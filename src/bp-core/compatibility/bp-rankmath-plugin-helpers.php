@@ -20,9 +20,11 @@ class BP_RankMath_Title implements IPaper {
 	/**
 	 * Retrieves the SEO title.
 	 *
+	 * @param string $title Document title.
+	 *
 	 * @return string
 	 */
-	public function title() {
+	public function title( $title = '' ) {
 		if ( bp_is_user() && bp_is_current_component( 'xprofile' ) ) {
 			$title = get_user_meta( bp_displayed_user_id(), 'first_name', true );
 			if ( empty( $title ) ) {
@@ -30,19 +32,21 @@ class BP_RankMath_Title implements IPaper {
 			}
 		} else {
 			$action = bp_current_action();
-			$title  = isset( buddypress()->groups->current_group->name ) ? buddypress()->groups->current_group->name : get_the_title() ;
+			$title  = ! empty( $title ) ? $title : get_the_title();
 			if ( 'admin' === $action ) {
 				$action = esc_html__( 'Manage', 'buddyboss' );
 			}
+
 			if ( 'my-groups' === $action ) {
 				$action = esc_html__( 'Groups', 'buddyboss' );
 			}
+
 			if ( isset( $action ) && ! empty( $action ) ) {
 				$title = ucfirst( $action ) . ' - ' . $title;
 			}
 		}
 
-		return $title . ' - ' . bp_get_site_name();
+		return $title;
 	}
 
 	/**
@@ -109,7 +113,7 @@ function bp_helper_rankmath_group_page_support( $title ) {
 		)
 	) {
 		$group_page = new BP_RankMath_Title();
-		$title      = $group_page->title();
+		$title      = $group_page->title( $title );
 	}
 
 	return $title;
