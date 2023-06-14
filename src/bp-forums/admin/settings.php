@@ -169,7 +169,7 @@ function bbp_admin_get_settings_fields() {
 
 				// Allow auto embedding setting
 				'_bbp_use_autoembed'          => array(
-					'title'             => __( 'Auto-embed links', 'buddyboss' ),
+					'title'             => __( 'Link Previews', 'buddyboss' ),
 					'callback'          => 'bbp_admin_setting_callback_use_autoembed',
 					'sanitize_callback' => 'intval',
 					'args'              => array(),
