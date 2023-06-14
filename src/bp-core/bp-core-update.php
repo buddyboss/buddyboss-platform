@@ -2881,16 +2881,8 @@ function bb_update_to_2_3_50() {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_update_to_2_3_60() {
-	$is_already_run = get_transient( 'bb_update_to_2_3_60' );
-	if ( $is_already_run ) {
-		return;
-	}
-
-	set_transient( 'bb_update_to_2_3_60', 'yes', DAY_IN_SECONDS );
 
 	bb_core_update_repair_duplicate_following_notification();
-
-	wp_cache_flush();
 }
 
 /**
@@ -2914,4 +2906,10 @@ function bb_core_update_repair_duplicate_following_notification() {
 
 	// Remove duplicate notification ids.
 	$wpdb->query( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) );
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear notifications API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-notifications' );
+	}
 }
