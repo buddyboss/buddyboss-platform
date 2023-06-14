@@ -601,24 +601,28 @@
 	}
 }
 
-.buddypress-wrap .bp-subnavs .component-navigation.video-nav,
-.buddypress-wrap .bp-subnavs .component-navigation.document-nav,
-.buddypress-wrap .bp-subnavs .component-navigation.media-nav {
+.buddypress-wrap .bp-subnavs .component-navigation {
 
-	li.selected.loading a:after {
-		content: "\ef30";
-		font-weight: 400;
-		font-family: "bb-icons"; /* stylelint-disable-line */
-		font-size: 20px;
-		line-height: 1;
-		margin-left: 5px;
-		text-align: center;
-		display: inline-block;
-		vertical-align: middle;
-		-webkit-animation: spin 2s infinite linear;
-		animation: spin 2s infinite linear;
+	li.selected.loading a {
+
+		&:after {
+			content: "\ef30";
+			font-weight: 400;
+			font-family: "bb-icons"; /* stylelint-disable-line */
+			font-size: 20px;
+			line-height: 1;
+			margin-left: 5px;
+			text-align: center;
+			display: inline-block;
+			vertical-align: middle;
+			-webkit-animation: spin 2s infinite linear;
+			animation: spin 2s infinite linear;
+		}
+
+		.count {
+			display: none;
+		}
 	}
-
 }
 
 .bb-item-cover-wrap {
@@ -4014,6 +4018,27 @@ body.search-results.bb-template-v2 .search_results {
 
 		.bb-title {
 			width: auto;
+
+			&.loading {
+				position: relative;
+				padding-right: 30px;
+
+				&:after {
+					content: "\ef30";
+					font-weight: 400;
+					font-family: "bb-icons"; /* stylelint-disable-line */
+					font-size: 20px;
+					line-height: 1;
+					position: absolute;
+					right: 0;
+					top: 7px;
+					text-align: center;
+					display: inline-block;
+					vertical-align: middle;
+					-webkit-animation: spin 2s infinite linear;
+					animation: spin 2s infinite linear;
+				}
+			}
 		}
 	}
 
@@ -4076,6 +4101,25 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 		flex-basis: 25%;
 	}
 
+}
+
+#bp-media-single-folder .bb-single-album-header .bb-title.loading {
+	position: relative;
+	padding-right: 30px;
+
+	&:after {
+		content: "\ef30";
+		font-weight: 400;
+		font-family: "bb-icons"; /* stylelint-disable-line */
+		font-size: 20px;
+		line-height: 1;
+		margin-left: 10px;
+		text-align: center;
+		display: inline-block;
+		vertical-align: middle;
+		-webkit-animation: spin 2s infinite linear;
+		animation: spin 2s infinite linear;
+	}
 }
 
 @media screen and (max-width: 1120px) {
