@@ -144,7 +144,7 @@ function bp_core_register_common_scripts() {
 			'footer'       => true,
 		),
 		'emojionearea'                  => array(
-			'file'         => "{$url}emojionearea-edited.js",
+			'file'         => "{$url}emojionearea-edited{$min}.js",
 			'dependencies' => array( 'emojione' ),
 			'footer'       => true,
 		),
@@ -957,3 +957,13 @@ function bp_core_enqueue_isInViewPort() {
 	}
 }
 add_action( 'bp_enqueue_scripts', 'bp_core_enqueue_isInViewPort', 5 );
+
+/**
+ * Load the JS template for link preview.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_load_link_preview_js_template() {
+	bp_get_template_part( 'common/js-templates/members/bb-link-preview' );
+}
+add_action( 'bp_enqueue_scripts', 'bb_load_link_preview_js_template' );
