@@ -187,9 +187,11 @@ class BP_Activity_Component extends BP_Component {
 
 		// Global tables for activity component.
 		$global_tables = array(
-			'table_name'        => $bp->table_prefix . 'bp_activity',
-			'table_name_meta'   => $bp->table_prefix . 'bp_activity_meta',
-			'table_name_follow' => $bp->table_prefix . 'bp_follow',
+			'table_name'              => $bp->table_prefix . 'bp_activity',
+			'table_name_meta'         => $bp->table_prefix . 'bp_activity_meta',
+			'table_name_follow'       => $bp->table_prefix . 'bp_follow',
+			'table_name_comment'      => $bp->table_prefix . 'bb_activity_comments',
+			'table_name_comment_meta' => $bp->table_prefix . 'bb_activity_comment_meta',
 		);
 
 		// Metadata tables for groups component.

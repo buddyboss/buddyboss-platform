@@ -418,7 +418,18 @@ function bp_nouveau_ajax_new_activity_comment() {
 		wp_send_json_error( $response );
 	}
 
-	$comment_id = bp_activity_new_comment(
+//	if ( apply_filters( 'bb_activity_legacy_comment', true ) ) {
+//		$comment_id = bp_activity_new_comment(
+//			array(
+//				'activity_id' => $_POST['form_id'],
+//				'content'     => $_POST['content'],
+//				'parent_id'   => $_POST['comment_id'],
+//				'skip_error'  => false === $content ? false : true // Pass true when $content will be not empty.
+//			)
+//		);
+//	}
+
+	$comment_id = bb_activity_new_comment(
 		array(
 			'activity_id' => $_POST['form_id'],
 			'content'     => $_POST['content'],
@@ -444,7 +455,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 	$activity = new BP_Activity_Activity( $comment_id );
 
 	// Load the new activity item into the $activities_template global.
-	bp_has_activities(
+	bb_has_activities_comments(
 		array(
 			'display_comments' => 'stream',
 			'hide_spam'        => false,

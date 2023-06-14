@@ -44,7 +44,17 @@ function bp_activity_action_post_comment() {
 		bp_core_redirect( wp_get_referer() . '#ac-form-' . $activity_id );
 	}
 
-	$comment_id = bp_activity_new_comment(
+	if ( apply_filters( 'bb_activity_legacy_comment', true ) ) {
+		$comment_id = bp_activity_new_comment(
+			array(
+				'content'     => $content,
+				'activity_id' => $activity_id,
+				'parent_id'   => false,
+			)
+		);
+	}
+
+	$comment_id = bb_activity_new_comment(
 		array(
 			'content'     => $content,
 			'activity_id' => $activity_id,
