@@ -2520,8 +2520,21 @@ h2.has_tutorial_btn {
 	margin-left: -210px;
 	background: rgb(255, 220, 220);
 	color: rgb(212, 41, 41);
+	line-height: 1.5;
 	border: 1px solid rgb(255, 197, 202);
 	border-radius: 4px;
+}
+
+.bb-warning-section-wrap.hidden-header > th {
+	opacity: 0;
+	visibility: hidden;
+	padding: 0;
+	margin: 0;
+
+	+ td {
+		padding-left: 0;
+		padding-right: 0;
+	}
 }
 
 .bb-warning-section {
@@ -2529,8 +2542,13 @@ h2.has_tutorial_btn {
 	margin-left: -210px;
 	background: #fff3c8;
 	color: #8b6300;
+	line-height: 1.5;
 	border: 1px solid #ffeeb3;
 	border-radius: 4px;
+
+	@media screen and (max-width: 782px) {
+		margin-left: 0;
+	}
 }
 
 /* Status Block */
