@@ -216,7 +216,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Prepare group member count join SQL query with suspend table.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 *
 	 * @param string $join_sql Join table query.
 	 * @param string $uid_name moderation type.
@@ -230,7 +230,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		/**
 		 * Filters the group members count Where SQL statement.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.50
 		 *
 		 * @param array $join_sql Join sql query
 		 * @param array $class    current class object.
@@ -243,7 +243,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Prepare group member count where SQL query with suspend table.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 *
 	 * @param array $where_sql Where sql.
 	 *
@@ -257,7 +257,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		/**
 		 * Filters the group members count Where SQL statement.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.50
 		 *
 		 * @param array $where Query to update group members count.
 		 * @param array $class current class object.
@@ -961,7 +961,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Function to allowed blocked member URL for group single activity.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 *
 	 * @param BP_Activity_Activity $activity Activity object.
 	 */
@@ -982,7 +982,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Function to dis-allowed blocked member URL for group single activity.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 *
 	 * @param BP_Activity_Activity $activity Activity object.
 	 */
@@ -1003,7 +1003,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Allow suspended member URL for group single activity.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 *
 	 * @param int $user_id User id.
 	 *
@@ -1047,7 +1047,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Fetch Activity for the suspend user.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 *
 	 * @param int $id Activity id.
 	 *
@@ -1075,7 +1075,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Setup unique hash URL for suspended member.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 *
 	 * @param string $domain        Domain for the passed user.
 	 * @param int    $user_id       ID of the passed user.

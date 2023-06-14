@@ -4,7 +4,7 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/members/bb-link-preview.php.
  *
- * @since [BBVERSION]
+ * @since 2.3.50
  */
 
 ?>

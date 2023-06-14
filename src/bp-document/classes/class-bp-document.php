@@ -89,7 +89,7 @@ class BP_Document {
 	/**
 	 * Message ID of the document item.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 * @var int
 	 */
 	var $message_id;

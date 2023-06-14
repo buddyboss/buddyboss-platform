@@ -8565,7 +8565,7 @@ function bb_is_wp_cli() {
 /**
  * Download an image from the specified URL and attach it to a post.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  *
  * @param string $file The URL of the image to download.
  *
@@ -8615,7 +8615,7 @@ function bb_media_sideload_attachment( $file ) {
 /**
  * This handles a sideloaded file in the same way as an uploaded file is handled by {@link media_handle_upload()}
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  *
  * @param array $file_array Array similar to a {@link $_FILES} upload array.
  * @param array $post_data  allows you to overwrite some of the attachment.
@@ -8692,7 +8692,7 @@ function bb_media_handle_sideload( $file_array, $post_data = array() ) {
 /**
  * Check the notification type is enabled or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  *
  * @param string $notification_type Notification type.
  * @param string $type              Type of notification.
@@ -8738,7 +8738,7 @@ function bb_is_notification_type_enabled( $notification_type, $type = 'main' ) {
 /**
  * Enable the notification type if disabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  *
  * @param string $notification_type Notification type.
  * @param string $type              Type of notification.
@@ -8774,7 +8774,7 @@ function bb_enable_notification_type( $notification_type, $type = 'main' ) {
 /**
  * Disable the notification type if enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  *
  * @param string $notification_type Notification type.
  * @param string $type              Type of notification.
