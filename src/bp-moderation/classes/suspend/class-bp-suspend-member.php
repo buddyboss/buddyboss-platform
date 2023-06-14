@@ -58,6 +58,10 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		add_filter( 'bp_user_search_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_user_search_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
 
+		// Update the where condition for group member count.
+		add_filter( 'bb_group_member_count_join_sql', array( $this, 'bb_group_member_count_join_sql' ), 10, 2 );
+		add_filter( 'bb_group_member_count_where_sql', array( $this, 'bb_group_member_count_where_sql' ), 10, 1 );
+
 		add_filter( 'authenticate', array( $this, 'boot_suspended_user' ), 30 );
 		add_filter( 'bp_init', array( $this, 'bp_stop_live_suspended' ), 5 );
 		add_action( 'login_form_bp-suspended', array( $this, 'bp_live_suspended_login_error' ) );
@@ -210,6 +214,63 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	}
 
 	/**
+	 * Prepare group member count join SQL query with suspend table.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $join_sql Join table query.
+	 * @param string $uid_name moderation type.
+	 *
+	 * @return mixed|string|void
+	 */
+	public function bb_group_member_count_join_sql( $join_sql, $uid_name ) {
+
+		$join_sql .= $this->exclude_joint_query( 'm.' . $uid_name, 'user' );
+
+		/**
+		 * Filters the group members count Where SQL statement.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $join_sql Join sql query
+		 * @param array $class    current class object.
+		 */
+		$join_sql = apply_filters( 'bp_suspend_member_get_join', $join_sql, $this );
+
+		return $join_sql;
+	}
+
+	/**
+	 * Prepare group member count where SQL query with suspend table.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $where_sql Where sql.
+	 *
+	 * @return mixed
+	 */
+	public function bb_group_member_count_where_sql( $where_sql ) {
+
+		$where                  = array();
+		$where['suspend_where'] = $this->exclude_where_query();
+
+		/**
+		 * Filters the group members count Where SQL statement.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $where Query to update group members count.
+		 * @param array $class current class object.
+		 */
+		$where = apply_filters( 'bp_suspend_group_member_count_where_conditions', $where, $this );
+		if ( ! empty( array_filter( $where ) ) ) {
+			$where_sql['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+		}
+
+		return $where_sql;
+	}
+
+	/**
 	 * Exclude moderated members from message recipients lists.
 	 *
 	 * @since BuddyBoss 1.7.8
@@ -236,7 +297,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		if ( ! empty( $hidden_members ) ) {
 			$where['blocked_where'] = "( r.user_id NOT IN('" . implode( "','", $hidden_members ) . "') )";
 		}
-// phpcs:ignore
+
+		// phpcs:ignore
 		$sql                    = $wpdb->prepare( "SELECT DISTINCT {$this->alias}.item_id FROM {$bp->moderation->table_name} {$this->alias} WHERE {$this->alias}.item_type = %s AND ( {$this->alias}.user_suspended = 1 )", 'user' );
 		$where['suspend_where'] = '( r.user_id NOT IN( ' . $sql . ' ) )';
 		/**
@@ -613,11 +675,27 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			}
 		}
 
-		/*
 		if ( bp_is_active( 'groups' ) ) {
-			$related_contents[ BP_Suspend_Group::$type ] = BP_Suspend_Group::get_member_group_ids( $member_id );
+			$groups    = BP_Groups_Member::get_group_ids( $member_id, false, false, true );
+			$group_ids = ! empty( $groups['groups'] ) ? $groups['groups'] : array();
+			$min_count = (int) apply_filters( 'bb_update_group_member_count', 10 );
+
+			if ( count( $group_ids ) > $min_count ) {
+				foreach ( array_chunk( $group_ids, $min_count ) as $chunk ) {
+					$bp_background_updater->data(
+						array(
+							array(
+								'callback' => 'bb_update_group_member_count',
+								'args'     => array( $chunk ),
+							),
+						)
+					);
+					$bp_background_updater->save()->schedule_event();
+				}
+			} else {
+				bb_update_group_member_count( $group_ids );
+			}
 		}
-		*/
 
 		if ( bp_is_active( 'forums' ) ) {
 			$related_contents[ BP_Suspend_Forum::$type ]       = BP_Suspend_Forum::get_member_forum_ids( $member_id, $action, $page );

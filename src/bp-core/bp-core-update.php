@@ -2861,6 +2861,7 @@ function bb_update_to_2_3_50() {
 }
 
 /**
+ * Update background job once plugin update.
  * Migration to add index and new column to media tables.
  *
  * @since BuddyBoss [BBVERSION]
@@ -2870,10 +2871,29 @@ function bb_update_to_2_3_50() {
 function bb_update_to_2_3_60() {
 	global $wpdb;
 
+	bb_background_update_group_member_count();
+
 	$tables = array(
-		$wpdb->prefix . 'bp_media'    => array( 'blog_id', 'message_id', 'group_id', 'privacy', 'type', 'menu_order', 'date_created' ),
-		$wpdb->prefix . 'bp_document' => array( 'blog_id', 'message_id', 'group_id', 'privacy', 'menu_order', 'date_created', 'date_modified' ),
+		$wpdb->prefix . 'bp_media'    => array(
+			'blog_id',
+			'message_id',
+			'group_id',
+			'privacy',
+			'type',
+			'menu_order',
+			'date_created',
+		),
+		$wpdb->prefix . 'bp_document' => array(
+			'blog_id',
+			'message_id',
+			'group_id',
+			'privacy',
+			'menu_order',
+			'date_created',
+			'date_modified',
+		),
 	);
+
 	$table_exists = array();
 	foreach ( $tables as $table_name => $indexes ) {
 		if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $table_name ) ) ) ) {
@@ -2890,6 +2910,45 @@ function bb_update_to_2_3_60() {
 
 	// Update older data.
 	bb_create_background_message_media_document_update( $table_exists );
+}
+
+/**
+ * Function to update group member count with background updater.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_background_update_group_member_count() {
+	global $wpdb, $bp_background_updater;
+
+	if ( ! bp_is_active( 'groups' ) ) {
+		return;
+	}
+
+	// Fetch all groups.
+	$sql       = "SELECT DISTINCT id FROM {$wpdb->prefix}bp_groups ORDER BY id DESC";
+	$group_ids = $wpdb->get_col( $sql );
+
+	if ( empty( $group_ids ) ) {
+		return;
+	}
+
+	$min_count = (int) apply_filters( 'bb_update_group_member_count', 10 );
+
+	if ( count( $group_ids ) > $min_count ) {
+		foreach ( array_chunk( $group_ids, $min_count ) as $chunk ) {
+			$bp_background_updater->data(
+				array(
+					array(
+						'callback' => 'bb_update_group_member_count',
+						'args'     => array( $chunk ),
+					),
+				)
+			);
+			$bp_background_updater->save()->schedule_event();
+		}
+	} else {
+		bb_update_group_member_count( $group_ids );
+	}
 }
 
 /**
@@ -2915,8 +2974,8 @@ function bb_create_background_message_media_document_update( $table_exists, $pag
 	if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $message_meta_table_name ) ) ) ) {
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT message_id, meta_key, meta_value FROM {$message_meta_table_name} WHERE meta_key IN 
-				('bp_media_ids', 'bp_video_ids', 'bp_document_ids') AND meta_value !='' 
+				"SELECT message_id, meta_key, meta_value FROM {$message_meta_table_name} WHERE meta_key IN
+				('bp_media_ids', 'bp_video_ids', 'bp_document_ids') AND meta_value !=''
 				ORDER BY message_id LIMIT %d offset %d",
 				$per_page,
 				$offset
@@ -2995,3 +3054,4 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
 	$paged++;
 	bb_create_background_message_media_document_update( $table_exists, $paged );
 }
+
