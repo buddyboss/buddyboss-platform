@@ -556,7 +556,7 @@ function bp_document_update_document_privacy( $folder ) {
 			}
 		}
 
-		if ( bp_is_active( 'activity' ) && ! empty( $activity_ids )  ) {
+		if ( bp_is_active( 'activity' ) && ! empty( $activity_ids ) ) {
 			foreach ( $activity_ids as $activity_id ) {
 				$activity = new BP_Activity_Activity( $activity_id );
 
@@ -785,36 +785,54 @@ function bp_document_forums_embed_attachments( $content, $id ) {
  */
 function bp_document_attach_document_to_message( &$message ) {
 
-	if ( bp_is_messages_document_support_enabled() && ! empty( $message->id ) && ! empty( $_POST['document'] ) ) {
+	if (
+		bp_is_messages_document_support_enabled() &&
+		! empty( $message->id ) &&
+		(
+			! empty( $_POST['document'] ) ||
+			! empty( $_POST['bp_document_ids'] )
+		)
+	) {
 
-		remove_action( 'bp_document_add', 'bp_activity_document_add', 9 );
-		remove_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
+		$documents = array();
 
-		$document_list = $_POST['document'];
+		if ( ! empty( $_POST['document'] ) ) {
+			$documents = $_POST['document'];
+		} else if ( ! empty( $_POST['bp_document_ids'] ) ) {
+			$documents = $_POST['bp_document_ids'];
+		}
 
-		if ( ! empty( $document_list ) ) {
-			foreach ( $document_list as $k => $document ) {
-				if ( array_key_exists( 'group_id', $document ) ) {
-					unset( $document_list[ $k ]['group_id'] );
+		$document_ids = array();
+
+		if ( ! empty( $documents ) ) {
+			foreach ( $documents as $attachment ) {
+
+				$attachment_id = ( is_array( $attachment ) && ! empty( $attachment['id'] ) ) ? $attachment['id'] : $attachment;
+
+				// Get media_id from the attachment ID.
+				$document_id = get_post_meta( $attachment_id, 'bp_document_id', true );
+
+				if ( ! empty( $document_id ) ) {
+
+					$document_ids[] = $document_id;
+
+					// Attach already created media.
+					$document             = new BP_Document( $document_id );
+					$document->privacy    = 'message';
+					$document->message_id = $message->id;
+					$document->save();
+
+					update_post_meta( $document->attachment_id, 'bp_document_saved', true );
+					update_post_meta( $document->attachment_id, 'bp_media_parent_message_id', $message->id );
+					update_post_meta( $document->attachment_id, 'thread_id', $message->thread_id );
+					bp_document_update_meta( $document_id, 'thread_id', $message->thread_id );
 				}
 			}
-		}
 
-		$document_ids = bp_document_add_handler( $document_list, 'message' );
-
-		if ( ! empty( $document_ids ) ) {
-			foreach ( $document_ids as $document_id ) {
-				bp_document_update_meta( $document_id, 'thread_id', $message->thread_id );
+			if ( ! empty( $document_ids ) ) {
+				bp_messages_update_meta( $message->id, 'bp_document_ids', implode( ',', $document_ids ) );
 			}
 		}
-
-		$document_ids = implode( ',', $document_ids );
-
-		// save document meta for message.
-		bp_messages_update_meta( $message->id, 'bp_document_ids', $document_ids );
-
-		add_action( 'bp_document_add', 'bp_activity_document_add', 9 );
-		add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
 	}
 }
 
@@ -1623,8 +1641,8 @@ function bp_document_admin_repair_document() {
 		);
 	} else {
 		return array(
-				'status'  => 1,
-				'message' => __( 'Repairing documents &hellip; Complete!', 'buddyboss' ),
+			'status'  => 1,
+			'message' => __( 'Repairing documents &hellip; Complete!', 'buddyboss' ),
 		);
 	}
 }
@@ -1695,14 +1713,14 @@ function bp_members_filter_document_public_scope( $retval = array(), $filter = a
 		array(
 			'column'  => 'privacy',
 			'compare' => 'IN',
-			'value'   => $privacy
+			'value'   => $privacy,
 		),
 		array(
 			'column'  => 'group_id',
 			'compare' => '=',
 			'value'   => '0',
 		),
-		$folders
+		$folders,
 	);
 
 	if ( ! bp_is_profile_document_support_enabled() ) {
@@ -1785,14 +1803,14 @@ function bp_members_filter_folder_public_scope( $retval = array(), $filter = arr
 		array(
 			'column'  => 'privacy',
 			'compare' => 'IN',
-			'value'   => $privacy
+			'value'   => $privacy,
 		),
 		array(
 			'column'  => 'group_id',
 			'compare' => '=',
 			'value'   => '0',
 		),
-		$folders
+		$folders,
 	);
 
 	if ( ! bp_is_profile_document_support_enabled() ) {
@@ -2109,3 +2127,63 @@ function bb_document_remove_specific_trailing_slash( $redirect_url ) {
 	return $redirect_url;
 }
 add_filter( 'redirect_canonical', 'bb_document_remove_specific_trailing_slash', 9999 );
+
+/**
+ * Put document attachment as media.
+ *
+ * @since BuddyBoss 2.3.50
+ *
+ * @param WP_Post $attachment Attachment Post object.
+ *
+ * @return mixed
+ */
+function bb_messages_document_save( $attachment ) {
+
+	if (
+		(
+			bp_is_group_messages() ||
+			bp_is_messages_component() ||
+			(
+				! empty( $_POST['component'] ) &&
+				'messages' === $_POST['component']
+			)
+		) &&
+		bp_is_messages_document_support_enabled() &&
+		! empty( $attachment )
+	) {
+		$documents[] = array(
+			'id'      => $attachment->ID,
+			'name'    => $attachment->post_title,
+			'privacy' => 'message',
+		);
+
+		remove_action( 'bp_document_add', 'bp_activity_document_add', 9 );
+		remove_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
+
+		$document_ids = bp_document_add_handler( $documents, 'message' );
+
+		if ( ! is_wp_error( $document_ids ) ) {
+			update_post_meta( $attachment->ID, 'bp_media_parent_message_id', 0 );
+
+			// Message not actually sent.
+			update_post_meta( $attachment->ID, 'bp_document_saved', 0 );
+
+			$thread_id = 0;
+			if ( ! empty( $_POST['thread_id'] ) ) {
+				$thread_id = absint( $_POST['thread_id'] );
+			}
+
+			// Message not actually sent.
+			update_post_meta( $attachment->ID, 'thread_id', $thread_id );
+		}
+
+		add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
+		add_action( 'bp_document_add', 'bp_activity_document_add', 9 );
+
+		return $document_ids;
+	}
+
+	return false;
+}
+
+add_action( 'bb_document_upload', 'bb_messages_document_save' );

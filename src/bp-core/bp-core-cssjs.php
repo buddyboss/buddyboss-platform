@@ -957,3 +957,13 @@ function bp_core_enqueue_isInViewPort() {
 	}
 }
 add_action( 'bp_enqueue_scripts', 'bp_core_enqueue_isInViewPort', 5 );
+
+/**
+ * Load the JS template for link preview.
+ *
+ * @since BuddyBoss 2.3.50
+ */
+function bb_load_link_preview_js_template() {
+	bp_get_template_part( 'common/js-templates/members/bb-link-preview' );
+}
+add_action( 'bp_enqueue_scripts', 'bb_load_link_preview_js_template' );
