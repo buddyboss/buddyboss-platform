@@ -2927,8 +2927,6 @@ function bp_nav_menu_get_loggedin_pages() {
 		}
 
 		if ( ! empty( $nav_sub ) ) {
-
-
 			foreach ( $nav_sub as $s_nav ) {
 
 				$sub_name          = preg_replace( '/^(.*)(<(.*)<\/(.*)>)/', '$1', $s_nav['name'] );
@@ -5968,7 +5966,6 @@ function bb_get_all_admin_users() {
 	return $users;
 }
 
-
 /**
  * Check the symlink function was disabled by server or not.
  *
@@ -6892,7 +6889,7 @@ function bp_can_send_notification( $user_id, $component_name, $component_action 
 
 				if (
 					'bb_new_mention' === $component_action &&
-					in_array( $component_name, array( 'activity', 'forums', 'members' ), true ) &&
+					in_array( $component_name, array( 'activity', 'forums', 'members', 'core' ), true ) &&
 					$component_action === $n['component_action']
 				) {
 					return $n['notification_type'];
@@ -8569,7 +8566,7 @@ function bb_is_wp_cli() {
 /**
  * Download an image from the specified URL and attach it to a post.
  *
- * @since BuddyBoss 2.3.50
+ * @since BuddyBoss 2.3.60
  *
  * @param string $file The URL of the image to download.
  *
@@ -8619,7 +8616,7 @@ function bb_media_sideload_attachment( $file ) {
 /**
  * This handles a sideloaded file in the same way as an uploaded file is handled by {@link media_handle_upload()}
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.60
  *
  * @param array $file_array Array similar to a {@link $_FILES} upload array.
  * @param array $post_data  allows you to overwrite some of the attachment.
@@ -8696,7 +8693,7 @@ function bb_media_handle_sideload( $file_array, $post_data = array() ) {
 /**
  * Check the notification type is enabled or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.60
  *
  * @param string $notification_type Notification type.
  * @param string $type              Type of notification.
@@ -8742,7 +8739,7 @@ function bb_is_notification_type_enabled( $notification_type, $type = 'main' ) {
 /**
  * Enable the notification type if disabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.60
  *
  * @param string $notification_type Notification type.
  * @param string $type              Type of notification.
@@ -8778,7 +8775,7 @@ function bb_enable_notification_type( $notification_type, $type = 'main' ) {
 /**
  * Disable the notification type if enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.60
  *
  * @param string $notification_type Notification type.
  * @param string $type              Type of notification.

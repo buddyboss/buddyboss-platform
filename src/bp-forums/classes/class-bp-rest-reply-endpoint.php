@@ -573,6 +573,27 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 */
 	public function create_item( $request ) {
 
+		/**
+		 * Map data into POST to work with link preview.
+		 */
+		$post_map = array(
+			'link_url'         => 'link_url',
+			'link_embed'       => 'link_embed',
+			'link_title'       => 'link_title',
+			'link_description' => 'link_description',
+			'link_image'       => 'link_image',
+		);
+
+		if ( ! empty( $request ) ) {
+			foreach ( $post_map as $key => $val ) {
+				if ( isset( $request[ $val ] ) ) {
+					$_POST[ $key ] = $request[ $val ];
+				}
+			}
+		}
+
+		$_POST['action'] = 'bbp-new-reply'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
 		$reply = $this->prepare_reply_for_database( $request );
 
 		// Define local variable(s).
@@ -848,11 +869,16 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 				(
 					! empty( $request['bbp_media_gif']['url'] ) &&
 					! empty( $request['bbp_media_gif']['mp4'] )
-				)
-				|| (
+				) ||
+				(
 					function_exists( 'bp_is_forums_video_support_enabled' )
 					&& false !== bp_is_forums_video_support_enabled()
 					&& ! empty( $request['bbp_videos'] )
+				) ||
+				(
+					function_exists( 'bbp_use_autoembed' )
+					&& false !== bbp_use_autoembed()
+					&& ! empty( $request['link_url'] )
 				)
 			)
 		) {
@@ -1304,6 +1330,27 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		/**
+		 * Map data into POST to work with link preview.
+		 */
+		$post_map = array(
+			'link_url'         => 'link_url',
+			'link_embed'       => 'link_embed',
+			'link_title'       => 'link_title',
+			'link_description' => 'link_description',
+			'link_image'       => 'link_image',
+		);
+
+		if ( ! empty( $post_map ) ) {
+			foreach ( $post_map as $key => $val ) {
+				if ( isset( $request[ $val ] ) ) {
+					$_POST[ $key ] = $request[ $val ];
+				}
+			}
+		}
+
+		$_POST['action'] = 'bbp-edit-reply'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
 		// Remove kses filters from title and content for capable users.
 		remove_filter( 'bbp_new_reply_pre_title', 'wp_filter_kses' );
 		remove_filter( 'bbp_new_reply_pre_content', 'bbp_encode_bad', 10 );
@@ -1416,11 +1463,15 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 				(
 					! empty( $request['bbp_media_gif']['url'] ) &&
 					! empty( $request['bbp_media_gif']['mp4'] )
-				)
-				|| (
+				) || (
 					function_exists( 'bp_is_forums_video_support_enabled' )
 					&& false !== bp_is_forums_video_support_enabled()
 					&& ! empty( $request['bbp_videos'] )
+				) ||
+				(
+					function_exists( 'bbp_use_autoembed' )
+					&& false !== bbp_use_autoembed()
+					&& ! empty( $request['link_url'] )
 				)
 			)
 		) {
@@ -1987,6 +2038,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 				: false
 			),
 			'classes'               => bbp_get_reply_class( $reply->ID ),
+			'title'                 => '',
+			'content'               => array(),
+			'short_content'         => '',
+			'preview_data'          => '',
+			'link_embed_url'        => '',
 		);
 
 		$data['title'] = array(
@@ -2004,6 +2060,8 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		remove_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 98, 2 );
 		remove_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 98, 2 );
 		remove_filter( 'bbp_get_reply_content', 'bp_video_forums_embed_attachments', 98, 2 );
+		remove_filter( 'bbp_get_reply_content', 'bb_forums_link_preview', 999, 2 ); // Remove link preview.
+		remove_filter( 'bbp_get_reply_content', 'bbp_reply_content_autoembed_paragraph', 99999, 1 ); // Remove link embed from content.
 		remove_filter( 'bbp_get_reply_content', 'bp_document_forums_embed_attachments', 999999, 2 );
 
 		$data['content'] = array(
@@ -2014,6 +2072,8 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 98, 2 );
 		add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 98, 2 );
 		add_filter( 'bbp_get_reply_content', 'bp_video_forums_embed_attachments', 98, 2 );
+		add_filter( 'bbp_get_reply_content', 'bb_forums_link_preview', 999, 2 ); // Restore link preview.
+		add_filter( 'bbp_get_reply_content', 'bbp_reply_content_autoembed_paragraph', 99999, 1 ); // Restore link embed to content
 		add_filter( 'bbp_get_reply_content', 'bp_document_forums_embed_attachments', 999999, 2 );
 
 		// Don't leave our cookie lying around: https://github.com/WP-API/WP-API/issues/1055.
@@ -2021,6 +2081,27 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			$_COOKIE[ 'wp-postpass_' . COOKIEHASH ] = '';
 		}
 		/* -- Prepare content */
+
+		// Add iframe embedded data in separate object.
+		$link_embed = get_post_meta( $reply->ID, '_link_embed', true );
+
+		if ( ! empty( $link_embed ) ) {
+
+			$data['link_embed_url'] = $link_embed;
+
+			$embed_data = bp_core_parse_url( $link_embed );
+
+			if (
+				isset( $embed_data['wp_embed'] ) &&
+				$embed_data['wp_embed'] &&
+				! empty( $embed_data['description'] )
+			) {
+				$data['preview_data'] = $embed_data['description'];
+				$data['preview_data'] = $this->forum_endpoint->bp_rest_forums_remove_lazyload( $data['preview_data'], $reply->ID );
+			}
+		} else {
+			$data['preview_data'] = bb_forums_link_preview( '', $reply->ID );
+		}
 
 		$forum_id = bbp_get_reply_forum_id( $reply->ID );
 
@@ -2251,11 +2332,6 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 						),
 					),
 				),
-				'short_content'            => array(
-					'description' => __( 'Short content of the reply.', 'buddyboss' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-				),
 				'content'                  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The content of the reply.', 'buddyboss' ),
@@ -2272,6 +2348,23 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 					),
+				),
+				'short_content'            => array(
+					'description' => __( 'Short content of the reply.', 'buddyboss' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+				),
+				'preview_data'             => array(
+					'description' => __( 'WordPress Embed and link preview data.', 'buddyboss' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'link_embed_url'    => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'WordPress Embed URL.', 'buddyboss' ),
+					'type'        => 'string',
+					'readonly'    => true,
 				),
 				'current_user_permissions' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),

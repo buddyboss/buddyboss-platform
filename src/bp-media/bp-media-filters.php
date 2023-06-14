@@ -2815,7 +2815,7 @@ add_filter( 'redirect_canonical', 'bb_media_remove_specific_trailing_slash', 999
 /**
  * Put photo attachment as media.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.60
  *
  * @param WP_Post $attachment Attachment Post object.
  *
