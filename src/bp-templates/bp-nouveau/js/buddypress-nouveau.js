@@ -2990,14 +2990,20 @@ window.bp = window.bp || {};
 		togglePassword: function () {
 			$( document ).on(
 				'click',
-				'.bb-toggle-password',
+				'.bb-toggle-password, .bb-hide-pw',
 				function ( e ) {
 					e.preventDefault();
-					var $this  = $( this );
-					var $input = $this.next( 'input' );
+					var $this = $( this ), $input;
+
+					if ( $this.hasClass( 'bb-hide-pw' ) ) {
+						$input = $this.closest( '.password-toggle' ).find( 'input' );
+					} else {
+						$input = $this.next( 'input' );
+					}
+					var $default_type = $input.data( 'type' ) ? $input.data( 'type' ) : 'text';
 					$this.toggleClass( 'bb-show-pass' );
 					if ( $this.hasClass( 'bb-show-pass' ) ) {
-						$input.attr( 'type', 'text' );
+						$input.attr( 'type', $default_type );
 					} else {
 						$input.attr( 'type', 'password' );
 					}
