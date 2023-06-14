@@ -136,6 +136,7 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	 * @return array
 	 */
 	public function update_where_sql( $where, $suspend ) {
+		global $wpdb;
 		$this->alias = $suspend->alias;
 
 		// Remove has blocked/is blocked members discussion from widget.
@@ -152,7 +153,7 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 
 		if ( true === $exclude_where ) {
 			// Remove is blocked members discussion from widget.
-			$where['moderation_widget_forums'] = '( wp_posts.post_author NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
+			$where['moderation_widget_forums'] = '( ' . $wpdb->prefix . 'posts.post_author NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
 		}
 
 		return $where;
