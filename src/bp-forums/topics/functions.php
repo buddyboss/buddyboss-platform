@@ -437,7 +437,11 @@ function bbp_new_topic_handler( $action = '' ) {
 
 					// Super sticky in all forums.
 					case 'super':
-						bbp_stick_topic( $topic_id, true );
+						if ( bb_is_group_forum_topic( $topic_id ) ) {
+							bbp_stick_topic( $topic_id );
+						} else {
+							bbp_stick_topic( $topic_id, true );
+						}
 						break;
 
 					// We can avoid this as it is a new topic.
@@ -838,7 +842,11 @@ function bbp_edit_topic_handler( $action = '' ) {
 
 					// Sticky in all forums.
 					case 'super':
-						bbp_stick_topic( $topic_id, true );
+						if ( bb_is_group_forum_topic( $topic_id ) ) {
+							bbp_stick_topic( $topic_id );
+						} else {
+							bbp_stick_topic( $topic_id, true );
+						}
 						break;
 
 					// Normal.
@@ -2193,6 +2201,7 @@ function bbp_get_topic_types() {
 		array(
 			'unstick' => __( 'Normal', 'buddyboss' ),
 			'stick'   => __( 'Sticky', 'buddyboss' ),
+			'super'   => __( 'Super Sticky', 'buddyboss' ),
 		)
 	);
 }
@@ -3868,4 +3877,19 @@ function bbp_check_topic_tag_edit() {
 		wp_safe_redirect( bbp_get_topic_tag_link() );
 		exit();
 	}
+}
+
+/**
+ * Function to check the topic is group topic or standalone.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $topic_id Optional. Topic id
+ *
+ * @return bool
+ */
+function bb_is_group_forum_topic( $topic_id ) {
+	$forum_id = bbp_get_topic_forum_id( $topic_id );
+
+	return (bool) apply_filters( 'bb_is_group_forum_topic', bbp_is_forum_group_forum( $forum_id ), $topic_id );
 }
