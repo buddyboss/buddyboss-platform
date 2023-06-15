@@ -1900,6 +1900,10 @@ function bp_activity_comments( $args = '' ) {
 function bp_activity_get_comments( $args = '' ) {
 	global $activities_template;
 
+	if ( in_array( $activities_template->activity->component, array( 'blogs' ), true ) && ! bp_activity_can_comment() ) {
+		return false;
+	}
+
 	if ( empty( $activities_template->activity->children ) ) {
 		return false;
 	}
