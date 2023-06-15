@@ -3624,7 +3624,7 @@ function bbp_get_form_topic_type_dropdown( $args = '' ) {
 	}
 
 	// Used variables
-	$tab = ! empty( $r['tab'] ) ? ' tabindex=' . (int) $r['tab'] . '' : '';
+	$tab = ! empty( $r['tab'] ) ? ' tabindex="' . esc_attr( (int) $r['tab'] ) . '"' : '';
 
 	// Start an output buffer, we'll finish it after the select loop
 	ob_start();
@@ -3638,7 +3638,7 @@ function bbp_get_form_topic_type_dropdown( $args = '' ) {
 		unset( $topic_sticky_types['super'] );
 	}
 	?>
-		<select name="<?php echo esc_attr( $r['select_id'] ); ?>" id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo esc_attr( $tab ); ?>>
+		<select name="<?php echo esc_attr( $r['select_id'] ); ?>" id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?>>
 			<?php foreach ( $topic_sticky_types as $key => $label ) : ?>
 				<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $r['selected'] ); ?>>
 					<span><?php _e( 'Type: ', 'buddyboss' ); ?></span>
