@@ -385,7 +385,7 @@ function bp_nouveau_ajax_video_save() {
 	if ( bp_is_user_video() || ( ( bp_is_profile_albums_support_enabled() || bp_is_group_albums_support_enabled() ) && bp_is_single_album() ) ) {
 		add_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
 		bp_has_video( bp_ajax_querystring( 'video' ) );
-		$video_personal_count = $GLOBALS['video_template']->total_video_count;
+		$video_personal_count = bp_core_number_format( $GLOBALS['video_template']->total_video_count );
 		remove_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
 	}
 
@@ -397,17 +397,17 @@ function bp_nouveau_ajax_video_save() {
 
 		add_filter( 'bp_ajax_querystring', 'bp_video_object_results_video_all_scope', 20 );
 		bp_has_video( bp_ajax_querystring( 'video' ) );
-		$video_all_count = $GLOBALS['video_template']->total_video_count;
+		$video_all_count = bp_core_number_format( $GLOBALS['video_template']->total_video_count );
 		remove_filter( 'bp_ajax_querystring', 'bp_video_object_results_video_all_scope', 20 );
 
 		add_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
 		bp_has_video( bp_ajax_querystring( 'video' ) );
-		$video_personal_count = $GLOBALS['video_template']->total_video_count;
+		$video_personal_count = bp_core_number_format( $GLOBALS['video_template']->total_video_count );
 		remove_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
 
 		add_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_groups_scope', 20 );
 		bp_has_video( bp_ajax_querystring( 'groups' ) );
-		$video_group_count = $GLOBALS['video_template']->total_video_count;
+		$video_group_count = bp_core_number_format( $GLOBALS['video_template']->total_video_count );
 		remove_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_groups_scope', 20 );
 
 	}
@@ -518,7 +518,7 @@ function bp_nouveau_ajax_video_delete() {
 	if ( bp_is_user_video() ) {
 		add_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
 		bp_has_video( bp_ajax_querystring( 'video' ) );
-		$video_personal_count = $GLOBALS['video_template']->total_video_count;
+		$video_personal_count = bp_core_number_format( $GLOBALS['video_template']->total_video_count );
 		remove_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
 	}
 
@@ -1106,17 +1106,17 @@ function bp_nouveau_object_template_results_video_tabs( $results, $object ) {
 
 	add_filter( 'bp_ajax_querystring', 'bp_video_object_results_video_all_scope', 20 );
 	bp_has_video( bp_ajax_querystring( 'video' ) );
-	$results['scopes']['all'] = $GLOBALS['video_template']->total_video_count;
+	$results['scopes']['all'] = bp_core_number_format( $GLOBALS['video_template']->total_video_count );
 	remove_filter( 'bp_ajax_querystring', 'bp_video_object_results_video_all_scope', 20 );
 
 	add_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
 	bp_has_video( bp_ajax_querystring( 'video' ) );
-	$results['scopes']['personal'] = $GLOBALS['video_template']->total_video_count;
+	$results['scopes']['personal'] = bp_core_number_format( $GLOBALS['video_template']->total_video_count );
 	remove_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
 
 	add_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_groups_scope', 20 );
 	bp_has_video( bp_ajax_querystring( 'groups' ) );
-	$results['scopes']['groups'] = $GLOBALS['video_template']->total_video_count;
+	$results['scopes']['groups'] = bp_core_number_format( $GLOBALS['video_template']->total_video_count );
 	remove_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_groups_scope', 20 );
 
 	return $results;
@@ -1188,6 +1188,7 @@ function bp_nouveau_ajax_video_get_video_description() {
 	$user_domain      = bp_core_get_user_domain( $video->user_id );
 	$display_name     = bp_core_get_user_displayname( $video->user_id );
 	$time_since       = bp_core_time_since( $video->date_created );
+	add_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
 	$avatar           = bp_core_fetch_avatar(
 		array(
 			'item_id' => $video->user_id,
@@ -1195,6 +1196,7 @@ function bp_nouveau_ajax_video_get_video_description() {
 			'type'    => 'full',
 		)
 	);
+	remove_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
 
 	ob_start();
 

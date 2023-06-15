@@ -228,7 +228,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 			// Enqueue the scripts.
 			foreach ( $scripts as $handle => $attributes ) {
-				bbp_enqueue_script( $handle, $attributes['file'], $attributes['dependencies'], $this->version, 'screen' );
+				bbp_enqueue_script( $handle, $attributes['file'], $attributes['dependencies'], bp_get_version(), 'screen' );
 			}
 
 			$no_load_topic = true;

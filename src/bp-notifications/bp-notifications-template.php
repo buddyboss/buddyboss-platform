@@ -1074,15 +1074,21 @@ function bb_on_screen_notification_template() {
 	}
 
 	remove_filter( 'bp_notifications_get_registered_components', 'bb_notification_exclude_group_message_notification', 999, 1 );
-	$user_unread_notification = BP_Notifications_Notification::get_unread_for_user( bp_loggedin_user_id() );
+	$args = array(
+		'user_id'           => bp_loggedin_user_id(),
+		'is_new'            => true,
+		'fields'            => 'id',
+		'update_meta_cache' => false,
+	);
+	// Actually, query it.
+	$user_unread_notification_ids = BP_Notifications_Notification::get( $args );
 	add_filter( 'bp_notifications_get_registered_components', 'bb_notification_exclude_group_message_notification', 999, 1 );
 
-	$user_unread_notification_ids = wp_list_pluck( $user_unread_notification, 'id' );
-	$position                     = bp_get_option( '_bp_on_screen_notifications_position', 'right' );
-	$has_mobile_support           = bp_get_option( '_bp_on_screen_notifications_mobile_support', '0' );
-	$browser_tab                  = bp_get_option( '_bp_on_screen_notifications_browser_tab', 0 );
-	$visibility                   = bp_get_option( '_bp_on_screen_notifications_visibility', 0 );
-	$enable                       = bp_get_option( '_bp_on_screen_notifications_enable', 0 );
+	$position           = bp_get_option( '_bp_on_screen_notifications_position', 'right' );
+	$has_mobile_support = bp_get_option( '_bp_on_screen_notifications_mobile_support', '0' );
+	$browser_tab        = bp_get_option( '_bp_on_screen_notifications_browser_tab', 0 );
+	$visibility         = bp_get_option( '_bp_on_screen_notifications_visibility', 0 );
+	$enable             = bp_get_option( '_bp_on_screen_notifications_enable', 0 );
 
 	?>
 	<div class="bb-onscreen-notification-enable <?php echo '1' === $has_mobile_support ? 'bb-onscreen-notification-enable-mobile-support' : ''; ?>">
