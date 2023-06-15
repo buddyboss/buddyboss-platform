@@ -48,6 +48,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		 * And IF moderation setting enabled for member then it'll filter blocked user content.
 		 */
 		add_filter( 'bp_suspend_activity_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+		add_filter( 'bp_suspend_activity_get_where_conditions_comment', array( $this, 'update_where_sql_comment' ), 10, 2 );
 		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
 
 		add_action( 'bb_moderation_before_get_related_' . $this->item_type, array( $this, 'remove_pre_validate_check' ) );
@@ -143,6 +144,33 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		) {
 			$exclude_group_sql = ' OR a.component = "groups"';
 		}
+
+		$sql = $this->exclude_where_query();
+		if ( ! empty( $sql ) ) {
+			$where['moderation_where'] = $sql;
+		}
+
+		// Allow to search isblocked members activity comment but isblocked members activity should not be searchable.
+		if (
+			function_exists( 'bb_did_filter' ) &&
+			! bb_did_filter( 'bp_activity_comments_search_where_conditions' )
+		) {
+			if ( isset( $where['moderation_where'] ) && ! empty( $where['moderation_where'] ) ) {
+				$where['moderation_where'] .= ' AND ';
+			}
+
+			$where['moderation_where'] .= '( a.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
+		}
+
+		if ( ! empty( $exclude_group_sql ) ) {
+			$sql = $this->exclude_where_query( false );
+
+			$where['moderation_where'] .= $exclude_group_sql . ' AND ( ' . $sql . ' ) ';
+		}
+		return $where;
+	}
+	public function update_where_sql_comment( $where, $suspend ) {
+		$this->alias = $suspend->alias;
 
 		$sql = $this->exclude_where_query();
 		if ( ! empty( $sql ) ) {

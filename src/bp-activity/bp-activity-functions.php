@@ -6111,7 +6111,7 @@ function bb_activity_new_comment( $args = '' ) {
 		$r['parent_id'] = $r['activity_id'];
 	}
 
-	$activity_id = $r['activity_id'];
+	$activity_id = (int) $r['activity_id'];
 
 	// Get the parent activity.
 	$activity = new BP_Activity_Activity( $activity_id );
@@ -6175,9 +6175,9 @@ function bb_activity_new_comment( $args = '' ) {
 	wp_cache_delete( 'bp_get_child_comments_' . $activity_id, 'bp_activity_comments' );
 
 	// Walk the tree to clear caches for all parent items.
-	$clear_id = $r['parent_id'];
+	$clear_id = intval( $r['parent_id'] );
 	while ( $clear_id != $activity_id ) {
-		$clear_object = new BP_Activity_Activity( $clear_id );
+		$clear_object = BP_Activity_Activity::get_single_comment( $clear_id );
 		wp_cache_delete( $clear_id, 'bp_activity' );
 		$clear_id = intval( $clear_object->secondary_item_id );
 	}

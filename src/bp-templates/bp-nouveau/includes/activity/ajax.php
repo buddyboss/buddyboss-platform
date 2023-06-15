@@ -452,7 +452,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 		wp_send_json_error( $response );
 	}
 
-	$activity = new BP_Activity_Activity( $comment_id );
+	$activity = BP_Activity_Activity::get_single_comment( $comment_id );
 
 	// Load the new activity item into the $activities_template global.
 	bb_has_activities_comments(
@@ -478,7 +478,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 		$parent_id = (int) $activities_template->activities[0]->secondary_item_id;
 		while ( $parent_id !== (int) $activities_template->activities[0]->item_id ) {
 			$depth++;
-			$p_obj     = new BP_Activity_Activity( $parent_id );
+			$p_obj     = BP_Activity_Activity::get_single_comment( $parent_id );
 			$parent_id = (int) $p_obj->secondary_item_id;
 		}
 		$activities_template->activity->current_comment->depth = $depth;

@@ -51,6 +51,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 
 		add_filter( 'bp_activity_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_activity_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+		add_filter( 'bb_activity_get_where_conditions', array( $this, 'update_where_sql_comment' ), 10, 2 );
 
 		add_filter( 'bp_activity_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_activity_search_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
@@ -260,6 +261,31 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		 * @param array $class current class object.
 		 */
 		$where = apply_filters( 'bp_suspend_activity_get_where_conditions', $where, $this );
+
+		if ( ! empty( array_filter( $where ) ) ) {
+
+			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+		}
+
+		return $where_conditions;
+	}
+	public function update_where_sql_comment( $where_conditions, $args = array() ) {
+		if ( isset( $args['moderation_query'] ) && false === $args['moderation_query'] ) {
+			return $where_conditions;
+		}
+
+		$where                  = array();
+		$where['suspend_where'] = $this->exclude_where_query();
+
+		/**
+		 * Filters the hidden activity Where SQL statement.
+		 *
+		 * @since BuddyBoss 1.5.6
+		 *
+		 * @param array $where Query to hide suspended user's activity.
+		 * @param array $class current class object.
+		 */
+		$where = apply_filters( 'bp_suspend_activity_get_where_conditions_comment', $where, $this );
 
 		if ( ! empty( array_filter( $where ) ) ) {
 

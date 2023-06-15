@@ -189,10 +189,6 @@ class BP_Activity_Activity {
 			$bp  = buddypress();
 			$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->activity->table_name} WHERE id = %d", $this->id ) );
 
-			if ( ! $row ) {
-				$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->activity->table_name_comment} WHERE id = %d", $this->id ) );
-			}
-
 			wp_cache_set( $this->id, $row, 'bp_activity' );
 		}
 
@@ -270,6 +266,77 @@ class BP_Activity_Activity {
 		} else {
 			$this->action = '';
 		}
+	}
+	public static function get_single_comment( $id = false ) {
+		global $wpdb;
+
+		$row = wp_cache_get( $id, 'bp_activity' );
+
+		if ( false === $row || empty( $row ) ) {
+			$bp  = buddypress();
+			$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->activity->table_name_comment} WHERE id = %d", $id ) );
+
+			wp_cache_set( $id, $row, 'bp_activity' );
+		}
+
+		if ( empty( $row ) ) {
+			return;
+		}
+
+		if ( ! property_exists( $row, 'item_id' ) ) {
+			$row->item_id = $row->activity_id;
+		}
+
+		if ( ! property_exists( $row, 'secondary_item_id' ) ) {
+			$row->secondary_item_id = $row->comment_parent;
+		}
+
+		if ( ! property_exists( $row, 'primary_link' ) ) {
+			$row->primary_link = '';
+		}
+
+		if ( !property_exists( $row, 'component' ) ) {
+			$row->component = 'activity';
+		}
+
+		if ( ! property_exists( $row, 'action' ) ) {
+			$row->action = '';
+		}
+
+		if ( ! property_exists( $row, 'type' ) ) {
+			$row->type = 'activity_comment';
+		}
+
+		/**
+		 * Pre validate the activity before fetch.
+		 *
+		 * @since BuddyBoss 1.5.6
+		 *
+		 * @param boolean $validate Whether to check the activity is valid or not.
+		 * @param object  $row      Activity object.
+		 */
+		$validate = apply_filters( 'bp_activity_activity_pre_validate', true, $row );
+
+		if ( empty( $validate ) ) {
+			return;
+		}
+
+		// Generate dynamic 'action' when possible.
+		$action = bp_activity_generate_action_string( $row );
+		if ( false !== $action ) {
+			$row->action = $action;
+
+			// If no callback is available, use the literal string from
+			// the database row.
+		} elseif ( ! empty( $row->action ) ) {
+			$row->action = $row->action;
+
+			// Provide a fallback to avoid PHP notices.
+		} else {
+			$row->action = '';
+		}
+
+		return $row;
 	}
 
 	/**
@@ -2463,7 +2530,7 @@ class BP_Activity_Activity {
 		 * @param string $from_sql         Current FROM MySQL statement at point of execution.
 		 * @param string $join_sql         Current INNER JOIN MySQL statement at point of execution.
 		 */
-		$where_conditions = apply_filters( 'bp_activity_get_where_conditions', $where_conditions, $r, $select_sql, $from_sql, $join_sql );
+		$where_conditions = apply_filters( 'bb_activity_get_where_conditions', $where_conditions, $r, $select_sql, $from_sql, $join_sql );
 
 		// Join the where conditions together.
 		$where_sql = 'WHERE ' . join( ' AND ', $where_conditions );
