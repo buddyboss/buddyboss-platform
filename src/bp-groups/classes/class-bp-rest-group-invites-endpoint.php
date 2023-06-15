@@ -138,6 +138,8 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 	 * @apiParam {String} [user_id] Return only invitations extended to this user.
 	 * @apiParam {Number} [inviter_id] Return only invitations extended by this user.
 	 * @apiParam {String=draft,sent,all} [invite_sent=sent] Limit result set to invites that have been sent, not sent, or include all.
+	 * @apiParam {String=id,include} [orderby=id] Order invites by which attribute.
+	 * @apiParam {String=asc,desc} [sort_order=desc] Order sort attribute ascending or descending.
 	 */
 	public function get_items( $request ) {
 		$args = array(
@@ -146,6 +148,8 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			'invite_sent' => $request['invite_sent'],
 			'per_page'    => $request['per_page'],
 			'page'        => $request['page'],
+			'order_by'    => ( ! empty( $request['orderby'] ) ? $request['orderby'] : '' ),
+			'sort_order'  => ( ! empty( $request['order'] ) ? $request['order'] : '' ),
 		);
 
 		/**
@@ -160,6 +164,16 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		// If the query is not restricted by group, user or inviter, limit it to the current user, if not an admin.
 		if ( ! $args['item_id'] && ! $args['user_id'] && ! $args['inviter_id'] && ! bp_current_user_can( 'bp_moderate' ) ) {
 			$args['user_id'] = bp_loggedin_user_id();
+		}
+
+		if ( ! empty( $request['include'] ) ) {
+			$args['id'] = $request['include'];
+			if (
+				! empty( $args['order_by'] )
+				&& 'include' === $args['order_by']
+			) {
+				$args['order_by'] = 'in';
+			}
 		}
 
 		/**
@@ -968,6 +982,10 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 				'href'       => rest_url( bp_rest_get_user_url( $invite->inviter_id ) ),
 				'embeddable' => true,
 			),
+			'group'      => array(
+				'href'       => rest_url( $this->namespace . '/' . buddypress()->groups->id . '/' . $invite->item_id ),
+				'embeddable' => true,
+			),
 		);
 
 		/**
@@ -1187,6 +1205,25 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			'sanitize_callback' => 'sanitize_text_field',
 			'validate_callback' => 'rest_validate_request_arg',
 			'enum'              => array( 'draft', 'sent', 'all' ),
+		);
+
+		$params['order_by'] = array(
+			'description'       => __( 'Name of the field to order according to.', 'buddyboss' ),
+			'default'           => '',
+			'type'              => 'string',
+			'enum'              => array(
+				'id',
+				'include',
+			),
+			'sanitize_callback' => 'sanitize_key',
+		);
+
+		$params['sort_order'] = array(
+			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss' ),
+			'default'           => 'asc',
+			'type'              => 'string',
+			'enum'              => array( 'asc', 'desc' ),
+			'sanitize_callback' => 'sanitize_key',
 		);
 
 		/**

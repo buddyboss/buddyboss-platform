@@ -1,0 +1,78 @@
+// Emojione Area Filter Icons
+
+.emojionearea {
+
+	.emojionearea-picker {
+
+		.emojionearea-filters {
+
+			.emojionearea-filter {
+
+				img {
+					display: none;
+				}
+
+				&::before {
+					font-family: bb-icons;
+					font-style: normal;
+					speak: never;
+					display: inline-block;
+					text-decoration: inherit;
+					width: 1em;
+					text-align: center;
+					font-variant: normal;
+					text-transform: none;
+					line-height: 24px;
+					-webkit-font-smoothing: antialiased;
+					-moz-osx-font-smoothing: grayscale;
+					font-weight: 400;
+					font-size: 20px;
+				}
+
+				&.active::before {
+					font-weight: 300;
+				}
+
+				&.emojionearea-filter-recent::before {
+					content: "\e884";
+				}
+
+				&.emojionearea-filter-smileys_people::before {
+					content: "\ee5f";
+				}
+
+				&.emojionearea-filter-animals_nature::before {
+					content: "\eea5";
+				}
+
+				&.emojionearea-filter-food_drink::before {
+					content: "\eef6";
+				}
+
+				&.emojionearea-filter-activity::before {
+					content: "\e801";
+				}
+
+				&.emojionearea-filter-travel_places::before {
+					content: "\e806";
+				}
+
+				&.emojionearea-filter-objects::before {
+					content: "\ee05";
+				}
+
+				&.emojionearea-filter-symbols::before {
+					content: "\eeb2";
+				}
+
+				&.emojionearea-filter-flags::before {
+					content: "\ee9c";
+				}
+
+			}
+
+		}
+
+	}
+
+}

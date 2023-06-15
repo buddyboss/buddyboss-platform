@@ -1,3 +1,14 @@
+<?php
+/**
+ * The template for displaying activity edit postin
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bp-activity-edit-postin.php.
+ *
+ * @since   1.0.0
+ * @version 1.0.0
+ */
+
+?>
 <script type="text/html" id="tmpl-activity-edit-postin">
 	<div id="whats-new-post-in-box">
 		<select disabled id="whats-new-post-in">

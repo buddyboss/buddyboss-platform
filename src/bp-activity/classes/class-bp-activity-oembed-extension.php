@@ -318,7 +318,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 						$count,
 						'buddyboss'
 					),
-					number_format_i18n( $count )
+					bp_core_number_format( $count )
 				);
 				?>
 			</a>

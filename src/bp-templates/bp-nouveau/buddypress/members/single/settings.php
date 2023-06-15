@@ -1,8 +1,11 @@
 <?php
 /**
- * BuddyBoss - Users Settings
+ * The template for users profile
  *
- * @version 3.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/settings.php.
+ *
+ * @since   BuddyPress 1.0.0
+ * @version 1.0.0
  */
 
 ?>
@@ -16,7 +19,11 @@ endif;
 
 switch ( bp_current_action() ) :
 	case 'notifications':
-		bp_get_template_part( 'members/single/settings/notifications' );
+		if ( bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {
+			bp_get_template_part( 'members/single/settings/subscriptions' );
+		} else {
+			bp_get_template_part( 'members/single/settings/notifications' );
+		}
 		break;
 	case 'capabilities':
 		bp_get_template_part( 'members/single/settings/capabilities' );

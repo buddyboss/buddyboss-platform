@@ -79,6 +79,14 @@ class BP_Video {
 	public $activity_id;
 
 	/**
+	 * Message ID of the video item.
+	 *
+	 * @since BuddyBoss 2.3.60
+	 * @var int
+	 */
+	var $message_id;
+
+	/**
 	 * Group ID of the video item.
 	 *
 	 * @since BuddyBoss 1.7.0
@@ -175,6 +183,7 @@ class BP_Video {
 		$this->title         = $row->title;
 		$this->album_id      = (int) $row->album_id;
 		$this->activity_id   = (int) $row->activity_id;
+		$this->message_id    = (int) $row->message_id;
 		$this->group_id      = (int) $row->group_id;
 		$this->privacy       = $row->privacy;
 		$this->menu_order    = (int) $row->menu_order;
@@ -201,6 +210,7 @@ class BP_Video {
 		$this->title         = apply_filters_ref_array( 'bp_video_title_before_save', array( $this->title, &$this ) );
 		$this->album_id      = apply_filters_ref_array( 'bp_video_album_id_before_save', array( $this->album_id, &$this ) );
 		$this->activity_id   = apply_filters_ref_array( 'bp_video_activity_id_before_save', array( $this->activity_id, &$this ) );
+		$this->message_id    = apply_filters_ref_array( 'bp_video_message_id_before_save', array( $this->message_id, &$this ) );
 		$this->group_id      = apply_filters_ref_array( 'bp_video_group_id_before_save', array( $this->group_id, &$this ) );
 		$this->privacy       = apply_filters_ref_array( 'bp_video_privacy_before_save', array( $this->privacy, &$this ) );
 		$this->menu_order    = apply_filters_ref_array( 'bp_video_menu_order_before_save', array( $this->menu_order, &$this ) );
@@ -237,9 +247,9 @@ class BP_Video {
 
 		// If we have an existing ID, update the video item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->video->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->id ); //phpcs:ignore
+			$q = $wpdb->prepare( "UPDATE {$bp->video->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, message_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->id ); //phpcs:ignore
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->video->table_name} ( blog_id, attachment_id, user_id, title, album_id, activity_id, group_id, privacy, menu_order, date_created, type ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %s, %d, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, 'video' );  //phpcs:ignore
+			$q = $wpdb->prepare( "INSERT INTO {$bp->video->table_name} ( blog_id, attachment_id, user_id, title, album_id, activity_id, message_id, group_id, privacy, menu_order, date_created, type ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %d, %s, %d, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, 'video' );  //phpcs:ignore
 		}
 
 		if ( false === $wpdb->query( $q ) ) { //phpcs:ignore
@@ -294,7 +304,7 @@ class BP_Video {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args(
+		$r  = bp_parse_args(
 			$args,
 			array(
 				'scope'        => '',              // Scope - Groups, friends etc.
@@ -373,11 +383,20 @@ class BP_Video {
 			case 'menu_order':
 				break;
 
+			case 'in':
+				$r['order_by'] = 'in';
+				break;
+
 			default:
 				$r['order_by'] = 'date_created';
 				break;
 		}
 		$order_by = 'm.' . $r['order_by'];
+		// Support order by fields for generally.
+		if ( ! empty( $r['in'] ) && 'in' === $r['order_by'] ) {
+			$order_by = 'FIELD(m.id, ' . implode( ',', wp_parse_id_list( $r['in'] ) ) . ')';
+			$sort     = '';
+		}
 
 		// Exclude specified items.
 		if ( ! empty( $r['exclude'] ) ) {
@@ -411,7 +430,7 @@ class BP_Video {
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions['user'] = "m.group_id = {$r['group_id']}";
+			$where_conditions['group'] = "m.group_id = {$r['group_id']}";
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
@@ -601,6 +620,7 @@ class BP_Video {
 				$video->attachment_id = (int) $video->attachment_id;
 				$video->album_id      = (int) $video->album_id;
 				$video->activity_id   = (int) $video->activity_id;
+				$video->message_id    = (int) $video->message_id;
 				$video->group_id      = (int) $video->group_id;
 				$video->menu_order    = (int) $video->menu_order;
 			}
@@ -689,27 +709,6 @@ class BP_Video {
 			$video->visibility = $visibility;
 			$video->video_link = bb_video_get_symlink( $video );
 			$videos[]          = $video;
-		}
-
-		// Then fetch user data.
-		$user_query = new BP_User_Query(
-			array(
-				'user_ids'        => wp_list_pluck( $videos, 'user_id' ),
-				'populate_extras' => false,
-			)
-		);
-
-		// Associated located user data with video items.
-		foreach ( $videos as $a_index => $a_item ) {
-			$a_user_id = intval( $a_item->user_id );
-			$a_user    = isset( $user_query->results[ $a_user_id ] ) ? $user_query->results[ $a_user_id ] : '';
-
-			if ( ! empty( $a_user ) ) {
-				$videos[ $a_index ]->user_email    = $a_user->user_email;
-				$videos[ $a_index ]->user_nicename = $a_user->user_nicename;
-				$videos[ $a_index ]->user_login    = $a_user->user_login;
-				$videos[ $a_index ]->display_name  = $a_user->display_name;
-			}
 		}
 
 		return $videos;
@@ -949,7 +948,7 @@ class BP_Video {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args(
+		$r  = bp_parse_args(
 			$args,
 			array(
 				'id'            => false,
@@ -1142,12 +1141,27 @@ class BP_Video {
 
 						// Deleting an activity.
 					} else {
-						if ( 'activity' !== $from && bp_activity_delete(
-							array(
-								'id'      => $activity->id,
-								'user_id' => $activity->user_id,
+						$activity_delete  = false;
+						$activity_content = ! empty( $activity->content ) ? wp_strip_all_tags( $activity->content, true ) : '';
+						if (
+							(
+								'activity' !== $from && empty( $activity_content )
+							) ||
+							(
+								'activity' === $from && ! empty( $activity->secondary_item_id )
 							)
-						) ) {
+						) {
+							$activity_delete = true;
+						}
+						if (
+							true === $activity_delete &&
+							bp_activity_delete(
+								array(
+									'id'      => $activity->id,
+									'user_id' => $activity->user_id,
+								)
+							)
+						) {
 							/** This action is documented in bp-activity/bp-activity-actions.php */
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 						}
@@ -1283,7 +1297,12 @@ class BP_Video {
 			return false;
 		}
 
-		$activity_video_id = false;
+		$cache_key         = 'bp_video_activity_id_' . $activity_id;
+		$activity_video_id = wp_cache_get( $cache_key, 'bp_video' );
+
+		if ( ! empty( $activity_video_id ) ) {
+			return $activity_video_id;
+		}
 
 		// Check activity component enabled or not.
 		if ( bp_is_active( 'activity' ) ) {
@@ -1300,6 +1319,8 @@ class BP_Video {
 				}
 			}
 		}
+
+		wp_cache_set( $cache_key, $activity_video_id, 'bp_video' );
 
 		return $activity_video_id;
 	}
@@ -1319,7 +1340,17 @@ class BP_Video {
 			return false;
 		}
 
-		return (int) $wpdb->get_var( "SELECT DISTINCT m.attachment_id FROM {$bp->video->table_name} m WHERE m.activity_id = {$activity_id}" ); // phpcs:ignore
+		$cache_key           = 'bp_video_attachment_id_' . $activity_id;
+		$video_attachment_id = wp_cache_get( $cache_key, 'bp_video' );
+
+		if ( ! empty( $video_attachment_id ) ) {
+			return $video_attachment_id;
+		}
+
+		$video_attachment_id = (int) $wpdb->get_var( "SELECT DISTINCT attachment_id FROM {$bp->video->table_name} WHERE activity_id = {$activity_id}" ); // phpcs:ignore
+		wp_cache_set( $cache_key, $video_attachment_id, 'bp_video' );
+
+		return $video_attachment_id;
 	}
 
 }

@@ -1,9 +1,11 @@
 <?php
 /**
- * BuddyBoss - Members Activate
+ * The template for members activate
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/activate.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
 ?>
 
@@ -25,7 +27,7 @@
 
 			<?php
 				printf(
-					'<p><a href="%1$s">%2$s</a></p>',
+					'<p><a class="button button-primary" href="%1$s">%2$s</a></p>',
 					esc_url( wp_login_url( bp_get_root_domain() ) ),
 					esc_html__( 'Log In', 'buddyboss' )
 				);

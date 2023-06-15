@@ -76,6 +76,7 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 			'max'             => $settings['max_members'],
 			'populate_extras' => true,
 			'search_terms'    => false,
+			'exclude'         => ( function_exists( 'bp_get_users_of_removed_member_types' ) && ! empty( bp_get_users_of_removed_member_types() ) ) ? bp_get_users_of_removed_member_types() : '',
 		);
 
 		// Back up global.
@@ -84,29 +85,33 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 		?>
 		<div id="boss_recently_active_widget_heartbeat" data-max="<?php echo $settings['max_members']; ?>">
 			<?php if ( bp_has_members( $members_args ) ) : ?>
-	
+
 				<div class="avatar-block">
-	
+
 					<?php
 					while ( bp_members() ) :
 						bp_the_member();
 						?>
-	
+
 						<div class="item-avatar">
-							<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?></a>
+							<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>"><?php bp_member_avatar(); ?></a>
 						</div>
-	
+
 					<?php endwhile; ?>
-	
+
 				</div>
-				<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
-	
+				<div class="more-block <?php echo ( $members_template->total_member_count > $settings['max_members'] ) ? '' : esc_attr( 'bp-hide' ); ?>">
+					<a href="<?php esc_url( bp_members_directory_permalink() ); ?>" class="count-more">
+						<?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i>
+					</a>
+				</div>
+
 			<?php else : ?>
-	
+
 				<div class="widget-error">
 					<?php esc_html_e( 'There are no recently active members', 'buddyboss' ); ?>
 				</div>
-	
+
 			<?php endif; ?>
 		</div>
 		<?php
@@ -159,7 +164,7 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 		<p>
 			<label for="<?php echo $this->get_field_id( 'max_members' ); ?>">
 				<?php esc_html_e( 'Max members to show:', 'buddyboss' ); ?>
-				<input class="widefat" id="<?php echo $this->get_field_id( 'max_members' ); ?>" name="<?php echo $this->get_field_name( 'max_members' ); ?>" type="text" value="<?php echo esc_attr( $max_members ); ?>" style="width: 30%" />
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_members' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_members' ) ); ?>" type="number" value="<?php echo esc_attr( $max_members ); ?>" style="width: 30%" />
 			</label>
 		</p>
 
@@ -227,13 +232,13 @@ function buddyboss_theme_recently_active_widget_heartbeat( $response = array(), 
 				?>
 
 				<div class="item-avatar">
-					<a href="<?php bp_member_permalink(); ?>" title="<?php bp_member_name(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?></a>
+					<a href="<?php bp_member_permalink(); ?>" title="<?php echo esc_attr( bp_get_member_name() ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>"><?php bp_member_avatar(); ?></a>
 				</div>
 
 			<?php endwhile; ?>
 
 		</div>
-		<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
+		<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
 
 	<?php else : ?>
 

@@ -1,13 +1,14 @@
 <?php
-
 /**
  * New/Edit Forum Form Attachments
  *
  * @package BuddyBoss\Theme
  */
 
-$group_id = 0;
-$forum_id = 0;
+$group_id = apply_filters( 'bb_forum_attachment_group_id', 0 );
+$forum_id = apply_filters( 'bb_forum_attachment_forum_id', 0 );
+$topic_id = apply_filters( 'bb_forum_attachment_topic_id', 0 );
+
 if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 	$group_id = bp_get_current_group_id();
 }
@@ -28,17 +29,22 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 <div id="whats-new-attachments">
 
 	<?php if ( bp_is_active( 'media' ) && bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), $forum_id, 0 ) ) : ?>
-		<div class="dropzone closed" id="forums-post-media-uploader" data-key="<?php echo esc_attr( bp_unique_id( 'forums_media_uploader_' ) ); ?>"></div>
+		<div class="dropzone closed media-dropzone" id="forums-post-media-uploader" data-key="<?php echo esc_attr( bp_unique_id( 'forums_media_uploader_' ) ); ?>"></div>
 		<input name="bbp_media" id="bbp_media" type="hidden" value=""/>
 		<div class="forum-post-media-template" style="display:none;">
-			<div class="dz-preview dz-file-preview">
+			<div class="dz-preview">
 				<div class="dz-image">
 					<img data-dz-thumbnail />
 				</div>
+				<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
+				<div class="dz-details">
+					<div class="dz-filename"><span data-dz-name></span></div>
+					<div class="dz-size" data-dz-size></div>
+				</div>
 				<div class="dz-progress-ring-wrap">
-					<i class="bb-icon bb-icon-camera-fill"></i>
-					<svg class="dz-progress-ring" width="62" height="62">
-						<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29.5" cx="31" cy="31" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
+					<i class="bb-icon-f bb-icon-camera"></i>
+					<svg class="dz-progress-ring" width="54" height="54">
+						<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 					</svg>
 				</div>
 				<div class="dz-error-message"><span data-dz-errormessage></span></div>
@@ -63,28 +69,30 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 				<img src="" alt="">
 			</div>
 			<div class="gif-image-remove gif-image-overlay">
-				<i class="bb-icon-close"></i>
+				<i class="bb-icon-l bb-icon-times"></i>
 			</div>
 		</div>
 		<input name="bbp_media_gif" id="bbp_media_gif" type="hidden" value=""/>
 		<?php
 	endif;
 
-	if ( bp_is_active( 'media' ) && ! empty( $extensions ) && bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), $forum_id, 0 ) ) :
+	if ( bp_is_active( 'media' ) && ! empty( $extensions ) && bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
-		<div class="dropzone closed" id="forums-post-document-uploader" data-key="<?php echo esc_attr( wp_unique_id( 'forums_document_uploader_' ) ); ?>"></div>
+		<div class="dropzone closed document-dropzone" id="forums-post-document-uploader" data-key="<?php echo esc_attr( wp_unique_id( 'forums_document_uploader_' ) ); ?>"></div>
 		<input name="bbp_document" id="bbp_document" type="hidden" value=""/>
 		<div class="forum-post-document-template" style="display:none;">
 			<div class="dz-preview dz-file-preview">
+				<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
 				<div class="dz-details">
+					<div class="dz-icon"><span class="bb-icon-l bb-icon-file"></span></div>
 					<div class="dz-filename"><span data-dz-name></span></div>
 					<div class="dz-size" data-dz-size></div>
 				</div>
 				<div class="dz-progress-ring-wrap">
-					<i class="bb-icon bb-icon-attach-fill"></i>
-					<svg class="dz-progress-ring" width="62" height="62">
-						<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29.5" cx="31" cy="31" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
-					</svg>
+					<i class="bb-icon-f bb-icon-file-attach"></i>
+					<svg class="dz-progress-ring" width="54" height="54">
+					<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
+				</svg>
 				</div>
 				<div class="dz-error-message"><span data-dz-errormessage></span></div>
 				<div class="dz-error-mark">
@@ -101,17 +109,18 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 	<?php endif; ?>
 
 	<?php if ( bp_is_active( 'media' ) && bb_user_has_access_upload_video( $group_id, bp_loggedin_user_id(), $forum_id, 0 ) ) : ?>
-		<div class="dropzone closed" id="forums-post-video-uploader" data-key="<?php echo esc_attr( bp_unique_id( 'forums_video_uploader_' ) ); ?>"></div>
+		<div class="dropzone closed video-dropzone" id="forums-post-video-uploader" data-key="<?php echo esc_attr( bp_unique_id( 'forums_video_uploader_' ) ); ?>"></div>
 		<input name="bbp_video" id="bbp_video" type="hidden" value=""/>
 		<div class="forum-post-video-template" style="display:none;">
 		<div class="dz-preview dz-file-preview well" id="dz-preview-template">
 			<div class="dz-details">
 				<div class="dz-filename"><span data-dz-name></span></div>
 			</div>
+			<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
 			<div class="dz-progress-ring-wrap">
-				<i class="bb-icon bb-icon-video-fill"></i>
-				<svg class="dz-progress-ring" width="62" height="62">
-					<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29" cx="31" cy="31" stroke-dasharray="182.212, 182.212" stroke-dashoffset="182" />
+				<i class="bb-icon-f bb-icon-video"></i>
+				<svg class="dz-progress-ring" width="54" height="54">
+					<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 				</svg>
 			</div>
 			<!-- <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div> -->
@@ -142,10 +151,10 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 
 <div id="whats-new-toolbar" class="<?php echo ( ! bp_is_active( 'media' ) ) ? esc_attr( 'media-off' ) : ''; ?> ">
 
-	<?php if ( bp_is_active( 'media' ) ) : ?>
+	<?php if ( bp_is_active( 'media' ) && bbp_use_wp_editor() ) : ?>
 		<div class="post-elements-buttons-item show-toolbar" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-hide="<?php esc_html_e( 'Hide formatting', 'buddyboss' ); ?>" data-bp-tooltip-show="<?php esc_html_e( 'Show formatting', 'buddyboss' ); ?>">
 			<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip">
-				<span class="bb-icon bb-icon-text-format"></span>
+				<span class="bb-icon-l bb-icon-font"></span>
 			</a>
 		</div>
 		<?php
@@ -154,8 +163,8 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 	if ( bp_is_active( 'media' ) && bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
 		<div class="post-elements-buttons-item post-media media-support">
-			<a href="#" id="forums-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach a photo', 'buddyboss' ); ?>">
-				<i class="bb-icon bb-icon-camera-small"></i>
+			<a href="#" id="forums-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>">
+				<i class="bb-icon-l bb-icon-camera"></i>
 			</a>
 		</div>
 
@@ -165,8 +174,8 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 	if ( bp_is_active( 'media' ) && ! empty( $video_extensions ) && bb_user_has_access_upload_video( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
 		<div class="post-elements-buttons-item post-video video-support">
-			<a href="#" id="forums-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach a video', 'buddyboss' ); ?>">
-				<i class="bb-icon bb-icon-video-alt"></i>
+			<a href="#" id="forums-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>">
+				<i class="bb-icon-l bb-icon-video"></i>
 			</a>
 		</div>
 		<?php
@@ -176,8 +185,8 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 		?>
 
 		<div class="post-elements-buttons-item post-media document-support">
-			<a href="#" id="forums-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach a document', 'buddyboss' ); ?>">
-				<i class="bb-icon bb-icon-attach"></i>
+			<a href="#" id="forums-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
+				<i class="bb-icon-l bb-icon-attach"></i>
 			</a>
 		</div>
 
@@ -188,18 +197,27 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 		?>
 		<div class="post-elements-buttons-item post-gif">
 			<div class="gif-media-search">
-				<a href="#" id="forums-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Post a GIF', 'buddyboss' ); ?>">
-					<i class="bb-icon bb-icon-gif"></i>
+				<a href="#" id="forums-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>">
+					<i class="bb-icon-l bb-icon-gif"></i>
 				</a>
 				<div class="gif-media-search-dropdown">
 					<div class="gif-search-content">
 						<div class="gif-search-query">
-							<input type="search" placeholder="<?php esc_html_e( 'Search GIPHY', 'buddyboss' ); ?>" class="search-query-input" />
+							<input type="search" placeholder="<?php esc_html_e( 'Search GIPHY...', 'buddyboss' ); ?>" class="search-query-input" />
 							<span class="search-icon"></span>
 						</div>
 						<div class="gif-search-results" id="gif-search-results">
 							<ul class="gif-search-results-list" >
 							</ul>
+							<div class="gif-alert gif-no-results">
+								<i class="bb-icon-l bb-icon-image-slash"></i>
+								<p><?php esc_html_e( 'No results found', 'buddyboss' ); ?></p>
+							</div>
+
+							<div class="gif-alert gif-no-connection">
+								<i class="bb-icon-l bb-icon-cloud-slash"></i>
+								<p><?php esc_html_e( 'Could not connect to GIPHY', 'buddyboss' ); ?></p>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -210,7 +228,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 
 	if ( bp_is_active( 'media' ) && bb_user_has_access_upload_emoji( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
-		<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Insert an emoji', 'buddyboss' ); ?>"></div>
+		<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss' ); ?>"></div>
 	<?php endif; ?>
 
 </div>

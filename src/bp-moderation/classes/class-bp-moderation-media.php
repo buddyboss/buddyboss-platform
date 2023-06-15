@@ -53,6 +53,9 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 			return;
 		}
 
+		// Update report button.
+		add_filter( "bp_moderation_{$this->item_type}_button_args", array( $this, 'update_button_args' ), 10, 2 );
+
 		// Validate item before proceed.
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
 
@@ -62,6 +65,16 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 
 		// Report popup content type.
 		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
+
+		// Prepare report button for media when activity moderation is disabled.
+		if ( bp_is_active( 'activity' ) && ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Activity::$moderation_type ) ) {
+			add_filter( 'bp_activity_get_report_link', array( $this, 'update_report_button_args' ), 10, 2 );
+		}
+
+		// Prepare report button for media when activity comment moderation is disabled.
+		if ( bp_is_active( 'activity' ) && ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Activity_Comment::$moderation_type ) ) {
+			add_filter( 'bp_activity_comment_get_report_link', array( $this, 'update_report_button_args' ), 10, 2 );
+		}
 	}
 
 	/**
@@ -126,7 +139,33 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 			$where['moderation_where'] = $sql;
 		}
 
+		if ( isset( $where['moderation_where'] ) && ! empty( $where['moderation_where'] ) ) {
+			$where['moderation_where'] .= ' AND ';
+		}
+		$where['moderation_where'] .= '( m.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) OR ( m.privacy = "comment" OR m.privacy = "forums" ) )';
+
 		return $where;
+	}
+
+	/**
+	 * Function to modify the button args
+	 *
+	 * @since BuddyBoss 1.7.7
+	 *
+	 * @param array $args    Button args.
+	 * @param int   $item_id Item id.
+	 *
+	 * @return array
+	 */
+	public function update_button_args( $args, $item_id ) {
+		$media = new BP_Media( $item_id );
+
+		// Remove report button if forum is group forums.
+		if ( ! empty( $media->id ) && ! empty( $media->privacy ) && in_array( $media->privacy, array( 'comment', 'forums' ), true ) ) {
+			return array();
+		}
+
+		return $args;
 	}
 
 	/**
@@ -179,5 +218,84 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	 */
 	public function report_content_type( $content_type, $item_id ) {
 		return esc_html__( 'Photo', 'buddyboss' );
+	}
+
+	/**
+	 * Function to update activity report button arguments.
+	 *
+	 * @since BuddyBoss 1.7.7
+	 *
+	 * @param array $report_button Activity report button.
+	 * @param array $args          Arguments.
+	 *
+	 * @return array|string
+	 */
+	public function update_report_button_args( $report_button, $args ) {
+
+		$activity = new BP_Activity_Activity( $args['button_attr']['data-bp-content-id'] );
+
+		if ( empty( $activity->id ) ) {
+			return $report_button;
+		}
+
+		$media_id  = bp_activity_get_meta( $activity->id, 'bp_media_id', true );
+		$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
+
+		if (
+			(
+				! empty( $media_id ) ||
+				! empty( $media_ids )
+			) &&
+			! in_array(
+				$activity->type,
+				array(
+					'bbp_forum_create',
+					'bbp_topic_create',
+					'bbp_reply_create',
+				),
+				true
+			)
+		) {
+			$explode_medias = explode( ',', $media_ids );
+			if ( ! empty( $media_id ) ) {
+				$args['button_attr']['data-bp-content-id']   = $media_id;
+				$args['button_attr']['data-bp-content-type'] = self::$moderation_type;
+			}
+			if ( 1 === count( $explode_medias ) && ! empty( current( $explode_medias ) ) ) {
+				$args['button_attr']['data-bp-content-id']   = current( $explode_medias );
+				$args['button_attr']['data-bp-content-type'] = self::$moderation_type;
+			}
+			$report_button = bp_moderation_get_report_button( $args, false );
+		}
+
+		return $report_button;
+	}
+
+	/**
+	 * Prepare Where sql for exclude Blocked items.
+	 *
+	 * @since BuddyBoss 2.3.50
+	 *
+	 * @param bool $blocked_user_query If true then blocked user query will fire.
+	 *
+	 * @return string|void
+	 */
+	protected function exclude_where_query( $blocked_user_query = true ) {
+		$where = '';
+
+		$where .= "( {$this->alias}.hide_parent = 0 OR {$this->alias}.hide_parent IS NULL ) AND
+		( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL )";
+
+		if ( true === $blocked_user_query ) {
+			$blocked_query = $this->blocked_user_query();
+			if ( ! empty( $blocked_query ) ) {
+				if ( ! empty( $where ) ) {
+					$where .= ' AND ';
+				}
+				$where .= "( ( {$this->alias}.id NOT IN ( $blocked_query ) OR ( m.privacy = 'comment' OR m.privacy = 'forums' ) ) OR {$this->alias}.id IS NULL )";
+			}
+		}
+
+		return $where;
 	}
 }

@@ -22,6 +22,7 @@ defined( 'ABSPATH' ) || exit;
  *     @type string      $name                    Display name for the nav item.
  *     @type string      $slug                    Unique URL slug for the nav item.
  *     @type bool|string $item_css_id             Optional. 'id' attribute for the nav item. Default: the value of `$slug`.
+ *     @type bool|string $item_css_class          Optional. 'class' attribute for the nav item. Default: false.
  *     @type bool        $show_for_displayed_user Optional. Whether the nav item should be visible when viewing a
  *                                                member profile other than your own. Default: true.
  *     @type bool        $site_admin_only         Optional. Whether the nav item should be visible only to site admins
@@ -44,6 +45,7 @@ function bp_core_new_nav_item( $args, $component = 'members' ) {
 		'name'                    => false, // Display name for the nav item.
 		'slug'                    => false, // URL slug for the nav item.
 		'item_css_id'             => false, // The CSS ID to apply to the HTML of the nav item.
+		'item_css_class'          => false, // The CSS class to apply to the HTML of the nav item.
 		'show_for_displayed_user' => true,  // When viewing another user does this nav item show up?
 		'site_admin_only'         => false, // Can only site admins see this nav item?
 		'position'                => 99,    // Index of where this nav item should be positioned.
@@ -51,7 +53,7 @@ function bp_core_new_nav_item( $args, $component = 'members' ) {
 		'default_subnav_slug'     => false,  // The slug of the default subnav item to select when clicked.
 	);
 
-	$r = wp_parse_args( $args, $defaults );
+	$r = bp_parse_args( $args, $defaults );
 
 	// Validate nav link data.
 	$nav_item = bp_core_create_nav_link( $r, $component );
@@ -96,6 +98,7 @@ function bp_core_new_nav_item( $args, $component = 'members' ) {
  *     @type string      $name                    Display name for the nav item.
  *     @type string      $slug                    Unique URL slug for the nav item.
  *     @type bool|string $item_css_id             Optional. 'id' attribute for the nav item. Default: the value of `$slug`.
+ *     @type bool|string $item_css_class          Optional. 'class' attribute for the nav item. Default: false.
  *     @type bool        $show_for_displayed_user Optional. Whether the nav item should be visible when viewing a
  *                                                member profile other than your own. Default: true.
  *     @type bool        $site_admin_only         Optional. Whether the nav item should be visible only to site admins
@@ -116,6 +119,7 @@ function bp_core_create_nav_link( $args = '', $component = 'members' ) {
 		'name'                    => false, // Display name for the nav item.
 		'slug'                    => false, // URL slug for the nav item.
 		'item_css_id'             => false, // The CSS ID to apply to the HTML of the nav item.
+		'item_css_class'          => false, // The CSS class to apply to the HTML of the nav item.
 		'show_for_displayed_user' => true,  // When viewing another user does this nav item show up?
 		'site_admin_only'         => false, // Can only site admins see this nav item?
 		'position'                => 99,    // Index of where this nav item should be positioned.
@@ -123,7 +127,7 @@ function bp_core_create_nav_link( $args = '', $component = 'members' ) {
 		'default_subnav_slug'     => false,  // The slug of the default subnav item to select when clicked.
 	);
 
-	$r = wp_parse_args( $args, $defaults );
+	$r = bp_parse_args( $args, $defaults );
 
 	// If we don't have the required info we need, don't create this nav item.
 	if ( empty( $r['name'] ) || empty( $r['slug'] ) ) {
@@ -146,6 +150,7 @@ function bp_core_create_nav_link( $args = '', $component = 'members' ) {
 			'slug'                    => $r['slug'],
 			'link'                    => trailingslashit( bp_loggedin_user_domain() . $r['slug'] ),
 			'css_id'                  => $r['item_css_id'],
+			'css_class'               => $r['item_css_class'],
 			'show_for_displayed_user' => $r['show_for_displayed_user'],
 			'position'                => $r['position'],
 			'screen_function'         => &$r['screen_function'],
@@ -208,7 +213,7 @@ function bp_core_register_nav_screen_function( $args = '' ) {
 		'default_subnav_slug'     => false,  // The slug of the default subnav item to select when clicked.
 	);
 
-	$r = wp_parse_args( $args, $defaults );
+	$r = bp_parse_args( $args, $defaults );
 
 	// If we don't have the required info we need, don't register this screen function.
 	if ( empty( $r['slug'] ) ) {
@@ -305,7 +310,7 @@ function bp_core_new_nav_default( $args = '' ) {
 		'subnav_slug'     => false,  // The slug of the subnav item to select when clicked.
 	);
 
-	$r = wp_parse_args( $args, $defaults );
+	$r = bp_parse_args( $args, $defaults );
 
 	// This is specific to Members - it's not available in Groups.
 	$parent_nav = $bp->members->nav->get_primary( array( 'slug' => $r['parent_slug'] ), false );
@@ -485,7 +490,7 @@ function bp_core_new_subnav_item( $args, $component = null ) {
 function bp_core_create_subnav_link( $args = '', $component = 'members' ) {
 	$bp = buddypress();
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'name'              => false, // Display name for the nav item.
@@ -493,6 +498,7 @@ function bp_core_create_subnav_link( $args = '', $component = 'members' ) {
 			'parent_slug'       => false, // URL slug of the parent nav item.
 			'parent_url'        => false, // URL of the parent item.
 			'item_css_id'       => false, // The CSS ID to apply to the HTML of the nav item.
+			'item_css_class'    => false, // The CSS class to apply to the HTML of the nav item.
 			'user_has_access'   => true,  // Can the logged in user see this nav item?
 			'no_access_url'     => '',
 			'site_admin_only'   => false, // Can only site admins see this nav item?
@@ -538,6 +544,7 @@ function bp_core_create_subnav_link( $args = '', $component = 'members' ) {
 		'slug'              => $r['slug'],
 		'parent_slug'       => $r['parent_slug'],
 		'css_id'            => $r['item_css_id'],
+		'css_class'         => $r['item_css_class'],
 		'position'          => $r['position'],
 		'user_has_access'   => $r['user_has_access'],
 		'no_access_url'     => $r['no_access_url'],
@@ -585,7 +592,7 @@ function bp_core_create_subnav_link( $args = '', $component = 'members' ) {
 function bp_core_register_subnav_screen_function( $args = '', $component = 'members' ) {
 	$bp = buddypress();
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'slug'            => false, // URL slug for the screen.

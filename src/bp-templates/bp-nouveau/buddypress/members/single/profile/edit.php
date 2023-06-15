@@ -1,9 +1,11 @@
 <?php
 /**
- * BuddyBoss - Members Single Profile Edit
+ * The template for members single profile edit
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/profile/edit.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
 
 bp_nouveau_xprofile_hook( 'before', 'edit_content' ); ?>

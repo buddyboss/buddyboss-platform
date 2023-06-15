@@ -1,8 +1,11 @@
 <?php
 /**
- * BP Nouveau Component's grid filters template.
+ * The template for BP Nouveau Component's grid filters template
  *
- * @since BuddyBoss 1.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/common/filters/grid-filters.php.
+ *
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
  */
 
 global $post;
@@ -58,7 +61,7 @@ if ( 'list_grid' === $current_value ) {
 																				'buddyboss'
 																			);
 																			?>
-		"> <i class="bb-icon-grid-view-small" aria-hidden="true"></i> </a>
+		"> <i class="bb-icon-l bb-icon-grid-large" aria-hidden="true"></i> </a>
 
 	<a href="#" class="layout-view layout-list-view bp-tooltip <?php echo ( 'list' === $default_current_value ) ? 'active' : ''; ?>" data-view="list" data-bp-tooltip-pos="up" data-bp-tooltip="
 																		  <?php
@@ -67,7 +70,7 @@ if ( 'list_grid' === $current_value ) {
 																				'buddyboss'
 																			);
 																			?>
-		"> <i class="bb-icon-list-view-small" aria-hidden="true"></i> </a>
+		"> <i class="bb-icon-l bb-icon-bars" aria-hidden="true"></i> </a>
 	</div>
 	<?php
 }

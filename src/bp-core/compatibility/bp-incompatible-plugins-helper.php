@@ -1,6 +1,6 @@
 <?php
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -46,6 +46,15 @@ function bp_helper_plugins_loaded_callback() {
 	/**
 	 * Include plugin when plugin is activated
 	 *
+	 * Support Elementor
+	 */
+	if ( in_array( 'elementor/elementor.php', $bp_plugins ) ) {
+		require buddypress()->compatibility_dir . '/bp-elementor-plugin-helpers.php';
+	}
+
+	/**
+	 * Include plugin when plugin is activated
+	 *
 	 * Support Co-Authors Plus
 	 */
 	if ( in_array( 'co-authors-plus/co-authors-plus.php', $bp_plugins ) ) {
@@ -75,63 +84,19 @@ function bp_helper_plugins_loaded_callback() {
 	 * Support WPML Multilingual CMS
 	 */
 	if ( in_array( 'sitepress-multilingual-cms/sitepress.php', $bp_plugins ) ) {
+		require buddypress()->compatibility_dir . '/class-bb-wpml-helpers.php';
+	}
 
-		/**
-		 * Add fix for WPML redirect issue
-		 *
-		 * @since BuddyBoss 1.4.0
-		 *
-		 * @param array $q
-		 *
-		 * @return array
-		 */
-		function bp_core_fix_wpml_redirection( $q ) {
-			if (
-				! defined( 'DOING_AJAX' )
-				&& ! bp_is_blog_page()
-				&& (bool) $q->get( 'page_id' ) === false
-				&& (bool) $q->get( 'pagename' ) === true
-			) {
-				$bp_current_component = bp_current_component();
-				$bp_pages             = bp_core_get_directory_pages();
-
-				if ( 'photos' === $bp_current_component && isset( $bp_pages->media->id ) ) {
-					$q->set( 'page_id', $bp_pages->media->id );
-				} elseif ( 'forums' === $bp_current_component && isset( $bp_pages->members->id ) ) {
-					$q->set( 'page_id', $bp_pages->members->id );
-				} elseif ( 'groups' === $bp_current_component && isset( $bp_pages->groups->id ) ) {
-					$q->set( 'page_id', $bp_pages->groups->id );
-				} elseif ( 'documents' === $bp_current_component && isset( $bp_pages->document->id ) ) {
-					$q->set( 'page_id', $bp_pages->document->id );
-				} elseif ( 'videos' === $bp_current_component && isset( $bp_pages->video->id ) ) {
-					$q->set( 'page_id', $bp_pages->video->id );
-				} else {
-					$page_id = apply_filters( 'bpml_redirection_page_id', null, $bp_current_component, $bp_pages );
-					if ( $page_id ) {
-						$q->set( 'page_id', $page_id );
-					}
-				}
-			}
-
-			return $q;
-		}
-
-		add_action( 'parse_query', 'bp_core_fix_wpml_redirection', 5 );
-
-		/**
-		 * Fix for url with wpml
-		 *
-		 * @since BuddyBoss 1.2.6
-		 *
-		 * @param $url
-		 * @return string
-		 */
-		function bp_core_wpml_fix_get_root_domain( $url ) {
-			return untrailingslashit( $url );
-		}
-
-		add_filter( 'bp_core_get_root_domain', 'bp_core_wpml_fix_get_root_domain' );
-
+	/**
+	 * Fix email subject, content and link
+     *
+	 * @since BuddyBoss 1.5.4
+	 */
+	if ( in_array( 'wishlist-member/wpm.php', $bp_plugins ) ) {
+		global $WishListMemberInstance;
+		remove_filter( 'user_request_action_email_content', array( &$WishListMemberInstance, 'privacy_user_request_email' ), 10 );
+		remove_filter( 'user_request_action_email_subject', array( &$WishListMemberInstance, 'privacy_user_request_email_subject' ), 10 );
+		remove_filter( 'wp_privacy_personal_data_email_content', array( &$WishListMemberInstance, 'privacy_personal_data_email' ), 10 );
 	}
 
 	if ( in_array( 'instructor-role/instructor.php', $bp_plugins, true ) ) {
@@ -147,6 +112,7 @@ function bp_helper_plugins_loaded_callback() {
 
 			if ( is_array( $exclude_posts ) ) {
 				$exclude_posts[] = 'bp-group-type';
+				$exclude_posts[] = 'bp-email';
 			}
 
 			return $exclude_posts;
@@ -154,217 +120,167 @@ function bp_helper_plugins_loaded_callback() {
 
 		add_filter( 'wdmir_exclude_post_types', 'bp_core_instructor_role_post_exclude', 10, 1 );
 	}
+
+	if ( in_array( 'geodirectory/geodirectory.php', $bp_plugins, true ) ) {
+
+		/**
+		 * Function to deregister some scripts and styles from bp component pages
+		 *
+		 * @since 1.8.0
+		 *
+		 * @return void
+		 */
+		function bp_exclude_geodirectory_scripts() {
+			$bp_current_component = bp_current_component();
+
+			// deregister geodirectory select2 script and styles from all component pages
+			if ( $bp_current_component && 'listings' !== $bp_current_component ) {
+				add_action( 'wp_enqueue_scripts', 'bp_deregister_geodirectory_script_select2' );
+				add_action( 'wp_print_styles', 'bp_deregister_geodirectory_styles' );
+			}
+		}
+
+		add_action( 'bp_init', 'bp_exclude_geodirectory_scripts' );
+
+		/**
+		 * Deregister and dequeue select2 script from all component pages.
+		 *
+		 * @since 1.8.0
+		 *
+		 * @return void
+		 */
+		function bp_deregister_geodirectory_script_select2() {
+			wp_dequeue_script( 'select2' );
+			wp_deregister_script( 'select2' );
+			wp_dequeue_script( 'bootstrap-js-bundle' );
+			wp_deregister_script( 'bootstrap-js-bundle' );
+		}
+
+		/**
+		 * Deregister and dequeue styles from all component pages.
+		 *
+		 * @since 1.8.0
+		 *
+		 * @return void
+		 */
+		function bp_deregister_geodirectory_styles() {
+			wp_dequeue_style( 'ayecode-ui' );
+			wp_deregister_style( 'ayecode-ui' );
+		}
+	}
+
+	/**
+	 * Include filters when Woocommerce plugin is activated
+	 *
+	 * Support Woocommerce
+	 */
+	if ( class_exists( 'WooCommerce' ) ) {
+		require buddypress()->compatibility_dir . '/class-bb-woocommerce-helpers.php';
+	}
+
+	/**
+	 * Include filters when The Events Calendar plugin is activated.
+	 *
+	 * Support The Events Calendar.
+	 */
+	if ( in_array( 'the-events-calendar/the-events-calendar.php', $bp_plugins, true ) ) {
+		require buddypress()->compatibility_dir . '/class-bb-the-events-calendar-helpers.php';
+	}
+
+	/**
+	 * Include Query Monitor compatibility.
+	 */
+	if ( class_exists( 'QueryMonitor' ) ) {
+		require buddypress()->compatibility_dir . '/class-bb-qm-helpers.php';
+	}
+
+	/**
+	 * Include filters when tutor-pro plugin is activated.
+	 */
+	if ( function_exists( 'tutor_pro' ) ) {
+		require buddypress()->compatibility_dir . '/class-bb-tutor-pro-helpers.php';
+	}
+
+	/**
+	 * Include filters to support network search when Paid Membership Pro plugin is activated.
+	 */
+	if ( defined( 'PMPRO_VERSION' ) ) {
+		require buddypress()->compatibility_dir . '/class-bb-pmpro-helpers.php';
+	}
+
+	/**
+	 * Include filters to support network search when Divi Builder plugin is activated.
+	 */
+	if ( class_exists( 'ET_Builder_Plugin' ) ) {
+		add_filter(
+			'et_builder_load_requests',
+			function( $builder_load_requests ) {
+				$builder_load_requests['action'][] = 'bp_search_ajax';
+				return $builder_load_requests;
+			}
+		);
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
 
 /**
- * Function to set the false to use the default media symlink instead use the offload media URL of media.
- *
- * @param bool   $can           default true.
- * @param int    $id            media/document/video id.
- * @param int    $attachment_id attachment id.
- * @param string $size          preview size.
- *
- * @return bool true if the offload media used.
- *
- * @since BuddyBoss 1.7.0
+ * Helper functions for the offload media compatibility.
  */
-function bb_offload_do_symlink( $can, $id, $attachment_id, $size ) {
+function bb_wp_offload_media_compatibility_helper() {
+
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
-			$can = false;
-		}
+		require buddypress()->compatibility_dir . '/bp-wp-offload-media-helpers.php';
 	}
-	return $can;
+
 }
-add_filter( 'bb_media_do_symlink', 'bb_offload_do_symlink', PHP_INT_MAX, 4 );
-add_filter( 'bb_document_do_symlink', 'bb_offload_do_symlink', PHP_INT_MAX, 4 );
-add_filter( 'bb_video_do_symlink', 'bb_offload_do_symlink', PHP_INT_MAX, 4 );
-add_filter( 'bb_video_create_thumb_symlinks', 'bb_offload_do_symlink', PHP_INT_MAX, 4 );
+add_action( 'init', 'bb_wp_offload_media_compatibility_helper', 10 );
 
 /**
- * Copy to local media file when the offload media used and remove local file setting used in offload media plugin to regenerate the thumb of the PDF.
+ * Fix the media, video & document display compatibility issue.
  *
- * @param bool               $default default false.
- * @param string             $file file to download.
- * @param int                $attachment_id attachment id.
- * @param Media_Library_Item $as3cf_item media library object.
- *
- * @return bool
- *
- * @since BuddyBoss 1.7.0
+ * @since BuddyBoss 1.7.9
  */
-function bb_document_as3cf_get_attached_file_copy_back_to_local( $default, $file, $attachment_id, $as3cf_item ) {
-	$default = true;
-	return $default;
-}
+function bb_seo_press_compatibility_helper() {
 
-/**
- * Return the offload media plugin attachment url.
- *
- * @param string $attachment_url attachment url.
- * @param int    $document_id    media id.
- * @param string $extension      extension.
- * @param string $size           size of the media.
- * @param int    $attachment_id  attachment id.
- *
- * @return false|mixed|string return the original document URL.
- *
- * @since BuddyBoss 1.7.0
- */
-function bp_document_offload_get_preview_url( $attachment_url, $document_id, $extension, $size, $attachment_id ) {
-
-    if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
-
-		    if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
-		        $get_metadata = wp_get_attachment_metadata( $attachment_id );
-				if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
-					$attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
-				} else {
-					$attachment_url = wp_get_attachment_image_url( $attachment_id, 'full' );
-				}
-
-				if ( ! $attachment_url ) {
-					if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['remove-local-file'] ) && '1' === $remove_local_files_setting['remove-local-file'] ) {
-						add_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
-						add_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
-						add_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
-						bp_document_generate_document_previews( $attachment_id );
-						remove_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
-						remove_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
-						remove_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
-						if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
-							$attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
-						} else {
-							$attachment_url = wp_get_attachment_image_url( $attachment_id, 'full' );
-						}
-					} else {
-						add_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
-						add_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
-						bp_document_generate_document_previews( $attachment_id );
-						remove_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
-						remove_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
-						if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
-							$attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
-						} else {
-							$attachment_url = wp_get_attachment_image_url( $attachment_id, 'full' );
-						}
-					}
-				}
-
-			    if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['remove-local-file'] ) && '1' === $remove_local_files_setting['remove-local-file'] ) {
-				    $imageArray = @getimagesize( $attachment_url );
-				    if ( empty( $imageArray ) ) {
-					    add_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
-					    add_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
-					    add_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
-					    bp_document_generate_document_previews( $attachment_id );
-					    remove_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
-					    remove_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
-					    remove_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
-					    if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
-						    $attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
-					    } else {
-						    $attachment_url = wp_get_attachment_image_url( $attachment_id, 'full' );
-					    }
-				    }
-			    }
-			}
-
-			$all_extensions = array_merge( bp_get_document_preview_code_extensions(), bp_get_document_preview_music_extensions() );
-			if ( in_array( $extension, $all_extensions, true ) ) {
-				$document = new BP_Document( $document_id );
-
-				$upload_directory        = wp_get_upload_dir();
-				$document_symlinks_path  = bp_document_symlink_path();
-				$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy );
-				if ( $document->group_id > 0 && bp_is_active( 'groups' ) ) {
-					$group_object            = groups_get_group( $document->group_id );
-					$group_status            = bp_get_group_status( $group_object );
-					$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $group_status . $document->privacy );
-				}
-				if ( ! file_exists( $preview_attachment_path ) ) {
-					bp_document_create_symlinks( $document );
-				}
-				$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
-			}
+	if ( (bool) bp_get_option( 'seopress_activated' ) ) {
+		if (
+			(
+				! empty( get_query_var( 'bb-media-preview' ) ) ||
+				! empty( get_query_var( 'bb-document-preview' ) ) ||
+				! empty( get_query_var( 'bb-document-player' ) ) ||
+				! empty( get_query_var( 'bb-video-thumb-preview' ) ) ||
+				! empty( get_query_var( 'bb-video-preview' ) )
+			)
+			&&
+			(
+				function_exists( 'seopress_redirections_enabled' ) &&
+				'yes' === seopress_redirections_enabled()
+			)
+		) {
+			remove_action( 'template_redirect', 'seopress_redirections_hook', 1 );
 		}
 	}
-	return $attachment_url;
+
 }
-add_filter( 'bp_document_get_preview_url', 'bp_document_offload_get_preview_url', PHP_INT_MAX, 5 );
+
+add_action( 'wp', 'bb_seo_press_compatibility_helper', 9999 );
 
 /**
- * Set the uploaded document to make private on offload media plugin.
+ * Allow activity page content restriction via MemberPress
  *
- * @since BuddyBoss 1.7.0
+ * @since BuddyBoss 2.2.9
+ *
+ * @return void
  */
-function bb_offload_media_set_private() {
-	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
-			add_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
-			add_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
-		}
-	}
-}
-add_action( 'bb_before_document_upload_handler', 'bb_offload_media_set_private' );
-add_action( 'bb_before_media_upload_handler', 'bb_offload_media_set_private' );
-add_action( 'bb_before_video_upload_handler', 'bb_offload_media_set_private' );
-add_action( 'bb_before_video_preview_image_by_js', 'bb_offload_media_set_private' );
-add_action( 'bb_video_before_preview_generate', 'bb_offload_media_set_private' );
-add_action( 'bb_before_bp_video_thumbnail_upload_handler', 'bb_offload_media_set_private' );
-add_action( 'bb_document_before_generate_document_previews', 'bb_offload_media_set_private' );
+function bb_core_allow_activity_page_content_restriction_memberpress() {
 
-/**
- * Remove the private URL generate document preview.
- *
- * @since BuddyBoss 1.7.0
- */
-function bb_offload_media_unset_private() {
-	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
-			remove_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
-			remove_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
-		}
+	if ( bp_is_active( 'activity' ) && bp_is_activity_component() && function_exists('is_bbpress') && is_bbpress() ) {
+		remove_filter( 'mepr-pre-run-rule-content', 'MeprBbPressIntegration::dont_block_the_content', 11, 3 );
 	}
-}
-add_action( 'bb_after_document_upload_handler', 'bb_offload_media_unset_private' );
-add_action( 'bb_after_media_upload_handler', 'bb_offload_media_unset_private' );
-add_action( 'bb_after_video_upload_handler', 'bb_offload_media_unset_private' );
-add_action( 'bb_after_video_preview_image_by_js', 'bb_offload_media_unset_private' );
-add_action( 'bb_video_after_preview_generate', 'bb_offload_media_unset_private' );
-add_action( 'bb_after_bp_video_thumbnail_upload_handler', 'bb_offload_media_unset_private' );
-add_action( 'bb_document_after_generate_document_previews', 'bb_offload_media_unset_private' );
 
-/**
- * Return the offload media plugin attachment url.
- *
- * @param string $attachment_url attachment url.
- * @param int    $media_id       media id.
- * @param int    $attachment_id  attachment id.
- * @param string $size           size of the media.
- *
- * @return false|mixed|string return the original media URL.
- *
- * @since BuddyBoss 1.7.0
- */
-function bp_media_offload_get_preview_url( $attachment_url, $media_id, $attachment_id, $size ) {
-	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
-			$media          = new BP_Media( $media_id );
-			$attachment_url = wp_get_attachment_url( $media->attachment_id );
-		}
-	}
-	return $attachment_url;
 }
-add_filter( 'bp_media_get_preview_image_url', 'bp_media_offload_get_preview_url', PHP_INT_MAX, 4 );
+add_action( 'bp_init', 'bb_core_allow_activity_page_content_restriction_memberpress' );
 
 /**
  * Add User meta as first and last name is update by BuddyBoss Platform itself
@@ -509,7 +425,6 @@ function bp_core_update_group_fields_id_in_db() {
 		add_site_option( 'bp-xprofile-field-ids-updated', 1 );
 	}
 }
-
 add_action( 'xprofile_admin_group_action', 'bp_core_update_group_fields_id_in_db', 100 );
 
 /**
@@ -559,7 +474,6 @@ function bp_core_add_support_for_google_captcha_pro( $section_notice, $section_s
 	return $section_notice;
 
 }
-
 add_filter( 'gglcptch_section_notice', 'bp_core_add_support_for_google_captcha_pro', 100, 2 );
 
 /**
@@ -600,7 +514,7 @@ function bb_core_validate_nickname_mepr_signup( $errors ) {
 	}
 	return $errors;
 }
-  
+
 add_filter( 'mepr-validate-signup', 'bb_core_validate_nickname_mepr_signup' );
 
 /**
@@ -736,34 +650,6 @@ add_action( 'bp_before_member_settings_template', 'bp_settings_remove_wc_lostpas
 add_action( 'login_form_login', 'bp_settings_remove_wc_lostpassword_url' );
 
 /**
- * Fix elementor editor issue while bp page set as front.
- *
- * @since BuddyBoss 1.5.0
- *
- * @param boolean $bool Boolean to return.
- *
- * @return boolean
- */
-function bp_core_set_uri_elementor_show_on_front( $bool ) {
-	if (
-		isset( $_REQUEST['elementor-preview'] )
-		|| (
-			is_admin() &&
-			isset( $_REQUEST['action'] )
-			&& (
-				'elementor' === $_REQUEST['action']
-				|| 'elementor_ajax' === $_REQUEST['action']
-			)
-		)
-	) {
-		return false;
-	}
-
-	return $bool;
-}
-add_filter( 'bp_core_set_uri_show_on_front', 'bp_core_set_uri_elementor_show_on_front', 10, 3 );
-
-/**
  * Get the forum page id from settings.
  *
  * @since BuddyBoss 1.5.8
@@ -864,58 +750,6 @@ function set_yoast_meta_tags() {
 
 // Trigger before template load.
 add_action( 'bp_template_redirect', 'set_yoast_meta_tags' );
-
-/**
- * Prevent BB template redering and Redirect to the Elementor "Maintenance Mode" template.
- *
- * @since BuddyBoss 1.5.8
- *
- * @return void
- */
-function bb_get_elementor_maintenance_mode_template() {
-	if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
-		return;
-	}
-
-	if ( isset( $_GET['elementor-preview'] ) && get_the_ID() === (int) $_GET['elementor-preview'] ) {
-		return;
-	}
-
-	$is_login_page = apply_filters( 'elementor/maintenance_mode/is_login_page', false );
-
-	if ( $is_login_page ) {
-		return;
-	}
-
-	$user         = wp_get_current_user();
-	$exclude_mode = get_option( 'elementor_maintenance_mode_exclude_mode' );
-
-	if ( 'logged_in' === $exclude_mode && is_user_logged_in() ) {
-		return;
-	}
-
-	if ( 'custom' === $exclude_mode ) {
-		$exclude_roles = get_option( 'elementor_maintenance_mode_exclude_roles' );
-		$user_roles    = $user->roles;
-
-		if ( is_multisite() && is_super_admin() ) {
-			$user_roles[] = 'super_admin';
-		}
-
-		$compare_roles = array_intersect( $user_roles, $exclude_roles );
-
-		if ( ! empty( $compare_roles ) ) {
-			return;
-		}
-	}
-
-	$mode = get_option( 'elementor_maintenance_mode_mode' );
-
-	if ( 'maintenance' === $mode || 'coming_soon' === $mode ) {
-		remove_action( 'template_redirect', 'bp_template_redirect', 10 );
-	}
-}
-add_action( 'bp_loaded', 'bb_get_elementor_maintenance_mode_template' );
 
 /**
  * Load rest compatibility.
@@ -1065,110 +899,9 @@ function bb_learndash_role_add( $user_id, $before ) {
 }
 add_action( 'profile_update', 'bb_learndash_role_add', 10, 2 );
 
-/**
- * Make all the media to private signed URL if someone using the offload media to store in AWS.
- *
- * @handles `as3cf_upload_acl`
- * @handles `as3cf_upload_acl_sizes`
- *
- * @param string $acl defaults to 'public-read'.
- *
- * @return string $acl make the media to private with signed url.
- *
- * @since BuddyBoss 1.7.0
- */
-function bb_media_private_upload_acl( $acl ) {
-	$acl = 'private';
-	return $acl;
-}
 
-/**
- * Filter to download the video on local server.
- *
- * @param BP_Video $video Video object.
- *
- * @since BuddyBoss 1.7.0
- */
-function bb_video_set_wp_offload_download_video_local( $video ) {
-	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
-			add_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
-			add_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
-			add_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
-		}
-	}
-}
-add_action( 'bb_try_before_video_background_create_thumbnail', 'bb_video_set_wp_offload_download_video_local', 99999, 1 );
 
-/**
- * Filter to download the video on local server.
- *
- * @param BP_Video $video Video object.
- *
- * @since BuddyBoss 1.7.0
- */
-function bb_video_unset_wp_offload_download_video_local( $video ) {
-	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
-			remove_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
-			remove_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
-			remove_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
-		}
-	}
-}
-add_action( 'bb_try_after_video_background_create_thumbnail', 'bb_video_unset_wp_offload_download_video_local', 99999, 1 );
 
-/**
- * Return the offload media plugin attachment url.
- *
- * @param string $attachment_url Attachment url.
- * @param int    $video_id       Video id.
- * @param string $size           size of the media.
- * @param int    $attachment_id  Attachment id.
- *
- * @return false|mixed|string return the original document URL.
- *
- * @since BuddyBoss 1.7.0
- */
-function bp_video_offload_get_thumb_preview_url( $attachment_url, $video_id, $size, $attachment_id ) {
-	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
-			$get_metadata = wp_get_attachment_metadata( $attachment_id );
-			if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
-				$attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
-			} else {
-				$attachment_url = wp_get_attachment_url( $attachment_id );
-			}
-		}
-	}
-
-	return $attachment_url;
-}
-add_filter( 'bb_video_get_thumb_url', 'bp_video_offload_get_thumb_preview_url', PHP_INT_MAX, 4 );
-
-/**
- * Return the offload media plugin attachment url.
- *
- * @param string $attachment_url Attachment url.
- * @param int    $video_id       Video id.
- * @param int    $attachment_id  Attachment id.
- *
- * @return string $attachment_url Attachment URL.
- */
-function bp_video_offload_get_video_url( $attachment_url, $video_id, $attachment_id ) {
-	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
-			$attachment_url = wp_get_attachment_url( $attachment_id );
-		}
-	}
-
-	return $attachment_url;
-}
-add_filter( 'bb_video_get_symlink', 'bp_video_offload_get_video_url', PHP_INT_MAX, 3 );
 
 /**
  * Function to set the false to use the default media symlink instead use the WP Stateless media URL of media.
@@ -1313,3 +1046,55 @@ function bp_document_wp_stateless_get_preview_url( $attachment_url, $document_id
 }
 
 add_filter( 'bp_document_get_preview_url', 'bp_document_wp_stateless_get_preview_url', PHP_INT_MAX, 5 );
+
+/**
+ * Fix Elementor conflict for forum parent field.
+ * Remove the Page Attributes meta box from forum edit page
+ * since Element's page attributes parent field is conflicting with forum attributes patent field
+ *
+ * @return void
+ *
+ * @since 1.7.6
+ */
+function bbp_remove_page_attributes_metabox_for_forum() {
+
+	// Check if elementor is exists.
+	if ( class_exists( '\Elementor\Plugin' ) ) {
+		// Remove the page attribute meta box for forum screen.
+		remove_meta_box( 'pageparentdiv' , 'forum' , 'side' );
+	}
+
+}
+
+add_action( 'admin_menu' , 'bbp_remove_page_attributes_metabox_for_forum' );
+
+/**
+ * Function will remove template_redirect action when we view individual saved template
+ * in the Elementor plugin.
+ *
+ * @since BuddyBoss 2.1.0
+ */
+function bb_elementor_library_template() {
+	if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
+		return;
+	}
+
+	if ( isset( $_GET['elementor_library'] ) ) {
+		remove_action( 'template_redirect', 'bp_template_redirect', 10 );
+	}
+}
+add_action( 'bp_loaded', 'bb_elementor_library_template' );
+
+/**
+ * Helper functions for the gravity forms compatibility.
+ *
+ * @since BuddyBoss 2.2.1
+ */
+function bb_wp_gravity_forms_compatibility_helper() {
+
+	if ( class_exists( 'GFForms' ) ) {
+		require buddypress()->compatibility_dir . '/bp-wp-gravity-forms-helpers.php';
+	}
+
+}
+add_action( 'init', 'bb_wp_gravity_forms_compatibility_helper', 999 );

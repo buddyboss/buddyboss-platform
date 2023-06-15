@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.5.0
  */
+#[\AllowDynamicProperties]
 class BP_Groups_Component extends BP_Component {
 
 	/**
@@ -255,14 +256,16 @@ class BP_Groups_Component extends BP_Component {
 
 		// Global tables for groups component.
 		$global_tables = array(
-			'table_name'           => $bp->table_prefix . 'bp_groups',
-			'table_name_members'   => $bp->table_prefix . 'bp_groups_members',
-			'table_name_groupmeta' => $bp->table_prefix . 'bp_groups_groupmeta',
+			'table_name'            => $bp->table_prefix . 'bp_groups',
+			'table_name_members'    => $bp->table_prefix . 'bp_groups_members',
+			'table_name_groupmeta'  => $bp->table_prefix . 'bp_groups_groupmeta',
+			'table_name_membermeta' => $bp->table_prefix . 'bp_groups_membermeta',
 		);
 
 		// Metadata tables for groups component.
 		$meta_tables = array(
-			'group' => $bp->table_prefix . 'bp_groups_groupmeta',
+			'group'  => $bp->table_prefix . 'bp_groups_groupmeta',
+			'member' => $bp->table_prefix . 'bp_groups_membermeta',
 		);
 
 		// Fetch the default directory title.
@@ -513,7 +516,7 @@ class BP_Groups_Component extends BP_Component {
 		$user_has_access = $this->current_group->user_has_access;
 		$is_visible      = $this->current_group->is_visible;
 
-		if ( ! $user_has_access && $is_visible ) {
+		if ( ! $user_has_access && $is_visible && is_user_logged_in() ) {
 			$bp->current_action = 'request-membership';
 		}
 
@@ -1137,7 +1140,7 @@ class BP_Groups_Component extends BP_Component {
 				);
 
 				if ( empty( $bp->bp_options_avatar ) ) {
-					$bp->bp_options_avatar = '<img src="' . esc_url( bp_core_avatar_default_thumb() ) . '" alt="' . esc_attr__( 'No Group Profile Photo', 'buddyboss' ) . '" class="avatar" />';
+					$bp->bp_options_avatar = '<img src="' . esc_url( bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group', 'type' => 'thumb' ) ) ) . '" alt="' . esc_attr__( 'No Group Profile Photo', 'buddyboss' ) . '" class="avatar" />';
 				}
 			}
 		}
@@ -1161,6 +1164,9 @@ class BP_Groups_Component extends BP_Component {
 				'group_meta',
 				'bp_groups_memberships',
 				'bp_groups_memberships_for_user',
+				'bp_group_mods',
+				'bp_groups_invitations_as_memberships',
+				'bp_groups_group_type',
 			)
 		);
 

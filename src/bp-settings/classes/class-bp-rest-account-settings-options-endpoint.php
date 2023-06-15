@@ -37,7 +37,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'nav' => array(
-						'description'       => __( 'Navigation item slug.', 'buddyboss' ),
+						'description'       => esc_html__( 'Navigation item slug.', 'buddyboss' ),
 						'type'              => 'string',
 						'required'          => true,
 						'sanitize_callback' => 'sanitize_key',
@@ -112,7 +112,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		if ( empty( $fields ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_setting_nav',
-				__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
+				esc_html__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
 				array(
 					'status' => 400,
 				)
@@ -155,7 +155,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
+			esc_html__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -168,7 +168,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			if ( empty( $nav ) ) {
 				return new WP_Error(
 					'bp_rest_invalid_setting_nav',
-					__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
+					esc_html__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
 					array(
 						'status' => 400,
 					)
@@ -261,7 +261,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 		$retval = array(
 			'error'   => ( isset( $updated['error'] ) ? $updated['error'] : false ),
-			'success' => ( empty( $updated['error'] ) ? __( 'Your settings has been successfully updated.', 'buddyboss' ) : false ),
+			'success' => ( empty( $updated['error'] ) ? esc_html__( 'Your settings has been successfully updated.', 'buddyboss' ) : false ),
 			'notices' => ( isset( $updated['notice'] ) ? $updated['notice'] : false ),
 			'data'    => $data,
 		);
@@ -292,7 +292,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	public function update_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
+			esc_html__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -305,7 +305,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			if ( empty( $nav ) ) {
 				return new WP_Error(
 					'bp_rest_invalid_setting_nav',
-					__( 'Sorry, you are not allowed to update the account settings options.', 'buddyboss' ),
+					esc_html__( 'Sorry, you are not allowed to update the account settings options.', 'buddyboss' ),
 					array(
 						'status' => 400,
 					)
@@ -340,7 +340,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			$key  = 'update_item';
 			$args = array(
 				'nav'    => array(
-					'description'       => __( 'Navigation item slug.', 'buddyboss' ),
+					'description'       => esc_html__( 'Navigation item slug.', 'buddyboss' ),
 					'type'              => 'string',
 					'required'          => true,
 					'sanitize_callback' => 'sanitize_key',
@@ -348,7 +348,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 				),
 				'fields' => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'The list of fields Objects to update with name and value of the field.', 'buddyboss' ),
+					'description' => esc_html__( 'The list of fields Objects to update with name and value of the field.', 'buddyboss' ),
 					'type'        => 'object',
 					'required'    => true,
 				),
@@ -378,12 +378,13 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	public function prepare_item_for_response( $field, $request ) {
 		$data = array(
 			'name'        => ( isset( $field['name'] ) && ! empty( $field['name'] ) ? $field['name'] : '' ),
-			'label'       => ( isset( $field['label'] ) && ! empty( $field['label'] ) ? $field['label'] : '' ),
+			'label'       => ( isset( $field['label'] ) && ! empty( $field['label'] ) ? wp_specialchars_decode( $field['label'], ENT_QUOTES ) : '' ),
 			'type'        => ( isset( $field['field'] ) && ! empty( $field['field'] ) ? $field['field'] : '' ),
 			'value'       => ( isset( $field['value'] ) && ! empty( $field['value'] ) ? $field['value'] : '' ),
 			'placeholder' => ( isset( $field['placeholder'] ) && ! empty( $field['placeholder'] ) ? $field['placeholder'] : '' ),
 			'options'     => ( isset( $field['options'] ) && ! empty( $field['options'] ) ? $field['options'] : array() ),
-			'headline'    => ( isset( $field['group_label'] ) && ! empty( $field['group_label'] ) ? $field['group_label'] : '' ),
+			'headline'    => ( isset( $field['group_label'] ) && ! empty( $field['group_label'] ) ? wp_specialchars_decode( $field['group_label'], ENT_QUOTES ) : '' ),
+			'subfields'   => ( isset( $field['subfields'] ) && ! empty( $field['subfields'] ) ? $field['subfields'] : array() ),
 		);
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -435,41 +436,47 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			'title'      => 'bp_account_settings_options',
 			'type'       => 'object',
 			'properties' => array(
-				'name'     => array(
+				'name'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique name for the field.', 'buddyboss' ),
+					'description' => esc_html__( 'A unique name for the field.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'label'    => array(
+				'label'     => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Label of the field.', 'buddyboss' ),
+					'description' => esc_html__( 'Label of the field.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'type'     => array(
+				'type'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The type the field.', 'buddyboss' ),
+					'description' => esc_html__( 'The type the field.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'value'    => array(
+				'value'     => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The saved value for the field.', 'buddyboss' ),
+					'description' => esc_html__( 'The saved value for the field.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'options'  => array(
+				'options'   => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Available options for the field.', 'buddyboss' ),
+					'description' => esc_html__( 'Available options for the field.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'object',
 				),
-				'headline' => array(
+				'headline'  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Headline text for the field.', 'buddyboss' ),
+					'description' => esc_html__( 'Headline text for the field.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
+				),
+				'subfields' => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => esc_html__( 'Related sub fields.', 'buddyboss' ),
+					'readonly'    => true,
+					'type'        => 'object',
 				),
 			),
 		);
@@ -520,7 +527,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 				'label'       => __( 'Current Password <span>(required to update email or change current password)</span>', 'buddyboss' ),
 				'field'       => 'password',
 				'value'       => '',
-				'placeholder' => __( 'Enter password', 'buddyboss' ),
+				'placeholder' => esc_html__( 'Enter password', 'buddyboss' ),
 				'options'     => array(),
 				'group_label' => '',
 			);
@@ -528,19 +535,19 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 		$fields[] = array(
 			'name'        => 'account_email',
-			'label'       => __( 'Account Email', 'buddyboss' ),
+			'label'       => esc_html__( 'Account Email', 'buddyboss' ),
 			'field'       => 'email',
 			'value'       => esc_attr( bp_core_get_user_email( bp_loggedin_user_id() ) ),
-			'placeholder' => __( 'Enter email', 'buddyboss' ),
+			'placeholder' => esc_html__( 'Enter email', 'buddyboss' ),
 			'options'     => array(),
 			'group_label' => '',
 		);
 
 		$fields[] = array(
 			'name'        => 'pass1',
-			'label'       => __( 'Add Your New Password', 'buddyboss' ),
+			'label'       => esc_html__( 'Add Your New Password', 'buddyboss' ),
 			'field'       => 'password',
-			'placeholder' => __( 'Enter password', 'buddyboss' ),
+			'placeholder' => esc_html__( 'Enter password', 'buddyboss' ),
 			'value'       => '',
 			'options'     => array(),
 			'group_label' => '',
@@ -548,9 +555,9 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 		$fields[] = array(
 			'name'        => 'pass2',
-			'label'       => __( 'Repeat Your New Password', 'buddyboss' ),
+			'label'       => esc_html__( 'Repeat Your New Password', 'buddyboss' ),
 			'field'       => 'password',
-			'placeholder' => __( 'Enter password', 'buddyboss' ),
+			'placeholder' => esc_html__( 'Enter password', 'buddyboss' ),
 			'value'       => '',
 			'options'     => array(),
 			'group_label' => '',
@@ -570,238 +577,444 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	public function get_notifications_fields() {
 		$fields = array();
 
-		if ( bp_is_active( 'activity' ) ) {
-			$fields_activity[] = array(
-				'name'        => '',
-				'label'       => '',
-				'field'       => '',
-				'value'       => '',
-				'options'     => array(),
-				'group_label' => __( 'Activity Feed', 'buddyboss' ),
-			);
+		if (
+			function_exists( 'bb_register_notification_preferences' ) &&
+			function_exists( 'bb_enabled_legacy_email_preference' ) &&
+			false === bb_enabled_legacy_email_preference()
+		) {
+			$notification_preferences   = bb_register_notification_preferences();
+			$enabled_notification_types = bb_enable_notifications_options();
+			$manual_notifications       = bb_manual_notification_options();
+			$enabled_all_notification   = bp_get_option( 'bb_enabled_notification', array() );
 
-			if ( bp_activity_do_mentions() ) {
+			if ( ! empty( $enabled_notification_types ) && ! empty( $enabled_notification_types['fields'] ) ) {
+				$fields_data = array(
+					'name'        => '',
+					'label'       => $enabled_notification_types['label'],
+					'field'       => '',
+					'value'       => '',
+					'options'     => array(),
+					'group_label' => '',
+					'subfields'   => array(),
+				);
+
+				foreach ( $enabled_notification_types['fields'] as $key => $label ) {
+					if ( ! empty( $key ) && ! empty( $label ) ) {
+						$fields_data['subfields'][] = array(
+							'name'     => $key,
+							'label'    => $label,
+							'value'    => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), $key, true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), $key, true ) : 'yes' ),
+							'field'    => 'checkbox',
+							'disabled' => false,
+							'options'  => array(
+								'yes' => esc_html__( 'Yes', 'buddyboss' ),
+								'no'  => esc_html__( 'No', 'buddyboss' ),
+							),
+						);
+					}
+				}
+
+				$fields[] = $fields_data;
+			}
+
+			if ( ! empty( $manual_notifications ) && ! empty( $manual_notifications['fields'] ) ) {
+				$fields_data = array(
+					'name'        => '',
+					'label'       => $manual_notifications['label'],
+					'field'       => '',
+					'value'       => '',
+					'options'     => array(),
+					'group_label' => '',
+					'subfields'   => array(
+						array(
+							'name'     => '',
+							'label'    => esc_html__( 'Email', 'buddyboss' ),
+							'value'    => '',
+							'field'    => '',
+							'disabled' => false,
+							'options'  => array(),
+						),
+					),
+				);
+
+				foreach ( $manual_notifications['fields'] as $key => $label ) {
+					$disabled = false;
+					if ( 'notification_web_push' === $key ) {
+						$disabled = 'no' === bp_get_user_meta( bp_loggedin_user_id(), 'enable_notification_web', true );
+					} elseif ( 'notification_app_push' === $key ) {
+						$disabled = 'no' === bp_get_user_meta( bp_loggedin_user_id(), 'enable_notification_app', true );
+					}
+
+					if ( ! empty( $label ) && ! empty( $key ) ) {
+						$fields_data['subfields'][] = array(
+							'name'     => $key,
+							'label'    => $label,
+							'value'    => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), $key, true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), $key, true ) : 'yes' ),
+							'field'    => 'checkbox',
+							'disabled' => $disabled,
+							'options'  => array(
+								'yes' => esc_html__( 'Yes', 'buddyboss' ),
+								'no'  => esc_html__( 'No', 'buddyboss' ),
+							),
+						);
+					} elseif ( ! empty( $key ) ) {
+						if ( 'notification_web_push' === $key ) {
+							$label = esc_html__( 'Web', 'buddyboss' );
+						} elseif ( 'notification_app_push' === $key ) {
+							$label = esc_html__( 'App', 'buddyboss' );
+						}
+						$fields_data['subfields'][] = array(
+							'name'     => '',
+							'label'    => $label,
+							'value'    => '',
+							'field'    => '',
+							'disabled' => false,
+							'options'  => array(),
+						);
+					}
+				}
+
+				$fields[] = $fields_data;
+			}
+
+			if ( ! empty( $notification_preferences ) ) {
+
+				foreach ( $notification_preferences as $group => $group_data ) {
+
+					if ( ! empty( $group_data['fields'] ) ) {
+						$group_data['fields'] = array_filter(
+							array_map(
+								function ( $fields ) {
+									if (
+										(
+											isset( $fields['notification_read_only'], $fields['default'] ) &&
+											true === (bool) $fields['notification_read_only'] &&
+											'yes' === (string) $fields['default']
+										) ||
+										(
+											! isset( $fields['notification_read_only'] ) ||
+											false === (bool) $fields['notification_read_only']
+										)
+									) {
+										return $fields;
+									}
+								},
+								$group_data['fields']
+							)
+						);
+					}
+
+					if ( empty( $group_data['fields'] ) ) {
+						continue;
+					}
+
+					if ( ! empty( $group_data['label'] ) ) {
+						$fields[] = array(
+							'name'        => '',
+							'label'       => '',
+							'field'       => '',
+							'value'       => '',
+							'options'     => array(),
+							'group_label' => $group_data['label'],
+						);
+					}
+
+					if ( ! empty( $group_data['fields'] ) ) {
+						$default_enabled_notifications = array_column( $group_data['fields'], 'default', 'key' );
+						$enabled_notification          = array_filter( array_combine( array_keys( $enabled_all_notification ), array_column( $enabled_all_notification, 'main' ) ) );
+						$enabled_notification          = array_merge( $default_enabled_notifications, $enabled_notification );
+
+						$group_data['fields'] = array_filter(
+							$group_data['fields'],
+							function ( $var ) use ( $enabled_notification ) {
+								return ( key_exists( $var['key'], $enabled_notification ) && 'yes' === $enabled_notification[ $var['key'] ] );
+							}
+						);
+					}
+
+					if ( ! empty( $group_data['fields'] ) ) {
+						foreach ( $group_data['fields'] as $field ) {
+
+							$fields_data = array(
+								'name'        => $field['key'],
+								'label'       => $field['label'],
+								'field'       => 'radio',
+								'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), $field['key'], true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), $field['key'], true ) : 'yes' ),
+								'options'     => array(
+									'yes' => esc_html__( 'Yes', 'buddyboss' ),
+									'no'  => esc_html__( 'No', 'buddyboss' ),
+								),
+								'group_label' => '',
+							);
+
+							$options = bb_notification_preferences_types( $field, bp_loggedin_user_id() );
+							foreach ( $options as $key => $v ) {
+								$is_render   = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $field['key'], $key );
+								$is_disabled = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_disabled', $v['disabled'], $field['key'], $key );
+								$name        = ( 'email' === $key ) ? $field['key'] : $field['key'] . '_' . $key;
+								if ( $is_render ) {
+									$fields_data['subfields'][] = array(
+										'name'     => esc_attr( $name ),
+										'label'    => esc_html( $v['label'] ),
+										'value'    => $v['is_checked'],
+										'field'    => 'checkbox',
+										'disabled' => $is_disabled,
+										'options'  => array(
+											'yes' => esc_html__( 'Yes', 'buddyboss' ),
+											'no'  => esc_html__( 'No', 'buddyboss' ),
+										),
+									);
+
+								} else {
+									$fields_data['subfields'][] = array(
+										'name'    => '',
+										'label'   => esc_html( $v['label'] ),
+										'value'   => '',
+										'field'   => '',
+										'options' => array(),
+									);
+								}
+							}
+
+							$fields[] = $fields_data;
+						}
+					}
+				}
+			}
+		} else {
+			if ( bp_is_active( 'activity' ) ) {
 				$fields_activity[] = array(
-					'name'        => 'notification_activity_new_mention',
-					'label'       => sprintf(
-					/* translators: %s: users mention name. */
-						__( 'A member mentions you in an update using "@%s"', 'buddyboss' ),
-						bp_activity_get_user_mentionname( bp_loggedin_user_id() )
-					),
+					'name'        => '',
+					'label'       => '',
+					'field'       => '',
+					'value'       => '',
+					'options'     => array(),
+					'group_label' => esc_html__( 'Activity Feed', 'buddyboss' ),
+				);
+
+				if ( bp_activity_do_mentions() ) {
+					$fields_activity[] = array(
+						'name'        => 'notification_activity_new_mention',
+						'label'       => sprintf(
+						/* translators: %s: users mention name. */
+							__( 'A member mentions you in an update using "@%s"', 'buddyboss' ),
+							bp_activity_get_user_mentionname( bp_loggedin_user_id() )
+						),
+						'field'       => 'radio',
+						'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_activity_new_mention', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_activity_new_mention', true ) : 'yes' ),
+						'options'     => array(
+							'yes' => esc_html__( 'Yes', 'buddyboss' ),
+							'no'  => esc_html__( 'No', 'buddyboss' ),
+						),
+						'group_label' => '',
+					);
+				}
+
+				$fields_activity[] = array(
+					'name'        => 'notification_activity_new_reply',
+					'label'       => __( "A member replies to an update or comment you've posted", 'buddyboss' ),
 					'field'       => 'radio',
-					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_activity_new_mention', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_activity_new_mention', true ) : 'yes' ),
+					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_activity_new_reply', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_activity_new_reply', true ) : 'yes' ),
 					'options'     => array(
-						'yes' => 'Yes',
-						'no'  => 'No',
+						'yes' => esc_html__( 'Yes', 'buddyboss' ),
+						'no'  => esc_html__( 'No', 'buddyboss' ),
 					),
 					'group_label' => '',
 				);
+
+				$fields_activity = apply_filters( 'bp_rest_account_settings_notifications_activity', $fields_activity );
+				$fields          = array_merge( $fields, $fields_activity );
 			}
 
-			$fields_activity[] = array(
-				'name'        => 'notification_activity_new_reply',
-				'label'       => __( "A member replies to an update or comment you've posted", 'buddyboss' ),
-				'field'       => 'radio',
-				'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_activity_new_reply', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_activity_new_reply', true ) : 'yes' ),
-				'options'     => array(
-					'yes' => 'Yes',
-					'no'  => 'No',
-				),
-				'group_label' => '',
-			);
+			if ( bp_is_active( 'messages' ) ) {
+				$fields_messages[] = array(
+					'name'        => '',
+					'label'       => '',
+					'field'       => '',
+					'value'       => '',
+					'options'     => array(),
+					'group_label' => esc_html__( 'Messages', 'buddyboss' ),
+				);
 
-			$fields_activity = apply_filters( 'bp_rest_account_settings_notifications_activity', $fields_activity );
-			$fields          = array_merge( $fields, $fields_activity );
-		}
+				$fields_messages[] = array(
+					'name'        => 'notification_messages_new_message',
+					'label'       => esc_html__( 'A member sends you a new message', 'buddyboss' ),
+					'field'       => 'radio',
+					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_messages_new_message', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_messages_new_message', true ) : 'yes' ),
+					'options'     => array(
+						'yes' => esc_html__( 'Yes', 'buddyboss' ),
+						'no'  => esc_html__( 'No', 'buddyboss' ),
+					),
+					'group_label' => '',
+				);
 
-		if ( bp_is_active( 'messages' ) ) {
-			$fields_messages[] = array(
-				'name'        => '',
-				'label'       => '',
-				'field'       => '',
-				'value'       => '',
-				'options'     => array(),
-				'group_label' => __( 'Messages', 'buddyboss' ),
-			);
+				$fields_messages = apply_filters( 'bp_rest_account_settings_notifications_messages', $fields_messages );
+				$fields          = array_merge( $fields, $fields_messages );
+			}
 
-			$fields_messages[] = array(
-				'name'        => 'notification_messages_new_message',
-				'label'       => __( 'A member sends you a new message', 'buddyboss' ),
-				'field'       => 'radio',
-				'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_messages_new_message', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_messages_new_message', true ) : 'yes' ),
-				'options'     => array(
-					'yes' => 'Yes',
-					'no'  => 'No',
-				),
-				'group_label' => '',
-			);
-
-			$fields_messages = apply_filters( 'bp_rest_account_settings_notifications_messages', $fields_messages );
-			$fields          = array_merge( $fields, $fields_messages );
-		}
-
-		if ( bp_is_active( 'groups' ) ) {
-			$fields_groups[] = array(
-				'name'        => '',
-				'label'       => '',
-				'field'       => '',
-				'value'       => '',
-				'options'     => array(),
-				'group_label' => __( 'Social Groups', 'buddyboss' ),
-			);
-
-			$fields_groups[] = array(
-				'name'        => 'notification_groups_invite',
-				'label'       => __( 'A member invites you to join a group', 'buddyboss' ),
-				'field'       => 'radio',
-				'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_groups_invite', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_groups_invite', true ) : 'yes' ),
-				'options'     => array(
-					'yes' => 'Yes',
-					'no'  => 'No',
-				),
-				'group_label' => '',
-			);
-
-			$fields_groups[] = array(
-				'name'        => 'notification_groups_group_updated',
-				'label'       => __( 'Group information is updated', 'buddyboss' ),
-				'field'       => 'radio',
-				'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_groups_group_updated', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_groups_group_updated', true ) : 'yes' ),
-				'options'     => array(
-					'yes' => 'Yes',
-					'no'  => 'No',
-				),
-				'group_label' => '',
-			);
-
-			$fields_groups[] = array(
-				'name'        => 'notification_groups_admin_promotion',
-				'label'       => __( 'You are promoted to a group organizer or moderator', 'buddyboss' ),
-				'field'       => 'radio',
-				'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_groups_admin_promotion', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_groups_admin_promotion', true ) : 'yes' ),
-				'options'     => array(
-					'yes' => 'Yes',
-					'no'  => 'No',
-				),
-				'group_label' => '',
-			);
-
-			$fields_groups[] = array(
-				'name'        => 'notification_groups_membership_request',
-				'label'       => __( 'A member requests to join a private group you organize', 'buddyboss' ),
-				'field'       => 'radio',
-				'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_groups_membership_request', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_groups_membership_request', true ) : 'yes' ),
-				'options'     => array(
-					'yes' => 'Yes',
-					'no'  => 'No',
-				),
-				'group_label' => '',
-			);
-
-			$fields_groups[] = array(
-				'name'        => 'notification_membership_request_completed',
-				'label'       => __( 'Your request to join a group has been approved or denied', 'buddyboss' ),
-				'field'       => 'radio',
-				'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_membership_request_completed', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_membership_request_completed', true ) : 'yes' ),
-				'options'     => array(
-					'yes' => 'Yes',
-					'no'  => 'No',
-				),
-				'group_label' => '',
-			);
-
-			if ( function_exists( 'bp_disable_group_messages' ) && true === bp_disable_group_messages() ) {
+			if ( bp_is_active( 'groups' ) ) {
 				$fields_groups[] = array(
-					'name'        => 'notification_group_messages_new_message',
-					'label'       => __( 'A group sends you a new message', 'buddyboss' ),
+					'name'        => '',
+					'label'       => '',
+					'field'       => '',
+					'value'       => '',
+					'options'     => array(),
+					'group_label' => esc_html__( 'Social Groups', 'buddyboss' ),
+				);
+
+				$fields_groups[] = array(
+					'name'        => 'notification_groups_invite',
+					'label'       => esc_html__( 'A member invites you to join a group', 'buddyboss' ),
 					'field'       => 'radio',
-					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_group_messages_new_message', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_group_messages_new_message', true ) : 'yes' ),
+					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_groups_invite', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_groups_invite', true ) : 'yes' ),
 					'options'     => array(
-						'yes' => 'Yes',
-						'no'  => 'No',
+						'yes' => esc_html__( 'Yes', 'buddyboss' ),
+						'no'  => esc_html__( 'No', 'buddyboss' ),
 					),
 					'group_label' => '',
 				);
+
+				$fields_groups[] = array(
+					'name'        => 'notification_groups_group_updated',
+					'label'       => esc_html__( 'Group information is updated', 'buddyboss' ),
+					'field'       => 'radio',
+					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_groups_group_updated', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_groups_group_updated', true ) : 'yes' ),
+					'options'     => array(
+						'yes' => esc_html__( 'Yes', 'buddyboss' ),
+						'no'  => esc_html__( 'No', 'buddyboss' ),
+					),
+					'group_label' => '',
+				);
+
+				$fields_groups[] = array(
+					'name'        => 'notification_groups_admin_promotion',
+					'label'       => esc_html__( 'You are promoted to a group organizer or moderator', 'buddyboss' ),
+					'field'       => 'radio',
+					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_groups_admin_promotion', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_groups_admin_promotion', true ) : 'yes' ),
+					'options'     => array(
+						'yes' => esc_html__( 'Yes', 'buddyboss' ),
+						'no'  => esc_html__( 'No', 'buddyboss' ),
+					),
+					'group_label' => '',
+				);
+
+				$fields_groups[] = array(
+					'name'        => 'notification_groups_membership_request',
+					'label'       => esc_html__( 'A member requests to join a private group you organize', 'buddyboss' ),
+					'field'       => 'radio',
+					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_groups_membership_request', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_groups_membership_request', true ) : 'yes' ),
+					'options'     => array(
+						'yes' => esc_html__( 'Yes', 'buddyboss' ),
+						'no'  => esc_html__( 'No', 'buddyboss' ),
+					),
+					'group_label' => '',
+				);
+
+				$fields_groups[] = array(
+					'name'        => 'notification_membership_request_completed',
+					'label'       => esc_html__( 'Your request to join a group has been approved or denied', 'buddyboss' ),
+					'field'       => 'radio',
+					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_membership_request_completed', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_membership_request_completed', true ) : 'yes' ),
+					'options'     => array(
+						'yes' => esc_html__( 'Yes', 'buddyboss' ),
+						'no'  => esc_html__( 'No', 'buddyboss' ),
+					),
+					'group_label' => '',
+				);
+
+				if ( function_exists( 'bp_disable_group_messages' ) && true === bp_disable_group_messages() ) {
+					$fields_groups[] = array(
+						'name'        => 'notification_group_messages_new_message',
+						'label'       => esc_html__( 'A group sends you a new message', 'buddyboss' ),
+						'field'       => 'radio',
+						'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_group_messages_new_message', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_group_messages_new_message', true ) : 'yes' ),
+						'options'     => array(
+							'yes' => esc_html__( 'Yes', 'buddyboss' ),
+							'no'  => esc_html__( 'No', 'buddyboss' ),
+						),
+						'group_label' => '',
+					);
+				}
+
+				$fields_groups = apply_filters( 'bp_rest_account_settings_notifications_groups', $fields_groups );
+				$fields        = array_merge( $fields, $fields_groups );
 			}
 
-			$fields_groups = apply_filters( 'bp_rest_account_settings_notifications_groups', $fields_groups );
-			$fields        = array_merge( $fields, $fields_groups );
-		}
+			if ( bp_is_active( 'forums' ) && function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active() ) {
+				$fields_forums[] = array(
+					'name'        => '',
+					'label'       => '',
+					'field'       => '',
+					'value'       => '',
+					'options'     => array(),
+					'group_label' => esc_html__( 'Forums', 'buddyboss' ),
+				);
 
-		if ( bp_is_active( 'forums' ) ) {
-			$fields_forums[] = array(
-				'name'        => '',
-				'label'       => '',
-				'field'       => '',
-				'value'       => '',
-				'options'     => array(),
-				'group_label' => __( 'Forums', 'buddyboss' ),
-			);
+				$fields_forums[] = array(
+					'name'        => 'notification_forums_following_reply',
+					'label'       => esc_html__( 'A member replies to a discussion you are subscribed to', 'buddyboss' ),
+					'field'       => 'radio',
+					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_reply', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_reply', true ) : 'yes' ),
+					'options'     => array(
+						'yes' => esc_html__( 'Yes', 'buddyboss' ),
+						'no'  => esc_html__( 'No', 'buddyboss' ),
+					),
+					'group_label' => '',
+				);
 
-			$fields_forums[] = array(
-				'name'        => 'notification_forums_following_reply',
-				'label'       => __( 'A member replies to a discussion you are subscribed', 'buddyboss' ),
-				'field'       => 'radio',
-				'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_reply', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_reply', true ) : 'yes' ),
-				'options'     => array(
-					'yes' => 'Yes',
-					'no'  => 'No',
-				),
-				'group_label' => '',
-			);
+				$fields_forums[] = array(
+					'name'        => 'notification_forums_following_topic',
+					'label'       => esc_html__( 'A member creates discussion in a forum you are subscribed to', 'buddyboss' ),
+					'field'       => 'radio',
+					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_topic', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_topic', true ) : 'yes' ),
+					'options'     => array(
+						'yes' => esc_html__( 'Yes', 'buddyboss' ),
+						'no'  => esc_html__( 'No', 'buddyboss' ),
+					),
+					'group_label' => '',
+				);
 
-			$fields_forums[] = array(
-				'name'        => 'notification_forums_following_topic',
-				'label'       => __( 'A member creates discussion in a forum you are subscribed', 'buddyboss' ),
-				'field'       => 'radio',
-				'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_topic', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_topic', true ) : 'yes' ),
-				'options'     => array(
-					'yes' => 'Yes',
-					'no'  => 'No',
-				),
-				'group_label' => '',
-			);
+				$fields_forums = apply_filters( 'bp_rest_account_settings_notifications_forums', $fields_forums );
+				$fields        = array_merge( $fields, $fields_forums );
+			}
 
-			$fields_forums = apply_filters( 'bp_rest_account_settings_notifications_forums', $fields_forums );
-			$fields        = array_merge( $fields, $fields_forums );
-		}
+			if ( bp_is_active( 'friends' ) ) {
+				$fields_friends[] = array(
+					'name'        => '',
+					'label'       => '',
+					'field'       => '',
+					'value'       => '',
+					'options'     => array(),
+					'group_label' => esc_html__( 'Connections', 'buddyboss' ),
+				);
 
-		if ( bp_is_active( 'friends' ) ) {
-			$fields_friends[] = array(
-				'name'        => '',
-				'label'       => '',
-				'field'       => '',
-				'value'       => '',
-				'options'     => array(),
-				'group_label' => __( 'Connections', 'buddyboss' ),
-			);
+				$fields_friends[] = array(
+					'name'        => 'notification_friends_friendship_request',
+					'label'       => esc_html__( 'A member invites you to connect', 'buddyboss' ),
+					'field'       => 'radio',
+					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_friends_friendship_request', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_friends_friendship_request', true ) : 'yes' ),
+					'options'     => array(
+						'yes' => esc_html__( 'Yes', 'buddyboss' ),
+						'no'  => esc_html__( 'No', 'buddyboss' ),
+					),
+					'group_label' => '',
+				);
 
-			$fields_friends[] = array(
-				'name'        => 'notification_friends_friendship_request',
-				'label'       => __( 'A member invites you to connect', 'buddyboss' ),
-				'field'       => 'radio',
-				'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_friends_friendship_request', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_friends_friendship_request', true ) : 'yes' ),
-				'options'     => array(
-					'yes' => 'Yes',
-					'no'  => 'No',
-				),
-				'group_label' => '',
-			);
+				$fields_friends[] = array(
+					'name'        => 'notification_friends_friendship_accepted',
+					'label'       => esc_html__( 'A member accepts your connection request', 'buddyboss' ),
+					'field'       => 'radio',
+					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_friends_friendship_accepted', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_friends_friendship_accepted', true ) : 'yes' ),
+					'options'     => array(
+						'yes' => esc_html__( 'Yes', 'buddyboss' ),
+						'no'  => esc_html__( 'No', 'buddyboss' ),
+					),
+					'group_label' => '',
+				);
 
-			$fields_friends[] = array(
-				'name'        => 'notification_friends_friendship_accepted',
-				'label'       => __( 'A member accepts your connection request', 'buddyboss' ),
-				'field'       => 'radio',
-				'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_friends_friendship_accepted', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_friends_friendship_accepted', true ) : 'yes' ),
-				'options'     => array(
-					'yes' => 'Yes',
-					'no'  => 'No',
-				),
-				'group_label' => '',
-			);
-
-			$fields_friends = apply_filters( 'bp_rest_account_settings_notifications_friends', $fields_friends );
-			$fields         = array_merge( $fields, $fields_friends );
+				$fields_friends = apply_filters( 'bp_rest_account_settings_notifications_friends', $fields_friends );
+				$fields         = array_merge( $fields, $fields_friends );
+			}
 		}
 
 		$fields = apply_filters( 'bp_rest_account_settings_notifications', $fields );
@@ -820,6 +1033,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		$field_groups = bp_xprofile_get_groups(
 			array(
 				'fetch_fields'           => true,
+				'user_id'                => bp_loggedin_user_id(),
 				'fetch_field_data'       => true,
 				'fetch_visibility_level' => true,
 			)
@@ -870,7 +1084,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		$fields = array(
 			array(
 				'name'        => 'account-group-invites-preferences',
-				'label'       => __( 'Restrict Group invites to members who are connected.', 'buddyboss' ),
+				'label'       => esc_html__( 'Restrict Group invites to members who are connected.', 'buddyboss' ),
 				'field'       => 'checkbox',
 				'value'       => bp_nouveau_groups_get_group_invites_setting( bp_loggedin_user_id() ),
 				'options'     => array(),
@@ -893,7 +1107,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		$fields = array(
 			array(
 				'name'        => 'member-data-export-submit',
-				'label'       => __( 'Request Data Export', 'buddyboss' ),
+				'label'       => esc_html__( 'Request Data Export', 'buddyboss' ),
 				'field'       => 'button',
 				'value'       => '',
 				'options'     => array(),
@@ -916,7 +1130,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		$fields = array(
 			array(
 				'name'        => 'delete-account-understand',
-				'label'       => __( 'I understand the consequences.', 'buddyboss' ),
+				'label'       => esc_html__( 'I understand the consequences.', 'buddyboss' ),
 				'field'       => 'checkbox',
 				'value'       => '',
 				'options'     => array(),
@@ -924,7 +1138,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			),
 			array(
 				'name'        => 'member-delete-account',
-				'label'       => __( 'Delete Account', 'buddyboss' ),
+				'label'       => esc_html__( 'Delete Account', 'buddyboss' ),
 				'field'       => 'button',
 				'value'       => '',
 				'options'     => array(),
@@ -1107,12 +1321,28 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			}
 
 			// Clear cached data, so that the changed settings take effect on the current page load.
+			clean_user_cache( bp_displayed_user_id() );
+
+			if (
+				function_exists( 'bb_enabled_legacy_email_preference' ) &&
+				! bb_enabled_legacy_email_preference()
+			) {
+				add_filter( 'send_password_change_email', '__return_false' );
+			}
+
 			if (
 				( false === $email_error )
 				&& ( false === $pass_error )
 				&& ( wp_update_user( $update_user ) )
 			) {
 				$bp->displayed_user->userdata = bp_core_get_core_userdata( bp_displayed_user_id() );
+			}
+
+			if (
+				function_exists( 'bb_enabled_legacy_email_preference' ) &&
+				! bb_enabled_legacy_email_preference()
+			) {
+				remove_filter( 'send_password_change_email', '__return_false' );
 			}
 
 			// Password Error.
@@ -1123,16 +1353,16 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		// Email feedback.
 		switch ( $email_error ) {
 			case 'invalid':
-				$feedback['email_invalid'] = __( 'That email address is invalid. Check the formatting and try again.', 'buddyboss' );
+				$feedback['email_invalid'] = esc_html__( 'That email address is invalid. Check the formatting and try again.', 'buddyboss' );
 				break;
 			case 'blocked':
-				$feedback['email_blocked'] = __( 'That email address is currently unavailable for use.', 'buddyboss' );
+				$feedback['email_blocked'] = esc_html__( 'That email address is currently unavailable for use.', 'buddyboss' );
 				break;
 			case 'taken':
-				$feedback['email_taken'] = __( 'That email address is already taken.', 'buddyboss' );
+				$feedback['email_taken'] = esc_html__( 'That email address is already taken.', 'buddyboss' );
 				break;
 			case 'empty':
-				$feedback['email_empty'] = __( 'Email address cannot be empty.', 'buddyboss' );
+				$feedback['email_empty'] = esc_html__( 'Email address cannot be empty.', 'buddyboss' );
 				break;
 			case false:
 				// No change.
@@ -1142,16 +1372,16 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		// Password feedback.
 		switch ( $pass_error ) {
 			case 'invalid':
-				$feedback['pass_error'] = __( 'Your current password is invalid.', 'buddyboss' );
+				$feedback['pass_error'] = esc_html__( 'Your current password is invalid.', 'buddyboss' );
 				break;
 			case 'mismatch':
-				$feedback['pass_mismatch'] = __( 'The new password fields did not match.', 'buddyboss' );
+				$feedback['pass_mismatch'] = esc_html__( 'The new password fields did not match.', 'buddyboss' );
 				break;
 			case 'empty':
-				$feedback['pass_empty'] = __( 'One of the password fields was empty.', 'buddyboss' );
+				$feedback['pass_empty'] = esc_html__( 'One of the password fields was empty.', 'buddyboss' );
 				break;
 			case 'same':
-				$feedback['pass_same'] = __( 'The new password must be different from the current password.', 'buddyboss' );
+				$feedback['pass_same'] = esc_html__( 'The new password must be different from the current password.', 'buddyboss' );
 				break;
 			case false:
 				// No change.
@@ -1163,7 +1393,53 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			( ( false === $email_error ) || ( false === $pass_error ) )
 			&& ( ( true !== $pass_changed ) && ( true !== $email_changed ) )
 		) {
-			$feedback['nochange'] = __( 'No changes were made to your account.', 'buddyboss' );
+			$feedback['nochange'] = esc_html__( 'No changes were made to your account.', 'buddyboss' );
+		} else {
+
+			// If the user is changing their password, send them a confirmation email.
+			if (
+				! bb_enabled_legacy_email_preference() &&
+				bb_get_modern_notification_admin_settings_is_enabled( 'bb_account_password', 'members' ) &&
+				true === bb_is_notification_enabled( bp_displayed_user_id(), 'bb_account_password' )
+			) {
+
+				$unsubscribe_args = array(
+					'user_id'           => (int) bp_displayed_user_id(),
+					'notification_type' => 'settings-password-changed',
+				);
+
+				$args = array(
+					'tokens' => array(
+						'reset.url'   => esc_url( wp_lostpassword_url() ),
+						'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+					),
+				);
+
+				// Send notification email.
+				bp_send_email( 'settings-password-changed', (int) bp_displayed_user_id(), $args );
+			}
+
+			if (
+				! bb_enabled_legacy_email_preference() &&
+				bb_get_modern_notification_admin_settings_is_enabled( 'bb_account_password', 'members' ) &&
+				bp_is_active( 'notifications' )
+			) {
+
+				// Send a notification to the user.
+				bp_notifications_add_notification(
+					array(
+						'user_id'           => bp_displayed_user_id(),
+						'item_id'           => bp_displayed_user_id(),
+						'secondary_item_id' => bp_displayed_user_id(),
+						'component_name'    => buddypress()->members->id,
+						'component_action'  => 'bb_account_password',
+						'date_notified'     => bp_core_current_time(),
+						'allow_duplicate'   => true,
+						'is_new'            => 1,
+					)
+				);
+
+			}
 		}
 
 		$notice = $this->bp_rest_settings_pending_email_notice();
@@ -1321,12 +1597,12 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 			} elseif ( ! $request_id ) {
 
-				$error = __( 'Unable to initiate the data export request.', 'buddyboss' );
+				$error = esc_html__( 'Unable to initiate the data export request.', 'buddyboss' );
 			}
 
 			if ( empty( $error ) ) {
 				wp_send_user_request( $request_id );
-				$notice = __( 'Please check your email to confirm the data export request.', 'buddyboss' );
+				$notice = esc_html__( 'Please check your email to confirm the data export request.', 'buddyboss' );
 			}
 		}
 
@@ -1372,17 +1648,17 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			$bp->displayed_user->domain = bp_core_get_user_domain( bp_displayed_user_id() );
 
 			if ( bp_disable_account_deletion() && ! bp_current_user_can( 'delete_users' ) ) {
-				$error = __( 'Sorry, You can not able to delete the account.', 'buddyboss' );
+				$error = esc_html__( 'Sorry, You can not able to delete the account.', 'buddyboss' );
 			} elseif ( bp_core_delete_account( bp_displayed_user_id() ) ) {
 				$username = bp_get_displayed_user_fullname();
 				/* translators: %s: User's full name. */
-				$notice = sprintf( __( '%s was successfully deleted.', 'buddyboss' ), $username );
+				$notice = sprintf( esc_html__( '%s was successfully deleted.', 'buddyboss' ), $username );
 			}
 
 			remove_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 
 		} else {
-			$error = __( 'No changes were made to your account.', 'buddyboss' );
+			$error = esc_html__( 'No changes were made to your account.', 'buddyboss' );
 		}
 
 		return array(

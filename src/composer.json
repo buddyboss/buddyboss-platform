@@ -23,7 +23,7 @@
     "autoload": {
     },
     "scripts": {
-        "remove-ffmpeg-docs": ["rm -rf vendor/php-ffmpeg/php-ffmpeg/docs; rm -rf vendor/php-ffmpeg/php-ffmpeg/tests;"],
+        "remove-ffmpeg-docs": ["rm -rf vendor/php-ffmpeg/php-ffmpeg/docs && rm -rf vendor/php-ffmpeg/php-ffmpeg/tests"],
         "post-install-cmd": ["@remove-ffmpeg-docs"],
         "post-update-cmd": ["@remove-ffmpeg-docs"]
     }

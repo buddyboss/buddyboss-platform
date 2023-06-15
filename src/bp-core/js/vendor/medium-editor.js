@@ -3730,11 +3730,15 @@ MediumEditor.extensions = {};
             event.stopPropagation();
 
             var range = MediumEditor.selection.getSelectionRange(this.document);
+            var preLink = document.createElement( 'span' );
+            preLink.classList.add( 'medium-editor-create-link' );
 
             if (range.startContainer.nodeName.toLowerCase() === 'a' ||
                 range.endContainer.nodeName.toLowerCase() === 'a' ||
                 MediumEditor.util.getClosestTag(MediumEditor.selection.getSelectedParentElement(range), 'a')) {
                 return this.execAction('unlink');
+            } else {
+                range.surroundContents( preLink );
             }
 
             if (!this.isDisplayed()) {
@@ -4010,6 +4014,12 @@ MediumEditor.extensions = {};
             return this.getForm().querySelector('.medium-editor-toolbar-anchor-button');
         },
 
+        clearPreCreateLink: function () {
+            jQuery('.medium-editor-create-link').replaceWith(function () {
+                return this.childNodes;
+            });
+        },
+
         handleTextboxKeyup: function (event) {
             // For ENTER -> create the anchor
             if (event.keyCode === MediumEditor.util.keyCode.ENTER) {
@@ -4030,16 +4040,27 @@ MediumEditor.extensions = {};
             event.stopPropagation();
         },
 
-        handleSaveClick: function (event) {
+        handleSaveClick: function ( event ) {
             // Clicking Save -> create the anchor
+            var toolbarInput = event.target.closest( '.medium-editor-toolbar-form' ).querySelector( '.medium-editor-toolbar-input' );
+            if ( toolbarInput.classList.contains( 'isNotValid' ) ) {
+                toolbarInput.classList.add( 'validate' );
+                return false;
+            } else {
+                toolbarInput.classList.remove( 'validate' );
+                this.clearPreCreateLink();
+            }
             event.preventDefault();
             this.doFormSave();
         },
 
-        handleCloseClick: function (event) {
+        handleCloseClick: function ( event ) {
             // Click Close -> close the form
+            var toolbarInput = event.target.closest( '.medium-editor-toolbar-form' ).querySelector( '.medium-editor-toolbar-input' );
+            toolbarInput.classList.remove( 'validate' );
             event.preventDefault();
             this.doFormCancel();
+            this.clearPreCreateLink();
         }
     });
 
@@ -6806,7 +6827,7 @@ MediumEditor.extensions = {};
                     var newLI = node.parentNode.parentNode.parentNode.insertBefore(li, node.parentNode.parentNode.nextSibling);
                     node.remove();
                     MediumEditor.selection.moveCursor(this.options.ownerDocument, newLI);
-                    
+
                 } else {
                    var  p = this.options.ownerDocument.createElement('p');
                     p.innerHTML = '<br>';
@@ -6844,6 +6865,12 @@ MediumEditor.extensions = {};
     }
 
     function handleKeyup(event) {
+        
+        // Ignore composing keyUp event, prevent from duplicated first char with CJK IME.
+        if ( event.isComposing || event.keyCode === 229 ) {
+            return;
+        }
+
         var node = MediumEditor.selection.getSelectionStart(this.options.ownerDocument),
             tagName;
 

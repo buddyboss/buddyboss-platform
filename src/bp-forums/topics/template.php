@@ -125,10 +125,6 @@ function bbp_get_topics_pagination_base( $forum_id = 0 ) {
 		} elseif ( bbp_is_favorites() ) {
 			$base = bbp_get_favorites_permalink( bbp_get_displayed_user_id() );
 
-			// User's subscriptions.
-		} elseif ( bbp_is_subscriptions() ) {
-			$base = bbp_get_subscriptions_permalink( bbp_get_displayed_user_id() );
-
 			// Root profile page.
 		} elseif ( bbp_is_single_user() ) {
 			$base = bbp_get_user_profile_url( bbp_get_displayed_user_id() );
@@ -143,11 +139,19 @@ function bbp_get_topics_pagination_base( $forum_id = 0 ) {
 
 			// Page or single post.
 		} elseif ( is_page() || is_single() ) {
-			$base = get_permalink();
+			if ( has_shortcode( get_the_content(), 'bbp-forum-index' ) ) {
+				$base = bbp_get_topics_url();
+			} else {
+				$base = get_permalink();
+			}
 
 			// Forum archive.
 		} elseif ( bbp_is_forum_archive() ) {
-			$base = bbp_get_forums_url();
+			if ( 'forums' === bbp_show_on_root() ) {
+				$base = bbp_get_topics_url();
+			} elseif ( 'topics' === bbp_show_on_root() ) {
+				$base = bbp_get_forums_url();
+			}
 
 			// Topic archive.
 		} elseif ( bbp_is_topic_archive() ) {
@@ -157,7 +161,6 @@ function bbp_get_topics_pagination_base( $forum_id = 0 ) {
 		} else {
 			$base = get_permalink( $forum_id );
 		}
-
 		// Use pagination base.
 		$base = trailingslashit( $base ) . user_trailingslashit( bbp_get_paged_slug() . '/%#%/' );
 
@@ -181,7 +184,7 @@ function bbp_get_topics_pagination_base( $forum_id = 0 ) {
  *
  * @return bool Yes if the topic appears as a lead, otherwise false
  */
-function bbp_show_lead_topic( $show_lead = false ) {
+function bbp_show_lead_topic( $show_lead = true ) {
 
 	// Never separate the lead topic in feeds.
 	if ( is_feed() ) {
@@ -701,7 +704,7 @@ function bbp_topic_title( $topic_id = 0 ) {
  */
 function bbp_get_topic_title( $topic_id = 0 ) {
 	$topic_id = bbp_get_topic_id( $topic_id );
-	$title    = get_the_title( $topic_id );
+	$title    = ( ! empty( $topic_id ) ) ? get_the_title( $topic_id ) : '';
 
 	return apply_filters( 'bbp_get_topic_title', $title, $topic_id );
 }
@@ -1490,12 +1493,16 @@ function bbp_get_topic_author_display_name( $topic_id = 0 ) {
 		// Get the author ID
 		$author_id = bbp_get_topic_author_id( $topic_id );
 
-		// Try to get a display name
-		$author_name = get_the_author_meta( 'display_name', $author_id );
+		$author_name = ( function_exists( 'bp_core_get_user_displayname' ) ) ? bp_core_get_user_displayname( $author_id ) : '';
 
-		// Fall back to user login
 		if ( empty( $author_name ) ) {
-			$author_name = get_the_author_meta( 'user_login', $author_id );
+			// Try to get a display name
+			$author_name = get_the_author_meta( 'display_name', $author_id );
+
+			// Fall back to user login
+			if ( empty( $author_name ) ) {
+				$author_name = get_the_author_meta( 'user_login', $author_id );
+			}
 		}
 
 		// User does not have an account
@@ -1646,7 +1653,13 @@ function bbp_get_topic_author_link( $args = '' ) {
 
 		// Get avatar
 		if ( 'avatar' === $r['type'] || 'both' === $r['type'] ) {
+			if ( bp_is_active( 'moderation' ) ) {
+				add_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
+			}
 			$author_links['avatar'] = bbp_get_topic_author_avatar( $topic_id, $r['size'] );
+			if ( bp_is_active( 'moderation' ) ) {
+				remove_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
+			}
 		}
 
 		// Get display name
@@ -4105,15 +4118,13 @@ function bbp_form_topic_title() {
  */
 function bbp_get_form_topic_title() {
 
-	// Get _POST data
+	// Get _POST data.
 	if ( bbp_is_post_request() && isset( $_POST['bbp_topic_title'] ) ) {
-		$topic_title = $_POST['bbp_topic_title'];
-
-		// Get edit data
+		$topic_title = wp_unslash( $_POST['bbp_topic_title'] );
+		// Get edit data.
 	} elseif ( bbp_is_topic_edit() ) {
 		$topic_title = bbp_get_global_post_field( 'post_title', 'raw' );
-
-		// No data
+		// No data.
 	} else {
 		$topic_title = '';
 	}
@@ -4146,6 +4157,11 @@ function bbp_get_form_topic_content() {
 	// Get _POST data
 	if ( bbp_is_post_request() && isset( $_POST['bbp_topic_content'] ) ) {
 		$topic_content = stripslashes( $_POST['bbp_topic_content'] );
+
+		// Remove unintentional empty paragraph coming from the medium editor when only link preview.
+		if ( preg_match('/^(<p><br><\/p>|<p><br \/><\/p>|<p><\/p>|<p><br\/><\/p>)$/i', $topic_content ) ) {
+			$topic_content = '';
+		}
 
 		// Get edit data
 	} elseif ( bbp_is_topic_edit() ) {
@@ -4406,4 +4422,32 @@ function bbp_get_form_topic_edit_reason() {
 	}
 
 	return apply_filters( 'bbp_get_form_topic_edit_reason', esc_attr( $topic_edit_reason ) );
+}
+
+/**
+ * Return the topics created date/time.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param int $topic_id Optional. Topic id.
+ *
+ * @uses  bbp_get_topic_id() To get topic id.
+ * @uses  get_post_meta() To get the topic lst active meta.
+ * @uses  bbp_get_topic_last_reply_id() To get topic last reply id.
+ * @uses  get_post_field() To get the post date of topic/reply.
+ * @uses  bbp_convert_date() To convert date.
+ * @uses  bbp_get_time_since() To get time in since format.
+ * @uses  apply_filters() Calls 'bbp_get_topic_last_active' with topic
+ *       freshness and topic id.
+ *
+ * @return string Topic freshness.
+ */
+function bbp_get_topic_created_time( $topic_id = 0 ) {
+
+	$topic_id    = bbp_get_topic_id( $topic_id );
+	$last_active = get_post_field( 'post_date', $topic_id );
+	$last_active = ! empty( $last_active ) ? bbp_get_time_since( bbp_convert_date( $last_active ) ) : '';
+
+	// Return the time since.
+	return apply_filters( 'bbp_get_topic_created_time', $last_active, $topic_id );
 }

@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.4.0
  */
+#[\AllowDynamicProperties]
 class BP_Attachment_Cover_Image extends BP_Attachment {
 	/**
 	 * The constuctor.
@@ -120,8 +121,8 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 		$image_width  = $cover_data['width'];
 		$image_height = $cover_data['height'];
 
-		$max_width = ( ! empty( $image_width ) && !empty( $image_height ) && $image_height > $dimensions['height'] ? ( $image_width * $dimensions['height'] ) / $image_height : 0 );
-		$max_height = ( ! empty( $image_width ) && !empty( $image_height ) && $image_width > $dimensions['width'] ? ( $image_height * $dimensions['width'] ) / $image_width : 0 );
+		$max_width  = ( ! empty( $image_width ) && ! empty( $image_height ) && $image_height > $dimensions['height'] ? ( $image_width * $dimensions['height'] ) / $image_height : 0 );
+		$max_height = ( ! empty( $image_width ) && ! empty( $image_height ) && $image_width > $dimensions['width'] ? ( $image_height * $dimensions['width'] ) / $image_width : 0 );
 
 		// Init the edit args.
 		$edit_args = array();
@@ -136,7 +137,7 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 				'max_w' => $dimensions['width'],
 				'crop'  => false,
 			);
-		} else if (
+		} elseif (
 			isset( $cover_data['height'] )
 			&& $cover_data['height'] > $dimensions['height']
 			&& $max_width >= $dimensions['width']
@@ -221,10 +222,11 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 			$item_id = bp_displayed_user_id();
 
 			$script_data['bp_params'] = array(
-				'object'          => 'user',
-				'item_id'         => $item_id,
-				'has_cover_image' => bp_attachments_get_user_has_cover_image( $item_id ),
-				'nonces'          => array(
+				'object'            => 'user',
+				'item_id'           => $item_id,
+				'has_cover_image'   => bp_attachments_get_user_has_cover_image( $item_id ),
+				'has_default_class' => ( ! bp_disable_cover_image_uploads() && 'custom' !== bb_get_default_profile_cover_type() ) ? 'has-default' : '',
+				'nonces'            => array(
 					'remove' => wp_create_nonce( 'bp_delete_cover_image' ),
 				),
 			);
@@ -239,10 +241,11 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 			$item_id = bp_get_current_group_id();
 
 			$script_data['bp_params'] = array(
-				'object'          => 'group',
-				'item_id'         => bp_get_current_group_id(),
-				'has_cover_image' => bp_attachments_get_group_has_cover_image( $item_id ),
-				'nonces'          => array(
+				'object'            => 'group',
+				'item_id'           => bp_get_current_group_id(),
+				'has_cover_image'   => bp_attachments_get_group_has_cover_image( $item_id ),
+				'has_default_class' => ( ! bp_disable_group_cover_image_uploads() && 'custom' !== bb_get_default_group_cover_type() ) ? 'has-default' : '',
+				'nonces'            => array(
 					'remove' => wp_create_nonce( 'bp_delete_cover_image' ),
 				),
 			);

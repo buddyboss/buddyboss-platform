@@ -409,6 +409,13 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		// Setting context.
 		$request->set_param( 'context', 'edit' );
 
+		if ( true === $request_id ) {
+			$request->set_param( 'joined', true );
+		} else {
+			$request->set_param( 'joined', false );
+		}
+		$request->set_param( 'user_id', $user->ID );
+
 		$invite = new BP_Invitation( $request_id );
 
 		$retval = $this->prepare_response_for_collection(
@@ -493,7 +500,6 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 				);
 			}
 		}
-
 
 		/**
 		 * Filter the group membership request `create_item` permissions check.
@@ -681,6 +687,8 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		$user  = bp_rest_get_user( $group_request->user_id );
 		$group = $this->groups_endpoint->get_group_object( $group_request->item_id );
 
+		$response->add_links( $this->prepare_links( $group_request ) );
+
 		/**
 		 * Fires after a group membership request is rejected via the REST API.
 		 *
@@ -705,7 +713,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$retval        = new WP_Error(
+		$retval = new WP_Error(
 			'bp_rest_authorization_required',
 			__( 'Sorry, you need to be logged in to delete a request.', 'buddyboss' ),
 			array(
@@ -763,6 +771,16 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function prepare_item_for_response( $invite, $request ) {
+
+		// Check the member request is auto join or not?
+		$joined = ! empty( $request['joined'] ) ? $request['joined'] : false;
+
+		// If joined is true then set user and group IDs.
+		if ( true === $joined && empty( $invite->id ) ) {
+			$invite->user_id = ! empty( $request['user_id'] ) ? $request['user_id'] : bp_loggedin_user_id();
+			$invite->item_id = ! empty( $request['group_id'] ) ? $request['group_id'] : false;
+		}
+
 		$data = array(
 			'id'            => $invite->id,
 			'user_id'       => $invite->user_id,
@@ -775,6 +793,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 				'raw'      => $invite->content,
 				'rendered' => apply_filters( 'the_content', $invite->content ),
 			),
+			'joined'        => $joined,
 		);
 
 		$context  = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -782,7 +801,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		$data     = $this->filter_response_by_context( $data, $context );
 		$response = rest_ensure_response( $data );
 
-		$response->add_links( $this->prepare_links( $invite, $request ) );
+		$response->add_links( $this->prepare_links( $invite ) );
 
 		/**
 		 * Filter a group invite value returned from the API.
@@ -808,7 +827,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		$base = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
 		$url  = $base . $invite->id;
 
-		$group_id = ( ( isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) ? $request['group_id'] : 0 );
+		$group_id = ( ! empty( $invite->item_id ) ? $invite->item_id : 0 );
 
 		// Entity meta.
 		$links = array(
@@ -917,6 +936,13 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		$schema['properties']['user_id']['description']  = __( 'The ID of the user who requested a Group membership.', 'buddyboss' );
 		$schema['properties']['group_id']['description'] = __( 'The ID of the group the user requested a membership for.', 'buddyboss' );
 		$schema['properties']['type']['default']         = 'request';
+
+		$schema['properties']['joined'] = array(
+			'context'     => array( 'view', 'edit' ),
+			'description' => __( 'The user auto join in private group or not.', 'buddyboss' ),
+			'type'        => 'boolean',
+			'default'     => false,
+		);
 
 		// Remove unused properties.
 		unset( $schema['properties']['invite_sent'], $schema['properties']['inviter_id'] );

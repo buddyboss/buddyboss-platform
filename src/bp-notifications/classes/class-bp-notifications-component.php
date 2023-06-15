@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Extends the component class to set up the Notifications component.
  */
+#[\AllowDynamicProperties]
 class BP_Notifications_Component extends BP_Component {
 
 	/**
@@ -46,6 +47,7 @@ class BP_Notifications_Component extends BP_Component {
 			'adminbar',
 			'template',
 			'functions',
+			'settings',
 			'cache',
 		);
 
@@ -309,6 +311,8 @@ class BP_Notifications_Component extends BP_Component {
 			array(
 				'bp_notifications',
 				'notification_meta',
+				'bp_notifications_unread_count',
+				'bp_notifications_grouped_notifications',
 			)
 		);
 

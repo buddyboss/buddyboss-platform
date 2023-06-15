@@ -1604,7 +1604,9 @@ define({ "api": [
               "date_created",
               "date_modified",
               "group_id",
-              "privacy"
+              "privacy",
+              "id",
+              "include"
             ],
             "optional": true,
             "field": "orderby",
@@ -3045,7 +3047,8 @@ define({ "api": [
               "parent",
               "rand",
               "popular",
-              "activity"
+              "activity",
+              "include"
             ],
             "optional": true,
             "field": "orderby",
@@ -3375,6 +3378,35 @@ define({ "api": [
   },
   {
     "type": "GET",
+    "url": "/wp-json/buddyboss/v1/forums/link-preview",
+    "title": "Link Preview",
+    "name": "GetBBForumsLinkPreview",
+    "group": "Forums",
+    "description": "<p>Retrieve link preview Forums.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "url",
+            "description": "<p>URL for the generate link preview.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-forums/classes/class-bb-rest-forums-link-preview-endpoint.php",
+    "groupTitle": "Forums"
+  },
+  {
+    "type": "GET",
     "url": "/wp-json/buddyboss/v1/forums/:id",
     "title": "Forum",
     "name": "GetBBPForum",
@@ -3404,7 +3436,7 @@ define({ "api": [
   },
   {
     "type": "POST",
-    "url": "/wp-json/buddyboss/v1/subscribe/:id",
+    "url": "/wp-json/buddyboss/v1/forums/subscribe/:id",
     "title": "Subscribe/Unsubscribe Forum",
     "name": "GetBBPForumSubscribe",
     "group": "Forums",
@@ -3532,7 +3564,8 @@ define({ "api": [
               "menu_order",
               "relevance",
               "popular",
-              "activity"
+              "activity",
+              "include"
             ],
             "optional": true,
             "field": "orderby",
@@ -4280,7 +4313,8 @@ define({ "api": [
               "newest",
               "alphabetical",
               "random",
-              "popular"
+              "popular",
+              "include"
             ],
             "optional": true,
             "field": "type",
@@ -4393,6 +4427,13 @@ define({ "api": [
             "field": "scope",
             "defaultValue": "all",
             "description": "<p>Limit result set to items with a specific scope.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "can_post",
+            "description": "<p>Fetch current users groups which can post activity in it.</p>"
           }
         ]
       }
@@ -4552,6 +4593,30 @@ define({ "api": [
             "field": "invite_sent",
             "defaultValue": "sent",
             "description": "<p>Limit result set to invites that have been sent, not sent, or include all.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "id",
+              "include"
+            ],
+            "optional": true,
+            "field": "orderby",
+            "defaultValue": "id",
+            "description": "<p>Order invites by which attribute.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "asc",
+              "desc"
+            ],
+            "optional": true,
+            "field": "sort_order",
+            "defaultValue": "desc",
+            "description": "<p>Order sort attribute ascending or descending.</p>"
           }
         ]
       }
@@ -4785,6 +4850,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "allowedValues": [
+              "edit-details",
               "group-settings",
               "forum",
               "courses"
@@ -5754,7 +5820,9 @@ define({ "api": [
             "type": "String",
             "allowedValues": [
               "date_created",
-              "menu_order"
+              "menu_order",
+              "id",
+              "include"
             ],
             "optional": true,
             "field": "orderby",
@@ -5849,6 +5917,49 @@ define({ "api": [
       }
     },
     "filename": "src/bp-media/classes/class-bp-rest-media-endpoint.php",
+    "groupTitle": "Media"
+  },
+  {
+    "type": "POST",
+    "url": "/wp-json/buddyboss/v1/media/move",
+    "title": "Move Medias",
+    "name": "MoveBBPhotos",
+    "group": "Media",
+    "description": "<p>Move Medias into the albums.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": false,
+            "field": "media_ids",
+            "description": "<p>Media specific IDs.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "album_id",
+            "description": "<p>A unique numeric ID for the Media Album.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "group_id",
+            "description": "<p>A unique numeric ID for the Group.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-media/classes/class-bp-rest-media-details-endpoint.php",
     "groupTitle": "Media"
   },
   {
@@ -6304,7 +6415,8 @@ define({ "api": [
               "alphabetical",
               "random",
               "online",
-              "popular"
+              "popular",
+              "include"
             ],
             "optional": true,
             "field": "type",
@@ -6378,6 +6490,35 @@ define({ "api": [
       }
     },
     "filename": "src/bp-members/classes/class-bp-rest-members-endpoint.php",
+    "groupTitle": "Members"
+  },
+  {
+    "type": "POST",
+    "url": "/wp-json/buddyboss/v1/members/presence",
+    "title": "Member Presence State",
+    "name": "GetBBMembers-MembersPresence",
+    "group": "Members",
+    "description": "<p>Members Presence.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": false,
+            "field": "ids",
+            "description": "<p>A unique numeric ID for the members</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-members/classes/class-bp-rest-members-actions-endpoint.php",
     "groupTitle": "Members"
   },
   {
@@ -6636,6 +6777,28 @@ define({ "api": [
             "optional": false,
             "field": "user_id",
             "description": "<p>The user ID to remove from the thread.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": true,
+            "field": "before",
+            "description": "<p>Messages to get before a specific date.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "recipients_pagination",
+            "description": "<p>Load recipients in a paginated manner.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "recipients_page",
+            "defaultValue": "1",
+            "description": "<p>Current page of the recipients.</p>"
           }
         ]
       }
@@ -6665,6 +6828,28 @@ define({ "api": [
             "optional": false,
             "field": "id",
             "description": "<p>ID of the Messages Thread.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": true,
+            "field": "before",
+            "description": "<p>Messages to get before a specific date.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "recipients_pagination",
+            "description": "<p>Load recipients in a paginated manner.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "recipients_page",
+            "defaultValue": "1",
+            "description": "<p>Current page of the recipients.</p>"
           }
         ]
       }
@@ -6743,6 +6928,13 @@ define({ "api": [
             "optional": false,
             "field": "user_id",
             "description": "<p>Limit result to messages created by a specific user.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "is_hidden",
+            "description": "<p>List the archived threads.</p>"
           }
         ]
       }
@@ -6827,6 +7019,28 @@ define({ "api": [
             "optional": false,
             "field": "group_id",
             "description": "<p>Group id to search members.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": true,
+            "field": "exclude",
+            "description": "<p>Ensure result set excludes specific member IDs.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "description": "<p>Current page of the collection.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "per_page",
+            "defaultValue": "10",
+            "description": "<p>Maximum number of items to be returned in result set.</p>"
           }
         ]
       }
@@ -6863,6 +7077,13 @@ define({ "api": [
             "optional": false,
             "field": "recipient_id",
             "description": "<p>Thread recipient ID.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "include_group_thread",
+            "description": "<p>Include group thread or not.</p>"
           }
         ]
       }
@@ -6899,6 +7120,28 @@ define({ "api": [
             "optional": false,
             "field": "message_id",
             "description": "<p>By default the latest message of the thread will be updated. Specify this message ID to edit another message of the thread.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": true,
+            "field": "before",
+            "description": "<p>Messages to get before a specific date.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "recipients_pagination",
+            "description": "<p>Load recipients in a paginated manner.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "recipients_page",
+            "defaultValue": "1",
+            "description": "<p>Current page of the recipients.</p>"
           }
         ]
       }
@@ -7355,7 +7598,8 @@ define({ "api": [
               "item_id",
               "secondary_item_id",
               "component_name",
-              "component_action"
+              "component_action",
+              "include"
             ],
             "optional": true,
             "field": "order_by",
@@ -8742,8 +8986,8 @@ define({ "api": [
   },
   {
     "type": "PATCH",
-    "url": "/wp-json/buddyboss/v1/signup/activate/:id",
-    "title": "Delete signup",
+    "url": "/wp-json/buddyboss/v1/signup/activate/:activation_key",
+    "title": "Activate a signup",
     "name": "ActivateBBSignups",
     "group": "Signups",
     "description": "<p>Activate a signup.</p>",
@@ -8755,8 +8999,8 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "id",
-            "description": "<p>Identifier for the signup. Can be a signup ID, an email address, or a user_login.</p>"
+            "field": "activation_key",
+            "description": "<p>Identifier for the signup.</p>"
           }
         ]
       }
@@ -8956,6 +9200,256 @@ define({ "api": [
     },
     "filename": "src/bp-members/classes/class-bp-rest-signup-endpoint.php",
     "groupTitle": "Signups"
+  },
+  {
+    "type": "POST",
+    "url": "/wp-json/buddyboss/v1/subscription",
+    "title": "Create Subscription",
+    "name": "CreateBBSubscription",
+    "group": "Subscription",
+    "description": "<p>Create subscription</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "forum",
+              "topic"
+            ],
+            "optional": false,
+            "field": "type",
+            "description": "<p>The type subscription.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "item_id",
+            "description": "<p>The ID of forum/topic.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "secondary_item_id",
+            "description": "<p>ID of the parent forum/topic.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "user_id",
+            "description": "<p>The ID of the user who created the Subscription. default logged-in user id.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "blog_id",
+            "description": "<p>The ID of site. default current site id.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-subscriptions-endpoint.php",
+    "groupTitle": "Subscription"
+  },
+  {
+    "type": "DELETE",
+    "url": "/wp-json/buddyboss/v1/subscription/:id",
+    "title": "Delete Subscription",
+    "name": "DeleteBBSubscription",
+    "group": "Subscriptions",
+    "description": "<p>Delete a subscription.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the Subscription.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-subscriptions-endpoint.php",
+    "groupTitle": "Subscriptions"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/subscription/:id",
+    "title": "Get Subscription",
+    "name": "GetBBSubscription",
+    "group": "Subscriptions",
+    "description": "<p>Retrieve single subscription</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the Subscription.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-subscriptions-endpoint.php",
+    "groupTitle": "Subscriptions"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/subscription-types",
+    "title": "Get Subscription types",
+    "name": "GetBBSubscriptionTypes",
+    "group": "Subscriptions",
+    "description": "<p>Retrieve subscription Types</p>",
+    "version": "1.0.0",
+    "filename": "src/bp-core/classes/class-bb-rest-subscriptions-endpoint.php",
+    "groupTitle": "Subscriptions"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/subscription",
+    "title": "Get Subscriptions",
+    "name": "GetBBSubscriptions",
+    "group": "Subscriptions",
+    "description": "<p>Retrieve subscriptions</p>",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "defaultValue": "1",
+            "description": "<p>Current page of the collection.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "per_page",
+            "defaultValue": "10",
+            "description": "<p>Maximum number of items to be returned in result set.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "search",
+            "description": "<p>Limit results to those matching a string.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "forum",
+              "topic"
+            ],
+            "optional": true,
+            "field": "type",
+            "description": "<p>Limit results based on subscription type.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "asc",
+              "desc"
+            ],
+            "optional": true,
+            "field": "order",
+            "defaultValue": "desc",
+            "description": "<p>Order sort attribute ascending or descending.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "id",
+              "type",
+              "item_id",
+              "date_recorded"
+            ],
+            "optional": true,
+            "field": "orderby",
+            "defaultValue": "date_recorded",
+            "description": "<p>Order Subscriptions by which attribute.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "blog_id",
+            "description": "<p>Get subscription site wise. Default current site ID.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "item_id",
+            "description": "<p>Get Subscriptions that are user subscribed items.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "secondary_item_id",
+            "description": "<p>Get Subscriptions that are children of the subscribed items.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "status",
+            "defaultValue": "1",
+            "description": "<p>Active Subscriptions. 1 = Active, 0 = Inactive.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "include",
+            "description": "<p>Ensure result set includes Subscriptions with specific IDs.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "exclude",
+            "description": "<p>Ensure result set excludes Subscriptions with specific IDs.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-subscriptions-endpoint.php",
+    "groupTitle": "Subscriptions"
   },
   {
     "type": "POST",
@@ -9223,7 +9717,9 @@ define({ "api": [
             "type": "String",
             "allowedValues": [
               "date_created",
-              "menu_order"
+              "menu_order",
+              "id",
+              "include"
             ],
             "optional": true,
             "field": "orderby",

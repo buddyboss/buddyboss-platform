@@ -44,7 +44,7 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 
 	if ( ! empty( $_POST ) ) {
 
-		$post_query = wp_parse_args( $_POST, $post_query );
+		$post_query = bp_parse_args( $_POST, $post_query );
 
 		// Make sure to transport the scope, filter etc.. in HeartBeat Requests
 		if ( ! empty( $post_query['data']['bp_heartbeat'] ) ) {
@@ -52,7 +52,7 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 
 			// Remove heartbeat specific vars
 			$post_query = array_diff_key(
-				wp_parse_args( $bp_heartbeat, $post_query ),
+				bp_parse_args( $bp_heartbeat, $post_query ),
 				array(
 					'data'      => false,
 					'interval'  => false,
@@ -129,6 +129,9 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 	if ( 'messages' === $object ) {
 		if ( ! empty( $post_query['box'] ) ) {
 			$qs[] = 'box=' . $post_query['box'];
+		}
+		if ( ! empty( $post_query['thread_type'] ) ) {
+			$qs[] = 'thread_type=' . $post_query['thread_type'];
 		}
 	}
 
@@ -256,7 +259,7 @@ function bp_nouveau_wrapper( $args = array() ) {
 	$current_component_class = bp_current_component() . '-meta';
 	$generic_class           = 'bp-generic-meta';
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'container'         => 'div',
@@ -279,7 +282,10 @@ function bp_nouveau_wrapper( $args = array() ) {
 	$default_classes        = array( 'action' );
 	$r['container_classes'] = array_merge( $r['container_classes'], $default_classes );
 
-	if ( empty( $r['container'] ) || ! isset( $valid_containers[ $r['container'] ] ) || empty( $r['output'] ) ) {
+	if ( empty( $r['container'] ) && ! empty( $r['output'] ) ) {
+		printf( $r['output'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		return;
+	} elseif ( empty( $r['container'] ) || ! isset( $valid_containers[ $r['container'] ] ) || empty( $r['output'] ) ) {
 		return;
 	}
 
@@ -995,7 +1001,7 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			),
 			'media-video-loop-none'             => array(
 				'type'    => 'info',
-				'message' => __( 'Sorry, no photos & videos were found.', 'buddyboss' ),
+				'message' => __( 'Sorry, no photos or videos were found.', 'buddyboss' ),
 			),
 			'video-loop-none'                   => array(
 				'type'    => 'info',

@@ -16,6 +16,13 @@ defined( 'ABSPATH' ) || exit;
 class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 
 	/**
+	 * Group object.
+	 *
+	 * @var object|null.
+	 */
+	public $group;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.1.0
@@ -109,7 +116,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Array} [include] An array of forums IDs to retrieve.
 	 * @apiParam {Number} [offset] The number of forums to offset before retrieval.
 	 * @apiParam {String=asc,desc} [order=asc] Designates ascending or descending order of forums.
-	 * @apiParam {Array=date,ID,author,title,name,modified,parent,rand,menu_order,relevance,popular,activity} [orderby] Sort retrieved forums by parameter..
+	 * @apiParam {Array=date,ID,author,title,name,modified,parent,rand,menu_order,relevance,popular,activity,include} [orderby] Sort retrieved forums by parameter..
 	 * @apiParam {Array=publish,private,hidden} [status=publish private] Limit result set to forums assigned a specific status.
 	 * @apiParam {Number} [parent] Forum ID to retrieve child pages for. Use 0 to only retrieve top-level forums.
 	 * @apiParam {Boolean} [subscriptions] Retrieve subscribed forums by user.
@@ -164,6 +171,14 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 
 		if ( is_array( $args['orderby'] ) ) {
 			$args['orderby'] = implode( ' ', $args['orderby'] );
+		}
+
+		if (
+			! empty( $request['include'] )
+			&& ! empty( $args['orderby'] )
+			&& 'include' === $args['orderby']
+		) {
+			$args['orderby'] = 'post__in';
 		}
 
 		/**
@@ -376,7 +391,10 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @return WP_REST_Response | WP_Error
 	 * @since 0.1.0
 	 *
-	 * @api            {POST} /wp-json/buddyboss/v1/subscribe/:id Subscribe/Unsubscribe Forum
+	 * NOTICE: Since 2.2.2, forum subscriptions have been migrated to a
+	 * new API for subscribing users to notifications: /wp-json/buddyboss/v1/subscriptions
+	 *
+	 * @api            {POST} /wp-json/buddyboss/v1/forums/subscribe/:id Subscribe/Unsubscribe Forum
 	 * @apiName        GetBBPForumSubscribe
 	 * @apiGroup       Forums
 	 * @apiDescription Subscribe/Unsubscribe forum for the user.
@@ -397,7 +415,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			$success = bbp_remove_user_subscription( $user_id, $forum->ID );
 			$action  = 'unsubscribe';
 		} elseif ( false === $is_subscription ) {
-			$success = bbp_add_user_subscription( $user_id, $forum->ID );
+			$success = (bool) bbp_add_user_subscription( $user_id, $forum->ID );
 			$action  = 'subscribe';
 		}
 
@@ -447,7 +465,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			$retval = true;
 			$forum  = bbp_get_forum( $request->get_param( 'id' ) );
 
-			if ( ! bbp_is_subscriptions_active() ) {
+			if ( ! bb_is_enabled_subscription( 'forum' ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
 					__( 'Subscription was disabled.', 'buddyboss' ),
@@ -557,7 +575,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			$this->prepare_password_response( $forum->post_password );
 		}
 
-		$data['short_content'] = wp_trim_excerpt( $forum->post_content );
+		$data['short_content'] = wp_trim_excerpt( '', $forum->ID );
 
 		$content = apply_filters( 'the_content', $forum->post_content );
 
@@ -582,11 +600,30 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			: ''
 		);
 
+		if ( ! empty( $data['group'] ) ) {
+			$this->group = $data['group'];
+		}
+
+		if ( class_exists( 'BBP_Forums_Group_Extension' ) ) {
+			$group_forum_extention = new BBP_Forums_Group_Extension();
+			// Allow group member to view private/hidden forums.
+			add_filter( 'bbp_map_meta_caps', array( $group_forum_extention, 'map_group_forum_meta_caps' ), 10, 4 );
+
+			// Fix issue - Group organizers and moderators can not add topic tags.
+			add_filter( 'bbp_map_topic_tag_meta_caps', array( $this, 'bb_rest_map_assign_topic_tags_caps' ), 10, 4 );
+		}
+
+		add_filter( 'bbp_map_group_forum_topic_meta_caps', array( $this, 'bb_rest_map_group_forum_topic_meta_caps' ), 99, 4 );
+
 		// Setup subscribe/unsubscribe state.
 		$data['action_states'] = $this->get_forum_action_states( $forum->ID );
 
 		// current user permission.
 		$data['user_permission'] = $this->get_forum_current_user_permissions( $forum->ID );
+
+		remove_filter( 'bbp_map_group_forum_topic_meta_caps', array( $this, 'bb_rest_map_group_forum_topic_meta_caps' ), 99, 4 );
+
+		$this->group = '';
 
 		$data['sub_forums'] = $this->get_sub_forums(
 			array(
@@ -950,6 +987,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 					'relevance',
 					'popular',
 					'activity',
+					'include',
 				),
 			),
 			'sanitize_callback' => 'bp_rest_sanitize_string_list',
@@ -1003,7 +1041,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	public function prepare_date_response( $date_gmt, $date = null ) {
 		// Use the date if passed.
 		if ( isset( $date ) ) {
-			return mysql_to_rfc3339( $date );
+			return mysql_to_rfc3339( $date ); // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_to_rfc3339, PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
 		}
 
 		// Return null if $date_gmt is empty/zeros.
@@ -1012,7 +1050,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		}
 
 		// Return the formatted datetime.
-		return mysql_to_rfc3339( $date_gmt );
+		return mysql_to_rfc3339( $date_gmt ); // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_to_rfc3339, PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
 	}
 
 	/**
@@ -1065,8 +1103,9 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 
 		if (
 			function_exists( 'bbp_is_forum_group_forum' )
-			&& bbp_is_forum_group_forum( $post->ID )
+			&& function_exists( 'bb_get_child_forum_group_ids' )
 			&& function_exists( 'groups_get_group' )
+			&& ! empty( bb_get_child_forum_group_ids( $post->ID ) )
 		) {
 			$group          = $this->bp_rest_get_group( $post->ID );
 			$links['group'] = array(
@@ -1178,7 +1217,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			'subscribed' => false,
 		);
 
-		if ( bbp_is_subscriptions_active() && current_user_can( 'edit_user', $user_id ) ) {
+		if ( bb_is_enabled_subscription( 'forum' ) && current_user_can( 'edit_user', $user_id ) ) {
 			$state['subscribed'] = bbp_is_user_subscribed( $user_id, $forum_id );
 		}
 
@@ -1207,6 +1246,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 				&& ! bbp_is_forum_category()
 				&& ( bbp_current_user_can_publish_topics() || bbp_current_user_can_access_anonymous_user_form() )
 				&& $this->can_access_content( $forum_id, true )
+				&& ( ! bbp_is_user_keymaster() ? bbp_is_forum_open( (int) $forum_id ) : true )
 			),
 		);
 	}
@@ -1325,8 +1365,14 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			return '';
 		}
 
-		if ( bbp_get_forum_group_ids( $forum_id ) ) {
-			$group              = groups_get_group( current( bbp_get_forum_group_ids( $forum_id ) ) );
+		if ( function_exists( 'bb_get_child_forum_group_ids' ) ) {
+			$group_ids = bb_get_child_forum_group_ids( $forum_id );
+		} else {
+			$group_ids = bbp_get_forum_group_ids( $forum_id );
+		}
+
+		if ( ! empty( $group_ids ) ) {
+			$group              = groups_get_group( current( $group_ids ) );
 			$group->avatar_urls = array();
 			if ( ! bp_disable_group_avatar_uploads() ) {
 				$group->avatar_urls = array(
@@ -1354,5 +1400,119 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 
 		return '';
 
+	}
+
+	/**
+	 * Allow group members to have advanced priviledges in group forum topics.
+	 *
+	 * @param array  $caps    Array of user caps.
+	 * @param string $cap     Capablility name to check.
+	 * @param int    $user_id User ID for capability check.
+	 * @param array  $args    Array of arguments.
+	 *
+	 * @return array
+	 */
+	public function bb_rest_map_group_forum_topic_meta_caps( $caps, $cap, $user_id, $args ) {
+		if (
+			empty( $this->group ) ||
+			empty( $this->group->id ) ||
+			empty( $user_id )
+		) {
+			return $caps;
+		}
+
+		switch ( $cap ) {
+
+			// If user is a group mmember, allow them to create content.
+			case 'read_forum':
+			case 'publish_replies':
+			case 'publish_topics':
+			case 'read_hidden_forums':
+			case 'read_private_forums':
+				if (
+					groups_is_user_member( $user_id, $this->group->id ) ||
+					groups_is_user_mod( $user_id, $this->group->id ) ||
+					groups_is_user_admin( $user_id, $this->group->id )
+				) {
+					$caps = array( 'participate' );
+				}
+				break;
+
+			// If user is a group mod ar admin, map to participate cap.
+			case 'moderate':
+			case 'edit_topic':
+			case 'edit_reply':
+			case 'view_trash':
+			case 'edit_others_replies':
+			case 'edit_others_topics':
+				if (
+					groups_is_user_mod( $user_id, $this->group->id ) ||
+					groups_is_user_admin( $user_id, $this->group->id )
+				) {
+					$caps = array( 'participate' );
+				}
+				break;
+
+			// If user is a group admin, allow them to delete topics and replies.
+			case 'delete_topic':
+			case 'delete_reply':
+				if ( groups_is_user_admin( $user_id, $this->group->id ) ) {
+					$caps = array( 'participate' );
+				}
+				break;
+		}
+
+		return apply_filters( 'bb_rest_map_group_forum_topic_meta_caps', $caps, $cap, $user_id, $args );
+	}
+
+	/**
+	 * Fix issue - Group organizers and moderators can not add topic tags.
+	 * - from bbp_map_assign_topic_tags_caps();
+	 *
+	 * @param array  $caps    List of capabilities.
+	 * @param string $cap     Capability name.
+	 * @param int    $user_id User ID.
+	 * @param array  $args    List of Arguments.
+	 *
+	 * @return array
+	 */
+	public function bb_rest_map_assign_topic_tags_caps( $caps, $cap, $user_id, $args ) {
+		if (
+			'assign_topic_tags' !== $cap ||
+			empty( $this->group ) ||
+			empty( $this->group->id ) ||
+			empty( $user_id )
+		) {
+			return $caps;
+		}
+
+		if (
+			groups_is_user_mod( $user_id, $this->group->id ) ||
+			groups_is_user_admin( $user_id, $this->group->id )
+		) {
+			return array( 'participate' );
+		}
+	}
+
+	/**
+	 * Removed lazyload from link preview embed.
+	 *
+	 * @param string $content Topic or reply content.
+	 * @param int    $post_id Topic or reply id.
+	 *
+	 * @return string $content
+	 */
+	public function bp_rest_forums_remove_lazyload( $content, $post_id ) {
+		$link_embed = get_post_meta( $post_id, '_link_embed', true );
+
+		if ( empty( $link_embed ) ) {
+			return $content;
+		}
+
+		$content = preg_replace( '/iframe(.*?)data-lazy-type="iframe"/is', 'iframe$1', $content );
+		$content = preg_replace( '/iframe(.*?)class="lazy/is', 'iframe$1class="', $content );
+		$content = preg_replace( '/iframe(.*?)data-src=/is', 'iframe$1src=', $content );
+
+		return $content;
 	}
 }

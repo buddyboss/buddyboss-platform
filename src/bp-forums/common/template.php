@@ -1010,6 +1010,8 @@ function bbp_is_edit() {
  */
 function bbp_body_class( $wp_classes, $custom_classes = false ) {
 
+	global $post;
+
 	$bbp_classes = array();
 
 	/** Archives */
@@ -1106,19 +1108,25 @@ function bbp_body_class( $wp_classes, $custom_classes = false ) {
 	} elseif ( bbp_is_search_results() ) {
 		$bbp_classes[] = 'bbp-search-results';
 		$bbp_classes[] = 'forum-search-results';
+	} elseif ( isset( $post->post_content ) && ( has_shortcode( $post->post_content, 'bbp-forum-form' ) || has_shortcode( $post->post_content, 'bbp-reply-form' ) || has_shortcode( $post->post_content, 'bbp-topic-form' ) ) ) {
+		$bbp_classes[] = 'forum';
+		$bbp_classes[] = 'bbpress';
+		$bbp_classes[] = 'forum-template-default';
+		$bbp_classes[] = 'single';
+		$bbp_classes[] = 'single-forum';
 	}
 
 	/** Clean up */
 
-	// Add Forums class if we are within a Forums page
+	// Add Forums class if we are within a Forums page.
 	if ( ! empty( $bbp_classes ) ) {
 		$bbp_classes[] = 'bbpress';
 	}
 
-	// Merge WP classes with Forums classes and remove any duplicates
+	// Merge WP classes with Forums classes and remove any duplicates.
 	$classes = array_unique( array_merge( (array) $bbp_classes, (array) $wp_classes ) );
 
-	// Deprecated filter (do not use)
+	// Deprecated filter (do not use).
 	$classes = apply_filters( 'bbp_get_the_body_class', $classes, $bbp_classes, $wp_classes, $custom_classes );
 
 	return apply_filters( 'bbp_body_class', $classes, $bbp_classes, $wp_classes, $custom_classes );
@@ -1491,7 +1499,7 @@ function bbp_dropdown( $args = '' ) {
 	 * @return string The dropdown
 	 */
 function bbp_get_dropdown( $args = '' ) {
-
+	static $bbp_get_dropdown_cache = array();
 	/** Arguments */
 
 	// Parse arguments against default values
@@ -1516,6 +1524,7 @@ function bbp_get_dropdown( $args = '' ) {
 			'show_none_default_val' => '',
 			'disable_categories'    => true,
 			'disabled'              => '',
+			'disabled_walker'       => true,
 		),
 		'get_dropdown'
 	);
@@ -1536,24 +1545,30 @@ function bbp_get_dropdown( $args = '' ) {
 	}
 
 	/** Setup variables */
-
-	$retval = '';
-	$posts  = get_posts(
-		array(
-			'post_type'              => $r['post_type'],
-			'post_status'            => $r['post_status'],
-			'exclude'                => $r['exclude'],
-			'post_parent'            => $r['post_parent'],
-			'numberposts'            => $r['numberposts'],
-			'orderby'                => $r['orderby'],
-			'order'                  => $r['order'],
-			'walker'                 => $r['walker'],
-			'disable_categories'     => $r['disable_categories'],
-			'suppress_filters'       => false,
-			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false,
-		)
+	$retval    = '';
+	$post_args = array(
+		'post_type'              => $r['post_type'],
+		'post_status'            => $r['post_status'],
+		'exclude'                => $r['exclude'],
+		'post_parent'            => $r['post_parent'],
+		'numberposts'            => $r['numberposts'],
+		'orderby'                => $r['orderby'],
+		'order'                  => $r['order'],
+		'walker'                 => $r['walker'],
+		'disable_categories'     => $r['disable_categories'],
+		'suppress_filters'       => false,
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false,
 	);
+
+	$cache_key = 'bbp_get_dropdown_' . md5( maybe_serialize( $post_args ) );
+	if ( ! isset( $bbp_get_dropdown_cache[ $cache_key ] ) ) {
+		$posts = get_posts( $post_args );
+
+		$bbp_get_dropdown_cache[ $cache_key ] = $posts;
+	} else {
+		$posts = $bbp_get_dropdown_cache[ $cache_key ];
+	}
 
 	/** Drop Down */
 
@@ -1561,7 +1576,7 @@ function bbp_get_dropdown( $args = '' ) {
 	if ( empty( $r['options_only'] ) ) {
 
 		// Should this select appear disabled?
-		$disabled = disabled( isset( bbpress()->options[ $r['disabled'] ] ), true, false );
+		$disabled = disabled( isset( bbpress()->options[ $r['disabled'] ] ) ? bbpress()->options[ $r['disabled'] ] : $r['disabled'], true, false );
 
 		// Setup the tab index attribute
 		$tab = ! empty( $r['tab'] ) ? ' tabindex="' . intval( $r['tab'] ) . '"' : '';
@@ -1617,7 +1632,11 @@ function bbp_get_dropdown( $args = '' ) {
 	// Items found so walk the tree
 	if ( ! empty( $posts ) ) {
 		add_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 999, 2 );
-		unset( $r['walker'] );
+
+		if ( ! empty( $r['disabled_walker'] ) && true === $r['disabled_walker'] ) {
+			unset( $r['walker'] );
+		}
+
 		$retval .= walk_page_dropdown_tree( $posts, 0, $r );
 		remove_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 999, 2 );
 	}
@@ -1646,7 +1665,7 @@ function bbp_reply_attributes_meta_box_discussion_reply_title( $title, $post ) {
 		$title = get_the_date( 'm/d/y', $post->ID ) . ' - ' . esc_html__( wp_trim_words( wp_strip_all_tags( $post->post_content ), 8, '...' ), 'buddyboss' );
 	}
 
-	return $title;
+	return apply_filters( 'bbp_reply_attributes_meta_box_discussion_reply_title', $title, $post );
 }
 
 /**
@@ -1716,7 +1735,13 @@ function bbp_forum_form_fields() {
  */
 function bbp_topic_form_fields() {
 
-	if ( bbp_is_topic_edit() ) :
+	if ( bbp_use_autoembed() ) {
+		?>
+		<input type="hidden" name="link_preview_data" id="link_preview_data" />
+		<?php
+	}
+
+	if ( bbp_is_topic_edit() ) {
 		?>
 
 		<input type="hidden" name="action"       id="bbp_post_action" value="bbp-edit-topic" />
@@ -1733,7 +1758,9 @@ function bbp_topic_form_fields() {
 		<?php
 		wp_nonce_field( 'bbp-edit-topic_' . bbp_get_topic_id() );
 
-	else :
+		bb_forums_edit_link_preview_field( bbp_get_topic_id() );
+
+	} else {
 
 		if ( bbp_is_single_forum() ) :
 			?>
@@ -1752,7 +1779,7 @@ function bbp_topic_form_fields() {
 		<?php
 		wp_nonce_field( 'bbp-new-topic' );
 
-	endif;
+	}
 }
 
 /**
@@ -1768,7 +1795,13 @@ function bbp_topic_form_fields() {
  */
 function bbp_reply_form_fields() {
 
-	if ( bbp_is_reply_edit() ) :
+	if ( bbp_use_autoembed() ) {
+		?>
+		<input type="hidden" name="link_preview_data" id="link_preview_data" />
+		<?php
+	}
+
+	if ( bbp_is_reply_edit() ) {
 		$forum_redirect_to = isset( $_REQUEST['forum_redirect_to'] ) ? (int) $_REQUEST['forum_redirect_to'] : 1
 		?>
 
@@ -1776,7 +1809,7 @@ function bbp_reply_form_fields() {
 		<input type="hidden" name="bbp_reply_to"    id="bbp_reply_to"    value="<?php bbp_form_reply_to(); ?>" />
 		<input type="hidden" name="action"          id="bbp_post_action" value="bbp-edit-reply" />
 		<input type="hidden" name="bbp_redirect_page_to" id="bbp_redirect_page_to" value="<?php echo intval( $forum_redirect_to ); ?>" />
-	
+
 		<?php
 		if ( current_user_can( 'unfiltered_html' ) ) {
 			wp_nonce_field( 'bbp-unfiltered-html-reply_' . bbp_get_reply_id(), '_bbp_unfiltered_html_reply', false );}
@@ -1785,7 +1818,9 @@ function bbp_reply_form_fields() {
 		<?php
 		wp_nonce_field( 'bbp-edit-reply_' . bbp_get_reply_id() );
 
-	else :
+		bb_forums_edit_link_preview_field( bbp_get_reply_id() );
+
+	} else {
 		?>
 
 		<input type="hidden" name="bbp_topic_id"    id="bbp_topic_id"    value="<?php bbp_topic_id(); ?>" />
@@ -1805,7 +1840,7 @@ function bbp_reply_form_fields() {
 			bbp_redirect_to_field( get_permalink() );
 
 		endif;
-	endif;
+	}
 }
 
 /**
@@ -1963,9 +1998,7 @@ function bbp_get_the_content( $args = array() ) {
 		$editor_unique_id = bp_unique_id( 'forums_editor_' );
 
 		?>
-			<div id="bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content_<?php echo esc_attr( $editor_unique_id ); ?>" class="<?php echo esc_attr( $r['editor_class'] ); ?> bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" data-key="<?php echo esc_attr( $editor_unique_id ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="'. bp_get_current_group_id() .'"' : ''; ?>>
-			<?php echo $post_content; ?>
-			</div>
+			<div id="bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content_<?php echo esc_attr( $editor_unique_id ); ?>" class="<?php echo esc_attr( $r['editor_class'] ); ?> bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" data-key="<?php echo esc_attr( $editor_unique_id ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="' . bp_get_current_group_id() . '"' : ''; ?>><?php echo wp_kses_post( $post_content ); ?></div>
 			<input type="hidden" id="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" name="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" value="<?php echo esc_attr( $post_content ); ?>" />
 			<?php
 
@@ -1998,7 +2031,7 @@ function bbp_get_the_content( $args = array() ) {
 		else :
 			?>
 
-			<textarea id="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" class="<?php echo esc_attr( $r['editor_class'] ); ?>" name="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" cols="60" rows="<?php echo esc_attr( $r['textarea_rows'] ); ?>" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="'. bp_get_current_group_id() .'"' : ''; ?>><?php echo $post_content; ?></textarea>
+			<textarea id="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" class="<?php echo esc_attr( $r['editor_class'] ); ?>" name="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" cols="60" rows="<?php echo esc_attr( $r['textarea_rows'] ); ?>" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="' . bp_get_current_group_id() . '"' : ''; ?>><?php echo esc_textarea( $post_content ); ?></textarea>
 
 			<?php
 		endif;
@@ -2602,18 +2635,19 @@ function bbp_get_breadcrumb( $args = array() ) {
 function bbp_allowed_tags() {
 	echo bbp_get_allowed_tags();
 }
-	/**
-	 * Display all of the allowed tags in HTML format with attributes.
-	 *
-	 * This is useful for displaying in the post area, which elements and
-	 * attributes are supported. As well as any plugins which want to display it.
-	 *
-	 * @since bbPress (r2780)
-	 *
-	 * @uses bbp_kses_allowed_tags() To get the allowed tags
-	 * @uses apply_filters() Calls 'bbp_allowed_tags' with the tags
-	 * @return string HTML allowed tags entity encoded.
-	 */
+
+/**
+ * Display all of the allowed tags in HTML format with attributes.
+ *
+ * This is useful for displaying in the post area, which elements and
+ * attributes are supported. As well as any plugins which want to display it.
+ *
+ * @since bbPress (r2780)
+ *
+ * @uses bbp_kses_allowed_tags() To get the allowed tags
+ * @uses apply_filters() Calls 'bbp_allowed_tags' with the tags
+ * @return string HTML allowed tags entity encoded.
+ */
 function bbp_get_allowed_tags() {
 
 	$allowed = '';
@@ -2628,7 +2662,7 @@ function bbp_get_allowed_tags() {
 		$allowed .= '> ';
 	}
 
-	return apply_filters( 'bbp_get_allowed_tags', htmlentities( $allowed ) );
+	return apply_filters( 'bbp_get_allowed_tags', htmlentities( $allowed, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
 }
 
 /** Errors & Messages *********************************************************/
@@ -2926,4 +2960,34 @@ function bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 
 	// Filter and return
 	return apply_filters( 'bbp_title', $new_title, $sep, $seplocation );
+}
+
+/**
+ * Link preview edit field.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param integer $post_id Topic or Reply id.
+ */
+function bb_forums_edit_link_preview_field( $post_id ) {
+	$link_data         = array();
+	$link_preview_data = get_post_meta( $post_id, '_link_preview_data', true );
+	if ( ! empty( $link_preview_data ) && count( $link_preview_data ) ) {
+		$link_data['embed']                 = 0;
+		$link_data['url']                   = ( ! empty( $link_preview_data['url'] ) ? $link_preview_data['url'] : '' );
+		$link_data['link_image_index_save'] = $link_preview_data['link_image_index_save'];
+	}
+
+	$link_embed = get_post_meta( $post_id, '_link_embed', true );
+	if ( ! empty( $link_embed ) ) {
+		$link_data['url']   = $link_embed;
+		$link_data['embed'] = 1;
+	}
+
+	if ( isset( $link_data['url'] ) && ! empty( $link_data['url'] ) ) {
+		$link_data_string = htmlentities( wp_json_encode( $link_data ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
+		?>
+		<input type="hidden" name="bb_link_url" id="bb_link_url" value="<?php echo $link_data_string; ?>"/>
+		<?php
+	}
 }

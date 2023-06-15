@@ -65,6 +65,29 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 				'schema' => array( $this, 'get_item_schema' ),
 			)
 		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . buddypress()->members->id . '/presence',
+			array(
+				'args'   => array(
+					'ids' => array(
+						'description'       => __( 'A unique users IDs of the member.', 'buddyboss' ),
+						'type'              => 'array',
+						'required'          => true,
+						'items'             => array( 'type' => 'integer' ),
+						'sanitize_callback' => 'wp_parse_id_list',
+						'validate_callback' => 'rest_validate_request_arg',
+					),
+				),
+				array(
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => array( $this, 'presence_item' ),
+					'permission_callback' => array( $this, 'presence_item_permissions_check' ),
+				),
+				'schema' => array( $this, 'get_presence_item_schema' ),
+			)
+		);
 	}
 
 	/**
@@ -198,6 +221,74 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 	}
 
 	/**
+	 * Checks if a given member is online or not.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return bool|WP_Error
+	 * @since 0.1.0
+	 *
+	 * @api {POST} /wp-json/buddyboss/v1/members/presence Member Presence State
+	 * @apiName GetBBMembers-MembersPresence
+	 * @apiGroup Members
+	 * @apiDescription Members Presence.
+	 * @apiVersion 1.0.0
+	 * @apiPermission LoggedInUser
+	 * @apiParam {Array} ids A unique numeric ID for the members
+	 */
+	public function presence_item( $request ) {
+
+		if ( isset( $request['ids'] ) ) {
+			bp_core_record_activity();
+		}
+
+		$users  = $request->get_param( 'ids' );
+		$retval = bb_get_users_presence( $users );
+
+		$response = rest_ensure_response( $retval );
+
+		/**
+		 * Fires after a member presence status is fetched via the REST API.
+		 *
+		 * @param WP_REST_Response $response The response data.
+		 * @param WP_REST_Request  $request  The request sent to the API.
+		 */
+		do_action( 'bp_rest_presence_item', $response, $request );
+
+		return $response;
+	}
+
+	/**
+	 * Check if a given request has access to check member status for presence.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return bool|WP_Error
+	 */
+	public function presence_item_permissions_check( $request ) {
+
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
+
+		if ( is_user_logged_in() ) {
+			$retval = true;
+		}
+
+		/**
+		 * Filter the members `presence_item_permissions_check` permissions check.
+		 *
+		 * @param bool|WP_Error   $retval  Returned value.
+		 * @param WP_REST_Request $request The request sent to the API.
+		 */
+		return apply_filters( 'bp_rest_presence_item_permissions_check', $retval, $request );
+	}
+
+	/**
 	 * Get the members action schema, conforming to JSON Schema.
 	 *
 	 * @return array
@@ -295,7 +386,7 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 
 			$avatar_properties['full'] = array(
 				/* translators: Full image size for the member Avatar */
-				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), number_format_i18n( bp_core_avatar_full_width() ), number_format_i18n( bp_core_avatar_full_height() ) ),
+				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_full_width() ), bp_core_number_format( bp_core_avatar_full_height() ) ),
 				'type'        => 'string',
 				'format'      => 'uri',
 				'context'     => array( 'embed', 'view', 'edit' ),
@@ -303,7 +394,7 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 
 			$avatar_properties['thumb'] = array(
 				/* translators: Thumb imaze size for the member Avatar */
-				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), number_format_i18n( bp_core_avatar_thumb_width() ), number_format_i18n( bp_core_avatar_thumb_height() ) ),
+				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_thumb_width() ), bp_core_number_format( bp_core_avatar_thumb_height() ) ),
 				'type'        => 'string',
 				'format'      => 'uri',
 				'context'     => array( 'embed', 'view', 'edit' ),
@@ -331,6 +422,42 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 		 * @param array $schema The endpoint schema.
 		 */
 		return apply_filters( 'bp_rest_members_action_schema', $this->add_additional_fields_schema( $schema ) );
+	}
+
+	/**
+	 * Get the query params for collections of members.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return array
+	 */
+	public function get_presence_item_schema() {
+		$schema = array(
+			'$schema'    => 'http://json-schema.org/draft-04/schema#',
+			'title'      => 'bp_members_presence',
+			'type'       => 'object',
+			'properties' => array(
+				'id'     => array(
+					'description' => __( 'A unique numeric ID for the Member.', 'buddyboss' ),
+					'type'        => 'integer',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'status' => array(
+					'description' => __( 'Current presence status of the user is online or offline.', 'buddyboss' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'readonly'    => true,
+				),
+			),
+		);
+
+		/**
+		 * Filters the members presence schema.
+		 *
+		 * @param array $schema The endpoint schema.
+		 */
+		return apply_filters( 'bp_rest_members_presence_schema', $this->add_additional_fields_schema( $schema ) );
 	}
 
 	/**

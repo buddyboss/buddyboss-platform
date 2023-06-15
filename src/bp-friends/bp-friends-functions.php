@@ -782,77 +782,6 @@ add_action( 'wpmu_delete_user', 'friends_remove_data' );
 add_action( 'delete_user', 'friends_remove_data' );
 add_action( 'bp_make_spam_user', 'friends_remove_data' );
 
-/**
- * Used by the Activity component's @mentions to print a JSON list of the current user's friends.
- *
- * This is intended to speed up @mentions lookups for a majority of use cases.
- *
- * @since BuddyPress 2.1.0
- *
- * @see bp_activity_mentions_script()
- */
-function bp_friends_prime_mentions_results() {
-
-	// Stop here if user is not logged in.
-	if ( ! is_user_logged_in() ) {
-		return;
-	}
-
-	// Bail out if the site has a ton of users.
-	if ( bp_is_large_install() ) {
-		return;
-	}
-
-	// Bail if single group page.
-	if ( bp_is_group() ) {
-		return;
-	}
-
-	if ( friends_get_total_friend_count( get_current_user_id() ) > 30 ) {
-		return;
-	}
-
-	$friends_query = array(
-		'count_total'     => '',                    // Prevents total count.
-		'populate_extras' => false,
-
-		'type'            => 'alphabetical',
-		'user_id'         => get_current_user_id(),
-	);
-
-	$friends_query = new BP_User_Query( $friends_query );
-	$results       = array();
-
-	foreach ( $friends_query->results as $user ) {
-		$result        = new stdClass();
-		$result->ID    = bp_activity_get_user_mentionname( $user->ID );
-		$result->image = bp_core_fetch_avatar(
-			array(
-				'html'    => false,
-				'item_id' => $user->ID,
-			)
-		);
-
-		if ( ! empty( $user->display_name ) && ! bp_disable_profile_sync() ) {
-			$result->name = bp_core_get_user_displayname( $user->ID );
-		} else {
-			$result->name = bp_core_get_user_displayname( $user->ID );
-		}
-		$result->user_id = $user->ID;
-
-		$results[] = $result;
-	}
-
-	wp_localize_script(
-		'bp-mentions',
-		'BP_Suggestions',
-		array(
-			'friends' => $results,
-		)
-	);
-}
-add_action( 'bp_activity_mentions_prime_results', 'bp_friends_prime_mentions_results' );
-add_action( 'bbp_forums_mentions_prime_results', 'bp_friends_prime_mentions_results' );
 
 /** Emails ********************************************************************/
 
@@ -869,7 +798,17 @@ add_action( 'bbp_forums_mentions_prime_results', 'bp_friends_prime_mentions_resu
  * @param int $friend_id     ID of the request recipient.
  */
 function friends_notification_new_request( $friendship_id, $initiator_id, $friend_id ) {
-	if ( 'no' == bp_get_user_meta( (int) $friend_id, 'notification_friends_friendship_request', true ) ) {
+
+	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $friend_id, $initiator_id ) ) {
+		return;
+	}
+
+	$type_key = 'notification_friends_friendship_request';
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		$type_key = bb_get_prefences_key( 'legacy', $type_key );
+	}
+
+	if ( false === bb_is_notification_enabled( (int) $friend_id, $type_key ) ) {
 		return;
 	}
 
@@ -906,7 +845,12 @@ add_action( 'friends_friendship_requested', 'friends_notification_new_request', 
  * @param int $friend_id     ID of the request recipient.
  */
 function friends_notification_accepted_request( $friendship_id, $initiator_id, $friend_id ) {
-	if ( 'no' == bp_get_user_meta( (int) $initiator_id, 'notification_friends_friendship_accepted', true ) ) {
+	$type_key = 'notification_friends_friendship_accepted';
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		$type_key = bb_get_prefences_key( 'legacy', $type_key );
+	}
+
+	if ( false === bb_is_notification_enabled( (int) $initiator_id, $type_key ) ) {
 		return;
 	}
 
@@ -928,3 +872,24 @@ function friends_notification_accepted_request( $friendship_id, $initiator_id, $
 	bp_send_email( 'friends-request-accepted', $initiator_id, $args );
 }
 add_action( 'friends_friendship_accepted', 'friends_notification_accepted_request', 10, 3 );
+
+/**
+ * When a connection request is accepted, auto follow the member if auto follow setting is enabled.
+ *
+ * @since BuddyPress 2.3.1
+ *
+ * @param int $friendship_id     ID of the friendship object.
+ * @param int $initiator_user_id ID of the user who initiated the request.
+ * @param int $friend_user_id    ID of the request recipient.
+ */
+function bb_friends_auto_follow( $friendship_id, $initiator_user_id, $friend_user_id ) {
+	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() && bb_is_friends_auto_follow_active() ) {
+		bp_start_following(
+			array(
+				'leader_id'   => $friend_user_id,
+				'follower_id' => $initiator_user_id,
+			)
+		);
+	}
+}
+add_action( 'friends_friendship_accepted', 'bb_friends_auto_follow', 10, 3 );

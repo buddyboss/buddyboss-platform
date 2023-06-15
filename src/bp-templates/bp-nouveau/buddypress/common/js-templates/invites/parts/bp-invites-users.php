@@ -1,3 +1,14 @@
+<?php
+/**
+ * Invites users Templates
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/invites/parts/bp-invites-users.php.
+ *
+ * @since   1.0.0
+ * @version 1.0.0
+ */
+
+?>
 <script type="text/html" id="tmpl-bp-invites-users">
 	<div class="item-avatar">
 		<img src="{{data.avatar}}" class="avatar" alt="">

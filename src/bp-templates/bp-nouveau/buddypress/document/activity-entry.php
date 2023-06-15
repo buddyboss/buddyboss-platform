@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Activity Document
+ * The template for activity document entry
  *
- * @since BuddyBoss 1.4.0
+ * This template can be overridden by copying it to yourtheme/buddypress/document/activity-entry.php.
+ *
+ * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 
 $attachment_id     = bp_get_document_attachment_id();
@@ -38,6 +41,7 @@ $video_url     = bb_document_video_get_symlink( bp_get_document_id() );
 ?>
 
 <div class="bb-activity-media-elem document-activity <?php bp_document_id(); ?> <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>" data-id="<?php bp_document_id(); ?>" data-parent-id="<?php bp_document_parent_id(); ?>" >
+	<?php bp_get_template_part( 'document/activity-document-preview' ); ?> <!-- .bb-code-extension-files-preview. -->
 	<div class="document-description-wrap">
 		<a
 				href="<?php echo esc_url( $download_url ); ?>"
@@ -88,12 +92,15 @@ $video_url     = bb_document_video_get_symlink( bp_get_document_id() );
 			<span class="document-title"><?php echo esc_html( $filename ); ?></span>
 			<span class="document-description"><?php echo esc_html( $size ); ?></span>
 			<span class="document-extension-description"><?php echo esc_html( bp_document_get_extension_description( bp_get_document_extension() ) ); ?></span>
-			<span class="document-helper-text"> <span> — </span><span class="document-helper-text-click"><?php esc_html_e( 'Click to', 'buddyboss' ); ?></span><span class="document-helper-text-inner"><?php echo esc_html( $click_text ); ?></span></span>
+			<span class="document-helper-text"> <span> - </span><span class="document-helper-text-click"><?php esc_html_e( 'Click to', 'buddyboss' ); ?></span><span class="document-helper-text-inner"><?php echo esc_html( $click_text ); ?></span></span>
 		</a>
 	</div>
 
 	<?php bp_get_template_part( 'document/activity-document-actions' ); ?> <!-- .bb-activity-document-actions. -->
 
-	<?php bp_get_template_part( 'document/activity-document-preview' ); ?> <!-- .bb-code-extension-files-preview. -->
+	<?php
+		// Code extension files preview.
+		bp_get_template_part( 'document/code-preview' );
+	?>
 
 </div> <!-- .bb-activity-media-elem -->

@@ -174,12 +174,11 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 			return $retval;
 		}
 
-		return $this->get_item(
-			array(
-				'id'      => $reply_id,
-				'context' => 'view',
-			)
-		);
+		$object = new WP_REST_Request();
+		$object->set_param( 'id', $reply_id );
+		$object->set_param( 'context', 'view' );
+
+		return $this->get_item( $object );
 	}
 
 	/**
@@ -500,12 +499,11 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 		// Update counts, etc...
 		do_action( 'bbp_post_move_reply', $move_reply->ID, $source_topic->ID, $destination_topic->ID );
 
-		return $this->topic_endpoint->get_item(
-			array(
-				'id'      => $destination_topic->ID,
-				'context' => 'view',
-			)
-		);
+		$object = new WP_REST_Request();
+		$object->set_param( 'id', $destination_topic->ID );
+		$object->set_param( 'context', 'view' );
+
+		return $this->topic_endpoint->get_item( $object );
 	}
 
 	/**
@@ -593,7 +591,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 		}
 
 		$post_status = get_post_status( $reply_id );
-		$topic_id = bbp_get_reply_topic_id( $reply_id );
+		$topic_id    = bbp_get_reply_topic_id( $reply_id );
 
 		if (
 			'trash' === $post_status

@@ -17,6 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.5.0
  */
+#[\AllowDynamicProperties]
 class BP_XProfile_Component extends BP_Component {
 
 	/**
@@ -394,7 +395,7 @@ class BP_XProfile_Component extends BP_Component {
 			);
 
 			// Edit Avatar.
-			if ( buddypress()->avatar->show_avatars ) {
+			if ( ! bp_disable_avatar_uploads() && buddypress()->avatar->show_avatars ) {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-change-avatar',
@@ -469,6 +470,7 @@ class BP_XProfile_Component extends BP_Component {
 				'bp_xprofile_fields',
 				'bp_xprofile_groups',
 				'xprofile_meta',
+				'field_children_options',
 			)
 		);
 

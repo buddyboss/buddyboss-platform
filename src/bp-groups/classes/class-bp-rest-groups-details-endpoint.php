@@ -206,6 +206,12 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		remove_action( 'bp_init', 'bp_add_rewrite_rules', 30 );
 		remove_action( 'bp_init', 'bp_add_permastructs', 40 );
 		remove_action( 'bp_init', 'bp_init_background_updater', 50 );
+		if ( function_exists( 'bb_init_email_background_updater' ) ) {
+			remove_action( 'bp_init', 'bb_init_email_background_updater', 51 );
+		}
+		if ( function_exists( 'bb_init_notifications_background_updater' ) ) {
+			remove_action( 'bp_init', 'bb_init_notifications_background_updater', 52 );
+		}
 		remove_all_actions( 'bp_actions' );
 
 		/**
@@ -227,6 +233,12 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		add_action( 'bp_init', 'bp_add_rewrite_rules', 30 );
 		add_action( 'bp_init', 'bp_add_permastructs', 40 );
 		add_action( 'bp_init', 'bp_init_background_updater', 50 );
+		if ( function_exists( 'bb_init_email_background_updater' ) ) {
+			add_action( 'bp_init', 'bb_init_email_background_updater', 51 );
+		}
+		if ( function_exists( 'bb_init_notifications_background_updater' ) ) {
+			add_action( 'bp_init', 'bb_init_notifications_background_updater', 52 );
+		}
 
 		$group_slug = $group->slug;
 
@@ -244,12 +256,16 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 			$default_tab = bp_nouveau_get_appearance_settings( 'group_default_tab' );
 		}
 
-		$nav_items = $group_nav->get_secondary(
-			array(
-				'parent_slug'     => $group_slug,
-				'user_has_access' => true,
-			)
-		);
+		$nav_items = array();
+		// Check if get_secondary method is exists.
+		if ( ! empty( $group_nav ) && method_exists( $group_nav, 'get_secondary' ) ) {
+			$nav_items = $group_nav->get_secondary(
+				array(
+					'parent_slug'     => $group_slug,
+					'user_has_access' => true,
+				)
+			);
+		}
 
 		if ( ! empty( $nav_items ) ) {
 			foreach ( $nav_items as $nav ) {
@@ -593,7 +609,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 				break;
 		}
 
-		return $count;
+		return bp_core_number_format( $count );
 	}
 
 	/**
@@ -619,13 +635,15 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 			$admins = groups_get_group_admins( $group->id );
 			$mods   = groups_get_group_mods( $group->id );
 			$count  = count( $admins ) + count( $mods );
+		} elseif ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() && 'videos' === $nav_item ) {
+			$count = bp_video_get_total_group_video_count( $group->id );
 		}
 
 		if ( ! isset( $count ) ) {
 			return false;
 		}
 
-		return $count;
+		return bp_core_number_format( $count );
 	}
 
 	/**

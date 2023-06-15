@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Document Entry
+ * The template for document entry
  *
- * @since BuddyBoss 1.4.0
+ * This template can be overridden by copying it to yourtheme/buddypress/document/entry.php.
+ *
+ * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 
 ?>

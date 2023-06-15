@@ -14,7 +14,6 @@ defined( 'ABSPATH' ) || exit;
  */
 class BP_Messages_Message {
 
-	public static $last_inserted_id;
 	/**
 	 * ID of the message.
 	 *
@@ -70,6 +69,13 @@ class BP_Messages_Message {
 	 * @var bool
 	 */
 	public $mark_visible;
+
+	/**
+	 * Flag for posted message as a read for all recipients.
+	 *
+	 * @var bool
+	 */
+	public $mark_read;
 
 	/**
 	 * Message recipients.
@@ -134,6 +140,7 @@ class BP_Messages_Message {
 		$this->date_sent    = apply_filters( 'messages_message_date_sent_before_save', $this->date_sent, $this->id );
 		$this->is_hidden    = apply_filters( 'messages_message_is_hidden_before_save', $this->is_hidden, $this->id );
 		$this->mark_visible = apply_filters( 'messages_message_mark_visible_before_save', $this->mark_visible, $this->id );
+		$this->mark_read    = apply_filters( 'messages_message_mark_read_before_save', $this->mark_read, $this->id );
 
 		/**
 		 * Fires before the current message item gets saved.
@@ -155,15 +162,7 @@ class BP_Messages_Message {
 
 		// If we have no thread_id then this is the first message of a new thread.
 		if ( empty( $this->thread_id ) ) {
-			$max_thread      = self::get(
-				array(
-					'fields'   => 'thread_ids',
-					'per_page' => 1,
-					'page'     => 1,
-					'orderby'  => 'thread_id',
-				)
-			);
-			$this->thread_id = ( ! empty( $max_thread['messages'] ) ? (int) current( $max_thread['messages'] ) + 1 : 1 );
+			$this->thread_id = (int) $wpdb->get_var( "SELECT MAX(thread_id) FROM {$bp->messages->table_name_messages}" ) + 1;
 			$new_thread      = true;
 		}
 
@@ -172,7 +171,7 @@ class BP_Messages_Message {
 			return false;
 		}
 
-		static::$last_inserted_id = $this->id = $wpdb->insert_id;
+		$this->id = $wpdb->insert_id;
 
 		$recipient_ids = array();
 
@@ -192,9 +191,21 @@ class BP_Messages_Message {
 			if ( true === $this->is_hidden ) {
 				$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 1, $this->thread_id, $this->sender_id ) );
 			}
+
+			/**
+			 * Fires after the new thread current message item has been saved.
+			 *
+			 * @since BuddyBoss 2.1.4
+			 *
+			 * @param BP_Messages_Message $this Current instance of the message item being saved. Passed by reference.
+			 */
+			do_action_ref_array( 'messages_message_new_thread_save', array( &$this ) );
+
 		} else {
-			// Update the unread count for all recipients.
-			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
+			if ( false === $this->mark_read ) {
+				// Update the unread count for all recipients.
+				$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
+			}
 
 			if ( true === $this->mark_visible ) {
 				// Mark the thread to visible for all recipients.
@@ -387,13 +398,13 @@ class BP_Messages_Message {
 
 		$thread_ids = isset( $threads['messages'] ) ? $threads['messages'] : array();
 
-		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
-		$message_deleted_text = '<p> </p>';
+		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', '' );
+		$message_deleted_text = '';
 
 		// Delete message meta.
 		foreach ( $message_ids as $message_id ) {
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedSimplePlaceholder
-			$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET subject= '%s', message= '%s' WHERE id = %d", $subject_deleted_text, $message_deleted_text, $message_id );
+			$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET subject = '%s', message = '%s' WHERE id = %d", $subject_deleted_text, $message_deleted_text, $message_id );
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$wpdb->query( $query ); // db call ok; no-cache ok;
 			// bp_messages_delete_meta( $message_id );
@@ -471,12 +482,13 @@ class BP_Messages_Message {
 	 *
 	 * @since BuddyBoss 1.2.9
 	 *
-	 * @param array   $recipient_ids The ID of the users in the thread.
-	 * @param integer $sender        The ID of the sender user.
+	 * @param array $recipient_ids The ID of the users in the thread.
+	 * @param int   $sender        The ID of the sender user.
+	 * @param bool  $force_cache   Whether to force a cache update.
 	 *
 	 * @return null|mixed
 	 */
-	public static function get_existing_threads( $recipient_ids, $sender = 0 ) {
+	public static function get_existing_threads( $recipient_ids, $sender = 0, $force_cache = false ) {
 		global $wpdb;
 
 		// add the sender into the recipient list and order by id ascending.
@@ -485,10 +497,11 @@ class BP_Messages_Message {
 		sort( $recipient_ids );
 
 		$having_sql = $wpdb->prepare( 'HAVING recipient_list = %s', implode( ',', $recipient_ids ) );
-		$results    = BP_Messages_Thread::get_threads_for_user(
+		$results = BP_Messages_Thread::get_threads_for_user(
 			array(
-				'fields'     => 'select',
-				'having_sql' => $having_sql,
+				'fields'      => 'select',
+				'having_sql'  => $having_sql,
+				'force_cache' => $force_cache,
 			)
 		);
 
@@ -565,6 +578,7 @@ class BP_Messages_Message {
 			'group_by'          => '',
 			'subject'           => '',
 			'count_total'       => false,
+			'is_deleted'        => true,
 		);
 
 		$r = bp_parse_args( $args, $defaults, 'bp_messages_message_get' );
@@ -622,6 +636,10 @@ class BP_Messages_Message {
 			$where_conditions['meta_not_in'] = "mm.meta_key NOT IN ('{$meta_key_not_in}')";
 		}
 
+		if ( isset( $r['is_deleted'] ) && false === $r['is_deleted'] ) {
+			$where_conditions['is_deleted'] = $wpdb->prepare( 'm.is_deleted = %d', (int) $r['is_deleted'] );
+		}
+
 		if ( ! empty( $r['user_id'] ) ) {
 			$where_conditions['user'] = $wpdb->prepare( 'm.sender_id = %d', $r['user_id'] );
 		}
@@ -667,7 +685,7 @@ class BP_Messages_Message {
 		 * @param string $value   Converted 'orderby' term.
 		 * @param string $orderby Original orderby value.
 		 */
-		$orderby = apply_filters( 'bp_messages_message_get_orderby', self::convert_orderby_to_order_by_term( $orderby ), $orderby );
+		$orderby = apply_filters( 'bp_messages_message_get_orderby', self::convert_orderby_to_order_by_term( $orderby, $order ), $orderby );
 
 		$sql['orderby'] = "ORDER BY {$orderby} {$order}";
 
@@ -714,7 +732,14 @@ class BP_Messages_Message {
 		 */
 		$paged_messages_sql = apply_filters( 'bp_messages_message_get_paged_sql', $paged_messages_sql, $sql, $r );
 
-		$paged_message_ids = $wpdb->get_col( $paged_messages_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+		$cached = bp_core_get_incremented_cache( $paged_messages_sql, 'bp_messages' );
+
+		if ( false === $cached ) {
+			$paged_message_ids = $wpdb->get_col( $paged_messages_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			bp_core_set_incremented_cache( $paged_messages_sql, 'bp_messages', $paged_message_ids );
+		} else {
+			$paged_message_ids = $cached;
+		}
 
 		$paged_messages = array();
 
@@ -722,8 +747,17 @@ class BP_Messages_Message {
 			// We only want the IDs.
 			$paged_messages = array_map( 'intval', $paged_message_ids );
 		} elseif ( ! empty( $paged_message_ids ) ) {
-			$message_ids_sql      = implode( ',', array_map( 'intval', $paged_message_ids ) );
-			$message_data_objects = $wpdb->get_results( "SELECT m.* FROM {$bp->messages->table_name_messages} m WHERE m.id IN ({$message_ids_sql})" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			$message_ids_sql             = implode( ',', array_map( 'intval', $paged_message_ids ) );
+			$message_data_objects_sql    = "SELECT m.* FROM {$bp->messages->table_name_messages} m WHERE m.id IN ({$message_ids_sql})";
+			$message_data_objects_cached = bp_core_get_incremented_cache( $message_data_objects_sql, 'bp_messages' );
+
+			if ( false === $message_data_objects_cached ) {
+				$message_data_objects = $wpdb->get_results( $message_data_objects_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+				bp_core_set_incremented_cache( $message_data_objects_sql, 'bp_messages', $message_data_objects );
+			} else {
+				$message_data_objects = $message_data_objects_cached;
+			}
+
 			foreach ( (array) $message_data_objects as $mdata ) {
 				$message_data_objects[ $mdata->id ] = $mdata;
 			}
@@ -752,7 +786,15 @@ class BP_Messages_Message {
 			 */
 			$total_messages_sql = apply_filters( 'bp_messages_message_get_total_sql', $total_messages_sql, $sql, $r );
 
-			$total_messages  = (int) $wpdb->get_var( $total_messages_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			$total_messages_sql_cached = bp_core_get_incremented_cache( $total_messages_sql, 'bp_messages' );
+
+			if ( false === $total_messages_sql_cached ) {
+				$total_messages = (int) $wpdb->get_var( $total_messages_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+				bp_core_set_incremented_cache( $total_messages_sql, 'bp_messages', $total_messages );
+			} else {
+				$total_messages = $total_messages_sql_cached;
+			}
+
 			$retval['total'] = $total_messages;
 		}
 
@@ -828,10 +870,11 @@ class BP_Messages_Message {
 	 * @since BuddyPress 1.8.0
 	 *
 	 * @param string $orderby Orderby term as passed to get().
+	 * @param string $order   Sort order. 'ASC' or 'DESC'. Default: 'DESC'.
 	 *
 	 * @return string $order_by_term SQL-friendly orderby term.
 	 */
-	protected static function convert_orderby_to_order_by_term( $orderby ) {
+	protected static function convert_orderby_to_order_by_term( $orderby, $order = 'DESC' ) {
 		$order_by_term = '';
 
 		switch ( $orderby ) {
@@ -847,7 +890,7 @@ class BP_Messages_Message {
 				break;
 			case 'date_sent':
 			default:
-				$order_by_term = 'm.date_sent';
+				$order_by_term = "m.date_sent {$order}, m.id";
 				break;
 		}
 

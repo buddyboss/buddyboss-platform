@@ -352,7 +352,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 			foreach ( (array) $subscribers as $subscriber ) {
 
 				// Shift the subscriber if told to.
-				if ( ! empty( $request['subscribers'] ) && ( true === $request['subscribers'] ) && bbp_is_subscriptions_active() ) {
+				if ( ! empty( $request['subscribers'] ) && ( true === $request['subscribers'] ) && bb_is_enabled_subscription( 'topic' ) ) {
 					bbp_add_user_subscription( $subscriber, $destination_topic->ID );
 				}
 
@@ -404,6 +404,21 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		// Sticky.
 		bbp_unstick_topic( $source_topic->ID );
 
+		// Delete source topic's last & count meta data.
+		delete_post_meta( $source_topic->ID, '_bbp_last_reply_id' );
+		delete_post_meta( $source_topic->ID, '_bbp_last_active_id' );
+		delete_post_meta( $source_topic->ID, '_bbp_last_active_time' );
+		delete_post_meta( $source_topic->ID, '_bbp_voice_count' );
+		delete_post_meta( $source_topic->ID, '_bbp_reply_count' );
+		delete_post_meta( $source_topic->ID, '_bbp_reply_count_hidden' );
+		delete_post_meta( $source_topic->ID, '_bbp_parent_reply_count' );
+
+		// Delete source topics user relationships.
+		delete_post_meta( $source_topic->ID, '_bbp_favorite' );
+		delete_post_meta( $source_topic->ID, '_bbp_subscription' );
+
+		$parent_replies = 0;
+
 		// Get the replies of the source topic.
 		$replies = (array) get_posts(
 			array(
@@ -445,14 +460,15 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 				bbp_update_reply_topic_id( $reply->ID, $destination_topic->ID );
 				bbp_update_reply_forum_id( $reply->ID, bbp_get_topic_forum_id( $destination_topic->ID ) );
 
-				// Adjust reply to values.
-				$reply_to = bbp_get_reply_to( $reply->ID );
-				if ( empty( $reply_to ) ) {
-					bbp_update_reply_to( $reply->ID, $source_topic->ID );
-				}
+				// Update the reply position.
+				bbp_update_reply_position( $reply->ID );
 
 				// Do additional actions per merged reply.
 				do_action( 'bbp_merged_topic_reply', $reply->ID, $destination_topic->ID );
+
+				if ( ! empty( $destination_topic->ID ) && empty( get_post_meta( $reply->ID, '_bbp_reply_to', true ) ) ) {
+					$parent_replies++;
+				}
 			}
 		}
 
@@ -461,6 +477,12 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		bbp_update_topic_last_reply_id( $destination_topic->ID );
 		bbp_update_topic_last_active_id( $destination_topic->ID );
 		bbp_update_topic_last_active_time( $destination_topic->ID );
+
+		// Update parent reply count with destination topic_id.
+		if ( ! empty( $destination_topic->ID ) && 0 !== $parent_replies ) {
+			$parent_reply_count = get_post_meta( $destination_topic->ID, '_bbp_parent_reply_count', true );
+			update_post_meta( $destination_topic->ID, '_bbp_parent_reply_count', (int) $parent_reply_count + $parent_replies );
+		}
 
 		// Send the post parent of the source topic as it has been shifted.
 		// (possibly to a new forum) so we need to update the counts of the.
@@ -478,12 +500,11 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		 */
 		do_action( 'bp_rest_topic_get_item', $destination_topic, $source_topic, $request );
 
-		return $this->get_item(
-			array(
-				'id'      => $destination_topic->ID,
-				'context' => 'view',
-			)
-		);
+		$object = new WP_REST_Request();
+		$object->set_param( 'id', $destination_topic->ID );
+		$object->set_param( 'context', 'view' );
+
+		return $this->get_item( $object );
 	}
 
 	/**
@@ -609,7 +630,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 
 		// How to Split.
 		if ( ! empty( $request['split_option'] ) ) {
-			$split_option = (string) trim( $request['split_option'] );
+			$split_option = sanitize_key( $request['split_option'] );
 		}
 
 		if ( empty( $split_option ) || ! in_array( $split_option, array( 'existing', 'reply' ), true ) ) {
@@ -754,7 +775,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 
 		/** Subscriptions */
 		// Copy the subscribers.
-		if ( ! empty( $request['subscribers'] ) && true === $request['subscribers'] && bbp_is_subscriptions_active() ) {
+		if ( ! empty( $request['subscribers'] ) && true === $request['subscribers'] && bb_is_enabled_subscription( 'topic' ) ) {
 
 			// Get the subscribers.
 			$subscribers = bbp_get_topic_subscribers( $source_topic->ID );
@@ -802,22 +823,11 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		// phpcs:ignore
 		$replies = (array) $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->posts} WHERE {$wpdb->posts}.post_date >= %s AND {$wpdb->posts}.post_parent = %d AND {$wpdb->posts}.post_type = %s ORDER BY {$wpdb->posts}.post_date ASC", $from_reply->post_date, $source_topic->ID, bbp_get_reply_post_type() ) );
 
+		$source_parent_replies      = 0;
+		$destination_parent_replies = 0;
+
 		// Make sure there are replies to loop through.
 		if ( ! empty( $replies ) && ! is_wp_error( $replies ) ) {
-
-			// Calculate starting point for reply positions.
-			switch ( $split_option ) {
-
-				// Get topic reply count for existing topic.
-				case 'existing':
-					$reply_position = bbp_get_topic_reply_count( $destination_topic->ID );
-					break;
-
-				// Account for new lead topic.
-				case 'reply':
-					$reply_position = 1;
-					break;
-			}
 
 			// Save reply ids.
 			$reply_ids = array();
@@ -825,8 +835,9 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 			// Change the post_parent of each reply to the destination topic id.
 			foreach ( $replies as $reply ) {
 
-				// Bump the reply position each iteration through the loop.
-				$reply_position++;
+				if ( ! empty( $source_topic->ID ) && empty( get_post_meta( $reply->ID, '_bbp_reply_to', true ) ) ) {
+					$source_parent_replies++;
+				}
 
 				// Update the reply.
 				wp_update_post(
@@ -839,17 +850,19 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 						),
 						'post_name'   => false, // will be automatically generated.
 						'post_parent' => $destination_topic->ID,
-						'menu_order'  => $reply_position,
 						'guid'        => '',
 					)
 				);
 
 				// Gather reply ids.
-				$reply_ids[] = $reply->ID;
+				$reply_ids[] = (int) $reply->ID;
 
 				// Adjust reply meta values.
 				bbp_update_reply_topic_id( $reply->ID, $destination_topic->ID );
 				bbp_update_reply_forum_id( $reply->ID, bbp_get_topic_forum_id( $destination_topic->ID ) );
+
+				// Adjust reply position.
+				bbp_update_reply_position( $reply->ID );
 
 				// Adjust reply to values.
 				$reply_to = bbp_get_reply_to( $reply->ID );
@@ -866,6 +879,22 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 
 				// Do additional actions per split reply.
 				do_action( 'bbp_split_topic_reply', $reply->ID, $destination_topic->ID );
+
+				if ( ! empty( $destination_topic->ID ) && empty( get_post_meta( $reply->ID, '_bbp_reply_to', true ) ) ) {
+					$destination_parent_replies++;
+				}
+			}
+
+			// Update parent reply count with source topic_id.
+			if ( ! empty( $source_topic->ID ) && 0 !== $source_parent_replies ) {
+				$parent_reply_count = get_post_meta( $source_topic->ID, '_bbp_parent_reply_count', true );
+				update_post_meta( $source_topic->ID, '_bbp_parent_reply_count', (int) $parent_reply_count - $source_parent_replies );
+			}
+
+			// Update parent reply count with destination topic_id.
+			if ( ! empty( $destination_topic->ID ) && 0 !== $destination_parent_replies ) {
+				$parent_reply_count = get_post_meta( $destination_topic->ID, '_bbp_parent_reply_count', true );
+				update_post_meta( $destination_topic->ID, '_bbp_parent_reply_count', (int) $parent_reply_count + $destination_parent_replies );
 			}
 
 			// Remove reply to from new topic.
@@ -912,12 +941,11 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		 */
 		do_action( 'bp_rest_split_get_item', $from_reply, $source_topic, $destination_topic, $request );
 
-		return $this->get_item(
-			array(
-				'id'      => $destination_topic->ID,
-				'context' => 'view',
-			)
-		);
+		$object = new WP_REST_Request();
+		$object->set_param( 'id', $destination_topic->ID );
+		$object->set_param( 'context', 'view' );
+
+		return $this->get_item( $object );
 	}
 
 	/**
@@ -970,6 +998,9 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 * @return WP_REST_Response | WP_Error
 	 * @since 0.1.0
 	 *
+	 * NOTICE: Since 2.2.2, forum subscriptions have been migrated to a
+	 * new API for subscribing users to notifications: /wp-json/buddyboss/v1/subscriptions
+	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/topics/action/:id Topic Actions
 	 * @apiName        ActionBBPTopic
 	 * @apiGroup       Forum Topics
@@ -1014,12 +1045,11 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 			return $retval;
 		}
 
-		return $this->get_item(
-			array(
-				'id'      => $topic_id,
-				'context' => 'view',
-			)
-		);
+		$object = new WP_REST_Request();
+		$object->set_param( 'id', $topic_id );
+		$object->set_param( 'context', 'view' );
+
+		return $this->get_item( $object );
 	}
 
 	/**
@@ -1307,7 +1337,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 * @return bool|WP_Error
 	 */
 	protected function rest_update_subscribe( $topic_id, $value, $user_id ) {
-		if ( ! bbp_is_subscriptions_active() ) {
+		if ( ! bb_is_enabled_subscription( 'topic' ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_topic_action_disabled',
 				__( 'Subscriptions are no longer active.', 'buddyboss' ),

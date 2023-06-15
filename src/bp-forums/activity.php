@@ -174,6 +174,10 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Meta button for activity discussion.
 			add_filter( 'bb_nouveau_get_activity_inner_buttons', array( $this, 'nouveau_get_activity_entry_buttons' ), 10, 2 );
+
+			// Allow slash in topic reply.
+			add_filter( 'bbp_activity_topic_create_excerpt', 'addslashes', 5 );
+			add_filter( 'bbp_activity_reply_create_excerpt', 'addslashes', 5 );
 		}
 
 		/**
@@ -348,10 +352,10 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		}
 
 		/**
-		 * Render the activity content for discussion activity. 
+		 * Render the activity content for discussion activity.
 		 *
 		 * @since BuddyBoss 1.7.2
-		 * 
+		 *
 		 * @param string $content  Activit content.
 		 * @param object $activity Activit data.
 		 *
@@ -393,12 +397,42 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			}
 
 			// Topic.
-			$topic_permalink = bbp_get_topic_permalink( $topic_id );
+			$topic_permalink = ( ! empty( $topic->ID ) && bbp_is_reply( $topic->ID ) ) ? bbp_get_reply_url( $topic->ID ) : bbp_get_topic_permalink( $topic_id );
 			$topic_title     = get_post_field( 'post_title', $topic_id, 'raw' );
 			$reply_to_text   = ( ! empty( $topic->ID ) && bbp_is_reply( $topic->ID ) ) ? sprintf( '<span class="bb-reply-lable">%1$s</span>', esc_html__( 'Reply to', 'buddyboss' ) ) : '';
-			$content         = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s %3$s</a></p> <div class="bb-content-inr-wrap">%4$s</div>', esc_url( $topic_permalink ), $reply_to_text, $topic_title, $content );
 
-			return $content;
+			if ( ! bb_is_rest() ) {
+				// Check if link embed or link preview and append the content accordingly.
+				$post_id    = ( ! empty( $topic->ID ) && bbp_is_reply( $topic->ID ) ) ? $topic->ID : $topic_id;
+				$link_embed = get_post_meta( $post_id, '_link_embed', true );
+				if ( ! empty( $link_embed ) ) {
+					if ( bbp_is_reply( $post_id ) ) {
+						$content = bbp_reply_content_autoembed_paragraph( $content, $post_id );
+					} else {
+						$content = bbp_topic_content_autoembed_paragraph( $content, $post_id );
+					}
+				} else {
+					$content = bb_forums_link_preview( $content, $post_id );
+				}
+			}
+
+			if ( ! empty( $reply_to_text ) && ! empty( $topic_title ) ) {
+				$content = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s %3$s</a></p> <div class="bb-content-inr-wrap">%4$s</div>', esc_url( $topic_permalink ), $reply_to_text, $topic_title, $content );
+			} elseif ( empty( $reply_to_text ) && ! empty( $topic_title ) ) {
+				$content = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s</a></p> <div class="bb-content-inr-wrap">%3$s</div>', esc_url( $topic_permalink ), $topic_title, $content );
+			} elseif ( ! empty( $reply_to_text ) && empty( $topic_title ) ) {
+				$content = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s</a></p> <div class="bb-content-inr-wrap">%3$s</div>', esc_url( $topic_permalink ), $reply_to_text, $content );
+			}
+
+			/**
+			 * Filters the activity content for forum.
+			 *
+			 * @since BuddyBoss 2.3.50
+			 *
+			 * @param array $content  Activity content
+			 * @param array $activity Activity object
+			 */
+			return apply_filters( 'bb_forum_before_activity_content', $content, $activity );
 		}
 
 		/**
@@ -416,6 +450,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 * @return array
 		 */
 		public function nouveau_get_activity_entry_buttons( $buttons, $activity_id ) {
+
 			// Get activity post data.
 			$activities = bp_activity_get_specific( array( 'activity_ids' => $activity_id ) );
 
@@ -451,7 +486,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 						__( 'Join Discussion', 'buddyboss' )
 					),
 					'button_attr'       => array(
-						'class'         => 'button bb-icon-discussion bp-secondary-action',
+						'class'         => 'button bb-icon-l bb-icon-comments-square bp-secondary-action',
 						'aria-expanded' => 'false',
 						'href'          => bbp_get_topic_permalink( $topic_id ),
 					),
@@ -474,10 +509,10 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 					$topic    = bbp_get_reply( $reply_id );
 					$topic_id = $topic->post_parent;
 				}
-				
+
 				// Redirect to.
 				$redirect_to = bbp_get_redirect_to();
-		
+
 				// Get the reply URL.
 				$reply_url = bbp_get_reply_url( $reply_id, $redirect_to );
 
@@ -494,7 +529,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 						__( 'Join Discussion', 'buddyboss' )
 					),
 					'button_attr'       => array(
-						'class'         => 'button bb-icon-discussion bp-secondary-action',
+						'class'         => 'button bb-icon-l bb-icon-comments-square bp-secondary-action',
 						'aria-expanded' => 'false',
 						'href'          => $reply_url,
 					),
@@ -646,6 +681,24 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				$topic_author_id = bbp_get_topic_author_id( $topic_id );
 
 				$this->topic_create( $topic_id, $forum_id, array(), $topic_author_id );
+			} elseif( bbp_get_spam_status_id() === $post->post_status ) {
+
+				// Mark related activity as spam if topic marked as spam.
+				if ( $activity_id = $this->get_activity_id( $topic_id ) ) {
+
+					$activity = new BP_Activity_Activity( $activity_id );
+
+					if ( empty( $activity->id ) ) {
+						return false;
+					}
+
+					do_action( 'bp_activity_before_action_spam_activity', $activity->id, $activity );
+
+					// Mark as spam.
+					bp_activity_mark_as_spam( $activity );
+					$activity->save();
+				}
+				return false;
 			} else {
 				$this->topic_delete( $topic_id );
 			}
@@ -803,6 +856,24 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				$reply_author_id = bbp_get_reply_author_id( $reply_id );
 
 				$this->reply_create( $reply_id, $topic_id, $forum_id, array(), $reply_author_id );
+			} elseif( bbp_get_spam_status_id() === $post->post_status ) {
+
+				// Mark related activity as spam if reply marked as spam.
+				if ( $activity_id = $this->get_activity_id( $reply_id ) ) {
+
+					$activity = new BP_Activity_Activity( $activity_id );
+
+					if ( empty( $activity->id ) ) {
+						return false;
+					}
+
+					do_action( 'bp_activity_before_action_spam_activity', $activity->id, $activity );
+
+					// Mark as spam.
+					bp_activity_mark_as_spam( $activity );
+					$activity->save();
+				}
+				return false;
 			} else {
 				$this->reply_delete( $reply_id );
 			}

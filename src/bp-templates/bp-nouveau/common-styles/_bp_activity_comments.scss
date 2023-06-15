@@ -60,6 +60,7 @@
 				height: 25px;
 				max-width: none;
 				width: 25px;
+				image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
 			}
 		}
 
@@ -145,7 +146,7 @@
 
 		.comment-item.suspended-comment-item {
 
-			> .item-avatar {
+			> .item-avatar > a[href=""] {
 				position: relative;
 				pointer-events: none;
 				opacity: 0.7;
@@ -157,14 +158,38 @@
 			}
 
 			> .acomment-meta {
-				pointer-events: none;
-				opacity: 0.7;
+
+				> .author-name[href=""] {
+					pointer-events: none;
+					opacity: 0.7;
+				}
 
 				.activity-time-since {
 					display: none;
 				}
 
 			}
+		}
+
+		.ac-form {
+
+			&.has-gif,
+			&.has-content,
+			&.has-media {
+
+				.ac-reply-content input[name="ac_form_submit"] {
+					opacity: 1;
+					pointer-events: initial;
+				}
+
+			}
+
+			&.media-uploading .ac-reply-content input[name="ac_form_submit"],
+			.ac-reply-content input[name="ac_form_submit"] {
+				opacity: 0.4;
+				pointer-events: none;
+			}
+
 		}
 
 	} // close .activity-comments

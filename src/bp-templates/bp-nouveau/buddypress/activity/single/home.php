@@ -1,8 +1,11 @@
 <?php
 /**
- * BuddyBoss - Home
+ * The template for BuddyBoss - Home
  *
- * @version 3.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/activity/single/home.php.
+ *
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
  */
 
 ?>

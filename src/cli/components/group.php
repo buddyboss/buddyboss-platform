@@ -98,7 +98,7 @@ class Group extends BuddypressCommand {
 	 * @alias add
 	 */
 	public function create( $args, $assoc_args ) {
-		$r = wp_parse_args(
+		$r = bp_parse_args(
 			$assoc_args,
 			array(
 				'name'         => '',
@@ -388,7 +388,7 @@ class Group extends BuddypressCommand {
 	 */
 	public function _list( $args, $assoc_args ) {
 		$formatter  = $this->get_formatter( $assoc_args );
-		$query_args = wp_parse_args(
+		$query_args = bp_parse_args(
 			$assoc_args,
 			array(
 				'count'       => 50,

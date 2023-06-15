@@ -167,7 +167,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 				);
 			}
 
-			if ( buddypress()->avatar->show_avatars ) {
+			if ( ! bp_disable_avatar_uploads() && buddypress()->avatar->show_avatars ) {
 				// Avatar Metabox.
 				add_meta_box(
 					'bp_xprofile_user_admin_avatar',
@@ -248,7 +248,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 					}
 
 					// Validate xprofile
-					if ( $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], $user_id ) ) {
+					if ( isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], $user_id ) ) {
 						$redirect_to = add_query_arg(
 							array(
 								'error'   => '4',

@@ -56,7 +56,7 @@ class OptionClearCache {
 	 */
 	public function purge_component_cache( $option, $old_value, $value ) {
 
-		if ( function_exists( 'bbapp_is_active' ) && ! bbapp_is_active( 'performance' ) ) {
+		if ( ! function_exists( 'bbapp_is_active' ) || ! bbapp_is_active( 'performance' ) ) {
 			return;
 		}
 

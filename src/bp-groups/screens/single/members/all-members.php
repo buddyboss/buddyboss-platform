@@ -13,7 +13,15 @@
  */
 function groups_screen_group_members_all_members() {
 
-	if ( 'all-members' != bp_get_group_current_members_tab() ) {
+	// should also not accessible if members slug is removed
+	$members_menu_removed = true;
+	foreach ( bp_get_nav_menu_items('groups') as $nav_item ) {
+		if( 'members' === $nav_item->css_id ) {
+			$members_menu_removed = false;
+		}
+	}
+
+	if ( 'all-members' !== bp_get_group_current_members_tab() || $members_menu_removed ) {
 		return false;
 	}
 

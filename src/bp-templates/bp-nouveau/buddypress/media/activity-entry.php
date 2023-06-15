@@ -1,8 +1,11 @@
 <?php
 /**
- * BuddyBoss - Activity Media
+ * The template for activity media
  *
- * @since BuddyBoss 1.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/media/activity-entry.php.
+ *
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
  */
 
 global $media_template;
@@ -30,7 +33,7 @@ $is_comment_pic = bp_media_is_activity_comment_photo( $media_template->media );
 $more_media     = $media_template->media_count > 5 ? true : false;
 ?>
 
-<div class="bb-activity-media-elem media-activity
+<div class="bb-activity-media-elem media-activity 
 	<?php
 	echo esc_attr( bp_get_media_id() ) . ' ';
 	echo $media_template->current_media > 4 ? esc_attr( 'hide' ) : '';
@@ -48,7 +51,7 @@ $more_media     = $media_template->media_count > 5 ? true : false;
 			if ( bp_loggedin_user_id() === bp_get_media_user_id() || bp_current_user_can( 'bp_moderate' ) ) {
 				?>
 					<a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
-						<i class="bb-icon-menu-dots-v"></i>
+						<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
 					</a>
 					<div class="media-action_list">
 						<ul class="conflict-activity-ul-li-comment">
@@ -102,7 +105,7 @@ $more_media     = $media_template->media_count > 5 ? true : false;
 		data-can-edit="<?php echo esc_attr( bp_media_user_can_edit( bp_get_media_id() ) ); ?>"
 	>
 		<?php $size = 1 === $media_template->media_count ? 'bb-media-activity-image' : 'bb-media-photos-album-directory-image-medium'; ?>
-		<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php echo 1 === $media_template->media_count ? esc_url( bp_media_attachment_image_activity_thumbnail() ) : esc_url( bb_get_media_photos_directory_image_thumbnail() ); ?>" class="no-round photo lazy" alt="<?php bp_media_title(); ?>" />
+		<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php echo 1 === $media_template->media_count ? esc_url( bp_get_media_attachment_image_activity_thumbnail() ) : esc_url( bb_get_media_photos_directory_image_thumbnail() ); ?>" class="no-round photo lazy" alt="<?php bp_media_title(); ?>" />
 
 		<?php
 		if ( $media_template->media_count > 5 && 4 === $media_template->current_media ) {

@@ -1,9 +1,11 @@
 <?php
 /**
- * BuddyPress Single Members item Navigation
+ * The template for single members item navigation
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/parts/item-nav.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
 ?>
 
@@ -28,8 +30,8 @@
 			?>
 
 				<li id="<?php bp_nouveau_nav_id(); ?>" class="<?php bp_nouveau_nav_classes(); ?>">
-					<a href="<?php bp_nouveau_nav_link(); ?>" id="<?php bp_nouveau_nav_link_id(); ?>">
-						<?php bp_nouveau_nav_link_text(); ?>
+					<a href="<?php bp_nouveau_nav_link(); ?>" id="<?php bp_nouveau_nav_link_id(); ?>" class="<?php bp_nouveau_nav_link_class(); ?>">
+						<div class="bb-single-nav-item-point"><?php bp_nouveau_nav_link_text(); ?></div>
 
 						<?php if ( bp_nouveau_nav_has_count() ) : ?>
 							<span class="count"><?php bp_nouveau_nav_count(); ?></span>

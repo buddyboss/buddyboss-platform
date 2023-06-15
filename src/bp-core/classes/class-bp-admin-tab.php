@@ -11,6 +11,7 @@ defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
+	#[\AllowDynamicProperties]
 	abstract class BP_Admin_Tab {
 
 		/**
@@ -71,7 +72,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function initialize() {
-			// nothing
+			// nothing.
 		}
 
 		/**
@@ -89,9 +90,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function register_tab() {
-			global ${$this->global_tabs_var};
-
-			${$this->global_tabs_var}[ $this->tab_name ] = $this;
+			$GLOBALS[$this->global_tabs_var][ $this->tab_name ] = $this;
 		}
 
 		public function register_hook() {
@@ -107,23 +106,239 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				true
 			);
 
-			wp_localize_script( 'bp-admin', 'BP_ADMIN', array(
-					'ajax_url'        => admin_url( 'admin-ajax.php' ),
-					'select_document' => esc_js( __( 'Please upload a file to check the MIME Type.', 'buddyboss' ) ),
-					'tools'           => array(
-						'default_data' => array(
-							'submit_button_message' => esc_js( __( 'Are you sure you want to import data? This action is going to alter your database. If this is a live website you may want to create a backup of your database first.', 'buddyboss' ) ),
-							'clear_button_message'  => esc_js( __( 'Are you sure you want to delete all Default Data content? Content that was created by you and others, and not by this default data installer, will not be deleted.', 'buddyboss' ) ),
-						),
-						'repair_forums' => array(
-							'validate_site_id_message' => esc_html__( 'Select site to repair the forums', 'buddyboss' ),
-						),
+			$screen         = get_current_screen();
+			$screen_id      = $screen ? $screen->id : '';
+			$email_template = '';
+
+			if ( 'edit-bp-email' === $screen_id ) {
+
+				$emails              = bp_email_get_schema();
+				$descriptions        = bp_email_get_type_schema( 'description' );
+				$total_missing_count = 0;
+				$missing_email_label = array();
+
+				ob_start();
+
+				// Add these emails to the database.
+				foreach ( $emails as $id => $email ) {
+					if (
+						term_exists( $id, bp_get_email_tax_type() ) &&
+						get_terms(
+							array(
+								'taxonomy' => bp_get_email_tax_type(),
+								'slug'     => $id,
+								'fields'   => 'count',
+							)
+						) > 0
+					) {
+						continue;
+					}
+
+					// Some emails are multisite-only.
+					if ( ! is_multisite() && isset( $email['args'] ) && ! empty( $email['args']['multisite'] ) ) {
+						continue;
+					}
+
+					if ( array_key_exists( $id, $descriptions ) ) {
+						$total_missing_count ++;
+						$missing_email_label[] = $descriptions[ $id ];
+					}
+				}
+
+				if ( $total_missing_count > 0 ) {
+					?>
+					<a href="javascript:void(0);" class="page-title-action btn-open-missing-email">
+						<span class="count"><?php echo esc_html( $total_missing_count ); ?> </span>
+						<?php
+						if ( $total_missing_count > 1 ) {
+							esc_html_e( 'Emails Missing', 'buddyboss' );
+						} else {
+							esc_html_e( 'Email Missing', 'buddyboss' );
+						}
+						?>
+					</a>
+					<div id="bp-hello-container" class="bp-hello-email" role="dialog" aria-labelledby="bp-hello-title" style="display: none;">
+						<div class="bp-hello-header">
+							<div class="bp-hello-title">
+								<h2 id="bp-hello-title" tabindex="-1">
+									<span class="count">
+										<?php echo esc_html( $total_missing_count ); ?> </span>
+									<?php
+									if ( $total_missing_count > 1 ) {
+										esc_html_e( 'Emails Missing', 'buddyboss' );
+									} else {
+										esc_html_e( 'Email Missing', 'buddyboss' );
+									}
+									?>
+							</div>
+							<div class="bp-hello-close">
+								<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Close pop-up', 'buddyboss' ); ?>">
+									<?php esc_html_e( 'Close', 'buddyboss' ); ?>
+								</button>
+							</div>
+						</div>
+
+						<div class="bp-hello-content">
+							<?php
+							if ( ! empty( $missing_email_label ) ) {
+								echo '<div class="missing-email-list"><ul>';
+
+								foreach ( $missing_email_label as $label ) {
+									echo '<li>' . wp_kses_post( $label ) . '</li>';
+								}
+
+								echo '</ul></div>';
+							}
+							?>
+							<div class="bb-popup-buttons">
+								<a href="
+								<?php
+								echo esc_url(
+									bp_get_admin_url(
+										add_query_arg(
+											array(
+												'page'     => 'bp-repair-community',
+												'tab'      => 'bp-repair-community',
+												'tool'     => 'bp-reinstall-emails',
+												'scrollto' => 'bpreinstallemails',
+											),
+											'admin.php'
+										)
+									)
+								);
+								?>
+								" class="button">
+									<?php esc_html_e( 'Reset All Emails', 'buddyboss' ); ?>
+								</a>
+								<a href="
+								<?php
+								echo esc_url(
+									bp_get_admin_url(
+										add_query_arg(
+											array(
+												'page'     => 'bp-repair-community',
+												'tab'      => 'bp-repair-community',
+												'tool'     => 'bp-missing-emails',
+												'scrollto' => 'bpmissingemails',
+											),
+											'admin.php'
+										)
+									)
+								);
+								?>
+								" class="button button-primary">
+									<?php esc_html_e( 'Install Missing Emails', 'buddyboss' ); ?>
+								</a>
+							</div>
+						</div>
+					</div>
+					<?php
+				}
+
+				// Get the output buffer contents.
+				$email_template = trim( ob_get_clean() );
+			}
+
+			$cover_dimensions = bb_attachments_get_default_custom_cover_image_dimensions();
+
+			$localize_arg     = array(
+				'ajax_url'            => admin_url( 'admin-ajax.php' ),
+				'select_document'     => esc_js( __( 'Please upload a file to check the MIME Type.', 'buddyboss' ) ),
+				'tools'               => array(
+					'default_data'  => array(
+						'submit_button_message' => esc_js( __( 'Are you sure you want to import data? This action is going to alter your database. If this is a live website you may want to create a backup of your database first.', 'buddyboss' ) ),
+						'clear_button_message'  => esc_js( __( 'Are you sure you want to delete all Default Data content? Content that was created by you and others, and not by this default data installer, will not be deleted.', 'buddyboss' ) ),
 					),
-					'moderation' => array(
-						'suspend_confirm_message'   => esc_js( __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
-						'unsuspend_confirm_message' => esc_js( __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
-					)
-				) );
+					'repair_forums' => array(
+						'validate_site_id_message' => esc_html__( 'Select site to repair the forums', 'buddyboss' ),
+					),
+				),
+				'moderation'          => array(
+					'suspend_confirm_message'   => esc_js( __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
+					'unsuspend_confirm_message' => esc_js( __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
+				),
+				'cover_size_alert'    => array(
+					'profile' => esc_html__( 'Changing the Cover Image Size will reposition all of your members cover images. Are you sure you wish to save these changes?', 'buddyboss' ),
+					'group'   => esc_html__( 'Changing the Cover Image Size will reposition all of your groups cover images. Are you sure you wish to save these changes?', 'buddyboss' ),
+				),
+				'avatar_settings'     => array(
+					'wordpress_show_avatar'    => bp_get_option( 'show_avatars' ),
+					'wordpress_avatar_default' => bp_get_option( 'avatar_default', 'mystery' ),
+					'wordpress_avatar_types'   => array(
+						'mystery',
+						'blank',
+						'gravatar_default',
+						'identicon',
+						'wavatar',
+						'monsterid',
+						'retro',
+					),
+				),
+				'profile_group_cover' => array(
+					'select_file'       => esc_js( esc_html__( 'No file was uploaded.', 'buddyboss' ) ),
+					'file_upload_error' => esc_js( esc_html__( 'There was a problem uploading the cover photo.', 'buddyboss' ) ),
+					'feedback_messages' => array(
+						0 => sprintf(
+						/* translators: 1. Cover image width. 2. Cover image height. */
+							esc_html__( 'Cover photo was uploaded successfully. For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss' ),
+							(int) $cover_dimensions['width'],
+							(int) $cover_dimensions['height']
+						),
+						1 => esc_html__( 'Cover photo was uploaded successfully.', 'buddyboss' ),
+						2 => esc_html__( 'There was a problem deleting cover photo. Please try again.', 'buddyboss' ),
+						3 => esc_html__( 'Cover photo was deleted successfully.', 'buddyboss' ),
+					),
+					'upload'            => array(
+						'nonce'           => wp_create_nonce( 'bp-uploader' ),
+						'action'          => 'bp_cover_image_upload',
+						'object'          => ( 'bp-xprofile' === bp_core_get_admin_active_tab() ) ? 'user' : 'group',
+						'item_id'         => 0,
+						'item_type'       => 'default',
+						'has_cover_image' => false,
+					),
+					'remove'            => array(
+						'nonce'  => wp_create_nonce( 'bp_delete_cover_image' ),
+						'action' => 'bp_cover_image_delete',
+						'json'   => true,
+					),
+				),
+				'member_directories'  => array(
+					'profile_actions'    => function_exists( 'bb_get_member_directory_profile_actions' ) ? bb_get_member_directory_profile_actions() : array(),
+					'profile_action_btn' => function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '',
+				),
+				'email_template'      => array(
+					'html' => $email_template,
+				),
+			);
+
+			// Localize only post_type is member type and group type.
+			if (
+				0 === strpos( get_current_screen()->id, 'bp-group-type' ) ||
+				0 === strpos( get_current_screen()->id, 'bp-member-type' )
+			) {
+				$localize_arg['post_type'] = get_current_screen()->id;
+				if ( function_exists( 'buddyboss_theme_get_option' ) ) {
+					$localize_arg['background_color'] = buddyboss_theme_get_option( 'label_background_color' );
+					$localize_arg['color']            = buddyboss_theme_get_option( 'label_text_color' );
+				}
+			}
+
+			wp_localize_script(
+				'bp-admin',
+				'BP_ADMIN',
+				$localize_arg
+			);
+
+			$active_tab = bp_core_get_admin_active_tab();
+
+			if ( 'bp-xprofile' === $active_tab || 'bp-groups' === $active_tab ) {
+
+				wp_enqueue_style( 'thickbox' );
+				wp_enqueue_script( 'media-upload' );
+
+				// Get Avatar Uploader.
+				bp_attachments_enqueue_scripts( 'BP_Attachment_Avatar' );
+			}
 		}
 
 		/**
@@ -132,7 +347,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function register_fields() {
-			// nothing
+			// nothing.
 		}
 
 		/**
@@ -190,7 +405,13 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			foreach ( $fields as $section => $settings ) {
 				foreach ( $settings as $setting_name => $setting ) {
-					$value = isset( $_POST[ $setting_name ] ) ? $_POST[ $setting_name ] : '';
+
+					if ( in_array( $setting_name, array( 'bp-enable-private-network-public-content', 'bb-enable-private-rss-feeds-public-content', 'bb-enable-private-rest-apis-public-content' ), true ) ) {
+						$value = isset( $_POST[ $setting_name ] ) ? sanitize_textarea_field( wp_unslash( $_POST[ $setting_name ] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+					} else {
+						$value = isset( $_POST[ $setting_name ] ) ? ( is_array( $_POST[ $setting_name ] ) ? map_deep( wp_unslash( $_POST[ $setting_name ] ), 'sanitize_text_field' ) : sanitize_text_field( wp_unslash( $_POST[ $setting_name ] ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+					}
+
 					bp_update_option( $setting_name, $value );
 				}
 			}
@@ -240,26 +461,32 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			$this->bp_custom_do_settings_sections( $this->tab_name );
 
 			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' === $_GET['tab'] && 'bp-settings' === $_GET['page'] ) {
-			?>
+				?>
 			<p class="submit">
 				<input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>" />
-				<a class="button" href="<?php echo bp_get_admin_url(
-					add_query_arg(
-						array(
-							'page'    => 'bp-help',
-							'article' => 87474,
-						),
-						'admin.php'
+				<a class="button" href="
+				<?php
+				echo esc_url(
+					bp_get_admin_url(
+						add_query_arg(
+							array(
+								'page'    => 'bp-help',
+								'article' => 87474,
+							),
+							'admin.php'
+						)
 					)
-				); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+				);
+				?>
+				"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 			</p>
-			<?php
+				<?php
 			} else {
 				printf(
-						'<p class="submit">
+					'<p class="submit">
 				<input type="submit" name="submit" class="button-primary" value="%s" />
 			</p>',
-						esc_attr__( 'Save Settings', 'buddyboss' )
+					esc_attr__( 'Save Settings', 'buddyboss' )
 				);
 			}
 		}
@@ -269,14 +496,22 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		 *
 		 * @since BuddyBoss 1.0.0
 		 */
-		public function add_section( $id, $title, $callback = '__return_null', $tutorial_callback = '' ) {
+		public function add_section( $id, $title, $callback = '__return_null', $tutorial_callback = '', $notice = '' ) {
 			global $wp_settings_sections;
 			add_settings_section( $id, $title, $callback, $this->tab_name );
 			$this->active_section = $id;
-			if( !empty( $tutorial_callback ) ) {
-				$wp_settings_sections[ $this->tab_name ][ $id ][ 'tutorial_callback' ] = $tutorial_callback;
+			if ( ! empty( $tutorial_callback ) ) {
+				$wp_settings_sections[ $this->tab_name ][ $id ]['tutorial_callback'] = $tutorial_callback;
 			}
-
+			if ( ! empty( $notice ) ) {
+				$wp_settings_sections[ $this->tab_name ][ $id ]['notice'] = $notice;
+			}
+			if ( function_exists( 'bb_admin_icons' ) ) {
+				$meta_icon = bb_admin_icons( $id );
+				if ( ! empty( $meta_icon ) ) {
+					$wp_settings_sections[ $this->tab_name ][ $id ]['icon'] = $meta_icon;
+				}
+			}
 			return $this;
 		}
 
@@ -304,7 +539,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		public function add_input_field( $name, $label, $callback_args = array(), $field_args = 'sanitize_text_field', $id = null ) {
 			$callback = array( $this, 'render_input_field_html' );
 
-			$callback_args = wp_parse_args(
+			$callback_args = bp_parse_args(
 				$callback_args,
 				array(
 					'input_type'        => 'text',
@@ -327,7 +562,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		public function add_checkbox_field( $name, $label, $callback_args = array(), $field_args = 'intval', $id = null ) {
 			$callback = array( $this, 'render_checkbox_field_html' );
 
-			$callback_args = wp_parse_args(
+			$callback_args = bp_parse_args(
 				$callback_args,
 				array(
 					'input_name'        => $this->get_input_name( $name ),
@@ -351,7 +586,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		public function add_select_field( $name, $label, $callback_args = array(), $field_args = 'sanitize_text_field', $id = null ) {
 			$callback = array( $this, 'render_select_field_html' );
 
-			$callback_args = wp_parse_args(
+			$callback_args = bp_parse_args(
 				$callback_args,
 				array(
 					'input_name'        => $this->get_input_name( $name ),
@@ -473,14 +708,20 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
 				echo "<div id='{$section['id']}' class='bp-admin-card section-{$section['id']}'>";
-				$has_tutorial_btn = ( isset( $section['tutorial_callback'] ) && !empty( $section['tutorial_callback'] ) ) ? 'has_tutorial_btn' : '';
+				$has_tutorial_btn = ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) ? 'has_tutorial_btn' : '';
+				$has_icon         = ( isset( $section['icon'] ) && ! empty( $section['icon'] ) ) ? '<i class="' . esc_attr( $section['icon'] ) . '"></i>' : '';
 				if ( $section['title'] ) {
-					echo "<h2 class=". $has_tutorial_btn .">{$section['title']}";
-					if( isset( $section['tutorial_callback'] ) && !empty( $section['tutorial_callback'] ) ) {
-						?> <div class="bbapp-tutorial-btn"> <?php
-						call_user_func( $section['tutorial_callback'], $section );
-						?> </div> <?php
-					}
+					echo '<h2 class=' . esc_attr( $has_tutorial_btn ) . '>' . $has_icon .
+						wp_kses_post( $section['title'] );
+
+						if ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) {
+						?>
+							<div class="bbapp-tutorial-btn">
+								<?php call_user_func( $section['tutorial_callback'], $section ); ?>
+							</div>
+							<?php
+						}
+
 					echo "</h2>\n";
 				}
 
@@ -493,7 +734,16 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				}
 
 				echo '<table class="form-table">';
-				$this->bp_custom_do_settings_fields( $page, $section['id'] );
+					$this->bp_custom_do_settings_fields( $page, $section['id'] );
+				echo '</table>';
+
+				if ( isset( $section['notice'] ) && ! empty( $section['notice'] ) ) {
+					?>
+					<div class="display-notice bb-bottom-notice">
+						<?php echo wp_kses_post( $section['notice'] ); ?>
+					</div>
+					<?php
+				}
 				echo '</table></div>';
 			}
 		}
