@@ -299,10 +299,10 @@ class BP_User_Query {
 			case 'active':
 			case 'newest':
 			case 'random':
-				$this->uid_name = 'user_id';
+				$this->uid_name  = 'user_id';
 				$this->uid_table = $bp->members->table_name_last_activity;
-				$sql['select']  = "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u";
-				$sql['where'][] = $wpdb->prepare( "u.component = %s AND u.type = 'last_activity'", buddypress()->members->id );
+				$sql['select']   = "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u";
+				$sql['where'][]  = $wpdb->prepare( "u.component = %s AND u.type = 'last_activity'", buddypress()->members->id );
 
 				if ( 'newest' == $type ) {
 					$sql['orderby'] = 'ORDER BY u.user_id';
