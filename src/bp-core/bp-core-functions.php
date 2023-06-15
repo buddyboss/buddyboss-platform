@@ -8561,20 +8561,3 @@ if ( ! function_exists( 'bb_filter_var_string' ) ) {
 function bb_is_wp_cli() {
 	return defined( 'WP_CLI' ) && WP_CLI;
 }
-
-/**
- * Create user last activity on activity table based on active user.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return void
- */
-function bb_core_create_last_activity() {
-	global $wpdb, $bp;
-
-	$query = "INSERT INTO {$bp->members->table_name_last_activity} (user_id, date_recorded, component, type, privacy, item_id, action, content, primary_link)
-			SELECT u.ID, u.user_registered, 'members', 'last_activity', 'public', '0', COALESCE(action,'') AS action, COALESCE(content,'') AS content, COALESCE(primary_link,'') AS primary_link FROM {$wpdb->users} AS u
-			LEFT JOIN {$bp->members->table_name_last_activity} AS a ON u.ID = a.user_id AND a.component = 'members' AND a.type = 'last_activity'
-			WHERE a.user_id IS NULL AND u.user_status = 0;";
-	$wpdb->query( $query );
-}

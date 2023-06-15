@@ -437,10 +437,6 @@ function bp_version_updater() {
 		if ( $raw_db_version < 20211 ) {
 			bb_update_to_2_3_50();
 		}
-
-		if ( $raw_db_version < 20301 ) {
-			bb_update_to_2_3_70();
-		}
 	}
 
 	/* All done! *************************************************************/
@@ -2874,15 +2870,3 @@ function bb_update_to_2_3_50() {
 		);
 	}
 }
-
-/**
- * Create the member last activity if not exists.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return void
- */
-function bb_update_to_2_3_70() {
-	bb_core_create_last_activity();
-}
-
