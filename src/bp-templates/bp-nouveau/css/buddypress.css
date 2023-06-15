@@ -25872,6 +25872,10 @@ div.dropzone.dz-started .dz-default.dz-message {
   left: 0;
 }
 
+.dropzone.video-dropzone .dz-preview.dz-file-preview.dz-has-thumbnail .dz-details .dz-filename {
+  display: none;
+}
+
 .dropzone.video-dropzone .dz-preview:not(.dz-has-thumbnail) .dz-progress-ring-wrap {
   background-color: rgba(0, 0, 0, 0.05);
 }
