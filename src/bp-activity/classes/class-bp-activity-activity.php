@@ -1049,10 +1049,19 @@ class BP_Activity_Activity {
 			// Integer casting.
 			$activity = wp_cache_get( $activity_id, 'bp_activity' );
 			if ( ! empty( $activity ) ) {
+
+				if ( ! property_exists( $activity, 'item_id' ) ) {
+					$activity->item_id = $activity->activity_id;
+				}
+
+				if ( ! property_exists( $activity, 'secondary_item_id' ) ) {
+					$activity->secondary_item_id = $activity->comment_parent;
+				}
+
 				$activity->id                = (int) $activity->id;
 				$activity->user_id           = (int) $activity->user_id;
-				$activity->item_id           = (int) $activity->activity_id;
-				$activity->secondary_item_id = (int) $activity->comment_parent;
+				$activity->item_id           = (int) $activity->item_id;
+				$activity->secondary_item_id = (int) $activity->secondary_item_id   ;
 				$activity->mptt_left         = (int) $activity->mptt_left;
 				$activity->type              = 'activity_comment';
 				$activity->component         = 'activity';
@@ -2567,9 +2576,9 @@ class BP_Activity_Activity {
 			 * since they are generally much less long-lived.
 			 */
 			if ( preg_match( '/a\.type NOT IN \([^\)]*\'last_activity\'[^\)]*\)/', $activity_ids_sql ) ) {
-				$cache_group = 'bp_activity_comment';
+				$cache_group = 'bp_activity';
 			} else {
-				$cache_group = 'bp_activity_comment_with_last_activity';
+				$cache_group = 'bp_activity_with_last_activity';
 			}
 
 			$cached = bp_core_get_incremented_cache( $activity_ids_sql, $cache_group );

@@ -6281,6 +6281,22 @@ function bb_comment_activity_add( $args = '' ) {
 
 	$save = $activity_comment->comment_save();
 
+	if ( ! array_key_exists( 'type', $r ) ) {
+		$r['type'] = 'activity_comment';
+	}
+
+	if ( ! array_key_exists( 'item_id', $r ) ) {
+		$r['item_id'] = $r['activity_id'];
+	}
+
+	if ( ! array_key_exists( 'secondary_item_id', $r ) ) {
+		$r['secondary_item_id'] = $r['comment_parent'];
+	}
+
+	if ( ! array_key_exists( 'component', $r ) ) {
+		$r['component'] = 'activity';
+	}
+
 	if ( 'wp_error' === $r['error_type'] && is_wp_error( $save ) ) {
 		return $save;
 	} elseif ( 'bool' === $r['error_type'] && false === $save ) {
