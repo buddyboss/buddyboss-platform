@@ -510,17 +510,22 @@ add_action( 'mepr-signup', 'bb_core_add_support_mepr_signup_map_user_fields', 10
  * @return array $errors	Array of error messages from memberpress signup validation
  */
 function bb_core_validate_nickname_mepr_signup( $errors ) {
+
 	if ( function_exists( 'bp_xprofile_nickname_field_id' ) ) {
-		$nickname   = '';
+		$nickname = '';
 		if ( isset( $_POST['user_login'] ) ) {
 			$nickname = sanitize_text_field( $_POST['user_login'] );
 		}
+
 		$field_id = bp_xprofile_nickname_field_id();
-		$message = bp_xprofile_validate_nickname_value( '', $field_id, $nickname, '' );
+		$message  = bp_xprofile_validate_nickname_value( '', $field_id, $nickname, '' );
+
 		if ( ! empty( $message ) ) {
-			$errors['user_login'] = $message;
+			$field_name           = xprofile_get_field( $field_id )->name;
+			$errors['user_login'] = str_replace( $field_name, __( 'Username', 'buddyboss' ), $message );
 		}
 	}
+
 	return $errors;
 }
 
