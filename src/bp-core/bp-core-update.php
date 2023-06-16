@@ -3073,7 +3073,6 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_update_to_2_3_70() {
-
 	bb_core_update_repair_duplicate_following_notification();
 }
 
