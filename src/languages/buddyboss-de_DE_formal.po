@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.3.1.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
 "POT-Creation-Date: 2023-04-05 17:49:53+00:00\n"
-"PO-Revision-Date: 2023-04-19 10:42+0400\n"
+"PO-Revision-Date: 2023-06-04 14:55+0600\n"
 "Last-Translator: Thorsten Wollenhöfer <thorsten.wollenhoefer@gmail.com>\n"
 "Language-Team: Thorsten Wollenhöfer <thorsten.wollenhoefer@gmail.com>\n"
 "Language: de_DE@formal\n"
@@ -19,7 +19,7 @@ msgstr ""
 "esc_html_x:1,2c\n"
 "X-Poedit-Basepath: ..\n"
 "X-Textdomain-Support: yes\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.3.1\n"
 "X-Poedit-SearchPath-0: .\n"
 
 #: bp-activity/actions/delete.php:60
@@ -2127,8 +2127,8 @@ msgstr ""
 "Sie werden künftig keine E-Mails mehr erhalten, wenn Ihnen jemand folgt."
 
 #: bp-activity/classes/class-bp-activity-notification.php:862
-msgid "New Follower"
-msgstr "Neuer Follower"
+msgid "New followers"
+msgstr "Neue Follower"
 
 #: bp-activity/classes/class-bp-activity-oembed-extension.php:194
 msgid "Embedded Activity Item"
