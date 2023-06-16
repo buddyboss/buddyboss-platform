@@ -217,6 +217,42 @@ function bp_core_install_activity_streams() {
 				KEY meta_key (meta_key(191))
 			) {$charset_collate};";
 
+	$sql[] = "CREATE TABLE {$bp_prefix}bb_activity_comments (
+				id bigint(20) NOT NULL AUTO_INCREMENT,
+				user_id bigint(20) NOT NULL,
+				content longtext NOT NULL,
+				activity_id bigint(20) NOT NULL,
+				comment_parent bigint(20) DEFAULT NULL,
+				date_recorded datetime NOT NULL,
+				date_updated datetime NOT NULL,
+				hide_sitewide bool DEFAULT 0,
+				mptt_left int(11) NOT NULL DEFAULT 0,
+				mptt_right int(11) NOT NULL DEFAULT 0,
+				is_spam tinyint(1) NOT NULL DEFAULT 0,
+				privacy varchar(75) NOT NULL DEFAULT 'public',
+				PRIMARY KEY  (id),
+				KEY date_recorded (date_recorded),
+				KEY user_id (user_id),
+				KEY activity_id (item_id),
+				KEY comment_parent (secondary_item_id),
+				KEY component (component),
+				KEY type (type),
+				KEY mptt_left (mptt_left),
+				KEY mptt_right (mptt_right),
+				KEY hide_sitewide (hide_sitewide),
+				KEY is_spam (is_spam)
+			) {$charset_collate};";
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bb_activity_comment_meta (
+				id bigint(20) NOT NULL AUTO_INCREMENT,
+				comment_id bigint(20) NOT NULL,
+				meta_key varchar(255) DEFAULT NULL,
+				meta_value longtext DEFAULT NULL,
+				PRIMARY KEY  (id),
+				KEY comment_id (comment_id),
+				KEY meta_key (meta_key(191))
+			) {$charset_collate};";
+
 	dbDelta( $sql );
 }
 

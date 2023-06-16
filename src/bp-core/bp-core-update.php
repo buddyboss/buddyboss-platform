@@ -437,6 +437,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 20261 ) {
 			bb_update_to_2_3_60();
 		}
+
+		if ( $raw_db_version < 20271 ) {
+			bb_update_to_activity_comment();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -3062,3 +3066,6 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
 	bb_create_background_message_media_document_update( $table_exists, $paged );
 }
 
+function bb_update_to_activity_comment() {
+	bp_core_install_activity_streams();
+}
