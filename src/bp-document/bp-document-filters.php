@@ -507,6 +507,16 @@ function bp_document_delete_activity_document( $activities ) {
 	if ( ! empty( $activities ) ) {
 		remove_action( 'bp_activity_after_delete', 'bp_document_delete_activity_document' );
 		foreach ( $activities as $activity ) {
+
+			// Do not delete attached document, if the activity belongs to a forum topic/reply.
+			// Attached document could still be used inside that component.
+			if (
+				! empty( $activity->type ) &&
+				in_array( $activity->type, array( 'bbp_reply_create', 'bbp_topic_create' ), true )
+			) {
+				continue;
+			}
+
 			$activity_id       = $activity->id;
 			$document_activity = bp_activity_get_meta( $activity_id, 'bp_document_activity', true );
 			if ( ! empty( $document_activity ) && '1' == $document_activity ) {
