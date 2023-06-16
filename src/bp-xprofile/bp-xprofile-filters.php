@@ -901,8 +901,8 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 	}
 
 	// only alpha numeric, underscore, dash.
-	if ( ! preg_match( '/^([A-Za-z0-9\'-_\.]+)$/', $value ) ) {
-		return sprintf( __( 'Invalid %s. Only "a-z", "0-9", "\'", "-", "_" and "." are allowed.', 'buddyboss' ), $field_name );
+	if ( ! preg_match( '/^([A-Za-z0-9-_\.]+)$/', $value ) ) {
+		return sprintf( __( 'Invalid %s. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss' ), $field_name );
 	}
 
 	// Check user unique identifier exist.
