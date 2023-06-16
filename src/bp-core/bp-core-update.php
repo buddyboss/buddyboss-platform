@@ -3050,7 +3050,7 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
 					$media = '';
 					if ( 'bp_document_ids' === $result->meta_key && class_exists( 'BP_Document' ) ) {
 						$media = new BP_Document( $media_id );
-					} else if ( class_exists( 'BP_Media' ) ) {
+					} elseif ( class_exists( 'BP_Media' ) ) {
 						$media = new BP_Media( $media_id );
 					}
 					if ( ! empty( $media ) ) {
@@ -3086,15 +3086,15 @@ function bb_core_update_repair_duplicate_following_notification() {
 	global $wpdb;
 	$bp = buddypress();
 
-	$sql = "DELETE FROM {$bp->notifications->table_name}";
-	$sql .= " WHERE id IN (";
-	$sql .= " SELECT DISTINCT n1.id FROM {$bp->notifications->table_name} n1";
+	$sql  = "DELETE FROM {$bp->notifications->table_name}";
+	$sql .= ' WHERE id IN (';
+	$sql .= " SELECT * FROM ( SELECT DISTINCT n1.id FROM {$bp->notifications->table_name} n1";
 	$sql .= " JOIN {$bp->notifications->table_name} n2 ON n1.user_id = n2.user_id";
-	$sql .= " WHERE n1.secondary_item_id = n2.secondary_item_id";
-	$sql .= " AND n1.date_notified < n2.date_notified";
-	$sql .= " AND n1.component_name = %s AND n1.component_action = %s";
-	$sql .= " ORDER BY n1.id DESC";
-	$sql .= " )";
+	$sql .= ' WHERE n1.secondary_item_id = n2.secondary_item_id';
+	$sql .= ' AND n1.date_notified < n2.date_notified';
+	$sql .= ' AND n1.component_name = %s AND n1.component_action = %s';
+	$sql .= ' ORDER BY n1.id DESC) AS ids';
+	$sql .= ' )';
 
 	// Remove duplicate notification ids.
 	$wpdb->query( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) );
