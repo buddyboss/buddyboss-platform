@@ -1,30 +1,38 @@
 {
-    "name": "buddyboss/buddyboss-platform",
-    "description": "The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!",
-    "type": "wordpress-plugin",
-    "keywords": ["activity", "community", "friends", "groups", "messaging", "notifications", "profiles", "social network"],
-    "homepage": "https://www.buddyboss.com/",
-    "license": "GPL-2.0-or-later",
-    "authors": [{
-        "name": "BuddyBoss Platform",
-        "homepage": "https://www.buddyboss.com/platform/"
-    }],
-    "support": {
-        "tutorials": "https://www.buddyboss.com/resources/docs/",
-        "reference": "https://www.buddyboss.com/resources/reference/",
-        "issues": "https://github.com/buddyboss/buddyboss-platform/issues",
-        "source": "https://github.com/buddyboss/buddyboss-platform"
-    },
-    "require": {
-        "composer/installers": "~1.0",
-        "php": ">=5.6.0",
-	  	"php-ffmpeg/php-ffmpeg": "^0.16.0"
-    },
-    "autoload": {
-    },
-    "scripts": {
-        "remove-ffmpeg-docs": ["rm -rf vendor/php-ffmpeg/php-ffmpeg/docs && rm -rf vendor/php-ffmpeg/php-ffmpeg/tests"],
-        "post-install-cmd": ["@remove-ffmpeg-docs"],
-        "post-update-cmd": ["@remove-ffmpeg-docs"]
-    }
+	"name": "buddyboss/buddyboss-platform",
+	"description": "The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!",
+	"type": "wordpress-plugin",
+	"keywords": ["activity", "community", "friends", "groups", "messaging", "notifications", "profiles", "social network"],
+	"homepage": "https://www.buddyboss.com/",
+	"license": "GPL-2.0-or-later",
+	"authors": [{
+		"name": "BuddyBoss Platform",
+		"homepage": "https://www.buddyboss.com/platform/"
+	}],
+	"support": {
+		"tutorials": "https://www.buddyboss.com/resources/docs/",
+		"reference": "https://www.buddyboss.com/resources/reference/",
+		"issues": "https://github.com/buddyboss/buddyboss-platform/issues",
+		"source": "https://github.com/buddyboss/buddyboss-platform"
+	},
+	"require": {
+		"composer/installers": "^2",
+		"php": ">=8.0.0",
+		"php-ffmpeg/php-ffmpeg": "^1.1.0"
+	},
+	"autoload": {
+	},
+	"scripts": {
+		"remove-ffmpeg-docs": ["rm -rf vendor/php-ffmpeg/php-ffmpeg/docs && rm -rf vendor/php-ffmpeg/php-ffmpeg/tests"],
+		"post-install-cmd": ["@install-scripts"],
+		"post-update-cmd": ["@install-scripts"],
+		"install-scripts": [
+			"composer dump-autoload"
+		]
+	},
+	"config": {
+		"allow-plugins": {
+			"composer/installers": true
+		}
+	}
 }

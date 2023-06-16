@@ -994,7 +994,7 @@ function bp_video_background_create_thumbnail( $video ) {
 				! empty( $ff_probe->ffprob->streams( get_attached_file( $video_attachment_id ) )->videos() ) &&
 				! empty( $ff_probe->ffprob->streams( get_attached_file( $video_attachment_id ) )->videos()->first() )
 			) {
-				$duration = $ff_probe->ffprob->streams( get_attached_file( $video_attachment_id ) )->videos()->first()->get( 'duration' );
+				$duration = $ff_probe->ffprob->format( get_attached_file( $video_attachment_id ) )->get( 'duration' );
 			}
 
 			$is_auto_generated_thumbnails = get_post_meta( $video->attachment_id, 'video_preview_thumbnails', true );

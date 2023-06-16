@@ -45,12 +45,6 @@ module.exports = function (grunt) {
 	grunt.initConfig(
 		{
 			pkg: grunt.file.readJSON( 'package.json' ),
-			checkDependencies: {
-				options: {
-					packageManager: 'npm'
-				},
-				src: {}
-			},
 			jshint: {
 				options: grunt.file.readJSON( '.jshintrc' ),
 				grunt: {
@@ -436,7 +430,7 @@ module.exports = function (grunt) {
 					stdout: false,
 				},
 				composer: {
-					command: 'composer update',
+					command: 'composer install --no-dev --no-scripts && composer install-scripts',
 					cwd: SOURCE_DIR,
 					stdout: false
 				}
@@ -492,32 +486,36 @@ module.exports = function (grunt) {
 					]
 				}
 			},
-			'string-replace': {
+			replace: {
 				dist: {
-					files: [{
-						src: '**/*.php',
-						expand: true,
-					}],
 					options: {
-						replacements: [{
-							pattern: /\[BBVERSION]/g,
-							replacement: '<%= pkg.BBVersion %>'
-						}]
-					}
-				},
-				'icon-translate': {
-					files: [{
-						src: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/font-map.php',
-						expand: true,
-					}],
-					options: {
-						replacements: [
+						patterns: [
 							{
-								pattern: /return/g,
-								replacement: '$bb_icons_data ='
+								match: /\[BBVERSION]/g,
+								replacement: '<%= pkg.BBVersion %>'
 							}
 						]
-					}
+					},
+					files: [
+						{
+							expand: true,
+							src: '**/*.php',
+						}
+					]
+				}
+			},
+			'icon-translate': {
+				files: [{
+					src: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/font-map.php',
+					expand: true,
+				}],
+				options: {
+					replacements: [
+						{
+							pattern: /return/g,
+							replacement: '$bb_icons_data ='
+						}
+					]
 				}
 			}
 		}
@@ -540,8 +538,9 @@ module.exports = function (grunt) {
 			'cssmin'
 		]
 	);
-	grunt.registerTask('pre-commit', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint']);
-	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src']);
+	grunt.registerTask('pre-commit', ['jsvalidate', 'jshint', 'stylelint']);
+	grunt.registerTask('string-replace', ['replace']);
+	grunt.registerTask('src', ['jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src']);
 	grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'clean:bp_rest', 'apidoc' ]);
 	grunt.registerTask('bp_performance', ['clean:bp_rest', 'exec:rest_performance', 'copy:bp_rest_performance', 'copy:bp_rest_mu', 'clean:bp_rest']);
 	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'exec:cli', 'clean:all', 'copy:files', 'compress', 'clean:all']);
