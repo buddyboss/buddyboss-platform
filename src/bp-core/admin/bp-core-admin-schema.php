@@ -217,6 +217,7 @@ function bp_core_install_activity_streams() {
 				KEY meta_key (meta_key(191))
 			) {$charset_collate};";
 
+	// New Activity comment table.
 	$sql[] = "CREATE TABLE {$bp_prefix}bb_activity_comments (
 				id bigint(20) NOT NULL AUTO_INCREMENT,
 				user_id bigint(20) NOT NULL,
