@@ -404,7 +404,19 @@ function bb_support_learndash_course_other_language_permalink( $url ) {
 			in_array( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'courses' ), explode( '/', $rawurldecode_url ), true )
 		)
 	) {
-		return rawurldecode( $url );
+		if (
+			(
+				! function_exists( 'bp_get_groups_slug' ) ||
+				! in_array( bp_get_groups_slug(), explode( '/', $un_trailing_slash_url ), true ) ||
+				! in_array( bp_get_groups_slug(), explode( '/', $rawurldecode_url ), true )
+			) ||
+			(
+				function_exists( 'bp_get_members_slug' ) ||
+				! in_array( bp_get_members_slug(), explode( '/', $rawurldecode_url ), true )
+			)
+		) {
+			return rawurldecode( $url );
+		}
 	}
 
 	return $url;
