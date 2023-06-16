@@ -321,10 +321,10 @@ function groups_edit_base_group_details( $args = array() ) {
 
 	if ( $r['notify_members'] ) {
 		groups_notification_group_updated( $group->id, $old_group );
-	}
 
-	if ( ! bb_enabled_legacy_email_preference() ) {
-		bb_groups_notification_groups_updated( $group->id );
+		if ( ! bb_enabled_legacy_email_preference() ) {
+			bb_groups_notification_groups_updated( $group->id );
+		}
 	}
 
 	/**
@@ -4958,7 +4958,7 @@ function bb_group_drop_down_order_metabox_translate_order_text( $translated_text
 /**
  * Function to check the user subscribed group or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.8
  *
  * @param int $group_id Group ID.
  * @param int $user_id  User ID.
@@ -4998,7 +4998,7 @@ function bb_is_member_subscribed_group( $group_id, $user_id ) {
 /**
  * Function to get Group Subscription button.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.8
  *
  * @param array $args button args.
  * @param bool  $html Should return button html or not.
@@ -5089,7 +5089,7 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 	/**
 	 * Filter to update group subscription button arguments.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.8
 	 *
 	 * @param array $button Button args.
 	 * @param array $r      Button args.
@@ -5113,7 +5113,7 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 	/**
 	 * Filter to update group subscription link.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.8
 	 *
 	 * @param mixed $button Button args or HTML.
 	 * @param array $r      Button args.
@@ -5126,7 +5126,7 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 /**
  * Function to display group action buttons.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.8
  *
  * @return void
  */
@@ -5145,4 +5145,27 @@ function bb_group_single_header_actions() {
 		?>
 	</div>
 	<?php
+}
+
+
+/**
+ * Update the group member count.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param array $group_ids Array of group IDs.
+ *
+ * @return void
+ */
+function bb_update_group_member_count( $group_ids = array() ) {
+
+	if ( empty( $group_ids ) ) {
+		return;
+	}
+
+	foreach ( $group_ids as $group_id ) {
+		$cache_key = 'bp_group_get_total_member_count_' . $group_id;
+		wp_cache_delete( $cache_key, 'bp_groups' );
+		BP_Groups_Member::refresh_total_member_count_for_group( $group_id );
+	}
 }

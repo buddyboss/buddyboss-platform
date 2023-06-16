@@ -469,7 +469,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	/**
 	 * Prepare subscription group where SQL query to filter blocked groups.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.8
 	 *
 	 * @param array $where_conditions Subscription where sql.
 	 * @param array $r                Array of subscription arguments.
@@ -501,7 +501,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden forum where SQL statement.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.8
 		 *
 		 * @param array $where            Query to hide suspended groups.
 		 * @param array $this             current class object.

@@ -20,8 +20,13 @@ add_filter( 'bp_get_loggedin_user_fullname', 'esc_html' );
 // Filter the user registration URL to point to BuddyPress's registration page.
 add_filter( 'register_url', 'bp_get_signup_page' );
 
-// Change the last active display format if users active within 5 minutes then shows 'Active now'.
+// Change the last active display format if users active within interval then shows 'Active now'.
 add_filter( 'bp_get_last_activity', 'bb_get_member_last_active_within_minutes', 10, 2 );
+
+// Repair member profile links.
+add_filter( 'bp_repair_list', 'bb_repair_member_profile_links', 12 );
+
+add_action( 'bb_assign_default_member_type_to_activate_user_on_admin', 'bb_set_default_member_type_to_activate_user_on_admin', 1, 2 );
 
 /**
  * Load additional sign-up sanitization filters on bp_loaded.
@@ -659,10 +664,10 @@ function bb_get_member_last_active_within_minutes( $last_activity, $user_id ) {
 	// Difference in seconds.
 	$since_diff = bp_core_current_time( true, 'timestamp' ) - $last_active_timestamp;
 	if ( $since_diff < HOUR_IN_SECONDS && $since_diff >= 0 ) {
-		$minutes_diff = round( $since_diff / MINUTE_IN_SECONDS );
 
-		// Difference within 5 minutes.
-		if ( 5 >= $minutes_diff ) {
+		$online_default_time = apply_filters( 'bb_default_online_presence_time', bb_presence_interval() + bb_presence_time_span() );
+
+		if ( $online_default_time >= $since_diff ) {
 			return esc_html__( 'Active now', 'buddyboss' );
 		}
 	}
@@ -742,9 +747,9 @@ function bb_load_member_type_label_custom_css() {
 					isset( $label_color_data['color_type'] ) &&
 					'custom' === $label_color_data['color_type']
 				) {
-					$background_color       = isset( $label_color_data['background-color'] ) ? $label_color_data['background-color'] : '';
-					$text_color             = isset( $label_color_data['color'] ) ? $label_color_data['color'] : '';
-					$class_name             = 'body .bp-member-type.bb-current-member-' . $type;
+					$background_color        = isset( $label_color_data['background-color'] ) ? $label_color_data['background-color'] : '';
+					$text_color              = isset( $label_color_data['color'] ) ? $label_color_data['color'] : '';
+					$class_name              = 'body .bp-member-type.bb-current-member-' . $type;
 					$member_type_custom_css .= $class_name . ' {' . "background-color:$background_color;" . '}';
 					$member_type_custom_css .= $class_name . ' {' . "color:$text_color;" . '}';
 				}
@@ -789,3 +794,155 @@ function bb_delete_user_subscriptions( $user_id ) {
 }
 add_action( 'wpmu_delete_user', 'bb_delete_user_subscriptions' );
 add_action( 'delete_user', 'bb_delete_user_subscriptions' );
+
+
+/**
+ * Add repair member profile links.
+ *
+ * @since BuddyBoss 2.3.1
+ *
+ * @param array $repair_list Repair list items.
+ *
+ * @return array Repair list items.
+ */
+function bb_repair_member_profile_links( $repair_list ) {
+	$repair_list[] = array(
+		'bb-member-repair-profile-links',
+		__( 'Repair member profile links', 'buddyboss' ),
+		'bb_repair_member_profile_links_callback',
+	);
+
+	return $repair_list;
+}
+
+/**
+ * This function will work as migration process which will repair member profile links.
+ *
+ * @since BuddyBoss 2.3.1
+ *
+ * @return array|void
+ */
+function bb_repair_member_profile_links_callback() {
+	if ( ! bp_is_active( 'members' ) ) {
+		return;
+	}
+
+	global $wpdb;
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	$offset   = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$per_page = 20;
+
+	// Set limit while repair the member slug.
+	$user_ids = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT u.ID FROM `{$wpdb->prefix}users` AS u LEFT JOIN `{$wpdb->prefix}usermeta` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) WHERE ( um.user_id IS NULL OR LENGTH(meta_value) = %d ) ORDER BY u.ID ASC LIMIT %d, %d",
+			'bb_profile_slug',
+			40,
+			0,
+			$per_page
+		)
+	);
+
+	if ( ! is_wp_error( $user_ids ) && ! empty( $user_ids ) ) {
+		bb_set_bulk_user_profile_slug( $user_ids );
+
+		$total           = $offset + count( $user_ids );
+		$records_updated = sprintf(
+		/* translators: total user */
+			_n( '%d user unique identifier generated successfully', '%d users unique identifier generated successfully', $total, 'buddyboss' ),
+			$total
+		);
+
+		return array(
+			'status'  => 'running',
+			'offset'  => $total,
+			'records' => $records_updated,
+		);
+	} else {
+		/* translators: Status of current action. */
+		$statement = __( 'Profile unique identifier generated for all users; %s', 'buddyboss' );
+
+		// All done!
+		return array(
+			'status'  => 1,
+			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		);
+	}
+}
+
+/**
+ * Assign the default member type to user who register recently.
+ *
+ * @since BuddyBoss 2.3.2
+ *
+ * @param int    $user_id     ID of user.
+ * @param string $member_type Default selected member type.
+ */
+function bb_set_default_member_type_to_activate_user_on_admin( $user_id, $member_type ) {
+
+	if ( empty( $user_id ) || empty( $member_type ) ) {
+		return false;
+	}
+
+	if ( is_admin() ) {
+
+		// Assign the default member type to user.
+		bp_set_member_type( $user_id, '' );
+		bp_set_member_type( $user_id, $member_type );
+	} else {
+		// Assign the default member type to user.
+		bp_set_member_type( $user_id, '' );
+		bp_set_member_type( $user_id, $member_type );
+
+		$member_type_id                = bp_member_type_post_by_type( $member_type );
+		$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
+
+		if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
+			$bp_user = new WP_User( $user_id );
+			foreach ( $bp_user->roles as $role ) {
+				// Remove role.
+				$bp_user->remove_role( $role );
+			}
+			// Add role.
+			$bp_user->add_role( $selected_member_type_wp_roles[0] );
+		}
+	}
+}
+
+/**
+ * This function will work as migration process which will repair member profile links.
+ *
+ * @since BuddyBoss 2.3.41
+ *
+ * @return array|void
+ */
+function bb_generate_member_profile_links_on_update() {
+	if ( ! bp_is_active( 'members' ) ) {
+		return;
+	}
+
+	global $wpdb, $bp_background_updater;
+
+	// Get all users who have not generate unique slug while it runs from background.
+	$user_ids = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT u.ID FROM `{$wpdb->prefix}users` AS u LEFT JOIN `{$wpdb->prefix}usermeta` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) WHERE um.user_id IS NULL ORDER BY u.ID ASC",
+			'bb_profile_slug'
+		)
+	);
+
+	if ( ! is_wp_error( $user_ids ) && ! empty( $user_ids ) ) {
+		foreach ( array_chunk( $user_ids, 50 ) as $chunked_user_ids ) {
+			$bp_background_updater->data(
+				array(
+					array(
+						'callback' => 'bb_set_bulk_user_profile_slug',
+						'args'     => array( $chunked_user_ids ),
+					),
+				)
+			);
+			$bp_background_updater->save()->dispatch();
+		}
+	}
+}

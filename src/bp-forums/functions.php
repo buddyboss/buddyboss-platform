@@ -795,6 +795,20 @@ function bbp_forum_update_forum_status_when_group_updates( $group_id ) {
 							'post_status' => $status,
 						)
 					);
+
+					$child_forums = bb_get_all_nested_subforums( $forum_id );
+					if ( $child_forums ) {
+						foreach ( $child_forums as $child_forum_id ) {
+							if ( get_post_status( $child_forum_id ) !== $status ) {
+								wp_update_post(
+									array(
+										'ID'          => $child_forum_id,
+										'post_status' => $status,
+									)
+								);
+							}
+						}
+					}
 				}
 			}
 		}
@@ -1019,6 +1033,7 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 	$params['forums'] = array(
 		'params'  => array(
 			'bb_current_user_id' => $user_id,
+			'link_preview'       => bbp_use_autoembed() ? true : false,
 		),
 		'nonces'  => array(
 			'post_topic_reply_draft' => wp_create_nonce( 'post_topic_reply_draft_data' ),
@@ -1087,7 +1102,7 @@ add_action( 'edit_post', 'bb_subscription_update_secondary_item', 999, 2 );
 /**
  * Return true if a forum is a group forum.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.8
  *
  * @param int $forum_id Forum ID.
  *
@@ -1102,3 +1117,35 @@ function bb_is_forum_group_forum( $forum_id = 0 ) {
 
 	return (bool) apply_filters( 'bb_is_forum_group_forum', $retval, $forum_id );
 }
+
+/**
+ * AJAX endpoint for link preview URL parser.
+ *
+ * @since BuddyBoss 2.3.60
+ */
+function bb_forums_link_preview_parse_url() {
+	// Get URL.
+	$url = isset( $_POST['url'] ) ? $_POST['url'] : ''; // phpcs:ignore
+
+	// Check if URL is validated.
+	if ( empty( $url ) || ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+		wp_send_json( array( 'error' => __( 'URL is not valid.', 'buddyboss' ) ) );
+	}
+
+	// Get URL parsed data.
+	$parse_url_data = bp_core_parse_url( $url );
+
+	// If empty data then send error.
+	if ( empty( $parse_url_data ) ) {
+		wp_send_json( array( 'error' => esc_html__( 'There was a problem generating a link preview.', 'buddyboss' ) ) );
+	}
+
+	// send json success.
+	wp_send_json( $parse_url_data );
+}
+
+add_action( 'wp_ajax_bb_forums_parse_url', 'bb_forums_link_preview_parse_url' );
+if ( bbp_allow_anonymous() ) {
+	add_action( 'wp_ajax_nopriv_bb_forums_parse_url', 'bb_forums_link_preview_parse_url' );
+}
+

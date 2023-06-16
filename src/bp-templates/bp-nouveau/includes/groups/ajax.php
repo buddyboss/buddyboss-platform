@@ -934,7 +934,8 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 						'type'    => 'thumb',
 						'class'   => '',
 					)
-				)
+				),
+				ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401
 			);
 
 			$name = bp_core_get_user_displayname( $member->ID );
@@ -1079,7 +1080,7 @@ function bp_nouveau_ajax_groups_send_message() {
 		wp_send_json_error( $response );
 	}
 
-	$wp_nonce = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING );
+	$wp_nonce = bb_filter_input_string( INPUT_POST, 'nonce' );
 
 	if ( empty( $wp_nonce ) || ! wp_verify_nonce( $wp_nonce, 'send_messages_users' ) ) {
 		wp_send_json_error( $response );
@@ -1130,7 +1131,7 @@ function bp_nouveau_ajax_groups_send_message() {
 	 *
 	 * @return bool True if message is valid, false otherwise.
 	 */
-	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $content ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $content ) ) ) ), $content, $_POST );
+	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $content ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ), $content, $_POST );
 
 	if ( ! $validated_content ) {
 		$response['feedback'] = __( 'Your message was not sent. Please enter some content.', 'buddyboss' );
@@ -1138,13 +1139,9 @@ function bp_nouveau_ajax_groups_send_message() {
 		wp_send_json_error( $response );
 	}
 
-	if ( '' === $content || empty( $content ) ) {
-		$content = '&nbsp;';
-	}
-
 	$group         = filter_input( INPUT_POST, 'group', FILTER_VALIDATE_INT ); // Group id.
-	$message_users = filter_input( INPUT_POST, 'users', FILTER_SANITIZE_STRING ); // all - individual.
-	$message_type  = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING ); // open - private.
+	$message_users = bb_filter_input_string( INPUT_POST, 'users' ); // all - individual.
+	$message_type  = bb_filter_input_string( INPUT_POST, 'type' ); // open - private.
 
 	// Get Members list if "All Group Members" selected.
 	if ( 'all' === $message_users ) {
@@ -1739,7 +1736,7 @@ function bp_nouveau_ajax_groups_send_message() {
 			$_POST['message_meta_users_list'] = $message_users_ids;
 
 			if ( ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) ) {
-				$chunk_members = array_chunk( $members, 10 );
+				$chunk_members = array_chunk( $members, bb_get_email_queue_min_count() );
 				if ( ! empty( $chunk_members ) ) {
 					foreach ( $chunk_members as $key => $members ) {
 						$bb_email_background_updater->data(

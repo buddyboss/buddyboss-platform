@@ -166,7 +166,7 @@ function bp_messages_filter_kses( $content ) {
  */
 function maybe_redirects_to_previous_thread_message() {
 	$recipient = bp_get_messages_username_value();
-	$user_id   = bp_core_get_userid( $recipient );
+	$user_id   = bp_core_get_userid_from_nicename( $recipient );
 
 	$thread_id = BP_Messages_Message::get_existing_thread( array( $user_id ), bp_loggedin_user_id() );
 	if ( ! $thread_id ) {
@@ -893,18 +893,21 @@ function bp_core_get_js_strings_callback( $params ) {
 	$params['nonce']['bp_moderation_content_nonce'] = wp_create_nonce( 'bp-moderation-content' );
 	$params['current']['message_user_id']           = bp_loggedin_user_id();
 
-	$hidden_threads = BP_Messages_Thread::get_current_threads_for_user(
-		array(
-			'fields'      => 'ids',
-			'user_id'     => bp_loggedin_user_id(),
-			'is_hidden'   => true,
-			'thread_type' => 'archived',
-		)
-	);
-
 	$archived_threads_ids = array();
-	if ( ! empty( $hidden_threads ) ) {
-		$archived_threads_ids = $hidden_threads['threads'];
+
+	if ( is_user_logged_in() ) {
+		$hidden_threads = BP_Messages_Thread::get_current_threads_for_user(
+			array(
+				'fields'      => 'ids',
+				'user_id'     => bp_loggedin_user_id(),
+				'is_hidden'   => true,
+				'thread_type' => 'archived',
+			)
+		);
+
+		if ( ! empty( $hidden_threads ) ) {
+			$archived_threads_ids = $hidden_threads['threads'];
+		}
 	}
 
 	$params['archived_threads'] = $archived_threads_ids;
@@ -1204,7 +1207,7 @@ function bb_digest_message_email_notifications() {
 					if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
 						global $bb_email_background_updater;
 
-						$chunk_recipient_array = array_chunk( $thread['recipients'], 10 );
+						$chunk_recipient_array = array_chunk( $thread['recipients'], bb_get_email_queue_min_count() );
 
 						if ( ! empty( $chunk_recipient_array ) ) {
 							foreach ( $chunk_recipient_array as $chunk_recipient ) {
