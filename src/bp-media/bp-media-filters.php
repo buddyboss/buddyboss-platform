@@ -546,6 +546,16 @@ function bp_media_delete_activity_media( $activities ) {
 	if ( ! empty( $activities ) ) {
 		remove_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' );
 		foreach ( $activities as $activity ) {
+
+			// Do not delete attached media, if the activity belongs to a forum topic/reply.
+			// Attached media could still be used inside that component.
+			if (
+				! empty( $activity->type ) &&
+				in_array( $activity->type, array( 'bbp_reply_create', 'bbp_topic_create' ), true )
+			) {
+				continue;
+			}
+
 			$activity_id    = $activity->id;
 			$media_activity = bp_activity_get_meta( $activity_id, 'bp_media_activity', true );
 			if ( ! empty( $media_activity ) && '1' == $media_activity ) {

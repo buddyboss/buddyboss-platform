@@ -503,6 +503,16 @@ function bp_video_delete_activity_video( $activities ) {
 	if ( ! empty( $activities ) ) {
 		remove_action( 'bp_activity_after_delete', 'bp_video_delete_activity_video' );
 		foreach ( $activities as $activity ) {
+
+			// Do not delete attached video, if the activity belongs to a forum topic/reply.
+			// Attached video could still be used inside that component.
+			if (
+				! empty( $activity->type ) &&
+				in_array( $activity->type, array( 'bbp_reply_create', 'bbp_topic_create' ), true )
+			) {
+				continue;
+			}
+
 			$activity_id    = $activity->id;
 			$video_activity = bp_activity_get_meta( $activity_id, 'bp_video_activity', true );
 			if ( ! empty( $video_activity ) && '1' === $video_activity ) {
