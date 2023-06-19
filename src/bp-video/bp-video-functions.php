@@ -3521,6 +3521,12 @@ function bb_get_video_default_placeholder_image() {
  */
 function bp_video_regenerate_attachment_thumbnails( $attachment_id ) {
 
+	// Check attachment is exists in file system.
+	$attachment_path = get_attached_file( $attachment_id );
+	if ( ! file_exists( $attachment_path ) ) {
+		return;
+	}
+
 	// Add upload filters.
 	bb_video_image_add_upload_filters();
 
