@@ -1264,7 +1264,7 @@ function xprofile_check_member_type_added_previously() {
 add_action( 'wp_ajax_xprofile_check_member_type_added_previously', 'xprofile_check_member_type_added_previously' );
 
 /**
- *  Save repeater option temporary before save group details.
+ * Save repeater option temporary before save group details.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -1278,7 +1278,7 @@ function bb_xprofile_before_save_xprofile_group_details( $xprofile ) {
 add_action( 'xprofile_group_before_save', 'bb_xprofile_before_save_xprofile_group_details', 11, 1 );
 
 /**
- *  Migrating the user simple data's to repeater fields data's.
+ * Migrating the user simple data's to repeater fields data's.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -1343,7 +1343,7 @@ function bb_xprofile_migrate_simple_to_repeater_fields_data( $xprofile ) {
 add_action( 'xprofile_group_after_save', 'bb_xprofile_migrate_simple_to_repeater_fields_data', 11, 1 );
 
 /**
- *  Prepare data to insert into repeater fields.
+ * Prepare data to insert into repeater fields.
  *
  * @since BuddyBoss [BBVERSION]
  *
