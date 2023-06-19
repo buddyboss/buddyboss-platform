@@ -349,6 +349,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 					'BP_REST_Topics_Actions_Endpoint',
 					'BP_REST_Reply_Endpoint',
 					'BP_REST_Reply_Actions_Endpoint',
+					'BB_REST_Forums_Link_Preview_Endpoint',
 				)
 			);
 		}
