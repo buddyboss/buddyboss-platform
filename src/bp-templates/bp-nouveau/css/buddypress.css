@@ -15417,13 +15417,14 @@ div.bbp-reply-header {
   display: block;
 }
 
-.bb_discard_topic_reply_draft {
-  border: 0 !important;
-  background-color: transparent !important;
-  line-height: 1 !important;
-  font-size: 15px !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+button.button.bb_discard_topic_reply_draft,
+button.button.bb_discard_topic_reply_draft:hover {
+  border: 0;
+  background-color: transparent;
+  line-height: 1;
+  font-size: 15px;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 /* =Reply to
