@@ -297,8 +297,10 @@ function bbp_has_replies( $args = '' ) {
 		}
 	}
 
+	$have_replies = ( isset( $total_pages ) && $bbp->reply_query->paged > $total_pages ) ? false : $bbp->reply_query->have_posts();
+
 	// Return object
-	return apply_filters( 'bbp_has_replies', $bbp->reply_query->have_posts(), $bbp->reply_query );
+	return apply_filters( 'bbp_has_replies', $have_replies, $bbp->reply_query );
 }
 
 /**
@@ -2664,6 +2666,11 @@ function bbp_get_form_reply_content() {
 	// Get _POST data
 	if ( bbp_is_post_request() && isset( $_POST['bbp_reply_content'] ) ) {
 		$reply_content = stripslashes( $_POST['bbp_reply_content'] );
+		
+		// Remove unintentional empty paragraph coming from the medium editor when only link preview.
+		if ( preg_match('/^(<p><br><\/p>|<p><br \/><\/p>|<p><\/p>|<p><br\/><\/p>)$/i', $reply_content ) ) {
+			$reply_content = '';
+		}
 
 		// Get edit data
 	} elseif ( bbp_is_reply_edit() ) {
