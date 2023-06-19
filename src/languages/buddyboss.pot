@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.3.60\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-06-14 11:49:43+00:00\n"
+"POT-Creation-Date: 2023-06-19 09:38:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -537,7 +537,7 @@ msgstr ""
 #: bp-forums/replies/template.php:51 bp-forums/replies/template.php:1779
 #: bp-forums/replies/template.php:1822 bp-forums/topics/template.php:3347
 #: bp-moderation/classes/class-bp-moderation-activity.php:521
-#: bp-moderation/classes/class-bp-moderation-forum-replies.php:274
+#: bp-moderation/classes/class-bp-moderation-forum-replies.php:275
 #: bp-templates/bp-nouveau/buddypress/assets/emails/single-bp-email.php:408
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:848
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:956
@@ -612,16 +612,16 @@ msgstr ""
 msgid "Your browser does not support HTML5 audio"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:623
-#: bp-activity/bp-activity-filters.php:2518
-#: bp-activity/bp-activity-filters.php:2552
+#: bp-activity/bp-activity-filters.php:624
+#: bp-activity/bp-activity-filters.php:2519
+#: bp-activity/bp-activity-filters.php:2553
 msgid " Read more"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:627
-#: bp-activity/bp-activity-filters.php:2492
-#: bp-activity/bp-activity-filters.php:2516
-#: bp-activity/bp-activity-filters.php:2550
+#: bp-activity/bp-activity-filters.php:628
+#: bp-activity/bp-activity-filters.php:2493
+#: bp-activity/bp-activity-filters.php:2517
+#: bp-activity/bp-activity-filters.php:2551
 #: bp-activity/classes/class-bp-activity-notification.php:226
 #: bp-activity/classes/class-bp-activity-notification.php:241
 #: bp-activity/classes/class-bp-activity-notification.php:645
@@ -647,32 +647,32 @@ msgstr ""
 msgid "&hellip;"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:688 bp-forums/core/filters.php:505
+#: bp-activity/bp-activity-filters.php:689 bp-forums/core/filters.php:505
 msgid "Continue reading"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:957
+#: bp-activity/bp-activity-filters.php:958
 msgid "Load Newest"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:1752
-#: bp-activity/bp-activity-filters.php:1963
-#: bp-activity/bp-activity-filters.php:2131
-#: bp-activity/bp-activity-filters.php:2342
-#: bp-activity/bp-activity-filters.php:2758
-#: bp-activity/bp-activity-filters.php:2972
+#: bp-activity/bp-activity-filters.php:1753
+#: bp-activity/bp-activity-filters.php:1964
+#: bp-activity/bp-activity-filters.php:2132
+#: bp-activity/bp-activity-filters.php:2343
+#: bp-activity/bp-activity-filters.php:2759
+#: bp-activity/bp-activity-filters.php:2973
 #: bp-groups/bp-groups-activity.php:179 bp-groups/bp-groups-functions.php:1747
 #: cli/components/activity.php:750
 #. translators: 1. User Link. 2. Group link.
 msgid "%1$s posted an update in the group %2$s"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3131
+#: bp-activity/bp-activity-filters.php:3132
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:792
 msgid "Activity Feed"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3132 bp-blogs/bp-blogs-template.php:1163
+#: bp-activity/bp-activity-filters.php:3133 bp-blogs/bp-blogs-template.php:1163
 #: bp-core/gdpr/class-bp-friendship-export.php:93
 #: bp-core/gdpr/class-bp-notification-export.php:68
 #: bp-core/gdpr/class-bp-settings-export.php:72
@@ -705,7 +705,7 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3133 bp-blogs/bp-blogs-template.php:1171
+#: bp-activity/bp-activity-filters.php:3134 bp-blogs/bp-blogs-template.php:1171
 #: bp-core/gdpr/class-bp-friendship-export.php:93
 #: bp-core/gdpr/class-bp-notification-export.php:66
 #: bp-core/gdpr/class-bp-settings-export.php:77
@@ -738,14 +738,14 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3144
+#: bp-activity/bp-activity-filters.php:3145
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:800
 #. translators: %s: users mention name.
 msgid "A member mentions you in an update using \"@%s\""
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3149
-#: bp-activity/bp-activity-filters.php:3169 bp-forums/core/actions.php:370
+#: bp-activity/bp-activity-filters.php:3150
+#: bp-activity/bp-activity-filters.php:3170 bp-forums/core/actions.php:370
 #: bp-forums/core/actions.php:386 bp-friends/bp-friends-filters.php:401
 #: bp-friends/bp-friends-filters.php:417
 #: bp-groups/bp-groups-notifications.php:1345
@@ -758,8 +758,8 @@ msgstr ""
 msgid "Yes, send email"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3156
-#: bp-activity/bp-activity-filters.php:3176 bp-forums/core/actions.php:376
+#: bp-activity/bp-activity-filters.php:3157
+#: bp-activity/bp-activity-filters.php:3177 bp-forums/core/actions.php:376
 #: bp-forums/core/actions.php:392 bp-friends/bp-friends-filters.php:407
 #: bp-friends/bp-friends-filters.php:423
 #: bp-groups/bp-groups-notifications.php:1351
@@ -772,7 +772,7 @@ msgstr ""
 msgid "No, do not send email"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3164
+#: bp-activity/bp-activity-filters.php:3165
 #: bp-core/gdpr/class-bp-settings-export.php:157
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:815
 msgid "A member replies to an update or comment you've posted"
@@ -4131,7 +4131,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/content-single-topic-lead.php:90
 #: bp-forums/topics/template.php:51
 #: bp-moderation/classes/class-bp-moderation-activity.php:517
-#: bp-moderation/classes/class-bp-moderation-forum-topics.php:258
+#: bp-moderation/classes/class-bp-moderation-forum-topics.php:259
 msgid "Discussion"
 msgstr ""
 
@@ -4903,7 +4903,7 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-groups.php:24
 #: bp-core/bp-core-functions.php:787 bp-core/bp-core-template.php:565
 #: bp-core/bp-core-update.php:966
-#: bp-core/compatibility/bp-rankmath-plugin-helpers.php:38
+#: bp-core/compatibility/bp-rankmath-plugin-helpers.php:41
 #: bp-core/gdpr/class-bp-group-export.php:27
 #: bp-core/gdpr/class-bp-group-export.php:57 bp-groups/bp-groups-admin.php:37
 #: bp-groups/bp-groups-admin.php:38 bp-groups/bp-groups-admin.php:48
@@ -5831,6 +5831,7 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:793
 #: bp-core/classes/class-bp-core-login-widget.php:110
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:516
 #: bp-forums/common/widgets.php:95
 #: bp-members/classes/class-bp-members-list-table.php:155
 #: bp-members/classes/class-bp-members-ms-list-table.php:142
@@ -6189,7 +6190,7 @@ msgstr ""
 #: bp-forums/groups.php:52
 #: bp-forums/templates/default/bbpress/loop-forums.php:18
 #: bp-moderation/classes/class-bp-moderation-activity.php:513
-#: bp-moderation/classes/class-bp-moderation-forums.php:250
+#: bp-moderation/classes/class-bp-moderation-forums.php:251
 msgid "Forum"
 msgstr ""
 
@@ -7022,7 +7023,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2559
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:506
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:538
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:39
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:57
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:98
@@ -9623,22 +9624,22 @@ msgstr ""
 msgid "Activate Forum Discussions Component"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:507
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:539
 msgid "activate"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:510
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:542
 msgid "LearnDash & bbPress Integration is deactivated."
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:511
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:543
 msgid ""
 "The LearnDash & bbPress Integration plugin can't work if LearnDash LMS "
 "plugin & %1$s component is deactivated. Please activate LearnDash LMS "
 "plugin & %2$s component."
 msgstr ""
 
-#: bp-core/compatibility/bp-rankmath-plugin-helpers.php:35
+#: bp-core/compatibility/bp-rankmath-plugin-helpers.php:37
 #: bp-groups/classes/class-bp-groups-component.php:913
 #: bp-templates/bp-nouveau/includes/groups/classes.php:272
 msgid "Manage"
@@ -15594,7 +15595,7 @@ msgstr ""
 msgid "Recent Replies"
 msgstr ""
 
-#: bp-forums/core/actions.php:584
+#: bp-forums/core/actions.php:591
 msgid "Forum Description"
 msgstr ""
 
@@ -15809,7 +15810,7 @@ msgstr ""
 msgid " (+ %d hidden)"
 msgstr ""
 
-#: bp-forums/forums/template.php:2957 bp-groups/bp-groups-template.php:1505
+#: bp-forums/forums/template.php:2960 bp-groups/bp-groups-template.php:1505
 #: bp-groups/bp-groups-template.php:1507
 msgid "View more"
 msgstr ""
@@ -23134,6 +23135,7 @@ msgid "That username is not allowed"
 msgstr ""
 
 #: bp-members/bp-members-functions.php:1734
+#: bp-xprofile/bp-xprofile-filters.php:905
 msgid "Invalid %s. Only \"a-z\", \"0-9\", \"-\", \"_\" and \".\" are allowed."
 msgstr ""
 
@@ -26216,17 +26218,17 @@ msgid "Report Comment"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-activity.php:424
-#: bp-moderation/classes/class-bp-moderation-forums.php:236
+#: bp-moderation/classes/class-bp-moderation-forums.php:237
 msgid "Report Forum"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-activity.php:428
-#: bp-moderation/classes/class-bp-moderation-forum-topics.php:244
+#: bp-moderation/classes/class-bp-moderation-forum-topics.php:245
 msgid "Report Discussion"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-activity.php:432
-#: bp-moderation/classes/class-bp-moderation-forum-replies.php:260
+#: bp-moderation/classes/class-bp-moderation-forum-replies.php:261
 msgid "Report Reply"
 msgstr ""
 
@@ -31959,12 +31961,6 @@ msgstr ""
 #: bp-xprofile/bp-xprofile-filters.php:925
 #. translators: 1. Field Name, 2. character length.
 msgid "%1$s must be shorter than %2$d characters."
-msgstr ""
-
-#: bp-xprofile/bp-xprofile-filters.php:905
-msgid ""
-"Invalid %s. Only \"a-z\", \"0-9\", \"'\", \"-\", \"_\" and \".\" are "
-"allowed."
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-filters.php:919
