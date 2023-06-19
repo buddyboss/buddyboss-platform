@@ -136,6 +136,10 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 	 * @apiParam {String} file File object which is going to upload.
 	 */
 	public function upload_item( $request ) {
+		
+		if ( 'messages' === $request->get_param( 'component' ) ) {
+			$_POST['component'] = 'messages';
+		}
 
 		$file = $request->get_file_params();
 
@@ -320,6 +324,10 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $request['activity_id'] ) ) {
 			$args['activity_id'] = $request['activity_id'];
+		}
+
+		if ( ! empty( $request['message_id'] ) ) {
+			$args['message_id'] = $request['message_id'];
 		}
 
 		if ( ! empty( $request['privacy'] ) ) {
@@ -607,6 +615,10 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			$args['content'] = $request['content'];
 		}
 
+		if ( isset( $request['message_id'] ) && ! empty( $request['message_id'] ) ) {
+			$args['message_id'] = $request['message_id'];
+		}
+
 		/**
 		 * Filter the query arguments for the request.
 		 *
@@ -762,7 +774,9 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 							'status' => 404,
 						)
 					);
-				} elseif ( function_exists( 'bp_get_attachment_video_id' ) && ! empty( bp_get_attachment_video_id( (int) $attachment_id ) ) && empty( $request['album_id'] ) ) {
+				} elseif ( 'messages' !== $request['component'] &&
+					function_exists( 'bp_get_attachment_video_id' ) && ! empty( bp_get_attachment_video_id( (int) $attachment_id ) ) &&
+					empty( $request['album_id'] ) ) {
 					$retval = new WP_Error(
 						'bp_rest_duplicate_video_upload_id',
 						sprintf(
@@ -832,6 +846,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			'group_id'      => $video->group_id,
 			'album_id'      => $video->album_id,
 			'activity_id'   => $video->activity_id,
+			'message_id'    => $video->message_id,
 			'user_id'       => $video->user_id,
 			'menu_order'    => $video->menu_order,
 		);
@@ -842,6 +857,10 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 
 		if ( isset( $request['privacy'] ) && ! empty( $request['privacy'] ) ) {
 			$args['privacy'] = $request['privacy'];
+		}
+
+		if ( isset( $request['message_id'] ) && ! empty( $request['message_id'] ) ) {
+			$args['message_id'] = $request['message_id'];
 		}
 
 		if ( isset( $request['album_id'] ) && (int) $args['album_id'] !== (int) $request['album_id'] ) {
@@ -1550,6 +1569,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		$content       = ( isset( $args['content'] ) ? $args['content'] : false );
 		$user_id       = ( ! empty( $args['user_id'] ) ? $args['user_id'] : get_current_user_id() );
 		$id            = ( ! empty( $args['id'] ) ? $args['id'] : '' );
+		$message_id    = ( ! empty( $args['message_id'] ) ? $args['message_id'] : 0 );
 
 		$group_id = ( ! empty( $args['group_id'] ) ? $args['group_id'] : false );
 		$album_id = ( ! empty( $args['album_id'] ) ? $args['album_id'] : false );
@@ -1595,6 +1615,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 				'attachment_id' => $wp_attachment_id,
 				'title'         => $title,
 				'activity_id'   => $video_activity_id,
+				'message_id'    => $message_id,
 				'album_id'      => ( ! empty( $args['album_id'] ) ? $args['album_id'] : false ),
 				'group_id'      => ( ! empty( $args['group_id'] ) ? $args['group_id'] : false ),
 				'privacy'       => $video_privacy,
@@ -1662,6 +1683,15 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			if ( ! empty( $valid_upload_ids ) ) {
 				foreach ( $valid_upload_ids as $wp_attachment_id ) {
 
+					// Check if media id already available for the messages.
+					if ( 'message' === $video_privacy ) {
+						$mid = get_post_meta( $wp_attachment_id, 'bp_video_id', true );
+
+						if ( ! empty( $mid ) ) {
+							$created_video_ids[] = $mid;
+							continue;
+						}
+					}
 					// extract the nice title name.
 					$title = get_the_title( $wp_attachment_id );
 
