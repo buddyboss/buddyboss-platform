@@ -333,6 +333,8 @@ window.bp = window.bp || {};
 			document.addEventListener( 'keyup', this.closePopup.bind( this ) );
 			document.addEventListener( 'keyup', this.submitPopup.bind( this ) );
 
+			$( window ).bind( 'beforeunload', this.beforeunloadWindow.bind( this ) );
+
 			// Gifs autoplay.
 			if ( !_.isUndefined( BP_Nouveau.media.gif_api_key ) ) {
 				window.addEventListener( 'scroll', this.autoPlayGifVideos, false );
@@ -4572,6 +4574,14 @@ window.bp = window.bp || {};
 					data: data
 				}
 			);
+		},
+
+		beforeunloadWindow: function() {
+			if( $('body.messages').length > 0 ) {
+				$.each( Dropzone.instances, function( index, value ) {
+					value.removeAllFiles( true );
+				});
+			}
 		},
 
 		changeUploadModalTab: function ( event ) {
