@@ -429,8 +429,9 @@ function bp_activity_at_name_filter( $content, $activity_id = 0 ) {
 		preg_match_all( '/(<a.*?(?!<\/a>)@' . $username . '.*?<\/a>)/', $content, $content_matches );
 		if ( ! empty( $content_matches[1] ) ) {
 			foreach ( $content_matches[1] as $replacement ) {
-				$replacements[ '#BPAN' . $replace_count ] = $replacement;
-				$content                                  = str_replace( $replacement, '#BPAN' . $replace_count, $content );
+				$unique_index                  = '#BPAN' . $replace_count . '#';
+				$replacements[ $unique_index ] = $replacement;
+				$content                       = str_replace( $replacement, $unique_index, $content );
 				$replace_count++;
 			}
 		}
