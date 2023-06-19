@@ -255,7 +255,20 @@ function bp_activity_check_blacklist_keys( $activity ) {
 function bp_activity_save_link_data( $activity ) {
 
 	// bail if the request is for privacy update.
-	if ( isset( $_POST['action'] ) && $_POST['action'] === 'activity_update_privacy' ) {
+	if ( 
+		isset( $_POST['action'] ) && 
+		in_array(
+			$_POST['action'], // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			array(
+				'activity_update_privacy',
+				'bbp-new-topic',
+				'bbp-new-reply',
+				'bbp-edit-topic',
+				'bbp-edit-reply',
+			),
+			true
+		)
+	) {
 		return;
 	}
 
@@ -286,13 +299,17 @@ function bp_activity_save_link_data( $activity ) {
 	// Check if link embed was used.
 	if ( true === $link_embed && ! empty( $link_url ) ) {
 		bp_activity_update_meta( $activity->id, '_link_embed', $link_url );
+		bp_activity_update_meta( $activity->id, '_link_preview_data', '' );
+
 		return;
+	} else {
+		bp_activity_update_meta( $activity->id, '_link_embed', '0' );
 	}
 
 	$preview_data['url'] = $link_url;
 
 	if ( ! empty( $link_image ) ) {
-		$attachment_id = bp_activity_media_sideload_attachment( $link_image );
+		$attachment_id = bb_media_sideload_attachment( $link_image );
 		if ( $attachment_id ) {
 			$preview_data['attachment_id'] = $attachment_id;
 		} else {
