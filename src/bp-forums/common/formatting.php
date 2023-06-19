@@ -139,6 +139,7 @@ function bbp_kses_data( $data = '' ) {
  * @return string Partially encodedd content
  */
 function bbp_code_trick( $content = '' ) {
+
 	$content = str_replace( array( "\r\n", "\r" ), "\n", $content );
 	/**
 	 * Added for convert &nbsp; to space fron content
