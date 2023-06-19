@@ -5147,6 +5147,29 @@ function bb_group_single_header_actions() {
 	<?php
 }
 
+
+/**
+ * Update the group member count.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param array $group_ids Array of group IDs.
+ *
+ * @return void
+ */
+function bb_update_group_member_count( $group_ids = array() ) {
+
+	if ( empty( $group_ids ) ) {
+		return;
+	}
+
+	foreach ( $group_ids as $group_id ) {
+		$cache_key = 'bp_group_get_total_member_count_' . $group_id;
+		wp_cache_delete( $cache_key, 'bp_groups' );
+		BP_Groups_Member::refresh_total_member_count_for_group( $group_id );
+	}
+}
+
 /**
  * Function to return groups settings statues.
  *

@@ -11,9 +11,25 @@
  * @version 1.0.0
  */
 
-bp_nouveau_activity_hook( 'before', 'entry' ); ?>
+bp_nouveau_activity_hook( 'before', 'entry' );
 
-<li class="<?php bp_activity_css_class(); ?>" id="activity-<?php bp_activity_id(); ?>" data-bp-activity-id="<?php bp_activity_id(); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php bp_nouveau_edit_activity_data(); ?>">
+$link_preview_string = '';
+$link_url            = '';
+
+$link_preview_data = bp_activity_get_meta( bp_get_activity_id(), '_link_preview_data', true );
+if ( ! empty( $link_preview_data ) && count( $link_preview_data ) ) {
+	$link_preview_string = wp_json_encode( $link_preview_data );
+	$link_url            = ! empty( $link_preview_data['url'] ) ? $link_preview_data['url'] : '';
+}
+
+$link_embed = bp_activity_get_meta( bp_get_activity_id(), '_link_embed', true );
+if ( ! empty( $link_embed ) ) {
+	$link_url = $link_embed;
+}
+
+?>
+
+<li class="<?php bp_activity_css_class(); ?>" id="activity-<?php bp_activity_id(); ?>" data-bp-activity-id="<?php bp_activity_id(); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php bp_nouveau_edit_activity_data(); ?>" data-link-preview='<?php echo $link_preview_string; ?>' data-link-url='<?php echo $link_url; ?>'>
 
 	<?php bb_nouveau_activity_entry_bubble_buttons(); ?>
 
