@@ -79,6 +79,14 @@ class BP_Video {
 	public $activity_id;
 
 	/**
+	 * Message ID of the video item.
+	 *
+	 * @since BuddyBoss 2.3.60
+	 * @var int
+	 */
+	var $message_id;
+
+	/**
 	 * Group ID of the video item.
 	 *
 	 * @since BuddyBoss 1.7.0
@@ -175,6 +183,7 @@ class BP_Video {
 		$this->title         = $row->title;
 		$this->album_id      = (int) $row->album_id;
 		$this->activity_id   = (int) $row->activity_id;
+		$this->message_id    = (int) $row->message_id;
 		$this->group_id      = (int) $row->group_id;
 		$this->privacy       = $row->privacy;
 		$this->menu_order    = (int) $row->menu_order;
@@ -201,6 +210,7 @@ class BP_Video {
 		$this->title         = apply_filters_ref_array( 'bp_video_title_before_save', array( $this->title, &$this ) );
 		$this->album_id      = apply_filters_ref_array( 'bp_video_album_id_before_save', array( $this->album_id, &$this ) );
 		$this->activity_id   = apply_filters_ref_array( 'bp_video_activity_id_before_save', array( $this->activity_id, &$this ) );
+		$this->message_id    = apply_filters_ref_array( 'bp_video_message_id_before_save', array( $this->message_id, &$this ) );
 		$this->group_id      = apply_filters_ref_array( 'bp_video_group_id_before_save', array( $this->group_id, &$this ) );
 		$this->privacy       = apply_filters_ref_array( 'bp_video_privacy_before_save', array( $this->privacy, &$this ) );
 		$this->menu_order    = apply_filters_ref_array( 'bp_video_menu_order_before_save', array( $this->menu_order, &$this ) );
@@ -237,9 +247,9 @@ class BP_Video {
 
 		// If we have an existing ID, update the video item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->video->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->id ); //phpcs:ignore
+			$q = $wpdb->prepare( "UPDATE {$bp->video->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, message_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->id ); //phpcs:ignore
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->video->table_name} ( blog_id, attachment_id, user_id, title, album_id, activity_id, group_id, privacy, menu_order, date_created, type ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %s, %d, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, 'video' );  //phpcs:ignore
+			$q = $wpdb->prepare( "INSERT INTO {$bp->video->table_name} ( blog_id, attachment_id, user_id, title, album_id, activity_id, message_id, group_id, privacy, menu_order, date_created, type ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %d, %s, %d, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, 'video' );  //phpcs:ignore
 		}
 
 		if ( false === $wpdb->query( $q ) ) { //phpcs:ignore
@@ -610,6 +620,7 @@ class BP_Video {
 				$video->attachment_id = (int) $video->attachment_id;
 				$video->album_id      = (int) $video->album_id;
 				$video->activity_id   = (int) $video->activity_id;
+				$video->message_id    = (int) $video->message_id;
 				$video->group_id      = (int) $video->group_id;
 				$video->menu_order    = (int) $video->menu_order;
 			}

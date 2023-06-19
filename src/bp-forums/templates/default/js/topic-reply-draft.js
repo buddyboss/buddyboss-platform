@@ -73,7 +73,6 @@ window.bp = window.bp || {};
 			} else {
 				// Set up the intervals.
 				$( window ).on( 'load', this.setupTopicReplyDraftIntervals.bind( this ) );
-				bp.Nouveau.TopicReplyDraft.displayTopicReplyDraft();
 			}
 
 			if ( ! $( 'body' ).hasClass( 'activity' ) ) {
@@ -243,7 +242,7 @@ window.bp = window.bp || {};
 			bp.Nouveau.Media.reply_topic_display_post = 'edit';
 
 			// Remove class to display draft.
-			$( '#new-post' ).removeClass( 'has-draft has-content has-media has-gif' );
+			$( '#new-post' ).removeClass( 'has-draft has-content has-media has-gif has-link-preview' );
 		},
 
 		resetTopicReplyDraftPostForm: function() {
@@ -360,6 +359,16 @@ window.bp = window.bp || {};
 			target.removeClass( 'has-content' );
 		},
 
+		resetTopicReplyDraftLinkPreview: function() {
+			var currentTargetForm = $( 'form#new-post' )[0];
+			//Reset link preview data.
+			if ( jQuery( currentTargetForm ).find('#link_preview_data').length > 0 ) {
+				jQuery( currentTargetForm ).find('#link_preview_data').val( '' );
+			}
+			jQuery( currentTargetForm ).find( '.bb-url-scrapper-container' ).remove();
+			jQuery( currentTargetForm ).find( '#bb_link_url' ).remove();
+		},
+
 		collectTopicReplyDraftActivity: function() {
 			var form = $( '#new-post' ), meta = {};
 
@@ -406,6 +415,17 @@ window.bp = window.bp || {};
 			}
 			if ( 'undefined' !== typeof meta.bbp_media_gif && ( '' !== meta.bbp_media_gif && '[]' !== meta.bbp_media_gif ) ) {
 				media_valid = true;
+			}
+			if ( 'undefined' !== typeof meta.link_preview_data && ( '' !== meta.link_preview_data && '[]' !== meta.link_preview_data ) ) {
+				media_valid = true;
+
+				var link_preview_data = JSON.parse( meta.link_preview_data );
+
+				var preview_data               = {};
+				preview_data.embed                 = ( false === link_preview_data.link_embed ) ? 0 : 1;
+				preview_data.url                   = link_preview_data.link_url;
+				preview_data.link_image_index_save = 0;
+				meta.bb_link_url                   = JSON.stringify( preview_data );
 			}
 
 			var content_valid = true;
@@ -553,6 +573,9 @@ window.bp = window.bp || {};
 
 		displayTopicReplyDraft: function() {
 			bp.Nouveau.Media.reply_topic_allow_delete_media = true;
+			if ( _.isUndefined( this.topic_reply_draft ) ) {
+				return;
+			}
 			if ( 'topic' === this.topic_reply_draft.object ) {
 				bp.Nouveau.TopicReplyDraft.appendTopicDraftData();
 			} else {
@@ -587,24 +610,21 @@ window.bp = window.bp || {};
 
 			// Content.
 			if ( 'undefined' !== typeof activity_data.bbp_topic_content ) {
-				$editor.html( activity_data.bbp_topic_content );
-				var element;
-				if ( $( '#bbp_topic_content' ).prop("tagName").toLowerCase === 'div' ) {
-					element = $editor.get( 0 );
-				} else {
-					element = $( '#bbp_topic_content' )[0];
-				}
-				element.focus();
-				$form.find( '#bbp_topic_content' ).val( activity_data.bbp_topic_content );
-				if ( $( '#bbp_topic_content' ).prop("tagName").toLowerCase === 'div' ) {
+				var element = $editor.get( 0 );
+				$meditor = window.MediumEditor ? window.MediumEditor.getEditorFromElement(element) : null;
+				if ( $meditor !== null ) {
+					$meditor.setContent( activity_data.bbp_topic_content );
 					if ( $( element ).text() !== '' ) {
 						$form.addClass( 'has-content' );
 					}
 				} else {
+					$form.find( '#bbp_topic_content' ).focus();
+					$form.find( '#bbp_topic_content' ).val( activity_data.bbp_topic_content );
 					if ( $( element ).val() !== '' ) {
 						$form.addClass( 'has-content' );
 					}
 				}
+
 			}
 
 			// Stick topic.
@@ -651,7 +671,10 @@ window.bp = window.bp || {};
 				activity_data = this.all_draft_data[this.topic_reply_draft.data_key];
 			}
 
-			if ( 'undefined' === typeof activity_data.bbp_reply_content ) {
+			if (
+				'undefined' === typeof activity_data.bbp_reply_content &&
+				'undefined' === typeof activity_data.bb_link_url
+			) {
 				return;
 			}
 
@@ -660,20 +683,16 @@ window.bp = window.bp || {};
 
 			// Content.
 			if ( 'undefined' !== typeof activity_data.bbp_reply_content ) {
-				$editor.html( activity_data.bbp_reply_content );
-				var element;
-				if ( $( '#bbp_reply_content' ).prop("tagName").toLowerCase === 'div' ) {
-					element = $editor.get( 0 );
-				} else {
-					element = $( '#bbp_reply_content' )[0];
-				}
-				element.focus();
-				$form.find( '#bbp_reply_content' ).val( activity_data.bbp_reply_content );
-				if ( $( '#bbp_reply_content' ).prop("tagName").toLowerCase === 'div' ) {
+				var element = $editor.get( 0 );
+				$meditor = window.MediumEditor ? window.MediumEditor.getEditorFromElement(element) : null;
+				if ( $meditor !== null ) {
+					$meditor.setContent( activity_data.bbp_reply_content );
 					if ( $( element ).text() !== '' ) {
 						$form.addClass( 'has-content' );
 					}
 				} else {
+					$form.find( '#bbp_reply_content' ).focus();
+					$form.find( '#bbp_reply_content' ).val( activity_data.bbp_reply_content );
 					if ( $( element ).val() !== '' ) {
 						$form.addClass( 'has-content' );
 					}
@@ -705,6 +724,18 @@ window.bp = window.bp || {};
 
 				tags_element.trigger( 'change' );
 			}
+
+			// Link preview.
+			if ( 'undefined' !== typeof activity_data.bb_link_url && '' !== activity_data.bb_link_url ) {
+				$form.find( '#bb_link_url' ).remove();
+				$('<input>').attr({
+					type: 'hidden',
+					id: 'bb_link_url',
+					name: 'bb_link_url',
+					value: activity_data.bb_link_url
+				}).appendTo( $form );
+			}
+
 
 			bp.Nouveau.TopicReplyDraft.previewDraftMedia( $form, activity_data );
 		},
@@ -977,6 +1008,7 @@ window.bp = window.bp || {};
 			this.clearTopicReplyDraftIntervals();
 			this.resetLocalTopicReplyDraft();
 			this.resetTopicReplyDraftPostForm();
+			this.resetTopicReplyDraftLinkPreview();
 			this.topic_reply_draft.post_action = 'update';
 			bp.Nouveau.TopicReplyDraft.setupTopicReplyDraftIntervals();
 			bp.Nouveau.TopicReplyDraft.is_topic_reply_form_submit = false;
