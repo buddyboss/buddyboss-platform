@@ -701,7 +701,6 @@
 			max-height: calc(100vh - 280px);
 			overflow: auto;
 			width: 100%;
-			overscroll-behavior: contain; // Prevent page scroll when scrolling the popup
 			padding-bottom: 10px;
 		}
 
@@ -1278,12 +1277,14 @@
 		right: 12px;
 		transform: translate(0, -50%);
 		z-index: 6;
-		width: 20px;
-		height: 20px;
+		width: 15px;
+		height: 15px;
 		cursor: pointer;
 
 		i {
-			font-size: 20px;
+			font-size: 15px;
+			font-weight: 200;
+			line-height: 1;
 			color: rgba(18, 43, 70, 0.4);
 			display: block;
 		}

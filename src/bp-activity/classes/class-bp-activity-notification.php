@@ -219,13 +219,13 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			}
 
 			$activity         = new BP_Activity_Activity( $item_id );
-			$activity_excerpt = '"' . bp_create_excerpt(
+			$activity_excerpt = bp_create_excerpt(
 				wp_strip_all_tags( $activity->content ),
 				50,
 				array(
 					'ending' => __( '&hellip;', 'buddyboss' ),
 				)
-			) . '"';
+			);
 
 			if ( '&nbsp;' === $activity_excerpt ) {
 				$activity_excerpt = '';
@@ -234,18 +234,20 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			if ( empty( $activity_excerpt ) && function_exists( 'bp_blogs_activity_comment_content_with_read_more' ) ) {
 				$activity_excerpt = bp_blogs_activity_comment_content_with_read_more( '', $activity );
 
-				$activity_excerpt = '"' . bp_create_excerpt(
+				$activity_excerpt = bp_create_excerpt(
 					wp_strip_all_tags( $activity_excerpt ),
 					50,
 					array(
 						'ending' => __( '&hellip;', 'buddyboss' ),
 					)
-				) . '"';
+				);
 
 				if ( '&nbsp;' === $activity_excerpt ) {
 					$activity_excerpt = '';
 				}
 			}
+
+			$activity_excerpt = '"' . $activity_excerpt . '"';
 
 			$activity_excerpt = str_replace( '&hellip;"', '&hellip;', $activity_excerpt );
 			$activity_excerpt = str_replace( '&#8203;', '', $activity_excerpt );
@@ -268,7 +270,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 							$activity_excerpt
 						);
 					} elseif ( $media_ids ) {
-						$media_ids = array_filter( explode( ',', $media_ids ) );
+						$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
 						if ( count( $media_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: Activity type. */
@@ -283,7 +285,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 							);
 						}
 					} elseif ( $document_ids ) {
-						$document_ids = array_filter( explode( ',', $document_ids ) );
+						$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
 						if ( count( $document_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: Activity type. */
@@ -298,7 +300,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 							);
 						}
 					} elseif ( $video_ids ) {
-						$video_ids = array_filter( explode( ',', $video_ids ) );
+						$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
 						if ( count( $video_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: Activity type. */
@@ -333,21 +335,21 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 							$activity_excerpt
 						);
 					} elseif ( $media_ids ) {
-						$media_ids = array_filter( explode( ',', $media_ids ) );
+						$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
 						if ( count( $media_ids ) > 1 ) {
 							$text = __( 'Replied: some photos', 'buddyboss' );
 						} else {
 							$text = __( 'Replied: a photo', 'buddyboss' );
 						}
 					} elseif ( $document_ids ) {
-						$document_ids = array_filter( explode( ',', $document_ids ) );
+						$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
 						if ( count( $document_ids ) > 1 ) {
 							$text = __( 'Replied: some documents', 'buddyboss' );
 						} else {
 							$text = __( 'Replied: a document', 'buddyboss' );
 						}
 					} elseif ( $video_ids ) {
-						$video_ids = array_filter( explode( ',', $video_ids ) );
+						$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
 						if ( count( $video_ids ) > 1 ) {
 							$text = __( 'Replied: some videos', 'buddyboss' );
 						} else {
@@ -381,7 +383,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 								$activity_excerpt
 							);
 						} elseif ( ! empty( $media_ids ) ) {
-							$media_ids = array_filter( explode( ',', $media_ids ) );
+							$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
 							if ( count( $media_ids ) > 1 ) {
 								$text = sprintf(
 								/* translators: 1: User full name, 2: Activity type. */
@@ -398,7 +400,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 								);
 							}
 						} elseif ( ! empty( $document_ids ) ) {
-							$document_ids = array_filter( explode( ',', $document_ids ) );
+							$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
 							if ( count( $document_ids ) > 1 ) {
 								$text = sprintf(
 								/* translators: 1: User full name, 2: Activity type. */
@@ -415,7 +417,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 								);
 							}
 						} elseif ( ! empty( $video_ids ) ) {
-							$video_ids = array_filter( explode( ',', $video_ids ) );
+							$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
 							if ( count( $video_ids ) > 1 ) {
 								$text = sprintf(
 								/* translators: 1: User full name, 2: Activity type. */
@@ -455,7 +457,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 								$activity_excerpt
 							);
 						} elseif ( $media_ids ) {
-							$media_ids = array_filter( explode( ',', $media_ids ) );
+							$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
 							if ( count( $media_ids ) > 1 ) {
 								$text = sprintf(
 								/* translators: User full name. */
@@ -470,7 +472,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 								);
 							}
 						} elseif ( $document_ids ) {
-							$document_ids = array_filter( explode( ',', $document_ids ) );
+							$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
 							if ( count( $document_ids ) > 1 ) {
 								$text = sprintf(
 								/* translators: User full name. */
@@ -485,7 +487,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 								);
 							}
 						} elseif ( $video_ids ) {
-							$video_ids = array_filter( explode( ',', $video_ids ) );
+							$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
 							if ( count( $video_ids ) > 1 ) {
 								$text = sprintf(
 								/* translators: User full name. */
@@ -667,21 +669,21 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 						$activity_excerpt
 					);
 				} elseif ( $media_ids ) {
-					$media_ids = array_filter( explode( ',', $media_ids ) );
+					$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
 					if ( count( $media_ids ) > 1 ) {
 						$text = __( 'Posted some photos', 'buddyboss' );
 					} else {
 						$text = __( 'Posted a photo', 'buddyboss' );
 					}
 				} elseif ( $document_ids ) {
-					$document_ids = array_filter( explode( ',', $document_ids ) );
+					$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
 					if ( count( $document_ids ) > 1 ) {
 						$text = __( 'Posted some documents', 'buddyboss' );
 					} else {
 						$text = __( 'Posted a document', 'buddyboss' );
 					}
 				} elseif ( $video_ids ) {
-					$video_ids = array_filter( explode( ',', $video_ids ) );
+					$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
 					if ( count( $video_ids ) > 1 ) {
 						$text = __( 'Posted some videos', 'buddyboss' );
 					} else {
@@ -711,7 +713,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 							$activity_excerpt
 						);
 					} elseif ( $media_ids ) {
-						$media_ids = array_filter( explode( ',', $media_ids ) );
+						$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
 						if ( count( $media_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: User full name. */
@@ -726,7 +728,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 							);
 						}
 					} elseif ( $document_ids ) {
-						$document_ids = array_filter( explode( ',', $document_ids ) );
+						$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
 						if ( count( $document_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: User full name. */
@@ -741,7 +743,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 							);
 						}
 					} elseif ( $video_ids ) {
-						$video_ids = array_filter( explode( ',', $video_ids ) );
+						$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
 						if ( count( $video_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: User full name. */
