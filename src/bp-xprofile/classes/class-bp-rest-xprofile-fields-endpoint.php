@@ -1514,9 +1514,10 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		$member_type = bp_get_member_type( ! empty( $request['user_id'] ) ? (int) $request['user_id'] : get_current_user_id() );
+		$member_type   = bp_get_member_type( ! empty( $request['user_id'] ) ? (int) $request['user_id'] : get_current_user_id() );
+		$post_selected = 0;
 		if ( '' !== $member_type ) {
-			$post_selected = bp_member_type_post_by_type( $member_type );
+			$post_selected = (int) bp_member_type_post_by_type( $member_type );
 		}
 
 		$options = array();

@@ -87,9 +87,6 @@ function bb_subscriptions_migrate_users_forum_topic( $is_background = false, $is
 		} else {
 			delete_site_option( 'bb_subscriptions_migrate_offset' );
 
-			// Delete duplicate entries.
-			bb_remove_duplicate_subscriptions();
-
 			if ( ! $is_background ) {
 				/* translators: Status of current action. */
 				$statement = __( 'Migrating BBPress (up to v2.5.14) forum and discussion subscriptions to BuddyBoss&hellip; %s', 'buddyboss' );
@@ -374,8 +371,6 @@ function bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background 
 		if ( ! empty( $results ) ) {
 			return bb_migrate_bbpress_users_post_subscriptions( $results, $blog_id, $offset, $is_background );
 		} else {
-			// Delete duplicate entries.
-			bb_remove_duplicate_subscriptions();
 
 			if ( ! $is_background ) {
 				/* translators: Status of current action. */
@@ -1286,9 +1281,6 @@ function bb_migrate_group_subscription( $is_background = false ) {
 		}
 	} else {
 
-		// Delete duplicate entries.
-		bb_remove_duplicate_subscriptions();
-
 		delete_site_option( 'bb_group_subscriptions_migrate_page' );
 		delete_site_option( 'bb_group_subscriptions_migrated_count' );
 
@@ -1430,18 +1422,4 @@ function bb_create_group_member_subscriptions( $group_id = 0, $member_ids = arra
 	}
 
 	groups_update_groupmeta( $group_id, 'bb_subscription_migrated_v2', 'yes' );
-}
-
-/**
- * Delete duplicate subscription entries.
- *
- * @since BuddyBoss 2.2.9.1
- *
- * @return void
- */
-function bb_remove_duplicate_subscriptions() {
-	global $wpdb;
-
-	$subscription_tbl = BB_Subscriptions::get_subscription_tbl();
-	$wpdb->query( "DELETE FROM {$subscription_tbl} WHERE id not IN( SELECT ID FROM ( SELECT MAX(id) as ID from {$subscription_tbl} GROUP BY `user_id`, `type`, `item_id`, `blog_id` ) AS SB );" ); // phpcs:ignore
 }

@@ -707,7 +707,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 			'secondary_item_id' => (int) $item->secondary_item_id,
 			'date_recorded'     => bp_rest_prepare_date_response( $item->date_recorded ),
 			'status'            => (bool) $item->status,
-			'title'             => $item->title,
+			'title'             => html_entity_decode( $item->title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ),
 			'description_html'  => $item->description_html,
 			'parent_html'       => $item->parent_html,
 			'icon'              => $item->icon,

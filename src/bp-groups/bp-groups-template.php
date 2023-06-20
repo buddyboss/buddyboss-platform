@@ -410,7 +410,7 @@ function bp_has_groups( $args = '' ) {
 
 	$parent_id = null;
 
-	if ( bp_is_groups_directory() && ( empty( $args['scope'] ) || 'all' === $args['scope'] ) && true === (bool) bp_enable_group_hide_subgroups() ) {
+	if ( bp_is_groups_directory() && true === (bool) bp_enable_group_hide_subgroups() ) {
 		$parent_id = 0;
 	}
 
