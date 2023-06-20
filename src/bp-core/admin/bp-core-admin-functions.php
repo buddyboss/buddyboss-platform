@@ -1782,9 +1782,10 @@ function bp_member_type_labels_metabox( $post ) {
  */
 function bp_member_type_permissions_metabox( $post ) {
 
-	$meta                 = get_post_custom( $post->ID );
-	$enable_filter        = isset( $meta['_bp_member_type_enable_filter'] ) ? $meta['_bp_member_type_enable_filter'][0] : 0; // disabled by default.
-	$enable_profile_field = isset( $meta['_bp_member_type_enable_profile_field'] ) ? $meta['_bp_member_type_enable_profile_field'][0] : 1; // enable by default.
+	$meta                               = get_post_custom( $post->ID );
+	$enable_filter                      = isset( $meta['_bp_member_type_enable_filter'] ) ? $meta['_bp_member_type_enable_filter'][0] : 0; // disabled by default.
+	$enable_profile_field               = isset( $meta['_bp_member_type_enable_profile_field'] ) ? $meta['_bp_member_type_enable_profile_field'][0] : 1; // enable by default.
+	$allow_messaging_without_connection = isset( $meta['_bp_member_type_allow_messaging_without_connection'] ) ? $meta['_bp_member_type_allow_messaging_without_connection'][0] : 0; // disabled by default.
 	?>
 	<!-- accesslint:ignore -->
 	<table class="widefat bp-postbox-table">
@@ -1861,6 +1862,25 @@ function bp_member_type_permissions_metabox( $post ) {
 				<input type='checkbox' name='bp-member-type[enable_profile_field]'
 					   value='1' <?php checked( $enable_profile_field, 1 ); ?> />
 				<?php _e( 'Allow users to self-select as this profile type from the "Profile Type" profile field dropdown.', 'buddyboss' ); ?>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<table class="widefat bp-postbox-table">
+		<thead>
+		<tr>
+			<th scope="col" colspan="2">
+				<?php _e( 'Messaging', 'buddyboss' ); ?>
+			</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td colspan="2">
+				<input type='checkbox' name='bp-member-type[allow_messaging_without_connection]'
+					   value='0' <?php checked( $allow_messaging_without_connection, 1 ); ?> />
+				<?php _e( 'Allow this profile type to send and receive messages without being connected.', 'buddyboss' ); ?>
 			</td>
 		</tr>
 		</tbody>
@@ -3455,3 +3475,4 @@ function bb_member_type_labelcolor_metabox( $post ) {
 	<?php
 }
 
+add_action( 'add_meta_boxes_' . bp_get_member_type_post_type(), 'bp_member_type_custom_metaboxes' );
