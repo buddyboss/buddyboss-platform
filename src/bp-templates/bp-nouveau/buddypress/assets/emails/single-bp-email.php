@@ -255,6 +255,7 @@ $settings = bp_email_get_appearance_settings();
 			.mobile-button-center {
 				margin: 5px auto 0 !important;
 				width: 160px !important;
+				display: block !important;
 			}
 		}
 	</style>

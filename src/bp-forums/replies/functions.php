@@ -289,12 +289,15 @@ function bbp_new_reply_handler( $action = '' ) {
 	// Filter and sanitize.
 	$reply_content = apply_filters( 'bbp_new_reply_pre_content', $reply_content );
 
+	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) ) : [];
+
 	// No reply content.
-	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ) ) ) )
+	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
 		 && empty( $_POST['bbp_media'] )
 		 && empty( $_POST['bbp_video'] )
 		 && empty( $_POST['bbp_media_gif'] )
 		 && empty( $_POST['bbp_document'] )
+		 && ( false === bbp_use_autoembed() || ( false !== bbp_use_autoembed() && empty( $link_preview_post_data['link_url'] ) ) )
 	) {
 		bbp_add_error( 'bbp_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss' ) );
 	}
@@ -523,7 +526,6 @@ function bbp_new_reply_handler( $action = '' ) {
 			bp_update_user_meta( $user_id, $usermeta_key, $existing_draft );
 		}
 
-
 		/** Additional Actions (After Save) */
 
 		do_action( 'bbp_new_reply_post_extras', $reply_id );
@@ -710,13 +712,16 @@ function bbp_edit_reply_handler( $action = '' ) {
 	// Filter and sanitize.
 	$reply_content = apply_filters( 'bbp_edit_reply_pre_content', $reply_content, $reply_id );
 
+	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) ) : [];
+
 	// No reply content.
 	if (
-		empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ) ) ) )
+		empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
 		&& empty( $_POST['bbp_media'] )
 		&& empty( $_POST['bbp_video'] )
 		&& empty( $_POST['bbp_media_gif'] )
 		&& empty( $_POST['bbp_document'] )
+		&& ( false === bbp_use_autoembed() || ( false !== bbp_use_autoembed() && empty( $link_preview_post_data['link_url'] ) ) )
 	) {
 		bbp_add_error( 'bbp_edit_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss' ) );
 	}
@@ -908,7 +913,7 @@ function bbp_edit_reply_handler( $action = '' ) {
  * @uses update_post_meta() To update the reply metas
  * @uses set_transient() To update the flood check transient for the ip
  * @uses bbp_update_user_last_posted() To update the users last posted time
- * @uses bbp_is_subscriptions_active() To check if the subscriptions feature is
+ * @uses bb_is_enabled_subscription() To check if the subscriptions feature is
  *                                      activated or not
  * @uses bbp_is_user_subscribed() To check if the user is subscribed
  * @uses bbp_remove_user_subscription() To remove the user's subscription
@@ -977,8 +982,19 @@ function bbp_update_reply( $reply_id = 0, $topic_id = 0, $forum_id = 0, $anonymo
 		}
 	}
 
+	// Get the post type.
+	$post_type = get_post_type( $topic_id );
+	if ( empty( $post_type ) ) {
+		return;
+	}
+
+	$subscribe_type = 'topic';
+	if ( bbp_get_forum_post_type() === $post_type ) {
+		$subscribe_type = 'forum';
+	}
+
 	// Handle Subscription Checkbox.
-	if ( bbp_is_subscriptions_active() && ! empty( $author_id ) && ! empty( $topic_id ) ) {
+	if ( bb_is_enabled_subscription( $subscribe_type ) && ! empty( $author_id ) && ! empty( $topic_id ) ) {
 		$subscribed = bbp_is_user_subscribed( $author_id, $topic_id );
 		$subscheck  = ( ! empty( $_POST['bbp_topic_subscription'] ) && ( 'bbp_subscribe' === $_POST['bbp_topic_subscription'] ) ) ? true : false;
 
@@ -2075,7 +2091,6 @@ function bbp_reply_content_autoembed() {
 	global $wp_embed;
 
 	if ( bbp_use_autoembed() && is_a( $wp_embed, 'WP_Embed' ) ) {
-		add_filter( 'bbp_get_reply_content', 'bb_validate_reply_embed', 1 );
 		// WordPress is not able to convert URLs to oembed if URL is in paragraph.
 		add_filter( 'bbp_get_reply_content', 'bbp_reply_content_autoembed_paragraph', 99999, 1 );
 	}
@@ -2107,11 +2122,12 @@ function bb_validate_reply_embed( $content ) {
 /**
  * Add oembed to forum reply.
  *
- * @param $content
+ * @param $content  Reply content.
+ * @param $reply_id Optional Reply id.
  *
  * @return string
  */
-function bbp_reply_content_autoembed_paragraph( $content ) {
+function bbp_reply_content_autoembed_paragraph( $content, $reply_id = 0 ) {
 	global $wp_embed;
 
 	if ( is_a( $wp_embed, 'WP_Embed' ) ) {
@@ -2126,32 +2142,63 @@ function bbp_reply_content_autoembed_paragraph( $content ) {
 		return $content;
 	}
 
-	$embed_urls = $embeds_array = array();
-	$flag       = true;
-
-	if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', strip_tags( $content ) ) ) {
-		preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
+	if ( empty( $reply_id ) ) {
+		$reply_id = bbp_get_reply_id();
 	}
 
-	if ( ! empty( $embed_urls ) && ! empty( $embed_urls[0] ) ) {
-		$embed_urls = array_filter( $embed_urls[0] );
-		$embed_urls = array_unique( $embed_urls );
+	if ( metadata_exists( 'post', $reply_id, '_link_embed' ) ) {
+		// if not urls in content then check if embed was used or not, if not return content without embed.
+		$link_embed = get_post_meta( $reply_id, '_link_embed', true );
+		if ( ! empty( $link_embed ) ) {
+			$embed_data = bp_core_parse_url( $link_embed );
 
-		foreach ( $embed_urls as $url ) {
-			if ( $flag == false ) {
-				continue;
+			if ( isset( $embed_data['wp_embed'] ) && $embed_data['wp_embed'] && ! empty( $embed_data['description'] ) ) {
+				$embed_code = $embed_data['description'];
 			}
 
-			$embed = wp_oembed_get( $url, array( 'discover' => false ) );
-			if ( $embed ) {
-				$flag           = false;
-				$embeds_array[] = wpautop( $embed );
+			if ( ! empty( $embed_code ) ) {
+				preg_match( '/(https?:\/\/[^\s<>"]+)/i', $content, $content_url );
+				preg_match( '(<p(>|\s+[^>]*>).*?<\/p>)', $content, $content_tag );
+
+				if ( ! empty( $content_url ) && empty( $content_tag ) ) {
+					$content = sprintf( '<p>%s</p>', $content );
+				}
+
+				return $content .= $embed_code;
 			}
+		}
+	} else {
+		// Added embed support before release link preview.
+		$embed_urls = $embeds_array = array();
+		$flag       = true;
+
+		if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', strip_tags( $content ) ) ) {
+			preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
+		}
+
+		if ( ! empty( $embed_urls ) && ! empty( $embed_urls[0] ) ) {
+			$embed_urls = array_filter( $embed_urls[0] );
+			$embed_urls = array_unique( $embed_urls );
+
+			foreach ( $embed_urls as $url ) {
+				if ( false === $flag ) {
+					continue;
+				}
+
+				$embed = wp_oembed_get( $url, array( 'discover' => false ) );
+				if ( $embed ) {
+					$flag           = false;
+					$embeds_array[] = wpautop( $embed );
+				}
+			}
+
+			// Put the line breaks back.
+			return $content . implode( '', $embeds_array );
+
 		}
 	}
 
-	// Put the line breaks back.
-	return $content . implode( '', $embeds_array );
+	return $content;
 }
 
 /** Filters *******************************************************************/
@@ -2538,21 +2585,29 @@ function bbp_list_replies( $args = array() ) {
 
 	if ( $r['page'] > 1 ) {
 
-		$loop_run     = $r['page'] - 1;
-		$offset_total = 0;
-		for ( $i = 1; $i <= $loop_run; $i++ ) {
+		// Get top level replies.
+		$top_level_replies = array_filter(
+			bbpress()->reply_query->posts,
+			function( $post ) {
+				return empty( $post->reply_to );
+			}
+		);
 
-			$walker_offset = new stdClass();
-			ob_start();
-			$walker_offset = new BBP_Walker_Reply();
+		// Get all child level replies.
+		$child_level_replies = array_filter(
+			bbpress()->reply_query->posts,
+			function( $post ) {
+				return ! empty( $post->reply_to );
+			}
+		);
 
-			$walker_offset->paged_walk( bbpress()->reply_query->posts, $r['max_depth'], $i, $r['per_page'], $r );
-			ob_get_clean();
+		// Get top level replies upto current page.
+		$length                = ( (int) $r['page'] - 1 ) * (int) $r['per_page'];
+		$top_replies_upto_page = array_slice( $top_level_replies, 0, $length );
+		$top_reply_ids         = wp_list_pluck( $top_replies_upto_page, 'ID' );
+		$offset_total          = bbp_replies_count_walk( $child_level_replies, $top_reply_ids, count( $top_reply_ids ) );
 
-			$offset_total = $offset_total + $walker_offset->total_items_per_page;
-		}
 		bbpress()->reply_query->offset = $offset_total;
-
 	} else {
 		bbpress()->reply_query->offset = 0;
 	}
@@ -2648,7 +2703,7 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
 }
 
 /**
- * Allow group members to have advanced priviledges in group forum topics.
+ * Allow group members to have advanced privileges in group forum topics.
  *
  * @since BuddyBoss 2.1.6
  *
@@ -2662,63 +2717,98 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
  */
 function bb_map_group_forum_reply_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
 
-	if ( ! function_exists( 'bp_is_activity_directory' ) || ! isset( $_POST['bbp_topic_id'] ) || ! isset( $_POST['bbp_reply_form_action'] ) || 'bbp-new-reply' !== $_POST['bbp_reply_form_action'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	if (
+		! isset( $_POST['bbp_topic_id'] ) || // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		! isset( $_POST['bbp_reply_form_action'] ) || // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		'bbp-new-reply' !== $_POST['bbp_reply_form_action'] // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	) {
 		return $caps;
 	}
 
-	if ( bp_is_activity_directory() ) {
-		$topic_id = filter_input( INPUT_POST, 'bbp_topic_id', FILTER_VALIDATE_INT );
+	$topic_id = filter_input( INPUT_POST, 'bbp_topic_id', FILTER_VALIDATE_INT );
+	$forum_id = filter_input( INPUT_POST, 'bbp_forum_id', FILTER_VALIDATE_INT );
 
-		if ( ! isset( $_POST['bbp_forum_id'] ) && ! empty( $topic_id ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$forum_id = bbp_get_topic_forum_id( $topic_id );
-		} else {
-			// Get the forum id.
-			$forum_id = filter_input( INPUT_POST, 'bbp_forum_id', FILTER_VALIDATE_INT );
-		}
+	if ( ! isset( $_POST['bbp_forum_id'] ) && ! empty( $topic_id ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$forum_id = bbp_get_topic_forum_id( $topic_id );
+	}
 
-		$group_ids = bbp_get_forum_group_ids( $forum_id );
-		$group_id  = reset( $group_ids );
+	if ( empty( $forum_id ) ) {
+		return $caps;
+	}
 
-		if ( $group_id ) {
-			$is_member = groups_is_user_member( get_current_user_id(), $group_id );
-			$is_mod    = groups_is_user_mod( get_current_user_id(), $group_id );
-			$is_admin  = groups_is_user_admin( get_current_user_id(), $group_id );
+	$group_ids = bbp_get_forum_group_ids( $forum_id );
+	$group_id  = reset( $group_ids );
 
-			switch ( $cap ) {
+	if ( $group_id ) {
+		$is_member = groups_is_user_member( get_current_user_id(), $group_id );
+		$is_mod    = groups_is_user_mod( get_current_user_id(), $group_id );
+		$is_admin  = groups_is_user_admin( get_current_user_id(), $group_id );
 
-				// If user is a group member, allow them to create content.
-				case 'read_forum':
-				case 'publish_replies':
-				case 'publish_topics':
-				case 'read_hidden_forums':
-				case 'read_private_forums':
-					if ( $is_member || $is_mod || $is_admin ) {
-						$caps = array( 'participate' );
-					}
-					break;
+		switch ( $cap ) {
 
-				// If user is a group mod ar admin, map to participate cap.
-				case 'moderate':
-				case 'edit_topic':
-				case 'edit_reply':
-				case 'view_trash':
-				case 'edit_others_replies':
-				case 'edit_others_topics':
-					if ( $is_mod || $is_admin ) {
-						$caps = array( 'participate' );
-					}
-					break;
+			// If user is a group member, allow them to create content.
+			case 'read_forum':
+			case 'publish_replies':
+			case 'publish_topics':
+			case 'read_hidden_forums':
+			case 'read_private_forums':
+				if ( $is_member || $is_mod || $is_admin ) {
+					$caps = array( 'participate' );
+				}
+				break;
 
-				// If user is a group admin, allow them to delete topics and replies.
-				case 'delete_topic':
-				case 'delete_reply':
-					if ( $is_admin ) {
-						$caps = array( 'participate' );
-					}
-					break;
-			}
+			// If user is a group mod ar admin, map to participate cap.
+			case 'moderate':
+			case 'edit_topic':
+			case 'edit_reply':
+			case 'view_trash':
+			case 'edit_others_replies':
+			case 'edit_others_topics':
+				if ( $is_mod || $is_admin ) {
+					$caps = array( 'participate' );
+				}
+				break;
+
+			// If user is a group admin, allow them to delete topics and replies.
+			case 'delete_topic':
+			case 'delete_reply':
+				if ( $is_admin ) {
+					$caps = array( 'participate' );
+				}
+				break;
 		}
 	}
 
 	return apply_filters( 'bb_map_group_forum_reply_meta_caps', $caps, $cap, $user_id, $args );
+}
+
+/**
+ * Get the total count of all replies upto possible depth.
+ *
+ * @since BuddyBoss 2.3.4
+ *
+ * @param array $posts         List of child level reply posts.
+ * @param array $top_reply_ids List of top level reply posts.
+ * @param int   $count         Count of replies.
+ *
+ * @return int $count
+ */
+function bbp_replies_count_walk( $posts, $top_reply_ids, $count ) {
+
+	if ( empty( $posts ) || empty( $top_reply_ids ) ) {
+		return $count;
+	}
+
+	$child_posts = array();
+	foreach ( $posts as $index => $child_post ) {
+		if ( in_array( $child_post->reply_to, $top_reply_ids, true ) ) {
+			$child_posts[] = $child_post;
+			unset( $posts[ $index ] );
+		}
+	}
+
+	$child_reply_ids = wp_list_pluck( $child_posts, 'ID' );
+	$count           = $count + bbp_replies_count_walk( $posts, $child_reply_ids, count( $child_reply_ids ) );
+
+	return $count;
 }

@@ -70,6 +70,9 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 
 		// Report popup content type.
 		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
+
+		// Update the where condition for forum Subscriptions.
+		add_filter( 'bb_subscriptions_suspend_forum_get_where_conditions', array( $this, 'bb_subscriptions_moderation_where_conditions' ), 10, 2 );
 	}
 
 	/**
@@ -128,9 +131,21 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	public function update_where_sql( $where, $suspend ) {
 		$this->alias = $suspend->alias;
 
-		$sql = $this->exclude_where_query();
+		// Remove has blocked/ is blocked members forum from widget.
+		$exclude_where = false;
+		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'bbp_after_forum_widget_settings_parse_args' ) ) {
+			$exclude_where = true;
+		}
+
+		// Remove has blocked members discussion from widget.
+		$sql = $this->exclude_where_query( $exclude_where );
 		if ( ! empty( $sql ) ) {
 			$where['moderation_where'] = $sql;
+		}
+
+		if ( true === $exclude_where ) {
+			// Remove is blocked members forum from widget.
+			$where['moderation_widget_forums'] = '( wp_posts.post_author NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
 		}
 
 		return $where;
@@ -233,5 +248,39 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	 */
 	public function report_content_type( $content_type, $item_id ) {
 		return esc_html__( 'Forum', 'buddyboss' );
+	}
+
+	/**
+	 * Update where query remove hidden/blocked user's forum subscriptions.
+	 *
+	 * @since BuddyBoss 2.2.6
+	 *
+	 * @param array  $where   Subscription forums Where sql.
+	 * @param object $suspend suspend object.
+	 *
+	 * @return array
+	 */
+	public function bb_subscriptions_moderation_where_conditions( $where, $suspend ) {
+		$moderation_where = 'hide_parent = 1 OR hide_sitewide = 1';
+
+		$where['moderation_where'] = $moderation_where;
+
+		return $where;
+	}
+
+	/**
+	 * Check content is hidden or not.
+	 *
+	 * @since BuddyBoss 2.3.50
+	 *
+	 * @param int $item_id Item id.
+	 *
+	 * @return bool
+	 */
+	protected function is_content_hidden( $item_id ) {
+		if ( $this->is_reporting_enabled() && BP_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) {
+			return true;
+		}
+		return false;
 	}
 }

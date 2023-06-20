@@ -34,6 +34,11 @@ class BP_Admin_Setting_Friends extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-force-friendship-to-message', __( 'Messaging', 'buddyboss' ), array( $this, 'bp_admin_setting_callback_force_friendship_to_message' ), array( $this, 'bp_admin_sanitize_callback_force_friendship_to_message' ) );
 		}
 
+		if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
+			// Allow auto follow.
+			$this->add_field( 'bb_enable_friends_auto_follow', __( 'Auto Follow', 'buddyboss' ), array( $this, 'bb_admin_setting_callback_enable_friends_auto_follow' ) );
+		}
+
 		/**
 		 * Fires to register Friends tab settings fields and section.
 		 *
@@ -53,6 +58,22 @@ class BP_Admin_Setting_Friends extends BP_Admin_Setting_tab {
 		?>
 		<input id="bp-force-friendship-to-message" name="bp-force-friendship-to-message" type="checkbox" value="1" <?php checked( bp_force_friendship_to_message( false ) ); ?> />
 		<label for="bp-force-friendship-to-message"><?php _e( 'Require non-admin members to be connected before they can message each other', 'buddyboss' ); ?></label>
+		<?php
+	}
+
+	/**
+	 * Allow auto following members after connecting
+	 *
+	 * @since BuddyBoss 2.3.1
+	 *
+	 * @return void
+	 */
+	public function bb_admin_setting_callback_enable_friends_auto_follow() {
+		?>
+
+		<input id="bb_enable_friends_auto_follow" name="bb_enable_friends_auto_follow" type="checkbox" value="1" <?php checked( bb_is_friends_auto_follow_active(), true ); ?> />
+		<label for="bb_enable_friends_auto_follow"><?php esc_html_e( 'Automatically have members follow a member they connect with', 'buddyboss' ); ?></label>
+
 		<?php
 	}
 

@@ -894,6 +894,16 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		// Member subscribed the group or not?
+		if ( function_exists( 'bb_is_enabled_subscription' ) && bb_is_enabled_subscription( 'group' ) ) {
+			$subscribed = 0;
+			if ( is_user_logged_in() && function_exists( 'bb_is_member_subscribed_group' ) ) {
+				$subscribed = bb_is_member_subscribed_group( $item->id, bp_loggedin_user_id() );
+			}
+			$data['is_subscribed'] = ! empty( $subscribed );
+			$data['subscribed_id'] = empty( $subscribed ) ? 0 : $subscribed;
+		}
+
 		$data     = $this->add_additional_fields_to_object( $data, $request );
 		$data     = $this->filter_response_by_context( $data, $context );
 		$response = rest_ensure_response( $data );
@@ -1064,7 +1074,14 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function can_user_delete_or_update( $group ) {
-		return ( bp_current_user_can( 'bp_moderate' ) || bp_loggedin_user_id() === $group->creator_id );
+		return (
+			bp_current_user_can( 'bp_moderate' ) ||
+			bp_loggedin_user_id() === $group->creator_id ||
+			(
+				function_exists( 'groups_is_user_admin' ) &&
+				groups_is_user_admin( bp_loggedin_user_id(), $group->id )
+			)
+		);
 	}
 
 	/**
@@ -1541,6 +1558,23 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 				'description' => __( 'Whether to check the default cover image or not.', 'buddyboss' ),
 				'type'        => 'boolean',
 				'context'     => array( 'embed', 'view', 'edit' ),
+				'readonly'    => true,
+			);
+		}
+
+		// Group subscriptions related schemas.
+		if ( function_exists( 'bb_is_enabled_subscription' ) && bb_is_enabled_subscription( 'group' ) ) {
+			$schema['properties']['is_subscribed'] = array(
+				'context'     => array( 'embed', 'view', 'edit' ),
+				'description' => __( 'The current user is subscribed of a group or not.', 'buddyboss' ),
+				'type'        => 'boolean',
+				'readonly'    => true,
+			);
+
+			$schema['properties']['subscribed_id'] = array(
+				'context'     => array( 'embed', 'view', 'edit' ),
+				'description' => __( 'The group subscription ID of current user.', 'buddyboss' ),
+				'type'        => 'integer',
 				'readonly'    => true,
 			);
 		}

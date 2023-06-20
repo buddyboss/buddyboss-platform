@@ -653,7 +653,7 @@ class SMF extends BBP_Converter_Base {
 	 * @return string Prefixed topic title, or empty string
 	 */
 	public function callback_reply_title( $title = '' ) {
-		$title = ! empty( $title ) ? __( 'Re: ', 'buddyboss' ) . html_entity_decode( $title ) : '';
+		$title = ! empty( $title ) ? __( 'Re: ', 'buddyboss' ) . html_entity_decode( $title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) : '';
 		return $title;
 	}
 
@@ -664,7 +664,7 @@ class SMF extends BBP_Converter_Base {
 
 		// Strips SMF custom HTML first from $field before parsing $field to parser.php
 		$SMF_markup = $field;
-		$SMF_markup = html_entity_decode( $SMF_markup );
+		$SMF_markup = html_entity_decode( $SMF_markup, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 
 		// Replace '[quote]' with '<blockquote>'
 		$SMF_markup = preg_replace( '/\[quote\]/', '<blockquote>', $SMF_markup );
@@ -738,6 +738,6 @@ class SMF extends BBP_Converter_Base {
 		$bbcode                 = BBCode::getInstance();
 		$bbcode->enable_smileys = false;
 		$bbcode->smiley_regex   = false;
-		return html_entity_decode( $bbcode->Parse( $field ) );
+		return html_entity_decode( $bbcode->Parse( $field ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 	}
 }

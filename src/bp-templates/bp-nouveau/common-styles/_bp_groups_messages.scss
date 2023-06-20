@@ -762,10 +762,37 @@ span.icons:before {
 	margin: 20px;
 }
 
-.bp-single-message-content .bp-message-content-wrap p.joined {
+.bp-single-message-wrap .bb-messages-group-notices {
+	width: 100%;
+	text-align: center;
 	color: #847d7d;
-	font-style: italic;
+	font-size: 11px;
 	font-weight: 500;
+	line-height: 17px;
+	margin: -5px 0;
+
+	p {
+		margin-bottom: 0;
+		line-height: 17px;
+	}
+
+	strong {
+		font-weight: 600;
+	}
+
+	.bp-tooltip {
+		display: inline-block;
+		color: #847d7d;
+
+		&:after {
+			font-size: 11px;
+			line-height: 14px;
+			max-width: 190px;
+			white-space: normal;
+			width: max-content;
+		}
+	}
+
 }
 
 .total-members-text:empty {

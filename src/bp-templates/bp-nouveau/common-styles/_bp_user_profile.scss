@@ -112,6 +112,7 @@
 			.description {
 				margin-top: -$marg-sml;
 				margin-bottom: $marg-sml;
+				white-space: pre-line;
 				order: 2;
 			}
 
@@ -355,7 +356,8 @@ body.register .buddypress-wrap .page ul {
 	opacity: 1;
 }
 
-.users-header #social-networks-popup {
+.users-header #social-networks-popup,
+.bp-widget.social #social-networks-popup {
 	display: none;
 
 	.bb-action-popup-content {
@@ -368,6 +370,36 @@ body.register .buddypress-wrap .page ul {
 
 	}
 
+}
+
+.bp-widget.social #social-networks-popup {
+
+	.bb-model-header > p {
+		margin-left: auto;
+		margin-bottom: 0;
+		line-height: 1;
+	}
+
+	.bb-action-popup-content {
+
+		.social {
+			margin-top: 9px;
+			width: 24px;
+		}
+
+	}
+}
+
+.bp-widget.social .social-networks-popup-hide {
+	display: none;
+}
+
+.profile .bp-widget:has(.field_type_socialnetworks) #social-networks-popup {
+	display: none;
+}
+
+.buddypress-wrap .bp-widget.social .bp-tables-user {
+	overflow: visible;
 }
 
 .users-header #item-header-avatar {
@@ -447,6 +479,12 @@ div.profile_completion_wrap {
 		float: right;
 		width: 50px;
 		text-align: center;
+
+		html[dir="rtl"] & {
+			display: flex;
+			align-items: center;
+			justify-content: end;
+		}
 	}
 }
 
