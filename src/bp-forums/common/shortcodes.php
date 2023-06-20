@@ -694,8 +694,14 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 */
 		public function display_search_form() {
 
+			global $post;
+			$has_bbp_search_form_shortcode = false;
+			if ( ! empty( $post->post_content ) && has_shortcode( $post->post_content, 'bbp-search-form' ) ) {
+				$has_bbp_search_form_shortcode = true;
+			}
+
 			// Bail if search is disabled.
-			if ( ! bbp_allow_search() ) {
+			if ( ! $has_bbp_search_form_shortcode && ! bbp_allow_search() ) {
 				return;
 			}
 
@@ -727,8 +733,14 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 				return $content;
 			}
 
+			global $post;
+			$has_bbp_search_shortcode = false;
+			if ( ! empty( $post->post_content ) && has_shortcode( $post->post_content, 'bbp-search' ) ) {
+				$has_bbp_search_shortcode = true;
+			}
+
 			// Bail if search is disabled.
-			if ( ! bbp_allow_search() ) {
+			if ( ! $has_bbp_search_shortcode && ! bbp_allow_search() ) {
 				return;
 			}
 
