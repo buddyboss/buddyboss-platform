@@ -261,6 +261,11 @@ window.bp = window.bp || {};
 								'page'     : page
 							};
 
+							feedbackInviteColumn.show().parents( '.bp-invites-feedback' ).show();
+							feedbackInviteColumn.attr( 'class', 'bp-feedback' );
+							feedbackInviteColumn.addClass( 'info' );
+							feedbackInvitePTag.html( BP_Nouveau.group_invites.loading );
+
 							$.ajax(
 								{
 									type: 'POST',
@@ -311,6 +316,11 @@ window.bp = window.bp || {};
 							'page'     	   : page,
 							'search_terms' : searchText
 						};
+
+						feedbackInviteColumn.show().parents( '.bp-invites-feedback' ).show();
+						feedbackInviteColumn.attr( 'class', 'bp-feedback' );
+						feedbackInviteColumn.addClass( 'info' );
+						feedbackInvitePTag.html( BP_Nouveau.group_invites.loading );
 
 						$.ajax(
 							{
@@ -488,6 +498,11 @@ window.bp = window.bp || {};
 							'scope'    : scope,
 							'page'     : page
 						};
+
+						feedbackSelectorLeftClass.show().parent().show();
+						feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+						feedbackSelectorLeftClass.addClass( 'info' );
+						feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_invites.loading );
 
 						$.ajax(
 							{
@@ -968,6 +983,11 @@ window.bp = window.bp || {};
 						'page'     	   : page,
 						'search_terms' : searchText
 					};
+
+					feedbackSelectorLeftClass.show().parent().show();
+					feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+					feedbackSelectorLeftClass.addClass( 'info' );
+					feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_invites.loading );
 
 					$.ajax(
 						{
