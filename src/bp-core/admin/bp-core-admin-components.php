@@ -78,6 +78,10 @@ function bp_core_admin_components_options() {
 		unset( $active_components['video'] );
 	}
 
+	if ( isset( $active_components['blogs'] ) ) {
+		unset( $active_components['blogs'] );
+	}
+
 	// Merge optional and required together.
 	$all_components = $required_components + $optional_components;
 
