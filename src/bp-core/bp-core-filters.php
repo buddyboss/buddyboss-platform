@@ -1028,6 +1028,10 @@ function bp_filter_metaid_column_name( $q ) {
 		$q = str_replace( 'meta_id', 'id', $q );
 	}
 
+	if ( strpos( $q, 'document_folder_id' ) !== false ) {
+		$q = str_replace( 'document_folder_id', 'id', $q );
+	}
+
 	// Put quoted content back into the string.
 	if ( ! empty( $quoted_matches[0] ) ) {
 		for ( $i = 0; $i < count( $quoted_matches[0] ); $i++ ) {
