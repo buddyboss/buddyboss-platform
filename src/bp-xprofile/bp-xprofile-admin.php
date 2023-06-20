@@ -1277,14 +1277,18 @@ function bb_xprofile_admin_removable_query_vars( $args ) {
 	// What mode?
 	$mode = ! empty( $_GET['mode'] ) ? sanitize_key( $_GET['mode'] ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-	// Allowed modes
+	if ( empty( $mode ) ) {
+		return $args;
+	}
+
+	// Allowed modes.
 	$allowed_modes = array(
 		'delete_group',
 		'delete_field',
 		'delete_option',
 	);
 
-	// Is an allowed mode
+	// Is an allowed mode.
 	if ( in_array( $mode, $allowed_modes, true ) ) {
 		$args = array_merge( $args, array( 'mode', 'field_id', 'group_id', '_wpnonce' ) );
 	}
