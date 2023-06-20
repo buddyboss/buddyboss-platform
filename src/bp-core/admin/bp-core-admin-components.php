@@ -113,9 +113,9 @@ function bp_core_admin_components_options() {
 	 */
 
 	// Get the total count of all plugins.
-	$all_count    = count( $all_components );
-	$page         = bp_core_do_network_admin() ? 'admin.php' : 'admin.php';
-	$action       = ! empty( $_GET['action'] ) ? $_GET['action'] : 'all';
+	$all_count = count( $all_components );
+	$page      = bp_core_do_network_admin() ? 'admin.php' : 'admin.php';
+	$action    = ! empty( $_GET['action'] ) ? $_GET['action'] : 'all';
 
 	switch ( $action ) {
 		case 'all':
