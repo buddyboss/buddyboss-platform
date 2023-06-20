@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Document Location Move
+ * The template for document location move
  *
- * @since BuddyBoss 1.4.0
+ * This template can be overridden by copying it to yourtheme/buddypress/document/location-move.php.
+ *
+ * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 
 $ul = '';

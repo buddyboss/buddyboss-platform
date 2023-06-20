@@ -62,25 +62,31 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	 *
 	 * @param int    $member_id member id.
 	 * @param string $action    Action name to perform.
+	 * @param int    $page      Number of page.
 	 *
 	 * @return array
 	 */
-	public static function get_member_activity_comment_ids( $member_id, $action = '' ) {
+	public static function get_member_activity_comment_ids( $member_id, $action = '', $page = - 1 ) {
 		$activities_ids = array();
 
-		$activities = BP_Activity_Activity::get(
-			array(
-				'moderation_query' => false,
-				'per_page'         => 0,
-				'fields'           => 'ids',
-				'show_hidden'      => true,
-				'display_comments' => true,
-				'filter'           => array(
-					'user_id' => $member_id,
-					'action'  => 'activity_comment',
-				),
-			)
+		$args = array(
+			'moderation_query' => false,
+			'per_page'         => 0,
+			'fields'           => 'ids',
+			'show_hidden'      => true,
+			'display_comments' => true,
+			'filter'           => array(
+				'user_id' => $member_id,
+				'action'  => 'activity_comment',
+			),
 		);
+
+		if ( $page > 0 ) {
+			$args['per_page'] = self::$item_per_page;
+			$args['page']     = $page;
+		}
+
+		$activities = BP_Activity_Activity::get( $args );
 
 		if ( ! empty( $activities['activities'] ) ) {
 			$activities_ids = $activities['activities'];
@@ -133,28 +139,32 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param array $where_conditions Activity Where sql.
-	 * @param array $args             Query arguments.
+	 * @param array  $where_conditions Activity Where sql.
+	 * @param string $args             Search terms.
 	 *
 	 * @return mixed Where SQL
 	 */
-	public function update_where_sql( $where_conditions, $args = array() ) {
-		if ( isset( $args['moderation_query'] ) && false === $args['moderation_query'] ) {
-			return $where_conditions;
-		}
+	public function update_where_sql( $where_conditions, $args = '' ) {
 
 		$where                  = array();
-		$where['suspend_where'] = $this->exclude_where_query();
+		if ( function_exists( 'bb_did_filter' ) && ! bb_did_filter( 'bp_activity_comments_search_where_conditions' ) ) {
+			$where['suspend_where'] = $this->exclude_where_query();
+		}
 
 		/**
 		 * Filters the hidden activity comment Where SQL statement.
 		 *
 		 * @since BuddyBoss 1.5.6
 		 *
-		 * @param array $where Query to hide suspended user's activity comment.
-		 * @param array $class current class object.
+		 * @since BuddyBoss 2.3.50
+		 * Introduce new params $where_conditions and $search_term.
+		 *
+		 * @param array  $where            Query to hide suspended user's activity comment.
+		 * @param array  $class            current class object.
+		 * @param array  $where_conditions Where condition for activity comment search.
+		 * @param string $search_term      Search term.
 		 */
-		$where = apply_filters( 'bp_suspend_activity_comment_get_where_conditions', $where, $this );
+		$where = apply_filters( 'bp_suspend_activity_comment_get_where_conditions', $where, $this, $where_conditions, $args );
 
 		if ( ! empty( array_filter( $where ) ) ) {
 			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
@@ -175,7 +185,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	public function manage_hidden_activity_comment( $acomment_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $acomment_id,
@@ -191,13 +201,15 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+		if ( $this->background_disabled ) {
 			$this->hide_related_content( $acomment_id, $hide_sitewide, $args );
 		} else {
-			$bp_background_updater->push_to_queue(
+			$bp_background_updater->data(
 				array(
-					'callback' => array( $this, 'hide_related_content' ),
-					'args'     => array( $acomment_id, $hide_sitewide, $args ),
+					array(
+						'callback' => array( $this, 'hide_related_content' ),
+						'args'     => array( $acomment_id, $hide_sitewide, $args ),
+					),
 				)
 			);
 			$bp_background_updater->save()->schedule_event();
@@ -217,7 +229,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	public function manage_unhidden_activity_comment( $acomment_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $acomment_id,
@@ -245,13 +257,15 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+		if ( $this->background_disabled ) {
 			$this->unhide_related_content( $acomment_id, $hide_sitewide, $force_all, $args );
 		} else {
-			$bp_background_updater->push_to_queue(
+			$bp_background_updater->data(
 				array(
-					'callback' => array( $this, 'unhide_related_content' ),
-					'args'     => array( $acomment_id, $hide_sitewide, $force_all, $args ),
+					array(
+						'callback' => array( $this, 'unhide_related_content' ),
+						'args'     => array( $acomment_id, $hide_sitewide, $force_all, $args ),
+					),
 				)
 			);
 			$bp_background_updater->save()->schedule_event();
@@ -301,6 +315,11 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	protected function get_related_contents( $acomment_id, $args = array() ) {
 		$action       = ! empty( $args['action'] ) ? $args['action'] : '';
 		$blocked_user = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
+		$page         = ! empty( $args['page'] ) ? $args['page'] : - 1;
+
+		if ( $page > 1 ) {
+			return array();
+		}
 
 		$related_contents = array();
 
@@ -321,35 +340,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_video_ids_meta( $acomment_id, 'bp_activity_get_meta', $action );
 		}
 
-		$related_content_hide = array();
-
-		if ( ! empty( $related_contents ) ) {
-			foreach ( $related_contents as $key => $related_content ) {
-				$related_content = (array) $related_content;
-				foreach ( $related_content as $item ) {
-					if ( ! BP_Core_Suspend::check_hidden_content( $item, $key, true ) && 'hide' === $action ) {
-						$related_content_hide[ $key ][] = $item;
-					}
-					if ( ( BP_Core_Suspend::check_hidden_content( $item, $key, true ) || BP_Core_Suspend::check_suspended_content( $item, $key, true ) ) && 'unhide' === $action ) {
-						$related_content_hide[ $key ][] = $item;
-					}
-				}
-			}
-		}
-
-		$related_content_hide = json_decode( wp_json_encode( $related_content_hide ), true );
-
-		if ( ! empty( $blocked_user ) && ! empty( $related_content_hide ) ) {
-			foreach ( $related_content_hide as $key => $related_content ) {
-				foreach ( (array) $related_content as $k => $item ) {
-					if ( BP_Core_Suspend::check_suspended_content( $item, $key, true ) && 'hide' === $action ) {
-						unset( $related_content_hide[ $key ][ $k ] );
-					}
-				}
-			}
-		}
-
-		return $related_content_hide;
+		return $related_contents;
 	}
 
 	/**

@@ -2,9 +2,15 @@
 /**
  * BuddyBoss - Moderation Reported Content entry
  *
- * @since BuddyBoss 1.5.6
+ * This template is used to render each reported content entry.
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/moderation/moderation-reported-content-entry.php.
+ *
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Core
+ * @version 1.5.6
  */
+
 $hide_sitewide = ( 1 === (int) bp_get_moderation_hide_site_wide() ) ? true : false;
 ?>
 <tr class="moderation-item-wrp">

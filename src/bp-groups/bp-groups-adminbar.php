@@ -77,7 +77,7 @@ function bp_groups_group_admin_menu() {
 							array(
 								'parent' => $bp->group_admin_menu_id,
 								'id'     => get_option( '_bbp_forum_slug', 'forum' ),
-								'title'  => __( 'Edit Group Discussion', 'buddyboss' ),
+								'title'  => __( 'Edit Forum Settings', 'buddyboss' ),
 								'href'   => bp_get_groups_action_link( 'admin/' . get_option( '_bbp_forum_slug', 'forum' ) ),
 							)
 						);

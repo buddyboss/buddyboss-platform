@@ -262,6 +262,9 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 				require trailingslashit( buddypress()->plugin_dir . 'bp-invites/actions' ) . '/invites.php';
 			}
 
+			// check if it has enough recipients to use batch emails.
+			$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( $invite_correct_array );
+
 			foreach ( $invite_correct_array as $key => $value ) {
 
 				$_POST = array();
@@ -309,7 +312,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 
 				// Set both variable which will use in email.
 				$_POST['custom_user_name']   = $name;
-				$_POST['custom_user_avatar'] = apply_filters( 'bp_sent_invite_email_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg' );
+				$_POST['custom_user_avatar'] = apply_filters( 'bp_sent_invite_email_avatar', function_exists( 'bb_attachments_get_default_profile_group_avatar_image' ) ? bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) : buddypress()->plugin_url . 'bp-core/images/profile-avatar-buddyboss.png' );
 
 				$accept_link = add_query_arg(
 					array(
@@ -350,7 +353,13 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 					$invitations_ids[] = $post_id;
 
 					// Send invitation email.
-					bp_send_email( 'invites-member-invite', $email, $args );
+					if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
+						bb_email_queue()->add_record( 'invites-member-invite', $email, $args );
+						// call email background process.
+						bb_email_queue()->bb_email_background_process();
+					} else {
+						bp_send_email( 'invites-member-invite', $email, $args );
+					}
 
 					// Save a blank bp_ia_accepted post_meta.
 					update_post_meta( $post_id, 'bp_member_invites_accepted', '' );
@@ -922,7 +931,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 	protected function prepare_date_response( $date_gmt, $date = null ) {
 		// Use the date if passed.
 		if ( isset( $date ) ) {
-			return mysql_to_rfc3339( $date );
+			return mysql_to_rfc3339( $date ); // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_to_rfc3339, PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
 		}
 
 		// Return null if $date_gmt is empty/zeros.
@@ -931,6 +940,6 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		}
 
 		// Return the formatted datetime.
-		return mysql_to_rfc3339( $date_gmt );
+		return mysql_to_rfc3339( $date_gmt ); // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_to_rfc3339, PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
 	}
 }

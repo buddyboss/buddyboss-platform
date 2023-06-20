@@ -40,7 +40,7 @@ function xprofile_screen_edit_profile() {
 		// Check the nonce.
 		check_admin_referer( 'bp_xprofile_edit' );
 
-		// First, clear the data for deleted fields, if any
+		// First, clear the data for deleted fields, if any.
 		if ( isset( $_POST['deleted_field_ids'] ) && ! empty( $_POST['deleted_field_ids'] ) ) {
 			$deleted_field_ids = wp_parse_id_list( $_POST['deleted_field_ids'] );
 			foreach ( $deleted_field_ids as $deleted_field_id ) {
@@ -85,19 +85,39 @@ function xprofile_screen_edit_profile() {
 				$selected_member_type_wp_roles = get_post_meta( $_POST[ 'field_' . $field_id ], '_bp_member_type_wp_roles', true );
 
 				if ( bp_current_user_can( 'administrator' ) ) {
-					if ( 'none' === $selected_member_type_wp_roles[0] ) {
+					if ( empty( $selected_member_type_wp_roles ) || ( isset( $selected_member_type_wp_roles[0] ) && 'none' === $selected_member_type_wp_roles[0] ) ) {
 						bp_set_member_type( bp_displayed_user_id(), '' );
 						bp_set_member_type( bp_displayed_user_id(), $member_type_name );
-					} elseif ( 'administrator' !== $selected_member_type_wp_roles[0] ) {
+
+						// If selected profile type is empty then bypass required field error for admin.
+						$errors                   = false;
+						$is_required[ $field_id ] = false;
+					} elseif (
+						(
+							isset( $selected_member_type_wp_roles[0] ) &&
+							'administrator' !== $selected_member_type_wp_roles[0]
+						) ||
+						! isset( $selected_member_type_wp_roles[0] )
+					) {
 						$errors                  = true;
 						$bp_error_message_string = __( 'Changing this profile type would remove your Administrator role and lock you out of the WordPress admin.', 'buddyboss' );
 						$validations[]           = $bp_error_message_string;
 					}
 				} elseif ( bp_current_user_can( 'editor' ) ) {
-					if ( 'none' === $selected_member_type_wp_roles[0] ) {
+					if ( empty( $selected_member_type_wp_roles ) || ( isset( $selected_member_type_wp_roles[0] ) && 'none' === $selected_member_type_wp_roles[0] ) ) {
 						bp_set_member_type( bp_displayed_user_id(), '' );
 						bp_set_member_type( bp_displayed_user_id(), $member_type_name );
-					} elseif ( ! in_array( $selected_member_type_wp_roles[0], array( 'editor', 'administrator' ) ) ) {
+
+						// If selected profile type is empty then bypass required field error for editor.
+						$errors                   = false;
+						$is_required[ $field_id ] = false;
+					} elseif (
+						(
+							isset( $selected_member_type_wp_roles[0] ) &&
+							! in_array( $selected_member_type_wp_roles[0], array( 'editor', 'administrator' ) )
+						) ||
+						! isset( $selected_member_type_wp_roles[0] )
+					) {
 						$errors                  = true;
 						$bp_error_message_string = __( 'Changing this profile type would remove your Editor role and lock you out of the WordPress admin.', 'buddyboss' );
 						$validations[]           = $bp_error_message_string;
@@ -110,11 +130,11 @@ function xprofile_screen_edit_profile() {
 						$bp_current_user = new WP_User( bp_displayed_user_id() );
 
 						foreach ( $bp_current_user->roles as $role ) {
-							// Remove role
+							// Remove role.
 							$bp_current_user->remove_role( $role );
 						}
 
-						// Add role
+						// Add role.
 						$bp_current_user->add_role( $selected_member_type_wp_roles[0] );
 					}
 				}
@@ -124,6 +144,39 @@ function xprofile_screen_edit_profile() {
 				$errors        = true;
 				$validations[] = $message;
 			}
+		}
+
+		if ( ! empty( $errors ) ) {
+
+			// Now we've checked for required fields, lets save the values.
+			$old_values = $new_values = array();
+			foreach ( (array) $posted_field_ids as $field_id ) {
+
+				$field_visibility = xprofile_get_field_visibility_level( $field_id, bp_displayed_user_id() );
+
+				$old_values[ $field_id ] = array(
+					'value'      => xprofile_get_field_data( $field_id, bp_displayed_user_id() ),
+					'visibility' => $field_visibility,
+				);
+
+				$new_values[ $field_id ] = array(
+					'value'      => $_POST[ 'field_' . $field_id ] ?? '',
+					'visibility' => $field_visibility,
+				);
+			}
+
+			/**
+			 * Fires after getting error while updating the profile.
+			 *
+			 * @since BuddyBoss 2.2.5
+			 *
+			 * @param int   $value            Displayed user ID.
+			 * @param array $posted_field_ids Array of field IDs that were edited.
+			 * @param bool  $errors           Whether or not any errors occurred.
+			 * @param array $old_values       Array of original values before updated.
+			 * @param array $new_values       Array of newly saved values after update.
+			 */
+			do_action( 'bb_xprofile_error_on_updated_profile', bp_displayed_user_id(), $posted_field_ids, $errors, $old_values, $new_values );
 		}
 
 		// There are validation errors.

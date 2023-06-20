@@ -188,6 +188,9 @@ function groups_create_group( $args = '' ) {
 		$member->date_modified = bp_core_current_time();
 		$member->save();
 
+		// add the Organizer to group joined date.
+		groups_update_membermeta( $member->id, 'joined_date', bp_core_current_time() );
+
 		/**
 		 * Fires after the creation of a new group and a group creator needs to be made.
 		 *
@@ -288,7 +291,8 @@ function groups_edit_base_group_details( $args = array() ) {
 	if ( $r['name'] ) {
 		$group->name = $r['name'];
 	}
-	if ( $r['slug'] && $r['slug'] != $group->slug ) {
+
+	if ( $r['slug'] && ( strtolower( rawurlencode( $r['slug'] ) ) !== strtolower( $group->slug ) ) ) {
 		$group->slug = groups_check_slug( $r['slug'] );
 	}
 
@@ -317,6 +321,10 @@ function groups_edit_base_group_details( $args = array() ) {
 
 	if ( $r['notify_members'] ) {
 		groups_notification_group_updated( $group->id, $old_group );
+
+		if ( ! bb_enabled_legacy_email_preference() ) {
+			bb_groups_notification_groups_updated( $group->id );
+		}
 	}
 
 	/**
@@ -671,6 +679,18 @@ function groups_join_group( $group_id, $user_id = 0 ) {
 		$group = $bp->groups->current_group;
 	}
 
+	// Tracking join a public group.
+	if ( 'public' === $group->status ) {
+		groups_update_membermeta( $new_member->id, 'joined_date', bp_core_current_time() );
+	} elseif ( ! empty( $_POST['bp-groups-new-members'] ) && in_array( $group->status, array( 'private', 'hidden' ), true ) ) {
+		groups_update_membermeta( $new_member->id, 'joined_date', bp_core_current_time() );
+	}
+
+	// Add meta when user added from the backend.
+	if ( ! empty( $_POST['bp-groups-new-members'] ) ) {
+		groups_update_membermeta( $new_member->id, 'joined_from', 'admin' );
+	}
+
 	// Record this in activity feeds.
 	if ( bp_is_active( 'activity' ) ) {
 		groups_record_activity(
@@ -778,6 +798,7 @@ function groups_get_group_mods( $group_id ) {
  * @return false|array Multi-d array of 'members' list and 'count'.
  */
 function groups_get_group_members( $args = array() ) {
+	static $cache = array();
 
 	$function_args = func_get_args();
 
@@ -810,6 +831,8 @@ function groups_get_group_members( $args = array() ) {
 			'group_role'          => array(),
 			'search_terms'        => false,
 			'type'                => 'last_joined',
+			'xprofile_query'      => false,
+			'populate_extras'     => true,
 		),
 		'groups_get_group_members'
 	);
@@ -834,18 +857,27 @@ function groups_get_group_members( $args = array() ) {
 			}
 		}
 
-		// Perform the group member query (extends BP_User_Query).
-		$members = new BP_Group_Member_Query(
-			array(
-				'group_id'     => $r['group_id'],
-				'per_page'     => $r['per_page'],
-				'page'         => $r['page'],
-				'group_role'   => $r['group_role'],
-				'exclude'      => $r['exclude'],
-				'search_terms' => $r['search_terms'],
-				'type'         => $r['type'],
-			)
+		$group_member_args = array(
+			'group_id'        => $r['group_id'],
+			'per_page'        => $r['per_page'],
+			'page'            => $r['page'],
+			'group_role'      => $r['group_role'],
+			'exclude'         => $r['exclude'],
+			'search_terms'    => $r['search_terms'],
+			'type'            => $r['type'],
+			'xprofile_query'  => $r['xprofile_query'],
+			'populate_extras' => $r['populate_extras'],
 		);
+
+		$cache_key = 'bp_groups_get_group_members_' . md5( maybe_serialize( $group_member_args ) );
+		if ( ! isset( $cache[ $cache_key ] ) ) {
+			// Perform the group member query (extends BP_User_Query).
+			$members = new BP_Group_Member_Query( $group_member_args );
+
+			$cache[ $cache_key ] = $members;
+		} else {
+			$members = $cache[ $cache_key ];
+		}
 
 		// Structure the return value as expected by the template functions.
 		$retval = array(
@@ -968,7 +1000,7 @@ function groups_get_groups( $args = '' ) {
 function groups_get_total_group_count() {
 	add_filter( 'bp_ajax_querystring', 'bp_group_object_template_results_groups_all_scope', 20, 2 );
 	bp_has_groups( bp_ajax_querystring( 'groups' ) );
-	$count = $GLOBALS["groups_template"]->total_group_count;
+	$count = $GLOBALS['groups_template']->total_group_count;
 	remove_filter( 'bp_ajax_querystring', 'bp_group_object_template_results_groups_all_scope', 20, 2 );
 
 	return $count;
@@ -984,7 +1016,7 @@ function bp_group_object_template_results_groups_all_scope( $querystring, $objec
 		return $querystring;
 	}
 
-	$querystring             = wp_parse_args( $querystring );
+	$querystring             = bp_parse_args( $querystring );
 	$querystring['scope']    = 'all';
 	$querystring['page']     = 1;
 	$querystring['per_page'] = '1';
@@ -992,7 +1024,7 @@ function bp_group_object_template_results_groups_all_scope( $querystring, $objec
 
 	if ( true === (bool) bp_enable_group_hide_subgroups() ) {
 		$querystring['parent_id'] = 0;
-    }
+	}
 
 	return http_build_query( $querystring );
 }
@@ -1078,6 +1110,11 @@ function bp_get_user_groups( $user_id, $args = array() ) {
 
 	$user_id = intval( $user_id );
 
+	// Do not process if no user_id.
+	if ( 0 === $user_id ) {
+		return array();
+	}
+
 	$membership_ids = wp_cache_get( $user_id, 'bp_groups_memberships_for_user' );
 	if ( false === $membership_ids ) {
 		$membership_ids = BP_Groups_Member::get_membership_ids_for_user( $user_id );
@@ -1097,24 +1134,28 @@ function bp_get_user_groups( $user_id, $args = array() ) {
 	// Prime the invitations- and requests-as-memberships cache.
 	$invitation_ids = array();
 	if ( true !== $r['is_confirmed'] || false !== $r['invite_sent'] ) {
-		$invitation_ids = groups_get_invites( array(
-			'user_id'     => $user_id,
-			'invite_sent' => 'all',
-			'type'        => 'all',
-			'fields'      => 'ids'
-		) );
+		$invitation_ids = groups_get_invites(
+			array(
+				'user_id'     => $user_id,
+				'invite_sent' => 'all',
+				'type'        => 'all',
+				'fields'      => 'ids',
+			)
+		);
 
 		// Prime the invitations cache.
 		$uncached_invitation_ids = bp_get_non_cached_ids( $invitation_ids, 'bp_groups_invitations_as_memberships' );
 		if ( $uncached_invitation_ids ) {
-			$uncached_invitations = groups_get_invites( array(
-				'id'          => $uncached_invitation_ids,
-				'invite_sent' => 'all',
-				'type'        => 'all'
-			) );
+			$uncached_invitations = groups_get_invites(
+				array(
+					'id'          => $uncached_invitation_ids,
+					'invite_sent' => 'all',
+					'type'        => 'all',
+				)
+			);
 			foreach ( $uncached_invitations as $uncached_invitation ) {
 				// Reshape the result as a membership db entry.
-				$invitation = new StdClass;
+				$invitation                = new StdClass();
 				$invitation->id            = $uncached_invitation->id;
 				$invitation->group_id      = $uncached_invitation->item_id;
 				$invitation->user_id       = $uncached_invitation->user_id;
@@ -1322,7 +1363,7 @@ function groups_avatar_upload_dir( $group_id = 0 ) {
 
 function bp_groups_get_group_roles() {
 	return array(
-		'admin' => (object) array(
+		'admin'  => (object) array(
 			'id'           => 'admin',
 			'name'         => __( 'Organizer', 'buddyboss' ),
 			'is_admin'     => true,
@@ -1330,7 +1371,7 @@ function bp_groups_get_group_roles() {
 			'is_confirmed' => true,
 			'is_mod'       => false,
 		),
-		'mod' => (object) array(
+		'mod'    => (object) array(
 			'id'           => 'mod',
 			'name'         => __( 'Moderator', 'buddyboss' ),
 			'is_admin'     => false,
@@ -1622,9 +1663,9 @@ function groups_is_user_pending( $user_id, $group_id ) {
 		return false;
 	}
 
-	$args = array(
-		'user_id'     => $user_id,
-		'item_id'     => $group_id,
+	$args          = array(
+		'user_id' => $user_id,
+		'item_id' => $group_id,
 	);
 	$invites_class = new BP_Groups_Invitation_Manager();
 
@@ -1703,7 +1744,7 @@ function groups_post_update( $args = '' ) {
 	}
 
 	// Record this in activity feeds.
-	$activity_action  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $user_id ), '<a href="' . bp_get_group_permalink( $bp->groups->current_group ) . '">' . esc_attr( $bp->groups->current_group->name ) . '</a>' );
+	$activity_action  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $user_id ), '<a href="' . bp_get_group_permalink( $bp->groups->current_group ) . '">' . bp_get_group_name( $bp->groups->current_group ) . '</a>' );
 	$activity_content = $content;
 
 	/**
@@ -1789,7 +1830,7 @@ function groups_get_invites_for_user( $user_id = 0, $limit = false, $page = fals
 	}
 
 	// Get a filtered list of groups.
-	$args = array(
+	$args   = array(
 		'include'     => $group_ids,
 		'show_hidden' => true,
 		'per_page'    => $limit,
@@ -1797,7 +1838,10 @@ function groups_get_invites_for_user( $user_id = 0, $limit = false, $page = fals
 	);
 	$groups = groups_get_groups( $args );
 
-	return array( 'groups' => $groups['groups'], 'total' => groups_get_invite_count_for_user( $user_id ) );
+	return array(
+		'groups' => $groups['groups'],
+		'total'  => groups_get_invite_count_for_user( $user_id ),
+	);
 }
 
 /**
@@ -1831,11 +1875,13 @@ function groups_get_invited_to_group_ids( $user_id = 0 ) {
 		$user_id = bp_loggedin_user_id();
 	}
 
-	$group_ids = groups_get_invites( array(
-		'user_id'     => $user_id,
-		'invite_sent' => 'sent',
-		'fields'      => 'item_ids'
-	) );
+	$group_ids = groups_get_invites(
+		array(
+			'user_id'     => $user_id,
+			'invite_sent' => 'sent',
+			'fields'      => 'item_ids',
+		)
+	);
 
 	return array_unique( $group_ids );
 }
@@ -1860,14 +1906,18 @@ function groups_get_invited_to_group_ids( $user_id = 0 ) {
  * @return bool True on success, false on failure.
  */
 function groups_invite_user( $args = '' ) {
-	$r = bp_parse_args( $args, array(
-		'user_id'       => false,
-		'group_id'      => false,
-		'inviter_id'    => bp_loggedin_user_id(),
-		'date_modified' => bp_core_current_time(),
-		'content'       => '',
-		'send_invite'   => 0
-	), 'groups_invite_user' );
+	$r = bp_parse_args(
+		$args,
+		array(
+			'user_id'       => false,
+			'group_id'      => false,
+			'inviter_id'    => bp_loggedin_user_id(),
+			'date_modified' => bp_core_current_time(),
+			'content'       => '',
+			'send_invite'   => 0,
+		),
+		'groups_invite_user'
+	);
 
 	$inv_args = array(
 		'user_id'       => $r['user_id'],
@@ -1875,12 +1925,15 @@ function groups_invite_user( $args = '' ) {
 		'inviter_id'    => $r['inviter_id'],
 		'date_modified' => $r['date_modified'],
 		'content'       => $r['content'],
-		'send_invite'   => $r['send_invite']
+		'send_invite'   => $r['send_invite'],
 	);
 
-	// Create the unsent invitataion.
+	// Create the unsent invitation.
 	$invites_class = new BP_Groups_Invitation_Manager();
 	$created       = $invites_class->add_invitation( $inv_args );
+
+	// Tracking group invite.
+	invitation_add_invitemeta( $created, 'invited_date', bp_core_current_time() );
 
 	/**
 	 * Fires after the creation of a new group invite.
@@ -1913,11 +1966,13 @@ function groups_uninvite_user( $user_id, $group_id, $inviter_id = false ) {
 	}
 
 	$invites_class = new BP_Groups_Invitation_Manager();
-	$success       = $invites_class->delete( array(
-		'user_id'    => $user_id,
-		'item_id'    => $group_id,
-		'inviter_id' => $inviter_id,
-	) );
+	$success       = $invites_class->delete(
+		array(
+			'user_id'    => $user_id,
+			'item_id'    => $group_id,
+			'inviter_id' => $inviter_id,
+		)
+	);
 
 	if ( $success ) {
 		/**
@@ -1950,7 +2005,7 @@ function groups_uninvite_user( $user_id, $group_id, $inviter_id = false ) {
 function groups_accept_invite( $user_id, $group_id ) {
 
 	$invites_class = new BP_Groups_Invitation_Manager();
-	$args = array(
+	$args          = array(
 		'user_id'     => $user_id,
 		'item_id'     => $group_id,
 		'invite_sent' => 'sent',
@@ -1977,11 +2032,13 @@ function groups_reject_invite( $user_id, $group_id, $inviter_id = false ) {
 	}
 
 	$invites_class = new BP_Groups_Invitation_Manager();
-	$success       = $invites_class->delete( array(
-		'user_id'    => $user_id,
-		'item_id'    => $group_id,
-		'inviter_id' => $inviter_id,
-	) );
+	$success       = $invites_class->delete(
+		array(
+			'user_id'    => $user_id,
+			'item_id'    => $group_id,
+			'inviter_id' => $inviter_id,
+		)
+	);
 
 	/**
 	 * Fires after a user rejects a group invitation.
@@ -2016,11 +2073,13 @@ function groups_delete_invite( $user_id, $group_id, $inviter_id = false ) {
 	}
 
 	$invites_class = new BP_Groups_Invitation_Manager();
-	$success       = $invites_class->delete( array(
-		'user_id'    => $user_id,
-		'item_id'    => $group_id,
-		'inviter_id' => $inviter_id,
-	) );
+	$success       = $invites_class->delete(
+		array(
+			'user_id'    => $user_id,
+			'item_id'    => $group_id,
+			'inviter_id' => $inviter_id,
+		)
+	);
 
 	/**
 	 * Fires after the deletion of a group invitation.
@@ -2068,13 +2127,17 @@ function groups_send_invites( $args = array() ) {
 		$args = bp_core_parse_args_array( $old_args_keys, $function_args );
 	}
 
-	$r = bp_parse_args( $args, array(
-		'user_id'       => false,
-		'invitee_email' => '',
-		'group_id'      => 0,
-		'inviter_id'    => bp_loggedin_user_id(),
-		'force_resend'  => false,
-	), 'groups_send_invitation' );
+	$r = bp_parse_args(
+		$args,
+		array(
+			'user_id'       => false,
+			'invitee_email' => '',
+			'group_id'      => 0,
+			'inviter_id'    => bp_loggedin_user_id(),
+			'force_resend'  => false,
+		),
+		'groups_send_invitation'
+	);
 
 	$args = array(
 		'user_id'       => $r['user_id'],
@@ -2241,7 +2304,8 @@ function groups_promote_member( $user_id, $group_id, $status ) {
 		return false;
 	}
 
-	$member = new BP_Groups_Member( $user_id, $group_id );
+	$member    = new BP_Groups_Member( $user_id, $group_id );
+	$member_id = $member->id;
 
 	// Don't use this action. It's deprecated as of BuddyPress 1.6.
 	do_action( 'groups_premote_member', $group_id, $user_id, $status );
@@ -2257,7 +2321,14 @@ function groups_promote_member( $user_id, $group_id, $status ) {
 	 */
 	do_action( 'groups_promote_member', $group_id, $user_id, $status );
 
-	return $member->promote( $status );
+	$status_updated = $member->promote( $status );
+
+	if ( $status_updated ) {
+		// Track promoted time.
+		groups_add_membermeta( $member_id, 'promoted_' . $status . '_date', bp_core_current_time() );
+	}
+
+	return $status_updated;
 }
 
 /**
@@ -2275,7 +2346,8 @@ function groups_demote_member( $user_id, $group_id ) {
 		return false;
 	}
 
-	$member = new BP_Groups_Member( $user_id, $group_id );
+	$member    = new BP_Groups_Member( $user_id, $group_id );
+	$member_id = $member->id;
 
 	/**
 	 * Fires before the demotion of a user to 'member'.
@@ -2287,7 +2359,14 @@ function groups_demote_member( $user_id, $group_id ) {
 	 */
 	do_action( 'groups_demote_member', $group_id, $user_id );
 
-	return $member->demote();
+	$status_updated = $member->demote();
+
+	if ( $status_updated ) {
+		// Track demoted time.
+		groups_add_membermeta( $member_id, 'demoted_date', bp_core_current_time() );
+	}
+
+	return $status_updated;
 }
 
 /**
@@ -2305,7 +2384,8 @@ function groups_ban_member( $user_id, $group_id ) {
 		return false;
 	}
 
-	$member = new BP_Groups_Member( $user_id, $group_id );
+	$member    = new BP_Groups_Member( $user_id, $group_id );
+	$member_id = $member->id;
 
 	/**
 	 * Fires before the banning of a member from a group.
@@ -2317,7 +2397,14 @@ function groups_ban_member( $user_id, $group_id ) {
 	 */
 	do_action( 'groups_ban_member', $group_id, $user_id );
 
-	return $member->ban();
+	$status_updated = $member->ban();
+
+	if ( $status_updated ) {
+		// Track banned time.
+		groups_add_membermeta( $member_id, 'banned_date', bp_core_current_time() );
+	}
+
+	return $status_updated;
 }
 
 /**
@@ -2335,7 +2422,8 @@ function groups_unban_member( $user_id, $group_id ) {
 		return false;
 	}
 
-	$member = new BP_Groups_Member( $user_id, $group_id );
+	$member    = new BP_Groups_Member( $user_id, $group_id );
+	$member_id = $member->id;
 
 	/**
 	 * Fires before the unbanning of a member from a group.
@@ -2347,7 +2435,14 @@ function groups_unban_member( $user_id, $group_id ) {
 	 */
 	do_action( 'groups_unban_member', $group_id, $user_id );
 
-	return $member->unban();
+	$status_updated = $member->unban();
+
+	if ( $status_updated ) {
+		// Track unbanned time.
+		groups_add_membermeta( $member_id, 'unbanned_date', bp_core_current_time() );
+	}
+
+	return $status_updated;
 }
 
 /** Group Removal *************************************************************/
@@ -2415,12 +2510,16 @@ function groups_send_membership_request( $args = array() ) {
 		$args = bp_core_parse_args_array( $old_args_keys, $function_args );
 	}
 
-	$r = bp_parse_args( $args, array(
-		'user_id'       => false,
-		'group_id'      => false,
-		'content'       => '',
-		'date_modified' => bp_core_current_time(),
-	), 'groups_send_membership_request' );
+	$r = bp_parse_args(
+		$args,
+		array(
+			'user_id'       => false,
+			'group_id'      => false,
+			'content'       => '',
+			'date_modified' => bp_core_current_time(),
+		),
+		'groups_send_membership_request'
+	);
 
 	$inv_args = array(
 		'user_id'       => $r['user_id'],
@@ -2453,12 +2552,15 @@ function groups_send_membership_request( $args = array() ) {
 	}
 
 	$invites_class = new BP_Groups_Invitation_Manager();
-	$request_id = $invites_class->add_request( $inv_args );
+	$request_id    = $invites_class->add_request( $inv_args );
 
 	// If a new request was created, send the emails.
 	if ( $request_id && is_int( $request_id ) ) {
 		$invites_class->send_request_notification_by_id( $request_id );
 		$admins = groups_get_group_admins( $r['group_id'] );
+
+		// Tracking group invite.
+		invitation_add_invitemeta( $request_id, 'requested_date', bp_core_current_time() );
 
 		/**
 		 * Fires after the creation of a new membership request.
@@ -2504,7 +2606,7 @@ function groups_accept_membership_request( $membership_id, $user_id = 0, $group_
 	}
 
 	$invites_class = new BP_Groups_Invitation_Manager();
-	$args = array(
+	$args          = array(
 		'user_id' => $user_id,
 		'item_id' => $group_id,
 	);
@@ -2528,7 +2630,7 @@ function groups_accept_membership_request( $membership_id, $user_id = 0, $group_
  */
 function groups_reject_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
 
-	if ( ! empty( $membership_id ) ){
+	if ( ! empty( $membership_id ) ) {
 		_deprecated_argument( __METHOD__, '1.3.5', sprintf( __( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 	}
 
@@ -2565,7 +2667,7 @@ function groups_reject_membership_request( $membership_id, $user_id = 0, $group_
  * @return false|BP_Groups_Member True on success, false on failure.
  */
 function groups_delete_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
-	if ( ! empty( $membership_id ) ){
+	if ( ! empty( $membership_id ) ) {
 		_deprecated_argument( __METHOD__, '1.3.5', sprintf( __( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 	}
 
@@ -2574,10 +2676,12 @@ function groups_delete_membership_request( $membership_id, $user_id = 0, $group_
 	}
 
 	$invites_class = new BP_Groups_Invitation_Manager();
-	$success       = $invites_class->delete_requests( array(
-		'user_id' => $user_id,
-		'item_id' => $group_id
-	) );
+	$success       = $invites_class->delete_requests(
+		array(
+			'user_id' => $user_id,
+			'item_id' => $group_id,
+		)
+	);
 
 	return $success;
 }
@@ -2613,7 +2717,7 @@ function groups_check_for_membership_request( $user_id, $group_id ) {
 		return false;
 	}
 
-	$args = array(
+	$args          = array(
 		'user_id' => $user_id,
 		'item_id' => $group_id,
 	);
@@ -2637,10 +2741,12 @@ function groups_get_membership_requested_group_ids( $user_id = 0 ) {
 		$user_id = bp_loggedin_user_id();
 	}
 
-	$group_ids     = groups_get_requests( array(
-		'user_id' => $user_id,
-		'fields'  => 'item_ids'
-	) );
+	$group_ids = groups_get_requests(
+		array(
+			'user_id' => $user_id,
+			'fields'  => 'item_ids',
+		)
+	);
 
 	return $group_ids;
 }
@@ -2660,10 +2766,12 @@ function groups_get_membership_requested_user_ids( $group_id = 0 ) {
 		$group_id = bp_get_current_group_id();
 	}
 
-	$requests = groups_get_requests( array(
-		'item_id' => $group_id,
-		'fields'  => 'user_ids'
-	) );
+	$requests = groups_get_requests(
+		array(
+			'item_id' => $group_id,
+			'fields'  => 'user_ids',
+		)
+	);
 
 	return $requests;
 }
@@ -2681,7 +2789,7 @@ function groups_get_membership_requested_user_ids( $group_id = 0 ) {
 function groups_change_all_activity_feed_status( $group_id = 0, $status = 0 ) {
 	global $wpdb, $bp;
 
-	//bail if no group_id
+	// bail if no group_id
 	if ( $group_id === 0 ) {
 		return false;
 	}
@@ -2843,6 +2951,120 @@ function groups_update_groupmeta( $group_id, $meta_key, $meta_value, $prev_value
 function groups_add_groupmeta( $group_id, $meta_key, $meta_value, $unique = false ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
 	$retval = add_metadata( 'group', $group_id, $meta_key, $meta_value, $unique );
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	return $retval;
+}
+
+/** Group Member Meta ****************************************************************/
+
+/**
+ * Delete metadata for a member.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param int         $member_id  ID of the member.
+ * @param string|bool $meta_key   The key of the row to delete.
+ * @param string|bool $meta_value Optional. Metadata value. If specified, only delete
+ *                                metadata entries with this value.
+ * @param bool        $delete_all Optional. If true, delete matching metadata entries
+ *                                for all groups. Otherwise, only delete matching
+ *                                metadata entries for the specified group.
+ *                                Default: false.
+ *
+ * @return bool True on success, false on failure.
+ */
+function groups_delete_membermeta( $member_id, $meta_key = false, $meta_value = false, $delete_all = false ) {
+	global $wpdb;
+
+	// Legacy - if no meta_key is passed, delete all for the item.
+	if ( empty( $meta_key ) ) {
+		$table_name = buddypress()->groups->table_name_membermeta;
+		$sql        = "SELECT meta_key FROM {$table_name} WHERE member_id = %d";
+		$query      = $wpdb->prepare( $sql, $member_id );
+		$keys       = $wpdb->get_col( $query );
+
+		// With no meta_key, ignore $delete_all.
+		$delete_all = false;
+	} else {
+		$keys = array( $meta_key );
+	}
+
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	$retval = true;
+	foreach ( $keys as $key ) {
+		$retval = delete_metadata( 'member', $member_id, $key, $meta_value, $delete_all );
+	}
+
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	return $retval;
+}
+
+/**
+ * Get a piece of member metadata.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param int    $member_id ID of the member.
+ * @param string $meta_key  Metadata key.
+ * @param bool   $single    Optional. If true, return only the first value of the
+ *                          specified meta_key. This parameter has no effect if
+ *                          meta_key is empty.
+ *
+ * @return mixed Metadata value.
+ */
+function groups_get_membermeta( $member_id, $meta_key = '', $single = true ) {
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	$retval = get_metadata( 'member', $member_id, $meta_key, $single );
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	return $retval;
+}
+
+/**
+ * Update a piece of member metadata.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param int    $member_id  ID of the member.
+ * @param string $meta_key   Metadata key.
+ * @param mixed  $meta_value Value to store.
+ * @param mixed  $prev_value Optional. If specified, only update existing
+ *                           metadata entries with the specified value.
+ *                           Otherwise, update all entries.
+ *
+ * @return bool|int $retval Returns false on failure. On successful update of existing
+ *                          metadata, returns true. On successful creation of new metadata,
+ *                          returns the integer ID of the new metadata row.
+ */
+function groups_update_membermeta( $member_id, $meta_key, $meta_value, $prev_value = '' ) {
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	$retval = update_metadata( 'member', $member_id, $meta_key, $meta_value, $prev_value );
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	return $retval;
+}
+
+/**
+ * Add a piece of member metadata.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param int    $member_id  ID of the member.
+ * @param string $meta_key   Metadata key.
+ * @param mixed  $meta_value Metadata value.
+ * @param bool   $unique     Optional. Whether to enforce a single metadata value
+ *                           for the given key. If true, and the object already
+ *                           has a value for the key, no change will be made.
+ *                           Default: false.
+ *
+ * @return int|bool The meta ID on successful update, false on failure.
+ */
+function groups_add_membermeta( $member_id, $meta_key, $meta_value, $unique = false ) {
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	$retval = add_metadata( 'member', $member_id, $meta_key, $meta_value, $unique );
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
 
 	return $retval;
@@ -3219,9 +3441,9 @@ function bp_groups_remove_group_type( $group_id, $group_type ) {
 
 	// No need to continue if the group doesn't have the type.
 	$existing_types = bp_groups_get_group_type( $group_id, false );
- 	if ( ! in_array( $group_type, $existing_types, true ) ) {
+	if ( ! in_array( $group_type, $existing_types, true ) ) {
 		return false;
- 	}
+	}
 
 	$deleted = bp_remove_object_terms( $group_id, $group_type, 'bp_group_type' );
 
@@ -3383,21 +3605,21 @@ function bp_groups_get_invited_by( $user_id = false, $group_id = false ) {
 		return false;
 	}
 
-	//Check invitation is exists or not
+	// Check invitation is exists or not
 	$invite_id = groups_check_user_has_invite( $user_id, $group->id );
 
 	if ( empty( $invite_id ) ) {
 		return false;
 	}
-	//Get invitation by id
-	$member 	= new BP_Invitation( $invite_id );
+	// Get invitation by id
+	$member = new BP_Invitation( $invite_id );
 
-	//$member = new BP_Groups_Member( $user_id, $group->id );
+	// $member = new BP_Groups_Member( $user_id, $group->id );
 	$inviter = array(
-		'id'   => $member->inviter_id,
-		'name' => bp_core_get_user_displayname( $member->inviter_id ),
-		'url'  => bp_core_get_user_domain( $member->inviter_id ),
-		'date_modified'  => $member->date_modified,
+		'id'            => $member->inviter_id,
+		'name'          => bp_core_get_user_displayname( $member->inviter_id ),
+		'url'           => bp_core_get_user_domain( $member->inviter_id ),
+		'date_modified' => $member->date_modified,
 	);
 
 	return apply_filters( 'bp_groups_get_invited_by', $inviter, $group->id );
@@ -3411,7 +3633,6 @@ function bp_groups_get_invited_by( $user_id = false, $group_id = false ) {
  * @param int $user_id The user ID.
  * @param int $group_id The group ID.
  * @return string invitation message.
- *
  */
 function bp_groups_get_invite_messsage_for_user( $user_id, $group_id ) {
 	global $groups_template;
@@ -3430,14 +3651,14 @@ function bp_groups_get_invite_messsage_for_user( $user_id, $group_id ) {
 		return '';
 	}
 
-	//Check invitation is exists or not
+	// Check invitation is exists or not
 	$invite_id = groups_check_user_has_invite( $user_id, $group->id );
 
 	if ( empty( $invite_id ) ) {
 		return '';
 	}
 
-	//Get invitation by id.
+	// Get invitation by id.
 	$member = new BP_Invitation( $invite_id );
 
 	$message  = $member->content;
@@ -3542,6 +3763,7 @@ function bp_groups_get_group_type_post_type_labels() {
 			'not_found_in_trash' => __( 'No Group Types found in trash', 'buddyboss' ),
 			'search_items'       => __( 'Search Group Types', 'buddyboss' ),
 			'singular_name'      => __( 'Group Type', 'buddyboss' ),
+			'attributes'         => __( 'Dropdown Order', 'buddyboss' ),
 		)
 	);
 }
@@ -3617,25 +3839,29 @@ function bp_get_active_group_types( $args = array() ) {
 		return array();
 	}
 
-	static $group_cache = array();
+	static $group_cache    = array();
 	$bp_active_group_types = array();
 
-	$args = bp_parse_args( $args, array(
-        'posts_per_page' => - 1,
-        'post_type'      => bp_groups_get_group_type_post_type(),
-        'post_status'    => 'publish',
-        'orderby'        => 'menu_order',
-        'order'          => 'ASC',
-        'fields'         => 'ids'
-    ), 'group_types' );
+	$args = bp_parse_args(
+		$args,
+		array(
+			'posts_per_page' => - 1,
+			'post_type'      => bp_groups_get_group_type_post_type(),
+			'post_status'    => 'publish',
+			'orderby'        => 'menu_order',
+			'order'          => 'ASC',
+			'fields'         => 'ids',
+		),
+		'group_types'
+	);
 
-	$group_cache_key = 'bp_get_active_group_types_' . md5( serialize( $args ) );
+	$group_cache_key = 'bp_get_active_group_types_' . md5( maybe_serialize( $args ) );
 
 	if ( isset( $group_cache[ $group_cache_key ] ) ) {
 		return $group_cache[ $group_cache_key ];
 	}
 
-    $bp_active_group_types_query = new \WP_Query( $args );
+	$bp_active_group_types_query = new \WP_Query( $args );
 
 	if ( $bp_active_group_types_query->have_posts() ) {
 		$bp_active_group_types = $bp_active_group_types_query->posts;
@@ -3672,7 +3898,7 @@ function bp_register_active_group_types() {
 	if ( ! empty( $group_type_ids ) ) {
 
 		// Get all registered group types in BP.
-		$group_types   = bp_groups_get_group_types();
+		$group_types = bp_groups_get_group_types();
 
 		foreach ( $group_type_ids as $group_type_id ) {
 			$name          = get_post_meta( $group_type_id, '_bp_group_type_label_name', true );
@@ -3685,7 +3911,7 @@ function bp_register_active_group_types() {
 						'name'          => $name,
 						'singular_name' => $singular_name,
 					),
-					'has_directory'         => strtolower( $name ),
+					'has_directory'         => $key,
 					'show_in_create_screen' => true,
 					'show_in_list'          => true,
 					'description'           => '',
@@ -3808,7 +4034,11 @@ function bp_group_type_short_code_add_body_class( $class ) {
 		$class[] = 'groups';
 		$class[] = 'buddypress';
 		$class[] = 'buddyboss';
-		$class[] = 'bb-buddypanel';
+		/**
+		 *This class commented because this class will add when buddypanel enable
+		 *and this condition already in the theme
+		 */
+		//$class[] = 'bb-buddypanel';
 	}
 	return $class;
 }
@@ -3825,7 +4055,7 @@ function bp_group_type_short_code_add_body_class( $class ) {
  */
 function bp_groups_exclude_group_type( $qs = false, $object = false ) {
 
-	$args = wp_parse_args( $qs );
+	$args = bp_parse_args( $qs );
 
 	if ( $object !== 'groups' ) {
 		return $qs;
@@ -3931,6 +4161,7 @@ function bp_group_ids_array_flatten( $array ) {
  * @return array
  */
 function bp_groups_get_excluded_group_types() {
+	static $bp_group_type_query = null;
 
 	$bp_group_type_ids  = array();
 	$post_type          = bp_groups_get_group_type_post_type();
@@ -3946,7 +4177,10 @@ function bp_groups_get_excluded_group_types() {
 		'nopaging'   => true,
 	);
 
-	$bp_group_type_query = new WP_Query( $bp_group_type_args );
+	if ( null === $bp_group_type_query ) {
+		$bp_group_type_query = new WP_Query( $bp_group_type_args );
+	}
+
 	if ( $bp_group_type_query->have_posts() ) :
 		while ( $bp_group_type_query->have_posts() ) :
 			$bp_group_type_query->the_post();
@@ -4012,8 +4246,9 @@ function bp_get_group_ids_by_group_types( $group_type = '', $taxonomy = 'bp_grou
  * @return mixed
  */
 function bp_group_get_group_type_id( $group_type = '' ) {
+	static $cache = array();
 
-	$args             = array(
+	$args = array(
 		'post_type'  => 'bp-group-type',
 		'meta_query' => array(
 			array(
@@ -4022,11 +4257,18 @@ function bp_group_get_group_type_id( $group_type = '' ) {
 			),
 		),
 	);
-	$group_type_query = new WP_Query( $args );
 
-	$posts = $group_type_query->posts;
+	$cache_key = md5( maybe_serialize( $args ) );
 
-	$id = ( is_array( $posts ) && isset( $posts[0]->ID ) ) ? $posts[0]->ID : 0;
+	if ( isset( $cache[ $cache_key ] ) ) {
+		return $cache[ $cache_key ];
+	} else {
+		$group_type_query = new WP_Query( $args );
+		$posts            = $group_type_query->posts;
+		$id               = ( is_array( $posts ) && isset( $posts[0]->ID ) ) ? $posts[0]->ID : 0;
+
+		$cache[ $cache_key ] = $id;
+	}
 
 	return $id;
 }
@@ -4268,7 +4510,19 @@ function bp_groups_prime_mentions_results() {
 		return;
 	}
 
-	$members = groups_get_group_members( array( 'exclude_admins_mods' => false, 'exclude' => get_current_user_id(), 'per_page' => 10, 'page' => 1 ) );
+	// We don't want to show mentions for groups in public & Private message screen.
+	if ( 'public-message' === bp_get_group_current_messages_tab() || 'private-message' === bp_get_group_current_messages_tab() ) {
+		return;
+	}
+
+	$members = groups_get_group_members(
+		array(
+			'exclude_admins_mods' => false,
+			'exclude'             => get_current_user_id(),
+			'per_page'            => 10,
+			'page'                => 1,
+		)
+	);
 	$results = array();
 
 	if ( ! empty( $members['members'] ) ) {
@@ -4277,10 +4531,10 @@ function bp_groups_prime_mentions_results() {
 			$result->ID            = bp_activity_get_user_mentionname( $user->ID );
 			$result->user_nicename = $user->user_nicename;
 			$result->image         = bp_core_fetch_avatar(
-					array(
-							'html'    => false,
-							'item_id' => $user->ID,
-					)
+				array(
+					'html'    => false,
+					'item_id' => $user->ID,
+				)
 			);
 			if ( ! empty( $user->display_name ) && ! bp_disable_profile_sync() ) {
 				$result->name = bp_core_get_user_displayname( $user->ID );
@@ -4321,10 +4575,10 @@ function bp_groups_migrate_invitations() {
 	}
 
 	$processed = array();
-	$values = array();
+	$values    = array();
 	foreach ( $records as $record ) {
-		$values[] = $wpdb->prepare(
-			"(%d, %d, %s, %s, %d, %d, %s, %s, %s, %d, %d)",
+		$values[]    = $wpdb->prepare(
+			'(%d, %d, %s, %s, %d, %d, %s, %s, %s, %d, %d)',
 			(int) $record->user_id,
 			(int) $record->inviter_id,
 			'',
@@ -4341,9 +4595,9 @@ function bp_groups_migrate_invitations() {
 	}
 
 	$table_name = BP_Invitation_Manager::get_table_name();
-	$query = "INSERT INTO {$table_name} (user_id, inviter_id, invitee_email, class, item_id, secondary_item_id, type, content, date_modified, invite_sent, accepted) VALUES ";
-	$query .= implode(', ', $values );
-	$query .= ';';
+	$query      = "INSERT INTO {$table_name} (user_id, inviter_id, invitee_email, class, item_id, secondary_item_id, type, content, date_modified, invite_sent, accepted) VALUES ";
+	$query     .= implode( ', ', $values );
+	$query     .= ';';
 	$wpdb->query( $query );
 
 	$ids_to_delete = implode( ',', $processed );
@@ -4451,4 +4705,467 @@ function groups_can_user_manage_video_albums( $user_id, $group_id ) {
 	}
 
 	return $is_allowed;
+}
+
+/**
+ * Get members list for group directory.
+ *
+ * @since BuddyBoss 1.9.1
+ *
+ * @param int   $group_id ID of the group.
+ * @param array $role roles of the group.
+ * @return string members list html.
+ */
+function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 'admin' ) ) {
+
+	if ( ! $group_id ) {
+		$group_id = bp_get_group_id();
+	}
+
+	if ( ! $group_id ) {
+		return '';
+	}
+
+	$members = new \BP_Group_Member_Query(
+		array(
+			'group_id'     => $group_id,
+			'per_page'     => 3,
+			'page'         => 1,
+			'group_role'   => $role,
+			'exclude'      => false,
+			'search_terms' => false,
+			'type'         => 'active',
+		)
+	);
+
+	$total   = $members->total_users;
+	$members = array_values( $members->results );
+
+	if ( ! empty( $members ) ) {
+		?>
+		<span class="bs-group-members">
+		<?php
+		foreach ( $members as $member ) {
+			$avatar = bp_core_fetch_avatar(
+				array(
+					'item_id'    => $member->ID,
+					'avatar_dir' => 'avatars',
+					'object'     => 'user',
+					'type'       => 'thumb',
+					'html'       => false,
+				)
+			);
+			?>
+			<span class="bs-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $member->ID ) ); ?>">
+				<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
+					<img src="<?php echo esc_url( $avatar ); ?>"
+						alt="<?php echo esc_attr( bp_core_get_user_displayname( $member->ID ) ); ?>" class="round" />
+				</a>
+			</span>
+			<?php
+		}
+
+		if ( $total - count( $members ) !== 0 ) {
+			$member_count = $total - count( $members );
+			?>
+			<span class="bs-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="+
+			<?php
+			/* translators: Group member count. */
+			printf( wp_kses_post( _nx( '%s member', '%s members', $member_count, 'group member count', 'buddyboss' ) ), esc_html( number_format_i18n( $member_count ) ) );
+			?>
+			">
+				<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>">
+					<span class="bb-icon-f bb-icon-ellipsis-h"></span>
+				</a>
+			</span>
+			<?php
+		}
+		?>
+		</span>
+		<?php
+	}
+
+}
+
+/**
+ * Get group cover image width.
+ *
+ * @since BuddyBoss 1.9.1
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                             Default: 'default'.
+ *
+ * @return string Return group cover image width.
+ */
+function bb_get_group_cover_image_width( $default = 'default' ) {
+	return bp_get_option( 'bb-pro-cover-group-width', $default );
+}
+
+/**
+ * Get group cover image height.
+ *
+ * @since BuddyBoss 1.9.1
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                             Default: 'small'.
+ *
+ * @return string Return group cover image height.
+ */
+function bb_get_group_cover_image_height( $default = 'small' ) {
+	return bp_get_option( 'bb-pro-cover-group-height', $default );
+}
+
+/**
+ * Function will return label background and text color's for specific group type.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param $type Type of the group
+ *
+ * @return array Return array of label color data
+ */
+function bb_get_group_type_label_colors( $type ) {
+	if ( empty( $type ) ) {
+		return false;
+	}
+	$post_id                   = bp_group_get_group_type_id( $type );
+	$cache_key                 = 'bb-group-type-label-color-' . $type;
+	$bp_group_type_label_color = wp_cache_get( $cache_key, 'bp_groups_group_type' );
+	if ( false === $bp_group_type_label_color && ! empty( $post_id ) ) {
+		$label_colors_meta = get_post_meta( $post_id, '_bp_group_type_label_color', true );
+		$label_color_data  = ! empty( $label_colors_meta ) ? maybe_unserialize( $label_colors_meta ) : array();
+		$color_type        = isset( $label_color_data['type'] ) ? $label_color_data['type'] : 'default';
+		if ( function_exists( 'buddyboss_theme_get_option' ) && 'default' === $color_type ) {
+			$background_color = buddyboss_theme_get_option( 'label_background_color' );
+			$text_color       = buddyboss_theme_get_option( 'label_text_color' );
+		} else {
+			$background_color = isset( $label_color_data['background_color'] ) ? $label_color_data['background_color'] : '';
+			$text_color       = isset( $label_color_data['text_color'] ) ? $label_color_data['text_color'] : '';
+		}
+		// Array of label's text and background color data.
+		$bp_group_type_label_color = array(
+			'color_type'       => $color_type,
+			'background-color' => $background_color,
+			'color'            => $text_color,
+		);
+		wp_cache_set( $cache_key, $bp_group_type_label_color, 'bp_groups_group_type' );
+	}
+
+	return apply_filters( 'bb_get_group_type_label_colors', $bp_group_type_label_color );
+}
+
+/**
+ * Function will fetch all members.
+ * If groups_ids pass in args then return that group related to members.
+ * Also, if pass per_page and page in args then it will return members list based on that.
+ *
+ * @since BuddyBoss 2.0.4
+ *
+ * @param array $args      {
+ * Array of optional arguments.
+ *
+ * @type array  $group_ids Group ids.
+ * @type int    $page      Page of members being requested. Default 1.
+ * @type int    $per_page  Members to return per page. Default 20.
+ * }
+ *
+ * @return array
+ */
+function bb_get_all_members_for_groups( $args = array() ) {
+	static $cache;
+	global $wpdb;
+	$bp = buddypress();
+	$r  = array_merge(
+		array(
+			'page'     => 1,
+			'per_page' => 20,
+		),
+		$args
+	);
+
+	$cache_key = md5( maybe_serialize( $r ) );
+
+	if ( isset( $cache[ $cache_key ] ) ) {
+		$results = $cache[ $cache_key ];
+	} else {
+		$sql['select'] = "SELECT DISTINCT user_id FROM {$bp->groups->table_name_members}";
+		$sql['where']  = array(
+			'is_confirmed = 1',
+			'is_banned = 0',
+		);
+
+		if ( ! empty( $r['group_ids'] ) ) {
+			$sql['where'][] = 'group_id IN ( ' . implode( ',', wp_parse_id_list( $r['group_ids'] ) ) . ' )';
+		}
+
+		/**
+		 * Filters the Where SQL statement.
+		 *
+		 * @since BuddyBoss 2.0.4
+		 *
+		 * @param string $sql         From SQL statement.
+		 * @param string $column_name Column name.
+		 */
+		$sql['where'] = apply_filters( 'bb_get_all_members_for_groups_where_sql', $sql['where'], 'user_id' );
+
+		// Concatenate where statement.
+		$sql['where'] = ! empty( $sql['where'] ) ? 'WHERE ' . implode( ' AND ', $sql['where'] ) : '';
+
+		// Set limit query.
+		$sql['limit'] = '';
+		if ( ! empty( $r['per_page'] ) && ! empty( $r['page'] ) ) {
+			$sql['limit'] = $wpdb->prepare( 'LIMIT %d, %d', intval( ( $r['page'] - 1 ) * $r['per_page'] ), intval( $r['per_page'] ) );
+		}
+
+		// Get the specific user ids.
+		$results = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['limit']}" );
+	}
+
+	return apply_filters( 'bb_get_all_members_for_groups', array_map( 'intval', $results ), $results );
+}
+add_filter( 'gettext', 'bb_group_drop_down_order_metabox_translate_order_text', 10, 3 );
+
+/**
+ * Translate the order text in the Group Drop Down Order metabox.
+ *
+ * @since BuddyBoss 2.1.6
+ *
+ * @param string $translated_text   Translated text.
+ * @param string $untranslated_text Untranslated text.
+ * @param string $domain            Domain.
+ *
+ * @return mixed|string|void
+ */
+function bb_group_drop_down_order_metabox_translate_order_text( $translated_text, $untranslated_text, $domain ) {
+
+	if ( ! function_exists( 'get_current_screen' ) ) {
+		return $translated_text;
+	}
+	$current_screen = get_current_screen();
+
+	if ( ! is_admin() || empty( $current_screen ) || ! isset( $current_screen->id ) || ! function_exists( 'bp_groups_get_group_type_post_type' ) || bp_groups_get_group_type_post_type() !== $current_screen->id ) {
+		return $translated_text;
+	}
+
+	if ( 'Order' === $untranslated_text ) {
+		return __( 'Number', 'buddyboss' );
+	}
+
+	return $translated_text;
+
+}
+
+/**
+ * Function to check the user subscribed group or not.
+ *
+ * @since BuddyBoss 2.2.8
+ *
+ * @param int $group_id Group ID.
+ * @param int $user_id  User ID.
+ *
+ * @return bool|int
+ */
+function bb_is_member_subscribed_group( $group_id, $user_id ) {
+
+	if ( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	if ( empty( $group_id ) || empty( $user_id ) ) {
+		return false;
+	}
+
+	if ( function_exists( 'bb_is_enabled_subscription' ) && bb_is_enabled_subscription( 'group' ) ) {
+		$subscription_ids = bb_get_subscriptions(
+			array(
+				'type'    => 'group',
+				'item_id' => $group_id,
+				'user_id' => $user_id,
+				'fields'  => 'id',
+				'status'  => null,
+			),
+			true
+		);
+
+		if ( ! empty( $subscription_ids ) && ! empty( $subscription_ids['subscriptions'] ) ) {
+			return current( $subscription_ids['subscriptions'] );
+		}
+	}
+
+	return false;
+}
+
+/**
+ * Function to get Group Subscription button.
+ *
+ * @since BuddyBoss 2.2.8
+ *
+ * @param array $args button args.
+ * @param bool  $html Should return button html or not.
+ *
+ * @return string|array
+ */
+function bb_get_group_subscription_button( $args, $html = true ) {
+	global $wp;
+
+	if ( ! bb_is_enabled_subscription( 'group' ) || ! is_user_logged_in() ) {
+		return ! empty( $html ) ? '' : array();
+	}
+
+	$r = bp_parse_args(
+		$args,
+		array(
+			'show_link_text' => false,
+			'button_attr'    => array(
+				'data-bp-content-id' => false,
+			),
+		),
+	);
+
+	$item_id = $r['button_attr']['data-bp-content-id'];
+	$user_id = get_current_user_id();
+	$group   = groups_get_group( $item_id );
+
+	if ( empty( $item_id ) || empty( $r ) ) {
+		return ! empty( $html ) ? '' : array();
+	}
+
+	// Check the current user's permission.
+	$is_group_member = groups_is_user_member( $user_id, $item_id );
+	if ( false === (bool) $is_group_member ) {
+		return ! empty( $html ) ? '' : array();
+	}
+
+	$button_icon         = '<i class="bb-icon-l bb-icon-bell"></i>';
+	$button_text         = __( 'Subscribe', 'buddyboss' );
+	$button_hover_text   = __( 'Unsubscribe', 'buddyboss' );
+	$subscription_status = 'not-subscribed';
+	$action              = 'subscribe';
+	if ( bb_is_member_subscribed_group( $item_id, $user_id ) ) {
+		$button_text         = __( 'Unsubscribe', 'buddyboss' );
+		$button_hover_text   = __( 'Subscribe', 'buddyboss' );
+		$subscription_status = 'subscribed';
+		$action              = 'unsubscribe';
+	}
+
+	$url = esc_url(
+		wp_nonce_url(
+			add_query_arg(
+				array(
+					'action'   => $action,
+					'group_id' => $item_id,
+				),
+				trailingslashit( home_url( $wp->request ) )
+			),
+			'bb-group-subscription-' . $item_id
+		)
+	);
+
+	$button = array(
+		'id'                => 'group_subscription',
+		'component'         => 'groups',
+		'must_be_logged_in' => true,
+		'block_self'        => false,
+		'wrapper_class'     => 'group-button ' . $subscription_status,
+		'wrapper_id'        => 'groupbutton-' . $item_id,
+		'link_href'         => $url,
+		'link_text'         => ( $r['show_link_text'] ) ? $button_icon . $button_text : $button_icon,
+		'link_class'        => 'group-button bp-toggle-action-button group-subscription ' . $subscription_status,
+		'is_tooltips'       => true,
+		'data-balloon'      => $button_text,
+		'data-balloon-pos'  => 'up',
+		'button_attr'       => array(
+			'data-title'           => ( $r['show_link_text'] ) ? $button_icon . $button_hover_text : $button_icon,
+			'data-title-displayed' => ( $r['show_link_text'] ) ? $button_icon . $button_text : $button_icon,
+			'data-bb-group-name'   => esc_attr( $group->name ),
+			'add_pre_post_text'    => false,
+			'href'                 => $url,
+			'data-bp-btn-action'   => $action,
+		),
+	);
+
+	$button = bp_parse_args( $button, $r );
+
+	/**
+	 * Filter to update group subscription button arguments.
+	 *
+	 * @since BuddyBoss 2.2.8
+	 *
+	 * @param array $button Button args.
+	 * @param array $r      Button args.
+	 */
+	$button = apply_filters( 'bb_group_subscription_button_args', $button, $r );
+
+	if ( ! empty( $html ) ) {
+		$button = sprintf(
+			'<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s" data-bp-btn-action="%s">%s</a>',
+			esc_url( $button['link_href'] ),
+			esc_attr( $button['id'] ),
+			esc_attr( $button['link_class'] ),
+			esc_attr( $item_id ),
+			'group',
+			esc_url( $button['link_href'] ),
+			esc_attr( $action ),
+			wp_kses_post( $button['link_text'] )
+		);
+	}
+
+	/**
+	 * Filter to update group subscription link.
+	 *
+	 * @since BuddyBoss 2.2.8
+	 *
+	 * @param mixed $button Button args or HTML.
+	 * @param array $r      Button args.
+	 * @param bool  $html   Should return button html or not.
+	 */
+	return apply_filters( 'bb_get_group_subscription_button', $button, $r, $html );
+
+}
+
+/**
+ * Function to display group action buttons.
+ *
+ * @since BuddyBoss 2.2.8
+ *
+ * @return void
+ */
+function bb_group_single_header_actions() {
+	?>
+	<div class="group-actions-absolute">
+		<?php
+		bp_nouveau_group_header_buttons();
+		bp_nouveau_group_header_buttons(
+			array(
+				'type'           => 'subscription',
+				'button_element' => 'button',
+			)
+		);
+		bb_nouveau_group_header_bubble_buttons();
+		?>
+	</div>
+	<?php
+}
+
+
+/**
+ * Update the group member count.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param array $group_ids Array of group IDs.
+ *
+ * @return void
+ */
+function bb_update_group_member_count( $group_ids = array() ) {
+
+	if ( empty( $group_ids ) ) {
+		return;
+	}
+
+	foreach ( $group_ids as $group_id ) {
+		$cache_key = 'bp_group_get_total_member_count_' . $group_id;
+		wp_cache_delete( $cache_key, 'bp_groups' );
+		BP_Groups_Member::refresh_total_member_count_for_group( $group_id );
+	}
 }

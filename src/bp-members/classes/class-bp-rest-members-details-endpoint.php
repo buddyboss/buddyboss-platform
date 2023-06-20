@@ -229,6 +229,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		add_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 		add_filter( 'bp_is_current_component', array( $this, 'bp_rest_is_current_component' ), 999, 2 );
+		add_filter( 'bp_core_create_nav_link', array( $this, 'bp_rest_core_create_nav_link' ), 999 );
 
 		remove_action( 'bp_init', 'bb_moderation_load', 1 );
 		remove_action( 'bp_init', 'bp_register_taxonomies', 2 );
@@ -239,6 +240,12 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		remove_action( 'bp_init', 'bp_add_rewrite_rules', 30 );
 		remove_action( 'bp_init', 'bp_add_permastructs', 40 );
 		remove_action( 'bp_init', 'bp_init_background_updater', 50 );
+		if ( function_exists( 'bb_init_email_background_updater' ) ) {
+			remove_action( 'bp_init', 'bb_init_email_background_updater', 51 );
+		}
+		if ( function_exists( 'bb_init_notifications_background_updater' ) ) {
+			remove_action( 'bp_init', 'bb_init_notifications_background_updater', 52 );
+		}
 		remove_all_actions( 'bp_actions' );
 
 		/**
@@ -257,6 +264,12 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		add_action( 'bp_init', 'bp_add_rewrite_rules', 30 );
 		add_action( 'bp_init', 'bp_add_permastructs', 40 );
 		add_action( 'bp_init', 'bp_init_background_updater', 50 );
+		if ( function_exists( 'bb_init_email_background_updater' ) ) {
+			add_action( 'bp_init', 'bb_init_email_background_updater', 51 );
+		}
+		if ( function_exists( 'bb_init_notifications_background_updater' ) ) {
+			add_action( 'bp_init', 'bb_init_notifications_background_updater', 52 );
+		}
 
 		$_SERVER['REQUEST_URI'] = $tempurl;
 
@@ -274,10 +287,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$default_tab = bp_is_active( $tab ) ? $tab : $default_tab;
 		}
 
-		$id_map = array(
-			'activity' => 'activities',
-			'profile'  => 'xprofile',
-		);
+		$id_map = array( 'profile' => 'xprofile' );
 
 		$args = array();
 
@@ -308,8 +318,10 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 					$id = $id_map[ $id ];
 				}
 
+				$request->set_param( 'user_nav', $navs );
+
 				$tab = array(
-					'id'                      => $id,
+					'id'                      => ( 'activity' === $id ? 'activities' : $id ), // Needs this slug to suppport: hide_in_app in app.
 					'title'                   => $name,
 					'default'                 => false,
 					'link'                    => $link,
@@ -340,6 +352,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 							'count'           => ( $this->bp_rest_nav_has_count( $s_nav ) ? $this->bp_rest_get_nav_count( $s_nav ) : '' ),
 							'position'        => $s_nav['position'],
 							'user_has_access' => $s_nav['user_has_access'],
+							'children'        => $this->get_secondary_nav_menu( $s_nav, $request ),
 						);
 
 						$tab['children'][] = $sub_nav;
@@ -352,6 +365,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		$retval['tabs'] = array_values( $profile_tabs );
 
+		remove_filter( 'bp_core_create_nav_link', array( $this, 'bp_rest_core_create_nav_link' ), 999 );
 		remove_filter( 'bp_is_current_component', array( $this, 'bp_rest_is_current_component' ), 999, 2 );
 		remove_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 
@@ -370,6 +384,44 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		do_action( 'bp_rest_members_detail_get_items', $response, $request );
 
 		return $response;
+	}
+
+	/**
+	 * Prepares sub nav menu data for return as an array.
+	 *
+	 * @param object          $nav     Navigation object.
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return array
+	 */
+	public function get_secondary_nav_menu( $nav, $request ) {
+		$child_nav   = array();
+		$user_nav    = $request->get_param( 'user_nav' );
+		$parent_slug = $nav->parent_slug . '_' . $nav->slug;
+		$nav_sub     = $user_nav->get_secondary(
+			array(
+				'parent_slug'     => $parent_slug,
+				'user_has_access' => true,
+			)
+		);
+
+		if ( ! empty( $nav_sub ) ) {
+			foreach ( $nav_sub as $s_nav ) {
+				$sub_name    = preg_replace( '/^(.*)(<(.*)<\/(.*)>)/', '$1', $s_nav['name'] );
+				$sub_name    = trim( $sub_name );
+				$child_nav[] = array(
+					'id'              => $s_nav['slug'],
+					'title'           => $sub_name,
+					'link'            => $s_nav['link'],
+					'count'           => ( $this->bp_rest_nav_has_count( $s_nav ) ? $this->bp_rest_get_nav_count( $s_nav ) : '' ),
+					'position'        => $s_nav['position'],
+					'user_has_access' => $s_nav['user_has_access'],
+					'children'        => $this->get_secondary_nav_menu( $s_nav, $request ),
+				);
+			}
+		}
+
+		return $child_nav;
 	}
 
 	/**
@@ -630,7 +682,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			foreach ( $tabs_items as $key => $item ) {
 				$tabs[ $key ]['title']    = $item['text'];
 				$tabs[ $key ]['position'] = $item['position'];
-				$tabs[ $key ]['count']    = $item['count'];
+				$tabs[ $key ]['count']    = bp_core_number_format( $item['count'] );
 			}
 		}
 
@@ -676,7 +728,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		 * @param int   $count    The count attribute for the nav item.
 		 * @param array $nav_item The current nav item array.
 		 */
-		return (int) apply_filters( 'bp_rest_nouveau_get_nav_count', $count, $nav );
+		return (int) apply_filters( 'bp_rest_nouveau_get_nav_count', bp_core_number_format( $count ), $nav );
 	}
 
 	/**
@@ -714,7 +766,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		$nav_items['all'] = array(
 			'text'     => __( 'All Members', 'buddyboss' ),
 			'position' => 5,
-			'count'    => bp_get_total_member_count(),
+			'count'    => bp_core_number_format( bp_get_total_member_count() ),
 		);
 
 		if ( is_user_logged_in() ) {
@@ -722,7 +774,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 				$nav_items['friends'] = array(
 					'text'     => __( 'My Friends', 'buddyboss' ),
 					'position' => 15,
-					'count'    => bp_get_total_friend_count( bp_loggedin_user_id() ),
+					'count'    => bp_core_number_format( bp_get_total_friend_count( bp_loggedin_user_id() ) ),
 				);
 			}
 		}
@@ -854,9 +906,14 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			);
 
 			if ( has_action( 'bp_notification_settings' ) ) {
+				$title = esc_html__( 'Email Preferences', 'buddyboss' );
+				if ( function_exists( 'bb_core_notification_preferences_data' ) ) {
+					$data  = bb_core_notification_preferences_data();
+					$title = esc_html( $data['menu_title'] );
+				}
 				$item_settings['children'][] = array(
 					'ID'    => 'notifications',
-					'title' => __( 'Email Preferences', 'buddyboss' ),
+					'title' => $title,
 					'url'   => esc_url( trailingslashit( $settings_link . 'notifications' ) ),
 					'count' => '',
 				);
@@ -1160,15 +1217,6 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 				);
 			}
 
-			if ( function_exists( 'bbp_is_subscriptions_active' ) && bbp_is_subscriptions_active() ) {
-				$item_forums['children'][] = array(
-					'ID'    => 'subscribe',
-					'title' => __( 'Subscriptions', 'buddyboss' ),
-					'url'   => esc_url( trailingslashit( $forums_link . bbp_get_user_subscriptions_slug() ) ),
-					'count' => '',
-				);
-			}
-
 			$items[] = $item_forums;
 		}
 
@@ -1302,6 +1350,30 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			return $is_current_component;
 		}
 		return false;
+	}
+
+	/**
+	 * Function to change the user domain for profile tabs.
+	 *
+	 * @param array $menu_args Menu arguments
+	 *
+	 * @return mixed
+	 */
+	public function bp_rest_core_create_nav_link( $menu_args ) {
+
+		$user_domain = '';
+
+		if ( bp_displayed_user_domain() ) {
+			$user_domain = bp_displayed_user_domain();
+		} elseif ( bp_loggedin_user_domain() ) {
+			$user_domain = bp_loggedin_user_domain();
+		}
+
+		if ( ! empty( $user_domain ) ) {
+			$menu_args['link'] = trailingslashit( $user_domain . $menu_args['slug'] );
+		}
+
+		return $menu_args;
 	}
 
 }

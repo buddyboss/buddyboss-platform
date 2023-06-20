@@ -16,6 +16,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 	 *
 	 * @since bbPress (r2464)
 	 */
+	#[\AllowDynamicProperties]
 	class BBP_Admin {
 
 		/** Directory *************************************************************/
@@ -133,6 +134,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 			add_action( 'bbp_admin_head', array( $this, 'admin_head' ) ); // Add some general styling to the admin area
 			add_action( 'bbp_admin_notices', array( $this, 'activation_notice' ) ); // Add notice if not using a Forums theme
 			add_action( 'bbp_register_admin_style', array( $this, 'register_admin_style' ) ); // Add green admin style
+			add_action( 'bbp_register_admin_scripts',  array( $this, 'register_admin_scripts'  ) ); // Add admin scripts
 			add_action( 'bbp_activation', array( $this, 'new_install' ) ); // Add menu item to settings menu
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' )     ); // Add enqueued CSS
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) ); // Add enqueued JS
@@ -448,7 +450,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		}
 
 		/**
-		 * Add a link to Forums about page to the admin bar
+		 * Add a link to about popup for BuddyBoss in the admin bar.
 		 *
 		 * @since bbPress (r5136)
 		 *
@@ -460,8 +462,8 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 					array(
 						'parent' => 'wp-logo',
 						'id'     => 'bbp-about',
-						'title'  => esc_html__( 'About Forums', 'buddyboss' ),
-						'href'   => add_query_arg( array( 'page' => 'bbp-about' ), admin_url( 'index.php' ) ),
+						'title'  => esc_html__( 'About BuddyBoss', 'buddyboss' ),
+						'href'   => esc_url( bp_get_admin_url( '?hello=buddyboss' ) ),
 					)
 				);
 			}
@@ -485,7 +487,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 			wp_enqueue_script( 'suggest' );
 
 			// Get the version to use for JS
-			$version = bbp_get_version();
+			$version = bp_get_version();
 
 			// Post type checker (only topics and replies)
 			if ( 'post' === get_current_screen()->base ) {
@@ -493,15 +495,15 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 					case bbp_get_reply_post_type():
 					case bbp_get_topic_post_type():
 						// Enqueue the common JS
-						wp_enqueue_script( 'bbp-admin-common-js', $this->js_url . 'common.js', array( 'jquery' ), $version );
+						wp_enqueue_script( 'bbp-admin-common-js' );
 
 						// Topics admin
 						if ( bbp_get_topic_post_type() === get_current_screen()->post_type ) {
-							wp_enqueue_script( 'bbp-admin-topics-js', $this->js_url . 'topics.js', array( 'jquery' ), $version );
+							wp_enqueue_script( 'bbp-admin-topics-js' );
 
 							// Replies admin
 						} elseif ( bbp_get_reply_post_type() === get_current_screen()->post_type ) {
-							wp_enqueue_script( 'bbp-admin-replies-js', $this->js_url . 'replies.js', array( 'jquery' ), $version );
+							wp_enqueue_script( 'bbp-admin-replies-js' );
 							$localize_array = array(
 								'loading_text' => __( 'Loading', 'buddyboss' ),
 							);
@@ -511,6 +513,8 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 						break;
 				}
 			}
+
+			wp_register_script( 'bbp-converter', $this->js_url . 'converter.js', array( 'jquery' ), $version );
 		}
 
 		/**
@@ -550,7 +554,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 				'bbp-admin-css',
 				$this->styles_url . 'admin.min.css',
 				array( 'dashicons' ),
-				bbp_get_version()
+				bp_get_version()
 			);
 
 			// Mint
@@ -587,6 +591,26 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 			// Force 'colors-fresh' dependency
 			global $wp_styles;
 			$wp_styles->registered['colors']->deps[] = 'colors-fresh';
+		}
+
+		/**
+		 * Registers the bbPress admin color schemes
+		 *
+		 * Because wp-content can exist outside of the WordPress root there is no
+		 * way to be certain what the relative path of the admin images is.
+		 * We are including the two most common configurations here, just in case.
+		 *
+		 * @since 2.6.0 bbPress (r2521)
+		 */
+		public function register_admin_scripts() {
+			// Get the version to use for JS.
+			$version = bp_get_version();
+
+			// Header JS.
+			wp_register_script( 'bbp-admin-common-js', $this->js_url . 'common.js', array( 'jquery' ), $version );
+			wp_register_script( 'bbp-admin-topics-js', $this->js_url . 'topics.js', array( 'jquery' ), $version );
+			wp_register_script( 'bbp-admin-replies-js', $this->js_url . 'replies.js', array( 'jquery' ), $version );
+			wp_register_script( 'bbp-converter', $this->js_url . 'converter.js', array( 'jquery', 'postbox', 'dashboard' ), $version );
 		}
 
 		/**

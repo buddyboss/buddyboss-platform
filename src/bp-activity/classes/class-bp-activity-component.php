@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.5.0
  */
+#[\AllowDynamicProperties]
 class BP_Activity_Component extends BP_Component {
 
 	/**
@@ -80,7 +81,7 @@ class BP_Activity_Component extends BP_Component {
 			$includes[] = 'akismet';
 		}
 
-		// Embeds
+		// Embeds.
 		if ( bp_is_active( $this->id, 'embeds' ) ) {
 			$includes[] = 'embeds';
 		}

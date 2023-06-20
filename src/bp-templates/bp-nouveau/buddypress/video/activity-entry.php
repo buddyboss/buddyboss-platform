@@ -2,9 +2,14 @@
 /**
  * BuddyBoss - Activity Video
  *
+ * This template is used to render activity video.
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/activity/video/activity-entry.php.
+ *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss 1.7.0
+ * @since   BuddyBoss 1.7.0
+ * @version 1.7.0
  */
 
 global $video_template;
@@ -42,6 +47,14 @@ if ( $is_comment_vid ) {
 		}
 	}
 }
+
+$has_no_thumbnail = '';
+$attachment_full  = bp_get_video_popup_thumb();
+$poster_full      = bp_get_video_activity_thumb();
+
+if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== strpos( $poster_full, 'video-placeholder.jpg' ) ) {
+	$has_no_thumbnail = ' has-no-thumbnail';
+}
 ?>
 
 <div class="bb-activity-video-elem
@@ -53,6 +66,7 @@ echo $video_template->video_count > 1 && $video_template->current_video > 0 ? es
 echo $width > $height ? esc_attr( 'bb-horizontal-layout' ) : '';
 echo $height > $width || $width === $height ? esc_attr( 'bb-vertical-layout' ) : '';
 echo ( $more_video && 2 === $video_template->current_video ) ? esc_attr( ' no_more_option ' ) : '';
+echo esc_attr( $has_no_thumbnail );
 ?>
 " data-id="<?php echo esc_attr( bp_get_video_id() ); ?>">
 	<div class="video-action-wrap item-action-wrap">
@@ -63,7 +77,7 @@ echo ( $more_video && 2 === $video_template->current_video ) ? esc_attr( ' no_mo
 			if ( bp_loggedin_user_id() === bp_get_video_user_id() || bp_current_user_can( 'bp_moderate' ) || $can_edit ) {
 				?>
 				<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
-					<i class="bb-icon-menu-dots-v"></i>
+					<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
 				</a>
 				<div class="video-action_list item-action_list">
 					<ul>
@@ -103,15 +117,15 @@ echo ( $more_video && 2 === $video_template->current_video ) ? esc_attr( ' no_mo
 	</div>
 
 	<?php if ( 1 === $video_template->video_count ) { ?>
-		<video playsinline id="video-<?php bp_video_id(); ?>" class="video-js single-activity-video" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php bp_video_popup_thumb(); ?>" data-activity-id="<?php bp_video_activity_id(); ?>" data-privacy="<?php bp_video_privacy(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-album-id="<?php bp_video_album_id(); ?>" data-group-id="<?php bp_video_group_id(); ?>" data-attachment-id="<?php bp_video_attachment_id(); ?>" controls poster="<?php bp_video_activity_thumb(); ?>" data-setup='{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2], "fullscreenToggle" : false }'>
+		<video playsinline id="video-<?php bp_video_id(); ?>" class="video-js single-activity-video" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php echo esc_url( $attachment_full ); ?>" data-activity-id="<?php bp_video_activity_id(); ?>" data-privacy="<?php bp_video_privacy(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-album-id="<?php bp_video_album_id(); ?>" data-group-id="<?php bp_video_group_id(); ?>" data-attachment-id="<?php bp_video_attachment_id(); ?>" controls poster="<?php echo esc_url( $poster_full ); ?>" data-setup='{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2], "fullscreenToggle" : false }'>
 			<source src="<?php bp_video_link(); ?>" type="<?php bp_video_type(); ?>"></source>
 		</video>
 		<p class="bb-video-loader"></p>
 		<?php if ( ! empty( bp_get_video_length() ) ) { ?>
 		<p class="bb-video-duration"><?php bp_video_length(); ?></p>
 		<?php } ?>
-		<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap hide" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php bp_video_popup_thumb(); ?>" data-activity-id="<?php bp_video_activity_id(); ?>" data-privacy="<?php bp_video_privacy(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-album-id="<?php bp_video_album_id(); ?>" data-group-id="<?php bp_video_group_id(); ?>" data-attachment-id="<?php bp_video_attachment_id(); ?>" href="#">
-			<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-placeholder.jpg" data-src="<?php bp_video_activity_thumb(); ?>" alt="<?php bp_video_title(); ?>" class="lazy" />
+		<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap hide" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php echo esc_url( $attachment_full ); ?>" data-activity-id="<?php bp_video_activity_id(); ?>" data-privacy="<?php bp_video_privacy(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-album-id="<?php bp_video_album_id(); ?>" data-group-id="<?php bp_video_group_id(); ?>" data-attachment-id="<?php bp_video_attachment_id(); ?>" href="#">
+			<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-placeholder.jpg" data-src="<?php echo esc_url( $poster_full ); ?>" alt="<?php bp_video_title(); ?>" class="lazy" />
 			<?php
 			if ( $video_template->video_count > 3 && 2 === $video_template->current_video ) {
 				$count = $video_template->video_count - 3;
@@ -125,8 +139,8 @@ echo ( $more_video && 2 === $video_template->current_video ) ? esc_attr( ' no_mo
 			<?php } ?>
 		</a>
 	<?php } else { ?>
-		<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php bp_video_popup_thumb(); ?>" data-activity-id="<?php bp_video_activity_id(); ?>" data-privacy="<?php bp_video_privacy(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-album-id="<?php bp_video_album_id(); ?>" data-group-id="<?php bp_video_group_id(); ?>" data-attachment-id="<?php bp_video_attachment_id(); ?>" href="#">
-			<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-placeholder.jpg" data-src="<?php bp_video_activity_thumb(); ?>" alt="<?php bp_video_title(); ?>" class="lazy" />
+		<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php echo esc_url( $attachment_full ); ?>" data-activity-id="<?php bp_video_activity_id(); ?>" data-privacy="<?php bp_video_privacy(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-album-id="<?php bp_video_album_id(); ?>" data-group-id="<?php bp_video_group_id(); ?>" data-attachment-id="<?php bp_video_attachment_id(); ?>" href="#">
+			<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-placeholder.jpg" data-src="<?php echo esc_url( $poster_full ); ?>" alt="<?php bp_video_title(); ?>" class="lazy" />
 			<?php
 			if ( $video_template->video_count > 3 && 2 === $video_template->current_video ) {
 				$count = $video_template->video_count - 3;

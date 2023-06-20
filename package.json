@@ -1,36 +1,45 @@
 {
 	"description": "BuddyBoss adds community features to WordPress. Member Profiles, Activity Streams, Direct Messaging, Notifications, and more!",
 	"devDependencies": {
+		"@wordpress/stylelint-config": "^19.1.0",
+		"apidoc": "^0.22.0",
 		"grunt": "^1.4.1",
 		"grunt-apidoc": "^0.11.0",
 		"grunt-check-dependencies": "~1.0.0",
 		"grunt-checktextdomain": "~1.0.1",
 		"grunt-contrib-clean": "~2.0.0",
-		"grunt-contrib-compress": "^1.6.0",
+		"grunt-contrib-compress": "^2.0.0",
 		"grunt-contrib-copy": "~1.0.0",
-		"grunt-contrib-cssmin": "^3.0.0",
+		"grunt-contrib-cssmin": "^4.0.0",
 		"grunt-contrib-imagemin": "^4.0.0",
-		"grunt-contrib-jshint": "~2.1.0",
-		"grunt-contrib-uglify": "~4.0.1",
+		"grunt-contrib-jshint": "~3.1.1",
+		"grunt-contrib-uglify": "~5.0.1",
 		"grunt-contrib-watch": "^1.1.0",
 		"grunt-exec": "~3.0.0",
+		"grunt-json2php": "^0.1.4",
 		"grunt-jsvalidate": "~0.2.2",
-		"grunt-legacy-util": "^1.1.1",
-		"grunt-patch-wordpress": "^2.0.0",
+		"grunt-legacy-util": "^2.0.1",
+		"grunt-patch-wordpress": "^3.0.1",
 		"grunt-rtlcss": "^2.0.2",
 		"grunt-sass": "~3.1.0",
-		"grunt-stylelint": "^0.15.0",
+		"grunt-string-replace": "^1.3.1",
+		"grunt-stylelint": "^0.17.0",
 		"grunt-wp-i18n": "^1.0.3",
+		"husky": "^7.0.4",
+		"jira-prepare-commit-msg": "^1.7.2",
 		"matchdep": "^2.0.0",
-		"node-sass": "^4.14.1",
-		"postcss": "^7.0.36",
-		"postcss-scss": "^2.1.1",
-		"stylelint": "~13.3.3",
-		"stylelint-config-wordpress": "~16.0.0"
+		"node-sass": "^7.0.0",
+		"postcss": "^8.4.4",
+		"postcss-scss": "^4.0.2",
+		"stylelint": "~13.13.1"
+	},
+	"scripts": {
+		"prepare": "npm install husky jira-prepare-commit-msg --save-dev && npx husky install"
 	},
 	"engines": {
-		"node": ">=12.16.3"
+		"node": ">=14.15.0"
 	},
 	"license": "GPL-2.0-or-later",
-	"version": "3.1.0"
+	"version": "3.1.0",
+	"BBVersion": "2.3.60"
 }

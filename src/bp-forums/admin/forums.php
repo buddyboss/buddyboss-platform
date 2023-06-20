@@ -80,6 +80,9 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 
 			// Set forum states
 			add_filter( 'display_post_states', array( $this, 'bbp_set_hidden_forum_states' ), 10, 2 );
+
+			// Filter post parent for forum type post.
+			add_filter( 'wp_insert_post_parent', array( $this, 'forum_parent' ), 10, 3 );
 		}
 
 		/**
@@ -581,7 +584,7 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 			unset( $actions['inline hide-if-no-js'] );
 
 			// simple hack to show the forum description under the title
-			bbp_forum_content( $forum->ID );
+			echo wp_strip_all_tags( bbp_get_forum_content( $forum->ID ) );
 
 			return $actions;
 		}
@@ -661,6 +664,33 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 			);
 
 			return $messages;
+		}
+
+		/**
+		 * Permission for forum parent, If not then return the current parent.
+		 * You can not make the forum a child forum when it's associated with any group.
+		 *
+		 * @since BuddyBoss 1.7.8
+		 *
+		 * @param init  $post_parent post parent.
+		 * @param init  $post_ID     post ID.
+		 * @param array $new_postarr submited post data.
+		 *
+		 * @return init
+		 */
+		public function forum_parent( $post_parent, $post_ID, $new_postarr ) {
+			if ( bbp_get_forum_post_type() !== $new_postarr['post_type'] ) {
+				return $post_parent;
+			}
+
+			$group_ids = bbp_get_forum_group_ids( $post_ID );
+
+			if ( empty( $group_ids ) ) {
+				return $post_parent;
+			}
+
+			$forum = bbp_get_forum( $post_ID );
+			return $forum->post_parent;
 		}
 	}
 endif; // class_exists check

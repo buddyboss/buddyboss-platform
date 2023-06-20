@@ -177,6 +177,10 @@ $settings = bp_email_get_appearance_settings();
 			display: inline-table;
 		}
 
+		.bb-email-message-content p {
+			margin: 0 0 5px 0;
+		}
+
 		/* MOBILE STYLES */
 		@media screen and (max-width: 525px) {
 			/* ALLOWS FOR FLUID TABLES */
@@ -251,6 +255,7 @@ $settings = bp_email_get_appearance_settings();
 			.mobile-button-center {
 				margin: 5px auto 0 !important;
 				width: 160px !important;
+				display: block !important;
 			}
 		}
 	</style>
@@ -285,13 +290,15 @@ $settings = bp_email_get_appearance_settings();
 						 */
 						do_action( 'bp_before_email_header' );
 
-						$blogname = bp_get_option( 'blogname' );
-						$attachment_id = isset( $settings[ 'logo' ] ) ? $settings[ 'logo' ] : '';
+						$blogname      = bp_get_option( 'blogname' );
+						$attachment_id = isset( $settings['logo'] ) ? $settings['logo'] : '';
 
-						if ( !empty( $attachment_id ) ) {
+						if ( ! empty( $attachment_id ) ) {
 							$image_src = wp_get_attachment_image_src( $attachment_id, array( 180, 45 ) );
-							if ( !empty( $image_src ) ) { ?>
-								<img src="<?php echo esc_attr( $image_src[ 0 ] ); ?>" alt="<?php echo esc_attr( $blogname ); ?>" style="margin:0; padding:0; border:none; display:block; max-height:auto; height:auto; width:<?php echo esc_attr( $settings['site_title_logo_size'] ); ?>px;" border="0" /><?php
+							if ( ! empty( $image_src ) ) {
+								?>
+								<img src="<?php echo esc_attr( $image_src[0] ); ?>" alt="<?php echo esc_attr( $blogname ); ?>" style="margin:0; padding:0; border:none; display:block; max-height:auto; height:auto; width:<?php echo esc_attr( $settings['site_title_logo_size'] ); ?>px;" border="0" />
+													 <?php
 							} else {
 								echo $blogname;
 							}
@@ -316,9 +323,9 @@ $settings = bp_email_get_appearance_settings();
 						 */
 						do_action( 'bp_before_email_recipient' );
 
-						//echo bp_get_option( 'blogname' );
+						// echo bp_get_option( 'blogname' );
 						if ( bp_is_email_customizer() ) {
-							echo '{{recipient.name}} <img src="' . apply_filters( 'bp_email_customizer_default_avatar', buddypress()->plugin_url . "bp-core/images/mystery-man.jpg" ) . '" width="34" height="34" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 12px; vertical-align: middle;" />';
+							echo '{{recipient.name}} <img src="' . apply_filters( 'bp_email_customizer_default_avatar', bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) ) . '" width="34" height="34" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 12px; vertical-align: middle;" />';
 						} else {
 							bp_email_the_salutation( $settings );
 						}
@@ -350,7 +357,7 @@ $settings = bp_email_get_appearance_settings();
 							<tr>
 								<td>
 									<div class="body_text_color body_text_size" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.618 ) . 'px' ); ?>; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;">
-										{{sender.name}} <?php _e('sent you a new message', 'buddyboss'); ?>
+										{{sender.name}} <?php _e( 'sent you a new message', 'buddyboss' ); ?>
 									</div>
 								</td>
 							</tr>
@@ -360,7 +367,7 @@ $settings = bp_email_get_appearance_settings();
 							<tr>
 								<td valign="middle" width="10%" style="vertical-align: middle;">
 									<a href="#" target="_blank">
-										<img alt="Avatar" src="<?php echo apply_filters( 'bp_email_default_avatar', buddypress()->plugin_url .'bp-core/images/mystery-man.jpg' ); ?>" width="45" height="45" style="border: 1px solid #b9babc; border-radius: 50%; vertical-align: middle;" />
+										<img alt="<?php esc_html_e( 'Avatar', 'buddyboss' ); ?>" src="<?php echo apply_filters( 'bp_email_default_avatar', bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) ); ?>" width="45" height="45" style="border: 1px solid #b9babc; border-radius: 50%; vertical-align: middle;" />
 									</a>
 									<span class="body_secondary_text_color body_text_size" style="margin-left: 10px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.618 ) . 'px' ); ?>; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; letter-spacing: -0.24px;">{{sender.name}}</span>
 								</td>
@@ -398,7 +405,7 @@ $settings = bp_email_get_appearance_settings();
 							</tr>
 							<tr>
 								<td>
-									<a class="body_text_size highlight_color button_outline" href="#" target="_blank" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-decoration: none; display: inline-block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; min-width: <?php echo esc_attr( floor( $settings['body_text_size'] * 5.25 ) . 'px' ); ?>; text-align: center; height: <?php echo esc_attr( floor( $settings['body_text_size'] * 2.125 ) . 'px' ); ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 2.125 ) . 'px' ); ?>; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>;padding: 0 10px;"><?php _e('Reply', 'buddyboss'); ?></a>
+									<a class="body_text_size highlight_color button_outline" href="#" target="_blank" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-decoration: none; display: inline-block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; min-width: <?php echo esc_attr( floor( $settings['body_text_size'] * 5.25 ) . 'px' ); ?>; text-align: center; height: <?php echo esc_attr( floor( $settings['body_text_size'] * 2.125 ) . 'px' ); ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 2.125 ) . 'px' ); ?>; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>;padding: 0 10px;"><?php _e( 'Reply', 'buddyboss' ); ?></a>
 								</td>
 							</tr>
 						</table>

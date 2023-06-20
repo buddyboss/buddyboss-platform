@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
+#[\AllowDynamicProperties]
 class BP_Moderation_Component extends BP_Component {
 
 	/**
@@ -149,6 +150,15 @@ class BP_Moderation_Component extends BP_Component {
 	 * @since BuddyBoss 1.5.6
 	 */
 	public function setup_cache_groups() {
+		// Global groups.
+		wp_cache_add_global_groups(
+			array(
+				'bp_moderation',
+				'bp_moderation_reporters',
+			)
+		);
+
+		parent::setup_cache_groups();
 	}
 
 	/**
@@ -163,6 +173,7 @@ class BP_Moderation_Component extends BP_Component {
 			'bp_moderation',
 			array(
 				'label'              => __( 'Reporting Category', 'buddyboss' ),
+				'description'        => __( 'Create reporting categories for members to select when reporting content and members on the front-end. An additional "Other" category will also be available for members to specify their own reason for reporting.', 'buddyboss' ),
 				'labels'             => array(
 					'name'                       => _x( 'Reporting Categories', 'taxonomy general name', 'buddyboss' ),
 					'singular_name'              => _x( 'Reporting Category', 'taxonomy singular name', 'buddyboss' ),
@@ -192,11 +203,11 @@ class BP_Moderation_Component extends BP_Component {
 		if ( false === $is_moderation_terms ) {
 
 			$moderation_terms = array(
-				'offensive'        => array(
+				'offensive'      => array(
 					'name'        => __( 'Offensive', 'buddyboss' ),
 					'description' => __( 'Contains abusive or derogatory content', 'buddyboss' ),
 				),
-				'inappropriate'       => array(
+				'inappropriate'  => array(
 					'name'        => __( 'Inappropriate', 'buddyboss' ),
 					'description' => __( 'Contains mature or sensitive content', 'buddyboss' ),
 				),
@@ -204,11 +215,11 @@ class BP_Moderation_Component extends BP_Component {
 					'name'        => __( 'Misinformation', 'buddyboss' ),
 					'description' => __( 'Contains misleading or false information', 'buddyboss' ),
 				),
-				'suspicious'  => array(
+				'suspicious'     => array(
 					'name'        => __( 'Suspicious', 'buddyboss' ),
 					'description' => __( 'Contains spam, fake content or potential malware', 'buddyboss' ),
 				),
-				'harassment'  => array(
+				'harassment'     => array(
 					'name'        => __( 'Harassment', 'buddyboss' ),
 					'description' => __( 'Harassment or bullying behavior', 'buddyboss' ),
 				),
@@ -217,7 +228,14 @@ class BP_Moderation_Component extends BP_Component {
 			foreach ( $moderation_terms as $moderation_term ) {
 				$term = term_exists( $moderation_term['name'], 'bpm_category' );
 				if ( empty( $term ) ) {
-					wp_insert_term( $moderation_term['name'], 'bpm_category', array( 'description' => $moderation_term['description'] ) );
+					$term = wp_insert_term( $moderation_term['name'], 'bpm_category', array( 'description' => $moderation_term['description'] ) );
+					if ( isset( $term['term_id'] ) && ! empty( $term['term_id'] ) ) {
+						update_term_meta(
+							$term['term_id'],
+							'bb_category_show_when_reporting',
+							'content_members'
+						);
+					}
 				}
 			}
 

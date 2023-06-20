@@ -13,7 +13,8 @@ defined( 'ABSPATH' ) || exit;
  * API to create BuddyPress buttons.
  *
  * @since BuddyPress 1.2.6
- * @since BuddyPress 2.7.0 Introduced $parent_element, $parent_attr, $button_element, $button_attr as
+ * @since BuddyPress 2.7.0 Introduced $parent_element, $parent_attr, $button_element, $button_attr
+ * @since BuddyPress 1.9.1 Introduced $prefix_link_text, $postfix_link_text, $is_tooltips, $hover_type, $add_pre_post_text as
  *              $args parameters.
  *              Deprecated $wrapper, $wrapper_id, $wrapper_class, $link_href, $link_class,
  *              $link_id, $link_rel, $link_title as $args params.
@@ -42,6 +43,16 @@ defined( 'ABSPATH' ) || exit;
  *     @type string      $link_id           Deprecated. Use $button_attr and set 'id' as array key.
  *     @type string      $link_rel          Deprecated. Use $button_attr and set 'rel' as array key.
  *     @type string      $link_title        Deprecated. Use $button_attr and set 'title' as array key.
+ *     @type string      $prefix_link_text  The prefix of button title. Default: null.
+ *     @type string      $postfix_link_text The postfix of button title. Default: null.
+ *     @type bool        $is_tooltips       Is enabled tooltip. Default: false.
+ *     @type array  $button_attr {
+ *          Button attributes to make it hover.
+ *          @type string|bool $hover_type             The type of hover. There three options 'hover', 'static', 'false'. Default: false.
+ *          @type string|null $data-title             The button hover title. Default: null.
+ *          @type string|null $data-title-displayed   The button hover out title. Default: null.
+ *          @type bool        $add_pre_post_text      Add prefix and postfix to the button title. Default: false.
+ *     }
  * }
  */
 class BP_Button {
@@ -132,6 +143,33 @@ class BP_Button {
 	 * @var string
 	 */
 	public $link_text = '';
+
+	/**
+	 * The prefix of the button link text.
+	 *
+	 * @since BuddyPress 1.9.1
+	 *
+	 * @var string
+	 */
+	public $prefix_link_text = '';
+
+	/**
+	 * The postfix of the button link text.
+	 *
+	 * @since BuddyPress 1.9.1
+	 *
+	 * @var string
+	 */
+	public $postfix_link_text = '';
+
+	/**
+	 * Is enabled tooltips?
+	 *
+	 * @since BuddyPress 1.9.1
+	 *
+	 * @var bool
+	 */
+	public $is_tooltips = false;
 
 	/**
 	 * HTML result.
@@ -235,7 +273,11 @@ class BP_Button {
 	 */
 	public function __construct( $args = '' ) {
 
-		$r = wp_parse_args( $args, get_class_vars( __CLASS__ ) );
+		$r = bp_parse_args(
+			$args,
+			get_class_vars( __CLASS__ ),
+			'bb_parse_button_args'
+		);
 
 		// Backward compatibility with deprecated parameters.
 		$r = $this->backward_compatibility_args( $r );
@@ -257,8 +299,42 @@ class BP_Button {
 		if ( ! empty( $r['link_class'] ) ) {
 			$this->link_class = ' class="' . $r['link_class'] . '"';
 		}
+		if ( ! empty( $r['prefix_link_text'] ) ) {
+			$this->prefix_link_text = $r['prefix_link_text'];
+		}
+		if ( ! empty( $r['postfix_link_text'] ) ) {
+			$this->postfix_link_text = $r['postfix_link_text'];
+		}
+		if ( isset( $r['is_tooltips'] ) && $r['is_tooltips'] ) {
+			$r['button_attr']['data-balloon-pos'] = $r['data-balloon-pos'] ?? 'down';
+			$r['button_attr']['data-balloon']     = $r['data-balloon'] ?? ( $r['link_text'] ?? '' );
+		}
 		if ( ! empty( $r['link_text'] ) ) {
+			$r['link_text']  = $this->prefix_link_text . $r['link_text'] . $this->postfix_link_text;
 			$this->link_text = $r['link_text'];
+		}
+		if ( isset( $r['button_attr']['hover_type'] ) ) {
+			$is_add_pre_post_text       = $r['button_attr']['add_pre_post_text'] ?? true;
+			$hover_data_title           = $r['button_attr']['data-title'] ?? '';
+			$hover_data_title_displayed = $r['button_attr']['data-title-displayed'] ?? '';
+
+			if ( $is_add_pre_post_text ) {
+				$hover_data_title           = $this->prefix_link_text . $hover_data_title . $this->postfix_link_text;
+				$hover_data_title_displayed = $this->prefix_link_text . $hover_data_title_displayed . $this->postfix_link_text;
+			}
+
+			if ( 'hover' === $r['button_attr']['hover_type'] && ! empty( wp_strip_all_tags( $hover_data_title_displayed ) ) ) {
+				$r['button_attr']['data-title']           = $hover_data_title;
+				$r['button_attr']['data-title-displayed'] = $hover_data_title_displayed;
+				$r['button_attr']['class']                = isset( $r['button_attr']['class'] ) ? $r['button_attr']['class'] . ' bp-toggle-action-button' : 'bp-toggle-action-button';
+			} elseif ( 'static' === $r['button_attr']['hover_type'] && ! empty( wp_strip_all_tags( $hover_data_title ) ) ) {
+				$r['link_text'] = $hover_data_title;
+				unset( $r['button_attr']['data-title'] );
+				unset( $r['button_attr']['data-title-displayed'] );
+			}
+
+			unset( $r['button_attr']['hover_type'] );
+			unset( $r['button_attr']['add_pre_post_text'] );
 		}
 
 		// Required button properties.
@@ -331,7 +407,8 @@ class BP_Button {
 
 			// No parent element.
 		} else {
-			$before = $after = '';
+			$before = '';
+			$after  = '';
 		}
 
 		// Button properties.
@@ -395,7 +472,8 @@ class BP_Button {
 				continue;
 			}
 
-			$parent = $child = false;
+			$parent = false;
+			$child  = false;
 			$sep    = strpos( $prop, '_' );
 
 			// Check if this is an attribute.
@@ -451,7 +529,7 @@ class BP_Button {
 	 */
 	public function display() {
 		if ( ! empty( $this->contents ) ) {
-			echo $this->contents;
+			echo wp_kses_post( $this->contents );
 		}
 	}
 }

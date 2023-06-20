@@ -56,6 +56,7 @@ function xprofile_add_admin_js() {
 			'social_networks_provider'                => array(),
 			'social_networks_provider_value'          => array(),
 			'social_networks_duplicate_value_message' => __( 'You have already selected this option previously.', 'buddyboss' ),
+			'confirm_delete_field'                    => __( 'Are you sure you want to delete this field?', 'buddyboss' ),
 			'confirm_delete_field_group'              => __( 'Are you sure you want to delete this field set and all of its included fields?', 'buddyboss' ),
 			'social_networks_provider_count'          => 0,
 		);

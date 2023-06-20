@@ -1,10 +1,13 @@
 <?php
 /**
- * BP Nouveau Search & filters bar
+ * The template for BP Nouveau Search & filters bar
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * This template can be overridden by copying it to yourtheme/buddypress/common/search-and-filters-bar.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
+
 ?>
 <div class="subnav-filters filters no-ajax" id="subnav-filters">
 

@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.7.0
  */
+#[\AllowDynamicProperties]
 class BP_Video_Template {
 
 	/**
@@ -136,25 +137,26 @@ class BP_Video_Template {
 	public function __construct( $args ) {
 
 		$defaults = array(
-			'page'         => 1,
-			'per_page'     => 20,
-			'page_arg'     => 'acpage',
-			'max'          => false,
-			'fields'       => 'all',
-			'count_total'  => false,
-			'sort'         => false,
-			'order_by'     => false,
-			'include'      => false,
-			'exclude'      => false,
-			'search_terms' => false,
-			'scope'        => false,
-			'user_id'      => false,
-			'album_id'     => false,
-			'group_id'     => false,
-			'privacy'      => false,
+			'page'             => 1,
+			'per_page'         => 20,
+			'page_arg'         => 'acpage',
+			'max'              => false,
+			'fields'           => 'all',
+			'count_total'      => false,
+			'sort'             => false,
+			'order_by'         => false,
+			'include'          => false,
+			'exclude'          => false,
+			'search_terms'     => false,
+			'scope'            => false,
+			'user_id'          => false,
+			'album_id'         => false,
+			'group_id'         => false,
+			'privacy'          => false,
+			'moderation_query' => true,
 		);
 
-		$r = wp_parse_args( $args, $defaults );
+		$r = bp_parse_args( $args, $defaults );
 		extract( $r ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
@@ -168,16 +170,17 @@ class BP_Video_Template {
 		if ( ! empty( $include ) ) {
 			$this->videos = bp_video_get_specific(
 				array(
-					'video_ids'   => explode( ',', $include ),
-					'max'         => $max,
-					'count_total' => $count_total,
-					'page'        => $this->pag_page,
-					'per_page'    => $this->pag_num,
-					'sort'        => $sort,
-					'order_by'    => $order_by,
-					'user_id'     => $user_id,
-					'album_id'    => $album_id,
-					'privacy'     => $privacy,
+					'video_ids'        => explode( ',', $include ),
+					'max'              => $max,
+					'count_total'      => $count_total,
+					'page'             => $this->pag_page,
+					'per_page'         => $this->pag_num,
+					'sort'             => $sort,
+					'order_by'         => $order_by,
+					'user_id'          => $user_id,
+					'album_id'         => $album_id,
+					'privacy'          => $privacy,
+					'moderation_query' => $moderation_query,
 				)
 			);
 

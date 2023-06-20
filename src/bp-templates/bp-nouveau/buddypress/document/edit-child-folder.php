@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Document Edit Child Folder
+ * The template for document edit child folder
  *
- * @since BuddyBoss 1.4.0
- * @package BuddyBoss/Core
+ * This template can be overridden by copying it to yourtheme/buddypress/document/edit-child-folder.php.
+ *
+ * @since   BuddyBoss 1.4.0
+ * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 
 global $document_folder_template;
@@ -22,7 +25,7 @@ if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_gr
 				<div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI">
 					<header class="bb-model-header">
 						<h4><?php esc_html_e( 'Edit Folder', 'buddyboss' ); ?> '<?php bp_folder_title(); ?>'</h4>
-						<a class="bb-model-close-button" id="bp-media-edit-folder-close" href="#"><span class="bb-icon bb-icon-close"></span></a>
+						<a class="bb-model-close-button" id="bp-media-edit-folder-close" href="#"><span class="bb-icon-l bb-icon-times"></span></a>
 					</header>
 						<div class="bb-field-wrap">
 							<label for="bb-album-child-title" class="bb-label"><?php esc_html_e( 'Rename Folder', 'buddyboss' ); ?></label>

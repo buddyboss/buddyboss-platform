@@ -75,6 +75,92 @@
 
 }
 
+//Action Popups
+.bb-action-popup {
+
+	.action-popup-overlay {
+		position: fixed;
+		inset: 0;
+	}
+
+
+	.modal-container {
+		padding-bottom: 0;
+		position: relative;
+		z-index: 1;
+	}
+
+	.bb-model-header {
+		background-color: #fbfbfc;
+		border-bottom: 1px solid #e7e9eb;
+		box-shadow: none;
+		margin-bottom: 0;
+
+		h3 {
+			margin: 0;
+		}
+
+		.bb-close-action-popup {
+			text-decoration: none;
+		}
+
+	}
+
+	.bb-action-popup-content {
+		margin: 0 -30px;
+		max-height: calc(100vh - 220px);
+		overflow: auto;
+		padding: 20px 30px;
+
+		p {
+			margin-bottom: 0;
+		}
+
+	}
+
+	.bb-model-footer {
+		background: #fafafa;
+		border-top: 1px solid #e7e9eb;
+		border-radius: 0 0 4px 4px;
+		display: block;
+		margin: 0 -30px;
+		padding: 15px 30px;
+		text-align: right;
+
+		.bb-close-action-popup {
+			color: #92949d;
+			margin-right: 20px;
+		}
+
+		.push-right {
+			float: none;
+		}
+
+	}
+
+	&#group-description-popup {
+
+		.bb-action-popup-content {
+			padding-bottom: 1px;
+
+			p {
+				margin-bottom: 1.6875rem;
+
+				&:empty {
+					display: none;
+				}
+			}
+
+			ul {
+				margin: 0 0 1.6875rem 1.6875rem;
+				list-style-type: disc;
+			}
+		}
+	}
+
+}
+
+
 // If BP Dir Navs or user screen main navs are selected as vertical
 // We need to just adjust the loop item elements a little
 // to cope with the decreased width.

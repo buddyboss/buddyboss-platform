@@ -1,8 +1,10 @@
 <?php
 /**
- * BuddyBoss - Members Settings ( Export Data )
+ * The template for members settings ( Export Data )
  *
- * @since BuddyBoss 1.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/settings/export-data.php.
+ *
+ * @since   BuddyBoss 1.0.0
  * @version 1.0.0
  */
 ?>

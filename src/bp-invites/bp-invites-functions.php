@@ -144,23 +144,28 @@ function bp_invites_member_invite_remove_registration_lock() {
 				'value'   => $email,
 				'compare' => '=',
 			),
+			array(
+				'key'     => '_bp_invitee_status',
+				'value'   => 0,
+				'compare' => '=',
+			),
 		),
 	);
 
 	$bp_get_invitee_email = new WP_Query( $args );
 
 	if ( ! $bp_get_invitee_email->have_posts() ) {
-		bp_core_add_message( __( "We couldn't find any invitations associated with this email address.", 'buddyboss' ), 'error' );
+		bp_core_add_message( __( "We couldn't find any invitations associated with the provided email address.", 'buddyboss' ), 'error' );
 		return;
 	}
 
 	// To support old versions of BP, we have to force the overloaded
-	// site_options property in some cases
+	// site_options property in some cases.
 	if ( is_multisite() ) {
 		$site_options = $bp->site_options;
-		if ( ! empty( $bp->site_options['registration'] ) && $bp->site_options['registration'] == 'blog' ) {
+		if ( ! empty( $bp->site_options['registration'] ) && 'blog' === $bp->site_options['registration'] ) {
 			$site_options['registration'] = 'all';
-		} elseif ( ! empty( $bp->site_options['registration'] ) && $bp->site_options['registration'] == 'none' ) {
+		} elseif ( ! empty( $bp->site_options['registration'] ) && 'none' === $bp->site_options['registration'] ) {
 			$site_options['registration'] = 'user';
 		}
 		$bp->site_options = $site_options;
@@ -311,21 +316,9 @@ function bp_invites_member_invite_get_invitations_by_invited_email( $email ) {
 function bp_get_member_invitation_subject() {
 	global $bp;
 
-	$term = get_term_by( 'name', 'invites-member-invite', bp_get_email_tax_type() );
+	$query = bb_get_member_invitation_query();
 
-	$args  = array(
-		'post_type' => bp_get_email_post_type(),
-		'tax_query' => array(
-			array(
-				'taxonomy' => bp_get_email_tax_type(),
-				'field'    => 'term_id',
-				'terms'    => $term->term_id,
-			),
-		),
-	);
-	$query = new WP_Query( $args );
-
-	$title = bp_get_member_invites_wildcard_replace( $query->posts[0]->post_title );
+	$title = bp_get_member_invites_wildcard_replace( ( $query->posts ? $query->posts[0]->post_title : '' ) );
 
 	return apply_filters( 'bp_get_member_invitation_subject', stripslashes( $title ) );
 }
@@ -340,19 +333,7 @@ function bp_get_member_invitation_subject() {
 function bp_get_member_invitation_message() {
 	global $bp;
 
-	$term = get_term_by( 'name', 'invites-member-invite', bp_get_email_tax_type() );
-
-	$args  = array(
-		'post_type' => bp_get_email_post_type(),
-		'tax_query' => array(
-			array(
-				'taxonomy' => bp_get_email_tax_type(),
-				'field'    => 'term_id',
-				'terms'    => $term->term_id,
-			),
-		),
-	);
-	$query = new WP_Query( $args );
+	$query = bb_get_member_invitation_query();
 
 	$wp_html_emails    = null;
 	$is_default_wpmail = null;
@@ -375,10 +356,14 @@ function bp_get_member_invitation_message() {
 
 	$must_use_wpmail = apply_filters( 'bp_email_use_wp_mail', $wp_html_emails || ! $is_default_wpmail );
 
-	if ( $must_use_wpmail ) {
-		$text = $query->posts[0]->post_excerpt;
-	} else {
-		$text = $query->posts[0]->post_content;
+	$text = '';
+
+	if ( ! empty( $query->posts ) ) {
+		if ( $must_use_wpmail ) {
+			$text = $query->posts[0]->post_excerpt;
+		} else {
+			$text = $query->posts[0]->post_content;
+		}
 	}
 
 	return apply_filters( 'bp_get_member_invitation_message', stripslashes( $text ) );
@@ -502,10 +487,10 @@ function bp_invites_member_invite_activate_user( $user_id, $key, $user ) {
 				if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
 					$bp_user = new WP_User( $user_id );
 					foreach ( $bp_user->roles as $role ) {
-						// Remove role
+						// Remove role.
 						$bp_user->remove_role( $role );
 					}
-					// Add role
+					// Add role.
 					$bp_user->add_role( $selected_member_type_wp_roles[0] );
 				}
 			}
@@ -628,4 +613,33 @@ function bp_nouveau_send_invite_content_css( $mceInit ) {
 		$mceInit['content_style'] = $styles . ' ';
 	}
 	return $mceInit;
+}
+
+/**
+ * Query to fetch email data for invite member.
+ *
+ * @since BuddyBoss 1.9.0
+ *
+ * @return object $query
+ */
+function bb_get_member_invitation_query() {
+	static $cache = null;
+	if ( null === $cache ) {
+		$term = get_term_by( 'name', 'invites-member-invite', bp_get_email_tax_type() );
+
+		$args = array(
+			'post_type' => bp_get_email_post_type(),
+			'tax_query' => array(
+				array(
+					'taxonomy' => bp_get_email_tax_type(),
+					'field'    => 'term_id',
+					'terms'    => $term->term_id,
+				),
+			),
+		);
+
+		$cache = new WP_Query( $args );
+	}
+
+	return apply_filters( 'bb_get_member_invitation_query', $cache );
 }

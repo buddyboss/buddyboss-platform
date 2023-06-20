@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
+#[\AllowDynamicProperties]
 class BP_XProfile_Field {
 
 	/**
@@ -596,6 +597,7 @@ class BP_XProfile_Field {
 	 * @return array
 	 */
 	public function get_children( $for_editing = false ) {
+		static $bp_get_children_cache = array();
 		global $wpdb;
 
 		// This is done here so we don't have problems with sql injection.
@@ -619,10 +621,15 @@ class BP_XProfile_Field {
 			$parent_id = $this->id;
 		}
 
-		$bp  = buddypress();
-		$sql = $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE parent_id = %d AND group_id = %d {$sort_sql}", $parent_id, $this->group_id );
+		$bp        = buddypress();
+		$cache_key = 'bp_xprofile_get_children_' . $parent_id . '_' . $this->group_id . '_' . $for_editing . '_' . $this->order_by;
+		if ( ! isset( $bp_get_children_cache[ $cache_key ] ) ) {
+			$children = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE parent_id = %d AND group_id = %d {$sort_sql}", $parent_id, $this->group_id ) );
 
-		$children = $wpdb->get_results( $sql );
+			$bp_get_children_cache[ $cache_key ] = $children;
+		} else {
+			$children = $bp_get_children_cache[ $cache_key ];
+		}
 
 		/**
 		 * Filters the found children for a field.
@@ -944,9 +951,15 @@ class BP_XProfile_Field {
 			return false;
 		}
 
-		$table_name = bp_core_get_table_prefix() . 'bp_xprofile_fields';
-		$sql        = $wpdb->prepare( "SELECT type FROM {$table_name} WHERE id = %d", $field_id );
-		$type       = $wpdb->get_var( $sql );
+		$cache_key = 'bp_xprofile_field_get_type_' . $field_id;
+		$type      = wp_cache_get( $cache_key, 'bp_xprofile' );
+
+		if ( false === $type ) {
+			$table_name = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+			$sql        = $wpdb->prepare( "SELECT type FROM {$table_name} WHERE id = %d", $field_id );
+			$type       = $wpdb->get_var( $sql );
+			wp_cache_set( $cache_key, $type, 'bp_xprofile' );
+		}
 
 		// Return field type.
 		if ( ! empty( $type ) ) {
@@ -975,8 +988,14 @@ class BP_XProfile_Field {
 			return false;
 		}
 
-		$bp      = buddypress();
-		$ids     = $wpdb->get_results( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id = %d", $group_id ) );
+		$cache_key = 'bp_xprofile_delete_for_group_' . $group_id;
+		$ids       = wp_cache_get( $cache_key, 'bp_xprofile' );
+
+		if ( false === $ids ) {
+			$bp  = buddypress();
+			$ids = $wpdb->get_results( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id = %d", $group_id ) );
+			wp_cache_set( $cache_key, $ids, 'bp_xprofile' );
+		}
 		$sql     = $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_fields} WHERE group_id = %d", $group_id );
 		$deleted = $wpdb->get_var( $sql );
 
@@ -1081,6 +1100,7 @@ class BP_XProfile_Field {
 	 */
 	public static function get_fields_for_member_type( $member_types ) {
 		global $wpdb;
+		static $unrestricted_field_ids = null;
 
 		$fields = array();
 
@@ -1133,11 +1153,13 @@ class BP_XProfile_Field {
 
 		// Any fields with no member_type metadata are available to all profile types.
 		if ( ! in_array( '_none', $member_types ) ) {
-			if ( ! empty( $all_recorded_field_ids ) ) {
-				$all_recorded_field_ids_sql = implode( ',', array_map( 'absint', $all_recorded_field_ids ) );
-				$unrestricted_field_ids     = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE id NOT IN ({$all_recorded_field_ids_sql})" );
-			} else {
-				$unrestricted_field_ids = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields}" );
+			if ( null === $unrestricted_field_ids ) {
+				if ( ! empty( $all_recorded_field_ids ) ) {
+					$all_recorded_field_ids_sql = implode( ',', array_map( 'absint', $all_recorded_field_ids ) );
+					$unrestricted_field_ids     = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE id NOT IN ({$all_recorded_field_ids_sql})" );
+				} else {
+					$unrestricted_field_ids = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields}" );
+				}
 			}
 
 			// Append the 'null' pseudo-type.
@@ -1528,7 +1550,7 @@ class BP_XProfile_Field {
 		<div id="titlediv">
 			<div class="titlewrap">
 				<label id="title-prompt-text"
-					   for="title"><?php echo esc_html__( 'Name (required)', 'buddyboss' ); ?></label>
+					   for="title" class="screen-reader-text"><?php echo esc_html__( 'Name (required)', 'buddyboss' ); ?></label>
 				<input type="text" name="title" id="title" value="<?php echo esc_attr( $this->name ); ?>"
 					   autocomplete="off"/>
 			</div>

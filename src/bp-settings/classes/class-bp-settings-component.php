@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.5.0
  */
+#[\AllowDynamicProperties]
 class BP_Settings_Component extends BP_Component {
 
 	/**
@@ -160,17 +161,48 @@ class BP_Settings_Component extends BP_Component {
 			'user_has_access' => $access,
 		);
 
+		$data = bb_core_notification_preferences_data();
 		// Add Email nav item. Formerly called 'Notifications', we
 		// retain the old slug and function names for backward compat.
 		$sub_nav[] = array(
-			'name'            => __( 'Email Preferences', 'buddyboss' ),
+			'name'            => $data['menu_title'],
 			'slug'            => 'notifications',
 			'parent_url'      => $settings_link,
 			'parent_slug'     => $slug,
 			'screen_function' => 'bp_settings_screen_notification',
 			'position'        => 20,
 			'user_has_access' => $access,
+			'item_css_class'  => $data['item_css_class'],
 		);
+
+		if ( ! empty( bb_get_subscriptions_types() ) ) {
+			// Common params to all nav items.
+			$default_params_notifications = array(
+				'parent_slug'     => $slug . '_notifications',
+				'screen_function' => 'bp_settings_screen_notification',
+				'user_has_access' => $access,
+			);
+
+			$sub_nav[] = array_merge(
+				array(
+					'name'       => __( 'Preferences', 'buddyboss' ),
+					'parent_url' => $settings_link,
+					'slug'       => 'notifications',
+					'position'   => 1,
+				),
+				$default_params_notifications
+			);
+
+			$sub_nav[] = array_merge(
+				array(
+					'name'       => __( 'Subscriptions', 'buddyboss' ),
+					'parent_url' => trailingslashit( $settings_link . 'notifications' ),
+					'slug'       => 'subscriptions',
+					'position'   => 2,
+				),
+				$default_params_notifications
+			);
+		}
 
 		$sub_nav[] = array(
 			'name'            => __( 'Export Data', 'buddyboss' ),
@@ -257,10 +289,11 @@ class BP_Settings_Component extends BP_Component {
 
 			// Notifications - only add the tab when there is something to display there.
 			if ( has_action( 'bp_notification_settings' ) ) {
+				$data           = bb_core_notification_preferences_data();
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-notifications',
-					'title'    => __( 'Email Preferences', 'buddyboss' ),
+					'title'    => $data['menu_title'],
 					'href'     => trailingslashit( $settings_link . 'notifications' ),
 					'position' => 20,
 				);

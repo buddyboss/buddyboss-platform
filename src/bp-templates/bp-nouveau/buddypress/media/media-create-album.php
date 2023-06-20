@@ -1,10 +1,12 @@
 <?php
-
 /**
- * BuddyBoss - Media Create Album
+ * The template for media create album
  *
- * @since BuddyBoss 1.5.6
+ * This template can be overridden by copying it to yourtheme/buddypress/media/media-create-album.php.
+ *
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Core
+ * @version 1.5.6
  */
 
 ?>

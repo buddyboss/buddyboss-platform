@@ -68,23 +68,29 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 *
 	 * @param int    $member_id member id.
 	 * @param string $action    Action name to perform.
+	 * @param int    $page      Number of page.
 	 *
 	 * @return array
 	 */
-	public static function get_member_activity_ids( $member_id, $action = '' ) {
+	public static function get_member_activity_ids( $member_id, $action = '', $page = - 1 ) {
 		$activities_ids = array();
 
-		$activities = BP_Activity_Activity::get(
-			array(
-				'moderation_query' => false,
-				'per_page'         => 0,
-				'fields'           => 'ids',
-				'show_hidden'      => true,
-				'filter'           => array(
-					'user_id' => $member_id,
-				),
-			)
+		$args = array(
+			'moderation_query' => false,
+			'per_page'         => 0,
+			'fields'           => 'ids',
+			'show_hidden'      => true,
+			'filter'           => array(
+				'user_id' => $member_id,
+			),
 		);
+
+		if ( $page > 0 ) {
+			$args['per_page'] = self::$item_per_page;
+			$args['page']     = $page;
+		}
+
+		$activities = BP_Activity_Activity::get( $args );
 
 		if ( ! empty( $activities['activities'] ) ) {
 			$activities_ids = $activities['activities'];
@@ -107,24 +113,30 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $group_id group id.
+	 * @param int $page     Number of page.
 	 *
 	 * @return array
 	 */
-	public static function get_group_activity_ids( $group_id ) {
+	public static function get_group_activity_ids( $group_id, $page = - 1 ) {
 		$activities_ids = array();
 
-		$activities = BP_Activity_Activity::get(
-			array(
-				'moderation_query' => false,
-				'per_page'         => 0,
-				'fields'           => 'ids',
-				'show_hidden'      => true,
-				'filter'           => array(
-					'primary_id' => $group_id,
-					'object'     => 'groups',
-				),
-			)
+		$args = array(
+			'moderation_query' => false,
+			'per_page'         => 0,
+			'fields'           => 'ids',
+			'show_hidden'      => true,
+			'filter'           => array(
+				'primary_id' => $group_id,
+				'object'     => 'groups',
+			),
 		);
+
+		if ( $page > 0 ) {
+			$args['per_page'] = self::$item_per_page;
+			$args['page']     = $page;
+		}
+
+		$activities = BP_Activity_Activity::get( $args );
 
 		if ( ! empty( $activities['activities'] ) ) {
 			$activities_ids = $activities['activities'];
@@ -139,43 +151,49 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $post_id post id.
+	 * @param int $page    Number of page.
 	 *
 	 * @return array
 	 */
-	public static function get_bbpress_activity_ids( $post_id ) {
+	public static function get_bbpress_activity_ids( $post_id, $page = - 1 ) {
 		$activities_ids = array();
 
-		$activities = BP_Activity_Activity::get(
-			array(
-				'moderation_query' => false,
-				'per_page'         => 0,
-				'fields'           => 'ids',
-				'show_hidden'      => true,
-				'filter_query'     => array(
-					'relation' => 'or',
-					'bbpress'  => array(
-						array(
-							'column' => 'item_id',
-							'value'  => $post_id,
-						),
-						array(
-							'column' => 'component',
-							'value'  => 'bbpress',
-						),
+		$args = array(
+			'moderation_query' => false,
+			'per_page'         => 0,
+			'fields'           => 'ids',
+			'show_hidden'      => true,
+			'filter_query'     => array(
+				'relation' => 'or',
+				'bbpress'  => array(
+					array(
+						'column' => 'item_id',
+						'value'  => $post_id,
 					),
-					'group'    => array(
-						array(
-							'column' => 'secondary_item_id',
-							'value'  => $post_id,
-						),
-						array(
-							'column' => 'component',
-							'value'  => 'groups',
-						),
+					array(
+						'column' => 'component',
+						'value'  => 'bbpress',
 					),
 				),
-			)
+				'group'    => array(
+					array(
+						'column' => 'secondary_item_id',
+						'value'  => $post_id,
+					),
+					array(
+						'column' => 'component',
+						'value'  => 'groups',
+					),
+				),
+			),
 		);
+
+		if ( $page > 0 ) {
+			$args['per_page'] = self::$item_per_page;
+			$args['page']     = $page;
+		}
+
+		$activities = BP_Activity_Activity::get( $args );
 
 		if ( ! empty( $activities['activities'] ) ) {
 			$activities_ids = $activities['activities'];
@@ -244,6 +262,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		$where = apply_filters( 'bp_suspend_activity_get_where_conditions', $where, $this );
 
 		if ( ! empty( array_filter( $where ) ) ) {
+
 			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
 		}
 
@@ -272,7 +291,15 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 			return $restrict;
 		}
 
-		if ( 'activity_comment' !== $activity->type && BP_Core_Suspend::check_suspended_content( (int) $activity->id, self::$type, true ) ) {
+		if (
+			'activity_comment' !== $activity->type &&
+			BP_Core_Suspend::check_suspended_content( (int) $activity->id, self::$type ) &&
+			(
+				// Allow comment to group activity.
+				! bp_is_active( 'groups' ) ||
+				'groups' !== $activity->component
+			)
+		) {
 			return false;
 		}
 
@@ -291,7 +318,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	public function manage_hidden_activity( $activity_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $activity_id,
@@ -307,13 +334,15 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+		if ( $this->background_disabled ) {
 			$this->hide_related_content( $activity_id, $hide_sitewide, $args );
 		} else {
-			$bp_background_updater->push_to_queue(
+			$bp_background_updater->data(
 				array(
-					'callback' => array( $this, 'hide_related_content' ),
-					'args'     => array( $activity_id, $hide_sitewide, $args ),
+					array(
+						'callback' => array( $this, 'hide_related_content' ),
+						'args'     => array( $activity_id, $hide_sitewide, $args ),
+					),
 				)
 			);
 			$bp_background_updater->save()->schedule_event();
@@ -333,7 +362,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	public function manage_unhidden_activity( $activity_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $activity_id,
@@ -361,13 +390,15 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+		if ( $this->background_disabled ) {
 			$this->unhide_related_content( $activity_id, $hide_sitewide, $force_all, $args );
 		} else {
-			$bp_background_updater->push_to_queue(
+			$bp_background_updater->data(
 				array(
-					'callback' => array( $this, 'unhide_related_content' ),
-					'args'     => array( $activity_id, $hide_sitewide, $force_all, $args ),
+					array(
+						'callback' => array( $this, 'unhide_related_content' ),
+						'args'     => array( $activity_id, $hide_sitewide, $force_all, $args ),
+					),
 				)
 			);
 			$bp_background_updater->save()->schedule_event();
@@ -387,6 +418,11 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	protected function get_related_contents( $activity_id, $args = array() ) {
 		$action       = ! empty( $args['action'] ) ? $args['action'] : '';
 		$blocked_user = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
+		$page         = ! empty( $args['page'] ) ? $args['page'] : - 1;
+
+		if ( $page > 1 ) {
+			return array();
+		}
 
 		$related_contents = array(
 			BP_Suspend_Activity_Comment::$type => BP_Suspend_Activity_Comment::get_activity_comment_ids( $activity_id ),
@@ -404,34 +440,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_video_ids_meta( $activity_id, 'bp_activity_get_meta', $action );
 		}
 
-		$related_content_hide = array();
-
-		if ( ! empty( $related_contents ) ) {
-			foreach ( $related_contents as $key => $related_content ) {
-				$related_content = (array) $related_content;
-				foreach ( $related_content as $item ) {
-					if ( ! BP_Core_Suspend::check_hidden_content( $item, $key, true ) && 'hide' === $action ) {
-						$related_content_hide[ $key ][] = $item;
-					}
-					if ( ( BP_Core_Suspend::check_hidden_content( $item, $key, true ) || BP_Core_Suspend::check_suspended_content( $item, $key, true ) ) && 'unhide' === $action ) {
-						$related_content_hide[ $key ][] = $item;
-					}
-				}
-			}
-		}
-
-		$related_content_hide = json_decode( wp_json_encode( $related_content_hide ), true );
-		if ( ! empty( $blocked_user ) && ! empty( $related_content_hide ) ) {
-			foreach ( $related_content_hide as $key => $related_content ) {
-				foreach ( (array) $related_content as $k => $item ) {
-					if ( BP_Core_Suspend::check_suspended_content( $item, $key, true ) && 'hide' === $action ) {
-						unset( $related_content_hide[ $key ][ $k ] );
-					}
-				}
-			}
-		}
-
-		return $related_content_hide;
+		return $related_contents;
 	}
 
 	/**

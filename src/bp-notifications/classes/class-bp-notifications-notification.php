@@ -84,6 +84,37 @@ class BP_Notifications_Notification {
 	 */
 	public $is_new;
 
+	/**
+	 * Is the notification newly inserted.
+	 *
+	 * @since BuddyBoss 2.0.4
+	 * @var bool
+	 */
+	public $inserted = false;
+
+	/**
+	 * Is notification read only or linkable?
+	 *
+	 * @since BuddyBoss 2.2.7
+	 *
+	 * @var bool
+	 */
+	public $readonly;
+
+	/**
+	 * Columns in the notifications table.
+	 */
+	public static $columns = array(
+		'id',
+		'user_id',
+		'item_id',
+		'secondary_item_id',
+		'component_name',
+		'component_action',
+		'date_notified',
+		'is_new',
+	);
+
 	/** Public Methods ********************************************************/
 
 	/**
@@ -150,6 +181,11 @@ class BP_Notifications_Notification {
 
 			if ( empty( $this->id ) ) {
 				$this->id = $wpdb->insert_id;
+
+				// Set the notification type.
+				bp_notifications_update_meta( $this->id, 'is_modern', ! bb_enabled_legacy_email_preference() );
+
+				$this->inserted = true;
 			}
 			$retval = $this->id;
 		}
@@ -182,7 +218,12 @@ class BP_Notifications_Notification {
 		$bp = buddypress();
 
 		// Look for a notification.
-		$notification = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->notifications->table_name} WHERE id = %d", $this->id ) );
+		$notification = wp_cache_get( $this->id, 'bp_notifications' );
+
+		if ( false === $notification ) {
+			$notification = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->notifications->table_name} WHERE id = %d", $this->id ) );
+			wp_cache_set( $this->id, $notification, 'bp_notifications' );
+		}
 
 		// Setup the notification data.
 		if ( ! empty( $notification ) && ! is_wp_error( $notification ) ) {
@@ -193,6 +234,7 @@ class BP_Notifications_Notification {
 			$this->component_action  = $notification->component_action;
 			$this->date_notified     = $notification->date_notified;
 			$this->is_new            = (int) $notification->is_new;
+			$this->readonly          = function_exists( 'bb_notification_is_read_only' ) ? bb_notification_is_read_only( $notification ) : false;
 		}
 	}
 
@@ -259,7 +301,19 @@ class BP_Notifications_Notification {
 	 */
 	protected static function _delete( $where = array(), $where_format = array() ) {
 		global $wpdb;
-		return $wpdb->delete( buddypress()->notifications->table_name, $where, $where_format );
+
+		$bp        = buddypress();
+		$where_sql = self::get_where_sql( $where );
+
+		$notifications = $wpdb->get_results( "SELECT * FROM {$bp->notifications->table_name} {$where_sql}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+		if ( ! empty( $notifications ) ) {
+			foreach ( $notifications as $notification ) {
+				bp_notifications_delete_meta( $notification->id );
+			}
+		}
+
+		return $wpdb->delete( $bp->notifications->table_name, $where, $where_format );
 	}
 
 	/**
@@ -342,6 +396,23 @@ class BP_Notifications_Notification {
 			$where_conditions['component_action'] = "component_action IN ({$ca_in})";
 		}
 
+		// Excluded component_action.
+		if ( ! empty( $args['excluded_action'] ) ) {
+			if ( ! is_array( $args['excluded_action'] ) ) {
+				$excluded_action = explode( ',', $args['excluded_action'] );
+			} else {
+				$excluded_action = $args['excluded_action'];
+			}
+
+			$ca_clean = array();
+			foreach ( $excluded_action as $ca ) {
+				$ca_clean[] = $wpdb->prepare( '%s', $ca );
+			}
+
+			$ca_not_in                           = implode( ',', $ca_clean );
+			$where_conditions['excluded_action'] = "component_action NOT IN ({$ca_not_in})";
+		}
+
 		// If is_new.
 		if ( ! empty( $args['is_new'] ) && 'both' !== $args['is_new'] ) {
 			$where_conditions['is_new'] = 'is_new = 1';
@@ -407,14 +478,31 @@ class BP_Notifications_Notification {
 
 		// Order by.
 		if ( ! empty( $args['order_by'] ) ) {
-			$order_by               = implode( ', ', (array) $args['order_by'] );
-			$conditions['order_by'] = "{$order_by}";
+			// Added security patch for SQL Injections vulnerability
+			$order_by_clean = array();
+			foreach ( (array) $args['order_by'] as $key => $value ) {
+				if ( in_array( $value, self::$columns, true ) ) {
+					$order_by_clean[] = $value;
+				}
+			}
+			if ( ! empty( $order_by_clean ) ) {
+				$order_by               = implode( ', ', $order_by_clean );
+				$conditions['order_by'] = "{$order_by}";
+			}
+
+			if ( ! empty( $args['id'] ) && 'in' === $args['order_by'] ) {
+				$in                     = implode( ',', wp_parse_id_list( $args['id'] ) );
+				$conditions['order_by'] = "FIELD(id, {$in})";
+			}
 		}
 
 		// Sort order direction.
 		if ( ! empty( $args['sort_order'] ) && in_array( $args['sort_order'], array( 'ASC', 'DESC' ) ) ) {
 			$sort_order               = $args['sort_order'];
 			$conditions['sort_order'] = "{$sort_order}";
+			if ( ! empty( $args['id'] ) && 'include' === $args['order_by'] ) {
+				$conditions['sort_order'] = '';
+			}
 		}
 
 		// Custom ORDER BY.
@@ -562,7 +650,14 @@ class BP_Notifications_Notification {
 
 		$bp = buddypress();
 
-		return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->core->table_name_notifications} WHERE id = %d AND user_id = %d", $notification_id, $user_id ) );
+		$cache_key = 'bp_notifications_check_access_' . $user_id . '_' . $notification_id;
+		$record    = wp_cache_get( $cache_key, 'bp_notifications' );
+
+		if ( false === $record ) {
+			$record = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->core->table_name_notifications} WHERE id = %d AND user_id = %d", $notification_id, $user_id ) );
+			wp_cache_set( $cache_key, $record, 'bp_notifications' );
+		}
+		return $record;
 	}
 
 	/**
@@ -574,7 +669,7 @@ class BP_Notifications_Notification {
 	 * @return array
 	 */
 	public static function parse_args( $args = '' ) {
-		return wp_parse_args(
+		return bp_parse_args(
 			$args,
 			array(
 				'id'                => false,
@@ -583,6 +678,7 @@ class BP_Notifications_Notification {
 				'secondary_item_id' => false,
 				'component_name'    => bp_notifications_get_registered_components(),
 				'component_action'  => false,
+				'excluded_action'   => bb_notification_excluded_component_actions(),
 				'is_new'            => true,
 				'search_terms'      => '',
 				'order_by'          => false,
@@ -640,6 +736,10 @@ class BP_Notifications_Notification {
 	public static function get( $args = array() ) {
 		global $wpdb;
 
+		if ( isset( $args['excluded_action'] ) && empty( $args['excluded_action'] ) ) {
+			unset( $args['excluded_action'] );
+		}
+
 		// Parse the arguments.
 		$r = self::parse_args( $args );
 
@@ -649,8 +749,13 @@ class BP_Notifications_Notification {
 		// METADATA.
 		$meta_query_sql = self::get_meta_query_sql( $r['meta_query'] );
 
-		// SELECT.
-		$select_sql = 'SELECT *';
+		if ( isset( $r['fields'] ) && 'id' === $r['fields'] ) {
+			// SELECT id only.
+			$select_sql = 'SELECT DISTINCT id';
+		} else {
+			// SELECT.
+			$select_sql = 'SELECT *';
+		}
 
 		// FROM.
 		$from_sql = "FROM {$bp->notifications->table_name} n ";
@@ -667,6 +772,7 @@ class BP_Notifications_Notification {
 				'secondary_item_id' => $r['secondary_item_id'],
 				'component_name'    => $r['component_name'],
 				'component_action'  => $r['component_action'],
+				'excluded_action'   => $r['excluded_action'],
 				'is_new'            => $r['is_new'],
 				'search_terms'      => $r['search_terms'],
 				'date_query'        => $r['date_query'],
@@ -677,11 +783,23 @@ class BP_Notifications_Notification {
 			$meta_query_sql
 		);
 
+		/**
+		 * Filters the Where SQL statement.
+		 *
+		 * @since BuddyBoss 2.0.3
+		 *
+		 * @param string $where_sql Where SQL statement.
+		 * @param string $tbl_alias Table alias.
+		 * @param array  $r         Array of parsed arguments for the get method.
+		 */
+		$where_sql = apply_filters( 'bb_notifications_get_where_conditions', $where_sql, 'n', $r );
+
 		// ORDER BY.
 		$order_sql = self::get_order_by_sql(
 			array(
 				'order_by'   => $r['order_by'],
 				'sort_order' => $r['sort_order'],
+				'id'         => $r['id'],
 			)
 		);
 
@@ -696,20 +814,28 @@ class BP_Notifications_Notification {
 		// Concatenate query parts.
 		$sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} {$order_sql} {$pag_sql}";
 
-		$results = $wpdb->get_results( $sql );
+		if ( isset( $r['fields'] ) && ( 'id' === $r['fields'] || 'ids' === $r['fields'] ) ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+			$results = $wpdb->get_col( $sql );
+			$results = wp_parse_id_list( $results );
+		} else {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+			$results = $wpdb->get_results( $sql );
 
-		// Integer casting.
-		foreach ( $results as $key => $result ) {
-			$results[ $key ]->id                = (int) $results[ $key ]->id;
-			$results[ $key ]->user_id           = (int) $results[ $key ]->user_id;
-			$results[ $key ]->item_id           = (int) $results[ $key ]->item_id;
-			$results[ $key ]->secondary_item_id = (int) $results[ $key ]->secondary_item_id;
-			$results[ $key ]->is_new            = (int) $results[ $key ]->is_new;
-		}
+			// Integer casting.
+			foreach ( $results as $key => $result ) {
+				$results[ $key ]->id                = (int) $results[ $key ]->id;
+				$results[ $key ]->user_id           = (int) $results[ $key ]->user_id;
+				$results[ $key ]->item_id           = (int) $results[ $key ]->item_id;
+				$results[ $key ]->secondary_item_id = (int) $results[ $key ]->secondary_item_id;
+				$results[ $key ]->is_new            = (int) $results[ $key ]->is_new;
+				$results[ $key ]->readonly          = function_exists( 'bb_notification_is_read_only' ) ? bb_notification_is_read_only( $results[ $key ] ) : false;
+			}
 
-		// Update meta cache.
-		if ( true === $r['update_meta_cache'] ) {
-			bp_notifications_update_meta_cache( wp_list_pluck( $results, 'id' ) );
+			// Update meta cache.
+			if ( true === $r['update_meta_cache'] ) {
+				bp_notifications_update_meta_cache( wp_list_pluck( $results, 'id' ) );
+			}
 		}
 
 		return $results;
@@ -755,6 +881,7 @@ class BP_Notifications_Notification {
 				'secondary_item_id' => $r['secondary_item_id'],
 				'component_name'    => $r['component_name'],
 				'component_action'  => $r['component_action'],
+				'excluded_action'   => $r['excluded_action'],
 				'is_new'            => $r['is_new'],
 				'search_terms'      => $r['search_terms'],
 				'date_query'        => $r['date_query'],
@@ -764,6 +891,17 @@ class BP_Notifications_Notification {
 			$join_sql,
 			$meta_query_sql
 		);
+
+		/**
+		 * Filters the Where SQL statement.
+		 *
+		 * @since BuddyBoss 2.0.3
+		 *
+		 * @param string $where_sql Where SQL statement.
+		 * @param string $tbl_alias Table alias.
+		 * @param array  $r         Array of parsed arguments for the get method.
+		 */
+		$where_sql = apply_filters( 'bb_notifications_get_where_conditions', $where_sql, 'n', $r );
 
 		// Concatenate query parts.
 		$sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql}";
@@ -1011,7 +1149,7 @@ class BP_Notifications_Notification {
 	 * }
 	 */
 	public static function get_current_notifications_for_user( $args = array() ) {
-		$r = wp_parse_args(
+		$r = bp_parse_args(
 			$args,
 			array(
 				'user_id'      => bp_loggedin_user_id(),

@@ -230,7 +230,7 @@ class BP_Media_Album {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args(
+		$r  = bp_parse_args(
 			$args,
 			array(
 				'page'         => 1,               // The current page.
@@ -316,7 +316,7 @@ class BP_Media_Album {
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions['user'] = "m.group_id = {$r['group_id']}";
+			$where_conditions['group'] = "m.group_id = {$r['group_id']}";
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
@@ -530,27 +530,6 @@ class BP_Media_Album {
 			$albums[] = $album;
 		}
 
-		// Then fetch user data.
-		$user_query = new BP_User_Query(
-			array(
-				'user_ids'        => wp_list_pluck( $albums, 'user_id' ),
-				'populate_extras' => false,
-			)
-		);
-
-		// Associated located user data with albums.
-		foreach ( $albums as $a_index => $a_item ) {
-			$a_user_id = intval( $a_item->user_id );
-			$a_user    = isset( $user_query->results[ $a_user_id ] ) ? $user_query->results[ $a_user_id ] : '';
-
-			if ( ! empty( $a_user ) ) {
-				$albums[ $a_index ]->user_email    = $a_user->user_email;
-				$albums[ $a_index ]->user_nicename = $a_user->user_nicename;
-				$albums[ $a_index ]->user_login    = $a_user->user_login;
-				$albums[ $a_index ]->display_name  = $a_user->display_name;
-			}
-		}
-
 		return $albums;
 	}
 
@@ -640,14 +619,20 @@ class BP_Media_Album {
 	 *
 	 * @since BuddyBoss 1.2.0
 	 *
-	 * @param int $group_id
+	 * @param int $group_id Group ID.
 	 *
 	 * @return array|bool|int
 	 */
 	public static function total_group_album_count( $group_id = 0 ) {
 		global $bp, $wpdb;
 
-		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name_albums} WHERE group_id = {$group_id}" );
+		$cache_key = 'bp_total_group_album_count_' . $group_id;
+		$total_count    = wp_cache_get( $cache_key, 'bp_media_album' );
+
+		if ( false === $total_count ) {
+			$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name_albums} WHERE group_id = {$group_id}" );
+			wp_cache_set( $cache_key, $total_count, 'bp_media_album' );
+		}
 
 		return $total_count;
 	}
@@ -674,7 +659,7 @@ class BP_Media_Album {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args(
+		$r  = bp_parse_args(
 			$args,
 			array(
 				'id'           => false,

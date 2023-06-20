@@ -2,8 +2,13 @@
 /**
  * BuddyBoss - Moderation Blocked Member entry
  *
+ * This template is used to render each member in the blocked members loop.
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/moderation/moderation-blocked-members-entry.php.
+ *
  * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Core
+ * @version 1.5.6
  */
 
 $hide_sitewide = ( 1 === (int) bp_get_moderation_hide_site_wide() ) ? true : false;

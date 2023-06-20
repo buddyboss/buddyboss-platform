@@ -185,7 +185,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 			foreach ( $bp_active_member_types as $bp_active_member_type ) {
 				$enabled = get_post_meta( $bp_active_member_type, '_bp_member_type_enable_profile_field', true );
 				$name    = get_post_meta( $bp_active_member_type, '_bp_member_type_label_singular_name', true );
-				if ( '' === $enabled || '1' === $enabled ) {
+				if ( '' === $enabled || '1' === $enabled || (int)$post_selected === $bp_active_member_type ) {
 					$html .= sprintf(
 						'<option value="%s" %s>%s</option>',
 						$bp_active_member_type,
@@ -242,5 +242,28 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 		}
 
 		return bp_xprofile_get_meta( $field_id, 'field', 'selected_post_type', true );
+	}
+
+	/**
+	 * Format profile type to display name instead of id.
+	 *
+	 * @since BuddyBoss 1.8.5
+	 *
+	 * @param string     $field_value The profile type id value, as saved in the database.
+	 * @param string|int $field_id    Optional. ID of the field.
+	 * @return string profile type name.
+	 */
+	public static function display_filter( $field_value, $field_id = '' ) {
+		if ( empty( $field_value ) || ! is_int( $field_value ) ) {
+			return $field_value;
+		}
+
+		$member_type_name = get_post_meta( $field_value, '_bp_member_type_label_singular_name', true );
+
+		if ( '' === $member_type_name || false === $member_type_name ) {
+			return esc_html__( '---', 'buddyboss' );
+		}
+
+		return $member_type_name;
 	}
 }

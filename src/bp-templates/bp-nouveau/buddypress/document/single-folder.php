@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Document Single Folder
+ * The template for document single folder
  *
- * @since BuddyBoss 1.4.0
+ * This template can be overridden by copying it to yourtheme/buddypress/document/single-folder.php.
+ *
+ * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 
 global $document_folder_template;
@@ -34,13 +37,17 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 						</div> <!-- .bb-single-album-header -->
 						<div class="bb-media-actions">
 							<div id="search-documents-form" class="media-search-form" data-bp-search="document">
-								<form action="" method="get" class="bp-dir-search-form" id="group-document-search-form" autocomplete="off">
-									<button type="submit" id="group-document-search-submit" class="nouveau-search-submit" name="group_document_search_submit">
+								<form action="" method="get" class="bp-dir-search-form search-form-has-reset" id="group-document-search-form" autocomplete="off">
+									<button type="submit" id="group-document-search-submit" class="nouveau-search-submit search-form_submit" name="group_document_search_submit">
 										<span class="dashicons dashicons-search" aria-hidden="true"></span>
 										<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></span>
 									</button>
 									<label for="group-document-search" class="bp-screen-reader-text"><?php esc_html_e( 'Search Documents…', 'buddyboss' ); ?></label>
 									<input id="group-document-search" name="document_search" type="search" placeholder="<?php esc_html_e( 'Search Documents…', 'buddyboss' ); ?>">
+									<button type="reset" class="search-form_reset">
+										<span class="bb-icon-rf bb-icon-times" aria-hidden="true"></span>
+										<span class="bp-screen-reader-text"><?php esc_html_e( 'Reset', 'buddyboss' ); ?></span>
+									</button>
 								</form>
 							</div>
 							<?php
@@ -53,20 +60,20 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 										if ( $manage ) {
 											?>
 											<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
-												<i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
+												<i class="bb-icon-l bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
 											</a>
 											<a href="#" id="bb-create-folder-child" class="bb-create-folder-stacked button small outline">
-												<i class="bb-icon-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
+												<i class="bb-icon-l bb-icon-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
 											</a>
 											<?php
 										}
 									} elseif ( ! bp_is_group() && $can_edit_btn && bb_user_can_create_document() ) {
 										?>
 										<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
-											<i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
+											<i class="bb-icon-l bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
 										</a>
 										<a href="#" id="bb-create-folder-child" class="bb-create-folder-stacked button small outline">
-											<i class="bb-icon-folder-stacked"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
+											<i class="bb-icon-l bb-icon-folder-alt"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
 										</a>
 										<?php
 									}
@@ -76,7 +83,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 									<div class="media-folder_items">
 										<div class="media-folder_actions">
 											<a href="#" class="media-folder_action__anchor">
-												<i class="bb-icon-menu-dots-v"></i>
+												<i class="bb-icon-f bb-icon-ellipsis-v"></i>
 											</a>
 											<div class="media-folder_action__list">
 												<ul>
@@ -85,7 +92,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 														?>
 														<li>
 															<a id="bp-edit-folder-open" href="#">
-																<i class="bb-icon-edit-square-small"></i><?php esc_html_e( 'Edit Folder', 'buddyboss' ); ?>
+																<i class="bb-icon-l bb-icon-edit"></i><?php esc_html_e( 'Edit Folder', 'buddyboss' ); ?>
 															</a>
 														</li>
 														<?php
@@ -94,7 +101,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 														?>
 														<li>
 															<a href="#" id="bb-delete-folder">
-																<i class="bb-icon-trash"></i><?php esc_html_e( 'Delete Folder', 'buddyboss' ); ?>
+																<i class="bb-icon-l bb-icon-trash"></i><?php esc_html_e( 'Delete Folder', 'buddyboss' ); ?>
 															</a>
 														</li>
 														<?php

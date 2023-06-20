@@ -889,8 +889,8 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		);
 
 		if ( WP_REST_Server::READABLE === $method ) {
-			$key          = 'get';
-			$args['id']   = array(
+			$key                = 'get';
+			$args['id']         = array(
 				'description' => __( 'A unique numeric ID for the album.', 'buddyboss' ),
 				'type'        => 'integer',
 				'required'    => true,
@@ -1008,14 +1008,14 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 			'user_id'       => $album->user_id,
 			'group_id'      => $album->group_id,
 			'date_created'  => $album->date_created,
-			'title'         => $album->title,
+			'title'         => wp_specialchars_decode( $album->title, ENT_QUOTES ),
 			'privacy'       => $album->privacy,
 			'media'         => $medias,
 			'group_name'    => ( isset( $album->group_name ) ? $album->group_name : '' ),
 			'visibility'    => ( isset( $album->visibility ) ? $album->visibility : '' ),
-			'user_nicename' => $album->user_nicename,
-			'user_login'    => $album->user_login,
-			'display_name'  => $album->display_name,
+			'user_nicename' => get_the_author_meta( 'user_nicename', $album->user_id ),
+			'user_login'    => get_the_author_meta( 'user_login', $album->user_id ),
+			'display_name'  => bp_core_get_user_displayname( $album->user_id ),
 		);
 
 		$response = rest_ensure_response( $data );

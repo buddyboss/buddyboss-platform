@@ -229,8 +229,8 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 
 			<tr>
 				<td>
-					<a href="<?php echo get_comment_link( $comment ); ?>" target="_blank" rel="nofollow"
-					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px;  width: 64px; text-align: center; height: 16px; line-height: 16px; padding:8px; "><?php _e( 'Reply', 'buddyboss' ); ?></a>
+					<a href="<?php echo esc_url( get_comment_link( $comment ) ); ?>" target="_blank" rel="nofollow"
+					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px;  min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding:8px; "><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a>
 				</td>
 			</tr>
 
@@ -257,21 +257,22 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 							$spam_comment = sprintf( __( '<a href="%s">Spam</a>', 'buddyboss' ), admin_url( "comment.php?action=spam&c={$comment_id}#wpbody-content" ) );
 						}
 						?>
-						<p><?php echo $moderate_text; ?><?php echo $approve_comment; ?>
-									  <?php
-										if ( ! empty( $trash_comment ) ) {
-											echo ', ' . $trash_comment; }
-										?>
-		<?php
-		if ( ! empty( $delete_comment ) ) {
-							echo ', ' . $delete_comment; }
-		?>
+						<p>
+							<?php
+							echo $moderate_text . $approve_comment;
+							if ( ! empty( $trash_comment ) ) {
+								echo ', ' . $trash_comment;
+							}
 
-		<?php
-		if ( ! empty( $spam_comment ) ) {
-							echo ', ' . $spam_comment; }
-		?>
-</p>
+							if ( ! empty( $delete_comment ) ) {
+								echo ', ' . $delete_comment;
+							}
+
+							if ( ! empty( $spam_comment ) ) {
+								echo ', ' . $spam_comment;
+							}
+							?>
+						</p>
 					</div>
 				</td>
 			</tr>
@@ -520,7 +521,7 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 			<tr>
 				<td>
 					<a href="<?php echo get_comment_link( $comment ); ?>" target="_blank" rel="nofollow"
-					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php _e( 'Reply', 'buddyboss' ); ?></a>
+					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a>
 				</td>
 			</tr>
 
@@ -544,16 +545,21 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 						/* translators: Comment moderation. 1: Comment action URL */
 						$spam_comment = sprintf( __( '<a href="%s">Spam</a>', 'buddyboss' ), admin_url( "comment.php?action=spam&c={$comment_id}#wpbody-content" ) );
 						?>
-						<p><?php echo $moderate_text; ?><?php echo $approve_comment; ?>
-									  <?php
-										if ( ! empty( $trash_comment ) ) {
-											echo ', ' . $trash_comment; }
-										?>
-		<?php
-		if ( ! empty( $delete_comment ) ) {
-							echo ', ' . $delete_comment; }
-		?>
-		<?php echo ', ' . $spam_comment; ?></p>
+						<p>
+							<?php
+							echo $moderate_text . $approve_comment;
+
+							if ( ! empty( $trash_comment ) ) {
+								echo ', ' . $trash_comment;
+							}
+
+							if ( ! empty( $delete_comment ) ) {
+								echo ', ' . $delete_comment;
+							}
+
+							echo ', ' . $spam_comment;
+							?>
+						</p>
 					</div>
 				</td>
 			</tr>
@@ -707,7 +713,7 @@ if ( ! function_exists( 'wp_new_user_notification' ) ) {
 			_deprecated_argument( __FUNCTION__, '4.3.1' );
 		}
 
-		global $wpdb, $wp_hasher;
+		global $wp_hasher;
 		$user = get_userdata( $user_id );
 
 		// The blogname option is escaped with esc_html on the way into the database in sanitize_option
@@ -785,7 +791,13 @@ if ( ! function_exists( 'wp_new_user_notification' ) ) {
 			$wp_hasher = new PasswordHash( 8, true );
 		}
 		$hashed = time() . ':' . $wp_hasher->HashPassword( $key );
-		$wpdb->update( $wpdb->users, array( 'user_activation_key' => $hashed ), array( 'user_login' => $user->user_login ) );
+
+		$key_saved = wp_update_user(
+			array(
+				'ID'                  => $user->ID,
+				'user_activation_key' => $hashed,
+			)
+		);
 
 		$switched_locale = switch_to_locale( get_user_locale( $user ) );
 
@@ -912,24 +924,42 @@ if ( ! function_exists( 'bp_email_wp_password_change_email' ) ) {
 	 */
 	function bp_email_wp_password_change_email( $pass_change_email, $user, $userdata ) {
 
-		/* translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */
-		$pass_change_text  = '<p>' . __( 'Hi ###USERNAME###,', 'buddyboss' ) . '</p>';
-		$pass_change_text .= '<p>' . __( 'This notice confirms that your password was changed on ###SITENAME###.', 'buddyboss' ) . '</p>';
-		$pass_change_text .= '<p>' . __( 'If you did not change your password, please contact the Site Administrator at <br />###ADMIN_EMAIL###', 'buddyboss' ) . '</p>';
-		$pass_change_text .= '<p>' . __( 'This email has been sent to ###EMAIL###', 'buddyboss' ) . '</p>';
-		$pass_change_text .= '<p>' . __( 'Regards, <br />All at ###SITENAME### <br />###SITEURL###', 'buddyboss' ) . '</p>';
+		if ( bb_enabled_legacy_email_preference() || is_admin() ) {
 
-		$pass_change_email = array(
-			'to'      => $user['user_email'],
-			/* translators: User password change notification email subject. 1: Site name */
-			'subject' => __( '[%s] Notice of Password Change', 'buddyboss' ),
-			'message' => $pass_change_text,
-			'headers' => '',
-		);
+			/* translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */
+			$pass_change_text  = '<p>' . __( 'Hi ###USERNAME###,', 'buddyboss' ) . '</p>';
+			$pass_change_text .= '<p>' . __( 'This notice confirms that your password was changed on ###SITENAME###.', 'buddyboss' ) . '</p>';
+			$pass_change_text .= '<p>' . __( 'If you did not change your password, please contact the Site Administrator at <br />###ADMIN_EMAIL###', 'buddyboss' ) . '</p>';
+			$pass_change_text .= '<p>' . __( 'This email has been sent to ###EMAIL###', 'buddyboss' ) . '</p>';
+			$pass_change_text .= '<p>' . __( 'Regards, <br />All at ###SITENAME### <br />###SITEURL###', 'buddyboss' ) . '</p>';
 
-		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
+			$pass_change_email = array(
+				'to'      => $user['user_email'],
+				/* translators: User password change notification email subject. 1: Site name */
+				'subject' => __( '[%s] Notice of Password Change', 'buddyboss' ),
+				'message' => $pass_change_text,
+				'headers' => '',
+			);
 
-		$pass_change_email['message'] = bp_email_core_wp_get_template( $pass_change_email['message'], $user );
+			add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email.
+
+			$pass_change_email['message'] = bp_email_core_wp_get_template( $pass_change_email['message'], $user );
+
+		} else {
+			/* translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */
+			$pass_change_text = '';
+
+			$pass_change_email = array(
+				'to'      => '',
+				'subject' => '',
+				'message' => '',
+				'headers' => '',
+			);
+
+			add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email.
+
+			$pass_change_email['message'] = bp_email_core_wp_get_template( $pass_change_email['message'], $user );
+		}
 
 		return $pass_change_email;
 	}
@@ -1247,9 +1277,20 @@ if ( ! function_exists( 'bp_email_wpmu_signup_user_notification_email' ) ) {
 	 */
 	function bp_email_wpmu_signup_user_notification_email( $content, $user_login, $user_email, $key, $meta ) {
 
-		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email.
 
-		$content = bp_email_core_wp_get_template( $content, get_user_by( 'email', $user_email ) );
+		add_filter(
+			'wp_mail',
+			function ( $args ) use ( $content, $key, $user_email ) {
+				$args['message'] = sprintf(
+					$content,
+					site_url( "wp-activate.php?key=$key" )
+				);
+				$args['message'] = bp_email_core_wp_get_template( $args['message'], get_user_by( 'email', $user_email ) );
+
+				return $args;
+			}
+		);
 
 		return $content;
 	}
@@ -1542,7 +1583,11 @@ if ( ! function_exists( 'bp_email_wp_privacy_personal_data_email_content' ) ) {
 	 */
 	function bp_email_wp_privacy_personal_data_email_content( $email_text, $request_id ) {
 		// Get the request data.
-		$request = wp_get_user_request_data( $request_id );
+		if ( function_exists( 'wp_get_user_request' ) ) {
+			$request = wp_get_user_request( $request_id );
+		} else {
+			$request = wp_get_user_request_data( $request_id );
+		}
 
 		$email_text  = '<p>' . __( 'Howdy,', 'buddyboss' ) . '</p>';
 		$email_text .= '<p>' . __( 'Your request for an export of personal data has been completed. You may download your personal data by clicking on the link below. For privacy and security, we will automatically delete the file on ###EXPIRATION###, so please download it before then.', 'buddyboss' ) . '</p>';

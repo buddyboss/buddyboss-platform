@@ -1,15 +1,16 @@
 .atwho-view {
-	background: rgba(204, 204, 204, 0.8);
-	border-radius: 2px;
+	background: #fff;
 	border: 1px solid rgb(204, 204, 204);
 	box-shadow: 0 0 5px rgba(204, 204, 204, 0.25), 0 0 1px #fff;
 	color: #d84800;
 	display: none;
-	font-family: sans-serif;
+	font-family: inherit;
 	margin-top: 18px;
 	position: absolute;
 	top: 0;
 	z-index: 1000; /* >999 for wp-admin */
+	border-radius: 4px;
+	overflow: auto;
 }
 
 /* stylelint-disable */
@@ -19,30 +20,62 @@
 /* stylelint-enable */
 
 .atwho-view ul {
-	background: #fff;
 	list-style: none;
-	margin: auto;
+	margin: 5px 0 5px 5px;
 	padding: 0;
+	max-height: 250px;
+	overflow: auto;
+}
+
+.atwho-view ul::-webkit-scrollbar {
+	width: 6px;
+}
+
+.atwho-view ul::-webkit-scrollbar-thumb {
+	background-color: #a4acb4;
+	border-radius: 10px;
 }
 
 .atwho-view ul li {
-	border-bottom: 1px solid #efefef;
 	box-sizing: content-box;
 	cursor: pointer;
 	display: block;
 	font-size: 14px;
-	height: 20px;
+	min-height: 20px;
 	line-height: 20px;
 	margin: 0;
 	overflow: hidden;
-	padding: 5px 10px;
+	padding: 8px 10px;
+}
+
+.atwho-view ul li.list-loader {
+	color: #92949d;
+}
+
+.atwho-view ul li.list-loader:before {
+	content: "\ef30";
+	display: inline-block;
+	font-family: "bb-icons";/* stylelint-disable-line */
+	font-size: 22px;
+	margin-left: 8px;
+	font-weight: 400;
+	animation: spin 2s infinite linear;
+}
+
+.atwho-view ul li .username {
+	display: inline-block;
+	color: #92949d;
+	max-width: 100px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
 }
 
 .atwho-view img {
-	border-radius: 2px;
-	float: left;
+	border-radius: 100%;
+	float: right;
 	height: 20px;
-	margin-top: 0;
+	margin: 0 0 0 8px;
 	width: 20px;
 }
 
@@ -57,10 +90,11 @@
 
 .atwho-view small {
 	color: #aaa;
-	float: left;
-	font-size: smaller;
-	font-weight: 400;
-	margin: 0 40px 0 10px;
+	float: right;
+	font-size: 13px;
+	font-weight: 500;
+	margin: 0 0 0 10px;
+	max-width: 130px;
 }
 
 .atwho-view .cur {

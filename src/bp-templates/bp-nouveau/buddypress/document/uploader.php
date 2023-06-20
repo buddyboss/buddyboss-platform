@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Document Uploader
+ * The template for document uploader
  *
- * @since BuddyBoss 1.4.0
+ * This template can be overridden by copying it to yourtheme/buddypress/document/uploader.php.
+ *
+ * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 ?>
 
@@ -28,7 +31,14 @@
 					</header>
 					<div class="bb-dropzone-wrap bp-media-upload-tab-content bp-upload-tab-content" id="bp-dropzone-content">
 						<?php
-						if ( bp_is_active( 'forums' ) && ! bbp_is_single_forum() && ! bbp_is_single_topic() && ! bp_is_messages_component() ) :
+						if (
+							(
+								! bp_is_active( 'forums' ) ||
+								( bp_is_active( 'forums' ) && ! bbp_is_single_forum() && ! bbp_is_single_topic() )
+							) &&
+							! bp_is_messages_component() &&
+							bp_is_active( 'activity' )
+						) :
 							?>
 							<div class="media-uploader-post-content">
 								<textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php bp_is_group() ? esc_html_e( 'Write something about your documents, to be shown on the group feed', 'buddyboss' ) : esc_html_e( 'Write something about your photos, to be shown on your timeline', 'buddyboss' ); ?>"></textarea>

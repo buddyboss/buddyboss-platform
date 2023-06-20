@@ -3,7 +3,7 @@
 /**
  * Forums Formatting
  *
- * @package BuddyBoss/Formatting
+ * @package BuddyBoss\Formatting
  */
 
 // Exit if accessed directly
@@ -139,6 +139,7 @@ function bbp_kses_data( $data = '' ) {
  * @return string Partially encodedd content
  */
 function bbp_code_trick( $content = '' ) {
+
 	$content = str_replace( array( "\r\n", "\r" ), "\n", $content );
 	/**
 	 * Added for convert &nbsp; to space fron content
@@ -266,7 +267,7 @@ function bbp_encode_callback( $matches = array() ) {
 function bbp_decode_callback( $matches = array() ) {
 
 	// Setup variables
-	$trans_table = array_flip( get_html_translation_table( HTML_ENTITIES ) );
+	$trans_table = array_flip( get_html_translation_table( HTML_ENTITIES, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
 	$amps        = array( '&#38;', '&#038;', '&amp;' );
 	$single      = array( '&#39;', '&#039;' );
 	$content     = $matches[2];
@@ -338,7 +339,20 @@ function bbp_rel_nofollow( $text = '' ) {
 function bbp_rel_nofollow_callback( $matches = array() ) {
 	$text = $matches[1];
 	$text = str_replace( array( ' rel="nofollow"', " rel='nofollow'" ), '', $text );
-	return "<a $text rel=\"nofollow\">";
+
+	// Extract URL from href.
+	preg_match_all( '#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $text, $match );
+
+	$url_host      = ( isset( $match[0] ) && isset( $match[0][0] ) ? wp_parse_url( $match[0][0], PHP_URL_HOST ) : '' );
+	$base_url_host = wp_parse_url( site_url(), PHP_URL_HOST );
+
+	// If site link then nothing to do.
+	if ( $url_host === $base_url_host || empty( $url_host ) ) {
+		return "<a $text rel=\"nofollow\">";
+		// Else open in new tab.
+	} else {
+		return "<a target='_blank' $text rel=\"nofollow\">";
+	}
 }
 
 /** Make Clickable ************************************************************/

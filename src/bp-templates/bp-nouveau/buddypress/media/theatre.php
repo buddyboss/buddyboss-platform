@@ -1,8 +1,11 @@
 <?php
 /**
- * BuddyBoss - Media Theatre
+ * The template for media theatre
  *
- * @since BuddyBoss 1.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/media/theatre.php.
+ *
+ * @since    BuddyBoss 1.0.0
+ * @version  1.0.0
  */
 ?>
 <div class="bb-media-model-wrapper bb-internal-model media media-theatre" style="display: none;"  id="buddypress">

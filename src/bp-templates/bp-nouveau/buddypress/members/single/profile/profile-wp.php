@@ -1,9 +1,11 @@
 <?php
 /**
- * BuddyBoss - Members Single Profile WP
+ * The template for members single profile wp
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/profile/profile-wp.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
 
 bp_nouveau_wp_profile_hooks( 'before' ); ?>

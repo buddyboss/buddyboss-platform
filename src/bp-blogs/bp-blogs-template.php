@@ -692,7 +692,7 @@ function bp_blog_latest_post( $args = array() ) {
 function bp_get_blog_latest_post( $args = array() ) {
 	global $blogs_template;
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'latest_format' => true,
@@ -1155,7 +1155,7 @@ function bp_blogs_signup_blog( $blogname = '', $blog_title = '', $errors = '' ) 
 		<legend class="label"><?php _e( 'Privacy: I would like my site to appear in search engines, and in public listings around this network', 'buddyboss' ); ?></legend>
 
 		<label class="checkbox" for="blog_public_on">
-			<input type="radio" id="blog_public_on" name="blog_public" value="1" 
+			<input type="radio" id="blog_public_on" name="blog_public" value="1"
 			<?php
 			if ( ! isset( $_POST['blog_public'] ) || '1' == $_POST['blog_public'] ) {
 				?>
@@ -1163,7 +1163,7 @@ function bp_blogs_signup_blog( $blogname = '', $blog_title = '', $errors = '' ) 
 			<strong><?php _e( 'Yes', 'buddyboss' ); ?></strong>
 		</label>
 		<label class="checkbox" for="blog_public_off">
-			<input type="radio" id="blog_public_off" name="blog_public" value="0" 
+			<input type="radio" id="blog_public_off" name="blog_public" value="0"
 			<?php
 			if ( isset( $_POST['blog_public'] ) && '0' == $_POST['blog_public'] ) {
 				?>
@@ -1544,7 +1544,7 @@ function bp_get_blogs_visit_blog_button( $args = '' ) {
 		'link_text'         => __( 'Visit Site', 'buddyboss' ),
 	);
 
-	$button = wp_parse_args( $args, $defaults );
+	$button = bp_parse_args( $args, $defaults );
 
 	/**
 	 * Filters the button for visiting a blog in a loop.

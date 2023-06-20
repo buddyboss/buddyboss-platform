@@ -211,6 +211,24 @@ AJAX SEARCH
 	}
 }
 
+.bbls-pages-type,
+.bbls-posts-type,
+.bbls-cpt-sfwd-quiz-type,
+.bbls-cpt-sfwd-certificates-type {
+
+	.bp-search-ajax-item {
+		display: flex;
+
+		.item > a:not(.x) {
+			display: block;
+		}
+
+		.item > .entry-meta a .author {
+			margin-right: 5px;
+		}
+	}
+}
+
 .ui-menu .ui-menu-item a,
 .ui-menu .ui-menu-item a:hover,
 .ui-menu .ui-menu-item a:active {

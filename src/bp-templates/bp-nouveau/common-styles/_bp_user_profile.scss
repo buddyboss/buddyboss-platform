@@ -112,6 +112,7 @@
 			.description {
 				margin-top: -$marg-sml;
 				margin-bottom: $marg-sml;
+				white-space: pre-line;
 				order: 2;
 			}
 
@@ -127,6 +128,15 @@
 
 	} // .profile
 } // close .buddypress-wrap
+
+.profile-edit {
+
+	button.button > i {
+		font-size: 18px;
+		margin-right: 5px;
+	}
+
+}
 
 #btn_add_repeater_set {
 	align-items: center;
@@ -288,14 +298,13 @@ body.register .buddypress-wrap .page ul {
 #item-header a.link-change-cover-image,
 #item-header a.position-change-cover-image,
 #item-header a.link-change-profile-image {
-	background: rgba(255, 255, 255, 0.9);
 	border-radius: 50%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	position: absolute;
-	width: 30px;
-	height: 30px;
+	width: 34px;
+	height: 34px;
 	left: 12px;
 	top: 12px;
 	z-index: 3;
@@ -303,15 +312,13 @@ body.register .buddypress-wrap .page ul {
 	transition: all 0.2s;
 	text-decoration: none;
 
-	@include box-shadow( 0 0 3px 0 rgba(0, 0, 0, 0.2) );
-
 	> i {
-		font-size: 20px;
+		font-size: 34px;
 	}
 }
 
-#item-header a.link-change-cover-image > i {
-	font-size: 16px;
+#item-header a.position-change-cover-image > i {
+	font-size: 34px;
 }
 
 #item-header a.position-change-cover-image {
@@ -349,12 +356,88 @@ body.register .buddypress-wrap .page ul {
 	opacity: 1;
 }
 
+.users-header #social-networks-popup,
+.bp-widget.social #social-networks-popup {
+	display: none;
+
+	.bb-action-popup-content {
+		padding: 26px 30px 35px;
+		text-align: left;
+
+		.social {
+			margin-top: 7px;
+		}
+
+	}
+
+}
+
+.bp-widget.social #social-networks-popup {
+
+	.bb-model-header > p {
+		margin-left: auto;
+		margin-bottom: 0;
+		line-height: 1;
+	}
+
+	.bb-action-popup-content {
+
+		.social {
+			margin-top: 9px;
+			width: 24px;
+		}
+
+	}
+}
+
+.bp-widget.social .social-networks-popup-hide {
+	display: none;
+}
+
+.profile .bp-widget:has(.field_type_socialnetworks) #social-networks-popup {
+	display: none;
+}
+
+.buddypress-wrap .bp-widget.social .bp-tables-user {
+	overflow: visible;
+}
+
+.users-header #item-header-avatar {
+
+	a.link-change-profile-image {
+		top: 71px;
+		left: 50%;
+		margin-left: 0;
+		transform: translateX(-50%);
+	}
+
+	&:hover .link-change-overlay {
+		position: absolute;
+		left: 3px;
+		right: 3px;
+		top: 3px;
+		height: 164px;
+		background-color: rgba(0, 0, 0, 0.3);
+		border-radius: 50%;
+	}
+
+}
+
 .social-networks-wrap {
 
 	span.social {
 		display: inline-block;
 		width: 20px;
 		margin-right: 10px;
+
+		&:last-of-type {
+			margin-right: 0;
+		}
+
+	}
+
+	a i {
+		font-size: 24px;
 	}
 
 	svg {
@@ -383,55 +466,87 @@ body.register .buddypress-wrap .page ul {
 div.profile_completion_wrap {
 
 	.progress_text_wrap {
-		text-align: right;
-		margin-bottom: 5px;
+		text-align: center;
 	}
+}
 
-	.progress_container {
+.pc_detailed_progress li {
 
-		border: 1px solid #000;
-		border-radius: 12px;
+	margin: 15px 0;
 
-		.pc_progress {
-			height: 8px;
-			background-color: $informational;
-			border-radius: 12px 0 0 12px;
+	span.completed_staus {
+		color: #fff;
+		float: right;
+		width: 50px;
+		text-align: center;
+
+		html[dir="rtl"] & {
+			display: flex;
+			align-items: center;
+			justify-content: end;
 		}
 	}
+}
 
-	ul.pc_detailed_progress li {
+.pc_detailed_progress li.completed {
 
-		margin: 15px 0;
+	span.completed_staus {
+		color: $update-success;
+	}
+}
 
-		span.completed_staus {
-			color: #fff;
-			border-radius: 8px;
-			padding: 2px;
-			float: right;
-			width: 50px;
-			text-align: center;
-		}
+.pc_detailed_progress li.incomplete {
+
+	span.completed_staus {
+		color: $warn;
+	}
+}
+
+.pc_progress_graph {
+
+	path {
+		stroke: #e7e7e8;
+		stroke-linecap: round;
+		stroke-width: 6;
 	}
 
-	ul.pc_detailed_progress li.completed {
+	&.pc_progress_graph--blank {
 
-		span.completed_staus {
-			background-color: $update-success;
+		path {
+			stroke-linecap: initial;
 		}
 	}
+}
 
-	ul.pc_detailed_progress li.incomplete {
+.pc_progress_wrap {
+	text-align: center;
+	margin: 0 0 25px;
 
-		span.section_name a {
-			color: $text-link-hover;
-			text-decoration: underline;
-		}
-
-		span.completed_staus {
-			background-color: $warn;
-		}
+	svg {
+		width: 70%;
+		height: auto;
+		margin: 0 auto;
 	}
 
+	.pc_progress_rate {
+		stroke: $informational;
+	}
+}
+
+.progress_text_wrap {
+	margin-top: -50px;
+
+	h3 {
+		margin: 0;
+	}
+
+	.progress_text_value {
+		font-weight: 600;
+	}
+}
+
+.progress_text_label {
+	display: block;
 }
 
 /* Send Invites Table */

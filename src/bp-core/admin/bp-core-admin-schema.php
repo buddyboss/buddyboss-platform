@@ -37,11 +37,19 @@ function bp_core_install( $active_components = false ) {
 		}
 	}
 
+	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
+		// Install email queue table.
+		bb_email_queue()::create_db_table();
+	}
+
 	// Install Activity Feeds even when inactive (to store last_activity data).
 	bp_core_install_activity_streams();
 
 	// Install the signups table.
 	bp_core_maybe_install_signups();
+
+	// Install item subscriptions.
+	bb_core_install_subscription();
 
 	// Notifications.
 	if ( ! empty( $active_components['notifications'] ) ) {
@@ -78,16 +86,18 @@ function bp_core_install( $active_components = false ) {
 		bp_core_install_blog_tracking();
 	}
 
-	// Discussion forums
+	// Discussion forums.
 	if ( ! empty( $active_components['forums'] ) ) {
 		bp_core_install_discussion_forums();
 	}
 
-	// Media
+	// Media.
 	if ( ! empty( $active_components['media'] ) ) {
 		bp_core_install_media();
 		bp_core_install_document();
-		bb_core_enable_default_symlink_support();
+		if ( false === bp_get_option( 'bp_media_symlink_support', false ) ) {
+			bp_update_option( 'bp_media_symlink_support', 1 );
+		}
 	}
 
 	if ( ! empty( $active_components['moderation'] ) ) {
@@ -96,6 +106,9 @@ function bp_core_install( $active_components = false ) {
 	}
 
 	do_action( 'bp_core_install', $active_components );
+
+	// Needs to flush all cache when component activate/deactivate.
+	wp_cache_flush();
 
 	// Reset the permalink to fix the 404 on some pages.
 	flush_rewrite_rules();
@@ -311,6 +324,16 @@ function bp_core_install_groups() {
 				KEY meta_key (meta_key(191))
 			) {$charset_collate};";
 
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_groups_membermeta (
+				id bigint(20) NOT NULL AUTO_INCREMENT,
+				member_id bigint(20) NOT NULL,
+				meta_key varchar(255) DEFAULT NULL,
+				meta_value longtext DEFAULT NULL,
+				PRIMARY KEY  (id),
+				KEY member_id (member_id),
+				KEY meta_key (meta_key(191))
+			) {$charset_collate};";
+
 	dbDelta( $sql );
 }
 
@@ -330,6 +353,7 @@ function bp_core_install_private_messaging() {
 				sender_id bigint(20) NOT NULL,
 				subject varchar(200) NOT NULL,
 				message longtext NOT NULL,
+				is_deleted tinyint(1) NOT NULL DEFAULT '0',
 				date_sent datetime NOT NULL,
 				PRIMARY KEY  (id),
 				KEY sender_id (sender_id),
@@ -723,6 +747,7 @@ function bp_core_install_media() {
 		album_id bigint(20),
 		group_id bigint(20),
 		activity_id bigint(20) NULL DEFAULT NULL ,
+		message_id bigint(20) NULL DEFAULT 0 ,
 		privacy varchar(50) NULL DEFAULT 'public',
 		type varchar(50) NULL DEFAULT 'photo',
 		menu_order bigint(20) NULL DEFAULT 0 ,
@@ -732,7 +757,14 @@ function bp_core_install_media() {
 		KEY user_id (user_id),
 		KEY album_id (album_id),
 		KEY media_author_id (album_id,user_id),
-		KEY activity_id (activity_id)
+		KEY activity_id (activity_id),
+		KEY blog_id (blog_id),
+		KEY message_id (message_id),
+		KEY group_id (group_id),
+		KEY privacy (privacy),
+		KEY type (type),
+		KEY menu_order (menu_order),
+		KEY date_created (date_created)
 	) {$charset_collate};";
 
 	dbDelta( $sql );
@@ -775,6 +807,7 @@ function bp_core_install_document() {
 		folder_id bigint(20),
 		group_id bigint(20),
 		activity_id bigint(20) NULL DEFAULT NULL ,
+		message_id bigint(20) NULL DEFAULT 0 ,
 		privacy varchar(50) NULL DEFAULT 'public',
 		menu_order bigint(20) NULL DEFAULT 0 ,
 		date_created datetime DEFAULT '0000-00-00 00:00:00',
@@ -784,7 +817,14 @@ function bp_core_install_document() {
 		KEY user_id (user_id),
 		KEY folder_id (folder_id),
 		KEY document_author_id (folder_id,user_id),
-		KEY activity_id (activity_id)
+		KEY activity_id (activity_id),
+		KEY blog_id (blog_id),
+		KEY message_id (message_id),
+		KEY group_id (group_id),
+		KEY privacy (privacy),
+		KEY menu_order (menu_order),
+		KEY date_created (date_created),
+		KEY date_modified (date_modified)
 	) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_document_meta (
@@ -1121,6 +1161,17 @@ function bp_core_install_invitations() {
 		KEY invite_sent (invite_sent),
 		KEY accepted (accepted)
 		) {$charset_collate};";
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_invitations_invitemeta (
+		id bigint(20) NOT NULL AUTO_INCREMENT,
+		invite_id bigint(20) NOT NULL,
+		meta_key varchar(255) DEFAULT NULL,
+		meta_value longtext DEFAULT NULL,
+		PRIMARY KEY  (id),
+		KEY invite_id (invite_id),
+		KEY meta_key (meta_key(191))
+	) {$charset_collate};";
+
 	dbDelta( $sql );
 
 	/**
@@ -1154,6 +1205,7 @@ function bp_core_install_suspend() {
 	   hide_parent tinyint(1) NOT NULL,
 	   user_suspended tinyint(1) NOT NULL,
 	   reported tinyint(1) NOT NULL,
+	   user_report tinyint DEFAULT '0',
 	   last_updated datetime NULL DEFAULT '0000-00-00 00:00:00',
 	   blog_id bigint(20) NOT NULL,
 	   PRIMARY KEY  (id),
@@ -1195,6 +1247,7 @@ function bp_core_install_moderation() {
 	   content longtext NOT NULL,
 	   date_created datetime NULL DEFAULT '0000-00-00 00:00:00',
 	   category_id bigint(20) NOT NULL,
+	   user_report tinyint DEFAULT '0',
 	   PRIMARY KEY  (id),
 	   KEY moderation_report_id (moderation_id,user_id),
 	   KEY user_id (user_id)
@@ -1264,4 +1317,41 @@ function bp_core_install_moderation_emails() {
 	 * @since BuddyBoss 1.5.6
 	 */
 	do_action( 'bp_core_install_moderation_emails' );
+}
+
+/** Subscription *********************************************************/
+/**
+ * Install database tables for the subscriptions
+ *
+ * @since BuddyBoss 2.2.6
+ *
+ * @uses  get_charset_collate()
+ * @uses  bp_core_get_table_prefix()
+ * @uses  dbDelta()
+ */
+function bb_core_install_subscription() {
+	$sql             = array();
+	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
+	$bp_prefix       = bp_core_get_table_prefix();
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bb_notifications_subscriptions (
+	   id bigint(20) NOT NULL AUTO_INCREMENT,
+	   blog_id bigint(20) NOT NULL,
+	   user_id bigint(20) NOT NULL,
+	   type varchar(255) NOT NULL,
+	   item_id bigint(20) NOT NULL,
+	   secondary_item_id bigint(20) NOT NULL,
+	   status tinyint(1) NOT NULL DEFAULT '1',
+	   date_recorded datetime NULL DEFAULT '0000-00-00 00:00:00',
+	   PRIMARY KEY  (id),
+	   KEY blog_id (blog_id),
+	   KEY user_id (user_id),
+	   KEY type (type),
+	   KEY item_id (item_id),
+	   KEY secondary_item_id (secondary_item_id),
+	   KEY status (status),
+	   KEY date_recorded (date_recorded)
+   	) {$charset_collate};";
+
+	dbDelta( $sql );
 }

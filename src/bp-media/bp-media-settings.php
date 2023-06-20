@@ -866,7 +866,13 @@ function bp_emoji_tutorial() {
  */
 function bp_media_settings_callback_gif_key() {
 	?>
-	<input type="text" name="bp_media_gif_api_key" id="bp_media_gif_api_key" value="<?php echo bp_media_get_gif_api_key(); ?>" placeholder="<?php _e( 'GIPHY API Key', 'buddyboss' ); ?>" style="width: 300px;" />
+	<div class="password-toggle">
+		<input type="password" name="bp_media_gif_api_key" id="bp_media_gif_api_key" value="<?php echo esc_attr( bp_media_get_gif_api_key() ); ?>" placeholder="<?php esc_html_e( 'GIPHY API Key', 'buddyboss' ); ?>" <?php echo ! empty( bp_media_get_gif_api_key() ) ? 'readonly' : ''; ?> />
+		<button type="button" class="button button-secondary bb-hide-pw hide-if-no-js" aria-label="<?php esc_attr_e( 'Toggle', 'buddyboss' ); ?>">
+			<span class="bb-icon bb-icon-eye-small" aria-hidden="true"></span>
+		</button>
+	</div>
+	<input type="button" data-connected="<?php echo empty( bp_media_get_gif_api_key() ) ? false : true; ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb-giphy-connect' ) ); ?>" name="connect" id="bb-giphy-connect" class="button <?php echo empty( bp_media_get_gif_api_key() ) ? 'button-primary' : ''; ?>" data-disconnect-text="<?php esc_html_e( 'Disconnect', 'buddyboss' ); ?>" data-connect-text="<?php esc_html_e( 'Connect', 'buddyboss' ); ?>" value="<?php empty( bp_media_get_gif_api_key() ) ? esc_html_e( 'Connect', 'buddyboss' ) : esc_html_e( 'Disconnect', 'buddyboss' ); ?>" />
 	<p class="description">
 		<?php
 		printf(
@@ -878,6 +884,10 @@ function bp_media_settings_callback_gif_key() {
 			__( 'Once done, copy the API key and paste it in the field above.', 'buddyboss' )
 		);
 		?>
+	</p>
+	<?php $is_valid_key = bb_check_valid_giphy_api_key( '', true ); ?>
+	<p class="display-notice bp-new-notice-panel-notice <?php echo ( ! is_wp_error( $is_valid_key ) && isset( $is_valid_key['response']['code'] ) && 200 !== $is_valid_key['response']['code'] ) ? '' : 'hidden'; ?>">
+		<strong><?php esc_html_e( 'There was a problem connecting to GIPHY with your API key:', 'buddyboss' ); ?></strong><br>(<span id="giphy_response_code"><?php echo ( isset( $is_valid_key['response']['code'] ) ) ? esc_attr( $is_valid_key['response']['code'] ) : ''; ?>)</span>) <span id="giphy_response_message"><?php echo isset( $is_valid_key['response']['message'] ) ? esc_attr( $is_valid_key['response']['message'] ) : ''; ?>.</span>
 	</p>
 	<?php
 }
@@ -910,7 +920,7 @@ function bp_media_get_gif_api_key( $default = '' ) {
  */
 function bp_media_settings_callback_profiles_gif_support() {
 	?>
-	<input name="bp_media_profiles_gif_support" id="bp_media_profiles_gif_support" type="checkbox" value="1" <?php checked( bp_is_profiles_gif_support_enabled() ); ?> />
+	<input name="bp_media_profiles_gif_support" id="bp_media_profiles_gif_support" type="checkbox" value="1" <?php checked( bp_is_profiles_gif_support_enabled() ); echo ! bb_check_valid_giphy_api_key() ? ' disabled' : ''; ?>/>
 	<label for="bp_media_profiles_gif_support">
 		<?php _e( 'Allow members to use animated GIFs in <strong>profile activity posts</strong>', 'buddyboss' ); ?>
 	</label>
@@ -955,7 +965,7 @@ function bp_media_settings_callback_groups_gif_support() {
 	}
 	$display_string .= $last_string;
 	?>
-	<input name="bp_media_groups_gif_support" id="bp_media_groups_gif_support" type="checkbox" value="1" <?php checked( bp_is_groups_gif_support_enabled() ); ?> />
+	<input name="bp_media_groups_gif_support" id="bp_media_groups_gif_support" type="checkbox" value="1" <?php checked( bp_is_groups_gif_support_enabled() );  echo ! bb_check_valid_giphy_api_key() ? ' disabled' : ''; ?>/>
 	<label for="bp_media_groups_gif_support">
 		<?php
 		printf(
@@ -975,7 +985,7 @@ function bp_media_settings_callback_groups_gif_support() {
  */
 function bp_media_settings_callback_messages_gif_support() {
 	?>
-	<input name="bp_media_messages_gif_support" id="bp_media_messages_gif_support" type="checkbox" value="1" <?php checked( bp_is_messages_gif_support_enabled() ); ?> />
+	<input name="bp_media_messages_gif_support" id="bp_media_messages_gif_support" type="checkbox" value="1" <?php checked( bp_is_messages_gif_support_enabled() ); echo ! bb_check_valid_giphy_api_key() ? ' disabled' : ''; ?>/>
 	<label for="bp_media_messages_gif_support">
 		<?php
 		_e( 'Allow members to use animated GIFs in <strong>private messages</strong>', 'buddyboss' );
@@ -991,7 +1001,7 @@ function bp_media_settings_callback_messages_gif_support() {
  */
 function bp_media_settings_callback_forums_gif_support() {
 	?>
-	<input name="bp_media_forums_gif_support" id="bp_media_forums_gif_support" type="checkbox" value="1" <?php checked( bp_is_forums_gif_support_enabled() ); ?> />
+	<input name="bp_media_forums_gif_support" id="bp_media_forums_gif_support" type="checkbox" value="1" <?php checked( bp_is_forums_gif_support_enabled() ); echo ! bb_check_valid_giphy_api_key() ? ' disabled' : ''; ?>/>
 	<label for="bp_media_forums_gif_support">
 		<?php _e( 'Allow members to use animated GIFs in <strong>forum discussions</strong> and <strong>replies</strong>', 'buddyboss' ); ?>
 	</label>
@@ -1007,7 +1017,11 @@ function bp_media_settings_callback_forums_gif_support() {
  * @since BuddyBoss 1.0.0
  */
 function bp_is_profiles_gif_support_enabled( $default = 0 ) {
-	return (bool) apply_filters( 'bp_is_profiles_gif_support_enabled', (bool) get_option( 'bp_media_profiles_gif_support', $default ) );
+	$result = false;
+	if ( bb_check_valid_giphy_api_key() ) {
+		$result = (bool) get_option( 'bp_media_profiles_gif_support', $default );
+	}
+	return (bool) apply_filters( 'bp_is_profiles_gif_support_enabled', $result );
 }
 
 /**
@@ -1019,7 +1033,11 @@ function bp_is_profiles_gif_support_enabled( $default = 0 ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_is_groups_gif_support_enabled( $default = 0 ) {
-	return (bool) apply_filters( 'bp_is_groups_gif_support_enabled', (bool) get_option( 'bp_media_groups_gif_support', $default ) );
+	$result = false;
+	if ( bb_check_valid_giphy_api_key() ) {
+		$result = (bool) get_option( 'bp_media_groups_gif_support', $default );
+	}
+	return (bool) apply_filters( 'bp_is_groups_gif_support_enabled', $result );
 }
 
 /**
@@ -1031,7 +1049,11 @@ function bp_is_groups_gif_support_enabled( $default = 0 ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_is_messages_gif_support_enabled( $default = 0 ) {
-	return (bool) apply_filters( 'bp_is_messages_gif_support_enabled', (bool) get_option( 'bp_media_messages_gif_support', $default ) );
+	$result = false;
+	if ( bb_check_valid_giphy_api_key() ) {
+		$result = (bool) get_option( 'bp_media_messages_gif_support', $default );
+	}
+	return (bool) apply_filters( 'bp_is_messages_gif_support_enabled', $result );
 }
 
 /**
@@ -1043,7 +1065,11 @@ function bp_is_messages_gif_support_enabled( $default = 0 ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_is_forums_gif_support_enabled( $default = 0 ) {
-	return (bool) apply_filters( 'bp_is_forums_gif_support_enabled', (bool) get_option( 'bp_media_forums_gif_support', $default ) );
+	$result = false;
+	if ( bb_check_valid_giphy_api_key() ) {
+		$result = (bool) get_option( 'bp_media_forums_gif_support', $default );
+	}
+	return (bool) apply_filters( 'bp_is_forums_gif_support_enabled', $result );
 }
 
 /**
@@ -1297,9 +1323,7 @@ function bp_media_settings_callback_extension_document_support() {
 				<td data-colname="<?php esc_attr_e( 'Icon', 'buddyboss' ); ?>">
 					<?php
 					if ( $is_default ) {
-						?>
-						<i class="bb-icon <?php echo $document_icon; ?>"></i>
-						<?php
+						echo '<i class="bb-icon-l ' . esc_attr( $document_icon ) . '"></i>';
 					}
 					if ( ! $is_default ) {
 						?>
@@ -1899,24 +1923,24 @@ function bp_media_settings_callback_extension_video_support() {
  */
 function bb_media_settings_callback_symlink_support() {
 
-    ?>
-    <input name="bp_media_symlink_support" id="bp_media_symlink_support" type="checkbox" value="1" <?php checked( bb_enable_symlinks() ); ?> />
-    <label for="bp_media_symlink_support">
-        <?php esc_html_e( 'Enable symbolic links. If you are having issues with media display, try disabling this option.', 'buddyboss' ); ?>
-    </label>
+	?>
+	<input name="bp_media_symlink_support" id="bp_media_symlink_support" type="checkbox" value="1" <?php checked( bb_enable_symlinks() ); ?> />
+	<label for="bp_media_symlink_support">
+		<?php esc_html_e( 'Enable symbolic links. If you are having issues with media display, try disabling this option.', 'buddyboss' ); ?>
+	</label>
 
-    <?php
+	<?php
 	$has_error = false;
 	if ( true === bb_check_server_disabled_symlink() ) {
 		bp_update_option( 'bp_media_symlink_support', 0 );
 		$has_error = true;
 		?>
-        <div class="bp-messages-feedback">
-            <div class="bp-feedback warning">
-                <span class="bp-icon" aria-hidden="true"></span>
-                <p><?php esc_html_e( 'Symbolic function disabled on your server. Please contact your hosting provider.', 'buddyboss' ); ?></p>
-            </div>
-        </div>
+		<div class="bp-messages-feedback">
+			<div class="bp-feedback warning">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p><?php esc_html_e( 'Symbolic function disabled on your server. Please contact your hosting provider.', 'buddyboss' ); ?></p>
+			</div>
+		</div>
 		<?php
 	}
 
@@ -1931,14 +1955,25 @@ function bb_media_settings_callback_symlink_support() {
 		<?php
 	}
 
+	if ( true === (bool) bp_get_option( 'bb_display_support_error' ) ) {
+		?>
+		<div class="bp-messages-feedback">
+			<div class="bp-feedback warning">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p><?php esc_html_e( 'Symbolic links don\'t seem to work on your server. Please contact BuddyBoss for support.', 'buddyboss' ); ?></p>
+			</div>
+		</div>
+		<?php
+	}
+
 	if ( empty( bb_enable_symlinks() ) ) {
 		?>
-        <div class="bp-messages-feedback">
-            <div class="bp-feedback warning">
-                <span class="bp-icon" aria-hidden="true"></span>
-                <p><?php esc_html_e( 'Symbolic links are disabled', 'buddyboss' ); ?></p>
-            </div>
-        </div>
+		<div class="bp-messages-feedback">
+			<div class="bp-feedback warning">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p><?php esc_html_e( 'Symbolic links are disabled', 'buddyboss' ); ?></p>
+			</div>
+		</div>
 		<?php
 	} elseif ( ! $has_error && bb_enable_symlinks() ) {
 		?>
@@ -1968,93 +2003,104 @@ function bb_media_settings_callback_symlink_direct_access() {
 	$video_attachment_id    = 0;
 	$media_attachment_id    = 0;
 	$document_attachment_id = 0;
+	$bypass_check           = apply_filters( 'bb_media_check_default_access', 0 );
 
-	// Add upload filters.
-	add_filter( 'upload_dir', 'bp_video_upload_dir_script' );
-	$file        = buddypress()->plugin_dir . 'bp-core/images/suspended-mystery-man.jpg';
-	$filename    = basename( $file );
-	$upload_file = wp_upload_bits( $filename, null, file_get_contents( $file ) );
+	if ( ! $bypass_check ) {
 
-	if ( ! $upload_file['error'] ) {
-		$wp_filetype         = wp_check_filetype( $filename, null );
-		$attachment          = array(
-			'post_mime_type' => $wp_filetype['type'],
-			'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
-			'post_content'   => '',
-			'post_status'    => 'inherit',
-		);
-		$video_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
-		if ( ! is_wp_error( $video_attachment_id ) ) {
-			require_once ABSPATH . 'wp-admin/includes/image.php';
-			$attachment_data = wp_generate_attachment_metadata( $video_attachment_id, $upload_file['file'] );
-			wp_update_attachment_metadata( $video_attachment_id, $attachment_data );
-			$get_sample_ids['bb_videos'] = $video_attachment_id;
+		// Add upload filters.
+		add_filter( 'upload_dir', 'bp_video_upload_dir_script' );
+		$file        = buddypress()->plugin_dir . 'bp-core/images/suspended-mystery-man.jpg';
+		$filename    = basename( $file );
+		$upload_file = wp_upload_bits( $filename, null, file_get_contents( $file ) );
+
+		if ( ! $upload_file['error'] ) {
+			$wp_filetype         = wp_check_filetype( $filename, null );
+			$attachment          = array(
+				'post_mime_type' => $wp_filetype['type'],
+				'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
+				'post_content'   => '',
+				'post_status'    => 'inherit',
+			);
+			$video_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
+			if ( ! is_wp_error( $video_attachment_id ) ) {
+				require_once ABSPATH . 'wp-admin/includes/image.php';
+				$attachment_data = wp_generate_attachment_metadata( $video_attachment_id, $upload_file['file'] );
+				wp_update_attachment_metadata( $video_attachment_id, $attachment_data );
+				$get_sample_ids['bb_videos'] = $video_attachment_id;
+			}
 		}
-	}
-	// Remove upload filters.
-	remove_filter( 'upload_dir', 'bp_video_upload_dir_script' );
+		// Remove upload filters.
+		remove_filter( 'upload_dir', 'bp_video_upload_dir_script' );
 
-	add_filter( 'upload_dir', 'bp_media_upload_dir_script' );
-	$file        = buddypress()->plugin_dir . 'bp-core/images/suspended-mystery-man.jpg';
-	$filename    = basename( $file );
-	$upload_file = wp_upload_bits( $filename, null, file_get_contents( $file ) );
+		add_filter( 'upload_dir', 'bp_media_upload_dir_script' );
+		$file        = buddypress()->plugin_dir . 'bp-core/images/suspended-mystery-man.jpg';
+		$filename    = basename( $file );
+		$upload_file = wp_upload_bits( $filename, null, file_get_contents( $file ) );
 
-	if ( ! $upload_file['error'] ) {
-		$wp_filetype         = wp_check_filetype( $filename, null );
-		$attachment          = array(
-			'post_mime_type' => $wp_filetype['type'],
-			'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
-			'post_content'   => '',
-			'post_status'    => 'inherit',
-		);
-		$media_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
-		if ( ! is_wp_error( $media_attachment_id ) ) {
-			require_once ABSPATH . 'wp-admin/includes/image.php';
-			$attachment_data = wp_generate_attachment_metadata( $media_attachment_id, $upload_file['file'] );
-			wp_update_attachment_metadata( $media_attachment_id, $attachment_data );
-			$get_sample_ids['bb_medias'] = $media_attachment_id;
+		if ( ! $upload_file['error'] ) {
+			$wp_filetype         = wp_check_filetype( $filename, null );
+			$attachment          = array(
+				'post_mime_type' => $wp_filetype['type'],
+				'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
+				'post_content'   => '',
+				'post_status'    => 'inherit',
+			);
+			$media_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
+			if ( ! is_wp_error( $media_attachment_id ) ) {
+				require_once ABSPATH . 'wp-admin/includes/image.php';
+				$attachment_data = wp_generate_attachment_metadata( $media_attachment_id, $upload_file['file'] );
+				wp_update_attachment_metadata( $media_attachment_id, $attachment_data );
+				$get_sample_ids['bb_medias'] = $media_attachment_id;
+			}
 		}
-	}
-	remove_filter( 'upload_dir', 'bp_media_upload_dir_script' );
+		remove_filter( 'upload_dir', 'bp_media_upload_dir_script' );
 
-	add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
-	$file        = buddypress()->plugin_dir . 'bp-core/images/suspended-mystery-man.jpg';
-	$filename    = basename( $file );
-	$upload_file = wp_upload_bits( $filename, null, file_get_contents( $file ) );
+		add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
+		$file        = buddypress()->plugin_dir . 'bp-core/images/suspended-mystery-man.jpg';
+		$filename    = basename( $file );
+		$upload_file = wp_upload_bits( $filename, null, file_get_contents( $file ) );
 
-	if ( ! $upload_file['error'] ) {
-		$wp_filetype            = wp_check_filetype( $filename, null );
-		$attachment             = array(
-			'post_mime_type' => $wp_filetype['type'],
-			'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
-			'post_content'   => '',
-			'post_status'    => 'inherit',
-		);
-		$document_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
-		if ( ! is_wp_error( $document_attachment_id ) ) {
-			require_once ABSPATH . 'wp-admin/includes/image.php';
-			$attachment_data = wp_generate_attachment_metadata( $document_attachment_id, $upload_file['file'] );
-			wp_update_attachment_metadata( $document_attachment_id, $attachment_data );
-			$get_sample_ids['bb_documents'] = $document_attachment_id;
+		if ( ! $upload_file['error'] ) {
+			$wp_filetype            = wp_check_filetype( $filename, null );
+			$attachment             = array(
+				'post_mime_type' => $wp_filetype['type'],
+				'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
+				'post_content'   => '',
+				'post_status'    => 'inherit',
+			);
+			$document_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
+			if ( ! is_wp_error( $document_attachment_id ) ) {
+				require_once ABSPATH . 'wp-admin/includes/image.php';
+				$attachment_data = wp_generate_attachment_metadata( $document_attachment_id, $upload_file['file'] );
+				wp_update_attachment_metadata( $document_attachment_id, $attachment_data );
+				$get_sample_ids['bb_documents'] = $document_attachment_id;
+			}
 		}
-	}
-	remove_filter( 'upload_dir', 'bp_document_upload_dir_script' );
+		remove_filter( 'upload_dir', 'bp_document_upload_dir_script' );
 
-	$directory = array();
-	foreach ( $get_sample_ids as $id => $v ) {
-		$fetch = wp_remote_get( wp_get_attachment_image_url( $v ) );
-		if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
-			$directory[] = $id;
+		$directory = array();
+		foreach ( $get_sample_ids as $id => $v ) {
+			$fetch = wp_remote_get( wp_get_attachment_image_url( $v ) );
+			if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
+				$directory[] = $id;
+			}
 		}
-	}
 
-	if ( ! empty( $directory ) ) {
+		$directory = apply_filters( 'bb_media_settings_callback_symlink_direct_access', $directory, $get_sample_ids );
 
-		printf(
-			'<div class="bp-messages-feedback"><div class="bp-feedback warning"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div></div>',
-			esc_html__( 'Direct access to your media files and folders is not blocked', 'buddyboss' )
-		);
+		if ( ! empty( $directory ) ) {
 
+			printf(
+				'<div class="bp-messages-feedback"><div class="bp-feedback warning"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div></div>',
+				esc_html__( 'Direct access to your media files and folders is not blocked', 'buddyboss' )
+			);
+
+		} else {
+			printf(
+				'<div class="bp-messages-feedback"><div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div></div>',
+				esc_html__( 'Direct access to your media files and folders is blocked', 'buddyboss' )
+			);
+		}
 	} else {
 		printf(
 			'<div class="bp-messages-feedback"><div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div></div>',

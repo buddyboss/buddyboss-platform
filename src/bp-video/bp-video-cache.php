@@ -18,6 +18,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_video_clear_cache_for_video( $video ) {
 	wp_cache_delete( $video->id, 'bp_video' );
+	wp_cache_delete( 'bb_video_activity_' . $video->id, 'bp_video' ); // Used in bb_moderation_get_media_record_by_id().
 }
 add_action( 'bp_video_after_save', 'bp_video_clear_cache_for_video' );
 
@@ -31,6 +32,7 @@ add_action( 'bp_video_after_save', 'bp_video_clear_cache_for_video' );
 function bp_video_clear_cache_for_deleted_video( $deleted_ids ) {
 	foreach ( (array) $deleted_ids as $deleted_id ) {
 		wp_cache_delete( $deleted_id, 'bp_video' );
+		wp_cache_delete( 'bb_video_activity_' . $deleted_id, 'bp_video' ); // Used in bb_moderation_get_media_record_by_id().
 	}
 }
 add_action( 'bp_video_deleted_videos', 'bp_video_clear_cache_for_deleted_video' );
@@ -76,9 +78,16 @@ add_action( 'bp_video_add', 'bp_video_clear_video_user_object_cache', 10 );
  * @param array $videos DB results of video items.
  */
 function bp_video_clear_video_user_object_cache_on_delete( $videos ) {
-	if ( ! empty( $videos[0] ) ) {
-		foreach ( (array) $videos[0] as $deleted_video ) {
+	if ( ! empty( $videos ) ) {
+		foreach ( (array) $videos as $deleted_video ) {
 			$user_id = ! empty( $deleted_video->user_id ) ? $deleted_video->user_id : false;
+
+			wp_cache_delete( 'bb_video_activity_' . $deleted_video->id, 'bp_video' ); // Used in bb_moderation_get_media_record_by_id().
+
+			if ( ! empty( $deleted_video->activity_id ) ) {
+				wp_cache_delete( 'bp_video_activity_id_' . $deleted_video->activity_id, 'bp_video' );
+				wp_cache_delete( 'bp_video_attachment_id_' . $deleted_video->activity_id, 'bp_video' );
+			}
 
 			if ( $user_id ) {
 				wp_cache_delete( 'bp_total_video_for_user_' . $user_id, 'bp' );
@@ -147,6 +156,7 @@ add_action( 'bp_video_before_delete', 'bp_video_clear_video_group_object_cache_o
  */
 function bp_video_clear_cache_for_album( $album ) {
 	wp_cache_delete( $album->id, 'bp_video_album' );
+	wp_cache_delete( 'bp_video_user_video_album_' . $album->user_id . '_' . $album->group_id, 'bp_video_album' );
 }
 add_action( 'bp_video_album_after_save', 'bp_video_clear_cache_for_album' );
 
@@ -188,11 +198,15 @@ add_action( 'bp_video_album_add', 'bp_video_album_reset_cache_incrementor' );
  * @param object $album Album object item.
  */
 function bp_video_clear_album_group_object_cache( $album ) {
-	$group_id = ! empty( $album->group_id ) ? $album->group_id : false;
+	$group_id = ! empty( $album->group_id ) ? $album->group_id : 0;
+	$user_id  = ! empty( $album->user_id ) ? $album->user_id : 0;
 
 	if ( $group_id ) {
 		wp_cache_delete( 'bp_total_album_for_group_' . $group_id, 'bp' );
 	}
+
+	wp_cache_delete( 'bp_video_user_video_album_' . $user_id . '_' . $group_id, 'bp_video_album' );
+
 }
 add_action( 'bp_video_album_add', 'bp_video_clear_album_group_object_cache', 10 );
 
@@ -206,11 +220,15 @@ add_action( 'bp_video_album_add', 'bp_video_clear_album_group_object_cache', 10 
 function bp_video_clear_album_group_object_cache_on_delete( $albums ) {
 	if ( ! empty( $albums[0] ) ) {
 		foreach ( (array) $albums[0] as $deleted_album ) {
-			$group_id = ! empty( $deleted_album->group_id ) ? $deleted_album->group_id : false;
+			$group_id = ! empty( $deleted_album->group_id ) ? $deleted_album->group_id : 0;
+			$user_id  = ! empty( $deleted_album->user_id ) ? $deleted_album->user_id : 0;
 
 			if ( $group_id ) {
 				wp_cache_delete( 'bp_total_album_for_group_' . $group_id, 'bp' );
 			}
+
+			wp_cache_delete( 'bp_video_user_video_album_' . $user_id . '_' . $group_id, 'bp_video_album' );
+
 		}
 	}
 }

@@ -6,7 +6,8 @@ jQuery(document).ready(function($) {
 	function initAutoComplete(  ) {
 		var autoCompleteObjects = [];
 		if (BP_SEARCH.enable_ajax_search == '1') {
-			var document_height = $(document).height();
+			var document_height = $(document).height(),
+			    bb_is_rtl       = $('body').hasClass('rtl');
 			$(BP_SEARCH.autocomplete_selector).each(function() {
 				var $form = $(this),
 					$search_field = $form.find('input[name="s"], input[type=search]');
@@ -23,11 +24,11 @@ jQuery(document).ready(function($) {
 						distance_from_bottom = document_height - input_offset_plus;
 
 					//assuming 400px is good enough to display autocomplete ui
-					if( distance_from_bottom < 400 ){
+					if( distance_from_bottom < 400 && input_offset.top > distance_from_bottom ){
 						//but if space available on top is even less!
-						if( input_offset.top > distance_from_bottom ){
-							ac_position_prop = { collision: 'flip flip' };
-						}
+						ac_position_prop = { collision: 'flip flip' };
+					} else {
+						ac_position_prop = { my: 'left top', at: 'left bottom', collision: 'none' };
 					}
 
 					autoCompleteObjects.push( $search_field );
@@ -129,14 +130,17 @@ jQuery(document).ready(function($) {
 							input_offset_plus = input_offset.top + $search_field.outerHeight(),
 							distance_from_bottom = document_height - input_offset_plus;
 
-						//assuming 400px is good enough to display autocomplete ui
-						if ( distance_from_bottom < 400 ) {
-							//but if space available on top is even less!
-							if ( input_offset.top > distance_from_bottom ) {
-								ac_position_prop = { collision: 'flip flip' };
-							}
+						if ( bb_is_rtl ) {
+							ac_position_prop = { my: 'right top', at: 'right bottom', collision: 'none' };
+						} else {
+							ac_position_prop = { my: 'left top', at: 'left bottom', collision: 'none' };
 						}
 
+						//assuming 400px is good enough to display autocomplete ui
+						if ( distance_from_bottom < 400 && input_offset.top > distance_from_bottom ) {
+							ac_position_prop.collision = 'none flipfit';
+						}
+						
 						$( $search_field ).autocomplete( {
 							source: function ( request, response ) {
 
@@ -207,16 +211,6 @@ jQuery(document).ready(function($) {
 					}
 				} );
 			}
-
-			/**
-			 * Close the suggestion box when the page scrolls
-			 */
-			window.addEventListener( 'scroll', function () {
-				var arrayLength = autoCompleteObjects.length;
-				for ( var i = 0; i < arrayLength; i ++ ) {
-					autoCompleteObjects[i].autocomplete( 'close' );
-				}
-			} );
 		}
 	}
 	initAutoComplete();

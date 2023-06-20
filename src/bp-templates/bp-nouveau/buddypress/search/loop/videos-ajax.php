@@ -1,8 +1,12 @@
 <?php
 /**
- * Video search Ajax Template
+ * Template for displaying the search results of the videos ajax
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/videos-ajax.php.
  *
  * @package BuddyBoss\Core
+ * @since   BuddyBoss 1.7.0
+ * @version 1.7.0
  */
 
 $listing_class = '';
@@ -43,40 +47,13 @@ $video_created = bp_get_video_date_created();
 
 				<div class="media-album_modified">
 					<div class="media-album_details__bottom">
+						<span class="media-album_author"><?php esc_html_e( 'By ', 'buddyboss' ); ?>
+							<a href="<?php echo esc_url( $video_link ); ?>">
+								<?php esc_html( bp_video_author() ); ?>
+							</a>
+						</span>
+						<span class="middot">&middot;</span>
 						<span class="media-album_date"><?php echo esc_html( bp_core_format_date( $video_created ) ); ?></span>
-						<?php
-						if ( ! bp_is_user() ) {
-							?>
-							<span class="media-album_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?>
-							<a href="<?php echo esc_url( $video_link ); ?>"><?php bp_video_author(); ?></a></span>
-							<?php
-						}
-						?>
-					</div>
-				</div>
-
-				<div class="media-album_group">
-					<div class="media-album_details__bottom">
-						<?php
-						if ( bp_is_active( 'groups' ) ) {
-							$group_id = bp_get_video_group_id();
-							if ( $group_id > 0 ) {
-								// Get the group from the database.
-								$group        = groups_get_group( $group_id );
-								$group_name   = isset( $group->name ) ? bp_get_group_name( $group ) : '';
-								$group_link   = sprintf( '<a href="%s" class="bp-group-home-link %s-home-link">%s</a>', esc_url( $video_link ), esc_attr( bp_get_group_slug( $group ) ), esc_html( bp_get_group_name( $group ) ) );
-								$group_status = bp_get_group_status( $group );
-								?>
-								<span class="media-album_group_name"><?php echo wp_kses_post( $group_link ); ?></span>
-								<span class="media-album_status"><?php echo esc_html( ucfirst( $group_status ) ); ?></span>
-								<?php
-							} else {
-								?>
-								<span class="media-album_group_name"> </span>
-								<?php
-							}
-						}
-						?>
 					</div>
 				</div>
 
@@ -87,12 +64,14 @@ $video_created = bp_get_video_date_created();
 							$group_id = bp_get_video_group_id();
 							if ( $group_id > 0 ) {
 								?>
+								<span class="middot">&middot;</span>
 								<span class="bp-tooltip" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
 									<?php bp_video_visibility(); ?>
 								</span>
 								<?php
 							} else {
 								?>
+								<span class="middot">&middot;</span>
 								<span id="privacy-<?php echo esc_attr( bp_get_video_id() ); ?>">
 									<?php bp_video_visibility(); ?>
 								</span>
@@ -100,6 +79,7 @@ $video_created = bp_get_video_date_created();
 							}
 						} else {
 							?>
+							<span class="middot">&middot;</span>
 							<span>
 								<?php bp_video_visibility(); ?>
 							</span>

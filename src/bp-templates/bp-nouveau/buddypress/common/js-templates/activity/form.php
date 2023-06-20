@@ -2,7 +2,10 @@
 /**
  * Activity Post form JS Templates
  *
- * @version 3.1.0
+ * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/form.php.
+ *
+ * @since   1.0.0
+ * @version 1.8.6
  */
 
 /**
@@ -19,16 +22,21 @@ $template_parts = apply_filters(
 		'parts/bp-activity-media',
 		'parts/bp-activity-document',
 		'parts/bp-activity-video',
-		'parts/bp-activity-post-form-avatar',
+		'parts/bp-activity-post-case-avatar',
+		'parts/bp-activity-post-case-heading',
+		'parts/bp-activity-post-case-privacy',
 		'parts/bp-activity-post-form-buttons',
 		'parts/bp-activity-post-form-feedback',
 		'parts/bp-activity-post-form-options',
+		'parts/bp-activity-header',
 		'parts/bp-activity-target-item',
 		'parts/bp-gif-media-search-dropdown',
 		'parts/bp-gif-result-item',
 		'parts/bp-whats-new-toolbar',
+		'parts/bp-editor-toolbar',
 		'parts/bp-activity-post-form-privacy',
 		'parts/bp-activity-edit-postin',
+		'parts/bp-activity-post-privacy-stage-footer',
 	)
 );
 

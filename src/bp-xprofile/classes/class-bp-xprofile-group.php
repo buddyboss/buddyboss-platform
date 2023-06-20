@@ -65,6 +65,15 @@ class BP_XProfile_Group {
 	public $fields;
 
 	/**
+	 * Static cache key for the groups.
+	 *
+	 * @since BuddyBoss 2.1.6
+	 *
+	 * @var array Fields of cache.
+	 */
+	public static $bp_xprofile_group_ids = array();
+
+	/**
 	 * Initialize and/or populate profile field group.
 	 *
 	 * @since BuddyPress 1.1.0
@@ -270,10 +279,11 @@ class BP_XProfile_Group {
 	 * @return array $groups
 	 */
 	public static function get( $args = array() ) {
+		static $bp_xprofile_field_ids = array();
 		global $wpdb;
 
 		// Parse arguments.
-		$r = wp_parse_args(
+		$r = bp_parse_args(
 			$args,
 			array(
 				'profile_group_id'               => false,
@@ -313,10 +323,16 @@ class BP_XProfile_Group {
 		$bp = buddypress();
 
 		// Include or exclude empty groups.
-		if ( ! empty( $r['hide_empty_groups'] ) ) {
-			$group_ids = $wpdb->get_col( "SELECT DISTINCT g.id FROM {$bp->profile->table_name_groups} g INNER JOIN {$bp->profile->table_name_fields} f ON g.id = f.group_id {$where_sql} ORDER BY g.group_order ASC" );
+		$cache_key = 'bp_xprofile_group_ids_' . md5( maybe_serialize( $r ) . '_' . maybe_serialize( $where_sql ) );
+		if ( ! isset( self::$bp_xprofile_group_ids[ $cache_key ] ) ) {
+			if ( ! empty( $r['hide_empty_groups'] ) ) {
+				$group_ids = $wpdb->get_col( "SELECT DISTINCT g.id FROM {$bp->profile->table_name_groups} g INNER JOIN {$bp->profile->table_name_fields} f ON g.id = f.group_id {$where_sql} ORDER BY g.group_order ASC" );
+			} else {
+				$group_ids = $wpdb->get_col( "SELECT DISTINCT g.id FROM {$bp->profile->table_name_groups} g {$where_sql} ORDER BY g.group_order ASC" );
+			}
+			self::$bp_xprofile_group_ids[ $cache_key ] = $group_ids;
 		} else {
-			$group_ids = $wpdb->get_col( "SELECT DISTINCT g.id FROM {$bp->profile->table_name_groups} g {$where_sql} ORDER BY g.group_order ASC" );
+			$group_ids = self::$bp_xprofile_group_ids[ $cache_key ];
 		}
 
 		// Get all group data.
@@ -418,7 +434,13 @@ class BP_XProfile_Group {
 		}
 
 		// Fetch the fields.
-		$field_ids = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id IN ( {$group_ids_in} ) AND parent_id = 0 {$exclude_fields_sql} {$in_sql} ORDER BY field_order" );
+		$cache_field_key = 'bp_xprofile_field_ids_' . md5( maybe_serialize( $r ) );
+		if ( ! isset( $bp_xprofile_field_ids[ $cache_field_key ] ) || is_admin() ) {
+			$field_ids                           = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id IN ( {$group_ids_in} ) AND parent_id = 0 {$exclude_fields_sql} {$in_sql} ORDER BY field_order" );
+			$bp_xprofile_field_ids[ $cache_field_key ] = $field_ids;
+		} else {
+			$field_ids = $bp_xprofile_field_ids[ $cache_field_key ];
+		}
 
 		foreach ( $groups as $group ) {
 			$group->fields = array();
@@ -767,23 +789,41 @@ class BP_XProfile_Group {
 				$profile_meta_table = $bp->table_prefix . 'bp_xprofile_meta';
 			}
 
-			$levels = $wpdb->get_results( "SELECT object_id, meta_key, meta_value FROM {$profile_meta_table} WHERE object_type = 'field' AND ( meta_key = 'default_visibility' OR meta_key = 'allow_custom_visibility' )" );
+			if ( isset( $bp->profile ) && isset( $bp->profile->table_name_fields ) ) {
+				$profile_table = $bp->profile->table_name_fields;
+			} else {
+				$profile_table = $bp->table_prefix . 'bp_xprofile_fields';
+			}
+
+			$levels = $wpdb->get_results(
+				"SELECT xf.id,
+				GROUP_CONCAT(xm.meta_key ORDER BY xf.id) meta_keys,
+				GROUP_CONCAT(xm.meta_value ORDER BY xf.id) meta_values
+				FROM {$profile_table} as xf
+				INNER JOIN {$profile_meta_table} as xm on xf.id = xm.object_id
+				WHERE ( xm.meta_key = 'default_visibility' OR xm.meta_key = 'allow_custom_visibility' )
+				GROUP BY xf.id
+				ORDER BY xf.id"
+			);
+
+			$default_visibility_levels = array();
 
 			// Arrange so that the field id is the key and the visibility level the value.
-			$default_visibility_levels = array();
-			foreach ( $levels as $level ) {
-				switch ( $level->meta_key ) {
-					case 'default_visibility':
-						$default_visibility_levels[ $level->object_id ]['default'] = $level->meta_value;
-						break;
-					case 'allow_custom_visibility':
-						$default_visibility_levels[ $level->object_id ]['allow_custom'] = $level->meta_value;
-						break;
+			if ( ! empty( $levels ) ) {
+
+				foreach ( $levels as $level ) {
+
+					$meta_keys   = explode( ',', $level->meta_keys );
+					$meta_values = explode( ',', $level->meta_values );
+
+					$meta_keys                               = json_decode( str_replace( '_visibility', '', wp_json_encode( $meta_keys ) ), true );
+					$default_visibility_levels[ $level->id ] = array_combine( $meta_keys, $meta_values );
 				}
 			}
 
 			wp_cache_set( 'default_visibility_levels', $default_visibility_levels, 'bp_xprofile' );
 		}
+
 
 		return $default_visibility_levels;
 	}
@@ -862,7 +902,7 @@ class BP_XProfile_Group {
 						<div id="post-body-content">
 							<div id="titlediv">
 								<div class="titlewrap">
-									<label id="title-prompt-text" for="title"><?php esc_html_e( 'Field Set Name (required)', 'buddyboss' ); ?></label>
+									<label id="title-prompt-text" for="title" class="screen-reader-text"><?php esc_html_e( 'Field Set Name (required)', 'buddyboss' ); ?></label>
 									<input type="text" name="group_name" id="title" value="<?php echo esc_attr( $this->name ); ?>" autocomplete="off" />
 								</div>
 							</div>

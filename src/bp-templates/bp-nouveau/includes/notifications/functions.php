@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 3.0.0
  *
- * @param  array  $scripts  The array of scripts to register
+ * @param  array $scripts  The array of scripts to register
  * @return array  The same array with the specific notifications scripts.
  */
 function bp_nouveau_notifications_register_scripts( $scripts = array() ) {
@@ -23,13 +23,16 @@ function bp_nouveau_notifications_register_scripts( $scripts = array() ) {
 		return $scripts;
 	}
 
-	return array_merge( $scripts, array(
-		'bp-nouveau-notifications' => array(
-			'file'         => 'js/buddypress-notifications%s.js',
-			'dependencies' => array( 'bp-nouveau' ),
-			'footer'       => true,
-		),
-	) );
+	return array_merge(
+		$scripts,
+		array(
+			'bp-nouveau-notifications' => array(
+				'file'         => 'js/buddypress-notifications%s.js',
+				'dependencies' => array( 'bp-nouveau' ),
+				'footer'       => true,
+			),
+		)
+	);
 }
 
 /**
@@ -72,8 +75,8 @@ function bp_nouveau_notifications_init_filters() {
  *
  * @since BuddyPress 3.0.0
  *
- * @param  array  $args {
- *     Array of arguments.
+ * @param  array $args {
+ *    Array of arguments.
  *
  *     @type string      $id         The unique string to identify your "component action". Required.
  *     @type string      $label      The human readable notification type. Required.
@@ -84,11 +87,14 @@ function bp_nouveau_notifications_init_filters() {
 function bp_nouveau_notifications_register_filter( $args = array() ) {
 	$bp_nouveau = bp_nouveau();
 
-	$r = wp_parse_args( $args, array(
-		'id'       => '',
-		'label'    => '',
-		'position' => 99,
-	) );
+	$r = bp_parse_args(
+		$args,
+		array(
+			'id'       => '',
+			'label'    => '',
+			'position' => 99,
+		)
+	);
 
 	if ( empty( $r['id'] ) || empty( $r['label'] ) ) {
 		return false;
@@ -118,7 +124,7 @@ function bp_nouveau_notifications_get_filters( $id = '' ) {
 	if ( empty( $id ) ) {
 		return $bp_nouveau->notifications->filters;
 
-	// Get a specific filter
+		// Get a specific filter
 	} elseif ( ! empty( $id ) && isset( $bp_nouveau->notifications->filters[ $id ] ) ) {
 		return $bp_nouveau->notifications->filters[ $id ];
 
@@ -132,7 +138,7 @@ function bp_nouveau_notifications_get_filters( $id = '' ) {
  *
  * @since BuddyPress 3.0.0
  *
- * @param  array  $filters The notifications filters to order.
+ * @param  array $filters The notifications filters to order.
  * @return array  The sorted filters.
  */
 function bp_nouveau_notifications_sort( $filters = array() ) {
@@ -244,110 +250,4 @@ function bp_nouveau_notifications_delete_link( $link = '' ) {
 		__( 'Delete', 'buddyboss' ),
 		'dashicons-trash'
 	);
-}
-
-/**
- * Get avatar for notification user.
- *
- * @since BuddyPress 1.7.0
- *
- * @return void
- */
-function bb_notification_avatar() {
-	$notification = buddypress()->notifications->query_loop->notification;
-	$component    = $notification->component_name;
-
-	switch ( $component ) {
-		case 'groups':
-			if ( ! empty( $notification->item_id ) ) {
-				$item_id = $notification->item_id;
-				$object  = 'group';
-			}
-			break;
-		case 'follow':
-		case 'friends':
-			if ( ! empty( $notification->item_id ) ) {
-				$item_id = $notification->item_id;
-				$object  = 'user';
-			}
-			break;
-		case has_action( 'bb_notification_avatar_' . $component ):
-			do_action( 'bb_notification_avatar_' . $component );
-			break;
-		default:
-			if ( ! empty( $notification->secondary_item_id ) ) {
-				$item_id = $notification->secondary_item_id;
-				$object  = 'user';
-			} else {
-				$item_id = $notification->item_id;
-				$object  = 'user';
-			}
-			break;
-	}
-
-	if ( isset( $item_id, $object ) ) {
-
-		if ( 'group' === $object ) {
-			$group = new BP_Groups_Group( $item_id );
-			$link  = bp_get_group_permalink( $group );
-		} else {
-			$user = new WP_User( $item_id );
-			$link = bp_core_get_user_domain( $user->ID, $user->user_nicename, $user->user_login );
-		}
-
-		?>
-		<a href="<?php echo esc_url( $link ); ?>">
-			<?php
-			echo bp_core_fetch_avatar(
-				array(
-					'item_id' => $item_id,
-					'object'  => $object,
-				)
-			);
-			?>
-			<?php ( isset( $user ) ? bb_current_user_status( $user->ID ) : '' ); ?>
-		</a>
-		<?php
-	}
-}
-
-/**
- * Current user online status.
- *
- * @since BuddyPress 1.7.0
- *
- * @param int $user_id User id.
- *
- * @return void
- */
-function bb_current_user_status( $user_id ) {
-	if ( bb_is_online_user( $user_id ) ) {
-		echo '<span class="member-status online"></span>';
-	}
-}
-
-/**
- * Current user online activity time. 
- *
- * @since BuddyPress 1.7.0
- *
- * @param int $user_id User id.
- *
- * @return string
- */
-function bb_is_online_user( $user_id ) {
-
-	if ( ! function_exists( 'bp_get_user_last_activity' ) ) {
-		return;
-	}
-
-	$last_activity = strtotime( bp_get_user_last_activity( $user_id ) );
-
-	if ( empty( $last_activity ) ) {
-		return false;
-	}
-
-	// the activity timeframe is 5 minutes
-	$activity_timeframe = 5 * MINUTE_IN_SECONDS;
-	return ( time() - $last_activity <= $activity_timeframe );
 }

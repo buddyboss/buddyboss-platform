@@ -58,7 +58,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 		background: #fff;
 		box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.01);
 		border-radius: 4px;
-		width: 168px;
+		width: 178px;
 		padding: 5px 0;
 		display: none;
 		z-index: 11;
@@ -126,7 +126,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 
 			&:before {
 				font-family: "bb-icons";/* stylelint-disable-line */
-				font-size: 15px;
+				font-size: 18px;
 				display: inline-block;
 				margin-right: 10px;
 				vertical-align: middle;
@@ -136,47 +136,41 @@ body.buddypress.bp-user #page #primary .entry-header {
 
 			&.reported-content:before,
 			&.report-content:before {
-				content: "\e8ea";
+				content: "\ee9c";
 			}
 
-			&:before {
-				font-family: "bb-icons";/* stylelint-disable-line */
-				font-size: 15px;
-				display: inline-block;
-				margin-right: 10px;
-				vertical-align: middle;
-				width: 20px;
-				text-align: center;
+			&.back-to-admin:before {
+				content: "\ef0a";
 			}
 
 			&.view-as:before {
-				content: "\e88a";
-				font-family: bb-icons;
-				font-size: 16px;
-				display: inline-block;
-				margin-right: 10px;
-				width: 20px;
-				text-align: center;
-				vertical-align: middle;
+				content: "\ee69";
 			}
 
 			&.send-message:before {
-				content: "\e839";
-				font-size: 16px;
-				color: inherit !important;
+				content: "\ee62";
 			}
 
 			&.block-member:before {
-				content: "\e8c9";
+				content: "\ee08";
 			}
 
-			&.friendship-button:before,
+			&.not_friends:before,
+			&.friendship-button:before {
+				content: "\ef60";
+			}
+
+			&.awaiting_response_friend:before {
+				content: "\ef57";
+			}
+
 			&.follow-button:before {
-				content: "\e94d";
+				content: "\ee03";
 			}
 
-			&.view-as:before {
-				content: "\e88a";
+			&.is_friend:before,
+			&.pending_friend:before {
+				content: "\ef64";
 			}
 
 		}

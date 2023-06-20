@@ -38,7 +38,12 @@ class BP_Nouveau_Profile_Header_Customize_Control extends WP_Customize_Control {
 		$profile_buttons = bp_nouveau_customizer_user_profile_actions();
 
 		uksort( $profile_buttons, function ( $key1, $key2 ) use ( $order ) {
-			return ( array_search( $key1, $order ) > array_search( $key2, $order ) );
+			$pos1 = array_search( $key1, $order );
+			$pos2 = array_search( $key2, $order );
+			if ( false === $pos1 || false === $pos2 ) {
+				return 0;
+			}
+			return $pos1 <=> $pos2; // return spaceship operator comparison result.
 		} );
 
 		?>

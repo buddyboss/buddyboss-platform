@@ -536,9 +536,9 @@ function bbp_get_statistics( $args = '' ) {
 			$topic_count_hidden = $topics['private'] + $topics['spammed'] + $topics['trashed'];
 
 			// Generate the hidden topic count's title attribute
-			$topic_titles[] = ! empty( $topics['private'] ) ? sprintf( __( 'Private: %s', 'buddyboss' ), number_format_i18n( $topics['private'] ) ) : '';
-			$topic_titles[] = ! empty( $topics['spammed'] ) ? sprintf( __( 'Spammed: %s', 'buddyboss' ), number_format_i18n( $topics['spammed'] ) ) : '';
-			$topic_titles[] = ! empty( $topics['trashed'] ) ? sprintf( __( 'Trashed: %s', 'buddyboss' ), number_format_i18n( $topics['trashed'] ) ) : '';
+			$topic_titles[] = ! empty( $topics['private'] ) ? sprintf( __( 'Private: %s', 'buddyboss' ), bbp_number_format_i18n( $topics['private'] ) ) : '';
+			$topic_titles[] = ! empty( $topics['spammed'] ) ? sprintf( __( 'Spammed: %s', 'buddyboss' ), bbp_number_format_i18n( $topics['spammed'] ) ) : '';
+			$topic_titles[] = ! empty( $topics['trashed'] ) ? sprintf( __( 'Trashed: %s', 'buddyboss' ), bbp_number_format_i18n( $topics['trashed'] ) ) : '';
 
 			// Compile the hidden topic title
 			$hidden_topic_title = implode( ' | ', array_filter( $topic_titles ) );
@@ -571,9 +571,9 @@ function bbp_get_statistics( $args = '' ) {
 			$reply_count_hidden = $replies['private'] + $replies['spammed'] + $replies['trashed'];
 
 			// Generate the hidden topic count's title attribute
-			$reply_titles[] = ! empty( $replies['private'] ) ? sprintf( __( 'Private: %s', 'buddyboss' ), number_format_i18n( $replies['private'] ) ) : '';
-			$reply_titles[] = ! empty( $replies['spammed'] ) ? sprintf( __( 'Spammed: %s', 'buddyboss' ), number_format_i18n( $replies['spammed'] ) ) : '';
-			$reply_titles[] = ! empty( $replies['trashed'] ) ? sprintf( __( 'Trashed: %s', 'buddyboss' ), number_format_i18n( $replies['trashed'] ) ) : '';
+			$reply_titles[] = ! empty( $replies['private'] ) ? sprintf( __( 'Private: %s', 'buddyboss' ), bbp_number_format_i18n( $replies['private'] ) ) : '';
+			$reply_titles[] = ! empty( $replies['spammed'] ) ? sprintf( __( 'Spammed: %s', 'buddyboss' ), bbp_number_format_i18n( $replies['spammed'] ) ) : '';
+			$reply_titles[] = ! empty( $replies['trashed'] ) ? sprintf( __( 'Trashed: %s', 'buddyboss' ), bbp_number_format_i18n( $replies['trashed'] ) ) : '';
 
 			// Compile the hidden replies title
 			$hidden_reply_title = implode( ' | ', array_filter( $reply_titles ) );
@@ -720,6 +720,11 @@ function bbp_check_for_duplicate( $post_data = array() ) {
 		),
 		'check_for_duplicate'
 	);
+
+	// If reply/topic content is NULL then skip checking duplicate post
+	if ( empty( $r['post_content'] ) ) {
+		return true;
+	}
 
 	// Check for anonymous post
 	if ( empty( $r['post_author'] ) && ( ! empty( $r['anonymous_data'] ) && ! empty( $r['anonymous_data']['bbp_anonymous_email'] ) ) ) {
@@ -1096,7 +1101,7 @@ function bbp_get_do_not_reply_address() {
  * @param mixed $anonymous_data Array of anonymous user data
  * @param int   $reply_author ID of the topic author ID
  *
- * @uses bbp_is_subscriptions_active() To check if the subscriptions are active
+ * @uses bb_is_enabled_subscription() To check if the subscriptions are active
  * @uses bbp_get_reply_id() To validate the reply ID
  * @uses bbp_get_topic_id() To validate the topic ID
  * @uses bbp_get_forum_id() To validate the forum ID
@@ -1122,8 +1127,8 @@ function bbp_get_do_not_reply_address() {
  */
 function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id = 0, $anonymous_data = false, $reply_author = 0 ) {
 
-	// Bail if subscriptions are turned off
-	if ( ! bbp_is_subscriptions_active() ) {
+	// Bail if subscriptions are turned off.
+	if ( ! bb_is_enabled_subscription( 'topic' ) ) {
 		return false;
 	}
 
@@ -1135,19 +1140,19 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 
 	/** Topic */
 
-	// Bail if topic is not published
+	// Bail if topic is not published.
 	if ( ! bbp_is_topic_published( $topic_id ) ) {
 		return false;
 	}
 
 	/** Reply */
 
-	// Bail if reply is not published
+	// Bail if reply is not published.
 	if ( ! bbp_is_reply_published( $reply_id ) ) {
 		return false;
 	}
 
-	// Poster name
+	// Poster name.
 	$reply_author_name = bbp_get_reply_author_display_name( $reply_id );
 
 	/** Mail */
@@ -1157,10 +1162,21 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 	remove_all_filters( 'bbp_get_reply_content' );
 	remove_all_filters( 'bbp_get_topic_title' );
 
-	// Strip tags from text and setup mail data
-	$topic_title   = strip_tags( bbp_get_topic_title( $topic_id ) );
+	// Strip tags from text and setup mail data.
+	$topic_title   = wp_strip_all_tags( bbp_get_topic_title( $topic_id ) );
 	$topic_url     = get_permalink( $topic_id );
-	$reply_content = strip_tags( bbp_get_reply_content( $reply_id ) );
+	$reply_content = bbp_kses_data( bbp_get_reply_content( $reply_id ) );
+
+	// Check if link embed or link preview and append the content accordingly.
+	if ( bbp_use_autoembed() ) {
+		$link_embed = get_post_meta( $reply_id, '_link_embed', true );
+		if ( empty( preg_replace( '/(?:<p>\s*<\/p>\s*)+|<p>(\s|(?:<br>|<\/br>|<br\/?>))*<\/p>/', '', $reply_content ) ) && ! empty( $link_embed ) ) {
+			$reply_content .= bbp_make_clickable( $link_embed );
+		} else {
+			$reply_content = bb_forums_link_preview( $reply_content, $reply_id );
+		}
+	}
+
 	$reply_url     = bbp_get_reply_url( $reply_id );
 
 	$forum_title = wp_strip_all_tags( get_post_field( 'post_title', $forum_id ) );
@@ -1180,7 +1196,7 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 		),
 	);
 
-	// Get topic subscribers and bail if empty
+	// Get topic subscribers and bail if empty.
 	$user_ids = bbp_get_topic_subscribers( $topic_id, true );
 
 	// Dedicated filter to manipulate user ID's to send emails to.
@@ -1193,22 +1209,17 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 
 	do_action( 'bbp_pre_notify_subscribers', $reply_id, $topic_id, $user_ids );
 
-	// Loop through users
-	foreach ( (array) $user_ids as $user_id ) {
-
-		// Don't send notifications to the person who made the post
-		if ( ! empty( $reply_author ) && (int) $user_id === (int) $reply_author ) {
-			continue;
-		}
-
-		// Bail if member opted out of receiving this email.
-		if ( 'no' === bp_get_user_meta( $user_id, 'notification_forums_following_reply', true ) ) {
-			continue;
-		}
-
-		// Send notification email.
-		bp_send_email( 'bbp-new-forum-reply', (int) $user_id, $args );
-	}
+	bb_send_notifications_to_subscribers(
+		array(
+			'type'    => 'topic',
+			'item_id' => $topic_id,
+			'data'    => array(
+				'reply_id'     => $reply_id,
+				'author_id'    => $reply_author,
+				'email_tokens' => $args,
+			),
+		)
+	);
 
 	do_action( 'bbp_post_notify_subscribers', $reply_id, $topic_id, $user_ids );
 
@@ -1234,7 +1245,7 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
  * @param mixed $anonymous_data Array of anonymous user data
  * @param int   $topic_author ID of the topic author ID
  *
- * @uses bbp_is_subscriptions_active() To check if the subscriptions are active
+ * @uses bb_is_enabled_subscription() To check if the subscriptions are active
  * @uses bbp_get_topic_id() To validate the topic ID
  * @uses bbp_get_forum_id() To validate the forum ID
  * @uses bbp_is_topic_published() To make sure the topic is published
@@ -1255,8 +1266,8 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
  */
 function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_data = false, $topic_author = 0 ) {
 
-	// Bail if subscriptions are turned off
-	if ( ! bbp_is_subscriptions_active() ) {
+	// Bail if subscriptions are turned off.
+	if ( ! bb_is_enabled_subscription( 'forum' ) && ! bb_is_enabled_subscription( 'group' ) ) {
 		return false;
 	}
 
@@ -1274,12 +1285,12 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 
 	/** Topic */
 
-	// Bail if topic is not published
+	// Bail if topic is not published.
 	if ( ! bbp_is_topic_published( $topic_id ) ) {
 		return false;
 	}
 
-	// Poster name
+	// Poster name.
 	$topic_author_name = bbp_get_topic_author_display_name( $topic_id );
 
 	/** Mail */
@@ -1289,12 +1300,22 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 	remove_all_filters( 'bbp_get_topic_content' );
 	remove_all_filters( 'bbp_get_topic_title' );
 
-	// Strip tags from text and setup mail data
-	$topic_title   = strip_tags( bbp_get_topic_title( $topic_id ) );
-	$topic_content = strip_tags( bbp_get_topic_content( $topic_id ) );
+	// Strip tags from text and setup mail data.
+	$topic_title   = wp_strip_all_tags( bbp_get_topic_title( $topic_id ) );
+	$topic_content = bbp_kses_data( bbp_get_topic_content( $topic_id ) );
 	$topic_url     = get_permalink( $topic_id );
 	$forum_title   = wp_strip_all_tags( get_post_field( 'post_title', $forum_id ) );
 	$forum_url     = esc_url( bbp_get_forum_permalink( $forum_id ) );
+
+	// Check if link embed or link preview and append the content accordingly.
+	if ( bbp_use_autoembed() ) {
+		$link_embed = get_post_meta( $topic_id, '_link_embed', true );
+		if ( empty( preg_replace( '/(?:<p>\s*<\/p>\s*)+|<p>(\s|(?:<br>|<\/br>|<br\/?>))*<\/p>/', '', $topic_content ) ) && ! empty( $link_embed ) ) {
+			$topic_content .= bbp_make_clickable( $link_embed );
+		} else {
+			$topic_content = bb_forums_link_preview( $topic_content, $topic_id );
+		}
+	}
 
 	$args = array(
 		'tokens' => array(
@@ -1309,8 +1330,42 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 		),
 	);
 
-	// Get topic subscribers and bail if empty
-	$user_ids = bbp_get_forum_subscribers( $forum_id, true );
+	// Check if discussion is attached in a group then send group subscription notifications.
+	$group_ids = bp_is_active( 'groups' ) && function_exists( 'bbp_get_forum_group_ids' ) ? bbp_get_forum_group_ids( $forum_id ) : array();
+	$item_id   = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
+	if ( bp_is_active( 'groups' ) && bb_is_enabled_subscription( 'group' ) && ! empty( $item_id ) ) {
+		$type  = 'group';
+		$group = groups_get_group( $item_id );
+
+		if ( empty( $group ) ) {
+			return false;
+		}
+
+		// Get group subscribers and bail if empty.
+		$get_subscriptions = bb_get_subscription_users(
+			array(
+				'item_id' => $item_id,
+				'type'    => 'group',
+				'count'   => false,
+			),
+			true
+		);
+
+		$user_ids = array();
+		if ( ! empty( $get_subscriptions['subscriptions'] ) ) {
+			$user_ids = array_filter( wp_parse_id_list( $get_subscriptions['subscriptions'] ) );
+		}
+
+		$args['tokens']['group.name'] = bp_get_group_name( $group );
+		$args['tokens']['group.url']  = esc_url( bp_get_group_permalink( $group ) );
+		$notification_from            = 'bb_groups_subscribed_discussion';
+	} else {
+		// Get topic subscribers and bail if empty.
+		$user_ids          = bbp_get_forum_subscribers( $forum_id );
+		$type              = 'forum';
+		$item_id           = $forum_id;
+		$notification_from = 'bb_forums_subscribed_discussion';
+	}
 
 	// Dedicated filter to manipulate user ID's to send emails to.
 	$user_ids = (array) apply_filters( 'bbp_forum_subscription_user_ids', $user_ids, $topic_id, $forum_id );
@@ -1322,22 +1377,22 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 
 	do_action( 'bbp_pre_notify_forum_subscribers', $topic_id, $forum_id, $user_ids );
 
-	// Loop through users
-	foreach ( (array) $user_ids as $user_id ) {
-
-		// Don't send notifications to the person who made the post
-		if ( ! empty( $topic_author ) && (int) $user_id === (int) $topic_author ) {
-			continue;
-		}
-
-		// Bail if member opted out of receiving this email.
-		if ( 'no' === bp_get_user_meta( $user_id, 'notification_forums_following_topic', true ) ) {
-			continue;
-		}
-
-		// Send notification email.
-		bp_send_email( 'bbp-new-forum-topic', (int) $user_id, $args );
+	if ( empty( $item_id ) ) {
+		return false;
 	}
+
+	bb_send_notifications_to_subscribers(
+		array(
+			'type'              => $type,
+			'item_id'           => $item_id,
+			'notification_from' => $notification_from,
+			'data'              => array(
+				'topic_id'     => $topic_id,
+				'author_id'    => bbp_get_topic_author_id( $topic_id ),
+				'email_tokens' => $args,
+			),
+		)
+	);
 
 	do_action( 'bbp_post_notify_forum_subscribers', $topic_id, $forum_id, $user_ids );
 
@@ -2132,4 +2187,146 @@ function bbp_set_404() {
 	}
 
 	$wp_query->set_404();
+}
+
+/**
+ * Render forum/topic subscriber into background.
+ *
+ * @since BuddyBoss 1.9.0
+ *
+ * @param array  $user_ids   Array of members ids.
+ * @param string $email_type Email type.
+ * @param int    $sender_id  Sender user id.
+ * @param string $meta_key   Meta key to verify the notification enabled or not.
+ * @param array  $args       Array of email arguments with token.
+ */
+function bb_render_email_notify_subscribers( $user_ids, $email_type, $sender_id, $meta_key, $args ) {
+
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	// Loop through users.
+	foreach ( (array) $user_ids as $user_id ) {
+
+		// Don't send notifications to the person who made the post.
+		if ( ! empty( $sender_id ) && (int) $user_id === (int) $sender_id ) {
+			continue;
+		}
+
+		// Bail if member opted out of receiving this email.
+		if ( false === bb_is_notification_enabled( $user_id, $meta_key ) ) {
+			continue;
+		}
+
+		if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $sender_id ) ) {
+			continue;
+		}
+
+		// Send notification email.
+		bp_send_email( $email_type, (int) $user_id, $args );
+	}
+}
+
+/**
+ * Function will get all parent ids of the topic replies.
+ *
+ * @since BuddyBoss 2.0.6
+ *
+ * @param int    $topic_id  Topic ID.
+ * @param string $post_type Post type.
+ *
+ * @return array Array of topic parent reply ids.
+ */
+function bb_get_parent_replies_ids( $topic_id, $post_type = 'post' ) {
+	global $wpdb;
+
+	// Bail if nothing passed.
+	if ( empty( $topic_id ) ) {
+		return false;
+	}
+	$cache_id   = 'bb_parent_all_' . $topic_id . '_type_' . $post_type . '_parent_ids';
+	$parent_ids = wp_cache_get( $cache_id, 'bbpress_posts' );
+
+	// If nothing is found, build the object.
+	if ( false === $parent_ids ) {
+		$post_status = "'" . implode( "','", array( bbp_get_public_status_id() ) ) . "'";
+		// WP_Query arguments.
+		$args               = array(
+			'fields'         => 'ids',
+			'post_parent'    => $topic_id,
+			'posts_per_page' => - 1,
+			'post_type'      => $post_type,
+			'post_status'    => $post_status,
+			'meta_query'     => array(
+				array(
+					'key'     => '_bbp_reply_to',
+					'compare' => 'NOT EXISTS',
+				),
+			),
+		);
+
+		$get_replies_parent = new WP_Query( $args );
+
+		if ( ! is_wp_error( $get_replies_parent ) && $get_replies_parent->have_posts() ) {
+			$parent_ids = $get_replies_parent->posts;
+			// Cache the whole WP_Query object in the cache.
+			wp_cache_set( $cache_id, $parent_ids, 'bbpress_posts' );
+		}
+	}
+
+	// Filter and return.
+	return apply_filters( 'bb_get_parent_replies_ids', $parent_ids, (int) $topic_id, $post_type );
+}
+
+/**
+ * Return array of bbPress registered post types
+ *
+ * @since 2.6.0 bbPress (r6813)
+ *
+ * @param array $args Array of arguments to pass into `get_post_types()`
+ *
+ * @return array
+ */
+function bbp_get_post_types( $args = array() ) {
+
+	// Parse args
+	$r = bbp_parse_args( $args, array(
+		'source' => 'bbpress'
+	), 'get_post_types' );
+
+	// Return post types
+	return get_post_types( $r );
+}
+
+/**
+ * Assist pagination by returning correct page number for sub-forums.
+ *
+ * @since BuddyBoss 2.2.4
+ *
+ * @uses  get_query_var() To get the 'forum-paged' value.
+ *
+ * @return int Current page number
+ */
+function bb_get_forum_paged() {
+	global $wp_query;
+
+	// Check the query var.
+	if ( get_query_var( 'forum-paged' ) ) {
+		$paged = get_query_var( 'forum-paged' );
+
+		// Check query paged.
+	} elseif ( ! empty( $wp_query->query['forum-paged'] ) ) {
+		$paged = $wp_query->query['forum-paged'];
+	} elseif ( isset( $_GET['forum-paged'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$paged = intval( $_GET['forum-paged'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	}
+
+	// Paged found.
+	if ( ! empty( $paged ) ) {
+		return (int) $paged;
+	}
+
+	// Default to first page.
+	return 1;
 }

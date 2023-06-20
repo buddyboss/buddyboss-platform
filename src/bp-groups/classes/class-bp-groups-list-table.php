@@ -357,19 +357,19 @@ class BP_Groups_List_Table extends WP_List_Table {
 													if ( 'public' == $this->view ) {
 														echo 'current';}
 													?>
-			"><?php printf( _n( 'Public <span class="count">(%s)</span>', 'Public <span class="count">(%s)</span>', $this->group_counts['public'], 'buddyboss' ), number_format_i18n( $this->group_counts['public'] ) ); ?></a> |</li>
+			"><?php printf( _n( 'Public <span class="count">(%s)</span>', 'Public <span class="count">(%s)</span>', $this->group_counts['public'], 'buddyboss' ), bp_core_number_format( $this->group_counts['public'] ) ); ?></a> |</li>
 			<li class="private"><a href="<?php echo esc_url( add_query_arg( 'group_status', 'private', $url_base ) ); ?>" class="
 													<?php
 													if ( 'private' == $this->view ) {
 														echo 'current';}
 													?>
-			"><?php printf( _n( 'Private <span class="count">(%s)</span>', 'Private <span class="count">(%s)</span>', $this->group_counts['private'], 'buddyboss' ), number_format_i18n( $this->group_counts['private'] ) ); ?></a> |</li>
+			"><?php printf( _n( 'Private <span class="count">(%s)</span>', 'Private <span class="count">(%s)</span>', $this->group_counts['private'], 'buddyboss' ), bp_core_number_format( $this->group_counts['private'] ) ); ?></a> |</li>
 			<li class="hidden"><a href="<?php echo esc_url( add_query_arg( 'group_status', 'hidden', $url_base ) ); ?>" class="
 												   <?php
 													if ( 'hidden' == $this->view ) {
 														echo 'current';}
 													?>
-			"><?php printf( _n( 'Hidden <span class="count">(%s)</span>', 'Hidden <span class="count">(%s)</span>', $this->group_counts['hidden'], 'buddyboss' ), number_format_i18n( $this->group_counts['hidden'] ) ); ?></a></li>
+			"><?php printf( _n( 'Hidden <span class="count">(%s)</span>', 'Hidden <span class="count">(%s)</span>', $this->group_counts['hidden'], 'buddyboss' ), bp_core_number_format( $this->group_counts['hidden'] ) ); ?></a></li>
 
 			<?php
 
@@ -756,7 +756,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	 * @param array  $item        The current group item in the loop.
 	 * @return string
 	 */
-	public function column_content_group_type( $retval = '', $column_name, $item ) {
+	public function column_content_group_type( $retval = '', $column_name = '', $item = array() ) {
 		if ( 'bp_group_type' !== $column_name ) {
 			return $retval;
 		}

@@ -53,6 +53,7 @@ add_action( 'bbp_admin_init', 'bbp_admin_topics' );
 add_action( 'bbp_admin_init', 'bbp_admin_replies' );
 add_action( 'bbp_admin_init', 'bbp_setup_updater', 999 );
 add_action( 'bbp_admin_init', 'bbp_register_importers' );
+add_action( 'bbp_admin_init', 'bbp_register_admin_scripts' );
 add_action( 'bbp_admin_init', 'bbp_register_admin_style' );
 add_action( 'bbp_admin_init', 'bbp_register_admin_settings' );
 
@@ -174,6 +175,15 @@ function bbp_register_importers() {
  */
 function bbp_register_admin_style() {
 	do_action( 'bbp_register_admin_style' );
+}
+
+/**
+ * Dedicated action to register admin scripts
+ *
+ * @since 2.6.0 bbPress (r6912)
+ */
+function bbp_register_admin_scripts() {
+	do_action( 'bbp_register_admin_scripts' );
 }
 
 /**
