@@ -170,7 +170,7 @@ function bp_document_folder_delete_meta( $folder_id, $meta_key = '', $meta_value
 
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
 	foreach ( $keys as $key ) {
-		$retval = delete_metadata( 'document_folder', $folder_id, $key, $meta_value, $delete_all );
+		$retval = delete_metadata( 'folder', $folder_id, $key, $meta_value, $delete_all );
 	}
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
 
@@ -193,7 +193,7 @@ function bp_document_folder_delete_meta( $folder_id, $meta_key = '', $meta_value
  */
 function bp_document_folder_get_meta( $folder_id = 0, $meta_key = '', $single = true ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
-	$retval = get_metadata( 'document_folder', $folder_id, $meta_key, $single );
+	$retval = get_metadata( 'folder', $folder_id, $meta_key, $single );
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
 
 	/**
@@ -225,7 +225,7 @@ function bp_document_folder_get_meta( $folder_id = 0, $meta_key = '', $single = 
  */
 function bp_document_folder_update_meta( $folder_id, $meta_key, $meta_value, $prev_value = '' ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
-	$retval = update_metadata( 'document_folder', $folder_id, $meta_key, $meta_value, $prev_value );
+	$retval = update_metadata( 'folder', $folder_id, $meta_key, $meta_value, $prev_value );
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
 
 	return $retval;
@@ -246,7 +246,7 @@ function bp_document_folder_update_meta( $folder_id, $meta_key, $meta_value, $pr
  */
 function bp_document_folder_add_meta( $folder_id, $meta_key, $meta_value, $unique = false ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
-	$retval = add_metadata( 'document_folder', $folder_id, $meta_key, $meta_value, $unique );
+	$retval = add_metadata( 'folder', $folder_id, $meta_key, $meta_value, $unique );
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
 
 	return $retval;
