@@ -1398,7 +1398,7 @@ window.bp = window.bp || {};
 			this.dropzone_video = [];
 			$( '#bp-video-post-content' ).val('');
 
-			var currentPopup = $( event.currentTarget ).closest( '#bp-video-uploader' );
+			var currentPopup = $( event.target ).closest( '#bp-video-uploader' );
 
 			$( '.close-create-popup-album' ).trigger( 'click' );
 			$( '.close-create-popup-folder' ).trigger( 'click' );
