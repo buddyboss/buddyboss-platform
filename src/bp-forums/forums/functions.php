@@ -2643,11 +2643,13 @@ function bb_get_all_nested_subforums( $forum_id ) {
 }
 
 /**
- * Redirect non-loggedin user to login page while viewing private forum
+ * Redirect non-loggedin user to login page while viewing private forum.
  *
- * @since Buddyboss x.x.x
+ * @since BuddyBoss [BBVERSION]
  *
  * @param object $posts array of post objects.
+ *
+ * @return object $posts.
  */
 function bb_redirect_private_forum( $posts ) {
 	// remove filter now, so that on subsequent post querying we don't get involved!
