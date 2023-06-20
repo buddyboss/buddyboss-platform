@@ -1029,7 +1029,7 @@ function bp_filter_metaid_column_name( $q ) {
 	}
 
 	if ( strpos( $q, 'document_folder_id' ) !== false ) {
-		$q = str_replace( 'document_folder_id', 'id', $q );
+		$q = str_replace( 'document_folder_id', 'folder_id', $q );
 	}
 
 	// Put quoted content back into the string.
