@@ -3474,5 +3474,3 @@ function bb_member_type_labelcolor_metabox( $post ) {
 	</div>
 	<?php
 }
-
-add_action( 'add_meta_boxes_' . bp_get_member_type_post_type(), 'bp_member_type_custom_metaboxes' );
