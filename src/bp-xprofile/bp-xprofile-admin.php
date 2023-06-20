@@ -1366,3 +1366,41 @@ function bb_xprofile_mapping_simple_to_repeater_fields_data( $user_ids, $group_i
 		}
 	}
 }
+
+/**
+ * Filters the list of query arguments which get removed from admin area URLs in WordPress.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args List of removable query arguments.
+ *
+ * @return array Updated list of removable query arguments.
+ */
+function bb_xprofile_admin_removable_query_vars( $args ) {
+
+	// What mode?
+	$mode = ! empty( $_GET['mode'] ) ? sanitize_key( $_GET['mode'] ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+	if ( empty( $mode ) ) {
+		return $args;
+	}
+
+	// Allowed modes.
+	$allowed_modes = array(
+		'delete_group',
+		'delete_field',
+		'delete_option',
+	);
+
+	// Is an allowed mode.
+	if ( in_array( $mode, $allowed_modes, true ) ) {
+		$args = array_merge( $args, array( 'mode', 'field_id', 'group_id', '_wpnonce' ) );
+	}
+
+	if ( isset( $_POST['save_group'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$args = array_merge( $args, array( 'mode' ) );
+	}
+
+	return $args;
+}
+add_filter( 'removable_query_args', 'bb_xprofile_admin_removable_query_vars' );
