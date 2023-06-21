@@ -2273,6 +2273,10 @@ function bbp_forum_enforce_private() {
 
 	// If forum is explicitly hidden and user not capable, set 404
 	if ( ! empty( $forum_id ) && bbp_is_forum_private( $forum_id ) && ! current_user_can( 'read_private_forums' ) ) {
+		if ( ! is_user_logged_in() ) {
+			wp_safe_redirect( wp_login_url( $_SERVER['REQUEST_URI'] ) );
+			exit;
+		}
 		bbp_set_404();
 	}
 }
