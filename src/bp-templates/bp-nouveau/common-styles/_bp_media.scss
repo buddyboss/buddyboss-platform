@@ -3411,6 +3411,13 @@ div.dropzone .dz-preview {
 							opacity: 0.7;
 						}
 
+						&.disabled-move[data-balloon]:after {
+							content: attr(data-balloon);
+							white-space: normal;
+							max-width: 200px;
+							width: 100%;
+						}
+
 						a:before {
 							content: "\ee9f";
 							font-family: "bb-icons";/* stylelint-disable-line */
