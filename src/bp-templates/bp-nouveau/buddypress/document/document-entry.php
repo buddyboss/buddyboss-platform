@@ -156,9 +156,24 @@ id="div-listing-<?php bp_document_id(); ?>">
 			<span class="media-folder_date"><?php bp_document_date(); ?></span>
 			<?php
 			if ( ! bp_is_user() ) {
+				$user_domain = bp_core_get_user_domain( bp_get_document_user_id() );
+				if ( ! empty( $user_domain ) && false !== strpos( 'user-edit.php', $user_domain ) ) {
+					$user_domain .= bp_get_document_slug();
+				}
 				?>
-				<span class="media-folder_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?><a
-							href="<?php echo esc_url( trailingslashit( bp_core_get_user_domain( bp_get_document_user_id() ) . bp_get_document_slug() ) ); ?>"><?php bp_document_author(); ?></a></span>
+				<span class="media-folder_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?>
+					<?php
+					if ( ! empty( $user_domain ) ) {
+						?>
+						<a href="<?php echo esc_url( trailingslashit( $user_domain ) ); ?>">
+							<?php bp_document_author(); ?>
+						</a>
+						<?php
+					} else {
+						bp_document_author();
+					}
+					?>
+				</span>
 				<?php
 			}
 			?>

@@ -1141,7 +1141,11 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 
 		$unserialized_value = maybe_unserialize( $value );
 		if ( ! is_array( $unserialized_value ) ) {
-			$unserialized_value = (array) wp_specialchars_decode( $unserialized_value );
+			$unserialized_value = (array) wp_specialchars_decode( $unserialized_value, ENT_QUOTES );
+		} elseif ( ! empty( $unserialized_value ) && is_array( $unserialized_value ) ) {
+			foreach ( $unserialized_value as $k => $v ) {
+				$unserialized_value[ $k ] = wp_specialchars_decode( $v, ENT_QUOTES );
+			}
 		}
 
 		return $unserialized_value;
@@ -1510,9 +1514,10 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		$member_type = bp_get_member_type( ! empty( $request['user_id'] ) ? (int) $request['user_id'] : get_current_user_id() );
+		$member_type   = bp_get_member_type( ! empty( $request['user_id'] ) ? (int) $request['user_id'] : get_current_user_id() );
+		$post_selected = 0;
 		if ( '' !== $member_type ) {
-			$post_selected = bp_member_type_post_by_type( $member_type );
+			$post_selected = (int) bp_member_type_post_by_type( $member_type );
 		}
 
 		$options = array();
