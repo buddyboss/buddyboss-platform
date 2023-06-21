@@ -25,7 +25,11 @@
 			</div>
 			<?php if ( bp_nouveau_activity_has_content() ) : ?>
 				<div class="activity-inner">
-					<a href="<?php echo esc_url( bp_activity_get_permalink( bp_get_activity_id() ) ); ?>"><?php bp_nouveau_activity_content(); ?></a>
+					<a href="<?php echo esc_url( bp_activity_get_permalink( bp_get_activity_id() ) ); ?>">
+						<?php
+						echo wp_kses_post( str_replace( '@', '&#64;', wp_trim_words( bp_get_activity_content_body(), '20', '...' ) ) );
+						?>
+					</a>
 				</div>
 			<?php endif; ?>
 			<div class="item-meta">
