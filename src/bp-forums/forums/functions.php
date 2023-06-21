@@ -2239,6 +2239,11 @@ function bbp_forum_enforce_private() {
 
 	// Bail if not viewing a single item or if user has caps
 	if ( ! is_singular() || bbp_is_user_keymaster() || current_user_can( 'read_private_forums' ) ) {
+		if ( ! is_user_logged_in() ) {
+			// Redirect logged-in users to a specific screen
+			wp_safe_redirect( wp_login_url( $_SERVER['REQUEST_URI'] ), 301 );
+			exit;
+		}
 		return;
 	}
 
@@ -2640,32 +2645,4 @@ function bb_get_all_nested_subforums( $forum_id ) {
 	}
 
 	return array_merge( $retval, $sub_forums );
-}
-
-/**
- * Redirect non-loggedin user to login page while viewing private forum.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param object $posts array of post objects.
- *
- * @return object $posts.
- */
-function bb_redirect_private_forum( $posts ) {
-	// remove filter now, so that on subsequent post querying we don't get involved!
-	remove_filter( 'the_posts', 'bb_redirect_private_forum', 5, 2 );
-
-	$forum_slug = get_query_var( 'forum' );
-
-	// no forum with no results.
-	if ( ! ( empty( $posts ) ) ) {
-		return $posts;
-	}
-
-	// otherwise assume that if the request was for a forum, and no forum was found, it was private.
-	if ( ! is_user_logged_in() && ( '' !== $forum_slug ) ) {
-		wp_safe_redirect( wp_login_url( $_SERVER['REQUEST_URI'] ), 301 );
-		exit;
-	}
-
 }
