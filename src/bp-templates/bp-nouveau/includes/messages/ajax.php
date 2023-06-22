@@ -1718,11 +1718,14 @@ function bp_nouveau_ajax_dsearch_recipients() {
 
 	add_filter( 'bp_members_suggestions_query_args', 'bp_nouveau_ajax_search_recipients_exclude_current' );
 
+	$profile_types_allowed_messaging = get_option( 'bp_member_types_allowed_messaging_without_connection' );
+	$sender_profile_type             = bp_get_member_type( get_current_user_id() );
+
 	$results = bp_core_get_suggestions(
 		array(
 			'term'            => sanitize_text_field( $_GET['term'] ),
 			'type'            => 'members',
-			'only_friends'    => bp_is_active( 'friends' ) && bp_force_friendship_to_message(),
+			'only_friends'    => bp_is_active( 'friends' ) && bp_force_friendship_to_message() && empty( $profile_types_allowed_messaging[ $sender_profile_type ] ),
 			'count_total'     => 'count_query',
 			'page'            => $_GET['page'],
 			'limit'           => 10,
@@ -1782,8 +1785,14 @@ function bp_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
  * @return array
  */
 function bp_nouveau_ajax_search_recipients_exclude_non_friend( $results ) {
+	$profile_types_allowed_messaging = get_option( 'bp_member_types_allowed_messaging_without_connection' );
+	$sender_profile_type             = bp_get_member_type( get_current_user_id() );
 
-	if ( true === bp_force_friendship_to_message() && function_exists( 'friends_check_friendship_status' ) ) {
+	if (
+		true === bp_force_friendship_to_message() &&
+		empty( $profile_types_allowed_messaging[ $sender_profile_type ] ) &&
+		function_exists( 'friends_check_friendship_status' )
+	) {
 		$new_users = array();
 		foreach ( $results as $user ) {
 			$member_friend_status = friends_check_friendship_status( $user->user_id, bp_loggedin_user_id() );

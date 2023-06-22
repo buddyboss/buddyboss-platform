@@ -1866,25 +1866,31 @@ function bp_member_type_permissions_metabox( $post ) {
 		</tr>
 		</tbody>
 	</table>
+	<?php
 
-	<table class="widefat bp-postbox-table">
-		<thead>
-		<tr>
-			<th scope="col" colspan="2">
-				<?php _e( 'Messaging', 'buddyboss' ); ?>
-			</th>
-		</tr>
-		</thead>
-		<tbody>
-		<tr>
-			<td colspan="2">
-				<input type='checkbox' name='bp-member-type[allow_messaging_without_connection]'
-					   value='0' <?php checked( $allow_messaging_without_connection, 1 ); ?> />
-				<?php _e( 'Allow this profile type to send and receive messages without being connected.', 'buddyboss' ); ?>
-			</td>
-		</tr>
-		</tbody>
-	</table>
+		if ( bp_is_active( 'messages' ) && bp_is_active( 'friends' ) && true === (bool) bp_get_option( 'bp-force-friendship-to-message', false ) ) {
+	?>
+		<table class="widefat bp-postbox-table">
+			<thead>
+			<tr>
+				<th scope="col" colspan="2">
+					<?php _e( 'Messaging', 'buddyboss' ); ?>
+				</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<td colspan="2">
+					<input type='checkbox' name='bp-member-type[allow_messaging_without_connection]'
+						value='1' <?php checked( $allow_messaging_without_connection, 1 ); ?> />
+					<?php _e( 'Allow this profile type to send and receive messages without being connected.', 'buddyboss' ); ?>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	<?php
+		} 
+	?>
 	<!-- accesslint:endignore -->
 	<?php
 	if ( bp_is_active( 'groups' ) && false === bp_restrict_group_creation() ) {
@@ -2239,6 +2245,8 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	$enable_profile_field = isset( $data['enable_profile_field'] ) ? absint( $data['enable_profile_field'] ) : 0; // default active.
 	$label_color          = isset( $data['label_color'] ) ? $data['label_color'] : '';
 
+	$allow_messaging_without_connection = isset( $data['allow_messaging_without_connection'] ) ? absint( $data['allow_messaging_without_connection'] ) : 0; // default active.
+
 	$data['wp_roles'] = array_filter( $data['wp_roles'] ); // Remove empty value from wp_roles array.
 	$wp_roles         = isset( $data['wp_roles'] ) ? $data['wp_roles'] : '';
 
@@ -2272,7 +2280,22 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_member_type_allowed_member_type_invite', $enable_group_type_invite );
 	update_post_meta( $post_id, '_bp_member_type_enable_invite', $enable_group_type_enable_invite );
 	update_post_meta( $post_id, '_bp_member_type_label_color', $label_color );
+	update_post_meta( $post_id, '_bp_member_type_allow_messaging_without_connection', $allow_messaging_without_connection );
 
+	// Update all profile types which are allowed to message without connections.
+	$profile_types_allowed_messaging      = get_option( 'bp_member_types_allowed_messaging_without_connection' );
+	$updated_profile_types_allowed_option = $profile_types_allowed_messaging;
+
+	if ( $allow_messaging_without_connection ) {
+		$updated_profile_types_allowed_option[ $get_existing ] = true;
+	} elseif ( ! empty( $profile_types_allowed_messaging ) && array_key_exists( $get_existing, (array) $profile_types_allowed_messaging ) ) {
+		unset( $updated_profile_types_allowed_option[ $get_existing ] );
+	}
+
+	if ( $profile_types_allowed_messaging !== $updated_profile_types_allowed_option ) {
+		update_option( 'bp_member_types_allowed_messaging_without_connection', $updated_profile_types_allowed_option );
+	}
+	
 	// Get user previous role.
 	$old_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
 
