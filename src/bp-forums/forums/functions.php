@@ -2236,9 +2236,14 @@ function bbp_forum_enforce_hidden() {
  * @uses bbp_set_404() To set a 404 status
  */
 function bbp_forum_enforce_private() {
+	global $wp;
 
 	// Bail if not viewing a single item or if user has caps
 	if ( ! is_singular() || bbp_is_user_keymaster() || current_user_can( 'read_private_forums' ) ) {
+		if ( ! is_user_logged_in() ) {
+			wp_safe_redirect( wp_login_url( home_url( $wp->request ) ) );
+			exit;
+		}
 		return;
 	}
 
@@ -2269,6 +2274,10 @@ function bbp_forum_enforce_private() {
 
 	// If forum is explicitly hidden and user not capable, set 404
 	if ( ! empty( $forum_id ) && bbp_is_forum_private( $forum_id ) && ! current_user_can( 'read_private_forums' ) ) {
+		if ( ! is_user_logged_in() ) {
+			wp_safe_redirect( wp_login_url( home_url( $wp->request ) ) );
+			exit;
+		}
 		bbp_set_404();
 	}
 }
