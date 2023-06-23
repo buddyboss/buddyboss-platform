@@ -15,12 +15,12 @@
         "issues": "https://github.com/buddyboss/buddyboss-platform/issues",
         "source": "https://github.com/buddyboss/buddyboss-platform"
     },
-	"require": {
-		"composer/installers": "~1.0",
-		"php": ">=5.6.0",
-		"php-ffmpeg/php-ffmpeg": "^0.16.0",
-		"nelexa/zip": "^4.0"
-	},
+    "require": {
+        "composer/installers": "~1.0",
+        "php": ">=5.6.0",
+        "php-ffmpeg/php-ffmpeg": "^0.16.0",
+        "nelexa/zip": "^4.0"
+    },
 	"autoload": {
 	},
     "scripts": {
