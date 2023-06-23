@@ -943,7 +943,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 				$files = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $rootPath ), RecursiveIteratorIterator::LEAVES_ONLY );
 				foreach ( $files as $name => $file ) {
 					$filePath     = $file->getRealPath();
-					$relativePath = substr( $filePath, strlen( rootPath ) + 1 );
+					$relativePath = substr( $filePath, strlen( $rootPath ) + 1 );
 
 					if ( ! $file->isDir() ) {
 						$zip->addFile( $filePath, $relativePath );
