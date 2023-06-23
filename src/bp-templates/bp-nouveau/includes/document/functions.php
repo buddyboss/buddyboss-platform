@@ -909,29 +909,53 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 			$file_name = sanitize_file_name( $folder->title ) . '.zip';
 			$rootPath  = realpath( "$upload_dir" );
 
-			// Create a new ZipFile instance.
-			$zip = new \PhpZip\ZipFile();
+			$phpVersion = phpversion();
 
-			$files = new RecursiveIteratorIterator(
-				new RecursiveDirectoryIterator( $parent_folder ),
-				RecursiveIteratorIterator::LEAVES_ONLY
-			);
+			//  Added phpversion check as ZipFile is not supported in less than PHP 7.4.
+			if ( version_compare( $phpVersion, '7.4', '>=' ) ) {
+				// Create a new ZipFile instance.
+				$zip = new \PhpZip\ZipFile();
 
-			foreach ( $files as $name => $file ) {
-				$filePath     = $file->getRealPath();
-				$relativePath = substr( $filePath, strlen( $parent_folder ) + 1 );
+				$files = new RecursiveIteratorIterator(
+					new RecursiveDirectoryIterator( $parent_folder ),
+					RecursiveIteratorIterator::LEAVES_ONLY
+				);
 
-				if ( ! $file->isDir() ) {
-					$zip->addFile( $filePath, $relativePath );
-				} else {
-					if ( $relativePath !== false ) {
-						$zip->addEmptyDir( $relativePath );
+				foreach ( $files as $name => $file ) {
+					$filePath     = $file->getRealPath();
+					$relativePath = substr( $filePath, strlen( $parent_folder ) + 1 );
+
+					if ( ! $file->isDir() ) {
+						$zip->addFile( $filePath, $relativePath );
+					} else {
+						if ( $relativePath !== false ) {
+							$zip->addEmptyDir( $relativePath );
+						}
 					}
 				}
-			}
 
-			$zip->saveAsFile( $zip_name );
-			$zip->close();
+				$zip->saveAsFile( $zip_name );
+				$zip->close();
+			} else {
+				$zip = new ZipArchive();
+				$zip->open( $zip_name, ZipArchive::CREATE | ZipArchive::OVERWRITE );
+
+				$files = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $rootPath ), RecursiveIteratorIterator::LEAVES_ONLY );
+				foreach ( $files as $name => $file ) {
+					$filePath     = $file->getRealPath();
+					$relativePath = substr( $filePath, strlen( rootPath ) + 1 );
+
+					if ( ! $file->isDir() ) {
+						$zip->addFile( $filePath, $relativePath );
+					} else {
+						if ( $relativePath !== false ) {
+							$zip->addEmptyDir( $relativePath );
+						}
+					}
+				}
+
+				$zip->close();
+			}
 
 			bb_document_force_download( $zip_name, basename( $zip_name ) );
 
