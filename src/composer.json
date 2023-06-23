@@ -15,16 +15,22 @@
         "issues": "https://github.com/buddyboss/buddyboss-platform/issues",
         "source": "https://github.com/buddyboss/buddyboss-platform"
     },
-    "require": {
-        "composer/installers": "~1.0",
-        "php": ">=5.6.0",
-	  	"php-ffmpeg/php-ffmpeg": "^0.16.0"
-    },
-    "autoload": {
-    },
+	"require": {
+		"composer/installers": "~1.0",
+		"php": ">=5.6.0",
+		"php-ffmpeg/php-ffmpeg": "^0.16.0",
+		"nelexa/zip": "^4.0"
+	},
+	"autoload": {
+	},
     "scripts": {
         "remove-ffmpeg-docs": ["rm -rf vendor/php-ffmpeg/php-ffmpeg/docs && rm -rf vendor/php-ffmpeg/php-ffmpeg/tests"],
         "post-install-cmd": ["@remove-ffmpeg-docs"],
         "post-update-cmd": ["@remove-ffmpeg-docs"]
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
     }
 }
