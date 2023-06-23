@@ -42,6 +42,8 @@ function bp_member_revoke_invite_admin() {
 		return;
 	}
 
+	$redirect 		= filter_input( INPUT_GET, 'redirect', FILTER_VALIDATE_URL );
+	
 	if ( empty( $_GET ) ) {
 		bp_core_add_message( __( 'You didn\'t include any email addresses!', 'buddyboss' ), 'error' );
 		bp_core_redirect( $redirect );
