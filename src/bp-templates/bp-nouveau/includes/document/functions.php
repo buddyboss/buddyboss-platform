@@ -913,13 +913,13 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 			$zip = new \PhpZip\ZipFile();
 
 			$files = new RecursiveIteratorIterator(
-				new RecursiveDirectoryIterator($parent_folder),
+				new RecursiveDirectoryIterator( $parent_folder ),
 				RecursiveIteratorIterator::LEAVES_ONLY
 			);
 
-			foreach ($files as $name => $file) {
+			foreach ( $files as $name => $file ) {
 				$filePath     = $file->getRealPath();
-				$relativePath = substr( $filePath, strlen( $rootPath ) + 1 );
+				$relativePath = substr( $filePath, strlen( $parent_folder ) + 1 );
 
 				if ( ! $file->isDir() ) {
 					$zip->addFile( $filePath, $relativePath );
@@ -930,10 +930,10 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 				}
 			}
 
-			$zip->saveAsFile($zip_name);
+			$zip->saveAsFile( $zip_name );
 			$zip->close();
 
-			bb_force_download_file($zip_name, basename($zip_name));
+			bb_document_force_download( $zip_name, basename( $zip_name ) );
 
 			bp_document_remove_temp_directory( $upload_dir );
 			exit();
@@ -943,16 +943,29 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 
 }
 
-function bb_force_download_file( $filePath, $fileName ) {
-	$chunkSize = 4096; // Chunk size in bytes
+/**
+ * Download the file from the server.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $file_path File absolute path.
+ * @param string $file_name File name.
+ *
+ * @return void
+ */
+function bb_document_force_download( $file_path, $file_name ) {
+	$chunk_size = apply_filters( 'bb_document_download_chunk_size', 4096 ); // Chunk size in bytes
 
+	header( 'Expires: 0' );
+	header( 'Cache-Control: must-revalidate' );
+	header( 'Pragma: public' );
 	header( 'Content-Type: application/octet-stream' );
-	header( 'Content-Disposition: attachment; filename="' . $fileName . '"' );
-	header( 'Content-Length: ' . filesize( $filePath ) );
+	header( 'Content-Disposition: attachment; filename="' . $file_name . '"' );
+	header( 'Content-Length: ' . filesize( $file_path ) );
 
-	$handle = fopen( $filePath, 'rb' );
+	$handle = fopen( $file_path, 'rb' );
 	while ( ! feof( $handle ) ) {
-		echo fread( $handle, $chunkSize );
+		echo fread( $handle, $chunk_size );
 		flush();
 	}
 	fclose( $handle );
