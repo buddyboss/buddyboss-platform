@@ -909,12 +909,15 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 			$file_name = sanitize_file_name( $folder->title ) . '.zip';
 			$rootPath  = realpath( "$upload_dir" );
 
-			$zip = new ZipArchive();
-			$zip->open( $zip_name, ZipArchive::CREATE | ZipArchive::OVERWRITE );
+			// Create a new ZipFile instance.
+			$zip = new \PhpZip\ZipFile();
 
-			$files = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $rootPath ), RecursiveIteratorIterator::LEAVES_ONLY );
+			$files = new RecursiveIteratorIterator(
+				new RecursiveDirectoryIterator($parent_folder),
+				RecursiveIteratorIterator::LEAVES_ONLY
+			);
 
-			foreach ( $files as $name => $file ) {
+			foreach ($files as $name => $file) {
 				$filePath     = $file->getRealPath();
 				$relativePath = substr( $filePath, strlen( $rootPath ) + 1 );
 
@@ -927,17 +930,10 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 				}
 			}
 
+			$zip->saveAsFile($zip_name);
 			$zip->close();
 
-			header( 'Expires: 0' );
-			header( 'Cache-Control: no-cache, no-store, must-revalidate' );
-			header( 'Cache-Control: pre-check=0, post-check=0, max-age=0', false );
-			header( 'Pragma: no-cache' );
-			header( 'Content-type: application/zip' );
-			header( "Content-Disposition:attachment; filename={$file_name}" );
-			header( 'Content-Type: application/force-download' );
-
-			readfile( "{$zip_name}" );
+			bb_force_download_file($zip_name, basename($zip_name));
 
 			bp_document_remove_temp_directory( $upload_dir );
 			exit();
@@ -945,6 +941,21 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 		}
 	}
 
+}
+
+function bb_force_download_file( $filePath, $fileName ) {
+	$chunkSize = 4096; // Chunk size in bytes
+
+	header( 'Content-Type: application/octet-stream' );
+	header( 'Content-Disposition: attachment; filename="' . $fileName . '"' );
+	header( 'Content-Length: ' . filesize( $filePath ) );
+
+	$handle = fopen( $filePath, 'rb' );
+	while ( ! feof( $handle ) ) {
+		echo fread( $handle, $chunkSize );
+		flush();
+	}
+	fclose( $handle );
 }
 
 function bp_document_get_child_folders( $folder_id = 0, $parent_folder = '' ) {
