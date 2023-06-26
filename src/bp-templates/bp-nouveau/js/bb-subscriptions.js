@@ -235,6 +235,7 @@ window.bp = window.bp || {};
 				if (
 					! _.isUndefined( bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ] ) &&
 					bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ] !== null &&
+					_.has( bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ], 'state') &&
 					bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ].state() !== 'resolved'
 				) {
 					bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ].abort();
