@@ -1889,7 +1889,7 @@ function bp_member_type_permissions_metabox( $post ) {
 			</tbody>
 		</table>
 	<?php
-		} 
+		}
 	?>
 	<!-- accesslint:endignore -->
 	<?php
@@ -2245,7 +2245,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	$enable_profile_field = isset( $data['enable_profile_field'] ) ? absint( $data['enable_profile_field'] ) : 0; // default active.
 	$label_color          = isset( $data['label_color'] ) ? $data['label_color'] : '';
 
-	$allow_messaging_without_connection = isset( $data['allow_messaging_without_connection'] ) ? absint( $data['allow_messaging_without_connection'] ) : 0; // default active.
+	$allow_messaging_without_connection = isset( $data['allow_messaging_without_connection'] ) ? absint( $data['allow_messaging_without_connection'] ) : 0; // default inactive.
 
 	$data['wp_roles'] = array_filter( $data['wp_roles'] ); // Remove empty value from wp_roles array.
 	$wp_roles         = isset( $data['wp_roles'] ) ? $data['wp_roles'] : '';
@@ -2283,19 +2283,19 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_member_type_allow_messaging_without_connection', $allow_messaging_without_connection );
 
 	// Update all profile types which are allowed to message without connections.
-	$profile_types_allowed_messaging      = get_option( 'bp_member_types_allowed_messaging_without_connection' );
-	$updated_profile_types_allowed_option = $profile_types_allowed_messaging;
+	$profile_types_allowed_messaging = get_option( 'bp_member_types_allowed_messaging_without_connection', array() );
 
-	if ( $allow_messaging_without_connection ) {
-		$updated_profile_types_allowed_option[ $get_existing ] = true;
-	} elseif ( ! empty( $profile_types_allowed_messaging ) && array_key_exists( $get_existing, (array) $profile_types_allowed_messaging ) ) {
-		unset( $updated_profile_types_allowed_option[ $get_existing ] );
+	if ( true === (bool) $allow_messaging_without_connection ) {
+		$profile_types_allowed_messaging[ $get_existing ] = true;
+	} elseif (
+		! empty( $profile_types_allowed_messaging ) &&
+		array_key_exists( $get_existing, $profile_types_allowed_messaging )
+	) {
+		unset( $profile_types_allowed_messaging[ $get_existing ] );
 	}
 
-	if ( $profile_types_allowed_messaging !== $updated_profile_types_allowed_option ) {
-		update_option( 'bp_member_types_allowed_messaging_without_connection', $updated_profile_types_allowed_option );
-	}
-	
+	update_option( 'bp_member_types_allowed_messaging_without_connection', $profile_types_allowed_messaging );
+
 	// Get user previous role.
 	$old_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
 
