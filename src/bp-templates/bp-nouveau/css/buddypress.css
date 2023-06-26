@@ -12923,6 +12923,11 @@ ul.bbp-stats .bbp-count {
   color: #939597;
 }
 
+.buddypress-wrap .gd-list-view-select .dropdown-menu button.dropdown-item {
+  border-radius: unset;
+  width: 100%;
+}
+
 .warn {
   color: #b71717;
 }
