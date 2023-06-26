@@ -170,7 +170,7 @@ window.bp = window.bp || {};
 					}
 				}
 			);
-		
+
 			/**
 			 * Function for hide/show auto suspend fields on member reporting enable/disabled.
 			 */
@@ -2409,6 +2409,23 @@ window.bp = window.bp || {};
 					} );
 				}
 			}
+
+			$( document ).on(
+				'click',
+				'.bb-hide-pw',
+				function ( e ) {
+					e.preventDefault();
+					var $this  = $( this );
+					var $input = $this.closest( '.password-toggle' ).find( 'input' );
+					var $default_type = $input.data( 'type' ) ? $input.data( 'type' ) : 'text';
+					$this.toggleClass( 'bb-show-pass' );
+					if ( $this.hasClass( 'bb-show-pass' ) ) {
+						$input.attr( 'type', $default_type );
+					} else {
+						$input.attr( 'type', 'password' );
+					}
+				}
+			);
 		}
 	);
 

@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.2.1
+Tested up to: 6.2.2
 Requires PHP: 5.6.20
-Stable tag: 2.3.42
+Stable tag: 2.3.60
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,59 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.3.60 =
+* Notifications - Optimized the performance of the default notification preference workflow for members
+* Groups - Addressed the member count issue in groups when one of the members is suspended
+* Forums - Introduced link preview support for Forums discussions and replies
+* Forums - Resolved the issue where the shortcode for hidden group discussions would throw permission errors for group members
+* Forums - Fixed the issue with the discussion reply 'post' button not being enabled in the responsive view on Android
+* Forums - Resolved the layout issue with the 'Recent Replies' widget when using third-party Themes
+* Forums - Fixed the layout issue with discussion replies pagination when the page number is out of range
+* Activity - Handled the issue where the 'post' button was not accessible in the responsive view when the post content is significant
+* Media - Updated the media database table schema by adding indexing
+* Media - Addressed a UI issue with the search form in the documents sub-folder screen
+* Messages - Enhanced the upload and send media workflow performance in private messages. This improvement optimizes the way media data is stored and deleted, resulting in a faster and smoother messaging experience
+* Moderation - Resolved the issue of suspended member group activity single screen throwing a 404 error
+* Network Search - Refactored the code to allow for easy extension of the feature
+* Core - Provided an option to retain link previews and embeds even after deleting the associated links in activity, forum discussions, and replies
+* Core - Improved the user experience by displaying a loading icon when a search form is submitted or reset
+* Core - Improved the user experience of the GIPHY option in the dashboard by hiding sensitive text. Users can now toggle the visibility of sensitive content with an eye icon
+* Core - Handled a critical issue with the Presence PHP file, ensuring correct detection of active and inactive member status even on non-English language sites
+* Core - Handled a critical conflict with the 'BuddyBoss App' plugin build screen
+* REST API - Added API support for link previews in forums discussions and replies
+* REST API - Updated API support to align with the messages media workflow improvement
+* REST API - Handled the issue where the photos and videos reply option was disabled in the API
+* Learndash - Addressed the issue with social group members roles when sync is enabled for the Learndash group and social group
+
+= 2.3.50 =
+* Profiles - Addressed the issue where the password updated email was triggered when the account email is updated in the profile
+* Profiles - Resolved the incorrect last active stats issue on Members and profile pages
+* Notifications - Introduced new notification type to trigger when members create a reply to a blog post comment
+* Notifications - Improved the business logic for notification preferences, now loading from admin default if not updated
+* Notifications - Improved to send @mention email for blog post comments
+* Groups - Resolved the hidden group not showing issue for WP CLI commands
+* Groups - Resolved the activity not getting created issue for WP CLI commands
+* Groups - Handled the forum option not showing issue while creating a group when the forums slug is updated
+* Forums - Handled create discussion UX issue when selecting auto-generated tags
+* Activity - Improved the @mention dropdown by providing load more pagination
+* Activity - Fixed the multiple @mention option not working issue
+* Activity - Resolved the post form GIF search option UX issue
+* Media - Resolved the video thumbnail issue for videos with portrait orientation or a small-sized
+* Media - Fixed the documents search not working issue when the document is in the folder
+* Media - Addressed the media modal issue that was not showing the option to like and comment
+* Messages - Fixed the duplicate text issue when copy-pasting in the send message editor
+* Moderation - Improved the logic for handling suspended and blocked members content in Social groups, Network Search, Forums, Activity, and Widgets
+* Moderation - Handled the report member option UX issue, preventing multiple reports
+* Moderation - Addressed a minor accessibility issue with the 'report group' option
+* Network Search - Addressed the incorrect count issue when modifying search results using a hook
+* Core - Improvement by loading minified JS and CSS for third-party libraries
+* Core - Fixed the 'Repair user nicknames' tool that was not working as expected
+* REST API - Provided API support for social groups, activity, and forums moderation related updates
+* REST API - Handled the Forum discussion images URL issue in the API
+* REST API - Addressed the selected profile type not returning issue in the users endpoint
+* REST API - Resolved the join group action not working issue in the API for private and hidden groups when auto-approval is enabled
+* REST API - Fixed the read more option not working issue in the API for activity when it contains a link
 
 = 2.3.42 =
 * Registration - Resolved invited users can't register issue when registration option is disabled for non-members

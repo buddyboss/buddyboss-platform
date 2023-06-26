@@ -5146,3 +5146,83 @@ function bb_group_single_header_actions() {
 	</div>
 	<?php
 }
+
+
+/**
+ * Update the group member count.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param array $group_ids Array of group IDs.
+ *
+ * @return void
+ */
+function bb_update_group_member_count( $group_ids = array() ) {
+
+	if ( empty( $group_ids ) ) {
+		return;
+	}
+
+	foreach ( $group_ids as $group_id ) {
+		$cache_key = 'bp_group_get_total_member_count_' . $group_id;
+		wp_cache_delete( $cache_key, 'bp_groups' );
+		BP_Groups_Member::refresh_total_member_count_for_group( $group_id );
+	}
+}
+
+/**
+ * Function to return groups settings statues.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $setting_type Type of group settings.
+ *
+ * @return array
+ */
+function bb_groups_get_settings_status( $setting_type ) {
+
+	$setting_type = str_replace( '-', '_', sanitize_key( $setting_type ) );
+
+	$statuses = array( 'members', 'mods', 'admins' );
+	if ( 'message' === $setting_type ) {
+		$statuses = array( 'mods', 'admins', 'members' );
+	}
+
+	/**
+	 * Filters the allowed settings statuses.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array  $statuses     The settings statuses.
+	 * @param string $setting_type Type of group settings.
+	 */
+	return apply_filters( 'groups_allowed_' . $setting_type . '_status', $statuses, $setting_type );
+}
+
+/**
+ * Default group settings fallback function.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $setting_type Type of group settings.
+ * @param string $val          Value of group settings.
+ *
+ * @return string
+ */
+function bb_groups_settings_default_fallback( $setting_type, $val = '' ) {
+
+	$setting_type = str_replace( '-', '_', sanitize_key( $setting_type ) );
+
+	if ( empty( $val ) ) {
+		$val = ( 'message' === $setting_type ) ? 'mods' : 'members';
+	}
+
+	/**
+	 * Filters to set default value of a group settings.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $val Value of group settings.
+	 */
+	return apply_filters( 'bp_group_' . $setting_type . '_status_fallback', $val );
+}
