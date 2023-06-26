@@ -2371,8 +2371,21 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   margin-left: -210px;
   background: #ffdcdc;
   color: #d42929;
+  line-height: 1.5;
   border: 1px solid #ffc5ca;
   border-radius: 4px;
+}
+
+.bb-warning-section-wrap.hidden-header > th {
+  opacity: 0;
+  visibility: hidden;
+  padding: 0;
+  margin: 0;
+}
+
+.bb-warning-section-wrap.hidden-header > th + td {
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .bb-warning-section {
@@ -2380,8 +2393,15 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   margin-left: -210px;
   background: #fff3c8;
   color: #8b6300;
+  line-height: 1.5;
   border: 1px solid #ffeeb3;
   border-radius: 4px;
+}
+
+@media screen and (max-width: 782px) {
+  .bb-warning-section {
+    margin-left: 0;
+  }
 }
 
 /* Status Block */
@@ -3493,4 +3513,47 @@ table.moderations .column-member img {
   border: 1px solid #ccd0d4;
   border-radius: 3px;
   padding: 15px;
+}
+
+.notification-settings-input[data-bp-tooltip] {
+  display: inline-block;
+}
+
+.notification-settings-input[data-bp-tooltip]::after {
+  min-width: 140px;
+  white-space: normal;
+  padding: 7px 12px;
+  text-align: center;
+}
+
+.bp-admin-card .password-toggle {
+  position: relative;
+  display: inline-block;
+  width: 50%;
+}
+
+.bp-admin-card .password-toggle > input {
+  padding-right: 30px;
+  width: 100% !important;
+}
+
+.bp-admin-card .password-toggle .bb-hide-pw {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 30px;
+  border: 0;
+  padding: 0;
+  background: none !important;
+  box-shadow: none;
+}
+
+.bp-admin-card .password-toggle .bb-hide-pw .bb-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.bp-admin-card .password-toggle .bb-hide-pw.bb-show-pass .bb-icon::before {
+  content: "\ee6a";
 }
