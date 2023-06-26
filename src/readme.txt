@@ -57,6 +57,34 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.3.70 =
+* Enhancement: Network Search - Extended search results to only show LearnDash lessons from a course that a user has enrolled into. This is configured in the LearnDash Settings > Lesson Search
+* Enhancement: Performance improvements to the followers and following feature by adding pagination to the background process when notifications are being sent
+* Bug: Blog - Logged out users on private networks could had an unresponsive ‘Load More’ when attempting to load additional articles
+* Bug: Core - Code refactoring of the Activity and Forums by removing unnecessary !important tags
+* Bug: Forums - Pagination loading issue when forum was set to homepage
+* Bug: Forums - Using forum shortcodes whilst having a forum widget on the sidebar removed the ability to subscribe or create new discussions
+* Bug: Forums - Resolved performance issue where discussions took longer to load as users subscribed to many discussions
+* Bug: Groups - Cleaned PHP notice when multiple groups were selected as part of the 'groups_get_group_members' function
+* Bug: Media - New albums created from the Videos page were not displaying due to Redis Cache compatibility
+* Bug: Media - Images and video thumbnails were not being cache when not using Symlinks
+* Bug: Media - Image previews of documents after being renamed were not available
+* Bug: Media - Updated edit buttons to use correct case sensitive
+* Bug: Members - Search results returned incorrect values if a standard profile field was switched to a repeater field
+* Bug: Messages - Search terms were being removed from the search box when a search returned multiple results and was scrolled down
+* Bug: Multisite - Database error related to an unknown column ‘meta_id’
+* Bug: Network Search - Improved compatibility with Object Caching when searching for Groups
+* Bug: Notifications - Updated dropdown labels to use correct case sensitive
+* Bug: Profile - Improved support for uploading Profile photos using the built in Safari browser webcam capture
+* Bug: Widgets - Recent Topics and Recent Replies widgets for Forums were not loading content if custom prefixes were applied to the database table
+* Bug: Widgets - Sell All link on the Recent Active Members widget was unresponsive
+* Bug: Widgets - Group widget not showing hidden members of the same group when applied to Members Page
+* Bug: Elementor - Improved compatibility with the Elementor Maintenance mode
+* Bug: Elementor - Activity block content and excerpt conflicted with replies whenever multiple mentions were added
+* Bug: Geodirectory - Dropdown menu on Favorites and Listings tab was unresponsive
+* Bug: MemberPress - New error message if a user attempts to use an email address as a username/nickname, this resolves issues where @mentions cannot be sent due to invalid character
+* Bug: Rankmath - Fixed an issue where titles and meta details were not being applied to forum or discussions
+
 = 2.3.60 =
 * Notifications - Optimized the performance of the default notification preference workflow for members
 * Groups - Addressed the member count issue in groups when one of the members is suspended
