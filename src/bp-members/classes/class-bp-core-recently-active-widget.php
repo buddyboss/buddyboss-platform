@@ -73,7 +73,7 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 			'user_id'         => 0,
 			'type'            => 'active',
 			'per_page'        => $settings['max_members'],
-			'max'             => $settings['max_members'],
+			'max'             => false,
 			'populate_extras' => true,
 			'search_terms'    => false,
 			'exclude'         => ( function_exists( 'bp_get_users_of_removed_member_types' ) && ! empty( bp_get_users_of_removed_member_types() ) ) ? bp_get_users_of_removed_member_types() : '',
@@ -212,9 +212,10 @@ function buddyboss_theme_recently_active_widget_heartbeat( $response = array(), 
 		'user_id'         => 0,
 		'type'            => 'active',
 		'per_page'        => $number,
-		'max'             => $number,
+		'max'             => false,
 		'populate_extras' => true,
 		'search_terms'    => false,
+		'exclude'         => ( function_exists( 'bp_get_users_of_removed_member_types' ) && ! empty( bp_get_users_of_removed_member_types() ) ) ? bp_get_users_of_removed_member_types() : '',
 	);
 
 	// Back up global.
@@ -238,7 +239,7 @@ function buddyboss_theme_recently_active_widget_heartbeat( $response = array(), 
 			<?php endwhile; ?>
 
 		</div>
-		<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
+		<div class="more-block <?php echo ( $members_template->total_member_count > $number ) ? '' : esc_attr( 'bp-hide' ); ?>"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
 
 	<?php else : ?>
 

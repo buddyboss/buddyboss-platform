@@ -132,9 +132,12 @@ function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
  * Return ids of all field sets repeated instances.
  *
  * @since BuddyBoss 1.0.0
- * @global wpdb $wpdb WordPress database abstraction object.
- * @param type $field_group_id
+ *
+ * @param int   $field_group_id Xprofile group ID.
+ *
  * @return array
+ * @global wpdb $wpdb           WordPress database abstraction object.
+ *
  */
 function bp_get_repeater_clone_field_ids_all( $field_group_id ) {
 	static $bp_clone_field_ids_all = array();
@@ -169,6 +172,7 @@ function bp_get_repeater_clone_field_ids_all( $field_group_id ) {
 }
 
 add_action( 'xprofile_updated_profile', 'bp_profile_repeaters_update_field_data', 11, 5 );
+add_action( 'bb_xprofile_error_on_updated_profile', 'bp_profile_repeaters_update_field_data', 11, 5 );
 
 /**
  * Update/Sort repeater fields when profile data is updated.
@@ -178,10 +182,6 @@ add_action( 'xprofile_updated_profile', 'bp_profile_repeaters_update_field_data'
 function bp_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
 	global $wpdb;
 	$bp = buddypress();
-
-	if ( ! empty( $errors ) ) {
-		return;
-	}
 
 	$field_group_id = 0;
 

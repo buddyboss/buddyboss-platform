@@ -194,6 +194,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			$args['activity_id'] = $request['activity_id'];
 		}
 
+		if ( ! empty( $request['message_id'] ) ) {
+			$args['message_id'] = $request['message_id'];
+		}
+
 		if ( ! empty( $request['privacy'] ) ) {
 			$args['privacy'] = $request['privacy'];
 		}
@@ -481,6 +485,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			$args['content'] = $request['content'];
 		}
 
+		if ( isset( $request['message_id'] ) && ! empty( $request['message_id'] ) ) {
+			$args['message_id'] = $request['message_id'];
+		}
+
 		if (
 			function_exists( 'bb_media_user_can_upload' ) &&
 			! bb_media_user_can_upload( bp_loggedin_user_id(), (int) ( isset( $args['group_id'] ) ? $args['group_id'] : 0 ) )
@@ -644,7 +652,9 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 							'status' => 404,
 						)
 					);
-				} elseif ( function_exists( 'bp_get_attachment_media_id' ) && ! empty( bp_get_attachment_media_id( (int) $attachment_id ) ) && empty( $request['album_id'] ) ) {
+				} elseif ( 'messages' !== $request['component'] && 
+					function_exists( 'bp_get_attachment_media_id' ) && ! empty( bp_get_attachment_media_id( (int) $attachment_id ) ) &&
+					empty( $request['album_id'] ) ) {
 					$retval = new WP_Error(
 						'bp_rest_duplicate_media_upload_id',
 						sprintf(
@@ -715,7 +725,9 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'group_id'      => $media->group_id,
 			'album_id'      => $media->album_id,
 			'activity_id'   => $media->activity_id,
+			'message_id'    => $media->message_id,
 			'user_id'       => $media->user_id,
+			'menu_order'    => $media->menu_order,
 		);
 
 		if ( isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
@@ -724,6 +736,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		if ( isset( $request['privacy'] ) && ! empty( $request['privacy'] ) ) {
 			$args['privacy'] = $request['privacy'];
+		}
+
+		if ( isset( $request['message_id'] ) && ! empty( $request['message_id'] ) ) {
+			$args['message_id'] = $request['message_id'];
 		}
 
 		if ( isset( $request['album_id'] ) && (int) $args['album_id'] !== (int) $request['album_id'] ) {
@@ -1076,7 +1092,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! bp_media_user_can_delete( $id ) ) {
-			return WP_Error(
+			return new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, you are not allowed to delete this media.', 'buddyboss' ),
 				array(
@@ -1177,6 +1193,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * @apiParam {String} file File object which is going to upload.
 	 */
 	public function upload_item( $request ) {
+
+		if ( 'messages' === $request->get_param( 'component' ) ) {
+			$_POST['component'] = 'messages';
+		}
 
 		$file = $request->get_file_params();
 
@@ -1403,7 +1423,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'attachment_id'         => $media->attachment_id,
 			'user_id'               => $media->user_id,
 			'title'                 => $media->title,
-			'description'           => get_post_field( 'post_content', $media->attachment_id ),
+			'description'           => wp_specialchars_decode( get_post_field( 'post_content', $media->attachment_id ), ENT_QUOTES ),
 			'album_id'              => $media->album_id,
 			'group_id'              => $media->group_id,
 			'activity_id'           => $media->activity_id,
@@ -1846,6 +1866,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$content       = ( isset( $args['content'] ) ? $args['content'] : false );
 		$user_id       = ( ! empty( $args['user_id'] ) ? $args['user_id'] : get_current_user_id() );
 		$id            = ( ! empty( $args['id'] ) ? $args['id'] : '' );
+		$message_id    = ( ! empty( $args['message_id'] ) ? $args['message_id'] : 0 );
 
 		$group_id = ( ! empty( $args['group_id'] ) ? $args['group_id'] : false );
 		$album_id = ( ! empty( $args['album_id'] ) ? $args['album_id'] : false );
@@ -1886,19 +1907,24 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			// extract the nice title name.
 			$title = get_the_title( $wp_attachment_id );
 
-			$media_id = bp_media_add(
-				array(
-					'id'            => $id,
-					'attachment_id' => $wp_attachment_id,
-					'title'         => $title,
-					'activity_id'   => $media_activity_id,
-					'album_id'      => ( ! empty( $args['album_id'] ) ? $args['album_id'] : false ),
-					'group_id'      => ( ! empty( $args['group_id'] ) ? $args['group_id'] : false ),
-					'privacy'       => $media_privacy,
-					'user_id'       => $user_id,
-					'error_type'    => 'wp_error',
-				)
+			$add_media_args = array(
+				'id'            => $id,
+				'attachment_id' => $wp_attachment_id,
+				'title'         => $title,
+				'activity_id'   => $media_activity_id,
+				'message_id'    => $message_id,
+				'album_id'      => ( ! empty( $args['album_id'] ) ? $args['album_id'] : false ),
+				'group_id'      => ( ! empty( $args['group_id'] ) ? $args['group_id'] : false ),
+				'privacy'       => $media_privacy,
+				'user_id'       => $user_id,
+				'error_type'    => 'wp_error',
 			);
+
+			if ( isset( $args['menu_order'] ) ) {
+				$add_media_args['menu_order'] = ( ! empty( $args['menu_order'] ) ? $args['menu_order'] : 0 );
+			}
+
+			$media_id = bp_media_add( $add_media_args );
 
 			if ( is_int( $media_id ) ) {
 
@@ -1951,6 +1977,16 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 			if ( ! empty( $valid_upload_ids ) ) {
 				foreach ( $valid_upload_ids as $wp_attachment_id ) {
+
+					// Check if media id already available for the messages.
+					if ( 'message' === $media_privacy ) {
+						$mid = get_post_meta( $wp_attachment_id, 'bp_media_id', true );
+
+						if ( ! empty( $mid ) ) {
+							$created_media_ids[] = $mid;
+							continue;
+						}
+					}
 
 					// extract the nice title name.
 					$title = get_the_title( $wp_attachment_id );
@@ -2307,6 +2343,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			array(
 				'media_ids' => $media_ids,
 				'sort'      => 'ASC',
+				'order_by'  => 'menu_order',
 			)
 		);
 
@@ -2467,7 +2504,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				foreach ( $old_media_ids as $media_id ) {
 
 					if ( ! in_array( (int) $media_id, $media_ids, true ) ) {
-						bp_media_delete( array( 'id' => $media_id ) );
+						bp_media_delete( array( 'id' => $media_id ), 'activity' );
 					}
 				}
 			}
@@ -2861,6 +2898,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			array(
 				'media_ids' => $media_ids,
 				'sort'      => 'ASC',
+				'order_by'  => 'menu_order',
 			)
 		);
 
@@ -3238,8 +3276,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		$medias = $this->assemble_response_data(
 			array(
-				'media_ids' => $media_ids,
-				'sort'      => 'ASC',
+				'media_ids'        => $media_ids,
+				'sort'             => 'ASC',
+				'order_by'         => 'menu_order',
+				'moderation_query' => false,
 			)
 		);
 

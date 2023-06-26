@@ -52,6 +52,10 @@ function bp_register_invite_type_sections_filters_actions() {
 	// Invites
 	add_filter( 'bp_admin_menu_order', 'invites_admin_menu_order', 20 );
 
+	add_filter( 'posts_distinct_request', 'bb_invites_modify_posts_distinct_request', 10, 2 );
+	add_filter( 'posts_join_request', 'bb_invites_modify_posts_join_request', 10, 2 );
+	add_filter( 'posts_where_request', 'bb_invites_modify_posts_where_request', 10, 2 );
+
 }
 
 /**
@@ -443,3 +447,100 @@ function bp_invites_add_sub_menu_page_admin_menu() {
 	}
 }
 add_action( 'admin_menu', 'bp_invites_add_sub_menu_page_admin_menu', 10 );
+
+/**
+ * Function to modify the distinct query.
+ *
+ * @since BuddyBoss 2.2.4
+ *
+ * @param string   $distinct The DISTINCT clause of the query.
+ * @param WP_Query $query    The WP_Query instance (passed by reference).
+ *
+ * @return string
+ */
+function bb_invites_modify_posts_distinct_request( $distinct, $query ) {
+	global $wpdb;
+
+	if (
+		! is_admin() ||
+		! $query->is_main_query() ||
+		! isset( $query->query ) ||
+		! isset( $query->query['post_type'] ) ||
+		bp_get_invite_post_type() !== $query->query['post_type']
+	) {
+		return $distinct;
+	}
+
+	$search_term = $query->query_vars['s'];
+	if ( ! empty( $search_term ) ) {
+		$distinct .= " DISTINCT({$wpdb->posts}.ID) as unique_id, ";
+	}
+
+	return $distinct;
+}
+
+/**
+ * Function to modify the join query.
+ *
+ * @since BuddyBoss 2.2.4
+ *
+ * @param string   $join  The JOIN clause of the query.
+ * @param WP_Query $query The WP_Query instance (passed by reference).
+ *
+ * @return string
+ */
+function bb_invites_modify_posts_join_request( $join, $query ) {
+	global $wpdb;
+
+	if (
+		! is_admin() ||
+		! $query->is_main_query() ||
+		! isset( $query->query ) ||
+		! isset( $query->query['post_type'] ) ||
+		bp_get_invite_post_type() !== $query->query['post_type']
+	) {
+		return $join;
+	}
+
+	$search_term = $query->query_vars['s'];
+	if ( ! empty( $search_term ) ) {
+		$join .= " INNER JOIN {$wpdb->postmeta} ON ( {$wpdb->posts}.ID = {$wpdb->postmeta}.post_id )";
+	}
+
+	return $join;
+}
+
+/**
+ * Function to modify the join query.
+ *
+ * @since BuddyBoss 2.2.4
+ *
+ * @param string   $where The WHERE clause of the query.
+ * @param WP_Query $query The WP_Query instance (passed by reference).
+ *
+ * @return string
+ */
+function bb_invites_modify_posts_where_request( $where, $query ) {
+	global $wpdb;
+
+	if (
+		! is_admin() ||
+		! $query->is_main_query() ||
+		! isset( $query->query ) ||
+		! isset( $query->query['post_type'] ) ||
+		bp_get_invite_post_type() !== $query->query['post_type']
+	) {
+		return $where;
+	}
+
+	$search_term = $query->query_vars['s'];
+	if ( ! empty( $search_term ) ) {
+
+		$invitee_name_meta_query  = $wpdb->prepare( "( {$wpdb->postmeta}.meta_key = '_bp_invitee_name' AND {$wpdb->postmeta}.meta_value LIKE %s )", '%' . $wpdb->esc_like( $search_term ) . '%' );
+		$invitee_email_meta_query = $wpdb->prepare( "( {$wpdb->postmeta}.meta_key = '_bp_invitee_email' AND {$wpdb->postmeta}.meta_value LIKE %s )", '%' . $wpdb->esc_like( $search_term ) . '%' );
+
+		$where .= " OR ( $invitee_name_meta_query OR $invitee_email_meta_query )";
+	}
+
+	return $where;
+}
