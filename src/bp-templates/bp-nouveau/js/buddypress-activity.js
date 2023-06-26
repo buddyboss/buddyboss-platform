@@ -1095,9 +1095,9 @@ window.bp = window.bp || {};
 				);
 
 				$( '#ac-form-' + activity_id + ' #ac-input-' + activity_id ).focus();
-				if( $( 'body' ).hasClass( 'bb-is-mobile' ) ) {
+				if ( $( 'body' ).hasClass( 'bb-is-mobile' ) ) {
 					// Scroll window up to show the submit button
-					setTimeout( function() {
+					setTimeout( function () {
 						$( 'html, body' ).animate( { scrollTop: $( '#ac-form-' + activity_id + ' #ac-input-' + activity_id ).offset().top - 200 }, 500 );
 					}, 0 );
 				}
