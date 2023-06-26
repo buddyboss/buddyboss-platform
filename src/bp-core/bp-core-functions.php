@@ -8817,18 +8817,48 @@ function bb_disable_notification_type( $notification_type, $type = 'main' ) {
  * @return bool
  */
 function bb_messages_user_can_send_message( $args = array() ) {
-	$can_send_message = true;
+	$can_send_message = false;
 
-	if ( empty( $args ) ) {
-		return apply_filters( 'bb_messages_user_can_send_message', false, $args );
+	$r = bp_parse_args(
+		$args,
+		array(
+			'sender_id'     => 0,
+			'recipients_id' => 0,
+			'thread_id'     => 0,
+		),
+	);
+
+	// Bail if no sender.
+	if ( empty( $r['sender_id'] ) ) {
+		return apply_filters( 'bb_messages_user_can_send_message', false, $r );
 	}
 
-	if ( empty( $args['sender_id'] ) || empty( $args['recipients_id'] ) ) {
-		return apply_filters( 'bb_messages_user_can_send_message', false, $args );
+	$sender_id      = $r['sender_id'];
+	$recipients_ids = ! empty( $r['recipients_id'] ) && is_int( $r['recipients_id'] ) ? array( $r['recipients_id'] ) : $r['recipients_id'];
+	$thread_id      = $r['thread_id'];
+
+	// Check the sender has the capability to send message.
+	if (
+		(
+			empty( $thread_id ) ||
+			! messages_check_thread_access( $thread_id, $sender_id )
+		) &&
+		! bp_current_user_can( 'bp_moderate' )
+	) {
+		return apply_filters( 'bb_messages_user_can_send_message', false, $r );
 	}
 
-	$sender_id      = ! empty( $args['sender_id'] ) ? $args['sender_id'] : 0;
-	$recipients_ids = ! empty( $args['recipients_id'] ) && is_int( $args['recipients_id'] ) ? array( $args['recipients_id'] ) : array();
+	// If no recipients, check if the thread has recipients.
+	if ( 0 === $recipients_ids && ! empty( $thread_id ) ) {
+		$recipients_ids = BP_Messages_Thread::get_recipients_for_thread( $thread_id );
+		$recipients_ids = wp_list_pluck( $recipients_ids, 'user_id' );
+		$r['recipients_id'] = $recipients_ids;
+	}
+
+	// Bail if no recipients.
+	if ( empty( $recipients_ids ) ) {
+		return apply_filters( 'bb_messages_user_can_send_message', false, $r );
+	}
 
 	// Strip the sender from the recipient list.
 	if ( ! empty( $recipients_ids ) ) {
@@ -8838,52 +8868,42 @@ function bb_messages_user_can_send_message( $args = array() ) {
 	}
 
 	$is_group_message_thread = false;
+
+	// Check if the thread is a group message thread.
 	if ( ! empty( $thread_id ) ) {
-		// $thread = BP_Messages_Thread::get(
-		// 	array(
-		// 		'include_threads' => array( $thread_id ),
-		// 		'count_total'     => false,
-		// 		'per_page'        => - 1,
-		// 	)
-		// );
-
-		// $recipients     = ! empty( $thread ) && ! empty( $thread['recipients'] ) ? $thread['recipients'] : array();
-		// $recipients_ids = array_column( $recipients, null, 'user_id' );
-
-		// // Strip the sender from the recipient list.
-		// if ( ! empty( $recipients_ids ) ) {
-		// 	$key = array_search( $sender_id, $recipients_ids );
-		// 	unset( $recipients_ids[ $key ] );
-		// }
-
-		$is_group_message_thread = bb_messages_is_group_thread( (int) $thread_id );
+		$is_group_message_thread = (bool) bb_messages_is_group_thread( (int) $thread_id );
 		if ( $is_group_message_thread ) {
-			$first_message = BP_Messages_Thread::get_first_message( $thread_id );
-			$group_id      = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
-			if (
-				true === bp_disable_group_messages() &&
-				$is_group_message_thread &&
-				$group_id &&
-				(
-					(
-						bp_is_active( 'groups' ) &&
-						! groups_can_user_manage_messages( $sender_id, $group_id )
-					) ||
-					! bp_is_active( 'groups' )
-				)
-			) {
-				return apply_filters( 'bb_messages_user_can_send_message', false, $args );
-			}
+			return apply_filters( 'bb_messages_user_can_send_message', true, $r );
 		}
 	}
 
-	// Check recepient is deleted.
-	if ( 1 === count( $recipients_ids ) ) {
-		$is_deleted   = get_user_by( 'id', $recipients_ids[0] );
+	// Check recipients if connected or not.
+	if (
+		false === $is_group_message_thread &&
+		bp_is_active( 'friends' ) &&
+		bp_force_friendship_to_message() &&
+		1 === count( $recipients_ids )
+	) {
+		$profile_types_allowed_messaging = get_option( 'bp_member_types_allowed_messaging_without_connection' );
+		$sender_profile_type             = bp_get_member_type( $sender_id );
 
-		if ( ! $is_deleted ) {
-			return apply_filters( 'bb_messages_user_can_send_message', false, $args );
+		// Check if the sender is allowed to send message to the recipient based on the member type settings.
+		if (
+			! empty( $sender_profile_type ) &&
+			! empty( $profile_types_allowed_messaging ) &&
+			array_key_exists( $sender_profile_type, $profile_types_allowed_messaging ) &&
+			true === $profile_types_allowed_messaging[ $sender_profile_type ]
+		) {
+			$can_send_message = true;
+			// Check if the sender is connected to the recipient.
+		} elseif (
+			(int) $sender_id !== (int) current( $recipients_ids ) &&
+			friends_check_friendship( (int) $sender_id, (int) current( $recipients_ids ) )
+		) {
+			$can_send_message = true;
 		}
+	} else {
+		$can_send_message = true;
 	}
 
 	// Check moderation if user blocked or not for single user thread.
@@ -8893,45 +8913,17 @@ function bb_messages_user_can_send_message( $args = array() ) {
 		! empty( $recipients_ids ) &&
 		count( $recipients_ids ) === 1
 	) {
-		if ( bp_moderation_is_user_suspended( $recipients_ids[0] ) ) {
+		if ( bp_moderation_is_user_suspended( current( $recipients_ids ) ) ) {
 			$can_send_message = false;
-		} elseif ( function_exists( 'bb_moderation_is_user_blocked_by' ) && bb_moderation_is_user_blocked_by( $recipients_ids[0] ) ) {
+		} elseif ( function_exists( 'bb_moderation_is_user_blocked_by' ) && bb_moderation_is_user_blocked_by( current( $recipients_ids ) ) ) {
 			$can_send_message = false;
-		} elseif ( bp_moderation_is_user_blocked( $recipients_ids[0] ) ) {
+		} elseif ( bp_moderation_is_user_blocked( current( $recipients_ids ) ) ) {
 			$can_send_message = false;
-		}
-
-		if ( ! $can_send_message ) {
-			return apply_filters( 'bb_messages_user_can_send_message', false, $args );
 		}
 	}
 
-	// Check recipients if connected or not.
-	if ( ! $is_group_message_thread && bp_force_friendship_to_message() && bp_is_active( 'friends' ) && 1 === count( $recipients_ids ) ) {
+	// Check the access control settings.
+	$can_send_message = (bool) ( $is_group_message_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : bb_user_can_send_messages( $can_send_message, $recipients_ids );
 
-		$profile_types_allowed_messaging = get_option( 'bp_member_types_allowed_messaging_without_connection' );
-		$sender_profile_type             = bp_get_member_type( $sender_id );
-
-		if (
-			! empty( $sender_profile_type ) &&
-			! empty( $profile_types_allowed_messaging ) &&
-			array_key_exists( $sender_profile_type, $profile_types_allowed_messaging ) &&
-			true === $profile_types_allowed_messaging[ $sender_profile_type ]
-		) {
-			$can_send_message = true;
-		} else {
-			if ( (int) $sender_id !== (int) $recipients_ids[0] && ! friends_check_friendship( (int) $sender_id, (int) $recipients_ids[0] ) ) {
-				return apply_filters( 'bb_messages_user_can_send_message', false, $args );
-			}
-			// foreach ( $recipients_ids as $recepient_id ) {
-			// 	if ( (int) $sender_id !== (int) $recepient_id && ! friends_check_friendship( (int) $sender_id, (int) $recepient_id ) ) {
-			// 		return apply_filters( 'bb_messages_user_can_send_message', false, $args );
-			// 	}
-			// }
-		}
-	}
-
-	$can_send_message = ( $is_group_message_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : bb_user_can_send_messages( true, $recipients_ids );
-
-	return apply_filters( 'bb_messages_user_can_send_message', $can_send_message, $args );
+	return apply_filters( 'bb_messages_user_can_send_message', $can_send_message, $r );
 }
