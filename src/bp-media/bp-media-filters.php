@@ -90,6 +90,7 @@ add_action( 'bp_add_rewrite_rules', 'bb_setup_attachment_media_preview' );
 add_filter( 'query_vars', 'bb_setup_attachment_media_preview_query' );
 add_action( 'template_include', 'bb_setup_attachment_media_preview_template', PHP_INT_MAX );
 
+add_action( 'bp_activity_after_email_content', 'bb_gif_activity_after_email_content' );
 /**
  * Add Media items for search
  */
@@ -2887,3 +2888,24 @@ function bb_messages_media_save( $attachment ) {
 }
 
 add_action( 'bb_media_upload', 'bb_messages_media_save' );
+
+/**
+ * Added text on the email when replied on the activity.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param BP_Activity_Activity $activity Activity Object.
+ */
+function bb_gif_activity_after_email_content( $activity ) {
+	$gif_ids = bp_activity_get_meta( $activity->id, '_gif_data', true );
+
+	if ( ! empty( $gif_ids ) ) {
+		$content = sprintf(
+		/* translator: 1. Activity link, 2. gif text */
+			'<a href="%1$s" target="_blank">%2$s</a>',
+			bp_activity_get_permalink( $activity->id ),
+			esc_html__( 'Sent you a gif', 'buddyboss' )
+		);
+		echo wpautop( $content );
+	}
+}
