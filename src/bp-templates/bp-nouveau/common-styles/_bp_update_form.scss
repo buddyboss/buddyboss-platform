@@ -709,6 +709,14 @@
 			max-width: 90%;
 			margin: auto;
 			box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
+
+			@media screen and (max-width: 768px) {
+
+				.bb-is-mobile & {
+					top: -70px;
+				}
+
+			}
 		}
 
 		.gif-media-search-dropdown {

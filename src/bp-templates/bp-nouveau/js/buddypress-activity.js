@@ -1095,6 +1095,12 @@ window.bp = window.bp || {};
 				);
 
 				$( '#ac-form-' + activity_id + ' #ac-input-' + activity_id ).focus();
+				if( $( 'body' ).hasClass( 'bb-is-mobile' ) ){
+					// Scroll window up to show the submit button
+					setTimeout(function(){
+						$( 'html, body' ).animate( { scrollTop: $( '#ac-form-' + activity_id + ' #ac-input-' + activity_id ).offset().top - 200 }, 500 );
+					},0);
+				}
 
 				if ( ! _.isUndefined( BP_Nouveau.media ) && ! _.isUndefined( BP_Nouveau.media.emoji ) && 'undefined' == typeof $( '#ac-input-' + activity_id ).data( 'emojioneArea' ) ) {
 					$( '#ac-input-' + activity_id ).emojioneArea(
