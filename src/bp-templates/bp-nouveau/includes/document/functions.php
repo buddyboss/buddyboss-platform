@@ -911,31 +911,31 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 
 			$phpVersion = phpversion();
 
-			//  Added phpversion check as ZipFile is not supported in less than PHP 7.4.
-			if ( version_compare( $phpVersion, '7.4', '>=' ) ) {
+			//  Added phpversion check as ZipFile is not supported in less than PHP 7.1.
+			if ( version_compare( $phpVersion, '7.1', '>=' ) ) {
+				$options = new \ZipStream\Option\Archive();
+				$options->setSendHttpHeaders( false ); // Disable sending HTTP headers
+				$options->setOutputStream( fopen( $zip_name, 'w' ) ); // Specify the output file path
+
+
 				// Create a new ZipFile instance.
-				$zip = new \PhpZip\ZipFile();
+				$zip = new \ZipStream\ZipStream( $file_name, $options );
 
 				$files = new RecursiveIteratorIterator(
 					new RecursiveDirectoryIterator( $parent_folder ),
 					RecursiveIteratorIterator::LEAVES_ONLY
 				);
 
-				foreach ( $files as $name => $file ) {
-					$filePath     = $file->getRealPath();
-					$relativePath = substr( $filePath, strlen( $parent_folder ) + 1 );
+				foreach ( $files as $file ) {
+					$relativePath = substr( $file, strlen( $parent_folder ) + 1 );
 
-					if ( ! $file->isDir() ) {
-						$zip->addFile( $filePath, $relativePath );
+					if ( $file->isDir() ) {
+						$zip->addFile( $relativePath, '' );
 					} else {
-						if ( $relativePath !== false ) {
-							$zip->addEmptyDir( $relativePath );
-						}
+						$zip->addFileFromPath( $relativePath, $file->getPathname() );
 					}
 				}
-
-				$zip->saveAsFile( $zip_name );
-				$zip->close();
+				$zip->finish();
 			} else {
 				$zip = new ZipArchive();
 				$zip->open( $zip_name, ZipArchive::CREATE | ZipArchive::OVERWRITE );
@@ -947,10 +947,8 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 
 					if ( ! $file->isDir() ) {
 						$zip->addFile( $filePath, $relativePath );
-					} else {
-						if ( $relativePath !== false ) {
-							$zip->addEmptyDir( $relativePath );
-						}
+					} elseif ( $relativePath !== false ) {
+						$zip->addEmptyDir( $relativePath );
 					}
 				}
 
