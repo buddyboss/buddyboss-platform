@@ -911,11 +911,11 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 
 			$phpVersion = phpversion();
 
-			//  Added phpversion check as ZipFile is not supported in less than PHP 7.1.
+			// Added phpversion check as ZipFile is not supported in less than PHP 7.1.
 			if ( version_compare( $phpVersion, '7.1', '>=' ) ) {
 				$options = new \ZipStream\Option\Archive();
-				$options->setSendHttpHeaders( false ); // Disable sending HTTP headers
-				$options->setOutputStream( fopen( $zip_name, 'w' ) ); // Specify the output file path
+				$options->setSendHttpHeaders( false ); // Disable sending HTTP headers.
+				$options->setOutputStream( fopen( $zip_name, 'w' ) ); // Specify the output file path.
 
 
 				// Create a new ZipFile instance.
@@ -976,7 +976,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
  * @return void
  */
 function bb_document_force_download( $file_path, $file_name ) {
-	$chunk_size = apply_filters( 'bb_document_download_chunk_size', 4096 ); // Chunk size in bytes
+	$chunk_size = apply_filters( 'bb_document_download_chunk_size', 4096 ); // Chunk size in bytes.
 
 	header( 'Expires: 0' );
 	header( 'Cache-Control: must-revalidate' );

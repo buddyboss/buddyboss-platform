@@ -5024,8 +5024,8 @@ function bb_document_remove_orphaned_download() {
 	$wp_files_system = new \WP_Filesystem_Direct( array() );
 
 	$six_hours_ago = time() - ( HOUR_IN_SECONDS * 6 ); // Get the timestamp 6 hours ago.
-	$uploadDir     = wp_upload_dir(); // Get the path to the upload directory
-	$dir           = $uploadDir['basedir']; // Get the base directory path
+	$uploadDir     = wp_upload_dir(); // Get the path to the upload directory.
+	$dir           = $uploadDir['basedir']; // Get the base directory path.
 
 	// Get all the subdirectories in the upload directory.
 	$folders = glob( $dir . '/*', GLOB_ONLYDIR );
