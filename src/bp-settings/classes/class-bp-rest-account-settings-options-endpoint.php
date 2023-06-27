@@ -378,12 +378,12 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	public function prepare_item_for_response( $field, $request ) {
 		$data = array(
 			'name'        => ( isset( $field['name'] ) && ! empty( $field['name'] ) ? $field['name'] : '' ),
-			'label'       => ( isset( $field['label'] ) && ! empty( $field['label'] ) ? $field['label'] : '' ),
+			'label'       => ( isset( $field['label'] ) && ! empty( $field['label'] ) ? wp_specialchars_decode( $field['label'], ENT_QUOTES ) : '' ),
 			'type'        => ( isset( $field['field'] ) && ! empty( $field['field'] ) ? $field['field'] : '' ),
 			'value'       => ( isset( $field['value'] ) && ! empty( $field['value'] ) ? $field['value'] : '' ),
 			'placeholder' => ( isset( $field['placeholder'] ) && ! empty( $field['placeholder'] ) ? $field['placeholder'] : '' ),
 			'options'     => ( isset( $field['options'] ) && ! empty( $field['options'] ) ? $field['options'] : array() ),
-			'headline'    => ( isset( $field['group_label'] ) && ! empty( $field['group_label'] ) ? $field['group_label'] : '' ),
+			'headline'    => ( isset( $field['group_label'] ) && ! empty( $field['group_label'] ) ? wp_specialchars_decode( $field['group_label'], ENT_QUOTES ) : '' ),
 			'subfields'   => ( isset( $field['subfields'] ) && ! empty( $field['subfields'] ) ? $field['subfields'] : array() ),
 		);
 
@@ -1033,6 +1033,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		$field_groups = bp_xprofile_get_groups(
 			array(
 				'fetch_fields'           => true,
+				'user_id'                => bp_loggedin_user_id(),
 				'fetch_field_data'       => true,
 				'fetch_visibility_level' => true,
 			)

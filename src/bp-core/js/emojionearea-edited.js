@@ -90,11 +90,16 @@ document = window.document || {};
 		} else {
 			fname = unicode;
 		}
+		if ( typeof window.forums_medium_topic_editor == 'undefined' ) {
+			var altAlt = emojione.shortnameToUnicode( shortname );
+		} else {
+			var altAlt = friendlyName;
+		}
 		template = template.replace( '{name}', shortname || '' )
 			.replace( '{friendlyName}', friendlyName )
 			.replace( '{img}', imagePath + (emojioneSupportMode < 2 ? fname.toUpperCase() : originalUnicode.uc_output ) + '.' + imageType )
 			.replace( '{uni}', unicode )
-			.replace( '{alt}', friendlyName );
+			.replace( '{alt}', altAlt );
 
 		if (shortname) {
 			template = template.replace( '{char}', emojione.shortnameToUnicode( shortname ) );
@@ -1366,7 +1371,19 @@ document = window.document || {};
 					}
 
 					saveSelection( editor[0] );
-					pasteHtmlAtCaret( shortnameTo( emojibtn.data( "name" ), self.emojiTemplate ) );
+
+					if ( typeof window.forums_medium_topic_editor == 'undefined' && source.is( "TEXTAREA" ) ) {
+						var textArea = $( 'textarea.bbp-the-content' ).get( 0 );
+						var init = textArea.selectionStart;
+						var emojiUnicode = emojione.shortnameToUnicode( emojibtn.data( "name" ) );
+						var emojiUnicodeLength = emojiUnicode.length;
+						textArea.value = textArea.value.slice( 0, init ) + emojiUnicode + textArea.value.slice( init );
+						textArea.setSelectionRange( init + emojiUnicodeLength, init + emojiUnicodeLength );
+						textArea.focus();
+					} else {
+						pasteHtmlAtCaret( shortnameTo( emojibtn.data( "name" ), self.emojiTemplate ) );
+					}
+
 					// }
 
 					if (self.recentEmojis) {

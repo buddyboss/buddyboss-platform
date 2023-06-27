@@ -11,6 +11,7 @@ defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'BP_Admin_Setting_tab' ) ) :
 
+	#[\AllowDynamicProperties]
 	class BP_Admin_Setting_tab extends BP_Admin_Tab {
 		public $global_tabs_var = 'bp_admin_setting_tabs';
 		public $menu_page       = 'bp-settings';

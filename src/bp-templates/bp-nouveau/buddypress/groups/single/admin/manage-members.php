@@ -7,9 +7,11 @@
  * @since   BuddyPress 3.0.0
  * @version 1.0.0
  */
+
+bp_nouveau_group_hook( 'before', 'manage_members_list' );
 ?>
 
-<h2 class="bp-screen-title 
+<h2 class="bp-screen-title
 <?php
 if ( bp_is_group_create() ) {
 	echo esc_attr( 'creation-step-name' ); }
@@ -22,48 +24,49 @@ if ( bp_is_group_create() ) {
 
 <dl class="groups-manage-members-list">
 
+	<?php if ( bp_group_admin_ids() ) : ?>
+
 	<dt class="admin-section section-title"><?php echo esc_html( get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ), 'buddyboss' ); ?></dt>
-
-	<?php if ( bp_has_members( '&include=' . bp_group_admin_ids() . '&member_type__not_in=false' ) ) : ?>
 		<dd class="admin-listing">
-
 			<p><?php printf( __( '%1$s have total control over the contents and settings of a group. That includes all the abilities of %2$s, as well as the ability to turn group forums on or off, change group status from public to private, change the group photo,  manage group %3$s, and delete the group.', 'buddyboss' ), get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ), strtolower( get_group_role_label( bp_get_current_group_id(), 'moderator_plural_label_name' ) ), strtolower( get_group_role_label( bp_get_current_group_id(), 'member_plural_label_name' ) ) ); ?></p>
 
-			<ul id="admins-list" class="item-list single-line">
+			<?php if ( bp_has_members( '&include=' . bp_group_admin_ids() . '&member_type__not_in=false' ) ) : ?>
+				<ul id="admins-list" class="item-list single-line">
 
-				<?php
-				while ( bp_members() ) :
-					bp_the_member();
-					?>
-					<li class="member-entry clearfix">
-
-						<?php
-						echo bp_core_fetch_avatar(
-							array(
-								'item_id' => bp_get_member_user_id(),
-								'type'    => 'thumb',
-								'width'   => 30,
-								'height'  => 30,
-								'alt'     => '',
-							)
-						);
+					<?php
+					while ( bp_members() ) :
+						bp_the_member();
 						?>
-						<p class="list-title member-name">
-							<a href="<?php bp_member_permalink(); ?>"> <?php bp_member_name(); ?></a>
-						</p>
+						<li class="member-entry clearfix">
 
-						<?php if ( count( bp_group_admin_ids( false, 'array' ) ) > 1 ) : ?>
-
-							<p class="action text-links-list">
-								<a class="button confirm admin-demote-to-member" href="<?php bp_group_member_demote_link( bp_get_member_user_id() ); ?>"><?php printf( __( 'Demote to regular %s', 'buddyboss' ), strtolower( get_group_role_label( bp_get_current_group_id(), 'member_singular_label_name' ) ) ); ?></a>
+							<?php
+							echo bp_core_fetch_avatar(
+								array(
+									'item_id' => bp_get_member_user_id(),
+									'type'    => 'thumb',
+									'width'   => 30,
+									'height'  => 30,
+									'alt'     => '',
+								)
+							);
+							?>
+							<p class="list-title member-name">
+								<a href="<?php bp_member_permalink(); ?>"> <?php bp_member_name(); ?></a>
 							</p>
 
-						<?php endif; ?>
+							<?php if ( count( bp_group_admin_ids( false, 'array' ) ) > 1 ) : ?>
 
-					</li>
-				<?php endwhile; ?>
+								<p class="action text-links-list">
+									<a class="button confirm admin-demote-to-member" href="<?php bp_group_member_demote_link( bp_get_member_user_id() ); ?>"><?php printf( __( 'Demote to regular %s', 'buddyboss' ), strtolower( get_group_role_label( bp_get_current_group_id(), 'member_singular_label_name' ) ) ); ?></a>
+								</p>
 
-			</ul>
+							<?php endif; ?>
+
+						</li>
+					<?php endwhile; ?>
+
+				</ul>
+			<?php endif; ?>
 		</dd>
 	<?php endif; ?>
 
@@ -181,4 +184,6 @@ else :
 	bp_nouveau_user_feedback( 'group-manage-members-none' );
 
 endif;
+
+bp_nouveau_group_hook( 'after', 'manage_members_list' );
 ?>

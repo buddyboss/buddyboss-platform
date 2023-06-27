@@ -212,8 +212,10 @@ function bbp_has_forums( $args = '' ) {
 		// Add pagination to query object.
 		$bbp->forum_query->pagination_links = paginate_links( $bbp_topic_pagination );
 
-		// Remove first page from pagination.
-		$bbp->forum_query->pagination_links = str_replace( $wp_rewrite->pagination_base . "/1/'", "'", $bbp->forum_query->pagination_links );
+		if ( ! empty( $bbp->forum_query->pagination_links ) ) {
+			// Remove first page from pagination.
+			$bbp->forum_query->pagination_links = str_replace( $wp_rewrite->pagination_base . "/1/'", "'", $bbp->forum_query->pagination_links );
+		}
 	}
 
 	return apply_filters( 'bbp_has_forums', $bbp->forum_query->have_posts(), $bbp->forum_query );
@@ -2949,10 +2951,13 @@ function bb_get_child_forum_group_ids( $forum_id ) {
  * @return string Content of the forum with more link.
  */
 function bbp_get_forum_content_excerpt_view_more( $forum_id = 0 ) {
+	global $template_forum_ids;
 	$forum_id      = bbp_get_forum_id( $forum_id );
 	$forum_content = bbp_get_forum_content( $forum_id );
 
-	$forum_link = '... <br/> <a href="#single-forum-description-popup" class="bb-more-link show-action-popup button outline">' . esc_html__( 'View more', 'buddyboss' ) . '</a>';
+	$template_forum_ids[] = $forum_id;
+
+	$forum_link = '... <br/> <a href="#single-forum-description-popup-' . esc_attr( $forum_id ) . '" class="bb-more-link show-action-popup button outline">' . esc_html__( 'View more', 'buddyboss' ) . '</a>';
 
 	return bp_create_excerpt( $forum_content, 250, array( 'ending' => $forum_link ) );
 }

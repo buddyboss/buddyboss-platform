@@ -253,7 +253,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 							$except
 						);
 					} elseif ( ! empty( $media_ids ) ) {
-						$media_ids = array_filter( explode( ',', $media_ids ) );
+						$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
 						if ( count( $media_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: Member display name. */
@@ -268,7 +268,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 							);
 						}
 					} elseif ( ! empty( $document_ids ) ) {
-						$document_ids = array_filter( explode( ',', $document_ids ) );
+						$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
 						if ( count( $document_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: Member display name. */
@@ -283,7 +283,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 							);
 						}
 					} elseif ( ! empty( $video_ids ) ) {
-						$video_ids = array_filter( explode( ',', $video_ids ) );
+						$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
 						if ( count( $video_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: Member display name. */
@@ -341,7 +341,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 								$except
 							);
 						} elseif ( $media_ids ) {
-							$media_ids = array_filter( explode( ',', $media_ids ) );
+							$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
 							if ( count( $media_ids ) > 1 ) {
 								$text = sprintf(
 								/* translators: Member display name. */
@@ -356,7 +356,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 								);
 							}
 						} elseif ( $document_ids ) {
-							$document_ids = array_filter( explode( ',', $document_ids ) );
+							$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
 							if ( count( $document_ids ) > 1 ) {
 								$text = sprintf(
 								/* translators: Member display name. */
@@ -371,7 +371,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 								);
 							}
 						} elseif ( $video_ids ) {
-							$video_ids = array_filter( explode( ',', $video_ids ) );
+							$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
 							if ( count( $video_ids ) > 1 ) {
 								$text = sprintf(
 								/* translators: Member display name. */
@@ -597,6 +597,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 * @return array
 	 */
 	public function bb_render_forums_subscribed_discussion( $items ) {
+		static $cached_items = array();
+
 		$type_data = bb_register_subscriptions_types( 'forum' );
 
 		if ( ! empty( $items ) ) {
@@ -627,6 +629,11 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					empty( $subscription['id'] ) ||
 					empty( $subscription['item_id'] )
 				) {
+					continue;
+				}
+
+				if ( ! empty( $cached_items[ $subscription['id'] ] ) ) {
+					$items[ $item_key ] = $cached_items[ $subscription['id'] ];
 					continue;
 				}
 
@@ -688,7 +695,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				);
 
 				// Reassign the extra data to exist object.
-				$items[ $item_key ] = (object) array_merge( (array) $item, $data );
+				$items[ $item_key ]                  = (object) array_merge( (array) $item, $data );
+				$cached_items[ $subscription['id'] ] = $items[ $item_key ];
 			}
 
 			// Restore current blog.
@@ -710,6 +718,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 * @return array
 	 */
 	public function bb_render_forums_subscribed_reply( $items ) {
+		static $cached_items = array();
+
 		$type_data = bb_register_subscriptions_types( 'topic' );
 
 		if ( ! empty( $items ) ) {
@@ -738,6 +748,11 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					empty( $subscription['id'] ) ||
 					empty( $subscription['item_id'] )
 				) {
+					continue;
+				}
+
+				if ( ! empty( $cached_items[ $subscription['id'] ] ) ) {
+					$items[ $item_key ] = $cached_items[ $subscription['id'] ];
 					continue;
 				}
 
@@ -822,7 +837,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					)
 				);
 
-				$items[ $item_key ] = (object) array_merge( (array) $item, $data );
+				$items[ $item_key ]                  = (object) array_merge( (array) $item, $data );
+				$cached_items[ $subscription['id'] ] = $items[ $item_key ];
 			}
 
 			// Restore current blog.
@@ -885,6 +901,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		}
 
 		foreach ( $r['user_ids'] as $user_id ) {
+			$send_mail         = true;
+			$send_notification = true;
 
 			if (
 				function_exists( 'bb_moderation_allowed_specific_notification' ) &&
@@ -897,12 +915,23 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					)
 				)
 			) {
-				continue;
+				$send_notification = false;
+				$send_mail         = false;
+			}
+
+			if ( ! empty( $r['usernames'] ) && isset( $r['usernames'][ $user_id ] ) ) {
+				if ( true === bb_is_notification_enabled( $user_id, 'bb_new_mention' ) ) {
+					$send_mail = false;
+				}
+			}
+
+			if ( false === bb_is_notification_enabled( $user_id, $type_key ) ) {
+				$send_mail = false;
 			}
 
 			// Bail if member opted out of receiving this email.
 			// Check the sender is blocked by recipient or not.
-			if ( true === bb_is_notification_enabled( $user_id, $type_key ) ) {
+			if ( true === $send_mail ) {
 				$unsubscribe_args = array(
 					'user_id'           => $user_id,
 					'notification_type' => 'bbp-new-forum-topic',
@@ -914,7 +943,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				bp_send_email( 'bbp-new-forum-topic', (int) $user_id, $email_tokens );
 			}
 
-			if ( ! bb_enabled_legacy_email_preference() && bp_is_active( 'notifications' ) ) {
+			if ( ! bb_enabled_legacy_email_preference() && true === $send_notification && bp_is_active( 'notifications' ) ) {
+				add_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 				bp_notifications_add_notification(
 					array(
 						'user_id'           => $user_id,
@@ -926,6 +956,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 						'is_new'            => 1,
 					)
 				);
+				remove_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 			}
 		}
 
@@ -983,6 +1014,9 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		}
 
 		foreach ( $r['user_ids'] as $user_id ) {
+			$send_mail         = true;
+			$send_notification = true;
+
 			if (
 				function_exists( 'bb_moderation_allowed_specific_notification' ) &&
 				bb_moderation_allowed_specific_notification(
@@ -994,12 +1028,23 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					)
 				)
 			) {
-				continue;
+				$send_notification = false;
+				$send_mail         = false;
+			}
+
+			if ( ! empty( $r['usernames'] ) && isset( $r['usernames'][ $user_id ] ) ) {
+				if ( true === bb_is_notification_enabled( $user_id, 'bb_new_mention' ) ) {
+					$send_mail = false;
+				}
+			}
+
+			if ( false === bb_is_notification_enabled( $user_id, $type_key ) ) {
+				$send_mail = false;
 			}
 
 			// Bail if member opted out of receiving this email.
 			// Check the sender is blocked by recipient or not.
-			if ( true === bb_is_notification_enabled( $user_id, $type_key ) ) {
+			if ( true === $send_mail ) {
 				$unsubscribe_args = array(
 					'user_id'           => $user_id,
 					'notification_type' => 'bbp-new-forum-reply',
@@ -1011,7 +1056,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				bp_send_email( 'bbp-new-forum-reply', (int) $user_id, $email_tokens );
 			}
 
-			if ( ! bb_enabled_legacy_email_preference() && bp_is_active( 'notifications' ) ) {
+			if ( ! bb_enabled_legacy_email_preference() && true === $send_notification && bp_is_active( 'notifications' ) ) {
+				add_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 				$reply_to_id = bbp_get_reply_to( $reply_id );
 				if ( ! empty( $reply_to_id ) ) {
 					$reply_to_author_id = bbp_get_reply_author_id( $reply_to_id );
@@ -1032,6 +1078,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 						'is_new'            => 1,
 					)
 				);
+				remove_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 			}
 		}
 

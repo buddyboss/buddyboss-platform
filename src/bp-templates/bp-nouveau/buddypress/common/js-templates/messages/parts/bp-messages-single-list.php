@@ -53,7 +53,7 @@
 						<div class="bp-messages-hook before-message-meta">{{{data.beforeMeta}}}</div>
 					<# } #>
 
-					<# if ( data.is_deleted ) { #>
+					<# if ( data.is_deleted || ! data.sender_link ) { #>
 						<strong class="bp-user-deleted">{{{data.sender_name}}}</strong>
 					<# } else { #>
 						<a href="{{data.sender_link}}" class="bp-user-link">
@@ -77,14 +77,21 @@
 
 				<# if ( data.is_user_suspended || data.is_user_blocked ) { #>
 					<div class="message-metadata bp-suspended-meta">
+						<# if ( data.sender_link ) { #>
+						<a href="{{data.sender_link}}" class="bp-user-link">
+							<strong>{{{data.sender_name}}}</strong>
+						<a>
+					<# } else { #>
 						<strong>{{{data.sender_name}}}</strong>
+					<# } #>
+
 					</div>
 					<div class="bp-message-content-wrap bp-suspended-content">{{{data.content}}}</div>
 				<# } else { #>
 					<div class="bp-message-content-wrap">{{{data.content}}}</div>
 				<# } #>
 
-				<# if ( data.media && ! ( data.is_user_suspended || data.is_user_blocked ) ) { #>
+				<# if ( data.media ) { #>
 				<div class="bb-activity-media-wrap bb-media-length-{{data.media.length}}">
 					<# for ( i in data.media ) { #>
 						<div class="bb-activity-media-elem">
@@ -136,7 +143,7 @@
 				</div>
 				<# } #>
 
-				<# if ( data.video && ! ( data.is_user_suspended || data.is_user_blocked ) ) { #>
+				<# if ( data.video ) { #>
 					<div class="bb-activity-video-wrap bb-video-length-{{data.video.length}}">
 						<# for ( i in data.video ) { #>
 							<div class="bb-activity-video-elem <# if ( -1 !== data.video[i].thumbnail.toLowerCase().indexOf( 'video-placeholder.jpg' ) ) { #>has-no-thumbnail<# } #>">
@@ -153,7 +160,7 @@
 					</div>
 				<# } #>
 
-				<# if ( data.document && ! ( data.is_user_suspended || data.is_user_blocked ) ) { #>
+				<# if ( data.document ) { #>
 					<div class="bb-activity-media-wrap bb-media-length-{{data.document.length}}">
 						<# for ( i in data.document ) { #>
 							<div class="bb-activity-media-elem document-activity " data-id="">
@@ -209,7 +216,7 @@
 					</div>
 				<# } #>
 
-				<# if ( data.gif && ! ( data.is_user_suspended || data.is_user_blocked ) ) { #>
+				<# if ( data.gif ) { #>
 					<div class="activity-attached-gif-container">
 						<div class="gif-image-container">
 							<div class="gif-player">

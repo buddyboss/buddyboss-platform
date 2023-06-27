@@ -621,10 +621,11 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 			'readonly'          => isset( $notification->readonly ) ? $notification->readonly : false,
 		);
 
-		$component = $notification->component_name;
-		$object    = $notification->component_name;
-		$item_id   = $notification->item_id;
-		$object_id = $notification->item_id;
+		$component        = $notification->component_name;
+		$object           = $notification->component_name;
+		$item_id          = $notification->item_id;
+		$object_id        = $notification->item_id;
+		$component_action = $notification->component_action;
 
 		switch ( $component ) {
 			case 'groups':
@@ -647,6 +648,23 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 					$object = 'user';
 				}
 				break;
+		}
+
+		if (
+			! empty( $notification->secondary_item_id ) &&
+			in_array(
+				$component_action,
+				array(
+					'bb_groups_new_request',
+					'bb_groups_subscribed_discussion',
+					'bb_groups_subscribed_activity',
+				),
+				true
+			)
+		) {
+			$item_id   = $notification->secondary_item_id;
+			$object_id = $notification->secondary_item_id;
+			$object    = 'user';
 		}
 
 		// Avatars.
