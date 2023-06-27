@@ -1401,6 +1401,10 @@ function bb_xprofile_admin_removable_query_vars( $args ) {
 		$args = array_merge( $args, array( 'mode' ) );
 	}
 
+	if ( isset( $_POST['saveField'] ) && ! isset( $_GET['field_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$args = array_merge( $args, array( 'mode', 'group_id' ) );
+	}
+
 	return $args;
 }
 add_filter( 'removable_query_args', 'bb_xprofile_admin_removable_query_vars' );
