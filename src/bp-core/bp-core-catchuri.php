@@ -1292,6 +1292,17 @@ function bp_private_network_template_redirect() {
 							// Check URL is fully matched without remove trailing slash.
 						} elseif ( false !== $check_is_full_url && ( ! empty( $request_url ) && $request_url === $check_is_full_url ) ) {
 							return;
+							// Allow to view if it's matched the page URL like /page/:id.
+						} elseif (
+							false !== $check_is_full_url &&
+							! empty( $request_url ) &&
+							! empty( $un_trailing_slash_it_url ) &&
+							strpos( $request_url, $un_trailing_slash_it_url ) !== false &&
+							! empty( get_query_var( 'paged' ) ) &&
+							preg_match( '%\/page/[0-9]+%', $request_url ) &&
+							$un_trailing_slash_it_url . '/page/' . get_query_var( 'paged' ) === untrailingslashit( $request_url )
+						) {
+							return;
 						}
 					}
 				}

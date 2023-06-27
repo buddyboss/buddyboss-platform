@@ -2198,7 +2198,9 @@ function bp_avatar_is_front_edit() {
  */
 function bp_avatar_use_webcam() {
 	global $is_safari, $is_IE, $is_chrome;
-
+	$browser	= bb_core_get_browser();
+	$is_firefox	= isset( $browser['name'] ) ? 'Firefox' === $browser['b_name'] : false;
+	
 	/**
 	 * Do not use the webcam feature for mobile devices
 	 * to avoid possible confusions.
@@ -2212,7 +2214,7 @@ function bp_avatar_use_webcam() {
 	 *
 	 * @see http://caniuse.com/#feat=stream
 	 */
-	if ( $is_safari || $is_IE || ( $is_chrome && ! is_ssl() ) ) {
+	if ( ( $is_safari && isset( $browser['version'] ) && $browser['version'] < 11 ) || $is_IE || ( ( $is_chrome || $is_firefox ) && ! is_ssl() ) ) {
 		return false;
 	}
 
