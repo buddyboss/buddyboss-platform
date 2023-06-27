@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.3.60\n"
+"Project-Id-Version: BuddyBoss Platform 2.3.70\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-06-27 06:09:53+00:00\n"
+"POT-Creation-Date: 2023-06-27 11:25:36+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3791,7 +3791,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:3438
 #: bp-core/admin/bp-core-admin-settings.php:745
 #: bp-core/admin/bp-core-admin-settings.php:1112
-#: bp-document/bp-document-functions.php:2033
+#: bp-document/bp-document-functions.php:2035
 #: bp-groups/bp-groups-admin.php:2654 bp-video/bp-video-functions.php:2562
 msgid "Default"
 msgstr ""
@@ -4780,8 +4780,8 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:53 bp-core/bp-core-functions.php:791
 #: bp-document/bp-document-filters.php:127
-#: bp-document/bp-document-functions.php:2214
-#: bp-document/bp-document-functions.php:2217
+#: bp-document/bp-document-functions.php:2216
+#: bp-document/bp-document-functions.php:2219
 #: bp-document/classes/class-bp-document-component.php:70
 #: bp-document/classes/class-bp-document-component.php:260
 #: bp-document/classes/class-bp-document-component.php:262
@@ -5649,7 +5649,7 @@ msgid "Registration Settings"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-video.php:24
-#: bp-document/bp-document-functions.php:2078
+#: bp-document/bp-document-functions.php:2080
 #: bp-moderation/classes/class-bp-moderation-activity.php:565
 #: bp-moderation/classes/class-bp-moderation-activity.php:572
 #: bp-moderation/classes/class-bp-moderation-video.php:220
@@ -8818,7 +8818,7 @@ msgstr ""
 
 #: bp-core/classes/class-bp-admin-tab.php:278
 #: bp-core/classes/class-bp-attachment.php:162
-#: bp-document/bp-document-functions.php:1518
+#: bp-document/bp-document-functions.php:1520
 #: bp-media/bp-media-functions.php:183 bp-video/bp-video-functions.php:157
 #: bp-video/bp-video-functions.php:305
 msgid "No file was uploaded."
@@ -8982,28 +8982,28 @@ msgid "The uploaded file exceeds the maximum allowed file size of: %s"
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:161
-#: bp-document/bp-document-functions.php:1517
+#: bp-document/bp-document-functions.php:1519
 #: bp-media/bp-media-functions.php:182 bp-video/bp-video-functions.php:156
 #: bp-video/bp-video-functions.php:304
 msgid "The uploaded file was only partially uploaded."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:164
-#: bp-document/bp-document-functions.php:1520
+#: bp-document/bp-document-functions.php:1522
 #: bp-media/bp-media-functions.php:185 bp-video/bp-video-functions.php:159
 #: bp-video/bp-video-functions.php:307
 msgid "Missing a temporary folder."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:165
-#: bp-document/bp-document-functions.php:1521
+#: bp-document/bp-document-functions.php:1523
 #: bp-media/bp-media-functions.php:186 bp-video/bp-video-functions.php:160
 #: bp-video/bp-video-functions.php:308
 msgid "Failed to write file to disk."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:166
-#: bp-document/bp-document-functions.php:1522
+#: bp-document/bp-document-functions.php:1524
 #: bp-media/bp-media-functions.php:187 bp-video/bp-video-functions.php:161
 #: bp-video/bp-video-functions.php:309
 msgid "File upload stopped by extension."
@@ -9781,13 +9781,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\r\n"
-"\r\n"
-"\"%3$s\"\r\n"
-"\r\n"
-"To view and respond to the message, log in and visit: %4$s\r\n"
-"\r\n"
-"---------------------\r\n"
+"%1$s mentioned you in the group \"%2$s\":\n"
+"\n"
+"\"%3$s\"\n"
+"\n"
+"To view and respond to the message, log in and visit: %4$s\n"
+"\n"
+"---------------------\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -10721,20 +10721,20 @@ msgstr[1] ""
 msgid "<a href=\"%1$s\" target=\"_blank\">%2$s uploaded</a>"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1400
+#: bp-document/bp-document-functions.php:1402
 msgid "Please login in order to upload file document."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1516
+#: bp-document/bp-document-functions.php:1518
 #: bp-video/bp-video-functions.php:155 bp-video/bp-video-functions.php:303
 msgid "The uploaded file exceeds "
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1547
+#: bp-document/bp-document-functions.php:1549
 msgid "Error while uploading document."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2038
+#: bp-document/bp-document-functions.php:2040
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:163
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:248
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:96
@@ -10742,64 +10742,64 @@ msgstr ""
 msgid "Archive"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2043
+#: bp-document/bp-document-functions.php:2045
 #: bp-video/bp-video-functions.php:2572
 msgid "Audio"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2048
+#: bp-document/bp-document-functions.php:2050
 #: bp-video/bp-video-functions.php:2577
 msgid "Code"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2053
+#: bp-document/bp-document-functions.php:2055
 #: bp-video/bp-video-functions.php:2582
 msgid "Design"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2058
+#: bp-document/bp-document-functions.php:2060
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:48
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/members/bb-link-preview.php:44
 #: bp-video/bp-video-functions.php:2587
 msgid "Image"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2063
+#: bp-document/bp-document-functions.php:2065
 #: bp-video/bp-video-functions.php:2592
 msgid "Presentation"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2068
+#: bp-document/bp-document-functions.php:2070
 #: bp-video/bp-video-functions.php:2597
 msgid "Spreadsheet"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2073
+#: bp-document/bp-document-functions.php:2075
 #: bp-video/bp-video-functions.php:2602
 msgid "Text"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2221
+#: bp-document/bp-document-functions.php:2223
 msgid "..."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2610
+#: bp-document/bp-document-functions.php:2612
 msgid "The document name is empty!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2613
+#: bp-document/bp-document-functions.php:2615
 msgid "Bad characters or invalid document name!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2616
+#: bp-document/bp-document-functions.php:2618
 msgid "A file with that name already exists in the containing folder!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2619
+#: bp-document/bp-document-functions.php:2621
 msgid "The document containing directory is not writable!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2640
+#: bp-document/bp-document-functions.php:2642
 msgid "File renaming error!"
 msgstr ""
 
@@ -29215,8 +29215,8 @@ msgid "replied to a post"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/search/loop/activity-comment-ajax.php:37
-#: bp-templates/bp-nouveau/buddypress/search/loop/activity-comment.php:36
-#: bp-templates/bp-nouveau/buddypress/search/loop/activity.php:31
+#: bp-templates/bp-nouveau/buddypress/search/loop/activity-comment.php:41
+#: bp-templates/bp-nouveau/buddypress/search/loop/activity.php:41
 msgid "ago"
 msgstr ""
 
@@ -33169,32 +33169,32 @@ msgctxt "member latest update in member directory"
 msgid "- &quot;%s&quot;"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3429
+#: bp-document/bp-document-functions.php:3431
 #. translators: Memory unit for terabyte.
 msgctxt "memory unit"
 msgid "TB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3431
+#: bp-document/bp-document-functions.php:3433
 #. translators: Memory unit for gigabyte.
 msgctxt "memory unit"
 msgid "GB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3433
+#: bp-document/bp-document-functions.php:3435
 #. translators: Memory unit for megabyte.
 msgctxt "memory unit"
 msgid "MB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3435
+#: bp-document/bp-document-functions.php:3437
 #. translators: Memory unit for kilobyte.
 msgctxt "memory unit"
 msgid "KB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3437
-#: bp-document/bp-document-functions.php:3442
+#: bp-document/bp-document-functions.php:3439
+#: bp-document/bp-document-functions.php:3444
 #. translators: Memory unit for byte.
 msgctxt "memory unit"
 msgid "B"
@@ -33309,15 +33309,14 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to automatically create thumbnails after "
-"uploading videos (optional). Ask your web host.\r\n"
+"uploading videos (optional). Ask your web host.\n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and you "
 "still see the above warning, this means BuddyBoss Platform is unable to "
 "auto-detect the binary file path for FFmpeg. You will need to add the below "
 "FFmpeg absolute path constants into your %2$s file, replacing "
 "PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. "
-"Ask your web host to provide the absolute path for the FFmpeg binary "
-"file.\r\n"
-"\t\t\t\t\t<br /><br />%3$s\r\n"
+"Ask your web host to provide the absolute path for the FFmpeg binary file.\n"
+"\t\t\t\t\t<br /><br />%3$s\n"
 "\t\t\t\t\t<br />%4$s"
 msgstr ""
 

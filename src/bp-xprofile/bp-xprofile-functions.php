@@ -2454,7 +2454,7 @@ function bb_get_user_social_networks_field_value( $user_id = null ) {
 /**
  * Get a profile Field Type object.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.70
  *
  * @param int $field_id ID of the field.
  *
