@@ -1865,10 +1865,18 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$is_group_message_thread = bb_messages_is_group_thread( bp_get_the_thread_id() );
 
 	// Check recipients if connected or not.
-	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && ! $is_group_message_thread && count( $recipients ) < 2 ) {
+	if ( ! $is_group_message_thread && count( $recipients ) < 2 ) {
 		add_filter( 'bp_after_bb_parse_button_args_parse_args', 'bb_messaged_set_friend_button_args' );
 		foreach ( $recipients as $recipient ) {
-			if ( $login_user_id !== $recipient->user_id && ! friends_check_friendship( $login_user_id, $recipient->user_id ) ) {
+			if (
+				$login_user_id !== $recipient->user_id &&
+				! bb_messages_user_can_send_message(
+					array(
+						'sender_id'     => $login_user_id,
+						'recipients_id' => $recipient->user_id,
+					)
+				)
+			) {
 				if ( count( $recipients ) > 1 ) {
 					$thread->feedback_error = array(
 						'feedback' => __( 'You must be connected to this member to send them a message.', 'buddyboss' ),
