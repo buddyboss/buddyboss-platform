@@ -237,7 +237,6 @@ function bp_core_register_common_scripts() {
 	 * @todo completely remove `bp-moment` in 12.0.0.
 	 */
 	if ( ! $is_moment_registered ) {
-		error_log( print_r( '$is_moment_registered => ' . $is_moment_registered, 1 ) );
 		$scripts['bp-moment']         = array( 'file' => "{$url}vendor/moment-js/moment{$min}.js", 'dependencies' => array(), 'footer' => true );
 		$bp_livestamp                 = $scripts['bp-livestamp'];
 		$bp_livestamp['dependencies'] = array( 'jquery', 'bp-moment' );
@@ -251,9 +250,6 @@ function bp_core_register_common_scripts() {
 			$scripts['bp-moment-locale'] = array( 'file' => esc_url( $moment_locale_url ), 'dependencies' => array( 'bp-moment' ), 'footer' => true );
 		}
 	}
-
-	error_log( print_r( $scripts, 1 ) );
-	error_log( print_r( '$scripts', 1 ) );
 
 	/**
 	 * Filters the BuddyBoss Core javascript files to register.
@@ -830,25 +826,25 @@ function bp_core_enqueue_livestamp() {
 					array(
 						'relativeTime' => array(
 							/* Translators: %s is the relative time (eg: in a few seconds). */
-							'future' => __( 'in %s', 'buddypress' ),
+							'future' => __( 'in %s', 'buddyboss' ),
 							/* translators: %s: the human time diff. */
-							'past'   => __( '%s ago', 'buddypress' ),
-							's'      => __( 'a few seconds', 'buddypress' ),
-							'm'      => __( 'a minute', 'buddypress' ),
+							'past'   => __( '%s ago', 'buddyboss' ),
+							's'      => __( 'a few seconds', 'buddyboss' ),
+							'm'      => __( 'a minute', 'buddyboss' ),
 							/* Translators: %d is the amount of minutes. */
-							'mm'     => __( '%d minutes', 'buddypress' ),
-							'h'      => __( 'an hour', 'buddypress' ),
+							'mm'     => __( '%d minutes', 'buddyboss' ),
+							'h'      => __( 'an hour', 'buddyboss' ),
 							/* Translators: %d is the amount of hours. */
-							'hh'     => __( '%d hours', 'buddypress' ),
-							'd'      => __( 'a day', 'buddypress' ),
+							'hh'     => __( '%d hours', 'buddyboss' ),
+							'd'      => __( 'a day', 'buddyboss' ),
 							/* Translators: %d is the amount of days. */
-							'dd'     => __( '%d days', 'buddypress' ),
-							'M'      => __( 'a month', 'buddypress' ),
+							'dd'     => __( '%d days', 'buddyboss' ),
+							'M'      => __( 'a month', 'buddyboss' ),
 							/* Translators: %d is the amount of months. */
-							'MM'     => __( '%d months', 'buddypress' ),
-							'y'      => __( 'a year', 'buddypress' ),
+							'MM'     => __( '%d months', 'buddyboss' ),
+							'y'      => __( 'a year', 'buddyboss' ),
 							/* Translators: %d is the amount of years. */
-							'yy'     => __( '%d years', 'buddypress' ),
+							'yy'     => __( '%d years', 'buddyboss' ),
 						),
 					)
 				)
