@@ -115,6 +115,10 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 */
 	public function upload_item( $request ) {
 
+		if ( 'messages' === $request->get_param( 'component' ) ) {
+			$_POST['component'] = 'messages';
+		}
+
 		$file = $request->get_file_params();
 
 		if ( empty( $file ) ) {
@@ -293,6 +297,10 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $request['activity_id'] ) ) {
 			$args['activity_id'] = $request['activity_id'];
+		}
+
+		if ( ! empty( $request['message_id'] ) ) {
+			$args['message_id'] = $request['message_id'];
 		}
 
 		if ( ! empty( $request['privacy'] ) ) {
@@ -584,6 +592,10 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			$args['content'] = $request['content'];
 		}
 
+		if ( isset( $request['message_id'] ) && ! empty( $request['message_id'] ) ) {
+			$args['message_id'] = $request['message_id'];
+		}
+
 		/**
 		 * Filter the query arguments for the request.
 		 *
@@ -729,7 +741,10 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 							'status' => 404,
 						)
 					);
-				} elseif ( function_exists( 'bp_get_attachment_document_id' ) && ! empty( bp_get_attachment_document_id( (int) $attachment_id ) ) ) {
+				} elseif ( 'messages' !== $request['component'] && 
+						function_exists( 'bp_get_attachment_document_id' ) &&
+						! empty( bp_get_attachment_document_id( (int) $attachment_id ) )
+					) {
 					$retval = new WP_Error(
 						'bp_rest_duplicate_document_upload_id',
 						sprintf(
@@ -800,14 +815,20 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			'attachment_id' => $document->attachment_id,
 			'group_id'      => $document->group_id,
 			'activity_id'   => $document->activity_id,
+			'message_id'    => $document->message_id,
 			'folder_id'     => $document->folder_id,
 			'title'         => $document->title,
 			'user_id'       => $document->user_id,
+			'menu_order'    => $document->menu_order,
 		);
 
 		if ( isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
 			$args['group_id'] = $request['group_id'];
 			$args['privacy']  = 'grouponly';
+		}
+
+		if ( isset( $request['message_id'] ) && ! empty( $request['message_id'] ) ) {
+			$args['message_id'] = $request['message_id'];
 		}
 
 		if ( isset( $request['folder_id'] ) && ( (int) $args['folder_id'] !== (int) $request['folder_id'] ) ) {
@@ -1921,6 +1942,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		$content             = ( isset( $args['content'] ) ? $args['content'] : false );
 		$user_id             = ( ! empty( $args['user_id'] ) ? $args['user_id'] : get_current_user_id() );
 		$id                  = ( ! empty( $args['id'] ) ? $args['id'] : '' );
+		$message_id          = ( ! empty( $args['message_id'] ) ? $args['message_id'] : 0 );
 
 		$group_id  = ( ! empty( $args['group_id'] ) ? $args['group_id'] : false );
 		$folder_id = ( ! empty( $args['folder_id'] ) ? $args['folder_id'] : false );
@@ -1962,19 +1984,24 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			// extract the nice title name.
 			$title = get_the_title( $wp_attachment_id );
 
-			$document_id = bp_document_add(
-				array(
-					'id'            => $id,
-					'attachment_id' => $wp_attachment_id,
-					'title'         => $title,
-					'activity_id'   => $document_activity_id,
-					'folder_id'     => ( ! empty( $args['folder_id'] ) ? $args['folder_id'] : false ),
-					'group_id'      => ( ! empty( $args['group_id'] ) ? $args['group_id'] : false ),
-					'privacy'       => $document_privacy,
-					'user_id'       => $user_id,
-					'error_type'    => 'wp_error',
-				)
+			$add_document_args = array(
+				'id'            => $id,
+				'attachment_id' => $wp_attachment_id,
+				'title'         => $title,
+				'activity_id'   => $document_activity_id,
+				'message_id'    => $message_id,
+				'folder_id'     => ( ! empty( $args['folder_id'] ) ? $args['folder_id'] : false ),
+				'group_id'      => ( ! empty( $args['group_id'] ) ? $args['group_id'] : false ),
+				'privacy'       => $document_privacy,
+				'user_id'       => $user_id,
+				'error_type'    => 'wp_error',
 			);
+
+			if ( isset( $args['menu_order'] ) ) {
+				$add_document_args['menu_order'] = ( ! empty( $args['menu_order'] ) ? $args['menu_order'] : 0 );
+			}
+
+			$document_id = bp_document_add( $add_document_args );
 
 			if ( is_int( $document_id ) ) {
 
@@ -2028,6 +2055,15 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			if ( ! empty( $valid_upload_ids ) ) {
 				foreach ( $valid_upload_ids as $wp_attachment_id ) {
 
+					// Check if document id already available for the messages.
+					if ( 'message' === $document_privacy ) {
+						$mid = get_post_meta( $wp_attachment_id, 'bp_document_id', true );
+
+						if ( ! empty( $mid ) ) {
+							$created_document_ids[] = $mid;
+							continue;
+						}
+					}
 					// extract the nice title name.
 					$title = get_the_title( $wp_attachment_id );
 
@@ -2101,6 +2137,8 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			if ( bp_is_active( 'groups' ) ) {
 				$new_scope[] = 'groups';
 			}
+		} elseif ( ( 'all' === $scope || empty( $scope ) ) && ! empty( $args['group_id'] ) ) {
+			$new_scope = array( 'groups' );
 		}
 
 		$new_scope = array_unique( $new_scope );
@@ -2341,6 +2379,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			array(
 				'document_ids' => $document_ids,
 				'sort'         => 'ASC',
+				'order_by'     => 'menu_order',
 			)
 		);
 
@@ -2545,11 +2584,12 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					$component = 'groups';
 				}
 			}
-			if ( 'blogs' === $parent_activity->component ||
-			     (
-				     ! empty( $activity['component'] ) &&
-				     'blogs' === $activity['component']
-			     )
+			if (
+				'blogs' === $parent_activity->component ||
+				(
+					! empty( $activity['component'] ) &&
+					'blogs' === $activity['component']
+				)
 			) {
 				return false;
 			}
@@ -2644,8 +2684,10 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 		$documents = $this->assemble_response_data(
 			array(
-				'document_ids' => $document_ids,
-				'sort'         => 'ASC',
+				'document_ids'     => $document_ids,
+				'sort'             => 'ASC',
+				'order_by'         => 'menu_order',
+				'moderation_query' => false,
 			)
 		);
 
@@ -2819,6 +2861,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			array(
 				'document_ids' => $document_ids,
 				'sort'         => 'ASC',
+				'order_by'     => 'menu_order',
 			)
 		);
 

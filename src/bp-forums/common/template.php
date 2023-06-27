@@ -1735,7 +1735,13 @@ function bbp_forum_form_fields() {
  */
 function bbp_topic_form_fields() {
 
-	if ( bbp_is_topic_edit() ) :
+	if ( bbp_use_autoembed() ) {
+		?>
+		<input type="hidden" name="link_preview_data" id="link_preview_data" />
+		<?php
+	}
+
+	if ( bbp_is_topic_edit() ) {
 		?>
 
 		<input type="hidden" name="action"       id="bbp_post_action" value="bbp-edit-topic" />
@@ -1752,7 +1758,9 @@ function bbp_topic_form_fields() {
 		<?php
 		wp_nonce_field( 'bbp-edit-topic_' . bbp_get_topic_id() );
 
-	else :
+		bb_forums_edit_link_preview_field( bbp_get_topic_id() );
+
+	} else {
 
 		if ( bbp_is_single_forum() ) :
 			?>
@@ -1771,7 +1779,7 @@ function bbp_topic_form_fields() {
 		<?php
 		wp_nonce_field( 'bbp-new-topic' );
 
-	endif;
+	}
 }
 
 /**
@@ -1787,7 +1795,13 @@ function bbp_topic_form_fields() {
  */
 function bbp_reply_form_fields() {
 
-	if ( bbp_is_reply_edit() ) :
+	if ( bbp_use_autoembed() ) {
+		?>
+		<input type="hidden" name="link_preview_data" id="link_preview_data" />
+		<?php
+	}
+
+	if ( bbp_is_reply_edit() ) {
 		$forum_redirect_to = isset( $_REQUEST['forum_redirect_to'] ) ? (int) $_REQUEST['forum_redirect_to'] : 1
 		?>
 
@@ -1804,7 +1818,9 @@ function bbp_reply_form_fields() {
 		<?php
 		wp_nonce_field( 'bbp-edit-reply_' . bbp_get_reply_id() );
 
-	else :
+		bb_forums_edit_link_preview_field( bbp_get_reply_id() );
+
+	} else {
 		?>
 
 		<input type="hidden" name="bbp_topic_id"    id="bbp_topic_id"    value="<?php bbp_topic_id(); ?>" />
@@ -1824,7 +1840,7 @@ function bbp_reply_form_fields() {
 			bbp_redirect_to_field( get_permalink() );
 
 		endif;
-	endif;
+	}
 }
 
 /**
@@ -2619,18 +2635,19 @@ function bbp_get_breadcrumb( $args = array() ) {
 function bbp_allowed_tags() {
 	echo bbp_get_allowed_tags();
 }
-	/**
-	 * Display all of the allowed tags in HTML format with attributes.
-	 *
-	 * This is useful for displaying in the post area, which elements and
-	 * attributes are supported. As well as any plugins which want to display it.
-	 *
-	 * @since bbPress (r2780)
-	 *
-	 * @uses bbp_kses_allowed_tags() To get the allowed tags
-	 * @uses apply_filters() Calls 'bbp_allowed_tags' with the tags
-	 * @return string HTML allowed tags entity encoded.
-	 */
+
+/**
+ * Display all of the allowed tags in HTML format with attributes.
+ *
+ * This is useful for displaying in the post area, which elements and
+ * attributes are supported. As well as any plugins which want to display it.
+ *
+ * @since bbPress (r2780)
+ *
+ * @uses bbp_kses_allowed_tags() To get the allowed tags
+ * @uses apply_filters() Calls 'bbp_allowed_tags' with the tags
+ * @return string HTML allowed tags entity encoded.
+ */
 function bbp_get_allowed_tags() {
 
 	$allowed = '';
@@ -2645,7 +2662,7 @@ function bbp_get_allowed_tags() {
 		$allowed .= '> ';
 	}
 
-	return apply_filters( 'bbp_get_allowed_tags', htmlentities( $allowed ) );
+	return apply_filters( 'bbp_get_allowed_tags', htmlentities( $allowed, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
 }
 
 /** Errors & Messages *********************************************************/
@@ -2943,4 +2960,34 @@ function bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 
 	// Filter and return
 	return apply_filters( 'bbp_title', $new_title, $sep, $seplocation );
+}
+
+/**
+ * Link preview edit field.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param integer $post_id Topic or Reply id.
+ */
+function bb_forums_edit_link_preview_field( $post_id ) {
+	$link_data         = array();
+	$link_preview_data = get_post_meta( $post_id, '_link_preview_data', true );
+	if ( ! empty( $link_preview_data ) && count( $link_preview_data ) ) {
+		$link_data['embed']                 = 0;
+		$link_data['url']                   = ( ! empty( $link_preview_data['url'] ) ? $link_preview_data['url'] : '' );
+		$link_data['link_image_index_save'] = $link_preview_data['link_image_index_save'];
+	}
+
+	$link_embed = get_post_meta( $post_id, '_link_embed', true );
+	if ( ! empty( $link_embed ) ) {
+		$link_data['url']   = $link_embed;
+		$link_data['embed'] = 1;
+	}
+
+	if ( isset( $link_data['url'] ) && ! empty( $link_data['url'] ) ) {
+		$link_data_string = htmlentities( wp_json_encode( $link_data ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
+		?>
+		<input type="hidden" name="bb_link_url" id="bb_link_url" value="<?php echo $link_data_string; ?>"/>
+		<?php
+	}
 }

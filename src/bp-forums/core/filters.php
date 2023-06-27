@@ -255,6 +255,13 @@ add_filter( 'bbp_make_clickable', 'bbp_make_mentions_clickable', 8 ); // @jjj
 // Search forum discussion with tags.
 add_filter( 'posts_where', 'bb_forum_search_by_topic_tags', 10, 2 );
 
+// Remove deleted members link from mention for topic/reply.
+add_filter( 'bbp_get_topic_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
+add_filter( 'bbp_get_reply_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
+
+add_filter( 'bbp_get_topic_content', 'bb_forums_link_preview', 999, 2 );
+add_filter( 'bbp_get_reply_content', 'bb_forums_link_preview', 999, 2 );
+
 /** Deprecated ****************************************************************/
 
 /**
@@ -334,6 +341,11 @@ add_filter( 'bbp_after_has_replies_parse_args', '_bbp_has_replies_query' );
 function bb_forum_search_by_topic_tags( $where, $wp_query ) {
 	global $wpdb;
 
+	// If search component is not enabled, return.
+	if ( ! bp_is_active( 'search' ) ) {
+		return $where;
+	}
+
 	// Get query post types array .
 	$post_types      = (array) $wp_query->get( 'post_type' );
 	$topic_post_type = bbp_get_topic_post_type();
@@ -349,7 +361,9 @@ function bb_forum_search_by_topic_tags( $where, $wp_query ) {
 			)
 		);
 
-		$where .= " OR $wpdb->posts.ID IN (SELECT DISTINCT $wpdb->posts.ID FROM $wpdb->posts LEFT JOIN $wpdb->term_relationships ON ( $wpdb->posts.ID = $wpdb->term_relationships.object_id ) WHERE $wpdb->term_relationships.term_taxonomy_id IN (" . implode( ',', $matching_terms ) . ')) ';
+		if ( ! empty( $matching_terms ) && ! is_wp_error( $matching_terms ) ) {
+			$where .= " OR $wpdb->posts.ID IN (SELECT DISTINCT $wpdb->posts.ID FROM $wpdb->posts LEFT JOIN $wpdb->term_relationships ON ( $wpdb->posts.ID = $wpdb->term_relationships.object_id ) WHERE $wpdb->term_relationships.term_taxonomy_id IN (" . implode( ',', $matching_terms ) . ')) ';
+		}
 	}
 
 	return $where;
@@ -387,3 +401,160 @@ function bb_forums_update_subscription_status( $new_status, $old_status, $post )
 }
 
 add_action( 'transition_post_status', 'bb_forums_update_subscription_status', 999, 3 );
+
+/**
+ * Remove forum and topic subscriptions when add forum to group.
+ *
+ * @since BuddyBoss 2.2.8
+ *
+ * @param int    $group_id   The ID of group.
+ * @param string $meta_key   The meta key of group.
+ * @param string $meta_value The meta value of group.
+ *
+ * @return void
+ */
+function bb_remove_group_forum_topic_subscriptions_add_group_meta( $group_id, $meta_key, $meta_value ) {
+	if (
+		! empty( $group_id ) &&
+		'forum_id' === $meta_key &&
+		bp_is_active( 'forums' )
+	) {
+		bb_delete_group_forum_topic_subscriptions( $group_id );
+	}
+}
+add_action( 'add_group_meta', 'bb_remove_group_forum_topic_subscriptions_add_group_meta', 10, 3 );
+
+/**
+ * Remove forum and topic subscriptions when update forum to group.
+ *
+ * @since BuddyBoss 2.2.8
+ *
+ * @param int    $meta_id    The ID of group meta.
+ * @param int    $group_id   The ID of group.
+ * @param string $meta_key   The meta key of group.
+ * @param string $meta_value The meta value of group.
+ *
+ * @return void
+ */
+function bb_remove_group_forum_topic_subscriptions_update_group_meta( $meta_id, $group_id, $meta_key, $meta_value ) {
+	if (
+		! empty( $group_id ) &&
+		'forum_id' === $meta_key &&
+		bp_is_active( 'forums' )
+	) {
+		bb_delete_group_forum_topic_subscriptions( $group_id );
+	}
+}
+add_action( 'updated_group_meta', 'bb_remove_group_forum_topic_subscriptions_update_group_meta', 10, 4 );
+
+/**
+ * Remove unintentional empty paragraph coming from the medium editor when only link preview.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param string $content Topic and reply content.
+ *
+ * @return string $content Topic and reply content
+ */
+function bb_filter_empty_editor_content( $content = '' ) {
+	if ( preg_match( '/^(<p><br><\/p>|<p><br \/><\/p>|<p><\/p>|<p><br\/><\/p>)$/i', $content ) ) {
+		$content = '';
+	}
+
+	return $content;
+}
+
+add_filter( 'bbp_new_topic_pre_content', 'bb_filter_empty_editor_content', 1 );
+add_filter( 'bbp_new_reply_pre_content', 'bb_filter_empty_editor_content', 1 );
+add_filter( 'bbp_edit_topic_pre_content', 'bb_filter_empty_editor_content', 1 );
+add_filter( 'bbp_edit_reply_pre_content', 'bb_filter_empty_editor_content', 1 );
+
+/**
+ * Embed link preview in Topic/Reply content
+ *
+ * @param string $content Topic/Reply content.
+ * @param int    $post_id Topic/Reply id.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @return string
+ */
+function bb_forums_link_preview( $content, $post_id ) {
+
+	$preview_data = get_post_meta( $post_id, '_link_preview_data', true );
+
+	if ( empty( $preview_data['url'] ) ) {
+		return $content;
+	}
+
+	$preview_data = bp_parse_args(
+		$preview_data,
+		array(
+			'title'       => '',
+			'description' => '',
+		)
+	);
+
+	$parse_url   = wp_parse_url( $preview_data['url'] );
+	$domain_name = '';
+	if ( ! empty( $parse_url['host'] ) ) {
+		$domain_name = str_replace( 'www.', '', $parse_url['host'] );
+	}
+
+	$description = $preview_data['description'];
+	$read_more   = ' &hellip; <a class="activity-link-preview-more" href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . __( 'Continue reading', 'buddyboss' ) . '</a>';
+	$description = wp_trim_words( $description, 40, $read_more );
+
+	$content = make_clickable( $content );
+
+	$content .= '<div class="bb-link-preview-container">';
+	if ( ! empty( $preview_data['attachment_id'] ) ) {
+		$image_url = wp_get_attachment_image_url( $preview_data['attachment_id'], 'full' );
+		$content  .= '<div class="bb-link-preview-image">';
+		$content  .= '<div class="bb-link-preview-image-cover">';
+		$content  .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $image_url ) . '" /></a>';
+		$content  .= '</div>';
+		$content  .= '</div>';
+	} elseif ( ! empty( $preview_data['image_url'] ) ) {
+		$content .= '<div class="bb-link-preview-image">';
+		$content .= '<div class="bb-link-preview-image-cover">';
+		$content .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $preview_data['image_url'] ) . '" /></a>';
+		$content .= '</div>';
+		$content .= '</div>';
+	}
+	$content .= '<div class="bb-link-preview-info">';
+	$content .= '<p class="bb-link-preview-link-name">' . esc_html( $domain_name ) . '</p>';
+	$content .= '<p class="bb-link-preview-title"><a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . esc_html( $preview_data['title'] ) . '</a></p>';
+	$content .= '<div class="bb-link-preview-excerpt"><p>' . $description . '</p></div>';
+	$content .= '</div>';
+	$content .= '</div>';
+
+	return $content;
+}
+
+/**
+ * Redirect to the 404 page if the no replies for single topic page.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param string $template The path of the template to include.
+ *
+ * @return string $template Template file to use.
+ */
+function bb_single_topic_no_replies_redirect_to_404( $template ) {
+	if ( bbp_is_single_topic() && ! bp_is_activity_component() ) {
+		if ( ! bbp_has_replies() && bbp_get_paged() > 1 ) {
+			$template_404 = locate_template( '404.php' );
+			if ( ! empty( $template_404 ) ) {
+				global $wp_query;
+				$wp_query->set_404();
+				status_header( 404 );
+				return $template_404;
+			}
+		}
+	}
+
+	return $template;
+}
+
+add_filter( 'template_include', 'bb_single_topic_no_replies_redirect_to_404' );

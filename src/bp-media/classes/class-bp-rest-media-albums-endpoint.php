@@ -1008,7 +1008,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 			'user_id'       => $album->user_id,
 			'group_id'      => $album->group_id,
 			'date_created'  => $album->date_created,
-			'title'         => $album->title,
+			'title'         => wp_specialchars_decode( $album->title, ENT_QUOTES ),
 			'privacy'       => $album->privacy,
 			'media'         => $medias,
 			'group_name'    => ( isset( $album->group_name ) ? $album->group_name : '' ),

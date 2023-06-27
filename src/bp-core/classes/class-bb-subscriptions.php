@@ -15,6 +15,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 	 *
 	 * @since BuddyBoss 2.2.6
 	 */
+	#[\AllowDynamicProperties]
 	class BB_Subscriptions {
 
 		/**
@@ -810,33 +811,9 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 					}
 				}
 
-				$all_subscriptions = array();
-				foreach ( $paged_subscription_ids as $paged_subscription_id ) {
-					$all_subscriptions[] = new BB_Subscriptions( $paged_subscription_id, false );
-				}
-
-				$present_types = array();
-				if ( ! empty( $all_subscriptions ) ) {
-					foreach ( $all_subscriptions as $additional_subscription ) {
-						$present_types[ $additional_subscription->type ][] = (array) $additional_subscription;
-					}
-				}
-
 				$paged_subscriptions = array();
-				if ( ! empty( $present_types ) ) {
-					foreach ( $present_types as $type => $items ) {
-
-						$type_data = bb_register_subscriptions_types( $type );
-
-						if (
-							! empty( $type_data ) &&
-							! empty( $type_data['items_callback'] ) &&
-							is_callable( $type_data['items_callback'] )
-						) {
-							$items_data          = call_user_func( $type_data['items_callback'], $items );
-							$paged_subscriptions = array_merge( $paged_subscriptions, $items_data );
-						}
-					}
+				foreach ( $paged_subscription_ids as $paged_subscription_id ) {
+					$paged_subscriptions[] = new BB_Subscriptions( $paged_subscription_id, ( 'all' === $r['fields'] ) );
 				}
 
 				if ( 'all' !== $r['fields'] ) {

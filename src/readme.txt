@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.1.1
+Tested up to: 6.2.2
 Requires PHP: 5.6.20
-Stable tag: 2.2.6
+Stable tag: 2.3.60
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,279 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.3.70 =
+* Enhancement: Network Search - Extended search results to only show LearnDash lessons from a course that a user has enrolled into. This is configured in the LearnDash Settings > Lesson Search
+* Enhancement: Performance improvements to the followers and following feature by adding pagination to the background process when notifications are being sent
+* Bug: Blog - Logged out users on private networks could had an unresponsive ‘Load More’ when attempting to load additional articles
+* Bug: Core - Code refactoring of the Activity and Forums by removing unnecessary !important tags
+* Bug: Forums - Pagination loading issue when forum was set to homepage
+* Bug: Forums - Using forum shortcodes whilst having a forum widget on the sidebar removed the ability to subscribe or create new discussions
+* Bug: Forums - Resolved performance issue where discussions took longer to load as users subscribed to many discussions
+* Bug: Groups - Cleaned PHP notice when multiple groups were selected as part of the 'groups_get_group_members' function
+* Bug: Media - New albums created from the Videos page were not displaying due to Redis Cache compatibility
+* Bug: Media - Images and video thumbnails were not being cache when not using Symlinks
+* Bug: Media - Image previews of documents after being renamed were not available
+* Bug: Media - Updated edit buttons to use correct case sensitive
+* Bug: Members - Search results returned incorrect values if a standard profile field was switched to a repeater field
+* Bug: Messages - Search terms were being removed from the search box when a search returned multiple results and was scrolled down
+* Bug: Multisite - Database error related to an unknown column ‘meta_id’
+* Bug: Network Search - Improved compatibility with Object Caching when searching for Groups
+* Bug: Notifications - Updated dropdown labels to use correct case sensitive
+* Bug: Profile - Improved support for uploading Profile photos using the built in Safari browser webcam capture
+* Bug: Widgets - Recent Topics and Recent Replies widgets for Forums were not loading content if custom prefixes were applied to the database table
+* Bug: Widgets - Sell All link on the Recent Active Members widget was unresponsive
+* Bug: Widgets - Group widget not showing hidden members of the same group when applied to Members Page
+* Bug: Elementor - Improved compatibility with the Elementor Maintenance mode
+* Bug: Elementor - Activity block content and excerpt conflicted with replies whenever multiple mentions were added
+* Bug: Geodirectory - Dropdown menu on Favorites and Listings tab was unresponsive
+* Bug: MemberPress - New error message if a user attempts to use an email address as a username/nickname, this resolves issues where @mentions cannot be sent due to invalid character
+* Bug: Rankmath - Fixed an issue where titles and meta details were not being applied to forum or discussions
+
+= 2.3.60 =
+* Notifications - Optimized the performance of the default notification preference workflow for members
+* Groups - Addressed the member count issue in groups when one of the members is suspended
+* Forums - Introduced link preview support for Forums discussions and replies
+* Forums - Resolved the issue where the shortcode for hidden group discussions would throw permission errors for group members
+* Forums - Fixed the issue with the discussion reply 'post' button not being enabled in the responsive view on Android
+* Forums - Resolved the layout issue with the 'Recent Replies' widget when using third-party Themes
+* Forums - Fixed the layout issue with discussion replies pagination when the page number is out of range
+* Activity - Handled the issue where the 'post' button was not accessible in the responsive view when the post content is significant
+* Media - Updated the media database table schema by adding indexing
+* Media - Addressed a UI issue with the search form in the documents sub-folder screen
+* Messages - Enhanced the upload and send media workflow performance in private messages. This improvement optimizes the way media data is stored and deleted, resulting in a faster and smoother messaging experience
+* Moderation - Resolved the issue of suspended member group activity single screen throwing a 404 error
+* Network Search - Refactored the code to allow for easy extension of the feature
+* Core - Provided an option to retain link previews and embeds even after deleting the associated links in activity, forum discussions, and replies
+* Core - Improved the user experience by displaying a loading icon when a search form is submitted or reset
+* Core - Improved the user experience of the GIPHY option in the dashboard by hiding sensitive text. Users can now toggle the visibility of sensitive content with an eye icon
+* Core - Handled a critical issue with the Presence PHP file, ensuring correct detection of active and inactive member status even on non-English language sites
+* Core - Handled a critical conflict with the 'BuddyBoss App' plugin build screen
+* REST API - Added API support for link previews in forums discussions and replies
+* REST API - Updated API support to align with the messages media workflow improvement
+* REST API - Handled the issue where the photos and videos reply option was disabled in the API
+* Learndash - Addressed the issue with social group members roles when sync is enabled for the Learndash group and social group
+
+= 2.3.50 =
+* Profiles - Addressed the issue where the password updated email was triggered when the account email is updated in the profile
+* Profiles - Resolved the incorrect last active stats issue on Members and profile pages
+* Notifications - Introduced new notification type to trigger when members create a reply to a blog post comment
+* Notifications - Improved the business logic for notification preferences, now loading from admin default if not updated
+* Notifications - Improved to send @mention email for blog post comments
+* Groups - Resolved the hidden group not showing issue for WP CLI commands
+* Groups - Resolved the activity not getting created issue for WP CLI commands
+* Groups - Handled the forum option not showing issue while creating a group when the forums slug is updated
+* Forums - Handled create discussion UX issue when selecting auto-generated tags
+* Activity - Improved the @mention dropdown by providing load more pagination
+* Activity - Fixed the multiple @mention option not working issue
+* Activity - Resolved the post form GIF search option UX issue
+* Media - Resolved the video thumbnail issue for videos with portrait orientation or a small-sized
+* Media - Fixed the documents search not working issue when the document is in the folder
+* Media - Addressed the media modal issue that was not showing the option to like and comment
+* Messages - Fixed the duplicate text issue when copy-pasting in the send message editor
+* Moderation - Improved the logic for handling suspended and blocked members content in Social groups, Network Search, Forums, Activity, and Widgets
+* Moderation - Handled the report member option UX issue, preventing multiple reports
+* Moderation - Addressed a minor accessibility issue with the 'report group' option
+* Network Search - Addressed the incorrect count issue when modifying search results using a hook
+* Core - Improvement by loading minified JS and CSS for third-party libraries
+* Core - Fixed the 'Repair user nicknames' tool that was not working as expected
+* REST API - Provided API support for social groups, activity, and forums moderation related updates
+* REST API - Handled the Forum discussion images URL issue in the API
+* REST API - Addressed the selected profile type not returning issue in the users endpoint
+* REST API - Resolved the join group action not working issue in the API for private and hidden groups when auto-approval is enabled
+* REST API - Fixed the read more option not working issue in the API for activity when it contains a link
+
+= 2.3.42 =
+* Registration - Resolved invited users can't register issue when registration option is disabled for non-members
+
+= 2.3.41 =
+* Profiles - Improved members profile link by reducing the length auto-generated unique identifier
+
+= 2.3.4 =
+* Profiles - Resolved formatting issues with paragraph type fields in profile fields
+* Groups - Handled incorrect group count issue on the directory screen when the sub-groups option is enabled
+* Forums - Enhanced performance of forum discussion favorites by restructuring their data
+* Forums - Resolved performance issues with discussions having a large number of replies through efficient pagination
+* Forums - Fixed a database error that occurred when updating a forum reply with attached media
+* Forums - Introduced a new parameter for the [bbp-reply-form] shortcode to pass the discussion ID
+* Forums - Fixed the issue where an auto-generated discussion would have preceding empty space
+* Activity - Fixed the problem with the discard draft option in the activity form
+* Activity - Handled the issue with auto-generated activity for comments links on custom post types not being clickable
+* Activity - Addressed the formatting issue where highlighted text did not maintain proper formatting when a link was applied
+* Media - Addressed the issue where the 'move photos' option was not functioning as expected
+* Media - Provided hooks to modify privacy options for media files
+* Registration - Enhanced invite flow to prevent multiple registrations using the same email invite
+* Core - Updated performance API MU plugin file name for improved consistency
+* Core - Improved code to load templates with block themes
+* REST API - Resolved the problem where the profile avatar was not returning in the notification endpoint
+* REST API - Fixed the issue where the group privacy option was being removed when updated using the group settings endpoint
+
+= 2.3.3 =
+* Profiles - Resolved critical issue of duplicate unique identifiers
+* Profiles - Handled 'Social Network' field with multiple types shows random modal issue when redirected to the profile
+* Notifications - Handled small notification read/unread issue when newly registered members login for the first time
+* Forums - Handled forum discussion uploaded text file preview issue
+* Forums - Handled forum discussion and reply tags suggestions dropdown layout issue
+* Forums - Handled create discussion and reply formatting issues when an option is disabled from the settings
+* Forums - Handled broken layout on the single forum reply screen
+* Activity - Handled activity comment form, post button disabled issue when specific steps followed
+* Messages - Handled message screen and dropdown 'sent a video' label inconsistency
+* Emails - Resolved UI issue in group and blog post emails when view group/post button labels were translated to non-English languages
+* Core - Improved the search form across the network by adding an option to clear the search field
+* Core - Provided hooks to update activities pagination and number of entries to process in the background process
+* Core - Handled messages and notification dropdown specific performance issues by refactoring code
+* REST API - Handled profile fields endpoint returns HTML entity name for special characters
+* REST API - Handled group settings endpoint permission issue for the group organizer
+
+= 2.3.2 =
+* Profiles - Handled non-selectable profile types not showing issue in Edit Profile even when configured from the admin dashboard
+* Profiles - Handled profile types field validation issue for administrator and editor role members
+* Profiles - Small improvement for the 'add user' action in the admin dashboard by assigning a selected role instead of the default profile type role configured
+* Profiles - Handled small performance issue for member search action with the help of cache
+* Groups - Handled delete activity post permission issue in the social group for the group organizer
+* Forums - Handled forums search not working issue when search by 'discussion tag' option enabled in network search
+* Forums - Handled quick reply form formatting option not working issue on forum discussion auto-generated activity
+* Activity - Handled empty markup getting added issue when editing activity post with @mention
+* Media - Small improvements to media link by removing trailing slash when symlink is disabled
+* Media - Handled uploaded video default thumbnail issue in Safari browser
+* Messages - Handled error notice on messages screen when visiting triggered push notification
+* Emails - Handled email template layout issue for the iOS email app
+* Moderation - Handled newly registered member display name shows as 'Unknown Member' when moderation component is enabled
+* Network Search - Handled network search page results content showing shortcode issue
+* Registration - Handled register page validation issue when paragraph and profile type fields were added together
+* Login - Handled small typo issue when only the 'Terms of Service' page is configured
+* Core - Small performance and security improvement by updating a bunch of JS libraries
+
+= 2.3.1.2 =
+* Forums - Handled forum discussion and reply form disabled post button cache issue
+
+= 2.3.1.1 =
+* Profiles - Small icon fix for 'Profile Links' option in the dashboard
+
+= 2.3.1 =
+* Profiles - Provided the option to replace usernames with unique IDs to secure member profile URLs
+* Profiles - Handled profile field instructions small formatting issue
+* Profiles - Handled profile search issue with profile fields configured as 'only me' privacy
+* Profiles - Handled members count formatting issues across the network as well as APIs
+* Groups - Handled group message with unsupported media format, error message not closing issue
+* Groups - Handled group documents pagination issue
+* Activity - Handled activity posts liked members tooltip formatting issue
+* Media - Handled media modal 'Download' button UI issue when 'BuddyBoss Theme' is not active
+* Messages - Small improvement for shared socket connection update for multiple browser tabs using Pusher
+* Messages - Handled selected member in compose message is not appearing when the mention name is updated and a message is composed of the profile
+* Messages - Handled video embed not showing properly in messages
+* Connections - Provided option to auto-follow when members connect
+* Moderation - Handled critical issues in the settings API when all moderation options are disabled
+* Core - Improved and optimized presence API performance for online/offline status using MU Plugin and independent PHP file
+* Core - Small improvement for Activity, Activity comment, media description, forums discussion, and reply form by not allowing to submit when no text or media uploaded
+* Coding Standards - Small code refactoring to fix PHP warnings for non-logged-in users
+* Events Calendar Pro - Handled events page not working conflict when private site enabled
+* REST API - Handled incorrect replies order in the profile issue in the API
+* REST API - Handled group types in a non-English language not returning in the API
+* REST API - Handled update sub-group privacy using API removes parent group settings
+* REST API - Handled invited organizer returns in the API before accepting the request
+
+= 2.3.0 =
+* Profiles - Handled a small UX issue in the profile fields screen in the dashboard
+* Notifications - Small improvements to not trigger multiple notifications for forum discussion and reply when members are mentioned
+* Groups - Handled group header description alignment UI issues
+* Groups - Handled groups directory and single group SEO title and description not rendering issue
+* Forums - Handled forum discussions and replies uploaded image sequence issue
+* Forums - Handled forum discussion and replies pagination not working issue on other members profiles for logged-in member
+* Forums - Handled search forum critical issue when the network search component is disabled
+* Forums - Handled social group associated forum and its child forums visibility issue based on group privacy
+* Forums - Handled missing fields in the replies tab when a logged-in member is viewing other members profile
+* Forums - Handled 'XenForo' import not working issue
+* Activity - Provided option to show relevant activities in the 'Latest Activities' widget
+* Messages - Handled send message editor formatting toolbar layout issue when the media component is disabled
+* Messages - Handled UI issue when a new thread is created from the messages screen
+* Core - Small performance update for non-logged-in users
+* Core - Small improvements for selected page/tab class logic
+* Core - Icon Pack updated with latest icons
+* Coding Standards - Significant code refactoring to fix PHP 8 warnings and notices
+* Coding Standards - Significant code refactoring to fix PHP 8.2 deprecation errors, warnings, and notices
+* REST API - Code refactoring to fix PHP 8 and 8.2 warnings and notices in the API
+* REST API - Handled profile type endpoint text format issue when it has special characters
+* REST API - Handled forum replies endpoint not returning excerpt issue in the response
+* Learndash - Handled social group privacy settings getting updated issue when the 'LearnDash Group Sync' option is enabled and the learndash group is updated
+* Learndash - Handled URL query var not working issue on lesson and topic screen when 'Nested URLs' option is enabled
+* Compatibility - Handled Jetpack plugin widget visibility option not showing conflict
+
+= 2.2.9.1 =
+* Notifications - Handled repeated email notification issues by removing duplicate forum subscription entries
+* Notifications - Handled triggering notification when an activity post is updated in a social group
+* Notifications - Handled notification broken template issue when media uploaded in a social group
+* Notifications - Handled 'subscriptions' page 404 conflict with the 'WooCommerce Subscriptions' plugin
+* Notifications - Handled defaults disabled issue for force enabled notifications types
+
+= 2.2.9 =
+* Profiles - Handled incorrect connection count shows in profile when any connected member is suspended
+* Groups - Handled group description small formatting issue on render
+* Groups - Handled update group details notification not working as expected
+* Groups - Handled critical issues when updating groups from the dashboard and the forums component is disabled
+* Forums - Handled forum discussion and reply tags field dropdown not working as expected
+* Forums - Handled new discussion form validation UI issue on submit
+* Forums - Handled discussion tags not showing issues in a group forum when it has an image
+* Forums - Handled 'Recent Discussions' widget small floating content UI issue
+* Forums - Handled reply editor lagging issue while typing at normal speed
+* Forums - Handled discussion email notification for subscribed members, the link doesn't take to the discussion on login
+* Emails - Handled group email notification template UI issue in the responsive view
+* Moderation - Improved the suspended and blocked members content logic in the messaging module
+* Network Search - Handled course layout issue in the search results by handling excerpt formatting
+* Network Search - Handled search blog post by tag not working issue
+* Network Search - Handled activity posts and comments in private/hidden groups not showing for group members
+* Network Search - Handled non-members can search hidden group associated forums
+* Core - Small code refactoring to pull and render the Icon Pack
+* Core - Small improvement to allow translation for all icon names from the Icon Pack
+* Core - Small improvement to not show specific options in the dashboard when relevant modules are disabled
+* Coding Standards - Small code refactoring to fix PHP 8 warnings and notices
+* REST API - Handled activity feed endpoint missing timeline filters in the API
+* REST API - Handled group description small formatting issue in the API
+* REST API - Handled courses related strings translation not working issue
+* REST API - Small API updates for the latest moderation changes in the messaging module
+* REST API - Handled learndash disable comment option not working issue in the API for relevant activity posts
+* REST API - Handled profile types endpoint menu order not working issue in the API
+* REST API - Handled profile types visibility settings not working issue in the API
+* REST API - Handled group details endpoint critical issue in the API
+* Learndash - Handled password rest link not working issue when member registered purchasing the course as a guest using Paypal
+* Compatibility - Handled news feed page restriction not working issue
+
+= 2.2.8 =
+* Notifications - Provided option to subscribe to group notifications from a single group screen
+* Notifications - Provided new notification types to trigger when members create new activity or discussion in a group
+* Core - Handled migration for new subscription workflow for groups and associated forums
+* REST API - Provided API support for new subscription workflow for groups
+
+= 2.2.7.1 =
+* Network Search - Handled network search not working critical issue for database table with custom prefix
+
+= 2.2.7 =
+* Notifications - Improved members active/inactive presence logic for Push Notifications
+* Activity - Handled activity post with exact 4 media fails to follow right sequence order selected
+* Login - Handled 'Terms of Service' and 'Privacy Policy' inline JS not working issue
+* Messages - Improved group thread join/left notices for their members
+* Emails - Handled private messages email template reply button label layout issue when a translated string is long
+* Moderation - Improved the suspended and blocked members @mention logic in the network
+* Moderation - Improved the suspended and blocked members notifications logic for both new and existing
+* Moderation - Handled activity feed comment notification, redirection URL not working issue
+* Network Search - Handled search results improvements to not show groups, forums, discussions, replies, and photos if not accessible
+* Core - Handled active/inactive member presence logic returning console error issue in the background
+* Core - Handled small formatting issue in the editor for multiple new lines
+* Core - Handled translation issue for dropzone uploader across the network
+* Core - Provided medium editor placeholder texts available to be translatable
+* REST API - Improved the suspended and blocked members notification logic in the API
+* REST API - Small improvement for members presence active/inactive logic for push notifications in the API
+* REST API - Handled deleted and suspended members names to show 'Unknown Member' across the network in the API
+* REST API - Provided join/left group thread notices small update API support
+* REST API - Provided API support for improved moderation @mention logic
+* REST API - Handled profile field and Album name with '&' character shows HTML entity in the API response
+* REST API - Handled profile search not working issue with the '&' character in the API
+* REST API - Handled photos order issue when description updated with the endpoint
+* REST API - Small improvement in the API to fetch group specific files using the documents endpoint
+* Elementor - Handled 'BB Forum Search form' widget alignment and UI issues on the RTL language site
+
+= 2.2.6.1 =
+* Learndash - Handled update group critical issue for php version < 8.0
 
 = 2.2.6 =
 * Profiles - Improved profile and account settings UI and layout in the responsive view
@@ -357,7 +630,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - Handled Activity form text color issue when @mention added and removed
 * Activity - Small improvement to show user-friendly validation message from dropzone uploader
 * Activity - Small improvement to restrict media upload for post types auto-generated activity
-* Activity - Handled post types auto-generated activity long comment read more issue 
+* Activity - Handled post types auto-generated activity long comment read more issue
 * Media - Handled symlink not working issue on private page excluded URL for non-logged-in member
 * Media - Handled media upload not showing thumbnail issue for media size more than 10MB
 * Media - Handled media popup layout issue for a specific set of device sizes

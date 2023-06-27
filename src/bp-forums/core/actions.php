@@ -82,6 +82,7 @@ add_action( 'bbp_init', 'bbp_register', 0 );
 add_action( 'bbp_init', 'bbp_add_rewrite_tags', 20 );
 add_action( 'bbp_init', 'bbp_add_rewrite_rules', 30 );
 add_action( 'bbp_init', 'bbp_add_permastructs', 40 );
+add_action( 'bbp_init', 'bbp_setup_engagements', 50  );
 add_action( 'bbp_init', 'bbp_ready', 999 );
 
 /**
@@ -303,6 +304,11 @@ add_action( 'bbp_login_form_login', 'bbp_user_maybe_convert_pass' );
 add_action( 'wp_ajax_post_topic_reply_draft', 'bb_post_topic_reply_draft' );
 
 add_action( 'wp_footer', 'bb_forum_add_content_popup' );
+
+add_action( 'bbp_new_topic', 'bb_forums_save_link_preview_data' );
+add_action( 'bbp_new_reply', 'bb_forums_save_link_preview_data' );
+add_action( 'bbp_edit_topic', 'bb_forums_save_link_preview_data' );
+add_action( 'bbp_edit_reply', 'bb_forums_save_link_preview_data' );
 
 /**
  * Register the forum notifications.
@@ -564,29 +570,141 @@ function bb_post_topic_reply_draft() {
  * @since BuddyBoss 2.2.1
  */
 function bb_forum_add_content_popup() {
-	if ( ! bbp_is_single_forum() ) {
+	global $template_forum_ids;
+
+	if ( empty( $template_forum_ids ) ) {
 		return;
 	}
+
+	$template_forum_ids = array_unique( $template_forum_ids );
+
+	// Output the extracted IDs.
+	foreach ( $template_forum_ids as $forum_id ) {
 	?>
-	<!-- Forum description popup -->
-	<div class="bb-action-popup" id="single-forum-description-popup" style="display: none">
-		<transition name="modal">
-			<div class="modal-mask bb-white bbm-model-wrap">
-				<div class="modal-wrapper">
-					<div class="modal-container">
-						<header class="bb-model-header">
-							<h4><span class="target_name"><?php echo esc_html__( 'Forum Description', 'buddyboss' ); ?></span></h4>
-							<a class="bb-close-action-popup bb-model-close-button" href="#">
-								<span class="bb-icon-l bb-icon-times"></span>
-							</a>
-						</header>
-						<div class="bb-action-popup-content">
-							<?php bbp_forum_content(); ?>
+		<!-- Forum description popup -->
+		<div class="bb-action-popup" id="single-forum-description-popup-<?php echo esc_attr( $forum_id ); ?>" style="display: none">
+			<transition name="modal">
+				<div class="modal-mask bb-white bbm-model-wrap">
+					<div class="modal-wrapper">
+						<div class="modal-container">
+							<header class="bb-model-header">
+								<h4><span class="target_name"><?php echo esc_html__( 'Forum Description', 'buddyboss' ); ?></span></h4>
+								<a class="bb-close-action-popup bb-model-close-button" href="#">
+									<span class="bb-icon-l bb-icon-times"></span>
+								</a>
+							</header>
+							<div class="bb-action-popup-content">
+								<?php echo wpautop( wp_kses_post( bbp_get_forum_content( $forum_id ) ) ); ?>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		</transition>
-	</div> <!-- .bb-action-popup -->
+			</transition>
+		</div> <!-- .bb-action-popup -->
 	<?php
+	}
+
+	unset( $template_forum_ids );
+}
+
+/**
+ * Save link preview data into topic/reply meta key "_link_preview_data"
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param int $post_id Discussion/Reply id.
+ */
+function bb_forums_save_link_preview_data( $post_id ) {
+
+	$link_preview_data = array();
+
+	if (
+		empty( $_POST['action'] ) || //phpcs:ignore WordPress.Security.NonceVerification.Missing
+		! in_array(
+			$_POST['action'], // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			array(
+				'bbp-new-topic',
+				'bbp-new-reply',
+				'reply',
+				'bbp-edit-topic',
+				'bbp-edit-reply',
+			),
+			true
+		)
+	) {
+		return false;
+	}
+
+	if ( ! empty( $_POST['link_preview_data'] ) ) {
+		$link_preview_data = get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) );
+	} else {
+
+		// Allow Link preview related keys.
+		$allowed_keys = array(
+			'link_url',
+			'link_embed',
+			'link_title',
+			'link_description',
+			'link_image',
+			'link_image_index_save'
+		);
+
+		// Filter the $_POST array to only include allowed keys.
+		$link_preview_data = array_filter( $_POST, function( $key ) use ( $allowed_keys ) {
+			return in_array( $key, $allowed_keys );
+		}, ARRAY_FILTER_USE_KEY );
+	}
+
+	$link_url   = ! empty( $link_preview_data['link_url'] ) ? filter_var( $link_preview_data['link_url'], FILTER_VALIDATE_URL ) : '';
+	$link_embed = isset( $link_preview_data['link_embed'] ) ? filter_var( $link_preview_data['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false;
+
+	// Check if link url is set or not.
+	if ( empty( $link_url ) ) {
+		if ( false === $link_embed ) {
+			update_post_meta( $post_id, '_link_embed', '0' );
+
+			// This will remove the preview data if the activity don't have anymore link in content.
+			update_post_meta( $post_id, '_link_preview_data', '' );
+		}
+
+		return;
+	}
+
+	$link_title       = ! empty( $link_preview_data['link_title'] ) ? filter_var( $link_preview_data['link_title'] ) : '';
+	$link_description = ! empty( $link_preview_data['link_description'] ) ? filter_var( $link_preview_data['link_description'] ) : '';
+	$link_image       = ! empty( $link_preview_data['link_image'] ) ? filter_var( $link_preview_data['link_image'], FILTER_VALIDATE_URL ) : '';
+
+	// Check if link embed was used.
+	if ( true === $link_embed && ! empty( $link_url ) ) {
+		update_post_meta( $post_id, '_link_embed', $link_url );
+		update_post_meta( $post_id, '_link_preview_data', '' );
+
+		return;
+	} else {
+		update_post_meta( $post_id, '_link_embed', '0' );
+	}
+
+	$preview_data['url'] = $link_url;
+
+	if ( ! empty( $link_image ) ) {
+		$attachment_id = bb_media_sideload_attachment( $link_image );
+		if ( $attachment_id ) {
+			$preview_data['attachment_id'] = $attachment_id;
+		} else {
+			// store non downloadable urls as it is in preview data.
+			$preview_data['image_url'] = $link_image;
+		}
+	}
+
+	$preview_data['link_image_index_save'] = isset( $link_preview_data['link_image_index_save'] ) ? filter_var( $link_preview_data['link_image_index_save'] ) : '';
+
+	if ( ! empty( $link_title ) ) {
+		$preview_data['title'] = $link_title;
+	}
+
+	if ( ! empty( $link_description ) ) {
+		$preview_data['description'] = $link_description;
+	}
+
+	update_post_meta( $post_id, '_link_preview_data', $preview_data );
 }
