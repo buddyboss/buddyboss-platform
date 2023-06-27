@@ -1251,3 +1251,8 @@ function bb_recipients_recipient_get_join_sql_with_group_members( $sql, $r ) {
 	$sql .= ' JOIN ' . $wpdb->prefix . 'bp_groups_members gm ON ( gm.user_id = r.user_id )';
 	return $sql;
 }
+
+function bb_member_loop_show_message_button( $enabled_message_action, $member_id, $current_user_id ) {
+	return (bool) ( $enabled_message_action && bb_messages_user_can_send_message( array( 'sender_id' => $current_user_id, 'recipients_id' => $member_id  ) ) );
+}
+add_filter( 'bb_member_loop_show_message_button', 'bb_member_loop_show_message_button', 10, 3 );
