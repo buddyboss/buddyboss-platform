@@ -503,7 +503,7 @@ add_action( 'mepr-signup', 'bb_core_add_support_mepr_signup_map_user_fields', 10
 /**
  * Prevent MemberPress registration when nickname(username) format is not valid
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.70
  *
  * @param array $errors		Array of error messages from memberpress signup validation
  *

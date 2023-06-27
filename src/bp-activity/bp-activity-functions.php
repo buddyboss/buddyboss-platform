@@ -5954,7 +5954,7 @@ function bb_is_group_activity_comment( $comment = 0 ) {
 /**
  * Function to create a paginated backgroud job for activity following notifications.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.70
  *
  * @param array $args  Array of arguments.
  * @param array $paged Current page number for pagination.

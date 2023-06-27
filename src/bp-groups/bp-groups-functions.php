@@ -5173,7 +5173,7 @@ function bb_update_group_member_count( $group_ids = array() ) {
 /**
  * Function to return groups settings statues.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.70
  *
  * @param string $setting_type Type of group settings.
  *
@@ -5191,7 +5191,7 @@ function bb_groups_get_settings_status( $setting_type ) {
 	/**
 	 * Filters the allowed settings statuses.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.70
 	 *
 	 * @param array  $statuses     The settings statuses.
 	 * @param string $setting_type Type of group settings.
@@ -5202,7 +5202,7 @@ function bb_groups_get_settings_status( $setting_type ) {
 /**
  * Default group settings fallback function.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.70
  *
  * @param string $setting_type Type of group settings.
  * @param string $val          Value of group settings.
@@ -5220,7 +5220,7 @@ function bb_groups_settings_default_fallback( $setting_type, $val = '' ) {
 	/**
 	 * Filters to set default value of a group settings.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.70
 	 *
 	 * @param string $val Value of group settings.
 	 */
