@@ -143,7 +143,7 @@ class BP_Activity_Follow {
 	 * Get the follower IDs for a given user.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @since BuddyBoss [BBVERSION] Added support for query arguments.
+	 * @since BuddyBoss 2.3.70 Added support for query arguments.
 	 *
 	 * @param int   $user_id    The user ID.
 	 * @param array $query_args Query arguments.
@@ -188,7 +188,7 @@ class BP_Activity_Follow {
 	 * Get the user IDs that a user is following.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @since BuddyBoss [BBVERSION] Added support for query arguments.
+	 * @since BuddyBoss 2.3.70 Added support for query arguments.
 	 *
 	 * @param int   $user_id    The user ID to fetch.
 	 * @param array $query_args Query arguments.

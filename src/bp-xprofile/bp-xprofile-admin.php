@@ -1266,7 +1266,7 @@ add_action( 'wp_ajax_xprofile_check_member_type_added_previously', 'xprofile_che
 /**
  * Save repeater option temporary before save group details.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.70
  *
  * @param object|BP_XProfile_Group $xprofile Current instance of the group being saved.
  */
@@ -1280,7 +1280,7 @@ add_action( 'xprofile_group_before_save', 'bb_xprofile_before_save_xprofile_grou
 /**
  * Migrating the user simple data's to repeater fields data's.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.70
  *
  * @param object|BP_XProfile_Group $xprofile Current instance of the group being saved.
  */
@@ -1345,7 +1345,7 @@ add_action( 'xprofile_group_after_save', 'bb_xprofile_migrate_simple_to_repeater
 /**
  * Prepare data to insert into repeater fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.70
  *
  * @param array $user_ids Array of user ID's.
  * @param int   $group_id Xprofile group ID.
