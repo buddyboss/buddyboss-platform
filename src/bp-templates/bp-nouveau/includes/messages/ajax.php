@@ -1674,7 +1674,7 @@ function bp_nouveau_ajax_dsearch_recipients() {
 		array(
 			'term'            => sanitize_text_field( $_GET['term'] ),
 			'type'            => 'members',
-			'only_friends'    => bp_is_active( 'friends' ) && bp_force_friendship_to_message() && empty( is_sender_allowed_messaging_without_connection( get_current_user_id() ) ),
+			'only_friends'    => bp_is_active( 'friends' ) && bp_force_friendship_to_message() && empty( bb_messages_allowed_messaging_without_connection( get_current_user_id() ) ),
 			'count_total'     => 'count_query',
 			'page'            => $_GET['page'],
 			'limit'           => 10,
@@ -1736,7 +1736,7 @@ function bp_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
 function bp_nouveau_ajax_search_recipients_exclude_non_friend( $results ) {
 	if (
 		true === bp_force_friendship_to_message() &&
-		empty( is_sender_allowed_messaging_without_connection( get_current_user_id() ) ) &&
+		empty( bb_messages_allowed_messaging_without_connection( get_current_user_id() ) ) &&
 		function_exists( 'friends_check_friendship_status' )
 	) {
 		$new_users = array();
