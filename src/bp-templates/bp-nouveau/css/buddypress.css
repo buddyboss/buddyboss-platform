@@ -22291,6 +22291,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   content: "\ef30";
   font-family: "bb-icons";
   /* stylelint-disable-line */
+  font-weight: 400;
   font-size: 18px;
   line-height: 1;
   margin-left: 10px;
