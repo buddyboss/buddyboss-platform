@@ -437,6 +437,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 20261 ) {
 			bb_update_to_2_3_60();
 		}
+
+		if ( $raw_db_version < 20291 ) {
+			bb_update_to_2_3_90();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -3062,3 +3066,26 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
 	bb_create_background_message_media_document_update( $table_exists, $paged );
 }
 
+/**
+ * Migrate icon class for the documents.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_3_90() {
+	if ( bp_is_active( 'document' ) ) {
+		$saved_extensions = bp_get_option( 'bp_document_extensions_support', array() );
+		$default = bp_media_allowed_document_type();
+
+		foreach ( $default as $key => $value ) {
+			if ( isset( $saved_extensions[ $key ] ) ) {
+				$document_file_extension = substr( strrchr( $value['extension'], '.' ), 1 );
+				$new_icon                = bp_document_svg_icon( $document_file_extension );
+				$saved_extensions[ $key ]['icon'] = $new_icon;
+			}
+		}
+
+		bp_update_option( 'bp_document_extensions_support', $saved_extensions );
+	}
+}
