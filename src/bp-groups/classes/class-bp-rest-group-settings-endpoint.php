@@ -1087,7 +1087,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
-		$allowed_invite_status = apply_filters( 'groups_allowed_invite_status', array( 'members', 'mods', 'admins' ) );
+		$allowed_invite_status = bb_groups_get_settings_status( 'invite' );
 		$invite_status         = ( array_key_exists( 'group-invite-status', (array) $post_fields ) && ! empty( $post_fields['group-invite-status'] ) ) ? $post_fields['group-invite-status'] : bp_group_get_invite_status( $group->id );
 
 		if ( ! in_array( $invite_status, $allowed_invite_status, true ) ) {
@@ -1096,7 +1096,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
-		$allowed_activity_feed_status = apply_filters( 'groups_allowed_activity_feed_status', array( 'members', 'mods', 'admins' ) );
+		$allowed_activity_feed_status = bb_groups_get_settings_status( 'activity_feed' );
 		$activity_feed_status         = ( array_key_exists( 'group-activity-feed-status', (array) $post_fields ) && ! empty( $post_fields['group-activity-feed-status'] ) ) ? $post_fields['group-activity-feed-status'] : bp_group_get_activity_feed_status( $group->id );
 
 		if ( ! in_array( $activity_feed_status, $allowed_activity_feed_status, true ) ) {
@@ -1105,7 +1105,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
-		$allowed_media_status = apply_filters( 'groups_allowed_media_status', array( 'members', 'mods', 'admins' ) );
+		$allowed_media_status = bb_groups_get_settings_status( 'media' );
 		$media_status         = ( array_key_exists( 'group-media-status', (array) $post_fields ) && ! empty( $post_fields['group-media-status'] ) ) ? $post_fields['group-media-status'] : bp_group_get_media_status( $group->id );
 
 		if ( ! in_array( $media_status, $allowed_media_status, true ) ) {
@@ -1114,7 +1114,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
-		$allowed_document_status = apply_filters( 'groups_allowed_document_status', array( 'members', 'mods', 'admins' ) );
+		$allowed_document_status = bb_groups_get_settings_status( 'document' );
 		$document_status         = ( array_key_exists( 'group-document-status', (array) $post_fields ) && ! empty( $post_fields['group-document-status'] ) ) ? $post_fields['group-document-status'] : bp_group_get_document_status( $group->id );
 
 		if ( ! in_array( $document_status, $allowed_document_status, true ) ) {
@@ -1123,7 +1123,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
-		$allowed_album_status = apply_filters( 'groups_allowed_album_status', array( 'members', 'mods', 'admins' ) );
+		$allowed_album_status = bb_groups_get_settings_status( 'album' );
 		$album_status         = ( array_key_exists( 'group-album-status', (array) $post_fields ) && ! empty( $post_fields['group-album-status'] ) ) ? $post_fields['group-album-status'] : bp_group_get_album_status( $group->id );
 
 		if ( ! in_array( $album_status, $allowed_album_status, true ) ) {
@@ -1132,7 +1132,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
-		$allowed_video_status = apply_filters( 'groups_allowed_video_status', array( 'members', 'mods', 'admins' ) );
+		$allowed_video_status = bb_groups_get_settings_status( 'video' );
 		$video_status         = ( array_key_exists( 'group-video-status', (array) $post_fields ) && ! empty( $post_fields['group-video-status'] ) ) ? $post_fields['group-video-status'] : bp_group_get_video_status( $group->id );
 
 		if ( ! in_array( $video_status, $allowed_video_status, true ) ) {
@@ -1141,7 +1141,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
-		$allowed_message_status = apply_filters( 'groups_allowed_message_status', array( 'mods', 'admins', 'members' ) );
+		$allowed_message_status = bb_groups_get_settings_status( 'message' );
 		$message_status         = ( array_key_exists( 'group-message-status', (array) $post_fields ) && ! empty( $post_fields['group-message-status'] ) ) ? $post_fields['group-message-status'] : bp_group_get_message_status( $group->id );
 
 		if ( ! in_array( $message_status, $allowed_message_status, true ) ) {
