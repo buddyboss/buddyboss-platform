@@ -25889,7 +25889,7 @@ div.dropzone.dz-started .dz-default.dz-message {
   right: 0;
 }
 
-.dropzone.video-dropzone .dz-preview.dz-file-preview.dz-has-thumbnail .dz-details .dz-filename {
+.dropzone.video-dropzone .dz-preview.dz-file-preview.dz-has-thumbnail:not(.dz-error) .dz-details .dz-filename {
   display: none;
 }
 

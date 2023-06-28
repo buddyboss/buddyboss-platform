@@ -1928,7 +1928,7 @@ div.dropzone.dz-started {
 
 	}
 
-	.dz-preview.dz-file-preview.dz-has-thumbnail {
+	.dz-preview.dz-file-preview.dz-has-thumbnail:not(.dz-error) {
 
 		.dz-details .dz-filename {
 			display: none;
