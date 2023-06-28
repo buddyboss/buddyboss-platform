@@ -1667,9 +1667,6 @@ function bp_nouveau_ajax_dsearch_recipients() {
 
 	add_filter( 'bp_members_suggestions_query_args', 'bp_nouveau_ajax_search_recipients_exclude_current' );
 
-	$profile_types_allowed_messaging = get_option( 'bp_member_types_allowed_messaging_without_connection' );
-	$sender_profile_type             = bp_get_member_type( get_current_user_id() );
-
 	$results = bp_core_get_suggestions(
 		array(
 			'term'            => sanitize_text_field( $_GET['term'] ),
