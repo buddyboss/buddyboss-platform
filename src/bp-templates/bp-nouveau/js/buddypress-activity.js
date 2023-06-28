@@ -1098,7 +1098,8 @@ window.bp = window.bp || {};
 				if ( $( 'body' ).hasClass( 'bb-is-mobile' ) ) {
 					// Scroll window up to show the submit button
 					setTimeout( function () {
-						$( 'html, body' ).animate( { scrollTop: $( '#ac-form-' + activity_id + ' #ac-input-' + activity_id ).offset().top - 100 }, 500 );
+						var scrollInt = jQuery(window).height() < 300 ? 100 : 200;
+						$( 'html, body' ).animate( { scrollTop: $( '#ac-form-' + activity_id + ' #ac-input-' + activity_id ).offset().top - scrollInt }, 500 );
 					}, 0 );
 				}
 
