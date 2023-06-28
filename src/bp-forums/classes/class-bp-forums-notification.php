@@ -253,7 +253,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 							$except
 						);
 					} elseif ( ! empty( $media_ids ) ) {
-						$media_ids = array_filter( explode( ',', $media_ids ) );
+						$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
 						if ( count( $media_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: Member display name. */
@@ -268,7 +268,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 							);
 						}
 					} elseif ( ! empty( $document_ids ) ) {
-						$document_ids = array_filter( explode( ',', $document_ids ) );
+						$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
 						if ( count( $document_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: Member display name. */
@@ -283,7 +283,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 							);
 						}
 					} elseif ( ! empty( $video_ids ) ) {
-						$video_ids = array_filter( explode( ',', $video_ids ) );
+						$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
 						if ( count( $video_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: Member display name. */
@@ -341,7 +341,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 								$except
 							);
 						} elseif ( $media_ids ) {
-							$media_ids = array_filter( explode( ',', $media_ids ) );
+							$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
 							if ( count( $media_ids ) > 1 ) {
 								$text = sprintf(
 								/* translators: Member display name. */
@@ -356,7 +356,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 								);
 							}
 						} elseif ( $document_ids ) {
-							$document_ids = array_filter( explode( ',', $document_ids ) );
+							$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
 							if ( count( $document_ids ) > 1 ) {
 								$text = sprintf(
 								/* translators: Member display name. */
@@ -371,7 +371,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 								);
 							}
 						} elseif ( $video_ids ) {
-							$video_ids = array_filter( explode( ',', $video_ids ) );
+							$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
 							if ( count( $video_ids ) > 1 ) {
 								$text = sprintf(
 								/* translators: Member display name. */
@@ -597,6 +597,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 * @return array
 	 */
 	public function bb_render_forums_subscribed_discussion( $items ) {
+		static $cached_items = array();
+
 		$type_data = bb_register_subscriptions_types( 'forum' );
 
 		if ( ! empty( $items ) ) {
@@ -627,6 +629,11 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					empty( $subscription['id'] ) ||
 					empty( $subscription['item_id'] )
 				) {
+					continue;
+				}
+
+				if ( ! empty( $cached_items[ $subscription['id'] ] ) ) {
+					$items[ $item_key ] = $cached_items[ $subscription['id'] ];
 					continue;
 				}
 
@@ -688,7 +695,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				);
 
 				// Reassign the extra data to exist object.
-				$items[ $item_key ] = (object) array_merge( (array) $item, $data );
+				$items[ $item_key ]                  = (object) array_merge( (array) $item, $data );
+				$cached_items[ $subscription['id'] ] = $items[ $item_key ];
 			}
 
 			// Restore current blog.
@@ -710,6 +718,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 * @return array
 	 */
 	public function bb_render_forums_subscribed_reply( $items ) {
+		static $cached_items = array();
+
 		$type_data = bb_register_subscriptions_types( 'topic' );
 
 		if ( ! empty( $items ) ) {
@@ -738,6 +748,11 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					empty( $subscription['id'] ) ||
 					empty( $subscription['item_id'] )
 				) {
+					continue;
+				}
+
+				if ( ! empty( $cached_items[ $subscription['id'] ] ) ) {
+					$items[ $item_key ] = $cached_items[ $subscription['id'] ];
 					continue;
 				}
 
@@ -822,7 +837,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					)
 				);
 
-				$items[ $item_key ] = (object) array_merge( (array) $item, $data );
+				$items[ $item_key ]                  = (object) array_merge( (array) $item, $data );
+				$cached_items[ $subscription['id'] ] = $items[ $item_key ];
 			}
 
 			// Restore current blog.

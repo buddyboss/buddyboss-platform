@@ -225,7 +225,7 @@ class BP_Media_Component extends BP_Component {
 
 		// Perform a daily tidy up.
 		if ( ! wp_next_scheduled( 'bp_media_delete_orphaned_attachments_hook' ) ) {
-			wp_schedule_event( time(), 'daily', 'bp_media_delete_orphaned_attachments_hook' );
+			wp_schedule_event( strtotime('tomorrow midnight'), 'daily', 'bp_media_delete_orphaned_attachments_hook' );
 		}
 
 		add_action( 'bp_media_delete_orphaned_attachments_hook', 'bp_media_delete_orphaned_attachments' );
@@ -267,7 +267,7 @@ class BP_Media_Component extends BP_Component {
 				$nav_name .= sprintf(
 					' <span class="%s">%s</span>',
 					esc_attr( $class ),
-					bp_core_number_format( $count )
+					$count
 				);
 			} else {
 				$nav_name = __( 'Photos', 'buddyboss' );

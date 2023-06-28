@@ -254,6 +254,15 @@
 				width: auto;
 			}
 
+			.vjs-volume-panel .vjs-mouse-display .vjs-volume-tooltip {
+				display: none;
+			}
+
+			.vjs-seek-button.skip-back ~ .vjs-seek-button.skip-back,
+			.vjs-seek-button.skip-forward ~ .vjs-seek-button.skip-forward {
+				display: none;
+			}
+
 			button,
 			button:hover {
 				background-color: transparent !important;
@@ -591,6 +600,12 @@ div.video-js {
 
 	}
 
+	.vjs-poster > img {
+		position: absolute;
+		object-fit: contain;
+		height: 100%;
+		width: 100%;
+	}
 }
 
 //Video more option dropdown in theater

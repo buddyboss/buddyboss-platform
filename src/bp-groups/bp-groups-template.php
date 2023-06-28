@@ -410,7 +410,7 @@ function bp_has_groups( $args = '' ) {
 
 	$parent_id = null;
 
-	if ( bp_is_groups_directory() && ( empty( $args['scope'] ) || 'all' === $args['scope'] ) && true === (bool) bp_enable_group_hide_subgroups() ) {
+	if ( bp_is_groups_directory() && true === (bool) bp_enable_group_hide_subgroups() ) {
 		$parent_id = 0;
 	}
 
@@ -2561,7 +2561,8 @@ function bp_group_get_invite_status( $group_id = false ) {
 
 	// Backward compatibility. When 'invite_status' is not set, fall back to a default value.
 	if ( ! $invite_status ) {
-		$invite_status = apply_filters( 'bp_group_invite_status_fallback', 'members' );
+		$allowed_invite_status = bb_groups_get_settings_status( 'invite' );
+		$invite_status         = bb_groups_settings_default_fallback( 'invite', current( $allowed_invite_status ) );
 	}
 
 	/**
@@ -2631,7 +2632,8 @@ function bp_group_get_activity_feed_status( $group_id = false ) {
 
 	// Backward compatibility. When 'invite_status' is not set, fall back to a default value.
 	if ( ! $activity_feed_status ) {
-		$activity_feed_status = apply_filters( 'bp_group_activity_feed_status_fallback', 'members' );
+		$allowed_activity_feed_status = bb_groups_get_settings_status( 'activity_feed' );
+		$activity_feed_status         = bb_groups_settings_default_fallback( 'activity_feed', current( $allowed_activity_feed_status ) );
 	}
 
 	/**
@@ -2701,7 +2703,8 @@ function bp_group_get_album_status( $group_id = false ) {
 
 	// Backward compatibility. When 'album_status' is not set, fall back to a default value.
 	if ( ! $album_status ) {
-		$album_status = apply_filters( 'bp_group_album_status_fallback', 'members' );
+		$allowed_album_status = bb_groups_get_settings_status( 'album' );
+		$album_status         = bb_groups_settings_default_fallback( 'album', current( $allowed_album_status ) );
 	}
 
 	/**
@@ -2809,7 +2812,8 @@ function bp_group_get_media_status( $group_id = false ) {
 
 	// Backward compatibility. When 'media_status' is not set, fall back to a default value.
 	if ( ! $media_status ) {
-		$media_status = apply_filters( 'bp_group_media_status_fallback', 'members' );
+		$allowed_media_status = bb_groups_get_settings_status( 'media' );
+		$media_status         = bb_groups_settings_default_fallback( 'media', current( $allowed_media_status ) );
 	}
 
 	/**
@@ -2860,7 +2864,8 @@ function bp_group_get_document_status( $group_id = false ) {
 
 	// Backward compatibility. When 'media_status' is not set, fall back to a default value.
 	if ( ! $document_status ) {
-		$document_status = apply_filters( 'bp_group_document_status_fallback', 'members' );
+		$allowed_document_status = bb_groups_get_settings_status( 'document' );
+		$document_status         = bb_groups_settings_default_fallback( 'document', current( $allowed_document_status ) );
 	}
 
 	/**
@@ -7746,7 +7751,8 @@ function bp_group_get_message_status( $group_id = false ) {
 
 	// Backward compatibility. When 'message_status' is not set, fall back to a default value.
 	if ( ! $message_status ) {
-		$message_status = apply_filters( 'bp_group_message_status_fallback', 'mods' );
+		$allowed_message_status = bb_groups_get_settings_status( 'message' );
+		$message_status         = bb_groups_settings_default_fallback( 'message', current( $allowed_message_status ) );
 	}
 
 	/**
@@ -7848,7 +7854,8 @@ function bp_group_get_video_status( $group_id = false ) {
 
 	// Backward compatibility. When 'video_status' is not set, fall back to a default value.
 	if ( ! $video_status ) {
-		$video_status = apply_filters( 'bp_group_video_status_fallback', 'members' );
+		$allowed_video_status = bb_groups_get_settings_status( 'video' );
+		$video_status         = bb_groups_settings_default_fallback( 'video', current( $allowed_video_status ) );
 	}
 
 	/**

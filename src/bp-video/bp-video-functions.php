@@ -57,6 +57,9 @@ function bp_video_upload() {
 	 */
 	do_action( 'bb_video_upload', $attachment );
 
+	// get saved video id.
+	$video_id = (int) get_post_meta( $attachment->ID, 'bp_video_id', true );
+
 	$name = $attachment->post_title;
 
 	// Generate video attachment preview link.
@@ -77,13 +80,28 @@ function bp_video_upload() {
 		$ext = 'mp4';
 	}
 
+	if (
+		! empty( $video_id ) &&
+		(
+			bp_is_group_messages() ||
+			bp_is_messages_component() ||
+			(
+				! empty( $_POST['component'] ) &&
+				'messages' === $_POST['component']
+			)
+		)
+	) {
+		$attachment_url    = bb_video_get_symlink( $video_id );
+		$video_message_url = $attachment_url;
+	}
+
 	$result = array(
 		'id'          => (int) $attachment->ID,
 		'thumb'       => '',
-		'url'         => esc_url( $attachment_url ),
+		'url'         => esc_url( untrailingslashit( $attachment_url ) ),
 		'name'        => esc_attr( $name ),
 		'ext'         => esc_attr( $ext ),
-		'vid_msg_url' => esc_url( $video_message_url ),
+		'vid_msg_url' => esc_url( untrailingslashit( $video_message_url ) ),
 	);
 
 	return $result;
@@ -587,6 +605,7 @@ function bp_video_add( $args = '' ) {
 			'album_id'      => false,                   // Optional: ID of the album.
 			'group_id'      => false,                   // Optional: ID of the group.
 			'activity_id'   => false,                   // The ID of activity.
+			'message_id'    => false,                   // The ID of message.
 			'privacy'       => 'public',                // Optional: privacy of the video e.g. public.
 			'menu_order'    => 0,                       // Optional:  Menu order.
 			'date_created'  => bp_core_current_time(),  // The GMT time that this video was recorded.
@@ -604,6 +623,7 @@ function bp_video_add( $args = '' ) {
 	$video->album_id      = (int) $r['album_id'];
 	$video->group_id      = (int) $r['group_id'];
 	$video->activity_id   = (int) $r['activity_id'];
+	$video->message_id    = (int) $r['message_id'];
 	$video->privacy       = $r['privacy'];
 	$video->menu_order    = $r['menu_order'];
 	$video->date_created  = $r['date_created'];
@@ -637,6 +657,7 @@ function bp_video_add( $args = '' ) {
 
 	// video is saved for attachment.
 	update_post_meta( $video->attachment_id, 'bp_video_saved', true );
+	update_post_meta( $video->attachment_id, 'bp_video_id', $video->id );
 
 	/**
 	 * Fires at the end of the execution of adding a new video item, before returning the new video item ID.
@@ -694,6 +715,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 							'album_id'      => ! empty( $video['album_id'] ) ? $video['album_id'] : $album_id,
 							'group_id'      => ! empty( $video['group_id'] ) ? $video['group_id'] : $group_id,
 							'activity_id'   => $bp_video->activity_id,
+							'message_id'    => $bp_video->message_id,
 							'privacy'       => $bp_video->privacy,
 							'menu_order'    => ! empty( $video['menu_order'] ) ? $video['menu_order'] : false,
 							'date_created'  => $bp_video->date_created,
@@ -725,6 +747,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 			if ( $video_id ) {
 				$video_ids[] = $video_id;
 			}
+
 		}
 	}
 
@@ -1840,6 +1863,12 @@ function bp_video_delete_orphaned_attachments() {
 				'value'   => '',
 			),
 		),
+		'date_query'     => array(
+			array(
+				'column' => 'post_date_gmt',
+				'before' => '6 hours ago',
+			),
+		),
 	);
 
 	$video_wp_query = new WP_query( $args );
@@ -2211,6 +2240,13 @@ function bp_video_get_thread_id( $video_id ) {
 				if ( $thread_id ) {
 					break;
 				}
+			}
+		}
+
+		if ( empty( $thread_id ) ) {
+			$video_object = new BP_Video( $video_id );
+			if ( ! empty( $video_object->attachment_id ) ) {
+				$thread_id = get_post_meta( $video_object->attachment_id, 'thread_id', true );
 			}
 		}
 	}
@@ -3401,7 +3437,7 @@ function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'bb-video-ac
 		$attachment_url = wp_get_attachment_url( $attachment_id );
 	}
 
-	$attachment_url = ! empty( $attachment_url ) && ! bb_enable_symlinks() ? user_trailingslashit( $attachment_url ) : $attachment_url;
+	$attachment_url = ! empty( $attachment_url ) && ! bb_enable_symlinks() ? untrailingslashit( $attachment_url ) : $attachment_url;
 
 	/**
 	 * Filter to get video thumb url.
@@ -4323,7 +4359,7 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $genera
 		if ( ! bb_enable_symlinks() ) {
 			$video_id       = 'forbidden_' . $video->id;
 			$attachment_id  = 'forbidden_' . $attachment_id;
-			$attachment_url = home_url( '/' ) . 'bb-video-thumb-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $video_id ) . '/' . $size;
+			$attachment_url = untrailingslashit( home_url( '/' ) . 'bb-video-thumb-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $video_id ) . '/' . $size );
 
 		} else {
 
