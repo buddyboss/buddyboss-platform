@@ -438,8 +438,8 @@ function bp_version_updater() {
 			bb_update_to_2_3_60();
 		}
 
-		if ( $raw_db_version < 20361 ) {
-			bb_update_to_2_3_70();
+		if ( $raw_db_version < 20371 ) {
+			bb_update_to_2_3_80();
 		}
 	}
 
@@ -3071,7 +3071,7 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_update_to_2_3_70() {
+function bb_update_to_2_3_80() {
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		BuddyBoss\Performance\Cache::instance()->purge_all();
