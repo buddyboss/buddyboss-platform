@@ -2805,17 +2805,8 @@ function bb_messages_user_can_send_message( $args = array() ) {
 		bp_force_friendship_to_message() &&
 		1 === count( $recipients_ids )
 	) {
-
-		$profile_types_allowed_messaging = get_option( 'bp_member_types_allowed_messaging_without_connection' );
-		$sender_profile_type             = bp_get_member_type( $sender_id );
-
 		// Check if the sender is allowed to send message to the recipient based on the member type settings.
-		if (
-			! empty( $sender_profile_type ) &&
-			! empty( $profile_types_allowed_messaging ) &&
-			array_key_exists( $sender_profile_type, $profile_types_allowed_messaging ) &&
-			true === $profile_types_allowed_messaging[ $sender_profile_type ]
-		) {
+		if ( is_sender_allowed_messaging_without_connection( (int) $sender_id ) ) {
 			$can_send_message = true;
 			// Check if the sender is connected to the recipient.
 		} elseif ( friends_check_friendship( (int) $sender_id, (int) current( $recipients_ids ) ) ) {
@@ -2849,4 +2840,31 @@ function bb_messages_user_can_send_message( $args = array() ) {
 	}
 
 	return apply_filters( 'bb_messages_user_can_send_message', $can_send_message, $r );
+}
+
+/**
+ * Check if sender can send message without connection.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $sender_id Sender ID.
+ *
+ * @return bool
+ */
+
+function is_sender_allowed_messaging_without_connection( $sender_id = 0 ) {
+	if ( ! empty( $sender_id ) ) {
+		$profile_types_allowed_messaging = get_option( 'bp_member_types_allowed_messaging_without_connection' );
+		$sender_profile_type             = bp_get_member_type( $sender_id );
+		if (
+			! empty( $sender_profile_type ) &&
+			! empty( $profile_types_allowed_messaging ) &&
+			array_key_exists( $sender_profile_type, $profile_types_allowed_messaging ) &&
+			true === $profile_types_allowed_messaging[ $sender_profile_type ]
+		) {
+			return true;
+		}
+	}
+
+	return false;
 }
