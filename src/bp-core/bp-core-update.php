@@ -3074,18 +3074,6 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
 function bb_update_to_2_3_70() {
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp_activity' );
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp_groups' );
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'blog_post' );
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'post_comment' );
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbpress_posts' );
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-forums' );
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-replies' );
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-topics' );
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-photos' );
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-albums' );
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-document' );
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-video' );
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-notifications' );
+		BuddyBoss\Performance\Cache::instance()->purge_all();
 	}
 }
