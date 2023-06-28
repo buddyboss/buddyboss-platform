@@ -441,6 +441,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 20361 ) {
 			bb_update_to_2_3_70();
 		}
+
+		if ( $raw_db_version < 20371 ) {
+			bb_update_to_2_3_80();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -3102,5 +3106,17 @@ function bb_core_update_repair_duplicate_following_notification() {
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		// Clear notifications API cache.
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-notifications' );
+	}
+}
+
+/**
+ * Migrate data when plugin update.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_update_to_2_3_80() {
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_all();
 	}
 }
