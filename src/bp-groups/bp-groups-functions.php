@@ -5169,3 +5169,60 @@ function bb_update_group_member_count( $group_ids = array() ) {
 		BP_Groups_Member::refresh_total_member_count_for_group( $group_id );
 	}
 }
+
+/**
+ * Function to return groups settings statues.
+ *
+ * @since BuddyBoss 2.3.70
+ *
+ * @param string $setting_type Type of group settings.
+ *
+ * @return array
+ */
+function bb_groups_get_settings_status( $setting_type ) {
+
+	$setting_type = str_replace( '-', '_', sanitize_key( $setting_type ) );
+
+	$statuses = array( 'members', 'mods', 'admins' );
+	if ( 'message' === $setting_type ) {
+		$statuses = array( 'mods', 'admins', 'members' );
+	}
+
+	/**
+	 * Filters the allowed settings statuses.
+	 *
+	 * @since BuddyBoss 2.3.70
+	 *
+	 * @param array  $statuses     The settings statuses.
+	 * @param string $setting_type Type of group settings.
+	 */
+	return apply_filters( 'groups_allowed_' . $setting_type . '_status', $statuses, $setting_type );
+}
+
+/**
+ * Default group settings fallback function.
+ *
+ * @since BuddyBoss 2.3.70
+ *
+ * @param string $setting_type Type of group settings.
+ * @param string $val          Value of group settings.
+ *
+ * @return string
+ */
+function bb_groups_settings_default_fallback( $setting_type, $val = '' ) {
+
+	$setting_type = str_replace( '-', '_', sanitize_key( $setting_type ) );
+
+	if ( empty( $val ) ) {
+		$val = ( 'message' === $setting_type ) ? 'mods' : 'members';
+	}
+
+	/**
+	 * Filters to set default value of a group settings.
+	 *
+	 * @since BuddyBoss 2.3.70
+	 *
+	 * @param string $val Value of group settings.
+	 */
+	return apply_filters( 'bp_group_' . $setting_type . '_status_fallback', $val );
+}
