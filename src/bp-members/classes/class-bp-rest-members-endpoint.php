@@ -858,6 +858,26 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			$data['member_types'] = $member_types;
 		}
 
+		// It will check non-admin members can send message or not before they can connected to each other.
+		$allowed_message = true;
+		if (
+			bp_is_active( 'friends' ) &&
+			function_exists( 'bp_force_friendship_to_message' ) &&
+			bp_force_friendship_to_message() &&
+			! friends_check_friendship( bp_loggedin_user_id(), $user->ID )
+		) {
+			$allowed_message = false;
+		}
+
+		// It will check non-admin members can send message or not before they can connected to each other.
+		// Also check access controls settings.
+		$data['can_send_message'] = (
+			bp_is_active( 'messages' ) &&
+			bp_loggedin_user_id() &&
+			apply_filters( 'bp_rest_user_can_show_send_message_button', true, $user->ID ) &&
+			$allowed_message
+		);
+
 		return $data;
 	}
 
@@ -1231,6 +1251,12 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				),
 				'can_follow'         => array(
 					'description' => __( 'Check if a user can follow or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'can_send_message'   => array(
+					'description' => __( 'Logged in user can send message or not.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
