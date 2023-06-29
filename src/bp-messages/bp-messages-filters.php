@@ -1267,10 +1267,10 @@ function bb_recipients_recipient_get_join_sql_with_group_members( $sql, $r ) {
 function bb_messages_oembed_dataparse( $iframe ) {
 	if (
 		str_contains( $iframe, '<iframe' ) &&
-		str_contains( $iframe, '.loom.' )
+		str_contains( $iframe, 'loom.com' )
 	) {
-		$iframe = str_replace( 'sandbox="allow-scripts"', '', $iframe );
-		$iframe = str_replace( 'security="restricted"', '', $iframe );
+		$iframe = preg_replace( '/\s*sandbox\s*=\s*(["\']).*?\1/', '', $iframe );
+		$iframe = preg_replace( '/\s*security\s*=\s*(["\']).*?\1/', '', $iframe );
 	}
 
 	return $iframe;
