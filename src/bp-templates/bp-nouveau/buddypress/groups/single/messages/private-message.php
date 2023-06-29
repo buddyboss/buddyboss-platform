@@ -22,15 +22,16 @@ $all_text      = esc_html__( 'All Group Members', 'buddyboss' );
 if ( ! empty( $group_members ) && isset( $group_members['members'] ) && ! empty( $group_members['members'] ) ) {
 	foreach ( $group_members['members'] as $member ) {
 
-		$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member->ID, bp_loggedin_user_id() );
-		$is_friends_connection  = true;
-		if ( bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
-			if ( ! friends_check_friendship( bp_loggedin_user_id(), $member->ID ) ) {
-				$is_friends_connection = false;
-			}
-		}
+		if (
+			bb_messages_user_can_send_message(
+				array(
+					'sender_id' => bp_loggedin_user_id(),
+					'recipients_id' => $member->ID,
+					'group_id' => bp_get_current_group_id(),
 
-		if ( $can_send_group_message && $is_friends_connection ) {
+				)
+			)
+		) {
 			$total_count ++;
 		}
 	}
