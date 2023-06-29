@@ -1883,7 +1883,7 @@ function bp_member_type_permissions_metabox( $post ) {
 				<td colspan="2">
 					<input type='checkbox' name='bp-member-type[allow_messaging_without_connection]'
 						value='1' <?php checked( $allow_messaging_without_connection, 1 ); ?> />
-					<?php _e( 'Allow this profile type to send and receive messages without being connected.', 'buddyboss' ); ?>
+					<?php _e( 'Allow this profile type to send and receive messages without being connected', 'buddyboss' ); ?>
 				</td>
 			</tr>
 			</tbody>
