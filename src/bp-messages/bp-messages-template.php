@@ -2812,7 +2812,7 @@ function bb_member_loop_show_message_button( $enabled_message_action, $member_id
 		bb_messages_user_can_send_message(
 			array(
 				'sender_id'     => $current_user_id,
-				'recipients_id' => $member_id
+				'recipients_id' => $member_id,
 			)
 		)
 	);
