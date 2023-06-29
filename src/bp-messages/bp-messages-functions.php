@@ -2768,8 +2768,8 @@ function bb_messages_user_can_send_message( $args = array() ) {
 
 	// If no recipients, check if the thread has recipients.
 	if ( 0 === $recipients_ids && ! empty( $thread_id ) ) {
-		$recipients_ids = BP_Messages_Thread::get_recipients_for_thread( $thread_id );
-		$recipients_ids = wp_list_pluck( $recipients_ids, 'user_id' );
+		$recipients_ids     = BP_Messages_Thread::get_recipients_for_thread( $thread_id );
+		$recipients_ids     = wp_list_pluck( $recipients_ids, 'user_id' );
 		$r['recipients_id'] = $recipients_ids;
 	}
 
@@ -2818,9 +2818,8 @@ function bb_messages_user_can_send_message( $args = array() ) {
 
 	// Check moderation if user blocked or not for single user thread.
 	if (
-		! $is_group_message_thread &&
+		false === $is_group_message_thread &&
 		bp_is_active( 'moderation' ) &&
-		! empty( $recipients_ids ) &&
 		count( $recipients_ids ) === 1
 	) {
 		if ( bp_moderation_is_user_suspended( current( $recipients_ids ) ) ) {
