@@ -219,13 +219,13 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			}
 
 			$activity         = new BP_Activity_Activity( $item_id );
-			$activity_excerpt = '"' . bp_create_excerpt(
+			$activity_excerpt = bp_create_excerpt(
 				wp_strip_all_tags( $activity->content ),
 				50,
 				array(
 					'ending' => __( '&hellip;', 'buddyboss' ),
 				)
-			) . '"';
+			);
 
 			if ( '&nbsp;' === $activity_excerpt ) {
 				$activity_excerpt = '';
@@ -234,18 +234,20 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			if ( empty( $activity_excerpt ) && function_exists( 'bp_blogs_activity_comment_content_with_read_more' ) ) {
 				$activity_excerpt = bp_blogs_activity_comment_content_with_read_more( '', $activity );
 
-				$activity_excerpt = '"' . bp_create_excerpt(
+				$activity_excerpt = bp_create_excerpt(
 					wp_strip_all_tags( $activity_excerpt ),
 					50,
 					array(
 						'ending' => __( '&hellip;', 'buddyboss' ),
 					)
-				) . '"';
+				);
 
 				if ( '&nbsp;' === $activity_excerpt ) {
 					$activity_excerpt = '';
 				}
 			}
+
+			$activity_excerpt = '"' . $activity_excerpt . '"';
 
 			$activity_excerpt = str_replace( '&hellip;"', '&hellip;', $activity_excerpt );
 			$activity_excerpt = str_replace( '&#8203;', '', $activity_excerpt );
@@ -859,7 +861,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->register_notification_filter(
-			esc_html__( 'New Follower', 'buddyboss' ),
+			esc_html__( 'New followers', 'buddyboss' ),
 			array( 'bb_following_new' ),
 			17
 		);
