@@ -330,7 +330,7 @@ class BuddyPress {
 
 		/** Versions */
 		$this->version    = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined( 'BP_VERSION' ) ? BP_VERSION : '1.0.0' );
-		$this->db_version = 20211;
+		$this->db_version = 20261;
 
 		/** Loading */
 
@@ -593,6 +593,7 @@ class BuddyPress {
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/2.1.4.php';
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/2.2.6.php';
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/2.3.5.php';
+			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/2.3.6.php';
 		}
 
 		if ( defined( 'WP_CLI' ) && file_exists( $this->plugin_dir . 'cli/wp-cli-bp.php' ) ) {
@@ -767,6 +768,7 @@ class BuddyPress {
 			'BP_REST_Topics_Actions_Endpoint'              => 'forums',
 			'BP_REST_Reply_Endpoint'                       => 'forums',
 			'BP_REST_Reply_Actions_Endpoint'               => 'forums',
+			'BB_REST_Forums_Link_Preview_Endpoint'         => 'forums',
 			'BP_REST_Invites_Endpoint'                     => 'invites',
 			'BP_REST_Account_Settings_Endpoint'            => 'settings',
 			'BP_REST_Account_Settings_Options_Endpoint'    => 'settings',
