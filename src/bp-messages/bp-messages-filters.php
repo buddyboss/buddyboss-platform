@@ -111,6 +111,9 @@ add_action( 'bp_notification_settings', 'messages_screen_notification_settings',
 // Hide archived thread notifications.
 add_filter( 'bp_notifications_get_where_conditions', 'bb_messages_hide_archived_notifications', 10, 2 );
 
+// Remove attributes from the iframe.
+add_filter( 'oembed_dataparse', 'bb_messages_oembed_dataparse', 10, 1 );
+
 /**
  * Enforce limitations on viewing private message contents
  *
@@ -1250,4 +1253,25 @@ function bb_recipients_recipient_get_join_sql_with_group_members( $sql, $r ) {
 	global $wpdb;
 	$sql .= ' JOIN ' . $wpdb->prefix . 'bp_groups_members gm ON ( gm.user_id = r.user_id )';
 	return $sql;
+}
+
+/**
+ * Function to remove 'sendbox' and 'security' attributes from the loom iframe.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $iframe Current oEmbed result.
+ *
+ * @return string
+ */
+function bb_messages_oembed_dataparse( $iframe ) {
+	if (
+		str_contains( $iframe, '<iframe' ) &&
+		str_contains( $iframe, '.loom.' )
+	) {
+		$iframe = str_replace( 'sandbox="allow-scripts"', '', $iframe );
+		$iframe = str_replace( 'security="restricted"', '', $iframe );
+	}
+
+	return $iframe;
 }
