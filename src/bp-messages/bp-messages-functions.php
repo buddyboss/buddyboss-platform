@@ -2805,8 +2805,12 @@ function bb_messages_user_can_send_message( $args = array() ) {
 		bp_force_friendship_to_message() &&
 		1 === count( $recipients_ids )
 	) {
-		// Check if the sender is allowed to send message to the recipient based on the member type settings.
-		if ( bb_messages_allowed_messaging_without_connection( (int) $sender_id ) ) {
+
+		// Check if the sender is allowed to send message to the recipient or vice a versa based on the member type settings.
+		if ( 
+			bb_messages_allowed_messaging_without_connection( (int) $sender_id ) ||
+			bb_messages_allowed_messaging_without_connection( (int) current( $recipients_ids ) )
+		) {
 			$can_send_message = true;
 			// Check if the sender is connected to the recipient.
 		} elseif ( friends_check_friendship( (int) $sender_id, (int) current( $recipients_ids ) ) ) {
@@ -2861,12 +2865,12 @@ function bb_messages_allowed_messaging_without_connection( $user_id = 0 ) {
 	}
 
 	$profile_types_allowed_messaging = get_option( 'bp_member_types_allowed_messaging_without_connection', array() );
-	$sender_profile_type             = bp_get_member_type( $user_id );
+	$member_profile_type             = bp_get_member_type( $user_id );
 	if (
-		! empty( $sender_profile_type ) &&
+		! empty( $member_profile_type ) &&
 		! empty( $profile_types_allowed_messaging ) &&
-		array_key_exists( $sender_profile_type, $profile_types_allowed_messaging ) &&
-		true === $profile_types_allowed_messaging[ $sender_profile_type ]
+		array_key_exists( $member_profile_type, $profile_types_allowed_messaging ) &&
+		true === $profile_types_allowed_messaging[ $member_profile_type ]
 	) {
 		return true;
 	}
