@@ -501,7 +501,7 @@ function bbp_new_reply_handler( $action = '' ) {
 
 		if ( ! empty( $topic_id ) && 0 === $reply_to ) {
 			// Update total parent
-			bbp_update_total_parent_reply( $reply_id, $topic_id, bbp_get_topic_reply_count( $topic_id, false ) + 1, 'add' );
+			bbp_update_total_parent_reply( $reply_id, $topic_id, bbp_get_topic_reply_count( $topic_id, true ) + 1, 'add' );
 		}
 
 		// Delete draft data from the database.
@@ -1460,7 +1460,7 @@ function bbp_move_reply_handler( $action = '' ) {
 				}
 
 				// Bump the reply position.
-				$reply_position = bbp_get_topic_reply_count( $destination_topic->ID ) + 1;
+				$reply_position = bbp_get_topic_reply_count( $destination_topic->ID, true ) + 1;
 
 				// Update the reply.
 				wp_update_post(
