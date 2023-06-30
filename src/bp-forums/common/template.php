@@ -1114,6 +1114,7 @@ function bbp_body_class( $wp_classes, $custom_classes = false ) {
 		$bbp_classes[] = 'forum-template-default';
 		$bbp_classes[] = 'single';
 		$bbp_classes[] = 'single-forum';
+		$bbp_classes[] = 'bbp-shortcode';
 	}
 
 	/** Clean up */
