@@ -1085,23 +1085,23 @@ window.bp = window.bp || {};
 
 				var peak_offset = ( $( window ).height() / 2 - 75 );
 
-				$.scrollTo(
-					form,
-					500,
-					{
-						offset: -peak_offset,
-						easing: 'swing'
-					}
-				);
+				if( ! jQuery( 'body' ).hasClass( 'bb-is-mobile' ) ) {
+					$.scrollTo(
+						form,
+						500,
+						{
+							offset: -peak_offset,
+							easing: 'swing'
+						}
+					);
+				} else {
+					setTimeout( function() {
+						var scrollInt = jQuery( window ).height() > 300 ? 200 : 100;
+						jQuery( 'html, body' ).animate( { scrollTop: jQuery( div_editor ).offset().top - scrollInt }, 500 );
+					}, 500 );
+				}
 
 				$( '#ac-form-' + activity_id + ' #ac-input-' + activity_id ).focus();
-				if ( $( 'body' ).hasClass( 'bb-is-mobile' ) ) {
-					// Scroll window up to show the submit button
-					setTimeout( function () {
-						var scrollInt = jQuery(window).height() < 300 ? 100 : 200;
-						$( 'html, body' ).animate( { scrollTop: $( '#ac-form-' + activity_id + ' #ac-input-' + activity_id ).offset().top - scrollInt }, 500 );
-					}, 0 );
-				}
 
 				if ( ! _.isUndefined( BP_Nouveau.media ) && ! _.isUndefined( BP_Nouveau.media.emoji ) && 'undefined' == typeof $( '#ac-input-' + activity_id ).data( 'emojioneArea' ) ) {
 					$( '#ac-input-' + activity_id ).emojioneArea(
