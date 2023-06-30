@@ -1667,11 +1667,19 @@ function bp_nouveau_ajax_dsearch_recipients() {
 
 	add_filter( 'bp_members_suggestions_query_args', 'bp_nouveau_ajax_search_recipients_exclude_current' );
 
+	if (
+		bp_is_active( 'friends' ) &&
+		bp_force_friendship_to_message() &&
+		empty( bb_messages_allowed_messaging_without_connection( get_current_user_id() ) )
+	) {
+		add_filter( 'bp_user_query_uid_clauses', 'bb_members_suggestions_allowed_messaging', 9999, 2 );
+	}
+
 	$results = bp_core_get_suggestions(
 		array(
 			'term'            => sanitize_text_field( $_GET['term'] ),
 			'type'            => 'members',
-			'only_friends'    => bp_is_active( 'friends' ) && bp_force_friendship_to_message() && empty( bb_messages_allowed_messaging_without_connection( get_current_user_id() ) ),
+			'only_friends'    => false,
 			'count_total'     => 'count_query',
 			'page'            => $_GET['page'],
 			'limit'           => 10,
@@ -1679,6 +1687,14 @@ function bp_nouveau_ajax_dsearch_recipients() {
 			'exclude'         => $exclude_user_ids,
 		)
 	);
+
+	if (
+		bp_is_active( 'friends' ) &&
+		bp_force_friendship_to_message() &&
+		empty( bb_messages_allowed_messaging_without_connection( get_current_user_id() ) )
+	) {
+		remove_filter( 'bp_user_query_uid_clauses', 'bb_members_suggestions_allowed_messaging', 9999 );
+	}
 
 	$results_total = apply_filters( 'bp_members_suggestions_results_total', $results['total'] );
 	$results       = apply_filters( 'bp_members_suggestions_results', isset( $results['members'] ) ? $results['members'] : array() );
@@ -1720,37 +1736,6 @@ function bp_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
 
 	return $user_query;
 }
-
-/**
- * Exclude members from messages suggestions list if require users to be connected before they can message each other
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $results
- *
- * @return array
- */
-function bp_nouveau_ajax_search_recipients_exclude_non_friend( $results ) {
-	if (
-		true === bp_force_friendship_to_message() &&
-		empty( bb_messages_allowed_messaging_without_connection( get_current_user_id() ) ) &&
-		function_exists( 'friends_check_friendship_status' )
-	) {
-		$new_users = array();
-		foreach ( $results as $user ) {
-			$member_friend_status = friends_check_friendship_status( $user->user_id, bp_loggedin_user_id() );
-			if ( 'is_friend' === $member_friend_status ) {
-				$new_users[] = $user;
-			}
-		}
-
-		return $new_users;
-	}
-
-	return $results;
-}
-
-add_filter( 'bp_members_suggestions_results', 'bp_nouveau_ajax_search_recipients_exclude_non_friend' );
 
 /**
  * Messages for each thread.
