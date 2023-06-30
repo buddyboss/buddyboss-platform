@@ -3378,6 +3378,35 @@
   },
   {
     "type": "GET",
+    "url": "/wp-json/buddyboss/v1/forums/link-preview",
+    "title": "Link Preview",
+    "name": "GetBBForumsLinkPreview",
+    "group": "Forums",
+    "description": "<p>Retrieve link preview Forums.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "url",
+            "description": "<p>URL for the generate link preview.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-forums/classes/class-bb-rest-forums-link-preview-endpoint.php",
+    "groupTitle": "Forums"
+  },
+  {
+    "type": "GET",
     "url": "/wp-json/buddyboss/v1/forums/:id",
     "title": "Forum",
     "name": "GetBBPForum",

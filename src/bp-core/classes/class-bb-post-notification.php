@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the BB_Post_Notification class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  */
 class BB_Post_Notification extends BP_Core_Notification_Abstract {
 
 	/**
 	 * Instance of this class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 *
 	 * @var object
 	 */
@@ -28,7 +28,7 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Get the instance of this class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 *
 	 * @return null|BB_Post_Notification|Controller|object
 	 */
@@ -43,7 +43,7 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Constructor method.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 */
 	public function __construct() {
 		// Initialize.
@@ -53,7 +53,7 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Initialize all methods inside it.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 *
 	 * @return mixed|void
 	 */
@@ -71,29 +71,15 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Register notification for posts.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 */
 	public function register_notification_for_post_comment_reply() {
-
-		$default                 = false;
-		$bb_enabled_notification = bp_get_option( 'bb_enabled_notification', false );
-		if (
-			false !== get_transient( '_bp_is_new_install' ) ||
-			(
-				empty( $bb_enabled_notification ) &&
-				true === (bool) bp_get_option( 'bb_posts_new_comment_reply_default_setting', false )
-			)
-		) {
-			$default = true;
-			bp_update_option( 'bb_posts_new_comment_reply_default_setting', true );
-		}
 
 		$this->register_notification_type(
 			'bb_posts_new_comment_reply',
 			esc_html__( 'A member replies to your post comment', 'buddyboss' ),
 			esc_html__( 'A member receives a reply to their WordPress post comment', 'buddyboss' ),
-			'posts',
-			$default
+			'posts'
 		);
 
 		$this->register_email_type(
@@ -123,7 +109,7 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Format the notifications.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 *
 	 * @param string $content               Notification content.
 	 * @param int    $item_id               Notification item ID.

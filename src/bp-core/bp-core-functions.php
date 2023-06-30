@@ -4810,7 +4810,7 @@ function bp_core_parse_url( $url ) {
 		}
 	}
 
-	$cache_key = 'bp_activity_oembed_' . md5( maybe_serialize( $url ) );
+	$cache_key = 'bb_oembed_' . md5( maybe_serialize( $url ) );
 
 	// get transient data for url.
 	$parsed_url_data = get_transient( $cache_key );
@@ -8554,10 +8554,255 @@ if ( ! function_exists( 'bb_filter_var_string' ) ) {
 /**
  * Return to check its working with WP CLI or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  *
  * @return bool
  */
 function bb_is_wp_cli() {
 	return defined( 'WP_CLI' ) && WP_CLI;
+}
+
+/**
+ * Download an image from the specified URL and attach it to a post.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param string $file The URL of the image to download.
+ *
+ * @return int|void
+ */
+function bb_media_sideload_attachment( $file ) {
+	if ( empty( $file ) ) {
+		return;
+	}
+
+	// Set variables for storage, fix file filename for query strings.
+	preg_match( '/[^\?]+\.(jpe?g|jpe|gif|png|svg|bmp|mp4)\b/i', $file, $matches );
+	$file_array = array();
+
+	if ( empty( $matches ) ) {
+		return;
+	}
+
+	$file_array['name'] = basename( $matches[0] );
+
+	// Load function download_url if not exists.
+	if ( ! function_exists( 'download_url' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+	}
+
+	// Download file to temp location.
+	$file                   = preg_replace( '/^:*?\/\//', $protocol = strtolower( substr( $_SERVER['SERVER_PROTOCOL'], 0, strpos( $_SERVER['SERVER_PROTOCOL'], '/' ) ) ) . '://', $file );
+	$file                   = str_replace( '&amp;', '&', $file );
+	$file_array['tmp_name'] = download_url( $file );
+
+	// If error storing temporarily, return the error.
+	if ( is_wp_error( $file_array['tmp_name'] ) ) {
+		return;
+	}
+
+	// Do the validation and storage stuff.
+	$id = bb_media_handle_sideload( $file_array );
+
+	// If error storing permanently, unlink.
+	if ( is_wp_error( $id ) ) {
+		return;
+	}
+
+	return $id;
+}
+
+/**
+ * This handles a sideloaded file in the same way as an uploaded file is handled by {@link media_handle_upload()}
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param array $file_array Array similar to a {@link $_FILES} upload array.
+ * @param array $post_data  allows you to overwrite some of the attachment.
+ *
+ * @return int|object The ID of the attachment or a WP_Error on failure
+ */
+function bb_media_handle_sideload( $file_array, $post_data = array() ) {
+
+	$overrides = array( 'test_form' => false );
+
+	$time = current_time( 'mysql' );
+	if ( $post = get_post() ) {
+		if ( substr( $post->post_date, 0, 4 ) > 0 ) {
+			$time = $post->post_date;
+		}
+	}
+
+	$file = wp_handle_sideload( $file_array, $overrides, $time );
+	if ( isset( $file['error'] ) ) {
+		return new WP_Error( 'upload_error', $file['error'] );
+	}
+
+	$url     = $file['url'];
+	$type    = $file['type'];
+	$file    = $file['file'];
+	$title   = preg_replace( '/\.[^.]+$/', '', basename( $file ) );
+	$content = '';
+
+	// Load function wp_read_image_metadata if not exists.
+	if ( ! function_exists( 'wp_read_image_metadata' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+	}
+
+	// Use image exif/iptc data for title and caption defaults if possible.
+	if ( $image_meta = @wp_read_image_metadata( $file ) ) {
+		if ( trim( $image_meta['title'] ) && ! is_numeric( sanitize_title( $image_meta['title'] ) ) ) {
+			$title = $image_meta['title'];
+		}
+		if ( trim( $image_meta['caption'] ) ) {
+			$content = $image_meta['caption'];
+		}
+	}
+
+	if ( isset( $desc ) ) {
+		$title = $desc;
+	}
+
+	// Construct the attachment array.
+	$attachment = array_merge(
+		array(
+			'post_mime_type' => $type,
+			'guid'           => $url,
+			'post_title'     => $title,
+			'post_content'   => $content,
+		),
+		$post_data
+	);
+
+	// This should never be set as it would then overwrite an existing attachment.
+	if ( isset( $attachment['ID'] ) ) {
+		unset( $attachment['ID'] );
+	}
+
+	// Save the attachment metadata.
+	$id = wp_insert_attachment( $attachment, $file );
+
+	if ( ! is_wp_error( $id ) ) {
+		wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $file ) );
+	}
+
+	return $id;
+}
+
+/**
+ * Check the notification type is enabled or not.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param string $notification_type Notification type.
+ * @param string $type              Type of notification.
+ *
+ * @return bool
+ */
+function bb_is_notification_type_enabled( $notification_type, $type = 'main' ) {
+
+	if ( empty( $notification_type ) ) {
+		return false;
+	}
+
+	// Check If given notification type is enabled or disabled in DB.
+	$enabled_notifications = bp_get_option( 'bb_enabled_notification', array() );
+
+	if (
+		! empty( $enabled_notifications[ $notification_type ] ) &&
+		isset( $enabled_notifications[ $notification_type ][ $type ] )
+	) {
+		return 'yes' === $enabled_notifications[ $notification_type ][ $type ];
+	}
+
+	// Check if default notification type is already set.
+	$notification_preferences = bb_register_notification_preferences();
+	$all_preferences          = array();
+	if ( ! empty( $notification_preferences ) ) {
+		foreach ( $notification_preferences as $preference ) {
+			if ( ! empty( $preference['fields'] ) ) {
+				$all_preferences = array_merge( $all_preferences, $preference['fields'] );
+			}
+		}
+	}
+
+	if ( ! empty( $all_preferences ) ) {
+		$notifications = array_column( $all_preferences, 'default', 'key' );
+
+		return ! empty( $notifications[ $notification_type ] ) && 'yes' === $notifications[ $notification_type ];
+	}
+
+	return false;
+}
+
+/**
+ * Enable the notification type if disabled.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param string $notification_type Notification type.
+ * @param string $type              Type of notification.
+ *
+ * @return bool
+ */
+function bb_enable_notification_type( $notification_type, $type = 'main' ) {
+
+	if ( empty( $notification_type ) ) {
+		return false;
+	}
+
+	// Check if notification types is already enable or not.
+	if ( bb_is_notification_type_enabled( $notification_type, $type ) ) {
+		return false;
+	}
+
+	if (
+		( 'web' === $type && ! bb_web_push_notification_enabled() ) ||
+		( 'app' === $type && ! bb_app_notification_enabled() )
+	) {
+		return false;
+	}
+
+	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+
+	$enabled_notification[ $notification_type ][ $type ] = 'yes';
+	update_option( 'bb_enabled_notification', $enabled_notification );
+
+	return true;
+}
+
+/**
+ * Disable the notification type if enabled.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param string $notification_type Notification type.
+ * @param string $type              Type of notification.
+ *
+ * @return bool
+ */
+function bb_disable_notification_type( $notification_type, $type = 'main' ) {
+
+	if ( empty( $notification_type ) ) {
+		return false;
+	}
+
+	// Check if notification types is already disable or not.
+	if ( ! bb_is_notification_type_enabled( $notification_type, $type ) ) {
+		return false;
+	}
+
+	if (
+		( 'web' === $type && ! bb_web_push_notification_enabled() ) ||
+		( 'app' === $type && ! bb_app_notification_enabled() )
+	) {
+		return false;
+	}
+
+	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+
+	$enabled_notification[ $notification_type ][ $type ] = 'no';
+	update_option( 'bb_enabled_notification', $enabled_notification );
+
+	return true;
 }

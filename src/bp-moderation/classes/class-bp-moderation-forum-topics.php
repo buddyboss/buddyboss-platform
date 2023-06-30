@@ -136,6 +136,7 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	 * @return array
 	 */
 	public function update_where_sql( $where, $suspend ) {
+		global $wpdb;
 		$this->alias = $suspend->alias;
 
 		// Remove has blocked/is blocked members discussion from widget.
@@ -152,7 +153,7 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 
 		if ( true === $exclude_where ) {
 			// Remove is blocked members discussion from widget.
-			$where['moderation_widget_forums'] = '( wp_posts.post_author NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
+			$where['moderation_widget_forums'] = '( ' . $wpdb->posts . '.post_author NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
 		}
 
 		return $where;
@@ -324,7 +325,7 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	/**
 	 * Check content is hidden or not.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 *
 	 * @param int $item_id Item id.
 	 *

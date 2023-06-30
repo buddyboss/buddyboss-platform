@@ -4933,11 +4933,13 @@ function bp_get_followers( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'user_id' => bp_displayed_user_id(),
+			'user_id'  => bp_displayed_user_id(),
+			'page'     => false,
+			'per_page' => false,
 		)
 	);
 
-	return apply_filters( 'bp_get_followers', BP_Activity_Follow::get_followers( $r['user_id'] ) );
+	return apply_filters( 'bp_get_followers', BP_Activity_Follow::get_followers( $r['user_id'], $r ) );
 }
 
 /**
@@ -4956,11 +4958,13 @@ function bp_get_following( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'user_id' => bp_displayed_user_id(),
+			'user_id'  => bp_displayed_user_id(),
+			'page'     => false,
+			'per_page' => false,
 		)
 	);
 
-	return apply_filters( 'bp_get_following', BP_Activity_Follow::get_following( $r['user_id'] ) );
+	return apply_filters( 'bp_get_following', BP_Activity_Follow::get_following( $r['user_id'], $r ) );
 }
 
 /**
@@ -5290,133 +5294,6 @@ function bp_activity_action_parse_url() {
 }
 
 add_action( 'wp_ajax_bp_activity_parse_url', 'bp_activity_action_parse_url' );
-
-/**
- * Download an image from the specified URL and attach it to a post.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param string $file The URL of the image to download
- *
- * @return int|void
- */
-function bp_activity_media_sideload_attachment( $file ) {
-	if ( empty( $file ) ) {
-		return;
-	}
-
-	// Set variables for storage, fix file filename for query strings.
-	preg_match( '/[^\?]+\.(jpe?g|jpe|gif|png|svg|bmp|mp4)\b/i', $file, $matches );
-	$file_array = array();
-
-	if ( empty( $matches ) ) {
-		return;
-	}
-
-	$file_array['name'] = basename( $matches[0] );
-
-	// Load function download_url if not exists.
-	if ( ! function_exists( 'download_url' ) ) {
-		require_once ABSPATH . 'wp-admin/includes/file.php';
-	}
-
-	// Download file to temp location.
-	$file                   = preg_replace( '/^:*?\/\//', $protocol = strtolower( substr( $_SERVER['SERVER_PROTOCOL'], 0, strpos( $_SERVER['SERVER_PROTOCOL'], '/' ) ) ) . '://', $file );
-	$file                   = str_replace( '&amp;', '&', $file );
-	$file_array['tmp_name'] = download_url( $file );
-
-	// If error storing temporarily, return the error.
-	if ( is_wp_error( $file_array['tmp_name'] ) ) {
-		return;
-	}
-
-	// Do the validation and storage stuff.
-	$id = bp_activity_media_handle_sideload( $file_array );
-
-	// If error storing permanently, unlink.
-	if ( is_wp_error( $id ) ) {
-		return;
-	}
-
-	return $id;
-}
-
-/**
- * This handles a sideloaded file in the same way as an uploaded file is handled by {@link media_handle_upload()}
- *
- * @since BuddyBoss 1.0.0
- *
- * @param array $file_array Array similar to a {@link $_FILES} upload array
- * @param array $post_data  allows you to overwrite some of the attachment
- *
- * @return int|object The ID of the attachment or a WP_Error on failure
- */
-function bp_activity_media_handle_sideload( $file_array, $post_data = array() ) {
-
-	$overrides = array( 'test_form' => false );
-
-	$time = current_time( 'mysql' );
-	if ( $post = get_post() ) {
-		if ( substr( $post->post_date, 0, 4 ) > 0 ) {
-			$time = $post->post_date;
-		}
-	}
-
-	$file = wp_handle_sideload( $file_array, $overrides, $time );
-	if ( isset( $file['error'] ) ) {
-		return new WP_Error( 'upload_error', $file['error'] );
-	}
-
-	$url     = $file['url'];
-	$type    = $file['type'];
-	$file    = $file['file'];
-	$title   = preg_replace( '/\.[^.]+$/', '', basename( $file ) );
-	$content = '';
-
-	// Load function wp_read_image_metadata if not exists.
-	if ( ! function_exists( 'wp_read_image_metadata' ) ) {
-		require_once ABSPATH . 'wp-admin/includes/image.php';
-	}
-
-	// Use image exif/iptc data for title and caption defaults if possible.
-	if ( $image_meta = @wp_read_image_metadata( $file ) ) {
-		if ( trim( $image_meta['title'] ) && ! is_numeric( sanitize_title( $image_meta['title'] ) ) ) {
-			$title = $image_meta['title'];
-		}
-		if ( trim( $image_meta['caption'] ) ) {
-			$content = $image_meta['caption'];
-		}
-	}
-
-	if ( isset( $desc ) ) {
-		$title = $desc;
-	}
-
-	// Construct the attachment array.
-	$attachment = array_merge(
-		array(
-			'post_mime_type' => $type,
-			'guid'           => $url,
-			'post_title'     => $title,
-			'post_content'   => $content,
-		),
-		$post_data
-	);
-
-	// This should never be set as it would then overwrite an existing attachment.
-	if ( isset( $attachment['ID'] ) ) {
-		unset( $attachment['ID'] );
-	}
-
-	// Save the attachment metadata
-	$id = wp_insert_attachment( $attachment, $file );
-
-	if ( ! is_wp_error( $id ) ) {
-		wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $file ) );
-	}
-
-	return $id;
-}
 
 /**
  * Function to add the content on top of activity listing
@@ -6004,7 +5881,7 @@ function bb_activity_following_post_notification( $args ) {
 /**
  * Check whether activity comment is group comment or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  *
  * @param object|int $comment Activity comment ID or object.
  *
@@ -6043,3 +5920,60 @@ function bb_is_group_activity_comment( $comment = 0 ) {
 
 	return false;
 }
+
+/**
+ * Function to create a paginated backgroud job for activity following notifications.
+ *
+ * @since BuddyBoss 2.3.70
+ *
+ * @param array $args  Array of arguments.
+ * @param array $paged Current page number for pagination.
+ */
+function bb_activity_create_following_post_notification( $args, $paged = 1 ) {
+	if ( empty( $paged ) ) {
+		$paged = 1;
+	}
+
+	$per_page       = apply_filters( 'bb_following_min_count', 20 );
+	$follower_users = bp_get_followers(
+		array(
+			'user_id'  => $args['item_id'],
+			'per_page' => $per_page,
+			'page'     => $paged
+		)
+	);
+
+	if ( empty( $follower_users ) ) {
+		return;
+	}
+
+	if ( count( $follower_users ) > 0 ) {
+		global $bp_background_updater;
+
+		$args['user_ids'] = $follower_users;
+		$args['paged']    = $paged;
+		$bp_background_updater->data(
+			array(
+				array(
+					'callback' => 'bb_activity_following_post_notification',
+					'args'     => array( $args ),
+				),
+			)
+		);
+
+		$bp_background_updater->save()->dispatch();
+	}
+
+	if ( isset( $args['user_ids'] ) ) {
+		unset( $args['user_ids'] );
+	}
+
+	if ( isset( $args['paged'] ) ) {
+		unset( $args['paged'] );
+	}
+
+	// Call recursive to finish update for all records.
+	$paged++;
+	bb_activity_create_following_post_notification( $args, $paged );
+}
+

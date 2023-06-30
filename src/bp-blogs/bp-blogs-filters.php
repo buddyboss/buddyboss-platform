@@ -174,7 +174,7 @@ add_filter( 'bb_nouveau_get_activity_inner_buttons', 'bb_nouveau_get_activity_in
 /**
  * Notification for mentions in blog comment
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  *
  * @param int        $activity_id The activity comment ID.
  * @param WP_Comment $comment WP Comment object.
@@ -297,3 +297,30 @@ function bb_blogs_comment_mention_notification( $activity_id, $comment, $activit
 
 // Action notification for mentions in single page blog comments.
 add_action( 'bp_blogs_comment_sync_activity_comment', 'bb_blogs_comment_mention_notification', 10, 4 );
+
+/**
+ * Filters the column name during blog metadata queries.
+ *
+ * This filters 'sanitize_key', which is used during various core metadata
+ * API functions: {@link https://core.trac.wordpress.org/browser/branches/4.9/src/wp-includes/meta.php?lines=47,160,324}.
+ * Due to how we are passing our meta type, we need to ensure that the correct
+ * DB column is referenced during blogmeta queries.
+ *
+ * @since buddypress 4.0.0
+ * @since BuddyBoss 2.3.70
+ *
+ * @see   bp_blogs_update_blogmeta()
+ * @see   bp_blogs_add_blogmeta()
+ * @see   bp_blogs_delete_blogmeta()
+ * @see   bp_blogs_get_blogmeta()
+ *
+ * @param string $retval column name.
+ *
+ * @return string
+ */
+function bp_blogs_filter_meta_column_name( $retval ) {
+	if ( 'bp_blog_id' === $retval ) {
+		$retval = 'blog_id';
+	}
+	return $retval;
+}
