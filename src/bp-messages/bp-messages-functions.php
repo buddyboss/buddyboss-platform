@@ -2807,7 +2807,7 @@ function bb_messages_user_can_send_message( $args = array() ) {
 	) {
 
 		// Check if the sender is allowed to send message to the recipient or vice a versa based on the member type settings.
-		if ( 
+		if (
 			bb_messages_allowed_messaging_without_connection( (int) $sender_id ) ||
 			bb_messages_allowed_messaging_without_connection( (int) current( $recipients_ids ) )
 		) {
@@ -2876,4 +2876,55 @@ function bb_messages_allowed_messaging_without_connection( $user_id = 0 ) {
 	}
 
 	return false;
+}
+
+/**
+ * Filter only those message recipients to those are allowed to send message.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array         $sql   Clauses in the user_id SQL query.
+ * @param BP_User_Query $query User query object.
+ *
+ * @return array
+ */
+function bb_messages_update_recipient_user_query_uid_clauses( $sql, BP_User_Query $query ) {
+	if (
+		bp_is_active( 'friends' ) &&
+		bp_force_friendship_to_message() &&
+		! empty( $sql['where']['search'] ) &&
+		'ID' === $query->uid_name &&
+		strpos( $sql['where']['search'], "u.$query->uid_name IN" ) > 1
+	) {
+		$pattern = '/u\.ID\s+IN\s+\((\d+(?:,\d+)*)\)/';
+		preg_match_all( $pattern, $sql['where']['search'], $matches );
+
+		$user_ids = array();
+		if ( ! empty( $matches[1] ) ) {
+			foreach ( $matches[1] as $match ) {
+				$user_ids = array_merge( $user_ids, wp_parse_id_list( $match ) );
+			}
+		}
+
+		$filtered_user_ids = array();
+		$friend_ids        = friends_get_friend_user_ids( bp_loggedin_user_id() );
+
+		foreach ( $user_ids as $user_id ) {
+			if ( bb_messages_allowed_messaging_without_connection( $user_id ) ) {
+				$filtered_user_ids[] = $user_id;
+				continue;
+			}
+			if ( ! empty( $friend_ids ) && in_array( $user_id, $friend_ids, true ) ) {
+				$filtered_user_ids[] = $user_id;
+			}
+		}
+
+		$sql['where']['search'] = '';
+		if ( ! empty( $filtered_user_ids ) ) {
+			$filtered_user_ids      = implode( ',', $filtered_user_ids );
+			$sql['where']['search'] = "u.{$query->uid_name} IN ({$filtered_user_ids})";
+		}
+	}
+
+	return $sql;
 }
