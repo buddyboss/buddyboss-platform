@@ -1672,7 +1672,7 @@ function bp_nouveau_ajax_dsearch_recipients() {
 		bp_force_friendship_to_message() &&
 		empty( bb_messages_allowed_messaging_without_connection( get_current_user_id() ) )
 	) {
-		add_filter( 'bp_user_query_uid_clauses', 'bb_members_suggestions_allowed_messaging', 9999, 2 );
+		add_filter( 'bp_user_query_uid_clauses', 'bb_messages_update_recipient_user_query_uid_clauses', 9999, 2 );
 	}
 
 	$results = bp_core_get_suggestions(
@@ -1693,7 +1693,7 @@ function bp_nouveau_ajax_dsearch_recipients() {
 		bp_force_friendship_to_message() &&
 		empty( bb_messages_allowed_messaging_without_connection( get_current_user_id() ) )
 	) {
-		remove_filter( 'bp_user_query_uid_clauses', 'bb_members_suggestions_allowed_messaging', 9999 );
+		remove_filter( 'bp_user_query_uid_clauses', 'bb_messages_update_recipient_user_query_uid_clauses', 9999 );
 	}
 
 	$results_total = apply_filters( 'bp_members_suggestions_results_total', $results['total'] );
