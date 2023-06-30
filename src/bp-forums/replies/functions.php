@@ -423,7 +423,7 @@ function bbp_new_reply_handler( $action = '' ) {
 			'post_parent'    => $topic_id,
 			'post_type'      => bbp_get_reply_post_type(),
 			'comment_status' => 'closed',
-			'menu_order'     => bbp_get_topic_reply_count( $topic_id, false ) + 1,
+			'menu_order'     => bbp_get_topic_reply_count( $topic_id, true ) + 1,
 		)
 	);
 
