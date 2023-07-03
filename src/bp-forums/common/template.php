@@ -868,7 +868,7 @@ function bbp_is_search() {
 	global $wp_query;
 
 	// Bail if search is disabled
-	if ( ! bbp_allow_search() ) {
+	if ( ! bbp_allow_search() && empty( $wp_query->query['bbp_search'] ) ) {
 		return false;
 	}
 

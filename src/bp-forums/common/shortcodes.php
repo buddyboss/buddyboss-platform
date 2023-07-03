@@ -740,7 +740,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			}
 
 			// Bail if search is disabled.
-			if ( ! $has_bbp_search_shortcode && ! bbp_allow_search() ) {
+			if ( ! $has_bbp_search_shortcode && ! bbp_allow_search() && empty( $attr['search'] ) ) {
 				return;
 			}
 
