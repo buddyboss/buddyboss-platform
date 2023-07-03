@@ -1085,14 +1085,21 @@ window.bp = window.bp || {};
 
 				var peak_offset = ( $( window ).height() / 2 - 75 );
 
-				$.scrollTo(
-					form,
-					500,
-					{
-						offset: -peak_offset,
-						easing: 'swing'
-					}
-				);
+				if( ! jQuery( 'body' ).hasClass( 'bb-is-mobile' ) ) {
+					$.scrollTo(
+						form,
+						500,
+						{
+							offset: -peak_offset,
+							easing: 'swing'
+						}
+					);
+				} else {
+					setTimeout( function() {
+						var scrollInt = jQuery( window ).height() > 300 ? 200 : 100;
+						jQuery( 'html, body' ).animate( { scrollTop: jQuery( div_editor ).offset().top - scrollInt }, 500 );
+					}, 500 );
+				}
 
 				$( '#ac-form-' + activity_id + ' #ac-input-' + activity_id ).focus();
 
