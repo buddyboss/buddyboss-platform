@@ -69,7 +69,7 @@ if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
 			// lets do a wp_query and generate html for all posts
 			$qry = new WP_Query(
 				array(
-					'post_type'     => array( 'forum', 'topic', 'reply' ),
+					'post_type'     => $this->type,
 					'post__in'      => $post_ids,
 					'post_status'   => array( 'publish', 'private', 'hidden', 'closed' ),
 					'no_found_rows' => true,
