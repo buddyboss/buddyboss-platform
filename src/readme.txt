@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.2.2
 Requires PHP: 5.6.20
-Stable tag: 2.3.60
+Stable tag: 2.3.70
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,34 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.3.70 =
+* Enhancement: Network Search - Extended search results to only show LearnDash lessons from a course that a user has enrolled into. This is configured in the LearnDash Settings > Lesson Search
+* Enhancement: Performance improvements to the followers and following feature by adding pagination to the background process when notifications are being sent
+* Bug: Blog - Logged out users on private networks could had an unresponsive ‘Load More’ when attempting to load additional articles
+* Bug: Core - Code refactoring of the Activity and Forums by removing unnecessary !important tags
+* Bug: Forums - Pagination loading issue when forum was set to homepage
+* Bug: Forums - Using forum shortcodes whilst having a forum widget on the sidebar removed the ability to subscribe or create new discussions
+* Bug: Forums - Resolved performance issue where discussions took longer to load as users subscribed to many discussions
+* Bug: Groups - Cleaned PHP notice when multiple groups were selected as part of the 'groups_get_group_members' function
+* Bug: Media - New albums created from the Videos page were not displaying due to Redis Cache compatibility
+* Bug: Media - Images and video thumbnails were not being cache when not using Symlinks
+* Bug: Media - Image previews of documents after being renamed were not available
+* Bug: Media - Updated edit buttons to use correct case sensitive
+* Bug: Members - Search results returned incorrect values if a standard profile field was switched to a repeater field
+* Bug: Messages - Search terms were being removed from the search box when a search returned multiple results and was scrolled down
+* Bug: Multisite - Database error related to an unknown column ‘meta_id’
+* Bug: Network Search - Improved compatibility with Object Caching when searching for Groups
+* Bug: Notifications - Updated dropdown labels to use correct case sensitive
+* Bug: Profile - Improved support for uploading Profile photos using the built in Safari browser webcam capture
+* Bug: Widgets - Recent Topics and Recent Replies widgets for Forums were not loading content if custom prefixes were applied to the database table
+* Bug: Widgets - Sell All link on the Recent Active Members widget was unresponsive
+* Bug: Widgets - Group widget not showing hidden members of the same group when applied to Members Page
+* Bug: Elementor - Improved compatibility with the Elementor Maintenance mode
+* Bug: Elementor - Activity block content and excerpt conflicted with replies whenever multiple mentions were added
+* Bug: Geodirectory - Dropdown menu on Favorites and Listings tab was unresponsive
+* Bug: MemberPress - New error message if a user attempts to use an email address as a username/nickname, this resolves issues where @mentions cannot be sent due to invalid character
+* Bug: Rankmath - Fixed an issue where titles and meta details were not being applied to forum or discussions
 
 = 2.3.60 =
 * Notifications - Optimized the performance of the default notification preference workflow for members
@@ -230,7 +258,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Notifications - Handled repeated email notification issues by removing duplicate forum subscription entries
 * Notifications - Handled triggering notification when an activity post is updated in a social group
 * Notifications - Handled notification broken template issue when media uploaded in a social group
-* Notifications - Handled 'subscriptions' page 404 conflict with the 'WooCommerce Subscriptions' plugin 
+* Notifications - Handled 'subscriptions' page 404 conflict with the 'WooCommerce Subscriptions' plugin
 * Notifications - Handled defaults disabled issue for force enabled notifications types
 
 = 2.2.9 =
@@ -244,7 +272,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Handled 'Recent Discussions' widget small floating content UI issue
 * Forums - Handled reply editor lagging issue while typing at normal speed
 * Forums - Handled discussion email notification for subscribed members, the link doesn't take to the discussion on login
-* Emails - Handled group email notification template UI issue in the responsive view 
+* Emails - Handled group email notification template UI issue in the responsive view
 * Moderation - Improved the suspended and blocked members content logic in the messaging module
 * Network Search - Handled course layout issue in the search results by handling excerpt formatting
 * Network Search - Handled search blog post by tag not working issue
@@ -602,7 +630,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - Handled Activity form text color issue when @mention added and removed
 * Activity - Small improvement to show user-friendly validation message from dropzone uploader
 * Activity - Small improvement to restrict media upload for post types auto-generated activity
-* Activity - Handled post types auto-generated activity long comment read more issue 
+* Activity - Handled post types auto-generated activity long comment read more issue
 * Media - Handled symlink not working issue on private page excluded URL for non-logged-in member
 * Media - Handled media upload not showing thumbnail issue for media size more than 10MB
 * Media - Handled media popup layout issue for a specific set of device sizes
