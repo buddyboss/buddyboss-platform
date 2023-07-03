@@ -174,7 +174,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'fields'            => 'all',
 			'show_hidden'       => false,
 			'update_meta_cache' => true,
-			'filter'            => false,
+			'filter'            => array(),
 		);
 
 		if ( empty( $args['display_comments'] ) || 'false' === $args['display_comments'] ) {
@@ -1279,6 +1279,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				? true
 				: false
 			),
+			'is_edited'         => ! empty( bp_activity_get_meta( $activity->id, '_is_edited', true ) ),
 			'can_delete'        => bp_activity_user_can_delete( $activity ),
 			'content_stripped'  => html_entity_decode( wp_strip_all_tags( $activity->content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ),
 			'privacy'           => ( isset( $activity->privacy ) ? $activity->privacy : false ),
@@ -1908,6 +1909,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				'can_edit'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether or not user have the edit access for the activity object.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+				'is_edited'         => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Determine whether an activity has been edited or not.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
