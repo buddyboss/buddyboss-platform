@@ -244,8 +244,8 @@ function bbp_has_replies( $args = '' ) {
 			} elseif ( bbp_is_single_user() ) {
 				$base = bbp_get_user_profile_url( bbp_get_displayed_user_id() );
 
-				// Page or single post
-			} elseif ( is_page() || is_single() ) {
+				// Any single post (for shortcodes)
+			} elseif ( is_singular() ) {
 				$base = get_permalink();
 
 				// Single topic
@@ -2666,7 +2666,7 @@ function bbp_get_form_reply_content() {
 	// Get _POST data
 	if ( bbp_is_post_request() && isset( $_POST['bbp_reply_content'] ) ) {
 		$reply_content = stripslashes( $_POST['bbp_reply_content'] );
-		
+
 		// Remove unintentional empty paragraph coming from the medium editor when only link preview.
 		if ( preg_match('/^(<p><br><\/p>|<p><br \/><\/p>|<p><\/p>|<p><br\/><\/p>)$/i', $reply_content ) ) {
 			$reply_content = '';

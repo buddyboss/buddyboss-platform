@@ -86,7 +86,7 @@ function bbp_has_search_results( $args = '' ) {
 	} else {
 
 		$default['perm'] = 'readable';
-		
+
 	}
 
 	/** Setup */
@@ -118,8 +118,8 @@ function bbp_has_search_results( $args = '' ) {
 		// If pretty permalinks are enabled, make our pagination pretty
 		if ( $wp_rewrite->using_permalinks() ) {
 
-			// Shortcode territory
-			if ( is_page() || is_single() ) {
+			// Any single post (for shortcodes)
+			if ( is_singular() ) {
 				$base = trailingslashit( get_permalink() );
 
 				// Default search location

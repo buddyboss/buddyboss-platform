@@ -2015,7 +2015,7 @@ function bbp_current_user_can_access_create_forum_form() {
 		$retval = true;
 
 		// Looking at a single forum & forum is open
-	} elseif ( ( is_page() || is_single() ) && bbp_is_forum_open() ) {
+	} elseif ( ( is_singular() ) && bbp_is_forum_open() ) {
 		$retval = bbp_current_user_can_publish_forums();
 
 		// User can edit this topic
@@ -2051,7 +2051,7 @@ function bbp_current_user_can_access_create_topic_form() {
 		$retval = true;
 
 		// Looking at a single forum & forum is open
-	} elseif ( ( bbp_is_single_forum() || is_page() || is_single() ) && bbp_is_forum_open() ) {
+	} elseif ( ( bbp_is_single_forum() || is_singular() ) && bbp_is_forum_open() ) {
 		$retval = bbp_current_user_can_publish_topics();
 
 		// User can edit this topic
@@ -2086,8 +2086,8 @@ function bbp_current_user_can_access_create_reply_form() {
 	if ( bbp_is_user_keymaster() ) {
 		$retval = true;
 
-		// Looking at a single topic, topic is open, and forum is open
-	} elseif ( ( bbp_is_single_topic() || is_page() || is_single() ) && bbp_is_topic_open() && bbp_is_forum_open() ) {
+		// Looking at single topic (and singulars), topic is open, and forum is open
+	} elseif ( ( bbp_is_single_topic() || is_singular() ) && bbp_is_topic_open() && bbp_is_forum_open() ) {
 		$retval = bbp_current_user_can_publish_replies();
 
 		// User can edit this topic

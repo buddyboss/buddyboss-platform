@@ -129,6 +129,10 @@ function bbp_get_topics_pagination_base( $forum_id = 0 ) {
 		} elseif ( bbp_is_single_user() ) {
 			$base = bbp_get_user_profile_url( bbp_get_displayed_user_id() );
 
+			// Any single post (for shortcodes, ahead of shortcodeables below)
+		} elseif ( is_singular() ) {
+			$base = get_permalink();
+
 			// View.
 		} elseif ( bbp_is_single_view() ) {
 			$base = bbp_get_view_url();
