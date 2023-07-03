@@ -624,6 +624,23 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 						);
 					}
 				}
+
+				if ( ! is_wp_error( $retval ) && groups_is_user_invited( $user->ID, $group->id ) ) {
+					$messages = array(
+						'ban'     => __( 'Could not ban member from the group.', 'buddyboss' ),
+						'unban'   => __( 'Could not unban member from the group.', 'buddyboss' ),
+						'promote' => __( 'Could not promote member from the group.', 'buddyboss' ),
+						'demote'  => __( 'Could not demote member from the group.', 'buddyboss' ),
+					);
+
+					$retval = new WP_Error(
+						'bp_rest_group_member_cannot_' . $request['action'],
+						$messages[ $request['action'] ],
+						array(
+							'status' => 500,
+						)
+					);
+				}
 			}
 		}
 
@@ -700,6 +717,8 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 
 		$user  = bp_rest_get_user( $request['user_id'] );
 		$group = $this->groups_endpoint->get_group_object( $request['group_id'] );
+
+		$response->add_links( $this->prepare_links( $user, $request ) );
 
 		/**
 		 * Fires after a group member is deleted via the REST API.

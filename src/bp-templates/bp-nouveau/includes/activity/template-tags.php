@@ -271,8 +271,10 @@ function bp_nouveau_activity_state() {
 				<?php echo $like_text ?: ''; ?>
 			</span>
 		</a>
-		<span class="ac-state-separator">&middot;</span>
 		<?php if ( bp_activity_can_comment() ) :
+			?>
+			<span class="ac-state-separator">&middot;</span>
+			<?php
 			$activity_state_comment_class['activity_state_comment_class'] = 'activity-state-comments';
 			$activity_state_class            = apply_filters( 'bp_nouveau_get_activity_comment_buttons_activity_state', $activity_state_comment_class, $activity_id );
 			?>
@@ -521,66 +523,69 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 	 * for each entry of the loop, it's a convenient way to make
 	 * sure the right button will be displayed.
 	 */
-	if ( $activity_type === 'activity_comment' ) {
-		$buttons['activity_conversation'] = array(
-			'id'                => 'activity_conversation',
-			'position'          => 5,
-			'component'         => 'activity',
-			'parent_element'    => $parent_element,
-			'parent_attr'       => $parent_attr,
-			'must_be_logged_in' => false,
-			'button_element'    => $button_element,
-			'button_attr'       => array(
-				'class'               => 'button view bp-secondary-action bp-tooltip',
-				'data-bp-tooltip'     => __( 'View Conversation', 'buddyboss' ),
-				'data-bp-tooltip-pos' => 'up',
-			),
-			'link_text'         => sprintf(
-				'<span class="bp-screen-reader-text">%1$s</span>',
-				__( 'View Conversation', 'buddyboss' )
-			),
-		);
 
-		// If button element set add url link to data-attr.
-		if ( 'button' === $button_element ) {
-			$buttons['activity_conversation']['button_attr']['data-bp-url'] = bp_get_activity_thread_permalink();
+	// Add the Comment button if the user can comment.
+	if ( bp_activity_can_comment() ) {
+		if ( 'activity_comment' === $activity_type ) {
+			$buttons['activity_conversation'] = array(
+				'id'                => 'activity_conversation',
+				'position'          => 5,
+				'component'         => 'activity',
+				'parent_element'    => $parent_element,
+				'parent_attr'       => $parent_attr,
+				'must_be_logged_in' => false,
+				'button_element'    => $button_element,
+				'button_attr'       => array(
+					'class'               => 'button view bp-secondary-action bp-tooltip',
+					'data-bp-tooltip'     => __( 'View Conversation', 'buddyboss' ),
+					'data-bp-tooltip-pos' => 'up',
+				),
+				'link_text'         => sprintf(
+					'<span class="bp-screen-reader-text">%1$s</span>',
+					__( 'View Conversation', 'buddyboss' )
+				),
+			);
+
+			// If button element set add url link to data-attr.
+			if ( 'button' === $button_element ) {
+				$buttons['activity_conversation']['button_attr']['data-bp-url'] = bp_get_activity_thread_permalink();
+			} else {
+				$buttons['activity_conversation']['button_attr']['href'] = bp_get_activity_thread_permalink();
+				$buttons['activity_conversation']['button_attr']['role'] = 'button';
+			}
+
+			/*
+			* We always create the Button to make sure we always have the right numbers of buttons,
+			* no matter the previous activity had less.
+			*/
 		} else {
-			$buttons['activity_conversation']['button_attr']['href'] = bp_get_activity_thread_permalink();
-			$buttons['activity_conversation']['button_attr']['role'] = 'button';
-		}
+			$buttons['activity_conversation'] = array(
+				'id'                => 'activity_conversation',
+				'position'          => 5,
+				'component'         => 'activity',
+				'parent_element'    => $parent_element,
+				'parent_attr'       => $parent_attr,
+				'must_be_logged_in' => true,
+				'button_element'    => $button_element,
+				'button_attr'       => array(
+					'id'            => 'acomment-comment-' . $activity_id,
+					'class'         => 'button acomment-reply bp-primary-action',
+					'aria-expanded' => 'false',
+				),
+				'link_text'         => sprintf(
+					'<span class="bp-screen-reader-text">%1$s</span> <span class="comment-count">%2$s</span>',
+					__( 'Comment', 'buddyboss' ),
+					__( 'Comment', 'buddyboss' )
+				),
+			);
 
-		/*
-		* We always create the Button to make sure we always have the right numbers of buttons,
-		* no matter the previous activity had less.
-		*/
-	} else {
-		$buttons['activity_conversation'] = array(
-			'id'                => 'activity_conversation',
-			'position'          => 5,
-			'component'         => 'activity',
-			'parent_element'    => $parent_element,
-			'parent_attr'       => $parent_attr,
-			'must_be_logged_in' => true,
-			'button_element'    => $button_element,
-			'button_attr'       => array(
-				'id'            => 'acomment-comment-' . $activity_id,
-				'class'         => 'button acomment-reply bp-primary-action',
-				// 'data-bp-tooltip' => __( 'Comment', 'buddyboss' ),
-				'aria-expanded' => 'false',
-			),
-			'link_text'         => sprintf(
-				'<span class="bp-screen-reader-text">%1$s</span> <span class="comment-count">%2$s</span>',
-				__( 'Comment', 'buddyboss' ),
-				__( 'Comment', 'buddyboss' )
-			),
-		);
-
-		// If button element set add href link to data-attr.
-		if ( 'button' === $button_element ) {
-			$buttons['activity_conversation']['button_attr']['data-bp-url'] = bp_get_activity_comment_link();
-		} else {
-			$buttons['activity_conversation']['button_attr']['href'] = bp_get_activity_comment_link();
-			$buttons['activity_conversation']['button_attr']['role'] = 'button';
+			// If button element set add href link to data-attr.
+			if ( 'button' === $button_element ) {
+				$buttons['activity_conversation']['button_attr']['data-bp-url'] = bp_get_activity_comment_link();
+			} else {
+				$buttons['activity_conversation']['button_attr']['href'] = bp_get_activity_comment_link();
+				$buttons['activity_conversation']['button_attr']['role'] = 'button';
+			}
 		}
 	}
 
@@ -613,11 +618,6 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 
 	if ( ! $return ) {
 		return array();
-	}
-
-	// Remove the Comment button if the user can't comment.
-	if ( ! bp_activity_can_comment() && $activity_type !== 'activity_comment' ) {
-		unset( $return['activity_conversation'] );
 	}
 
 	/**
@@ -1527,7 +1527,7 @@ function bp_nouveau_edit_activity_data() {
  * @return string The Activity edit data.
  */
 function bp_nouveau_get_edit_activity_data() {
-	return htmlentities( wp_json_encode( bp_activity_get_edit_data( bp_get_activity_id() ) ) );
+	return htmlentities( wp_json_encode( bp_activity_get_edit_data( bp_get_activity_id() ) ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 }
 
 /**
@@ -1612,89 +1612,27 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		$button_element = $args['button_element'];
 	}
 
-	if ( $activity_type !== 'activity_comment' ) {
-		// Add activity edit button.
-		if ( bp_is_activity_edit_enabled() ) {
-			$buttons['activity_edit'] = array(
-				'id'                => 'activity_edit',
-				'position'          => 30,
-				'component'         => 'activity',
-				'parent_element'    => $parent_element,
-				'parent_attr'       => $parent_attr,
-				'must_be_logged_in' => true,
-				'button_element'    => $button_element,
-				'button_attr'       => array(
-					'href'  => '#',
-					'class' => 'button edit edit-activity bp-secondary-action bp-tooltip',
-					'title' => __( 'Edit Activity', 'buddyboss' ),
-				),
-				'link_text'         => sprintf(
-					'<span class="bp-screen-reader-text">%1$s</span><span class="edit-label">%2$s</span>',
-					__( 'Edit Activity', 'buddyboss' ),
-					__( 'Edit', 'buddyboss' )
-				),
-			);
-		}
-	}
-
-	// The delete button is always created, and removed later on if needed.
-	$delete_args = array();
-
-	/*
-	 * As the delete link is filterable we need this workaround
-	 * to try to intercept the edits the filter made and build
-	 * a button out of it.
-	 */
-	if ( has_filter( 'bp_get_activity_delete_link' ) ) {
-		preg_match( '/<a\s[^>]*>(.*)<\/a>/siU', bp_get_activity_delete_link(), $link );
-
-		if ( ! empty( $link[0] ) && ! empty( $link[1] ) ) {
-			$delete_args['link_text'] = $link[1];
-			$subject                  = str_replace( $delete_args['link_text'], '', $link[0] );
-		}
-
-		preg_match_all( '/([\w\-]+)=([^"\'> ]+|([\'"]?)(?:[^\3]|\3+)+?\3)/', $subject, $attrs );
-
-		if ( ! empty( $attrs[1] ) && ! empty( $attrs[2] ) ) {
-			foreach ( $attrs[1] as $key_attr => $key_value ) {
-				$delete_args[ 'link_' . $key_value ] = trim( $attrs[2][ $key_attr ], '"' );
-			}
-		}
-
-		$delete_args = bp_parse_args(
-			$delete_args,
-			array(
-				'link_text'   => '',
-				'button_attr' => array(
-					'link_id'         => '',
-					'link_href'       => '',
-					'link_class'      => '',
-					'link_rel'        => 'nofollow',
-					'data_bp_tooltip' => '',
-				),
-			)
+	// Add activity edit button.
+	if ( 'activity_comment' !== $activity_type && bp_activity_user_can_edit() && bp_is_activity_edit_enabled() ) {
+		$buttons['activity_edit'] = array(
+			'id'                => 'activity_edit',
+			'position'          => 30,
+			'component'         => 'activity',
+			'parent_element'    => $parent_element,
+			'parent_attr'       => $parent_attr,
+			'must_be_logged_in' => true,
+			'button_element'    => $button_element,
+			'button_attr'       => array(
+				'href'  => '#',
+				'class' => 'button edit edit-activity bp-secondary-action bp-tooltip',
+				'title' => __( 'Edit Activity', 'buddyboss' ),
+			),
+			'link_text'         => sprintf(
+				'<span class="bp-screen-reader-text">%1$s</span><span class="edit-label">%2$s</span>',
+				__( 'Edit Activity', 'buddyboss' ),
+				__( 'Edit', 'buddyboss' )
+			),
 		);
-	}
-
-	if ( empty( $delete_args['link_href'] ) ) {
-		$delete_args = array(
-			'button_element'  => $button_element,
-			'link_id'         => '',
-			'link_class'      => 'button item-button bp-secondary-action delete-activity confirm',
-			'link_rel'        => 'nofollow',
-			'data_bp_tooltip' => __( 'Delete', 'buddyboss' ),
-			'link_text'       => __( 'Delete', 'buddyboss' ),
-			'link_href'       => bp_get_activity_delete_url(),
-		);
-
-		// If button element set add nonce link to data-attr attr.
-		if ( 'button' === $button_element ) {
-			$delete_args['data-attr'] = bp_get_activity_delete_url();
-			$delete_args['link_href'] = '';
-		} else {
-			$delete_args['link_href'] = bp_get_activity_delete_url();
-			$delete_args['data-attr'] = '';
-		}
 	}
 
 	if ( bp_is_active( 'moderation' ) ) {
@@ -1746,26 +1684,85 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		}
 	}
 
-	$buttons['activity_delete'] = array(
-		'id'                => 'activity_delete',
-		'component'         => 'activity',
-		'parent_element'    => $parent_element,
-		'parent_attr'       => $parent_attr,
-		'must_be_logged_in' => true,
-		'button_element'    => $button_element,
-		'button_attr'       => array(
-			'id'            => $delete_args['link_id'],
-			'href'          => $delete_args['link_href'],
-			'class'         => $delete_args['link_class'],
-			//'data-bp-tooltip' => $delete_args['data_bp_tooltip'],
-			'data-bp-nonce' => $delete_args['data-attr'],
-		),
-		'link_text'         => sprintf(
-			'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
-			esc_html( $delete_args['data_bp_tooltip'] ),
-			esc_html( $delete_args['data_bp_tooltip'] )
-		),
-	);
+	if ( bp_activity_user_can_delete() ) {
+		$delete_args = array();
+
+		/*
+		 * As the delete link is filterable we need this workaround
+		 * to try to intercept the edits the filter made and build
+		 * a button out of it.
+		 */
+		if ( has_filter( 'bp_get_activity_delete_link' ) ) {
+			preg_match( '/<a\s[^>]*>(.*)<\/a>/siU', bp_get_activity_delete_link(), $link );
+
+			if ( ! empty( $link[0] ) && ! empty( $link[1] ) ) {
+				$delete_args['link_text'] = $link[1];
+				$subject                  = str_replace( $delete_args['link_text'], '', $link[0] );
+			}
+
+			preg_match_all( '/([\w\-]+)=([^"\'> ]+|([\'"]?)(?:[^\3]|\3+)+?\3)/', $subject, $attrs );
+
+			if ( ! empty( $attrs[1] ) && ! empty( $attrs[2] ) ) {
+				foreach ( $attrs[1] as $key_attr => $key_value ) {
+					$delete_args[ 'link_' . $key_value ] = trim( $attrs[2][ $key_attr ], '"' );
+				}
+			}
+
+			$delete_args = bp_parse_args(
+				$delete_args,
+				array(
+					'link_text'   => '',
+					'button_attr' => array(
+						'link_id'         => '',
+						'link_href'       => '',
+						'link_class'      => '',
+						'link_rel'        => 'nofollow',
+						'data_bp_tooltip' => '',
+					),
+				)
+			);
+		}
+
+		if ( empty( $delete_args['link_href'] ) ) {
+			$delete_args = array(
+				'button_element'  => $button_element,
+				'link_id'         => '',
+				'link_class'      => 'button item-button bp-secondary-action delete-activity confirm',
+				'link_rel'        => 'nofollow',
+				'data_bp_tooltip' => __( 'Delete', 'buddyboss' ),
+				'link_text'       => __( 'Delete', 'buddyboss' ),
+			);
+
+			// If button element set add nonce link to data-attr attr.
+			if ( 'button' === $button_element ) {
+				$delete_args['data-attr'] = bp_get_activity_delete_url();
+				$delete_args['link_href'] = '';
+			} else {
+				$delete_args['link_href'] = bp_get_activity_delete_url();
+				$delete_args['data-attr'] = '';
+			}
+		}
+
+		$buttons['activity_delete'] = array(
+			'id'                => 'activity_delete',
+			'component'         => 'activity',
+			'parent_element'    => $parent_element,
+			'parent_attr'       => $parent_attr,
+			'must_be_logged_in' => true,
+			'button_element'    => $button_element,
+			'button_attr'       => array(
+				'id'            => $delete_args['link_id'],
+				'href'          => $delete_args['link_href'],
+				'class'         => $delete_args['link_class'],
+				'data-bp-nonce' => $delete_args['data-attr'],
+			),
+			'link_text'         => sprintf(
+				'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
+				esc_html( $delete_args['data_bp_tooltip'] ),
+				esc_html( $delete_args['data_bp_tooltip'] )
+			),
+		);
+	}
 
 	/**
 	 * Filter to add your buttons, use the position argument to choose where to insert it.
@@ -1796,11 +1793,6 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 
 	if ( ! $return ) {
 		return array();
-	}
-
-	// Remove the Edit button if the user can't edit.
-	if ( ! bp_activity_user_can_edit() ) {
-		unset( $return['activity_edit'] );
 	}
 
 	// Remove the Delete button if the user can't delete.
@@ -1921,33 +1913,33 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 	// If button element set add nonce link to data-attr attr
 	if ( 'button' === $button_element ) {
 		$buttons['activity_comment_reply']['button_attr']['data-bp-act-reply-nonce']         = sprintf( '#acomment-%s', $activity_comment_id );
-		$buttons['activity_comment_delete']['button_attr']['data-bp-act-reply-delete-nonce'] = bp_get_activity_comment_delete_link();
 	} else {
 		$buttons['activity_comment_reply']['button_attr']['href']  = sprintf( '#acomment-%s', $activity_comment_id );
-		$buttons['activity_comment_delete']['button_attr']['href'] = bp_get_activity_comment_delete_link();
 	}
 
-	$buttons['activity_comment_delete'] = array(
-		'id'                => 'activity_comment_delete',
-		'component'         => 'activity',
-		'must_be_logged_in' => true,
-		'parent_element'    => $parent_element,
-		'parent_attr'       => $parent_attr,
-		'button_element'    => $button_element,
-		'link_text'         => esc_html__( 'Delete', 'buddyboss' ),
-		'button_attr'       => array(
-			'class' => 'delete acomment-delete confirm bp-secondary-action',
-			'rel'   => 'nofollow',
-		),
-	);
+	if ( bp_activity_user_can_delete() ) {
 
-	// If button element set add nonce link to data-attr attr.
-	if ( 'button' === $button_element ) {
-		$buttons['activity_comment_delete']['button_attr']['data-bp-act-reply-delete-nonce'] = bp_get_activity_comment_delete_link();
-	} else {
-		$buttons['activity_comment_delete']['button_attr']['href'] = bp_get_activity_comment_delete_link();
+		$buttons['activity_comment_delete'] = array(
+			'id'                => 'activity_comment_delete',
+			'component'         => 'activity',
+			'must_be_logged_in' => true,
+			'parent_element'    => $parent_element,
+			'parent_attr'       => $parent_attr,
+			'button_element'    => $button_element,
+			'link_text'         => esc_html__( 'Delete', 'buddyboss' ),
+			'button_attr'       => array(
+				'class' => 'delete acomment-delete confirm bp-secondary-action',
+				'rel'   => 'nofollow',
+			),
+		);
+
+		// If button element set add nonce link to data-attr attr.
+		if ( 'button' === $button_element ) {
+			$buttons['activity_comment_delete']['button_attr']['data-bp-act-reply-delete-nonce'] = bp_get_activity_comment_delete_link();
+		} else {
+			$buttons['activity_comment_delete']['button_attr']['href'] = bp_get_activity_comment_delete_link();
+		}
 	}
-
 	/**
 	 * Filter to add your buttons, use the position argument to choose where to insert it.
 	 *
@@ -1980,13 +1972,7 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 		return array();
 	}
 
-	/**
-	 * If there was an activity of the user before one af another
-	 * user as we're updating buttons, we need to unset the delete link
-	 */
-	if ( ! bp_activity_user_can_delete() ) {
-		unset( $return['activity_comment_delete'] );
-	}
+
 
 	/**
 	 * Leave a chance to adjust the $return

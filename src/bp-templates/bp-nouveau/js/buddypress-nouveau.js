@@ -70,6 +70,8 @@ window.bp = window.bp || {};
 			// Profile Notification setting
 			this.profileNotificationSetting();
 
+			this.xProfileBlock();
+
 			// Bail if not set.
 			if ( 'undefined' !== typeof BB_Nouveau_Presence ) {
 				// User Presence status.
@@ -532,6 +534,32 @@ window.bp = window.bp || {};
 			} else {
 				$( this.objectNavParent + ' [data-bp-scope]:eq(0), #object-nav li.current' ).addClass( 'selected loading' );
 			}
+
+			// Add loader at custom place for few search types
+			if ( $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length === 0 ) {
+
+				var component_conditions = [
+					data.object === 'group_members' && $( 'body' ).hasClass( 'group-members' ),
+					data.object === 'activity' && $( 'body.groups' ).hasClass( 'activity' ),
+					data.object === 'document' && $( 'body' ).hasClass( 'documents' ),
+					data.object === 'document' && ( $( 'body' ).hasClass( 'document' ) || $( 'body' ).hasClass( 'documents' ) ),
+				];
+
+				var component_targets = [
+					$( '.groups .group-search.members-search' ),
+					$( '.groups .group-search.activity-search' ),
+					$( '.documents .bp-document-listing .bb-title' ),
+					$( '#bp-media-single-folder .bb-title' ),
+				];
+
+				component_conditions.forEach( function ( condition, i ) {
+					if ( condition ) {
+						component_targets[ i ].addClass( 'loading' );
+					}
+				} );
+
+			}
+
 			// $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"], #object-nav li.current' ).find( 'span' ).text('');
 			// $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"], #object-nav li.current' ).find( 'span' ).show();
 			$( '#buddypress [data-bp-filter="' + data.object + '"] option[value="' + data.filter + '"]' ).prop( 'selected', true );
@@ -569,6 +597,12 @@ window.bp = window.bp || {};
 
 					$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).removeClass( 'loading' );
 					$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text( '' );
+
+					if ( $( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length === 0 ) {
+						component_targets.forEach( function ( target ) {
+							target.removeClass( 'loading' );
+						} );
+					}
 
 					if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.count ) ) {
 						$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text( response.data.count );
@@ -807,6 +841,8 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#message-threads .block-member', this.threadListBlockPopup );
 			$( document ).on( 'click', '#message-threads .report-content', this.threadListReportPopup );
 			$( document ).on( 'click', '.bb-close-action-popup, .action-popup-overlay', this.closeActionPopup );
+			$( document ).on( 'keyup', '.search-form-has-reset input[type="search"], .search-form-has-reset input#bbp_search', _.throttle( this.directorySearchInput, 900 ) );
+			$( document ).on( 'click', '.search-form-has-reset .search-form_reset', this.resetDirectorySearch );
 
 			$( document ).on( 'keyup', this, this.keyUp );
 
@@ -837,6 +873,9 @@ window.bp = window.bp || {};
 
 			// Following widget more button click.
 			$( document ).on( 'click', '.more-following .count-more', this.bbWidgetMoreFollowing );
+
+			// Accordion open/close event
+			$( '.bb-accordion .bb-accordion_trigger' ).on( 'click', this.toggleAccordion );
 		},
 
 		/**
@@ -1956,7 +1995,11 @@ window.bp = window.bp || {};
 			if ( nonceUrl ) {
 				nonce = self.getLinkParams( nonceUrl, '_wpnonce' );
 			} else {
-				nonce = self.getLinkParams( target.prop( 'href' ), '_wpnonce' );
+				if ( 'undefined' === typeof target.prop( 'href' ) ) {
+					nonce = self.getLinkParams( target.attr( 'href' ), '_wpnonce' );
+				} else {
+					nonce = self.getLinkParams( target.prop( 'href' ), '_wpnonce' );
+				}
 			}
 
 			// Unfortunately unlike groups.
@@ -2029,6 +2072,23 @@ window.bp = window.bp || {};
 							}
 						}
 
+						if (
+							'undefined' !== typeof response.data.is_group_subscription &&
+							true === response.data.is_group_subscription &&
+							'undefined' !== typeof response.data.feedback
+						) {
+							$( document ).trigger(
+								'bb_trigger_toast_message',
+								[
+									'',
+									'<div>' + response.data.feedback + '</div>',
+									'error',
+									null,
+									true
+								]
+							);
+						}
+
 					} else {
 						// Specific cases for groups.
 						if ( 'groups' === object ) {
@@ -2041,6 +2101,23 @@ window.bp = window.bp || {};
 									return window.location.reload();
 								}
 							}
+
+							if (
+								'undefined' !== typeof response.data.is_group_subscription &&
+								true === response.data.is_group_subscription &&
+								'undefined' !== typeof response.data.feedback
+							) {
+								$( document ).trigger(
+									'bb_trigger_toast_message',
+									[
+										'',
+										'<div>' + response.data.feedback + '</div>',
+										'info',
+										null,
+										true
+									]
+								);
+							}
 						}
 
 						// User main nav update friends counts.
@@ -2051,7 +2128,7 @@ window.bp = window.bp || {};
 							// Check friend count set.
 							if ( undefined !== response.data.is_user && response.data.is_user && undefined !== response.data.friend_count ) {
 								// Check friend count > 0 then show the count span.
-								if ( response.data.friend_count > 0 ) {
+								if ( '0' !== response.data.friend_count ) {
 									if ( ( friend_with_count ).length ) {
 										// Update count span.
 										$( friend_with_count ).html( response.data.friend_count );
@@ -2064,7 +2141,7 @@ window.bp = window.bp || {};
 									$( friend_with_count ).hide();
 								}
 							} else if ( undefined !== response.data.friend_count ) {
-								if ( response.data.friend_count > 0 ) {
+								if ( '0' !== response.data.friend_count ) {
 									if ( ( friend_with_count ).length ) {
 										// Update count span.
 										$( friend_with_count ).html( response.data.friend_count );
@@ -2115,6 +2192,33 @@ window.bp = window.bp || {};
 						target.parent().replaceWith( response.data.contents );
 					}
 				}
+			).fail(
+				function () {
+
+					if ( ['unsubscribe', 'subscribe'].includes( action ) ) {
+						var title = $( target ).data( 'bb-group-name' );
+
+						if ( 25 < title.length ) {
+							title = title.substring( 0, 25 ) + '...';
+						}
+
+						var display_error = '<div>' + BP_Nouveau.subscriptions.error + '<strong>' + title + '</strong>.</div>';
+						if ( 'subscribe' === action ) {
+							display_error = '<div>' + BP_Nouveau.subscriptions.subscribe_error + '<strong>' + title + '</strong></div>';
+						}
+						jQuery( document ).trigger(
+							'bb_trigger_toast_message',
+							[
+								'',
+								display_error,
+								'error',
+								null,
+								true
+							]
+						);
+					}
+					target.removeClass( 'pending loading' );
+				}
 			);
 		},
 
@@ -2161,6 +2265,17 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			if ( target.hasClass( 'bp-toggle-action-button' ) ) {
+				if (
+					target.hasClass( 'group-subscription' ) &&
+					'undefined' !== typeof target.data( 'title' ) &&
+					'undefined' !== typeof target.data( 'title-displayed' ) &&
+					0 === target.data( 'title' ).replace( /<(.|\n)*?>/g, '' ).length &&
+					0 === target.data( 'title-displayed' ).replace( /<(.|\n)*?>/g, '' ).length
+				) {
+					target.removeClass( 'bp-toggle-action-button' );
+					target.addClass( 'bp-toggle-action-button-hover' );
+					return false;
+				}
 
 				// support for buddyboss theme for button actions and icons and texts.
 				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
@@ -2189,6 +2304,18 @@ window.bp = window.bp || {};
 			var target = $( event.currentTarget );
 
 			if ( target.hasClass( 'bp-toggle-action-button-hover' ) && ! target.hasClass( 'loading' ) ) {
+
+				if (
+					target.hasClass( 'group-subscription' ) &&
+					'undefined' !== typeof target.data( 'title' ) &&
+					'undefined' !== typeof target.data( 'title-displayed' ) &&
+					0 === target.data( 'title' ).replace( /<(.|\n)*?>/g, '' ).length &&
+					0 === target.data( 'title-displayed' ).replace( /<(.|\n)*?>/g, '' ).length
+				) {
+					target.removeClass( 'bp-toggle-action-button-hover' ); // remove class to detect event.
+					target.addClass( 'bp-toggle-action-button' ); // add class to detect event to confirm.
+					return false;
+				}
 
 				// support for BuddyBoss theme for button actions and icons and texts.
 				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
@@ -2863,14 +2990,20 @@ window.bp = window.bp || {};
 		togglePassword: function () {
 			$( document ).on(
 				'click',
-				'.bb-toggle-password',
+				'.bb-toggle-password, .bb-hide-pw',
 				function ( e ) {
 					e.preventDefault();
-					var $this  = $( this );
-					var $input = $this.next( 'input' );
+					var $this = $( this ), $input;
+
+					if ( $this.hasClass( 'bb-hide-pw' ) ) {
+						$input = $this.closest( '.password-toggle' ).find( 'input' );
+					} else {
+						$input = $this.next( 'input' );
+					}
+					var $default_type = $input.data( 'type' ) ? $input.data( 'type' ) : 'text';
 					$this.toggleClass( 'bb-show-pass' );
 					if ( $this.hasClass( 'bb-show-pass' ) ) {
-						$input.attr( 'type', 'text' );
+						$input.attr( 'type', $default_type );
 					} else {
 						$input.attr( 'type', 'password' );
 					}
@@ -3071,6 +3204,7 @@ window.bp = window.bp || {};
 				var video         = document.createElement( 'video' );
 				var videoDuration = null;
 				video.src         = url;
+				var attempts 	  = 0;
 				var timer         = setInterval(
 					function () {
 						if (video.readyState > 0) {
@@ -3081,22 +3215,13 @@ window.bp = window.bp || {};
 									video.pause();
 								}
 							};
-
-							video.addEventListener(
-								'loadeddata',
-								function () {
-									if ( snapImage() ) {
-										video.removeEventListener( 'timeupdate', timeupdate );
-									}
-								}
-							);
 							var snapImage = function () {
 								var canvas    = document.createElement( 'canvas' );
 								canvas.width  = video.videoWidth;
 								canvas.height = video.videoHeight;
 								canvas.getContext( '2d' ).drawImage( video, 0, 0, canvas.width, canvas.height );
 								var image   = canvas.toDataURL();
-								var success = image.length > 100000;
+								var success = image.length > 50000;
 								if ( success ) {
 									var img = document.createElement( 'img' );
 									img.src = image;
@@ -3118,6 +3243,11 @@ window.bp = window.bp || {};
 									}
 
 									URL.revokeObjectURL( url );
+								} else {
+									if( attempts >= 2 ) {
+										$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-no-thumbnail' );
+										clearInterval( timer );
+									}
 								}
 								return success;
 							};
@@ -3132,6 +3262,11 @@ window.bp = window.bp || {};
 							video.play();
 							clearInterval( timer );
 						}
+						if( attempts >= 2 ) {
+							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-no-thumbnail' );
+							clearInterval( timer );
+						}
+						attempts++;
 					},
 					500
 				);
@@ -3169,6 +3304,23 @@ window.bp = window.bp || {};
 					return false;
 				}
 			}
+		},
+
+		/**
+		 * [toggleAccordion description]
+		 * @return {[type]} [description]
+		 */
+		 toggleAccordion: function() {
+			var accordion = $( this ).closest( '.bb-accordion' );
+			if( accordion.find( '.bb-accordion_trigger' ).attr( 'aria-expanded' ) == 'true' ) {
+				accordion.find( '.bb-accordion_trigger' ).attr( 'aria-expanded', 'false' );
+				accordion.find( '.bb-icon-angle-up' ).removeClass( 'bb-icon-angle-up' ).addClass( 'bb-icon-angle-down' );
+			} else {
+				accordion.find( '.bb-accordion_trigger' ).attr( 'aria-expanded', 'true' );
+				accordion.find( '.bb-icon-angle-down' ).removeClass( 'bb-icon-angle-down' ).addClass( 'bb-icon-angle-up' );
+			}
+			accordion.toggleClass('is_closed');
+			accordion.find( '.bb-accordion_panel' ).slideToggle();
 		},
 
 		/**
@@ -3244,7 +3396,6 @@ window.bp = window.bp || {};
 				'resize',
 				function() { // Attach event once only.
 					editorWrap.removeClass( 'wrappingInitialised' ); // Remove class to run trough again as screen has resized.
-					$( editorWrap ).find( '.medium-editor-action-more-button' ).unbind( 'click' );
 					$( editorWrap ).find( '.medium-editor-action-more ul .medium-editor-action' ).unbind( 'click' );
 				}
 			);
@@ -3271,6 +3422,67 @@ window.bp = window.bp || {};
 		closeActionPopup: function( event ) {
 			event.preventDefault();
 			$( this ).closest( '.bb-action-popup' ).hide();
+		},
+
+		/**
+		 *  Show/Hide Search reset button
+		 *
+		 *  @return {function}
+		 */
+		directorySearchInput: function() {
+			// Check if the current value of the input field is equal to the last recorded value,
+			// OR if the current value is empty and there is no previously recorded value
+			if( $( this ).val() === $( this ).data( 'last-value' ) || ( $( this ).val() === '' && $( this ).data( 'last-value' ) === undefined ) ) {
+				// Return early to skip unnecessary actions
+				return;
+			}
+			$( this ).data( 'last-value', $( this ).val() );
+
+			var $form = $( this ).closest( '.search-form-has-reset' );
+			var $resetButton = $form.find( '.search-form_reset' );
+
+			if ( $( this ).val().length > 0 ) {
+				$resetButton.show();
+			} else {
+				$resetButton.hide();
+
+				// Trigger search event
+				if( $form.hasClass( 'bp-invites-search-form') ) {
+					$form.find( 'input[type="search"]').val('');
+					$form.find( 'input[type="search"]').trigger( $.Event( 'search' ) );
+				}
+			}
+
+			if ( !$( this ).hasClass( 'ui-autocomplete-input' ) ) {
+				$form.find( '.search-form_submit' ).trigger( 'click' );
+			}
+
+		},
+
+		/**
+		 *  Reset search results
+		 *
+		 *  @param  {object} event The event object.
+		 *  @return {function}
+		 */
+		resetDirectorySearch: function( e ) {
+			e.preventDefault();
+			var $form = $( this ).closest( 'form' );
+			if ( $form.filter( '.bp-messages-search-form, .bp-dir-search-form' ).length > 0 ) {
+				$form.find( 'input[type="search"]').val('');
+				$form.find( '.search-form_submit' ).trigger( 'click' );
+			} else {
+				$form.find( '#bbp_search' ).val('');
+			}
+
+			$( this ).hide();
+
+			// Trigger search event
+			if ( $form.hasClass( 'bp-invites-search-form') ) {
+				$form.find( 'input[type="search"]').val('');
+				$form.find( 'input[type="search"]').trigger( $.Event( 'search' ) );
+			}
+
 		},
 
 		/**
@@ -3337,6 +3549,15 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 *  Add socialnetworks profile field type related class
+		 */
+		xProfileBlock: function () {
+			$( '.profile-fields .field_type_socialnetworks' ).each( function () {
+				$( this ).closest( '.bp-widget' ).addClass( 'social' );
+			} );
+		},
+
+		/**
 		 *  Enable Disable profile notification setting inputs
 		 */
 		profileNotificationSettingInputs: function ( node ) {
@@ -3351,6 +3572,7 @@ window.bp = window.bp || {};
 							$( '.main-notification-settings' ).find( 'td' + node[_i] ).addClass( 'disabled' ).find( 'input' ).prop( 'disabled', true );
 							$( '.main-notification-settings' ).find( '.bb-mobile-setting li' + node[_i] ).addClass( 'disabled' ).find( 'input' ).prop( 'disabled', true );
 						}
+						bp.Nouveau.NotificationMobileDropdown( $( this ).closest( '#settings-form' ).find( 'tr:not( .notification_heading )' ) );
 					});
 				})(i);
 				/* jshint ignore:end */
@@ -3375,6 +3597,9 @@ window.bp = window.bp || {};
 						var inputDisabled = $( this ).hasClass( 'disabled' ) ? ' disabled' : '';
 						available_option += '<li class="'+ inputText.toLowerCase() + inputDisabled +'"><input type="checkbox" class="bs-styled-checkbox" '+ inputChecked +' /><label data-for="'+ $( this ).find( 'input[type="checkbox"]' ).attr( 'id' ) +'">'+ inputText +'</label></li>';
 					}
+					if ( $( this ).hasClass( 'disabled' ) ) {
+						return;
+					}
 					if ( ! $( this ).find( 'input:checked' ).length ) {
 						return;
 					}
@@ -3382,7 +3607,11 @@ window.bp = window.bp || {};
 					allInputsChecked++;
 				} );
 				if ( allInputsChecked === $( this ).find( nodeSelector + ':not(:first-child) input[type="checkbox"]' ).length ) {
-					selected_text = textAll;
+					if ( $( this ).find( nodeSelector + ':not(:first-child) input[type="checkbox"]' ).length == 1 ) {
+						selected_text = selected_text;
+					} else {
+						selected_text = textAll;
+					}
 				} else {
 					selected_text = selected_text === '' ? textNone : selected_text;
 				}
@@ -3436,8 +3665,9 @@ window.bp = window.bp || {};
 		},
 
 		userPresenceStatus: function() {
-
-			var idle_interval = parseInt( BB_Nouveau_Presence.presence_time_span ) * 1000;
+		 	// Active user on page load.
+			window.bb_is_user_active = true;
+			var idle_interval = parseInt( BB_Nouveau_Presence.idle_inactive_span ) * 1000;
 
 			// setup the idle time user check.
 			bp.Nouveau.userPresenceChecker( idle_interval );
@@ -3464,35 +3694,45 @@ window.bp = window.bp || {};
 					bp.Nouveau.updateUsersPresence( data.users_presence );
 				} );
 			} else {
-				setInterval( function () {
-					var params = {};
+				setInterval(
+					function () {
+						var params = {};
 
-					if (
-						'undefined' !== typeof window.bb_is_user_active &&
-						true === window.bb_is_user_active
-					) {
-						params.ids = bp.Nouveau.getPageUserIDs();
-					}
-
-					$.ajax(
-						{
-							type: 'POST',
-							url: '/wp-json/buddyboss/v1/members/presence',
-							data: params,
-							beforeSend: function ( xhr ) {
-								xhr.setRequestHeader( 'X-WP-Nonce', BB_Nouveau_Presence.rest_nonce );
-							},
-							success: function ( data ) {
-								// Check for our data, and use it.
-								if ( ! data ) {
-									return;
-								}
-
-								bp.Nouveau.updateUsersPresence( data );
-							}
+						if (
+							'undefined' !== typeof window.bb_is_user_active &&
+							true === window.bb_is_user_active
+						) {
+							params.ids = bp.Nouveau.getPageUserIDs();
 						}
-					);
-				}, parseInt( BB_Nouveau_Presence.presence_default_interval ) * 1000 ); // 1 min.
+
+						if (
+							'undefined' !== typeof params.ids &&
+							'undefined' !== typeof params.ids.length &&
+							0 < params.ids.length
+						) {
+							var url = '1' === BB_Nouveau_Presence.native_presence ? BB_Nouveau_Presence.native_presence_url : BB_Nouveau_Presence.presence_rest_url;
+							$.ajax(
+								{
+									type: 'POST',
+									url: url,
+									data: params,
+									beforeSend: function ( xhr ) {
+										xhr.setRequestHeader( 'X-WP-Nonce', BB_Nouveau_Presence.rest_nonce );
+									},
+									success: function ( data ) {
+										// Check for our data, and use it.
+										if ( ! data ) {
+											return;
+										}
+
+										bp.Nouveau.updateUsersPresence( data );
+									}
+								}
+							);
+						}
+					},
+					parseInt( BB_Nouveau_Presence.presence_default_interval ) * 1000 // 1 min.
+				);
 			}
 		},
 
@@ -3540,7 +3780,395 @@ window.bp = window.bp || {};
 				}, inactive_timeout );
 				window.bb_is_user_active = true;
 			};
+		},
+
+		linkPreviews : {
+			currentTarget: null,
+			currentTargetForm: null,
+			currentPreviewParent: null,
+			controlsAdded :null,
+			dataInput: null,
+			loadedURLs: [],
+			loadURLAjax: null,
+			options: {},
+			render: function( renderOptions ) {
+				var self = this;
+				// Link Preview Template
+				var tmpl = $('#tmpl-bb-link-preview').html();
+
+				// Compile the template
+				var compiled = _.template(tmpl);
+
+				var html = compiled( renderOptions );
+
+				if( self.currentPreviewParent ) {
+					self.currentPreviewParent.html( html );
+				}
+
+				if( self.options.link_loading === true || self.options.link_swap_image_button === 1 ) {
+					return;
+				}
+
+				if( self.controlsAdded === null ){
+					self.registerControls();
+				}
+
+				if( self.options.link_error === true ) {
+					return;
+				}
+
+				if ( self.dataInput !== null && self.dataInput.length > 0 ) {
+
+					var tmp_link_description = self.options.link_description;
+
+					if ( self.options.link_embed ) {
+						tmp_link_description = '';
+					}
+
+					var link_preview_data = {
+						link_url: self.options.link_url,
+						link_title: self.options.link_title,
+						link_description: tmp_link_description,
+						link_embed: self.options.link_embed,
+						link_image: ( 'undefined' !== typeof self.options.link_images ) ? self.options.link_images[ self.options.link_image_index_save ] : '',
+						link_image_index_save: self.options.link_image_index_save
+					};
+
+					self.dataInput.val( JSON.stringify( link_preview_data ) ).trigger('change');
+
+				}
+
+			},
+			registerControls: function() {
+				var self = this;
+				self.displayNextPrevButtonView = function() {
+					$( '.bb-url-scrapper-container #bb-url-prevPicButton' ).show();
+					$( '.bb-url-scrapper-container #bb-url-nextPicButton' ).show();
+					$( '.bb-url-scrapper-container #bb-link-preview-select-image' ).show();
+					$( '.bb-url-scrapper-container #icon-exchange' ).hide();
+					$( '.bb-url-scrapper-container #bb-link-preview-remove-image' ).hide();
+				};
+
+				$( self.currentPreviewParent ).on( 'click', '#bb-link-preview-remove-image', function( e ) {
+					e.preventDefault();
+					self.options.link_images = [];
+					self.options.link_image_index = 0;
+					self.options.link_image_index_save = '-1';
+					self.render( self.options );
+				});
+
+				$( self.currentPreviewParent ).on( 'click', '#bb-close-link-suggestion', function( e ) {
+					e.preventDefault();
+					// Set default values.
+					Object.assign( self.options, {
+						link_success: false,
+						link_error: false,
+						link_error_msg: '',
+						link_scrapping: false,
+						link_images: [],
+						link_image_index: 0,
+						link_title: '',
+						link_description: '',
+						link_url: '',
+						link_embed: false,
+						link_swap_image_button: 0,
+						link_image_index_save: '0',
+					} );
+					self.render( self.options );
+				});
+
+				$( self.currentPreviewParent ).on( 'click', '#icon-exchange', function( e ) {
+					e.preventDefault();
+					self.options.link_swap_image_button = 1;
+					self.displayNextPrevButtonView();
+				});
+
+				$( self.currentPreviewParent ).on( 'click', '#bb-url-prevPicButton', function( e ) {
+					e.preventDefault();
+					var imageIndex = self.options.link_image_index;
+					if ( imageIndex > 0 ) {
+						Object.assign( self.options, {
+							link_image_index : parseInt( imageIndex ) - 1,
+							link_swap_image_button : 1
+						} );
+						self.render( self.options );
+						self.displayNextPrevButtonView();
+					}
+				});
+
+				$( self.currentPreviewParent ).on( 'click', '#bb-url-nextPicButton', function( e ) {
+					e.preventDefault();
+					var imageIndex = self.options.link_image_index;
+					var images = self.options.link_images;
+					if ( imageIndex < images.length - 1 ) {
+						Object.assign( self.options, {
+							link_image_index : parseInt( imageIndex ) + 1,
+							link_swap_image_button : 1
+						} );
+						self.render( self.options );
+						self.displayNextPrevButtonView();
+					}
+				});
+
+				$( self.currentPreviewParent ).on( 'click', '#bb-link-preview-select-image', function( e ) {
+					e.preventDefault();
+					var imageIndex = self.options.link_image_index;
+					self.options.link_image_index_save = imageIndex;
+					self.options.link_swap_image_button = 0;
+					$( '.bb-url-scrapper-container #icon-exchange' ).show();
+					$( '.bb-url-scrapper-container #activity-link-preview-remove-image' ).show();
+					$( '.bb-url-scrapper-container #activity-link-preview-select-image' ).hide();
+					$( '.bb-url-scrapper-container #activity-url-prevPicButton' ).hide();
+					$( '.bb-url-scrapper-container #activity-url-nextPicButton' ).hide();
+					self.render( self.options );
+				});
+
+				self.controlsAdded = true;
+			},
+			scrapURL: function ( urlText, targetPreviewParent, targetDataInput ) {
+				var self = this;
+				var urlString = '';
+
+				if ( targetPreviewParent ) {
+					var formEl = targetPreviewParent.closest( 'form' );
+					if( formEl.find( 'input#bb_link_url' ).length > 0 && formEl.find( 'input#bb_link_url' ).val() !== '' ){
+						var currentValue = JSON.parse( formEl.find( 'input#bb_link_url').val() );
+						self.options.link_url = currentValue.url ? currentValue.url : '';
+						self.options.link_image_index_save = currentValue.link_image_index_save;
+					}
+				}
+				
+		
+				if ( ( urlText === null || urlText === '' ) && self.options.link_url === undefined ) {
+					return;
+				}
+
+				if( targetPreviewParent ) {
+
+					if( targetPreviewParent.children( '.bb-url-scrapper-container' ).length == 0 ) {
+						targetPreviewParent.prepend('<div class="bb-url-scrapper-container"><div>');
+					}
+					self.currentPreviewParent = targetPreviewParent.find( '.bb-url-scrapper-container' );
+				}
+
+				if( targetDataInput.length > 0 && targetDataInput.prop('tagName').toLowerCase() === 'input' ){
+					self.dataInput = targetDataInput;
+				}
+		
+				//Remove mentioned members Link
+				var tempNode = jQuery( '<div></div>' ).html( urlText );
+				tempNode.find( 'a.bp-suggestions-mention' ).remove();
+				urlText = tempNode.html();
+		
+				if ( urlText.indexOf( '<img' ) >= 0 ) {
+					urlText = urlText.replace( /<img .*?>/g, '' );
+				}
+		
+				if ( urlText.indexOf( 'http://' ) >= 0 ) {
+					urlString = this.getURL( 'http://', urlText );
+				} else if ( urlText.indexOf( 'https://' ) >= 0 ) {
+					urlString = this.getURL( 'https://', urlText );
+				} else if ( urlText.indexOf( 'www.' ) >= 0 ) {
+					urlString = this.getURL( 'www', urlText );
+				}
+		
+				if ( urlString !== '' ) {
+					// check if the url of any of the excluded video oembeds.
+					var url_a    = document.createElement( 'a' );
+					url_a.href   = urlString;
+					var hostname = url_a.hostname;
+					if ( 'undefined' !== typeof BP_Nouveau.forums.params.excluded_hosts && BP_Nouveau.forums.params.excluded_hosts.indexOf( hostname ) !== -1 ) {
+						urlString = '';
+					}
+				}
+		
+				if ( '' !== urlString ) {
+					this.loadURLPreview( urlString );
+				} else if( self.options.link_url ) {
+					this.loadURLPreview( self.options.link_url );
+				}
+			},
+		
+			getURL: function ( prefix, urlText ) {
+				var urlString   = '';
+				urlText         = urlText.replace( /&nbsp;/g, '' );
+				var startIndex  = urlText.indexOf( prefix );
+				var responseUrl = '';
+		
+				if ( ! _.isUndefined( jQuery( $.parseHTML( urlText ) ).attr( 'href' ) ) ) {
+					urlString = jQuery( urlText ).attr( 'href' );
+				} else {
+					for ( var i = startIndex; i < urlText.length; i++ ) {
+						if (
+							urlText[ i ] === ' ' ||
+							urlText[ i ] === '\n' ||
+							( urlText[ i ] === '"' && urlText[ i + 1 ] === '>' ) ||
+							( urlText[ i ] === '<' && urlText[ i + 1 ] === 'b' && urlText[ i + 2 ] === 'r' )
+						) {
+							break;
+						} else {
+							urlString += urlText[ i ];
+						}
+					}
+					if ( prefix === 'www' ) {
+						prefix    = 'http://';
+						urlString = prefix + urlString;
+					}
+				}
+		
+				var div       = document.createElement( 'div' );
+				div.innerHTML = urlString;
+				var elements  = div.getElementsByTagName( '*' );
+		
+				while ( elements[ 0 ] ) {
+					elements[ 0 ].parentNode.removeChild( elements[ 0 ] );
+				}
+		
+				if ( div.innerHTML.length > 0 ) {
+					responseUrl = div.innerHTML;
+				}
+		
+				return responseUrl;
+			},
+		
+			loadURLPreview: function ( url ) {
+				var self = this;
+		
+				var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?$/;
+				url        = $.trim( url );
+				if ( regexp.test( url ) ) {
+		
+					if ( url.includes( window.location.hostname ) && ( url.includes( 'download_document_file' ) || url.includes( 'download_media_file' ) || url.includes( 'download_video_file' ) ) ) {
+						return false;
+					}
+		
+					var urlResponse = false;
+					if ( self.loadedURLs.length ) {
+						$.each(
+							self.loadedURLs,
+							function ( index, urlObj ) {
+								if ( urlObj.url == url ) {
+									urlResponse = urlObj.response;
+									return false;
+								}
+							}
+						);
+					}
+		
+					if ( self.loadURLAjax != null ) {
+						self.loadURLAjax.abort();
+					}
+		
+					Object.assign( self.options, {
+							link_scrapping: true,
+							link_loading: true,
+							link_error: false,
+							link_url: url,
+							link_embed: false,
+							link_success: false,
+						}
+					);
+
+					self.controlsAdded = null;
+
+					if ( 'undefined' !== typeof self.currentPreviewParent && self.currentPreviewParent.length ) {
+						var formEl = self.currentPreviewParent.closest( 'form' );
+						if( formEl.find( 'input#bb_link_url' ).length > 0 && formEl.find( 'input#bb_link_url' ).val() !== '' ){
+							var prev_preview_value = JSON.parse( formEl.find( 'input#bb_link_url').val() );
+							if ( '' !== prev_preview_value.url && prev_preview_value.url !== url ) {
+
+								// Reset older preview data.
+								self.options.link_image_index_save = 0;
+								formEl.find( 'input#bb_link_url').val('');
+							}
+						}
+					}
+					self.render( self.options );
+		
+					if ( ! urlResponse ) {
+						self.loadURLAjax = $.post(
+							ajaxurl,
+							{
+							  action: 'bb_forums_parse_url',
+							  url: url
+							},
+							function( response ) {
+							  // success callback
+							  self.setURLResponse(response, url);
+							}
+						  ).always(function() {
+							// always callback
+						});
+					} else {
+						self.setURLResponse( urlResponse, url );
+					}
+				}
+			},
+		
+			setURLResponse: function ( response, url ) {
+				var self = this;
+		
+				self.options.link_loading = false;
+		
+				if ( response.title === '' && response.images === '' ) {
+					self.options.link_scrapping = false;
+					return;
+				}
+		
+				if ( response.error === '' ) {
+					var urlImages = response.images;
+					self.options.link_image_index = 0;
+					var urlImagesIndex = '0';
+					if ( '' !== self.options.link_image_index_save && ! _.isUndefined( self.options.link_image_index_save ) ) {
+						urlImagesIndex =  parseInt( self.options.link_image_index_save );
+					}
+					if( self.options.link_image_index_save === '-1' ) {
+						urlImagesIndex = '';
+						urlImages = [];
+					} else if( _.isUndefined( self.options.link_image_index_save ) ) {
+						self.options.link_image_index_save = 0;
+					}
+					Object.assign( self.options, {
+							link_success: true,
+							link_url: url,
+							link_title: response.title,
+							link_description: response.description,
+							link_images: urlImages,
+							link_image_index: urlImagesIndex,
+							link_embed: ! _.isUndefined( response.wp_embed ) && response.wp_embed
+						}
+					);
+
+					if ( $( '#whats-new-attachments' ).hasClass( 'bb-video-preview' ) ) {
+						$( '#whats-new-attachments' ).removeClass( 'bb-video-preview' );
+					}
+
+					if ( $( '#whats-new-attachments' ).hasClass( 'bb-link-preview' ) ) {
+						$( '#whats-new-attachments' ).removeClass( 'bb-link-preview' );
+					}
+
+					if ( response.description.indexOf( 'iframe' ) > -1 || ( ! _.isUndefined( response.wp_embed ) && response.wp_embed ) ) {
+						$( '#whats-new-attachments' ).addClass( 'bb-video-preview' );
+					} else {
+						$( '#whats-new-attachments' ).addClass( 'bb-link-preview' );
+					}
+		
+					self.loadedURLs.push( { 'url': url, 'response': response } );
+					self.render( self.options );		
+				} else {
+					Object.assign( self.options, {
+							link_success: false,
+							link_error: true,
+							link_error_msg: response.error,
+							link_loading: false,
+							link_images: []
+						}
+					);
+					self.render( self.options );
+				}
+			}
 		}
+			
 
 	};
 
