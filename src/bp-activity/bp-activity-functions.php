@@ -4933,11 +4933,13 @@ function bp_get_followers( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'user_id' => bp_displayed_user_id(),
+			'user_id'  => bp_displayed_user_id(),
+			'page'     => false,
+			'per_page' => false,
 		)
 	);
 
-	return apply_filters( 'bp_get_followers', BP_Activity_Follow::get_followers( $r['user_id'] ) );
+	return apply_filters( 'bp_get_followers', BP_Activity_Follow::get_followers( $r['user_id'], $r ) );
 }
 
 /**
@@ -4956,11 +4958,13 @@ function bp_get_following( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'user_id' => bp_displayed_user_id(),
+			'user_id'  => bp_displayed_user_id(),
+			'page'     => false,
+			'per_page' => false,
 		)
 	);
 
-	return apply_filters( 'bp_get_following', BP_Activity_Follow::get_following( $r['user_id'] ) );
+	return apply_filters( 'bp_get_following', BP_Activity_Follow::get_following( $r['user_id'], $r ) );
 }
 
 /**
@@ -5916,3 +5920,60 @@ function bb_is_group_activity_comment( $comment = 0 ) {
 
 	return false;
 }
+
+/**
+ * Function to create a paginated backgroud job for activity following notifications.
+ *
+ * @since BuddyBoss 2.3.70
+ *
+ * @param array $args  Array of arguments.
+ * @param array $paged Current page number for pagination.
+ */
+function bb_activity_create_following_post_notification( $args, $paged = 1 ) {
+	if ( empty( $paged ) ) {
+		$paged = 1;
+	}
+
+	$per_page       = apply_filters( 'bb_following_min_count', 20 );
+	$follower_users = bp_get_followers(
+		array(
+			'user_id'  => $args['item_id'],
+			'per_page' => $per_page,
+			'page'     => $paged
+		)
+	);
+
+	if ( empty( $follower_users ) ) {
+		return;
+	}
+
+	if ( count( $follower_users ) > 0 ) {
+		global $bp_background_updater;
+
+		$args['user_ids'] = $follower_users;
+		$args['paged']    = $paged;
+		$bp_background_updater->data(
+			array(
+				array(
+					'callback' => 'bb_activity_following_post_notification',
+					'args'     => array( $args ),
+				),
+			)
+		);
+
+		$bp_background_updater->save()->dispatch();
+	}
+
+	if ( isset( $args['user_ids'] ) ) {
+		unset( $args['user_ids'] );
+	}
+
+	if ( isset( $args['paged'] ) ) {
+		unset( $args['paged'] );
+	}
+
+	// Call recursive to finish update for all records.
+	$paged++;
+	bb_activity_create_following_post_notification( $args, $paged );
+}
+
