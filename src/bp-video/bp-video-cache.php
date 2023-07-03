@@ -185,6 +185,7 @@ add_action( 'bp_video_albums_deleted_albums', 'bp_video_clear_cache_for_deleted_
  * @return bool True on success, false on failure.
  */
 function bp_video_album_reset_cache_incrementor() {
+	bp_core_reset_incrementor( 'bp_media_album' );
 	return bp_core_reset_incrementor( 'bp_video_album' );
 }
 add_action( 'bp_video_album_delete', 'bp_video_album_reset_cache_incrementor' );

@@ -137,14 +137,6 @@ function bbp_get_topics_pagination_base( $forum_id = 0 ) {
 		} elseif ( bbp_is_topic_tag() ) {
 			$base = bbp_get_topic_tag_link();
 
-			// Page or single post.
-		} elseif ( is_page() || is_single() ) {
-			if ( has_shortcode( get_the_content(), 'bbp-forum-index' ) ) {
-				$base = bbp_get_topics_url();
-			} else {
-				$base = get_permalink();
-			}
-
 			// Forum archive.
 		} elseif ( bbp_is_forum_archive() ) {
 			if ( 'forums' === bbp_show_on_root() ) {
@@ -156,6 +148,14 @@ function bbp_get_topics_pagination_base( $forum_id = 0 ) {
 			// Topic archive.
 		} elseif ( bbp_is_topic_archive() ) {
 			$base = bbp_get_topics_url();
+
+			// Page or single post.
+		} elseif ( is_page() || is_single() ) {
+			if ( has_shortcode( get_the_content(), 'bbp-forum-index' ) ) {
+				$base = bbp_get_topics_url();
+			} else {
+				$base = get_permalink();
+			}
 
 			// Default.
 		} else {
