@@ -3119,7 +3119,7 @@ window.bp = window.bp || {};
 					}
 
 					if ( $( '.activity-media-container' ).length ) {
-						if ( response.description.indexOf( 'iframe' ) > -1 || ( ! _.isUndefined( response.wp_embed ) && response.wp_embed ) ) {
+						if ( ( 'undefined' !== typeof response.description && response.description.indexOf( 'iframe' ) > -1 ) || ( ! _.isUndefined( response.wp_embed ) && response.wp_embed ) ) {
 							$( '#whats-new-attachments' ).addClass( 'activity-video-preview' );
 						} else {
 							$( '#whats-new-attachments' ).addClass( 'activity-link-preview' );
