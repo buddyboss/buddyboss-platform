@@ -2147,35 +2147,37 @@ function bbp_view_id( $view = '' ) {
 	echo bbp_get_view_id( $view );
 }
 
-	/**
-	 * Get the view id
-	 *
-	 * Use view id if supplied, otherwise bbp_get_view_rewrite_id() query var.
-	 *
-	 * @since bbPress (r2789)
-	 *
-	 * @param string $view Optional. View id.
-	 * @uses sanitize_title() To sanitize the view id
-	 * @uses get_query_var() To get the view id query variable
-	 * @uses bbp_get_view_rewrite_id() To get the view rewrite ID
-	 * @return bool|string ID on success, false on failure
-	 */
+/**
+ * Get the view id
+ *
+ * Use view id if supplied, otherwise bbp_get_view_rewrite_id() query var.
+ *
+ * @since bbPress (r2789)
+ *
+ * @param string $view Optional. View id.
+ * @uses sanitize_title() To sanitize the view id
+ * @uses get_query_var() To get the view id query variable
+ * @uses bbp_get_view_rewrite_id() To get the view rewrite ID
+ * @return bool|string ID on success, false on failure
+ */
 function bbp_get_view_id( $view = '' ) {
 	$bbp = bbpress();
 
-	if ( ! empty( $view ) ) {
-		$view = sanitize_title( $view );
+	// User supplied string
+	if ( ! empty( $view ) && is_string( $view ) ) {
+		$view_id = $view;
+
+		// Current view ID
 	} elseif ( ! empty( $bbp->current_view_id ) ) {
-		$view = $bbp->current_view_id;
+		$view_id = $bbp->current_view_id;
+
+		// Querying for view
 	} else {
-		$view = get_query_var( bbp_get_view_rewrite_id() );
+		$view_id = get_query_var( bbp_get_view_rewrite_id() );
 	}
 
-	if ( array_key_exists( $view, $bbp->views ) ) {
-		return $view;
-	}
-
-	return false;
+	// Filter & return
+	return apply_filters( 'bbp_get_view_id', $view_id, $view );
 }
 
 /**
