@@ -307,7 +307,7 @@ add_action( 'bp_blogs_comment_sync_activity_comment', 'bb_blogs_comment_mention_
  * DB column is referenced during blogmeta queries.
  *
  * @since buddypress 4.0.0
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.70
  *
  * @see   bp_blogs_update_blogmeta()
  * @see   bp_blogs_add_blogmeta()
