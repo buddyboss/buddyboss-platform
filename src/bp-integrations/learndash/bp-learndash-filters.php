@@ -438,14 +438,13 @@ function bb_support_learndash_course_other_language_permalink( $url ) {
 	$un_trailing_slash_url = rtrim( $url, '/' );
 	$rawurldecode_url      = rawurldecode( $un_trailing_slash_url );
 
-	if (
-		class_exists( 'LearnDash_Settings_Section' ) &&
-		(
-			in_array( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'courses' ), explode( '/', $un_trailing_slash_url ), true ) ||
-			in_array( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'courses' ), explode( '/', $rawurldecode_url ), true )
-		)
-	) {
-		return rawurldecode( $url );
+	if ( class_exists( 'LearnDash_Settings_Section' ) ) {
+		if (
+			in_array( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'courses' ), explode( '/', $rawurldecode_url ), true ) &&
+			! in_array( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'courses' ), explode( '/', $un_trailing_slash_url ), true )
+		) {
+			return rawurldecode( $url );
+		}
 	}
 
 	return $url;
