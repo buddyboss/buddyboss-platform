@@ -438,8 +438,8 @@ function bp_version_updater() {
 			bb_update_to_2_3_60();
 		}
 
-		if ( $raw_db_version < 20361 ) {
-			bb_update_to_2_3_70();
+		if ( $raw_db_version < 20371 ) {
+			bb_update_to_2_3_80();
 		}
 
 		if ( $raw_db_version < 20371 ) {
@@ -3087,7 +3087,7 @@ function bb_update_to_2_3_80() {
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_update_to_2_3_70() {
+function bb_update_to_2_3_80() {
 	bb_core_update_repair_duplicate_following_notification();
 }
 
