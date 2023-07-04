@@ -2847,6 +2847,7 @@ window.bp = window.bp || {};
 				this.on( 'ready', this.activateTinyMce, this );
 				this.options.activity.on( 'change:content', this.resetContent, this );
 				this.linkTimeout = null;
+				this.flag_show_link_preview = true;
 			},
 
 			adjustContent: function () {
@@ -2888,16 +2889,29 @@ window.bp = window.bp || {};
 					if ( this.linkTimeout != null ) {
 						clearTimeout( this.linkTimeout );
 					}
+					if ( this.$el.parents('form.activity-form.bp-activity-edit').length > 0 ) {
+						activity_id = this.$el.parents('form.activity-form.bp-activity-edit').find( '#bp-activity-id' ).val();
 
-					this.linkTimeout = setTimeout(
-						function () {
-							this.linkTimeout = null;
-							self.scrapURL( window.activity_editor.getContent() );
-						},
-						500
-					);
+						if ( 'undefined' === typeof $( '#activity-' + activity_id ).data( 'data-link-url' ) || '' === $( '#activity-' + activity_id ).data( 'data-link-url' ) ) {
+							self.flag_show_link_preview = false;
+						}
+						
+					} else {
+						self.flag_show_link_preview = true;
+					}
+
+					if ( self.flag_show_link_preview ) {
+						this.linkTimeout = setTimeout(
+							function () {
+								this.linkTimeout = null;
+								self.scrapURL( window.activity_editor.getContent() );
+							},
+							500
+						);
+					}
+	
 				}
-
+				self.flag_hide_link_preview = true;
 				this.saveCaretPosition();
 
 				var scrollViewScrollHeight = this.$el.closest( '.whats-new-scroll-view' ).prop('scrollHeight');
