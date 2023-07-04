@@ -583,13 +583,13 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 
 			unset( $actions['inline hide-if-no-js'] );
 
-			// Only show content if user can read it and there is no password
+			// Only show content if user can read it and there is no password.
 			if ( current_user_can( 'read_forum', $forum->ID ) && ! post_password_required( $forum ) ) {
 
-				// Get the forum description
+				// Get the forum description.
 				$content = bbp_get_forum_content( $forum->ID );
 
-				// Only proceed if there is a description
+				// Only proceed if there is a description.
 				if ( ! empty( $content ) ) {
 					echo '<div class="bbp-escaped-content">' . wp_strip_all_tags( wp_trim_excerpt( $content, $forum ) ) . '</div>';
 				}
