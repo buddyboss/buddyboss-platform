@@ -276,6 +276,9 @@ function bp_get_activate_slug() {
  * display a list of members.
  *
  * @since BuddyPress 1.2.0
+ * @since BuddyPress 7.0.0 Added `xprofile_query` and `user_ids` parameters.
+ * @since BuddyPress 10.0.0 Added `$date_query` parameter.
+ * @since BuddyBoss [BBVERSION] Added `xprofile_query`, `user_ids`, `date_query` parameters.
  *
  * @global object $members_template {@link BP_Members_Template}
  *
@@ -303,6 +306,8 @@ function bp_get_activate_slug() {
  *     @type array|int|string|bool $exclude             Exclude users from results by ID. Accepts an array, a single
  *                                                      integer, a comma-separated list of IDs, or false (to disable
  *                                                      this limiting). Default: false.
+ *     @type array|string|bool     $user_ids            An array or comma-separated list of IDs, or false (to
+ *                                                      disable this limiting). Default: false.
  *     @type int                   $user_id             If provided, results are limited to the friends of the specified
  *                                                      user. When on a user's Connections page, defaults to the ID of the
  *                                                      displayed user. Otherwise defaults to 0.
@@ -401,6 +406,7 @@ function bp_has_members( $args = array() ) {
 
 			'include'             => $include,    // Pass a user_id or a list (comma-separated or array) of user_ids to only show these users.
 			'exclude'             => false,    // Pass a user_id or a list (comma-separated or array) of user_ids to exclude these users.
+			'user_ids'            => false,
 
 			'user_id'             => $user_id, // Pass a user_id to only show friends of this user.
 			'member_type'         => $member_type,
@@ -411,7 +417,9 @@ function bp_has_members( $args = array() ) {
 			'meta_key'            => false,    // Only return users with this usermeta.
 			'meta_value'          => false,    // Only return users where the usermeta value matches. Requires meta_key.
 
-			'populate_extras'     => true,      // Fetch usermeta? Connection count, last active etc.
+			'populate_extras'     => true,     // Fetch usermeta? Connection count, last active etc.
+			'xprofile_query'      => false,
+			'date_query'          => false,    // Filter members by last activity.
 		),
 		'has_members'
 	);
