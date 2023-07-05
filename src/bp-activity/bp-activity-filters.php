@@ -272,7 +272,16 @@ function bp_activity_save_link_data( $activity ) {
 		return;
 	}
 
-	$link_url   = ! empty( $_POST['link_url'] ) ? filter_var( $_POST['link_url'], FILTER_VALIDATE_URL ) : '';
+	// Check if link_url is missing http protocol then update it.
+	$link_url = '';
+	if ( ! empty( $_POST['link_url'] ) ) {
+		$parsed_url = wp_parse_url( $_POST['link_url'] );
+		if ( ! $parsed_url || empty( $parsed_url['host'] ) ) {
+			$link_url = 'http://' . $_POST['link_url'];
+		}
+	}
+
+	$link_url   = ! empty( $link_url ) ? filter_var( $link_url, FILTER_VALIDATE_URL ) : '';
 	$link_embed = isset( $_POST['link_embed'] ) ? filter_var( $_POST['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false;
 
 	// Check if link url is set or not.
