@@ -6010,7 +6010,7 @@ function bp_activity_get_types_list() {
 					$new_types
 				);
 
-				$new_types['friendship_accepted,friendship_created'] = __( 'Friendships', 'buddypress' );
+				$new_types['friendship_accepted,friendship_created'] = __( 'Friendships', 'buddyboss' );
 			}
 		}
 

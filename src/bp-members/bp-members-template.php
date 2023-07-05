@@ -324,6 +324,11 @@ function bp_get_activate_slug() {
  *                                                      Default: false.
  *     @type mixed                 $meta_value          When used with meta_key, limits results by the a matching
  *                                                      usermeta value. Default: false.
+ *     @type array                 $xprofile_query      Filter results by xprofile data. Requires the xprofile
+ *                                                      component. See {@see BP_XProfile_Query} for details.
+ *     @type array                 $date_query          Filter results by member last activity date. See first parameter of
+ *                                                      {@link WP_Date_Query::__construct()} for syntax. Only applicable if
+ *                                                      $type is either 'active', 'random', 'newest', or 'online'.
  *     @type bool                  $populate_extras     Whether to fetch optional data, such as friend counts.
  *                                                      Default: true.
  * }
