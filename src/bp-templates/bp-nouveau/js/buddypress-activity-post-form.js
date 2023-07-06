@@ -3151,8 +3151,8 @@ window.bp = window.bp || {};
 					self.options.activity.set(
 						{
 							link_success: true,
-							link_title: response.title,
-							link_description: response.description,
+							link_title: ! _.isUndefined( response.title ) ? response.title : '',
+							link_description: ! _.isUndefined( response.description ) ? response.description : '',
 							link_images: urlImages,
 							link_image_index: urlImagesIndex,
 							link_image_index_save: link_image_index_save,
@@ -3171,7 +3171,7 @@ window.bp = window.bp || {};
 					}
 
 					if ( $( '.activity-media-container' ).length ) {
-						if ( response.description.indexOf( 'iframe' ) > -1 || ( ! _.isUndefined( response.wp_embed ) && response.wp_embed ) ) {
+						if ( ( 'undefined' !== typeof response.description && response.description.indexOf( 'iframe' ) > -1 ) || ( ! _.isUndefined( response.wp_embed ) && response.wp_embed ) ) {
 							$( '#whats-new-attachments' ).addClass( 'activity-video-preview' );
 						} else {
 							$( '#whats-new-attachments' ).addClass( 'activity-link-preview' );
