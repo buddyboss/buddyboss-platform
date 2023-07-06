@@ -2242,7 +2242,7 @@ function bbp_forum_enforce_private() {
 	if ( ! is_singular() || bbp_is_user_keymaster() || current_user_can( 'read_private_forums' ) ) {
 		if ( ! is_user_logged_in() ) {
 			wp_safe_redirect( wp_login_url( home_url( $wp->request ) ) );
-			exit;
+			return;
 		}
 		return;
 	}
@@ -2276,7 +2276,7 @@ function bbp_forum_enforce_private() {
 	if ( ! empty( $forum_id ) && bbp_is_forum_private( $forum_id ) && ! current_user_can( 'read_private_forums' ) ) {
 		if ( ! is_user_logged_in() ) {
 			wp_safe_redirect( wp_login_url( home_url( $wp->request ) ) );
-			exit;
+			return;
 		}
 		bbp_set_404();
 	}
