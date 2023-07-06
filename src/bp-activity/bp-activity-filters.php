@@ -278,6 +278,8 @@ function bp_activity_save_link_data( $activity ) {
 		$parsed_url = wp_parse_url( $_POST['link_url'] );
 		if ( ! $parsed_url || empty( $parsed_url['host'] ) ) {
 			$link_url = 'http://' . $_POST['link_url'];
+		} else {
+			$link_url = $_POST['link_url'];
 		}
 	}
 
