@@ -78,7 +78,7 @@ add_action( 'bp_setup_globals', 'bp_core_define_slugs', 11 );
  *
  * @since BuddyPress 1.2.0
  * @since BuddyPress 7.0.0 Added `xprofile_query` parameter. Added `user_ids` parameter.
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss [BBVERSION] Added `xprofile_query` parameter. Added `user_ids` parameter.
  *
  * @param array|string $args {
  *     Array of arguments. All are optional. See {@link BP_User_Query} for

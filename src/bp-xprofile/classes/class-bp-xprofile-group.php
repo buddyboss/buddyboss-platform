@@ -251,31 +251,37 @@ class BP_XProfile_Group {
 	 * and field data.
 	 *
 	 * @since BuddyPress 1.2.0
-	 *
+	 * @since BuddyPress 2.4.0 Introduced `$member_type` argument.
+	 * @since BuddyPress 8.0.0 Introduced `$hide_field_types` & `$signup_fields_only` arguments.
+	 * @since BuddyPress 11.0.0 `$profile_group_id` accepts an array of profile group ids.
+	 * @since BuddyBoss [BBVERSION] Introduced `$hide_field_types` & `$signup_fields_only` arguments.`$profile_group_id` accepts an array of profile group ids.
+	 * 
 	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @param array $args {
 	 *  Array of optional arguments:
-	 *      @type int          $profile_group_id  Limit results to a single profile group.
-	 *      @type int          $user_id           Required if you want to load a specific user's data.
-	 *                                            Default: displayed user's ID.
-	 *      @type array|string $member_type       Limit fields by those restricted to a given profile type, or array of
-	 *                                            profile types. If `$user_id` is provided, the value of `$member_type`
-	 *                                            will be overridden by the profile types of the provided user. The
-	 *                                            special value of 'any' will return only those fields that are
-	 *                                            unrestricted by profile type - i.e., those applicable to any type.
-	 *      @type bool         $hide_empty_groups True to hide groups that don't have any fields. Default: false.
-	 *      @type bool         $hide_empty_fields True to hide fields where the user has not provided data.
-	 *                                            Default: false.
-	 *      @type bool         $fetch_fields      Whether to fetch each group's fields. Default: false.
-	 *      @type bool         $fetch_field_data  Whether to fetch data for each field. Requires a $user_id.
-	 *                                            Default: false.
-	 *      @type array        $exclude_groups    Comma-separated list or array of group IDs to exclude.
-	 *      @type array        $exclude_fields    Comma-separated list or array of field IDs to exclude.
-	 *      @type array        $includ_fields    Comma-separated list or array of field IDs to include.
-	 *      @type bool         $update_meta_cache Whether to pre-fetch xprofilemeta for all retrieved groups, fields,
-	 *                                            and data. Default: true.
-	 * }
+	 *      @type int|int[]|bool $profile_group_id   Limit results to a single profile group.
+	 *      @type int            $user_id            Required if you want to load a specific user's data.
+	 *                                               Default: displayed user's ID.
+	 *      @type array|string   $member_type        Limit fields by those restricted to a given profile type, or array of
+	 *                                               profile types. If `$user_id` is provided, the value of `$member_type`
+	 *                                               will be overridden by the profile types of the provided user. The
+	 *                                               special value of 'any' will return only those fields that are
+	 *                                               unrestricted by profile type - i.e., those applicable to any type.
+	 *      @type bool           $hide_empty_groups  True to hide groups that don't have any fields. Default: false.
+	 *      @type bool           $hide_empty_fields  True to hide fields where the user has not provided data.
+	 *                                               Default: false.
+	 *      @type bool           $fetch_fields       Whether to fetch each group's fields. Default: false.
+	 *      @type bool           $fetch_field_data   Whether to fetch data for each field. Requires a $user_id.
+	 *                                               Default: false.
+	 *      @type array          $exclude_groups     Comma-separated list or array of group IDs to exclude.
+	 *      @type array          $exclude_fields     Comma-separated list or array of field IDs to exclude.
+	 *      @type array          $includ_fields      Comma-separated list or array of field IDs to include.
+	 *      @type bool           $update_meta_cache  Whether to pre-fetch xprofilemeta for all retrieved groups, fields,
+	 *                                               and data. Default: true.
+	 *      @type string[]       $hide_field_types   List of field types to hide form loop. Default: empty array.
+	 *      @type bool           $signup_fields_only Whether to only return signup fields. Default: false.
+	 *  }
 	 * @return array $groups
 	 */
 	public static function get( $args = array() ) {
@@ -300,6 +306,8 @@ class BP_XProfile_Group {
 				'update_meta_cache'              => true,
 				'repeater_show_main_fields_only' => false,
 				'fetch_social_network_fields'    => false,
+				'hide_field_types'               => array(),
+				'signup_fields_only'             => false,
 			)
 		);
 
@@ -311,8 +319,9 @@ class BP_XProfile_Group {
 		);
 
 		// WHERE.
-		if ( ! empty( $r['profile_group_id'] ) ) {
-			$where_sql = $wpdb->prepare( 'WHERE g.id = %d', $r['profile_group_id'] );
+		if ( ! empty( $r['profile_group_id'] ) && ! is_bool( $r['profile_group_id'] ) ) {
+			$profile_group_ids = join( ',', wp_parse_id_list( $r['profile_group_id'] ) );
+			$where_sql         = "WHERE g.id IN ({$profile_group_ids})";
 		} elseif ( $r['exclude_groups'] ) {
 			$exclude   = join( ',', wp_parse_id_list( $r['exclude_groups'] ) );
 			$where_sql = "WHERE g.id NOT IN ({$exclude})";

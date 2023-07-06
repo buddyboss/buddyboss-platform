@@ -17,6 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * Get a BuddyPress template part for display in a theme.
  *
  * @since BuddyPress 1.7.0
+ * @since BuddyPress 7.0.0 Added $args parameter.
  * @since BuddyBoss [BBVERSION] Added $args parameter.
  *
  * @param string      $slug Template part slug. Used to generate filenames,
@@ -35,6 +36,7 @@ function bp_get_template_part( $slug, $name = null, $args = array() ) {
 	 * This is a variable hook that is dependent on the slug passed in.
 	 *
 	 * @since BuddyPress 1.7.0
+	 * @since BuddyPress 7.0.0 Added $args parameter.
 	 * @since BuddyBoss [BBVERSION] Added $args parameter.
 	 *
 	 * @param string $slug Template part slug requested.
@@ -54,6 +56,7 @@ function bp_get_template_part( $slug, $name = null, $args = array() ) {
 	 * Filters the template parts to be loaded.
 	 *
 	 * @since BuddyPress 1.7.0
+	 * @since BuddyPress 7.0.0 Added $args parameter.
 	 * @since BuddyBoss [BBVERSION] Added $args parameter.
 	 *
 	 * @param array  $templates Array of templates located.
@@ -74,6 +77,7 @@ function bp_get_template_part( $slug, $name = null, $args = array() ) {
  * prepended to the slug.
  *
  * @since BuddyPress 2.6.0
+ * @since BuddyPress 7.0.0 Added $args parameter.
  * @since BuddyBoss [BBVERSION] Added $args parameter.
  *
  * @see bp_get_template_part() for full documentation.
@@ -96,6 +100,7 @@ function bp_get_asset_template_part( $slug, $name = null, $args = array() ) {
  * not found in either of those, it looks in the theme-compat folder last.
  *
  * @since BuddyPress 1.7.0
+ * @since BuddyPress 7.0.0 Added $args parameter.
  * @since BuddyBoss [BBVERSION] Added $args parameter.
  *
  * @param string|array $template_names Template file(s) to search for, in order.
@@ -340,6 +345,7 @@ function bp_get_template_stack() {
  * Put a template part into an output buffer, and return it.
  *
  * @since BuddyPress 1.7.0
+ * @since BuddyPress 7.0.0 Added $args parameter.
  * @since BuddyBoss [BBVERSION] Added $args parameter.
  *
  * @see bp_get_template_part() for a description of $slug, $name and $args params.
