@@ -1252,3 +1252,4 @@ function bb_recipients_recipient_get_join_sql_with_group_members( $sql, $r ) {
 	$sql .= ' JOIN ' . $wpdb->prefix . 'bp_groups_members gm ON ( gm.user_id = r.user_id )';
 	return $sql;
 }
+
