@@ -2580,7 +2580,7 @@ window.bp = window.bp || {};
 			},
 
 			search: function ( e ) {
-				
+
 				// Prevent search dropdown from closing with enter key
 				if ( e.key === 'Enter' || e.keyCode === 13 ) {
 					e.preventDefault();
@@ -2605,7 +2605,7 @@ window.bp = window.bp || {};
 					},
 					1000
 				);
-				
+
 			},
 
 			searchGif: function ( q ) {
@@ -3099,8 +3099,8 @@ window.bp = window.bp || {};
 					self.options.activity.set(
 						{
 							link_success: true,
-							link_title: response.title,
-							link_description: response.description,
+							link_title: ! _.isUndefined( response.title ) ? response.title : '',
+							link_description: ! _.isUndefined( response.description ) ? response.description : '',
 							link_images: urlImages,
 							link_image_index: urlImagesIndex,
 							link_image_index_save: link_image_index_save,
