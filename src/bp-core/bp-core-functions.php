@@ -7836,13 +7836,6 @@ function bb_admin_icons( $id ) {
 		case 'connection_access_control_block':
 			$meta_icon = $bb_icon_bf . ' bb-icon-lock-alt-open';
 			break;
-		case 'bp_zoom_settings_section':
-			$meta_icon = $bb_icon_bf . ' bb-icon-brand-buddyboss';
-			break;
-		case 'bp_zoom_gutenberg_section';
-		case 'bp_zoom_browser_section';
-			$meta_icon = $bb_icon_bf . ' bb-icon-brand-zoom';
-			break;
 		case 'bp_labs_settings_notifications';
 			$meta_icon = $bb_icon_bf . ' bb-icon-flask';
 			break;
