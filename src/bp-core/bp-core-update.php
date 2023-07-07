@@ -438,12 +438,8 @@ function bp_version_updater() {
 			bb_update_to_2_3_60();
 		}
 
-		if ( $raw_db_version < 20361 ) {
-			bb_update_to_2_3_70();
-		}
-
-		if ( $raw_db_version < 20371 ) {
-			bb_update_to_2_3_80();
+		if ( $raw_db_version < 20561 ) {
+			bb_update_to_2_3_90();
 		}
 	}
 
@@ -3070,53 +3066,26 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
 	bb_create_background_message_media_document_update( $table_exists, $paged );
 }
 
-
 /**
- * Migrate data when plugin update.
+ * Migrate icon class for the documents.
  *
  * @since BuddyBoss [BBVERSION]
- */
-function bb_update_to_2_3_70() {
-	bb_core_update_repair_duplicate_following_notification();
-}
-
-/**
- * Function will fetch and delete duplicate following notification data.
  *
- * @since BuddyBoss [BBVERSION]
+ * @return void
  */
-function bb_core_update_repair_duplicate_following_notification() {
-	global $wpdb;
-	$bp = buddypress();
+function bb_update_to_2_3_90() {
+	if ( bp_is_active( 'document' ) ) {
+		$saved_extensions = bp_get_option( 'bp_document_extensions_support', array() );
+		$default          = bp_media_allowed_document_type();
 
-	$sql  = "DELETE FROM {$bp->notifications->table_name}";
-	$sql .= ' WHERE id IN (';
-	$sql .= " SELECT * FROM ( SELECT DISTINCT n1.id FROM {$bp->notifications->table_name} n1";
-	$sql .= " JOIN {$bp->notifications->table_name} n2 ON n1.user_id = n2.user_id";
-	$sql .= ' WHERE n1.secondary_item_id = n2.secondary_item_id';
-	$sql .= ' AND n1.date_notified < n2.date_notified';
-	$sql .= ' AND n1.component_name = %s AND n1.component_action = %s';
-	$sql .= ' ORDER BY n1.id DESC) AS ids';
-	$sql .= ' )';
+		foreach ( $default as $key => $value ) {
+			if ( isset( $saved_extensions[ $key ] ) ) {
+				$document_file_extension          = substr( strrchr( $value['extension'], '.' ), 1 );
+				$new_icon                         = bp_document_svg_icon( $document_file_extension );
+				$saved_extensions[ $key ]['icon'] = $new_icon;
+			}
+		}
 
-	// Remove duplicate notification ids.
-	$wpdb->query( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) );
-
-	// Purge all the cache for API.
-	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		// Clear notifications API cache.
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-notifications' );
-	}
-}
-
-/**
- * Migrate data when plugin update.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_update_to_2_3_80() {
-	// Purge all the cache for API.
-	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		BuddyBoss\Performance\Cache::instance()->purge_all();
+		bp_update_option( 'bp_document_extensions_support', $saved_extensions );
 	}
 }
