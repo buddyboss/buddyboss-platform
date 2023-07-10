@@ -3066,6 +3066,17 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
 	bb_create_background_message_media_document_update( $table_exists, $paged );
 }
 
+/**
+ * Migrate data when plugin update.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_update_to_2_3_80() {
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
+}
 
 /**
  * Migrate data when plugin update.
@@ -3074,6 +3085,11 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
  */
 function bb_update_to_2_3_80() {
 	bb_core_update_repair_duplicate_following_notification();
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
 }
 
 /**
