@@ -384,13 +384,21 @@ function bp_admin_repair_list() {
 		);
 	}
 
-	// Groups:
-	// - user group count.
+	// Group repair actions.
 	if ( bp_is_active( 'groups' ) ) {
+
+		// User group count.
 		$repair_list[10] = array(
 			'bp-group-count',
 			esc_html__( 'Repair total groups count for each member', 'buddyboss' ),
 			'bp_admin_repair_group_count',
+		);
+
+		// Recalculate group members count for each group.
+		$repair_list[124] = array(
+			'bp-group-member-count',
+			esc_html__( 'Recalculate the total members count for each group.', 'buddyboss' ),
+			'bp_admin_repair_group_member_count',
 		);
 	}
 
@@ -1523,4 +1531,88 @@ function bb_sync_profile_completion_widget() {
 			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
 		);
 	}
+}
+
+/**
+ * Function will recalculate the group total members count
+ * and remove the orphaned group members records.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bp_admin_repair_group_member_count() {
+	global $wpdb;
+
+	if ( ! bp_is_active( 'groups' ) ) {
+		return;
+	}
+
+	$statement = esc_html__( 'Recalculating the total group members count for each group &hellip; %s', 'buddyboss' );
+	$bp        = buddypress();
+
+	/**
+	 * Check and delete orphan group members records from wp_bp_groups_members table
+	 * if user doesn't exist in users table.
+	 */
+	$wpdb->query( "DELETE m FROM {$bp->groups->table_name_members} AS m LEFT JOIN {$wpdb->users} AS u ON u.ID = m.user_id WHERE u.ID IS NULL" );
+
+	// Fetch all groups.
+	$group_ids = $wpdb->get_col( "SELECT DISTINCT id FROM {$wpdb->prefix}bp_groups ORDER BY id DESC" );
+
+	if ( is_wp_error( $group_ids ) ) {
+		return array(
+			'status'  => 0,
+			'message' => sprintf( $statement, esc_html__( 'Failed!', 'buddyboss' ) ),
+		);
+	}
+
+	if ( ! empty( $group_ids ) ) {
+		foreach ( $group_ids as $group_id ) {
+			// Remove cached group member count.
+			$cache_key = 'bp_group_get_total_member_count_' . $group_id;
+			wp_cache_delete( $cache_key, 'bp_groups' );
+
+			$select_sql = "SELECT COUNT(u.ID) FROM {$bp->groups->table_name_members} m";
+			$join_sql   = "LEFT JOIN {$wpdb->users} u ON u.ID = m.user_id";
+
+			// Where conditions.
+			$where_conditions          = array();
+			$where_conditions['where'] = 'm.group_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0';
+
+			/**
+			 * Filters the MySQL WHERE conditions for the group members count.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
+			 * @param string $ud_name          moderation type
+			 */
+			$where_conditions = apply_filters( 'bb_group_member_count_where_sql', $where_conditions, 'user_id' );
+
+			// Join the where conditions together.
+			$where_sql = 'WHERE ' . join( ' AND ', $where_conditions );
+
+			/**
+			 * Filters the MySQL JOIN conditions for the group members count.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array  $join_sql Current conditions for MySQL JOIN statement.
+			 * @param string $ud_name  moderation type
+			 */
+			$join_sql = apply_filters( 'bb_group_member_count_join_sql', $join_sql, 'user_id' );
+
+			$sql          = $wpdb->prepare( "{$select_sql} {$join_sql} {$where_sql}", $group_id );
+			$member_count = $wpdb->get_var( $sql );
+
+			groups_update_groupmeta( $group_id, 'total_member_count', absint( $member_count ) );
+			wp_cache_set( $cache_key, absint( $member_count ), 'bp_groups' );
+		}
+	}
+
+	return array(
+		'status'  => 1,
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+	);
 }
