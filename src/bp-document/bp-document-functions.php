@@ -498,6 +498,7 @@ function bp_document_add( $args = '' ) {
 			'folder_id'     => false,                   // Optional: ID of the folder.
 			'group_id'      => false,                   // Optional: ID of the group.
 			'activity_id'   => false,                   // The ID of activity.
+			'message_id'    => false,                   // The ID of message.
 			'privacy'       => 'public',                // Optional: privacy of the document e.g. public.
 			'menu_order'    => 0,                       // Optional:  Menu order.
 			'date_created'  => bp_core_current_time(),  // The GMT time that this document was recorded.
@@ -516,6 +517,7 @@ function bp_document_add( $args = '' ) {
 	$document->folder_id     = (int) $r['folder_id'];
 	$document->group_id      = (int) $r['group_id'];
 	$document->activity_id   = (int) $r['activity_id'];
+	$document->message_id    = (int) $r['message_id'];
 	$document->privacy       = $r['privacy'];
 	$document->menu_order    = $r['menu_order'];
 	$document->date_created  = $r['date_created'];
@@ -549,6 +551,7 @@ function bp_document_add( $args = '' ) {
 
 	// document is saved for attachment.
 	update_post_meta( $document->attachment_id, 'bp_document_saved', true );
+	update_post_meta( $document->attachment_id, 'bp_document_id', $document->id );
 
 	/**
 	 * Fires at the end of the execution of adding a new document item, before returning the new document item ID.
@@ -608,6 +611,7 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 							'folder_id'     => ! empty( $document['folder_id'] ) ? $document['folder_id'] : $folder_id,
 							'group_id'      => ! empty( $document['group_id'] ) ? $document['group_id'] : $group_id,
 							'activity_id'   => $bp_document->activity_id,
+							'message_id'    => $bp_document->message_id,
 							'privacy'       => $bp_document->privacy,
 							'menu_order'    => ! empty( $document['menu_order'] ) ? $document['menu_order'] : false,
 							'date_modified' => bp_core_current_time(),
@@ -1242,6 +1246,12 @@ function bp_document_delete_orphaned_attachments() {
 				'value'   => '',
 			),
 		),
+		'date_query'     => array(
+			array(
+				'column' => 'post_date_gmt',
+				'before' => '6 hours ago',
+			),
+		),
 	);
 
 	$document_wp_query = new WP_query( $args );
@@ -1256,6 +1266,8 @@ function bp_document_delete_orphaned_attachments() {
 
 	add_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10, 2 );
 	add_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10, 2 );
+
+	bb_document_remove_orphaned_download();
 }
 
 /**
@@ -1400,11 +1412,38 @@ function bp_document_upload() {
 
 	do_action( 'bb_document_upload', $attachment );
 
+	// get saved document id.
+	$document_id = (int) get_post_meta( $attachment->ID, 'bp_document_id', true );
+
 	// Generate document attachment preview link.
 	$attachment_id   = 'forbidden_' . $attachment->ID;
 	$attachment_url  = home_url( '/' ) . 'bb-attachment-document-preview/' . base64_encode( $attachment_id );
 	$attachment_file = get_attached_file( $attachment->ID );
 	$attachment_size = is_file( $attachment_file ) ? bp_document_size_format( filesize( get_attached_file( $attachment->ID ) ) ) : 0;
+
+	if (
+		! empty( $document_id ) &&
+		(
+			bp_is_group_messages() ||
+			bp_is_messages_component() ||
+			(
+				! empty( $_POST['component'] ) &&
+				'messages' === $_POST['component']
+			)
+		)
+	) {
+		$attachment_url = bp_document_get_preview_url( $document_id, $attachment->ID );
+		$extension      = bp_document_extension( $attachment->ID );
+
+		if ( in_array( $extension, bp_get_document_preview_video_extensions(), true ) ) {
+			$attachment_url = bb_document_video_get_symlink( $document_id, true );
+		}
+
+		if ( empty( $attachment_url ) ) {
+			$attachment_url = bp_document_get_preview_url( $document_id, $attachment->ID );
+		}
+
+	}
 
 	if ( 0 === $attachment_size ) {
 
@@ -3680,6 +3719,13 @@ function bp_document_get_thread_id( $document_id ) {
 				}
 			}
 		}
+
+		if ( empty( $thread_id ) ) {
+			$document_object = new BP_Document( $document_id );
+			if ( ! empty( $document_object->attachment_id ) ) {
+				$thread_id = get_post_meta( $document_object->attachment_id, 'thread_id', true );
+			}
+		}
 	}
 
 	return apply_filters( 'bp_document_get_thread_id', $thread_id, $document_id );
@@ -3943,8 +3989,10 @@ function bp_document_delete_symlinks( $document ) {
 					$group_status    = bp_get_group_status( $group_object );
 					$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $privacy . sanitize_key( $name ) );
 				}
-				if ( file_exists( $attachment_path ) ) {
-					unlink( $attachment_path );
+
+				// If rename the file then preview doesn't exist but symbolic is available in the folder. So, checked the file is not empty then remove it from symbolic.
+				if ( ! empty( $attachment_path ) ) {
+					@unlink( $attachment_path ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 				}
 			}
 		}
@@ -4960,4 +5008,36 @@ function bp_document_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
 	}
 
 	return apply_filters( 'bp_document_query_privacy', $privacy, $user_id, $group_id, $scope );
+}
+
+/**
+ * Function to delete the temporary download folder which create while downloding the document directory.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_document_remove_orphaned_download() {
+	if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+	}
+
+	$wp_files_system = new \WP_Filesystem_Direct( array() );
+
+	$six_hours_ago = time() - ( HOUR_IN_SECONDS * 6 ); // Get the timestamp 6 hours ago.
+	$uploadDir     = wp_upload_dir(); // Get the path to the upload directory.
+	$dir           = $uploadDir['basedir']; // Get the base directory path.
+
+	// Get all the subdirectories in the upload directory.
+	$folders = glob( $dir . '/*', GLOB_ONLYDIR );
+
+	foreach ( $folders as $folder ) {
+		$folder_timestamp = filemtime( $folder );
+
+		// If the folder is older than 6 hours and contains "-download-folder-" in the name, print it.
+		if ( $folder_timestamp < $six_hours_ago && stristr( $folder, '-download-folder-' ) !== false ) {
+			$wp_files_system->delete( $folder, true );
+		}
+	}
 }

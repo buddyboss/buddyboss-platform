@@ -410,10 +410,6 @@ function bp_version_updater() {
 			bb_update_to_2_2_9();
 		}
 
-		if ( $raw_db_version < 19871 ) {
-			bb_update_to_2_2_9_1();
-		}
-
 		if ( $raw_db_version < 19971 ) {
 			bb_update_to_2_3_0();
 		}
@@ -436,6 +432,14 @@ function bp_version_updater() {
 
 		if ( $raw_db_version < 20211 ) {
 			bb_update_to_2_3_50();
+		}
+
+		if ( $raw_db_version < 20261 ) {
+			bb_update_to_2_3_60();
+		}
+
+		if ( $raw_db_version < 20371 ) {
+			bb_update_to_2_3_80();
 		}
 	}
 
@@ -2563,17 +2567,6 @@ function bb_migrate_member_friends_count( $user_ids, $paged ) {
 }
 
 /**
- * Background job to update duplicate subscriptions.
- *
- * @since BuddyBoss 2.2.9.1
- *
- * @return void
- */
-function bb_update_to_2_2_9_1() {
-	bb_remove_duplicate_subscriptions();
-}
-
-/**
  * Migration for the activity widget based on the relevant feed.
  *
  * @since BuddyBoss 2.3.0
@@ -2868,5 +2861,262 @@ function bb_update_to_2_3_50() {
 				'description' => esc_html__( 'A member receives a reply to their WordPress post comment', 'buddyboss' ),
 			)
 		);
+	}
+}
+
+/**
+ * Update background job once plugin update.
+ * Migration to add index and new column to media tables.
+ * Save the default notification types.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @return void
+ */
+function bb_update_to_2_3_60() {
+	global $wpdb;
+
+	// Disabled notification for post type comment reply notification.
+	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+	if ( ! isset( $enabled_notification['bb_posts_new_comment_reply'] ) ) {
+		bb_disable_notification_type( 'bb_posts_new_comment_reply' );
+	}
+
+	bb_background_update_group_member_count();
+
+	$tables = array(
+		$wpdb->prefix . 'bp_media'    => array(
+			'blog_id',
+			'message_id',
+			'group_id',
+			'privacy',
+			'type',
+			'menu_order',
+			'date_created',
+		),
+		$wpdb->prefix . 'bp_document' => array(
+			'blog_id',
+			'message_id',
+			'group_id',
+			'privacy',
+			'menu_order',
+			'date_created',
+			'date_modified',
+		),
+	);
+
+	$table_exists = array();
+	foreach ( $tables as $table_name => $indexes ) {
+		if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $table_name ) ) ) ) {
+			$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$table_name}' AND column_name = 'message_id'" );
+			if ( empty( $row ) ) {
+				$wpdb->query( "ALTER TABLE {$table_name} ADD message_id BIGINT(20) DEFAULT 0 AFTER activity_id" );
+			}
+			foreach ( $indexes as $index ) {
+				$wpdb->query( "ALTER TABLE {$table_name} ADD INDEX ({$index})" );
+			}
+			$table_exists[ $table_name ] = true;
+		}
+	}
+
+	// Update older data.
+	bb_create_background_message_media_document_update( $table_exists );
+}
+
+/**
+ * Function to update group member count with background updater.
+ *
+ * @since BuddyBoss 2.3.60
+ */
+function bb_background_update_group_member_count() {
+	global $wpdb, $bp_background_updater;
+
+	if ( ! bp_is_active( 'groups' ) ) {
+		return;
+	}
+
+	// Fetch all groups.
+	$sql       = "SELECT DISTINCT id FROM {$wpdb->prefix}bp_groups ORDER BY id DESC";
+	$group_ids = $wpdb->get_col( $sql );
+
+	if ( empty( $group_ids ) ) {
+		return;
+	}
+
+	$min_count = (int) apply_filters( 'bb_update_group_member_count', 10 );
+
+	if ( count( $group_ids ) > $min_count ) {
+		foreach ( array_chunk( $group_ids, $min_count ) as $chunk ) {
+			$bp_background_updater->data(
+				array(
+					array(
+						'callback' => 'bb_update_group_member_count',
+						'args'     => array( $chunk ),
+					),
+				)
+			);
+			$bp_background_updater->save()->schedule_event();
+		}
+	} else {
+		bb_update_group_member_count( $group_ids );
+	}
+}
+
+/**
+ * Schedule event for message media and document migration.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param array $table_exists List of tables.
+ * @param int   $paged        Page number.
+ */
+function bb_create_background_message_media_document_update( $table_exists, $paged = 1 ) {
+	global $wpdb, $bp_background_updater;
+
+	if ( empty( $paged ) ) {
+		$paged = 1;
+	}
+
+	$per_page = 50;
+	$offset   = ( ( $paged - 1 ) * $per_page );
+	$results  = array();
+
+	$message_meta_table_name = $wpdb->prefix . 'bp_messages_meta';
+	if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $message_meta_table_name ) ) ) ) {
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT message_id, meta_key, meta_value FROM {$message_meta_table_name} WHERE meta_key IN
+				('bp_media_ids', 'bp_video_ids', 'bp_document_ids') AND meta_value !=''
+				ORDER BY message_id LIMIT %d offset %d",
+				$per_page,
+				$offset
+			)
+		);
+	}
+
+	if ( empty( $results ) ) {
+		return;
+	}
+
+	$bp_background_updater->data(
+		array(
+			array(
+				'callback' => 'bb_migrate_message_media_document',
+				'args'     => array( $table_exists, $results, $paged ),
+			),
+		)
+	);
+	$bp_background_updater->save()->schedule_event();
+}
+
+/**
+ * Message media and document migration callback.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param array $table_exists List of tables.
+ * @param array $results      Results from message meta table.
+ * @param int   $paged        Page number.
+ */
+function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
+	global $wpdb;
+
+	if ( empty( $results ) ) {
+		return;
+	}
+
+	foreach ( $results as $result ) {
+		$table_name = $wpdb->prefix . 'bp_media';
+		if ( 'bp_document_ids' === $result->meta_key ) {
+			$table_name = $wpdb->prefix . 'bp_document';
+		}
+
+		// Check valid ids & update message_id column.
+		if (
+			! empty( $table_exists ) &&
+			array_key_exists( $table_name, $table_exists ) &&
+			isset( $result->message_id ) &&
+			isset( $result->meta_value ) &&
+			preg_match( '/^\d+(?:,\d+)*$/', $result->meta_value )
+		) {
+
+			$query = $wpdb->prepare( "UPDATE {$table_name} SET message_id = %d WHERE id IN ( {$result->meta_value} )", $result->message_id );
+
+			$wpdb->query( $query );
+
+			$id_array = explode( ',', $result->meta_value );
+			if ( ! empty( $id_array ) ) {
+				foreach ( $id_array as $media_id ) {
+					$media = '';
+					if ( 'bp_document_ids' === $result->meta_key && class_exists( 'BP_Document' ) ) {
+						$media = new BP_Document( $media_id );
+					} elseif ( class_exists( 'BP_Media' ) ) {
+						$media = new BP_Media( $media_id );
+					}
+					if ( ! empty( $media ) ) {
+						update_post_meta( $media->attachment_id, 'bp_media_parent_message_id', $media->message_id );
+					}
+				}
+			}
+		}
+	}
+
+	// Call recursive to finish update for all records.
+	$paged++;
+	bb_create_background_message_media_document_update( $table_exists, $paged );
+}
+
+/**
+ * Migrate data when plugin update.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_update_to_2_3_80() {
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
+}
+
+/**
+ * Migrate data when plugin update.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_update_to_2_3_80() {
+	bb_core_update_repair_duplicate_following_notification();
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
+}
+
+/**
+ * Function will fetch and delete duplicate following notification data.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_core_update_repair_duplicate_following_notification() {
+	global $wpdb;
+	$bp = buddypress();
+
+	$sql  = "DELETE FROM {$bp->notifications->table_name}";
+	$sql .= ' WHERE id IN (';
+	$sql .= " SELECT * FROM ( SELECT DISTINCT n1.id FROM {$bp->notifications->table_name} n1";
+	$sql .= " JOIN {$bp->notifications->table_name} n2 ON n1.user_id = n2.user_id";
+	$sql .= ' WHERE n1.secondary_item_id = n2.secondary_item_id';
+	$sql .= ' AND n1.date_notified < n2.date_notified';
+	$sql .= ' AND n1.component_name = %s AND n1.component_action = %s';
+	$sql .= ' ORDER BY n1.id DESC) AS ids';
+	$sql .= ' )';
+
+	// Remove duplicate notification ids.
+	$wpdb->query( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) );
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear notifications API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-notifications' );
 	}
 }

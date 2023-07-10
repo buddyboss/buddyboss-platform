@@ -866,7 +866,12 @@ function bp_emoji_tutorial() {
  */
 function bp_media_settings_callback_gif_key() {
 	?>
-	<input type="text" name="bp_media_gif_api_key" id="bp_media_gif_api_key" value="<?php echo esc_attr( bp_media_get_gif_api_key() ); ?>" placeholder="<?php esc_html_e( 'GIPHY API Key', 'buddyboss' ); ?>" style="width: 300px;" <?php echo ! empty( bp_media_get_gif_api_key() ) ? 'readonly' : ''; ?> />
+	<div class="password-toggle">
+		<input type="password" name="bp_media_gif_api_key" id="bp_media_gif_api_key" value="<?php echo esc_attr( bp_media_get_gif_api_key() ); ?>" placeholder="<?php esc_html_e( 'GIPHY API Key', 'buddyboss' ); ?>" <?php echo ! empty( bp_media_get_gif_api_key() ) ? 'readonly' : ''; ?> />
+		<button type="button" class="button button-secondary bb-hide-pw hide-if-no-js" aria-label="<?php esc_attr_e( 'Toggle', 'buddyboss' ); ?>">
+			<span class="bb-icon bb-icon-eye-small" aria-hidden="true"></span>
+		</button>
+	</div>
 	<input type="button" data-connected="<?php echo empty( bp_media_get_gif_api_key() ) ? false : true; ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb-giphy-connect' ) ); ?>" name="connect" id="bb-giphy-connect" class="button <?php echo empty( bp_media_get_gif_api_key() ) ? 'button-primary' : ''; ?>" data-disconnect-text="<?php esc_html_e( 'Disconnect', 'buddyboss' ); ?>" data-connect-text="<?php esc_html_e( 'Connect', 'buddyboss' ); ?>" value="<?php empty( bp_media_get_gif_api_key() ) ? esc_html_e( 'Connect', 'buddyboss' ) : esc_html_e( 'Disconnect', 'buddyboss' ); ?>" />
 	<p class="description">
 		<?php
