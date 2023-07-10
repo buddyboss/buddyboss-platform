@@ -655,7 +655,17 @@ function bb_forums_save_link_preview_data( $post_id ) {
 		}, ARRAY_FILTER_USE_KEY );
 	}
 
-	$link_url   = ! empty( $link_preview_data['link_url'] ) ? filter_var( $link_preview_data['link_url'], FILTER_VALIDATE_URL ) : '';
+	$link_url = '';
+	if ( ! empty( $link_preview_data['link_url'] ) ) {
+		$parsed_url = wp_parse_url( $link_preview_data['link_url'] );
+		if ( ! $parsed_url || empty( $parsed_url['host'] ) ) {
+			$link_url = 'http://' . $link_preview_data['link_url'];
+		} else {
+			$link_url = $link_preview_data['link_url'];
+		}
+	}
+
+	$link_url   = ! empty( $link_url ) ? filter_var( $link_url, FILTER_VALIDATE_URL ) : '';
 	$link_embed = isset( $link_preview_data['link_embed'] ) ? filter_var( $link_preview_data['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false;
 
 	// Check if link url is set or not.
