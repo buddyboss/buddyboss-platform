@@ -410,10 +410,6 @@ function bp_version_updater() {
 			bb_update_to_2_2_9();
 		}
 
-		if ( $raw_db_version < 19871 ) {
-			bb_update_to_2_2_9_1();
-		}
-
 		if ( $raw_db_version < 19971 ) {
 			bb_update_to_2_3_0();
 		}
@@ -428,6 +424,18 @@ function bp_version_updater() {
 
 		if ( $raw_db_version < 20101 ) {
 			bb_update_to_2_3_4();
+		}
+
+		if ( $raw_db_version < 20111 ) {
+			bb_update_to_2_3_41();
+		}
+
+		if ( $raw_db_version < 20211 ) {
+			bb_update_to_2_3_50();
+		}
+
+		if ( $raw_db_version < 20261 ) {
+			bb_update_to_2_3_60();
 		}
 	}
 
@@ -2555,17 +2563,6 @@ function bb_migrate_member_friends_count( $user_ids, $paged ) {
 }
 
 /**
- * Background job to update duplicate subscriptions.
- *
- * @since BuddyBoss 2.2.9.1
- *
- * @return void
- */
-function bb_update_to_2_2_9_1() {
-	bb_remove_duplicate_subscriptions();
-}
-
-/**
  * Migration for the activity widget based on the relevant feed.
  *
  * @since BuddyBoss 2.3.0
@@ -2618,7 +2615,7 @@ function bb_update_to_2_3_1() {
 		BB_Presence::bb_check_native_presence_load_directly();
 	}
 
-	bb_repair_member_profile_links_callback( true );
+	bb_generate_member_profile_links_on_update();
 }
 
 /**
@@ -2745,3 +2742,323 @@ function bb_update_to_2_3_4() {
 
 	wp_cache_flush();
 }
+
+/**
+ * Background job to update user profile slug.
+ *
+ * @since BuddyBoss 2.3.41
+ *
+ * @return void
+ */
+function bb_update_to_2_3_41() {
+	$is_already_run = get_transient( 'bb_update_to_2_3_4' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_update_to_2_3_4', 'yes', DAY_IN_SECONDS );
+
+	bb_core_update_repair_member_slug();
+}
+
+/**
+ * Update the member slugs.
+ *
+ * @since BuddyBoss 2.3.41
+ */
+function bb_core_update_repair_member_slug() {
+	global $wpdb, $bp_background_updater;
+
+	$user_ids = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT u.ID FROM `{$wpdb->prefix}users` AS u LEFT JOIN `{$wpdb->prefix}usermeta` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) WHERE ( um.user_id IS NULL OR LENGTH(meta_value) = %d ) ORDER BY u.ID",
+			'bb_profile_slug',
+			40
+		)
+	);
+
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	foreach ( array_chunk( $user_ids, 50 ) as $chunk ) {
+		$bp_background_updater->data(
+			array(
+				array(
+					'callback' => 'bb_set_bulk_user_profile_slug',
+					'args'     => array( $chunk ),
+				),
+			)
+		);
+
+		$bp_background_updater->save()->schedule_event();
+	}
+}
+
+/**
+ * Clear web and api cache on the update.
+ * Install email template for activity following post.
+ *
+ * @since BuddyBoss 2.3.50
+ *
+ * @return void
+ */
+function bb_update_to_2_3_50() {
+	// Clear cache.
+	wp_cache_flush();
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
+
+	$defaults = array(
+		'post_status' => 'publish',
+		'post_type'   => bp_get_email_post_type(),
+	);
+
+	$email = array(
+		/* translators: do not remove {} brackets or translate its contents. */
+		'post_title'   => __( '[{{{site.name}}}] {{commenter.name}} replied to your comment', 'buddyboss' ),
+		/* translators: do not remove {} brackets or translate its contents. */
+		'post_content' => __( "<a href=\"{{{commenter.url}}}\">{{commenter.name}}</a> replied to your comment:\n\n{{{comment_reply}}}", 'buddyboss' ),
+		/* translators: do not remove {} brackets or translate its contents. */
+		'post_excerpt' => __( "{{commenter.name}} replied to your comment:\n\n{{{comment_reply}}}\n\nView the comment: {{{comment.url}}}", 'buddyboss' ),
+	);
+
+	$id = 'new-comment-reply';
+
+	if (
+		term_exists( $id, bp_get_email_tax_type() ) &&
+		get_terms(
+			array(
+				'taxonomy' => bp_get_email_tax_type(),
+				'slug'     => $id,
+				'fields'   => 'count',
+			)
+		) > 0
+	) {
+		return;
+	}
+
+	$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ) );
+	if ( ! $post_id ) {
+		return;
+	}
+
+	$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
+
+	foreach ( $tt_ids as $tt_id ) {
+		$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+		wp_update_term(
+			(int) $term->term_id,
+			bp_get_email_tax_type(),
+			array(
+				'description' => esc_html__( 'A member receives a reply to their WordPress post comment', 'buddyboss' ),
+			)
+		);
+	}
+}
+
+/**
+ * Update background job once plugin update.
+ * Migration to add index and new column to media tables.
+ * Save the default notification types.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @return void
+ */
+function bb_update_to_2_3_60() {
+	global $wpdb;
+
+	// Disabled notification for post type comment reply notification.
+	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+	if ( ! isset( $enabled_notification['bb_posts_new_comment_reply'] ) ) {
+		bb_disable_notification_type( 'bb_posts_new_comment_reply' );
+	}
+
+	bb_background_update_group_member_count();
+
+	$tables = array(
+		$wpdb->prefix . 'bp_media'    => array(
+			'blog_id',
+			'message_id',
+			'group_id',
+			'privacy',
+			'type',
+			'menu_order',
+			'date_created',
+		),
+		$wpdb->prefix . 'bp_document' => array(
+			'blog_id',
+			'message_id',
+			'group_id',
+			'privacy',
+			'menu_order',
+			'date_created',
+			'date_modified',
+		),
+	);
+
+	$table_exists = array();
+	foreach ( $tables as $table_name => $indexes ) {
+		if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $table_name ) ) ) ) {
+			$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$table_name}' AND column_name = 'message_id'" );
+			if ( empty( $row ) ) {
+				$wpdb->query( "ALTER TABLE {$table_name} ADD message_id BIGINT(20) DEFAULT 0 AFTER activity_id" );
+			}
+			foreach ( $indexes as $index ) {
+				$wpdb->query( "ALTER TABLE {$table_name} ADD INDEX ({$index})" );
+			}
+			$table_exists[ $table_name ] = true;
+		}
+	}
+
+	// Update older data.
+	bb_create_background_message_media_document_update( $table_exists );
+}
+
+/**
+ * Function to update group member count with background updater.
+ *
+ * @since BuddyBoss 2.3.60
+ */
+function bb_background_update_group_member_count() {
+	global $wpdb, $bp_background_updater;
+
+	if ( ! bp_is_active( 'groups' ) ) {
+		return;
+	}
+
+	// Fetch all groups.
+	$sql       = "SELECT DISTINCT id FROM {$wpdb->prefix}bp_groups ORDER BY id DESC";
+	$group_ids = $wpdb->get_col( $sql );
+
+	if ( empty( $group_ids ) ) {
+		return;
+	}
+
+	$min_count = (int) apply_filters( 'bb_update_group_member_count', 10 );
+
+	if ( count( $group_ids ) > $min_count ) {
+		foreach ( array_chunk( $group_ids, $min_count ) as $chunk ) {
+			$bp_background_updater->data(
+				array(
+					array(
+						'callback' => 'bb_update_group_member_count',
+						'args'     => array( $chunk ),
+					),
+				)
+			);
+			$bp_background_updater->save()->schedule_event();
+		}
+	} else {
+		bb_update_group_member_count( $group_ids );
+	}
+}
+
+/**
+ * Schedule event for message media and document migration.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param array $table_exists List of tables.
+ * @param int   $paged        Page number.
+ */
+function bb_create_background_message_media_document_update( $table_exists, $paged = 1 ) {
+	global $wpdb, $bp_background_updater;
+
+	if ( empty( $paged ) ) {
+		$paged = 1;
+	}
+
+	$per_page = 50;
+	$offset   = ( ( $paged - 1 ) * $per_page );
+	$results  = array();
+
+	$message_meta_table_name = $wpdb->prefix . 'bp_messages_meta';
+	if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $message_meta_table_name ) ) ) ) {
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT message_id, meta_key, meta_value FROM {$message_meta_table_name} WHERE meta_key IN
+				('bp_media_ids', 'bp_video_ids', 'bp_document_ids') AND meta_value !=''
+				ORDER BY message_id LIMIT %d offset %d",
+				$per_page,
+				$offset
+			)
+		);
+	}
+
+	if ( empty( $results ) ) {
+		return;
+	}
+
+	$bp_background_updater->data(
+		array(
+			array(
+				'callback' => 'bb_migrate_message_media_document',
+				'args'     => array( $table_exists, $results, $paged ),
+			),
+		)
+	);
+	$bp_background_updater->save()->schedule_event();
+}
+
+/**
+ * Message media and document migration callback.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param array $table_exists List of tables.
+ * @param array $results      Results from message meta table.
+ * @param int   $paged        Page number.
+ */
+function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
+	global $wpdb;
+
+	if ( empty( $results ) ) {
+		return;
+	}
+
+	foreach ( $results as $result ) {
+		$table_name = $wpdb->prefix . 'bp_media';
+		if ( 'bp_document_ids' === $result->meta_key ) {
+			$table_name = $wpdb->prefix . 'bp_document';
+		}
+
+		// Check valid ids & update message_id column.
+		if (
+			! empty( $table_exists ) &&
+			array_key_exists( $table_name, $table_exists ) &&
+			isset( $result->message_id ) &&
+			isset( $result->meta_value ) &&
+			preg_match( '/^\d+(?:,\d+)*$/', $result->meta_value )
+		) {
+
+			$query = $wpdb->prepare( "UPDATE {$table_name} SET message_id = %d WHERE id IN ( {$result->meta_value} )", $result->message_id );
+
+			$wpdb->query( $query );
+
+			$id_array = explode( ',', $result->meta_value );
+			if ( ! empty( $id_array ) ) {
+				foreach ( $id_array as $media_id ) {
+					$media = '';
+					if ( 'bp_document_ids' === $result->meta_key && class_exists( 'BP_Document' ) ) {
+						$media = new BP_Document( $media_id );
+					} else if ( class_exists( 'BP_Media' ) ) {
+						$media = new BP_Media( $media_id );
+					}
+					if ( ! empty( $media ) ) {
+						update_post_meta( $media->attachment_id, 'bp_media_parent_message_id', $media->message_id );
+					}
+				}
+			}
+		}
+	}
+
+	// Call recursive to finish update for all records.
+	$paged++;
+	bb_create_background_message_media_document_update( $table_exists, $paged );
+}
+

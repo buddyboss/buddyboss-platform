@@ -4014,15 +4014,17 @@ function bp_get_follower_ids( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'user_id' => bp_displayed_user_id(),
+			'user_id'  => bp_displayed_user_id(),
+			'page'     => false,
+			'per_page' => false
 		)
 	);
 
-	$ids = implode( ',', (array) bp_get_followers( array( 'user_id' => $r['user_id'] ) ) );
+	$ids = implode( ',', (array) bp_get_followers( $r ) );
 
 	$ids = empty( $ids ) ? 0 : $ids;
 
-	return apply_filters( 'bp_get_follower_ids', $ids, $r['user_id'] );
+	return apply_filters( 'bp_get_follower_ids', $ids, $r['user_id'], $r );
 }
 
 /**
@@ -4055,14 +4057,16 @@ function bp_get_following_ids( $args = '' ) {
 		$args,
 		array(
 			'user_id' => bp_displayed_user_id(),
+			'page'     => false,
+			'per_page' => false,
 		)
 	);
 
-	$ids = implode( ',', (array) bp_get_following( array( 'user_id' => $r['user_id'] ) ) );
+	$ids = implode( ',', (array) bp_get_following( $r ) );
 
 	$ids = empty( $ids ) ? 0 : $ids;
 
-	return apply_filters( 'bp_get_following_ids', $ids, $r['user_id'] );
+	return apply_filters( 'bp_get_following_ids', $ids, $r['user_id'], $r );
 }
 
 /**
