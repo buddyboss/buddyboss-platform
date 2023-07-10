@@ -133,7 +133,7 @@ function bp_invite_show_data( $column, $post_id ) {
 				if ( $allow_custom_registration && '' !== bp_custom_register_page_url() ) {
 					echo esc_html( __( 'Invited', 'buddyboss' ) );
 				} else {
-					$redirect_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+					$redirect_link = admin_url( 'edit.php?post_type=' . bp_get_invite_post_type() );
 					$revoke_link   = bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_invites_slug() . '/revoke-invite-admin/?id=' . $post_id . '&redirect=' . $redirect_link;
 					$confirm_title = __( 'Are you sure you want to revoke this invitation?', 'buddyboss' );
 					?>
