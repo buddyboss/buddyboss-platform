@@ -1503,7 +1503,7 @@ function bp_get_group_description_excerpt( $group = false, $length = 225 ) {
  */
 function bb_get_group_description_excerpt_view_more( $excerpt, $group ) {
 	$group_link = '... <a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" class="bb-more-link">' . esc_html__( 'View more', 'buddyboss' ) . '</a>';
-	if ( bp_is_single_item() ) {
+	if ( bp_is_single_item() && bp_is_current_item( $group->slug ) ) {
 		$group_link = '... <a href="#group-description-popup" class="bb-more-link show-action-popup">' . esc_html__( 'View more', 'buddyboss' ) . '</a>';
 	}
 	return bp_create_excerpt( $excerpt, 120, array( 'ending' => $group_link ) );
