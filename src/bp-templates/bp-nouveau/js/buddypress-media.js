@@ -6381,7 +6381,7 @@ window.bp = window.bp || {};
 				return false;
 			}
 
-			var userIsEditing = ( $( '#add-activity-description' ).length && $( '#add-activity-description' ).is( ':focus' ) ) || ( $( '.ac-reply-content .ac-textarea > .ac-input' ).length && $( '.ac-reply-content .ac-textarea > .ac-input' ).hasClass( 'focus-visible' ) );
+			var userIsEditing = $( e.target ).hasClass( 'ac-input' ) || $( e.target ).attr( 'id' ) === 'add-activity-description';
 
 			switch ( e.keyCode ) {
 				case 27: // escape key.
@@ -6410,7 +6410,7 @@ window.bp = window.bp || {};
 				return false;
 			}
 
-			var userIsEditing = ( $( '#add-activity-description' ).length && $( '#add-activity-description' ).is( ':focus' ) ) || ( $( '.ac-reply-content .ac-textarea > .ac-input' ).length && $( '.ac-reply-content .ac-textarea > .ac-input' ).hasClass( 'focus-visible' ) );
+			var userIsEditing = $( e.target ).hasClass( 'ac-input' ) || $( e.target ).attr( 'id' ) === 'add-activity-description';
 
 			switch ( e.keyCode ) {
 				case 27: // escape key.
