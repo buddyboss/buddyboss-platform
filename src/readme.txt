@@ -57,6 +57,33 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.3.80 =
+* Bug: Activity - Post button was inconsistent when trying to reply to activity post.
+* Bug: Activity - Unable to click the activity comments from group search when a member was tagged using "@" function
+* Bug: Activity - While posting a link directly from the app with www, no link preview is shown
+* Bug: Core - Node version issue on `npm install` script after a repo was cloned
+* Bug: Core - Platform main components page showed incorrect count for "All" and "Active" components
+* Bug: Email Invites - Revoking the email invite from admin was redirecting the user to post list page
+* Bug: Forums - Private forum were redirecting to 404 instead of login screen for logged out users
+* Bug: Groups - Child group was displaying parent group description from subgroup page
+* Bug: Groups - Super Sticky was incorrectly showing on the admin panel for discussions within a Group
+* Bug: Gutenberg - Discussions on editor added extreme spacing between lines
+* Bug: LifterLMS - Deleting an user who is a Course Participant did not remove the user from Participants list
+* Bug: Media - Next/Previous navigation on media modal accessible even while commenting
+* Bug: Media - "Create new album" translation was missing on the photos page
+* Bug: Media - Document folder meta was not being saved in the database using bp_document_folder_add_meta function
+* Bug: Media - Move file tooltip not clear and inconsistent
+* Bug: Media - Unable to download folders due to size constraints
+* Bug: Media - When uploading media, we will now handle the error messaging dynamically
+* Bug: Messages - Error in POST API endpoint when creating a message
+* Bug: Messages - Mark as unread was not working when object cache is enabled
+* Bug: Moderation - Clear API cache when member blocked/unblocked
+* Bug: Notifications - Follow notification still shows in dropdown after being unfollowed
+* Bug: Notifications - Group subscriptions page was broken on iOS Safari mobile browser
+* Bug: Notifications - Replied with GIF Notification were showing as empty
+* Bug: Profiles - Deleting a field in the fieldset was not reflected and when refreshing the page an error was displayed
+* Bug: The Events Calendar - Events page was showing blank instead of the login screen when visited from the guest user on a private site
+
 = 2.3.70 =
 * Enhancement: Network Search - Extended search results to only show LearnDash lessons from a course that a user has enrolled into. This is configured in the LearnDash Settings > Lesson Search
 * Enhancement: Performance improvements to the followers and following feature by adding pagination to the background process when notifications are being sent
