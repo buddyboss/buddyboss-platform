@@ -60,9 +60,9 @@ class BP_Groups_Widget extends WP_Widget {
 		 *
 		 * @since BuddyPress 1.5.0
 		 *
-		 * @param string $value Empty user ID.
+		 * @param string $value Current user ID if user logged-in otherwise empty user ID.
 		 */
-		$user_id = apply_filters( 'bp_group_widget_user_id', '0' );
+		$user_id = apply_filters( 'bp_group_widget_user_id', get_current_user_id() );
 
 		extract( $args );
 
