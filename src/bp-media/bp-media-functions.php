@@ -48,20 +48,49 @@ function bp_media_upload() {
 		return $attachment;
 	}
 
+	/**
+	 * Hook Media upload.
+	 *
+	 * @param mixed $attachment attachment
+	 *
+	 * @since BuddyBoss 2.3.60
+	 */
+	do_action( 'bb_media_upload', $attachment );
+
+	// get saved media id.
+	$media_id = get_post_meta( $attachment->ID, 'bp_media_id', true );
+
 	$name = $attachment->post_title;
 
-	// Generate document attachment preview link.
-	$attachment_id          = base64_encode( 'forbidden_' . $attachment->ID );
-	$attachment_url         = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id;
-	$attachment_thumb_url   = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/thumbnail';
-	$attachment_medium      = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image';
-	$attachment_message_url = ( isset( $_POST ) && isset( $_POST['thread_id'] ) ? home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image/' . base64_encode( 'thread_' . $_POST['thread_id'] ) : '' );
+	if (
+		! empty( $media_id ) &&
+		(
+			bp_is_group_messages() ||
+			bp_is_messages_component() ||
+			(
+				! empty( $_POST['component'] ) &&
+				'messages' === $_POST['component']
+			)
+		)
+	) {
+		$attachment_url         = bp_media_get_preview_image_url( $media_id, $attachment->ID, 'bb-media-photos-popup-image' );
+		$attachment_thumb_url   = bp_media_get_preview_image_url( $media_id, $attachment->ID, 'bb-media-activity-image' );
+		$attachment_medium      = $attachment_thumb_url;
+		$attachment_message_url = $attachment_thumb_url;
+	} else {
+		// Generate document attachment preview link.
+		$attachment_id          = base64_encode( 'forbidden_' . $attachment->ID );
+		$attachment_url         = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id;
+		$attachment_thumb_url   = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/thumbnail';
+		$attachment_medium      = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image';
+		$attachment_message_url = ( isset( $_POST ) && isset( $_POST['thread_id'] ) ? home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image/' . base64_encode( 'thread_' . $_POST['thread_id'] ) : '' );
+	}
 
 	$result = array(
 		'id'      => (int) $attachment->ID,
 		'thumb'   => $attachment_thumb_url,
 		'medium'  => $attachment_medium,
-		'url'     => $attachment_url,
+		'url'     => untrailingslashit( $attachment_url ),
 		'msg_url' => $attachment_message_url,
 		'name'    => esc_attr( $name ),
 	);
@@ -456,6 +485,7 @@ function bp_media_add( $args = '' ) {
 			'album_id'      => false,                   // Optional: ID of the album.
 			'group_id'      => false,                   // Optional: ID of the group.
 			'activity_id'   => false,                   // The ID of activity.
+			'message_id'    => false,                   // The ID of message.
 			'privacy'       => 'public',                // Optional: privacy of the media e.g. public.
 			'menu_order'    => 0,                       // Optional:  Menu order.
 			'date_created'  => bp_core_current_time(),  // The GMT time that this media was recorded.
@@ -473,6 +503,7 @@ function bp_media_add( $args = '' ) {
 	$media->album_id      = (int) $r['album_id'];
 	$media->group_id      = (int) $r['group_id'];
 	$media->activity_id   = (int) $r['activity_id'];
+	$media->message_id    = (int) $r['message_id'];
 	$media->privacy       = $r['privacy'];
 	$media->menu_order    = $r['menu_order'];
 	$media->date_created  = $r['date_created'];
@@ -505,6 +536,7 @@ function bp_media_add( $args = '' ) {
 
 	// media is saved for attachment.
 	update_post_meta( $media->attachment_id, 'bp_media_saved', true );
+	update_post_meta( $media->attachment_id, 'bp_media_id', $media->id );
 
 	/**
 	 * Fires at the end of the execution of adding a new media item, before returning the new media item ID.
@@ -562,6 +594,7 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 							'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : $album_id,
 							'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : $group_id,
 							'activity_id'   => $bp_media->activity_id,
+							'message_id'    => $bp_media->message_id,
 							'privacy'       => $bp_media->privacy,
 							'menu_order'    => ! empty( $media['menu_order'] ) ? $media['menu_order'] : false,
 							'date_created'  => $bp_media->date_created,
@@ -1282,6 +1315,12 @@ function bp_media_delete_orphaned_attachments() {
 				'key'     => 'bb_media_draft',
 				'compare' => 'NOT EXISTS',
 				'value'   => '',
+			),
+		),
+		'date_query'     => array(
+			array(
+				'column' => 'post_date_gmt',
+				'before' => '6 hours ago',
 			),
 		),
 	);
@@ -2452,6 +2491,13 @@ function bp_media_get_thread_id( $media_id ) {
 				}
 			}
 		}
+
+		if ( empty( $thread_id ) ) {
+			$media_object = new BP_Media( $media_id );
+			if ( ! empty( $media_object->attachment_id ) ) {
+				$thread_id = get_post_meta( $media_object->attachment_id, 'thread_id', true );
+			}
+		}
 	}
 
 	return apply_filters( 'bp_media_get_thread_id', $thread_id, $media_id );
@@ -3452,7 +3498,7 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 		}
 	}
 
-	$attachment_url = ! empty( $attachment_url ) && ! bb_enable_symlinks() ? user_trailingslashit( $attachment_url ) : $attachment_url;
+	$attachment_url = ! empty( $attachment_url ) && ! bb_enable_symlinks() ? untrailingslashit( $attachment_url ) : $attachment_url;
 
 	/**
 	 * Filters media preview image url.

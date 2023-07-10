@@ -1292,6 +1292,17 @@ function bp_private_network_template_redirect() {
 							// Check URL is fully matched without remove trailing slash.
 						} elseif ( false !== $check_is_full_url && ( ! empty( $request_url ) && $request_url === $check_is_full_url ) ) {
 							return;
+							// Allow to view if it's matched the page URL like /page/:id.
+						} elseif (
+							false !== $check_is_full_url &&
+							! empty( $request_url ) &&
+							! empty( $un_trailing_slash_it_url ) &&
+							strpos( $request_url, $un_trailing_slash_it_url ) !== false &&
+							! empty( get_query_var( 'paged' ) ) &&
+							preg_match( '%\/page/[0-9]+%', $request_url ) &&
+							$un_trailing_slash_it_url . '/page/' . get_query_var( 'paged' ) === untrailingslashit( $request_url )
+						) {
+							return;
 						}
 					}
 				}
@@ -1529,76 +1540,74 @@ function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_
 		return $link;
 	}
 
-	if ( ! is_user_logged_in() ) {
-		$privacy_policy_url = get_privacy_policy_url();
-		$policy_page_id     = (int) get_option( 'wp_page_for_privacy_policy' );
-		$page_title         = ( $policy_page_id ) ? get_the_title( $policy_page_id ) : '';
+	$page_ids           = bp_core_get_directory_page_ids();
+	$privacy_policy_url = get_privacy_policy_url();
 
-		if ( $privacy_policy_url && $page_title ) {
-			$get_privacy_policy = get_post( $policy_page_id );
-			$get_content        = apply_filters( 'bp_privacy_policy_content', apply_filters( 'the_content', $get_privacy_policy->post_content ), $get_privacy_policy->post_content );
-			$link               = sprintf( '<a class="privacy-policy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>', '#privacy-modal', esc_html( $page_title ), esc_html( $page_title ), $get_content, esc_html( 'Close (Esc)' ), esc_html( '×' ) );
-		}
+	// Get pages.
+	$terms   = isset( $page_ids['terms'] ) ? $page_ids['terms'] : false;
+	$privacy = isset( $page_ids['privacy'] ) ? $page_ids['privacy'] : (int) get_option( 'wp_page_for_privacy_policy' );
+
+	// Do not show the page if page is not published.
+	if ( false !== $terms && 'publish' !== get_post_status( $terms ) ) {
+		$terms = false;
 	}
 
-	$page_ids = bp_core_get_directory_page_ids();
-	$terms    = ! empty( $page_ids['terms'] ) ? $page_ids['terms'] : false;
-	$privacy  = ! empty( $page_ids['privacy'] ) ? $page_ids['privacy'] : (int) get_option( 'wp_page_for_privacy_policy' );
+	// Do not show the page if page is not published.
+	if ( false !== $privacy && 'publish' !== get_post_status( $privacy ) ) {
+		$privacy = false;
+	}
 
-	if (
-		( ! empty( $terms ) && 'publish' === get_post_status( $terms ) ) ||
-		( ! empty( $privacy ) && 'publish' === get_post_status( $privacy ) )
-	) {
-		if ( ! empty( $terms ) && ! empty( $privacy ) ) {
-			$page_title       = ! empty( $terms ) ? get_the_title( $terms ) : '';
-			$get_terms        = get_post( $terms );
-			$get_term_content = apply_filters( 'bp_term_of_service_content', apply_filters( 'the_content', $get_terms->post_content ), $get_terms->post_content );
-			$link             = sprintf(
-				'<a class="terms-link popup-modal-login popup-terms" href="%s">%s</a><div id="terms-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>',
-				'#terms-modal',
-				$page_title,
-				$page_title,
-				$get_term_content,
-				esc_html( 'Close (Esc)' ),
-				esc_html( '×' )
-			);
-			$page_title       = ( $privacy ) ? get_the_title( $privacy ) : '';
-			$get_privacy      = get_post( $privacy );
-			$get_content      = apply_filters( 'bp_privacy_policy_content', apply_filters( 'the_content', $get_privacy->post_content ), $get_privacy->post_content );
-			$link             .= ' ' . __( 'and', 'buddyboss' ) . ' ';
-			$link             .= sprintf(
-				'<a class="privacy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>',
-				'#privacy-modal',
-				$page_title,
-				$page_title,
-				$get_content,
-				esc_html( 'Close (Esc)' ),
-				esc_html( '×' )
-			);
-		} elseif ( empty( $terms ) && ! empty( $privacy ) ) {
-			$page_title  = ! empty( $privacy ) ? get_the_title( $privacy ) : '';
-			$get_privacy = get_post( $privacy );
-			$get_content = apply_filters( 'bp_privacy_policy_content', apply_filters( 'the_content', $get_privacy->post_content ), $get_privacy->post_content );
-			$link        = sprintf(
-				'<a class="privacy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>',
-				'#privacy-modal',
-				$page_title,
-				$page_title,
-				$get_content,
-				esc_html( 'Close (Esc)' ),
-				esc_html( '×' )
-			);
-		} elseif ( ! empty( $terms ) && empty( $privacy ) ) {
-			$page_title       = ! empty( $terms ) ? get_the_title( $terms ) : '';
-			$get_terms        = get_post( $terms );
-			$get_term_content = apply_filters( 'bp_term_of_service_content', apply_filters( 'the_content', $get_terms->post_content ), $get_terms->post_content );
-			$link             = sprintf( '<a class="terms-link popup-modal-login popup-terms" href="%s">%s</a><div id="terms-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>', '#terms-modal', $page_title, $page_title, $get_term_content, esc_html( 'Close (Esc)' ), esc_html( '×' ) );
-		}
+	if ( ! $terms && ! $privacy ) {
+		return $link;
+	}
+
+	if ( ! empty( $terms ) && ! empty( $privacy ) ) {
+		$page_title       = ! empty( $terms ) ? get_the_title( $terms ) : '';
+		$get_terms        = get_post( $terms );
+		$get_term_content = apply_filters( 'bp_term_of_service_content', apply_filters( 'the_content', $get_terms->post_content ), $get_terms->post_content );
+		$link             = sprintf(
+			'<a class="terms-link popup-modal-login popup-terms" href="%s">%s</a><div id="terms-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>',
+			'#terms-modal',
+			$page_title,
+			$page_title,
+			$get_term_content,
+			esc_html( 'Close (Esc)' ),
+			esc_html( '×' )
+		);
+		$page_title       = ( $privacy ) ? get_the_title( $privacy ) : '';
+		$get_privacy      = get_post( $privacy );
+		$get_content      = apply_filters( 'bp_privacy_policy_content', apply_filters( 'the_content', $get_privacy->post_content ), $get_privacy->post_content );
+		$link            .= ' ' . __( 'and', 'buddyboss' ) . ' ';
+		$link            .= sprintf(
+			'<a class="privacy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>',
+			'#privacy-modal',
+			$page_title,
+			$page_title,
+			$get_content,
+			esc_html( 'Close (Esc)' ),
+			esc_html( '×' )
+		);
+	} elseif ( empty( $terms ) && ! empty( $privacy ) ) {
+		$page_title  = ! empty( $privacy ) ? get_the_title( $privacy ) : '';
+		$get_privacy = get_post( $privacy );
+		$get_content = apply_filters( 'bp_privacy_policy_content', apply_filters( 'the_content', $get_privacy->post_content ), $get_privacy->post_content );
+		$link        = sprintf(
+			'<a class="privacy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>',
+			'#privacy-modal',
+			$page_title,
+			$page_title,
+			$get_content,
+			esc_html( 'Close (Esc)' ),
+			esc_html( '×' )
+		);
+	} elseif ( ! empty( $terms ) && empty( $privacy ) ) {
+		$page_title       = ! empty( $terms ) ? get_the_title( $terms ) : '';
+		$get_terms        = get_post( $terms );
+		$get_term_content = apply_filters( 'bp_term_of_service_content', apply_filters( 'the_content', $get_terms->post_content ), $get_terms->post_content );
+		$link             = sprintf( '<a class="terms-link popup-modal-login popup-terms" href="%s">%s</a><div id="terms-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>', '#terms-modal', $page_title, $page_title, $get_term_content, esc_html( 'Close (Esc)' ), esc_html( '×' ) );
 
 		$privacy_policy_url = '';
 	}
 
-	$link = apply_filters( 'bp_core_change_privacy_policy_link_on_private_network', $link, $privacy_policy_url );
-
-	return $link;
+	return apply_filters( 'bp_core_change_privacy_policy_link_on_private_network', $link, $privacy_policy_url );
 }

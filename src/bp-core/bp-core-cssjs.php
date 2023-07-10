@@ -144,7 +144,7 @@ function bp_core_register_common_scripts() {
 			'footer'       => true,
 		),
 		'emojionearea'                  => array(
-			'file'         => "{$url}emojionearea-edited.js",
+			'file'         => "{$url}emojionearea-edited{$min}.js",
 			'dependencies' => array( 'emojione' ),
 			'footer'       => true,
 		),
@@ -921,6 +921,7 @@ function bp_core_register_page_js() {
 
 	if ( bp_is_register_page() && bp_get_xprofile_member_type_field_id() > 0 ) {
 		wp_enqueue_script( 'bp-register-page' );
+		wp_enqueue_editor();
 
 		$data = array(
 			'ajaxurl'        => bp_core_ajax_url(),
@@ -956,3 +957,13 @@ function bp_core_enqueue_isInViewPort() {
 	}
 }
 add_action( 'bp_enqueue_scripts', 'bp_core_enqueue_isInViewPort', 5 );
+
+/**
+ * Load the JS template for link preview.
+ *
+ * @since BuddyBoss 2.3.60
+ */
+function bb_load_link_preview_js_template() {
+	bp_get_template_part( 'common/js-templates/members/bb-link-preview' );
+}
+add_action( 'bp_enqueue_scripts', 'bb_load_link_preview_js_template' );

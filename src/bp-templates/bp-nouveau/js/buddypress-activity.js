@@ -606,9 +606,10 @@ window.bp = window.bp || {};
 				var activity_item = $( '#activity-' + BP_Nouveau.activity.params.is_activity_edit );
 				if ( activity_item.length ) {
 					var activity_data = activity_item.data( 'bp-activity' );
+					var activity_URL_preview = activity_item.data( 'link-url' )  !== '' ? activity_item.data( 'link-url' ) : null ;
 
 					if ( ! _.isUndefined( activity_data ) ) {
-						bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data );
+						bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data, activity_URL_preview );
 					}
 				}
 			}
@@ -1045,8 +1046,15 @@ window.bp = window.bp || {};
 				var ce = form.find( '.ac-input[contenteditable]' );
 				if ( ce.length > 0 ) {
 					var div_editor = ce.get( 0 );
+					var commentID = $(div_editor).attr( 'id' ) + ( $(div_editor).closest( '.bb-media-model-inner' ).length ? '-theater' : '' );
 
-					if ( $.inArray( $(div_editor).attr( 'id' ), self.InitiatedCommentForms ) == -1 ) {//Check if Comment form has already paste event initiated
+					// Comment block is moved from theater and needs to be initiated
+					if( $.inArray( commentID, self.InitiatedCommentForms ) !== -1 && !$(div_editor).closest( 'form' ).hasClass( 'events-initiated')  ) {
+						var index = self.InitiatedCommentForms.indexOf( commentID );
+						self.InitiatedCommentForms.splice(index, 1);
+					}
+
+					if ( $.inArray( commentID, self.InitiatedCommentForms ) == -1 &&  !$(div_editor).closest( 'form' ).hasClass( 'events-initiated') ) {//Check if Comment form has already paste event initiated
 						div_editor.addEventListener( 'paste', function ( e ) {
 							e.preventDefault();
 							var text = e.clipboardData.getData( 'text/plain' );
@@ -1067,7 +1075,8 @@ window.bp = window.bp || {};
 								jQuery( e.currentTarget ).closest( 'form' ).removeClass( 'has-content' );
 							}
 						} );
-						self.InitiatedCommentForms.push( $(div_editor).attr( 'id' ) );//Add this Comment form in initiated comment form list
+						$(div_editor).closest( 'form' ).addClass( 'events-initiated');
+						self.InitiatedCommentForms.push( commentID );//Add this Comment form in initiated comment form list
 					}
 				}
 
@@ -1345,9 +1354,10 @@ window.bp = window.bp || {};
 				event.preventDefault();
 
 				var activity_data = activity_item.data( 'bp-activity' );
+				var activity_URL_preview = activity_item.data( 'link-url' )  !== '' ? activity_item.data( 'link-url' ) : null ;
 
 				if ( typeof activity_data !== 'undefined' ) {
-					bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data );
+					bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data, activity_URL_preview );
 
 					// Check if it's a Group activity.
 					if ( target.closest( 'li' ).hasClass( 'groups' ) ) {

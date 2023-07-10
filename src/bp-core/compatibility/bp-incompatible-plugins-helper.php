@@ -134,7 +134,7 @@ function bp_helper_plugins_loaded_callback() {
 			$bp_current_component = bp_current_component();
 
 			// deregister geodirectory select2 script and styles from all component pages
-			if ( $bp_current_component && 'listings' !== $bp_current_component ) {
+			if ( $bp_current_component && 'listings' !== $bp_current_component && 'favorites' !== $bp_current_component ) {
 				add_action( 'wp_enqueue_scripts', 'bp_deregister_geodirectory_script_select2' );
 				add_action( 'wp_print_styles', 'bp_deregister_geodirectory_styles' );
 			}
@@ -200,6 +200,26 @@ function bp_helper_plugins_loaded_callback() {
 	if ( function_exists( 'tutor_pro' ) ) {
 		require buddypress()->compatibility_dir . '/class-bb-tutor-pro-helpers.php';
 	}
+
+	/**
+	 * Include filters to support network search when Paid Membership Pro plugin is activated.
+	 */
+	if ( defined( 'PMPRO_VERSION' ) ) {
+		require buddypress()->compatibility_dir . '/class-bb-pmpro-helpers.php';
+	}
+
+	/**
+	 * Include filters to support network search when Divi Builder plugin is activated.
+	 */
+	if ( class_exists( 'ET_Builder_Plugin' ) ) {
+		add_filter(
+			'et_builder_load_requests',
+			function( $builder_load_requests ) {
+				$builder_load_requests['action'][] = 'bp_search_ajax';
+				return $builder_load_requests;
+			}
+		);
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
@@ -248,7 +268,7 @@ add_action( 'wp', 'bb_seo_press_compatibility_helper', 9999 );
 
 /**
  * Allow activity page content restriction via MemberPress
- * 
+ *
  * @since BuddyBoss 2.2.9
  *
  * @return void
@@ -463,12 +483,44 @@ add_filter( 'gglcptch_section_notice', 'bp_core_add_support_for_google_captcha_p
  *
  * @since BuddyBoss 1.1.9
  */
-function bp_core_add_support_mepr_signup_map_user_fields( $txn ) {
+function bb_core_add_support_mepr_signup_map_user_fields( $txn ) {
 	if ( ! empty( $txn->user_id ) ) {
 		bp_core_map_user_registration( $txn->user_id, true );
 	}
 }
-add_action( 'mepr-signup', 'bp_core_add_support_mepr_signup_map_user_fields', 100 );
+
+add_action( 'mepr-signup', 'bb_core_add_support_mepr_signup_map_user_fields', 100 );
+
+/**
+ * Prevent MemberPress registration when nickname(username) format is not valid
+ *
+ * @since BuddyBoss 2.3.70
+ *
+ * @param array $errors		Array of error messages from memberpress signup validation
+ *
+ * @return array $errors	Array of error messages from memberpress signup validation
+ */
+function bb_core_validate_nickname_mepr_signup( $errors ) {
+
+	if ( function_exists( 'bp_xprofile_nickname_field_id' ) ) {
+		$nickname = '';
+		if ( isset( $_POST['user_login'] ) ) {
+			$nickname = sanitize_text_field( $_POST['user_login'] );
+		}
+
+		$field_id = bp_xprofile_nickname_field_id();
+		$message  = bp_xprofile_validate_nickname_value( '', $field_id, $nickname, '' );
+
+		if ( ! empty( $message ) ) {
+			$field_name           = xprofile_get_field( $field_id )->name;
+			$errors['user_login'] = str_replace( $field_name, __( 'Username', 'buddyboss' ), $message );
+		}
+	}
+
+	return $errors;
+}
+
+add_filter( 'mepr-validate-signup', 'bb_core_validate_nickname_mepr_signup' );
 
 /**
  * Include plugin when plugin is activated

@@ -289,10 +289,14 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 		 *
 		 * @since BuddyBoss 1.7.0.1
 		 *
+		 * @since BuddyBoss [BBVERSION]
+		 * Introduce new params $args as Media args.
+		 *
 		 * @param array $where Query to hide suspended user's video.
 		 * @param array $class current class object.
+		 * @param array $args  Media args.
 		 */
-		$where = apply_filters( 'bp_suspend_media_get_where_conditions', $where, $this );
+		$where = apply_filters( 'bp_suspend_media_get_where_conditions', $where, $this, $args );
 
 		if ( ! empty( array_filter( $where ) ) ) {
 			$where_conditions['video_suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
@@ -335,6 +339,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 			if ( bp_is_active( 'groups' ) ) {
 				$exclude_group_sql = ' OR m.privacy = "grouponly" ';
 			}
+			$exclude_group_sql .= ' OR ( m.privacy = "comment" OR m.privacy = "forums" ) ';
 
 			$where_conditions['suspend_where'] = '( ( ' . implode( ' AND ', $where ) . ' ) ' . $exclude_group_sql . ' )';
 		}

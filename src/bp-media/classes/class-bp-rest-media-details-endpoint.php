@@ -437,7 +437,7 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 	 * @return array
 	 */
 	public function get_media_privacy() {
-		$privacy = buddypress()->media->visibility_levels;
+		$privacy = apply_filters( 'bp_media_get_visibility_levels', buddypress()->media->visibility_levels );
 		$retval  = array();
 
 		if ( ! empty( $privacy ) ) {

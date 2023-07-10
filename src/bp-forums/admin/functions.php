@@ -149,23 +149,25 @@ function bbp_filter_sample_permalink( $post_link, $_post, $leavename = false, $s
  */
 function bbp_sanitize_slug( $slug = '' ) {
 
-	// Don't allow multiple slashes in a row
+	// Don't allow multiple slashes in a row.
 	$value = preg_replace( '#/+#', '/', str_replace( '#', '', $slug ) );
 
-	// Strip out unsafe or unusable chars
+	// Strip out unsafe or unusable chars.
 	$value = esc_url_raw( $value );
 
-	// esc_url_raw() adds a scheme via esc_url(), so let's remove it
+	// esc_url_raw() adds a scheme via esc_url(), so let's remove it.
 	$value = str_replace( 'http://', '', $value );
 
 	// Trim off first and last slashes.
-	//
 	// We already prevent double slashing elsewhere, but let's prevent
 	// accidental poisoning of options values where we can.
 	$value = ltrim( $value, '/' );
 	$value = rtrim( $value, '/' );
 
-	// Filter the result and return
+	// Remove all the accents from the slug.
+	$value = remove_accents( $value );
+
+	// Filter the result and return.
 	return apply_filters( 'bbp_sanitize_slug', $value, $slug );
 }
 
