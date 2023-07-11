@@ -843,30 +843,44 @@ class BBP_Topics_Widget extends WP_Widget {
 			// Order by most recent replies.
 			case 'freshness':
 				$topics_query = array(
-					'post_type'           => bbp_get_topic_post_type(),
-					'post_parent'         => $settings['parent_forum'],
-					'posts_per_page'      => (int) $settings['max_shown'],
-					'post_status'         => array( bbp_get_public_status_id(), bbp_get_closed_status_id() ),
-					'ignore_sticky_posts' => true,
-					'no_found_rows'       => true,
-					'meta_key'            => '_bbp_last_active_time',
-					'orderby'             => 'meta_value',
-					'order'               => 'DESC',
+					'post_type'              => bbp_get_topic_post_type(),
+					'post_parent'            => $settings['parent_forum'],
+					'posts_per_page'         => (int) $settings['max_shown'],
+					'post_status'            => array( bbp_get_public_status_id(), bbp_get_closed_status_id() ),
+					'ignore_sticky_posts'    => true,
+					'no_found_rows'          => true,
+					'meta_query'             => array(
+						array(
+							'key'  => '_bbp_last_active_time',
+							'type' => 'DATETIME'
+						)
+					),
+					'orderby'                => 'meta_value',
+					'order'                  => 'DESC',
+					'update_post_term_cache' => false,
+					'update_post_meta_cache' => false
 				);
 				break;
 
 			// Order by total number of replies.
 			case 'popular':
 				$topics_query = array(
-					'post_type'           => bbp_get_topic_post_type(),
-					'post_parent'         => $settings['parent_forum'],
-					'posts_per_page'      => (int) $settings['max_shown'],
-					'post_status'         => array( bbp_get_public_status_id(), bbp_get_closed_status_id() ),
-					'ignore_sticky_posts' => true,
-					'no_found_rows'       => true,
-					'meta_key'            => '_bbp_reply_count',
-					'orderby'             => 'meta_value',
-					'order'               => 'DESC',
+					'post_type'              => bbp_get_topic_post_type(),
+					'post_parent'            => $settings['parent_forum'],
+					'posts_per_page'         => (int) $settings['max_shown'],
+					'meta_query'             => array(
+						array(
+							'key'  => '_bbp_reply_count',
+							'type' => 'NUMERIC'
+						)
+					),
+					'post_status'            => array( bbp_get_public_status_id(), bbp_get_closed_status_id() ),
+					'ignore_sticky_posts'    => true,
+					'no_found_rows'          => true,
+					'orderby'                => 'meta_value_num',
+					'order'                  => 'DESC',
+					'update_post_term_cache' => false,
+					'update_post_meta_cache' => false
 				);
 				break;
 
@@ -874,13 +888,16 @@ class BBP_Topics_Widget extends WP_Widget {
 			case 'newness':
 			default:
 				$topics_query = array(
-					'post_type'           => bbp_get_topic_post_type(),
-					'post_parent'         => $settings['parent_forum'],
-					'posts_per_page'      => (int) $settings['max_shown'],
-					'post_status'         => array( bbp_get_public_status_id(), bbp_get_closed_status_id() ),
-					'ignore_sticky_posts' => true,
-					'no_found_rows'       => true,
-					'order'               => 'DESC',
+					'post_type'              => bbp_get_topic_post_type(),
+					'post_parent'            => $settings['parent_forum'],
+					'posts_per_page'         => (int) $settings['max_shown'],
+					'post_status'            => array( bbp_get_public_status_id(), bbp_get_closed_status_id() ),
+					'orderby'                => 'date',
+					'order'                  => 'DESC',
+					'ignore_sticky_posts'    => true,
+					'no_found_rows'          => true,
+					'update_post_term_cache' => false,
+					'update_post_meta_cache' => false
 				);
 				break;
 		}

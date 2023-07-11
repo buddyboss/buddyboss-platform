@@ -978,6 +978,7 @@ if ( ! class_exists( 'BBP_Topics_Admin' ) ) :
 			// Add post_parent query_var if one is present
 			if ( ! empty( $_GET['bbp_forum_id'] ) ) {
 				$query_vars['meta_key']   = '_bbp_forum_id';
+				$query_vars['meta_type']  = 'NUMERIC';
 				$query_vars['meta_value'] = $_GET['bbp_forum_id'];
 			}
 

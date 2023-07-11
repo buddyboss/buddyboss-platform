@@ -689,6 +689,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 					'bbp_register_view_popular',
 					array(
 						'meta_key'      => '_bbp_reply_count',
+						'meta_type'     => 'NUMERIC',
 						'max_num_pages' => 1,
 						'orderby'       => 'meta_value_num',
 						'show_stickies' => false,
@@ -704,6 +705,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 					'bbp_register_view_no_replies',
 					array(
 						'meta_key'      => '_bbp_reply_count',
+						'meta_type'     => 'NUMERIC',
 						'meta_value'    => 1,
 						'meta_compare'  => '<',
 						'orderby'       => '',

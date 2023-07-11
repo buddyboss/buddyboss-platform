@@ -237,6 +237,7 @@ function bbp_has_topics( $args = '' ) {
 		'post_type'      => bbp_get_topic_post_type(),  // Narrow query down to Forums topics.
 		'post_parent'    => $default_post_parent,       // Forum ID.
 		'meta_key'       => '_bbp_last_active_time',    // Make sure topic has some last activity time.
+		'meta_type'      => 'DATETIME',
 		'orderby'        => 'meta_value',               // 'meta_value', 'author', 'date', 'title', 'modified', 'parent', rand',
 		'order'          => 'DESC',                     // 'ASC', 'DESC'.
 		'posts_per_page' => bbp_get_topics_per_page(),  // Topics per page.

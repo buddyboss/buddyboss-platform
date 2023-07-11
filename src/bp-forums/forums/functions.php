@@ -1273,6 +1273,7 @@ function bbp_update_forum_last_topic_id( $forum_id = 0, $topic_id = 0 ) {
 			'post_parent'            => $forum_id,
 			'post_type'              => bbp_get_topic_post_type(),
 			'meta_key'               => '_bbp_last_active_time',
+			'meta_type'              => 'DATETIME',
 			'orderby'                => 'meta_value',
 			'numberposts'            => 1,
 			'suppress_filters'       => false,
