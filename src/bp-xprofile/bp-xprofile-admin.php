@@ -1370,7 +1370,7 @@ function bb_xprofile_mapping_simple_to_repeater_fields_data( $user_ids, $group_i
 /**
  * Filters the list of query arguments which get removed from admin area URLs in WordPress.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.80
  *
  * @param array $args List of removable query arguments.
  *

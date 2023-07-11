@@ -5013,7 +5013,7 @@ function bp_document_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
 /**
  * Function to delete the temporary download folder which create while downloding the document directory.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.80
  *
  * @return void
  */

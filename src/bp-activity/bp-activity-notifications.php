@@ -648,7 +648,7 @@ function bb_activity_add_notification_metas( $notification ) {
 /**
  * Function will remove follow notification when a member withdraws their following.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.80
  *
  * @param BP_Activity_Follow $follower Contains following data.
  */
