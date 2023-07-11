@@ -5338,10 +5338,11 @@ function bb_get_user_by_profile_slug( $profile_slug ) {
 
 	if ( ! isset( $cache[ $cache_key ] ) ) {
 		global $wpdb;
+		$bp_prefix = bp_core_get_table_prefix();
 
 		// Backward compatible to check 40 characters long unique slug or new slug as well.
 		$user_query = $wpdb->prepare(
-			"SELECT user_id FROM `{$wpdb->prefix}usermeta` WHERE `meta_key` IN ( %s, %s )",
+			"SELECT user_id FROM `{$bp_prefix}usermeta` WHERE `meta_key` IN ( %s, %s )",
 			"bb_profile_slug_{$profile_slug}",
 			"bb_profile_long_slug_{$profile_slug}"
 		);
@@ -5525,13 +5526,14 @@ function bb_generate_user_random_profile_slugs( $max_ids = 1 ) {
  */
 function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 ) {
 	global $wpdb;
+	$bp_prefix = bp_core_get_table_prefix();
 
 	if ( is_array( $unique_identifier ) ) {
 		$unique_identifier = '"' . implode( '","', $unique_identifier ) . '"';
 	}
 
 	// Prepare the statement to check unique identifier.
-	$prepare_user_query = "SELECT DISTINCT u.user_nicename, u.user_login FROM `{$wpdb->prefix}users` AS u WHERE ( u.user_login IN ({$unique_identifier}) OR u.user_nicename IN ({$unique_identifier}) )";
+	$prepare_user_query = "SELECT DISTINCT u.user_nicename, u.user_login FROM `{$bp_prefix}users` AS u WHERE ( u.user_login IN ({$unique_identifier}) OR u.user_nicename IN ({$unique_identifier}) )";
 
 	// Exclude the user to check unique identifier.
 	if ( ! empty( $user_id ) ) {
@@ -5552,7 +5554,7 @@ function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 )
 
 	// Prepare the statement to check unique identifier.
 	$prepare_meta_query = $wpdb->prepare(
-		"SELECT DISTINCT um.meta_value FROM `{$wpdb->prefix}usermeta` AS um WHERE ( um.meta_key = %s AND um.meta_value IN ({$unique_identifier}) ) OR ( um.meta_key = %s AND um.meta_value IN ({$unique_identifier}) )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		"SELECT DISTINCT um.meta_value FROM `{$bp_prefix}usermeta` AS um WHERE ( um.meta_key = %s AND um.meta_value IN ({$unique_identifier}) ) OR ( um.meta_key = %s AND um.meta_value IN ({$unique_identifier}) )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		'bb_profile_slug',
 		'nickname'
 	);
