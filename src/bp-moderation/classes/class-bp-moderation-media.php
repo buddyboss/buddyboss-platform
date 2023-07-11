@@ -126,7 +126,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.80
 	 * Introduce new params $args.
 	 *
 	 * @param string $where   medias Where sql.

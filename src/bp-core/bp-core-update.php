@@ -3069,7 +3069,7 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
 /**
  * Migrate data when plugin update.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.80
  */
 function bb_update_to_2_3_80() {
 	bb_core_update_repair_duplicate_following_notification();
@@ -3083,7 +3083,7 @@ function bb_update_to_2_3_80() {
 /**
  * Function will fetch and delete duplicate following notification data.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.80
  */
 function bb_core_update_repair_duplicate_following_notification() {
 	global $wpdb;

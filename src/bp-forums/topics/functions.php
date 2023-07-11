@@ -3933,7 +3933,7 @@ function bbp_check_topic_tag_edit() {
 /**
  * Function to check the topic is group topic or standalone.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.80
  *
  * @param int $topic_id Optional. Topic id
  *
