@@ -146,10 +146,12 @@ function bbp_is_forum( $post_id = 0 ) {
  * @return bool
  */
 function bbp_is_forum_archive() {
-	global $wp_query;
 
 	// Default to false
 	$retval = false;
+
+	// Get the main query global
+	$wp_query = bbp_get_wp_query();
 
 	// In forum archive
 	if ( is_post_type_archive( bbp_get_forum_post_type() ) || bbp_is_query_name( 'bbp_forum_archive' ) || ! empty( $wp_query->bbp_show_topics_on_root ) || absint( $wp_query->get( 'page_id' ) ) === (int) bp_get_option( '_bbp_root_slug_custom_slug' ) ) {
@@ -198,10 +200,13 @@ function bbp_is_single_forum() {
  * @return bool True if it's the forum edit page, false if not
  */
 function bbp_is_forum_edit() {
-	global $wp_query, $pagenow;
+	global $pagenow;
 
 	// Assume false
 	$retval = false;
+
+	// Get the main query global
+	$wp_query = bbp_get_wp_query();
 
 	// Check query
 	if ( ! empty( $wp_query->bbp_is_forum_edit ) && ( $wp_query->bbp_is_forum_edit === true ) ) {
@@ -301,10 +306,13 @@ function bbp_is_topic_archive() {
  * @return bool True if it's the topic edit page, false if not
  */
 function bbp_is_topic_edit() {
-	global $wp_query, $pagenow;
+	global $pagenow;
 
 	// Assume false
 	$retval = false;
+
+	// Get the main query global
+	$wp_query = bbp_get_wp_query();
 
 	// Check query
 	if ( ! empty( $wp_query->bbp_is_topic_edit ) && ( $wp_query->bbp_is_topic_edit === true ) ) {
@@ -403,7 +411,7 @@ function bbp_is_topic_tag() {
  * @return bool True if editing a topic tag, false if not
  */
 function bbp_is_topic_tag_edit() {
-	global $wp_query, $pagenow, $taxnow;
+	global $pagenow, $taxnow;
 
 	// Bail if topic-tags are off
 	if ( ! bbp_allow_topic_tags() ) {
@@ -412,6 +420,9 @@ function bbp_is_topic_tag_edit() {
 
 	// Assume false
 	$retval = false;
+
+	// Get the main query global
+	$wp_query = bbp_get_wp_query();
 
 	// Check query
 	if ( ! empty( $wp_query->bbp_is_topic_tag_edit ) && ( true === $wp_query->bbp_is_topic_tag_edit ) ) {
@@ -491,10 +502,13 @@ function bbp_is_reply( $post_id = 0 ) {
  * @return bool True if it's the reply edit page, false if not
  */
 function bbp_is_reply_edit() {
-	global $wp_query, $pagenow;
+	global $pagenow;
 
 	// Assume false
 	$retval = false;
+
+	// Get the main query global
+	$wp_query = bbp_get_wp_query();
 
 	// Check query
 	if ( ! empty( $wp_query->bbp_is_reply_edit ) && ( true === $wp_query->bbp_is_reply_edit ) ) {
@@ -569,10 +583,12 @@ function bbp_is_single_reply() {
  * @return bool True if it's the favorites page, false if not
  */
 function bbp_is_favorites() {
-	global $wp_query;
 
 	// Assume false
 	$retval = false;
+
+	// Get the main query global
+	$wp_query = bbp_get_wp_query();
 
 	// Check query
 	if ( ! empty( $wp_query->bbp_is_single_user_favs ) && ( true === $wp_query->bbp_is_single_user_favs ) ) {
@@ -590,10 +606,12 @@ function bbp_is_favorites() {
  * @return bool True if it's the subscriptions page, false if not
  */
 function bbp_is_subscriptions() {
-	global $wp_query;
 
 	// Assume false
 	$retval = false;
+
+	// Get the main query global
+	$wp_query = bbp_get_wp_query();
 
 	// Check query
 	if ( ! empty( $wp_query->bbp_is_single_user_subs ) && ( true === $wp_query->bbp_is_single_user_subs ) ) {
@@ -612,10 +630,12 @@ function bbp_is_subscriptions() {
  * @return bool True if it's the topics created page, false if not
  */
 function bbp_is_topics_created() {
-	global $wp_query;
 
 	// Assume false
 	$retval = false;
+
+	// Get the main query global
+	$wp_query = bbp_get_wp_query();
 
 	// Check query
 	if ( ! empty( $wp_query->bbp_is_single_user_topics ) && ( true === $wp_query->bbp_is_single_user_topics ) ) {
@@ -634,10 +654,12 @@ function bbp_is_topics_created() {
  * @return bool True if it's the topics created page, false if not
  */
 function bbp_is_replies_created() {
-	global $wp_query;
 
 	// Assume false
 	$retval = false;
+
+	// Get the main query global
+	$wp_query = bbp_get_wp_query();
 
 	// Check query
 	if ( ! empty( $wp_query->bbp_is_single_user_replies ) && ( true === $wp_query->bbp_is_single_user_replies ) ) {
@@ -658,10 +680,12 @@ function bbp_is_replies_created() {
  * @return bool True if it's the user's home, false if not
  */
 function bbp_is_user_home() {
-	global $wp_query;
 
 	// Assume false
 	$retval = false;
+
+	// Get the main query global
+	$wp_query = bbp_get_wp_query();
 
 	// Check query
 	if ( ! empty( $wp_query->bbp_is_single_user_home ) && ( true === $wp_query->bbp_is_single_user_home ) ) {
@@ -702,10 +726,12 @@ function bbp_is_user_home_edit() {
  * @return bool True if it's a user's profile page, false if not
  */
 function bbp_is_single_user() {
-	global $wp_query;
 
 	// Assume false
 	$retval = false;
+
+	// Get the main query global
+	$wp_query = bbp_get_wp_query();
 
 	// Check query
 	if ( ! empty( $wp_query->bbp_is_single_user ) && ( true === $wp_query->bbp_is_single_user ) ) {
@@ -724,10 +750,12 @@ function bbp_is_single_user() {
  * @return bool True if it's a user's profile edit page, false if not
  */
 function bbp_is_single_user_edit() {
-	global $wp_query;
 
 	// Assume false
 	$retval = false;
+
+	// Get the main query global
+	$wp_query = bbp_get_wp_query();
 
 	// Check query
 	if ( ! empty( $wp_query->bbp_is_single_user_edit ) && ( true === $wp_query->bbp_is_single_user_edit ) ) {
@@ -746,10 +774,12 @@ function bbp_is_single_user_edit() {
  * @return bool True if it's a user's profile page, false if not
  */
 function bbp_is_single_user_profile() {
-	global $wp_query;
 
 	// Assume false
 	$retval = false;
+
+	// Get the main query global
+	$wp_query = bbp_get_wp_query();
 
 	// Check query
 	if ( ! empty( $wp_query->bbp_is_single_user_profile ) && ( true === $wp_query->bbp_is_single_user_profile ) ) {
@@ -768,10 +798,12 @@ function bbp_is_single_user_profile() {
  * @return bool True if it's a user's topics page, false if not
  */
 function bbp_is_single_user_topics() {
-	global $wp_query;
 
 	// Assume false
 	$retval = false;
+
+	// Get the main query global
+	$wp_query = bbp_get_wp_query();
 
 	// Check query
 	if ( ! empty( $wp_query->bbp_is_single_user_topics ) && ( true === $wp_query->bbp_is_single_user_topics ) ) {
@@ -790,10 +822,12 @@ function bbp_is_single_user_topics() {
  * @return bool True if it's a user's replies page, false if not
  */
 function bbp_is_single_user_replies() {
-	global $wp_query;
 
 	// Assume false
 	$retval = false;
+
+	// Get the main query global
+	$wp_query = bbp_get_wp_query();
 
 	// Check query
 	if ( ! empty( $wp_query->bbp_is_single_user_replies ) && ( true === $wp_query->bbp_is_single_user_replies ) ) {
@@ -837,10 +871,12 @@ function bbp_is_single_user_engagements() {
  * @return bool Is it a view page?
  */
 function bbp_is_single_view() {
-	global $wp_query;
 
 	// Assume false
 	$retval = false;
+
+	// Get the main query global
+	$wp_query = bbp_get_wp_query();
 
 	// Check query
 	if ( ! empty( $wp_query->bbp_is_view ) && ( true === $wp_query->bbp_is_view ) ) {
@@ -865,7 +901,6 @@ function bbp_is_single_view() {
  * @return bool Is it a search page?
  */
 function bbp_is_search() {
-	global $wp_query;
 
 	// Bail if search is disabled
 	if ( ! bbp_allow_search() ) {
@@ -874,6 +909,9 @@ function bbp_is_search() {
 
 	// Assume false
 	$retval = false;
+
+	// Get the main query global
+	$wp_query = bbp_get_wp_query();
 
 	// Get the rewrite ID (one time, to avoid repeated calls)
 	$rewrite_id = bbp_get_search_rewrite_id();
@@ -907,7 +945,6 @@ function bbp_is_search() {
  * @return bool Is it a search page?
  */
 function bbp_is_search_results() {
-	global $wp_query;
 
 	// Bail if search is disabled
 	if ( ! bbp_allow_search() ) {
@@ -916,6 +953,9 @@ function bbp_is_search_results() {
 
 	// Assume false
 	$retval = false;
+
+	// Get the main query global
+	$wp_query = bbp_get_wp_query();
 
 	// Check query
 	if ( ! empty( $wp_query->bbp_search_terms ) ) {
@@ -964,10 +1004,12 @@ function bbp_is_shortcode() {
  * @return bool True if it's the edit page, false if not
  */
 function bbp_is_edit() {
-	global $wp_query;
 
 	// Assume false
 	$retval = false;
+
+	// Get the main query global
+	$wp_query = bbp_get_wp_query();
 
 	// Check query
 	if ( ! empty( $wp_query->bbp_is_edit ) && ( $wp_query->bbp_is_edit === true ) ) {
@@ -1156,7 +1198,7 @@ function bbp_body_class( $wp_classes, $custom_classes = false ) {
  */
 function is_bbpress() {
 
-	// Defalt to false
+	// Default to false
 	$retval = false;
 
 	// Bail if main query has not been populated.
