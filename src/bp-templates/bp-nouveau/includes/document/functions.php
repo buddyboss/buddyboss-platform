@@ -968,7 +968,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 /**
  * Download the file from the server.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.80
  *
  * @param string $file_path File absolute path.
  * @param string $file_name File name.

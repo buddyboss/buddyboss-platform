@@ -244,7 +244,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 		 *
 		 * @since BuddyBoss 1.5.6
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.80
 		 * Introduce new params $args as Media args.
 		 *
 		 * @param array $where Query to hide suspended user's media.

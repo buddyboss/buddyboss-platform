@@ -289,7 +289,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 		 *
 		 * @since BuddyBoss 1.7.0.1
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.80
 		 * Introduce new params $args as Media args.
 		 *
 		 * @param array $where Query to hide suspended user's video.

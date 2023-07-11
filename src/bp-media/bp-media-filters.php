@@ -2888,7 +2888,7 @@ add_action( 'bb_media_upload', 'bb_messages_media_save' );
 /**
  * Added text on the email when replied on the activity.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.80
  *
  * @param BP_Activity_Activity $activity Activity Object.
  */

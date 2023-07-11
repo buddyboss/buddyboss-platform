@@ -438,6 +438,10 @@ function bp_version_updater() {
 			bb_update_to_2_3_60();
 		}
 
+		if ( $raw_db_version < 20371 ) {
+			bb_update_to_2_3_80();
+		}
+
 		if ( $raw_db_version < 20561 ) {
 			bb_update_to_2_3_90();
 		}
@@ -3064,6 +3068,49 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
 	// Call recursive to finish update for all records.
 	$paged++;
 	bb_create_background_message_media_document_update( $table_exists, $paged );
+}
+
+/**
+ * Migrate data when plugin update.
+ *
+ * @since BuddyBoss 2.3.80
+ */
+function bb_update_to_2_3_80() {
+	bb_core_update_repair_duplicate_following_notification();
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
+}
+
+/**
+ * Function will fetch and delete duplicate following notification data.
+ *
+ * @since BuddyBoss 2.3.80
+ */
+function bb_core_update_repair_duplicate_following_notification() {
+	global $wpdb;
+	$bp = buddypress();
+
+	$sql  = "DELETE FROM {$bp->notifications->table_name}";
+	$sql .= ' WHERE id IN (';
+	$sql .= " SELECT * FROM ( SELECT DISTINCT n1.id FROM {$bp->notifications->table_name} n1";
+	$sql .= " JOIN {$bp->notifications->table_name} n2 ON n1.user_id = n2.user_id";
+	$sql .= ' WHERE n1.secondary_item_id = n2.secondary_item_id';
+	$sql .= ' AND n1.date_notified < n2.date_notified';
+	$sql .= ' AND n1.component_name = %s AND n1.component_action = %s';
+	$sql .= ' ORDER BY n1.id DESC) AS ids';
+	$sql .= ' )';
+
+	// Remove duplicate notification ids.
+	$wpdb->query( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) );
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear notifications API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-notifications' );
+	}
 }
 
 /**
