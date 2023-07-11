@@ -722,10 +722,17 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			);
 		} else {
 			$thread_id = (int) $request->get_param( 'id' );
+			$sender_id = (int) $request->get_param( 'sender_id' );
 
 			// It's an existing thread.
 			if ( $thread_id ) {
-				if ( bp_current_user_can( 'bp_moderate' ) || ( messages_is_valid_thread( $thread_id ) && messages_check_thread_access( $thread_id ) ) ) {
+				$sender_id = ( 0 !== $sender_id ? $sender_id : bp_loggedin_user_id() );
+
+				if (
+					! empty( $sender_id ) &&
+					messages_is_valid_thread( $thread_id ) &&
+					messages_check_thread_access( $thread_id, $sender_id )
+				) {
 					$retval = true;
 				}
 			} else {
@@ -1421,8 +1428,8 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			$prepared_thread->thread_id = $thread->thread_id;
 		}
 
-		if ( ! empty( $schema['properties']['sender_id'] ) && ! empty( $request['sender_id'] ) ) {
-			$prepared_thread->sender_id = $thread->sender_id;
+		if ( ! empty( $request['sender_id'] ) ) {
+			$prepared_thread->sender_id = (int) $request['sender_id'];
 		} elseif ( ! empty( $thread->sender_id ) ) {
 			$prepared_thread->sender_id = $thread->sender_id;
 		} else {
