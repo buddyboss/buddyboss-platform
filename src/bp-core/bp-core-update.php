@@ -2771,7 +2771,7 @@ function bb_core_update_repair_member_slug() {
 
 	$user_ids = $wpdb->get_col(
 		$wpdb->prepare(
-			"SELECT u.ID FROM `{$wpdb->prefix}users` AS u LEFT JOIN `{$wpdb->prefix}usermeta` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) WHERE ( um.user_id IS NULL OR LENGTH(meta_value) = %d ) ORDER BY u.ID",
+			"SELECT u.ID FROM `{$wpdb->base_prefix}users` AS u LEFT JOIN `{$wpdb->base_prefix}usermeta` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) WHERE ( um.user_id IS NULL OR LENGTH(meta_value) = %d ) ORDER BY u.ID",
 			'bb_profile_slug',
 			40
 		)
