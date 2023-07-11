@@ -36,6 +36,11 @@ class BB_Videos extends Integration_Abstract {
 			'bp_video_deleted_videos',        // Any Video File delete.
 			'bp_video_delete',                // Any Video File delete.
 
+			// Added moderation support.
+			'bp_suspend_video_suspended',       // Hide video when member suspend.
+			'bp_suspend_video_unsuspended',     // Unhide video when member suspend.
+			'bp_moderation_after_save',         // Hide video when member blocked.
+			'bb_moderation_after_delete'        // Unhide video when member unblocked.
 		);
 
 		$this->purge_event( 'bp-video', $purge_events );
@@ -44,10 +49,9 @@ class BB_Videos extends Integration_Abstract {
 		 * Support for single items purge
 		 */
 		$purge_single_events = array(
-			'bp_video_add'           => 1, // Any Video File add.
-			'bp_video_after_save'    => 1, // Any Video File updated.
-			'bp_video_before_delete' => 1, // Any Video File deleted.
-
+			'bp_video_add'                   => 1, // Any Video File add.
+			'bp_video_after_save'            => 1, // Any Video File updated.
+			'bp_video_before_delete'         => 1, // Any Video File deleted.
 			'updated_video_meta'             => 2, // Any Video meta update.
 
 			// Video group information update support.
@@ -60,6 +64,12 @@ class BB_Videos extends Integration_Abstract {
 			'deleted_user'                   => 1, // User deleted on site.
 			'xprofile_avatar_uploaded'       => 1, // User avatar photo updated.
 			'bp_core_delete_existing_avatar' => 1, // User avatar photo deleted.
+
+			// Added moderation support.
+			'bp_suspend_video_suspended'     => 1, // Hide video when member suspend.
+			'bp_suspend_video_unsuspended'   => 1, // Unhide video when member suspend.
+			'bp_moderation_after_save'       => 1, // Hide video when member blocked.
+			'bb_moderation_after_delete'     => 1, // Unhide video when member unblocked.
 		);
 
 		$this->purge_single_events( $purge_single_events );
@@ -311,6 +321,58 @@ class BB_Videos extends Integration_Abstract {
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_col( $sql );
+	}
+
+	/**
+	 * Update cache for video when member suspend.
+	 *
+	 * @param int $video_id Video ID.
+	 */
+	public function event_bp_suspend_video_suspended( $video_id ) {
+		Cache::instance()->purge_by_group( 'bp-video_' . $video_id );
+	}
+
+	/**
+	 * Update cache for video when member unsuspend.
+	 *
+	 * @param int $video_id Video ID.
+	 */
+	public function event_bp_suspend_video_unsuspended( $video_id ) {
+		Cache::instance()->purge_by_group( 'bp-video_' . $video_id );
+	}
+
+	/**
+	 * Update cache for video when member blocked.
+	 *
+	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 */
+	public function event_bp_moderation_after_save( $bp_moderation ) {
+		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
+			return;
+		}
+		$video_ids = $this->get_video_ids_by_user_id( $bp_moderation->item_id );
+		if ( ! empty( $video_ids ) ) {
+			foreach ( $video_ids as $video_id ) {
+				Cache::instance()->purge_by_group( 'bp-video_' . $video_id );
+			}
+		}
+	}
+
+	/**
+	 * Update cache for video when member unblocked.
+	 *
+	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 */
+	public function event_bb_moderation_after_delete( $bp_moderation ) {
+		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
+			return;
+		}
+		$video_ids = $this->get_video_ids_by_user_id( $bp_moderation->item_id );
+		if ( ! empty( $video_ids ) ) {
+			foreach ( $video_ids as $video_id ) {
+				Cache::instance()->purge_by_group( 'bp-video_' . $video_id );
+			}
+		}
 	}
 
 }
