@@ -406,7 +406,7 @@ class BP_User_Query {
 		/**
 		 * Filters the Join SQL statement.
 		 *
-         * @since BuddyBoss 1.5.6
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param string $sql      From SQL statement.
 		 * @param string $uid_name User ID field name.
@@ -514,7 +514,7 @@ class BP_User_Query {
 		/**
 		 * Filters the Where SQL statement.
 		 *
-         * @since BuddyBoss 1.5.6
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param string $sql      From SQL statement.
 		 * @param string $uid_name User ID field name.
@@ -576,7 +576,7 @@ class BP_User_Query {
 		if ( is_array( $this->uid_clauses['orderby'] ) ) {
 			$orderby_multiple = array();
 			foreach ( $this->uid_clauses['orderby'] as $part ) {
-				$orderby_multiple[] = $part[0] . ' ' . $part[1];// column_name DESC/ASC
+				$orderby_multiple[] = $part[0] . ' ' . $part[1];// column_name DESC/ASC.
 			}
 
 			$this->uid_clauses['orderby'] = 'ORDER BY ' . implode( ', ', $orderby_multiple );
@@ -627,7 +627,7 @@ class BP_User_Query {
 			'user_registered',
 			'user_activation_key',
 			'user_status',
-			'display_name'
+			'display_name',
 		);
 
 		if ( is_multisite() ) {

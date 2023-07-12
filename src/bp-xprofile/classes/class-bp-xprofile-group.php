@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
+#[AllowDynamicProperties]
 class BP_XProfile_Group {
 
 	/**
@@ -255,7 +256,7 @@ class BP_XProfile_Group {
 	 * @since BuddyPress 8.0.0 Introduced `$hide_field_types` & `$signup_fields_only` arguments.
 	 * @since BuddyPress 11.0.0 `$profile_group_id` accepts an array of profile group ids.
 	 * @since BuddyBoss [BBVERSION] Introduced `$hide_field_types` & `$signup_fields_only` arguments.`$profile_group_id` accepts an array of profile group ids.
-	 * 
+	 *
 	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @param array $args {
