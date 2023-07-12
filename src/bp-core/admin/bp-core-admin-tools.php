@@ -397,7 +397,7 @@ function bp_admin_repair_list() {
 		// Recalculate group members count for each group.
 		$repair_list[124] = array(
 			'bp-group-member-count',
-			esc_html__( 'Recalculate the total members count for each group.', 'buddyboss' ),
+			esc_html__( 'Recalculate the total members count for each group', 'buddyboss' ),
 			'bp_admin_repair_group_member_count',
 		);
 	}
@@ -1548,24 +1548,19 @@ function bp_admin_repair_group_member_count() {
 		return;
 	}
 
-	$statement = esc_html__( 'Recalculating the total group members count for each group &hellip; %s', 'buddyboss' );
-	$bp        = buddypress();
+	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$bp     = buddypress();
 
 	/**
 	 * Check and delete orphan group members records from wp_bp_groups_members table
 	 * if user doesn't exist in users table.
 	 */
-	$wpdb->query( "DELETE m FROM {$bp->groups->table_name_members} AS m LEFT JOIN {$wpdb->users} AS u ON u.ID = m.user_id WHERE u.ID IS NULL" );
+	if ( $offset === 0 ) {
+		$wpdb->query( "DELETE m FROM {$bp->groups->table_name_members} AS m LEFT JOIN {$wpdb->users} AS u ON u.ID = m.user_id WHERE u.ID IS NULL" );
+	}
 
 	// Fetch all groups.
-	$group_ids = $wpdb->get_col( "SELECT DISTINCT id FROM {$wpdb->prefix}bp_groups ORDER BY id DESC" );
-
-	if ( is_wp_error( $group_ids ) ) {
-		return array(
-			'status'  => 0,
-			'message' => sprintf( $statement, esc_html__( 'Failed!', 'buddyboss' ) ),
-		);
-	}
+	$group_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT id FROM {$wpdb->prefix}bp_groups ORDER BY id DESC LIMIT 20 OFFSET %d", $offset ) );
 
 	if ( ! empty( $group_ids ) ) {
 		foreach ( $group_ids as $group_id ) {
@@ -1608,11 +1603,21 @@ function bp_admin_repair_group_member_count() {
 
 			groups_update_groupmeta( $group_id, 'total_member_count', absint( $member_count ) );
 			wp_cache_set( $cache_key, absint( $member_count ), 'bp_groups' );
+
+			$offset++;
 		}
+
+		return array(
+			'status'  => 'running',
+			'offset'  => $offset,
+			'records' => sprintf( esc_html__( '%s groups member count updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) ),
+		);
 	}
+
+	$statement = esc_html__( 'Recalculating the total group members count for each group &hellip; %s', 'buddyboss' );
 
 	return array(
 		'status'  => 1,
-		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'message' => sprintf( $statement, esc_html__( 'Complete!', 'buddyboss' ) ),
 	);
 }
