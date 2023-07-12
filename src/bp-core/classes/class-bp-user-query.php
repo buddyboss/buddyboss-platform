@@ -311,10 +311,10 @@ class BP_User_Query {
 			case 'active':
 			case 'newest':
 			case 'random':
-				$this->uid_name  = 'ID';
-				$this->uid_table = $wpdb->users;
+				$this->uid_name = 'user_id';
+				$this->uid_table = $bp->members->table_name_last_activity;
 				$sql['select']   = $wpdb->prepare( "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u LEFT JOIN {$bp->members->table_name_last_activity} a ON u.ID = a.user_id AND a.component = %s AND a.type = 'last_activity' ", buddypress()->members->id );
-				$sql['where'][]  = ' u.user_status = 0 ';
+				$sql['where'][]  = $wpdb->prepare( "u.component = %s AND u.type = 'last_activity'", buddypress()->members->id );
 
 				if ( 'newest' == $type ) {
 					$sql['orderby'] = 'ORDER BY u.ID';
@@ -322,10 +322,8 @@ class BP_User_Query {
 				} elseif ( 'random' == $type ) {
 					$sql['orderby'] = 'ORDER BY rand()';
 				} else {
-					$sql['orderby'] = array(
-						array( 'COALESCE( a.date_recorded, NULL )', 'DESC' ),
-						array( 'u.display_name', 'ASC' ),
-					);
+					$sql['orderby'] = "ORDER BY u.date_recorded";
+					$sql['order'] = "DESC";
 				}
 
 				// Date query.
