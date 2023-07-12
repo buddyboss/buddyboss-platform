@@ -496,7 +496,18 @@ class BP_XProfile_Group {
 		// Pull field objects from the cache.
 		$fields = array();
 		foreach ( $field_ids as $field_id ) {
-			$fields[] = xprofile_get_field( $field_id, null, false );
+
+			if ( true === $r['signup_fields_only'] && ! in_array( $field_id, bp_xprofile_get_signup_field_ids(), true ) ) {
+				continue;
+			}
+
+			$_field = xprofile_get_field( $field_id, null, false );
+
+			if ( in_array( $_field->type, $r['hide_field_types'], true ) ) {
+				continue;
+			}
+
+			$fields[] = $_field;
 		}
 
 		// Store field IDs for meta cache priming.
