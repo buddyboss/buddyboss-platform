@@ -17,6 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
+#[AllowDynamicProperties]
 class BP_Blogs_Blog {
 
 	/**
@@ -170,19 +171,31 @@ class BP_Blogs_Blog {
 	/**
 	 * Retrieve a set of blog-user associations.
 	 *
-	 * @param string      $type              The order in which results should be returned.
-	 *                                       'active', 'alphabetical', 'newest', or 'random'.
-	 * @param int|bool    $limit             Optional. The maximum records to return.
-	 *                                       Default: false.
-	 * @param int|bool    $page              Optional. The page of records to return.
-	 *                                       Default: false (unlimited results).
-	 * @param int         $user_id           Optional. ID of the user whose blogs are being
-	 *                                       retrieved. Default: 0.
-	 * @param string|bool $search_terms      Optional. Search by text stored in
-	 *                                       blogmeta (such as the blog name). Default: false.
-	 * @param bool        $update_meta_cache Whether to pre-fetch metadata for
-	 *                                       blogs. Default: true.
-	 * @param array|bool  $include_blog_ids  Array of blog IDs to include.
+	 * @since BuddyPress 1.2.0
+	 * @since BuddyPress 10.0.0 Converted to array as main function argument. Added `$date_query` parameter.
+	 * @since BuddyBoss [BBVERSION] Converted to array as main function argument. Added `$date_query` parameter.
+	 *
+	 * @param array $data {
+	 *     Array of site data to query for.
+	 *
+	 *     @type string      $type              The order in which results should be returned.
+	 *                                          'active', 'alphabetical', 'newest', or 'random'.
+	 *     @type int|bool    $per_page          Optional. The number of records to return per page.
+	 *                                          Default: false.
+	 *     @type int|bool    $page              Optional. The page of records to return.
+	 *                                          Default: false (unlimited results).
+	 *     @type int         $user_id           Optional. ID of the user whose blogs are being
+	 *                                          retrieved. Default: 0.
+	 *     @type string|bool $search_terms      Optional. Search by text stored in
+	 *                                          blogmeta (such as the blog name). Default: false.
+	 *     @type bool        $update_meta_cache Whether to pre-fetch metadata for
+	 *                                          blogs. Default: true.
+	 *     @type array|bool  $include_blog_ids  Optional. Array of blog IDs to include.
+	 *     @type array       $date_query        Optional. Filter results by site last activity date. See first
+	 *                                          paramter of {@link WP_Date_Query::__construct()} for syntax. Only
+	 *                                          applicable if $type is either 'newest' or 'active'.
+	 * }
+	 *
 	 * @return array Multidimensional results array, structured as follows:
 	 *               'blogs' - Array of located blog objects
 	 *               'total' - A count of the total blogs matching the filter params
@@ -196,15 +209,15 @@ class BP_Blogs_Blog {
 		if ( ! is_array( $args[0] ) || count( $args ) > 1 ) {
 			_deprecated_argument( __METHOD__, '[BBVERSION]', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
-			$old_args_keys = [
-				0  => 'type',
-				1  => 'per_page',
-				2  => 'page',
-				3  => 'user_id',
-				4  => 'search_terms',
-				5  => 'update_meta_cache',
-				6  => 'include_blog_ids',
-			];
+			$old_args_keys = array(
+				0 => 'type',
+				1 => 'per_page',
+				2 => 'page',
+				3 => 'user_id',
+				4 => 'search_terms',
+				5 => 'update_meta_cache',
+				6 => 'include_blog_ids',
+			);
 
 			$args = bp_core_parse_args_array( $old_args_keys, $args );
 		} else {
@@ -225,32 +238,39 @@ class BP_Blogs_Blog {
 			)
 		);
 
-		if ( ! is_user_logged_in() || ( ! bp_current_user_can( 'bp_moderate' ) && ( $r['user_id'] != bp_loggedin_user_id() ) ) ) {
-			$hidden_sql = "AND wb.public = 1";
+		if (
+			! is_user_logged_in() ||
+			(
+				! bp_current_user_can( 'bp_moderate' ) &&
+				( bp_loggedin_user_id() !== (int) $r['user_id'] )
+			)
+		) {
+			$hidden_sql = 'AND wb.public = 1';
 		} else {
 			$hidden_sql = '';
 		}
 
-		$pag_sql = ( $r['per_page'] && $r['page'] ) ? $wpdb->prepare( " LIMIT %d, %d", intval( ( $r['page'] - 1 ) * $r['per_page']), intval( $r['per_page'] ) ) : '';
+		$pag_sql = ( $r['per_page'] && $r['page'] ) ? $wpdb->prepare( ' LIMIT %d, %d', intval( ( $r['page'] - 1 ) * $r['per_page'] ), intval( $r['per_page'] ) ) : '';
 
-		$user_sql = ! empty( $r['user_id'] ) ? $wpdb->prepare( " AND b.user_id = %d", $r['user_id'] ) : '';
+		$user_sql = ! empty( $r['user_id'] ) ? $wpdb->prepare( ' AND b.user_id = %d', $r['user_id'] ) : '';
 
 		$date_query_sql = '';
 
 		switch ( $r['type'] ) {
-			case 'active': default:
+			case 'active':
+			default:
 				$date_query_sql = BP_Date_Query::get_where_sql( $r['date_query'], 'bm.meta_value', true );
-				$order_sql      = "ORDER BY bm.meta_value DESC";
+				$order_sql      = 'ORDER BY bm.meta_value DESC';
 				break;
 			case 'alphabetical':
-				$order_sql = "ORDER BY bm_name.meta_value ASC";
+				$order_sql = 'ORDER BY bm_name.meta_value ASC';
 				break;
 			case 'newest':
 				$date_query_sql = BP_Date_Query::get_where_sql( $r['date_query'], 'wb.registered', true );
-				$order_sql      = "ORDER BY wb.registered DESC";
+				$order_sql      = 'ORDER BY wb.registered DESC';
 				break;
 			case 'random':
-				$order_sql = "ORDER BY RAND()";
+				$order_sql = 'ORDER BY RAND()';
 				break;
 		}
 

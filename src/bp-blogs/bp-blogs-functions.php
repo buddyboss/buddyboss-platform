@@ -35,6 +35,7 @@ function bp_blogs_has_directory() {
  * @param array|string $args {
  *     Arguments are listed here with their default values. For more
  *     information about the arguments, see {@link BP_Blogs_Blog::get()}.
+ *
  *     @type string      $type              Default: 'active'.
  *     @type int|bool    $user_id           Default: false.
  *     @type array       $include_blog_ids  Default: false.
@@ -44,7 +45,8 @@ function bp_blogs_has_directory() {
  *     @type bool        $update_meta_cache Whether to pre-fetch blogmeta. Default: true.
  *     @type array       $date_query        Default: false.
  * }
- * @return array See {@link BP_Blogs_Blog::get()}.
+ *
+ * @return array See {@link BP_Blogs_Blog::get()}. If no blogs are found, an empty array is returned.
  */
 function bp_blogs_get_blogs( $args = '' ) {
 

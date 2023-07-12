@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
  * @param string|null $name Optional. Template part name. Used to generate
  *                          secondary filenames, eg 'personal' for 'activity-personal.php'.
  * @param array       $args Optional. Extra args to pass to locate_template().
- * 
+ *
  * @return false|string Path to located template. See {@link bp_locate_template()}.
  */
 function bp_get_template_part( $slug, $name = null, $args = array() ) {
@@ -109,7 +109,7 @@ function bp_get_asset_template_part( $slug, $name = null, $args = array() ) {
  * @param bool         $require_once   Optional. Whether to require_once or require. Has
  *                                     no effect if $load is false. Default: true.
  * @param array        $args           Optional. Extra args to pass to locate_template().
- * 
+ *
  * @return string The template filename if one is located.
  */
 function bp_locate_template( $template_names, $load = false, $require_once = true, $args = array() ) {
@@ -355,7 +355,7 @@ function bp_get_template_stack() {
  * @param bool        $echo If true, template content will be echoed. If false,
  *                          returned. Default: true.
  * @param array       $args See {@link bp_get_template_part()}.
- * 
+ *
  * @return string|null If $echo, returns the template content.
  */
 function bp_buffer_template_part( $slug, $name = null, $echo = true, $args = array() ) {

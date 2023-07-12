@@ -112,7 +112,7 @@ function bp_rewind_blogs() {
  * @since BuddyPress 2.0.0 Added $include_blog_ids, $update_meta_cache parameters
  * @since BuddyPress 10.0.0 Added $date_query parameter
  * @since BuddyBoss [BBVERSION] Added $date_query parameter
- * 
+ *
  * @global object $blogs_template {@link BP_Blogs_Template}
  *
  * @param array|string $args {
@@ -142,6 +142,7 @@ function bp_rewind_blogs() {
  *                                      {@link WP_Date_Query::__construct()} for syntax. Only applicable if
  *                                      $type is either 'newest' or 'active'.
  * }
+ *
  * @return bool Returns true when blogs are found, otherwise false.
  */
 function bp_has_blogs( $args = '' ) {

@@ -93,7 +93,7 @@ class BP_Blogs_Template {
 	 * @since BuddyPress 1.2.0
 	 * @since BuddyPress 10.0.0 Converted to array as main function argument. Added $date_query parameter.
 	 * @since BuddyBoss [BBVERSION] Converted to array as main function argument. Added $date_query parameter.
-	 * 
+	 *
 	 * @see BP_Blogs_Blog::get() for a description of parameters.
 	 *
 	 * @param array $args {
@@ -106,17 +106,17 @@ class BP_Blogs_Template {
 		if ( ! is_array( $args[0] ) || count( $args ) > 1 ) {
 			_deprecated_argument( __METHOD__, '[BBVERSION]', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
-			$old_args_keys = [
-				0  => 'type',
-				1  => 'page',
-				2  => 'per_page',
-				3  => 'max',
-				4  => 'user_id',
-				5  => 'search_terms',
-				6  => 'page_arg',
-				7  => 'update_meta_cache',
-				8  => 'include_blog_ids',
-			];
+			$old_args_keys = array(
+				0 => 'type',
+				1 => 'page',
+				2 => 'per_page',
+				3 => 'max',
+				4 => 'user_id',
+				5 => 'search_terms',
+				6 => 'page_arg',
+				7 => 'update_meta_cache',
+				8 => 'include_blog_ids',
+			);
 
 			$args = bp_core_parse_args_array( $old_args_keys, $args );
 		} else {
@@ -164,11 +164,13 @@ class BP_Blogs_Template {
 			);
 		}
 
+		$max = (int) wp_unslash( $r['max'] );
+
 		// Set the total blog count.
-		if ( empty( $r['max'] ) || ( $r['max'] >= (int) $this->blogs['total'] ) ) {
+		if ( empty( $max ) || ( $max >= (int) $this->blogs['total'] ) ) {
 			$this->total_blog_count = (int) $this->blogs['total'];
 		} else {
-			$this->total_blog_count = (int) $max;
+			$this->total_blog_count = $max;
 		}
 
 		// Set the blogs array (to loop through later.
@@ -178,10 +180,10 @@ class BP_Blogs_Template {
 		$blog_count = count( $this->blogs );
 
 		// Set the current blog count.
-		if ( empty( $r['max'] ) || ( $r['max'] >= (int) $blog_count ) ) {
+		if ( empty( $max ) || ( $max >= (int) $blog_count ) ) {
 			$this->blog_count = (int) $blog_count;
 		} else {
-			$this->blog_count = (int) $max;
+			$this->blog_count = $max;
 		}
 
 		// Build pagination links based on total blogs and current page number.
