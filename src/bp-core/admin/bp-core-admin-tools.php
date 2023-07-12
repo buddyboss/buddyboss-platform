@@ -1556,7 +1556,7 @@ function bp_admin_repair_group_member_count() {
 	 * if user doesn't exist in users table.
 	 */
 	if ( $offset === 0 ) {
-		$wpdb->query( "DELETE m FROM {$bp->groups->table_name_members} AS m LEFT JOIN {$wpdb->users} AS u ON u.ID = m.user_id WHERE u.ID IS NULL" );
+		$wpdb->query( "DELETE m, mm FROM {$wpdb->prefix}bp_groups_members AS m LEFT JOIN {$wpdb->users} AS u ON u.ID = m.user_id LEFT JOIN {$wpdb->prefix}bp_groups_membermeta AS mm ON m.ID = mm.member_id WHERE u.ID IS NULL" );
 	}
 
 	// Fetch all groups.
