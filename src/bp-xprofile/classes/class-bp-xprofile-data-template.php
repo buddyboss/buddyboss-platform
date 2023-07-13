@@ -105,9 +105,8 @@ class BP_XProfile_Data_Template {
 	 *
 	 * @since BuddyPress 1.5.0
 	 * @since BuddyPress 2.4.0 Introduced `$member_type` argument.
-	 * @since BuddyPress 8.0.0 Introduced `$hide_field_types` & `$signup_fields_only` arguments.
 	 * @since BuddyPress 11.0.0 `$profile_group_id` accepts an array of profile group ids.
-	 * @since BuddyBoss [BBVERSION] Introduced `$hide_field_types` & `$signup_fields_only` arguments.`$profile_group_id` accepts an array of profile group ids.
+	 * @since BuddyBoss [BBVERSION] `$profile_group_id` accepts an array of profile group ids.
 	 *
 	 * @param array|string $args {
 	 *     An array of arguments. All items are optional.
@@ -124,8 +123,6 @@ class BP_XProfile_Data_Template {
 	 *     @type int|bool       $hide_empty_fields       Should empty fields be skipped.
 	 *     @type int|bool       $fetch_visibility_level  Fetch visibility levels.
 	 *     @type int|bool       $update_meta_cache       Should metadata cache be updated.
-	 *     @type string[]       $hide_field_types        List of field types to hide form loop. Default: empty array.
-	 *     @type bool           $signup_fields_only      Whether to only return signup fields. Default: false
 	 * }
 	 */
 	public function __construct( $args = '' ) {

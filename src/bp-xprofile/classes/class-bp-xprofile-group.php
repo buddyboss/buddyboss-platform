@@ -253,9 +253,8 @@ class BP_XProfile_Group {
 	 *
 	 * @since BuddyPress 1.2.0
 	 * @since BuddyPress 2.4.0 Introduced `$member_type` argument.
-	 * @since BuddyPress 8.0.0 Introduced `$hide_field_types` & `$signup_fields_only` arguments.
 	 * @since BuddyPress 11.0.0 `$profile_group_id` accepts an array of profile group ids.
-	 * @since BuddyBoss [BBVERSION] Introduced `$hide_field_types` & `$signup_fields_only` arguments.`$profile_group_id` accepts an array of profile group ids.
+	 * @since BuddyBoss [BBVERSION] `$profile_group_id` accepts an array of profile group ids.
 	 *
 	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
@@ -280,8 +279,6 @@ class BP_XProfile_Group {
 	 *      @type array          $includ_fields      Comma-separated list or array of field IDs to include.
 	 *      @type bool           $update_meta_cache  Whether to pre-fetch xprofilemeta for all retrieved groups, fields,
 	 *                                               and data. Default: true.
-	 *      @type string[]       $hide_field_types   List of field types to hide form loop. Default: empty array.
-	 *      @type bool           $signup_fields_only Whether to only return signup fields. Default: false.
 	 *  }
 	 * @return array $groups
 	 */
@@ -307,8 +304,6 @@ class BP_XProfile_Group {
 				'update_meta_cache'              => true,
 				'repeater_show_main_fields_only' => false,
 				'fetch_social_network_fields'    => false,
-				'hide_field_types'               => array(),
-				'signup_fields_only'             => false,
 			)
 		);
 
@@ -497,18 +492,7 @@ class BP_XProfile_Group {
 		// Pull field objects from the cache.
 		$fields = array();
 		foreach ( $field_ids as $field_id ) {
-
-			if ( true === $r['signup_fields_only'] && ! in_array( $field_id, bp_xprofile_get_signup_field_ids(), true ) ) {
-				continue;
-			}
-
-			$_field = xprofile_get_field( $field_id, null, false );
-
-			if ( in_array( $_field->type, $r['hide_field_types'], true ) ) {
-				continue;
-			}
-
-			$fields[] = $_field;
+			$fields[] = xprofile_get_field( $field_id, null, false );
 		}
 
 		// Store field IDs for meta cache priming.

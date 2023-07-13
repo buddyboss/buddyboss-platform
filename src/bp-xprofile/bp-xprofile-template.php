@@ -14,9 +14,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  * @since BuddyPress 2.4.0 Introduced `$member_type` argument.
- * @since BuddyPress 8.0.0 Introduced `$hide_field_types` & `$signup_fields_only` arguments.
  * @since BuddyPress 11.0.0 `$profile_group_id` accepts an array of profile group ids.
- * @since BuddyBoss [BBVERSION] Introduced `$hide_field_types` & `$signup_fields_only` arguments.`$profile_group_id` accepts an array of profile group ids.
+ * @since BuddyBoss [BBVERSION] `$profile_group_id` accepts an array of profile group ids.
  *
  * @global object $profile_template
  * @see BP_XProfile_Group::get() for full description of `$args` array.
@@ -38,8 +37,6 @@ defined( 'ABSPATH' ) || exit;
  *     @type int|bool       $exclude_fields         Default: false
  *     @type int|bool       $include_fields         Default: false
  *     @type bool           $update_meta_cache      Default: true.\
- *     @type string[]       $hide_field_types       List of field types to hide form loop. Default: empty array.
- *     @type bool           $signup_fields_only     Whether to only return signup fields. Default: false
  * }
  *
  * @return bool
