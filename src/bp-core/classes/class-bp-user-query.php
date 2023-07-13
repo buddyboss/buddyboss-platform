@@ -311,10 +311,10 @@ class BP_User_Query {
 			case 'active':
 			case 'newest':
 			case 'random':
-				$this->uid_name = 'user_id';
-				$this->uid_table = $bp->members->table_name_last_activity;
+				$this->uid_name  = 'ID';
+				$this->uid_table = $wpdb->users;
 				$sql['select']   = $wpdb->prepare( "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u LEFT JOIN {$bp->members->table_name_last_activity} a ON u.ID = a.user_id AND a.component = %s AND a.type = 'last_activity' ", buddypress()->members->id );
-				$sql['where'][]  = $wpdb->prepare( "u.component = %s AND u.type = 'last_activity'", buddypress()->members->id );
+				$sql['where'][]  = ' u.user_status = 0 ';
 
 				if ( 'newest' == $type ) {
 					$sql['orderby'] = 'ORDER BY u.ID';
@@ -322,12 +322,14 @@ class BP_User_Query {
 				} elseif ( 'random' == $type ) {
 					$sql['orderby'] = 'ORDER BY rand()';
 				} else {
-					$sql['orderby'] = "ORDER BY u.date_recorded";
-					$sql['order'] = "DESC";
+					$sql['orderby'] = array(
+						array( 'COALESCE( a.date_recorded, NULL )', 'DESC' ),
+						array( 'u.display_name', 'ASC' ),
+					);
 				}
 
 				// Date query.
-				$date_query = BP_Date_Query::get_where_sql( $date_query, 'u.date_recorded' );
+				$date_query = BP_Date_Query::get_where_sql( $date_query, 'a.date_recorded' );
 				if ( ! empty( $date_query ) ) {
 					$sql['where']['date_query'] = $date_query;
 				}
