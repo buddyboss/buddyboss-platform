@@ -396,7 +396,7 @@ function bp_admin_repair_list() {
 
 		// Recalculate group members count for each group.
 		$repair_list[124] = array(
-			'bp-group-member-count',
+			'bp-group-members-count',
 			esc_html__( 'Recalculate the total members count for each group', 'buddyboss' ),
 			'bp_admin_repair_group_member_count',
 		);
@@ -1548,6 +1548,7 @@ function bp_admin_repair_group_member_count() {
 		return;
 	}
 
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 	$bp     = buddypress();
 
@@ -1555,11 +1556,13 @@ function bp_admin_repair_group_member_count() {
 	 * Check and delete orphan group members records from wp_bp_groups_members table
 	 * if user doesn't exist in users table.
 	 */
-	if ( $offset === 0 ) {
+	if ( 0 === $offset ) {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->query( "DELETE m, mm FROM {$wpdb->prefix}bp_groups_members AS m LEFT JOIN {$wpdb->users} AS u ON u.ID = m.user_id LEFT JOIN {$wpdb->prefix}bp_groups_membermeta AS mm ON m.ID = mm.member_id WHERE u.ID IS NULL" );
 	}
 
 	// Fetch all groups.
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	$group_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT id FROM {$wpdb->prefix}bp_groups ORDER BY id DESC LIMIT 20 OFFSET %d", $offset ) );
 
 	if ( ! empty( $group_ids ) ) {
@@ -1573,7 +1576,7 @@ function bp_admin_repair_group_member_count() {
 
 			// Where conditions.
 			$where_conditions          = array();
-			$where_conditions['where'] = 'm.group_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0';
+			$where_conditions['where'] = $wpdb->prepare( 'm.group_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0', $group_id );
 
 			/**
 			 * Filters the MySQL WHERE conditions for the group members count.
@@ -1598,7 +1601,9 @@ function bp_admin_repair_group_member_count() {
 			 */
 			$join_sql = apply_filters( 'bb_group_member_count_join_sql', $join_sql, 'user_id' );
 
-			$sql          = $wpdb->prepare( "{$select_sql} {$join_sql} {$where_sql}", $group_id );
+			$sql = "{$select_sql} {$join_sql} {$where_sql}";
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 			$member_count = $wpdb->get_var( $sql );
 
 			groups_update_groupmeta( $group_id, 'total_member_count', absint( $member_count ) );
@@ -1610,7 +1615,11 @@ function bp_admin_repair_group_member_count() {
 		return array(
 			'status'  => 'running',
 			'offset'  => $offset,
-			'records' => sprintf( esc_html__( '%s groups member count updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) ),
+			'records' => sprintf(
+				/* translators: %s: number of groups */
+				esc_html__( '%s groups member count updated successfully.', 'buddyboss' ),
+				bp_core_number_format( $offset )
+			),
 		);
 	}
 
