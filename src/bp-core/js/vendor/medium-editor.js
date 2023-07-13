@@ -3738,6 +3738,23 @@ MediumEditor.extensions = {};
                 MediumEditor.util.getClosestTag(MediumEditor.selection.getSelectedParentElement(range), 'a')) {
                 return this.execAction('unlink');
             } else {
+                // Check if startContainer is not a text
+                // Check if startContainer is not inline elements
+                var isSafeRange = range.startContainer === range.endContainer;
+                var inlineElements = ['b', 'i', 'em', 'strong'];
+                if( range.startOffset > 0 && inlineElements.indexOf( range.startContainer.parentElement.nodeName.toLowerCase() ) !== -1 ) {
+                    // split selected text node into different <b> or <i>
+                    var tag = document.createElement(range.startContainer.parentElement.nodeName.toLowerCase());
+                    tag.innerHTML = range.startContainer.textContent.substring(0, range.startOffset);
+                    range.startContainer.parentElement.innerHTML = range.startContainer.textContent.substring(range.startOffset);
+                    range.startContainer.parentElement.insertBefore(tag, range.startContainer);
+                }
+                // Wrap content into span to avoid surroundContents TextNode issue
+                if( !isSafeRange ) {
+                    var span = document.createElement( 'span' );
+                    span.appendChild( range.extractContents() );
+                    range.insertNode( span );
+                }
                 range.surroundContents( preLink );
             }
 
@@ -3905,6 +3922,9 @@ MediumEditor.extensions = {};
             this.base.restoreSelection();
             this.execAction(this.action, opts);
             this.base.checkSelection();
+            // Clean HTML by replacing empty HTML tags
+            var pattern = /<([a-zA-Z]+)[^>]*><\/\1>/g; //regex view -> https://regex101.com/r/gwCOv5/1
+            this.base.elements[0].innerHTML = this.base.elements[0].innerHTML.replace(pattern, '');
         },
 
         ensureEncodedUri: function (str) {
