@@ -1667,7 +1667,7 @@ function bp_document_svg_icon( $extension, $attachment_id = 0, $type = 'font' ) 
 				// added svg icon support.
 				if ( 'svg' === $type ) {
 					$svg_icons = array_column( bp_document_svg_icon_list(), 'svg', 'icon' );
-					$icon      = $svg_icons[ $icon ];
+					$icon      = isset( $svg_icons[ $icon ] ) ? $svg_icons[ $icon ] : array();
 				}
 
 				return apply_filters( 'bp_document_svg_icon', $icon, $extension );
