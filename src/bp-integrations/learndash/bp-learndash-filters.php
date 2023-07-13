@@ -394,16 +394,24 @@ function bb_support_learndash_course_permalink( $bp, $bp_uri ) {
  * @return string URL of the current page.
  */
 function bb_support_learndash_course_other_language_permalink( $url ) {
-	$un_trailing_slash_url = rtrim( $url, '/' );
-	$rawurldecode_url      = rawurldecode( $un_trailing_slash_url );
+	// Original URL.
+	$un_trailing_slash_url           = rtrim( $url, '/' );
+	$exploded_un_trailing_slash_url  = ! empty( $un_trailing_slash_url ) ? explode( '/', $un_trailing_slash_url ) : array();
+	$un_trailing_slash_url_last_part = ! empty( $exploded_un_trailing_slash_url ) ? array( end( $exploded_un_trailing_slash_url ) ) : array();
 
-	if ( class_exists( 'LearnDash_Settings_Section' ) ) {
-		if (
-			in_array( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'courses' ), explode( '/', $rawurldecode_url ), true ) &&
-			! in_array( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'courses' ), explode( '/', $un_trailing_slash_url ), true )
-		) {
-			return rawurldecode( $url );
-		}
+	// Decoded URL.
+	$rawurldecode_url           = rawurldecode( $un_trailing_slash_url );
+	$exploded_rawurldecode_url  = ! empty( $rawurldecode_url ) ? explode( '/', $rawurldecode_url ) : array();
+	$rawurldecode_url_last_part = ! empty( $exploded_rawurldecode_url ) ? array( end( $exploded_rawurldecode_url ) ) : array();
+
+	if (
+		class_exists( 'LearnDash_Settings_Section' ) &&
+		! empty( $rawurldecode_url_last_part ) &&
+		in_array( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'courses' ), $rawurldecode_url_last_part, true ) &&
+		! empty( $un_trailing_slash_url_last_part ) &&
+		$un_trailing_slash_url_last_part[0] !== urldecode( $rawurldecode_url_last_part[0] )
+	) {
+		return rawurldecode( $url );
 	}
 
 	return $url;
