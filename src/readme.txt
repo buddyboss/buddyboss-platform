@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.3.81 =
+* Bug: Core - Fixed access to public pages as a logged out user so that it no longer redirects to the login form
+
 = 2.3.80 =
 * Bug: Activity - Post button was inconsistent when trying to reply to activity post.
 * Bug: Activity - Unable to click the activity comments from group search when a member was tagged using "@" function
