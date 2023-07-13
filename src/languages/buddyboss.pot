@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.3.80\n"
+"Project-Id-Version: BuddyBoss Platform 2.3.81\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-07-11 09:04:07+00:00\n"
+"POT-Creation-Date: 2023-07-13 08:40:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -859,7 +859,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:2506
 #: bp-core/admin/bp-core-admin-tools.php:34
 #: bp-core/admin/bp-core-admin-tools.php:231
-#: bp-core/admin/bp-core-admin-tools.php:905
+#: bp-core/admin/bp-core-admin-tools.php:913
 #: bp-core/classes/class-bp-admin.php:516
 #: bp-core/classes/class-bp-admin.php:517
 #: bp-core/classes/class-bp-admin.php:539
@@ -3060,7 +3060,7 @@ msgid "<strong>Error</strong>: Nickname already has been taken. Please try again
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-actions.php:309
-#: bp-core/admin/bp-core-admin-tools.php:1233 bp-forums/admin/tools.php:1967
+#: bp-core/admin/bp-core-admin-tools.php:1241 bp-forums/admin/tools.php:1967
 #: bp-forums/functions.php:889
 #: bp-templates/bp-nouveau/includes/document/ajax.php:187
 #: bp-templates/bp-nouveau/includes/document/ajax.php:546
@@ -5038,49 +5038,53 @@ msgstr ""
 msgid "Repair total connections count for each member"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:392
+#: bp-core/admin/bp-core-admin-tools.php:393
 msgid "Repair total groups count for each member"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:402
+#: bp-core/admin/bp-core-admin-tools.php:400
+msgid "Recalculate the total members count for each group"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-tools.php:410
 msgid "Repopulate site tracking records"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:411
+#: bp-core/admin/bp-core-admin-tools.php:419
 msgid "Install missing emails (restore missing emails from defaults)"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:419
+#: bp-core/admin/bp-core-admin-tools.php:427
 msgid "Reset emails (delete and restore from defaults)"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:432
+#: bp-core/admin/bp-core-admin-tools.php:440
 msgid ""
 "Assign members without a profile type to the default profile type (excludes "
 "admins)"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:442
+#: bp-core/admin/bp-core-admin-tools.php:450
 msgid "Update activity favorites data"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:451
+#: bp-core/admin/bp-core-admin-tools.php:459
 msgid ""
 "Create the database table for Invitations and migrate existing group "
 "invitations if needed"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:458
+#: bp-core/admin/bp-core-admin-tools.php:466
 msgid "Re-Sync Profile Completion widget profile photo status"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:488
+#: bp-core/admin/bp-core-admin-tools.php:496
 msgid "Repairing total connections count for each member &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:489
-#: bp-core/admin/bp-core-admin-tools.php:550
-#: bp-core/admin/bp-core-admin-tools.php:598 bp-forums/admin/tools.php:264
+#: bp-core/admin/bp-core-admin-tools.php:497
+#: bp-core/admin/bp-core-admin-tools.php:558
+#: bp-core/admin/bp-core-admin-tools.php:606 bp-forums/admin/tools.php:264
 #: bp-forums/admin/tools.php:330 bp-forums/admin/tools.php:389
 #: bp-forums/admin/tools.php:455 bp-forums/admin/tools.php:457
 #: bp-forums/admin/tools.php:588 bp-forums/admin/tools.php:645
@@ -5094,22 +5098,23 @@ msgstr ""
 msgid "Failed!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:531
-#: bp-core/admin/bp-core-admin-tools.php:581
-#: bp-core/admin/bp-core-admin-tools.php:610
-#: bp-core/admin/bp-core-admin-tools.php:632
-#: bp-core/admin/bp-core-admin-tools.php:649
-#: bp-core/admin/bp-core-admin-tools.php:710
-#: bp-core/admin/bp-core-admin-tools.php:747
-#: bp-core/admin/bp-core-admin-tools.php:798
-#: bp-core/admin/bp-core-admin-tools.php:843
-#: bp-core/admin/bp-core-admin-tools.php:1170
-#: bp-core/admin/bp-core-admin-tools.php:1213
-#: bp-core/admin/bp-core-admin-tools.php:1365
+#: bp-core/admin/bp-core-admin-tools.php:539
+#: bp-core/admin/bp-core-admin-tools.php:589
+#: bp-core/admin/bp-core-admin-tools.php:618
+#: bp-core/admin/bp-core-admin-tools.php:640
+#: bp-core/admin/bp-core-admin-tools.php:657
+#: bp-core/admin/bp-core-admin-tools.php:718
+#: bp-core/admin/bp-core-admin-tools.php:755
+#: bp-core/admin/bp-core-admin-tools.php:806
+#: bp-core/admin/bp-core-admin-tools.php:851
+#: bp-core/admin/bp-core-admin-tools.php:1178
+#: bp-core/admin/bp-core-admin-tools.php:1221
 #: bp-core/admin/bp-core-admin-tools.php:1373
-#: bp-core/admin/bp-core-admin-tools.php:1408
-#: bp-core/admin/bp-core-admin-tools.php:1424
-#: bp-core/admin/bp-core-admin-tools.php:1523
+#: bp-core/admin/bp-core-admin-tools.php:1381
+#: bp-core/admin/bp-core-admin-tools.php:1416
+#: bp-core/admin/bp-core-admin-tools.php:1432
+#: bp-core/admin/bp-core-admin-tools.php:1531
+#: bp-core/admin/bp-core-admin-tools.php:1630
 #: bp-core/bb-core-subscriptions.php:93 bp-core/bb-core-subscriptions.php:378
 #: bp-core/bb-core-subscriptions.php:1293 bp-forums/admin/tools.php:310
 #: bp-forums/admin/tools.php:312 bp-forums/admin/tools.php:370
@@ -5128,137 +5133,146 @@ msgstr ""
 #: bp-forums/admin/tools.php:1672 bp-forums/admin/tools.php:1674
 #: bp-forums/admin/tools.php:1746 bp-forums/admin/tools.php:1748
 #: bp-forums/core/capabilities.php:608 bp-media/bp-media-filters.php:1899
-#: bp-members/bp-members-filters.php:869 bp-video/bp-video-filters.php:1137
+#: bp-members/bp-members-filters.php:870 bp-video/bp-video-filters.php:1137
 msgid "Complete!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:549
+#: bp-core/admin/bp-core-admin-tools.php:557
 msgid "Repairing total groups count for each member &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:595
+#: bp-core/admin/bp-core-admin-tools.php:603
 msgid "Repopulating Blogs records&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:626
+#: bp-core/admin/bp-core-admin-tools.php:634
 msgid "Repairing total members count &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:644
+#: bp-core/admin/bp-core-admin-tools.php:652
 msgid "Repairing member \"last activity\" data &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:706
+#: bp-core/admin/bp-core-admin-tools.php:714
 msgid "Repairing default profile set and fields &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:737
-#: bp-core/admin/bp-core-admin-tools.php:788
-#: bp-core/admin/bp-core-admin-tools.php:833
-#: bp-core/admin/bp-core-admin-tools.php:1161
-#: bp-core/admin/bp-core-admin-tools.php:1204
+#: bp-core/admin/bp-core-admin-tools.php:745
+#: bp-core/admin/bp-core-admin-tools.php:796
+#: bp-core/admin/bp-core-admin-tools.php:841
+#: bp-core/admin/bp-core-admin-tools.php:1169
+#: bp-core/admin/bp-core-admin-tools.php:1212
 msgid "%s members updated successfully."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:744
+#: bp-core/admin/bp-core-admin-tools.php:752
 msgid "Re-syncing BuddyBoss profile fields to WordPress profile fields &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:795
+#: bp-core/admin/bp-core-admin-tools.php:803
 msgid "Re-syncing WordPress profile fields to BuddyBoss profile fields &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:840
+#: bp-core/admin/bp-core-admin-tools.php:848
 msgid "Updating display name to selected format in profile settings &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:935
-#: bp-core/admin/bp-core-admin-tools.php:938
+#: bp-core/admin/bp-core-admin-tools.php:943
+#: bp-core/admin/bp-core-admin-tools.php:946
 msgid "BuddyBoss Tools"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:937
+#: bp-core/admin/bp-core-admin-tools.php:945
 msgid ""
 "BuddyBoss keeps track of various relationships between users, groups, and "
 "activity items. Occasionally these relationships become out of sync, most "
 "often after an import, update, or migration."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:938
+#: bp-core/admin/bp-core-admin-tools.php:946
 msgid "Use the %s to repair these relationships."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1019
+#: bp-core/admin/bp-core-admin-tools.php:1027
 #. translators: %1$s for counts missing emails.
 msgid "%1$s missing emails have been installed."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1024
+#: bp-core/admin/bp-core-admin-tools.php:1032
 #. translators: %1$s for view emails url.
 msgid "Installing missing emails &hellip; Complete! %1$s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1025
-#: bp-core/admin/bp-core-admin-tools.php:1094
+#: bp-core/admin/bp-core-admin-tools.php:1033
+#: bp-core/admin/bp-core-admin-tools.php:1102
 msgid "View Emails."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1093
+#: bp-core/admin/bp-core-admin-tools.php:1101
 #. translators: %1$s for view emails url.
 msgid "Reseting emails &hellip; Complete! %1$s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1116
+#: bp-core/admin/bp-core-admin-tools.php:1124
 msgid ""
 "It looks like you have more sites to record. Resume recording by checking "
 "the \"Repopulate site tracking records\" option."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1169
+#: bp-core/admin/bp-core-admin-tools.php:1177
 msgid ""
 "Assign users without a profile type to the default profile type "
 "records&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1212
+#: bp-core/admin/bp-core-admin-tools.php:1220
 msgid "Repair Nickname&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1349
+#: bp-core/admin/bp-core-admin-tools.php:1357
 msgid "%s members activity favorite updated successfully."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1361
 #: bp-core/admin/bp-core-admin-tools.php:1369
+#: bp-core/admin/bp-core-admin-tools.php:1377
 msgid "Updating activity favorites data &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1394
+#: bp-core/admin/bp-core-admin-tools.php:1402
 #. translators: %s: the result of the action performed by the repair tool
 msgid "Creating the database table for Invitations if it does not exist &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1395
+#: bp-core/admin/bp-core-admin-tools.php:1403
 msgid "Failed to create table!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1416
+#: bp-core/admin/bp-core-admin-tools.php:1424
 #. translators: %s: the result of the action performed by the repair tool
 msgid "Migrating existing group invitations &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1417
+#: bp-core/admin/bp-core-admin-tools.php:1425
 msgid "Failed to migrate invitations!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1513
+#: bp-core/admin/bp-core-admin-tools.php:1521
 msgid ""
 "Profile completion widget, profile photo status updated successfully for %s "
 "members."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1520
+#: bp-core/admin/bp-core-admin-tools.php:1528
 msgid "Profile Completion widget, profile photo status re-sync %s"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-tools.php:1620
+#. translators: %s: number of groups
+msgid "%s groups member count updated successfully."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-tools.php:1626
+msgid "Recalculating the total group members count for each group &hellip; %s"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:79
@@ -23141,14 +23155,14 @@ msgstr ""
 msgid "Repair member profile links"
 msgstr ""
 
-#: bp-members/bp-members-filters.php:853
+#: bp-members/bp-members-filters.php:854
 #. translators: total user
 msgid "%d user unique identifier generated successfully"
 msgid_plural "%d users unique identifier generated successfully"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-members/bp-members-filters.php:864
+#: bp-members/bp-members-filters.php:865
 #. translators: Status of current action.
 msgid "Profile unique identifier generated for all users; %s"
 msgstr ""
