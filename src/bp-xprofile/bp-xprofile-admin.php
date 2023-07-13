@@ -1240,7 +1240,7 @@ function xprofile_check_member_type_added_previously() {
 
 		$current_edit_id = intval( $parsed_array['field_id'] );
 
-		$exists_member_type = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'membertypes' " );
+		$exists_member_type = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$wpdb->base_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'membertypes' " );
 		if ( intval( $exists_member_type[0]->count ) > 0 ) {
 			if ( $current_edit_id === intval( $exists_member_type[0]->id ) ) {
 				$response['status'] = 'not_added';
@@ -1251,7 +1251,7 @@ function xprofile_check_member_type_added_previously() {
 			$response['status'] = 'not_added';
 		}
 	} else {
-		$exists_member_type = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'membertypes' " );
+		$exists_member_type = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$wpdb->base_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'membertypes' " );
 		if ( intval( $exists_member_type[0]->count ) > 0 ) {
 			$response['status'] = 'added';
 		} else {
