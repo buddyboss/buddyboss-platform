@@ -407,9 +407,9 @@ function bb_support_learndash_course_other_language_permalink( $url ) {
 	if (
 		class_exists( 'LearnDash_Settings_Section' ) &&
 		! empty( $rawurldecode_url_last_part ) &&
-		in_array( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'courses' ), $rawurldecode_url_last_part, true ) &&
 		! empty( $un_trailing_slash_url_last_part ) &&
-		$un_trailing_slash_url_last_part[0] !== urldecode( $rawurldecode_url_last_part[0] )
+		in_array( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'courses' ), $rawurldecode_url_last_part, true ) &&
+		urldecode( current( $rawurldecode_url_last_part ) ) !== current( $un_trailing_slash_url_last_part )
 	) {
 		return rawurldecode( $url );
 	}
