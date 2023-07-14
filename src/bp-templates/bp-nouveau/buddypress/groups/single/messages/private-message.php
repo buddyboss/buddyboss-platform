@@ -25,9 +25,9 @@ if ( ! empty( $group_members ) && isset( $group_members['members'] ) && ! empty(
 		if (
 			bb_messages_user_can_send_message(
 				array(
-					'sender_id' => bp_loggedin_user_id(),
+					'sender_id'     => bp_loggedin_user_id(),
 					'recipients_id' => $member->ID,
-					'group_id' => bp_get_current_group_id(),
+					'group_id'      => bp_get_current_group_id(),
 
 				)
 			)

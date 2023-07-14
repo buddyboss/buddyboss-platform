@@ -594,7 +594,15 @@ function bp_nouveau_get_members_buttons( $args ) {
 		}
 	}
 
-	if ( bp_is_active( 'messages' ) && bb_messages_user_can_send_message( array( 'sender_id' => bp_loggedin_user_id(), 'recipients_id' => $user_id  ) ) ) {
+	if (
+		bp_is_active( 'messages' ) &&
+		bb_messages_user_can_send_message(
+			array(
+				'sender_id'     => bp_loggedin_user_id(),
+				'recipients_id' => $user_id,
+			)
+		)
+	) {
 
 		$message_button_args = array();
 		if ( ! empty( $prefix_link_text ) || ! empty( $postfix_link_text ) ) {
