@@ -2184,7 +2184,8 @@ class BP_Email_Tokens {
 	 * @return string html for the output.
 	 */
 	public function token__sender_name( $bp_email, $formatted_tokens, $tokens ) {
-		$output = $tokens['sender.name'] ?? '';
+		$output    = $tokens['sender.name'] ?? '';
+		$bp_prefix = bp_core_get_table_prefix();
 
 		if ( ! in_array( $bp_email->get( 'type' ), array( 'group-message-email', 'messages-unread' ), true ) || ! isset( $tokens['message_id'] ) ) {
 			return $output;
@@ -2194,7 +2195,7 @@ class BP_Email_Tokens {
 
 		global $wpdb;
 
-		$table_name = $wpdb->prefix . 'bp_messages_messages';
+		$table_name = $bp_prefix . 'bp_messages_messages';
 		$sender_id  = $wpdb->get_var(
 			$wpdb->prepare(
 				'SELECT sender_id FROM `' . $table_name . '` WHERE id = %d',
