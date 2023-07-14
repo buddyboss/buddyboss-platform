@@ -119,6 +119,9 @@ function bp_nouveau_notifications_register_filter( $args = array() ) {
  */
 function bp_nouveau_notifications_get_filters( $id = '' ) {
 	$bp_nouveau = bp_nouveau();
+	if ( ! isset( $bp_nouveau->notifications->filters ) ) {
+		return false;
+	}
 
 	// Get all filters
 	if ( empty( $id ) ) {
