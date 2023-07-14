@@ -3382,7 +3382,7 @@ function bp_member_type_by_type( $type_id ) {
 	$cache_key  = 'bp_member_type_by_type_' . $type_id;
 	$member_ids = wp_cache_get( $cache_key, 'bp_member_member_type' );
 	if ( false === $member_ids ) {
-		$member_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->prefix}term_relationships r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_id );
+		$member_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->term_relationships} r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_id );
 		wp_cache_set( $cache_key, $member_ids, 'bp_member_member_type' );
 	}
 
@@ -4233,8 +4233,8 @@ function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user )
 	if ( true === bp_member_type_enable_disable() ) {
 
 		// Check Member Type Dropdown added on register page.
-		$get_parent_id_of_member_types_field  = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}bp_xprofile_fields WHERE type = %s AND parent_id = %d ", 'membertypes', 0 ) );
-		$get_selected_member_type_on_register = trim( $wpdb->get_var( $wpdb->prepare( "SELECT value FROM {$wpdb->prefix}bp_xprofile_data WHERE user_id = %s AND field_id = %d ", $user_id, $get_parent_id_of_member_types_field ) ) );
+		$get_parent_id_of_member_types_field  = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->base_prefix}bp_xprofile_fields WHERE type = %s AND parent_id = %d ", 'membertypes', 0 ) );
+		$get_selected_member_type_on_register = trim( $wpdb->get_var( $wpdb->prepare( "SELECT value FROM {$wpdb->base_prefix}bp_xprofile_data WHERE user_id = %s AND field_id = %d ", $user_id, $get_parent_id_of_member_types_field ) ) );
 		// return to user if default member type is not set.
 		$existing_selected = bp_member_type_default_on_registration();
 
@@ -5347,7 +5347,7 @@ function bb_get_user_by_profile_slug( $profile_slug ) {
 
 		// Backward compatible to check 40 characters long unique slug or new slug as well.
 		$user_query = $wpdb->prepare(
-			"SELECT user_id FROM `{$bp_prefix}usermeta` WHERE `meta_key` IN ( %s, %s )",
+			"SELECT user_id FROM `{$wpdb->usermeta}` WHERE `meta_key` IN ( %s, %s )",
 			"bb_profile_slug_{$profile_slug}",
 			"bb_profile_long_slug_{$profile_slug}"
 		);
@@ -5531,14 +5531,13 @@ function bb_generate_user_random_profile_slugs( $max_ids = 1 ) {
  */
 function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 ) {
 	global $wpdb;
-	$bp_prefix = bp_core_get_table_prefix();
 
 	if ( is_array( $unique_identifier ) ) {
 		$unique_identifier = '"' . implode( '","', $unique_identifier ) . '"';
 	}
 
 	// Prepare the statement to check unique identifier.
-	$prepare_user_query = "SELECT DISTINCT u.user_nicename, u.user_login FROM `{$bp_prefix}users` AS u WHERE ( u.user_login IN ({$unique_identifier}) OR u.user_nicename IN ({$unique_identifier}) )";
+	$prepare_user_query = "SELECT DISTINCT u.user_nicename, u.user_login FROM `{$wpdb->users}` AS u WHERE ( u.user_login IN ({$unique_identifier}) OR u.user_nicename IN ({$unique_identifier}) )";
 
 	// Exclude the user to check unique identifier.
 	if ( ! empty( $user_id ) ) {
@@ -5559,7 +5558,7 @@ function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 )
 
 	// Prepare the statement to check unique identifier.
 	$prepare_meta_query = $wpdb->prepare(
-		"SELECT DISTINCT um.meta_value FROM `{$bp_prefix}usermeta` AS um WHERE ( um.meta_key = %s AND um.meta_value IN ({$unique_identifier}) ) OR ( um.meta_key = %s AND um.meta_value IN ({$unique_identifier}) )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		"SELECT DISTINCT um.meta_value FROM `{$wpdb->usermeta}` AS um WHERE ( um.meta_key = %s AND um.meta_value IN ({$unique_identifier}) ) OR ( um.meta_key = %s AND um.meta_value IN ({$unique_identifier}) )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		'bb_profile_slug',
 		'nickname'
 	);

@@ -2318,7 +2318,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 
 		if ( isset( $type_term->term_id ) ) {
 			// Fetch all the users which associated this profile type.
-			$get_user_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->prefix}term_relationships r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_term->term_id );
+			$get_user_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->term_relationships} r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_term->term_id );
 			if ( isset( $get_user_ids ) && ! empty( $get_user_ids ) ) {
 				if ( in_array( get_current_user_id(), $get_user_ids ) ) {
 					$bp_prevent_data_update = true;
