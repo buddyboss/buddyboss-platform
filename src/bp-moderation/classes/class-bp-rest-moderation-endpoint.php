@@ -1305,19 +1305,19 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( $is_hidden ) {
 			$content            = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
 			$data['can_report'] = false;
-		} elseif ( $is_user_suspended ) {
+		} elseif ( $is_user_suspended && 'groups' !== $activity->component ) {
 			$is_suspended_content = bb_moderation_is_suspended_message( $content, $type, $activity->id );
 			if ( $content !== $is_suspended_content ) {
 				$content      = $is_suspended_content;
 				$hide_objects = true;
 			}
-		} elseif ( $is_user_blocked ) {
+		} elseif ( $is_user_blocked && 'groups' !== $activity->component  ) {
 			$has_blocked_content = bb_moderation_has_blocked_message( $content, $type, $activity->id );
 			if ( $content !== $has_blocked_content ) {
 				$content      = $has_blocked_content;
 				$hide_objects = true;
 			}
-		} elseif ( $is_blocked_by_user ) {
+		} elseif ( $is_blocked_by_user && 'groups' !== $activity->component  ) {
 			$s_blocked_content = bb_moderation_is_blocked_message( $content, $type, $activity->id );
 			if ( $content !== $s_blocked_content ) {
 				$content      = $s_blocked_content;

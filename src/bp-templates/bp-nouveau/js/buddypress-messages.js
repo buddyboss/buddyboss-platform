@@ -490,19 +490,29 @@ window.bp = window.bp || {};
 				{
 					'page'         : 1,
 					'total_page'   : 0,
-					'search_terms' : '',
+					'search_terms' : ( collection.options && collection.options.search_terms ) ? collection.options.search_terms : '',
 					'box'          : this.box
 				}
 			);
 
 			if ( collection.length ) {
 				// Use it in the filters viex.
-				filters_view = new bp.Views.messageFilters( {model: this.filters, threads: collection} );
+				filters_view = new bp.Views.messageFilters( { model: this.filters, threads: collection } );
 
-				this.views.add( {id: 'filters', view: filters_view} );
+				this.views.add( { id: 'filters', view: filters_view } );
 
 				$( '#subsubnav' ).removeClass( 'bp-hide' );
 				filters_view.inject( '.bp-messages-filters' );
+
+				if (
+					collection.options &&
+					collection.options.search_terms &&
+					collection.options.search_terms != '' &&
+					'undefined' !== typeof filters_view.$el &&
+					filters_view.$el.length > 0
+				) {
+					$( filters_view.$el ).find( 'input[type=search]' ).val( collection.options.search_terms );
+				}
 
 				$( '.bp-messages-threads-list .message-lists > li .thread-subject' ).each( function () {
 					var available_width = $( this ).width() - 10;
@@ -2489,7 +2499,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								errorText = response.data.feedback;
-							} else if ( 'Server responded with 0 code.' == response ) { // update error text to user friendly.
+							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								errorText = BP_Nouveau.media.connection_lost_error;
 							}
 						} else {
@@ -2719,7 +2729,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								errorText = response.data.feedback;
-							} else if ( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								errorText = BP_Nouveau.media.connection_lost_error;
 							}
 						} else {
@@ -2966,7 +2976,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								errorText = response.data.feedback;
-							} else if ( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								errorText = BP_Nouveau.media.connection_lost_error;
 							}
 						} else {
@@ -4342,7 +4352,8 @@ window.bp = window.bp || {};
 					target.closest( '.bp-messages-nav-panel' ).removeClass( 'threads-scrolled' );
 				}
 
-				if ( ( target[0].scrollHeight - target.scrollTop() ) >= ( target.innerHeight() - 5 ) &&
+				if (
+					( target.scrollTop() + target.innerHeight() >= target[ 0 ].scrollHeight - 5 ) &&
 					this.collection.length &&
 					this.collection.options.page < this.collection.options.total_page &&
 					! target.find( '.bp-user-messages-loading' ).length

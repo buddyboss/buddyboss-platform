@@ -23,7 +23,17 @@
 				<?php echo wp_kses_post( bp_get_activity_action( array( 'no_timestamp' => true ) ) ); ?>
 			</div>
 			<?php if ( bp_nouveau_activity_has_content() ) : ?>
-				<div class="activity-inner"><?php echo wp_kses_post( wp_trim_words( $GLOBALS['activities_template']->activity->content, '20', '...' ) ); ?></div>
+				<div class="activity-inner">
+					<?php
+					echo bp_create_excerpt(
+						bp_get_activity_content_body(),
+						100,
+						array(
+							'ending' => '&hellip;'
+						)
+					);
+					?>
+				</div>
 			<?php endif; ?>
 			<div class="item-meta">
 				<a href="<?php bp_activity_thread_permalink(); ?>">

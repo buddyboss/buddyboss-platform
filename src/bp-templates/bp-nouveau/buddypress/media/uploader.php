@@ -141,7 +141,7 @@
 					<footer class="bb-model-footer media-uploader-footer">
 						<a href="#" class="bp-media-open-create-popup-folder" style="display: none;">
 							<i class="bb-icon-l bb-icon-plus"></i>
-							Create new album
+							<?php esc_html_e( 'Create new album', 'buddyboss' ); ?>
 						</a>
 						<?php if ( ! bp_is_group() ) : ?>
 							<div class="bb-dropdown-wrap">
