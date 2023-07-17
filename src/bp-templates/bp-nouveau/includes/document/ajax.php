@@ -1016,10 +1016,23 @@ function bp_nouveau_ajax_document_update_file_name() {
 		$document = bp_document_rename_file( $document_id, $attachment_document_id, $title );
 
 		if ( isset( $document['document_id'] ) && $document['document_id'] > 0 ) {
+
+			// Generate the document HTML to update the preview links.
+			ob_start();
+			if ( bp_has_document( array( 'include' => $document['document_id'] ) ) ) {
+				while ( bp_document() ) {
+					bp_the_document();
+					bp_get_template_part( 'document/document-entry' );
+				}
+			}
+			$html_document = ob_get_contents();
+			ob_end_clean();
+
 			wp_send_json_success(
 				array(
 					'message'  => 'success',
 					'response' => $document,
+					'document' => $html_document,
 				)
 			);
 		} else {

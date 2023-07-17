@@ -2297,7 +2297,7 @@ window.bp = window.bp || {};
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-								} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 								}
 							} else {
@@ -2528,7 +2528,7 @@ window.bp = window.bp || {};
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-								} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 								}
 							} else {
@@ -2675,7 +2675,7 @@ window.bp = window.bp || {};
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-								} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 								}
 							} else {
@@ -2818,7 +2818,7 @@ window.bp = window.bp || {};
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-								} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 								}
 							} else {
@@ -3043,7 +3043,7 @@ window.bp = window.bp || {};
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-								} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 								}
 							} else {
@@ -3296,7 +3296,7 @@ window.bp = window.bp || {};
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-								} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 								}
 							} else {
@@ -3751,7 +3751,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
@@ -4017,7 +4017,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
@@ -4537,11 +4537,15 @@ window.bp = window.bp || {};
 						},
 						success: function ( response ) {
 							if ( response.success ) {
-								document_name_update_data.attr( 'data-document-title', response.data.response.title + '.' + document_name_update_data.data( 'extension' ) );
-								document_name.html( response.data.response.title );
-								document_edit.removeClass( 'submitting' );
-								document_edit.parent().find( '.animate-spin' ).remove();
-								document_edit.parent().hide().siblings( '.media-folder_name' ).show();
+								if ( 'undefined' !== typeof response.data.document && 0 < $( response.data.document ).length ) {
+									$( event.currentTarget ).closest( '.media-folder_items' ).html( $( response.data.document ).html() );
+								} else {
+									document_name_update_data.attr( 'data-document-title', response.data.response.title + '.' + document_name_update_data.data( 'extension' ) );
+									document_name.html( response.data.response.title );
+									document_edit.removeClass( 'submitting' );
+									document_edit.parent().find( '.animate-spin' ).remove();
+									document_edit.parent().hide().siblings( '.media-folder_name' ).show();
+								}
 							} else {
 								document_edit.removeClass( 'submitting' );
 								document_edit.parent().find( '.animate-spin' ).remove();
@@ -6377,7 +6381,7 @@ window.bp = window.bp || {};
 				return false;
 			}
 
-			var userIsEditing = ( $( '#add-activity-description' ).length && $( '#add-activity-description' ).is( ':focus' ) ) || ( $( '.ac-reply-content .ac-textarea > .ac-input' ).length && $( '.ac-reply-content .ac-textarea > .ac-input' ).hasClass( 'focus-visible' ) );
+			var userIsEditing = $( e.target ).hasClass( 'ac-input' ) || $( e.target ).attr( 'id' ) === 'add-activity-description';
 
 			switch ( e.keyCode ) {
 				case 27: // escape key.
@@ -6406,7 +6410,7 @@ window.bp = window.bp || {};
 				return false;
 			}
 
-			var userIsEditing = ( $( '#add-activity-description' ).length && $( '#add-activity-description' ).is( ':focus' ) ) || ( $( '.ac-reply-content .ac-textarea > .ac-input' ).length && $( '.ac-reply-content .ac-textarea > .ac-input' ).hasClass( 'focus-visible' ) );
+			var userIsEditing = $( e.target ).hasClass( 'ac-input' ) || $( e.target ).attr( 'id' ) === 'add-activity-description';
 
 			switch ( e.keyCode ) {
 				case 27: // escape key.

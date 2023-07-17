@@ -174,7 +174,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'fields'            => 'all',
 			'show_hidden'       => false,
 			'update_meta_cache' => true,
-			'filter'            => false,
+			'filter'            => array(),
 		);
 
 		if ( empty( $args['display_comments'] ) || 'false' === $args['display_comments'] ) {
@@ -559,12 +559,18 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$prime       = $request['primary_item_id'];
 		$activity_id = 0;
 
+		remove_action( 'bp_activity_after_save', 'bp_activity_at_name_send_emails' );
+
 		// Post a regular activity update.
 		if ( 'activity_update' === $type ) {
 			if ( bp_is_active( 'groups' ) && ! is_null( $prime ) ) {
+				remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
 				$activity_id = groups_post_update( $prepared_activity );
+				add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
 			} else {
+				remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 				$activity_id = bp_activity_post_update( $prepared_activity );
+				add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 			}
 
 			// Post an activity comment.
@@ -580,12 +586,16 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				$prepared_activity->parent_id = (int) $request['secondary_item_id'];
 			}
 
+			$prepared_activity->skip_notification = true;
+
 			$activity_id = bp_activity_new_comment( $prepared_activity );
 
 			// Otherwise add an activity.
 		} else {
 			$activity_id = bp_activity_add( $prepared_activity );
 		}
+
+		add_action( 'bp_activity_after_save', 'bp_activity_at_name_send_emails' );
 
 		if ( ! is_numeric( $activity_id ) ) {
 			return new WP_Error(
@@ -609,6 +619,38 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		if ( is_wp_error( $fields_update ) ) {
 			return $fields_update;
+		}
+
+		bp_activity_at_name_send_emails( $activity );
+
+		if ( 'activity_update' === $type ) {
+			if ( bp_is_active( 'groups' ) && ! is_null( $prime ) ) {
+				$group_id = ! empty( $prepared_activity->group_id ) ? $prepared_activity->group_id : ( ! empty( $prepared_activity->item_id ) ? $prepared_activity->item_id : 0 );
+				bb_subscription_send_subscribe_group_notifications(
+					$prepared_activity->content,
+					$prepared_activity->user_id,
+					$group_id,
+					$activity_id
+				);
+			} else {
+				bb_activity_send_email_to_following_post( $prepared_activity->content, $prepared_activity->user_id, $activity_id );
+			}
+
+			// Post an activity comment.
+		} elseif ( 'activity_comment' === $type ) {
+			$activity = new BP_Activity_Activity( ( ! empty( $prepared_activity->activity_id ) ? $prepared_activity->activity_id : 0 ) );
+
+			/**
+			 * Fires near the end of an activity comment posting, before the returning of the comment ID.
+			 * Sends a notification to the user.
+			 *
+			 * @param int                  $activity_id       ID of the newly posted activity comment.
+			 * @param array                $prepared_activity Array of parsed comment arguments.
+			 * @param BP_Activity_Activity $activity          Activity item being commented on.
+			 *
+			 * @see   bp_activity_new_comment_notification_helper().
+			 */
+			do_action( 'bp_activity_comment_posted', $activity_id, (array) $prepared_activity, $activity );
 		}
 
 		// Update current user's last activity.
@@ -1279,6 +1321,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				? true
 				: false
 			),
+			'is_edited'         => ! empty( bp_activity_get_meta( $activity->id, '_is_edited', true ) ),
 			'can_delete'        => bp_activity_user_can_delete( $activity ),
 			'content_stripped'  => html_entity_decode( wp_strip_all_tags( $activity->content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ),
 			'privacy'           => ( isset( $activity->privacy ) ? $activity->privacy : false ),
@@ -1908,6 +1951,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				'can_edit'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether or not user have the edit access for the activity object.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+				'is_edited'         => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Determine whether an activity has been edited or not.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
