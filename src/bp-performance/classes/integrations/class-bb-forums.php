@@ -57,6 +57,8 @@ class BB_Forums extends Integration_Abstract {
 			'bp_suspend_forum_topic_unsuspended', // Any Forum Topic Unsuspended.
 			'bp_suspend_forum_reply_suspended',   // Any Forum Reply Suspended.
 			'bp_suspend_forum_reply_unsuspended', // Any Forum Reply Unsuspended.
+			'bp_moderation_after_save',           // Update cache for forums when member blocked.
+			'bb_moderation_after_delete'          // Update cache for forums when member unblocked.
 		);
 
 		$this->purge_event( 'bbp-forums', $purge_events );
@@ -66,53 +68,55 @@ class BB_Forums extends Integration_Abstract {
 		 * Support for single items purge
 		 */
 		$purge_single_events = array(
-			'save_post_forum'                              => 1, // When forum created.
-			'edit_post_forum'                              => 1, // When forum updated.
-			'trashed_post'                                 => 1, // When forum trashed.
-			'untrashed_post'                               => 1, // When forum untrashed.
-			'deleted_post'                                 => 1, // When forum deleted.
-			'bbp_add_user_subscription'                    => 2, // When user subscribe forum.
-			'bbp_remove_user_subscription'                 => 2, // When user remove forum's subscribe.
-			'bbp_new_topic'                                => 2, // When new topic created, update count and last topic id and author id.
-			'bbp_edit_topic'                               => 2, // When topic updated, update count and last topic id and author id.
-			'bbp_new_reply'                                => 3, // When new reply created, update count and last reply id and author id.
-			'bbp_edit_reply'                               => 3, // When reply updated, update count and last reply id and author id.
-			'bbp_merged_topic'                             => 3, // When topic merged, update count and last reply id and author id.
-			'bbp_post_move_reply'                          => 3, // When reply moved, update count and last reply id and author id.
-			'bbp_post_split_topic'                         => 3, // When split topic, update count and last reply id and author id.
+			'save_post_forum'                                    => 1, // When forum created.
+			'edit_post_forum'                                    => 1, // When forum updated.
+			'trashed_post'                                       => 1, // When forum trashed.
+			'untrashed_post'                                     => 1, // When forum untrashed.
+			'deleted_post'                                       => 1, // When forum deleted.
+			'bbp_add_user_subscription'                          => 2, // When user subscribe forum.
+			'bbp_remove_user_subscription'                       => 2, // When user remove forum's subscribe.
+			'bbp_new_topic'                                      => 2, // When new topic created, update count and last topic id and author id.
+			'bbp_edit_topic'                                     => 2, // When topic updated, update count and last topic id and author id.
+			'bbp_new_reply'                                      => 3, // When new reply created, update count and last reply id and author id.
+			'bbp_edit_reply'                                     => 3, // When reply updated, update count and last reply id and author id.
+			'bbp_merged_topic'                                   => 3, // When topic merged, update count and last reply id and author id.
+			'bbp_post_move_reply'                                => 3, // When reply moved, update count and last reply id and author id.
+			'bbp_post_split_topic'                               => 3, // When split topic, update count and last reply id and author id.
 
 			// Group Embed data.
-			'bp_group_admin_edit_after'                    => 1, // When forum Group change form admin.
-			'groups_group_details_edited'                  => 1, // When forum Group Details updated form Manage.
-			'groups_group_settings_edited'                 => 1, // When forum Group setting updated form Manage.
-			'bp_group_admin_after_edit_screen_save'        => 1, // When Group forums setting Manage.
-			'groups_avatar_uploaded'                       => 1, // When forum Group avarar updated form Manage.
-			'groups_cover_image_uploaded'                  => 1, // When forum Group cover photo uploaded form Manage.
-			'groups_cover_image_deleted'                   => 1, // When forum Group cover photo deleted form Manage.
+			'bp_group_admin_edit_after'                          => 1, // When forum Group change form admin.
+			'groups_group_details_edited'                        => 1, // When forum Group Details updated form Manage.
+			'groups_group_settings_edited'                       => 1, // When forum Group setting updated form Manage.
+			'bp_group_admin_after_edit_screen_save'              => 1, // When Group forums setting Manage.
+			'groups_avatar_uploaded'                             => 1, // When forum Group avarar updated form Manage.
+			'groups_cover_image_uploaded'                        => 1, // When forum Group cover photo uploaded form Manage.
+			'groups_cover_image_deleted'                         => 1, // When forum Group cover photo deleted form Manage.
 
 			// Added moderation support.
-			'bp_suspend_groups_suspended'                  => 1, // Any Group Suspended.
-			'bp_suspend_groups_unsuspended'                => 1, // Any Group Unsuspended.
-			'bp_suspend_forum_suspended'                   => 1, // Any Forum Suspended.
-			'bp_suspend_forum_unsuspended'                 => 1, // Any Forum Unsuspended.
-			'bp_suspend_forum_topic_suspended'             => 1, // Any Forum Topic Suspended.
-			'bp_suspend_forum_topic_unsuspended'           => 1, // Any Forum Topic Unsuspended.
-			'bp_suspend_forum_reply_suspended'             => 1, // Any Forum Reply Suspended.
-			'bp_suspend_forum_reply_unsuspended'           => 1, // Any Forum Reply Unsuspended.
+			'bp_suspend_groups_suspended'                        => 1, // Any Group Suspended.
+			'bp_suspend_groups_unsuspended'                      => 1, // Any Group Unsuspended.
+			'bp_suspend_forum_suspended'                         => 1, // Any Forum Suspended.
+			'bp_suspend_forum_unsuspended'                       => 1, // Any Forum Unsuspended.
+			'bp_suspend_forum_topic_suspended'                   => 1, // Any Forum Topic Suspended.
+			'bp_suspend_forum_topic_unsuspended'                 => 1, // Any Forum Topic Unsuspended.
+			'bp_suspend_forum_reply_suspended'                   => 1, // Any Forum Reply Suspended.
+			'bp_suspend_forum_reply_unsuspended'                 => 1, // Any Forum Reply Unsuspended.
+			'bp_moderation_after_save'                           => 1, // Update cache for forums when member blocked.
+			'bb_moderation_after_delete'                         => 1, // Update cache for forums when member unblocked.
 
 			// Add Author Embed Support.
-			'profile_update'                               => 1, // User updated on site.
-			'deleted_user'                                 => 1, // User deleted on site.
-			'xprofile_avatar_uploaded'                     => 1, // User avatar photo updated.
-			'bp_core_delete_existing_avatar'               => 1, // User avatar photo deleted.
+			'profile_update'                                     => 1, // User updated on site.
+			'deleted_user'                                       => 1, // User deleted on site.
+			'xprofile_avatar_uploaded'                           => 1, // User avatar photo updated.
+			'bp_core_delete_existing_avatar'                     => 1, // User avatar photo deleted.
 
 			// When change/update the group avatar and cover options.
-			'update_option_bp-disable-group-avatar-uploads' => 3,
-			'update_option_bp-default-group-avatar-type'   => 3,
-			'update_option_bp-default-custom-group-avatar' => 3,
+			'update_option_bp-disable-group-avatar-uploads'      => 3,
+			'update_option_bp-default-group-avatar-type'         => 3,
+			'update_option_bp-default-custom-group-avatar'       => 3,
 			'update_option_bp-disable-group-cover-image-uploads' => 3,
-			'update_option_bp-default-group-cover-type'    => 3,
-			'update_option_bp-default-custom-group-cover'  => 3,
+			'update_option_bp-default-group-cover-type'          => 3,
+			'update_option_bp-default-custom-group-cover'        => 3,
 		);
 
 		$this->purge_single_events( $purge_single_events );
@@ -487,6 +491,45 @@ class BB_Forums extends Integration_Abstract {
 	public function event_bp_suspend_forum_reply_unsuspended( $reply_id ) {
 		$forum_id = bbp_get_reply_forum_id( $reply_id );
 		$this->purge_item_cache_by_item_id( $forum_id );
+	}
+
+	/**
+	 * Update cache for forums when member blocked.
+	 *
+	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 */
+	public function event_bp_moderation_after_save( $bp_moderation ) {
+		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
+			return;
+		}
+		$forum_ids = $this->get_forum_ids_by_userid( $bp_moderation->item_id );
+		if ( ! empty( $forum_ids ) ) {
+			foreach ( $forum_ids as $forum_id ) {
+				$this->purge_item_cache_by_item_id( $forum_id );
+			}
+
+			$this->purge_subscription_cache_by_items( $forum_ids );
+		}
+	}
+
+
+	/**
+	 * Update cache for topics when member unblocked.
+	 *
+	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 */
+	public function event_bb_moderation_after_delete( $bp_moderation ) {
+		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
+			return;
+		}
+		$forum_ids = $this->get_forum_ids_by_userid( $bp_moderation->item_id );
+		if ( ! empty( $forum_ids ) ) {
+			foreach ( $forum_ids as $forum_id ) {
+				$this->purge_item_cache_by_item_id( $forum_id );
+			}
+
+			$this->purge_subscription_cache_by_items( $forum_ids );
+		}
 	}
 
 	/****************************** Author Embed Support *****************************/

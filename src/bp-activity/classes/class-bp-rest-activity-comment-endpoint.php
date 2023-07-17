@@ -252,13 +252,19 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			$request['parent_id'] = '';
 		}
 
-		$comment_id = bp_activity_new_comment(
-			array(
-				'activity_id' => $request['id'],
-				'content'     => $request['content'],
-				'parent_id'   => $request['parent_id'],
-			)
+		$args = array(
+			'content'           => $request['content'],
+			'parent_id'         => $request['parent_id'],
+			'activity_id'       => $request['id'],
+			'user_id'           => bp_loggedin_user_id(),
+			'skip_notification' => true,
 		);
+
+		remove_action( 'bp_activity_after_save', 'bp_activity_at_name_send_emails' );
+
+		$comment_id = bp_activity_new_comment( $args );
+
+		add_action( 'bp_activity_after_save', 'bp_activity_at_name_send_emails' );
 
 		if ( is_wp_error( $comment_id ) ) {
 			return new WP_Error(
@@ -277,6 +283,22 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		if ( is_wp_error( $fields_update ) ) {
 			return $fields_update;
 		}
+
+		$activity = new BP_Activity_Activity( $request['id'] );
+
+		bp_activity_at_name_send_emails( $activity );
+
+		/**
+		 * Fires near the end of an activity comment posting, before the returning of the comment ID.
+		 * Sends a notification to the user.
+		 *
+		 * @param int                  $comment_id ID of the newly posted activity comment.
+		 * @param array                $args       Array of parsed comment arguments.
+		 * @param BP_Activity_Activity $activity   Activity item being commented on.
+		 *
+		 * @see   bp_activity_new_comment_notification_helper().
+		 */
+		do_action( 'bp_activity_comment_posted', $comment_id, $args, $activity );
 
 		// Update current user's last activity.
 		bp_update_user_last_activity();
