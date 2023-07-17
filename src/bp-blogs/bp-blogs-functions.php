@@ -25,11 +25,17 @@ function bp_blogs_has_directory() {
 /**
  * Retrieve a set of blogs.
  *
+ * @since BuddyPress 1.2.0
+ * @since BuddyPress 2.0.0 Added $include_blog_ids, $update_meta_cache parameters
+ * @since BuddyPress 10.0.0 Added $date_query parameter
+ * @since BuddyBoss [BBVERSION] Added $date_query parameter
+ *
  * @see BP_Blogs_Blog::get() for a description of arguments and return value.
  *
  * @param array|string $args {
  *     Arguments are listed here with their default values. For more
  *     information about the arguments, see {@link BP_Blogs_Blog::get()}.
+ *
  *     @type string      $type              Default: 'active'.
  *     @type int|bool    $user_id           Default: false.
  *     @type array       $include_blog_ids  Default: false.
@@ -37,8 +43,10 @@ function bp_blogs_has_directory() {
  *     @type int         $per_page          Default: 20.
  *     @type int         $page              Default: 1.
  *     @type bool        $update_meta_cache Whether to pre-fetch blogmeta. Default: true.
+ *     @type array       $date_query        Default: false.
  * }
- * @return array See {@link BP_Blogs_Blog::get()}.
+ *
+ * @return array See {@link BP_Blogs_Blog::get()}. If no blogs are found, an empty array is returned.
  */
 function bp_blogs_get_blogs( $args = '' ) {
 
@@ -52,21 +60,14 @@ function bp_blogs_get_blogs( $args = '' ) {
 			'search_terms'      => false,    // Limit to blogs matching these search terms
 			'per_page'          => 20,       // The number of results to return per page
 			'page'              => 1,        // The page to return if limiting per page
-			'update_meta_cache' => true,      // Whether to pre-fetch blogmeta
+			'update_meta_cache' => true,     // Whether to pre-fetch blogmeta
+			'date_query'        => false,    // Filter blogs by date query
 		),
 		'blogs_get_blogs'
 	);
 
 	// Get the blogs.
-	$blogs = BP_Blogs_Blog::get(
-		$r['type'],
-		$r['per_page'],
-		$r['page'],
-		$r['user_id'],
-		$r['search_terms'],
-		$r['update_meta_cache'],
-		$r['include_blog_ids']
-	);
+	$blogs = BP_Blogs_Blog::get( $r );
 
 	/**
 	 * Filters a set of blogs.
@@ -834,7 +835,7 @@ function bp_blogs_comment_sync_activity_comment( &$activity_id, $comment = null,
 			remove_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
 
 			// Added the filter to bypass the content check on blog or custom post types comments.
-			add_filter('bp_has_activity_comment_content', '__return_false');
+			add_filter( 'bp_has_activity_comment_content', '__return_false' );
 
 			$activity_id = bp_activity_new_comment( $activity_args );
 
@@ -1313,7 +1314,13 @@ function bp_blogs_get_all_blogs( $limit = null, $page = null ) {
  * @return array See {@BP_Blogs_Blog::get()}.
  */
 function bp_blogs_get_random_blogs( $limit = null, $page = null ) {
-	return BP_Blogs_Blog::get( 'random', $limit, $page );
+	return BP_Blogs_Blog::get(
+		array(
+			'type'  => 'random',
+			'limit' => $limit,
+			'page'  => $page
+		)
+	);
 }
 
 /**

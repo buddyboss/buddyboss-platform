@@ -106,6 +106,13 @@ function bp_rewind_blogs() {
  * global, enabling the use of BuddyPress templates and template functions to
  * display a list of activity items.
  *
+ * @since BuddyPress 1.0.0
+ * @since BuddyPress 1.2.0 Added $type, $page, $search_terms parameters
+ * @since BuddyPress 1.6.0 Added $page_arg parameter
+ * @since BuddyPress 2.0.0 Added $include_blog_ids, $update_meta_cache parameters
+ * @since BuddyPress 10.0.0 Added $date_query parameter
+ * @since BuddyBoss [BBVERSION] Added $date_query parameter
+ *
  * @global object $blogs_template {@link BP_Blogs_Template}
  *
  * @param array|string $args {
@@ -114,9 +121,6 @@ function bp_rewind_blogs() {
  *     the format of the arguments accepted here differs in a number of ways,
  *     and because bp_has_blogs() determines some default arguments in a
  *     dynamic fashion, we list all accepted arguments here as well.
- *
- *     Arguments can be passed as an associative array, or as a URL query
- *     string (eg, 'user_id=4&per_page=3').
  *
  *     @type int      $page             Which page of results to fetch. Using page=1 without
  *                                      per_page will result in no pagination. Default: 1.
@@ -134,7 +138,11 @@ function bp_rewind_blogs() {
  *     @type int      $user_id          The ID of the user whose blogs should be retrieved.
  *                                      When viewing a user profile page, 'user_id' defaults to the
  *                                      ID of the displayed user. Otherwise the default is false.
+ *     @type array    $date_query       Filter results by site last activity date. See first parameter of
+ *                                      {@link WP_Date_Query::__construct()} for syntax. Only applicable if
+ *                                      $type is either 'newest' or 'active'.
  * }
+ *
  * @return bool Returns true when blogs are found, otherwise false.
  */
 function bp_has_blogs( $args = '' ) {
@@ -162,6 +170,7 @@ function bp_has_blogs( $args = '' ) {
 			'include_blog_ids'  => false,
 			'search_terms'      => $search_terms_default,
 			'update_meta_cache' => true,
+			'date_query'        => false,
 		),
 		'has_blogs'
 	);
@@ -172,7 +181,7 @@ function bp_has_blogs( $args = '' ) {
 	}
 
 	// Get the blogs.
-	$blogs_template = new BP_Blogs_Template( $r['type'], $r['page'], $r['per_page'], $r['max'], $r['user_id'], $r['search_terms'], $r['page_arg'], $r['update_meta_cache'], $r['include_blog_ids'] );
+	$blogs_template = new BP_Blogs_Template( $r );
 
 	/**
 	 * Filters whether or not there are blogs to list.
