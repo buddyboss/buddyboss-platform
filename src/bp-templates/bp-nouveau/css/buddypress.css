@@ -2123,6 +2123,7 @@ a.layout-grid-view {
 .bp-nouveau-activity-form-placeholder-.modal-popup .whats-new-scroll-view,
 .activity-update-form.modal-popup .whats-new-scroll-view {
   max-height: calc(100vh - 280px);
+  min-height: 150px;
   overflow: auto;
   width: 100%;
   padding-bottom: 10px;
@@ -2134,6 +2135,13 @@ a.layout-grid-view {
   max-width: 90%;
   margin: auto;
   box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
+}
+
+@media screen and (max-width: 768px) and (min-height: 550px) {
+  .bb-is-mobile .bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-form, .bb-is-mobile
+  .activity-update-form.modal-popup #whats-new-form {
+    top: -70px;
+  }
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .gif-media-search-dropdown,
@@ -20940,6 +20948,14 @@ div.dropzone .dz-preview .dz-filename {
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.move_file.disabled-move a {
   pointer-events: none;
   opacity: 0.7;
+}
+
+.search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.move_file.disabled-move[data-balloon]:after,
+#media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.move_file.disabled-move[data-balloon]:after {
+  content: attr(data-balloon);
+  white-space: normal;
+  max-width: 200px;
+  width: 100%;
 }
 
 .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.move_file a:before,

@@ -35,8 +35,10 @@ class BB_Media_Photos extends Integration_Abstract {
 			'bp_media_deleted_medias',   // Any Media Photos deleted.
 
 			// Added moderation support.
-			'bp_suspend_media_suspended',         // Any Media Suspended.
-			'bp_suspend_media_unsuspended',       // Any Media Unsuspended.
+			'bp_suspend_media_suspended',   // Any Media Suspended.
+			'bp_suspend_media_unsuspended', // Any Media Unsuspended.
+			'bp_moderation_after_save',     // Hide media when member blocked.
+			'bb_moderation_after_delete'    // Unhide media when member unblocked.
 		);
 
 		$this->purge_event( 'bp-media-photos', $purge_events );
@@ -57,6 +59,8 @@ class BB_Media_Photos extends Integration_Abstract {
 			// Added moderation support.
 			'bp_suspend_media_suspended'     => 1, // Any Media Suspended.
 			'bp_suspend_media_unsuspended'   => 1, // Any Media Unsuspended.
+			'bp_moderation_after_save'       => 1, // Hide media when member blocked.
+			'bb_moderation_after_delete'     => 1, // Unhide media when member unblocked.
 
 			// Add Author Embed Support.
 			'profile_update'                 => 1, // User updated on site.
@@ -189,6 +193,40 @@ class BB_Media_Photos extends Integration_Abstract {
 	 */
 	public function event_bp_suspend_media_unsuspended( $media_id ) {
 		Cache::instance()->purge_by_group( 'bp-media-photos_' . $media_id );
+	}
+
+	/**
+	 * Update cache for media when member blocked.
+	 *
+	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 */
+	public function event_bp_moderation_after_save( $bp_moderation ) {
+		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
+			return;
+		}
+		$media_ids = $this->get_media_ids_by_userid( $bp_moderation->item_id );
+		if ( ! empty( $media_ids ) ) {
+			foreach ( $media_ids as $media_id ) {
+				Cache::instance()->purge_by_group( 'bp-media-photos_' . $media_id );
+			}
+		}
+	}
+
+	/**
+	 * Update cache for media when member unblocked.
+	 *
+	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 */
+	public function event_bb_moderation_after_delete( $bp_moderation ) {
+		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
+			return;
+		}
+		$media_ids = $this->get_media_ids_by_userid( $bp_moderation->item_id );
+		if ( ! empty( $media_ids ) ) {
+			foreach ( $media_ids as $media_id ) {
+				Cache::instance()->purge_by_group( 'bp-media-photos_' . $media_id );
+			}
+		}
 	}
 
 	/****************************** Author Embed Support *****************************/
