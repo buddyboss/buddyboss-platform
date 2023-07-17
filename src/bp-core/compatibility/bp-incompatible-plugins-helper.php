@@ -511,7 +511,7 @@ add_action( 'mepr-signup', 'bb_core_add_support_mepr_signup_map_user_fields', 10
  */
 function bb_core_validate_nickname_mepr_signup( $errors ) {
 
-	if ( function_exists( 'bp_xprofile_nickname_field_id' ) ) {
+	if ( function_exists( 'bp_xprofile_nickname_field_id' ) && ! is_user_logged_in() ) {
 		$nickname = '';
 		if ( isset( $_POST['user_login'] ) ) {
 			$nickname = sanitize_text_field( $_POST['user_login'] );
