@@ -736,9 +736,8 @@ function bp_nouveau_ajax_send_group_invites() {
 		wp_send_json_error( $response );
 	}
 
-	// Get current user friend ids  
-	$current_user_id = bp_loggedin_user_id();
-	$friend_ids = friends_get_friend_user_ids( $current_user_id );
+	// Get current user friend ids.
+	$friend_ids = bp_is_active( 'friends' ) ? friends_get_friend_user_ids( bp_loggedin_user_id() ) : array();
 
 	// For feedback.
 	$invited = array();
