@@ -699,7 +699,7 @@ add_filter( 'bp_repair_list', 'bb_moderation_migrate_old_data' );
  */
 function bb_moderation_admin_repair_old_moderation_data() {
 	global $wpdb;
-	$suspend_table            = "{$wpdb->prefix}bp_suspend";
+	$suspend_table            = "{$wpdb->base_prefix}bp_suspend";
 	$offset                   = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 	$sql_offset               = $offset - 1;
 	$moderated_activities_sql = $wpdb->prepare( "SELECT id,item_id,item_type FROM {$suspend_table} WHERE item_type IN ('media','video','document') GROUP BY id ORDER BY id DESC LIMIT 10 OFFSET %d", $sql_offset );
