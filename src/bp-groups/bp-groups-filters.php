@@ -765,6 +765,10 @@ function bp_groups_filter_document_scope( $retval = array(), $filter = array() )
 		$group_ids = array( 'groups' => $groups );
 	}
 
+	if ( empty( $group_ids ) ) {
+		$group_ids = array( 'groups' => array( 0 ) );
+	}
+
 	if ( bp_is_group() ) {
 		$group_ids = array( 'groups' => array( bp_get_current_group_id() ) );
 	} elseif ( ! empty( $filter['group_id'] ) ) {
@@ -882,10 +886,14 @@ function bp_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
 		$group_ids = array( 'groups' => $groups );
 	}
 
+	if ( empty( $group_ids ) ) {
+		$group_ids = array( 'groups' => array( 0 ) );
+	}
+
 	if ( bp_is_group() ) {
 		$group_ids = array( 'groups' => array( bp_get_current_group_id() ) );
-	} elseif ( empty( $group_ids ) ) {
-		$group_ids = array( 'groups' => ! empty( $filter['group_id'] ) ? array( $filter['group_id'] ) : array( 0 ) );
+	} elseif ( ! empty( $filter['group_id'] ) ) {
+		$group_ids = array( 'groups' => array( $filter['group_id'] ) );
 	}
 
 	if ( ! empty( $filter['search_terms'] ) ) {
