@@ -745,18 +745,12 @@ function bp_nouveau_ajax_send_group_invites() {
 	foreach ( (array) $_POST['users'] as $user_id ) {
 		$user_id             = (int) $user_id;
 
-		/* 
-		 * Check friends & settings component is active and 
-		 * all members can be invited
-		 */
+		// Check friends & settings component is active and all members can be invited.
 		if ( bp_is_active( 'friends' ) && bp_is_active( 'settings' ) && ! bp_nouveau_groups_disallow_all_members_invites() ) {
 			$restrict_invites_to_friends = bp_get_user_meta( $user_id, '_bp_nouveau_restrict_invites_to_friends', true );
 
-			/* 
-			 * Check user invite restriction and
-			 * user exists in the current user friend list
-			 */
-			if ( '1' == $restrict_invites_to_friends && ! in_array( $user_id, $friend_ids ) ) {
+			// Check user invite restriction and user exists in the current user friend list.
+			if ( '1' === $restrict_invites_to_friends && ! empty( $friend_ids ) && ! in_array( $user_id, $friend_ids, true ) ) {
 				$invited[ $user_id ] = false;
 				continue;
 			}
