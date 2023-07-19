@@ -39,15 +39,15 @@ function bp_is_update() {
 
 	// Plugin version history.
 	$bb_plugin_version_history = bp_get_option( 'bb_plugin_version_history' );
-	$bb_version_exists         = false;
-	if ( ! empty( $bb_plugin_version_history ) ) {
-		$initial_version_data = current( $bb_plugin_version_history );
-		if ( ! empty( $initial_version_data ) && (int) $initial_version_data['db_version'] === (int) $current_live ) {
-			$bb_version_exists = true;
-		}
-	} else {
+	if ( empty( $bb_plugin_version_history ) ) {
 		$bb_plugin_version_history = array();
 	}
+	$bb_version_exists    = false;
+	$initial_version_data = current( $bb_plugin_version_history );
+	if ( ! empty( $initial_version_data ) && (int) $initial_version_data['db_version'] === (int) $current_live ) {
+		$bb_version_exists = true;
+	}
+
 	if ( ! $bb_version_exists ) {
 		$current_date             = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
 		$bb_latest_plugin_version = array(
