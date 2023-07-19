@@ -205,7 +205,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 				}
 
 				$scripts['bb-topic-reply-draft'] = array(
-					'file'         => 'js/topic-reply-draft.js',
+					'file'         => 'js/new-topic-reply-draft.js',
 					'dependencies' => $dependencies,
 				);
 			}
