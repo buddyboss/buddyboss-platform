@@ -46,15 +46,13 @@ function bbp_has_search_results( $args = '' ) {
 
 	// Default query args
 	$default = array(
-		'post_type'                => $default_post_types,         // Forums, topics, and replies
+		'post_type'                => $default_post_types,        // Forums, topics, and replies
 		'posts_per_page'           => bbp_get_replies_per_page(), // This many
 		'paged'                    => bbp_get_paged(),            // On this page
 		'orderby'                  => 'date',                     // Sorted by date
 		'order'                    => 'DESC',                     // Most recent first
 		'ignore_sticky_posts'      => true,                       // Stickies not supported,
-
-		// Conditionally prime the cache for last active posts
-		'update_post_family_cache' => true,
+		'update_post_family_cache' => true,                       // Conditionally prime the cache for related posts
 	);
 
 	// Only set 's' if search terms exist
@@ -100,6 +98,9 @@ function bbp_has_search_results( $args = '' ) {
 	// Call the query
 	if ( ! empty( $r['s'] ) ) {
 		$bbp->search_query = new WP_Query( $r );
+		if ( ! empty( $r['update_post_family_cache'] ) ) {
+			bbp_update_post_family_caches( $bbp->search_query->posts );
+		}
 	}
 
 	// Add pagination values to query object

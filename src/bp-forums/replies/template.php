@@ -134,7 +134,7 @@ function bbp_has_replies( $args = '' ) {
 	/** Defaults */
 
 	// Other defaults
-	$default_reply_search   = ! empty( $_REQUEST['rs'] ) ? $_REQUEST['rs'] : false;
+	$default_reply_search   = bbp_sanitize_search_request( 'rs' );
 	$default_post_parent    = ( bbp_is_single_topic() ) ? bbp_get_topic_id() : 'any';
 	$default_post_type      = ( bbp_is_single_topic() && bbp_show_lead_topic() ) ? bbp_get_reply_post_type() : array(
 		bbp_get_topic_post_type(),
@@ -144,16 +144,18 @@ function bbp_has_replies( $args = '' ) {
 
 	// Default query args
 	$default = array(
-		'post_type'           => $default_post_type,         // Only replies
-		'post_parent'         => $default_post_parent,       // Of this topic
-		'posts_per_page'      => bbp_get_replies_per_page(), // This many
-		'paged'               => bbp_get_paged(),            // On this page
-		'orderby'             => 'date',                     // Sorted by date
-		'order'               => 'ASC',                      // Oldest to newest
-		'hierarchical'        => $default_thread_replies,    // Hierarchical replies
-		'ignore_sticky_posts' => true,                       // Stickies not supported
-		's'                   => $default_reply_search,      // Maybe search
-		'moderation_query'    => false,
+		'post_type'                => $default_post_type,         // Only replies
+		'post_parent'              => $default_post_parent,       // Of this topic
+		'posts_per_page'           => bbp_get_replies_per_page(), // This many
+		'paged'                    => bbp_get_paged(),            // On this page
+		'orderby'                  => 'date',                     // Sorted by date
+		'order'                    => 'ASC',                      // Oldest to newest
+		'hierarchical'             => $default_thread_replies,    // Hierarchical replies
+		'ignore_sticky_posts'      => true,                       // Stickies not supported
+		's'                        => $default_reply_search,      // Maybe search
+		'moderation_query'         => false,
+		'update_post_family_cache' => true,
+		
 	);
 
 	// What are the default allowed statuses (based on user caps)
@@ -196,6 +198,11 @@ function bbp_has_replies( $args = '' ) {
 
 	// Call the query
 	$bbp->reply_query = new WP_Query( $r );
+
+	// Maybe prime last active posts
+	if ( ! empty( $r['update_post_family_cache'] ) ) {
+		bbp_update_post_family_caches( $bbp->reply_query->posts );
+	}
 
 	// Add pagination values to query object
 	$bbp->reply_query->posts_per_page = $replies_per_page;

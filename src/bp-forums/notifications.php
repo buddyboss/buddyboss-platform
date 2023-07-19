@@ -653,7 +653,7 @@ function bbp_buddypress_mark_notifications( $action = '' ) {
 	}
 
 	// Redirect.
-	wp_safe_redirect( $redirect );
+	bbp_redirect( $redirect );
 
 	// For good measure.
 	exit();

@@ -234,17 +234,18 @@ function bbp_has_topics( $args = '' ) {
 
 	// Default argument array.
 	$default = array(
-		'post_type'      => bbp_get_topic_post_type(),  // Narrow query down to Forums topics.
-		'post_parent'    => $default_post_parent,       // Forum ID.
-		'meta_key'       => '_bbp_last_active_time',    // Make sure topic has some last activity time.
-		'meta_type'      => 'DATETIME',
-		'orderby'        => 'meta_value',               // 'meta_value', 'author', 'date', 'title', 'modified', 'parent', rand',
-		'order'          => 'DESC',                     // 'ASC', 'DESC'.
-		'posts_per_page' => bbp_get_topics_per_page(),  // Topics per page.
-		'paged'          => bbp_get_paged(),            // Page Number.
-		's'              => $default_topic_search,      // Topic Search.
-		'show_stickies'  => $default_show_stickies,     // Ignore sticky topics?
-		'max_num_pages'  => false,                      // Maximum number of pages to show.
+		'post_type'                => bbp_get_topic_post_type(),  // Narrow query down to Forums topics.
+		'post_parent'              => $default_post_parent,       // Forum ID.
+		'meta_key'                 => '_bbp_last_active_time',    // Make sure topic has some last activity time.
+		'meta_type'                => 'DATETIME',
+		'orderby'                  => 'meta_value',               // 'meta_value', 'author', 'date', 'title', 'modified', 'parent', rand',
+		'order'                    => 'DESC',                     // 'ASC', 'DESC'.
+		'posts_per_page'           => bbp_get_topics_per_page(),  // Topics per page.
+		'paged'                    => bbp_get_paged(),            // Page Number.
+		's'                        => $default_topic_search,      // Topic Search.
+		'show_stickies'            => $default_show_stickies,     // Ignore sticky topics?
+		'max_num_pages'            => false,                      // Maximum number of pages to show.
+		'update_post_family_cache' => true,
 	);
 
 	// What are the default allowed statuses (based on user caps).

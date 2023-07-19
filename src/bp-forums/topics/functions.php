@@ -115,7 +115,7 @@ function bbp_insert_topic( $topic_data = array(), $topic_meta = array() ) {
  * @uses bbp_stick_topic() To stick or super stick the topic
  * @uses bbp_unstick_topic() To unstick the topic
  * @uses bbp_get_topic_permalink() To get the topic permalink
- * @uses wp_safe_redirect() To redirect to the topic link
+ * @uses bbp_redirect() To redirect to the topic link
  * @uses bbPress::errors::get_error_messages() To get the {@link WP_Error} error
  *                                              messages
  */
@@ -509,7 +509,7 @@ function bbp_new_topic_handler( $action = '' ) {
 		/** Successful Save */
 
 		// Redirect back to new topic.
-		wp_safe_redirect( $redirect_url );
+		bbp_redirect( $redirect_url );
 
 		// For good measure.
 		exit();
@@ -553,7 +553,7 @@ function bbp_new_topic_handler( $action = '' ) {
  * @uses bbp_move_topic_handler() To handle movement of a topic from one forum
  *                                 to another
  * @uses bbp_get_topic_permalink() To get the topic permalink
- * @uses wp_safe_redirect() To redirect to the topic link
+ * @uses bbp_redirect() To redirect to the topic link
  * @uses bbPress::errors::get_error_messages() To get the {@link WP_Error} error
  *                                              messages
  */
@@ -904,7 +904,7 @@ function bbp_edit_topic_handler( $action = '' ) {
 		/** Successful Edit */
 
 		// Redirect back to new topic.
-		wp_safe_redirect( $topic_url );
+		bbp_redirect( $topic_url );
 
 		// For good measure.
 		exit();
@@ -1282,7 +1282,7 @@ function bbp_move_topic_handler( $topic_id, $old_forum_id, $new_forum_id ) {
  * @uses do_action() Calls 'bbp_merged_topic' with the destination and source
  *                    topic ids and source topic's forum id
  * @uses bbp_get_topic_permalink() To get the topic permalink
- * @uses wp_safe_redirect() To redirect to the topic link
+ * @uses bbp_redirect() To redirect to the topic link
  */
 function bbp_merge_topic_handler( $action = '' ) {
 
@@ -1520,7 +1520,7 @@ function bbp_merge_topic_handler( $action = '' ) {
 	do_action( 'bbp_merged_topic', $destination_topic->ID, $source_topic->ID, $source_topic->post_parent );
 
 	// Redirect back to new topic.
-	wp_safe_redirect( bbp_get_topic_permalink( $destination_topic->ID ) );
+	bbp_redirect( bbp_get_topic_permalink( $destination_topic->ID ) );
 
 	// For good measure.
 	exit();
@@ -1607,7 +1607,7 @@ function bbp_merge_topic_count( $destination_topic_id, $source_topic_id, $source
  * @uses do_action() Calls 'bbp_post_split_topic' with the destination and
  *                    source topic ids and source topic's forum id
  * @uses bbp_get_topic_permalink() To get the topic permalink
- * @uses wp_safe_redirect() To redirect to the topic link
+ * @uses bbp_redirect() To redirect to the topic link
  */
 function bbp_split_topic_handler( $action = '' ) {
 
@@ -1930,7 +1930,7 @@ function bbp_split_topic_handler( $action = '' ) {
 	do_action( 'bbp_post_split_topic', $from_reply->ID, $source_topic->ID, $destination_topic->ID );
 
 	// Redirect back to the topic.
-	wp_safe_redirect( bbp_get_topic_permalink( $destination_topic->ID ) );
+	bbp_redirect( bbp_get_topic_permalink( $destination_topic->ID ) );
 
 	// For good measure.
 	exit();
@@ -1996,7 +1996,7 @@ function bbp_split_topic_count( $from_reply_id, $source_topic_id, $destination_t
  * @uses home_url() To get the blog's home page url
  * @uses do_action() Calls actions based on the actions with associated args
  * @uses is_wp_error() To check if the value retrieved is a {@link WP_Error}
- * @uses wp_safe_redirect() To redirect to the url
+ * @uses bbp_redirect() To redirect to the url
  */
 function bbp_edit_topic_tag_handler( $action = '' ) {
 
@@ -2175,7 +2175,7 @@ function bbp_edit_topic_tag_handler( $action = '' ) {
 
 	// Redirect back.
 	$redirect = ( ! empty( $redirect ) && ! is_wp_error( $redirect ) ) ? $redirect : home_url();
-	wp_safe_redirect( $redirect );
+	bbp_redirect( $redirect );
 
 	// For good measure.
 	exit();
@@ -2292,7 +2292,7 @@ function bbp_get_super_stickies() {
  *                    and action
  * @uses  bbp_get_forum_permalink() To get the forum link
  * @uses  bbp_get_topic_permalink() To get the topic link
- * @uses  wp_safe_redirect() To redirect to the topic
+ * @uses  bbp_redirect() To redirect to the topic
  * @uses  bbPress::errors:add() To log the error messages
  */
 function bbp_toggle_topic_handler( $action = '' ) {
@@ -2428,7 +2428,7 @@ function bbp_toggle_topic_handler( $action = '' ) {
 			$redirect  = bbp_add_view_all( $permalink, $view_all );
 		}
 
-		wp_safe_redirect( $redirect );
+		bbp_redirect( $redirect );
 
 		// For good measure.
 		exit();
@@ -3888,7 +3888,7 @@ function bbp_display_topics_feed_rss2( $topics_query = array() ) {
  * @uses bbp_is_topic_edit()
  * @uses current_user_can()
  * @uses bbp_get_topic_id()
- * @uses wp_safe_redirect()
+ * @uses bbp_redirect()
  * @uses bbp_get_topic_permalink()
  */
 function bbp_check_topic_edit() {
@@ -3900,7 +3900,7 @@ function bbp_check_topic_edit() {
 
 	// User cannot edit topic, so redirect back to topic.
 	if ( ! current_user_can( 'edit_topic', bbp_get_topic_id() ) ) {
-		wp_safe_redirect( bbp_get_topic_permalink() );
+		bbp_redirect( bbp_get_topic_permalink() );
 		exit();
 	}
 }
@@ -3913,7 +3913,7 @@ function bbp_check_topic_edit() {
  * @uses bbp_is_topic_tag_edit()
  * @uses current_user_can()
  * @uses bbp_get_topic_tag_id()
- * @uses wp_safe_redirect()
+ * @uses bbp_redirect()
  * @uses bbp_get_topic_tag_link()
  */
 function bbp_check_topic_tag_edit() {
@@ -3925,7 +3925,7 @@ function bbp_check_topic_tag_edit() {
 
 	// Bail if current user cannot edit topic tags.
 	if ( ! current_user_can( 'edit_topic_tags', bbp_get_topic_tag_id() ) ) {
-		wp_safe_redirect( bbp_get_topic_tag_link() );
+		bbp_redirect( bbp_get_topic_tag_link() );
 		exit();
 	}
 }

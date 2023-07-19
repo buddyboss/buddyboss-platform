@@ -139,21 +139,29 @@ function bbp_has_forums( $args = '' ) {
 		$default_post_parent = bbp_get_forum_id();
 	}
 
+	$default_forum_search = bbp_sanitize_search_request( 'fs' );
+
 	// Parse arguments with default forum query for most circumstances
 	$bbp_f = bbp_parse_args(
 		$args,
 		array(
-			'post_type'           => bbp_get_forum_post_type(),
-			'post_parent'         => $default_post_parent,
-			'post_status'         => bbp_get_public_status_id(),
-			'posts_per_page'      => bbp_get_forums_per_page(),
-			'ignore_sticky_posts' => true,
-			'orderby'             => 'menu_order title',
-			'order'               => 'ASC',
-			'paged'               => bbp_get_paged(),           // Page Number
+			'post_type'                => bbp_get_forum_post_type(),
+			'post_parent'              => $default_post_parent,
+			'post_status'              => bbp_get_public_status_id(),
+			'posts_per_page'           => bbp_get_forums_per_page(),
+			'ignore_sticky_posts'      => true,
+			'orderby'                  => 'menu_order title',
+			'order'                    => 'ASC',
+			'paged'                    => bbp_get_paged(),           // Page Number
+			'update_post_family_cache' => true,                      // Conditionally prime the cache for related posts
 		),
 		'has_forums'
 	);
+
+	// Only add 's' arg if searching for forums
+	if ( ! empty( $default_forum_search ) ) {
+		$bbp_f['s'] = $default_forum_search;
+	}
 
 	if ( ! empty( $default_post_parent ) ) {
 		$bbp_f['paged'] = bb_get_forum_paged();
@@ -166,6 +174,11 @@ function bbp_has_forums( $args = '' ) {
 		$bbp->forum_query = new WP_Query( $bbp_f );
 
 		$bbp_forum_query_cache[ $cache_key ] = $bbp->forum_query;
+
+		// Maybe prime last active posts
+		if ( ! empty( $bbp_f['update_post_family_cache'] ) ) {
+			bbp_update_post_family_caches( $bbp->forum_query->posts );
+		}
 	} else {
 		$bbp->forum_query = $bbp_forum_query_cache[ $cache_key ];
 	}

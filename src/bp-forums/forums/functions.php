@@ -110,7 +110,7 @@ function bbp_insert_forum( $forum_data = array(), $forum_meta = array() ) {
  * @uses bbp_stick_forum() To stick or super stick the forum
  * @uses bbp_unstick_forum() To unstick the forum
  * @uses bbp_get_forum_permalink() To get the forum permalink
- * @uses wp_safe_redirect() To redirect to the forum link
+ * @uses bbp_redirect() To redirect to the forum link
  * @uses bbPress::errors::get_error_messages() To get the {@link WP_Error} error
  *                                              messages
  */
@@ -341,7 +341,7 @@ function bbp_new_forum_handler( $action = '' ) {
 		/** Successful Save */
 
 		// Redirect back to new forum.
-		wp_safe_redirect( $redirect_url );
+		bbp_redirect( $redirect_url );
 
 		// For good measure.
 		exit();
@@ -382,7 +382,7 @@ function bbp_new_forum_handler( $action = '' ) {
  * @uses bbp_move_forum_handler() To handle movement of a forum from one forum
  *                                 to another
  * @uses bbp_get_forum_permalink() To get the forum permalink
- * @uses wp_safe_redirect() To redirect to the forum link
+ * @uses bbp_redirect() To redirect to the forum link
  * @uses bbPress::errors::get_error_messages() To get the {@link WP_Error} error
  *                                              messages
  */
@@ -597,7 +597,7 @@ function bbp_edit_forum_handler( $action = '' ) {
 		/** Successful Edit */
 
 		// Redirect back to new forum
-		wp_safe_redirect( $forum_url );
+		bbp_redirect( $forum_url );
 
 		// For good measure
 		exit();
@@ -2293,7 +2293,7 @@ function bbp_forum_enforce_private() {
  * @uses bbp_is_forum_edit()
  * @uses current_user_can()
  * @uses bbp_get_forum_id()
- * @uses wp_safe_redirect()
+ * @uses bbp_redirect()
  * @uses bbp_get_forum_permalink()
  */
 function bbp_check_forum_edit() {
@@ -2305,7 +2305,7 @@ function bbp_check_forum_edit() {
 
 	// User cannot edit topic, so redirect back to reply
 	if ( ! current_user_can( 'edit_forum', bbp_get_forum_id() ) ) {
-		wp_safe_redirect( bbp_get_forum_permalink() );
+		bbp_redirect( bbp_get_forum_permalink() );
 		exit();
 	}
 }

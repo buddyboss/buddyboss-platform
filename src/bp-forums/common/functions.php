@@ -594,29 +594,32 @@ function bbp_get_statistics( $args = '' ) {
 	}
 
 	// Tally the tallies
-	$statistics = array_map(
-		'number_format_i18n',
-		array_map(
-			'absint',
-			compact(
-				'user_count',
-				'forum_count',
-				'topic_count',
-				'topic_count_hidden',
-				'reply_count',
-				'reply_count_hidden',
-				'topic_tag_count',
-				'empty_topic_tag_count'
-			)
-		)
-	);
+	$counts = array_filter( array_map( 'absint', compact(
+		'user_count',
+		'forum_count',
+		'topic_count',
+		'topic_count_hidden',
+		'reply_count',
+		'reply_count_hidden',
+		'topic_tag_count',
+		'empty_topic_tag_count'
+	) ) );
+
+	// Define return value
+	$statistics = array();
+
+	// Loop through and store the integer and i18n formatted counts.
+	foreach ( $counts as $key => $count ) {
+		$statistics[ $key ]         = bbp_number_format_i18n( $count );
+		$statistics[ "{$key}_int" ] = $count;
+	}
 
 	// Add the hidden (topic/reply) count title attribute strings because we
 	// don't need to run the math functions on these (see above)
 	$statistics['hidden_topic_title'] = isset( $hidden_topic_title ) ? $hidden_topic_title : '';
 	$statistics['hidden_reply_title'] = isset( $hidden_reply_title ) ? $hidden_reply_title : '';
 
-	return apply_filters( 'bbp_get_statistics', $statistics, $r );
+	return (array) apply_filters( 'bbp_get_statistics', $statistics, $r );
 }
 
 /** New/edit topic/reply helpers **********************************************/
@@ -661,12 +664,12 @@ function bbp_filter_anonymous_post_data( $args = '' ) {
 	// Filter variables and add errors if necessary
 	$r['bbp_anonymous_name'] = apply_filters( 'bbp_pre_anonymous_post_author_name', $r['bbp_anonymous_name'] );
 	if ( empty( $r['bbp_anonymous_name'] ) ) {
-		bbp_add_error( 'bbp_anonymous_name', __( '<strong>ERROR</strong>: Invalid author name submitted!', 'buddyboss' ) );
+		bbp_add_error( 'bbp_anonymous_name', esc_html__( '<strong>ERROR</strong>: Invalid author name submitted!', 'buddyboss' ) );
 	}
 
 	$r['bbp_anonymous_email'] = apply_filters( 'bbp_pre_anonymous_post_author_email', $r['bbp_anonymous_email'] );
 	if ( empty( $r['bbp_anonymous_email'] ) ) {
-		bbp_add_error( 'bbp_anonymous_email', __( '<strong>ERROR</strong>: Invalid email address submitted!', 'buddyboss' ) );
+		bbp_add_error( 'bbp_anonymous_email', esc_html__( '<strong>ERROR</strong>: Invalid email address submitted!', 'buddyboss' ) );
 	}
 
 	// Website is optional
@@ -2182,7 +2185,7 @@ function bbp_set_404() {
 	global $wp_query;
 
 	if ( ! isset( $wp_query ) ) {
-		_doing_it_wrong( __FUNCTION__, __( 'Conditional query tags do not work before the query is run. Before then, they always return false.', 'buddyboss' ), '3.1' );
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Conditional query tags do not work before the query is run. Before then, they always return false.', 'buddyboss' ), '3.1' );
 		return false;
 	}
 

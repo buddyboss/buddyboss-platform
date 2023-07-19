@@ -500,7 +500,7 @@ if ( ! class_exists( 'BBP_Topics_Admin' ) ) :
 		 * @uses do_action() Calls 'bbp_toggle_topic_admin' with success, post
 		 *                    data, action and message
 		 * @uses add_query_arg() To add custom args to the url
-		 * @uses wp_safe_redirect() Redirect the page to custom url
+		 * @uses bbp_redirect() Redirect the page to custom url
 		 */
 		public function toggle_topic() {
 
@@ -570,7 +570,7 @@ if ( ! class_exists( 'BBP_Topics_Admin' ) ) :
 
 				// Redirect back to the topic
 				$redirect = add_query_arg( $message, remove_query_arg( array( 'action', 'topic_id' ) ) );
-				wp_safe_redirect( $redirect );
+				bbp_redirect( $redirect );
 
 				// For good measure
 				exit();

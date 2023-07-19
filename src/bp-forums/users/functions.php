@@ -897,7 +897,7 @@ function bbp_remove_user_topic_subscription( $user_id, $topic_id ) {
  *                    forum id and action
  * @uses  bbp_is_subscription() To check if it's the subscription page
  * @uses  bbp_get_forum_permalink() To get the forum permalink
- * @uses  wp_safe_redirect() To redirect to the url
+ * @uses  bbp_redirect() To redirect to the url
  */
 function bbp_forum_subscriptions_handler( $action = '' ) {
 
@@ -973,7 +973,7 @@ function bbp_forum_subscriptions_handler( $action = '' ) {
 			$redirect = get_permalink( $forum_id );
 		}
 
-		wp_safe_redirect( $redirect );
+		bbp_redirect( $redirect );
 
 		// For good measure
 		exit();
@@ -1004,7 +1004,7 @@ function bbp_forum_subscriptions_handler( $action = '' ) {
  *                    topic id and action
  * @uses bbp_is_subscription() To check if it's the subscription page
  * @uses bbp_get_topic_permalink() To get the topic permalink
- * @uses wp_safe_redirect() To redirect to the url
+ * @uses bbp_redirect() To redirect to the url
  */
 function bbp_subscriptions_handler( $action = '' ) {
 
@@ -1080,7 +1080,7 @@ function bbp_subscriptions_handler( $action = '' ) {
 			$redirect = get_permalink( $topic_id );
 		}
 
-		wp_safe_redirect( $redirect );
+		bbp_redirect( $redirect );
 
 		// For good measure
 		exit();
