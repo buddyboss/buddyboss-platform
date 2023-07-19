@@ -37,6 +37,28 @@ function bp_is_update() {
 	$current_db   = bp_get_option( '_bp_db_version' );
 	$current_live = bp_get_db_version();
 
+	// Plugin version history.
+	$bb_plugin_version_history = bp_get_option( 'bb_plugin_version_history' );
+	$bb_version_exists         = false;
+	if ( ! empty( $bb_plugin_version_history ) ) {
+		$initial_version_data = current( $bb_plugin_version_history );
+		if ( ! empty( $initial_version_data ) && (int) $initial_version_data['db_version'] === (int) $current_live ) {
+			$bb_version_exists = true;
+		}
+	} else {
+		$bb_plugin_version_history = array();
+	}
+	if ( ! $bb_version_exists ) {
+		$current_date             = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+		$bb_latest_plugin_version = array(
+			'db_version' => $current_live,
+			'date'       => $current_date->format( 'Y-m-d H:i:s' ),
+			'version'    => BP_PLATFORM_VERSION,
+		);
+		array_unshift( $bb_plugin_version_history, $bb_latest_plugin_version );
+		bp_update_option( 'bb_plugin_version_history', $bb_plugin_version_history );
+	}
+
 	// Compare versions (cast as int and bool to be safe).
 	$is_update = (bool) ( (int) $current_db < (int) $current_live );
 
