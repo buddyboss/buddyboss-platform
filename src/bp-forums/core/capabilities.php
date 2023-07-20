@@ -325,7 +325,7 @@ function bbp_add_forums_roles( $wp_roles = null ) {
  */
 function bbp_filter_user_roles_option() {
 
-	$role_key = bbp_db() . 'user_roles';
+	$role_key = bbp_db()->prefix . 'user_roles';
 
 	add_filter( 'option_' . $role_key, '_bbp_reinit_dynamic_roles' );
 }
