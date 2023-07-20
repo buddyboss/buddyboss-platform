@@ -2035,6 +2035,19 @@ function bbp_pre_get_posts_normalize_forum_visibility( $posts_query = null ) {
 		// Bail if no forums to exclude.
 		if ( empty( $hidden_ids ) ) {
 			return;
+		} elseif ( ! empty( $hidden_ids ) && ! is_user_logged_in() && is_singular() ) {
+			$forum_name = $posts_query->get( 'name' );
+			if ( ! empty( $forum_name ) ) {
+				$forum_object = get_page_by_path( $forum_name, OBJECT, bbp_get_forum_post_type() );
+
+				if (
+					! empty( $forum_object ) &&
+					! empty( $forum_object->ID ) &&
+					in_array( $forum_object->ID, $hidden_ids, true )
+				) {
+					unset( $hidden_ids[ array_search( $forum_object->ID, $hidden_ids, true ) ] );
+				}
+			}
 		}
 
 		// Get any existing meta queries.
@@ -2050,11 +2063,50 @@ function bbp_pre_get_posts_normalize_forum_visibility( $posts_query = null ) {
 	} elseif ( ! array_diff( $post_types, bbp_get_post_types() ) ) {
 
 		// Get forums to exclude.
-		$forum_ids = bbp_exclude_forum_ids( 'meta_query' );
+		$forum_ids  = bbp_exclude_forum_ids( 'meta_query' );
+		$hidden_ids = bbp_exclude_forum_ids( 'array' );
 
 		// Bail if no forums to exclude.
 		if ( empty( $forum_ids ) ) {
 			return;
+		} elseif ( ! empty( $forum_ids ) && ! is_user_logged_in() && is_singular() ) {
+
+			$post_type = $posts_query->get( 'post_type' );
+			$post_name = $posts_query->get( 'name' );
+			$forum_id  = 0;
+
+			if ( ! empty( $post_name ) ) {
+				if ( bbp_get_topic_post_type() === $post_type ) {
+					global $wp;
+
+					remove_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
+					$topic_id = url_to_postid( $wp->request );
+					add_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
+
+					if ( ! empty( $topic_id ) ) {
+						$forum_id = bbp_get_topic_forum_id( $topic_id );
+					}
+				} elseif ( bbp_get_reply_post_type() === $post_type ) {
+					global $wp;
+
+					remove_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
+					$reply_id = url_to_postid( $wp->request );
+					add_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
+
+					if ( ! empty( $reply_id ) ) {
+						$forum_id = bbp_get_reply_forum_id( $reply_id );
+					}
+				}
+
+				if (
+					! empty( $forum_id ) &&
+					in_array( $forum_id, $hidden_ids, true )
+				) {
+					unset( $hidden_ids[ array_search( $forum_id, $hidden_ids, true ) ] );
+
+					$forum_ids['value'] = implode( ',', $hidden_ids );
+				}
+			}
 		}
 
 		// Get any existing meta queries.
@@ -2181,6 +2233,7 @@ function bbp_forum_query_last_reply_id( $forum_id, $topic_ids = 0 ) {
  * @uses bbp_set_404() To set a 404 status
  */
 function bbp_forum_enforce_hidden() {
+	global $wp;
 
 	// Bail if not viewing a single item or if user has caps
 	if ( ! is_singular() || bbp_is_user_keymaster() || current_user_can( 'read_hidden_forums' ) ) {
@@ -2214,6 +2267,10 @@ function bbp_forum_enforce_hidden() {
 
 	// If forum is explicitly hidden and user not capable, set 404
 	if ( ! empty( $forum_id ) && bbp_is_forum_hidden( $forum_id ) && ! current_user_can( 'read_hidden_forums' ) ) {
+		if ( ! is_user_logged_in() ) {
+			wp_safe_redirect( wp_login_url( home_url( $wp->request ) ) );
+			exit();
+		}
 		bbp_set_404();
 	}
 }
