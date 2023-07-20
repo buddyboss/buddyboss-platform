@@ -551,8 +551,17 @@ function bbp_get_paged_rewrite_id() {
  * @return string
  */
 function bbp_get_paged_slug() {
-	global $wp_rewrite;
-	return $wp_rewrite->pagination_base;
+	// Default
+	$retval  = 'page';
+	$rewrite = bbp_rewrite();
+
+	// Use $wp_rewrite->pagination_base if available
+	if ( property_exists( $rewrite, 'pagination_base' ) ) {
+		$retval = $rewrite->pagination_base;
+	}
+
+	// Filter & return
+	return apply_filters( 'bbp_get_paged_slug', $retval );
 }
 
 /**
@@ -1096,4 +1105,16 @@ function bbp_redirect( $location = '', $status = 302 ) {
  */
 function bb_forum_favourite_legacy_data_support() {
 	return (bool) apply_filters( 'bb_forum_favourite_legacy_data_support', true );
+}
+
+/**
+ * Return the database class being used to interface with the environment.
+ *
+ * @since bbPress 2.5.8 (r5814)
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return object
+ */
+function bbp_db() {
+	return bbp_get_global_object( 'wpdb', 'WPDB' );
 }

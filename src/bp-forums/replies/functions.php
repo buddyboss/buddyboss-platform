@@ -1359,8 +1359,6 @@ function bbp_update_reply_revision_log( $args = '' ) {
  * @uses do_action() Calls 'bbp_pre_move_reply' with the from reply id, source
  *                    and destination topic ids
  * @uses bbp_get_reply_post_type() To get the reply post type
- * @uses wpdb::prepare() To prepare our sql query
- * @uses wpdb::get_results() To execute the sql query and get results
  * @uses wp_update_post() To update the replies
  * @uses bbp_update_reply_topic_id() To update the reply topic id
  * @uses bbp_get_topic_forum_id() To get the topic forum id
@@ -2241,10 +2239,8 @@ function _bbp_has_replies_where( $where = '', $query = false ) {
 
 	/** Proceed */
 
-	global $wpdb;
-
 	// Table name for posts
-	$table_name = $wpdb->prefix . 'posts';
+	$table_name = bbp_db()->prefix . 'posts';
 
 	// Get the topic ID from the post_parent, set in bbp_has_replies()
 	$topic_id = bbp_get_topic_id( $query->get( 'post_parent' ) );

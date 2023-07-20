@@ -707,9 +707,6 @@ function bbp_check_for_duplicate( $post_data = array() ) {
 		return true;
 	}
 
-	// Define global to use get_meta_sql() and get_var() methods
-	global $wpdb;
-
 	// Parse arguments against default values
 	$r = bbp_parse_args(
 		$post_data,
@@ -729,6 +726,9 @@ function bbp_check_for_duplicate( $post_data = array() ) {
 		return true;
 	}
 
+	// Get the DB
+	$bbp_db = bbp_db();
+
 	// Check for anonymous post
 	if ( empty( $r['post_author'] ) && ( ! empty( $r['anonymous_data'] ) && ! empty( $r['anonymous_data']['bbp_anonymous_email'] ) ) ) {
 		$clauses = get_meta_sql(
@@ -739,7 +739,7 @@ function bbp_check_for_duplicate( $post_data = array() ) {
 				),
 			),
 			'post',
-			$wpdb->posts,
+			$bbp_db->posts,
 			'ID'
 		);
 
@@ -749,19 +749,19 @@ function bbp_check_for_duplicate( $post_data = array() ) {
 		$join = $where = '';
 	}
 
-	// Unslash $r to pass through $wpdb->prepare()
+	// Unslash $r to pass through DB->prepare()
 	//
 	// @see: http://bbpress.trac.wordpress.org/ticket/2185/
 	// @see: http://core.trac.wordpress.org/changeset/23973/
 	$r = function_exists( 'wp_unslash' ) ? wp_unslash( $r ) : stripslashes_deep( $r );
 
 	// Prepare duplicate check query
-	$query  = $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} {$join} WHERE post_type = %s AND post_status != %s AND post_author = %d AND post_content = %s {$where}", $r['post_type'], $r['post_status'], $r['post_author'], $r['post_content'] );
-	$query .= ! empty( $r['post_parent'] ) ? $wpdb->prepare( ' AND post_parent = %d', $r['post_parent'] ) : '';
+	$query  = $bbp_db->prepare( "SELECT ID FROM {$bbp_db->posts} {$join} WHERE post_type = %s AND post_status != %s AND post_author = %d AND post_content = %s {$where}", $r['post_type'], $r['post_status'], $r['post_author'], $r['post_content'] );
+	$query .= ! empty( $r['post_parent'] ) ? $bbp_db->prepare( ' AND post_parent = %d', $r['post_parent'] ) : '';
 	$query .= ' LIMIT 1';
 	$dupe   = apply_filters( 'bbp_check_for_duplicate_query', $query, $r );
 
-	if ( $wpdb->get_var( $dupe ) ) {
+	if ( $bbp_db->get_var( $dupe ) ) {
 		do_action( 'bbp_check_for_duplicate_trigger', $post_data );
 		return false;
 	}
@@ -1476,14 +1476,13 @@ function bbp_parse_args( $args, $defaults = array(), $filter_key = '' ) {
  *
  * @deprecated bbPress (r5820)
  *
- * @global wpdb $wpdb WordPress database abstraction object.
  * @global WP $wp
  * @param string   $where
  * @param WP_Query $object
  * @return string
  */
 function bbp_query_post_parent__in( $where, $object = '' ) {
-	global $wpdb, $wp;
+	global $wp;
 
 	// Noop if WP core supports this already
 	if ( in_array( 'post_parent__in', $wp->private_query_vars ) ) {
@@ -1500,15 +1499,18 @@ function bbp_query_post_parent__in( $where, $object = '' ) {
 		return $where;
 	}
 
+	// Get the DB
+	$bbp_db = bbp_db();
+
 	// Including specific post_parent's
 	if ( ! empty( $object->query_vars['post_parent__in'] ) ) {
 		$ids    = implode( ',', wp_parse_id_list( $object->query_vars['post_parent__in'] ) );
-		$where .= " AND {$wpdb->posts}.post_parent IN ($ids)";
+		$where .= " AND {$bbp_db->posts}.post_parent IN ($ids)";
 
 		// Excluding specific post_parent's
 	} elseif ( ! empty( $object->query_vars['post_parent__not_in'] ) ) {
 		$ids    = implode( ',', wp_parse_id_list( $object->query_vars['post_parent__not_in'] ) );
-		$where .= " AND {$wpdb->posts}.post_parent NOT IN ($ids)";
+		$where .= " AND {$bbp_db->posts}.post_parent NOT IN ($ids)";
 	}
 
 	// Return possibly modified $where
@@ -1530,7 +1532,7 @@ function bbp_query_post_parent__in( $where, $object = '' ) {
  * @return int The last active post_id
  */
 function bbp_get_public_child_last_id( $parent_id = 0, $post_type = 'post' ) {
-	global $wpdb;
+	$bbp_db = bbp_db();
 
 	// Bail if nothing passed
 	if ( empty( $parent_id ) ) {
@@ -1553,7 +1555,7 @@ function bbp_get_public_child_last_id( $parent_id = 0, $post_type = 'post' ) {
 		// Join post statuses together
 		$post_status = "'" . implode( "', '", $post_status ) . "'";
 
-		$child_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_parent = %d AND post_status IN ( {$post_status} ) AND post_type = '%s' ORDER BY ID DESC LIMIT 1;", $parent_id, $post_type ) );
+		$child_id = $bbp_db->get_var( $bbp_db->prepare( "SELECT ID FROM {$bbp_db->posts} WHERE post_parent = %d AND post_status IN ( {$post_status} ) AND post_type = '%s' ORDER BY ID DESC LIMIT 1;", $parent_id, $post_type ) );
 		wp_cache_set( $cache_id, $child_id, 'bbpress_posts' );
 	}
 
@@ -1576,7 +1578,7 @@ function bbp_get_public_child_last_id( $parent_id = 0, $post_type = 'post' ) {
  * @return int The number of children
  */
 function bbp_get_public_child_count( $parent_id = 0, $post_type = 'post' ) {
-	global $wpdb;
+	$bbp_db = bbp_db();
 
 	// Bail if nothing passed
 	if ( empty( $parent_id ) ) {
@@ -1598,7 +1600,7 @@ function bbp_get_public_child_count( $parent_id = 0, $post_type = 'post' ) {
 
 		// Join post statuses together
 		$post_status = "'" . implode( "', '", $post_status ) . "'";
-		$child_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM {$wpdb->posts} WHERE post_parent = %d AND post_status IN ( {$post_status} ) AND post_type = '%s';", $parent_id, $post_type ) );
+		$child_count = $bbp_db->get_var( $bbp_db->prepare( "SELECT COUNT(ID) FROM {$bbp_db->posts} WHERE post_parent = %d AND post_status IN ( {$post_status} ) AND post_type = '%s';", $parent_id, $post_type ) );
 		wp_cache_set( $cache_id, $child_count, 'bbpress_posts' );
 	}
 
@@ -1622,7 +1624,7 @@ function bbp_get_public_child_count( $parent_id = 0, $post_type = 'post' ) {
  * @return array The array of children
  */
 function bbp_get_public_child_ids( $parent_id = 0, $post_type = 'post', $force_cache = false ) {
-	global $wpdb;
+	$bbp_db = bbp_db();
 
 	// Bail if nothing passed
 	if ( empty( $parent_id ) ) {
@@ -1645,7 +1647,7 @@ function bbp_get_public_child_ids( $parent_id = 0, $post_type = 'post', $force_c
 		// Join post statuses together
 		$post_status = "'" . implode( "', '", $post_status ) . "'";
 
-		$child_ids = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_parent = %d AND post_status IN ( {$post_status} ) AND post_type = '%s' ORDER BY ID DESC;", $parent_id, $post_type ) );
+		$child_ids = $bbp_db->get_col( $bbp_db->prepare( "SELECT ID FROM {$bbp_db->posts} WHERE post_parent = %d AND post_status IN ( {$post_status} ) AND post_type = '%s' ORDER BY ID DESC;", $parent_id, $post_type ) );
 		wp_cache_set( $cache_id, $child_ids, 'bbpress_posts' );
 	}
 
@@ -1668,7 +1670,7 @@ function bbp_get_public_child_ids( $parent_id = 0, $post_type = 'post', $force_c
  * @return array The array of children
  */
 function bbp_get_all_child_ids( $parent_id = 0, $post_type = 'post' ) {
-	global $wpdb;
+	$bbp_db = bbp_db();
 
 	// Bail if nothing passed
 	if ( empty( $parent_id ) ) {
@@ -1685,7 +1687,7 @@ function bbp_get_all_child_ids( $parent_id = 0, $post_type = 'post' ) {
 		// Join post statuses to specifically exclude together
 		$not_in      = array( 'draft', 'future' );
 		$post_status = "'" . implode( "', '", $not_in ) . "'";
-		$child_ids = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_parent = %d AND post_status NOT IN ( {$post_status} ) AND post_type = '%s' ORDER BY ID DESC;", $parent_id, $post_type ) );
+		$child_ids = $bbp_db->get_col( $bbp_db->prepare( "SELECT ID FROM {$bbp_db->posts} WHERE post_parent = %d AND post_status NOT IN ( {$post_status} ) AND post_type = '%s' ORDER BY ID DESC;", $parent_id, $post_type ) );
 		wp_cache_set( $cache_id, $child_ids, 'bbpress_posts' );
 	}
 
@@ -2242,7 +2244,7 @@ function bb_render_email_notify_subscribers( $user_ids, $email_type, $sender_id,
  * @return array Array of topic parent reply ids.
  */
 function bb_get_parent_replies_ids( $topic_id, $post_type = 'post' ) {
-	global $wpdb;
+	$bbp_db = bbp_db();
 
 	// Bail if nothing passed.
 	if ( empty( $topic_id ) ) {

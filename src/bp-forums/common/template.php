@@ -2279,7 +2279,6 @@ function bbp_view_url( $view = false ) {
 	 * @return string View url (or home url if the view was not found)
 	 */
 function bbp_get_view_url( $view = false ) {
-	global $wp_rewrite;
 
 	$view = bbp_get_view_id( $view );
 	if ( empty( $view ) ) {
@@ -2287,8 +2286,8 @@ function bbp_get_view_url( $view = false ) {
 	}
 
 	// Pretty permalinks
-	if ( $wp_rewrite->using_permalinks() ) {
-		$url = $wp_rewrite->root . bbp_get_view_slug() . '/' . $view;
+	if ( bbp_use_pretty_urls() ) {
+		$url = trailingslashit( bbp_get_root_url() . bbp_get_view_slug() ) . $view;
 		$url = home_url( user_trailingslashit( $url ) );
 
 		// Unpretty permalinks

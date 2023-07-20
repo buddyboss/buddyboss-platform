@@ -819,7 +819,7 @@ function bbp_template_include_theme_compat( $template = '' ) {
  *
  * @since bbPress (r2628)
  * @param string $redirect_url Redirect url
- * @uses WP_Rewrite::using_permalinks() To check if the blog is using permalinks
+ * @uses bbp_use_pretty_urls() To check if the blog is using permalinks
  * @uses bbp_get_paged() To get the current page number
  * @uses bbp_is_single_topic() To check if it's a topic page
  * @uses bbp_is_single_forum() To check if it's a forum page
@@ -830,7 +830,7 @@ function bbp_redirect_canonical( $redirect_url ) {
 	global $wp_rewrite;
 
 	// Canonical is for the beautiful
-	if ( $wp_rewrite->using_permalinks() ) {
+	if ( bbp_use_pretty_urls() ) {
 
 		// If viewing beyond page 1 of several
 		if ( 1 < bbp_get_paged() ) {

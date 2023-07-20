@@ -246,15 +246,14 @@ function bbp_remove_caps() {
  *
  * @since bbPress (r4293)
  *
- * @global WP_Roles $wp_roles
  * @return WP_Roles
  */
 function bbp_get_wp_roles() {
-	global $wp_roles;
+	$wp_roles = bbp_get_global_object( 'wp_roles', 'WP_Roles' );
 
-	// Load roles if not set
-	if ( ! isset( $wp_roles ) ) {
-		$wp_roles = new WP_Roles();
+	// Set roles if not loaded
+	if ( empty( $wp_roles ) ) {
+		$wp_roles = $GLOBALS['wp_roles'] = new WP_Roles();
 	}
 
 	return $wp_roles;
@@ -323,12 +322,10 @@ function bbp_add_forums_roles( $wp_roles = null ) {
  *
  * @see _bbp_reinit_dynamic_roles()
  *
- * @global wpdb $wpdb WordPress database abstraction object.
  */
 function bbp_filter_user_roles_option() {
-	global $wpdb;
 
-	$role_key = $wpdb->prefix . 'user_roles';
+	$role_key = bbp_db() . 'user_roles';
 
 	add_filter( 'option_' . $role_key, '_bbp_reinit_dynamic_roles' );
 }
