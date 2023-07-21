@@ -87,7 +87,7 @@ class TopicReplyDraft {
         // Submit the reply form.
         $(document).on('click', '#new-post #bbp_reply_submit', this.submitTopicReplyDraftForm.bind(this));
 
-        $(document).on('click', '#new-post .bb_discard_topic_reply_draft', this.discardTopicReplyDraftForm.bind(this));
+        $(document).find( this.currentForm )('click', '.bb_discard_topic_reply_draft', this.discardTopicReplyDraftForm.bind(this));
     }
 
     setupOnOpenTopicReplyModal() {
@@ -135,6 +135,10 @@ class TopicReplyDraft {
     getTopicReplyDraftData() {
         if (!this.topic_reply_draft.data_key || '' !== this.topic_reply_draft.data_key) {
             var draft_data = localStorage.getItem(this.topic_reply_draft.data_key);
+
+            console.error( 'getTopicReplyDraftData' );
+            console.error( this.topic_reply_draft.data_key );
+            console.error( draft_data );
             if (!_.isUndefined(draft_data) && null !== draft_data && 0 < draft_data.length) {
                 // Parse data with JSON.
                 var draft_activity_local_data = JSON.parse(draft_data);
@@ -143,7 +147,6 @@ class TopicReplyDraft {
             }
         }
 
-        console.error( this.topic_reply_draft );
         return this.topic_reply_draft;
     }
 
@@ -151,6 +154,12 @@ class TopicReplyDraft {
         if ('undefined' === typeof this.all_draft_data[this.topic_reply_draft.data_key] && 'undefined' !== typeof this.bp_nouveau_forums_data && 'undefined' !== typeof this.bp_nouveau_forums_data[this.topic_reply_draft.data_key]) {
             this.topic_reply_draft = this.bp_nouveau_forums_data[this.topic_reply_draft.data_key];
             this.all_draft_data[this.topic_reply_draft.data_key] = this.bp_nouveau_forums_data[this.topic_reply_draft.data_key].data;
+            
+
+            console.error( 'syncTopicReplyDraftData' );
+            console.error( this.topic_reply_draft.data_key );
+            console.error( this.topic_reply_draft );
+
             localStorage.setItem(this.topic_reply_draft.data_key, JSON.stringify(this.topic_reply_draft));
         }
     }
@@ -456,11 +465,6 @@ class TopicReplyDraft {
     }
 
     checkedTopicReplyDataChanged(old_data, new_data) {
-        console.error('checkedTopicReplyDataChanged');
-
-        console.error(old_data );
-        console.error(new_data );
-
         const draft_data_keys = [
             'bbp_topic_title',
             'bbp_topic_content',
@@ -478,7 +482,6 @@ class TopicReplyDraft {
             'link_url',
         ];
 
-        console.error( 'draft_content_changed : ' + this.draft_content_changed );
         var self = this;
 
         _.each(
@@ -510,8 +513,6 @@ class TopicReplyDraft {
                 }
             }
         );
-
-        console.error( 'draft_content_changed : ' + this.draft_content_changed);
     }
 
 
@@ -521,18 +522,12 @@ class TopicReplyDraft {
             return;
         }
 
-        console.error( 'after first condition postTopicReplyDraft' );
-        console.error( is_force_saved );
-        console.error( this.draft_content_changed );
-
         // Checked the content changed or not.
         if (!is_force_saved && !this.draft_content_changed) {
             return;
         }
 
         this.topic_reply_draft.data = this.all_draft_data[this.topic_reply_draft.data_key];
-
-        console.log(  this.topic_reply_draft.data );
 
         if (!is_reload_window) {
             if (this.draft_ajax_request) {
@@ -666,6 +661,7 @@ class TopicReplyDraft {
 
     appendReplyDraftData() {
         this.getTopicReplyDraftData();
+        console.error( 'appendReplyDraftData' );
 
         var $form = this.currentForm ? this.currentForm: $('form#new-post');
 
@@ -690,7 +686,7 @@ class TopicReplyDraft {
         // Content.
         if ('undefined' !== typeof activity_data.bbp_reply_content) {
             var element = $editor.get(0);
-            //$meditor = window.MediumEditor ? window.MediumEditor.getEditorFromElement(element) : null;
+            var $meditor = window.MediumEditor ? window.MediumEditor.getEditorFromElement(element) : null;
             if ($meditor !== null) {
                 $meditor.setContent(activity_data.bbp_reply_content);
                 if ($(element).text() !== '') {
