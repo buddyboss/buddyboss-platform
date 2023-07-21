@@ -3092,7 +3092,7 @@ function bbp_get_topic_stick_link( $args = '' ) {
 
 	$topic = bbp_get_topic( bbp_get_topic_id( (int) $r['id'] ) );
 
-	if ( empty( $topic ) || ! current_user_can( 'moderate', $topic->ID ) ) {
+	if ( empty( $topic ) || ! current_user_can( 'edit_topic', $topic->ID ) ) {
 		return;
 	}
 
