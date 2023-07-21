@@ -37,17 +37,11 @@ function bp_is_update() {
 	$current_db   = bp_get_option( '_bp_db_version' );
 	$current_live = bp_get_db_version();
 
-	// Plugin version history.
-	$bb_plugin_version_history = bp_get_option( 'bb_plugin_version_history' );
-	if ( empty( $bb_plugin_version_history ) ) {
-		$bb_plugin_version_history = array();
-	}
-	$bb_version_exists    = false;
-	$initial_version_data = current( $bb_plugin_version_history );
-	if ( ! empty( $initial_version_data ) && (int) $initial_version_data['db_version'] === (int) $current_live ) {
-		$bb_version_exists = true;
-	}
-
+	// Pro plugin version history.
+	bp_version_bump();
+	$bb_plugin_version_history = bp_get_option( 'bb_plugin_version_history', array() );
+	$initial_version_data      = ! empty( $bb_plugin_version_history ) ? current( $bb_plugin_version_history ) : array();
+	$bb_version_exists         = ! empty( $initial_version_data ) && (string) $initial_version_data['version'] === (string) BP_PLATFORM_VERSION ? true : false;
 	if ( ! $bb_version_exists ) {
 		$current_date             = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
 		$bb_latest_plugin_version = array(
@@ -59,8 +53,10 @@ function bp_is_update() {
 		bp_update_option( 'bb_plugin_version_history', $bb_plugin_version_history );
 	}
 
-	// Compare versions (cast as int and bool to be safe).
-	$is_update = (bool) ( (int) $current_db < (int) $current_live );
+	$is_update = false;
+	if ( (int) $current_live !== (int) $current_db ) {
+		$is_update = true;
+	}
 
 	// Return the product of version comparison.
 	return $is_update;
@@ -192,6 +188,8 @@ function bp_setup_updater() {
  */
 function bp_version_updater() {
 
+	// Get current DB version.
+	$current_db = bp_get_option( '_bp_db_version' );
 	// Get the raw database version.
 	$raw_db_version = (int) bp_get_db_version_raw();
 
@@ -463,12 +461,17 @@ function bp_version_updater() {
 		if ( $raw_db_version < 20371 ) {
 			bb_update_to_2_3_80();
 		}
+
+		if (
+			$raw_db_version < $current_db ||
+			$raw_db_version > $current_db
+		) {
+			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
+			error_log( 'run migration' );
+		}
 	}
 
 	/* All done! *************************************************************/
-
-	// Bump the version.
-	bp_version_bump();
 
 	if ( $switched_to_root_blog ) {
 		restore_current_blog();
