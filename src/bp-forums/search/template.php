@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
  * @uses bbp_get_paged() To get the current page value
  * @uses bbp_get_search_terms() To get the search terms
  * @uses WP_Query To make query and get the search results
- * @uses WP_Rewrite::using_permalinks() To check if the blog is using permalinks
+ * @uses bbp_use_pretty_urls() To check if the site is using pretty URLs
  * @uses bbp_get_search_url() To get the forum search url
  * @uses paginate_links() To paginate search results
  * @uses apply_filters() Calls 'bbp_has_search_results' with
@@ -38,7 +38,6 @@ defined( 'ABSPATH' ) || exit;
  * @return object Multidimensional array of search information
  */
 function bbp_has_search_results( $args = '' ) {
-	global $wp_rewrite;
 
 	/** Defaults */
 	$default_search_terms = bbp_get_search_terms();
@@ -117,7 +116,7 @@ function bbp_has_search_results( $args = '' ) {
 		$add_args = array();
 
 		// If pretty permalinks are enabled, make our pagination pretty
-		if ( $wp_rewrite->using_permalinks() ) {
+		if (  bbp_use_pretty_urls() ) {
 
 			// Shortcode territory
 			if ( is_page() || is_single() ) {
@@ -129,7 +128,7 @@ function bbp_has_search_results( $args = '' ) {
 			}
 
 			// Add pagination base
-			$base = $base . user_trailingslashit( $wp_rewrite->pagination_base . '/%#%/' );
+			$base = $base . user_trailingslashit( bbp_get_paged_slug() . '/%#%/' );
 
 			// Unpretty permalinks
 		} else {
@@ -159,8 +158,8 @@ function bbp_has_search_results( $args = '' ) {
 		);
 
 		// Remove first page from pagination
-		if ( $wp_rewrite->using_permalinks() ) {
-			$bbp->search_query->pagination_links = str_replace( $wp_rewrite->pagination_base . '/1/', '', $bbp->search_query->pagination_links );
+		if ( bbp_get_paged_slug() ) {
+			$bbp->search_query->pagination_links = str_replace( bbp_get_paged_slug() . '/1/', '', $bbp->search_query->pagination_links );
 		} else {
 			$bbp->search_query->pagination_links = str_replace( '&#038;paged=1', '', $bbp->search_query->pagination_links );
 		}
@@ -270,11 +269,10 @@ function bbp_search_url() {
  * @return string Search url
  */
 function bbp_get_search_url( $default = true ) {
-	global $wp_rewrite;
 
 	// Pretty permalinks
-	if ( $wp_rewrite->using_permalinks() ) {
-		$url = $wp_rewrite->root . bbp_get_search_slug();
+	if ( bbp_use_pretty_urls() ) {
+		$url = bbp_get_root_url() . bbp_get_search_slug();
 		$url = home_url( user_trailingslashit( $url ) );
 
 		// Unpretty permalinks
@@ -314,20 +312,19 @@ function bbp_search_results_url() {
  * @return string Search url
  */
 function bbp_get_search_results_url() {
-	global $wp_rewrite;
 
 	// Get the search terms
 	$search_terms = bbp_get_search_terms();
 
 	// Pretty permalinks
-	if ( $wp_rewrite->using_permalinks() ) {
+	if ( bbp_use_pretty_urls() ) {
 
 		// Root search URL
-		$url = $wp_rewrite->root . bbp_get_search_slug();
+		$url = bbp_get_root_url() . bbp_get_search_slug();
 
 		// Append search terms
 		if ( ! empty( $search_terms ) ) {
-			$url = trailingslashit( $url ) . user_trailingslashit( urlencode( $search_terms ) );
+			$url = trailingslashit( $url ) . urlencode( $search_terms );
 		}
 
 		// Run through home_url()

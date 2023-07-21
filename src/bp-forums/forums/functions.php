@@ -103,12 +103,11 @@ function bbp_insert_forum( $forum_data = array(), $forum_meta = array() ) {
  * @uses remove_filter() To remove kses filters if needed
  * @uses apply_filters() Calls 'bbp_new_forum_pre_title' with the content
  * @uses apply_filters() Calls 'bbp_new_forum_pre_content' with the content
- * @uses bbPress::errors::get_error_codes() To get the {@link WP_Error} errors
+ * @uses bbPress::errors::get_error_codes() To get the {@link WP_Error} errors 
  * @uses wp_insert_post() To insert the forum
  * @uses do_action() Calls 'bbp_new_forum' with the forum id, forum id,
  *                    anonymous data and reply author
  * @uses bbp_stick_forum() To stick or super stick the forum
- * @uses bbp_unstick_forum() To unstick the forum
  * @uses bbp_get_forum_permalink() To get the forum permalink
  * @uses bbp_redirect() To redirect to the forum link
  * @uses bbPress::errors::get_error_messages() To get the {@link WP_Error} error
@@ -265,7 +264,7 @@ function bbp_new_forum_handler( $action = '' ) {
 	);
 
 	// Insert forum.
-	$forum_id = wp_insert_post( $forum_data );
+	$forum_id = wp_insert_post( $forum_data, true );
 
 	/** No Errors */
 
@@ -346,10 +345,13 @@ function bbp_new_forum_handler( $action = '' ) {
 		// For good measure.
 		exit();
 
-		// Errors.
+	// WP_Error
+	} elseif ( is_wp_error( $forum_id ) && $forum_id->get_error_message() ) {
+		bbp_add_error( 'bbp_forum_error', sprintf( __( '<strong>Error</strong>: The following problem(s) occurred: %s', 'buddyboss' ), $forum_id->get_error_message() ) );
+
+	// Generic error
 	} else {
-		$append_error = ( is_wp_error( $forum_id ) && $forum_id->get_error_message() ) ? $forum_id->get_error_message() . ' ' : '';
-		bbp_add_error( 'bbp_forum_error', __( '<strong>ERROR</strong>: The following problem(s) have been found with your forum:' . $append_error, 'buddyboss' ) );
+		bbp_add_error( 'bbp_forum_error', __( '<strong>Error</strong>: The forum was not created.', 'buddyboss' ) );
 	}
 }
 

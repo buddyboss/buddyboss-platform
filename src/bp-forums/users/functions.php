@@ -142,7 +142,6 @@ function bbp_current_author_ua() {
  * @uses  get_posts_by_author_sql()
  * @uses  bbp_get_topic_post_type()
  * @uses  apply_filters()
- * @global wpdb $wpdb WordPress database abstraction object.
  */
 function bbp_get_user_topic_count_raw( $user_id = 0 ) {
 	$user_id = bbp_get_user_id( $user_id );
@@ -150,10 +149,10 @@ function bbp_get_user_topic_count_raw( $user_id = 0 ) {
 		return false;
 	}
 
-	global $wpdb;
+	$bbp_db = bbp_db();
 
 	$where = get_posts_by_author_sql( bbp_get_topic_post_type(), true, $user_id );
-	$count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->posts} {$where}" );
+	$count = (int) $bbp_db->get_var( "SELECT COUNT(*) FROM {$bbp_db->posts} {$where}" );
 
 	return (int) apply_filters( 'bbp_get_user_topic_count_raw', $count, $user_id );
 }
@@ -167,7 +166,6 @@ function bbp_get_user_topic_count_raw( $user_id = 0 ) {
  * @uses  get_posts_by_author_sql()
  * @uses  bbp_get_reply_post_type()
  * @uses  apply_filters()
- * @global wpdb $wpdb WordPress database abstraction object.
  */
 function bbp_get_user_reply_count_raw( $user_id = 0 ) {
 	$user_id = bbp_get_user_id( $user_id );
@@ -175,10 +173,10 @@ function bbp_get_user_reply_count_raw( $user_id = 0 ) {
 		return false;
 	}
 
-	global $wpdb;
+	$bbp_db = bbp_db();
 
 	$where = get_posts_by_author_sql( bbp_get_reply_post_type(), true, $user_id );
-	$count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->posts} {$where}" );
+	$count = (int) $bbp_db->get_var( "SELECT COUNT(*) FROM {$bbp_db->posts} {$where}" );
 
 	return (int) apply_filters( 'bbp_get_user_reply_count_raw', $count, $user_id );
 }
@@ -1281,10 +1279,10 @@ function bbp_user_maybe_convert_pass() {
 		return;
 	}
 
-	global $wpdb;
+	$bbp_db = bbp_db();
 
 	// Bail if no user password to convert
-	$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->users} INNER JOIN {$wpdb->usermeta} ON user_id = ID WHERE meta_key = '_bbp_class' AND user_login = '%s' LIMIT 1", $username ) );
+	$row = $bbp_db->get_row( $bbp_db->prepare( "SELECT * FROM {$bbp_db->users} INNER JOIN {$bbp_db->usermeta} ON user_id = ID WHERE meta_key = '_bbp_class' AND user_login = '%s' LIMIT 1", $username ) );
 	if ( empty( $row ) || is_wp_error( $row ) ) {
 		return;
 	}

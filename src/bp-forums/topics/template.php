@@ -214,7 +214,7 @@ function bbp_show_lead_topic( $show_lead = true ) {
  * @uses                  bbp_get_super_stickies() To get the super stickies
  * @uses                  bbp_get_stickies() To get the forum stickies
  * @uses                  wpdb::get_results() To execute our query and get the results
- * @uses                  WP_Rewrite::using_permalinks() To check if the blog is using permalinks
+ * @uses                  bbp_use_pretty_urls() To check if the site is using pretty URLs
  * @uses                  get_permalink() To get the permalink
  * @uses                  add_query_arg() To add custom args to the url
  * @uses                  apply_filters() Calls 'bbp_topics_pagination' with the pagination args
@@ -928,22 +928,19 @@ function bbp_topic_pagination( $args = '' ) {
  *                    - after: After the links
  *
  * @return string Pagination links
- * @uses                                 bbp_get_topic_id() To get the topic id
- * @uses                                 WP_Rewrite::using_permalinks() To check if the blog is using
- *                                       permalinks
- * @uses                                 user_trailingslashit() To add a trailing slash
- * @uses                                 trailingslashit() To add a trailing slash
- * @uses                                 get_permalink() To get the permalink of the topic
- * @uses                                 add_query_arg() To add query args
- * @uses                                 bbp_get_topic_reply_count() To get topic reply count
- * @uses                                 bbp_show_topic_lead() Are we showing the topic as a lead?
- * @uses                                 get_option() To get replies per page option
- * @uses                                 paginate_links() To paginate the links
- * @uses                                 apply_filters() Calls 'bbp_get_topic_pagination' with the links
- *                                       and arguments
+ * @uses bbp_get_topic_id()          To get the topic id
+ * @uses bbp_use_pretty_urls()       To check if the blog is using permalinks
+ * @uses user_trailingslashit()      To add a trailing slash
+ * @uses trailingslashit()           To add a trailing slash
+ * @uses get_permalink()             To get the permalink of the topic
+ * @uses add_query_arg()             To add query args
+ * @uses bbp_get_topic_reply_count() To get topic reply count
+ * @uses bbp_show_topic_lead()       Are we showing the topic as a lead?
+ * @uses get_option()                To get replies per page option
+ * @uses paginate_links()            To paginate the links
+ * @uses apply_filters()             Calls 'bbp_get_topic_pagination' with the links  and arguments
  */
 function bbp_get_topic_pagination( $args = '' ) {
-	global $wp_rewrite;
 
 	// Bail if threading replies
 	if ( bbp_thread_replies() ) {
@@ -962,8 +959,8 @@ function bbp_get_topic_pagination( $args = '' ) {
 	);
 
 	// If pretty permalinks are enabled, make our pagination pretty
-	if ( $wp_rewrite->using_permalinks() ) {
-		$base = trailingslashit( get_permalink( $r['topic_id'] ) ) . user_trailingslashit( $wp_rewrite->pagination_base . '/%#%/' );
+	if ( bbp_use_pretty_urls() ) {
+		$base = trailingslashit( get_permalink( $r['topic_id'] ) ) . user_trailingslashit( bbp_get_paged_slug() . '/%#%/' );
 	} else {
 		$base = add_query_arg( 'paged', '%#%', get_permalink( $r['topic_id'] ) );
 	}
@@ -993,8 +990,8 @@ function bbp_get_topic_pagination( $args = '' ) {
 	if ( ! empty( $pagination_links ) ) {
 
 		// Remove first page from pagination
-		if ( $wp_rewrite->using_permalinks() ) {
-			$pagination_links = str_replace( $wp_rewrite->pagination_base . '/1/', '', $pagination_links );
+		if ( bbp_use_pretty_urls() ) {
+			$pagination_links = str_replace( bbp_get_paged_slug() . '/1/', '', $pagination_links );
 		} else {
 			$pagination_links = str_replace( '&#038;paged=1', '', $pagination_links );
 		}
@@ -2820,7 +2817,6 @@ function bbp_topic_edit_url( $topic_id = 0 ) {
  * @uses                  bbp_get_topic_id() To get the topic id
  */
 function bbp_get_topic_edit_url( $topic_id = 0 ) {
-	global $wp_rewrite;
 
 	$bbp = bbpress();
 
@@ -2832,10 +2828,11 @@ function bbp_get_topic_edit_url( $topic_id = 0 ) {
 	// Remove view=all link from edit
 	$topic_link = bbp_remove_view_all( bbp_get_topic_permalink( $topic_id ) );
 
-	// Pretty permalinks
-	if ( $wp_rewrite->using_permalinks() ) {
-		$url = trailingslashit( $topic_link ) . $bbp->edit_id;
-		$url = trailingslashit( $url );
+	// Pretty permalinks, previously used `bbp_use_pretty_urls()`
+	// https://bbpress.trac.wordpress.org/ticket/3054
+	if ( false === strpos( $topic_link, '?' ) ) {
+		$url = trailingslashit( $topic_link ) . bbp_get_edit_slug();
+		$url = user_trailingslashit( $url );
 
 		// Unpretty permalinks
 	} else {
@@ -4011,7 +4008,6 @@ function bbp_topic_tag_edit_link( $tag = '' ) {
  * @uses  get_term_by()
  */
 function bbp_get_topic_tag_edit_link( $tag = '' ) {
-	global $wp_rewrite;
 
 	// Get the term
 	if ( ! empty( $tag ) ) {
@@ -4024,16 +4020,11 @@ function bbp_get_topic_tag_edit_link( $tag = '' ) {
 	// Add before and after if description exists
 	if ( ! empty( $term->term_id ) ) {
 
-		$bbp = bbpress();
+		// Pretty or ugly URL
+		$retval = bbp_use_pretty_urls()
+		? user_trailingslashit( trailingslashit( bbp_get_topic_tag_link() ) . bbp_get_edit_slug() )
+		: add_query_arg( array( bbp_get_edit_rewrite_id() => '1' ), bbp_get_topic_tag_link() );
 
-		// Pretty
-		if ( $wp_rewrite->using_permalinks() ) {
-			$retval = user_trailingslashit( trailingslashit( bbp_get_topic_tag_link() ) . $bbp->edit_id );
-
-			// Ugly
-		} else {
-			$retval = add_query_arg( array( $bbp->edit_id => '1' ), bbp_get_topic_tag_link() );
-		}
 
 		// No link
 	} else {

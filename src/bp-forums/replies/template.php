@@ -2157,7 +2157,6 @@ function bbp_reply_edit_url( $reply_id = 0 ) {
  */
 function bbp_get_reply_edit_url( $reply_id = 0 ) {
 
-	$bbp   = bbpress();
 	$reply = bbp_get_reply( bbp_get_reply_id( $reply_id ) );
 	if ( empty( $reply ) ) {
 		return;
@@ -2166,8 +2165,8 @@ function bbp_get_reply_edit_url( $reply_id = 0 ) {
 	$reply_link = bbp_remove_view_all( bbp_get_reply_permalink( $reply_id ) );
 
 	// Pretty permalinks
-	if ( bbp_use_pretty_urls() ) {
-		$url = trailingslashit( $reply_link ) . $bbp->edit_id;
+	if ( false === strpos( $reply_link, '?' ) ) {
+		$url = trailingslashit( $reply_link ) . bbp_get_edit_slug();
 		$url = user_trailingslashit( $url );
 
 		// Unpretty permalinks
@@ -2175,7 +2174,7 @@ function bbp_get_reply_edit_url( $reply_id = 0 ) {
 		$url = add_query_arg(
 			array(
 				bbp_get_reply_post_type() => $reply->post_name,
-				$bbp->edit_id             => '1',
+				bbp_get_edit_rewrite_id() => '1'
 			),
 			$reply_link
 		);

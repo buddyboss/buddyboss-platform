@@ -547,7 +547,6 @@ function bbp_get_paged_rewrite_id() {
  * Get the slug used for paginated requests
  *
  * @since bbPress (r4926)
- * @global object $wp_rewrite The WP_Rewrite object
  * @return string
  */
 function bbp_get_paged_slug() {
@@ -713,8 +712,6 @@ function bbp_get_global_object( $name = '', $type = '', $default = null ) {
  * Is the environment using pretty URLs?
  *
  * @since 2.5.8 bbPress (r5814)
- *
- * @global object $wp_rewrite The WP_Rewrite object
  *
  * @return bool
  */
@@ -1117,4 +1114,27 @@ function bb_forum_favourite_legacy_data_support() {
  */
 function bbp_db() {
 	return bbp_get_global_object( 'wpdb', 'WPDB' );
+}
+
+/**
+ * Get the root URL
+ *
+ * @since bbPress 2.5.8 (r5814)
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bbp_get_root_url() {
+
+	// Default
+	$retval  = '';
+	$rewrite = bbp_rewrite();
+
+	// Use $wp_rewrite->root if available
+	if ( property_exists( $rewrite, 'root' ) ) {
+		$retval = $rewrite->root;
+	}
+
+	// Filter & return
+	return apply_filters( 'bbp_get_root_url', $retval );
 }
