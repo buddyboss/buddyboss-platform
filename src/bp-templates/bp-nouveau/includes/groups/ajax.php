@@ -1175,7 +1175,12 @@ function bp_nouveau_ajax_groups_send_message() {
 			// Check if force friendship is enabled and check recipients.
 			if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
 				foreach ( $members as $f => $member ) {
-					if ( ! friends_check_friendship( bp_loggedin_user_id(), $member ) ) {
+					if ( 
+						! (
+							bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) ||
+							bb_messages_allowed_messaging_without_connection( $member )
+						) 
+					){
 						unset( $members[ $f ] );
 					}
 				}
@@ -1202,8 +1207,15 @@ function bp_nouveau_ajax_groups_send_message() {
 				$not_access_list[] = bp_core_get_user_displayname( $member );
 			}
 
-			if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && ! friends_check_friendship( bp_loggedin_user_id(), $member ) ) {
-				$not_friends[] = bp_core_get_user_displayname( $member );
+			if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
+				if ( 
+					! (
+						bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) ||
+						bb_messages_allowed_messaging_without_connection( $member )
+					) 
+				){
+					$not_friends[] = bp_core_get_user_displayname( $member );
+				}
 			}
 		}
 
