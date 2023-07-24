@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.3.81\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-07-24 11:44:47+00:00\n"
+"POT-Creation-Date: 2023-07-24 11:59:48+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -153,7 +153,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-list-table.php:416
 #: bp-activity/classes/class-bp-activity-oembed-extension.php:137
 #: bp-core/admin/settings/bp-admin-setting-activity.php:21
-#: bp-core/bp-core-cssjs.php:268
+#: bp-core/bp-core-cssjs.php:304
 #: bp-moderation/classes/class-bp-moderation-activity.php:120
 #: bp-search/bp-search-functions.php:376 bp-search/bp-search-settings.php:952
 msgid "Activity"
@@ -378,7 +378,7 @@ msgid "Go back and try again."
 msgstr ""
 
 #: bp-activity/bp-activity-admin.php:829
-#: bp-activity/classes/class-bp-activity-list-table.php:763
+#: bp-activity/classes/class-bp-activity-list-table.php:762
 msgid "View Activity"
 msgstr ""
 
@@ -397,7 +397,7 @@ msgstr ""
 msgid "Spam"
 msgstr ""
 
-#: bp-activity/bp-activity-admin.php:844 bp-forums/admin/forums.php:656
+#: bp-activity/bp-activity-admin.php:844 bp-forums/admin/forums.php:665
 #: bp-forums/admin/replies.php:956 bp-forums/admin/topics.php:1052
 #. Translators: Publish box date format, see http:php.net/date.
 #. translators: Publish box date format, see http:php.net/date
@@ -859,7 +859,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:2506
 #: bp-core/admin/bp-core-admin-tools.php:34
 #: bp-core/admin/bp-core-admin-tools.php:231
-#: bp-core/admin/bp-core-admin-tools.php:905
+#: bp-core/admin/bp-core-admin-tools.php:913
 #: bp-core/classes/class-bp-admin.php:516
 #: bp-core/classes/class-bp-admin.php:517
 #: bp-core/classes/class-bp-admin.php:539
@@ -982,7 +982,7 @@ msgid "There was a problem generating a link preview."
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:5788
-#: bp-groups/bp-groups-filters.php:1122
+#: bp-groups/bp-groups-filters.php:1126
 #: bp-messages/classes/class-bp-messages-notification.php:371
 #: bp-messages/classes/class-bp-messages-notification.php:445
 #: bp-messages/classes/class-bp-messages-notification.php:526
@@ -992,7 +992,7 @@ msgid "some photos"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:5790
-#: bp-groups/bp-groups-filters.php:1124
+#: bp-groups/bp-groups-filters.php:1128
 #: bp-messages/classes/class-bp-messages-notification.php:378
 #: bp-messages/classes/class-bp-messages-notification.php:453
 #: bp-messages/classes/class-bp-messages-notification.php:533
@@ -1002,7 +1002,7 @@ msgid "a photo"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:5795
-#: bp-groups/bp-groups-filters.php:1129
+#: bp-groups/bp-groups-filters.php:1133
 #: bp-messages/classes/class-bp-messages-notification.php:388
 #: bp-messages/classes/class-bp-messages-notification.php:464
 #: bp-messages/classes/class-bp-messages-notification.php:543
@@ -1012,7 +1012,7 @@ msgid "some documents"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:5797
-#: bp-groups/bp-groups-filters.php:1131
+#: bp-groups/bp-groups-filters.php:1135
 #: bp-messages/classes/class-bp-messages-notification.php:395
 #: bp-messages/classes/class-bp-messages-notification.php:472
 #: bp-messages/classes/class-bp-messages-notification.php:550
@@ -1022,7 +1022,7 @@ msgid "a document"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:5802
-#: bp-groups/bp-groups-filters.php:1136
+#: bp-groups/bp-groups-filters.php:1140
 #: bp-messages/classes/class-bp-messages-notification.php:405
 #: bp-messages/classes/class-bp-messages-notification.php:483
 #: bp-messages/classes/class-bp-messages-notification.php:560
@@ -1032,7 +1032,7 @@ msgid "some videos"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:5804
-#: bp-groups/bp-groups-filters.php:1138
+#: bp-groups/bp-groups-filters.php:1142
 #: bp-messages/classes/class-bp-messages-notification.php:412
 #: bp-messages/classes/class-bp-messages-notification.php:491
 #: bp-messages/classes/class-bp-messages-notification.php:567
@@ -1042,7 +1042,7 @@ msgid "a video"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:5807
-#: bp-groups/bp-groups-filters.php:1118 bp-groups/bp-groups-filters.php:1143
+#: bp-groups/bp-groups-filters.php:1122 bp-groups/bp-groups-filters.php:1147
 msgid "an update"
 msgstr ""
 
@@ -1543,7 +1543,7 @@ msgid "Replies disabled"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:682
-#: bp-core/bp-core-cssjs.php:394
+#: bp-core/bp-core-cssjs.php:430
 #: bp-templates/bp-nouveau/buddypress-functions.php:614
 msgid "Are you sure?"
 msgstr ""
@@ -2848,7 +2848,7 @@ msgstr ""
 
 #: bp-blogs/bp-blogs-template.php:1393
 #: bp-core/admin/settings/bp-admin-setting-search.php:22
-#: bp-core/bp-core-cssjs.php:274 bp-core/deprecated/buddypress/1.5.php:440
+#: bp-core/bp-core-cssjs.php:310 bp-core/deprecated/buddypress/1.5.php:440
 #: bp-core/profile-search/templates/members/bps-form-default.php:229
 #: bp-forums/admin/settings.php:156 bp-forums/admin/settings.php:344
 #: bp-forums/common/template.php:2585 bp-forums/search/template.php:238
@@ -3060,7 +3060,7 @@ msgid "<strong>Error</strong>: Nickname already has been taken. Please try again
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-actions.php:309
-#: bp-core/admin/bp-core-admin-tools.php:1233 bp-forums/admin/tools.php:1967
+#: bp-core/admin/bp-core-admin-tools.php:1241 bp-forums/admin/tools.php:1967
 #: bp-forums/functions.php:889
 #: bp-templates/bp-nouveau/includes/document/ajax.php:187
 #: bp-templates/bp-nouveau/includes/document/ajax.php:546
@@ -5038,49 +5038,53 @@ msgstr ""
 msgid "Repair total connections count for each member"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:392
+#: bp-core/admin/bp-core-admin-tools.php:393
 msgid "Repair total groups count for each member"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:402
+#: bp-core/admin/bp-core-admin-tools.php:400
+msgid "Recalculate the total members count for each group"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-tools.php:410
 msgid "Repopulate site tracking records"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:411
+#: bp-core/admin/bp-core-admin-tools.php:419
 msgid "Install missing emails (restore missing emails from defaults)"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:419
+#: bp-core/admin/bp-core-admin-tools.php:427
 msgid "Reset emails (delete and restore from defaults)"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:432
+#: bp-core/admin/bp-core-admin-tools.php:440
 msgid ""
 "Assign members without a profile type to the default profile type (excludes "
 "admins)"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:442
+#: bp-core/admin/bp-core-admin-tools.php:450
 msgid "Update activity favorites data"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:451
+#: bp-core/admin/bp-core-admin-tools.php:459
 msgid ""
 "Create the database table for Invitations and migrate existing group "
 "invitations if needed"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:458
+#: bp-core/admin/bp-core-admin-tools.php:466
 msgid "Re-Sync Profile Completion widget profile photo status"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:488
+#: bp-core/admin/bp-core-admin-tools.php:496
 msgid "Repairing total connections count for each member &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:489
-#: bp-core/admin/bp-core-admin-tools.php:550
-#: bp-core/admin/bp-core-admin-tools.php:598 bp-forums/admin/tools.php:264
+#: bp-core/admin/bp-core-admin-tools.php:497
+#: bp-core/admin/bp-core-admin-tools.php:558
+#: bp-core/admin/bp-core-admin-tools.php:606 bp-forums/admin/tools.php:264
 #: bp-forums/admin/tools.php:330 bp-forums/admin/tools.php:389
 #: bp-forums/admin/tools.php:455 bp-forums/admin/tools.php:457
 #: bp-forums/admin/tools.php:588 bp-forums/admin/tools.php:645
@@ -5094,22 +5098,23 @@ msgstr ""
 msgid "Failed!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:531
-#: bp-core/admin/bp-core-admin-tools.php:581
-#: bp-core/admin/bp-core-admin-tools.php:610
-#: bp-core/admin/bp-core-admin-tools.php:632
-#: bp-core/admin/bp-core-admin-tools.php:649
-#: bp-core/admin/bp-core-admin-tools.php:710
-#: bp-core/admin/bp-core-admin-tools.php:747
-#: bp-core/admin/bp-core-admin-tools.php:798
-#: bp-core/admin/bp-core-admin-tools.php:843
-#: bp-core/admin/bp-core-admin-tools.php:1170
-#: bp-core/admin/bp-core-admin-tools.php:1213
-#: bp-core/admin/bp-core-admin-tools.php:1365
+#: bp-core/admin/bp-core-admin-tools.php:539
+#: bp-core/admin/bp-core-admin-tools.php:589
+#: bp-core/admin/bp-core-admin-tools.php:618
+#: bp-core/admin/bp-core-admin-tools.php:640
+#: bp-core/admin/bp-core-admin-tools.php:657
+#: bp-core/admin/bp-core-admin-tools.php:718
+#: bp-core/admin/bp-core-admin-tools.php:755
+#: bp-core/admin/bp-core-admin-tools.php:806
+#: bp-core/admin/bp-core-admin-tools.php:851
+#: bp-core/admin/bp-core-admin-tools.php:1178
+#: bp-core/admin/bp-core-admin-tools.php:1221
 #: bp-core/admin/bp-core-admin-tools.php:1373
-#: bp-core/admin/bp-core-admin-tools.php:1408
-#: bp-core/admin/bp-core-admin-tools.php:1424
-#: bp-core/admin/bp-core-admin-tools.php:1523
+#: bp-core/admin/bp-core-admin-tools.php:1381
+#: bp-core/admin/bp-core-admin-tools.php:1416
+#: bp-core/admin/bp-core-admin-tools.php:1432
+#: bp-core/admin/bp-core-admin-tools.php:1531
+#: bp-core/admin/bp-core-admin-tools.php:1630
 #: bp-core/bb-core-subscriptions.php:93 bp-core/bb-core-subscriptions.php:378
 #: bp-core/bb-core-subscriptions.php:1293 bp-forums/admin/tools.php:310
 #: bp-forums/admin/tools.php:312 bp-forums/admin/tools.php:370
@@ -5132,133 +5137,142 @@ msgstr ""
 msgid "Complete!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:549
+#: bp-core/admin/bp-core-admin-tools.php:557
 msgid "Repairing total groups count for each member &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:595
+#: bp-core/admin/bp-core-admin-tools.php:603
 msgid "Repopulating Blogs records&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:626
+#: bp-core/admin/bp-core-admin-tools.php:634
 msgid "Repairing total members count &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:644
+#: bp-core/admin/bp-core-admin-tools.php:652
 msgid "Repairing member \"last activity\" data &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:706
+#: bp-core/admin/bp-core-admin-tools.php:714
 msgid "Repairing default profile set and fields &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:737
-#: bp-core/admin/bp-core-admin-tools.php:788
-#: bp-core/admin/bp-core-admin-tools.php:833
-#: bp-core/admin/bp-core-admin-tools.php:1161
-#: bp-core/admin/bp-core-admin-tools.php:1204
+#: bp-core/admin/bp-core-admin-tools.php:745
+#: bp-core/admin/bp-core-admin-tools.php:796
+#: bp-core/admin/bp-core-admin-tools.php:841
+#: bp-core/admin/bp-core-admin-tools.php:1169
+#: bp-core/admin/bp-core-admin-tools.php:1212
 msgid "%s members updated successfully."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:744
+#: bp-core/admin/bp-core-admin-tools.php:752
 msgid "Re-syncing BuddyBoss profile fields to WordPress profile fields &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:795
+#: bp-core/admin/bp-core-admin-tools.php:803
 msgid "Re-syncing WordPress profile fields to BuddyBoss profile fields &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:840
+#: bp-core/admin/bp-core-admin-tools.php:848
 msgid "Updating display name to selected format in profile settings &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:935
-#: bp-core/admin/bp-core-admin-tools.php:938
+#: bp-core/admin/bp-core-admin-tools.php:943
+#: bp-core/admin/bp-core-admin-tools.php:946
 msgid "BuddyBoss Tools"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:937
+#: bp-core/admin/bp-core-admin-tools.php:945
 msgid ""
 "BuddyBoss keeps track of various relationships between users, groups, and "
 "activity items. Occasionally these relationships become out of sync, most "
 "often after an import, update, or migration."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:938
+#: bp-core/admin/bp-core-admin-tools.php:946
 msgid "Use the %s to repair these relationships."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1019
+#: bp-core/admin/bp-core-admin-tools.php:1027
 #. translators: %1$s for counts missing emails.
 msgid "%1$s missing emails have been installed."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1024
+#: bp-core/admin/bp-core-admin-tools.php:1032
 #. translators: %1$s for view emails url.
 msgid "Installing missing emails &hellip; Complete! %1$s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1025
-#: bp-core/admin/bp-core-admin-tools.php:1094
+#: bp-core/admin/bp-core-admin-tools.php:1033
+#: bp-core/admin/bp-core-admin-tools.php:1102
 msgid "View Emails."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1093
+#: bp-core/admin/bp-core-admin-tools.php:1101
 #. translators: %1$s for view emails url.
 msgid "Reseting emails &hellip; Complete! %1$s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1116
+#: bp-core/admin/bp-core-admin-tools.php:1124
 msgid ""
 "It looks like you have more sites to record. Resume recording by checking "
 "the \"Repopulate site tracking records\" option."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1169
+#: bp-core/admin/bp-core-admin-tools.php:1177
 msgid ""
 "Assign users without a profile type to the default profile type "
 "records&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1212
+#: bp-core/admin/bp-core-admin-tools.php:1220
 msgid "Repair Nickname&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1349
+#: bp-core/admin/bp-core-admin-tools.php:1357
 msgid "%s members activity favorite updated successfully."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1361
 #: bp-core/admin/bp-core-admin-tools.php:1369
+#: bp-core/admin/bp-core-admin-tools.php:1377
 msgid "Updating activity favorites data &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1394
+#: bp-core/admin/bp-core-admin-tools.php:1402
 #. translators: %s: the result of the action performed by the repair tool
 msgid "Creating the database table for Invitations if it does not exist &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1395
+#: bp-core/admin/bp-core-admin-tools.php:1403
 msgid "Failed to create table!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1416
+#: bp-core/admin/bp-core-admin-tools.php:1424
 #. translators: %s: the result of the action performed by the repair tool
 msgid "Migrating existing group invitations &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1417
+#: bp-core/admin/bp-core-admin-tools.php:1425
 msgid "Failed to migrate invitations!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1513
+#: bp-core/admin/bp-core-admin-tools.php:1521
 msgid ""
 "Profile completion widget, profile photo status updated successfully for %s "
 "members."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1520
+#: bp-core/admin/bp-core-admin-tools.php:1528
 msgid "Profile Completion widget, profile photo status re-sync %s"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-tools.php:1620
+#. translators: %s: number of groups
+msgid "%s groups member count updated successfully."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-tools.php:1626
+msgid "Recalculating the total group members count for each group &hellip; %s"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:79
@@ -6516,27 +6530,27 @@ msgstr ""
 msgid "You must log in to access the page you requested."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:246
+#: bp-core/bp-core-cssjs.php:282
 msgid "The results could not be loaded."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:247
+#: bp-core/bp-core-cssjs.php:283
 msgid "Please delete %% character"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:248
+#: bp-core/bp-core-cssjs.php:284
 msgid "Please enter %% or more characters"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:249
+#: bp-core/bp-core-cssjs.php:285
 msgid "Loading more results…"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:250
+#: bp-core/bp-core-cssjs.php:286
 msgid "You can only select %% item"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:251
+#: bp-core/bp-core-cssjs.php:287
 #: bp-forums/templates/default/bbpress/form-attachments.php:214
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-gif-media-search-dropdown.php:23
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-gif-media-search-dropdown.php:23
@@ -6546,112 +6560,176 @@ msgstr ""
 msgid "No results found"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:252
+#: bp-core/bp-core-cssjs.php:288
 msgid "Searching…"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:253
+#: bp-core/bp-core-cssjs.php:289
 msgid "Remove all items"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:254
+#: bp-core/bp-core-cssjs.php:290
 msgid "Start typing to find members"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:264
+#: bp-core/bp-core-cssjs.php:300
 msgid "Recent"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:265
+#: bp-core/bp-core-cssjs.php:301
 msgid "Smileys & People"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:266
+#: bp-core/bp-core-cssjs.php:302
 msgid "Animals & Nature"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:267
+#: bp-core/bp-core-cssjs.php:303
 msgid "Food & Drink"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:269
+#: bp-core/bp-core-cssjs.php:305
 msgid "Travel & Places"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:270
+#: bp-core/bp-core-cssjs.php:306
 msgid "Objects"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:271
+#: bp-core/bp-core-cssjs.php:307
 msgid "Symbols"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:272
+#: bp-core/bp-core-cssjs.php:308
 msgid "Flags"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:273
+#: bp-core/bp-core-cssjs.php:309
 msgid "Diversity"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:286
+#: bp-core/bp-core-cssjs.php:322
 msgid "Drop files here to upload"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:287
+#: bp-core/bp-core-cssjs.php:323
 msgid "Your browser does not support drag'n'drop file uploads."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:288
+#: bp-core/bp-core-cssjs.php:324
 msgid ""
 "Please use the fallback form below to upload your files like in the olden "
 "days."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:289
+#: bp-core/bp-core-cssjs.php:325
 #: bp-templates/bp-nouveau/includes/media/functions.php:138
 msgid "File size is too big ({{filesize}} MB). Max file size: {{maxFilesize}} MB."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:290
+#: bp-core/bp-core-cssjs.php:326
 msgid "You can't upload files of this type."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:291
+#: bp-core/bp-core-cssjs.php:327
 msgid "Server responded with {{statusCode}} code."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:292
+#: bp-core/bp-core-cssjs.php:328
 msgid "Cancel upload"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:293
+#: bp-core/bp-core-cssjs.php:329
 msgid "Upload canceled."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:294
+#: bp-core/bp-core-cssjs.php:330
 #: bp-templates/bp-nouveau/includes/media/functions.php:150
 #: bp-templates/bp-nouveau/includes/video/functions.php:135
 msgid "Are you sure you want to cancel this upload?"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:295
+#: bp-core/bp-core-cssjs.php:331
 msgid "Remove file"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:296
+#: bp-core/bp-core-cssjs.php:332
 msgid "You cannot upload more than 10 files at a time."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:930
+#: bp-core/bp-core-cssjs.php:829
+#. Translators: %s is the relative time (eg: in a few seconds).
+msgid "in %s"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:831 bp-core/bp-core-functions.php:1207
+#: bp-forums/common/functions.php:115
+#. translators: %s: the human time diff.
+#. translators: The time since the older date.
+msgid "%s ago"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:832
+msgid "a few seconds"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:833 bp-core/bp-core-functions.php:1321
+msgid "a minute"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:835
+#. Translators: %d is the amount of minutes.
+msgid "%d minutes"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:836 bp-core/bp-core-functions.php:1314
+msgid "an hour"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:838 bp-messages/bp-messages-functions.php:2125
+#: bp-messages/bp-messages-functions.php:2134
+#: bp-messages/bp-messages-functions.php:2143
+#. Translators: %d is the amount of hours.
+#. translators: %s: The admin setting field label.
+msgid "%d hours"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:839 bp-core/bp-core-functions.php:1307
+msgid "a day"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:841
+#. Translators: %d is the amount of days.
+msgid "%d days"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:842
+msgid "a month"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:844
+#. Translators: %d is the amount of months.
+msgid "%d months"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:845 bp-core/bp-core-functions.php:1273
+msgid "a year"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:847
+#. Translators: %d is the amount of years.
+msgid "%d years"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:982
 msgid "Mismatch"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:931
+#: bp-core/bp-core-cssjs.php:983
 msgid "Enter valid email"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:932
+#: bp-core/bp-core-cssjs.php:984
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:720
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:790
 #: bp-members/screens/register.php:161 bp-members/screens/register.php:209
@@ -6889,15 +6967,6 @@ msgstr ""
 msgid "a second"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:1207 bp-forums/common/functions.php:115
-#. translators: The time since the older date.
-msgid "%s ago"
-msgstr ""
-
-#: bp-core/bp-core-functions.php:1273
-msgid "a year"
-msgstr ""
-
 #: bp-core/bp-core-functions.php:1275
 #. translators: The display years count from the older date.
 msgid "%s year"
@@ -6923,10 +6992,6 @@ msgstr[1] ""
 msgid "a week"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:1307
-msgid "a day"
-msgstr ""
-
 #: bp-core/bp-core-functions.php:1309
 #. translators: The display days count from the older date.
 msgid "%s day"
@@ -6934,20 +6999,12 @@ msgid_plural "%s days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-core/bp-core-functions.php:1314
-msgid "an hour"
-msgstr ""
-
 #: bp-core/bp-core-functions.php:1316
 #. translators: The display hours count from the older date..
 msgid "%s hour"
 msgid_plural "%s hours"
 msgstr[0] ""
 msgstr[1] ""
-
-#: bp-core/bp-core-functions.php:1321
-msgid "a minute"
-msgstr ""
 
 #: bp-core/bp-core-functions.php:1323
 #. translators: The display minutes count from the older date.
@@ -12031,48 +12088,48 @@ msgstr ""
 msgid "No Discussions"
 msgstr ""
 
-#: bp-forums/admin/forums.php:625
+#: bp-forums/admin/forums.php:634
 msgid "Forum updated. <a href=\"%s\">View forum</a>"
 msgstr ""
 
-#: bp-forums/admin/forums.php:628 bp-forums/admin/replies.php:928
+#: bp-forums/admin/forums.php:637 bp-forums/admin/replies.php:928
 #: bp-forums/admin/topics.php:1024
 msgid "Custom field updated."
 msgstr ""
 
-#: bp-forums/admin/forums.php:631 bp-forums/admin/replies.php:931
+#: bp-forums/admin/forums.php:640 bp-forums/admin/replies.php:931
 #: bp-forums/admin/topics.php:1027
 msgid "Custom field deleted."
 msgstr ""
 
-#: bp-forums/admin/forums.php:634
+#: bp-forums/admin/forums.php:643
 msgid "Forum updated."
 msgstr ""
 
-#: bp-forums/admin/forums.php:639
+#: bp-forums/admin/forums.php:648
 #. translators: %s: date and time of the revision
 msgid "Forum restored to revision from %s"
 msgstr ""
 
-#: bp-forums/admin/forums.php:643
+#: bp-forums/admin/forums.php:652
 msgid "Forum created. <a href=\"%s\">View forum</a>"
 msgstr ""
 
-#: bp-forums/admin/forums.php:646
+#: bp-forums/admin/forums.php:655
 msgid "Forum saved."
 msgstr ""
 
-#: bp-forums/admin/forums.php:649
+#: bp-forums/admin/forums.php:658
 msgid "Forum submitted. <a target=\"_blank\" href=\"%s\">Preview forum</a>"
 msgstr ""
 
-#: bp-forums/admin/forums.php:653
+#: bp-forums/admin/forums.php:662
 msgid ""
 "Forum scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" "
 "href=\"%2$s\">Preview forum</a>"
 msgstr ""
 
-#: bp-forums/admin/forums.php:663
+#: bp-forums/admin/forums.php:672
 msgid "Forum draft updated. <a target=\"_blank\" href=\"%s\">Preview forum</a>"
 msgstr ""
 
@@ -18557,7 +18614,7 @@ msgstr ""
 msgid "Edit Forum Settings"
 msgstr ""
 
-#: bp-groups/bp-groups-filters.php:1141
+#: bp-groups/bp-groups-filters.php:1145
 #: bp-messages/classes/class-bp-messages-notification.php:420
 #: bp-messages/classes/class-bp-messages-notification.php:500
 #: bp-messages/classes/class-bp-messages-notification.php:575
@@ -18566,50 +18623,50 @@ msgstr ""
 msgid "a gif"
 msgstr ""
 
-#: bp-groups/bp-groups-filters.php:1185
+#: bp-groups/bp-groups-filters.php:1189
 msgid ""
 "Migrate Group forum and discussion subscriptions data structure to the new "
 "subscription flow"
 msgstr ""
 
-#: bp-groups/bp-groups-filters.php:1235
+#: bp-groups/bp-groups-filters.php:1239
 msgid "No group was found! Which group are you subscribing/unsubscribing to?"
 msgstr ""
 
-#: bp-groups/bp-groups-filters.php:1237
+#: bp-groups/bp-groups-filters.php:1241
 msgid "There was a problem subscribing/unsubscribing from that group!"
 msgstr ""
 
-#: bp-groups/bp-groups-filters.php:1239
+#: bp-groups/bp-groups-filters.php:1243
 msgid "You are not part of that group!"
 msgstr ""
 
-#: bp-groups/bp-groups-filters.php:1251
+#: bp-groups/bp-groups-filters.php:1255
 msgid "%s You are already subscribe this group."
 msgstr ""
 
-#: bp-groups/bp-groups-filters.php:1265
+#: bp-groups/bp-groups-filters.php:1269
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:1920
 #. translators: Group name
 #. translators: Group name.
 msgid "There was a problem subscribing to %s."
 msgstr ""
 
-#: bp-groups/bp-groups-filters.php:1271
+#: bp-groups/bp-groups-filters.php:1275
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:1944
 #. translators: Group name
 #. translators: Group name.
 msgid "You've been subscribed to %s."
 msgstr ""
 
-#: bp-groups/bp-groups-filters.php:1281
+#: bp-groups/bp-groups-filters.php:1285
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:1978
 #. translators: Group name
 #. translators: Group name.
 msgid "There was a problem unsubscribing from %s."
 msgstr ""
 
-#: bp-groups/bp-groups-filters.php:1287
+#: bp-groups/bp-groups-filters.php:1291
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:1970
 #. translators: Group name
 #. translators: Group name.
@@ -24737,13 +24794,6 @@ msgstr ""
 #: bp-messages/bp-messages-functions.php:2116
 #. translators: %s: The admin setting field label.
 msgid "%d hour"
-msgstr ""
-
-#: bp-messages/bp-messages-functions.php:2125
-#: bp-messages/bp-messages-functions.php:2134
-#: bp-messages/bp-messages-functions.php:2143
-#. translators: %s: The admin setting field label.
-msgid "%d hours"
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:2170
@@ -32993,7 +33043,7 @@ msgstr ""
 msgid "Changes saved."
 msgstr ""
 
-#: class-buddypress.php:917
+#: class-buddypress.php:918
 msgid "BuddyPress Nouveau"
 msgstr ""
 
