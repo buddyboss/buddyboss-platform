@@ -134,7 +134,7 @@ function bp_helper_plugins_loaded_callback() {
 			$bp_current_component = bp_current_component();
 
 			// deregister geodirectory select2 script and styles from all component pages
-			if ( $bp_current_component && 'listings' !== $bp_current_component && 'favorites' !== $bp_current_component ) {
+			if ( $bp_current_component && ! in_array( $bp_current_component, array( 'listings', 'favorites', 'reviews' ), true ) ) {
 				add_action( 'wp_enqueue_scripts', 'bp_deregister_geodirectory_script_select2' );
 				add_action( 'wp_print_styles', 'bp_deregister_geodirectory_styles' );
 			}
@@ -502,7 +502,7 @@ add_action( 'mepr-signup', 'bb_core_add_support_mepr_signup_map_user_fields', 10
  */
 function bb_core_validate_nickname_mepr_signup( $errors ) {
 
-	if ( function_exists( 'bp_xprofile_nickname_field_id' ) ) {
+	if ( function_exists( 'bp_xprofile_nickname_field_id' ) && ! is_user_logged_in() ) {
 		$nickname = '';
 		if ( isset( $_POST['user_login'] ) ) {
 			$nickname = sanitize_text_field( $_POST['user_login'] );
