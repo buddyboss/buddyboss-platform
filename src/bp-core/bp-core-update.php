@@ -33,28 +33,29 @@ function bp_is_install() {
  */
 function bp_is_update() {
 
-	// Current DB version of this site (per site in a multisite network).
-	$current_db   = bp_get_option( '_bp_db_version' );
-	$current_live = bp_get_db_version();
+	// Get current DB version.
+	$current_db = (int) bp_get_option( '_bp_db_version' );
+	// Get the raw database version.
+	$current_live = (int) bp_get_db_version();
 
 	// Pro plugin version history.
 	bp_version_bump();
-	$bb_plugin_version_history = bp_get_option( 'bb_plugin_version_history', array() );
-	$initial_version_data      = ! empty( $bb_plugin_version_history ) ? current( $bb_plugin_version_history ) : array();
-	$bb_version_exists         = ! empty( $initial_version_data ) && (string) $initial_version_data['version'] === (string) BP_PLATFORM_VERSION ? true : false;
+	$bb_plugin_version_history = (array) bp_get_option( 'bb_plugin_version_history', array() );
+	$initial_version_data      = ! empty( $bb_plugin_version_history ) ? end( $bb_plugin_version_history ) : array();
+	$bb_version_exists         = ! empty( $initial_version_data ) && ! empty( $initial_version_data['version'] ) && (string) BP_PLATFORM_VERSION === (string) $initial_version_data['version'];
 	if ( ! $bb_version_exists ) {
-		$current_date             = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
-		$bb_latest_plugin_version = array(
+		$current_date                = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+		$bb_latest_plugin_version    = array(
 			'db_version' => $current_live,
 			'date'       => $current_date->format( 'Y-m-d H:i:s' ),
 			'version'    => BP_PLATFORM_VERSION,
 		);
-		array_unshift( $bb_plugin_version_history, $bb_latest_plugin_version );
-		bp_update_option( 'bb_plugin_version_history', $bb_plugin_version_history );
+		$bb_plugin_version_history[] = $bb_latest_plugin_version;
+		bp_update_option( 'bb_plugin_version_history', array_filter( $bb_plugin_version_history ) );
 	}
 
 	$is_update = false;
-	if ( (int) $current_live !== (int) $current_db ) {
+	if ( $current_live !== $current_db ) {
 		$is_update = true;
 	}
 
@@ -467,7 +468,6 @@ function bp_version_updater() {
 			$raw_db_version > $current_db
 		) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
-			error_log( 'run migration' );
 		}
 	}
 
