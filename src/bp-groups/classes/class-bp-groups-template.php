@@ -116,6 +116,14 @@ class BP_Groups_Template {
 	public $order;
 
 	/**
+	 * URL parameter key for pagination.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @var string
+	 */
+	public $pag_arg = '';
+
+	/**
 	 * Constructor method.
 	 *
 	 * @see BP_Groups_Group::get() for an in-depth description of arguments.
@@ -128,12 +136,12 @@ class BP_Groups_Template {
 	 *     @type int $page Default: 1.
 	 * }
 	 */
-	function __construct( $args = array() ) {
+	function __construct( ...$args ){
 
 		$function_args = func_get_args();
 
 		// Backward compatibility with old method of passing arguments.
-		if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
+		if ( ! is_array( $args[0] ) || count( $args ) > 1 ) {
 			_deprecated_argument( __METHOD__, '1.7', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
@@ -151,7 +159,9 @@ class BP_Groups_Template {
 				11 => 'page_arg',
 			);
 
-			$args = bp_core_parse_args_array( $old_args_keys, $function_args );
+			$args = bp_core_parse_args_array( $old_args_keys, $args );
+		} else {
+			$args = reset( $args );
 		}
 
 		$defaults = array(
@@ -172,8 +182,10 @@ class BP_Groups_Template {
 			'search_columns'     => array(),
 			'group_type'         => '',
 			'group_type__in'     => '',
+			'status'             => array(),
 			'group_type__not_in' => '',
 			'meta_query'         => false,
+			'date_query'         => false,
 			'update_meta_cache'  => true,
 			'update_admin_cache' => false,
 		);
@@ -224,9 +236,11 @@ class BP_Groups_Template {
 					'search_terms'       => $search_terms,
 					'search_columns'     => $search_columns,
 					'meta_query'         => $meta_query,
+					'date_query'         => $date_query,
 					'group_type'         => $group_type,
 					'group_type__in'     => $group_type__in,
 					'group_type__not_in' => $group_type__not_in,
+					'status'             => $status,
 					'include'            => $include,
 					'exclude'            => $exclude,
 					'parent_id'          => $parent_id,
