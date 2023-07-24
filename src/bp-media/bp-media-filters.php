@@ -90,6 +90,7 @@ add_action( 'bp_add_rewrite_rules', 'bb_setup_attachment_media_preview' );
 add_filter( 'query_vars', 'bb_setup_attachment_media_preview_query' );
 add_action( 'template_include', 'bb_setup_attachment_media_preview_template', PHP_INT_MAX );
 
+add_action( 'bp_activity_after_email_content', 'bb_gif_activity_after_email_content' );
 /**
  * Add Media items for search
  */
@@ -546,6 +547,16 @@ function bp_media_delete_activity_media( $activities ) {
 	if ( ! empty( $activities ) ) {
 		remove_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' );
 		foreach ( $activities as $activity ) {
+
+			// Do not delete attached media, if the activity belongs to a forum topic/reply.
+			// Attached media could still be used inside that component.
+			if (
+				! empty( $activity->type ) &&
+				in_array( $activity->type, array( 'bbp_reply_create', 'bbp_topic_create' ), true )
+			) {
+				continue;
+			}
+
 			$activity_id    = $activity->id;
 			$media_activity = bp_activity_get_meta( $activity_id, 'bp_media_activity', true );
 			if ( ! empty( $media_activity ) && '1' == $media_activity ) {
@@ -2873,3 +2884,24 @@ function bb_messages_media_save( $attachment ) {
 }
 
 add_action( 'bb_media_upload', 'bb_messages_media_save' );
+
+/**
+ * Added text on the email when replied on the activity.
+ *
+ * @since BuddyBoss 2.3.80
+ *
+ * @param BP_Activity_Activity $activity Activity Object.
+ */
+function bb_gif_activity_after_email_content( $activity ) {
+	$gif_ids = bp_activity_get_meta( $activity->id, '_gif_data', true );
+
+	if ( ! empty( $gif_ids ) ) {
+		$content = sprintf(
+		/* translator: 1. Activity link, 2. gif text */
+			'<a href="%1$s" target="_blank">%2$s</a>',
+			bp_activity_get_permalink( $activity->id ),
+			esc_html__( 'Sent you a gif', 'buddyboss' )
+		);
+		echo wpautop( $content );
+	}
+}

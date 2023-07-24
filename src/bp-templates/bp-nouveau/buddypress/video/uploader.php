@@ -114,7 +114,7 @@
 					<footer class="bb-model-footer video-uploader-footer">
 						<a href="#" class="bp-video-open-create-popup-album" style="display: none;">
 							<i class="bb-icon-l bb-icon-plus"></i>
-							Create new album
+							<?php esc_html_e( 'Create new album', 'buddyboss' ); ?>
 						</a>
 
 						<?php if ( ! bp_is_group() && ! bp_is_single_album() ) : ?>

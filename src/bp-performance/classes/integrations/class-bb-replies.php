@@ -43,6 +43,8 @@ class BB_Replies extends Integration_Abstract {
 			// Added moderation support.
 			'bp_suspend_forum_reply_suspended',   // Any Forum Reply Suspended.
 			'bp_suspend_forum_reply_unsuspended', // Any Forum Reply Unsuspended.
+			'bp_moderation_after_save',           // Hide forum reply when member blocked.
+			'bb_moderation_after_delete'          // Unhide forum reply when member unblocked.
 		);
 
 		$this->purge_event( 'bbp-replies', $purge_events );
@@ -68,6 +70,8 @@ class BB_Replies extends Integration_Abstract {
 			// Added moderation support.
 			'bp_suspend_forum_reply_suspended'   => 1, // Any Forum Reply Suspended.
 			'bp_suspend_forum_reply_unsuspended' => 1, // Any Forum Reply Unsuspended.
+			'bp_moderation_after_save'           => 1, // Any Forum Reply Suspended.
+			'bb_moderation_after_delete'         => 1, // Any Forum Reply Unsuspended.
 
 			// Add Author Embed Support.
 			'profile_update'                     => 1, // User updated on site.
@@ -234,6 +238,40 @@ class BB_Replies extends Integration_Abstract {
 	 */
 	public function event_bp_suspend_forum_reply_unsuspended( $reply_id ) {
 		$this->purge_item_cache_by_item_id( $reply_id );
+	}
+
+	/**
+	 * Update cache for replies when member blocked.
+	 *
+	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 */
+	public function event_bp_moderation_after_save( $bp_moderation ) {
+		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
+			return;
+		}
+		$replies_ids = $this->get_reply_ids_by_userid( $bp_moderation->item_id );
+		if ( ! empty( $replies_ids ) ) {
+			foreach ( $replies_ids as $reply_id ) {
+				$this->purge_item_cache_by_item_id( $reply_id );
+			}
+		}
+	}
+
+	/**
+	 * Update cache for replies when member unblocked.
+	 *
+	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 */
+	public function event_bb_moderation_after_delete( $bp_moderation ) {
+		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
+			return;
+		}
+		$replies_ids = $this->get_reply_ids_by_userid( $bp_moderation->item_id );
+		if ( ! empty( $replies_ids ) ) {
+			foreach ( $replies_ids as $reply_id ) {
+				$this->purge_item_cache_by_item_id( $reply_id );
+			}
+		}
 	}
 
 	/****************************** Author Embed Support *****************************/
