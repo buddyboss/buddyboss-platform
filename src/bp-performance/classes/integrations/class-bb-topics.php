@@ -40,10 +40,12 @@ class BB_Topics extends Integration_Abstract {
 			'bbp_post_split_topic', // When topic split.
 
 			// Added moderation support.
-			'bp_suspend_forum_topic_suspended', // Any Forum Topic Suspended.
-			'bp_suspend_forum_topic_unsuspended', // Any Forum Topic Unsuspended.
-			'bp_suspend_forum_reply_suspended', // Any Forum Reply Suspended.
-			'bp_suspend_forum_reply_unsuspended', // Any Forum Reply Unsuspended.
+			'bp_suspend_forum_topic_suspended',     // Any Forum Topic Suspended.
+			'bp_suspend_forum_topic_unsuspended',   // Any Forum Topic Unsuspended.
+			'bp_suspend_forum_reply_suspended',     // Any Forum Reply Suspended.
+			'bp_suspend_forum_reply_unsuspended',   // Any Forum Reply Unsuspended.
+			'bp_moderation_after_save',             // Update cache for topics when member blocked.
+			'bb_moderation_after_delete'            // Update cache for topics when member unblocked.
 		);
 
 		$this->purge_event( 'bbp-topics', $purge_events );
@@ -81,6 +83,8 @@ class BB_Topics extends Integration_Abstract {
 			'bp_suspend_forum_topic_unsuspended' => 1, // Any Forum Topic Unsuspended.
 			'bp_suspend_forum_reply_suspended'   => 1, // Any Forum Reply Suspended.
 			'bp_suspend_forum_reply_unsuspended' => 1, // Any Forum Reply Unsuspended.
+			'bp_moderation_after_save'           => 1, // Update cache for topics when member blocked.
+			'bb_moderation_after_delete'         => 1, // Update cache for topics when member unblocked.
 
 			// Add Author Embed Support.
 			'profile_update'                     => 1, // User updated on site.
@@ -392,6 +396,44 @@ class BB_Topics extends Integration_Abstract {
 	public function event_bp_suspend_forum_reply_unsuspended( $reply_id ) {
 		$topic_id = bbp_get_reply_topic_id( $reply_id );
 		$this->purge_item_cache_by_item_id( $topic_id );
+	}
+
+	/**
+	 * Update cache for topics when member blocked.
+	 *
+	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 */
+	public function event_bp_moderation_after_save( $bp_moderation ) {
+		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
+			return;
+		}
+		$topic_ids = $this->get_topic_ids_by_userid( $bp_moderation->item_id );
+		if ( ! empty( $topic_ids ) ) {
+			foreach ( $topic_ids as $topic_id ) {
+				$this->purge_item_cache_by_item_id( $topic_id );
+			}
+
+			$this->purge_subscription_cache_by_items( $topic_ids );
+		}
+	}
+
+	/**
+	 * Update cache for topics when member unblocked.
+	 *
+	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 */
+	public function event_bb_moderation_after_delete( $bp_moderation ) {
+		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
+			return;
+		}
+		$topic_ids = $this->get_topic_ids_by_userid( $bp_moderation->item_id );
+		if ( ! empty( $topic_ids ) ) {
+			foreach ( $topic_ids as $topic_id ) {
+				$this->purge_item_cache_by_item_id( $topic_id );
+			}
+
+			$this->purge_subscription_cache_by_items( $topic_ids );
+		}
 	}
 
 	/****************************** Author Embed Support *****************************/

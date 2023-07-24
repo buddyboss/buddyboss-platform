@@ -1266,6 +1266,8 @@ function bp_document_delete_orphaned_attachments() {
 
 	add_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10, 2 );
 	add_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10, 2 );
+
+	bb_document_remove_orphaned_download();
 }
 
 /**
@@ -5006,4 +5008,36 @@ function bp_document_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
 	}
 
 	return apply_filters( 'bp_document_query_privacy', $privacy, $user_id, $group_id, $scope );
+}
+
+/**
+ * Function to delete the temporary download folder which create while downloding the document directory.
+ *
+ * @since BuddyBoss 2.3.80
+ *
+ * @return void
+ */
+function bb_document_remove_orphaned_download() {
+	if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+	}
+
+	$wp_files_system = new \WP_Filesystem_Direct( array() );
+
+	$six_hours_ago = time() - ( HOUR_IN_SECONDS * 6 ); // Get the timestamp 6 hours ago.
+	$uploadDir     = wp_upload_dir(); // Get the path to the upload directory.
+	$dir           = $uploadDir['basedir']; // Get the base directory path.
+
+	// Get all the subdirectories in the upload directory.
+	$folders = glob( $dir . '/*', GLOB_ONLYDIR );
+
+	foreach ( $folders as $folder ) {
+		$folder_timestamp = filemtime( $folder );
+
+		// If the folder is older than 6 hours and contains "-download-folder-" in the name, print it.
+		if ( $folder_timestamp < $six_hours_ago && stristr( $folder, '-download-folder-' ) !== false ) {
+			$wp_files_system->delete( $folder, true );
+		}
+	}
 }
