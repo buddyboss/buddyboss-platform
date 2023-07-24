@@ -73,6 +73,11 @@ class BB_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 
 		$url = $request->get_param( 'url' );
 
+		$parsed_url = wp_parse_url( $url );
+		if ( ! $parsed_url || empty( $parsed_url['host'] ) ) {
+			$url = 'http://' . $url;
+		}
+
 		if ( ! wp_http_validate_url( $url ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_url',
