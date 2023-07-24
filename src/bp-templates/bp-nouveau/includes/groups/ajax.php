@@ -1176,7 +1176,12 @@ function bp_nouveau_ajax_groups_send_message() {
 			if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
 				if ( ! bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) ) {
 					foreach ( $members as $f => $member ) {
-						if ( ! bb_messages_allowed_messaging_without_connection( $member ) ) {
+						if (
+							! ( 
+								bb_messages_allowed_messaging_without_connection( $member ) ||
+								friends_check_friendship( bp_loggedin_user_id(), $member )
+							)
+						) {
 							unset( $members[ $f ] );
 						}
 					}
@@ -1208,7 +1213,12 @@ function bp_nouveau_ajax_groups_send_message() {
 		if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
 				if ( ! bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) ) {
 					foreach ( $members as $f => $member ) {
-						if ( ! bb_messages_allowed_messaging_without_connection( $member ) ) {
+						if (
+							! ( 
+								bb_messages_allowed_messaging_without_connection( $member ) ||
+								friends_check_friendship( bp_loggedin_user_id(), $member )
+							)
+						) {
 							$not_friends[] = bp_core_get_user_displayname( $member );
 						}
 					}
