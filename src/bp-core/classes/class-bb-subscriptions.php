@@ -888,10 +888,10 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 
 			if ( is_multisite() ) {
 				switch_to_blog( 1 );
-				$subscription_tbl = $wpdb->prefix . 'bb_notifications_subscriptions';
+				$subscription_tbl = $wpdb->base_prefix . 'bb_notifications_subscriptions';
 				restore_current_blog();
 			} else {
-				$subscription_tbl = $wpdb->prefix . 'bb_notifications_subscriptions';
+				$subscription_tbl = $wpdb->base_prefix . 'bb_notifications_subscriptions';
 			}
 
 			return $subscription_tbl;
