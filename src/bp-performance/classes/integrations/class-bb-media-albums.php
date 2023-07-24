@@ -41,6 +41,8 @@ class BB_Media_Albums extends Integration_Abstract {
 			'bp_suspend_media_unsuspended',       // Any Media Unsuspended.
 			'bp_suspend_media_album_suspended',   // Any Media Album Suspended.
 			'bp_suspend_media_album_unsuspended', // Any Media Album Unsuspended.
+			'bp_moderation_after_save',           // Hide media album when member blocked.
+			'bb_moderation_after_delete'          // Unhide media album when member unblocked.
 		);
 
 		$this->purge_event( 'bp-media-albums', $purge_events );
@@ -49,18 +51,18 @@ class BB_Media_Albums extends Integration_Abstract {
 		 * Support for single items purge
 		 */
 		$purge_single_events = array(
-			'bp_media_album_after_save'   => 1, // Any Media Album add.
-			'bp_media_album_after_delete' => 1, // Any Media Album deleted.
-			'bp_video_album_after_save'   => 1, // Any Video Album add.
-			'bp_video_album_after_delete' => 1, // Any Video Album deleted.
+			'bp_media_album_after_save'          => 1, // Any Media Album add.
+			'bp_media_album_after_delete'        => 1, // Any Media Album deleted.
+			'bp_video_album_after_save'          => 1, // Any Video Album add.
+			'bp_video_album_after_delete'        => 1, // Any Video Album deleted.
 
 			'bp_media_add'                       => 1, // Any Media Photo add.
 			'bp_media_after_save'                => 1, // Any Media Photo updated.
 			'bp_media_before_delete'             => 1, // Any Media Photos deleted.
 
-			'bp_video_add'           => 1, // Any Video File add.
-			'bp_video_after_save'    => 1, // Any Video File updated.
-			'bp_video_before_delete' => 1, // Any Video File deleted.
+			'bp_video_add'                       => 1, // Any Video File add.
+			'bp_video_after_save'                => 1, // Any Video File updated.
+			'bp_video_before_delete'             => 1, // Any Video File deleted.
 
 			// Media group information update support.
 			'groups_update_group'                => 1,   // When Group Details updated.
@@ -72,6 +74,8 @@ class BB_Media_Albums extends Integration_Abstract {
 			'bp_suspend_media_unsuspended'       => 1, // Any Media Unsuspended.
 			'bp_suspend_media_album_suspended'   => 1, // Any Media Album Suspended.
 			'bp_suspend_media_album_unsuspended' => 1, // Any Media Album Unsuspended.
+			'bp_moderation_after_save'           => 1, // Hide media album when member blocked.
+			'bb_moderation_after_delete'         => 1, // Unhide media album when member unblocked.
 
 			// Add Author Embed Support.
 			'profile_update'                     => 1, // User updated on site.
@@ -324,6 +328,40 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	public function event_bp_suspend_media_album_unsuspended( $album_id ) {
 		Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
+	}
+
+	/**
+	 * Update cache for media album when member blocked.
+	 *
+	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 */
+	public function event_bp_moderation_after_save( $bp_moderation ) {
+		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
+			return;
+		}
+		$album_ids = $this->get_album_ids_by_user_id( $bp_moderation->item_id );
+		if ( ! empty( $album_ids ) ) {
+			foreach ( $album_ids as $album_id ) {
+				Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
+			}
+		}
+	}
+
+	/**
+	 * Update cache for media album when member unblocked.
+	 *
+	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 */
+	public function event_bb_moderation_after_delete( $bp_moderation ) {
+		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
+			return;
+		}
+		$album_ids = $this->get_album_ids_by_user_id( $bp_moderation->item_id );
+		if ( ! empty( $album_ids ) ) {
+			foreach ( $album_ids as $album_id ) {
+				Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
+			}
+		}
 	}
 
 	/****************************** Author Embed Support *****************************/

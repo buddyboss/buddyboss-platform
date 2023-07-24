@@ -39,10 +39,12 @@ class BB_Documents extends Integration_Abstract {
 			'bp_document_folder_before_delete', // Any Document Folder delete.
 
 			// Added moderation support.
-			'bp_suspend_document_suspended',          // Any Document Suspended.
-			'bp_suspend_document_unsuspended',        // Any Document Unsuspended.
-			'bp_suspend_document_folder_suspended',   // Any Document Folder Suspended.
-			'bp_suspend_document_folder_unsuspended', // Any Document Folder Unsuspended.
+			'bp_suspend_document_suspended',            // Any Document Suspended.
+			'bp_suspend_document_unsuspended',          // Any Document Unsuspended.
+			'bp_suspend_document_folder_suspended',     // Any Document Folder Suspended.
+			'bp_suspend_document_folder_unsuspended',   // Any Document Folder Unsuspended.
+			'bp_moderation_after_save',                 // Hide document when member blocked.
+			'bb_moderation_after_delete'                // Unhide document when member unblocked.
 		);
 
 		$this->purge_event( 'bp-document', $purge_events );
@@ -72,6 +74,8 @@ class BB_Documents extends Integration_Abstract {
 			'bp_suspend_document_unsuspended'        => 1, // Any Document Unsuspended.
 			'bp_suspend_document_folder_suspended'   => 1, // Any Document Folder Suspended.
 			'bp_suspend_document_folder_unsuspended' => 1, // Any Document Folder Unsuspended.
+			'bp_moderation_after_save'               => 1, // Hide document when member blocked.
+			'bb_moderation_after_delete'             => 1, // Unhide document when member unblocked.
 
 			// Add Author Embed Support.
 			'profile_update'                         => 1, // User updated on site.
@@ -329,6 +333,40 @@ class BB_Documents extends Integration_Abstract {
 	 */
 	public function event_bp_suspend_document_folder_unsuspended( $folder_id ) {
 		Cache::instance()->purge_by_group( 'bp-document_folder_' . $folder_id );
+	}
+
+	/**
+	 * Update cache for document when member blocked.
+	 *
+	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 */
+	public function event_bp_moderation_after_save( $bp_moderation ) {
+		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
+			return;
+		}
+		$document_ids = $this->get_document_ids_by_user_id( $bp_moderation->item_id );
+		if ( ! empty( $document_ids ) ) {
+			foreach ( $document_ids as $document_id ) {
+				Cache::instance()->purge_by_group( 'bp-document_document_' . $document_id );
+			}
+		}
+	}
+
+	/**
+	 * Update cache for document when member unblocked.
+	 *
+	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 */
+	public function event_bb_moderation_after_delete( $bp_moderation ) {
+		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
+			return;
+		}
+		$document_ids = $this->get_document_ids_by_user_id( $bp_moderation->item_id );
+		if ( ! empty( $document_ids ) ) {
+			foreach ( $document_ids as $document_id ) {
+				Cache::instance()->purge_by_group( 'bp-document_document_' . $document_id );
+			}
+		}
 	}
 
 	/****************************** Author Embed Support *****************************/
