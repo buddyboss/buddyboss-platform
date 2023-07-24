@@ -5338,6 +5338,7 @@ function bb_get_user_by_profile_slug( $profile_slug ) {
 
 	if ( ! isset( $cache[ $cache_key ] ) ) {
 		global $wpdb;
+		$bp_prefix = bp_core_get_table_prefix();
 
 		// Backward compatible to check 40 characters long unique slug or new slug as well.
 		$user_query = $wpdb->prepare(
@@ -5525,6 +5526,7 @@ function bb_generate_user_random_profile_slugs( $max_ids = 1 ) {
  */
 function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 ) {
 	global $wpdb;
+	$bp_prefix = bp_core_get_table_prefix();
 
 	if ( is_array( $unique_identifier ) ) {
 		$unique_identifier = '"' . implode( '","', $unique_identifier ) . '"';
