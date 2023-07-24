@@ -255,11 +255,35 @@ function bp_activity_check_blacklist_keys( $activity ) {
 function bp_activity_save_link_data( $activity ) {
 
 	// bail if the request is for privacy update.
-	if ( isset( $_POST['action'] ) && $_POST['action'] === 'activity_update_privacy' ) {
+	if ( 
+		isset( $_POST['action'] ) && 
+		in_array(
+			$_POST['action'], // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			array(
+				'activity_update_privacy',
+				'bbp-new-topic',
+				'bbp-new-reply',
+				'bbp-edit-topic',
+				'bbp-edit-reply',
+			),
+			true
+		)
+	) {
 		return;
 	}
 
-	$link_url   = ! empty( $_POST['link_url'] ) ? filter_var( $_POST['link_url'], FILTER_VALIDATE_URL ) : '';
+	// Check if link_url is missing http protocol then update it.
+	$link_url = '';
+	if ( ! empty( $_POST['link_url'] ) ) {
+		$parsed_url = wp_parse_url( $_POST['link_url'] );
+		if ( ! $parsed_url || empty( $parsed_url['host'] ) ) {
+			$link_url = 'http://' . $_POST['link_url'];
+		} else {
+			$link_url = $_POST['link_url'];
+		}
+	}
+
+	$link_url   = ! empty( $link_url ) ? filter_var( $link_url, FILTER_VALIDATE_URL ) : '';
 	$link_embed = isset( $_POST['link_embed'] ) ? filter_var( $_POST['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false;
 
 	// Check if link url is set or not.
@@ -286,13 +310,17 @@ function bp_activity_save_link_data( $activity ) {
 	// Check if link embed was used.
 	if ( true === $link_embed && ! empty( $link_url ) ) {
 		bp_activity_update_meta( $activity->id, '_link_embed', $link_url );
+		bp_activity_update_meta( $activity->id, '_link_preview_data', '' );
+
 		return;
+	} else {
+		bp_activity_update_meta( $activity->id, '_link_embed', '0' );
 	}
 
 	$preview_data['url'] = $link_url;
 
 	if ( ! empty( $link_image ) ) {
-		$attachment_id = bp_activity_media_sideload_attachment( $link_image );
+		$attachment_id = bb_media_sideload_attachment( $link_image );
 		if ( $attachment_id ) {
 			$preview_data['attachment_id'] = $attachment_id;
 		} else {
@@ -412,8 +440,9 @@ function bp_activity_at_name_filter( $content, $activity_id = 0 ) {
 		preg_match_all( '/(<a.*?(?!<\/a>)@' . $username . '.*?<\/a>)/', $content, $content_matches );
 		if ( ! empty( $content_matches[1] ) ) {
 			foreach ( $content_matches[1] as $replacement ) {
-				$replacements[ '#BPAN' . $replace_count ] = $replacement;
-				$content                                  = str_replace( $replacement, '#BPAN' . $replace_count, $content );
+				$unique_index                  = '#BPAN' . $replace_count . '#';
+				$replacements[ $unique_index ] = $replacement;
+				$content                       = str_replace( $replacement, $unique_index, $content );
 				$replace_count++;
 			}
 		}
@@ -3230,12 +3259,6 @@ function bb_activity_send_email_to_following_post( $content, $user_id, $activity
 		return;
 	}
 
-	$follower_users = bp_get_followers( array( 'user_id' => bp_loggedin_user_id() ) );
-	if ( empty( $follower_users ) ) {
-		return;
-	}
-
-	$min_count  = (int) apply_filters( 'bb_following_queue_min_count', 20 );
 	$usernames  = bp_activity_do_mentions() ? bp_activity_find_mentions( $content ) : array();
 	$parse_args = array(
 		'activity'  => $activity,
@@ -3243,33 +3266,8 @@ function bb_activity_send_email_to_following_post( $content, $user_id, $activity
 		'item_id'   => $user_id,
 	);
 
-	if ( $min_count && count( $follower_users ) > $min_count ) {
-		global $bp_background_updater;
-		$chunk_user_ids = array_chunk( $follower_users, $min_count );
-		if ( ! empty( $chunk_user_ids ) ) {
-			foreach ( $chunk_user_ids as $key => $user_ids ) {
-				$parse_args['user_ids'] = $user_ids;
-				$bp_background_updater->data(
-					array(
-						array(
-							'callback' => 'bb_activity_following_post_notification',
-							'args'     => array( $parse_args ),
-						),
-					)
-				);
-
-				$bp_background_updater->save();
-			}
-		}
-
-		$bp_background_updater->dispatch();
-	} else {
-		$parse_args['user_ids'] = $follower_users;
-		call_user_func(
-			'bb_activity_following_post_notification',
-			$parse_args
-		);
-	}
+	// Send notification to followers.
+	bb_activity_create_following_post_notification( $parse_args );
 }
 
 add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );

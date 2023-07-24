@@ -254,6 +254,10 @@
 				word-break: break-word;
 			}
 
+			iframe {
+				max-width: 100%;
+			}
+
 			p:empty {
 				min-height: 1em;
 			}
@@ -969,7 +973,7 @@ ul.medium-editor-toolbar-actions {
 					border-radius: 50%;
 					text-decoration: none;
 					transition: all linear 0.2s;
-					box-shadow: 0 1px 1.5px rgba(0, 0, 0, 0.08) !important;
+					box-shadow: 0 1px 1.5px rgba(0, 0, 0, 0.08);
 					display: flex;
 					height: 35px;
 					width: 35px;
@@ -1038,7 +1042,7 @@ ul.medium-editor-toolbar-actions {
 	&.activity-post-form-link-wp-embed {
 
 		.activity-link-preview-excerpt > .twitter-tweet {
-			margin: 0 auto !important;
+			margin: 0 auto !important; // To override twitter iframe inline-style
 		}
 
 	}
@@ -1163,7 +1167,7 @@ ul.medium-editor-toolbar-actions {
 	}
 
 	a.activity-link-preview-more:hover {
-		text-decoration: underline !important;
+		text-decoration: underline;
 	}
 }
 
@@ -1265,7 +1269,7 @@ ul.medium-editor-toolbar-actions {
 	border-radius: 50%;
 	text-decoration: none;
 	transition: all linear 0.2s;
-	box-shadow: 0 1px 1.5px rgba(0, 0, 0, 0.08) !important;
+	box-shadow: 0 1px 1.5px rgba(0, 0, 0, 0.08);
 	height: 35px;
 	width: 35px;
 	display: flex;
@@ -2307,7 +2311,7 @@ span.dashicons.dashicons-admin-file:before {
 							color: #7f868f;
 
 							&:hover {
-								background-color: #f5f5f5 !important;
+								background-color: #f5f5f5;
 								color: $blue;
 							}
 

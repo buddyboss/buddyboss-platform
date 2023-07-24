@@ -970,6 +970,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 * @return array
 	 */
 	public function bb_render_subscribed_groups( $items ) {
+		static $cached_items = array();
+
 		$type_data = bb_register_subscriptions_types( 'group' );
 
 		if ( ! empty( $items ) ) {
@@ -998,6 +1000,11 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					empty( $subscription['id'] ) ||
 					empty( $subscription['item_id'] )
 				) {
+					continue;
+				}
+
+				if ( ! empty( $cached_items[ $subscription['id'] ] ) ) {
+					$items[ $item_key ] = $cached_items[ $subscription['id'] ];
 					continue;
 				}
 
@@ -1055,7 +1062,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				);
 
 				// Reassign the extra data to exist object.
-				$items[ $item_key ] = (object) array_merge( (array) $item, $data );
+				$items[ $item_key ]                  = (object) array_merge( (array) $item, $data );
+				$cached_items[ $subscription['id'] ] = $items[ $item_key ];
 			}
 
 			// Restore current blog.
