@@ -526,7 +526,7 @@ function bbp_template_include_theme_compat( $template = '' ) {
 
 			// ...or use the existing page title?
 		} else {
-			$new_title = apply_filters( 'the_title', $page->post_title );
+			$new_title = apply_filters( 'the_title', $page->post_title, $page->ID );
 		}
 
 		// Reset post
@@ -602,7 +602,7 @@ function bbp_template_include_theme_compat( $template = '' ) {
 
 			// ...or use the existing page title?
 		} else {
-			$new_title = apply_filters( 'the_title', $page->post_title );
+			$new_title = apply_filters( 'the_title', $page->post_title, $page->ID );
 		}
 
 		// Reset post
