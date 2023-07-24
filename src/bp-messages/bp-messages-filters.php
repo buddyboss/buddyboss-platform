@@ -1134,6 +1134,7 @@ add_action( 'bp_init', 'bb_schedule_event_on_update_notification_settings', 2 );
  */
 function bb_digest_message_email_notifications() {
 	global $wpdb;
+	$bp_prefix = bp_core_get_table_prefix();
 
 	// Get all defined time.
 	$db_delay_time = bb_get_delay_email_notifications_time();
@@ -1148,7 +1149,7 @@ function bb_digest_message_email_notifications() {
 
 			$results = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT m.*, r.user_id, r.unread_count FROM `{$wpdb->prefix}bp_messages_messages` AS m LEFT JOIN `{$wpdb->prefix}bp_messages_recipients` AS r ON m.thread_id = r.thread_id LEFT JOIN `{$wpdb->prefix}bp_messages_meta` AS meta1 ON ( m.id = meta1.message_id AND meta1.meta_key = 'bb_sent_digest_email' ) WHERE m.date_sent >= %s AND m.date_sent <= %s AND r.unread_count > %d AND r.is_deleted = %d AND m.sender_id != r.user_id AND r.is_hidden = %d AND meta1.message_id IS NULL ORDER BY m.thread_id, m.id ASC",
+					"SELECT m.*, r.user_id, r.unread_count FROM `{$bp_prefix}bp_messages_messages` AS m LEFT JOIN `{$bp_prefix}bp_messages_recipients` AS r ON m.thread_id = r.thread_id LEFT JOIN `{$bp_prefix}bp_messages_meta` AS meta1 ON ( m.id = meta1.message_id AND meta1.meta_key = 'bb_sent_digest_email' ) WHERE m.date_sent >= %s AND m.date_sent <= %s AND r.unread_count > %d AND r.is_deleted = %d AND m.sender_id != r.user_id AND r.is_hidden = %d AND meta1.message_id IS NULL ORDER BY m.thread_id, m.id ASC",
 					$start_date,
 					$current_date,
 					0,
@@ -1248,6 +1249,7 @@ add_action( 'bb_digest_email_notifications_hook', 'bb_digest_message_email_notif
  */
 function bb_recipients_recipient_get_join_sql_with_group_members( $sql, $r ) {
 	global $wpdb;
-	$sql .= ' JOIN ' . $wpdb->prefix . 'bp_groups_members gm ON ( gm.user_id = r.user_id )';
+	$sql .= ' JOIN ' . $wpdb->base_prefix . 'bp_groups_members gm ON ( gm.user_id = r.user_id )';
 	return $sql;
 }
+

@@ -56,7 +56,7 @@
 						var domainName = hostname.replace('www.', '' );
 					%>
 
-					<% if ( link_title.trim() && link_description ) { %>
+					<% if ( 'undefined' !== typeof link_title && link_title.trim() && link_description ) { %>
 						<p class="bb-link-preview-link-name"><%= domainName %></p>
 					<% } %>
 
