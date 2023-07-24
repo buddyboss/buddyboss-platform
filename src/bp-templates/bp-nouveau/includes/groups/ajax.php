@@ -1202,8 +1202,9 @@ function bp_nouveau_ajax_groups_send_message() {
 			if ( ! $can_send_group_message ) {
 				$not_access_list[] = bp_core_get_user_displayname( $member );
 			}
+		}
 
-			if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
+		if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
 				if ( ! bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) ) {
 					foreach ( $members as $f => $member ) {
 						if ( ! bb_messages_allowed_messaging_without_connection( $member ) ) {
@@ -1212,7 +1213,6 @@ function bp_nouveau_ajax_groups_send_message() {
 					}
 				}
 			}
-		}
 
 		if ( ! empty( $not_access_list ) ) {
 			$response['feedback'] = sprintf(
