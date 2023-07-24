@@ -41,6 +41,9 @@ class BB_Activity extends Integration_Abstract {
 			'bp_suspend_activity_comment_suspended',   // Any Activity Comment Suspended.
 			'bp_suspend_activity_unsuspended',         // Any Activity Unsuspended.
 			'bp_suspend_activity_comment_unsuspended', // Any Activity Comment Unsuspended.
+
+			'bp_moderation_after_save',     // Hide activity when member blocked.
+			'bb_moderation_after_delete'    // Unhide activity when member unblocked.
 		);
 
 		$this->purge_event( 'bp-activity', $purge_events );
@@ -68,6 +71,9 @@ class BB_Activity extends Integration_Abstract {
 			'bp_suspend_activity_comment_suspended'   => 1, // Any Activity Comment Suspended.
 			'bp_suspend_activity_unsuspended'         => 1, // Any Activity Unsuspended.
 			'bp_suspend_activity_comment_unsuspended' => 1, // Any Activity Comment Unsuspended.
+
+			'bp_moderation_after_save'                => 1, // Hide activity when member blocked.
+			'bb_moderation_after_delete'              => 1, // Unhide activity when member unblocked.
 
 			// Add Author Embed Support.
 			'profile_update'                          => 1, // User updated on site.
@@ -200,6 +206,40 @@ class BB_Activity extends Integration_Abstract {
 	 */
 	public function event_bp_suspend_activity_comment_unsuspended( $activity_id ) {
 		$this->purge_item_cache_by_item_id( $activity_id );
+	}
+
+	/**
+	 * Update cache for activity when member blocked.
+	 *
+	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 */
+	public function event_bp_moderation_after_save( $bp_moderation ) {
+		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
+			return;
+		}
+		$activity_ids = $this->get_activity_ids_by_userid( $bp_moderation->item_id );
+		if ( ! empty( $activity_ids ) ) {
+			foreach ( $activity_ids as $activity_id ) {
+				$this->purge_item_cache_by_item_id( $activity_id );
+			}
+		}
+	}
+
+	/**
+	 * Update cache for activity when member unblocked.
+	 *
+	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 */
+	public function event_bb_moderation_after_delete( $bp_moderation ) {
+		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
+			return;
+		}
+		$activity_ids = $this->get_activity_ids_by_userid( $bp_moderation->item_id );
+		if ( ! empty( $activity_ids ) ) {
+			foreach ( $activity_ids as $activity_id ) {
+				$this->purge_item_cache_by_item_id( $activity_id );
+			}
+		}
 	}
 
 	/****************************** Author Embed Support *****************************/
