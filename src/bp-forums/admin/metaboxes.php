@@ -661,7 +661,7 @@ function bbp_filter_dashboard_glance_items( $elements = array() ) {
 		 	),
 			admin_url( 'edit.php' )
 		);
-		$text       = sprintf( _n( '%s Topic', '%s Topics', $r['topic_count_int'], 'buddyboss' ), $r['topic_count'] );
+		$text       = sprintf( _n( '%s Discussion', '%s Discussions', $r['topic_count_int'], 'buddyboss' ), $r['topic_count'] );
 		$elements[] = current_user_can( 'publish_topics' )
 			? '<a href="' . esc_url( $link ) . '" class="bbp-glance-topics">' . esc_html( $text ) . '</a>'
 			: esc_html( $text );
@@ -690,7 +690,7 @@ function bbp_filter_dashboard_glance_items( $elements = array() ) {
 			),
 			admin_url( 'edit-tags.php' )
 		);
-		$text       = sprintf( _n( '%s Topic Tag', '%s Topic Tags', $r['topic_tag_count_int'], 'buddyboss' ), $r['topic_tag_count'] );
+		$text       = sprintf( _n( '%s Discussion Tag', '%s Discussion Tags', $r['topic_tag_count_int'], 'buddyboss' ), $r['topic_tag_count'] );
 		$elements[] = current_user_can( 'manage_topic_tags' )
 			? '<a href="' . esc_url( $link ) . '" class="bbp-glance-topic-tags">' . esc_html( $text ) . '</a>'
 			: esc_html( $text );
