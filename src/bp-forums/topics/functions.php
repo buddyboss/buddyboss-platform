@@ -2685,18 +2685,14 @@ function bbp_update_topic_reply_count( $topic_id = 0, $reply_count = 0 ) {
 function bbp_update_topic_reply_count_hidden( $topic_id = 0, $reply_count = 0 ) {
 
 	// If it's a reply, then get the parent (topic id).
-	if ( bbp_is_reply( $topic_id ) ) {
-		$topic_id = bbp_get_reply_topic_id( $topic_id );
-	} else {
-		$topic_id = bbp_get_topic_id( $topic_id );
-	}
+	$topic_id = bbp_is_reply( $topic_id )
+		? bbp_get_reply_topic_id( $topic_id )
+		: bbp_get_topic_id( $topic_id );
 
 	// Get replies of topic.
-	if ( empty( $reply_count ) ) {
-		$bbp_db      = bbp_db();
-		$post_status = "'" . implode( "','", array( bbp_get_trash_status_id(), bbp_get_spam_status_id() ) ) . "'";
-		$reply_count = $bbp_db->get_var( $bbp_db->prepare( "SELECT COUNT(ID) FROM {$bbp_db->posts} WHERE post_parent = %d AND post_status IN ( {$post_status} ) AND post_type = '%s';", $topic_id, bbp_get_reply_post_type() ) );
-	}
+	$reply_count = ! is_int( $reply_count )
+		? bbp_get_non_public_child_count( $topic_id, bbp_get_reply_post_type() )
+		: (int) $reply_count;
 
 	update_post_meta( $topic_id, '_bbp_reply_count_hidden', (int) $reply_count );
 
@@ -3952,4 +3948,41 @@ function bb_is_group_forum_topic( $topic_id ) {
 	$forum_id = bbp_get_topic_forum_id( $topic_id );
 
 	return (bool) apply_filters( 'bb_is_group_forum_topic', bbp_is_forum_group_forum( $forum_id ), $topic_id );
+}
+
+/**
+ * Return array of public reply statuses.
+ *
+ * @since bbPress 2.6.0 (r6383)
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bbp_get_public_topic_statuses() {
+	$statuses = array(
+		bbp_get_public_status_id(),
+		bbp_get_closed_status_id()
+	);
+
+	// Filter & return
+	return (array) apply_filters( 'bbp_get_public_topic_statuses', $statuses );
+}
+
+/**
+ * Return array of non-public topic statuses.
+ *
+ * @since bbPress 2.6.0 (r6642)
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bbp_get_non_public_topic_statuses() {
+	$statuses = array(
+		bbp_get_trash_status_id(),
+		bbp_get_spam_status_id(),
+		bbp_get_pending_status_id()
+	);
+
+	// Filter & return
+	return (array) apply_filters( 'bbp_get_non_public_topic_statuses', $statuses );
 }

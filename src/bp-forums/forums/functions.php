@@ -1568,11 +1568,28 @@ function bbp_update_forum_topic_count_hidden( $forum_id = 0, $topic_count = 0 ) 
 	if ( ! empty( $forum_id ) ) {
 
 		// Get topics of forum
-		if ( empty( $topic_count ) ) {
-			$bbp_db      = bbp_db();
-			$post_status = "'" . implode( "','", array( bbp_get_trash_status_id(), bbp_get_spam_status_id() ) ) . "'";
-			$topic_count = $bbp_db->get_var( $bbp_db->prepare( "SELECT COUNT(ID) FROM {$bbp_db->posts} WHERE post_parent = %d AND post_status IN ( {$post_status} ) AND post_type = '%s';", $forum_id, bbp_get_topic_post_type() ) );
+
+		if ( ! is_int( $topic_count ) ) {
+			$query = new WP_Query( array(
+				'fields'         => 'ids',
+				'post_parent'    => $forum_id,
+				'post_status'    => bbp_get_non_public_topic_statuses(),
+				'post_type'      => bbp_get_topic_post_type(),
+				'posts_per_page' => -1,
+
+				// Performance
+				'nopaging'               => true,
+				'suppress_filters'       => true,
+				'update_post_term_cache' => false,
+				'update_post_meta_cache' => false,
+				'ignore_sticky_posts'    => true,
+				'no_found_rows'          => true
+			) );
+			$topic_count = $query->post_count;
+			unset( $query );
 		}
+
+		$topic_count = (int) $topic_count;
 
 		// Update the count
 		update_post_meta( $forum_id, '_bbp_topic_count_hidden', (int) $topic_count );
@@ -2652,4 +2669,39 @@ function bb_get_all_nested_subforums( $forum_id ) {
 	}
 
 	return array_merge( $retval, $sub_forums );
+}
+
+/**
+ * Return array of public forum statuses.
+ *
+ * @since bbPress 2.6.0 (r6921)
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bbp_get_public_forum_statuses() {
+	$statuses = array(
+		bbp_get_public_status_id()
+	);
+
+	// Filter & return
+	return (array) apply_filters( 'bbp_get_public_forum_statuses', $statuses );
+}
+
+/**
+ * Return array of non-public forum statuses.
+ *
+ * @since bbPress 2.6.0 (r6921)
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bbp_get_non_public_forum_statuses() {
+	$statuses = array(
+		bbp_get_private_status_id(),
+		bbp_get_hidden_status_id()
+	);
+
+	// Filter & return
+	return (array) apply_filters( 'bbp_get_non_public_forum_statuses', $statuses );
 }

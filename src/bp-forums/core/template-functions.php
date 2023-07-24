@@ -625,8 +625,8 @@ function bbp_parse_query( $posts_query ) {
 		// Check if the view exists by checking if there are query args are set
 		$view_args = bbp_get_view_query_args( $bbp_view );
 
-		// Bail if view args is false (view isn't registered)
-		if ( false === $view_args ) {
+		// Bail if view args are empty
+		if ( empty( $view_args ) ) {
 			$posts_query->set_404();
 			return;
 		}

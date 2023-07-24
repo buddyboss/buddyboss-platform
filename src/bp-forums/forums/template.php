@@ -1530,31 +1530,29 @@ function bbp_get_forum_topics_link( $forum_id = 0 ) {
 	$forum_id = $forum->ID;
 	$topics   = sprintf( _n( '%s discussion', '%s discussions', bbp_get_forum_topic_count( $forum_id, true, false ), 'buddyboss' ), bbp_get_forum_topic_count( $forum_id ) );
 	$retval   = '';
+	$link     = bbp_get_forum_permalink( $forum_id );
 
 	// First link never has view=all
 	if ( bbp_get_view_all( 'edit_others_topics' ) ) {
-		$retval .= "<a href='" . esc_url( bbp_remove_view_all( bbp_get_forum_permalink( $forum_id ) ) ) . "'>" . esc_html( $topics ) . '</a>';
+		$retval .= "<a href='" . esc_url( bbp_remove_view_all( $link ) ) . "'>" . esc_html( $topics ) . '</a>';
 	} else {
 		$retval .= esc_html( $topics );
 	}
 
 	// Get deleted topics
-	$deleted = bbp_get_forum_topic_count_hidden( $forum_id );
+	$deleted_int = bbp_get_forum_topic_count_hidden( $forum_id, false, true );
 
 	// This forum has hidden topics
-	if ( ! empty( $deleted ) && current_user_can( 'edit_others_topics' ) ) {
+	if ( ! empty( $deleted_int ) && current_user_can( 'edit_others_topics' ) ) {
 
-		// Extra text
-		$extra = sprintf( __( ' (+ %d hidden)', 'buddyboss' ), $deleted );
+		// Hidden text
+		$deleted_num = bbp_get_forum_topic_count_hidden( $forum_id, false, false );
+		$extra       = ' ' . sprintf( _n( '(+%s hidden)', '(+%s hidden)', $deleted_int, 'buddyboss' ), $deleted_num );
 
-		// No link
-		if ( bbp_get_view_all() ) {
-			$retval .= " $extra";
-
-			// Link
-		} else {
-			$retval .= " <a href='" . esc_url( bbp_add_view_all( bbp_get_forum_permalink( $forum_id ), true ) ) . "'>" . esc_html( $extra ) . '</a>';
-		}
+		// Hidden link
+		$retval .= ! bbp_get_view_all( 'edit_others_topics' )
+			? " <a href='" . esc_url( bbp_add_view_all( $link, true ) ) . "'>" . esc_html( $extra ) . "</a>"
+			: " {$extra}";
 	}
 
 	return apply_filters( 'bbp_get_forum_topics_link', $retval, $forum_id );
@@ -1702,16 +1700,16 @@ function bbp_forum_post_count( $forum_id = 0, $total_count = true, $integer = fa
  * @param boolean $integer      Optional. Whether or not to format the result
  *
  * @return int Forum post count
- * @uses                  get_post_meta() To get the forum post count
- * @uses                  apply_filters() Calls 'bbp_get_forum_post_count' with the
- *                        post count and forum id
- * @uses                  bbp_get_forum_id() To get the forum id
+ * @uses get_post_meta() To get the forum post count
+ * @uses apply_filters() Calls 'bbp_get_forum_post_count' with the post count and forum id
+ * @uses bbp_get_forum_id() To get the forum id
+ * @uses bbp_get_forum_topic_count() To get the reply count
+ * @uses bbp_get_forum_reply_count() To get the reply count
  */
 function bbp_get_forum_post_count( $forum_id = 0, $total_count = true, $integer = false ) {
 	$forum_id = bbp_get_forum_id( $forum_id );
 	$topics   = bbp_get_forum_topic_count( $forum_id, $total_count, true );
-	$meta_key = empty( $total_count ) ? '_bbp_reply_count' : '_bbp_total_reply_count';
-	$replies  = (int) get_post_meta( $forum_id, $meta_key, true );
+	$replies  = bbp_get_forum_reply_count( $forum_id, $total_count, true );
 	$retval   = $replies + $topics;
 	$filter   = ( true === $integer ) ? 'bbp_get_forum_post_count_int' : 'bbp_get_forum_post_count';
 

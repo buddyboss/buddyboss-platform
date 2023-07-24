@@ -2814,3 +2814,39 @@ function bbp_replies_count_walk( $posts, $top_reply_ids, $count ) {
 
 	return $count;
 }
+
+/**
+ * Return array of public reply statuses.
+ *
+ * @since bbPress 2.6.0 (r6705)
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bbp_get_public_reply_statuses() {
+	$statuses = array(
+		bbp_get_public_status_id()
+	);
+
+	// Filter & return
+	return (array) apply_filters( 'bbp_get_public_reply_statuses', $statuses );
+}
+
+/**
+ * Return array of non-public reply statuses.
+ *
+ * @since bbPress 2.6.0 (r6791)
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bbp_get_non_public_reply_statuses() {
+	$statuses = array(
+		bbp_get_trash_status_id(),
+		bbp_get_spam_status_id(),
+		bbp_get_pending_status_id()
+	);
+
+	// Filter & return
+	return (array) apply_filters( 'bbp_get_non_public_reply_statuses', $statuses );
+}

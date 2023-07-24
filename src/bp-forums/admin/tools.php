@@ -402,7 +402,14 @@ function bbp_admin_repair_topic_hidden_reply_count() {
 		);
 	}
 
-	$sql = "INSERT INTO `{$bbp_db->postmeta}` (`post_id`, `meta_key`, `meta_value`) (SELECT `post_parent`, '_bbp_reply_count_hidden', COUNT(`post_status`) as `meta_value` FROM `{$bbp_db->posts}` WHERE `post_type` = '" . bbp_get_reply_post_type() . "' AND `post_status` IN ( '" . implode( "','", array( bbp_get_trash_status_id(), bbp_get_spam_status_id() ) ) . "') GROUP BY `post_parent`);";
+	// Post types and status
+	$rpt = bbp_get_reply_post_type();
+	$sta = bbp_get_non_public_topic_statuses();
+
+	// Status
+	$sql_status = "'" . implode( "','", $sta ) . "'";
+
+	$sql = "INSERT INTO `{$bbp_db->postmeta}` (`post_id`, `meta_key`, `meta_value`) (SELECT `post_parent`, '_bbp_reply_count_hidden', COUNT(`post_status`) as `meta_value` FROM `{$bbp_db->posts}` WHERE `post_type` = '{$rpt}' AND `post_status` IN ({$sql_status}) GROUP BY `post_parent`)";
 	if ( is_wp_error( $bbp_db->query( $sql ) ) ) {
 		return array(
 			2,
@@ -1831,7 +1838,7 @@ function bbp_admin_reset() {
 }
 
 /**
- * Handle the processing and feedback of the admin tools page
+ * Handle a bbPress admin area reset request.
  *
  * @since bbPress (r2613)
  *
@@ -1852,6 +1859,16 @@ function bbp_admin_reset_handler() {
 
 	check_admin_referer( 'bbpress-reset' );
 
+	bbp_admin_reset_database();
+}
+
+/**
+ * Perform a bbPress database reset.
+ *
+ * @since bbPress 2.6.0
+ * @since BuddyBoss [BBVERSION]
+ */
+function bbp_admin_reset_database() {
 	// Stores messages
 	$messages = array();
 	$failed   = __( 'Failed', 'buddyboss' );

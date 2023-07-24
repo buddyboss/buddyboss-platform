@@ -982,21 +982,17 @@ function bbp_restore_all_filters( $tag, $priority = false ) {
  * @param int  $post_id ID of the post to check
  * @return bool True if open, false if closed
  */
-function bbp_force_comment_status( $open, $post_id = 0 ) {
+function bbp_force_comment_status( $open = false, $post_id = 0 ) {
 
 	// Get the post type of the post ID
 	$post_type = get_post_type( $post_id );
 
 	// Default return value is what is passed in $open
-	$retval = $open;
+	$retval = (bool) $open;
 
-	// Only force for Forums post types
-	switch ( $post_type ) {
-		case bbp_get_forum_post_type():
-		case bbp_get_topic_post_type():
-		case bbp_get_reply_post_type():
-			$retval = false;
-			break;
+	// Only force for bbpress post types
+	if ( in_array( $post_type, bbp_get_post_types(), true ) ) {
+		$retval = false;
 	}
 
 	// Allow override of the override

@@ -41,7 +41,7 @@ function bbp_has_search_results( $args = '' ) {
 
 	/** Defaults */
 	$default_search_terms = bbp_get_search_terms();
-	$default_post_types   = array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() );
+	$default_post_types   = bbp_get_post_types();
 
 	// Default query args
 	$default = array(
