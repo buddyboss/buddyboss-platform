@@ -18,7 +18,8 @@
     "require": {
         "composer/installers": "~1.0",
         "php": ">=5.6.0",
-	  	"php-ffmpeg/php-ffmpeg": "^0.16.0"
+        "php-ffmpeg/php-ffmpeg": "^0.16.0",
+        "maennchen/zipstream-php": "^2.1"
     },
     "autoload": {
     },
@@ -26,5 +27,10 @@
         "remove-ffmpeg-docs": ["rm -rf vendor/php-ffmpeg/php-ffmpeg/docs && rm -rf vendor/php-ffmpeg/php-ffmpeg/tests"],
         "post-install-cmd": ["@remove-ffmpeg-docs"],
         "post-update-cmd": ["@remove-ffmpeg-docs"]
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
     }
 }
