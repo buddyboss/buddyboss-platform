@@ -841,8 +841,8 @@ class BP_Friends_Friendship {
 		// name (@todo - figure out why this restriction).
 		$search_terms_like = bp_esc_like( $filter ) . '%';
 
-		$usermeta_table = $wpdb->prefix . 'usermeta';
-		$users_table    = $wpdb->base_prefix . 'users';
+		$usermeta_table = $wpdb->usermeta;
+		$users_table    = $wpdb->users;
 
 		$bp = buddypress();
 
