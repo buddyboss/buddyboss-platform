@@ -1850,6 +1850,10 @@ div.dropzone.dz-started {
 		}
 	}
 
+	.dz-preview.dz-processing:not(.dz-complete) .dz-details .dz-filename {
+		display: none;
+	}
+
 	div.dz-preview.dz-file-preview .dz-remove {
 		position: absolute;
 		bottom: 5px;
