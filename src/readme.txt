@@ -59,8 +59,8 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 2.3.90 =
 * New Feature! Allow specific profiles types to send messages without being connected
-* Enhancement: Tools - New repair option to recalculate group member count for each group
 * Enhancement: Core - Identified code improvements across different components by taking reference from BuddyPress recent releases
+* Enhancement: Tools - New repair option to recalculate group member count for each group
 * Bug: Activity - Deleting only the 'activity post' of a discussion or any post from other component was also deleting the attachment from the original discussion
 * Bug: Activity - Twitter link previews UI resolved to not return a console error
 * Bug: Activity - Videos on lessons were showing double in the news feed when the lesson was automatically fetched after creation
