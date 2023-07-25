@@ -33,12 +33,31 @@ function bp_is_install() {
  */
 function bp_is_update() {
 
-	// Current DB version of this site (per site in a multisite network).
-	$current_db   = bp_get_option( '_bp_db_version' );
-	$current_live = bp_get_db_version();
+	// Get current DB version.
+	$current_db = (int) bp_get_option( '_bp_db_version' );
+	// Get the raw database version.
+	$current_live = (int) bp_get_db_version();
 
-	// Compare versions (cast as int and bool to be safe).
-	$is_update = (bool) ( (int) $current_db < (int) $current_live );
+	// Pro plugin version history.
+	bp_version_bump();
+	$bb_plugin_version_history = (array) bp_get_option( 'bb_plugin_version_history', array() );
+	$initial_version_data      = ! empty( $bb_plugin_version_history ) ? end( $bb_plugin_version_history ) : array();
+	$bb_version_exists         = ! empty( $initial_version_data ) && ! empty( $initial_version_data['version'] ) && (string) BP_PLATFORM_VERSION === (string) $initial_version_data['version'];
+	if ( ! $bb_version_exists || $current_live !== $current_db ) {
+		$current_date                = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+		$bb_latest_plugin_version    = array(
+			'db_version' => $current_live,
+			'date'       => $current_date->format( 'Y-m-d H:i:s' ),
+			'version'    => BP_PLATFORM_VERSION,
+		);
+		$bb_plugin_version_history[] = $bb_latest_plugin_version;
+		bp_update_option( 'bb_plugin_version_history', array_filter( $bb_plugin_version_history ) );
+	}
+
+	$is_update = false;
+	if ( $current_live !== $current_db ) {
+		$is_update = true;
+	}
 
 	// Return the product of version comparison.
 	return $is_update;
@@ -170,6 +189,8 @@ function bp_setup_updater() {
  */
 function bp_version_updater() {
 
+	// Get current DB version.
+	$current_db = bp_get_option( '_bp_db_version' );
 	// Get the raw database version.
 	$raw_db_version = (int) bp_get_db_version_raw();
 
@@ -445,12 +466,16 @@ function bp_version_updater() {
 		if ( $raw_db_version < 20561 ) {
 			bb_update_to_2_3_90();
 		}
+
+		if (
+			$raw_db_version < $current_db ||
+			$raw_db_version > $current_db
+		) {
+			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
+		}
 	}
 
 	/* All done! *************************************************************/
-
-	// Bump the version.
-	bp_version_bump();
 
 	if ( $switched_to_root_blog ) {
 		restore_current_blog();
