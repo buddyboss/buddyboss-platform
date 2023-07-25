@@ -254,7 +254,7 @@ class BP_XProfile_Group {
 	 * @since BuddyPress 1.2.0
 	 * @since BuddyPress 2.4.0 Introduced `$member_type` argument.
 	 * @since BuddyPress 11.0.0 `$profile_group_id` accepts an array of profile group ids.
-	 * @since BuddyBoss [BBVERSION] `$profile_group_id` accepts an array of profile group ids.
+	 * @since BuddyBoss 2.3.90 `$profile_group_id` accepts an array of profile group ids.
 	 *
 	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *

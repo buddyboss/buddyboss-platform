@@ -5984,7 +5984,7 @@ function bb_activity_create_following_post_notification( $args, $paged = 1 ) {
  * Returns the list of available BuddyPress activity types.
  *
  * @since BuddyPress 9.0.0
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.90
  *
  * @return array An array of activity type labels keyed by type names.
  */

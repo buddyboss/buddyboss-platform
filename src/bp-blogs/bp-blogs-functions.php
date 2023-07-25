@@ -28,7 +28,7 @@ function bp_blogs_has_directory() {
  * @since BuddyPress 1.2.0
  * @since BuddyPress 2.0.0 Added $include_blog_ids, $update_meta_cache parameters
  * @since BuddyPress 10.0.0 Added $date_query parameter
- * @since BuddyBoss [BBVERSION] Added $date_query parameter
+ * @since BuddyBoss 2.3.90 Added $date_query parameter
  *
  * @see BP_Blogs_Blog::get() for a description of arguments and return value.
  *
