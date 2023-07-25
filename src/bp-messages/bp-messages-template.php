@@ -2798,7 +2798,7 @@ function bb_get_message_archived_thread_view_link( $thread_id = 0, $user_id = nu
 /**
  * Apply filter to show hide the message button on member list page.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.90
  *
  * @param bool $enabled_message_action Whether to show the message button or not.
  * @param int  $member_id              Member ID.

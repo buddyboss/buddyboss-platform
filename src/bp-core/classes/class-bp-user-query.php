@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.7.0
  * @since BuddyPress 10.0.0 Added $date_query parameter.
- * @since BuddyBoss [BBVERSION] Added $date_query parameter.
+ * @since BuddyBoss 2.3.90 Added $date_query parameter.
  *
  * @param array            $query               {
  *                                              Query arguments. All items are optional.

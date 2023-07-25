@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.7.0
  * @since BuddyPress 7.0.0 Added $args parameter.
- * @since BuddyBoss [BBVERSION] Added $args parameter.
+ * @since BuddyBoss 2.3.90 Added $args parameter.
  *
  * @param string      $slug Template part slug. Used to generate filenames,
  *                          eg 'friends' for 'friends.php'.
@@ -37,7 +37,7 @@ function bp_get_template_part( $slug, $name = null, $args = array() ) {
 	 *
 	 * @since BuddyPress 1.7.0
 	 * @since BuddyPress 7.0.0 Added $args parameter.
-	 * @since BuddyBoss [BBVERSION] Added $args parameter.
+	 * @since BuddyBoss 2.3.90 Added $args parameter.
 	 *
 	 * @param string $slug Template part slug requested.
 	 * @param string $name Template part name requested.
@@ -57,7 +57,7 @@ function bp_get_template_part( $slug, $name = null, $args = array() ) {
 	 *
 	 * @since BuddyPress 1.7.0
 	 * @since BuddyPress 7.0.0 Added $args parameter.
-	 * @since BuddyBoss [BBVERSION] Added $args parameter.
+	 * @since BuddyBoss 2.3.90 Added $args parameter.
 	 *
 	 * @param array  $templates Array of templates located.
 	 * @param string $slug      Template part slug requested.
@@ -78,7 +78,7 @@ function bp_get_template_part( $slug, $name = null, $args = array() ) {
  *
  * @since BuddyPress 2.6.0
  * @since BuddyPress 7.0.0 Added $args parameter.
- * @since BuddyBoss [BBVERSION] Added $args parameter.
+ * @since BuddyBoss 2.3.90 Added $args parameter.
  *
  * @see bp_get_template_part() for full documentation.
  *
@@ -101,7 +101,7 @@ function bp_get_asset_template_part( $slug, $name = null, $args = array() ) {
  *
  * @since BuddyPress 1.7.0
  * @since BuddyPress 7.0.0 Added $args parameter.
- * @since BuddyBoss [BBVERSION] Added $args parameter.
+ * @since BuddyBoss 2.3.90 Added $args parameter.
  *
  * @param string|array $template_names Template file(s) to search for, in order.
  * @param bool         $load           Optional. If true, the template file will be loaded when
@@ -346,7 +346,7 @@ function bp_get_template_stack() {
  *
  * @since BuddyPress 1.7.0
  * @since BuddyPress 7.0.0 Added $args parameter.
- * @since BuddyBoss [BBVERSION] Added $args parameter.
+ * @since BuddyBoss 2.3.90 Added $args parameter.
  *
  * @see bp_get_template_part() for a description of $slug, $name and $args params.
  *
