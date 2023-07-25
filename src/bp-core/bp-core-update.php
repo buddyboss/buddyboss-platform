@@ -190,7 +190,7 @@ function bp_setup_updater() {
 function bp_version_updater() {
 
 	// Get current DB version.
-	$current_db = bp_get_option( '_bp_db_version' );
+	$current_db = (int) bp_get_option( '_bp_db_version' );
 	// Get the raw database version.
 	$raw_db_version = (int) bp_get_db_version_raw();
 
@@ -467,10 +467,7 @@ function bp_version_updater() {
 			bb_update_to_2_3_90();
 		}
 
-		if (
-			$raw_db_version < $current_db ||
-			$raw_db_version > $current_db
-		) {
+		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 		}
 	}
