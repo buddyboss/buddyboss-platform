@@ -291,6 +291,13 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		if ( isset( $schema['allow_messaging_without_connection'] ) ) {
+			$data['allow_messaging_without_connection'] = (
+				! empty( $post_id ) &&
+				true === (bool) get_post_meta( $post_id, '_bp_member_type_allow_messaging_without_connection', true )
+			);
+		}
+
 		$response = rest_ensure_response( $data );
 
 		/**
@@ -454,6 +461,15 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
 			);
+
+			if ( bp_is_active( 'messages' ) && bp_is_active( 'friends' ) && true === (bool) bp_get_option( 'bp-force-friendship-to-message', false ) ) {
+				$schema['properties']['allow_messaging_without_connection'] = array(
+					'description' => __( 'Allow messaging without connection.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'readonly'    => true,
+				);
+			}
 
 		}
 
