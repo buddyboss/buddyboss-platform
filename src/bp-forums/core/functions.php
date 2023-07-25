@@ -1121,18 +1121,6 @@ function bb_forum_favourite_legacy_data_support() {
 }
 
 /**
- * Return the database class being used to interface with the environment.
- *
- * @since bbPress 2.5.8 (r5814)
- * @since BuddyBoss [BBVERSION]
- *
- * @return object
- */
-function bbp_db() {
-	return bbp_get_global_object( 'wpdb', 'WPDB' );
-}
-
-/**
  * Get the root URL
  *
  * @since bbPress 2.5.8 (r5814)
