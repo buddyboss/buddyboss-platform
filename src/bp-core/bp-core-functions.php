@@ -4845,16 +4845,14 @@ function bp_core_parse_url( $url ) {
 		$parsed_url_data['error']       = '';
 		$parsed_url_data['wp_embed']    = true;
 	} else {
-		$verify_ssl = ! bb_is_same_site_url( $url );
+		$args = array( 'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0' );
+
+		if( bb_is_same_site_url( $url ) ){
+			$args['sslverify'] = false;
+		}
 
 		// safely get URL and response body.
-		$response = wp_safe_remote_get(
-			$url,
-			array(
-				'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0',
-				'sslverify'  => $verify_ssl,
-			)
-		);
+		$response = wp_safe_remote_get( $url, $args );
 		$body     = wp_remote_retrieve_body( $response );
 
 		// if response is not empty.
