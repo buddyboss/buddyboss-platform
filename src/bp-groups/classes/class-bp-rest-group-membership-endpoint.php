@@ -831,9 +831,9 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 
 		$is_friends_connection = true;
 		if ( bp_is_active( 'friends' ) && function_exists( 'bp_force_friendship_to_message' ) && bp_force_friendship_to_message() ) {
-			if ( ! bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) ) {
-				if ( 
-					! ( 
+			if ( bp_is_active( 'messages' ) && ! bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) ) {
+				if (
+					! (
 						bb_messages_allowed_messaging_without_connection( $group_member->user_id ) ||
 						friends_check_friendship( bp_loggedin_user_id(), $group_member->user_id )
 					)

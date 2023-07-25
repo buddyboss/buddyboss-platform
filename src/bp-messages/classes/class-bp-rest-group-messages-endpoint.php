@@ -121,7 +121,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 					if ( ! bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) ) {
 						foreach ( $members as $f => $member ) {
 							if (
-								! ( 
+								! (
 									bb_messages_allowed_messaging_without_connection( $member ) ||
 									friends_check_friendship( bp_loggedin_user_id(), $member )
 								)
@@ -157,7 +157,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 				if ( ! bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) ) {
 					foreach ( $members as $f => $member ) {
 						if (
-							! ( 
+							! (
 								bb_messages_allowed_messaging_without_connection( $member ) ||
 								friends_check_friendship( bp_loggedin_user_id(), $member )
 							)
