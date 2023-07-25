@@ -105,8 +105,16 @@ window.bp = window.bp || {};
 					}
 				);
 
-				$( document ).on(
+				this.currentForm.find( '.js-modal-close' ).on(
 					'bbp_after_close_topic_reply_form',
+					function( event ) {
+						event.stopPropagation();
+						self.clearOnCloseTopicReplyModal();
+					}
+				);
+
+				$(document).on(
+					'bbp_after_close_topic_reply_form_on_overlay',
 					function() {
 						self.clearOnCloseTopicReplyModal();
 					}
@@ -598,6 +606,7 @@ window.bp = window.bp || {};
 			}
 
 			var content_valid = true;
+
 			if (
 				"topic" === this.topic_reply_draft.object &&
 				"undefined" !== typeof meta.bbp_topic_content &&
@@ -648,16 +657,17 @@ window.bp = window.bp || {};
 					this.topic_reply_draft.data_key,
 					JSON.stringify( this.topic_reply_draft )
 				);
-			} else {
-				if (
-					"undefined" !==
-					typeof this.all_draft_data[this.topic_reply_draft.data_key]
-				) {
-					delete this.all_draft_data[this.topic_reply_draft.data_key];
-				}
-				this.topic_reply_draft.data = false;
-				localStorage.removeItem( this.topic_reply_draft.data_key );
 			}
+			// else {
+			// 	if (
+			// 		"undefined" !==
+			// 		typeof this.all_draft_data[this.topic_reply_draft.data_key]
+			// 	) {
+			// 		delete this.all_draft_data[this.topic_reply_draft.data_key];
+			// 	}
+			// 	this.topic_reply_draft.data = false;
+			// 	localStorage.removeItem( this.topic_reply_draft.data_key );
+			// }
 		}
 
 		checkedTopicReplyDataChanged(old_data, new_data) {
@@ -905,9 +915,6 @@ window.bp = window.bp || {};
 			) {
 				activity_data = this.all_draft_data[this.topic_reply_draft.data_key];
 			}
-
-			// console.log( this.topic_reply_draft.data_key );
-			// console.log( activity_data.bbp_topic_tags );
 
 			if (
 				"undefined" === typeof activity_data.bbp_reply_content &&
@@ -1350,8 +1357,6 @@ window.bp = window.bp || {};
 		}
 
 		submitTopicReplyDraftForm() {
-
-			console.error( this );
 			this.topic_reply_draft.post_action = "delete";
 			this.clearTopicReplyDraftIntervals();
 			this.resetLocalTopicReplyDraft();
