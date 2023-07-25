@@ -301,7 +301,7 @@ function bp_get_group_type_list( $group_id = 0, $r = array() ) {
  * @since BuddyPress 1.0.0
  * @since BuddyPress 2.6.0 Added `$group_type`, `$group_type__in`, and `$group_type__not_in` parameters.
  * @since BuddyPress 2.7.0 Added `$update_admin_cache` parameter.
- * @since BuddyBoss [BBVERSION] Added `$status` parameter.
+ * @since BuddyBoss 2.3.90 Added `$status` parameter.
  *
  * @param array|string $args {
  *     Array of parameters. All items are optional.

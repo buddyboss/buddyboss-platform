@@ -1058,7 +1058,7 @@ class BP_Groups_Group {
 	 * @since BuddyPress 2.8.0 Changed `$search_terms` parameter handling and added `$search_columns` parameter.
 	 * @since BuddyPress 2.9.0 Added `$slug` parameter.
 	 * @since BuddyPress 10.0.0 Added `$date_query` parameter.
-	 * @since BuddyBoss [BBVERSION] `$date_query` parameter.
+	 * @since BuddyBoss 2.3.90 `$date_query` parameter.
 	 *
 	 * @param array $args {
 	 *     Array of parameters. All items are optional.

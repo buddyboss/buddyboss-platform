@@ -910,7 +910,7 @@ function groups_get_total_member_count( $group_id ) {
  * @since BuddyPress 2.6.0 Added `$group_type`, `$group_type__in`, and `$group_type__not_in` parameters.
  * @since BuddyPress 2.7.0 Added `$update_admin_cache` and `$parent_id` parameters.
  * @since BuddyPress 10.0.0 Added `$date_query` parameter.
- * @since BuddyBoss [BBVERSION] Added `$date_query` parameter.
+ * @since BuddyBoss 2.3.90 Added `$date_query` parameter.
  *
  * @param array|string $args {
  *     Array of arguments. Supports all arguments of

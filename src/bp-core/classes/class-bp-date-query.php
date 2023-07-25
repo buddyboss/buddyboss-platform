@@ -35,7 +35,7 @@ if ( class_exists( 'WP_Date_Query' ) ) :
 		 * Whether to prepend the 'AND' operator to the WHERE SQL clause.
 		 *
 		 * @since BuddyPress 10.0.0
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.90
 		 *
 		 * @var bool
 		 */
@@ -46,7 +46,7 @@ if ( class_exists( 'WP_Date_Query' ) ) :
 		 *
 		 * @since BuddyPress 2.1.0
 		 * @since BuddyPress 10.0.0 Added $prepend_and argument.
-		 * @since BuddyBoss [BBVERSION] Added $prepend_and argument.
+		 * @since BuddyBoss 2.3.90 Added $prepend_and argument.
 		 *
 		 * @param array  $date_query  Date query arguments.
 		 * @param string $column      The DB column to query against.
@@ -93,7 +93,7 @@ if ( class_exists( 'WP_Date_Query' ) ) :
 		 * WHERE clause.
 		 *
 		 * @since BuddyPress 10.0.0
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.90
 		 *
 		 * @return array {
 		 *     Array containing JOIN and WHERE SQL clauses to append to the main query.
@@ -118,7 +118,7 @@ if ( class_exists( 'WP_Date_Query' ) ) :
 		 * See {@link BP_Date_Query::__construct()} for all argument documentation.
 		 *
 		 * @since BuddyPress 10.0.0
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.90
 		 *
 		 * @param  array  $date_query  Date query arguments.
 		 * @param  string $column      DB column to query against date.
