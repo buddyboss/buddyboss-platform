@@ -741,7 +741,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 							'status' => 404,
 						)
 					);
-				} elseif ( 'messages' !== $request['component'] && 
+				} elseif ( 'messages' !== $request['component'] &&
 						function_exists( 'bp_get_attachment_document_id' ) &&
 						! empty( bp_get_attachment_document_id( (int) $attachment_id ) )
 					) {
@@ -1345,6 +1345,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			'folder_id'             => $document->parent,
 			'group_id'              => $document->group_id,
 			'activity_id'           => ( isset( $document->activity_id ) ? $document->activity_id : 0 ),
+			'message_id'            => ( isset( $document->message_id ) ? $document->message_id : 0 ),
 			'hide_activity_actions' => false,
 			'privacy'               => $document->privacy,
 			'menu_order'            => ( isset( $document->menu_order ) ? $document->menu_order : 0 ),
@@ -1541,6 +1542,12 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				'activity_id'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'A unique numeric ID for the activity.', 'buddyboss' ),
+					'readonly'    => true,
+					'type'        => 'integer',
+				),
+				'message_id'            => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'A unique numeric ID for the Message thread.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
