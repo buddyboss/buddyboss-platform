@@ -77,6 +77,8 @@ add_action( 'bp_setup_globals', 'bp_core_define_slugs', 11 );
  * bp_use_legacy_user_query value, returning true.
  *
  * @since BuddyPress 1.2.0
+ * @since BuddyPress 7.0.0 Added `xprofile_query` parameter. Added `user_ids` parameter.
+ * @since BuddyBoss [BBVERSION] Added `xprofile_query` parameter. Added `user_ids` parameter.
  *
  * @param array|string $args {
  *     Array of arguments. All are optional. See {@link BP_User_Query} for
@@ -92,6 +94,7 @@ add_action( 'bp_setup_globals', 'bp_core_define_slugs', 11 );
  *                                             `$member_type` takes precedence over this parameter.
  *     @type array|string $member_type__not_in Array or comma-separated string of profile types to be excluded.
  *     @type mixed        $include             Limit results by user IDs. Default: false.
+ *     @type mixed        $user_ids            IDs corresponding to the users. Default: false.
  *     @type int          $per_page            Results per page. Default: 20.
  *     @type int          $page                Page of results. Default: 1.
  *     @type bool         $populate_extras     Fetch optional extras. Default: true.
@@ -105,19 +108,21 @@ function bp_core_get_users( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'type'                => 'active',     // Active, newest, alphabetical, random or popular.
-			'user_id'             => false,        // Pass a user_id to limit to only friend connections for this user.
-			'exclude'             => false,        // Users to exclude from results.
-			'search_terms'        => false,        // Limit to users that match these search terms.
-			'meta_key'            => false,        // Limit to users who have this piece of usermeta.
-			'meta_value'          => false,        // With meta_key, limit to users where usermeta matches this value.
+			'type'                => 'active',      // Active, newest, alphabetical, random or popular.
+			'user_id'             => false,         // Pass a user_id to limit to only friend connections for this user.
+			'exclude'             => false,         // Users to exclude from results.
+			'search_terms'        => false,         // Limit to users that match these search terms.
+			'meta_key'            => false,         // Limit to users who have this piece of usermeta.
+			'meta_value'          => false,         // With meta_key, limit to users where usermeta matches this value.
 			'member_type'         => '',
 			'member_type__in'     => '',
 			'member_type__not_in' => '',
-			'include'             => false,        // Pass comma separated list of user_ids to limit to only these users.
-			'per_page'            => 20,           // The number of results to return per page.
-			'page'                => 1,            // The page to return if limiting per page.
-			'populate_extras'     => true,         // Fetch the last active, where the user is a friend, total friend count, latest update.
+			'include'             => false,         // Pass comma separated list of user_ids to limit to only these users.
+			'user_ids'            => false,
+			'per_page'            => 20,            // The number of results to return per page.
+			'page'                => 1,             // The page to return if limiting per page.
+			'populate_extras'     => true,          // Fetch the last active, where the user is a friend, total friend count, latest update.
+			'xprofile_query'      => false,
 			'count_total'         => 'count_query', // What kind of total user count to do, if any. 'count_query', 'sql_calc_found_rows', or false.
 		),
 		'core_get_users'
@@ -3377,7 +3382,7 @@ function bp_member_type_by_type( $type_id ) {
 	$cache_key  = 'bp_member_type_by_type_' . $type_id;
 	$member_ids = wp_cache_get( $cache_key, 'bp_member_member_type' );
 	if ( false === $member_ids ) {
-		$member_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->prefix}term_relationships r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_id );
+		$member_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->term_relationships} r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_id );
 		wp_cache_set( $cache_key, $member_ids, 'bp_member_member_type' );
 	}
 
@@ -4228,8 +4233,8 @@ function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user )
 	if ( true === bp_member_type_enable_disable() ) {
 
 		// Check Member Type Dropdown added on register page.
-		$get_parent_id_of_member_types_field  = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}bp_xprofile_fields WHERE type = %s AND parent_id = %d ", 'membertypes', 0 ) );
-		$get_selected_member_type_on_register = trim( $wpdb->get_var( $wpdb->prepare( "SELECT value FROM {$wpdb->prefix}bp_xprofile_data WHERE user_id = %s AND field_id = %d ", $user_id, $get_parent_id_of_member_types_field ) ) );
+		$get_parent_id_of_member_types_field  = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->base_prefix}bp_xprofile_fields WHERE type = %s AND parent_id = %d ", 'membertypes', 0 ) );
+		$get_selected_member_type_on_register = trim( $wpdb->get_var( $wpdb->prepare( "SELECT value FROM {$wpdb->base_prefix}bp_xprofile_data WHERE user_id = %s AND field_id = %d ", $user_id, $get_parent_id_of_member_types_field ) ) );
 		// return to user if default member type is not set.
 		$existing_selected = bp_member_type_default_on_registration();
 
@@ -5338,10 +5343,11 @@ function bb_get_user_by_profile_slug( $profile_slug ) {
 
 	if ( ! isset( $cache[ $cache_key ] ) ) {
 		global $wpdb;
+		$bp_prefix = bp_core_get_table_prefix();
 
 		// Backward compatible to check 40 characters long unique slug or new slug as well.
 		$user_query = $wpdb->prepare(
-			"SELECT user_id FROM `{$wpdb->prefix}usermeta` WHERE `meta_key` IN ( %s, %s )",
+			"SELECT user_id FROM `{$wpdb->usermeta}` WHERE `meta_key` IN ( %s, %s )",
 			"bb_profile_slug_{$profile_slug}",
 			"bb_profile_long_slug_{$profile_slug}"
 		);
@@ -5525,13 +5531,14 @@ function bb_generate_user_random_profile_slugs( $max_ids = 1 ) {
  */
 function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 ) {
 	global $wpdb;
+	$bp_prefix = bp_core_get_table_prefix();
 
 	if ( is_array( $unique_identifier ) ) {
 		$unique_identifier = '"' . implode( '","', $unique_identifier ) . '"';
 	}
 
 	// Prepare the statement to check unique identifier.
-	$prepare_user_query = "SELECT DISTINCT u.user_nicename, u.user_login FROM `{$wpdb->prefix}users` AS u WHERE ( u.user_login IN ({$unique_identifier}) OR u.user_nicename IN ({$unique_identifier}) )";
+	$prepare_user_query = "SELECT DISTINCT u.user_nicename, u.user_login FROM `{$wpdb->users}` AS u WHERE ( u.user_login IN ({$unique_identifier}) OR u.user_nicename IN ({$unique_identifier}) )";
 
 	// Exclude the user to check unique identifier.
 	if ( ! empty( $user_id ) ) {
@@ -5552,7 +5559,7 @@ function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 )
 
 	// Prepare the statement to check unique identifier.
 	$prepare_meta_query = $wpdb->prepare(
-		"SELECT DISTINCT um.meta_value FROM `{$wpdb->prefix}usermeta` AS um WHERE ( um.meta_key = %s AND um.meta_value IN ({$unique_identifier}) ) OR ( um.meta_key = %s AND um.meta_value IN ({$unique_identifier}) )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		"SELECT DISTINCT um.meta_value FROM `{$wpdb->usermeta}` AS um WHERE ( um.meta_key = %s AND um.meta_value IN ({$unique_identifier}) ) OR ( um.meta_key = %s AND um.meta_value IN ({$unique_identifier}) )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		'bb_profile_slug',
 		'nickname'
 	);

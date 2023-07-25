@@ -709,6 +709,22 @@ function bbp_get_global_object( $name = '', $type = '', $default = null ) {
 }
 
 /**
+ * Return the database class being used to interface with the environment.
+ *
+ * This function is abstracted to avoid global touches to the primary database
+ * class. bbPress supports WordPress's `$wpdb` global by default, and can be
+ * filtered to support other configurations if needed.
+ *
+ * @since 2.5.8 bbPress (r5814)
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return object
+ */
+function bbp_db() {
+	return bbp_get_global_object( 'wpdb', 'WPDB' );
+}
+
+/**
  * Is the environment using pretty URLs?
  *
  * @since 2.5.8 bbPress (r5814)
