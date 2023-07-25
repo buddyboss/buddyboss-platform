@@ -811,6 +811,11 @@ function bb_groups_get_join_sql_for_activity( $sql, $r ) {
  * @return mixed
  */
 function bb_groups_get_where_conditions_for_activity( $where_conditions, $r ) {
+
+	if ( empty( $r['user_id'] )  ) {
+		return $where_conditions;
+	}
+
 	$where_conditions['exclude_where'] = ' ( 
 		mt.meta_key = "activity_feed_status" AND 
 		( 
