@@ -4845,7 +4845,7 @@ function bp_core_parse_url( $url ) {
 		$parsed_url_data['error']       = '';
 		$parsed_url_data['wp_embed']    = true;
 	} else {
-		$verify_ssl = ! bp_is_same_site_url( $url );
+		$verify_ssl = ! bb_is_same_site_url( $url );
 
 		// safely get URL and response body.
 		$response = wp_safe_remote_get(
@@ -8819,7 +8819,7 @@ function bb_disable_notification_type( $notification_type, $type = 'main' ) {
  *
  * @return bool
  */
-function bp_is_same_site_url( $url ) {
+function bb_is_same_site_url( $url ) {
 	$parsed_url	= wp_parse_url( $url );
 	$home_url	= wp_parse_url( home_url('/') );
 
