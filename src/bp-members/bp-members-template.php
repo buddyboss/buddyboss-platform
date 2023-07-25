@@ -278,7 +278,7 @@ function bp_get_activate_slug() {
  * @since BuddyPress 1.2.0
  * @since BuddyPress 7.0.0 Added `xprofile_query` and `user_ids` parameters.
  * @since BuddyPress 10.0.0 Added `$date_query` parameter.
- * @since BuddyBoss [BBVERSION] Added `xprofile_query`, `user_ids`, `date_query` parameters.
+ * @since BuddyBoss 2.3.90 Added `xprofile_query`, `user_ids`, `date_query` parameters.
  *
  * @global object $members_template {@link BP_Members_Template}
  *

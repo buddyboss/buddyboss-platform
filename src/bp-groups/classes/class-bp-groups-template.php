@@ -118,7 +118,7 @@ class BP_Groups_Template {
 	/**
 	 * URL parameter key for pagination.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.90
 	 * @var string
 	 */
 	public $pag_arg = '';

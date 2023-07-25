@@ -141,10 +141,13 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			'page'         => $request['page'],
 			'can_post'     => (bool) $request['can_post'],
 		);
-
 		if ( empty( $request['parent_id'] ) ) {
 			$args['parent_id'] = null;
-			if ( true === (bool) bp_enable_group_hide_subgroups() ) {
+			if (
+				true === (bool) bp_enable_group_hide_subgroups() &&
+				isset( $request['user_id'] ) &&
+				0 === (int) $request['user_id']
+			) {
 				$args['parent_id'] = 0;
 			}
 		}
