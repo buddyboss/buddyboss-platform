@@ -4845,12 +4845,14 @@ function bp_core_parse_url( $url ) {
 		$parsed_url_data['error']       = '';
 		$parsed_url_data['wp_embed']    = true;
 	} else {
+		$verify_ssl = ! bp_is_same_site_url( $url );
 
 		// safely get URL and response body.
 		$response = wp_safe_remote_get(
 			$url,
 			array(
 				'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0',
+				'sslverify'  => $verify_ssl,
 			)
 		);
 		$body     = wp_remote_retrieve_body( $response );
@@ -8806,4 +8808,24 @@ function bb_disable_notification_type( $notification_type, $type = 'main' ) {
 	update_option( 'bb_enabled_notification', $enabled_notification );
 
 	return true;
+}
+
+/**
+ * Check if the requested URL is from same site.
+ *
+ * @since [BBVERSION]
+ *
+ * @param string $url URL to check.
+ *
+ * @return bool
+ */
+function bp_is_same_site_url( $url ) {
+	$parsed_url	= wp_parse_url( $url );
+	$home_url	= wp_parse_url( home_url('/') );
+
+    if ( ! empty( $parsed_url['host'] ) && ! empty( $parsed_url['scheme'] ) ) {
+        return ( strtolower( $parsed_url['host'] ) === strtolower( $home_url['host'] ) ) && ( $parsed_url['scheme'] === $home_url['scheme'] );
+    }
+
+    return false;
 }
