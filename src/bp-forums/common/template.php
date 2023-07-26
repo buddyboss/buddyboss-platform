@@ -149,13 +149,13 @@ function bbp_is_forum( $post_id = 0 ) {
  */
 function bbp_is_forum_archive() {
 
-	// Default to false
+	// Default to false.
 	$retval = false;
 
-	// Get the main query global
+	// Get the main query global.
 	$wp_query = bbp_get_wp_query();
 
-	// In forum archive
+	// In forum archive.
 	if ( is_post_type_archive( bbp_get_forum_post_type() ) || bbp_is_query_name( 'bbp_forum_archive' ) || ! empty( $wp_query->bbp_show_topics_on_root ) || absint( $wp_query->get( 'page_id' ) ) === (int) bp_get_option( '_bbp_root_slug_custom_slug' ) ) {
 		$retval = true;
 	}
@@ -204,18 +204,18 @@ function bbp_is_single_forum() {
 function bbp_is_forum_edit() {
 	global $pagenow;
 
-	// Assume false
+	// Assume false.
 	$retval = false;
 
-	// Get the main query global
+	// Get the main query global.
 	$wp_query = bbp_get_wp_query();
 
-	// Check query
+	// Check query.
 	if ( ! empty( $wp_query->bbp_is_forum_edit ) && ( $wp_query->bbp_is_forum_edit === true ) ) {
 		$retval = true;
 	}
 
-	// Editing in admin
+	// Editing in admin.
 	elseif ( is_admin() && ( 'post.php' === $pagenow ) && ( get_post_type() === bbp_get_forum_post_type() ) && ( ! empty( $_GET['action'] ) && ( 'edit' === $_GET['action'] ) ) ) {
 		$retval = true;
 	}
@@ -310,10 +310,10 @@ function bbp_is_topic_archive() {
 function bbp_is_topic_edit() {
 	global $pagenow;
 
-	// Assume false
+	// Assume false.
 	$retval = false;
 
-	// Get the main query global
+	// Get the main query global.
 	$wp_query = bbp_get_wp_query();
 
 	// Check query
@@ -415,23 +415,23 @@ function bbp_is_topic_tag() {
 function bbp_is_topic_tag_edit() {
 	global $pagenow, $taxnow;
 
-	// Bail if topic-tags are off
+	// Bail if topic-tags are off.
 	if ( ! bbp_allow_topic_tags() ) {
 		return false;
 	}
 
-	// Assume false
+	// Assume false.
 	$retval = false;
 
-	// Get the main query global
+	// Get the main query global.
 	$wp_query = bbp_get_wp_query();
 
-	// Check query
+	// Check query.
 	if ( ! empty( $wp_query->bbp_is_topic_tag_edit ) && ( true === $wp_query->bbp_is_topic_tag_edit ) ) {
 		$retval = true;
 	}
 
-	// Editing in admin
+	// Editing in admin.
 	elseif ( is_admin() && ( 'edit-tags.php' === $pagenow ) && ( bbp_get_topic_tag_tax_id() === $taxnow ) && ( ! empty( $_GET['action'] ) && ( 'edit' === $_GET['action'] ) ) ) {
 		$retval = true;
 	}
@@ -507,13 +507,13 @@ function bbp_is_reply( $post_id = 0 ) {
 function bbp_is_reply_edit() {
 	global $pagenow;
 
-	// Assume false
+	// Assume false.
 	$retval = false;
 
-	// Get the main query global
+	// Get the main query global.
 	$wp_query = bbp_get_wp_query();
 
-	// Check query
+	// Check query.
 	if ( ! empty( $wp_query->bbp_is_reply_edit ) && ( true === $wp_query->bbp_is_reply_edit ) ) {
 		$retval = true;
 
@@ -521,7 +521,7 @@ function bbp_is_reply_edit() {
 		$retval = true;
 	}
 
-	// Editing in admin
+	// Editing in admin.
 	elseif ( is_admin() && ( 'post.php' === $pagenow ) && ( get_post_type() === bbp_get_reply_post_type() ) && ( ! empty( $_GET['action'] ) && ( 'edit' === $_GET['action'] ) ) ) {
 		$retval = true;
 	}
@@ -587,13 +587,13 @@ function bbp_is_single_reply() {
  */
 function bbp_is_favorites() {
 
-	// Assume false
+	// Assume false.
 	$retval = false;
 
-	// Get the main query global
+	// Get the main query global.
 	$wp_query = bbp_get_wp_query();
 
-	// Check query
+	// Check query.
 	if ( ! empty( $wp_query->bbp_is_single_user_favs ) && ( true === $wp_query->bbp_is_single_user_favs ) ) {
 		$retval = true;
 	}
@@ -610,13 +610,13 @@ function bbp_is_favorites() {
  */
 function bbp_is_subscriptions() {
 
-	// Assume false
+	// Assume false.
 	$retval = false;
 
-	// Get the main query global
+	// Get the main query global.
 	$wp_query = bbp_get_wp_query();
 
-	// Check query
+	// Check query.
 	if ( ! empty( $wp_query->bbp_is_single_user_subs ) && ( true === $wp_query->bbp_is_single_user_subs ) ) {
 		$retval = true;
 	}
@@ -634,13 +634,13 @@ function bbp_is_subscriptions() {
  */
 function bbp_is_topics_created() {
 
-	// Assume false
+	// Assume false.
 	$retval = false;
 
-	// Get the main query global
+	// Get the main query global.
 	$wp_query = bbp_get_wp_query();
 
-	// Check query
+	// Check query.
 	if ( ! empty( $wp_query->bbp_is_single_user_topics ) && ( true === $wp_query->bbp_is_single_user_topics ) ) {
 		$retval = true;
 	}
@@ -658,13 +658,13 @@ function bbp_is_topics_created() {
  */
 function bbp_is_replies_created() {
 
-	// Assume false
+	// Assume false.
 	$retval = false;
 
-	// Get the main query global
+	// Get the main query global.
 	$wp_query = bbp_get_wp_query();
 
-	// Check query
+	// Check query.
 	if ( ! empty( $wp_query->bbp_is_single_user_replies ) && ( true === $wp_query->bbp_is_single_user_replies ) ) {
 		$retval = true;
 	}
@@ -684,13 +684,13 @@ function bbp_is_replies_created() {
  */
 function bbp_is_user_home() {
 
-	// Assume false
+	// Assume false.
 	$retval = false;
 
-	// Get the main query global
+	// Get the main query global.
 	$wp_query = bbp_get_wp_query();
 
-	// Check query
+	// Check query.
 	if ( ! empty( $wp_query->bbp_is_single_user_home ) && ( true === $wp_query->bbp_is_single_user_home ) ) {
 		$retval = true;
 	}
@@ -730,13 +730,13 @@ function bbp_is_user_home_edit() {
  */
 function bbp_is_single_user() {
 
-	// Assume false
+	// Assume false.
 	$retval = false;
 
-	// Get the main query global
+	// Get the main query global.
 	$wp_query = bbp_get_wp_query();
 
-	// Check query
+	// Check query.
 	if ( ! empty( $wp_query->bbp_is_single_user ) && ( true === $wp_query->bbp_is_single_user ) ) {
 		$retval = true;
 	}
@@ -754,13 +754,13 @@ function bbp_is_single_user() {
  */
 function bbp_is_single_user_edit() {
 
-	// Assume false
+	// Assume false.
 	$retval = false;
 
-	// Get the main query global
+	// Get the main query global.
 	$wp_query = bbp_get_wp_query();
 
-	// Check query
+	// Check query.
 	if ( ! empty( $wp_query->bbp_is_single_user_edit ) && ( true === $wp_query->bbp_is_single_user_edit ) ) {
 		$retval = true;
 	}
@@ -778,13 +778,13 @@ function bbp_is_single_user_edit() {
  */
 function bbp_is_single_user_profile() {
 
-	// Assume false
+	// Assume false.
 	$retval = false;
 
-	// Get the main query global
+	// Get the main query global.
 	$wp_query = bbp_get_wp_query();
 
-	// Check query
+	// Check query.
 	if ( ! empty( $wp_query->bbp_is_single_user_profile ) && ( true === $wp_query->bbp_is_single_user_profile ) ) {
 		$retval = true;
 	}
@@ -802,13 +802,13 @@ function bbp_is_single_user_profile() {
  */
 function bbp_is_single_user_topics() {
 
-	// Assume false
+	// Assume false.
 	$retval = false;
 
-	// Get the main query global
+	// Get the main query global.
 	$wp_query = bbp_get_wp_query();
 
-	// Check query
+	// Check query.
 	if ( ! empty( $wp_query->bbp_is_single_user_topics ) && ( true === $wp_query->bbp_is_single_user_topics ) ) {
 		$retval = true;
 	}
@@ -826,13 +826,13 @@ function bbp_is_single_user_topics() {
  */
 function bbp_is_single_user_replies() {
 
-	// Assume false
+	// Assume false.
 	$retval = false;
 
-	// Get the main query global
+	// Get the main query global.
 	$wp_query = bbp_get_wp_query();
 
-	// Check query
+	// Check query.
 	if ( ! empty( $wp_query->bbp_is_single_user_replies ) && ( true === $wp_query->bbp_is_single_user_replies ) ) {
 		$retval = true;
 	}
@@ -875,18 +875,18 @@ function bbp_is_single_user_engagements() {
  */
 function bbp_is_single_view() {
 
-	// Assume false
+	// Assume false.
 	$retval = false;
 
-	// Get the main query global
+	// Get the main query global.
 	$wp_query = bbp_get_wp_query();
 
-	// Check query
+	// Check query.
 	if ( ! empty( $wp_query->bbp_is_view ) && ( true === $wp_query->bbp_is_view ) ) {
 		$retval = true;
 	}
 
-	// Check query name
+	// Check query name.
 	if ( empty( $retval ) && bbp_is_query_name( 'bbp_single_view' ) ) {
 		$retval = true;
 	}
@@ -905,31 +905,31 @@ function bbp_is_single_view() {
  */
 function bbp_is_search() {
 
-	// Bail if search is disabled
+	// Bail if search is disabled.
 	if ( ! bbp_allow_search() ) {
 		return false;
 	}
 
-	// Assume false
+	// Assume false.
 	$retval = false;
 
-	// Get the main query global
+	// Get the main query global.
 	$wp_query = bbp_get_wp_query();
 
-	// Get the rewrite ID (one time, to avoid repeated calls)
+	// Get the rewrite ID (one time, to avoid repeated calls).
 	$rewrite_id = bbp_get_search_rewrite_id();
 
-	// Check query
+	// Check query.
 	if ( ! empty( $wp_query->bbp_is_search ) && ( true === $wp_query->bbp_is_search ) ) {
 		$retval = true;
 	}
 
-	// Check query name
+	// Check query name.
 	if ( empty( $retval ) && bbp_is_query_name( $rewrite_id ) ) {
 		$retval = true;
 	}
 
-	// Check $_GET
+	// Check $_GET.
 	if ( empty( $retval ) && isset( $_REQUEST[ $rewrite_id ] ) && empty( $_REQUEST[ $rewrite_id ] ) ) {
 		$retval = true;
 	}
@@ -949,28 +949,28 @@ function bbp_is_search() {
  */
 function bbp_is_search_results() {
 
-	// Bail if search is disabled
+	// Bail if search is disabled.
 	if ( ! bbp_allow_search() ) {
 		return false;
 	}
 
-	// Assume false
+	// Assume false.
 	$retval = false;
 
-	// Get the main query global
+	// Get the main query global.
 	$wp_query = bbp_get_wp_query();
 
-	// Check query
+	// Check query.
 	if ( ! empty( $wp_query->bbp_search_terms ) ) {
 		$retval = true;
 	}
 
-	// Check query name
+	// Check query name.
 	if ( empty( $retval ) && bbp_is_query_name( 'bbp_search_results' ) ) {
 		$retval = true;
 	}
 
-	// Check $_REQUEST
+	// Check $_REQUEST.
 	if ( empty( $retval ) && ! empty( $_REQUEST[ bbp_get_search_rewrite_id() ] ) ) {
 		$retval = true;
 	}
@@ -1008,13 +1008,13 @@ function bbp_is_shortcode() {
  */
 function bbp_is_edit() {
 
-	// Assume false
+	// Assume false.
 	$retval = false;
 
-	// Get the main query global
+	// Get the main query global.
 	$wp_query = bbp_get_wp_query();
 
-	// Check query
+	// Check query.
 	if ( ! empty( $wp_query->bbp_is_edit ) && ( $wp_query->bbp_is_edit === true ) ) {
 		$retval = true;
 	}
