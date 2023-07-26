@@ -1032,7 +1032,20 @@ class BP_Notifications_Notification {
 		 */
 		do_action( 'bp_notification_before_delete', $args );
 
-		return self::_delete( $where['data'], $where['format'] );
+		$retval = self::_delete( $where['data'], $where['format'] );
+
+		/**
+		 * Fires after the deletion of a notification item.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $args Associative array of columns/values, to determine
+		 *                    which rows should be deleted. Of the format
+		 *                    array( 'item_id' => 7, 'component_action' => 'members' ).
+		 */
+		do_action( 'bp_notification_after_delete', $args );
+
+		return $retval;
 	}
 
 	/** Convenience methods ***************************************************/
