@@ -36,8 +36,9 @@ class BBP_Login_Widget extends WP_Widget {
 		$widget_ops = apply_filters(
 			'bbp_login_widget_options',
 			array(
-				'classname'   => 'bbp_widget_login',
-				'description' => __( 'A simple login form with optional links to sign-up and lost password pages.', 'buddyboss' ),
+				'classname'                   => 'bbp_widget_login',
+				'description'                 => __( 'A simple login form with optional links to sign-up and lost password pages.', 'buddyboss' ),
+				'customize_selective_refresh' => true,
 			)
 		);
 
@@ -256,8 +257,9 @@ class BBP_Views_Widget extends WP_Widget {
 		$widget_ops = apply_filters(
 			'bbp_views_widget_options',
 			array(
-				'classname'   => 'widget_display_views',
-				'description' => __( 'A list of registered optional discussion views.', 'buddyboss' ),
+				'classname'                   => 'widget_display_views',
+				'description'                 => __( 'A list of registered optional discussion views.', 'buddyboss' ),
+				'customize_selective_refresh' => true,
 			)
 		);
 
@@ -304,6 +306,9 @@ class BBP_Views_Widget extends WP_Widget {
 		// Forums filter.
 		$settings['title'] = apply_filters( 'bbp_view_widget_title', $settings['title'], $instance, $this->id_base );
 
+		// Start an output buffer
+		ob_start();
+
 		echo $args['before_widget'];
 
 		if ( ! empty( $settings['title'] ) ) {
@@ -323,6 +328,9 @@ class BBP_Views_Widget extends WP_Widget {
 
 		<?php
 		echo $args['after_widget'];
+
+		// Output the current buffer.
+		echo ob_get_clean();
 	}
 
 	/**
@@ -414,8 +422,9 @@ class BBP_Search_Widget extends WP_Widget {
 		$widget_ops = apply_filters(
 			'bbp_search_widget_options',
 			array(
-				'classname'   => 'widget_display_search',
-				'description' => __( 'The forums search form.', 'buddyboss' ),
+				'classname'                   => 'widget_display_search',
+				'description'                 => __( 'The forums search form.', 'buddyboss' ),
+				'customize_selective_refresh' => true,
 			)
 		);
 
@@ -560,8 +569,9 @@ class BBP_Forums_Widget extends WP_Widget {
 		$widget_ops = apply_filters(
 			'bbp_forums_widget_options',
 			array(
-				'classname'   => 'widget_display_forums',
-				'description' => __( 'A list of forums with an option to set the parent.', 'buddyboss' ),
+				'classname'                   => 'widget_display_forums',
+				'description'                 => __( 'A list of forums with an option to set the parent.', 'buddyboss' ),
+				'customize_selective_refresh' => true,
 			)
 		);
 
@@ -617,14 +627,19 @@ class BBP_Forums_Widget extends WP_Widget {
 		// bbp_pre_get_posts_normalize_forum_visibility action and function.
 		$widget_query = new WP_Query(
 			array(
-				'post_type'           => bbp_get_forum_post_type(),
-				'post_parent'         => $parent_id,
-				'post_status'         => bbp_get_public_status_id(),
-				'posts_per_page'      => bbp_get_forums_per_page(),
-				'ignore_sticky_posts' => true,
-				'no_found_rows'       => true,
-				'orderby'             => 'menu_order title',
-				'order'               => 'ASC',
+				'post_type'              => bbp_get_forum_post_type(),
+				'post_parent'            => $parent_id,
+				'post_status'            => bbp_get_public_status_id(),
+				// Order.
+				'posts_per_page'         => bbp_get_forums_per_page(),
+				'orderby'                => 'menu_order title',
+				'order'                  => 'ASC',
+
+				// Performance.
+				'ignore_sticky_posts'    => true,
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
+				'update_post_meta_cache' => false,
 			)
 		);
 
@@ -792,8 +807,9 @@ class BBP_Topics_Widget extends WP_Widget {
 		$widget_ops = apply_filters(
 			'bbp_topics_widget_options',
 			array(
-				'classname'   => 'widget_display_topics',
-				'description' => __( 'A list of recent discussions, sorted by popularity or freshness.', 'buddyboss' ),
+				'classname'                   => 'widget_display_topics',
+				'description'                 => __( 'A list of recent discussions, sorted by popularity or freshness.', 'buddyboss' ),
+				'customize_selective_refresh' => true,
 			)
 		);
 
@@ -847,18 +863,20 @@ class BBP_Topics_Widget extends WP_Widget {
 					'post_parent'            => $settings['parent_forum'],
 					'posts_per_page'         => (int) $settings['max_shown'],
 					'post_status'            => array( bbp_get_public_status_id(), bbp_get_closed_status_id() ),
-					'ignore_sticky_posts'    => true,
-					'no_found_rows'          => true,
 					'meta_query'             => array(
 						array(
 							'key'  => '_bbp_last_active_time',
-							'type' => 'DATETIME'
-						)
+							'type' => 'DATETIME',
+						),
 					),
+					// Ordering.
 					'orderby'                => 'meta_value',
 					'order'                  => 'DESC',
+					// Performance.
+					'ignore_sticky_posts'    => true,
+					'no_found_rows'          => true,
 					'update_post_term_cache' => false,
-					'update_post_meta_cache' => false
+					'update_post_meta_cache' => false,
 				);
 				break;
 
@@ -871,16 +889,18 @@ class BBP_Topics_Widget extends WP_Widget {
 					'meta_query'             => array(
 						array(
 							'key'  => '_bbp_reply_count',
-							'type' => 'NUMERIC'
-						)
+							'type' => 'NUMERIC',
+						),
 					),
 					'post_status'            => array( bbp_get_public_status_id(), bbp_get_closed_status_id() ),
-					'ignore_sticky_posts'    => true,
-					'no_found_rows'          => true,
+					// Ordering.
 					'orderby'                => 'meta_value_num',
 					'order'                  => 'DESC',
+					// Performance.
+					'ignore_sticky_posts'    => true,
+					'no_found_rows'          => true,
 					'update_post_term_cache' => false,
-					'update_post_meta_cache' => false
+					'update_post_meta_cache' => false,
 				);
 				break;
 
@@ -892,12 +912,14 @@ class BBP_Topics_Widget extends WP_Widget {
 					'post_parent'            => $settings['parent_forum'],
 					'posts_per_page'         => (int) $settings['max_shown'],
 					'post_status'            => array( bbp_get_public_status_id(), bbp_get_closed_status_id() ),
+					// Ordering.
 					'orderby'                => 'date',
 					'order'                  => 'DESC',
+					// Performance.
 					'ignore_sticky_posts'    => true,
 					'no_found_rows'          => true,
 					'update_post_term_cache' => false,
-					'update_post_meta_cache' => false
+					'update_post_meta_cache' => false,
 				);
 				break;
 		}
@@ -910,6 +932,9 @@ class BBP_Topics_Widget extends WP_Widget {
 		if ( ! $widget_query->have_posts() ) {
 			return;
 		}
+
+		// Start an output buffer
+		ob_start();
 
 		echo $args['before_widget'];
 
@@ -945,7 +970,7 @@ class BBP_Topics_Widget extends WP_Widget {
 				?>
 
 				<li class="<?php echo $author_related_class; ?>">
-					
+
 					<?php if ( ! empty( $author_link ) ) : ?>
 
 						<a href="<?php echo esc_url( $author_url ); ?>" class="bbp-author-link" rel="nofollow">
@@ -955,7 +980,7 @@ class BBP_Topics_Widget extends WP_Widget {
 						</a>
 
 					<?php endif; ?>
-				
+
 					<div class="bbp-topic-info">
 						<a class="bbp-forum-title" href="<?php bbp_topic_permalink( $topic_id ); ?>"><?php bbp_topic_title( $topic_id ); ?></a>
 
@@ -970,7 +995,7 @@ class BBP_Topics_Widget extends WP_Widget {
 							<div class="time-since"><?php bbp_topic_last_active_time( $topic_id ); ?></div>
 
 						<?php endif; ?>
-					</div>	
+					</div>
 				</li>
 
 			<?php endwhile; ?>
@@ -982,6 +1007,9 @@ class BBP_Topics_Widget extends WP_Widget {
 
 		// Reset the $post global.
 		wp_reset_postdata();
+
+		// Output the current buffer
+		echo ob_get_clean();
 	}
 
 	/**
@@ -1115,8 +1143,9 @@ class BBP_Stats_Widget extends WP_Widget {
 		$widget_ops = apply_filters(
 			'bbp_stats_widget_options',
 			array(
-				'classname'   => 'widget_display_stats',
-				'description' => __( 'Some statistics from your forum.', 'buddyboss' ),
+				'classname'                   => 'widget_display_stats',
+				'description'                 => __( 'Some statistics from your forum.', 'buddyboss' ),
+				'customize_selective_refresh' => true,
 			)
 		);
 
@@ -1255,8 +1284,9 @@ class BBP_Replies_Widget extends WP_Widget {
 		$widget_ops = apply_filters(
 			'bbp_replies_widget_options',
 			array(
-				'classname'   => 'widget_display_replies',
-				'description' => __( 'A list of the most recent replies.', 'buddyboss' ),
+				'classname'                   => 'widget_display_replies',
+				'description'                 => __( 'A list of the most recent replies.', 'buddyboss' ),
+				'customize_selective_refresh' => true,
 			)
 		);
 
@@ -1306,11 +1336,14 @@ class BBP_Replies_Widget extends WP_Widget {
 		// bbp_pre_get_posts_normalize_forum_visibility action and function.
 		$widget_query = new WP_Query(
 			array(
-				'post_type'           => bbp_get_reply_post_type(),
-				'post_status'         => array( bbp_get_public_status_id(), bbp_get_closed_status_id() ),
-				'posts_per_page'      => (int) $settings['max_shown'],
-				'ignore_sticky_posts' => true,
-				'no_found_rows'       => true,
+				'post_type'              => bbp_get_reply_post_type(),
+				'post_status'            => array( bbp_get_public_status_id(), bbp_get_closed_status_id() ),
+				'posts_per_page'         => (int) $settings['max_shown'],
+				// Performance.
+				'ignore_sticky_posts'    => true,
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
+				'update_post_meta_cache' => false,
 			)
 		);
 
@@ -1318,6 +1351,9 @@ class BBP_Replies_Widget extends WP_Widget {
 		if ( ! $widget_query->have_posts() ) {
 			return;
 		}
+
+		// Start an output buffer
+		ob_start();
 
 		echo $args['before_widget'];
 
@@ -1383,7 +1419,7 @@ class BBP_Replies_Widget extends WP_Widget {
 							<div class="time-since"><?php bbp_topic_last_active_time( $reply_id ); ?></div>
 
 						<?php endif; ?>
-					</div>	
+					</div>
 				</li>
 
 			<?php endwhile; ?>
@@ -1395,6 +1431,9 @@ class BBP_Replies_Widget extends WP_Widget {
 
 		// Reset the $post global.
 		wp_reset_postdata();
+
+		// Output the current buffer
+		echo ob_get_clean();
 	}
 
 	/**
