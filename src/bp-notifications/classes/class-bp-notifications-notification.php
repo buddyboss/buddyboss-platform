@@ -1034,6 +1034,11 @@ class BP_Notifications_Notification {
 
 		$retval = self::_delete( $where['data'], $where['format'] );
 
+		// Bail if notification cannot be deleted.
+		if ( ! $retval ) {
+			return false;
+		}
+
 		/**
 		 * Fires after the deletion of a notification item.
 		 *
