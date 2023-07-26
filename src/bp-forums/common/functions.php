@@ -1911,7 +1911,7 @@ function bbp_verify_nonce_request( $action = '', $query_arg = '_wpnonce' ) {
 	}
 
 	// Build the currently requested URL
-	$scheme        = is_ssl() ? 'https://' : 'http://';
+	$scheme        = bbp_get_url_scheme();
 	$requested_url = strtolower( $scheme . $request_host . $_SERVER['REQUEST_URI'] );
 
 	/** Look for match */
