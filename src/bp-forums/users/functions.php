@@ -1162,9 +1162,11 @@ function bbp_get_user_replies_created( $user_id = 0 ) {
  * @uses  count_users() To execute our query and get the var back
  */
 function bbp_get_total_users() {
-	$user_count = count_users();
+	$bbp_db = bbp_db();
+	$count  = $bbp_db->get_var( "SELECT COUNT(ID) as c FROM {$bbp_db->users} WHERE user_status = '0'" );
 
-	return apply_filters( 'bbp_get_total_users', (int) $user_count['total_users'] );
+	// Filter & return.
+	return (int) apply_filters( 'bbp_get_total_users', (int) $count );
 }
 
 /** Premissions ***************************************************************/

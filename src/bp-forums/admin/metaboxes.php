@@ -612,7 +612,7 @@ function bbp_author_metabox() {
  */
 function bbp_filter_dashboard_glance_items( $elements = array() ) {
 
-	// Bail if user cannot spectate
+	// Bail if user cannot spectate.
 	if ( ! current_user_can( 'spectate' ) ) {
 		return $elements;
 	}
