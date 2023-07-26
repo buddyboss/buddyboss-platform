@@ -2398,7 +2398,7 @@ function bbp_number_not_negative( $number = 0 ) {
  *
  * @param int    $parent_id Parent id.
  * @param string $post_type Post type. Defaults to 'post'.
- * 
+ *
  * @return int The number of children
  */
 function bbp_get_non_public_child_count( $parent_id = 0, $post_type = 'post' ) {
@@ -2546,4 +2546,18 @@ function bbp_get_child_counts( $parent_id = 0 ) {
 
 	// Make sure results are INTs
 	return (array) apply_filters( 'bbp_get_child_counts', $retval, $parent_id );
+}
+
+/**
+ * Get scheme for a URL based on is_ssl() results.
+ *
+ * @since 2.6.0 bbPress (r6759)
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string https:// if is_ssl(), otherwise http://
+ */
+function bbp_get_url_scheme() {
+	return is_ssl()
+		? 'https://'
+		: 'http://';
 }
