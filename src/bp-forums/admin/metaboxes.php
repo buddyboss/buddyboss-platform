@@ -248,7 +248,7 @@ function bbp_dashboard_widget_right_now() {
  * @uses bbp_dropdown() To show a dropdown of the forums for forum parent
  * @uses do_action() Calls 'bbp_forum_metabox'
  */
-function bbp_forum_metabox() {
+function bbp_forum_metabox( $post ) {
 
 	// Post ID
 	$post_id     = get_the_ID();
@@ -334,7 +334,7 @@ function bbp_forum_metabox() {
 
 	<?php
 	wp_nonce_field( 'bbp_forum_metabox_save', 'bbp_forum_metabox' );
-	do_action( 'bbp_forum_metabox', $post_id );
+	do_action( 'bbp_forum_metabox', $post );
 }
 
 /** Topics ********************************************************************/
@@ -349,7 +349,7 @@ function bbp_forum_metabox() {
  * @uses bbp_get_topic_forum_id() To get the topic forum id
  * @uses do_action() Calls 'bbp_topic_metabox'
  */
-function bbp_topic_metabox() {
+function bbp_topic_metabox( $post ) {
 
 	// Post ID
 	$post_id = get_the_ID();
@@ -419,7 +419,7 @@ function bbp_topic_metabox() {
 
 	<?php
 	wp_nonce_field( 'bbp_topic_metabox_save', 'bbp_topic_metabox' );
-	do_action( 'bbp_topic_metabox', $post_id );
+	do_action( 'bbp_topic_metabox', $post );
 }
 
 /** Replies *******************************************************************/
@@ -434,7 +434,7 @@ function bbp_topic_metabox() {
  * @uses bbp_get_topic_post_type() To get the topic post type
  * @uses do_action() Calls 'bbp_reply_metabox'
  */
-function bbp_reply_metabox() {
+function bbp_reply_metabox( $post ) {
 
 	// Post ID
 	$post_id = get_the_ID();
@@ -538,7 +538,7 @@ function bbp_reply_metabox() {
 
 	<?php
 	wp_nonce_field( 'bbp_reply_metabox_save', 'bbp_reply_metabox' );
-	do_action( 'bbp_reply_metabox', $post_id );
+	do_action( 'bbp_reply_metabox', $post );
 }
 
 /** Users *********************************************************************/
@@ -617,18 +617,20 @@ function bbp_filter_dashboard_glance_items( $elements = array() ) {
 		return $elements;
 	}
 
-	// Get the statistics
-	$r = bbp_get_statistics( array(
-		'count_pending_topics'  => false,
-		'count_private_topics'  => false,
-		'count_spammed_topics'  => false,
-		'count_trashed_topics'  => false,
-		'count_pending_replies' => false,
-		'count_private_replies' => false,
-		'count_spammed_replies' => false,
-		'count_trashed_replies' => false,
-		'count_empty_tags'      => false
-	) );
+	// Get the statistics.
+	$r = bbp_get_statistics(
+		array(
+			'count_pending_topics'  => false,
+			'count_private_topics'  => false,
+			'count_spammed_topics'  => false,
+			'count_trashed_topics'  => false,
+			'count_pending_replies' => false,
+			'count_private_replies' => false,
+			'count_spammed_replies' => false,
+			'count_trashed_replies' => false,
+			'count_empty_tags'      => false,
+		)
+	);
 
 	// Users
 	if ( isset( $r['user_count'] ) ) {
@@ -656,7 +658,7 @@ function bbp_filter_dashboard_glance_items( $elements = array() ) {
 	// Topics
 	if ( isset( $r['topic_count'] ) ) {
 		$link       = add_query_arg(
-			array( 
+			array(
 				'post_type' => bbp_get_topic_post_type()
 		 	),
 			admin_url( 'edit.php' )
