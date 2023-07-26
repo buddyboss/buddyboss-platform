@@ -107,8 +107,7 @@ window.bp = window.bp || {};
 
 				this.currentForm.find( '.js-modal-close' ).on(
 					'bbp_after_close_topic_reply_form',
-					function( event ) {
-						event.stopPropagation();
+					function() {
 						self.clearOnCloseTopicReplyModal();
 					}
 				);
