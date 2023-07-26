@@ -4847,7 +4847,7 @@ function bp_core_parse_url( $url ) {
 	} else {
 		$args = array( 'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0' );
 
-		if( bb_is_same_site_url( $url ) ){
+		if ( bb_is_same_site_url( $url ) ) {
 			$args['sslverify'] = false;
 		}
 
@@ -8811,19 +8811,19 @@ function bb_disable_notification_type( $notification_type, $type = 'main' ) {
 /**
  * Check if the requested URL is from same site.
  *
- * @since [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  *
  * @param string $url URL to check.
  *
  * @return bool
  */
 function bb_is_same_site_url( $url ) {
-	$parsed_url	= wp_parse_url( $url );
-	$home_url	= wp_parse_url( home_url('/') );
+	$parsed_url = wp_parse_url( $url );
+	$home_url   = wp_parse_url( home_url( '/' ) );
 
-    if ( ! empty( $parsed_url['host'] ) && ! empty( $parsed_url['scheme'] ) ) {
-        return ( strtolower( $parsed_url['host'] ) === strtolower( $home_url['host'] ) ) && ( $parsed_url['scheme'] === $home_url['scheme'] );
-    }
+	if ( ! empty( $parsed_url['host'] ) && ! empty( $parsed_url['scheme'] ) ) {
+		return ( strtolower( $parsed_url['host'] ) === strtolower( $home_url['host'] ) ) && ( $parsed_url['scheme'] === $home_url['scheme'] );
+	}
 
-    return false;
+	return false;
 }
