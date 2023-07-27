@@ -632,72 +632,77 @@ function bbp_filter_dashboard_glance_items( $elements = array() ) {
 		)
 	);
 
-	// Users
+	// Users.
 	if ( isset( $r['user_count'] ) ) {
-		$link       = admin_url( 'users.php' );
+		$link = admin_url( 'users.php' );
+		/* translators: %s: number of users */
 		$text       = sprintf( _n( '%s User', '%s Users', $r['user_count_int'], 'buddyboss' ), $r['user_count'] );
 		$elements[] = current_user_can( 'edit_users' )
 			? '<a href="' . esc_url( $link ) . '" class="bbp-glance-users">' . esc_html( $text ) . '</a>'
 			: esc_html( $text );
 	}
 
-	// Forums
+	// Forums.
 	if ( isset( $r['forum_count'] ) ) {
-		$link       = add_query_arg(
+		$link = add_query_arg(
 			array(
-				'post_type' => bbp_get_forum_post_type()
+				'post_type' => bbp_get_forum_post_type(),
 			),
 			admin_url( 'edit.php' )
-	 	);
+		);
+		/* translators: %s: number of forums */
 		$text       = sprintf( _n( '%s Forum', '%s Forums', $r['forum_count_int'], 'buddyboss' ), $r['forum_count'] );
 		$elements[] = current_user_can( 'publish_forums' )
 			? '<a href="' . esc_url( $link ) . '" class="bbp-glance-forums">' . esc_html( $text ) . '</a>'
 			: esc_html( $text );
 	}
 
-	// Topics
+	// Topics.
 	if ( isset( $r['topic_count'] ) ) {
-		$link       = add_query_arg(
+		$link = add_query_arg(
 			array(
-				'post_type' => bbp_get_topic_post_type()
-		 	),
+				'post_type' => bbp_get_topic_post_type(),
+			),
 			admin_url( 'edit.php' )
 		);
+		/* translators: %s: number of topics */
 		$text       = sprintf( _n( '%s Discussion', '%s Discussions', $r['topic_count_int'], 'buddyboss' ), $r['topic_count'] );
 		$elements[] = current_user_can( 'publish_topics' )
 			? '<a href="' . esc_url( $link ) . '" class="bbp-glance-topics">' . esc_html( $text ) . '</a>'
 			: esc_html( $text );
 	}
 
-	// Replies
+	// Replies.
 	if ( isset( $r['reply_count'] ) ) {
-		$link       = add_query_arg(
+		$link = add_query_arg(
 			array(
-				'post_type' => bbp_get_reply_post_type()
+				'post_type' => bbp_get_reply_post_type(),
 			),
 			admin_url( 'edit.php' )
 		);
+		/* translators: %s: number of replies */
 		$text       = sprintf( _n( '%s Reply', '%s Replies', $r['reply_count_int'], 'buddyboss' ), $r['reply_count'] );
 		$elements[] = current_user_can( 'publish_replies' )
 			? '<a href="' . esc_url( $link ) . '" class="bbp-glance-replies">' . esc_html( $text ) . '</a>'
 			: esc_html( $text );
 	}
 
-	// Topic Tags
+	// Topic Tags.
 	if ( bbp_allow_topic_tags() && isset( $r['topic_tag_count'] ) ) {
-		$link       = add_query_arg(
+		$link = add_query_arg(
 			array(
-				'taxonomy' => bbp_get_topic_tag_tax_id(),
-				'post_type' => bbp_get_topic_post_type()
+				'taxonomy'  => bbp_get_topic_tag_tax_id(),
+				'post_type' => bbp_get_topic_post_type(),
 			),
 			admin_url( 'edit-tags.php' )
 		);
+		/* translators: %s: number of topic tags */
 		$text       = sprintf( _n( '%s Discussion Tag', '%s Discussion Tags', $r['topic_tag_count_int'], 'buddyboss' ), $r['topic_tag_count'] );
 		$elements[] = current_user_can( 'manage_topic_tags' )
 			? '<a href="' . esc_url( $link ) . '" class="bbp-glance-topic-tags">' . esc_html( $text ) . '</a>'
 			: esc_html( $text );
 	}
 
-	// Filter & return
+	// Filter & return.
 	return apply_filters( 'bbp_dashboard_at_a_glance', $elements, $r );
 }
