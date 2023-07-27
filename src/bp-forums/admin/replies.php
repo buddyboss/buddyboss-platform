@@ -533,9 +533,6 @@ if ( ! class_exists( 'BBP_Replies_Admin' ) ) :
 				// Redirect back to the reply
 				$redirect = add_query_arg( $message, remove_query_arg( array( 'action', 'reply_id' ) ) );
 				bbp_redirect( $redirect );
-
-				// For good measure
-				exit();
 			}
 		}
 

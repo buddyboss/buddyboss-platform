@@ -511,9 +511,6 @@ function bbp_new_topic_handler( $action = '' ) {
 		// Redirect back to new topic.
 		bbp_redirect( $redirect_url );
 
-		// For good measure.
-		exit();
-
 		// WP_Error
 	} elseif ( is_wp_error( $topic_id ) && $topic_id->get_error_message() ) {
 		bbp_add_error( 'bbp_topic_error', sprintf( __( '<strong>Error</strong>: The following problem(s) occurred: %s', 'bussyboss' ), $topic_id->get_error_message() ) );
@@ -908,9 +905,6 @@ function bbp_edit_topic_handler( $action = '' ) {
 
 		// Redirect back to new topic.
 		bbp_redirect( $topic_url );
-
-		// For good measure.
-		exit();
 
 		/** Errors */
 
@@ -1524,9 +1518,6 @@ function bbp_merge_topic_handler( $action = '' ) {
 
 	// Redirect back to new topic.
 	bbp_redirect( bbp_get_topic_permalink( $destination_topic->ID ) );
-
-	// For good measure.
-	exit();
 }
 
 /**
@@ -1934,9 +1925,6 @@ function bbp_split_topic_handler( $action = '' ) {
 
 	// Redirect back to the topic.
 	bbp_redirect( bbp_get_topic_permalink( $destination_topic->ID ) );
-
-	// For good measure.
-	exit();
 }
 
 /**
@@ -2179,9 +2167,6 @@ function bbp_edit_topic_tag_handler( $action = '' ) {
 	// Redirect back.
 	$redirect = ( ! empty( $redirect ) && ! is_wp_error( $redirect ) ) ? $redirect : home_url();
 	bbp_redirect( $redirect );
-
-	// For good measure.
-	exit();
 }
 
 /** Helpers *******************************************************************/
@@ -2432,9 +2417,6 @@ function bbp_toggle_topic_handler( $action = '' ) {
 		}
 
 		bbp_redirect( $redirect );
-
-		// For good measure.
-		exit();
 
 		// Handle errors.
 	} else {
@@ -3906,7 +3888,6 @@ function bbp_check_topic_edit() {
 	// User cannot edit topic, so redirect back to topic.
 	if ( ! current_user_can( 'edit_topic', bbp_get_topic_id() ) ) {
 		bbp_redirect( bbp_get_topic_permalink() );
-		exit();
 	}
 }
 
@@ -3931,7 +3912,6 @@ function bbp_check_topic_tag_edit() {
 	// Bail if current user cannot edit topic tags.
 	if ( ! current_user_can( 'edit_topic_tags', bbp_get_topic_tag_id() ) ) {
 		bbp_redirect( bbp_get_topic_tag_link() );
-		exit();
 	}
 }
 

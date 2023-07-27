@@ -1544,7 +1544,6 @@ function bbp_logged_in_redirect( $url = '' ) {
 
 	// Do a safe redirect and exit
 	bbp_redirect( $redirect_to );
-	exit;
 }
 
 /**

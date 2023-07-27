@@ -973,9 +973,6 @@ function bbp_forum_subscriptions_handler( $action = '' ) {
 
 		bbp_redirect( $redirect );
 
-		// For good measure
-		exit();
-
 		// Fail! Handle errors
 	} elseif ( true === $is_subscription && 'bbp_unsubscribe' === $action ) {
 		bbp_add_error( 'bbp_unsubscribe', __( '<strong>ERROR</strong>: There was a problem unsubscribing from that forum!', 'buddyboss' ) );
@@ -1079,9 +1076,6 @@ function bbp_subscriptions_handler( $action = '' ) {
 		}
 
 		bbp_redirect( $redirect );
-
-		// For good measure
-		exit();
 
 		// Fail! Handle errors
 	} elseif ( true === $is_subscription && 'bbp_unsubscribe' === $action ) {

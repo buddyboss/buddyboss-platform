@@ -571,9 +571,6 @@ if ( ! class_exists( 'BBP_Topics_Admin' ) ) :
 				// Redirect back to the topic
 				$redirect = add_query_arg( $message, remove_query_arg( array( 'action', 'topic_id' ) ) );
 				bbp_redirect( $redirect );
-
-				// For good measure
-				exit();
 			}
 		}
 

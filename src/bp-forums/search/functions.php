@@ -79,7 +79,6 @@ function bbp_search_results_redirect() {
 
 	// Redirect and bail
 	bbp_redirect( $redirect_to );
-	exit();
 }
 
 

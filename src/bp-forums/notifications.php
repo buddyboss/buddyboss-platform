@@ -654,9 +654,6 @@ function bbp_buddypress_mark_notifications( $action = '' ) {
 
 	// Redirect.
 	bbp_redirect( $redirect );
-
-	// For good measure.
-	exit();
 }
 add_action( 'bbp_get_request', 'bbp_buddypress_mark_notifications', 1 );
 

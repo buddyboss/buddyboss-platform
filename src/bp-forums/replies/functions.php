@@ -546,9 +546,6 @@ function bbp_new_reply_handler( $action = '' ) {
 		// Redirect back to new reply.
 		bbp_redirect( $reply_url );
 
-		// For good measure.
-		exit();
-
 		/** Errors */
 
 		// WP_Error
@@ -559,7 +556,7 @@ function bbp_new_reply_handler( $action = '' ) {
 	} else {
 		bbp_add_error( 'bbp_reply_error', __( '<strong>Error</strong>: The reply was not created.', 'buddyboss' ) );
 	}
-	
+
 }
 
 /**
@@ -886,9 +883,6 @@ function bbp_edit_reply_handler( $action = '' ) {
 
 		// Redirect back to new reply.
 		bbp_redirect( $reply_url );
-
-		// For good measure.
-		exit();
 
 		/** Errors */
 
@@ -1605,9 +1599,6 @@ function bbp_move_reply_handler( $action = '' ) {
 
 	// Redirect back to the topic.
 	bbp_redirect( bbp_get_topic_permalink( $destination_topic->ID ) );
-
-	// For good measure.
-	exit();
 }
 
 /**
@@ -1791,9 +1782,6 @@ function bbp_toggle_reply_handler( $action = '' ) {
 
 		// Redirect back to reply.
 		bbp_redirect( $reply_url );
-
-		// For good measure.
-		exit();
 
 		// Handle errors.
 	} else {
@@ -2441,7 +2429,6 @@ function bbp_check_reply_edit() {
 	// User cannot edit topic, so redirect back to reply
 	if ( ! current_user_can( 'edit_reply', bbp_get_reply_id() ) ) {
 		bbp_redirect( bbp_get_reply_url() );
-		exit();
 	}
 }
 

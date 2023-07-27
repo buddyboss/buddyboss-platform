@@ -103,7 +103,7 @@ function bbp_insert_forum( $forum_data = array(), $forum_meta = array() ) {
  * @uses remove_filter() To remove kses filters if needed
  * @uses apply_filters() Calls 'bbp_new_forum_pre_title' with the content
  * @uses apply_filters() Calls 'bbp_new_forum_pre_content' with the content
- * @uses bbPress::errors::get_error_codes() To get the {@link WP_Error} errors 
+ * @uses bbPress::errors::get_error_codes() To get the {@link WP_Error} errors
  * @uses wp_insert_post() To insert the forum
  * @uses do_action() Calls 'bbp_new_forum' with the forum id, forum id,
  *                    anonymous data and reply author
@@ -341,9 +341,6 @@ function bbp_new_forum_handler( $action = '' ) {
 
 		// Redirect back to new forum.
 		bbp_redirect( $redirect_url );
-
-		// For good measure.
-		exit();
 
 	// WP_Error
 	} elseif ( is_wp_error( $forum_id ) && $forum_id->get_error_message() ) {
@@ -600,9 +597,6 @@ function bbp_edit_forum_handler( $action = '' ) {
 
 		// Redirect back to new forum
 		bbp_redirect( $forum_url );
-
-		// For good measure
-		exit();
 
 		/** Errors */
 
@@ -2321,7 +2315,6 @@ function bbp_check_forum_edit() {
 	// User cannot edit topic, so redirect back to reply
 	if ( ! current_user_can( 'edit_forum', bbp_get_forum_id() ) ) {
 		bbp_redirect( bbp_get_forum_permalink() );
-		exit();
 	}
 }
 
