@@ -1016,7 +1016,8 @@ class BP_Notifications_Notification {
 	 * @param array $args Associative array of columns/values, to determine
 	 *                    which rows should be deleted.  Of the format
 	 *                    array( 'item_id' => 7, 'component_action' => 'members', ).
-	 * @return int|false Number of rows deleted on success, false on failure.
+	 *
+	 * @return int|false $retval Number of rows deleted on success, false on failure.
 	 */
 	public static function delete( $args = array() ) {
 		$where = self::get_query_clauses( $args );
@@ -1039,9 +1040,10 @@ class BP_Notifications_Notification {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param array $args Associative array of columns/values, to determine
-		 *                    which rows should be deleted. Of the format
-		 *                    array( 'item_id' => 7, 'component_action' => 'members' ).
+		 * @param int|false $retval Number of rows deleted on success, false on failure.
+		 * @param array     $args   Associative array of columns/values, to determine
+		 *                          which rows should be deleted. Of the format
+		 *                          array( 'item_id' => 7, 'component_action' => 'members' ).
 		 */
 		do_action( 'bp_notification_after_delete', $retval, $args );
 
