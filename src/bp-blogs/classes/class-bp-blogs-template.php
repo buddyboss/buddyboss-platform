@@ -82,7 +82,7 @@ class BP_Blogs_Template {
 	/**
 	 * URL parameter key for pagination. Default: 'bpage'.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.90
 	 * @var string
 	 */
 	public $pag_arg = 'bpage';
@@ -92,7 +92,7 @@ class BP_Blogs_Template {
 	 *
 	 * @since BuddyPress 1.2.0
 	 * @since BuddyPress 10.0.0 Converted to array as main function argument. Added $date_query parameter.
-	 * @since BuddyBoss [BBVERSION] Converted to array as main function argument. Added $date_query parameter.
+	 * @since BuddyBoss 2.3.90 Converted to array as main function argument. Added $date_query parameter.
 	 *
 	 * @see BP_Blogs_Blog::get() for a description of parameters.
 	 *
@@ -104,7 +104,7 @@ class BP_Blogs_Template {
 
 		// Backward compatibility with old method of passing arguments.
 		if ( ! is_array( $args[0] ) || count( $args ) > 1 ) {
-			_deprecated_argument( __METHOD__, '[BBVERSION]', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+			_deprecated_argument( __METHOD__, '2.3.90', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
 				0 => 'type',

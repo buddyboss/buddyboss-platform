@@ -2729,7 +2729,7 @@ function bb_messages_get_group_join_leave_text( $args ) {
 /**
  * Check if user can send message.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.90
  *
  * @param array $args An array of arguments.
  *
@@ -2848,7 +2848,7 @@ function bb_messages_user_can_send_message( $args = array() ) {
 /**
  * Check if sender can send message without connection.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.90
  *
  * @param int $user_id User ID.
  *
@@ -2881,7 +2881,7 @@ function bb_messages_allowed_messaging_without_connection( $user_id = 0 ) {
 /**
  * Filter only those message recipients to those are allowed to send message.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.90
  *
  * @param array         $sql   Clauses in the user_id SQL query.
  * @param BP_User_Query $query User query object.

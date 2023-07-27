@@ -859,13 +859,13 @@ function bp_core_enqueue_livestamp() {
  * Return moment.js config.
  *
  * @since             BuddyPress 2.7.0
- * @deprecated        [BBVERSION] Softly deprecated as we're keeping the function into this file
+ * @deprecated        2.3.90 Softly deprecated as we're keeping the function into this file
  *                    to avoid fatal errors if deprecated code is ignored.
  *
  * @return string
  */
 function bp_core_moment_js_config() {
-	_deprecated_function( __FUNCTION__, '[BBVERSION]' );
+	_deprecated_function( __FUNCTION__, '2.3.90' );
 
 	// Grab the locale from the enqueued JS.
 	$moment_locale = wp_scripts()->query( 'bp-moment-locale' );

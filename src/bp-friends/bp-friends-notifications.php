@@ -105,7 +105,7 @@ function friends_format_notifications( $action, $item_id, $secondary_item_id, $t
 		 *
 		 * @since BuddyPress 1.0.0
 		 * @since BuddyPress 6.0.0 Adds the $secondary_item_id parameter.
-		 * @since BuddyBoss [BBVERSION] Adds the $secondary_item_id parameter.
+		 * @since BuddyBoss 2.3.90 Adds the $secondary_item_id parameter.
 		 *
 		 * @param string|array $value             Depending on format, an HTML link to new requests profile
 		 *                                        tab or array with link and text.

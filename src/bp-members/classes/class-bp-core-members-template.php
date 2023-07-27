@@ -109,7 +109,7 @@ class BP_Core_Members_Template {
 	 * Constructor method.
 	 *
 	 * @since BuddyPress 1.5.0
-	 * @since BuddyBoss [BBVERSION] Added $args as arguments.
+	 * @since BuddyBoss 2.3.90 Added $args as arguments.
 	 *
 	 * @see BP_User_Query for an in-depth description of parameters.
 	 *
@@ -124,7 +124,7 @@ class BP_Core_Members_Template {
 	public function __construct( ...$args ) {
 		// Backward compatibility with old method of passing arguments.
 		if ( ! is_array( $args[0] ) || count( $args ) > 1 ) {
-			_deprecated_argument( __METHOD__, '[BBVERSION]', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+			_deprecated_argument( __METHOD__, '2.3.90', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
 				0  => 'type',

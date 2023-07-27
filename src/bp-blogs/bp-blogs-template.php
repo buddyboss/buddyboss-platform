@@ -111,7 +111,7 @@ function bp_rewind_blogs() {
  * @since BuddyPress 1.6.0 Added $page_arg parameter
  * @since BuddyPress 2.0.0 Added $include_blog_ids, $update_meta_cache parameters
  * @since BuddyPress 10.0.0 Added $date_query parameter
- * @since BuddyBoss [BBVERSION] Added $date_query parameter
+ * @since BuddyBoss 2.3.90 Added $date_query parameter
  *
  * @global object $blogs_template {@link BP_Blogs_Template}
  *

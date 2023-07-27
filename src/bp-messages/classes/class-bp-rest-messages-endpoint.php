@@ -799,7 +799,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$args = array(
 			'term'         => sanitize_text_field( $term ),
 			'type'         => 'members',
-			'only_friends' => bp_is_active( 'friends' ) && function_exists( 'bp_force_friendship_to_message' ) && bp_force_friendship_to_message(),
+			'only_friends' => false,
 			'page'         => $request->get_param( 'page' ),
 			'limit'        => $request->get_param( 'per_page' ),
 			'count_total'  => 'count_query',
@@ -821,7 +821,23 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			$args['group_id'] = $group_id;
 		}
 
+		if (
+			bp_is_active( 'friends' ) &&
+			bp_force_friendship_to_message() &&
+			empty( bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) )
+		) {
+			add_filter( 'bp_user_query_uid_clauses', 'bb_messages_update_recipient_user_query_uid_clauses', 9999, 2 );
+		}
+
 		$results = bp_core_get_suggestions( $args );
+
+		if (
+			bp_is_active( 'friends' ) &&
+			bp_force_friendship_to_message() &&
+			empty( bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) )
+		) {
+			remove_filter( 'bp_user_query_uid_clauses', 'bb_messages_update_recipient_user_query_uid_clauses', 9999, 2 );
+		}
 
 		$results_total = apply_filters( 'bp_members_suggestions_results_total', $results['total'] );
 		$results       = apply_filters( 'bp_members_suggestions_results', isset( $results['members'] ) ? $results['members'] : array() );
@@ -3011,7 +3027,15 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			// Check recipients if connected or not.
 			if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && count( $recepients ) < 3 ) {
 				foreach ( $recepients as $recepient ) {
-					if ( (int) $user_id !== (int) $recepient->user_id && ! friends_check_friendship( (int) $user_id, (int) $recepient->user_id ) ) {
+					if (
+						(int) $user_id !== (int) $recepient->user_id &&
+						! bb_messages_user_can_send_message(
+							array(
+								'sender_id'     => (int) $user_id,
+								'recipients_id' => (int) $recepient->user_id,
+							)
+						)
+					) {
 						return new WP_Error(
 							'bp_rest_friendship_required',
 							__( 'You must be connected to this member to send them a message.', 'buddyboss' ),

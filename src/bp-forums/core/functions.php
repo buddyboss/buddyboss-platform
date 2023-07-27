@@ -716,7 +716,7 @@ function bbp_get_global_object( $name = '', $type = '', $default = null ) {
  * filtered to support other configurations if needed.
  *
  * @since 2.5.8 bbPress (r5814)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.90
  *
  * @return object
  */

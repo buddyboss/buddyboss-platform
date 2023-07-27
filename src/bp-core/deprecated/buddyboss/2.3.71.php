@@ -2,7 +2,7 @@
 /**
  * Deprecated functions.
  *
- * @deprecated BuddyBoss [BBVERSION]
+ * @deprecated BuddyBoss 2.3.90
  */
 
 // Exit if accessed directly.
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @access private
  */
 function _bp_core_moment_js_config_footer() {
-	_deprecated_function( __FUNCTION__, '[BBVERSION]' );
+	_deprecated_function( __FUNCTION__, '2.3.90' );
 	if ( ! wp_script_is( 'bp-moment-locale' ) ) {
 		return;
 	}
