@@ -548,11 +548,11 @@ function bbp_new_reply_handler( $action = '' ) {
 
 		/** Errors */
 
-		// WP_Error
+		// WP_Error.
 	} elseif ( is_wp_error( $reply_id ) && $reply_id->get_error_message() ) {
 		bbp_add_error( 'bbp_reply_error', sprintf( __( '<strong>Error</strong>: The following problem(s) occurred: %s', 'buddyboss' ), $reply_id->get_error_message() ) );
 
-		// Generic error
+		// Generic error.
 	} else {
 		bbp_add_error( 'bbp_reply_error', __( '<strong>Error</strong>: The reply was not created.', 'buddyboss' ) );
 	}

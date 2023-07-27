@@ -256,7 +256,7 @@ function bbp_get_topic_subscribers( $topic_id = 0 ) {
 		wp_cache_set( 'bbp_get_topic_subscribers_' . $topic_id, $users, 'bbpress_users' );
 	}
 
-	return apply_filters( 'bbp_get_topic_subscribers', $users. $topic_id );
+	return apply_filters( 'bbp_get_topic_subscribers', $users, $topic_id );
 }
 
 /**

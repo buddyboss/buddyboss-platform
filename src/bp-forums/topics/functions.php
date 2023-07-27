@@ -511,11 +511,11 @@ function bbp_new_topic_handler( $action = '' ) {
 		// Redirect back to new topic.
 		bbp_redirect( $redirect_url );
 
-		// WP_Error
+		// WP_Error.
 	} elseif ( is_wp_error( $topic_id ) && $topic_id->get_error_message() ) {
 		bbp_add_error( 'bbp_topic_error', sprintf( __( '<strong>Error</strong>: The following problem(s) occurred: %s', 'bussyboss' ), $topic_id->get_error_message() ) );
 
-	// Generic error
+	// Generic error.
 	} else {
 		bbp_add_error( 'bbp_topic_error', __( '<strong>Error</strong>: The topic was not created.', 'buddyboss' ) );
 	}
@@ -3960,9 +3960,9 @@ function bbp_get_non_public_topic_statuses() {
 	$statuses = array(
 		bbp_get_trash_status_id(),
 		bbp_get_spam_status_id(),
-		bbp_get_pending_status_id()
+		bbp_get_pending_status_id(),
 	);
 
-	// Filter & return
+	// Filter & return.
 	return (array) apply_filters( 'bbp_get_non_public_topic_statuses', $statuses );
 }

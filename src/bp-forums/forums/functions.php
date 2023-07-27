@@ -342,11 +342,11 @@ function bbp_new_forum_handler( $action = '' ) {
 		// Redirect back to new forum.
 		bbp_redirect( $redirect_url );
 
-	// WP_Error
+	// WP_Error.
 	} elseif ( is_wp_error( $forum_id ) && $forum_id->get_error_message() ) {
 		bbp_add_error( 'bbp_forum_error', sprintf( __( '<strong>Error</strong>: The following problem(s) occurred: %s', 'buddyboss' ), $forum_id->get_error_message() ) );
 
-	// Generic error
+	// Generic error.
 	} else {
 		bbp_add_error( 'bbp_forum_error', __( '<strong>Error</strong>: The forum was not created.', 'buddyboss' ) );
 	}
