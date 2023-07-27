@@ -1636,7 +1636,7 @@ function bbp_get_public_child_count( $parent_id = 0, $post_type = 'post' ) {
  *                        parent id and post type
  * @return array The array of children
  */
-function bbp_get_public_child_ids( $parent_id = 0, $post_type = 'post', $force_cache = false ) {
+function bbp_get_public_child_ids( $parent_id = 0, $post_type = 'post' ) {
 	// Bail if nothing passed
 	if ( empty( $parent_id ) ) {
 		return array();

@@ -2643,7 +2643,7 @@ function bbp_update_topic_reply_count( $topic_id = 0, $reply_count = 0 ) {
 
 	update_post_meta( $topic_id, '_bbp_reply_count', (int) $reply_count );
 
-	return apply_filters( 'bbp_update_topic_reply_count', (int) $reply_count, $topic_id );
+	return (int) apply_filters( 'bbp_update_topic_reply_count', (int) $reply_count, $topic_id );
 }
 
 /**
@@ -2678,7 +2678,7 @@ function bbp_update_topic_reply_count_hidden( $topic_id = 0, $reply_count = 0 ) 
 
 	update_post_meta( $topic_id, '_bbp_reply_count_hidden', (int) $reply_count );
 
-	return apply_filters( 'bbp_update_topic_reply_count_hidden', (int) $reply_count, $topic_id );
+	return (int) apply_filters( 'bbp_update_topic_reply_count_hidden', (int) $reply_count, $topic_id );
 }
 
 /**

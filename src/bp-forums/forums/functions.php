@@ -2096,7 +2096,7 @@ function bbp_pre_get_posts_normalize_forum_visibility( $posts_query = null ) {
  *                        and forum id
  */
 function bbp_forum_query_topic_ids( $forum_id ) {
-	$topic_ids = bbp_get_public_child_ids( $forum_id, bbp_get_topic_post_type(), true );
+	$topic_ids = bbp_get_public_child_ids( $forum_id, bbp_get_topic_post_type() );
 
 	return apply_filters( 'bbp_forum_query_topic_ids', $topic_ids, $forum_id );
 }
