@@ -513,7 +513,7 @@ function bbp_new_topic_handler( $action = '' ) {
 
 		// WP_Error.
 	} elseif ( is_wp_error( $topic_id ) && $topic_id->get_error_message() ) {
-		bbp_add_error( 'bbp_topic_error', sprintf( __( '<strong>Error</strong>: The following problem(s) occurred: %s', 'bussyboss' ), $topic_id->get_error_message() ) );
+		bbp_add_error( 'bbp_topic_error', sprintf( __( '<strong>Error</strong>: The following problem(s) occurred: %s', 'buddyboss' ), $topic_id->get_error_message() ) );
 
 	// Generic error.
 	} else {
