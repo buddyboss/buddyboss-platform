@@ -1034,11 +1034,6 @@ class BP_Notifications_Notification {
 
 		$retval = self::_delete( $where['data'], $where['format'] );
 
-		// Bail if notification cannot be deleted.
-		if ( ! $retval ) {
-			return false;
-		}
-
 		/**
 		 * Fires after the deletion of a notification item.
 		 *
@@ -1048,7 +1043,7 @@ class BP_Notifications_Notification {
 		 *                    which rows should be deleted. Of the format
 		 *                    array( 'item_id' => 7, 'component_action' => 'members' ).
 		 */
-		do_action( 'bp_notification_after_delete', $args );
+		do_action( 'bp_notification_after_delete', $retval, $args );
 
 		return $retval;
 	}
