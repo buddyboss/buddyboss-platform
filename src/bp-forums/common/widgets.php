@@ -306,7 +306,7 @@ class BBP_Views_Widget extends WP_Widget {
 		// Forums filter.
 		$settings['title'] = apply_filters( 'bbp_view_widget_title', $settings['title'], $instance, $this->id_base );
 
-		// Start an output buffer
+		// Start an output buffer.
 		ob_start();
 
 		echo $args['before_widget'];
@@ -933,7 +933,7 @@ class BBP_Topics_Widget extends WP_Widget {
 			return;
 		}
 
-		// Start an output buffer
+		// Start an output buffer.
 		ob_start();
 
 		echo $args['before_widget'];
@@ -1008,7 +1008,7 @@ class BBP_Topics_Widget extends WP_Widget {
 		// Reset the $post global.
 		wp_reset_postdata();
 
-		// Output the current buffer
+		// Output the current buffer.
 		echo ob_get_clean();
 	}
 
@@ -1352,7 +1352,7 @@ class BBP_Replies_Widget extends WP_Widget {
 			return;
 		}
 
-		// Start an output buffer
+		// Start an output buffer.
 		ob_start();
 
 		echo $args['before_widget'];
@@ -1432,7 +1432,7 @@ class BBP_Replies_Widget extends WP_Widget {
 		// Reset the $post global.
 		wp_reset_postdata();
 
-		// Output the current buffer
+		// Output the current buffer.
 		echo ob_get_clean();
 	}
 

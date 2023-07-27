@@ -152,13 +152,13 @@ function bbp_has_forums( $args = '' ) {
 			'ignore_sticky_posts'      => true,
 			'orderby'                  => 'menu_order title',
 			'order'                    => 'ASC',
-			'paged'                    => bbp_get_paged(),           // Page Number
-			'update_post_family_cache' => true,                      // Conditionally prime the cache for related posts
+			'paged'                    => bbp_get_paged(),           // Page Number.
+			'update_post_family_cache' => true,                      // Conditionally prime the cache for related posts.
 		),
 		'has_forums'
 	);
 
-	// Only add 's' arg if searching for forums
+	// Only add 's' arg if searching for forums.
 	if ( ! empty( $default_forum_search ) ) {
 		$bbp_f['s'] = $default_forum_search;
 	}
@@ -175,7 +175,7 @@ function bbp_has_forums( $args = '' ) {
 
 		$bbp_forum_query_cache[ $cache_key ] = $bbp->forum_query;
 
-		// Maybe prime last active posts
+		// Maybe prime last active posts.
 		if ( ! empty( $bbp_f['update_post_family_cache'] ) ) {
 			bbp_update_post_family_caches( $bbp->forum_query->posts );
 		}
@@ -1545,11 +1545,11 @@ function bbp_get_forum_topics_link( $forum_id = 0 ) {
 	// This forum has hidden topics
 	if ( ! empty( $deleted_int ) && current_user_can( 'edit_others_topics' ) ) {
 
-		// Hidden text
+		// Hidden text.
 		$deleted_num = bbp_get_forum_topic_count_hidden( $forum_id, false, false );
 		$extra       = ' ' . sprintf( _n( '(+%s hidden)', '(+%s hidden)', $deleted_int, 'buddyboss' ), $deleted_num );
 
-		// Hidden link
+		// Hidden link.
 		$retval .= ! bbp_get_view_all( 'edit_others_topics' )
 			? " <a href='" . esc_url( bbp_add_view_all( $link, true ) ) . "'>" . esc_html( $extra ) . "</a>"
 			: " {$extra}";

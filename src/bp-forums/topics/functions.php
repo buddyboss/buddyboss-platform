@@ -2836,7 +2836,7 @@ function bbp_update_topic_voice_count( $topic_id = 0 ) {
 		return;
 	}
 
-	// Bail if no topic ID
+	// Bail if no topic ID.
 	if ( empty( $topic_id ) ) {
 		return;
 	}
@@ -3944,7 +3944,7 @@ function bbp_get_public_topic_statuses() {
 		bbp_get_closed_status_id()
 	);
 
-	// Filter & return
+	// Filter & return.
 	return (array) apply_filters( 'bbp_get_public_topic_statuses', $statuses );
 }
 

@@ -394,7 +394,7 @@ function bbp_get_search_terms( $passed_terms = '' ) {
 }
 
 /**
- * Return the base URL used inside of pagination links
+ * Return the base URL used inside of pagination links.
  *
  * @since 2.6.0 bbPress (r6679)
  * @since BuddyBoss [BBVERSION]
@@ -403,27 +403,27 @@ function bbp_get_search_terms( $passed_terms = '' ) {
  */
 function bbp_get_search_pagination_base() {
 
-	// If pretty permalinks are enabled, make our pagination pretty
+	// If pretty permalinks are enabled, make our pagination pretty.
 	if ( bbp_use_pretty_urls() ) {
 
-		// Any single post (for shortcodes)
+		// Any single post (for shortcodes).
 		if ( is_singular() ) {
 			$base = get_permalink();
 
-			// Default search location
+			// Default search location.
 		} else {
 			$base = bbp_get_search_results_url();
 		}
 
-		// Add pagination base
+		// Add pagination base.
 		$base = trailingslashit( $base ) . user_trailingslashit( bbp_get_paged_slug() . '/%#%/' );
 
-		// Unpretty permalinks
+		// Unpretty permalinks.
 	} else {
 		$base = add_query_arg( 'paged', '%#%' );
 	}
 
-	// Filter & return
+	// Filter & return.
 	return apply_filters( 'bbp_get_search_pagination_base', $base );
 }
 

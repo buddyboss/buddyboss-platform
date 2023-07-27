@@ -174,7 +174,7 @@ add_filter( 'bbp_get_form_reply_content', 'bbp_code_trick_reverse' );
 add_filter( 'bbp_get_form_reply_content', 'esc_textarea' );
 add_filter( 'bbp_get_form_reply_content', 'trim' );
 
-// Add number format filter to functions requesting formatted values
+// Add number format filter to functions requesting formatted values.
 add_filter( 'bbp_get_user_topic_count', 'bbp_number_format', 10 );
 add_filter( 'bbp_get_user_reply_count', 'bbp_number_format', 10 );
 add_filter( 'bbp_get_user_post_count', 'bbp_number_format', 10 );
@@ -190,7 +190,7 @@ add_filter( 'bbp_get_reply_revision_count', 'bbp_number_format', 10 );
 add_filter( 'bbp_get_forum_topic_count_hidden', 'bbp_number_format', 10 );
 add_filter( 'bbp_get_topic_reply_count_hidden', 'bbp_number_format', 10 );
 
-// Add number-not-negative filter to values that can never be negative numbers
+// Add number-not-negative filter to values that can never be negative numbers.
 add_filter( 'bbp_get_user_topic_count',             'bbp_number_not_negative', 8 );
 add_filter( 'bbp_get_user_reply_count',             'bbp_number_not_negative', 8 );
 add_filter( 'bbp_get_user_post_count',              'bbp_number_not_negative', 8 );

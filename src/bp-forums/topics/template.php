@@ -2342,14 +2342,14 @@ function bbp_get_topic_replies_link( $topic_id = 0 ) {
 	// Any deleted replies?
 	$deleted_int = bbp_get_topic_reply_count_hidden( $topic_id, true  );
 
-	// This topic has hidden replies
+	// This topic has hidden replies.
 	if ( ! empty( $deleted_int ) && current_user_can( 'edit_others_replies' ) ) {
 
-		// Hidden replies
+		// Hidden replies.
 		$deleted_num = bbp_get_topic_reply_count_hidden( $topic_id, false );
 		$extra       = ' ' . sprintf( _n( '(+%s hidden)', '(+%s hidden)', $deleted_int, 'buddyboss' ), $deleted_num );
 
-		// Hidden link
+		// Hidden link.
 		$retval .= ! bbp_get_view_all( 'edit_others_replies' )
 			? " <a href='" . esc_url( bbp_add_view_all( $link, true ) ) . "'>" . esc_html( $extra ) . "</a>"
 			: " {$extra}";
@@ -4018,7 +4018,7 @@ function bbp_get_topic_tag_edit_link( $tag = '' ) {
 	// Add before and after if description exists
 	if ( ! empty( $term->term_id ) ) {
 
-		// Pretty or ugly URL
+		// Pretty or ugly URL.
 		$retval = bbp_use_pretty_urls()
 		? user_trailingslashit( trailingslashit( bbp_get_topic_tag_link() ) . bbp_get_edit_slug() )
 		: add_query_arg( array( bbp_get_edit_rewrite_id() => '1' ), bbp_get_topic_tag_link() );

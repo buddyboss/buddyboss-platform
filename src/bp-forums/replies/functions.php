@@ -2815,7 +2815,7 @@ function bbp_get_public_reply_statuses() {
 		bbp_get_public_status_id()
 	);
 
-	// Filter & return
+	// Filter & return.
 	return (array) apply_filters( 'bbp_get_public_reply_statuses', $statuses );
 }
 
@@ -2834,6 +2834,6 @@ function bbp_get_non_public_reply_statuses() {
 		bbp_get_pending_status_id()
 	);
 
-	// Filter & return
+	// Filter & return.
 	return (array) apply_filters( 'bbp_get_non_public_reply_statuses', $statuses );
 }

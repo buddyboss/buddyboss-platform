@@ -242,6 +242,8 @@ function bbp_dashboard_widget_right_now() {
  *
  * @since bbPress (r2744)
  *
+ * @param WP_Post $post Post object.
+ *
  * @uses bbp_is_forum_closed() To check if a forum is closed or not
  * @uses bbp_is_forum_category() To check if a forum is a category or not
  * @uses bbp_is_forum_private() To check if a forum is private or not
@@ -346,6 +348,8 @@ function bbp_forum_metabox( $post ) {
  *
  * @since bbPress (r2464)
  *
+ * @param WP_Post $post Post object.
+ *
  * @uses bbp_get_topic_forum_id() To get the topic forum id
  * @uses do_action() Calls 'bbp_topic_metabox'
  */
@@ -430,6 +434,8 @@ function bbp_topic_metabox( $post ) {
  * The metabox that holds all of the additional reply information
  *
  * @since bbPress (r2464)
+ *
+ * @param WP_Post $post Post object.
  *
  * @uses bbp_get_topic_post_type() To get the topic post type
  * @uses do_action() Calls 'bbp_reply_metabox'

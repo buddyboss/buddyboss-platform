@@ -554,12 +554,12 @@ function bbp_get_paged_slug() {
 	$retval  = 'page';
 	$rewrite = bbp_rewrite();
 
-	// Use $wp_rewrite->pagination_base if available
+	// Use $wp_rewrite->pagination_base if available.
 	if ( property_exists( $rewrite, 'pagination_base' ) ) {
 		$retval = $rewrite->pagination_base;
 	}
 
-	// Filter & return
+	// Filter & return.
 	return apply_filters( 'bbp_get_paged_slug', $retval );
 }
 
@@ -1121,7 +1121,7 @@ function bb_forum_favourite_legacy_data_support() {
 }
 
 /**
- * Get the root URL
+ * Get the root URL.
  *
  * @since bbPress 2.5.8 (r5814)
  * @since BuddyBoss [BBVERSION]
@@ -1130,16 +1130,16 @@ function bb_forum_favourite_legacy_data_support() {
  */
 function bbp_get_root_url() {
 
-	// Default
+	// Default.
 	$retval  = '';
 	$rewrite = bbp_rewrite();
 
-	// Use $wp_rewrite->root if available
+	// Use $wp_rewrite->root if available.
 	if ( property_exists( $rewrite, 'root' ) ) {
 		$retval = $rewrite->root;
 	}
 
-	// Filter & return
+	// Filter & return.
 	return apply_filters( 'bbp_get_root_url', $retval );
 }
 
@@ -1147,7 +1147,7 @@ function bbp_get_root_url() {
 /** Global Helpers ************************************************************/
 
 /**
- * Return if debugging scripts or not
+ * Return if debugging scripts or not.
  *
  * @since 2.6.7 (r7188)
  * @since BuddyBoss [BBVERSION]
@@ -1159,7 +1159,7 @@ function bbp_doing_script_debug() {
 }
 
 /**
- * Return if auto-saving or not
+ * Return if auto-saving or not.
  *
  * @since 2.6.7 (r7188)
  * @since BuddyBoss [BBVERSION]

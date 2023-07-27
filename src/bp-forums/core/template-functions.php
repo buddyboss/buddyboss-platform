@@ -137,15 +137,15 @@ function bbp_locate_template( $template_names, $load = false, $require_once = tr
  */
 function bbp_locate_enqueueable( $file = '' ) {
 
-	// Bail if no file to locate
+	// Bail if no file to locate.
 	if ( empty( $file ) ) {
 		return false;
 	}
 
-	// Add file to files array
+	// Add file to files array.
 	$files = array( $file );
 
-	// Get the file variant (minified or not, but opposite of $file)
+	// Get the file variant (minified or not, but opposite of $file).
 	$file_is_min  = ( false !== strpos( $file, '.min' ) );
 	$file_variant = ( false === $file_is_min )
 		? str_replace( array( '.css', '.js' ), array( '.min.css', '.min.js' ), $file )
@@ -154,7 +154,7 @@ function bbp_locate_enqueueable( $file = '' ) {
 	// Are we debugging?
 	$script_debug = bbp_doing_script_debug();
 
-	// Debugging, so prefer unminified files
+	// Debugging, so prefer unminified files.
 	if ( true === $script_debug ) {
 		if ( true === $file_is_min ) {
 			array_unshift( $files, $file_variant );
@@ -162,7 +162,7 @@ function bbp_locate_enqueueable( $file = '' ) {
 			array_push( $files, $file_variant );
 		}
 
-		// Not debugging, so prefer minified files
+		// Not debugging, so prefer minified files.
 	} elseif ( false === $script_debug ) {
 		if ( true === $file_is_min ) {
 			array_push( $files, $file_variant );
@@ -171,12 +171,12 @@ function bbp_locate_enqueueable( $file = '' ) {
 		}
 	}
 
-	// Return first found file location in the stack
+	// Return first found file location in the stack.
 	return bbp_locate_template( $files, false, false );
 }
 
 /**
- * Convert an enqueueable file path to a URL
+ * Convert an enqueueable file path to a URL.
  *
  * @since 2.6.0
  * @since BuddyBoss [BBVERSION]
@@ -187,18 +187,18 @@ function bbp_locate_enqueueable( $file = '' ) {
  */
 function bbp_urlize_enqueueable( $file = '' ) {
 
-	// Get DIR and URL
+	// Get DIR and URL.
 	$content_dir = constant( 'WP_CONTENT_DIR' );
 	$content_url = content_url();
 
-	// IIS (Windows) here
-	// Replace back slashes with forward slash
+	// IIS (Windows) here.
+	// Replace back slashes with forward slash.
 	if ( false !== strpos( $file, '\\' ) ) {
 		$file        = str_replace( '\\', '/', $file        );
 		$content_dir = str_replace( '\\', '/', $content_dir );
 	}
 
-	// Return path to file relative to site URL
+	// Return path to file relative to site URL.
 	return str_replace( $content_dir, $content_url, $file );
 }
 
@@ -673,7 +673,7 @@ function bbp_parse_query( $posts_query ) {
 		// Check if the view exists by checking if there are query args are set
 		$view_args = bbp_get_view_query_args( $bbp_view );
 
-		// Bail if view args are empty
+		// Bail if view args are empty.
 		if ( empty( $view_args ) ) {
 			$posts_query->set_404();
 			return;

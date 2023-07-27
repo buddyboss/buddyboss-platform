@@ -161,12 +161,12 @@ function bbp_admin_repair_handler() {
  */
 function bbp_admin_tools_feedback( $message, $class = false ) {
 
-	// One message as string
+	// One message as string.
 	if ( is_string( $message ) ) {
 		$message = '<p>' . $message . '</p>';
 		$class   = $class ? $class : 'updated';
 
-	// Messages as objects
+	// Messages as objects.
 	} elseif ( is_wp_error( $message ) ) {
 		$errors = $message->get_error_messages();
 
@@ -402,11 +402,11 @@ function bbp_admin_repair_topic_hidden_reply_count() {
 		);
 	}
 
-	// Post types and status
+	// Post types and status.
 	$rpt = bbp_get_reply_post_type();
 	$sta = bbp_get_non_public_topic_statuses();
 
-	// Status
+	// Status.
 	$sql_status = "'" . implode( "','", $sta ) . "'";
 
 	$sql = "INSERT INTO `{$bbp_db->postmeta}` (`post_id`, `meta_key`, `meta_value`) (SELECT `post_parent`, '_bbp_reply_count_hidden', COUNT(`post_status`) as `meta_value` FROM `{$bbp_db->posts}` WHERE `post_type` = '{$rpt}' AND `post_status` IN ({$sql_status}) GROUP BY `post_parent`)";

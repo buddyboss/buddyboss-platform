@@ -2260,7 +2260,7 @@ function bbp_view_id( $view = '' ) {
 }
 
 /**
- * Get the view id
+ * Get the view id.
  *
  * Use view id if supplied, otherwise bbp_get_view_rewrite_id() query var.
  *

@@ -990,7 +990,7 @@ function bbp_force_comment_status( $open = false, $post_id = 0 ) {
 	// Default return value is what is passed in $open
 	$retval = (bool) $open;
 
-	// Only force for bbpress post types
+	// Only force for bbpress post types.
 	if ( in_array( $post_type, bbp_get_post_types(), true ) ) {
 		$retval = false;
 	}

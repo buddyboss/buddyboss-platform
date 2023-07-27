@@ -1571,7 +1571,7 @@ function bbp_update_forum_topic_count_hidden( $forum_id = 0, $topic_count = 0 ) 
 				'post_type'      => bbp_get_topic_post_type(),
 				'posts_per_page' => -1,
 
-				// Performance
+				// Performance.
 				'nopaging'               => true,
 				'suppress_filters'       => true,
 				'update_post_term_cache' => false,
@@ -2673,7 +2673,7 @@ function bbp_get_public_forum_statuses() {
 		bbp_get_public_status_id()
 	);
 
-	// Filter & return
+	// Filter & return.
 	return (array) apply_filters( 'bbp_get_public_forum_statuses', $statuses );
 }
 
@@ -2691,6 +2691,6 @@ function bbp_get_non_public_forum_statuses() {
 		bbp_get_hidden_status_id()
 	);
 
-	// Filter & return
+	// Filter & return.
 	return (array) apply_filters( 'bbp_get_non_public_forum_statuses', $statuses );
 }

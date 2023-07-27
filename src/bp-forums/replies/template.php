@@ -198,7 +198,7 @@ function bbp_has_replies( $args = '' ) {
 	// Call the query
 	$bbp->reply_query = new WP_Query( $r );
 
-	// Maybe prime last active posts
+	// Maybe prime last active posts.
 	if ( ! empty( $r['update_post_family_cache'] ) ) {
 		bbp_update_post_family_caches( $bbp->reply_query->posts );
 	}

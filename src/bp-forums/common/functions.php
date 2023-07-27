@@ -677,12 +677,12 @@ function bbp_filter_anonymous_post_data( $args = '' ) {
 	// Filter variables and add errors if necessary
 	$r['bbp_anonymous_name'] = apply_filters( 'bbp_pre_anonymous_post_author_name', $r['bbp_anonymous_name'] );
 	if ( empty( $r['bbp_anonymous_name'] ) ) {
-		bbp_add_error( 'bbp_anonymous_name', esc_html__( '<strong>ERROR</strong>: Invalid author name submitted!', 'buddyboss' ) );
+		bbp_add_error( 'bbp_anonymous_name', __( '<strong>ERROR</strong>: Invalid author name submitted!', 'buddyboss' ) );
 	}
 
 	$r['bbp_anonymous_email'] = apply_filters( 'bbp_pre_anonymous_post_author_email', $r['bbp_anonymous_email'] );
 	if ( empty( $r['bbp_anonymous_email'] ) ) {
-		bbp_add_error( 'bbp_anonymous_email', esc_html__( '<strong>ERROR</strong>: Invalid email address submitted!', 'buddyboss' ) );
+		bbp_add_error( 'bbp_anonymous_email', __( '<strong>ERROR</strong>: Invalid email address submitted!', 'buddyboss' ) );
 	}
 
 	// Website is optional
@@ -739,7 +739,7 @@ function bbp_check_for_duplicate( $post_data = array() ) {
 		return true;
 	}
 
-	// Get the DB
+	// Get the DB.
 	$bbp_db = bbp_db();
 
 	// Check for anonymous post
@@ -1512,7 +1512,7 @@ function bbp_query_post_parent__in( $where, $object = '' ) {
 		return $where;
 	}
 
-	// Get the DB
+	// Get the DB.
 	$bbp_db = bbp_db();
 
 	// Including specific post_parent's
@@ -1638,7 +1638,7 @@ function bbp_get_public_child_count( $parent_id = 0, $post_type = 'post' ) {
  */
 function bbp_get_public_child_ids( $parent_id = 0, $post_type = 'post' ) {
 	// Bail if nothing passed
-	if ( empty( $parent_id ) ) {
+	if ( empty( $parent_id ) || empty( $post_type ) ) {
 		return array();
 	}
 
@@ -1695,7 +1695,7 @@ function bbp_get_public_child_ids( $parent_id = 0, $post_type = 'post' ) {
 }
 
 /**
- * Query the DB and get the child id's of all children
+ * Query the DB and get the child id's of all children.
  *
  * @param int    $parent_id Parent id
  * @param string $post_type Post type. Defaults to 'post'
@@ -1712,7 +1712,7 @@ function bbp_get_all_child_ids( $parent_id = 0, $post_type = 'post' ) {
 	$bbp_db = bbp_db();
 
 	// Bail if nothing passed
-	if ( empty( $parent_id ) ) {
+	if ( empty( $parent_id ) || empty( $post_type ) ) {
 		return array();
 	}
 
@@ -2390,7 +2390,7 @@ function bbp_number_not_negative( $number = 0 ) {
 
 	// Protect against formatted strings.
 	if ( is_string( $number ) ) {
-		$number = wp_strip_all_tags( $number );                    // No HTML.
+		$number = wp_strip_all_tags( $number );                               // No HTML.
 		$number = preg_replace( '/[^0-9-]/', '', $number ); // No number-format.
 
 		// Protect against objects, arrays, scalars, etc...
@@ -2409,7 +2409,7 @@ function bbp_number_not_negative( $number = 0 ) {
 }
 
 /**
- * Query the DB and get a count of public children
+ * Query the DB and get a count of public children.
  *
  * @since bbPress 2.0.0 (r2868)
  * @since bbPress 2.6.0 (r5954) Replace direct queries with WP_Query() objects
@@ -2462,7 +2462,7 @@ function bbp_get_non_public_child_count( $parent_id = 0, $post_type = 'post' ) {
 }
 
 /**
- * Filter a list of child counts, from `bbp_get_child_counts()`
+ * Filter a list of child counts, from `bbp_get_child_counts()`.
  *
  * @since bbPress 2.6.0 (r6826)
  * @since BuddyBoss [BBVERSION]
@@ -2503,7 +2503,7 @@ function bbp_filter_child_counts_list( $parent_id = 0, $types = array( 'post' ),
 }
 
 /**
- * Query the database for child counts, grouped by type & status
+ * Query the database for child counts, grouped by type & status.
  *
  * @since bbPress 2.6.0 (r6826)
  * @since BuddyBoss [BBVERSION]
