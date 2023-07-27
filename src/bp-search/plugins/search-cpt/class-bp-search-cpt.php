@@ -39,13 +39,29 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 				is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) &&
 				function_exists( 'learndash_get_post_type_slug' )
 			) {
-				$lms_lesson_slug = learndash_get_post_type_slug( 'lesson' );
-				if (
-					$lms_lesson_slug === $this->cpt_name &&
-					learndash_post_type_search_param( $lms_lesson_slug, 'search_enrolled_only' )
-				) {
-					$enrolled_courses = learndash_user_get_enrolled_courses( get_current_user_id(), array(), true );
-					if ( empty( $enrolled_courses ) ) {
+				$in_search_post_types = get_post_types( array( 'public' => true ) );
+				$ld_post_types        = learndash_get_post_types( 'course_steps' );
+				$ld_post_types        = array_intersect( $ld_post_types, $in_search_post_types );
+				$learndash_post_type_search_param_enrolled = learndash_post_type_search_param( $this->cpt_name, 'search_enrolled_only' );
+
+				if ( is_user_logged_in() ) {
+				   	if (
+					  in_array( $this->cpt_name, $ld_post_types, true ) &&
+					  false === is_string($learndash_post_type_search_param_enrolled) && 
+					  true === $learndash_post_type_search_param_enrolled
+				   	) {
+						$enrolled_courses = learndash_user_get_enrolled_courses( get_current_user_id(), array(), true );
+						if ( empty( $enrolled_courses ) ) {
+							// Exclude from search.
+							return;
+					  	}
+				   	}
+				} else {
+					if (
+						in_array( $this->cpt_name, $ld_post_types, true ) &&
+						false === is_string($learndash_post_type_search_param_enrolled) && 
+						true === $learndash_post_type_search_param_enrolled
+					) {
 						// Exclude from search.
 						return;
 					}
