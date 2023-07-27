@@ -212,6 +212,17 @@ window.bp = window.bp || {};
 						"draft_reply_" + this.bbp_topic_id + "_" + this.bbp_reply_to;
 				}
 			}
+
+			if ( this.bbp_topic_id && forms.length > 1 ) {
+				this.updateSubscriptionCheckboxes();
+			}
+		}
+
+		updateSubscriptionCheckboxes() {
+			// Change the subscribe checkbox id and label for to make workable for multiple form and topic in single page.
+			const bbp_topic_subscription_id = this.currentForm.find( '#bbp_topic_subscription' );
+			bbp_topic_subscription_id.prop( 'id', 'bbp_topic_subscription_' + this.bbp_topic_id );
+			bbp_topic_subscription_id.siblings( 'label' ).prop( 'for', 'bbp_topic_subscription_' + this.bbp_topic_id );
 		}
 
 		getTopicReplyDraftData() {
@@ -403,16 +414,17 @@ window.bp = window.bp || {};
 			}
 
 			// Reset topic subscription.
+			const bbp_topic_subscription_id = ( forms.length > 1 && this.bbp_topic_id ) ? '#bbp_topic_subscription_' + this.bbp_topic_id : '#bbp_topic_subscription';
 			if (
 				"topic" === this.topic_reply_draft.object &&
 				! $( "#subscribe-" + this.bbp_forum_id ).hasClass( "is-subscribed" )
 			) {
-				target.find( "#bbp_topic_subscription" ).prop( "checked", false );
+				target.find( bbp_topic_subscription_id ).prop( "checked", false );
 			} else if (
 				"reply" === this.topic_reply_draft.object &&
 				! $( "#subscribe-" + this.bbp_topic_id ).hasClass( "is-subscribed" )
 			) {
-				target.find( "#bbp_topic_subscription" ).prop( "checked", false );
+				target.find( bbp_topic_subscription_id ).prop( "checked", false );
 			}
 
 			// Reset tags.
@@ -864,21 +876,23 @@ window.bp = window.bp || {};
 				.prop( "selected", true );
 
 			// Subscribe notify.
+			const bbp_topic_subscription_id = ( forms.length > 1 && this.bbp_topic_id ) ? '#bbp_topic_subscription_' + this.bbp_topic_id : '#bbp_topic_subscription';
+
 			if (
 				"undefined" !== typeof activity_data.bbp_topic_subscription &&
 				"" !== activity_data.bbp_topic_subscription
 			) {
-				$form.find( "#bbp_topic_subscription" ).prop( "checked", true );
+				$form.find( bbp_topic_subscription_id ).prop( "checked", true );
 			} else if (
 				"undefined" !== typeof activity_data.bbp_topic_subscription &&
 				"" === activity_data.bbp_topic_subscription
 			) {
-				$form.find( "#bbp_topic_subscription" ).prop( "checked", false );
+				$form.find( bbp_topic_subscription_id ).prop( "checked", false );
 			} else if (
 				0 < this.bbp_forum_id &&
 				! $( "#subscribe-" + this.bbp_forum_id ).hasClass( "is-subscribed" )
 			) {
-				$form.find( "#bbp_topic_subscription" ).prop( "checked", false );
+				$form.find( bbp_topic_subscription_id ).prop( "checked", false );
 			}
 
 			// Tags.
@@ -950,21 +964,23 @@ window.bp = window.bp || {};
 			}
 
 			// Subscribe notify.
+			const bbp_topic_subscription_id = ( forms.length > 1 && this.bbp_topic_id ) ? '#bbp_topic_subscription_' + this.bbp_topic_id : '#bbp_topic_subscription';
+
 			if (
 				"undefined" !== typeof activity_data.bbp_topic_subscription &&
 				"" !== activity_data.bbp_topic_subscription
 			) {
-				$form.find( "#bbp_topic_subscription" ).prop( "checked", true );
+				$form.find( bbp_topic_subscription_id ).prop( "checked", true );
 			} else if (
 				"undefined" !== typeof activity_data.bbp_topic_subscription &&
 				"" === activity_data.bbp_topic_subscription
 			) {
-				$form.find( "#bbp_topic_subscription" ).prop( "checked", false );
+				$form.find( bbp_topic_subscription_id ).prop( "checked", false );
 			} else if (
 				0 < this.bbp_topic_id &&
 				! $( "#subscribe-" + this.bbp_topic_id ).hasClass( "is-subscribed" )
 			) {
-				$form.find( "#bbp_topic_subscription" ).prop( "checked", false );
+				$form.find( bbp_topic_subscription_id ).prop( "checked", false );
 			}
 
 			// Tags.
@@ -1404,7 +1420,7 @@ window.bp = window.bp || {};
 
 	// bp.Nouveau.TopicReplyDraft = new TopicReplyDraft();
 
-	const forms = $( 'form[name="new-post"]' );
+	var forms = $( 'form[name="new-post"]' );
 	forms.each(
 		function () {
 			topicReplyDraft = new TopicReplyDraft( $( this ) );
