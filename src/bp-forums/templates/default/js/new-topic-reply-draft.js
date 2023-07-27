@@ -510,13 +510,17 @@ window.bp = window.bp || {};
 		}
 
 		resetTopicReplyDraftLinkPreview() {
-			var currentTargetForm = this.currentForm
-				? this.currentForm
-				: $( "form#new-post" )[0];
-			// Reset link preview data.
-			if ($( currentTargetForm ).find( "#link_preview_data" ).length > 0) {
+			var currentTargetForm = this.currentForm ? this.currentForm : $( "form#new-post" );
+
+			// Clear the linkPreviews object for the form.
+			$( currentTargetForm ).find( "#bb-close-link-suggestion" ).trigger('click');
+
+			// Reset link preview data and attachments.
+			if ( $( currentTargetForm ).find( "#link_preview_data" ).length > 0) {
 				$( currentTargetForm ).find( "#link_preview_data" ).val( "" );
+				$( currentTargetForm ).find( "#whats-new-attachments" ).val( "" );
 			}
+
 			$( currentTargetForm ).find( ".bb-url-scrapper-container" ).remove();
 			$( currentTargetForm ).find( "#bb_link_url" ).remove();
 		}
