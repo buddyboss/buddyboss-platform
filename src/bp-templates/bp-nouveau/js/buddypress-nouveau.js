@@ -3939,7 +3939,7 @@ window.bp = window.bp || {};
 						bbLinkUrlInput = self.options.link_url;
 					}
 				}
-q
+
 				if ( ( urlText === null || urlText === '' ) && self.options.link_url === undefined ) {
 					return;
 				}
