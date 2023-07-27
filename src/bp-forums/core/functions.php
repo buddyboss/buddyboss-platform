@@ -1142,3 +1142,30 @@ function bbp_get_root_url() {
 	// Filter & return
 	return apply_filters( 'bbp_get_root_url', $retval );
 }
+
+
+/** Global Helpers ************************************************************/
+
+/**
+ * Return if debugging scripts or not
+ *
+ * @since 2.6.7 (r7188)
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True if debugging scripts. False if not debugging scripts.
+ */
+function bbp_doing_script_debug() {
+	return defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
+}
+
+/**
+ * Return if auto-saving or not
+ *
+ * @since 2.6.7 (r7188)
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True if mid auto-save. False if not mid auto-save.
+ */
+function bbp_doing_autosave() {
+	return defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE;
+}
