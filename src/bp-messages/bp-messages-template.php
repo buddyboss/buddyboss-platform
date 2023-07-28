@@ -2382,13 +2382,13 @@ function bb_get_thread_sent_date( $last_message_date = false ) {
 	);
 
 	if ( is_numeric( $last_message_date ) ) {
-		$last_message_date_formatted = bp_core_get_format_date( $last_message_date, 'Y-m-d h:i:s' );
+		$last_message_date_formatted = bp_core_get_format_date( $last_message_date, 'Y-m-d H:i:s' );
 	} else {
 		$last_message_date_formatted = $last_message_date;
 	}
 
 	// Add 5mins to check the with the sent date.
-	$five_minutes = date_i18n( 'Y-m-d h:i:s', strtotime( '+5 min', strtotime( $last_message_date_formatted ) ) );
+	$five_minutes = date_i18n( 'Y-m-d H:i:s', strtotime( '+5 min', strtotime( $last_message_date_formatted ) ) );
 
 	// Convert UTC to WordPress timezone.
 	$last_message_date = get_date_from_gmt( $last_message_date_formatted );
@@ -2558,7 +2558,7 @@ function bb_get_thread_start_date( $thread_start_date = false, $show_week_days =
 	);
 
 	if ( is_numeric( $thread_start_date ) ) {
-		$last_message_date_formatted = bp_core_get_format_date( $thread_start_date, 'Y-m-d h:i:s' );
+		$last_message_date_formatted = bp_core_get_format_date( $thread_start_date, 'Y-m-d H:i:s' );
 	} else {
 		$last_message_date_formatted = $thread_start_date;
 	}
