@@ -34,36 +34,35 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 		public function sql( $search_term, $only_totalrow_count = false ) {
 			global $wpdb;
 
-			$enrolled_courses = array();
+			$enrolled_courses  = array();
+			$exclude_post_type = false;
 			if (
+				function_exists( 'is_plugin_active' ) &&
 				is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) &&
-				function_exists( 'learndash_get_post_type_slug' )
+				function_exists( 'learndash_get_post_types' )
 			) {
-				$in_search_post_types = get_post_types( array( 'public' => true ) );
-				$ld_post_types        = learndash_get_post_types( 'course_steps' );
-				$ld_post_types        = array_intersect( $ld_post_types, $in_search_post_types );
-				$learndash_post_type_search_param_enrolled = learndash_post_type_search_param( $this->cpt_name, 'search_enrolled_only' );
-
-				if ( is_user_logged_in() ) {
-				   	if (
-					  in_array( $this->cpt_name, $ld_post_types, true ) &&
-					  false === is_string($learndash_post_type_search_param_enrolled) && 
-					  true === $learndash_post_type_search_param_enrolled
-				   	) {
-						$enrolled_courses = learndash_user_get_enrolled_courses( get_current_user_id(), array(), true );
-						if ( empty( $enrolled_courses ) ) {
-							// Exclude from search.
-							return;
-					  	}
-				   	}
-				} else {
+				$ld_post_types = learndash_get_post_types();
+				if ( ! empty( $ld_post_types ) && in_array( $this->cpt_name, $ld_post_types, true ) ) {
+					$ld_course_slug = learndash_get_post_type_slug( 'course' );
 					if (
-						in_array( $this->cpt_name, $ld_post_types, true ) &&
-						false === is_string($learndash_post_type_search_param_enrolled) && 
-						true === $learndash_post_type_search_param_enrolled
+						$ld_course_slug === $this->cpt_name &&
+						'yes' !== LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_CPT', 'include_in_search' )
 					) {
-						// Exclude from search.
-						return;
+						$exclude_post_type = true;
+					} else {
+						if ( is_user_logged_in() ) {
+							if ( learndash_post_type_search_param( $this->cpt_name, 'search_enrolled_only' ) ) {
+								$enrolled_courses = learndash_user_get_enrolled_courses( get_current_user_id(), array(), true );
+								if ( empty( $enrolled_courses ) ) {
+									// Exclude from search.
+									return;
+								}
+							} else {
+								$exclude_post_type = true;
+							}
+						} elseif ( learndash_post_type_search_param( $this->cpt_name, 'search_login_only' ) ) {
+							$exclude_post_type = true;
+						}
 					}
 				}
 			}
@@ -126,7 +125,10 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 				$sql .= " AND p.post_status = 'publish'";
 			}
 
-			if ( ! empty( $enrolled_courses ) ) {
+			if ( true === $exclude_post_type ) {
+				$sql                 .= " AND p.post_type != %s";
+				$query_placeholder[] = $this->cpt_name;
+			} elseif ( false === $exclude_post_type && ! empty( $enrolled_courses ) ) {
 				$courses_id_in = '"' . implode( '","', $enrolled_courses ) . '"';
 				$sql .= " AND p.ID IN ( SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key = 'course_id' AND meta_value IN ({$courses_id_in}) )";
 			}
