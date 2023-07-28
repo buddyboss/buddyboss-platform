@@ -28,7 +28,7 @@ window.bp = window.bp || {};
 		 * @constructor
 		 */
 		constructor(currentForm = null) {
-			if ( ! currentForm || currentForm === undefined) {
+			if ( !currentForm ) {
 				currentForm = $( "#new-post" );
 			}
 
@@ -848,8 +848,8 @@ window.bp = window.bp || {};
 
 			// Content.
 			if ("undefined" !== typeof activity_data.bbp_topic_content) {
-				var element = $editor.get( 0 );
-				$meditor    = window.MediumEditor
+				var element  = $editor.get( 0 );
+				var $meditor = window.MediumEditor
 					? window.MediumEditor.getEditorFromElement( element )
 					: null;
 				if ($meditor !== null) {
