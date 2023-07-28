@@ -57,6 +57,10 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.3.91 =
+* Bug: Groups - Mentioning users inside a group didn’t show all members
+* Bug: MemberPress - Fixed conflict for user registration where ‘username is required’ error was shown
+
 = 2.3.90 =
 * New Feature! Allow specific profiles types to send messages without being connected
 * Enhancement: Core - Identified code improvements across different components by taking reference from BuddyPress recent releases
