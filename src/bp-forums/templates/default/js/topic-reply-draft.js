@@ -1,11 +1,17 @@
 /**
- * File containing the TopicReplyDraft class definition and
- * handling the topic reply content draft.
+ * Represents a Forum, Topic, and Reply Draft manager.
+ *
+ * This function provides functionality to manage and interact with a forum, topic reply draft.
+ * It allows users to create, update, and retrieve draft data.
+ *
+ * @constructor
+ * @param {jQuery} currentForm - The jQuery object representing the current form element.
  */
 
 window.bp = window.bp || {};
-(function (exports, $) {
-	// Bail if not set.
+(function(exports, $) {
+
+	 // Bail if not set.
 	if (typeof BP_Nouveau === "undefined") {
 		return;
 	}
@@ -13,29 +19,21 @@ window.bp = window.bp || {};
 	bp.Nouveau       = bp.Nouveau || {};
 	bp.Nouveau.Media = bp.Nouveau.Media || {};
 
-	/**
-	 * Represents a Forum, Topic and Reply Draft.
-	 *
-	 * This class provides functionality to manage and interact with a forum, topic reply draft.
-	 * It allows users to create, update, and retrieve draft data.
-	 *
-	 * @class TopicReplyDraft
-	 */
-	class TopicReplyDraft {
-		/**
-		 * Creates an instance of the TopicReplyDraft.
-		 *
-		 * @constructor
-		 */
-		constructor(currentForm = null) {
-			if ( !currentForm ) {
-				currentForm = $( "#new-post" );
-			}
-
-			this.currentForm = currentForm;
+	bp.Nouveau.TopicReplyDraft = function(currentForm) {
+		if ( ! currentForm) {
+			currentForm = $( "#new-post" );
 		}
 
-		start() {
+		this.currentForm = currentForm;
+
+		/**
+		 * Start the TopicReplyDraft and initialize event listeners and global variables.
+		 *
+		 * @function start
+		 *
+		 * @return {void}
+		 */
+		this.start = function() {
 			// Check the user is logged or not.
 			if (
 				"undefined" === typeof BP_Nouveau.forums.params.bb_current_user_id ||
@@ -46,10 +44,16 @@ window.bp = window.bp || {};
 
 			this.setupGlobals();
 			this.addListeners();
-		}
+		};
 
-		setupGlobals() {
-			// Draft variables.
+		/**
+		 * Set up global variables and data for the TopicReplyDraft instance.
+		 *
+		 * @function setupGlobals
+		 * @return {void}
+		 */
+		this.setupGlobals = function() {
+			// Draft variables
 			this.bbp_forum_id               = false;
 			this.bbp_topic_id               = false;
 			this.bbp_reply_to               = false;
@@ -62,8 +66,8 @@ window.bp = window.bp || {};
 			this.all_draft_data             = {};
 			this.bp_nouveau_forums_data     =
 				"undefined" !== typeof BP_Nouveau.forums.draft
-					? BP_Nouveau.forums.draft
-					: {};
+				? BP_Nouveau.forums.draft
+				: {};
 			this.topic_reply_draft          = {
 				object: false,
 				data_key: false,
@@ -77,13 +81,18 @@ window.bp = window.bp || {};
 			this.setupTopicReplyDraftKeys( newPostEvent );
 			this.getTopicReplyDraftData();
 			this.syncTopicReplyDraftData();
-		}
+		};
 
-		addListeners() {
+		/**
+		 * Add event listeners for managing topic reply drafts.
+		 *
+		 * @function addListeners
+		 * @return {void}
+		 */
+		this.addListeners = function() {
 			var self = this;
 			// Set up the draft keys/intervals/display data when BuddyBoss theme is enabled.
 			if (this.is_bb_theme) {
-
 				this.currentForm.closest( '.bbp-topic-form' ).on(
 					'bbp_after_load_topic_form',
 					function() {
@@ -94,28 +103,28 @@ window.bp = window.bp || {};
 				this.currentForm.closest( '.bbp-reply-form' ).on(
 					'bbp_after_load_reply_form',
 					function() {
-						self.setupOnOpenTopicReplyModal();
+							self.setupOnOpenTopicReplyModal();
 					}
 				);
 
 				this.currentForm.closest( '.bbp-reply-form' ).on(
 					'bbp_after_load_inline_reply_form',
 					function() {
-						self.setupOnOpenTopicReplyModal();
+							self.setupOnOpenTopicReplyModal();
 					}
 				);
 
 				this.currentForm.find( '.js-modal-close' ).on(
 					'bbp_after_close_topic_reply_form',
 					function() {
-						self.clearOnCloseTopicReplyModal();
+							self.clearOnCloseTopicReplyModal();
 					}
 				);
 
 				$( document ).on(
 					'bbp_after_close_topic_reply_form_on_overlay',
 					function() {
-						self.clearOnCloseTopicReplyModal();
+							self.clearOnCloseTopicReplyModal();
 					}
 				);
 			} else {
@@ -130,26 +139,26 @@ window.bp = window.bp || {};
 
 			if ( ! $( "body" ).hasClass( "activity" )) {
 				// This will work only for Chrome.
-				window.onbeforeunload = function (event) {
+				window.onbeforeunload = function(event) {
 					if ("undefined" !== typeof event) {
-						self.setupOnReloadWindow();
+							self.setupOnReloadWindow();
 					}
-				}.bind( this );
+				};
 
 				// This will work only for other browsers.
-				window.unload = function (event) {
+				window.unload = function(event) {
 					if ("undefined" !== typeof event) {
 						self.setupOnReloadWindow();
 					}
-				}.bind( this );
+				};
 			}
 
 			// Submit the topic form.
 			this.currentForm.on(
 				"click",
 				"#bbp_topic_submit",
-				function () {
-					self.submitTopicReplyDraftForm()
+				function() {
+					self.submitTopicReplyDraftForm();
 				}
 			);
 
@@ -157,7 +166,7 @@ window.bp = window.bp || {};
 			this.currentForm.on(
 				"click",
 				"#bbp_reply_submit",
-				function () {
+				function() {
 					self.submitTopicReplyDraftForm();
 				}
 			);
@@ -169,39 +178,47 @@ window.bp = window.bp || {};
 					self.discardTopicReplyDraftForm();
 				}
 			);
-		}
+		};
 
-		setupOnOpenTopicReplyModal() {
+		/**
+		 * Set up necessary actions when opening the topic reply modal.
+		 *
+		 * @function setupOnOpenTopicReplyModal
+		 * @return {void}
+		 */
+		this.setupOnOpenTopicReplyModal = function() {
 			this.setupTopicReplyDraftKeys();
 			this.getTopicReplyDraftData();
 			this.syncTopicReplyDraftData();
 			this.setupTopicReplyDraftIntervals();
 			this.displayTopicReplyDraft();
-		}
+		};
 
-		setupTopicReplyDraftKeys(event) {
+		/**
+		 * Set up the keys and data for managing topic reply drafts.
+		 *
+		 * @function setupTopicReplyDraftKeys
+		 *
+		 * @param {Event} event - The event object that triggered the function (optional).
+		 *
+		 * @return {void}
+		 */
+		this.setupTopicReplyDraftKeys = function(event) {
 			if ( ! this.currentForm) {
 				return;
 			}
 
 			if (this.currentForm.find( "#bbp_forum_id" ).length > 0) {
-				this.bbp_forum_id               = parseInt(
-					this.currentForm.find( "#bbp_forum_id" ).val()
-				);
+				this.bbp_forum_id               = parseInt( this.currentForm.find( "#bbp_forum_id" ).val() );
 				this.topic_reply_draft.object   = "topic";
 				this.topic_reply_draft.data_key = "draft_topic";
 
 				if (this.bbp_forum_id > 0) {
-					this.topic_reply_draft.data_key =
-						"draft_discussion_" + this.bbp_forum_id;
+					this.topic_reply_draft.data_key = "draft_discussion_" + this.bbp_forum_id;
 				}
 			} else if (this.currentForm.find( "#bbp_topic_id" ).length > 0) {
-				this.bbp_topic_id               = parseInt(
-					this.currentForm.find( "#bbp_topic_id" ).val()
-				);
-				this.bbp_reply_to               = parseInt(
-					this.currentForm.find( "#bbp_reply_to" ).val()
-				);
+				this.bbp_topic_id               = parseInt( this.currentForm.find( "#bbp_topic_id" ).val() );
+				this.bbp_reply_to               = parseInt( this.currentForm.find( "#bbp_reply_to" ).val() );
 				this.topic_reply_draft.object   = "reply";
 				this.topic_reply_draft.data_key = "draft_reply";
 
@@ -209,68 +226,58 @@ window.bp = window.bp || {};
 					this.topic_reply_draft.data_key = "draft_reply_" + this.bbp_topic_id;
 				} else if (this.bbp_topic_id > 0 && this.bbp_reply_to > 0) {
 					this.topic_reply_draft.data_key =
-						"draft_reply_" + this.bbp_topic_id + "_" + this.bbp_reply_to;
+					"draft_reply_" + this.bbp_topic_id + "_" + this.bbp_reply_to;
 				}
 			}
 
-			if ( this.bbp_topic_id && forms.length > 1 ) {
+			if (this.bbp_topic_id && forms.length > 1) {
 				this.updateSubscriptionCheckboxes();
 			}
-		}
+		};
 
-		updateSubscriptionCheckboxes() {
-			// Change the subscribe checkbox id and label for to make workable for multiple form and topic in single page.
+		this.updateSubscriptionCheckboxes = function() {
+			// Change the subscribe checkbox id and label for to make it workable for multiple forms and topics on a single page.
 			const bbp_topic_subscription_id = this.currentForm.find( '#bbp_topic_subscription' );
 			bbp_topic_subscription_id.prop( 'id', 'bbp_topic_subscription_' + this.bbp_topic_id );
 			bbp_topic_subscription_id.siblings( 'label' ).prop( 'for', 'bbp_topic_subscription_' + this.bbp_topic_id );
-		}
+		};
 
-		getTopicReplyDraftData() {
-			if (
-				! this.topic_reply_draft.data_key ||
-				"" !== this.topic_reply_draft.data_key
-			) {
+		this.getTopicReplyDraftData = function() {
+			if ( ! this.topic_reply_draft.data_key || "" !== this.topic_reply_draft.data_key) {
 				var draft_data = localStorage.getItem( this.topic_reply_draft.data_key );
 				if (
-					! _.isUndefined( draft_data ) &&
-					null !== draft_data &&
-					0 < draft_data.length
+				! _.isUndefined( draft_data ) &&
+				null !== draft_data &&
+				draft_data.length > 0
 				) {
 					// Parse data with JSON.
 					var draft_activity_local_data                        = JSON.parse( draft_data );
 					this.topic_reply_draft.data                          = draft_activity_local_data.data;
 					this.all_draft_data[this.topic_reply_draft.data_key] =
-						draft_activity_local_data.data;
+					draft_activity_local_data.data;
 				}
 			}
 
 			return this.topic_reply_draft;
-		}
+		};
 
-		syncTopicReplyDraftData() {
+		this.syncTopicReplyDraftData = function() {
 			if (
-				"undefined" ===
-					typeof this.all_draft_data[this.topic_reply_draft.data_key] &&
-				"undefined" !== typeof this.bp_nouveau_forums_data &&
-				"undefined" !==
-					typeof this.bp_nouveau_forums_data[this.topic_reply_draft.data_key]
+				typeof this.all_draft_data[this.topic_reply_draft.data_key] === "undefined" &&
+				typeof this.bp_nouveau_forums_data !== "undefined" &&
+				typeof this.bp_nouveau_forums_data[this.topic_reply_draft.data_key] !== "undefined"
 			) {
-				this.topic_reply_draft                               =
-					this.bp_nouveau_forums_data[this.topic_reply_draft.data_key];
-				this.all_draft_data[this.topic_reply_draft.data_key] =
-					this.bp_nouveau_forums_data[this.topic_reply_draft.data_key].data;
-				localStorage.setItem(
-					this.topic_reply_draft.data_key,
-					JSON.stringify( this.topic_reply_draft )
-				);
+				this.topic_reply_draft                               = this.bp_nouveau_forums_data[this.topic_reply_draft.data_key];
+				this.all_draft_data[this.topic_reply_draft.data_key] = this.bp_nouveau_forums_data[this.topic_reply_draft.data_key].data;
+				localStorage.setItem( this.topic_reply_draft.data_key, JSON.stringify( this.topic_reply_draft ) );
 			}
-		}
+		};
 
-		setupTopicReplyDraftIntervals() {
+		this.setupTopicReplyDraftIntervals = function() {
 			if (this.is_bb_theme && $( ".bb-modal-box" ).hasClass( "bb-modal-open" )) {
 				if ( ! window.topic_reply_local_interval) {
 					window.topic_reply_local_interval = setInterval(
-						function () {
+						function() {
 							this.collectTopicReplyDraftActivity();
 						}.bind( this ),
 						3000
@@ -278,17 +285,17 @@ window.bp = window.bp || {};
 				}
 
 				if ( ! window.topic_reply_ajax_interval) {
-					window.topic_reply_ajax_interval = setInterval(
-						function () {
-							this.postTopicReplyDraft( false, false, false );
-						}.bind( this ),
-						20000
-					);
+						window.topic_reply_ajax_interval = setInterval(
+							function() {
+									this.postTopicReplyDraft( false, false, false );
+							}.bind( this ),
+							20000
+						);
 				}
 			} else if ( ! this.is_bb_theme) {
 				if ( ! window.topic_reply_local_interval) {
 					window.topic_reply_local_interval = setInterval(
-						function () {
+						function() {
 							this.collectTopicReplyDraftActivity();
 						}.bind( this ),
 						3000
@@ -297,16 +304,16 @@ window.bp = window.bp || {};
 
 				if ( ! window.topic_reply_ajax_interval) {
 					window.topic_reply_ajax_interval = setInterval(
-						function () {
+						function() {
 							this.postTopicReplyDraft( false, false, false );
 						}.bind( this ),
 						20000
 					);
 				}
 			}
-		}
+		};
 
-		clearOnCloseTopicReplyModal() {
+		this.clearOnCloseTopicReplyModal = function() {
 			bp.Nouveau.Media.reply_topic_display_post = "";
 
 			if ( ! this.is_topic_reply_form_submit) {
@@ -316,7 +323,7 @@ window.bp = window.bp || {};
 
 			this.clearTopicReplyDraftIntervals();
 			setTimeout(
-				function () {
+				function() {
 					this.resetTopicReplyDraftPostForm();
 				}.bind( this ),
 				500
@@ -324,31 +331,25 @@ window.bp = window.bp || {};
 
 			bp.Nouveau.Media.reply_topic_display_post = "";
 			this.is_topic_reply_form_submit           = false;
-		}
+		};
 
-		clearTopicReplyDraftIntervals() {
+		this.clearTopicReplyDraftIntervals = function() {
 			clearInterval( window.topic_reply_local_interval );
 			window.topic_reply_local_interval = false;
 
 			clearInterval( window.topic_reply_ajax_interval );
 			window.topic_reply_ajax_interval = false;
-		}
+		};
 
-		resetLocalTopicReplyDraft() {
+		this.resetLocalTopicReplyDraft = function() {
 			bp.Nouveau.Media.reply_topic_allow_delete_media = false;
 			bp.Nouveau.Media.reply_topic_display_post       = "";
 			this.is_topic_reply_form_submit                 = true;
 
-			if (
-				"undefined" !==
-				typeof this.all_draft_data[this.topic_reply_draft.data_key]
-			) {
+			if (typeof this.all_draft_data[this.topic_reply_draft.data_key] !== "undefined") {
 				delete this.all_draft_data[this.topic_reply_draft.data_key];
 			}
-			if (
-				"undefined" !==
-				typeof this.bp_nouveau_forums_data[this.topic_reply_draft.data_key]
-			) {
+			if (typeof this.bp_nouveau_forums_data[this.topic_reply_draft.data_key] !== "undefined") {
 				delete this.bp_nouveau_forums_data[this.topic_reply_draft.data_key];
 			}
 
@@ -356,17 +357,13 @@ window.bp = window.bp || {};
 			localStorage.removeItem( this.topic_reply_draft.data_key );
 			bp.Nouveau.Media.reply_topic_display_post = "edit";
 
-			var currentForm = this.currentForm
-				? this.currentForm
-				: $( "form#new-post" );
+			var currentForm = this.currentForm ? this.currentForm : $( "form#new-post" );
 
 			// Remove class to display draft.
-			currentForm.removeClass(
-				"has-draft has-content has-media has-gif has-link-preview"
-			);
-		}
+			currentForm.removeClass( "has-draft has-content has-media has-gif has-link-preview" );
+		};
 
-		resetTopicReplyDraftPostForm() {
+		this.resetTopicReplyDraftPostForm = function() {
 			var target                      = this.currentForm ? this.currentForm : $( "form#new-post" );
 			var editor_key                  = target.find( ".bbp-the-content" ).data( "key" ),
 				$editor,
@@ -521,7 +518,7 @@ window.bp = window.bp || {};
 			target.removeClass( "has-content" );
 		}
 
-		resetTopicReplyDraftLinkPreview() {
+		this.resetTopicReplyDraftLinkPreview = function() {
 			var currentTargetForm = this.currentForm ? this.currentForm : $( "form#new-post" );
 
 			// Clear the linkPreviews object for the form.
@@ -537,7 +534,7 @@ window.bp = window.bp || {};
 			$( currentTargetForm ).find( "#bb_link_url" ).remove();
 		}
 
-		collectTopicReplyDraftActivity() {
+		this.collectTopicReplyDraftActivity = function() {
 			var form = this.currentForm ? this.currentForm : $( "#new-post" ),
 				meta = {};
 
@@ -673,19 +670,9 @@ window.bp = window.bp || {};
 					JSON.stringify( this.topic_reply_draft )
 				);
 			}
-			// else {
-			// if (
-			// "undefined" !==
-			// typeof this.all_draft_data[this.topic_reply_draft.data_key]
-			// ) {
-			// delete this.all_draft_data[this.topic_reply_draft.data_key];
-			// }
-			// this.topic_reply_draft.data = false;
-			// localStorage.removeItem( this.topic_reply_draft.data_key );
-			// }
 		}
 
-		checkedTopicReplyDataChanged(old_data, new_data) {
+		this.checkedTopicReplyDataChanged = function(old_data, new_data) {
 			const draft_data_keys = [
 				"bbp_topic_title",
 				"bbp_topic_content",
@@ -739,7 +726,7 @@ window.bp = window.bp || {};
 			);
 		}
 
-		postTopicReplyDraft(is_force_saved, is_reload_window, is_send_all_data) {
+		this.postTopicReplyDraft = function(is_force_saved, is_reload_window, is_send_all_data) {
 			if (
 				! is_force_saved &&
 				"undefined" ===
@@ -801,7 +788,7 @@ window.bp = window.bp || {};
 			this.draft_content_changed = false;
 		}
 
-		displayTopicReplyDraft() {
+		this.displayTopicReplyDraft = function() {
 			bp.Nouveau.Media.reply_topic_allow_delete_media = true;
 			if (_.isUndefined( this.topic_reply_draft )) {
 				return;
@@ -814,7 +801,7 @@ window.bp = window.bp || {};
 			}
 		}
 
-		appendTopicDraftData() {
+		this.appendTopicDraftData = function() {
 			this.getTopicReplyDraftData();
 
 			var $form = this.currentForm ? this.currentForm : $( "form#new-post" );
@@ -917,7 +904,7 @@ window.bp = window.bp || {};
 			this.previewDraftMedia( $form, activity_data );
 		}
 
-		appendReplyDraftData() {
+		this.appendReplyDraftData = function() {
 			this.getTopicReplyDraftData();
 
 			var $form = this.currentForm ? this.currentForm : $( "form#new-post" );
@@ -1023,7 +1010,7 @@ window.bp = window.bp || {};
 			this.previewDraftMedia( $form, activity_data );
 		}
 
-		previewDraftMedia($form, activity_data) {
+		this.previewDraftMedia = function( $form, activity_data ) {
 			var self                        = bp.Nouveau.Media,
 				dropzone_media_container    = $form.find( "#forums-post-media-uploader" ),
 				dropzone_document_container = $form.find(
@@ -1047,8 +1034,8 @@ window.bp = window.bp || {};
 				if (draft_medias.length) {
 					$form.find( "a#forums-media-button" ).trigger( "click" );
 
-					var m_mock_file        = false,
-						m_dropzone_obj_key = dropzone_media_container.data( "key" );
+					var m_mock_file    = false,
+					m_dropzone_obj_key = dropzone_media_container.data( "key" );
 					for (var i = 0; i < draft_medias.length; i++) {
 						m_mock_file = false;
 						self.dropzone_media[m_dropzone_obj_key].push(
@@ -1095,8 +1082,8 @@ window.bp = window.bp || {};
 
 					// Disable other buttons( document/gif ).
 					if (
-						! _.isNull( self.dropzone_obj[m_dropzone_obj_key].files ) &&
-						self.dropzone_obj[m_dropzone_obj_key].files.length !== 0
+					! _.isNull( self.dropzone_obj[m_dropzone_obj_key].files ) &&
+					self.dropzone_obj[m_dropzone_obj_key].files.length !== 0
 					) {
 						if ($form.find( "#forums-document-button" )) {
 							$form
@@ -1106,21 +1093,21 @@ window.bp = window.bp || {};
 						}
 						if ($form.find( "#forums-video-button" )) {
 							$form
-								.find( "#forums-video-button" )
-								.parents( ".post-elements-buttons-item" )
-								.addClass( "disable" );
+							.find( "#forums-video-button" )
+							.parents( ".post-elements-buttons-item" )
+							.addClass( "disable" );
 						}
 						if ($form.find( "#forums-gif-button" )) {
 							$form
-								.find( "#forums-gif-button" )
-								.parents( ".post-elements-buttons-item" )
-								.addClass( "disable" );
+							.find( "#forums-gif-button" )
+							.parents( ".post-elements-buttons-item" )
+							.addClass( "disable" );
 						}
 						if ($form.find( "#forums-media-button" )) {
 							$form
-								.find( "#forums-media-button" )
-								.parents( ".post-elements-buttons-item" )
-								.addClass( "no-click" );
+							.find( "#forums-media-button" )
+							.parents( ".post-elements-buttons-item" )
+							.addClass( "no-click" );
 						}
 					}
 
@@ -1141,8 +1128,8 @@ window.bp = window.bp || {};
 				if (draft_documents.length) {
 					$form.find( "a#forums-document-button" ).trigger( "click" );
 
-					var d_mock_file        = false,
-						d_dropzone_obj_key = dropzone_document_container.data( "key" );
+					var d_mock_file    = false,
+					d_dropzone_obj_key = dropzone_document_container.data( "key" );
 					for (var d = 0; d < draft_documents.length; d++) {
 						d_mock_file = false;
 						self.dropzone_media[d_dropzone_obj_key].push(
@@ -1192,8 +1179,8 @@ window.bp = window.bp || {};
 
 					// Disable other buttons( media/gif ).
 					if (
-						! _.isNull( self.dropzone_obj[d_dropzone_obj_key].files ) &&
-						self.dropzone_obj[d_dropzone_obj_key].files.length !== 0
+					! _.isNull( self.dropzone_obj[d_dropzone_obj_key].files ) &&
+					self.dropzone_obj[d_dropzone_obj_key].files.length !== 0
 					) {
 						if ($form.find( "#forums-media-button" )) {
 							$form
@@ -1203,21 +1190,21 @@ window.bp = window.bp || {};
 						}
 						if ($form.find( "#forums-video-button" )) {
 							$form
-								.find( "#forums-video-button" )
-								.parents( ".post-elements-buttons-item" )
-								.addClass( "disable" );
+							.find( "#forums-video-button" )
+							.parents( ".post-elements-buttons-item" )
+							.addClass( "disable" );
 						}
 						if ($form.find( "#forums-gif-button" )) {
 							$form
-								.find( "#forums-gif-button" )
-								.parents( ".post-elements-buttons-item" )
-								.addClass( "disable" );
+							.find( "#forums-gif-button" )
+							.parents( ".post-elements-buttons-item" )
+							.addClass( "disable" );
 						}
 						if ($form.find( "#forums-document-button" )) {
 							$form
-								.find( "#forums-document-button" )
-								.parents( ".post-elements-buttons-item" )
-								.addClass( "no-click" );
+							.find( "#forums-document-button" )
+							.parents( ".post-elements-buttons-item" )
+							.addClass( "no-click" );
 						}
 					}
 
@@ -1238,8 +1225,8 @@ window.bp = window.bp || {};
 				if (draft_videos.length) {
 					$form.find( "a#forums-video-button" ).trigger( "click" );
 
-					var v_mock_file        = false,
-						v_dropzone_obj_key = dropzone_video_container.data( "key" );
+					var v_mock_file    = false,
+					v_dropzone_obj_key = dropzone_video_container.data( "key" );
 					for (var v = 0; v < draft_videos.length; v++) {
 						v_mock_file = false;
 						self.dropzone_media[v_dropzone_obj_key].push(
@@ -1289,8 +1276,8 @@ window.bp = window.bp || {};
 
 					// Disable other buttons( media/gif ).
 					if (
-						! _.isNull( self.dropzone_obj[v_dropzone_obj_key].files ) &&
-						self.dropzone_obj[v_dropzone_obj_key].files.length !== 0
+					! _.isNull( self.dropzone_obj[v_dropzone_obj_key].files ) &&
+					self.dropzone_obj[v_dropzone_obj_key].files.length !== 0
 					) {
 						if ($form.find( "#forums-media-button" )) {
 							$form
@@ -1300,21 +1287,21 @@ window.bp = window.bp || {};
 						}
 						if ($form.find( "#forums-gif-button" )) {
 							$form
-								.find( "#forums-gif-button" )
-								.parents( ".post-elements-buttons-item" )
-								.addClass( "disable" );
+							.find( "#forums-gif-button" )
+							.parents( ".post-elements-buttons-item" )
+							.addClass( "disable" );
 						}
 						if ($form.find( "#forums-document-button" )) {
 							$form
-								.find( "#forums-document-button" )
-								.parents( ".post-elements-buttons-item" )
-								.addClass( "disable" );
+							.find( "#forums-document-button" )
+							.parents( ".post-elements-buttons-item" )
+							.addClass( "disable" );
 						}
 						if ($form.find( "#forums-video-button" )) {
 							$form
-								.find( "#forums-video-button" )
-								.parents( ".post-elements-buttons-item" )
-								.addClass( "no-click" );
+							.find( "#forums-video-button" )
+							.parents( ".post-elements-buttons-item" )
+							.addClass( "no-click" );
 						}
 					}
 
@@ -1334,40 +1321,40 @@ window.bp = window.bp || {};
 				if ("undefined" !== typeof draft_gif.images) {
 					$form.find( "a#forums-gif-button" ).trigger( "click" );
 					gif_container[0].style.backgroundImage =
-						"url(" + draft_gif.images.fixed_width.url + ")";
+					"url(" + draft_gif.images.fixed_width.url + ")";
 					gif_container[0].style.backgroundSize  = "contain";
 					gif_container[0].style.height          =
-						draft_gif.images.original.height + "px";
+					draft_gif.images.original.height + "px";
 					gif_container[0].style.width           = draft_gif.images.original.width + "px";
 					gif_container
-						.find( ".gif-image-container img" )
-						.attr( "src", draft_gif.images.original.url );
+					.find( ".gif-image-container img" )
+					.attr( "src", draft_gif.images.original.url );
 					gif_container.removeClass( "closed" );
 					if ($( "#bbp_media_gif" ).length) {
 						$( "#bbp_media_gif" ).val( JSON.stringify( draft_gif ) );
 						if ($form.find( "#forums-document-button" )) {
 							$form
-								.find( "#forums-document-button" )
-								.parents( ".post-elements-buttons-item" )
-								.addClass( "disable" );
+							.find( "#forums-document-button" )
+							.parents( ".post-elements-buttons-item" )
+							.addClass( "disable" );
 						}
 						if ($form.find( "#forums-video-button" )) {
 							$form
-								.find( "#forums-video-button" )
-								.parents( ".post-elements-buttons-item" )
-								.addClass( "disable" );
+							.find( "#forums-video-button" )
+							.parents( ".post-elements-buttons-item" )
+							.addClass( "disable" );
 						}
 						if ($form.find( "#forums-gif-button" )) {
 							$form
-								.find( "#forums-gif-button" )
-								.parents( ".post-elements-buttons-item" )
-								.addClass( "no-click" );
+							.find( "#forums-gif-button" )
+							.parents( ".post-elements-buttons-item" )
+							.addClass( "no-click" );
 						}
 						if ($form.find( "#forums-media-button" )) {
 							$form
-								.find( "#forums-media-button" )
-								.parents( ".post-elements-buttons-item" )
-								.addClass( "disable" );
+							.find( "#forums-media-button" )
+							.parents( ".post-elements-buttons-item" )
+							.addClass( "disable" );
 						}
 						$form.addClass( "has-gif" );
 					}
@@ -1375,13 +1362,13 @@ window.bp = window.bp || {};
 			}
 		}
 
-		submitTopicReplyDraftForm() {
+		this.submitTopicReplyDraftForm = function() {
 			this.topic_reply_draft.post_action = "delete";
 			this.clearTopicReplyDraftIntervals();
 			this.resetLocalTopicReplyDraft();
 		}
 
-		discardTopicReplyDraftForm() {
+		this.discardTopicReplyDraftForm = function() {
 
 			var forum_topic = this.currentForm.find( "a[data-modal-id]" ),
 				forum_reply = this.currentForm.find( ".bbp-reply-to-link" );
@@ -1403,7 +1390,7 @@ window.bp = window.bp || {};
 			forum_reply.css( "pointer-events", "" );
 		}
 
-		setupOnReloadWindow() {
+		this.setupOnReloadWindow = function() {
 			if (
 				"update" === this.topic_reply_draft.post_action
 			) {
@@ -1420,15 +1407,10 @@ window.bp = window.bp || {};
 
 	var forms = $( 'form[name="new-post"]' );
 	forms.each(
-		function () {
-			topicReplyDraft = new TopicReplyDraft( $( this ) );
+		function() {
+			var topicReplyDraft = new bp.Nouveau.TopicReplyDraft( $( this ) );
 			topicReplyDraft.start();
 		}
 	);
 
-	/**
-	 * Assigning the TopicReplyDraft class as bp.Nouveau property
-	 * so that we can use this class from other files if required.
-	 */
-	bp.Nouveau.TopicReplyDraft = TopicReplyDraft;
 })( bp, jQuery );
