@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.3.90\n"
+"Project-Id-Version: BuddyBoss Platform 2.3.91\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-07-25 11:39:38+00:00\n"
+"POT-Creation-Date: 2023-07-28 10:30:06+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5867,7 +5867,6 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:793
 #: bp-core/classes/class-bp-core-login-widget.php:110
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:516
 #: bp-forums/common/widgets.php:95
 #: bp-members/classes/class-bp-members-list-table.php:155
 #: bp-members/classes/class-bp-members-ms-list-table.php:142
@@ -7102,7 +7101,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2559
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:538
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:507
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:39
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:57
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:98
@@ -9703,15 +9702,15 @@ msgstr ""
 msgid "Activate Forum Discussions Component"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:539
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:508
 msgid "activate"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:542
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:511
 msgid "LearnDash & bbPress Integration is deactivated."
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:543
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:512
 msgid ""
 "The LearnDash & bbPress Integration plugin can't work if LearnDash LMS "
 "plugin & %1$s component is deactivated. Please activate LearnDash LMS "
