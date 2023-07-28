@@ -1418,8 +1418,6 @@ window.bp = window.bp || {};
 		}
 	}
 
-	// bp.Nouveau.TopicReplyDraft = new TopicReplyDraft();
-
 	var forms = $( 'form[name="new-post"]' );
 	forms.each(
 		function () {
@@ -1427,4 +1425,10 @@ window.bp = window.bp || {};
 			topicReplyDraft.start();
 		}
 	);
+
+	/**
+	 * Assigning the TopicReplyDraft class as bp.Nouveau property
+	 * so that we can use this class from other files if required.
+	 */
+	bp.Nouveau.TopicReplyDraft = TopicReplyDraft;
 })( bp, jQuery );
