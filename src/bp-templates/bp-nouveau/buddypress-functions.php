@@ -383,7 +383,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 */
 		$styles = apply_filters( 'bp_nouveau_enqueue_styles', array(
 			'bp-nouveau-icons-map' => array(
-				'file' => 'icons/css/icons-map%1$s%2$s.css', 'dependencies' => array(), 'version' => $this->version,
+				'file' => 'icons/css/icons-map%1$s.css', 'dependencies' => array(), 'version' => $this->version,
 			),
 			'bp-nouveau-bb-icons' => array(
 				'file' => 'icons/css/bb-icons%1$s%2$s.css', 'dependencies' => array(), 'version' => $bb_icon_version,
@@ -400,7 +400,12 @@ class BP_Nouveau extends BP_Theme_Compat {
 					continue;
 				}
 
-				$file = sprintf( $style['file'], $rtl, $min );
+				if ( 'bp-nouveau-icons-map' === $handle ) {
+					$file = sprintf( $style['file'], $min );
+				} else {
+					$file = sprintf( $style['file'], $rtl, $min );
+				}
+				
 
 				// Locate the asset if needed.
 				if ( false === strpos( $style['file'], '://' ) ) {
