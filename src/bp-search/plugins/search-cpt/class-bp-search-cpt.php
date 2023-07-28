@@ -57,8 +57,6 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 									// Exclude from search.
 									return;
 								}
-							} else {
-								$exclude_post_type = true;
 							}
 						} elseif ( learndash_post_type_search_param( $this->cpt_name, 'search_login_only' ) ) {
 							$exclude_post_type = true;
