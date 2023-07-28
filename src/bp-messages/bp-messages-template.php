@@ -2794,3 +2794,28 @@ function bb_get_message_archived_thread_view_link( $thread_id = 0, $user_id = nu
 	 */
 	return apply_filters( 'bp_get_message_thread_view_link', trailingslashit( $domain . bp_get_messages_slug() . '/archived/view/' . $thread_id ), $thread_id, $user_id );
 }
+
+/**
+ * Apply filter to show hide the message button on member list page.
+ *
+ * @since BuddyBoss 2.3.90
+ *
+ * @param bool $enabled_message_action Whether to show the message button or not.
+ * @param int  $member_id              Member ID.
+ * @param int  $current_user_id        Current user ID.
+ *
+ * @return bool
+ */
+function bb_member_loop_show_message_button( $enabled_message_action, $member_id, $current_user_id ) {
+	return (bool) (
+		$enabled_message_action &&
+		bb_messages_user_can_send_message(
+			array(
+				'sender_id'     => $current_user_id,
+				'recipients_id' => $member_id,
+			)
+		)
+	);
+}
+
+add_filter( 'bb_member_loop_show_message_button', 'bb_member_loop_show_message_button', 10, 3 );
