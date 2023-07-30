@@ -1670,7 +1670,7 @@ class BP_Activity_Activity {
 				/**
 				 * Filters the MySQL prepared statement for the activity query.
 				 *
-				 * @since BuddyBoss 1.5.6
+				 * @since BuddyBoss 2.3.92
 				 *
 				 * @param string $value       Prepared statement for the activity query.
 				 * @param int    $activity_id Activity ID to fetch comments for.
