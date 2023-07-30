@@ -30845,7 +30845,7 @@ msgstr "Einladen"
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-form.php:26
 msgid "To:"
-msgstr "Bis:"
+msgstr "An:"
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-form.php:32
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:80
