@@ -2994,6 +2994,7 @@ window.bp = window.bp || {};
 				function ( e ) {
 					e.preventDefault();
 					var $this = $( this ), $input;
+					var $tooltip = $this.attr( 'data-balloon' );
 
 					if ( $this.hasClass( 'bb-hide-pw' ) ) {
 						$input = $this.closest( '.password-toggle' ).find( 'input' );
@@ -3004,8 +3005,16 @@ window.bp = window.bp || {};
 					$this.toggleClass( 'bb-show-pass' );
 					if ( $this.hasClass( 'bb-show-pass' ) ) {
 						$input.attr( 'type', $default_type );
+						if( $tooltip !== undefined ) {
+							$this.attr( 'data-balloon', $this.attr( 'data-balloon-toggle' ) );
+							$this.attr( 'data-balloon-toggle', $tooltip );
+						}
 					} else {
 						$input.attr( 'type', 'password' );
+						if( $tooltip !== undefined ) {
+							$this.attr( 'data-balloon', $this.attr( 'data-balloon-toggle' ) );
+							$this.attr( 'data-balloon-toggle', $tooltip );
+						}
 					}
 				}
 			);
