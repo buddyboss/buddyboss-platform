@@ -105,22 +105,24 @@ class BP_XProfile_Data_Template {
 	 *
 	 * @since BuddyPress 1.5.0
 	 * @since BuddyPress 2.4.0 Introduced `$member_type` argument.
+	 * @since BuddyPress 11.0.0 `$profile_group_id` accepts an array of profile group ids.
+	 * @since BuddyBoss 2.3.90 `$profile_group_id` accepts an array of profile group ids.
 	 *
 	 * @param array|string $args {
 	 *     An array of arguments. All items are optional.
 	 *
-	 *     @type int          $user_id                 Fetch field data for this user ID.
-	 *     @type string|array $member_type             Limit results to those matching profile type(s).
-	 *     @type int          $profile_group_id        Field group to fetch fields & data for.
-	 *     @type int|bool     $hide_empty_groups       Should empty field groups be skipped.
-	 *     @type int|bool     $fetch_fields            Fetch fields for field group.
-	 *     @type int|bool     $fetch_field_data        Fetch field data for fields in group.
-	 *     @type array        $exclude_groups          Exclude these field groups.
-	 *     @type array        $exclude_fields          Exclude these fields.
-	 *     @type array        $include_fields          Include these fields.
-	 *     @type int|bool     $hide_empty_fields       Should empty fields be skipped.
-	 *     @type int|bool     $fetch_visibility_level  Fetch visibility levels.
-	 *     @type int|bool     $update_meta_cache       Should metadata cache be updated.
+	 *     @type int            $user_id                 Fetch field data for this user ID.
+	 *     @type string|array   $member_type             Limit results to those matching profile type(s).
+	 *     @type int|int[]|bool $profile_group_id        Field group to fetch fields & data for.
+	 *     @type int|bool       $hide_empty_groups       Should empty field groups be skipped.
+	 *     @type int|bool       $fetch_fields            Fetch fields for field group.
+	 *     @type int|bool       $fetch_field_data        Fetch field data for fields in group.
+	 *     @type array          $exclude_groups          Exclude these field groups.
+	 *     @type array          $exclude_fields          Exclude these fields.
+	 *     @type array          $include_fields          Include these fields.
+	 *     @type int|bool       $hide_empty_fields       Should empty fields be skipped.
+	 *     @type int|bool       $fetch_visibility_level  Fetch visibility levels.
+	 *     @type int|bool       $update_meta_cache       Should metadata cache be updated.
 	 * }
 	 */
 	public function __construct( $args = '' ) {

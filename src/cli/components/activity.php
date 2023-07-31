@@ -866,7 +866,7 @@ class Activity extends BuddypressCommand {
 					}
 
 					if ( '' === $r['action'] ) {
-						$r['action'] = sprintf( __( '%1$s commented on the post, %2$s', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ), '<a href="' . $post_permalink . '">' . apply_filters( 'the_title', $post->post_title ) . '</a>' );
+						$r['action'] = sprintf( __( '%1$s commented on the post, %2$s', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ), '<a href="' . $post_permalink . '">' . apply_filters( 'the_title', $post->post_title, $post->ID ) . '</a>' );
 					}
 
 					if ( '' === $r['content'] ) {

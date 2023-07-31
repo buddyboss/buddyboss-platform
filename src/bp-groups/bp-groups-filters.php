@@ -771,6 +771,8 @@ function bp_groups_filter_document_scope( $retval = array(), $filter = array() )
 
 	if ( bp_is_group() ) {
 		$group_ids = array( 'groups' => array( bp_get_current_group_id() ) );
+	} elseif ( ! empty( $filter['group_id'] ) ) {
+		$group_ids = array( 'groups' => array( $filter['group_id'] ) );
 	}
 
 	if ( ! empty( $filter['search_terms'] ) ) {
@@ -890,6 +892,8 @@ function bp_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
 
 	if ( bp_is_group() ) {
 		$group_ids = array( 'groups' => array( bp_get_current_group_id() ) );
+	} elseif ( ! empty( $filter['group_id'] ) ) {
+		$group_ids = array( 'groups' => array( $filter['group_id'] ) );
 	}
 
 	if ( ! empty( $filter['search_terms'] ) ) {

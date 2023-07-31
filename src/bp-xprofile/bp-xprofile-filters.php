@@ -1296,7 +1296,7 @@ function bb_xprofile_repair_user_nicknames_callback() {
 	$users_query = "SELECT users.ID, users.display_name, users.user_login, users.user_nicename, meta.meta_value, xprofile.value as xprofile_nickname
 					FROM `{$wpdb->users}` as users
 					LEFT JOIN `{$wpdb->usermeta}` as meta ON users.ID = meta.user_ID AND meta.meta_key = 'nickname'
-					LEFT JOIN `{$wpdb->prefix}bp_xprofile_data` as xprofile ON users.ID = xprofile.user_id AND xprofile.field_id = %d
+					LEFT JOIN `{$wpdb->base_prefix}bp_xprofile_data` as xprofile ON users.ID = xprofile.user_id AND xprofile.field_id = %d
 					WHERE users.user_nicename != COALESCE(meta.meta_value, users.user_nicename) OR users.user_nicename != COALESCE(xprofile.value, users.user_nicename)";
 
 	$records = $wpdb->get_results( $wpdb->prepare( $users_query, bp_xprofile_nickname_field_id() ) );
@@ -1323,7 +1323,7 @@ function bb_xprofile_repair_user_nicknames_callback() {
 			);
 
 			$wpdb->update(
-				"{$wpdb->prefix}bp_xprofile_data",
+				"{$wpdb->base_prefix}bp_xprofile_data",
 				array( 'value' => $record->user_nicename ),
 				array( 'user_id' => $record->ID, 'field_id' => bp_xprofile_nickname_field_id() ),
 				array( '%s' ),

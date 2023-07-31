@@ -64,7 +64,7 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 				$query_placeholder[] = $search_term;
 			}
 
-			$sql .= " FROM {$wpdb->prefix}posts p";
+			$sql .= " FROM {$wpdb->posts} p";
 
 			$tax        = array();
 			$taxonomies = get_object_taxonomies( $this->cpt_name );

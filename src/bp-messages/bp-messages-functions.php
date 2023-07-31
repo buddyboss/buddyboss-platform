@@ -357,7 +357,7 @@ function messages_new_message( $args = '' ) {
 	}
 
 	// Check if force friendship is enabled and check recipients.
-	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && true !== $is_group_thread && ( count( $message->recipients ) < 2 ) ) {
+	if ( true !== $is_group_thread && ( count( $message->recipients ) < 2 ) ) {
 
 		$error_messages = array(
 			'new_message'       => __( 'You need to be connected with this member in order to send a message.', 'buddyboss' ),
@@ -367,7 +367,14 @@ function messages_new_message( $args = '' ) {
 		);
 
 		foreach ( (array) $message->recipients as $i => $recipient ) {
-			if ( ! friends_check_friendship( $message->sender_id, $recipient->user_id ) ) {
+			if (
+				! bb_messages_user_can_send_message(
+					array(
+						'sender_id'     => $message->sender_id,
+						'recipients_id' => $recipient->user_id,
+					)
+				)
+			) {
 				if ( 'wp_error' === $r['error_type'] ) {
 					if ( $new_reply && 1 === count( $message->recipients ) ) {
 						return new WP_Error( 'message_invalid_recipients', $error_messages['new_reply'] );
@@ -2716,4 +2723,208 @@ function bb_messages_get_group_join_leave_text( $args ) {
 	}
 
 	return '<p class="joined">' . $content . '</p>';
+}
+
+
+/**
+ * Check if user can send message.
+ *
+ * @since BuddyBoss 2.3.90
+ *
+ * @param array $args An array of arguments.
+ *
+ * @return bool|WP_Error
+ */
+function bb_messages_user_can_send_message( $args = array() ) {
+	$can_send_message = false;
+
+	$r = bp_parse_args(
+		$args,
+		array(
+			'sender_id'     => 0,
+			'recipients_id' => 0,
+			'thread_id'     => 0,
+			'group_id'      => 0,
+		),
+	);
+
+	// Bail if no sender.
+	if ( empty( $r['sender_id'] ) ) {
+		return apply_filters( 'bb_messages_user_can_send_message', false, $r );
+	}
+
+	$sender_id      = $r['sender_id'];
+	$recipients_ids = ! empty( $r['recipients_id'] ) && is_int( $r['recipients_id'] ) ? array( $r['recipients_id'] ) : $r['recipients_id'];
+	$thread_id      = $r['thread_id'];
+
+	// Check the sender has the capability to send message.
+	if (
+		! empty( $thread_id ) &&
+		! messages_check_thread_access( $thread_id, $sender_id ) &&
+		! bp_current_user_can( 'bp_moderate' )
+	) {
+		return apply_filters( 'bb_messages_user_can_send_message', false, $r );
+	}
+
+	// If no recipients, check if the thread has recipients.
+	if ( 0 === $recipients_ids && ! empty( $thread_id ) ) {
+		$recipients_ids     = BP_Messages_Thread::get_recipients_for_thread( $thread_id );
+		$recipients_ids     = wp_list_pluck( $recipients_ids, 'user_id' );
+		$r['recipients_id'] = $recipients_ids;
+	}
+
+	// Strip the sender from the recipient list.
+	if ( ! empty( $recipients_ids ) ) {
+		$recipients_ids = array_unique( $recipients_ids );
+		$key            = array_search( $sender_id, $recipients_ids, true );
+		if ( false !== $key ) {
+			unset( $recipients_ids[ $key ] );
+			$recipients_ids = array_values( $recipients_ids );
+		}
+	}
+
+	// Bail if no recipients.
+	if ( empty( $recipients_ids ) ) {
+		return apply_filters( 'bb_messages_user_can_send_message', false, $r );
+	}
+
+	$is_group_message_thread = false;
+
+	// Check if the thread is a group message thread.
+	if ( ! empty( $thread_id ) ) {
+		$is_group_message_thread = (bool) bb_messages_is_group_thread( (int) $thread_id );
+		if ( $is_group_message_thread ) {
+			return apply_filters( 'bb_messages_user_can_send_message', true, $r );
+		}
+	}
+
+	// Check recipients if connected or not.
+	if (
+		false === $is_group_message_thread &&
+		bp_is_active( 'friends' ) &&
+		bp_force_friendship_to_message() &&
+		1 === count( $recipients_ids )
+	) {
+
+		// Check if the sender is allowed to send message to the recipient or vice a versa based on the member type settings.
+		if (
+			bb_messages_allowed_messaging_without_connection( (int) $sender_id ) ||
+			bb_messages_allowed_messaging_without_connection( (int) current( $recipients_ids ) )
+		) {
+			$can_send_message = true;
+			// Check if the sender is connected to the recipient.
+		} elseif ( friends_check_friendship( (int) $sender_id, (int) current( $recipients_ids ) ) ) {
+			$can_send_message = true;
+		}
+	} else {
+		$can_send_message = true;
+	}
+
+	// Check moderation if user blocked or not for single user thread.
+	if (
+		false === $is_group_message_thread &&
+		bp_is_active( 'moderation' ) &&
+		count( $recipients_ids ) === 1
+	) {
+		if ( bp_moderation_is_user_suspended( current( $recipients_ids ) ) ) {
+			return apply_filters( 'bb_messages_user_can_send_message', false, $r );
+		} elseif ( function_exists( 'bb_moderation_is_user_blocked_by' ) && bb_moderation_is_user_blocked_by( current( $recipients_ids ) ) ) {
+			return apply_filters( 'bb_messages_user_can_send_message', false, $r );
+		} elseif ( bp_moderation_is_user_blocked( current( $recipients_ids ) ) ) {
+			return apply_filters( 'bb_messages_user_can_send_message', false, $r );
+		}
+	}
+
+	// Check the access control settings.
+	if ( ! empty( $r['group_id'] ) && count( $recipients_ids ) === 1 ) {
+		$can_send_message = (bool) ( $is_group_message_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_user_can_send_group_message', $can_send_message, current( $recipients_ids ), $sender_id );
+	} else {
+		$can_send_message = (bool) ( $is_group_message_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : bb_user_can_send_messages( $can_send_message, $recipients_ids, '' );
+	}
+
+	return apply_filters( 'bb_messages_user_can_send_message', $can_send_message, $r );
+}
+
+/**
+ * Check if sender can send message without connection.
+ *
+ * @since BuddyBoss 2.3.90
+ *
+ * @param int $user_id User ID.
+ *
+ * @return bool
+ */
+function bb_messages_allowed_messaging_without_connection( $user_id = 0 ) {
+
+	if ( empty( $user_id ) ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
+	if ( empty( $user_id ) || false === bp_member_type_enable_disable() ) {
+		return false;
+	}
+
+	$profile_types_allowed_messaging = get_option( 'bp_member_types_allowed_messaging_without_connection', array() );
+	$member_profile_type             = bp_get_member_type( $user_id );
+	if (
+		! empty( $member_profile_type ) &&
+		! empty( $profile_types_allowed_messaging ) &&
+		array_key_exists( $member_profile_type, $profile_types_allowed_messaging ) &&
+		true === $profile_types_allowed_messaging[ $member_profile_type ]
+	) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * Filter only those message recipients to those are allowed to send message.
+ *
+ * @since BuddyBoss 2.3.90
+ *
+ * @param array         $sql   Clauses in the user_id SQL query.
+ * @param BP_User_Query $query User query object.
+ *
+ * @return array
+ */
+function bb_messages_update_recipient_user_query_uid_clauses( $sql, BP_User_Query $query ) {
+	if (
+		bp_is_active( 'friends' ) &&
+		bp_force_friendship_to_message() &&
+		! empty( $sql['where']['search'] ) &&
+		'ID' === $query->uid_name &&
+		strpos( $sql['where']['search'], "u.$query->uid_name IN" ) > 1
+	) {
+		$pattern = '/u\.ID\s+IN\s+\((\d+(?:,\d+)*)\)/';
+		preg_match_all( $pattern, $sql['where']['search'], $matches );
+
+		$user_ids = array();
+		if ( ! empty( $matches[1] ) ) {
+			foreach ( $matches[1] as $match ) {
+				$user_ids = array_merge( $user_ids, wp_parse_id_list( $match ) );
+			}
+		}
+
+		$filtered_user_ids = array();
+		$friend_ids        = friends_get_friend_user_ids( bp_loggedin_user_id() );
+
+		foreach ( $user_ids as $user_id ) {
+			if ( bb_messages_allowed_messaging_without_connection( $user_id ) ) {
+				$filtered_user_ids[] = $user_id;
+				continue;
+			}
+			if ( ! empty( $friend_ids ) && in_array( $user_id, $friend_ids, true ) ) {
+				$filtered_user_ids[] = $user_id;
+			}
+		}
+
+		$sql['where']['search'] = '';
+		if ( ! empty( $filtered_user_ids ) ) {
+			$filtered_user_ids      = implode( ',', $filtered_user_ids );
+			$sql['where']['search'] = "u.{$query->uid_name} IN ({$filtered_user_ids})";
+		}
+	}
+
+	return $sql;
 }
