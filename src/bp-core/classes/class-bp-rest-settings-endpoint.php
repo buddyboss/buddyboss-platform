@@ -570,6 +570,17 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 
 		$native_presence               = (bool) bp_get_option( 'bb_use_core_native_presence', false );
 		$results['bb-native-presence'] = true === $native_presence ? buddypress()->plugin_url . 'bp-core/bb-core-native-presence.php' : '';
+		
+		// Allowed messaging without connection for profile types.
+		if (
+			bp_member_type_enable_disable() &&
+			bp_is_active( 'messages' ) &&
+			bp_is_active( 'friends' ) &&
+			true === (bool) bp_get_option( 'bp-force-friendship-to-message', false )
+		) {
+			$results['bp_member_types_allowed_messaging_without_connection'] = get_option( 'bp_member_types_allowed_messaging_without_connection' );
+		}
+
 		return $results;
 	}
 

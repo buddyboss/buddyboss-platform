@@ -652,7 +652,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 							'status' => 404,
 						)
 					);
-				} elseif ( 'messages' !== $request['component'] && 
+				} elseif ( 'messages' !== $request['component'] &&
 					function_exists( 'bp_get_attachment_media_id' ) && ! empty( bp_get_attachment_media_id( (int) $attachment_id ) ) &&
 					empty( $request['album_id'] ) ) {
 					$retval = new WP_Error(
@@ -1427,6 +1427,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'album_id'              => $media->album_id,
 			'group_id'              => $media->group_id,
 			'activity_id'           => $media->activity_id,
+			'message_id'            => $media->message_id,
 			'hide_activity_actions' => false,
 			'privacy'               => $media->privacy,
 			'menu_order'            => $media->menu_order,
@@ -1607,6 +1608,12 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				'activity_id'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'A unique numeric ID for the activity.', 'buddyboss' ),
+					'readonly'    => true,
+					'type'        => 'integer',
+				),
+				'message_id'            => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'A unique numeric ID for the Message thread.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),

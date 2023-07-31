@@ -4064,15 +4064,10 @@ function bp_email_unsubscribe_handler() {
 	$raw_hash       = ! empty( $_GET['nh'] ) ? $_GET['nh'] : '';
 	$raw_user_id    = ! empty( $_GET['uid'] ) ? absint( $_GET['uid'] ) : 0;
 	$new_hash       = hash_hmac( 'sha1', "{$raw_email_type}:{$raw_user_id}", bp_email_get_salt() );
+	$message_type   = 'error';
 
 	// Check required values.
 	if ( ! $raw_user_id || ! $raw_email_type || ! $raw_hash || ! array_key_exists( $raw_email_type, $emails ) ) {
-		$redirect_to = wp_login_url();
-		$result_msg  = __( 'Something has gone wrong.', 'buddyboss' );
-		$unsub_msg   = __( 'Please log in and go to your settings to unsubscribe from notification emails.', 'buddyboss' );
-
-		// Check valid hash.
-	} elseif ( ! hash_equals( $new_hash, $raw_hash ) ) {
 		$redirect_to = wp_login_url();
 		$result_msg  = __( 'Something has gone wrong.', 'buddyboss' );
 		$unsub_msg   = __( 'Please log in and go to your settings to unsubscribe from notification emails.', 'buddyboss' );
@@ -4091,6 +4086,11 @@ function bp_email_unsubscribe_handler() {
 		} else {
 			$redirect_to = bp_core_get_user_domain( get_current_user_id() );
 		}
+		// Check valid hash
+	} elseif ( ! hash_equals( $new_hash, $raw_hash ) ) {
+		$redirect_to = wp_login_url();
+		$result_msg  = __( 'Something has gone wrong.', 'buddyboss' );
+		$unsub_msg   = __( 'Please log in and go to your settings to unsubscribe from notification emails.', 'buddyboss' );
 	} else {
 		if ( bp_is_active( 'settings' ) ) {
 			$redirect_to = sprintf(
@@ -4106,8 +4106,9 @@ function bp_email_unsubscribe_handler() {
 		$meta_key = $emails[ $raw_email_type ]['unsubscribe']['meta_key'];
 		bp_update_user_meta( $raw_user_id, $meta_key, 'no' );
 
-		$result_msg = $emails[ $raw_email_type ]['unsubscribe']['message'];
-		$unsub_msg  = __( 'You can change this or any other email notification preferences in your email settings.', 'buddyboss' );
+		$result_msg   = $emails[ $raw_email_type ]['unsubscribe']['message'];
+		$unsub_msg    = __( 'You can change this or any other email notification preferences in your email settings.', 'buddyboss' );
+		$message_type = 'success';
 	}
 
 	$message = sprintf(
@@ -4117,7 +4118,7 @@ function bp_email_unsubscribe_handler() {
 		esc_html( $unsub_msg )
 	);
 
-	bp_core_add_message( $message );
+	bp_core_add_message( $message , $message_type );
 	bp_core_redirect( bp_core_get_user_domain( $raw_user_id ) );
 
 	exit;
@@ -5779,8 +5780,8 @@ function bb_moderation_get_media_record_by_id( $id, $type ) {
 	global $wpdb;
 
 	$record         = array();
-	$media_table    = "{$wpdb->prefix}bp_media";
-	$document_table = "{$wpdb->prefix}bp_document";
+	$media_table    = "{$wpdb->base_prefix}bp_media";
+	$document_table = "{$wpdb->base_prefix}bp_document";
 
 	if ( in_array( $type, array( 'media', 'video' ) ) ) {
 		$cache_key   = 'bb_' . $type . '_activity_' . $id;
@@ -5830,7 +5831,7 @@ function bb_moderation_suspend_record_exist( $id ) {
 		return $record;
 	}
 
-	$suspend_table = "{$wpdb->prefix}bp_suspend";
+	$suspend_table = "{$wpdb->base_prefix}bp_suspend";
 
 	$cache_key = 'bb_suspend_' . $id;
 	$record    = wp_cache_get( $cache_key, 'bp_moderation' );
@@ -5859,7 +5860,7 @@ function bb_moderation_suspend_record_exist( $id ) {
 function bb_moderation_update_suspend_data( $moderated_activities, $offset = 0 ) {
 	global $wpdb;
 
-	$suspend_table = "{$wpdb->prefix}bp_suspend";
+	$suspend_table = "{$wpdb->base_prefix}bp_suspend";
 
 	if ( ! empty( $moderated_activities ) ) {
 		foreach ( $moderated_activities as $moderated_activity ) {
@@ -5930,7 +5931,7 @@ function bb_moderation_update_suspend_data( $moderated_activities, $offset = 0 )
  */
 function bb_moderation_bg_update_moderation_data() {
 	global $wpdb;
-	$suspend_table = "{$wpdb->prefix}bp_suspend";
+	$suspend_table = "{$wpdb->base_prefix}bp_suspend";
 	$table_exists  = (bool) $wpdb->get_results( "DESCRIBE {$suspend_table}" );
 
 	if ( ! $table_exists ) {

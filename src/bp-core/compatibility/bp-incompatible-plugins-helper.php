@@ -134,7 +134,7 @@ function bp_helper_plugins_loaded_callback() {
 			$bp_current_component = bp_current_component();
 
 			// deregister geodirectory select2 script and styles from all component pages
-			if ( $bp_current_component && 'listings' !== $bp_current_component && 'favorites' !== $bp_current_component ) {
+			if ( $bp_current_component && ! in_array( $bp_current_component, array( 'listings', 'favorites', 'reviews' ), true ) ) {
 				add_action( 'wp_enqueue_scripts', 'bp_deregister_geodirectory_script_select2' );
 				add_action( 'wp_print_styles', 'bp_deregister_geodirectory_styles' );
 			}
@@ -490,37 +490,6 @@ function bb_core_add_support_mepr_signup_map_user_fields( $txn ) {
 }
 
 add_action( 'mepr-signup', 'bb_core_add_support_mepr_signup_map_user_fields', 100 );
-
-/**
- * Prevent MemberPress registration when nickname(username) format is not valid
- *
- * @since BuddyBoss 2.3.70
- *
- * @param array $errors		Array of error messages from memberpress signup validation
- *
- * @return array $errors	Array of error messages from memberpress signup validation
- */
-function bb_core_validate_nickname_mepr_signup( $errors ) {
-
-	if ( function_exists( 'bp_xprofile_nickname_field_id' ) ) {
-		$nickname = '';
-		if ( isset( $_POST['user_login'] ) ) {
-			$nickname = sanitize_text_field( $_POST['user_login'] );
-		}
-
-		$field_id = bp_xprofile_nickname_field_id();
-		$message  = bp_xprofile_validate_nickname_value( '', $field_id, $nickname, '' );
-
-		if ( ! empty( $message ) ) {
-			$field_name           = xprofile_get_field( $field_id )->name;
-			$errors['user_login'] = str_replace( $field_name, __( 'Username', 'buddyboss' ), $message );
-		}
-	}
-
-	return $errors;
-}
-
-add_filter( 'mepr-validate-signup', 'bb_core_validate_nickname_mepr_signup' );
 
 /**
  * Include plugin when plugin is activated
