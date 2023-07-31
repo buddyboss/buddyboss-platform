@@ -559,12 +559,18 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$prime       = $request['primary_item_id'];
 		$activity_id = 0;
 
+		remove_action( 'bp_activity_after_save', 'bp_activity_at_name_send_emails' );
+
 		// Post a regular activity update.
 		if ( 'activity_update' === $type ) {
 			if ( bp_is_active( 'groups' ) && ! is_null( $prime ) ) {
+				remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
 				$activity_id = groups_post_update( $prepared_activity );
+				add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
 			} else {
+				remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 				$activity_id = bp_activity_post_update( $prepared_activity );
+				add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 			}
 
 			// Post an activity comment.
@@ -580,12 +586,16 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				$prepared_activity->parent_id = (int) $request['secondary_item_id'];
 			}
 
+			$prepared_activity->skip_notification = true;
+
 			$activity_id = bp_activity_new_comment( $prepared_activity );
 
 			// Otherwise add an activity.
 		} else {
 			$activity_id = bp_activity_add( $prepared_activity );
 		}
+
+		add_action( 'bp_activity_after_save', 'bp_activity_at_name_send_emails' );
 
 		if ( ! is_numeric( $activity_id ) ) {
 			return new WP_Error(
@@ -609,6 +619,38 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		if ( is_wp_error( $fields_update ) ) {
 			return $fields_update;
+		}
+
+		bp_activity_at_name_send_emails( $activity );
+
+		if ( 'activity_update' === $type ) {
+			if ( bp_is_active( 'groups' ) && ! is_null( $prime ) ) {
+				$group_id = ! empty( $prepared_activity->group_id ) ? $prepared_activity->group_id : ( ! empty( $prepared_activity->item_id ) ? $prepared_activity->item_id : 0 );
+				bb_subscription_send_subscribe_group_notifications(
+					$prepared_activity->content,
+					$prepared_activity->user_id,
+					$group_id,
+					$activity_id
+				);
+			} else {
+				bb_activity_send_email_to_following_post( $prepared_activity->content, $prepared_activity->user_id, $activity_id );
+			}
+
+			// Post an activity comment.
+		} elseif ( 'activity_comment' === $type ) {
+			$activity = new BP_Activity_Activity( ( ! empty( $prepared_activity->activity_id ) ? $prepared_activity->activity_id : 0 ) );
+
+			/**
+			 * Fires near the end of an activity comment posting, before the returning of the comment ID.
+			 * Sends a notification to the user.
+			 *
+			 * @param int                  $activity_id       ID of the newly posted activity comment.
+			 * @param array                $prepared_activity Array of parsed comment arguments.
+			 * @param BP_Activity_Activity $activity          Activity item being commented on.
+			 *
+			 * @see   bp_activity_new_comment_notification_helper().
+			 */
+			do_action( 'bp_activity_comment_posted', $activity_id, (array) $prepared_activity, $activity );
 		}
 
 		// Update current user's last activity.
@@ -1307,24 +1349,33 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			// Removed lazyload from link preview.
 			$data['preview_data'] = $this->bp_rest_activity_remove_lazyload( $data['preview_data'], $activity, true );
 		} elseif ( method_exists( $bp->embed, 'autoembed' ) && ! empty( $data['content_stripped'] ) ) {
-			$check_embedded_content = $bp->embed->autoembed( $data['content_stripped'], $activity );
-			if ( ! empty( $check_embedded_content ) ) {
-				preg_match( '/<iframe[^>]*><\/iframe>/', $check_embedded_content, $match );
-				if ( ! empty( $match[0] ) ) {
-					$data['preview_data'] = $match[0];
+			$skip_embed = false;
+			if ( ! empty( $data['content']['rendered'] ) ) {
 
-					// Use a regular expression to find the src URL.
-					preg_match( '/src="([^"]+)"/', $match[0], $matches );
-					if ( ! empty( $matches[1] ) ) {
-
-						// Set link_embed_url with the iframe src URL as a fallback.
-						$data['link_embed_url'] = $matches[1];
-					}
+				// Check if already embed in rendered content.
+				preg_match( '/<iframe[^>]*><\/iframe>/', $data['content']['rendered'], $matchcontent );
+				if ( ! empty( $matchcontent[0] ) ) {
+					$skip_embed = true;
 				}
 			}
-
-			// Removed lazyload from link preview.
-			$data['preview_data'] = $this->bp_rest_activity_remove_lazyload( $data['preview_data'], $activity, true );
+			if ( ! $skip_embed ) {
+				$check_embedded_content = $bp->embed->autoembed( $data['content_stripped'], $activity );
+				if ( ! empty( $check_embedded_content ) ) {
+					preg_match( '/<iframe[^>]*><\/iframe>/', $check_embedded_content, $match );
+					if ( ! empty( $match[0] ) ) {
+						$data['preview_data'] = $match[0];
+						// Use a regular expression to find the src URL.
+						preg_match( '/src="([^"]+)"/', $match[0], $matches );
+						if ( ! empty( $matches[1] ) ) {
+	
+							// Set link_embed_url with the iframe src URL as a fallback.
+							$data['link_embed_url'] = $matches[1];
+						}
+					}
+				}
+				// Removed lazyload from link preview.
+				$data['preview_data'] = $this->bp_rest_activity_remove_lazyload( $data['preview_data'], $activity, true );
+			}
 		}
 
 		// Add link preview data in separate object.
@@ -1373,10 +1424,10 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			if ( ! empty( $schema['properties']['comments'] ) && 'threaded' === $request['display_comments'] ) {
 				// First check the comment is disabled from the activity settings for post type.
 				// For more information please check this PROD-2475.
-				if ( 'activity_comment' !== $activity->type && $data['can_comment'] ) {
+				if ( 'blogs' === $activity->component && $data['can_comment'] ) {
 					$data['comments'] = $this->prepare_activity_comments( $activity->children, $request );
 					// This is for activity comment to attach the comment in the feed.
-				} elseif ( 'activity_comment' === $activity->type ) {
+				} elseif ( 'blogs' !== $activity->component ) {
 					$data['comments'] = $this->prepare_activity_comments( $activity->children, $request );
 				}
 			}

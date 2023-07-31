@@ -909,6 +909,8 @@ function groups_get_total_member_count( $group_id ) {
  * @since BuddyPress 1.2.0
  * @since BuddyPress 2.6.0 Added `$group_type`, `$group_type__in`, and `$group_type__not_in` parameters.
  * @since BuddyPress 2.7.0 Added `$update_admin_cache` and `$parent_id` parameters.
+ * @since BuddyPress 10.0.0 Added `$date_query` parameter.
+ * @since BuddyBoss 2.3.90 Added `$date_query` parameter.
  *
  * @param array|string $args {
  *     Array of arguments. Supports all arguments of
@@ -937,6 +939,7 @@ function groups_get_groups( $args = '' ) {
 		'group_type__in'     => '',             // Array or comma-separated list of group types to limit results to.
 		'group_type__not_in' => '',             // Array or comma-separated list of group types that will be excluded from results.
 		'meta_query'         => false,          // Filter by groupmeta. See WP_Meta_Query for syntax.
+		'date_query'         => false,          // Filter by group last activity date. See WP_Date_Query for syntax.
 		'show_hidden'        => false,          // Show hidden groups to non-admins.
 		'status'             => array(),        // Array or comma-separated list of group statuses to limit results to.
 		'per_page'           => 20,             // The number of results to return per page.
@@ -964,6 +967,7 @@ function groups_get_groups( $args = '' ) {
 			'group_type__in'     => $r['group_type__in'],
 			'group_type__not_in' => $r['group_type__not_in'],
 			'meta_query'         => $r['meta_query'],
+			'date_query'         => $r['date_query'],
 			'show_hidden'        => $r['show_hidden'],
 			'status'             => $r['status'],
 			'per_page'           => $r['per_page'],

@@ -343,7 +343,11 @@ if ( ! class_exists( 'BBP_Topics_Admin' ) ) :
 
 					// Super sticky in all forums
 					case 'super':
-						bbp_stick_topic( $topic_id, true );
+						if ( bb_is_group_forum_topic( $topic_id ) ) {
+							bbp_stick_topic( $topic_id );
+						} else {
+							bbp_stick_topic( $topic_id, true );
+						}
 						break;
 
 					// Normal

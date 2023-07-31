@@ -3628,23 +3628,28 @@ function bbp_get_form_topic_type_dropdown( $args = '' ) {
 	}
 
 	// Used variables
-	$tab = ! empty( $r['tab'] ) ? ' tabindex="' . (int) $r['tab'] . '"' : '';
+	$tab = ! empty( $r['tab'] ) ? ' tabindex="' . esc_attr( (int) $r['tab'] ) . '"' : '';
 
 	// Start an output buffer, we'll finish it after the select loop
-	ob_start(); ?>
+	ob_start();
 
-    <select name="<?php echo esc_attr( $r['select_id'] ); ?>"
-            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?>>
+	// Get topic sticky types.
+	$topic_sticky_types = bbp_get_topic_types();
 
-		<?php foreach ( bbp_get_topic_types() as $key => $label ) : ?>
-
-            <option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $r['selected'] ); ?>>
-                <span><?php _e( 'Type: ', 'buddyboss' ); ?></span><?php echo esc_html( $label ); ?></option>
-
-		<?php endforeach; ?>
-
-    </select>
-
+	// Get current topic id
+	$topic_id = bbp_get_topic_id( $r['topic_id'] );
+	if ( ! empty( $topic_id ) && bb_is_group_forum_topic( $topic_id ) ) {
+		unset( $topic_sticky_types['super'] );
+	}
+	?>
+		<select name="<?php echo esc_attr( $r['select_id'] ); ?>" id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?>>
+			<?php foreach ( $topic_sticky_types as $key => $label ) : ?>
+				<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $r['selected'] ); ?>>
+					<span><?php _e( 'Type: ', 'buddyboss' ); ?></span>
+					<?php echo esc_html( $label ); ?>
+				</option>
+			<?php endforeach; ?>
+		</select>
 	<?php
 
 	// Return the results

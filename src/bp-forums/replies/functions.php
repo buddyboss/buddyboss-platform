@@ -2243,7 +2243,7 @@ function _bbp_has_replies_where( $where = '', $query = false ) {
 	global $wpdb;
 
 	// Table name for posts
-	$table_name = $wpdb->prefix . 'posts';
+	$table_name = $wpdb->posts;
 
 	// Get the topic ID from the post_parent, set in bbp_has_replies()
 	$topic_id = bbp_get_topic_id( $query->get( 'post_parent' ) );
