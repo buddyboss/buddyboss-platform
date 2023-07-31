@@ -36,11 +36,7 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 
 			$enrolled_courses  = array();
 			$exclude_post_type = false;
-			if (
-				function_exists( 'is_plugin_active' ) &&
-				is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) &&
-				function_exists( 'learndash_get_post_types' )
-			) {
+			if ( function_exists( 'learndash_get_post_types' ) ) {
 				$ld_post_types = learndash_get_post_types();
 				if ( ! empty( $ld_post_types ) && in_array( $this->cpt_name, $ld_post_types, true ) ) {
 					$ld_course_slug = learndash_get_post_type_slug( 'course' );
