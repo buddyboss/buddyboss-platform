@@ -25783,6 +25783,10 @@ div.dropzone.dz-started .dz-default.dz-message {
   color: #fff;
 }
 
+.dropzone.video-dropzone .dz-preview.dz-processing:not(.dz-complete) .dz-details .dz-filename {
+  display: none;
+}
+
 .dropzone.video-dropzone div.dz-preview.dz-file-preview .dz-remove {
   position: absolute;
   bottom: 5px;
@@ -25858,6 +25862,10 @@ div.dropzone.dz-started .dz-default.dz-message {
   position: absolute;
   top: 0;
   left: 0;
+}
+
+.dropzone.video-dropzone .dz-preview.dz-file-preview.dz-has-thumbnail:not(.dz-error) .dz-details .dz-filename {
+  display: none;
 }
 
 .dropzone.video-dropzone .dz-preview:not(.dz-has-thumbnail) .dz-progress-ring-wrap {
