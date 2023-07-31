@@ -2546,6 +2546,10 @@ h2.has_tutorial_btn {
 	border: 1px solid #ffeeb3;
 	border-radius: 4px;
 
+	a {
+		color: inherit;
+	}
+
 	@media screen and (max-width: 782px) {
 		margin-left: 0;
 	}

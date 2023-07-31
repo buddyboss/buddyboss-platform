@@ -2398,6 +2398,10 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   border-radius: 4px;
 }
 
+.bb-warning-section a {
+  color: inherit;
+}
+
 @media screen and (max-width: 782px) {
   .bb-warning-section {
     margin-left: 0;
