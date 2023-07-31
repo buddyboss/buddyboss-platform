@@ -85,7 +85,7 @@ jQuery( document ).ready(
 					'select2:select',
 					function ( e ) {
 						var form = jQuery( element ).closest( 'form' ),
-							bbp_topic_tags = form.find( '.bbp_topic_tags' ),
+							bbp_topic_tags = form.find( '#bbp_topic_tags' ),
 							existingTags   = bbp_topic_tags.val(),
 							tagsArrayData  = existingTags && existingTags.length > 0 ? existingTags.split( ',' ) : [],
 							data           = e.params.data;
@@ -114,7 +114,7 @@ jQuery( document ).ready(
 					} );
 					var tags = tagsArrayData.join( ',' );
 
-					form.find( '.bbp_topic_tags' ).val( tags );
+					form.find( '#bbp_topic_tags' ).val( tags );
 
 					if ( tags.length === 0 ) {
 						jQuery( window ).scrollTop( jQuery( window ).scrollTop() + 1 );
