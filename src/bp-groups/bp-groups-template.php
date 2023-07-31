@@ -429,11 +429,6 @@ function bp_has_groups( $args = '' ) {
 		$parent_id = 0;
 	}
 
-	$show_hidden = true;
-	if ( ! empty( bp_displayed_user_id() ) && ! empty( bp_current_user_id() ) && bp_displayed_user_id() === bp_current_user_id() ) {
-		$show_hidden = false;
-	}
-
 	// Parse defaults and requested arguments.
 	$r = bp_parse_args(
 		$args,
@@ -444,7 +439,7 @@ function bp_has_groups( $args = '' ) {
 			'page'               => 1,
 			'per_page'           => 20,
 			'max'                => false,
-			'show_hidden'        => $show_hidden,
+			'show_hidden'        => true,
 			'page_arg'           => 'grpage',
 			'user_id'            => bp_displayed_user_id(),
 			'slug'               => $slug,
