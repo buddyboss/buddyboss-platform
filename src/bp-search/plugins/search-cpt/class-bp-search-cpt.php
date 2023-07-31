@@ -49,10 +49,6 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 						if ( is_user_logged_in() ) {
 							if ( learndash_post_type_search_param( $this->cpt_name, 'search_enrolled_only' ) ) {
 								$enrolled_courses = learndash_user_get_enrolled_courses( get_current_user_id(), array(), true );
-								if ( empty( $enrolled_courses ) ) {
-									// Exclude from search.
-									return;
-								}
 							}
 						} elseif ( learndash_post_type_search_param( $this->cpt_name, 'search_login_only' ) ) {
 							$exclude_post_type = true;
