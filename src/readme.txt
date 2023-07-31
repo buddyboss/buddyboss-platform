@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.2.2
 Requires PHP: 5.6.20
-Stable tag: 2.3.81
+Stable tag: 2.3.91
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,40 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.3.91 =
+* Bug: Groups - Mentioning users inside a group didn’t show all members
+* Bug: MemberPress - Fixed conflict for user registration where ‘username is required’ error was shown
+
+= 2.3.90 =
+* New Feature! Allow specific profiles types to send messages without being connected
+* Enhancement: Core - Identified code improvements across different components by taking reference from BuddyPress recent releases
+* Enhancement: Tools - New repair option to recalculate group member count for each group
+* Bug: Activity - Deleting only the 'activity post' of a discussion or any post from other component was also deleting the attachment from the original discussion
+* Bug: Activity - Twitter link previews UI resolved to not return a console error
+* Bug: Activity - Videos on lessons were showing double in the news feed when the lesson was automatically fetched after creation
+* Bug: Core - Fatal error resolved when applying "the_title" filter
+* Bug: Core - Identified filters refinement and bugs by taking reference from BuddyPress most recent releases
+* Bug: Core - Identified security issues by taking reference from BBPress most recent releases
+* Bug: Core - Identified security Issues by taking reference from BuddyPress most recent releases
+* Bug: Core - Resolved fatal error whenever bbp_db() function was called
+* Bug: Core - Site notice appears twice on subgroup overview page
+* Bug: Core - Unnecessary use of "!important" tag in message component
+* Bug: Core - Unnecessary use of "!important" tag in theme related to social groups component
+* Bug: Core - When clicking the unsubscribe link while logged in as different user, a success error message was displayed instead of alert error message
+* Bug: Core - Wrong translation string for "You will no longer receive emails of new discussions in groups you are subscribed to"
+* Bug: Forums - Could not add a hyperlink to text that began with italic/bold formatting
+* Bug: Forums - Data was not accurate when using specific forum shortcodes on a single page
+* Bug: Geodirectory - Fixed compatibility issue with a profile’s Reviews tab showing incorrect stars
+* Bug: Groups - Comments were not visible to logged in users viewing a public group whilst not being a group member
+* Bug: Groups - Courses tab was not working whenever the courses slug was changed into a different language
+* Bug: Groups - Subgroups were not displaying whenever going to User > Profile > Groups
+* Bug: Media - Documents for public groups were not showing in the app for logged out users
+* Bug: Media - Wrong icon style was used for the Create album button
+* Bug: MemberPress - Upload file now compatible when using custom registration or checkout forms
+* Bug: Multisite - Database error for user activity on Multisite Network Installation after updating to v 2.3.1
+* Bug: Multisite - Members page previously displayed 404 error whenever Profile Link's Link Format was configured to be a "Unique Identifier"
+* Bug: Profiles - Profile type filter was not showing plural labels on the Members directory
 
 = 2.3.81 =
 * Bug: Core - Fixed access to public pages as a logged out user so that it no longer redirects to the login form
