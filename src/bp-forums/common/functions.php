@@ -1661,8 +1661,8 @@ function bbp_get_all_child_ids( $parent_id = 0, $post_type = 'post' ) {
 	global $wpdb;
 
 	// Bail if nothing passed
-	if ( empty( $parent_id ) ) {
-		return false;
+	if ( empty( $parent_id ) || empty( $post_type ) ) {
+		return array();
 	}
 
 	// The ID of the cached query
