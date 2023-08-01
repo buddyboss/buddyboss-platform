@@ -3933,6 +3933,7 @@ window.bp = window.bp || {};
 			scrapURL: function ( urlText, targetPreviewParent, targetDataInput ) {
 				var self = this;
 				var urlString = '';
+				var bbLinkUrlInput = '';
 
 				if ( targetPreviewParent ) {
 					var formEl = targetPreviewParent.closest( 'form' );
@@ -3940,6 +3941,7 @@ window.bp = window.bp || {};
 						var currentValue = JSON.parse( formEl.find( 'input#bb_link_url').val() );
 						self.options.link_url = currentValue.url ? currentValue.url : '';
 						self.options.link_image_index_save = currentValue.link_image_index_save;
+						bbLinkUrlInput = self.options.link_url;
 					}
 				}
 
@@ -3977,6 +3979,10 @@ window.bp = window.bp || {};
 					urlString = this.getURL( 'www', urlText );
 				}
 
+				if ( '' === urlString && '' === bbLinkUrlInput ) {
+					return;
+				}
+
 				if ( urlString !== '' ) {
 					// check if the url of any of the excluded video oembeds.
 					var url_a    = document.createElement( 'a' );
@@ -3989,8 +3995,8 @@ window.bp = window.bp || {};
 
 				if ( '' !== urlString ) {
 					this.loadURLPreview( urlString );
-				} else if( self.options.link_url ) {
-					this.loadURLPreview( self.options.link_url );
+				} else if ( bbLinkUrlInput ) {
+					this.loadURLPreview( bbLinkUrlInput );
 				}
 			},
 
