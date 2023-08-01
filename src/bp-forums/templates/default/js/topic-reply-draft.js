@@ -1,9 +1,17 @@
-/* global bp */
-window.bp = window.bp || {};
+/**
+ * Represents a Forum, Topic, and Reply Draft manager.
+ *
+ * This function provides functionality to manage and interact with a forum, topic reply draft.
+ * It allows users to create, update, and retrieve draft data.
+ *
+ * @constructor
+ * @param {jQuery} currentForm - The jQuery object representing the current form element.
+ */
 
+window.bp = window.bp || {};
 ( function ( exports, $ ) {
 
-	// Bail if not set.
+	 // Bail if not set.
 	if ( typeof BP_Nouveau === 'undefined' ) {
 		return;
 	}
@@ -11,9 +19,21 @@ window.bp = window.bp || {};
 	bp.Nouveau       = bp.Nouveau || {};
 	bp.Nouveau.Media = bp.Nouveau.Media || {};
 
-	bp.Nouveau.TopicReplyDraft = {
-		start: function () {
+	bp.Nouveau.TopicReplyDraft = function(currentForm) {
+		if ( ! currentForm ) {
+			currentForm = $( '#new-post' );
+		}
 
+		this.currentForm = currentForm;
+
+		/**
+		 * Start the TopicReplyDraft and initialize event listeners and global variables.
+		 *
+		 * @function start
+		 *
+		 * @return {void}
+		 */
+		this.start = function() {
 			// Check the user is logged or not.
 			if ( 'undefined' === typeof BP_Nouveau.forums.params.bb_current_user_id || 0 === parseInt( BP_Nouveau.forums.params.bb_current_user_id ) ) {
 				return;
@@ -21,22 +41,20 @@ window.bp = window.bp || {};
 
 			this.setupGlobals();
 			this.addListeners();
-		},
+		};
 
 		/**
-		 * [setupGlobals description]
+		 * Set up global variables and data for the TopicReplyDraft instance.
 		 *
-		 * @return {[type]} [description]
+		 * @function setupGlobals
+		 * @return {void}
 		 */
-		setupGlobals: function () {
-
-			var bodySelector = $( 'body' );
-
-			// Draft variables.
+		this.setupGlobals = function() {
+			// Draft variables
 			this.bbp_forum_id               = false;
 			this.bbp_topic_id               = false;
 			this.bbp_reply_to               = false;
-			this.is_bb_theme                = bodySelector.hasClass( 'buddyboss-theme' );
+			this.is_bb_theme                = $( 'body' ).hasClass( 'buddyboss-theme' );
 			this.topic_reply_local_interval = false;
 			this.topic_reply_ajax_interval  = false;
 			this.draft_ajax_request         = null;
@@ -49,77 +67,152 @@ window.bp = window.bp || {};
 				data_key: false,
 				data: false,
 				post_action: 'update',
-				is_content_valid: false
+				is_content_valid: false,
 			};
 
 			// Set object and key for draft.
-			var newPostEvent = new Event( $( '#new-post' ) );
-			bp.Nouveau.TopicReplyDraft.setupTopicReplyDraftKeys( newPostEvent );
-			bp.Nouveau.TopicReplyDraft.getTopicReplyDraftData();
-			bp.Nouveau.TopicReplyDraft.syncTopicReplyDraftData();
-		},
+			var newPostEvent = new Event( this.currentForm );
+			this.setupTopicReplyDraftKeys( newPostEvent );
+			this.getTopicReplyDraftData();
+			this.syncTopicReplyDraftData();
+		};
 
 		/**
-		 * [addListeners description]
+		 * Add event listeners for managing topic reply drafts.
+		 *
+		 * @function addListeners
+		 * @return {void}
 		 */
-		addListeners: function () {
-
-			// Set up the draft keys/intervals/display data when Buddyboss theme is enabled.
+		this.addListeners = function() {
+			var self = this;
+			// Set up the draft keys/intervals/display data when BuddyBoss theme is enabled.
 			if ( this.is_bb_theme ) {
-				$( document ).on( 'bbp_after_load_topic_form', this.setupOnOpenTopicReplyModal.bind( this ) );
-				$( document ).on( 'bbp_after_load_reply_form', this.setupOnOpenTopicReplyModal.bind( this ) );
-				$( document ).on( 'bbp_after_load_inline_reply_form', this.setupOnOpenTopicReplyModal.bind( this ) );
-				$( document ).on( 'bbp_after_close_topic_reply_form', this.clearOnCloseTopicReplyModal.bind( this ) );
+				this.currentForm.closest( '.bbp-topic-form' ).on(
+					'bbp_after_load_topic_form',
+					function () {
+						self.setupOnOpenTopicReplyModal();
+					}
+				);
+
+				this.currentForm.closest( '.bbp-reply-form' ).on(
+					'bbp_after_load_reply_form',
+					function () {
+						self.setupOnOpenTopicReplyModal();
+					}
+				);
+
+				this.currentForm.closest( '.bbp-reply-form' ).on(
+					'bbp_after_load_inline_reply_form',
+					function () {
+						self.setupOnOpenTopicReplyModal();
+					}
+				);
+
+				this.currentForm.find( '.js-modal-close' ).on(
+					'bbp_after_close_topic_reply_form',
+					function () {
+						self.clearOnCloseTopicReplyModal();
+					}
+				);
+
+				$( document ).on(
+					'bbp_after_close_topic_reply_form_on_overlay',
+					function () {
+						self.clearOnCloseTopicReplyModal();
+					}
+				);
 			} else {
 				// Set up the intervals.
-				$( window ).on( 'load', this.setupTopicReplyDraftIntervals.bind( this ) );
+				$( window ).on(
+					'load',
+					function () {
+						self.setupTopicReplyDraftIntervals();
+					}
+				);
 			}
 
 			if ( ! $( 'body' ).hasClass( 'activity' ) ) {
 				// This will work only for Chrome.
-				window.onbeforeunload = function( event ) {
+				window.onbeforeunload = function ( event ) {
 					if ( 'undefined' !== typeof event ) {
-						bp.Nouveau.TopicReplyDraft.setupOnReloadWindow();
+						self.setupOnReloadWindow();
 					}
 				};
 
 				// This will work only for other browsers.
-				window.unload = function( event ) {
+				window.unload = function ( event ) {
 					if ( 'undefined' !== typeof event ) {
-						bp.Nouveau.TopicReplyDraft.setupOnReloadWindow();
+						self.setupOnReloadWindow();
 					}
 				};
 			}
 
 			// Submit the topic form.
-			$( document ).on( 'click', '#new-post #bbp_topic_submit', this.submitTopicReplyDraftForm.bind( this ) );
+			this.currentForm.on(
+				'click',
+				'#bbp_topic_submit',
+				function () {
+					self.submitTopicReplyDraftForm();
+				}
+			);
+
 			// Submit the reply form.
-			$( document ).on( 'click', '#new-post #bbp_reply_submit', this.submitTopicReplyDraftForm.bind( this ) );
+			this.currentForm.on(
+				'click',
+				'#bbp_reply_submit',
+				function () {
+					self.submitTopicReplyDraftForm();
+				}
+			);
 
-			$( document ).on( 'click', '#new-post .bb_discard_topic_reply_draft', this.discardTopicReplyDraftForm.bind( this ) );
-		},
+			this.currentForm.on(
+				'click',
+				'.bb_discard_topic_reply_draft',
+				function () {
+					self.discardTopicReplyDraftForm();
+				}
+			);
+		};
 
-		setupOnOpenTopicReplyModal: function() {
-			bp.Nouveau.TopicReplyDraft.setupTopicReplyDraftKeys();
-			bp.Nouveau.TopicReplyDraft.getTopicReplyDraftData();
-			bp.Nouveau.TopicReplyDraft.syncTopicReplyDraftData();
-			bp.Nouveau.TopicReplyDraft.setupTopicReplyDraftIntervals();
-			bp.Nouveau.TopicReplyDraft.displayTopicReplyDraft();
-		},
+		/**
+		 * Set up necessary actions when opening the topic reply modal.
+		 *
+		 * @function setupOnOpenTopicReplyModal
+		 * @return {void}
+		 */
+		this.setupOnOpenTopicReplyModal = function () {
+			this.setupTopicReplyDraftKeys();
+			this.getTopicReplyDraftData();
+			this.syncTopicReplyDraftData();
+			this.setupTopicReplyDraftIntervals();
+			this.displayTopicReplyDraft();
+		};
 
-		setupTopicReplyDraftKeys: function() {
+		/**
+		 * Set up the keys and data for managing topic reply drafts.
+		 *
+		 * @function setupTopicReplyDraftKeys
+		 *
+		 * @param {Event} event - The event object that triggered the function (optional).
+		 *
+		 * @return {void}
+		 */
+		this.setupTopicReplyDraftKeys = function ( event ) {
+			if ( !this.currentForm ) {
+				return;
+			}
 
-			if ( $( '#bbp_forum_id' ).length > 0 ) {
-				this.bbp_forum_id               = parseInt( $( '#bbp_forum_id' ).val() );
+			if ( this.currentForm.find( '#bbp_forum_id' ).length > 0 ) {
+				this.bbp_forum_id               = parseInt( this.currentForm.find( '#bbp_forum_id' ).val() );
 				this.topic_reply_draft.object   = 'topic';
 				this.topic_reply_draft.data_key = 'draft_topic';
 
 				if ( 0 < this.bbp_forum_id ) {
 					this.topic_reply_draft.data_key = 'draft_discussion_' + this.bbp_forum_id;
 				}
-			} else if ( $( '#bbp_topic_id' ).length > 0 ) {
-				this.bbp_topic_id               = parseInt( $( '#bbp_topic_id' ).val() );
-				this.bbp_reply_to               = parseInt( $( '#bbp_reply_to' ).val() );
+			} else if ( this.currentForm.find( '#bbp_topic_id' ).length > 0 ) {
+				this.bbp_topic_id               = parseInt( this.currentForm.find( '#bbp_topic_id' ).val() );
+				this.bbp_reply_to               = parseInt( this.currentForm.find( '#bbp_reply_to' ).val() );
 				this.topic_reply_draft.object   = 'reply';
 				this.topic_reply_draft.data_key = 'draft_reply';
 
@@ -129,15 +222,23 @@ window.bp = window.bp || {};
 					this.topic_reply_draft.data_key = 'draft_reply_' + this.bbp_topic_id + '_' + this.bbp_reply_to;
 				}
 			}
-		},
 
-		getTopicReplyDraftData: function() {
+			if ( this.bbp_topic_id && forms.length > 1 ) {
+				this.updateSubscriptionCheckboxes();
+			}
+		};
 
-			if ( ! this.topic_reply_draft.data_key || '' !== this.topic_reply_draft.data_key ) {
+		this.updateSubscriptionCheckboxes = function() {
+			// Change the subscribe checkbox id and label for to make it workable for multiple forms and topics on a single page.
+			const bbp_topic_subscription_id = this.currentForm.find( '#bbp_topic_subscription' );
+			bbp_topic_subscription_id.prop( 'id', 'bbp_topic_subscription_' + this.bbp_topic_id );
+			bbp_topic_subscription_id.siblings( 'label' ).prop( 'for', 'bbp_topic_subscription_' + this.bbp_topic_id );
+		};
 
+		this.getTopicReplyDraftData = function() {
+			if ( ! this.topic_reply_draft.data_key || '' !== this.topic_reply_draft.data_key) {
 				var draft_data = localStorage.getItem( this.topic_reply_draft.data_key );
 				if ( ! _.isUndefined( draft_data ) && null !== draft_data && 0 < draft_data.length ) {
-
 					// Parse data with JSON.
 					var draft_activity_local_data                        = JSON.parse( draft_data );
 					this.topic_reply_draft.data                          = draft_activity_local_data.data;
@@ -146,24 +247,27 @@ window.bp = window.bp || {};
 			}
 
 			return this.topic_reply_draft;
-		},
+		};
 
-		syncTopicReplyDraftData: function() {
-			if ( 'undefined' === typeof this.all_draft_data[this.topic_reply_draft.data_key] && 'undefined' !== typeof this.bp_nouveau_forums_data && 'undefined' !== typeof this.bp_nouveau_forums_data[this.topic_reply_draft.data_key] ) {
+		this.syncTopicReplyDraftData = function() {
+			if (
+				'undefined' === typeof this.all_draft_data[this.topic_reply_draft.data_key] &&
+				'undefined' !== typeof this.bp_nouveau_forums_data &&
+				'undefined' !== typeof this.bp_nouveau_forums_data[this.topic_reply_draft.data_key]
+			) {
 				this.topic_reply_draft                               = this.bp_nouveau_forums_data[this.topic_reply_draft.data_key];
 				this.all_draft_data[this.topic_reply_draft.data_key] = this.bp_nouveau_forums_data[this.topic_reply_draft.data_key].data;
 				localStorage.setItem( this.topic_reply_draft.data_key, JSON.stringify( this.topic_reply_draft ) );
 			}
-		},
+		};
 
-		setupTopicReplyDraftIntervals: function() {
-
+		this.setupTopicReplyDraftIntervals = function() {
 			if ( this.is_bb_theme && $( '.bb-modal-box' ).hasClass( 'bb-modal-open' ) ) {
 				if ( ! window.topic_reply_local_interval ) {
 					window.topic_reply_local_interval = setInterval(
 						function() {
-							bp.Nouveau.TopicReplyDraft.collectTopicReplyDraftActivity();
-						},
+							this.collectTopicReplyDraftActivity();
+						}.bind( this ),
 						3000
 					);
 				}
@@ -171,18 +275,17 @@ window.bp = window.bp || {};
 				if ( ! window.topic_reply_ajax_interval ) {
 					window.topic_reply_ajax_interval = setInterval(
 						function() {
-							bp.Nouveau.TopicReplyDraft.postTopicReplyDraft( false, false, false );
-						},
+							this.postTopicReplyDraft( false, false, false );
+						}.bind( this ),
 						20000
 					);
 				}
-
 			} else if ( ! this.is_bb_theme ) {
 				if ( ! window.topic_reply_local_interval ) {
 					window.topic_reply_local_interval = setInterval(
 						function() {
-							bp.Nouveau.TopicReplyDraft.collectTopicReplyDraftActivity();
-						},
+							this.collectTopicReplyDraftActivity();
+						}.bind( this ),
 						3000
 					);
 				}
@@ -190,45 +293,46 @@ window.bp = window.bp || {};
 				if ( ! window.topic_reply_ajax_interval ) {
 					window.topic_reply_ajax_interval = setInterval(
 						function() {
-							bp.Nouveau.TopicReplyDraft.postTopicReplyDraft( false, false, false );
-						},
+							this.postTopicReplyDraft( false, false, false );
+						}.bind( this ),
 						20000
 					);
 				}
 			}
-		},
+		};
 
-		clearOnCloseTopicReplyModal: function() {
+		this.clearOnCloseTopicReplyModal = function() {
 			bp.Nouveau.Media.reply_topic_display_post = '';
 
-			if ( ! bp.Nouveau.TopicReplyDraft.is_topic_reply_form_submit ) {
-				bp.Nouveau.TopicReplyDraft.collectTopicReplyDraftActivity();
-				bp.Nouveau.TopicReplyDraft.postTopicReplyDraft( false, true, false );
+			if ( ! this.is_topic_reply_form_submit ) {
+				this.collectTopicReplyDraftActivity();
+				this.postTopicReplyDraft( false, true, false );
 			}
 
-			bp.Nouveau.TopicReplyDraft.clearTopicReplyDraftIntervals();
+			this.clearTopicReplyDraftIntervals();
 			setTimeout(
-				function () {
-					bp.Nouveau.TopicReplyDraft.resetTopicReplyDraftPostForm();
-				},
+				function() {
+					this.resetTopicReplyDraftPostForm();
+				}.bind( this ),
 				500
 			);
-			bp.Nouveau.Media.reply_topic_display_post             = '';
-			bp.Nouveau.TopicReplyDraft.is_topic_reply_form_submit = false;
-		},
 
-		clearTopicReplyDraftIntervals: function() {
+			bp.Nouveau.Media.reply_topic_display_post = '';
+			this.is_topic_reply_form_submit           = false;
+		};
+
+		this.clearTopicReplyDraftIntervals = function() {
 			clearInterval( window.topic_reply_local_interval );
 			window.topic_reply_local_interval = false;
 
 			clearInterval( window.topic_reply_ajax_interval );
 			window.topic_reply_ajax_interval = false;
-		},
+		};
 
-		resetLocalTopicReplyDraft: function() {
-			bp.Nouveau.Media.reply_topic_allow_delete_media       = false;
-			bp.Nouveau.Media.reply_topic_display_post             = '';
-			bp.Nouveau.TopicReplyDraft.is_topic_reply_form_submit = true;
+		this.resetLocalTopicReplyDraft = function() {
+			bp.Nouveau.Media.reply_topic_allow_delete_media = false;
+			bp.Nouveau.Media.reply_topic_display_post       = '';
+			this.is_topic_reply_form_submit                 = true;
 
 			if ( 'undefined' !== typeof this.all_draft_data[this.topic_reply_draft.data_key] ) {
 				delete this.all_draft_data[this.topic_reply_draft.data_key];
@@ -241,13 +345,15 @@ window.bp = window.bp || {};
 			localStorage.removeItem( this.topic_reply_draft.data_key );
 			bp.Nouveau.Media.reply_topic_display_post = 'edit';
 
-			// Remove class to display draft.
-			$( '#new-post' ).removeClass( 'has-draft has-content has-media has-gif has-link-preview' );
-		},
+			var currentForm = this.currentForm ? this.currentForm : $( 'form#new-post' );
 
-		resetTopicReplyDraftPostForm: function() {
-			var target                      = $( 'form#new-post' ),
-				editor_key                  = target.find( '.bbp-the-content' ).data( 'key' ),
+			// Remove class to display draft.
+			currentForm.removeClass( 'has-draft has-content has-media has-gif has-link-preview' );
+		};
+
+		this.resetTopicReplyDraftPostForm = function() {
+			var target                      = this.currentForm ? this.currentForm : $( 'form#new-post' );
+			var editor_key                  = target.find( '.bbp-the-content' ).data( 'key' ),
 				$editor,
 				$medium_editor,
 				media_dropzone_container    = target.find( '#forums-post-media-uploader' ),
@@ -256,9 +362,9 @@ window.bp = window.bp || {};
 				gif_attached_container      = target.find( '#whats-new-attachments .forums-attached-gif-container' );
 
 			// Reset editor.
-			if ( typeof window.MediumEditor !== 'undefined' ) {
+			if ( 'undefined' !== typeof window.MediumEditor ) {
 				if ( 'topic' === this.topic_reply_draft.object ) {
-					if( window.forums_medium_topic_editor ) {
+					if ( window.forums_medium_topic_editor ) {
 						$medium_editor = window.forums_medium_topic_editor[editor_key];
 						$medium_editor.setContent( '' );
 					}
@@ -289,10 +395,11 @@ window.bp = window.bp || {};
 			}
 
 			// Reset topic subscription.
+			const bbp_topic_subscription_id = ( forms.length > 1 && this.bbp_topic_id ) ? '#bbp_topic_subscription_' + this.bbp_topic_id : '#bbp_topic_subscription';
 			if ( 'topic' === this.topic_reply_draft.object && ! $( '#subscribe-' + this.bbp_forum_id ).hasClass( 'is-subscribed' ) ) {
-				target.find( '#bbp_topic_subscription' ).prop( 'checked', false );
+				target.find( bbp_topic_subscription_id ).prop( 'checked', false );
 			} else if ( 'reply' === this.topic_reply_draft.object && ! $( '#subscribe-' + this.bbp_topic_id ).hasClass( 'is-subscribed' ) ) {
-				target.find( '#bbp_topic_subscription' ).prop( 'checked', false );
+				target.find( bbp_topic_subscription_id ).prop( 'checked', false );
 			}
 
 			// Reset tags.
@@ -359,22 +466,28 @@ window.bp = window.bp || {};
 			target.removeClass( 'has-content' );
 		},
 
-		resetTopicReplyDraftLinkPreview: function() {
-			var currentTargetForm = $( 'form#new-post' )[0];
-			//Reset link preview data.
-			if ( jQuery( currentTargetForm ).find('#link_preview_data').length > 0 ) {
-				jQuery( currentTargetForm ).find('#link_preview_data').val( '' );
-			}
-			jQuery( currentTargetForm ).find( '.bb-url-scrapper-container' ).remove();
-			jQuery( currentTargetForm ).find( '#bb_link_url' ).remove();
-		},
+		this.resetTopicReplyDraftLinkPreview = function() {
+			var currentTargetForm = this.currentForm ? this.currentForm : $( 'form#new-post' );
 
-		collectTopicReplyDraftActivity: function() {
-			var form = $( '#new-post' ), meta = {};
+			// Clear the linkPreviews object for the form.
+			$( currentTargetForm ).find( "#bb-close-link-suggestion" ).trigger( 'click' );
+
+			// Reset link preview data and attachments.
+			if ( $( currentTargetForm ).find( '#link_preview_data' ).length > 0 ) {
+				$( currentTargetForm ).find( '#link_preview_data' ).val( '' );
+				$( currentTargetForm ).find( '#whats-new-attachments' ).val( '' );
+			}
+
+			$( currentTargetForm ).find( '.bb-url-scrapper-container' ).remove();
+			$( currentTargetForm ).find( '#bb_link_url' ).remove();
+		}
+
+		this.collectTopicReplyDraftActivity = function() {
+			var form = this.currentForm ? this.currentForm : $( '#new-post' ), meta = {};
 
 			_.each(
 				form.serializeArray(),
-				function( pair ) {
+				function ( pair ) {
 					pair.name = pair.name.replace( '[]', '' );
 					if ( - 1 === _.indexOf(
 						[
@@ -421,7 +534,7 @@ window.bp = window.bp || {};
 
 				var link_preview_data = JSON.parse( meta.link_preview_data );
 
-				var preview_data               = {};
+				var preview_data                   = {};
 				preview_data.embed                 = ( false === link_preview_data.link_embed ) ? 0 : 1;
 				preview_data.url                   = link_preview_data.link_url;
 				preview_data.link_image_index_save = 0;
@@ -457,23 +570,18 @@ window.bp = window.bp || {};
 					old_draft_data = this.all_draft_data[this.topic_reply_draft.data_key];
 				}
 
-				bp.Nouveau.TopicReplyDraft.checkedTopicReplyDataChanged( old_draft_data, meta );
+				this.checkedTopicReplyDataChanged( old_draft_data, meta );
 
 				this.topic_reply_draft.data                          = meta;
 				this.all_draft_data[this.topic_reply_draft.data_key] = meta;
 				this.topic_reply_draft.is_content_valid              = true;
-				localStorage.setItem( this.topic_reply_draft.data_key, JSON.stringify( this.topic_reply_draft ) );
-			} else {
-				if ( 'undefined' !== typeof this.all_draft_data[this.topic_reply_draft.data_key] ) {
-					delete this.all_draft_data[this.topic_reply_draft.data_key];
-				}
-				this.topic_reply_draft.data = false;
-				localStorage.removeItem( this.topic_reply_draft.data_key );
-			}
-		},
 
-		checkedTopicReplyDataChanged: function( old_data, new_data ) {
-			var draft_data_keys = [
+				localStorage.setItem( this.topic_reply_draft.data_key, JSON.stringify( this.topic_reply_draft ) );
+			}
+		}
+
+		this.checkedTopicReplyDataChanged = function ( old_data, new_data ) {
+			const draft_data_keys = [
 				'bbp_topic_title',
 				'bbp_topic_content',
 				'bbp_stick_topic',
@@ -490,14 +598,15 @@ window.bp = window.bp || {};
 				'link_url'
 			];
 
+			var self = this;
+
 			_.each(
 				draft_data_keys,
-				function( pair ) {
-
+				function ( pair ) {
 					if ( 'undefined' !== typeof old_data[ pair ] && 'undefined' === typeof new_data[ pair ] ) {
-						bp.Nouveau.TopicReplyDraft.draft_content_changed = true;
+						self.draft_content_changed = true;
 					} else if ( 'undefined' === typeof old_data[ pair ] && 'undefined' !== typeof new_data[ pair ] ) {
-						bp.Nouveau.TopicReplyDraft.draft_content_changed = true;
+						self.draft_content_changed = true;
 					} else if ( 'undefined' !== typeof old_data[ pair ] && 'undefined' !== typeof new_data[ pair ] ) {
 						if ( - 1 !== _.indexOf(
 							[
@@ -506,26 +615,24 @@ window.bp = window.bp || {};
 							],
 							pair
 						) ) {
-
 							if ( $( $.parseHTML( old_data[ pair ] ) ).text().trim() !== $( $.parseHTML( new_data[ pair ] ) ).text().trim() ) {
-								bp.Nouveau.TopicReplyDraft.draft_content_changed = true;
+								self.draft_content_changed = true;
 							}
 						} else if ( old_data[ pair ] !== new_data[ pair ] ) {
-							bp.Nouveau.TopicReplyDraft.draft_content_changed = true;
+							self.draft_content_changed = true;
 						}
-
 					}
 				}
 			);
-		},
+		}
 
-		postTopicReplyDraft: function( is_force_saved, is_reload_window, is_send_all_data ) {
+		this.postTopicReplyDraft = function ( is_force_saved, is_reload_window, is_send_all_data ) {
 			if ( ! is_force_saved && 'undefined' === typeof this.all_draft_data[this.topic_reply_draft.data_key] ) {
 				return;
 			}
 
 			// Checked the content changed or not.
-			if ( ! is_force_saved && ! bp.Nouveau.TopicReplyDraft.draft_content_changed ) {
+			if ( ! is_force_saved && ! this.draft_content_changed ) {
 				return;
 			}
 
@@ -567,29 +674,30 @@ window.bp = window.bp || {};
 				navigator.sendBeacon( BP_Nouveau.ajaxurl, formData );
 			}
 
-			// Set false after send request to server.
-			bp.Nouveau.TopicReplyDraft.draft_content_changed = false;
-		},
+			// Set false after sending the request to the server.
+			this.draft_content_changed = false;
+		};
 
-		displayTopicReplyDraft: function() {
+		this.displayTopicReplyDraft = function () {
 			bp.Nouveau.Media.reply_topic_allow_delete_media = true;
 			if ( _.isUndefined( this.topic_reply_draft ) ) {
 				return;
 			}
+
 			if ( 'topic' === this.topic_reply_draft.object ) {
-				bp.Nouveau.TopicReplyDraft.appendTopicDraftData();
+				this.appendTopicDraftData();
 			} else {
-				bp.Nouveau.TopicReplyDraft.appendReplyDraftData();
+				this.appendReplyDraftData();
 			}
-		},
+		};
 
-		appendTopicDraftData: function() {
-			bp.Nouveau.TopicReplyDraft.getTopicReplyDraftData();
+		this.appendTopicDraftData = function() {
+			this.getTopicReplyDraftData();
 
-			var $form         = $( 'form#new-post' ),
+			var $form         = this.currentForm ? this.currentForm : $('form#new-post'),
 				activity_data = {},
-				editor_key    = $form.find( '.bbp-the-content' ).data( 'key' ),
-				$editor       = $form.find( '#bbp_editor_topic_content_' + editor_key );
+				editor_key    = $form.find('.bbp-the-content').data('key'),
+				$editor       = $form.find('#bbp_editor_topic_content_' + editor_key);
 
 			if ( 'undefined' !== typeof this.all_draft_data[this.topic_reply_draft.data_key] ) {
 				activity_data = this.all_draft_data[this.topic_reply_draft.data_key];
@@ -611,7 +719,7 @@ window.bp = window.bp || {};
 			// Content.
 			if ( 'undefined' !== typeof activity_data.bbp_topic_content ) {
 				var element = $editor.get( 0 );
-				var $meditor = window.MediumEditor ? window.MediumEditor.getEditorFromElement(element) : null;
+				var $meditor = window.MediumEditor ? window.MediumEditor.getEditorFromElement( element ) : null;
 				if ( $meditor !== null ) {
 					$meditor.setContent( activity_data.bbp_topic_content );
 					if ( $( element ).text() !== '' ) {
@@ -624,19 +732,20 @@ window.bp = window.bp || {};
 						$form.addClass( 'has-content' );
 					}
 				}
-
 			}
 
 			// Stick topic.
 			$form.find( '#bbp_stick_topic_select option[value="' + activity_data.bbp_stick_topic + '"]' ).prop( 'selected', true );
 
 			// Subscribe notify.
+			const bbp_topic_subscription_id = ( forms.length > 1 && this.bbp_topic_id ) ? '#bbp_topic_subscription_' + this.bbp_topic_id : '#bbp_topic_subscription';
+
 			if ( 'undefined' !== typeof activity_data.bbp_topic_subscription && '' !== activity_data.bbp_topic_subscription ) {
-				$form.find( '#bbp_topic_subscription' ).prop( 'checked', true );
+				$form.find( bbp_topic_subscription_id ).prop( 'checked', true );
 			} else if ( 'undefined' !== typeof activity_data.bbp_topic_subscription && '' === activity_data.bbp_topic_subscription ) {
-				$form.find( '#bbp_topic_subscription' ).prop( 'checked', false );
+				$form.find( bbp_topic_subscription_id ).prop( 'checked', false );
 			} else if ( 0 < this.bbp_forum_id && ! $( '#subscribe-' + this.bbp_forum_id ).hasClass( 'is-subscribed' ) ) {
-				$form.find( '#bbp_topic_subscription' ).prop( 'checked', false );
+				$form.find( bbp_topic_subscription_id ).prop( 'checked', false );
 			}
 
 			// Tags.
@@ -659,10 +768,10 @@ window.bp = window.bp || {};
 			this.previewDraftMedia( $form, activity_data );
 		},
 
-		appendReplyDraftData: function() {
-			bp.Nouveau.TopicReplyDraft.getTopicReplyDraftData();
+		this.appendReplyDraftData = function() {
+			this.getTopicReplyDraftData();
 
-			var $form         = $( 'form#new-post' ),
+			var $form         = this.currentForm ? this.currentForm : $( 'form#new-post' ),
 				activity_data = {},
 				editor_key    = $form.find( '.bbp-the-content' ).data( 'key' ),
 				$editor       = $form.find( '#bbp_editor_reply_content_' + editor_key );
@@ -684,7 +793,7 @@ window.bp = window.bp || {};
 			// Content.
 			if ( 'undefined' !== typeof activity_data.bbp_reply_content ) {
 				var element = $editor.get( 0 );
-				var $meditor = window.MediumEditor ? window.MediumEditor.getEditorFromElement(element) : null;
+				var $meditor = window.MediumEditor ? window.MediumEditor.getEditorFromElement( element ) : null;
 				if ( $meditor !== null ) {
 					$meditor.setContent( activity_data.bbp_reply_content );
 					if ( $( element ).text() !== '' ) {
@@ -700,12 +809,14 @@ window.bp = window.bp || {};
 			}
 
 			// Subscribe notify.
+			const bbp_topic_subscription_id = ( forms.length > 1 && this.bbp_topic_id ) ? '#bbp_topic_subscription_' + this.bbp_topic_id : '#bbp_topic_subscription';
+
 			if ( 'undefined' !== typeof activity_data.bbp_topic_subscription && '' !== activity_data.bbp_topic_subscription ) {
-				$form.find( '#bbp_topic_subscription' ).prop( 'checked', true );
+				$form.find( bbp_topic_subscription_id ).prop( 'checked', true );
 			} else if ( 'undefined' !== typeof activity_data.bbp_topic_subscription && '' === activity_data.bbp_topic_subscription ) {
-				$form.find( '#bbp_topic_subscription' ).prop( 'checked', false );
+				$form.find( bbp_topic_subscription_id ).prop( 'checked', false );
 			} else if ( 0 < this.bbp_topic_id && ! $( '#subscribe-' + this.bbp_topic_id ).hasClass( 'is-subscribed' ) ) {
-				$form.find( '#bbp_topic_subscription' ).prop( 'checked', false );
+				$form.find( bbp_topic_subscription_id ).prop( 'checked', false );
 			}
 
 			// Tags.
@@ -736,11 +847,10 @@ window.bp = window.bp || {};
 				}).appendTo( $form );
 			}
 
+			this.previewDraftMedia( $form, activity_data );
+		}
 
-			bp.Nouveau.TopicReplyDraft.previewDraftMedia( $form, activity_data );
-		},
-
-		previewDraftMedia: function( $form, activity_data ) {
+		this.previewDraftMedia = function( $form, activity_data ) {
 			var self                        = bp.Nouveau.Media,
 				dropzone_media_container    = $form.find( '#forums-post-media-uploader' ),
 				dropzone_document_container = $form.find( '#forums-post-document-uploader' ),
@@ -987,18 +1097,18 @@ window.bp = window.bp || {};
 					}
 				}
 			}
+		}
 
-		},
-
-		submitTopicReplyDraftForm: function() {
+		this.submitTopicReplyDraftForm = function () {
 			this.topic_reply_draft.post_action = 'delete';
 			this.clearTopicReplyDraftIntervals();
 			this.resetLocalTopicReplyDraft();
-		},
+		};
 
-		discardTopicReplyDraftForm: function() {
-			var forum_topic = $( 'a[data-modal-id]' ),
-				forum_reply = $( '.bbp-reply-to-link' );
+		this.discardTopicReplyDraftForm = function () {
+
+			var forum_topic = this.currentForm.find( 'a[data-modal-id]' ),
+				forum_reply = this.currentForm.find( '.bbp-reply-to-link' );
 
 			forum_topic.css( 'pointer-events', 'none' );
 			forum_reply.css( 'pointer-events', 'none' );
@@ -1010,26 +1120,30 @@ window.bp = window.bp || {};
 			this.resetTopicReplyDraftPostForm();
 			this.resetTopicReplyDraftLinkPreview();
 			this.topic_reply_draft.post_action = 'update';
-			bp.Nouveau.TopicReplyDraft.setupTopicReplyDraftIntervals();
-			bp.Nouveau.TopicReplyDraft.is_topic_reply_form_submit = false;
+			this.setupTopicReplyDraftIntervals();
+			this.is_topic_reply_form_submit = false;
 
 			forum_topic.css( 'pointer-events', '' );
 			forum_reply.css( 'pointer-events', '' );
-		},
+		};
 
-		setupOnReloadWindow: function() {
-			if ( 'update' === bp.Nouveau.TopicReplyDraft.topic_reply_draft.post_action ) {
+		this.setupOnReloadWindow = function () {
+			if ( 'update' === this.topic_reply_draft.post_action ) {
+
 				// Clear intervals.
-				bp.Nouveau.TopicReplyDraft.clearTopicReplyDraftIntervals();
+				this.clearTopicReplyDraftIntervals();
 				// Collect draft data.
-				bp.Nouveau.TopicReplyDraft.collectTopicReplyDraftActivity();
-				// Send latest draft data.
-				bp.Nouveau.TopicReplyDraft.postTopicReplyDraft( false, true, true );
+				this.collectTopicReplyDraftActivity();
+				// Send the latest draft data.
+				this.postTopicReplyDraft( false, true, true );
 			}
-		}
-	};
+		};
+	}
 
-	// Launch BP Nouveau Media.
-	bp.Nouveau.TopicReplyDraft.start();
+	var forms = $( 'form[name="new-post"]' );
+	forms.each( function () {
+		var topicReplyDraft = new bp.Nouveau.TopicReplyDraft( $( this ) );
+		topicReplyDraft.start();
+	} );
 
-} )( bp, jQuery );
+})( bp, jQuery );
