@@ -138,19 +138,24 @@ function bbp_clean_post_cache( $_post = '' ) {
 		return;
 	}
 
-	wp_cache_delete( $_post->ID, 'posts' );
-	wp_cache_delete( $_post->ID, 'post_meta' );
-
-	clean_object_term_cache( $_post->ID, $_post->post_type );
-
-	do_action( 'bbp_clean_post_cache', $_post->ID, $_post );
-
 	// Child query types to clean
 	$post_types = array(
 		bbp_get_topic_post_type(),
 		bbp_get_forum_post_type(),
 		bbp_get_reply_post_type(),
 	);
+
+	// Bail if not a bbPress post type
+	if ( ! in_array( $_post->post_type, $post_types, true ) ) {
+		return;
+	}
+
+	wp_cache_delete( $_post->ID, 'posts' );
+	wp_cache_delete( $_post->ID, 'post_meta' );
+
+	clean_object_term_cache( $_post->ID, $_post->post_type );
+
+	do_action( 'bbp_clean_post_cache', $_post->ID, $_post );
 
 	// Loop through query types and clean caches
 	foreach ( $post_types as $post_type ) {
