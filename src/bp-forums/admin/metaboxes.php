@@ -80,8 +80,8 @@ function bbp_dashboard_widget_right_now() {
 				<tr>
 
 					<?php
-						$num  = $r['topic_tag_count'];
-						$text = _n( 'Discussion Tag', 'Discussion Tags', $r['topic_tag_count'], 'buddyboss' );
+						$num  = empty( $r['topic_tag_count'] ) ? 0 : (int) $r['topic_tag_count'];
+						$text = _n( 'Discussion Tag', 'Discussion Tags', $num, 'buddyboss' );
 					if ( current_user_can( 'manage_topic_tags' ) ) {
 						$link = add_query_arg(
 							array(
@@ -198,8 +198,8 @@ function bbp_dashboard_widget_right_now() {
 				<tr>
 
 					<?php
-						$num  = $r['empty_topic_tag_count'];
-						$text = _n( 'Empty Discussion Tag', 'Empty Discussion Tags', $r['empty_topic_tag_count'], 'buddyboss' );
+						$num  = empty( $r['empty_topic_tag_count'] ) ? 0 : (int) $r['empty_topic_tag_count'];
+						$text = _n( 'Empty Discussion Tag', 'Empty Discussion Tags', $num, 'buddyboss' );
 						$link = add_query_arg(
 							array(
 								'taxonomy'  => bbp_get_topic_tag_tax_id(),
