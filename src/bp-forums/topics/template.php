@@ -4231,6 +4231,10 @@ function bbp_get_form_topic_tags() {
 			case bbp_get_reply_post_type():
 				$topic_id = bbp_get_reply_topic_id( get_the_ID() );
 				break;
+			default:
+				// If post type doesn't match and topic id is set via shortcode.
+				$topic_id = bbp_get_topic_id();
+			break;
 		}
 
 		$new_terms = array();

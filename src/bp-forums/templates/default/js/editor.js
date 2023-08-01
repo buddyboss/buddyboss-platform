@@ -253,7 +253,12 @@ jQuery( document ).ready(
 				});
 
 				if ( 'undefined' !== typeof bp.Nouveau.TopicReplyDraft ) {
-					bp.Nouveau.TopicReplyDraft.displayTopicReplyDraft();
+					jQuery( 'form[name="new-post"]' ).each(
+						function () {
+							topicReplyDraft = new bp.Nouveau.TopicReplyDraft( jQuery( this ) )
+							topicReplyDraft.displayTopicReplyDraft();
+						}
+					);
 				}
 			}
 
@@ -413,7 +418,12 @@ jQuery( document ).ready(
 				});
 
 				if ( 'undefined' !== typeof bp.Nouveau.TopicReplyDraft ) {
-					bp.Nouveau.TopicReplyDraft.displayTopicReplyDraft();
+					jQuery( 'form[name="new-post"]' ).each(
+						function () {
+							topicReplyDraft = new bp.Nouveau.TopicReplyDraft( jQuery( this ) )
+							topicReplyDraft.displayTopicReplyDraft();
+						}
+					);
 				}
 			}
 
