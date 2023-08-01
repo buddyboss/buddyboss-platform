@@ -1186,7 +1186,7 @@ class BP_Groups_Group {
 		);
 
 		if ( ! empty( $r['user_id'] ) || ! empty( $r['show_hidden'] ) ) {
-			$sql['from'] .= " LEFT JOIN {$bp->groups->table_name_members} m ON ( g.id = m.group_id )";
+			$sql['from'] .= " JOIN {$bp->groups->table_name_members} m ON ( g.id = m.group_id )";
 		}
 
 		$where_conditions = array();
