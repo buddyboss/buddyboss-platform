@@ -44,8 +44,8 @@ function bbp_dashboard_widget_right_now() {
 			<tr class="first">
 
 				<?php
-					$num  = $r['forum_count'];
-					$text = _n( 'Forum', 'Forums', $r['forum_count'], 'buddyboss' );
+					$num  = empty( $r['forum_count'] ) ? 0 : (int) $r['forum_count'];
+					$text = _n( 'Forum', 'Forums', $num, 'buddyboss' );
 					if ( current_user_can( 'publish_forums' ) ) {
 						$link = add_query_arg( array( 'post_type' => bbp_get_forum_post_type() ), admin_url( null, 'edit.php' ) );
 						$num  = '<a href="' . esc_url( $link ) . '">' . $num . '</a>';
@@ -61,8 +61,8 @@ function bbp_dashboard_widget_right_now() {
 			<tr>
 
 				<?php
-					$num  = $r['topic_count'];
-					$text = _n( 'Discussion', 'Discussions', $r['topic_count'], 'buddyboss' );
+					$num  = empty( $r['topic_count'] ) ? 0 : (int) $r['topic_count'];
+					$text = _n( 'Discussion', 'Discussions', $num, 'buddyboss' );
 				if ( current_user_can( 'publish_topics' ) ) {
 					$link = add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), admin_url( null, 'edit.php' ) );
 					$num  = '<a href="' . esc_url( $link ) . '">' . $num . '</a>';
@@ -105,8 +105,8 @@ function bbp_dashboard_widget_right_now() {
 			<tr>
 
 				<?php
-					$num  = $r['reply_count'];
-					$text = _n( 'Reply', 'Replies', $r['reply_count'], 'buddyboss' );
+					$num  = empty( $r['reply_count'] ) ? 0 : (int) $r['reply_count'];
+					$text = _n( 'Reply', 'Replies', $num, 'buddyboss' );
 				if ( current_user_can( 'publish_replies' ) ) {
 					$link = add_query_arg( array( 'post_type' => bbp_get_reply_post_type() ), admin_url( null, 'edit.php' ) );
 					$num  = '<a href="' . esc_url( $link ) . '">' . $num . '</a>';
@@ -135,8 +135,8 @@ function bbp_dashboard_widget_right_now() {
 			<tr class="first">
 
 				<?php
-					$num  = $r['user_count'];
-					$text = _n( 'User', 'Users', $r['user_count'], 'buddyboss' );
+					$num  = empty( $r['user_count'] ) ? 0 : (int) $r['user_count'];
+					$text = _n( 'User', 'Users', $num, 'buddyboss' );
 				if ( current_user_can( 'edit_users' ) ) {
 					$link = admin_url( null, 'users.php' );
 					$num  = '<a href="' . esc_url( $link ) . '">' . $num . '</a>';
@@ -155,7 +155,7 @@ function bbp_dashboard_widget_right_now() {
 
 					<?php
 						$num  = $r['topic_count_hidden'];
-						$text = _n( 'Hidden Discussion', 'Hidden Discussions', $r['topic_count_hidden'], 'buddyboss' );
+						$text = _n( 'Hidden Discussion', 'Hidden Discussions', $num, 'buddyboss' );
 						$link = add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), admin_url( null, 'edit.php' ) );
 					if ( '0' !== $num ) {
 						$link = add_query_arg( array( 'post_status' => bbp_get_spam_status_id() ), $link );
