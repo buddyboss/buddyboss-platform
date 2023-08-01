@@ -381,17 +381,26 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 *
 		 * @param array $value Array of styles to enqueue.
 		 */
-		$styles = apply_filters( 'bp_nouveau_enqueue_styles', array(
-			'bp-nouveau-icons-map' => array(
-				'file' => 'icons/css/icons-map%1$s.css', 'dependencies' => array(), 'version' => $this->version,
-			),
-			'bp-nouveau-bb-icons' => array(
-				'file' => 'icons/css/bb-icons%1$s%2$s.css', 'dependencies' => array(), 'version' => $bb_icon_version,
-			),
-			'bp-nouveau' => array(
-				'file' => 'css/buddypress%1$s%2$s.css', 'dependencies' => $css_dependencies, 'version' => $this->version,
-			),
-		) );
+		$styles = apply_filters(
+			'bp_nouveau_enqueue_styles',
+			array(
+				'bp-nouveau-icons-map' => array(
+					'file'         => 'icons/css/icons-map%s.css',
+					'dependencies' => array(),
+					'version'      => $this->version,
+				),
+				'bp-nouveau-bb-icons'  => array(
+					'file'         => 'icons/css/bb-icons%1$s%2$s.css',
+					'dependencies' => array(),
+					'version'      => $bb_icon_version,
+				),
+				'bp-nouveau'           => array(
+					'file'         => 'css/buddypress%1$s%2$s.css',
+					'dependencies' => $css_dependencies,
+					'version'      => $this->version,
+				),
+			)
+		);
 
 		if ( $styles ) {
 
@@ -405,7 +414,6 @@ class BP_Nouveau extends BP_Theme_Compat {
 				} else {
 					$file = sprintf( $style['file'], $rtl, $min );
 				}
-				
 
 				// Locate the asset if needed.
 				if ( false === strpos( $style['file'], '://' ) ) {
