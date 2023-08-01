@@ -946,18 +946,25 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 
 			$name = bp_core_get_user_displayname( $member->ID );
 
-			$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member->ID, bp_loggedin_user_id() );
 			$is_friends_connection  = true;
-			if ( bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
-				if ( ! friends_check_friendship( bp_loggedin_user_id(), $member->ID ) ) {
-					$is_friends_connection = false;
-				}
+
+			if (
+				! bb_messages_user_can_send_message(
+					array(
+						'sender_id'     => bp_loggedin_user_id(),
+						'recipients_id' => $member->ID,
+						'group_id'      => bp_get_current_group_id(),
+
+					)
+				)
+			) {
+				$is_friends_connection = false;
 			}
 			?>
-			<li class="group-message-member-li 
+			<li class="group-message-member-li
 			<?php
 			echo $member->ID;
-			echo ( $can_send_group_message && $is_friends_connection ) ? ' can-grp-msg ' : ' is_disabled can-not-grp-msg';
+			echo ( $is_friends_connection ) ? ' can-grp-msg ' : ' is_disabled can-not-grp-msg';
 			?>
 			">
 				<div class="item-avatar">
@@ -972,9 +979,9 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 						</a>
 					</div>
 				</div>
-				<div class="action <?php echo ( $can_send_group_message && $is_friends_connection ) ? esc_attr( 'can-grp-msg' ) : esc_attr( 'can-not-grp-msg' ); ?>">
+				<div class="action <?php echo ( $is_friends_connection ) ? esc_attr( 'can-grp-msg' ) : esc_attr( 'can-not-grp-msg' ); ?>">
 					<?php
-					if ( $can_send_group_message && $is_friends_connection ) {
+					if ( $is_friends_connection ) {
 						?>
 						<button type="button"
 								class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons"
@@ -1172,9 +1179,16 @@ function bp_nouveau_ajax_groups_send_message() {
 
 			// Check if force friendship is enabled and check recipients.
 			if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
-				foreach ( $members as $f => $member ) {
-					if ( ! friends_check_friendship( bp_loggedin_user_id(), $member ) ) {
-						unset( $members[ $f ] );
+				if ( bp_is_active( 'messages' ) && ! bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) ) {
+					foreach ( $members as $f => $member ) {
+						if (
+							! (
+								bb_messages_allowed_messaging_without_connection( $member ) ||
+								friends_check_friendship( bp_loggedin_user_id(), $member )
+							)
+						) {
+							unset( $members[ $f ] );
+						}
 					}
 				}
 			}
@@ -1199,9 +1213,20 @@ function bp_nouveau_ajax_groups_send_message() {
 			if ( ! $can_send_group_message ) {
 				$not_access_list[] = bp_core_get_user_displayname( $member );
 			}
+		}
 
-			if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && ! friends_check_friendship( bp_loggedin_user_id(), $member ) ) {
-				$not_friends[] = bp_core_get_user_displayname( $member );
+		if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
+			if ( bp_is_active( 'messages' ) && ! bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) ) {
+				foreach ( $members as $f => $member ) {
+					if (
+						! (
+							bb_messages_allowed_messaging_without_connection( $member ) ||
+							friends_check_friendship( bp_loggedin_user_id(), $member )
+						)
+					) {
+						$not_friends[] = bp_core_get_user_displayname( $member );
+					}
+				}
 			}
 		}
 

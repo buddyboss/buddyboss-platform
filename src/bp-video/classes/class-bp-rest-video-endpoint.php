@@ -136,7 +136,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 	 * @apiParam {String} file File object which is going to upload.
 	 */
 	public function upload_item( $request ) {
-		
+
 		if ( 'messages' === $request->get_param( 'component' ) ) {
 			$_POST['component'] = 'messages';
 		}
@@ -1310,6 +1310,12 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 				'activity_id'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'A unique numeric ID for the activity.', 'buddyboss' ),
+					'readonly'    => true,
+					'type'        => 'integer',
+				),
+				'message_id'            => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'A unique numeric ID for the Message thread.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),

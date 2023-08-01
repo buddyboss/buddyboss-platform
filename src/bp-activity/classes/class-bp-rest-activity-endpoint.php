@@ -1349,24 +1349,33 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			// Removed lazyload from link preview.
 			$data['preview_data'] = $this->bp_rest_activity_remove_lazyload( $data['preview_data'], $activity, true );
 		} elseif ( method_exists( $bp->embed, 'autoembed' ) && ! empty( $data['content_stripped'] ) ) {
-			$check_embedded_content = $bp->embed->autoembed( $data['content_stripped'], $activity );
-			if ( ! empty( $check_embedded_content ) ) {
-				preg_match( '/<iframe[^>]*><\/iframe>/', $check_embedded_content, $match );
-				if ( ! empty( $match[0] ) ) {
-					$data['preview_data'] = $match[0];
+			$skip_embed = false;
+			if ( ! empty( $data['content']['rendered'] ) ) {
 
-					// Use a regular expression to find the src URL.
-					preg_match( '/src="([^"]+)"/', $match[0], $matches );
-					if ( ! empty( $matches[1] ) ) {
-
-						// Set link_embed_url with the iframe src URL as a fallback.
-						$data['link_embed_url'] = $matches[1];
-					}
+				// Check if already embed in rendered content.
+				preg_match( '/<iframe[^>]*><\/iframe>/', $data['content']['rendered'], $matchcontent );
+				if ( ! empty( $matchcontent[0] ) ) {
+					$skip_embed = true;
 				}
 			}
-
-			// Removed lazyload from link preview.
-			$data['preview_data'] = $this->bp_rest_activity_remove_lazyload( $data['preview_data'], $activity, true );
+			if ( ! $skip_embed ) {
+				$check_embedded_content = $bp->embed->autoembed( $data['content_stripped'], $activity );
+				if ( ! empty( $check_embedded_content ) ) {
+					preg_match( '/<iframe[^>]*><\/iframe>/', $check_embedded_content, $match );
+					if ( ! empty( $match[0] ) ) {
+						$data['preview_data'] = $match[0];
+						// Use a regular expression to find the src URL.
+						preg_match( '/src="([^"]+)"/', $match[0], $matches );
+						if ( ! empty( $matches[1] ) ) {
+	
+							// Set link_embed_url with the iframe src URL as a fallback.
+							$data['link_embed_url'] = $matches[1];
+						}
+					}
+				}
+				// Removed lazyload from link preview.
+				$data['preview_data'] = $this->bp_rest_activity_remove_lazyload( $data['preview_data'], $activity, true );
+			}
 		}
 
 		// Add link preview data in separate object.
@@ -1415,10 +1424,10 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			if ( ! empty( $schema['properties']['comments'] ) && 'threaded' === $request['display_comments'] ) {
 				// First check the comment is disabled from the activity settings for post type.
 				// For more information please check this PROD-2475.
-				if ( 'activity_comment' !== $activity->type && $data['can_comment'] ) {
+				if ( 'blogs' === $activity->component && $data['can_comment'] ) {
 					$data['comments'] = $this->prepare_activity_comments( $activity->children, $request );
 					// This is for activity comment to attach the comment in the feed.
-				} elseif ( 'activity_comment' === $activity->type ) {
+				} elseif ( 'blogs' !== $activity->component ) {
 					$data['comments'] = $this->prepare_activity_comments( $activity->children, $request );
 				}
 			}
