@@ -8023,7 +8023,7 @@ body.guillotine-dragging * {
 }
 
 .groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .generic-button {
-  margin: 0 !important;
+  margin: 0;
 }
 
 .groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .generic-button > * {
@@ -10583,11 +10583,11 @@ input#send-to-input {
   padding: 10px 0 10px 10px;
   min-width: 30px;
   border: 0;
-  background-color: transparent !important;
+  background-color: transparent;
 }
 
 .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active {
-  background: none transparent !important;
+  background: none transparent;
 }
 
 .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-action-close {
@@ -10902,10 +10902,10 @@ body.bb-is-mobile .bp-messages-content .bp-message-content_foot_note {
   min-width: 20%;
 }
 
-.bp-single-message-content .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list li {
-  background-color: transparent !important;
-  margin: 0 !important;
-  padding: 0 !important;
+#bp-message-thread-list .bp-single-message-content .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list li {
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
 }
 
 .bp-single-message-content .bb-activity-media-wrap .bb-activity-media-elem.document-activity:last-child .document-action-wrap .document-action_list {
@@ -10955,7 +10955,7 @@ body.bb-is-mobile .bp-messages-content .bp-message-content_foot_note {
   transform: translateY(-50%);
   animation: spin 2s infinite linear;
   height: auto;
-  background-color: transparent !important;
+  background-color: transparent;
   right: inherit;
 }
 
@@ -11214,7 +11214,7 @@ body .bp-messages-user-threads {
   font: normal normal normal 20px/1 "bb-icons";
   /* stylelint-disable-line */
   speak: none;
-  display: inline-block !important;
+  display: inline-block;
   text-decoration: inherit;
   text-transform: none;
   -webkit-font-smoothing: antialiased;
@@ -22208,6 +22208,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   content: "\ef30";
   font-family: "bb-icons";
   /* stylelint-disable-line */
+  font-weight: 400;
   font-size: 18px;
   line-height: 1;
   margin-right: 10px;
@@ -27579,9 +27580,9 @@ span.icons:before {
 }
 
 #group-messages-container .bb-groups-messages-right .group-messages-compose:after {
-  content: "\f465";
+  content: "\ee5a";
   font-size: 20px;
-  font-family: dashicons;
+  font-family: bb-icons;
   vertical-align: top;
   text-align: center;
   transition: color 0.1s ease-in;
