@@ -406,7 +406,19 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			foreach ( $fields as $section => $settings ) {
 				foreach ( $settings as $setting_name => $setting ) {
 
-					if ( in_array( $setting_name, array( 'bp-enable-private-network-public-content', 'bb-enable-private-rss-feeds-public-content', 'bb-enable-private-rest-apis-public-content' ), true ) ) {
+					if (
+						in_array(
+							$setting_name,
+							array(
+								'bp-enable-private-network-public-content',
+								'bb-enable-private-rss-feeds-public-content',
+								'bb-enable-private-rest-apis-public-content',
+								'bb-blacklist-email-setting',
+								'bb-whitelist-email-setting',
+							),
+							true 
+						)
+					) {
 						$value = isset( $_POST[ $setting_name ] ) ? sanitize_textarea_field( wp_unslash( $_POST[ $setting_name ] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 					} else {
 						$value = isset( $_POST[ $setting_name ] ) ? ( is_array( $_POST[ $setting_name ] ) ? map_deep( wp_unslash( $_POST[ $setting_name ] ), 'sanitize_text_field' ) : sanitize_text_field( wp_unslash( $_POST[ $setting_name ] ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing

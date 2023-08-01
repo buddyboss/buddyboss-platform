@@ -2333,3 +2333,45 @@ function bb_get_profile_slug_format( $default = 'username' ) {
 	 */
 	return apply_filters( 'bb_get_profile_slug_format', bp_get_option( 'bb_profile_slug_format', $default ) );
 }
+
+/**
+ * Get blacklisted email and domain list value from the database.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                      Default: Empty string.
+ * @return string whitelist email and domain list.
+ */
+function bb_blacklist_email_setting( $default = '' ) {
+
+	/**
+	 * Filters blacklist email and domain list.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value Blacklist email and domain list.
+	 */
+	return apply_filters( 'bb_blacklist_email_setting', bp_get_option( 'bb-blacklist-email-setting', '' ) );
+}
+
+/**
+ * Get whitelisted email and domain list value from the database.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                      Default: Empty string.
+ * @return string Whitelist email and domain list.
+ */
+function bb_whitelist_email_setting( $default = '' ) {
+
+	/**
+	 * Filters whitelist email and domain list.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value whitelist email and domain list.
+	 */
+	return apply_filters( 'bb_blacklist_email_setting', bp_get_option( 'bb-whitelist-email-setting', '' ) );
+}

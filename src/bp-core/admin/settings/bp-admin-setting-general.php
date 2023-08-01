@@ -76,6 +76,15 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 
 		}
 
+		// Email domain restriction section.
+		$this->add_section( 'bb_email_domain_restrictions', __( 'Email Domain Restrictions', 'buddyboss' ), '', 'bb_email_domain_restrictions_tutorial' );
+
+		// Blacklist email settings.
+		$this->add_field( 'bb-blacklist-email-setting', __( 'Blacklist Email Registrations', 'buddyboss' ), 'bb_admin_setting_callback_blacklist_email_setting' );
+
+		// Whitelist email settings.
+		$this->add_field( 'bb-whitelist-email-setting', __( 'Whitelist Email Registrations', 'buddyboss' ), 'bb_admin_setting_callback_whitelist_email_setting' );
+
 		// Main Privacy Settings Section.
 		$this->add_section( 'bp_privacy', __( 'Privacy', 'buddyboss' ), '', 'bp_privacy_tutorial' );
 

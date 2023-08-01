@@ -2996,3 +2996,56 @@ function bb_profile_slug_tutorial() {
 	</p>
 	<?php
 }
+
+/**
+ * Link to Email Domain Restrictions tutorial
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_email_domain_restrictions_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62793,
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
+ * Allow admin to add blacklist emails and domains.
+ *
+ * @since  BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_callback_blacklist_email_setting() {
+	?>
+
+	<label for="bb-blacklist-email-setting"><?php esc_html_e( 'Enter email domains, extensions or specific addresses which you want to restrict from registration. Enter one domain or address per line.', 'buddyboss' ); ?></label>
+	<textarea rows="10" cols="100" id="bb-blacklist-email-setting" name="bb-blacklist-email-setting" style="margin-top: 10px;"><?php echo esc_textarea( bb_blacklist_email_setting() ); ?></textarea>
+	<?php
+}
+
+/**
+ * Allow admin to add whilelist emails and domains.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_callback_whitelist_email_setting() {
+	?>
+
+	<label for="bb-whitelist-email-setting"><?php esc_html_e( 'Enter email domains, extensions or specific addresses which you want to allow for user registrations. Enter one domain or address per line.', 'buddyboss' ); ?></label>
+	<textarea rows="10" cols="100" id="bb-whitelist-email-setting" name="bb-whitelist-email-setting" style="margin-top: 10px;"><?php echo esc_textarea( bb_whitelist_email_setting() ); ?></textarea>
+	<?php
+}
