@@ -167,7 +167,15 @@ class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 			$result->name          = bp_core_get_user_displayname( $user->ID );
 			$result->user_id       = $user->ID;
 
-			$results[] = $result;
+			if ( isset( $this->args['count_total'] ) && $this->args['count_total'] ) {
+				$results['members'][] = $result;
+			} else {
+				$results[] = $result;
+			}
+		}
+
+		if ( isset( $this->args['count_total'] ) && $this->args['count_total'] ) {
+			$results['total'] = $user_query->total_users;
 		}
 
 		/**
