@@ -194,11 +194,9 @@ window.bp = window.bp || {};
 		 *
 		 * @function setupTopicReplyDraftKeys
 		 *
-		 * @param {Event} event - The event object that triggered the function (optional).
-		 *
 		 * @return {void}
 		 */
-		this.setupTopicReplyDraftKeys = function ( ) {
+		this.setupTopicReplyDraftKeys = function () {
 			if ( !this.currentForm ) {
 				return;
 			}
@@ -465,7 +463,7 @@ window.bp = window.bp || {};
 
 			// Remove class to display draft.
 			target.removeClass( 'has-content' );
-		},
+		};
 
 		this.resetTopicReplyDraftLinkPreview = function() {
 			var currentTargetForm = this.currentForm ? this.currentForm : $( 'form#new-post' );
@@ -767,7 +765,7 @@ window.bp = window.bp || {};
 			}
 
 			this.previewDraftMedia( $form, activity_data );
-		},
+		};
 
 		this.appendReplyDraftData = function() {
 			this.getTopicReplyDraftData();
