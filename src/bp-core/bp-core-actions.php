@@ -81,6 +81,7 @@ add_action( 'bp_init', 'bp_add_permastructs', 40 );
 add_action( 'bp_init', 'bp_init_background_updater', 50 );
 add_action( 'bp_init', 'bb_init_email_background_updater', 51 );
 add_action( 'bp_init', 'bb_init_notifications_background_updater', 52 );
+add_action( 'bp_init', 'bb_init_background_updater', 50 );
 
 /**
  * The bp_register_taxonomies hook - Attached to 'bp_init' @ priority 2 above.
@@ -429,6 +430,20 @@ function bb_handle_cron_healthcheck() {
 }
 
 add_action( 'bp_init_background_updater', 'bb_handle_cron_healthcheck' );
+
+/**
+ * Check and reschedule the newly added background process if queue is not empty.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_updater_handle_cron_healthcheck() {
+	global $bb_background_updater;
+	if ( $bb_background_updater->is_updating() ) {
+		$bb_background_updater->schedule_event();
+	}
+}
+
+add_action( 'bb_init_background_updater', 'bb_updater_handle_cron_healthcheck' );
 
 /**
  * Function will remove RSS Feeds.
