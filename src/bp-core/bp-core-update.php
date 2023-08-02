@@ -3123,6 +3123,10 @@ function bb_core_update_repair_duplicate_following_notification() {
 function bb_update_to_2_4_10() {
 	global $wpdb;
 
+	if ( ! bp_is_active( 'groups' ) ) {
+		return;
+	}
+
 	$groups     = $wpdb->base_prefix . 'bp_groups';
 	$group_meta = $wpdb->base_prefix . 'bp_groups_groupmeta';
 
@@ -3144,16 +3148,15 @@ function bb_update_to_2_4_10() {
 			)
 		);
 
-		$admin_id = 1;
-		if ( ! empty( $admin[0] ) ) {
-			$admin_id = $admin[0];
-		}
+		if ( ! empty( $admin ) && ! is_wp_error( $admin ) ) {
+			$admin_id = current( $admin );
 
-		// Assign the group organizer to all the group that has 0 members.
-		foreach ( $groups as $group ) {
-			groups_join_group( $group->id, $admin_id );
-			$member = new BP_Groups_Member( $admin_id, $group->id );
-			$member->promote( 'admin' );
+			// Assign the group organizer to all the group that has 0 members.
+			foreach ( $groups as $group ) {
+				groups_join_group( $group->id, $admin_id );
+				$member = new BP_Groups_Member( $admin_id, $group->id );
+				$member->promote( 'admin' );
+			}
 		}
 	}
 }
