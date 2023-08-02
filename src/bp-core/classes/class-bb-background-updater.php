@@ -705,6 +705,8 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		 * Called when background process has completed.
 		 */
 		protected function completed() {
+			// phpcs:ignore
+			error_log( 'Data update completed' );
 			do_action( $this->identifier . '_completed' );
 		}
 
