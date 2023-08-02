@@ -383,7 +383,6 @@ function bbp_is_user_spammer( $user_id = 0 ) {
  *
  * @since bbPress (r3405)
  *
- * @global wpdb $wpdb WordPress database abstraction object.
  * @param int $user_id Optional. User ID to spam. Defaults to displayed user.
 
  * @uses bbp_is_single_user()
@@ -420,14 +419,14 @@ function bbp_make_spam_user( $user_id = 0 ) {
 	}
 
 	// Arm the torpedos
-	global $wpdb;
+	$bbp_db = bbp_db();
 
 	// Get the blog IDs of the user to mark as spam
 	$blogs = get_blogs_of_user( $user_id, true );
 
 	// If user has no blogs, they are a guest on this site
 	if ( empty( $blogs ) ) {
-		$blogs[ $wpdb->blogid ] = array();
+		$blogs[ $bbp_db->blogid ] = array();
 	}
 
 	// Make array of post types to mark as spam
@@ -441,7 +440,7 @@ function bbp_make_spam_user( $user_id = 0 ) {
 		switch_to_blog( $blog_id );
 
 		// Get topics and replies
-		$posts = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_author = %d AND post_status = '%s' AND post_type IN ( {$post_types} )", $user_id, bbp_get_public_status_id() ) );
+		$posts = $bbp_db->get_col( $bbp_db->prepare( "SELECT ID FROM {$bbp_db->posts} WHERE post_author = %d AND post_status = '%s' AND post_type IN ( {$post_types} )", $user_id, bbp_get_public_status_id() ) );
 
 		// Loop through posts and spam them
 		if ( ! empty( $posts ) ) {
@@ -475,7 +474,6 @@ function bbp_make_spam_user( $user_id = 0 ) {
  *
  * @since bbPress (r3405)
  *
- * @global wpdb $wpdb WordPress database abstraction object.
  * @param int $user_id Optional. User ID to unspam. Defaults to displayed user.
  *
  * @uses bbp_is_single_user()
@@ -511,14 +509,14 @@ function bbp_make_ham_user( $user_id = 0 ) {
 	}
 
 	// Arm the torpedos
-	global $wpdb;
+	$bbp_db = bbp_db();
 
 	// Get the blog IDs of the user to mark as spam
 	$blogs = get_blogs_of_user( $user_id, true );
 
 	// If user has no blogs, they are a guest on this site
 	if ( empty( $blogs ) ) {
-		$blogs[ $wpdb->blogid ] = array();
+		$blogs[ $bbp_db->blogid ] = array();
 	}
 
 	// Make array of post types to mark as spam
@@ -532,7 +530,7 @@ function bbp_make_ham_user( $user_id = 0 ) {
 		switch_to_blog( $blog_id );
 
 		// Get topics and replies
-		$posts = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_author = %d AND post_status = '%s' AND post_type IN ( {$post_types} )", $user_id, bbp_get_spam_status_id() ) );
+		$posts = $bbp_db->get_col( $bbp_db->prepare( "SELECT ID FROM {$bbp_db->posts} WHERE post_author = %d AND post_status = '%s' AND post_type IN ( {$post_types} )", $user_id, bbp_get_spam_status_id() ) );
 
 		// Loop through posts and spam them
 		if ( ! empty( $posts ) ) {

@@ -1,5 +1,6 @@
+/* global bp_select2, bbpCommonJsData */
 jQuery( document ).ready(
-	function () {
+	function ( $ ) {
 
 		var $tagsSelect = jQuery( 'body' ).find( '.bbp_topic_tags_dropdown' );
 		var tagsArrayData = [];
@@ -189,7 +190,7 @@ jQuery( document ).ready(
 									var small = _this.search.val().toLowerCase();
 									_this.search.val(small);
 								},
-								
+
 								picker_show: function () {
 									$( this.button[0] ).closest( '.post-emoji' ).addClass('active');
 								},
@@ -211,7 +212,7 @@ jQuery( document ).ready(
 				if ( $tagsSelect.length ) {
 					$tagsSelect.select2( {
 						placeholder: $tagsSelect.attr( 'placeholder' ),
-						dropdownParent: jQuery( element ).closest('form').parent(),
+						dropdownParent: $tagsSelect.closest('form').parent(),
 						minimumInputLength: 1,
 						closeOnSelect: true,
 						tags: true,
@@ -317,9 +318,9 @@ jQuery( document ).ready(
 			jQuery( '#bbp_topic_content' ).on( 'keyup', function() {
 				var $reply_content = jQuery( '#bbp_topic_content' ).val().trim();
 				if ( $reply_content !== '' ) {
-					jQuery( this ).closest( 'form' ).addClass( 'has-content' )
+					jQuery( this ).closest( 'form' ).addClass( 'has-content' );
 				} else {
-					jQuery( this ).closest( 'form' ).removeClass( 'has-content' )
+					jQuery( this ).closest( 'form' ).removeClass( 'has-content' );
 				}
 			} );
 		}
@@ -329,9 +330,9 @@ jQuery( document ).ready(
 			jQuery( '#bbp_reply_content' ).on( 'keyup', function() {
 				var $reply_content = jQuery( '#bbp_reply_content' ).val().trim();
 				if ( $reply_content !== '' ) {
-					jQuery( this ).closest( 'form' ).addClass( 'has-content' )
+					jQuery( this ).closest( 'form' ).addClass( 'has-content' );
 				} else {
-					jQuery( this ).closest( 'form' ).removeClass( 'has-content' )
+					jQuery( this ).closest( 'form' ).removeClass( 'has-content' );
 				}
 			} );
 		}

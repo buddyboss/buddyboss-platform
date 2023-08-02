@@ -611,7 +611,7 @@ window.bp = window.bp || {};
 			// Content.
 			if ( 'undefined' !== typeof activity_data.bbp_topic_content ) {
 				var element = $editor.get( 0 );
-				$meditor = window.MediumEditor ? window.MediumEditor.getEditorFromElement(element) : null;
+				var $meditor = window.MediumEditor ? window.MediumEditor.getEditorFromElement(element) : null;
 				if ( $meditor !== null ) {
 					$meditor.setContent( activity_data.bbp_topic_content );
 					if ( $( element ).text() !== '' ) {
@@ -684,7 +684,7 @@ window.bp = window.bp || {};
 			// Content.
 			if ( 'undefined' !== typeof activity_data.bbp_reply_content ) {
 				var element = $editor.get( 0 );
-				$meditor = window.MediumEditor ? window.MediumEditor.getEditorFromElement(element) : null;
+				var $meditor = window.MediumEditor ? window.MediumEditor.getEditorFromElement(element) : null;
 				if ( $meditor !== null ) {
 					$meditor.setContent( activity_data.bbp_reply_content );
 					if ( $( element ).text() !== '' ) {
