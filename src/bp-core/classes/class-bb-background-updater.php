@@ -943,5 +943,14 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 			return $this;
 		}
 
+		/**
+		 * Is the updater running?
+		 *
+		 * @return boolean
+		 */
+		public function is_updating() {
+			return false === $this->is_queue_empty();
+		}
+
 	}
 }
