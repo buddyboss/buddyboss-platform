@@ -66,6 +66,9 @@ add_action( 'bp_admin_menu', 'bp_admin_separator' );
 // Check user nickname on backend user edit page.
 add_action( 'user_profile_update_errors', 'bb_check_user_nickname', 10, 3 );
 
+// Validate if email address is allowed or blacklisted.
+add_action( 'user_profile_update_errors', 'bb_validate_restricted_email_on_registration', PHP_INT_MAX, 3 );
+
 /**
  * When a new site is created in a multisite installation, run the activation
  * routine on that site.
@@ -347,3 +350,15 @@ function bb_admin_check_valid_giphy_key() {
 
 }
 add_action( 'wp_ajax_bb_admin_check_valid_giphy_key', 'bb_admin_check_valid_giphy_key' );
+
+function bb_validate_restricted_email_on_registration( $errors, $update, $user ) {
+
+	// Check if it's a new user registration (not profile update)
+	if ( ! $update ) {
+		if ( ! bb_is_allowed_register_email_address( $user->user_email ) ) {
+			$errors->add( 'bb_restricted_email', __( 'This email address or domain has been blacklisted. If you think you are seeing this in error, please contact the site administrator.', 'buddyboss' ), array( 'form-field' => 'email' ) );
+		}
+	}
+
+	return $errors;
+}

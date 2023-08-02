@@ -7847,6 +7847,7 @@ function bb_admin_icons( $id ) {
 		case 'bp_notification_settings_automatic':
 			$meta_icon = $bb_icon_bf . ' bb-icon-bell';
 			break;
+		case 'bb_email_domain_restrictions':
 		case 'bp_messaging_notification_settings':
 			$meta_icon = $bb_icon_bf . ' bb-icon-envelope';
 			break;
@@ -8806,4 +8807,111 @@ function bb_disable_notification_type( $notification_type, $type = 'main' ) {
 	update_option( 'bb_enabled_notification', $enabled_notification );
 
 	return true;
+}
+
+/**
+ * Format the blacklist/whitelist email settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ * 
+ * @param string $data_values Input blacklist or whiltelist data.
+ *
+ * @return array
+ */
+function bb_format_blacklist_whitelist_email_setting( $data_values = '' ) {
+
+	// Initialize arrays to store domain, extension, and email.
+	$result     = array();
+	$emails     = array();
+	$domains    = array();
+	$extensions = array();
+
+	if ( ! empty( $data_values ) && is_string( $data_values ) ) {
+
+		// Regular expression pattern to match email, domain, and extension.
+		$pattern = '/^(?:(\S+@\S+)|(?:(?:\S+\.)?(\S+)))$/';
+
+		// Explode the textarea content into an array by lines.
+		$lines = explode("\n", $data_values);
+
+		foreach( $lines as $line ) {
+
+			// Remove leading/trailing whitespace.
+			$line = trim( $line );
+			preg_match( $pattern, $line, $matches );
+
+			$email  = $matches[1] ?? '';
+			$domain = $matches[2] ?? '';
+
+			if ( ! empty( $email ) ) {
+				$emails[] = $email;
+			} elseif ( ! empty( $domain ) ) {
+				if ( 0 === strpos( $line, '.' ) ) {
+					$extensions[] = $line;
+				} else {
+					$domains[] = $line;
+				}
+			}
+		}
+
+		// Create the final array with the desired format.
+		$result = array(
+			'email'     => $emails,
+			'extension' => $extensions,
+			'domain'    => $domains,
+		);
+	}
+
+	return $result;
+}
+
+function bb_is_allowed_register_email_address( $email = '' ) {
+
+	if( empty( $email ) ) {
+		return false;
+	}
+
+	// Get the list in associative array format.
+	$blacklist = bb_format_blacklist_whitelist_email_setting( bb_blacklist_email_setting() );
+	$whitelist = bb_format_blacklist_whitelist_email_setting( bb_whitelist_email_setting() );
+
+	if( empty( $blacklist ) ) {
+		return true;
+	}
+
+	// Check if the email address is in the whitelist.
+	if ( in_array( $email, $whitelist['email'], true ) ) {
+		return true;
+	}
+
+	// Check if the email domain is in the whitelist.
+	$domain = substr( strrchr( $email, "@" ), 1 );
+	if ( in_array( $domain, $whitelist['domain'], true ) ) {
+		return true;
+	}
+
+	// Check if the email extension is in the whitelist.
+	$extension = strrchr( $email, "." );
+	if ( in_array( $extension, $whitelist['extension'], true ) ) {
+		return true;
+	}
+
+	// Check if the email domain is in the blacklist.
+	if ( in_array( $domain, $blacklist['domain'], true ) ) {
+		return false;
+	}
+
+	// Check if the email address is in the blacklist.
+	if ( in_array( $email, $blacklist['email'], true ) ) {
+		return false;
+	}
+
+	// Check if the email extension is in the blacklist.
+	if ( in_array( $extension, $blacklist['extension'], true ) ) {
+		return false;
+	}
+
+	// If no matching found, allow registration by default.
+	return true;
+
 }

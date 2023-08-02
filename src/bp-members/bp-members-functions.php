@@ -1645,6 +1645,11 @@ function bp_core_validate_email_address( $user_email ) {
 		}
 	}
 
+	// Check buddyboss enmail restrictions.
+	if ( function_exists( 'bb_is_allowed_register_email_address' ) && ! bb_is_allowed_register_email_address( $user_email ) ) {
+		$errors['bb_restricted_email'] = 1;
+	}
+
 	// Is the email alreday in use?
 	if ( email_exists( $user_email ) ) {
 		$errors['in_use'] = 1;
@@ -1685,6 +1690,10 @@ function bp_core_add_validation_error_messages( WP_Error $errors, $validation_re
 
 	if ( ! empty( $validation_results['in_use'] ) ) {
 		$errors->add( 'user_email', __( 'Sorry, that email address is already used!', 'buddyboss' ) );
+	}
+
+	if ( ! empty( $validation_results['bb_restricted_email'] ) ) {
+		$errors->add( 'user_email', __( 'This email address or domain has been blacklisted. If you think you are seeing this in error, please contact the site administrator.', 'buddyboss' ) );
 	}
 }
 
