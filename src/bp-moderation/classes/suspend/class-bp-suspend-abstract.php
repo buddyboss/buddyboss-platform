@@ -137,7 +137,7 @@ abstract class BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function hide_related_content( $item_id, $hide_sitewide = 0, $args = array() ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
 
 		$args = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
 
@@ -223,7 +223,7 @@ abstract class BP_Suspend_Abstract {
 				$this->hide_related_content( $item_id, $hide_sitewide, $args );
 			} else {
 				$args['page'] = ++$page;
-				$bp_background_updater->data(
+				$bb_background_updater->data(
 					array(
 						array(
 							'callback' => array( $this, 'hide_related_content' ),
@@ -231,7 +231,7 @@ abstract class BP_Suspend_Abstract {
 						),
 					)
 				);
-				$bp_background_updater->save()->schedule_event();
+				$bb_background_updater->save()->schedule_event();
 			}
 		}
 	}
@@ -278,7 +278,7 @@ abstract class BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function unhide_related_content( $item_id, $hide_sitewide = 0, $force_all = 0, $args = array() ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
 
 		$args = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
 
@@ -371,7 +371,7 @@ abstract class BP_Suspend_Abstract {
 				$this->unhide_related_content( $item_id, $hide_sitewide, $force_all, $args );
 			} else {
 				$args['page'] = ++$page;
-				$bp_background_updater->data(
+				$bb_background_updater->data(
 					array(
 						array(
 							'callback' => array( $this, 'unhide_related_content' ),
@@ -379,7 +379,7 @@ abstract class BP_Suspend_Abstract {
 						),
 					)
 				);
-				$bp_background_updater->save()->schedule_event();
+				$bb_background_updater->save()->schedule_event();
 			}
 		}
 	}

@@ -371,7 +371,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function manage_hidden_member( $member_id, $hide_sitewide, $args = array() ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
 
 		$force_bg_process = false;
 		if ( isset( $args['force_bg_process'] ) ) {
@@ -404,7 +404,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		if ( $this->background_disabled || ! $force_bg_process ) {
 			$this->hide_related_content( $member_id, $hide_sitewide, $args );
 		} else {
-			$bp_background_updater->data(
+			$bb_background_updater->data(
 				array(
 					array(
 						'callback' => array( $this, 'hide_related_content' ),
@@ -412,7 +412,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 					),
 				)
 			);
-			$bp_background_updater->save()->schedule_event();
+			$bb_background_updater->save()->schedule_event();
 		}
 	}
 
@@ -427,7 +427,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function manage_unhidden_member( $member_id, $hide_sitewide, $force_all, $args = array() ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
 
 		$force_bg_process = false;
 		if ( isset( $args['force_bg_process'] ) ) {
@@ -460,7 +460,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		if ( $this->background_disabled || ! $force_bg_process ) {
 			$this->unhide_related_content( $member_id, $hide_sitewide, $force_all, $args );
 		} else {
-			$bp_background_updater->data(
+			$bb_background_updater->data(
 				array(
 					array(
 						'callback' => array( $this, 'unhide_related_content' ),
@@ -468,7 +468,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 					),
 				)
 			);
-			$bp_background_updater->save()->schedule_event();
+			$bb_background_updater->save()->schedule_event();
 		}
 	}
 
@@ -639,7 +639,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @return array
 	 */
 	protected function get_related_contents( $member_id, $args = array() ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
 
 		$action           = ! empty( $args['action'] ) ? $args['action'] : '';
 		$page             = ! empty( $args['page'] ) ? $args['page'] : - 1;
@@ -659,7 +659,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 					$chunk_results = array_chunk( $friend_ids, $min_count );
 					if ( ! empty( $chunk_results ) ) {
 						foreach ( $chunk_results as $chunk_result ) {
-							$bp_background_updater->data(
+							$bb_background_updater->data(
 								array(
 									array(
 										'callback' => array( $this, 'bb_update_member_friend_count' ),
@@ -668,7 +668,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 								)
 							);
 
-							$bp_background_updater->save()->dispatch();
+							$bb_background_updater->save()->dispatch();
 						}
 					}
 				}
@@ -682,7 +682,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 			if ( count( $group_ids ) > $min_count ) {
 				foreach ( array_chunk( $group_ids, $min_count ) as $chunk ) {
-					$bp_background_updater->data(
+					$bb_background_updater->data(
 						array(
 							array(
 								'callback' => 'bb_update_group_member_count',
@@ -690,7 +690,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 							),
 						)
 					);
-					$bp_background_updater->save()->schedule_event();
+					$bb_background_updater->save()->schedule_event();
 				}
 			} else {
 				bb_update_group_member_count( $group_ids );
