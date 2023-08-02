@@ -906,5 +906,40 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 			return $result ? $callback : false;
 		}
 
+		/**
+		 * Kill process.
+		 *
+		 * Stop processing queue items, clear cronjob and delete all batches.
+		 */
+		public function kill_process() {
+			if ( ! $this->is_queue_empty() ) {
+				$this->delete_all_batches();
+				wp_clear_scheduled_hook( $this->cron_hook_identifier );
+			}
+		}
+
+		/**
+		 * Delete all batches.
+		 *
+		 * @return WC_Background_Process
+		 */
+		public function delete_all_batches() {
+			global $wpdb;
+
+			$table  = $wpdb->options;
+			$column = 'option_name';
+
+			if ( is_multisite() ) {
+				$table  = $wpdb->sitemeta;
+				$column = 'meta_key';
+			}
+
+			$key = $wpdb->esc_like( $this->identifier . '_batch_' ) . '%';
+
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE {$column} LIKE %s", $key ) ); // @codingStandardsIgnoreLine.
+
+			return $this;
+		}
+
 	}
 }
