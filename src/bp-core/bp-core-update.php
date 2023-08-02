@@ -463,6 +463,10 @@ function bp_version_updater() {
 			bb_update_to_2_3_80();
 		}
 
+		if ( $raw_db_version < 20471 ) {
+			bb_update_to_2_4_10();
+		}
+
 		if ( $raw_db_version < 20561 ) {
 			bb_update_to_2_3_90();
 		}
@@ -3156,5 +3160,53 @@ function bb_update_to_2_3_90() {
 		}
 
 		bp_update_option( 'bp_document_extensions_support', $saved_extensions );
+	}
+}
+
+/**
+ * Assign the group organizer to the group has 0 members.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_4_10() {
+	global $wpdb;
+
+	if ( ! bp_is_active( 'groups' ) ) {
+		return;
+	}
+
+	$groups     = $wpdb->base_prefix . 'bp_groups';
+	$group_meta = $wpdb->base_prefix . 'bp_groups_groupmeta';
+
+	$sql = "SELECT g.id FROM {$groups} g";
+	$sql .= " INNER JOIN {$group_meta} gm ON gm.group_id = g.id";
+	$sql .= ' WHERE gm.meta_key = %s AND gm.meta_value = %d';
+
+	// Get the group ids with 0 members.
+	$groups = $wpdb->get_results( $wpdb->prepare( $sql, 'total_member_count', 0 ) );
+
+	if ( ! empty( $groups ) ) {
+		$admin = get_users(
+			array(
+				'blog_id' => bp_get_root_blog_id(),
+				'fields'  => 'ID',
+				'number'  => 1,
+				'orderby' => 'ID',
+				'role'    => 'administrator',
+			)
+		);
+
+		if ( ! empty( $admin ) && ! is_wp_error( $admin ) ) {
+			$admin_id = current( $admin );
+
+			// Assign the group organizer to all the group that has 0 members.
+			foreach ( $groups as $group ) {
+				groups_join_group( $group->id, $admin_id );
+				$member = new BP_Groups_Member( $admin_id, $group->id );
+				$member->promote( 'admin' );
+			}
+		}
 	}
 }
