@@ -95,6 +95,13 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		const STATUS_PAUSED = 2;
 
 		/**
+		 * Background job queue table name.
+		 *
+		 * @var string
+		 */
+		public static $table_name = '';
+
+		/**
 		 * Initiate new async request.
 		 */
 		public function __construct() {
@@ -103,11 +110,62 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 			$this->cron_hook_identifier     = $this->identifier . '_cron';
 			$this->cron_interval_identifier = $this->identifier . '_cron_interval';
 
+			self::create_table();
+
 			add_action( $this->cron_hook_identifier, array( $this, 'handle_cron_healthcheck' ) );
 			add_filter( 'cron_schedules', array( $this, 'schedule_cron_healthcheck' ) ); // phpcs:ignore
 
 			add_action( 'wp_ajax_' . $this->identifier, array( $this, 'maybe_handle' ) );
 			add_action( 'wp_ajax_nopriv_' . $this->identifier, array( $this, 'maybe_handle' ) );
+		}
+
+		/**
+		 * Created custom table for background job queue.
+		 *
+		 * @return void
+		 */
+		public static function create_table() {
+			$sql             = array();
+			$wpdb            = $GLOBALS['wpdb'];
+			$charset_collate = $wpdb->get_charset_collate();
+			$bp_prefix       = bp_core_get_table_prefix();
+
+			$table_name = $bp_prefix . 'bb_background_job_queue';
+
+			self::$table_name = $table_name;
+
+			// Ensure that dbDelta() is defined.
+			if ( ! function_exists( 'dbDelta' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			}
+
+			$table_exists = (bool) $wpdb->get_results( "DESCRIBE {$table_name};" );
+
+			// Table already exists, so maybe upgrade instead?
+			if ( true !== $table_exists ) {
+
+				$sql[] = "CREATE TABLE {$table_name} (
+					id bigint(20) NOT NULL AUTO_INCREMENT,
+					type varchar(20) NOT NULL,
+					`group` varchar(20) DEFAULT NULL,
+					data_id varchar(20) DEFAULT NULL,
+					secondary_data_id varchar(20) DEFAULT NULL,
+					data longtext DEFAULT NULL,
+					priority tinyint(2) DEFAULT NULL,
+					blog_id bigint(20) NOT NULL,
+					date_created datetime NOT NULL,
+					PRIMARY KEY (id),
+					KEY type (type),
+					KEY `group` (`group`),
+					KEY data_id (data_id),
+					KEY secondary_data_id (secondary_data_id),
+					KEY priority (priority),
+					KEY blog_id (blog_id),
+					KEY date_created (date_created)
+				) {$charset_collate};";
+
+				dbDelta( $sql );
+			}
 		}
 
 		/**
