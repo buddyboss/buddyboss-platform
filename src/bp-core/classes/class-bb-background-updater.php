@@ -222,19 +222,6 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		}
 
 		/**
-		 * Set data used during the request.
-		 *
-		 * @param array $data Data.
-		 *
-		 * @return $this
-		 */
-		public function data( $data ) {
-			$this->data = $data;
-
-			return $this;
-		}
-
-		/**
 		 * Dispatch the async request.
 		 *
 		 * @return array|WP_Error|false HTTP Response array, WP_Error on failure, or false if not attempted.
@@ -507,7 +494,50 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		 * @return $this
 		 */
 		public function push_to_queue( $data ) {
-			$this->data[] = $data;
+			$data_array = wp_parse_args(
+				$data,
+				array(
+					'callback'          => '',
+					'type'              => '',
+					'group'             => '',
+					'data_id'           => '',
+					'secondary_data_id' => '',
+					'args'              => array(),
+					'priority'          => 10,
+					'blog_id'           => get_current_blog_id(),
+					'date_created'      => bp_core_current_time(),
+				)
+			);
+
+			$this->data[] = $data_array;
+
+			return $this;
+		}
+
+		/**
+		 * Set data used during the request.
+		 *
+		 * @param array $data Data.
+		 *
+		 * @return $this
+		 */
+		public function data( $data ) {
+			$data_array = wp_parse_args(
+				$data,
+				array(
+					'callback'          => '',
+					'type'              => '',
+					'group'             => '',
+					'data_id'           => '',
+					'secondary_data_id' => '',
+					'args'              => array(),
+					'priority'          => 10,
+					'blog_id'           => get_current_blog_id(),
+					'date_created'      => bp_core_current_time(),
+				)
+			);
+
+			$this->data = $data_array;
 
 			return $this;
 		}
@@ -518,10 +548,52 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		 * @return $this
 		 */
 		public function save() {
+			global $wpdb;
 			$key = $this->generate_key();
 
-			if ( ! empty( $this->data ) ) {
-				update_site_option( $key, $this->data );
+			if ( ! empty( $this->data ) && array_key_exists( 'callback', $this->data ) ) {
+				$args_data = array(
+					'callback' => $this->data['callback'],
+					'args'     => (array) $this->data['args'],
+				);
+
+				$wpdb->insert(
+					self::$table_name,
+					array(
+						'type'              => $this->data['type'],
+						'group'             => $this->data['group'],
+						'data_id'           => (int) $this->data['data_id'],
+						'secondary_data_id' => (int) $this->data['secondary_data_id'],
+						'data'              => maybe_serialize( $args_data ),
+						'priority'          => (int) $this->data['priority'],
+						'blog_id'           => (int) $this->data['blog_id'],
+						'date_created'      => $this->data['date_created'],
+					)
+				);
+			} elseif ( ! empty( $this->data ) ) {
+				$key_check = array_column( $this->data, 'callback' );
+				if ( ! empty( $key_check ) ) {
+					foreach ( $this->data as $data ) {
+						$args_data = array(
+							'callback' => $data['callback'],
+							'args'     => (array) $data['args'],
+						);
+
+						$wpdb->insert(
+							self::$table_name,
+							array(
+								'type'              => $data['type'],
+								'group'             => $data['group'],
+								'data_id'           => (int) $data['data_id'],
+								'secondary_data_id' => (int) $data['secondary_data_id'],
+								'data'              => maybe_serialize( $args_data ),
+								'priority'          => (int) $data['priority'],
+								'blog_id'           => (int) $data['blog_id'],
+								'date_created'      => $data['date_created'],
+							)
+						);
+					}
+				}
 			}
 
 			// Clean out data so that new data isn't prepended with closed session's data.
