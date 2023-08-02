@@ -400,32 +400,32 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 			do {
 				$batch = $this->get_batch();
 
-				foreach ( $batch->data as $key => $value ) {
-					$task = $this->task( $value );
+				$key_id = $batch->key;
 
-					if ( false !== $task ) {
-						$batch->data[ $key ] = $task;
-					} else {
-						unset( $batch->data[ $key ] );
-					}
+				$task = $this->task( $batch->data );
 
-					// Keep the batch up to date while processing it.
-					if ( ! empty( $batch->data ) ) {
-						$this->update( $batch->key, $batch->data );
-					}
+				if ( false !== $task ) {
+					$batch->data = $task;
+				} else {
+					unset( $batch );
+				}
 
-					// Let the server breathe a little.
-					sleep( $throttle_seconds );
+				// Keep the batch up to date while processing it.
+				if ( ! empty( $batch->data ) ) {
+					$this->update( $key_id, $batch->data );
+				}
 
-					// Batch limits reached, or pause or cancel request.
-					if ( $this->time_exceeded() || $this->memory_exceeded() || $this->is_paused() || $this->is_cancelled() ) {
-						break;
-					}
+				// Let the server breathe a little.
+				sleep( $throttle_seconds );
+
+				// Batch limits reached, or pause or cancel request.
+				if ( $this->time_exceeded() || $this->memory_exceeded() || $this->is_paused() || $this->is_cancelled() ) {
+					break;
 				}
 
 				// Delete current batch if fully processed.
 				if ( empty( $batch->data ) ) {
-					$this->delete( $batch->key );
+					$this->delete( $key_id );
 				}
 			} while ( ! $this->time_exceeded() && ! $this->memory_exceeded() && ! $this->is_queue_empty() && ! $this->is_paused() && ! $this->is_cancelled() );
 
@@ -640,7 +640,17 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		 */
 		public function update( $key, $data ) {
 			if ( ! empty( $data ) ) {
-				update_site_option( $key, $data );
+				global $wpdb;
+
+				$wpdb->update(
+					self::$table_name,
+					array(
+						'data' => maybe_serialize( $data ),
+					),
+					array(
+						'id' => (int) $key,
+					)
+				);
 			}
 
 			return $this;
@@ -654,7 +664,14 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		 * @return $this
 		 */
 		public function delete( $key ) {
-			delete_site_option( $key );
+			global $wpdb;
+
+			$wpdb->delete(
+				self::$table_name,
+				array(
+					'id' => (int) $key,
+				)
+			);
 
 			return $this;
 		}
@@ -870,28 +887,23 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 				$limit = 0;
 			}
 
-			$table        = $wpdb->options;
-			$column       = 'option_name';
-			$key_column   = 'option_id';
-			$value_column = 'option_value';
-
-			if ( is_multisite() ) {
-				$table        = $wpdb->sitemeta;
-				$column       = 'meta_key';
-				$key_column   = 'meta_id';
-				$value_column = 'meta_value';
-			}
-
-			$key = $wpdb->esc_like( $this->identifier . '_batch_' ) . '%';
+			$table                = self::$table_name;
+			$blog_id              = get_current_blog_id();
+			$id                   = 'id';
+			$group                = 'group';
+			$type                 = 'type';
+			$value_item           = 'data_id';
+			$value_secondary_item = 'secondary_data_id';
+			$value_column         = 'data';
 
 			$sql = '
 			SELECT *
 			FROM ' . $table . '
-			WHERE ' . $column . ' LIKE %s
-			ORDER BY ' . $key_column . ' ASC
+			WHERE blog_id = %d
+			ORDER BY priority, id ASC
 			';
 
-			$args = array( $key );
+			$args[] = $blog_id;
 
 			if ( ! empty( $limit ) ) {
 				$sql .= ' LIMIT %d';
@@ -906,10 +918,14 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 
 			if ( ! empty( $items ) ) {
 				$batches = array_map(
-					function ( $item ) use ( $column, $value_column ) {
-						$batch       = new stdClass();
-						$batch->key  = $item->{$column};
-						$batch->data = maybe_unserialize( $item->{$value_column} );
+					function ( $item ) use ( $id, $group, $type, $value_item, $value_secondary_item, $value_column ) {
+						$batch               = new stdClass();
+						$batch->key          = $item->{$id};
+						$batch->group        = $item->{$group};
+						$batch->type         = $item->{$type};
+						$batch->item_id      = $item->{$value_item};
+						$batch->secondary_id = $item->{$value_secondary_item};
+						$batch->data         = maybe_unserialize( $item->{$value_column} );
 
 						return $batch;
 					},
