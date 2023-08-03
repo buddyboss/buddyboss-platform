@@ -2,7 +2,7 @@
 /**
  * Deprecated functions.
  *
- * @deprecated BuddyBoss [BBVERSION]
+ * @deprecated BuddyBoss 2.2.6
  */
 
 // Exit if accessed directly.
@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  * @return void
  */
 function bb_pre_notify_reply_subscribers( $reply_id, $topic_id, $user_ids ) {
-	_deprecated_function( __FUNCTION__, '[BBVERSION]' );
+	_deprecated_function( __FUNCTION__, '2.2.6' );
 
 	if ( bb_enabled_legacy_email_preference() || ! bp_is_active( 'notifications' ) || empty( $user_ids ) ) {
 		return;
@@ -45,12 +45,13 @@ function bb_pre_notify_reply_subscribers( $reply_id, $topic_id, $user_ids ) {
 		}
 	}
 
-	$action = 'bb_forums_subscribed_reply';
+	$action    = 'bb_forums_subscribed_reply';
+	$min_count = (int) apply_filters( 'bb_forums_subscribed_reply_notifications_count', 20 );
 
 	if (
 		function_exists( 'bb_notifications_background_enabled' ) &&
 		true === bb_notifications_background_enabled() &&
-		count( $user_ids ) > 20
+		count( $user_ids ) > $min_count
 	) {
 		global $bb_notifications_background_updater;
 		$bb_notifications_background_updater->data(
@@ -99,7 +100,7 @@ function bb_pre_notify_reply_subscribers( $reply_id, $topic_id, $user_ids ) {
  * @return void
  */
 function bb_pre_notify_forum_subscribers( $topic_id, $forum_id, $user_ids ) {
-	_deprecated_function( __FUNCTION__, '[BBVERSION]' );
+	_deprecated_function( __FUNCTION__, '2.2.6' );
 
 	if ( bb_enabled_legacy_email_preference() || ! bp_is_active( 'notifications' ) || empty( $user_ids ) ) {
 		return;
@@ -114,10 +115,11 @@ function bb_pre_notify_forum_subscribers( $topic_id, $forum_id, $user_ids ) {
 		unset( $user_ids[ $unset_topic_key ] );
 	}
 
+	$min_count = (int) apply_filters( 'bb_forums_subscribed_discussion_notifications_count', 20 );
 	if (
 		function_exists( 'bb_notifications_background_enabled' ) &&
 		true === bb_notifications_background_enabled() &&
-		count( $user_ids ) > 20
+		count( $user_ids ) > $min_count
 	) {
 		global $bb_notifications_background_updater;
 		$bb_notifications_background_updater->data(

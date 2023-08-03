@@ -84,7 +84,16 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public static function get_permalink( $comment_id ) {
-		$url = get_comment_link( $comment_id );
+		if ( empty( $comment_id ) ) {
+			return '';
+		}
+
+		$get_comment = get_comment( $comment_id );
+		if ( empty( $get_comment ) ) {
+			return '';
+		}
+
+		$url = esc_url( get_comment_link( $get_comment ) );
 
 		return add_query_arg( array( 'modbypass' => 1 ), $url );
 	}
@@ -118,6 +127,8 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		if ( ! $comment instanceof WP_Comment ) {
 			return $comment_text;
 		}
+
+		$comment_text = bb_moderation_remove_mention_link( $comment_text );
 
 		$comment_author_id = ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
 
@@ -454,7 +465,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			}
 			$blocked_by_query = bb_moderation_get_blocked_by_sql( bp_loggedin_user_id() );
 			if ( ! empty( $blocked_by_query ) ) {
-				$comment_data['where'] .= ' AND ' . $wpdb->prefix . 'comments.user_id NOT IN ( ' . $blocked_by_query . ' )';
+				$comment_data['where'] .= ' AND ' . $wpdb->comments . '.user_id NOT IN ( ' . $blocked_by_query . ' )';
 			}
 		}
 

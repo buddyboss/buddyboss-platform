@@ -747,6 +747,7 @@ function bp_core_install_media() {
 		album_id bigint(20),
 		group_id bigint(20),
 		activity_id bigint(20) NULL DEFAULT NULL ,
+		message_id bigint(20) NULL DEFAULT 0 ,
 		privacy varchar(50) NULL DEFAULT 'public',
 		type varchar(50) NULL DEFAULT 'photo',
 		menu_order bigint(20) NULL DEFAULT 0 ,
@@ -756,7 +757,14 @@ function bp_core_install_media() {
 		KEY user_id (user_id),
 		KEY album_id (album_id),
 		KEY media_author_id (album_id,user_id),
-		KEY activity_id (activity_id)
+		KEY activity_id (activity_id),
+		KEY blog_id (blog_id),
+		KEY message_id (message_id),
+		KEY group_id (group_id),
+		KEY privacy (privacy),
+		KEY type (type),
+		KEY menu_order (menu_order),
+		KEY date_created (date_created)
 	) {$charset_collate};";
 
 	dbDelta( $sql );
@@ -799,6 +807,7 @@ function bp_core_install_document() {
 		folder_id bigint(20),
 		group_id bigint(20),
 		activity_id bigint(20) NULL DEFAULT NULL ,
+		message_id bigint(20) NULL DEFAULT 0 ,
 		privacy varchar(50) NULL DEFAULT 'public',
 		menu_order bigint(20) NULL DEFAULT 0 ,
 		date_created datetime DEFAULT '0000-00-00 00:00:00',
@@ -808,7 +817,14 @@ function bp_core_install_document() {
 		KEY user_id (user_id),
 		KEY folder_id (folder_id),
 		KEY document_author_id (folder_id,user_id),
-		KEY activity_id (activity_id)
+		KEY activity_id (activity_id),
+		KEY blog_id (blog_id),
+		KEY message_id (message_id),
+		KEY group_id (group_id),
+		KEY privacy (privacy),
+		KEY menu_order (menu_order),
+		KEY date_created (date_created),
+		KEY date_modified (date_modified)
 	) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_document_meta (
@@ -1307,7 +1323,7 @@ function bp_core_install_moderation_emails() {
 /**
  * Install database tables for the subscriptions
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @uses  get_charset_collate()
  * @uses  bp_core_get_table_prefix()

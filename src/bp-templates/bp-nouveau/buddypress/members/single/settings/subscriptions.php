@@ -4,7 +4,7 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/members/single/settings/subscriptions.php.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  * @version 1.0.0
  */
 
@@ -64,7 +64,7 @@ $data = bb_core_notification_preferences_data();
  * Split each js template to its own file. Easier for child theme to
  * overwrite individual parts.
  *
- * @version BuddyBoss [BBVERSION]
+ * @version BuddyBoss 2.2.6
  */
 $template_parts = apply_filters(
 	'bb_member_subscriptions_js_template_parts',

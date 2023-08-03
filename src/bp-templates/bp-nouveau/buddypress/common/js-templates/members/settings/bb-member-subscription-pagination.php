@@ -4,7 +4,7 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/members/settings/bb-member-subscription-pagination.php.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.2.6
  * @version 1.0.0
  */
 ?>
@@ -52,7 +52,7 @@
 				}
 			}
 
-			links = links.sort();
+			links = links.sort( function( a, b ) { return a - b } );
 
 			if ( 0 < links.length ) {
 				for ( i = 0; i < links.length; i++ ) {

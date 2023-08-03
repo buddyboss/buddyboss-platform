@@ -1,4 +1,4 @@
-/* global wp, bp, BP_Nouveau, _, Backbone, tinymce, tinyMCE, bp_select2, bb_pusher_vars */
+/* global wp, bp, BP_Nouveau, _, Backbone, tinymce, tinyMCE, bp_select2, bb_pusher_vars, bp_media_dropzone */
 /* jshint devel: true */
 /* @version 3.1.0 */
 window.wp = window.wp || {};
@@ -73,19 +73,20 @@ window.bp = window.bp || {};
 			window.Dropzone.autoDiscover = false;
 
 			this.dropzone_options = {
-				url                 		 : BP_Nouveau.ajaxurl,
-				timeout             		 : 3 * 60 * 60 * 1000,
-				dictFileTooBig      		 : BP_Nouveau.media.dictFileTooBig,
-				dictDefaultMessage  		 : '',
-				acceptedFiles       		 : 'image/*',
-				autoProcessQueue    		 : true,
-				addRemoveLinks      		 : true,
-				uploadMultiple      		 : false,
-				maxFiles            		 : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
-				maxFilesize         		 : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
-				thumbnailWidth				 : 140,
-				thumbnailHeight				 : 140,
-				dictMaxFilesExceeded		 : BP_Nouveau.media.media_dict_file_exceeded,
+				url                          : BP_Nouveau.ajaxurl,
+				timeout                      : 3 * 60 * 60 * 1000,
+				dictFileTooBig               : BP_Nouveau.media.dictFileTooBig,
+				dictDefaultMessage           : '',
+				acceptedFiles                : 'image/*',
+				autoProcessQueue             : true,
+				addRemoveLinks               : true,
+				uploadMultiple               : false,
+				maxFiles                     : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
+				maxFilesize                  : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+				thumbnailWidth               : 140,
+				thumbnailHeight              : 140,
+				dictInvalidFileType          : bp_media_dropzone.dictInvalidFileType,
+				dictMaxFilesExceeded         : BP_Nouveau.media.media_dict_file_exceeded,
 				dictCancelUploadConfirmation : BP_Nouveau.media.dictCancelUploadConfirmation,
 			};
 
@@ -489,19 +490,29 @@ window.bp = window.bp || {};
 				{
 					'page'         : 1,
 					'total_page'   : 0,
-					'search_terms' : '',
+					'search_terms' : ( collection.options && collection.options.search_terms ) ? collection.options.search_terms : '',
 					'box'          : this.box
 				}
 			);
 
 			if ( collection.length ) {
 				// Use it in the filters viex.
-				filters_view = new bp.Views.messageFilters( {model: this.filters, threads: collection} );
+				filters_view = new bp.Views.messageFilters( { model: this.filters, threads: collection } );
 
-				this.views.add( {id: 'filters', view: filters_view} );
+				this.views.add( { id: 'filters', view: filters_view } );
 
 				$( '#subsubnav' ).removeClass( 'bp-hide' );
 				filters_view.inject( '.bp-messages-filters' );
+
+				if (
+					collection.options &&
+					collection.options.search_terms &&
+					collection.options.search_terms != '' &&
+					'undefined' !== typeof filters_view.$el &&
+					filters_view.$el.length > 0
+				) {
+					$( filters_view.$el ).find( 'input[type=search]' ).val( collection.options.search_terms );
+				}
 
 				$( '.bp-messages-threads-list .message-lists > li .thread-subject' ).each( function () {
 					var available_width = $( this ).width() - 10;
@@ -1920,6 +1931,7 @@ window.bp = window.bp || {};
 				dividerObject.group_link = '';
 				dividerObject.message_from = '';
 				dividerObject.class_name = 'divider-date';
+				dividerObject.is_group_notice = false;
 
 				if ( typeof dividerObject.gif !== 'undefined' ) {
 					delete dividerObject.gif;
@@ -2036,7 +2048,6 @@ window.bp = window.bp || {};
 				'input #message_content': 'focusEditorOnChange',
 				'input #message_content': 'postValidate',// jshint ignore:line
 				'change .medium-editor-toolbar-input': 'mediumLink',
-				'paste': 'handlePaste',
 			},
 
 			focusEditorOnChange: function ( e ) { // Fix issue of Editor loose focus when formatting is opened after selecting text.
@@ -2125,18 +2136,6 @@ window.bp = window.bp || {};
 				}
 			},
 
-			handlePaste: function ( event ) {
-				// Get user's pasted data.
-				var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
-					data = clipboardData.getData( 'text/plain' );
-
-				// Insert the filtered content.
-				document.execCommand( 'insertHTML', false, data );
-
-				// Prevent the standard paste behavior.
-				event.preventDefault();
-			},
-
 			initialize: function() {
 				this.on( 'ready', this.activateTinyMce, this );
 				this.on( 'ready', this.listenToUploader, this );
@@ -2176,6 +2175,7 @@ window.bp = window.bp || {};
 							},
 							imageDragging: false,
 							anchor: {
+								placeholderText: BP_Nouveau.anchorPlaceholderText,
 								linkValidation: true
 							}
 						}
@@ -2499,7 +2499,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								errorText = response.data.feedback;
-							} else if ( 'Server responded with 0 code.' == response ) { // update error text to user friendly.
+							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								errorText = BP_Nouveau.media.connection_lost_error;
 							}
 						} else {
@@ -2729,7 +2729,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								errorText = response.data.feedback;
-							} else if ( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								errorText = BP_Nouveau.media.connection_lost_error;
 							}
 						} else {
@@ -2875,6 +2875,10 @@ window.bp = window.bp || {};
 						}
 						Backbone.trigger( 'triggerMediaInProgress' );
 
+						if ( bp.Nouveau.getVideoThumb ) {
+							bp.Nouveau.getVideoThumb( file, '.dz-video-thumbnail' );
+						}
+
 						var tool_box = self.$el.parents( '#bp-message-content' );
 						if ( tool_box.find( '#messages-document-button' ) ) {
 							tool_box.find( '#messages-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
@@ -2972,7 +2976,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								errorText = response.data.feedback;
-							} else if ( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								errorText = BP_Nouveau.media.connection_lost_error;
 							}
 						} else {
@@ -4296,6 +4300,14 @@ window.bp = window.bp || {};
 			},
 
 			threadsFetchError: function( collection, response ) {
+
+				if (
+					'undefined' !== typeof response.statusText &&
+					'abort' === response.statusText
+				) {
+					return;
+				}
+
 				if ( ! _.isUndefined( this.options.search_terms ) && this.options.search_terms !== '' ) {
 					this.loadingFeedback = new bp.Views.Feedback(
 						{
@@ -4340,7 +4352,8 @@ window.bp = window.bp || {};
 					target.closest( '.bp-messages-nav-panel' ).removeClass( 'threads-scrolled' );
 				}
 
-				if ( ( target[0].scrollHeight - target.scrollTop() ) >= ( target.innerHeight() - 5 ) &&
+				if (
+					( target.scrollTop() + target.innerHeight() >= target[ 0 ].scrollHeight - 5 ) &&
 					this.collection.length &&
 					this.collection.options.page < this.collection.options.total_page &&
 					! target.find( '.bp-user-messages-loading' ).length
@@ -4889,6 +4902,7 @@ window.bp = window.bp || {};
 				this.model.on( 'change', this.updateMessage, this );
 				this.model.on( 'change', this.updateMessageClass, this );
 
+				this.listenTo( Backbone, 'onCancelRemoveMessage', this.onCancelRemoveMessage );
 			},
 
 			updateMessage: function( model ) {
@@ -4908,8 +4922,17 @@ window.bp = window.bp || {};
 			},
 
 			removeMessage: function () {
-				bp.Nouveau.Messages.messages.remove( bp.Nouveau.Messages.messages.findWhere().collection.get( this.model.id ) );
-				this.$el.remove();
+				var data      = {};
+				data.model_id = this.model.id;
+
+				if (
+					'undefined' !== bp.Pusher_FrontCommon &&
+					'function' === typeof bp.Pusher_FrontCommon.removeFailedMessage
+				) {
+					bp.Pusher_FrontCommon.removeFailedMessage( data );
+				} else {
+					window.Backbone.trigger( 'onCancelRemoveMessage', data );
+				}
 			},
 
 			retryMessage: function ( model ) {
@@ -4922,6 +4945,11 @@ window.bp = window.bp || {};
 						success: function () {}
 					}
 				);
+			},
+
+			onCancelRemoveMessage: function ( data ) {
+				bp.Nouveau.Messages.messages.remove( bp.Nouveau.Messages.messages.findWhere().collection.get( data.model_id ) );
+				$( '#bp-message-thread-list li.error.' + data.model_id ).remove();
 			}
 		}
 	);
@@ -5007,21 +5035,22 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.last.split_date = split_date;
 
 				if ( $.inArray( split_date, bp.Nouveau.Messages.divider ) === -1 ) {
-					split_message.hash          = '';
-					split_message.id            = split_date;
-					split_message.content       = BP_Nouveau.messages.today;
-					split_message.sender_avatar = '';
-					split_message.sender_id     = '';
-					split_message.sender_is_you = '';
-					split_message.sender_link   = '';
-					split_message.sender_name   = '';
-					split_message.display_date  = '';
-					split_message.group_text    = '';
-					split_message.group_name    = '';
-					split_message.group_avatar  = '';
-					split_message.group_link    = '';
-					split_message.message_from  = '';
-					split_message.class_name    = 'divider-date';
+					split_message.hash            = '';
+					split_message.id              = split_date;
+					split_message.content         = BP_Nouveau.messages.today;
+					split_message.sender_avatar   = '';
+					split_message.sender_id       = '';
+					split_message.sender_is_you   = '';
+					split_message.sender_link     = '';
+					split_message.sender_name     = '';
+					split_message.display_date    = '';
+					split_message.group_text      = '';
+					split_message.group_name      = '';
+					split_message.group_avatar    = '';
+					split_message.group_link      = '';
+					split_message.message_from    = '';
+					split_message.class_name      = 'divider-date';
+					split_message.is_group_notice = false;
 					delete split_message.className;
 
 					if ( typeof split_message.gif !== 'undefined' ) {
@@ -5047,13 +5076,15 @@ window.bp = window.bp || {};
 				var first_message = _.first( messagePusherData );
 
 				if ( 'undefined' !== typeof first_message.video && first_message.video.length > 0 ) {
-					var videos = first_message.video;
+					var videos    = first_message.video;
 					$.each(
 						videos,
 						function ( index, video ) {
 							var blobData = BP_Nouveau.messages.video_default_url;
-							video.video_html = '<video playsinline id="theatre-video-" class="video-js" controls poster="' + blobData + '" data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\'><source src="' + video.vid_ids_fake + '" type="video/' + video.ext + '"></source></video>';
-							videos[ index ] = video;
+							if ( 'undefined' !== typeof video.vid_ids_fake ) {
+								video.video_html = '<video playsinline id="theatre-video-" class="video-js" controls poster="' + blobData + '" data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\'><source src="' + video.vid_ids_fake + '" type="video/' + video.ext + '"></source></video>';
+								videos[ index ] = video;
+							}
 						}
 					);
 					first_message.video = videos;
@@ -5061,6 +5092,14 @@ window.bp = window.bp || {};
 
 				// use sent messageData here.
 				this.collection.add( first_message );
+				if (
+					$( document.body ).find( '#bp-messages-threads-list li.' + first_message.thread_id ).length &&
+					'undefined' !== typeof first_message.display_date_list
+				) {
+					var list_date = $( document.body ).find( '#bp-messages-threads-list li.' + first_message.thread_id + ' .thread-date' );
+					list_date.find( 'time' ).attr( 'datetime', first_message.date.toISOString() );
+					list_date.find( 'time' ).html( first_message.display_date_list );
+				}
 				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
 
 				if( $( '#bp-message-thread-list li:last-child video' ).length > 0 ){
@@ -5116,6 +5155,18 @@ window.bp = window.bp || {};
 
 			triggerPusherUpdateMessage: function ( messagePusherData ) {
 				var model = this.collection.get( messagePusherData.hash );
+
+				// Re-sync the collection if the collection is not updated on onSentMessage.
+				if ( 'undefined' === typeof model ) {
+					var message_array = [],
+					    message       = messagePusherData.message;
+
+					message.date = new Date( message.date );
+					message_array.push( message );
+					window.Backbone.trigger( 'onSentMessage', message_array );
+					model = this.collection.get( messagePusherData.hash );
+				}
+
 				if ( model ) {
 					if ( parseInt( messagePusherData.message.sender_id ) === parseInt( BP_Nouveau.current.message_user_id ) ) {
 						messagePusherData.message.sender_is_you = true;

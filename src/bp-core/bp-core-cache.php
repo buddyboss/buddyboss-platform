@@ -341,8 +341,13 @@ function bp_core_delete_incremented_cache( $key, $group ) {
  * @return string
  */
 function bp_core_get_incremented_cache_key( $key, $group ) {
+	global $wpdb;
 	$incrementor = bp_core_get_incrementor( $group );
-	$cache_key   = md5( $key . $incrementor );
+
+	// Removes the placeholder escape strings from a query.
+	$key       = $wpdb->remove_placeholder_escape( $key );
+	$cache_key = md5( $key . $incrementor );
+
 	return $cache_key;
 }
 
@@ -400,7 +405,7 @@ add_action( 'bp_invitation_after_delete', 'bp_invitations_reset_cache_incremento
 /**
  * Clear bbpress subscriptions cache.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param int $subscription_id The subscription ID.
  *
@@ -423,7 +428,7 @@ function bb_subscriptions_clear_bbpress_cache( $subscription_id ) {
 /**
  * Reset incremental cache for add/delete subscription.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @return void
  */
@@ -437,7 +442,7 @@ add_action( 'bb_delete_subscription', 'bb_subscriptions_reset_cache_incrementor'
 /**
  * Clear a cached subscription item when that item is updated.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param BB_Subscriptions $subscription Subscription object.
  */
@@ -456,7 +461,7 @@ add_action( 'bb_subscriptions_after_delete_subscription', 'bb_subscriptions_clea
 /**
  * Clear cache while updating the status of the subscriptions.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param string $type    Type subscription item.
  * @param int    $item_id The subscription item ID.
@@ -498,7 +503,7 @@ add_action( 'bb_subscriptions_after_update_subscription_status', 'bb_subscriptio
 /**
  * Clear cache while updating the secondary item ID of the subscriptions.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param array $r Subscription arguments.
  *

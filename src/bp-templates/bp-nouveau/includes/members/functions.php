@@ -482,7 +482,7 @@ function bp_nouveau_member_customizer_nav() {
 /**
  * Enqueue the members scripts
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  */
 function bp_nouveau_member_enqueue_scripts() {
 	if ( ! bp_is_user_settings() ) {
@@ -497,7 +497,7 @@ function bp_nouveau_member_enqueue_scripts() {
 /**
  * Register Scripts for the Member component
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param array $scripts The array of scripts to register.
  *
@@ -523,23 +523,34 @@ function bp_nouveau_member_register_scripts( $scripts = array() ) {
 /**
  * Localize the strings needed for the Member UI
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param array $params Associative array containing the JS Strings needed by scripts.
  *
  * @return array         The same array with specific strings for the messages UI if needed.
  */
 function bp_nouveau_member_localize_scripts( $params = array() ) {
-	if ( ! bp_is_user_settings() ) {
+	if ( ! bp_is_user_settings() && ! function_exists( 'bp_is_groups_component' ) ) {
 		return $params;
 	}
 
-	if ( bp_is_user_settings_notifications() && bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {
+	if (
+		(
+			bp_is_user_settings_notifications() &&
+			bp_action_variables() &&
+			'subscriptions' === bp_action_variable( 0 )
+		) ||
+		(
+			bp_is_groups_component() &&
+			bp_is_group()
+		)
+	) {
 		$params['subscriptions'] = array(
-			'unsubscribe' => __( 'You\'ve been unsubscribed from ', 'buddyboss' ),
-			'error'       => __( 'There was a problem unsubscribing from ', 'buddyboss' ),
-			'per_page'    => apply_filters( 'bb_subscriptions_per_page', 5 ),
-			'no_result'    => __( 'You are not currently subscribed to any %s.', 'buddyboss' ),
+			'unsubscribe'     => __( 'You\'ve been unsubscribed from ', 'buddyboss' ),
+			'error'           => __( 'There was a problem unsubscribing from ', 'buddyboss' ),
+			'per_page'        => apply_filters( 'bb_subscriptions_per_page', 5 ),
+			'no_result'       => __( 'You are not currently subscribed to any %s.', 'buddyboss' ),
+			'subscribe_error' => __( 'There was a problem subscribing to ', 'buddyboss' ),
 		);
 	}
 

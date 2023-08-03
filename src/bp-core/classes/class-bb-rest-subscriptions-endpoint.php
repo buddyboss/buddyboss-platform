@@ -2,7 +2,7 @@
 /**
  * BP REST: BB_REST_Subscriptions_Endpoint class
  *
- * @since   [BBVERSION]
+ * @since   2.2.6
  * @package BuddyBoss
  */
 
@@ -11,14 +11,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Subscriptions endpoints.
  *
- * @since [BBVERSION]
+ * @since 2.2.6
  */
 class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Constructor.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.2.6
 	 */
 	public function __construct() {
 		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
@@ -28,7 +28,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.2.6
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -707,7 +707,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 			'secondary_item_id' => (int) $item->secondary_item_id,
 			'date_recorded'     => bp_rest_prepare_date_response( $item->date_recorded ),
 			'status'            => (bool) $item->status,
-			'title'             => $item->title,
+			'title'             => html_entity_decode( $item->title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ),
 			'description_html'  => $item->description_html,
 			'parent_html'       => $item->parent_html,
 			'icon'              => $item->icon,

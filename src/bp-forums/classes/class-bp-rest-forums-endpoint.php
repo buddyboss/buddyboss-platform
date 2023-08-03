@@ -575,7 +575,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			$this->prepare_password_response( $forum->post_password );
 		}
 
-		$data['short_content'] = wp_trim_excerpt( $forum->post_content );
+		$data['short_content'] = wp_trim_excerpt( '', $forum->ID );
 
 		$content = apply_filters( 'the_content', $forum->post_content );
 
@@ -1041,7 +1041,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	public function prepare_date_response( $date_gmt, $date = null ) {
 		// Use the date if passed.
 		if ( isset( $date ) ) {
-			return mysql_to_rfc3339( $date );
+			return mysql_to_rfc3339( $date ); // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_to_rfc3339, PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
 		}
 
 		// Return null if $date_gmt is empty/zeros.
@@ -1050,7 +1050,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		}
 
 		// Return the formatted datetime.
-		return mysql_to_rfc3339( $date_gmt );
+		return mysql_to_rfc3339( $date_gmt ); // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_to_rfc3339, PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
 	}
 
 	/**
@@ -1492,5 +1492,27 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		) {
 			return array( 'participate' );
 		}
+	}
+
+	/**
+	 * Removed lazyload from link preview embed.
+	 *
+	 * @param string $content Topic or reply content.
+	 * @param int    $post_id Topic or reply id.
+	 *
+	 * @return string $content
+	 */
+	public function bp_rest_forums_remove_lazyload( $content, $post_id ) {
+		$link_embed = get_post_meta( $post_id, '_link_embed', true );
+
+		if ( empty( $link_embed ) ) {
+			return $content;
+		}
+
+		$content = preg_replace( '/iframe(.*?)data-lazy-type="iframe"/is', 'iframe$1', $content );
+		$content = preg_replace( '/iframe(.*?)class="lazy/is', 'iframe$1class="', $content );
+		$content = preg_replace( '/iframe(.*?)data-src=/is', 'iframe$1src=', $content );
+
+		return $content;
 	}
 }

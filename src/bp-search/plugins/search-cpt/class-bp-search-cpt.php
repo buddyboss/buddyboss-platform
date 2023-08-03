@@ -32,10 +32,25 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 		}
 
 		public function sql( $search_term, $only_totalrow_count = false ) {
-
 			global $wpdb;
 
-			$bp_prefix = bp_core_get_table_prefix();
+			$enrolled_courses = array();
+			if (
+				is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) &&
+				function_exists( 'learndash_get_post_type_slug' )
+			) {
+				$lms_lesson_slug = learndash_get_post_type_slug( 'lesson' );
+				if (
+					$lms_lesson_slug === $this->cpt_name &&
+					learndash_post_type_search_param( $lms_lesson_slug, 'search_enrolled_only' )
+				) {
+					$enrolled_courses = learndash_user_get_enrolled_courses( get_current_user_id(), array(), true );
+					if ( empty( $enrolled_courses ) ) {
+						// Exclude from search.
+						return;
+					}
+				}
+			}
 
 			$query_placeholder = array();
 
@@ -49,7 +64,7 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 				$query_placeholder[] = $search_term;
 			}
 
-			$sql .= " FROM {$wpdb->prefix}posts p";
+			$sql .= " FROM {$wpdb->posts} p";
 
 			$tax        = array();
 			$taxonomies = get_object_taxonomies( $this->cpt_name );
@@ -93,6 +108,11 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 				$sql .= " AND p.post_status = 'inherit' AND p.ID NOT IN ( SELECT post_id FROM {$wpdb->postmeta} pm WHERE pm.`meta_key` IN ( 'bp_media_upload', 'bp_document_upload', 'bp_video_upload' ) )";
 			} else {
 				$sql .= " AND p.post_status = 'publish'";
+			}
+
+			if ( ! empty( $enrolled_courses ) ) {
+				$courses_id_in = '"' . implode( '","', $enrolled_courses ) . '"';
+				$sql .= " AND p.ID IN ( SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key = 'course_id' AND meta_value IN ({$courses_id_in}) )";
 			}
 
 			$query_placeholder[] = $this->cpt_name;

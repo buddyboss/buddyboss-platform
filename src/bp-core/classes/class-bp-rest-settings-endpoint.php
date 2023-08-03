@@ -563,6 +563,22 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bb_enabled_legacy_email_preference' ) && ! bb_enabled_legacy_email_preference() ) {
 			$results['bbp_enable_forum_subscriptions'] = function_exists( 'bb_is_enabled_subscription' ) && bb_is_enabled_subscription( 'forum' );
 			$results['bbp_enable_topic_subscriptions'] = function_exists( 'bb_is_enabled_subscription' ) && bb_is_enabled_subscription( 'topic' );
+			$results['bb_enable_group_subscriptions']  = function_exists( 'bb_is_enabled_subscription' ) && bb_is_enabled_subscription( 'group' );
+		}
+
+		$results['bb-presence-idle-inactive-span'] = function_exists( 'bb_idle_inactive_span' ) ? bb_idle_inactive_span() : 180;
+
+		$native_presence               = (bool) bp_get_option( 'bb_use_core_native_presence', false );
+		$results['bb-native-presence'] = true === $native_presence ? buddypress()->plugin_url . 'bp-core/bb-core-native-presence.php' : '';
+		
+		// Allowed messaging without connection for profile types.
+		if (
+			bp_member_type_enable_disable() &&
+			bp_is_active( 'messages' ) &&
+			bp_is_active( 'friends' ) &&
+			true === (bool) bp_get_option( 'bp-force-friendship-to-message', false )
+		) {
+			$results['bp_member_types_allowed_messaging_without_connection'] = get_option( 'bp_member_types_allowed_messaging_without_connection' );
 		}
 
 		return $results;

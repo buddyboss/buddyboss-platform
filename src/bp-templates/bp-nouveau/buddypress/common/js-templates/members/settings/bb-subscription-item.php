@@ -4,7 +4,7 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/members/settings/bb-subscription-item.php.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.2.6
  * @version 1.0.0
  */
 ?>

@@ -701,6 +701,22 @@ function bbp_get_global_object( $name = '', $type = '', $default = null ) {
 }
 
 /**
+ * Return the database class being used to interface with the environment.
+ *
+ * This function is abstracted to avoid global touches to the primary database
+ * class. bbPress supports WordPress's `$wpdb` global by default, and can be
+ * filtered to support other configurations if needed.
+ *
+ * @since 2.5.8 bbPress (r5814)
+ * @since BuddyBoss 2.3.90
+ *
+ * @return object
+ */
+function bbp_db() {
+	return bbp_get_global_object( 'wpdb', 'WPDB' );
+}
+
+/**
  * Is the environment using pretty URLs?
  *
  * @since 2.5.8 bbPress (r5814)
@@ -1032,7 +1048,7 @@ function bbp_get_empty_datetime() {
 /**
  * Get default forum image URL.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param string $size This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
  *
@@ -1052,4 +1068,48 @@ function bb_get_forum_default_image( $size = 'full' ) {
 	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
 	 */
 	return apply_filters( 'bb_get_forum_default_image', esc_url( buddypress()->plugin_url . 'bp-core/images/' . $filename ), $size );
+}
+
+/**
+ * Perform a safe, local redirect somewhere inside the current site.
+ *
+ * On some setups, passing the value of wp_get_referer() may result in an empty
+ * value for $location, which results in an error on redirection. If $location
+ * is empty, we can safely redirect back to the forum root. This might change
+ * in a future version, possibly to the site root.
+ *
+ * @since 2.6.0 bbPress (r5658)
+ * @since BuddyBoss 2.3.4
+ *
+ * @see   bbp_redirect_to_field()
+ *
+ * @param string $location The URL to redirect the user to.
+ * @param int    $status   Optional. The numeric code to give in the redirect
+ *                         headers. Default: 302.
+ */
+function bbp_redirect( $location = '', $status = 302 ) {
+
+	// Prevent errors from empty $location.
+	if ( empty( $location ) ) {
+		$location = bbp_get_forums_url();
+	}
+
+	// Setup the safe redirect.
+	wp_safe_redirect( $location, $status );
+
+	// Exit so the redirect takes place immediately.
+	exit();
+}
+
+/**
+ * Function to check the forums favourite legacy is enabled or not.
+ *
+ * @since BuddyBoss 2.3.4
+ *
+ * @todo Legacy support will disable after certain version.
+ *
+ * @return bool True if forums favourite legacy is enabled otherwise false.
+ */
+function bb_forum_favourite_legacy_data_support() {
+	return (bool) apply_filters( 'bb_forum_favourite_legacy_data_support', true );
 }

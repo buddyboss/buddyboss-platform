@@ -3,7 +3,7 @@
  * Subscriptions class
  *
  * @package BuddyBoss\Core
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,14 +13,15 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 	/**
 	 * BuddyBoss Subscriptions object.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.6
 	 */
+	#[\AllowDynamicProperties]
 	class BB_Subscriptions {
 
 		/**
 		 * ID of the subscriptions.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 * @var int
 		 */
 		public $id;
@@ -28,7 +29,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		/**
 		 * Blog site ID.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 * @var int
 		 */
 		public $blog_id;
@@ -36,7 +37,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		/**
 		 * User ID.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 * @var int
 		 */
 		public $user_id;
@@ -46,7 +47,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		 *
 		 * Core statuses are 'forum', 'topic'.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 * @var string
 		 */
 		public $type;
@@ -54,7 +55,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		/**
 		 * ID of subscription item.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 * @var int
 		 */
 		public $item_id;
@@ -62,7 +63,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		/**
 		 * ID of parent item.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 * @var int
 		 */
 		public $secondary_item_id;
@@ -70,7 +71,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		/**
 		 * Status of the subscription item.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 * @var int
 		 */
 		public $status;
@@ -78,7 +79,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		/**
 		 * Date the subscription was created.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 * @var string
 		 */
 		public $date_recorded;
@@ -86,7 +87,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		/**
 		 * Title of the subscription item.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 * @var string
 		 */
 		public $title;
@@ -94,7 +95,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		/**
 		 * Description of the subscription item.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 * @var string
 		 */
 		public $description_html;
@@ -102,7 +103,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		/**
 		 * Parent of the subscription item.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 * @var string
 		 */
 		public $parent_html;
@@ -110,7 +111,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		/**
 		 * Image of the subscription item.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 * @var string
 		 */
 		public $icon;
@@ -118,7 +119,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		/**
 		 * Link of the subscription item.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 * @var string
 		 */
 		public $link;
@@ -126,7 +127,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		/**
 		 * Constructor method.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 *
 		 * @param int|null $id              Optional. If the ID of an existing subscriptions is provided,
 		 *                                  the object will be pre-populated with info about that subscriptions.
@@ -146,7 +147,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		/**
 		 * Set up data about the current subscriptions.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 */
 		public function populate() {
 			global $wpdb;
@@ -173,7 +174,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			/**
 			 * Pre validate the subscription before fetch.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.2.6
 			 *
 			 * @param boolean $validate     Whether to check the subscriptions is valid or not.
 			 * @param object  $subscription Subscription object.
@@ -199,7 +200,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		/**
 		 * Populates extra fields such as render data.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 */
 		public function populate_extras() {
 
@@ -242,7 +243,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		/**
 		 * Save the current subscription to the database.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 *
 		 * @return bool|WP_Error True on success, false on failure.
 		 */
@@ -265,7 +266,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			 *
 			 * Please use this hook to filter the properties above. Each part will be passed in.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.2.6
 			 *
 			 * @param BB_Subscriptions $this Current instance of the subscription item being saved. Passed by reference.
 			 */
@@ -301,7 +302,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			 *
 			 * Please use this filter to validate subscription request. Each part will be passed in.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.2.6
 			 *
 			 * @param bool             $is_validate True when subscription request correct otherwise false/WP_Error. Default true.
 			 * @param BB_Subscriptions $this        Current instance of the subscription item being saved.
@@ -375,7 +376,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			/**
 			 * Fires after the current subscription item has been saved.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.2.6
 			 *
 			 * @param BB_Subscriptions $this Current instance of the subscription item that was saved. Passed by reference.
 			 */
@@ -387,7 +388,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		/**
 		 * Update the subscription secondary item ID.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 *
 		 * @param array $args Subscription arguments.
 		 *
@@ -430,7 +431,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			/**
 			 * Fires after the subscription secondary item ID has been updated.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.2.6
 			 *
 			 * @param array $r Subscription arguments.
 			 */
@@ -442,7 +443,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		/**
 		 * Delete the current subscription.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 *
 		 * @return bool True on success, false on failure.
 		 */
@@ -455,7 +456,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			/**
 			 * Fires before the deletion of a subscriptions.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.2.6
 			 *
 			 * @param BB_Subscriptions $this Current instance of the subscription item being deleted. Passed by reference.
 			 * @param int              $id   ID of subscription.
@@ -470,7 +471,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			/**
 			 * Fires after the deletion of a subscriptions.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.2.6
 			 *
 			 * @param BB_Subscriptions $this Current instance of the subscription item being deleted. Passed by reference.
 			 * @param int              $id   ID of subscription.
@@ -483,7 +484,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		/**
 		 * Update the subscription items status.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 *
 		 * @param string $type    Type subscription item.
 		 * @param int    $item_id The subscription item ID.
@@ -501,7 +502,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			/**
 			 * Fires before the update status of a subscriptions.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.2.6
 			 *
 			 * @param string $type    Type subscription item.
 			 * @param int    $item_id The subscription item ID.
@@ -535,7 +536,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			/**
 			 * Fires after the update status of a subscriptions.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.2.6
 			 *
 			 * @param string $type    Type subscription item.
 			 * @param int    $item_id The subscription item ID.
@@ -550,7 +551,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		/**
 		 * Magic getter.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 *
 		 * @param string $key Property name.
 		 *
@@ -566,7 +567,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		 * Used to maintain backward compatibility for properties that are now
 		 * accessible only via magic method.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 *
 		 * @param string $key Property name.
 		 * @return bool
@@ -581,7 +582,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		 * Used to maintain backward compatibility for properties that are now
 		 * accessible only via magic method.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 *
 		 * @param string $key   Property name.
 		 * @param mixed  $value Property value.
@@ -594,7 +595,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		/**
 		 * Query for subscriptions.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 *
 		 * @param array $args {
 		 *     Array of parameters. All items are optional.
@@ -753,7 +754,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			/**
 			 * Filters the Where SQL statement.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.2.6
 			 *
 			 * @param array $r                Array of parsed arguments for the get method.
 			 * @param array $where_conditions Where conditions SQL statement.
@@ -769,7 +770,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			/**
 			 * Filters the From SQL statement.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.2.6
 			 *
 			 * @param array $r    Array of parsed arguments for the get method.
 			 * @param string $sql From SQL statement.
@@ -781,7 +782,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			/**
 			 * Filters the pagination SQL statement.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.2.6
 			 *
 			 * @param string $value Concatenated SQL statement.
 			 * @param array  $sql   Array of SQL parts before concatenation.
@@ -810,33 +811,9 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 					}
 				}
 
-				$all_subscriptions = array();
-				foreach ( $paged_subscription_ids as $paged_subscription_id ) {
-					$all_subscriptions[] = new BB_Subscriptions( $paged_subscription_id, false );
-				}
-
-				$present_types = array();
-				if ( ! empty( $all_subscriptions ) ) {
-					foreach ( $all_subscriptions as $additional_subscription ) {
-						$present_types[ $additional_subscription->type ][] = (array) $additional_subscription;
-					}
-				}
-
 				$paged_subscriptions = array();
-				if ( ! empty( $present_types ) ) {
-					foreach ( $present_types as $type => $items ) {
-
-						$type_data = bb_register_subscriptions_types( $type );
-
-						if (
-							! empty( $type_data ) &&
-							! empty( $type_data['items_callback'] ) &&
-							is_callable( $type_data['items_callback'] )
-						) {
-							$items_data          = call_user_func( $type_data['items_callback'], $items );
-							$paged_subscriptions = array_merge( $paged_subscriptions, $items_data );
-						}
-					}
+				foreach ( $paged_subscription_ids as $paged_subscription_id ) {
+					$paged_subscriptions[] = new BB_Subscriptions( $paged_subscription_id, ( 'all' === $r['fields'] ) );
 				}
 
 				if ( 'all' !== $r['fields'] ) {
@@ -855,7 +832,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 				/**
 				 * Filters the SQL used to retrieve total subscriptions results.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 2.2.6
 				 *
 				 * @param string $total_subscriptions_sql Concatenated SQL statement used for retrieving total subscriptions results.
 				 * @param array  $sql                     Array of SQL parts for the query.
@@ -881,7 +858,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		/**
 		 * Validate the column name.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 *
 		 * @param string $column Column name of database.
 		 *
@@ -902,7 +879,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		/**
 		 * Get database table name for subscription.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 *
 		 * @return string.
 		 */
@@ -911,10 +888,10 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 
 			if ( is_multisite() ) {
 				switch_to_blog( 1 );
-				$subscription_tbl = $wpdb->prefix . 'bb_notifications_subscriptions';
+				$subscription_tbl = $wpdb->base_prefix . 'bb_notifications_subscriptions';
 				restore_current_blog();
 			} else {
-				$subscription_tbl = $wpdb->prefix . 'bb_notifications_subscriptions';
+				$subscription_tbl = $wpdb->base_prefix . 'bb_notifications_subscriptions';
 			}
 
 			return $subscription_tbl;
@@ -925,7 +902,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		 *
 		 * See the 'bb_notifications_subscriptions' DB table schema.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 * @return string[]
 		 */
 		public static function get_tbl_columns() {

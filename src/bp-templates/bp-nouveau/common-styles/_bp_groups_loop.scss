@@ -138,6 +138,26 @@
 
 	}
 
+	&#group-description-popup {
+
+		.bb-action-popup-content {
+			padding-bottom: 1px;
+
+			p {
+				margin-bottom: 1.6875rem;
+
+				&:empty {
+					display: none;
+				}
+			}
+
+			ul {
+				margin: 0 0 1.6875rem 1.6875rem;
+				list-style-type: disc;
+			}
+		}
+	}
+
 }
 
 
