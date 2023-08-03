@@ -139,8 +139,6 @@ abstract class BP_Suspend_Abstract {
 	public function hide_related_content( $item_id, $hide_sitewide = 0, $args = array() ) {
 		global $bb_background_updater;
 
-		$args = array_filter( $args );
-
 		$args = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
 
 		if ( empty( $args['action'] ) ) {
@@ -294,8 +292,6 @@ abstract class BP_Suspend_Abstract {
 	 */
 	public function unhide_related_content( $item_id, $hide_sitewide = 0, $force_all = 0, $args = array() ) {
 		global $bb_background_updater;
-
-		$args = array_filter( $args );
 
 		$args = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
 

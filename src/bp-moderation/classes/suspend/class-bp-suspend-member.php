@@ -373,8 +373,6 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	public function manage_hidden_member( $member_id, $hide_sitewide, $args = array() ) {
 		global $bb_background_updater;
 
-		$args = array_filter( $args );
-
 		$force_bg_process = false;
 		if ( isset( $args['force_bg_process'] ) ) {
 			$force_bg_process = (bool) $args['force_bg_process'];
@@ -440,8 +438,6 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 */
 	public function manage_unhidden_member( $member_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bb_background_updater;
-
-		$args = array_filter( $args );
 
 		$force_bg_process = false;
 		if ( isset( $args['force_bg_process'] ) ) {

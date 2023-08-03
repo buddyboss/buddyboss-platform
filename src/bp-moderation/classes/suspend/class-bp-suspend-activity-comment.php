@@ -185,8 +185,6 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	public function manage_hidden_activity_comment( $acomment_id, $hide_sitewide, $args = array() ) {
 		global $bb_background_updater;
 
-		$args = array_filter( $args );
-
 		$suspend_args = bp_parse_args(
 			$args,
 			array(
@@ -240,8 +238,6 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	 */
 	public function manage_unhidden_activity_comment( $acomment_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bb_background_updater;
-
-		$args = array_filter( $args );
 
 		$suspend_args = bp_parse_args(
 			$args,
