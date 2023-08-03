@@ -304,7 +304,6 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 					'group'             => $group_name,
 					'data_id'           => $reply_id,
 					'secondary_data_id' => '23',
-					'priority'          => 9,
 					'callback'          => array( $this, 'hide_related_content' ),
 					'args'              => array( $reply_id, $hide_sitewide, $args ),
 				),

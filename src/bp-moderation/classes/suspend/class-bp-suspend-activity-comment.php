@@ -222,7 +222,6 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 					'group'             => $group_name,
 					'data_id'           => $acomment_id,
 					'secondary_data_id' => '23',
-					'priority'          => 9,
 					'callback'          => array( $this, 'hide_related_content' ),
 					'args'              => array( $acomment_id, $hide_sitewide, $args ),
 				),

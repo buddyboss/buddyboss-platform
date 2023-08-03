@@ -396,7 +396,6 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 					'group'             => $group_name,
 					'data_id'           => $video_id,
 					'secondary_data_id' => '23',
-					'priority'          => 9,
 					'callback'          => array( $this, 'hide_related_content' ),
 					'args'              => array( $video_id, $hide_sitewide, $args ),
 				),
