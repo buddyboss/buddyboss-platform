@@ -989,3 +989,56 @@ add_action( 'bp_after_activity_entry', 'bb_moderation_after_activity_entry_callb
 add_action( 'bp_after_activity_comment_entry', 'bb_moderation_after_activity_entry_callback' );
 add_action( 'bp_after_group_members_list', 'bb_moderation_after_activity_entry_callback' );
 add_action( 'bp_after_group_manage_members_list', 'bb_moderation_before_activity_entry_callback' );
+
+function bb_moderation_async_request_batch_process( $batch ) {
+	global $bb_background_updater, $wpdb;
+	if (
+		empty( $batch ) ||
+		! property_exists( $batch, 'group' ) ||
+		empty( $batch->group ) ||
+		false === strpos( $batch->group, 'bb_moderation' )
+	) {
+		return $batch;
+	}
+
+	$group_name = $batch->group;
+	$item_id    = $batch->item_id;
+	$type       = $batch->type;
+
+	$next_group_name = '';
+	if ( false !== strpos( $group_name, 'unsuspend' ) ) {
+		$next_group_name = str_replace( 'unsuspend', 'suspend', $group_name );
+	} elseif ( false !== strpos( $group_name, 'suspend' ) ) {
+		$next_group_name = str_replace( 'suspend', 'unsuspend', $group_name );
+	} elseif ( false !== strpos( $group_name, 'unhide' ) ) {
+		$next_group_name = str_replace( 'unhide', 'hide', $group_name );
+	} elseif ( false !== strpos( $group_name, 'hide' ) ) {
+		$next_group_name = str_replace( 'hide', 'unhide', $group_name );
+	}
+
+	$table_name = $bb_background_updater::$table_name;
+
+	$sql  = "SELECT * from {$table_name} WHERE `group` = %s AND data_id = %s AND type = %s ORDER BY priority, id ASC LIMIT 1";
+	$sql  = $wpdb->prepare( $sql, $next_group_name, $item_id, $type );
+	$data = $wpdb->get_results( $sql );
+
+	if ( ! empty( $data ) ) {
+		$next_batch       = current( $data );
+		$next_batch->data = maybe_unserialize( $next_batch->data );
+		$current_args     = ! empty( $batch->data['args'] ) ? end( $batch->data['args'] ) : array();
+		$next_args        = ! empty( $next_batch->data['args'] ) ? end( $next_batch->data['args'] ) : array();
+
+		if (
+			isset( $current_args['action_suspend'] ) &&
+			isset( $next_args['action_suspend'] ) &&
+			(int) $current_args['action_suspend'] === (int) $next_args['action_suspend']
+		) {
+			$batch->data = array();
+			error_log( sprintf( 'Skip process: `%s` next found: `%s`', $batch->key, $next_batch->id ) );
+		}
+	}
+
+	return $batch;
+}
+add_action( 'bb_async_request_batch_process', 'bb_moderation_async_request_batch_process', 10, 1 );
+
