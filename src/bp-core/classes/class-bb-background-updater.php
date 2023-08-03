@@ -451,6 +451,8 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 			do {
 				$batch = $this->get_batch();
 
+				do_action( $this->identifier . '_batch_process', $batch );
+
 				$key_id = $batch->key;
 
 				$task = $this->task( $batch->data );
