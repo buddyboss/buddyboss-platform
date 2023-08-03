@@ -521,6 +521,9 @@ abstract class BP_Suspend_Abstract {
 			empty( $args['item_id'] ) ||
 			empty( $args['item_type'] )
 		) {
+			error_log( print_r( '====================================', 1 ) );
+			error_log( print_r( $args, 1 ) );
+			error_log( print_r( debug_backtrace(), 1 ) );
 			return 'test moderation';
 		}
 

@@ -209,6 +209,10 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	public function manage_hidden_group( $group_id, $hide_sitewide, $args = array() ) {
 		global $bb_background_updater;
 
+		if ( empty( $group_id ) ) {
+			return;
+		}
+
 		$suspend_args = bp_parse_args(
 			$args,
 			array(
@@ -263,8 +267,11 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function manage_unhidden_group( $group_id, $hide_sitewide, $force_all, $args = array() ) {
-
 		global $bb_background_updater;
+
+		if ( empty( $group_id ) ) {
+			return;
+		}
 
 		$suspend_args = bp_parse_args(
 			$args,

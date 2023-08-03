@@ -359,6 +359,10 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 	public function manage_hidden_video( $video_id, $hide_sitewide, $args = array() ) {
 		global $bb_background_updater;
 
+		if ( empty( $video_id ) ) {
+			return;
+		}
+
 		$suspend_args = bp_parse_args(
 			$args,
 			array(
@@ -412,6 +416,10 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 	 */
 	public function manage_unhidden_video( $video_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bb_background_updater;
+
+		if ( empty( $video_id ) ) {
+			return;
+		}
 
 		$suspend_args = bp_parse_args(
 			$args,

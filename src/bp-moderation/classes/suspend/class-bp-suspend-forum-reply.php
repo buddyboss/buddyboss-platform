@@ -267,6 +267,10 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	public function manage_hidden_reply( $reply_id, $hide_sitewide, $args = array() ) {
 		global $bb_background_updater;
 
+		if ( empty( $reply_id ) ) {
+			return;
+		}
+
 		$suspend_args = bp_parse_args(
 			$args,
 			array(
@@ -320,6 +324,10 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	 */
 	public function manage_unhidden_reply( $reply_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bb_background_updater;
+
+		if ( empty( $reply_id ) ) {
+			return;
+		}
 
 		$suspend_args = bp_parse_args(
 			$args,
