@@ -3047,5 +3047,6 @@ function bb_admin_setting_callback_whitelist_email_setting() {
 
 	<label for="bb-whitelist-email-setting"><?php esc_html_e( 'Enter email domains, extensions or specific addresses which you want to allow for user registrations. Enter one domain or address per line.', 'buddyboss' ); ?></label>
 	<textarea rows="10" cols="100" id="bb-whitelist-email-setting" name="bb-whitelist-email-setting" style="margin-top: 10px;"><?php echo esc_textarea( bb_whitelist_email_setting() ); ?></textarea>
+	<p class='description'><?php esc_html_e( 'When providing both white and blacklist entries, any whitelisted domains will take priority.', 'buddyboss' ); ?></p>
 	<?php
 }

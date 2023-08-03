@@ -8871,13 +8871,17 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 		return false;
 	}
 
-	// Get the list in associative array format.
-	$blacklist = bb_format_blacklist_whitelist_email_setting( bb_blacklist_email_setting() );
-	$whitelist = bb_format_blacklist_whitelist_email_setting( bb_whitelist_email_setting() );
+	$blacklist_setting = bb_blacklist_email_setting();
+	$whitelist_setting = bb_whitelist_email_setting();
 
-	if( empty( $blacklist ) ) {
+	// No restrictions.
+	if( empty( $blacklist_setting ) && empty( $whitelist_setting ) ) {
 		return true;
 	}
+
+	// Get the list in associative array format.
+	$blacklist = bb_format_blacklist_whitelist_email_setting( $blacklist_setting );
+	$whitelist = bb_format_blacklist_whitelist_email_setting( $whitelist_setting );
 
 	// Check if the email address is in the whitelist.
 	if ( in_array( $email, $whitelist['email'], true ) ) {
@@ -8894,6 +8898,11 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 	$extension = strrchr( $email, "." );
 	if ( in_array( $extension, $whitelist['extension'], true ) ) {
 		return true;
+	}
+
+	// Restricted to only whitelisted.
+	if( empty( $blacklist_setting ) ) {
+		return false;
 	}
 
 	// Check if the email domain is in the blacklist.
