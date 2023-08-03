@@ -1025,13 +1025,29 @@ function bb_moderation_async_request_batch_process( $batch ) {
 	if ( ! empty( $data ) ) {
 		$next_batch       = current( $data );
 		$next_batch->data = maybe_unserialize( $next_batch->data );
-		$current_args     = ! empty( $batch->data['args'] ) ? end( $batch->data['args'] ) : array();
-		$next_args        = ! empty( $next_batch->data['args'] ) ? end( $next_batch->data['args'] ) : array();
+
+		$current_data = ! empty( $batch->data['args'] ) ? $batch->data['args'] : array();
+		$next_data    = ! empty( $next_batch->data['args'] ) ? $next_batch->data['args'] : array();
+
+		$current_args = ! empty( $current_data ) ? end( $current_data ) : array();
+		$next_args    = ! empty( $next_data ) ? end( $next_data ) : array();
+
+		$current_callback = ! empty( $batch->data['callback'] ) ? end( $batch->data['callback'] ) : array();
+		$next_callback    = ! empty( $next_batch->data['callback'] ) ? end( $next_batch->data['callback'] ) : array();
 
 		if (
 			isset( $current_args['action_suspend'] ) &&
 			isset( $next_args['action_suspend'] ) &&
 			(int) $current_args['action_suspend'] === (int) $next_args['action_suspend']
+		) {
+			$batch->data = array();
+			error_log( sprintf( 'Skip process: `%s` next found: `%s`', $batch->key, $next_batch->id ) );
+		} else if (
+			! empty( $next_data ) &&
+			! empty( $current_data ) &&
+			isset( $next_data[1] ) &&
+			isset( $current_data[1] ) &&
+			(int) $next_data[1] !== (int) $current_data[1]
 		) {
 			$batch->data = array();
 			error_log( sprintf( 'Skip process: `%s` next found: `%s`', $batch->key, $next_batch->id ) );
