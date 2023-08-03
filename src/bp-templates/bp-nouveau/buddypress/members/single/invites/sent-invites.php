@@ -20,7 +20,7 @@ if ( isset( $email ) && '' !== $email ) {
 		<p>
 			<?php
 				$text = __( 'Invitations were sent successfully to the following email addresses:', 'buddyboss' );
-				echo trim ($text.' '. $email );
+				echo trim( $text.' '. $email );
 			?>
 		</p>
 	</aside>
@@ -35,7 +35,7 @@ if ( isset( $failed ) && '' !== $failed ) {
 		<p>
 			<?php
 			$text = __( 'Invitations did not send because these email addresses are invalid:', 'buddyboss' );
-			echo trim ($text.' '. $failed );
+			echo trim( $text.' '. $failed );
 			?>
 		</p>
 
@@ -51,7 +51,23 @@ if ( isset( $exists ) && '' !== $exists ) {
         <p>
 			<?php
 			$text = __( 'Invitations did not send to the following email addresses, because they are already members:', 'buddyboss' );
-			echo trim ($text.' '. $exists );
+			echo trim( $text.' '. $exists );
+			?>
+        </p>
+
+    </aside>
+	<?php
+}
+
+$restricted = trim ( bb_filter_input_string( INPUT_GET, 'restricted' ) );
+if ( isset( $restricted ) && '' !== $restricted ) {
+	?>
+    <aside class="bp-feedback bp-send-invites bp-template-notice error">
+        <span class="bp-icon" aria-hidden="true"></span>
+        <p>
+			<?php
+			$text = __( 'Invitations did not send to the following email addresses, because the address or domain has been blacklisted:', 'buddyboss' );
+			echo trim( $text.' '. $restricted );
 			?>
         </p>
 
