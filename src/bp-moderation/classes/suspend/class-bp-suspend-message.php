@@ -178,6 +178,14 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 
 		$suspend_args = self::validate_keys( $suspend_args );
 
+		$group_name_args = array_merge(
+			$suspend_args,
+			array(
+				'custom_action' => 'hide',
+			)
+		);
+		$group_name      = bb_moderation_get_action_type( $group_name_args );
+
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
 		if ( $this->background_disabled ) {
@@ -186,7 +194,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 			$bb_background_updater->data(
 				array(
 					'type'              => $this->item_type,
-					'group'             => 'moderation',
+					'group'             => $group_name,
 					'data_id'           => $message_id,
 					'secondary_data_id' => '23',
 					'callback'          => array( $this, 'hide_related_content' ),
@@ -236,6 +244,14 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 
 		$suspend_args = self::validate_keys( $suspend_args );
 
+		$group_name_args = array_merge(
+			$suspend_args,
+			array(
+				'custom_action' => 'unhide',
+			)
+		);
+		$group_name      = bb_moderation_get_action_type( $group_name_args );
+
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
 		if ( $this->background_disabled ) {
@@ -244,7 +260,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 			$bb_background_updater->data(
 				array(
 					'type'              => $this->item_type,
-					'group'             => 'moderation',
+					'group'             => $group_name,
 					'data_id'           => $message_id,
 					'secondary_data_id' => '23',
 					'callback'          => array( $this, 'unhide_related_content' ),

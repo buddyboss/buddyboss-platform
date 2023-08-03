@@ -222,11 +222,22 @@ abstract class BP_Suspend_Abstract {
 				$args['page'] = ++$page;
 				$this->hide_related_content( $item_id, $hide_sitewide, $args );
 			} else {
+				$group_name_args = array_merge(
+					$args,
+					array(
+						'item_id'       => $item_id,
+						'item_type'     => $this->item_type,
+						'hide_sitewide' => $hide_sitewide,
+						'custom_action' => 'hide',
+					)
+				);
+				$group_name      = bb_moderation_get_action_type( $group_name_args );
+
 				$args['page'] = ++$page;
 				$bb_background_updater->data(
 					array(
 						'type'              => $this->item_type,
-						'group'             => 'moderation',
+						'group'             => $group_name,
 						'data_id'           => $item_id,
 						'secondary_data_id' => '23',
 						'callback'          => array( $this, 'hide_related_content' ),
@@ -372,11 +383,23 @@ abstract class BP_Suspend_Abstract {
 				$args['page'] = ++$page;
 				$this->unhide_related_content( $item_id, $hide_sitewide, $force_all, $args );
 			} else {
+
+				$group_name_args = array_merge(
+					$args,
+					array(
+						'item_id'       => $item_id,
+						'item_type'     => $this->item_type,
+						'hide_sitewide' => $hide_sitewide,
+						'custom_action' => 'unhide',
+					)
+				);
+				$group_name      = bb_moderation_get_action_type( $group_name_args );
+
 				$args['page'] = ++$page;
 				$bb_background_updater->data(
 					array(
 						'type'              => $this->item_type,
-						'group'             => 'moderation',
+						'group'             => $group_name,
 						'data_id'           => $item_id,
 						'secondary_data_id' => '23',
 						'callback'          => array( $this, 'unhide_related_content' ),
