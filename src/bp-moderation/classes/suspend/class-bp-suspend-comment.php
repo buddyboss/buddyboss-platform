@@ -218,7 +218,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 					'group'             => $group_name,
 					'data_id'           => $comment_id,
 					'secondary_data_id' => '23',
-					'callback'          => array( $this, 'hide_related_content' ),
+					'callback'          => array( $this, 'unhide_related_content' ),
 					'args'              => array( $comment_id, $hide_sitewide, $args ),
 				),
 			);
