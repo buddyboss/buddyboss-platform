@@ -696,7 +696,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 									'data_id'           => $member_id,
 									'secondary_data_id' => '23',
 									'priority'          => $priority,
-									'callback'          => 'bb_update_member_friend_count',
+									'callback'          => array( $this, 'bb_update_member_friend_count' ),
 									'args'              => array( $member_id, $chunk_result, $action ),
 								),
 							);

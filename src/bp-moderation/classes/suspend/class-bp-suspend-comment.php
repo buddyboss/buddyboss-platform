@@ -219,7 +219,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 					'data_id'           => $comment_id,
 					'secondary_data_id' => '23',
 					'callback'          => array( $this, 'unhide_related_content' ),
-					'args'              => array( $comment_id, $hide_sitewide, $args ),
+					'args'              => array( $comment_id, $hide_sitewide, $force_all, $args ),
 				),
 			);
 			$bb_background_updater->save()->schedule_event();
