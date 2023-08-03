@@ -317,6 +317,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 					'group'             => $group_name,
 					'data_id'           => $media_id,
 					'secondary_data_id' => '23',
+					'priority'          => 9,
 					'callback'          => array( $this, 'hide_related_content' ),
 					'args'              => array( $media_id, $hide_sitewide, $args ),
 				),

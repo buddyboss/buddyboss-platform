@@ -326,6 +326,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 					'group'             => $group_name,
 					'data_id'           => $topic_id,
 					'secondary_data_id' => '23',
+					'priority'          => 9,
 					'callback'          => array( $this, 'hide_related_content' ),
 					'args'              => array( $topic_id, $hide_sitewide, $args ),
 				),
