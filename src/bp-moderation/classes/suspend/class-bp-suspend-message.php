@@ -164,6 +164,8 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 	public function manage_hidden_message( $message_id, $hide_sitewide, $args = array() ) {
 		global $bb_background_updater;
 
+		$args = array_filter( $args );
+
 		$suspend_args = bp_parse_args(
 			$args,
 			array(
@@ -217,6 +219,8 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 	 */
 	public function manage_unhidden_message( $message_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bb_background_updater;
+
+		$args = array_filter( $args );
 
 		$suspend_args = bp_parse_args(
 			$args,
