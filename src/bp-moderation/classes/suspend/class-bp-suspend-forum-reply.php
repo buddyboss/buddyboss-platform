@@ -265,7 +265,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function manage_hidden_reply( $reply_id, $hide_sitewide, $args = array() ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
 
 		$suspend_args = bp_parse_args(
 			$args,
@@ -286,15 +286,17 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 		if ( $this->background_disabled ) {
 			$this->hide_related_content( $reply_id, $hide_sitewide, $args );
 		} else {
-			$bp_background_updater->data(
+			$bb_background_updater->data(
 				array(
-					array(
-						'callback' => array( $this, 'hide_related_content' ),
-						'args'     => array( $reply_id, $hide_sitewide, $args ),
-					),
-				)
+					'type'              => $this->item_type,
+					'group'             => 'moderation',
+					'data_id'           => $reply_id,
+					'secondary_data_id' => '23',
+					'callback'          => array( $this, 'hide_related_content' ),
+					'args'              => array( $reply_id, $hide_sitewide, $args ),
+				),
 			);
-			$bp_background_updater->save()->schedule_event();
+			$bb_background_updater->save()->schedule_event();
 		}
 	}
 
@@ -309,7 +311,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function manage_unhidden_reply( $reply_id, $hide_sitewide, $force_all, $args = array() ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
 
 		$suspend_args = bp_parse_args(
 			$args,
@@ -342,15 +344,17 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 		if ( $this->background_disabled ) {
 			$this->unhide_related_content( $reply_id, $hide_sitewide, $force_all, $args );
 		} else {
-			$bp_background_updater->data(
+			$bb_background_updater->data(
 				array(
-					array(
-						'callback' => array( $this, 'unhide_related_content' ),
-						'args'     => array( $reply_id, $hide_sitewide, $force_all, $args ),
-					),
-				)
+					'type'              => $this->item_type,
+					'group'             => 'moderation',
+					'data_id'           => $reply_id,
+					'secondary_data_id' => '23',
+					'callback'          => array( $this, 'unhide_related_content' ),
+					'args'              => array( $reply_id, $hide_sitewide, $force_all, $args ),
+				),
 			);
-			$bp_background_updater->save()->schedule_event();
+			$bb_background_updater->save()->schedule_event();
 		}
 	}
 

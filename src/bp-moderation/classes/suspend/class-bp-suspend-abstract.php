@@ -225,11 +225,13 @@ abstract class BP_Suspend_Abstract {
 				$args['page'] = ++$page;
 				$bb_background_updater->data(
 					array(
-						array(
-							'callback' => array( $this, 'hide_related_content' ),
-							'args'     => array( $item_id, $hide_sitewide, $args ),
-						),
-					)
+						'type'              => $this->item_type,
+						'group'             => 'moderation',
+						'data_id'           => $item_id,
+						'secondary_data_id' => '23',
+						'callback'          => array( $this, 'hide_related_content' ),
+						'args'              => array( $item_id, $hide_sitewide, $args ),
+					),
 				);
 				$bb_background_updater->save()->schedule_event();
 			}
@@ -373,11 +375,13 @@ abstract class BP_Suspend_Abstract {
 				$args['page'] = ++$page;
 				$bb_background_updater->data(
 					array(
-						array(
-							'callback' => array( $this, 'unhide_related_content' ),
-							'args'     => array( $item_id, $hide_sitewide, $force_all, $args ),
-						),
-					)
+						'type'              => $this->item_type,
+						'group'             => 'moderation',
+						'data_id'           => $item_id,
+						'secondary_data_id' => '23',
+						'callback'          => array( $this, 'unhide_related_content' ),
+						'args'              => array( $item_id, $hide_sitewide, $force_all, $args ),
+					),
 				);
 				$bb_background_updater->save()->schedule_event();
 			}

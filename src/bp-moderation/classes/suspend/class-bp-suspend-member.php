@@ -406,11 +406,13 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		} else {
 			$bb_background_updater->data(
 				array(
-					array(
-						'callback' => array( $this, 'hide_related_content' ),
-						'args'     => array( $member_id, $hide_sitewide, $args ),
-					),
-				)
+					'type'              => $this->item_type,
+					'group'             => 'moderation',
+					'data_id'           => $member_id,
+					'secondary_data_id' => '23',
+					'callback'          => array( $this, 'hide_related_content' ),
+					'args'              => array( $member_id, $hide_sitewide, $args ),
+				),
 			);
 			$bb_background_updater->save()->schedule_event();
 		}
@@ -462,11 +464,13 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		} else {
 			$bb_background_updater->data(
 				array(
-					array(
-						'callback' => array( $this, 'unhide_related_content' ),
-						'args'     => array( $member_id, $hide_sitewide, $force_all, $args ),
-					),
-				)
+					'type'              => $this->item_type,
+					'group'             => 'moderation',
+					'data_id'           => $member_id,
+					'secondary_data_id' => '23',
+					'callback'          => array( $this, 'unhide_related_content' ),
+					'args'              => array( $member_id, $hide_sitewide, $force_all, $args ),
+				),
 			);
 			$bb_background_updater->save()->schedule_event();
 		}
@@ -661,11 +665,13 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 						foreach ( $chunk_results as $chunk_result ) {
 							$bb_background_updater->data(
 								array(
-									array(
-										'callback' => array( $this, 'bb_update_member_friend_count' ),
-										'args'     => array( $member_id, $chunk_result, $action ),
-									),
-								)
+									'type'              => 'member_count',
+									'group'             => 'bb_update_member_friend_count',
+									'data_id'           => $member_id,
+									'secondary_data_id' => '23',
+									'callback'          => 'bb_update_member_friend_count',
+									'args'              => array( $member_id, $chunk_result, $action ),
+								),
 							);
 
 							$bb_background_updater->save()->dispatch();
@@ -684,11 +690,13 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 				foreach ( array_chunk( $group_ids, $min_count ) as $chunk ) {
 					$bb_background_updater->data(
 						array(
-							array(
-								'callback' => 'bb_update_group_member_count',
-								'args'     => array( $chunk ),
-							),
-						)
+							'type'              => 'group_member_count',
+							'group'             => 'bb_update_group_member_count',
+							'data_id'           => $chunk,
+							'secondary_data_id' => '23',
+							'callback'          => 'bb_update_group_member_count',
+							'args'              => array( $chunk ),
+						),
 					);
 					$bb_background_updater->save()->schedule_event();
 				}
