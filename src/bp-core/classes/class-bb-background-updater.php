@@ -170,8 +170,8 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 
 				$sql[] = "CREATE TABLE {$table_name} (
 					id bigint(20) NOT NULL AUTO_INCREMENT,
-					type varchar(20) NOT NULL,
-					`group` varchar(20) DEFAULT NULL,
+					type varchar(255) NOT NULL,
+					`group` varchar(255) DEFAULT NULL,
 					data_id varchar(20) DEFAULT NULL,
 					secondary_data_id varchar(20) DEFAULT NULL,
 					data longtext DEFAULT NULL,

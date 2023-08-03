@@ -231,7 +231,7 @@ abstract class BP_Suspend_Abstract {
 						'custom_action' => 'hide',
 					)
 				);
-				$group_name      = bb_moderation_get_action_type( $group_name_args );
+				$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
 
 				$args['page'] = ++$page;
 				$bb_background_updater->data(
@@ -393,7 +393,7 @@ abstract class BP_Suspend_Abstract {
 						'custom_action' => 'unhide',
 					)
 				);
-				$group_name      = bb_moderation_get_action_type( $group_name_args );
+				$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
 
 				$args['page'] = ++$page;
 				$bb_background_updater->data(
@@ -512,6 +512,35 @@ abstract class BP_Suspend_Abstract {
 		}
 
 		return ! empty( $result );
+	}
+
+	public function bb_moderation_get_action_type( $args ) {
+		$type = '';
+		if (
+			empty( $args ) ||
+			empty( $args['item_id'] ) ||
+			empty( $args['item_type'] )
+		) {
+			return 'test moderation';
+		}
+
+		switch ( $args['item_type'] ) {
+			case BP_Suspend_Member::$type:
+				if ( ! empty( $args['action_suspend'] ) ) {
+					if ( ! empty( $args['user_suspended'] ) ) {
+						$type = 'suspend';
+					} else {
+						$type = 'unsuspend';
+					}
+				}
+				break;
+			default:
+				if ( empty( $type ) && ! empty( $args['custom_action'] ) ) {
+					$type = $args['custom_action'];
+				}
+		}
+
+		return 'bb_moderation_' . $type . '_' . $args['item_type'] . '_' . $args['item_id'];
 	}
 
 }

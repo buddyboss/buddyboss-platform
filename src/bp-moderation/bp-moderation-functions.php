@@ -1935,34 +1935,3 @@ function bb_moderation_to_hide_forum_activity( $activity_id ) {
 
 	return $hide_activity;
 }
-
-function bb_moderation_get_action_type( $args ) {
-
-	if (
-		empty( $args ) ||
-		empty( $args['item_id'] ) ||
-		empty( $args['item_type'] )
-	) {
-		return;
-	}
-
-	$type = '';
-
-	switch ( $args['item_type'] ) {
-		case BP_Suspend_Member::$type:
-			if ( ! empty( $args['action_suspend'] ) ) {
-				if ( ! empty( $args['user_suspended'] ) ) {
-					$type = 'suspend';
-				} else {
-					$type = 'unsuspend';
-				}
-			}
-			break;
-	}
-
-	if ( empty( $type ) && ! empty( $args['custom_action'] ) ) {
-		$type = $args['custom_action'];
-	}
-
-	return 'bb_moderation_' . $type . '_' . $args['item_type'] . '_' . $args['item_id'];
-}

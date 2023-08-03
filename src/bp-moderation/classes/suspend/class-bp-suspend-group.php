@@ -229,7 +229,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 				'custom_action' => 'hide',
 			)
 		);
-		$group_name      = bb_moderation_get_action_type( $group_name_args );
+		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
 
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
@@ -298,7 +298,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 				'custom_action' => 'unhide',
 			)
 		);
-		$group_name      = bb_moderation_get_action_type( $group_name_args );
+		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
 
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
