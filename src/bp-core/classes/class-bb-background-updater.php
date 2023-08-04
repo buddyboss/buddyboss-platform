@@ -468,14 +468,6 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 					$this->update( $key_id, $batch->data );
 				}
 
-				// Let the server breathe a little.
-				sleep( $throttle_seconds );
-
-				// Batch limits reached, or pause or cancel request.
-				if ( $this->time_exceeded() || $this->memory_exceeded() || $this->is_paused() || $this->is_cancelled() ) {
-					break;
-				}
-
 				// Delete current batch if fully processed.
 				if ( empty( $batch->data ) ) {
 					$this->delete( $key_id );
@@ -628,8 +620,8 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 					array(
 						'type'              => $this->data['type'],
 						'group'             => $this->data['group'],
-						'data_id'           => (int) $this->data['data_id'],
-						'secondary_data_id' => (int) $this->data['secondary_data_id'],
+						'data_id'           => $this->data['data_id'],
+						'secondary_data_id' => $this->data['secondary_data_id'],
 						'data'              => maybe_serialize( $args_data ),
 						'priority'          => (int) $this->data['priority'],
 						'blog_id'           => (int) $this->data['blog_id'],
@@ -650,8 +642,8 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 							array(
 								'type'              => $data['type'],
 								'group'             => $data['group'],
-								'data_id'           => (int) $data['data_id'],
-								'secondary_data_id' => (int) $data['secondary_data_id'],
+								'data_id'           => $data['data_id'],
+								'secondary_data_id' => $data['secondary_data_id'],
 								'data'              => maybe_serialize( $args_data ),
 								'priority'          => (int) $data['priority'],
 								'blog_id'           => (int) $data['blog_id'],
