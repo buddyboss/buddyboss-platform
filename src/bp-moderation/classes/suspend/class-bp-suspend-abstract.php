@@ -514,6 +514,15 @@ abstract class BP_Suspend_Abstract {
 		return ! empty( $result );
 	}
 
+	/**
+	 * Return group name based on argument.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args Array of arguments.
+	 *
+	 * @return string
+	 */
 	public function bb_moderation_get_action_type( $args ) {
 		$type = '';
 		if (
@@ -521,26 +530,27 @@ abstract class BP_Suspend_Abstract {
 			empty( $args['item_id'] ) ||
 			empty( $args['item_type'] )
 		) {
-			error_log( print_r( '====================================', 1 ) );
-			error_log( print_r( $args, 1 ) );
-			error_log( print_r( debug_backtrace(), 1 ) );
-			return 'test moderation';
+			return 'bb_moderation';
 		}
 
-		switch ( $args['item_type'] ) {
-			case BP_Suspend_Member::$type:
-				if ( ! empty( $args['action_suspend'] ) ) {
-					if ( ! empty( $args['user_suspended'] ) ) {
-						$type = 'suspend';
-					} else {
-						$type = 'unsuspend';
-					}
+		if ( BP_Suspend_Member::$type === $args['item_type'] ) {
+			if ( ! empty( $args['action_suspend'] ) ) {
+				if ( ! empty( $args['user_suspended'] ) ) {
+					$type = 'suspend';
+				} else {
+					$type = 'unsuspend';
 				}
-				break;
-			default:
-				if ( empty( $type ) && ! empty( $args['custom_action'] ) ) {
-					$type = $args['custom_action'];
-				}
+			}
+		} elseif ( isset( $args['hide_parent'] ) ) {
+			if ( ! empty( $args['hide_parent'] ) ) {
+				$type = 'hide_parent';
+			} else {
+				$type = 'unhide_parent';
+			}
+		}
+
+		if ( empty( $type ) && ! empty( $args['custom_action'] ) ) {
+			$type = $args['custom_action'];
 		}
 
 		return 'bb_moderation_' . $type . '_' . $args['item_type'] . '_' . $args['item_id'];
