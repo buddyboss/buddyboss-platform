@@ -1426,21 +1426,21 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 						);
 					}
 				}
-
-				$content = apply_filters(
-					'bb_groups_' . $amount . '_' . $notification->component_action . '_notification',
-					array(
-						'link'  => $notification_link,
-						'text'  => $text,
-						'title' => $group_name,
-						'image' => bb_notification_avatar_url( $notification ),
-					),
-					$notification,
-					$notification_link,
-					$text,
-					$screen
-				);
 			}
+
+			$content = apply_filters(
+				'bb_groups_' . $amount . '_' . $notification->component_action . '_notification',
+				array(
+					'link'  => $notification_link,
+					'text'  => $text,
+					'title' => $group_name,
+					'image' => bb_notification_avatar_url( $notification ),
+				),
+				$notification,
+				$notification_link,
+				$text,
+				$screen
+			);
 		}
 
 		if ( ! empty( $notification ) && 'groups' === $notification->component_name && 'bb_groups_subscribed_discussion' === $notification->component_action ) {
