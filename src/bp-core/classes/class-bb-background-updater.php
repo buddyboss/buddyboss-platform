@@ -233,10 +233,10 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 			}
 
 			if ( 1 === $interval ) {
-				$display = __( 'Every Minute' );
+				$display = __( 'Every Minute', 'buddyboss' );
 			} else {
 				/* translators: %d: Number of minutes */
-				$display = sprintf( __( 'Every %d Minutes' ), $interval );
+				$display = sprintf( __( 'Every %d Minutes', 'buddyboss' ), $interval );
 			}
 
 			// Adds an "Every NNN Minute(s)" schedule to the existing cron schedules.
@@ -616,7 +616,6 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		 */
 		public function save() {
 			global $wpdb;
-			$key = $this->generate_key();
 
 			if ( ! empty( $this->data ) && array_key_exists( 'callback', $this->data ) ) {
 				$args_data = array(
@@ -667,26 +666,6 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 			$this->data = array();
 
 			return $this;
-		}
-
-		/**
-		 * Generate key for a batch.
-		 *
-		 * Generates a unique key based on microtime. Queue items are
-		 * given a unique key so that they can be merged upon save.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param int    $length Optional max length to trim key to, defaults to 64 characters.
-		 * @param string $key    Optional string to append to identifier before hash, defaults to "batch".
-		 *
-		 * @return string
-		 */
-		protected function generate_key( $length = 64, $key = 'batch' ) {
-			$unique  = md5( microtime() . wp_rand() );
-			$prepend = $this->identifier . '_' . $key . '_';
-
-			return substr( $prepend . $unique, 0, $length );
 		}
 
 		/**
@@ -927,7 +906,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @return $this
+		 * @return object $this
 		 */
 		protected function unlock_process() {
 			delete_site_transient( $this->identifier . '_process_lock' );
