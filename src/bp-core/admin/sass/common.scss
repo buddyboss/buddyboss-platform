@@ -2520,8 +2520,21 @@ h2.has_tutorial_btn {
 	margin-left: -210px;
 	background: rgb(255, 220, 220);
 	color: rgb(212, 41, 41);
+	line-height: 1.5;
 	border: 1px solid rgb(255, 197, 202);
 	border-radius: 4px;
+}
+
+.bb-warning-section-wrap.hidden-header > th {
+	opacity: 0;
+	visibility: hidden;
+	padding: 0;
+	margin: 0;
+
+	+ td {
+		padding-left: 0;
+		padding-right: 0;
+	}
 }
 
 .bb-warning-section {
@@ -2529,8 +2542,13 @@ h2.has_tutorial_btn {
 	margin-left: -210px;
 	background: #fff3c8;
 	color: #8b6300;
+	line-height: 1.5;
 	border: 1px solid #ffeeb3;
 	border-radius: 4px;
+
+	@media screen and (max-width: 782px) {
+		margin-left: 0;
+	}
 }
 
 /* Status Block */
@@ -3796,17 +3814,52 @@ table.moderations .column-member {
 	padding: 15px;
 }
 
-.bb-notification-input-tooltip[data-bp-tooltip] {
-	display: inline-block;
+.notification-settings-input {
 
-	&::after {
-		min-width: 140px;
-		white-space: normal;
-		padding: 7px 12px;
-		text-align: center;
+	&[data-bp-tooltip] {
+		display: inline-block;
+
+		&::after {
+			min-width: 140px;
+			white-space: normal;
+			padding: 7px 12px;
+			text-align: center;
+		}
 	}
 }
 
-.bb-notification-input-tooltip input[readonly="readonly"] {
-	pointer-events: none;
+.bp-admin-card {
+
+	.password-toggle {
+
+		position: relative;
+		display: inline-block;
+		width: 50%;
+
+		> input {
+			padding-right: 30px;
+			width: 100% !important;
+		}
+
+		.bb-hide-pw {
+			position: absolute;
+			right: 0;
+			top: 0;
+			height: 100%;
+			width: 30px;
+			border: 0;
+			padding: 0;
+			background: none !important;
+			box-shadow: none;
+
+			.bb-icon {
+				font-size: 16px;
+				line-height: 1;
+			}
+		}
+
+		.bb-hide-pw.bb-show-pass .bb-icon::before {
+			content: "\ee6a";
+		}
+	}
 }

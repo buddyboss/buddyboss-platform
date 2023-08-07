@@ -15,7 +15,6 @@ jQuery( document ).ready( function() {
 	jQuery('body').append(hiddenField);
 	jQuery('body').append(prevField);
 
-	var tinyMceAdded = 0;
 	var onLoadField  = jQuery('body .onloadfields');
 	var firstCall    = 0;
 
@@ -23,7 +22,11 @@ jQuery( document ).ready( function() {
 	onLoadField.val( getExistingFieldsSelector.val() );
 
 	if ( typeof window.tinymce !== 'undefined' ) {
-		window.tinymce.remove('textarea');
+		jQuery( window.tinymce.editors ).each( function( index ) {
+			window.tinymce.editors[index].on('change', function () {
+				window.tinymce.editors[index].save();
+			});
+		});
 	}
 
 	var dropDownSelected = jQuery( 'body #buddypress #register-page #signup-form .layout-wrap #profile-details-section .editfield fieldset select#' + BP_Register.field_id);
@@ -45,7 +48,6 @@ jQuery( document ).ready( function() {
 			'_wpnonce': BP_Register.nonce,
 			'fields'  : getExistingFields,
 			'fixedIds': fixedIds,
-			'tinymce' : tinyMceAdded,
 			'type'	  : getSelectedValue
 		};
 
@@ -58,10 +60,6 @@ jQuery( document ).ready( function() {
 
 				if ( response.success ) {
 					firstCall = 1;
-
-					if ( true === parseInt( response.data.field_html ) ) {
-						tinyMceAdded = 1;
-					}
 
 					getExistingFieldsSelector.val('');
 					getExistingFieldsSelector.val( response.data.field_ids );
@@ -76,23 +74,29 @@ jQuery( document ).ready( function() {
 					jQuery( 'body .layout-wrap #profile-details-section' ).append( existsField );
 					existsField.val( response.data.field_ids );
 
-					if ( typeof window.tinymce !== 'undefined' ) {
-
-						window.tinymce.remove('textarea');
-
-						window.tinymce.init(
-							{
-								selector: 'textarea.wp-editor-area',
+					jQuery('.register-section textarea.wp-editor-area').each(function() {
+						// Remove older html structure to resolve conflict.
+						wp.editor.remove( jQuery(this).attr('id') );
+						wp.editor.initialize( jQuery(this).attr('id'), {
+							tinymce: {
+								wpautop: true,
 								branding: false,
 								menubar:false,
-								statusbar: false,
+								statusbar: true,
+								elementpath: true,
 								plugins: 'lists fullscreen link',
-								toolbar: ' bold italic underline blockquote strikethrough bullist numlist alignleft aligncenter alignright undo redo link fullscreen',
-
+								toolbar1: 'bold italic underline blockquote strikethrough bullist numlist alignleft aligncenter alignright undo redo link fullscreen',
+								setup: function (editor) {
+									editor.on('change', function () {
+										editor.save();
+									});
+								}
+							},
+							quicktags: {
+								buttons: 'strong,em,link,block,del,ins,img,ul,ol,li,code,more,close'
 							}
-						);
-						window.tinymce.execCommand('mceRepaint');
-					}
+						} );
+					});
 				}
 			}
 		});
@@ -121,7 +125,6 @@ jQuery( document ).ready( function() {
 			'_wpnonce': BP_Register.nonce,
 			'fields'  : getExistingFields,
 			'fixedIds': fixedIds,
-			'tinymce' : tinyMceAdded,
 			'type'	  : getSelectedValue,
 			'prevId'  :prevField.val()
 		};
@@ -157,10 +160,6 @@ jQuery( document ).ready( function() {
 
 					firstCall = 1;
 
-					if ( true === parseInt( response.data.field_html ) ) {
-						tinyMceAdded = 1;
-					}
-
 					getExistingFieldsSelector.val('');
 					getExistingFieldsSelector.val( response.data.field_ids );
 					appendHtmlDiv.append( response.data.field_html );
@@ -174,28 +173,29 @@ jQuery( document ).ready( function() {
 					jQuery( 'body .layout-wrap #profile-details-section' ).append( existsField );
 					existsField.val( response.data.field_ids );
 
-					if ( typeof window.tinymce !== 'undefined' ) {
-
-						window.tinymce.remove('textarea');
-
-						window.tinymce.init(
-							{
-								selector: 'textarea.wp-editor-area',
+					jQuery('.register-section textarea.wp-editor-area').each(function() {
+						// Remove older html structure to resolve conflict.
+						wp.editor.remove( jQuery(this).attr('id') );
+						wp.editor.initialize( jQuery(this).attr('id'), {
+							tinymce: {
+								wpautop: true,
 								branding: false,
 								menubar:false,
-								statusbar: false,
+								statusbar: true,
+								elementpath: true,
 								plugins: 'lists fullscreen link',
-								toolbar: ' bold italic underline blockquote strikethrough bullist numlist alignleft aligncenter alignright undo redo link fullscreen',
-
+								toolbar1: 'bold italic underline blockquote strikethrough bullist numlist alignleft aligncenter alignright undo redo link fullscreen',
+								setup: function (editor) {
+									editor.on('change', function () {
+										editor.save();
+									});
+								}
+							},
+							quicktags: {
+								buttons: 'strong,em,link,block,del,ins,img,ul,ol,li,code,more,close'
 							}
-						);
-
-						window.tinymce.on('init', function () {
-							if (window.tinymce.inline) {
-								window.tinymce.execCommand('mceRepaint');
-							}
-						});
-					}
+						} );
+					});
 				} else {
 					registerSubmitButtonSelector.prop( 'disabled', false );
 				}

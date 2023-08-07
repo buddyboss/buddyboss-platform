@@ -43,7 +43,7 @@ class BP_Email_Queue {
 	 */
 	public function bb_email_background_process() {
 		global $wpdb, $bb_email_background_updater;
-		$table_name  = $wpdb->prefix . 'bb_email_queue';
+		$table_name  = $wpdb->base_prefix . 'bb_email_queue';
 		$get_records = $this->get_records();
 		if ( ! empty( $get_records ) ) {
 			$bb_email_background_updater->push_to_queue(
@@ -82,7 +82,7 @@ class BP_Email_Queue {
 		}
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$wpdb->query( $wpdb->prepare( "INSERT INTO {$wpdb->prefix}bb_email_queue ( email_type, recipient, arguments, date_created, scheduled ) VALUES ( %s, %s, %s, %s, %d )", $email_type, maybe_serialize( $to ), maybe_serialize( $args ), bp_core_current_time(), false ) );
+		$wpdb->query( $wpdb->prepare( "INSERT INTO {$wpdb->base_prefix}bb_email_queue ( email_type, recipient, arguments, date_created, scheduled ) VALUES ( %s, %s, %s, %s, %d )", $email_type, maybe_serialize( $to ), maybe_serialize( $args ), bp_core_current_time(), false ) );
 	}
 
 	/**
@@ -96,8 +96,9 @@ class BP_Email_Queue {
 			return;
 		}
 
-		if ( count( $data ) > 200 ) {
-			$datas = array_chunk( $data, 200 );
+		$min_count = (int) apply_filters( 'bb_add_email_bulk_record_count', 200 );
+		if ( count( $data ) > $min_count ) {
+			$datas = array_chunk( $data, $min_count );
 		} else {
 			$datas = array( $data );
 		}
@@ -109,7 +110,7 @@ class BP_Email_Queue {
 				$place_holders[] = $wpdb->prepare( "( %s, %s, %s, %s, %d )", $item['email_type'], maybe_serialize( $item['recipient'] ), maybe_serialize( $item['arguments'] ), bp_core_current_time(), 0 );
 			}
 
-			$sql = "INSERT INTO {$wpdb->prefix}bb_email_queue ( email_type, recipient, arguments, date_created, scheduled ) VALUES " . implode( ', ', $place_holders );
+			$sql = "INSERT INTO {$wpdb->base_prefix}bb_email_queue ( email_type, recipient, arguments, date_created, scheduled ) VALUES " . implode( ', ', $place_holders );
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->query( $sql );
 		}
@@ -127,7 +128,7 @@ class BP_Email_Queue {
 	public function delete_record( $id ) {
 		global $wpdb;
 
-		return $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}bb_email_queue WHERE id = %d", $id ) );
+		return $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->base_prefix}bb_email_queue WHERE id = %d", $id ) );
 	}
 
 	/**
@@ -146,7 +147,7 @@ class BP_Email_Queue {
 		global $wpdb;
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}bb_email_queue WHERE scheduled = '0' ORDER BY {$order_column} {$order} LIMIT %d", $limit ), ARRAY_A );
+		return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->base_prefix}bb_email_queue WHERE scheduled = '0' ORDER BY {$order_column} {$order} LIMIT %d", $limit ), ARRAY_A );
 	}
 
 	/**
@@ -161,7 +162,7 @@ class BP_Email_Queue {
 	public function get_single_record( $id ) {
 		global $wpdb;
 
-		return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}bb_email_queue  WHERE id = %d", $id ) );
+		return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->base_prefix}bb_email_queue  WHERE id = %d", $id ) );
 	}
 
 	/**
@@ -206,7 +207,7 @@ class BP_Email_Queue {
 			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		}
 
-		$sql = "CREATE TABLE {$wpdb->prefix}bb_email_queue (
+		$sql = "CREATE TABLE {$wpdb->base_prefix}bb_email_queue (
 			id bigint(20) NOT NULL AUTO_INCREMENT,
 			email_type varchar(200) NOT NULL,
 			recipient longtext NOT NULL,

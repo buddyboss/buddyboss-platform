@@ -1782,9 +1782,10 @@ function bp_member_type_labels_metabox( $post ) {
  */
 function bp_member_type_permissions_metabox( $post ) {
 
-	$meta                 = get_post_custom( $post->ID );
-	$enable_filter        = isset( $meta['_bp_member_type_enable_filter'] ) ? $meta['_bp_member_type_enable_filter'][0] : 0; // disabled by default.
-	$enable_profile_field = isset( $meta['_bp_member_type_enable_profile_field'] ) ? $meta['_bp_member_type_enable_profile_field'][0] : 1; // enable by default.
+	$meta                               = get_post_custom( $post->ID );
+	$enable_filter                      = isset( $meta['_bp_member_type_enable_filter'] ) ? $meta['_bp_member_type_enable_filter'][0] : 0; // disabled by default.
+	$enable_profile_field               = isset( $meta['_bp_member_type_enable_profile_field'] ) ? $meta['_bp_member_type_enable_profile_field'][0] : 1; // enable by default.
+	$allow_messaging_without_connection = isset( $meta['_bp_member_type_allow_messaging_without_connection'] ) ? $meta['_bp_member_type_allow_messaging_without_connection'][0] : 0; // disabled by default.
 	?>
 	<!-- accesslint:ignore -->
 	<table class="widefat bp-postbox-table">
@@ -1865,6 +1866,31 @@ function bp_member_type_permissions_metabox( $post ) {
 		</tr>
 		</tbody>
 	</table>
+	<?php
+
+		if ( bp_is_active( 'messages' ) && bp_is_active( 'friends' ) && true === (bool) bp_get_option( 'bp-force-friendship-to-message', false ) ) {
+	?>
+		<table class="widefat bp-postbox-table">
+			<thead>
+			<tr>
+				<th scope="col" colspan="2">
+					<?php _e( 'Messaging', 'buddyboss' ); ?>
+				</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<td colspan="2">
+					<input type='checkbox' name='bp-member-type[allow_messaging_without_connection]'
+						value='1' <?php checked( $allow_messaging_without_connection, 1 ); ?> />
+					<?php _e( 'Allow this profile type to send and receive messages without being connected', 'buddyboss' ); ?>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	<?php
+		}
+	?>
 	<!-- accesslint:endignore -->
 	<?php
 	if ( bp_is_active( 'groups' ) && false === bp_restrict_group_creation() ) {
@@ -2219,6 +2245,8 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	$enable_profile_field = isset( $data['enable_profile_field'] ) ? absint( $data['enable_profile_field'] ) : 0; // default active.
 	$label_color          = isset( $data['label_color'] ) ? $data['label_color'] : '';
 
+	$allow_messaging_without_connection = isset( $data['allow_messaging_without_connection'] ) ? absint( $data['allow_messaging_without_connection'] ) : 0; // default inactive.
+
 	$data['wp_roles'] = array_filter( $data['wp_roles'] ); // Remove empty value from wp_roles array.
 	$wp_roles         = isset( $data['wp_roles'] ) ? $data['wp_roles'] : '';
 
@@ -2252,6 +2280,21 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_member_type_allowed_member_type_invite', $enable_group_type_invite );
 	update_post_meta( $post_id, '_bp_member_type_enable_invite', $enable_group_type_enable_invite );
 	update_post_meta( $post_id, '_bp_member_type_label_color', $label_color );
+	update_post_meta( $post_id, '_bp_member_type_allow_messaging_without_connection', $allow_messaging_without_connection );
+
+	// Update all profile types which are allowed to message without connections.
+	$profile_types_allowed_messaging = get_option( 'bp_member_types_allowed_messaging_without_connection', array() );
+
+	if ( true === (bool) $allow_messaging_without_connection ) {
+		$profile_types_allowed_messaging[ $get_existing ] = true;
+	} elseif (
+		! empty( $profile_types_allowed_messaging ) &&
+		array_key_exists( $get_existing, $profile_types_allowed_messaging )
+	) {
+		unset( $profile_types_allowed_messaging[ $get_existing ] );
+	}
+
+	update_option( 'bp_member_types_allowed_messaging_without_connection', $profile_types_allowed_messaging );
 
 	// Get user previous role.
 	$old_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
@@ -2275,7 +2318,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 
 		if ( isset( $type_term->term_id ) ) {
 			// Fetch all the users which associated this profile type.
-			$get_user_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->prefix}term_relationships r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_term->term_id );
+			$get_user_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->term_relationships} r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_term->term_id );
 			if ( isset( $get_user_ids ) && ! empty( $get_user_ids ) ) {
 				if ( in_array( get_current_user_id(), $get_user_ids ) ) {
 					$bp_prevent_data_update = true;
@@ -2434,7 +2477,7 @@ add_action( 'admin_menu', 'bp_register_member_type_import_submenu_page' );
 function bp_register_member_type_import_submenu_page() {
 
 	add_submenu_page(
-		null,   // or 'options.php'.
+		'',
 		__( 'Repair Community', 'buddyboss' ),
 		__( 'Repair Community', 'buddyboss' ),
 		'manage_options',
@@ -2443,7 +2486,7 @@ function bp_register_member_type_import_submenu_page() {
 	);
 
 	add_submenu_page(
-		null,   // or 'options.php'.
+		'',
 		'Import Member Types',
 		'Import Member Types',
 		'manage_options',
@@ -3454,4 +3497,3 @@ function bb_member_type_labelcolor_metabox( $post ) {
 	</div>
 	<?php
 }
-

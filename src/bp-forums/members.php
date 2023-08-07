@@ -99,7 +99,6 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 		public function get_topics_created_url( $user_id = 0 ) {
 			return $this->get_profile_url( $user_id, bbp_get_topic_archive_slug() );
 		}
-
 		/**
 		 * Override Forums replies created URL with BuddyBoss profile URL
 		 *
@@ -135,8 +134,9 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 		 * @param int $user_id
 		 * @return string
 		 */
-		public function get_subscriptions_permalink( $user_id = 0 ) {
-			return $this->get_profile_url( $user_id, bbp_get_user_subscriptions_slug() );
+		public function get_subscriptions_permalink( $url, $user_id ) {
+			$url = trailingslashit( bp_core_get_user_domain( $user_id ) . bp_get_settings_slug() ) . 'notifications/subscriptions';
+			return $url;
 		}
 
 		/**
@@ -152,7 +152,7 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 		public function set_member_forum_query_vars() {
 
 			// Special handling for forum component
-			if ( ! bp_is_my_profile() ) {
+			if ( ! bp_is_my_profile() && ! bbp_is_single_user() ) {
 				return;
 			}
 
@@ -170,18 +170,13 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 				// 'favorites' action
 			} elseif ( bbp_is_favorites_active() && bp_is_current_action( bbp_get_user_favorites_slug() ) ) {
 				$wp_query->bbp_is_single_user_favs = true;
-
-				// 'subscriptions' action
-			} elseif ( bbp_is_subscriptions_active() && bp_is_current_action( bbp_get_user_subscriptions_slug() ) ) {
-				$wp_query->bbp_is_single_user_subs = true;
-
 			}
 		}
 
 		/** Private Methods *******************************************************/
 
 		/**
-		 * Private method used to concatenate user IDs and slugs into URLs
+		 * Private method used to concatenate user IDs and slugs into URLs.
 		 *
 		 * @since bbPress (r6803)
 		 *
@@ -192,22 +187,26 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 		 */
 		private function get_profile_url( $user_id = 0, $slug = '' ) {
 
-			// Do not filter if not on BuddyPress root blog
+			// Do not filter if not on BuddyPress root blog.
 			if ( empty( $user_id ) || ! bp_is_root_blog() ) {
 				return false;
 			}
 
-			// Setup profile URL
+			// Setup profile URL.
 			$url = array( bp_core_get_user_domain( $user_id ) );
 
-			// Maybe push slug to end of URL array
+			// Maybe push slug to end of URL array.
 			if ( ! empty( $slug ) ) {
 				array_push( $url, bbpress()->extend->buddypress->slug );
 				array_push( $url, $slug );
 			}
 
-			// Return
-			return implode( '', array_map( 'trailingslashit', $url ) );
+			if ( ! empty( array_filter( $url ) ) ) {
+				// Return.
+				return implode( '', array_map( 'trailingslashit', $url ) );
+			}
+
+			return '';
 		}
 	}
 endif;

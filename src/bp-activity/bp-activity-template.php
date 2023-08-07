@@ -1900,7 +1900,7 @@ function bp_activity_comments( $args = '' ) {
 function bp_activity_get_comments( $args = '' ) {
 	global $activities_template;
 
-	if ( ! in_array( $activities_template->activity->type, array( 'bbp_reply_create', 'bbp_topic_create' ), true ) && ! bp_activity_can_comment() ) {
+	if ( in_array( $activities_template->activity->component, array( 'blogs' ), true ) && ! bp_activity_can_comment() ) {
 		return false;
 	}
 
@@ -4014,15 +4014,17 @@ function bp_get_follower_ids( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'user_id' => bp_displayed_user_id(),
+			'user_id'  => bp_displayed_user_id(),
+			'page'     => false,
+			'per_page' => false
 		)
 	);
 
-	$ids = implode( ',', (array) bp_get_followers( array( 'user_id' => $r['user_id'] ) ) );
+	$ids = implode( ',', (array) bp_get_followers( $r ) );
 
 	$ids = empty( $ids ) ? 0 : $ids;
 
-	return apply_filters( 'bp_get_follower_ids', $ids, $r['user_id'] );
+	return apply_filters( 'bp_get_follower_ids', $ids, $r['user_id'], $r );
 }
 
 /**
@@ -4055,14 +4057,16 @@ function bp_get_following_ids( $args = '' ) {
 		$args,
 		array(
 			'user_id' => bp_displayed_user_id(),
+			'page'     => false,
+			'per_page' => false,
 		)
 	);
 
-	$ids = implode( ',', (array) bp_get_following( array( 'user_id' => $r['user_id'] ) ) );
+	$ids = implode( ',', (array) bp_get_following( $r ) );
 
 	$ids = empty( $ids ) ? 0 : $ids;
 
-	return apply_filters( 'bp_get_following_ids', $ids, $r['user_id'] );
+	return apply_filters( 'bp_get_following_ids', $ids, $r['user_id'], $r );
 }
 
 /**

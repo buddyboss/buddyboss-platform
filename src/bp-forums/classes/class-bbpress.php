@@ -292,6 +292,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 			// Common
 			require $this->includes_dir . 'common/ajax.php';
 			require $this->includes_dir . 'common/classes.php';
+			require $this->includes_dir . 'common/engagements.php';
 			require $this->includes_dir . 'common/functions.php';
 			require $this->includes_dir . 'common/formatting.php';
 			require $this->includes_dir . 'common/locale.php';
@@ -320,6 +321,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 
 			// Users
 			require $this->includes_dir . 'users/capabilities.php';
+			require $this->includes_dir . 'users/engagements.php';
 			require $this->includes_dir . 'users/functions.php';
 			require $this->includes_dir . 'users/template.php';
 			require $this->includes_dir . 'users/options.php';
@@ -329,6 +331,9 @@ if ( ! class_exists( 'bbPress' ) ) :
 			require $this->includes_dir . 'core/extend.php';
 			require $this->includes_dir . 'core/actions.php';
 			require $this->includes_dir . 'core/filters.php';
+
+			// Legacy subscriptions.
+			require $this->includes_dir . 'classes/class-bp-forums-legacy.php';
 
 			/** Admin */
 
@@ -361,6 +366,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 			$actions = array(
 				'setup_theme',              // Setup the default theme compat
 				'setup_current_user',       // Setup currently logged in user
+				'setup_engagements',        // Setup user engagements strategy.
 				'register_post_types',      // Register post types (forum|topic|reply)
 				'register_post_statuses',   // Register post statuses (closed|spam|orphan|hidden)
 				'register_taxonomies',      // Register taxonomies (topic-tag)
@@ -683,6 +689,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 					'bbp_register_view_popular',
 					array(
 						'meta_key'      => '_bbp_reply_count',
+						'meta_type'     => 'NUMERIC',
 						'max_num_pages' => 1,
 						'orderby'       => 'meta_value_num',
 						'show_stickies' => false,
@@ -698,6 +705,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 					'bbp_register_view_no_replies',
 					array(
 						'meta_key'      => '_bbp_reply_count',
+						'meta_type'     => 'NUMERIC',
 						'meta_value'    => 1,
 						'meta_compare'  => '<',
 						'orderby'       => '',
@@ -731,6 +739,22 @@ if ( ! class_exists( 'bbPress' ) ) :
 		 */
 		public function setup_current_user() {
 			$this->current_user = wp_get_current_user();
+		}
+
+		/**
+		 * Setup the user engagements strategy.
+		 *
+		 * @since 2.6.0 bbPress (r6875)
+		 * @since BuddyBoss 2.3.4
+		 */
+		public function setup_engagements() {
+
+			// Setup the class name.
+			$strategy   = ucwords( bbp_engagements_strategy() );
+			$class_name = "BBP_User_Engagements_{$strategy}";
+
+			// Setup the engagements interface.
+			$this->engagements = new $class_name();
 		}
 
 		/** Custom Rewrite Rules **************************************************/

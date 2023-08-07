@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 3.0.0
  */
+#[\AllowDynamicProperties]
 class BP_Nouveau_Members {
 	/**
 	 * Constructor
@@ -80,6 +81,9 @@ class BP_Nouveau_Members {
 		// Add 'Dashboard' link to admin bar.
 		add_action( 'bp_setup_admin_bar', 'bp_nouveau_admin_bar_member_dashboard', 11 );
 
+		// Enqueue the scripts for the new UI.
+		add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_member_enqueue_scripts' );
+
 	}
 
 	/**
@@ -88,6 +92,12 @@ class BP_Nouveau_Members {
 	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_filters() {
+		// Register member scripts.
+		add_filter( 'bp_nouveau_register_scripts', 'bp_nouveau_member_register_scripts', 10, 1 );
+
+		// Localize Scripts.
+		add_filter( 'bp_core_get_js_strings', 'bp_nouveau_member_localize_scripts', 10, 1 );
+
 		// Add the default-front to User's front hierarchy if user enabled it (Enabled by default).
 	}
 

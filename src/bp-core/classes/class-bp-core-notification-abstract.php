@@ -70,6 +70,25 @@ abstract class BP_Core_Notification_Abstract {
 	private $notifications_filters = array();
 
 	/**
+	 * Subscriptions.
+	 *
+	 * @since BuddyBoss 2.2.6
+	 *
+	 * @var array
+	 */
+	private $subscriptions = array();
+
+
+	/**
+	 * If set bypass the subscription validation.
+	 *
+	 * @since BuddyBoss 2.2.8
+	 *
+	 * @var bool
+	 */
+	public static $no_validate = false;
+
+	/**
 	 * Initialize.
 	 *
 	 * @since BuddyBoss 1.9.3
@@ -86,9 +105,13 @@ abstract class BP_Core_Notification_Abstract {
 		add_filter( 'bb_notifications_get_component_notification', array( $this, 'get_notifications_for_user' ), 9999, 9 );
 		add_filter( 'bp_notifications_get_notifications_for_user', array( $this, 'get_notifications_for_user' ), 9999, 9 );
 		add_filter( 'bp_notifications_get_registered_components', array( $this, 'get_registered_components' ), 99, 1 );
+		add_filter( 'bb_register_subscriptions_types', array( $this, 'registered_subscriptions_types' ), 99, 1 );
 
 		// Register the Notifications filters.
 		add_action( 'bp_nouveau_notifications_init_filters', array( $this, 'register_notification_filters' ) );
+
+		// Register callback function validate subscription request.
+		add_filter( 'bb_subscriptions_validate_before_save', array( $this, 'bb_subscriptions_validate_request' ), 10, 2 );
 	}
 
 	/**
@@ -195,6 +218,91 @@ abstract class BP_Core_Notification_Abstract {
 
 		return $notifications;
 
+	}
+
+	/**
+	 * Register the subscription type
+	 *
+	 * @since BuddyBoss 2.2.6
+	 *
+	 * @param array $types Subscription types.
+	 *
+	 * @return array
+	 */
+	public function registered_subscriptions_types( array $types ) {
+
+		if ( ! empty( $this->subscriptions ) ) {
+
+			$filtered_preferences     = $this->bb_get_subscription_filtered_notification_preferences();
+			$notification_preferences = array_column( $filtered_preferences, 'notification_read_only', 'notification_type' );
+
+			foreach ( $this->subscriptions as $type ) {
+				if (
+					! empty( $type['notification_type'] ) &&
+					! is_array( $type['notification_type'] ) &&
+					isset( $notification_preferences[ $type['notification_type'] ] )
+				) {
+					$types[ $type['subscription_type'] ] = $type;
+				} elseif (
+					! empty( $type['notification_type'] ) &&
+					is_array( $type['notification_type'] ) &&
+					! key_exists( $type['subscription_type'], $types ) &&
+					array_filter( array_map( array( $this, 'bb_filter_read_only_subscription' ), $type['notification_type'] ) )
+				) {
+					$types[ $type['subscription_type'] ] = $type;
+				} elseif (
+					true === self::$no_validate &&
+					! key_exists( $type['subscription_type'], $types )
+				) {
+					$types[ $type['subscription_type'] ] = $type;
+				}
+			}
+		}
+
+		return $types;
+	}
+
+	/**
+	 * Check the subscription is enabled or not from preferences.
+	 *
+	 * @since BuddyBoss 2.2.6
+	 *
+	 * @param string $notification_type Notification type.
+	 *
+	 * @return bool
+	 */
+	protected function bb_filter_read_only_subscription( $notification_type ) {
+		$filtered_preferences     = $this->bb_get_subscription_filtered_notification_preferences();
+		$notification_preferences = array_column( $filtered_preferences, 'notification_read_only', 'notification_type' );
+		return isset( $notification_preferences[ $notification_type ] );
+	}
+
+	/**
+	 * Filtered the notification preferences to use for subscription.
+	 *
+	 * @since BuddyBoss 2.2.6
+	 *
+	 * @return array
+	 */
+	protected function bb_get_subscription_filtered_notification_preferences() {
+		return array_map(
+			function ( $preference ) {
+				if (
+					(
+						isset( $preference['notification_read_only'], $preference['notification_default'] ) &&
+						true === (bool) $preference['notification_read_only'] &&
+						true === (bool) $preference['notification_default']
+					) ||
+					(
+						! isset( $preference['notification_read_only'] ) ||
+						false === (bool) $preference['notification_read_only']
+					)
+				) {
+					return $preference;
+				}
+			},
+			$this->preferences
+		);
 	}
 
 	/**
@@ -517,6 +625,135 @@ abstract class BP_Core_Notification_Abstract {
 			'notification_types' => $notification_types,
 			'position'           => $notification_position,
 		);
+	}
+
+	/**
+	 * Register Subscription Type.
+	 *
+	 * @param array $args {
+	 *     Used to display the subscription block.
+	 *
+	 *     @type array  $label               Required. Array of labels with singular and plural.
+	 *     @type string $subscription_type   Required. Subscription type key.
+	 *     @type string $items_callback      Optional. The render callback function.
+	 *     @type string $send_callback       Optional. To send notification callback function.
+	 *     @type string $validate_callback   Required. To validate request callback function.
+	 *     @type string $notification_type   Required. Notification type key.
+	 *     @type string $notification_group  Optional. Notification group key.
+	 * }
+	 */
+	final public function bb_register_subscription_type( $args ) {
+		$r = bp_parse_args(
+			$args,
+			array(
+				'label'              => array(
+					'singular' => '',
+					'plural'   => '',
+				),
+				'subscription_type'  => '',
+				'items_callback'     => '',
+				'send_callback'      => '',
+				'validate_callback'  => '',
+				'notification_type'  => '',
+				'notification_group' => '',
+			)
+		);
+
+		if ( empty( $r['subscription_type'] ) || empty( $r['notification_type'] ) || ! is_array( $r['label'] ) || empty( $r['validate_callback'] ) ) {
+			return;
+		}
+
+		$this->subscriptions[ $r['subscription_type'] ] = array(
+			'label'              => array(
+				'singular' => ( ! empty( $r['label']['singular'] ) ? $r['label']['singular'] : $r['subscription_type'] ),
+				'plural'   => ( ! empty( $r['label']['plural'] ) ? $r['label']['plural'] : $r['subscription_type'] ),
+			),
+			'subscription_type'  => $r['subscription_type'],
+			'items_callback'     => $r['items_callback'],
+			'send_callback'      => $r['send_callback'],
+			'validate_callback'  => $r['validate_callback'],
+			'notification_type'  => $r['notification_type'],
+			'notification_group' => $r['notification_group'],
+		);
+	}
+
+	/**
+	 * Register validate callback function for subscription.
+	 *
+	 * @param bool             $response      True when subscription request correct otherwise false/WP_Error.
+	 * @param BB_Subscriptions $subscriptions Current instance of the subscription item being saved.
+	 *
+	 * @return bool|WP_Error True on success, false on failure.
+	 */
+	public function bb_subscriptions_validate_request( $response, $subscriptions ) {
+		$type              = $subscriptions->type ?? '';
+		$blog_id           = isset( $subscriptions->blog_id ) ? (int) $subscriptions->blog_id : get_current_blog_id();
+		$item_id           = isset( $subscriptions->item_id ) ? (int) $subscriptions->item_id : 0;
+		$secondary_item_id = isset( $subscriptions->secondary_item_id ) ? (int) $subscriptions->secondary_item_id : 0;
+
+		if ( empty( $item_id ) ) {
+			$response = new WP_Error(
+				'bb_subscription_required_item_id',
+				__( 'The item ID is required.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		} elseif ( empty( $type ) ) {
+			$response = new WP_Error(
+				'bb_subscription_required_item_type',
+				__( 'The item type is required.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		} else {
+			$type_data = bb_register_subscriptions_types( $type );
+
+			if (
+				! empty( $type_data ) &&
+				! empty( $type_data['validate_callback'] ) &&
+				is_callable( $type_data['validate_callback'] )
+			) {
+				$validate_item = call_user_func(
+					$type_data['validate_callback'],
+					array(
+						'type'              => $type,
+						'blog_id'           => $blog_id,
+						'item_id'           => $item_id,
+						'secondary_item_id' => $secondary_item_id,
+					)
+				);
+
+				if ( is_wp_error( $validate_item ) ) {
+					$response = new WP_Error(
+						'bb_subscription_invalid_item_request',
+						$validate_item->get_error_message(),
+						array(
+							'status' => 400,
+						)
+					);
+				} elseif ( ! $validate_item ) {
+					$response = new WP_Error(
+						'bb_subscription_invalid_item_request',
+						__( 'The request for subscription item is not valid.', 'buddyboss' ),
+						array(
+							'status' => 400,
+						)
+					);
+				}
+			} else {
+				$response = new WP_Error(
+					'bb_subscription_invalid_item_type',
+					__( 'The item type is not valid.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
+		}
+
+		return $response;
 	}
 
 }

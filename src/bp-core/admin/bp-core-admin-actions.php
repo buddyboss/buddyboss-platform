@@ -263,6 +263,19 @@ function bp_register_admin_integrations() {
 function bb_check_user_nickname( &$errors, $update, &$user ) {
 	global $wpdb;
 
+	// Check user unique identifier exist.
+	$check_exists = $wpdb->get_var( // phpcs:ignore
+		$wpdb->prepare(
+			"SELECT count(*) FROM {$wpdb->usermeta} WHERE meta_key = %s AND meta_value = %s",
+			'bb_profile_slug',
+			$user->user_login
+		)
+	);
+
+	if ( $check_exists > 0 ) {
+		return $errors->add( 'invalid_nickname', __( 'Invalid Nickname', 'buddyboss' ), array( 'form-field' => 'nickname' ) );
+	}
+
 	$un_name = ( ! empty( $user->nickname ) ) ? $user->nickname : $user->user_login;
 
 	$where = array(

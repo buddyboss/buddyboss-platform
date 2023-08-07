@@ -48,7 +48,7 @@
 	}
 
 	var senderName = data.sender_name;
-	if ( ! data.is_group && data.recipients && 1 === parseInt( data.recipientsCount ) ) {
+	if ( ! data.is_group_thread && data.recipients && 1 === parseInt( data.recipientsCount ) ) {
 		senderName = '';
 	}
 
@@ -191,7 +191,7 @@
 									#>
 									  <i class="user-status-icon bb-icon-f bb-icon-cancel"></i>
 									<#
-								} else if ( recipient.is_user_blocked_by ) {
+								} else if ( recipient.is_user_blocked_by || false === data.can_user_send_message_in_thread ) {
 									#>
 									  <i class="user-status-icon bb-icon-f bb-icon-lock"></i>
 									<#

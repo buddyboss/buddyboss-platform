@@ -166,7 +166,7 @@ function bp_messages_filter_kses( $content ) {
  */
 function maybe_redirects_to_previous_thread_message() {
 	$recipient = bp_get_messages_username_value();
-	$user_id   = bp_core_get_userid( $recipient );
+	$user_id   = bp_core_get_userid_from_nicename( $recipient );
 
 	$thread_id = BP_Messages_Message::get_existing_thread( array( $user_id ), bp_loggedin_user_id() );
 	if ( ! $thread_id ) {
@@ -893,18 +893,21 @@ function bp_core_get_js_strings_callback( $params ) {
 	$params['nonce']['bp_moderation_content_nonce'] = wp_create_nonce( 'bp-moderation-content' );
 	$params['current']['message_user_id']           = bp_loggedin_user_id();
 
-	$hidden_threads = BP_Messages_Thread::get_current_threads_for_user(
-		array(
-			'fields'      => 'ids',
-			'user_id'     => bp_loggedin_user_id(),
-			'is_hidden'   => true,
-			'thread_type' => 'archived',
-		)
-	);
-
 	$archived_threads_ids = array();
-	if ( ! empty( $hidden_threads ) ) {
-		$archived_threads_ids = $hidden_threads['threads'];
+
+	if ( is_user_logged_in() ) {
+		$hidden_threads = BP_Messages_Thread::get_current_threads_for_user(
+			array(
+				'fields'      => 'ids',
+				'user_id'     => bp_loggedin_user_id(),
+				'is_hidden'   => true,
+				'thread_type' => 'archived',
+			)
+		);
+
+		if ( ! empty( $hidden_threads ) ) {
+			$archived_threads_ids = $hidden_threads['threads'];
+		}
 	}
 
 	$params['archived_threads'] = $archived_threads_ids;
@@ -1031,7 +1034,7 @@ function bb_messages_compose_action_sub_nav() {
 		</a>
 		<ul class="bb_more_options_list message_action__list">
 			<li class="archived-messages">
-				<a href="<?php bb_messages_archived_url(); ?>" data-action="more_options"><?php echo esc_html__( 'Archived messages', 'buddyboss' ); ?></a>
+				<a href="<?php bb_messages_archived_url(); ?>" class="archived-page" data-action="more_options"><?php echo esc_html__( 'Archived messages', 'buddyboss' ); ?></a>
 			</li>
 			<?php
 			if ( bp_is_user_messages() && bp_is_active( 'notifications' ) ) {
@@ -1131,6 +1134,7 @@ add_action( 'bp_init', 'bb_schedule_event_on_update_notification_settings', 2 );
  */
 function bb_digest_message_email_notifications() {
 	global $wpdb;
+	$bp_prefix = bp_core_get_table_prefix();
 
 	// Get all defined time.
 	$db_delay_time = bb_get_delay_email_notifications_time();
@@ -1145,7 +1149,7 @@ function bb_digest_message_email_notifications() {
 
 			$results = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT m.*, r.user_id, r.unread_count FROM `{$wpdb->prefix}bp_messages_messages` AS m LEFT JOIN `{$wpdb->prefix}bp_messages_recipients` AS r ON m.thread_id = r.thread_id LEFT JOIN `{$wpdb->prefix}bp_messages_meta` AS meta1 ON ( m.id = meta1.message_id AND meta1.meta_key = 'bb_sent_digest_email' ) WHERE m.date_sent >= %s AND m.date_sent <= %s AND r.unread_count > %d AND r.is_deleted = %d AND m.sender_id != r.user_id AND r.is_hidden = %d AND meta1.message_id IS NULL ORDER BY m.thread_id, m.id ASC",
+					"SELECT m.*, r.user_id, r.unread_count FROM `{$bp_prefix}bp_messages_messages` AS m LEFT JOIN `{$bp_prefix}bp_messages_recipients` AS r ON m.thread_id = r.thread_id LEFT JOIN `{$bp_prefix}bp_messages_meta` AS meta1 ON ( m.id = meta1.message_id AND meta1.meta_key = 'bb_sent_digest_email' ) WHERE m.date_sent >= %s AND m.date_sent <= %s AND r.unread_count > %d AND r.is_deleted = %d AND m.sender_id != r.user_id AND r.is_hidden = %d AND meta1.message_id IS NULL ORDER BY m.thread_id, m.id ASC",
 					$start_date,
 					$current_date,
 					0,
@@ -1204,7 +1208,7 @@ function bb_digest_message_email_notifications() {
 					if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
 						global $bb_email_background_updater;
 
-						$chunk_recipient_array = array_chunk( $thread['recipients'], 10 );
+						$chunk_recipient_array = array_chunk( $thread['recipients'], bb_get_email_queue_min_count() );
 
 						if ( ! empty( $chunk_recipient_array ) ) {
 							foreach ( $chunk_recipient_array as $chunk_recipient ) {
@@ -1245,6 +1249,7 @@ add_action( 'bb_digest_email_notifications_hook', 'bb_digest_message_email_notif
  */
 function bb_recipients_recipient_get_join_sql_with_group_members( $sql, $r ) {
 	global $wpdb;
-	$sql .= ' JOIN ' . $wpdb->prefix . 'bp_groups_members gm ON ( gm.user_id = r.user_id )';
+	$sql .= ' JOIN ' . $wpdb->base_prefix . 'bp_groups_members gm ON ( gm.user_id = r.user_id )';
 	return $sql;
 }
+
