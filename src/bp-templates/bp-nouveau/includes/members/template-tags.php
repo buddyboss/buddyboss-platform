@@ -719,37 +719,37 @@ function bp_nouveau_get_members_buttons( $args ) {
 			$buttons['member_switch']['button_attr']['href'] = $button_args['link_href'];
 		}
 
-		unset( bp_nouveau()->members->button_args );
-	}
+		if ( is_user_logged_in() && bp_is_active( 'moderation' ) ) {
+			if ( bp_is_moderation_member_blocking_enable() ) {
+				$buttons['member_block'] = bp_member_get_report_link(
+					array(
+						'parent_element' => $parent_element,
+						'parent_attr'    => array(
+							'id'    => $button_args['wrapper_id'],
+							'class' => $parent_class,
+						),
+						'button_element' => $button_element,
+						'position'       => 29,
+					)
+				);
+			}
+			if ( bb_is_moderation_member_reporting_enable() ) {
+				$buttons['member_report'] = bp_member_get_report_link(
+					array(
+						'parent_element' => $parent_element,
+						'parent_attr'    => array(
+							'id'    => $button_args['wrapper_id'],
+							'class' => $parent_class,
+						),
+						'button_element' => $button_element,
+						'position'       => 25,
+						'report_user'    => true,
+					)
+				);
+			}
+		}
 
-	if ( is_user_logged_in() && bp_is_active( 'moderation' ) ) {
-		if ( bp_is_moderation_member_blocking_enable() ) {
-			$buttons['member_block'] = bp_member_get_report_link(
-				array(
-					'parent_element' => $parent_element,
-					'parent_attr'    => array(
-						'id'    => $button_args['wrapper_id'],
-						'class' => $parent_class,
-					),
-					'button_element' => $button_element,
-					'position'       => 29,
-				)
-			);
-		}
-		if ( bb_is_moderation_member_reporting_enable() ) {
-			$buttons['member_report'] = bp_member_get_report_link(
-				array(
-					'parent_element' => $parent_element,
-					'parent_attr'    => array(
-						'id'    => $button_args['wrapper_id'],
-						'class' => $parent_class,
-					),
-					'button_element' => $button_element,
-					'position'       => 25,
-					'report_user'    => true,
-				)
-			);
-		}
+		unset( bp_nouveau()->members->button_args );
 	}
 
 	/**
