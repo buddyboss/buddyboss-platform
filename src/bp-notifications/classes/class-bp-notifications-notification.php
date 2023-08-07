@@ -1020,7 +1020,14 @@ class BP_Notifications_Notification {
 	 * @return int|false $retval Number of rows deleted on success, false on failure.
 	 */
 	public static function delete( $args = array() ) {
+		global $wpdb;
+
 		$where = self::get_query_clauses( $args );
+
+		$bp        = buddypress();
+		$where_sql = self::get_where_sql( $where );
+
+		$notifications = $wpdb->get_results( "SELECT * FROM {$bp->notifications->table_name} {$where_sql}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		/**
 		 * Fires before the deletion of a notification item.
@@ -1040,12 +1047,13 @@ class BP_Notifications_Notification {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param int|false $retval Number of rows deleted on success, false on failure.
-		 * @param array     $args   Associative array of columns/values, to determine
-		 *                          which rows should be deleted. Of the format
-		 *                          array( 'item_id' => 7, 'component_action' => 'members' ).
+		 * @param int|false $retval        Number of rows deleted on success, false on failure.
+		 * @param array     $notifications Array of deleted notifications object.
+		 * @param array     $args          Associative array of columns/values, to determine
+		 *                                 which rows should be deleted. Of the format
+		 *                                 array( 'item_id' => 7, 'component_action' => 'members' ).
 		 */
-		do_action( 'bp_notification_after_delete', $retval, $args );
+		do_action( 'bp_notification_after_delete', $retval, $notifications, $args );
 
 		return $retval;
 	}
