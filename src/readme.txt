@@ -57,6 +57,19 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.4.00 =
+* Enhancement: Core - Identified code improvements across different components by taking reference from BBPress recent releases
+* Enhancement: Core - Improved the handling of data migration when switching between release versions
+* Bug: Activity - Link previews were not displaying when referencing the same site
+* Bug: Elementor - Profile Type shortcodes caused layout conflicts when used within columns
+* Bug: Forums - Private forums were redirecting to 404 page instead of login for logged out users
+* Bug: Forums - Shortcode compatibility when using multiple Forums, Topics, and Replies on a single page
+* Bug: Forums - UI improvements to media upload modal for Safari browser on iOS devices
+* Bug: Groups - Subgroups could not invite Organizers of the parent group
+* Bug: LearnDash - Updated the ‘Topic Search > Enrolled Only’ setting to ensure search results are only returned if a member is enrolled into the course
+* Bug: Messages - AM/PM in private messages list was showing different results due to timezone differences
+* Bug: Widgets - Groups widget returned zero results to users who were not a member of any group
+
 = 2.3.91 =
 * Bug: Groups - Mentioning users inside a group didn’t show all members
 * Bug: MemberPress - Fixed conflict for user registration where ‘username is required’ error was shown
