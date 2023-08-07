@@ -143,7 +143,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		} else {
 			$bb_background_updater->data(
 				array(
-					'type'              => 'blocked',
+					'type'              => $this->item_type,
 					'group'             => $group_name,
 					'data_id'           => $comment_id,
 					'secondary_data_id' => '23',
