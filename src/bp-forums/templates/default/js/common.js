@@ -84,33 +84,38 @@ jQuery( document ).ready(
 				jQuery( element ).on(
 					'select2:select',
 					function ( e ) {
-						var bbp_topic_tags = jQuery( 'body #bbp_topic_tags' ),
+						var form = jQuery( element ).closest( 'form' ),
+							bbp_topic_tags = form.find( '#bbp_topic_tags' ),
 							existingTags   = bbp_topic_tags.val(),
-							tagsArrayData  = ( existingTags.length > 0 ) ? existingTags.split( ',' ) : [],
+							tagsArrayData  = existingTags && existingTags.length > 0 ? existingTags.split( ',' ) : [],
 							data           = e.params.data;
 
 						tagsArrayData.push( data.id );
 						var tags = tagsArrayData.join( ',' );
 						bbp_topic_tags.val( tags );
 
-						jQuery( 'body .select2-search__field' ).trigger( 'click' );
-						jQuery( 'body .select2-search__field' ).trigger( 'click' );
+						form.find( '.select2-search__field' ).trigger( 'click' );
+						form.find( '.select2-search__field' ).trigger( 'click' );
 					}
 				);
 
 				// Remove element into the Arrdata array.
 				jQuery( element ).on( 'select2:unselect', function ( e ) {
+					var form = jQuery( element ).closest( 'form' );
 					var data = e.params.data;
-					jQuery( 'body #bbp_topic_tags_dropdown option[value="' + data.id + '"]' ).remove();
-					var select_options = jQuery( 'body #bbp_topic_tags_dropdown option' );
-					var tagsArrayData = jQuery.map( select_options, function ( option ) {
+
+					form.find( '.bbp_topic_tags_dropdown option[value="' + data.id + '"]' ).remove();
+					var select_options = form.find( '.bbp_topic_tags_dropdown option' );
+					var tagsArrayData  = jQuery.map( select_options, function ( option ) {
 						return option.text;
 					} );
 					tagsArrayData = jQuery.grep( tagsArrayData, function ( value ) {
 						return value !== data.id;
 					} );
 					var tags = tagsArrayData.join( ',' );
-					jQuery( 'body #bbp_topic_tags' ).val( tags );
+
+					form.find( '#bbp_topic_tags' ).val( tags );
+
 					if ( tags.length === 0 ) {
 						jQuery( window ).scrollTop( jQuery( window ).scrollTop() + 1 );
 					}
