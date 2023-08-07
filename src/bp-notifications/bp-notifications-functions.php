@@ -1641,17 +1641,6 @@ function bb_delay_email_notifications_enabled() {
 }
 
 /**
- * Function to check the Delay email notifications for new messages is enabled or not.
- *
- * @since BuddyBoss 2.1.4
- *
- * @return int
- */
-function bb_get_delay_email_notifications_time() {
-	return (int) apply_filters( 'bb_get_delay_email_notifications_time', bp_get_option( 'time_delay_email_notification', 15 ) );
-}
-
-/**
  * Function to check the Delay email notifications for new messages is enabled with pusher or not.
  *
  * @since BuddyBoss 2.1.4

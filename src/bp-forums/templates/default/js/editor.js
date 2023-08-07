@@ -92,9 +92,9 @@ jQuery( document ).ready(
 
 							var content_text = jQuery( '<p>' + $reply_content + '</p>' ).text();
 							if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
-								jQuery( element ).closest( 'form' ).addClass( 'has-content' )
+								jQuery( element ).closest( 'form' ).addClass( 'has-content' );
 							} else {
-								jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
+								jQuery( element ).closest( 'form' ).removeClass( 'has-content' );
 							}
 						}
 					);
@@ -199,16 +199,16 @@ jQuery( document ).ready(
 
 							var content_text = jQuery( '<p>' + $reply_content + '</p>' ).text();
 							if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
-								jQuery( element ).closest( 'form' ).addClass( 'has-content' )
+								jQuery( element ).closest( 'form' ).addClass( 'has-content' );
 							} else {
-								jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
+								jQuery( element ).closest( 'form' ).removeClass( 'has-content' );
 							}
 
 							if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
 								if ( window.forums_medium_reply_editor[key].linkTimeout != null ) {
 									clearTimeout( window.forums_medium_reply_editor[key].linkTimeout );
 								}
-	
+
 								window.forums_medium_reply_editor[key].linkTimeout = setTimeout(
 									function () {
 										var form = jQuery(element).closest( 'form' );
@@ -253,7 +253,12 @@ jQuery( document ).ready(
 				});
 
 				if ( 'undefined' !== typeof bp.Nouveau.TopicReplyDraft ) {
-					bp.Nouveau.TopicReplyDraft.displayTopicReplyDraft();
+					jQuery( 'form[name="new-post"]' ).each(
+						function () {
+							var topicReplyDraft = new bp.Nouveau.TopicReplyDraft( jQuery( this ) );
+							topicReplyDraft.displayTopicReplyDraft();
+						}
+					);
 				}
 			}
 
@@ -359,16 +364,16 @@ jQuery( document ).ready(
 
 							var content_text = jQuery( '<p>' + $reply_content + '</p>' ).text();
 							if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
-								jQuery( element ).closest( 'form' ).addClass( 'has-content' )
+								jQuery( element ).closest( 'form' ).addClass( 'has-content' );
 							} else {
-								jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
+								jQuery( element ).closest( 'form' ).removeClass( 'has-content' );
 							}
 
 							if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
 								if ( window.forums_medium_topic_editor[key].linkTimeout != null ) {
 									clearTimeout( window.forums_medium_topic_editor[key].linkTimeout );
 								}
-	
+
 								window.forums_medium_topic_editor[key].linkTimeout = setTimeout(
 									function () {
 										var form = jQuery(element).closest('form');
@@ -413,7 +418,12 @@ jQuery( document ).ready(
 				});
 
 				if ( 'undefined' !== typeof bp.Nouveau.TopicReplyDraft ) {
-					bp.Nouveau.TopicReplyDraft.displayTopicReplyDraft();
+					jQuery( 'form[name="new-post"]' ).each(
+						function () {
+							var topicReplyDraft = new bp.Nouveau.TopicReplyDraft( jQuery( this ) );
+							topicReplyDraft.displayTopicReplyDraft();
+						}
+					);
 				}
 			}
 
@@ -577,16 +587,16 @@ jQuery( document ).ready(
 
 									var content_text = jQuery( '<p>' + $reply_content + '</p>' ).text();
 									if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
-										jQuery( element ).closest( 'form' ).addClass( 'has-content' )
+										jQuery( element ).closest( 'form' ).addClass( 'has-content' );
 									} else {
-										jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
+										jQuery( element ).closest( 'form' ).removeClass( 'has-content' );
 									}
 
 									if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
 										if ( window.forums_medium_forum_editor[key].linkTimeout != null ) {
 											clearTimeout( window.forums_medium_forum_editor[key].linkTimeout );
 										}
-			
+
 										window.forums_medium_forum_editor[key].linkTimeout = setTimeout(
 											function () {
 												var form = jQuery(element).closest('form');
@@ -680,16 +690,16 @@ jQuery( document ).ready(
 
 									var content_text = jQuery( '<p>' + $reply_content + '</p>' ).text();
 									if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
-										jQuery( element ).closest( 'form' ).addClass( 'has-content' )
+										jQuery( element ).closest( 'form' ).addClass( 'has-content' );
 									} else {
-										jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
+										jQuery( element ).closest( 'form' ).removeClass( 'has-content' );
 									}
 
 									if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
 										if ( window.forums_medium_reply_editor[key].linkTimeout != null ) {
 											clearTimeout( window.forums_medium_reply_editor[key].linkTimeout );
 										}
-			
+
 										window.forums_medium_reply_editor[key].linkTimeout = setTimeout(
 											function () {
 												var form = jQuery(element).closest( 'form' );
@@ -783,16 +793,16 @@ jQuery( document ).ready(
 
 									var content_text = jQuery( '<p>' + $reply_content + '</p>' ).text();
 									if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
-										jQuery( element ).closest( 'form' ).addClass( 'has-content' )
+										jQuery( element ).closest( 'form' ).addClass( 'has-content' );
 									} else {
-										jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
+										jQuery( element ).closest( 'form' ).removeClass( 'has-content' );
 									}
 
 									if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
 										if ( window.forums_medium_topic_editor[key].linkTimeout != null ) {
 											clearTimeout( window.forums_medium_topic_editor[key].linkTimeout );
 										}
-			
+
 										window.forums_medium_topic_editor[key].linkTimeout = setTimeout(
 											function () {
 												var form = jQuery(element).closest( 'form' );
