@@ -1767,7 +1767,7 @@ function bp_nouveau_ajax_groups_send_message() {
 					foreach ( $chunk_members as $key => $members ) {
 						$bb_background_updater->data(
 							array(
-								'type'     => 'email_notification',
+								'type'     => 'email',
 								'group'    => 'group_private_message',
 								'data_id'  => $group,
 								'priority' => 5,
