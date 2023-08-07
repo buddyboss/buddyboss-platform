@@ -5957,7 +5957,7 @@ function bb_activity_create_following_post_notification( $args, $paged = 1 ) {
 		$args['paged']    = $paged;
 		$bb_background_updater->data(
 			array(
-				'type'     => 'notification',
+				'type'     => 'email_notification',
 				'group'    => 'activity_following_post',
 				'data_id'  => $args['item_id'],
 				'priority' => 5,
