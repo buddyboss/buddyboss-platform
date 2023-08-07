@@ -722,10 +722,17 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			);
 		} else {
 			$thread_id = (int) $request->get_param( 'id' );
+			$sender_id = (int) $request->get_param( 'sender_id' );
 
 			// It's an existing thread.
 			if ( $thread_id ) {
-				if ( bp_current_user_can( 'bp_moderate' ) || ( messages_is_valid_thread( $thread_id ) && messages_check_thread_access( $thread_id ) ) ) {
+				$sender_id = ( 0 !== $sender_id ? $sender_id : bp_loggedin_user_id() );
+
+				if (
+					! empty( $sender_id ) &&
+					messages_is_valid_thread( $thread_id ) &&
+					messages_check_thread_access( $thread_id, $sender_id )
+				) {
 					$retval = true;
 				}
 			} else {
@@ -792,7 +799,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$args = array(
 			'term'         => sanitize_text_field( $term ),
 			'type'         => 'members',
-			'only_friends' => bp_is_active( 'friends' ) && function_exists( 'bp_force_friendship_to_message' ) && bp_force_friendship_to_message(),
+			'only_friends' => false,
 			'page'         => $request->get_param( 'page' ),
 			'limit'        => $request->get_param( 'per_page' ),
 			'count_total'  => 'count_query',
@@ -814,7 +821,23 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			$args['group_id'] = $group_id;
 		}
 
+		if (
+			bp_is_active( 'friends' ) &&
+			bp_force_friendship_to_message() &&
+			empty( bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) )
+		) {
+			add_filter( 'bp_user_query_uid_clauses', 'bb_messages_update_recipient_user_query_uid_clauses', 9999, 2 );
+		}
+
 		$results = bp_core_get_suggestions( $args );
+
+		if (
+			bp_is_active( 'friends' ) &&
+			bp_force_friendship_to_message() &&
+			empty( bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) )
+		) {
+			remove_filter( 'bp_user_query_uid_clauses', 'bb_messages_update_recipient_user_query_uid_clauses', 9999, 2 );
+		}
 
 		$results_total = apply_filters( 'bp_members_suggestions_results_total', $results['total'] );
 		$results       = apply_filters( 'bp_members_suggestions_results', isset( $results['members'] ) ? $results['members'] : array() );
@@ -1421,8 +1444,8 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			$prepared_thread->thread_id = $thread->thread_id;
 		}
 
-		if ( ! empty( $schema['properties']['sender_id'] ) && ! empty( $request['sender_id'] ) ) {
-			$prepared_thread->sender_id = $thread->sender_id;
+		if ( ! empty( $request['sender_id'] ) ) {
+			$prepared_thread->sender_id = (int) $request['sender_id'];
 		} elseif ( ! empty( $thread->sender_id ) ) {
 			$prepared_thread->sender_id = $thread->sender_id;
 		} else {
@@ -3004,7 +3027,15 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			// Check recipients if connected or not.
 			if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && count( $recepients ) < 3 ) {
 				foreach ( $recepients as $recepient ) {
-					if ( (int) $user_id !== (int) $recepient->user_id && ! friends_check_friendship( (int) $user_id, (int) $recepient->user_id ) ) {
+					if (
+						(int) $user_id !== (int) $recepient->user_id &&
+						! bb_messages_user_can_send_message(
+							array(
+								'sender_id'     => (int) $user_id,
+								'recipients_id' => (int) $recepient->user_id,
+							)
+						)
+					) {
 						return new WP_Error(
 							'bp_rest_friendship_required',
 							__( 'You must be connected to this member to send them a message.', 'buddyboss' ),

@@ -2123,6 +2123,7 @@ a.layout-grid-view {
 .bp-nouveau-activity-form-placeholder-.modal-popup .whats-new-scroll-view,
 .activity-update-form.modal-popup .whats-new-scroll-view {
   max-height: calc(100vh - 280px);
+  min-height: 150px;
   overflow: auto;
   width: 100%;
   padding-bottom: 10px;
@@ -2134,6 +2135,13 @@ a.layout-grid-view {
   max-width: 90%;
   margin: auto;
   box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
+}
+
+@media screen and (max-width: 768px) and (min-height: 550px) {
+  .bb-is-mobile .bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-form, .bb-is-mobile
+  .activity-update-form.modal-popup #whats-new-form {
+    top: -70px;
+  }
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .gif-media-search-dropdown,
@@ -8015,7 +8023,7 @@ body.guillotine-dragging * {
 }
 
 .groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .generic-button {
-  margin: 0 !important;
+  margin: 0;
 }
 
 .groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .generic-button > * {
@@ -10575,11 +10583,11 @@ input#send-to-input {
   padding: 10px 0 10px 10px;
   min-width: 30px;
   border: 0;
-  background-color: transparent !important;
+  background-color: transparent;
 }
 
 .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active {
-  background: none transparent !important;
+  background: none transparent;
 }
 
 .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-action-close {
@@ -10894,10 +10902,10 @@ body.bb-is-mobile .bp-messages-content .bp-message-content_foot_note {
   min-width: 20%;
 }
 
-.bp-single-message-content .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list li {
-  background-color: transparent !important;
-  margin: 0 !important;
-  padding: 0 !important;
+#bp-message-thread-list .bp-single-message-content .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list li {
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
 }
 
 .bp-single-message-content .bb-activity-media-wrap .bb-activity-media-elem.document-activity:last-child .document-action-wrap .document-action_list {
@@ -10947,7 +10955,7 @@ body.bb-is-mobile .bp-messages-content .bp-message-content_foot_note {
   transform: translateY(-50%);
   animation: spin 2s infinite linear;
   height: auto;
-  background-color: transparent !important;
+  background-color: transparent;
   right: inherit;
 }
 
@@ -11206,7 +11214,7 @@ body .bp-messages-user-threads {
   font: normal normal normal 20px/1 "bb-icons";
   /* stylelint-disable-line */
   speak: none;
-  display: inline-block !important;
+  display: inline-block;
   text-decoration: inherit;
   text-transform: none;
   -webkit-font-smoothing: antialiased;
@@ -20942,6 +20950,14 @@ div.dropzone .dz-preview .dz-filename {
   opacity: 0.7;
 }
 
+.search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.move_file.disabled-move[data-balloon]:after,
+#media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.move_file.disabled-move[data-balloon]:after {
+  content: attr(data-balloon);
+  white-space: normal;
+  max-width: 200px;
+  width: 100%;
+}
+
 .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.move_file a:before,
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.move_file a:before {
   content: "\ee9f";
@@ -22192,6 +22208,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   content: "\ef30";
   font-family: "bb-icons";
   /* stylelint-disable-line */
+  font-weight: 400;
   font-size: 18px;
   line-height: 1;
   margin-right: 10px;
@@ -24204,7 +24221,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(180deg);
+  transform: rotateY(-180deg);
 }
 
 @media screen and (max-width: 768px) {
@@ -27571,9 +27588,9 @@ span.icons:before {
 }
 
 #group-messages-container .bb-groups-messages-right .group-messages-compose:after {
-  content: "\f465";
+  content: "\ee5a";
   font-size: 20px;
-  font-family: dashicons;
+  font-family: bb-icons;
   vertical-align: top;
   text-align: center;
   transition: color 0.1s ease-in;

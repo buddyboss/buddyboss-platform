@@ -1676,7 +1676,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( ! _.isUndefined( response ) && ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.feedback ) ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
@@ -1933,7 +1933,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( ! _.isUndefined( response ) && ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.feedback ) ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
@@ -2210,7 +2210,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( ! _.isUndefined( response ) && ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.feedback ) ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
@@ -2580,7 +2580,7 @@ window.bp = window.bp || {};
 			},
 
 			search: function ( e ) {
-				
+
 				// Prevent search dropdown from closing with enter key
 				if ( e.key === 'Enter' || e.keyCode === 13 ) {
 					e.preventDefault();
@@ -2605,7 +2605,7 @@ window.bp = window.bp || {};
 					},
 					1000
 				);
-				
+
 			},
 
 			searchGif: function ( q ) {
@@ -3099,8 +3099,8 @@ window.bp = window.bp || {};
 					self.options.activity.set(
 						{
 							link_success: true,
-							link_title: response.title,
-							link_description: response.description,
+							link_title: ! _.isUndefined( response.title ) ? response.title : '',
+							link_description: ! _.isUndefined( response.description ) ? response.description : '',
 							link_images: urlImages,
 							link_image_index: urlImagesIndex,
 							link_image_index_save: link_image_index_save,
@@ -3119,7 +3119,7 @@ window.bp = window.bp || {};
 					}
 
 					if ( $( '.activity-media-container' ).length ) {
-						if ( response.description.indexOf( 'iframe' ) > -1 || ( ! _.isUndefined( response.wp_embed ) && response.wp_embed ) ) {
+						if ( ( 'undefined' !== typeof response.description && response.description.indexOf( 'iframe' ) > -1 ) || ( ! _.isUndefined( response.wp_embed ) && response.wp_embed ) ) {
 							$( '#whats-new-attachments' ).addClass( 'activity-video-preview' );
 						} else {
 							$( '#whats-new-attachments' ).addClass( 'activity-link-preview' );

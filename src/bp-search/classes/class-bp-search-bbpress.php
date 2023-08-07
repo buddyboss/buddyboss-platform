@@ -30,18 +30,18 @@ if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
 				$query_placeholder[] = '%' . $search_term . '%';
 			}
 
-			$sql                .= " FROM 
-						{$wpdb->prefix}posts 
-					WHERE 
-						1=1 
+			$sql                .= " FROM
+						{$wpdb->posts}
+					WHERE
+						1=1
 						AND (
 								(
 										(post_title LIKE %s)
 									OR 	(post_content LIKE %s)
 								)
-							) 
+							)
 						AND post_type = '{$this->type}'
-						AND post_status = 'publish' 
+						AND post_status = 'publish'
 				";
 			$query_placeholder[] = '%' . $search_term . '%';
 			$query_placeholder[] = '%' . $search_term . '%';
