@@ -720,7 +720,6 @@ function bp_nouveau_get_members_buttons( $args ) {
 		}
 
 		unset( bp_nouveau()->members->button_args );
-
 	}
 
 	if ( is_user_logged_in() && bp_is_active( 'moderation' ) ) {
