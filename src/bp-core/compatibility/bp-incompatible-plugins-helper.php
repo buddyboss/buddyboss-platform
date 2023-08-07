@@ -134,7 +134,7 @@ function bp_helper_plugins_loaded_callback() {
 			$bp_current_component = bp_current_component();
 
 			// deregister geodirectory select2 script and styles from all component pages
-			if ( $bp_current_component && 'listings' !== $bp_current_component ) {
+			if ( $bp_current_component && ! in_array( $bp_current_component, array( 'listings', 'favorites', 'reviews' ), true ) ) {
 				add_action( 'wp_enqueue_scripts', 'bp_deregister_geodirectory_script_select2' );
 				add_action( 'wp_print_styles', 'bp_deregister_geodirectory_styles' );
 			}
@@ -483,12 +483,13 @@ add_filter( 'gglcptch_section_notice', 'bp_core_add_support_for_google_captcha_p
  *
  * @since BuddyBoss 1.1.9
  */
-function bp_core_add_support_mepr_signup_map_user_fields( $txn ) {
+function bb_core_add_support_mepr_signup_map_user_fields( $txn ) {
 	if ( ! empty( $txn->user_id ) ) {
 		bp_core_map_user_registration( $txn->user_id, true );
 	}
 }
-add_action( 'mepr-signup', 'bp_core_add_support_mepr_signup_map_user_fields', 100 );
+
+add_action( 'mepr-signup', 'bb_core_add_support_mepr_signup_map_user_fields', 100 );
 
 /**
  * Include plugin when plugin is activated

@@ -261,43 +261,20 @@ function bp_nouveau_ajax_messages_send_message() {
 					}
 				}
 
-				$all_recipients = $messages_template->thread->get_recipients();
-
-				$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $messages_template->thread->thread_id, (array) $all_recipients );
-				$un_access_users = false;
-				if ( $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
-					foreach ( (array) $all_recipients as $recipient ) {
-
-						if ( true === $un_access_users ) {
-							break;
-						}
-
-						if ( bp_loggedin_user_id() !== $recipient->user_id ) {
-							if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
-								$un_access_users = true;
-							}
-						}
-					}
-					if ( ! empty( $un_access_users ) ) {
-						$can_message = false;
-					}
-				}
-
 				$check_recipients = (array) $messages_template->thread->recipients;
-				// Strip the sender from the recipient list, and unset them if they are
-				// not alone. If they are alone, let them talk to themselves.
-				if ( isset( $check_recipients[ bp_loggedin_user_id() ] ) && ( count( $check_recipients ) > 1 ) ) {
-					unset( $check_recipients[ bp_loggedin_user_id() ] );
-				}
-
-				// Check moderation if user blocked or not for single user thread.
-				if ( $can_message && ! $is_group_thread && bp_is_active( 'moderation' ) && ! empty( $check_recipients ) && 1 === count( $check_recipients ) ) {
-					$recipient_id = current( array_keys( $check_recipients ) );
-					if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
-						$can_message = false;
-					} elseif ( bp_moderation_is_user_blocked( $recipient_id ) ) {
-						$can_message = false;
-					}
+				$recipients_ids   = wp_list_pluck( $check_recipients, 'user_id' );
+				$can_message      = false;
+				if (
+					bp_is_active( 'messages' ) &&
+					bb_messages_user_can_send_message(
+						array(
+							'sender_id'     => bp_loggedin_user_id(),
+							'recipients_id' => $recipients_ids,
+							'thread_id'     => bp_get_message_thread_id(),
+						)
+					)
+				) {
+					$can_message = true;
 				}
 
 				$response = array(
@@ -886,48 +863,20 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			continue;
 		}
 
-		$all_recipients = $messages_template->thread->get_recipients();
-
-		$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $messages_template->thread->thread_id, (array) $all_recipients );
-		$un_access_users = false;
-		if ( $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && bp_force_friendship_to_message() && count( $messages_template->thread->recipients ) < 3 ) {
-			foreach ( (array) $all_recipients as $recipient ) {
-
-				if ( true === $un_access_users ) {
-					break;
-				}
-
-				if ( bp_loggedin_user_id() !== $recipient->user_id ) {
-					if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
-						$un_access_users = true;
-					}
-				}
-			}
-			if ( ! empty( $un_access_users ) ) {
-				$can_message = false;
-			}
-		}
-
 		$sender_name      = bp_core_get_user_displayname( $messages_template->thread->last_sender_id );
 		$check_recipients = (array) $messages_template->thread->recipients;
-		// Strip the sender from the recipient list, and unset them if they are
-		// not alone. If they are alone, let them talk to themselves.
-		if ( isset( $check_recipients[ bp_loggedin_user_id() ] ) && ( count( $check_recipients ) > 1 ) ) {
-			unset( $check_recipients[ bp_loggedin_user_id() ] );
-		}
-
-		// Check moderation if user blocked or not for single user thread.
-		if ( $can_message && ! $is_group_thread && ! empty( $check_recipients ) && 1 === count( $check_recipients ) ) {
-			$recipient_id = current( array_keys( $check_recipients ) );
-			// For conversations with a single recipient - Don’t include the name of the last person to message before the message content.
-			$sender_name = '';
-			if ( bp_is_active( 'moderation' ) ) {
-				if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
-					$can_message = false;
-				} elseif ( bp_moderation_is_user_blocked( $recipient_id ) ) {
-					$can_message = false;
-				}
-			}
+		$recipients_ids   = wp_list_pluck( $check_recipients, 'user_id' );
+		$can_message      = false;
+		if (
+			bp_is_active( 'messages' ) &&
+			bb_messages_user_can_send_message(
+				array(
+					'sender_id'     => bp_loggedin_user_id(),
+					'recipients_id' => $recipients_ids
+				)
+			)
+		) {
+			$can_message = true;
 		}
 
 		// Check the thread is private or group.
@@ -1718,11 +1667,19 @@ function bp_nouveau_ajax_dsearch_recipients() {
 
 	add_filter( 'bp_members_suggestions_query_args', 'bp_nouveau_ajax_search_recipients_exclude_current' );
 
+	if (
+		bp_is_active( 'friends' ) &&
+		bp_force_friendship_to_message() &&
+		empty( bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) )
+	) {
+		add_filter( 'bp_user_query_uid_clauses', 'bb_messages_update_recipient_user_query_uid_clauses', 9999, 2 );
+	}
+
 	$results = bp_core_get_suggestions(
 		array(
 			'term'            => sanitize_text_field( $_GET['term'] ),
 			'type'            => 'members',
-			'only_friends'    => bp_is_active( 'friends' ) && bp_force_friendship_to_message(),
+			'only_friends'    => false,
 			'count_total'     => 'count_query',
 			'page'            => $_GET['page'],
 			'limit'           => 10,
@@ -1730,6 +1687,14 @@ function bp_nouveau_ajax_dsearch_recipients() {
 			'exclude'         => $exclude_user_ids,
 		)
 	);
+
+	if (
+		bp_is_active( 'friends' ) &&
+		bp_force_friendship_to_message() &&
+		empty( bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) )
+	) {
+		remove_filter( 'bp_user_query_uid_clauses', 'bb_messages_update_recipient_user_query_uid_clauses', 9999 );
+	}
 
 	$results_total = apply_filters( 'bp_members_suggestions_results_total', $results['total'] );
 	$results       = apply_filters( 'bp_members_suggestions_results', isset( $results['members'] ) ? $results['members'] : array() );
@@ -1771,34 +1736,6 @@ function bp_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
 
 	return $user_query;
 }
-
-/**
- * Exclude members from messages suggestions list if require users to be connected before they can message each other
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $results
- *
- * @return array
- */
-function bp_nouveau_ajax_search_recipients_exclude_non_friend( $results ) {
-
-	if ( true === bp_force_friendship_to_message() && function_exists( 'friends_check_friendship_status' ) ) {
-		$new_users = array();
-		foreach ( $results as $user ) {
-			$member_friend_status = friends_check_friendship_status( $user->user_id, bp_loggedin_user_id() );
-			if ( 'is_friend' === $member_friend_status ) {
-				$new_users[] = $user;
-			}
-		}
-
-		return $new_users;
-	}
-
-	return $results;
-}
-
-add_filter( 'bp_members_suggestions_results', 'bp_nouveau_ajax_search_recipients_exclude_non_friend' );
 
 /**
  * Messages for each thread.
@@ -1856,10 +1793,18 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$is_group_message_thread = bb_messages_is_group_thread( bp_get_the_thread_id() );
 
 	// Check recipients if connected or not.
-	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && ! $is_group_message_thread && count( $recipients ) < 2 ) {
+	if ( ! $is_group_message_thread && count( $recipients ) < 2 ) {
 		add_filter( 'bp_after_bb_parse_button_args_parse_args', 'bb_messaged_set_friend_button_args' );
 		foreach ( $recipients as $recipient ) {
-			if ( $login_user_id !== $recipient->user_id && ! friends_check_friendship( $login_user_id, $recipient->user_id ) ) {
+			if (
+				$login_user_id !== $recipient->user_id &&
+				! bb_messages_user_can_send_message(
+					array(
+						'sender_id'     => $login_user_id,
+						'recipients_id' => $recipient->user_id,
+					)
+				)
+			) {
 				if ( count( $recipients ) > 1 ) {
 					$thread->feedback_error = array(
 						'feedback' => __( 'You must be connected to this member to send them a message.', 'buddyboss' ),
@@ -2130,8 +2075,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$all_recipients = $thread_template->thread->get_recipients();
 
 	$is_participated = ( ! empty( $participated['messages'] ) ? $participated['messages'] : array() );
-	$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $thread_template->thread->thread_id, (array) $all_recipients );
-	$un_access_users = false;
 
 	$thread->thread = array(
 		'id'                        => $bp_get_the_thread_id,
@@ -2164,20 +2107,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		$bp_force_friendship_to_message = bp_force_friendship_to_message();
 
 		foreach ( $thread_template->thread->recipients as $recipient ) {
-
-			if (
-					$can_message &&
-					! $is_group_thread &&
-					bp_is_active( 'friends' ) &&
-					$bp_force_friendship_to_message &&
-					true !== $un_access_users
-			) {
-				if ( $login_user_id !== $recipient->user_id ) {
-					if ( ! friends_check_friendship( $login_user_id, $recipient->user_id ) ) {
-						$un_access_users = true;
-					}
-				}
-			}
 
 			if ( empty( $recipient->is_deleted ) ) {
 				$thread->thread['recipients']['members'][ $count ] = array(
@@ -2220,19 +2149,20 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		$thread->thread['recipients']['per_page']      = bb_messages_recipients_per_page();
 		$thread->thread['recipients']['total_pages']   = ceil( (int) $recipients_count / (int) bb_messages_recipients_per_page() );
 
-		if ( $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && $bp_force_friendship_to_message && ! empty( $un_access_users ) ) {
-			$can_message = false;
-		}
 	}
 
-	// Check moderation if user blocked or not for single user thread.
-	if ( $can_message && ! $is_group_thread && bp_is_active( 'moderation' ) && ! empty( $check_recipients ) && 1 === count( $check_recipients ) ) {
-		$recipient_id = current( array_keys( $check_recipients ) );
-		if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
-			$can_message = false;
-		} elseif ( bp_moderation_is_user_blocked( $recipient_id ) ) {
-			$can_message = false;
-		}
+	$recipients_ids = wp_list_pluck( $all_recipients, 'user_id' );
+	$can_message    = false;
+	if (
+		bb_messages_user_can_send_message(
+			array(
+				'sender_id'     => bp_loggedin_user_id(),
+				'recipients_id' => $recipients_ids,
+				'thread_id'     => $bp_get_the_thread_id
+			)
+		)
+	) {
+		$can_message = true;
 	}
 
 	$thread->thread['can_user_send_message_in_thread'] = $can_message;

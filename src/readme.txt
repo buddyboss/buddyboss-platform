@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.2.2
 Requires PHP: 5.6.20
-Stable tag: 2.3.60
+Stable tag: 2.3.91
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,98 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.3.91 =
+* Bug: Groups - Mentioning users inside a group didn’t show all members
+* Bug: MemberPress - Fixed conflict for user registration where ‘username is required’ error was shown
+
+= 2.3.90 =
+* New Feature! Allow specific profiles types to send messages without being connected
+* Enhancement: Core - Identified code improvements across different components by taking reference from BuddyPress recent releases
+* Enhancement: Tools - New repair option to recalculate group member count for each group
+* Bug: Activity - Deleting only the 'activity post' of a discussion or any post from other component was also deleting the attachment from the original discussion
+* Bug: Activity - Twitter link previews UI resolved to not return a console error
+* Bug: Activity - Videos on lessons were showing double in the news feed when the lesson was automatically fetched after creation
+* Bug: Core - Fatal error resolved when applying "the_title" filter
+* Bug: Core - Identified filters refinement and bugs by taking reference from BuddyPress most recent releases
+* Bug: Core - Identified security issues by taking reference from BBPress most recent releases
+* Bug: Core - Identified security Issues by taking reference from BuddyPress most recent releases
+* Bug: Core - Resolved fatal error whenever bbp_db() function was called
+* Bug: Core - Site notice appears twice on subgroup overview page
+* Bug: Core - Unnecessary use of "!important" tag in message component
+* Bug: Core - Unnecessary use of "!important" tag in theme related to social groups component
+* Bug: Core - When clicking the unsubscribe link while logged in as different user, a success error message was displayed instead of alert error message
+* Bug: Core - Wrong translation string for "You will no longer receive emails of new discussions in groups you are subscribed to"
+* Bug: Forums - Could not add a hyperlink to text that began with italic/bold formatting
+* Bug: Forums - Data was not accurate when using specific forum shortcodes on a single page
+* Bug: Geodirectory - Fixed compatibility issue with a profile’s Reviews tab showing incorrect stars
+* Bug: Groups - Comments were not visible to logged in users viewing a public group whilst not being a group member
+* Bug: Groups - Courses tab was not working whenever the courses slug was changed into a different language
+* Bug: Groups - Subgroups were not displaying whenever going to User > Profile > Groups
+* Bug: Media - Documents for public groups were not showing in the app for logged out users
+* Bug: Media - Wrong icon style was used for the Create album button
+* Bug: MemberPress - Upload file now compatible when using custom registration or checkout forms
+* Bug: Multisite - Database error for user activity on Multisite Network Installation after updating to v 2.3.1
+* Bug: Multisite - Members page previously displayed 404 error whenever Profile Link's Link Format was configured to be a "Unique Identifier"
+* Bug: Profiles - Profile type filter was not showing plural labels on the Members directory
+
+= 2.3.81 =
+* Bug: Core - Fixed access to public pages as a logged out user so that it no longer redirects to the login form
+
+= 2.3.80 =
+* Bug: Activity - Post button was inconsistent when trying to reply to activity post.
+* Bug: Activity - Unable to click the activity comments from group search when a member was tagged using "@" function
+* Bug: Activity - While posting a link directly from the app with www, no link preview is shown
+* Bug: Core - Node version issue on `npm install` script after a repo was cloned
+* Bug: Core - Platform main components page showed incorrect count for "All" and "Active" components
+* Bug: Email Invites - Revoking the email invite from admin was redirecting the user to post list page
+* Bug: Forums - Private forum were redirecting to 404 instead of login screen for logged out users
+* Bug: Groups - Child group was displaying parent group description from subgroup page
+* Bug: Groups - Super Sticky was incorrectly showing on the admin panel for discussions within a Group
+* Bug: Gutenberg - Discussions on editor added extreme spacing between lines
+* Bug: LifterLMS - Deleting an user who is a Course Participant did not remove the user from Participants list
+* Bug: Media - Next/Previous navigation on media modal accessible even while commenting
+* Bug: Media - "Create new album" translation was missing on the photos page
+* Bug: Media - Document folder meta was not being saved in the database using bp_document_folder_add_meta function
+* Bug: Media - Move file tooltip not clear and inconsistent
+* Bug: Media - Unable to download folders due to size constraints
+* Bug: Media - When uploading media, we will now handle the error messaging dynamically
+* Bug: Messages - Error in POST API endpoint when creating a message
+* Bug: Messages - Mark as unread was not working when object cache is enabled
+* Bug: Moderation - Clear API cache when member blocked/unblocked
+* Bug: Notifications - Follow notification still shows in dropdown after being unfollowed
+* Bug: Notifications - Group subscriptions page was broken on iOS Safari mobile browser
+* Bug: Notifications - Replied with GIF Notification were showing as empty
+* Bug: Profiles - Deleting a field in the fieldset was not reflected and when refreshing the page an error was displayed
+* Bug: The Events Calendar - Events page was showing blank instead of the login screen when visited from the guest user on a private site
+
+= 2.3.70 =
+* Enhancement: Network Search - Extended search results to only show LearnDash lessons from a course that a user has enrolled into. This is configured in the LearnDash Settings > Lesson Search
+* Enhancement: Performance improvements to the followers and following feature by adding pagination to the background process when notifications are being sent
+* Bug: Blog - Logged out users on private networks could had an unresponsive ‘Load More’ when attempting to load additional articles
+* Bug: Core - Code refactoring of the Activity and Forums by removing unnecessary !important tags
+* Bug: Forums - Pagination loading issue when forum was set to homepage
+* Bug: Forums - Using forum shortcodes whilst having a forum widget on the sidebar removed the ability to subscribe or create new discussions
+* Bug: Forums - Resolved performance issue where discussions took longer to load as users subscribed to many discussions
+* Bug: Groups - Cleaned PHP notice when multiple groups were selected as part of the 'groups_get_group_members' function
+* Bug: Media - New albums created from the Videos page were not displaying due to Redis Cache compatibility
+* Bug: Media - Images and video thumbnails were not being cache when not using Symlinks
+* Bug: Media - Image previews of documents after being renamed were not available
+* Bug: Media - Updated edit buttons to use correct case sensitive
+* Bug: Members - Search results returned incorrect values if a standard profile field was switched to a repeater field
+* Bug: Messages - Search terms were being removed from the search box when a search returned multiple results and was scrolled down
+* Bug: Multisite - Database error related to an unknown column ‘meta_id’
+* Bug: Network Search - Improved compatibility with Object Caching when searching for Groups
+* Bug: Notifications - Updated dropdown labels to use correct case sensitive
+* Bug: Profile - Improved support for uploading Profile photos using the built in Safari browser webcam capture
+* Bug: Widgets - Recent Topics and Recent Replies widgets for Forums were not loading content if custom prefixes were applied to the database table
+* Bug: Widgets - Sell All link on the Recent Active Members widget was unresponsive
+* Bug: Widgets - Group widget not showing hidden members of the same group when applied to Members Page
+* Bug: Elementor - Improved compatibility with the Elementor Maintenance mode
+* Bug: Elementor - Activity block content and excerpt conflicted with replies whenever multiple mentions were added
+* Bug: Geodirectory - Dropdown menu on Favorites and Listings tab was unresponsive
+* Bug: MemberPress - New error message if a user attempts to use an email address as a username/nickname, this resolves issues where @mentions cannot be sent due to invalid character
+* Bug: Rankmath - Fixed an issue where titles and meta details were not being applied to forum or discussions
 
 = 2.3.60 =
 * Notifications - Optimized the performance of the default notification preference workflow for members
@@ -230,7 +322,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Notifications - Handled repeated email notification issues by removing duplicate forum subscription entries
 * Notifications - Handled triggering notification when an activity post is updated in a social group
 * Notifications - Handled notification broken template issue when media uploaded in a social group
-* Notifications - Handled 'subscriptions' page 404 conflict with the 'WooCommerce Subscriptions' plugin 
+* Notifications - Handled 'subscriptions' page 404 conflict with the 'WooCommerce Subscriptions' plugin
 * Notifications - Handled defaults disabled issue for force enabled notifications types
 
 = 2.2.9 =
@@ -244,7 +336,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Handled 'Recent Discussions' widget small floating content UI issue
 * Forums - Handled reply editor lagging issue while typing at normal speed
 * Forums - Handled discussion email notification for subscribed members, the link doesn't take to the discussion on login
-* Emails - Handled group email notification template UI issue in the responsive view 
+* Emails - Handled group email notification template UI issue in the responsive view
 * Moderation - Improved the suspended and blocked members content logic in the messaging module
 * Network Search - Handled course layout issue in the search results by handling excerpt formatting
 * Network Search - Handled search blog post by tag not working issue
@@ -602,7 +694,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - Handled Activity form text color issue when @mention added and removed
 * Activity - Small improvement to show user-friendly validation message from dropzone uploader
 * Activity - Small improvement to restrict media upload for post types auto-generated activity
-* Activity - Handled post types auto-generated activity long comment read more issue 
+* Activity - Handled post types auto-generated activity long comment read more issue
 * Media - Handled symlink not working issue on private page excluded URL for non-logged-in member
 * Media - Handled media upload not showing thumbnail issue for media size more than 10MB
 * Media - Handled media popup layout issue for a specific set of device sizes

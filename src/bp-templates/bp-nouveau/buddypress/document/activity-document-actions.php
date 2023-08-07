@@ -52,7 +52,7 @@ if ( $group_id > 0 ) {
 				if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
 					if ( $is_comment_doc ) {
 						?>
-						<li class="move_file document-action-class move-disabled" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Documents added in comment cannot be moved', 'buddyboss' ); ?>">
+						<li class="move_file document-action-class move-disabled" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Document inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
 							<a href="#"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
 						</li>
 						<?php
