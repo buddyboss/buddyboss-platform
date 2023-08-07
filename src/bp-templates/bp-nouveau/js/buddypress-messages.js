@@ -2205,17 +2205,36 @@ window.bp = window.bp || {};
 							if ( event.keyCode === 13 && event.shiftKey ) {
 								var MediumEditorOptDoc = bp.Nouveau.Messages.mediumEditor.options.ownerDocument;
 								var node = MediumEditor.selection.getSelectionStart( MediumEditorOptDoc ); // jshint ignore:line
+								var currentNode = MediumEditor.selection.getSelectionRange( MediumEditorOptDoc ); // jshint ignore:line
+								var p;
+								var newP;
+
 								// Do nothing if caret is in between the text.
 								if ( MediumEditor.selection.getCaretOffsets( node ).right !== 0 ) { // jshint ignore:line
+									return;
+								}
+
+								// Check if the current node is not an html element.
+								if( currentNode.endContainer.parentNode && currentNode.endContainer.parentNode.classList.contains( 'medium-editor-element' ) ) {
+									p = MediumEditorOptDoc.createElement( 'p' );
+									p.innerHTML = '<br>';
+									if ( currentNode.endContainer.nextElementSibling ) {
+										newP = currentNode.endContainer.parentNode.insertBefore( p, currentNode.endContainer.nextSibling );
+									} else {
+										newP = currentNode.endContainer.parentNode.appendChild( p );
+									}
+									MediumEditor.selection.moveCursor( MediumEditorOptDoc, newP ); // jshint ignore:line
+									setTimeout( function() {
+										newP.children[0].remove();
+									}, 100 );
 									return;
 								}
 
 								// Make sure current node is not list item element.
 								if ( ! MediumEditor.util.isListItem( node ) ) { // jshint ignore:line
 									event.preventDefault();
-									var p = MediumEditorOptDoc.createElement( 'p' );
+									p = MediumEditorOptDoc.createElement( 'p' );
 									p.innerHTML = '<br>';
-									var newP;
 									// Make sure current node is not inline element.
 									if ( ! MediumEditor.util.isBlockContainer( node ) ) { // jshint ignore:line
 										// If next element is there add before it else add at the end.
