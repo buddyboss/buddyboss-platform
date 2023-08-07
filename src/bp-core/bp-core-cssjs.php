@@ -785,12 +785,12 @@ function bp_add_cover_image_inline_css( $return = false ) {
 add_action( 'bp_enqueue_scripts', 'bp_add_cover_image_inline_css', 11 );
 
 /**
- * Enqueues livestamp.js on BuddyPress pages.
+ * Enqueues livestamp.js on BuddyPress pages and elementor page to support activity widget.
  *
  * @since BuddyPress 2.7.0
  */
 function bp_core_add_livestamp() {
-	if ( ! is_buddypress() ) {
+	if ( ! is_buddypress() && did_action( 'elementor/theme/before_do_single' ) ) {
 		return;
 	}
 
