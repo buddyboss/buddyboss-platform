@@ -12,7 +12,7 @@
 window.bp = window.bp || {};
 ( function ( exports, $ ) {
 
-	 // Bail if not set.
+	// Bail if not set.
 	if ( typeof BP_Nouveau === 'undefined' ) {
 		return;
 	}
@@ -51,7 +51,7 @@ window.bp = window.bp || {};
 		 * @return {void}
 		 */
 		this.setupGlobals = function() {
-			// Draft variables
+			// Draft variables.
 			this.bbp_forum_id               = false;
 			this.bbp_topic_id               = false;
 			this.bbp_reply_to               = false;
