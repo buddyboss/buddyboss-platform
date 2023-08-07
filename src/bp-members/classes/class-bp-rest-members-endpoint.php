@@ -859,14 +859,18 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		}
 
 		// It will check non-admin members can send message or not before they can connected to each other.
-		$allowed_message = true;
+		$allowed_message = false;
+
 		if (
-			bp_is_active( 'friends' ) &&
-			function_exists( 'bp_force_friendship_to_message' ) &&
-			bp_force_friendship_to_message() &&
-			! friends_check_friendship( bp_loggedin_user_id(), $user->ID )
+			bp_is_active( 'messages' ) &&
+			bb_messages_user_can_send_message(
+				array(
+					'sender_id'     => bp_loggedin_user_id(),
+					'recipients_id' => $user->ID,
+				)
+			)
 		) {
-			$allowed_message = false;
+			$allowed_message = true;
 		}
 
 		// It will check non-admin members can send message or not before they can connected to each other.

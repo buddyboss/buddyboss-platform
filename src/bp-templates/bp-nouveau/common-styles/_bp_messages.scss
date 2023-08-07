@@ -1107,10 +1107,10 @@ input#send-to-input {
 				padding: 10px 10px 10px 0;
 				min-width: 30px;
 				border: 0;
-				background-color: transparent !important;
+				background-color: transparent;
 
 				&.medium-editor-button-active {
-					background: none transparent !important;
+					background: none transparent;
 				}
 
 				&.medium-editor-action-close {
@@ -1444,9 +1444,12 @@ input#send-to-input {
 	.bb-activity-media-wrap .bb-activity-media-elem.document-activity {
 
 		.document-action-wrap .document-action_list li {
-			background-color: transparent !important;
-			margin: 0 !important;
-			padding: 0 !important;
+
+			#bp-message-thread-list & {
+				background-color: transparent;
+				margin: 0;
+				padding: 0;
+			}
 		}
 
 		&:last-child {
@@ -1505,7 +1508,7 @@ input#send-to-input {
 			transform: translateY(-50%);
 			animation: spin 2s infinite linear;
 			height: auto;
-			background-color: transparent !important;
+			background-color: transparent;
 			left: inherit;
 		}
 	}
@@ -1799,7 +1802,7 @@ body .bp-messages-user-threads {
 		content: "\ef30";
 		font: normal normal normal 20px/1 "bb-icons";/* stylelint-disable-line */
 		speak: none;
-		display: inline-block !important;
+		display: inline-block;
 		text-decoration: inherit;
 		text-transform: none;
 		-webkit-font-smoothing: antialiased;
