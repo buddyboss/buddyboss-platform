@@ -3046,18 +3046,18 @@ function bb_admin_setting_callback_domain_restrictions() {
 		?>
 	</label>
 
-	<div class="domain-restrictions-listing">
-		<div class="domain-restrictions-rule-list bb-sortable">
+	<div class="registration-restrictions-listing">
+		<div class="registration-restrictions-rule-list bb-sortable">
 
-			<div class="domain-restrictions-rule">
-				<div class="domain-restrictions-input">
-					<input type="text" class="domain-restrictions-domain" placeholder="example" value="" />
+			<div class="registration-restrictions-rule">
+				<div class="registration-restrictions-input">
+					<input type="text" class="registration-restrictions-domain" placeholder="example" value="" />
 				</div>
-				<div class="domain-restrictions-input domain-restrictions-input-tld">
-					<input type="text" class="domain-restrictions-tld" placeholder="com" value="" />
+				<div class="registration-restrictions-input registration-restrictions-input-tld">
+					<input type="text" class="registration-restrictions-tld" placeholder="com" value="" />
 				</div>
-				<div class="domain-restrictions-select">
-					<select class="domain-restrictions-input-select">
+				<div class="registration-restrictions-select">
+					<select class="registration-restrictions-input-select">
 						<?php
 							foreach( $conditions as $key => $value ) {
 								?>
@@ -3067,23 +3067,23 @@ function bb_admin_setting_callback_domain_restrictions() {
 						?>
 					</select>
 				</div>
-				<div class="domain-restrictions-remove">
-					<button class="domain-restrictions-rule-remove" aria-label="Remove Rule">
+				<div class="registration-restrictions-remove">
+					<button class="registration-restrictions-rule-remove" aria-label="Remove Rule">
 						<i class="bb-icon-f bb-icon-times"></i>
 					</button>
 				</div>
 			</div>
 
 			<!-- This below HTML is for clone only - Starts -->
-			<div class="custom domain-restrictions-rule" style="display: none;">
-				<div class="domain-restrictions-input">
-					<input type="text" class="domain-restrictions-domain" placeholder="example" value="" />
+			<div class="custom registration-restrictions-rule" style="display: none;">
+				<div class="registration-restrictions-input">
+					<input type="text" class="registration-restrictions-domain" placeholder="example" value="" />
 				</div>
-				<div class="domain-restrictions-input domain-restrictions-input-tld">
-					<input type="text" class="domain-restrictions-tld" placeholder="com" value="" />
+				<div class="registration-restrictions-input registration-restrictions-input-tld">
+					<input type="text" class="registration-restrictions-tld" placeholder="com" value="" />
 				</div>
-				<div class="domain-restrictions-select">
-					<select class="domain-restrictions-input-select">
+				<div class="registration-restrictions-select">
+					<select class="registration-restrictions-input-select">
 						<?php
 							foreach( $conditions as $key => $value ) {
 								?>
@@ -3093,8 +3093,8 @@ function bb_admin_setting_callback_domain_restrictions() {
 						?>
 					</select>
 				</div>
-				<div class="domain-restrictions-remove">
-					<button class="domain-restrictions-rule-remove" aria-label="<?php esc_attr_e( 'Remove Rule', 'buddyboss' ); ?>">
+				<div class="registration-restrictions-remove">
+					<button class="registration-restrictions-rule-remove" aria-label="<?php esc_attr_e( 'Remove Rule', 'buddyboss' ); ?>">
 						<i class="bb-icon-f bb-icon-times"></i>
 					</button>
 				</div>
@@ -3102,7 +3102,7 @@ function bb_admin_setting_callback_domain_restrictions() {
 			<!-- This below HTML is for clone only - Ends -->
 
 		</div>
-		<button class="button button-primary domain-restrictions-add-rule"> <?php esc_html_e( 'Add Domain', 'buddyboss' ); ?></button>
+		<button class="button button-primary registration-restrictions-add-rule"> <?php esc_html_e( 'Add Domain', 'buddyboss' ); ?></button>
 	</div>
 	<?php
 }
@@ -3121,14 +3121,14 @@ function bb_admin_setting_callback_email_restrictions() {
 	);
 	?>
 	<label for="bb-email-restrictions-setting"><?php esc_html_e( 'Enter specific email addresses which you want to allow for user registrations. Enter one domain or address per line.', 'buddyboss' ); ?></label>
-	<div class="domain-restrictions-listing">
-		<div class="domain-restrictions-rule-list">
-			<div class="domain-restrictions-rule">
-				<div class="domain-restrictions-input">
-					<input type="text" class="domain-restrictions-domain" placeholder="example" value="" />
+	<div class="registration-restrictions-listing">
+		<div class="registration-restrictions-rule-list">
+			<div class="registration-restrictions-rule">
+				<div class="registration-restrictions-input">
+					<input type="text" class="registration-restrictions-domain" placeholder="example" value="" />
 				</div>
-				<div class="domain-restrictions-select">
-					<select class="domain-restrictions-input-select">
+				<div class="registration-restrictions-select">
+					<select class="registration-restrictions-input-select">
 						<?php
 							foreach( $conditions as $key => $value ) {
 								?>
@@ -3138,19 +3138,19 @@ function bb_admin_setting_callback_email_restrictions() {
 						?>
 					</select>
 				</div>
-				<div class="domain-restrictions-remove">
-					<button class="domain-restrictions-rule-remove" aria-label="Remove Rule">
+				<div class="registration-restrictions-remove">
+					<button class="registration-restrictions-rule-remove" aria-label="Remove Rule">
 						<i class="bb-icon-f bb-icon-times"></i>
 					</button>
 				</div>
 			</div>
 			<!-- This below HTML is for clone only - Starts -->
-			<div class="custom domain-restrictions-rule" style="display: none;">
-				<div class="domain-restrictions-input">
-					<input type="text" class="domain-restrictions-domain" placeholder="example" value="" />
+			<div class="custom registration-restrictions-rule" style="display: none;">
+				<div class="registration-restrictions-input">
+					<input type="text" class="registration-restrictions-domain" placeholder="example" value="" />
 				</div>
-				<div class="domain-restrictions-select">
-					<select class="domain-restrictions-input-select">
+				<div class="registration-restrictions-select">
+					<select class="registration-restrictions-input-select">
 						<?php
 							foreach( $conditions as $key => $value ) {
 								?>
@@ -3160,8 +3160,8 @@ function bb_admin_setting_callback_email_restrictions() {
 						?>
 					</select>
 				</div>
-				<div class="domain-restrictions-remove">
-					<button class="email-restrictions-rule-remove" aria-label="<?php esc_attr_e( 'Remove Rule', 'buddyboss' ); ?>">
+				<div class="registration-restrictions-remove">
+					<button class="registration-restrictions-rule-remove" aria-label="<?php esc_attr_e( 'Remove Rule', 'buddyboss' ); ?>">
 						<i class="bb-icon-f bb-icon-times"></i>
 					</button>
 				</div>
@@ -3169,7 +3169,7 @@ function bb_admin_setting_callback_email_restrictions() {
 			<!-- This below HTML is for clone only - Ends -->
 
 		</div>
-		<button class="button button-primary email-restrictions-add-rule"> <?php esc_html_e( 'Add Email', 'buddyboss' ); ?></button>
+		<button class="button button-primary registration-restrictions-add-rule"> <?php esc_html_e( 'Add Email', 'buddyboss' ); ?></button>
 	</div>
 	<?php
 }

@@ -2457,27 +2457,27 @@ window.bp = window.bp || {};
 	
 	$( document ).on(
 		'click',
-		'.domain-restrictions-listing .domain-restrictions-add-rule',
+		'.registration-restrictions-listing .registration-restrictions-add-rule',
 		function ( e ) {
 			e.preventDefault();
 			var $this  = $( this );
-			var $row = $this.closest( '.domain-restrictions-listing' ).find( '.domain-restrictions-rule-list .domain-restrictions-rule.custom' ).html();
-			$this.closest( '.domain-restrictions-listing' ).find( '.domain-restrictions-rule-list' ).append( ' <div class="domain-restrictions-rule"> ' + $row + ' </div> ' );
+			var $row = $this.closest( '.registration-restrictions-listing' ).find( '.registration-restrictions-rule-list .registration-restrictions-rule.custom' ).html();
+			$this.closest( '.registration-restrictions-listing' ).find( '.registration-restrictions-rule-list' ).append( ' <div class="registration-restrictions-rule"> ' + $row + ' </div> ' );
 		}
 	);
 
 	$( document ).on(
 		'click',
-		'.domain-restrictions-listing .domain-restrictions-rule-remove',
+		'.registration-restrictions-listing .registration-restrictions-rule-remove',
 		function ( e ) {
 			e.preventDefault();
 			var $this  = $( e.currentTarget );
-			if( ! $this.closest( '.domain-restrictions-rule').hasClass( 'custom' ) ) {
-				$this.closest( '.domain-restrictions-rule' ).remove();
+			if( ! $this.closest( '.registration-restrictions-rule').hasClass( 'custom' ) ) {
+				$this.closest( '.registration-restrictions-rule' ).remove();
 			}
 		}
 	);
 
-	$( '.domain-restrictions-rule-list.bb-sortable' ).sortable();
+	$( '.registration-restrictions-rule-list.bb-sortable' ).sortable();
 
 }());

@@ -3869,11 +3869,11 @@ table.moderations .column-member {
  * 17.0 Domain restriction
  *----------------------------------------------------------------------------*/
 
-.domain-restrictions-rule-list {
+.registration-restrictions-rule-list {
 	margin: 15px 0;
 	max-width: 600px;
 
-	&.bb-sortable .domain-restrictions-rule {
+	&.bb-sortable .registration-restrictions-rule {
 		padding-left: 40px;
 
 		&:before {
@@ -3893,7 +3893,7 @@ table.moderations .column-member {
 		}
 	}
 
-	.domain-restrictions-rule {
+	.registration-restrictions-rule {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 15px;
@@ -3912,7 +3912,7 @@ table.moderations .column-member {
 		> div {
 			flex: 1 0 200px;
 
-			&.domain-restrictions-input-tld {
+			&.registration-restrictions-input-tld {
 				flex-basis: 80px;
 				display: flex;
 				align-items: baseline;
@@ -3925,7 +3925,7 @@ table.moderations .column-member {
 			}
 		}
 
-		.domain-restrictions-remove {
+		.registration-restrictions-remove {
 			position: absolute;
 			top: 50%;
 			transform: translateY(-50%);

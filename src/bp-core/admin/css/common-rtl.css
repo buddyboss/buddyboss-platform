@@ -3562,16 +3562,16 @@ table.moderations .column-member img {
 /*------------------------------------------------------------------------------
  * 17.0 Domain restriction
  *----------------------------------------------------------------------------*/
-.domain-restrictions-rule-list {
+.registration-restrictions-rule-list {
   margin: 15px 0;
   max-width: 600px;
 }
 
-.domain-restrictions-rule-list.bb-sortable .domain-restrictions-rule {
+.registration-restrictions-rule-list.bb-sortable .registration-restrictions-rule {
   padding-right: 40px;
 }
 
-.domain-restrictions-rule-list.bb-sortable .domain-restrictions-rule:before {
+.registration-restrictions-rule-list.bb-sortable .registration-restrictions-rule:before {
   cursor: grab;
   content: "\e858";
   font-family: "bb-icons";
@@ -3584,11 +3584,11 @@ table.moderations .column-member img {
   right: 10px;
 }
 
-.domain-restrictions-rule-list.bb-sortable .domain-restrictions-rule.ui-sortable-helper:before {
+.registration-restrictions-rule-list.bb-sortable .registration-restrictions-rule.ui-sortable-helper:before {
   cursor: grabbing;
 }
 
-.domain-restrictions-rule-list .domain-restrictions-rule {
+.registration-restrictions-rule-list .registration-restrictions-rule {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
@@ -3600,35 +3600,35 @@ table.moderations .column-member img {
   margin-bottom: 15px;
 }
 
-.domain-restrictions-rule-list .domain-restrictions-rule input,
-.domain-restrictions-rule-list .domain-restrictions-rule select {
+.registration-restrictions-rule-list .registration-restrictions-rule input,
+.registration-restrictions-rule-list .registration-restrictions-rule select {
   width: 100%;
 }
 
-.domain-restrictions-rule-list .domain-restrictions-rule > div {
+.registration-restrictions-rule-list .registration-restrictions-rule > div {
   flex: 1 0 200px;
 }
 
-.domain-restrictions-rule-list .domain-restrictions-rule > div.domain-restrictions-input-tld {
+.registration-restrictions-rule-list .registration-restrictions-rule > div.registration-restrictions-input-tld {
   flex-basis: 80px;
   display: flex;
   align-items: baseline;
   margin-right: -5px;
 }
 
-.domain-restrictions-rule-list .domain-restrictions-rule > div.domain-restrictions-input-tld:before {
+.registration-restrictions-rule-list .registration-restrictions-rule > div.registration-restrictions-input-tld:before {
   content: ".";
   margin-left: 5px;
 }
 
-.domain-restrictions-rule-list .domain-restrictions-rule .domain-restrictions-remove {
+.registration-restrictions-rule-list .registration-restrictions-rule .registration-restrictions-remove {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   left: 10px;
 }
 
-.domain-restrictions-rule-list .domain-restrictions-rule .domain-restrictions-remove button {
+.registration-restrictions-rule-list .registration-restrictions-rule .registration-restrictions-remove button {
   color: #3c434a;
   font-size: 20px;
   cursor: pointer;
