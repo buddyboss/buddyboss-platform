@@ -1866,7 +1866,7 @@ function bbp_admin_reset_handler() {
  * Perform a bbPress database reset.
  *
  * @since bbPress 2.6.0
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.00
  */
 function bbp_admin_reset_database() {
 	// Stores messages

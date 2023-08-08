@@ -1200,7 +1200,7 @@ function bbp_body_class( $wp_classes, $custom_classes = false ) {
  * prevent unnecessarily processing.
  *
  * @since 2.6.0
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.00
  *
  * @param string $text Text to check for shortcodes exists into it or not.
  * @return bool
