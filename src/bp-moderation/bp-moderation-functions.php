@@ -1936,45 +1936,63 @@ function bb_moderation_to_hide_forum_activity( $activity_id ) {
 	return $hide_activity;
 }
 
-function bb_moderation_migration() {
+/**
+ * Run Migration related to the Moderation.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_moderation_migration_on_update() {
 
+	if ( wp_doing_ajax() ) {
+		return;
+	}
+
+	/**
+	 * Migrate old data to new background jobs.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
 	$suspend_request_args = array(
 		'in_types' => array( BP_Moderation_Members::$moderation_type ),
 		'reported' => false,
+		'per_page' => false,
 	);
-	$suspend_requests     = BP_Moderation::get( $suspend_request_args );
+
+	$suspend_requests = BP_Moderation::get( $suspend_request_args );
+
+	error_log( print_r( $suspend_requests, 1 ) );
+
 	if ( ! empty( $suspend_requests['moderations'] ) ) {
 		foreach ( $suspend_requests['moderations'] as $data ) {
-			if ( empty( $suspend_requests['user_report'] ) ) {
-				// For blocked.
-				if ( isset( $data->reported ) ) {
-					if ( ! empty( $data->reported ) ) {
-						bp_moderation_add(
-							array(
-								'content_id'   => $data->item_id,
-								'content_type' => $data->item_type,
-								'note'         => esc_html__( 'Member block', 'buddyboss' ),
-							)
-						);
-					} else {
-						bp_moderation_delete(
-							array(
-								'content_id'   => $data->item_id,
-								'content_type' => $data->item_type,
-							)
-						);
-					}
-				}
 
-				// For suspend.
-				if ( isset( $data->user_suspended ) ) {
-					if ( ! empty( $data->user_suspended ) ) {
-						BP_Suspend_Member::suspend_user( $data->item_id );
-					} else {
-						BP_Suspend_Member::unsuspend_user( $data->item_id );
-					}
+			// update data for the blocked users.
+			if ( isset( $data->reported ) ) {
+				if ( ! empty( $data->reported ) ) {
+					$args = array(
+						'item_id'     => $data->item_id,
+						'item_type'   => $data->item_type,
+						'user_report' => ( isset( $data->user_report ) ? $data->user_report : 0 ),
+						'blog_id'     => $data->blog_id,
+					);
+
+					BP_Core_Suspend::add_suspend( $args );
 				}
 			}
+
+			// updated data based on suspend entries.
+			if ( isset( $data->user_suspended ) ) {
+				if ( ! empty( $data->user_suspended ) ) {
+					BP_Suspend_Member::suspend_user( $data->item_id );
+				} elseif (
+					empty( $data->user_suspended ) &&
+					empty( $data->user_report )
+				) {
+					BP_Suspend_Member::unsuspend_user( $data->item_id );
+				}
+			}
+
 		}
 	}
 }
