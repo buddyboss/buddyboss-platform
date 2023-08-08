@@ -142,7 +142,6 @@ function bbp_current_author_ua() {
  * @uses  get_posts_by_author_sql()
  * @uses  bbp_get_topic_post_type()
  * @uses  apply_filters()
- * @global wpdb $wpdb WordPress database abstraction object.
  */
 function bbp_get_user_topic_count_raw( $user_id = 0 ) {
 	$user_id = bbp_get_user_id( $user_id );
@@ -150,10 +149,10 @@ function bbp_get_user_topic_count_raw( $user_id = 0 ) {
 		return false;
 	}
 
-	global $wpdb;
+	$bbp_db = bbp_db();
 
 	$where = get_posts_by_author_sql( bbp_get_topic_post_type(), true, $user_id );
-	$count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->posts} {$where}" );
+	$count = (int) $bbp_db->get_var( "SELECT COUNT(*) FROM {$bbp_db->posts} {$where}" );
 
 	return (int) apply_filters( 'bbp_get_user_topic_count_raw', $count, $user_id );
 }
@@ -167,7 +166,6 @@ function bbp_get_user_topic_count_raw( $user_id = 0 ) {
  * @uses  get_posts_by_author_sql()
  * @uses  bbp_get_reply_post_type()
  * @uses  apply_filters()
- * @global wpdb $wpdb WordPress database abstraction object.
  */
 function bbp_get_user_reply_count_raw( $user_id = 0 ) {
 	$user_id = bbp_get_user_id( $user_id );
@@ -175,10 +173,10 @@ function bbp_get_user_reply_count_raw( $user_id = 0 ) {
 		return false;
 	}
 
-	global $wpdb;
+	$bbp_db = bbp_db();
 
 	$where = get_posts_by_author_sql( bbp_get_reply_post_type(), true, $user_id );
-	$count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->posts} {$where}" );
+	$count = (int) $bbp_db->get_var( "SELECT COUNT(*) FROM {$bbp_db->posts} {$where}" );
 
 	return (int) apply_filters( 'bbp_get_user_reply_count_raw', $count, $user_id );
 }
@@ -220,7 +218,7 @@ function bbp_get_forum_subscribers( $forum_id = 0 ) {
 		wp_cache_set( 'bbp_get_forum_subscribers_' . $forum_id, $users, 'bbpress_users' );
 	}
 
-	return apply_filters( 'bbp_get_forum_subscribers', $users );
+	return apply_filters( 'bbp_get_forum_subscribers', $users, $forum_id );
 }
 
 /**
@@ -258,7 +256,7 @@ function bbp_get_topic_subscribers( $topic_id = 0 ) {
 		wp_cache_set( 'bbp_get_topic_subscribers_' . $topic_id, $users, 'bbpress_users' );
 	}
 
-	return apply_filters( 'bbp_get_topic_subscribers', $users );
+	return apply_filters( 'bbp_get_topic_subscribers', $users, $topic_id );
 }
 
 /**
@@ -897,7 +895,7 @@ function bbp_remove_user_topic_subscription( $user_id, $topic_id ) {
  *                    forum id and action
  * @uses  bbp_is_subscription() To check if it's the subscription page
  * @uses  bbp_get_forum_permalink() To get the forum permalink
- * @uses  wp_safe_redirect() To redirect to the url
+ * @uses  bbp_redirect() To redirect to the url
  */
 function bbp_forum_subscriptions_handler( $action = '' ) {
 
@@ -973,10 +971,7 @@ function bbp_forum_subscriptions_handler( $action = '' ) {
 			$redirect = get_permalink( $forum_id );
 		}
 
-		wp_safe_redirect( $redirect );
-
-		// For good measure
-		exit();
+		bbp_redirect( $redirect );
 
 		// Fail! Handle errors
 	} elseif ( true === $is_subscription && 'bbp_unsubscribe' === $action ) {
@@ -1004,7 +999,7 @@ function bbp_forum_subscriptions_handler( $action = '' ) {
  *                    topic id and action
  * @uses bbp_is_subscription() To check if it's the subscription page
  * @uses bbp_get_topic_permalink() To get the topic permalink
- * @uses wp_safe_redirect() To redirect to the url
+ * @uses bbp_redirect() To redirect to the url
  */
 function bbp_subscriptions_handler( $action = '' ) {
 
@@ -1080,10 +1075,7 @@ function bbp_subscriptions_handler( $action = '' ) {
 			$redirect = get_permalink( $topic_id );
 		}
 
-		wp_safe_redirect( $redirect );
-
-		// For good measure
-		exit();
+		bbp_redirect( $redirect );
 
 		// Fail! Handle errors
 	} elseif ( true === $is_subscription && 'bbp_unsubscribe' === $action ) {
@@ -1164,9 +1156,11 @@ function bbp_get_user_replies_created( $user_id = 0 ) {
  * @uses  count_users() To execute our query and get the var back
  */
 function bbp_get_total_users() {
-	$user_count = count_users();
+	$bbp_db = bbp_db();
+	$count  = $bbp_db->get_var( "SELECT COUNT(ID) as c FROM {$bbp_db->users} WHERE user_status = '0'" );
 
-	return apply_filters( 'bbp_get_total_users', (int) $user_count['total_users'] );
+	// Filter & return.
+	return (int) apply_filters( 'bbp_get_total_users', (int) $count );
 }
 
 /** Premissions ***************************************************************/
@@ -1281,10 +1275,10 @@ function bbp_user_maybe_convert_pass() {
 		return;
 	}
 
-	global $wpdb;
+	$bbp_db = bbp_db();
 
 	// Bail if no user password to convert
-	$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->users} INNER JOIN {$wpdb->usermeta} ON user_id = ID WHERE meta_key = '_bbp_class' AND user_login = '%s' LIMIT 1", $username ) );
+	$row = $bbp_db->get_row( $bbp_db->prepare( "SELECT * FROM {$bbp_db->users} INNER JOIN {$bbp_db->usermeta} ON user_id = ID WHERE meta_key = '_bbp_class' AND user_login = '%s' LIMIT 1", $username ) );
 	if ( empty( $row ) || is_wp_error( $row ) ) {
 		return;
 	}
