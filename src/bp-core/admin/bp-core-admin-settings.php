@@ -3054,7 +3054,7 @@ function bb_admin_setting_callback_domain_restrictions() {
 					<input type="text" class="domain-restrictions-domain" placeholder="example" value="" />
 				</div>
 				<div class="domain-restrictions-input domain-restrictions-input-tld">
-					<input type="text" class="domain-restrictions-tld" placeholder=".com" value="" />
+					<input type="text" class="domain-restrictions-tld" placeholder="com" value="" />
 				</div>
 				<div class="domain-restrictions-select">
 					<select class="domain-restrictions-input-select">
@@ -3080,7 +3080,7 @@ function bb_admin_setting_callback_domain_restrictions() {
 					<input type="text" class="domain-restrictions-domain" placeholder="example" value="" />
 				</div>
 				<div class="domain-restrictions-input domain-restrictions-input-tld">
-					<input type="text" class="domain-restrictions-tld" placeholder=".com" value="" />
+					<input type="text" class="domain-restrictions-tld" placeholder="com" value="" />
 				</div>
 				<div class="domain-restrictions-select">
 					<select class="domain-restrictions-input-select">

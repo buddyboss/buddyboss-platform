@@ -3564,7 +3564,7 @@ table.moderations .column-member img {
  *----------------------------------------------------------------------------*/
 .domain-restrictions-rule-list {
   margin: 15px 0;
-  max-width: 540px;
+  max-width: 600px;
 }
 
 .domain-restrictions-rule-list.bb-sortable .domain-restrictions-rule {
@@ -3598,7 +3598,6 @@ table.moderations .column-member img {
   border-radius: 4px;
   padding: 15px 40px 15px 15px;
   margin-bottom: 15px;
-  width: 100%;
 }
 
 .domain-restrictions-rule-list .domain-restrictions-rule input,
@@ -3612,6 +3611,14 @@ table.moderations .column-member img {
 
 .domain-restrictions-rule-list .domain-restrictions-rule > div.domain-restrictions-input-tld {
   flex-basis: 80px;
+  display: flex;
+  align-items: baseline;
+  margin-left: -5px;
+}
+
+.domain-restrictions-rule-list .domain-restrictions-rule > div.domain-restrictions-input-tld:before {
+  content: ".";
+  margin-right: 5px;
 }
 
 .domain-restrictions-rule-list .domain-restrictions-rule .domain-restrictions-remove {
