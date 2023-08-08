@@ -1006,7 +1006,9 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 		);
 	}
 
-	$privacy = array( 'public' );
+	$group_sitewide = array();
+	$privacy        = array( 'public' );
+
 	if ( is_user_logged_in() ) {
 		$privacy[] = 'loggedin';
 		if ( bp_is_active( 'friends' ) ) {
@@ -1026,6 +1028,20 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 		if ( $user_id === bp_loggedin_user_id() ) {
 			$privacy[] = 'onlyme';
 		}
+
+		if ( bp_is_active( 'groups' ) ) {
+			$group_sitewide = array(
+				'relation' => 'AND',
+				array(
+					'column' => 'component',
+					'value'  => buddypress()->groups->id,
+				),
+				array(
+					'column' => 'hide_sitewide',
+					'value'  => 0,
+				)
+			);
+		}
 	}
 
 	$retval = array(
@@ -1039,6 +1055,7 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 			'value'   => $privacy,
 			'compare' => 'IN',
 		),
+		$group_sitewide,
 		$show_hidden,
 
 		// Overrides.
