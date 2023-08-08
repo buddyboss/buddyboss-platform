@@ -1990,14 +1990,15 @@ function bb_moderation_migration_on_update() {
 					BP_Suspend_Member::unsuspend_user( $data->item_id );
 				}
 			}
-
 		}
 	}
 
 	$hidden_request_args = array(
 		'exclude_types' => array( BP_Moderation_Members::$moderation_type ),
 	);
-	$hidden_requests     = BP_Moderation::get( $hidden_request_args );
+
+	$hidden_requests = BP_Moderation::get( $hidden_request_args );
+
 	if ( ! empty( $hidden_requests['moderations'] ) ) {
 		foreach ( $hidden_requests['moderations'] as $data ) {
 
@@ -2008,6 +2009,9 @@ function bb_moderation_migration_on_update() {
 						array(
 							'content_id'   => $data->item_id,
 							'content_type' => $data->item_type,
+							'reported'     => $data->reported,
+							'user_report'  => $data->user_report,
+							'count'        => $data->count,
 						)
 					);
 				} else {
@@ -2015,6 +2019,9 @@ function bb_moderation_migration_on_update() {
 						array(
 							'content_id'   => $data->item_id,
 							'content_type' => $data->item_type,
+							'reported'     => $data->reported,
+							'user_report'  => $data->user_report,
+							'count'        => $data->count,
 						)
 					);
 				}
