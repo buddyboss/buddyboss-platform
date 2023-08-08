@@ -1962,8 +1962,6 @@ function bb_moderation_migration_on_update() {
 
 	$suspend_requests = BP_Moderation::get( $suspend_request_args );
 
-	error_log( print_r( $suspend_requests, 1 ) );
-
 	if ( ! empty( $suspend_requests['moderations'] ) ) {
 		foreach ( $suspend_requests['moderations'] as $data ) {
 
@@ -1993,6 +1991,34 @@ function bb_moderation_migration_on_update() {
 				}
 			}
 
+		}
+	}
+
+	$hidden_request_args = array(
+		'exclude_types' => array( BP_Moderation_Members::$moderation_type ),
+	);
+	$hidden_requests     = BP_Moderation::get( $hidden_request_args );
+	if ( ! empty( $hidden_requests['moderations'] ) ) {
+		foreach ( $hidden_requests['moderations'] as $data ) {
+
+			// update data for the hidden data.
+			if ( isset( $data->hide_sitewide ) ) {
+				if ( ! empty( $data->hide_sitewide ) ) {
+					bp_moderation_hide(
+						array(
+							'content_id'   => $data->item_id,
+							'content_type' => $data->item_type,
+						)
+					);
+				} else {
+					bp_moderation_unhide(
+						array(
+							'content_id'   => $data->item_id,
+							'content_type' => $data->item_type,
+						)
+					);
+				}
+			}
 		}
 	}
 }
