@@ -15,14 +15,14 @@ module.exports = function (grunt) {
 		// CSS exclusions, for excluding files from certain tasks, e.g. rtlcss.
 		BP_EXCLUDED_CSS = [
 			'!**/*-rtl.css',
-			'!bp-forums/**/*.css',
+			// '!bp-forums/**/*.css',
 			'!**/endpoints/**/*.css'
 		],
 
 		BP_JS = [
 			'**/*.js',
 			'!**/*.min.js',
-			'!bp-forums/**/*.js',
+			// '!bp-forums/**/*.js',
 			'!**/vendor/**/*.js',
 			'!**/endpoints/**/*.js',
 		],

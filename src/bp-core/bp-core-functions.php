@@ -4847,14 +4847,14 @@ function bp_core_parse_url( $url ) {
 		$parsed_url_data['error']       = '';
 		$parsed_url_data['wp_embed']    = true;
 	} else {
+		$args = array( 'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0' );
+
+		if ( bb_is_same_site_url( $url ) ) {
+			$args['sslverify'] = false;
+		}
 
 		// safely get URL and response body.
-		$response = wp_safe_remote_get(
-			$url,
-			array(
-				'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0',
-			)
-		);
+		$response = wp_safe_remote_get( $url, $args );
 		$body     = wp_remote_retrieve_body( $response );
 
 		// if response is not empty.
@@ -8310,6 +8310,17 @@ function bb_pro_pusher_version() {
 }
 
 /**
+ * Function to check the Delay email notifications for new messages is enabled or not.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @return int
+ */
+function bb_get_delay_email_notifications_time() {
+	return (int) apply_filters( 'bb_get_delay_email_notifications_time', bp_get_option( 'time_delay_email_notification', 15 ) );
+}
+
+/**
  * Function to return the time span for the presence in seconds.
  *
  * @since BuddyBoss 2.2
@@ -8808,4 +8819,24 @@ function bb_disable_notification_type( $notification_type, $type = 'main' ) {
 	update_option( 'bb_enabled_notification', $enabled_notification );
 
 	return true;
+}
+
+/**
+ * Check if the requested URL is from same site.
+ *
+ * @since BuddyBoss 2.4.00
+ *
+ * @param string $url URL to check.
+ *
+ * @return bool
+ */
+function bb_is_same_site_url( $url ) {
+	$parsed_url = wp_parse_url( $url );
+	$home_url   = wp_parse_url( home_url( '/' ) );
+
+	if ( ! empty( $parsed_url['host'] ) && ! empty( $parsed_url['scheme'] ) ) {
+		return ( strtolower( $parsed_url['host'] ) === strtolower( $home_url['host'] ) ) && ( $parsed_url['scheme'] === $home_url['scheme'] );
+	}
+
+	return false;
 }
