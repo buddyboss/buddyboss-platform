@@ -1995,6 +1995,7 @@ function bb_moderation_migration_on_update() {
 
 	$hidden_request_args = array(
 		'exclude_types' => array( BP_Moderation_Members::$moderation_type ),
+		'per_page'      => false,
 	);
 
 	$hidden_requests = BP_Moderation::get( $hidden_request_args );
