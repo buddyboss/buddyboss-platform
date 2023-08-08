@@ -1077,40 +1077,76 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		$allowed_status = apply_filters( 'groups_allowed_status', array( 'public', 'private', 'hidden' ) );
 		$status         = ( array_key_exists( 'group-status', (array) $post_fields ) && ! empty( $post_fields['group-status'] ) ) ? $post_fields['group-status'] : ( ! bp_get_new_group_status() ? 'public' : bp_get_new_group_status() );
 
+		$error          = '';
+		$notice         = '';
+		$validate_error = false;
+
+		if ( ! in_array( $status, $allowed_status, true ) ) {
+			$validate_error = true;
+		}
+
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
-		$allowed_invite_status = apply_filters( 'groups_allowed_invite_status', array( 'members', 'mods', 'admins' ) );
+		$allowed_invite_status = bb_groups_get_settings_status( 'invite' );
 		$invite_status         = ( array_key_exists( 'group-invite-status', (array) $post_fields ) && ! empty( $post_fields['group-invite-status'] ) ) ? $post_fields['group-invite-status'] : bp_group_get_invite_status( $group->id );
 
+		if ( ! in_array( $invite_status, $allowed_invite_status, true ) ) {
+			$validate_error = true;
+		}
+
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
-		$allowed_activity_feed_status = apply_filters( 'groups_allowed_activity_feed_status', array( 'members', 'mods', 'admins' ) );
+		$allowed_activity_feed_status = bb_groups_get_settings_status( 'activity_feed' );
 		$activity_feed_status         = ( array_key_exists( 'group-activity-feed-status', (array) $post_fields ) && ! empty( $post_fields['group-activity-feed-status'] ) ) ? $post_fields['group-activity-feed-status'] : bp_group_get_activity_feed_status( $group->id );
 
+		if ( ! in_array( $activity_feed_status, $allowed_activity_feed_status, true ) ) {
+			$validate_error = true;
+		}
+
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
-		$allowed_media_status = apply_filters( 'groups_allowed_media_status', array( 'members', 'mods', 'admins' ) );
+		$allowed_media_status = bb_groups_get_settings_status( 'media' );
 		$media_status         = ( array_key_exists( 'group-media-status', (array) $post_fields ) && ! empty( $post_fields['group-media-status'] ) ) ? $post_fields['group-media-status'] : bp_group_get_media_status( $group->id );
 
+		if ( ! in_array( $media_status, $allowed_media_status, true ) ) {
+			$validate_error = true;
+		}
+
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
-		$allowed_document_status = apply_filters( 'groups_allowed_document_status', array( 'members', 'mods', 'admins' ) );
+		$allowed_document_status = bb_groups_get_settings_status( 'document' );
 		$document_status         = ( array_key_exists( 'group-document-status', (array) $post_fields ) && ! empty( $post_fields['group-document-status'] ) ) ? $post_fields['group-document-status'] : bp_group_get_document_status( $group->id );
 
+		if ( ! in_array( $document_status, $allowed_document_status, true ) ) {
+			$validate_error = true;
+		}
+
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
-		$allowed_album_status = apply_filters( 'groups_allowed_album_status', array( 'members', 'mods', 'admins' ) );
+		$allowed_album_status = bb_groups_get_settings_status( 'album' );
 		$album_status         = ( array_key_exists( 'group-album-status', (array) $post_fields ) && ! empty( $post_fields['group-album-status'] ) ) ? $post_fields['group-album-status'] : bp_group_get_album_status( $group->id );
 
-		// Checked against a whitelist for security.
-		/** This filter is documented in bp-groups/bp-groups-admin.php */
-		$allowed_video_status = apply_filters( 'groups_allowed_video_status', array( 'members', 'mods', 'admins' ) );
-		$video_status         = ( array_key_exists( 'group-video-status', (array) $post_fields ) && ! empty( $post_fields['group-video-status'] ) ) ? $post_fields['group-video-status'] : bp_group_get_video_status( $group->id );
+		if ( ! in_array( $album_status, $allowed_album_status, true ) ) {
+			$validate_error = true;
+		}
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
-		$allowed_message_status = apply_filters( 'groups_allowed_message_status', array( 'mods', 'admins', 'members' ) );
+		$allowed_video_status = bb_groups_get_settings_status( 'video' );
+		$video_status         = ( array_key_exists( 'group-video-status', (array) $post_fields ) && ! empty( $post_fields['group-video-status'] ) ) ? $post_fields['group-video-status'] : bp_group_get_video_status( $group->id );
+
+		if ( ! in_array( $video_status, $allowed_video_status, true ) ) {
+			$validate_error = true;
+		}
+
+		// Checked against a whitelist for security.
+		/** This filter is documented in bp-groups/bp-groups-admin.php */
+		$allowed_message_status = bb_groups_get_settings_status( 'message' );
 		$message_status         = ( array_key_exists( 'group-message-status', (array) $post_fields ) && ! empty( $post_fields['group-message-status'] ) ) ? $post_fields['group-message-status'] : bp_group_get_message_status( $group->id );
+
+		if ( ! in_array( $message_status, $allowed_message_status, true ) ) {
+			$validate_error = true;
+		}
 
 		/*
 		 * Save group types.
@@ -1138,13 +1174,10 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			bp_groups_set_group_type( $group_id, $current_types );
 		}
 
-		$parent_id    = isset( $post_fields['bp-groups-parent'] ) && array_key_exists( 'bp-groups-parent', (array) $post_fields ) ? $post_fields['bp-groups-parent'] : '0';
+		$parent_id    = isset( $post_fields['bp-groups-parent'] ) && array_key_exists( 'bp-groups-parent', (array) $post_fields ) ? $post_fields['bp-groups-parent'] : bp_get_parent_group_id( $group->id );
 		$enable_forum = ( isset( $group->enable_forum ) ? $group->enable_forum : false );
 
-		$error  = '';
-		$notice = '';
-
-		if ( ! groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status, $activity_feed_status, $parent_id, $media_status, $document_status, $video_status, $album_status, $message_status ) ) {
+		if ( true === $validate_error || ! groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status, $activity_feed_status, $parent_id, $media_status, $document_status, $video_status, $album_status, $message_status ) ) {
 			$error = __( 'There was an error updating group settings. Please try again.', 'buddyboss' );
 		} else {
 			$notice = __( 'Group settings were successfully updated.', 'buddyboss' );
@@ -1206,56 +1239,6 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			'options'     => array(),
 		);
 
-		if ( bbp_is_user_keymaster() ) {
-			$forum_field = array(
-				'label'       => esc_html__( 'Group Forum:', 'buddyboss' ),
-				'name'        => 'bbp_group_forum_id',
-				'description' => esc_html__( 'Only site administrators can reconfigure which forum belongs to this group.', 'buddyboss' ),
-				'field'       => 'select',
-				'value'       => $forum_id,
-				'options'     => array(),
-			);
-
-			$forums = get_posts(
-				array(
-					'post_type'              => 'forum',
-					'numberposts'            => - 1,
-					'orderby'                => 'menu_order title',
-					'order'                  => 'ASC',
-					'disable_categories'     => true,
-					'suppress_filters'       => false,
-					'update_post_meta_cache' => false,
-					'update_post_term_cache' => false,
-				)
-			);
-
-			if ( ! empty( $forums ) ) {
-				$forum_field['options'][] = array(
-					'label'             => esc_html__( '(No Forum)', 'buddyboss' ),
-					'value'             => '',
-					'description'       => '',
-					'is_default_option' => empty( $forum_id ),
-					'disabled'          => false,
-				);
-				foreach ( $forums as $forum ) {
-					$title = $forum->post_title;
-					if ( '' === $title ) {
-						/* translators: %d: ID of a post. */
-						$title = sprintf( __( '#%d (no title)', 'buddyboss' ), $forum->ID );
-					}
-					$forum_field['options'][] = array(
-						'label'             => $title,
-						'value'             => $forum->ID,
-						'description'       => '',
-						'is_default_option' => $forum_id === $forum->ID,
-						'disabled'          => $this->is_option_disabled( $forum, $forum_id ),
-					);
-				}
-			}
-
-			$fields[] = $forum_field;
-		}
-
 		return apply_filters( 'bp_rest_group_settings_forum', $fields, $group_id );
 
 	}
@@ -1265,7 +1248,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	 *
 	 * @param WP_REST_Request $request Request used to generate the response.
 	 *
-	 * @return array
+	 * @return array|WP_Error
 	 */
 	protected function update_forum_fields( $request ) {
 		$post_fields                        = $request->get_param( 'fields' );
@@ -1295,14 +1278,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		$group_forum_extention = new BBP_Forums_Group_Extension();
 
-		// Keymasters have the ability to reconfigure forums.
-		if ( bbp_is_user_keymaster() ) {
-			$forum_ids = ( array_key_exists( 'bbp_group_forum_id', (array) $post_fields ) && ! empty( $post_fields['bbp_group_forum_id'] ) ) ? (array) (int) $post_fields['bbp_group_forum_id'] : array();
-
-			// Use the existing forum IDs.
-		} else {
-			$forum_ids = array_values( bbp_get_group_forum_ids( $group_id ) );
-		}
+		$forum_ids = array_values( bbp_get_group_forum_ids( $group_id ) );
 
 		// Normalize group forum relationships now.
 		if ( ! empty( $forum_ids ) ) {
@@ -1367,7 +1343,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			$new_forum_args = array( 'forum_id' => $forum_id );
 
 			// If in admin, also include the group ID.
-			if ( is_admin() && ! empty( $group_id ) ) {
+			if ( ! empty( $group_id ) ) {
 				$new_forum_args['group_id'] = $group_id;
 			}
 

@@ -167,7 +167,7 @@ function bp_nouveau_ajax_messages_send_message() {
 	 *
 	 * @return bool True if message is valid, false otherwise.
 	 */
-	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $content ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $content ) ) ) ), $content, $_POST );
+	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $content ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ), $content, $_POST );
 
 	if ( ! $validated_content ) {
 		$response['feedback'] = __( 'Your message was not sent. Please enter some content.', 'buddyboss' );
@@ -261,36 +261,20 @@ function bp_nouveau_ajax_messages_send_message() {
 					}
 				}
 
-				$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $messages_template->thread->thread_id, (array) $messages_template->thread->recipients );
-				$un_access_users = array();
-				if ( $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
-					foreach ( (array) $messages_template->thread->recipients as $recipient ) {
-						if ( bp_loggedin_user_id() !== $recipient->user_id ) {
-							if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
-								$un_access_users[] = false;
-							}
-						}
-					}
-					if ( ! empty( $un_access_users ) ) {
-						$can_message = false;
-					}
-				}
-
 				$check_recipients = (array) $messages_template->thread->recipients;
-				// Strip the sender from the recipient list, and unset them if they are
-				// not alone. If they are alone, let them talk to themselves.
-				if ( isset( $check_recipients[ bp_loggedin_user_id() ] ) && ( count( $check_recipients ) > 1 ) ) {
-					unset( $check_recipients[ bp_loggedin_user_id() ] );
-				}
-
-				// Check moderation if user blocked or not for single user thread.
-				if ( $can_message && ! $is_group_thread && bp_is_active( 'moderation' ) && ! empty( $check_recipients ) && 1 === count( $check_recipients ) ) {
-					$recipient_id = current( array_keys( $check_recipients ) );
-					if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
-						$can_message = false;
-					} elseif ( bp_moderation_is_user_blocked( $recipient_id ) ) {
-						$can_message = false;
-					}
+				$recipients_ids   = wp_list_pluck( $check_recipients, 'user_id' );
+				$can_message      = false;
+				if (
+					bp_is_active( 'messages' ) &&
+					bb_messages_user_can_send_message(
+						array(
+							'sender_id'     => bp_loggedin_user_id(),
+							'recipients_id' => $recipients_ids,
+							'thread_id'     => bp_get_message_thread_id(),
+						)
+					)
+				) {
+					$can_message = true;
 				}
 
 				$response = array(
@@ -495,7 +479,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 	 *
 	 * @return bool True if message is valid, false otherwise.
 	 */
-	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $content ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $content ) ) ) ), $content, $_POST );
+	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $content ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ), $content, $_POST );
 
 	if ( ! $validated_content ) {
 		$response['feedback'] = __( 'Please add some content to your message.', 'buddyboss' );
@@ -550,8 +534,10 @@ function bp_nouveau_ajax_messages_send_reply() {
 	$group         = '';
 	$first_message = BP_Messages_Thread::get_first_message( $thread_id );
 	$group_id      = bp_messages_get_meta( $first_message->id, 'group_id', true ); // group id.
+	$message_users = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
+	$message_type  = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
 
-	if ( ! empty( $group_id ) ) {
+	if ( ! empty( $group_id ) && 'open' === $message_type && 'all' === $message_users ) {
 		$group = groups_get_group( $group_id );
 	}
 
@@ -636,362 +622,9 @@ function bp_nouveau_ajax_messages_send_reply() {
 		$thread_template->message = current( $messages['messages'] );
 	}
 
-	$excerpt = wp_trim_words( wp_strip_all_tags( bb_get_the_thread_message_excerpt() ) );
-	if ( empty( $excerpt ) ) {
-		if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
-			$media_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_media_ids', true );
+	$message_response = bb_get_message_response_object( $thread_template->message );
 
-			if ( ! empty( $media_ids ) ) {
-				$media_ids = explode( ',', $media_ids );
-				if ( count( $media_ids ) < 2 ) {
-					$excerpt = __( 'sent a photo', 'buddyboss' );
-				} else {
-					$excerpt = __( 'sent some photos', 'buddyboss' );
-				}
-			}
-		}
-
-		if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) {
-			$video_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_video_ids', true );
-
-			if ( ! empty( $video_ids ) ) {
-				$video_ids = explode( ',', $video_ids );
-				if ( count( $video_ids ) < 2 ) {
-					$excerpt = __( 'sent a video', 'buddyboss' );
-				} else {
-					$excerpt = __( 'sent some videos', 'buddyboss' );
-				}
-			}
-		}
-
-		if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
-			$document_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_document_ids', true );
-
-			if ( ! empty( $document_ids ) ) {
-				$document_ids = explode( ',', $document_ids );
-				if ( count( $document_ids ) < 2 ) {
-					$excerpt = __( 'sent a document', 'buddyboss' );
-				} else {
-					$excerpt = __( 'sent some documents', 'buddyboss' );
-				}
-			}
-		}
-
-		if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) {
-			$gif_data = bp_messages_get_meta( bp_get_the_thread_message_id(), '_gif_data', true );
-
-			if ( ! empty( $gif_data ) ) {
-				$excerpt = __( 'sent a GIF', 'buddyboss' );
-			}
-		}
-	}
-
-	// Output single message template part.
-	$reply = array(
-		'id'                => bp_get_the_thread_message_id(),
-		'content'           => do_shortcode( bp_get_the_thread_message_content() ),
-		'sender_id'         => bp_get_the_thread_message_sender_id(),
-		'sender_name'       => esc_html( bp_get_the_thread_message_sender_name() ),
-		'is_deleted'        => empty( get_userdata( bp_get_the_thread_message_sender_id() ) ) ? 1 : 0,
-		'sender_link'       => bp_get_the_thread_message_sender_link(),
-		'sender_is_you'     => bp_get_the_thread_message_sender_id() === bp_loggedin_user_id(),
-		'sender_avatar'     => esc_url(
-			bp_core_fetch_avatar(
-				array(
-					'item_id' => bp_get_the_thread_message_sender_id(),
-					'object'  => 'user',
-					'type'    => 'thumb',
-					'width'   => 32,
-					'height'  => 32,
-					'html'    => false,
-				)
-			)
-		),
-		'date'              => bp_get_the_thread_message_date_sent() * 1000,
-		'display_date'      => bb_get_the_thread_message_sent_time(),
-		'display_date_list' => bb_get_thread_sent_date( $thread_template->message->date_sent ),
-		'excerpt'           => $excerpt,
-		'sent_date'         => ucfirst( bb_get_thread_start_date( $thread_template->message->date_sent ) ),
-		'sent_split_date'   => date_i18n( 'Y-m-d', strtotime( $thread_template->message->date_sent ) ),
-	);
-
-	$get_thread_recipients = $thread_template->thread->recipients;
-
-	if ( bp_is_active( 'moderation' ) ) {
-		$reply['is_user_suspended'] = bp_moderation_is_user_suspended( bp_get_the_thread_message_sender_id() );
-		$reply['is_user_blocked']   = bp_moderation_is_user_blocked( bp_get_the_thread_message_sender_id() );
-	}
-
-	if ( bp_is_active( 'messages', 'star' ) ) {
-
-		$star_link = bp_get_the_message_star_action_link(
-			array(
-				'message_id' => bp_get_the_thread_message_id(),
-				'url_only'   => true,
-			)
-		);
-
-		$reply['star_link']  = $star_link;
-		$reply['is_starred'] = array_search( 'unstar', explode( '/', $star_link ), true );
-
-	}
-
-	if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
-		$media_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_media_ids', true );
-
-		if ( ! empty( $media_ids ) && bp_has_media(
-			array(
-				'include'  => $media_ids,
-				'privacy'  => array( 'message' ),
-				'order_by' => 'menu_order',
-				'sort'     => 'ASC',
-			)
-		) ) {
-			$reply['media'] = array();
-			while ( bp_media() ) {
-				bp_the_media();
-
-				$reply['media'][] = array(
-					'id'            => bp_get_media_id(),
-					'title'         => bp_get_media_title(),
-					'message_id'    => bp_get_the_thread_message_id(),
-					'thread_id'     => bp_get_the_thread_id(),
-					'attachment_id' => bp_get_media_attachment_id(),
-					'thumbnail'     => bp_get_media_attachment_image_thumbnail(),
-					'full'          => bb_get_media_photos_theatre_popup_image(),
-					'meta'          => $media_template->media->attachment_data->meta,
-					'privacy'       => bp_get_media_privacy(),
-					'height'        => ( isset( $media_template->media->attachment_data->meta['height'] ) ? $media_template->media->attachment_data->meta['height'] : '' ),
-					'width'         => ( isset( $media_template->media->attachment_data->meta['width'] ) ? $media_template->media->attachment_data->meta['width'] : '' ),
-				);
-			}
-		}
-	}
-
-	if ( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() ) {
-		$video_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_video_ids', true );
-
-		if (
-			! empty( $video_ids ) &&
-			bp_has_video(
-				array(
-					'include'  => $video_ids,
-					'privacy'  => array( 'message' ),
-					'order_by' => 'menu_order',
-					'sort'     => 'ASC',
-				)
-			)
-		) {
-			$reply['video'] = array();
-			while ( bp_video() ) {
-				bp_the_video();
-
-				$video_html = '';
-				if ( 1 === $video_template->video_count ) {
-					ob_start();
-					bp_get_template_part( 'video/single-video' );
-					?>
-					<p class="bb-video-loader"></p>
-					<?php
-					if ( ! empty( bp_get_video_length() ) ) {
-						?>
-						<p class="bb-video-duration"><?php bp_video_length(); ?></p>
-						<?php
-					}
-					$thumbnail_url = bb_video_get_thumb_url( bp_get_video_id(), bp_get_video_attachment_id(), 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
-
-					if ( empty( $thumbnail_url ) ) {
-						$thumbnail_url = bb_get_video_default_placeholder_image();
-					}
-					?>
-					<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap hide" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php bp_video_popup_thumb(); ?>" data-privacy="<?php bp_video_privacy(); ?>"  data-attachment-id="<?php bp_video_attachment_id(); ?>" href="#">
-						<img src="<?php echo esc_url( $thumbnail_url ); ?>" alt="<?php bp_video_title(); ?>" />
-					</a>
-					<?php
-					$video_html = ob_get_clean();
-					$video_html = str_replace( 'video-js', 'video-js single-activity-video', $video_html );
-					$video_html = str_replace( 'id="theatre-video', 'id="video', $video_html );
-
-				}
-
-				$reply['video'][] = array(
-					'id'            => bp_get_video_id(),
-					'title'         => bp_get_video_title(),
-					'message_id'    => bp_get_the_thread_message_id(),
-					'thread_id'     => bp_get_the_thread_id(),
-					'attachment_id' => bp_get_video_attachment_id(),
-					'thumbnail'     => bp_get_video_attachment_image_thumbnail(),
-					'full'          => bp_get_video_attachment_image(),
-					'meta'          => $video_template->video->attachment_data->meta,
-					'privacy'       => bp_get_video_privacy(),
-					'video_html'    => $video_html,
-				);
-			}
-		}
-	}
-
-	if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
-		$document_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_document_ids', true );
-
-		if ( ! empty( $document_ids ) && bp_has_document(
-			array(
-				'include'  => $document_ids,
-				'order_by' => 'menu_order',
-				'sort'     => 'ASC',
-			)
-		) ) {
-			$reply['document'] = array();
-			while ( bp_document() ) {
-				bp_the_document();
-
-				$attachment_id         = bp_get_document_attachment_id();
-				$extension             = bp_document_extension( $attachment_id );
-				$svg_icon              = bp_document_svg_icon( $extension, $attachment_id );
-				$svg_icon_download     = bp_document_svg_icon( 'download' );
-				$download_url          = bp_document_download_link( $attachment_id, bp_get_document_id() );
-				$filename              = basename( get_attached_file( $attachment_id ) );
-				$size                  = bp_document_size_format( filesize( get_attached_file( $attachment_id ) ) );
-				$extension_description = '';
-				$extension_lists       = bp_document_extensions_list();
-				$text_attachment_url   = wp_get_attachment_url( $attachment_id );
-				$mirror_text           = bp_document_mirror_text( $attachment_id );
-				$audio_url             = '';
-				$video_url             = '';
-
-				if ( ! empty( $extension_lists ) ) {
-					$extension_lists = array_column( $extension_lists, 'description', 'extension' );
-					$extension_name  = '.' . $extension;
-					if ( ! empty( $extension_lists ) && ! empty( $extension ) && array_key_exists( $extension_name, $extension_lists ) ) {
-						$extension_description = '<span class="document-extension-description">' . esc_html( $extension_lists[ $extension_name ] ) . '</span>';
-					}
-				}
-
-				if ( in_array( $extension, bp_get_document_preview_video_extensions(), true ) ) {
-					$video_url = bb_document_video_get_symlink( bp_get_document_id(), true );
-				}
-
-				if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
-					$audio_url = bp_document_get_preview_url( bp_get_document_id(), $attachment_id );
-				}
-
-				$output = '';
-				ob_start();
-
-				if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
-					$audio_url = bp_document_get_preview_url( bp_get_document_id(), $attachment_id );
-					?>
-					<div class="document-audio-wrap">
-						<audio controls controlsList="nodownload">
-							<source src="<?php echo esc_url( $audio_url ); ?>" type="audio/mpeg">
-							<?php esc_html_e( 'Your browser does not support the audio element.', 'buddyboss' ); ?>
-						</audio>
-					</div>
-					<?php
-				}
-
-				$attachment_url      = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'bb-document-pdf-preview-activity-image' );
-				$full_attachment_url = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'bb-document-pdf-image-popup-image' );
-
-				if ( $attachment_url ) {
-					?>
-					<div class="document-preview-wrap">
-						<img src="<?php echo esc_url( $attachment_url ); ?>" alt=""/>
-					</div><!-- .document-preview-wrap -->
-					<?php
-				}
-				$sizes = is_file( get_attached_file( $attachment_id ) ) ? get_attached_file( $attachment_id ) : 0;
-				if ( $sizes && filesize( $sizes ) / 1e+6 < 2 ) {
-					if ( in_array( $extension, bp_get_document_preview_code_extensions(), true ) ) {
-						$data      = bp_document_get_preview_text_from_attachment( $attachment_id );
-						$file_data = $data['text'];
-						$more_text = $data['more_text']
-						?>
-						<div class="document-text-wrap">
-							<div class="document-text" data-extension="<?php echo esc_attr( $extension ); ?>">
-								<textarea class="document-text-file-data-hidden" style="display: none;"><?php echo wp_kses_post( $file_data ); ?></textarea>
-							</div>
-							<div class="document-expand">
-								<a href="#" class="document-expand-anchor">
-									<i class="bb-icon-l bb-icon-expand document-icon-plus"></i> <?php esc_html_e( 'Expand', 'buddyboss' ); ?>
-								</a>
-							</div>
-						</div> <!-- .document-text-wrap -->
-						<?php
-						if ( true === $more_text ) {
-
-							printf(
-							/* translators: %s: download string */
-								'<div class="more_text_view">%s</div>',
-								sprintf(
-								/* translators: %s: download url */
-									wp_kses_post( 'This file was truncated for preview. Please <a href="%s">download</a> to view the full file.', 'buddyboss' ),
-									esc_url( $download_url )
-								)
-							);
-						}
-					}
-				}
-
-				$output .= ob_get_clean();
-
-				$reply['document'][] = array(
-					'id'                    => bp_get_document_id(),
-					'title'                 => bp_get_document_title(),
-					'attachment_id'         => bp_get_document_attachment_id(),
-					'url'                   => $download_url,
-					'extension'             => $extension,
-					'svg_icon'              => $svg_icon,
-					'svg_icon_download'     => $svg_icon_download,
-					'filename'              => $filename,
-					'size'                  => $size,
-					'meta'                  => $document_template->document->attachment_data->meta,
-					'download_text'         => __( 'Click to view', 'buddyboss' ),
-					'extension_description' => $extension_description,
-					'download'              => __( 'Download', 'buddyboss' ),
-					'collapse'              => __( 'Collapse', 'buddyboss' ),
-					'expand'                => __( 'Expand', 'buddyboss' ),
-					'copy_download_link'    => __( 'Copy Download Link', 'buddyboss' ),
-					'more_action'           => __( 'More actions', 'buddyboss' ),
-					'privacy'               => bp_get_db_document_privacy(),
-					'author'                => bp_get_document_user_id(),
-					'preview'               => $attachment_url,
-					'full_preview'          => ( '' !== $full_attachment_url ) ? $full_attachment_url : $attachment_url,
-					'msg_preview'           => $output,
-					'text_preview'          => $text_attachment_url ? esc_url( $text_attachment_url ) : '',
-					'mp3_preview'           => $audio_url ? $audio_url : '',
-					'document_title'        => $filename ? $filename : '',
-					'mirror_text'           => $mirror_text ? $mirror_text : '',
-					'video'                 => $video_url ? $video_url : '',
-				);
-			}
-		}
-	}
-
-	if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) {
-		$gif_data = bp_messages_get_meta( bp_get_the_thread_message_id(), '_gif_data', true );
-
-		if ( ! empty( $gif_data ) ) {
-			$preview_url  = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
-			$video_url    = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
-			$reply['gif'] = array(
-				'preview_url' => $preview_url,
-				'video_url'   => $video_url,
-			);
-		}
-	}
-
-	$extra_content = bp_nouveau_messages_catch_hook_content(
-		array(
-			'beforeMeta'    => 'bp_before_message_meta',
-			'afterMeta'     => 'bp_after_message_meta',
-			'beforeContent' => 'bp_before_message_content',
-			'afterContent'  => 'bp_after_message_content',
-		)
-	);
-
-	if ( array_filter( $extra_content ) ) {
-		$reply = array_merge( $reply, $extra_content );
-	}
+	$message_response['started_date_mysql'] = $thread_template->thread->first_message_date;
 
 	// Clean up the loop.
 	bp_thread_messages();
@@ -999,21 +632,9 @@ function bp_nouveau_ajax_messages_send_reply() {
 	// Remove the bp_current_action() override.
 	$bp->current_action = $reset_action;
 
-	// set a flag.
-	$reply['is_new']  = true;
-	$inbox_unread_cnt = apply_filters( 'thread_recipient_inbox_unread_counts', array(), $get_thread_recipients );
-
 	$response = apply_filters(
 		'bb_nouveau_ajax_messages_send_reply_success',
-		array(
-			'messages'                      => array( $reply ),
-			'thread_id'                     => $thread_id,
-			'feedback'                      => __( 'Your reply was sent successfully', 'buddyboss' ),
-			'hash'                          => $hash,
-			'recipient_inbox_unread_counts' => $inbox_unread_cnt,
-			'type'                          => 'success',
-			'started_date_mysql'            => $thread_template->thread->first_message_date,
-		)
+		$message_response
 	);
 
 	wp_send_json_success( $response );
@@ -1242,41 +863,20 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			continue;
 		}
 
-		$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $messages_template->thread->thread_id, (array) $messages_template->thread->recipients );
-		$un_access_users = array();
-		if ( $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && bp_force_friendship_to_message() && count( $messages_template->thread->recipients ) < 3 ) {
-			foreach ( (array) $messages_template->thread->recipients as $recipient ) {
-				if ( bp_loggedin_user_id() !== $recipient->user_id ) {
-					if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
-						$un_access_users[] = false;
-					}
-				}
-			}
-			if ( ! empty( $un_access_users ) ) {
-				$can_message = false;
-			}
-		}
-
 		$sender_name      = bp_core_get_user_displayname( $messages_template->thread->last_sender_id );
 		$check_recipients = (array) $messages_template->thread->recipients;
-		// Strip the sender from the recipient list, and unset them if they are
-		// not alone. If they are alone, let them talk to themselves.
-		if ( isset( $check_recipients[ bp_loggedin_user_id() ] ) && ( count( $check_recipients ) > 1 ) ) {
-			unset( $check_recipients[ bp_loggedin_user_id() ] );
-		}
-
-		// Check moderation if user blocked or not for single user thread.
-		if ( $can_message && ! $is_group_thread && ! empty( $check_recipients ) && 1 === count( $check_recipients ) ) {
-			$recipient_id = current( array_keys( $check_recipients ) );
-			// For conversations with a single recipient - Don’t include the name of the last person to message before the message content.
-			$sender_name = '';
-			if ( bp_is_active( 'moderation' ) ) {
-				if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
-					$can_message = false;
-				} elseif ( bp_moderation_is_user_blocked( $recipient_id ) ) {
-					$can_message = false;
-				}
-			}
+		$recipients_ids   = wp_list_pluck( $check_recipients, 'user_id' );
+		$can_message      = false;
+		if (
+			bp_is_active( 'messages' ) &&
+			bb_messages_user_can_send_message(
+				array(
+					'sender_id'     => bp_loggedin_user_id(),
+					'recipients_id' => $recipients_ids
+				)
+			)
+		) {
+			$can_message = true;
 		}
 
 		// Check the thread is private or group.
@@ -1290,7 +890,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'message_id'                      => (int) $last_message_id,
 			'subject'                         => wp_strip_all_tags( bp_get_message_thread_subject() ),
 			'group_avatar'                    => $group_avatar,
-			'group_name'                      => html_entity_decode( $group_name ),
+			'group_name'                      => html_entity_decode( $group_name, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ),
 			'is_deleted'                      => $is_deleted_group,
 			'is_group'                        => ! empty( $group_id ) ? true : false,
 			'is_group_thread'                 => $is_group_thread,
@@ -1323,6 +923,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'display_date'                    => bb_get_thread_sent_date(),
 			'started_date'                    => bp_nouveau_get_message_date( $messages_template->thread->first_message_date, get_option( 'date_format' ) ),
 			'is_private_thread'               => $is_private_thread,
+			'has_media'                       => false,
 		);
 
 		if ( (int) bp_action_variable( 0 ) === (int) $bp_get_message_thread_id ) {
@@ -1447,50 +1048,56 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			$threads->threads[ $i ]['starred_id'] = $sm_id;
 		}
 
-		if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
-			$media_ids = bp_messages_get_meta( $last_message_id, 'bp_media_ids', true );
+		if ( empty( $threads->threads[ $i ]['excerpt'] ) ) {
+			if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
+				$media_ids = bp_messages_get_meta( $last_message_id, 'bp_media_ids', true );
 
-			if ( ! empty( $media_ids ) ) {
-				$media_ids = explode( ',', $media_ids );
-				if ( count( $media_ids ) < 2 ) {
-					$threads->threads[ $i ]['excerpt'] = __( 'sent a photo', 'buddyboss' );
-				} else {
-					$threads->threads[ $i ]['excerpt'] = __( 'sent some photos', 'buddyboss' );
+				if ( ! empty( $media_ids ) ) {
+					$threads->threads[ $i ]['has_media'] = true;
+					$media_ids                           = explode( ',', $media_ids );
+					if ( count( $media_ids ) < 2 ) {
+						$threads->threads[ $i ]['excerpt'] = __( 'Sent a photo', 'buddyboss' );
+					} else {
+						$threads->threads[ $i ]['excerpt'] = __( 'Sent some photos', 'buddyboss' );
+					}
 				}
 			}
-		}
 
-		if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) {
-			$video_ids = bp_messages_get_meta( $last_message_id, 'bp_video_ids', true );
+			if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) {
+				$video_ids = bp_messages_get_meta( $last_message_id, 'bp_video_ids', true );
 
-			if ( ! empty( $video_ids ) ) {
-				$video_ids = explode( ',', $video_ids );
-				if ( count( $video_ids ) < 2 ) {
-					$threads->threads[ $i ]['excerpt'] = __( 'sent a video', 'buddyboss' );
-				} else {
-					$threads->threads[ $i ]['excerpt'] = __( 'sent some videos', 'buddyboss' );
+				if ( ! empty( $video_ids ) ) {
+					$threads->threads[ $i ]['has_media'] = true;
+					$video_ids                           = explode( ',', $video_ids );
+					if ( count( $video_ids ) < 2 ) {
+						$threads->threads[ $i ]['excerpt'] = __( 'Sent a video', 'buddyboss' );
+					} else {
+						$threads->threads[ $i ]['excerpt'] = __( 'Sent some videos', 'buddyboss' );
+					}
 				}
 			}
-		}
 
-		if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
-			$document_ids = bp_messages_get_meta( $last_message_id, 'bp_document_ids', true );
+			if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
+				$document_ids = bp_messages_get_meta( $last_message_id, 'bp_document_ids', true );
 
-			if ( ! empty( $document_ids ) ) {
-				$document_ids = explode( ',', $document_ids );
-				if ( count( $document_ids ) < 2 ) {
-					$threads->threads[ $i ]['excerpt'] = __( 'sent a document', 'buddyboss' );
-				} else {
-					$threads->threads[ $i ]['excerpt'] = __( 'sent some documents', 'buddyboss' );
+				if ( ! empty( $document_ids ) ) {
+					$threads->threads[ $i ]['has_media'] = true;
+					$document_ids                        = explode( ',', $document_ids );
+					if ( count( $document_ids ) < 2 ) {
+						$threads->threads[ $i ]['excerpt'] = __( 'Sent a document', 'buddyboss' );
+					} else {
+						$threads->threads[ $i ]['excerpt'] = __( 'Sent some documents', 'buddyboss' );
+					}
 				}
 			}
-		}
 
-		if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) {
-			$gif_data = bp_messages_get_meta( $last_message_id, '_gif_data', true );
+			if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) {
+				$gif_data = bp_messages_get_meta( $last_message_id, '_gif_data', true );
 
-			if ( ! empty( $gif_data ) ) {
-				$threads->threads[ $i ]['excerpt'] = __( 'sent a GIF', 'buddyboss' );
+				if ( ! empty( $gif_data ) ) {
+					$threads->threads[ $i ]['has_media'] = true;
+					$threads->threads[ $i ]['excerpt']   = __( 'Sent a gif', 'buddyboss' );
+				}
 			}
 		}
 
@@ -1763,6 +1370,19 @@ function bp_nouveau_ajax_delete_thread() {
 		 * @since BuddyBoss 1.5.6
 		 */
 		do_action( 'bp_messages_message_delete_thread', $thread_id, $thread_recipients );
+
+		/**
+		 * Fires before an entire message thread is deleted.
+		 *
+		 * @since BuddyPress 2.2.0
+		 *
+		 * @param array $message_ids   IDs of messages being deleted.
+		 * @param int   $user_id       ID of the user the threads were deleted for.
+		 * @param bool  $thread_delete True entire thread will be deleted.
+		 *
+		 * @param int   $thread_id     ID of the thread being deleted.
+		 */
+		do_action( 'bp_messages_thread_after_delete', $thread_id, $message_ids, bp_loggedin_user_id(), true );
 	}
 
 	wp_send_json_success(
@@ -2047,11 +1667,19 @@ function bp_nouveau_ajax_dsearch_recipients() {
 
 	add_filter( 'bp_members_suggestions_query_args', 'bp_nouveau_ajax_search_recipients_exclude_current' );
 
+	if (
+		bp_is_active( 'friends' ) &&
+		bp_force_friendship_to_message() &&
+		empty( bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) )
+	) {
+		add_filter( 'bp_user_query_uid_clauses', 'bb_messages_update_recipient_user_query_uid_clauses', 9999, 2 );
+	}
+
 	$results = bp_core_get_suggestions(
 		array(
 			'term'            => sanitize_text_field( $_GET['term'] ),
 			'type'            => 'members',
-			'only_friends'    => bp_is_active( 'friends' ) && bp_force_friendship_to_message(),
+			'only_friends'    => false,
 			'count_total'     => 'count_query',
 			'page'            => $_GET['page'],
 			'limit'           => 10,
@@ -2059,6 +1687,14 @@ function bp_nouveau_ajax_dsearch_recipients() {
 			'exclude'         => $exclude_user_ids,
 		)
 	);
+
+	if (
+		bp_is_active( 'friends' ) &&
+		bp_force_friendship_to_message() &&
+		empty( bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) )
+	) {
+		remove_filter( 'bp_user_query_uid_clauses', 'bb_messages_update_recipient_user_query_uid_clauses', 9999 );
+	}
 
 	$results_total = apply_filters( 'bp_members_suggestions_results_total', $results['total'] );
 	$results       = apply_filters( 'bp_members_suggestions_results', isset( $results['members'] ) ? $results['members'] : array() );
@@ -2100,34 +1736,6 @@ function bp_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
 
 	return $user_query;
 }
-
-/**
- * Exclude members from messages suggestions list if require users to be connected before they can message each other
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $results
- *
- * @return array
- */
-function bp_nouveau_ajax_search_recipients_exclude_non_friend( $results ) {
-
-	if ( true === bp_force_friendship_to_message() && function_exists( 'friends_check_friendship_status' ) ) {
-		$new_users = array();
-		foreach ( $results as $user ) {
-			$member_friend_status = friends_check_friendship_status( $user->user_id, bp_loggedin_user_id() );
-			if ( 'is_friend' === $member_friend_status ) {
-				$new_users[] = $user;
-			}
-		}
-
-		return $new_users;
-	}
-
-	return $results;
-}
-
-add_filter( 'bp_members_suggestions_results', 'bp_nouveau_ajax_search_recipients_exclude_non_friend' );
 
 /**
  * Messages for each thread.
@@ -2185,10 +1793,18 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$is_group_message_thread = bb_messages_is_group_thread( bp_get_the_thread_id() );
 
 	// Check recipients if connected or not.
-	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && ! $is_group_message_thread && count( $recipients ) < 2 ) {
+	if ( ! $is_group_message_thread && count( $recipients ) < 2 ) {
 		add_filter( 'bp_after_bb_parse_button_args_parse_args', 'bb_messaged_set_friend_button_args' );
 		foreach ( $recipients as $recipient ) {
-			if ( $login_user_id !== $recipient->user_id && ! friends_check_friendship( $login_user_id, $recipient->user_id ) ) {
+			if (
+				$login_user_id !== $recipient->user_id &&
+				! bb_messages_user_can_send_message(
+					array(
+						'sender_id'     => $login_user_id,
+						'recipients_id' => $recipient->user_id,
+					)
+				)
+			) {
 				if ( count( $recipients ) > 1 ) {
 					$thread->feedback_error = array(
 						'feedback' => __( 'You must be connected to this member to send them a message.', 'buddyboss' ),
@@ -2243,7 +1859,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 		if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
 			$thread->feedback_error = array(
-				'feedback' => __( 'Unable to send new messages at this time.', 'buddyboss' ),
+				'feedback' => __( 'Unable to send new messages to this member.', 'buddyboss' ),
 				'type'     => 'notice',
 			);
 		} elseif ( bb_moderation_is_user_blocked_by( $recipient_id ) ) {
@@ -2456,9 +2072,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		)
 	);
 
+	$all_recipients = $thread_template->thread->get_recipients();
+
 	$is_participated = ( ! empty( $participated['messages'] ) ? $participated['messages'] : array() );
-	$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $thread_template->thread->thread_id, (array) $thread_template->thread->recipients );
-	$un_access_users = array();
 
 	$thread->thread = array(
 		'id'                        => $bp_get_the_thread_id,
@@ -2466,7 +2082,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		'started_date'              => bb_get_thread_start_date( $thread_template->thread->first_message_date, false ),
 		'started_date_mysql'        => $thread_template->thread->first_message_date,
 		'group_id'                  => $group_id,
-		'group_name'                => html_entity_decode( ucwords( $group_name ) ),
+		'group_name'                => html_entity_decode( ucwords( $group_name ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ),
 		'is_group_thread'           => $is_group_thread,
 		'is_deleted'                => $is_deleted_group,
 		'group_avatar'              => $group_avatar,
@@ -2491,13 +2107,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		$bp_force_friendship_to_message = bp_force_friendship_to_message();
 
 		foreach ( $thread_template->thread->recipients as $recipient ) {
-			if ( $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && $bp_force_friendship_to_message ) {
-				if ( $login_user_id !== $recipient->user_id ) {
-					if ( ! friends_check_friendship( $login_user_id, $recipient->user_id ) ) {
-						$un_access_users[] = false;
-					}
-				}
-			}
 
 			if ( empty( $recipient->is_deleted ) ) {
 				$thread->thread['recipients']['members'][ $count ] = array(
@@ -2540,19 +2149,20 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		$thread->thread['recipients']['per_page']      = bb_messages_recipients_per_page();
 		$thread->thread['recipients']['total_pages']   = ceil( (int) $recipients_count / (int) bb_messages_recipients_per_page() );
 
-		if ( $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && $bp_force_friendship_to_message && ! empty( $un_access_users ) ) {
-			$can_message = false;
-		}
 	}
 
-	// Check moderation if user blocked or not for single user thread.
-	if ( $can_message && ! $is_group_thread && bp_is_active( 'moderation' ) && ! empty( $check_recipients ) && 1 === count( $check_recipients ) ) {
-		$recipient_id = current( array_keys( $check_recipients ) );
-		if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
-			$can_message = false;
-		} elseif ( bp_moderation_is_user_blocked( $recipient_id ) ) {
-			$can_message = false;
-		}
+	$recipients_ids = wp_list_pluck( $all_recipients, 'user_id' );
+	$can_message    = false;
+	if (
+		bb_messages_user_can_send_message(
+			array(
+				'sender_id'     => bp_loggedin_user_id(),
+				'recipients_id' => $recipients_ids,
+				'thread_id'     => $bp_get_the_thread_id
+			)
+		)
+	) {
+		$can_message = true;
 	}
 
 	$thread->thread['can_user_send_message_in_thread'] = $can_message;
@@ -2675,31 +2285,29 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				}
 			}
 
+			$is_group_notice = false;
 			if ( $message_left && 'yes' === $message_left ) {
-				/* translators: %s: Group Name */
-				$content    = '<p class="joined">' . sprintf( __( 'Left %s', 'buddyboss' ), '<strong>' . ucwords( $group_name ) . '</strong>' ) . '</p>';
-				$left_users = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_left_users' );
-				if ( is_array( $left_users ) ) {
-					if ( 2 === count( $left_users ) ) {
-						$left_user = ( $left_users[1]['user_id'] === $login_user_id ) ? __( 'You', 'buddyboss' ) : bp_core_get_user_displayname( $left_users[1]['user_id'] );
-						/* translators: 1. Group Name. 2. Member Name. */
-						$content = '<p class="joined">' . sprintf( __( 'Left <strong>%1$s</strong>, along with <strong>%2$s</strong>', 'buddyboss' ), '<strong>' . ucwords( $group_name ) . '</strong>', '<strong>' . $left_user . '</strong>' ) . '</p>';
-					} elseif ( 2 < count( $left_users ) ) {
-						unset( $left_users[0] );
-						/* translators: 1. Group Name. 2. Thread ID. 3. Message ID. 4. Member Count. */
-						$content = '<p class="joined">' . sprintf( __( 'Left <strong>%1$s</strong>, along with <a href="#message-members-list" class="view_other_members" data-thread-id="%2$d" data-message-id="%3$d" data-message-type="left" data-action="bp_view_others" ><strong>%4$d others</strong></a>', 'buddyboss' ), ucwords( $group_name ), $bp_get_the_thread_id, $bp_get_the_thread_message_id, count( $left_users ) ) . '</p>';
-						if ( 5 > count( $left_users ) ) {
-							$left_members = array_map(
-								function( $user ) use ( $login_user_id ) {
-									return ( $user['user_id'] === $login_user_id ) ? __( 'You', 'buddyboss' ) : bp_core_get_user_displayname( $user['user_id'] );
-								},
-								$left_users
-							);
-							/* translators: 1. Group Name. 2. Member Names. 3. Member Count. */
-							$content = '<p class="joined">' . sprintf( __( 'Left <strong>%1$s</strong>, along with <strong class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%2$s">%3$d others</strong>', 'buddyboss' ), ucwords( $group_name ), implode( ', ', $left_members ), count( $left_users ) ) . '</p>';
-						}
-					}
-				}
+				$is_group_notice = true;
+				$content         = bb_messages_get_group_join_leave_text(
+					array(
+						'thread_id'  => $bp_get_the_thread_id,
+						'message_id' => $bp_get_the_thread_message_id,
+						'user_id'    => $login_user_id,
+						'sender_id'  => $bp_get_the_thread_message_sender_id,
+						'type'       => 'left',
+					)
+				);
+			} elseif ( $message_joined && 'yes' === $message_joined ) {
+				$is_group_notice = true;
+				$content         = bb_messages_get_group_join_leave_text(
+					array(
+						'thread_id'  => $bp_get_the_thread_id,
+						'message_id' => $bp_get_the_thread_message_id,
+						'user_id'    => $login_user_id,
+						'sender_id'  => $bp_get_the_thread_message_sender_id,
+						'type'       => 'joined',
+					)
+				);
 			} elseif ( $message_deleted && 'yes' === $message_deleted ) {
 				$content = '<p class="joined deleted-message">' . __( 'This message was deleted', 'buddyboss' ) . '</p>';
 			} elseif ( $message_unbanned && 'yes' === $message_unbanned ) {
@@ -2708,31 +2316,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			} elseif ( $message_banned && 'yes' === $message_banned ) {
 				/* translators: %s: Group Name */
 				$content = sprintf( __( '<p class="joined">Ban <strong>%s</strong></p>', 'buddyboss' ), ucwords( $group_name ) );
-			} elseif ( $message_joined && 'yes' === $message_joined ) {
-				/* translators: %s: Group Name */
-				$content      = '<p class="joined">' . sprintf( __( 'Joined %s', 'buddyboss' ), '<strong>' . ucwords( $group_name ) . '</strong>' ) . '</p>';
-				$joined_users = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_joined_users' );
-				if ( is_array( $joined_users ) ) {
-					if ( 2 === count( $joined_users ) ) {
-						$join_user = ( $joined_users[1]['user_id'] === $login_user_id ) ? __( 'You', 'buddyboss' ) : bp_core_get_user_displayname( $joined_users[1]['user_id'] );
-						/* translators: 1. Group Name. 2. Member Name. */
-						$content = '<p class="joined">' . sprintf( __( 'Joined %1$s, along with %2$s', 'buddyboss' ), '<strong>' . ucwords( $group_name ) . '</strong>', '<strong>' . $join_user . '</strong>' ) . '</p>';
-					} elseif ( 2 < count( $joined_users ) ) {
-						unset( $joined_users[0] );
-						/* translators: 1. Group Name. 2. Thread ID. 3. Message ID. 4. Member Count. */
-						$content = '<p class="joined">' . sprintf( __( 'Joined <strong>%1$s</strong>, along with <a href="#message-members-list" class="view_other_members" data-thread-id="%2$d" data-message-id="%3$d" data-message-type="joined" data-action="bp_view_others" ><strong>%4$d others</strong></a>', 'buddyboss' ), ucwords( $group_name ), $bp_get_the_thread_id, $bp_get_the_thread_message_id, count( $joined_users ) ) . '</p>';
-						if ( 5 > count( $joined_users ) ) {
-							$joined_members = array_map(
-								function( $user ) use ( $login_user_id ) {
-									return ( $user['user_id'] === $login_user_id ) ? __( 'You', 'buddyboss' ) : bp_core_get_user_displayname( $user['user_id'] );
-								},
-								$joined_users
-							);
-							/* translators: 1. Group Name. 2. Member Names. 3. Member Count. */
-							$content = '<p class="joined">' . sprintf( __( 'Joined <strong>%1$s</strong>, along with <strong class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%2$s">%3$d others</strong>', 'buddyboss' ), ucwords( $group_name ), implode( ', ', $joined_members ), count( $joined_users ) ) . '</p>';
-						}
-					}
-				}
 			} elseif ( 'This message was deleted' === wp_strip_all_tags( bp_get_the_thread_message_content() ) ) {
 				$content = '<p class="joined">' . wp_strip_all_tags( bp_get_the_thread_message_content() ) . '</p>';
 			} else {
@@ -2751,7 +2334,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				'message_from'              => $message_from,
 				'group_text'                => $group_text,
 				'id'                        => $bp_get_the_thread_message_id,
-				'content'                   => $content,
+				'content'                   => preg_replace( '#(<p></p>)#', '<p><br></p>', $content ),
 				'sender_id'                 => $bp_get_the_thread_message_sender_id,
 				'sender_name'               => esc_html( bp_get_the_thread_message_sender_name() ),
 				'sender_link'               => bp_get_the_thread_message_sender_link(),
@@ -2770,6 +2353,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				),
 				'date'                      => bp_get_the_thread_message_date_sent() * 1000,
 				'display_date'              => bb_get_the_thread_message_sent_time(),
+				'is_group_notice'           => $is_group_notice,
 			);
 
 		} else {
@@ -2780,31 +2364,29 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			$message_unbanned = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_un_ban', true );
 			$message_deleted  = bp_messages_get_meta( $bp_get_the_thread_message_id, 'bp_messages_deleted', true );
 
+			$is_group_notice = false;
 			if ( $message_left && 'yes' === $message_left ) {
-				/* translators: %s: Group Name */
-				$content    = '<p class="joined">' . sprintf( __( 'Left %s', 'buddyboss' ), '<strong>' . ucwords( $group_name ) . '</strong>' ) . '</p>';
-				$left_users = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_left_users' );
-				if ( is_array( $left_users ) ) {
-					if ( 2 === count( $left_users ) ) {
-						$left_user = ( $left_users[1]['user_id'] === $login_user_id ) ? __( 'You', 'buddyboss' ) : bp_core_get_user_displayname( $left_users[1]['user_id'] );
-						/* translators: 1. Group Name. 2. Member Name. */
-						$content = '<p class="joined">' . sprintf( __( 'Left %1$s, along with %2$s', 'buddyboss' ), '<strong>' . ucwords( $group_name ) . '</strong>', '<strong>' . $left_user . '</strong>' ) . '</p>';
-					} elseif ( 2 < count( $left_users ) ) {
-						unset( $left_users[0] );
-						/* translators: 1. Group Name. 2. Thread ID. 3. Message ID. 4. Member Count. */
-						$content = '<p class="joined">' . sprintf( __( 'Left <strong>%1$s</strong>, along with <a href="#message-members-list" class="view_other_members" data-thread-id="%2$d" data-message-id="%3$d" data-message-type="left" data-action="bp_view_others" ><strong>%4$d others</strong></a>', 'buddyboss' ), ucwords( $group_name ), $bp_get_the_thread_id, $bp_get_the_thread_message_id, count( $left_users ) ) . '</p>';
-						if ( 5 > count( $left_users ) ) {
-							$left_members = array_map(
-								function( $user ) use ( $login_user_id ) {
-									return ( $user['user_id'] === $login_user_id ) ? __( 'You', 'buddyboss' ) : bp_core_get_user_displayname( $user['user_id'] );
-								},
-								$left_users
-							);
-							/* translators: 1. Group Name. 2. Member Names. 3. Member Count. */
-							$content = '<p class="joined">' . sprintf( __( 'Left <strong>%1$s</strong>, along with <strong class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%2$s">%3$d others</strong>', 'buddyboss' ), ucwords( $group_name ), implode( ', ', $left_members ), count( $left_users ) ) . '</p>';
-						}
-					}
-				}
+				$is_group_notice = true;
+				$content         = bb_messages_get_group_join_leave_text(
+					array(
+						'thread_id'  => $bp_get_the_thread_id,
+						'message_id' => $bp_get_the_thread_message_id,
+						'user_id'    => $login_user_id,
+						'sender_id'  => $bp_get_the_thread_message_sender_id,
+						'type'       => 'left',
+					)
+				);
+			} elseif ( $message_joined && 'yes' === $message_joined ) {
+				$is_group_notice = true;
+				$content         = bb_messages_get_group_join_leave_text(
+					array(
+						'thread_id'  => $bp_get_the_thread_id,
+						'message_id' => $bp_get_the_thread_message_id,
+						'user_id'    => $login_user_id,
+						'sender_id'  => $bp_get_the_thread_message_sender_id,
+						'type'       => 'joined',
+					)
+				);
 			} elseif ( $message_deleted && 'yes' === $message_deleted ) {
 				$content = '<p class="joined deleted-message">' . __( 'This message was deleted', 'buddyboss' ) . '</p>';
 			} elseif ( $message_unbanned && 'yes' === $message_unbanned ) {
@@ -2813,31 +2395,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			} elseif ( $message_banned && 'yes' === $message_banned ) {
 				/* translators: %s: Group Name */
 				$content = sprintf( __( '<p class="joined">Ban <strong>%s</strong></p>', 'buddyboss' ), ucwords( $group_name ) );
-			} elseif ( $message_joined && 'yes' === $message_joined ) {
-				/* translators: %s: Group Name */
-				$content      = '<p class="joined">' . sprintf( __( 'Joined %s', 'buddyboss' ), '<strong>' . ucwords( $group_name ) . '</strong>' ) . '</p>';
-				$joined_users = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_joined_users' );
-				if ( is_array( $joined_users ) ) {
-					if ( 2 === count( $joined_users ) ) {
-						$join_user = ( $joined_users[1]['user_id'] === $login_user_id ) ? __( 'You', 'buddyboss' ) : bp_core_get_user_displayname( $joined_users[1]['user_id'] );
-						/* translators: 1. Group Name. 2. Member Name. */
-						$content = '<p class="joined">' . sprintf( __( 'Joined %1$s, along with %2$s', 'buddyboss' ), '<strong>' . ucwords( $group_name ) . '</strong>', '<strong>' . $join_user . '</strong>' ) . '</p>';
-					} elseif ( 2 < count( $joined_users ) ) {
-						unset( $joined_users[0] );
-						/* translators: 1. Group Name. 2. Thread ID. 3. Message ID. 4. Member Count. */
-						$content = '<p class="joined">' . sprintf( __( 'Joined <strong>%1$s</strong>, along with <a href="#message-members-list" class="view_other_members" data-thread-id="%2$d" data-message-id="%3$d" data-message-type="joined" data-action="bp_view_others" ><strong>%4$d others</strong></a>', 'buddyboss' ), ucwords( $group_name ), $bp_get_the_thread_id, $bp_get_the_thread_message_id, count( $joined_users ) ) . '</p>';
-						if ( 5 > count( $joined_users ) ) {
-							$joined_members = array_map(
-								function( $user ) use ( $login_user_id ) {
-									return ( $user['user_id'] === $login_user_id ) ? __( 'You', 'buddyboss' ) : bp_core_get_user_displayname( $user['user_id'] );
-								},
-								$joined_users
-							);
-							/* translators: 1. Group Name. 2. Member Names. 3. Member Count. */
-							$content = '<p class="joined">' . sprintf( __( 'Joined <strong>%1$s</strong>, along with <strong class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%2$s">%3$d others</strong>', 'buddyboss' ), ucwords( $group_name ), implode( ', ', $joined_members ), count( $joined_users ) ) . '</p>';
-						}
-					}
-				}
 			} elseif ( 'This message was deleted' === wp_strip_all_tags( bp_get_the_thread_message_content() ) ) {
 				$content = '<p class="joined deleted-message">' . wp_strip_all_tags( bp_get_the_thread_message_content() ) . '</p>';
 			} else {
@@ -2845,14 +2402,14 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			}
 
 			$thread->messages[ $i ] = array(
-				'id'            => $bp_get_the_thread_message_id,
-				'content'       => $content,
-				'sender_id'     => $bp_get_the_thread_message_sender_id,
-				'sender_name'   => esc_html( bp_get_the_thread_message_sender_name() ),
-				'is_deleted'    => empty( get_userdata( $bp_get_the_thread_message_sender_id ) ) ? 1 : 0,
-				'sender_link'   => bp_get_the_thread_message_sender_link(),
-				'sender_is_you' => $bp_get_the_thread_message_sender_id === $login_user_id,
-				'sender_avatar' => esc_url(
+				'id'              => $bp_get_the_thread_message_id,
+				'content'         => preg_replace( '#(<p></p>)#', '<p><br></p>', $content ),
+				'sender_id'       => $bp_get_the_thread_message_sender_id,
+				'sender_name'     => esc_html( bp_get_the_thread_message_sender_name() ),
+				'is_deleted'      => empty( get_userdata( $bp_get_the_thread_message_sender_id ) ) ? 1 : 0,
+				'sender_link'     => bp_get_the_thread_message_sender_link(),
+				'sender_is_you'   => $bp_get_the_thread_message_sender_id === $login_user_id,
+				'sender_avatar'   => esc_url(
 					bp_core_fetch_avatar(
 						array(
 							'item_id' => $bp_get_the_thread_message_sender_id,
@@ -2864,20 +2421,38 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						)
 					)
 				),
-				'date'          => bp_get_the_thread_message_date_sent() * 1000,
-				'display_date'  => bb_get_the_thread_message_sent_time(),
+				'date'            => bp_get_the_thread_message_date_sent() * 1000,
+				'display_date'    => bb_get_the_thread_message_sent_time(),
+				'is_group_notice' => $is_group_notice,
 			);
 		}
 
+		$has_message_updated = false;
 		if ( bp_is_active( 'moderation' ) ) {
 			$thread->messages[ $i ]['is_user_suspended']  = bp_moderation_is_user_suspended( $bp_get_the_thread_message_sender_id );
 			$thread->messages[ $i ]['is_user_blocked']    = bp_moderation_is_user_blocked( $bp_get_the_thread_message_sender_id );
 			$thread->messages[ $i ]['is_user_blocked_by'] = bb_moderation_is_user_blocked_by( $bp_get_the_thread_message_sender_id );
 
-			if ( bp_moderation_is_user_suspended( $bp_get_the_thread_message_sender_id ) ) {
-				$thread->messages[ $i ]['content'] = '<p class="suspended">' . esc_html__( 'This content has been hidden as the member is suspended.', 'buddyboss' ) . '</p>';
-			} elseif ( bp_moderation_is_user_blocked( $bp_get_the_thread_message_sender_id ) ) {
-				$thread->messages[ $i ]['content'] = '<p class="blocked">' . esc_html__( 'This content has been hidden as you have blocked this member.', 'buddyboss' ) . '</p>';
+			if ( 'yes' !== $message_joined && 'yes' !== $message_left ) {
+				if ( bp_moderation_is_user_suspended( $bp_get_the_thread_message_sender_id ) ) {
+					$filtred_content = bb_moderation_is_suspended_message( $content, BP_Moderation_Message::$moderation_type, $bp_get_the_thread_message_id );
+					if ( $content !== $filtred_content ) {
+						$has_message_updated               = true;
+						$thread->messages[ $i ]['content'] = '<span class="suspended">' . $filtred_content . '</span>';
+					}
+				} elseif ( bb_moderation_is_user_blocked_by( $bp_get_the_thread_message_sender_id ) ) {
+					$filtred_content = bb_moderation_is_blocked_message( $content, BP_Moderation_Message::$moderation_type, $bp_get_the_thread_message_id );
+					if ( $content !== $filtred_content ) {
+						$has_message_updated               = true;
+						$thread->messages[ $i ]['content'] = '<span class="blocked">' . $filtred_content . '</span>';
+					}
+				} elseif ( bp_moderation_is_user_blocked( $bp_get_the_thread_message_sender_id ) ) {
+					$filtred_content = bb_moderation_has_blocked_message( $content, BP_Moderation_Message::$moderation_type, $bp_get_the_thread_message_id );
+					if ( $content !== $filtred_content ) {
+						$has_message_updated               = true;
+						$thread->messages[ $i ]['content'] = '<span class="blocked">' . $filtred_content . '</span>';
+					}
+				}
 			}
 		}
 
@@ -2901,11 +2476,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 			if ( ! empty( $media_ids ) && bp_has_media(
 				array(
-					'include'  => $media_ids,
-					'privacy'  => array( 'message' ),
-					'order_by' => 'menu_order',
-					'sort'     => 'ASC',
-					'user_id'  => false,
+					'include'          => $media_ids,
+					'privacy'          => array( 'message' ),
+					'order_by'         => 'menu_order',
+					'sort'             => 'ASC',
+					'user_id'          => false,
+					'moderation_query' => $has_message_updated,
 				)
 			) ) {
 				$thread->messages[ $i ]['media'] = array();
@@ -2936,11 +2512,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				! empty( $video_ids ) &&
 				bp_has_video(
 					array(
-						'include'  => $video_ids,
-						'privacy'  => array( 'message' ),
-						'order_by' => 'menu_order',
-						'sort'     => 'ASC',
-						'user_id'  => false,
+						'include'          => $video_ids,
+						'privacy'          => array( 'message' ),
+						'order_by'         => 'menu_order',
+						'sort'             => 'ASC',
+						'user_id'          => false,
+						'moderation_query' => $has_message_updated,
 					)
 				)
 			) {
@@ -2996,9 +2573,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 			if ( ! empty( $document_ids ) && bp_has_document(
 				array(
-					'include'  => $document_ids,
-					'order_by' => 'menu_order',
-					'sort'     => 'ASC',
+					'include'          => $document_ids,
+					'order_by'         => 'menu_order',
+					'sort'             => 'ASC',
+					'moderation_query' => $has_message_updated,
 				)
 			) ) {
 				$thread->messages[ $i ]['document'] = array();
@@ -3054,7 +2632,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					$attachment_url      = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'bb-document-pdf-preview-activity-image' );
 					$full_attachment_url = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'bb-document-pdf-image-popup-image' );
 
-					if ( '' !== $attachment_url ) {
+					if ( $attachment_url && ! in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
 						?>
 						<div class="document-preview-wrap">
 							<img src="<?php echo esc_url( $attachment_url ); ?>" alt=""/>
@@ -3132,7 +2710,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		if ( bp_is_active( 'media' ) && ( ( ( empty( $is_group_thread ) || ( ! empty( $is_group_thread ) && ! bp_is_active( 'groups' ) ) ) && bp_is_messages_gif_support_enabled() ) || ( bp_is_active( 'groups' ) && ! empty( $is_group_thread ) && bp_is_groups_gif_support_enabled() ) ) ) {
 			$gif_data = bp_messages_get_meta( $bp_get_the_thread_message_id, '_gif_data', true );
 
-			if ( ! empty( $gif_data ) ) {
+			if ( ! empty( $gif_data ) && ! $has_message_updated ) {
 				$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
 				$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 
@@ -3176,7 +2754,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$thread->next_messages_timestamp         = $thread_template->thread->messages[ count( $thread_template->thread->messages ) - 1 ]->date_sent;
 	$thread->group_id                        = $group_id;
 	$thread->is_group_thread                 = $is_group_thread;
-	$thread->can_user_send_message_in_thread = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $thread_template->thread->thread_id, (array) $thread_template->thread->recipients );
+	$thread->can_user_send_message_in_thread = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $thread_template->thread->thread_id, (array) $thread_template->thread->get_recipients() );
 	$thread->user_can_upload_media           = bb_user_has_access_upload_media( 0, $login_user_id, 0, $thread_id, 'message' );
 	$thread->user_can_upload_document        = bb_user_has_access_upload_document( 0, $login_user_id, 0, $thread_id, 'message' );
 	$thread->user_can_upload_video           = bb_user_has_access_upload_video( 0, $login_user_id, 0, $thread_id, 'message' );
@@ -3192,7 +2770,7 @@ function bp_nouveau_ajax_hide_thread() {
 	global $bp, $wpdb;
 
 	$response = array(
-		'feedback' => __( 'There was a problem deleting your messages. Please try again.', 'buddyboss' ),
+		'feedback' => __( 'There was a problem archiving conversation.', 'buddyboss' ),
 		'type'     => 'error',
 	);
 
@@ -3303,7 +2881,7 @@ function bp_nouveau_ajax_hide_thread() {
  * Function which get next recipients list for block member in message section and message header.
  */
 function bb_nouveau_ajax_recipient_list_for_blocks() {
-	$post_data = filter_input( INPUT_POST, 'post_data', FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY );
+	$post_data = bb_filter_input_string( INPUT_POST, 'post_data', array( FILTER_REQUIRE_ARRAY ) );
 	$user_id   = bp_loggedin_user_id() ? (int) bp_loggedin_user_id() : '';
 
 	if ( ! isset( $post_data['thread_id'] ) ) {
@@ -3328,7 +2906,7 @@ function bb_nouveau_ajax_recipient_list_for_blocks() {
 
 	$member_action = '';
 	if ( isset( $post_data['member_action'] ) ) {
-		$member_action = filter_var( $post_data['member_action'], FILTER_SANITIZE_STRING );
+		$member_action = bb_filter_var_string( $post_data['member_action'] );
 	}
 
 	if ( 'report' === $member_action ) {
@@ -3397,7 +2975,7 @@ function bb_nouveau_ajax_recipient_list_for_blocks() {
  * @return string|Object A JSON object containing html with success data.
  */
 function bb_nouveau_ajax_moderated_recipient_list() {
-	$post_data = filter_input( INPUT_POST, 'post_data', FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY );
+	$post_data = bb_filter_input_string( INPUT_POST, 'post_data', array( FILTER_REQUIRE_ARRAY ) );
 	$user_id   = bp_loggedin_user_id() ? (int) bp_loggedin_user_id() : '';
 	if ( ! isset( $post_data['thread_id'] ) ) {
 		$response['message'] = new WP_Error( 'bp_error_get_recipient_list_for_blocks', esc_html__( 'Missing thread id.', 'buddyboss' ) );
@@ -3419,7 +2997,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 
 	$member_action = '';
 	if ( isset( $post_data['member_action'] ) ) {
-		$member_action = filter_var( $post_data['member_action'], FILTER_SANITIZE_STRING );
+		$member_action = bb_filter_var_string( $post_data['member_action'] );
 	}
 
 	if ( 'report' === $member_action ) {
@@ -3483,12 +3061,21 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 							$user_name = bp_core_get_user_displayname( $recipient->user_id );
 							?>
 							<div class="user-item-wrp" id="user-<?php echo esc_attr( $recipient->user_id ); ?>">
-								<div class="user-avatar">
-									<a href="<?php echo esc_url( bp_core_get_user_domain( $recipient->user_id ) ); ?>"><img src="<?php echo esc_url( $avatar ); ?>" alt="<?php echo esc_html( $user_name ); ?>"></a>
-								</div>
-								<div class="user-name">
-									<a href="<?php echo esc_url( bp_core_get_user_domain( $recipient->user_id ) ); ?>"><?php echo esc_html( $user_name ); ?></a>
-								</div>
+								<?php if ( ! empty ( bp_core_get_user_domain( $recipient->user_id ) ) ) { ?>
+									<div class="user-avatar">
+										<a href="<?php echo esc_url( bp_core_get_user_domain( $recipient->user_id ) ); ?>"><img src="<?php echo esc_url( $avatar ); ?>" alt="<?php echo esc_html( $user_name ); ?>"></a>
+									</div>
+									<div class="user-name">
+										<a href="<?php echo esc_url( bp_core_get_user_domain( $recipient->user_id ) ); ?>"><?php echo esc_html( $user_name ); ?></a>
+									</div>
+								<?php } else { ?>
+									<div class="user-avatar">
+										<span><img src="<?php echo esc_url( $avatar ); ?>" alt="<?php echo esc_html( $user_name ); ?>"></span>
+									</div>
+									<div class="user-name">
+										<span><?php echo esc_html( $user_name ); ?></span>
+									</div>
+								<?php } ?>
 								<?php if ( 'block' === $member_action && bp_is_active( 'moderation' ) ) { ?>
 									<div class="user-actions">
 										<?php
@@ -3604,7 +3191,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
  * @return void|string|Object A JSON object containing html with success data.
  */
 function bb_nouveau_ajax_left_join_members_list() {
-	$post_data = filter_input( INPUT_POST, 'post_data', FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY );
+	$post_data = bb_filter_input_string( INPUT_POST, 'post_data', array( FILTER_REQUIRE_ARRAY ) );
 	if ( ! isset( $post_data['message_id'] ) ) {
 		$response['message'] = new WP_Error( 'bp_error_get_left_join_members_list', esc_html__( 'Missing message id.', 'buddyboss' ) );
 		wp_send_json_error( $response );
@@ -3622,7 +3209,6 @@ function bb_nouveau_ajax_left_join_members_list() {
 	}
 	ob_start();
 	if ( is_array( $results ) ) {
-		unset( $results[0] );
 		?>
 		<div class="bb-report-type-wrp">
 			<?php
@@ -3685,7 +3271,7 @@ function bp_nouveau_ajax_unhide_thread() {
 	global $bp, $wpdb;
 
 	$response = array(
-		'feedback' => __( 'There was a problem un-archiving your messages. Please try again.', 'buddyboss' ),
+		'feedback' => __( 'There was a problem unarchiving the conversation.', 'buddyboss' ),
 		'type'     => 'error',
 	);
 

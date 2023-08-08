@@ -322,8 +322,7 @@ function bbp_user_profile_url( $user_id = 0, $user_nicename = '' ) {
 	 * @param int    $user_id Optional. User id
 	 * @param string $user_nicename Optional. User nicename
 	 * @uses bbp_get_user_id() To get user id
-	 * @uses WP_Rewrite::using_permalinks() To check if the blog is using
-	 *                                       permalinks
+	 * @uses bbp_use_pretty_urls() To check if the site is using pretty URLs
 	 * @uses add_query_arg() To add custom args to the url
 	 * @uses home_url() To get blog home url
 	 * @uses apply_filters() Calls 'bbp_get_user_profile_url' with the user
@@ -331,7 +330,6 @@ function bbp_user_profile_url( $user_id = 0, $user_nicename = '' ) {
 	 * @return string User profile url
 	 */
 function bbp_get_user_profile_url( $user_id = 0, $user_nicename = '' ) {
-	global $wp_rewrite;
 
 	// Use displayed user ID if there is one, and one isn't requested
 	$user_id = bbp_get_user_id( $user_id );
@@ -346,8 +344,8 @@ function bbp_get_user_profile_url( $user_id = 0, $user_nicename = '' ) {
 	}
 
 	// Pretty permalinks
-	if ( $wp_rewrite->using_permalinks() ) {
-		$url = $wp_rewrite->root . bbp_get_user_slug() . '/%' . bbp_get_user_rewrite_id() . '%';
+	if ( bbp_use_pretty_urls() ) {
+		$url = bbp_get_root_url() . bbp_get_user_slug() . '/%' . bbp_get_user_rewrite_id() . '%';
 
 		// Get username if not passed
 		if ( empty( $user_nicename ) ) {
@@ -431,7 +429,6 @@ function bbp_user_profile_edit_url( $user_id = 0, $user_nicename = '' ) {
 	 * @return string
 	 */
 function bbp_get_user_profile_edit_url( $user_id = 0, $user_nicename = '' ) {
-	global $wp_rewrite;
 
 	$bbp     = bbpress();
 	$user_id = bbp_get_user_id( $user_id );
@@ -440,8 +437,8 @@ function bbp_get_user_profile_edit_url( $user_id = 0, $user_nicename = '' ) {
 	}
 
 	// Pretty permalinks
-	if ( $wp_rewrite->using_permalinks() ) {
-		$url = $wp_rewrite->root . bbp_get_user_slug() . '/%' . $bbp->user_id . '%/' . $bbp->edit_id;
+	if ( bbp_use_pretty_urls() ) {
+		$url = bbp_get_root_url() . bbp_get_user_slug() . '/%' . $bbp->user_id . '%/' . $bbp->edit_id;
 
 		// Get username if not passed
 		if ( empty( $user_nicename ) ) {
@@ -816,7 +813,6 @@ function bbp_favorites_permalink( $user_id = 0 ) {
 	 * @return string Permanent link to user profile page
 	 */
 function bbp_get_favorites_permalink( $user_id = 0 ) {
-	global $wp_rewrite;
 
 	// Use displayed user ID if there is one, and one isn't requested
 	$user_id = bbp_get_user_id( $user_id );
@@ -831,8 +827,8 @@ function bbp_get_favorites_permalink( $user_id = 0 ) {
 	}
 
 	// Pretty permalinks
-	if ( $wp_rewrite->using_permalinks() ) {
-		$url  = $wp_rewrite->root . bbp_get_user_slug() . '/%' . bbp_get_user_rewrite_id() . '%/%' . bbp_get_user_favorites_rewrite_id() . '%';
+	if ( bbp_use_pretty_urls() ) {
+		$url  = bbp_get_root_url() . bbp_get_user_slug() . '/%' . bbp_get_user_rewrite_id() . '%/%' . bbp_get_user_favorites_rewrite_id() . '%';
 		$user = get_userdata( $user_id );
 		if ( ! empty( $user->user_nicename ) ) {
 			$user_nicename = $user->user_nicename;
@@ -994,43 +990,20 @@ function bbp_subscriptions_permalink( $user_id = 0 ) {
 	 * @return string Permanent link to user subscriptions page
 	 */
 function bbp_get_subscriptions_permalink( $user_id = 0 ) {
-	global $wp_rewrite;
 
-	// Use displayed user ID if there is one, and one isn't requested
+	// Use displayed user ID if there is one, and one isn't requested.
 	$user_id = bbp_get_user_id( $user_id );
 	if ( empty( $user_id ) ) {
 		return false;
 	}
 
-	// Allow early overriding of the profile URL to cut down on processing
+	// Allow early overriding of the profile URL to cut down on processing.
 	$early_profile_url = apply_filters( 'bbp_pre_get_subscriptions_permalink', (int) $user_id );
 	if ( is_string( $early_profile_url ) ) {
 		return $early_profile_url;
 	}
 
-	// Pretty permalinks
-	if ( $wp_rewrite->using_permalinks() ) {
-		$url  = $wp_rewrite->root . bbp_get_user_slug() . '/%' . bbp_get_user_rewrite_id() . '%/%' . bbp_get_user_subscriptions_rewrite_id() . '%';
-		$user = get_userdata( $user_id );
-		if ( ! empty( $user->user_nicename ) ) {
-			$user_nicename = $user->user_nicename;
-		} else {
-			$user_nicename = $user->user_login;
-		}
-		$url = str_replace( '%' . bbp_get_user_rewrite_id() . '%', $user_nicename, $url );
-		$url = str_replace( '%' . bbp_get_user_subscriptions_rewrite_id() . '%', bbp_get_user_subscriptions_slug(), $url );
-		$url = home_url( user_trailingslashit( $url ) );
-
-		// Unpretty permalinks
-	} else {
-		$url = add_query_arg(
-			array(
-				bbp_get_user_rewrite_id()               => $user_id,
-				bbp_get_user_subscriptions_rewrite_id() => bbp_get_user_subscriptions_slug(),
-			),
-			home_url( '/' )
-		);
-	}
+	$url = trailingslashit( bp_core_get_user_domain( $user_id ) . bp_get_settings_slug() ) . 'notifications/subscriptions';
 
 	return apply_filters( 'bbp_get_subscriptions_permalink', $url, $user_id );
 }
@@ -1048,42 +1021,39 @@ function bbp_get_subscriptions_permalink( $user_id = 0 ) {
 function bbp_user_subscribe_link( $args = '', $user_id = 0, $wrap = true ) {
 	echo bbp_get_user_subscribe_link( $args, $user_id, $wrap );
 }
-	/**
-	 * Return the link to subscribe/unsubscribe from a forum or topic
-	 *
-	 * @since bbPress (r2668)
-	 *
-	 * @param mixed $args This function supports these arguments:
-	 *  - subscribe: Subscribe text
-	 *  - unsubscribe: Unsubscribe text
-	 *  - user_id: User id
-	 *  - topic_id: Topic id
-	 *  - forum_id: Forum id
-	 *  - before: Before the link
-	 *  - after: After the link
-	 * @param int   $user_id Optional. User id
-	 * @param bool  $wrap Optional. If you want to wrap the link in <span id="subscription-toggle">.
-	 * @uses bbp_is_subscriptions_active() to check if subscriptions are active
-	 * @uses bbp_get_user_id() To get the user id
-	 * @uses bbp_get_user_id() To get the user id
-	 * @uses bbp_get_topic_id() To get the topic id
-	 * @uses bbp_get_forum_id() To get the forum id
-	 * @uses current_user_can() To check if the current user can edit user
-	 * @uses bbp_is_user_subscribed_to_forum() To check if the user is subscribed to the forum
-	 * @uses bbp_is_user_subscribed_to_topic() To check if the user is subscribed to the topic
-	 * @uses bbp_is_subscriptions() To check if it's the subscriptions page
-	 * @uses bbp_get_subscriptions_permalink() To get subscriptions link
-	 * @uses bbp_get_topic_permalink() To get topic link
-	 * @uses apply_filters() Calls 'bbp_get_user_subscribe_link' with the
-	 *                        link, args, user id & topic id
-	 * @return string Permanent link to topic
-	 */
-function bbp_get_user_subscribe_link( $args = '', $user_id = 0, $wrap = true ) {
-	if ( ! bbp_is_subscriptions_active() ) {
-		return;
-	}
 
-	// Parse arguments against default values
+/**
+ * Return the link to subscribe/unsubscribe from a forum or topic
+ *
+ * @since bbPress (r2668)
+ *
+ * @param mixed $args This function supports these arguments:
+ *  - subscribe: Subscribe text
+ *  - unsubscribe: Unsubscribe text
+ *  - user_id: User id
+ *  - topic_id: Topic id
+ *  - forum_id: Forum id
+ *  - before: Before the link
+ *  - after: After the link
+ * @param int   $user_id Optional. User id.
+ * @param bool  $wrap Optional. If you want to wrap the link in <span id="subscription-toggle">.
+ * @uses bb_is_enabled_subscription() to check if subscriptions are active
+ * @uses bbp_get_user_id() To get the user id
+ * @uses bbp_get_user_id() To get the user id
+ * @uses bbp_get_topic_id() To get the topic id
+ * @uses bbp_get_forum_id() To get the forum id
+ * @uses current_user_can() To check if the current user can edit user
+ * @uses bbp_is_user_subscribed_to_forum() To check if the user is subscribed to the forum
+ * @uses bbp_is_user_subscribed_to_topic() To check if the user is subscribed to the topic
+ * @uses bbp_is_subscriptions() To check if it's the subscriptions page
+ * @uses bbp_get_subscriptions_permalink() To get subscriptions link
+ * @uses bbp_get_topic_permalink() To get topic link
+ * @uses apply_filters() Calls 'bbp_get_user_subscribe_link' with the
+ *                        link, args, user id & topic id
+ * @return string Permanent link to topic
+ */
+function bbp_get_user_subscribe_link( $args = '', $user_id = 0, $wrap = true ) {
+	// Parse arguments against default values.
 	$r = bbp_parse_args(
 		$args,
 		array(
@@ -1098,7 +1068,7 @@ function bbp_get_user_subscribe_link( $args = '', $user_id = 0, $wrap = true ) {
 		'get_user_subscribe_link'
 	);
 
-	// Validate user and object ID's
+	// Validate user and object ID's.
 	$user_id  = bbp_get_user_id( $r['user_id'], true, true );
 	$topic_id = bbp_get_topic_id( $r['topic_id'] );
 	$forum_id = bbp_get_forum_id( $r['forum_id'] );
@@ -1106,15 +1076,24 @@ function bbp_get_user_subscribe_link( $args = '', $user_id = 0, $wrap = true ) {
 		return false;
 	}
 
-	// No link if you can't edit yourself
+	// No link if you can't edit yourself.
 	if ( ! current_user_can( 'edit_user', (int) $user_id ) ) {
 		return false;
 	}
 
-	// Check if viewing a single forum
+	// Check if viewing a single forum.
 	if ( empty( $topic_id ) && ! empty( $forum_id ) ) {
 
-		// Decide which link to show
+		if ( ! bb_is_enabled_subscription( 'forum' ) ) {
+			return false;
+		}
+
+		// Remove subscription link if forum is assigned to any group.
+		if ( function_exists( 'bb_is_forum_group_forum' ) && bb_is_forum_group_forum( bbp_get_forum_id() ) ) {
+			return false;
+		}
+
+		// Decide which link to show.
 		$is_subscribed = bbp_is_user_subscribed_to_forum( $user_id, $forum_id );
 		if ( ! empty( $is_subscribed ) ) {
 			$text       = $r['unsubscribe'];
@@ -1131,7 +1110,7 @@ function bbp_get_user_subscribe_link( $args = '', $user_id = 0, $wrap = true ) {
 		}
 
 		// Create the link based where the user is and if the user is
-		// subscribed already
+		// subscribed already.
 		if ( bbp_is_subscriptions() ) {
 			$permalink = bbp_get_subscriptions_permalink( $user_id );
 		} elseif ( bbp_is_single_forum() || bbp_is_single_reply() ) {
@@ -1144,13 +1123,17 @@ function bbp_get_user_subscribe_link( $args = '', $user_id = 0, $wrap = true ) {
 		$sub  = $is_subscribed ? ' class="is-subscribed"' : '';
 		$html = sprintf( '%s<span id="subscribe-%d"  %s><a href="%s" class="subscription-toggle" data-forum="%d">%s</a></span>%s', $r['before'], $forum_id, $sub, $url, $forum_id, $text, $r['after'] );
 
-		// Initial output is wrapped in a span, ajax output is hooked to this
+		// Initial output is wrapped in a span, ajax output is hooked to this.
 		if ( ! empty( $wrap ) ) {
 			$html = '<span id="subscription-toggle">' . $html . '</span>';
 		}
 	} else {
 
-		// Decide which link to show
+		if ( ! bb_is_enabled_subscription( 'topic' ) ) {
+			return false;
+		}
+
+		// Decide which link to show.
 		$is_subscribed = bbp_is_user_subscribed_to_topic( $user_id, $topic_id );
 		if ( ! empty( $is_subscribed ) ) {
 			$text       = $r['unsubscribe'];
@@ -1167,7 +1150,7 @@ function bbp_get_user_subscribe_link( $args = '', $user_id = 0, $wrap = true ) {
 		}
 
 		// Create the link based where the user is and if the user is
-		// subscribed already
+		// subscribed already.
 		if ( bbp_is_subscriptions() ) {
 			$permalink = bbp_get_subscriptions_permalink( $user_id );
 		} elseif ( bbp_is_single_topic() || bbp_is_single_reply() ) {
@@ -1180,13 +1163,13 @@ function bbp_get_user_subscribe_link( $args = '', $user_id = 0, $wrap = true ) {
 		$sub  = $is_subscribed ? ' class="is-subscribed"' : '';
 		$html = sprintf( '%s<span id="subscribe-%d"  %s><a href="%s" class="subscription-toggle" data-topic="%d">%s</a></span>%s', $r['before'], $topic_id, $sub, $url, $topic_id, $text, $r['after'] );
 
-		// Initial output is wrapped in a span, ajax output is hooked to this
+		// Initial output is wrapped in a span, ajax output is hooked to this.
 		if ( ! empty( $wrap ) ) {
 			$html = '<span id="subscription-toggle">' . $html . '</span>';
 		}
 	}
 
-	// Return the link
+	// Return the link.
 	return apply_filters( 'bbp_get_user_subscribe_link', $html, $r, $user_id, $topic_id );
 }
 
@@ -1402,7 +1385,6 @@ function bbp_user_topics_created_url( $user_id = 0 ) {
 	 * @return string Permanent link to user profile page
 	 */
 function bbp_get_user_topics_created_url( $user_id = 0 ) {
-	global $wp_rewrite;
 
 	// Use displayed user ID if there is one, and one isn't requested
 	$user_id = bbp_get_user_id( $user_id );
@@ -1417,8 +1399,8 @@ function bbp_get_user_topics_created_url( $user_id = 0 ) {
 	}
 
 	// Pretty permalinks
-	if ( $wp_rewrite->using_permalinks() ) {
-		$url = trailingslashit( bbp_get_user_profile_url( $user_id ) );
+	if ( bbp_use_pretty_urls() ) {
+		$url = trailingslashit( bbp_get_user_profile_url( $user_id ) ) . bbp_get_topic_archive_slug();
 		$url = user_trailingslashit( $url );
 
 		// Unpretty permalinks
@@ -1460,7 +1442,6 @@ function bbp_user_replies_created_url( $user_id = 0 ) {
 	 * @return string Permanent link to user profile page
 	 */
 function bbp_get_user_replies_created_url( $user_id = 0 ) {
-	global $wp_rewrite;
 
 	// Use displayed user ID if there is one, and one isn't requested
 	$user_id = bbp_get_user_id( $user_id );
@@ -1475,8 +1456,8 @@ function bbp_get_user_replies_created_url( $user_id = 0 ) {
 	}
 
 	// Pretty permalinks
-	if ( $wp_rewrite->using_permalinks() ) {
-		$url = trailingslashit( bbp_get_user_profile_url( $user_id ) );
+	if ( bbp_use_pretty_urls() ) {
+		$url = trailingslashit( bbp_get_user_profile_url( $user_id ) ). bbp_get_reply_archive_slug();
 		$url = user_trailingslashit( $url );
 
 		// Unpretty permalinks
@@ -1546,7 +1527,7 @@ function bbp_login_notices() {
  *
  * @param string $url The URL to redirect to
  * @uses is_user_logged_in() Check if user is logged in
- * @uses wp_safe_redirect() To safely redirect
+ * @uses bbp_redirect() To safely redirect
  * @uses bbp_get_user_profile_url() To get the profile url of the user
  * @uses bbp_get_current_user_id() To get the current user id
  * @todo deprecate?
@@ -1562,8 +1543,7 @@ function bbp_logged_in_redirect( $url = '' ) {
 	$redirect_to = ! empty( $url ) ? $url : bbp_get_user_profile_url( bbp_get_current_user_id() );
 
 	// Do a safe redirect and exit
-	wp_safe_redirect( $redirect_to );
-	exit;
+	bbp_redirect( $redirect_to );
 }
 
 /**

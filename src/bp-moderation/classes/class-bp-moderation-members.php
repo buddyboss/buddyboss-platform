@@ -52,7 +52,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		/**
 		 * If moderation setting enabled for this content then it'll filter hidden content.
 		 */
-		add_filter( 'bp_suspend_member_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+		add_filter( 'bp_suspend_member_get_where_conditions', array( $this, 'update_where_sql' ), 10, 3 );
 
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
@@ -64,6 +64,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		add_filter( 'bp_init', array( $this, 'restrict_member_profile' ), 4 );
 
 		add_filter( 'bp_core_get_user_domain', array( $this, 'bp_core_get_user_domain' ), 9999, 2 );
+		add_filter( 'bp_core_get_userlink', array( $this, 'bp_core_get_userlink' ), 9999, 2 );
 		add_filter( 'get_the_author_user_nicename', array( $this, 'get_the_author_name' ), 9999, 2 );
 		add_filter( 'get_the_author_user_login', array( $this, 'get_the_author_name' ), 9999, 2 );
 		add_filter( 'get_the_author_user_email', array( $this, 'get_the_author_name' ), 9999, 2 );
@@ -75,6 +76,12 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 
 		// Validate item before proceed.
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
+
+		add_action( 'bb_activity_before_permalink_redirect_url', array( $this, 'bb_activity_before_permalink_redirect_url' ), 10, 1 );
+		add_action( 'bb_activity_after_permalink_redirect_url', array( $this, 'bb_activity_after_permalink_redirect_url' ), 10, 1 );
+
+		add_filter( 'bb_member_directories_get_profile_actions', array( $this, 'bb_member_directories_remove_profile_actions' ), 9999, 2 );
+		add_filter( 'bp_member_type_name_string', array( $this, 'bb_remove_member_type_name_string' ), 9999, 3 );
 	}
 
 	/**
@@ -127,17 +134,43 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param string $where   blocked users Where sql.
-	 * @param object $suspend suspend object.
+	 * @param array  $where       blocked users Where sql.
+	 * @param object $suspend     suspend object.
+	 * @param string $column_name Table column name.
 	 *
 	 * @return array
 	 */
-	public function update_where_sql( $where, $suspend ) {
+	public function update_where_sql( $where, $suspend, $column_name ) {
 		$this->alias = $suspend->alias;
 
-		$sql = $this->exclude_where_query();
+		$blocked_user_query = true;
+
+		if (
+			(
+				function_exists( 'bp_is_group_members' ) &&
+				bp_is_group_members()
+			) ||
+			(
+				function_exists( 'bp_get_group_current_admin_tab' ) &&
+				'manage-members' === bp_get_group_current_admin_tab()
+			) ||
+			(
+				! empty( $GLOBALS['wp']->query_vars['rest_route'] ) &&
+				preg_match( '/buddyboss\/v+(\d+)\/groups\/+(\d+)\/members/', $GLOBALS['wp']->query_vars['rest_route'], $matches ) &&
+				empty( $_REQUEST['scope'] ) &&
+				empty( $_REQUEST['show-all'] )
+			)
+		) {
+			$blocked_user_query = false;
+		}
+
+		$sql = $this->exclude_where_query( $blocked_user_query );
 		if ( ! empty( $sql ) ) {
 			$where['moderation_where'] = $sql;
+		}
+
+		if ( true === $blocked_user_query ) {
+			$where['moderation_blocked_by_where'] = "( u.{$column_name} NOT IN (" . bb_moderation_get_blocked_by_sql() . ') )';
 		}
 
 		return $where;
@@ -170,7 +203,13 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 */
 	public function restrict_member_profile() {
 		$user_id = bp_displayed_user_id();
-		if ( bp_moderation_is_user_blocked( $user_id ) ) {
+		if (
+			! bp_is_single_activity() &&
+			(
+				bp_moderation_is_user_blocked( $user_id ) ||
+				bb_moderation_is_user_blocked_by( $user_id )
+			)
+		) {
 			buddypress()->displayed_user->id = 0;
 			bp_do_404();
 
@@ -189,13 +228,49 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function bp_core_get_user_domain( $domain, $user_id ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 
-		if ( empty( $username_visible ) && bp_moderation_is_user_blocked( $user_id ) ) {
-			return '';
+		// Alowed to view single group activity.
+		if (
+			bp_is_single_activity() &&
+			! wp_doing_ajax()
+		) {
+			return $domain;
+		}
+
+		if (
+			empty( $username_visible ) &&
+			! bp_moderation_is_user_suspended( $user_id ) &&
+			(
+				bp_moderation_is_user_blocked( $user_id ) ||
+				bb_moderation_is_user_blocked_by( $user_id )
+			)
+		) {
+			return ''; // To allow to make this function working bp_core_get_userlink() which update using below function.
 		}
 
 		return $domain;
+	}
+
+	/**
+	 * Filters the link text for the passed in user.
+	 *
+	 * @since BuddyBoss 2.2.5
+	 *
+	 * @param string $value   Link text based on passed parameters.
+	 * @param int    $user_id ID of the user to check.
+	 *
+	 * @return string
+	 */
+	public function bp_core_get_userlink( $value, $user_id ) {
+		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
+
+		if ( empty( $username_visible ) && ( bp_moderation_is_user_blocked( $user_id ) || bb_moderation_is_user_blocked_by( $user_id ) ) ) {
+			return '<a>' . bp_core_get_user_displayname( $user_id ) . '</a>';
+		}
+
+		return $value;
 	}
 
 	/**
@@ -227,10 +302,16 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function get_the_author_name( $value, $user_id ) {
-
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 		if ( ! empty( $username_visible ) || ( bp_is_my_profile() && 'blocked-members' === bp_current_action() ) ) {
 			return $value;
+		}
+
+		$user = get_userdata( $user_id );
+
+		if ( empty( $user ) || ! empty( $user->deleted ) ) {
+			return bb_moderation_is_deleted_label();
 		}
 
 		if ( ! bp_moderation_is_user_suspended( $user_id ) ) {
@@ -359,5 +440,72 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		}
 
 		return $retval;
+	}
+
+	/**
+	 * Function to allowed blocked member URL for group single activity.
+	 *
+	 * @since BuddyBoss 2.3.50
+	 *
+	 * @param BP_Activity_Activity $activity Activity object.
+	 */
+	public function bb_activity_before_permalink_redirect_url( $activity ) {
+		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+			remove_filter( 'bp_core_get_user_domain', array( $this, 'bp_core_get_user_domain' ), 9999, 2 );
+		}
+	}
+
+	/**
+	 * Function to dis-allowed blocked member URL for group single activity.
+	 *
+	 * @since BuddyBoss 2.3.50
+	 *
+	 * @param BP_Activity_Activity $activity Activity object.
+	 */
+	public function bb_activity_after_permalink_redirect_url( $activity ) {
+		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+			add_filter( 'bp_core_get_user_domain', array( $this, 'bp_core_get_user_domain' ), 9999, 2 );
+		}
+	}
+
+	/**
+	 * Function to remove profile action if member is hasblocked/isblocked.
+	 *
+	 * @since BuddyBoss 2.3.50
+	 *
+	 * @param array $buttons Member profile actions.
+	 * @param int   $user_id Member ID.
+	 *
+	 * @return array|string Return the member actions.
+	 */
+	public function bb_member_directories_remove_profile_actions( $buttons, $user_id ) {
+		if ( bp_moderation_is_user_blocked( $user_id ) ) {
+			$buttons['primary']   = '';
+			$buttons['secondary'] = '';
+		} elseif ( bb_moderation_is_user_blocked_by( $user_id ) ) {
+			$buttons['primary']   = '';
+			$buttons['secondary'] = '';
+		}
+
+		return $buttons;
+	}
+
+	/**
+	 * Logged in member is blocked by members from group, then loggedin member can not see member type of is blocked by members.
+	 *
+	 * @since BuddyBoss 2.3.50
+	 *
+	 * @param string $string      Member type html.
+	 * @param string $member_type Member type.
+	 * @param int    $user_id     Member ID.
+	 *
+	 * @return array|string Return the member actions.
+	 */
+	public function bb_remove_member_type_name_string( $string, $member_type, $user_id ) {
+		if ( bb_moderation_is_user_blocked_by( $user_id ) ) {
+			$string = '';
+		}
+
+		return $string;
 	}
 }

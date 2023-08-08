@@ -244,13 +244,25 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 		 *
 		 * @since BuddyBoss 1.5.6
 		 *
+		 * @since BuddyBoss 2.3.80
+		 * Introduce new params $args as Media args.
+		 *
 		 * @param array $where Query to hide suspended user's media.
 		 * @param array $class current class object.
+		 * @param array $args  Media args.
 		 */
-		$where = apply_filters( 'bp_suspend_media_get_where_conditions', $where, $this );
+		$where = apply_filters( 'bp_suspend_media_get_where_conditions', $where, $this, $args );
 
 		if ( ! empty( array_filter( $where ) ) ) {
-			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+
+			$exclude_group_sql = '';
+			// Allow group medias from blocked/suspended users.
+			if ( bp_is_active( 'groups' ) ) {
+				$exclude_group_sql = ' OR m.privacy = "grouponly" ';
+			}
+			$exclude_group_sql .= ' OR ( m.privacy = "comment" OR m.privacy = "forums" ) ';
+
+			$where_conditions['suspend_where'] = '( ( ' . implode( ' AND ', $where ) . ' ) ' . $exclude_group_sql . ' )';
 		}
 
 		return $where_conditions;

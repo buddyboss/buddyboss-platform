@@ -306,7 +306,7 @@ window.bp = window.bp || {};
 					membersDiv.addEventListener(
 						'scroll',
 						function () {
-							if ( membersDiv.offsetHeight + membersDiv.scrollTop >= membersDiv.scrollHeight ) {
+							if ( membersDiv.offsetHeight + membersDiv.scrollTop + 30 >= membersDiv.scrollHeight ) {
 
 								if ( page >= total_pages || scroll_xhr != null ) {
 									return false;
@@ -893,6 +893,7 @@ window.bp = window.bp || {};
 						},
 						imageDragging: false,
 						anchor: {
+							placeholderText: BP_Nouveau.anchorPlaceholderText,
 							linkValidation: true
 						}
 					}

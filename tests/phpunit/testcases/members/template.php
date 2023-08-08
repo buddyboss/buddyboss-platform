@@ -255,21 +255,7 @@ class BP_Tests_Members_Template extends BP_UnitTestCase {
 			'search_terms'    => ''
 		);
 
-		$at = new BP_Core_Members_Template(
-			$r['type'],
-			$r['page'],
-			$r['per_page'],
-			$r['max'],
-			$r['user_id'],
-			$r['search_terms'],
-			$r['include'],
-			$r['populate_extras'],
-			$r['exclude'],
-			$r['meta_key'],
-			$r['meta_value'],
-			$r['page_arg'],
-			$r['member_type']
-		);
+		$at = new BP_Core_Members_Template( $r );
 
 		$this->assertEquals( 5, $at->pag_page );
 
@@ -301,21 +287,7 @@ class BP_Tests_Members_Template extends BP_UnitTestCase {
 			'search_terms'    => ''
 		);
 
-		$at = new BP_Core_Members_Template(
-			$r['type'],
-			$r['page'],
-			$r['per_page'],
-			$r['max'],
-			$r['user_id'],
-			$r['search_terms'],
-			$r['include'],
-			$r['populate_extras'],
-			$r['exclude'],
-			$r['meta_key'],
-			$r['meta_value'],
-			$r['page_arg'],
-			$r['member_type']
-		);
+		$at = new BP_Core_Members_Template( $r );
 
 		$this->assertEquals( 8, $at->pag_page );
 
@@ -347,21 +319,7 @@ class BP_Tests_Members_Template extends BP_UnitTestCase {
 			'search_terms'    => ''
 		);
 
-		$at = new BP_Core_Members_Template(
-			$r['type'],
-			$r['page'],
-			$r['per_page'],
-			$r['max'],
-			$r['user_id'],
-			$r['search_terms'],
-			$r['include'],
-			$r['populate_extras'],
-			$r['exclude'],
-			$r['meta_key'],
-			$r['meta_value'],
-			$r['page_arg'],
-			$r['member_type']
-		);
+		$at = new BP_Core_Members_Template( $r );
 
 		$this->assertEquals( 14, $at->pag_num );
 
@@ -393,21 +351,7 @@ class BP_Tests_Members_Template extends BP_UnitTestCase {
 			'search_terms'    => ''
 		);
 
-		$at = new BP_Core_Members_Template(
-			$r['type'],
-			$r['page'],
-			$r['per_page'],
-			$r['max'],
-			$r['user_id'],
-			$r['search_terms'],
-			$r['include'],
-			$r['populate_extras'],
-			$r['exclude'],
-			$r['meta_key'],
-			$r['meta_value'],
-			$r['page_arg'],
-			$r['member_type']
-		);
+		$at = new BP_Core_Members_Template( $r );
 
 		$this->assertEquals( 13, $at->pag_num );
 

@@ -3730,11 +3730,32 @@ MediumEditor.extensions = {};
             event.stopPropagation();
 
             var range = MediumEditor.selection.getSelectionRange(this.document);
+            var preLink = document.createElement( 'span' );
+            preLink.classList.add( 'medium-editor-create-link' );
 
             if (range.startContainer.nodeName.toLowerCase() === 'a' ||
                 range.endContainer.nodeName.toLowerCase() === 'a' ||
                 MediumEditor.util.getClosestTag(MediumEditor.selection.getSelectedParentElement(range), 'a')) {
                 return this.execAction('unlink');
+            } else {
+                // Check if startContainer is not a text
+                // Check if startContainer is not inline elements
+                var isSafeRange = range.startContainer === range.endContainer;
+                var inlineElements = ['b', 'i', 'em', 'strong'];
+                if( range.startOffset > 0 && inlineElements.indexOf( range.startContainer.parentElement.nodeName.toLowerCase() ) !== -1 ) {
+                    // split selected text node into different <b> or <i>
+                    var tag = document.createElement(range.startContainer.parentElement.nodeName.toLowerCase());
+                    tag.innerHTML = range.startContainer.textContent.substring(0, range.startOffset);
+                    range.startContainer.parentElement.innerHTML = range.startContainer.textContent.substring(range.startOffset);
+                    range.startContainer.parentElement.insertBefore(tag, range.startContainer);
+                }
+                // Wrap content into span to avoid surroundContents TextNode issue
+                if( !isSafeRange ) {
+                    var span = document.createElement( 'span' );
+                    span.appendChild( range.extractContents() );
+                    range.insertNode( span );
+                }
+                range.surroundContents( preLink );
             }
 
             if (!this.isDisplayed()) {
@@ -3901,6 +3922,9 @@ MediumEditor.extensions = {};
             this.base.restoreSelection();
             this.execAction(this.action, opts);
             this.base.checkSelection();
+            // Clean HTML by replacing empty HTML tags
+            var pattern = /<([a-zA-Z]+)[^>]*><\/\1>/g; //regex view -> https://regex101.com/r/gwCOv5/1
+            this.base.elements[0].innerHTML = this.base.elements[0].innerHTML.replace(pattern, '');
         },
 
         ensureEncodedUri: function (str) {
@@ -4010,6 +4034,12 @@ MediumEditor.extensions = {};
             return this.getForm().querySelector('.medium-editor-toolbar-anchor-button');
         },
 
+        clearPreCreateLink: function () {
+            jQuery('.medium-editor-create-link').replaceWith(function () {
+                return this.childNodes;
+            });
+        },
+
         handleTextboxKeyup: function (event) {
             // For ENTER -> create the anchor
             if (event.keyCode === MediumEditor.util.keyCode.ENTER) {
@@ -4038,6 +4068,7 @@ MediumEditor.extensions = {};
                 return false;
             } else {
                 toolbarInput.classList.remove( 'validate' );
+                this.clearPreCreateLink();
             }
             event.preventDefault();
             this.doFormSave();
@@ -4049,6 +4080,7 @@ MediumEditor.extensions = {};
             toolbarInput.classList.remove( 'validate' );
             event.preventDefault();
             this.doFormCancel();
+            this.clearPreCreateLink();
         }
     });
 
@@ -6853,6 +6885,12 @@ MediumEditor.extensions = {};
     }
 
     function handleKeyup(event) {
+        
+        // Ignore composing keyUp event, prevent from duplicated first char with CJK IME.
+        if ( event.isComposing || event.keyCode === 229 ) {
+            return;
+        }
+
         var node = MediumEditor.selection.getSelectionStart(this.options.ownerDocument),
             tagName;
 

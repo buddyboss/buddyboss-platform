@@ -48,7 +48,7 @@
 	}
 
 	var senderName = data.sender_name;
-	if ( ! data.is_group && data.recipients && 1 === parseInt( data.recipientsCount ) ) {
+	if ( ! data.is_group_thread && data.recipients && 1 === parseInt( data.recipientsCount ) ) {
 		senderName = '';
 	}
 
@@ -125,11 +125,11 @@
 					<li class="report_member_thread">
 						<a id="mass-report-member" href="#mass-user-block-list" class="mass-report-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Report a member', 'buddyboss' ); ?></a>
 					</li>
-				<# } else if ( action_other_recipients.length == 1 && action_other_recipients[0].is_user_reported ) { #>
+				<# } else if ( action_other_recipients.length == 1 && action_other_recipients[0].is_user_reported && true !== other_recipients[0].is_user_suspended ) { #>
 					<li class="report_member_thread">
 						<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>-{{action_other_recipients[0].id}}" href="#reported-content" class="reported-content" reported_type="{{action_other_recipients[0].reported_type}}" item_id="{{action_other_recipients[0].id}}" item_type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>"><?php esc_html_e( 'Report member', 'buddyboss' ); ?></a>
 					</li>
-				<# } else if ( action_other_recipients.length == 1 && true == action_other_recipients[0].can_be_report && 1 !== action_other_recipients[0].is_deleted ) { #>
+				<# } else if ( action_other_recipients.length == 1 && true == action_other_recipients[0].can_be_report && 1 !== action_other_recipients[0].is_deleted && true !== other_recipients[0].is_user_suspended ) { #>
 					<li class="report_member_thread">
 						<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>-{{action_other_recipients[0].id}}" href="#content-report" class="report-content" data-bp-content-id="{{action_other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>" reported_type="{{action_other_recipients[0].reported_type}}"><?php esc_html_e( 'Report member', 'buddyboss' ); ?></a>
 					</li>
@@ -191,7 +191,7 @@
 									#>
 									  <i class="user-status-icon bb-icon-f bb-icon-cancel"></i>
 									<#
-								} else if ( recipient.is_user_blocked_by ) {
+								} else if ( recipient.is_user_blocked_by || false === data.can_user_send_message_in_thread ) {
 									#>
 									  <i class="user-status-icon bb-icon-f bb-icon-lock"></i>
 									<#
@@ -225,20 +225,35 @@
 					<span class="thread-excerpt">
 						<span class="last-message-sender">
 							<#
+							var displayName = false;
 							var checkedContent = data.content.replace(/<\/?[^>]+(>|$)/g, '').replace(/^\s+|\s+$/gm,'');
-							if ( data.sender_is_you && '' !== checkedContent ) { #>
+							if ( data.sender_is_you && '' !== checkedContent ) {
+								displayName = true;
+								#>
 								<?php esc_html_e( 'You', 'buddyboss' ); ?>:
-							<# } else if ( data.sender_is_you && '' === checkedContent )  { #>
+							<# } else if ( data.sender_is_you && '' === checkedContent ) {
+								displayName = true;
+								#>
 								<?php esc_html_e( 'You', 'buddyboss' ); ?>
 							<# } else { #>
-								<# if ( senderName && '' !== checkedContent ) { #>
+								<# if ( senderName && '' !== senderName && '' !== checkedContent ) {
+									displayName = true;
+									#>
 									{{ senderName }}:
-								<# } else if ( senderName && '' === checkedContent )  { #>
+								<# } else if ( senderName && '' !== senderName && '' === checkedContent ) {
+									displayName = true;
+									#>
 									{{ senderName }}
 								<# } #>
 							<# } #>
-							</span>
-						{{{data.excerpt}}}
+						</span>
+						<#
+						var dataExcerpt = data.excerpt;
+						if ( dataExcerpt && true === displayName && 'undefined' !== typeof data.has_media && data.has_media ) {
+							dataExcerpt = dataExcerpt.toLowerCase();
+						}
+						#>
+						{{{dataExcerpt}}}
 					</span>
 				<# } #>
 				<div class="thread-date">
