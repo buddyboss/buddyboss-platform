@@ -2998,11 +2998,11 @@ function bb_profile_slug_tutorial() {
 }
 
 /**
- * Link to Email Domain Restrictions tutorial
+ * Link to registration restrictions tutorial
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_email_domain_restrictions_tutorial() {
+function bb_registration_restrictions_tutorial() {
 	?>
 	<p>
 		<a class="button" href="
@@ -3029,11 +3029,69 @@ function bb_email_domain_restrictions_tutorial() {
  *
  * @since  BuddyBoss [BBVERSION]
  */
-function bb_admin_setting_callback_blacklist_email_setting() {
-	?>
+function bb_admin_setting_callback_domain_restrictions() {
 
-	<label for="bb-blacklist-email-setting"><?php esc_html_e( 'Enter email domains, extensions or specific addresses which you want to restrict from registration. Enter one domain or address per line.', 'buddyboss' ); ?></label>
-	<textarea rows="10" cols="100" id="bb-blacklist-email-setting" name="bb-blacklist-email-setting" style="margin-top: 10px;"><?php echo esc_textarea( bb_blacklist_email_setting() ); ?></textarea>
+	$domain_restrictions = bb_domain_restrictions_setting();
+
+	?>
+	<label for="bb-domain-restrictions-setting">
+		<?php 
+			esc_html_e( 'Add domain(s) to restrict new user registrations. All restrictions are applied in list order priority and can be re-ordered using the drag icon.
+			You can also apply a wildcard (*) symbol to specify entire extensions.', 'buddyboss' ); 
+		?>
+	</label>
+
+	<table class="domain-restrictions-listing">
+		<thead>
+		<td class="ext-head ext-head-enable check-column"><input id="bp_select_extensions" type="checkbox" value="1"></td>
+		<th class="ext-head ext-head-extension"><?php echo esc_html__( 'Extension', 'buddyboss' ); ?></th>
+		<th class="ext-head ext-head-desc"><?php echo esc_html__( 'Description', 'buddyboss' ); ?></th>
+		<th class="ext-head ext-head-icon"><?php echo esc_html__( 'Icon', 'buddyboss' ); ?></th>
+		<th class="ext-head ext-head-mime"><?php echo esc_html__( 'MIME Type', 'buddyboss' ); ?></th>
+		</thead>
+		<tbody>
+		<?php
+
+		?>
+		<tr style="display: none;" class="custom-extension-data">
+			<td>
+				<input value="1" name="extension-check" data-name="<?php echo esc_attr( $name . '[is_active]' ); ?>" type="checkbox" class="extension-check"/>
+			</td>
+			<td>
+				<input name="extension-extension" data-name="<?php echo esc_attr( $name . '[extension]' ); ?>" type="text" class="extension-extension" placeholder="<?php echo esc_html__( '.extension', 'buddyboss' ); ?>"/>
+				<input name="extension-hidden" data-name="<?php echo esc_attr( $name . '[is_default]' ); ?>" type="hidden" value="0" class="extension-hidden" />
+			</td>
+			<td>
+				<input name="extension-desc" data-name="<?php echo esc_attr( $name . '[description]' ); ?>" type="text" class="extension-desc" placeholder="<?php echo esc_html__( 'description', 'buddyboss' ); ?>"/>
+			</td>
+			<td>
+				<select class="extension-icon" name="extension-icon" data-name="<?php echo esc_attr( $name . '[icon]' ); ?>">
+					<?php
+					$icons = bp_document_svg_icon_list();
+					foreach ( $icons as $icon ) {
+						?>
+						<option value="<?php echo esc_attr( $icon['icon'] ); ?>"><?php echo esc_attr( $icon['title'] ); ?></option>
+						<?php
+					}
+					?>
+				</select>
+			</td>
+			<td>
+				<input name="extension-mime" data-name="<?php echo esc_attr( $name . '[mime_type]' ); ?>" type="text" value="" class="extension-mime" placeholder="<?php echo esc_html__( 'MIME type', 'buddyboss' ); ?>"/>
+				<a href="#" id="" class="button btn-check-mime-type"><?php echo esc_html__( 'MIME Checker', 'buddyboss' ); ?></a>
+				<span id="btn-remove-extensions" class="dashicons dashicons-dismiss"></span>
+			</td>
+		</tr>
+		</tbody>
+		<tfoot>
+		<tr>
+			<td colspan="5">
+				<div id="btn-add-domain" class="button-primary"><?php echo esc_html__( 'Add Domain', 'buddyboss' ); ?></div>
+			</td>
+		</tr>
+		</tfoot>
+	</table>
+	<!-- <textarea rows="10" cols="100" id="bb-domain-restrictions-setting" name="bb-domain-restrictions-setting" style="margin-top: 10px;"><?php //echo esc_textarea( bb_domain_restrictions_setting() ); ?></textarea> -->
 	<?php
 }
 
@@ -3042,11 +3100,10 @@ function bb_admin_setting_callback_blacklist_email_setting() {
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_admin_setting_callback_whitelist_email_setting() {
+function bb_admin_setting_callback_email_restrictions() {
 	?>
-
-	<label for="bb-whitelist-email-setting"><?php esc_html_e( 'Enter email domains, extensions or specific addresses which you want to allow for user registrations. Enter one domain or address per line.', 'buddyboss' ); ?></label>
-	<textarea rows="10" cols="100" id="bb-whitelist-email-setting" name="bb-whitelist-email-setting" style="margin-top: 10px;"><?php echo esc_textarea( bb_whitelist_email_setting() ); ?></textarea>
+	<label for="bb-email-restrictions-setting"><?php esc_html_e( 'Enter specific email addresses which you want to allow for user registrations. Enter one domain or address per line.', 'buddyboss' ); ?></label>
+	<textarea rows="10" cols="100" id="bb-email-restrictions-setting" name="bb-email-restrictions-setting" style="margin-top: 10px;"><?php echo esc_textarea( bb_email_restrictions_setting() ); ?></textarea>
 	<p class='description'><?php esc_html_e( 'When providing both white and blacklist entries, any whitelisted domains will take priority.', 'buddyboss' ); ?></p>
 	<?php
 }

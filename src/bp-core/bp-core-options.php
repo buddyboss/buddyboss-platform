@@ -2343,7 +2343,7 @@ function bb_get_profile_slug_format( $default = 'username' ) {
  *                      Default: Empty string.
  * @return string whitelist email and domain list.
  */
-function bb_blacklist_email_setting( $default = '' ) {
+function bb_domain_restrictions_setting( $default = '' ) {
 
 	/**
 	 * Filters blacklist email and domain list.
@@ -2364,7 +2364,7 @@ function bb_blacklist_email_setting( $default = '' ) {
  *                      Default: Empty string.
  * @return string Whitelist email and domain list.
  */
-function bb_whitelist_email_setting( $default = '' ) {
+function bb_email_restrictions_setting( $default = '' ) {
 
 	/**
 	 * Filters whitelist email and domain list.
