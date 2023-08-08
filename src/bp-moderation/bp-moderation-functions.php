@@ -2005,25 +2005,33 @@ function bb_moderation_migration_on_update() {
 			// update data for the hidden data.
 			if ( isset( $data->hide_sitewide ) ) {
 				if ( ! empty( $data->hide_sitewide ) ) {
-					bp_moderation_hide(
-						array(
-							'content_id'   => $data->item_id,
-							'content_type' => $data->item_type,
-							'reported'     => $data->reported,
-							'user_report'  => $data->user_report,
-							'count'        => $data->count,
-						)
-					);
+					$moderation = new BP_Moderation( $data->item_id, $data->item_type );
+					$moderation->hide();
 				} else {
-					bp_moderation_unhide(
-						array(
-							'content_id'   => $data->item_id,
-							'content_type' => $data->item_type,
-							'reported'     => $data->reported,
-							'user_report'  => $data->user_report,
-							'count'        => $data->count,
-						)
+					$args = array(
+						'content_id'   => $data->item_id,
+						'content_type' => $data->item_type,
 					);
+
+					if ( ! empty( $args['content_id'] ) && ! empty( $args['content_type'] ) ) {
+						$moderation = new BP_Moderation( $args['content_id'], $args['content_type'] );
+
+						if ( method_exists( $moderation, 'unhide_related_content' ) ) {
+							$moderation->hide_sitewide = 0;
+
+							$moderation->unhide_related_content();
+							bp_moderation_delete_meta( $moderation->id, '_hide_by' );
+
+							/**
+							 * Fires after an moderation report item has been unhide
+							 *
+							 * @since BuddyBoss 1.5.6
+							 *
+							 * @param BP_Moderation $this current class object.
+							 */
+							do_action( 'bp_moderation_after_unhide', $moderation );
+						}
+					}
 				}
 			}
 		}
