@@ -3934,7 +3934,7 @@ function bb_is_group_forum_topic( $topic_id ) {
  * Return array of public reply statuses.
  *
  * @since bbPress 2.6.0 (r6383)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.00
  *
  * @return array
  */
@@ -3952,7 +3952,7 @@ function bbp_get_public_topic_statuses() {
  * Return array of non-public topic statuses.
  *
  * @since bbPress 2.6.0 (r6642)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.00
  *
  * @return array
  */

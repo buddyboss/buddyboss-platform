@@ -611,7 +611,7 @@ function bbp_author_metabox() {
  * Filter the Dashboard "at a glance" items and append bbPress elements to it.
  *
  * @since BBPress 2.6.0 (r5268)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.00
  *
  * @param array $elements
  * @return array

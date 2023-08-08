@@ -650,7 +650,7 @@ function bbp_engagements_strategy( $default = 'meta' ) {
  * Return the edit slug.
  *
  * @since bbPress 2.6.2 (r6965)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.00
  *
  * @param string $default Optional. Default value 'edit'.
  * @return string
