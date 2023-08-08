@@ -3042,7 +3042,8 @@ function bb_admin_setting_callback_domain_restrictions() {
 	</label>
 
 	<div class="domain-restrictions-listing">
-		<div class="domain-restrictions-rule-list">
+		<div class="domain-restrictions-rule-list bb-sortable">
+
 			<div class="domain-restrictions-rule">
 				<div class="domain-restrictions-input">
 					<input type="text" class="domain-restrictions-domain" placeholder="example" value="" />
@@ -3063,6 +3064,7 @@ function bb_admin_setting_callback_domain_restrictions() {
 					</button>
 				</div>
 			</div>
+
 			<!-- This below HTML is for clone only - Starts -->
 			<div class="custom domain-restrictions-rule" style="display: none;">
 				<div class="domain-restrictions-input">

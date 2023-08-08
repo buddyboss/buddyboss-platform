@@ -101,7 +101,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			wp_enqueue_script(
 				'bp-admin',
 				buddypress()->plugin_url . 'bp-core/admin/js/settings-page.js',
-				array( 'jquery' ),
+				array( 'jquery', 'jquery-ui-sortable' ),
 				buddypress()->version,
 				true
 			);

@@ -2478,4 +2478,6 @@ window.bp = window.bp || {};
 		}
 	);
 
+	$( '.domain-restrictions-rule-list.bb-sortable' ).sortable();
+
 }());
