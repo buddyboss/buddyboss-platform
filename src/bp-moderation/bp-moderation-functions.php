@@ -1935,3 +1935,46 @@ function bb_moderation_to_hide_forum_activity( $activity_id ) {
 
 	return $hide_activity;
 }
+
+function bb_moderation_migration() {
+
+	$suspend_request_args = array(
+		'in_types' => array( BP_Moderation_Members::$moderation_type ),
+		'reported' => false,
+	);
+	$suspend_requests     = BP_Moderation::get( $suspend_request_args );
+	if ( ! empty( $suspend_requests['moderations'] ) ) {
+		foreach ( $suspend_requests['moderations'] as $data ) {
+			if ( empty( $suspend_requests['user_report'] ) ) {
+				// For blocked.
+				if ( isset( $data->reported ) ) {
+					if ( ! empty( $data->reported ) ) {
+						bp_moderation_add(
+							array(
+								'content_id'   => $data->item_id,
+								'content_type' => $data->item_type,
+								'note'         => esc_html__( 'Member block', 'buddyboss' ),
+							)
+						);
+					} else {
+						bp_moderation_delete(
+							array(
+								'content_id'   => $data->item_id,
+								'content_type' => $data->item_type,
+							)
+						);
+					}
+				}
+
+				// For suspend.
+				if ( isset( $data->user_suspended ) ) {
+					if ( ! empty( $data->user_suspended ) ) {
+						BP_Suspend_Member::suspend_user( $data->item_id );
+					} else {
+						BP_Suspend_Member::unsuspend_user( $data->item_id );
+					}
+				}
+			}
+		}
+	}
+}
