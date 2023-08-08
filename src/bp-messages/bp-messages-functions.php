@@ -937,7 +937,7 @@ function messages_notification_new_message( $raw_args = array() ) {
 	$sender_name = bp_core_get_user_displayname( $sender_id );
 
 	if ( isset( $message ) ) {
-		$message = wpautop( preg_replace('#(<br\s*?\/?>|</(\w+)><(\w+)>)#', ' ', $message ) );
+		$message = wpautop( $message );
 	} else {
 		$message = '';
 	}
