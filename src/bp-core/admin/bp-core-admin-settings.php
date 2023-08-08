@@ -3041,56 +3041,54 @@ function bb_admin_setting_callback_domain_restrictions() {
 		?>
 	</label>
 
-	<table class="domain-restrictions-listing">
-		<thead>
-		<td class="ext-head ext-head-enable check-column"><input id="bp_select_extensions" type="checkbox" value="1"></td>
-		<th class="ext-head ext-head-extension"><?php echo esc_html__( 'Extension', 'buddyboss' ); ?></th>
-		<th class="ext-head ext-head-desc"><?php echo esc_html__( 'Description', 'buddyboss' ); ?></th>
-		<th class="ext-head ext-head-icon"><?php echo esc_html__( 'Icon', 'buddyboss' ); ?></th>
-		<th class="ext-head ext-head-mime"><?php echo esc_html__( 'MIME Type', 'buddyboss' ); ?></th>
-		</thead>
-		<tbody>
-		<?php
+	<div class="domain-restrictions-listing">
+		<div class="domain-restrictions-rule-list">
+			<div class="domain-restrictions-rule">
+				<div class="domain-restrictions-input">
+					<input type="text" class="domain-restrictions-domain" placeholder="example" value="" />
+				</div>
+				<div class="domain-restrictions-input domain-restrictions-input-tld">
+					<input type="text" class="domain-restrictions-tld" placeholder=".com" value="" />
+				</div>
+				<div class="domain-restrictions-select">
+					<select class="domain-restrictions-input-select">
+						<option>Select Condition</option>
+						<option>Always Allow</option>
+						<option>Never Allow</option>
+					</select>
+				</div>
+				<div class="domain-restrictions-remove">
+					<button class="domain-restrictions-rule-remove" aria-label="Remove Rule">
+						<i class="bb-icon-f bb-icon-times"></i>
+					</button>
+				</div>
+			</div>
+			<!-- This below HTML is for clone only - Starts -->
+			<div class="custom domain-restrictions-rule" style="display: none;">
+				<div class="domain-restrictions-input">
+					<input type="text" class="domain-restrictions-domain" placeholder="example" value="" />
+				</div>
+				<div class="domain-restrictions-input domain-restrictions-input-tld">
+					<input type="text" class="domain-restrictions-tld" placeholder=".com" value="" />
+				</div>
+				<div class="domain-restrictions-select">
+					<select class="domain-restrictions-input-select">
+						<option>Select Condition</option>
+						<option>Always Allow</option>
+						<option>Never Allow</option>
+					</select>
+				</div>
+				<div class="domain-restrictions-remove">
+					<button class="domain-restrictions-rule-remove" aria-label="<?php esc_attr_e( 'Remove Rule', 'buddyboss' ); ?>">
+						<i class="bb-icon-f bb-icon-times"></i>
+					</button>
+				</div>
+			</div>
+			<!-- This below HTML is for clone only - Ends -->
 
-		?>
-		<tr style="display: none;" class="custom-extension-data">
-			<td>
-				<input value="1" name="extension-check" data-name="<?php echo esc_attr( $name . '[is_active]' ); ?>" type="checkbox" class="extension-check"/>
-			</td>
-			<td>
-				<input name="extension-extension" data-name="<?php echo esc_attr( $name . '[extension]' ); ?>" type="text" class="extension-extension" placeholder="<?php echo esc_html__( '.extension', 'buddyboss' ); ?>"/>
-				<input name="extension-hidden" data-name="<?php echo esc_attr( $name . '[is_default]' ); ?>" type="hidden" value="0" class="extension-hidden" />
-			</td>
-			<td>
-				<input name="extension-desc" data-name="<?php echo esc_attr( $name . '[description]' ); ?>" type="text" class="extension-desc" placeholder="<?php echo esc_html__( 'description', 'buddyboss' ); ?>"/>
-			</td>
-			<td>
-				<select class="extension-icon" name="extension-icon" data-name="<?php echo esc_attr( $name . '[icon]' ); ?>">
-					<?php
-					$icons = bp_document_svg_icon_list();
-					foreach ( $icons as $icon ) {
-						?>
-						<option value="<?php echo esc_attr( $icon['icon'] ); ?>"><?php echo esc_attr( $icon['title'] ); ?></option>
-						<?php
-					}
-					?>
-				</select>
-			</td>
-			<td>
-				<input name="extension-mime" data-name="<?php echo esc_attr( $name . '[mime_type]' ); ?>" type="text" value="" class="extension-mime" placeholder="<?php echo esc_html__( 'MIME type', 'buddyboss' ); ?>"/>
-				<a href="#" id="" class="button btn-check-mime-type"><?php echo esc_html__( 'MIME Checker', 'buddyboss' ); ?></a>
-				<span id="btn-remove-extensions" class="dashicons dashicons-dismiss"></span>
-			</td>
-		</tr>
-		</tbody>
-		<tfoot>
-		<tr>
-			<td colspan="5">
-				<div id="btn-add-domain" class="button-primary"><?php echo esc_html__( 'Add Domain', 'buddyboss' ); ?></div>
-			</td>
-		</tr>
-		</tfoot>
-	</table>
+		</div>
+		<button class="button button-primary domain-restrictions-add-rule"> <?php esc_html_e( 'Add Domain', 'buddyboss' ); ?></button>
+	</div>
 	<!-- <textarea rows="10" cols="100" id="bb-domain-restrictions-setting" name="bb-domain-restrictions-setting" style="margin-top: 10px;"><?php //echo esc_textarea( bb_domain_restrictions_setting() ); ?></textarea> -->
 	<?php
 }

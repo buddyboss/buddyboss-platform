@@ -40,6 +40,7 @@ TABLE OF CONTENTS:
 14.0 BB Pro Active/Inactive Notices
 15.0 Admin bar Notification
 16.0 Moderation
+17.0 Domain restriction
 ------------------------------------------------------------------------------*/
 /*------------------------------------------------------------------------------
  * 1.0 Welcome Screen
@@ -3556,4 +3557,54 @@ table.moderations .column-member img {
 
 .bp-admin-card .password-toggle .bb-hide-pw.bb-show-pass .bb-icon::before {
   content: "\ee6a";
+}
+
+/*------------------------------------------------------------------------------
+ * 17.0 Domain restriction
+ *----------------------------------------------------------------------------*/
+.domain-restrictions-rule-list {
+  margin: 15px 0;
+  max-width: 540px;
+}
+
+.domain-restrictions-rule-list .domain-restrictions-rule {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  background-color: #f6f7f7;
+  border: 1px solid #c3c4c7;
+  position: relative;
+  border-radius: 4px;
+  padding: 15px 40px 15px 15px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.domain-restrictions-rule-list .domain-restrictions-rule input,
+.domain-restrictions-rule-list .domain-restrictions-rule select {
+  width: 100%;
+}
+
+.domain-restrictions-rule-list .domain-restrictions-rule > div {
+  flex: 1 0 200px;
+}
+
+.domain-restrictions-rule-list .domain-restrictions-rule > div.domain-restrictions-input-tld {
+  flex-basis: 80px;
+}
+
+.domain-restrictions-rule-list .domain-restrictions-rule .domain-restrictions-remove {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 10px;
+}
+
+.domain-restrictions-rule-list .domain-restrictions-rule .domain-restrictions-remove button {
+  color: #3c434a;
+  font-size: 20px;
+  cursor: pointer;
+  border: 0;
+  background-color: transparent;
+  padding: 0;
 }

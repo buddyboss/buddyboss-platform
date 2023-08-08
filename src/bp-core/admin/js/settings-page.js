@@ -2453,4 +2453,29 @@ window.bp = window.bp || {};
 
 	/* jshint ignore:end */
 
+	// Domain Restrictions
+	
+	$( document ).on(
+		'click',
+		'.domain-restrictions-listing .domain-restrictions-add-rule',
+		function ( e ) {
+			e.preventDefault();
+			var $this  = $( this );
+			var $row = $this.closest( '.domain-restrictions-listing' ).find( '.domain-restrictions-rule-list .domain-restrictions-rule.custom' ).html();
+			$this.closest( '.domain-restrictions-listing' ).find( '.domain-restrictions-rule-list' ).append( ' <div class="domain-restrictions-rule"> ' + $row + ' </div> ' );
+		}
+	);
+
+	$( document ).on(
+		'click',
+		'.domain-restrictions-listing .domain-restrictions-rule-remove',
+		function ( e ) {
+			e.preventDefault();
+			var $this  = $( e.currentTarget );
+			if( ! $this.closest( '.domain-restrictions-rule').hasClass( 'custom' ) ) {
+				$this.closest( '.domain-restrictions-rule' ).remove();
+			}
+		}
+	);
+
 }());
