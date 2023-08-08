@@ -3051,13 +3051,13 @@ function bb_admin_setting_callback_domain_restrictions() {
 
 			<div class="registration-restrictions-rule">
 				<div class="registration-restrictions-input">
-					<input type="text" class="registration-restrictions-domain" placeholder="example" value="" />
+					<input type="text" name="bb-domain-restrictions[0][domain]" class="registration-restrictions-domain" placeholder="example" value="" />
 				</div>
 				<div class="registration-restrictions-input registration-restrictions-input-tld">
-					<input type="text" class="registration-restrictions-tld" placeholder="com" value="" />
+					<input type="text" name="bb-domain-restrictions[0][tld]" class="registration-restrictions-tld" placeholder="com" value="" />
 				</div>
 				<div class="registration-restrictions-select">
-					<select class="registration-restrictions-input-select">
+					<select name="bb-domain-restrictions[0][condition]" class="registration-restrictions-input-select">
 						<?php
 							foreach( $conditions as $key => $value ) {
 								?>
@@ -3077,13 +3077,13 @@ function bb_admin_setting_callback_domain_restrictions() {
 			<!-- This below HTML is for clone only - Starts -->
 			<div class="custom registration-restrictions-rule" style="display: none;">
 				<div class="registration-restrictions-input">
-					<input type="text" class="registration-restrictions-domain" placeholder="example" value="" />
+					<input type="text" name="bb-domain-restrictions[placeholder_priority_index][domain]" class="registration-restrictions-domain" placeholder="example" value="" />
 				</div>
 				<div class="registration-restrictions-input registration-restrictions-input-tld">
-					<input type="text" class="registration-restrictions-tld" placeholder="com" value="" />
+					<input type="text" name="bb-domain-restrictions[placeholder_priority_index][tld]" class="registration-restrictions-tld" placeholder="com" value="" />
 				</div>
 				<div class="registration-restrictions-select">
-					<select class="registration-restrictions-input-select">
+					<select name="bb-domain-restrictions[placeholder_priority_index][condition]" class="registration-restrictions-input-select">
 						<?php
 							foreach( $conditions as $key => $value ) {
 								?>
@@ -3102,7 +3102,8 @@ function bb_admin_setting_callback_domain_restrictions() {
 			<!-- This below HTML is for clone only - Ends -->
 
 		</div>
-		<button class="button button-primary registration-restrictions-add-rule"> <?php esc_html_e( 'Add Domain', 'buddyboss' ); ?></button>
+		<input type='hidden' class='registration-restrictions-lastindex' value='0' />
+		<button class="button registration-restrictions-add-rule"> <?php esc_html_e( 'Add Domain', 'buddyboss' ); ?></button>
 	</div>
 	<?php
 }
@@ -3125,10 +3126,10 @@ function bb_admin_setting_callback_email_restrictions() {
 		<div class="registration-restrictions-rule-list">
 			<div class="registration-restrictions-rule">
 				<div class="registration-restrictions-input">
-					<input type="text" class="registration-restrictions-domain" placeholder="example" value="" />
+					<input type="text" name="bb-email-restrictions[0][address]" class="registration-restrictions-domain" placeholder="example" value="" />
 				</div>
 				<div class="registration-restrictions-select">
-					<select class="registration-restrictions-input-select">
+					<select name="bb-email-restrictions[0][condition]" class="registration-restrictions-input-select">
 						<?php
 							foreach( $conditions as $key => $value ) {
 								?>
@@ -3147,10 +3148,10 @@ function bb_admin_setting_callback_email_restrictions() {
 			<!-- This below HTML is for clone only - Starts -->
 			<div class="custom registration-restrictions-rule" style="display: none;">
 				<div class="registration-restrictions-input">
-					<input type="text" class="registration-restrictions-domain" placeholder="example" value="" />
+					<input type="text" name="bb-email-restrictions[placeholder_priority_index][address]" class="registration-restrictions-domain" placeholder="example" value="" />
 				</div>
 				<div class="registration-restrictions-select">
-					<select class="registration-restrictions-input-select">
+					<select name="bb-email-restrictions[placeholder_priority_index][condition]" class="registration-restrictions-input-select">
 						<?php
 							foreach( $conditions as $key => $value ) {
 								?>
@@ -3169,7 +3170,7 @@ function bb_admin_setting_callback_email_restrictions() {
 			<!-- This below HTML is for clone only - Ends -->
 
 		</div>
-		<button class="button button-primary registration-restrictions-add-rule"> <?php esc_html_e( 'Add Email', 'buddyboss' ); ?></button>
+		<button class="button registration-restrictions-add-rule"> <?php esc_html_e( 'Add Email', 'buddyboss' ); ?></button>
 	</div>
 	<?php
 }
