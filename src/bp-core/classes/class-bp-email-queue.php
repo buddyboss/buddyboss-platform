@@ -50,7 +50,6 @@ class BP_Email_Queue {
 				array(
 					'type'     => 'email',
 					'group'    => 'groups_email_notification',
-					'data_id'  => '',
 					'priority' => 5,
 					'callback' => array( $this, 'bb_email_queue_cron_cb' ),
 					'args'     => array( $get_records ),
