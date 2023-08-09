@@ -3568,7 +3568,7 @@ table.moderations .column-member img {
 }
 
 .registration-restrictions-rule-list.bb-sortable .registration-restrictions-rule {
-  padding-left: 40px;
+  padding-left: 60px;
 }
 
 .registration-restrictions-rule-list.bb-sortable .registration-restrictions-rule:before {
@@ -3581,7 +3581,7 @@ table.moderations .column-member img {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  left: 10px;
+  left: 30px;
 }
 
 .registration-restrictions-rule-list.bb-sortable .registration-restrictions-rule.ui-sortable-helper:before {
@@ -3623,7 +3623,10 @@ table.moderations .column-member img {
 }
 
 .registration-restrictions-rule-list .registration-restrictions-rule .registration-restrictions-priority {
-  margin-right: -5px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 15px;
 }
 
 .registration-restrictions-rule-list .registration-restrictions-rule .registration-restrictions-remove {
