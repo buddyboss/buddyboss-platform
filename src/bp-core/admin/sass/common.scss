@@ -3871,7 +3871,7 @@ table.moderations .column-member {
 
 .registration-restrictions-rule-list {
 	margin: 15px 0;
-	max-width: 600px;
+	max-width: 610px;
 
 	&.bb-sortable .registration-restrictions-rule {
 		padding-left: 40px;
@@ -3895,6 +3895,7 @@ table.moderations .column-member {
 
 	.registration-restrictions-rule {
 		display: flex;
+		align-items: center;
 		flex-wrap: wrap;
 		gap: 15px;
 		background-color: #f6f7f7;
@@ -3910,7 +3911,7 @@ table.moderations .column-member {
 		}
 
 		> div {
-			flex: 1 0 200px;
+			flex: 1 0 130px;
 
 			&.registration-restrictions-input-tld {
 				flex-basis: 80px;
@@ -3923,6 +3924,10 @@ table.moderations .column-member {
 					margin-right: 5px;
 				}
 			}
+		}
+
+		.registration-restrictions-priority {
+			margin-right: -5px;
 		}
 
 		.registration-restrictions-remove {
