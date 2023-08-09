@@ -2215,7 +2215,7 @@ window.bp = window.bp || {};
 								}
 
 								// Check if the current node is not an html element.
-								if( currentNode.endContainer.parentNode && currentNode.endContainer.parentNode.classList.contains( 'medium-editor-element' ) ) {
+								if ( currentNode.endContainer.parentNode && currentNode.endContainer.parentNode.classList.contains( 'medium-editor-element' ) ) {
 									p = MediumEditorOptDoc.createElement( 'p' );
 									p.innerHTML = '<br>';
 									if ( currentNode.endContainer.nextElementSibling ) {
@@ -2224,8 +2224,8 @@ window.bp = window.bp || {};
 										newP = currentNode.endContainer.parentNode.appendChild( p );
 									}
 									MediumEditor.selection.moveCursor( MediumEditorOptDoc, newP ); // jshint ignore:line
-									setTimeout( function() {
-										newP.children[0].remove();
+									setTimeout( function () {
+										newP.children[ 0 ].remove();
 									}, 100 );
 									return;
 								}
