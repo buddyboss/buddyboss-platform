@@ -2998,7 +2998,7 @@ function bb_profile_slug_tutorial() {
 }
 
 /**
- * Link to registration restrictions tutorial
+ * Link to registration restrictions tutorial.
  *
  * @since BuddyBoss [BBVERSION]
  */

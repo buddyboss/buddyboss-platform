@@ -7847,7 +7847,7 @@ function bb_admin_icons( $id ) {
 		case 'bp_notification_settings_automatic':
 			$meta_icon = $bb_icon_bf . ' bb-icon-bell';
 			break;
-		case 'bb_email_domain_restrictions':
+		case 'bb_registration_restrictions':
 		case 'bp_messaging_notification_settings':
 			$meta_icon = $bb_icon_bf . ' bb-icon-envelope';
 			break;
@@ -8867,60 +8867,61 @@ function bb_format_blacklist_whitelist_email_setting( $data_values = '' ) {
 
 function bb_is_allowed_register_email_address( $email = '' ) {
 
+	$email = strtolower( trim( $email ) );
 	if( empty( $email ) ) {
 		return false;
 	}
+	
+	$domain_restrictions = bb_domain_restrictions_setting();
+	$email_restrictions  = bb_email_restrictions_setting();
 
-	$blacklist_setting = bb_blacklist_email_setting();
-	$whitelist_setting = bb_whitelist_email_setting();
-
-	// No restrictions.
-	if( empty( $blacklist_setting ) && empty( $whitelist_setting ) ) {
+	// No restrictions or custom registration enabled then return true.
+	if( empty( $domain_restrictions ) && empty( $email_restrictions ) || bp_allow_custom_registration() ) {
 		return true;
 	}
 
-	// Get the list in associative array format.
-	$blacklist = bb_format_blacklist_whitelist_email_setting( $blacklist_setting );
-	$whitelist = bb_format_blacklist_whitelist_email_setting( $whitelist_setting );
+	// Check if the email address is allowed or not.
+	$key = array_search( $email, array_column( $email_restrictions, 'address' ) );
 
-	// Check if the email address is in the whitelist.
-	if ( in_array( $email, $whitelist['email'], true ) ) {
-		return true;
-	}
+	// 👇 key is found, check for allow or not.
+	if ( $key !== false ) {
+		if ( 'always_allow' === $email_restrictions[ $key ][ 'condition' ] ) {
+			return true;
+		} elseif ( 'never_allow' === $email_restrictions[ $key ][ 'condition' ] ) {
+			return false;
+		}
+	 }
 
-	// Check if the email domain is in the whitelist.
-	$domain = substr( strrchr( $email, "@" ), 1 );
-	if ( in_array( $domain, $whitelist['domain'], true ) ) {
-		return true;
-	}
+	// Check condition the email domain.
+	$domain     = substr( strrchr( $email, "@" ), 1 );
+	$extension  = strrchr( $email, "." );
+	$is_allowed = '';
 
-	// Check if the email extension is in the whitelist.
-	$extension = strrchr( $email, "." );
-	if ( in_array( $extension, $whitelist['extension'], true ) ) {
-		return true;
-	}
+	foreach( $domain_restrictions as $key => $rule ) {
+		$rule_domain    = strtolower( trim( $rule['domain'] ) );
+		$rule_tld       = strtolower( trim( $rule['tld'] ) );
+		$rule_condition = $rule['condition'];
 
-	// Restricted to only whitelisted.
-	if( empty( $blacklist_setting ) ) {
-		return false;
-	}
-
-	// Check if the email domain is in the blacklist.
-	if ( in_array( $domain, $blacklist['domain'], true ) ) {
-		return false;
-	}
-
-	// Check if the email address is in the blacklist.
-	if ( in_array( $email, $blacklist['email'], true ) ) {
-		return false;
-	}
-
-	// Check if the email extension is in the blacklist.
-	if ( in_array( $extension, $blacklist['extension'], true ) ) {
-		return false;
+		if ( in_array( $domain, $rule_domain, true ) && in_array( $extension, $rule_tld, true ) ) {
+			if ( 'always_allow' === $rule_condition  ) {
+				$is_allowed = true;
+			} elseif ( 'never_allow' === $rule_condition  ) {
+				$is_allowed = false;
+			}
+		} elseif ( '*' === $rule_domain && in_array( $extension, $rule_tld, true ) ) {
+			if ( 'always_allow' === $rule_condition  ) {
+				$is_allowed = true;
+			} elseif ( 'never_allow' === $rule_condition  ) {
+				$is_allowed = false;
+			}
+		}
 	}
 
 	// If no matching found, allow registration by default.
-	return true;
+	if ( '' === $is_allowed ) {
+		return true;
+	} else {
+		return $is_allowed;
+	}
 
 }
