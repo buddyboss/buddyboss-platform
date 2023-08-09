@@ -3050,6 +3050,7 @@ function bb_admin_setting_callback_domain_restrictions() {
 		<div class="registration-restrictions-rule-list bb-sortable">
 
 			<div class="registration-restrictions-rule">
+				<span class='registration-restrictions-priority'>1</span>
 				<div class="registration-restrictions-input">
 					<input type="text" name="bb-domain-restrictions[0][domain]" class="registration-restrictions-domain" placeholder="example" value="" />
 				</div>
@@ -3076,6 +3077,7 @@ function bb_admin_setting_callback_domain_restrictions() {
 
 			<!-- This below HTML is for clone only - Starts -->
 			<div class="custom registration-restrictions-rule" style="display: none;">
+				<span class='registration-restrictions-priority'>2</span>
 				<div class="registration-restrictions-input">
 					<input type="text" name="bb-domain-restrictions[placeholder_priority_index][domain]" class="registration-restrictions-domain" placeholder="example" value="" />
 				</div>
@@ -3174,4 +3176,45 @@ function bb_admin_setting_callback_email_restrictions() {
 		<button class="button registration-restrictions-add-rule"> <?php esc_html_e( 'Add Email', 'buddyboss' ); ?></button>
 	</div>
 	<?php
+}
+
+
+/**
+ * Callback function for registration restrictions section.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ */
+function bb_admin_setting_callback_registration_restrictions_instructions() {
+	?>
+	<p class='description'><?php esc_html_e( 'Domain restrictions can be configured to limit new user registrations to specific domains or extensions. This setting is only available when using the BuddyBoss Registration Form.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Get label with buddyboss registration notice if not active for the registration restrictions.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_get_buddyboss_registration_notice() {
+	static $bb_registration_notice = '';
+
+	if ( '' !== $bb_registration_notice ) {
+		return $bb_registration_notice;
+	}
+
+	if ( bp_allow_custom_registration() ) {
+		$bb_registration_notice = sprintf(
+			'<br/><span class="bb-head-notice"> %1$s <strong>%2$s</strong> %3$s</span>',
+			esc_html__( 'Enable the', 'buddyboss' ),
+			esc_html__( 'BuddyBoss Registration Form', 'buddyboss' ),
+			esc_html__( 'to unlock', 'buddyboss' )
+		);
+	} else {
+		$bb_registration_notice = '';
+	}
+
+	return $bb_registration_notice;
 }

@@ -2466,6 +2466,7 @@ window.bp = window.bp || {};
 			var $row     = $this.closest( '.registration-restrictions-listing' ).find( '.registration-restrictions-rule-list .registration-restrictions-rule.custom' ).html();
 			$this.closest( '.registration-restrictions-listing' ).find( '.registration-restrictions-rule-list' ).append( ' <div class="registration-restrictions-rule"> ' + $row.replace( regex, newindex ) + ' </div> ' );
 			$this.prev( '.registration-restrictions-lastindex').val( newindex );
+			domain_restiction_update_priority_number();
 		}
 	);
 
@@ -2480,9 +2481,20 @@ window.bp = window.bp || {};
 				$this.closest( '.registration-restrictions-rule' ).remove();
 				$this.parents('.registration-restrictions-listing').find( '.registration-restrictions-lastindex').val( newindex );
 			}
+			domain_restiction_update_priority_number();
 		}
 	);
 
-	$( '.registration-restrictions-rule-list.bb-sortable' ).sortable();
+	$( '.registration-restrictions-rule-list.bb-sortable' ).sortable({
+        update: function( event, ui ) {
+            domain_restiction_update_priority_number();
+        }
+    });
+
+	function domain_restiction_update_priority_number() {
+        $('.bb-sortable .registration-restrictions-rule:not(.custom)').each( function( index ) {
+			$( this ).find( '.registration-restrictions-priority' ).html( index + 1 );
+        });
+    }
 
 }());
