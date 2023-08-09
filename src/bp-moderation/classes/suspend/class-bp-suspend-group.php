@@ -237,6 +237,8 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
+		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $group_id;
+
 		if ( $this->background_disabled ) {
 			$args['type'] = self::$type;
 			$this->hide_related_content( $group_id, $hide_sitewide, $args );
@@ -247,7 +249,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 					'type'              => $this->item_type,
 					'group'             => $group_name,
 					'data_id'           => $group_id,
-					'secondary_data_id' => '23',
+					'secondary_data_id' => $args['parent_id'],
 					'callback'          => array( $this, 'hide_related_content' ),
 					'args'              => array( $group_id, $hide_sitewide, $args ),
 				),

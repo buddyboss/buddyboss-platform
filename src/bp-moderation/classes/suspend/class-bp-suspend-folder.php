@@ -245,6 +245,8 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
+		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $folder_id;
+
 		if ( $this->background_disabled ) {
 			$this->hide_related_content( $folder_id, $hide_sitewide, $args );
 		} else {
@@ -253,7 +255,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 					'type'              => $this->item_type,
 					'group'             => $group_name,
 					'data_id'           => $folder_id,
-					'secondary_data_id' => '23',
+					'secondary_data_id' => $args['parent_id'],
 					'callback'          => array( $this, 'hide_related_content' ),
 					'args'              => array( $folder_id, $hide_sitewide, $args ),
 				),

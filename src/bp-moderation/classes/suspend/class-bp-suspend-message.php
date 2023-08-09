@@ -192,6 +192,8 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
+		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $message_id;
+
 		if ( $this->background_disabled ) {
 			$this->hide_related_content( $message_id, $hide_sitewide, $args );
 		} else {
@@ -200,7 +202,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 					'type'              => $this->item_type,
 					'group'             => $group_name,
 					'data_id'           => $message_id,
-					'secondary_data_id' => '23',
+					'secondary_data_id' => $args['parent_id'],
 					'callback'          => array( $this, 'hide_related_content' ),
 					'args'              => array( $message_id, $hide_sitewide, $args ),
 				),
