@@ -421,7 +421,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 					'type'              => $this->item_type,
 					'group'             => $group_name,
 					'data_id'           => $member_id,
-					'secondary_data_id' => '23',
+					'secondary_data_id' => bp_loggedin_user_id(),
 					'callback'          => array( $this, 'hide_related_content' ),
 					'args'              => array( $member_id, $hide_sitewide, $args ),
 				)
