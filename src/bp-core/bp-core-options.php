@@ -2352,7 +2352,7 @@ function bb_domain_restrictions_setting( $default = '' ) {
 	 *
 	 * @param bool $value Blacklist email and domain list.
 	 */
-	return apply_filters( 'bb_blacklist_email_setting', bp_get_option( 'bb-blacklist-email-setting', '' ) );
+	return apply_filters( 'bb_domain_restrictions_setting', bp_get_option( 'bb-domain-restrictions', '' ) );
 }
 
 /**
@@ -2373,5 +2373,5 @@ function bb_email_restrictions_setting( $default = '' ) {
 	 *
 	 * @param bool $value whitelist email and domain list.
 	 */
-	return apply_filters( 'bb_blacklist_email_setting', bp_get_option( 'bb-whitelist-email-setting', '' ) );
+	return apply_filters( 'bb_email_restrictions_setting', bp_get_option( 'bb-email-restrictions', '' ) );
 }
