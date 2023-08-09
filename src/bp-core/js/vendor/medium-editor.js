@@ -7664,6 +7664,22 @@ MediumEditor.extensions = {};
             // do some DOM clean-up for known browser issues after the action
             if (action === 'insertunorderedlist' || action === 'insertorderedlist') {
                 MediumEditor.util.cleanListDOM(this.options.ownerDocument, this.getSelectedParentElement());
+                
+                if( this.getSelectedParentElement().parentNode.classList.contains( 'medium-editor-element' ) ) {
+                    // element that will be wrapped
+                    var el = this.getSelectedParentElement();
+                    var elLength = el.innerText.length;
+
+                    // create wrapper container
+                    var wrapper = document.createElement('p');
+
+                    // insert wrapper before el in the DOM tree
+                    el.parentNode.insertBefore(wrapper, el);
+
+                    // move el into wrapper
+                    wrapper.appendChild(el);
+                    MediumEditor.selection.moveCursor(this.options.ownerDocument, el, 1);
+                }
             }
 
             this.checkSelection();
