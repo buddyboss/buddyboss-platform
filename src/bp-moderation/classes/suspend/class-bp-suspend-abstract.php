@@ -64,6 +64,13 @@ abstract class BP_Suspend_Abstract {
 	);
 
 	/**
+	 * Item type
+	 *
+	 * @var string
+	 */
+	public $parent_id = '';
+
+	/**
 	 * Check whether bypass argument pass for admin user or not.
 	 *
 	 * @since BuddyBoss 1.5.6
@@ -203,8 +210,8 @@ abstract class BP_Suspend_Abstract {
 						 */
 						do_action( 'bb_suspend_hide_before', $content_type, $content_id, $args );
 
-						$args['page'] = 1;
-
+						$args['page']      = 1;
+						$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $item_id;
 						/**
 						 * Add related content of reported item into hidden list
 						 *
@@ -235,10 +242,11 @@ abstract class BP_Suspend_Abstract {
 
 				$args['page'] = ++$page;
 
-				$parent_id = 23;
+				$parent_id = ! empty( $this->parent_id ) ? $this->parent_id : $item_id;
 				if ( BP_Moderation_Members::$moderation_type === $this->item_type ) {
 					$parent_id = bp_loggedin_user_id();
 				}
+				$args['parent_id'] = $parent_id;
 				$bb_background_updater->data(
 					array(
 						'type'              => $this->item_type,
