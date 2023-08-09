@@ -413,11 +413,10 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
-		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $member_id;
-
 		if ( $this->background_disabled || ! $force_bg_process ) {
 			$this->hide_related_content( $member_id, $hide_sitewide, $args );
 		} else {
+			$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $member_id;
 			$bb_background_updater->data(
 				array(
 					'type'              => $this->item_type,
