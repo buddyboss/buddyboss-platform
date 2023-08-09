@@ -291,6 +291,10 @@ class BP_Core_Suspend {
 			unset( $args['blocked_user'] );
 		}
 
+		if ( isset( $args['parent_id'] ) ) {
+			unset( $args['parent_id'] );
+		}
+
 		/**
 		 * Hook fire before item unsuspended
 		 *

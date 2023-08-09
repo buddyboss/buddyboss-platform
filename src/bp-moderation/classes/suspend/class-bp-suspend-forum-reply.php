@@ -367,6 +367,8 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
+		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $reply_id;
+
 		if ( $this->background_disabled ) {
 			$this->unhide_related_content( $reply_id, $hide_sitewide, $force_all, $args );
 		} else {
@@ -375,7 +377,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 					'type'              => $this->item_type,
 					'group'             => $group_name,
 					'data_id'           => $reply_id,
-					'secondary_data_id' => '23',
+					'secondary_data_id' => $args['parent_id'],
 					'callback'          => array( $this, 'unhide_related_content' ),
 					'args'              => array( $reply_id, $hide_sitewide, $force_all, $args ),
 				),

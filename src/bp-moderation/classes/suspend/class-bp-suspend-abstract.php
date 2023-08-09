@@ -243,7 +243,7 @@ abstract class BP_Suspend_Abstract {
 						'type'              => $this->item_type,
 						'group'             => $group_name,
 						'data_id'           => $item_id,
-						'secondary_data_id' => (string) $parent_id,
+						'secondary_data_id' => $parent_id,
 						'callback'          => array( $this, 'hide_related_content' ),
 						'args'              => array( $item_id, $hide_sitewide, $args ),
 					),
@@ -323,6 +323,8 @@ abstract class BP_Suspend_Abstract {
 			$page = $args['page'];
 		}
 
+		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $item_id;
+
 		$related_contents = array_filter( $this->get_related_contents( $item_id, $args ) );
 
 		if ( ! empty( $related_contents ) ) {
@@ -401,16 +403,13 @@ abstract class BP_Suspend_Abstract {
 
 				$args['page'] = ++$page;
 
-				$parent_id = 23;
-				if ( BP_Moderation_Members::$moderation_type === $this->item_type ) {
-					$parent_id = bp_loggedin_user_id();
-				}
+				$parent_id = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $item_id;
 				$bb_background_updater->data(
 					array(
 						'type'              => $this->item_type,
 						'group'             => $group_name,
 						'data_id'           => $item_id,
-						'secondary_data_id' => (string) $parent_id,
+						'secondary_data_id' => $parent_id,
 						'callback'          => array( $this, 'unhide_related_content' ),
 						'args'              => array( $item_id, $hide_sitewide, $force_all, $args ),
 					),
