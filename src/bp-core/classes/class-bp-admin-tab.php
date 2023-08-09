@@ -430,6 +430,12 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 						unset( $_POST[ $setting_name ]['placeholder_priority_index'] );
 						$value = $_POST[ $setting_name ];
 
+						if ( 'bb-domain-restrictions' === $setting_name ) {
+
+							//Re-index as per priority.
+							$value = array_values( $value );
+						}
+
 					} else {
 						$value = isset( $_POST[ $setting_name ] ) ? ( is_array( $_POST[ $setting_name ] ) ? map_deep( wp_unslash( $_POST[ $setting_name ] ), 'sanitize_text_field' ) : sanitize_text_field( wp_unslash( $_POST[ $setting_name ] ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 					}

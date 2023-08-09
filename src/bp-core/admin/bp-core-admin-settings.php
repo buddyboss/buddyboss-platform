@@ -3170,6 +3170,7 @@ function bb_admin_setting_callback_email_restrictions() {
 			<!-- This below HTML is for clone only - Ends -->
 
 		</div>
+		<input type='hidden' class='registration-restrictions-lastindex' value='0' />
 		<button class="button registration-restrictions-add-rule"> <?php esc_html_e( 'Add Email', 'buddyboss' ); ?></button>
 	</div>
 	<?php
