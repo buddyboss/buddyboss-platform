@@ -401,12 +401,17 @@ abstract class BP_Suspend_Abstract {
 				$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
 
 				$args['page'] = ++$page;
+
+				$parent_id = 23;
+				if ( BP_Moderation_Members::$moderation_type === $this->item_type ) {
+					$parent_id = bp_loggedin_user_id();
+				}
 				$bb_background_updater->data(
 					array(
 						'type'              => $this->item_type,
 						'group'             => $group_name,
 						'data_id'           => $item_id,
-						'secondary_data_id' => '23',
+						'secondary_data_id' => (string) $parent_id,
 						'callback'          => array( $this, 'unhide_related_content' ),
 						'args'              => array( $item_id, $hide_sitewide, $force_all, $args ),
 					),
