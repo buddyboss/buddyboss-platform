@@ -1944,22 +1944,18 @@ function bb_moderation_to_hide_forum_activity( $activity_id ) {
  * @return void
  */
 function bb_moderation_migration_on_update() {
-	if ( wp_doing_ajax() ) {
-		return;
-	}
-
 	global $wpdb;
 
+	/**
+	 * Migrate old data to new background jobs.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
 	$sql  = "DELETE FROM {$wpdb->options} WHERE `option_name` LIKE 'wp_1_bp_updater_batch_%' and `option_value` LIKE '%BP_Suspend_%'";
 	$data = $wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 	// Run migration only if any entry deleted from options table.
 	if ( $data ) {
-		/**
-		 * Migrate old data to new background jobs.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 */
 		$suspend_request_args = array(
 			'in_types' => array( BP_Moderation_Members::$moderation_type ),
 			'reported' => false,
