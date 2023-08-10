@@ -2214,6 +2214,18 @@ window.bp = window.bp || {};
 									return;
 								}
 
+								// Check if the current node is text node
+								if ( currentNode.endContainer && currentNode.endContainer.nodeName.toLowerCase() === 'div' && currentNode.endContainer.classList.contains( 'medium-editor-element' ) ) {
+									p = MediumEditorOptDoc.createElement( 'p' );
+									p.innerHTML = '<br>';
+									newP = currentNode.endContainer.appendChild( p );
+									MediumEditor.selection.moveCursor( MediumEditorOptDoc, newP ); // jshint ignore:line
+									setTimeout( function () {
+										newP.children[ 0 ].remove();
+									}, 100 );
+									return;
+								}
+
 								// Check if the current node is not an html element.
 								if ( currentNode.endContainer.parentNode && currentNode.endContainer.parentNode.classList.contains( 'medium-editor-element' ) ) {
 									p = MediumEditorOptDoc.createElement( 'p' );
