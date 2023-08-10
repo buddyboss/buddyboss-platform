@@ -3158,10 +3158,22 @@ window.bp = window.bp || {};
 					// Enable submit button when all documents are uploaded
 					self.dropzone_obj[ dropzone_obj_key ].on(
 						'complete',
-						function() {
+						function( file ) {
 							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
 								var formElement = target.closest( 'form' );
 								formElement.removeClass( 'media-uploading' );
+							}
+
+							var filename  = !_.isUndefined( file.name ) ? file.name : '';
+							var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+							var file_icon     = ( ! _.isUndefined( file.svg_icon ) ? file.svg_icon : '' );
+							var icon_class    = ! _.isEmpty( file_icon ) ? file_icon : 'bb-icon-file-' + fileExtension;
+
+							if (
+								$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).length  &&
+								$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).hasClass( 'bb-icon-file' )
+							) {
+								$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( icon_class );
 							}
 						}
 					);

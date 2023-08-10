@@ -837,7 +837,8 @@ window.bp = window.bp || {};
 								'url': draft_documents[ d ].url,
 								'uuid': draft_documents[ d ].uuid,
 								'menu_order': draft_documents[ d ].menu_order,
-								'saved': false
+								'saved': false,
+								'svg_icon': ! _.isUndefined( draft_documents[ d ].svg_icon ) ? draft_documents[ d ].svg_icon : ''
 							}
 						);
 
@@ -851,10 +852,11 @@ window.bp = window.bp || {};
 								title: draft_documents[ d ].name,
 								filename: draft_documents[ d ].full_name,
 								size: draft_documents[ d ].size,
-								uuid: draft_documents[ d ].uuid
+								uuid: draft_documents[ d ].uuid,
 							},
 							dataURL: draft_documents[ d ].url,
-							id: draft_documents[ d ].id
+							id: draft_documents[ d ].id,
+							svg_icon: ! _.isUndefined( draft_documents[ d ].svg_icon ) ? draft_documents[ d ].svg_icon : ''
 						};
 
 						self.dropzone_obj[ d_dropzone_obj_key ].files.push( d_mock_file );
