@@ -8868,7 +8868,7 @@ function bb_format_blacklist_whitelist_email_setting( $data_values = '' ) {
 function bb_is_allowed_register_email_address( $email = '' ) {
 
 	$email = strtolower( trim( $email ) );
-	if( empty( $email ) ) {
+	if( empty( $email ) || ( ! is_email( $email ) ) ) {
 		return false;
 	}
 	
@@ -8892,23 +8892,37 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 		}
 	 }
 
-	// Check condition the email domain.
-	$domain     = substr( strrchr( $email, "@" ), 1 );
-	$extension  = strrchr( $email, "." );
-	$is_allowed = '';
+	// Split the email into parts
+	$email_parts = explode( '@', $email );
 
+	if ( count( $email_parts ) === 2 ) {
+		$username     = $email_parts[0];
+		$domain_parts = explode( '.', $email_parts[1] );
+		if ( count( $domain_parts ) >= 2 ) {
+			$domain    = $domain_parts[0];
+			$extension = end( $domain_parts );
+		} else {
+			return false;
+		}
+	} else {
+		return false;
+	}
+
+	// Check condition the email domain.
+	$is_allowed = '';
 	foreach( $domain_restrictions as $key => $rule ) {
 		$rule_domain    = strtolower( trim( $rule['domain'] ) );
 		$rule_tld       = strtolower( trim( $rule['tld'] ) );
 		$rule_condition = $rule['condition'];
 
-		if ( in_array( $domain, $rule_domain, true ) && in_array( $extension, $rule_tld, true ) ) {
+		// Exact match with domain and extension.
+		if ( $domain === $rule_domain && $extension === $rule_tld ) {
 			if ( 'always_allow' === $rule_condition  ) {
 				$is_allowed = true;
 			} elseif ( 'never_allow' === $rule_condition  ) {
 				$is_allowed = false;
 			}
-		} elseif ( '*' === $rule_domain && in_array( $extension, $rule_tld, true ) ) {
+		} elseif ( '*' === $rule_domain && $extension === $rule_tld ) {
 			if ( 'always_allow' === $rule_condition  ) {
 				$is_allowed = true;
 			} elseif ( 'never_allow' === $rule_condition  ) {
@@ -8916,6 +8930,8 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 			}
 		}
 	}
+	
+	error_log('res'.$is_allowed);
 
 	// If no matching found, allow registration by default.
 	if ( '' === $is_allowed ) {
