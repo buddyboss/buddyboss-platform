@@ -577,7 +577,8 @@ window.bp = window.bp || {};
 							'menu_order': activity_data.document[ doci ].menu_order,
 							'folder_id': activity_data.document[ doci ].folder_id,
 							'group_id': activity_data.document[ doci ].group_id,
-							'saved': true
+							'saved': true,
+							'svg_icon': !_.isUndefined( activity_data.document[ doci ].svg_icon ) ? activity_data.document[ doci ].svg_icon : ''
 						};
 					} else {
 						document_edit_data = {
@@ -592,6 +593,7 @@ window.bp = window.bp || {};
 							'folder_id': activity_data.document[ doci ].folder_id,
 							'group_id': activity_data.document[ doci ].group_id,
 							'saved': false,
+							'svg_icon': !_.isUndefined( activity_data.document[ doci ].svg_icon ) ? activity_data.document[ doci ].svg_icon : ''
 						};
 					}
 
@@ -606,7 +608,8 @@ window.bp = window.bp || {};
 						},
 						dataURL: activity_data.document[ doci ].url,
 						id: activity_data.document[ doci ].doc_id,
-						document_edit_data: document_edit_data
+						document_edit_data: document_edit_data,
+						svg_icon: !_.isUndefined( activity_data.document[ doci ].svg_icon ) ? activity_data.document[ doci ].svg_icon : ''
 					};
 
 					if ( self.dropzone ) {
@@ -1887,9 +1890,6 @@ window.bp = window.bp || {};
 							self.document.push( file.document_edit_data );
 							self.model.set( 'document', self.document );
 						}
-						var filename = file.upload.filename;
-						var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
-						$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
 					}
 				);
 
@@ -1947,10 +1947,20 @@ window.bp = window.bp || {};
 							file.id                  = response.data.id;
 							response.data.uuid       = file.upload.uuid;
 							response.data.group_id   = ! _.isUndefined( BP_Nouveau.media ) && ! _.isUndefined( BP_Nouveau.media.group_id ) ? BP_Nouveau.media.group_id : false;
+							response.data.svg_icon   = ( ! _.isUndefined( response.data.svg_icon ) ? response.data.svg_icon : '' );
 							response.data.saved      = false;
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 							self.document.push( response.data );
 							self.model.set( 'document', self.document );
+
+							var filename      = file.upload.filename;
+							var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+							var file_icon     = ( ! _.isUndefined( response.data.svg_icon ) ? response.data.svg_icon : '' );
+							var icon_class    = ! _.isEmpty( file_icon ) ? file_icon : 'bb-icon-file-' + fileExtension;
+
+							if ( $( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).length ) {
+								$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( icon_class );
+							}
 						} else {
 							var node, _i, _len, _ref, _results;
 							var message = response.data.feedback;
@@ -2051,9 +2061,21 @@ window.bp = window.bp || {};
 				// Enable submit button when all documents are uploaded
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'complete',
-					function() {
+					function( file ) {
 						if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
-							self.$el.closest( '#whats-new-form').removeClass( 'media-uploading' );
+							self.$el.closest( '#whats-new-form' ).removeClass( 'media-uploading' );
+						}
+
+						var filename  = !_.isUndefined( file.name ) ? file.name : '';
+						var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+						var file_icon     = ( ! _.isUndefined( file.svg_icon ) ? file.svg_icon : '' );
+						var icon_class    = ! _.isEmpty( file_icon ) ? file_icon : 'bb-icon-file-' + fileExtension;
+
+						if (
+							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).length  &&
+							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).hasClass( 'bb-icon-file' )
+						) {
+							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( icon_class );
 						}
 					}
 				);
