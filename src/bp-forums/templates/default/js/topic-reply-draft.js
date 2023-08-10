@@ -311,6 +311,7 @@ window.bp = window.bp || {};
 			this.clearTopicReplyDraftIntervals();
 			setTimeout(
 				function() {
+					this.resetTopicReplyDraftLinkPreview();
 					this.resetTopicReplyDraftPostForm();
 				}.bind( this ),
 				500
@@ -345,6 +346,9 @@ window.bp = window.bp || {};
 			bp.Nouveau.Media.reply_topic_display_post = 'edit';
 
 			var currentForm = this.currentForm ? this.currentForm : $( 'form#new-post' );
+
+			// Remove the link preview for the draft too.
+			$( currentForm ).find( '#bb_link_url' ).remove();
 
 			// Remove class to display draft.
 			currentForm.removeClass( 'has-draft has-content has-media has-gif has-link-preview' );
@@ -762,6 +766,17 @@ window.bp = window.bp || {};
 				);
 
 				tags_element.trigger( 'change' );
+			}
+
+			// Link preview.
+			if ( 'undefined' !== typeof activity_data.bb_link_url && '' !== activity_data.bb_link_url ) {
+				$form.find( '#bb_link_url' ).remove();
+				$('<input>').attr({
+					type: 'hidden',
+					id: 'bb_link_url',
+					name: 'bb_link_url',
+					value: activity_data.bb_link_url
+				}).appendTo( $form );
 			}
 
 			this.previewDraftMedia( $form, activity_data );
