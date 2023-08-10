@@ -2274,7 +2274,7 @@ window.bp = window.bp || {};
 									if ( node.nextElementSibling ) {
 										newLI = node.parentNode.insertBefore( li, node.nextSibling );
 									} else {
-										newLI = node.parentNode.insertBefore( li, node.parentNode.nextSibling );
+										newLI = node.parentNode.appendChild( li );
 									}
 									MediumEditor.selection.moveCursor( MediumEditorOptDoc, newLI ); // jshint ignore:line
 									event.preventDefault();
