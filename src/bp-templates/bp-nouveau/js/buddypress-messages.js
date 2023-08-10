@@ -2627,7 +2627,7 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Messages.dropzone.on(
 					'addedfile',
-					function ( file ) {
+					function () {
 						total_uploaded_file++;
 					}
 				);

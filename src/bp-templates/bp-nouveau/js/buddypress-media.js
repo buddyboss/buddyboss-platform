@@ -2626,7 +2626,7 @@ window.bp = window.bp || {};
 
 					self.document_dropzone_obj.on(
 						'addedfile',
-						function ( file ) {
+						function () {
 						}
 					);
 
@@ -2997,7 +2997,7 @@ window.bp = window.bp || {};
 
 					self.dropzone_obj[ dropzone_obj_key ].on(
 						'addedfile',
-						function ( file ) {
+						function () {
 						}
 					);
 
@@ -4018,7 +4018,7 @@ window.bp = window.bp || {};
 
 				self.dropzone_obj.on(
 					'addedfile',
-					function ( file ) {
+					function () {
 						setTimeout(
 							function () {
 								if ( self.dropzone_obj.getAcceptedFiles().length ) {
