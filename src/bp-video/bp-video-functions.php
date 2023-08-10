@@ -910,7 +910,7 @@ function bp_video_add_generate_thumb_background_process( $video_id ) {
 					'type'     => 'video',
 					'group'    => 'video_thumbnail',
 					'data_id'  => $video_id,
-					'priority' => 4,
+					'priority' => 5,
 					'callback' => 'bp_video_background_create_thumbnail',
 					'args'     => array( $video ),
 				)
