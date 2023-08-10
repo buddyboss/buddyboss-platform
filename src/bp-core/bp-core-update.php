@@ -464,7 +464,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 20561 ) {
-			bb_update_to_2_3_90();
+			bb_update_to_2_4_10();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
@@ -3142,7 +3142,7 @@ function bb_core_update_repair_duplicate_following_notification() {
  *
  * @return void
  */
-function bb_update_to_2_3_90() {
+function bb_update_to_2_4_10() {
 	if ( bp_is_active( 'document' ) ) {
 		$saved_extensions = bp_get_option( 'bp_document_extensions_support', array() );
 		$default          = bp_media_allowed_document_type();
