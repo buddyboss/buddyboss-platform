@@ -1835,9 +1835,6 @@ window.bp = window.bp || {};
 							self.document.push( file.document_edit_data );
 							self.model.set( 'document', self.document );
 						}
-						var filename = file.upload.filename;
-						var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
-						$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
 					}
 				);
 
@@ -1899,6 +1896,15 @@ window.bp = window.bp || {};
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 							self.document.push( response.data );
 							self.model.set( 'document', self.document );
+
+							var filename = file.upload.filename;
+							var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+							var file_icon = ( !_.isUndefined( response.data.svg_icon ) ? response.data.svg_icon : '' );
+							var icon_class = !_.isEmpty( file_icon ) ? file_icon : 'bb-icon-file-' + fileExtension;
+
+							if ( $( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).length ) {
+								$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( icon_class );
+							}
 						} else {
 							var node, _i, _len, _ref, _results;
 							var message = response.data.feedback;
@@ -2580,7 +2586,7 @@ window.bp = window.bp || {};
 			},
 
 			search: function ( e ) {
-				
+
 				// Prevent search dropdown from closing with enter key
 				if ( e.key === 'Enter' || e.keyCode === 13 ) {
 					e.preventDefault();
@@ -2605,7 +2611,7 @@ window.bp = window.bp || {};
 					},
 					1000
 				);
-				
+
 			},
 
 			searchGif: function ( q ) {

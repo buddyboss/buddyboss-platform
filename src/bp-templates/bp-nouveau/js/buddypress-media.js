@@ -2627,9 +2627,6 @@ window.bp = window.bp || {};
 					self.document_dropzone_obj.on(
 						'addedfile',
 						function ( file ) {
-							var filename = file.upload.filename;
-							var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
-							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
 						}
 					);
 
@@ -2710,6 +2707,15 @@ window.bp = window.bp || {};
 								response.data.saved = false;
 								self.dropzone_media.push( response.data );
 								self.addDocumentIdsToGroupMessagesForm();
+
+								var filename = file.upload.filename;
+								var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+								var file_icon = ( !_.isUndefined( response.data.svg_icon ) ? response.data.svg_icon : '' );
+								var icon_class = !_.isEmpty( file_icon ) ? file_icon : 'bb-icon-file-' + fileExtension;
+
+								if ( $( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).length ) {
+									$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( icon_class );
+								}
 							} else {
 								var node, _i, _len, _ref, _results;
 								var message = response.data.feedback;
@@ -2992,9 +2998,6 @@ window.bp = window.bp || {};
 					self.dropzone_obj[ dropzone_obj_key ].on(
 						'addedfile',
 						function ( file ) {
-							var filename = file.upload.filename;
-							var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
-							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
 						}
 					);
 
@@ -3080,6 +3083,15 @@ window.bp = window.bp || {};
 								response.data.saved = false;
 								self.dropzone_media[ dropzone_obj_key ].push( response.data );
 								self.addDocumentIdsToForumsForm( dropzone_container );
+
+								var filename = file.upload.filename;
+								var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+								var file_icon = ( !_.isUndefined( response.data.svg_icon ) ? response.data.svg_icon : '' );
+								var icon_class = !_.isEmpty( file_icon ) ? file_icon : 'bb-icon-file-' + fileExtension;
+
+								if ( $( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).length ) {
+									$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( icon_class );
+								}
 							} else {
 								var node, _i, _len, _ref, _results;
 								var message = response.data.feedback;
@@ -4003,11 +4015,6 @@ window.bp = window.bp || {};
 							},
 							1000
 						);
-						var filename = file.upload.filename;
-						var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
-						if( $( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').length ) {
-							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
-						}
 					}
 				);
 
@@ -4065,6 +4072,15 @@ window.bp = window.bp || {};
 							response.data.group_id = self.current_group_id;
 							response.data.saved = false;
 							self.dropzone_media.push( response.data );
+
+							var filename = file.upload.filename;
+							var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+							var file_icon = ( !_.isUndefined( response.data.svg_icon ) ? response.data.svg_icon : '' );
+							var icon_class = !_.isEmpty( file_icon ) ? file_icon : 'bb-icon-file-' + fileExtension;
+
+							if ( $( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).length ) {
+								$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( icon_class );
+							}
 						} else {
 							var node, _i, _len, _ref, _results;
 							var message = response.data.feedback;
