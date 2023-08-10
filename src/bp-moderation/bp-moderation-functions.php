@@ -1944,93 +1944,100 @@ function bb_moderation_to_hide_forum_activity( $activity_id ) {
  * @return void
  */
 function bb_moderation_migration_on_update() {
-
 	if ( wp_doing_ajax() ) {
 		return;
 	}
 
-	/**
-	 * Migrate old data to new background jobs.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	$suspend_request_args = array(
-		'in_types' => array( BP_Moderation_Members::$moderation_type ),
-		'reported' => false,
-		'per_page' => false,
-	);
+	global $wpdb;
 
-	$suspend_requests = BP_Moderation::get( $suspend_request_args );
+	$sql  = "DELETE FROM {$wpdb->options} WHERE `option_name` LIKE 'wp_1_bp_updater_batch_%' and `option_value` LIKE '%BP_Suspend_%'";
+	$data = $wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
-	if ( ! empty( $suspend_requests['moderations'] ) ) {
-		foreach ( $suspend_requests['moderations'] as $data ) {
+	// Run migration only if any entry deleted from options table.
+	if ( $data ) {
+		/**
+		 * Migrate old data to new background jobs.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		$suspend_request_args = array(
+			'in_types' => array( BP_Moderation_Members::$moderation_type ),
+			'reported' => false,
+			'per_page' => false,
+		);
 
-			// update data for the blocked users.
-			if ( isset( $data->reported ) ) {
-				if ( ! empty( $data->reported ) ) {
-					$args = array(
-						'item_id'     => $data->item_id,
-						'item_type'   => $data->item_type,
-						'user_report' => ( isset( $data->user_report ) ? $data->user_report : 0 ),
-						'blog_id'     => $data->blog_id,
-					);
+		$suspend_requests = BP_Moderation::get( $suspend_request_args );
 
-					BP_Core_Suspend::add_suspend( $args );
+		if ( ! empty( $suspend_requests['moderations'] ) ) {
+			foreach ( $suspend_requests['moderations'] as $data ) {
+
+				// update data for the blocked users.
+				if ( isset( $data->reported ) ) {
+					if ( ! empty( $data->reported ) ) {
+						$args = array(
+							'item_id'     => $data->item_id,
+							'item_type'   => $data->item_type,
+							'user_report' => ( isset( $data->user_report ) ? $data->user_report : 0 ),
+							'blog_id'     => $data->blog_id,
+						);
+
+						BP_Core_Suspend::add_suspend( $args );
+					}
 				}
-			}
 
-			// updated data based on suspend entries.
-			if ( isset( $data->user_suspended ) ) {
-				if ( ! empty( $data->user_suspended ) ) {
-					BP_Suspend_Member::suspend_user( $data->item_id );
-				} elseif (
-					empty( $data->user_suspended ) &&
-					empty( $data->user_report )
-				) {
-					BP_Suspend_Member::unsuspend_user( $data->item_id );
+				// updated data based on suspend entries.
+				if ( isset( $data->user_suspended ) ) {
+					if ( ! empty( $data->user_suspended ) ) {
+						BP_Suspend_Member::suspend_user( $data->item_id );
+					} elseif (
+						empty( $data->user_suspended ) &&
+						empty( $data->user_report )
+					) {
+						BP_Suspend_Member::unsuspend_user( $data->item_id );
+					}
 				}
 			}
 		}
-	}
 
-	$hidden_request_args = array(
-		'exclude_types' => array( BP_Moderation_Members::$moderation_type ),
-		'per_page'      => false,
-	);
+		$hidden_request_args = array(
+			'exclude_types' => array( BP_Moderation_Members::$moderation_type ),
+			'per_page'      => false,
+		);
 
-	$hidden_requests = BP_Moderation::get( $hidden_request_args );
+		$hidden_requests = BP_Moderation::get( $hidden_request_args );
 
-	if ( ! empty( $hidden_requests['moderations'] ) ) {
-		foreach ( $hidden_requests['moderations'] as $data ) {
+		if ( ! empty( $hidden_requests['moderations'] ) ) {
+			foreach ( $hidden_requests['moderations'] as $data ) {
 
-			// update data for the hidden data.
-			if ( isset( $data->hide_sitewide ) ) {
-				if ( ! empty( $data->hide_sitewide ) ) {
-					$moderation = new BP_Moderation( $data->item_id, $data->item_type );
-					$moderation->hide();
-				} else {
-					$args = array(
-						'content_id'   => $data->item_id,
-						'content_type' => $data->item_type,
-					);
+				// update data for the hidden data.
+				if ( isset( $data->hide_sitewide ) ) {
+					if ( ! empty( $data->hide_sitewide ) ) {
+						$moderation = new BP_Moderation( $data->item_id, $data->item_type );
+						$moderation->hide();
+					} else {
+						$args = array(
+							'content_id'   => $data->item_id,
+							'content_type' => $data->item_type,
+						);
 
-					if ( ! empty( $args['content_id'] ) && ! empty( $args['content_type'] ) ) {
-						$moderation = new BP_Moderation( $args['content_id'], $args['content_type'] );
+						if ( ! empty( $args['content_id'] ) && ! empty( $args['content_type'] ) ) {
+							$moderation = new BP_Moderation( $args['content_id'], $args['content_type'] );
 
-						if ( method_exists( $moderation, 'unhide_related_content' ) ) {
-							$moderation->hide_sitewide = 0;
+							if ( method_exists( $moderation, 'unhide_related_content' ) ) {
+								$moderation->hide_sitewide = 0;
 
-							$moderation->unhide_related_content();
-							bp_moderation_delete_meta( $moderation->id, '_hide_by' );
+								$moderation->unhide_related_content();
+								bp_moderation_delete_meta( $moderation->id, '_hide_by' );
 
-							/**
-							 * Fires after an moderation report item has been unhide
-							 *
-							 * @since BuddyBoss 1.5.6
-							 *
-							 * @param BP_Moderation $this current class object.
-							 */
-							do_action( 'bp_moderation_after_unhide', $moderation );
+								/**
+								 * Fires after an moderation report item has been unhide
+								 *
+								 * @since BuddyBoss 1.5.6
+								 *
+								 * @param BP_Moderation $this current class object.
+								 */
+								do_action( 'bp_moderation_after_unhide', $moderation );
+							}
 						}
 					}
 				}
