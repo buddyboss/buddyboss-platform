@@ -463,12 +463,8 @@ function bp_version_updater() {
 			bb_update_to_2_3_80();
 		}
 
-		if ( $raw_db_version < 20471 ) {
-			bb_update_to_2_4_10();
-		}
-
 		if ( $raw_db_version < 20561 ) {
-			bb_update_to_2_3_90();
+			bb_update_to_2_4_10();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
@@ -3141,12 +3137,15 @@ function bb_core_update_repair_duplicate_following_notification() {
 
 /**
  * Migrate icon class for the documents.
+ * Assign the group organizer to the group has 0 members.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @return void
  */
-function bb_update_to_2_3_90() {
+function bb_update_to_2_4_10() {
+	global $wpdb;
+
 	if ( bp_is_active( 'document' ) ) {
 		$saved_extensions = bp_get_option( 'bp_document_extensions_support', array() );
 		$default          = bp_media_allowed_document_type();
@@ -3161,17 +3160,6 @@ function bb_update_to_2_3_90() {
 
 		bp_update_option( 'bp_document_extensions_support', $saved_extensions );
 	}
-}
-
-/**
- * Assign the group organizer to the group has 0 members.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return void
- */
-function bb_update_to_2_4_10() {
-	global $wpdb;
 
 	if ( ! bp_is_active( 'groups' ) ) {
 		return;

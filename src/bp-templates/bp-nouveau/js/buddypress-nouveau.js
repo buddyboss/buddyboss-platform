@@ -3056,7 +3056,7 @@ window.bp = window.bp || {};
 							isInViewPort = true;
 						}
 					} catch ( err ) {
-						console.error( err.message );
+						console.log( err.message );
 						if ( ! isInViewPort && lazy[ i ].getBoundingClientRect().top <= ( ( window.innerHeight || document.documentElement.clientHeight ) + window.scrollY ) ) {
 							isInViewPort = true;
 						}
