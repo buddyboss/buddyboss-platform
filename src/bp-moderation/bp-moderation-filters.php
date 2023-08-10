@@ -1057,7 +1057,7 @@ function bb_moderation_async_request_batch_process( $batch ) {
 		} elseif (
 			isset( $current_args['hide_parent'] ) &&
 			isset( $next_args['hide_parent'] ) &&
-			(int) $current_args['hide_parent'] === (int) $next_args['hide_parent']
+			(int) $current_args['hide_parent'] !== (int) $next_args['hide_parent']
 		) {
 			$batch->data = array();
 			error_log( sprintf( 'Skip parent process: `%s` next found: `%s`', $batch->key, $next_batch->id ) );
