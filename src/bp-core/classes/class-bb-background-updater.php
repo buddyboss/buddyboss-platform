@@ -1168,17 +1168,9 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		public function delete_all_batches() {
 			global $wpdb;
 
-			$table  = $wpdb->options;
-			$column = 'option_name';
+			$table = self::$table_name;
 
-			if ( is_multisite() ) {
-				$table  = $wpdb->sitemeta;
-				$column = 'meta_key';
-			}
-
-			$key = $wpdb->esc_like( $this->identifier . '_batch_' ) . '%';
-
-			$wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE {$column} LIKE %s", $key ) ); // @codingStandardsIgnoreLine.
+			$wpdb->query( "DELETE FROM {$table}" ); // @codingStandardsIgnoreLine.
 
 			return $this;
 		}
