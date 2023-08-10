@@ -2279,6 +2279,9 @@ function bp_activity_post_update( $args = '' ) {
 	// }
 
 	if ( bp_is_user_inactive( $r['user_id'] ) ) {
+		if ( 'wp_error' === $r['error_type'] ) {
+			return new WP_Error( 'bp_activity_inactive_user', __( 'User account has not yet been activated.', 'buddyboss' ) );
+		}
 		return false;
 	}
 
@@ -5977,3 +5980,49 @@ function bb_activity_create_following_post_notification( $args, $paged = 1 ) {
 	bb_activity_create_following_post_notification( $args, $paged );
 }
 
+/**
+ * Returns the list of available BuddyPress activity types.
+ *
+ * @since BuddyPress 9.0.0
+ * @since BuddyBoss 2.3.90
+ *
+ * @return array An array of activity type labels keyed by type names.
+ */
+function bp_activity_get_types_list() {
+	$actions_object = bp_activity_get_actions();
+	$actions_array  = get_object_vars( $actions_object );
+
+	$types = array();
+	foreach ( $actions_array as $component => $actions ) {
+		$new_types = wp_list_pluck( $actions, 'label', 'key' );
+
+		if ( $types ) {
+			// Makes sure activity types are unique.
+			$new_types = array_diff_key( $new_types, $types );
+
+			if ( 'friends' === $component ) {
+				$new_types = array_diff_key(
+					array(
+						'friendship_accepted'              => false,
+						'friendship_created'               => false,
+						'friends_register_activity_action' => false,
+					),
+					$new_types
+				);
+
+				$new_types['friendship_accepted,friendship_created'] = __( 'Friendships', 'buddyboss' );
+			}
+		}
+
+		$types = array_merge( $types, $new_types );
+	}
+
+	/**
+	 * Filter here to edit the activity types list.
+	 *
+	 * @since BuddyPress 9.0.0
+	 *
+	 * @param array $types An array of activity type labels keyed by type names.
+	 */
+	return apply_filters( 'bp_activity_get_types_list', $types );
+}

@@ -343,7 +343,11 @@ if ( ! class_exists( 'BBP_Topics_Admin' ) ) :
 
 					// Super sticky in all forums
 					case 'super':
-						bbp_stick_topic( $topic_id, true );
+						if ( bb_is_group_forum_topic( $topic_id ) ) {
+							bbp_stick_topic( $topic_id );
+						} else {
+							bbp_stick_topic( $topic_id, true );
+						}
 						break;
 
 					// Normal
@@ -496,7 +500,7 @@ if ( ! class_exists( 'BBP_Topics_Admin' ) ) :
 		 * @uses do_action() Calls 'bbp_toggle_topic_admin' with success, post
 		 *                    data, action and message
 		 * @uses add_query_arg() To add custom args to the url
-		 * @uses wp_safe_redirect() Redirect the page to custom url
+		 * @uses bbp_redirect() Redirect the page to custom url
 		 */
 		public function toggle_topic() {
 
@@ -566,10 +570,7 @@ if ( ! class_exists( 'BBP_Topics_Admin' ) ) :
 
 				// Redirect back to the topic
 				$redirect = add_query_arg( $message, remove_query_arg( array( 'action', 'topic_id' ) ) );
-				wp_safe_redirect( $redirect );
-
-				// For good measure
-				exit();
+				bbp_redirect( $redirect );
 			}
 		}
 
@@ -974,6 +975,7 @@ if ( ! class_exists( 'BBP_Topics_Admin' ) ) :
 			// Add post_parent query_var if one is present
 			if ( ! empty( $_GET['bbp_forum_id'] ) ) {
 				$query_vars['meta_key']   = '_bbp_forum_id';
+				$query_vars['meta_type']  = 'NUMERIC';
 				$query_vars['meta_value'] = $_GET['bbp_forum_id'];
 			}
 
