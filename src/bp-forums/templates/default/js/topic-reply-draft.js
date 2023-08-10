@@ -961,7 +961,7 @@ window.bp = window.bp || {};
 								title: draft_documents[ d ].name,
 								filename: draft_documents[ d ].full_name,
 								size: draft_documents[ d ].size,
-								uuid: draft_documents[ d ].uuid,
+								uuid: draft_documents[ d ].uuid
 							},
 							dataURL: draft_documents[ d ].url,
 							id: draft_documents[ d ].id,
