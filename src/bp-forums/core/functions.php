@@ -246,9 +246,9 @@ function bbp_view_query( $view = '', $new_args = '' ) {
  */
 function bbp_get_view_query_args( $view ) {
 	$view   = bbp_get_view_id( $view );
-	$retval = ! empty( $view ) ? bbpress()->views[ $view ]['query'] : false;
+	$retval = ! empty( $view ) && ! empty( $bbp->views[ $view ] ) ? bbpress()->views[ $view ]['query'] : array();
 
-	return apply_filters( 'bbp_get_view_query_args', $retval, $view );
+	return (array) apply_filters( 'bbp_get_view_query_args', $retval, $view );
 }
 
 /** Errors ********************************************************************/
@@ -547,12 +547,20 @@ function bbp_get_paged_rewrite_id() {
  * Get the slug used for paginated requests
  *
  * @since bbPress (r4926)
- * @global object $wp_rewrite The WP_Rewrite object
  * @return string
  */
 function bbp_get_paged_slug() {
-	global $wp_rewrite;
-	return $wp_rewrite->pagination_base;
+	// Default
+	$retval  = 'page';
+	$rewrite = bbp_rewrite();
+
+	// Use $wp_rewrite->pagination_base if available.
+	if ( property_exists( $rewrite, 'pagination_base' ) ) {
+		$retval = $rewrite->pagination_base;
+	}
+
+	// Filter & return.
+	return apply_filters( 'bbp_get_paged_slug', $retval );
 }
 
 /**
@@ -720,8 +728,6 @@ function bbp_db() {
  * Is the environment using pretty URLs?
  *
  * @since 2.5.8 bbPress (r5814)
- *
- * @global object $wp_rewrite The WP_Rewrite object
  *
  * @return bool
  */
@@ -1112,4 +1118,54 @@ function bbp_redirect( $location = '', $status = 302 ) {
  */
 function bb_forum_favourite_legacy_data_support() {
 	return (bool) apply_filters( 'bb_forum_favourite_legacy_data_support', true );
+}
+
+/**
+ * Get the root URL.
+ *
+ * @since bbPress 2.5.8 (r5814)
+ * @since BuddyBoss 2.4.00
+ *
+ * @return string
+ */
+function bbp_get_root_url() {
+
+	// Default.
+	$retval  = '';
+	$rewrite = bbp_rewrite();
+
+	// Use $wp_rewrite->root if available.
+	if ( property_exists( $rewrite, 'root' ) ) {
+		$retval = $rewrite->root;
+	}
+
+	// Filter & return.
+	return apply_filters( 'bbp_get_root_url', $retval );
+}
+
+
+/** Global Helpers ************************************************************/
+
+/**
+ * Return if debugging scripts or not.
+ *
+ * @since 2.6.7 (r7188)
+ * @since BuddyBoss 2.4.00
+ *
+ * @return bool True if debugging scripts. False if not debugging scripts.
+ */
+function bbp_doing_script_debug() {
+	return defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
+}
+
+/**
+ * Return if auto-saving or not.
+ *
+ * @since 2.6.7 (r7188)
+ * @since BuddyBoss 2.4.00
+ *
+ * @return bool True if mid auto-save. False if not mid auto-save.
+ */
+function bbp_doing_autosave() {
+	return defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE;
 }
