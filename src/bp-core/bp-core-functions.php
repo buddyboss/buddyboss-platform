@@ -8881,26 +8881,27 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 	}
 
 	// Check if the email address is allowed or not.
-	$key = array_search( $email, array_column( $email_restrictions, 'address' ) );
-
-	// 👇 key is found, check for allow or not.
-	if ( $key !== false ) {
-		if ( 'always_allow' === $email_restrictions[ $key ][ 'condition' ] ) {
-			return true;
-		} elseif ( 'never_allow' === $email_restrictions[ $key ][ 'condition' ] ) {
-			return false;
+	foreach( $email_restrictions as $key => $rule ) { 
+		$rule_email = strtolower( trim( $rule['address'] ) );
+		if ( $email === $rule_email ) {
+			if ( 'always_allow' === $rule['condition' ] ) {
+				return true;
+			} elseif ( 'never_allow' === $rule['condition'] ) {
+				return false;
+			}
 		}
-	 }
+	}
+	 
 
 	// Split the email into parts
 	$email_parts = explode( '@', $email );
-
 	if ( count( $email_parts ) === 2 ) {
-		$username     = $email_parts[0];
-		$domain_parts = explode( '.', $email_parts[1] );
+		$username       = $email_parts[0];
+		$domain_and_ext = $email_parts[1];
+		$domain_parts   = explode( '.', $email_parts[1] );
 		if ( count( $domain_parts ) >= 2 ) {
-			$domain    = $domain_parts[0];
-			$extension = end( $domain_parts );
+			$extension = array_pop( $domain_parts );
+			$domain    = implode( '.', $domain_parts );
 		} else {
 			return false;
 		}
@@ -8910,28 +8911,65 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 
 	// Check condition the email domain.
 	$is_allowed = '';
+	$only_allow = false;
 	foreach( $domain_restrictions as $key => $rule ) {
+
+		// // Already return true if match for only allow for rest it will be false;
+		// if ( true === $only_allow ) {
+		// 	return false;
+		// }
+
 		$rule_domain    = strtolower( trim( $rule['domain'] ) );
 		$rule_tld       = strtolower( trim( $rule['tld'] ) );
 		$rule_condition = $rule['condition'];
 
+		// if ( 'only_allow' === $rule_condition ) {
+		// 	$only_allow = true;
+		// }
+		error_log( $rule_domain );
+		error_log( $rule_tld );
+		error_log( $rule_condition );
+		error_log( $domain );
+		error_log( $domain_and_ext );
+		error_log( $rule_domain . '.'. $rule_tld );
 		// Exact match with domain and extension.
-		if ( $domain === $rule_domain && $extension === $rule_tld ) {
-			if ( 'always_allow' === $rule_condition  ) {
-				$is_allowed = true;
+		if ( $domain_and_ext === $rule_domain . '.'. $rule_tld ) {
+			if ( 'only_allow' === $rule_condition  ) {
+				return true;
+			} elseif ( 'always_allow' === $rule_condition  ) {
+				return true;
 			} elseif ( 'never_allow' === $rule_condition  ) {
-				$is_allowed = false;
+				return false;
 			}
+
+			//domain starting with placeholder.
+		} elseif ( 0 === strpos( $rule_domain, '*.' ) && $extension === $rule_tld ) {
+
+			$pattern = preg_quote( $rule_domain . '.'. $rule_tld, '/' );
+			$pattern = str_replace( '\*', '[a-zA-Z0-9.-]*', $pattern );
+			$pattern = "/$pattern$/";
+
+			if ( preg_match( $pattern, $domain_and_ext ) ) {
+				if ( 'only_allow' === $rule_condition  ) {
+					return true;
+				} elseif ( 'always_allow' === $rule_condition  ) {
+					$is_allowed = true;
+				} elseif ( 'never_allow' === $rule_condition  ) {
+					$is_allowed = false;
+				}
+			}
+
+			
 		} elseif ( '*' === $rule_domain && $extension === $rule_tld ) {
-			if ( 'always_allow' === $rule_condition  ) {
+			if ( 'only_allow' === $rule_condition  ) {
+				return true;
+			} elseif ( 'always_allow' === $rule_condition  ) {
 				$is_allowed = true;
 			} elseif ( 'never_allow' === $rule_condition  ) {
 				$is_allowed = false;
 			}
 		}
 	}
-	
-	error_log('res'.$is_allowed);
 
 	// If no matching found, allow registration by default.
 	if ( '' === $is_allowed ) {

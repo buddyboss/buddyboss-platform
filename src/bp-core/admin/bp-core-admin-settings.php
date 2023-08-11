@@ -3031,11 +3031,12 @@ function bb_registration_restrictions_tutorial() {
  */
 function bb_admin_setting_callback_domain_restrictions() {
 
-	$domain_restrictions = bb_domain_restrictions_setting();
+	$domain_restrictions = (array) bb_domain_restrictions_setting();
 	$conditions          = array(
 		''             => esc_html__( 'Select Condition', 'buddyboss' ),
 		'always_allow' => esc_html__( 'Always Allow', 'buddyboss' ),
 		'never_allow'  => esc_html__( 'Never Allow', 'buddyboss' ),
+		'only_allow'   => esc_html__( 'Only Allow', 'buddyboss' ),
 	);
 
 	?>
@@ -3047,12 +3048,13 @@ function bb_admin_setting_callback_domain_restrictions() {
 	</label>
 
 	<div class="registration-restrictions-listing">
+		<div class="restrictions-error"></div>
 		<div class="registration-restrictions-rule-list bb-sortable">
 		<?php
 			foreach( $domain_restrictions as $key_rule => $rule ) {
 				?>
 				<div class="registration-restrictions-rule">
-					<span class='registration-restrictions-priority'><?php echo $key_rule + 1; ?></span>
+					<span class='registration-restrictions-priority' style='display:none;'><?php echo $key_rule + 1; ?></span>
 					<div class="registration-restrictions-input">
 						<input type="text" name="bb-domain-restrictions[<?php echo $key_rule; ?>][domain]" class="registration-restrictions-domain" placeholder="example" value="<?php echo $rule['domain']; ?>" />
 					</div>
@@ -3082,7 +3084,7 @@ function bb_admin_setting_callback_domain_restrictions() {
 
 			<!-- This below HTML is for clone only - Starts -->
 			<div class="custom registration-restrictions-rule" style="display: none;">
-				<span class='registration-restrictions-priority'><?php echo count( $domain_restrictions ) + 1 ; ?></span>
+				<span class='registration-restrictions-priority' style='display:none;'><?php echo count( $domain_restrictions ) + 1 ; ?></span>
 				<div class="registration-restrictions-input">
 					<input type="text" name="bb-domain-restrictions[placeholder_priority_index][domain]" class="registration-restrictions-domain" placeholder="example" value="" />
 				</div>
@@ -3122,7 +3124,7 @@ function bb_admin_setting_callback_domain_restrictions() {
  */
 function bb_admin_setting_callback_email_restrictions() {
 
-	$email_restrictions = bb_email_restrictions_setting();
+	$email_restrictions = (array) bb_email_restrictions_setting();
 	$conditions         = array(
 		''             => esc_html__( 'Select Condition', 'buddyboss' ),
 		'always_allow' => esc_html__( 'Always Allow', 'buddyboss' ),
@@ -3131,6 +3133,7 @@ function bb_admin_setting_callback_email_restrictions() {
 	?>
 	<label for="bb-email-restrictions-setting"><?php esc_html_e( 'Enter specific email addresses which you want to allow for user registrations. Enter one domain or address per line.', 'buddyboss' ); ?></label>
 	<div class="registration-restrictions-listing">
+		<div class="restrictions-error"></div>
 		<div class="registration-restrictions-rule-list">
 		<?php
 			foreach( $email_restrictions as $key_rule => $rule ) {

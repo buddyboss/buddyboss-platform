@@ -3981,6 +3981,10 @@ table.moderations .column-member {
 				margin-bottom: 0;
 			}
 		}
+
+		&:empty {
+			display: none;
+		}
 	}
 
 	@media screen and (max-width: 1320px) {

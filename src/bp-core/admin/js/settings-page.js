@@ -2486,7 +2486,7 @@ window.bp = window.bp || {};
 	);
 
 	$( '.registration-restrictions-rule-list.bb-sortable' ).sortable({
-        update: function( event, ui ) {
+        update: function() {
             domain_restiction_update_priority_number();
         }
     });

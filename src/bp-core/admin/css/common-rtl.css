@@ -3682,6 +3682,10 @@ table.moderations .column-member img {
   margin-bottom: 0;
 }
 
+.section-bb_registration_restrictions .registration-restrictions-listing .restrictions-error:empty {
+  display: none;
+}
+
 @media screen and (max-width: 1320px) {
   .section-bb_registration_restrictions .registration-restrictions-listing .restrictions-error {
     position: static;

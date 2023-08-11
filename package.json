@@ -28,7 +28,7 @@
 		"husky": "^7.0.4",
 		"jira-prepare-commit-msg": "^1.7.2",
 		"matchdep": "^2.0.0",
-		"node-sass": "^7.0.0",
+		"node-sass": "^4.14.1",
 		"postcss": "^8.4.4",
 		"postcss-scss": "^4.0.2",
 		"stylelint": "~13.13.1"
