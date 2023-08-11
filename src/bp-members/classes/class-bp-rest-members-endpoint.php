@@ -762,6 +762,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			: '0'
 		);
 
+		$data['can_follow'] = bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active();;
+
 		if ( 'edit' === $context ) {
 			$data['registered_date']    = bp_rest_prepare_date_response( $user_data->user_registered );
 			$data['roles']              = (array) array_values( $user_data->roles );
@@ -856,6 +858,30 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			$data['member_types'] = $member_types;
 		}
 
+		// It will check non-admin members can send message or not before they can connected to each other.
+		$allowed_message = false;
+
+		if (
+			bp_is_active( 'messages' ) &&
+			bb_messages_user_can_send_message(
+				array(
+					'sender_id'     => bp_loggedin_user_id(),
+					'recipients_id' => $user->ID,
+				)
+			)
+		) {
+			$allowed_message = true;
+		}
+
+		// It will check non-admin members can send message or not before they can connected to each other.
+		// Also check access controls settings.
+		$data['can_send_message'] = (
+			bp_is_active( 'messages' ) &&
+			bp_loggedin_user_id() &&
+			apply_filters( 'bp_rest_user_can_show_send_message_button', true, $user->ID ) &&
+			$allowed_message
+		);
+
 		return $data;
 	}
 
@@ -922,7 +948,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 			foreach ( $groups as $group ) {
 				$data['groups'][ $group->id ] = array(
-					'name' => $group->name,
+					'name' => wp_specialchars_decode( $group->name, ENT_QUOTES ),
 				);
 
 				foreach ( $group->fields as $item ) {
@@ -1223,6 +1249,18 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				),
 				'is_wp_admin'        => array(
 					'description' => __( 'Whether the member is an administrator.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'can_follow'         => array(
+					'description' => __( 'Check if a user can follow or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'can_send_message'   => array(
+					'description' => __( 'Logged in user can send message or not.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,

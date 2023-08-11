@@ -1394,7 +1394,7 @@ function bp_get_send_private_message_link() {
 	 *
 	 * @param string $value URL for the Private Message link in member profile headers.
 	 */
-	return apply_filters( 'bp_get_send_private_message_link', wp_nonce_url( bp_loggedin_user_domain() . bp_get_messages_slug() . '/compose/?r=' . bp_core_get_username( $user_id ) ) );
+	return apply_filters( 'bp_get_send_private_message_link', wp_nonce_url( bp_loggedin_user_domain() . bp_get_messages_slug() . '/compose/?r=' . bp_members_get_user_nicename( $user_id ) ) );
 }
 
 /**
@@ -2369,13 +2369,13 @@ function bb_get_thread_sent_date( $last_message_date = false ) {
 	);
 
 	if ( is_numeric( $last_message_date ) ) {
-		$last_message_date_formatted = bp_core_get_format_date( $last_message_date, 'Y-m-d h:i:s' );
+		$last_message_date_formatted = bp_core_get_format_date( $last_message_date, 'Y-m-d H:i:s' );
 	} else {
 		$last_message_date_formatted = $last_message_date;
 	}
 
 	// Add 5mins to check the with the sent date.
-	$five_minutes = date_i18n( 'Y-m-d h:i:s', strtotime( '+5 min', strtotime( $last_message_date_formatted ) ) );
+	$five_minutes = date_i18n( 'Y-m-d H:i:s', strtotime( '+5 min', strtotime( $last_message_date_formatted ) ) );
 
 	// Convert UTC to WordPress timezone.
 	$last_message_date = get_date_from_gmt( $last_message_date_formatted );
@@ -2545,7 +2545,7 @@ function bb_get_thread_start_date( $thread_start_date = false, $show_week_days =
 	);
 
 	if ( is_numeric( $thread_start_date ) ) {
-		$last_message_date_formatted = bp_core_get_format_date( $thread_start_date, 'Y-m-d h:i:s' );
+		$last_message_date_formatted = bp_core_get_format_date( $thread_start_date, 'Y-m-d H:i:s' );
 	} else {
 		$last_message_date_formatted = $thread_start_date;
 	}
@@ -2674,14 +2674,9 @@ function bb_get_thread_start_date( $thread_start_date = false, $show_week_days =
 function bb_get_the_thread_message_sent_time() {
 	global $thread_template;
 
-	$sent_date_formatted = $thread_template->message->date_sent;
-	$site_sent_date      = get_date_from_gmt( $sent_date_formatted );
-
-	if ( strtotime( 'now' ) <= strtotime( '+5 min', strtotime( $sent_date_formatted ) ) ) {
-		$thread_message_sent_time = apply_filters( 'bb_thread_message_sent_time_right_now_text', __( 'Now', 'buddyboss' ) );
-	} else {
-		$thread_message_sent_time = date_i18n( 'g:i A', strtotime( $site_sent_date ) );
-	}
+	$sent_date_formatted      = $thread_template->message->date_sent;
+	$site_sent_date           = get_date_from_gmt( $sent_date_formatted );
+	$thread_message_sent_time = date_i18n( 'g:i A', strtotime( $site_sent_date ) );
 
 	/**
 	 * Filters the 'Sent x hours ago' string for the current message.
@@ -2799,3 +2794,28 @@ function bb_get_message_archived_thread_view_link( $thread_id = 0, $user_id = nu
 	 */
 	return apply_filters( 'bp_get_message_thread_view_link', trailingslashit( $domain . bp_get_messages_slug() . '/archived/view/' . $thread_id ), $thread_id, $user_id );
 }
+
+/**
+ * Apply filter to show hide the message button on member list page.
+ *
+ * @since BuddyBoss 2.3.90
+ *
+ * @param bool $enabled_message_action Whether to show the message button or not.
+ * @param int  $member_id              Member ID.
+ * @param int  $current_user_id        Current user ID.
+ *
+ * @return bool
+ */
+function bb_member_loop_show_message_button( $enabled_message_action, $member_id, $current_user_id ) {
+	return (bool) (
+		$enabled_message_action &&
+		bb_messages_user_can_send_message(
+			array(
+				'sender_id'     => $current_user_id,
+				'recipients_id' => $member_id,
+			)
+		)
+	);
+}
+
+add_filter( 'bb_member_loop_show_message_button', 'bb_member_loop_show_message_button', 10, 3 );

@@ -115,7 +115,7 @@ function bbp_insert_topic( $topic_data = array(), $topic_meta = array() ) {
  * @uses bbp_stick_topic() To stick or super stick the topic
  * @uses bbp_unstick_topic() To unstick the topic
  * @uses bbp_get_topic_permalink() To get the topic permalink
- * @uses wp_safe_redirect() To redirect to the topic link
+ * @uses bbp_redirect() To redirect to the topic link
  * @uses bbPress::errors::get_error_messages() To get the {@link WP_Error} error
  *                                              messages
  */
@@ -194,12 +194,22 @@ function bbp_new_topic_handler( $action = '' ) {
 	// Filter and sanitize.
 	$topic_content = apply_filters( 'bbp_new_topic_pre_content', $topic_content );
 
+	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) ) : [];
+
 	// No topic content.
-	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ) ) ) )
-		 && empty( $_POST['bbp_media'] )
-		 && empty( $_POST['bbp_document'] )
-		 && empty( $_POST['bbp_video'] )
-		 && empty( $_POST['bbp_media_gif'] )
+	if (
+		empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
+		&& empty( $_POST['bbp_media'] )
+		&& empty( $_POST['bbp_document'] )
+		&& empty( $_POST['bbp_video'] )
+		&& empty( $_POST['bbp_media_gif'] )
+		&& (
+			false === bbp_use_autoembed() ||
+			(
+				false !== bbp_use_autoembed() &&
+				empty( $link_preview_post_data['link_url'] )
+			)
+		)
 	) {
 		bbp_add_error( 'bbp_topic_content', __( '<strong>ERROR</strong>: Your discussion cannot be empty.', 'buddyboss' ) );
 	}
@@ -383,7 +393,7 @@ function bbp_new_topic_handler( $action = '' ) {
 	);
 
 	// Insert topic.
-	$topic_id = wp_insert_post( $topic_data );
+	$topic_id = wp_insert_post( $topic_data, true );
 
 	/** No Errors */
 
@@ -437,7 +447,11 @@ function bbp_new_topic_handler( $action = '' ) {
 
 					// Super sticky in all forums.
 					case 'super':
-						bbp_stick_topic( $topic_id, true );
+						if ( bb_is_group_forum_topic( $topic_id ) ) {
+							bbp_stick_topic( $topic_id );
+						} else {
+							bbp_stick_topic( $topic_id, true );
+						}
 						break;
 
 					// We can avoid this as it is a new topic.
@@ -495,15 +509,15 @@ function bbp_new_topic_handler( $action = '' ) {
 		/** Successful Save */
 
 		// Redirect back to new topic.
-		wp_safe_redirect( $redirect_url );
+		bbp_redirect( $redirect_url );
 
-		// For good measure.
-		exit();
+		// WP_Error.
+	} elseif ( is_wp_error( $topic_id ) && $topic_id->get_error_message() ) {
+		bbp_add_error( 'bbp_topic_error', sprintf( __( '<strong>Error</strong>: The following problem(s) occurred: %s', 'buddyboss' ), $topic_id->get_error_message() ) );
 
-		// Errors.
+	// Generic error.
 	} else {
-		$append_error = ( is_wp_error( $topic_id ) && $topic_id->get_error_message() ) ? $topic_id->get_error_message() . ' ' : '';
-		bbp_add_error( 'bbp_topic_error', __( '<strong>ERROR</strong>: The following problem(s) have been found with your topic:' . $append_error, 'buddyboss' ) );
+		bbp_add_error( 'bbp_topic_error', __( '<strong>Error</strong>: The topic was not created.', 'buddyboss' ) );
 	}
 }
 
@@ -539,7 +553,7 @@ function bbp_new_topic_handler( $action = '' ) {
  * @uses bbp_move_topic_handler() To handle movement of a topic from one forum
  *                                 to another
  * @uses bbp_get_topic_permalink() To get the topic permalink
- * @uses wp_safe_redirect() To redirect to the topic link
+ * @uses bbp_redirect() To redirect to the topic link
  * @uses bbPress::errors::get_error_messages() To get the {@link WP_Error} error
  *                                              messages
  */
@@ -675,11 +689,21 @@ function bbp_edit_topic_handler( $action = '' ) {
 	// Filter and sanitize.
 	$topic_content = apply_filters( 'bbp_edit_topic_pre_content', $topic_content, $topic_id );
 
-	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ) ) ) )
-	     && empty( $_POST['bbp_media'] )
-	     && empty( $_POST['bbp_document'] )
-	     && empty( $_POST['bbp_video'] )
-	     && empty( $_POST['bbp_media_gif'] )
+	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) ) : [];
+
+	if (
+		empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
+		&& empty( $_POST['bbp_media'] )
+		&& empty( $_POST['bbp_document'] )
+		&& empty( $_POST['bbp_video'] )
+		&& empty( $_POST['bbp_media_gif'] )
+		&& (
+			false === bbp_use_autoembed() ||
+			(
+				false !== bbp_use_autoembed() &&
+				empty( $link_preview_post_data['link_url'] )
+			)
+		)
 	) {
 		bbp_add_error( 'bbp_edit_topic_content', __( '<strong>ERROR</strong>: Your discussion cannot be empty.', 'buddyboss' ) );
 	}
@@ -838,7 +862,11 @@ function bbp_edit_topic_handler( $action = '' ) {
 
 					// Sticky in all forums.
 					case 'super':
-						bbp_stick_topic( $topic_id, true );
+						if ( bb_is_group_forum_topic( $topic_id ) ) {
+							bbp_stick_topic( $topic_id );
+						} else {
+							bbp_stick_topic( $topic_id, true );
+						}
 						break;
 
 					// Normal.
@@ -876,10 +904,7 @@ function bbp_edit_topic_handler( $action = '' ) {
 		/** Successful Edit */
 
 		// Redirect back to new topic.
-		wp_safe_redirect( $topic_url );
-
-		// For good measure.
-		exit();
+		bbp_redirect( $topic_url );
 
 		/** Errors */
 
@@ -904,7 +929,7 @@ function bbp_edit_topic_handler( $action = '' ) {
  * @uses update_post_meta() To update the topic metas
  * @uses set_transient() To update the flood check transient for the ip
  * @uses bbp_update_user_last_posted() To update the users last posted time
- * @uses bbp_is_subscriptions_active() To check if the subscriptions feature is
+ * @uses bb_is_enabled_subscription() To check if the subscriptions feature is
  *                                      activated or not
  * @uses bbp_is_user_subscribed() To check if the user is subscribed
  * @uses bbp_remove_user_subscription() To remove the user's subscription
@@ -971,9 +996,20 @@ function bbp_update_topic( $topic_id = 0, $forum_id = 0, $anonymous_data = false
 		}
 	}
 
+	// Get the post type.
+	$post_type = get_post_type( $topic_id );
+	if ( empty( $post_type ) ) {
+		return;
+	}
+
+	$subscribe_type = 'topic';
+	if ( bbp_get_forum_post_type() === $post_type ) {
+		$subscribe_type = 'forum';
+	}
+
 	// Handle Subscription Checkbox.
 	// Make sure the form is being submitted from frontend.
-	if ( bbp_is_subscriptions_active() && ! empty( $author_id ) && ( ! isset( $_POST['action'] ) || 'editpost' !== $_POST['action'] ) ) {
+	if ( bb_is_enabled_subscription( $subscribe_type ) && ! empty( $author_id ) && ( ! isset( $_POST['action'] ) || 'editpost' !== $_POST['action'] ) ) {
 		$subscribed = bbp_is_user_subscribed( $author_id, $topic_id );
 		$subscheck  = ( ! empty( $_POST['bbp_topic_subscription'] ) && ( 'bbp_subscribe' === $_POST['bbp_topic_subscription'] ) ) ? true : false;
 
@@ -1243,7 +1279,7 @@ function bbp_move_topic_handler( $topic_id, $old_forum_id, $new_forum_id ) {
  * @uses do_action() Calls 'bbp_merged_topic' with the destination and source
  *                    topic ids and source topic's forum id
  * @uses bbp_get_topic_permalink() To get the topic permalink
- * @uses wp_safe_redirect() To redirect to the topic link
+ * @uses bbp_redirect() To redirect to the topic link
  */
 function bbp_merge_topic_handler( $action = '' ) {
 
@@ -1342,7 +1378,7 @@ function bbp_merge_topic_handler( $action = '' ) {
 		foreach ( (array) $subscribers as $subscriber ) {
 
 			// Shift the subscriber if told to.
-			if ( ! empty( $_POST['bbp_topic_subscribers'] ) && ( '1' === $_POST['bbp_topic_subscribers'] ) && bbp_is_subscriptions_active() ) {
+			if ( ! empty( $_POST['bbp_topic_subscribers'] ) && ( '1' === $_POST['bbp_topic_subscribers'] ) && bb_is_enabled_subscription( 'topic' ) ) {
 				bbp_add_user_subscription( $subscriber, $destination_topic->ID );
 			}
 
@@ -1481,10 +1517,7 @@ function bbp_merge_topic_handler( $action = '' ) {
 	do_action( 'bbp_merged_topic', $destination_topic->ID, $source_topic->ID, $source_topic->post_parent );
 
 	// Redirect back to new topic.
-	wp_safe_redirect( bbp_get_topic_permalink( $destination_topic->ID ) );
-
-	// For good measure.
-	exit();
+	bbp_redirect( bbp_get_topic_permalink( $destination_topic->ID ) );
 }
 
 /**
@@ -1568,7 +1601,7 @@ function bbp_merge_topic_count( $destination_topic_id, $source_topic_id, $source
  * @uses do_action() Calls 'bbp_post_split_topic' with the destination and
  *                    source topic ids and source topic's forum id
  * @uses bbp_get_topic_permalink() To get the topic permalink
- * @uses wp_safe_redirect() To redirect to the topic link
+ * @uses bbp_redirect() To redirect to the topic link
  */
 function bbp_split_topic_handler( $action = '' ) {
 
@@ -1577,7 +1610,7 @@ function bbp_split_topic_handler( $action = '' ) {
 		return;
 	}
 
-	global $wpdb;
+	$bbp_db = bbp_db();
 
 	// Prevent debug notices.
 	$from_reply_id           = $destination_topic_id = 0;
@@ -1737,7 +1770,7 @@ function bbp_split_topic_handler( $action = '' ) {
 	/** Subscriptions */
 
 	// Copy the subscribers.
-	if ( ! empty( $_POST['bbp_topic_subscribers'] ) && '1' === $_POST['bbp_topic_subscribers'] && bbp_is_subscriptions_active() ) {
+	if ( ! empty( $_POST['bbp_topic_subscribers'] ) && '1' === $_POST['bbp_topic_subscribers'] && bb_is_enabled_subscription( 'topic' ) ) {
 
 		// Get the subscribers.
 		$subscribers = bbp_get_topic_subscribers( $source_topic->ID );
@@ -1785,7 +1818,7 @@ function bbp_split_topic_handler( $action = '' ) {
 
 	// get_posts() is not used because it doesn't allow us to use '>='.
 	// comparision without a filter.
-	$replies = (array) $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->posts} WHERE {$wpdb->posts}.post_date >= %s AND {$wpdb->posts}.post_parent = %d AND {$wpdb->posts}.post_type = %s ORDER BY {$wpdb->posts}.post_date ASC", $from_reply->post_date, $source_topic->ID, bbp_get_reply_post_type() ) );
+	$replies = (array) $bbp_db->get_results( $bbp_db->prepare( "SELECT * FROM {$bbp_db->posts} WHERE {$bbp_db->posts}.post_date >= %s AND {$bbp_db->posts}.post_parent = %d AND {$bbp_db->posts}.post_type = %s ORDER BY {$bbp_db->posts}.post_date ASC", $from_reply->post_date, $source_topic->ID, bbp_get_reply_post_type() ) );
 
 	$source_parent_replies      = 0;
 	$destination_parent_replies = 0;
@@ -1891,10 +1924,7 @@ function bbp_split_topic_handler( $action = '' ) {
 	do_action( 'bbp_post_split_topic', $from_reply->ID, $source_topic->ID, $destination_topic->ID );
 
 	// Redirect back to the topic.
-	wp_safe_redirect( bbp_get_topic_permalink( $destination_topic->ID ) );
-
-	// For good measure.
-	exit();
+	bbp_redirect( bbp_get_topic_permalink( $destination_topic->ID ) );
 }
 
 /**
@@ -1957,7 +1987,7 @@ function bbp_split_topic_count( $from_reply_id, $source_topic_id, $destination_t
  * @uses home_url() To get the blog's home page url
  * @uses do_action() Calls actions based on the actions with associated args
  * @uses is_wp_error() To check if the value retrieved is a {@link WP_Error}
- * @uses wp_safe_redirect() To redirect to the url
+ * @uses bbp_redirect() To redirect to the url
  */
 function bbp_edit_topic_tag_handler( $action = '' ) {
 
@@ -2136,10 +2166,7 @@ function bbp_edit_topic_tag_handler( $action = '' ) {
 
 	// Redirect back.
 	$redirect = ( ! empty( $redirect ) && ! is_wp_error( $redirect ) ) ? $redirect : home_url();
-	wp_safe_redirect( $redirect );
-
-	// For good measure.
-	exit();
+	bbp_redirect( $redirect );
 }
 
 /** Helpers *******************************************************************/
@@ -2253,7 +2280,7 @@ function bbp_get_super_stickies() {
  *                    and action
  * @uses  bbp_get_forum_permalink() To get the forum link
  * @uses  bbp_get_topic_permalink() To get the topic link
- * @uses  wp_safe_redirect() To redirect to the topic
+ * @uses  bbp_redirect() To redirect to the topic
  * @uses  bbPress::errors:add() To log the error messages
  */
 function bbp_toggle_topic_handler( $action = '' ) {
@@ -2389,10 +2416,7 @@ function bbp_toggle_topic_handler( $action = '' ) {
 			$redirect  = bbp_add_view_all( $permalink, $view_all );
 		}
 
-		wp_safe_redirect( $redirect );
-
-		// For good measure.
-		exit();
+		bbp_redirect( $redirect );
 
 		// Handle errors.
 	} else {
@@ -2441,7 +2465,7 @@ function bbp_remove_topic_from_all_favorites( $topic_id = 0 ) {
  * @since bbPress (r2652)
  *
  * @param int $topic_id Get the topic id to remove
- * @uses bbp_is_subscriptions_active() To check if the subscriptions are active
+ * @uses bb_is_enabled_subscription() To check if the subscriptions are active
  * @uses bbp_get_topic_id To get the topic id
  * @uses bbp_get_topic_subscribers() To get the topic subscribers
  * @uses bbp_remove_user_subscription() To remove the user subscription
@@ -2449,7 +2473,7 @@ function bbp_remove_topic_from_all_favorites( $topic_id = 0 ) {
 function bbp_remove_topic_from_all_subscriptions( $topic_id = 0 ) {
 
 	// Subscriptions are not active.
-	if ( ! bbp_is_subscriptions_active() ) {
+	if ( ! bb_is_enabled_subscription( 'topic' ) ) {
 		return;
 	}
 
@@ -2619,7 +2643,7 @@ function bbp_update_topic_reply_count( $topic_id = 0, $reply_count = 0 ) {
 
 	update_post_meta( $topic_id, '_bbp_reply_count', (int) $reply_count );
 
-	return apply_filters( 'bbp_update_topic_reply_count', (int) $reply_count, $topic_id );
+	return (int) apply_filters( 'bbp_update_topic_reply_count', (int) $reply_count, $topic_id );
 }
 
 /**
@@ -2641,24 +2665,20 @@ function bbp_update_topic_reply_count( $topic_id = 0, $reply_count = 0 ) {
  * @return int Topic hidden reply count
  */
 function bbp_update_topic_reply_count_hidden( $topic_id = 0, $reply_count = 0 ) {
-	global $wpdb;
 
 	// If it's a reply, then get the parent (topic id).
-	if ( bbp_is_reply( $topic_id ) ) {
-		$topic_id = bbp_get_reply_topic_id( $topic_id );
-	} else {
-		$topic_id = bbp_get_topic_id( $topic_id );
-	}
+	$topic_id = bbp_is_reply( $topic_id )
+		? bbp_get_reply_topic_id( $topic_id )
+		: bbp_get_topic_id( $topic_id );
 
 	// Get replies of topic.
-	if ( empty( $reply_count ) ) {
-		$post_status = "'" . implode( "','", array( bbp_get_trash_status_id(), bbp_get_spam_status_id() ) ) . "'";
-		$reply_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM {$wpdb->posts} WHERE post_parent = %d AND post_status IN ( {$post_status} ) AND post_type = '%s';", $topic_id, bbp_get_reply_post_type() ) );
-	}
+	$reply_count = ! is_int( $reply_count )
+		? bbp_get_non_public_child_count( $topic_id, bbp_get_reply_post_type() )
+		: (int) $reply_count;
 
 	update_post_meta( $topic_id, '_bbp_reply_count_hidden', (int) $reply_count );
 
-	return apply_filters( 'bbp_update_topic_reply_count_hidden', (int) $reply_count, $topic_id );
+	return (int) apply_filters( 'bbp_update_topic_reply_count_hidden', (int) $reply_count, $topic_id );
 }
 
 /**
@@ -2806,7 +2826,6 @@ function bbp_update_topic_last_reply_id( $topic_id = 0, $reply_id = 0 ) {
  * @return int Members count
  */
 function bbp_update_topic_voice_count( $topic_id = 0 ) {
-	global $wpdb;
 
 	// If it's a reply, then get the parent (topic id).
 	if ( bbp_is_reply( $topic_id ) ) {
@@ -2817,11 +2836,18 @@ function bbp_update_topic_voice_count( $topic_id = 0 ) {
 		return;
 	}
 
+	// Bail if no topic ID.
+	if ( empty( $topic_id ) ) {
+		return;
+	}
+
+	$bbp_db = bbp_db();
+
 	// Query the DB to get members in this topic.
-	$voices = $wpdb->get_col( $wpdb->prepare( "SELECT COUNT( DISTINCT post_author ) FROM {$wpdb->posts} WHERE ( post_parent = %d AND post_status = '%s' AND post_type = '%s' ) OR ( ID = %d AND post_type = '%s' );", $topic_id, bbp_get_public_status_id(), bbp_get_reply_post_type(), $topic_id, bbp_get_topic_post_type() ) );
+	$voices = (int) $bbp_db->get_var( $bbp_db->prepare( "SELECT COUNT( DISTINCT post_author ) FROM {$bbp_db->posts} WHERE ( post_parent = %d AND post_status = '%s' AND post_type = '%s' ) OR ( ID = %d AND post_type = '%s' );", $topic_id, bbp_get_public_status_id(), bbp_get_reply_post_type(), $topic_id, bbp_get_topic_post_type() ) );
 
 	// If there's an error, make sure we have at least have 1 voice.
-	$voices = ( empty( $voices ) || is_wp_error( $voices ) ) ? 1 : $voices[0];
+	$voices = ( empty( $voices ) || is_wp_error( $voices ) ) ? 1 : $voices;
 
 	// Update the voice count for this topic id.
 	update_post_meta( $topic_id, '_bbp_voice_count', (int) $voices );
@@ -2842,14 +2868,13 @@ function bbp_update_topic_voice_count( $topic_id = 0 ) {
  * @uses bbp_get_reply_post_type() To get the reply post type
  * @uses bbp_get_topic_post_type() To get the topic post type
  * @uses wpdb::prepare() To prepare our sql query
- * @uses wpdb::get_col() To execute our query and get the column back
+ * @uses wpdb::get_var() To execute our query and get the column back
  * @uses update_post_meta() To update the topic anonymous reply count meta
  * @uses apply_filters() Calls 'bbp_update_topic_anonymous_reply_count' with the
  *                        anonymous reply count and topic id
  * @return int Anonymous reply count
  */
 function bbp_update_topic_anonymous_reply_count( $topic_id = 0 ) {
-	global $wpdb;
 
 	// If it's a reply, then get the parent (topic id).
 	if ( bbp_is_reply( $topic_id ) ) {
@@ -2860,7 +2885,8 @@ function bbp_update_topic_anonymous_reply_count( $topic_id = 0 ) {
 		return;
 	}
 
-	$anonymous_replies = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT( ID ) FROM {$wpdb->posts} WHERE ( post_parent = %d AND post_status = '%s' AND post_type = '%s' AND post_author = 0 ) OR ( ID = %d AND post_type = '%s' AND post_author = 0 );", $topic_id, bbp_get_public_status_id(), bbp_get_reply_post_type(), $topic_id, bbp_get_topic_post_type() ) );
+	$bbp_db            = bbp_db();
+	$anonymous_replies = (int) $bbp_db->get_var( $bbp_db->prepare( "SELECT COUNT( ID ) FROM {$bbp_db->posts} WHERE ( post_parent = %d AND post_status = '%s' AND post_type = '%s' AND post_author = 0 ) OR ( ID = %d AND post_type = '%s' AND post_author = 0 );", $topic_id, bbp_get_public_status_id(), bbp_get_reply_post_type(), $topic_id, bbp_get_topic_post_type() ) );
 
 	update_post_meta( $topic_id, '_bbp_anonymous_reply_count', (int) $anonymous_replies );
 
@@ -3622,7 +3648,6 @@ function bbp_topic_content_autoembed() {
 	global $wp_embed;
 
 	if ( bbp_use_autoembed() && is_a( $wp_embed, 'WP_Embed' ) ) {
-		add_filter( 'bbp_get_topic_content', 'bb_validate_topic_embed', 1 );
 		// WordPress is not able to convert URLs to oembed if URL is in paragraph.
 		add_filter( 'bbp_get_topic_content', 'bbp_topic_content_autoembed_paragraph', 99999, 1 );
 	}
@@ -3654,11 +3679,12 @@ function bb_validate_topic_embed( $content ) {
 /**
  * Add oembed to forum topic.
  *
- * @param $content
+ * @param $content  Topic content.
+ * @param $topic_id Optional Topic id.
  *
  * @return string
  */
-function bbp_topic_content_autoembed_paragraph( $content ) {
+function bbp_topic_content_autoembed_paragraph( $content, $topic_id = 0 ) {
 	global $wp_embed;
 
 	if ( is_a( $wp_embed, 'WP_Embed' ) ) {
@@ -3673,32 +3699,63 @@ function bbp_topic_content_autoembed_paragraph( $content ) {
 		return $content;
 	}
 
-	$embed_urls = $embeds_array = array();
-	$flag       = true;
-
-	if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', strip_tags( $content ) ) ) {
-		preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
+	if ( empty( $topic_id ) ) {
+		$topic_id = bbp_get_topic_id();
 	}
 
-	if ( ! empty( $embed_urls ) && ! empty( $embed_urls[0] ) ) {
-		$embed_urls = array_filter( $embed_urls[0] );
-		$embed_urls = array_unique( $embed_urls );
+	if ( metadata_exists( 'post', $topic_id, '_link_embed' ) ) {
+		// check if preview url was used or not, if not return content without embed.
+		$link_embed = get_post_meta( $topic_id, '_link_embed', true );
+		if ( ! empty( $link_embed ) ) {
+			$embed_data = bp_core_parse_url( $link_embed );
 
-		foreach ( $embed_urls as $url ) {
-			if ( $flag == false ) {
-				continue;
+			if ( isset( $embed_data['wp_embed'] ) && $embed_data['wp_embed'] && ! empty( $embed_data['description'] ) ) {
+				$embed_code = $embed_data['description'];
 			}
 
-			$embed = wp_oembed_get( $url, array( 'discover' => false ) );
-			if ( $embed ) {
-				$flag           = false;
-				$embeds_array[] = wpautop( $embed );
+			if ( ! empty( $embed_code ) ) {
+				preg_match( '/(https?:\/\/[^\s<>"]+)/i', $content, $content_url );
+				preg_match( '(<p(>|\s+[^>]*>).*?<\/p>)', $content, $content_tag );
+
+				if ( ! empty( $content_url ) && empty( $content_tag ) ) {
+					$content = sprintf( '<p>%s</p>', $content );
+				}
+
+				return $content .= $embed_code;
 			}
+		}
+	} else {
+		// Added embed support before release link preview.
+		$embed_urls = $embeds_array = array();
+		$flag       = true;
+
+		if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', strip_tags( $content ) ) ) {
+			preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
+		}
+
+		if ( ! empty( $embed_urls ) && ! empty( $embed_urls[0] ) ) {
+			$embed_urls = array_filter( $embed_urls[0] );
+			$embed_urls = array_unique( $embed_urls );
+
+			foreach ( $embed_urls as $url ) {
+				if ( false === $flag ) {
+					continue;
+				}
+
+				$embed = wp_oembed_get( $url, array( 'discover' => false ) );
+				if ( $embed ) {
+					$flag           = false;
+					$embeds_array[] = wpautop( $embed );
+				}
+			}
+
+			// Put the line breaks back.
+			return $content . implode( '', $embeds_array );
+
 		}
 	}
 
-	// Put the line breaks back.
-	return $content . implode( '', $embeds_array );
+	return $content;
 }
 
 /** Feeds *********************************************************************/
@@ -3818,7 +3875,7 @@ function bbp_display_topics_feed_rss2( $topics_query = array() ) {
  * @uses bbp_is_topic_edit()
  * @uses current_user_can()
  * @uses bbp_get_topic_id()
- * @uses wp_safe_redirect()
+ * @uses bbp_redirect()
  * @uses bbp_get_topic_permalink()
  */
 function bbp_check_topic_edit() {
@@ -3830,8 +3887,7 @@ function bbp_check_topic_edit() {
 
 	// User cannot edit topic, so redirect back to topic.
 	if ( ! current_user_can( 'edit_topic', bbp_get_topic_id() ) ) {
-		wp_safe_redirect( bbp_get_topic_permalink() );
-		exit();
+		bbp_redirect( bbp_get_topic_permalink() );
 	}
 }
 
@@ -3843,7 +3899,7 @@ function bbp_check_topic_edit() {
  * @uses bbp_is_topic_tag_edit()
  * @uses current_user_can()
  * @uses bbp_get_topic_tag_id()
- * @uses wp_safe_redirect()
+ * @uses bbp_redirect()
  * @uses bbp_get_topic_tag_link()
  */
 function bbp_check_topic_tag_edit() {
@@ -3855,7 +3911,58 @@ function bbp_check_topic_tag_edit() {
 
 	// Bail if current user cannot edit topic tags.
 	if ( ! current_user_can( 'edit_topic_tags', bbp_get_topic_tag_id() ) ) {
-		wp_safe_redirect( bbp_get_topic_tag_link() );
-		exit();
+		bbp_redirect( bbp_get_topic_tag_link() );
 	}
+}
+
+/**
+ * Function to check the topic is group topic or standalone.
+ *
+ * @since BuddyBoss 2.3.80
+ *
+ * @param int $topic_id Optional. Topic id
+ *
+ * @return bool
+ */
+function bb_is_group_forum_topic( $topic_id ) {
+	$forum_id = bbp_get_topic_forum_id( $topic_id );
+
+	return (bool) apply_filters( 'bb_is_group_forum_topic', bbp_is_forum_group_forum( $forum_id ), $topic_id );
+}
+
+/**
+ * Return array of public reply statuses.
+ *
+ * @since bbPress 2.6.0 (r6383)
+ * @since BuddyBoss 2.4.00
+ *
+ * @return array
+ */
+function bbp_get_public_topic_statuses() {
+	$statuses = array(
+		bbp_get_public_status_id(),
+		bbp_get_closed_status_id()
+	);
+
+	// Filter & return.
+	return (array) apply_filters( 'bbp_get_public_topic_statuses', $statuses );
+}
+
+/**
+ * Return array of non-public topic statuses.
+ *
+ * @since bbPress 2.6.0 (r6642)
+ * @since BuddyBoss 2.4.00
+ *
+ * @return array
+ */
+function bbp_get_non_public_topic_statuses() {
+	$statuses = array(
+		bbp_get_trash_status_id(),
+		bbp_get_spam_status_id(),
+		bbp_get_pending_status_id(),
+	);
+
+	// Filter & return.
+	return (array) apply_filters( 'bbp_get_non_public_topic_statuses', $statuses );
 }

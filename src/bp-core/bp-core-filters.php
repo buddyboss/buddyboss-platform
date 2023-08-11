@@ -113,6 +113,8 @@ add_filter( 'comments_open', 'bp_comments_open', 10, 2 );
 // Prevent DB query for WP's main loop.
 add_filter( 'posts_pre_query', 'bp_core_filter_wp_query', 10, 2 );
 
+// Remove deleted members link from mention for blog comment.
+add_filter( 'comment_text', 'bb_mention_remove_deleted_users_link', 20, 1 );
 /**
  * Prevent specific pages (eg 'Activate') from showing on page listings.
  *
@@ -786,34 +788,143 @@ function bp_setup_nav_menu_item( $menu_item ) {
 
 		// Highlight the current page.
 	} else {
-		$current = bp_get_requested_url();
-		if ( strpos( $current, $menu_item->url ) !== false ) {
-			if ( is_array( $menu_item->classes ) ) {
+		$current            = bp_get_requested_url();
+		$url_parts          = explode( '/', untrailingslashit( $menu_item->url ) );
+		$menu_item->classes = is_array( $menu_item->classes ) ? $menu_item->classes : array();
+
+		if ( untrailingslashit( $current ) === untrailingslashit( $menu_item->url ) ) {
+			$menu_item->classes[] = 'current_page_item';
+			$menu_item->classes[] = 'current-menu-item';
+		} else {
+
+			if ( bp_loggedin_user_domain() && strpos( $current, bp_loggedin_user_domain() ) !== false ) {
+				if (
+					(
+						! in_array( 'settings', $url_parts, true ) &&
+						(
+							(
+								bp_is_user_profile() &&
+								! bp_is_user_profile_edit() &&
+								! bp_is_user_change_avatar() &&
+								! bp_is_user_change_cover_image() &&
+								'profile' === end( $url_parts )
+							) ||
+							(
+								bp_is_user_profile_edit() &&
+								'edit' === end( $url_parts )
+							) ||
+							(
+								bp_is_user_change_avatar() &&
+								'change-avatar' === end( $url_parts )
+							) ||
+							(
+								bp_is_user_change_cover_image() &&
+								'change-cover-image' === end( $url_parts )
+							) ||
+							(
+								in_array( 'bp-profile-nav', $menu_item->classes, true ) &&
+								(
+									bp_is_user_profile_edit() ||
+									bp_is_user_change_avatar() ||
+									bp_is_user_change_cover_image()
+								)
+							)
+						)
+					) ||
+					(
+						in_array( 'settings', $url_parts, true ) &&
+						(
+							(
+								bp_is_user_settings_general() &&
+								'settings' === end( $url_parts )
+							) ||
+							(
+								bp_is_user_settings_profile() &&
+								'profile' === end( $url_parts )
+							) ||
+							(
+								bp_is_user_settings_notifications() &&
+								'subscriptions' === bp_action_variable() &&
+								'notifications' === end( $url_parts ) &&
+								in_array( 'bp-settings-notifications-sub-nav', $menu_item->classes, true )
+							) ||
+							(
+								in_array( 'bp-settings-nav', $menu_item->classes, true ) &&
+								(
+									bp_is_user_settings_general() ||
+									bp_is_user_settings_profile() ||
+									bp_is_user_settings_notifications()
+								)
+							)
+						)
+					) ||
+					(
+						bp_is_user_invites() &&
+						'sent-invites' === bp_current_action() &&
+						in_array( 'bp-invites-nav', $menu_item->classes, true )
+					) ||
+					(
+						bp_is_user_activity() &&
+						in_array( 'bp-activity-nav', $menu_item->classes, true ) &&
+						(
+							'groups' === bp_current_action() ||
+							'mentions' === bp_current_action() ||
+							'following' === bp_current_action() ||
+							'friends' === bp_current_action()
+						)
+					) ||
+					(
+						bp_is_user_notifications() &&
+						'read' === bp_current_action() &&
+						in_array( 'bp-notifications-nav', $menu_item->classes, true )
+					) ||
+					(
+						bp_is_user_messages() &&
+						in_array( 'bp-messages-nav', $menu_item->classes, true ) &&
+						(
+							'compose' === bp_current_action() ||
+							'archived' === bp_current_action()
+						)
+					) ||
+					(
+						bp_is_friends_component() &&
+						'requests' === bp_current_action() &&
+						in_array( 'bp-friends-nav', $menu_item->classes, true )
+					) ||
+					(
+						bp_is_groups_component() &&
+						'invites' === bp_current_action() &&
+						in_array( 'bp-groups-nav', $menu_item->classes, true )
+					) ||
+					(
+						bp_is_user_albums() &&
+						in_array( 'bp-photos-nav', $menu_item->classes, true )
+					) ||
+					(
+						bp_is_forums_component() &&
+						(
+							'favorites' === bp_current_action() ||
+							'replies' === bp_current_action()
+						) &&
+						in_array( 'bp-forums-nav', $menu_item->classes, true )
+					)
+				) {
+					$menu_item->classes[] = 'current_page_item';
+					$menu_item->classes[] = 'current-menu-item';
+				}
+			} elseif (
+				bp_is_groups_component() &&
+				bp_is_group_create() &&
+				(
+					'create' === end( $url_parts ) ||
+					in_array( 'bp-groups-nav', $menu_item->classes, true )
+				)
+			) {
 				$menu_item->classes[] = 'current_page_item';
 				$menu_item->classes[] = 'current-menu-item';
-			} else {
-				$menu_item->classes = array( 'current_page_item', 'current-menu-item' );
-			}
-		} else {
-			if ( in_array( $current, array( bp_loggedin_user_domain() ) ) ) {
-				if ( function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
-					$tab       = bp_nouveau_get_appearance_settings( 'user_default_tab' );
-					$component = $tab;
-					if ( $component && in_array( $component, array( 'document' ), true ) ) {
-						$component = 'media';
-					} elseif ( $component && in_array( $component, array( 'video' ), true ) ) {
-						$component = 'media';
-					} elseif ( $component && in_array( $component, array( 'profile' ), true ) ) {
-						$component = 'xprofile';
-					}
-					if ( bp_is_active( $component ) ) {
-						if ( strpos( $menu_item->url, $tab ) !== false ) {
-							$menu_item->classes   = is_array( $menu_item->classes ) ? $menu_item->classes : array();
-							$menu_item->classes[] = 'current_page_item';
-							$menu_item->classes[] = 'current-menu-item';
-						}
-					}
-				}
+			} elseif ( strpos( $current, $menu_item->url ) !== false ) {
+				$menu_item->classes[] = 'current_page_item';
+				$menu_item->classes[] = 'current-menu-item';
 			}
 		}
 	}
@@ -2153,7 +2264,7 @@ add_filter( 'nav_menu_link_attributes', 'bb_change_nav_menu_links', 10, 4 );
  */
 function bb_change_nav_menu_class( $classes, $item, $args, $depth ) {
 
-	if ( isset( $item->menu_type ) && 'buddyboss' === $item->menu_type ) {
+	if ( isset( $item->menu_type ) && 'buddyboss' === $item->menu_type && ! bp_is_groups_component() ) {
 		if ( bp_loggedin_user_domain() !== bp_displayed_user_domain() ) {
 			$classes = array_diff( $classes, array( 'current-menu-item', 'current_page_item' ) );
 		}
@@ -2258,7 +2369,7 @@ add_filter( 'heartbeat_settings', 'bb_heartbeat_settings', PHP_INT_MAX, 1 );
 /**
  * Function to update menu order for Theme Options and License Key in the BuddyBoss menu.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.2
  *
  * @param array $menu_order Menu order.
  *
@@ -2329,3 +2440,18 @@ function buddyboss_menu_order( $menu_order ) {
 }
 
 add_filter( 'menu_order', 'buddyboss_menu_order' );
+
+/**
+ * Function to remove html entity from number format.
+ *
+ * @since BuddyBoss 2.3.1
+ *
+ * @param string $formatted The number to be formatted.
+ *
+ * @return string
+ */
+function bb_core_number_format_callback( $formatted ) {
+	return html_entity_decode( $formatted, ENT_NOQUOTES );
+}
+
+add_filter( 'bp_core_number_format', 'bb_core_number_format_callback', 10, 1 );

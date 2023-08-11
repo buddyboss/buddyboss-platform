@@ -76,7 +76,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 			$raw_properties,
 			array(
 				'type'        => 'tel',
-				'value'       => wp_strip_all_tags( html_entity_decode( bp_get_the_profile_field_edit_value() ) ),
+				'value'       => wp_strip_all_tags( html_entity_decode( bp_get_the_profile_field_edit_value(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ),
 				'placeholder' => $placeholder,
 			)
 		); ?>
@@ -315,7 +315,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 	 * @return string URL converted to a link.
 	 */
 	public static function display_filter( $field_value, $field_id = '' ) {
-		$url   = wp_strip_all_tags( html_entity_decode( $field_value ) );
+		$url   = wp_strip_all_tags( html_entity_decode( $field_value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
 		$parts = parse_url( $url );
 
 		// Add the tel:// protocol to the field value.
