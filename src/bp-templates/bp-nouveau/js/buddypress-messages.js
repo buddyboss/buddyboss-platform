@@ -2205,17 +2205,48 @@ window.bp = window.bp || {};
 							if ( event.keyCode === 13 && event.shiftKey ) {
 								var MediumEditorOptDoc = bp.Nouveau.Messages.mediumEditor.options.ownerDocument;
 								var node = MediumEditor.selection.getSelectionStart( MediumEditorOptDoc ); // jshint ignore:line
+								var currentNode = MediumEditor.selection.getSelectionRange( MediumEditorOptDoc ); // jshint ignore:line
+								var p;
+								var newP;
+
 								// Do nothing if caret is in between the text.
 								if ( MediumEditor.selection.getCaretOffsets( node ).right !== 0 ) { // jshint ignore:line
+									return;
+								}
+
+								// Check if the current node is text node
+								if ( currentNode.endContainer && currentNode.endContainer.nodeName.toLowerCase() === 'div' && currentNode.endContainer.classList.contains( 'medium-editor-element' ) ) {
+									p = MediumEditorOptDoc.createElement( 'p' );
+									p.innerHTML = '<br>';
+									newP = currentNode.endContainer.appendChild( p );
+									MediumEditor.selection.moveCursor( MediumEditorOptDoc, newP ); // jshint ignore:line
+									setTimeout( function () {
+										newP.children[ 0 ].remove();
+									}, 100 );
+									return;
+								}
+
+								// Check if the current node is not an html element.
+								if ( currentNode.endContainer.parentNode && currentNode.endContainer.parentNode.classList.contains( 'medium-editor-element' ) ) {
+									p = MediumEditorOptDoc.createElement( 'p' );
+									p.innerHTML = '<br>';
+									if ( currentNode.endContainer.nextElementSibling ) {
+										newP = currentNode.endContainer.parentNode.insertBefore( p, currentNode.endContainer.nextSibling );
+									} else {
+										newP = currentNode.endContainer.parentNode.appendChild( p );
+									}
+									MediumEditor.selection.moveCursor( MediumEditorOptDoc, newP ); // jshint ignore:line
+									setTimeout( function () {
+										newP.children[ 0 ].remove();
+									}, 100 );
 									return;
 								}
 
 								// Make sure current node is not list item element.
 								if ( ! MediumEditor.util.isListItem( node ) ) { // jshint ignore:line
 									event.preventDefault();
-									var p = MediumEditorOptDoc.createElement( 'p' );
+									p = MediumEditorOptDoc.createElement( 'p' );
 									p.innerHTML = '<br>';
-									var newP;
 									// Make sure current node is not inline element.
 									if ( ! MediumEditor.util.isBlockContainer( node ) ) { // jshint ignore:line
 										// If next element is there add before it else add at the end.
@@ -2243,7 +2274,7 @@ window.bp = window.bp || {};
 									if ( node.nextElementSibling ) {
 										newLI = node.parentNode.insertBefore( li, node.nextSibling );
 									} else {
-										newLI = node.parentNode.insertBefore( li, node.parentNode.nextSibling );
+										newLI = node.parentNode.appendChild( li );
 									}
 									MediumEditor.selection.moveCursor( MediumEditorOptDoc, newLI ); // jshint ignore:line
 									event.preventDefault();
@@ -2301,7 +2332,7 @@ window.bp = window.bp || {};
 										}
 
 										if ( 'undefined' !== typeof window.messageCaretPosition.commonAncestorContainer.classList &&
-										     window.messageCaretPosition.commonAncestorContainer.classList.contains( 'medium-editor-element' ) ) {
+											window.messageCaretPosition.commonAncestorContainer.classList.contains( 'medium-editor-element' ) ) {
 											var content = '<p>' + bp.Nouveau.Messages.mediumEditor.getContent() + '</p>';
 											bp.Nouveau.Messages.mediumEditor.setContent( content );
 											bp.Nouveau.Messages.mediumEditor.checkContentChanged();
@@ -2323,7 +2354,7 @@ window.bp = window.bp || {};
 											window.messageCaretPosition = '';
 										}
 
-										// Enable submit button
+										// Enable submit button.
 										$( '#bp-message-content' ).addClass( 'focus-in--content' );
 									},
 
