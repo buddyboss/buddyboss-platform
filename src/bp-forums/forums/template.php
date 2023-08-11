@@ -2460,35 +2460,26 @@ function bbp_form_forum_subscribed() {
  */
 function bbp_get_form_forum_subscribed() {
 
-	// Get _POST data
+	// Default value.
+	$forum_subscribed = false;
+
+	// Get _POST data.
 	if ( bbp_is_post_request() && isset( $_POST['bbp_forum_subscription'] ) ) {
 		$forum_subscribed = (bool) $_POST['bbp_forum_subscription'];
 
-		// Get edit data
+		// Get edit data.
 	} elseif ( bbp_is_forum_edit() || bbp_is_reply_edit() ) {
 
-		// Get current posts author
-		$post_author = bbp_get_global_post_field( 'post_author', 'raw' );
+		// Get current posts author.
+		$post_author      = (int) bbp_get_global_post_field( 'post_author', 'raw' );
+		$forum_subscribed = bbp_is_user_subscribed( $post_author, bbp_get_forum_id() );
 
-		// Post author is not the current user
-		if ( bbp_get_current_user_id() !== $post_author ) {
-			$forum_subscribed = bbp_is_user_subscribed_to_forum( $post_author );
-
-			// Post author is the current user
-		} else {
-			$forum_subscribed = bbp_is_user_subscribed_to_forum( bbp_get_current_user_id() );
-		}
-
-		// Get current status
+		// Get current status.
 	} elseif ( bbp_is_single_forum() ) {
-		$forum_subscribed = bbp_is_user_subscribed_to_forum( bbp_get_current_user_id() );
-
-		// No data
-	} else {
-		$forum_subscribed = false;
+		$forum_subscribed = bbp_is_user_subscribed( bbp_get_current_user_id(), bbp_get_forum_id() );
 	}
 
-	// Get checked output
+	// Get checked output.
 	$checked = checked( $forum_subscribed, true, false );
 
 	return apply_filters( 'bbp_get_form_forum_subscribed', $checked, $forum_subscribed );
