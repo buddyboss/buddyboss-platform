@@ -2375,7 +2375,7 @@ function bb_get_forum_paged() {
  * Never let a numeric value be less than zero.
  *
  * @since bbPress 2.6.0 (r6300)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.00
  *
  * @param int $number
  */
@@ -2406,7 +2406,7 @@ function bbp_number_not_negative( $number = 0 ) {
  *
  * @since bbPress 2.0.0 (r2868)
  * @since bbPress 2.6.0 (r5954) Replace direct queries with WP_Query() objects
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.00
  *
  * @param int    $parent_id Parent id.
  * @param string $post_type Post type. Defaults to 'post'.
@@ -2458,7 +2458,7 @@ function bbp_get_non_public_child_count( $parent_id = 0, $post_type = 'post' ) {
  * Filter a list of child counts, from `bbp_get_child_counts()`.
  *
  * @since bbPress 2.6.0 (r6826)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.00
  *
  * @param int   $parent_id  ID of post to get child counts from.
  * @param array $types      Optional. An array of post types to filter by.
@@ -2499,7 +2499,7 @@ function bbp_filter_child_counts_list( $parent_id = 0, $types = array( 'post' ),
  * Query the database for child counts, grouped by type & status.
  *
  * @since bbPress 2.6.0 (r6826)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.00
  *
  * @param int $parent_id Parent ID.
  */
@@ -2571,7 +2571,7 @@ function bbp_get_child_counts( $parent_id = 0 ) {
  * Get scheme for a URL based on is_ssl() results.
  *
  * @since 2.6.0 bbPress (r6759)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.00
  *
  * @return string https:// if is_ssl(), otherwise http://
  */

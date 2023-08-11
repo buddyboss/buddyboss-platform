@@ -1124,7 +1124,7 @@ function bb_forum_favourite_legacy_data_support() {
  * Get the root URL.
  *
  * @since bbPress 2.5.8 (r5814)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.00
  *
  * @return string
  */
@@ -1150,7 +1150,7 @@ function bbp_get_root_url() {
  * Return if debugging scripts or not.
  *
  * @since 2.6.7 (r7188)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.00
  *
  * @return bool True if debugging scripts. False if not debugging scripts.
  */
@@ -1162,7 +1162,7 @@ function bbp_doing_script_debug() {
  * Return if auto-saving or not.
  *
  * @since 2.6.7 (r7188)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.00
  *
  * @return bool True if mid auto-save. False if not mid auto-save.
  */

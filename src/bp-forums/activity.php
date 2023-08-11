@@ -1075,7 +1075,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 * Formats the dynamic activity action for new topics.
 		 *
 		 * @since bbPress 2.6.0 (r6370)
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.00
 		 *
 		 * @param string $action   The current action string.
 		 * @param object $activity The activity object.
@@ -1089,7 +1089,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			* Filters the formatted activity action new topic string.
 			*
 			* @since bbPress 2.6.0 (r6370)
-			* @since BuddyBoss [BBVERSION]
+			* @since BuddyBoss 2.4.00
 			*
 			* @param string               $action   Activity action string value
 			* @param BP_Activity_Activity $activity Activity item object
@@ -1101,7 +1101,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		* Formats the dynamic activity action for new replies.
 		*
 		* @since bbPress 2.6.0 (r6370)
-		* @since BuddyBoss [BBVERSION]
+		* @since BuddyBoss 2.4.00
 		*
 		* @param string $action   The current action string.
 		* @param object $activity The activity object.
@@ -1115,7 +1115,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			* Filters the formatted activity action new reply string.
 			*
 			* @since bbPress 2.6.0 (r6370)
-		 	* @since BuddyBoss [BBVERSION]
+		 	* @since BuddyBoss 2.4.00
 			*
 			* @param string               $action   Activity action string value.
 			* @param BP_Activity_Activity $activity Activity item object.
@@ -1127,7 +1127,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 * Generic function to format the dynamic activity title for topics/replies.
 		 *
 		 * @since bbPress 2.6.0 (r6370)
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.00
 		 *
 		 * @param string               $type     The type of post. Expects `topic` or `reply`.
 		 * @param string               $action   The current action string.
@@ -1192,7 +1192,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			* Filters the formatted activity action new activity string.
 			*
 			* @since bbPress 2.6.0 (r6370)
-			* @since BuddyBoss [BBVERSION]
+			* @since BuddyBoss 2.4.00
 			*
 			* @param string               $activity_action Activity action string value.
 			* @param string               $type            The type of post. Expects `topic` or `reply`.
@@ -1206,7 +1206,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 * Return an array of allowed activity actions.
 		 *
 		 * @since bbPress 2.6.0 (r6370)
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.00
 		 *
 		 * @return array
 		 */

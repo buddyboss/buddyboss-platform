@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.3.91\n"
+"Project-Id-Version: BuddyBoss Platform 2.4.00\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-08-07 07:03:40+00:00\n"
+"POT-Creation-Date: 2023-08-08 04:44:35+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2492,7 +2492,7 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:389
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1277
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:2401
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1100
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1119
 #. translators: 1: Full avatar width in pixels. 2: Full avatar height in pixels
 #. translators: Full image size for the member Avatar
 #. translators: 1: Full avatar width in pixels. 2: Full avatar height in pixels
@@ -2507,7 +2507,7 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:397
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1285
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:2408
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1108
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1127
 #. translators: 1: Thumb avatar width in pixels. 2: Thumb avatar height in
 #. pixels
 #. translators: Thumb imaze size for the member Avatar
@@ -2557,7 +2557,7 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:1501
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:809
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:818
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1161
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1180
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1455
 msgid "Order sort attribute ascending or descending."
 msgstr ""
@@ -2750,7 +2750,7 @@ msgstr ""
 #: bp-core/classes/class-bp-core-user.php:204
 #: bp-groups/bp-groups-widgets.php:81
 #: bp-groups/classes/class-bp-groups-invite-template.php:283
-#: bp-groups/classes/class-bp-groups-widget.php:159
+#: bp-groups/classes/class-bp-groups-widget.php:163
 #: bp-members/bp-members-template.php:1013
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1560
 #. translators: last active format.
@@ -4940,8 +4940,8 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:579
 #: bp-groups/classes/class-bp-groups-component.php:1047
 #: bp-groups/classes/class-bp-groups-notification.php:865
-#: bp-groups/classes/class-bp-groups-widget.php:74
-#: bp-groups/classes/class-bp-groups-widget.php:219
+#: bp-groups/classes/class-bp-groups-widget.php:78
+#: bp-groups/classes/class-bp-groups-widget.php:223
 #: bp-media/bp-media-settings.php:151 bp-media/bp-media-settings.php:158
 #: bp-media/bp-media-settings.php:174 bp-media/bp-media-settings.php:183
 #: bp-media/bp-media-settings.php:190
@@ -9144,7 +9144,7 @@ msgstr ""
 #: bp-core/classes/class-bp-core-follow-follower-widget.php:130
 #: bp-core/classes/class-bp-core-follow-following-widget.php:130
 #: bp-friends/classes/class-bp-core-friends-widget.php:189
-#: bp-groups/classes/class-bp-groups-widget.php:172
+#: bp-groups/classes/class-bp-groups-widget.php:176
 #: bp-members/classes/class-bp-core-members-widget.php:189
 #: bp-members/classes/class-bp-core-recently-active-widget.php:105
 #: bp-members/classes/class-bp-core-recently-active-widget.php:242
@@ -9221,7 +9221,7 @@ msgstr ""
 #: bp-forums/common/widgets.php:517 bp-forums/common/widgets.php:744
 #: bp-forums/common/widgets.php:1066 bp-forums/common/widgets.php:1232
 #: bp-forums/common/widgets.php:1483
-#: bp-groups/classes/class-bp-groups-widget.php:232
+#: bp-groups/classes/class-bp-groups-widget.php:236
 #: bp-members/classes/class-bp-core-members-widget.php:248
 #: bp-members/classes/class-bp-core-recently-active-widget.php:159
 #: bp-members/classes/class-bp-core-whos-online-widget.php:270
@@ -9870,8 +9870,8 @@ msgstr ""
 #: bp-friends/classes/class-bp-core-friends-widget.php:151
 #: bp-friends/classes/class-bp-core-friends-widget.php:259
 #: bp-groups/bp-groups-template.php:5604
-#: bp-groups/classes/class-bp-groups-widget.php:124
-#: bp-groups/classes/class-bp-groups-widget.php:241
+#: bp-groups/classes/class-bp-groups-widget.php:128
+#: bp-groups/classes/class-bp-groups-widget.php:245
 #: bp-members/classes/class-bp-core-members-widget.php:123
 #: bp-members/classes/class-bp-core-members-widget.php:274
 #: bp-templates/bp-nouveau/includes/blogs/functions.php:109
@@ -17738,8 +17738,8 @@ msgstr ""
 
 #: bp-friends/classes/class-bp-core-friends-widget.php:152
 #: bp-friends/classes/class-bp-core-friends-widget.php:260
-#: bp-groups/classes/class-bp-groups-widget.php:130
-#: bp-groups/classes/class-bp-groups-widget.php:242
+#: bp-groups/classes/class-bp-groups-widget.php:134
+#: bp-groups/classes/class-bp-groups-widget.php:246
 #: bp-members/classes/class-bp-core-members-widget.php:129
 #: bp-members/classes/class-bp-core-members-widget.php:279
 #: bp-members/classes/class-bp-members-admin.php:1246
@@ -17748,8 +17748,8 @@ msgstr ""
 
 #: bp-friends/classes/class-bp-core-friends-widget.php:153
 #: bp-friends/classes/class-bp-core-friends-widget.php:261
-#: bp-groups/classes/class-bp-groups-widget.php:136
-#: bp-groups/classes/class-bp-groups-widget.php:243
+#: bp-groups/classes/class-bp-groups-widget.php:140
+#: bp-groups/classes/class-bp-groups-widget.php:247
 #: bp-members/classes/class-bp-core-members-widget.php:137
 #: bp-members/classes/class-bp-core-members-widget.php:284
 msgid "Popular"
@@ -19072,7 +19072,7 @@ msgid "an"
 msgstr ""
 
 #: bp-groups/bp-groups-widgets.php:77
-#: bp-groups/classes/class-bp-groups-widget.php:155
+#: bp-groups/classes/class-bp-groups-widget.php:159
 msgid "created %s"
 msgstr ""
 
@@ -19739,19 +19739,19 @@ msgstr ""
 msgid "(BB) Social Groups"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-widget.php:177
+#: bp-groups/classes/class-bp-groups-widget.php:181
 msgid "There are no groups to display."
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-widget.php:234
+#: bp-groups/classes/class-bp-groups-widget.php:238
 msgid "Link widget title to Groups directory"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-widget.php:236
+#: bp-groups/classes/class-bp-groups-widget.php:240
 msgid "Max groups to show:"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-widget.php:239
+#: bp-groups/classes/class-bp-groups-widget.php:243
 msgid "Default groups to show:"
 msgstr ""
 
@@ -19955,7 +19955,7 @@ msgid "Limit result set to invites that have been sent, not sent, or include all
 msgstr ""
 
 #: bp-groups/classes/class-bp-rest-group-invites-endpoint.php:1211
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1144
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1163
 msgid "Name of the field to order according to."
 msgstr ""
 
@@ -27242,7 +27242,7 @@ msgid "Unread %s"
 msgstr ""
 
 #: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:60
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1012
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1031
 msgid "A unique numeric ID for the notification."
 msgstr ""
 
@@ -27256,7 +27256,7 @@ msgid "Sorry, you are not allowed to see the notification."
 msgstr ""
 
 #: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:289
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:545
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:548
 msgid "Invalid notification ID."
 msgstr ""
 
@@ -27264,123 +27264,123 @@ msgstr ""
 msgid "Sorry, you cannot view this notification."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:364
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:367
 msgid "Cannot create new notification."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:446
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:449
 msgid "Notification is already with the status you are trying to update into."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:459
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:462
 msgid "Cannot update the status of this notification."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1018
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1037
 msgid "The ID of the user the notification is addressed to."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1024
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1043
 msgid "The ID of the item associated with the notification."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1029
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1048
 msgid "The ID of the secondary item associated with the notification."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1034
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1053
 msgid "The name of the BuddyPress component the notification relates to."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1039
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1058
 msgid "The name of the component's action the notification is about."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1043
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1062
 msgid "The date the notification was created, in the site's timezone."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1050
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1069
 msgid "Whether it's a new notification or not."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1056
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1075
 msgid "The name of the notification object."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1061
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1080
 msgid "The ID of the notification object."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1066
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1085
 msgid "Description of notification."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1071
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1090
 msgid "HTML description for the object, transformed for display."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1080
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1099
 msgid "Link URL for the notification."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1085
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1104
 msgid "Rest Actions which perform accept/reject based on the status."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1090
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1109
 msgid "Readonly for the moderated members notification."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1115
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1134
 msgid "Avatar URLs for the notification."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1170
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1189
 msgid "Limit result set to notifications associated with a specific component"
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1178
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1197
 msgid ""
 "Limit result set to notifications associated with a specific component's "
 "action name."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1186
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1205
 msgid "Limit result set to notifications addressed to a specific user."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1194
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1213
 msgid "Limit result set to notifications associated with a specific item ID."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1202
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1221
 msgid ""
 "Limit result set to notifications associated with a specific secondary item "
 "ID."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1210
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1229
 msgid "Limit result set to items from specific states."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1264
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1291
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1303
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1327
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1339
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1283
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1310
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1322
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1346
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1358
 msgid "Accepted"
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1266
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1305
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1341
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1285
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1324
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1360
 msgid "Pending"
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1276
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1315
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1351
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1295
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1334
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1370
 msgid "Rejected"
 msgstr ""
 
