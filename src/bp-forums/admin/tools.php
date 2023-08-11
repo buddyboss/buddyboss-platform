@@ -1956,8 +1956,7 @@ function bbp_admin_reset_database() {
 	/** Roles */
 
 	$statement = __( 'Deleting Roles and Capabilities&hellip; %s', 'buddyboss' );
-	remove_role( bbp_get_moderator_role() );
-	remove_role( bbp_get_participant_role() );
+	bbp_remove_roles();
 	bbp_remove_caps();
 	$messages[] = sprintf( $statement, $success );
 
