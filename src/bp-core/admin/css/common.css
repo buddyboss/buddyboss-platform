@@ -3564,7 +3564,7 @@ table.moderations .column-member img {
  *----------------------------------------------------------------------------*/
 .registration-restrictions-rule-list {
   margin: 15px 0;
-  max-width: 610px;
+  max-width: 560px;
 }
 
 .registration-restrictions-rule-list.bb-sortable .registration-restrictions-rule {
@@ -3599,6 +3599,11 @@ table.moderations .column-member img {
   border-radius: 4px;
   padding: 15px 40px 15px 15px;
   margin-bottom: 15px;
+}
+
+.registration-restrictions-rule-list .registration-restrictions-rule.error {
+  background-color: rgba(255, 0, 0, 0.1);
+  border-color: #ffc5ca;
 }
 
 .registration-restrictions-rule-list .registration-restrictions-rule input,
@@ -3643,4 +3648,38 @@ table.moderations .column-member img {
   border: 0;
   background-color: transparent;
   padding: 0;
+}
+
+.section-bb_registration_restrictions .registration-restrictions-listing {
+  position: relative;
+}
+
+.section-bb_registration_restrictions .registration-restrictions-listing .restrictions-error {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 13px;
+  max-width: 200px;
+  padding: 10px 12px;
+  border-radius: 4px;
+  color: #d42929;
+  border: 1px solid #ffc5ca;
+  background: #ffdcdc;
+}
+
+.section-bb_registration_restrictions .registration-restrictions-listing .restrictions-error p {
+  color: inherit;
+  margin: 0 0 5px 0;
+}
+
+.section-bb_registration_restrictions .registration-restrictions-listing .restrictions-error p:last-child {
+  margin-bottom: 0;
+}
+
+@media screen and (max-width: 1320px) {
+  .section-bb_registration_restrictions .registration-restrictions-listing .restrictions-error {
+    position: static;
+    max-width: inherit;
+    margin: 20px 0;
+  }
 }

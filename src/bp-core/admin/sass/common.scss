@@ -3871,7 +3871,7 @@ table.moderations .column-member {
 
 .registration-restrictions-rule-list {
 	margin: 15px 0;
-	max-width: 610px;
+	max-width: 560px;
 
 	&.bb-sortable .registration-restrictions-rule {
 		padding-left: 60px;
@@ -3904,6 +3904,11 @@ table.moderations .column-member {
 		border-radius: 4px;
 		padding: 15px 40px 15px 15px;
 		margin-bottom: 15px;
+
+		&.error {
+			background-color: rgba(255, 0, 0, 0.1);
+			border-color: #ffc5ca;
+		}
 
 		input,
 		select {
@@ -3949,4 +3954,41 @@ table.moderations .column-member {
 			}
 		}
 	}
+}
+
+.section-bb_registration_restrictions .registration-restrictions-listing {
+	position: relative;
+
+	.restrictions-error {
+		position: absolute;
+		right: 0;
+		top: 0;
+		font-size: 13px;
+		max-width: 200px;
+		padding: 10px 12px;
+		border-radius: 4px;
+		color: #d42929;
+		border: 1px solid #ffc5ca;
+		background: #ffdcdc;
+
+		p {
+			color: inherit;
+			margin: 0 0 5px 0;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+
+	@media screen and (max-width: 1320px) {
+
+		.restrictions-error {
+			position: static;
+			max-width: inherit;
+			margin: 20px 0;
+		}
+
+	}
+
 }
