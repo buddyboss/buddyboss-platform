@@ -645,3 +645,18 @@ function bbp_engagements_strategy( $default = 'meta' ) {
 	// Filter & return.
 	return apply_filters( 'bbp_engagements_strategy', $integration, $default );
 }
+
+/**
+ * Return the edit slug.
+ *
+ * @since bbPress 2.6.2 (r6965)
+ * @since BuddyBoss 2.4.00
+ *
+ * @param string $default Optional. Default value 'edit'.
+ * @return string
+ */
+function bbp_get_edit_slug( $default = 'edit' ) {
+
+	// Filter & return.
+	return apply_filters( 'bbp_get_edit_slug', get_option( '_bbp_edit_slug', $default ) );
+}
