@@ -163,12 +163,10 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 				require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 			}
 
-			$table_exists = (bool) $wpdb->get_results( "DESCRIBE {$table_name};" );
-
 			// Table already exists, so maybe upgrade instead?
-			if ( true !== $table_exists ) {
-
-				$sql[] = "CREATE TABLE {$table_name} (
+			$table_exists = $wpdb->query( "SHOW TABLES LIKE '{$table_name}';" );
+			if ( ! $table_exists ) {
+				$sql[] = "CREATE TABLE IF NOT EXISTS {$table_name} (
 					id bigint(20) NOT NULL AUTO_INCREMENT,
 					type varchar(255) NOT NULL,
 					`group` varchar(255) DEFAULT NULL,
