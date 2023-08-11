@@ -1,5 +1,5 @@
 /* globals tinyMCE */
-addReply = {
+var addReply = {
 
 	/**
 	 * Move the reply form when "Reply" is clicked.
@@ -230,10 +230,10 @@ addReply = {
 		}
 
 		if ( 'tmce' === this.mode ) {
-			switchEditors.go( 'bbp_reply_content', 'tmce' );
+			window.switchEditors.go( 'bbp_reply_content', 'tmce' );
 
 		} else if ( 'html' === this.mode ) {
-			switchEditors.go( 'bbp_reply_content', 'html' );
+			window.switchEditors.go( 'bbp_reply_content', 'html' );
 		}
 	}
 };
