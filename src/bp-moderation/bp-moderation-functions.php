@@ -1953,9 +1953,10 @@ function bb_moderation_migration_on_update() {
 	 */
 	$sql  = "DELETE FROM {$wpdb->options} WHERE `option_name` LIKE 'wp_1_bp_updater_batch_%' and `option_value` LIKE '%BP_Suspend_%'";
 	$deleted = $wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-
+	error_log( ' $deleted ' . $deleted );
 	// Run migration only if any entry deleted from options table.
 	if ( $deleted ) {
+		error_log( 'migraiton run ');
 		$suspend_request_args = array(
 			'in_types' => array( BP_Moderation_Members::$moderation_type ),
 			'reported' => false,
