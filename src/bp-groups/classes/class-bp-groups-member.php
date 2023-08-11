@@ -1539,6 +1539,7 @@ class BP_Groups_Member {
 						'number'  => 1,
 						'orderby' => 'ID',
 						'role'    => 'administrator',
+						'exclude' => array( $user_id ),
 					) );
 
 					if ( ! empty( $admin ) ) {
