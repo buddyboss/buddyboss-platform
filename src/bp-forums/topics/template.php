@@ -131,7 +131,11 @@ function bbp_get_topics_pagination_base( $forum_id = 0 ) {
 
 			// Any single post (for shortcodes, ahead of shortcodeables below)
 		} elseif ( is_singular() ) {
-			$base = get_permalink();
+			if ( has_shortcode( get_the_content(), 'bbp-forum-index' ) ) {
+				$base = bbp_get_topics_url();
+			} else {
+				$base = get_permalink();
+			}
 
 			// View.
 		} elseif ( bbp_is_single_view() ) {
@@ -154,14 +158,6 @@ function bbp_get_topics_pagination_base( $forum_id = 0 ) {
 			$base = bbp_get_topics_url();
 
 			// Page or single post.
-		} elseif ( is_page() || is_single() ) {
-			if ( has_shortcode( get_the_content(), 'bbp-forum-index' ) ) {
-				$base = bbp_get_topics_url();
-			} else {
-				$base = get_permalink();
-			}
-
-			// Default.
 		} else {
 			$base = get_permalink( $forum_id );
 		}
