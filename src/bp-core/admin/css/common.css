@@ -2999,6 +2999,7 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
   text-decoration: none;
 }
 
+.bb-inactive-field > th:before,
 .bb-pro-inactive > th:before {
   content: "\e97c";
   font-family: "bb-icons";
@@ -3010,20 +3011,25 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
   font-size: 14px;
 }
 
+.bb-inactive-field > td,
 .bb-pro-inactive > td {
   opacity: 0.3;
 }
 
+.bb-inactive-field > td,
+.bb-inactive-field > td *,
 .bb-pro-inactive > td,
 .bb-pro-inactive > td * {
   pointer-events: none;
   user-select: none;
 }
 
+.bb-active-field > th:before,
 .bb-pro-active > th:before {
   display: none;
 }
 
+.bb-active-field .bb-head-notice,
 .bb-pro-active .bb-head-notice {
   display: none;
 }
