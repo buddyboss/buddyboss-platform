@@ -129,7 +129,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 				'item_id'        => $user_id,
 				'item_type'      => self::$type,
 				'user_suspended' => 0,
-				'hide_sitewide'  => 0,
+				'hide_sitewide'  => 1,
 			)
 		);
 
