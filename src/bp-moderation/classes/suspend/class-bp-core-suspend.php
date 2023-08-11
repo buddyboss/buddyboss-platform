@@ -125,6 +125,9 @@ class BP_Core_Suspend {
 		do_action( 'bb_suspend_before_add_suspend', $args );
 
 		$recode = self::get_recode( $args['item_id'], $args['item_type'] );
+		error_log('#####');
+		error_log(print_r( $args, true ));
+		error_log(print_r( $recode, true ));
 		if ( ! empty( $recode ) ) {
 			$where = array(
 				'item_id'   => $args['item_id'],

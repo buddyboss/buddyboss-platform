@@ -1943,7 +1943,7 @@ function bb_moderation_to_hide_forum_activity( $activity_id ) {
  *
  * @return void
  */
-function bb_moderation_migration_on_update() {
+function bb_moderation_migration_on_update( $force = false ) {
 	global $wpdb;
 
 	/**
@@ -1956,7 +1956,8 @@ function bb_moderation_migration_on_update() {
 
 	// Run migration only if not run previously.
 	$moderation_repaired = bp_get_option( 'bb_moderation_migration_run', false );
-	if ( true !== $moderation_repaired ) {
+	if ( true !== $moderation_repaired || $force ) {
+
 		$suspend_request_args = array(
 			'in_types' => array( BP_Moderation_Members::$moderation_type ),
 			'reported' => false,
@@ -1964,7 +1965,7 @@ function bb_moderation_migration_on_update() {
 		);
 
 		$suspend_requests = BP_Moderation::get( $suspend_request_args );
-
+		error_log(print_r( $suspend_requests, true ));
 		if ( ! empty( $suspend_requests['moderations'] ) ) {
 			foreach ( $suspend_requests['moderations'] as $data ) {
 
@@ -1990,6 +1991,7 @@ function bb_moderation_migration_on_update() {
 						empty( $data->user_suspended ) &&
 						empty( $data->user_report )
 					) {
+						error_log( ' migration unsuspend_user ' );
 						BP_Suspend_Member::unsuspend_user( $data->item_id );
 					}
 				}
@@ -2044,3 +2046,7 @@ function bb_moderation_migration_on_update() {
 		bp_update_option( 'bb_moderation_migration_run', true );
 	}
 }
+add_action( 'admin_init', function (){
+	error_log('123');
+	bb_moderation_migration_on_update( true );
+}, 9999 );
