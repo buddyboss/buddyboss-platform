@@ -2332,7 +2332,7 @@ window.bp = window.bp || {};
 										}
 
 										if ( 'undefined' !== typeof window.messageCaretPosition.commonAncestorContainer.classList &&
-										     window.messageCaretPosition.commonAncestorContainer.classList.contains( 'medium-editor-element' ) ) {
+											window.messageCaretPosition.commonAncestorContainer.classList.contains( 'medium-editor-element' ) ) {
 											var content = '<p>' + bp.Nouveau.Messages.mediumEditor.getContent() + '</p>';
 											bp.Nouveau.Messages.mediumEditor.setContent( content );
 											bp.Nouveau.Messages.mediumEditor.checkContentChanged();
@@ -2354,7 +2354,7 @@ window.bp = window.bp || {};
 											window.messageCaretPosition = '';
 										}
 
-										// Enable submit button
+										// Enable submit button.
 										$( '#bp-message-content' ).addClass( 'focus-in--content' );
 									},
 
