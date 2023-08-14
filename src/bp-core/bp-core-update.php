@@ -463,12 +463,12 @@ function bp_version_updater() {
 			bb_update_to_2_3_80();
 		}
 
-		if ( $raw_db_version !== $current_db ) {
-			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
+		if ( $raw_db_version < 20561 ) {
+			bb_update_to_2_4_10();
 		}
 
-		if ( $raw_db_version < 20471 ) {
-			bb_update_to_2_4_10();
+		if ( $raw_db_version !== $current_db ) {
+			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 		}
 	}
 
@@ -3136,6 +3136,7 @@ function bb_core_update_repair_duplicate_following_notification() {
 }
 
 /**
+ * Migrate icon class for the documents.
  * Assign the group organizer to the group has 0 members.
  *
  * @since BuddyBoss [BBVERSION]
@@ -3144,6 +3145,21 @@ function bb_core_update_repair_duplicate_following_notification() {
  */
 function bb_update_to_2_4_10() {
 	global $wpdb;
+
+	if ( bp_is_active( 'document' ) ) {
+		$saved_extensions = bp_get_option( 'bp_document_extensions_support', array() );
+		$default          = bp_media_allowed_document_type();
+
+		foreach ( $default as $key => $value ) {
+			if ( isset( $saved_extensions[ $key ] ) ) {
+				$document_file_extension          = substr( strrchr( $value['extension'], '.' ), 1 );
+				$new_icon                         = bp_document_svg_icon( $document_file_extension );
+				$saved_extensions[ $key ]['icon'] = $new_icon;
+			}
+		}
+
+		bp_update_option( 'bp_document_extensions_support', $saved_extensions );
+	}
 
 	if ( ! bp_is_active( 'groups' ) ) {
 		return;
