@@ -1969,17 +1969,15 @@ function bb_moderation_migration_on_update() {
 			foreach ( $suspend_requests['moderations'] as $data ) {
 
 				// update data for the blocked users.
-				if ( isset( $data->reported ) ) {
-					if ( ! empty( $data->reported ) ) {
-						$args = array(
-							'item_id'     => $data->item_id,
-							'item_type'   => $data->item_type,
-							'user_report' => ( isset( $data->user_report ) ? $data->user_report : 0 ),
-							'blog_id'     => $data->blog_id,
-						);
+				if ( ! empty( $data->reported ) ) {
+					$args = array(
+						'item_id'     => $data->item_id,
+						'item_type'   => $data->item_type,
+						'user_report' => ( $data->user_report ?? 0 ),
+						'blog_id'     => $data->blog_id,
+					);
 
-						BP_Core_Suspend::add_suspend( $args );
-					}
+					BP_Core_Suspend::add_suspend( $args );
 				}
 
 				// updated data based on suspend entries.
@@ -2027,7 +2025,7 @@ function bb_moderation_migration_on_update() {
 								bp_moderation_delete_meta( $moderation->id, '_hide_by' );
 
 								/**
-								 * Fires after an moderation report item has been unhide
+								 * Fires after a moderation report item has been unhide
 								 *
 								 * @since BuddyBoss 1.5.6
 								 *
