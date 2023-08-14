@@ -438,7 +438,11 @@ add_action( 'bp_init_background_updater', 'bb_handle_cron_healthcheck' );
  */
 function bb_updater_handle_cron_healthcheck() {
 	global $bb_background_updater;
-	if ( $bb_background_updater->is_updating() ) {
+	if (
+		is_object( $bb_background_updater ) &&
+		property_exists( $bb_background_updater, 'is_updating' ) &&
+		$bb_background_updater->is_updating()
+	) {
 		$bb_background_updater->schedule_event();
 	}
 }
