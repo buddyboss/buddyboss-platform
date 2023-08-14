@@ -2566,6 +2566,7 @@ window.bp = window.bp || {};
 
 	// Function to validate duplicate entry
 	function validateDuplicateRuleEntry( row ) {
+		var wrapper = $( row ).closest( '#bb-domain-restrictions-setting' );
 		var domainInput     = row.find( '.registration-restrictions-domain' );
 		var extensionInput  = row.find( '.registration-restrictions-tld' );
 		var domain          = domainInput.val().trim();
@@ -2587,8 +2588,10 @@ window.bp = window.bp || {};
 
 		if ( duplicateFound ) {
 			row.addClass( 'error' );
+			wrapper.children( '.restrictions-error' ).html('<p>' + BP_ADMIN.bb_registration_resticitions.feedback_messages.duplicate + '</p>');
 		} else {
 			row.removeClass( 'error' );
+			wrapper.children( '.restrictions-error' ).html('');
 		}
 	}
 
@@ -2640,6 +2643,10 @@ window.bp = window.bp || {};
 
 		if( $( '#bb-email-restrictions-setting .registration-restrictions-rule.error' ).length === 0 ) {
 			$( '#bb-email-restrictions-setting' ).children( '.restrictions-error' ).html( '' );
+		}
+
+		if( $( '#bb-domain-restrictions-setting .registration-restrictions-rule.error' ).length === 0 ) {
+			$( '#bb-domain-restrictions-setting' ).children( '.restrictions-error' ).html( '' );
 		}
 	});
 
