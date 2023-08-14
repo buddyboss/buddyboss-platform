@@ -81,12 +81,12 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 
 		// Blacklist email settings.
 		$args          = array();
-		$args['class'] = ( bp_allow_custom_registration() ) ? 'bb-pro-inactive' : '';
+		$args['class'] = ( bp_allow_custom_registration() ) ? 'bb-inactive-field' : '';
 		$this->add_field( 'bb-domain-restrictions', __( 'Domain Restrictions', 'buddyboss' ) . bb_get_buddyboss_registration_notice(), 'bb_admin_setting_callback_domain_restrictions', '', $args );
 
 		// Whitelist email settings.
 		$args          = array();
-		$args['class'] = ( bp_allow_custom_registration() ) ? 'bb-pro-inactive' : '';
+		$args['class'] = ( bp_allow_custom_registration() ) ? 'bb-inactive-field' : '';
 		$this->add_field( 'bb-email-restrictions', __( 'Email Restrictions', 'buddyboss' ) . bb_get_buddyboss_registration_notice(), 'bb_admin_setting_callback_email_restrictions', '', $args );
 
 		// Main Privacy Settings Section.

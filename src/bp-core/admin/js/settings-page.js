@@ -2466,7 +2466,7 @@ window.bp = window.bp || {};
 			var $row     = $this.closest( '.registration-restrictions-listing' ).find( '.registration-restrictions-rule-list .registration-restrictions-rule.custom' ).html();
 			$this.closest( '.registration-restrictions-listing' ).find( '.registration-restrictions-rule-list' ).append( ' <div class="registration-restrictions-rule"> ' + $row.replace( regex, newindex ) + ' </div> ' );
 			$this.prev( '.registration-restrictions-lastindex').val( newindex );
-			domain_restiction_update_priority_number();
+			domainRestictionUpdatePriorityNumber();
 		}
 	);
 
@@ -2481,20 +2481,144 @@ window.bp = window.bp || {};
 				$this.closest( '.registration-restrictions-rule' ).remove();
 				$this.parents('.registration-restrictions-listing').find( '.registration-restrictions-lastindex').val( newindex );
 			}
-			domain_restiction_update_priority_number();
+			domainRestictionUpdatePriorityNumber();
+		}
+	);
+
+	$( document ).on(
+		'change',
+		'.registration-restrictions-listing .registration-restrictions-select',
+		function ( e ) {
+			e.preventDefault();
+			var $this      = $( e.currentTarget );
+			var $dropdowns = $this.parents( '.bb-domain-restrictions-listing' ).find( '.registration-restrictions-select' ).not( $this );
+			if ( 'only_allow' === $this.find(':selected').val() ) {
+
+				// Make always allow disable.
+				$dropdowns.find( 'option' ).attr( 'disabled', false );
+				$dropdowns.find( 'option[value=always_allow]' ).attr( 'disabled', true );
+			} else if ( 'always_allow' === $this.find(':selected').val() ) {
+
+				// Make only allow disable.
+				$dropdowns.find( 'option' ).attr( 'disabled', false );
+				$dropdowns.find( 'option[value=only_allow]' ).attr( 'disabled', true );
+			} else {
+
+				// enable all options.
+				if ( ! ( $dropdowns.find( 'option[value=always_allow] option:selected' ).length > 0 &&
+					$dropdowns.find( 'option[value=only_allow] option:selected' ).length > 0 ) ) {
+					$dropdowns.find( 'option' ).attr( 'disabled', false );
+				}
+			}
 		}
 	);
 
 	$( '.registration-restrictions-rule-list.bb-sortable' ).sortable({
-        update: function() {
-            domain_restiction_update_priority_number();
-        }
-    });
+		update: function() {
+			domainRestictionUpdatePriorityNumber();
+		}
+	});
 
-	function domain_restiction_update_priority_number() {
-        $('.bb-sortable .registration-restrictions-rule:not(.custom)').each( function( index ) {
+	function domainRestictionUpdatePriorityNumber() {
+		$('.bb-sortable .registration-restrictions-rule:not(.custom)').each( function( index ) {
 			$( this ).find( '.registration-restrictions-priority' ).html( index + 1 );
-        });
-    }
+		});
+	}
+
+	// Function to validate empty domain or extension
+	function validateEmptyInput() {
+		var isValid = true;
+		$( '.bb-domain-restrictions-listing .registration-restrictions-rule' ).not( '.custom' ).each( function() {
+			var domainInput    = $( this ).find( '.registration-restrictions-domain' );
+			var extensionInput = $( this ).find( '.registration-restrictions-tld' );
+			var domain         = domainInput.val().trim();
+			var extension      = extensionInput.val().trim();
+
+			if ( '' === domain || '' === extension ) {
+				$( this ).addClass( 'error' );
+				$('html, body').animate({
+					'scrollTop' : $( this ).parents('.registration-restrictions-listing').offset().top
+				});
+				isValid = false;
+			} else {
+				$( this ).removeClass( 'error' );
+			}
+		});
+
+		// Check the empty emails.
+		$( '.bb-email-restrictions-listing .registration-restrictions-rule' ).not( '.custom' ).each( function() {
+			var emailInput = $( this ).find( '.registration-restrictions-domain' );
+			var email      = emailInput.val().trim();
+
+			if ( '' === email ) {
+				$( this ).addClass( 'error' );
+				$('html, body').animate({
+					'scrollTop' : $( this ).parents('.registration-restrictions-listing').offset().top
+				});
+				isValid = false;
+			} else {
+				$( this ).removeClass( 'error' );
+			}
+		});
+
+		return isValid;
+	}
+
+	// Function to validate duplicate entry
+	function validateDuplicateRuleEntry( row ) {
+		var domainInput     = row.find( '.registration-restrictions-domain' );
+		var extensionInput  = row.find( '.registration-restrictions-tld' );
+		var domain          = domainInput.val().trim();
+		var extension       = extensionInput.val().trim();
+		var domainExtension = domain + '.' + extension;
+		var duplicateFound  = false;
+
+		$( '.bb-domain-restrictions-listing .registration-restrictions-rule' ).not( row ).each( function() {
+			var currentDomain    = $( this ).find( '.registration-restrictions-domain' ).val().trim();
+			var currentExtension = $( this ).find( '.registration-restrictions-tld' ).val().trim();
+
+			var rowDomainExtension = currentDomain + '.' + currentExtension;
+
+			if ( domainExtension === rowDomainExtension ) {
+				duplicateFound = true;
+				return false; // Exit the loop
+			}
+		});
+
+		if ( duplicateFound ) {
+			row.addClass( 'error' );
+		} else {
+			row.removeClass( 'error' );
+		}
+	}
+
+	// Handle input event on domain and extension textboxes
+	$( document ).on( 'input', '.bb-domain-restrictions-listing .registration-restrictions-domain, .registration-restrictions-tld', function() {
+		var row = $( this ).closest( '.registration-restrictions-rule' );
+		validateDuplicateRuleEntry( row );
+	});
+
+	// Handle blur event on domain and extension textboxes
+	$( document ).on( 'blur', '.bb-domain-restrictions-listing .registration-restrictions-domain, .registration-restrictions-tld', function() {
+		var row = $( this ).closest( '.registration-restrictions-rule' );
+		validateDuplicateRuleEntry( row );
+	});
+
+	// Handle adding domain restriction
+	$( '.registration-restrictions-add-rule' ).on( 'click', function() {
+		var row = $( this ).closest( '.registration-restrictions-listing' ).find( '.registration-restrictions-rule' ).last();
+		validateDuplicateRuleEntry( row );
+	});
+
+	// Handle removing domain restriction
+	$( document ).on( 'click', '.registration-restrictions-rule-remove', function() {
+		var row = $( this ).closest( '.registration-restrictions-rule' );
+		row.removeClass( 'error' );
+	});
+
+	// Handle settings save.
+	$( '#bb_registration_restrictions' ).parents( 'form' ).on( 'submit', function( e ) {
+		return validateEmptyInput();
+	});
 
 }());

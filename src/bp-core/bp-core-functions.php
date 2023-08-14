@@ -8865,6 +8865,15 @@ function bb_format_blacklist_whitelist_email_setting( $data_values = '' ) {
 	return $result;
 }
 
+/**
+ * Check if email address allowed to register.
+ *
+ * @since BuddyBoss [BBVERSION]
+ * 
+ * @param string $email Email address.
+ *
+ * @return bool
+ */
 function bb_is_allowed_register_email_address( $email = '' ) {
 
 	$email = strtolower( trim( $email ) );
@@ -8891,9 +8900,8 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 			}
 		}
 	}
-	 
 
-	// Split the email into parts
+	// Split the email into parts.
 	$email_parts = explode( '@', $email );
 	if ( count( $email_parts ) === 2 ) {
 		$username       = $email_parts[0];
@@ -8914,24 +8922,14 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 	$only_allow = false;
 	foreach( $domain_restrictions as $key => $rule ) {
 
-		// // Already return true if match for only allow for rest it will be false;
-		// if ( true === $only_allow ) {
-		// 	return false;
-		// }
-
 		$rule_domain    = strtolower( trim( $rule['domain'] ) );
 		$rule_tld       = strtolower( trim( $rule['tld'] ) );
 		$rule_condition = $rule['condition'];
 
-		// if ( 'only_allow' === $rule_condition ) {
-		// 	$only_allow = true;
-		// }
-		error_log( $rule_domain );
-		error_log( $rule_tld );
-		error_log( $rule_condition );
-		error_log( $domain );
-		error_log( $domain_and_ext );
-		error_log( $rule_domain . '.'. $rule_tld );
+		if ( 'only_allow' === $rule_condition ) {
+			$only_allow = true;
+		}
+
 		// Exact match with domain and extension.
 		if ( $domain_and_ext === $rule_domain . '.'. $rule_tld ) {
 			if ( 'only_allow' === $rule_condition  ) {
@@ -8944,7 +8942,6 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 
 			//domain starting with placeholder.
 		} elseif ( 0 === strpos( $rule_domain, '*.' ) && $extension === $rule_tld ) {
-
 			$pattern = preg_quote( $rule_domain . '.'. $rule_tld, '/' );
 			$pattern = str_replace( '\*', '[a-zA-Z0-9.-]*', $pattern );
 			$pattern = "/$pattern$/";
@@ -8959,7 +8956,7 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 				}
 			}
 
-			
+			//domain with * as placeholder.
 		} elseif ( '*' === $rule_domain && $extension === $rule_tld ) {
 			if ( 'only_allow' === $rule_condition  ) {
 				return true;
@@ -8969,6 +8966,11 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 				$is_allowed = false;
 			}
 		}
+	}
+
+	// If only allowed occured but rules not matched.
+	if ( true === $only_allow ) {
+		return false;
 	}
 
 	// If no matching found, allow registration by default.
