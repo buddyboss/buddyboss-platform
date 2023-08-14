@@ -1823,11 +1823,11 @@ class BP_Email_Tokens {
 		// Find the group.
 		$group = $tokens['group'] ?? false;
 		if ( empty( $group ) ) {
-			$group_id = $tokens['group.id'] ?? false;
+			$group_id    = $tokens['group.id'] ?? false;
+			$message_ids = array_column( $tokens['message'], 'message_id' );
+			$message_ids = array_unique( wp_parse_id_list( $message_ids ) );
+			$message_id  = ! empty( $message_ids ) ? current( $message_ids ) : false;
 			if ( empty( $group_id ) ) {
-				$message_ids = array_column( $tokens['message'], 'message_id' );
-				$message_ids = array_unique( wp_parse_id_list( $message_ids ) );
-				$message_id  = ! empty( $message_ids ) ? current( $message_ids ) : false;
 				$group_id    = bp_messages_get_meta( $message_id, 'group_id', true ); // group id.
 			}
 

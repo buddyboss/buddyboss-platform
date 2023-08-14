@@ -1206,26 +1206,28 @@ function bb_digest_message_email_notifications() {
 					$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( (array) $thread['recipients'] );
 
 					if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
-						global $bb_email_background_updater;
+						global $bb_background_updater;
 
 						$chunk_recipient_array = array_chunk( $thread['recipients'], bb_get_email_queue_min_count() );
 
 						if ( ! empty( $chunk_recipient_array ) ) {
 							foreach ( $chunk_recipient_array as $chunk_recipient ) {
-								$bb_email_background_updater->data(
+								$bb_background_updater->data(
 									array(
-										array(
-											'callback' => 'bb_render_digest_messages_template',
-											'args'     => array(
-												$chunk_recipient,
-												$thread['thread_id'],
-											),
+										'type'     => 'email',
+										'group'    => 'digest_email_messages',
+										'data_id'  => $thread['thread_id'],
+										'priority' => 5,
+										'callback' => 'bb_render_digest_messages_template',
+										'args'     => array(
+											$chunk_recipient,
+											$thread['thread_id'],
 										),
-									)
+									),
 								);
-								$bb_email_background_updater->save();
+								$bb_background_updater->save();
 							}
-							$bb_email_background_updater->dispatch();
+							$bb_background_updater->dispatch();
 						}
 					} else {
 						bb_render_digest_messages_template( $thread['recipients'], $thread['thread_id'] );
