@@ -19,8 +19,6 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Prefix.
 		 *
-		 * (default value: 'wp')
-		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @var string
@@ -30,8 +28,6 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 
 		/**
 		 * Action.
-		 *
-		 * (default value: 'async_request')
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -53,8 +49,6 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Data.
 		 *
-		 * (default value: array())
-		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @var array
@@ -64,8 +58,6 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 
 		/**
 		 * Start time of current process.
-		 *
-		 * (default value: 0)
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -164,7 +156,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 			}
 
 			// Table already exists, so maybe upgrade instead?
-			$table_exists = $wpdb->query( "SHOW TABLES LIKE '{$table_name}';" );
+			$table_exists = $wpdb->query( "SHOW TABLES LIKE '{$table_name}';" ); // phpcs:ignore
 			if ( ! $table_exists ) {
 				$sql[] = "CREATE TABLE IF NOT EXISTS {$table_name} (
 					id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -613,6 +605,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 					'args'     => (array) $this->data['args'],
 				);
 
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 				$wpdb->insert(
 					self::$table_name,
 					array(
@@ -635,6 +628,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 							'args'     => (array) $data['args'],
 						);
 
+						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 						$wpdb->insert(
 							self::$table_name,
 							array(
@@ -684,6 +678,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 			if ( ! empty( $data ) ) {
 				global $wpdb;
 
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 				$wpdb->update(
 					self::$table_name,
 					array(
@@ -710,6 +705,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		public function delete( $key ) {
 			global $wpdb;
 
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->delete(
 				self::$table_name,
 				array(
@@ -853,22 +849,6 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		 */
 		public function is_active() {
 			return $this->is_queued() || $this->is_processing() || $this->is_paused() || $this->is_cancelled();
-		}
-
-		/**
-		 * Is process running?
-		 *
-		 * Check whether the current process is already running
-		 * in a background process.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 * @deprecated 1.1.0 Superseded.
-		 * @see is_processing()
-		 *
-		 * @return bool
-		 */
-		protected function is_process_running() {
-			return $this->is_processing();
 		}
 
 		/**
