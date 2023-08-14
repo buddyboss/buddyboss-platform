@@ -1951,8 +1951,8 @@ function bb_moderation_migration_on_update() {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	$sql     = "DELETE FROM {$wpdb->options} WHERE `option_name` LIKE 'wp_1_bp_updater_batch_%' AND `option_value` LIKE '%BP_Suspend_%'";
-	$deleted = $wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$sql = "DELETE FROM {$wpdb->options} WHERE `option_name` LIKE 'wp_1_bp_updater_batch_%' AND `option_value` LIKE '%BP_Suspend_%'";
+	$wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 	// Run migration only if not run previously.
 	$moderation_repaired = bp_get_option( 'bb_moderation_migration_run', false );
@@ -1990,7 +1990,7 @@ function bb_moderation_migration_on_update() {
 						empty( $data->user_suspended ) &&
 						empty( $data->user_report )
 					) {
-						BP_Suspend_Member::unsuspend_user( $data->item_id, array( 'hide_sitewide'  => 1 ) );
+						BP_Suspend_Member::unsuspend_user( $data->item_id, array( 'hide_sitewide' => 1 ) );
 					}
 				}
 			}
