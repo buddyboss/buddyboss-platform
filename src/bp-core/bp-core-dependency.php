@@ -559,10 +559,11 @@ function bb_init_background_updater() {
 	if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		include_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-background-updater.php';
 	}
+
 	$bb_background_updater = new BB_Background_Updater();
 
 	/**
-	 * Fires inside the 'bp_init_background_updater' function, where BP updates data.
+	 * Fires inside the 'bb_init_background_updater' function, where BB updates data.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
