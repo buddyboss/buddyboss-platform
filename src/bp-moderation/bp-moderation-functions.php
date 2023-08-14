@@ -1990,7 +1990,7 @@ function bb_moderation_migration_on_update() {
 						empty( $data->user_suspended ) &&
 						empty( $data->user_report )
 					) {
-						BP_Suspend_Member::unsuspend_user( $data->item_id );
+						BP_Suspend_Member::unsuspend_user( $data->item_id, array( 'hide_sitewide'  => 1 ) );
 					}
 				}
 			}

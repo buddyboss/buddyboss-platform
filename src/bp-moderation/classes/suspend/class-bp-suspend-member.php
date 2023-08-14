@@ -86,16 +86,18 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int $user_id user id.
+	 * @since BuddyBoss [BBVERSION]
+	 * Introduce new params $args.
+	 *
+	 * @param int   $user_id user id.
+	 * @param array $args    Suspend users arg.
 	 */
-	public static function suspend_user( $user_id ) {
-		BP_Core_Suspend::add_suspend(
-			array(
-				'item_id'        => $user_id,
-				'item_type'      => self::$type,
-				'user_suspended' => 1,
-			)
-		);
+	public static function suspend_user( $user_id, $args = array() ) {
+		$args['item_id']        = $user_id;
+		$args['item_type']      = self::$type;
+		$args['user_suspended'] = 1;
+
+		BP_Core_Suspend::add_suspend( $args );
 
 		/**
 		 * Add related content of reported item into hidden list
@@ -121,17 +123,18 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int $user_id user id.
+	 * @since BuddyBoss [BBVERSION]
+	 * Introduce new params $args.
+	 *
+	 * @param int   $user_id user id.
+	 * @param array $args    Unsuspend users arg.
 	 */
-	public static function unsuspend_user( $user_id ) {
-		BP_Core_Suspend::add_suspend(
-			array(
-				'item_id'        => $user_id,
-				'item_type'      => self::$type,
-				'user_suspended' => 0,
-				'hide_sitewide'  => 1,
-			)
-		);
+	public static function unsuspend_user( $user_id, $args = array() ) {
+		$args['item_id']        = $user_id;
+		$args['item_type']      = self::$type;
+		$args['user_suspended'] = 0;
+
+		BP_Core_Suspend::add_suspend( $args );
 
 		/**
 		 * Remove related content of reported item from hidden list.
