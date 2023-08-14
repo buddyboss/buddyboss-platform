@@ -2592,6 +2592,21 @@ window.bp = window.bp || {};
 		}
 	}
 
+	// Validate Email Restrictions emails duplicate entry
+	function validateDuplicateEmails( row ) {
+		var wrapper = $( row ).closest( '#bb-email-restrictions-setting' );
+		var emailValue = row.find( '.registration-restrictions-domain' ).val().trim();
+		$( '#bb-email-restrictions-setting .registration-restrictions-rule' ).not( row ).not( '.custom' ).each( function() {
+			if( emailValue == $( this ).find( '.registration-restrictions-domain' ).val().trim() ) {
+				row.addClass( 'error' );
+				wrapper.children( '.restrictions-error' ).html('<p>' + BP_ADMIN.bb_registration_resticitions.feedback_messages.duplicate + '</p>');
+			} else {
+				row.removeClass( 'error' );
+				wrapper.children( '.restrictions-error' ).html('');
+			}
+		});
+	}
+
 	// Handle input event on domain and extension textboxes
 	$( document ).on( 'input', '.bb-domain-restrictions-listing .registration-restrictions-domain, .registration-restrictions-tld', function() {
 		var row = $( this ).closest( '.registration-restrictions-rule' );
@@ -2606,19 +2621,35 @@ window.bp = window.bp || {};
 
 	// Handle adding domain restriction
 	$( '.registration-restrictions-add-rule' ).on( 'click', function() {
-		var row = $( this ).closest( '.registration-restrictions-listing' ).find( '.registration-restrictions-rule' ).last();
-		validateDuplicateRuleEntry( row );
+		var $this = $( this );
+		if( $this.closest( '#bb-domain-restrictions-setting' ).length ) {
+			var row = $this.closest( '.registration-restrictions-listing' ).find( '.registration-restrictions-rule' ).last();
+			validateDuplicateRuleEntry( row );
+		} else if( $this.closest( '#bb-email-restrictions-setting' ).length ) {
+			setTimeout( function() {
+				var row = $this.closest( '#bb-email-restrictions-setting' ).find( '.registration-restrictions-rule' ).last();
+				validateDuplicateEmails( row );
+			});
+		}
 	});
 
 	// Handle removing domain restriction
 	$( document ).on( 'click', '.registration-restrictions-rule-remove', function() {
 		var row = $( this ).closest( '.registration-restrictions-rule' );
 		row.removeClass( 'error' );
+
+		if( $( '#bb-email-restrictions-setting .registration-restrictions-rule.error' ).length === 0 ) {
+			$( '#bb-email-restrictions-setting' ).children( '.restrictions-error' ).html( '' );
+		}
 	});
 
 	// Handle settings save.
-	$( '#bb_registration_restrictions' ).parents( 'form' ).on( 'submit', function( e ) {
+	$( '#bb_registration_restrictions' ).parents( 'form' ).on( 'submit', function() {
 		return validateEmptyInput();
 	});
 
+	$( document ).on( 'keyup', '.registration-restrictions-input .registration-restrictions-domain', function() {
+		var row = $( this ).closest( '.registration-restrictions-rule' );
+		validateDuplicateEmails( row );
+	});
 }());
