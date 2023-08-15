@@ -337,7 +337,7 @@ function bp_media_get( $args = '' ) {
 			'sort'             => 'DESC',       // sort ASC or DESC.
 			'order_by'         => false,        // order by.
 
-			'scope'            => false,
+			'scope'            => false,        // public, groups, friends, personal.
 
 			// want to limit the query.
 			'user_id'          => false,
@@ -345,11 +345,12 @@ function bp_media_get( $args = '' ) {
 			'album_id'         => false,
 			'group_id'         => false,
 			'search_terms'     => false,        // Pass search terms as a string.
-			'privacy'          => false,        // privacy of media.
-			'exclude'          => false,        // Comma-separated list of activity IDs to exclude.
+			'privacy'          => false,        // Privacy of media - public, loggedin, onlyme, friends, grouponly, message.
+			'exclude'          => false,        // Comma-separated list of IDs to exclude.
+			'in'               => false,        // Comma-separated list of IDs to include.
+			'moderation_query' => true,         // Filter to include moderation query.
+			'video'            => false,        // Whether to include videos.
 			'count_total'      => false,
-			'moderation_query' => true,         // Filter for exclude moderation query.
-			'video'            => false,         // Whether to include videos.
 		),
 		'media_get'
 	);
@@ -369,6 +370,7 @@ function bp_media_get( $args = '' ) {
 			'scope'            => $r['scope'],
 			'privacy'          => $r['privacy'],
 			'exclude'          => $r['exclude'],
+			'in'               => $r['in'],
 			'count_total'      => $r['count_total'],
 			'fields'           => $r['fields'],
 			'moderation_query' => $r['moderation_query'],
