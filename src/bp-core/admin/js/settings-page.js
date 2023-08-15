@@ -2500,7 +2500,7 @@ window.bp = window.bp || {};
 				var element_val = $( this ).find('option:selected').val();
 				all_values[index] = element_val;
 
-				if ( $this.get(0) === element ) {
+				if ( $this.length !== 0 && $this.get(0) === element ) {
 					current_val = element_val;
 				}
 			} );
