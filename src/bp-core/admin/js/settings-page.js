@@ -2491,8 +2491,8 @@ window.bp = window.bp || {};
 		function ( e ) {
 			e.preventDefault();
 			var $this = $( e.currentTarget );
-			var $dropdowns = $this.parents( '.bb-domain-restrictions-listing' ).find( '.registration-restrictions-rule:not(.custom) .registration-restrictions-select' );
-			var $other_dropdowns = $this.parents( '.bb-domain-restrictions-listing' ).find( '.registration-restrictions-rule:not(.custom) .registration-restrictions-select' ).not( $this );
+			var $dropdowns = $this.parents( '.bb-domain-restrictions-listing' ).find( '.registration-restrictions-select' );
+			var $other_dropdowns = $this.parents( '.bb-domain-restrictions-listing' ).find( '.registration-restrictions-select' ).not( $this );
 			var current_val = '';
 			var all_values = [];
 
@@ -2512,11 +2512,21 @@ window.bp = window.bp || {};
 
 			if ( filtered_val.length === 1 ) {
 				if ( filtered_val[ 0 ] === 'always_allow' ) {
-					$dropdowns.find( 'option' ).attr( 'disabled', false );
-					$dropdowns.find( 'option[value="only_allow"]' ).attr( 'disabled', true );
+					if ( 1 === $other_dropdowns.length ) {
+						$other_dropdowns.find( 'option' ).attr( 'disabled', false );
+						$other_dropdowns.find( 'option[value="only_allow"]' ).attr( 'disabled', true );
+					} else {
+						$dropdowns.find( 'option' ).attr( 'disabled', false );
+						$dropdowns.find( 'option[value="only_allow"]' ).attr( 'disabled', true );
+					}
 				} else if ( filtered_val[ 0 ] === 'only_allow' ) {
-					$dropdowns.find( 'option' ).attr( 'disabled', false );
-					$dropdowns.find( 'option[value="always_allow"]' ).attr( 'disabled', true );
+					if ( 1 === $other_dropdowns.length ) {
+						$other_dropdowns.find( 'option' ).attr( 'disabled', false );
+						$other_dropdowns.find( 'option[value="always_allow"]' ).attr( 'disabled', true );
+					} else {
+						$dropdowns.find( 'option' ).attr( 'disabled', false );
+						$dropdowns.find( 'option[value="always_allow"]' ).attr( 'disabled', true );
+					}
 				} else if ( filtered_val[ 0 ] === 'never_allow' ) {
 					$dropdowns.find( 'option' ).attr( 'disabled', false );
 				}
@@ -2533,6 +2543,7 @@ window.bp = window.bp || {};
 					$other_dropdowns.find( 'option[value="only_allow"]' ).attr( 'disabled', true );
 				}
 			}
+			validateDuplicateDomainRuleEntry();
 		}
 	);
 
