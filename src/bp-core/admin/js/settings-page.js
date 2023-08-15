@@ -2646,24 +2646,48 @@ window.bp = window.bp || {};
 	}
 
 	// Validate Email Restrictions emails duplicate entry.
-	function validateDuplicateEmailRuleEntry( row ) {
-		var wrapper    = $( row ).closest( '#bb-email-restrictions-setting' );
-		var emailValue = row.find( '.registration-restrictions-domain' ).val().trim().toLowerCase();
-		$( '#bb-email-restrictions-setting .registration-restrictions-rule' ).not( row ).not( '.custom' ).each( function() {
+	function validateDuplicateEmailRuleEntry( e, eventType ) {
+		//Store all the entry.
+		var allEmailEntries = [];
+		var EmailRestrictionsErrors = [];
+		$( '#bb-email-restrictions-setting .registration-restrictions-rule' ).not( '.custom' ).each( function() {
 			var currentEmailValue = $( this ).find( '.registration-restrictions-domain' ).val().trim().toLowerCase();
-			if (
-				'' !== emailValue &&
-				'' !== currentEmailValue
-			) {
-				$( this ).removeClass( 'error' );
+			var currentEmailCondition = $( this ).find( '.registration-restrictions-input-select').val();
+
+			if( currentEmailValue !== '' ) {
+				if ( 'undefined' === typeof allEmailEntries[ currentEmailValue ] ) {
+					allEmailEntries[ currentEmailValue ] = 1 ;
+					$( this ).removeClass( 'error' );
+					if( currentEmailCondition === '' ) {
+						$( this ).addClass( 'error' );
+						if( ! EmailRestrictionsErrors.includes( BP_ADMIN.bb_registration_resticitions.feedback_messages.empty ) ) {
+							EmailRestrictionsErrors.push( BP_ADMIN.bb_registration_resticitions.feedback_messages.empty );
+						}
+					}
+				} else {
+					allEmailEntries[ currentEmailValue ] += 1 ;
+					duplicateFound = true;
+					$( this ).addClass( 'error' );
+					if( ! EmailRestrictionsErrors.includes( BP_ADMIN.bb_registration_resticitions.feedback_messages.duplicate ) ) {
+						EmailRestrictionsErrors.push( BP_ADMIN.bb_registration_resticitions.feedback_messages.duplicate );
+					}
+				}
+			} else {
+				$( this ).addClass( 'error' );
+				if( ! EmailRestrictionsErrors.includes( BP_ADMIN.bb_registration_resticitions.feedback_messages.empty ) ) {
+					EmailRestrictionsErrors.push( BP_ADMIN.bb_registration_resticitions.feedback_messages.empty );
+				}
 			}
 
-			if( emailValue === currentEmailValue ) {
-				row.addClass( 'error' );
-				wrapper.children( '.restrictions-error' ).html('<p>' + BP_ADMIN.bb_registration_resticitions.feedback_messages.duplicate + '</p>');
-			} else {
-				row.removeClass( 'error' );
-				wrapper.children( '.restrictions-error' ).html('');
+			$( '#bb-email-restrictions-setting' ).children( '.restrictions-error' ).html( '' );
+			if( EmailRestrictionsErrors.length > 0 ) {
+				for( error of EmailRestrictionsErrors ) {
+					var error = '<p>' + error + '</p>';
+					$( '#bb-email-restrictions-setting' ).children( '.restrictions-error' ).append( error );
+				};
+				if( eventType === 'submit' ) {
+					e.preventDefault();
+				}
 			}
 		});
 	}
@@ -2679,10 +2703,7 @@ window.bp = window.bp || {};
 		if( $this.closest( '#bb-domain-restrictions-setting' ).length ) {
 			validateDuplicateDomainRuleEntry();
 		} else if( $this.closest( '#bb-email-restrictions-setting' ).length ) {
-			setTimeout( function() {
-				var row = $this.closest( '#bb-email-restrictions-setting' ).find( '.registration-restrictions-rule' ).last();
-				validateDuplicateEmailRuleEntry( row );
-			});
+			validateDuplicateEmailRuleEntry();
 		}
 	});
 
@@ -2696,17 +2717,21 @@ window.bp = window.bp || {};
 	// Handle settings save.
 	$( '#bb_registration_restrictions' ).parents( 'form' ).on( 'submit', function( e ) {
 		validateDuplicateDomainRuleEntry( e, 'submit' );
-		if( $( '#bb-domain-restrictions-setting .registration-restrictions-rule-list .registration-restrictions-rule.error' ).length > 0 ) {
+		validateDuplicateEmailRuleEntry(e, 'submit');
+		if( $( '#bb-domain-restrictions-setting .registration-restrictions-rule.error' ).length > 0 ) {
 			$('html, body').animate({
 				'scrollTop' : $( '#bb-domain-restrictions-setting').offset().top - 75
+			});
+		} else if( $( '#bb-email-restrictions-setting .registration-restrictions-rule.error' ).length > 0 ) {
+			$('html, body').animate({
+				'scrollTop' : $( '#bb-email-restrictions-setting').offset().top - 75
 			});
 		}
 	});
 
 	// Handle input and blur event on email textboxes.
 	$( document ).on( 'input blur', '#bb-email-restrictions-setting .registration-restrictions-domain', function() {
-		var row = $( this ).closest( '.registration-restrictions-rule' );
-		validateDuplicateEmailRuleEntry( row );
+		validateDuplicateEmailRuleEntry();
 	});
 
 	function bb_unique(array) {
