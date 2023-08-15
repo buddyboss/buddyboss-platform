@@ -161,12 +161,12 @@ window.bp = window.bp || {};
 				'change',
 				'#bpm_blocking_member_blocking',
 				function () {
-					$( 'label[for="bpm_blocking_auto_suspend"' ).toggleClass( 'is_disabled' );
+					$( 'label[for="bpm_blocking_auto_suspend"]' ).toggleClass( 'is_disabled' );
 					$( '#bpm_blocking_auto_suspend' ).prop( 'checked', false );
-					$( 'label[for="bpm_blocking_email_notification"' ).removeClass( 'is_disabled' );
+					$( 'label[for="bpm_blocking_email_notification"]' ).removeClass( 'is_disabled' );
 					if( false === $( '#bpm_blocking_member_blocking' ).prop( 'checked' ) && false === $( '#bb_blocking_member_reporting' ).prop( 'checked' ) ) {
 						$( '#bpm_blocking_email_notification' ).prop( 'checked', false );
-						$( 'label[for="bpm_blocking_email_notification"' ).addClass( 'is_disabled' );
+						$( 'label[for="bpm_blocking_email_notification"]' ).addClass( 'is_disabled' );
 					}
 				}
 			);
@@ -180,10 +180,10 @@ window.bp = window.bp || {};
 				function () {
 					$( 'label[for="bb_reporting_auto_suspend"]' ).toggleClass('is_disabled');
 					$( '#bb_reporting_auto_suspend' ).prop( 'checked', false );
-					$( 'label[for="bpm_blocking_email_notification"' ).removeClass( 'is_disabled' );
+					$( 'label[for="bpm_blocking_email_notification"]' ).removeClass( 'is_disabled' );
 					if( false === $( '#bpm_blocking_member_blocking' ).prop( 'checked' ) && false === $( '#bb_blocking_member_reporting' ).prop( 'checked' ) ) {
 						$( '#bpm_blocking_email_notification' ).prop( 'checked', false );
-						$( 'label[for="bpm_blocking_email_notification"' ).addClass( 'is_disabled' );
+						$( 'label[for="bpm_blocking_email_notification"]' ).addClass( 'is_disabled' );
 					}
 				}
 			);
@@ -193,7 +193,7 @@ window.bp = window.bp || {};
 			 */
 			if( false === $( '#bpm_blocking_member_blocking' ).prop( 'checked' ) && false === $( '#bb_blocking_member_reporting' ).prop( 'checked' ) ) {
 				$( '#bpm_blocking_email_notification' ).prop( 'checked', false );
-				$( 'label[for="bpm_blocking_email_notification"' ).addClass( 'is_disabled' );
+				$( 'label[for="bpm_blocking_email_notification"]' ).addClass( 'is_disabled' );
 			}
 
 			if( $( '#bb_reporting_category_description' ).length ) {
@@ -2306,10 +2306,10 @@ window.bp = window.bp || {};
 					} else {
 						$( this ).parent().next( 'label' ).addClass( 'is_disabled' ).find( 'input[type="checkbox"]' ).removeProp( 'checked' ).removeAttr( 'checked' ).prop( 'disabled', 'disabled' );
 					}
-					$( 'label[for="bpm_reporting_email_notification"' ).removeClass( 'is_disabled' );
+					$( 'label[for="bpm_reporting_email_notification"]' ).removeClass( 'is_disabled' );
 					if ( 0 === $( '.bpm_reporting_content_content_label > input:checked' ).length ) {
 						$( '#bpm_reporting_email_notification' ).prop( 'checked', false );
-						$( 'label[for="bpm_reporting_email_notification"' ).addClass( 'is_disabled' );
+						$( 'label[for="bpm_reporting_email_notification"]' ).addClass( 'is_disabled' );
 					}
 				}
 			);
@@ -2319,7 +2319,7 @@ window.bp = window.bp || {};
 			 */
 			if ( 0 === $( '.bpm_reporting_content_content_label > input:checked' ).length ) {
 				$( '#bpm_reporting_email_notification' ).prop( 'checked', false );
-				$( 'label[for="bpm_reporting_email_notification"' ).addClass( 'is_disabled' );
+				$( 'label[for="bpm_reporting_email_notification"]' ).addClass( 'is_disabled' );
 			}
 
 			$( document ).on(
@@ -2454,7 +2454,7 @@ window.bp = window.bp || {};
 	/* jshint ignore:end */
 
 	// Domain Restrictions.
-	
+
 	$( document ).on(
 		'click',
 		'.registration-restrictions-listing .registration-restrictions-add-rule',
@@ -2490,25 +2490,48 @@ window.bp = window.bp || {};
 		'.registration-restrictions-listing .registration-restrictions-select',
 		function ( e ) {
 			e.preventDefault();
-			var $this      = $( e.currentTarget );
-			var $dropdowns = $this.parents( '.bb-domain-restrictions-listing' ).find( '.registration-restrictions-select' ).not( $this );
-			if ( 'only_allow' === $this.find(':selected').val() ) {
+			var $this = $( e.currentTarget );
+			var $dropdowns = $this.parents( '.bb-domain-restrictions-listing' ).find( '.registration-restrictions-rule:not(.custom) .registration-restrictions-select' );
+			var $other_dropdowns = $this.parents( '.bb-domain-restrictions-listing' ).find( '.registration-restrictions-rule:not(.custom) .registration-restrictions-select' ).not( $this );
+			var current_val = '';
+			var all_values = [];
 
-				// Make always allow disable.
-				$dropdowns.find( 'option' ).attr( 'disabled', false );
-				$dropdowns.find( 'option[value=always_allow]' ).attr( 'disabled', true );
-			} else if ( 'always_allow' === $this.find(':selected').val() ) {
+			$dropdowns.each( function ( index, element ) {
+				var element_val = $( this ).find('option:selected').val();
+				all_values[index] = element_val;
 
-				// Make only allow disable.
-				$dropdowns.find( 'option' ).attr( 'disabled', false );
-				$dropdowns.find( 'option[value=only_allow]' ).attr( 'disabled', true );
-			} else {
+				if ( $this.get(0) === element ) {
+					current_val = element_val;
+				}
+			} );
 
-				// Enable all options.
-				// if ( ! ( $dropdowns.find( 'option[value=always_allow] option:selected' ).length > 0 &&
-				// 	$dropdowns.find( 'option[value=only_allow] option:selected' ).length > 0 ) ) {
-				// 	$dropdowns.find( 'option' ).attr( 'disabled', false );
-				// }
+			var filtered_val = bb_unique( all_values );
+			filtered_val = filtered_val.filter( function ( v ) {
+				return v !== '';
+			} );
+
+			if ( filtered_val.length === 1 ) {
+				if ( filtered_val[ 0 ] === 'always_allow' ) {
+					$dropdowns.find( 'option' ).attr( 'disabled', false );
+					$dropdowns.find( 'option[value="only_allow"]' ).attr( 'disabled', true );
+				} else if ( filtered_val[ 0 ] === 'only_allow' ) {
+					$dropdowns.find( 'option' ).attr( 'disabled', false );
+					$dropdowns.find( 'option[value="always_allow"]' ).attr( 'disabled', true );
+				} else if ( filtered_val[ 0 ] === 'never_allow' ) {
+					$dropdowns.find( 'option' ).attr( 'disabled', false );
+				}
+			} else if (
+				filtered_val.length !== 0 &&
+				filtered_val.length > 1 &&
+				current_val !== ''
+			) {
+				if ( 'only_allow' === current_val ) {
+					$other_dropdowns.find( 'option' ).attr( 'disabled', false );
+					$other_dropdowns.find( 'option[value="always_allow"]' ).attr( 'disabled', true );
+				} else if ( 'always_allow' === $this.find( ':selected' ).val() ) {
+					$other_dropdowns.find( 'option' ).attr( 'disabled', false );
+					$other_dropdowns.find( 'option[value="only_allow"]' ).attr( 'disabled', true );
+				}
 			}
 		}
 	);
@@ -2603,7 +2626,7 @@ window.bp = window.bp || {};
 		var emailValue = row.find( '.registration-restrictions-domain' ).val().trim().toLowerCase();
 		$( '#bb-email-restrictions-setting .registration-restrictions-rule' ).not( row ).not( '.custom' ).each( function() {
 			var currentEmailValue = $( this ).find( '.registration-restrictions-domain' ).val().trim().toLowerCase();
-			if ( 
+			if (
 				'' !== emailValue &&
 				'' !== currentEmailValue
 			) {
@@ -2664,5 +2687,11 @@ window.bp = window.bp || {};
 		var row = $( this ).closest( '.registration-restrictions-rule' );
 		validateDuplicateEmailRuleEntry( row );
 	});
+
+	function bb_unique(array) {
+		return $.grep(array, function(el, index) {
+			return index === $.inArray(el, array);
+		});
+	}
 
 }());
