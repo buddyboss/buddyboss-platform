@@ -8821,7 +8821,7 @@ function bb_disable_notification_type( $notification_type, $type = 'main' ) {
 function bb_is_allowed_register_email_address( $email = '' ) {
 
 	$email = strtolower( trim( $email ) );
-	if( empty( $email ) || ( ! is_email( $email ) ) ) {
+	if ( empty( $email ) || ( ! is_email( $email ) ) ) {
 		return false;
 	}
 	
@@ -8829,7 +8829,7 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 	$email_restrictions  = bb_email_restrictions_setting();
 
 	// No restrictions or custom registration enabled then return true.
-	if( empty( $domain_restrictions ) && empty( $email_restrictions ) || bp_allow_custom_registration() ) {
+	if ( empty( $domain_restrictions ) && empty( $email_restrictions ) || bp_allow_custom_registration() ) {
 		return true;
 	}
 
