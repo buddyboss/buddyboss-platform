@@ -7474,24 +7474,44 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "Number",
-            "optional": false,
-            "field": "group_id",
-            "description": "<p>The ID of the group to which the user has been invited.</p>"
+            "optional": true,
+            "field": "item_id",
+            "description": "<p>The ID of the item associated with the notification.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "secondary_item_id",
+            "description": "<p>The ID of the secondary item associated with the notification.</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
-            "field": "message",
-            "description": "<p>The optional message to send to the invited user.</p>"
+            "optional": true,
+            "field": "component",
+            "description": "<p>The name of the component associated with the notification.</p>"
           },
           {
             "group": "Parameter",
-            "type": "Boolean",
+            "type": "String",
             "optional": true,
-            "field": "send_invite",
-            "defaultValue": "true",
-            "description": "<p>Whether the invite should be sent to the invitee.</p>"
+            "field": "action",
+            "description": "<p>The name of the component action associated with the notification.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "date",
+            "description": "<p>The date the notification was sent/created.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "is_new",
+            "description": "<p>Whether the notification is new or not.</p>"
           }
         ]
       }
