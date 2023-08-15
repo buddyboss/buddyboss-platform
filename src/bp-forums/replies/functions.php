@@ -2806,7 +2806,7 @@ function bbp_replies_count_walk( $posts, $top_reply_ids, $count ) {
  * Return array of public reply statuses.
  *
  * @since bbPress 2.6.0 (r6705)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.00
  *
  * @return array
  */
@@ -2823,7 +2823,7 @@ function bbp_get_public_reply_statuses() {
  * Return array of non-public reply statuses.
  *
  * @since bbPress 2.6.0 (r6791)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.00
  *
  * @return array
  */
