@@ -2453,7 +2453,7 @@ window.bp = window.bp || {};
 
 	/* jshint ignore:end */
 
-	// Domain Restrictions
+	// Domain Restrictions.
 	
 	$( document ).on(
 		'click',
@@ -2504,11 +2504,11 @@ window.bp = window.bp || {};
 				$dropdowns.find( 'option[value=only_allow]' ).attr( 'disabled', true );
 			} else {
 
-				// enable all options.
-				if ( ! ( $dropdowns.find( 'option[value=always_allow] option:selected' ).length > 0 &&
-					$dropdowns.find( 'option[value=only_allow] option:selected' ).length > 0 ) ) {
-					$dropdowns.find( 'option' ).attr( 'disabled', false );
-				}
+				// Enable all options.
+				// if ( ! ( $dropdowns.find( 'option[value=always_allow] option:selected' ).length > 0 &&
+				// 	$dropdowns.find( 'option[value=only_allow] option:selected' ).length > 0 ) ) {
+				// 	$dropdowns.find( 'option' ).attr( 'disabled', false );
+				// }
 			}
 		}
 	);
@@ -2525,14 +2525,14 @@ window.bp = window.bp || {};
 		});
 	}
 
-	// Function to validate empty domain or extension
-	function validateEmptyInput() {
+	// Function to validate empty domain and extension or emails.
+	function validateEmptyRuleEntry() {
 		var isValid = true;
 		$( '.bb-domain-restrictions-listing .registration-restrictions-rule' ).not( '.custom' ).each( function() {
 			var domainInput    = $( this ).find( '.registration-restrictions-domain' );
 			var extensionInput = $( this ).find( '.registration-restrictions-tld' );
-			var domain         = domainInput.val().trim();
-			var extension      = extensionInput.val().trim();
+			var domain         = domainInput.val().trim().toLowerCase();
+			var extension      = extensionInput.val().trim().toLowerCase();
 
 			if ( '' === domain || '' === extension ) {
 				$( this ).addClass( 'error' );
@@ -2548,7 +2548,7 @@ window.bp = window.bp || {};
 		// Check the empty emails.
 		$( '.bb-email-restrictions-listing .registration-restrictions-rule' ).not( '.custom' ).each( function() {
 			var emailInput = $( this ).find( '.registration-restrictions-domain' );
-			var email      = emailInput.val().trim();
+			var email      = emailInput.val().trim().toLowerCase();
 
 			if ( '' === email ) {
 				$( this ).addClass( 'error' );
@@ -2564,20 +2564,27 @@ window.bp = window.bp || {};
 		return isValid;
 	}
 
-	// Function to validate duplicate entry
-	function validateDuplicateRuleEntry( row ) {
-		var wrapper = $( row ).closest( '#bb-domain-restrictions-setting' );
+	// Function to validate duplicate entry.
+	function validateDuplicateDomainRuleEntry( row ) {
+		var wrapper         = $( row ).closest( '#bb-domain-restrictions-setting' );
 		var domainInput     = row.find( '.registration-restrictions-domain' );
 		var extensionInput  = row.find( '.registration-restrictions-tld' );
-		var domain          = domainInput.val().trim();
-		var extension       = extensionInput.val().trim();
+		var domain          = domainInput.val().trim().toLowerCase();
+		var extension       = extensionInput.val().trim().toLowerCase();
 		var domainExtension = domain + '.' + extension;
 		var duplicateFound  = false;
 
 		$( '.bb-domain-restrictions-listing .registration-restrictions-rule' ).not( row ).each( function() {
-			var currentDomain    = $( this ).find( '.registration-restrictions-domain' ).val().trim();
-			var currentExtension = $( this ).find( '.registration-restrictions-tld' ).val().trim();
-
+			var currentDomain    = $( this ).find( '.registration-restrictions-domain' ).val().trim().toLowerCase();
+			var currentExtension = $( this ).find( '.registration-restrictions-tld' ).val().trim().toLowerCase();
+			if ( 
+				'' !== currentDomain &&
+				'' !== currentExtension &&
+				'' !== domain &&
+				'' !== extension 
+			) {
+				$( this ).removeClass( 'error' );
+			}
 			var rowDomainExtension = currentDomain + '.' + currentExtension;
 
 			if ( domainExtension === rowDomainExtension ) {
@@ -2595,12 +2602,12 @@ window.bp = window.bp || {};
 		}
 	}
 
-	// Validate Email Restrictions emails duplicate entry
-	function validateDuplicateEmails( row ) {
-		var wrapper = $( row ).closest( '#bb-email-restrictions-setting' );
-		var emailValue = row.find( '.registration-restrictions-domain' ).val().trim();
+	// Validate Email Restrictions emails duplicate entry.
+	function validateDuplicateEmailRuleEntry( row ) {
+		var wrapper    = $( row ).closest( '#bb-email-restrictions-setting' );
+		var emailValue = row.find( '.registration-restrictions-domain' ).val().trim().toLowerCase();
 		$( '#bb-email-restrictions-setting .registration-restrictions-rule' ).not( row ).not( '.custom' ).each( function() {
-			if( emailValue == $( this ).find( '.registration-restrictions-domain' ).val().trim() ) {
+			if( emailValue == $( this ).find( '.registration-restrictions-domain' ).val().trim().toLowerCase() ) {
 				row.addClass( 'error' );
 				wrapper.children( '.restrictions-error' ).html('<p>' + BP_ADMIN.bb_registration_resticitions.feedback_messages.duplicate + '</p>');
 			} else {
@@ -2610,33 +2617,27 @@ window.bp = window.bp || {};
 		});
 	}
 
-	// Handle input event on domain and extension textboxes
-	$( document ).on( 'input', '.bb-domain-restrictions-listing .registration-restrictions-domain, .registration-restrictions-tld', function() {
+	// Handle input and blur event on domain and extension textboxes.
+	$( document ).on( 'input blur', '.bb-domain-restrictions-listing .registration-restrictions-domain, .registration-restrictions-tld', function() {
 		var row = $( this ).closest( '.registration-restrictions-rule' );
-		validateDuplicateRuleEntry( row );
+		validateDuplicateDomainRuleEntry( row );
 	});
 
-	// Handle blur event on domain and extension textboxes
-	$( document ).on( 'blur', '.bb-domain-restrictions-listing .registration-restrictions-domain, .registration-restrictions-tld', function() {
-		var row = $( this ).closest( '.registration-restrictions-rule' );
-		validateDuplicateRuleEntry( row );
-	});
-
-	// Handle adding domain restriction
+	// Handle adding domain restriction.
 	$( '.registration-restrictions-add-rule' ).on( 'click', function() {
 		var $this = $( this );
 		if( $this.closest( '#bb-domain-restrictions-setting' ).length ) {
 			var row = $this.closest( '.registration-restrictions-listing' ).find( '.registration-restrictions-rule' ).last();
-			validateDuplicateRuleEntry( row );
+			validateDuplicateDomainRuleEntry( row );
 		} else if( $this.closest( '#bb-email-restrictions-setting' ).length ) {
 			setTimeout( function() {
 				var row = $this.closest( '#bb-email-restrictions-setting' ).find( '.registration-restrictions-rule' ).last();
-				validateDuplicateEmails( row );
+				validateDuplicateEmailRuleEntry( row );
 			});
 		}
 	});
 
-	// Handle removing domain restriction
+	// Handle removing domain restriction.
 	$( document ).on( 'click', '.registration-restrictions-rule-remove', function() {
 		var row = $( this ).closest( '.registration-restrictions-rule' );
 		row.removeClass( 'error' );
@@ -2652,11 +2653,13 @@ window.bp = window.bp || {};
 
 	// Handle settings save.
 	$( '#bb_registration_restrictions' ).parents( 'form' ).on( 'submit', function() {
-		return validateEmptyInput();
+		return validateEmptyRuleEntry();
 	});
 
-	$( document ).on( 'keyup', '.registration-restrictions-input .registration-restrictions-domain', function() {
+	// Handle input and blur event on email textboxes.
+	$( document ).on( 'input blur', '#bb-email-restrictions-setting .registration-restrictions-domain', function() {
 		var row = $( this ).closest( '.registration-restrictions-rule' );
-		validateDuplicateEmails( row );
+		validateDuplicateEmailRuleEntry( row );
 	});
+
 }());
