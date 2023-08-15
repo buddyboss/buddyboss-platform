@@ -470,8 +470,8 @@ function bp_video_get( $args = '' ) {
 			'privacy'          => false,        // Privacy of video - public, loggedin, onlyme, friends, grouponly, message.
 			'exclude'          => false,        // Comma-separated list of IDs to exclude.
 			'in'               => false,        // Comma-separated list of IDs to include.
-			'count_total'      => false,
 			'moderation_query' => true,         // Filter to include moderation query.
+			'count_total'      => false,        // Whether to count the total number of items in the query.
 		),
 		'video_get'
 	);
@@ -1533,20 +1533,20 @@ function bp_video_album_get( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'max'              => false,                    // Maximum number of results to return.
+			'max'              => false,           // Maximum number of results to return.
 			'fields'           => 'all',
-			'page'             => 1,                        // Page 1 without a per_page will result in no pagination.
-			'per_page'         => false,                    // results per page.
-			'sort'             => 'DESC',                   // sort ASC or DESC.
+			'page'             => 1,               // Page 1 without a per_page will result in no pagination.
+			'per_page'         => false,           // results per page.
+			'sort'             => 'DESC',          // sort ASC or DESC.
 
 			'search_terms'     => false,           // Pass search terms as a string.
 			'exclude'          => false,           // Comma-separated list of activity IDs to exclude.
 			// want to limit the query.
 			'user_id'          => false,
 			'group_id'         => false,
-			'privacy'          => false,                    // privacy of album.
+			'privacy'          => false,           // privacy of album.
+			'moderation_query' => true,            // Filter to include moderation query.
 			'count_total'      => false,
-			'moderation_query' => true,             // Filter to include moderation query.
 		),
 		'video_album_get'
 	);

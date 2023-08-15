@@ -321,7 +321,7 @@ class BP_Media {
 				'search_terms'     => false,           // Terms to search by.
 				'album_id'         => false,           // Album ID.
 				'privacy'          => false,           // public, loggedin, onlyme, friends, grouponly, message.
-				'count_total'      => false,           // Whether or not to use count_total.
+				'count_total'      => false,           // Whether to use count_total.
 				'video'            => false,           // Whether to include videos.
 				'user_id'          => false,           // Filter by user id.
 				'activity_id'      => false,           // Filter by activity id.

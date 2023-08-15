@@ -348,9 +348,9 @@ function bp_media_get( $args = '' ) {
 			'privacy'          => false,        // Privacy of media - public, loggedin, onlyme, friends, grouponly, message.
 			'exclude'          => false,        // Comma-separated list of IDs to exclude.
 			'in'               => false,        // Comma-separated list of IDs to include.
-			'count_total'      => false,
 			'moderation_query' => true,         // Filter to include moderation query.
 			'video'            => false,        // Whether to include videos.
+			'count_total'      => false,
 		),
 		'media_get'
 	);

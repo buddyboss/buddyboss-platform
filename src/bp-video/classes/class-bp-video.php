@@ -322,8 +322,8 @@ class BP_Video {
 				'group_id'         => false,           // Group ID.
 				'activity_id'      => false,           // Activity ID.
 				'privacy'          => false,           // public, loggedin, onlyme, friends, grouponly, message.
-				'count_total'      => false,           // Whether or not to use count_total.
 				'moderation_query' => false,           // Whether to include moderation or not.
+				'count_total'      => false,           // Whether to use count_total.
 			)
 		);
 

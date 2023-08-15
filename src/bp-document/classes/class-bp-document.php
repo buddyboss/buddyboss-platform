@@ -818,9 +818,9 @@ class BP_Document {
 				'meta_query_document' => false,           // Filter by activity meta. See WP_Meta_Query for format.
 				'meta_query_folder'   => false,           // Filter by activity meta. See WP_Meta_Query for format.
 				'moderation_query'    => false,           // Filter for exclude moderation .
-				'activity_id'         => false,	          // Filter by activity id.
+				'activity_id'         => false,           // Filter by activity id.
 				'group_id'            => false,           // Filter by group id.
-				'user_id'             => false,	          // Filter by user id.
+				'user_id'             => false,           // Filter by user id.
 			)
 		);
 
