@@ -347,12 +347,12 @@ function bp_document_get( $args = '' ) {
 			'scope'               => false,        // Document Scope - public, friends, groups, personal.
 
 			// want to limit the query.
-			'user_id'             => false,        // Filter by user id
-			'activity_id'         => false,	       // Filter by activity id
-			'folder_id'           => false,	       // Filter by folder id
-			'group_id'            => false,	       // Filter by group id
+			'user_id'             => false,        // Filter by user id.
+			'activity_id'         => false,        // Filter by activity id.
+			'folder_id'           => false,        // Filter by folder id.
+			'group_id'            => false,        // Filter by group id.
 			'search_terms'        => false,        // Pass search terms as a string.
-			'privacy'             => false,        // Privacy of document. public, loggedin, onlyme, friends, grouponly, message
+			'privacy'             => false,        // Privacy of document. public, loggedin, onlyme, friends, grouponly, message.
 			'in'                  => false,        // Array of ids to limit query by (IN).
 			'exclude'             => false,        // Comma-separated list of activity IDs to exclude.
 			'count_total'         => false,
