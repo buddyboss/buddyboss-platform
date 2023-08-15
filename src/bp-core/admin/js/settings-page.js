@@ -2702,18 +2702,21 @@ window.bp = window.bp || {};
 	// Handle adding domain restriction.
 	$( '.registration-restrictions-add-rule' ).on( 'click', function() {
 		var $this = $( this );
-		if( $this.closest( '#bb-domain-restrictions-setting' ).length ) {
+		if( $this.closest( '#bb-domain-restrictions-setting' ).length > 0 ) {
 			validateDuplicateDomainRuleEntry();
-		} else if( $this.closest( '#bb-email-restrictions-setting' ).length ) {
+		} else {
 			validateDuplicateEmailRuleEntry();
 		}
 	});
 
 	// Handle removing domain restriction.
 	$( document ).on( 'click', '.registration-restrictions-rule-remove', function() {
-		setTimeout( function() {
+		var $this = $( this );
+		if( $this.closest( '#bb-domain-restrictions-setting' ).length > 0 ) {
 			validateDuplicateDomainRuleEntry();
-		}, 50 );
+		} else {
+			validateDuplicateEmailRuleEntry();	
+		}
 	});
 
 	// Handle settings save.
