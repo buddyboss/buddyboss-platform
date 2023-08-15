@@ -132,7 +132,7 @@ final class BP_Activity_Export extends BP_Export {
 			return $this->response_erase( array(), true );
 		}
 
-		$table          = "{$wpdb->prefix}bp_activity";
+		$table          = "{$wpdb->base_prefix}bp_activity";
 		$number         = $this->items_per_batch;
 		$page           = (int) $page;
 		$items_removed  = true;

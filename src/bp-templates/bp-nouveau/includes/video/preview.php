@@ -57,6 +57,8 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 		}
 
 		header( "Content-Type: $type" );
+		header( 'Cache-Control: max-age=2592000, public' );
+		header( 'Expires: ' . gmdate( 'D, d M Y H:i:s', time() + 2592000 ) . ' GMT' );
 		readfile( "$output_file_src" );
 	} else {
 		echo '// Silence is golden.';

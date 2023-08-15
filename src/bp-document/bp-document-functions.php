@@ -1268,6 +1268,8 @@ function bp_document_delete_orphaned_attachments() {
 
 	add_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10, 2 );
 	add_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10, 2 );
+
+	bb_document_remove_orphaned_download();
 }
 
 /**
@@ -1667,7 +1669,7 @@ function bp_document_svg_icon( $extension, $attachment_id = 0, $type = 'font' ) 
 				// added svg icon support.
 				if ( 'svg' === $type ) {
 					$svg_icons = array_column( bp_document_svg_icon_list(), 'svg', 'icon' );
-					$icon      = $svg_icons[ $icon ];
+					$icon      = isset( $svg_icons[ $icon ] ) ? $svg_icons[ $icon ] : '';
 				}
 
 				return apply_filters( 'bp_document_svg_icon', $icon, $extension );
@@ -3989,8 +3991,10 @@ function bp_document_delete_symlinks( $document ) {
 					$group_status    = bp_get_group_status( $group_object );
 					$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $privacy . sanitize_key( $name ) );
 				}
-				if ( file_exists( $attachment_path ) ) {
-					unlink( $attachment_path );
+
+				// If rename the file then preview doesn't exist but symbolic is available in the folder. So, checked the file is not empty then remove it from symbolic.
+				if ( ! empty( $attachment_path ) ) {
+					@unlink( $attachment_path ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 				}
 			}
 		}
@@ -5006,4 +5010,36 @@ function bp_document_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
 	}
 
 	return apply_filters( 'bp_document_query_privacy', $privacy, $user_id, $group_id, $scope );
+}
+
+/**
+ * Function to delete the temporary download folder which create while downloding the document directory.
+ *
+ * @since BuddyBoss 2.3.80
+ *
+ * @return void
+ */
+function bb_document_remove_orphaned_download() {
+	if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+	}
+
+	$wp_files_system = new \WP_Filesystem_Direct( array() );
+
+	$six_hours_ago = time() - ( HOUR_IN_SECONDS * 6 ); // Get the timestamp 6 hours ago.
+	$uploadDir     = wp_upload_dir(); // Get the path to the upload directory.
+	$dir           = $uploadDir['basedir']; // Get the base directory path.
+
+	// Get all the subdirectories in the upload directory.
+	$folders = glob( $dir . '/*', GLOB_ONLYDIR );
+
+	foreach ( $folders as $folder ) {
+		$folder_timestamp = filemtime( $folder );
+
+		// If the folder is older than 6 hours and contains "-download-folder-" in the name, print it.
+		if ( $folder_timestamp < $six_hours_ago && stristr( $folder, '-download-folder-' ) !== false ) {
+			$wp_files_system->delete( $folder, true );
+		}
+	}
 }
