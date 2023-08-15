@@ -2540,8 +2540,10 @@ window.bp = window.bp || {};
 					'scrollTop' : $( this ).parents('.registration-restrictions-listing').offset().top
 				});
 				isValid = false;
+				$( '#bb-domain-restrictions-setting .restrictions-error' ).html('<p>' + BP_ADMIN.bb_registration_resticitions.feedback_messages.empty + '</p>');
 			} else {
 				$( this ).removeClass( 'error' );
+				$( '#bb-domain-restrictions-setting .restrictions-error' ).html('');
 			}
 		});
 
@@ -2556,8 +2558,10 @@ window.bp = window.bp || {};
 					'scrollTop' : $( this ).parents('.registration-restrictions-listing').offset().top
 				});
 				isValid = false;
+				$( '#bb-email-restrictions-setting .restrictions-error' ).html('<p>' + BP_ADMIN.bb_registration_resticitions.feedback_messages.empty + '</p>');
 			} else {
 				$( this ).removeClass( 'error' );
+				$( '#bb-email-restrictions-setting .restrictions-error' ).html('');
 			}
 		});
 
@@ -2566,38 +2570,29 @@ window.bp = window.bp || {};
 
 	// Function to validate duplicate entry.
 	function validateDuplicateDomainRuleEntry( row ) {
-		var wrapper         = $( row ).closest( '#bb-domain-restrictions-setting' );
-		var domainInput     = row.find( '.registration-restrictions-domain' );
-		var extensionInput  = row.find( '.registration-restrictions-tld' );
-		var domain          = domainInput.val().trim().toLowerCase();
-		var extension       = extensionInput.val().trim().toLowerCase();
-		var domainExtension = domain + '.' + extension;
-		var duplicateFound  = false;
+		var wrapper        = $( row ).closest( '#bb-domain-restrictions-setting' );
+		var duplicateFound = false;
 
-		$( '.bb-domain-restrictions-listing .registration-restrictions-rule' ).not( row ).each( function() {
+		//Store all the entry.
+		var allDomainExtension = [];
+
+		$( '.bb-domain-restrictions-listing .registration-restrictions-rule' ).not( '.custom' ).each( function() {
 			var currentDomain    = $( this ).find( '.registration-restrictions-domain' ).val().trim().toLowerCase();
 			var currentExtension = $( this ).find( '.registration-restrictions-tld' ).val().trim().toLowerCase();
-			if ( 
-				'' !== currentDomain &&
-				'' !== currentExtension &&
-				'' !== domain &&
-				'' !== extension 
-			) {
-				$( this ).removeClass( 'error' );
-			}
-			var rowDomainExtension = currentDomain + '.' + currentExtension;
-
-			if ( domainExtension === rowDomainExtension ) {
+			$( this ).removeClass( 'error' );
+			wrapper.children( '.restrictions-error' ).html('');
+			if ( 'undefined' === typeof allDomainExtension[ currentDomain + '_' + currentExtension ] ) {
+				allDomainExtension[ currentDomain + '_' + currentExtension ] = 1 ;
+			} else {
+				allDomainExtension[ currentDomain + '_' + currentExtension ] += 1 ;
 				duplicateFound = true;
-				return false; // Exit the loop
+				$( this ).addClass( 'error' );
 			}
 		});
 
 		if ( duplicateFound ) {
-			row.addClass( 'error' );
 			wrapper.children( '.restrictions-error' ).html('<p>' + BP_ADMIN.bb_registration_resticitions.feedback_messages.duplicate + '</p>');
 		} else {
-			row.removeClass( 'error' );
 			wrapper.children( '.restrictions-error' ).html('');
 		}
 	}
@@ -2607,7 +2602,15 @@ window.bp = window.bp || {};
 		var wrapper    = $( row ).closest( '#bb-email-restrictions-setting' );
 		var emailValue = row.find( '.registration-restrictions-domain' ).val().trim().toLowerCase();
 		$( '#bb-email-restrictions-setting .registration-restrictions-rule' ).not( row ).not( '.custom' ).each( function() {
-			if( emailValue == $( this ).find( '.registration-restrictions-domain' ).val().trim().toLowerCase() ) {
+			var currentEmailValue = $( this ).find( '.registration-restrictions-domain' ).val().trim().toLowerCase();
+			if ( 
+				'' !== emailValue &&
+				'' !== currentEmailValue
+			) {
+				$( this ).removeClass( 'error' );
+			}
+
+			if( emailValue === currentEmailValue ) {
 				row.addClass( 'error' );
 				wrapper.children( '.restrictions-error' ).html('<p>' + BP_ADMIN.bb_registration_resticitions.feedback_messages.duplicate + '</p>');
 			} else {
