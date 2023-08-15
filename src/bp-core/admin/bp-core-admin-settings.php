@@ -3230,7 +3230,6 @@ function bb_admin_setting_callback_email_restrictions() {
  * Callback function for registration restrictions section.
  *
  * @since BuddyBoss [BBVERSION]
- *
  */
 function bb_admin_setting_callback_registration_restrictions_instructions() {
 	?>
@@ -3243,7 +3242,7 @@ function bb_admin_setting_callback_registration_restrictions_instructions() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return string
+ * @return string $bb_registration_notice Notice content.
  */
 function bb_get_buddyboss_registration_notice() {
 	static $bb_registration_notice = '';

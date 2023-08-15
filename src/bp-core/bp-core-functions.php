@@ -8810,62 +8810,6 @@ function bb_disable_notification_type( $notification_type, $type = 'main' ) {
 }
 
 /**
- * Format the blacklist/whitelist email settings.
- *
- * @since BuddyBoss [BBVERSION]
- * 
- * @param string $data_values Input blacklist or whiltelist data.
- *
- * @return array
- */
-function bb_format_blacklist_whitelist_email_setting( $data_values = '' ) {
-
-	// Initialize arrays to store domain, extension, and email.
-	$result     = array();
-	$emails     = array();
-	$domains    = array();
-	$extensions = array();
-
-	if ( ! empty( $data_values ) && is_string( $data_values ) ) {
-
-		// Regular expression pattern to match email, domain, and extension.
-		$pattern = '/^(?:(\S+@\S+)|(?:(?:\S+\.)?(\S+)))$/';
-
-		// Explode the textarea content into an array by lines.
-		$lines = explode("\n", $data_values);
-
-		foreach( $lines as $line ) {
-
-			// Remove leading/trailing whitespace.
-			$line = trim( $line );
-			preg_match( $pattern, $line, $matches );
-
-			$email  = $matches[1] ?? '';
-			$domain = $matches[2] ?? '';
-
-			if ( ! empty( $email ) ) {
-				$emails[] = $email;
-			} elseif ( ! empty( $domain ) ) {
-				if ( 0 === strpos( $line, '.' ) ) {
-					$extensions[] = $line;
-				} else {
-					$domains[] = $line;
-				}
-			}
-		}
-
-		// Create the final array with the desired format.
-		$result = array(
-			'email'     => $emails,
-			'extension' => $extensions,
-			'domain'    => $domains,
-		);
-	}
-
-	return $result;
-}
-
-/**
  * Check if email address allowed to register.
  *
  * @since BuddyBoss [BBVERSION]

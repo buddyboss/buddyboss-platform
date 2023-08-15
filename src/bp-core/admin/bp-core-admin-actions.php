@@ -351,6 +351,13 @@ function bb_admin_check_valid_giphy_key() {
 }
 add_action( 'wp_ajax_bb_admin_check_valid_giphy_key', 'bb_admin_check_valid_giphy_key' );
 
+/**
+ * Validate the email address allowed to register as per the registration restriction settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ * 
+ * @return object $errors Validation errors.
+ */
 function bb_validate_restricted_email_on_registration( $errors, $update, $user ) {
 
 	// Check if it's a new user registration (not profile update)
