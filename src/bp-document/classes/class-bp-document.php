@@ -812,12 +812,12 @@ class BP_Document {
 				'in'                  => false,           // Array of ids to limit query by (IN).
 				'search_terms'        => false,           // Terms to search by.
 				'privacy'             => false,           // public, loggedin, onlyme, friends, grouponly, message.
-				'count_total'         => false,           // Whether or not to use count_total.
+				'count_total'         => false,           // Whether to use count_total.
 				'user_directory'      => true,
 				'folder_id'           => 0,               // Folder id to filter on.
 				'meta_query_document' => false,           // Filter by activity meta. See WP_Meta_Query for format.
 				'meta_query_folder'   => false,           // Filter by activity meta. See WP_Meta_Query for format.
-				'moderation_query'    => false,           // Filter for exclude moderation .
+				'moderation_query'    => false,           // Filter for exclude moderation.
 				'activity_id'         => false,           // Filter by activity id.
 				'group_id'            => false,           // Filter by group id.
 				'user_id'             => false,           // Filter by user id.
