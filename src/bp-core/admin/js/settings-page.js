@@ -2622,13 +2622,19 @@ window.bp = window.bp || {};
 				allDomainExtension[ currentDomain + '_' + currentExtension ] += 1 ;
 				duplicateFound = true;
 				$( this ).addClass( 'error' );
-				DomainRestrictionsErrors.push( BP_ADMIN.bb_registration_resticitions.feedback_messages.duplicate );
+				if( ! DomainRestrictionsErrors.includes( BP_ADMIN.bb_registration_resticitions.feedback_messages.empty ) ) {
+					DomainRestrictionsErrors.push( BP_ADMIN.bb_registration_resticitions.feedback_messages.empty );
+				}
 			}
 
-			if ( '' === currentDomain || '' === currentExtension || '' === conditionType ) {
-				$( this ).addClass( 'error' );
-				isValid = false;
-				DomainRestrictionsErrors.push( BP_ADMIN.bb_registration_resticitions.feedback_messages.empty );
+			if( eventType === 'submit') {
+				if ( '' === currentDomain || '' === currentExtension || '' === conditionType ) {
+					$( this ).addClass( 'error' );
+					isValid = false;
+					if( ! DomainRestrictionsErrors.includes( BP_ADMIN.bb_registration_resticitions.feedback_messages.empty ) ) {
+						DomainRestrictionsErrors.push( BP_ADMIN.bb_registration_resticitions.feedback_messages.empty );
+					}
+				}
 			}
 
 			$( '#bb-domain-restrictions-setting' ).children( '.restrictions-error' ).html( '' );
@@ -2658,12 +2664,6 @@ window.bp = window.bp || {};
 				if ( 'undefined' === typeof allEmailEntries[ currentEmailValue ] ) {
 					allEmailEntries[ currentEmailValue ] = 1 ;
 					$( this ).removeClass( 'error' );
-					if( currentEmailCondition === '' ) {
-						$( this ).addClass( 'error' );
-						if( ! EmailRestrictionsErrors.includes( BP_ADMIN.bb_registration_resticitions.feedback_messages.empty ) ) {
-							EmailRestrictionsErrors.push( BP_ADMIN.bb_registration_resticitions.feedback_messages.empty );
-						}
-					}
 				} else {
 					allEmailEntries[ currentEmailValue ] += 1 ;
 					duplicateFound = true;
@@ -2672,7 +2672,9 @@ window.bp = window.bp || {};
 						EmailRestrictionsErrors.push( BP_ADMIN.bb_registration_resticitions.feedback_messages.duplicate );
 					}
 				}
-			} else {
+			}
+
+			if( eventType === 'submit' && ( currentEmailValue === '' || currentEmailCondition === '') ) {
 				$( this ).addClass( 'error' );
 				if( ! EmailRestrictionsErrors.includes( BP_ADMIN.bb_registration_resticitions.feedback_messages.empty ) ) {
 					EmailRestrictionsErrors.push( BP_ADMIN.bb_registration_resticitions.feedback_messages.empty );
