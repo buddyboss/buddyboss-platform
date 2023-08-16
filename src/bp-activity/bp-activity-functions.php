@@ -993,6 +993,8 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0 ) {
 		 */
 		do_action( 'bp_activity_add_user_favorite', $activity_id, $user_id );
 
+		bb_add_user_activity_reaction( $activity_id );
+
 		// Success.
 		return true;
 
@@ -6049,5 +6051,38 @@ function bb_activity_migration() {
 				bp_update_option( 'bb_reactions_default_like_reaction_added', (int) $reaction_id );
 			}
 		}
+	}
+}
+
+/**
+ * Add user activity reaction.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $activity_id Activity ID.
+ *
+ * @return void
+ */
+function bb_add_user_activity_reaction( $activity_id ) {
+	if ( empty( $activity_id ) ) {
+		return;
+	}
+
+	$parent_activity = new BP_Activity_Activity( $activity_id );
+
+	if (
+		! empty( $parent_activity ) &&
+		'activity_update' === $parent_activity->type
+	) {
+		$reaction_id      = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
+		$user_reaction_id = bb_load_reaction()->bb_add_user_item_reaction(
+			array(
+				'item_type'   => 'activity',
+				'reaction_id' => $reaction_id,
+				'item_id'     => $activity_id
+			)
+		);
+
+		return $user_reaction_id;
 	}
 }
