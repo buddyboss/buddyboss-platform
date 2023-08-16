@@ -6026,3 +6026,28 @@ function bp_activity_get_types_list() {
 	 */
 	return apply_filters( 'bp_activity_get_types_list', $types );
 }
+
+/**
+ * Activity migration.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_activity_migration() {
+
+	/**
+	 * Like migration into reaction.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	if ( class_exists( 'BB_Reaction' ) ) {
+		$reaction_id = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
+		if ( empty( $reaction_id ) ) {
+			$reaction_id = bb_load_reaction()->bb_add_reaction( array( 'name' => 'Like' ) );
+			if ( ! empty( $reaction_id ) ) {
+				bp_update_option( 'bb_reactions_default_like_reaction_added', (int) $reaction_id );
+			}
+		}
+	}
+}
