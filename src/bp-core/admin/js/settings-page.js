@@ -2615,7 +2615,7 @@ window.bp = window.bp || {};
 		//Store all the entry.
 		var allDomainExtension = [];
 		// Store Errors
-		window.DomainRestrictionsErrors = [];
+		var DomainRestrictionsErrors = [];
 
 		if( e && e.currentTarget && $( e.currentTarget ).closest( '.registration-restrictions-rule' ).hasClass( 'untouched' ) ) {
 			$( e.currentTarget ).closest( '.registration-restrictions-rule' ).removeClass( 'untouched' );
@@ -2638,8 +2638,8 @@ window.bp = window.bp || {};
 				allDomainExtension[ currentDomain + '_' + currentExtension ] += 1 ;
 				duplicateFound = true;
 				$( this ).addClass( 'error' );
-				if( ! DomainRestrictionsErrors.includes( BP_ADMIN.bb_registration_resticitions.feedback_messages.empty ) ) {
-					DomainRestrictionsErrors.push( BP_ADMIN.bb_registration_resticitions.feedback_messages.empty );
+				if( ! DomainRestrictionsErrors.includes( BP_ADMIN.bb_registration_resticitions.feedback_messages.duplicate ) ) {
+					DomainRestrictionsErrors.push( BP_ADMIN.bb_registration_resticitions.feedback_messages.duplicate );
 				}
 			}
 
@@ -2654,14 +2654,15 @@ window.bp = window.bp || {};
 			}
 
 			$( '#bb-domain-restrictions-setting' ).children( '.restrictions-error' ).html( '' );
-			if( DomainRestrictionsErrors.length > 0 ) {
-				for( error of DomainRestrictionsErrors ) {
-					var error = '<p>' + error + '</p>';
-					$( '#bb-domain-restrictions-setting' ).children( '.restrictions-error' ).append( error );
-				};
-			}
-
 		});
+
+		if( DomainRestrictionsErrors.length > 0 ) {
+			for( error of DomainRestrictionsErrors ) {
+				var error = '<p>' + error + '</p>';
+				$( '#bb-domain-restrictions-setting' ).children( '.restrictions-error' ).append( error );
+			};
+		}
+
 		if( DomainRestrictionsErrors.length > 0 && eventType === 'submit' ) {
 			e.preventDefault();
 		}
