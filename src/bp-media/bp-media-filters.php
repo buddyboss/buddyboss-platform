@@ -1146,26 +1146,29 @@ function bp_media_user_messages_delete_attached_gif( $thread_id, $message_ids, $
  * @param $message
  */
 function bp_media_messages_save_gif_data( &$message ) {
+	$group_id = ! empty( $_POST['group'] ) ? (int) $_POST['group'] : 0;
 
-	if ( empty( $_POST['gif_data'] ) ) {
-		return;
+	if (
+		bb_user_has_access_upload_gif( $group_id, $message->sender_id, 0, $message->thread_id, 'message' ) &&
+		! empty( $message->id ) &&
+		! empty( $_POST['gif_data'] )
+	) {
+		$gif_data = $_POST['gif_data'];
+
+		$still = $gif_data['images']['480w_still']['url'];
+		$mp4   = $gif_data['images']['original_mp4']['mp4'];
+
+		bp_messages_update_meta(
+			$message->id,
+			'_gif_data',
+			array(
+				'still' => $still,
+				'mp4'   => $mp4,
+			)
+		);
+
+		bp_messages_update_meta( $message->id, '_gif_raw_data', $gif_data );
 	}
-
-	$gif_data = $_POST['gif_data'];
-
-	$still = $gif_data['images']['480w_still']['url'];
-	$mp4   = $gif_data['images']['original_mp4']['mp4'];
-
-	bp_messages_update_meta(
-		$message->id,
-		'_gif_data',
-		array(
-			'still' => $still,
-			'mp4'   => $mp4,
-		)
-	);
-
-	bp_messages_update_meta( $message->id, '_gif_raw_data', $gif_data );
 }
 
 /**
@@ -1205,7 +1208,13 @@ function bp_media_message_validated_content( $validated_content, $content, $post
  * @return bool
  */
 function bp_media_gif_message_validated_content( $validated_content, $content, $post ) {
-	if ( ! bp_is_messages_gif_support_enabled() || ! isset( $post['gif_data'] ) ) {
+	$group_id  = ! empty( $post['group'] ) ? (int) $post['group'] : 0;
+	$thread_id = ! empty( $post['thread_id'] ) ? (int) $post['thread_id'] : 0;
+
+	if (
+		! bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), 0, $thread_id, 'message' ) ||
+		! isset( $post['gif_data'] )
+	) {
 		return (bool) $validated_content;
 	}
 
