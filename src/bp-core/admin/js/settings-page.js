@@ -2690,7 +2690,11 @@ window.bp = window.bp || {};
 				}
 			}
 
-			if( eventType === 'submit' && ( currentEmailValue === '' || currentEmailCondition === '') ) {
+			var emptyValueOnSubmit = eventType === 'submit' && ( currentEmailValue === '' || currentEmailCondition === '');
+			var emptyConditionOnChange = e && e.currentTarget && e.currentTarget.classList.contains( 'registration-restrictions-input-select' ) && currentEmailCondition === '' ;
+			var emptyEmailOnChange = e && e.currentTarget && e.currentTarget.classList.contains( 'registration-restrictions-domain' ) && currentEmailValue === '' ;
+
+			if( emptyValueOnSubmit || emptyConditionOnChange || emptyEmailOnChange ) {
 				$( this ).addClass( 'error' );
 				if( ! EmailRestrictionsErrors.includes( BP_ADMIN.bb_registration_resticitions.feedback_messages.empty ) ) {
 					EmailRestrictionsErrors.push( BP_ADMIN.bb_registration_resticitions.feedback_messages.empty );
@@ -2751,8 +2755,12 @@ window.bp = window.bp || {};
 	});
 
 	// Handle input and blur event on email textboxes.
-	$( document ).on( 'input blur', '#bb-email-restrictions-setting .registration-restrictions-domain', function() {
-		validateDuplicateEmailRuleEntry();
+	$( document ).on( 'input blur', '#bb-email-restrictions-setting .registration-restrictions-domain', function( e ) {
+		validateDuplicateEmailRuleEntry( e );
+	});
+
+	$( document ).on( 'change', '#bb-email-restrictions-setting .registration-restrictions-input-select', function( e ) {
+		validateDuplicateEmailRuleEntry( e );
 	});
 
 	function bb_unique(array) {
