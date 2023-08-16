@@ -5823,9 +5823,15 @@ window.bp = window.bp || {};
 
 				// Update the unread message thread action link when the user views the current message thread.
 				var read_unread_div = $( '.message_action__list[data-bp-thread-id="' + thread_id + '"]' ),
-					read_unread     = read_unread_div.find( '[data-bp-action="read"]' );
+					read_unread = read_unread_div.find( '[data-bp-action="read"]' );
 
-				if ( _.isUndefined( read_unread.length ) || ( ! _.isUndefined( read_unread.length ) && 0 === read_unread.length ) ) {
+				if (
+					_.isUndefined( read_unread.length ) ||
+					(
+						!_.isUndefined( read_unread.length ) &&
+						0 === read_unread.length
+					)
+				) {
 					read_unread = read_unread_div.find( '[data-bp-action="unread"]' );
 				}
 
