@@ -36,6 +36,24 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		private static $post_type;
 
 		/**
+		 * User reaction table name.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @var string
+		 */
+		public static $user_reaction_table = '';
+
+		/**
+		 * Reaction data table name.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @var string
+		 */
+		public static $reaction_data_table = '';
+
+		/**
 		 * Get the instance of this class.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -60,8 +78,80 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		public function __construct() {
 			self::$post_type = 'bb_reaction';
 
+			self::create_table();
+
 			// Register post type.
 			add_action( 'bp_register_post_types', array( $this, 'bb_register_post_type' ), 10 );
+		}
+
+		/**
+		 * Created custom table for reactions.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return void
+		 */
+		public static function create_table() {
+			$sql             = array();
+			$wpdb            = $GLOBALS['wpdb'];
+			$charset_collate = $wpdb->get_charset_collate();
+			$bp_prefix       = bp_core_get_table_prefix();
+
+			// Ensure that dbDelta() is defined.
+			if ( ! function_exists( 'dbDelta' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			}
+
+			// User reaction table.
+			$bb_user_reactions         = $bp_prefix . 'bb_user_reactions';
+			self::$user_reaction_table = $bb_user_reactions;
+
+			// Table already exists, so maybe upgrade instead?
+			$user_reactions_table_exists = $wpdb->query( "SHOW TABLES LIKE '{$bb_user_reactions}';" ); // phpcs:ignore
+			if ( ! $user_reactions_table_exists ) {
+				$sql[] = "CREATE TABLE IF NOT EXISTS {$bb_user_reactions} (
+					id bigint(20) NOT NULL AUTO_INCREMENT,
+					user_id bigint(20) NOT NULL,
+					reaction_id bigint(20) NOT NULL,
+					item_type varchar(20) NOT NULL,
+					item_id bigint(20) NOT NULL,
+					date_created datetime NOT NULL,
+					PRIMARY KEY (id),
+					KEY user_id (user_id),
+					KEY reaction_id (reaction_id),
+					KEY item_type (item_type),
+					KEY item_id (item_id),
+					KEY date_created (date_created)
+				) {$charset_collate};";
+			}
+
+			// Reaction data table.
+			$bb_reactions_data         = $bp_prefix . 'bb_reactions_data';
+			self::$reaction_data_table = $bb_reactions_data;
+
+			// Table already exists, so maybe upgrade instead?
+			$reactions_data_table_exists = $wpdb->query( "SHOW TABLES LIKE '{$bb_reactions_data}';" ); // phpcs:ignore
+			if ( ! $reactions_data_table_exists ) {
+				$sql[] = "CREATE TABLE IF NOT EXISTS {$bb_reactions_data} (
+					id bigint(20) NOT NULL AUTO_INCREMENT,
+					`name` varchar(255)  NOT NULL,
+					`value` longtext DEFAULT NULL,
+					rel1 varchar(20) NOT NULL,
+					rel2 varchar(20) NOT NULL,
+    				rel3 varchar(20) NOT NULL,
+					`date` datetime NOT NULL,
+					PRIMARY KEY (id),
+					KEY `name` (`name`),
+					KEY rel1 (rel1),
+					KEY rel2 (rel2),
+					KEY rel3 (rel3),
+					KEY `date` (`date`)
+				) {$charset_collate};";
+			}
+
+			if ( ! empty( $sql ) ) {
+				dbDelta( $sql );
+			}
 		}
 
 		/**
