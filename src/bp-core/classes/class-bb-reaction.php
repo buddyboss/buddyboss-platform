@@ -230,6 +230,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @type string $name Name of the reaction.
 		 * @type string $icon Icon filename or uploaded file.
 		 *                    }
+		 *
+		 * @return int|void|WP_Error
 		 */
 		public function bb_add_reaction( $args ) {
 			$r = bp_parse_args(
@@ -274,6 +276,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				// Update bb_reactions transient.
 				$this->bb_update_reactions_transient();
 			}
+
+			return $reaction_id;
 		}
 
 		/**
