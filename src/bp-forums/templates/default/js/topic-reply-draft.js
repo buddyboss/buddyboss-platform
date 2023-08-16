@@ -702,14 +702,14 @@ window.bp = window.bp || {};
 				activity_data = this.all_draft_data[this.topic_reply_draft.data_key];
 			}
 
-			if ( 
+			if (
 				(
 					'undefined' === typeof activity_data.bbp_topic_title &&
-			 		'undefined' === typeof activity_data.bbp_topic_content
+					'undefined' === typeof activity_data.bbp_topic_content
 				) ||
 				(
 					'' === activity_data.bbp_topic_title &&
-			 		'' === activity_data.bbp_topic_content
+					'' === activity_data.bbp_topic_content
 				)
 			) {
 				return;
@@ -719,13 +719,19 @@ window.bp = window.bp || {};
 			$form.addClass( 'has-draft' );
 
 			// Title.
-			if ( 'undefined' !== typeof activity_data.bbp_topic_title && '' !== activity_data.bbp_topic_title ) {
+			if (
+				'undefined' !== typeof activity_data.bbp_topic_title &&
+				'' !== activity_data.bbp_topic_title
+			) {
 				$form.find( '#bbp_topic_title' ).val( activity_data.bbp_topic_title );
 				$form.addClass( 'has-title' );
 			}
 
 			// Content.
-			if ( 'undefined' !== typeof activity_data.bbp_topic_content && '' !== activity_data.bbp_topic_content ) {
+			if (
+				'undefined' !== typeof activity_data.bbp_topic_content &&
+				'' !== activity_data.bbp_topic_content
+			) {
 				var element = $editor.get( 0 );
 				var $meditor = window.MediumEditor ? window.MediumEditor.getEditorFromElement( element ) : null;
 				if ( $meditor !== null ) {
@@ -788,7 +794,7 @@ window.bp = window.bp || {};
 				activity_data = this.all_draft_data[this.topic_reply_draft.data_key];
 			}
 
-			if ( 
+			if (
 				(
 					'undefined' === typeof activity_data.bbp_reply_content &&
 					'undefined' === typeof activity_data.bb_link_url
@@ -805,7 +811,10 @@ window.bp = window.bp || {};
 			$form.addClass( 'has-draft' );
 
 			// Content.
-			if ( 'undefined' !== typeof activity_data.bbp_reply_content && '' !== activity_data.bbp_reply_content ) {
+			if (
+				'undefined' !== typeof activity_data.bbp_reply_content &&
+				'' !== activity_data.bbp_reply_content
+			) {
 				var element = $editor.get( 0 );
 				var $meditor = window.MediumEditor ? window.MediumEditor.getEditorFromElement( element ) : null;
 				if ( $meditor !== null ) {
