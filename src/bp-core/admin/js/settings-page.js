@@ -2461,11 +2461,11 @@ window.bp = window.bp || {};
 		function ( e ) {
 			e.preventDefault();
 			var $this    = $( this );
-			var newindex = parseInt( $this.prev( '.registration-restrictions-lastindex').val() ) + 1;
+			var newindex = parseInt( $this.prev( '.registration-restrictions-lastindex' ).val() ) + 1;
 			var regex    = new RegExp('placeholder_priority_index', 'g');
 			var $row     = $this.closest( '.registration-restrictions-listing' ).find( '.registration-restrictions-rule-list .registration-restrictions-rule.custom' ).html();
 			$this.closest( '.registration-restrictions-listing' ).find( '.registration-restrictions-rule-list' ).append( ' <div class="registration-restrictions-rule untouched"> ' + $row.replace( regex, newindex ) + ' </div> ' );
-			$this.prev( '.registration-restrictions-lastindex').val( newindex );
+			$this.prev( '.registration-restrictions-lastindex' ).val( newindex );
 			domainRestictionUpdatePriorityNumber();
 		}
 	);
@@ -2475,11 +2475,16 @@ window.bp = window.bp || {};
 		'.registration-restrictions-listing .registration-restrictions-rule-remove',
 		function ( e ) {
 			e.preventDefault();
-			var $this  = $( e.currentTarget );
-			var newindex = parseInt( $this.prev( '.registration-restrictions-lastindex').val() ) - 1;
+			var $this   = $( e.currentTarget );
+			var $listing = $this.parents( '.bb-domain-restrictions-listing' );
+			var newindex = parseInt( $this.prev( '.registration-restrictions-lastindex' ).val() ) - 1;
 			if( ! $this.closest( '.registration-restrictions-rule').hasClass( 'custom' ) ) {
 				$this.closest( '.registration-restrictions-rule' ).remove();
-				$this.parents('.registration-restrictions-listing').find( '.registration-restrictions-lastindex').val( newindex );
+				$this.parents( '.registration-restrictions-listing' ).find( '.registration-restrictions-lastindex' ).val( newindex );
+			}
+
+			if ( 0 === $listing.find( '.registration-restrictions-rule' ).not( '.custom' ).length ) {
+				$( '.bb-domain-restrictions-listing .registration-restrictions-select' ).find( 'option' ).attr( 'disabled', false );
 			}
 			domainRestictionUpdatePriorityNumber();
 		}
