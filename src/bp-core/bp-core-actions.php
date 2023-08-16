@@ -129,6 +129,9 @@ add_action( 'comment_post', 'bb_post_new_comment_reply_notification', 20, 3 );
 add_action( 'wp_insert_comment', 'bb_post_new_comment_reply_notification_helper', 20, 2 );
 add_action( 'transition_comment_status', 'bb_post_comment_on_status_change', 20, 3 );
 
+// Load Reaction.
+add_action( 'bp_core_components_included', 'bb_load_reaction' );
+
 // Load the admin.
 if ( is_admin() ) {
 	add_action( 'bp_loaded', 'bp_admin' );
@@ -1027,3 +1030,16 @@ function bb_core_registered_notification_components( $component_names ) {
 }
 
 add_action( 'bp_notifications_get_registered_components', 'bb_core_registered_notification_components', 20, 1 );
+
+/**
+ * Function to load the instance of the class BB_Reaction.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return null|BB_Reaction|void
+ */
+function bb_load_reaction() {
+	if ( class_exists( 'BB_Reaction' ) ) {
+		return BB_Reaction::instance();
+	}
+}

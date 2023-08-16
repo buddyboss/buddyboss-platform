@@ -8838,16 +8838,3 @@ function bb_is_same_site_url( $url ) {
 
 	return false;
 }
-
-/**
- * Function to load the instance of the class BB_Reaction.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return null|BB_Reaction|void
- */
-function bb_reaction() {
-	if ( class_exists( 'BB_Reaction' ) ) {
-		return BB_Reaction::instance();
-	}
-}
