@@ -1710,14 +1710,17 @@ class BP_Email_Tokens {
 												</td>
 											</tr>
 											<?php
-											if ( ! empty( $media_ids ) && bp_has_media(
-												array(
-													'include'  => $media_ids,
-													'order_by' => 'menu_order',
-													'sort'     => 'ASC',
-													'privacy'  => false,
+											if (
+												! empty( $media_ids ) &&
+												bp_has_media(
+													array(
+														'include'  => $media_ids,
+														'order_by' => 'menu_order',
+														'sort'     => 'ASC',
+														'privacy'  => false,
+													)
 												)
-											) ) :
+                                            ) :
 												?>
 												<tr>
 													<td>
@@ -1749,14 +1752,17 @@ class BP_Email_Tokens {
 												<?php
 											endif;
 
-											if ( ! empty( $video_ids ) && bp_has_video(
-												array(
-													'include'  => $video_ids,
-													'order_by' => 'menu_order',
-													'sort'     => 'ASC',
-													'privacy'  => false,
+											if (
+												! empty( $video_ids ) &&
+												bp_has_video(
+													array(
+														'include'  => $video_ids,
+														'order_by' => 'menu_order',
+														'sort'     => 'ASC',
+														'privacy'  => false,
+													)
 												)
-											) ) :
+											) :
 												?>
 												<tr>
 													<td>
@@ -1792,14 +1798,17 @@ class BP_Email_Tokens {
 												<?php
 											endif;
 
-											if ( ! empty( $document_ids ) && bp_has_document(
-												array(
-													'include'  => $document_ids,
-													'order_by' => 'menu_order',
-													'sort'     => 'ASC',
-													'privacy'  => false,
+											if (
+												! empty( $document_ids ) &&
+												bp_has_document(
+													array(
+														'include'  => $document_ids,
+														'order_by' => 'menu_order',
+														'sort'     => 'ASC',
+														'privacy'  => false,
+													)
 												)
-											) ) :
+											) :
 												?>
 												<tr>
 													<td>
@@ -1828,9 +1837,9 @@ class BP_Email_Tokens {
 															<a href="<?php echo esc_url( $tokens['reply.url'] ); ?>">
 																<?php
 																echo sprintf(
-																/* translators: The more documents. */
-																	__( 'and %d more', 'buddyboss' ),
-																	$total_document_ids - 5
+																	/* translators: The more documents. */
+																	esc_html__( 'and %d more', 'buddyboss' ),
+																	(int) ( $total_document_ids - 5 )
 																);
 																?>
 															</a>
@@ -1858,7 +1867,7 @@ class BP_Email_Tokens {
 														</div>
 													</td>
 												</tr>
-												<?php 
+												<?php
 											endif;
 										?>
 										</tbody>
@@ -2151,7 +2160,7 @@ class BP_Email_Tokens {
 														</div>
 													</td>
 												</tr>
-												<?php 
+												<?php
 											endif;
 										?>
 										</tbody>
