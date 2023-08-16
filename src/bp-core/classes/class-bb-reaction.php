@@ -255,6 +255,12 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				return;
 			}
 
+			// Check if the reaction post exists.
+			$reaction = get_post( $reaction_id );
+			if ( ! isset( $reaction->post_type ) || self::$post_type !== $reaction->post_type ) {
+				return;
+			}
+
 			$success = wp_delete_post( $reaction_id, true );
 
 			if ( ! empty( $success ) && ! is_wp_error( $success ) ) {
