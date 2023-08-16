@@ -340,7 +340,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param $reaction_id
+		 * @param int $reaction_id Reaction id.
 		 *
 		 * @return void
 		 */
@@ -360,6 +360,62 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			if ( ! empty( $success ) && ! is_wp_error( $success ) ) {
 				$this->bb_update_reactions_transient();
 			}
+		}
+
+		/**
+		 * Function to add user reaction.
+		 *
+		 * @snce BuddyBoss [BBVERSION]
+		 *
+		 * @param array $args Arguments of user reaction.
+		 *
+		 * @return int $user_reaction_id
+		 */
+		public function bb_add_user_item_reaction( $args ) {
+			global $wpdb;
+
+			$r = bp_parse_args(
+				$args,
+				array(
+					'user_id'      => bp_loggedin_user_id(),
+					'reaction_id'  => '',
+					'item_type'    => '',
+					'item_id'      => '',
+					'date_created' => bp_core_current_time(),
+				)
+			);
+
+			/**
+			 * Fires before the add user item reaction in DB.
+			 *
+			 * @snce BuddyBoss [BBVERSION]
+			 *
+			 * @param array $r Args of user item reactions.
+			 */
+			do_action_ref_array( 'bb_before_add_user_item_reaction', array( $r ) );
+
+			$sql = $wpdb->prepare( "INSERT INTO " . self::$user_reaction_table . " (user_id, reaction_id, item_type, item_id, date_created) VALUES (%d, %d, %s, %d, %s)", $r['user_id'], $r['reaction_id'], $r['item_type'], $r['item_id'], $r['date_created'] );
+
+			// Attempt to insert or update.
+			$query = $wpdb->query( $sql );
+
+			// Bail if query fails. If `$query` is 0, it means the save was successful, but no fields were updated.
+			if ( false === $query || is_wp_error( $query ) ) {
+				return false;
+			}
+
+			$user_reaction_id = $wpdb->insert_id;
+
+			/**
+			 * Fires after the add user item reaction in DB.
+			 *
+			 * @snce BuddyBoss [BBVERSION]
+			 *
+			 * @param array $r Args of user item reactions.
+			 */
+			do_action_ref_array( 'bb_after_add_user_item_reaction', array( $r ) );
+
+			return $user_reaction_id;
 		}
 	}
 }
