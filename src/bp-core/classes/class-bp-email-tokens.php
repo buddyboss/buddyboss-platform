@@ -1198,13 +1198,17 @@ class BP_Email_Tokens {
 														<?php
 													endif;
 
-													if ( ! empty( $document_ids ) && bp_has_document(
-														array(
-															'include' => $document_ids,
-															'order_by' => 'menu_order',
-															'sort' => 'ASC',
+													if (
+														! empty( $document_ids ) &&
+														bp_has_document(
+															array(
+																'include'  => $document_ids,
+																'order_by' => 'menu_order',
+																'sort'     => 'ASC',
+																'per_page' => 5,
+															)
 														)
-													) ) :
+													) :
 														?>
 														<div class="bb-activity-media-wrap" style="padding: 10px 0;">
 															<?php
@@ -2095,14 +2099,18 @@ class BP_Email_Tokens {
 												<?php
 											endif;
 
-											if ( ! empty( $document_ids ) && bp_has_document(
-												array(
-													'include'  => $document_ids,
-													'order_by' => 'menu_order',
-													'sort'     => 'ASC',
-													'privacy'  => false,
+											if (
+												! empty( $document_ids ) &&
+												bp_has_document(
+													array(
+														'include'  => $document_ids,
+														'order_by' => 'menu_order',
+														'sort'     => 'ASC',
+														'privacy'  => false,
+														'per_page' => 5,
+													)
 												)
-											) ) :
+											) :
 												?>
 												<tr>
 													<td>
@@ -2474,13 +2482,17 @@ class BP_Email_Tokens {
 													<?php
 												endif;
 
-												if ( ! empty( $document_ids ) && bp_has_document(
-													array(
-														'include' => $document_ids,
-														'order_by' => 'menu_order',
-														'sort' => 'ASC',
+												if (
+													! empty( $document_ids ) &&
+													bp_has_document(
+														array(
+															'include'  => $document_ids,
+															'order_by' => 'menu_order',
+															'sort'     => 'ASC',
+															'per_page' => 5,
+														)
 													)
-												) ) :
+												) :
 													?>
 													<div class="bb-activity-media-wrap" style="padding: 10px 0;">
 														<?php
@@ -2933,6 +2945,7 @@ class BP_Email_Tokens {
 																	'include'  => $document_ids,
 																	'order_by' => 'menu_order',
 																	'sort'     => 'ASC',
+																	'per_page' => 5,
 																)
 															)
 														) {
@@ -3221,14 +3234,18 @@ class BP_Email_Tokens {
 										<?php
 									endif;
 
-									if ( ! empty( $document_ids ) && bp_has_document(
-										array(
-											'include'  => $document_ids,
-											'order_by' => 'menu_order',
-											'sort'     => 'ASC',
-											'privacy'  => false,
+									if (
+										! empty( $document_ids ) &&
+										bp_has_document(
+											array(
+												'include'  => $document_ids,
+												'order_by' => 'menu_order',
+												'sort'     => 'ASC',
+												'privacy'  => false,
+												'per_page' => 5,
+											)
 										)
-									) ) :
+									) :
 										?>
 										<tr>
 											<td>
@@ -3547,6 +3564,7 @@ class BP_Email_Tokens {
 																	'include'  => $document_ids,
 																	'order_by' => 'menu_order',
 																	'sort'     => 'ASC',
+																	'per_page' => 5,
 																)
 															)
 														) {
