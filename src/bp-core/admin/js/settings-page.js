@@ -2691,8 +2691,9 @@ window.bp = window.bp || {};
 			}
 
 			var emptyValueOnSubmit = eventType === 'submit' && ( currentEmailValue === '' || currentEmailCondition === '');
-			var emptyConditionOnChange = e && e.currentTarget && e.currentTarget.classList.contains( 'registration-restrictions-input-select' ) && currentEmailCondition === '' ;
-			var emptyEmailOnChange = e && e.currentTarget && e.currentTarget.classList.contains( 'registration-restrictions-domain' ) && currentEmailValue === '' ;
+			var eventFromField = e && e.currentTarget;
+			var emptyConditionOnChange = eventFromField && e.currentTarget.classList.contains( 'registration-restrictions-input-select' ) && currentEmailCondition === '' ;
+			var emptyEmailOnChange = eventFromField && e.currentTarget.classList.contains( 'registration-restrictions-domain' ) && currentEmailValue === '' ;
 
 			if( emptyValueOnSubmit || emptyConditionOnChange || emptyEmailOnChange ) {
 				$( this ).addClass( 'error' );
