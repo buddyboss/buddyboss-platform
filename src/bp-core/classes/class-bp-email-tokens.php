@@ -1806,6 +1806,7 @@ class BP_Email_Tokens {
 														'order_by' => 'menu_order',
 														'sort'     => 'ASC',
 														'privacy'  => false,
+														'per_page' => 5,
 													)
 												)
 											) :
