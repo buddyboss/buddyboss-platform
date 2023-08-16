@@ -192,8 +192,6 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		private function bb_update_reactions_transient() {
-			// Clear the existing transient.
-			delete_transient( 'bb_reactions' );
 
 			// Fetch existing reactions.
 			$all_reactions  = $this->bb_get_reactions();
@@ -241,6 +239,27 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			);
 
 			return get_posts( $args );
+		}
+
+		/**
+		 * Remove reaction.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param $reaction_id
+		 *
+		 * @return void
+		 */
+		public function bb_remove_reaction( $reaction_id ) {
+			if ( empty( $reaction_id ) ) {
+				return;
+			}
+
+			$success = wp_delete_post( $reaction_id, true );
+
+			if ( ! empty( $success ) && ! is_wp_error( $success ) ) {
+				$this->bb_update_reactions_transient();
+			}
 		}
 	}
 }
