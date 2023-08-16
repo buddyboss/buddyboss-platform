@@ -2425,9 +2425,9 @@ window.bp = window.bp || {};
 						formData.append( 'action', 'media_upload' );
 						formData.append( '_wpnonce', BP_Nouveau.nonces.media );
 
-						var url      = bp.Nouveau.Messages.getCurrentThreadUrl();
-						var parts    = url.split( '/' );
-						var newArray = $.map( parts, function ( v ) {
+						var url       = bp.Nouveau.Messages.getCurrentThreadUrl();
+						var parts     = url.split( '/' );
+						var newArray  = $.map( parts, function ( v ) {
 							return v === '' ? null : v;
 						} );
 						var thread_id = newArray.pop();

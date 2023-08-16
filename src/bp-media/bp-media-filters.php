@@ -974,11 +974,10 @@ function bp_media_forums_save_gif_data( $post_id ) {
  * @param $message
  */
 function bp_media_attach_media_to_message( &$message ) {
-	$group_id       = ! empty( $_POST['group'] ) ? (int) $_POST['group'] : 0;
-	$message_access = bb_user_has_access_upload_media( $group_id, $message->sender_id, 0, $message->thread_id, 'message' );
+	$group_id = ! empty( $_POST['group'] ) ? (int) $_POST['group'] : 0;
 
 	if (
-		$message_access &&
+		bb_user_has_access_upload_media( $group_id, $message->sender_id, 0, $message->thread_id, 'message' ) &&
 		! empty( $message->id ) &&
 		(
 			! empty( $_POST['media'] ) ||
