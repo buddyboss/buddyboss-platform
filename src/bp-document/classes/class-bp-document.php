@@ -2044,10 +2044,10 @@ class BP_Document {
 			$document_meta_query = new WP_Meta_Query( $meta_query );
 
 			// WP_Meta_Query expects the table name at
-			// $wpdb->document_meta.
-			$wpdb->documentmeta = buddypress()->document->table_name_folder_meta;
+			// $wpdb->document_folder_meta.
+			$wpdb->document_foldermeta = buddypress()->document->table_name_folder_meta;
 
-			$meta_sql = $document_meta_query->get_sql( 'document_folder', 'f', 'id' );
+			$meta_sql = $document_meta_query->get_sql( 'folder', 'f', 'id' );
 
 			// Strip the leading AND - BP handles it in get().
 			$sql_array['where'] = preg_replace( '/^\sAND/', '', $meta_sql['where'] );
