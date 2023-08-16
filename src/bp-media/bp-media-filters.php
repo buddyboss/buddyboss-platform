@@ -2841,9 +2841,9 @@ add_filter( 'redirect_canonical', 'bb_media_remove_specific_trailing_slash', 999
  * @return mixed
  */
 function bb_messages_media_save( $attachment ) {
-	$is_message_componenet = ( bp_is_group_messages() || bp_is_messages_component() || ( ! empty( $_POST['component'] ) && 'messages' === $_POST['component'] ) );
-	$thread_id             = ! empty( $_POST['thread_id'] ) ? (int) $_POST['thread_id'] : 0;
-	$group_id              = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : 0;
+	$is_message_component = ( bp_is_group_messages() || bp_is_messages_component() || ( ! empty( $_POST['component'] ) && 'messages' === $_POST['component'] ) );
+	$thread_id            = ! empty( $_POST['thread_id'] ) ? (int) $_POST['thread_id'] : 0;
+	$group_id             = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : 0;
 
 	if ( empty( $group_id ) && bp_is_group_messages() ) {
 		$group = groups_get_current_group();
@@ -2853,7 +2853,7 @@ function bb_messages_media_save( $attachment ) {
 	}
 
 	if (
-		$is_message_componenet &&
+		$is_message_component &&
 		bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), 0, $thread_id, 'message' ) &&
 		! empty( $attachment )
 	) {
