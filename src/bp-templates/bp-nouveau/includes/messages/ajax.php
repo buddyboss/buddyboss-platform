@@ -2505,7 +2505,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			}
 		}
 
-		if ( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() ) {
+		if ( bp_is_active( 'video' )  && ( ( ( empty( $is_group_thread ) || ( ! empty( $is_group_thread ) && ! bp_is_active( 'groups' ) ) ) && bp_is_messages_video_support_enabled() ) || ( bp_is_active( 'groups' ) && ! empty( $is_group_thread ) && bp_is_group_video_support_enabled() ) ) ) {
 			$video_ids = bp_messages_get_meta( $bp_get_the_thread_message_id, 'bp_video_ids', true );
 
 			if (
