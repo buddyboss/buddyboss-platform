@@ -2721,7 +2721,7 @@ function bb_get_all_nested_subforums( $forum_id ) {
  * Return array of public forum statuses.
  *
  * @since bbPress 2.6.0 (r6921)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.00
  *
  * @return array
  */
@@ -2738,7 +2738,7 @@ function bbp_get_public_forum_statuses() {
  * Return array of non-public forum statuses.
  *
  * @since bbPress 2.6.0 (r6921)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.00
  *
  * @return array
  */
