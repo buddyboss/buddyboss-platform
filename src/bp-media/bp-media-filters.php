@@ -974,8 +974,11 @@ function bp_media_forums_save_gif_data( $post_id ) {
  * @param $message
  */
 function bp_media_attach_media_to_message( &$message ) {
+	$group_id       = ! empty( $_POST['group'] ) ? (int) $_POST['group'] : 0;
+	$message_access = bb_user_has_access_upload_media( $group_id, $message->sender_id, 0, $message->thread_id, 'message' );
+
 	if (
-		bp_is_messages_media_support_enabled() &&
+		$message_access &&
 		! empty( $message->id ) &&
 		(
 			! empty( $_POST['media'] ) ||
@@ -1178,7 +1181,13 @@ function bp_media_messages_save_gif_data( &$message ) {
  * @return bool
  */
 function bp_media_message_validated_content( $validated_content, $content, $post ) {
-	if ( ! bp_is_messages_media_support_enabled() || ! isset( $post['media'] ) ) {
+	$group_id  = ! empty( $post['group'] ) ? (int) $post['group'] : 0;
+	$thread_id = ! empty( $post['thread_id'] ) ? (int) $post['thread_id'] : 0;
+
+	if (
+		! bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), 0, $thread_id, 'message' ) ||
+		! isset( $post['media'] )
+	) {
 		return (bool) $validated_content;
 	}
 
@@ -2833,17 +2842,20 @@ add_filter( 'redirect_canonical', 'bb_media_remove_specific_trailing_slash', 999
  * @return mixed
  */
 function bb_messages_media_save( $attachment ) {
+	$is_message_componenet = ( bp_is_group_messages() || bp_is_messages_component() || ( ! empty( $_POST['component'] ) && 'messages' === $_POST['component'] ) );
+	$thread_id             = ! empty( $_POST['thread_id'] ) ? (int) $_POST['thread_id'] : 0;
+	$group_id              = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : 0;
+
+	if ( empty( $group_id ) && bp_is_group_messages() ) {
+		$group = groups_get_current_group();
+		if ( ! empty( $group ) ) {
+			$group_id = $group->id;
+		}
+	}
 
 	if (
-		(
-			bp_is_group_messages() ||
-			bp_is_messages_component() ||
-			(
-				! empty( $_POST['component'] ) &&
-				'messages' === $_POST['component']
-			)
-		) &&
-		bp_is_messages_media_support_enabled() &&
+		$is_message_componenet &&
+		bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), 0, $thread_id, 'message' ) &&
 		! empty( $attachment )
 	) {
 

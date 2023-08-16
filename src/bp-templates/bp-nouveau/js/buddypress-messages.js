@@ -1453,6 +1453,10 @@ window.bp = window.bp || {};
 				$( '#no-messages-archived-link' ).addClass( 'bp-hide' );
 				$( '#no-messages-unarchived-link' ).removeClass( 'bp-hide' );
 			}
+		},
+
+		getCurrentThreadUrl: function() {
+			return Backbone.history.getFragment().split(/[?#]/)[0];
 		}
 	};
 
@@ -2421,7 +2425,8 @@ window.bp = window.bp || {};
 						formData.append( 'action', 'media_upload' );
 						formData.append( '_wpnonce', BP_Nouveau.nonces.media );
 
-						var parts = Backbone.history.getFragment().split( '/' );
+						var url      = bp.Nouveau.Messages.getCurrentThreadUrl();
+						var parts    = url.split( '/' );
 						var newArray = $.map( parts, function ( v ) {
 							return v === '' ? null : v;
 						} );

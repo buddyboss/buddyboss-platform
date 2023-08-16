@@ -94,6 +94,8 @@ function messages_new_message( $args = '' ) {
 		}
 	}
 
+	$group_id = ! empty( $_POST['group'] ) ? (int) $_POST['group'] : 0;
+
 	/**
 	 * Filter to validate message content.
 	 *
@@ -118,7 +120,7 @@ function messages_new_message( $args = '' ) {
 	}
 
 	if ( ! empty( $_POST['media'] ) ) {
-		$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
+		$can_send_media = bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_media ) {
 			$error_code = 'messages_empty_content';
 			$feedback   = __( 'You don\'t have access to send the media. ', 'buddyboss' );
@@ -2182,9 +2184,12 @@ function bb_get_message_response_object( $message ) {
 	}
 	$sender_display_name = apply_filters( 'bp_get_the_thread_message_sender_name', $sender_display_name );
 
+	// Check message media, document, video, GIF access.
+	$has_message_media_access = bb_user_has_access_upload_media( 0, $sender_id, 0, $thread_id, 'message' );
+
 	$has_media = false;
 	if ( empty( $excerpt ) ) {
-		if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
+		if ( bp_is_active( 'media' ) && $has_message_media_access ) {
 			$media_ids = bp_messages_get_meta( $message_id, 'bp_media_ids', true );
 
 			if ( ! empty( $media_ids ) ) {
@@ -2293,7 +2298,7 @@ function bb_get_message_response_object( $message ) {
 
 	}
 
-	if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
+	if ( bp_is_active( 'media' ) && $has_message_media_access ) {
 		$media_ids = bp_messages_get_meta( $message_id, 'bp_media_ids', true );
 
 		if ( ! empty( $media_ids ) && bp_has_media(
