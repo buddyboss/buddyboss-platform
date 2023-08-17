@@ -54,6 +54,15 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		public static $reaction_data_table = '';
 
 		/**
+		 * Cache group.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @var string
+		 */
+		public static $cache_group = 'bb_reactions';
+
+		/**
 		 * Get the instance of this class.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -393,7 +402,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			 *
 			 * @param array $r Args of user item reactions.
 			 */
-			do_action( 'bb_before_add_user_item_reaction', $r );
+			do_action( 'bb_reaction_before_add_user_item_reaction', $r );
 
 			// Reaction need reaction ID.
 			if ( empty( $r['reaction_id'] ) ) {
@@ -467,9 +476,10 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			 *
 			 * @snce BuddyBoss [BBVERSION]
 			 *
-			 * @param array $r Args of user item reactions.
+			 * @param int   $user_reaction_id User reaction id.
+			 * @param array $r                Args of user item reactions.
 			 */
-			do_action( 'bb_after_add_user_item_reaction', $user_reaction_id, $r );
+			do_action( 'bb_reaction_after_add_user_item_reaction', $user_reaction_id, $r );
 
 			return $user_reaction_id;
 		}
@@ -481,8 +491,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @param int $user_reaction_id ID of the user reaction.
 		 *
-		 * @return bool True on success, false on failure or if no user reaction
-		 *              is found for the user.
+		 * @return int|false True on success, false on failure or if no user reaction
+		 *                   is found for the user.
 		 */
 		public function bb_remove_user_item_reaction( $user_reaction_id ) {
 			global $wpdb;
@@ -490,6 +500,15 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			if ( empty( $user_reaction_id ) ) {
 				return false;
 			}
+
+			/**
+			 * Fires before the remove user item reaction.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param int $user_reaction_id User reaction id.
+			 */
+			do_action( 'bb_reaction_before_remove_user_item_reaction', $user_reaction_id );
 
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$get = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . self::$user_reaction_table . " WHERE id=%d", $user_reaction_id ) );
@@ -505,6 +524,16 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'id' => $get->id,
 				)
 			);
+
+			/**
+			 * Fires after the remove user item reaction.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param int|false $deleted          The number of rows deleted, or false on error.
+			 * @param int       $user_reaction_id User reaction id.
+			 */
+			do_action( 'bb_reaction_after_remove_user_item_reaction', $deleted, $user_reaction_id );
 
 			return $deleted;
 		}
@@ -530,6 +559,15 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'error_type'  => 'bool',
 				)
 			);
+
+			/**
+			 * Fires before the remove user item reactions.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array $r Args of user item reactions.
+			 */
+			do_action( 'bb_reaction_before_remove_user_item_reactions', $r );
 
 			// Reaction need reaction ID.
 			if ( empty( $r['reaction_id'] ) ) {
@@ -560,6 +598,16 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'id' => $get_reaction->id,
 				)
 			);
+
+			/**
+			 * Fires after the remove user item reactions.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param int|false $deleted The number of rows deleted, or false on error.
+			 * @param array     $r       Args of user item reactions.
+			 */
+			do_action( 'bb_reaction_after_remove_user_item_reactions', $deleted, $r );
 
 			return $deleted;
 		}
@@ -602,6 +650,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'order'       => 'DESC', // Order ASC or DESC.
 					'order_by'    => 'id',   // Column to order by.
 					'count_total' => false,  // Whether to use count_total.
+					'fields'      => 'all',  // Fields to include.
 				),
 				'bb_get_user_reactions'
 			);
@@ -687,23 +736,21 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			 */
 			$join_sql = apply_filters( 'bb_get_user_reactions_join_sql', $join_sql, $r, $select_sql, $from_sql, $where_sql );
 
-			// Sanitize page and per_page parameters.
-			$page     = absint( $r['paged'] );
-			$per_page = absint( $r['per_page'] );
-
 			$retval = array(
 				'reactions' => null,
 				'total'     => null,
 			);
 
-			// Query first for user_reaction IDs.
-			$user_reaction_ids_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort}, ur.id {$sort}";
-
-			if ( ! empty( $per_page ) && ! empty( $page ) ) {
-				// We query for $per_page + 1 items in order to
-				// populate the has_more_items flag.
-				$user_reaction_ids_sql .= $wpdb->prepare( ' LIMIT %d, %d', absint( ( $page - 1 ) * $per_page ), $per_page + 1 );
+			// Sanitize page and per_page parameters.
+			$page       = absint( $r['paged'] );
+			$per_page   = absint( $r['per_page'] );
+			$pagination = '';
+			if ( ! empty( $per_page ) && ! empty( $page ) && $per_page != - 1 ) {
+				$pagination = $wpdb->prepare( 'LIMIT %d, %d', intval( ( $page - 1 ) * $per_page ), intval( $per_page ) );
 			}
+
+			// Query first for user_reaction IDs.
+			$paged_user_reactions_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort}, ur.id {$sort} {$pagination}";
 
 			/**
 			 * Filters the paged user reaction MySQL statement.
@@ -713,25 +760,24 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			 * @param string $user_reaction_ids_sql MySQL's statement used to query for Reaction IDs.
 			 * @param array  $r                     Array of arguments passed into method.
 			 */
-			$user_reaction_ids_sql = apply_filters( 'bb_get_user_reactions_paged_sql', $user_reaction_ids_sql, $r );
+			$paged_user_reactions_sql = apply_filters( 'bb_get_user_reactions_paged_sql', $paged_user_reactions_sql, $r );
 
-			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$user_reaction_ids = $wpdb->get_col( $user_reaction_ids_sql );
-
-			// If we've fetched more than the $per_page value, we
-			// can discard the extra now.
-			if ( ! empty( $per_page ) && count( $user_reaction_ids ) === $per_page + 1 ) {
-				array_pop( $user_reaction_ids );
+			$cached = bp_core_get_incremented_cache( $paged_user_reactions_sql, self::$cache_group );
+			if ( false === $cached ) {
+				$paged_user_reactions_ids = $wpdb->get_col( $paged_user_reactions_sql );
+				bp_core_set_incremented_cache( $paged_user_reactions_sql, self::$cache_group, $paged_user_reactions_ids );
+			} else {
+				$paged_user_reactions_ids = $cached;
 			}
 
-			$user_reactions = $wpdb->get_results( $user_reaction_ids_sql, ARRAY_A );
-			if ( ! empty( $user_reactions ) ) {
-				foreach ( (array) $user_reactions as $i => $user_reaction ) {
-					$user_reactions[ $i ] = $user_reaction;
-				}
+			if ( 'id' === $r['fields'] ) {
+				// We only want the IDs.
+				$paged_user_reactions = array_map( 'intval', $paged_user_reactions_ids );
+			} else {
+				$paged_user_reactions = self::get_user_reaction_item_data( $paged_user_reactions_ids );
 			}
 
-			$retval['reactions'] = $user_reactions;
+			$retval['reactions'] = $paged_user_reactions;
 
 			if ( ! empty( $r['count_total'] ) ) {
 				/**
@@ -745,12 +791,73 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				 */
 				$sql                      = "SELECT count(DISTINCT ur.id) FROM " . self::$user_reaction_table . " ur {$join_sql} {$where_sql}";
 				$total_user_reactions_sql = apply_filters( 'bb_get_user_reactions_total_sql', $sql, $where_sql, $sort );
-				$total_user_reactions     = $wpdb->get_var( $total_user_reactions_sql );
+				$cached                   = bp_core_get_incremented_cache( $total_user_reactions_sql, self::$cache_group );
+				if ( false === $cached ) {
+					$total_user_reactions = $wpdb->get_var( $total_user_reactions_sql );
+					bp_core_set_incremented_cache( $total_user_reactions_sql, self::$cache_group, $total_user_reactions );
+				} else {
+					$total_user_reactions = $cached;
+				}
 
 				$retval['total'] = $total_user_reactions;
 			}
 
 			return $retval;
+		}
+
+		/**
+		 * Convert user reaction IDs to objects, as expected in template loop.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $user_reactions_ids Array of user reaction id IDs.
+		 *
+		 * @return array
+		 */
+		protected static function get_user_reaction_item_data( $user_reactions_ids = array() ) {
+			global $wpdb;
+
+			// Bail if no user reaction ID's passed.
+			if ( empty( $user_reactions_ids ) ) {
+				return array();
+			}
+
+			$user_reactions = array();
+			$uncached_ids   = bp_get_non_cached_ids( $user_reactions_ids, self::$cache_group );
+
+			// Prime caches as necessary.
+			if ( ! empty( $uncached_ids ) ) {
+				// Format the user reaction ID's for use in the query below.
+				$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
+
+				// Fetch data from bb_user_reactions table, preserving order.
+				$queried_adata = $wpdb->get_results( "SELECT * FROM " . self::$user_reaction_table . " WHERE id IN ({$uncached_ids_sql})" );
+
+				// Put that data into the placeholders created earlier,
+				// and add it to the cache.
+				foreach ( (array) $queried_adata as $urdata ) {
+					wp_cache_set( $urdata->id, $urdata, self::$cache_group );
+				}
+			}
+
+			// Now fetch data from the cache.
+			foreach ( $user_reactions_ids as $id ) {
+
+				// Integer casting.
+				$user_reaction = wp_cache_get( $id, self::$cache_group );
+				if ( ! empty( $user_reaction ) ) {
+					$user_reaction->id           = (int) $user_reaction->id;
+					$user_reaction->user_id      = (int) $user_reaction->user_id;
+					$user_reaction->reaction_id  = (int) $user_reaction->reaction_id;
+					$user_reaction->item_type    = $user_reaction->item_type;
+					$user_reaction->item_id      = (int) $user_reaction->item_id;
+					$user_reaction->date_created = $user_reaction->date_created;
+				}
+
+				$user_reactions[] = $user_reaction;
+			}
+
+			return $user_reactions;
 		}
 	}
 }
