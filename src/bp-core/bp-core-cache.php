@@ -537,3 +537,18 @@ function bb_subscriptions_clear_cache_after_update_secondary_item_id( $r ) {
 }
 
 add_action( 'bb_subscriptions_after_update_secondary_item_id', 'bb_subscriptions_clear_cache_after_update_secondary_item_id', 10 );
+
+/**
+ * Clear cache when add/remove user item reaction.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_reaction_clear_cache_user_item() {
+	bp_core_reset_incrementor( 'bb_reactions' );
+}
+
+add_action( 'bb_reaction_after_add_user_item_reaction', 'bb_reaction_clear_cache_user_item', 10 );
+add_action( 'bb_reaction_after_remove_user_item_reactions', 'bb_reaction_clear_cache_user_item', 10 );
+add_action( 'bb_reaction_after_remove_user_item_reaction', 'bb_reaction_clear_cache_user_item', 10 );
