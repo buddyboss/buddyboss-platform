@@ -1667,7 +1667,18 @@ class BP_Activity_Activity {
 
 				$sql = "{$sql['select']} {$sql['from']} {$sql['where']} {$sql['misc']}";
 
-				$sql = $wpdb->prepare( $sql, $top_level_parent_id, $left, $right );
+				/**
+				 * Filters the MySQL prepared statement for the activity query.
+				 *
+				 * @since BuddyBoss 2.4.1
+				 *
+				 * @param string $value       Prepared statement for the activity query.
+				 * @param int    $activity_id Activity ID to fetch comments for.
+				 * @param int    $left        Left-most node boundary.
+				 * @param int    $right       Right-most node boundary.
+				 * @param string $spam_sql    SQL Statement portion to differentiate between ham or spam.
+				 */
+				$sql = apply_filters( 'bp_activity_comments_user_join_filter', $wpdb->prepare( $sql, $top_level_parent_id, $left, $right ), $activity_id, $left, $right, $spam_sql );
 
 				$descendant_ids = $wpdb->get_col( $sql );
 				$descendants    = self::get_activity_data( $descendant_ids );
