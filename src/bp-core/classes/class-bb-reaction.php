@@ -475,7 +475,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		}
 
 		/**
-		 * Remove user reaction for item.
+		 * Remove single user reaction based on reaction id.
 		 *
 		 * @snce BuddyBoss [BBVERSION]
 		 *
@@ -492,7 +492,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			}
 
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$get = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . self::$user_reaction_table . " WHERE item_id=%d", $user_reaction_id ) );
+			$get = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . self::$user_reaction_table . " WHERE id=%d", $user_reaction_id ) );
 
 			if ( empty( $get ) ) {
 				return false;
@@ -503,6 +503,61 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				self::$user_reaction_table,
 				array(
 					'id' => $get->id,
+				)
+			);
+
+			return $deleted;
+		}
+
+		/**
+		 * Remove user reactions based on args.
+		 *
+		 * @snce BuddyBoss [BBVERSION]
+		 *
+		 * @param array $args Args of user reactions.
+		 *
+		 * @return bool
+		 */
+		public function bb_remove_user_item_reactions( $args ) {
+			global $wpdb;
+
+			$r = bp_parse_args(
+				$args,
+				array(
+					'reaction_id' => '',
+					'item_id'     => '',
+					'user_id'     => bp_loggedin_user_id(),
+					'error_type'  => 'bool',
+				)
+			);
+
+			// Reaction need reaction ID.
+			if ( empty( $r['reaction_id'] ) ) {
+				if ( 'wp_error' === $r['error_type'] ) {
+					return new WP_Error( 'bb_user_reactions_empty_reaction_id', __( 'The reaction ID is required to remove reaction.', 'buddyboss' ) );
+				}
+				return false;
+				// Reaction need item id.
+			} elseif ( empty( $r['item_id'] ) ) {
+				if ( 'wp_error' === $r['error_type'] ) {
+					return new WP_Error( 'bb_user_reactions_empty_item_id', __( 'The item id is required to remove reaction.', 'buddyboss' ) );
+				}
+				return false;
+			}
+
+			$sql = "SELECT * FROM " . self::$user_reaction_table . " WHERE reaction_id = %d AND item_id = %d AND user_id = %d";
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$get_reaction = $wpdb->get_row( $wpdb->prepare( $sql, $r['item_type'], $r['item_id'], $r['user_id'] ) );
+
+			if ( empty( $get_reaction ) ) {
+				return false;
+			}
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$deleted = $wpdb->delete(
+				self::$user_reaction_table,
+				array(
+					'id' => $get_reaction->id,
 				)
 			);
 
