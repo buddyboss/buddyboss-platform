@@ -5330,7 +5330,11 @@ window.bp = window.bp || {};
 				// add scroll event for the auto load messages without user having to click the button.
 				$( '#bp-message-thread-list' ).on( 'scroll', this.messages_scrolled );
 
-				if ( 0 !== parseInt( this.options.thread.get( 'group_id' ) ) && 'private' !== this.options.thread.get( 'group_message_type' ) ) {
+				if (
+					0 !== parseInt( this.options.thread.get( 'group_id' ) ) &&
+					'open' === this.options.thread.get( 'group_message_type' ) &&
+					'all' === this.options.thread.get( 'group_message_users' )
+				) {
 					this.model.set( 'is_group', true );
 				}
 				this.messageAttachments = new bp.Views.MessagesAttachments( { model: this.model } );
