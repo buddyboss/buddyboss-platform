@@ -130,6 +130,7 @@ window.bp = window.bp || {};
 						self.setupTopicReplyDraftIntervals();
 					}
 				);
+				self.displayTopicReplyDraft();
 			}
 
 			if ( ! $( 'body' ).hasClass( 'activity' ) ) {
@@ -729,6 +730,7 @@ window.bp = window.bp || {};
 						$form.addClass( 'has-content' );
 					}
 				} else {
+					$editor.html( activity_data.bbp_topic_content );
 					$form.find( '#bbp_topic_content' ).focus();
 					$form.find( '#bbp_topic_content' ).val( activity_data.bbp_topic_content );
 					if ( $( element ).val() !== '' ) {
@@ -814,6 +816,7 @@ window.bp = window.bp || {};
 						$form.addClass( 'has-content' );
 					}
 				} else {
+					$editor.html( activity_data.bbp_reply_content );
 					$form.find( '#bbp_reply_content' ).focus();
 					$form.find( '#bbp_reply_content' ).val( activity_data.bbp_reply_content );
 					if ( $( element ).val() !== '' ) {
