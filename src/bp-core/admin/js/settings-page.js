@@ -2573,54 +2573,11 @@ window.bp = window.bp || {};
 		});
 	}
 
-	// Function to validate empty domain and extension or emails.
-	function validateEmptyRuleEntry() {
-		var isValid = true;
-		$( '.bb-domain-restrictions-listing .registration-restrictions-rule' ).not( '.custom' ).each( function() {
-			var domainInput    = $( this ).find( '.registration-restrictions-domain' );
-			var extensionInput = $( this ).find( '.registration-restrictions-tld' );
-			var domain         = domainInput.val().trim().toLowerCase();
-			var extension      = extensionInput.val().trim().toLowerCase();
-
-			if ( '' === domain || '' === extension ) {
-				$( this ).addClass( 'error' );
-				$('html, body').animate({
-					'scrollTop' : $( this ).parents('.registration-restrictions-listing').offset().top
-				});
-				isValid = false;
-				$( '#bb-domain-restrictions-setting .restrictions-error' ).html('<p>' + BP_ADMIN.bb_registration_resticitions.feedback_messages.empty + '</p>');
-			}
-		});
-
-		// Check the empty emails.
-		$( '.bb-email-restrictions-listing .registration-restrictions-rule' ).not( '.custom' ).each( function() {
-			var emailInput = $( this ).find( '.registration-restrictions-domain' );
-			var email      = emailInput.val().trim().toLowerCase();
-
-			if ( '' === email ) {
-				$( this ).addClass( 'error' );
-				$('html, body').animate({
-					'scrollTop' : $( this ).parents('.registration-restrictions-listing').offset().top
-				});
-				isValid = false;
-				DomainRestrictionsErrors.push( BP_ADMIN.bb_registration_resticitions.feedback_messages.empty );
-			}
-		});
-
-		if( DomainRestrictionsErrors.length > 0 ) {
-			for( error of DomainRestrictionsErrors ) {
-				var error = '<p>' + error + '</p>';
-				wrapper.children( '.restrictions-error' ).append( error );
-			};
-		}
-
-		return isValid;
-	}
-
 	// Function to validate duplicate entry.
 	function validateDuplicateDomainRuleEntry( e, eventType ) {
 		var wrapper        = $( '#bb-domain-restrictions-setting' );
-
+		var duplicateFound = false;
+		var isValid		   = true;
 		//Store all the entry.
 		var allDomainExtension = [];
 		// Store Errors
@@ -2666,10 +2623,10 @@ window.bp = window.bp || {};
 		});
 
 		if( DomainRestrictionsErrors.length > 0 ) {
-			for( error of DomainRestrictionsErrors ) {
-				var error = '<p>' + error + '</p>';
+			for( var i = 0; i < DomainRestrictionsErrors.length; i++ ) {
+				var error = '<p>' + DomainRestrictionsErrors[i] + '</p>';
 				$( '#bb-domain-restrictions-setting' ).children( '.restrictions-error' ).append( error );
-			};
+			}
 		}
 
 		if( DomainRestrictionsErrors.length > 0 && eventType === 'submit' ) {
@@ -2679,6 +2636,7 @@ window.bp = window.bp || {};
 
 	// Validate Email Restrictions emails duplicate entry.
 	function validateDuplicateEmailRuleEntry( e, eventType ) {
+		var duplicateFound = false;
 		//Store all the entry.
 		var allEmailEntries = [];
 		var EmailRestrictionsErrors = [];
@@ -2714,10 +2672,10 @@ window.bp = window.bp || {};
 
 			$( '#bb-email-restrictions-setting' ).children( '.restrictions-error' ).html( '' );
 			if( EmailRestrictionsErrors.length > 0 ) {
-				for( error of EmailRestrictionsErrors ) {
-					var error = '<p>' + error + '</p>';
+				for( var i = 0; i < EmailRestrictionsErrors.length; i++ ) {
+					var error = '<p>' + EmailRestrictionsErrors[i] + '</p>';
 					$( '#bb-email-restrictions-setting' ).children( '.restrictions-error' ).append( error );
-				};
+				}
 				if( eventType === 'submit' ) {
 					e.preventDefault();
 				}
