@@ -547,7 +547,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			$sql = "SELECT * FROM " . self::$user_reaction_table . " WHERE reaction_id = %d AND item_id = %d AND user_id = %d";
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$get_reaction = $wpdb->get_row( $wpdb->prepare( $sql, $r['item_type'], $r['item_id'], $r['user_id'] ) );
+			$get_reaction = $wpdb->get_row( $wpdb->prepare( $sql, $r['reaction_id'], $r['item_id'], $r['user_id'] ) );
 
 			if ( empty( $get_reaction ) ) {
 				return false;
