@@ -993,10 +993,29 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0 ) {
 		 */
 		do_action( 'bp_activity_add_user_favorite', $activity_id, $user_id );
 
-		bb_add_user_activity_reaction( $activity_id );
+		// Add user reaction.
+		if ( ! empty( $activity_id ) && function_exists( 'bb_load_reaction' ) ) {
+			$parent_activity = new BP_Activity_Activity( $activity_id );
 
-		// Success.
-		return true;
+			if (
+				! empty( $parent_activity ) &&
+				'activity_update' === $parent_activity->type
+			) {
+				$reaction_id      = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
+				$user_reaction_id = bb_load_reaction()->bb_add_user_item_reaction(
+					array(
+						'item_type'   => 'activity',
+						'reaction_id' => $reaction_id,
+						'item_id'     => $activity_id,
+					)
+				);
+
+				if ( $user_reaction_id ) {
+					// Success.
+					return true;
+				}
+			}
+		}
 
 		// Saving meta was unsuccessful for an unknown reason.
 	} else {
@@ -1078,10 +1097,22 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0 ) {
 				 */
 				do_action( 'bp_activity_remove_user_favorite', $activity_id, $user_id );
 
-				bb_remove_user_activity_reaction( $activity_id );
+				// Remove user reaction.
+				if ( ! empty( $activity_id ) && function_exists( 'bb_load_reaction' ) ) {
+					$reaction_id = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
+					$deleted     = bb_load_reaction()->bb_remove_user_item_reactions(
+						array(
+							'item_id'     => $activity_id,
+							'user_id'     => $user_id,
+							'reaction_id' => $reaction_id,
+						)
+					);
 
-				// Success.
-				return true;
+					if ( $deleted ) {
+						// Success.
+						return true;
+					}
+				}
 
 				// Error updating.
 			} else {
@@ -6062,10 +6093,11 @@ function bb_activity_migration() {
  * @since BuddyBoss [BBVERSION]
  *
  * @param int $activity_id Activity ID.
+ * @param int $user_id     User ID.
  *
  * @return void
  */
-function bb_add_user_activity_reaction( $activity_id ) {
+function bb_add_user_activity_reaction( $activity_id, $user_id ) {
 	if ( empty( $activity_id ) && ! function_exists( 'bb_load_reaction' ) ) {
 		return;
 	}
@@ -6087,23 +6119,4 @@ function bb_add_user_activity_reaction( $activity_id ) {
 
 		return $user_reaction_id;
 	}
-}
-
-/**
- * Remove user activity reaction.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int $activity_id Activity ID.
- *
- * @return bool|void
- */
-function bb_remove_user_activity_reaction( $activity_id ) {
-	if ( empty( $activity_id ) && ! function_exists( 'bb_load_reaction' ) ) {
-		return;
-	}
-
-	$reaction_id = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
-
-	return bb_load_reaction()->bb_remove_user_item_reaction( $activity_id );
 }
