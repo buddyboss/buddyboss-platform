@@ -794,7 +794,7 @@ function bp_document_forums_embed_attachments( $content, $id ) {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_attach_document_to_message( &$message ) {
-	$group_id = ! empty( $_POST['group'] ) ? (int) $_POST['group'] : 0;
+	$group_id = ! empty( $_POST['group'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['group'] ) ) : 0;
 
 	if (
 		bb_user_has_access_upload_document( $group_id, $message->sender_id, 0, $message->thread_id, 'message' ) &&
@@ -913,8 +913,8 @@ function bp_document_user_messages_delete_attached_document( $thread_id, $messag
  * @since BuddyBoss 1.5.1
  */
 function bp_document_message_validated_content( $validated_content, $content, $post ) {
-	$group_id  = ! empty( $post['group'] ) ? (int) $post['group'] : 0;
-	$thread_id = ! empty( $post['thread_id'] ) ? (int) $post['thread_id'] : 0;
+	$group_id  = ! empty( $post['group'] ) ? (int) sanitize_text_field( wp_unslash( $post['group'] ) ) : 0;
+	$thread_id = ! empty( $post['thread_id'] ) ? (int) sanitize_text_field( wp_unslash( $post['thread_id'] ) ) : 0;
 
 	if (
 		! bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), 0, $thread_id, 'message' ) ||
@@ -2155,9 +2155,10 @@ add_filter( 'redirect_canonical', 'bb_document_remove_specific_trailing_slash', 
  * @return mixed
  */
 function bb_messages_document_save( $attachment ) {
-	$is_message_component = ( bp_is_group_messages() || bp_is_messages_component() || ( ! empty( $_POST['component'] ) && 'messages' === $_POST['component'] ) );
-	$thread_id            = ! empty( $_POST['thread_id'] ) ? (int) $_POST['thread_id'] : 0;
-	$group_id             = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : 0;
+	$thread_id            = ! empty( $_POST['thread_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['thread_id'] ) ) : 0;
+	$group_id             = ! empty( $_POST['group_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['group_id'] ) ) : 0;
+	$component            = ! empty( $_POST['component'] ) ? sanitize_text_field( wp_unslash( $_POST['component'] ) ) : '';
+	$is_message_component = ( bp_is_group_messages() || bp_is_messages_component() || ( ! empty( $component ) && 'messages' === $component ) );
 
 	if ( empty( $group_id ) && bp_is_group_messages() ) {
 		$group = groups_get_current_group();

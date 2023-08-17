@@ -94,7 +94,7 @@ function messages_new_message( $args = '' ) {
 		}
 	}
 
-	$group_id = ! empty( $_POST['group'] ) ? (int) $_POST['group'] : 0;
+	$group_id = ! empty( $_POST['group'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['group'] ) ) : 0;
 
 	/**
 	 * Filter to validate message content.
