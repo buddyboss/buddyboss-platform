@@ -2483,9 +2483,18 @@ window.bp = window.bp || {};
 				$this.parents( '.registration-restrictions-listing' ).find( '.registration-restrictions-lastindex' ).val( newindex );
 			}
 
-			if ( 0 === $listing.find( '.registration-restrictions-rule' ).not( '.custom' ).length ) {
-				$( '.bb-domain-restrictions-listing .registration-restrictions-select' ).find( 'option' ).attr( 'disabled', false );
+			// If no rules or all are never allow then enable all option
+			if ( 'undefined' !== typeof $listing && $listing.length > 0 ) {
+				if ( 0 === $listing.find( '.registration-restrictions-rule' ).not( '.custom' ).length ) {
+					$( '.bb-domain-restrictions-listing .registration-restrictions-select' ).find( 'option' ).attr( 'disabled', false );
+				} else {
+					var $select = $listing.find( '.registration-restrictions-rule:not(.custom)' );
+					if ( $select.find( '.registration-restrictions-selected' ).length ===  $select.find( '.registration-restrictions-selected option[value="never_allow"]' ).length ) {
+						$( '.bb-domain-restrictions-listing .registration-restrictions-select' ).find( 'option' ).attr( 'disabled', false );
+					}
+				}
 			}
+
 			domainRestictionUpdatePriorityNumber();
 		}
 	);
