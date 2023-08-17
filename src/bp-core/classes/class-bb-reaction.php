@@ -563,5 +563,194 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			return $deleted;
 		}
+
+		/**
+		 * Get user reactions.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $args {
+		 * An array of arguments. All items are optional.
+		 *
+		 * @type int         $reaction_id Reaction id.
+		 * @type string      $item_type   Item type ( i.e - activity,activity_comment ).
+		 * @type int         $item_id     Item id.
+		 * @type int         $user_id     User id.
+		 * @type int|bool    $per_page    Number of results per page. Default: 20.
+		 * @type int         $paged       Which page of results to fetch. Using page=1 without per_page will result
+		 *                                in no pagination. Default: 1.
+		 * @type string      $order       ASC or DESC. Default: 'DESC'.
+		 * @type string      $order_by    Column to order results by.
+		 * @type string|bool $count_total If true, an additional DB query is run to count the total video items
+		 *                                for the query. Default: false.
+		 * }
+		 *
+		 * @return array|null
+		 */
+		public function bb_get_user_reactions( $args = array() ) {
+			global $wpdb;
+
+			$r = bp_parse_args(
+				$args,
+				array(
+					'reaction_id' => '',     // Reaction id.
+					'item_type'   => '',     // Item type ( i.e - Activity, Activity Comment ).
+					'item_id'     => '',     // Item id ( i.e - activity_id, activity_comment_id ).
+					'user_id'     => '',     // User Id.
+					'per_page'    => 20,     // Results per page.
+					'paged'       => 1,      // Page 1 without a per_page will result in no pagination.
+					'order'       => 'DESC', // Order ASC or DESC.
+					'order_by'    => 'id',   // Column to order by.
+					'count_total' => false,  // Whether to use count_total.
+				),
+				'bb_get_user_reactions'
+			);
+
+			// Select conditions.
+			$select_sql = 'SELECT *';
+
+			$from_sql = " FROM " . self::$user_reaction_table . " ur";
+
+			$join_sql = '';
+
+			// Where conditions.
+			$where_conditions = array();
+
+			// Sorting.
+			$sort = $r['order'];
+			if ( 'ASC' !== $sort && 'DESC' !== $sort ) {
+				$sort = 'DESC';
+			}
+
+			switch ( $r['order_by'] ) {
+				case 'date_created':
+					break;
+
+				default:
+					$r['order_by'] = 'id';
+					break;
+			}
+			$order_by = 'ur.' . $r['order_by'];
+
+			// user_id.
+			if ( ! empty( $r['user_id'] ) ) {
+				$user_id_in                  = implode( ',', wp_parse_id_list( $r['user_id'] ) );
+				$where_conditions['user_id'] = "ur.user_id IN ({$user_id_in})";
+			}
+
+			// reaction_id.
+			if ( ! empty( $r['reaction_id'] ) ) {
+				$reaction_id_in                  = implode( ',', wp_parse_id_list( $r['reaction_id'] ) );
+				$where_conditions['reaction_id'] = "ur.reaction_id IN ({$reaction_id_in})";
+			}
+
+			// item_id.
+			if ( ! empty( $r['item_id'] ) ) {
+				$item_id_in                  = implode( ',', wp_parse_id_list( $r['item_id'] ) );
+				$where_conditions['item_id'] = "ur.item_id IN ({$item_id_in})";
+			}
+
+			if ( ! empty( $r['item_type'] ) ) {
+				$where_conditions['item_type'] = "ur.item_type = {$r['item_type']}";
+			}
+
+			/**
+			 * Filters the MySQL WHERE conditions for the user reaction get sql method.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
+			 * @param array  $r                Parsed arguments passed into method.
+			 * @param string $select_sql       Current SELECT MySQL statement at point of execution.
+			 * @param string $from_sql         Current FROM MySQL statement at point of execution.
+			 * @param string $join_sql         Current INNER JOIN MySQL statement at point of execution.
+			 */
+			$where_conditions = apply_filters( 'bb_get_user_reactions_where_conditions', $where_conditions, $r, $select_sql, $from_sql, $join_sql );
+
+			if ( empty( $where_conditions ) ) {
+				$where_conditions['2'] = '2';
+			}
+
+			// Join the where conditions together.
+			$where_sql = 'WHERE ' . join( ' AND ', $where_conditions );
+
+			/**
+			 * Filter the MySQL JOIN clause for the main user reaction query.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $join_sql   JOIN clause.
+			 * @param array  $r          Method parameters.
+			 * @param string $select_sql Current SELECT MySQL statement.
+			 * @param string $from_sql   Current FROM MySQL statement.
+			 * @param string $where_sql  Current WHERE MySQL statement.
+			 */
+			$join_sql = apply_filters( 'bb_get_user_reactions_join_sql', $join_sql, $r, $select_sql, $from_sql, $where_sql );
+
+			// Sanitize page and per_page parameters.
+			$page     = absint( $r['paged'] );
+			$per_page = absint( $r['per_page'] );
+
+			$retval = array(
+				'reactions' => null,
+				'total'     => null,
+			);
+
+			// Query first for user_reaction IDs.
+			$user_reaction_ids_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort}, ur.id {$sort}";
+
+			if ( ! empty( $per_page ) && ! empty( $page ) ) {
+				// We query for $per_page + 1 items in order to
+				// populate the has_more_items flag.
+				$user_reaction_ids_sql .= $wpdb->prepare( ' LIMIT %d, %d', absint( ( $page - 1 ) * $per_page ), $per_page + 1 );
+			}
+
+			/**
+			 * Filters the paged user reaction MySQL statement.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $user_reaction_ids_sql MySQL's statement used to query for Reaction IDs.
+			 * @param array  $r                     Array of arguments passed into method.
+			 */
+			$user_reaction_ids_sql = apply_filters( 'bb_get_user_reactions_paged_sql', $user_reaction_ids_sql, $r );
+
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$user_reaction_ids = $wpdb->get_col( $user_reaction_ids_sql );
+
+			// If we've fetched more than the $per_page value, we
+			// can discard the extra now.
+			if ( ! empty( $per_page ) && count( $user_reaction_ids ) === $per_page + 1 ) {
+				array_pop( $user_reaction_ids );
+			}
+
+			$user_reactions = $wpdb->get_results( $user_reaction_ids_sql, ARRAY_A );
+			if ( ! empty( $user_reactions ) ) {
+				foreach ( (array) $user_reactions as $i => $user_reaction ) {
+					$user_reactions[ $i ] = $user_reaction;
+				}
+			}
+
+			$retval['reactions'] = $user_reactions;
+
+			if ( ! empty( $r['count_total'] ) ) {
+				/**
+				 * Filters the total user reaction MySQL statement.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 *
+				 * @param string $sql       MySQL statement used to query for total videos.
+				 * @param string $where_sql MySQL WHERE statement portion.
+				 * @param string $sort      Sort direction for query.
+				 */
+				$sql                      = "SELECT count(DISTINCT ur.id) FROM " . self::$user_reaction_table . " ur {$join_sql} {$where_sql}";
+				$total_user_reactions_sql = apply_filters( 'bb_get_user_reactions_total_sql', $sql, $where_sql, $sort );
+				$total_user_reactions     = $wpdb->get_var( $total_user_reactions_sql );
+
+				$retval['total'] = $total_user_reactions;
+			}
+
+			return $retval;
+		}
 	}
 }
