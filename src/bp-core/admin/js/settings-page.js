@@ -2585,7 +2585,7 @@ window.bp = window.bp || {};
 			$( e.currentTarget ).closest( '.registration-restrictions-rule' ).removeClass( 'untouched' );
 		}
 
-		if ( eventType === 'submit' || eventType === 'remove' ) {
+		if ( eventType === 'submit' || eventType === 'remove' || eventType === 'add' ) {
 			$( '.registration-restrictions-rule' ).removeClass( 'untouched' );
 		}
 
