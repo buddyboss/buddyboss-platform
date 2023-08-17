@@ -349,7 +349,9 @@ window.bp = window.bp || {};
 			var currentForm = this.currentForm ? this.currentForm : $( 'form#new-post' );
 
 			// Remove the link preview for the draft too.
-			$( currentForm ).find( '#bb_link_url' ).remove();
+			if ( $( currentForm ).find( '#bb_link_url' ).length > 0 ) {
+				$( currentForm ).find( '#bb_link_url' ).remove();
+			}
 
 			// Remove class to display draft.
 			currentForm.removeClass( 'has-draft has-content has-media has-gif has-link-preview' );
@@ -771,14 +773,20 @@ window.bp = window.bp || {};
 			}
 
 			// Link preview.
-			if ( 'undefined' !== typeof activity_data.bb_link_url && '' !== activity_data.bb_link_url ) {
-				$form.find( '#bb_link_url' ).remove();
-				$('<input>').attr({
+			if (
+				'undefined' !== typeof activity_data.bb_link_url &&
+				'' !== activity_data.bb_link_url
+			) {
+				if ( $form.find( '#bb_link_url' ).length > 0 ) {
+					$form.find( '#bb_link_url' ).remove();
+				}
+
+				$( '<input>' ).attr( {
 					type: 'hidden',
 					id: 'bb_link_url',
 					name: 'bb_link_url',
-					value: activity_data.bb_link_url
-				}).appendTo( $form );
+					value: activity_data.bb_link_url,
+				} ).appendTo( $form );
 			}
 
 			this.previewDraftMedia( $form, activity_data );
