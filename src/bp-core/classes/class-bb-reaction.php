@@ -423,7 +423,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					"UPDATE " . self::$user_reaction_table . " SET
 						reaction_id = %d,
-						date_created = %s,
+						date_created = %s
 					WHERE
 						id = %d
 					",
@@ -472,6 +472,41 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			do_action( 'bb_after_add_user_item_reaction', $user_reaction_id, $r );
 
 			return $user_reaction_id;
+		}
+
+		/**
+		 * Remove user reaction for item.
+		 *
+		 * @snce BuddyBoss [BBVERSION]
+		 *
+		 * @param int $user_reaction_id ID of the user reaction.
+		 *
+		 * @return bool True on success, false on failure or if no user reaction
+		 *              is found for the user.
+		 */
+		public function bb_remove_user_item_reaction( $user_reaction_id ) {
+			global $wpdb;
+
+			if ( empty( $user_reaction_id ) ) {
+				return false;
+			}
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$get = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . self::$user_reaction_table . " WHERE item_id=%d", $user_reaction_id ) );
+
+			if ( empty( $get ) ) {
+				return false;
+			}
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$deleted = $wpdb->delete(
+				self::$user_reaction_table,
+				array(
+					'id' => $get->id,
+				)
+			);
+
+			return $deleted;
 		}
 	}
 }
