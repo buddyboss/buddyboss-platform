@@ -377,11 +377,12 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$r = bp_parse_args(
 				$args,
 				array(
-					'user_id'      => bp_loggedin_user_id(),
 					'reaction_id'  => '',
 					'item_type'    => '',
 					'item_id'      => '',
+					'user_id'      => bp_loggedin_user_id(),
 					'date_created' => bp_core_current_time(),
+					'error_type'   => 'bool'
 				)
 			);
 
@@ -392,16 +393,71 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			 *
 			 * @param array $r Args of user item reactions.
 			 */
-			do_action_ref_array( 'bb_before_add_user_item_reaction', array( $r ) );
+			do_action( 'bb_before_add_user_item_reaction', $r );
 
-			$sql = $wpdb->prepare( "INSERT INTO " . self::$user_reaction_table . " (user_id, reaction_id, item_type, item_id, date_created) VALUES (%d, %d, %s, %d, %s)", $r['user_id'], $r['reaction_id'], $r['item_type'], $r['item_id'], $r['date_created'] );
-
-			// Attempt to insert or update.
-			$query = $wpdb->query( $sql );
-
-			// Bail if query fails. If `$query` is 0, it means the save was successful, but no fields were updated.
-			if ( false === $query || is_wp_error( $query ) ) {
+			// Reaction need reaction ID.
+			if ( empty( $r['reaction_id'] ) ) {
+				if ( 'wp_error' === $r['error_type'] ) {
+					return new WP_Error( 'bb_user_reactions_empty_reaction_id', __( 'The reaction ID is required to add reaction.', 'buddyboss' ) );
+				}
 				return false;
+				// Reaction need item type.
+			} elseif ( empty( $r['item_type'] ) ) {
+				if ( 'wp_error' === $r['error_type'] ) {
+					return new WP_Error( 'bb_user_reactions_empty_item_type', __( 'The item type is required to add reaction.', 'buddyboss' ) );
+				}
+				return false;
+				// Reaction need item id.
+			} elseif ( empty( $r['item_id'] ) ) {
+				if ( 'wp_error' === $r['error_type'] ) {
+					return new WP_Error( 'bb_user_reactions_empty_item_id', __( 'The item id is required to add reaction.', 'buddyboss' ) );
+				}
+				return false;
+			}
+
+			$sql          = "SELECT * FROM " . self::$user_reaction_table . " WHERE item_type = %s AND item_id = %d AND user_id = %d";
+			$get_reaction = $wpdb->get_row( $wpdb->prepare( $sql, $r['item_type'], $r['item_id'], $r['user_id'] ) );
+
+			if ( $get_reaction ) {
+				$sql = $wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					"UPDATE " . self::$user_reaction_table . " SET
+						reaction_id = %d,
+						date_created = %s,
+					WHERE
+						id = %d
+					",
+					$r['reaction_id'],
+					$r['date_created'],
+					$get_reaction->id
+				);
+			} else {
+				$sql = $wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					"INSERT INTO " . self::$user_reaction_table . " (
+						user_id, 
+						reaction_id, 
+						item_type, 
+						item_id, 
+						date_created
+					) VALUES (
+						%d, %d, %s, %d, %s
+					)",
+					$r['user_id'],
+					$r['reaction_id'],
+					$r['item_type'],
+					$r['item_id'],
+					$r['date_created']
+				);
+			}
+
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			if ( false === $wpdb->query( $sql ) ) {
+				if ( 'wp_error' === $r['error_type'] ) {
+					return new WP_Error( 'bb_reaction_cannot_add', __( 'There is an error while adding the reaction.', 'buddyboss' ) );
+				} else {
+					return false;
+				}
 			}
 
 			$user_reaction_id = $wpdb->insert_id;
@@ -413,7 +469,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			 *
 			 * @param array $r Args of user item reactions.
 			 */
-			do_action_ref_array( 'bb_after_add_user_item_reaction', array( $r ) );
+			do_action( 'bb_after_add_user_item_reaction', $user_reaction_id, $r );
 
 			return $user_reaction_id;
 		}
