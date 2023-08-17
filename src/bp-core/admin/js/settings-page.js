@@ -2576,8 +2576,6 @@ window.bp = window.bp || {};
 	// Function to validate duplicate entry.
 	function validateDuplicateDomainRuleEntry( e, eventType ) {
 		var wrapper        = $( '#bb-domain-restrictions-setting' );
-		var duplicateFound = false;
-		var isValid		   = true;
 		//Store all the entry.
 		var allDomainExtension = [];
 		// Store Errors
@@ -2587,7 +2585,7 @@ window.bp = window.bp || {};
 			$( e.currentTarget ).closest( '.registration-restrictions-rule' ).removeClass( 'untouched' );
 		}
 
-		if ( eventType === 'submit' ) {
+		if ( eventType === 'submit' || eventType === 'remove' ) {
 			$( '.registration-restrictions-rule' ).removeClass( 'untouched' );
 		}
 
@@ -2598,21 +2596,22 @@ window.bp = window.bp || {};
 
 			$( this ).removeClass( 'error' );
 			wrapper.children( '.restrictions-error' ).html('');
-			if ( 'undefined' === typeof allDomainExtension[ currentDomain + '_' + currentExtension ] ) {
-				allDomainExtension[ currentDomain + '_' + currentExtension ] = 1 ;
-			} else {
-				allDomainExtension[ currentDomain + '_' + currentExtension ] += 1 ;
-				duplicateFound = true;
-				$( this ).addClass( 'error' );
-				if( ! DomainRestrictionsErrors.includes( BP_ADMIN.bb_registration_resticitions.feedback_messages.duplicate ) ) {
-					DomainRestrictionsErrors.push( BP_ADMIN.bb_registration_resticitions.feedback_messages.duplicate );
+
+			if( '' !== currentDomain && '' !== currentExtension  ) {
+				if ( 'undefined' === typeof allDomainExtension[ currentDomain + '_' + currentExtension ] ) {
+					allDomainExtension[ currentDomain + '_' + currentExtension ] = 1 ;
+				} else {
+					allDomainExtension[ currentDomain + '_' + currentExtension ] += 1 ;
+					$( this ).addClass( 'error' );
+					if( ! DomainRestrictionsErrors.includes( BP_ADMIN.bb_registration_resticitions.feedback_messages.duplicate ) ) {
+						DomainRestrictionsErrors.push( BP_ADMIN.bb_registration_resticitions.feedback_messages.duplicate );
+					}
 				}
 			}
 
-			if( eventType === 'submit') {
+			if( eventType === 'submit' || eventType === 'remove' || eventType === 'add' ) {
 				if ( '' === currentDomain || '' === currentExtension || '' === conditionType ) {
 					$( this ).addClass( 'error' );
-					isValid = false;
 					if( ! DomainRestrictionsErrors.includes( BP_ADMIN.bb_registration_resticitions.feedback_messages.empty ) ) {
 						DomainRestrictionsErrors.push( BP_ADMIN.bb_registration_resticitions.feedback_messages.empty );
 					}
@@ -2636,7 +2635,6 @@ window.bp = window.bp || {};
 
 	// Validate Email Restrictions emails duplicate entry.
 	function validateDuplicateEmailRuleEntry( e, eventType ) {
-		var duplicateFound = false;
 		//Store all the entry.
 		var allEmailEntries = [];
 		var EmailRestrictionsErrors = [];
@@ -2650,7 +2648,6 @@ window.bp = window.bp || {};
 					$( this ).removeClass( 'error' );
 				} else {
 					allEmailEntries[ currentEmailValue ] += 1 ;
-					duplicateFound = true;
 					$( this ).addClass( 'error' );
 					if( ! EmailRestrictionsErrors.includes( BP_ADMIN.bb_registration_resticitions.feedback_messages.duplicate ) ) {
 						EmailRestrictionsErrors.push( BP_ADMIN.bb_registration_resticitions.feedback_messages.duplicate );
@@ -2658,7 +2655,7 @@ window.bp = window.bp || {};
 				}
 			}
 
-			var emptyValueOnSubmit = eventType === 'submit' && ( currentEmailValue === '' || currentEmailCondition === '');
+			var emptyValueOnSubmit = ( eventType === 'submit' || eventType === 'remove' || eventType === 'add' ) && ( currentEmailValue === '' || currentEmailCondition === '');
 			var eventFromField = e && e.currentTarget;
 			var emptyConditionOnChange = eventFromField && e.currentTarget.classList.contains( 'registration-restrictions-input-select' ) && currentEmailCondition === '' ;
 			var emptyEmailOnChange = eventFromField && e.currentTarget.classList.contains( 'registration-restrictions-domain' ) && currentEmailValue === '' ;
@@ -2691,20 +2688,20 @@ window.bp = window.bp || {};
 	// Handle adding domain restriction.
 	$( '.registration-restrictions-add-rule' ).on( 'click', function() {
 		var $this = $( this );
-		if( $this.closest( '#bb-domain-restrictions-setting' ).length > 0 ) {
-			validateDuplicateDomainRuleEntry();
+		if( $this.hasClass( 'domain-rule-add' ) ) {
+			validateDuplicateDomainRuleEntry( null, 'add' );
 		} else {
-			validateDuplicateEmailRuleEntry();
+			validateDuplicateEmailRuleEntry( null, 'add' );
 		}
 	});
 
 	// Handle removing domain restriction.
 	$( document ).on( 'click', '.registration-restrictions-rule-remove', function() {
 		var $this = $( this );
-		if( $this.closest( '#bb-domain-restrictions-setting' ).length > 0 ) {
-			validateDuplicateDomainRuleEntry();
+		if( $this.hasClass( 'domain-rule-remove' ) ) {
+			validateDuplicateDomainRuleEntry( null, 'remove' );
 		} else {
-			validateDuplicateEmailRuleEntry();	
+			validateDuplicateEmailRuleEntry( null, 'remove' );	
 		}
 	});
 

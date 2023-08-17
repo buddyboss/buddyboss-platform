@@ -3091,7 +3091,7 @@ function bb_admin_setting_callback_domain_restrictions() {
 							</select>
 						</div>
 						<div class="registration-restrictions-remove">
-							<button class="registration-restrictions-rule-remove" aria-label="Remove Rule">
+							<button class="registration-restrictions-rule-remove domain-rule-remove" aria-label="Remove Rule">
 								<i class="bb-icon-f bb-icon-times"></i>
 							</button>
 						</div>
@@ -3133,7 +3133,7 @@ function bb_admin_setting_callback_domain_restrictions() {
 					</select>
 				</div>
 				<div class="registration-restrictions-remove">
-					<button class="registration-restrictions-rule-remove" aria-label="<?php esc_attr_e( 'Remove Rule', 'buddyboss' ); ?>">
+					<button class="registration-restrictions-rule-remove domain-rule-remove" aria-label="<?php esc_attr_e( 'Remove Rule', 'buddyboss' ); ?>">
 						<i class="bb-icon-f bb-icon-times"></i>
 					</button>
 				</div>
@@ -3142,7 +3142,7 @@ function bb_admin_setting_callback_domain_restrictions() {
 
 		</div>
 		<input type='hidden' class='registration-restrictions-lastindex' value='<?php echo empty( $domain_restrictions ) ? 0 : count( $domain_restrictions ); ?>' />
-		<button class="button registration-restrictions-add-rule"> <?php esc_html_e( 'Add Domain', 'buddyboss' ); ?></button>
+		<button class="button registration-restrictions-add-rule domain-rule-add"> <?php esc_html_e( 'Add Domain', 'buddyboss' ); ?></button>
 	</div>
 	<?php
 }
@@ -3185,7 +3185,7 @@ function bb_admin_setting_callback_email_restrictions() {
 							</select>
 						</div>
 						<div class="registration-restrictions-remove">
-							<button class="registration-restrictions-rule-remove" aria-label="Remove Rule">
+							<button class="registration-restrictions-rule-remove email-rule-remove" aria-label="Remove Rule">
 								<i class="bb-icon-f bb-icon-times"></i>
 							</button>
 						</div>
@@ -3211,7 +3211,7 @@ function bb_admin_setting_callback_email_restrictions() {
 					</select>
 				</div>
 				<div class="registration-restrictions-remove">
-					<button class="registration-restrictions-rule-remove" aria-label="<?php esc_attr_e( 'Remove Rule', 'buddyboss' ); ?>">
+					<button class="registration-restrictions-rule-remove email-rule-remove" aria-label="<?php esc_attr_e( 'Remove Rule', 'buddyboss' ); ?>">
 						<i class="bb-icon-f bb-icon-times"></i>
 					</button>
 				</div>
@@ -3220,7 +3220,7 @@ function bb_admin_setting_callback_email_restrictions() {
 
 		</div>
 		<input type='hidden' class='registration-restrictions-lastindex' value='<?php echo empty( $email_restrictions ) ? 0 : count( $email_restrictions ); ?>' />
-		<button class="button registration-restrictions-add-rule"> <?php esc_html_e( 'Add Email', 'buddyboss' ); ?></button>
+		<button class="button registration-restrictions-add-rule email-rule-add"> <?php esc_html_e( 'Add Email', 'buddyboss' ); ?></button>
 	</div>
 	<?php
 }
