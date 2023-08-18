@@ -709,7 +709,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			}
 
 			if ( ! empty( $r['item_type'] ) ) {
-				$where_conditions['item_type'] = "ur.item_type = {$r['item_type']}";
+				$where_conditions['item_type'] = "ur.item_type = '" . $r['item_type'] . "'";
 			}
 
 			/**
