@@ -999,18 +999,18 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 
 	// Should we show all items regardless of sitewide visibility?
 	$show_hidden = array();
-	if ( ! empty( $user_id ) && $user_id !== bp_loggedin_user_id() ) {
+	if ( ! empty( $user_id ) && bp_loggedin_user_id() !== $user_id ) {
 		$show_hidden = array(
 			'column' => 'hide_sitewide',
 			'value'  => 0,
 		);
-	} else if (
+	} elseif (
 		! empty( $user_id ) &&
 		bp_loggedin_user_id() === $user_id &&
 		bp_is_active( 'groups' ) &&
 		bp_is_activity_directory()
 	) {
-        // Fetch public groups.
+		// Fetch public groups.
 		$public_groups = groups_get_groups(
 			array(
 				'fields'   => 'ids',
