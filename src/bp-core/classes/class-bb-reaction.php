@@ -783,7 +783,21 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				// We only want the IDs.
 				$paged_user_reactions = array_map( 'intval', $paged_user_reactions_ids );
 			} else {
-				$paged_user_reactions = self::get_user_reaction_item_data( $paged_user_reactions_ids );
+				$uncached_ids = bp_get_non_cached_ids( $paged_user_reactions_ids, self::$cache_group );
+				if ( ! empty( $uncached_ids ) ) {
+					$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
+					$queried_data     = $wpdb->get_results( "SELECT * FROM " . self::$user_reaction_table . " WHERE id IN ({$uncached_ids_sql})" );
+					foreach ( (array) $queried_data as $urdata ) {
+						wp_cache_set( $urdata->id, $urdata, self::$cache_group );
+					}
+				}
+
+				foreach ( $paged_user_reactions_ids as $id ) {
+					$user_reaction = wp_cache_get( $id, self::$cache_group );
+					if ( ! empty( $user_reaction ) ) {
+						$paged_user_reactions[] = $user_reaction;
+					}
+				}
 
 				if ( 'all' !== $r['fields'] ) {
 					$paged_user_reactions = array_unique( array_column( $paged_user_reactions, $r['fields'] ) );
@@ -816,53 +830,6 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			}
 
 			return $retval;
-		}
-
-		/**
-		 * Convert user reaction IDs to objects, as expected in template loop.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param array $user_reactions_ids Array of user reaction id IDs.
-		 *
-		 * @return array
-		 */
-		protected static function get_user_reaction_item_data( $user_reactions_ids = array() ) {
-			global $wpdb;
-
-			// Bail if no user reaction ID's passed.
-			if ( empty( $user_reactions_ids ) ) {
-				return array();
-			}
-
-			$user_reactions = array();
-			$uncached_ids   = bp_get_non_cached_ids( $user_reactions_ids, self::$cache_group );
-
-			// Prime caches as necessary.
-			if ( ! empty( $uncached_ids ) ) {
-				// Format the user reaction ID's for use in the query below.
-				$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
-
-				// Fetch data from bb_user_reactions table, preserving order.
-				$queried_data = $wpdb->get_results( "SELECT * FROM " . self::$user_reaction_table . " WHERE id IN ({$uncached_ids_sql})" );
-
-				// Put that data into the placeholders created earlier,
-				// and add it to the cache.
-				foreach ( (array) $queried_data as $urdata ) {
-					wp_cache_set( $urdata->id, $urdata, self::$cache_group );
-				}
-			}
-
-			// Now fetch data from the cache.
-			foreach ( $user_reactions_ids as $id ) {
-
-				$user_reaction = wp_cache_get( $id, self::$cache_group );
-				if ( ! empty( $user_reaction ) ) {
-					$user_reactions[] = $user_reaction;
-				}
-			}
-
-			return $user_reactions;
 		}
 	}
 }
