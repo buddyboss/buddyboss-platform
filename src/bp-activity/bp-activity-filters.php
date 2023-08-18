@@ -255,8 +255,8 @@ function bp_activity_check_blacklist_keys( $activity ) {
 function bp_activity_save_link_data( $activity ) {
 
 	// bail if the request is for privacy update.
-	if ( 
-		isset( $_POST['action'] ) && 
+	if (
+		isset( $_POST['action'] ) &&
 		in_array(
 			$_POST['action'], // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			array(
@@ -1004,10 +1004,61 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 			'column' => 'hide_sitewide',
 			'value'  => 0,
 		);
+	} else if (
+            ! empty( $user_id ) &&
+            $user_id === bp_loggedin_user_id()
+	        bp_is_active( 'groups' ) &&
+            bp_is_activity_directory()
+    ) {
+        // Fetch public groups.
+		$public_groups = groups_get_groups(
+			array(
+				'fields'   => 'ids',
+				'status'   => 'public',
+				'per_page' => - 1,
+			)
+		);
+		if ( ! empty( $public_groups['groups'] ) ) {
+			$public_groups = $public_groups['groups'];
+		} else {
+			$public_groups = array();
+		}
+
+		$user_groups           = array();
+		$logged_in_user_groups = groups_get_user_groups( bp_loggedin_user_id() );
+		if ( ! empty( $logged_in_user_groups['groups'] ) ) {
+			$user_groups = $logged_in_user_groups['groups'];
+		}
+
+		$group_activity = array(
+			'relation' => 'AND',
+			array(
+				'column' => 'component',
+				'value'  => buddypress()->groups->id,
+			),
+			array(
+				'relation' => 'OR',
+				array(
+					'column'  => 'item_id',
+					'compare' => 'IN',
+					'value'   => (array) $public_groups,
+				),
+				array(
+					'column'  => 'item_id',
+					'compare' => 'IN',
+					'value'   => (array) $user_groups,
+				),
+			),
+		);
+
+		$show_hidden = array(
+			$show_hidden,
+			$group_activity,
+			'relation' => 'AND',
+		);
 	}
 
-	$group_sitewide = array();
-	$privacy        = array( 'public' );
+	$privacy = array( 'public' );
 
 	if ( is_user_logged_in() ) {
 		$privacy[] = 'loggedin';
@@ -1016,31 +1067,17 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 			// Determine friends of user.
 			$friends = friends_get_friend_user_ids( $user_id );
 
-			if ( $user_id === bp_loggedin_user_id() || bp_is_activity_directory() ) {
+			if ( bp_loggedin_user_id() === $user_id || bp_is_activity_directory() ) {
 				$friends[] = bp_loggedin_user_id();
 			}
 
-			if ( ! empty( $friends ) && in_array( bp_loggedin_user_id(), $friends ) ) {
+			if ( ! empty( $friends ) && in_array( bp_loggedin_user_id(), $friends, true ) ) {
 				$privacy[] = 'friends';
 			}
 		}
 
-		if ( $user_id === bp_loggedin_user_id() ) {
+		if ( bp_loggedin_user_id() === $user_id ) {
 			$privacy[] = 'onlyme';
-		}
-
-		if ( bp_is_active( 'groups' ) ) {
-			$group_sitewide = array(
-				'relation' => 'AND',
-				array(
-					'column' => 'component',
-					'value'  => buddypress()->groups->id,
-				),
-				array(
-					'column' => 'hide_sitewide',
-					'value'  => 0,
-				)
-			);
 		}
 	}
 
@@ -1055,7 +1092,6 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 			'value'   => $privacy,
 			'compare' => 'IN',
 		),
-		$group_sitewide,
 		$show_hidden,
 
 		// Overrides.
