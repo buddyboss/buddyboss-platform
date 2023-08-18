@@ -247,7 +247,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				$args,
 				array(
 					'name' => '',
-					'icon' => '',
+					'icon' => null,
 				)
 			);
 
@@ -264,7 +264,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			$post_content = array(
 				'name' => $r['name'],
-				'icon' => ! empty( $r['icon'] ) ? $r['icon'] : '',
+				'icon' => $r['icon'],
 			);
 
 			// Prepare reaction data.
