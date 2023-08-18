@@ -355,12 +355,12 @@ add_action( 'wp_ajax_bb_admin_check_valid_giphy_key', 'bb_admin_check_valid_giph
  * Validate the email address allowed to register as per the registration restriction settings.
  *
  * @since BuddyBoss [BBVERSION]
- * 
+ *
  * @return object $errors Validation errors.
  */
 function bb_validate_restricted_email_on_registration( $errors, $update, $user ) {
 
-	// Check if it's a new user registration (not profile update)
+	// Check if it's a new user registration (not profile update).
 	if ( ! $update ) {
 		if ( ! bb_is_allowed_register_email_address( $user->user_email ) ) {
 			$errors->add( 'bb_restricted_email', __( 'This email address or domain has been blacklisted. If you think you are seeing this in error, please contact the site administrator.', 'buddyboss' ), array( 'form-field' => 'email' ) );
