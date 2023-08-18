@@ -183,7 +183,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 							'show_in_rest'        => false,
 							'exclude_from_search' => true,
 							'show_in_admin_bar'   => false,
-							'show_in_nav_menus'   => true,
+							'show_in_nav_menus'   => false,
 						)
 					)
 				);
