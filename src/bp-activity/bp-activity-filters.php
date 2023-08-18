@@ -1005,11 +1005,11 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 			'value'  => 0,
 		);
 	} else if (
-            ! empty( $user_id ) &&
-            $user_id === bp_loggedin_user_id() &&
-	        bp_is_active( 'groups' ) &&
-            bp_is_activity_directory()
-    ) {
+		! empty( $user_id ) &&
+		bp_loggedin_user_id() === $user_id &&
+		bp_is_active( 'groups' ) &&
+		bp_is_activity_directory()
+	) {
         // Fetch public groups.
 		$public_groups = groups_get_groups(
 			array(
