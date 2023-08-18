@@ -3864,6 +3864,10 @@ window.bp = window.bp || {};
 
 				$( self.currentPreviewParent ).on( 'click', '#bb-close-link-suggestion', function( e ) {
 					e.preventDefault();
+
+					// Remove the link preview for the draft too.
+					$( '#bb_link_url' ).val('');
+
 					// Set default values.
 					Object.assign( self.options, {
 						link_success: false,
