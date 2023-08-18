@@ -613,7 +613,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		}
 
 		/**
-		 * Get user reactions.
+		 * Query for user reactions.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -631,20 +631,23 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @type string      $order_by    Column to order results by.
 		 * @type string|bool $count_total If true, an additional DB query is run to count the total video items
 		 *                                for the query. Default: false.
+		 * @type string      $fields      Which fields to return. Specify 'id' to fetch a list of IDs.
+		 *                                Default: 'all' (return BP_Subscription objects).
 		 * }
 		 *
 		 * @return array|null
 		 */
-		public function bb_get_user_reactions( $args = array() ) {
+		public static function bb_get_user_reactions( $args = array() ) {
 			global $wpdb;
 
 			$r = bp_parse_args(
 				$args,
 				array(
-					'reaction_id' => '',     // Reaction id.
+					'id'          => 0,      // Reaction id.
+					'reaction_id' => 0,      // Reaction id.
 					'item_type'   => '',     // Item type ( i.e - Activity, Activity Comment ).
-					'item_id'     => '',     // Item id ( i.e - activity_id, activity_comment_id ).
-					'user_id'     => '',     // User Id.
+					'item_id'     => 0,      // Item id ( i.e - activity_id, activity_comment_id ).
+					'user_id'     => 0,      // User Id.
 					'per_page'    => 20,     // Results per page.
 					'paged'       => 1,      // Page 1 without a per_page will result in no pagination.
 					'order'       => 'DESC', // Order ASC or DESC.
@@ -652,11 +655,11 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'count_total' => false,  // Whether to use count_total.
 					'fields'      => 'all',  // Fields to include.
 				),
-				'bb_get_user_reactions'
+				'bb_reactions_get_reaction'
 			);
 
 			// Select conditions.
-			$select_sql = 'SELECT *';
+			$select_sql = 'SELECT DISTINCT ur.id';
 
 			$from_sql = " FROM " . self::$user_reaction_table . " ur";
 
@@ -680,6 +683,12 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					break;
 			}
 			$order_by = 'ur.' . $r['order_by'];
+
+			// id.
+			if ( ! empty( $r['id'] ) ) {
+				$id_in                  = implode( ',', wp_parse_id_list( $r['id'] ) );
+				$where_conditions['id'] = "ur.id IN ({$id_in})";
+			}
 
 			// user_id.
 			if ( ! empty( $r['user_id'] ) ) {
@@ -775,6 +784,10 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				$paged_user_reactions = array_map( 'intval', $paged_user_reactions_ids );
 			} else {
 				$paged_user_reactions = self::get_user_reaction_item_data( $paged_user_reactions_ids );
+
+				if ( 'all' !== $r['fields'] ) {
+					$paged_user_reactions = array_unique( array_column( $paged_user_reactions, $r['fields'] ) );
+				}
 			}
 
 			$retval['reactions'] = $paged_user_reactions;
@@ -831,11 +844,11 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
 
 				// Fetch data from bb_user_reactions table, preserving order.
-				$queried_adata = $wpdb->get_results( "SELECT * FROM " . self::$user_reaction_table . " WHERE id IN ({$uncached_ids_sql})" );
+				$queried_data = $wpdb->get_results( "SELECT * FROM " . self::$user_reaction_table . " WHERE id IN ({$uncached_ids_sql})" );
 
 				// Put that data into the placeholders created earlier,
 				// and add it to the cache.
-				foreach ( (array) $queried_adata as $urdata ) {
+				foreach ( (array) $queried_data as $urdata ) {
 					wp_cache_set( $urdata->id, $urdata, self::$cache_group );
 				}
 			}
@@ -843,18 +856,10 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			// Now fetch data from the cache.
 			foreach ( $user_reactions_ids as $id ) {
 
-				// Integer casting.
 				$user_reaction = wp_cache_get( $id, self::$cache_group );
 				if ( ! empty( $user_reaction ) ) {
-					$user_reaction->id           = (int) $user_reaction->id;
-					$user_reaction->user_id      = (int) $user_reaction->user_id;
-					$user_reaction->reaction_id  = (int) $user_reaction->reaction_id;
-					$user_reaction->item_type    = $user_reaction->item_type;
-					$user_reaction->item_id      = (int) $user_reaction->item_id;
-					$user_reaction->date_created = $user_reaction->date_created;
+					$user_reactions[] = $user_reaction;
 				}
-
-				$user_reactions[] = $user_reaction;
 			}
 
 			return $user_reactions;
