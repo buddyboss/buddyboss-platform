@@ -3030,7 +3030,7 @@ function bb_registration_restrictions_tutorial() {
  * @since  BuddyBoss [BBVERSION]
  */
 function bb_admin_setting_callback_domain_restrictions() {
-	
+
 	$domain_restrictions = bb_domain_restrictions_setting();
 	$conditions          = array(
 		''             => esc_html__( 'Select Condition', 'buddyboss' ),
@@ -3040,9 +3040,8 @@ function bb_admin_setting_callback_domain_restrictions() {
 	);
 	?>
 	<label for="bb-domain-restrictions-setting">
-		<?php 
-			esc_html_e( 'Add domain(s) to restrict new user registrations. All restrictions are applied in list order priority and can be re-ordered using the drag icon.
-			You can also apply a wildcard (*) symbol to specify entire extensions.', 'buddyboss' ); 
+		<?php
+		esc_html_e( 'Add domain(s) to restrict new user registrations. All restrictions are applied in list order priority and can be re-ordered using the drag icon. You can also apply a wildcard (*) symbol to specify entire extensions.', 'buddyboss' );
 		?>
 	</label>
 
@@ -3050,60 +3049,71 @@ function bb_admin_setting_callback_domain_restrictions() {
 		<div class="restrictions-error"></div>
 		<div class="registration-restrictions-rule-list bb-sortable">
 		<?php
-			// Count the occurances used later to validate.
-			$pre_saved_conditions = array( 'always_allow' => 0 , 'only_allow' => 0 );
-			if ( ! empty( $domain_restrictions ) ) {
-				foreach( $domain_restrictions as $key_rule => $rule ) {
-					if ( isset( $rule['condition'] ) && isset( $pre_saved_conditions[ $rule['condition'] ] ) ) {
-						$pre_saved_conditions[ $rule['condition'] ] += 1;
-					}
-				}
-				foreach( $domain_restrictions as $key_rule => $rule ) {
-					?>
-					<div class="registration-restrictions-rule">
-						<span class='registration-restrictions-priority' style='display:none;'><?php echo $key_rule + 1; ?></span>
-						<div class="registration-restrictions-input">
-							<input type="text" name="bb-domain-restrictions[<?php echo $key_rule; ?>][domain]" class="registration-restrictions-domain" placeholder="<?php esc_attr_e( 'Domain name', 'buddyboss' ); ?>" value="<?php echo $rule['domain']; ?>" />
-						</div>
-						<div class="registration-restrictions-input registration-restrictions-input-tld">
-							<input type="text" name="bb-domain-restrictions[<?php echo $key_rule; ?>][tld]" class="registration-restrictions-tld" placeholder="<?php esc_attr_e( 'Extension', 'buddyboss' ); ?>" value="<?php echo $rule['tld']; ?>" />
-						</div>
-						<div class="registration-restrictions-select">
-							<select name="bb-domain-restrictions[<?php echo $key_rule; ?>][condition]" class="registration-restrictions-input-select">
-								<?php
-									foreach( $conditions as $key => $value ) {
-										$disabled = '';
-										if ( 
-											(
-												'always_allow' === $key && $pre_saved_conditions[ 'only_allow' ] > 0
-											) ||
-											(
-												'only_allow' === $key && $pre_saved_conditions[ 'always_allow' ] > 0
-											)
-										) {
-											$disabled = 'disabled="disabled"';
-										}
-										?>
-										<option value='<?php echo $key; ?>' <?php echo ( $key === $rule['condition'] ) ? 'selected="selected"' : ''; ?> <?php echo $disabled; ?>><?php echo $value; ?></option>
-										<?php
-									}
-								?>
-							</select>
-						</div>
-						<div class="registration-restrictions-remove">
-							<button class="registration-restrictions-rule-remove domain-rule-remove" aria-label="Remove Rule">
-								<i class="bb-icon-f bb-icon-times"></i>
-							</button>
-						</div>
-					</div>
-					<?php
+		// Count the occurances used later to validate.
+		$pre_saved_conditions = array(
+			'always_allow' => 0,
+			'only_allow'   => 0,
+		);
+
+		if ( ! empty( $domain_restrictions ) ) {
+			foreach ( $domain_restrictions as $key_rule => $rule ) {
+				if ( isset( $rule['condition'] ) && isset( $pre_saved_conditions[ $rule['condition'] ] ) ) {
+					$pre_saved_conditions[ $rule['condition'] ] += 1;
 				}
 			}
+			foreach ( $domain_restrictions as $key_rule => $rule ) {
+				?>
+				<div class="registration-restrictions-rule">
+					<span class='registration-restrictions-priority' style='display:none;'><?php echo esc_html( $key_rule + 1 ); ?></span>
+					<div class="registration-restrictions-input">
+						<input type="text" name="bb-domain-restrictions[<?php echo esc_attr( $key_rule ); ?>][domain]" class="registration-restrictions-domain" placeholder="<?php esc_attr_e( 'Domain name', 'buddyboss' ); ?>" value="<?php echo esc_attr( $rule['domain'] ); ?>"/>
+					</div>
+					<div class="registration-restrictions-input registration-restrictions-input-tld">
+						<input type="text" name="bb-domain-restrictions[<?php echo esc_attr( $key_rule ); ?>][tld]" class="registration-restrictions-tld" placeholder="<?php esc_attr_e( 'Extension', 'buddyboss' ); ?>" value="<?php echo esc_attr( $rule['tld'] ); ?>"/>
+					</div>
+					<div class="registration-restrictions-select">
+						<select name="bb-domain-restrictions[<?php echo esc_attr( $key_rule ); ?>][condition]" class="registration-restrictions-input-select">
+							<?php
+							foreach ( $conditions as $key => $value ) {
+								$disabled = false;
+								if (
+									(
+										'always_allow' === $key && $pre_saved_conditions['only_allow'] > 0
+									) ||
+									(
+										'only_allow' === $key && $pre_saved_conditions['always_allow'] > 0
+									)
+								) {
+									$disabled = true;
+								}
+								?>
+								<option value='<?php echo esc_attr( $key ); ?>'
+									<?php
+									selected( $key === $rule['condition'] );
+									disabled( $disabled );
+									?>
+								>
+									<?php echo esc_html( $value ); ?>
+								</option>
+								<?php
+							}
+							?>
+						</select>
+					</div>
+					<div class="registration-restrictions-remove">
+						<button class="registration-restrictions-rule-remove domain-rule-remove" aria-label="Remove Rule">
+							<i class="bb-icon-f bb-icon-times"></i>
+						</button>
+					</div>
+				</div>
+				<?php
+			}
+		}
 		?>
 
 			<!-- This below HTML is for clone only - Starts -->
 			<div class="custom registration-restrictions-rule" style="display: none;">
-				<span class='registration-restrictions-priority' style='display:none;'><?php echo empty( $domain_restrictions ) ? 0 : count( $domain_restrictions ) + 1 ; ?></span>
+				<span class='registration-restrictions-priority' style='display:none;'><?php echo esc_html( empty( $domain_restrictions ) ? 0 : count( $domain_restrictions ) + 1 ); ?></span>
 				<div class="registration-restrictions-input">
 					<input type="text" name="bb-domain-restrictions[placeholder_priority_index][domain]" class="registration-restrictions-domain" placeholder="<?php esc_attr_e( 'Domain name', 'buddyboss' ); ?>" value="" />
 				</div>
@@ -3113,22 +3123,26 @@ function bb_admin_setting_callback_domain_restrictions() {
 				<div class="registration-restrictions-select">
 					<select name="bb-domain-restrictions[placeholder_priority_index][condition]" class="registration-restrictions-input-select">
 						<?php
-							foreach( $conditions as $key => $value ) {
-								$disabled = '';
-								if ( 
-									(
-										'always_allow' === $key && $pre_saved_conditions[ 'only_allow' ] > 0
-									) ||
-									(
-										'only_allow' === $key && $pre_saved_conditions[ 'always_allow' ] > 0
-									)
-								) {
-									$disabled = 'disabled="disabled"';
-								}
-								?>
-								<option value='<?php echo $key; ?>' <?php echo $disabled; ?>><?php echo $value; ?></option>
-								<?php
+						foreach ( $conditions as $key => $value ) {
+							$disabled = false;
+							if (
+								(
+									'always_allow' === $key && $pre_saved_conditions['only_allow'] > 0
+								) ||
+								(
+									'only_allow' === $key && $pre_saved_conditions['always_allow'] > 0
+								)
+							) {
+								$disabled = true;
 							}
+							?>
+							<option value='<?php echo esc_attr( $key ); ?>'
+								<?php echo disabled( $disabled ); ?>
+							>
+								<?php echo esc_html( $value ); ?>
+							</option>
+							<?php
+						}
 						?>
 					</select>
 				</div>
@@ -3167,46 +3181,50 @@ function bb_admin_setting_callback_email_restrictions() {
 		<div class="registration-restrictions-rule-list">
 		<?php
 		if ( ! empty( $email_restrictions ) ) {
-				foreach( $email_restrictions as $key_rule => $rule ) {
-					?>
-					<div class="registration-restrictions-rule">
-						<div class="registration-restrictions-input">
-							<input type="text" name="bb-email-restrictions[<?php echo $key_rule; ?>][address]" class="registration-restrictions-domain" placeholder="<?php esc_attr_e( 'Email address', 'buddyboss' ); ?>" value="<?php echo $rule['address']; ?>" />
-						</div>
-						<div class="registration-restrictions-select">
-							<select name="bb-email-restrictions[<?php echo $key_rule; ?>][condition]" class="registration-restrictions-input-select">
-								<?php
-									foreach( $conditions as $key => $value ) {
-										?>
-										<option value='<?php echo $key; ?>' <?php echo ( $key === $rule['condition'] ) ? 'selected="selected"' : ''; ?> ><?php echo $value; ?></option>
-										<?php
-									}
-								?>
-							</select>
-						</div>
-						<div class="registration-restrictions-remove">
-							<button class="registration-restrictions-rule-remove email-rule-remove" aria-label="Remove Rule">
-								<i class="bb-icon-f bb-icon-times"></i>
-							</button>
-						</div>
+			foreach ( $email_restrictions as $key_rule => $rule ) {
+				?>
+				<div class="registration-restrictions-rule">
+					<div class="registration-restrictions-input">
+						<input type="text" name="bb-email-restrictions[<?php echo esc_attr( $key_rule ); ?>][address]" class="registration-restrictions-domain" placeholder="<?php esc_attr_e( 'Email address', 'buddyboss' ); ?>" value="<?php echo esc_attr( $rule['address'] ); ?>"/>
 					</div>
-					<?php
-				}
+					<div class="registration-restrictions-select">
+						<select name="bb-email-restrictions[<?php echo esc_attr( $key_rule ); ?>][condition]" class="registration-restrictions-input-select">
+							<?php
+							foreach ( $conditions as $key => $value ) {
+								?>
+								<option value='<?php echo esc_attr( $key ); ?>'
+									<?php selected( $key === $rule['condition'] ); ?>
+								>
+									<?php echo esc_html( $value ); ?>
+								</option>
+								<?php
+							}
+							?>
+						</select>
+					</div>
+					<div class="registration-restrictions-remove">
+						<button class="registration-restrictions-rule-remove email-rule-remove" aria-label="Remove Rule">
+							<i class="bb-icon-f bb-icon-times"></i>
+						</button>
+					</div>
+				</div>
+				<?php
 			}
+		}
 		?>
 			<!-- This below HTML is for clone only - Starts -->
 			<div class="custom registration-restrictions-rule" style="display: none;">
 				<div class="registration-restrictions-input">
-					<input type="text" name="bb-email-restrictions[placeholder_priority_index][address]" class="registration-restrictions-domain" placeholder="<?php esc_attr_e( 'Email address', 'buddyboss' ); ?>" value="" />
+					<input type="text" name="bb-email-restrictions[placeholder_priority_index][address]" class="registration-restrictions-domain" placeholder="<?php esc_attr_e( 'Email address', 'buddyboss' ); ?>" value=""/>
 				</div>
 				<div class="registration-restrictions-select">
 					<select name="bb-email-restrictions[placeholder_priority_index][condition]" class="registration-restrictions-input-select">
 						<?php
-							foreach( $conditions as $key => $value ) {
-								?>
-								<option value='<?php echo $key; ?>'><?php echo $value; ?></option>
-								<?php
-							}
+						foreach ( $conditions as $key => $value ) {
+							?>
+							<option value='<?php echo esc_attr( $key ); ?>'><?php echo esc_html( $value ); ?></option>
+							<?php
+						}
 						?>
 					</select>
 				</div>
