@@ -1008,8 +1008,16 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 		! empty( $user_id ) &&
 		bp_loggedin_user_id() === $user_id &&
 		bp_is_active( 'groups' ) &&
-		bp_is_activity_directory()
+		(
+			bp_is_activity_directory() ||
+			(
+				empty( $filter['filter']['user_id'] ) &&
+				! empty( $filter['scope'] ) &&
+				false !== strpos( $filter['scope'], 'just-me' )
+			)
+		)
 	) {
+
 		// Fetch public groups.
 		$public_groups = groups_get_groups(
 			array(
