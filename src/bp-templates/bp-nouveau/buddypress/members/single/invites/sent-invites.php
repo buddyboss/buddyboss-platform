@@ -19,8 +19,8 @@ if ( isset( $email ) && '' !== $email ) {
 		<span class="bp-icon" aria-hidden="true"></span>
 		<p>
 			<?php
-				$text = __( 'Invitations were sent successfully to the following email addresses:', 'buddyboss' );
-				echo trim( $text.' '. $email );
+			$text = __( 'Invitations were sent successfully to the following email addresses:', 'buddyboss' );
+			echo esc_html( trim( $text . ' ' . $email ) );
 			?>
 		</p>
 	</aside>
@@ -35,7 +35,7 @@ if ( isset( $failed ) && '' !== $failed ) {
 		<p>
 			<?php
 			$text = __( 'Invitations did not send because these email addresses are invalid:', 'buddyboss' );
-			echo trim( $text.' '. $failed );
+			echo esc_html( trim( $text . ' ' . $failed ) );
 			?>
 		</p>
 
@@ -51,7 +51,7 @@ if ( isset( $exists ) && '' !== $exists ) {
         <p>
 			<?php
 			$text = __( 'Invitations did not send to the following email addresses, because they are already members:', 'buddyboss' );
-			echo trim( $text.' '. $exists );
+			echo esc_html( trim( $text.' '. $exists ) );
 			?>
         </p>
 

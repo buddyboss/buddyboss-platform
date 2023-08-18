@@ -3185,7 +3185,7 @@ function bb_admin_setting_callback_email_restrictions() {
 				?>
 				<div class="registration-restrictions-rule">
 					<div class="registration-restrictions-input">
-						<input type="text" name="bb-email-restrictions[<?php echo esc_attr( $key_rule ); ?>][address]" class="registration-restrictions-domain" placeholder="<?php esc_attr_e( 'Email address', 'buddyboss' ); ?>" value="<?php echo esc_attr( $rule['address'] ); ?>"/>
+						<input type="email" name="bb-email-restrictions[<?php echo esc_attr( $key_rule ); ?>][address]" class="registration-restrictions-domain" placeholder="<?php esc_attr_e( 'Email address', 'buddyboss' ); ?>" value="<?php echo esc_attr( $rule['address'] ); ?>"/>
 					</div>
 					<div class="registration-restrictions-select">
 						<select name="bb-email-restrictions[<?php echo esc_attr( $key_rule ); ?>][condition]" class="registration-restrictions-input-select">
@@ -3215,7 +3215,7 @@ function bb_admin_setting_callback_email_restrictions() {
 			<!-- This below HTML is for clone only - Starts -->
 			<div class="custom registration-restrictions-rule" style="display: none;">
 				<div class="registration-restrictions-input">
-					<input type="text" name="bb-email-restrictions[placeholder_priority_index][address]" class="registration-restrictions-domain" placeholder="<?php esc_attr_e( 'Email address', 'buddyboss' ); ?>" value=""/>
+					<input type="email" name="bb-email-restrictions[placeholder_priority_index][address]" class="registration-restrictions-domain" placeholder="<?php esc_attr_e( 'Email address', 'buddyboss' ); ?>" value=""/>
 				</div>
 				<div class="registration-restrictions-select">
 					<select name="bb-email-restrictions[placeholder_priority_index][condition]" class="registration-restrictions-input-select">

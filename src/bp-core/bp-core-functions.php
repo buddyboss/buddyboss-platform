@@ -8813,7 +8813,7 @@ function bb_disable_notification_type( $notification_type, $type = 'main' ) {
  * Check if email address allowed to register.
  *
  * @since BuddyBoss [BBVERSION]
- * 
+ *
  * @param string $email Email address.
  *
  * @return bool
@@ -8824,18 +8824,18 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 	if ( empty( $email ) || ( ! is_email( $email ) ) ) {
 		return false;
 	}
-	
+
 	$domain_restrictions = bb_domain_restrictions_setting();
 	$email_restrictions  = bb_email_restrictions_setting();
 
 	// No restrictions or custom registration enabled then return true.
-	if ( empty( $domain_restrictions ) && empty( $email_restrictions ) || bp_allow_custom_registration() ) {
+	if ( ( empty( $domain_restrictions ) && empty( $email_restrictions ) ) || bp_allow_custom_registration() ) {
 		return true;
 	}
 
 	// Check if the email address is allowed or not.
-	foreach( $email_restrictions as $key => $rule ) { 
-		$rule_email = strtolower( trim( $rule['address'] ) );
+	foreach( $email_restrictions as $key => $rule ) {
+		$rule_email = ( ! empty( $rule['address'] ) ? strtolower( trim( $rule['address'] ) ) : '' );
 		if ( $email === $rule_email ) {
 			if ( 'always_allow' === $rule['condition' ] ) {
 				return true;
@@ -8848,12 +8848,10 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 	// Split the email into parts.
 	$email_parts = explode( '@', $email );
 	if ( count( $email_parts ) === 2 ) {
-		$username       = $email_parts[0];
 		$domain_and_ext = $email_parts[1];
-		$domain_parts   = explode( '.', $email_parts[1] );
+		$domain_parts   = explode( '.', $domain_and_ext );
 		if ( count( $domain_parts ) >= 2 ) {
 			$extension = array_pop( $domain_parts );
-			$domain    = implode( '.', $domain_parts );
 		} else {
 			return false;
 		}
@@ -8884,7 +8882,7 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 				return false;
 			}
 
-			//domain starting with placeholder.
+			// Domain starting with placeholder.
 		} elseif ( 0 === strpos( $rule_domain, '*.' ) && $extension === $rule_tld ) {
 			$pattern = preg_quote( $rule_domain . '.'. $rule_tld, '/' );
 			$pattern = str_replace( '\*', '[a-zA-Z0-9.-]*', $pattern );
@@ -8900,7 +8898,7 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 				}
 			}
 
-			//domain with * as placeholder.
+			// Domain with * as placeholder.
 		} elseif ( '*' === $rule_domain && $extension === $rule_tld ) {
 			if ( 'only_allow' === $rule_condition  ) {
 				return true;

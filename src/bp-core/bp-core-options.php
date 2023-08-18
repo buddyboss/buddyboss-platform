@@ -2335,43 +2335,43 @@ function bb_get_profile_slug_format( $default = 'username' ) {
 }
 
 /**
- * Get blacklisted email and domain list value from the database.
+ * Get domain restrictions setting value from the database.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @param string $default Optional. Fallback value if not found in the database.
- *                      Default: Empty string.
- * @return string whitelist email and domain list.
+ *                        Default: Empty string.
+ * @return array Domain restrictions setting value.
  */
-function bb_domain_restrictions_setting( $default = '' ) {
+function bb_domain_restrictions_setting( $default = array() ) {
 
 	/**
-	 * Filters blacklist email and domain list.
+	 * Filters domain restriction settings.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param bool $value Blacklist email and domain list.
+	 * @param array $value Domain restrictions setting value.
 	 */
-	return apply_filters( 'bb_domain_restrictions_setting', bp_get_option( 'bb-domain-restrictions', '' ) );
+	return apply_filters( 'bb_domain_restrictions_setting', bp_get_option( 'bb-domain-restrictions', $default ) );
 }
 
 /**
- * Get whitelisted email and domain list value from the database.
+ * Get email restrictions setting value from the database.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @param string $default Optional. Fallback value if not found in the database.
- *                      Default: Empty string.
- * @return string Whitelist email and domain list.
+ *                        Default: Empty string.
+ * @return array Email restrictions setting value.
  */
-function bb_email_restrictions_setting( $default = '' ) {
+function bb_email_restrictions_setting( $default = array() ) {
 
 	/**
-	 * Filters whitelist email and domain list.
+	 * Filters email restriction settings.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param bool $value whitelist email and domain list.
+	 * @param array $value Email restrictions setting value.
 	 */
-	return apply_filters( 'bb_email_restrictions_setting', bp_get_option( 'bb-email-restrictions', '' ) );
+	return apply_filters( 'bb_email_restrictions_setting', bp_get_option( 'bb-email-restrictions', $default ) );
 }

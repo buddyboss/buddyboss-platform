@@ -2482,13 +2482,13 @@ window.bp = window.bp || {};
 				$this.parents( '.registration-restrictions-listing' ).find( '.registration-restrictions-lastindex' ).val( newindex );
 			}
 
-			// If no rules or all are never allow then enable all option
+			// If no rules or all are never allow then enable all option.
 			if ( 'undefined' !== typeof $listing && $listing.length > 0 ) {
 				if ( 0 === $listing.find( '.registration-restrictions-rule' ).not( '.custom' ).length ) {
 					$( '.bb-domain-restrictions-listing .registration-restrictions-select' ).find( 'option' ).attr( 'disabled', false );
 				} else {
-					var $select = $listing.find( '.registration-restrictions-rule:not(.custom)' );
-					if ( $select.find( '.registration-restrictions-selected' ).length === $select.find( '.registration-restrictions-selected option[value="never_allow"]' ).length ) {
+					var $select = $listing.find( '.registration-restrictions-rule:not(.custom) .registration-restrictions-input-select' );
+					if ( $select.length === $select.find( 'option[value="never_allow"]:selected' ).length ) {
 						$( '.bb-domain-restrictions-listing .registration-restrictions-select' ).find( 'option' ).attr( 'disabled', false );
 					}
 				}
@@ -2578,7 +2578,7 @@ window.bp = window.bp || {};
 		//Store all the entry.
 		var allDomainExtension = [];
 		// Store Errors
-		var DomainRestrictionsErrors = [];
+		var domainRestrictionsErrors = [];
 
 		if ( e && e.currentTarget && $( e.currentTarget ).closest( '.registration-restrictions-rule' ).hasClass( 'untouched' ) ) {
 			$( e.currentTarget ).closest( '.registration-restrictions-rule' ).removeClass( 'untouched' );
@@ -2602,8 +2602,8 @@ window.bp = window.bp || {};
 				} else {
 					allDomainExtension[ currentDomain + '_' + currentExtension ] += 1;
 					$( this ).addClass( 'error' );
-					if ( !DomainRestrictionsErrors.includes( BP_ADMIN.bb_registration_resticitions.feedback_messages.duplicate ) ) {
-						DomainRestrictionsErrors.push( BP_ADMIN.bb_registration_resticitions.feedback_messages.duplicate );
+					if ( !domainRestrictionsErrors.includes( BP_ADMIN.bb_registration_restrictions.feedback_messages.duplicate ) ) {
+						domainRestrictionsErrors.push( BP_ADMIN.bb_registration_restrictions.feedback_messages.duplicate );
 					}
 				}
 			}
@@ -2611,8 +2611,8 @@ window.bp = window.bp || {};
 			if ( eventType === 'submit' || eventType === 'remove' || eventType === 'add' ) {
 				if ( '' === currentDomain || '' === currentExtension || '' === conditionType ) {
 					$( this ).addClass( 'error' );
-					if ( !DomainRestrictionsErrors.includes( BP_ADMIN.bb_registration_resticitions.feedback_messages.empty ) ) {
-						DomainRestrictionsErrors.push( BP_ADMIN.bb_registration_resticitions.feedback_messages.empty );
+					if ( !domainRestrictionsErrors.includes( BP_ADMIN.bb_registration_restrictions.feedback_messages.empty ) ) {
+						domainRestrictionsErrors.push( BP_ADMIN.bb_registration_restrictions.feedback_messages.empty );
 					}
 				}
 			}
@@ -2620,14 +2620,14 @@ window.bp = window.bp || {};
 			$( '#bb-domain-restrictions-setting' ).children( '.restrictions-error' ).html( '' );
 		} );
 
-		if ( DomainRestrictionsErrors.length > 0 ) {
-			for ( var i = 0; i < DomainRestrictionsErrors.length; i++ ) {
-				var error = '<p>' + DomainRestrictionsErrors[ i ] + '</p>';
+		if ( domainRestrictionsErrors.length > 0 ) {
+			for ( var i = 0; i < domainRestrictionsErrors.length; i++ ) {
+				var error = '<p>' + domainRestrictionsErrors[ i ] + '</p>';
 				$( '#bb-domain-restrictions-setting' ).children( '.restrictions-error' ).append( error );
 			}
 		}
 
-		if ( DomainRestrictionsErrors.length > 0 && eventType === 'submit' ) {
+		if ( domainRestrictionsErrors.length > 0 && eventType === 'submit' ) {
 			e.preventDefault();
 		}
 	}
@@ -2636,7 +2636,7 @@ window.bp = window.bp || {};
 	function validateDuplicateEmailRuleEntry( e, eventType ) {
 		//Store all the entry.
 		var allEmailEntries = [];
-		var EmailRestrictionsErrors = [];
+		var emailRestrictionsErrors = [];
 		$( '#bb-email-restrictions-setting .registration-restrictions-rule' ).not( '.custom' ).each( function () {
 			var currentEmailValue = $( this ).find( '.registration-restrictions-domain' ).val().trim().toLowerCase();
 			var currentEmailCondition = $( this ).find( '.registration-restrictions-input-select' ).val();
@@ -2648,8 +2648,8 @@ window.bp = window.bp || {};
 				} else {
 					allEmailEntries[ currentEmailValue ] += 1;
 					$( this ).addClass( 'error' );
-					if ( !EmailRestrictionsErrors.includes( BP_ADMIN.bb_registration_resticitions.feedback_messages.duplicate ) ) {
-						EmailRestrictionsErrors.push( BP_ADMIN.bb_registration_resticitions.feedback_messages.duplicate );
+					if ( !emailRestrictionsErrors.includes( BP_ADMIN.bb_registration_restrictions.feedback_messages.duplicate ) ) {
+						emailRestrictionsErrors.push( BP_ADMIN.bb_registration_restrictions.feedback_messages.duplicate );
 					}
 				}
 			}
@@ -2661,15 +2661,15 @@ window.bp = window.bp || {};
 
 			if ( emptyValueOnSubmit || emptyConditionOnChange || emptyEmailOnChange ) {
 				$( this ).addClass( 'error' );
-				if ( !EmailRestrictionsErrors.includes( BP_ADMIN.bb_registration_resticitions.feedback_messages.empty ) ) {
-					EmailRestrictionsErrors.push( BP_ADMIN.bb_registration_resticitions.feedback_messages.empty );
+				if ( !emailRestrictionsErrors.includes( BP_ADMIN.bb_registration_restrictions.feedback_messages.empty ) ) {
+					emailRestrictionsErrors.push( BP_ADMIN.bb_registration_restrictions.feedback_messages.empty );
 				}
 			}
 
 			$( '#bb-email-restrictions-setting' ).children( '.restrictions-error' ).html( '' );
-			if ( EmailRestrictionsErrors.length > 0 ) {
-				for ( var i = 0; i < EmailRestrictionsErrors.length; i++ ) {
-					var error = '<p>' + EmailRestrictionsErrors[ i ] + '</p>';
+			if ( emailRestrictionsErrors.length > 0 ) {
+				for ( var i = 0; i < emailRestrictionsErrors.length; i++ ) {
+					var error = '<p>' + emailRestrictionsErrors[ i ] + '</p>';
 					$( '#bb-email-restrictions-setting' ).children( '.restrictions-error' ).append( error );
 				}
 				if ( eventType === 'submit' ) {

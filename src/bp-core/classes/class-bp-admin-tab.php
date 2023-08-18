@@ -309,7 +309,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				'email_template'      => array(
 					'html' => $email_template,
 				),
-				'bb_registration_resticitions' => array(
+				'bb_registration_restrictions' => array(
 					'feedback_messages' => array(
 						'empty'     => esc_html__( 'The rule content cannot be empty.', 'buddyboss' ),
 						'duplicate' => esc_html__( 'The rule content cannot be duplicate.', 'buddyboss' ),
