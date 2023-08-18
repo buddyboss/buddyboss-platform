@@ -59,19 +59,19 @@ if ( isset( $exists ) && '' !== $exists ) {
 	<?php
 }
 
-$restricted = trim ( bb_filter_input_string( INPUT_GET, 'restricted' ) );
+$restricted = trim( bb_filter_input_string( INPUT_GET, 'restricted' ) );
 if ( isset( $restricted ) && '' !== $restricted ) {
 	?>
-    <aside class="bp-feedback bp-send-invites bp-template-notice error">
-        <span class="bp-icon" aria-hidden="true"></span>
-        <p>
+	<aside class="bp-feedback bp-send-invites bp-template-notice error">
+		<span class="bp-icon" aria-hidden="true"></span>
+		<p>
 			<?php
 			$text = __( 'Invitations did not send to the following email addresses, because the address or domain has been blacklisted:', 'buddyboss' );
-			echo trim( $text.' '. $restricted );
+			echo esc_html( trim( $text . ' ' . $restricted ) );
 			?>
-        </p>
+		</p>
 
-    </aside>
+	</aside>
 	<?php
 }
 ?>
