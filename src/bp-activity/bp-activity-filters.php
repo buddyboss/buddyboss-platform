@@ -1006,7 +1006,7 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 		);
 	} else if (
             ! empty( $user_id ) &&
-            $user_id === bp_loggedin_user_id()
+            $user_id === bp_loggedin_user_id() &&
 	        bp_is_active( 'groups' ) &&
             bp_is_activity_directory()
     ) {
