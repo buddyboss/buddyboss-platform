@@ -831,5 +831,56 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			return $retval;
 		}
+
+		/**
+		 * Get user reactions count.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $args Args of the user reactions count.
+		 *
+		 * @return int
+		 */
+		public function bb_get_user_reactions_count( $args = array() ) {
+			$r = bp_parse_args(
+				$args,
+				array(
+					'reaction_id' => 0,      // Reaction id.
+					'item_type'   => '',     // Item type ( i.e - Activity, Activity Comment ).
+					'item_id'     => 0,      // Item id ( i.e - activity_id, activity_comment_id ).
+					'user_id'     => 0,      // User Id.
+					'per_page'    => 1,      // Pe Page 1.
+					'paged'       => 1,      // Page 1 without a per_page will result in no pagination.
+					'count_total' => true,   // Whether to use count_total.
+				),
+				'bb_get_user_reactions_count'
+			);
+
+			$total_count = self::bb_get_user_reactions( $r );
+			$total_count = ! empty( $total_count ) && ! empty( $total_count['total'] ) ? $total_count['total'] : 0;
+
+			return $total_count;
+		}
+
+		/**
+		 * Get current user reactions count.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $args Args of the user reactions count.
+		 *
+		 * @return int
+		 */
+		public function bb_get_current_user_reactions_count( $args = array() ) {
+			$r = bp_parse_args(
+				$args,
+				array(
+					'user_id' => bp_loggedin_user_id(), // User Id.
+				),
+				'bb_get_current_user_reactions_count'
+			);
+
+			return $this->bb_get_user_reactions_count( $r );
+		}
 	}
 }
