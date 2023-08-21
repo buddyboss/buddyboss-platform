@@ -657,9 +657,9 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		public function suggest_topic() {
 
 			$html = '<option value="0">' . esc_html__( '-- Select Discussion --', 'buddyboss' ) . '</option>';
-
 			$posts = get_posts(
 				array(
+					's'                      => ! empty( $_REQUEST['q'] ) ? bbp_db()->esc_like( $_REQUEST['q'] ) : '',
 					'post_type'              => bbp_get_topic_post_type(),
 					'post_status'            => 'publish',
 					'post_parent'            => $_POST['post_parent'],
@@ -724,7 +724,6 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		 * @since bbPress (r5014)
 		 */
 		public function suggest_user() {
-			global $wpdb;
 
 			// Bail early if no request
 			if ( empty( $_REQUEST['q'] ) ) {
@@ -742,7 +741,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 			// Try to get some users
 			$users_query = new WP_User_Query(
 				array(
-					'search'         => '*' . $wpdb->esc_like( $_REQUEST['q'] ) . '*',
+					'search'         => '*' . bbp_db()->esc_like( $_REQUEST['q'] ) . '*',
 					'fields'         => array( 'ID', 'user_nicename' ),
 					'search_columns' => array( 'ID', 'user_nicename', 'user_email' ),
 					'orderby'        => 'ID',
@@ -765,7 +764,6 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		 *
 		 * @since bbPress (r3689)
 		 *
-		 * @global wpdb $wpdb WordPress database abstraction object.
 		 * @uses get_blog_option()
 		 * @uses wp_remote_get()
 		 */
@@ -816,12 +814,11 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		 *
 		 * @since bbPress (r3689)
 		 *
-		 * @global wpdb $wpdb WordPress database abstraction object.
 		 * @uses get_blog_option()
 		 * @uses wp_remote_get()
 		 */
 		public static function network_update_screen() {
-			global $wpdb;
+			$bbp_db = bbp_db();
 
 			// Get action
 			$action = isset( $_GET['action'] ) ? $_GET['action'] : '';
@@ -840,7 +837,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 					$n = isset( $_GET['n'] ) ? intval( $_GET['n'] ) : 0;
 
 					// Get blogs 5 at a time
-					$blogs = $wpdb->get_results( "SELECT * FROM {$wpdb->blogs} WHERE site_id = '{$wpdb->siteid}' AND spam = '0' AND deleted = '0' AND archived = '0' ORDER BY registered DESC LIMIT {$n}, 5", ARRAY_A );
+					$blogs = $bbp_db->get_results( "SELECT * FROM {$bbp_db->blogs} WHERE site_id = '{$bbp_db->siteid}' AND spam = '0' AND deleted = '0' AND archived = '0' ORDER BY registered DESC LIMIT {$n}, 5", ARRAY_A );
 
 					// No blogs so all done!
 				if ( empty( $blogs ) ) :
