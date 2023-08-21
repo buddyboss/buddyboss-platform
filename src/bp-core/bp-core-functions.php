@@ -8834,10 +8834,10 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 	}
 
 	// Check if the email address is allowed or not.
-	foreach( $email_restrictions as $key => $rule ) {
+	foreach ( $email_restrictions as $key => $rule ) {
 		$rule_email = ( ! empty( $rule['address'] ) ? strtolower( trim( $rule['address'] ) ) : '' );
 		if ( $email === $rule_email ) {
-			if ( 'always_allow' === $rule['condition' ] ) {
+			if ( 'always_allow' === $rule['condition'] ) {
 				return true;
 			} elseif ( 'never_allow' === $rule['condition'] ) {
 				return false;
@@ -8862,7 +8862,7 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 	// Check condition the email domain.
 	$is_allowed = '';
 	$only_allow = false;
-	foreach( $domain_restrictions as $key => $rule ) {
+	foreach ( $domain_restrictions as $key => $rule ) {
 
 		$rule_domain    = strtolower( trim( $rule['domain'] ) );
 		$rule_tld       = strtolower( trim( $rule['tld'] ) );
@@ -8873,38 +8873,38 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 		}
 
 		// Exact match with domain and extension.
-		if ( $domain_and_ext === $rule_domain . '.'. $rule_tld ) {
-			if ( 'only_allow' === $rule_condition  ) {
+		if ( $domain_and_ext === $rule_domain . '.' . $rule_tld ) {
+			if ( 'only_allow' === $rule_condition ) {
 				return true;
-			} elseif ( 'always_allow' === $rule_condition  ) {
+			} elseif ( 'always_allow' === $rule_condition ) {
 				return true;
-			} elseif ( 'never_allow' === $rule_condition  ) {
+			} elseif ( 'never_allow' === $rule_condition ) {
 				return false;
 			}
 
 			// Domain starting with placeholder.
 		} elseif ( 0 === strpos( $rule_domain, '*.' ) && $extension === $rule_tld ) {
-			$pattern = preg_quote( $rule_domain . '.'. $rule_tld, '/' );
+			$pattern = preg_quote( $rule_domain . '.' . $rule_tld, '/' );
 			$pattern = str_replace( '\*', '[a-zA-Z0-9.-]*', $pattern );
 			$pattern = "/$pattern$/";
 
 			if ( preg_match( $pattern, $domain_and_ext ) ) {
-				if ( 'only_allow' === $rule_condition  ) {
+				if ( 'only_allow' === $rule_condition ) {
 					return true;
-				} elseif ( 'always_allow' === $rule_condition  ) {
+				} elseif ( 'always_allow' === $rule_condition ) {
 					$is_allowed = true;
-				} elseif ( 'never_allow' === $rule_condition  ) {
+				} elseif ( 'never_allow' === $rule_condition ) {
 					$is_allowed = false;
 				}
 			}
 
 			// Domain with * as placeholder.
 		} elseif ( '*' === $rule_domain && $extension === $rule_tld ) {
-			if ( 'only_allow' === $rule_condition  ) {
+			if ( 'only_allow' === $rule_condition ) {
 				return true;
-			} elseif ( 'always_allow' === $rule_condition  ) {
+			} elseif ( 'always_allow' === $rule_condition ) {
 				$is_allowed = true;
-			} elseif ( 'never_allow' === $rule_condition  ) {
+			} elseif ( 'never_allow' === $rule_condition ) {
 				$is_allowed = false;
 			}
 		}

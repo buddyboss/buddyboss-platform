@@ -3276,8 +3276,6 @@ function bb_get_buddyboss_registration_notice() {
 			esc_html__( 'BuddyBoss Registration Form', 'buddyboss' ),
 			esc_html__( 'to unlock', 'buddyboss' )
 		);
-	} else {
-		$bb_registration_notice = '';
 	}
 
 	return $bb_registration_notice;
