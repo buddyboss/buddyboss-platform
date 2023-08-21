@@ -356,7 +356,11 @@ add_action( 'wp_ajax_bb_admin_check_valid_giphy_key', 'bb_admin_check_valid_giph
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return object $errors Validation errors.
+ * @param object $errors error object.
+ * @param bool   $update updating user or adding user.
+ * @param object $user   user data.
+ *
+ * @return object
  */
 function bb_validate_restricted_email_on_registration( $errors, $update, $user ) {
 
