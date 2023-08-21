@@ -1210,5 +1210,71 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			return $reaction_data_id;
 		}
+
+		/**
+		 * Prepare reaction summary data when reaction to any item.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array  $args   Args of reaction data.
+		 * @param string $action Add or remove the user reaction
+		 *
+		 * @return false|int|WP_Error
+		 */
+		public function bb_prepare_reaction_summary_data( $args, $action ) {
+			if ( empty( $args['item_id'] ) && empty( $args['item_type'] ) ) {
+				return false;
+			}
+
+			$item_id   = $args['item_id'];
+			$item_type = $args['item_type'];
+
+			// Calculate total counts of each reaction and sum of all that reactions.
+			$reaction_counts = array();
+
+			// Fetch latest 10 reactions.
+			$latest_reaction   = self::bb_get_user_reactions(
+				array(
+					'item_id'   => $item_id,
+					'item_type' => $item_type,
+					'per_page'  => 10,
+					'order_by'  => 'date_created',
+					'order'     => 'DESC',
+				)
+			);
+			$last_10_reactions = ! empty( $latest_reaction['reactions'] ) ? $latest_reaction['reactions'] : array();
+
+			// Fetch last 10 reactions.
+			$last_reaction      = self::bb_get_user_reactions(
+				array(
+					'item_id'   => $args['item_id'],
+					'item_type' => $args['item_type'],
+					'per_page'  => 10,
+					'order_by'  => 'date_created',
+					'order'     => 'ASC',
+				)
+			);
+			$first_10_reactions = ! empty( $last_reaction['reactions'] ) ? $last_reaction['reactions'] : array();;
+
+			// Prepare data array for bb_add_reactions_data function.
+			$data = array(
+				'reactions_count'    => $reaction_counts,
+				'last_10_reactions'  => $last_10_reactions,
+				'first_10_reactions' => $first_10_reactions,
+			);
+
+			// Store the data in bb_reactions_data table.
+			$result = $this->bb_add_reactions_data(
+				array(
+					'name'  => 'item_summary',
+					'value' => maybe_serialize( $data ),
+					'rel1'  => $item_type,
+					'rel2'  => $item_id,
+					'rel3'  => 0,
+				)
+			);
+
+			return $result;
+		}
 	}
 }
