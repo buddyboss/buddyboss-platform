@@ -184,6 +184,7 @@ function bbp_do_uninstall( $site_id = 0 ) {
 
 	switch_to_blog( $site_id );
 	bbp_delete_options();
+	bbp_remove_roles();
 	bbp_remove_caps();
 	flush_rewrite_rules();
 	restore_current_blog();
