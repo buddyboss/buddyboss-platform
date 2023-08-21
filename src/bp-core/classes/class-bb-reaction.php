@@ -511,7 +511,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			do_action( 'bb_reaction_before_remove_user_item_reaction', $user_reaction_id );
 
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$get = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . self::$user_reaction_table . " WHERE id=%d", $user_reaction_id ) );
+			$get = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . self::$user_reaction_table . " WHERE id=%d", $user_reaction_id ), ARRAY_A );
 
 			if ( empty( $get ) ) {
 				return false;
@@ -521,7 +521,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$deleted = $wpdb->delete(
 				self::$user_reaction_table,
 				array(
-					'id' => $get->id,
+					'id' => $get['id'],
 				)
 			);
 
@@ -585,7 +585,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			$sql = "SELECT * FROM " . self::$user_reaction_table . " WHERE reaction_id = %d AND item_id = %d AND user_id = %d";
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$get_reaction = $wpdb->get_row( $wpdb->prepare( $sql, $r['reaction_id'], $r['item_id'], $r['user_id'] ) );
+			$get_reaction = $wpdb->get_row( $wpdb->prepare( $sql, $r['reaction_id'], $r['item_id'], $r['user_id'] ), ARRAY_A );
 
 			if ( empty( $get_reaction ) ) {
 				return false;
@@ -595,7 +595,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$deleted = $wpdb->delete(
 				self::$user_reaction_table,
 				array(
-					'id' => $get_reaction->id,
+					'id' => $get_reaction['id'],
 				)
 			);
 
@@ -792,6 +792,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					}
 				}
 
+				$paged_user_reactions = array();
 				foreach ( $paged_user_reactions_ids as $id ) {
 					$user_reaction = wp_cache_get( $id, self::$cache_group );
 					if ( ! empty( $user_reaction ) ) {
@@ -881,6 +882,211 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			);
 
 			return $this->bb_get_user_reactions_count( $r );
+		}
+
+		/**
+		 * Get reactions data.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $args Args of reaction data.
+		 *
+		 * @return array
+		 */
+		private function bb_get_reactions_data( $args = array() ) {
+			global $wpdb;
+
+			$r = bp_parse_args(
+				$args,
+				array(
+					'name'        => '',       // Item Summary.
+					'rel1'        => '',       // Item type ( i.e - activity, activity_comment ).
+					'rel2'        => '',       // Item id.
+					'rel3'        => '0',      // Reaction id.
+					'name_in'     => array(),  // Include name as array ( 'item_summary', 'total_reactions_count' ).
+					'rel1_in'     => array(),  // Include rel1 as array ( 'activity', 'activity_comment' ).
+					'rel2_in'     => array(),  // Include rel1 as array ( '123', '456' ).
+					'per_page'    => 20,       // Results per page.
+					'paged'       => 1,        // Page 1 without a per_page will result in no pagination.
+					'order'       => 'DESC',   // Order ASC or DESC.
+					'order_by'    => 'id',     // Column to order by.
+					'count_total' => false,    // Whether to use count_total.
+					'fields'      => 'all',    // Fields to include.
+				),
+				'bb_get_reactions_data'
+			);
+
+			// Select conditions.
+			$select_sql = 'SELECT *';
+
+			$from_sql = " FROM " . self::$reaction_data_table . " rd";
+
+			$join_sql = '';
+
+			// Where conditions.
+			$where_conditions = array();
+
+			// id.
+			if ( ! empty( $r['id'] ) ) {
+				$id_in                  = implode( ',', wp_parse_id_list( $r['id'] ) );
+				$where_conditions['id'] = "rd.id IN ({$id_in})";
+			}
+
+			// rel1.
+			if ( ! empty( $r['rel1'] ) ) {
+				$where_conditions['rel1'] = $wpdb->prepare( 'rd.rel1 = %s', $r['rel1'] );
+			}
+
+			// rel2.
+			if ( ! empty( $r['rel2'] ) ) {
+				$where_conditions['rel2'] = $wpdb->prepare( 'rd.rel2 = %s', $r['rel2'] );
+			}
+
+			// rel3.
+			$where_conditions['rel3'] = $wpdb->prepare( 'rd.rel3 = %s', $r['rel3'] );
+
+			// name_in.
+			if ( ! empty( $r['name_in'] ) ) {
+				$name_in_array = wp_parse_slug_list( $r['name_in'] );
+				$quoted_values = array_map( function ( $value ) {
+					return "'" . esc_sql( $value ) . "'";
+				}, $name_in_array );
+
+				$name_in_string              = implode( ', ', $quoted_values );
+				$where_conditions['name_in'] = "rd.name IN ($name_in_string)";
+			}
+
+			// rel1_in.
+			if ( ! empty( $r['rel1_in'] ) ) {
+				$rel1_in                  = implode( ',', wp_parse_id_list( $r['rel1_in'] ) );
+				$where_conditions['rel1_in'] = "rd.rel1 IN ({$rel1_in})";
+			}
+
+			// rel2_in.
+			if ( ! empty( $r['rel2_in'] ) ) {
+				$rel2_in                  = implode( ',', wp_parse_id_list( $r['rel2_in'] ) );
+				$where_conditions['rel2_in'] = "rd.rel2 IN ({$rel2_in})";
+			}
+
+			/**
+			 * Filters the MySQL WHERE conditions for get reaction data sql method.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
+			 * @param array  $r                Parsed arguments passed into method.
+			 * @param string $select_sql       Current SELECT MySQL statement at point of execution.
+			 * @param string $from_sql         Current FROM MySQL statement at point of execution.
+			 * @param string $join_sql         Current INNER JOIN MySQL statement at point of execution.
+			 */
+			$where_conditions = apply_filters( 'bb_get_reactions_data_where_conditions', $where_conditions, $r, $select_sql, $from_sql, $join_sql );
+
+			if ( empty( $where_conditions ) ) {
+				$where_conditions['2'] = '2';
+			}
+
+			// Join the where conditions together.
+			$where_sql = 'WHERE ' . join( ' AND ', $where_conditions );
+
+			/**
+			 * Filter the MySQL JOIN clause for the main reaction data query.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $join_sql   JOIN clause.
+			 * @param array  $r          Method parameters.
+			 * @param string $select_sql Current SELECT MySQL statement.
+			 * @param string $from_sql   Current FROM MySQL statement.
+			 * @param string $where_sql  Current WHERE MySQL statement.
+			 */
+			$join_sql = apply_filters( 'bb_get_reactions_data_join_sql', $join_sql, $r, $select_sql, $from_sql, $where_sql );
+
+			$retval = array(
+				'reaction_data' => null,
+				'total'         => null,
+			);
+
+			// Sanitize page and per_page parameters.
+			$page       = absint( $r['paged'] );
+			$per_page   = absint( $r['per_page'] );
+			$pagination = '';
+			if ( ! empty( $per_page ) && ! empty( $page ) && $per_page != - 1 ) {
+				$pagination = $wpdb->prepare( 'LIMIT %d, %d', intval( ( $page - 1 ) * $per_page ), intval( $per_page ) );
+			}
+
+			// Query first for user_reaction IDs.
+			$paged_reaction_data_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} {$pagination}";
+
+			/**
+			 * Filters the paged reaction data MySQL statement.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $user_reaction_ids_sql MySQL's statement used to query for Reaction IDs.
+			 * @param array  $r                     Array of arguments passed into method.
+			 */
+			$paged_reaction_data_sql = apply_filters( 'bb_get_reactions_data_paged_sql', $paged_reaction_data_sql, $r );
+
+			$cached = bp_core_get_incremented_cache( $paged_reaction_data_sql, self::$cache_group );
+			if ( false === $cached ) {
+				$paged_reaction_data_ids = $wpdb->get_col( $paged_reaction_data_sql );
+				bp_core_set_incremented_cache( $paged_reaction_data_sql, self::$cache_group, $paged_reaction_data_ids );
+			} else {
+				$paged_reaction_data_ids = $cached;
+			}
+
+			if ( 'id' === $r['fields'] ) {
+				// We only want the IDs.
+				$paged_reaction_data = array_map( 'intval', $paged_reaction_data_ids );
+			} else {
+				$uncached_ids = bp_get_non_cached_ids( $paged_reaction_data_ids, self::$cache_group );
+				if ( ! empty( $uncached_ids ) ) {
+					$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
+					$queried_data     = $wpdb->get_results( "SELECT * FROM " . self::$reaction_data_table . " WHERE id IN ({$uncached_ids_sql})" );
+					foreach ( (array) $queried_data as $rddata ) {
+						wp_cache_set( $rddata->id, $rddata, self::$cache_group );
+					}
+				}
+
+				$paged_reaction_data = array();
+				foreach ( $paged_reaction_data_ids as $id ) {
+					$user_reaction = wp_cache_get( $id, self::$cache_group );
+					if ( ! empty( $user_reaction ) ) {
+						$paged_reaction_data[] = $user_reaction;
+					}
+				}
+
+				if ( 'all' !== $r['fields'] ) {
+					$paged_reaction_data = array_unique( array_column( $paged_reaction_data, $r['fields'] ) );
+				}
+			}
+
+			$retval['reaction_data'] = $paged_reaction_data;
+
+			if ( ! empty( $r['count_total'] ) ) {
+				/**
+				 * Filters the total reaction data MySQL statement.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 *
+				 * @param string $sql       MySQL statement used to query for total videos.
+				 * @param string $where_sql MySQL WHERE statement portion.
+				 * @param string $sort      Sort direction for query.
+				 */
+				$sql                      = "SELECT count(DISTINCT rd.id) FROM " . self::$reaction_data_table . " rd {$join_sql} {$where_sql}";
+				$total_reaction_data_sql = apply_filters( 'bb_get_reactions_data_total_sql', $sql, $where_sql );
+				$cached                   = bp_core_get_incremented_cache( $total_reaction_data_sql, self::$cache_group );
+				if ( false === $cached ) {
+					$total_reaction_data = $wpdb->get_var( $total_reaction_data_sql );
+					bp_core_set_incremented_cache( $total_reaction_data_sql, self::$cache_group, $total_reaction_data );
+				} else {
+					$total_reaction_data = $cached;
+				}
+
+				$retval['total'] = $total_reaction_data;
+			}
+
+			return $retval;
 		}
 	}
 }
