@@ -425,8 +425,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			}
 
 			$sql          = "SELECT * FROM " . self::$user_reaction_table . " WHERE item_type = %s AND item_id = %d AND user_id = %d";
-			$get_reaction = $wpdb->get_row( $wpdb->prepare( $sql, $r['item_type'], $r['item_id'], $r['user_id'] ) );
-
+			$get_reaction = $wpdb->get_row( $wpdb->prepare( $sql, $r['item_type'], (int) $r['item_id'], (int) $r['user_id'] ) );
 			if ( $get_reaction ) {
 				$sql = $wpdb->prepare(
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -452,10 +451,10 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					) VALUES (
 						%d, %d, %s, %d, %s
 					)",
-					$r['user_id'],
-					$r['reaction_id'],
+					(int) $r['user_id'],
+					(int) $r['reaction_id'],
 					$r['item_type'],
-					$r['item_id'],
+					(int) $r['item_id'],
 					$r['date_created']
 				);
 			}
@@ -949,6 +948,11 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			// rel3.
 			$where_conditions['rel3'] = $wpdb->prepare( 'rd.rel3 = %s', $r['rel3'] );
 
+			// rel2.
+			if ( ! empty( $r['name'] ) ) {
+				$where_conditions['name'] = $wpdb->prepare( 'rd.name = %s', $r['name'] );
+			}
+
 			// name_in.
 			if ( ! empty( $r['name_in'] ) ) {
 				$name_in_string              = implode( "','", wp_parse_slug_list( $r['name_in'] ) );
@@ -1043,13 +1047,13 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
 					$queried_data     = $wpdb->get_results( "SELECT * FROM " . self::$reaction_data_table . " WHERE id IN ({$uncached_ids_sql})" );
 					foreach ( (array) $queried_data as $rddata ) {
-						wp_cache_set( $rddata->id, $rddata, self::$cache_group );
+						wp_cache_set( 'rd_' . $rddata->id, $rddata, self::$cache_group );
 					}
 				}
 
 				$paged_reaction_data = array();
 				foreach ( $paged_reaction_data_ids as $id ) {
-					$user_reaction = wp_cache_get( $id, self::$cache_group );
+					$user_reaction = wp_cache_get( 'rd_' . $id, self::$cache_group );
 					if ( ! empty( $user_reaction ) ) {
 						$paged_reaction_data[] = $user_reaction;
 					}
