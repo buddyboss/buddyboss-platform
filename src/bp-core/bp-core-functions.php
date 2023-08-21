@@ -4586,7 +4586,9 @@ add_action( 'wp_ajax_bp_get_suggestions', 'bp_ajax_get_suggestions' );
  *                    value. Boolean false if no mentions found.
  */
 function bp_find_mentions_by_at_sign( $mentioned_users, $content ) {
-	$pattern = '/(?<=[^A-Za-z0-9]|^)@([A-Za-z0-9-_\.@]+)\b/';
+
+	// Exclude mention in URL.
+	$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@([A-Za-z0-9-_\.@]+)\b/';
 	preg_match_all( $pattern, $content, $usernames );
 
 	// Make sure there's only one instance of each username.
