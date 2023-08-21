@@ -1279,6 +1279,82 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			return $result;
 		}
+		
+		/**
+		 * Add or update total reaction count.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array  $args   Args of reaction data.
+		 * @param string $action Add or remove the user reaction
+		 *
+		 * @return false|int|WP_Error
+		 */
+		public function bb_total_reactions_count( $args, $action ) {
+			global $wpdb;
+
+			$total_reactions_count = $this->bb_get_reactions_data(
+				array(
+					'name'        => 'total_reactions_count',
+					'fields'      => 'value',
+					'count_total' => false,
+				)
+			);
+
+			$total_reactions_count = ! empty( $total_reactions_count['reaction_data'] ) ? (int) current( $total_reactions_count['reaction_data'] ) : 0;
+
+			if ( 'add' === $action ) {
+				$total_reactions_count += 1;
+			} else {
+				$total_reactions_count -= 1;
+			}
+
+			$query = "SELECT * FROM " . self::$reaction_data_table . " WHERE name = %s";
+			$sql   = $wpdb->get_row( $wpdb->prepare( $query, 'total_reactions_count' ) );
+			if ( $sql ) {
+				$sql = $wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					"UPDATE " . self::$reaction_data_table . " SET
+                        value = %s
+                    WHERE
+                        name = %s
+                    ",
+					$total_reactions_count,
+					'total_reactions_count'
+				);
+			} else {
+				$sql = $wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					"INSERT INTO " . self::$reaction_data_table . " (
+                        name,
+                        value,
+                        rel1,
+                        rel2,
+                        rel3,
+                        date
+                    ) VALUES (
+                        %s, %s, %s, %s, %s, %s
+                    )",
+					'total_reactions_count',
+					$total_reactions_count,
+					'0',
+					'0',
+					'0',
+					$args['date_created']
+				);
+			}
+
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			if ( false === $wpdb->query( $sql ) ) {
+				if ( 'wp_error' === $args['error_type'] ) {
+					return new WP_Error( 'bb_total_reactions_count_cannot_add', __( 'There is an error while adding the total reaction count.', 'buddyboss' ) );
+				} else {
+					return false;
+				}
+			}
+
+			return $total_reactions_count;
+		}
 
 		/**
 		 * Add or update total item reaction count.
