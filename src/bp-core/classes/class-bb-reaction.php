@@ -1088,5 +1088,127 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			return $retval;
 		}
+
+		/**
+		 * Add reaction data.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $args Args of reaction data.
+		 *
+		 * @return false|int|WP_Error
+		 */
+		public function bb_add_reactions_data( $args ) {
+			global $wpdb;
+
+			$r = bp_parse_args(
+				$args,
+				array(
+					'name'         => '',
+					'value'        => '',
+					'rel1'         => '',
+					'rel2'         => '',
+					'rel3'         => '0',
+					'date_created' => bp_core_current_time(),
+					'error_type'   => 'bool',
+				)
+			);
+
+			/**
+			 * Fires before the add user item reaction in DB.
+			 *
+			 * @snce BuddyBoss [BBVERSION]
+			 *
+			 * @param array $r Args of user item reactions.
+			 */
+			do_action( 'bb_reaction_before_add_reactions_data', $r );
+
+			// Reaction need reaction ID.
+			if ( empty( $r['name'] ) ) {
+				if ( 'wp_error' === $r['error_type'] ) {
+					return new WP_Error( 'bb_reaction_data_empty_name', __( 'The item summary is required to add reaction data.', 'buddyboss' ) );
+				}
+				return false;
+				// Reaction need item type.
+			} elseif ( empty( $r['value'] ) ) {
+				if ( 'wp_error' === $r['error_type'] ) {
+					return new WP_Error( 'bb_reaction_data_empty_value', __( 'The value is required to add reaction data.', 'buddyboss' ) );
+				}
+				return false;
+				// Reaction need item id.
+			} elseif ( empty( $r['rel1'] ) ) {
+				if ( 'wp_error' === $r['error_type'] ) {
+					return new WP_Error( 'bb_reaction_data_empty_rel1', __( 'The item type is required to add reaction data.', 'buddyboss' ) );
+				}
+				return false;
+			} elseif ( empty( $r['rel2'] ) ) {
+				if ( 'wp_error' === $r['error_type'] ) {
+					return new WP_Error( 'bb_reaction_data_empty_rel2', __( 'The item id is required to add reaction data.', 'buddyboss' ) );
+				}
+				return false;
+			}
+
+			$sql          = "SELECT * FROM " . self::$reaction_data_table . " WHERE name = %s AND rel1 = %s AND rel2 = %s";
+			$reaction_data = $wpdb->get_row( $wpdb->prepare( $sql, 'item_summary', $r['rel1'], $r['rel2'] ) );
+			if ( $reaction_data ) {
+				$sql = $wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					"UPDATE " . self::$reaction_data_table . " SET
+                        value = %s
+                    WHERE
+                        rel1 = %s
+                        AND rel2 = %s
+                        AND name = %s
+                    ",
+					$r['value'],
+					$r['rel1'],
+					$r['rel2'],
+					$r['name']
+				);
+			} else {
+				$sql = $wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					"INSERT INTO " . self::$reaction_data_table . " (
+                        name,
+                        value,
+                        rel1,
+                        rel2,
+                        rel3,
+                        date
+                    ) VALUES (
+                        %s, %s, %s, %s, %s, %s
+                    )",
+					$r['name'],
+					$r['value'],
+					$r['rel1'],
+					$r['rel2'],
+					$r['rel3'],
+					$r['date_created']
+				);
+			}
+
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			if ( false === $wpdb->query( $sql ) ) {
+				if ( 'wp_error' === $r['error_type'] ) {
+					return new WP_Error( 'bb_reaction_cannot_add', __( 'There is an error while adding the reaction data.', 'buddyboss' ) );
+				} else {
+					return false;
+				}
+			}
+
+			$reaction_data_id = $wpdb->insert_id;
+
+			/**
+			 * Fires after the add user item reaction in DB.
+			 *
+			 * @snce BuddyBoss [BBVERSION]
+			 *
+			 * @param int   $reaction_data_id Reaction data id.
+			 * @param array $r                Args of user item reactions.
+			 */
+			do_action( 'bb_reaction_after_add_reactions_data', $reaction_data_id, $r );
+
+			return $reaction_data_id;
+		}
 	}
 }
