@@ -158,6 +158,7 @@ add_filter( 'bbp_get_topic_content', 'convert_chars', 8 );
 add_filter( 'bbp_get_topic_content', 'capital_P_dangit', 10 );
 add_filter( 'bbp_get_topic_content', 'convert_smilies', 20 );
 add_filter( 'bbp_get_topic_content', 'force_balance_tags', 30 );
+add_filter( 'bbp_get_topic_content', 'do_blocks', 9 );
 add_filter( 'bbp_get_topic_content', 'wpautop', 40 );
 add_filter( 'bbp_get_topic_content', 'bbp_remove_html_tags', 45 );
 add_filter( 'bbp_get_topic_content', 'bbp_rel_nofollow', 50 );
@@ -173,7 +174,7 @@ add_filter( 'bbp_get_form_reply_content', 'bbp_code_trick_reverse' );
 add_filter( 'bbp_get_form_reply_content', 'esc_textarea' );
 add_filter( 'bbp_get_form_reply_content', 'trim' );
 
-// Add number format filter to functions requiring numeric output
+// Add number format filter to functions requesting formatted values.
 add_filter( 'bbp_get_user_topic_count', 'bbp_number_format', 10 );
 add_filter( 'bbp_get_user_reply_count', 'bbp_number_format', 10 );
 add_filter( 'bbp_get_user_post_count', 'bbp_number_format', 10 );
@@ -184,6 +185,40 @@ add_filter( 'bbp_get_forum_post_count', 'bbp_number_format', 10 );
 add_filter( 'bbp_get_topic_voice_count', 'bbp_number_format', 10 );
 add_filter( 'bbp_get_topic_reply_count', 'bbp_number_format', 10 );
 add_filter( 'bbp_get_topic_post_count', 'bbp_number_format', 10 );
+add_filter( 'bbp_get_topic_revision_count', 'bbp_number_format', 10 );
+add_filter( 'bbp_get_reply_revision_count', 'bbp_number_format', 10 );
+add_filter( 'bbp_get_forum_topic_count_hidden', 'bbp_number_format', 10 );
+add_filter( 'bbp_get_topic_reply_count_hidden', 'bbp_number_format', 10 );
+
+// Add number-not-negative filter to values that can never be negative numbers.
+add_filter( 'bbp_get_user_topic_count',             'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_user_reply_count',             'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_user_post_count',              'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_subforum_count',         'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_topic_count',            'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_reply_count',            'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_post_count',             'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_voice_count',            'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_reply_count',            'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_post_count',             'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_topic_count_hidden',     'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_reply_count_hidden',     'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_revision_count',         'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_reply_revision_count',         'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_user_topic_count_int',         'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_user_reply_count_int',         'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_user_post_count_int',          'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_subforum_count_int',     'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_topic_count_int',        'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_reply_count_int',        'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_post_count_int',         'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_voice_count_int',        'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_reply_count_int',        'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_post_count_int',         'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_topic_count_hidden_int', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_reply_count_hidden_int', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_revision_count_int',     'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_reply_revision_count_int',     'bbp_number_not_negative', 8 );
 
 // Sanitize displayed user data
 add_filter( 'bbp_get_displayed_user_field', 'bbp_sanitize_displayed_user_field', 10, 3 );

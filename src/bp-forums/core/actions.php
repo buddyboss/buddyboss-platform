@@ -570,31 +570,41 @@ function bb_post_topic_reply_draft() {
  * @since BuddyBoss 2.2.1
  */
 function bb_forum_add_content_popup() {
-	if ( ! bbp_is_single_forum() ) {
+	global $template_forum_ids;
+
+	if ( empty( $template_forum_ids ) ) {
 		return;
 	}
+
+	$template_forum_ids = array_unique( $template_forum_ids );
+
+	// Output the extracted IDs.
+	foreach ( $template_forum_ids as $forum_id ) {
 	?>
-	<!-- Forum description popup -->
-	<div class="bb-action-popup" id="single-forum-description-popup" style="display: none">
-		<transition name="modal">
-			<div class="modal-mask bb-white bbm-model-wrap">
-				<div class="modal-wrapper">
-					<div class="modal-container">
-						<header class="bb-model-header">
-							<h4><span class="target_name"><?php echo esc_html__( 'Forum Description', 'buddyboss' ); ?></span></h4>
-							<a class="bb-close-action-popup bb-model-close-button" href="#">
-								<span class="bb-icon-l bb-icon-times"></span>
-							</a>
-						</header>
-						<div class="bb-action-popup-content">
-							<?php bbp_forum_content(); ?>
+		<!-- Forum description popup -->
+		<div class="bb-action-popup" id="single-forum-description-popup-<?php echo esc_attr( $forum_id ); ?>" style="display: none">
+			<transition name="modal">
+				<div class="modal-mask bb-white bbm-model-wrap">
+					<div class="modal-wrapper">
+						<div class="modal-container">
+							<header class="bb-model-header">
+								<h4><span class="target_name"><?php echo esc_html__( 'Forum Description', 'buddyboss' ); ?></span></h4>
+								<a class="bb-close-action-popup bb-model-close-button" href="#">
+									<span class="bb-icon-l bb-icon-times"></span>
+								</a>
+							</header>
+							<div class="bb-action-popup-content">
+								<?php echo wpautop( wp_kses_post( bbp_get_forum_content( $forum_id ) ) ); ?>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		</transition>
-	</div> <!-- .bb-action-popup -->
+			</transition>
+		</div> <!-- .bb-action-popup -->
 	<?php
+	}
+
+	unset( $template_forum_ids );
 }
 
 /**
@@ -645,7 +655,17 @@ function bb_forums_save_link_preview_data( $post_id ) {
 		}, ARRAY_FILTER_USE_KEY );
 	}
 
-	$link_url   = ! empty( $link_preview_data['link_url'] ) ? filter_var( $link_preview_data['link_url'], FILTER_VALIDATE_URL ) : '';
+	$link_url = '';
+	if ( ! empty( $link_preview_data['link_url'] ) ) {
+		$parsed_url = wp_parse_url( $link_preview_data['link_url'] );
+		if ( ! $parsed_url || empty( $parsed_url['host'] ) ) {
+			$link_url = 'http://' . $link_preview_data['link_url'];
+		} else {
+			$link_url = $link_preview_data['link_url'];
+		}
+	}
+
+	$link_url   = ! empty( $link_url ) ? filter_var( $link_url, FILTER_VALIDATE_URL ) : '';
 	$link_embed = isset( $link_preview_data['link_embed'] ) ? filter_var( $link_preview_data['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false;
 
 	// Check if link url is set or not.

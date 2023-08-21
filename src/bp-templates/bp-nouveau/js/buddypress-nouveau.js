@@ -3055,7 +3055,7 @@ window.bp = window.bp || {};
 							isInViewPort = true;
 						}
 					} catch ( err ) {
-						console.error( err.message );
+						console.log( err.message );
 						if ( ! isInViewPort && lazy[ i ].getBoundingClientRect().top <= ( ( window.innerHeight || document.documentElement.clientHeight ) + window.scrollY ) ) {
 							isInViewPort = true;
 						}
@@ -3928,6 +3928,7 @@ window.bp = window.bp || {};
 			scrapURL: function ( urlText, targetPreviewParent, targetDataInput ) {
 				var self = this;
 				var urlString = '';
+				var bbLinkUrlInput = '';
 
 				if ( targetPreviewParent ) {
 					var formEl = targetPreviewParent.closest( 'form' );
@@ -3935,10 +3936,11 @@ window.bp = window.bp || {};
 						var currentValue = JSON.parse( formEl.find( 'input#bb_link_url').val() );
 						self.options.link_url = currentValue.url ? currentValue.url : '';
 						self.options.link_image_index_save = currentValue.link_image_index_save;
+						bbLinkUrlInput = self.options.link_url;
 					}
 				}
-				
-		
+
+
 				if ( ( urlText === null || urlText === '' ) && self.options.link_url === undefined ) {
 					return;
 				}
@@ -3954,16 +3956,16 @@ window.bp = window.bp || {};
 				if( targetDataInput.length > 0 && targetDataInput.prop('tagName').toLowerCase() === 'input' ){
 					self.dataInput = targetDataInput;
 				}
-		
+
 				//Remove mentioned members Link
 				var tempNode = jQuery( '<div></div>' ).html( urlText );
 				tempNode.find( 'a.bp-suggestions-mention' ).remove();
 				urlText = tempNode.html();
-		
+
 				if ( urlText.indexOf( '<img' ) >= 0 ) {
 					urlText = urlText.replace( /<img .*?>/g, '' );
 				}
-		
+
 				if ( urlText.indexOf( 'http://' ) >= 0 ) {
 					urlString = this.getURL( 'http://', urlText );
 				} else if ( urlText.indexOf( 'https://' ) >= 0 ) {
@@ -3971,7 +3973,11 @@ window.bp = window.bp || {};
 				} else if ( urlText.indexOf( 'www.' ) >= 0 ) {
 					urlString = this.getURL( 'www', urlText );
 				}
-		
+
+				if ( '' === urlString && '' === bbLinkUrlInput ) {
+					return;
+				}
+
 				if ( urlString !== '' ) {
 					// check if the url of any of the excluded video oembeds.
 					var url_a    = document.createElement( 'a' );
@@ -3981,20 +3987,20 @@ window.bp = window.bp || {};
 						urlString = '';
 					}
 				}
-		
+
 				if ( '' !== urlString ) {
 					this.loadURLPreview( urlString );
-				} else if( self.options.link_url ) {
-					this.loadURLPreview( self.options.link_url );
+				} else if ( bbLinkUrlInput ) {
+					this.loadURLPreview( bbLinkUrlInput );
 				}
 			},
-		
+
 			getURL: function ( prefix, urlText ) {
 				var urlString   = '';
 				urlText         = urlText.replace( /&nbsp;/g, '' );
 				var startIndex  = urlText.indexOf( prefix );
 				var responseUrl = '';
-		
+
 				if ( ! _.isUndefined( jQuery( $.parseHTML( urlText ) ).attr( 'href' ) ) ) {
 					urlString = jQuery( urlText ).attr( 'href' );
 				} else {
@@ -4015,33 +4021,33 @@ window.bp = window.bp || {};
 						urlString = prefix + urlString;
 					}
 				}
-		
+
 				var div       = document.createElement( 'div' );
 				div.innerHTML = urlString;
 				var elements  = div.getElementsByTagName( '*' );
-		
+
 				while ( elements[ 0 ] ) {
 					elements[ 0 ].parentNode.removeChild( elements[ 0 ] );
 				}
-		
+
 				if ( div.innerHTML.length > 0 ) {
 					responseUrl = div.innerHTML;
 				}
-		
+
 				return responseUrl;
 			},
-		
+
 			loadURLPreview: function ( url ) {
 				var self = this;
-		
+
 				var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?$/;
 				url        = $.trim( url );
 				if ( regexp.test( url ) ) {
-		
+
 					if ( url.includes( window.location.hostname ) && ( url.includes( 'download_document_file' ) || url.includes( 'download_media_file' ) || url.includes( 'download_video_file' ) ) ) {
 						return false;
 					}
-		
+
 					var urlResponse = false;
 					if ( self.loadedURLs.length ) {
 						$.each(
@@ -4054,11 +4060,11 @@ window.bp = window.bp || {};
 							}
 						);
 					}
-		
+
 					if ( self.loadURLAjax != null ) {
 						self.loadURLAjax.abort();
 					}
-		
+
 					Object.assign( self.options, {
 							link_scrapping: true,
 							link_loading: true,
@@ -4084,7 +4090,7 @@ window.bp = window.bp || {};
 						}
 					}
 					self.render( self.options );
-		
+
 					if ( ! urlResponse ) {
 						self.loadURLAjax = $.post(
 							ajaxurl,
@@ -4104,17 +4110,17 @@ window.bp = window.bp || {};
 					}
 				}
 			},
-		
+
 			setURLResponse: function ( response, url ) {
 				var self = this;
-		
+
 				self.options.link_loading = false;
-		
+
 				if ( response.title === '' && response.images === '' ) {
 					self.options.link_scrapping = false;
 					return;
 				}
-		
+
 				if ( response.error === '' ) {
 					var urlImages = response.images;
 					self.options.link_image_index = 0;
@@ -4131,8 +4137,8 @@ window.bp = window.bp || {};
 					Object.assign( self.options, {
 							link_success: true,
 							link_url: url,
-							link_title: response.title,
-							link_description: response.description,
+							link_title: ! _.isUndefined( response.title ) ? response.title : '',
+							link_description: ! _.isUndefined( response.description ) ? response.description : '',
 							link_images: urlImages,
 							link_image_index: urlImagesIndex,
 							link_embed: ! _.isUndefined( response.wp_embed ) && response.wp_embed
@@ -4147,14 +4153,14 @@ window.bp = window.bp || {};
 						$( '#whats-new-attachments' ).removeClass( 'bb-link-preview' );
 					}
 
-					if ( response.description.indexOf( 'iframe' ) > -1 || ( ! _.isUndefined( response.wp_embed ) && response.wp_embed ) ) {
+					if ( ( 'undefined' !== typeof response.description && response.description.indexOf( 'iframe' ) > -1 ) || ( ! _.isUndefined( response.wp_embed ) && response.wp_embed ) ) {
 						$( '#whats-new-attachments' ).addClass( 'bb-video-preview' );
 					} else {
 						$( '#whats-new-attachments' ).addClass( 'bb-link-preview' );
 					}
-		
+
 					self.loadedURLs.push( { 'url': url, 'response': response } );
-					self.render( self.options );		
+					self.render( self.options );
 				} else {
 					Object.assign( self.options, {
 							link_success: false,
@@ -4168,7 +4174,7 @@ window.bp = window.bp || {};
 				}
 			}
 		}
-			
+
 
 	};
 

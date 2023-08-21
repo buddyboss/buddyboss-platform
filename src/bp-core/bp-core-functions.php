@@ -4064,15 +4064,10 @@ function bp_email_unsubscribe_handler() {
 	$raw_hash       = ! empty( $_GET['nh'] ) ? $_GET['nh'] : '';
 	$raw_user_id    = ! empty( $_GET['uid'] ) ? absint( $_GET['uid'] ) : 0;
 	$new_hash       = hash_hmac( 'sha1', "{$raw_email_type}:{$raw_user_id}", bp_email_get_salt() );
+	$message_type   = 'error';
 
 	// Check required values.
 	if ( ! $raw_user_id || ! $raw_email_type || ! $raw_hash || ! array_key_exists( $raw_email_type, $emails ) ) {
-		$redirect_to = wp_login_url();
-		$result_msg  = __( 'Something has gone wrong.', 'buddyboss' );
-		$unsub_msg   = __( 'Please log in and go to your settings to unsubscribe from notification emails.', 'buddyboss' );
-
-		// Check valid hash.
-	} elseif ( ! hash_equals( $new_hash, $raw_hash ) ) {
 		$redirect_to = wp_login_url();
 		$result_msg  = __( 'Something has gone wrong.', 'buddyboss' );
 		$unsub_msg   = __( 'Please log in and go to your settings to unsubscribe from notification emails.', 'buddyboss' );
@@ -4091,6 +4086,11 @@ function bp_email_unsubscribe_handler() {
 		} else {
 			$redirect_to = bp_core_get_user_domain( get_current_user_id() );
 		}
+		// Check valid hash
+	} elseif ( ! hash_equals( $new_hash, $raw_hash ) ) {
+		$redirect_to = wp_login_url();
+		$result_msg  = __( 'Something has gone wrong.', 'buddyboss' );
+		$unsub_msg   = __( 'Please log in and go to your settings to unsubscribe from notification emails.', 'buddyboss' );
 	} else {
 		if ( bp_is_active( 'settings' ) ) {
 			$redirect_to = sprintf(
@@ -4106,8 +4106,9 @@ function bp_email_unsubscribe_handler() {
 		$meta_key = $emails[ $raw_email_type ]['unsubscribe']['meta_key'];
 		bp_update_user_meta( $raw_user_id, $meta_key, 'no' );
 
-		$result_msg = $emails[ $raw_email_type ]['unsubscribe']['message'];
-		$unsub_msg  = __( 'You can change this or any other email notification preferences in your email settings.', 'buddyboss' );
+		$result_msg   = $emails[ $raw_email_type ]['unsubscribe']['message'];
+		$unsub_msg    = __( 'You can change this or any other email notification preferences in your email settings.', 'buddyboss' );
+		$message_type = 'success';
 	}
 
 	$message = sprintf(
@@ -4117,7 +4118,7 @@ function bp_email_unsubscribe_handler() {
 		esc_html( $unsub_msg )
 	);
 
-	bp_core_add_message( $message );
+	bp_core_add_message( $message , $message_type );
 	bp_core_redirect( bp_core_get_user_domain( $raw_user_id ) );
 
 	exit;
@@ -4585,7 +4586,9 @@ add_action( 'wp_ajax_bp_get_suggestions', 'bp_ajax_get_suggestions' );
  *                    value. Boolean false if no mentions found.
  */
 function bp_find_mentions_by_at_sign( $mentioned_users, $content ) {
-	$pattern = '/(?<=[^A-Za-z0-9]|^)@([A-Za-z0-9-_\.@]+)\b/';
+
+	// Exclude mention in URL.
+	$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@([A-Za-z0-9-_\.@]+)\b/';
 	preg_match_all( $pattern, $content, $usernames );
 
 	// Make sure there's only one instance of each username.
@@ -4844,14 +4847,14 @@ function bp_core_parse_url( $url ) {
 		$parsed_url_data['error']       = '';
 		$parsed_url_data['wp_embed']    = true;
 	} else {
+		$args = array( 'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0' );
+
+		if ( bb_is_same_site_url( $url ) ) {
+			$args['sslverify'] = false;
+		}
 
 		// safely get URL and response body.
-		$response = wp_safe_remote_get(
-			$url,
-			array(
-				'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0',
-			)
-		);
+		$response = wp_safe_remote_get( $url, $args );
 		$body     = wp_remote_retrieve_body( $response );
 
 		// if response is not empty.
@@ -5779,8 +5782,8 @@ function bb_moderation_get_media_record_by_id( $id, $type ) {
 	global $wpdb;
 
 	$record         = array();
-	$media_table    = "{$wpdb->prefix}bp_media";
-	$document_table = "{$wpdb->prefix}bp_document";
+	$media_table    = "{$wpdb->base_prefix}bp_media";
+	$document_table = "{$wpdb->base_prefix}bp_document";
 
 	if ( in_array( $type, array( 'media', 'video' ) ) ) {
 		$cache_key   = 'bb_' . $type . '_activity_' . $id;
@@ -5830,7 +5833,7 @@ function bb_moderation_suspend_record_exist( $id ) {
 		return $record;
 	}
 
-	$suspend_table = "{$wpdb->prefix}bp_suspend";
+	$suspend_table = "{$wpdb->base_prefix}bp_suspend";
 
 	$cache_key = 'bb_suspend_' . $id;
 	$record    = wp_cache_get( $cache_key, 'bp_moderation' );
@@ -5859,7 +5862,7 @@ function bb_moderation_suspend_record_exist( $id ) {
 function bb_moderation_update_suspend_data( $moderated_activities, $offset = 0 ) {
 	global $wpdb;
 
-	$suspend_table = "{$wpdb->prefix}bp_suspend";
+	$suspend_table = "{$wpdb->base_prefix}bp_suspend";
 
 	if ( ! empty( $moderated_activities ) ) {
 		foreach ( $moderated_activities as $moderated_activity ) {
@@ -5930,7 +5933,7 @@ function bb_moderation_update_suspend_data( $moderated_activities, $offset = 0 )
  */
 function bb_moderation_bg_update_moderation_data() {
 	global $wpdb;
-	$suspend_table = "{$wpdb->prefix}bp_suspend";
+	$suspend_table = "{$wpdb->base_prefix}bp_suspend";
 	$table_exists  = (bool) $wpdb->get_results( "DESCRIBE {$suspend_table}" );
 
 	if ( ! $table_exists ) {
@@ -8307,6 +8310,17 @@ function bb_pro_pusher_version() {
 }
 
 /**
+ * Function to check the Delay email notifications for new messages is enabled or not.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @return int
+ */
+function bb_get_delay_email_notifications_time() {
+	return (int) apply_filters( 'bb_get_delay_email_notifications_time', bp_get_option( 'time_delay_email_notification', 15 ) );
+}
+
+/**
  * Function to return the time span for the presence in seconds.
  *
  * @since BuddyBoss 2.2
@@ -8805,4 +8819,24 @@ function bb_disable_notification_type( $notification_type, $type = 'main' ) {
 	update_option( 'bb_enabled_notification', $enabled_notification );
 
 	return true;
+}
+
+/**
+ * Check if the requested URL is from same site.
+ *
+ * @since BuddyBoss 2.4.00
+ *
+ * @param string $url URL to check.
+ *
+ * @return bool
+ */
+function bb_is_same_site_url( $url ) {
+	$parsed_url = wp_parse_url( $url );
+	$home_url   = wp_parse_url( home_url( '/' ) );
+
+	if ( ! empty( $parsed_url['host'] ) && ! empty( $parsed_url['scheme'] ) ) {
+		return ( strtolower( $parsed_url['host'] ) === strtolower( $home_url['host'] ) ) && ( $parsed_url['scheme'] === $home_url['scheme'] );
+	}
+
+	return false;
 }

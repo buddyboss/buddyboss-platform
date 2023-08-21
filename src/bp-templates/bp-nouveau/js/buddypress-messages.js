@@ -490,19 +490,29 @@ window.bp = window.bp || {};
 				{
 					'page'         : 1,
 					'total_page'   : 0,
-					'search_terms' : '',
+					'search_terms' : ( collection.options && collection.options.search_terms ) ? collection.options.search_terms : '',
 					'box'          : this.box
 				}
 			);
 
 			if ( collection.length ) {
 				// Use it in the filters viex.
-				filters_view = new bp.Views.messageFilters( {model: this.filters, threads: collection} );
+				filters_view = new bp.Views.messageFilters( { model: this.filters, threads: collection } );
 
-				this.views.add( {id: 'filters', view: filters_view} );
+				this.views.add( { id: 'filters', view: filters_view } );
 
 				$( '#subsubnav' ).removeClass( 'bp-hide' );
 				filters_view.inject( '.bp-messages-filters' );
+
+				if (
+					collection.options &&
+					collection.options.search_terms &&
+					collection.options.search_terms != '' &&
+					'undefined' !== typeof filters_view.$el &&
+					filters_view.$el.length > 0
+				) {
+					$( filters_view.$el ).find( 'input[type=search]' ).val( collection.options.search_terms );
+				}
 
 				$( '.bp-messages-threads-list .message-lists > li .thread-subject' ).each( function () {
 					var available_width = $( this ).width() - 10;
@@ -2195,17 +2205,48 @@ window.bp = window.bp || {};
 							if ( event.keyCode === 13 && event.shiftKey ) {
 								var MediumEditorOptDoc = bp.Nouveau.Messages.mediumEditor.options.ownerDocument;
 								var node = MediumEditor.selection.getSelectionStart( MediumEditorOptDoc ); // jshint ignore:line
+								var currentNode = MediumEditor.selection.getSelectionRange( MediumEditorOptDoc ); // jshint ignore:line
+								var p;
+								var newP;
+
 								// Do nothing if caret is in between the text.
 								if ( MediumEditor.selection.getCaretOffsets( node ).right !== 0 ) { // jshint ignore:line
+									return;
+								}
+
+								// Check if the current node is text node
+								if ( currentNode.endContainer && currentNode.endContainer.nodeName.toLowerCase() === 'div' && currentNode.endContainer.classList.contains( 'medium-editor-element' ) ) {
+									p = MediumEditorOptDoc.createElement( 'p' );
+									p.innerHTML = '<br>';
+									newP = currentNode.endContainer.appendChild( p );
+									MediumEditor.selection.moveCursor( MediumEditorOptDoc, newP ); // jshint ignore:line
+									setTimeout( function () {
+										newP.children[ 0 ].remove();
+									}, 100 );
+									return;
+								}
+
+								// Check if the current node is not an html element.
+								if ( currentNode.endContainer.parentNode && currentNode.endContainer.parentNode.classList.contains( 'medium-editor-element' ) ) {
+									p = MediumEditorOptDoc.createElement( 'p' );
+									p.innerHTML = '<br>';
+									if ( currentNode.endContainer.nextElementSibling ) {
+										newP = currentNode.endContainer.parentNode.insertBefore( p, currentNode.endContainer.nextSibling );
+									} else {
+										newP = currentNode.endContainer.parentNode.appendChild( p );
+									}
+									MediumEditor.selection.moveCursor( MediumEditorOptDoc, newP ); // jshint ignore:line
+									setTimeout( function () {
+										newP.children[ 0 ].remove();
+									}, 100 );
 									return;
 								}
 
 								// Make sure current node is not list item element.
 								if ( ! MediumEditor.util.isListItem( node ) ) { // jshint ignore:line
 									event.preventDefault();
-									var p = MediumEditorOptDoc.createElement( 'p' );
+									p = MediumEditorOptDoc.createElement( 'p' );
 									p.innerHTML = '<br>';
-									var newP;
 									// Make sure current node is not inline element.
 									if ( ! MediumEditor.util.isBlockContainer( node ) ) { // jshint ignore:line
 										// If next element is there add before it else add at the end.
@@ -2233,7 +2274,7 @@ window.bp = window.bp || {};
 									if ( node.nextElementSibling ) {
 										newLI = node.parentNode.insertBefore( li, node.nextSibling );
 									} else {
-										newLI = node.parentNode.insertBefore( li, node.parentNode.nextSibling );
+										newLI = node.parentNode.appendChild( li );
 									}
 									MediumEditor.selection.moveCursor( MediumEditorOptDoc, newLI ); // jshint ignore:line
 									event.preventDefault();
@@ -2291,7 +2332,7 @@ window.bp = window.bp || {};
 										}
 
 										if ( 'undefined' !== typeof window.messageCaretPosition.commonAncestorContainer.classList &&
-										     window.messageCaretPosition.commonAncestorContainer.classList.contains( 'medium-editor-element' ) ) {
+											window.messageCaretPosition.commonAncestorContainer.classList.contains( 'medium-editor-element' ) ) {
 											var content = '<p>' + bp.Nouveau.Messages.mediumEditor.getContent() + '</p>';
 											bp.Nouveau.Messages.mediumEditor.setContent( content );
 											bp.Nouveau.Messages.mediumEditor.checkContentChanged();
@@ -2313,7 +2354,7 @@ window.bp = window.bp || {};
 											window.messageCaretPosition = '';
 										}
 
-										// Enable submit button
+										// Enable submit button.
 										$( '#bp-message-content' ).addClass( 'focus-in--content' );
 									},
 
@@ -2489,7 +2530,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								errorText = response.data.feedback;
-							} else if ( 'Server responded with 0 code.' == response ) { // update error text to user friendly.
+							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								errorText = BP_Nouveau.media.connection_lost_error;
 							}
 						} else {
@@ -2617,11 +2658,7 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Messages.dropzone.on(
 					'addedfile',
-					function ( file ) {
-						var filename = file.upload.filename;
-						var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
-						$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
-
+					function () {
 						total_uploaded_file++;
 					}
 				);
@@ -2677,6 +2714,16 @@ window.bp = window.bp || {};
 							if ( total_uploaded_file <= BP_Nouveau.document.maxFiles ) {
 								bp.Nouveau.Messages.removeFeedback();
 							}
+
+							var filename = file.upload.filename;
+							var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+							var file_icon = ( !_.isUndefined( response.data.svg_icon ) ? response.data.svg_icon : '' );
+							var icon_class = !_.isEmpty( file_icon ) ? file_icon : 'bb-icon-file-' + fileExtension;
+
+							if ( $( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).length ) {
+								$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( icon_class );
+							}
+
 							return file.previewElement.classList.add( 'dz-success' );
 						} else {
 							var message = response.data.feedback;
@@ -2719,7 +2766,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								errorText = response.data.feedback;
-							} else if ( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								errorText = BP_Nouveau.media.connection_lost_error;
 							}
 						} else {
@@ -2966,7 +3013,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								errorText = response.data.feedback;
-							} else if ( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								errorText = BP_Nouveau.media.connection_lost_error;
 							}
 						} else {
@@ -4342,7 +4389,8 @@ window.bp = window.bp || {};
 					target.closest( '.bp-messages-nav-panel' ).removeClass( 'threads-scrolled' );
 				}
 
-				if ( ( target[0].scrollHeight - target.scrollTop() ) >= ( target.innerHeight() - 5 ) &&
+				if (
+					( target.scrollTop() + target.innerHeight() >= target[ 0 ].scrollHeight - 5 ) &&
 					this.collection.length &&
 					this.collection.options.page < this.collection.options.total_page &&
 					! target.find( '.bp-user-messages-loading' ).length

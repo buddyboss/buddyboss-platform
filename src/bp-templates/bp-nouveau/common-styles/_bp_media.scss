@@ -2023,24 +2023,24 @@ img.emoji,
 img.emojioneemoji {
 	display: inline-block;
 	margin: 3px;
-	width: 24px !important;
-	height: 24px !important;
+	width: 24px;
+	height: 24px;
 }
 
 .emojionearea-filters {
 
 	img.emoji,
 	img.emojioneemoji {
-		max-width: 20px !important;
-		max-height: 20px !important;
-		width: 20px !important;
-		height: auto !important;
+		max-width: 20px;
+		max-height: 20px;
+		width: 20px;
+		height: auto;
 	}
 
 	.emojionearea-filter-flags {
 
 		img.emojioneemoji {
-			max-width: 14px !important;
+			max-width: 14px;
 		}
 	}
 }
@@ -3364,6 +3364,13 @@ div.dropzone .dz-preview {
 						&.disabled-move a {
 							pointer-events: none;
 							opacity: 0.7;
+						}
+
+						&.disabled-move[data-balloon]:after {
+							content: attr(data-balloon);
+							white-space: normal;
+							max-width: 200px;
+							width: 100%;
 						}
 
 						a:before {
@@ -4718,6 +4725,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 			&:after {
 				content: "\ef30";
 				font-family: "bb-icons"; /* stylelint-disable-line */
+				font-weight: 400;
 				font-size: 18px;
 				line-height: 1;
 				margin-left: 10px;

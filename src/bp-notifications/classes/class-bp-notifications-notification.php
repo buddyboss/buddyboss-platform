@@ -956,9 +956,6 @@ class BP_Notifications_Notification {
 	 *
 	 * We use BP_Date_Query, which extends WP_Date_Query, to do the heavy lifting
 	 * of parsing the date_query array and creating the necessary SQL clauses.
-	 * However, since BP_Notifications_Notification::get() builds its SQL
-	 * differently than WP_Query, we have to alter the return value (stripping
-	 * the leading AND keyword from the query).
 	 *
 	 * @since BuddyPress 2.3.0
 	 *
@@ -967,17 +964,7 @@ class BP_Notifications_Notification {
 	 * @return string
 	 */
 	public static function get_date_query_sql( $date_query = array() ) {
-
-		// Bail if not a proper date query format.
-		if ( empty( $date_query ) || ! is_array( $date_query ) ) {
-			return '';
-		}
-
-		// Date query.
-		$date_query = new BP_Date_Query( $date_query, 'date_notified' );
-
-		// Strip the leading AND - it's handled in get().
-		return preg_replace( '/^\sAND/', '', $date_query->get_sql() );
+		return BP_Date_Query::get_where_sql( $date_query, 'n.date_notified' );
 	}
 
 	/**
@@ -1029,10 +1016,18 @@ class BP_Notifications_Notification {
 	 * @param array $args Associative array of columns/values, to determine
 	 *                    which rows should be deleted.  Of the format
 	 *                    array( 'item_id' => 7, 'component_action' => 'members', ).
-	 * @return int|false Number of rows deleted on success, false on failure.
+	 *
+	 * @return int|false $retval Number of rows deleted on success, false on failure.
 	 */
 	public static function delete( $args = array() ) {
+		global $wpdb;
+
 		$where = self::get_query_clauses( $args );
+
+		$bp        = buddypress();
+		$where_sql = self::get_where_sql( $where );
+
+		$notifications = $wpdb->get_results( "SELECT * FROM {$bp->notifications->table_name} {$where_sql}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		/**
 		 * Fires before the deletion of a notification item.
@@ -1045,7 +1040,22 @@ class BP_Notifications_Notification {
 		 */
 		do_action( 'bp_notification_before_delete', $args );
 
-		return self::_delete( $where['data'], $where['format'] );
+		$retval = self::_delete( $where['data'], $where['format'] );
+
+		/**
+		 * Fires after the deletion of a notification item.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int|false $retval        Number of rows deleted on success, false on failure.
+		 * @param array     $notifications Array of deleted notifications object.
+		 * @param array     $args          Associative array of columns/values, to determine
+		 *                                 which rows should be deleted. Of the format
+		 *                                 array( 'item_id' => 7, 'component_action' => 'members' ).
+		 */
+		do_action( 'bp_notification_after_delete', $retval, $notifications, $args );
+
+		return $retval;
 	}
 
 	/** Convenience methods ***************************************************/

@@ -525,7 +525,8 @@ window.bp = window.bp || {};
 							'menu_order': activity_data.document[ doci ].menu_order,
 							'folder_id': activity_data.document[ doci ].folder_id,
 							'group_id': activity_data.document[ doci ].group_id,
-							'saved': true
+							'saved': true,
+							'svg_icon': !_.isUndefined( activity_data.document[ doci ].svg_icon ) ? activity_data.document[ doci ].svg_icon : ''
 						};
 					} else {
 						document_edit_data = {
@@ -540,6 +541,7 @@ window.bp = window.bp || {};
 							'folder_id': activity_data.document[ doci ].folder_id,
 							'group_id': activity_data.document[ doci ].group_id,
 							'saved': false,
+							'svg_icon': !_.isUndefined( activity_data.document[ doci ].svg_icon ) ? activity_data.document[ doci ].svg_icon : ''
 						};
 					}
 
@@ -554,7 +556,8 @@ window.bp = window.bp || {};
 						},
 						dataURL: activity_data.document[ doci ].url,
 						id: activity_data.document[ doci ].doc_id,
-						document_edit_data: document_edit_data
+						document_edit_data: document_edit_data,
+						svg_icon: !_.isUndefined( activity_data.document[ doci ].svg_icon ) ? activity_data.document[ doci ].svg_icon : ''
 					};
 
 					if ( self.dropzone ) {
@@ -1676,7 +1679,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( ! _.isUndefined( response ) && ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.feedback ) ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
@@ -1835,9 +1838,6 @@ window.bp = window.bp || {};
 							self.document.push( file.document_edit_data );
 							self.model.set( 'document', self.document );
 						}
-						var filename = file.upload.filename;
-						var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
-						$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
 					}
 				);
 
@@ -1895,10 +1895,20 @@ window.bp = window.bp || {};
 							file.id                  = response.data.id;
 							response.data.uuid       = file.upload.uuid;
 							response.data.group_id   = ! _.isUndefined( BP_Nouveau.media ) && ! _.isUndefined( BP_Nouveau.media.group_id ) ? BP_Nouveau.media.group_id : false;
+							response.data.svg_icon   = ( ! _.isUndefined( response.data.svg_icon ) ? response.data.svg_icon : '' );
 							response.data.saved      = false;
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 							self.document.push( response.data );
 							self.model.set( 'document', self.document );
+
+							var filename      = file.upload.filename;
+							var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+							var file_icon     = ( ! _.isUndefined( response.data.svg_icon ) ? response.data.svg_icon : '' );
+							var icon_class    = ! _.isEmpty( file_icon ) ? file_icon : 'bb-icon-file-' + fileExtension;
+
+							if ( $( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).length ) {
+								$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( icon_class );
+							}
 						} else {
 							var node, _i, _len, _ref, _results;
 							var message = response.data.feedback;
@@ -1933,7 +1943,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( ! _.isUndefined( response ) && ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.feedback ) ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
@@ -1999,9 +2009,21 @@ window.bp = window.bp || {};
 				// Enable submit button when all documents are uploaded
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'complete',
-					function() {
+					function( file ) {
 						if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
-							self.$el.closest( '#whats-new-form').removeClass( 'media-uploading' );
+							self.$el.closest( '#whats-new-form' ).removeClass( 'media-uploading' );
+						}
+
+						var filename  = !_.isUndefined( file.name ) ? file.name : '';
+						var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+						var file_icon     = ( ! _.isUndefined( file.svg_icon ) ? file.svg_icon : '' );
+						var icon_class    = ! _.isEmpty( file_icon ) ? file_icon : 'bb-icon-file-' + fileExtension;
+
+						if (
+							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).length  &&
+							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).hasClass( 'bb-icon-file' )
+						) {
+							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( icon_class );
 						}
 					}
 				);
@@ -2210,7 +2232,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( ! _.isUndefined( response ) && ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.feedback ) ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
@@ -2580,7 +2602,7 @@ window.bp = window.bp || {};
 			},
 
 			search: function ( e ) {
-				
+
 				// Prevent search dropdown from closing with enter key
 				if ( e.key === 'Enter' || e.keyCode === 13 ) {
 					e.preventDefault();
@@ -2605,7 +2627,7 @@ window.bp = window.bp || {};
 					},
 					1000
 				);
-				
+
 			},
 
 			searchGif: function ( q ) {
@@ -3099,8 +3121,8 @@ window.bp = window.bp || {};
 					self.options.activity.set(
 						{
 							link_success: true,
-							link_title: response.title,
-							link_description: response.description,
+							link_title: ! _.isUndefined( response.title ) ? response.title : '',
+							link_description: ! _.isUndefined( response.description ) ? response.description : '',
 							link_images: urlImages,
 							link_image_index: urlImagesIndex,
 							link_image_index_save: link_image_index_save,
@@ -3119,7 +3141,7 @@ window.bp = window.bp || {};
 					}
 
 					if ( $( '.activity-media-container' ).length ) {
-						if ( response.description.indexOf( 'iframe' ) > -1 || ( ! _.isUndefined( response.wp_embed ) && response.wp_embed ) ) {
+						if ( ( 'undefined' !== typeof response.description && response.description.indexOf( 'iframe' ) > -1 ) || ( ! _.isUndefined( response.wp_embed ) && response.wp_embed ) ) {
 							$( '#whats-new-attachments' ).addClass( 'activity-video-preview' );
 						} else {
 							$( '#whats-new-attachments' ).addClass( 'activity-link-preview' );

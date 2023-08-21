@@ -1266,6 +1266,8 @@ function bp_document_delete_orphaned_attachments() {
 
 	add_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10, 2 );
 	add_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10, 2 );
+
+	bb_document_remove_orphaned_download();
 }
 
 /**
@@ -1665,7 +1667,7 @@ function bp_document_svg_icon( $extension, $attachment_id = 0, $type = 'font' ) 
 				// added svg icon support.
 				if ( 'svg' === $type ) {
 					$svg_icons = array_column( bp_document_svg_icon_list(), 'svg', 'icon' );
-					$icon      = $svg_icons[ $icon ];
+					$icon      = isset( $svg_icons[ $icon ] ) ? $svg_icons[ $icon ] : '';
 				}
 
 				return apply_filters( 'bp_document_svg_icon', $icon, $extension );
@@ -1930,7 +1932,7 @@ function bp_document_svg_icon( $extension, $attachment_id = 0, $type = 'font' ) 
 		case 'jpg':
 		case 'jpeg':
 			$svg = array(
-				'font' => 'bb-icon-file-jpg',
+				'font' => 'bb-icon-file-image',
 				'svg'  => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-jpg</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.736 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0h9.728zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM16 13.504c1.6 0 2.912 1.248 3.008 2.816v8.192c0 1.6-1.248 2.88-2.816 2.976h-8.192c-1.6 0-2.912-1.248-2.976-2.816l-0.032-0.16v-8c0-1.6 1.248-2.912 2.848-3.008h8.16zM16 14.496h-8c-1.056 0-1.92 0.832-1.984 1.856v8.16c0 0.064 0 0.096 0 0.16l2.624-2.432c0.384-0.384 1.024-0.352 1.408 0.032v0l1.376 1.504 3.328-3.84c0.352-0.416 0.992-0.448 1.408-0.096 0.032 0.032 0.064 0.064 0.096 0.096l1.76 1.92v-5.344c0-1.056-0.832-1.92-1.856-2.016h-0.16zM10.752 18.112c0.704 0 1.248 0.544 1.248 1.248 0 0.672-0.544 1.248-1.248 1.248s-1.248-0.576-1.248-1.248c0-0.704 0.544-1.248 1.248-1.248z"></path></svg>',
 			);
 			break;
@@ -3987,8 +3989,10 @@ function bp_document_delete_symlinks( $document ) {
 					$group_status    = bp_get_group_status( $group_object );
 					$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $privacy . sanitize_key( $name ) );
 				}
-				if ( file_exists( $attachment_path ) ) {
-					unlink( $attachment_path );
+
+				// If rename the file then preview doesn't exist but symbolic is available in the folder. So, checked the file is not empty then remove it from symbolic.
+				if ( ! empty( $attachment_path ) ) {
+					@unlink( $attachment_path ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 				}
 			}
 		}
@@ -5004,4 +5008,36 @@ function bp_document_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
 	}
 
 	return apply_filters( 'bp_document_query_privacy', $privacy, $user_id, $group_id, $scope );
+}
+
+/**
+ * Function to delete the temporary download folder which create while downloding the document directory.
+ *
+ * @since BuddyBoss 2.3.80
+ *
+ * @return void
+ */
+function bb_document_remove_orphaned_download() {
+	if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+	}
+
+	$wp_files_system = new \WP_Filesystem_Direct( array() );
+
+	$six_hours_ago = time() - ( HOUR_IN_SECONDS * 6 ); // Get the timestamp 6 hours ago.
+	$uploadDir     = wp_upload_dir(); // Get the path to the upload directory.
+	$dir           = $uploadDir['basedir']; // Get the base directory path.
+
+	// Get all the subdirectories in the upload directory.
+	$folders = glob( $dir . '/*', GLOB_ONLYDIR );
+
+	foreach ( $folders as $folder ) {
+		$folder_timestamp = filemtime( $folder );
+
+		// If the folder is older than 6 hours and contains "-download-folder-" in the name, print it.
+		if ( $folder_timestamp < $six_hours_ago && stristr( $folder, '-download-folder-' ) !== false ) {
+			$wp_files_system->delete( $folder, true );
+		}
+	}
 }

@@ -108,7 +108,7 @@ function bbp_insert_reply( $reply_data = array(), $reply_meta = array() ) {
  *                    id, anonymous data, reply author, edit (false), and
  *                    the reply to id
  * @uses bbp_get_reply_url() To get the paginated url to the reply
- * @uses wp_safe_redirect() To redirect to the reply url
+ * @uses bbp_redirect() To redirect to the reply url
  * @uses bbPress::errors::get_error_message() To get the {@link WP_Error} error
  *                                              message
  */
@@ -423,12 +423,12 @@ function bbp_new_reply_handler( $action = '' ) {
 			'post_parent'    => $topic_id,
 			'post_type'      => bbp_get_reply_post_type(),
 			'comment_status' => 'closed',
-			'menu_order'     => bbp_get_topic_reply_count( $topic_id, false ) + 1,
+			'menu_order'     => bbp_get_topic_reply_count( $topic_id, true ) + 1,
 		)
 	);
 
 	// Insert reply.
-	$reply_id = wp_insert_post( $reply_data );
+	$reply_id = wp_insert_post( $reply_data, true );
 
 	/** No Errors */
 
@@ -501,7 +501,7 @@ function bbp_new_reply_handler( $action = '' ) {
 
 		if ( ! empty( $topic_id ) && 0 === $reply_to ) {
 			// Update total parent
-			bbp_update_total_parent_reply( $reply_id, $topic_id, bbp_get_topic_reply_count( $topic_id, false ) + 1, 'add' );
+			bbp_update_total_parent_reply( $reply_id, $topic_id, bbp_get_topic_reply_count( $topic_id, true ) + 1, 'add' );
 		}
 
 		// Delete draft data from the database.
@@ -544,17 +544,19 @@ function bbp_new_reply_handler( $action = '' ) {
 		/** Successful Save */
 
 		// Redirect back to new reply.
-		wp_safe_redirect( $reply_url );
-
-		// For good measure.
-		exit();
+		bbp_redirect( $reply_url );
 
 		/** Errors */
 
+		// WP_Error.
+	} elseif ( is_wp_error( $reply_id ) && $reply_id->get_error_message() ) {
+		bbp_add_error( 'bbp_reply_error', sprintf( __( '<strong>Error</strong>: The following problem(s) occurred: %s', 'buddyboss' ), $reply_id->get_error_message() ) );
+
+		// Generic error.
 	} else {
-		$append_error = ( is_wp_error( $reply_id ) && $reply_id->get_error_message() ) ? $reply_id->get_error_message() . ' ' : '';
-		bbp_add_error( 'bbp_reply_error', __( '<strong>ERROR</strong>: The following problem(s) have been found with your reply:' . $append_error . 'Please try again.', 'buddyboss' ) );
+		bbp_add_error( 'bbp_reply_error', __( '<strong>Error</strong>: The reply was not created.', 'buddyboss' ) );
 	}
+
 }
 
 /**
@@ -586,7 +588,7 @@ function bbp_new_reply_handler( $action = '' ) {
  *                    id, anonymous data, reply author, bool true (for edit),
  *                    and the reply to id
  * @uses bbp_get_reply_url() To get the paginated url to the reply
- * @uses wp_safe_redirect() To redirect to the reply url
+ * @uses bbp_redirect() To redirect to the reply url
  * @uses bbPress::errors::get_error_message() To get the {@link WP_Error} error
  *                                             message
  */
@@ -880,10 +882,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 		/** Successful Edit */
 
 		// Redirect back to new reply.
-		wp_safe_redirect( $reply_url );
-
-		// For good measure.
-		exit();
+		bbp_redirect( $reply_url );
 
 		/** Errors */
 
@@ -1359,8 +1358,6 @@ function bbp_update_reply_revision_log( $args = '' ) {
  * @uses do_action() Calls 'bbp_pre_move_reply' with the from reply id, source
  *                    and destination topic ids
  * @uses bbp_get_reply_post_type() To get the reply post type
- * @uses wpdb::prepare() To prepare our sql query
- * @uses wpdb::get_results() To execute the sql query and get results
  * @uses wp_update_post() To update the replies
  * @uses bbp_update_reply_topic_id() To update the reply topic id
  * @uses bbp_get_topic_forum_id() To get the topic forum id
@@ -1372,7 +1369,7 @@ function bbp_update_reply_revision_log( $args = '' ) {
  * @uses do_action() Calls 'bbp_post_split_topic' with the destination and
  *                    source topic ids and source topic's forum id
  * @uses bbp_get_topic_permalink() To get the topic permalink
- * @uses wp_safe_redirect() To redirect to the topic link
+ * @uses bbp_redirect() To redirect to the topic link
  */
 function bbp_move_reply_handler( $action = '' ) {
 
@@ -1460,7 +1457,7 @@ function bbp_move_reply_handler( $action = '' ) {
 				}
 
 				// Bump the reply position.
-				$reply_position = bbp_get_topic_reply_count( $destination_topic->ID ) + 1;
+				$reply_position = bbp_get_topic_reply_count( $destination_topic->ID, true ) + 1;
 
 				// Update the reply.
 				wp_update_post(
@@ -1565,6 +1562,7 @@ function bbp_move_reply_handler( $action = '' ) {
 		array(
 			'post_type'  => bbp_get_reply_post_type(),
 			'meta_key'   => '_bbp_reply_to',
+			'meta_type'  => 'NUMERIC',
 			'meta_value' => $move_reply->ID,
 		)
 	);
@@ -1600,10 +1598,7 @@ function bbp_move_reply_handler( $action = '' ) {
 	do_action( 'bbp_post_move_reply', $move_reply->ID, $source_topic->ID, $destination_topic->ID );
 
 	// Redirect back to the topic.
-	wp_safe_redirect( bbp_get_topic_permalink( $destination_topic->ID ) );
-
-	// For good measure.
-	exit();
+	bbp_redirect( bbp_get_topic_permalink( $destination_topic->ID ) );
 }
 
 /**
@@ -1673,7 +1668,7 @@ function bbp_move_reply_count( $move_reply_id, $source_topic_id, $destination_to
  * @uses do_action() Calls 'bbp_toggle_reply_handler' with success, post data
  *                    and action
  * @uses bbp_get_reply_url() To get the reply url
- * @uses wp_safe_redirect() To redirect to the reply
+ * @uses bbp_redirect() To redirect to the reply
  * @uses bbPress::errors:add() To log the error messages
  */
 function bbp_toggle_reply_handler( $action = '' ) {
@@ -1786,10 +1781,7 @@ function bbp_toggle_reply_handler( $action = '' ) {
 		}
 
 		// Redirect back to reply.
-		wp_safe_redirect( $reply_url );
-
-		// For good measure.
-		exit();
+		bbp_redirect( $reply_url );
 
 		// Handle errors.
 	} else {
@@ -2218,49 +2210,49 @@ function _bbp_has_replies_where( $where = '', $query = false ) {
 
 	/** Bail */
 
-	// Bail if the sky is falling
+	// Bail if the sky is falling.
 	if ( empty( $where ) || empty( $query ) ) {
 		return $where;
 	}
 
-	// Bail if no post_parent to replace
+	// Bail if no post_parent to replace.
 	if ( ! is_numeric( $query->get( 'post_parent' ) ) ) {
 		return $where;
 	}
 
-	// Bail if not a topic and reply query
+	// Bail if not a topic and reply query.
 	if ( array( bbp_get_topic_post_type(), bbp_get_reply_post_type() ) !== $query->get( 'post_type' ) ) {
 		return $where;
 	}
 
-	// Bail if including or excluding specific post ID's
-	if ( $query->get( 'post__not_in' ) || $query->get( 'post__in' ) ) {
+	// Bail if including specific post ID's.
+	if ( $query->get( 'post__in' ) ) {
 		return $where;
 	}
 
 	/** Proceed */
 
-	global $wpdb;
-
-	// Table name for posts
-	$table_name = $wpdb->prefix . 'posts';
+	// Table name for posts.
+	$table_name = bbp_db()->prefix . 'posts';
 
 	// Get the topic ID from the post_parent, set in bbp_has_replies()
 	$topic_id = bbp_get_topic_id( $query->get( 'post_parent' ) );
 
-	// The texts to search for
+	// The texts to search for.
 	$search = array(
 		"FROM {$table_name} ",
 		"WHERE 1=1  AND {$table_name}.post_parent = {$topic_id}",
+		") AND {$table_name}.post_parent = {$topic_id}"
 	);
 
-	// The texts to replace them with
+	// The texts to replace them with.
 	$replace = array(
 		$search[0] . 'FORCE INDEX (PRIMARY, post_parent) ',
 		"WHERE 1=1 AND ({$table_name}.ID = {$topic_id} OR {$table_name}.post_parent = {$topic_id})",
+		") AND ({$table_name}.ID = {$topic_id} OR {$table_name}.post_parent = {$topic_id})"
 	);
 
-	// Try to replace the search text with the replacement
+	// Try to replace the search text with the replacement.
 	$new_where = str_replace( $search, $replace, $where );
 	if ( ! empty( $new_where ) ) {
 		$where = $new_where;
@@ -2426,7 +2418,7 @@ function bbp_display_replies_feed_rss2( $replies_query = array() ) {
  * @uses bbp_is_reply_edit()
  * @uses current_user_can()
  * @uses bbp_get_topic_id()
- * @uses wp_safe_redirect()
+ * @uses bbp_redirect()
  * @uses bbp_get_topic_permalink()
  */
 function bbp_check_reply_edit() {
@@ -2438,8 +2430,7 @@ function bbp_check_reply_edit() {
 
 	// User cannot edit topic, so redirect back to reply
 	if ( ! current_user_can( 'edit_reply', bbp_get_reply_id() ) ) {
-		wp_safe_redirect( bbp_get_reply_url() );
-		exit();
+		bbp_redirect( bbp_get_reply_url() );
 	}
 }
 
@@ -2811,4 +2802,40 @@ function bbp_replies_count_walk( $posts, $top_reply_ids, $count ) {
 	$count           = $count + bbp_replies_count_walk( $posts, $child_reply_ids, count( $child_reply_ids ) );
 
 	return $count;
+}
+
+/**
+ * Return array of public reply statuses.
+ *
+ * @since bbPress 2.6.0 (r6705)
+ * @since BuddyBoss 2.4.00
+ *
+ * @return array
+ */
+function bbp_get_public_reply_statuses() {
+	$statuses = array(
+		bbp_get_public_status_id()
+	);
+
+	// Filter & return.
+	return (array) apply_filters( 'bbp_get_public_reply_statuses', $statuses );
+}
+
+/**
+ * Return array of non-public reply statuses.
+ *
+ * @since bbPress 2.6.0 (r6791)
+ * @since BuddyBoss 2.4.00
+ *
+ * @return array
+ */
+function bbp_get_non_public_reply_statuses() {
+	$statuses = array(
+		bbp_get_trash_status_id(),
+		bbp_get_spam_status_id(),
+		bbp_get_pending_status_id()
+	);
+
+	// Filter & return.
+	return (array) apply_filters( 'bbp_get_non_public_reply_statuses', $statuses );
 }

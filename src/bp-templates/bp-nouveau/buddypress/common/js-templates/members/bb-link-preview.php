@@ -14,7 +14,7 @@
 		<span class="bb-url-scrapper-loading bb-ajax-loader"><i class="bb-icon-l bb-icon-spinner animate-spin"></i><?php esc_html_e( 'Loading preview...', 'buddyboss' ) ?></span>
 	<% } %>
 	<% if ( link_success || link_error ) { %>
-		<a title="<?php esc_html_e( 'Cancel Preview', 'buddyboss' ); ?>" href="#" id="bb-close-link-suggestion"><?php esc_html_e( 'Remove Preview', 'buddyboss' ); ?></i></a>
+		<a title="<?php esc_html_e( 'Cancel Preview', 'buddyboss' ); ?>" href="#" id="bb-close-link-suggestion"><?php esc_html_e( 'Remove Preview', 'buddyboss' ); ?></a>
 		<div class="bb-link-preview-container">
 
 			<% if ( link_images && link_images.length && link_success && ! link_error && '' !== link_image_index ) { %>
@@ -56,7 +56,7 @@
 						var domainName = hostname.replace('www.', '' );
 					%>
 
-					<% if ( link_title.trim() && link_description ) { %>
+					<% if ( 'undefined' !== typeof link_title && link_title.trim() && link_description ) { %>
 						<p class="bb-link-preview-link-name"><%= domainName %></p>
 					<% } %>
 
