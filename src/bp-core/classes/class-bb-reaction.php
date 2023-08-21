@@ -471,6 +471,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			$user_reaction_id = $wpdb->insert_id;
 
+			$this->bb_prepare_reaction_summary_data( $r, 'add' );
+
 			/**
 			 * Fires after the add user item reaction in DB.
 			 *
@@ -598,6 +600,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'id' => $get_reaction['id'],
 				)
 			);
+
+			$this->bb_prepare_reaction_summary_data( $get_reaction, 'remove' );
 
 			/**
 			 * Fires after the remove user item reactions.
@@ -947,13 +951,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			// name_in.
 			if ( ! empty( $r['name_in'] ) ) {
-				$name_in_array = wp_parse_slug_list( $r['name_in'] );
-				$quoted_values = array_map( function ( $value ) {
-					return "'" . esc_sql( $value ) . "'";
-				}, $name_in_array );
-
-				$name_in_string              = implode( ', ', $quoted_values );
-				$where_conditions['name_in'] = "rd.name IN ($name_in_string)";
+				$name_in_string              = implode( "','", wp_parse_slug_list( $r['name_in'] ) );
+				$where_conditions['name_in'] = "rd.name IN ('{$name_in_string}')";
 			}
 
 			// rel1_in.
@@ -1230,10 +1229,10 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$item_type = $args['item_type'];
 
 			// Calculate total counts of each reaction and sum of all that reactions.
-			$reaction_counts = array();
+			$reaction_counts = $this->bb_fetch_reaction_counts( $args, $action );
 
 			// Fetch latest 10 reactions.
-			$latest_reaction   = self::bb_get_user_reactions(
+			$latest_reaction = self::bb_get_user_reactions(
 				array(
 					'item_id'   => $item_id,
 					'item_type' => $item_type,
@@ -1245,7 +1244,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$last_10_reactions = ! empty( $latest_reaction['reactions'] ) ? $latest_reaction['reactions'] : array();
 
 			// Fetch last 10 reactions.
-			$last_reaction      = self::bb_get_user_reactions(
+			$last_reaction = self::bb_get_user_reactions(
 				array(
 					'item_id'   => $args['item_id'],
 					'item_type' => $args['item_type'],
