@@ -3049,7 +3049,7 @@ function bb_admin_setting_callback_domain_restrictions() {
 		<div class="restrictions-error"></div>
 		<div class="registration-restrictions-rule-list bb-sortable">
 		<?php
-		// Count the occurances used later to validate.
+		// Count the occurrences used later to validate.
 		$pre_saved_conditions = array(
 			'always_allow' => 0,
 			'only_allow'   => 0,
@@ -3162,7 +3162,7 @@ function bb_admin_setting_callback_domain_restrictions() {
 }
 
 /**
- * Allow admin to add whilelist emails and domains.
+ * Allow admin to add whitelist emails and domains.
  *
  * @since BuddyBoss [BBVERSION]
  */
