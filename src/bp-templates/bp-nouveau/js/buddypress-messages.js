@@ -2658,11 +2658,7 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Messages.dropzone.on(
 					'addedfile',
-					function ( file ) {
-						var filename = file.upload.filename;
-						var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
-						$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
-
+					function () {
 						total_uploaded_file++;
 					}
 				);
@@ -2718,6 +2714,16 @@ window.bp = window.bp || {};
 							if ( total_uploaded_file <= BP_Nouveau.document.maxFiles ) {
 								bp.Nouveau.Messages.removeFeedback();
 							}
+
+							var filename = file.upload.filename;
+							var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+							var file_icon = ( !_.isUndefined( response.data.svg_icon ) ? response.data.svg_icon : '' );
+							var icon_class = !_.isEmpty( file_icon ) ? file_icon : 'bb-icon-file-' + fileExtension;
+
+							if ( $( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).length ) {
+								$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( icon_class );
+							}
+
 							return file.previewElement.classList.add( 'dz-success' );
 						} else {
 							var message = response.data.feedback;
