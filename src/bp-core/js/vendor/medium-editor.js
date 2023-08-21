@@ -6885,7 +6885,7 @@ MediumEditor.extensions = {};
     }
 
     function handleKeyup(event) {
-        
+
         // Ignore composing keyUp event, prevent from duplicated first char with CJK IME.
         if ( event.isComposing || event.keyCode === 229 ) {
             return;
@@ -7664,6 +7664,45 @@ MediumEditor.extensions = {};
             // do some DOM clean-up for known browser issues after the action
             if (action === 'insertunorderedlist' || action === 'insertorderedlist') {
                 MediumEditor.util.cleanListDOM(this.options.ownerDocument, this.getSelectedParentElement());
+
+	            if ( this.getSelectedParentElement().classList.contains( 'medium-editor-element' ) ) {
+		            var currentNode = MediumEditor.selection.getSelectionRange( this.options.ownerDocument ); // jshint ignore:line
+		            var p = this.options.ownerDocument.createElement( 'p' );
+		            p.innerHTML = '<br>';
+		            var newP;
+
+		            if ( currentNode.endContainer.nextElementSibling ) {
+			            newP = currentNode.endContainer.insertBefore( p, currentNode.endContainer.nextSibling );
+		            } else {
+			            newP = currentNode.endContainer.appendChild( p );
+		            }
+
+		            MediumEditor.selection.moveCursor( this.options.ownerDocument, newP );
+
+		            if ( newP.previousElementSibling ) {
+			            if ( newP.previousElementSibling.tagName.toLowerCase() === 'br' ) {
+				            newP.previousElementSibling.remove();
+			            }
+		            }
+	            } else if ( this.getSelectedParentElement().parentNode.classList.contains( 'medium-editor-element' ) ) {
+		            // element that will be wrapped
+		            var el = this.getSelectedParentElement();
+
+		            // create wrapper container
+		            var wrapper = document.createElement( 'p' );
+
+		            // insert wrapper before el in the DOM tree
+		            el.parentNode.insertBefore( wrapper, el );
+
+		            // move el into wrapper
+		            wrapper.appendChild( el );
+		            MediumEditor.selection.moveCursor( this.options.ownerDocument, el, 1 );
+		            if ( el.nextElementSibling ) {
+			            if ( el.nextElementSibling.tagName.toLowerCase() === 'br' ) {
+				            el.nextElementSibling.remove();
+			            }
+		            }
+	            }
             }
 
             this.checkSelection();

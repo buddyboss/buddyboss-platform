@@ -63,6 +63,10 @@ class BP_Groups_Widget extends WP_Widget {
 		 * @param string $value Current user ID if user logged-in otherwise empty user ID.
 		 */
 		$user_id = apply_filters( 'bp_group_widget_user_id', get_current_user_id() );
+		
+		if ( 0 !== $user_id && empty( bp_get_total_group_count_for_user( $user_id ) ) ) {
+			$user_id = 0;
+		}
 
 		extract( $args );
 
