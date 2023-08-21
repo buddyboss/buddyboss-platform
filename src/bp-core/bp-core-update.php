@@ -3137,12 +3137,15 @@ function bb_core_update_repair_duplicate_following_notification() {
 
 /**
  * Migrate icon class for the documents.
+ * Assign the group organizer to the group has 0 members.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @return void
  */
 function bb_update_to_2_4_10() {
+	global $wpdb;
+
 	if ( bp_is_active( 'document' ) ) {
 		$saved_extensions = bp_get_option( 'bp_document_extensions_support', array() );
 		$default          = bp_media_allowed_document_type();
@@ -3156,5 +3159,42 @@ function bb_update_to_2_4_10() {
 		}
 
 		bp_update_option( 'bp_document_extensions_support', $saved_extensions );
+	}
+
+	if ( ! bp_is_active( 'groups' ) ) {
+		return;
+	}
+
+	$groups     = $wpdb->base_prefix . 'bp_groups';
+	$group_meta = $wpdb->base_prefix . 'bp_groups_groupmeta';
+
+	$sql = "SELECT g.id FROM {$groups} g";
+	$sql .= " INNER JOIN {$group_meta} gm ON gm.group_id = g.id";
+	$sql .= ' WHERE gm.meta_key = %s AND gm.meta_value = %d';
+
+	// Get the group ids with 0 members.
+	$groups = $wpdb->get_results( $wpdb->prepare( $sql, 'total_member_count', 0 ) );
+
+	if ( ! empty( $groups ) ) {
+		$admin = get_users(
+			array(
+				'blog_id' => bp_get_root_blog_id(),
+				'fields'  => 'ID',
+				'number'  => 1,
+				'orderby' => 'ID',
+				'role'    => 'administrator',
+			)
+		);
+
+		if ( ! empty( $admin ) && ! is_wp_error( $admin ) ) {
+			$admin_id = current( $admin );
+
+			// Assign the group organizer to all the group that has 0 members.
+			foreach ( $groups as $group ) {
+				groups_join_group( $group->id, $admin_id );
+				$member = new BP_Groups_Member( $admin_id, $group->id );
+				$member->promote( 'admin' );
+			}
+		}
 	}
 }
