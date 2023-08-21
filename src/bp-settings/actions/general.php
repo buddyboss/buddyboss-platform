@@ -44,8 +44,8 @@ function bp_settings_action_general() {
 
 	// Define local defaults.
 	$bp            = buddypress(); // The instance.
-	$email_error   = '';        // invalid|blocked|taken|empty|nochange.
-	$pass_error    = '';        // invalid|mismatch|empty|nochange.
+	$email_error   = '';           // Email error code: invalid|blocked|taken|empty|nochange.
+	$pass_error    = '';           // Password error code: invalid|mismatch|empty|nochange.
 	$pass_changed  = false;        // true if the user changes their password.
 	$email_changed = false;        // true if the user changes their email.
 	$feedback_type = 'error';      // success|error.
@@ -285,8 +285,8 @@ function bp_settings_action_general() {
 			empty( $pass_error )
 		) &&
 		(
-			! empty( $pass_changed ) ||
-			! empty( $email_changed )
+			true === $pass_changed ||
+			true === $email_changed
 		)
 	) {
 		$feedback[]    = __( 'Your settings have been saved.', 'buddyboss' );
@@ -296,8 +296,8 @@ function bp_settings_action_general() {
 	} elseif (
 		empty( $email_error ) &&
 		empty( $pass_error ) &&
-		empty( $pass_changed ) &&
-		empty( $email_changed )
+		false === $pass_changed &&
+		false === $email_changed
 	) {
 		if ( bp_is_my_profile() ) {
 			$feedback['nochange'] = __( 'No changes were made to your account.', 'buddyboss' );
