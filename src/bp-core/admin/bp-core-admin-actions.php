@@ -68,6 +68,7 @@ add_action( 'user_profile_update_errors', 'bb_check_user_nickname', 10, 3 );
 
 // Validate if email address is allowed or blacklisted.
 add_action( 'user_profile_update_errors', 'bb_validate_restricted_email_on_registration', PHP_INT_MAX, 3 );
+add_action( 'personal_options_update', 'bb_validate_restricted_email_on_profile_update', 1 );
 
 /**
  * When a new site is created in a multisite installation, run the activation
@@ -364,12 +365,44 @@ add_action( 'wp_ajax_bb_admin_check_valid_giphy_key', 'bb_admin_check_valid_giph
  */
 function bb_validate_restricted_email_on_registration( $errors, $update, $user ) {
 
-	// Check if it's a new user registration (not profile update).
-	if ( ! $update ) {
-		if ( ! bb_is_allowed_register_email_address( $user->user_email ) ) {
-			$errors->add( 'bb_restricted_email', __( 'This email address or domain has been blacklisted. If you think you are seeing this in error, please contact the site administrator.', 'buddyboss' ), array( 'form-field' => 'email' ) );
+	// Check if email address allowed.
+	if ( ! bb_is_allowed_register_email_address( $user->user_email ) ) {
+		if ( $update ) {
+			$old_user_data = get_userdata( $user->ID );
+
+			// Allow already saved emails.
+			if ( $old_user_data->user_email === $user->user_email ) {
+				return $errors;
+			}
 		}
+		$errors->add( 'bb_restricted_email', __( 'This email address or domain has been blacklisted. If you think you are seeing this in error, please contact the site administrator.', 'buddyboss' ), array( 'form-field' => 'email' ) );
 	}
 
 	return $errors;
+}
+
+/**
+ * Validate & prevent email update and related email.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id User ID.
+ */
+function bb_validate_restricted_email_on_profile_update( $user_id ) {
+	
+	if ( 
+		! empty( $_REQUEST['email'] ) && 
+		! empty( $_REQUEST['action'] ) && 
+		'update' === $_REQUEST['action']
+	) {
+		$old_user_data = get_userdata( $user_id );
+		if (  $old_user_data->user_email !== $_REQUEST['email'] && ! bb_is_allowed_register_email_address( $_REQUEST['email'] ) )  {
+
+			// Prevent email updates and related email.
+			remove_action( 'personal_options_update', 'send_confirmation_on_profile_email' );
+			add_filter( 'send_email_change_email', '__return_false', 0 );
+		}
+
+	}
+	
 }

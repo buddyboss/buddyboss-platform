@@ -3041,7 +3041,9 @@ function bb_admin_setting_callback_domain_restrictions() {
 	?>
 	<label for="bb-domain-restrictions-setting">
 		<?php
-		esc_html_e( 'Add domain(s) to restrict new user registrations. All restrictions are applied in list order priority and can be re-ordered using the drag icon. You can also apply a wildcard (*) symbol to specify entire extensions.', 'buddyboss' );
+		esc_html_e( 'Add domain(s) to restrict new users from being able to register, you can use a wildcard (*) symbol to apply restrictions to an entire extension.
+		When multiple restrictions are in place, a domain will always take priority over an extension.
+		', 'buddyboss' );
 		?>
 	</label>
 
