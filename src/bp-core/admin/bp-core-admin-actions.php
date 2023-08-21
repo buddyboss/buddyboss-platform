@@ -389,20 +389,22 @@ function bb_validate_restricted_email_on_registration( $errors, $update, $user )
  * @param int $user_id User ID.
  */
 function bb_validate_restricted_email_on_profile_update( $user_id ) {
-	
-	if ( 
-		! empty( $_REQUEST['email'] ) && 
-		! empty( $_REQUEST['action'] ) && 
-		'update' === $_REQUEST['action']
+
+	if (
+		! empty( $_REQUEST['email'] ) && // phpcs:ignore
+		! empty( $_REQUEST['action'] ) && // phpcs:ignore
+		'update' === $_REQUEST['action'] // phpcs:ignore
 	) {
+		$email = $_REQUEST['email']; // phpcs:ignore
 		$old_user_data = get_userdata( $user_id );
-		if (  $old_user_data->user_email !== $_REQUEST['email'] && ! bb_is_allowed_register_email_address( $_REQUEST['email'] ) )  {
+		if (
+			$old_user_data->user_email !== $email &&
+			! bb_is_allowed_register_email_address( $email )
+		) {
 
 			// Prevent email updates and related email.
 			remove_action( 'personal_options_update', 'send_confirmation_on_profile_email' );
 			add_filter( 'send_email_change_email', '__return_false', 0 );
 		}
-
 	}
-	
 }
