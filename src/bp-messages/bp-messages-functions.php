@@ -936,9 +936,7 @@ function messages_notification_new_message( $raw_args = array() ) {
 
 	$sender_name = bp_core_get_user_displayname( $sender_id );
 
-	if ( isset( $message ) ) {
-		$message = wpautop( preg_replace('#(<br\s*?\/?>|</(\w+)><(\w+)>)#', ' ', $message ) );
-	} else {
+	if ( ! isset( $message ) ) {
 		$message = '';
 	}
 
@@ -2236,8 +2234,7 @@ function bb_get_message_response_object( $message ) {
 		}
 	}
 
-	$sent_date           = strtotime( $message->date_sent );
-	$sent_date_formatted = date_i18n( 'Y-m-d h:i:s', $sent_date );
+	$sent_date_formatted = $message->date_sent;
 	$site_sent_date      = get_date_from_gmt( $sent_date_formatted );
 	$sent_time           = apply_filters( 'bb_get_the_thread_message_sent_time', date_i18n( 'g:i A', strtotime( $site_sent_date ) ) );
 

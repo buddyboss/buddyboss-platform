@@ -328,9 +328,12 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} [user_id] A unique numeric ID for the notification.
-	 * @apiParam {Number} group_id The ID of the group to which the user has been invited.
-	 * @apiParam {String} message The optional message to send to the invited user.
-	 * @apiParam {Boolean} [send_invite=true] Whether the invite should be sent to the invitee.
+	 * @apiParam {Number} [item_id] The ID of the item associated with the notification.
+	 * @apiParam {Number} [secondary_item_id] The ID of the secondary item associated with the notification.
+	 * @apiParam {String} [component] The name of the component associated with the notification.
+	 * @apiParam {String} [action] The name of the component action associated with the notification.
+	 * @apiParam {String} [date] The date the notification was sent/created.
+	 * @apiParam {Number} [is_new] Whether the notification is new or not.
 	 */
 	public function create_item( $request ) {
 		// Setting context.
@@ -980,6 +983,22 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 			$args['is_new']['default'] = 0;
 		} elseif ( WP_REST_Server::CREATABLE === $method ) {
 			$key = 'create_item';
+
+			if ( array_key_exists( 'object', $args ) ) {
+				unset( $args['object'] );
+			}
+			if ( array_key_exists( 'object_id', $args ) ) {
+				unset( $args['object_id'] );
+			}
+			if ( array_key_exists( 'link_url', $args ) ) {
+				unset( $args['link_url'] );
+			}
+			if ( array_key_exists( 'rest_actions', $args ) ) {
+				unset( $args['rest_actions'] );
+			}
+			if ( array_key_exists( 'readonly', $args ) ) {
+				unset( $args['readonly'] );
+			}
 		} elseif ( WP_REST_Server::DELETABLE === $method ) {
 			$key = 'delete_item';
 		}
