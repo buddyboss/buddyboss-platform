@@ -1850,6 +1850,10 @@ div.dropzone.dz-started {
 		}
 	}
 
+	.dz-preview.dz-processing:not(.dz-complete) .dz-details .dz-filename {
+		display: none;
+	}
+
 	div.dz-preview.dz-file-preview .dz-remove {
 		position: absolute;
 		bottom: 5px;
@@ -1924,6 +1928,14 @@ div.dropzone.dz-started {
 				top: 0;
 				left: 0;
 			}
+		}
+
+	}
+
+	.dz-preview.dz-file-preview.dz-has-thumbnail:not(.dz-error) {
+
+		.dz-details .dz-filename {
+			display: none;
 		}
 
 	}

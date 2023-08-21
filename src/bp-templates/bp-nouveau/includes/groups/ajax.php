@@ -387,7 +387,8 @@ function bp_nouveau_ajax_get_users_to_invite() {
 				if ( $parent_group_id > 0 ) {
 					$members_query      = groups_get_group_members(
 						array(
-							'group_id' => $parent_group_id,
+							'group_id'            => $parent_group_id,
+							'exclude_admins_mods' => false,
 						)
 					);
 					$members            = wp_list_pluck( $members_query['members'], 'ID' );
@@ -740,7 +741,13 @@ function bp_nouveau_ajax_send_group_invites() {
 	$invited = array();
 
 	foreach ( (array) $_POST['users'] as $user_id ) {
-		$user_id             = (int) $user_id;
+		$user_id = (int) $user_id;
+
+		// Check friends & settings component is active and all members can be invited.
+		if ( bp_is_active( 'friends' ) && bp_nouveau_groups_get_group_invites_setting( $user_id ) && 'is_friend' !== BP_Friends_Friendship::check_is_friend( bp_loggedin_user_id(), $user_id ) ) {
+			continue;
+		}
+
 		$invited[ $user_id ] = groups_invite_user(
 			array(
 				'user_id'  => $user_id,

@@ -529,7 +529,8 @@ function bbp_convert_mentions( $data ) {
 	// We have mentions!
 	if ( ! empty( $usernames ) ) {
 		foreach ( (array) $usernames as $user_id => $username ) {
-			$data = preg_replace( '/(@' . $username . '\b)/', "<a class='bp-suggestions-mention' href='" . bbp_get_user_profile_url( $user_id ) . "' rel='nofollow'>@$username</a>", $data );
+			$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)/';
+			$data = preg_replace( $pattern, "<a class='bp-suggestions-mention' href='" . bbp_get_user_profile_url( $user_id ) . "' rel='nofollow'>@$username</a>", $data );
 		}
 
 		// Temporary variable to avoid having to run bp_find_mentions_by_at_sign() again.

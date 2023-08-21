@@ -60,7 +60,6 @@ function bbp_get_search_query_args() {
  * @return If a redirect is not needed
  */
 function bbp_search_results_redirect() {
-	global $wp_rewrite;
 
 	// Bail if not a search request action
 	if ( empty( $_GET['action'] ) || ( 'bbp-search-request' !== $_GET['action'] ) ) {
@@ -68,7 +67,7 @@ function bbp_search_results_redirect() {
 	}
 
 	// Bail if not using pretty permalinks
-	if ( ! $wp_rewrite->using_permalinks() ) {
+	if ( ! bbp_use_pretty_urls() ) {
 		return;
 	}
 
@@ -79,8 +78,7 @@ function bbp_search_results_redirect() {
 	}
 
 	// Redirect and bail
-	wp_safe_redirect( $redirect_to );
-	exit();
+	bbp_redirect( $redirect_to );
 }
 
 
