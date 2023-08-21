@@ -154,7 +154,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			// Set shortcode query name.
 			set_query_var( '_bbp_shortcode_query', 'bbp_shortcodes' );
 
-			// call the enqueue script for shortcodes
+			// call the enqueue script for shortcodes.
 			do_action( 'bbp_enqueue_scripts' );
 
 			// Start output buffer.
@@ -174,11 +174,17 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			// Unset globals.
 			$this->unset_globals();
 
+			// Get the query name, for filter.
+			$query_name = bbp_get_query_name();
+
 			// Reset the query name.
 			bbp_reset_query_name();
 
 			// Return and flush the output buffer.
-			return ob_get_clean();
+			$output = ob_get_clean();
+
+			// Filter & return.
+			return apply_filters( 'bbp_display_shortcode', $output, $query_name );
 		}
 
 		/** Forum shortcodes ******************************************************/

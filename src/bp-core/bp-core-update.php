@@ -33,12 +33,31 @@ function bp_is_install() {
  */
 function bp_is_update() {
 
-	// Current DB version of this site (per site in a multisite network).
-	$current_db   = bp_get_option( '_bp_db_version' );
-	$current_live = bp_get_db_version();
+	// Get current DB version.
+	$current_db = (int) bp_get_option( '_bp_db_version' );
+	// Get the raw database version.
+	$current_live = (int) bp_get_db_version();
 
-	// Compare versions (cast as int and bool to be safe).
-	$is_update = (bool) ( (int) $current_db < (int) $current_live );
+	// Pro plugin version history.
+	bp_version_bump();
+	$bb_plugin_version_history = (array) bp_get_option( 'bb_plugin_version_history', array() );
+	$initial_version_data      = ! empty( $bb_plugin_version_history ) ? end( $bb_plugin_version_history ) : array();
+	$bb_version_exists         = ! empty( $initial_version_data ) && ! empty( $initial_version_data['version'] ) && (string) BP_PLATFORM_VERSION === (string) $initial_version_data['version'];
+	if ( ! $bb_version_exists || $current_live !== $current_db ) {
+		$current_date                = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+		$bb_latest_plugin_version    = array(
+			'db_version' => $current_live,
+			'date'       => $current_date->format( 'Y-m-d H:i:s' ),
+			'version'    => BP_PLATFORM_VERSION,
+		);
+		$bb_plugin_version_history[] = $bb_latest_plugin_version;
+		bp_update_option( 'bb_plugin_version_history', array_filter( $bb_plugin_version_history ) );
+	}
+
+	$is_update = false;
+	if ( $current_live !== $current_db ) {
+		$is_update = true;
+	}
 
 	// Return the product of version comparison.
 	return $is_update;
@@ -170,6 +189,8 @@ function bp_setup_updater() {
  */
 function bp_version_updater() {
 
+	// Get current DB version.
+	$current_db = (int) bp_get_option( '_bp_db_version' );
 	// Get the raw database version.
 	$raw_db_version = (int) bp_get_db_version_raw();
 
@@ -441,12 +462,17 @@ function bp_version_updater() {
 		if ( $raw_db_version < 20371 ) {
 			bb_update_to_2_3_80();
 		}
+
+		if ( $raw_db_version < 20561 ) {
+			bb_update_to_2_4_10();
+		}
+
+		if ( $raw_db_version !== $current_db ) {
+			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
+		}
 	}
 
 	/* All done! *************************************************************/
-
-	// Bump the version.
-	bp_version_bump();
 
 	if ( $switched_to_root_blog ) {
 		restore_current_blog();
@@ -3106,5 +3132,69 @@ function bb_core_update_repair_duplicate_following_notification() {
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		// Clear notifications API cache.
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-notifications' );
+	}
+}
+
+/**
+ * Migrate icon class for the documents.
+ * Assign the group organizer to the group has 0 members.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_4_10() {
+	global $wpdb;
+
+	if ( bp_is_active( 'document' ) ) {
+		$saved_extensions = bp_get_option( 'bp_document_extensions_support', array() );
+		$default          = bp_media_allowed_document_type();
+
+		foreach ( $default as $key => $value ) {
+			if ( isset( $saved_extensions[ $key ] ) ) {
+				$document_file_extension          = substr( strrchr( $value['extension'], '.' ), 1 );
+				$new_icon                         = bp_document_svg_icon( $document_file_extension );
+				$saved_extensions[ $key ]['icon'] = $new_icon;
+			}
+		}
+
+		bp_update_option( 'bp_document_extensions_support', $saved_extensions );
+	}
+
+	if ( ! bp_is_active( 'groups' ) ) {
+		return;
+	}
+
+	$groups     = $wpdb->base_prefix . 'bp_groups';
+	$group_meta = $wpdb->base_prefix . 'bp_groups_groupmeta';
+
+	$sql = "SELECT g.id FROM {$groups} g";
+	$sql .= " INNER JOIN {$group_meta} gm ON gm.group_id = g.id";
+	$sql .= ' WHERE gm.meta_key = %s AND gm.meta_value = %d';
+
+	// Get the group ids with 0 members.
+	$groups = $wpdb->get_results( $wpdb->prepare( $sql, 'total_member_count', 0 ) );
+
+	if ( ! empty( $groups ) ) {
+		$admin = get_users(
+			array(
+				'blog_id' => bp_get_root_blog_id(),
+				'fields'  => 'ID',
+				'number'  => 1,
+				'orderby' => 'ID',
+				'role'    => 'administrator',
+			)
+		);
+
+		if ( ! empty( $admin ) && ! is_wp_error( $admin ) ) {
+			$admin_id = current( $admin );
+
+			// Assign the group organizer to all the group that has 0 members.
+			foreach ( $groups as $group ) {
+				groups_join_group( $group->id, $admin_id );
+				$member = new BP_Groups_Member( $admin_id, $group->id );
+				$member->promote( 'admin' );
+			}
+		}
 	}
 }
