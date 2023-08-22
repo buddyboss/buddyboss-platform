@@ -1112,11 +1112,19 @@ function bp_xprofile_validate_website_url_value( $retval, $field_id, $value ) {
 	}
 
 	if ( 1 === $field->is_required && '' === trim( $value ) ) {
-		return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field->name );
+		return sprintf(
+			/* translators: Field name. */
+			__( '%s is required and not allowed to be empty.', 'buddyboss' ),
+			$field->name
+		);
 	}
 
-	if ( ! wp_http_validate_url( $value ) ) {
-		return sprintf( __( 'Invalid %s. Please enter a valid URL.', 'buddyboss' ), $field->name );
+	if ( ! filter_var( $value, FILTER_VALIDATE_URL ) ) {
+		return sprintf(
+			/* translators: Field name. */
+			__( 'Invalid %s. Please enter a valid URL.', 'buddyboss' ),
+			$field->name
+		);
 	}
 
 	return $retval;
