@@ -2466,7 +2466,7 @@ window.bp = window.bp || {};
 				append( ' <div class="registration-restrictions-rule untouched"> ' + $row.replace( regex, newindex ) + ' </div> ' );
 			$this.prev( '.registration-restrictions-lastindex' ).val( newindex );
 			domainRestictionUpdatePriorityNumber();
-		},
+		}
 	);
 
 	$( document ).on(
@@ -2495,7 +2495,7 @@ window.bp = window.bp || {};
 			}
 
 			domainRestictionUpdatePriorityNumber();
-		},
+		}
 	);
 
 	$( document ).on(
@@ -2557,7 +2557,7 @@ window.bp = window.bp || {};
 				}
 			}
 			validateDuplicateDomainRuleEntry();
-		},
+		}
 	);
 
 	$( '.registration-restrictions-rule-list.bb-sortable' ).sortable( {
