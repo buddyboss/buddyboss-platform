@@ -1279,7 +1279,48 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			return $result;
 		}
-		
+
+		/**
+		 * Add or update total reaction count.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array  $args   Args of reaction data.
+		 * @param string $action Add or remove the user reaction
+		 *
+		 * @return false|int|WP_Error
+		 */
+		public function bb_fetch_reaction_counts( $args, $action ) {
+			global $wpdb;
+
+			$item_id   = $args['item_id'];
+			$item_type = $args['item_type'];
+
+			$this->bb_total_item_reactions_count( $args, $action );
+			$this->bb_total_item_reaction_reactions_count( $args, $action );
+			$this->bb_total_reactions_count( $args, $action );
+
+			// Calculate total counts of each reaction for the item.
+			$reaction_counts = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT reaction_id, COUNT(*) AS count FROM {$wpdb->prefix}bb_user_reactions WHERE item_type = %s AND item_id = %d GROUP BY reaction_id",
+					$item_type,
+					$item_id
+				),
+				ARRAY_A
+			);
+
+			$total_item_reaction_count = array_reduce( $reaction_counts, function ( $data, $item ) {
+				$data[ $item['reaction_id'] ] = intval( $item['count'] );
+
+				return $data;
+			}, array() );
+
+			$total_item_reaction_count['total'] = array_sum( $total_item_reaction_count );
+
+			return $total_item_reaction_count;
+		}
+
 		/**
 		 * Add or update total reaction count.
 		 *
