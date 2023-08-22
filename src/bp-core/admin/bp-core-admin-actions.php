@@ -68,7 +68,8 @@ add_action( 'user_profile_update_errors', 'bb_check_user_nickname', 10, 3 );
 
 // Validate if email address is allowed or blacklisted.
 add_action( 'user_profile_update_errors', 'bb_validate_restricted_email_on_registration', PHP_INT_MAX, 3 );
-add_action( 'personal_options_update', 'bb_validate_restricted_email_on_profile_update', 1 );
+add_action( 'personal_options_update', 'bb_validate_restricted_email_on_profile_update', 1 ); // Edit the login user profile from backend.
+add_action( 'edit_user_profile_update', 'bb_validate_restricted_email_on_profile_update', 1 ); // Edit other users profile from backend.
 
 /**
  * When a new site is created in a multisite installation, run the activation
