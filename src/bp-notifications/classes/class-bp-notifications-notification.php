@@ -1016,10 +1016,18 @@ class BP_Notifications_Notification {
 	 * @param array $args Associative array of columns/values, to determine
 	 *                    which rows should be deleted.  Of the format
 	 *                    array( 'item_id' => 7, 'component_action' => 'members', ).
-	 * @return int|false Number of rows deleted on success, false on failure.
+	 *
+	 * @return int|false $retval Number of rows deleted on success, false on failure.
 	 */
 	public static function delete( $args = array() ) {
+		global $wpdb;
+
 		$where = self::get_query_clauses( $args );
+
+		$bp        = buddypress();
+		$where_sql = self::get_where_sql( $where );
+
+		$notifications = $wpdb->get_results( "SELECT * FROM {$bp->notifications->table_name} {$where_sql}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		/**
 		 * Fires before the deletion of a notification item.
@@ -1032,7 +1040,22 @@ class BP_Notifications_Notification {
 		 */
 		do_action( 'bp_notification_before_delete', $args );
 
-		return self::_delete( $where['data'], $where['format'] );
+		$retval = self::_delete( $where['data'], $where['format'] );
+
+		/**
+		 * Fires after the deletion of a notification item.
+		 *
+		 * @since BuddyBoss 2.4.10
+		 *
+		 * @param int|false $retval        Number of rows deleted on success, false on failure.
+		 * @param array     $notifications Array of deleted notifications object.
+		 * @param array     $args          Associative array of columns/values, to determine
+		 *                                 which rows should be deleted. Of the format
+		 *                                 array( 'item_id' => 7, 'component_action' => 'members' ).
+		 */
+		do_action( 'bp_notification_after_delete', $retval, $notifications, $args );
+
+		return $retval;
 	}
 
 	/** Convenience methods ***************************************************/

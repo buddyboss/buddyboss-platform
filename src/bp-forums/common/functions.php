@@ -1292,13 +1292,6 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 	$topic_id = bbp_get_topic_id( $topic_id );
 	$forum_id = bbp_get_forum_id( $forum_id );
 
-	/**
-	 * Necessary for backwards compatibility
-	 *
-	 * @see https://bbpress.trac.wordpress.org/ticket/2620
-	 */
-	$user_id = 0;
-
 	/** Topic */
 
 	// Bail if topic is not published.

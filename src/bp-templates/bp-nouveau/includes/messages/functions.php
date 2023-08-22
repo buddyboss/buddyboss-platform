@@ -332,7 +332,11 @@ function bp_nouveau_push_sitewide_notices() {
 		// Inject the notice into the template_message if no other message has priority.
 		$bp = buddypress();
 
-		if ( empty( $bp->template_message ) ) {
+		/**
+		 * The "bp-message" cookie takes precedence over notices because it needs to be immediately displayed
+		 * after a user unsubscribes and requires prompt action.
+		 */
+		if ( empty( $bp->template_message ) && empty( $_COOKIE['bp-message'] ) ) {
 			$message                   = sprintf(
 				'<strong class="subject">%s</strong>
 				%s',
