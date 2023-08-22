@@ -22,6 +22,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
+		 * @access private
 		 * @var self
 		 */
 		private static $instance = null;
@@ -31,6 +32,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
+		 * @access private
 		 * @var mixed|null
 		 */
 		private static $post_type;
@@ -40,6 +42,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
+		 * @access public
 		 * @var string
 		 */
 		public static $user_reaction_table = '';
@@ -49,6 +52,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
+		 * @access public
 		 * @var string
 		 */
 		public static $reaction_data_table = '';
@@ -58,6 +62,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
+		 * @access public
 		 * @var string
 		 */
 		public static $cache_group = 'bb_reactions';
@@ -167,6 +172,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * Register post type.
 		 *
 		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return void
 		 */
 		public function bb_register_post_type() {
 			if ( bp_is_root_blog() && ! is_network_admin() ) {
@@ -374,7 +381,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Function to add user reaction.
 		 *
-		 * @snce BuddyBoss [BBVERSION]
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param array $args Arguments of user reaction.
 		 *
@@ -398,7 +405,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			/**
 			 * Fires before the add user item reaction in DB.
 			 *
-			 * @snce BuddyBoss [BBVERSION]
+			 * @since BuddyBoss [BBVERSION]
 			 *
 			 * @param array $r Args of user item reactions.
 			 */
@@ -475,7 +482,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			/**
 			 * Fires after the add user item reaction in DB.
 			 *
-			 * @snce BuddyBoss [BBVERSION]
+			 * @since BuddyBoss [BBVERSION]
 			 *
 			 * @param int   $user_reaction_id User reaction id.
 			 * @param array $r                Args of user item reactions.
@@ -488,7 +495,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Remove single user reaction based on reaction id.
 		 *
-		 * @snce BuddyBoss [BBVERSION]
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param int $user_reaction_id ID of the user reaction.
 		 *
@@ -542,7 +549,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Remove user reactions based on args.
 		 *
-		 * @snce BuddyBoss [BBVERSION]
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param array $args Args of user reactions.
 		 *
@@ -646,7 +653,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$r = bp_parse_args(
 				$args,
 				array(
-					'id'          => 0,      // Reaction id.
+					'id'          => 0,      // User reaction id.
 					'reaction_id' => 0,      // Reaction id.
 					'item_type'   => '',     // Item type ( i.e - Activity, Activity Comment ).
 					'item_id'     => 0,      // Item id ( i.e - activity_id, activity_comment_id ).
@@ -1120,7 +1127,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			/**
 			 * Fires before the add user item reaction in DB.
 			 *
-			 * @snce BuddyBoss [BBVERSION]
+			 * @since BuddyBoss [BBVERSION]
 			 *
 			 * @param array $r Args of user item reactions.
 			 */
@@ -1204,7 +1211,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			/**
 			 * Fires after the add user item reaction in DB.
 			 *
-			 * @snce BuddyBoss [BBVERSION]
+			 * @since BuddyBoss [BBVERSION]
 			 *
 			 * @param int   $reaction_data_id Reaction data id.
 			 * @param array $r                Args of user item reactions.
