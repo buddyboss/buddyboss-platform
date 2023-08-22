@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.2.2
 Requires PHP: 5.6.20
-Stable tag: 2.4.00
+Stable tag: 2.4.10
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,20 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.4.10 =
+* Bug: Activity - If a link contains a @user mention, the rest of the link was being cut off
+* Bug: Activity - Web fall back pages were showing a warning if it contains a link preview
+* Bug: Core - Identified filters refinement and bugs by taking reference from BBPress recent releases
+* Bug: Core - Removed the unnecessary "!important" tags in the Theme
+* Bug: Email - Unsubscribe Link not redirecting when a user logs in after clicking the link
+* Bug: Groups - Group Invites were being sent even if it was restricted by the user
+* Bug: Groups - Groups were not being reassigned to another user if the Organizer was deleted
+* Bug: Media - Incorrect icon was shown for image files when uploaded to Documents from a user profile
+* Bug: Messages - New line (Shift+Enter) was not working correctly and lists were not formatted appropriately on Notification emails
+* Bug: Notifications - Web Push Notifications were not sending notifications for Group Activity feed posts.
+* Bug: Profiles - Embedding a TikTok link that had the same username as another member caused the link to redirect the users profile
+* Bug: Translations - Icons were not showing for File Extensions when RTL was enabled
 
 = 2.4.00 =
 * Enhancement: Core - Identified code improvements across different components by taking reference from BBPress recent releases
