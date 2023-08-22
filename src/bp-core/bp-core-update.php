@@ -3139,7 +3139,7 @@ function bb_core_update_repair_duplicate_following_notification() {
  * Migrate icon class for the documents.
  * Assign the group organizer to the group has 0 members.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.10
  *
  * @return void
  */
