@@ -15,6 +15,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
+	#[\AllowDynamicProperties]
 	class BB_Reaction {
 
 		/**
@@ -1411,7 +1412,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				}
 			}
 
-			if ( $total_reactions_count_data->id ) {
+			if ( ! empty( $total_reactions_count_data->id ) ) {
 				wp_cache_delete( $total_reactions_count_data->id, self::$cache_group );
 			}
 
