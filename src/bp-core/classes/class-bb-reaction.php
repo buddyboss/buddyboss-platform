@@ -398,7 +398,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'item_id'      => '',
 					'user_id'      => bp_loggedin_user_id(),
 					'date_created' => bp_core_current_time(),
-					'error_type'   => 'bool'
+					'error_type'   => 'bool',
 				)
 			);
 
@@ -431,17 +431,17 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				return false;
 			}
 
-			$sql          = "SELECT * FROM " . self::$user_reaction_table . " WHERE item_type = %s AND item_id = %d AND user_id = %d";
+			$sql          = 'SELECT * FROM ' . self::$user_reaction_table . ' WHERE item_type = %s AND item_id = %d AND user_id = %d';
 			$get_reaction = $wpdb->get_row( $wpdb->prepare( $sql, $r['item_type'], (int) $r['item_id'], (int) $r['user_id'] ) );
 			if ( $get_reaction ) {
 				$sql = $wpdb->prepare(
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					"UPDATE " . self::$user_reaction_table . " SET
+					'UPDATE ' . self::$user_reaction_table . ' SET
 						reaction_id = %d,
 						date_created = %s
 					WHERE
 						id = %d
-					",
+					',
 					$r['reaction_id'],
 					$r['date_created'],
 					$get_reaction->id
@@ -449,15 +449,15 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			} else {
 				$sql = $wpdb->prepare(
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					"INSERT INTO " . self::$user_reaction_table . " (
-						user_id, 
-						reaction_id, 
-						item_type, 
-						item_id, 
+					'INSERT INTO ' . self::$user_reaction_table . ' (
+						user_id,
+						reaction_id,
+						item_type,
+						item_id,
 						date_created
 					) VALUES (
 						%d, %d, %s, %d, %s
-					)",
+					)',
 					(int) $r['user_id'],
 					(int) $r['reaction_id'],
 					$r['item_type'],
@@ -519,7 +519,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			do_action( 'bb_reaction_before_remove_user_item_reaction', $user_reaction_id );
 
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$get = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . self::$user_reaction_table . " WHERE id=%d", $user_reaction_id ), ARRAY_A );
+			$get = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . self::$user_reaction_table . ' WHERE id=%d', $user_reaction_id ), ARRAY_A );
 
 			if ( empty( $get ) ) {
 				return false;
@@ -591,7 +591,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				return false;
 			}
 
-			$sql = "SELECT * FROM " . self::$user_reaction_table . " WHERE reaction_id = %d AND item_id = %d AND user_id = %d";
+			$sql = 'SELECT * FROM ' . self::$user_reaction_table . ' WHERE reaction_id = %d AND item_id = %d AND user_id = %d';
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$get_reaction = $wpdb->get_row( $wpdb->prepare( $sql, $r['reaction_id'], $r['item_id'], $r['user_id'] ), ARRAY_A );
 
@@ -671,7 +671,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			// Select conditions.
 			$select_sql = 'SELECT DISTINCT ur.id';
 
-			$from_sql = " FROM " . self::$user_reaction_table . " ur";
+			$from_sql = ' FROM ' . self::$user_reaction_table . ' ur';
 
 			$join_sql = '';
 
@@ -764,7 +764,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$page       = absint( $r['paged'] );
 			$per_page   = absint( $r['per_page'] );
 			$pagination = '';
-			if ( ! empty( $per_page ) && ! empty( $page ) && $per_page != - 1 ) {
+			if ( ! empty( $per_page ) && ! empty( $page ) && - 1 !== $per_page ) {
 				$pagination = $wpdb->prepare( 'LIMIT %d, %d', intval( ( $page - 1 ) * $per_page ), intval( $per_page ) );
 			}
 
@@ -796,7 +796,11 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				$uncached_ids = bp_get_non_cached_ids( $paged_user_reactions_ids, self::$cache_group );
 				if ( ! empty( $uncached_ids ) ) {
 					$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
-					$queried_data     = $wpdb->get_results( "SELECT * FROM " . self::$user_reaction_table . " WHERE id IN ({$uncached_ids_sql})" );
+
+					$queried_data = $wpdb->get_results(
+						'SELECT * FROM ' . self::$user_reaction_table . " WHERE id IN ({$uncached_ids_sql})"
+					);
+
 					foreach ( (array) $queried_data as $urdata ) {
 						wp_cache_set( $urdata->id, $urdata, self::$cache_group );
 					}
@@ -827,7 +831,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				 * @param string $where_sql MySQL WHERE statement portion.
 				 * @param string $sort      Sort direction for query.
 				 */
-				$sql                      = "SELECT count(DISTINCT ur.id) FROM " . self::$user_reaction_table . " ur {$join_sql} {$where_sql}";
+				$sql                      = 'SELECT count(DISTINCT ur.id) FROM ' . self::$user_reaction_table . " ur {$join_sql} {$where_sql}";
 				$total_user_reactions_sql = apply_filters( 'bb_get_user_reactions_total_sql', $sql, $where_sql, $sort );
 				$cached                   = bp_core_get_incremented_cache( $total_user_reactions_sql, self::$cache_group );
 				if ( false === $cached ) {
@@ -929,7 +933,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			// Select conditions.
 			$select_sql = 'SELECT *';
 
-			$from_sql = " FROM " . self::$reaction_data_table . " rd";
+			$from_sql = ' FROM ' . self::$reaction_data_table . ' rd';
 
 			$join_sql = '';
 
@@ -968,13 +972,13 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			// rel1_in.
 			if ( ! empty( $r['rel1_in'] ) ) {
-				$rel1_in                  = implode( ',', wp_parse_id_list( $r['rel1_in'] ) );
+				$rel1_in                     = implode( ',', wp_parse_id_list( $r['rel1_in'] ) );
 				$where_conditions['rel1_in'] = "rd.rel1 IN ({$rel1_in})";
 			}
 
 			// rel2_in.
 			if ( ! empty( $r['rel2_in'] ) ) {
-				$rel2_in                  = implode( ',', wp_parse_id_list( $r['rel2_in'] ) );
+				$rel2_in                     = implode( ',', wp_parse_id_list( $r['rel2_in'] ) );
 				$where_conditions['rel2_in'] = "rd.rel2 IN ({$rel2_in})";
 			}
 
@@ -1020,7 +1024,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$page       = absint( $r['paged'] );
 			$per_page   = absint( $r['per_page'] );
 			$pagination = '';
-			if ( ! empty( $per_page ) && ! empty( $page ) && $per_page != - 1 ) {
+			if ( ! empty( $per_page ) && ! empty( $page ) && - 1 !== $per_page ) {
 				$pagination = $wpdb->prepare( 'LIMIT %d, %d', intval( ( $page - 1 ) * $per_page ), intval( $per_page ) );
 			}
 
@@ -1052,7 +1056,11 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				$uncached_ids = bp_get_non_cached_ids( $paged_reaction_data_ids, self::$cache_group );
 				if ( ! empty( $uncached_ids ) ) {
 					$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
-					$queried_data     = $wpdb->get_results( "SELECT * FROM " . self::$reaction_data_table . " WHERE id IN ({$uncached_ids_sql})" );
+
+					$queried_data = $wpdb->get_results(
+						'SELECT * FROM ' . self::$reaction_data_table . " WHERE id IN ({$uncached_ids_sql})"
+					);
+
 					foreach ( (array) $queried_data as $rddata ) {
 						wp_cache_set( 'rd_' . $rddata->id, $rddata, self::$cache_group );
 					}
@@ -1083,9 +1091,9 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				 * @param string $where_sql MySQL WHERE statement portion.
 				 * @param string $sort      Sort direction for query.
 				 */
-				$sql                      = "SELECT count(DISTINCT rd.id) FROM " . self::$reaction_data_table . " rd {$join_sql} {$where_sql}";
+				$sql                     = 'SELECT count(DISTINCT rd.id) FROM ' . self::$reaction_data_table . " rd {$join_sql} {$where_sql}";
 				$total_reaction_data_sql = apply_filters( 'bb_get_reactions_data_total_sql', $sql, $where_sql );
-				$cached                   = bp_core_get_incremented_cache( $total_reaction_data_sql, self::$cache_group );
+				$cached                  = bp_core_get_incremented_cache( $total_reaction_data_sql, self::$cache_group );
 				if ( false === $cached ) {
 					$total_reaction_data = $wpdb->get_var( $total_reaction_data_sql );
 					bp_core_set_incremented_cache( $total_reaction_data_sql, self::$cache_group, $total_reaction_data );
@@ -1158,18 +1166,18 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				return false;
 			}
 
-			$sql          = "SELECT * FROM " . self::$reaction_data_table . " WHERE name = %s AND rel1 = %s AND rel2 = %s";
+			$sql           = 'SELECT * FROM ' . self::$reaction_data_table . ' WHERE name = %s AND rel1 = %s AND rel2 = %s';
 			$reaction_data = $wpdb->get_row( $wpdb->prepare( $sql, 'item_summary', $r['rel1'], $r['rel2'] ) );
 			if ( $reaction_data ) {
 				$sql = $wpdb->prepare(
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					"UPDATE " . self::$reaction_data_table . " SET
+					'UPDATE ' . self::$reaction_data_table . ' SET
                         value = %s
                     WHERE
                         rel1 = %s
                         AND rel2 = %s
                         AND name = %s
-                    ",
+                    ',
 					$r['value'],
 					$r['rel1'],
 					$r['rel2'],
@@ -1178,7 +1186,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			} else {
 				$sql = $wpdb->prepare(
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					"INSERT INTO " . self::$reaction_data_table . " (
+					'INSERT INTO ' . self::$reaction_data_table . ' (
                         name,
                         value,
                         rel1,
@@ -1187,7 +1195,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
                         date
                     ) VALUES (
                         %s, %s, %s, %s, %s, %s
-                    )",
+                    )',
 					$r['name'],
 					$r['value'],
 					$r['rel1'],
@@ -1227,7 +1235,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param array  $args   Args of reaction data.
-		 * @param string $action Add or remove the user reaction
+		 * @param string $action Add or remove the user reaction.
 		 *
 		 * @return false|int|WP_Error
 		 */
@@ -1252,6 +1260,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'order'     => 'DESC',
 				)
 			);
+
 			$last_10_reactions = ! empty( $latest_reaction['reactions'] ) ? $latest_reaction['reactions'] : array();
 
 			// Fetch last 10 reactions.
@@ -1264,6 +1273,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'order'     => 'ASC',
 				)
 			);
+
 			$first_10_reactions = ! empty( $last_reaction['reactions'] ) ? $last_reaction['reactions'] : array();
 
 			// Prepare data array for bb_add_reactions_data function.
@@ -1274,7 +1284,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			);
 
 			// Store the data in bb_reactions_data table.
-			$result = $this->bb_add_reactions_data(
+			return $this->bb_add_reactions_data(
 				array(
 					'name'  => 'item_summary',
 					'value' => maybe_serialize( $data ),
@@ -1283,8 +1293,6 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'rel3'  => 0,
 				)
 			);
-
-			return $result;
 		}
 
 		/**
@@ -1293,7 +1301,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param array  $args   Args of reaction data.
-		 * @param string $action Add or remove the user reaction
+		 * @param string $action Add or remove the user reaction.
 		 *
 		 * @return false|int|WP_Error
 		 */
@@ -1317,11 +1325,15 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				ARRAY_A
 			);
 
-			$total_item_reaction_count = array_reduce( $reaction_counts, function ( $data, $item ) {
-				$data[ $item['reaction_id'] ] = intval( $item['count'] );
+			$total_item_reaction_count = array_reduce(
+				$reaction_counts,
+				function ( $data, $item ) {
+					$data[ $item['reaction_id'] ] = intval( $item['count'] );
 
-				return $data;
-			}, array() );
+					return $data;
+				},
+				array()
+			);
 
 			$total_item_reaction_count['total'] = array_sum( $total_item_reaction_count );
 
@@ -1334,7 +1346,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param array  $args   Args of reaction data.
-		 * @param string $action Add or remove the user reaction
+		 * @param string $action Add or remove the user reaction.
 		 *
 		 * @return false|int|WP_Error
 		 */
@@ -1351,15 +1363,15 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$total_reactions_count_data = ! empty( $total_reactions_count_data['reaction_data'] ) ? current( $total_reactions_count_data['reaction_data'] ) : array();
 			$total_reactions_count      = ! empty( $total_reactions_count_data->value ) ? (int) $total_reactions_count_data->value : 0;
 			if ( 'add' === $action ) {
-				$total_reactions_count += 1;
+				++$total_reactions_count;
 			} else {
-				$total_reactions_count -= 1;
+				--$total_reactions_count;
 			}
 
 			if ( ! empty( $total_reactions_count_data ) ) {
 				$sql = $wpdb->prepare(
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					"UPDATE " . self::$reaction_data_table . " SET
+					'UPDATE ' . self::$reaction_data_table . " SET
                         value = %s
                     WHERE
                         name = %s
@@ -1371,7 +1383,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			} else {
 				$sql = $wpdb->prepare(
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					"INSERT INTO " . self::$reaction_data_table . " (
+					'INSERT INTO ' . self::$reaction_data_table . ' (
                         name,
                         value,
                         rel1,
@@ -1380,7 +1392,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
                         date
                     ) VALUES (
                         %s, %s, %s, %s, %s, %s
-                    )",
+                    )',
 					'total_reactions_count',
 					$total_reactions_count,
 					'0',
@@ -1412,7 +1424,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param array  $args   Args of reaction data.
-		 * @param string $action Add or remove the user reaction
+		 * @param string $action Add or remove the user reaction.
 		 *
 		 * @return false|int|WP_Error
 		 */
@@ -1436,24 +1448,24 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$total_item_reactions_count = ! empty( $total_item_reactions_count['reaction_data'] ) ? (int) current( $total_item_reactions_count['reaction_data'] ) : 0;
 
 			if ( 'add' === $action ) {
-				$total_item_reactions_count += 1;
+				++$total_item_reactions_count;
 			} else {
-				$total_item_reactions_count -= 1;
+				--$total_item_reactions_count;
 			}
 
-			$query = "SELECT * FROM " . self::$reaction_data_table . " WHERE name = %s AND rel1 = %s AND rel2 = %s AND rel3 = %s";
+			$query = 'SELECT * FROM ' . self::$reaction_data_table . ' WHERE name = %s AND rel1 = %s AND rel2 = %s AND rel3 = %s';
 			$sql   = $wpdb->get_row( $wpdb->prepare( $query, 'total_item_reactions_count', $args['item_type'], $args['item_id'], '0' ) );
 			if ( $sql ) {
 				$sql = $wpdb->prepare(
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					"UPDATE " . self::$reaction_data_table . " SET
+					'UPDATE ' . self::$reaction_data_table . ' SET
                         value = %s
                     WHERE
                         name = %s
                         AND rel1 = %s
                         AND rel2 = %s
                         AND rel3 = %s
-                    ",
+                    ',
 					$total_item_reactions_count,
 					'total_item_reactions_count',
 					$args['item_type'],
@@ -1463,7 +1475,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			} else {
 				$sql = $wpdb->prepare(
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					"INSERT INTO " . self::$reaction_data_table . " (
+					'INSERT INTO ' . self::$reaction_data_table . ' (
                         name,
                         value,
                         rel1,
@@ -1472,7 +1484,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
                         date
                     ) VALUES (
                         %s, %s, %s, %s, %s, %s
-                    )",
+                    )',
 					'total_item_reactions_count',
 					$total_item_reactions_count,
 					$args['item_type'],
@@ -1500,7 +1512,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param array  $args   Args of reaction data.
-		 * @param string $action Add or remove the user reaction
+		 * @param string $action Add or remove the user reaction.
 		 *
 		 * @return false|int|WP_Error
 		 */
@@ -1525,12 +1537,12 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$total_item_reactions_count = ! empty( $total_item_reactions_count['reaction_data'] ) ? (int) current( $total_item_reactions_count['reaction_data'] ) : 0;
 
 			if ( 'add' === $action ) {
-				$total_item_reactions_count += 1;
+				++$total_item_reactions_count;
 			} else {
-				$total_item_reactions_count -= 1;
+				--$total_item_reactions_count;
 			}
 
-			$query = "SELECT * FROM " . self::$reaction_data_table . " WHERE name = %s AND rel1 = %s AND rel2 = %s AND rel3 = %s";
+			$query = 'SELECT * FROM ' . self::$reaction_data_table . ' WHERE name = %s AND rel1 = %s AND rel2 = %s AND rel3 = %s';
 			$sql   = $wpdb->get_row(
 				$wpdb->prepare(
 					$query,
@@ -1543,14 +1555,14 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			if ( $sql ) {
 				$sql = $wpdb->prepare(
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					"UPDATE " . self::$reaction_data_table . " SET
+					'UPDATE ' . self::$reaction_data_table . ' SET
                         value = %s
                     WHERE
                         name = %s
                         AND rel1 = %s
                         AND rel2 = %s
                         AND rel3 = %s
-                    ",
+                    ',
 					$total_item_reactions_count,
 					'total_item_reaction_reactions_count',
 					$args['item_type'],
@@ -1560,7 +1572,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			} else {
 				$sql = $wpdb->prepare(
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					"INSERT INTO " . self::$reaction_data_table . " (
+					'INSERT INTO ' . self::$reaction_data_table . ' (
                         name,
                         value,
                         rel1,
@@ -1569,7 +1581,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
                         date
                     ) VALUES (
                         %s, %s, %s, %s, %s, %s
-                    )",
+                    )',
 					'total_item_reaction_reactions_count',
 					$total_item_reactions_count,
 					$args['item_type'],
