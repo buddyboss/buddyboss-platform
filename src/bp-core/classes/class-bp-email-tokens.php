@@ -210,7 +210,7 @@ class BP_Email_Tokens {
 		ob_start();
 		?>
 		<table cellspacing="0" cellpadding="0" border="0" width="100%"
-			   style="background: <?php echo esc_attr( $settings['body_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
+			style="background: <?php echo esc_attr( $settings['body_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
 			<tbody>
 			<tr>
 				<td height="16px" style="font-size: 16px; line-height: 16px;">&nbsp;</td>
@@ -568,7 +568,7 @@ class BP_Email_Tokens {
 			<tr>
 				<td>
 					<table cellspacing="0" cellpadding="0" border="0" width="100%"
-						   style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
+						style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
 						<tbody>
 						<tr>
 							<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
@@ -696,7 +696,7 @@ class BP_Email_Tokens {
 			<tr>
 				<td>
 					<table cellspacing="0" cellpadding="0" border="0" width="100%"
-						   style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
+						style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
 						<tbody>
 						<tr>
 							<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
@@ -814,17 +814,17 @@ class BP_Email_Tokens {
 						<tr>
 							<td valign="middle" width="65px" style="vertical-align: middle;">
 								<a style="display: block; width: 47px;" href="<?php echo esc_url( bp_core_get_user_domain( $activity_comment->user_id ) ); ?>" target="_blank" rel="nofollow">
-																						 <?php
-																							$avatar_url = bp_core_fetch_avatar(
-																								array(
-																									'item_id' => $activity_comment->user_id,
-																									'width'   => 100,
-																									'height'  => 100,
-																									'type'    => 'full',
-																									'html'    => false,
-																								)
-																							);
-																							?>
+									<?php
+									$avatar_url = bp_core_fetch_avatar(
+										array(
+											'item_id' => $activity_comment->user_id,
+											'width'   => 100,
+											'height'  => 100,
+											'type'    => 'full',
+											'html'    => false,
+										)
+									);
+									?>
 									<img alt="" src="<?php echo esc_url( $avatar_url ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" />
 								</a>
 							</td>
@@ -1322,7 +1322,7 @@ class BP_Email_Tokens {
 		ob_start();
 		?>
 		<table class="member-details" cellspacing="0" cellpadding="0" border="0" width="100%"
-			   style="background: <?php echo esc_attr( $settings['body_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
+			style="background: <?php echo esc_attr( $settings['body_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
 			<tr>
 				<td align="center">
 					<table cellpadding="0" cellspacing="0" border="0" width="100%" style="width: 100%;">
@@ -1505,7 +1505,7 @@ class BP_Email_Tokens {
 		?>
 		<div class="spacer" style="font-size: 5px; line-height: 5px; height: 5px;">&nbsp;</div>
 		<table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
-			 <tbody>
+			<tbody>
 				<tr>
 					<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
 				</tr>
@@ -1527,7 +1527,7 @@ class BP_Email_Tokens {
 				<tr>
 					<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
 				</tr>
-			 </tbody>
+			</tbody>
 		</table>
 		<div class="spacer" style="font-size: 30px; line-height: 30px; height: 30px;">&nbsp;</div>
 		<?php
@@ -1656,7 +1656,7 @@ class BP_Email_Tokens {
 			<tr>
 				<td>
 					<table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
-						 <tbody>
+						<tbody>
 							<tr>
 								<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
 							</tr>
@@ -1678,7 +1678,7 @@ class BP_Email_Tokens {
 							<tr>
 								<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
 							</tr>
-						 </tbody>
+						</tbody>
 					</table>
 				</td>
 			</tr>
@@ -1759,7 +1759,7 @@ class BP_Email_Tokens {
 			<tr>
 				<td>
 					<table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
-						 <tbody>
+						<tbody>
 							<tr>
 								<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
 							</tr>
@@ -1781,7 +1781,7 @@ class BP_Email_Tokens {
 							<tr>
 								<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
 							</tr>
-						 </tbody>
+						</tbody>
 					</table>
 				</td>
 			</tr>
@@ -2609,7 +2609,7 @@ class BP_Email_Tokens {
 
 			<tr>
 				<td><a href="<?php echo esc_url( $tokens['activity.url'] ); ?>" target="_blank" rel="nofollow"
-					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; min-width: 64px; text-align: center; height: 20px; line-height: 20px; padding: 9px 18px;"><?php esc_html_e( 'View Post', 'buddyboss' ); ?></a></td>
+					style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; min-width: 64px; text-align: center; height: 20px; line-height: 20px; padding: 9px 18px;"><?php esc_html_e( 'View Post', 'buddyboss' ); ?></a></td>
 			</tr>
 		</table>
 		<div class="spacer" style="font-size: 10px; line-height: 10px; height: 10px;">&nbsp;</div>
