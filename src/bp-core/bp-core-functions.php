@@ -8829,7 +8829,13 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 	$email_restrictions  = bb_email_restrictions_setting();
 
 	// No restrictions or custom registration enabled then return true.
-	if ( ( empty( $domain_restrictions ) && empty( $email_restrictions ) ) || bp_allow_custom_registration() ) {
+	if (
+		(
+			empty( $domain_restrictions ) &&
+			empty( $email_restrictions )
+		) ||
+		bp_allow_custom_registration()
+	) {
 		return true;
 	}
 
@@ -8910,7 +8916,7 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 		}
 	}
 
-	// If only allowed occured but rules not matched.
+	// If only allowed occurred but rules not matched.
 	if ( true === $only_allow ) {
 		return false;
 	}
