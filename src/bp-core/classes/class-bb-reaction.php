@@ -1108,7 +1108,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @return false|int|WP_Error
 		 */
-		public function bb_add_reactions_data( $args ) {
+		private function bb_add_reactions_data( $args ) {
 			global $wpdb;
 
 			$r = bp_parse_args(
@@ -1341,31 +1341,29 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		public function bb_total_reactions_count( $args, $action ) {
 			global $wpdb;
 
-			$total_reactions_count = $this->bb_get_reactions_data(
+			$total_reactions_count_data = $this->bb_get_reactions_data(
 				array(
 					'name'        => 'total_reactions_count',
-					'fields'      => 'value',
 					'count_total' => false,
 				)
 			);
 
-			$total_reactions_count = ! empty( $total_reactions_count['reaction_data'] ) ? (int) current( $total_reactions_count['reaction_data'] ) : 0;
-
+			$total_reactions_count_data = ! empty( $total_reactions_count_data['reaction_data'] ) ? current( $total_reactions_count_data['reaction_data'] ) : array();
+			$total_reactions_count      = ! empty( $total_reactions_count_data->value ) ? (int) $total_reactions_count_data->value : 0;
 			if ( 'add' === $action ) {
 				$total_reactions_count += 1;
 			} else {
 				$total_reactions_count -= 1;
 			}
 
-			$query = "SELECT * FROM " . self::$reaction_data_table . " WHERE name = %s";
-			$sql   = $wpdb->get_row( $wpdb->prepare( $query, 'total_reactions_count' ) );
-			if ( $sql ) {
+			if ( ! empty( $total_reactions_count_data ) ) {
 				$sql = $wpdb->prepare(
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					"UPDATE " . self::$reaction_data_table . " SET
                         value = %s
                     WHERE
                         name = %s
+                        AND rel3 = '0'
                     ",
 					$total_reactions_count,
 					'total_reactions_count'
@@ -1399,6 +1397,10 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				} else {
 					return false;
 				}
+			}
+
+			if ( $total_reactions_count_data->id ) {
+				wp_cache_delete( $total_reactions_count_data->id, self::$cache_group );
 			}
 
 			return $total_reactions_count;
