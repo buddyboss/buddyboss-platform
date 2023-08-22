@@ -1119,7 +1119,7 @@ function bp_xprofile_validate_website_url_value( $retval, $field_id, $value ) {
 		);
 	}
 
-	if ( ! wp_http_validate_url( $value ) ) {
+	if ( ! empty( $value ) && ! wp_http_validate_url( $value ) ) {
 		return sprintf(
 			/* translators: Field name. */
 			__( 'Invalid %s. Please enter a valid URL.', 'buddyboss' ),
