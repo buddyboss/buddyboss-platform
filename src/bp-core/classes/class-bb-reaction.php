@@ -1434,7 +1434,6 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'rel1'        => $item_type,
 					'rel2'        => $item_id,
 					'rel3'        => '0',
-					'fields'      => 'value',
 					'count_total' => false,
 				)
 			);
