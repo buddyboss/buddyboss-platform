@@ -1045,7 +1045,7 @@ class BP_Notifications_Notification {
 		/**
 		 * Fires after the deletion of a notification item.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.10
 		 *
 		 * @param int|false $retval        Number of rows deleted on success, false on failure.
 		 * @param array     $notifications Array of deleted notifications object.
