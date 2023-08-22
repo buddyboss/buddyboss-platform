@@ -1001,21 +1001,19 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0 ) {
 				! empty( $parent_activity ) &&
 				'activity_update' === $parent_activity->type
 			) {
-				$reaction_id      = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
-				$user_reaction_id = bb_load_reaction()->bb_add_user_item_reaction(
+				$reaction_id = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
+				bb_load_reaction()->bb_add_user_item_reaction(
 					array(
 						'item_type'   => 'activity',
 						'reaction_id' => $reaction_id,
 						'item_id'     => $activity_id,
 					)
 				);
-
-				if ( $user_reaction_id ) {
-					// Success.
-					return true;
-				}
 			}
 		}
+
+		// Success.
+		return true;
 
 		// Saving meta was unsuccessful for an unknown reason.
 	} else {
@@ -1100,19 +1098,17 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0 ) {
 				// Remove user reaction.
 				if ( ! empty( $activity_id ) && function_exists( 'bb_load_reaction' ) ) {
 					$reaction_id = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
-					$deleted     = bb_load_reaction()->bb_remove_user_item_reactions(
+					bb_load_reaction()->bb_remove_user_item_reactions(
 						array(
 							'item_id'     => $activity_id,
 							'user_id'     => $user_id,
 							'reaction_id' => $reaction_id,
 						)
 					);
-
-					if ( $deleted ) {
-						// Success.
-						return true;
-					}
 				}
+
+				// Success.
+				return true;
 
 				// Error updating.
 			} else {
