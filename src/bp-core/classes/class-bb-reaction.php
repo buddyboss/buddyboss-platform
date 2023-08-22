@@ -95,8 +95,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			self::create_table();
 
-			// Register post type.
-			add_action( 'bp_register_post_types', array( $this, 'bb_register_post_type' ), 10 );
+			$this->bb_register_post_type();
 		}
 
 		/**
@@ -124,7 +123,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			// Table already exists, so maybe upgrade instead?
 			$user_reactions_table_exists = $wpdb->query( "SHOW TABLES LIKE '{$bb_user_reactions}';" ); // phpcs:ignore
 			if ( ! $user_reactions_table_exists ) {
-				$sql[] = "CREATE TABLE IF NOT EXISTS {$bb_user_reactions} (
+				$sql[] = "CREATE TABLE {$bb_user_reactions} (
 					id bigint(20) NOT NULL AUTO_INCREMENT,
 					user_id bigint(20) NOT NULL,
 					reaction_id bigint(20) NOT NULL,
@@ -147,7 +146,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			// Table already exists, so maybe upgrade instead?
 			$reactions_data_table_exists = $wpdb->query( "SHOW TABLES LIKE '{$bb_reactions_data}';" ); // phpcs:ignore
 			if ( ! $reactions_data_table_exists ) {
-				$sql[] = "CREATE TABLE IF NOT EXISTS {$bb_reactions_data} (
+				$sql[] = "CREATE TABLE {$bb_reactions_data} (
 					id bigint(20) NOT NULL AUTO_INCREMENT,
 					`name` varchar(255)  NOT NULL,
 					`value` longtext DEFAULT NULL,
@@ -177,7 +176,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @return void
 		 */
 		public function bb_register_post_type() {
-			if ( bp_is_root_blog() && ! is_network_admin() ) {
+			if ( bp_is_root_blog() && ! is_network_admin() && function_exists( 'register_post_type' ) ) {
 				register_post_type(
 					self::$post_type,
 					apply_filters(
