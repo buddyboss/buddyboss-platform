@@ -385,7 +385,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @param array $args Arguments of user reaction.
 		 *
-		 * @return int $user_reaction_id
+		 * @return false|int|WP_Error
 		 */
 		public function bb_add_user_item_reaction( $args ) {
 			global $wpdb;
@@ -553,7 +553,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @param array $args Args of user reactions.
 		 *
-		 * @return bool
+		 * @return bool|int|WP_Error|null
 		 */
 		public function bb_remove_user_item_reactions( $args ) {
 			global $wpdb;
@@ -1264,7 +1264,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'order'     => 'ASC',
 				)
 			);
-			$first_10_reactions = ! empty( $last_reaction['reactions'] ) ? $last_reaction['reactions'] : array();;
+			$first_10_reactions = ! empty( $last_reaction['reactions'] ) ? $last_reaction['reactions'] : array();
 
 			// Prepare data array for bb_add_reactions_data function.
 			$data = array(
