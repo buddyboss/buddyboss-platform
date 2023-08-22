@@ -1353,15 +1353,13 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		public function bb_total_reactions_count( $args, $action ) {
 			global $wpdb;
 
-			$total_reactions_count_data = $this->bb_get_reactions_data(
-				array(
-					'name'        => 'total_reactions_count',
-					'count_total' => false,
-				)
-			);
+			$total_reactions_count      = 0;
+			$sql                        = "SELECT value FROM " . self::$reaction_data_table . " WHERE name = %s";
+			$total_reactions_count_data = $wpdb->get_row( $wpdb->prepare( $sql, 'total_reactions_count' ) );
+			if ( ! empty( $total_reactions_count_data ) && ! empty( $total_reactions_count_data ) ) {
+				$total_reactions_count = $total_reactions_count_data->value;
+			}
 
-			$total_reactions_count_data = ! empty( $total_reactions_count_data['reaction_data'] ) ? current( $total_reactions_count_data['reaction_data'] ) : array();
-			$total_reactions_count      = ! empty( $total_reactions_count_data->value ) ? (int) $total_reactions_count_data->value : 0;
 			if ( 'add' === $action ) {
 				++$total_reactions_count;
 			} else {
@@ -1411,10 +1409,6 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				}
 			}
 
-			if ( ! empty( $total_reactions_count_data->id ) ) {
-				wp_cache_delete( $total_reactions_count_data->id, self::$cache_group );
-			}
-
 			return $total_reactions_count;
 		}
 
@@ -1434,7 +1428,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$item_id   = $args['item_id'];
 			$item_type = $args['item_type'];
 
-			$total_item_reactions_count = $this->bb_get_reactions_data(
+			$total_item_reactions_data = $this->bb_get_reactions_data(
 				array(
 					'name'        => 'total_item_reactions_count',
 					'rel1'        => $item_type,
@@ -1445,17 +1439,16 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				)
 			);
 
-			$total_item_reactions_count = ! empty( $total_item_reactions_count['reaction_data'] ) ? (int) current( $total_item_reactions_count['reaction_data'] ) : 0;
+			$total_item_reactions_data  = ! empty( $total_item_reactions_data['reaction_data'] ) ? current( $total_item_reactions_data['reaction_data'] ) : array();
+			$total_item_reactions_count = ! empty( $total_item_reactions_data->value ) ? (int) $total_item_reactions_data->value : 0;
 
 			if ( 'add' === $action ) {
-				++$total_item_reactions_count;
+				++ $total_item_reactions_count;
 			} else {
-				--$total_item_reactions_count;
+				-- $total_item_reactions_count;
 			}
 
-			$query = 'SELECT * FROM ' . self::$reaction_data_table . ' WHERE name = %s AND rel1 = %s AND rel2 = %s AND rel3 = %s';
-			$sql   = $wpdb->get_row( $wpdb->prepare( $query, 'total_item_reactions_count', $args['item_type'], $args['item_id'], '0' ) );
-			if ( $sql ) {
+			if ( ! empty( $total_item_reactions_data ) ) {
 				$sql = $wpdb->prepare(
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					'UPDATE ' . self::$reaction_data_table . ' SET
@@ -1503,6 +1496,10 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				}
 			}
 
+			if ( ! empty( $total_item_reactions_data->id ) ) {
+				wp_cache_delete( $total_item_reactions_data->id, self::$cache_group );
+			}
+
 			return $total_item_reactions_count;
 		}
 
@@ -1523,36 +1520,26 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$item_id     = $args['item_id'];
 			$item_type   = $args['item_type'];
 
-			$total_item_reactions_count = $this->bb_get_reactions_data(
+			$total_item_reactions_data_with_rel3 = $this->bb_get_reactions_data(
 				array(
-					'name'        => 'total_item_reaction_reactions_count',
+					'name'        => 'total_item_reactions_count',
 					'rel1'        => $item_type,
 					'rel2'        => $item_id,
 					'rel3'        => $reaction_id,
-					'fields'      => 'value',
 					'count_total' => false,
 				)
 			);
 
-			$total_item_reactions_count = ! empty( $total_item_reactions_count['reaction_data'] ) ? (int) current( $total_item_reactions_count['reaction_data'] ) : 0;
+			$total_item_reactions_data_with_rel3  = ! empty( $total_item_reactions_data_with_rel3['reaction_data'] ) ? current( $total_item_reactions_data_with_rel3['reaction_data'] ) : array();
+			$total_item_reactions_count_with_rel3 = ! empty( $total_item_reactions_data_with_rel3->value ) ? (int) $total_item_reactions_data_with_rel3->value : 0;
 
 			if ( 'add' === $action ) {
-				++$total_item_reactions_count;
+				++ $total_item_reactions_count_with_rel3;
 			} else {
-				--$total_item_reactions_count;
+				-- $total_item_reactions_count_with_rel3;
 			}
 
-			$query = 'SELECT * FROM ' . self::$reaction_data_table . ' WHERE name = %s AND rel1 = %s AND rel2 = %s AND rel3 = %s';
-			$sql   = $wpdb->get_row(
-				$wpdb->prepare(
-					$query,
-					'total_item_reaction_reactions_count',
-					$args['item_type'],
-					$args['item_id'],
-					$args['reaction_id']
-				)
-			);
-			if ( $sql ) {
+			if ( ! empty( $total_item_reactions_data_with_rel3 ) ) {
 				$sql = $wpdb->prepare(
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					'UPDATE ' . self::$reaction_data_table . ' SET
@@ -1563,8 +1550,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
                         AND rel2 = %s
                         AND rel3 = %s
                     ',
-					$total_item_reactions_count,
-					'total_item_reaction_reactions_count',
+					$total_item_reactions_count_with_rel3,
+					'total_item_reactions_count',
 					$args['item_type'],
 					$args['item_id'],
 					$args['reaction_id']
@@ -1582,8 +1569,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
                     ) VALUES (
                         %s, %s, %s, %s, %s, %s
                     )',
-					'total_item_reaction_reactions_count',
-					$total_item_reactions_count,
+					'total_item_reactions_count',
+					$total_item_reactions_count_with_rel3,
 					$args['item_type'],
 					$args['item_id'],
 					$args['reaction_id'],
@@ -1600,7 +1587,11 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				}
 			}
 
-			return $total_item_reactions_count;
+			if ( ! empty( $total_item_reactions_data_with_rel3->id ) ) {
+				wp_cache_delete( $total_item_reactions_data_with_rel3->id, self::$cache_group );
+			}
+
+			return $total_item_reactions_count_with_rel3;
 		}
 	}
 }
