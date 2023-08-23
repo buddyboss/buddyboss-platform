@@ -312,8 +312,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					if (
 						! empty( $reaction_data ) &&
 						is_array( $reaction_data ) &&
-						isset( $reaction_data['name'] ) &&
-						isset( $reaction_data['icon'] )
+						isset( $reaction_data['name'] )
 					) {
 						$reactions_data[] = array(
 							'id'   => $reaction->ID,
