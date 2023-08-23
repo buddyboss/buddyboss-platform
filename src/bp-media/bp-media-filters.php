@@ -2689,6 +2689,7 @@ function bp_video_activity_entry_css_class( $class ) {
 function bb_setup_media_preview() {
 	add_rewrite_rule( 'bb-media-preview/([^/]+)/([^/]+)/?$', 'index.php?bb-media-preview=$matches[1]&id1=$matches[2]', 'top' );
 	add_rewrite_rule( 'bb-media-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?bb-media-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
+	add_rewrite_rule( 'bb-media-preview/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?bb-media-preview=$matches[1]&id1=$matches[2]&size=$matches[3]&receiver=$matches[4]', 'top' );
 }
 
 /**
@@ -2704,6 +2705,7 @@ function bb_setup_query_media_preview( $query_vars ) {
 	$query_vars[] = 'bb-media-preview';
 	$query_vars[] = 'id1';
 	$query_vars[] = 'size';
+	$query_vars[] = 'receiver';
 
 	return $query_vars;
 }
@@ -2711,11 +2713,11 @@ function bb_setup_query_media_preview( $query_vars ) {
 /**
  * Setup template for the media preview.
  *
+ * @since BuddyBoss 1.7.2
+ *
  * @param string $template Template path to include.
  *
- * @return array
- *
- * @since BuddyBoss 1.7.2
+ * @return string
  */
 function bb_setup_template_for_media_preview( $template ) {
 	if ( get_query_var( 'bb-media-preview' ) === false || empty( get_query_var( 'bb-media-preview' ) ) ) {

@@ -5901,7 +5901,8 @@ function bb_activity_following_post_notification( $args ) {
 				'notification_type' => 'new-activity-following',
 			);
 
-			$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+			$args['tokens']['unsubscribe']      = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+			$args['tokens']['receiver-user.id'] = $user_id;
 
 			// Send notification email.
 			bp_send_email( 'new-activity-following', $user_id, $args );
