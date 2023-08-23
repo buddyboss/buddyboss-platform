@@ -2716,9 +2716,10 @@ class BP_Email_Tokens {
 	 */
 	public function token__activity_content( $bp_email, $formatted_tokens, $tokens ) {
 		global $bp;
-		$output   = '';
-		$settings = bp_email_get_appearance_settings();
-		$activity = isset( $tokens['activity'] ) ? $tokens['activity'] : '';
+		$output           = '';
+		$settings         = bp_email_get_appearance_settings();
+		$activity         = isset( $tokens['activity'] ) ? $tokens['activity'] : '';
+		$receiver_user_id = isset( $tokens['receiver-user.id'] ) ? $tokens['receiver-user.id'] : 0;
 
 		if ( 'groups-new-activity' === $bp_email->get( 'type' ) ) {
 			return $this->token__group_activity_content( $bp_email, $formatted_tokens, $tokens );
@@ -2878,7 +2879,7 @@ class BP_Email_Tokens {
 																	?>
 																	<div class="bb-activity-media-elem" style="width: 250px; vertical-align: top; height: 200px; overflow: hidden;padding:0;">
 																		<a href="<?php echo esc_url( $tokens['activity.url'] ); ?>">
-																			<img style="border-radius: 4px; min-width: 100%; min-height: 100%; max-width: 100%; object-fit: cover;" src="<?php echo esc_url( bp_media_get_preview_image_url( bp_get_media_id(), bp_get_media_attachment_id() ) ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>"/>
+																			<img style="border-radius: 4px; min-width: 100%; min-height: 100%; max-width: 100%; object-fit: cover;" src="<?php echo esc_url( bp_media_get_preview_image_url( bp_get_media_id(), bp_get_media_attachment_id(), 'bb-media-activity-image', true, $receiver_user_id ) ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>"/>
 																		</a>
 																	</div>
 																	<?php if ( $total_media_ids > 1 ) : ?>
