@@ -1906,7 +1906,8 @@ class BP_Email_Tokens {
 	 * @return string html for the output
 	 */
 	public function token__discussion_content( $bp_email, $formatted_tokens, $tokens ) {
-		$output = '';
+		$output           = '';
+		$receiver_user_id = isset( $tokens['receiver-user.id'] ) ? $tokens['receiver-user.id'] : 0;
 
 		if ( empty( $formatted_tokens['discussion.id'] ) ) {
 			return $output;
@@ -2032,14 +2033,10 @@ class BP_Email_Tokens {
 														<?php
 														while ( bp_media() ) {
 															bp_the_media();
-
-															$media_id      = 'forbidden_' . bp_get_media_id();
-															$attachment_id = 'forbidden_' . bp_get_media_attachment_id();
-															$media_url     = home_url( '/' ) . 'bb-media-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $media_id ) . '/bb-media-activity-image';
 															?>
 															<div class="bb-activity-media-elem"  style="width: 250px; vertical-align: top; overflow: hidden;">
 																<a href="<?php echo esc_url( $tokens['discussion.url'] ); ?>">
-																	<img style="border-radius: 4px; width:100%; height: 100%; object-fit: cover;" src="<?php echo esc_url( $media_url ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>" />
+																	<img style="border-radius: 4px; width:100%; height: 100%; object-fit: cover;" src="<?php echo esc_url( bp_media_get_preview_image_url( bp_get_media_id(), bp_get_media_attachment_id(), 'bb-media-activity-image', true, $receiver_user_id  ) ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>" />
 																</a>
 															</div>
 															<?php if ( $total_media_ids > 1 ) : ?>
@@ -2171,7 +2168,7 @@ class BP_Email_Tokens {
 												</tr>
 												<?php
 											endif;
-										?>
+											?>
 										</tbody>
 									</table>
 								</td>
@@ -3035,7 +3032,8 @@ class BP_Email_Tokens {
 	 * @return string html for the output
 	 */
 	public function token__group_discussion_content( $bp_email, $formatted_tokens, $tokens ) {
-		$output = '';
+		$output           = '';
+		$receiver_user_id = isset( $tokens['receiver-user.id'] ) ? $tokens['receiver-user.id'] : 0;
 
 		$settings = bp_email_get_appearance_settings();
 
@@ -3167,7 +3165,7 @@ class BP_Email_Tokens {
 													?>
 													<div class="bb-activity-media-elem"  style="width: 250px; vertical-align: top; height: 200px; overflow: hidden;">
 														<a href="<?php echo esc_url( $tokens['discussion.url'] ); ?>">
-															<img style="border-radius: 4px; width:100%; height: 100%; object-fit: cover;" src="<?php echo esc_url( bp_media_get_preview_image_url( bp_get_media_id(), bp_get_media_attachment_id() ) ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>" />
+															<img style="border-radius: 4px; width:100%; height: 100%; object-fit: cover;" src="<?php echo esc_url( bp_media_get_preview_image_url( bp_get_media_id(), bp_get_media_attachment_id(), 'bb-media-activity-image', true, $receiver_user_id  ) ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>" />
 														</a>
 													</div>
 													<?php if ( $total_media_ids > 1 ) : ?>
