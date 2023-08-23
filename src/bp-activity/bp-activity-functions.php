@@ -6123,15 +6123,6 @@ function bb_migrate_activity_like_reaction( $paged = 1 ) {
 		return;
 	}
 
-//	$bb_background_updater->push_to_queue(
-//		array(
-//			'type'     => 'migration',
-//			'group'    => 'bb_activity_like_reaction',
-//			'priority' => 5,
-//			'callback' => 'bb_activity_like_reaction_background_process',
-//			'args'     => array( $results, $paged, $reaction_id ),
-//		)
-//	);
 	$bp_background_updater->data(
 		array(
 			array(
@@ -6164,7 +6155,7 @@ function bb_activity_like_reaction_background_process( $results, $paged, $reacti
 	}
 
 	foreach ( $results as $result ) {
-		$activity_id = $result->activity_id;
+		$activity_id = (int) $result->activity_id;
 		$meta_value  = maybe_unserialize( $result->meta_value );
 		if ( ! empty( $meta_value ) ) {
 			$implode_meta_value = implode( ',', wp_parse_id_list( $meta_value ) );
@@ -6188,16 +6179,6 @@ function bb_activity_like_reaction_background_process( $results, $paged, $reacti
 				$min_count = (int) apply_filters( 'bb_update_users_like_reaction', 20 );
 				if ( count( $meta_value ) > $min_count ) {
 					foreach ( array_chunk( $meta_value, $min_count ) as $chunk ) {
-//						$bb_background_updater->push_to_queue(
-//							array(
-//								'type'     => 'migration',
-//								'group'    => 'bb_update_users_like_reaction',
-//								'priority' => 4,
-//								'callback' => 'bb_update_users_like_reaction',
-//								'args'     => array( $chunk, $activity_id, $reaction_id  ),
-//							)
-//						);
-//						$bb_background_updater->save()->schedule_event();
 						$bp_background_updater->data(
 							array(
 								array(
@@ -6221,13 +6202,13 @@ function bb_activity_like_reaction_background_process( $results, $paged, $reacti
 }
 
 /**
- * Add user item reaction to custom table.
+ * Add user item reaction.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param $user_ids
- * @param $activity_id
- * @param $reaction_id
+ * @param array $user_ids    Array of user ids.
+ * @param int   $activity_id Activity id.
+ * @param int   $reaction_id Reaction id.
  *
  * @return void
  */
