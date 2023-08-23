@@ -1728,15 +1728,18 @@ function bbp_update_forum( $args = '' ) {
  *
  * @since bbPress (r5059)
  *
+ * @param int $forum_id Optional. Forum id.
+ *
  * @return array
  */
-function bbp_get_forum_statuses() {
-	return apply_filters(
+function bbp_get_forum_statuses( $forum_id = 0 ) {
+	return (array) apply_filters(
 		'bbp_get_forum_statuses',
 		array(
 			'open'   => __( 'Open', 'buddyboss' ),
 			'closed' => __( 'Closed', 'buddyboss' ),
-		)
+		),
+		$forum_id
 	);
 }
 
@@ -1745,15 +1748,18 @@ function bbp_get_forum_statuses() {
  *
  * @since bbPress (r5059)
  *
+ * @param int $forum_id Optional. Forum id.
+ *
  * @return array
  */
-function bbp_get_forum_types() {
-	return apply_filters(
+function bbp_get_forum_types( $forum_id = 0 ) {
+	return (array) apply_filters(
 		'bbp_get_forum_types',
 		array(
 			'forum'    => __( 'Forum', 'buddyboss' ),
 			'category' => __( 'Category', 'buddyboss' ),
-		)
+		),
+		$forum_id
 	);
 }
 
@@ -1762,16 +1768,19 @@ function bbp_get_forum_types() {
  *
  * @since bbPress (r5059)
  *
+ * @param int $forum_id Optional. Forum id.
+ *
  * @return array
  */
-function bbp_get_forum_visibilities() {
-	return apply_filters(
+function bbp_get_forum_visibilities( $forum_id = 0 ) {
+	return (array) apply_filters(
 		'bbp_get_forum_visibilities',
 		array(
 			bbp_get_public_status_id()  => __( 'Public', 'buddyboss' ),
 			bbp_get_private_status_id() => __( 'Private', 'buddyboss' ),
 			bbp_get_hidden_status_id()  => __( 'Hidden', 'buddyboss' ),
-		)
+		),
+		$forum_id
 	);
 }
 
@@ -2721,7 +2730,7 @@ function bb_get_all_nested_subforums( $forum_id ) {
  * Return array of public forum statuses.
  *
  * @since bbPress 2.6.0 (r6921)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.00
  *
  * @return array
  */
@@ -2738,7 +2747,7 @@ function bbp_get_public_forum_statuses() {
  * Return array of non-public forum statuses.
  *
  * @since bbPress 2.6.0 (r6921)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.00
  *
  * @return array
  */
