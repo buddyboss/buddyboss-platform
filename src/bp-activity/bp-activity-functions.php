@@ -6080,5 +6080,149 @@ function bb_activity_migration() {
 				bp_update_option( 'bb_reactions_default_like_reaction_added', (int) $reaction_id );
 			}
 		}
+
+		// Migration Like to Reaction.
+		if ( function_exists( 'bb_migrate_activity_like_reaction' ) ) {
+			bb_migrate_activity_like_reaction();
+		}
+	}
+}
+
+/**
+ * Migrate activity like reaction.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $paged Current page for fetch records.
+ *
+ * @return void
+ */
+function bb_migrate_activity_like_reaction( $paged = 1 ) {
+	global $wpdb, $bb_background_updater;
+
+	$reaction_id = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
+
+	$bp_prefix = bp_core_get_table_prefix();
+
+	if ( empty( $paged ) ) {
+		$paged = 1;
+	}
+
+	$per_page = 20;
+	$offset   = ( ( $paged - 1 ) * $per_page );
+
+	$results = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT * FROM {$bp_prefix}bp_activity_meta WHERE meta_key = 'bp_favorite_users' ORDER BY activity_id LIMIT %d offset %d",
+			$per_page,
+			$offset
+		)
+	);
+
+	if ( empty( $results ) ) {
+		return;
+	}
+
+	$bb_background_updater->push_to_queue(
+		array(
+			'type'     => 'migration',
+			'group'    => 'bb_activity_like_reaction',
+			'priority' => 5,
+			'callback' => 'bb_activity_like_reaction_background_process',
+			'args'     => array( $results, $paged, $reaction_id ),
+		)
+	);
+	$bb_background_updater->save()->schedule_event();
+}
+
+/**
+ * Function to run like reaction within background process.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $results     Activity like data.
+ * @param int   $paged       Current page for migration.
+ * @param int   $reaction_id Reaction ID.
+ *
+ * @return void
+ */
+function bb_activity_like_reaction_background_process( $results, $paged, $reaction_id ) {
+	global $wpdb, $bb_background_updater;
+
+	$bp_prefix = bp_core_get_table_prefix();
+
+	if ( empty( $results ) ) {
+		return;
+	}
+
+	foreach ( $results as $result ) {
+		$activity_id = $result->activity_id;
+		$meta_value  = maybe_unserialize( $result->meta_value );
+		if ( ! empty( $meta_value ) ) {
+			$implode_meta_value = implode( ',', wp_parse_id_list( $meta_value ) );
+			$data               = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT user_id FROM {$bp_prefix}bb_user_reactions 
+                        WHERE item_id = %d AND reaction_id = %d AND user_id IN ( {$implode_meta_value} )",
+					$result->activity_id,
+					$reaction_id
+				),
+				ARRAY_A
+			);
+
+			// Extract the user_id values using array_column
+			$user_ids = array_column( $data, 'user_id' );
+			if ( ! empty( $user_ids ) ) {
+				$meta_value = array_diff( $meta_value, $user_ids );
+			}
+
+			if ( ! empty( $meta_value) ) {
+				$min_count = (int) apply_filters( 'bb_update_users_like_reaction', 20 );
+				if ( count( $meta_value ) > $min_count ) {
+					foreach ( array_chunk( $meta_value, $min_count ) as $chunk ) {
+						$bb_background_updater->push_to_queue(
+							array(
+								'type'     => 'migration',
+								'group'    => 'bb_update_users_like_reaction',
+								'priority' => 4,
+								'callback' => 'bb_update_users_like_reaction',
+								'args'     => array( $chunk, $activity_id, $reaction_id  ),
+							)
+						);
+						$bb_background_updater->save()->schedule_event();
+					}
+				} else {
+					bb_update_users_like_reaction( $meta_value, $activity_id, $reaction_id );
+				}
+			}
+		}
+	}
+
+	// Call recursive to finish update for all records.
+	$paged ++;
+	bb_migrate_activity_like_reaction( $paged );
+}
+
+/**
+ * Add user item reaction to custom table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param $user_ids
+ * @param $activity_id
+ * @param $reaction_id
+ *
+ * @return void
+ */
+function bb_update_users_like_reaction( $user_ids, $activity_id, $reaction_id ) {
+	foreach ( $user_ids as $user_id ) {
+		bb_load_reaction()->bb_add_user_item_reaction(
+			array(
+				'user_id'     => $user_id,
+				'reaction_id' => $reaction_id,
+				'item_id'     => $activity_id,
+				'item_type'   => 'activity',
+			)
+		);
 	}
 }
