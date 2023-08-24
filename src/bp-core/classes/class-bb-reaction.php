@@ -116,7 +116,6 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$this->bb_register_reaction_item_type(
 				'activity',
 				array(
-					'reaction_type'     => 'activity',
 					'validate_callback' => array( $this, 'bb_validate_activity_reaction_request' ),
 				)
 			);
