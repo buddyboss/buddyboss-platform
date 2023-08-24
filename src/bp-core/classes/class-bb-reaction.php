@@ -127,11 +127,6 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$charset_collate = $wpdb->get_charset_collate();
 			$bp_prefix       = bp_core_get_table_prefix();
 
-			// Ensure that dbDelta() is defined.
-			if ( ! function_exists( 'dbDelta' ) ) {
-				require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-			}
-
 			// User reaction table.
 			$bb_user_reactions         = $bp_prefix . 'bb_user_reactions';
 			self::$user_reaction_table = $bb_user_reactions;
@@ -180,6 +175,11 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			}
 
 			if ( ! empty( $sql ) ) {
+				// Ensure that dbDelta() is defined.
+				if ( ! function_exists( 'dbDelta' ) ) {
+					require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+				}
+
 				dbDelta( $sql );
 			}
 		}
