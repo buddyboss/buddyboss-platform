@@ -981,9 +981,9 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'rel1'        => '',       // Item type ( i.e - activity, activity_comment ).
 					'rel2'        => '',       // Item id.
 					'rel3'        => '0',      // Reaction id.
-					'name_in'     => array(),  // Include name as array ( 'item_summary', 'total_reactions_count' ).
-					'rel1_in'     => array(),  // Include rel1 as array ( 'activity', 'activity_comment' ).
-					'rel2_in'     => array(),  // Include rel1 as array ( '123', '456' ).
+					'name_in'     => array(),  // Include name as array ( i.e - array( 'item_summary', 'total_reactions_count' ) ).
+					'rel1_in'     => array(),  // Include rel1 as array ( i.e - array( 'activity', 'activity_comment' ) ).
+					'rel2_in'     => array(),  // Include rel1 as array ( i.e - array( '123', '456' ) ).
 					'per_page'    => 20,       // Results per page.
 					'paged'       => 1,        // Page 1 without a per_page will result in no pagination.
 					'order'       => 'DESC',   // Order ASC or DESC.
@@ -1418,7 +1418,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			global $wpdb;
 
 			$total_reactions_count      = 0;
-			$sql                        = "SELECT value FROM " . self::$reaction_data_table . " WHERE name = %s";
+			$sql                        = 'SELECT value FROM ' . self::$reaction_data_table . ' WHERE name = %s';
 			$total_reactions_count_data = $wpdb->get_row( $wpdb->prepare( $sql, 'total_reactions_count' ) );
 			if ( ! empty( $total_reactions_count_data ) && ! empty( $total_reactions_count_data ) ) {
 				$total_reactions_count = $total_reactions_count_data->value;
@@ -1506,9 +1506,9 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$total_item_reactions_count = ! empty( $total_item_reactions_data->value ) ? (int) $total_item_reactions_data->value : 0;
 
 			if ( 'add' === $action ) {
-				++ $total_item_reactions_count;
+				++$total_item_reactions_count;
 			} else {
-				-- $total_item_reactions_count;
+				--$total_item_reactions_count;
 			}
 
 			if ( ! empty( $total_item_reactions_data ) ) {
@@ -1597,9 +1597,9 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$total_item_reactions_count_with_rel3 = ! empty( $total_item_reactions_data_with_rel3->value ) ? (int) $total_item_reactions_data_with_rel3->value : 0;
 
 			if ( 'add' === $action ) {
-				++ $total_item_reactions_count_with_rel3;
+				++$total_item_reactions_count_with_rel3;
 			} else {
-				-- $total_item_reactions_count_with_rel3;
+				--$total_item_reactions_count_with_rel3;
 			}
 
 			if ( ! empty( $total_item_reactions_data_with_rel3 ) ) {
