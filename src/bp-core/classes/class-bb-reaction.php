@@ -434,7 +434,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @param array $args Arguments of user reaction.
 		 *
-		 * @return false|int|WP_Error
+		 * @return false|int|WP_Error|object
 		 */
 		public function bb_add_user_item_reaction( $args ) {
 			global $wpdb;
@@ -456,18 +456,21 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
 					return new WP_Error( 'bb_user_reactions_empty_reaction_id', __( 'The reaction ID is required to add reaction.', 'buddyboss' ) );
 				}
+
 				return false;
 				// Reaction need item type.
 			} elseif ( empty( $r['item_type'] ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
 					return new WP_Error( 'bb_user_reactions_empty_item_type', __( 'The item type is required to add reaction.', 'buddyboss' ) );
 				}
+
 				return false;
 				// Reaction need item id.
 			} elseif ( empty( $r['item_id'] ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
 					return new WP_Error( 'bb_user_reactions_empty_item_id', __( 'The item id is required to add reaction.', 'buddyboss' ) );
 				}
+
 				return false;
 			}
 
@@ -485,6 +488,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 						__( 'The item type is invalid.', 'buddyboss' )
 					);
 				}
+
 				return false;
 			} else {
 				$validate_callback = $all_registered_reaction_types[ $r['item_type'] ]['validate_callback'];
@@ -557,11 +561,11 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			 * @since BuddyBoss [BBVERSION]
 			 *
 			 * @param int   $user_reaction_id User reaction id.
-			 * @param array $r                Args of user item reactions.
+			 * @param array $r                Array of parsed arguments.
 			 */
 			do_action( 'bb_reaction_after_add_user_item_reaction', $user_reaction_id, $r );
 
-			return $user_reaction_id;
+			return $this->bb_get_user_reaction( $user_reaction_id );
 		}
 
 		/**
@@ -590,18 +594,17 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			 */
 			do_action( 'bb_reaction_before_remove_user_item_reaction', $user_reaction_id );
 
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$get = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . self::$user_reaction_table . ' WHERE id=%d', $user_reaction_id ), ARRAY_A );
+			$get = $this->bb_get_user_reaction( $user_reaction_id );
 
-			if ( empty( $get ) ) {
+			if ( empty( $get->id ) ) {
 				return false;
 			}
 
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$deleted = $wpdb->delete(
 				self::$user_reaction_table,
 				array(
-					'id' => $get['id'],
+					'id' => $get->id,
 				)
 			);
 
@@ -635,6 +638,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				array(
 					'reaction_id' => '',
 					'item_id'     => '',
+					'item_type'   => '',
 					'user_id'     => bp_loggedin_user_id(),
 					'error_type'  => 'bool',
 				)
@@ -649,35 +653,44 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			 */
 			do_action( 'bb_reaction_before_remove_user_item_reactions', $r );
 
-			// Reaction need reaction ID.
-			if ( empty( $r['reaction_id'] ) ) {
-				if ( 'wp_error' === $r['error_type'] ) {
-					return new WP_Error( 'bb_user_reactions_empty_reaction_id', __( 'The reaction ID is required to remove reaction.', 'buddyboss' ) );
-				}
-				return false;
-				// Reaction need item id.
-			} elseif ( empty( $r['item_id'] ) ) {
-				if ( 'wp_error' === $r['error_type'] ) {
-					return new WP_Error( 'bb_user_reactions_empty_item_id', __( 'The item id is required to remove reaction.', 'buddyboss' ) );
-				}
+			$where_args = array();
+
+			if ( ! empty( $r['reaction_id'] ) ) {
+				$where_args['reaction_id'] = $wpdb->prepare( 'reaction_id = %d', $r['reaction_id'] );
+			}
+
+			if ( ! empty( $r['item_id'] ) ) {
+				$in                    = implode( ',', wp_parse_id_list( $r['item_id'] ) );
+				$where_args['item_id'] = "item_id IN ({$in})";
+			}
+
+			if ( ! empty( $r['item_type'] ) ) {
+				$where_args['item_type'] = $wpdb->prepare( 'item_type = %s', $r['item_type'] );
+			}
+
+			// User ID.
+			if ( ! empty( $r['user_id'] ) ) {
+				$where_args[] = $wpdb->prepare( 'user_id = %d', $r['user_id'] );
+			}
+
+			if ( empty( $where_args ) ) {
 				return false;
 			}
 
-			$sql = 'SELECT * FROM ' . self::$user_reaction_table . ' WHERE reaction_id = %d AND item_id = %d AND user_id = %d';
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$get_reaction = $wpdb->get_row( $wpdb->prepare( $sql, $r['reaction_id'], $r['item_id'], $r['user_id'] ), ARRAY_A );
+			// Join the where arguments for querying.
+			$where_sql = ' WHERE ' . join( ' AND ', $where_args );
 
-			if ( empty( $get_reaction ) ) {
+			// Fetch all reactions being deleted so we can perform more actions.
+			// phpcs:ignore
+			$get_reaction = $wpdb->get_results( 'SELECT * FROM ' . self::$user_reaction_table . " {$where_sql}" );
+
+			// Attempt to delete reactions from the database.
+			$deleted = $wpdb->query( 'DELETE FROM ' . self::$user_reaction_table . " {$where_sql}" ); // phpcs:ignore
+
+			// Bail if nothing was deleted.
+			if ( empty( $deleted ) ) {
 				return false;
 			}
-
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-			$deleted = $wpdb->delete(
-				self::$user_reaction_table,
-				array(
-					'id' => $get_reaction['id'],
-				)
-			);
 
 			$this->bb_prepare_reaction_summary_data( $get_reaction, 'remove' );
 
@@ -717,7 +730,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *                                Default: 'all' (return BP_Subscription objects).
 		 * }
 		 *
-		 * @return array|null
+		 * @return WP_Error
 		 */
 		public function bb_get_user_reactions( $args = array() ) {
 			global $wpdb;
@@ -727,8 +740,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				array(
 					'id'          => 0,      // User reaction id.
 					'reaction_id' => 0,      // Reaction id.
-					'item_type'   => '',     // Item type ( i.e - Activity, Activity Comment ).
-					'item_id'     => 0,      // Item id ( i.e - activity_id, activity_comment_id ).
+					'item_type'   => '',     // Item type ( i.e - activity ).
+					'item_id'     => 0,      // Item id ( i.e - activity_id ).
 					'user_id'     => 0,      // User Id.
 					'per_page'    => 20,     // Results per page.
 					'paged'       => 1,      // Page 1 without a per_page will result in no pagination.
@@ -741,26 +754,30 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				'bb_reactions_get_reaction'
 			);
 
-			$all_registered_reaction_types = self::bb_get_registered_reaction_item_types();
+			$all_registered_reaction_types = $this->bb_get_registered_reaction_item_types();
 
-			if (
-				empty( $all_registered_reaction_types ) ||
-				! isset( $all_registered_reaction_types[ $r['item_type'] ] ) ||
-				empty( $all_registered_reaction_types[ $r['item_type'] ]['validate_callback'] ) ||
-				! is_callable( $all_registered_reaction_types[ $r['item_type'] ]['validate_callback'] )
-			) {
-				if ( 'wp_error' === $r['error_type'] ) {
-					return new WP_Error(
-						'bb_user_reactions_invalid_item_type',
-						__( 'The item type is invalid.', 'buddyboss' )
-					);
-				}
-				return false;
-			} else {
-				$validate_callback = $all_registered_reaction_types[ $r['item_type'] ]['validate_callback'];
-				$validate_callback = call_user_func( $validate_callback, $r );
-				if ( empty( $validate_callback ) ) {
-					return $validate_callback;
+
+			if ( ! empty( $r['item_type'] ) ) {
+				if (
+					empty( $all_registered_reaction_types ) ||
+					! isset( $all_registered_reaction_types[ $r['item_type'] ] ) ||
+					empty( $all_registered_reaction_types[ $r['item_type'] ]['validate_callback'] ) ||
+					! is_callable( $all_registered_reaction_types[ $r['item_type'] ]['validate_callback'] )
+				) {
+					if ( 'wp_error' === $r['error_type'] ) {
+						return new WP_Error(
+							'bb_user_reactions_invalid_item_type',
+							__( 'The item type is invalid.', 'buddyboss' )
+						);
+					}
+
+					return false;
+				} else {
+					$validate_callback = $all_registered_reaction_types[ $r['item_type'] ]['validate_callback'];
+					$validate_callback = call_user_func( $validate_callback, $r );
+					if ( empty( $validate_callback ) ) {
+						return $validate_callback;
+					}
 				}
 			}
 
@@ -782,6 +799,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			switch ( $r['order_by'] ) {
 				case 'date_created':
+					$r['order_by'] = 'date_created';
 					break;
 
 				default:
@@ -832,7 +850,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$where_conditions = apply_filters( 'bb_get_user_reactions_where_conditions', $where_conditions, $r, $select_sql, $from_sql, $join_sql );
 
 			if ( empty( $where_conditions ) ) {
-				$where_conditions['2'] = '2';
+				$where_conditions['1'] = '1';
 			}
 
 			// Join the where conditions together.
@@ -865,7 +883,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			}
 
 			// Query first for user_reaction IDs.
-			$paged_user_reactions_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort}, ur.id {$sort} {$pagination}";
+			$paged_user_reactions_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort} {$pagination}";
 
 			/**
 			 * Filters the paged user reaction MySQL statement.
@@ -941,6 +959,34 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			}
 
 			return $retval;
+		}
+
+		/**
+		 * Fetch single user reaction.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $user_reaction_id User reaction id.
+		 *
+		 * @return array|null
+		 */
+		public function bb_get_user_reaction( $user_reaction_id ) {
+			global $wpdb;
+
+			if ( empty( $user_reaction_id ) ) {
+				return false;
+			}
+
+			$get_reaction = wp_cache_get( $user_reaction_id, self::$cache_group );
+
+			if ( false !== $get_reaction ) {
+				return $get_reaction;
+			}
+
+			$sql          = 'SELECT * FROM ' . self::$user_reaction_table . ' WHERE id = %d';
+			$get_reaction = $wpdb->get_row( $wpdb->prepare( $sql, $user_reaction_id ) ); // phpcs:ignore
+
+			return $get_reaction;
 		}
 
 		/**
