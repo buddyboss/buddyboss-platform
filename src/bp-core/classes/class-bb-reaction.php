@@ -100,6 +100,14 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function __construct() {
+			$bp_prefix = bp_core_get_table_prefix();
+			// User reaction table.
+			$bb_user_reactions         = $bp_prefix . 'bb_user_reactions';
+			self::$user_reaction_table = $bb_user_reactions;
+			// Reaction data table.
+			$bb_reactions_data         = $bp_prefix . 'bb_reactions_data';
+			self::$reaction_data_table = $bb_reactions_data;
+
 			self::$post_type = 'bb_reaction';
 
 			$this->bb_register_post_type();
@@ -127,11 +135,9 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$sql             = array();
 			$wpdb            = $GLOBALS['wpdb'];
 			$charset_collate = $wpdb->get_charset_collate();
-			$bp_prefix       = bp_core_get_table_prefix();
 
 			// User reaction table.
-			$bb_user_reactions         = $bp_prefix . 'bb_user_reactions';
-			self::$user_reaction_table = $bb_user_reactions;
+			$bb_user_reactions = self::$user_reaction_table;
 
 			// Table already exists, so maybe upgrade instead?
 			$user_reactions_table_exists = $wpdb->query( "SHOW TABLES LIKE '{$bb_user_reactions}';" ); // phpcs:ignore
@@ -153,8 +159,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			}
 
 			// Reaction data table.
-			$bb_reactions_data         = $bp_prefix . 'bb_reactions_data';
-			self::$reaction_data_table = $bb_reactions_data;
+			$bb_reactions_data = self::$reaction_data_table;
 
 			// Table already exists, so maybe upgrade instead?
 			$reactions_data_table_exists = $wpdb->query( "SHOW TABLES LIKE '{$bb_reactions_data}';" ); // phpcs:ignore
@@ -294,7 +299,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$reaction_id = wp_insert_post( $reaction_data );
 
 			// If the reaction was successfully added, update the transient.
-			if ( ! is_wp_error( $reaction_id ) ) {
+			if ( ! is_wp_error( $reaction_id ) && ! empty( $reaction_id ) ) {
 				// Update bb_reactions transient.
 				$this->bb_update_reactions_transient();
 			}
@@ -336,7 +341,22 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @return array
 		 */
-		private function bb_get_reactions() {
+		public function bb_get_reactions() {
+			$reactions = get_transient( 'bb_reactions', '' );
+			if ( ! empty( $reactions ) ) {
+				return maybe_unserialize( $reactions );
+			}
+
+			return array();
+		}
+
+		/**
+		 * Update the bb_reactions transient.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		private function bb_update_reactions_transient() {
+			// Get all reactions.
 			$args = array(
 				'fields'                 => array( 'ids', 'post_title', 'post_content' ),
 				'post_type'              => self::$post_type,
@@ -348,18 +368,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				'update_post_term_cache' => false,
 			);
 
-			return get_posts( $args );
-		}
+			$all_reactions = get_posts( $args );
 
-		/**
-		 * Update the bb_reactions transient.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 */
-		private function bb_update_reactions_transient() {
-
-			// Fetch existing reactions.
-			$all_reactions  = $this->bb_get_reactions();
 			$reactions_data = array();
 			if ( ! empty( $all_reactions ) ) {
 				foreach ( $all_reactions as $reaction ) {
