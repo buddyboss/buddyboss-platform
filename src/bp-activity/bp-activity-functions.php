@@ -6073,15 +6073,8 @@ function bb_activity_migration() {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	if ( class_exists( 'BB_Reaction' ) ) {
-		BB_Reaction::create_table();
-
-		$reaction_id = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
-		if ( empty( $reaction_id ) ) {
-			$reaction_id = bb_load_reaction()->bb_add_reaction( array( 'name' => 'Like' ) );
-			if ( ! empty( $reaction_id ) ) {
-				bp_update_option( 'bb_reactions_default_like_reaction_added', (int) $reaction_id );
-			}
-		}
+		bb_load_reaction()->create_table();
+		bb_load_reaction()->register_activity_like();
 
 		// Migration Like to Reaction.
 		if ( function_exists( 'bb_migrate_activity_like_reaction' ) ) {
@@ -6163,7 +6156,7 @@ function bb_activity_like_reaction_background_process( $results, $paged, $reacti
 			$implode_meta_value = implode( ',', wp_parse_id_list( $meta_value ) );
 			$data               = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT user_id FROM {$bp_prefix}bb_user_reactions 
+					"SELECT user_id FROM {$bp_prefix}bb_user_reactions
                         WHERE item_id = %d AND reaction_id = %d AND user_id IN ( {$implode_meta_value} )",
 					$result->activity_id,
 					$reaction_id

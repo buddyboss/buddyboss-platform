@@ -114,6 +114,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			);
 		}
 
+		/******************* Required functions ******************/
+
 		/**
 		 * Created custom table for reactions.
 		 *
@@ -121,7 +123,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @return void
 		 */
-		public static function create_table() {
+		public function create_table() {
 			$sql             = array();
 			$wpdb            = $GLOBALS['wpdb'];
 			$charset_collate = $wpdb->get_charset_collate();
@@ -195,19 +197,16 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			if ( bp_is_root_blog() && ! is_network_admin() && function_exists( 'register_post_type' ) ) {
 				register_post_type(
 					self::$post_type,
-					apply_filters(
-						'bb_register_reaction_post_type',
-						array(
-							'description'         => __( 'Reactions', 'buddyboss' ),
-							'labels'              => $this->bb_get_reaction_post_type_labels(),
-							'menu_icon'           => 'dashicons-reaction-alt',
-							'public'              => false,
-							'show_ui'             => false,
-							'show_in_rest'        => false,
-							'exclude_from_search' => true,
-							'show_in_admin_bar'   => false,
-							'show_in_nav_menus'   => false,
-						)
+					array(
+						'description'         => __( 'Reactions', 'buddyboss' ),
+						'labels'              => $this->bb_get_reaction_post_type_labels(),
+						'menu_icon'           => 'dashicons-reaction-alt',
+						'public'              => false,
+						'show_ui'             => false,
+						'show_in_rest'        => false,
+						'exclude_from_search' => true,
+						'show_in_admin_bar'   => false,
+						'show_in_nav_menus'   => false,
 					)
 				);
 			}
@@ -221,36 +220,27 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @return array
 		 */
 		public function bb_get_reaction_post_type_labels() {
-
-			/**
-			 * Filters reaction post type labels.
-			 *
-			 * @since BuddyBoss [BBVERSION]
-			 *
-			 * @param array $value Associative array (name => label).
-			 */
-			return apply_filters(
-				'bb_get_reaction_post_type_labels',
-				array(
-					'add_new'               => __( 'New Reaction', 'buddyboss' ),
-					'add_new_item'          => __( 'Add New Reaction', 'buddyboss' ),
-					'all_items'             => __( 'All Reactions', 'buddyboss' ),
-					'edit_item'             => __( 'Edit Reaction', 'buddyboss' ),
-					'filter_items_list'     => __( 'Filter Reaction list', 'buddyboss' ),
-					'items_list'            => __( 'Reaction list', 'buddyboss' ),
-					'items_list_navigation' => __( 'Reaction list navigation', 'buddyboss' ),
-					'menu_name'             => __( 'Reactions', 'buddyboss' ),
-					'name'                  => __( 'Reactions', 'buddyboss' ),
-					'new_item'              => __( 'New Reaction', 'buddyboss' ),
-					'not_found'             => __( 'No reactions found', 'buddyboss' ),
-					'not_found_in_trash'    => __( 'No reactions found in trash', 'buddyboss' ),
-					'search_items'          => __( 'Search Reactions', 'buddyboss' ),
-					'singular_name'         => __( 'Reaction', 'buddyboss' ),
-					'uploaded_to_this_item' => __( 'Uploaded to this reaction', 'buddyboss' ),
-					'view_item'             => __( 'View Reaction', 'buddyboss' ),
-				)
+			return array(
+				'add_new'               => __( 'New Reaction', 'buddyboss' ),
+				'add_new_item'          => __( 'Add New Reaction', 'buddyboss' ),
+				'all_items'             => __( 'All Reactions', 'buddyboss' ),
+				'edit_item'             => __( 'Edit Reaction', 'buddyboss' ),
+				'filter_items_list'     => __( 'Filter Reaction list', 'buddyboss' ),
+				'items_list'            => __( 'Reaction list', 'buddyboss' ),
+				'items_list_navigation' => __( 'Reaction list navigation', 'buddyboss' ),
+				'menu_name'             => __( 'Reactions', 'buddyboss' ),
+				'name'                  => __( 'Reactions', 'buddyboss' ),
+				'new_item'              => __( 'New Reaction', 'buddyboss' ),
+				'not_found'             => __( 'No reactions found', 'buddyboss' ),
+				'not_found_in_trash'    => __( 'No reactions found in trash', 'buddyboss' ),
+				'search_items'          => __( 'Search Reactions', 'buddyboss' ),
+				'singular_name'         => __( 'Reaction', 'buddyboss' ),
+				'uploaded_to_this_item' => __( 'Uploaded to this reaction', 'buddyboss' ),
+				'view_item'             => __( 'View Reaction', 'buddyboss' ),
 			);
 		}
+
+		/******************* Reaction functions ******************/
 
 		/**
 		 * Add new reaction.
@@ -265,7 +255,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @return int|void|WP_Error
 		 */
-		public function bb_add_reaction( $args ) {
+		private function bb_add_reaction( $args ) {
 			$r = bp_parse_args(
 				$args,
 				array(
@@ -313,6 +303,55 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		}
 
 		/**
+		 * Remove reaction.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $reaction_id Reaction id.
+		 *
+		 * @return void
+		 */
+		private function bb_remove_reaction( $reaction_id ) {
+			if ( empty( $reaction_id ) ) {
+				return;
+			}
+
+			// Check if the reaction post exists.
+			$reaction = get_post( $reaction_id );
+			if ( ! isset( $reaction->post_type ) || self::$post_type !== $reaction->post_type ) {
+				return;
+			}
+
+			$success = wp_delete_post( $reaction_id, true );
+
+			if ( ! empty( $success ) && ! is_wp_error( $success ) ) {
+				$this->bb_update_reactions_transient();
+			}
+		}
+
+		/**
+		 * Get all reaction data.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array
+		 */
+		private function bb_get_reactions() {
+			$args = array(
+				'fields'                 => array( 'ids', 'post_title', 'post_content' ),
+				'post_type'              => self::$post_type,
+				'posts_per_page'         => - 1,
+				'orderby'                => 'menu_order',
+				'post_status'            => 'publish',
+				'suppress_filters'       => false,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+			);
+
+			return get_posts( $args );
+		}
+
+		/**
 		 * Update the bb_reactions transient.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -345,53 +384,39 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		}
 
 		/**
-		 * Get all reaction data.
+		 * Register reaction item type.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @return array
-		 */
-		private function bb_get_reactions() {
-			$args = array(
-				'fields'                 => array( 'ids', 'post_title', 'post_content' ),
-				'post_type'              => self::$post_type,
-				'posts_per_page'         => - 1,
-				'orderby'                => 'menu_order',
-				'post_status'            => 'publish',
-				'suppress_filters'       => false,
-				'update_post_meta_cache' => false,
-				'update_post_term_cache' => false,
-			);
-
-			return get_posts( $args );
-		}
-
-		/**
-		 * Remove reaction.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param int $reaction_id Reaction id.
+		 * @param string $type Item Type.
+		 * @param array  $args Array of arguments.
 		 *
 		 * @return void
 		 */
-		public function bb_remove_reaction( $reaction_id ) {
-			if ( empty( $reaction_id ) ) {
+		private function bb_register_reaction_item_type( $type, $args ) {
+			$r = bp_parse_args(
+				$args,
+				array(
+					'reaction_type'     => $type,
+					'validate_callback' => '',
+				)
+			);
+
+			if (
+				empty( $r['reaction_type'] ) ||
+				empty( $r['validate_callback'] ) ||
+				isset( $this->registered_reaction_types[ $r['reaction_type'] ] )
+			) {
 				return;
 			}
 
-			// Check if the reaction post exists.
-			$reaction = get_post( $reaction_id );
-			if ( ! isset( $reaction->post_type ) || self::$post_type !== $reaction->post_type ) {
-				return;
-			}
-
-			$success = wp_delete_post( $reaction_id, true );
-
-			if ( ! empty( $success ) && ! is_wp_error( $success ) ) {
-				$this->bb_update_reactions_transient();
-			}
+			$this->registered_reaction_types[ $r['reaction_type'] ] = array(
+				'reaction_type'     => $r['reaction_type'],
+				'validate_callback' => $r['validate_callback'],
+			);
 		}
+
+		/******************* Reaction user functions ******************/
 
 		/**
 		 * Function to add user reaction.
@@ -960,175 +985,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			return $this->bb_get_user_reactions_count( $r );
 		}
 
-		/**
-		 * Add or update total reaction count.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param array  $args   Args of reaction data.
-		 * @param string $action Add or remove the user reaction.
-		 *
-		 * @return false|int|WP_Error
-		 */
-		public function bb_fetch_reaction_counts( $args, $action ) {
-			global $wpdb;
-
-			$item_id   = $args['item_id'];
-			$item_type = $args['item_type'];
-
-			$this->bb_total_item_reactions_count( $args, $action );
-			$this->bb_total_item_reaction_reactions_count( $args, $action );
-			$this->bb_total_reactions_count( $args, $action );
-
-			// Calculate total counts of each reaction for the item.
-			$reaction_counts = $wpdb->get_results(
-				$wpdb->prepare(
-					"SELECT reaction_id, COUNT(*) AS count FROM {$wpdb->prefix}bb_user_reactions WHERE item_type = %s AND item_id = %d GROUP BY reaction_id",
-					$item_type,
-					$item_id
-				),
-				ARRAY_A
-			);
-
-			$total_item_reaction_count = array_reduce(
-				$reaction_counts,
-				function ( $data, $item ) {
-					$data[ $item['reaction_id'] ] = intval( $item['count'] );
-
-					return $data;
-				},
-				array()
-			);
-
-			$total_item_reaction_count['total'] = array_sum( $total_item_reaction_count );
-
-			return $total_item_reaction_count;
-		}
-
-		/**
-		 * Get registered reaction item types.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @return mixed|null
-		 */
-		private function bb_get_registered_reaction_item_types() {
-			return apply_filters( 'bb_register_reaction_types', $this->registered_reaction_types );
-		}
-
-		/**
-		 * Register reaction item type.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param string $type Item Type.
-		 * @param array  $args Array of arguments.
-		 *
-		 * @return void
-		 */
-		public function bb_register_reaction_item_type( $type, $args ) {
-			$r = bp_parse_args(
-				$args,
-				array(
-					'reaction_type'     => $type,
-					'validate_callback' => '',
-				)
-			);
-
-			if (
-				empty( $r['reaction_type'] ) ||
-				empty( $r['validate_callback'] ) ||
-				isset( $this->registered_reaction_types[ $r['reaction_type'] ] )
-			) {
-				return;
-			}
-
-			$this->registered_reaction_types[ $r['reaction_type'] ] = array(
-				'reaction_type'     => $r['reaction_type'],
-				'validate_callback' => $r['validate_callback'],
-			);
-		}
-
-		/**
-		 * Validate callback for reaction item type.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param array $args Array of arguments.
-		 *
-		 * @return bool|WP_Error
-		 */
-		public function bb_validate_activity_reaction_request( $args ) {
-
-			$r = bp_parse_args(
-				$args,
-				array(
-					'item_type'  => '',
-					'item_id'    => '',
-					'error_type' => 'bool',
-				)
-			);
-			// Initially set is false.
-			$retval = false;
-
-			if ( ! bp_is_active( 'activity' ) ) {
-				$retval = new WP_Error(
-					'bb_reaction_activity_not_active',
-					__( 'Activity not enabled.', 'buddyboss' ),
-					array(
-						'status' => 400,
-					)
-				);
-			} elseif ( empty( $r['item_id'] ) ) {
-				$retval = new WP_Error(
-					'bb_reaction_required_item_id',
-					__( 'The item IDs is required.', 'buddyboss' ),
-					array(
-						'status' => 400,
-					)
-				);
-			} elseif ( empty( $r['item_type'] ) ) {
-				$retval = new WP_Error(
-					'bb_reaction_required_item_type',
-					__( 'The item type is required.', 'buddyboss' ),
-					array(
-						'status' => 400,
-					)
-				);
-			} elseif ( 'activity' !== $r['item_type'] ) {
-				$retval = new WP_Error(
-					'bb_reaction_invalid_item_type',
-					__( 'The item type is not matching with the type.', 'buddyboss' ),
-					array(
-						'status' => 400,
-					)
-				);
-			} elseif ( ! empty( $r['item_id'] ) && 'activity' === $r['item_type'] ) {
-				$activity = new BP_Activity_Activity( $r['item_id'] );
-
-				if ( empty( $activity->id ) ) {
-					$retval = new WP_Error(
-						'bb_reaction_invalid_item_id',
-						__( 'The item ID is not valid.', 'buddyboss' ),
-						array(
-							'status' => 400,
-						)
-					);
-				} else {
-					$retval = true;
-				}
-			} else {
-				$retval = true;
-			}
-
-			if ( 'wp_error' !== $r['error_type'] && is_wp_error( $retval ) ) {
-				return false;
-			} elseif ( 'wp_error' === $r['error_type'] && is_wp_error( $retval ) ) {
-				return $retval;
-			}
-
-			return $retval;
-		}
+		/******************* Reaction data functions ******************/
 
 		/**
 		 * Get reactions data.
@@ -1778,6 +1635,162 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			}
 
 			return $total_item_reactions_count_with_rel3;
+		}
+
+		/******************* General functions ******************/
+
+		/**
+		 * Add or update total reaction count.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array  $args   Args of reaction data.
+		 * @param string $action Add or remove the user reaction.
+		 *
+		 * @return false|int|WP_Error
+		 */
+		public function bb_fetch_reaction_counts( $args, $action ) {
+			global $wpdb;
+
+			$item_id   = $args['item_id'];
+			$item_type = $args['item_type'];
+
+			$this->bb_total_item_reactions_count( $args, $action );
+			$this->bb_total_item_reaction_reactions_count( $args, $action );
+			$this->bb_total_reactions_count( $args, $action );
+
+			// Calculate total counts of each reaction for the item.
+			$reaction_counts = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT reaction_id, COUNT(*) AS count FROM {$wpdb->prefix}bb_user_reactions WHERE item_type = %s AND item_id = %d GROUP BY reaction_id",
+					$item_type,
+					$item_id
+				),
+				ARRAY_A
+			);
+
+			$total_item_reaction_count = array_reduce(
+				$reaction_counts,
+				function ( $data, $item ) {
+					$data[ $item['reaction_id'] ] = intval( $item['count'] );
+
+					return $data;
+				},
+				array()
+			);
+
+			$total_item_reaction_count['total'] = array_sum( $total_item_reaction_count );
+
+			return $total_item_reaction_count;
+		}
+
+		/**
+		 * Get registered reaction item types.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return mixed|null
+		 */
+		private function bb_get_registered_reaction_item_types() {
+			return apply_filters( 'bb_register_reaction_types', $this->registered_reaction_types );
+		}
+
+		/**
+		 * Validate callback for reaction item type.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $args Array of arguments.
+		 *
+		 * @return bool|WP_Error
+		 */
+		public function bb_validate_activity_reaction_request( $args ) {
+
+			$r = bp_parse_args(
+				$args,
+				array(
+					'item_type'  => '',
+					'item_id'    => '',
+					'error_type' => 'bool',
+				)
+			);
+			// Initially set is false.
+			$retval = false;
+
+			if ( ! bp_is_active( 'activity' ) ) {
+				$retval = new WP_Error(
+					'bb_reaction_activity_not_active',
+					__( 'Activity not enabled.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			} elseif ( empty( $r['item_id'] ) ) {
+				$retval = new WP_Error(
+					'bb_reaction_required_item_id',
+					__( 'The item IDs is required.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			} elseif ( empty( $r['item_type'] ) ) {
+				$retval = new WP_Error(
+					'bb_reaction_required_item_type',
+					__( 'The item type is required.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			} elseif ( 'activity' !== $r['item_type'] ) {
+				$retval = new WP_Error(
+					'bb_reaction_invalid_item_type',
+					__( 'The item type is not matching with the type.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			} elseif ( ! empty( $r['item_id'] ) && 'activity' === $r['item_type'] ) {
+				$activity = new BP_Activity_Activity( $r['item_id'] );
+
+				if ( empty( $activity->id ) ) {
+					$retval = new WP_Error(
+						'bb_reaction_invalid_item_id',
+						__( 'The item ID is not valid.', 'buddyboss' ),
+						array(
+							'status' => 400,
+						)
+					);
+				} else {
+					$retval = true;
+				}
+			} else {
+				$retval = true;
+			}
+
+			if ( 'wp_error' !== $r['error_type'] && is_wp_error( $retval ) ) {
+				return false;
+			} elseif ( 'wp_error' === $r['error_type'] && is_wp_error( $retval ) ) {
+				return $retval;
+			}
+
+			return $retval;
+		}
+
+		/**
+		 * Setup Like reaction for the activity.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return void
+		 */
+		public function register_activity_like() {
+			$reaction_id = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
+			if ( empty( $reaction_id ) ) {
+				$reaction_id = $this->bb_add_reaction( array( 'name' => 'Like' ) );
+				if ( ! empty( $reaction_id ) ) {
+					bp_update_option( 'bb_reactions_default_like_reaction_added', (int) $reaction_id );
+				}
+			}
 		}
 	}
 }
