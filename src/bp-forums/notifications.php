@@ -294,12 +294,12 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 		'date_notified'    => get_post( $reply_id )->post_date_gmt,
 	);
 
-	$group = false;
-	if ( bp_is_active( 'groups' ) ) {
-		$forum_id = bbp_get_reply_forum_id( $reply_id );
-		$group_id = bbp_get_forum_group_ids( $forum_id );
-		$group_id = ! empty( $group_id ) ? (int) current( $group_id ) : 0;
-		$group    = groups_get_group( $group_id );
+	$group    = false;
+	$forum_id = bbp_get_forum_id( $forum_id );
+	if ( bp_is_active( 'groups' ) && bb_is_forum_group_forum( $forum_id ) ) {
+		$group_ids = bbp_get_forum_group_ids( $forum_id );
+		$group_id  = ! empty( $group_ids ) ? (int) current( $group_ids ) : 0;
+		$group     = ! empty( $group_id ) ? groups_get_group( $group_id ) : false;
 		if (
 			! empty( $group->id ) &&
 			'public' == bp_get_group_status( $group )
