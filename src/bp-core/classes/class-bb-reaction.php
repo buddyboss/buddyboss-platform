@@ -687,7 +687,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @return array|null
 		 */
-		public static function bb_get_user_reactions( $args = array() ) {
+		public function bb_get_user_reactions( $args = array() ) {
 			global $wpdb;
 
 			$r = bp_parse_args(
@@ -704,9 +704,33 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'order_by'    => 'id',   // Column to order by.
 					'count_total' => false,  // Whether to use count_total.
 					'fields'      => 'all',  // Fields to include.
+					'error_type'  => 'bool',
 				),
 				'bb_reactions_get_reaction'
 			);
+
+			$all_registered_reaction_types = self::bb_get_registered_reaction_item_types();
+
+			if (
+				empty( $all_registered_reaction_types ) ||
+				! isset( $all_registered_reaction_types[ $r['item_type'] ] ) ||
+				empty( $all_registered_reaction_types[ $r['item_type'] ]['validate_callback'] ) ||
+				! is_callable( $all_registered_reaction_types[ $r['item_type'] ]['validate_callback'] )
+			) {
+				if ( 'wp_error' === $r['error_type'] ) {
+					return new WP_Error(
+						'bb_user_reactions_invalid_item_type',
+						__( 'The item type is invalid.', 'buddyboss' )
+					);
+				}
+				return false;
+			} else {
+				$validate_callback = $all_registered_reaction_types[ $r['item_type'] ]['validate_callback'];
+				$validate_callback = call_user_func( $validate_callback, $r );
+				if ( empty( $validate_callback ) ) {
+					return $validate_callback;
+				}
+			}
 
 			// Select conditions.
 			$select_sql = 'SELECT DISTINCT ur.id';
@@ -911,7 +935,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				'bb_get_user_reactions_count'
 			);
 
-			$total_count = self::bb_get_user_reactions( $r );
+			$total_count = $this->bb_get_user_reactions( $r );
 			$total_count = ! empty( $total_count ) && ! empty( $total_count['total'] ) ? $total_count['total'] : 0;
 
 			return $total_count;
@@ -1291,7 +1315,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$reaction_counts = $this->bb_fetch_reaction_counts( $args, $action );
 
 			// Fetch latest 10 reactions.
-			$latest_reaction = self::bb_get_user_reactions(
+			$latest_reaction = $this->bb_get_user_reactions(
 				array(
 					'item_id'   => $item_id,
 					'item_type' => $item_type,
@@ -1304,7 +1328,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$last_10_reactions = ! empty( $latest_reaction['reactions'] ) ? $latest_reaction['reactions'] : array();
 
 			// Fetch last 10 reactions.
-			$last_reaction = self::bb_get_user_reactions(
+			$last_reaction = $this->bb_get_user_reactions(
 				array(
 					'item_id'   => $args['item_id'],
 					'item_type' => $args['item_type'],
@@ -1742,6 +1766,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 							'status' => 400,
 						)
 					);
+				} else {
+					$retval = true;
 				}
 			} else {
 				$retval = true;
