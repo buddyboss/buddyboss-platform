@@ -859,21 +859,56 @@ function bbp_forum_get_subforums( $args = '' ) {
  *                    - show_topic_count - To show forum topic count or not. Defaults to true
  *                    - show_reply_count - To show forum reply count or not. Defaults to true
  *
+ * @return mixed
+ */
+function bbp_list_forums( $args = '' ) {
+
+	if ( empty( $args ) || empty( $args['forum_id'] ) ) {
+		return;
+	}
+
+	$output = bbp_list_forums_recursive( $args, 3 );
+
+	/**
+	 * Filters the output of forums list.
+	 *
+	 * @param HTML $output
+	 * @param array $args
+	 */
+	echo apply_filters( 'bbp_list_forums', $output, $args );
+}
+
+/**
+ * Output a list of forums recursively.
+ *
+ * @since [BBVERSION]
+ *
+ * @param mixed $args The function supports these args:
+ *                    - before: To put before the output. Defaults to '<ul class="bbp-forums">'
+ *                    - after: To put after the output. Defaults to '</ul>'
+ *                    - link_before: To put before every link. Defaults to '<li class="bbp-forum">'
+ *                    - link_after: To put after every link. Defaults to '</li>'
+ *                    - separator: Separator. Defaults to ', '
+ *                    - forum_id: Forum id. Defaults to ''
+ *                    - show_topic_count - To show forum topic count or not. Defaults to true
+ *                    - show_reply_count - To show forum reply count or not. Defaults to true
+ * @param int   $depth The level of nesting.
+ *
  * @uses bbp_forum_get_subforums() To check if the forum has subforums or not
  * @uses bbp_get_forum_permalink() To get forum permalink
  * @uses bbp_get_forum_title() To get forum title
  * @uses bbp_is_forum_category() To check if a forum is a category
  * @uses bbp_get_forum_topic_count() To get forum topic count
  * @uses bbp_get_forum_reply_count() To get forum reply count
+ *
+ * @return mixed
  */
-function bbp_list_forums( $args = '' ) {
+function bbp_list_forums_recursive( $args = array(), $depth = 1 ) {
 
-	// Define used variables
-	$output = $sub_forums = $topic_count = $reply_count = $counts = '';
-	$i      = 0;
-	$count  = array();
+	if ( $depth <= 0 ) {
+		return '';
+	}
 
-	// Parse arguments against default values
 	$r = bbp_parse_args(
 		$args,
 		array(
@@ -892,20 +927,20 @@ function bbp_list_forums( $args = '' ) {
 		'list_forums'
 	);
 
-	// Loop through forums and create a list
+	// Get subforums for the current forum.
 	$sub_forums = bbp_forum_get_subforums( $r['forum_id'] );
-	if ( ! empty( $sub_forums ) ) {
+	$output     = '';
 
-		// Total count (for separator)
+	if ( ! empty( $sub_forums ) ) {
 		$total_subs = count( $sub_forums );
+		$counts     = '';
+		$i          = 0;
+
 		foreach ( $sub_forums as $sub_forum ) {
 			$i ++; // Separator count
 
-			// Get forum details
-			$count     = array();
-			$show_sep  = $total_subs > $i ? $r['separator'] : '';
-			$permalink = bbp_get_forum_permalink( $sub_forum->ID );
-			$title     = bbp_get_forum_title( $sub_forum->ID );
+			$count    = array();
+			$show_sep = $total_subs > $i ? $r['separator'] : '';
 
 			// Show topic count
 			if ( ! empty( $r['show_topic_count'] ) && ! bbp_is_forum_category( $sub_forum->ID ) ) {
@@ -922,13 +957,22 @@ function bbp_list_forums( $args = '' ) {
 				$counts = $r['count_before'] . implode( $r['count_sep'], $count ) . $r['count_after'];
 			}
 
-			// Build this sub forums link
-			$output .= $r['link_before'] . '<a href="' . esc_url( $permalink ) . '" class="bbp-forum-link">' . $title . $counts . '</a>' . $show_sep . $r['link_after'];
+			$output .= sprintf(
+				'%s <a href="%s" class="bbp-forum-link">%s %s</a> %s %s %s',
+				$r['link_before'],
+				esc_url( bbp_get_forum_permalink( $sub_forum->ID ) ),
+				esc_html( bbp_get_forum_title( $sub_forum->ID ) ),
+				$counts,
+				$show_sep,
+				bbp_list_forums_recursive( array( 'forum_id' => $sub_forum->ID ), $depth - 1 ),
+				$r['link_after'],
+			);
 		}
 
-		// Output the list
-		echo apply_filters( 'bbp_list_forums', $r['before'] . $output . $r['after'], $r );
+		$output = apply_filters( 'bbp_list_forums', $r['before'] . $output . $r['after'], $r );
 	}
+
+	return $output;
 }
 
 /** Forum Pagination **********************************************************/
