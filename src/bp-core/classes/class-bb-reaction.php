@@ -1140,7 +1140,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$where_conditions = apply_filters( 'bb_get_reactions_data_where_conditions', $where_conditions, $r, $select_sql, $from_sql, $join_sql );
 
 			if ( empty( $where_conditions ) ) {
-				$where_conditions['2'] = '2';
+				$where_conditions['1'] = '1';
 			}
 
 			// Join the where conditions together.
@@ -1270,9 +1270,9 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'value'        => '',
 					'rel1'         => '',
 					'rel2'         => '',
-					'rel3'         => '0',
+					'rel3'         => '',
 					'date_created' => bp_core_current_time(),
-					'error_type'   => 'bool',
+					'error_type'   => '',
 				)
 			);
 
@@ -1290,46 +1290,41 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
 					return new WP_Error( 'bb_reaction_data_empty_name', __( 'The item summary is required to add reaction data.', 'buddyboss' ) );
 				}
+
 				return false;
 				// Reaction need item type.
 			} elseif ( empty( $r['value'] ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
 					return new WP_Error( 'bb_reaction_data_empty_value', __( 'The value is required to add reaction data.', 'buddyboss' ) );
 				}
-				return false;
-				// Reaction need item id.
-			} elseif ( empty( $r['rel1'] ) ) {
-				if ( 'wp_error' === $r['error_type'] ) {
-					return new WP_Error( 'bb_reaction_data_empty_rel1', __( 'The item type is required to add reaction data.', 'buddyboss' ) );
-				}
-				return false;
-			} elseif ( empty( $r['rel2'] ) ) {
-				if ( 'wp_error' === $r['error_type'] ) {
-					return new WP_Error( 'bb_reaction_data_empty_rel2', __( 'The item id is required to add reaction data.', 'buddyboss' ) );
-				}
+
 				return false;
 			}
 
-			$sql           = 'SELECT * FROM ' . self::$reaction_data_table . ' WHERE name = %s AND rel1 = %s AND rel2 = %s';
-			$reaction_data = $wpdb->get_row( $wpdb->prepare( $sql, 'item_summary', $r['rel1'], $r['rel2'] ) );
+			$sql           = 'SELECT * FROM ' . self::$reaction_data_table . ' WHERE name = %s';
+			$reaction_data = $wpdb->get_row( $wpdb->prepare( $sql, $r['name'] ) ); // phpcs:ignore
 			if ( $reaction_data ) {
 				$sql = $wpdb->prepare(
-				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					// phpcs:ignore
 					'UPDATE ' . self::$reaction_data_table . ' SET
                         value = %s
-                    WHERE
                         rel1 = %s
-                        AND rel2 = %s
+                        rel2 = %s
+                        rel3 = %s
+                        date = %s
+                    WHERE
                         AND name = %s
                     ',
 					$r['value'],
-					$r['rel1'],
-					$r['rel2'],
+					( ! empty( $r['rel1'] ) ? $r['rel1'] : $reaction_data->rel1 ),
+					( ! empty( $r['rel2'] ) ? $r['rel2'] : $reaction_data->rel2 ),
+					( ! empty( $r['rel3'] ) ? $r['rel3'] : $reaction_data->rel3 ),
+					( ! empty( $r['date_created'] ) ? $r['date_created'] : $reaction_data->date ),
 					$r['name']
 				);
 			} else {
 				$sql = $wpdb->prepare(
-				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					// phpcs:ignore
 					'INSERT INTO ' . self::$reaction_data_table . ' (
                         name,
                         value,
@@ -1370,7 +1365,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			 */
 			do_action( 'bb_reaction_after_add_reactions_data', $reaction_data_id, $r );
 
-			return $reaction_data_id;
+			return $this->bb_get_reaction_data( $reaction_data_id );
 		}
 
 		/**
@@ -1690,6 +1685,34 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			}
 
 			return $total_item_reactions_count_with_rel3;
+		}
+
+		/**
+		 * Fetch the single reaction data.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $reaction_data_id Reaction data id.
+		 *
+		 * @return array|bool|mixed|object|stdClass|null
+		 */
+		private function bb_get_reaction_data( $reaction_data_id ) {
+			global $wpdb;
+
+			if ( empty( $reaction_data_id ) ) {
+				return false;
+			}
+
+			$reaction_data = wp_cache_get( 'rd_' . $reaction_data_id, self::$cache_group );
+			if ( false !== $reaction_data ) {
+				return $reaction_data;
+			}
+
+			$sql_query     = 'SELECT * ' . self::$reaction_data_table . " WHERE id = %d";
+			$sql           = $wpdb->prepare( $sql_query, $reaction_data_id );
+			$reaction_data = $wpdb->get_row( $sql );
+
+			return $reaction_data;
 		}
 
 		/******************* General functions ******************/
