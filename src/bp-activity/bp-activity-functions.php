@@ -6073,6 +6073,8 @@ function bb_activity_migration() {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	if ( class_exists( 'BB_Reaction' ) ) {
+		BB_Reaction::create_table();
+
 		$reaction_id = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
 		if ( empty( $reaction_id ) ) {
 			$reaction_id = bb_load_reaction()->bb_add_reaction( array( 'name' => 'Like' ) );
