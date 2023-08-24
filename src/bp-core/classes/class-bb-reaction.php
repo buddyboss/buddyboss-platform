@@ -68,6 +68,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 */
 		public static $cache_group = 'bb_reactions';
 
+		private $registered_reaction_types = array();
+
 		/**
 		 * Get the instance of this class.
 		 *
@@ -96,6 +98,17 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			self::create_table();
 
 			$this->bb_register_post_type();
+
+			/**
+			 * Register the reaction item type and validation callback
+			 */
+			$this->bb_register_reaction_item_type(
+				'activity',
+				array(
+					'reaction_type' => 'activity',
+					'validate_callback' => array( $this, 'bb_validate_activity_reaction_request' ),
+				)
+			);
 		}
 
 		/**
@@ -1590,6 +1603,107 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			}
 
 			return $total_item_reactions_count_with_rel3;
+		}
+
+		/**
+		 * Register reaction item type.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $type Item Type.
+		 * @param array  $args Args of item type
+		 *
+		 * @return void
+		 */
+		public function bb_register_reaction_item_type( $type, $args ) {
+			$r = bp_parse_args(
+				$args,
+				array(
+					'reaction_type'     => $type,
+					'validate_callback' => '',
+				)
+			);
+
+			if ( empty( $r['reaction_type'] ) || empty( $r['validate_callback'] ) || isset( $this->registered_reaction_types[ $r['reaction_type'] ] ) ) {
+				return;
+			}
+
+			$this->registered_reaction_types[ $r['reaction_type'] ] = array(
+				'reaction_type'     => $r['reaction_type'],
+				'validate_callback' => $r['validate_callback'],
+			);
+
+			$this->registered_reaction_types = apply_filters( 'bb_register_reaction_types', $this->registered_reaction_types );
+		}
+
+		/**
+		 * Validate callback for reaction item type.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param $item_ids
+		 * @param $item_type
+		 *
+		 * @return bool|WP_Error
+		 */
+		public function bb_validate_activity_reaction_request( $item_ids, $item_type ) {
+
+			// Initially set is false.
+			$retval = false;
+
+			if ( empty( $item_ids ) ) {
+				$retval = new WP_Error(
+					'bb_reaction_required_item_ids',
+					__( 'The item IDs is required.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			} elseif ( empty( $item_type ) ) {
+				$retval = new WP_Error(
+					'bb_reaction_required_item_type',
+					__( 'The item type is required.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			} else {
+				if ( 'activity' !== $item_type ) {
+					$retval = new WP_Error(
+						'bb_reaction_invalid_item_type',
+						__( 'The item type is not matching with the type.', 'buddyboss' ),
+						array(
+							'status' => 400,
+						)
+					);
+				} else {
+					// Validate the item id if exists.
+					if ( ! empty( $item_ids ) && 'activity' === $item_type ) {
+						global $wpdb;
+
+						$activity_exists = $wpdb->get_var(
+							$wpdb->prepare(
+								"SELECT COUNT(*) FROM {$wpdb->prefix}bp_activity WHERE id = %d",
+								$item_ids
+							)
+						);
+
+						if ( empty( $activity_exists ) ) {
+							$retval = new WP_Error(
+								'bb_reaction_invalid_item_id',
+								__( 'The item ID is not valid.', 'buddyboss' ),
+								array(
+									'status' => 400,
+								)
+							);
+						}
+					} else {
+						$retval = true;
+					}
+				}
+			}
+
+			return $retval;
 		}
 	}
 }
