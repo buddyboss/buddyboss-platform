@@ -553,8 +553,6 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			$user_reaction_id = $wpdb->insert_id;
 
-			$this->bb_prepare_reaction_summary_data( $r, 'add' );
-
 			/**
 			 * Fires after the add user item reaction in DB.
 			 *
@@ -564,6 +562,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			 * @param array $r                Array of parsed arguments.
 			 */
 			do_action( 'bb_reaction_after_add_user_item_reaction', $user_reaction_id, $r );
+
+			$this->bb_prepare_reaction_summary_data( $r, 'add' );
 
 			return $this->bb_get_user_reaction( $user_reaction_id );
 		}
@@ -692,8 +692,6 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				return false;
 			}
 
-			$this->bb_prepare_reaction_summary_data( $get_reaction, 'remove' );
-
 			/**
 			 * Fires after the remove user item reactions.
 			 *
@@ -703,6 +701,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			 * @param array     $r       Args of user item reactions.
 			 */
 			do_action( 'bb_reaction_after_remove_user_item_reactions', $deleted, $r );
+
+			$this->bb_prepare_reaction_summary_data( $get_reaction, 'remove' );
 
 			return $deleted;
 		}
@@ -1454,78 +1454,6 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		}
 
 		/**
-		 * Add or update total reaction count.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param array  $args   Args of reaction data.
-		 * @param string $action Add or remove the user reaction.
-		 *
-		 * @return false|int|WP_Error
-		 */
-		public function bb_total_reactions_count( $args, $action ) {
-			global $wpdb;
-
-			$total_reactions_count      = 0;
-			$sql                        = 'SELECT value FROM ' . self::$reaction_data_table . ' WHERE name = %s';
-			$total_reactions_count_data = $wpdb->get_row( $wpdb->prepare( $sql, 'total_reactions_count' ) );
-			if ( ! empty( $total_reactions_count_data ) && ! empty( $total_reactions_count_data ) ) {
-				$total_reactions_count = $total_reactions_count_data->value;
-			}
-
-			if ( 'add' === $action ) {
-				++$total_reactions_count;
-			} else {
-				--$total_reactions_count;
-			}
-
-			if ( ! empty( $total_reactions_count_data ) ) {
-				$sql = $wpdb->prepare(
-				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					'UPDATE ' . self::$reaction_data_table . " SET
-                        value = %s
-                    WHERE
-                        name = %s
-                        AND rel3 = '0'
-                    ",
-					$total_reactions_count,
-					'total_reactions_count'
-				);
-			} else {
-				$sql = $wpdb->prepare(
-				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					'INSERT INTO ' . self::$reaction_data_table . ' (
-                        name,
-                        value,
-                        rel1,
-                        rel2,
-                        rel3,
-                        date
-                    ) VALUES (
-                        %s, %s, %s, %s, %s, %s
-                    )',
-					'total_reactions_count',
-					$total_reactions_count,
-					'0',
-					'0',
-					'0',
-					$args['date_created']
-				);
-			}
-
-			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			if ( false === $wpdb->query( $sql ) ) {
-				if ( 'wp_error' === $args['error_type'] ) {
-					return new WP_Error( 'bb_total_reactions_count_cannot_add', __( 'There is an error while adding the total reaction count.', 'buddyboss' ) );
-				} else {
-					return false;
-				}
-			}
-
-			return $total_reactions_count;
-		}
-
-		/**
 		 * Add or update total item reaction count.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -1560,56 +1488,18 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				--$total_item_reactions_count;
 			}
 
-			if ( ! empty( $total_item_reactions_data ) ) {
-				$sql = $wpdb->prepare(
-				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					'UPDATE ' . self::$reaction_data_table . ' SET
-                        value = %s
-                    WHERE
-                        name = %s
-                        AND rel1 = %s
-                        AND rel2 = %s
-                        AND rel3 = %s
-                    ',
-					$total_item_reactions_count,
-					'total_item_reactions_count',
-					$args['item_type'],
-					$args['item_id'],
-					'0'
-				);
-			} else {
-				$sql = $wpdb->prepare(
-				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					'INSERT INTO ' . self::$reaction_data_table . ' (
-                        name,
-                        value,
-                        rel1,
-                        rel2,
-                        rel3,
-                        date
-                    ) VALUES (
-                        %s, %s, %s, %s, %s, %s
-                    )',
-					'total_item_reactions_count',
-					$total_item_reactions_count,
-					$args['item_type'],
-					$args['item_id'],
-					'0',
-					$args['date_created']
-				);
-			}
-
-			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			if ( false === $wpdb->query( $sql ) ) {
-				if ( 'wp_error' === $args['error_type'] ) {
-					return new WP_Error( 'bb_total_item_reactions_count_cannot_add', __( 'There is an error while adding the total item reaction count.', 'buddyboss' ) );
-				} else {
-					return false;
-				}
-			}
+			$this->bb_add_reactions_data(
+				array(
+					'name'  => 'total_item_reactions_count',
+					'value' => $total_item_reactions_count,
+					'rel1'  => $item_type,
+					'rel2'  => $item_id,
+					'rel3'  => '0',
+				)
+			);
 
 			if ( ! empty( $total_item_reactions_data->id ) ) {
-				wp_cache_delete( $total_item_reactions_data->id, self::$cache_group );
+				wp_cache_delete( 'rd_' . $total_item_reactions_data->id, self::$cache_group );
 			}
 
 			return $total_item_reactions_count;
@@ -1634,7 +1524,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			$total_item_reactions_data_with_rel3 = $this->bb_get_reactions_data(
 				array(
-					'name'        => 'total_item_reactions_count',
+					'name'        => 'total_item_reaction_count',
 					'rel1'        => $item_type,
 					'rel2'        => $item_id,
 					'rel3'        => $reaction_id,
@@ -1651,59 +1541,50 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				--$total_item_reactions_count_with_rel3;
 			}
 
-			if ( ! empty( $total_item_reactions_data_with_rel3 ) ) {
-				$sql = $wpdb->prepare(
-				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					'UPDATE ' . self::$reaction_data_table . ' SET
-                        value = %s
-                    WHERE
-                        name = %s
-                        AND rel1 = %s
-                        AND rel2 = %s
-                        AND rel3 = %s
-                    ',
-					$total_item_reactions_count_with_rel3,
-					'total_item_reactions_count',
-					$args['item_type'],
-					$args['item_id'],
-					$args['reaction_id']
-				);
-			} else {
-				$sql = $wpdb->prepare(
-				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					'INSERT INTO ' . self::$reaction_data_table . ' (
-                        name,
-                        value,
-                        rel1,
-                        rel2,
-                        rel3,
-                        date
-                    ) VALUES (
-                        %s, %s, %s, %s, %s, %s
-                    )',
-					'total_item_reactions_count',
-					$total_item_reactions_count_with_rel3,
-					$args['item_type'],
-					$args['item_id'],
-					$args['reaction_id'],
-					$args['date_created']
-				);
-			}
-
-			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			if ( false === $wpdb->query( $sql ) ) {
-				if ( 'wp_error' === $args['error_type'] ) {
-					return new WP_Error( 'bb_total_item_reaction_reactions_count_cannot_add', __( 'There is an error while adding the total item reaction count based on reaction id.', 'buddyboss' ) );
-				} else {
-					return false;
-				}
-			}
+			$this->bb_add_reactions_data(
+				array(
+					'name'  => 'total_item_reaction_count',
+					'value' => $total_item_reactions_count_with_rel3,
+					'rel1'  => $item_type,
+					'rel2'  => $item_id,
+					'rel3'  => $reaction_id,
+				)
+			);
 
 			if ( ! empty( $total_item_reactions_data_with_rel3->id ) ) {
-				wp_cache_delete( $total_item_reactions_data_with_rel3->id, self::$cache_group );
+				wp_cache_delete( 'rd_' . $total_item_reactions_data_with_rel3->id, self::$cache_group );
 			}
 
 			return $total_item_reactions_count_with_rel3;
+		}
+
+
+		/**
+		 * Add or update total reaction count.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array  $args   Args of reaction data.
+		 * @param string $action Add or remove the user reaction.
+		 *
+		 * @return false|int|WP_Error
+		 */
+		public function bb_total_reactions_count( $args, $action ) {
+			$total_reactions_count = 0;
+
+			$all_reactions = $this->bb_get_user_reactions(
+				array(
+					'count_total' => true,
+					'per_page'    => 1,
+					'paged'       => 1,
+				)
+			);
+
+			if ( isset( $all_reactions['total'] ) ) {
+				$total_reactions_count = $all_reactions['total'];
+			}
+
+			return $total_reactions_count;
 		}
 
 		/**
@@ -1727,14 +1608,12 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				return $reaction_data;
 			}
 
-			$sql_query     = 'SELECT * ' . self::$reaction_data_table . " WHERE id = %d";
-			$sql           = $wpdb->prepare( $sql_query, $reaction_data_id );
-			$reaction_data = $wpdb->get_row( $sql );
+			// phpcs:ignore
+			$sql           = $wpdb->prepare( 'SELECT * ' . self::$reaction_data_table . " WHERE id = %d", $reaction_data_id );
+			$reaction_data = $wpdb->get_row( $sql ); // phpcs:ignore
 
 			return $reaction_data;
 		}
-
-		/******************* General functions ******************/
 
 		/**
 		 * Add or update total reaction count.
@@ -1752,9 +1631,9 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$item_id   = $args['item_id'];
 			$item_type = $args['item_type'];
 
-			$this->bb_total_item_reactions_count( $args, $action );
-			$this->bb_total_item_reaction_reactions_count( $args, $action );
-			$this->bb_total_reactions_count( $args, $action );
+			$this->bb_total_item_reactions_count( $args, $action ); // total_item_reactions_count.
+			$this->bb_total_item_reaction_reactions_count( $args, $action ); // total_item_reaction_count.
+			$this->bb_total_reactions_count( $args, $action ); // total_reactions_count.
 
 			// Calculate total counts of each reaction for the item.
 			$reaction_counts = $wpdb->get_results(
@@ -1780,6 +1659,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			return $total_item_reaction_count;
 		}
+
+		/******************* General functions ******************/
 
 		/**
 		 * Get registered reaction item types.
