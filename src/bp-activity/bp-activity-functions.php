@@ -4501,7 +4501,17 @@ add_action( 'bp_after_activity_comment', 'bp_activity_comment_embed_after_recurs
  * @return mixed The cached embeds for this activity item.
  */
 function bp_embed_activity_cache( $cache, $id, $cachekey ) {
-	return bp_activity_get_meta( $id, $cachekey );
+	$data = bp_activity_get_meta( $id, $cachekey );
+
+	if (
+		! empty( $data ) &&
+		false !== strpos( $data, 'loom.com' ) &&
+		false !== strpos( $data, 'sandbox' )
+	) {
+		return false;
+	}
+
+	return $data;
 }
 
 /**
