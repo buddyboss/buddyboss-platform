@@ -1509,8 +1509,6 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @param array  $args   Args of reaction data.
 		 * @param string $action Add or remove the user reaction.
-		 *
-		 * @return false|int|WP_Error
 		 */
 		public function bb_total_item_reaction_reactions_count( $args, $action ) {
 			global $wpdb;
@@ -1519,42 +1517,23 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$item_id     = $args['item_id'];
 			$item_type   = $args['item_type'];
 
-			$total_item_reactions_data_with_rel3 = $this->bb_get_reactions_data(
-				array(
-					'name'        => 'total_item_reaction_count',
-					'rel1'        => $item_type,
-					'rel2'        => $item_id,
-					'rel3'        => $reaction_id,
-					'count_total' => false,
-				)
-			);
+			$data_sql      = "SELECT reaction_id, count(id) AS total FROM " . self::$user_reaction_table . " WHERE item_type = %s and item_id = %d GROUP BY reaction_id;";
+			$sql           = $wpdb->prepare( $data_sql, $item_type, $item_id ); // phpcs:ignore
+			$reaction_data = $wpdb->get_results( $sql ); // phpcs:ignore
 
-			$total_item_reactions_data_with_rel3  = ! empty( $total_item_reactions_data_with_rel3['reaction_data'] ) ? current( $total_item_reactions_data_with_rel3['reaction_data'] ) : array();
-			$total_item_reactions_count_with_rel3 = ! empty( $total_item_reactions_data_with_rel3->value ) ? (int) $total_item_reactions_data_with_rel3->value : 0;
-
-			if ( 'add' === $action ) {
-				++ $total_item_reactions_count_with_rel3;
-			} else {
-				if ( 0 !== $total_item_reactions_count_with_rel3 ) {
-					-- $total_item_reactions_count_with_rel3;
+			if ( ! empty( $reaction_data ) ) {
+				foreach ( $reaction_data as $key => $value ) {
+					$this->bb_add_reactions_data(
+						array(
+							'name'  => 'total_item_reaction_count',
+							'value' => $value->total,
+							'rel1'  => $item_type,
+							'rel2'  => $item_id,
+							'rel3'  => $value->reaction_id,
+						)
+					);
 				}
 			}
-
-			$this->bb_add_reactions_data(
-				array(
-					'name'  => 'total_item_reaction_count',
-					'value' => $total_item_reactions_count_with_rel3,
-					'rel1'  => $item_type,
-					'rel2'  => $item_id,
-					'rel3'  => $reaction_id,
-				)
-			);
-
-			if ( ! empty( $total_item_reactions_data_with_rel3->id ) ) {
-				wp_cache_delete( 'rd_' . $total_item_reactions_data_with_rel3->id, self::$cache_group );
-			}
-
-			return $total_item_reactions_count_with_rel3;
 		}
 
 
