@@ -1542,6 +1542,37 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					);
 				}
 			}
+
+			$total_item_reactions_data = $this->bb_get_reactions_data(
+				array(
+					'name'        => 'total_item_reaction_count',
+					'rel1'        => $item_type,
+					'rel2'        => $item_id,
+					'count_total' => false,
+				)
+			);
+
+			if (
+				! empty( $total_item_reactions_data['reaction_data'] ) &&
+				! empty( $reaction_data )
+			) {
+				$reaction_ids         = array_unique( wp_list_pluck( $total_item_reactions_data['reaction_data'], 'rel3' ) );
+				$updated_reaction_ids = array_unique( wp_list_pluck( $reaction_data, 'reaction_id' ) );
+				$unwated              = array_diff( $reaction_ids, $updated_reaction_ids );
+				if ( ! empty( $unwated ) ) {
+					foreach ( $unwated as $unwanted_reaction_id ) {
+						$this->bb_add_reactions_data(
+							array(
+								'name'  => 'total_item_reaction_count',
+								'value' => 0,
+								'rel1'  => $item_type,
+								'rel2'  => $item_id,
+								'rel3'  => $unwanted_reaction_id,
+							)
+						);
+					}
+				}
+			}
 		}
 
 
