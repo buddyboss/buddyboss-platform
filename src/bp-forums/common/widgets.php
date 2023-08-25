@@ -685,7 +685,7 @@ class BBP_Forums_Widget extends WP_Widget {
 							'show_reply_count' => false,
 						);
 
-						bbp_list_forums( $r );
+						echo bbp_get_list_forums_recursively( $r );
 					}
 					?>
 				</li>

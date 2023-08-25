@@ -859,23 +859,76 @@ function bbp_forum_get_subforums( $args = '' ) {
  *                    - show_topic_count - To show forum topic count or not. Defaults to true
  *                    - show_reply_count - To show forum reply count or not. Defaults to true
  *
- * @return mixed
+ * @uses bbp_forum_get_subforums() To check if the forum has subforums or not
+ * @uses bbp_get_forum_permalink() To get forum permalink
+ * @uses bbp_get_forum_title() To get forum title
+ * @uses bbp_is_forum_category() To check if a forum is a category
+ * @uses bbp_get_forum_topic_count() To get forum topic count
+ * @uses bbp_get_forum_reply_count() To get forum reply count
  */
 function bbp_list_forums( $args = '' ) {
 
-	if ( empty( $args ) || empty( $args['forum_id'] ) ) {
-		return;
+	// Define used variables
+	$output = $sub_forums = $topic_count = $reply_count = $counts = '';
+	$i      = 0;
+	$count  = array();
+
+	// Parse arguments against default values
+	$r = bbp_parse_args(
+		$args,
+		array(
+			'before'           => '<ul class="bbp-forums-list">',
+			'after'            => '</ul>',
+			'link_before'      => '<li class="bbp-forum">',
+			'link_after'       => '</li>',
+			'count_before'     => ' (',
+			'count_after'      => ')',
+			'count_sep'        => ', ',
+			'separator'        => ', ',
+			'forum_id'         => '',
+			'show_topic_count' => true,
+			'show_reply_count' => true,
+		),
+		'list_forums'
+	);
+
+	// Loop through forums and create a list
+	$sub_forums = bbp_forum_get_subforums( $r['forum_id'] );
+	if ( ! empty( $sub_forums ) ) {
+
+		// Total count (for separator)
+		$total_subs = count( $sub_forums );
+		foreach ( $sub_forums as $sub_forum ) {
+			$i ++; // Separator count
+
+			// Get forum details
+			$count     = array();
+			$show_sep  = $total_subs > $i ? $r['separator'] : '';
+			$permalink = bbp_get_forum_permalink( $sub_forum->ID );
+			$title     = bbp_get_forum_title( $sub_forum->ID );
+
+			// Show topic count
+			if ( ! empty( $r['show_topic_count'] ) && ! bbp_is_forum_category( $sub_forum->ID ) ) {
+				$count['topic'] = bbp_get_forum_topic_count( $sub_forum->ID );
+			}
+
+			// Show reply count
+			if ( ! empty( $r['show_reply_count'] ) && ! bbp_is_forum_category( $sub_forum->ID ) ) {
+				$count['reply'] = bbp_get_forum_reply_count( $sub_forum->ID );
+			}
+
+			// Counts to show
+			if ( ! empty( $count ) ) {
+				$counts = $r['count_before'] . implode( $r['count_sep'], $count ) . $r['count_after'];
+			}
+
+			// Build this sub forums link
+			$output .= $r['link_before'] . '<a href="' . esc_url( $permalink ) . '" class="bbp-forum-link">' . $title . $counts . '</a>' . $show_sep . $r['link_after'];
+		}
+
+		// Output the list
+		echo apply_filters( 'bbp_list_forums', $r['before'] . $output . $r['after'], $r );
 	}
-
-	$output = bbp_list_forums_recursive( $args );
-
-	/**
-	 * Filters the output of forums list.
-	 *
-	 * @param HTML $output
-	 * @param array $args
-	 */
-	echo apply_filters( 'bbp_list_forums', $output, $args );
 }
 
 /**
@@ -902,7 +955,7 @@ function bbp_list_forums( $args = '' ) {
  *
  * @return mixed
  */
-function bbp_list_forums_recursive( $args = array() ) {
+function bbp_get_list_forums_recursively( $args = array() ) {
 
 	$r = bbp_parse_args(
 		$args,
@@ -959,12 +1012,12 @@ function bbp_list_forums_recursive( $args = array() ) {
 				esc_html( bbp_get_forum_title( $sub_forum->ID ) ),
 				$counts,
 				$show_sep,
-				bbp_list_forums_recursive( array( 'forum_id' => $sub_forum->ID ) ),
+				bbp_get_list_forums_recursively( array( 'forum_id' => $sub_forum->ID ) ),
 				$r['link_after'],
 			);
 		}
 
-		$output = apply_filters( 'bbp_list_forums', $r['before'] . $output . $r['after'], $r );
+		$output = apply_filters( 'bbp_get_list_forums_recursively', $r['before'] . $output . $r['after'], $r );
 	}
 
 	return $output;
