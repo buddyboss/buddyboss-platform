@@ -78,6 +78,16 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		public static $cache_group = 'bb_reactions';
 
 		/**
+		 * Cache group.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @access public
+		 * @var string
+		 */
+		public static $rd_cache_group = 'bb_reaction_data';
+
+		/**
 		 * Get the instance of this class.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -1088,7 +1098,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			);
 
 			// Select conditions.
-			$select_sql = 'SELECT *';
+			$select_sql = 'SELECT rd.id';
 
 			$from_sql = ' FROM ' . self::$reaction_data_table . ' rd';
 
@@ -1219,10 +1229,10 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			 */
 			$paged_reaction_data_sql = apply_filters( 'bb_get_reactions_data_paged_sql', $paged_reaction_data_sql, $r );
 
-			$cached = bp_core_get_incremented_cache( $paged_reaction_data_sql, self::$cache_group );
+			$cached = bp_core_get_incremented_cache( $paged_reaction_data_sql, self::$rd_cache_group );
 			if ( false === $cached ) {
 				$paged_reaction_data_ids = $wpdb->get_col( $paged_reaction_data_sql ); // phpcs:ignore
-				bp_core_set_incremented_cache( $paged_reaction_data_sql, self::$cache_group, $paged_reaction_data_ids );
+				bp_core_set_incremented_cache( $paged_reaction_data_sql, self::$rd_cache_group, $paged_reaction_data_ids );
 			} else {
 				$paged_reaction_data_ids = $cached;
 			}
@@ -1231,7 +1241,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				// We only want the IDs.
 				$paged_reaction_data = array_map( 'intval', $paged_reaction_data_ids );
 			} else {
-				$uncached_ids = bp_get_non_cached_ids( $paged_reaction_data_ids, self::$cache_group );
+				$uncached_ids = bp_get_non_cached_ids( $paged_reaction_data_ids, self::$rd_cache_group );
 				if ( ! empty( $uncached_ids ) ) {
 					$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
 
@@ -1239,13 +1249,13 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					$queried_data = $wpdb->get_results( 'SELECT * FROM ' . self::$reaction_data_table . " WHERE id IN ({$uncached_ids_sql})" );
 
 					foreach ( (array) $queried_data as $rddata ) {
-						wp_cache_set( 'rd_' . $rddata->id, $rddata, self::$cache_group );
+						wp_cache_set( $rddata->id, $rddata, self::$rd_cache_group );
 					}
 				}
 
 				$paged_reaction_data = array();
 				foreach ( $paged_reaction_data_ids as $id ) {
-					$user_reaction = wp_cache_get( 'rd_' . $id, self::$cache_group );
+					$user_reaction = wp_cache_get( $id, self::$rd_cache_group );
 					if ( ! empty( $user_reaction ) ) {
 						$paged_reaction_data[] = $user_reaction;
 					}
@@ -1270,10 +1280,10 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				 */
 				$sql                     = 'SELECT count(DISTINCT rd.id) FROM ' . self::$reaction_data_table . " rd {$join_sql} {$where_sql}";
 				$total_reaction_data_sql = apply_filters( 'bb_get_reactions_data_total_sql', $sql, $where_sql, $sort );
-				$cached                  = bp_core_get_incremented_cache( $total_reaction_data_sql, self::$cache_group );
+				$cached                  = bp_core_get_incremented_cache( $total_reaction_data_sql, self::$rd_cache_group );
 				if ( false === $cached ) {
 					$total_reaction_data = $wpdb->get_var( $total_reaction_data_sql ); // phpcs:ignore
-					bp_core_set_incremented_cache( $total_reaction_data_sql, self::$cache_group, $total_reaction_data );
+					bp_core_set_incremented_cache( $total_reaction_data_sql, self::$rd_cache_group, $total_reaction_data );
 				} else {
 					$total_reaction_data = $cached;
 				}
@@ -1503,7 +1513,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			);
 
 			if ( ! empty( $total_item_reactions_data->id ) ) {
-				wp_cache_delete( 'rd_' . $total_item_reactions_data->id, self::$cache_group );
+				wp_cache_delete( $total_item_reactions_data->id, self::$rd_cache_group );
 			}
 
 			return $total_item_reactions_count;
@@ -1624,7 +1634,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				return false;
 			}
 
-			$reaction_data = wp_cache_get( 'rd_' . $reaction_data_id, self::$cache_group );
+			$reaction_data = wp_cache_get( $reaction_data_id, self::$rd_cache_group );
 			if ( false !== $reaction_data ) {
 				return $reaction_data;
 			}

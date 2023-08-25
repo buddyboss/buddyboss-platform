@@ -567,7 +567,7 @@ function bb_reaction_clear_cache_remove_user_item( $deleted, $r, $reactions ) {
 add_action( 'bb_reaction_after_remove_user_item_reactions', 'bb_reaction_clear_cache_remove_user_item', 10, 3 );
 
 function bb_reaction_clear_cache_reactions_data( $reaction_data_id ) {
-	wp_cache_delete( 'rd_' . $reaction_data_id, 'bb_reactions' );
+	wp_cache_delete( $reaction_data_id, 'bb_reaction_data' );
 }
 
 add_action( 'bb_reaction_after_add_reactions_data', 'bb_reaction_clear_cache_reactions_data', 10, 1 );
