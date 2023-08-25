@@ -792,7 +792,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$where_conditions = array();
 
 			// Sorting.
-			$sort = $r['order'];
+			$sort = bp_esc_sql_order( $r['order'] );
 			if ( 'ASC' !== $sort && 'DESC' !== $sort ) {
 				$sort = 'DESC';
 			}
