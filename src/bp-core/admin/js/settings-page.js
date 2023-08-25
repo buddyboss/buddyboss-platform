@@ -2620,11 +2620,9 @@ window.bp = window.bp || {};
 			$( '#bb-domain-restrictions-setting' ).children( '.restrictions-error' ).html( '' );
 		} );
 
-		if ( domainRestrictionsErrors.length > 0 ) {
-			for ( var i = 0; i < domainRestrictionsErrors.length; i++ ) {
-				var error = '<p>' + domainRestrictionsErrors[ i ] + '</p>';
-				$( '#bb-domain-restrictions-setting' ).children( '.restrictions-error' ).append( error );
-			}
+		for ( var i = 0; i < domainRestrictionsErrors.length; i++ ) {
+			var error = '<p>' + domainRestrictionsErrors[ i ] + '</p>';
+			$( '#bb-domain-restrictions-setting' ).children( '.restrictions-error' ).append( error );
 		}
 
 		if ( domainRestrictionsErrors.length > 0 && eventType === 'submit' ) {
@@ -2667,11 +2665,13 @@ window.bp = window.bp || {};
 			}
 
 			$( '#bb-email-restrictions-setting' ).children( '.restrictions-error' ).html( '' );
+
+			for ( var i = 0; i < emailRestrictionsErrors.length; i++ ) {
+				var error = '<p>' + emailRestrictionsErrors[ i ] + '</p>';
+				$( '#bb-email-restrictions-setting' ).children( '.restrictions-error' ).append( error );
+			}
+
 			if ( emailRestrictionsErrors.length > 0 ) {
-				for ( var i = 0; i < emailRestrictionsErrors.length; i++ ) {
-					var error = '<p>' + emailRestrictionsErrors[ i ] + '</p>';
-					$( '#bb-email-restrictions-setting' ).children( '.restrictions-error' ).append( error );
-				}
 				if ( eventType === 'submit' ) {
 					e.preventDefault();
 				}
