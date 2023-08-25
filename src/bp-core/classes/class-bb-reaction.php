@@ -1321,9 +1321,10 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				// Reaction need item type.
 			}
 
-			$sql           = 'SELECT * FROM ' . self::$reaction_data_table . ' WHERE name = %s';
-			$reaction_data = $wpdb->get_row( $wpdb->prepare( $sql, $r['name'] ) ); // phpcs:ignore
-			if ( $reaction_data ) {
+			$reactions_data = $this->bb_get_reactions_data( $r );
+			if ( ! empty( $reactions_data['reaction_data'] ) ) {
+				$reaction_data = current( $reactions_data['reaction_data'] );
+
 				$sql = $wpdb->prepare(
 					// phpcs:ignore
 					'UPDATE ' . self::$reaction_data_table . ' SET
