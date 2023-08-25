@@ -2282,20 +2282,7 @@ add_action( 'thread_loop_start', 'bp_messages_embed' );
  * @return mixed The cached embeds for this message item.
  */
 function bp_embed_message_cache( $cache, $id, $cachekey ) {
-	$data = bp_messages_get_meta( $id, $cachekey );
-
-	if (
-		! empty( $data ) &&
-		false !== strpos( $data, 'loom.com' ) &&
-		(
-			false !== strpos( $data, 'sandbox' ) ||
-			false !== strpos( $data, 'security' )
-		)
-	) {
-		return false;
-	}
-
-	return $data;
+	return bp_messages_get_meta( $id, $cachekey );
 }
 
 /**
