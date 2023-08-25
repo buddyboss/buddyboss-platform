@@ -722,8 +722,9 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			 *
 			 * @since BuddyBoss [BBVERSION]
 			 *
-			 * @param int|false $deleted The number of rows deleted, or false on error.
-			 * @param array     $r       Args of user item reactions.
+			 * @param int|false $deleted      The number of rows deleted, or false on error.
+			 * @param array     $r            Args of user item reactions.
+			 * @param object    $get_reaction Reaction data.
 			 */
 			do_action( 'bb_reaction_after_remove_user_item_reactions', $deleted, $r, $get_reaction );
 
