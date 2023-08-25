@@ -2616,9 +2616,9 @@ window.bp = window.bp || {};
 					}
 				}
 			}
-
-			$( '#bb-domain-restrictions-setting' ).children( '.restrictions-error' ).html( '' );
 		} );
+
+		$( '#bb-domain-restrictions-setting' ).children( '.restrictions-error' ).html( '' );
 
 		for ( var i = 0; i < domainRestrictionsErrors.length; i++ ) {
 			var error = '<p>' + domainRestrictionsErrors[ i ] + '</p>';
@@ -2663,20 +2663,20 @@ window.bp = window.bp || {};
 					emailRestrictionsErrors.push( BP_ADMIN.bb_registration_restrictions.feedback_messages.empty );
 				}
 			}
-
-			$( '#bb-email-restrictions-setting' ).children( '.restrictions-error' ).html( '' );
-
-			for ( var i = 0; i < emailRestrictionsErrors.length; i++ ) {
-				var error = '<p>' + emailRestrictionsErrors[ i ] + '</p>';
-				$( '#bb-email-restrictions-setting' ).children( '.restrictions-error' ).append( error );
-			}
-
-			if ( emailRestrictionsErrors.length > 0 ) {
-				if ( eventType === 'submit' ) {
-					e.preventDefault();
-				}
-			}
 		} );
+
+		$( '#bb-email-restrictions-setting' ).children( '.restrictions-error' ).html( '' );
+
+		for ( var i = 0; i < emailRestrictionsErrors.length; i++ ) {
+			var error = '<p>' + emailRestrictionsErrors[ i ] + '</p>';
+			$( '#bb-email-restrictions-setting' ).children( '.restrictions-error' ).append( error );
+		}
+
+		if ( emailRestrictionsErrors.length > 0 ) {
+			if ( eventType === 'submit' ) {
+				e.preventDefault();
+			}
+		}
 	}
 
 	// Handle input and blur event on domain and extension textboxes.
