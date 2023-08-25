@@ -3876,7 +3876,7 @@ table.moderations .column-member {
 	max-width: 560px;
 
 	&.bb-sortable .registration-restrictions-rule {
-		padding-left: 60px;
+		padding-left: 40px;
 
 		&:before {
 			cursor: grab;
@@ -3887,7 +3887,7 @@ table.moderations .column-member {
 			position: absolute;
 			top: 50%;
 			transform: translateY(-50%);
-			left: 30px;
+			left: 10px;
 		}
 
 		&.ui-sortable-helper:before {
