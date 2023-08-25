@@ -1794,7 +1794,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @return void
 		 */
-		public function register_activity_like() {
+		public function bb_register_activity_like() {
 			$reaction_id = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
 			if ( empty( $reaction_id ) ) {
 				$reaction_id = $this->bb_add_reaction( array( 'name' => 'Like' ) );

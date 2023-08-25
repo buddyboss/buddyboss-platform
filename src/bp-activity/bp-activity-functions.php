@@ -6068,7 +6068,7 @@ function bb_activity_migration() {
 	 */
 	if ( class_exists( 'BB_Reaction' ) ) {
 		bb_load_reaction()->create_table();
-		bb_load_reaction()->register_activity_like();
+		bb_load_reaction()->bb_register_activity_like();
 
 		// Migration Like to Reaction.
 		if ( function_exists( 'bb_migrate_activity_like_reaction' ) ) {
