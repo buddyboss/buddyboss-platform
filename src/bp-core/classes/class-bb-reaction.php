@@ -1137,7 +1137,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				$where_conditions['rel3'] = $wpdb->prepare( 'rd.rel3 = %s', $r['rel3'] );
 			}
 
-			// rel2.
+			// name.
 			if ( ! empty( $r['name'] ) ) {
 				$where_conditions['name'] = $wpdb->prepare( 'rd.name = %s', $r['name'] );
 			}
@@ -1336,18 +1336,18 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					// phpcs:ignore
 					'UPDATE ' . self::$reaction_data_table . ' SET
                         value = %s,
-                        rel1 = %s,
-                        rel2 = %s,
-                        rel3 = %s,
                         date = %s
                     WHERE
+                        rel1 = %s AND
+                        rel2 = %s AND
+                        rel3 = %s AND
                         name = %s
                     ',
 					$r['value'],
+					( ! empty( $r['date_created'] ) ? $r['date_created'] : $reaction_data->date ),
 					( ! empty( $r['rel1'] ) ? $r['rel1'] : $reaction_data->rel1 ),
 					( ! empty( $r['rel2'] ) ? $r['rel2'] : $reaction_data->rel2 ),
 					( ! empty( $r['rel3'] ) ? $r['rel3'] : $reaction_data->rel3 ),
-					( ! empty( $r['date_created'] ) ? $r['date_created'] : $reaction_data->date ),
 					$r['name']
 				);
 			} else {
@@ -1457,6 +1457,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'value' => maybe_serialize( $data ),
 					'rel1'  => $item_type,
 					'rel2'  => $item_id,
+					'rel3'  => '0',
 				)
 			);
 		}
@@ -1498,6 +1499,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'value' => $total_item_reactions_count,
 					'rel1'  => $item_type,
 					'rel2'  => $item_id,
+					'rel3'  => '0',
 				)
 			);
 
@@ -1572,6 +1574,9 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				array(
 					'name'  => 'total_reactions_count',
 					'value' => $total_reactions_count,
+					'rel1'  => '0',
+					'rel2'  => '0',
+					'rel3'  => '0',
 				)
 			);
 
