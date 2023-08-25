@@ -1084,6 +1084,25 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			// Where conditions.
 			$where_conditions = array();
 
+			// Sorting.
+			$sort = bp_esc_sql_order( $r['order'] );
+			if ( 'ASC' !== $sort && 'DESC' !== $sort ) {
+				$sort = 'DESC';
+			}
+
+			switch ( $r['order_by'] ) {
+				case 'name':
+				case 'rel1':
+				case 'rel2':
+				case 'rel3':
+					break;
+
+				default:
+					$r['order_by'] = 'id';
+					break;
+			}
+			$order_by = 'rd.' . $r['order_by'];
+
 			// id.
 			if ( ! empty( $r['id'] ) ) {
 				$id_in                  = implode( ',', wp_parse_id_list( $r['id'] ) );
@@ -1173,7 +1192,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			}
 
 			// Query first for user_reaction IDs.
-			$paged_reaction_data_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} {$pagination}";
+			$paged_reaction_data_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort} {$pagination}";
 
 			/**
 			 * Filters the paged reaction data MySQL statement.
@@ -1236,7 +1255,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				 * @param string $sort      Sort direction for query.
 				 */
 				$sql                     = 'SELECT count(DISTINCT rd.id) FROM ' . self::$reaction_data_table . " rd {$join_sql} {$where_sql}";
-				$total_reaction_data_sql = apply_filters( 'bb_get_reactions_data_total_sql', $sql, $where_sql );
+				$total_reaction_data_sql = apply_filters( 'bb_get_reactions_data_total_sql', $sql, $where_sql, $sort );
 				$cached                  = bp_core_get_incremented_cache( $total_reaction_data_sql, self::$cache_group );
 				if ( false === $cached ) {
 					$total_reaction_data = $wpdb->get_var( $total_reaction_data_sql );
