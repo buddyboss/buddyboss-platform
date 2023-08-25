@@ -589,6 +589,7 @@ add_action( 'bb_reaction_after_remove_user_item_reactions', 'bb_reaction_clear_c
  * @return void
  */
 function bb_reaction_clear_cache_reactions_data( $reaction_data_id ) {
+	bp_core_reset_incrementor( 'bb_reaction_data' );
 	if ( ! empty( $reaction_data_id ) ) {
 		wp_cache_delete( $reaction_data_id, 'bb_reaction_data' );
 	}
