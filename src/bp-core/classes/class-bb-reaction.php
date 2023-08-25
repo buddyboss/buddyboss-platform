@@ -622,6 +622,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				array(
 					'item_id'   => $get->item_id,
 					'item_type' => $get->item_type,
+					'user_id'   => $get->user_id,
 				),
 				'remove'
 			);
@@ -1469,27 +1470,23 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$item_id   = $args['item_id'];
 			$item_type = $args['item_type'];
 
-			$total_item_reactions_data = $this->bb_get_reactions_data(
+			$total_item_reactions_count = 0;
+
+			$all_reactions = $this->bb_get_user_reactions(
 				array(
-					'name'        => 'total_item_reactions_count',
-					'rel1'        => $item_type,
-					'rel2'        => $item_id,
-					'count_total' => false,
+					'count_total' => true,
+					'per_page'    => 1,
+					'paged'       => 1,
+					'item_type'   => $item_type,
+					'item_id'     => $item_id,
 				)
 			);
 
-			$total_item_reactions_data  = ! empty( $total_item_reactions_data['reaction_data'] ) ? current( $total_item_reactions_data['reaction_data'] ) : array();
-			$total_item_reactions_count = ! empty( $total_item_reactions_data->value ) ? (int) $total_item_reactions_data->value : 0;
-
-			if ( 'add' === $action ) {
-				++ $total_item_reactions_count;
-			} else {
-				if ( 0 !== $total_item_reactions_count ) {
-					-- $total_item_reactions_count;
-				}
+			if ( isset( $all_reactions['total'] ) ) {
+				$total_item_reactions_count = $all_reactions['total'];
 			}
 
-			$this->bb_add_reactions_data(
+			$total_item_reactions_data = $this->bb_add_reactions_data(
 				array(
 					'name'  => 'total_item_reactions_count',
 					'value' => $total_item_reactions_count,
