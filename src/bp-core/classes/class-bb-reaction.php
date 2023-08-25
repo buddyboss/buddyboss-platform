@@ -1467,12 +1467,11 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param array  $args   Args of reaction data.
-		 * @param string $action Add or remove the user reaction.
+		 * @param array $args Args of reaction data.
 		 *
 		 * @return false|int|WP_Error
 		 */
-		public function bb_total_item_reactions_count( $args, $action ) {
+		public function bb_total_item_reactions_count( $args ) {
 
 			$item_id   = $args['item_id'];
 			$item_type = $args['item_type'];
@@ -1515,10 +1514,9 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param array  $args   Args of reaction data.
-		 * @param string $action Add or remove the user reaction.
+		 * @param array $args Args of reaction data.
 		 */
-		public function bb_total_item_reaction_reactions_count( $args, $action ) {
+		public function bb_total_item_reaction_reactions_count( $args ) {
 			global $wpdb;
 
 			$reaction_id = $args['reaction_id'];
@@ -1575,18 +1573,14 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			}
 		}
 
-
 		/**
 		 * Add or update total reaction count.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param array  $args   Args of reaction data.
-		 * @param string $action Add or remove the user reaction.
-		 *
 		 * @return false|int|WP_Error
 		 */
-		public function bb_total_reactions_count( $args, $action ) {
+		public function bb_total_reactions_count() {
 			$total_reactions_count = 0;
 
 			$all_reactions = $this->bb_get_user_reactions(
@@ -1658,9 +1652,9 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$item_id   = $args['item_id'];
 			$item_type = $args['item_type'];
 
-			$this->bb_total_item_reactions_count( $args, $action ); // total_item_reactions_count.
-			$this->bb_total_item_reaction_reactions_count( $args, $action ); // total_item_reaction_count.
-			$this->bb_total_reactions_count( $args, $action ); // total_reactions_count.
+			$this->bb_total_item_reactions_count( $args ); // total_item_reactions_count.
+			$this->bb_total_item_reaction_reactions_count( $args ); // total_item_reaction_count.
+			$this->bb_total_reactions_count(); // total_reactions_count.
 
 			// Calculate total counts of each reaction for the item.
 			// phpcs:ignore
