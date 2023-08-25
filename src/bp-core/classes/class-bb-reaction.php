@@ -1532,9 +1532,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$item_id     = $args['item_id'];
 			$item_type   = $args['item_type'];
 
-			$data_sql      = "SELECT reaction_id, count(id) AS total FROM " . self::$user_reaction_table . " WHERE item_type = %s and item_id = %d GROUP BY reaction_id;";
-			$sql           = $wpdb->prepare( $data_sql, $item_type, $item_id ); // phpcs:ignore
-			$reaction_data = $wpdb->get_results( $sql ); // phpcs:ignore
+			$reaction_data = $this->bb_get_reaction_reactions_count( $args );
 
 			if ( ! empty( $reaction_data ) ) {
 				foreach ( $reaction_data as $key => $value ) {
@@ -1665,20 +1663,12 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$this->bb_total_reactions_count(); // total_reactions_count.
 
 			// Calculate total counts of each reaction for the item.
-			// phpcs:ignore
-			$reaction_counts = $wpdb->get_results(
-				$wpdb->prepare(
-					"SELECT reaction_id, COUNT(*) AS count FROM " . self::$user_reaction_table . " WHERE item_type = %s AND item_id = %d GROUP BY reaction_id",
-					$item_type,
-					$item_id
-				),
-				ARRAY_A
-			);
+			$reaction_counts = $this->bb_get_reaction_reactions_count( $args );
 
 			$total_item_reaction_count = array_reduce(
 				$reaction_counts,
 				function ( $data, $item ) {
-					$data[ $item['reaction_id'] ] = intval( $item['count'] );
+					$data[ $item->reaction_id ] = intval( $item->total );
 
 					return $data;
 				},
@@ -1799,6 +1789,27 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					bp_update_option( 'bb_reactions_default_like_reaction_added', (int) $reaction_id );
 				}
 			}
+		}
+
+		/**
+		 * Function to fetch reaction total count with id.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $args Array of arguments.
+		 *
+		 * @return array|object|stdClass[]|null
+		 */
+		public function bb_get_reaction_reactions_count( $args ) {
+			global $wpdb;
+
+			$item_id   = $args['item_id'];
+			$item_type = $args['item_type'];
+
+			$data_sql = "SELECT reaction_id, count(id) AS total FROM " . self::$user_reaction_table . " WHERE item_type = %s and item_id = %d GROUP BY reaction_id;";
+			$sql      = $wpdb->prepare( $data_sql, $item_type, $item_id ); // phpcs:ignore
+
+			return $wpdb->get_results( $sql );
 		}
 	}
 }
