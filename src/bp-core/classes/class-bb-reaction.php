@@ -1624,7 +1624,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			// phpcs:ignore
 			$reaction_counts = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT reaction_id, COUNT(*) AS count FROM {$wpdb->prefix}bb_user_reactions WHERE item_type = %s AND item_id = %d GROUP BY reaction_id",
+					"SELECT reaction_id, COUNT(*) AS count FROM " . self::$user_reaction_table . " WHERE item_type = %s AND item_id = %d GROUP BY reaction_id",
 					$item_type,
 					$item_id
 				),
