@@ -1673,6 +1673,7 @@ class BP_Activity_Activity {
 				$sql['misc'] = apply_filters( 'bp_activity_comments_get_misc_sql', $sql['misc'] );
 
 				$sql = "{$sql['select']} {$sql['from']} {$sql['where']} {$sql['misc']}";
+				$sql = $wpdb->prepare( $sql, $top_level_parent_id, $left, $right );
 
 				$descendant_ids = $wpdb->get_col( $sql );
 				$descendants    = self::get_activity_data( $descendant_ids );
