@@ -472,6 +472,12 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				}
 
 				return false;
+			} elseif ( empty( $r['user_id'] ) ) {
+				if ( 'wp_error' === $r['error_type'] ) {
+					return new WP_Error( 'bb_user_reactions_empty_user_id', __( 'Invalid User ID.', 'buddyboss' ) );
+				}
+
+				return false;
 			}
 
 			$all_registered_reaction_types = $this->bb_get_registered_reaction_item_types();
