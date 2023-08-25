@@ -382,7 +382,6 @@ function bp_document_get( $args = '' ) {
 			'privacy'             => $r['privacy'],
 			'in'                  => ! empty( $r['include'] ) ? $r['include'] : $r['in'],
 			'exclude'             => $r['exclude'],
-			'in'                  => $r['include'],
 			'count_total'         => $r['count_total'],
 			'fields'              => $r['fields'],
 			'user_directory'      => $r['user_directory'],
