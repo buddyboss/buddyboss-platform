@@ -867,7 +867,7 @@ function bbp_list_forums( $args = '' ) {
 		return;
 	}
 
-	$output = bbp_list_forums_recursive( $args, 3 );
+	$output = bbp_list_forums_recursive( $args );
 
 	/**
 	 * Filters the output of forums list.
@@ -892,7 +892,6 @@ function bbp_list_forums( $args = '' ) {
  *                    - forum_id: Forum id. Defaults to ''
  *                    - show_topic_count - To show forum topic count or not. Defaults to true
  *                    - show_reply_count - To show forum reply count or not. Defaults to true
- * @param int   $depth The level of nesting.
  *
  * @uses bbp_forum_get_subforums() To check if the forum has subforums or not
  * @uses bbp_get_forum_permalink() To get forum permalink
@@ -903,11 +902,7 @@ function bbp_list_forums( $args = '' ) {
  *
  * @return mixed
  */
-function bbp_list_forums_recursive( $args = array(), $depth = 1 ) {
-
-	if ( $depth <= 0 ) {
-		return '';
-	}
+function bbp_list_forums_recursive( $args = array() ) {
 
 	$r = bbp_parse_args(
 		$args,
@@ -964,7 +959,7 @@ function bbp_list_forums_recursive( $args = array(), $depth = 1 ) {
 				esc_html( bbp_get_forum_title( $sub_forum->ID ) ),
 				$counts,
 				$show_sep,
-				bbp_list_forums_recursive( array( 'forum_id' => $sub_forum->ID ), $depth - 1 ),
+				bbp_list_forums_recursive( array( 'forum_id' => $sub_forum->ID ) ),
 				$r['link_after'],
 			);
 		}
