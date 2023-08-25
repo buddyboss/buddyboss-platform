@@ -995,21 +995,14 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0 ) {
 
 		// Add user reaction.
 		if ( ! empty( $activity_id ) && function_exists( 'bb_load_reaction' ) ) {
-			$parent_activity = new BP_Activity_Activity( $activity_id );
-
-			if (
-				! empty( $parent_activity ) &&
-				'activity_update' === $parent_activity->type
-			) {
-				$reaction_id = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
-				bb_load_reaction()->bb_add_user_item_reaction(
-					array(
-						'item_type'   => 'activity',
-						'reaction_id' => $reaction_id,
-						'item_id'     => $activity_id,
-					)
-				);
-			}
+			$reaction_id = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
+			bb_load_reaction()->bb_add_user_item_reaction(
+				array(
+					'item_type'   => 'activity',
+					'reaction_id' => $reaction_id,
+					'item_id'     => $activity_id,
+				)
+			);
 		}
 
 		// Success.
@@ -1101,6 +1094,7 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0 ) {
 					bb_load_reaction()->bb_remove_user_item_reactions(
 						array(
 							'item_id'     => $activity_id,
+							'item_type'   => 'activity',
 							'user_id'     => $user_id,
 							'reaction_id' => $reaction_id,
 						)

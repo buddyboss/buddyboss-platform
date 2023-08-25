@@ -545,10 +545,29 @@ add_action( 'bb_subscriptions_after_update_secondary_item_id', 'bb_subscriptions
  *
  * @return void
  */
-function bb_reaction_clear_cache_user_item() {
+function bb_reaction_clear_cache_user_item( $user_reaction_id ) {
 	bp_core_reset_incrementor( 'bb_reactions' );
+	if ( ! empty( $user_reaction_id ) ) {
+		wp_cache_delete( $user_reaction_id, 'bb_reactions' );
+	}
 }
 
-add_action( 'bb_reaction_after_add_user_item_reaction', 'bb_reaction_clear_cache_user_item', 10 );
-add_action( 'bb_reaction_after_remove_user_item_reactions', 'bb_reaction_clear_cache_user_item', 10 );
-add_action( 'bb_reaction_after_remove_user_item_reaction', 'bb_reaction_clear_cache_user_item', 10 );
+add_action( 'bb_reaction_after_add_user_item_reaction', 'bb_reaction_clear_cache_user_item', 10, 1 );
+add_action( 'bb_reaction_after_remove_user_item_reaction', 'bb_reaction_clear_cache_user_item', 10, 1 );
+
+function bb_reaction_clear_cache_remove_user_item( $deleted, $r, $reactions ) {
+	bp_core_reset_incrementor( 'bb_reactions' );
+	if ( ! empty( $reactions ) ) {
+		foreach ( $reactions as $reaction ) {
+			wp_cache_delete( $reaction->id, 'bb_reactions' );
+		}
+	}
+}
+
+add_action( 'bb_reaction_after_remove_user_item_reactions', 'bb_reaction_clear_cache_remove_user_item', 10, 3 );
+
+function bb_reaction_clear_cache_reactions_data( $reaction_data_id ) {
+	wp_cache_delete( 'rd_' . $reaction_data_id, 'bb_reactions' );
+}
+
+add_action( 'bb_reaction_after_add_reactions_data', 'bb_reaction_clear_cache_reactions_data', 10, 1 );
