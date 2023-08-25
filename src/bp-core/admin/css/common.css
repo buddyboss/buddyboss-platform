@@ -3574,7 +3574,7 @@ table.moderations .column-member img {
 }
 
 .registration-restrictions-rule-list.bb-sortable .registration-restrictions-rule {
-  padding-left: 60px;
+  padding-left: 40px;
 }
 
 .registration-restrictions-rule-list.bb-sortable .registration-restrictions-rule:before {
@@ -3587,7 +3587,7 @@ table.moderations .column-member img {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  left: 30px;
+  left: 10px;
 }
 
 .registration-restrictions-rule-list.bb-sortable .registration-restrictions-rule.ui-sortable-helper:before {
