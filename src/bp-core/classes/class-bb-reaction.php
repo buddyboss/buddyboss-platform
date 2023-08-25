@@ -68,7 +68,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		public static $reaction_data_table = '';
 
 		/**
-		 * Cache group.
+		 * Cache group for user reaction.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -78,7 +78,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		public static $cache_group = 'bb_reactions';
 
 		/**
-		 * Cache group.
+		 * Cache group for reaction data.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -652,7 +652,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @param array $args Args of user reactions.
 		 *
-		 * @return bool|int|WP_Error|null
+		 * @return bool|int|mysqli_result|resource
 		 */
 		public function bb_remove_user_item_reactions( $args ) {
 			global $wpdb;
@@ -1526,9 +1526,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @param array $args Args of reaction data.
 		 */
 		public function bb_total_item_reaction_reactions_count( $args ) {
-			global $wpdb;
 
-			$reaction_id = $args['reaction_id'];
 			$item_id     = $args['item_id'];
 			$item_type   = $args['item_type'];
 
@@ -1653,10 +1651,6 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @return false|int|WP_Error
 		 */
 		public function bb_fetch_reaction_counts( $args ) {
-			global $wpdb;
-
-			$item_id   = $args['item_id'];
-			$item_type = $args['item_type'];
 
 			$this->bb_total_item_reactions_count( $args ); // total_item_reactions_count.
 			$this->bb_total_item_reaction_reactions_count( $args ); // total_item_reaction_count.
