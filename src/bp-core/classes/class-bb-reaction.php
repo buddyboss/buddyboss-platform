@@ -579,7 +579,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			 */
 			do_action( 'bb_reaction_after_add_user_item_reaction', $user_reaction_id, $r );
 
-			$this->bb_prepare_reaction_summary_data( $r, 'add' );
+			$this->bb_prepare_reaction_summary_data( $r );
 
 			return $this->bb_get_user_reaction( $user_reaction_id );
 		}
@@ -639,8 +639,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'item_id'   => $get->item_id,
 					'item_type' => $get->item_type,
 					'user_id'   => $get->user_id,
-				),
-				'remove'
+				)
 			);
 
 			return $deleted;
@@ -728,7 +727,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			 */
 			do_action( 'bb_reaction_after_remove_user_item_reactions', $deleted, $r, $get_reaction );
 
-			$this->bb_prepare_reaction_summary_data( $r, 'remove' );
+			$this->bb_prepare_reaction_summary_data( $r );
 
 			return $deleted;
 		}
@@ -1412,12 +1411,11 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param array  $args   Args of reaction data.
-		 * @param string $action Add or remove the user reaction.
+		 * @param array $args Args of reaction data.
 		 *
 		 * @return false|int|WP_Error
 		 */
-		public function bb_prepare_reaction_summary_data( $args, $action ) {
+		public function bb_prepare_reaction_summary_data( $args ) {
 			if ( empty( $args['item_id'] ) && empty( $args['item_type'] ) ) {
 				return false;
 			}
@@ -1426,7 +1424,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$item_type = $args['item_type'];
 
 			// Calculate total counts of each reaction and sum of all that reactions.
-			$reaction_counts = $this->bb_fetch_reaction_counts( $args, $action );
+			$reaction_counts = $this->bb_fetch_reaction_counts( $args );
 
 			// Fetch latest 10 reactions.
 			$latest_reaction = $this->bb_get_user_reactions(
@@ -1652,12 +1650,11 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param array  $args   Args of reaction data.
-		 * @param string $action Add or remove the user reaction.
+		 * @param array $args Args of reaction data.
 		 *
 		 * @return false|int|WP_Error
 		 */
-		public function bb_fetch_reaction_counts( $args, $action ) {
+		public function bb_fetch_reaction_counts( $args ) {
 			global $wpdb;
 
 			$item_id   = $args['item_id'];
