@@ -2287,10 +2287,7 @@ function bp_embed_message_cache( $cache, $id, $cachekey ) {
 	if (
 		! empty( $data ) &&
 		false !== strpos( $data, 'loom.com' ) &&
-		(
-			false !== strpos( $data, 'sandbox' ) ||
-			false !== strpos( $data, 'security' )
-		)
+		false !== strpos( $data, 'sandbox' )
 	) {
 		return false;
 	}
