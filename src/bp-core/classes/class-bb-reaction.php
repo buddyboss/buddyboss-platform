@@ -412,7 +412,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @return void
 		 */
-		private function bb_register_reaction_item_type( $type, $args ) {
+		public function bb_register_reaction_item_type( $type, $args ) {
 			$r = bp_parse_args(
 				$args,
 				array(
@@ -424,7 +424,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			if (
 				empty( $r['reaction_type'] ) ||
 				empty( $r['validate_callback'] ) ||
-				isset( $this->registered_reaction_types[ $r['reaction_type'] ] )
+				isset( $this->registered_reaction_types[ $r['reaction_type'] ] ) ||
+				! preg_match('/^[a-zA-Z0-9_-]+$/', $r['reaction_type'] )
 			) {
 				return;
 			}
