@@ -2442,48 +2442,6 @@ function buddyboss_menu_order( $menu_order ) {
 add_filter( 'menu_order', 'buddyboss_menu_order' );
 
 /**
- * Fix the issue with loom embed not working correctly.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $return The returned oEmbed HTML.
- * @param object $data   A data object result from an oEmbed provider.
- * @param string $url    The URL of the content to be embedded.
- *
- * @return array|mixed|string|string[]|null
- */
-function bb_oembed_dataparse( $return, $data, $url ) {
-	if ( ! empty( $return ) && false !== strpos( $return, 'loom.com' ) ) {
-		$return = preg_replace( '/\s*sandbox\s*=\s*(["\']).*?\1/', '', $return );
-		$return = preg_replace( '/\s*security\s*=\s*(["\']).*?\1/', '', $return );
-	}
-
-	return $return;
-}
-
-add_filter( 'oembed_dataparse', 'bb_oembed_dataparse', 999, 3 );
-
-/**
- * Make the loom video embed discoverable.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param bool   $retval Return value to enabled discover support or not.
- * @param string $url    URL to parse for embed.
- *
- * @return bool
- */
-function bb_loom_oembed_discover_support( $retval, $url ) {
-	if ( ! empty( $url ) && false !== strpos( $url, 'loom.com' ) ) {
-		$retval = true;
-	}
-
-	return $retval;
-}
-
-add_filter( 'bb_oembed_discover_support', 'bb_loom_oembed_discover_support', 10, 2 );
-
-/**
  * Function to remove html entity from number format.
  *
  * @since BuddyBoss 2.3.1
