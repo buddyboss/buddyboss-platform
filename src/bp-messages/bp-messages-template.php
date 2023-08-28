@@ -2468,7 +2468,7 @@ function bb_get_thread_sent_date( $last_message_date = false ) {
 						}
 						break;
 					case 1:
-						$output = bp_core_get_format_date( $old_last_date, 'g:i A' );
+						$output = bp_core_get_format_date( $old_last_date, get_option( 'time_format' ) );
 						break;
 					default:
 						$output = $right_now_text;
@@ -2676,7 +2676,7 @@ function bb_get_the_thread_message_sent_time() {
 
 	$sent_date_formatted      = $thread_template->message->date_sent;
 	$site_sent_date           = get_date_from_gmt( $sent_date_formatted );
-	$thread_message_sent_time = date_i18n( 'g:i A', strtotime( $site_sent_date ) );
+	$thread_message_sent_time = date_i18n( get_option( 'time_format' ), strtotime( $site_sent_date ) );
 
 	/**
 	 * Filters the 'Sent x hours ago' string for the current message.
