@@ -670,7 +670,7 @@ class BBP_Forums_Widget extends WP_Widget {
 						?>
 					</span>
 					<?php
-					if ( 'any' === $parent_id ) {
+					if ( 0 !== $parent_id ) {
 						$r = array(
 							'before'           => '<ul class="bb-sidebar-forums">',
 							'after'            => '</ul>',
