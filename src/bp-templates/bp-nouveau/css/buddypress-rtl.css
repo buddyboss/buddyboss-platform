@@ -3207,8 +3207,8 @@ div[class*="attached-gif-container"] .gif-icon {
 }
 
 .gif-media-search-dropdown .gif-alert [class*="bb-icon"] {
-  font-size: 30px !important;
-  color: #333 !important;
+  font-size: 30px;
+  color: #333;
   opacity: 0.4;
 }
 
@@ -19695,20 +19695,20 @@ img.emoji,
 img.emojioneemoji {
   display: inline-block;
   margin: 3px;
-  width: 24px !important;
-  height: 24px !important;
+  width: 24px;
+  height: 24px;
 }
 
 .emojionearea-filters img.emoji,
 .emojionearea-filters img.emojioneemoji {
-  max-width: 20px !important;
-  max-height: 20px !important;
-  width: 20px !important;
-  height: auto !important;
+  max-width: 20px;
+  max-height: 20px;
+  width: 20px;
+  height: auto;
 }
 
 .emojionearea-filters .emojionearea-filter-flags img.emojioneemoji {
-  max-width: 14px !important;
+  max-width: 14px;
 }
 
 .bb-media-only-privacy {
@@ -25584,6 +25584,10 @@ div.dropzone.dz-started .dz-default.dz-message {
   color: #fff;
 }
 
+.dropzone.video-dropzone .dz-preview.dz-processing:not(.dz-complete) .dz-details .dz-filename {
+  display: none;
+}
+
 .dropzone.video-dropzone div.dz-preview.dz-file-preview .dz-remove {
   position: absolute;
   bottom: 5px;
@@ -25659,6 +25663,10 @@ div.dropzone.dz-started .dz-default.dz-message {
   position: absolute;
   top: 0;
   right: 0;
+}
+
+.dropzone.video-dropzone .dz-preview.dz-file-preview.dz-has-thumbnail:not(.dz-error) .dz-details .dz-filename {
+  display: none;
 }
 
 .dropzone.video-dropzone .dz-preview:not(.dz-has-thumbnail) .dz-progress-ring-wrap {

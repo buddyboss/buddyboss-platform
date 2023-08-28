@@ -3849,9 +3849,10 @@ function bp_member_type_shortcode_callback( $atts ) {
 	// Get a BuddyPress members-loop template part for display in a theme.
 	bp_get_template_part( 'members/members-loop' );
 
-	echo '</div>';
-	echo '</div>';
-	echo '</div>';
+	echo '</div> <!-- #members-dir-list -->';
+	echo '</div><!-- .members-directory-content -->';
+	echo '</div><!-- .members -->';
+	echo '</div><!-- #buddypress -->';
 
 	return ob_get_clean();
 

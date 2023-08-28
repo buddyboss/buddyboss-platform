@@ -139,21 +139,29 @@ function bbp_has_forums( $args = '' ) {
 		$default_post_parent = bbp_get_forum_id();
 	}
 
+	$default_forum_search = bbp_sanitize_search_request( 'fs' );
+
 	// Parse arguments with default forum query for most circumstances
 	$bbp_f = bbp_parse_args(
 		$args,
 		array(
-			'post_type'           => bbp_get_forum_post_type(),
-			'post_parent'         => $default_post_parent,
-			'post_status'         => bbp_get_public_status_id(),
-			'posts_per_page'      => bbp_get_forums_per_page(),
-			'ignore_sticky_posts' => true,
-			'orderby'             => 'menu_order title',
-			'order'               => 'ASC',
-			'paged'               => bbp_get_paged(),           // Page Number
+			'post_type'                => bbp_get_forum_post_type(),
+			'post_parent'              => $default_post_parent,
+			'post_status'              => bbp_get_public_status_id(),
+			'posts_per_page'           => bbp_get_forums_per_page(),
+			'ignore_sticky_posts'      => true,
+			'orderby'                  => 'menu_order title',
+			'order'                    => 'ASC',
+			'paged'                    => bbp_get_paged(),           // Page Number.
+			'update_post_family_cache' => true,                      // Conditionally prime the cache for related posts.
 		),
 		'has_forums'
 	);
+
+	// Only add 's' arg if searching for forums.
+	if ( ! empty( $default_forum_search ) ) {
+		$bbp_f['s'] = $default_forum_search;
+	}
 
 	if ( ! empty( $default_post_parent ) ) {
 		$bbp_f['paged'] = bb_get_forum_paged();
@@ -166,6 +174,11 @@ function bbp_has_forums( $args = '' ) {
 		$bbp->forum_query = new WP_Query( $bbp_f );
 
 		$bbp_forum_query_cache[ $cache_key ] = $bbp->forum_query;
+
+		// Maybe prime last active posts.
+		if ( ! empty( $bbp_f['update_post_family_cache'] ) ) {
+			bbp_update_post_family_caches( $bbp->forum_query->posts );
+		}
 	} else {
 		$bbp->forum_query = $bbp_forum_query_cache[ $cache_key ];
 	}
@@ -1517,31 +1530,29 @@ function bbp_get_forum_topics_link( $forum_id = 0 ) {
 	$forum_id = $forum->ID;
 	$topics   = sprintf( _n( '%s discussion', '%s discussions', bbp_get_forum_topic_count( $forum_id, true, false ), 'buddyboss' ), bbp_get_forum_topic_count( $forum_id ) );
 	$retval   = '';
+	$link     = bbp_get_forum_permalink( $forum_id );
 
 	// First link never has view=all
 	if ( bbp_get_view_all( 'edit_others_topics' ) ) {
-		$retval .= "<a href='" . esc_url( bbp_remove_view_all( bbp_get_forum_permalink( $forum_id ) ) ) . "'>" . esc_html( $topics ) . '</a>';
+		$retval .= "<a href='" . esc_url( bbp_remove_view_all( $link ) ) . "'>" . esc_html( $topics ) . '</a>';
 	} else {
 		$retval .= esc_html( $topics );
 	}
 
 	// Get deleted topics
-	$deleted = bbp_get_forum_topic_count_hidden( $forum_id );
+	$deleted_int = bbp_get_forum_topic_count_hidden( $forum_id, false, true );
 
 	// This forum has hidden topics
-	if ( ! empty( $deleted ) && current_user_can( 'edit_others_topics' ) ) {
+	if ( ! empty( $deleted_int ) && current_user_can( 'edit_others_topics' ) ) {
 
-		// Extra text
-		$extra = sprintf( __( ' (+ %d hidden)', 'buddyboss' ), $deleted );
+		// Hidden text.
+		$deleted_num = bbp_get_forum_topic_count_hidden( $forum_id, false, false );
+		$extra       = ' ' . sprintf( _n( '(+%s hidden)', '(+%s hidden)', $deleted_int, 'buddyboss' ), $deleted_num );
 
-		// No link
-		if ( bbp_get_view_all() ) {
-			$retval .= " $extra";
-
-			// Link
-		} else {
-			$retval .= " <a href='" . esc_url( bbp_add_view_all( bbp_get_forum_permalink( $forum_id ), true ) ) . "'>" . esc_html( $extra ) . '</a>';
-		}
+		// Hidden link.
+		$retval .= ! bbp_get_view_all( 'edit_others_topics' )
+			? " <a href='" . esc_url( bbp_add_view_all( $link, true ) ) . "'>" . esc_html( $extra ) . "</a>"
+			: " {$extra}";
 	}
 
 	return apply_filters( 'bbp_get_forum_topics_link', $retval, $forum_id );
@@ -1689,16 +1700,16 @@ function bbp_forum_post_count( $forum_id = 0, $total_count = true, $integer = fa
  * @param boolean $integer      Optional. Whether or not to format the result
  *
  * @return int Forum post count
- * @uses                  get_post_meta() To get the forum post count
- * @uses                  apply_filters() Calls 'bbp_get_forum_post_count' with the
- *                        post count and forum id
- * @uses                  bbp_get_forum_id() To get the forum id
+ * @uses get_post_meta() To get the forum post count
+ * @uses apply_filters() Calls 'bbp_get_forum_post_count' with the post count and forum id
+ * @uses bbp_get_forum_id() To get the forum id
+ * @uses bbp_get_forum_topic_count() To get the reply count
+ * @uses bbp_get_forum_reply_count() To get the reply count
  */
 function bbp_get_forum_post_count( $forum_id = 0, $total_count = true, $integer = false ) {
 	$forum_id = bbp_get_forum_id( $forum_id );
 	$topics   = bbp_get_forum_topic_count( $forum_id, $total_count, true );
-	$meta_key = empty( $total_count ) ? '_bbp_reply_count' : '_bbp_total_reply_count';
-	$replies  = (int) get_post_meta( $forum_id, $meta_key, true );
+	$replies  = bbp_get_forum_reply_count( $forum_id, $total_count, true );
 	$retval   = $replies + $topics;
 	$filter   = ( true === $integer ) ? 'bbp_get_forum_post_count_int' : 'bbp_get_forum_post_count';
 
@@ -2449,35 +2460,26 @@ function bbp_form_forum_subscribed() {
  */
 function bbp_get_form_forum_subscribed() {
 
-	// Get _POST data
+	// Default value.
+	$forum_subscribed = false;
+
+	// Get _POST data.
 	if ( bbp_is_post_request() && isset( $_POST['bbp_forum_subscription'] ) ) {
 		$forum_subscribed = (bool) $_POST['bbp_forum_subscription'];
 
-		// Get edit data
+		// Get edit data.
 	} elseif ( bbp_is_forum_edit() || bbp_is_reply_edit() ) {
 
-		// Get current posts author
-		$post_author = bbp_get_global_post_field( 'post_author', 'raw' );
+		// Get current posts author.
+		$post_author      = (int) bbp_get_global_post_field( 'post_author', 'raw' );
+		$forum_subscribed = bbp_is_user_subscribed( $post_author, bbp_get_forum_id() );
 
-		// Post author is not the current user
-		if ( bbp_get_current_user_id() !== $post_author ) {
-			$forum_subscribed = bbp_is_user_subscribed_to_forum( $post_author );
-
-			// Post author is the current user
-		} else {
-			$forum_subscribed = bbp_is_user_subscribed_to_forum( bbp_get_current_user_id() );
-		}
-
-		// Get current status
+		// Get current status.
 	} elseif ( bbp_is_single_forum() ) {
-		$forum_subscribed = bbp_is_user_subscribed_to_forum( bbp_get_current_user_id() );
-
-		// No data
-	} else {
-		$forum_subscribed = false;
+		$forum_subscribed = bbp_is_user_subscribed( bbp_get_current_user_id(), bbp_get_forum_id() );
 	}
 
-	// Get checked output
+	// Get checked output.
 	$checked = checked( $forum_subscribed, true, false );
 
 	return apply_filters( 'bbp_get_form_forum_subscribed', $checked, $forum_subscribed );
@@ -2562,17 +2564,13 @@ function bbp_get_form_forum_type_dropdown( $args = '' ) {
 	// Start an output buffer, we'll finish it after the select loop
 	ob_start(); ?>
 
-    <select name="<?php echo esc_attr( $r['select_id'] ); ?>"
-            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo esc_attr( $tab ); ?>
-            <?php echo $can_update === false ? esc_attr( 'disabled="disabled"' ) : '' ; ?>>
+	<select name="<?php echo esc_attr( $r['select_id'] ); ?>" id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo esc_attr( $tab ); ?> <?php echo $can_update === false ? esc_attr( 'disabled="disabled"' ) : ''; ?>>
 
-		<?php foreach ( bbp_get_forum_types() as $key => $label ) : ?>
-
-            <option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $r['selected'] ); ?>><?php echo esc_html( $label ); ?></option>
-
+		<?php foreach ( bbp_get_forum_types( $r['forum_id'] ) as $key => $label ) : ?>
+			<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $r['selected'] ); ?>><?php echo esc_html( $label ); ?></option>
 		<?php endforeach; ?>
 
-    </select>
+	</select>
 
 	<?php
 
@@ -2656,16 +2654,13 @@ function bbp_get_form_forum_status_dropdown( $args = '' ) {
 	ob_start();
 	?>
 
-    <select name="<?php echo esc_attr( $r['select_id'] ); ?>"
-            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?>>
+	<select name="<?php echo esc_attr( $r['select_id'] ); ?>" id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?>>
 
-		<?php foreach ( bbp_get_forum_statuses() as $key => $label ) : ?>
-
-            <option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $r['selected'] ); ?>><?php echo esc_html( $label ); ?></option>
-
+		<?php foreach ( bbp_get_forum_statuses( $r['forum_id'] ) as $key => $label ) : ?>
+			<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $r['selected'] ); ?>><?php echo esc_html( $label ); ?></option>
 		<?php endforeach; ?>
 
-    </select>
+	</select>
 
 	<?php
 
@@ -2752,16 +2747,13 @@ function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
 	ob_start();
 	?>
 
-    <select name="<?php echo esc_attr( $r['select_id'] ); ?>"
-            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo esc_attr( $tab ); ?> <?php echo $disabled ? esc_attr( 'disabled="disabled"' ) : ''; ?>>
+	<select name="<?php echo esc_attr( $r['select_id'] ); ?>" id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo esc_attr( $tab ); ?> <?php echo $disabled ? esc_attr( 'disabled="disabled"' ) : ''; ?>>
 
-		<?php foreach ( bbp_get_forum_visibilities() as $key => $label ) : ?>
-
-            <option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $r['selected'] ); ?>><?php echo esc_html( $label ); ?></option>
-
+		<?php foreach ( bbp_get_forum_visibilities( $r['forum_id'] ) as $key => $label ) : ?>
+			<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $r['selected'] ); ?>><?php echo esc_html( $label ); ?></option>
 		<?php endforeach; ?>
 
-    </select>
+	</select>
 
 	<?php
 
