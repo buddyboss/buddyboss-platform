@@ -628,7 +628,7 @@ class BBP_Forums_Widget extends WP_Widget {
 		$widget_query = new WP_Query(
 			array(
 				'post_type'              => bbp_get_forum_post_type(),
-				'post_parent'            => 0,
+				'post_parent'            => 'any' !== $parent_id ? $parent_id : 0,
 				'post_status'            => bbp_get_public_status_id(),
 				// Order.
 				'posts_per_page'         => bbp_get_forums_per_page(),
@@ -670,7 +670,7 @@ class BBP_Forums_Widget extends WP_Widget {
 						?>
 					</span>
 					<?php
-					if ( 0 !== $parent_id ) {
+					if ( 'any' === $parent_id ) {
 						$r = array(
 							'before'           => '<ul class="bb-sidebar-forums">',
 							'after'            => '</ul>',
