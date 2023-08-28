@@ -1613,7 +1613,7 @@ class BP_Email_Tokens {
 	public function token__reply_content( $bp_email, $formatted_tokens, $tokens ) {
 		$output = '';
 
-		if ( empty( $formatted_tokens['reply.content'] ) || empty( $formatted_tokens['reply.id'] ) ) {
+		if ( empty( $formatted_tokens['reply.id'] ) ) {
 			return $output;
 		}
 
@@ -1655,6 +1655,16 @@ class BP_Email_Tokens {
 		$gif_data = array();
 		if ( bp_is_active( 'media' ) && bp_is_forums_gif_support_enabled() && ! empty( $tokens['reply.id'] ) ) {
 			$gif_data = get_post_meta( $tokens['reply.id'], '_gif_data', true );
+		}
+
+		if ( 
+			empty( $formatted_tokens['reply.content'] ) &&
+			empty( $gif_data ) &&
+			empty( $document_ids ) &&
+			empty( $video_ids ) &&
+			empty( $media_ids )
+		) {
+			return $output;
 		}
 
 		ob_start();
@@ -1916,10 +1926,6 @@ class BP_Email_Tokens {
 			return $this->token__group_discussion_content( $bp_email, $formatted_tokens, $tokens );
 		}
 
-		if ( empty( $formatted_tokens['discussion.content'] ) ) {
-			return $output;
-		}
-
 		$settings = bp_email_get_appearance_settings();
 
 		$media_ids       = '';
@@ -1958,6 +1964,16 @@ class BP_Email_Tokens {
 		$gif_data = array();
 		if ( bp_is_active( 'media' ) && bp_is_forums_gif_support_enabled() && ! empty( $tokens['discussion.id'] ) ) {
 			$gif_data = get_post_meta( $tokens['discussion.id'], '_gif_data', true );
+		}
+
+		if ( 
+			empty( $formatted_tokens['discussion.content'] ) &&
+			empty( $gif_data ) &&
+			empty( $document_ids ) &&
+			empty( $video_ids ) &&
+			empty( $media_ids )
+		) {
+			return $output;
 		}
 
 		ob_start();
