@@ -394,10 +394,9 @@ jQuery( document ).ready(
 						});
 						if (targetLiElements.length > 0) {
 							targetLiElements.wrapAll('<ul></ul>');
+							// Update content into input field
+							jQuery( this ).closest( 'form' ).find( '#bbp_topic_content' ).val( window.forums_medium_topic_editor[key].getContent() );
 						}
-
-						// Update content into input field
-						jQuery( this ).closest( 'form' ).find( '#bbp_topic_content' ).val( window.forums_medium_topic_editor[key].getContent() );
 					});
 
 					if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
