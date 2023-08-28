@@ -88,6 +88,16 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		public static $rd_cache_group = 'bb_reaction_data';
 
 		/**
+		 * Check initialize action status.
+		 *
+		 * @since  BuddyBoss [BBVERSION]
+		 *
+		 * @access private
+		 * @var bool
+		 */
+		private static $status = true;
+
+		/**
 		 * Get the instance of this class.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -129,6 +139,21 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'validate_callback' => array( $this, 'bb_validate_activity_reaction_request' ),
 				)
 			);
+
+			do_action( 'bb_reaction_init' );
+
+			add_action( 'bb_reaction_init', array( $this, 'bb_initialize_status' ) );
+		}
+
+		/**
+		 * Function to check intialize status.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return void
+		 */
+		public function bb_initialize_status() {
+			self::$status = false; // Set status to false
 		}
 
 		/******************* Required functions ******************/
@@ -462,6 +487,10 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				)
 			);
 
+			if ( false === self::$status ) { // Use self::$status to check.
+				return false;
+			}
+
 			// Reaction need reaction ID.
 			if ( empty( $r['reaction_id'] ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
@@ -569,6 +598,10 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			}
 
 			$user_reaction_id = $wpdb->insert_id;
+			if ( $get_reaction ) {
+				$user_reaction_id = $get_reaction->id;
+			}
+
 
 			/**
 			 * Fires after the add user item reaction in DB.
@@ -668,6 +701,10 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'error_type'  => 'bool',
 				)
 			);
+
+			if ( false === self::$status ) { // Use self::$status to check
+				return false;
+			}
 
 			/**
 			 * Fires before the remove user item reactions.
