@@ -1025,8 +1025,7 @@ class BP_Notifications_Notification {
 		$where = self::get_query_clauses( $args );
 
 		$bp        = buddypress();
-		$where_sql = self::get_where_sql( $where );
-
+		$where_sql = self::get_where_sql( $where['data'] );
 		$notifications = $wpdb->get_results( "SELECT * FROM {$bp->notifications->table_name} {$where_sql}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		/**
