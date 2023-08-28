@@ -934,7 +934,7 @@ function bbp_list_forums( $args = '' ) {
 /**
  * Output a list of forums recursively.
  *
- * @since [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  *
  * @param mixed $args The function supports these args:
  *                    - before: To put before the output. Defaults to '<ul class="bbp-forums">'
@@ -955,7 +955,7 @@ function bbp_list_forums( $args = '' ) {
  *
  * @return mixed
  */
-function bbp_get_list_forums_recursively( $args = array() ) {
+function bb_get_list_forums_recursively( $args = array() ) {
 
 	$r = bbp_parse_args(
 		$args,
@@ -1012,12 +1012,20 @@ function bbp_get_list_forums_recursively( $args = array() ) {
 				esc_html( bbp_get_forum_title( $sub_forum->ID ) ),
 				$counts,
 				$show_sep,
-				bbp_get_list_forums_recursively( array( 'forum_id' => $sub_forum->ID ) ),
+				bb_get_list_forums_recursively( array( 'forum_id' => $sub_forum->ID ) ),
 				$r['link_after'],
 			);
 		}
 
-		$output = apply_filters( 'bbp_get_list_forums_recursively', $r['before'] . $output . $r['after'], $r );
+		/**
+		 * Modify the output of a list of forums recursively using filters.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $output The processed output of the list of forums.
+		 * @param array  $r      An array of parameters and settings related to the output.
+		 */
+		$output = apply_filters( 'bb_get_list_forums_recursively', $r['before'] . $output . $r['after'], $r );
 	}
 
 	return $output;
