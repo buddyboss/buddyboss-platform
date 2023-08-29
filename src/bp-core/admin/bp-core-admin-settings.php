@@ -2996,3 +2996,30 @@ function bb_profile_slug_tutorial() {
 	</p>
 	<?php
 }
+
+/**
+ * Enable activity comment edit.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_callback_enable_activity_comment_edit() {
+	$edit_times = bp_activity_edit_times();
+	$edit_time  = bb_get_activity_comment_edit_time();
+	?>
+
+	<input id="_bb_enable_activity_comment_edit" name="_bb_enable_activity_comment_edit" type="checkbox" value="1" <?php checked( bb_is_activity_comment_edit_enabled( false ) ); ?> />
+	<label for="_bb_enable_activity_comment_edit"><?php esc_html_e( 'Allow members to edit their comment for a duration of', 'buddyboss' ); ?></label>
+
+	<select name="_bb_activity_comment_edit_time">
+		<option value="-1"><?php esc_html_e( 'Forever', 'buddyboss' ); ?></option>
+		<?php
+		foreach ( $edit_times as $time ) {
+			$value      = isset( $time['value'] ) ? $time['value'] : 0;
+			$time_level = isset( $time['label'] ) ? $time['label'] : 0;
+			echo '<option value="' . esc_attr( $value ) . '" ' . selected( $edit_time, $value, false ) . '>' . esc_html( $time_level ) . '</option>';
+		}
+		?>
+	</select>
+
+	<?php
+}
