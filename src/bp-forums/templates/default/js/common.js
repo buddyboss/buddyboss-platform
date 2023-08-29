@@ -1,5 +1,6 @@
+/* global bp_select2, bbpCommonJsData */
 jQuery( document ).ready(
-	function () {
+	function ( $ ) {
 
 		var $tagsSelect = jQuery( 'body' ).find( '.bbp_topic_tags_dropdown' );
 		var tagsArrayData = [];
@@ -84,33 +85,38 @@ jQuery( document ).ready(
 				jQuery( element ).on(
 					'select2:select',
 					function ( e ) {
-						var bbp_topic_tags = jQuery( 'body #bbp_topic_tags' ),
+						var form = jQuery( element ).closest( 'form' ),
+							bbp_topic_tags = form.find( '#bbp_topic_tags' ),
 							existingTags   = bbp_topic_tags.val(),
-							tagsArrayData  = ( existingTags.length > 0 ) ? existingTags.split( ',' ) : [],
+							tagsArrayData  = existingTags && existingTags.length > 0 ? existingTags.split( ',' ) : [],
 							data           = e.params.data;
 
 						tagsArrayData.push( data.id );
 						var tags = tagsArrayData.join( ',' );
 						bbp_topic_tags.val( tags );
 
-						jQuery( 'body .select2-search__field' ).trigger( 'click' );
-						jQuery( 'body .select2-search__field' ).trigger( 'click' );
+						form.find( '.select2-search__field' ).trigger( 'click' );
+						form.find( '.select2-search__field' ).trigger( 'click' );
 					}
 				);
 
 				// Remove element into the Arrdata array.
 				jQuery( element ).on( 'select2:unselect', function ( e ) {
+					var form = jQuery( element ).closest( 'form' );
 					var data = e.params.data;
-					jQuery( 'body #bbp_topic_tags_dropdown option[value="' + data.id + '"]' ).remove();
-					var select_options = jQuery( 'body #bbp_topic_tags_dropdown option' );
-					var tagsArrayData = jQuery.map( select_options, function ( option ) {
+
+					form.find( '.bbp_topic_tags_dropdown option[value="' + data.id + '"]' ).remove();
+					var select_options = form.find( '.bbp_topic_tags_dropdown option' );
+					var tagsArrayData  = jQuery.map( select_options, function ( option ) {
 						return option.text;
 					} );
 					tagsArrayData = jQuery.grep( tagsArrayData, function ( value ) {
 						return value !== data.id;
 					} );
 					var tags = tagsArrayData.join( ',' );
-					jQuery( 'body #bbp_topic_tags' ).val( tags );
+
+					form.find( '#bbp_topic_tags' ).val( tags );
+
 					if ( tags.length === 0 ) {
 						jQuery( window ).scrollTop( jQuery( window ).scrollTop() + 1 );
 					}
@@ -129,6 +135,7 @@ jQuery( document ).ready(
 			jQuery( 'medium-editor-action' ).removeClass( 'medium-editor-button-active' );
 			jQuery( '.medium-editor-toolbar-actions' ).show();
 			jQuery( '.medium-editor-toolbar-form' ).removeClass( 'medium-editor-toolbar-form-active' );
+			jQuery( '#whats-new-attachments .bb-url-scrapper-container' ).remove();
 		} );
 
 		var topicReplyButton = jQuery( 'body .bbp-topic-reply-link' );
@@ -188,7 +195,7 @@ jQuery( document ).ready(
 									var small = _this.search.val().toLowerCase();
 									_this.search.val(small);
 								},
-								
+
 								picker_show: function () {
 									$( this.button[0] ).closest( '.post-emoji' ).addClass('active');
 								},
@@ -210,7 +217,7 @@ jQuery( document ).ready(
 				if ( $tagsSelect.length ) {
 					$tagsSelect.select2( {
 						placeholder: $tagsSelect.attr( 'placeholder' ),
-						dropdownParent: jQuery( element ).closest('form').parent(),
+						dropdownParent: $tagsSelect.closest('form').parent(),
 						minimumInputLength: 1,
 						closeOnSelect: true,
 						tags: true,
@@ -316,9 +323,9 @@ jQuery( document ).ready(
 			jQuery( '#bbp_topic_content' ).on( 'keyup', function() {
 				var $reply_content = jQuery( '#bbp_topic_content' ).val().trim();
 				if ( $reply_content !== '' ) {
-					jQuery( this ).closest( 'form' ).addClass( 'has-content' )
+					jQuery( this ).closest( 'form' ).addClass( 'has-content' );
 				} else {
-					jQuery( this ).closest( 'form' ).removeClass( 'has-content' )
+					jQuery( this ).closest( 'form' ).removeClass( 'has-content' );
 				}
 			} );
 		}
@@ -328,9 +335,9 @@ jQuery( document ).ready(
 			jQuery( '#bbp_reply_content' ).on( 'keyup', function() {
 				var $reply_content = jQuery( '#bbp_reply_content' ).val().trim();
 				if ( $reply_content !== '' ) {
-					jQuery( this ).closest( 'form' ).addClass( 'has-content' )
+					jQuery( this ).closest( 'form' ).addClass( 'has-content' );
 				} else {
-					jQuery( this ).closest( 'form' ).removeClass( 'has-content' )
+					jQuery( this ).closest( 'form' ).removeClass( 'has-content' );
 				}
 			} );
 		}

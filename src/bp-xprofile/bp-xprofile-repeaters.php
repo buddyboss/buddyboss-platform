@@ -132,9 +132,12 @@ function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
  * Return ids of all field sets repeated instances.
  *
  * @since BuddyBoss 1.0.0
- * @global wpdb $wpdb WordPress database abstraction object.
- * @param type $field_group_id
+ *
+ * @param int   $field_group_id Xprofile group ID.
+ *
  * @return array
+ * @global wpdb $wpdb           WordPress database abstraction object.
+ *
  */
 function bp_get_repeater_clone_field_ids_all( $field_group_id ) {
 	static $bp_clone_field_ids_all = array();

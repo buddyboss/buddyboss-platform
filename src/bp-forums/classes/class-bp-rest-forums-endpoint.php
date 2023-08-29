@@ -133,7 +133,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		);
 
 		if ( ! empty( $request['search'] ) ) {
-			$args['s'] = $request['search'];
+			$args['s'] = $this->bbp_sanitize_search_request( $request['search'] );
 		}
 
 		if ( ! empty( $request['author'] ) ) {
@@ -1492,5 +1492,42 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		) {
 			return array( 'participate' );
 		}
+	}
+
+	/**
+	 * Removed lazyload from link preview embed.
+	 *
+	 * @param string $content Topic or reply content.
+	 * @param int    $post_id Topic or reply id.
+	 *
+	 * @return string $content
+	 */
+	public function bp_rest_forums_remove_lazyload( $content, $post_id ) {
+		$link_embed = get_post_meta( $post_id, '_link_embed', true );
+
+		if ( empty( $link_embed ) ) {
+			return $content;
+		}
+
+		$content = preg_replace( '/iframe(.*?)data-lazy-type="iframe"/is', 'iframe$1', $content );
+		$content = preg_replace( '/iframe(.*?)class="lazy/is', 'iframe$1class="', $content );
+		$content = preg_replace( '/iframe(.*?)data-src=/is', 'iframe$1src=', $content );
+
+		return $content;
+	}
+
+	/**
+	 * Sanitize a query argument used to pass some search terms.
+	 * Accepts a single parameter to be used for forums, topics, or replies.
+	 *
+	 * @param string $terms Search Term.
+	 *
+	 * @return string
+	 */
+	public function bbp_sanitize_search_request( $term ) {
+		$retval = ! empty( $term ) && is_string( $term ) ? urldecode( trim( $term ) ) : '';
+
+		// Filter & return.
+		return apply_filters( 'bbp_sanitize_search_request', $retval, $term );
 	}
 }

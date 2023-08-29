@@ -909,6 +909,8 @@ function groups_get_total_member_count( $group_id ) {
  * @since BuddyPress 1.2.0
  * @since BuddyPress 2.6.0 Added `$group_type`, `$group_type__in`, and `$group_type__not_in` parameters.
  * @since BuddyPress 2.7.0 Added `$update_admin_cache` and `$parent_id` parameters.
+ * @since BuddyPress 10.0.0 Added `$date_query` parameter.
+ * @since BuddyBoss 2.3.90 Added `$date_query` parameter.
  *
  * @param array|string $args {
  *     Array of arguments. Supports all arguments of
@@ -937,6 +939,7 @@ function groups_get_groups( $args = '' ) {
 		'group_type__in'     => '',             // Array or comma-separated list of group types to limit results to.
 		'group_type__not_in' => '',             // Array or comma-separated list of group types that will be excluded from results.
 		'meta_query'         => false,          // Filter by groupmeta. See WP_Meta_Query for syntax.
+		'date_query'         => false,          // Filter by group last activity date. See WP_Date_Query for syntax.
 		'show_hidden'        => false,          // Show hidden groups to non-admins.
 		'status'             => array(),        // Array or comma-separated list of group statuses to limit results to.
 		'per_page'           => 20,             // The number of results to return per page.
@@ -964,6 +967,7 @@ function groups_get_groups( $args = '' ) {
 			'group_type__in'     => $r['group_type__in'],
 			'group_type__not_in' => $r['group_type__not_in'],
 			'meta_query'         => $r['meta_query'],
+			'date_query'         => $r['date_query'],
 			'show_hidden'        => $r['show_hidden'],
 			'status'             => $r['status'],
 			'per_page'           => $r['per_page'],
@@ -5145,4 +5149,84 @@ function bb_group_single_header_actions() {
 		?>
 	</div>
 	<?php
+}
+
+
+/**
+ * Update the group member count.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param array $group_ids Array of group IDs.
+ *
+ * @return void
+ */
+function bb_update_group_member_count( $group_ids = array() ) {
+
+	if ( empty( $group_ids ) ) {
+		return;
+	}
+
+	foreach ( $group_ids as $group_id ) {
+		$cache_key = 'bp_group_get_total_member_count_' . $group_id;
+		wp_cache_delete( $cache_key, 'bp_groups' );
+		BP_Groups_Member::refresh_total_member_count_for_group( $group_id );
+	}
+}
+
+/**
+ * Function to return groups settings statues.
+ *
+ * @since BuddyBoss 2.3.70
+ *
+ * @param string $setting_type Type of group settings.
+ *
+ * @return array
+ */
+function bb_groups_get_settings_status( $setting_type ) {
+
+	$setting_type = str_replace( '-', '_', sanitize_key( $setting_type ) );
+
+	$statuses = array( 'members', 'mods', 'admins' );
+	if ( 'message' === $setting_type ) {
+		$statuses = array( 'mods', 'admins', 'members' );
+	}
+
+	/**
+	 * Filters the allowed settings statuses.
+	 *
+	 * @since BuddyBoss 2.3.70
+	 *
+	 * @param array  $statuses     The settings statuses.
+	 * @param string $setting_type Type of group settings.
+	 */
+	return apply_filters( 'groups_allowed_' . $setting_type . '_status', $statuses, $setting_type );
+}
+
+/**
+ * Default group settings fallback function.
+ *
+ * @since BuddyBoss 2.3.70
+ *
+ * @param string $setting_type Type of group settings.
+ * @param string $val          Value of group settings.
+ *
+ * @return string
+ */
+function bb_groups_settings_default_fallback( $setting_type, $val = '' ) {
+
+	$setting_type = str_replace( '-', '_', sanitize_key( $setting_type ) );
+
+	if ( empty( $val ) ) {
+		$val = ( 'message' === $setting_type ) ? 'mods' : 'members';
+	}
+
+	/**
+	 * Filters to set default value of a group settings.
+	 *
+	 * @since BuddyBoss 2.3.70
+	 *
+	 * @param string $val Value of group settings.
+	 */
+	return apply_filters( 'bp_group_' . $setting_type . '_status_fallback', $val );
 }

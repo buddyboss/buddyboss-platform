@@ -152,18 +152,19 @@ function bb_nouveau_get_activity_inner_blogs_buttons( $buttons ) {
 		// If we converted $content to an object earlier, flip it back to a string.
 		if ( is_a( $blog_post, 'WP_Post' ) && ! has_post_thumbnail( $blog_post ) ) {
 			$post_type_obj = get_post_type_object( $blog_post->post_type );
-
-			$buttons['activity_post'] = array(
-				'id'             => 'activity_post_link_wrap',
-				'position'       => 4,
-				'component'      => 'activity',
-				'button_element' => 'a',
-				'link_text'      => sprintf( '<span class="text">%1$s %2$s</span>', esc_html__( 'View', 'buddyboss' ), esc_attr( ucfirst( $post_type_obj->labels->singular_name ) ) ),
-				'button_attr'    => array(
-					'href'  => esc_url( get_permalink( $blog_post->ID ) ),
-					'class' => 'button bb-icon-arrow-down bb-icons bp-secondary-action',
-				),
-			);
+			if ( ! empty( $post_type_obj ) ) {
+				$buttons['activity_post'] = array(
+					'id'             => 'activity_post_link_wrap',
+					'position'       => 4,
+					'component'      => 'activity',
+					'button_element' => 'a',
+					'link_text'      => sprintf( '<span class="text">%1$s %2$s</span>', esc_html__( 'View', 'buddyboss' ), esc_attr( ucfirst( $post_type_obj->labels->singular_name ) ) ),
+					'button_attr'    => array(
+						'href'  => esc_url( get_permalink( $blog_post->ID ) ),
+						'class' => 'button bb-icon-arrow-down bb-icons bp-secondary-action',
+					),
+				);
+			}
 		}
 	}
 
@@ -297,3 +298,30 @@ function bb_blogs_comment_mention_notification( $activity_id, $comment, $activit
 
 // Action notification for mentions in single page blog comments.
 add_action( 'bp_blogs_comment_sync_activity_comment', 'bb_blogs_comment_mention_notification', 10, 4 );
+
+/**
+ * Filters the column name during blog metadata queries.
+ *
+ * This filters 'sanitize_key', which is used during various core metadata
+ * API functions: {@link https://core.trac.wordpress.org/browser/branches/4.9/src/wp-includes/meta.php?lines=47,160,324}.
+ * Due to how we are passing our meta type, we need to ensure that the correct
+ * DB column is referenced during blogmeta queries.
+ *
+ * @since buddypress 4.0.0
+ * @since BuddyBoss 2.3.70
+ *
+ * @see   bp_blogs_update_blogmeta()
+ * @see   bp_blogs_add_blogmeta()
+ * @see   bp_blogs_delete_blogmeta()
+ * @see   bp_blogs_get_blogmeta()
+ *
+ * @param string $retval column name.
+ *
+ * @return string
+ */
+function bp_blogs_filter_meta_column_name( $retval ) {
+	if ( 'bp_blog_id' === $retval ) {
+		$retval = 'blog_id';
+	}
+	return $retval;
+}

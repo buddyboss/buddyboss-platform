@@ -333,6 +333,8 @@ window.bp = window.bp || {};
 			document.addEventListener( 'keyup', this.closePopup.bind( this ) );
 			document.addEventListener( 'keyup', this.submitPopup.bind( this ) );
 
+			$( window ).bind( 'beforeunload', this.beforeunloadWindow.bind( this ) );
+
 			// Gifs autoplay.
 			if ( !_.isUndefined( BP_Nouveau.media.gif_api_key ) ) {
 				window.addEventListener( 'scroll', this.autoPlayGifVideos, false );
@@ -2295,7 +2297,7 @@ window.bp = window.bp || {};
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-								} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 								}
 							} else {
@@ -2526,7 +2528,7 @@ window.bp = window.bp || {};
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-								} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 								}
 							} else {
@@ -2624,10 +2626,7 @@ window.bp = window.bp || {};
 
 					self.document_dropzone_obj.on(
 						'addedfile',
-						function ( file ) {
-							var filename = file.upload.filename;
-							var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
-							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
+						function () {
 						}
 					);
 
@@ -2673,7 +2672,7 @@ window.bp = window.bp || {};
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-								} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 								}
 							} else {
@@ -2708,6 +2707,15 @@ window.bp = window.bp || {};
 								response.data.saved = false;
 								self.dropzone_media.push( response.data );
 								self.addDocumentIdsToGroupMessagesForm();
+
+								var filename = file.upload.filename;
+								var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+								var file_icon = ( !_.isUndefined( response.data.svg_icon ) ? response.data.svg_icon : '' );
+								var icon_class = !_.isEmpty( file_icon ) ? file_icon : 'bb-icon-file-' + fileExtension;
+
+								if ( $( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).length ) {
+									$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( icon_class );
+								}
 							} else {
 								var node, _i, _len, _ref, _results;
 								var message = response.data.feedback;
@@ -2816,7 +2824,7 @@ window.bp = window.bp || {};
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-								} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 								}
 							} else {
@@ -2989,10 +2997,7 @@ window.bp = window.bp || {};
 
 					self.dropzone_obj[ dropzone_obj_key ].on(
 						'addedfile',
-						function ( file ) {
-							var filename = file.upload.filename;
-							var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
-							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
+						function () {
 						}
 					);
 
@@ -3041,7 +3046,7 @@ window.bp = window.bp || {};
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-								} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 								}
 							} else {
@@ -3078,6 +3083,15 @@ window.bp = window.bp || {};
 								response.data.saved = false;
 								self.dropzone_media[ dropzone_obj_key ].push( response.data );
 								self.addDocumentIdsToForumsForm( dropzone_container );
+
+								var filename = file.upload.filename;
+								var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+								var file_icon = ( !_.isUndefined( response.data.svg_icon ) ? response.data.svg_icon : '' );
+								var icon_class = !_.isEmpty( file_icon ) ? file_icon : 'bb-icon-file-' + fileExtension;
+
+								if ( $( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).length ) {
+									$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( icon_class );
+								}
 							} else {
 								var node, _i, _len, _ref, _results;
 								var message = response.data.feedback;
@@ -3144,10 +3158,22 @@ window.bp = window.bp || {};
 					// Enable submit button when all documents are uploaded
 					self.dropzone_obj[ dropzone_obj_key ].on(
 						'complete',
-						function() {
+						function( file ) {
 							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
 								var formElement = target.closest( 'form' );
 								formElement.removeClass( 'media-uploading' );
+							}
+
+							var filename  = !_.isUndefined( file.name ) ? file.name : '';
+							var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+							var file_icon     = ( ! _.isUndefined( file.svg_icon ) ? file.svg_icon : '' );
+							var icon_class    = ! _.isEmpty( file_icon ) ? file_icon : 'bb-icon-file-' + fileExtension;
+
+							if (
+								$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).length  &&
+								$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).hasClass( 'bb-icon-file' )
+							) {
+								$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( icon_class );
 							}
 						}
 					);
@@ -3294,7 +3320,7 @@ window.bp = window.bp || {};
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-								} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 								}
 							} else {
@@ -3749,7 +3775,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
@@ -3992,7 +4018,7 @@ window.bp = window.bp || {};
 
 				self.dropzone_obj.on(
 					'addedfile',
-					function ( file ) {
+					function () {
 						setTimeout(
 							function () {
 								if ( self.dropzone_obj.getAcceptedFiles().length ) {
@@ -4001,11 +4027,6 @@ window.bp = window.bp || {};
 							},
 							1000
 						);
-						var filename = file.upload.filename;
-						var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
-						if( $( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').length ) {
-							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
-						}
 					}
 				);
 
@@ -4015,7 +4036,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
@@ -4063,6 +4084,15 @@ window.bp = window.bp || {};
 							response.data.group_id = self.current_group_id;
 							response.data.saved = false;
 							self.dropzone_media.push( response.data );
+
+							var filename = file.upload.filename;
+							var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+							var file_icon = ( !_.isUndefined( response.data.svg_icon ) ? response.data.svg_icon : '' );
+							var icon_class = !_.isEmpty( file_icon ) ? file_icon : 'bb-icon-file-' + fileExtension;
+
+							if ( $( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).length ) {
+								$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( icon_class );
+							}
 						} else {
 							var node, _i, _len, _ref, _results;
 							var message = response.data.feedback;
@@ -4535,11 +4565,15 @@ window.bp = window.bp || {};
 						},
 						success: function ( response ) {
 							if ( response.success ) {
-								document_name_update_data.attr( 'data-document-title', response.data.response.title + '.' + document_name_update_data.data( 'extension' ) );
-								document_name.html( response.data.response.title );
-								document_edit.removeClass( 'submitting' );
-								document_edit.parent().find( '.animate-spin' ).remove();
-								document_edit.parent().hide().siblings( '.media-folder_name' ).show();
+								if ( 'undefined' !== typeof response.data.document && 0 < $( response.data.document ).length ) {
+									$( event.currentTarget ).closest( '.media-folder_items' ).html( $( response.data.document ).html() );
+								} else {
+									document_name_update_data.attr( 'data-document-title', response.data.response.title + '.' + document_name_update_data.data( 'extension' ) );
+									document_name.html( response.data.response.title );
+									document_edit.removeClass( 'submitting' );
+									document_edit.parent().find( '.animate-spin' ).remove();
+									document_edit.parent().hide().siblings( '.media-folder_name' ).show();
+								}
 							} else {
 								document_edit.removeClass( 'submitting' );
 								document_edit.parent().find( '.animate-spin' ).remove();
@@ -4572,6 +4606,14 @@ window.bp = window.bp || {};
 					data: data
 				}
 			);
+		},
+
+		beforeunloadWindow: function() {
+			if( $('body.messages').length > 0 ) {
+				$.each( Dropzone.instances, function( index, value ) {
+					value.removeAllFiles( true );
+				});
+			}
 		},
 
 		changeUploadModalTab: function ( event ) {
@@ -6367,7 +6409,7 @@ window.bp = window.bp || {};
 				return false;
 			}
 
-			var userIsEditing = ( $( '#add-activity-description' ).length && $( '#add-activity-description' ).is( ':focus' ) ) || ( $( '.ac-reply-content .ac-textarea > .ac-input' ).length && $( '.ac-reply-content .ac-textarea > .ac-input' ).hasClass( 'focus-visible' ) );
+			var userIsEditing = $( e.target ).hasClass( 'ac-input' ) || $( e.target ).attr( 'id' ) === 'add-activity-description';
 
 			switch ( e.keyCode ) {
 				case 27: // escape key.
@@ -6396,7 +6438,7 @@ window.bp = window.bp || {};
 				return false;
 			}
 
-			var userIsEditing = ( $( '#add-activity-description' ).length && $( '#add-activity-description' ).is( ':focus' ) ) || ( $( '.ac-reply-content .ac-textarea > .ac-input' ).length && $( '.ac-reply-content .ac-textarea > .ac-input' ).hasClass( 'focus-visible' ) );
+			var userIsEditing = $( e.target ).hasClass( 'ac-input' ) || $( e.target ).attr( 'id' ) === 'add-activity-description';
 
 			switch ( e.keyCode ) {
 				case 27: // escape key.

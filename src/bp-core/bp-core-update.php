@@ -33,12 +33,31 @@ function bp_is_install() {
  */
 function bp_is_update() {
 
-	// Current DB version of this site (per site in a multisite network).
-	$current_db   = bp_get_option( '_bp_db_version' );
-	$current_live = bp_get_db_version();
+	// Get current DB version.
+	$current_db = (int) bp_get_option( '_bp_db_version' );
+	// Get the raw database version.
+	$current_live = (int) bp_get_db_version();
 
-	// Compare versions (cast as int and bool to be safe).
-	$is_update = (bool) ( (int) $current_db < (int) $current_live );
+	// Pro plugin version history.
+	bp_version_bump();
+	$bb_plugin_version_history = (array) bp_get_option( 'bb_plugin_version_history', array() );
+	$initial_version_data      = ! empty( $bb_plugin_version_history ) ? end( $bb_plugin_version_history ) : array();
+	$bb_version_exists         = ! empty( $initial_version_data ) && ! empty( $initial_version_data['version'] ) && (string) BP_PLATFORM_VERSION === (string) $initial_version_data['version'];
+	if ( ! $bb_version_exists || $current_live !== $current_db ) {
+		$current_date                = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+		$bb_latest_plugin_version    = array(
+			'db_version' => $current_live,
+			'date'       => $current_date->format( 'Y-m-d H:i:s' ),
+			'version'    => BP_PLATFORM_VERSION,
+		);
+		$bb_plugin_version_history[] = $bb_latest_plugin_version;
+		bp_update_option( 'bb_plugin_version_history', array_filter( $bb_plugin_version_history ) );
+	}
+
+	$is_update = false;
+	if ( $current_live !== $current_db ) {
+		$is_update = true;
+	}
 
 	// Return the product of version comparison.
 	return $is_update;
@@ -170,6 +189,8 @@ function bp_setup_updater() {
  */
 function bp_version_updater() {
 
+	// Get current DB version.
+	$current_db = (int) bp_get_option( '_bp_db_version' );
 	// Get the raw database version.
 	$raw_db_version = (int) bp_get_db_version_raw();
 
@@ -410,10 +431,6 @@ function bp_version_updater() {
 			bb_update_to_2_2_9();
 		}
 
-		if ( $raw_db_version < 19871 ) {
-			bb_update_to_2_2_9_1();
-		}
-
 		if ( $raw_db_version < 19971 ) {
 			bb_update_to_2_3_0();
 		}
@@ -437,12 +454,25 @@ function bp_version_updater() {
 		if ( $raw_db_version < 20211 ) {
 			bb_update_to_2_3_50();
 		}
+
+		if ( $raw_db_version < 20261 ) {
+			bb_update_to_2_3_60();
+		}
+
+		if ( $raw_db_version < 20371 ) {
+			bb_update_to_2_3_80();
+		}
+
+		if ( $raw_db_version < 20561 ) {
+			bb_update_to_2_4_10();
+		}
+
+		if ( $raw_db_version !== $current_db ) {
+			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
+		}
 	}
 
 	/* All done! *************************************************************/
-
-	// Bump the version.
-	bp_version_bump();
 
 	if ( $switched_to_root_blog ) {
 		restore_current_blog();
@@ -1963,16 +1993,16 @@ function bb_moderation_add_user_report_column() {
 
 	global $wpdb;
 
-	$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$wpdb->prefix}bp_moderation' AND column_name = 'user_report'" ); //phpcs:ignore
+	$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$wpdb->base_prefix}bp_moderation' AND column_name = 'user_report'" ); //phpcs:ignore
 
 	if ( empty( $row ) ) {
-		$wpdb->query( "ALTER TABLE {$wpdb->prefix}bp_moderation ADD user_report TINYINT NULL DEFAULT '0'" ); //phpcs:ignore
+		$wpdb->query( "ALTER TABLE {$wpdb->base_prefix}bp_moderation ADD user_report TINYINT NULL DEFAULT '0'" ); //phpcs:ignore
 	}
 
-	$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$wpdb->prefix}bp_suspend' AND column_name = 'user_report'" ); //phpcs:ignore
+	$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$wpdb->base_prefix}bp_suspend' AND column_name = 'user_report'" ); //phpcs:ignore
 
 	if ( empty( $row ) ) {
-		$wpdb->query( "ALTER TABLE {$wpdb->prefix}bp_suspend ADD user_report TINYINT NULL DEFAULT '0'" ); //phpcs:ignore
+		$wpdb->query( "ALTER TABLE {$wpdb->base_prefix}bp_suspend ADD user_report TINYINT NULL DEFAULT '0'" ); //phpcs:ignore
 	}
 }
 
@@ -2019,10 +2049,10 @@ function bb_messages_add_is_deleted_column() {
 	global $wpdb;
 
 	// Add 'is_deleted' column in 'bp_messages_messages' table.
-	$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$wpdb->prefix}bp_messages_messages' AND column_name = 'is_deleted'" ); //phpcs:ignore
+	$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$wpdb->base_prefix}bp_messages_messages' AND column_name = 'is_deleted'" ); //phpcs:ignore
 
 	if ( empty( $row ) ) {
-		$wpdb->query( "ALTER TABLE {$wpdb->prefix}bp_messages_messages ADD `is_deleted` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `message`" ); //phpcs:ignore
+		$wpdb->query( "ALTER TABLE {$wpdb->base_prefix}bp_messages_messages ADD `is_deleted` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `message`" ); //phpcs:ignore
 	}
 }
 
@@ -2036,8 +2066,8 @@ function bb_messages_add_is_deleted_column() {
 function bb_messages_migrate_is_deleted_column() {
 	global $wpdb;
 
-	$table_name = $wpdb->prefix . 'bp_messages_messages';
-	$meta_table = $wpdb->prefix . 'bp_messages_meta';
+	$table_name = $wpdb->base_prefix . 'bp_messages_messages';
+	$meta_table = $wpdb->base_prefix . 'bp_messages_meta';
 
 	$query = $wpdb->prepare(
 		'SELECT DISTINCT `message_id` FROM `' . $meta_table . '` WHERE `meta_key` = %s',  // phpcs:ignore
@@ -2563,17 +2593,6 @@ function bb_migrate_member_friends_count( $user_ids, $paged ) {
 }
 
 /**
- * Background job to update duplicate subscriptions.
- *
- * @since BuddyBoss 2.2.9.1
- *
- * @return void
- */
-function bb_update_to_2_2_9_1() {
-	bb_remove_duplicate_subscriptions();
-}
-
-/**
  * Migration for the activity widget based on the relevant feed.
  *
  * @since BuddyBoss 2.3.0
@@ -2782,7 +2801,7 @@ function bb_core_update_repair_member_slug() {
 
 	$user_ids = $wpdb->get_col(
 		$wpdb->prepare(
-			"SELECT u.ID FROM `{$wpdb->prefix}users` AS u LEFT JOIN `{$wpdb->prefix}usermeta` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) WHERE ( um.user_id IS NULL OR LENGTH(meta_value) = %d ) ORDER BY u.ID",
+			"SELECT u.ID FROM `{$wpdb->users}` AS u LEFT JOIN `{$wpdb->usermeta}` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) WHERE ( um.user_id IS NULL OR LENGTH(meta_value) = %d ) ORDER BY u.ID",
 			'bb_profile_slug',
 			40
 		)
@@ -2868,5 +2887,314 @@ function bb_update_to_2_3_50() {
 				'description' => esc_html__( 'A member receives a reply to their WordPress post comment', 'buddyboss' ),
 			)
 		);
+	}
+}
+
+/**
+ * Update background job once plugin update.
+ * Migration to add index and new column to media tables.
+ * Save the default notification types.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @return void
+ */
+function bb_update_to_2_3_60() {
+	global $wpdb;
+
+	// Disabled notification for post type comment reply notification.
+	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+	if ( ! isset( $enabled_notification['bb_posts_new_comment_reply'] ) ) {
+		bb_disable_notification_type( 'bb_posts_new_comment_reply' );
+	}
+
+	bb_background_update_group_member_count();
+
+	$tables = array(
+		$wpdb->base_prefix . 'bp_media'    => array(
+			'blog_id',
+			'message_id',
+			'group_id',
+			'privacy',
+			'type',
+			'menu_order',
+			'date_created',
+		),
+		$wpdb->base_prefix . 'bp_document' => array(
+			'blog_id',
+			'message_id',
+			'group_id',
+			'privacy',
+			'menu_order',
+			'date_created',
+			'date_modified',
+		),
+	);
+
+	$table_exists = array();
+	foreach ( $tables as $table_name => $indexes ) {
+		if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $table_name ) ) ) ) {
+			$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$table_name}' AND column_name = 'message_id'" );
+			if ( empty( $row ) ) {
+				$wpdb->query( "ALTER TABLE {$table_name} ADD message_id BIGINT(20) DEFAULT 0 AFTER activity_id" );
+			}
+			foreach ( $indexes as $index ) {
+				$wpdb->query( "ALTER TABLE {$table_name} ADD INDEX ({$index})" );
+			}
+			$table_exists[ $table_name ] = true;
+		}
+	}
+
+	// Update older data.
+	bb_create_background_message_media_document_update( $table_exists );
+}
+
+/**
+ * Function to update group member count with background updater.
+ *
+ * @since BuddyBoss 2.3.60
+ */
+function bb_background_update_group_member_count() {
+	global $wpdb, $bp_background_updater;
+
+	if ( ! bp_is_active( 'groups' ) ) {
+		return;
+	}
+
+	// Fetch all groups.
+	$sql       = "SELECT DISTINCT id FROM {$wpdb->base_prefix}bp_groups ORDER BY id DESC";
+	$group_ids = $wpdb->get_col( $sql );
+
+	if ( empty( $group_ids ) ) {
+		return;
+	}
+
+	$min_count = (int) apply_filters( 'bb_update_group_member_count', 10 );
+
+	if ( count( $group_ids ) > $min_count ) {
+		foreach ( array_chunk( $group_ids, $min_count ) as $chunk ) {
+			$bp_background_updater->data(
+				array(
+					array(
+						'callback' => 'bb_update_group_member_count',
+						'args'     => array( $chunk ),
+					),
+				)
+			);
+			$bp_background_updater->save()->schedule_event();
+		}
+	} else {
+		bb_update_group_member_count( $group_ids );
+	}
+}
+
+/**
+ * Schedule event for message media and document migration.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param array $table_exists List of tables.
+ * @param int   $paged        Page number.
+ */
+function bb_create_background_message_media_document_update( $table_exists, $paged = 1 ) {
+	global $wpdb, $bp_background_updater;
+
+	if ( empty( $paged ) ) {
+		$paged = 1;
+	}
+
+	$per_page = 50;
+	$offset   = ( ( $paged - 1 ) * $per_page );
+	$results  = array();
+
+	$message_meta_table_name = $wpdb->base_prefix . 'bp_messages_meta';
+	if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $message_meta_table_name ) ) ) ) {
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT message_id, meta_key, meta_value FROM {$message_meta_table_name} WHERE meta_key IN
+				('bp_media_ids', 'bp_video_ids', 'bp_document_ids') AND meta_value !=''
+				ORDER BY message_id LIMIT %d offset %d",
+				$per_page,
+				$offset
+			)
+		);
+	}
+
+	if ( empty( $results ) ) {
+		return;
+	}
+
+	$bp_background_updater->data(
+		array(
+			array(
+				'callback' => 'bb_migrate_message_media_document',
+				'args'     => array( $table_exists, $results, $paged ),
+			),
+		)
+	);
+	$bp_background_updater->save()->schedule_event();
+}
+
+/**
+ * Message media and document migration callback.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param array $table_exists List of tables.
+ * @param array $results      Results from message meta table.
+ * @param int   $paged        Page number.
+ */
+function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
+	global $wpdb;
+
+	if ( empty( $results ) ) {
+		return;
+	}
+
+	foreach ( $results as $result ) {
+		$table_name = $wpdb->base_prefix . 'bp_media';
+		if ( 'bp_document_ids' === $result->meta_key ) {
+			$table_name = $wpdb->base_prefix . 'bp_document';
+		}
+
+		// Check valid ids & update message_id column.
+		if (
+			! empty( $table_exists ) &&
+			array_key_exists( $table_name, $table_exists ) &&
+			isset( $result->message_id ) &&
+			isset( $result->meta_value ) &&
+			preg_match( '/^\d+(?:,\d+)*$/', $result->meta_value )
+		) {
+
+			$query = $wpdb->prepare( "UPDATE {$table_name} SET message_id = %d WHERE id IN ( {$result->meta_value} )", $result->message_id );
+
+			$wpdb->query( $query );
+
+			$id_array = explode( ',', $result->meta_value );
+			if ( ! empty( $id_array ) ) {
+				foreach ( $id_array as $media_id ) {
+					$media = '';
+					if ( 'bp_document_ids' === $result->meta_key && class_exists( 'BP_Document' ) ) {
+						$media = new BP_Document( $media_id );
+					} elseif ( class_exists( 'BP_Media' ) ) {
+						$media = new BP_Media( $media_id );
+					}
+					if ( ! empty( $media ) ) {
+						update_post_meta( $media->attachment_id, 'bp_media_parent_message_id', $media->message_id );
+					}
+				}
+			}
+		}
+	}
+
+	// Call recursive to finish update for all records.
+	$paged++;
+	bb_create_background_message_media_document_update( $table_exists, $paged );
+}
+
+/**
+ * Migrate data when plugin update.
+ *
+ * @since BuddyBoss 2.3.80
+ */
+function bb_update_to_2_3_80() {
+	bb_core_update_repair_duplicate_following_notification();
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
+}
+
+/**
+ * Function will fetch and delete duplicate following notification data.
+ *
+ * @since BuddyBoss 2.3.80
+ */
+function bb_core_update_repair_duplicate_following_notification() {
+	global $wpdb;
+	$bp = buddypress();
+
+	$sql  = "DELETE FROM {$bp->notifications->table_name}";
+	$sql .= ' WHERE id IN (';
+	$sql .= " SELECT * FROM ( SELECT DISTINCT n1.id FROM {$bp->notifications->table_name} n1";
+	$sql .= " JOIN {$bp->notifications->table_name} n2 ON n1.user_id = n2.user_id";
+	$sql .= ' WHERE n1.secondary_item_id = n2.secondary_item_id';
+	$sql .= ' AND n1.date_notified < n2.date_notified';
+	$sql .= ' AND n1.component_name = %s AND n1.component_action = %s';
+	$sql .= ' ORDER BY n1.id DESC) AS ids';
+	$sql .= ' )';
+
+	// Remove duplicate notification ids.
+	$wpdb->query( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) );
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear notifications API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-notifications' );
+	}
+}
+
+/**
+ * Migrate icon class for the documents.
+ * Assign the group organizer to the group has 0 members.
+ *
+ * @since BuddyBoss 2.4.10
+ *
+ * @return void
+ */
+function bb_update_to_2_4_10() {
+	global $wpdb;
+
+	if ( bp_is_active( 'document' ) ) {
+		$saved_extensions = bp_get_option( 'bp_document_extensions_support', array() );
+		$default          = bp_media_allowed_document_type();
+
+		foreach ( $default as $key => $value ) {
+			if ( isset( $saved_extensions[ $key ] ) ) {
+				$document_file_extension          = substr( strrchr( $value['extension'], '.' ), 1 );
+				$new_icon                         = bp_document_svg_icon( $document_file_extension );
+				$saved_extensions[ $key ]['icon'] = $new_icon;
+			}
+		}
+
+		bp_update_option( 'bp_document_extensions_support', $saved_extensions );
+	}
+
+	if ( ! bp_is_active( 'groups' ) ) {
+		return;
+	}
+
+	$groups     = $wpdb->base_prefix . 'bp_groups';
+	$group_meta = $wpdb->base_prefix . 'bp_groups_groupmeta';
+
+	$sql = "SELECT g.id FROM {$groups} g";
+	$sql .= " INNER JOIN {$group_meta} gm ON gm.group_id = g.id";
+	$sql .= ' WHERE gm.meta_key = %s AND gm.meta_value = %d';
+
+	// Get the group ids with 0 members.
+	$groups = $wpdb->get_results( $wpdb->prepare( $sql, 'total_member_count', 0 ) );
+
+	if ( ! empty( $groups ) ) {
+		$admin = get_users(
+			array(
+				'blog_id' => bp_get_root_blog_id(),
+				'fields'  => 'ID',
+				'number'  => 1,
+				'orderby' => 'ID',
+				'role'    => 'administrator',
+			)
+		);
+
+		if ( ! empty( $admin ) && ! is_wp_error( $admin ) ) {
+			$admin_id = current( $admin );
+
+			// Assign the group organizer to all the group that has 0 members.
+			foreach ( $groups as $group ) {
+				groups_join_group( $group->id, $admin_id );
+				$member = new BP_Groups_Member( $admin_id, $group->id );
+				$member->promote( 'admin' );
+			}
+		}
 	}
 }

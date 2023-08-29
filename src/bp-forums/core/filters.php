@@ -158,6 +158,7 @@ add_filter( 'bbp_get_topic_content', 'convert_chars', 8 );
 add_filter( 'bbp_get_topic_content', 'capital_P_dangit', 10 );
 add_filter( 'bbp_get_topic_content', 'convert_smilies', 20 );
 add_filter( 'bbp_get_topic_content', 'force_balance_tags', 30 );
+add_filter( 'bbp_get_topic_content', 'do_blocks', 9 );
 add_filter( 'bbp_get_topic_content', 'wpautop', 40 );
 add_filter( 'bbp_get_topic_content', 'bbp_remove_html_tags', 45 );
 add_filter( 'bbp_get_topic_content', 'bbp_rel_nofollow', 50 );
@@ -173,7 +174,7 @@ add_filter( 'bbp_get_form_reply_content', 'bbp_code_trick_reverse' );
 add_filter( 'bbp_get_form_reply_content', 'esc_textarea' );
 add_filter( 'bbp_get_form_reply_content', 'trim' );
 
-// Add number format filter to functions requiring numeric output
+// Add number format filter to functions requesting formatted values.
 add_filter( 'bbp_get_user_topic_count', 'bbp_number_format', 10 );
 add_filter( 'bbp_get_user_reply_count', 'bbp_number_format', 10 );
 add_filter( 'bbp_get_user_post_count', 'bbp_number_format', 10 );
@@ -184,6 +185,40 @@ add_filter( 'bbp_get_forum_post_count', 'bbp_number_format', 10 );
 add_filter( 'bbp_get_topic_voice_count', 'bbp_number_format', 10 );
 add_filter( 'bbp_get_topic_reply_count', 'bbp_number_format', 10 );
 add_filter( 'bbp_get_topic_post_count', 'bbp_number_format', 10 );
+add_filter( 'bbp_get_topic_revision_count', 'bbp_number_format', 10 );
+add_filter( 'bbp_get_reply_revision_count', 'bbp_number_format', 10 );
+add_filter( 'bbp_get_forum_topic_count_hidden', 'bbp_number_format', 10 );
+add_filter( 'bbp_get_topic_reply_count_hidden', 'bbp_number_format', 10 );
+
+// Add number-not-negative filter to values that can never be negative numbers.
+add_filter( 'bbp_get_user_topic_count',             'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_user_reply_count',             'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_user_post_count',              'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_subforum_count',         'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_topic_count',            'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_reply_count',            'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_post_count',             'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_voice_count',            'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_reply_count',            'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_post_count',             'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_topic_count_hidden',     'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_reply_count_hidden',     'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_revision_count',         'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_reply_revision_count',         'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_user_topic_count_int',         'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_user_reply_count_int',         'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_user_post_count_int',          'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_subforum_count_int',     'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_topic_count_int',        'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_reply_count_int',        'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_post_count_int',         'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_voice_count_int',        'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_reply_count_int',        'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_post_count_int',         'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_topic_count_hidden_int', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_reply_count_hidden_int', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_revision_count_int',     'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_reply_revision_count_int',     'bbp_number_not_negative', 8 );
 
 // Sanitize displayed user data
 add_filter( 'bbp_get_displayed_user_field', 'bbp_sanitize_displayed_user_field', 10, 3 );
@@ -258,6 +293,9 @@ add_filter( 'posts_where', 'bb_forum_search_by_topic_tags', 10, 2 );
 // Remove deleted members link from mention for topic/reply.
 add_filter( 'bbp_get_topic_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
 add_filter( 'bbp_get_reply_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
+
+add_filter( 'bbp_get_topic_content', 'bb_forums_link_preview', 999, 2 );
+add_filter( 'bbp_get_reply_content', 'bb_forums_link_preview', 999, 2 );
 
 /** Deprecated ****************************************************************/
 
@@ -443,3 +481,115 @@ function bb_remove_group_forum_topic_subscriptions_update_group_meta( $meta_id, 
 	}
 }
 add_action( 'updated_group_meta', 'bb_remove_group_forum_topic_subscriptions_update_group_meta', 10, 4 );
+
+/**
+ * Remove unintentional empty paragraph coming from the medium editor when only link preview.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param string $content Topic and reply content.
+ *
+ * @return string $content Topic and reply content
+ */
+function bb_filter_empty_editor_content( $content = '' ) {
+	if ( preg_match( '/^(<p><br><\/p>|<p><br \/><\/p>|<p><\/p>|<p><br\/><\/p>)$/i', $content ) ) {
+		$content = '';
+	}
+
+	return $content;
+}
+
+add_filter( 'bbp_new_topic_pre_content', 'bb_filter_empty_editor_content', 1 );
+add_filter( 'bbp_new_reply_pre_content', 'bb_filter_empty_editor_content', 1 );
+add_filter( 'bbp_edit_topic_pre_content', 'bb_filter_empty_editor_content', 1 );
+add_filter( 'bbp_edit_reply_pre_content', 'bb_filter_empty_editor_content', 1 );
+
+/**
+ * Embed link preview in Topic/Reply content
+ *
+ * @param string $content Topic/Reply content.
+ * @param int    $post_id Topic/Reply id.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @return string
+ */
+function bb_forums_link_preview( $content, $post_id ) {
+
+	$preview_data = get_post_meta( $post_id, '_link_preview_data', true );
+
+	if ( empty( $preview_data['url'] ) ) {
+		return $content;
+	}
+
+	$preview_data = bp_parse_args(
+		$preview_data,
+		array(
+			'title'       => '',
+			'description' => '',
+		)
+	);
+
+	$parse_url   = wp_parse_url( $preview_data['url'] );
+	$domain_name = '';
+	if ( ! empty( $parse_url['host'] ) ) {
+		$domain_name = str_replace( 'www.', '', $parse_url['host'] );
+	}
+
+	$description = $preview_data['description'];
+	$read_more   = ' &hellip; <a class="activity-link-preview-more" href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . __( 'Continue reading', 'buddyboss' ) . '</a>';
+	$description = wp_trim_words( $description, 40, $read_more );
+
+	$content = make_clickable( $content );
+
+	$content .= '<div class="bb-link-preview-container">';
+	if ( ! empty( $preview_data['attachment_id'] ) ) {
+		$image_url = wp_get_attachment_image_url( $preview_data['attachment_id'], 'full' );
+		$content  .= '<div class="bb-link-preview-image">';
+		$content  .= '<div class="bb-link-preview-image-cover">';
+		$content  .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $image_url ) . '" /></a>';
+		$content  .= '</div>';
+		$content  .= '</div>';
+	} elseif ( ! empty( $preview_data['image_url'] ) ) {
+		$content .= '<div class="bb-link-preview-image">';
+		$content .= '<div class="bb-link-preview-image-cover">';
+		$content .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $preview_data['image_url'] ) . '" /></a>';
+		$content .= '</div>';
+		$content .= '</div>';
+	}
+	$content .= '<div class="bb-link-preview-info">';
+	$content .= '<p class="bb-link-preview-link-name">' . esc_html( $domain_name ) . '</p>';
+	$content .= '<p class="bb-link-preview-title"><a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . esc_html( $preview_data['title'] ) . '</a></p>';
+	$content .= '<div class="bb-link-preview-excerpt"><p>' . $description . '</p></div>';
+	$content .= '</div>';
+	$content .= '</div>';
+
+	return $content;
+}
+
+/**
+ * Redirect to the 404 page if the no replies for single topic page.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param string $template The path of the template to include.
+ *
+ * @return string $template Template file to use.
+ */
+function bb_single_topic_no_replies_redirect_to_404( $template ) {
+	if ( bbp_is_single_topic() && ! bp_is_activity_component() ) {
+		if ( ! bbp_has_replies() && bbp_get_paged() > 1 ) {
+			$template_404 = locate_template( '404.php' );
+			if ( ! empty( $template_404 ) ) {
+				global $wp_query;
+				$wp_query->set_404();
+				status_header( 404 );
+				return $template_404;
+			}
+		}
+	}
+
+	return $template;
+}
+
+add_filter( 'template_include', 'bb_single_topic_no_replies_redirect_to_404' );
