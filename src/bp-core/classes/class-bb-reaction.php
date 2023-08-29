@@ -1735,7 +1735,6 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @return bool|WP_Error
 		 */
 		public function bb_validate_activity_reaction_request( $args ) {
-
 			$r = bp_parse_args(
 				$args,
 				array(
@@ -1744,66 +1743,31 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'error_type' => 'bool',
 				)
 			);
-			// Initially set is false.
-			$retval = false;
 
-			if ( ! bp_is_active( 'activity' ) ) {
-				$retval = new WP_Error(
-					'bb_reaction_activity_not_active',
-					__( 'Activity not enabled.', 'buddyboss' ),
+			$valid_item_ids = array();
+			if ( ! empty( $r['item_id'] ) && 'activity' === $r['item_type'] ) {
+				$activities_ids = array();
+				$activities     = BP_Activity_Activity::get(
 					array(
-						'status' => 400,
-					)
+						'moderation_query' => false,
+						'per_page'         => 0,
+						'fields'           => 'ids',
+						'in'               => ! is_array( $r['item_id'] ) ? array( $r['item_id'] ) : $r['item_id'],
+					),
 				);
-			} elseif ( empty( $r['item_id'] ) ) {
-				$retval = new WP_Error(
-					'bb_reaction_required_item_id',
-					__( 'The item IDs is required.', 'buddyboss' ),
-					array(
-						'status' => 400,
-					)
-				);
-			} elseif ( empty( $r['item_type'] ) ) {
-				$retval = new WP_Error(
-					'bb_reaction_required_item_type',
-					__( 'The item type is required.', 'buddyboss' ),
-					array(
-						'status' => 400,
-					)
-				);
-			} elseif ( 'activity' !== $r['item_type'] ) {
-				$retval = new WP_Error(
-					'bb_reaction_invalid_item_type',
-					__( 'The item type is not matching with the type.', 'buddyboss' ),
-					array(
-						'status' => 400,
-					)
-				);
-			} elseif ( ! empty( $r['item_id'] ) && 'activity' === $r['item_type'] ) {
-				$activity = new BP_Activity_Activity( $r['item_id'] );
 
-				if ( empty( $activity->id ) ) {
-					$retval = new WP_Error(
-						'bb_reaction_invalid_item_id',
-						__( 'The item ID is not valid.', 'buddyboss' ),
-						array(
-							'status' => 400,
-						)
-					);
-				} else {
-					$retval = true;
+				if ( ! empty( $activities['activities'] ) ) {
+					$activities_ids = $activities['activities'];
 				}
-			} else {
-				$retval = true;
+
+				foreach ( $activities_ids as $activity_id ) {
+					if ( ! empty( $activity_id ) ) {
+						$valid_item_ids[] = $activity_id;
+					}
+				}
 			}
 
-			if ( 'wp_error' !== $r['error_type'] && is_wp_error( $retval ) ) {
-				return false;
-			} elseif ( 'wp_error' === $r['error_type'] && is_wp_error( $retval ) ) {
-				return $retval;
-			}
-
-			return $retval;
+			return $valid_item_ids;
 		}
 
 		/**
