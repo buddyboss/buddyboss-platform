@@ -1016,7 +1016,7 @@ class BP_Email_Tokens {
 
 		$media_ids       = '';
 		$total_media_ids = 0;
-		if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() && ! empty( $tokens['message_id'] ) ) {
+		if ( bp_is_active( 'media' ) && ! empty( $tokens['message_id'] ) ) {
 			$media_ids = bp_messages_get_meta( $tokens['message_id'], 'bp_media_ids', true );
 			if ( ! empty( $media_ids ) ) {
 				$media_ids       = explode( ',', $media_ids );
@@ -1027,7 +1027,7 @@ class BP_Email_Tokens {
 
 		$video_ids       = '';
 		$total_video_ids = 0;
-		if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() && ! empty( $tokens['message_id'] ) ) {
+		if ( bp_is_active( 'media' ) && ! empty( $tokens['message_id'] ) ) {
 			$video_ids = bp_messages_get_meta( $tokens['message_id'], 'bp_video_ids', true );
 			if ( ! empty( $video_ids ) ) {
 				$video_ids       = explode( ',', $video_ids );
@@ -1038,7 +1038,7 @@ class BP_Email_Tokens {
 
 		$document_ids       = '';
 		$total_document_ids = 0;
-		if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() && ! empty( $tokens['message_id'] ) ) {
+		if ( bp_is_active( 'media' ) && ! empty( $tokens['message_id'] ) ) {
 			$document_ids = bp_messages_get_meta( $tokens['message_id'], 'bp_document_ids', true );
 			if ( ! empty( $document_ids ) ) {
 				$document_ids       = explode( ',', $document_ids );
@@ -1048,7 +1048,7 @@ class BP_Email_Tokens {
 		}
 
 		$gif_data = array();
-		if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() && ! empty( $tokens['message_id'] ) ) {
+		if ( bp_is_active( 'media' ) && ! empty( $tokens['message_id'] ) ) {
 			$gif_data = bp_messages_get_meta( $tokens['message_id'], '_gif_data', true );
 		}
 
@@ -1622,7 +1622,7 @@ class BP_Email_Tokens {
 
 		$media_ids       = '';
 		$total_media_ids = 0;
-		if ( bp_is_active( 'media' ) && bp_is_forums_media_support_enabled() && ! empty( $tokens['reply.id'] ) ) {
+		if ( bp_is_active( 'media' ) && ! empty( $tokens['reply.id'] ) ) {
 			$media_ids = get_post_meta( $tokens['reply.id'], 'bp_media_ids', true );
 			if ( ! empty( $media_ids ) ) {
 				$media_ids       = explode( ',', $media_ids );
@@ -1633,7 +1633,7 @@ class BP_Email_Tokens {
 
 		$video_ids       = '';
 		$total_video_ids = 0;
-		if ( bp_is_active( 'media' ) && bp_is_forums_video_support_enabled() && ! empty( $tokens['reply.id'] ) ) {
+		if ( bp_is_active( 'media' ) && ! empty( $tokens['reply.id'] ) ) {
 			$video_ids = get_post_meta( $tokens['reply.id'], 'bp_video_ids', true );
 			if ( ! empty( $video_ids ) ) {
 				$video_ids       = explode( ',', $video_ids );
@@ -1644,7 +1644,7 @@ class BP_Email_Tokens {
 
 		$document_ids       = '';
 		$total_document_ids = 0;
-		if ( bp_is_active( 'media' ) && bp_is_forums_document_support_enabled() && ! empty( $tokens['reply.id'] ) ) {
+		if ( bp_is_active( 'media' ) && ! empty( $tokens['reply.id'] ) ) {
 			$document_ids = get_post_meta( $tokens['reply.id'], 'bp_document_ids', true );
 			if ( ! empty( $document_ids ) ) {
 				$document_ids       = explode( ',', $document_ids );
@@ -1654,7 +1654,7 @@ class BP_Email_Tokens {
 		}
 
 		$gif_data = array();
-		if ( bp_is_active( 'media' ) && bp_is_forums_gif_support_enabled() && ! empty( $tokens['reply.id'] ) ) {
+		if ( bp_is_active( 'media' ) && ! empty( $tokens['reply.id'] ) ) {
 			$gif_data = get_post_meta( $tokens['reply.id'], '_gif_data', true );
 		}
 
@@ -1922,7 +1922,7 @@ class BP_Email_Tokens {
 
 		$media_ids       = '';
 		$total_media_ids = 0;
-		if ( bp_is_active( 'media' ) && bp_is_forums_media_support_enabled() && ! empty( $tokens['discussion.id'] ) ) {
+		if ( bp_is_active( 'media' ) && ! empty( $tokens['discussion.id'] ) ) {
 			$media_ids = get_post_meta( $tokens['discussion.id'], 'bp_media_ids', true );
 			if ( ! empty( $media_ids ) ) {
 				$media_ids       = explode( ',', $media_ids );
@@ -1933,7 +1933,7 @@ class BP_Email_Tokens {
 
 		$video_ids       = '';
 		$total_video_ids = 0;
-		if ( bp_is_active( 'media' ) && bp_is_forums_video_support_enabled() && ! empty( $tokens['discussion.id'] ) ) {
+		if ( bp_is_active( 'media' ) && ! empty( $tokens['discussion.id'] ) ) {
 			$video_ids = get_post_meta( $tokens['discussion.id'], 'bp_video_ids', true );
 			if ( ! empty( $video_ids ) ) {
 				$video_ids       = explode( ',', $video_ids );
@@ -1944,7 +1944,7 @@ class BP_Email_Tokens {
 
 		$document_ids       = '';
 		$total_document_ids = 0;
-		if ( bp_is_active( 'media' ) && bp_is_forums_document_support_enabled() && ! empty( $tokens['discussion.id'] ) ) {
+		if ( bp_is_active( 'media' ) && ! empty( $tokens['discussion.id'] ) ) {
 			$document_ids = get_post_meta( $tokens['discussion.id'], 'bp_document_ids', true );
 			if ( ! empty( $document_ids ) ) {
 				$document_ids       = explode( ',', $document_ids );
@@ -1954,7 +1954,7 @@ class BP_Email_Tokens {
 		}
 
 		$gif_data = array();
-		if ( bp_is_active( 'media' ) && bp_is_forums_gif_support_enabled() && ! empty( $tokens['discussion.id'] ) ) {
+		if ( bp_is_active( 'media' ) && ! empty( $tokens['discussion.id'] ) ) {
 			$gif_data = get_post_meta( $tokens['discussion.id'], '_gif_data', true );
 		}
 
@@ -2366,7 +2366,7 @@ class BP_Email_Tokens {
 												<?php
 												$media_ids       = '';
 												$total_media_ids = 0;
-												if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() && ! empty( $message['message_id'] ) ) {
+												if ( bp_is_active( 'media' ) && ! empty( $message['message_id'] ) ) {
 													$media_ids = bp_messages_get_meta( $message['message_id'], 'bp_media_ids', true );
 
 													if ( ! empty( $media_ids ) ) {
@@ -2378,7 +2378,7 @@ class BP_Email_Tokens {
 
 												$video_ids       = '';
 												$total_video_ids = 0;
-												if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() && ! empty( $message['message_id'] ) ) {
+												if ( bp_is_active( 'media' ) && ! empty( $message['message_id'] ) ) {
 													$video_ids = bp_messages_get_meta( $message['message_id'], 'bp_video_ids', true );
 
 													if ( ! empty( $video_ids ) ) {
@@ -2390,7 +2390,7 @@ class BP_Email_Tokens {
 
 												$document_ids       = '';
 												$total_document_ids = 0;
-												if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() && ! empty( $message['message_id'] ) ) {
+												if ( bp_is_active( 'media' ) && ! empty( $message['message_id'] ) ) {
 													$document_ids = bp_messages_get_meta( $message['message_id'], 'bp_document_ids', true );
 
 													if ( ! empty( $document_ids ) ) {
@@ -2401,7 +2401,7 @@ class BP_Email_Tokens {
 												}
 
 												$gif_data = array();
-												if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() && ! empty( $message['message_id'] ) ) {
+												if ( bp_is_active( 'media' ) && ! empty( $message['message_id'] ) ) {
 													$gif_data = bp_messages_get_meta( $message['message_id'], '_gif_data', true );
 												}
 
@@ -2816,7 +2816,7 @@ class BP_Email_Tokens {
 														$media_ids       = '';
 														$total_media_ids = 0;
 
-														if ( bp_is_active( 'media' ) && bp_is_profile_media_support_enabled() ) {
+														if ( bp_is_active( 'media' ) ) {
 															$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
 
 															if ( ! empty( $media_ids ) ) {
@@ -2828,7 +2828,7 @@ class BP_Email_Tokens {
 
 														$video_ids       = '';
 														$total_video_ids = 0;
-														if ( bp_is_active( 'media' ) && bp_is_profile_video_support_enabled() ) {
+														if ( bp_is_active( 'media' ) ) {
 															$video_ids = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
 
 															if ( ! empty( $video_ids ) ) {
@@ -2840,7 +2840,7 @@ class BP_Email_Tokens {
 
 														$document_ids       = '';
 														$total_document_ids = 0;
-														if ( bp_is_active( 'media' ) && bp_is_profile_document_support_enabled() ) {
+														if ( bp_is_active( 'media' ) ) {
 															$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
 
 															if ( ! empty( $document_ids ) ) {
@@ -2851,7 +2851,7 @@ class BP_Email_Tokens {
 														}
 
 														$gif_data = array();
-														if ( bp_is_active( 'media' ) && bp_is_profiles_gif_support_enabled() ) {
+														if ( bp_is_active( 'media' ) ) {
 															$gif_data = bp_activity_get_meta( $activity->id, '_gif_data', true );
 														}
 
@@ -3036,7 +3036,7 @@ class BP_Email_Tokens {
 
 		$media_ids       = '';
 		$total_media_ids = 0;
-		if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && ! empty( $tokens['discussion.id'] ) ) {
+		if ( bp_is_active( 'media' ) && ! empty( $tokens['discussion.id'] ) ) {
 			$media_ids = get_post_meta( $tokens['discussion.id'], 'bp_media_ids', true );
 			if ( ! empty( $media_ids ) ) {
 				$media_ids       = explode( ',', $media_ids );
@@ -3047,7 +3047,7 @@ class BP_Email_Tokens {
 
 		$video_ids       = '';
 		$total_video_ids = 0;
-		if ( bp_is_active( 'media' ) && bp_is_group_video_support_enabled() && ! empty( $tokens['discussion.id'] ) ) {
+		if ( bp_is_active( 'media' ) && ! empty( $tokens['discussion.id'] ) ) {
 			$video_ids = get_post_meta( $tokens['discussion.id'], 'bp_video_ids', true );
 			if ( ! empty( $video_ids ) ) {
 				$video_ids       = explode( ',', $video_ids );
@@ -3058,7 +3058,7 @@ class BP_Email_Tokens {
 
 		$document_ids       = '';
 		$total_document_ids = 0;
-		if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() && ! empty( $tokens['discussion.id'] ) ) {
+		if ( bp_is_active( 'media' ) && ! empty( $tokens['discussion.id'] ) ) {
 			$document_ids = get_post_meta( $tokens['discussion.id'], 'bp_document_ids', true );
 			if ( ! empty( $document_ids ) ) {
 				$document_ids       = explode( ',', $document_ids );
@@ -3068,7 +3068,7 @@ class BP_Email_Tokens {
 		}
 
 		$gif_data = array();
-		if ( bp_is_active( 'media' ) && bp_is_groups_gif_support_enabled() && ! empty( $tokens['discussion.id'] ) ) {
+		if ( bp_is_active( 'media' ) && ! empty( $tokens['discussion.id'] ) ) {
 			$gif_data = get_post_meta( $tokens['discussion.id'], '_gif_data', true );
 		}
 
@@ -3429,7 +3429,7 @@ class BP_Email_Tokens {
 														<?php
 														$media_ids       = '';
 														$total_media_ids = 0;
-														if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && ! empty( $activity->id ) ) {
+														if ( bp_is_active( 'media' ) && ! empty( $activity->id ) ) {
 															$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
 
 															if ( ! empty( $media_ids ) ) {
@@ -3441,7 +3441,7 @@ class BP_Email_Tokens {
 
 														$video_ids       = '';
 														$total_video_ids = 0;
-														if ( bp_is_active( 'media' ) && bp_is_group_video_support_enabled() && ! empty( $activity->id ) ) {
+														if ( bp_is_active( 'media' ) && ! empty( $activity->id ) ) {
 															$video_ids = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
 
 															if ( ! empty( $video_ids ) ) {
@@ -3453,7 +3453,7 @@ class BP_Email_Tokens {
 
 														$document_ids       = '';
 														$total_document_ids = 0;
-														if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() && ! empty( $activity->id ) ) {
+														if ( bp_is_active( 'media' ) && ! empty( $activity->id ) ) {
 															$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
 
 															if ( ! empty( $document_ids ) ) {
@@ -3464,7 +3464,7 @@ class BP_Email_Tokens {
 														}
 
 														$gif_data = array();
-														if ( bp_is_active( 'media' ) && bp_is_groups_gif_support_enabled() && ! empty( $activity->id ) ) {
+														if ( bp_is_active( 'media' ) && ! empty( $activity->id ) ) {
 															$gif_data = bp_activity_get_meta( $activity->id, '_gif_data', true );
 														}
 
