@@ -1742,36 +1742,29 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$r = bp_parse_args(
 				$args,
 				array(
-					'item_type'  => '',
-					'item_id'    => '',
-					'error_type' => 'bool',
+					'item_type' => '',
+					'item_id'   => '',
 				)
 			);
 
 			$valid_item_ids = array();
+
 			if ( ! empty( $r['item_id'] ) && 'activity' === $r['item_type'] ) {
 				$activities_ids = array();
 				$activities     = BP_Activity_Activity::get(
 					array(
-						'moderation_query' => false,
-						'per_page'         => 0,
-						'fields'           => 'ids',
-						'in'               => ! is_array( $r['item_id'] ) ? array( $r['item_id'] ) : $r['item_id'],
+						'per_page' => 0,
+						'fields'   => 'ids',
+						'in'       => ! is_array( $r['item_id'] ) ? array( $r['item_id'] ) : $r['item_id'],
 					),
 				);
 
 				if ( ! empty( $activities['activities'] ) ) {
 					$activities_ids = $activities['activities'];
 				}
-
-				foreach ( $activities_ids as $activity_id ) {
-					if ( ! empty( $activity_id ) ) {
-						$valid_item_ids[] = $activity_id;
-					}
-				}
 			}
 
-			return $valid_item_ids;
+			return $activities_ids;
 		}
 
 		/**
