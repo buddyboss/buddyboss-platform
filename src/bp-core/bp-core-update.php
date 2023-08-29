@@ -467,6 +467,10 @@ function bp_version_updater() {
 			bb_update_to_2_4_10();
 		}
 
+		if ( $raw_db_version < 20661 ) {
+			bb_update_to_2_4_30();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 		}
@@ -3195,6 +3199,44 @@ function bb_update_to_2_4_10() {
 				$member = new BP_Groups_Member( $admin_id, $group->id );
 				$member->promote( 'admin' );
 			}
+		}
+	}
+}
+
+/**
+ * Run migration for resolving group message thread meta fix.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_4_30() {
+	global $wpdb;
+
+	if ( ! bp_is_active( 'messages' ) ) {
+		return;
+	}
+
+	$message      = $wpdb->base_prefix . 'bp_messages_messages';
+	$message_meta = $wpdb->base_prefix . 'bp_messages_meta';
+
+	$sql = "SELECT m.id, m.thread_id FROM {$message} m";
+	$sql .= " INNER JOIN {$message_meta} mm_joined ON mm_joined.message_id = m.id AND mm_joined.meta_key = '%s' AND mm_joined.meta_value = '%s'";
+	$sql .= " LEFT JOIN {$message_meta} mm_users ON mm_users.message_id = m.id AND mm_users.meta_key = '%s'";
+	$sql .= " LEFT JOIN {$message_meta} mm_type ON mm_type.message_id = m.id AND mm_type.meta_key = '%s'";
+	$sql .= ' WHERE mm_users.message_id IS NULL AND mm_type.message_id IS NULL';
+
+	// Retrieve all messages that are missing the required specified metadata.
+	$messages = $wpdb->get_results( $wpdb->prepare( $sql, 'group_message_group_joined', 'yes', 'group_message_users', 'group_message_type' ) );
+
+	if ( ! empty( $messages ) ) {
+		foreach ( $messages as $message ) {
+			$first_message = BP_Messages_Thread::get_first_message( $message->thread_id );
+			$message_users = bp_messages_get_meta( $first_message->id, 'group_message_users', true );
+			$message_type  = bp_messages_get_meta( $first_message->id, 'group_message_type', true );
+
+			bp_messages_update_meta( $message->id, 'group_message_users', $message_users );
+			bp_messages_update_meta( $message->id, 'group_message_type', $message_type );
 		}
 	}
 }
