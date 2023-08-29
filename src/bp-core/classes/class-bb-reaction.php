@@ -1729,7 +1729,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @return mixed|null
 		 */
-		private function bb_get_registered_reaction_item_types() {
+		public function bb_get_registered_reaction_item_types() {
 			return apply_filters( 'bb_register_reaction_types', $this->registered_reaction_types );
 		}
 
