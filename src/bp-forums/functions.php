@@ -458,9 +458,9 @@ function bbp_remove_group_id_from_forum( $forum_id = 0, $group_id = 0 ) {
 
 	// Maybe update the groups forums.
 	if ( in_array( $group_id, $group_ids ) ) {
-		$group_ids = array_diff( array_values( $group_ids ), (array) $group_id );
-
-		return bbp_update_forum_group_ids( $forum_id, $group_ids );
+		$new_group_ids = array_diff( array_values( $group_ids ), (array) $group_id );
+		bb_update_last_group_forum_associations( $group_id, $forum_id );
+		return bbp_update_forum_group_ids( $forum_id, $new_group_ids );
 	}
 }
 
@@ -486,9 +486,9 @@ function bbp_remove_forum_id_from_group( $group_id = 0, $forum_id = 0 ) {
 
 	// Maybe update the groups forums.
 	if ( in_array( $forum_id, $forum_ids ) ) {
-		$forum_ids = array_diff( array_values( $forum_ids ), (array) $forum_id );
-
-		return bbp_update_group_forum_ids( $group_id, $forum_ids );
+		$new_forum_ids = array_diff( array_values( $forum_ids ), (array) $forum_id );
+		bb_update_last_group_forum_associations( $group_id, $forum_id );
+		return bbp_update_group_forum_ids( $group_id, $new_forum_ids );
 	}
 }
 
@@ -1149,3 +1149,36 @@ if ( bbp_allow_anonymous() ) {
 	add_action( 'wp_ajax_nopriv_bb_forums_parse_url', 'bb_forums_link_preview_parse_url' );
 }
 
+/**
+ * Backup the last group forum associations.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $group_id Group ID.
+ * @param int $forum_id Forum ID.
+ *
+ */
+function bb_update_last_group_forum_associations( $group_id = 0, $forum_id = 0 ) {
+	if ( empty( $forum_id ) ) {
+		return;
+	}
+	$forum_id = bbp_get_forum_id( $forum_id );
+
+	// Use current group if none is set.
+	if ( empty( $group_id ) ) {
+		$group_id = bp_get_current_group_id();
+	}
+
+	// Get the values to backup.
+	$group_ids = array_filter( bbp_get_forum_group_ids( $forum_id ) );
+	$forum_ids = array_filter( bbp_get_group_forum_ids( $group_id ) );
+
+	if ( in_array( $group_id, $group_ids ) && in_array( $forum_id, $forum_ids ) ) {
+
+		// Save the backups.
+		update_post_meta( $forum_id, '_last_bbp_group_ids', $group_ids );
+		groups_update_groupmeta( $group_id, 'last_forum_id', $forum_ids );
+		
+	}
+
+}
