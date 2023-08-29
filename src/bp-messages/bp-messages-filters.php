@@ -284,6 +284,8 @@ function bp_group_messages_groups_membership_accepted( $user_id, $group_id, $acc
 		);
 		bp_messages_update_meta( $last_message->id, 'group_message_group_joined_users', array( $joined_user ) );
 		bp_messages_update_meta( $last_message->id, 'group_message_group_joined', 'yes' );
+		bp_messages_update_meta( $last_message->id, 'group_message_users', 'all' );
+		bp_messages_update_meta( $last_message->id, 'group_message_type', 'open' );
 	}
 }
 
@@ -419,6 +421,8 @@ function bp_group_messages_join_new_member( $group_id, $user_id ) {
 
 		$last_message = BP_Messages_Thread::get_last_message( $group_thread );
 		bp_messages_update_meta( $last_message->id, 'group_message_group_joined', 'yes' );
+		bp_messages_update_meta( $last_message->id, 'group_message_users', 'all' );
+		bp_messages_update_meta( $last_message->id, 'group_message_type', 'open' );
 		bp_messages_update_meta( $last_message->id, 'group_id', $group_id );
 		$joined_user = array(
 			'user_id' => $user_id,
@@ -536,6 +540,8 @@ function bp_group_messages_accept_new_member( $user_id, $group_id ) {
 
 		$last_message = BP_Messages_Thread::get_last_message( $group_thread );
 		bp_messages_update_meta( $last_message->id, 'group_message_group_joined', 'yes' );
+		bp_messages_update_meta( $last_message->id, 'group_message_users', 'all' );
+		bp_messages_update_meta( $last_message->id, 'group_message_type', 'open' );
 		bp_messages_update_meta( $last_message->id, 'group_id', $group_id );
 		$joined_user = array(
 			'user_id' => $user_id,
@@ -719,6 +725,8 @@ function bp_messages_add_user_to_group_message_thread( $group_id, $user_id ) {
 
 			$last_message = BP_Messages_Thread::get_last_message( $group_thread );
 			bp_messages_update_meta( $last_message->id, 'group_message_group_joined', 'yes' );
+			bp_messages_update_meta( $last_message->id, 'group_message_users', 'all' );
+			bp_messages_update_meta( $last_message->id, 'group_message_type', 'open' );
 			bp_messages_update_meta( $last_message->id, 'group_id', $group_id );
 			$joined_user = array(
 				'user_id' => $user_id,
