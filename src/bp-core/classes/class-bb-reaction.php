@@ -478,9 +478,9 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$r = bp_parse_args(
 				$args,
 				array(
-					'reaction_id'  => '',
+					'reaction_id'  => 0,
 					'item_type'    => '',
-					'item_id'      => '',
+					'item_id'      => 0,
 					'user_id'      => bp_loggedin_user_id(),
 					'date_created' => bp_core_current_time(),
 					'error_type'   => 'bool',
@@ -541,6 +541,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				$validate_callback = call_user_func( $validate_callback, $r );
 				if ( empty( $validate_callback ) ) {
 					return $validate_callback;
+				} else {
+					$r['item_id'] = current( $validate_callback );
 				}
 			}
 
@@ -694,15 +696,15 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$r = bp_parse_args(
 				$args,
 				array(
-					'reaction_id' => '',
-					'item_id'     => '',
+					'reaction_id' => 0,
+					'item_id'     => 0,
 					'item_type'   => '',
 					'user_id'     => bp_loggedin_user_id(),
 					'error_type'  => 'bool',
 				)
 			);
 
-			if ( false === self::$status ) { // Use self::$status to check
+			if ( false === self::$status ) { // Use self::$status to check.
 				return false;
 			}
 
@@ -839,6 +841,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					$validate_callback = call_user_func( $validate_callback, $r );
 					if ( empty( $validate_callback ) ) {
 						return $validate_callback;
+					} else {
+						$r['item_id'] = $validate_callback;
 					}
 				}
 			}
