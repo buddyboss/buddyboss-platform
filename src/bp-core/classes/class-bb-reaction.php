@@ -95,7 +95,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @access private
 		 * @var bool
 		 */
-		private static $status = true;
+		public static $status = false;
 
 		/**
 		 * Get the instance of this class.
@@ -140,20 +140,9 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				)
 			);
 
-			do_action( 'bb_reaction_init' );
+			add_action( 'bb_reaction_after_add_user_item_reaction', array( $this, 'bb_add_activity_reaction_data' ), 10, 2 );
+			add_action( 'bb_reaction_after_remove_user_item_reaction', array( $this, 'bb_remove_activity_reaction_data' ), 10, 3 );
 
-			add_action( 'bb_reaction_init', array( $this, 'bb_initialize_status' ) );
-		}
-
-		/**
-		 * Function to check intialize status.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @return void
-		 */
-		public function bb_initialize_status() {
-			self::$status = false; // Set status to false
 		}
 
 		/******************* Required functions ******************/
@@ -450,7 +439,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				empty( $r['reaction_type'] ) ||
 				empty( $r['validate_callback'] ) ||
 				isset( $this->registered_reaction_types[ $r['reaction_type'] ] ) ||
-				! preg_match('/^[a-zA-Z0-9_-]+$/', $r['reaction_type'] )
+				! preg_match( '/^[a-zA-Z0-9_-]+$/', $r['reaction_type'] )
 			) {
 				return;
 			}
@@ -487,8 +476,34 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				)
 			);
 
-			if ( false === self::$status ) { // Use self::$status to check.
+			if ( true === self::$status ) { // Use self::$status to check.
 				return false;
+			}
+
+			$all_registered_reaction_types = $this->bb_get_registered_reaction_item_types();
+
+			if (
+				empty( $all_registered_reaction_types ) ||
+				! isset( $all_registered_reaction_types[ $r['item_type'] ] ) ||
+				empty( $all_registered_reaction_types[ $r['item_type'] ]['validate_callback'] ) ||
+				! is_callable( $all_registered_reaction_types[ $r['item_type'] ]['validate_callback'] )
+			) {
+				if ( 'wp_error' === $r['error_type'] ) {
+					return new WP_Error(
+						'bb_user_reactions_invalid_item_type',
+						__( 'The item type is invalid.', 'buddyboss' )
+					);
+				}
+
+				return false;
+			} else {
+				$validate_callback = $all_registered_reaction_types[ $r['item_type'] ]['validate_callback'];
+				$validate_callback = call_user_func( $validate_callback, $r );
+				if ( empty( $validate_callback ) ) {
+					$r['item_id'] = 0;
+				} else {
+					$r['item_id'] = current( $validate_callback );
+				}
 			}
 
 			// Reaction need reaction ID.
@@ -518,32 +533,6 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				}
 
 				return false;
-			}
-
-			$all_registered_reaction_types = $this->bb_get_registered_reaction_item_types();
-
-			if (
-				empty( $all_registered_reaction_types ) ||
-				! isset( $all_registered_reaction_types[ $r['item_type'] ] ) ||
-				empty( $all_registered_reaction_types[ $r['item_type'] ]['validate_callback'] ) ||
-				! is_callable( $all_registered_reaction_types[ $r['item_type'] ]['validate_callback'] )
-			) {
-				if ( 'wp_error' === $r['error_type'] ) {
-					return new WP_Error(
-						'bb_user_reactions_invalid_item_type',
-						__( 'The item type is invalid.', 'buddyboss' )
-					);
-				}
-
-				return false;
-			} else {
-				$validate_callback = $all_registered_reaction_types[ $r['item_type'] ]['validate_callback'];
-				$validate_callback = call_user_func( $validate_callback, $r );
-				if ( empty( $validate_callback ) ) {
-					return $validate_callback;
-				} else {
-					$r['item_id'] = current( $validate_callback );
-				}
 			}
 
 			/**
@@ -604,7 +593,6 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				$user_reaction_id = $get_reaction->id;
 			}
 
-
 			/**
 			 * Fires after the add user item reaction in DB.
 			 *
@@ -633,7 +621,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		public function bb_remove_user_item_reaction( $user_reaction_id ) {
 			global $wpdb;
 
-			if ( empty( $user_reaction_id ) ) {
+			if ( empty( $user_reaction_id ) || true === self::$status ) { // Use self::$status to check.
 				return false;
 			}
 
@@ -665,10 +653,11 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			 *
 			 * @since BuddyBoss [BBVERSION]
 			 *
-			 * @param int|false $deleted          The number of rows deleted, or false on error.
 			 * @param int       $user_reaction_id User reaction id.
+			 * @param int|false $deleted          The number of rows deleted, or false on error.
+			 * @param object    $get              Reaction data.
 			 */
-			do_action( 'bb_reaction_after_remove_user_item_reaction', $deleted, $user_reaction_id );
+			do_action( 'bb_reaction_after_remove_user_item_reaction', $user_reaction_id, $deleted, $get );
 
 			$this->bb_prepare_reaction_summary_data(
 				array(
@@ -704,7 +693,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				)
 			);
 
-			if ( false === self::$status ) { // Use self::$status to check.
+			if ( true === self::$status ) { // Use self::$status to check.
 				return false;
 			}
 
@@ -1753,6 +1742,13 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			$valid_item_ids = array();
 
+			if (
+				! bp_is_active( 'activity' ) ||
+				false === bp_is_activity_like_active()
+			) {
+				return $valid_item_ids;
+			}
+
 			if ( ! empty( $r['item_id'] ) && 'activity' === $r['item_type'] ) {
 				$activities_ids = array();
 				$activities     = BP_Activity_Activity::get(
@@ -1803,10 +1799,40 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$item_id   = $args['item_id'];
 			$item_type = $args['item_type'];
 
-			$data_sql = "SELECT reaction_id, count(id) AS total FROM " . self::$user_reaction_table . " WHERE item_type = %s and item_id = %d GROUP BY reaction_id;";
+			$data_sql = 'SELECT reaction_id, count(id) AS total FROM ' . self::$user_reaction_table . ' WHERE item_type = %s and item_id = %d GROUP BY reaction_id;';
 			$sql      = $wpdb->prepare( $data_sql, $item_type, $item_id ); // phpcs:ignore
 
-			return $wpdb->get_results( $sql );
+			return $wpdb->get_results( $sql ); // phpcs:ignore
+		}
+
+		public function bb_add_activity_reaction_data( $user_reaction_id, $args ) {
+			if (
+				! bp_is_active( 'activity' ) ||
+				empty( $args['item_id'] ) ||
+				empty( $args['item_type'] ) ||
+				empty( $args['user_id'] ) ||
+				'activity' !== $args['item_type']
+			) {
+				return;
+			}
+
+			bp_activity_add_user_favorite( $args['item_id'], $args['user_id'] );
+
+		}
+
+		public function bb_remove_activity_reaction_data( $user_reaction_id, $deleted, $get ) {
+			if (
+				! bp_is_active( 'activity' ) ||
+				empty( $get->item_type ) ||
+				'activity' !== $get->item_type ||
+				true !== $deleted ||
+				empty( $get->user_id ) ||
+				empty( $get->item_id )
+			) {
+				return;
+			}
+
+			bp_activity_remove_user_favorite( $get->item_id, $get->user_id );
 		}
 	}
 }
