@@ -1567,21 +1567,25 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			$item_id     = $args['item_id'];
 			$item_type   = $args['item_type'];
+			$reaction_id = $args['reaction_id'];
 
 			$reaction_data = $this->bb_get_reaction_reactions_count( $args );
 
+			$reaction_args = array(
+				'name'  => 'total_item_reaction_count',
+				'rel1'  => $item_type,
+				'rel2'  => $item_id,
+				'value' => 0,
+				'rel3'  => $reaction_id,
+			);
 			if ( ! empty( $reaction_data ) ) {
-				foreach ( $reaction_data as $key => $value ) {
-					$this->bb_add_reactions_data(
-						array(
-							'name'  => 'total_item_reaction_count',
-							'value' => $value->total,
-							'rel1'  => $item_type,
-							'rel2'  => $item_id,
-							'rel3'  => $value->reaction_id,
-						)
-					);
+				foreach ( $reaction_data as $value ) {
+					$reaction_args['value'] = $value->total;
+					$reaction_args['rel3']  = $value->reaction_id;
+					$this->bb_add_reactions_data( $reaction_args );
 				}
+			} else {
+				$this->bb_add_reactions_data( $reaction_args );
 			}
 
 			$total_item_reactions_data = $this->bb_get_reactions_data(
