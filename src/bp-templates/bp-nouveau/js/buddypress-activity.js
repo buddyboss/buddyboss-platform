@@ -984,11 +984,17 @@ window.bp = window.bp || {};
 			}
 
 			// Displaying the comment form.
-			if ( target.hasClass( 'activity-state-comments' ) || target.hasClass( 'acomment-reply' ) || target.parent().hasClass( 'acomment-reply' ) ) {
-				var comment_link       = target;
-				item_id                = activity_id;
-				form                   = $( '#ac-form-' + activity_id );
-				var $activity_comments = $( '[data-bp-activity-id="' + item_id + '"] .activity-comments' );
+			if (
+				target.hasClass( 'activity-state-comments' ) ||
+				target.hasClass( 'acomment-reply' ) ||
+				target.parent().hasClass( 'acomment-reply' ) ||
+				target.hasClass( 'acomment-edit' )
+			) {
+				var comment_link          = target;
+				item_id                   = activity_id;
+				form                      = $( '#ac-form-' + activity_id );
+				var $activity_comments    = $( '[data-bp-activity-id="' + item_id + '"] .activity-comments' ),
+					activity_comment_data = false;
 
 				if ( target.closest( '.bb-media-model-container' ).length ) {
 					form               = target.closest( '.bb-media-model-container' ).find( '#ac-form-' + activity_id );
@@ -1007,10 +1013,12 @@ window.bp = window.bp || {};
 					item_id = target.closest( 'li' ).data( 'bp-activity-comment-id' );
 				}
 
-				this.toggleMultiMediaOptions( form,target );
+				if ( target.hasClass( 'acomment-edit' ) && target.closest( 'li' ).data( 'bp-activity-comment' ) ) {
+					activity_comment_data = target.closest( 'li' ).data( 'bp-activity-comment' );
+				}
 
-				// ?? hide and display none..
-				// form.css( 'display', 'none' );
+				this.toggleMultiMediaOptions( form, target );
+
 				form.removeClass( 'root' );
 				$( '.ac-form' ).hide();
 
@@ -1024,14 +1032,21 @@ window.bp = window.bp || {};
 					}
 				);
 
-				// It's an activity we're commenting.
-				if ( item_id === activity_id ) {
-					$activity_comments.append( form );
-					form.addClass( 'root' );
-
-					// It's a comment we're replying to.
+				if ( target.hasClass( 'acomment-edit' ) && ! _.isNull( activity_comment_data ) ) {
+					var acomment = $( '[data-bp-activity-comment-id="' + item_id + '"]' );
+					acomment.find( '#acomment-display-' + item_id ).addClass( 'bp-hide' );
+					acomment.find( '#acomment-edit-form-' + item_id ).append( form );
+					form.addClass( 'acomment-edit' ).attr( 'data-item-id', item_id );
 				} else {
-					$( '[data-bp-activity-comment-id="' + item_id + '"]' ).append( form );
+					// It's an activity we're commenting.
+					if ( item_id === activity_id ) {
+						$activity_comments.append( form );
+						form.addClass( 'root' );
+
+						// It's a comment we're replying to.
+					} else {
+						$( '[data-bp-activity-comment-id="' + item_id + '"]' ).append( form );
+					}
 				}
 
 				form.slideDown( 200 );
@@ -1164,13 +1179,22 @@ window.bp = window.bp || {};
 			// Removing the form.
 			if ( target.hasClass( 'ac-reply-cancel' ) ) {
 
-				$( target ).closest( '.ac-form' ).slideUp( 200 );
+				var $form = $( target ).closest( '.ac-form' );
+				$form.slideUp( 200 );
 
 				// Change the aria state back to false on comment cancel.
 				$( '.acomment-reply' ).attr( 'aria-expanded', 'false' );
 
 				self.destroyCommentMediaUploader( activity_id );
 				self.destroyCommentDocumentUploader( activity_id );
+
+				if ( $form.hasClass( 'acomment-edit' ) ) {
+					var form_item_id  = $form.attr( 'data-item-id' ),
+						form_acomment = $( '[data-bp-activity-comment-id="' + form_item_id + '"]' );
+
+					form_acomment.find( '#acomment-display-' + form_item_id ).removeClass( 'bp-hide' );
+					$form.removeClass( 'acomment-edit' ).removeAttr( 'data-item-id' );
+				}
 
 				// Stop event propagation.
 				event.preventDefault();
@@ -2236,11 +2260,15 @@ window.bp = window.bp || {};
 			this.destroyCommentVideoUploader( activityID );
 		},
 
-		toggleMultiMediaOptions: function(form,target) {
+		toggleMultiMediaOptions: function( form, target ) {
 			if ( ! _.isUndefined( BP_Nouveau.media ) ) {
 
 				var parent_activity = target.closest( '.activity-item' );
 				var activity_data   = target.closest( '.activity-item' ).data( 'bp-activity' );
+
+				if ( target.closest( 'li' ).data( 'bp-activity-comment' ) ) {
+					activity_data = target.closest( 'li' ).data( 'bp-activity-comment' );
+				}
 
 				if ( target.closest( 'li' ).hasClass( 'groups' ) || parent_activity.hasClass( 'groups' ) ) {
 
