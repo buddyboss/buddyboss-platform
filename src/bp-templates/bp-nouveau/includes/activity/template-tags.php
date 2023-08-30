@@ -1866,6 +1866,7 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 
 	$activity_comment_id = bp_get_activity_comment_id();
 	$activity_id         = bp_get_activity_id();
+	$current_comment     = bp_activity_current_comment();
 
 	if ( ! $activity_comment_id || ! $activity_id ) {
 		return $buttons;
@@ -1899,6 +1900,28 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 	}
 
 	$buttons = array();
+
+	if ( 'activity_comment' === $current_comment->type && bb_activity_comment_user_can_edit() && bb_is_activity_comment_edit_enabled() ) {
+		$buttons['activity_comment_edit'] = array(
+			'id'                => 'activity_comment_edit',
+			'position'          => 30,
+			'component'         => 'activity',
+			'parent_element'    => $parent_element,
+			'parent_attr'       => $parent_attr,
+			'must_be_logged_in' => true,
+			'button_element'    => $button_element,
+			'button_attr'       => array(
+				'href'  => '#',
+				'class' => 'edit acomment-edit bp-secondary-action',
+				'title' => __( 'Edit Comment', 'buddyboss' ),
+			),
+			'link_text'         => sprintf(
+				'<span class="bp-screen-reader-text">%1$s</span><span class="edit-label">%2$s</span>',
+				__( 'Edit Comment', 'buddyboss' ),
+				__( 'Edit', 'buddyboss' )
+			),
+		);
+	}
 
 	if ( bp_is_active( 'moderation' ) ) {
 		$buttons['activity_comment_report'] = bp_activity_comment_get_report_link(
@@ -1940,6 +1963,7 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 			$buttons['activity_comment_delete']['button_attr']['href'] = bp_get_activity_comment_delete_link();
 		}
 	}
+
 	/**
 	 * Filter to add your buttons, use the position argument to choose where to insert it.
 	 *
@@ -1971,8 +1995,6 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 	if ( ! $return ) {
 		return array();
 	}
-
-
 
 	/**
 	 * Leave a chance to adjust the $return
