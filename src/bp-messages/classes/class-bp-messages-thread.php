@@ -1242,6 +1242,8 @@ class BP_Messages_Thread {
 			$sorted_threads[ $thread->thread_id ] = strtotime( $thread->date_sent );
 		}
 
+		arsort( $sorted_threads );
+
 		$threads = array();
 		if ( 'ids' === $r['fields'] ) {
 			$threads = array_keys( $sorted_threads );
