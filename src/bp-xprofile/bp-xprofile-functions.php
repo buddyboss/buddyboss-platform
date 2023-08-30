@@ -2463,3 +2463,18 @@ function bb_xprofile_get_field_type( $field_id ) {
 
 	return $field_type;
 }
+
+/**
+ * Function to update xprofile social networks field values.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_xprofile_update_social_network_fields() {
+
+	/**
+	 * Check the google+ was setup or not in social network field.
+	 */
+
+}
