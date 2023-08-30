@@ -3830,7 +3830,7 @@ input.search-query-input {
   content: "\eeb4";
 }
 
-#buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.edit-activity:before {
+#buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.acomment-edit:before, #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.edit-activity:before {
   content: "\ee5a";
 }
 
