@@ -1749,9 +1749,9 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				return $valid_item_ids;
 			}
 
+			$activities_ids = array();
 			if ( ! empty( $r['item_id'] ) && 'activity' === $r['item_type'] ) {
-				$activities_ids = array();
-				$activities     = BP_Activity_Activity::get(
+				$activities = BP_Activity_Activity::get(
 					array(
 						'per_page' => 0,
 						'fields'   => 'ids',
