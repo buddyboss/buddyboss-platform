@@ -661,9 +661,10 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			$this->bb_prepare_reaction_summary_data(
 				array(
-					'item_id'   => $get->item_id,
-					'item_type' => $get->item_type,
-					'user_id'   => $get->user_id,
+					'item_id'     => $get->item_id,
+					'item_type'   => $get->item_type,
+					'user_id'     => $get->user_id,
+					'reaction_id' => $get->reaction_id,
 				)
 			);
 
