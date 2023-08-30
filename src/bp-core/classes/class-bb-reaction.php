@@ -1805,6 +1805,16 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			return $wpdb->get_results( $sql ); // phpcs:ignore
 		}
 
+		/**
+		 * Backward compatibility to add user favorite.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int   $user_reaction_id User reaction id.
+		 * @param array $args             Array of arguments.
+		 *
+		 * @return void
+		 */
 		public function bb_add_activity_reaction_data( $user_reaction_id, $args ) {
 			if (
 				! bp_is_active( 'activity' ) ||
@@ -1820,6 +1830,17 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 		}
 
+		/**
+		 * Backward compatibility to remove user favorite.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int       $user_reaction_id User reaction id.
+		 * @param int|false $deleted          The number of rows deleted, or false on error.
+		 * @param object    $get              Reaction data.
+		 *
+		 * @return void
+		 */
 		public function bb_remove_activity_reaction_data( $user_reaction_id, $deleted, $get ) {
 			if (
 				! bp_is_active( 'activity' ) ||
