@@ -1066,21 +1066,24 @@ window.bp = window.bp || {};
 						);
 
 						// Register keyup event.
-						div_editor.addEventListener( 'keyup', function ( e ) {
-							var $activity_comment_content   = jQuery( e.currentTarget ).html();
+						div_editor.addEventListener(
+							'keyup',
+							function ( e ) {
+								var $activity_comment_content = jQuery( e.currentTarget ).html();
 
-							content = $.trim( $activity_comment_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
-							content = content.replace( /&nbsp;/g, ' ' );
+								content = $.trim( $activity_comment_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+								content = content.replace( /&nbsp;/g, ' ' );
 
-							var content_text = jQuery( e.currentTarget ).text().trim();
-							if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0 ) {
-								jQuery( e.currentTarget ).closest( 'form' ).addClass( 'has-content' );
-							} else {
-								jQuery( e.currentTarget ).closest( 'form' ).removeClass( 'has-content' );
+								var content_text = jQuery( e.currentTarget ).text().trim();
+								if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0 ) {
+									jQuery( e.currentTarget ).closest( 'form' ).addClass( 'has-content' );
+								} else {
+									jQuery( e.currentTarget ).closest( 'form' ).removeClass( 'has-content' );
+								}
 							}
-						} );
-						$(div_editor).closest( 'form' ).addClass( 'events-initiated');
-						self.InitiatedCommentForms.push( commentID );//Add this Comment form in initiated comment form list
+						);
+						$( div_editor ).closest( 'form' ).addClass( 'events-initiated' );
+						self.InitiatedCommentForms.push( commentID ); // Add this Comment form in initiated comment form list.
 					}
 				}
 
@@ -1089,7 +1092,7 @@ window.bp = window.bp || {};
 
 				var peak_offset = ( $( window ).height() / 2 - 75 );
 
-				if( ! jQuery( 'body' ).hasClass( 'bb-is-mobile' ) ) {
+				if ( ! jQuery( 'body' ).hasClass( 'bb-is-mobile' ) ) {
 					$.scrollTo(
 						form,
 						500,
@@ -1099,10 +1102,13 @@ window.bp = window.bp || {};
 						}
 					);
 				} else {
-					setTimeout( function() {
-						var scrollInt = jQuery( window ).height() > 300 ? 200 : 100;
-						jQuery( 'html, body' ).animate( { scrollTop: jQuery( div_editor ).offset().top - scrollInt }, 500 );
-					}, 500 );
+					setTimeout(
+						function() {
+							var scrollInt = jQuery( window ).height() > 300 ? 200 : 100;
+							jQuery( 'html, body' ).animate( { scrollTop: jQuery( div_editor ).offset().top - scrollInt }, 500 );
+						},
+						500
+					);
 				}
 
 				$( '#ac-form-' + activity_id + ' #ac-input-' + activity_id ).focus();
@@ -1121,12 +1127,15 @@ window.bp = window.bp || {};
 								emojibtn_click: function () {
 									$( '#ac-input-' + activity_id )[0].emojioneArea.hidePicker();
 
-									// Check if emoji is added then enable submit button
-									var $activity_comment_input = $( '#ac-form-' + activity_id + ' #ac-input-' + activity_id );
-									var $activity_comment_content   = $activity_comment_input.html();
+									// Check if emoji is added then enable submit button.
+									var $activity_comment_input   = $( '#ac-form-' + activity_id + ' #ac-input-' + activity_id );
+									var $activity_comment_content = $activity_comment_input.html();
+
 									content = $.trim( $activity_comment_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 									content = content.replace( /&nbsp;/g, ' ' );
+
 									var content_text = $activity_comment_input.text();
+
 									if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0 ) {
 										$activity_comment_input.closest( 'form' ).addClass( 'has-content' );
 									} else {
@@ -1135,11 +1144,11 @@ window.bp = window.bp || {};
 								},
 
 								picker_show: function () {
-									$( this.button[0] ).closest( '.post-emoji' ).addClass('active');
+									$( this.button[0] ).closest( '.post-emoji' ).addClass( 'active' );
 								},
 
 								picker_hide: function () {
-									$( this.button[0] ).closest( '.post-emoji' ).removeClass('active');
+									$( this.button[0] ).closest( '.post-emoji' ).removeClass( 'active' );
 								},
 							}
 						}
@@ -1364,8 +1373,8 @@ window.bp = window.bp || {};
 				// Stop event propagation.
 				event.preventDefault();
 
-				var activity_data = activity_item.data( 'bp-activity' );
-				var activity_URL_preview = activity_item.data( 'link-url' )  !== '' ? activity_item.data( 'link-url' ) : null ;
+				var activity_data        = activity_item.data( 'bp-activity' );
+				var activity_URL_preview = activity_item.data( 'link-url' ) !== '' ? activity_item.data( 'link-url' ) : null;
 
 				if ( typeof activity_data !== 'undefined' ) {
 					bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data, activity_URL_preview );
@@ -1580,8 +1589,8 @@ window.bp = window.bp || {};
 							formData.append( 'action', 'media_upload' );
 							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
 
-							var tool_box = target.parents( '.ac-reply-toolbar' );
-							var commentForm = target.closest( '.ac-form');
+							var tool_box    = target.parents( '.ac-reply-toolbar' );
+							var commentForm = target.closest( '.ac-form' );
 							commentForm.addClass( 'has-media' );
 							if ( tool_box.find( '.ac-reply-document-button' ) ) {
 								tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
@@ -1602,7 +1611,7 @@ window.bp = window.bp || {};
 						'uploadprogress',
 						function( element ) {
 
-							var commentForm = target.closest( '.ac-form');
+							var commentForm = target.closest( '.ac-form' );
 							commentForm.addClass( 'media-uploading' );
 
 							var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
@@ -1660,7 +1669,7 @@ window.bp = window.bp || {};
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
+								} else if ( file.status == 'error' && ( file.xhr && file.xhr.status == 0 ) ) { // update server error text to user friendly.
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 								}
 							} else {
@@ -1668,7 +1677,7 @@ window.bp = window.bp || {};
 									$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup comment-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 								}
 								this.removeFile( file );
-								var commentForm = target.closest( '.ac-form');
+								var commentForm = target.closest( '.ac-form' );
 								commentForm.removeClass( 'media-uploading' );
 							}
 						}
@@ -1692,8 +1701,8 @@ window.bp = window.bp || {};
 							}
 
 							if ( ! _.isNull( self.dropzone_obj ) && ! _.isNull( self.dropzone_obj.files ) && self.dropzone_obj.files.length === 0 ) {
-								var tool_box = target.parents( '.ac-reply-toolbar' );
-								var commentForm = target.closest( '.ac-form');
+								var tool_box    = target.parents( '.ac-reply-toolbar' );
+								var commentForm = target.closest( '.ac-form' );
 								commentForm.removeClass( 'has-media' );
 								if ( tool_box.find( '.ac-reply-document-button' ) ) {
 									tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
@@ -1711,12 +1720,12 @@ window.bp = window.bp || {};
 						}
 					);
 
-					// Enable submit button when all medias are uploaded
+					// Enable submit button when all medias are uploaded.
 					self.dropzone_obj.on(
 						'complete',
 						function() {
 							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
-								var commentForm = target.closest( '.ac-form');
+								var commentForm = target.closest( '.ac-form' );
 								commentForm.removeClass( 'media-uploading' );
 							}
 						}
@@ -1783,9 +1792,9 @@ window.bp = window.bp || {};
 					self.dropzone_document_obj.on(
 						'addedfile',
 						function ( file ) {
-							var filename = file.upload.filename;
+							var filename 	  = file.upload.filename;
 							var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
-							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
+							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
 						}
 					);
 
@@ -1795,8 +1804,8 @@ window.bp = window.bp || {};
 							formData.append( 'action', 'document_document_upload' );
 							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
 
-							var tool_box = target.parents( '.ac-reply-toolbar' );
-							var commentForm = target.closest( '.ac-form');
+							var tool_box    = target.parents( '.ac-reply-toolbar' );
+							var commentForm = target.closest( '.ac-form' );
 							commentForm.addClass( 'has-media' );
 							if ( tool_box.find( '.ac-reply-media-button' ) ) {
 								tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
@@ -1817,7 +1826,7 @@ window.bp = window.bp || {};
 						'uploadprogress',
 						function( element ) {
 
-							var commentForm = target.closest( '.ac-form');
+							var commentForm = target.closest( '.ac-form' );
 							commentForm.addClass( 'media-uploading' );
 
 							var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
@@ -1875,7 +1884,7 @@ window.bp = window.bp || {};
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
+								} else if ( file.status == 'error' && ( file.xhr && file.xhr.status == 0 ) ) { // update server error text to user friendly.
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 								}
 							} else {
@@ -1883,7 +1892,7 @@ window.bp = window.bp || {};
 									$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup comment-document"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 								}
 								this.removeFile( file );
-								var commentForm = target.closest( '.ac-form');
+								var commentForm = target.closest( '.ac-form' );
 								commentForm.removeClass( 'media-uploading' );
 							}
 						}
@@ -1907,8 +1916,8 @@ window.bp = window.bp || {};
 							}
 
 							if ( ! _.isNull( self.dropzone_document_obj ) && ! _.isNull( self.dropzone_document_obj.files ) && self.dropzone_document_obj.files.length === 0 ) {
-								var tool_box = target.parents( '.ac-reply-toolbar' );
-								var commentForm = target.closest( '.ac-form');
+								var tool_box    = target.parents( '.ac-reply-toolbar' );
+								var commentForm = target.closest( '.ac-form' );
 								commentForm.removeClass( 'has-media' );
 								if ( tool_box.find( '.ac-reply-media-button' ) ) {
 									tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
@@ -1926,12 +1935,12 @@ window.bp = window.bp || {};
 						}
 					);
 
-					// Enable submit button when all medias are uploaded
+					// Enable submit button when all medias are uploaded.
 					self.dropzone_document_obj.on(
 						'complete',
 						function() {
 							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
-								var commentForm = target.closest( '.ac-form');
+								var commentForm = target.closest( '.ac-form' );
 								commentForm.removeClass( 'media-uploading' );
 							}
 						}
@@ -2001,8 +2010,8 @@ window.bp = window.bp || {};
 							formData.append( 'action', 'video_upload' );
 							formData.append( '_wpnonce', BP_Nouveau.nonces.video );
 
-							var tool_box = target.parents( '.ac-reply-toolbar' );
-							var commentForm = target.closest( '.ac-form');
+							var tool_box    = target.parents( '.ac-reply-toolbar' );
+							var commentForm = target.closest( '.ac-form' );
 							commentForm.addClass( 'has-media' );
 							if ( tool_box.find( '.ac-reply-media-button' ) ) {
 								tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
@@ -2050,15 +2059,15 @@ window.bp = window.bp || {};
 						'uploadprogress',
 						function( element ) {
 
-							var commentForm = target.closest( '.ac-form');
+							var commentForm = target.closest( '.ac-form' );
 							commentForm.addClass( 'media-uploading' );
 
 							var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
 							var radius        = circle.r.baseVal.value;
 							var circumference = radius * 2 * Math.PI;
 
-							circle.style.strokeDasharray  = circumference + ' ' + circumference;
-							var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+							circle.style.strokeDasharray = circumference + ' ' + circumference;
+							var offset                   = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
 
 							if ( element.upload.progress <= 99 ) {
 								$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
@@ -2111,7 +2120,7 @@ window.bp = window.bp || {};
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
+								} else if ( file.status == 'error' && ( file.xhr && file.xhr.status == 0 ) ) { // update server error text to user friendly.
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 								}
 							} else {
@@ -2119,7 +2128,7 @@ window.bp = window.bp || {};
 									$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup comment-video"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.video.invalid_video_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 								}
 								this.removeFile( file );
-								var commentForm = target.closest( '.ac-form');
+								var commentForm = target.closest( '.ac-form' );
 								commentForm.removeClass( 'media-uploading' );
 							}
 						}
@@ -2143,8 +2152,8 @@ window.bp = window.bp || {};
 							}
 
 							if ( ! _.isNull( self.dropzone_video_obj ) && ! _.isNull( self.dropzone_video_obj.files ) && self.dropzone_video_obj.files.length === 0 ) {
-								var tool_box = target.parents( '.ac-reply-toolbar' );
-								var commentForm = target.closest( '.ac-form');
+								var tool_box    = target.parents( '.ac-reply-toolbar' );
+								var commentForm = target.closest( '.ac-form' );
 								commentForm.removeClass( 'has-media' );
 
 								if ( tool_box.find( '.ac-reply-media-button' ) ) {
@@ -2163,12 +2172,12 @@ window.bp = window.bp || {};
 						}
 					);
 
-					// Enable submit button when all medias are uploaded
+					// Enable submit button when all medias are uploaded.
 					self.dropzone_video_obj.on(
 						'complete',
 						function() {
 							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
-								var commentForm = target.closest( '.ac-form');
+								var commentForm = target.closest( '.ac-form' );
 								commentForm.removeClass( 'media-uploading' );
 							}
 						}
@@ -2359,9 +2368,9 @@ window.bp = window.bp || {};
 
 		toggleActivityOption: function( event ) {
 
-			if( $( event.target ).hasClass( 'bb-activity-more-options-action' ) || $( event.target ).parent().hasClass( 'bb-activity-more-options-action' ) ) {
+			if ( $( event.target ).hasClass( 'bb-activity-more-options-action' ) || $( event.target ).parent().hasClass( 'bb-activity-more-options-action' ) ) {
 
-				if( $( event.target ).closest( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).hasClass( 'is_visible' ) ) {
+				if ( $( event.target ).closest( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).hasClass( 'is_visible' ) ) {
 					$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible' );
 				} else {
 					$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible' );
@@ -2375,18 +2384,21 @@ window.bp = window.bp || {};
 
 		navigateToSpecificComment: function () {
 
-			setTimeout( function () {
+			setTimeout(
+				function () {
 
-				if ( window.location.hash ) {
+					if ( window.location.hash ) {
 
-					var id = window.location.hash;
-					var adminBar = $( '#wpadminbar' ).length !== 0 ? $( '#wpadminbar' ).innerHeight() : 0;
-					if ( $( id ).length > 0 ) {
-						$( 'html, body' ).animate( { scrollTop: parseInt( $( id ).offset().top ) - (80 + adminBar) }, 0 );
+						var id       = window.location.hash;
+						var adminBar = $( '#wpadminbar' ).length !== 0 ? $( '#wpadminbar' ).innerHeight() : 0;
+						if ( $( id ).length > 0 ) {
+							$( 'html, body' ).animate( { scrollTop: parseInt( $( id ).offset().top ) - (80 + adminBar) }, 0 );
+						}
 					}
-				}
 
-			}, 200 );
+				},
+				200
+			);
 		}
 
 	};
