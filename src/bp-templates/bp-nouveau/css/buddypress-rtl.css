@@ -6566,6 +6566,15 @@ form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-resu
   margin: 0 0 5px 0;
 }
 
+form.acomment-edit .ac-reply-content {
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+form.acomment-edit .ac-reply-content:focus-within {
+  border-color: #5087e5;
+}
+
 .bp-ac-form-cotainer {
   display: -webkit-box;
   display: -ms-flexbox;
