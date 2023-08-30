@@ -78,6 +78,7 @@ add_action( 'template_include', 'bb_setup_attachment_video_preview_template', PH
 
 add_action( 'bb_video_upload', 'bb_messages_video_save' );
 
+add_filter( 'bb_activity_comment_get_edit_data', 'bp_video_get_edit_activity_data' );
 /**
  * Add video theatre template for activity pages.
  *

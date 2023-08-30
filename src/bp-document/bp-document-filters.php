@@ -85,6 +85,7 @@ add_action( 'bp_add_rewrite_rules', 'bb_setup_attachment_document_preview' );
 add_filter( 'query_vars', 'bb_setup_attachment_document_preview_query' );
 add_action( 'template_include', 'bb_setup_attachment_document_preview_template', PHP_INT_MAX );
 
+add_filter( 'bb_activity_comment_get_edit_data', 'bp_document_get_edit_activity_data' );
 /**
  * Clear a user's symlinks document when attachment document delete.
  *

@@ -6026,3 +6026,73 @@ function bp_activity_get_types_list() {
 	 */
 	return apply_filters( 'bp_activity_get_types_list', $types );
 }
+
+/**
+ * Get the Activity comment edit data.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $activity_comment_id Activity comment ID.
+ *
+ * @return array|bool The Activity comment edit data or false otherwise.
+ */
+function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
+	global $activities_template;
+
+	// check activity comment empty or not.
+	if ( empty( $activity_comment_id ) && empty( $activities_template ) ) {
+		return false;
+	}
+	// get activity comment.
+	if ( ! empty( $activities_template->activity->current_comment ) ) {
+		$activity_comment = $activities_template->activity->current_comment;
+	} else {
+		$activity_comment = new BP_Activity_Activity( $activity_comment_id );
+	}
+
+	// check activity comment exists.
+	if ( empty( $activity_comment->id ) ) {
+		return false;
+	}
+
+	$can_edit_privacy                = true;
+	$album_id                        = 0;
+	$folder_id                       = 0;
+	$album_activity_comment__id      = bp_activity_get_meta( $activity_comment_id, 'bp_media_album_activity', true );
+	$album_video_activity_comment_id = bp_activity_get_meta( $activity_comment_id, 'bp_video_album_activity', true );
+
+	if ( ! empty( $album_activity_comment__id ) || ! empty( $album_video_activity_comment_id ) ) {
+		$album_id = $album_activity_comment__id;
+	}
+
+	$folder_activity_comment_id = bp_activity_get_meta( $activity_comment_id, 'bp_document_folder_activity', true );
+	if ( ! empty( $folder_activity_comment_id ) ) {
+		$folder_id = $folder_activity_comment_id;
+	}
+
+	// if album or folder activity comment, then set privacy edit to always false.
+	if ( $album_id || $folder_id ) {
+		$can_edit_privacy = false;
+	}
+
+	/**
+	 * Filter here to edit the activity comment edit data.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $activity_comment_data The Activity comment edit data.
+	 */
+	return apply_filters(
+		'bb_activity_comment_get_edit_data',
+		array(
+			'id'               => $activity_comment_id,
+			'can_edit_privacy' => $can_edit_privacy,
+			'album_id'         => $album_id,
+			'folder_id'        => $folder_id,
+			'content'          => stripslashes( $activity_comment->content ),
+			'item_id'          => $activity_comment->item_id,
+			'object'           => $activity_comment->component,
+			'privacy'          => $activity_comment->privacy,
+		)
+	);
+}

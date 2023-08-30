@@ -2016,3 +2016,50 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 
 	return $return;
 }
+
+/**
+ * Output the Activity comment timestamp into the bp-timestamp attribute.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_nouveau_activity_comment_timestamp() {
+	echo esc_attr( bb_nouveau_get_activity_comment_timestamp() );
+}
+
+/**
+ * Get the Activity comment timestamp.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return integer The Activity comment timestamp.
+ */
+function bb_nouveau_get_activity_comment_timestamp() {
+	/**
+	 * Filter here to edit the activity comment timestamp.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param integer $value The Activity comment timestamp.
+	 */
+	return apply_filters( 'bb_nouveau_get_activity_comment_timestamp', strtotime( bp_get_activity_comment_date_recorded() ) );
+}
+
+/**
+ * Output the Activity comment edit data.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_nouveau_edit_activity_comment_data() {
+	echo bb_nouveau_get_edit_activity_comment_data();
+}
+
+/**
+ * Get the Activity comment edit data.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string The Activity comment edit data.
+ */
+function bb_nouveau_get_edit_activity_comment_data() {
+	return htmlentities( wp_json_encode( bb_activity_comment_get_edit_data( bp_get_activity_comment_id() ) ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
+}
