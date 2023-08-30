@@ -140,7 +140,7 @@ window.bp = window.bp || {};
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-video-button', this.openCommentsVideoUploader.bind( this ) );
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-gif-button', this.openGifPicker.bind( this ) );
 
-			//Activity More Option Dropdown
+			// Activity More Option Dropdown.
 			$( document ).on( 'click', this.toggleActivityOption.bind( this ) );
 
 			// Activity autoload.
@@ -461,16 +461,16 @@ window.bp = window.bp || {};
 					comment_items.each(
 						function( i, item ) {
 							if ( i < comment_items.length - 4 ) {
-								
+
 								// Prepend a link to display all.
 								if ( ! i ) {
 									$( item ).before( '<li class="show-all"><button class="text-button" type="button" data-bp-show-comments-id="#' + activity_item.prop( 'id' ) + '/show-all/">' + BP_Nouveau.show_x_comments + '</button></li>' );
 								}
 
-								//stop hiding elements if the id from hash url for specific comment matches.
+								// stop hiding elements if the id from hash url for specific comment matches.
 								if ( window.location.hash && '#' + $( item ).attr( 'id' ) === window.location.hash ) {
 
-									//in case it's a reply from comment, show hidden parent elements for it to show.
+									// in case it's a reply from comment, show hidden parent elements for it to show.
 									$( item ).parents( 'li.comment-item' ).show();
 
 									return false;
@@ -605,8 +605,8 @@ window.bp = window.bp || {};
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.is_activity_edit ) && 0 < BP_Nouveau.activity.params.is_activity_edit ) {
 				var activity_item = $( '#activity-' + BP_Nouveau.activity.params.is_activity_edit );
 				if ( activity_item.length ) {
-					var activity_data = activity_item.data( 'bp-activity' );
-					var activity_URL_preview = activity_item.data( 'link-url' )  !== '' ? activity_item.data( 'link-url' ) : null ;
+					var activity_data        = activity_item.data( 'bp-activity' );
+					var activity_URL_preview = ( activity_item.data( 'link-url' ) ) !== '' ? activity_item.data( 'link-url' ) : null;
 
 					if ( ! _.isUndefined( activity_data ) ) {
 						bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data, activity_URL_preview );
@@ -1036,32 +1036,36 @@ window.bp = window.bp || {};
 
 				form.slideDown( 200 );
 
-				var emojiPosition = form.find('.post-elements-buttons-item.post-emoji').prevAll().not(':hidden').length + 1;
-				form.find('.post-elements-buttons-item.post-emoji').attr( 'data-nth-child', emojiPosition );
+				var emojiPosition = form.find( '.post-elements-buttons-item.post-emoji' ).prevAll().not( ':hidden' ).length + 1;
+				form.find( '.post-elements-buttons-item.post-emoji' ).attr( 'data-nth-child', emojiPosition );
 
-				var gifPosition = form.find('.post-elements-buttons-item.post-gif').prevAll().not(':hidden').length + 1;
-				form.find('.post-elements-buttons-item.post-gif').attr( 'data-nth-child', gifPosition );
+				var gifPosition = form.find( '.post-elements-buttons-item.post-gif' ).prevAll().not( ':hidden' ).length + 1;
+				form.find( '.post-elements-buttons-item.post-gif' ).attr( 'data-nth-child', gifPosition );
 
 				/* Stop past image from clipboard */
 				var ce = form.find( '.ac-input[contenteditable]' );
 				if ( ce.length > 0 ) {
 					var div_editor = ce.get( 0 );
-					var commentID = $(div_editor).attr( 'id' ) + ( $(div_editor).closest( '.bb-media-model-inner' ).length ? '-theater' : '' );
+					var commentID  = $( div_editor ).attr( 'id' ) + ( $( div_editor ).closest( '.bb-media-model-inner' ).length ? '-theater' : '' );
 
-					// Comment block is moved from theater and needs to be initiated
-					if( $.inArray( commentID, self.InitiatedCommentForms ) !== -1 && !$(div_editor).closest( 'form' ).hasClass( 'events-initiated')  ) {
+					// Comment block is moved from theater and needs to be initiated.
+					if ( $.inArray( commentID, self.InitiatedCommentForms ) !== -1 && ! $( div_editor ).closest( 'form' ).hasClass( 'events-initiated' ) ) {
 						var index = self.InitiatedCommentForms.indexOf( commentID );
-						self.InitiatedCommentForms.splice(index, 1);
+						self.InitiatedCommentForms.splice( index, 1 );
 					}
 
-					if ( $.inArray( commentID, self.InitiatedCommentForms ) == -1 &&  !$(div_editor).closest( 'form' ).hasClass( 'events-initiated') ) {//Check if Comment form has already paste event initiated
-						div_editor.addEventListener( 'paste', function ( e ) {
-							e.preventDefault();
-							var text = e.clipboardData.getData( 'text/plain' );
-							document.execCommand( 'insertText', false, text );
-						} );
+					if ( $.inArray( commentID, self.InitiatedCommentForms ) == -1 && ! $( div_editor ).closest( 'form' ).hasClass( 'events-initiated' ) ) {
+						// Check if Comment form has already paste event initiated.
+						div_editor.addEventListener(
+							'paste',
+							function ( e ) {
+								e.preventDefault();
+								var text = e.clipboardData.getData( 'text/plain' );
+								document.execCommand( 'insertText', false, text );
+							}
+						);
 
-						//Register keyup event
+						// Register keyup event.
 						div_editor.addEventListener( 'keyup', function ( e ) {
 							var $activity_comment_content   = jQuery( e.currentTarget ).html();
 
@@ -1142,7 +1146,7 @@ window.bp = window.bp || {};
 					);
 				}
 			}
-			
+
 			if ( target.hasClass( 'activity-state-no-comments' ) ) {
 				// Stop event propagation.
 				event.preventDefault();
@@ -1268,7 +1272,7 @@ window.bp = window.bp || {};
 											activity_comments.append( '<ul></ul>' );
 										}
 									}
-									
+
 									activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
 									$( form ).find( '.ac-input' ).first().html( '' );
 
