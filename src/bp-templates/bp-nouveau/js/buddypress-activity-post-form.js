@@ -246,10 +246,10 @@ window.bp = window.bp || {};
 				}
 			);
 
-			$( window.activity_edit_editor.elements[ 0 ] ).on( 'paste', function(e) {
+			window.activity_edit_editor.subscribe( 'editablePaste', function ( e ) {
 				setTimeout( function() {
 					// Wrap all target <li> elements in a single <ul>
-					var targetLiElements = $(e.currentTarget).find('li').filter(function() {
+					var targetLiElements = $(e.target).find('li').filter(function() {
 						return !$(this).parent().is('ul') && !$(this).parent().is('ol');
 					});
 					if (targetLiElements.length > 0) {
@@ -3217,10 +3217,10 @@ window.bp = window.bp || {};
 									}
 								);
 
-								$( window.activity_editor.elements[ 0 ] ).on( 'paste', function(e) {
+								window.activity_editor.subscribe( 'editablePaste', function ( e ) {
 									setTimeout( function() {
 										// Wrap all target <li> elements in a single <ul>
-										var targetLiElements = $(e.currentTarget).find('li').filter(function() {
+										var targetLiElements = $(e.target).find('li').filter(function() {
 											return !$(this).parent().is('ul') && !$(this).parent().is('ol');
 										});
 										if (targetLiElements.length > 0) {
