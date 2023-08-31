@@ -777,6 +777,7 @@ class BuddyPress {
 			'BP_REST_Moderation_Endpoint'                  => 'moderation',
 			'BP_REST_Moderation_Report_Endpoint'           => 'moderation',
 			'BB_REST_Subscriptions_Endpoint'               => 'core',
+			'BB_REST_Reactions_Endpoint'                   => 'core',
 		);
 
 		$component = null;
