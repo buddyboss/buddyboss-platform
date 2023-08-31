@@ -356,7 +356,7 @@ add_action( 'wp_ajax_bb_admin_check_valid_giphy_key', 'bb_admin_check_valid_giph
 /**
  * Validate the email address allowed to register as per the registration restriction settings.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.11
  *
  * @param object $errors error object.
  * @param bool   $update updating user or adding user.
@@ -385,7 +385,7 @@ function bb_validate_restricted_email_on_registration( $errors, $update, $user )
 /**
  * Validate & prevent email update and related email.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.11
  *
  * @param int $user_id User ID.
  */
