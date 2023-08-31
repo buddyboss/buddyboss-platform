@@ -105,7 +105,7 @@ form.acomment-edit {
 
 			.ac-input[contenteditable="true"] {
 				border: 0;
-				padding: 10px 0;
+				padding: 0;
 
 				&:focus {
 					box-shadow: none;
@@ -122,6 +122,10 @@ form.acomment-edit {
 		.ac-reply-cancel,
 		input[name="ac_form_submit"] {
 			float: right;
+		}
+
+		input[name="ac_form_submit"] {
+			margin-left: 5px;
 		}
 
 		.ac-reply-cancel {

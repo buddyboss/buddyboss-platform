@@ -6592,7 +6592,7 @@ form.acomment-edit .ac-reply-content .ac-textarea {
 
 form.acomment-edit .ac-reply-content .ac-textarea .ac-input[contenteditable="true"] {
   border: 0;
-  padding: 10px 0;
+  padding: 0;
 }
 
 form.acomment-edit .ac-reply-content .ac-textarea .ac-input[contenteditable="true"]:focus {
@@ -6608,6 +6608,10 @@ form.acomment-edit .ac-reply-content .ac-textarea .ac-reply-toolbar {
 form.acomment-edit .ac-reply-content .ac-reply-cancel,
 form.acomment-edit .ac-reply-content input[name="ac_form_submit"] {
   float: right;
+}
+
+form.acomment-edit .ac-reply-content input[name="ac_form_submit"] {
+  margin-left: 5px;
 }
 
 #buddypress form.acomment-edit .ac-reply-content .ac-reply-cancel {
