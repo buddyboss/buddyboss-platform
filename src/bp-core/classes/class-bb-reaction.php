@@ -826,7 +826,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					}
 
 					return false;
-				} else {
+				} elseif ( ! empty( $r['item_id'] ) ) {
 					$validate_callback = $all_registered_reaction_types[ $r['item_type'] ]['validate_callback'];
 					$validate_callback = call_user_func( $validate_callback, $r );
 					if ( empty( $validate_callback ) ) {
