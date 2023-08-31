@@ -1004,6 +1004,9 @@ window.bp = window.bp || {};
 				// Stop event propagation.
 				event.preventDefault();
 
+				// If form is edit activity comment, then reset it.
+				self.resetActivityCommentForm( form );
+
 				// If the comment count span inside the link is clicked.
 				if ( target.parent().hasClass( 'acomment-reply' ) ) {
 					comment_link = target.parent();
@@ -1192,9 +1195,7 @@ window.bp = window.bp || {};
 				self.destroyCommentDocumentUploader( activity_id );
 
 				// If form is edit activity comment, then reset it.
-				if ( $form.hasClass( 'acomment-edit' ) ) {
-					self.resetActivityCommentForm( $form );
-				}
+				self.resetActivityCommentForm( $form );
 
 				// Stop event propagation.
 				event.preventDefault();
@@ -2706,6 +2707,12 @@ window.bp = window.bp || {};
 		},
 
 		resetActivityCommentForm: function ( form ) {
+
+			// Form is not edit activity comment form, then return.
+			if ( ! form.hasClass( 'acomment-edit' ) ) {
+				return;
+			}
+
 			var form_activity_id = form.find( 'input[name="comment_form_id"]' ).val(),
 				form_item_id     = form.attr( 'data-item-id' ),
 				form_acomment    = $( '[data-bp-activity-comment-id="' + form_item_id + '"]' ),
