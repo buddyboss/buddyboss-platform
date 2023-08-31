@@ -2472,9 +2472,72 @@ function bb_xprofile_get_field_type( $field_id ) {
  * @return void
  */
 function bb_xprofile_update_social_network_fields() {
+	global $wpdb, $bp_background_updater;
 
 	/**
 	 * Check the google+ was setup or not in social network field.
 	 */
+	$table_name      = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+	$social_networks = $wpdb->get_col( "SELECT id FROM {$table_name} a WHERE type = 'socialnetworks'" ); //phpcs:ignore
+	if (
+		! empty( $social_networks ) &&
+		! is_wp_error( $social_networks )
+	) {
+		foreach ( $social_networks as $network_field_id ) {
+			$field = xprofile_get_field( $network_field_id );
+			if ( ! empty( $field->id ) ) {
+				$field_name      = 'google';
+				$sql             = $wpdb->prepare( "SELECT id from {$table_name} WHERE parent_id = %d AND name = %s", $field->id, $field_name ); // phpcs:ignore
+				$google_field_id = $wpdb->get_var( $sql ); //phpcs:ignore
 
+				if ( ! empty( $google_field_id ) ) {
+					$wpdb->query( "DELETE FROM {$table_name} WHERE id = {$google_field_id}" ); //phpcs:ignore
+
+					$bp_background_updater->data(
+						array(
+							array(
+								'callback' => 'bb_remove_google_plus_fields',
+							),
+							'args' => array( $field->id, $field_name ),
+						),
+					);
+					$bp_background_updater->save()->schedule_event();
+				}
+			}
+		}
+	}
+}
+
+function bb_remove_google_plus_fields( $field_id, $field_name ) {
+	global $wpdb, $bp_background_updater;
+
+	$table_name = bp_core_get_table_prefix() . 'bp_xprofile_data';
+	$user_ids   = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT user_id FROM {$table_name} WHERE field_id = %d and value like %s limit 0, 20", $field_id, '%' . $wpdb->esc_like( $field_name ) . '%' ) );
+
+	if (
+		! empty( $user_ids ) ||
+		! is_wp_error( $user_ids )
+	) {
+		foreach ( $user_ids as $user_id ) {
+			$field_data = new BP_XProfile_ProfileData( $field_id, $user_id );
+			$data_value = maybe_unserialize( $field_data->value );
+			if ( ! empty( $data_value ) && isset( $data_value[ $field_name ] ) ) {
+				$field_value = $data_value[ $field_name ];
+				unset( $data_value[ $field_name ] );
+				update_user_meta( $user_id, 'bb_xprofile_social_google_plus', $field_value );
+				$field_data->value = maybe_serialize( $data_value );
+				$field_data->save();
+			}
+		}
+
+		$bp_background_updater->data(
+			array(
+				array(
+					'callback' => 'bb_remove_google_plus_fields',
+				),
+				'args' => array( $field_id, $field_name ),
+			),
+		);
+		$bp_background_updater->save()->schedule_event();
+	}
 }
