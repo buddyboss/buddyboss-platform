@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.4.11 =
+* New Feature! - This new 'Restrict Registration' feature allows you to restrict or allow specific email or domains from registering on your site
+
 = 2.4.10 =
 * Bug: Activity - If a link contains a @user mention, the rest of the link was being cut off
 * Bug: Activity - Web fall back pages were showing a warning if it contains a link preview
