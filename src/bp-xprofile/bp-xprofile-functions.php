@@ -2499,7 +2499,12 @@ function bb_xprofile_update_social_network_fields() {
 							array(
 								'callback' => 'bb_remove_google_plus_fields',
 							),
-							'args' => array( $field->id, $field_name ),
+							'args' => array(
+								array(
+									'field_id'   => $field->id,
+									'field_name' => $field_name,
+								),
+							),
 						),
 					);
 					$bp_background_updater->save();
@@ -2511,8 +2516,14 @@ function bb_xprofile_update_social_network_fields() {
 	}
 }
 
-function bb_remove_google_plus_fields( $field_id, $field_name ) {
+function bb_remove_google_plus_fields( $args ) {
 	global $wpdb, $bp_background_updater;
+	if ( empty( $args['field_id'] ) || empty( $args['field_name'] ) ) {
+		return;
+	}
+
+	$field_id   = $args['field_id'];
+	$field_name = $args['field_name'];
 
 	error_log( print_r( 'bg_bb_remove_google_plus_fields', 1 ) );
 
@@ -2540,7 +2551,7 @@ function bb_remove_google_plus_fields( $field_id, $field_name ) {
 				array(
 					'callback' => 'bb_remove_google_plus_fields',
 				),
-				'args' => array( $field_id, $field_name ),
+				'args' => array( $args ),
 			),
 		);
 		$bp_background_updater->save()->dispatch();
