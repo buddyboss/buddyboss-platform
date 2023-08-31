@@ -3000,7 +3000,7 @@ function bb_profile_slug_tutorial() {
 /**
  * Link to registration restrictions tutorial.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.11
  */
 function bb_registration_restrictions_tutorial() {
 	?>
@@ -3027,7 +3027,7 @@ function bb_registration_restrictions_tutorial() {
 /**
  * Allow admin to add blacklist emails and domains.
  *
- * @since  BuddyBoss [BBVERSION]
+ * @since  BuddyBoss 2.4.11
  */
 function bb_admin_setting_callback_domain_restrictions() {
 
@@ -3166,7 +3166,7 @@ function bb_admin_setting_callback_domain_restrictions() {
 /**
  * Allow admin to add whitelist emails and domains.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.11
  */
 function bb_admin_setting_callback_email_restrictions() {
 
@@ -3249,7 +3249,7 @@ function bb_admin_setting_callback_email_restrictions() {
 /**
  * Callback function for registration restrictions section.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.11
  */
 function bb_admin_setting_callback_registration_restrictions_instructions() {
 	?>
@@ -3260,7 +3260,7 @@ function bb_admin_setting_callback_registration_restrictions_instructions() {
 /**
  * Get label with buddyboss registration notice if not active for the registration restrictions.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.11
  *
  * @return string $bb_registration_notice Notice content.
  */
