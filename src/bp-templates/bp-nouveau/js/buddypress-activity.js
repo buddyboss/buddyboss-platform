@@ -1782,7 +1782,9 @@ window.bp = window.bp || {};
 			var c_id = $( event.currentTarget ).data( 'ac-id' );
 			this.resetGifPicker( c_id );
 
-			$( target ).closest( '.ac-reply-content' ).find( '.dropzone.media-dropzone' ).trigger( 'click' );
+			if( $( target ).closest( 'form.ac-form' ).hasClass( 'acomment-edit' ) ) {
+				$( target ).closest( '.ac-reply-content' ).find( '.dropzone.media-dropzone' ).trigger( 'click' );
+			}
 		},
 
 		openCommentsDocumentUploader: function(event) {
