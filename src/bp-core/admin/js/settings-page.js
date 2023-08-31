@@ -2488,7 +2488,10 @@ window.bp = window.bp || {};
 					$( '.bb-domain-restrictions-listing .registration-restrictions-select' ).find( 'option' ).attr( 'disabled', false );
 				} else {
 					var $select = $listing.find( '.registration-restrictions-rule:not(.custom) .registration-restrictions-input-select' );
-					if ( $select.length === $select.find( 'option[value="never_allow"]:selected' ).length ) {
+					if ( 
+						0 === $select.find( 'option[value="only_allow"]:selected' ).length &&
+						0 === $select.find( 'option[value="always_allow"]:selected' ).length
+					) {
 						$( '.bb-domain-restrictions-listing .registration-restrictions-select' ).find( 'option' ).attr( 'disabled', false );
 					}
 				}
