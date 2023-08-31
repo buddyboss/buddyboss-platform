@@ -2493,12 +2493,11 @@ function bb_xprofile_update_social_network_fields() {
 				if ( ! empty( $google_field_id ) ) {
 					$wpdb->query( "DELETE FROM {$table_name} WHERE id = {$google_field_id}" ); //phpcs:ignore
 
-					error_log( print_r( 'bg_registered', 1 ) );
 					$bp_background_updater->data(
 						array(
 							array(
 								'callback' => 'bb_remove_google_plus_fields',
-								'args'     => array( $field->id, $field_name ),
+								'args'     => array( $network_field_id, $field_name ),
 							),
 						)
 					);
@@ -2507,25 +2506,31 @@ function bb_xprofile_update_social_network_fields() {
 				}
 			}
 		}
-
 		$bp_background_updater->dispatch();
 	}
 }
 
-function bb_remove_google_plus_fields( $field_id, $field_name  ) {
+/**
+ * Function to remove google+ field values from xprofile data.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $field_id   To check against the filed id.
+ * @param string $field_name To check against the filed name.
+ *
+ * @return void
+ */
+function bb_remove_google_plus_fields( $field_id, $field_name ) {
 	global $wpdb, $bp_background_updater;
-	error_log( print_r( $args, 1 ) );
 	if ( empty( $field_name ) || empty( $field_id ) ) {
 		return;
 	}
 
-	error_log( print_r( 'bg_bb_remove_google_plus_fields', 1 ) );
-
 	$table_name = bp_core_get_table_prefix() . 'bp_xprofile_data';
-	$user_ids   = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT user_id FROM {$table_name} WHERE field_id = %d and value like %s limit 0, 20", $field_id, '%' . $wpdb->esc_like( $field_name ) . '%' ) );
+	$user_ids   = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT user_id FROM {$table_name} WHERE field_id = %d and value like %s limit 0, 20", $field_id, '%' . $wpdb->esc_like( $field_name ) . '%' ) ); // phpcs:ignore
 
 	if (
-		! empty( $user_ids ) ||
+		! empty( $user_ids ) &&
 		! is_wp_error( $user_ids )
 	) {
 		foreach ( $user_ids as $user_id ) {
