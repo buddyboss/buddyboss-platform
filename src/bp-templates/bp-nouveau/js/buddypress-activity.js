@@ -1629,6 +1629,7 @@ window.bp = window.bp || {};
 							if ( tool_box.find( '.ac-reply-media-button' ) ) {
 								tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 							}
+							this.element.classList.remove( 'files-uploaded' );
 						}
 					);
 
@@ -1671,6 +1672,9 @@ window.bp = window.bp || {};
 								for ( _i = 0, _len = _ref.length; _i < _len; _i++ ) {
 									node = _ref[_i];
 									_results.push( node.textContent = message );
+								}
+								if ( ! _.isNull( self.dropzone_obj.files ) && self.dropzone_obj.files.length === 0 ) {
+									$( self.dropzone_obj.element ).removeClass( 'files-uploaded' );
 								}
 								return _results;
 							}
@@ -1741,6 +1745,7 @@ window.bp = window.bp || {};
 								if ( tool_box.find( '.ac-reply-media-button' ) ) {
 									tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 								}
+								$( self.dropzone_obj.element ).removeClass( 'files-uploaded' );
 							}
 						}
 					);
@@ -1752,6 +1757,7 @@ window.bp = window.bp || {};
 							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
 								var commentForm = target.closest( '.ac-form' );
 								commentForm.removeClass( 'media-uploading' );
+								this.element.classList.add( 'files-uploaded' );
 							}
 						}
 					);
@@ -1775,6 +1781,8 @@ window.bp = window.bp || {};
 
 			var c_id = $( event.currentTarget ).data( 'ac-id' );
 			this.resetGifPicker( c_id );
+
+			$( target ).closest( '.ac-reply-content' ).find( '.dropzone.media-dropzone' ).trigger( 'click' );
 		},
 
 		openCommentsDocumentUploader: function(event) {
