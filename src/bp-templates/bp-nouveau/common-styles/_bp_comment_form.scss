@@ -81,6 +81,14 @@ form.ac-form {
 // Edit Comment Form
 form.acomment-edit {
 
+	.bp-ac-form-cotainer {
+		align-items: flex-start;
+	}
+
+	.ac-reply-avatar img {
+		max-width: 34px;
+	}
+
 	.ac-reply-content {
 		border: 1px solid $bp-border-color;
 		border-radius: 4px;
@@ -92,15 +100,34 @@ form.acomment-edit {
 		}
 
 		.ac-textarea {
-			padding: 0;
-			margin: 0;
+			margin: 0 0 10px;
+			position: relative;
 
 			.ac-input[contenteditable="true"] {
 				border: 0;
+				padding: 10px 0;
 
 				&:focus {
 					box-shadow: none;
 				}
+			}
+
+			.ac-reply-toolbar {
+				position: absolute;
+				bottom: -45px;
+				left: 10px;
+			}
+		}
+
+		.ac-reply-cancel,
+		input[name="ac_form_submit"] {
+			float: right;
+		}
+
+		.ac-reply-cancel {
+
+			#buddypress & {
+				padding: 5px 10px;
 			}
 		}
 	}

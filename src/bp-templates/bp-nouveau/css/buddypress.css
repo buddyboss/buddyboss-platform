@@ -6566,6 +6566,14 @@ form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-resu
   margin: 0 0 5px 0;
 }
 
+form.acomment-edit .bp-ac-form-cotainer {
+  align-items: flex-start;
+}
+
+form.acomment-edit .ac-reply-avatar img {
+  max-width: 34px;
+}
+
 form.acomment-edit .ac-reply-content {
   border: 1px solid #eee;
   border-radius: 4px;
@@ -6578,16 +6586,32 @@ form.acomment-edit .ac-reply-content:focus-within {
 }
 
 form.acomment-edit .ac-reply-content .ac-textarea {
-  padding: 0;
-  margin: 0;
+  margin: 0 0 10px;
+  position: relative;
 }
 
 form.acomment-edit .ac-reply-content .ac-textarea .ac-input[contenteditable="true"] {
   border: 0;
+  padding: 10px 0;
 }
 
 form.acomment-edit .ac-reply-content .ac-textarea .ac-input[contenteditable="true"]:focus {
   box-shadow: none;
+}
+
+form.acomment-edit .ac-reply-content .ac-textarea .ac-reply-toolbar {
+  position: absolute;
+  bottom: -45px;
+  left: 10px;
+}
+
+form.acomment-edit .ac-reply-content .ac-reply-cancel,
+form.acomment-edit .ac-reply-content input[name="ac_form_submit"] {
+  float: right;
+}
+
+#buddypress form.acomment-edit .ac-reply-content .ac-reply-cancel {
+  padding: 5px 10px;
 }
 
 .bp-ac-form-cotainer {
