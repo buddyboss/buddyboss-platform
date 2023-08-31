@@ -1037,6 +1037,9 @@ window.bp = window.bp || {};
 					acomment.find( '#acomment-display-' + item_id ).addClass( 'bp-hide' );
 					acomment.find( '#acomment-edit-form-' + item_id ).append( form );
 					form.addClass( 'acomment-edit' ).attr( 'data-item-id', item_id );
+
+					// Render activity comment edit data to form.
+					self.editActivityCommentForm( form, activity_comment_data );
 				} else {
 					// It's an activity we're commenting.
 					if ( item_id === activity_id ) {
@@ -1188,12 +1191,9 @@ window.bp = window.bp || {};
 				self.destroyCommentMediaUploader( activity_id );
 				self.destroyCommentDocumentUploader( activity_id );
 
+				// If form is edit activity comment, then reset it.
 				if ( $form.hasClass( 'acomment-edit' ) ) {
-					var form_item_id  = $form.attr( 'data-item-id' ),
-						form_acomment = $( '[data-bp-activity-comment-id="' + form_item_id + '"]' );
-
-					form_acomment.find( '#acomment-display-' + form_item_id ).removeClass( 'bp-hide' );
-					$form.removeClass( 'acomment-edit' ).removeAttr( 'data-item-id' );
+					self.resetActivityCommentForm( $form );
 				}
 
 				// Stop event propagation.
@@ -1816,6 +1816,12 @@ window.bp = window.bp || {};
 					self.dropzone_document_obj.on(
 						'addedfile',
 						function ( file ) {
+
+							// Set data from edit comment.
+							if ( file.document_edit_data ) {
+								self.dropzone_document.push( file.document_edit_data );
+							}
+
 							var filename 	  = file.upload.filename;
 							var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
 							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
@@ -2067,8 +2073,15 @@ window.bp = window.bp || {};
 						'addedfile',
 						function ( file ) {
 
-							if (file.dataURL) {
+							// Set data from edit comment.
+							if ( file.video_edit_data ) {
+								self.dropzone_video.push( file.video_edit_data );
+							}
+
+							if ( file.dataURL && file.video_edit_data.thumb.length ) {
 								// Get Thumbnail image from response.
+								$( file.previewElement ).find( '.dz-video-thumbnail' ).prepend( '<img src=" ' + file.video_edit_data.thumb + ' " />' );
+								$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-thumbnail' );
 							} else {
 
 								if ( bp.Nouveau.getVideoThumb ) {
@@ -2427,6 +2440,304 @@ window.bp = window.bp || {};
 				},
 				200
 			);
+		},
+
+		createThumbnailFromUrl: function ( mock_file ) {
+			var self = this;
+			self.dropzone_obj.createThumbnailFromUrl(
+				mock_file,
+				self.dropzone_obj.options.thumbnailWidth,
+				self.dropzone_obj.options.thumbnailHeight,
+				self.dropzone_obj.options.thumbnailMethod,
+				true,
+				function ( thumbnail ) {
+					self.dropzone_obj.emit( 'thumbnail', mock_file, thumbnail );
+					self.dropzone_obj.emit( 'complete', mock_file );
+				}
+			);
+		},
+
+		editActivityCommentForm: function ( form, activity_comment_data ) {
+			var form_activity_id = form.find( 'input[name="comment_form_id"]' ).val(),
+				toolbar_div      = form.find( '#ac-reply-toolbar-' + form_activity_id ),
+				self 			 = this;
+
+			form.find( '#ac-input-' + form_activity_id ).html( activity_comment_data.content );
+
+			// Inject medias.
+			if (
+				'undefined' !== typeof activity_comment_data.media &&
+				0 < activity_comment_data.media.length
+			) {
+				toolbar_div.find( '.ac-reply-media-button' ).trigger( 'click' );
+				self.disabledCommentDocumentUploader( toolbar_div );
+				self.disabledCommentVideoUploader( toolbar_div );
+				self.disabledCommentGifPicker( toolbar_div );
+
+				var mock_file    = false,
+					media_length = activity_comment_data.media.length;
+
+				for ( var i = 0; i < media_length; i++ ) {
+					mock_file = false;
+
+					var media_edit_data = {};
+					if ( 0 < parseInt( activity_comment_data.id ) ) {
+						media_edit_data = {
+							'id': activity_comment_data.media[i].attachment_id,
+							'media_id': activity_comment_data.media[i].id,
+							'name': activity_comment_data.media[i].name,
+							'thumb': activity_comment_data.media[i].thumb,
+							'url': activity_comment_data.media[i].url,
+							'uuid': activity_comment_data.media[i].attachment_id,
+							'menu_order': activity_comment_data.media[i].menu_order,
+							'album_id': activity_comment_data.media[i].album_id,
+							'group_id': activity_comment_data.media[i].group_id,
+							'saved': true
+						};
+					} else {
+						media_edit_data = {
+							'id': activity_comment_data.media[i].id,
+							'name': activity_comment_data.media[i].name,
+							'thumb': activity_comment_data.media[i].thumb,
+							'url': activity_comment_data.media[i].url,
+							'uuid': activity_comment_data.media[i].id,
+							'menu_order': activity_comment_data.media[i].menu_order,
+							'album_id': activity_comment_data.media[i].album_id,
+							'group_id': activity_comment_data.media[i].group_id,
+							'saved': false
+						};
+					}
+
+					mock_file = {
+						name: activity_comment_data.media[i].name,
+						accepted: true,
+						kind: 'image',
+						upload: {
+							filename: activity_comment_data.media[i].name,
+							uuid: activity_comment_data.media[i].attachment_id
+						},
+						dataURL: activity_comment_data.media[i].url,
+						id: activity_comment_data.media[i].attachment_id,
+						media_edit_data: media_edit_data
+					};
+
+					if ( self.dropzone_obj ) {
+						self.dropzone_obj.files.push( mock_file );
+						self.dropzone_obj.emit( 'addedfile', mock_file );
+						self.createThumbnailFromUrl( mock_file );
+						self.dropzone_obj.emit( 'dz-success' );
+						self.dropzone_obj.emit( 'dz-complete' );
+					}
+				}
+			}
+
+			// Inject Documents.
+			if (
+				'undefined' !== typeof activity_comment_data.document &&
+				0 < activity_comment_data.document.length
+			) {
+				toolbar_div.find( '.ac-reply-document-button' ).trigger( 'click' );
+				self.disabledCommentMediaUploader( toolbar_div );
+				self.disabledCommentVideoUploader( toolbar_div );
+				self.disabledCommentGifPicker( toolbar_div );
+
+				var doc_file   = false,
+					doc_length = activity_comment_data.document.length;
+
+				for ( var doci = 0; doci < doc_length; doci++ ) {
+					doc_file = false;
+
+					var document_edit_data = {};
+					if ( 0 < parseInt( activity_comment_data.id ) ) {
+						document_edit_data = {
+							'id': activity_comment_data.document[ doci ].doc_id,
+							'name': activity_comment_data.document[ doci ].full_name,
+							'full_name': activity_comment_data.document[ doci ].full_name,
+							'type': 'document',
+							'url': activity_comment_data.document[ doci ].url,
+							'size': activity_comment_data.document[ doci ].size,
+							'uuid': activity_comment_data.document[ doci ].doc_id,
+							'document_id': activity_comment_data.document[ doci ].id,
+							'menu_order': activity_comment_data.document[ doci ].menu_order,
+							'folder_id': activity_comment_data.document[ doci ].folder_id,
+							'group_id': activity_comment_data.document[ doci ].group_id,
+							'saved': true,
+							'svg_icon': ! _.isUndefined( activity_comment_data.document[ doci ].svg_icon ) ? activity_comment_data.document[ doci ].svg_icon : ''
+						};
+					} else {
+						document_edit_data = {
+							'id': activity_comment_data.document[ doci ].id,
+							'name': activity_comment_data.document[ doci ].full_name,
+							'full_name': activity_comment_data.document[ doci ].full_name,
+							'type': 'document',
+							'url': activity_comment_data.document[ doci ].url,
+							'size': activity_comment_data.document[ doci ].size,
+							'uuid': activity_comment_data.document[ doci ].id,
+							'menu_order': activity_comment_data.document[ doci ].menu_order,
+							'folder_id': activity_comment_data.document[ doci ].folder_id,
+							'group_id': activity_comment_data.document[ doci ].group_id,
+							'saved': false,
+							'svg_icon': ! _.isUndefined( activity_comment_data.document[ doci ].svg_icon ) ? activity_comment_data.document[ doci ].svg_icon : ''
+						};
+					}
+
+					doc_file = {
+						name: activity_comment_data.document[ doci ].full_name,
+						size: activity_comment_data.document[ doci ].size,
+						accepted: true,
+						kind: 'file',
+						upload: {
+							filename: activity_comment_data.document[ doci ].full_name,
+							uuid: activity_comment_data.document[ doci ].doc_id
+						},
+						dataURL: activity_comment_data.document[ doci ].url,
+						id: activity_comment_data.document[ doci ].doc_id,
+						document_edit_data: document_edit_data,
+						svg_icon: ! _.isUndefined( activity_comment_data.document[ doci ].svg_icon ) ? activity_comment_data.document[ doci ].svg_icon : ''
+					};
+
+					if ( self.dropzone_document_obj ) {
+						self.dropzone_document_obj.files.push( doc_file );
+						self.dropzone_document_obj.emit( 'addedfile', doc_file );
+						self.dropzone_document_obj.emit( 'complete', doc_file );
+					}
+				}
+			}
+
+			// Inject Videos.
+			if (
+				'undefined' !== typeof activity_comment_data.video &&
+				0 < activity_comment_data.video.length
+			) {
+				toolbar_div.find( '.ac-reply-video-button' ).trigger( 'click' );
+				self.disabledCommentMediaUploader( toolbar_div );
+				self.disabledCommentDocumentUploader( toolbar_div );
+				self.disabledCommentGifPicker( toolbar_div );
+
+				var video_file   = false,
+					video_length = activity_comment_data.video.length;
+
+				for ( var vidi = 0; vidi < video_length; vidi++ ) {
+					video_file = false;
+
+					var video_edit_data = {};
+					if ( 0 < parseInt( activity_comment_data.id ) ) {
+						video_edit_data = {
+							'id': activity_comment_data.video[ vidi ].vid_id,
+							'name': activity_comment_data.video[ vidi ].name,
+							'type': 'video',
+							'thumb': activity_comment_data.video[ vidi ].thumb,
+							'url': activity_comment_data.video[ vidi ].url,
+							'size': activity_comment_data.video[ vidi ].size,
+							'uuid': activity_comment_data.video[ vidi ].vid_id,
+							'video_id': activity_comment_data.video[ vidi ].id,
+							'menu_order': activity_comment_data.video[ vidi ].menu_order,
+							'album_id': activity_comment_data.video[ vidi ].album_id,
+							'group_id': activity_comment_data.video[ vidi ].group_id,
+							'saved': true
+						};
+					} else {
+						video_edit_data = {
+							'id': activity_comment_data.video[ vidi ].id,
+							'name': activity_comment_data.video[ vidi ].name,
+							'type': 'video',
+							'thumb': activity_comment_data.video[ vidi ].thumb,
+							'url': activity_comment_data.video[ vidi ].url,
+							'size': activity_comment_data.video[ vidi ].size,
+							'uuid': activity_comment_data.video[ vidi ].id,
+							'menu_order': activity_comment_data.video[ vidi ].menu_order,
+							'album_id': activity_comment_data.video[ vidi ].album_id,
+							'group_id': activity_comment_data.video[ vidi ].group_id,
+							'saved': false,
+						};
+					}
+
+					video_file = {
+						name: activity_comment_data.video[ vidi ].name,
+						size: activity_comment_data.video[ vidi ].size,
+						accepted: true,
+						kind: 'file',
+						upload: {
+							filename: activity_comment_data.video[ vidi ].name,
+							uuid: activity_comment_data.video[ vidi ].vid_id
+						},
+						dataURL: activity_comment_data.video[ vidi ].url,
+						id: activity_comment_data.video[ vidi ].vid_id,
+						video_edit_data: video_edit_data
+					};
+					console.log( video_file );
+					console.log( self.dropzone_video_obj );
+
+					if ( self.dropzone_video_obj ) {
+						self.dropzone_video_obj.files.push( video_file );
+						self.dropzone_video_obj.emit( 'addedfile', video_file );
+						self.dropzone_video_obj.emit( 'complete', video_file );
+					}
+				}
+			}
+
+			// Inject GIF.
+			if (
+				'undefined' !== typeof activity_comment_data.gif &&
+				0 < Object.keys( activity_comment_data.gif ).length
+			) {
+				var $gifPickerEl     = toolbar_div.find( '.ac-reply-gif-button' ).next(),
+					$gifAttachmentEl = $( '#ac-reply-post-gif-' + form_activity_id );
+
+				toolbar_div.find( '.ac-reply-gif-button' ).trigger( 'click' );
+				self.disabledCommentMediaUploader( toolbar_div );
+				self.disabledCommentDocumentUploader( toolbar_div );
+				self.disabledCommentVideoUploader( toolbar_div );
+
+				var model                      = new bp.Models.ACReply(),
+					gifMediaSearchDropdownView = new bp.Views.GifMediaSearchDropdown( {model: model} ),
+					activityAttachedGifPreview = new bp.Views.ActivityAttachedGifPreview( {model: model} );
+
+				gifMediaSearchDropdownView.model.set( 'gif_data', activity_comment_data.gif );
+				$gifPickerEl.html( gifMediaSearchDropdownView.render().el );
+				$gifAttachmentEl.html( activityAttachedGifPreview.render().el );
+
+				this.models[form_activity_id] = model;
+			}
+		},
+
+		resetActivityCommentForm: function ( form ) {
+			var form_activity_id = form.find( 'input[name="comment_form_id"]' ).val(),
+				form_item_id     = form.attr( 'data-item-id' ),
+				form_acomment    = $( '[data-bp-activity-comment-id="' + form_item_id + '"]' );
+
+			form_acomment.find( '#acomment-display-' + form_item_id ).removeClass( 'bp-hide' );
+			form.removeClass( 'acomment-edit' ).removeAttr( 'data-item-id' );
+
+			form.find( '#ac-input-' + form_activity_id ).html( '' );
+			this.destroyCommentMediaUploader( form_activity_id );
+			this.destroyCommentDocumentUploader( form_activity_id );
+			this.destroyCommentVideoUploader( form_activity_id );
+			this.resetGifPicker( form_activity_id );
+		},
+
+		disabledCommentMediaUploader: function ( toolbar ) {
+			if ( toolbar.find( '.ac-reply-media-button' ) ) {
+				toolbar.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+			}
+		},
+
+		disabledCommentDocumentUploader: function ( toolbar ) {
+			if ( toolbar.find( '.ac-reply-document-button' ) ) {
+				toolbar.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+			}
+		},
+
+		disabledCommentVideoUploader: function ( toolbar ) {
+			if ( toolbar.find( '.ac-reply-video-button' ) ) {
+				toolbar.find( '.ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+			}
+		},
+
+		disabledCommentGifPicker: function ( toolbar ) {
+			if ( toolbar.find( '.ac-reply-gif-button' ) ) {
+				toolbar.find( '.ac-reply-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+			}
 		}
 
 	};
