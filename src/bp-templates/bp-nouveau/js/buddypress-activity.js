@@ -2460,9 +2460,13 @@ window.bp = window.bp || {};
 		editActivityCommentForm: function ( form, activity_comment_data ) {
 			var form_activity_id = form.find( 'input[name="comment_form_id"]' ).val(),
 				toolbar_div      = form.find( '#ac-reply-toolbar-' + form_activity_id ),
+				form_submit_btn  = form.find( 'input[name="ac_form_submit"]' ),
 				self 			 = this;
 
 			form.find( '#ac-input-' + form_activity_id ).html( activity_comment_data.content );
+
+			var form_submit_btn_attr_val = form_submit_btn.attr( 'data-add-edit-label' );
+			form_submit_btn.attr( 'data-add-edit-label', form_submit_btn.val() ).val( form_submit_btn_attr_val );
 
 			// Inject medias.
 			if (
@@ -2704,10 +2708,14 @@ window.bp = window.bp || {};
 		resetActivityCommentForm: function ( form ) {
 			var form_activity_id = form.find( 'input[name="comment_form_id"]' ).val(),
 				form_item_id     = form.attr( 'data-item-id' ),
-				form_acomment    = $( '[data-bp-activity-comment-id="' + form_item_id + '"]' );
+				form_acomment    = $( '[data-bp-activity-comment-id="' + form_item_id + '"]' ),
+				form_submit_btn  = form.find( 'input[name="ac_form_submit"]' );
 
 			form_acomment.find( '#acomment-display-' + form_item_id ).removeClass( 'bp-hide' );
 			form.removeClass( 'acomment-edit' ).removeAttr( 'data-item-id' );
+
+			var form_submit_btn_attr_val = form_submit_btn.attr( 'data-add-edit-label' );
+			form_submit_btn.attr( 'data-add-edit-label', form_submit_btn.val() ).val( form_submit_btn_attr_val );
 
 			form.find( '#ac-input-' + form_activity_id ).html( '' );
 			this.destroyCommentMediaUploader( form_activity_id );
