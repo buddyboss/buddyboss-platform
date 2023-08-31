@@ -2501,10 +2501,12 @@ function bb_xprofile_update_social_network_fields() {
 							'args' => array( $field->id, $field_name ),
 						),
 					);
-					$bp_background_updater->save()->schedule_event();
+					$bp_background_updater->save();
 				}
 			}
 		}
+
+		$bp_background_updater->dispatch()
 	}
 }
 
@@ -2538,6 +2540,6 @@ function bb_remove_google_plus_fields( $field_id, $field_name ) {
 				'args' => array( $field_id, $field_name ),
 			),
 		);
-		$bp_background_updater->save()->schedule_event();
+		$bp_background_updater->save()->dispatch();
 	}
 }
