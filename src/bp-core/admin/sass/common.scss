@@ -39,6 +39,7 @@ TABLE OF CONTENTS:
 14.0 BB Pro Active/Inactive Notices
 15.0 Admin bar Notification
 16.0 Moderation
+17.0 Domain restriction
 ------------------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------------------
@@ -3203,6 +3204,7 @@ table tbody td .bb-description {
 
 }
 
+.bb-inactive-field,
 .bb-pro-inactive {
 
 	> th:before {
@@ -3227,6 +3229,7 @@ table tbody td .bb-description {
 
 }
 
+.bb-active-field,
 .bb-pro-active {
 
 	> th:before {
@@ -3862,4 +3865,137 @@ table.moderations .column-member {
 			content: "\ee6a";
 		}
 	}
+}
+
+/*------------------------------------------------------------------------------
+ * 17.0 Domain restriction
+ *----------------------------------------------------------------------------*/
+
+.registration-restrictions-rule-list {
+	margin: 15px 0;
+	max-width: 560px;
+
+	&.bb-sortable .registration-restrictions-rule {
+		padding-left: 40px;
+
+		&:before {
+			cursor: grab;
+			content: "\e858";
+			font-family: "bb-icons";/* stylelint-disable-line */
+			font-weight: 400;
+			font-size: 22px;
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			left: 10px;
+		}
+
+		&.ui-sortable-helper:before {
+			cursor: grabbing;
+		}
+	}
+
+	.registration-restrictions-rule {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 15px;
+		background-color: #f6f7f7;
+		border: 1px solid #c3c4c7;
+		position: relative;
+		border-radius: 4px;
+		padding: 15px 40px 15px 15px;
+		margin-bottom: 15px;
+
+		&.error {
+			background-color: rgba(255, 0, 0, 0.1);
+			border-color: #ffc5ca;
+		}
+
+		input,
+		select {
+			width: 100%;
+		}
+
+		> div {
+			flex: 1 0 130px;
+
+			&.registration-restrictions-input-tld {
+				flex-basis: 80px;
+				display: flex;
+				align-items: baseline;
+				margin-left: -5px;
+
+				&:before {
+					content: ".";
+					margin-right: 5px;
+				}
+			}
+		}
+
+		.registration-restrictions-priority {
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			left: 15px;
+		}
+
+		.registration-restrictions-remove {
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			right: 10px;
+
+			button {
+				color: #3c434a;
+				font-size: 20px;
+				cursor: pointer;
+				border: 0;
+				background-color: transparent;
+				padding: 0;
+			}
+		}
+	}
+}
+
+.section-bb_registration_restrictions .registration-restrictions-listing {
+	position: relative;
+
+	.restrictions-error {
+		position: absolute;
+		right: 0;
+		top: 0;
+		font-size: 13px;
+		max-width: 200px;
+		min-width: 200px;
+		padding: 10px 12px;
+		border-radius: 4px;
+		color: #d42929;
+		border: 1px solid #ffc5ca;
+		background: #ffdcdc;
+
+		p {
+			color: inherit;
+			margin: 0 0 5px 0;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+
+		&:empty {
+			display: none;
+		}
+	}
+
+	@media screen and (max-width: 1320px) {
+
+		.restrictions-error {
+			position: static;
+			max-width: inherit;
+			margin: 20px 0;
+		}
+
+	}
+
 }
