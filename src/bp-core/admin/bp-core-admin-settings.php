@@ -3012,7 +3012,7 @@ function bb_registration_restrictions_tutorial() {
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
-						'article' => 62793,
+						'article' => 126835,
 					),
 					'admin.php'
 				)
