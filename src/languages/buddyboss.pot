@@ -2,7 +2,7 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.4.10\n"
+"Project-Id-Version: BuddyBoss Platform 2.4.11\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
 "POT-Creation-Date: 2023-08-22 09:23:36+00:00\n"
 "MIME-Version: 1.0\n"
@@ -3110,7 +3110,12 @@ msgid "There was a problem performing this action. Please try again."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-actions.php:379
+<<<<<<< HEAD
 #: bp-members/bp-members-functions.php:1689 bp-settings/actions/general.php:208
+=======
+#: bp-members/bp-members-functions.php:1696 bp-settings/actions/general.php:208
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1372
+>>>>>>> PROD-5647
 msgid ""
 "This email address or domain has been blacklisted. If you think you are "
 "seeing this in error, please contact the site administrator."
@@ -3490,8 +3495,13 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1743
 #: bp-members/bp-members-admin.php:33 bp-members/bp-members-admin.php:99
+<<<<<<< HEAD
 #: bp-members/bp-members-functions.php:3104
 #: bp-members/bp-members-functions.php:3629
+=======
+#: bp-members/bp-members-functions.php:3111
+#: bp-members/bp-members-functions.php:3636
+>>>>>>> PROD-5647
 #: bp-members/classes/class-bp-members-admin.php:990
 #: bp-members/classes/class-bp-members-admin.php:2821
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php:31
@@ -3520,7 +3530,11 @@ msgid "e.g. Student"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1795
+<<<<<<< HEAD
 #: bp-members/bp-members-functions.php:3632
+=======
+#: bp-members/bp-members-functions.php:3639
+>>>>>>> PROD-5647
 msgid "Members Directory"
 msgstr ""
 
@@ -3616,7 +3630,11 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2129
+<<<<<<< HEAD
 #: bp-groups/bp-groups-admin.php:2313 bp-members/bp-members-functions.php:3884
+=======
+#: bp-groups/bp-groups-admin.php:2313 bp-members/bp-members-functions.php:3891
+>>>>>>> PROD-5647
 msgid "Copy to clipboard"
 msgstr ""
 
@@ -5865,8 +5883,13 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:346
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:349
+<<<<<<< HEAD
 #: bp-members/bp-members-functions.php:3096
 #: bp-members/bp-members-functions.php:3099
+=======
+#: bp-members/bp-members-functions.php:3103
+#: bp-members/bp-members-functions.php:3106
+>>>>>>> PROD-5647
 #: bp-xprofile/bp-xprofile-admin.php:1100
 #: bp-xprofile/bp-xprofile-admin.php:1151
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1624
@@ -10541,7 +10564,11 @@ msgid "Field"
 msgstr ""
 
 #: bp-core/profile-search/bps-admin.php:84 bp-groups/bp-groups-admin.php:2329
+<<<<<<< HEAD
 #: bp-members/bp-members-functions.php:3630
+=======
+#: bp-members/bp-members-functions.php:3637
+>>>>>>> PROD-5647
 msgid "Label"
 msgstr ""
 
@@ -14269,7 +14296,7 @@ msgstr ""
 #: bp-forums/classes/class-bp-rest-reply-endpoint.php:2194
 #: bp-forums/classes/class-bp-rest-topics-endpoint.php:2241
 #: bp-integrations/learndash/classes/class-bp-rest-learndash-courses-endpoint.php:369
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:841
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:857
 msgid "The date the object was published, in the site's timezone."
 msgstr ""
 
@@ -14277,7 +14304,7 @@ msgstr ""
 #: bp-forums/classes/class-bp-rest-reply-endpoint.php:2200
 #: bp-forums/classes/class-bp-rest-topics-endpoint.php:2247
 #: bp-integrations/learndash/classes/class-bp-rest-learndash-courses-endpoint.php:375
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:847
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:863
 msgid "The date the object was published, as GMT."
 msgstr ""
 
@@ -16387,7 +16414,11 @@ msgstr ""
 #: bp-groups/bp-groups-functions.php:4350
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:375
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:391
+<<<<<<< HEAD
 #: bp-members/bp-members-functions.php:3906
+=======
+#: bp-members/bp-members-functions.php:3913
+>>>>>>> PROD-5647
 #: bp-members/classes/class-bp-members-admin.php:972
 #: bp-moderation/bp-moderation-filters.php:924
 #: bp-moderation/classes/class-bp-moderation-list-table.php:235
@@ -18784,14 +18815,24 @@ msgid "Groups Filter"
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:2357 bp-groups/bp-groups-admin.php:2368
+<<<<<<< HEAD
 #: bp-members/bp-members-functions.php:3658
 #: bp-members/bp-members-functions.php:3669
+=======
+#: bp-members/bp-members-functions.php:3665
+#: bp-members/bp-members-functions.php:3676
+>>>>>>> PROD-5647
 msgid "Show"
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:2359 bp-groups/bp-groups-admin.php:2366
+<<<<<<< HEAD
 #: bp-members/bp-members-functions.php:3660
 #: bp-members/bp-members-functions.php:3667
+=======
+#: bp-members/bp-members-functions.php:3667
+#: bp-members/bp-members-functions.php:3674
+>>>>>>> PROD-5647
 #: bp-moderation/classes/class-bp-moderation-list-table.php:415
 #: bp-moderation/classes/class-bp-moderation-list-table.php:419
 #: bp-templates/bp-nouveau/includes/customizer-controls.php:149
@@ -18908,12 +18949,20 @@ msgid "You may not register a group type with this name."
 msgstr ""
 
 #: bp-groups/bp-groups-functions.php:3770
+<<<<<<< HEAD
 #: bp-members/bp-members-functions.php:3105
+=======
+#: bp-members/bp-members-functions.php:3112
+>>>>>>> PROD-5647
 msgid "Dropdown Order"
 msgstr ""
 
 #: bp-groups/bp-groups-functions.php:4955
+<<<<<<< HEAD
 #: bp-members/bp-members-functions.php:5228
+=======
+#: bp-members/bp-members-functions.php:5235
+>>>>>>> PROD-5647
 #: bp-xprofile/classes/class-bp-xprofile-field-type-number.php:28
 msgid "Number"
 msgstr ""
@@ -22133,8 +22182,8 @@ msgid "Date Invited"
 msgstr ""
 
 #: bp-invites/bp-invites-admin.php:125
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:708
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:710
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:724
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:726
 #: bp-members/classes/class-bp-members-list-table.php:158
 #: bp-members/classes/class-bp-members-ms-list-table.php:145
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:137
@@ -22148,7 +22197,11 @@ msgid "Pending &ndash; Revoke Invite"
 msgstr ""
 
 #: bp-invites/bp-invites-admin.php:134
+<<<<<<< HEAD
 #: bp-invites/classes/class-bp-rest-invites-endpoint.php:708
+=======
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:724
+>>>>>>> PROD-5647
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:92
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:137
 msgid "Invited"
@@ -22256,109 +22309,120 @@ msgstr ""
 msgid "Sorry, you need to set the fields parameter."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:384
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:396
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:53
 msgid ""
 "Invitations did not send to the following email addresses, because they are "
 "already members:"
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:388
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:400
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:37
 msgid "Invitations did not send because these email addresses are invalid:"
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:435
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:404
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:69
+msgid ""
+"Invitations did not send to the following email addresses, because the "
+"address or domain has been blacklisted:"
+msgstr ""
+
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:451
 msgid "Sorry, you need to be logged in to create invites."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:447
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:463
 msgid "Sorry, you don't have permission to create invites."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:528
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:544
 msgid "Sorry, you need to be logged in to revoke invite."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:541
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:557
 msgid "Sorry, you don't have permission to revoke invite."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:549
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:557
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:565
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:573
 msgid "Invalid invite ID."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:650
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:666
 msgid "Sorry, you need to be logged in to view invites profile type."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:662
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:678
 msgid "Sorry, you don't have permission to view invites profile type."
 msgstr ""
 
+<<<<<<< HEAD
 #: bp-invites/classes/class-bp-rest-invites-endpoint.php:710
+=======
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:726
+>>>>>>> PROD-5647
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:141
 msgid "Revoke Invite"
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:746
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:762
 msgid "Fields array with name and email_id to create an invites."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:752
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:768
 msgid "Recipient Name for the invite."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:759
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:775
 msgid "Recipient Email for the invite."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:770
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:786
 msgid "Fields array with name, email_id and profile_type to create an invites."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:772
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:788
 msgid "Profile Type for the invite."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:782
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:798
 msgid "Subject for invite a member."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:791
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:807
 msgid "Content for invite a member."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:823
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:839
 msgid "Unique identifier for the invite."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:829
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:845
 msgid "Member's name."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:835
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:851
 msgid "Member's email address"
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:853
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:869
 msgid "Status to perform on it."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:858
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:874
 msgid "Whether invitee is registered or not."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:863
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:879
 msgid "Whether revoke invite or not."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:891
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:907
 msgid "Designates ascending or descending order of invites."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:900
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:916
 msgid "Sort retrieved invites by parameter."
 msgstr ""
 
@@ -23364,6 +23428,7 @@ msgid ""
 "bp_update_user_last_activity() instead."
 msgstr ""
 
+<<<<<<< HEAD
 #: bp-members/bp-members-functions.php:1433
 #: bp-members/bp-members-functions.php:2558
 msgid "<strong>ERROR</strong>: Your account has been marked as a spammer."
@@ -23405,10 +23470,54 @@ msgstr ""
 
 #: bp-members/bp-members-functions.php:1979
 #: bp-members/bp-members-functions.php:2006
+=======
+#: bp-members/bp-members-functions.php:1440
+#: bp-members/bp-members-functions.php:2565
+msgid "<strong>ERROR</strong>: Your account has been marked as a spammer."
+msgstr ""
+
+#: bp-members/bp-members-functions.php:1680
+msgid "Please enter a valid email address."
+msgstr ""
+
+#: bp-members/bp-members-functions.php:1684
+#: bp-members/bp-members-functions.php:1688
+msgid "Sorry, that email address is not allowed!"
+msgstr ""
+
+#: bp-members/bp-members-functions.php:1692
+msgid "Sorry, that email address is already used!"
+msgstr ""
+
+#: bp-members/bp-members-functions.php:1736
+msgid "Please enter a username"
+msgstr ""
+
+#: bp-members/bp-members-functions.php:1742
+msgid "That username is not allowed"
+msgstr ""
+
+#: bp-members/bp-members-functions.php:1748
+#: bp-xprofile/bp-xprofile-filters.php:860
+msgid "Invalid %s. Only \"a-z\", \"0-9\", \"-\", \"_\" and \".\" are allowed."
+msgstr ""
+
+#: bp-members/bp-members-functions.php:1753
+msgid "Username must be at least 3 characters"
+msgstr ""
+
+#: bp-members/bp-members-functions.php:1767
+msgid "Sorry, that username already exists!"
+msgstr ""
+
+#: bp-members/bp-members-functions.php:1986
+#: bp-members/bp-members-functions.php:2013
+>>>>>>> PROD-5647
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:1145
 msgid "Invalid activation key."
 msgstr ""
 
+<<<<<<< HEAD
 #: bp-members/bp-members-functions.php:1986
 msgid "The user is already active."
 msgstr ""
@@ -23426,17 +23535,41 @@ msgid "That username is already activated."
 msgstr ""
 
 #: bp-members/bp-members-functions.php:2403
+=======
+#: bp-members/bp-members-functions.php:1993
+msgid "The user is already active."
+msgstr ""
+
+#: bp-members/bp-members-functions.php:1995
+msgid "The site is already active."
+msgstr ""
+
+#: bp-members/bp-members-functions.php:2025
+msgid "Could not create user"
+msgstr ""
+
+#: bp-members/bp-members-functions.php:2041
+msgid "That username is already activated."
+msgstr ""
+
+#: bp-members/bp-members-functions.php:2410
+>>>>>>> PROD-5647
 msgid ""
 "If you have not received an email yet, <a href=\"%s\">click here to resend "
 "it</a>."
 msgstr ""
 
+<<<<<<< HEAD
 #: bp-members/bp-members-functions.php:2405
+=======
+#: bp-members/bp-members-functions.php:2412
+>>>>>>> PROD-5647
 msgid ""
 "<strong>ERROR</strong>: Your account has not been activated. Check your "
 "email for the activation link."
 msgstr ""
 
+<<<<<<< HEAD
 #: bp-members/bp-members-functions.php:2436
 msgid "<strong>ERROR</strong>: Your account has already been activated."
 msgstr ""
@@ -23468,11 +23601,45 @@ msgstr ""
 
 #: bp-members/bp-members-functions.php:3098
 #: bp-members/bp-members-functions.php:3633
+=======
+#: bp-members/bp-members-functions.php:2443
+msgid "<strong>ERROR</strong>: Your account has already been activated."
+msgstr ""
+
+#: bp-members/bp-members-functions.php:2445
+msgid "Activation email resent! Please check your inbox or spam folder."
+msgstr ""
+
+#: bp-members/bp-members-functions.php:2652
+msgid "Profile type already exists."
+msgstr ""
+
+#: bp-members/bp-members-functions.php:2679
+msgid "You may not register a profile type with this name."
+msgstr ""
+
+#: bp-members/bp-members-functions.php:2999
+msgid "BuddyBoss profile type"
+msgstr ""
+
+#: bp-members/bp-members-functions.php:3102
+#: bp-members/bp-members-functions.php:3107
+msgid "New Profile Type"
+msgstr ""
+
+#: bp-members/bp-members-functions.php:3104
+msgid "Edit Profile Type"
+msgstr ""
+
+#: bp-members/bp-members-functions.php:3105
+#: bp-members/bp-members-functions.php:3640
+>>>>>>> PROD-5647
 #: bp-members/classes/class-bp-members-admin.php:2268
 #: bp-members/classes/class-bp-members-admin.php:2290
 msgid "Users"
 msgstr ""
 
+<<<<<<< HEAD
 #: bp-members/bp-members-functions.php:3101
 msgid "No Profile Types found"
 msgstr ""
@@ -23490,29 +23657,61 @@ msgid "Members Filter"
 msgstr ""
 
 #: bp-members/bp-members-functions.php:3879
+=======
+#: bp-members/bp-members-functions.php:3108
+msgid "No Profile Types found"
+msgstr ""
+
+#: bp-members/bp-members-functions.php:3109
+msgid "No Profile Types found in trash"
+msgstr ""
+
+#: bp-members/bp-members-functions.php:3110
+msgid "Search Profile Types"
+msgstr ""
+
+#: bp-members/bp-members-functions.php:3638
+msgid "Members Filter"
+msgstr ""
+
+#: bp-members/bp-members-functions.php:3886
+>>>>>>> PROD-5647
 msgid ""
 "You have {total_users} members with this profile type, are you sure you "
 "would like to trash it?"
 msgstr ""
 
+<<<<<<< HEAD
 #: bp-members/bp-members-functions.php:3880
+=======
+#: bp-members/bp-members-functions.php:3887
+>>>>>>> PROD-5647
 msgid ""
 "You have {total_users} members with this profile type, are you sure you "
 "would like to delete it?"
 msgstr ""
 
+<<<<<<< HEAD
 #: bp-members/bp-members-functions.php:3881
+=======
+#: bp-members/bp-members-functions.php:3888
+>>>>>>> PROD-5647
 msgid ""
 "You have members with these profile types, are you sure you would like to "
 "trash it?"
 msgstr ""
 
+<<<<<<< HEAD
 #: bp-members/bp-members-functions.php:3882
+=======
+#: bp-members/bp-members-functions.php:3889
+>>>>>>> PROD-5647
 msgid ""
 "You have members with these profile types, are you sure you would like to "
 "delete it?"
 msgstr ""
 
+<<<<<<< HEAD
 #: bp-members/bp-members-functions.php:3883
 msgid "Copied"
 msgstr ""
@@ -23529,6 +23728,24 @@ msgid "his"
 msgstr ""
 
 #: bp-members/bp-members-functions.php:3959
+=======
+#: bp-members/bp-members-functions.php:3890
+msgid "Copied"
+msgstr ""
+
+#: bp-members/bp-members-functions.php:3952
+#: bp-members/bp-members-functions.php:3960
+#: bp-members/bp-members-functions.php:3968
+#: bp-members/bp-members-functions.php:3972
+msgid "their"
+msgstr ""
+
+#: bp-members/bp-members-functions.php:3964
+msgid "his"
+msgstr ""
+
+#: bp-members/bp-members-functions.php:3966
+>>>>>>> PROD-5647
 msgid "her"
 msgstr ""
 
@@ -27706,7 +27923,7 @@ msgid "All Results"
 msgstr ""
 
 #: bp-settings/actions/delete-account.php:50
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1655
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1666
 #. translators: %s: User's full name.
 msgid "%s was successfully deleted."
 msgstr ""
@@ -27716,52 +27933,84 @@ msgid "Sorry something went wrong, please try again."
 msgstr ""
 
 #: bp-settings/actions/export.php:43
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1600
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1611
 msgid "Unable to initiate the data export request."
 msgstr ""
 
 #: bp-settings/actions/export.php:53
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1605
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1616
 msgid "Please check your email to confirm the data export request."
 msgstr ""
 
 #: bp-settings/actions/general.php:196
+<<<<<<< HEAD
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1356
+=======
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1360
+>>>>>>> PROD-5647
 msgid "That email address is invalid. Check the formatting and try again."
 msgstr ""
 
 #: bp-settings/actions/general.php:199
+<<<<<<< HEAD
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1359
+=======
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1363
+>>>>>>> PROD-5647
 msgid "That email address is currently unavailable for use."
 msgstr ""
 
 #: bp-settings/actions/general.php:202
+<<<<<<< HEAD
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1362
+=======
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1366
+>>>>>>> PROD-5647
 msgid "That email address is already taken."
 msgstr ""
 
 #: bp-settings/actions/general.php:205
+<<<<<<< HEAD
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1365
+=======
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1369
+>>>>>>> PROD-5647
 msgid "Email address cannot be empty."
 msgstr ""
 
 #: bp-settings/actions/general.php:218
+<<<<<<< HEAD
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1375
+=======
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1382
+>>>>>>> PROD-5647
 msgid "Your current password is invalid."
 msgstr ""
 
 #: bp-settings/actions/general.php:221
+<<<<<<< HEAD
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1378
+=======
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1385
+>>>>>>> PROD-5647
 msgid "The new password fields did not match."
 msgstr ""
 
 #: bp-settings/actions/general.php:224
+<<<<<<< HEAD
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1381
+=======
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1388
+>>>>>>> PROD-5647
 msgid "One of the password fields was empty."
 msgstr ""
 
 #: bp-settings/actions/general.php:227
+<<<<<<< HEAD
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1384
+=======
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1391
+>>>>>>> PROD-5647
 msgid "The new password must be different from the current password."
 msgstr ""
 
@@ -27770,8 +28019,13 @@ msgid "Your settings have been saved."
 msgstr ""
 
 #: bp-settings/actions/general.php:303
+<<<<<<< HEAD
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1396
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1661
+=======
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1406
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1672
+>>>>>>> PROD-5647
 msgid "No changes were made to your account."
 msgstr ""
 
@@ -27923,11 +28177,11 @@ msgstr ""
 msgid "I understand the consequences."
 msgstr ""
 
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1651
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1662
 msgid "Sorry, You can not able to delete the account."
 msgstr ""
 
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1700
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1711
 #. translators: 1: New email. 2: Current email.
 msgid ""
 "There is a pending change of your email address to %1$s. Check your email "
@@ -29257,12 +29511,15 @@ msgstr ""
 msgid "Invitations were sent successfully to the following email addresses:"
 msgstr ""
 
+<<<<<<< HEAD
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:69
 msgid ""
 "Invitations did not send to the following email addresses, because the "
 "address or domain has been blacklisted:"
 msgstr ""
 
+=======
+>>>>>>> PROD-5647
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:84
 msgid "You have sent invitation emails to the following people:"
 msgstr ""

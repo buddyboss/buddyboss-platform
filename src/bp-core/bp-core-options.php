@@ -2337,7 +2337,7 @@ function bb_get_profile_slug_format( $default = 'username' ) {
 /**
  * Get domain restrictions setting value from the database.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.11
  *
  * @param string $default Optional. Fallback value if not found in the database.
  *                        Default: Empty string.
@@ -2348,7 +2348,7 @@ function bb_domain_restrictions_setting( $default = array() ) {
 	/**
 	 * Filters domain restriction settings.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.11
 	 *
 	 * @param array $value Domain restrictions setting value.
 	 */
@@ -2358,7 +2358,7 @@ function bb_domain_restrictions_setting( $default = array() ) {
 /**
  * Get email restrictions setting value from the database.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.11
  *
  * @param string $default Optional. Fallback value if not found in the database.
  *                        Default: Empty string.
@@ -2369,7 +2369,7 @@ function bb_email_restrictions_setting( $default = array() ) {
 	/**
 	 * Filters email restriction settings.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.11
 	 *
 	 * @param array $value Email restrictions setting value.
 	 */

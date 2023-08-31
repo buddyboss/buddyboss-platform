@@ -8842,10 +8842,11 @@ function bb_is_same_site_url( $url ) {
 
 	return false;
 }
+
 /**
  * Check if email address allowed to register.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.11
  *
  * @param string $email Email address.
  *
