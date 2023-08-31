@@ -834,13 +834,20 @@ add_action( 'template_redirect', 'bb_forums_remove_screen_notifications' );
  *
  * @return void
  */
-function bb_delete_forum_reply_notification( $post_data ) {
+function bb_delete_forum_topic_reply_notification( $post_data ) {
 	if ( empty( $post_data ) ) {
 		return;
 	}
 
 	if ( 'trash' === $post_data->post_status ) {
-		bp_notifications_delete_all_notifications_by_type( $post_data->ID, 'forums', 'bb_forums_subscribed_reply' );
+		if ( bbp_get_reply_post_type() === $post_data->post_type ) {
+			bp_notifications_delete_all_notifications_by_type( $post_data->ID, 'forums', 'bb_forums_subscribed_reply' );
+		}
+		if ( bbp_get_topic_post_type() === $post_data->post_type ) {
+			bp_notifications_delete_all_notifications_by_type( $post_data->ID, 'forums', 'bb_forums_subscribed_discussion' );
+			bp_notifications_delete_all_notifications_by_type( $post_data->ID, 'groups', 'bb_groups_subscribed_discussion' );
+		}
 	}
 }
-add_action( 'bbp_toggle_reply_handler', 'bb_delete_forum_reply_notification', 1 );
+add_action( 'bbp_toggle_reply_handler', 'bb_delete_forum_topic_reply_notification', 1 );
+add_action( 'bbp_toggle_topic_handler', 'bb_delete_forum_topic_reply_notification', 1 );
