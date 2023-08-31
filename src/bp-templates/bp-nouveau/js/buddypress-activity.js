@@ -1782,7 +1782,7 @@ window.bp = window.bp || {};
 			var c_id = $( event.currentTarget ).data( 'ac-id' );
 			this.resetGifPicker( c_id );
 
-			if( $( target ).closest( 'form.ac-form' ).hasClass( 'acomment-edit' ) ) {
+			if( $( target ).closest( 'form.ac-form' ).hasClass( 'acomment-edit' ) && !event.isCustomEvent ) {
 				$( target ).closest( '.ac-reply-content' ).find( '.dropzone.media-dropzone' ).trigger( 'click' );
 			}
 		},
@@ -2484,7 +2484,7 @@ window.bp = window.bp || {};
 				'undefined' !== typeof activity_comment_data.media &&
 				0 < activity_comment_data.media.length
 			) {
-				toolbar_div.find( '.ac-reply-media-button' ).trigger( 'click' );
+				toolbar_div.find( '.ac-reply-media-button' ).trigger( { type: 'click', isCustomEvent: true } );
 				self.disabledCommentDocumentUploader( toolbar_div );
 				self.disabledCommentVideoUploader( toolbar_div );
 				self.disabledCommentGifPicker( toolbar_div );
