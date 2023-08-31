@@ -349,21 +349,23 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				</div>
 
 				<?php if ( is_admin() && bbp_is_user_keymaster() ) : ?>
-					<hr class="bb-sep-line" />
-					<div class="field-group">
-						<h4 class="bb-section-title"><?php esc_html_e( 'Connected Forum', 'buddyboss' ); ?></h4>
-						<p class="bb-section-info"><?php esc_html_e( 'Only site administrators can reconfigure which forum belongs to this group.', 'buddyboss' ); ?></p>
-						<?php
-							bbp_dropdown(
-								array(
-									'select_id'          => 'bbp_group_forum_id',
-									'show_none'          => __( '(No Forum)', 'buddyboss' ),
-									'selected'           => $forum_id,
-									'disable_categories' => false,
-									'disabled_walker'    => false,
-								)
-							);
-						?>
+					<div id='bb_group_forum_list' style="<?php echo $checked ? '' : 'display:none'; ?>">
+						<hr class="bb-sep-line" />
+						<div class="field-group">
+							<h4 class="bb-section-title"><?php esc_html_e( 'Connected Forum', 'buddyboss' ); ?></h4>
+							<p class="bb-section-info"><?php esc_html_e( 'Only site administrators can reconfigure which forum belongs to this group.', 'buddyboss' ); ?></p>
+							<?php
+								bbp_dropdown(
+									array(
+										'select_id'          => 'bbp_group_forum_id',
+										'show_none'          => __( '(No Forum)', 'buddyboss' ),
+										'selected'           => $forum_id,
+										'disable_categories' => false,
+										'disabled_walker'    => false,
+									)
+								);
+							?>
+						</div>
 					</div>
 				<?php endif; ?>
 
@@ -415,7 +417,51 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Keymasters have the ability to reconfigure forums
 			if ( bbp_is_user_keymaster() ) {
-				$forum_ids = ! empty( $_POST['bbp_group_forum_id'] ) ? (array) (int) $_POST['bbp_group_forum_id'] : array();
+
+				if ( true === $edit_forum ) {
+					$forum_ids = ! empty( $_POST['bbp_group_forum_id'] ) ? (array) (int) $_POST['bbp_group_forum_id'] : array();
+				} else {
+
+					// Get saved values in DB.
+					$forum_ids = groups_get_groupmeta( $group_id, 'forum_id' );
+				}
+
+				// Check for the last associated values if no forum set from setting.
+				if ( empty( $forum_ids ) ) {
+
+					$last_forum_ids = groups_get_groupmeta( $group_id, 'last_forum_id' );
+
+					if ( ! empty( $last_forum_ids ) ) {
+
+						$forum_ids = array_values( $last_forum_ids );
+						$forum_id  = (int) ( ! empty( $forum_ids ) && is_array( $forum_ids ) ? current( $forum_ids ) : $forum_ids );
+
+						// Flag to remove the last associations meta.
+						$restored_associations = true;
+
+						// Check if same values associated in group and forum
+						$last_group_ids = array_filter( get_post_meta( $forum_id, '_last_bbp_group_ids', true ) );
+
+						if ( in_array( $group_id, $last_group_ids ) && in_array( $forum_id, $last_forum_ids ) ) {
+
+							// Look for forum can be associated.
+							$valid_forum = $this->forum_can_associate_with_group( $forum_id, $group_id );
+
+							// Look for forum if exits.
+							$forum_exist = bbp_get_forum( $forum_id );
+							if ( empty( $valid_forum ) || empty( $forum_exist ) ) {
+								$restored_associations = false;
+							}
+						} else {
+							$restored_associations = false;
+						}
+
+						if ( false === $restored_associations ) {
+							$forum_ids = array();
+							$forum_id  = 0;
+						}
+					}
+				}
 
 				// Use the existing forum IDs
 			} else {
@@ -457,6 +503,13 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Update the group forum setting
 			$group = $this->toggle_group_forum( $group_id, $edit_forum, $forum_id );
+
+			if ( true === $edit_forum && isset( $restored_associations) && $restored_associations ) {
+
+				// Delete last associations.
+				delete_post_meta( $forum_id, '_last_bbp_group_ids' );
+				groups_delete_groupmeta( $group_id, 'last_forum_id' );
+			}
 
 			// Create a new forum
 			if ( empty( $forum_id ) && ( true === $edit_forum ) ) {
