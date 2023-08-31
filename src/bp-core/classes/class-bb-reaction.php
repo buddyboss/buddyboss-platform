@@ -1847,7 +1847,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				! bp_is_active( 'activity' ) ||
 				empty( $get->item_type ) ||
 				'activity' !== $get->item_type ||
-				true !== $deleted ||
+				! $deleted ||
 				empty( $get->user_id ) ||
 				empty( $get->item_id )
 			) {
