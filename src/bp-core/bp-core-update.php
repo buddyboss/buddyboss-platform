@@ -469,7 +469,9 @@ function bp_version_updater() {
 
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
-			bb_activity_migration();
+			if ( function_exists( 'bb_activity_migration' ) ) {
+				bb_activity_migration();
+			}
 		}
 	}
 
