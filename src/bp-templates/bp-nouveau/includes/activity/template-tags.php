@@ -733,14 +733,15 @@ function bp_nouveau_get_activity_comment_action() {
 	return apply_filters(
 		'bp_nouveau_get_activity_comment_action',
 		sprintf(
-			/* translators: 1: user profile link, 2: user name, 3: activity permalink, 4: activity recorded date, 5: activity timestamp, 6: activity human time since */
-			__( '<a class="author-name" href="%1$s">%2$s</a> <a href="%3$s" class="activity-time-since"><time class="time-since" datetime="%4$s" data-bp-timestamp="%5$d">%6$s</time></a>', 'buddyboss' ),
+			/* translators: 1: user profile link, 2: user name, 3: activity permalink, 4: activity recorded date, 5: activity timestamp, 6: activity human time since, 7: Edited text */
+			__( '<a class="author-name" href="%1$s">%2$s</a> <a href="%3$s" class="activity-time-since"><time class="time-since" datetime="%4$s" data-bp-timestamp="%5$d">%6$s</time></a>%7$s', 'buddyboss' ),
 			esc_url( bp_get_activity_comment_user_link() ),
 			esc_html( bp_get_activity_comment_name() ),
 			esc_url( bp_get_activity_comment_permalink() ),
 			esc_attr( bp_get_activity_comment_date_recorded_raw() ),
 			esc_attr( strtotime( bp_get_activity_comment_date_recorded_raw() ) ),
-			esc_attr( bp_get_activity_comment_date_recorded() )
+			esc_attr( bp_get_activity_comment_date_recorded() ),
+			bb_nouveau_activity_comment_is_edited()
 		)
 	);
 }
@@ -2062,4 +2063,41 @@ function bb_nouveau_edit_activity_comment_data() {
  */
 function bb_nouveau_get_edit_activity_comment_data() {
 	return htmlentities( wp_json_encode( bb_activity_comment_get_edit_data( bp_get_activity_comment_id() ) ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
+}
+
+
+/**
+ * Get edited activity comment log.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int  $activity_comment_id Activity comment id.
+ * @param bool $echo                Whether to print or not.
+ *
+ * @return string text.
+ */
+function bb_nouveau_activity_comment_is_edited( $activity_comment_id = 0, $echo = false ) {
+	$activity_comment_text = '';
+
+	if ( empty( $activity_comment_id ) ) {
+		$activity_comment_id = bp_get_activity_comment_id();
+	}
+
+	if ( empty( $activity_comment_id ) ) {
+		return $activity_comment_text;
+	}
+
+	$is_edited = bp_activity_get_meta( $activity_comment_id, '_is_edited', true );
+
+	if ( $is_edited ) {
+		$activity_comment_text = '<span class="bb-activity-edited-text" data-balloon-pos="up" data-balloon="' . bp_core_time_since( $is_edited ) . '"> ' . __( '(edited)', 'buddyboss' ) . ' </span>';
+	}
+
+	$rendered_text = apply_filters( 'bb_nouveau_activity_comment_is_edited', $activity_comment_text, $activity_comment_id );
+
+	if ( $echo ) {
+		echo $rendered_text;
+	} else {
+		return $rendered_text;
+	}
 }
