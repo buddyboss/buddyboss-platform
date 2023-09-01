@@ -197,17 +197,98 @@ form.acomment-edit {
 
 		&.video-dropzone {
 
-			.dz-default.dz-message {
-				min-height: initial !important;
+			div.dz-preview.dz-file-preview {
+				min-width: 80px;
 				width: 80px;
-				height: 60px;
-				max-width: 80px !important;
+
+				.dz-details {
+					min-height: 60px;
+					height: 60px;
+					width: 80px;
+				}
+
+				.dz-remove {
+					background-color: #e7e7ea;
+					margin-left: 0;
+					left: inherit;
+					height: 20px;
+					width: 20px;
+					top: -8px;
+					right: -8px;
+
+					&:after {
+						color: #9ea8b3;
+						font-size: 20px;
+						line-height: 1;
+					}
+				}
+
 			}
+
+			&.dz-started .dz-default.dz-message {
+				max-width: 80px !important;
+				width: 80px;
+				min-height: 60px !important;
+				height: 60px;
+			}
+
+			.dz-progress-count {
+				display: none;
+			}
+
+		}
+
+		&.document-dropzone {
 
 			.dz-preview {
-				min-width: 80px;
-			}
 
+				&.dz-complete .dz-details {
+					padding: 5px;
+
+					.dz-filename {
+						margin-top: 1px;
+						font-size: 10px;
+						line-height: 1;
+					}
+
+					.dz-size {
+						font-size: 8px;
+						line-height: 1.5;
+					}
+
+					.dz-icon {
+						height: 24px;
+						margin-top: 0;
+
+						> [class*="bb-icon"],
+						&:before {
+							font-size: 24px;
+						}
+					}
+				}
+
+				.dz-details .dz-filename {
+					font-size: 10px;
+					line-height: 1.6;
+					bottom: 4px;
+				}
+
+				.dz-remove {
+					background-color: #e7e7ea;
+					top: -8px;
+					right: -8px;
+				}
+
+				.dz-progress-ring-wrap {
+					margin-top: -7px;
+				}
+			}
+		}
+
+		.dz-preview.dz-file-preview .dz-details {
+			background-color: $light-grey;
+			min-height: 60px;
+			width: 60px;
 		}
 
 		&.dz-started.files-uploaded:not(.dz-max-files-reached) .dz-default.dz-message {
@@ -223,6 +304,20 @@ form.acomment-edit {
 			align-items: center;
 			justify-content: center;
 			box-shadow: 0 1px 1.5px rgba(0, 0, 0, 0.08) !important;
+		}
+
+		.dz-preview .dz-progress-ring-wrap {
+			height: 30px;
+			width: 30px;
+
+			[class*=" bb-icon-"] {
+				font-size: 20px;
+			}
+
+			.dz-progress-ring {
+				scale: 0.6;
+				margin: -10px;
+			}
 		}
 	}
 }

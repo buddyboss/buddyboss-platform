@@ -6673,15 +6673,88 @@ form.acomment-edit div.dropzone .dz-preview .dz-image {
   height: 60px;
 }
 
-form.acomment-edit div.dropzone.video-dropzone .dz-default.dz-message {
-  min-height: initial !important;
+form.acomment-edit div.dropzone.video-dropzone div.dz-preview.dz-file-preview {
+  min-width: 80px;
   width: 80px;
-  height: 60px;
-  max-width: 80px !important;
 }
 
-form.acomment-edit div.dropzone.video-dropzone .dz-preview {
-  min-width: 80px;
+form.acomment-edit div.dropzone.video-dropzone div.dz-preview.dz-file-preview .dz-details {
+  min-height: 60px;
+  height: 60px;
+  width: 80px;
+}
+
+form.acomment-edit div.dropzone.video-dropzone div.dz-preview.dz-file-preview .dz-remove {
+  background-color: #e7e7ea;
+  margin-left: 0;
+  left: inherit;
+  height: 20px;
+  width: 20px;
+  top: -8px;
+  right: -8px;
+}
+
+form.acomment-edit div.dropzone.video-dropzone div.dz-preview.dz-file-preview .dz-remove:after {
+  color: #9ea8b3;
+  font-size: 20px;
+  line-height: 1;
+}
+
+form.acomment-edit div.dropzone.video-dropzone.dz-started .dz-default.dz-message {
+  max-width: 80px !important;
+  width: 80px;
+  min-height: 60px !important;
+  height: 60px;
+}
+
+form.acomment-edit div.dropzone.video-dropzone .dz-progress-count {
+  display: none;
+}
+
+form.acomment-edit div.dropzone.document-dropzone .dz-preview.dz-complete .dz-details {
+  padding: 5px;
+}
+
+form.acomment-edit div.dropzone.document-dropzone .dz-preview.dz-complete .dz-details .dz-filename {
+  margin-top: 1px;
+  font-size: 10px;
+  line-height: 1;
+}
+
+form.acomment-edit div.dropzone.document-dropzone .dz-preview.dz-complete .dz-details .dz-size {
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+form.acomment-edit div.dropzone.document-dropzone .dz-preview.dz-complete .dz-details .dz-icon {
+  height: 24px;
+  margin-top: 0;
+}
+
+form.acomment-edit div.dropzone.document-dropzone .dz-preview.dz-complete .dz-details .dz-icon > [class*="bb-icon"], form.acomment-edit div.dropzone.document-dropzone .dz-preview.dz-complete .dz-details .dz-icon:before {
+  font-size: 24px;
+}
+
+form.acomment-edit div.dropzone.document-dropzone .dz-preview .dz-details .dz-filename {
+  font-size: 10px;
+  line-height: 1.6;
+  bottom: 4px;
+}
+
+form.acomment-edit div.dropzone.document-dropzone .dz-preview .dz-remove {
+  background-color: #e7e7ea;
+  top: -8px;
+  right: -8px;
+}
+
+form.acomment-edit div.dropzone.document-dropzone .dz-preview .dz-progress-ring-wrap {
+  margin-top: -7px;
+}
+
+form.acomment-edit div.dropzone .dz-preview.dz-file-preview .dz-details {
+  background-color: #eaeaea;
+  min-height: 60px;
+  width: 60px;
 }
 
 form.acomment-edit div.dropzone.dz-started.files-uploaded:not(.dz-max-files-reached) .dz-default.dz-message {
@@ -6697,6 +6770,20 @@ form.acomment-edit div.dropzone .dz-remove {
   align-items: center;
   justify-content: center;
   box-shadow: 0 1px 1.5px rgba(0, 0, 0, 0.08) !important;
+}
+
+form.acomment-edit div.dropzone .dz-preview .dz-progress-ring-wrap {
+  height: 30px;
+  width: 30px;
+}
+
+form.acomment-edit div.dropzone .dz-preview .dz-progress-ring-wrap [class*=" bb-icon-"] {
+  font-size: 20px;
+}
+
+form.acomment-edit div.dropzone .dz-preview .dz-progress-ring-wrap .dz-progress-ring {
+  scale: 0.6;
+  margin: -10px;
 }
 
 .bp-ac-form-cotainer {
