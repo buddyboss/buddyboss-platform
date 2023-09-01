@@ -1617,6 +1617,16 @@ window.bp = window.bp || {};
 					self.dropzone_obj = new Dropzone( '#ac-reply-post-media-uploader-' + target.data( 'ac-id' ), dropzone_options );
 
 					self.dropzone_obj.on(
+						'addedfile',
+						function ( file ) {
+							// Set data from edit comment.
+							if ( file.media_edit_data ) {
+								self.dropzone_media.push( file.media_edit_data );
+							}
+						}
+					);
+
+					self.dropzone_obj.on(
 						'sending',
 						function(file, xhr, formData) {
 							formData.append( 'action', 'media_upload' );

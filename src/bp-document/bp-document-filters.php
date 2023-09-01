@@ -446,7 +446,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 	// save document meta for activity.
 	if ( ! empty( $activity_id ) ) {
 		// Delete document if not exists in current document ids.
-		if ( isset( $_POST['edit'] ) ) {
+		if ( isset( $_POST['edit'] ) || ( isset( $_POST['edit_comment'] ) && true === (bool) $_POST['edit_comment'] ) ) {
 			$old_document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
 			$old_document_ids = explode( ',', $old_document_ids );
 			if ( ! empty( $old_document_ids ) ) {

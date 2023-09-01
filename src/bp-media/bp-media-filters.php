@@ -480,7 +480,7 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 	if ( ! empty( $activity_id ) ) {
 
 		// Delete media if not exists in current media ids.
-		if ( isset( $_POST['edit'] ) ) {
+		if ( isset( $_POST['edit'] ) || ( isset( $_POST['edit_comment'] ) && true === (bool) $_POST['edit_comment'] ) ) {
 			$old_media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
 			$old_media_ids = explode( ',', $old_media_ids );
 
