@@ -1249,7 +1249,8 @@ window.bp = window.bp || {};
 					_wpnonce_new_activity_comment : $( '#_wpnonce_new_activity_comment' ).val(),
 					comment_id                    : item_id,
 					form_id                       : activity_id,
-					content                       : comment_value
+					content                       : comment_value,
+					edit_comment                  : false
 				};
 
 				// Add the Akismet nonce if it exists.
@@ -1284,6 +1285,10 @@ window.bp = window.bp || {};
 
 				comment_data.content = comment_data.content.replace( /&nbsp;/g, ' ' );
 
+				if ( form.hasClass( 'acomment-edit' ) ) {
+					comment_data.edit_comment = true;
+				}
+
 				parent.ajax( comment_data, 'activity' ).done(
 					function( response ) {
 						target.removeClass( 'loading' );
@@ -1299,21 +1304,28 @@ window.bp = window.bp || {};
 							form.fadeOut(
 								200,
 								function() {
-									if ( 0 === activity_comments.children( 'ul' ).length ) {
-										if ( activity_comments.hasClass( 'activity-comments' ) ) {
-											activity_comments.prepend( '<ul></ul>' );
-										} else {
-											activity_comments.append( '<ul></ul>' );
+
+									if ( form.hasClass( 'acomment-edit' ) ) {
+										var form_item_id = form.attr( 'data-item-id' );
+										form.closest( '.activity-comments' ).append( form );
+										$( 'li#acomment-' + form_item_id ).replaceWith( the_comment );
+									} else {
+										if ( 0 === activity_comments.children( 'ul' ).length ) {
+											if ( activity_comments.hasClass( 'activity-comments' ) ) {
+												activity_comments.prepend( '<ul></ul>' );
+											} else {
+												activity_comments.append( '<ul></ul>' );
+											}
 										}
+
+										activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
+										$( form ).find( '.ac-input' ).first().html( '' );
+
+										activity_comments.parent().addClass( 'has-comments' );
+										activity_comments.parent().addClass( 'comments-loaded' );
+										activity_state.addClass( 'has-comments' );
+										// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 									}
-
-									activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
-									$( form ).find( '.ac-input' ).first().html( '' );
-
-									activity_comments.parent().addClass( 'has-comments' );
-									activity_comments.parent().addClass( 'comments-loaded' );
-									activity_state.addClass( 'has-comments' );
-									// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 
 									var tool_box_comment = activity_comments.find( '.ac-reply-content' );
 									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ) ) {
@@ -1333,26 +1345,22 @@ window.bp = window.bp || {};
 								}
 							);
 
-							// why, as it's already done a few lines ahead ???
-							// jq( '#' + form.attr('id') + ' textarea').val('');
+							if ( ! form.hasClass( 'acomment-edit' ) ) {
+								// Set the new count.
+								comment_count_span = activity_state.find( 'span.comments-count' );
+								comment_count      = comment_count_span.text().length ? comment_count_span.text().match( /\d+/ )[0] : 0;
+								comment_count      = Number( comment_count ) + 1;
 
-							// Set the new count.
-							comment_count_span = activity_state.find( 'span.comments-count' );
-							comment_count      = comment_count_span.text().length ? comment_count_span.text().match( /\d+/ )[0] : 0;
-							comment_count      = Number( comment_count ) + 1;
+								if ( comments_text.length ) {
+									var label = comment_count > 1 ? BP_Nouveau.activity.strings.commentsLabel : BP_Nouveau.activity.strings.commentLabel;
+									comments_text.text( label.replace( '%d', comment_count || 1 ) );
+								}
 
-							// Increase the "Reply (X)" button count.
-							// $( activity_item ).find( 'a span.comment-count' ).html( comment_count );
-
-							if ( comments_text.length ) {
-								var label = comment_count > 1 ? BP_Nouveau.activity.strings.commentsLabel : BP_Nouveau.activity.strings.commentLabel;
-								comments_text.text( label.replace( '%d', comment_count || 1 ) );
-							}
-
-							// Increment the 'Show all x comments' string, if present.
-							show_all_a = $( activity_item ).find( '.show-all a' );
-							if ( show_all_a ) {
-								show_all_a.html( BP_Nouveau.show_x_comments.replace( '%d', comment_count ) );
+								// Increment the 'Show all x comments' string, if present.
+								show_all_a = $( activity_item ).find( '.show-all a' );
+								if ( show_all_a ) {
+									show_all_a.html( BP_Nouveau.show_x_comments.replace( '%d', comment_count ) );
+								}
 							}
 
 							// keep the dropzone media saved so it wont remove its attachment when destroyed.

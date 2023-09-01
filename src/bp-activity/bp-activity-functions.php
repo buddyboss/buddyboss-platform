@@ -2995,6 +2995,8 @@ add_action( 'delete_comment', 'bp_activity_post_type_remove_comment', 10, 1 );
  * @return WP_Error|bool|int The ID of the comment on success, otherwise false.
  */
 function bp_activity_new_comment( $args = '' ) {
+	global $bb_activity_comment_edit;
+
 	$bp = buddypress();
 
 	$r = bp_parse_args(
@@ -3085,22 +3087,64 @@ function bp_activity_new_comment( $args = '' ) {
 	 */
 	$comment_content = apply_filters( 'bp_activity_comment_content', $r['content'], 'new' );
 
-	// Insert the activity comment.
-	$comment_id = bp_activity_add(
-		array(
-			'id'                => $r['id'],
-			'content'           => $comment_content,
-			'component'         => buddypress()->activity->id,
-			'type'              => 'activity_comment',
-			'primary_link'      => $r['primary_link'],
-			'user_id'           => $r['user_id'],
-			'item_id'           => $activity_id,
-			'secondary_item_id' => $r['parent_id'],
-			'hide_sitewide'     => $is_hidden,
-			'privacy'           => $privacy,
-			'error_type'        => $r['error_type'],
-		)
-	);
+	$bb_activity_comment_edit = false;
+	if ( ! empty( $r['id'] ) ) {
+		$activity_comment = new BP_Activity_Activity( $r['id'] );
+
+		if ( ! empty( $activity_comment->id ) ) {
+			$bb_activity_comment_edit = true;
+
+			if ( ! bb_activity_comment_user_can_edit( $activity_comment ) ) {
+				if ( 'wp_error' === $r['error_type'] ) {
+					return new WP_Error( 'error', __( 'Allowed time for editing this activity comment is passed already, you can not edit now.', 'buddyboss' ) );
+				} else {
+					return false;
+				}
+			}
+
+			$comment_id = bp_activity_add(
+				array(
+					'id'                => $activity_comment->id,
+					'action'            => $activity_comment->action,
+					'content'           => $comment_content,
+					'component'         => $activity_comment->component,
+					'type'              => $activity_comment->type,
+					'primary_link'      => $activity_comment->primary_link,
+					'user_id'           => $activity_comment->user_id,
+					'item_id'           => $activity_comment->item_id,
+					'secondary_item_id' => $activity_comment->secondary_item_id,
+					'recorded_time'     => $activity_comment->date_recorded,
+					'hide_sitewide'     => $activity_comment->hide_sitewide,
+					'is_spam'           => $activity_comment->is_spam,
+					'privacy'           => $activity_comment->privacy,
+					'error_type'        => $r['error_type'],
+				)
+			);
+
+			/**
+			 * Addition from the BuddyBoss
+			 * Add meta to ensure that this activity has been edited.
+			 */
+			bp_activity_update_meta( $activity_comment->id, '_is_edited', bp_core_current_time() );
+		}
+	} else {
+		// Insert the activity comment.
+		$comment_id = bp_activity_add(
+			array(
+				'id'                => $r['id'],
+				'content'           => $comment_content,
+				'component'         => buddypress()->activity->id,
+				'type'              => 'activity_comment',
+				'primary_link'      => $r['primary_link'],
+				'user_id'           => $r['user_id'],
+				'item_id'           => $activity_id,
+				'secondary_item_id' => $r['parent_id'],
+				'hide_sitewide'     => $is_hidden,
+				'privacy'           => $privacy,
+				'error_type'        => $r['error_type'],
+			)
+		);
+	}
 
 	// Bail on failure.
 	if ( false === $comment_id || is_wp_error( $comment_id ) ) {
