@@ -2644,7 +2644,7 @@ window.bp = window.bp || {};
 				'undefined' !== typeof activity_comment_data.video &&
 				0 < activity_comment_data.video.length
 			) {
-				toolbar_div.find( '.ac-reply-video-button' ).trigger( 'click' );
+				toolbar_div.find( '.ac-reply-video-button' ).trigger( { type: 'click', isCustomEvent: true } );
 				self.disabledCommentMediaUploader( toolbar_div );
 				self.disabledCommentDocumentUploader( toolbar_div );
 				self.disabledCommentGifPicker( toolbar_div );
