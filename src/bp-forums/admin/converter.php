@@ -2048,7 +2048,10 @@ abstract class BBP_Converter_Base {
 	 * @return bool
 	 */
 	private function count_rows_by_table( $table_name = '' ) {
-		$count = (int) $this->opdb->get_var( "SELECT COUNT(*) FROM {$table_name}" );
+		$count = 0;
+		if ( bb_check_table_exists( $this->opdb, $this->opdb->prefix . $table_name ) ) {
+			$count = (int) $this->opdb->get_var( "SELECT COUNT(*) FROM {$table_name}" );
+		}
 
 		return update_option( '_bbp_converter_rows_in_step', $count );
 	}
