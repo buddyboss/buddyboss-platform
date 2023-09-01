@@ -6618,9 +6618,14 @@ form.acomment-edit .ac-reply-content input[name="ac_form_submit"] {
   padding: 5px 10px;
 }
 
+form.acomment-edit .ac-reply-content .ac-textarea div.dropzone.open {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 form.acomment-edit div.dropzone .dz-default.dz-message {
   display: none;
-  margin: 0 6px;
+  margin: 15px 6px 0 6px;
   order: 99;
 }
 
@@ -6661,7 +6666,7 @@ form.acomment-edit div.dropzone .dz-default.dz-message .dz-button {
 
 form.acomment-edit div.dropzone .dz-preview {
   min-width: 60px;
-  margin: 0 6px;
+  margin: 15px 6px 0 6px;
 }
 
 form.acomment-edit div.dropzone .dz-preview .dz-image {
