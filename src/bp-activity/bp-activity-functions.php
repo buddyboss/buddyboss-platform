@@ -4424,6 +4424,13 @@ function bp_show_streamed_activity_comment() {
  * @param array $params     Parameters to use with notification.
  */
 function bp_activity_new_comment_notification_helper( $comment_id, $params ) {
+	global $bb_activity_comment_edit;
+
+	// Return if $comment_id empty or edit activity comment.
+	if ( empty( $comment_id ) || $bb_activity_comment_edit ) {
+		return;
+	}
+
 	bp_activity_new_comment_notification( $comment_id, $params['user_id'], $params );
 }
 add_action( 'bp_activity_comment_posted', 'bp_activity_new_comment_notification_helper', 10, 2 );
