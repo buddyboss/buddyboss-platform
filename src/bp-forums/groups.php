@@ -433,14 +433,15 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 					if ( ! empty( $last_forum_ids ) ) {
 
-						$forum_ids = array_values( $last_forum_ids );
-						$forum_id  = (int) ( ! empty( $forum_ids ) && is_array( $forum_ids ) ? current( $forum_ids ) : $forum_ids );
-
+						$forum_ids     = array_values( $last_forum_ids );
+						$forum_id      = (int) ( ! empty( $forum_ids ) && is_array( $forum_ids ) ? current( $forum_ids ) : $forum_ids );
+						$last_forum_id = $forum_id;
 						// Flag to remove the last associations meta.
 						$restored_associations = true;
 
 						// Check if same values associated in group and forum.
-						$last_group_ids = array_filter( get_post_meta( $forum_id, '_last_bbp_group_ids', true ) );
+						$last_group_ids = get_post_meta( $forum_id, '_last_bbp_group_ids', true );
+						$last_group_ids = ! empty( $last_group_ids ) ? array_filter( $last_group_ids ) : array();
 
 						if ( in_array( $group_id, $last_group_ids ) && in_array( $forum_id, $last_forum_ids ) ) {
 
@@ -505,10 +506,15 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			// Update the group forum setting.
 			$group = $this->toggle_group_forum( $group_id, $edit_forum, $forum_id );
 
-			if ( true === $edit_forum && isset( $restored_associations) && $restored_associations ) {
+			if ( true === $edit_forum ) {
 
 				// Delete last associations.
-				delete_post_meta( $forum_id, '_last_bbp_group_ids' );
+				if ( ! empty( $last_forum_id ) ) {
+					delete_post_meta( $last_forum_id, '_last_bbp_group_ids' );
+				}
+				if ( ! empty( $forum_id ) ) {
+					delete_post_meta( $forum_id, '_last_bbp_group_ids' );
+				}
 				groups_delete_groupmeta( $group_id, 'last_forum_id' );
 			}
 
