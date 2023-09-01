@@ -1860,6 +1860,7 @@ window.bp = window.bp || {};
 							if ( tool_box.find( '.ac-reply-document-button' ) ) {
 								tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 							}
+							this.element.classList.remove( 'files-uploaded' );
 						}
 					);
 
@@ -1913,6 +1914,9 @@ window.bp = window.bp || {};
 								for ( _i = 0, _len = _ref.length; _i < _len; _i++ ) {
 									node = _ref[_i];
 									_results.push( node.textContent = message );
+								}
+								if ( ! _.isNull( self.dropzone_document_obj.files ) && self.dropzone_document_obj.files.length === 0 ) {
+									$( self.dropzone_document_obj.element ).removeClass( 'files-uploaded' );
 								}
 								return _results;
 							}
@@ -1972,6 +1976,7 @@ window.bp = window.bp || {};
 								if ( tool_box.find( '.ac-reply-document-button' ) ) {
 									tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 								}
+								$( self.dropzone_document_obj.element ).removeClass( 'files-uploaded' );
 							}
 						}
 					);
@@ -1983,6 +1988,7 @@ window.bp = window.bp || {};
 							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
 								var commentForm = target.closest( '.ac-form' );
 								commentForm.removeClass( 'media-uploading' );
+								this.element.classList.add( 'files-uploaded' );
 							}
 						}
 					);
@@ -2006,6 +2012,10 @@ window.bp = window.bp || {};
 
 			var c_id = $( event.currentTarget ).data( 'ac-id' );
 			this.resetGifPicker( c_id );
+
+			if( $( target ).closest( 'form.ac-form' ).hasClass( 'acomment-edit' ) && !event.isCustomEvent ) {
+				$( target ).closest( '.ac-reply-content' ).find( '.dropzone.document-dropzone' ).trigger( 'click' );
+			}
 		},
 
 		openCommentsVideoUploader: function(event) {
@@ -2066,6 +2076,7 @@ window.bp = window.bp || {};
 							if ( tool_box.find( '.ac-reply-video-button' ) ) {
 								tool_box.find( '.ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 							}
+							this.element.classList.remove( 'files-uploaded' );
 						}
 					);
 
@@ -2157,6 +2168,9 @@ window.bp = window.bp || {};
 									node = _ref[_i];
 									_results.push( node.textContent = message );
 								}
+								if ( ! _.isNull( self.dropzone_video_obj.files ) && self.dropzone_video_obj.files.length === 0 ) {
+									$( self.dropzone_video_obj.element ).removeClass( 'files-uploaded' );
+								}
 								return _results;
 							}
 						}
@@ -2216,6 +2230,7 @@ window.bp = window.bp || {};
 								if ( tool_box.find( '.ac-reply-video-button' ) ) {
 									tool_box.find( '.ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 								}
+								$( self.dropzone_video_obj.element ).removeClass( 'files-uploaded' );
 							}
 						}
 					);
@@ -2227,6 +2242,7 @@ window.bp = window.bp || {};
 							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
 								var commentForm = target.closest( '.ac-form' );
 								commentForm.removeClass( 'media-uploading' );
+								this.element.classList.add( 'files-uploaded' );
 							}
 						}
 					);
@@ -2250,6 +2266,10 @@ window.bp = window.bp || {};
 
 			var c_id = $( event.currentTarget ).data( 'ac-id' );
 			this.resetGifPicker( c_id );
+
+			if( $( target ).closest( 'form.ac-form' ).hasClass( 'acomment-edit' ) && !event.isCustomEvent ) {
+				$( target ).closest( '.ac-reply-content' ).find( '.dropzone.video-dropzone' ).trigger( 'click' );
+			}
 		},
 
 		openGifPicker: function ( event ) {
@@ -2551,7 +2571,7 @@ window.bp = window.bp || {};
 				'undefined' !== typeof activity_comment_data.document &&
 				0 < activity_comment_data.document.length
 			) {
-				toolbar_div.find( '.ac-reply-document-button' ).trigger( 'click' );
+				toolbar_div.find( '.ac-reply-document-button' ).trigger( { type: 'click', isCustomEvent: true } );
 				self.disabledCommentMediaUploader( toolbar_div );
 				self.disabledCommentVideoUploader( toolbar_div );
 				self.disabledCommentGifPicker( toolbar_div );
