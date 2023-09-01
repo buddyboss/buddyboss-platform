@@ -419,7 +419,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 	}
 
 	$edit_comment_id = 0;
-	if ( $_POST['edit_comment'] && true === (bool) $_POST['edit_comment'] ) {
+	if ( ! empty( $_POST['edit_comment'] ) ) {
 		$edit_comment_id = sanitize_text_field( wp_unslash( $_POST['comment_id'] ) );
 	}
 

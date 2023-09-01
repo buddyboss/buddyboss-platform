@@ -1249,8 +1249,7 @@ window.bp = window.bp || {};
 					_wpnonce_new_activity_comment : $( '#_wpnonce_new_activity_comment' ).val(),
 					comment_id                    : item_id,
 					form_id                       : activity_id,
-					content                       : comment_value,
-					edit_comment                  : false
+					content                       : comment_value
 				};
 
 				// Add the Akismet nonce if it exists.

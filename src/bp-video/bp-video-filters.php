@@ -439,7 +439,7 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 	if ( ! empty( $activity_id ) ) {
 
 		// Delete video if not exists in current video ids.
-		if ( isset( $post_edit ) || ( isset( $_POST['edit_comment'] ) && true === (bool) $_POST['edit_comment'] ) ) {
+		if ( isset( $post_edit ) || isset( $_POST['edit_comment'] ) ) {
 			$old_video_ids = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
 			$old_video_ids = array_filter( explode( ',', $old_video_ids ) );
 
