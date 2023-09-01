@@ -1800,7 +1800,7 @@ window.bp = window.bp || {};
 			var c_id = $( event.currentTarget ).data( 'ac-id' );
 			this.resetGifPicker( c_id );
 
-			if( $( target ).closest( 'form.ac-form' ).hasClass( 'acomment-edit' ) && !event.isCustomEvent ) {
+			if ( $( target ).closest( 'form.ac-form' ).hasClass( 'acomment-edit' ) && ! event.isCustomEvent ) {
 				$( target ).closest( '.ac-reply-content' ).find( '.dropzone.media-dropzone' ).trigger( 'click' );
 			}
 		},
@@ -2031,7 +2031,7 @@ window.bp = window.bp || {};
 			var c_id = $( event.currentTarget ).data( 'ac-id' );
 			this.resetGifPicker( c_id );
 
-			if( $( target ).closest( 'form.ac-form' ).hasClass( 'acomment-edit' ) && !event.isCustomEvent ) {
+			if ( $( target ).closest( 'form.ac-form' ).hasClass( 'acomment-edit' ) && ! event.isCustomEvent ) {
 				$( target ).closest( '.ac-reply-content' ).find( '.dropzone.document-dropzone' ).trigger( 'click' );
 			}
 		},
@@ -2285,7 +2285,7 @@ window.bp = window.bp || {};
 			var c_id = $( event.currentTarget ).data( 'ac-id' );
 			this.resetGifPicker( c_id );
 
-			if( $( target ).closest( 'form.ac-form' ).hasClass( 'acomment-edit' ) && !event.isCustomEvent ) {
+			if ( $( target ).closest( 'form.ac-form' ).hasClass( 'acomment-edit' ) && ! event.isCustomEvent ) {
 				$( target ).closest( '.ac-reply-content' ).find( '.dropzone.video-dropzone' ).trigger( 'click' );
 			}
 		},
