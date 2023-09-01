@@ -2335,6 +2335,48 @@ function bb_get_profile_slug_format( $default = 'username' ) {
 }
 
 /**
+ * Get domain restrictions setting value from the database.
+ *
+ * @since BuddyBoss 2.4.11
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ * @return array Domain restrictions setting value.
+ */
+function bb_domain_restrictions_setting( $default = array() ) {
+
+	/**
+	 * Filters domain restriction settings.
+	 *
+	 * @since BuddyBoss 2.4.11
+	 *
+	 * @param array $value Domain restrictions setting value.
+	 */
+	return apply_filters( 'bb_domain_restrictions_setting', bp_get_option( 'bb-domain-restrictions', $default ) );
+}
+
+/**
+ * Get email restrictions setting value from the database.
+ *
+ * @since BuddyBoss 2.4.11
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ * @return array Email restrictions setting value.
+ */
+function bb_email_restrictions_setting( $default = array() ) {
+
+	/**
+	 * Filters email restriction settings.
+	 *
+	 * @since BuddyBoss 2.4.11
+	 *
+	 * @param array $value Email restrictions setting value.
+	 */
+	return apply_filters( 'bb_email_restrictions_setting', bp_get_option( 'bb-email-restrictions', $default ) );
+}
+
+/**
  * Check whether Activity comment edit is enabled.
  *
  * @since BuddyBoss [BBVERSION]
