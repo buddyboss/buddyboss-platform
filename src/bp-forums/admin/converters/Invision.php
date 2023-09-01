@@ -74,12 +74,21 @@ class Invision extends BBP_Converter_Base {
 		);
 
 		// Forum title.
-		$this->field_map[] = array(
-			'from_tablename' => 'forums',
-			'from_fieldname' => 'name',
-			'to_type'        => 'forum',
-			'to_fieldname'   => 'post_title',
-		);
+		if ( bb_check_column_exists( $this->opdb, 'forums', 'name' ) ) {
+			$this->field_map[] = array(
+				'from_tablename' => 'forums',
+				'from_fieldname' => 'name',
+				'to_type'        => 'forum',
+				'to_fieldname'   => 'post_title',
+			);
+		} elseif ( bb_check_column_exists( $this->opdb, 'forums', 'last_title' ) ) {
+			$this->field_map[] = array(
+				'from_tablename' => 'forums',
+				'from_fieldname' => 'last_title',
+				'to_type'        => 'forum',
+				'to_fieldname'   => 'post_title',
+			);
+		}
 
 		// Forum slug (Clean name to avoid confilcts)
 		$this->field_map[] = array(
@@ -91,13 +100,15 @@ class Invision extends BBP_Converter_Base {
 		);
 
 		// Forum description.
-		$this->field_map[] = array(
-			'from_tablename'  => 'forums',
-			'from_fieldname'  => 'description',
-			'to_type'         => 'forum',
-			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_null',
-		);
+		if ( bb_check_column_exists( $this->opdb, 'forums', 'description' ) ) {
+			$this->field_map[] = array(
+				'from_tablename'  => 'forums',
+				'from_fieldname'  => 'description',
+				'to_type'         => 'forum',
+				'to_fieldname'    => 'post_content',
+				'callback_method' => 'callback_null',
+			);
+		}
 
 		// Forum display order (Starts from 1)
 		$this->field_map[] = array(
@@ -453,12 +464,21 @@ class Invision extends BBP_Converter_Base {
 		);
 
 		// User display name.
-		$this->field_map[] = array(
-			'from_tablename' => 'members',
-			'from_fieldname' => 'members_display_name',
-			'to_type'        => 'user',
-			'to_fieldname'   => 'display_name',
-		);
+		if ( bb_check_column_exists( $this->opdb, 'forums', 'members_seo_name' ) ) {
+			$this->field_map[] = array(
+				'from_tablename' => 'members',
+				'from_fieldname' => 'members_seo_name',
+				'to_type'        => 'user',
+				'to_fieldname'   => 'display_name',
+			);
+		} elseif ( bb_check_column_exists( $this->opdb, 'forums', 'members_display_name' ) ) {
+			$this->field_map[] = array(
+				'from_tablename' => 'members',
+				'from_fieldname' => 'members_display_name',
+				'to_type'        => 'user',
+				'to_fieldname'   => 'display_name',
+			);
+		}
 	}
 
 	/**
