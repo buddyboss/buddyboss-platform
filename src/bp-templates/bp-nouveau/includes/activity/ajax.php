@@ -418,7 +418,18 @@ function bp_nouveau_ajax_new_activity_comment() {
 		wp_send_json_error( $response );
 	}
 
-	$comment_id = bp_activity_new_comment(
+//	if ( apply_filters( 'bb_activity_legacy_comment', true ) ) {
+//		$comment_id = bp_activity_new_comment(
+//			array(
+//				'activity_id' => $_POST['form_id'],
+//				'content'     => $_POST['content'],
+//				'parent_id'   => $_POST['comment_id'],
+//				'skip_error'  => false === $content ? false : true // Pass true when $content will be not empty.
+//			)
+//		);
+//	}
+
+	$comment_id = bb_activity_new_comment(
 		array(
 			'activity_id' => $_POST['form_id'],
 			'content'     => $_POST['content'],
@@ -441,10 +452,10 @@ function bp_nouveau_ajax_new_activity_comment() {
 		wp_send_json_error( $response );
 	}
 
-	$activity = new BP_Activity_Activity( $comment_id );
+	$activity = BP_Activity_Activity::get_single_comment( $comment_id );
 
 	// Load the new activity item into the $activities_template global.
-	bp_has_activities(
+	bb_has_activities_comments(
 		array(
 			'display_comments' => 'stream',
 			'hide_spam'        => false,
@@ -467,7 +478,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 		$parent_id = (int) $activities_template->activities[0]->secondary_item_id;
 		while ( $parent_id !== (int) $activities_template->activities[0]->item_id ) {
 			$depth++;
-			$p_obj     = new BP_Activity_Activity( $parent_id );
+			$p_obj     = BP_Activity_Activity::get_single_comment( $parent_id );
 			$parent_id = (int) $p_obj->secondary_item_id;
 		}
 		$activities_template->activity->current_comment->depth = $depth;

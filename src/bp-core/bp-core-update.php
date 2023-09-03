@@ -470,6 +470,10 @@ function bp_version_updater() {
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 		}
+
+		if ( $raw_db_version < 20761 ) {
+			bb_update_to_activity_comment();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -3197,4 +3201,7 @@ function bb_update_to_2_4_10() {
 			}
 		}
 	}
+}
+function bb_update_to_activity_comment() {
+	bp_core_install_activity_streams();
 }

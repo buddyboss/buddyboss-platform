@@ -943,7 +943,7 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 
 	if ( ! empty( $enabled_all_notification ) ) {
 		foreach ( $enabled_all_notification as $key => $types ) {
-			if ( isset( $types['main'] ) && 'no' === $types['main'] ) {
+			if ( isset( $types['main'] ) && 'no' === $types['main'] && isset( $all_actions[ $key ] ) ) {
 				$admin_excluded_actions = array_merge( $admin_excluded_actions, $all_actions[ $key . '_' . $type ] );
 			}
 			if ( isset( $types[ $type ] ) ) {

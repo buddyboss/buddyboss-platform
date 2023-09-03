@@ -2060,6 +2060,81 @@ function bp_activity_get( $args = '' ) {
 	 */
 	return apply_filters_ref_array( 'bp_activity_get', array( &$activity, &$r ) );
 }
+function bp_activity_comment_get( $args = '' ) {
+
+	$r = bp_parse_args(
+		$args,
+		array(
+			'max'               => false,        // Maximum number of results to return.
+			'fields'            => 'all',
+			'page'              => 1,            // Page 1 without a per_page will result in no pagination.
+			'per_page'          => false,        // results per page
+			'sort'              => 'DESC',       // sort ASC or DESC
+			'order_by'          => false,         // order by.
+			'display_comments'  => false,        // False for no comments. 'stream' for within stream display, 'threaded' for below each activity item.
+
+			'privacy'           => false,        // Privacy of activity
+			'search_terms'      => false,        // Pass search terms as a string
+			'meta_query'        => false,        // Filter by activity meta. See WP_Meta_Query for format
+			'date_query'        => false,        // Filter by date. See first parameter of WP_Date_Query for format.
+			'filter_query'      => false,
+			'exclude'           => false,        // Comma-separated list of activity IDs to exclude.
+			'in'                => false,        // Comma-separated list or array of activity IDs to which you
+											 // want to limit the query.
+			'spam'              => 'ham_only',   // 'ham_only' (default), 'spam_only' or 'all'.
+			'show_hidden'       => false,        // Show activity items that are hidden site-wide?
+			'update_meta_cache' => true,
+			'count_total'       => false,
+
+			/**
+			 * Pass filters as an array -- all filter items can be multiple values comma separated:
+			 * array(
+			 *     'user_id'      => false, // User ID to filter on.
+			 *     'object'       => false, // Object to filter on e.g. groups, profile, status, friends.
+			 *     'action'       => false, // Action to filter on e.g. activity_update, profile_updated.
+			 *     'primary_id'   => false, // Object ID to filter on e.g. a group_id or blog_id etc.
+			 *     'secondary_id' => false, // Secondary object ID to filter on e.g. a post_id.
+			 * );
+			 */
+			'filter'            => array(),
+		),
+		'activity_get'
+	);
+
+	$activity = BP_Activity_Activity::get_comment(
+		array(
+			'page'              => $r['page'],
+			'per_page'          => $r['per_page'],
+			'max'               => $r['max'],
+			'sort'              => $r['sort'],
+			'order_by'          => $r['order_by'],
+			'privacy'           => $r['privacy'],
+			'search_terms'      => $r['search_terms'],
+			'meta_query'        => $r['meta_query'],
+			'date_query'        => $r['date_query'],
+			'filter_query'      => $r['filter_query'],
+			'filter'            => $r['filter'],
+			'display_comments'  => $r['display_comments'],
+			'show_hidden'       => $r['show_hidden'],
+			'exclude'           => $r['exclude'],
+			'in'                => $r['in'],
+			'spam'              => $r['spam'],
+			'update_meta_cache' => $r['update_meta_cache'],
+			'count_total'       => $r['count_total'],
+			'fields'            => $r['fields'],
+		)
+	);
+
+	/**
+	 * Filters the requested activity item(s).
+	 *
+	 * @since BuddyPress 1.2.0
+	 *
+	 * @param BP_Activity_Activity $activity Requested activity object.
+	 * @param array                $r        Arguments used for the activity query.
+	 */
+	return apply_filters_ref_array( 'bp_activity_get', array( &$activity, &$r ) );
+}
 
 /**
  * Fetch specific activity items.
@@ -2120,6 +2195,50 @@ function bp_activity_get_specific( $args = '' ) {
 	 * @param array                $get_args Constructed arguments used with request.
 	 */
 	return apply_filters( 'bp_activity_get_specific', BP_Activity_Activity::get( $get_args ), $args, $get_args );
+}
+function bp_activity_get_specific_comment( $args = '' ) {
+
+	$r = bp_parse_args(
+		$args,
+		array(
+			'activity_ids'      => false,      // A single activity_id or array of IDs.
+			'display_comments'  => false,      // True or false to display threaded comments for these specific activity items.
+			'max'               => false,      // Maximum number of results to return.
+			'page'              => 1,          // Page 1 without a per_page will result in no pagination.
+			'per_page'          => false,      // Results per page.
+			'show_hidden'       => true,       // When fetching specific items, show all.
+			'privacy'           => false,      // privacy of activity.
+			'sort'              => 'DESC',     // Sort ASC or DESC
+			'spam'              => 'ham_only', // Retrieve items marked as spam.
+			'scope'             => false, // Retrieve items marked as spam.
+			'update_meta_cache' => true,
+		),
+		'activity_get_specific'
+	);
+
+	$get_args = array(
+		'display_comments'  => $r['display_comments'],
+		'in'                => $r['activity_ids'],
+		'max'               => $r['max'],
+		'page'              => $r['page'],
+		'per_page'          => $r['per_page'],
+		'show_hidden'       => $r['show_hidden'],
+		'privacy'           => $r['privacy'],
+		'sort'              => $r['sort'],
+		'spam'              => $r['spam'],
+		'update_meta_cache' => $r['update_meta_cache'],
+	);
+
+	/**
+	 * Filters the requested specific activity item.
+	 *
+	 * @since BuddyPress 1.2.0
+	 *
+	 * @param BP_Activity_Activity $activity Requested activity object.
+	 * @param array                $args     Original passed in arguments.
+	 * @param array                $get_args Constructed arguments used with request.
+	 */
+	return apply_filters( 'bp_activity_get_specific', BP_Activity_Activity::get_comment( $get_args ), $args, $get_args );
 }
 
 /**
@@ -6025,4 +6144,293 @@ function bp_activity_get_types_list() {
 	 * @param array $types An array of activity type labels keyed by type names.
 	 */
 	return apply_filters( 'bp_activity_get_types_list', $types );
+}
+
+/**
+ * Add an activity comment.
+ *
+ * @since BuddyPress 1.2.0
+ * @since BuddyPress 2.5.0 Add a new possible parameter $skip_notification for the array of arguments.
+ *              Add the $primary_link parameter for the array of arguments.
+ * @since BuddyPress 2.6.0 Added 'error_type' parameter to $args.
+ *
+ * @param array|string $args {
+ *     An array of arguments.
+ *     @type int    $id                Optional. Pass an ID to update an existing comment.
+ *     @type string $content           The content of the comment.
+ *     @type int    $user_id           Optional. The ID of the user making the comment.
+ *                                     Defaults to the ID of the logged-in user.
+ *     @type int    $activity_id       The ID of the "root" activity item, ie the oldest
+ *                                     ancestor of the comment.
+ *     @type int    $parent_id         Optional. The ID of the parent activity item, ie the item to
+ *                                     which the comment is an immediate reply. If not provided,
+ *                                     this value defaults to the $activity_id.
+ *     @type bool   $skip_notification Optional. false to send a comment notification, false otherwise.
+ *                                     Defaults to false.
+ *     @type string $error_type        Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
+ * }
+ * @return WP_Error|bool|int The ID of the comment on success, otherwise false.
+ */
+function bb_activity_new_comment( $args = '' ) {
+	$bp = buddypress();
+
+	$r = bp_parse_args(
+		$args,
+		array(
+			'id'                => false,
+			'content'           => false,
+			'user_id'           => bp_loggedin_user_id(),
+			'activity_id'       => false, // ID of the root activity item.
+			'parent_id'         => false, // ID of a parent comment (optional).
+			'skip_notification' => false,
+			'error_type'        => 'bool',
+			'skip_error'        => true,
+		)
+	);
+
+	// Error type is boolean; need to initialize some variables for backpat.
+	if ( 'bool' === $r['error_type'] ) {
+		if ( empty( $bp->activity->errors ) ) {
+			$bp->activity->errors = array();
+		}
+	}
+
+	// Default error message.
+	$feedback = __( 'There was an error posting your reply. Please try again.', 'buddyboss' );
+
+	// Filter to skip comment content check for comment notification.
+	$check_empty_content = apply_filters( 'bp_has_activity_comment_content', true );
+
+	// Bail if missing necessary data.
+	if ( ( $check_empty_content && ( empty( $r['content'] ) && false === $r['skip_error'] ) ) || empty( $r['user_id'] ) || empty( $r['activity_id'] ) ) {
+
+		$error = new WP_Error( 'missing_data', $feedback );
+
+		if ( 'wp_error' === $r['error_type'] ) {
+			return $error;
+
+			// Backpat.
+		} else {
+			$bp->activity->errors['new_comment'] = $error;
+			return false;
+		}
+	}
+
+	// Maybe set current activity ID as the parent.
+	if ( empty( $r['parent_id'] ) ) {
+		$r['parent_id'] = $r['activity_id'];
+	}
+
+	$activity_id = (int) $r['activity_id'];
+
+	// Get the parent activity.
+	$activity = new BP_Activity_Activity( $activity_id );
+
+	// Bail if the parent activity does not exist.
+	if ( empty( $activity->date_recorded ) ) {
+		$error = new WP_Error( 'missing_activity', __( 'The item you were replying to no longer exists.', 'buddyboss' ) );
+
+		if ( 'wp_error' === $r['error_type'] ) {
+			return $error;
+
+			// Backpat.
+		} else {
+			$bp->activity->errors['new_comment'] = $error;
+			return false;
+		}
+	}
+
+	// update comment privacy with parent one.
+	if ( ! empty( $activity->privacy ) ) {
+		$privacy = $activity->privacy;
+	} else {
+		$privacy = 'public';
+	}
+
+	// Check to see if the parent activity is hidden, and if so, hide this comment publicly.
+	$is_hidden = $activity->hide_sitewide ? 1 : 0;
+
+	/**
+	 * Filters the content of a new comment.
+	 *
+	 * @since BuddyPress 1.2.0
+	 * @since BuddyPress 3.0.0 Added $context parameter to disambiguate from bp_get_activity_comment_content().
+	 *
+	 * @param string $r       Content for the newly posted comment.
+	 * @param string $context This filter's context ("new").
+	 */
+	$comment_content = apply_filters( 'bp_activity_comment_content', $r['content'], 'new' );
+
+	// Insert the activity comment.
+	$comment_id = bb_comment_activity_add(
+		array(
+			'id'             => $r['id'],
+			'content'        => $comment_content,
+			'user_id'        => $r['user_id'],
+			'activity_id'    => $activity_id,
+			'comment_parent' => $r['parent_id'],
+			'hide_sitewide'  => $is_hidden,
+			'privacy'        => $privacy,
+			'error_type'     => $r['error_type'],
+		)
+	);
+
+	// Bail on failure.
+	if ( false === $comment_id || is_wp_error( $comment_id ) ) {
+		return $comment_id;
+	}
+
+	// Comment caches are stored only with the top-level item.
+	wp_cache_delete( $activity_id, 'bp_activity_comments' );
+	wp_cache_delete( 'bp_get_child_comments_' . $activity_id, 'bp_activity_comments' );
+
+	// Walk the tree to clear caches for all parent items.
+	$clear_id = intval( $r['parent_id'] );
+	while ( $clear_id != $activity_id ) {
+		$clear_object = BP_Activity_Activity::get_single_comment( $clear_id );
+		wp_cache_delete( $clear_id, 'bp_activity' );
+		$clear_id = intval( $clear_object->secondary_item_id );
+	}
+	wp_cache_delete( $activity_id, 'bp_activity' );
+
+	if ( empty( $r['skip_notification'] ) ) {
+		/**
+		 * Fires near the end of an activity comment posting, before the returning of the comment ID.
+		 * Sends a notification to the user @see bp_activity_new_comment_notification_helper().
+		 *
+		 * @since BuddyPress 1.2.0
+		 *
+		 * @param int                  $comment_id ID of the newly posted activity comment.
+		 * @param array                $r          Array of parsed comment arguments.
+		 * @param BP_Activity_Activity $activity   Activity item being commented on.
+		 */
+		do_action( 'bp_activity_comment_posted', $comment_id, $r, $activity );
+	} else {
+		/**
+		 * Fires near the end of an activity comment posting, before the returning of the comment ID.
+		 * without sending a notification to the user
+		 *
+		 * @since BuddyPress 2.5.0
+		 *
+		 * @param int                  $comment_id ID of the newly posted activity comment.
+		 * @param array                $r          Array of parsed comment arguments.
+		 * @param BP_Activity_Activity $activity   Activity item being commented on.
+		 */
+		do_action( 'bp_activity_comment_posted_notification_skipped', $comment_id, $r, $activity );
+	}
+
+	if ( empty( $comment_id ) ) {
+		$error = new WP_Error( 'comment_failed', $feedback );
+
+		if ( 'wp_error' === $r['error_type'] ) {
+			return $error;
+
+			// Backpat.
+		} else {
+			$bp->activity->errors['new_comment'] = $error;
+		}
+	}
+
+	return $comment_id;
+}
+
+/**
+ * Add an activity comment item.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array|string $args {
+ *     An array of arguments.
+ *     @type int|bool $id                Pass an activity ID to update an existing item, or
+ *                                       false to create a new item. Default: false.
+ *     @type string   $content           Optional. The content of the activity item.
+ *     @type int|bool $user_id           Optional. The ID of the user associated with the activity
+ *                                       item. May be set to false or 0 if the item is not related
+ *                                       to any user. Default: the ID of the currently logged-in user.
+ *     @type int      $activity_id           Optional. The ID of the associated item.
+ *     @type int      $comment_parent    Optional. The ID of a secondary associated item.
+ *     @type string   $date_recorded     Optional. The GMT time, in Y-m-d h:i:s format, when
+ *                                       the item was recorded. Defaults to the current time.
+ *     @type bool     $is_spam           Should the item be marked as spam? Default: false.
+ *     @type string   $privacy           Privacy of the activity Default: public.
+ *     @type string   $error_type        Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
+ * }
+ * @return WP_Error|bool|int The ID of the activity on success. False on error.
+ */
+function bb_comment_activity_add( $args = '' ) {
+
+	$r = bp_parse_args(
+		$args,
+		array(
+			'id'             => false, // Pass an existing activity ID to update an existing entry.
+			'content'        => '', // Optional: The content of the activity item e.g. "BuddyPress is awesome guys!"
+			'user_id'        => bp_loggedin_user_id(), // Optional: The user to record the activity for, can be false if this activity is not for a user.
+			'activity_id'    => false, // Optional: The ID of the specific item being recorded, e.g. a blog_id.
+			'comment_parent' => false, // Optional: A second ID used to further filter e.g. a comment_id.
+			'recorded_time'  => bp_core_current_time(), // The GMT time that this activity was recorded.
+			'hide_sitewide'  => false, // Should this be hidden on the sitewide activity feed?
+			'is_spam'        => false, // Is this activity item to be marked as spam?
+			'privacy'        => 'public', // privacy of the activity
+			'error_type'     => 'bool',
+		),
+		'activity_add'
+	);
+
+
+	// Setup activity to be added.
+	$activity_comment                 = new BP_Activity_Activity( $r['id'] );
+	$activity_comment->user_id        = $r['user_id'];
+	$activity_comment->content        = $r['content'];
+	$activity_comment->activity_id    = $r['activity_id'];
+	$activity_comment->comment_parent = $r['comment_parent'];
+	$activity_comment->date_recorded  = empty( $r['id'] ) ? $r['recorded_time'] : $activity_comment->date_recorded;
+	$activity_comment->hide_sitewide  = $r['hide_sitewide'];
+	$activity_comment->is_spam        = $r['is_spam'];
+	$activity_comment->privacy        = $r['privacy'];
+	$activity_comment->error_type     = $r['error_type'];
+
+	$save = $activity_comment->comment_save();
+
+	if ( ! array_key_exists( 'type', $r ) ) {
+		$r['type'] = 'activity_comment';
+	}
+
+	if ( ! array_key_exists( 'item_id', $r ) ) {
+		$r['item_id'] = $r['activity_id'];
+	}
+
+	if ( ! array_key_exists( 'secondary_item_id', $r ) ) {
+		$r['secondary_item_id'] = $r['comment_parent'];
+	}
+
+	if ( ! array_key_exists( 'component', $r ) ) {
+		$r['component'] = 'activity';
+	}
+
+	if ( 'wp_error' === $r['error_type'] && is_wp_error( $save ) ) {
+		return $save;
+	} elseif ( 'bool' === $r['error_type'] && false === $save ) {
+		return false;
+	}
+
+	// If this is an activity comment, rebuild the tree.
+
+	// Also clear the comment cache for the parent activity ID.
+	wp_cache_delete( $activity_comment->activity_id, 'bp_activity_comments' );
+	wp_cache_delete( 'bp_get_child_comments_' . $activity_comment->activity_id, 'bp_activity_comments' );
+
+	BP_Activity_Activity::rebuild_activity_comment_tree( $activity_comment->activity_id );
+
+	wp_cache_delete( 'bp_activity_sitewide_front', 'bp' );
+
+	/**
+	 * Fires at the end of the execution of adding a new activity item, before returning the new activity item ID.
+	 *
+	 * @since BuddyPress 1.1.0
+	 *
+	 * @param array $r Array of parsed arguments for the activity item being added.
+	 */
+	do_action( 'bp_activity_add', $r );
+
+	return $activity_comment->id;
 }

@@ -4205,3 +4205,163 @@ function bp_get_activity_entry_css_class() {
 	return apply_filters( 'bp_get_activity_entry_css_class', $class );
 }
 
+function bb_has_activities_comments( $args = '' ) {
+	global $activities_template;
+
+	$args = bp_parse_args( $args );
+
+	// Get BuddyPress.
+	$bp = buddypress();
+
+	/*
+	 * Smart Defaults.
+	 */
+
+	// User filtering.
+	$user_id = bp_displayed_user_id()
+		? bp_displayed_user_id()
+		: false;
+
+
+	// Group filtering.
+	if ( bp_is_group() ) {
+		$object          = $bp->groups->id;
+		$args['privacy'] = ( isset( $args['privacy'] ) ? $args['privacy'] : array( 'public' ) );
+		$primary_id      = bp_get_current_group_id();
+		$show_hidden     = (bool) ( groups_is_user_member( bp_loggedin_user_id(), $primary_id ) || bp_current_user_can( 'bp_moderate' ) );
+	} else {
+		$object      = false;
+		$primary_id  = false;
+		$show_hidden = false;
+	}
+
+	// Support for permalinks on single item pages: /groups/my-group/activity/124/.
+	$include = bp_is_current_action( bp_get_activity_slug() )
+		? bp_action_variable( 0 )
+		: false;
+
+	$search_terms_default = false;
+	$search_query_arg     = bp_core_get_component_search_query_arg( 'activity' );
+	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) {
+		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
+	}
+
+	/*
+	 * Parse Args.
+	 */
+
+	// Note: any params used for filtering can be a single value, or multiple
+	// values comma separated.
+	$r = bp_parse_args(
+		$args,
+		array(
+			'display_comments'  => 'threaded',   // False for none, stream/threaded - show comments in the stream or threaded under items.
+			'include'           => $include,     // Pass an activity_id or string of IDs comma-separated.
+			'exclude'           => false,        // Pass an activity_id or string of IDs comma-separated.
+			'in'                => false,        // Comma-separated list or array of activity IDs among which to search.
+			'sort'              => 'DESC',       // Sort DESC or ASC.
+			'page'              => 1,            // Which page to load.
+			'per_page'          => 20,           // Number of items per page.
+			'page_arg'          => 'acpage',     // See https://buddypress.trac.wordpress.org/ticket/3679.
+			'max'               => false,        // Max number to return.
+			'fields'            => 'all',
+			'count_total'       => false,
+			'show_hidden'       => $show_hidden, // Show activity items that are hidden site-wide?
+			'spam'              => 'ham_only',   // Hide spammed items.
+
+			// Filtering.
+			'user_id'           => $user_id,     // user_id to filter on.
+			'primary_id'        => $primary_id,  // Object ID to filter on e.g. a group_id or blog_id etc.
+			'secondary_id'      => false,        // Secondary object ID to filter on e.g. a post_id.
+			'offset'            => false,        // Return only items >= this ID.
+			'since'             => false,        // Return only items recorded since this Y-m-d H:i:s date.
+			'privacy'           => false,        // privacy to filter on - public, onlyme, loggedin, friends, media, document.
+
+			'meta_query'        => false,        // Filter on activity meta. See WP_Meta_Query for format.
+			'date_query'        => false,        // Filter by date. See first parameter of WP_Date_Query for format.
+			'filter_query'      => false,        // Advanced filtering.  See BP_Activity_Query for format.
+
+			// Searching.
+			'search_terms'      => $search_terms_default,
+			'update_meta_cache' => true,
+		),
+		'has_activities'
+	);
+
+	/*
+	 * Smart Overrides.
+	 */
+
+	// Translate various values for 'display_comments'
+	// This allows disabling comments via ?display_comments=0
+	// or =none or =false. Final true is a strict type check. See #5029.
+	if ( in_array( $r['display_comments'], array( 0, '0', 'none', 'false' ), true ) ) {
+		$r['display_comments'] = false;
+	}
+
+	// Ignore pagination if an offset is passed.
+	if ( ! empty( $r['offset'] ) ) {
+		$r['page'] = 0;
+	}
+
+	// Search terms.
+	if ( ! empty( $_REQUEST['s'] ) && empty( $r['search_terms'] ) ) {
+		$r['search_terms'] = $_REQUEST['s'];
+	}
+
+	// Do not exceed the maximum per page.
+	if ( ! empty( $r['max'] ) && ( (int) $r['per_page'] > (int) $r['max'] ) ) {
+		$r['per_page'] = $r['max'];
+	}
+
+	/**
+	 * Filters whether BuddyPress should enable afilter support.
+	 *
+	 * Support for basic filters in earlier BP versions is disabled by default.
+	 * To enable, put add_filter( 'bp_activity_enable_afilter_support', '__return_true' );
+	 * into bp-custom.php or your theme's functions.php.
+	 *
+	 * @since BuddyPress 1.6.0
+	 *
+	 * @param bool $value True if BuddyPress should enable afilter support.
+	 */
+	if ( isset( $_GET['afilter'] ) && apply_filters( 'bp_activity_enable_afilter_support', false ) ) {
+		$r['filter'] = array(
+			'object' => $_GET['afilter'],
+		);
+	} elseif ( ! empty( $r['user_id'] ) || ! empty( $r['object'] ) || ! empty( $r['action'] ) || ! empty( $r['primary_id'] ) || ! empty( $r['secondary_id'] ) || ! empty( $r['offset'] ) || ! empty( $r['since'] ) ) {
+		$r['filter'] = array(
+			'user_id'      => $r['user_id'],
+			'primary_id'   => $r['primary_id'],
+			'secondary_id' => $r['secondary_id'],
+			'offset'       => $r['offset'],
+			'since'        => $r['since'],
+		);
+	} else {
+		$r['filter'] = false;
+	}
+
+	// If specific activity items have been requested, override the $hide_spam
+	// argument. This prevents backpat errors with AJAX.
+	if ( ! empty( $r['include'] ) && ( 'ham_only' === $r['spam'] ) ) {
+		$r['spam'] = 'all';
+	}
+
+	/*
+	 * Query
+	 */
+
+	$activities_template = new BP_Activity_Comment_Template( $r );
+
+	/**
+	 * Filters whether or not there are activity items to display.
+	 *
+	 * @since BuddyPress 1.1.0
+	 *
+	 * @param bool   $value               Whether or not there are activity items to display.
+	 * @param string $activities_template Current activities template being used.
+	 * @param array  $r                   Array of arguments passed into the BP_Activity_Template class.
+	 */
+	return apply_filters( 'bp_has_activities', $activities_template->has_activities(), $activities_template, $r );
+}
+
