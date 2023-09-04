@@ -6662,6 +6662,7 @@ form.acomment-edit div.dropzone .dz-default.dz-message .dz-button {
   opacity: 0;
   position: absolute;
   inset: 0;
+  overflow: hidden;
 }
 
 form.acomment-edit div.dropzone .dz-preview {
