@@ -255,8 +255,8 @@ function bp_activity_check_blacklist_keys( $activity ) {
 function bp_activity_save_link_data( $activity ) {
 
 	// bail if the request is for privacy update.
-	if ( 
-		isset( $_POST['action'] ) && 
+	if (
+		isset( $_POST['action'] ) &&
 		in_array(
 			$_POST['action'], // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			array(
@@ -450,7 +450,8 @@ function bp_activity_at_name_filter( $content, $activity_id = 0 ) {
 
 	// Linkify the mentions with the username.
 	foreach ( (array) $usernames as $user_id => $username ) {
-		$content = preg_replace( '/(@' . $username . '\b)/', "<a class='bp-suggestions-mention' href='" . bp_core_get_user_domain( $user_id ) . "' rel='nofollow'>@$username</a>", $content );
+		$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)/';
+		$content = preg_replace( $pattern, "<a class='bp-suggestions-mention' href='" . bp_core_get_user_domain( $user_id ) . "' rel='nofollow'>@$username</a>", $content );
 	}
 
 	// Put everything back.
@@ -492,7 +493,8 @@ function bp_activity_at_name_filter_updates( $activity ) {
 	if ( ! empty( $usernames ) ) {
 		// Replace @mention text with userlinks.
 		foreach ( (array) $usernames as $user_id => $username ) {
-			$activity->content = preg_replace( '/(@' . $username . '\b)/', "<a class='bp-suggestions-mention' href='" . bp_core_get_user_domain( $user_id ) . "' rel='nofollow'>@$username</a>", $activity->content );
+			$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)/';
+			$activity->content = preg_replace( $pattern, "<a class='bp-suggestions-mention' href='" . bp_core_get_user_domain( $user_id ) . "' rel='nofollow'>@$username</a>", $activity->content );
 		}
 
 		// Add our hook to send @mention emails after the activity item is saved.
@@ -999,14 +1001,75 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 
 	// Should we show all items regardless of sitewide visibility?
 	$show_hidden = array();
-	if ( ! empty( $user_id ) && $user_id !== bp_loggedin_user_id() ) {
+	if ( ! empty( $user_id ) && bp_loggedin_user_id() !== $user_id ) {
 		$show_hidden = array(
 			'column' => 'hide_sitewide',
 			'value'  => 0,
 		);
+	} elseif (
+		! empty( $user_id ) &&
+		bp_loggedin_user_id() === $user_id &&
+		bp_is_active( 'groups' ) &&
+		(
+			bp_is_activity_directory() ||
+			(
+				empty( $filter['filter']['user_id'] ) &&
+				! empty( $filter['scope'] ) &&
+				false !== strpos( $filter['scope'], 'just-me' )
+			)
+		)
+	) {
+
+		// Fetch public groups.
+		$public_groups = groups_get_groups(
+			array(
+				'fields'   => 'ids',
+				'status'   => 'public',
+				'per_page' => - 1,
+			)
+		);
+		if ( ! empty( $public_groups['groups'] ) ) {
+			$public_groups = $public_groups['groups'];
+		} else {
+			$public_groups = array();
+		}
+
+		$user_groups           = array();
+		$logged_in_user_groups = groups_get_user_groups( bp_loggedin_user_id() );
+		if ( ! empty( $logged_in_user_groups['groups'] ) ) {
+			$user_groups = $logged_in_user_groups['groups'];
+		}
+
+		$group_activity = array(
+			'relation' => 'AND',
+			array(
+				'column' => 'component',
+				'value'  => buddypress()->groups->id,
+			),
+			array(
+				'relation' => 'OR',
+				array(
+					'column'  => 'item_id',
+					'compare' => 'IN',
+					'value'   => (array) $public_groups,
+				),
+				array(
+					'column'  => 'item_id',
+					'compare' => 'IN',
+					'value'   => (array) $user_groups,
+				),
+			),
+		);
+
+		$show_hidden = array(
+			$show_hidden,
+			$group_activity,
+			'relation' => 'AND',
+		);
 	}
 
 	$privacy = array( 'public' );
+
 	if ( is_user_logged_in() ) {
 		$privacy[] = 'loggedin';
 		if ( bp_is_active( 'friends' ) ) {
@@ -1014,16 +1077,16 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 			// Determine friends of user.
 			$friends = friends_get_friend_user_ids( $user_id );
 
-			if ( $user_id === bp_loggedin_user_id() || bp_is_activity_directory() ) {
+			if ( bp_loggedin_user_id() === $user_id || bp_is_activity_directory() ) {
 				$friends[] = bp_loggedin_user_id();
 			}
 
-			if ( ! empty( $friends ) && in_array( bp_loggedin_user_id(), $friends ) ) {
+			if ( ! empty( $friends ) && in_array( bp_loggedin_user_id(), $friends, true ) ) {
 				$privacy[] = 'friends';
 			}
 		}
 
-		if ( $user_id === bp_loggedin_user_id() ) {
+		if ( bp_loggedin_user_id() === $user_id ) {
 			$privacy[] = 'onlyme';
 		}
 	}
