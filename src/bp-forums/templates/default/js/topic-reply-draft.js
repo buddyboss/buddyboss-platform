@@ -709,7 +709,16 @@ window.bp = window.bp || {};
 				activity_data = this.all_draft_data[this.topic_reply_draft.data_key];
 			}
 
-			if ( 'undefined' === typeof activity_data.bbp_topic_title && 'undefined' === typeof activity_data.bbp_topic_content ) {
+			if (
+				(
+					'undefined' === typeof activity_data.bbp_topic_title &&
+					'undefined' === typeof activity_data.bbp_topic_content
+				) ||
+				(
+					'' === activity_data.bbp_topic_title &&
+					'' === activity_data.bbp_topic_content
+				)
+			) {
 				return;
 			}
 
@@ -717,13 +726,19 @@ window.bp = window.bp || {};
 			$form.addClass( 'has-draft' );
 
 			// Title.
-			if ( 'undefined' !== typeof activity_data.bbp_topic_title ) {
+			if (
+				'undefined' !== typeof activity_data.bbp_topic_title &&
+				'' !== activity_data.bbp_topic_title
+			) {
 				$form.find( '#bbp_topic_title' ).val( activity_data.bbp_topic_title );
 				$form.addClass( 'has-title' );
 			}
 
 			// Content.
-			if ( 'undefined' !== typeof activity_data.bbp_topic_content ) {
+			if (
+				'undefined' !== typeof activity_data.bbp_topic_content &&
+				'' !== activity_data.bbp_topic_content
+			) {
 				var element = $editor.get( 0 );
 				var $meditor = window.MediumEditor ? window.MediumEditor.getEditorFromElement( element ) : null;
 				if ( $meditor !== null ) {
@@ -805,8 +820,14 @@ window.bp = window.bp || {};
 			}
 
 			if (
-				'undefined' === typeof activity_data.bbp_reply_content &&
-				'undefined' === typeof activity_data.bb_link_url
+				(
+					'undefined' === typeof activity_data.bbp_reply_content &&
+					'undefined' === typeof activity_data.bb_link_url
+				) ||
+				(
+					'' === activity_data.bbp_reply_content &&
+					'' === activity_data.bb_link_url
+				)
 			) {
 				return;
 			}
@@ -815,7 +836,10 @@ window.bp = window.bp || {};
 			$form.addClass( 'has-draft' );
 
 			// Content.
-			if ( 'undefined' !== typeof activity_data.bbp_reply_content ) {
+			if (
+				'undefined' !== typeof activity_data.bbp_reply_content &&
+				'' !== activity_data.bbp_reply_content
+			) {
 				var element = $editor.get( 0 );
 				var $meditor = window.MediumEditor ? window.MediumEditor.getEditorFromElement( element ) : null;
 				if ( $meditor !== null ) {
@@ -972,7 +996,8 @@ window.bp = window.bp || {};
 								'url': draft_documents[ d ].url,
 								'uuid': draft_documents[ d ].uuid,
 								'menu_order': draft_documents[ d ].menu_order,
-								'saved': false
+								'saved': false,
+								'svg_icon': ! _.isUndefined( draft_documents[ d ].svg_icon ) ? draft_documents[ d ].svg_icon : ''
 							}
 						);
 
@@ -989,7 +1014,8 @@ window.bp = window.bp || {};
 								uuid: draft_documents[ d ].uuid
 							},
 							dataURL: draft_documents[ d ].url,
-							id: draft_documents[ d ].id
+							id: draft_documents[ d ].id,
+							svg_icon: ! _.isUndefined( draft_documents[ d ].svg_icon ) ? draft_documents[ d ].svg_icon : ''
 						};
 
 						self.dropzone_obj[ d_dropzone_obj_key ].files.push( d_mock_file );

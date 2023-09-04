@@ -320,17 +320,17 @@ function bp_document_format_size_units( $bytes, $post_string = false, $type = 'b
 
 /**
  * Retrieve an document or documents.
- * The bp_document_get() function shares all arguments with BP_Document::get().
+ * The bp_document_get() function shares all arguments with BP_Document::documents().
  * The following is a list of bp_document_get() parameters that have different
- * default values from BP_Document::get() (value in parentheses is
+ * default values from BP_Document::documents() (value in parentheses is
  * the default for the bp_document_get()).
  *   - 'per_page' (false)
  *
- * @param array|string $args See BP_Document::get() for description.
+ * @param array|string $args See BP_Document::documents() for description.
  *
- * @return array $document See BP_Document::get() for description.
+ * @return array $document See BP_Document::documents() for description.
  * @since BuddyBoss 1.4.0
- * @see   BP_Document::get() For more information on accepted arguments
+ * @see   BP_Document::documents() For more information on accepted arguments
  *        and the format of the returned value.
  */
 function bp_document_get( $args = '' ) {
@@ -339,27 +339,28 @@ function bp_document_get( $args = '' ) {
 		$args,
 		array(
 			'max'                 => false,        // Maximum number of results to return.
-			'fields'              => 'all',
+			'fields'              => 'all',        // Fields to include.
 			'page'                => 1,            // Page 1 without a per_page will result in no pagination.
 			'per_page'            => false,        // results per page.
 			'sort'                => 'DESC',       // sort ASC or DESC.
 			'order_by'            => false,        // order by.
-			'scope'               => false,
+			'scope'               => false,        // Document Scope - public, friends, groups, personal.
 
 			// want to limit the query.
-			'user_id'             => false,
-			'activity_id'         => false,
-			'folder_id'           => false,
-			'group_id'            => false,
+			'user_id'             => false,        // Filter by user id.
+			'activity_id'         => false,        // Filter by activity id.
+			'folder_id'           => false,        // Filter by folder id.
+			'group_id'            => false,        // Filter by group id.
 			'search_terms'        => false,        // Pass search terms as a string.
-			'privacy'             => false,        // privacy of document.
+			'privacy'             => false,        // Privacy of document. public, loggedin, onlyme, friends, grouponly, message.
+			'in'                  => false,        // Array of ids to limit query by (IN).
 			'exclude'             => false,        // Comma-separated list of activity IDs to exclude.
 			'count_total'         => false,
 			'user_directory'      => true,
 
-			'meta_query_document' => false,         // Filter by activity meta. See WP_Meta_Query for format.
-			'meta_query_folder'   => false,          // Filter by activity meta. See WP_Meta_Query for format.
-			'moderation_query'    => true,         // Filter for exclude moderation query.
+			'meta_query_document' => false,        // Filter by activity meta. See WP_Meta_Query for format.
+			'meta_query_folder'   => false,        // Filter by activity meta. See WP_Meta_Query for format.
+			'moderation_query'    => true,         // Filter to include moderation query.
 		),
 		'document_get'
 	);
@@ -378,6 +379,7 @@ function bp_document_get( $args = '' ) {
 			'search_terms'        => $r['search_terms'],
 			'scope'               => $r['scope'],
 			'privacy'             => $r['privacy'],
+			'in'                  => ! empty( $r['include'] ) ? $r['include'] : $r['in'],
 			'exclude'             => $r['exclude'],
 			'count_total'         => $r['count_total'],
 			'fields'              => $r['fields'],
@@ -1932,7 +1934,7 @@ function bp_document_svg_icon( $extension, $attachment_id = 0, $type = 'font' ) 
 		case 'jpg':
 		case 'jpeg':
 			$svg = array(
-				'font' => 'bb-icon-file-jpg',
+				'font' => 'bb-icon-file-image',
 				'svg'  => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-jpg</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.736 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0h9.728zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM16 13.504c1.6 0 2.912 1.248 3.008 2.816v8.192c0 1.6-1.248 2.88-2.816 2.976h-8.192c-1.6 0-2.912-1.248-2.976-2.816l-0.032-0.16v-8c0-1.6 1.248-2.912 2.848-3.008h8.16zM16 14.496h-8c-1.056 0-1.92 0.832-1.984 1.856v8.16c0 0.064 0 0.096 0 0.16l2.624-2.432c0.384-0.384 1.024-0.352 1.408 0.032v0l1.376 1.504 3.328-3.84c0.352-0.416 0.992-0.448 1.408-0.096 0.032 0.032 0.064 0.064 0.096 0.096l1.76 1.92v-5.344c0-1.056-0.832-1.92-1.856-2.016h-0.16zM10.752 18.112c0.704 0 1.248 0.544 1.248 1.248 0 0.672-0.544 1.248-1.248 1.248s-1.248-0.576-1.248-1.248c0-0.704 0.544-1.248 1.248-1.248z"></path></svg>',
 			);
 			break;
