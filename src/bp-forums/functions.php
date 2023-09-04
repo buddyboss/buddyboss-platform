@@ -457,10 +457,10 @@ function bbp_remove_group_id_from_forum( $forum_id = 0, $group_id = 0 ) {
 	$group_ids = bbp_get_forum_group_ids( $forum_id );
 
 	// Maybe update the groups forums.
-	if ( in_array( $group_id, $group_ids ) ) {
-		$new_group_ids = array_diff( array_values( $group_ids ), (array) $group_id );
+	if ( in_array( $group_id, $group_ids, true ) ) {
+		$group_ids = array_diff( array_values( $group_ids ), (array) $group_id );
 		bb_update_last_group_forum_associations( $group_id, $forum_id );
-		return bbp_update_forum_group_ids( $forum_id, $new_group_ids );
+		return bbp_update_forum_group_ids( $forum_id, $group_ids );
 	}
 }
 
@@ -485,10 +485,10 @@ function bbp_remove_forum_id_from_group( $group_id = 0, $forum_id = 0 ) {
 	$forum_ids = bbp_get_group_forum_ids( $group_id );
 
 	// Maybe update the groups forums.
-	if ( in_array( $forum_id, $forum_ids ) ) {
-		$new_forum_ids = array_diff( array_values( $forum_ids ), (array) $forum_id );
+	if ( in_array( $forum_id, $forum_ids, true ) ) {
+		$forum_ids = array_diff( array_values( $forum_ids ), (array) $forum_id );
 		bb_update_last_group_forum_associations( $group_id, $forum_id );
-		return bbp_update_group_forum_ids( $group_id, $new_forum_ids );
+		return bbp_update_group_forum_ids( $group_id, $forum_ids );
 	}
 }
 
@@ -1156,7 +1156,6 @@ if ( bbp_allow_anonymous() ) {
  *
  * @param int $group_id Group ID.
  * @param int $forum_id Forum ID.
- *
  */
 function bb_update_last_group_forum_associations( $group_id = 0, $forum_id = 0 ) {
 	if ( empty( $forum_id ) ) {
@@ -1173,12 +1172,12 @@ function bb_update_last_group_forum_associations( $group_id = 0, $forum_id = 0 )
 	$group_ids = array_filter( bbp_get_forum_group_ids( $forum_id ) );
 	$forum_ids = array_filter( bbp_get_group_forum_ids( $group_id ) );
 
-	if ( in_array( $group_id, $group_ids ) && in_array( $forum_id, $forum_ids ) ) {
-
+	if (
+		in_array( $group_id, $group_ids, true ) &&
+		in_array( $forum_id, $forum_ids, true )
+	) {
 		// Save the backups.
 		update_post_meta( $forum_id, '_last_bbp_group_ids', $group_ids );
 		groups_update_groupmeta( $group_id, 'last_forum_id', $forum_ids );
-		
 	}
-
 }

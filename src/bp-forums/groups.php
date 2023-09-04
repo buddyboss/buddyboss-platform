@@ -355,15 +355,15 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 							<h4 class="bb-section-title"><?php esc_html_e( 'Connected Forum', 'buddyboss' ); ?></h4>
 							<p class="bb-section-info"><?php esc_html_e( 'Only site administrators can reconfigure which forum belongs to this group.', 'buddyboss' ); ?></p>
 							<?php
-								bbp_dropdown(
-									array(
-										'select_id'          => 'bbp_group_forum_id',
-										'show_none'          => __( '(No Forum)', 'buddyboss' ),
-										'selected'           => $forum_id,
-										'disable_categories' => false,
-										'disabled_walker'    => false,
-									)
-								);
+							bbp_dropdown(
+								array(
+									'select_id'          => 'bbp_group_forum_id',
+									'show_none'          => __( '(No Forum)', 'buddyboss' ),
+									'selected'           => $forum_id,
+									'disable_categories' => false,
+									'disabled_walker'    => false,
+								)
+							);
 							?>
 						</div>
 					</div>
@@ -443,8 +443,10 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 						$last_group_ids = get_post_meta( $forum_id, '_last_bbp_group_ids', true );
 						$last_group_ids = ! empty( $last_group_ids ) ? array_filter( $last_group_ids ) : array();
 
-						if ( in_array( $group_id, $last_group_ids ) && in_array( $forum_id, $last_forum_ids ) ) {
-
+						if (
+							in_array( $group_id, $last_group_ids, true ) &&
+							in_array( $forum_id, $last_forum_ids, true )
+						) {
 							// Look for forum can be associated.
 							$valid_forum = $this->forum_can_associate_with_group( $forum_id, $group_id, false );
 
@@ -507,11 +509,12 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			$group = $this->toggle_group_forum( $group_id, $edit_forum, $forum_id );
 
 			if ( true === $edit_forum ) {
-
-				// Delete last associations.
+				// Delete last associations forum id.
 				if ( ! empty( $last_forum_id ) ) {
 					delete_post_meta( $last_forum_id, '_last_bbp_group_ids' );
 				}
+
+				// Update associations forum id.
 				if ( ! empty( $forum_id ) ) {
 					delete_post_meta( $forum_id, '_last_bbp_group_ids' );
 				}
@@ -1881,6 +1884,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				if ( $show_error ) {
 					bp_core_add_message( __( 'Child forums are not allowed to associate with any groups.', 'buddyboss' ), 'error' );
 				}
+
 				return false;
 			}
 
@@ -1889,6 +1893,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				if ( $show_error ) {
 					bp_core_add_message( __( 'Category type forums are not allowed to associate with any groups.', 'buddyboss' ), 'error' );
 				}
+
 				return false;
 			}
 
@@ -1897,6 +1902,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				if ( $show_error ) {
 					bp_core_add_message( __( 'This forum is already associated with other groups.', 'buddyboss' ), 'error' );
 				}
+
 				return false;
 			}
 
