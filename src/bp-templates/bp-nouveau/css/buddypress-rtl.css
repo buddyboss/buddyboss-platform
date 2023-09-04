@@ -6700,6 +6700,11 @@ form.acomment-edit div.dropzone.video-dropzone div.dz-preview.dz-file-preview .d
   line-height: 1;
 }
 
+form.acomment-edit div.dropzone.video-dropzone .dz-default.dz-message:after {
+  content: "\e9f1";
+  font-size: 32px;
+}
+
 form.acomment-edit div.dropzone.video-dropzone.dz-started .dz-default.dz-message {
   max-width: 80px !important;
   width: 80px;
@@ -6749,6 +6754,10 @@ form.acomment-edit div.dropzone.document-dropzone .dz-preview .dz-remove {
 
 form.acomment-edit div.dropzone.document-dropzone .dz-preview .dz-progress-ring-wrap {
   margin-top: -7px;
+}
+
+form.acomment-edit div.dropzone.document-dropzone .dz-default.dz-message:after {
+  content: "\eef9";
 }
 
 form.acomment-edit div.dropzone .dz-preview.dz-file-preview .dz-details {

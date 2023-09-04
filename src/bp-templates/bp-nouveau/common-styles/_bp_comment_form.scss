@@ -225,6 +225,11 @@ form.acomment-edit {
 
 			}
 
+			.dz-default.dz-message:after {
+				content: "\e9f1";
+				font-size: 32px;
+			}
+
 			&.dz-started .dz-default.dz-message {
 				max-width: 80px !important;
 				width: 80px;
@@ -282,6 +287,10 @@ form.acomment-edit {
 				.dz-progress-ring-wrap {
 					margin-top: -7px;
 				}
+			}
+
+			.dz-default.dz-message:after {
+				content: "\eef9";
 			}
 		}
 
