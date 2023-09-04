@@ -1932,9 +1932,9 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$message_rendered = preg_replace( '#(<p></p>)#', '<p><br></p>', $message_rendered );
 
 		$data = array(
-			'id'                        => $thread->thread_id,
-			'message_id'                => $thread->last_message_id,
-			'last_sender_id'            => $thread->last_sender_id,
+			'id'                        => (int) $thread->thread_id,
+			'message_id'                => (int) $thread->last_message_id,
+			'last_sender_id'            => (int) $thread->last_sender_id,
 			'subject'                   => array(
 				'raw'      => $thread->last_message_subject,
 				'rendered' => apply_filters( 'bp_get_message_thread_subject', $thread->last_message_subject ),

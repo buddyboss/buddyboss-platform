@@ -161,12 +161,12 @@ window.bp = window.bp || {};
 				'change',
 				'#bpm_blocking_member_blocking',
 				function () {
-					$( 'label[for="bpm_blocking_auto_suspend"' ).toggleClass( 'is_disabled' );
+					$( 'label[for="bpm_blocking_auto_suspend"]' ).toggleClass( 'is_disabled' );
 					$( '#bpm_blocking_auto_suspend' ).prop( 'checked', false );
-					$( 'label[for="bpm_blocking_email_notification"' ).removeClass( 'is_disabled' );
+					$( 'label[for="bpm_blocking_email_notification"]' ).removeClass( 'is_disabled' );
 					if( false === $( '#bpm_blocking_member_blocking' ).prop( 'checked' ) && false === $( '#bb_blocking_member_reporting' ).prop( 'checked' ) ) {
 						$( '#bpm_blocking_email_notification' ).prop( 'checked', false );
-						$( 'label[for="bpm_blocking_email_notification"' ).addClass( 'is_disabled' );
+						$( 'label[for="bpm_blocking_email_notification"]' ).addClass( 'is_disabled' );
 					}
 				}
 			);
@@ -180,10 +180,10 @@ window.bp = window.bp || {};
 				function () {
 					$( 'label[for="bb_reporting_auto_suspend"]' ).toggleClass('is_disabled');
 					$( '#bb_reporting_auto_suspend' ).prop( 'checked', false );
-					$( 'label[for="bpm_blocking_email_notification"' ).removeClass( 'is_disabled' );
+					$( 'label[for="bpm_blocking_email_notification"]' ).removeClass( 'is_disabled' );
 					if( false === $( '#bpm_blocking_member_blocking' ).prop( 'checked' ) && false === $( '#bb_blocking_member_reporting' ).prop( 'checked' ) ) {
 						$( '#bpm_blocking_email_notification' ).prop( 'checked', false );
-						$( 'label[for="bpm_blocking_email_notification"' ).addClass( 'is_disabled' );
+						$( 'label[for="bpm_blocking_email_notification"]' ).addClass( 'is_disabled' );
 					}
 				}
 			);
@@ -193,7 +193,7 @@ window.bp = window.bp || {};
 			 */
 			if( false === $( '#bpm_blocking_member_blocking' ).prop( 'checked' ) && false === $( '#bb_blocking_member_reporting' ).prop( 'checked' ) ) {
 				$( '#bpm_blocking_email_notification' ).prop( 'checked', false );
-				$( 'label[for="bpm_blocking_email_notification"' ).addClass( 'is_disabled' );
+				$( 'label[for="bpm_blocking_email_notification"]' ).addClass( 'is_disabled' );
 			}
 
 			if( $( '#bb_reporting_category_description' ).length ) {
@@ -2306,10 +2306,10 @@ window.bp = window.bp || {};
 					} else {
 						$( this ).parent().next( 'label' ).addClass( 'is_disabled' ).find( 'input[type="checkbox"]' ).removeProp( 'checked' ).removeAttr( 'checked' ).prop( 'disabled', 'disabled' );
 					}
-					$( 'label[for="bpm_reporting_email_notification"' ).removeClass( 'is_disabled' );
+					$( 'label[for="bpm_reporting_email_notification"]' ).removeClass( 'is_disabled' );
 					if ( 0 === $( '.bpm_reporting_content_content_label > input:checked' ).length ) {
 						$( '#bpm_reporting_email_notification' ).prop( 'checked', false );
-						$( 'label[for="bpm_reporting_email_notification"' ).addClass( 'is_disabled' );
+						$( 'label[for="bpm_reporting_email_notification"]' ).addClass( 'is_disabled' );
 					}
 				}
 			);
@@ -2319,7 +2319,7 @@ window.bp = window.bp || {};
 			 */
 			if ( 0 === $( '.bpm_reporting_content_content_label > input:checked' ).length ) {
 				$( '#bpm_reporting_email_notification' ).prop( 'checked', false );
-				$( 'label[for="bpm_reporting_email_notification"' ).addClass( 'is_disabled' );
+				$( 'label[for="bpm_reporting_email_notification"]' ).addClass( 'is_disabled' );
 			}
 
 			$( document ).on(
@@ -2449,6 +2449,292 @@ window.bp = window.bp || {};
 		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
 			results = regex.exec(location.search);
 		return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
+
+	// Domain Restrictions.
+	$( document ).on(
+		'click',
+		'.registration-restrictions-listing .registration-restrictions-add-rule',
+		function ( e ) {
+			e.preventDefault();
+			var $this = $( this );
+			var newindex = parseInt( $this.prev( '.registration-restrictions-lastindex' ).val() ) + 1;
+			var regex = new RegExp( 'placeholder_priority_index', 'g' );
+			var $row = $this.closest( '.registration-restrictions-listing' ).find( '.registration-restrictions-rule-list .registration-restrictions-rule.custom' ).html();
+			$this.closest( '.registration-restrictions-listing' ).
+				find( '.registration-restrictions-rule-list' ).
+				append( ' <div class="registration-restrictions-rule untouched"> ' + $row.replace( regex, newindex ) + ' </div> ' );
+			$this.prev( '.registration-restrictions-lastindex' ).val( newindex );
+			domainRestictionUpdatePriorityNumber();
+		}
+	);
+
+	$( document ).on(
+		'click',
+		'.registration-restrictions-listing .registration-restrictions-rule-remove',
+		function ( e ) {
+			e.preventDefault();
+			var $this = $( e.currentTarget );
+			var $listing = $this.parents( '.bb-domain-restrictions-listing' );
+			var newindex = parseInt( $this.prev( '.registration-restrictions-lastindex' ).val() ) - 1;
+			if ( !$this.closest( '.registration-restrictions-rule' ).hasClass( 'custom' ) ) {
+				$this.closest( '.registration-restrictions-rule' ).remove();
+				$this.parents( '.registration-restrictions-listing' ).find( '.registration-restrictions-lastindex' ).val( newindex );
+			}
+
+			// If no rules or all are never allow then enable all option.
+			if ( 'undefined' !== typeof $listing && $listing.length > 0 ) {
+				if ( 0 === $listing.find( '.registration-restrictions-rule' ).not( '.custom' ).length ) {
+					$( '.bb-domain-restrictions-listing .registration-restrictions-select' ).find( 'option' ).attr( 'disabled', false );
+				} else {
+					var $select = $listing.find( '.registration-restrictions-rule:not(.custom) .registration-restrictions-input-select' );
+					if ( 
+						0 === $select.find( 'option[value="only_allow"]:selected' ).length &&
+						0 === $select.find( 'option[value="always_allow"]:selected' ).length
+					) {
+						$( '.bb-domain-restrictions-listing .registration-restrictions-select' ).find( 'option' ).attr( 'disabled', false );
+					}
+				}
+			}
+
+			domainRestictionUpdatePriorityNumber();
+		}
+	);
+
+	$( document ).on(
+		'change',
+		'.registration-restrictions-listing .registration-restrictions-select',
+		function ( e ) {
+			e.preventDefault();
+			var $this = $( e.currentTarget );
+			var $dropdowns = $this.parents( '.bb-domain-restrictions-listing' ).find( '.registration-restrictions-select' );
+			var $other_dropdowns = $this.parents( '.bb-domain-restrictions-listing' ).find( '.registration-restrictions-select' ).not( $this );
+			var current_val = '';
+			var all_values = [];
+
+			$dropdowns.each( function ( index, element ) {
+				var element_val = $( this ).find( 'option:selected' ).val();
+				all_values[ index ] = element_val;
+
+				if ( $this.length !== 0 && $this.get( 0 ) === element ) {
+					current_val = element_val;
+				}
+			} );
+
+			var filtered_val = bb_unique( all_values );
+			filtered_val = filtered_val.filter( function ( v ) {
+				return v !== '';
+			} );
+
+			if ( filtered_val.length === 1 ) {
+				if ( filtered_val[ 0 ] === 'always_allow' ) {
+					if ( 1 === $other_dropdowns.length ) {
+						$other_dropdowns.find( 'option' ).attr( 'disabled', false );
+						$other_dropdowns.find( 'option[value="only_allow"]' ).attr( 'disabled', true );
+					} else {
+						$dropdowns.find( 'option' ).attr( 'disabled', false );
+						$dropdowns.find( 'option[value="only_allow"]' ).attr( 'disabled', true );
+					}
+				} else if ( filtered_val[ 0 ] === 'only_allow' ) {
+					if ( 1 === $other_dropdowns.length ) {
+						$other_dropdowns.find( 'option' ).attr( 'disabled', false );
+						$other_dropdowns.find( 'option[value="always_allow"]' ).attr( 'disabled', true );
+					} else {
+						$dropdowns.find( 'option' ).attr( 'disabled', false );
+						$dropdowns.find( 'option[value="always_allow"]' ).attr( 'disabled', true );
+					}
+				} else if ( filtered_val[ 0 ] === 'never_allow' ) {
+					$dropdowns.find( 'option' ).attr( 'disabled', false );
+				}
+			} else if (
+				filtered_val.length !== 0 &&
+				filtered_val.length > 1 &&
+				current_val !== ''
+			) {
+				if ( 'only_allow' === current_val ) {
+					$other_dropdowns.find( 'option' ).attr( 'disabled', false );
+					$other_dropdowns.find( 'option[value="always_allow"]' ).attr( 'disabled', true );
+				} else if ( 'always_allow' === $this.find( ':selected' ).val() ) {
+					$other_dropdowns.find( 'option' ).attr( 'disabled', false );
+					$other_dropdowns.find( 'option[value="only_allow"]' ).attr( 'disabled', true );
+				}
+			}
+			validateDuplicateDomainRuleEntry();
+		}
+	);
+
+	$( '.registration-restrictions-rule-list.bb-sortable' ).sortable( {
+		update: function () {
+			domainRestictionUpdatePriorityNumber();
+		},
+	} );
+
+	function domainRestictionUpdatePriorityNumber() {
+		$( '.bb-sortable .registration-restrictions-rule:not(.custom)' ).each( function ( index ) {
+			$( this ).find( '.registration-restrictions-priority' ).html( index + 1 );
+		} );
+	}
+
+	// Function to validate duplicate entry.
+	function validateDuplicateDomainRuleEntry( e, eventType ) {
+		var wrapper = $( '#bb-domain-restrictions-setting' );
+		//Store all the entry.
+		var allDomainExtension = [];
+		// Store Errors
+		var domainRestrictionsErrors = [];
+
+		if ( e && e.currentTarget && $( e.currentTarget ).closest( '.registration-restrictions-rule' ).hasClass( 'untouched' ) ) {
+			$( e.currentTarget ).closest( '.registration-restrictions-rule' ).removeClass( 'untouched' );
+		}
+
+		if ( eventType === 'submit' || eventType === 'remove' || eventType === 'add' ) {
+			$( '.registration-restrictions-rule' ).removeClass( 'untouched' );
+		}
+
+		$( '.bb-domain-restrictions-listing .registration-restrictions-rule' ).not( '.custom' ).not( '.untouched' ).each( function () {
+			var currentDomain = $( this ).find( '.registration-restrictions-domain' ).val().trim().toLowerCase();
+			var currentExtension = $( this ).find( '.registration-restrictions-tld' ).val().trim().toLowerCase();
+			var conditionType = $( this ).find( '.registration-restrictions-input-select' ).val();
+
+			$( this ).removeClass( 'error' );
+			wrapper.children( '.restrictions-error' ).html( '' );
+
+			if ( '' !== currentDomain && '' !== currentExtension ) {
+				if ( 'undefined' === typeof allDomainExtension[ currentDomain + '_' + currentExtension ] ) {
+					allDomainExtension[ currentDomain + '_' + currentExtension ] = 1;
+				} else {
+					allDomainExtension[ currentDomain + '_' + currentExtension ] += 1;
+					$( this ).addClass( 'error' );
+					if ( !domainRestrictionsErrors.includes( BP_ADMIN.bb_registration_restrictions.feedback_messages.duplicate ) ) {
+						domainRestrictionsErrors.push( BP_ADMIN.bb_registration_restrictions.feedback_messages.duplicate );
+					}
+				}
+			}
+
+			if ( eventType === 'submit' || eventType === 'remove' || eventType === 'add' ) {
+				if ( '' === currentDomain || '' === currentExtension || '' === conditionType ) {
+					$( this ).addClass( 'error' );
+					if ( !domainRestrictionsErrors.includes( BP_ADMIN.bb_registration_restrictions.feedback_messages.empty ) ) {
+						domainRestrictionsErrors.push( BP_ADMIN.bb_registration_restrictions.feedback_messages.empty );
+					}
+				}
+			}
+		} );
+
+		$( '#bb-domain-restrictions-setting' ).children( '.restrictions-error' ).html( '' );
+
+		for ( var i = 0; i < domainRestrictionsErrors.length; i++ ) {
+			var error = '<p>' + domainRestrictionsErrors[ i ] + '</p>';
+			$( '#bb-domain-restrictions-setting' ).children( '.restrictions-error' ).append( error );
+		}
+
+		if ( domainRestrictionsErrors.length > 0 && eventType === 'submit' ) {
+			e.preventDefault();
+		}
+	}
+
+	// Validate Email Restrictions emails duplicate entry.
+	function validateDuplicateEmailRuleEntry( e, eventType ) {
+		//Store all the entry.
+		var allEmailEntries = [];
+		var emailRestrictionsErrors = [];
+		$( '#bb-email-restrictions-setting .registration-restrictions-rule' ).not( '.custom' ).each( function () {
+			var currentEmailValue = $( this ).find( '.registration-restrictions-domain' ).val().trim().toLowerCase();
+			var currentEmailCondition = $( this ).find( '.registration-restrictions-input-select' ).val();
+
+			if ( currentEmailValue !== '' ) {
+				if ( 'undefined' === typeof allEmailEntries[ currentEmailValue ] ) {
+					allEmailEntries[ currentEmailValue ] = 1;
+					$( this ).removeClass( 'error' );
+				} else {
+					allEmailEntries[ currentEmailValue ] += 1;
+					$( this ).addClass( 'error' );
+					if ( !emailRestrictionsErrors.includes( BP_ADMIN.bb_registration_restrictions.feedback_messages.duplicate ) ) {
+						emailRestrictionsErrors.push( BP_ADMIN.bb_registration_restrictions.feedback_messages.duplicate );
+					}
+				}
+			}
+
+			var emptyValueOnSubmit = ( eventType === 'submit' || eventType === 'remove' || eventType === 'add' ) && ( currentEmailValue === '' || currentEmailCondition === '' );
+			var eventFromField = e && e.currentTarget;
+			var emptyConditionOnChange = eventFromField && e.currentTarget.classList.contains( 'registration-restrictions-input-select' ) && currentEmailCondition === '';
+			var emptyEmailOnChange = eventFromField && e.currentTarget.classList.contains( 'registration-restrictions-domain' ) && currentEmailValue === '';
+
+			if ( emptyValueOnSubmit || emptyConditionOnChange || emptyEmailOnChange ) {
+				$( this ).addClass( 'error' );
+				if ( !emailRestrictionsErrors.includes( BP_ADMIN.bb_registration_restrictions.feedback_messages.empty ) ) {
+					emailRestrictionsErrors.push( BP_ADMIN.bb_registration_restrictions.feedback_messages.empty );
+				}
+			}
+		} );
+
+		$( '#bb-email-restrictions-setting' ).children( '.restrictions-error' ).html( '' );
+
+		for ( var i = 0; i < emailRestrictionsErrors.length; i++ ) {
+			var error = '<p>' + emailRestrictionsErrors[ i ] + '</p>';
+			$( '#bb-email-restrictions-setting' ).children( '.restrictions-error' ).append( error );
+		}
+
+		if ( emailRestrictionsErrors.length > 0 ) {
+			if ( eventType === 'submit' ) {
+				e.preventDefault();
+			}
+		}
+	}
+
+	// Handle input and blur event on domain and extension textboxes.
+	$( document ).on( 'input blur', '.bb-domain-restrictions-listing .registration-restrictions-domain, .registration-restrictions-tld', function ( e ) {
+		validateDuplicateDomainRuleEntry( e );
+	} );
+
+	// Handle adding domain restriction.
+	$( '.registration-restrictions-add-rule' ).on( 'click', function () {
+		var $this = $( this );
+		if ( $this.hasClass( 'domain-rule-add' ) ) {
+			validateDuplicateDomainRuleEntry( null, 'add' );
+		} else {
+			validateDuplicateEmailRuleEntry( null, 'add' );
+		}
+	} );
+
+	// Handle removing domain restriction.
+	$( document ).on( 'click', '.registration-restrictions-rule-remove', function () {
+		var $this = $( this );
+		if ( $this.hasClass( 'domain-rule-remove' ) ) {
+			validateDuplicateDomainRuleEntry( null, 'remove' );
+		} else {
+			validateDuplicateEmailRuleEntry( null, 'remove' );
+		}
+	} );
+
+	// Handle settings save.
+	$( '#bb_registration_restrictions' ).parents( 'form' ).on( 'submit', function ( e ) {
+		validateDuplicateDomainRuleEntry( e, 'submit' );
+		validateDuplicateEmailRuleEntry( e, 'submit' );
+		if ( $( '#bb-domain-restrictions-setting .registration-restrictions-rule.error' ).length > 0 ) {
+			$( 'html, body' ).animate( {
+				'scrollTop': $( '#bb-domain-restrictions-setting' ).offset().top - 75,
+			} );
+		} else if ( $( '#bb-email-restrictions-setting .registration-restrictions-rule.error' ).length > 0 ) {
+			$( 'html, body' ).animate( {
+				'scrollTop': $( '#bb-email-restrictions-setting' ).offset().top - 75,
+			} );
+		}
+	} );
+
+	// Handle input and blur event on email textboxes.
+	$( document ).on( 'input blur', '#bb-email-restrictions-setting .registration-restrictions-domain', function ( e ) {
+		validateDuplicateEmailRuleEntry( e );
+	} );
+
+	$( document ).on( 'change', '#bb-email-restrictions-setting .registration-restrictions-input-select', function ( e ) {
+		validateDuplicateEmailRuleEntry( e );
+	} );
+
+	function bb_unique( array ) {
+		return $.grep( array, function ( el, index ) {
+			return index === $.inArray( el, array );
+		} );
 	}
 
 	/* jshint ignore:end */

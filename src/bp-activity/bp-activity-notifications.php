@@ -431,6 +431,9 @@ function bp_activity_at_mention_delete_notification( $activity_ids_deleted = arr
 	if ( ! empty( $activity_ids_deleted ) ) {
 		foreach ( $activity_ids_deleted as $activity_id ) {
 			bp_notifications_delete_all_notifications_by_type( $activity_id, buddypress()->activity->id );
+			if ( bp_is_active( 'groups' ) ) {
+				bp_notifications_delete_all_notifications_by_type( $activity_id, buddypress()->groups->id );
+			}
 		}
 	}
 }
