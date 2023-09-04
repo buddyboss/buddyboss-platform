@@ -6796,6 +6796,38 @@ form.acomment-edit div.dropzone .dz-preview .dz-progress-ring-wrap .dz-progress-
   margin: -10px;
 }
 
+form.acomment-edit .activity-attached-gif-container {
+  background: none !important;
+  height: auto !important;
+  width: auto !important;
+  display: table;
+  min-height: auto !important;
+}
+
+form.acomment-edit .activity-attached-gif-container .gif-image-container {
+  margin: 0;
+}
+
+form.acomment-edit .activity-attached-gif-container .gif-image-container img {
+  border-radius: 4px;
+  height: 60px;
+  width: 60px;
+  object-fit: cover;
+}
+
+form.acomment-edit .activity-attached-gif-container .gif-image-remove {
+  left: -8px;
+  top: -8px;
+}
+
+form.acomment-edit .activity-attached-gif-container .gif-image-remove .bb-icon-times {
+  opacity: 0.4;
+}
+
+form.acomment-edit .activity-attached-gif-container .gif-image-remove:hover .bb-icon-times {
+  opacity: 1;
+}
+
 .bp-ac-form-cotainer {
   display: -webkit-box;
   display: -ms-flexbox;

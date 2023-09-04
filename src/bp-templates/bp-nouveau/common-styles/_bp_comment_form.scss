@@ -330,6 +330,41 @@ form.acomment-edit {
 			}
 		}
 	}
+
+	.activity-attached-gif-container {
+		background: none !important;
+		height: auto !important;
+		width: auto !important;
+		display: table;
+		min-height: auto !important;
+
+		.gif-image-container {
+			margin: 0;
+
+			img {
+				border-radius: 4px;
+				height: 60px;
+				width: 60px;
+				object-fit: cover;
+			}
+		}
+
+		.gif-image-remove {
+			right: -8px;
+			top: -8px;
+
+			.bb-icon-times {
+				opacity: 0.4;
+			}
+
+			&:hover {
+
+				.bb-icon-times {
+					opacity: 1;
+				}
+			}
+		}
+	}
 }
 
 .bp-ac-form-cotainer {
