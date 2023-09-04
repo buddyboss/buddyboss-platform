@@ -142,7 +142,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $request['search'] ) ) {
-			$args['s'] = $this->bbp_sanitize_search_request( $request['search'] );
+			$args['s'] = $this->forum_endpoint->bbp_sanitize_search_request( $request['search'] );
 		}
 
 		if ( ! empty( $request['author'] ) ) {
@@ -2961,30 +2961,6 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		$super = array();
 
 		return $super;
-	}
-
-	/**
-	 * Sanitize a query argument used to pass some search terms.
-	 * Accepts a single parameter to be used for forums, topics, or replies.
-	 * - from bbp_sanitize_search_request();
-	 *
-	 * @since 2.6.0 bbPress (r6903)
-	 *
-	 * @param string $terms Search Term.
-	 *
-	 * @return mixed
-	 */
-	public function bbp_sanitize_search_request( $terms ) {
-		// Maybe implode if an array.
-		if ( is_array( $terms ) ) {
-			$terms = implode( ' ', $terms );
-		}
-
-		// Sanitize.
-		$retval = sanitize_title( trim( $terms ) );
-
-		// Filter & return.
-		return apply_filters( 'bbp_sanitize_search_request', $retval, $query_arg );
 	}
 
 	/**

@@ -3213,8 +3213,8 @@ div[class*="attached-gif-container"] .gif-icon {
 }
 
 .gif-media-search-dropdown .gif-alert [class*="bb-icon"] {
-  font-size: 30px !important;
-  color: #333 !important;
+  font-size: 30px;
+  color: #333;
   opacity: 0.4;
 }
 
@@ -19701,20 +19701,20 @@ img.emoji,
 img.emojioneemoji {
   display: inline-block;
   margin: 3px;
-  width: 24px !important;
-  height: 24px !important;
+  width: 24px;
+  height: 24px;
 }
 
 .emojionearea-filters img.emoji,
 .emojionearea-filters img.emojioneemoji {
-  max-width: 20px !important;
-  max-height: 20px !important;
-  width: 20px !important;
-  height: auto !important;
+  max-width: 20px;
+  max-height: 20px;
+  width: 20px;
+  height: auto;
 }
 
 .emojionearea-filters .emojionearea-filter-flags img.emojioneemoji {
-  max-width: 14px !important;
+  max-width: 14px;
 }
 
 .bb-media-only-privacy {
@@ -24227,7 +24227,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(180deg);
+  transform: rotateY(-180deg);
 }
 
 @media screen and (max-width: 768px) {
