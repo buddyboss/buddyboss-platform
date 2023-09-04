@@ -1584,7 +1584,9 @@ window.bp = window.bp || {};
 
 			event.preventDefault();
 
-			$( event.currentTarget ).toggleClass( 'active' );
+			if( ! $( event.currentTarget ).closest( '.ac-form' ).hasClass( 'acomment-edit' ) ) {
+				$( event.currentTarget ).toggleClass( 'active' );
+			}
 
 			var acCommentDefaultTemplate = document.getElementsByClassName( 'ac-reply-post-default-template' ).length ? document.getElementsByClassName( 'ac-reply-post-default-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
 
@@ -1621,6 +1623,10 @@ window.bp = window.bp || {};
 							// Set data from edit comment.
 							if ( file.media_edit_data ) {
 								self.dropzone_media.push( file.media_edit_data );
+								var tool_box    = target.parents( '.ac-reply-toolbar' );
+								if ( tool_box.find( '.ac-reply-media-button' ) ) {
+									tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' ).find( '.toolbar-button' ).addClass( 'active' );
+								}
 							}
 						}
 					);
@@ -1644,7 +1650,7 @@ window.bp = window.bp || {};
 								tool_box.find( '.ac-reply-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 							}
 							if ( tool_box.find( '.ac-reply-media-button' ) ) {
-								tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+								tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' ).find( '.toolbar-button' ).addClass( 'active' );
 							}
 							this.element.classList.remove( 'files-uploaded' );
 						}
@@ -1760,7 +1766,7 @@ window.bp = window.bp || {};
 									tool_box.find( '.ac-reply-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 								}
 								if ( tool_box.find( '.ac-reply-media-button' ) ) {
-									tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
+									tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' ).find( '.toolbar-button' ).removeClass( 'active' );
 								}
 								$( self.dropzone_obj.element ).removeClass( 'files-uploaded' );
 							}
@@ -1812,7 +1818,9 @@ window.bp = window.bp || {};
 
 			event.preventDefault();
 
-			$( event.currentTarget ).toggleClass( 'active' );
+			if( ! $( event.currentTarget ).closest( '.ac-form' ).hasClass( 'acomment-edit' ) ) {
+				$( event.currentTarget ).toggleClass( 'active' );
+			}
 
 			var acCommentDocumentTemplate = document.getElementsByClassName( 'ac-reply-post-document-template' ).length ? document.getElementsByClassName( 'ac-reply-post-document-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
 
@@ -1853,6 +1861,10 @@ window.bp = window.bp || {};
 							var filename 	  = file.upload.filename;
 							var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
 							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
+							var tool_box    = target.parents( '.ac-reply-toolbar' );
+							if ( tool_box.find( '.ac-reply-document-button' ) ) {
+								tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' ).find( '.toolbar-button' ).addClass( 'active' );
+							}
 						}
 					);
 
@@ -1875,7 +1887,7 @@ window.bp = window.bp || {};
 								tool_box.find( '.ac-reply-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 							}
 							if ( tool_box.find( '.ac-reply-document-button' ) ) {
-								tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+								tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' ).find( '.toolbar-button' ).addClass( 'active' );
 							}
 							this.element.classList.remove( 'files-uploaded' );
 						}
@@ -1991,7 +2003,7 @@ window.bp = window.bp || {};
 									tool_box.find( '.ac-reply-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 								}
 								if ( tool_box.find( '.ac-reply-document-button' ) ) {
-									tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
+									tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' ).find( '.toolbar-button' ).removeClass( 'active' );
 								}
 								$( self.dropzone_document_obj.element ).removeClass( 'files-uploaded' );
 							}
@@ -2043,7 +2055,9 @@ window.bp = window.bp || {};
 
 			event.preventDefault();
 
-			$( event.currentTarget ).toggleClass( 'active' );
+			if( ! $( event.currentTarget ).closest( '.ac-form' ).hasClass( 'acomment-edit' ) ) {
+				$( event.currentTarget ).toggleClass( 'active' );
+			}
 
 			var acCommentVideoTemplate = document.getElementsByClassName( 'ac-reply-post-video-template' ).length ? document.getElementsByClassName( 'ac-reply-post-video-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
 
@@ -2091,7 +2105,7 @@ window.bp = window.bp || {};
 								tool_box.find( '.ac-reply-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 							}
 							if ( tool_box.find( '.ac-reply-video-button' ) ) {
-								tool_box.find( '.ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+								tool_box.find( '.ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' ).find( '.toolbar-button' ).addClass( 'active' );
 							}
 							this.element.classList.remove( 'files-uploaded' );
 						}
@@ -2115,6 +2129,10 @@ window.bp = window.bp || {};
 							// Set data from edit comment.
 							if ( file.video_edit_data ) {
 								self.dropzone_video.push( file.video_edit_data );
+								var tool_box    = target.parents( '.ac-reply-toolbar' );
+								if ( tool_box.find( '.ac-reply-video-button' ) ) {
+									tool_box.find( '.ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' ).find( '.toolbar-button' ).addClass( 'active' );
+								}
 							}
 
 							if ( file.dataURL && file.video_edit_data.thumb.length ) {
@@ -2245,7 +2263,7 @@ window.bp = window.bp || {};
 									tool_box.find( '.ac-reply-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 								}
 								if ( tool_box.find( '.ac-reply-video-button' ) ) {
-									tool_box.find( '.ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
+									tool_box.find( '.ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' ).find( '.toolbar-button' ).removeClass( 'active' );
 								}
 								$( self.dropzone_video_obj.element ).removeClass( 'files-uploaded' );
 							}
