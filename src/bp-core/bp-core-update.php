@@ -469,6 +469,11 @@ function bp_version_updater() {
 
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
+
+			// Run migration about the moderation.
+			if ( function_exists( 'bb_moderation_migration_on_update' ) ) {
+				bb_moderation_migration_on_update();
+			}
 		}
 	}
 
@@ -3139,7 +3144,7 @@ function bb_core_update_repair_duplicate_following_notification() {
  * Migrate icon class for the documents.
  * Assign the group organizer to the group has 0 members.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.10
  *
  * @return void
  */
