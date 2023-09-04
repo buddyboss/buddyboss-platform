@@ -40,6 +40,7 @@ TABLE OF CONTENTS:
 14.0 BB Pro Active/Inactive Notices
 15.0 Admin bar Notification
 16.0 Moderation
+17.0 Domain restriction
 ------------------------------------------------------------------------------*/
 /*------------------------------------------------------------------------------
  * 1.0 Welcome Screen
@@ -2998,6 +2999,7 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
   text-decoration: none;
 }
 
+.bb-inactive-field > th:before,
 .bb-pro-inactive > th:before {
   content: "\e97c";
   font-family: "bb-icons";
@@ -3009,20 +3011,25 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
   font-size: 14px;
 }
 
+.bb-inactive-field > td,
 .bb-pro-inactive > td {
   opacity: 0.3;
 }
 
+.bb-inactive-field > td,
+.bb-inactive-field > td *,
 .bb-pro-inactive > td,
 .bb-pro-inactive > td * {
   pointer-events: none;
   user-select: none;
 }
 
+.bb-active-field > th:before,
 .bb-pro-active > th:before {
   display: none;
 }
 
+.bb-active-field .bb-head-notice,
 .bb-pro-active .bb-head-notice {
   display: none;
 }
@@ -3556,4 +3563,134 @@ table.moderations .column-member img {
 
 .bp-admin-card .password-toggle .bb-hide-pw.bb-show-pass .bb-icon::before {
   content: "\ee6a";
+}
+
+/*------------------------------------------------------------------------------
+ * 17.0 Domain restriction
+ *----------------------------------------------------------------------------*/
+.registration-restrictions-rule-list {
+  margin: 15px 0;
+  max-width: 560px;
+}
+
+.registration-restrictions-rule-list.bb-sortable .registration-restrictions-rule {
+  padding-left: 40px;
+}
+
+.registration-restrictions-rule-list.bb-sortable .registration-restrictions-rule:before {
+  cursor: grab;
+  content: "\e858";
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-weight: 400;
+  font-size: 22px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 10px;
+}
+
+.registration-restrictions-rule-list.bb-sortable .registration-restrictions-rule.ui-sortable-helper:before {
+  cursor: grabbing;
+}
+
+.registration-restrictions-rule-list .registration-restrictions-rule {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  background-color: #f6f7f7;
+  border: 1px solid #c3c4c7;
+  position: relative;
+  border-radius: 4px;
+  padding: 15px 40px 15px 15px;
+  margin-bottom: 15px;
+}
+
+.registration-restrictions-rule-list .registration-restrictions-rule.error {
+  background-color: rgba(255, 0, 0, 0.1);
+  border-color: #ffc5ca;
+}
+
+.registration-restrictions-rule-list .registration-restrictions-rule input,
+.registration-restrictions-rule-list .registration-restrictions-rule select {
+  width: 100%;
+}
+
+.registration-restrictions-rule-list .registration-restrictions-rule > div {
+  flex: 1 0 130px;
+}
+
+.registration-restrictions-rule-list .registration-restrictions-rule > div.registration-restrictions-input-tld {
+  flex-basis: 80px;
+  display: flex;
+  align-items: baseline;
+  margin-left: -5px;
+}
+
+.registration-restrictions-rule-list .registration-restrictions-rule > div.registration-restrictions-input-tld:before {
+  content: ".";
+  margin-right: 5px;
+}
+
+.registration-restrictions-rule-list .registration-restrictions-rule .registration-restrictions-priority {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 15px;
+}
+
+.registration-restrictions-rule-list .registration-restrictions-rule .registration-restrictions-remove {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 10px;
+}
+
+.registration-restrictions-rule-list .registration-restrictions-rule .registration-restrictions-remove button {
+  color: #3c434a;
+  font-size: 20px;
+  cursor: pointer;
+  border: 0;
+  background-color: transparent;
+  padding: 0;
+}
+
+.section-bb_registration_restrictions .registration-restrictions-listing {
+  position: relative;
+}
+
+.section-bb_registration_restrictions .registration-restrictions-listing .restrictions-error {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 13px;
+  max-width: 200px;
+  min-width: 200px;
+  padding: 10px 12px;
+  border-radius: 4px;
+  color: #d42929;
+  border: 1px solid #ffc5ca;
+  background: #ffdcdc;
+}
+
+.section-bb_registration_restrictions .registration-restrictions-listing .restrictions-error p {
+  color: inherit;
+  margin: 0 0 5px 0;
+}
+
+.section-bb_registration_restrictions .registration-restrictions-listing .restrictions-error p:last-child {
+  margin-bottom: 0;
+}
+
+.section-bb_registration_restrictions .registration-restrictions-listing .restrictions-error:empty {
+  display: none;
+}
+
+@media screen and (max-width: 1320px) {
+  .section-bb_registration_restrictions .registration-restrictions-listing .restrictions-error {
+    position: static;
+    max-width: inherit;
+    margin: 20px 0;
+  }
 }

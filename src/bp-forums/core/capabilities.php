@@ -532,10 +532,15 @@ function bbp_add_roles() {
 }
 
 /**
- * Removes Forums-specific user roles.
+ * Removes bbPress-specific user roles from the `wp_user_roles` array.
+ *
+ * This is currently only used when updating, uninstalling, or resetting bbPress.
  *
  * @since bbPress (r2741)
- * @version BuddyBoss 1.0.0
+ *
+ * @see   bbp_do_uninstall()
+ * @see   bbp_version_updater()
+ * @see   bbp_admin_reset_handler()
  */
 function bbp_remove_roles() {
 

@@ -2201,16 +2201,19 @@ function bbp_get_topic_statuses( $topic_id = 0 ) {
  *
  * @since bbPress (r5059)
  *
+ * @param int $topic_id Optional. Topic id.
+ *
  * @return array
  */
-function bbp_get_topic_types() {
-	return apply_filters(
+function bbp_get_topic_types( $topic_id = 0 ) {
+	return (array) apply_filters(
 		'bbp_get_topic_types',
 		array(
 			'unstick' => __( 'Normal', 'buddyboss' ),
 			'stick'   => __( 'Sticky', 'buddyboss' ),
 			'super'   => __( 'Super Sticky', 'buddyboss' ),
-		)
+		),
+		$topic_id
 	);
 }
 
@@ -3934,7 +3937,7 @@ function bb_is_group_forum_topic( $topic_id ) {
  * Return array of public reply statuses.
  *
  * @since bbPress 2.6.0 (r6383)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.00
  *
  * @return array
  */
@@ -3952,7 +3955,7 @@ function bbp_get_public_topic_statuses() {
  * Return array of non-public topic statuses.
  *
  * @since bbPress 2.6.0 (r6642)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.00
  *
  * @return array
  */
