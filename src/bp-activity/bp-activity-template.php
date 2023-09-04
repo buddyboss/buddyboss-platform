@@ -2241,22 +2241,36 @@ function bp_activity_comment_content() {
  * comments only.
  *
  * @since BuddyPress 1.5.0
+ * @since BuddyBoss [BBVERSION] Added $activity_comment_id parameter to get activity comment content.
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @param int     $activity_comment_id Activity comment ID.
  *
  * @return string $content The content of the current activity comment.
+ * @global object $activities_template {@link BP_Activity_Template}
  */
-function bp_get_activity_comment_content() {
+function bp_get_activity_comment_content( $activity_comment_id = 0 ) {
 	global $activities_template;
 
+	$activity_comment = new stdClass();
+	if ( ! empty( $activity_comment_id ) ) {
+		$activity_comment = new BP_Activity_Activity( $activity_comment_id );
+	} elseif ( ! empty( $activities_template->activity->current_comment ) ) {
+		$activity_comment = $activities_template->activity->current_comment;
+	}
+
+	// check activity comment exists.
+	if ( empty( $activity_comment->id ) ) {
+		return '';
+	}
+
 	// scrape off activity content if it contain empty characters only
-	if ( in_array( $activities_template->activity->current_comment->content, array( '&nbsp;', '&#8203;' ) ) ) {
-		$activities_template->activity->current_comment->content = '';
+	if ( in_array( $activity_comment->content, array( '&nbsp;', '&#8203;' ) ) ) {
+		$activity_comment->content = '';
 	}
 
 	/** This filter is documented in bp-activity/bp-activity-template.php */
-	// $content = apply_filters( 'bp_get_activity_content', $activities_template->activity->current_comment->content );
-	$content = apply_filters_ref_array( 'bp_get_activity_content', array( $activities_template->activity->current_comment->content, &$activities_template->activity->current_comment ) );
+	// $content = apply_filters( 'bp_get_activity_content', $activity_comment->content );
+	$content = apply_filters_ref_array( 'bp_get_activity_content', array( $activity_comment->content, &$activity_comment ) );
 
 	/**
 	 * Filters the content of the current activity comment.

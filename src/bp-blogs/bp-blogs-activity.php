@@ -829,6 +829,13 @@ add_action( 'delete_post', 'bp_blogs_remove_post' );
  * @param object $parent_activity Parameters of the parent activity item (in this case, the blog post).
  */
 function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_activity ) {
+	global $bb_activity_comment_edit;
+
+	// Return if $comment_id empty or edit activity comment.
+	if ( $bb_activity_comment_edit ) {
+		return;
+	}
+
 	// if parent activity isn't a post type having the buddypress-activity support, stop now!
 	if ( ! bp_activity_type_supports( $parent_activity->type, 'post-type-comment-tracking' ) ) {
 		return;

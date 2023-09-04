@@ -6094,11 +6094,13 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 	if ( empty( $activity_comment_id ) && empty( $activities_template ) ) {
 		return false;
 	}
+
+	$activity_comment = new stdClass();
 	// get activity comment.
-	if ( ! empty( $activities_template->activity->current_comment ) ) {
-		$activity_comment = $activities_template->activity->current_comment;
-	} else {
+	if ( ! empty( $activity_comment_id ) ) {
 		$activity_comment = new BP_Activity_Activity( $activity_comment_id );
+	} elseif ( ! empty( $activities_template->activity->current_comment ) ) {
+		$activity_comment = $activities_template->activity->current_comment;
 	}
 
 	// check activity comment exists.
@@ -6140,7 +6142,7 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 			'can_edit_privacy' => $can_edit_privacy,
 			'album_id'         => $album_id,
 			'folder_id'        => $folder_id,
-			'content'          => stripslashes( $activity_comment->content ),
+			'content'          => stripslashes( bp_get_activity_comment_content( $activity_comment_id ) ),
 			'item_id'          => $activity_comment->item_id,
 			'object'           => $activity_comment->component,
 			'privacy'          => $activity_comment->privacy,
