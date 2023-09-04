@@ -149,7 +149,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		);
 
 		if ( ! empty( $request['search'] ) ) {
-			$args['s'] = $this->topic_endpoint->bbp_sanitize_search_request( $request['search'] );
+			$args['s'] = $this->forum_endpoint->bbp_sanitize_search_request( $request['search'] );
 		}
 
 		if ( ! empty( $request['author'] ) ) {

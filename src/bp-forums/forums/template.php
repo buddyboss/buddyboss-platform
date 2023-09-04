@@ -931,6 +931,106 @@ function bbp_list_forums( $args = '' ) {
 	}
 }
 
+/**
+ * Output a list of forums recursively.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $args The function supports these args:
+ *                    - before: To put before the output. Defaults to '<ul class="bbp-forums">'
+ *                    - after: To put after the output. Defaults to '</ul>'
+ *                    - link_before: To put before every link. Defaults to '<li class="bbp-forum">'
+ *                    - link_after: To put after every link. Defaults to '</li>'
+ *                    - separator: Separator. Defaults to ', '
+ *                    - forum_id: Forum id. Defaults to ''
+ *                    - show_topic_count - To show forum topic count or not. Defaults to true
+ *                    - show_reply_count - To show forum reply count or not. Defaults to true
+ *
+ * @uses bbp_forum_get_subforums() To check if the forum has subforums or not
+ * @uses bbp_get_forum_permalink() To get forum permalink
+ * @uses bbp_get_forum_title() To get forum title
+ * @uses bbp_is_forum_category() To check if a forum is a category
+ * @uses bbp_get_forum_topic_count() To get forum topic count
+ * @uses bbp_get_forum_reply_count() To get forum reply count
+ *
+ * @return mixed
+ */
+function bb_get_list_forums_recursively( $args = array() ) {
+
+	$r = bbp_parse_args(
+		$args,
+		array(
+			'before'           => '<ul class="bbp-forums-list">',
+			'after'            => '</ul>',
+			'link_before'      => '<li class="bbp-forum">',
+			'link_after'       => '</li>',
+			'count_before'     => ' (',
+			'count_after'      => ')',
+			'count_sep'        => ', ',
+			'separator'        => ', ',
+			'forum_id'         => '',
+			'show_topic_count' => true,
+			'show_reply_count' => true,
+		),
+		'list_forums'
+	);
+
+	// Get subforums for the current forum.
+	$sub_forums = bbp_forum_get_subforums( $r['forum_id'] );
+	$output     = '';
+
+	if ( ! empty( $sub_forums ) ) {
+		$total_subs = count( $sub_forums );
+		$counts     = '';
+		$i          = 0;
+
+		foreach ( $sub_forums as $sub_forum ) {
+			$i ++; // Separator count
+
+			$count    = array();
+			$show_sep = $total_subs > $i ? $r['separator'] : '';
+
+			// Show topic count
+			if ( ! empty( $r['show_topic_count'] ) && ! bbp_is_forum_category( $sub_forum->ID ) ) {
+				$count['topic'] = bbp_get_forum_topic_count( $sub_forum->ID );
+			}
+
+			// Show reply count
+			if ( ! empty( $r['show_reply_count'] ) && ! bbp_is_forum_category( $sub_forum->ID ) ) {
+				$count['reply'] = bbp_get_forum_reply_count( $sub_forum->ID );
+			}
+
+			// Counts to show
+			if ( ! empty( $count ) ) {
+				$counts = $r['count_before'] . implode( $r['count_sep'], $count ) . $r['count_after'];
+			}
+
+			$output .= sprintf(
+				'%s <a href="%s" class="bbp-forum-link">%s %s</a> %s %s %s',
+				$r['link_before'],
+				esc_url( bbp_get_forum_permalink( $sub_forum->ID ) ),
+				esc_html( bbp_get_forum_title( $sub_forum->ID ) ),
+				$counts,
+				$show_sep,
+				bb_get_list_forums_recursively( array( 'forum_id' => $sub_forum->ID ) ),
+				$r['link_after'],
+			);
+		}
+
+		/**
+		 * Modify the output of a list of forums recursively using filters.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $output The processed output of the list of forums.
+		 * @param array  $r      An array of parameters and settings related to the output.
+		 */
+		$output = apply_filters( 'bb_get_list_forums_recursively', $r['before'] . $output . $r['after'], $r );
+	}
+
+	return $output;
+}
+
 /** Forum Pagination **********************************************************/
 
 function bbp_forum_index_pagination_count() {
@@ -2460,35 +2560,26 @@ function bbp_form_forum_subscribed() {
  */
 function bbp_get_form_forum_subscribed() {
 
-	// Get _POST data
+	// Default value.
+	$forum_subscribed = false;
+
+	// Get _POST data.
 	if ( bbp_is_post_request() && isset( $_POST['bbp_forum_subscription'] ) ) {
 		$forum_subscribed = (bool) $_POST['bbp_forum_subscription'];
 
-		// Get edit data
+		// Get edit data.
 	} elseif ( bbp_is_forum_edit() || bbp_is_reply_edit() ) {
 
-		// Get current posts author
-		$post_author = bbp_get_global_post_field( 'post_author', 'raw' );
+		// Get current posts author.
+		$post_author      = (int) bbp_get_global_post_field( 'post_author', 'raw' );
+		$forum_subscribed = bbp_is_user_subscribed( $post_author, bbp_get_forum_id() );
 
-		// Post author is not the current user
-		if ( bbp_get_current_user_id() !== $post_author ) {
-			$forum_subscribed = bbp_is_user_subscribed_to_forum( $post_author );
-
-			// Post author is the current user
-		} else {
-			$forum_subscribed = bbp_is_user_subscribed_to_forum( bbp_get_current_user_id() );
-		}
-
-		// Get current status
+		// Get current status.
 	} elseif ( bbp_is_single_forum() ) {
-		$forum_subscribed = bbp_is_user_subscribed_to_forum( bbp_get_current_user_id() );
-
-		// No data
-	} else {
-		$forum_subscribed = false;
+		$forum_subscribed = bbp_is_user_subscribed( bbp_get_current_user_id(), bbp_get_forum_id() );
 	}
 
-	// Get checked output
+	// Get checked output.
 	$checked = checked( $forum_subscribed, true, false );
 
 	return apply_filters( 'bbp_get_form_forum_subscribed', $checked, $forum_subscribed );
@@ -2573,17 +2664,13 @@ function bbp_get_form_forum_type_dropdown( $args = '' ) {
 	// Start an output buffer, we'll finish it after the select loop
 	ob_start(); ?>
 
-    <select name="<?php echo esc_attr( $r['select_id'] ); ?>"
-            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo esc_attr( $tab ); ?>
-            <?php echo $can_update === false ? esc_attr( 'disabled="disabled"' ) : '' ; ?>>
+	<select name="<?php echo esc_attr( $r['select_id'] ); ?>" id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo esc_attr( $tab ); ?> <?php echo $can_update === false ? esc_attr( 'disabled="disabled"' ) : ''; ?>>
 
-		<?php foreach ( bbp_get_forum_types() as $key => $label ) : ?>
-
-            <option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $r['selected'] ); ?>><?php echo esc_html( $label ); ?></option>
-
+		<?php foreach ( bbp_get_forum_types( $r['forum_id'] ) as $key => $label ) : ?>
+			<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $r['selected'] ); ?>><?php echo esc_html( $label ); ?></option>
 		<?php endforeach; ?>
 
-    </select>
+	</select>
 
 	<?php
 
@@ -2667,16 +2754,13 @@ function bbp_get_form_forum_status_dropdown( $args = '' ) {
 	ob_start();
 	?>
 
-    <select name="<?php echo esc_attr( $r['select_id'] ); ?>"
-            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?>>
+	<select name="<?php echo esc_attr( $r['select_id'] ); ?>" id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?>>
 
-		<?php foreach ( bbp_get_forum_statuses() as $key => $label ) : ?>
-
-            <option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $r['selected'] ); ?>><?php echo esc_html( $label ); ?></option>
-
+		<?php foreach ( bbp_get_forum_statuses( $r['forum_id'] ) as $key => $label ) : ?>
+			<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $r['selected'] ); ?>><?php echo esc_html( $label ); ?></option>
 		<?php endforeach; ?>
 
-    </select>
+	</select>
 
 	<?php
 
@@ -2763,16 +2847,13 @@ function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
 	ob_start();
 	?>
 
-    <select name="<?php echo esc_attr( $r['select_id'] ); ?>"
-            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo esc_attr( $tab ); ?> <?php echo $disabled ? esc_attr( 'disabled="disabled"' ) : ''; ?>>
+	<select name="<?php echo esc_attr( $r['select_id'] ); ?>" id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo esc_attr( $tab ); ?> <?php echo $disabled ? esc_attr( 'disabled="disabled"' ) : ''; ?>>
 
-		<?php foreach ( bbp_get_forum_visibilities() as $key => $label ) : ?>
-
-            <option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $r['selected'] ); ?>><?php echo esc_html( $label ); ?></option>
-
+		<?php foreach ( bbp_get_forum_visibilities( $r['forum_id'] ) as $key => $label ) : ?>
+			<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $r['selected'] ); ?>><?php echo esc_html( $label ); ?></option>
 		<?php endforeach; ?>
 
-    </select>
+	</select>
 
 	<?php
 
