@@ -1085,36 +1085,38 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( $recipients );
 
 	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
-		global $bb_email_background_updater;
+		global $bb_background_updater;
 		$chunk_recipients = array_chunk( $recipients, bb_get_email_queue_min_count() );
 		if ( ! empty( $chunk_recipients ) ) {
 			foreach ( $chunk_recipients as $key => $data_recipients ) {
-				$bb_email_background_updater->data(
+				$bb_background_updater->data(
 					array(
-						array(
-							'callback' => 'bb_render_messages_recipients',
-							'args'     => array(
-								$data_recipients,
-								'group-message-email',
-								bp_get_messages_slug(),
-								$thread_id,
-								$sender_id,
-								array(
-									'message_id'  => $id,
-									'usermessage' => stripslashes( $message ),
-									'message'     => stripslashes( $message ),
-									'sender.id'   => $sender_id,
-									'sender.name' => $sender_name,
-									'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
-									'group.name'  => $group_name,
-								),
+						'type'     => 'email',
+						'group'    => 'group_messages_new_message_email',
+						'data_id'  => $group,
+						'priority' => 5,
+						'callback' => 'bb_render_messages_recipients',
+						'args'     => array(
+							$data_recipients,
+							'group-message-email',
+							bp_get_messages_slug(),
+							$thread_id,
+							$sender_id,
+							array(
+								'message_id'  => $id,
+								'usermessage' => stripslashes( $message ),
+								'message'     => stripslashes( $message ),
+								'sender.id'   => $sender_id,
+								'sender.name' => $sender_name,
+								'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
+								'group.name'  => $group_name,
 							),
 						),
-					)
+					),
 				);
-				$bb_email_background_updater->save();
+				$bb_background_updater->save();
 			}
-			$bb_email_background_updater->dispatch();
+			$bb_background_updater->dispatch();
 		}
 	} else {
 		// Send an email to each recipient.

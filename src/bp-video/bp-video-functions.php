@@ -872,7 +872,7 @@ function bp_video_preview_image_by_js( $video ) {
 function bp_video_add_generate_thumb_background_process( $video_id ) {
 
 	if ( class_exists( 'FFMpeg\FFMpeg' ) ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
 		$ffmpeg = bb_video_check_is_ffmpeg_binary();
 
 		if ( ! empty( $ffmpeg->error ) && ! empty( trim( $ffmpeg->error ) ) ) {
@@ -907,14 +907,18 @@ function bp_video_add_generate_thumb_background_process( $video_id ) {
 
 		if ( count( $is_default_images ) <= 1 ) {
 
-			$bp_background_updater->push_to_queue(
+			$bb_background_updater->push_to_queue(
 				array(
+					'type'     => 'video',
+					'group'    => 'video_thumbnail',
+					'data_id'  => $video_id,
+					'priority' => 5,
 					'callback' => 'bp_video_background_create_thumbnail',
 					'args'     => array( $video ),
 				)
 			);
 
-			$bp_background_updater->save()->schedule_event();
+			$bb_background_updater->save()->schedule_event();
 
 		}
 
