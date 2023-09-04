@@ -628,7 +628,7 @@ class BBP_Forums_Widget extends WP_Widget {
 		$widget_query = new WP_Query(
 			array(
 				'post_type'              => bbp_get_forum_post_type(),
-				'post_parent'            => $parent_id,
+				'post_parent'            => 'any' !== $parent_id ? $parent_id : 0,
 				'post_status'            => bbp_get_public_status_id(),
 				// Order.
 				'posts_per_page'         => bbp_get_forums_per_page(),
@@ -685,7 +685,7 @@ class BBP_Forums_Widget extends WP_Widget {
 							'show_reply_count' => false,
 						);
 
-						bbp_list_forums( $r );
+						echo bb_get_list_forums_recursively( $r );
 					}
 					?>
 				</li>
