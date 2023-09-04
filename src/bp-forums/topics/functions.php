@@ -2201,16 +2201,19 @@ function bbp_get_topic_statuses( $topic_id = 0 ) {
  *
  * @since bbPress (r5059)
  *
+ * @param int $topic_id Optional. Topic id.
+ *
  * @return array
  */
-function bbp_get_topic_types() {
-	return apply_filters(
+function bbp_get_topic_types( $topic_id = 0 ) {
+	return (array) apply_filters(
 		'bbp_get_topic_types',
 		array(
 			'unstick' => __( 'Normal', 'buddyboss' ),
 			'stick'   => __( 'Sticky', 'buddyboss' ),
 			'super'   => __( 'Super Sticky', 'buddyboss' ),
-		)
+		),
+		$topic_id
 	);
 }
 

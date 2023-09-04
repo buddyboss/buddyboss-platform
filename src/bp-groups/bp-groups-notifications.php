@@ -1497,24 +1497,26 @@ function bb_groups_notification_groups_updated( $group_id = 0 ) {
 		true === bb_notifications_background_enabled() &&
 		count( $user_ids ) > $min_count
 	) {
-		global $bb_notifications_background_updater;
-		$bb_notifications_background_updater->data(
+		global $bb_background_updater;
+		$bb_background_updater->data(
 			array(
-				array(
-					'callback' => 'bb_add_background_notifications',
-					'args'     => array(
-						$user_ids,
-						$group_id,
-						$sender_id,
-						buddypress()->groups->id,
-						'bb_groups_details_updated',
-						bp_core_current_time(),
-						true,
-					),
+				'type'     => 'notification',
+				'group'    => 'groups_updated_notification',
+				'data_id'  => $group_id,
+				'priority' => 5,
+				'callback' => 'bb_add_background_notifications',
+				'args'     => array(
+					$user_ids,
+					$group_id,
+					$sender_id,
+					buddypress()->groups->id,
+					'bb_groups_details_updated',
+					bp_core_current_time(),
+					true,
 				),
-			)
+			),
 		);
-		$bb_notifications_background_updater->save()->dispatch();
+		$bb_background_updater->save()->dispatch();
 	} else {
 		foreach ( $user_ids  as $user_id ) {
 			bp_notifications_add_notification(

@@ -423,7 +423,7 @@ function bbp_new_reply_handler( $action = '' ) {
 			'post_parent'    => $topic_id,
 			'post_type'      => bbp_get_reply_post_type(),
 			'comment_status' => 'closed',
-			'menu_order'     => bbp_get_topic_reply_count( $topic_id, false ) + 1,
+			'menu_order'     => bbp_get_topic_reply_count( $topic_id, true ) + 1,
 		)
 	);
 
@@ -501,7 +501,7 @@ function bbp_new_reply_handler( $action = '' ) {
 
 		if ( ! empty( $topic_id ) && 0 === $reply_to ) {
 			// Update total parent
-			bbp_update_total_parent_reply( $reply_id, $topic_id, bbp_get_topic_reply_count( $topic_id, false ) + 1, 'add' );
+			bbp_update_total_parent_reply( $reply_id, $topic_id, bbp_get_topic_reply_count( $topic_id, true ) + 1, 'add' );
 		}
 
 		// Delete draft data from the database.
@@ -1457,7 +1457,7 @@ function bbp_move_reply_handler( $action = '' ) {
 				}
 
 				// Bump the reply position.
-				$reply_position = bbp_get_topic_reply_count( $destination_topic->ID ) + 1;
+				$reply_position = bbp_get_topic_reply_count( $destination_topic->ID, true ) + 1;
 
 				// Update the reply.
 				wp_update_post(
@@ -2210,47 +2210,49 @@ function _bbp_has_replies_where( $where = '', $query = false ) {
 
 	/** Bail */
 
-	// Bail if the sky is falling
+	// Bail if the sky is falling.
 	if ( empty( $where ) || empty( $query ) ) {
 		return $where;
 	}
 
-	// Bail if no post_parent to replace
+	// Bail if no post_parent to replace.
 	if ( ! is_numeric( $query->get( 'post_parent' ) ) ) {
 		return $where;
 	}
 
-	// Bail if not a topic and reply query
+	// Bail if not a topic and reply query.
 	if ( array( bbp_get_topic_post_type(), bbp_get_reply_post_type() ) !== $query->get( 'post_type' ) ) {
 		return $where;
 	}
 
-	// Bail if including or excluding specific post ID's
-	if ( $query->get( 'post__not_in' ) || $query->get( 'post__in' ) ) {
+	// Bail if including specific post ID's.
+	if ( $query->get( 'post__in' ) ) {
 		return $where;
 	}
 
 	/** Proceed */
 
-	// Table name for posts
+	// Table name for posts.
 	$table_name = bbp_db()->prefix . 'posts';
 
 	// Get the topic ID from the post_parent, set in bbp_has_replies()
 	$topic_id = bbp_get_topic_id( $query->get( 'post_parent' ) );
 
-	// The texts to search for
+	// The texts to search for.
 	$search = array(
 		"FROM {$table_name} ",
 		"WHERE 1=1  AND {$table_name}.post_parent = {$topic_id}",
+		") AND {$table_name}.post_parent = {$topic_id}"
 	);
 
-	// The texts to replace them with
+	// The texts to replace them with.
 	$replace = array(
 		$search[0] . 'FORCE INDEX (PRIMARY, post_parent) ',
 		"WHERE 1=1 AND ({$table_name}.ID = {$topic_id} OR {$table_name}.post_parent = {$topic_id})",
+		") AND ({$table_name}.ID = {$topic_id} OR {$table_name}.post_parent = {$topic_id})"
 	);
 
-	// Try to replace the search text with the replacement
+	// Try to replace the search text with the replacement.
 	$new_where = str_replace( $search, $replace, $where );
 	if ( ! empty( $new_where ) ) {
 		$where = $new_where;

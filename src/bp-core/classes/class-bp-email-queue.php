@@ -42,12 +42,15 @@ class BP_Email_Queue {
 	 * @since BuddyBoss 1.8.1
 	 */
 	public function bb_email_background_process() {
-		global $wpdb, $bb_email_background_updater;
+		global $wpdb, $bb_background_updater;
 		$table_name  = $wpdb->base_prefix . 'bb_email_queue';
 		$get_records = $this->get_records();
 		if ( ! empty( $get_records ) ) {
-			$bb_email_background_updater->push_to_queue(
+			$bb_background_updater->push_to_queue(
 				array(
+					'type'     => 'email',
+					'group'    => 'groups_email_notification',
+					'priority' => 5,
 					'callback' => array( $this, 'bb_email_queue_cron_cb' ),
 					'args'     => array( $get_records ),
 				)
@@ -58,7 +61,7 @@ class BP_Email_Queue {
 				$wpdb->update( $table_name, array( 'scheduled' => true ), array( 'id' => $record['id'] ) );
 			}
 
-			$bb_email_background_updater->save()->dispatch();
+			$bb_background_updater->save()->dispatch();
 		}
 	}
 
