@@ -8875,7 +8875,20 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 	// Check if the email address is allowed or not.
 	foreach ( $email_restrictions as $key => $rule ) {
 		$rule_email = ( ! empty( $rule['address'] ) ? strtolower( trim( $rule['address'] ) ) : '' );
-		if ( $email === $rule_email ) {
+
+		// Split the email addresses into parts using '@'.
+		$rule_email_parts  = explode( '@', $rule_email );
+		$input_email_parts = explode( '@', $email );
+	 
+		// Remove aliases, everything after '+'.
+		$rule_email_user  = explode( '+', $rule_email_parts[0] )[0];
+		$input_email_user = explode( '+', $input_email_parts[0] )[0];
+
+		// Compose the email address without the alias.
+		$rule_email  = $rule_email_user . '@' . $rule_email_parts[1];
+		$input_email = $input_email_user . '@' . $input_email_parts[1];
+
+		if ( $input_email === $rule_email ) {
 			if ( 'always_allow' === $rule['condition'] ) {
 				return true;
 			} elseif ( 'never_allow' === $rule['condition'] ) {
@@ -8929,7 +8942,7 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 
 			if ( preg_match( $pattern, $domain_and_ext ) ) {
 				if ( 'only_allow' === $rule_condition ) {
-					return true;
+					$is_allowed = true;
 				} elseif ( 'always_allow' === $rule_condition ) {
 					$is_allowed = true;
 				} elseif ( 'never_allow' === $rule_condition ) {
@@ -8940,7 +8953,7 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 			// Domain with * as placeholder.
 		} elseif ( '*' === $rule_domain && $extension === $rule_tld ) {
 			if ( 'only_allow' === $rule_condition ) {
-				return true;
+				$is_allowed = true;
 			} elseif ( 'always_allow' === $rule_condition ) {
 				$is_allowed = true;
 			} elseif ( 'never_allow' === $rule_condition ) {
@@ -8950,7 +8963,7 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 	}
 
 	// If only allowed occurred but rules not matched.
-	if ( true === $only_allow ) {
+	if ( true === $only_allow && '' === $is_allowed ) {
 		return false;
 	}
 
