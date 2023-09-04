@@ -92,7 +92,7 @@ class BP_REST_Learndash_Courses_Endpoint extends WP_REST_Controller {
 		);
 
 		if ( ! empty( $request['search'] ) ) {
-			$args['s'] = sanitize_title( trim( $request['search'] ) );
+			$args['s'] = urldecode( trim( $request['search'] ) );
 		}
 
 		if ( ! empty( $request['author'] ) ) {
