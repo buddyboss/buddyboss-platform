@@ -133,7 +133,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		);
 
 		if ( ! empty( $request['search'] ) ) {
-			$args['s'] = $request['search'];
+			$args['s'] = $this->bbp_sanitize_search_request( $request['search'] );
 		}
 
 		if ( ! empty( $request['author'] ) ) {
@@ -1514,5 +1514,20 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		$content = preg_replace( '/iframe(.*?)data-src=/is', 'iframe$1src=', $content );
 
 		return $content;
+	}
+
+	/**
+	 * Sanitize a query argument used to pass some search terms.
+	 * Accepts a single parameter to be used for forums, topics, or replies.
+	 *
+	 * @param string $terms Search Term.
+	 *
+	 * @return string
+	 */
+	public function bbp_sanitize_search_request( $term ) {
+		$retval = ! empty( $term ) && is_string( $term ) ? urldecode( trim( $term ) ) : '';
+
+		// Filter & return.
+		return apply_filters( 'bbp_sanitize_search_request', $retval, $term );
 	}
 }
