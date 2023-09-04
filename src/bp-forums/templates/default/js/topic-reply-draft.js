@@ -130,6 +130,7 @@ window.bp = window.bp || {};
 						self.setupTopicReplyDraftIntervals();
 					}
 				);
+				self.displayTopicReplyDraft();
 			}
 
 			if ( ! $( 'body' ).hasClass( 'activity' ) ) {
@@ -311,6 +312,7 @@ window.bp = window.bp || {};
 			this.clearTopicReplyDraftIntervals();
 			setTimeout(
 				function() {
+					this.resetTopicReplyDraftLinkPreview();
 					this.resetTopicReplyDraftPostForm();
 				}.bind( this ),
 				500
@@ -345,6 +347,11 @@ window.bp = window.bp || {};
 			bp.Nouveau.Media.reply_topic_display_post = 'edit';
 
 			var currentForm = this.currentForm ? this.currentForm : $( 'form#new-post' );
+
+			// Remove the link preview for the draft too.
+			if ( $( currentForm ).find( '#bb_link_url' ).length > 0 ) {
+				$( currentForm ).find( '#bb_link_url' ).remove();
+			}
 
 			// Remove class to display draft.
 			currentForm.removeClass( 'has-draft has-content has-media has-gif has-link-preview' );
@@ -740,6 +747,7 @@ window.bp = window.bp || {};
 						$form.addClass( 'has-content' );
 					}
 				} else {
+					$editor.html( activity_data.bbp_topic_content );
 					$form.find( '#bbp_topic_content' ).focus();
 					$form.find( '#bbp_topic_content' ).val( activity_data.bbp_topic_content );
 					if ( $( element ).val() !== '' ) {
@@ -777,6 +785,23 @@ window.bp = window.bp || {};
 				);
 
 				tags_element.trigger( 'change' );
+			}
+
+			// Link preview.
+			if (
+				'undefined' !== typeof activity_data.bb_link_url &&
+				'' !== activity_data.bb_link_url
+			) {
+				if ( $form.find( '#bb_link_url' ).length > 0 ) {
+					$form.find( '#bb_link_url' ).remove();
+				}
+
+				$( '<input>' ).attr( {
+					type: 'hidden',
+					id: 'bb_link_url',
+					name: 'bb_link_url',
+					value: activity_data.bb_link_url,
+				} ).appendTo( $form );
 			}
 
 			this.previewDraftMedia( $form, activity_data );
@@ -823,6 +848,7 @@ window.bp = window.bp || {};
 						$form.addClass( 'has-content' );
 					}
 				} else {
+					$editor.html( activity_data.bbp_reply_content );
 					$form.find( '#bbp_reply_content' ).focus();
 					$form.find( '#bbp_reply_content' ).val( activity_data.bbp_reply_content );
 					if ( $( element ).val() !== '' ) {
