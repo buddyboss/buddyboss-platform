@@ -1086,6 +1086,21 @@ function bp_blogs_sync_activity_edit_to_post_comment( BP_Activity_Activity $acti
 	add_action( 'transition_comment_status', 'bp_activity_transition_post_type_comment_status', 10, 3 );
 	add_action( 'bp_activity_post_type_comment', 'bp_blogs_comment_sync_activity_comment', 10, 4 );
 
+	// If activity comment edited and it's a blog, then set activity comment content as blank.
+	$activity->primary_link = get_comment_link( $post_comment_id );
+
+	/**
+	 * Now that the activity id exists and the post comment was created, we don't need to update
+	 * the content of the comment as there are no chances it has evolved.
+	 */
+	remove_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
+
+	$activity->content = '';
+	$activity->save();
+
+	// Add the edit activity comment hook back.
+	add_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
+
 	restore_current_blog();
 }
 add_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
