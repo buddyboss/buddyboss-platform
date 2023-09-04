@@ -1768,9 +1768,8 @@ div[class*="attached-gif-container"] {
 		}
 
 		[class*="bb-icon"] {
-			// !important used to have these styles globally for all components
-			font-size: 30px !important;
-			color: $black !important;
+			font-size: 30px;
+			color: $black;
 			opacity: 0.4;
 		}
 
