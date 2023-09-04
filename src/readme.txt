@@ -63,8 +63,8 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Bug: Activity - New Activity Post ‘Privacy’ option had white spacing above the options
 * Bug: Activity - When editing a posts Giff within Discussion or Discussion reply, the Giff still remained in the Activity Feed.
 * Bug: Core - Add default parameters and documentation to media, documents and videos "get" functions
-* Bug: Core - Code corrected within bp-templates/bp-nouveau/includes/messages/ajax.php file
 * Bug: Core - Display name setting code correction
+* Bug: Core - Fix typo in the core template
 * Bug: Core - Hyperlink was not working in the Safari browser on Activity feed posts
 * Bug: Core - Profile field "website" did not check for URL validation
 * Bug: Core - Removed the unsupported URL preview that WordPress Embed shows when not supporting to just showing the link in this case
