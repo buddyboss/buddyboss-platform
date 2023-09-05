@@ -3755,7 +3755,9 @@ MediumEditor.extensions = {};
                     span.appendChild( range.extractContents() );
                     range.insertNode( span );
                 }
-                range.surroundContents( preLink );
+                if( ! window.safari ) {
+                    range.surroundContents( preLink );
+                }
             }
 
             if (!this.isDisplayed()) {

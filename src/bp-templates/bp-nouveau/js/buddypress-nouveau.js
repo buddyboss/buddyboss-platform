@@ -3859,6 +3859,10 @@ window.bp = window.bp || {};
 
 				$( self.currentPreviewParent ).on( 'click', '#bb-close-link-suggestion', function( e ) {
 					e.preventDefault();
+
+					// Remove the link preview for the draft too.
+					$( '#bb_link_url' ).val('');
+
 					// Set default values.
 					Object.assign( self.options, {
 						link_success: false,
@@ -4039,6 +4043,18 @@ window.bp = window.bp || {};
 
 			loadURLPreview: function ( url ) {
 				var self = this;
+
+				// Already same preview then return.
+				if ( 'undefined' !== typeof self.dataInput && '' !== self.dataInput.val() ) {
+					var old_preview_data = JSON.parse( self.dataInput.val() );
+					if (
+						'undefined' !== typeof old_preview_data.link_url &&
+						'' !== old_preview_data.link_url &&
+						url === old_preview_data.link_url
+					) {
+						return;
+					}
+				}
 
 				var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?$/;
 				url        = $.trim( url );
