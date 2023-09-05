@@ -1178,6 +1178,6 @@ function bb_update_last_group_forum_associations( $group_id = 0, $forum_id = 0 )
 	) {
 		// Save the backups.
 		update_post_meta( $forum_id, '_last_bbp_group_ids', $group_ids );
-		groups_update_groupmeta( $group_id, 'last_forum_id', $forum_ids );
+		groups_update_groupmeta( $group_id, 'last_forum_id', $forum_id );
 	}
 }
