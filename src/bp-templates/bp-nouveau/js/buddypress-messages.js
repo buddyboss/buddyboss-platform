@@ -1453,6 +1453,30 @@ window.bp = window.bp || {};
 				$( '#no-messages-archived-link' ).addClass( 'bp-hide' );
 				$( '#no-messages-unarchived-link' ).removeClass( 'bp-hide' );
 			}
+		},
+
+		updateReadUnreadLink: function( threadId ) {
+
+			if ( !threadId ) {
+				return;
+			}
+
+			var read_unread_div = $( '.message_action__list[data-bp-thread-id="' + threadId + '"]' ),
+				read_unread = read_unread_div.find( '[data-bp-action="read"]' );
+
+			if (
+				_.isUndefined( read_unread.length ) ||
+				(
+					!_.isUndefined( read_unread.length ) &&
+					0 === read_unread.length
+				)
+			) {
+				read_unread = read_unread_div.find( '[data-bp-action="unread"]' );
+			}
+
+			read_unread.data( 'bp-action', 'unread' );
+			read_unread.html( read_unread.data( 'mark-unread-text' ) );
+			read_unread.parent( 'li' ).removeClass( 'read' ).addClass( 'unread' );
 		}
 	};
 
@@ -4271,6 +4295,8 @@ window.bp = window.bp || {};
 				if ( '' !== updatedThread ) {
 					var threads = bp.Nouveau.Messages.threads.parse( { threads: [ updatedThread ] } );
 					bp.Nouveau.Messages.threads.unshift( _.first( threads ) );
+					bp.Nouveau.Messages.updateReadUnreadLink( response.thread_id );
+
 					if (
 						'undefined' !== typeof bp.Pusher_FrontCommon &&
 						'function' === typeof bp.Pusher_FrontCommon.updateOnlineStatus
@@ -5857,6 +5883,9 @@ window.bp = window.bp || {};
 				);
 
 				$( 'body' ).removeClass( 'compose' ).removeClass( 'inbox' ).addClass( 'view' );
+
+				// Update the unread message thread action link when the user views the current message thread.
+				bp.Nouveau.Messages.updateReadUnreadLink( thread_id );
 			},
 
 			starredView: function() {

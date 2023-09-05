@@ -212,5 +212,25 @@ if ( ! class_exists( 'BP_Background_Process' ) ) {
 				wp_clear_scheduled_hook( $this->cron_hook_identifier );
 			}
 		}
+
+		/**
+		 * Should the process exit with wp_die?
+		 *
+		 * @param mixed $return What to return if filter says don't die, default is null.
+		 *
+		 * @return void|mixed
+		 */
+		protected function maybe_wp_die( $return = null ) {
+			/**
+			 * Should wp_die be used?
+			 *
+			 * @return bool
+			 */
+			if ( apply_filters( $this->identifier . '_wp_die', true ) ) {
+				wp_die();
+			}
+
+			return $return;
+		}
 	}
 }

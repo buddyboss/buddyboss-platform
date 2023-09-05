@@ -728,7 +728,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 				array(
 					'parent_element' => $parent_element,
 					'parent_attr'    => array(
-						'id'    => $button_args['wrapper_id'],
+						'id'    => 'user-block-' . bp_displayed_user_id(),
 						'class' => $parent_class,
 					),
 					'button_element' => $button_element,
@@ -741,7 +741,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 				array(
 					'parent_element' => $parent_element,
 					'parent_attr'    => array(
-						'id'    => $button_args['wrapper_id'],
+						'id'    => 'user-report-' . bp_displayed_user_id(),
 						'class' => $parent_class,
 					),
 					'button_element' => $button_element,
