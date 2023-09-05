@@ -306,8 +306,8 @@ add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bbp_core_get_import_forum_
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param object $opdb       Old forum Database
- * @param string $table_name Old forums table name
+ * @param object $opdb       Old forum Database.
+ * @param string $table_name Old forums table name.
  *
  * @return bool
  */
@@ -331,9 +331,9 @@ function bb_check_table_exists( $opdb, $table_name ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param object $opdb        Old forum Database
- * @param string $table_name  Old forums table name
- * @param string $column_name Old forums tables column name
+ * @param object $opdb        Old forum Database.
+ * @param string $table_name  Old forums table name.
+ * @param string $column_name Old forums tables column name.
  *
  * @return bool
  */
