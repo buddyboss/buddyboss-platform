@@ -464,14 +464,14 @@ class Invision extends BBP_Converter_Base {
 		);
 
 		// User display name.
-		if ( bb_check_column_exists( $this->opdb, 'forums', 'members_seo_name' ) ) {
+		if ( bb_check_column_exists( $this->opdb, 'members', 'members_seo_name' ) ) {
 			$this->field_map[] = array(
 				'from_tablename' => 'members',
 				'from_fieldname' => 'members_seo_name',
 				'to_type'        => 'user',
 				'to_fieldname'   => 'display_name',
 			);
-		} elseif ( bb_check_column_exists( $this->opdb, 'forums', 'members_display_name' ) ) {
+		} elseif ( bb_check_column_exists( $this->opdb, 'members', 'members_display_name' ) ) {
 			$this->field_map[] = array(
 				'from_tablename' => 'members',
 				'from_fieldname' => 'members_display_name',
