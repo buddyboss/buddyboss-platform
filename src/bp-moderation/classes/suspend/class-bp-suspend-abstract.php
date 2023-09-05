@@ -525,7 +525,7 @@ abstract class BP_Suspend_Abstract {
 	/**
 	 * Return group name based on argument.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.20
 	 *
 	 * @param array $args Array of arguments.
 	 *

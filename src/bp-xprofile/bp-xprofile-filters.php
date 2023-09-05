@@ -1141,7 +1141,7 @@ function bp_xprofile_validate_social_networks_value( $retval, $field_id, $value,
 /**
  * Validate website field values.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.20
  *
  * @param mixed  $retval     The return value.
  * @param string $field_id   The ID of the field.
