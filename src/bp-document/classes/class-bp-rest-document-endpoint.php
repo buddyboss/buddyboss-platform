@@ -2384,6 +2384,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 		$documents = $this->assemble_response_data(
 			array(
+				'per_page'     => 0,
 				'document_ids' => $document_ids,
 				'sort'         => 'ASC',
 				'order_by'     => 'menu_order',
@@ -2691,6 +2692,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 		$documents = $this->assemble_response_data(
 			array(
+				'per_page'         => 0,
 				'document_ids'     => $document_ids,
 				'sort'             => 'ASC',
 				'order_by'         => 'menu_order',
@@ -2866,6 +2868,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 		$documents = $this->assemble_response_data(
 			array(
+				'per_page'     => 0,
 				'document_ids' => $document_ids,
 				'sort'         => 'ASC',
 				'order_by'     => 'menu_order',
