@@ -6673,6 +6673,12 @@ form.acomment-edit div.dropzone .dz-preview .dz-image {
   height: 60px;
 }
 
+form.acomment-edit div.dropzone .dz-preview .dz-image img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+}
+
 form.acomment-edit div.dropzone.video-dropzone div.dz-preview.dz-file-preview {
   min-width: 80px;
   width: 80px;

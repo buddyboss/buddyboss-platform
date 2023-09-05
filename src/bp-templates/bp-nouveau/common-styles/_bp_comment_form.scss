@@ -193,6 +193,12 @@ form.acomment-edit {
 
 			.dz-image {
 				height: 60px;
+
+				img {
+					width: 60px;
+					height: 60px;
+					object-fit: cover;
+				}
 			}
 		}
 
