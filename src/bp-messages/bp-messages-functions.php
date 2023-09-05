@@ -2940,3 +2940,43 @@ function bb_messages_update_recipient_user_query_uid_clauses( $sql, BP_User_Quer
 
 	return $sql;
 }
+
+/**
+ * Run migration for resolving the issue related to the messages.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_messages_migration() {
+	global $wpdb;
+	$db_prefix = bp_core_get_table_prefix();
+
+	/**
+	 * Run migration for resolving group message thread meta fix.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	$message      = $db_prefix . 'bp_messages_messages';
+	$message_meta = $db_prefix . 'bp_messages_meta';
+
+	$sql  = "SELECT m.id, m.thread_id FROM {$message} m";
+	$sql .= " INNER JOIN {$message_meta} mm ON mm.message_id = m.id AND ( (mm.meta_key = '%s' OR mm.meta_key = '%s') AND mm.meta_value = '%s' ) ";
+	$sql .= " LEFT JOIN {$message_meta} mm_users ON mm_users.message_id = m.id AND mm_users.meta_key = '%s'";
+	$sql .= " LEFT JOIN {$message_meta} mm_type ON mm_type.message_id = m.id AND mm_type.meta_key = '%s'";
+	$sql .= ' WHERE mm_users.message_id IS NULL AND mm_type.message_id IS NULL';
+
+	// Retrieve all messages that are missing the required specified metadata.
+	$messages = $wpdb->get_results( $wpdb->prepare( $sql, 'group_message_group_joined', 'group_message_group_left', 'yes', 'group_message_users', 'group_message_type' ) ); // phpcs:ignore
+
+	if ( ! empty( $messages ) ) {
+		foreach ( $messages as $message ) {
+			$first_message = BP_Messages_Thread::get_first_message( $message->thread_id );
+			$message_users = bp_messages_get_meta( $first_message->id, 'group_message_users', true );
+			$message_type  = bp_messages_get_meta( $first_message->id, 'group_message_type', true );
+
+			bp_messages_update_meta( $message->id, 'group_message_users', $message_users );
+			bp_messages_update_meta( $message->id, 'group_message_type', $message_type );
+		}
+	}
+}

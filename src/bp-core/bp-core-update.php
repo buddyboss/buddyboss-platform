@@ -474,8 +474,13 @@ function bp_version_updater() {
 			if ( function_exists( 'bb_moderation_migration_on_update' ) ) {
 				bb_moderation_migration_on_update();
 			}
+
 			if ( function_exists( 'bb_activity_migration' ) ) {
 				bb_activity_migration();
+			}
+
+			if ( function_exists( 'bb_messages_migration' ) ) {
+				bb_messages_migration();
 			}
 		}
 	}
