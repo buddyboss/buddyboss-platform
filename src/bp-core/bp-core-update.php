@@ -475,7 +475,7 @@ function bp_version_updater() {
 				bb_moderation_migration_on_update();
 			}
 
-			// Run migration about reaction.
+			// Run migration about activity.
 			if ( function_exists( 'bb_activity_migration' ) ) {
 				bb_activity_migration();
 			}

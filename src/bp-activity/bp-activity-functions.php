@@ -6113,7 +6113,7 @@ function bb_activity_migration() {
  * @return void
  */
 function bb_migrate_activity_like_reaction( $paged = 1 ) {
-	global $wpdb, $bp_background_updater;
+	global $wpdb, $bb_background_updater;
 
 	$reaction_id = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
 
@@ -6138,15 +6138,16 @@ function bb_migrate_activity_like_reaction( $paged = 1 ) {
 		return;
 	}
 
-	$bp_background_updater->data(
+	$bb_background_updater->push_to_queue(
 		array(
-			array(
-				'callback' => 'bb_activity_like_reaction_background_process',
-				'args'     => array( $results, $paged, $reaction_id ),
-			),
+			'type'     => 'migration',
+			'group'    => 'bb_activity_like_reaction',
+			'priority' => 5,
+			'callback' => 'bb_activity_like_reaction_background_process',
+			'args'     => array( $results, $paged, $reaction_id ),
 		)
 	);
-	$bp_background_updater->save()->schedule_event();
+	$bb_background_updater->save()->schedule_event();
 }
 
 /**
@@ -6161,7 +6162,7 @@ function bb_migrate_activity_like_reaction( $paged = 1 ) {
  * @return void
  */
 function bb_activity_like_reaction_background_process( $results, $paged, $reaction_id ) {
-	global $wpdb, $bp_background_updater;
+	global $wpdb, $bb_background_updater;
 
 	$bp_prefix = bp_core_get_table_prefix();
 
@@ -6194,15 +6195,16 @@ function bb_activity_like_reaction_background_process( $results, $paged, $reacti
 				$min_count = (int) apply_filters( 'bb_update_users_like_reaction', 20 );
 				if ( count( $meta_value ) > $min_count ) {
 					foreach ( array_chunk( $meta_value, $min_count ) as $chunk ) {
-						$bp_background_updater->data(
+						$bb_background_updater->push_to_queue(
 							array(
-								array(
-									'callback' => 'bb_update_users_like_reaction',
-									'args'     => array( $chunk, $activity_id, $reaction_id ),
-								),
+								'type'     => 'migration',
+								'group'    => 'bb_update_users_like_reaction',
+								'priority' => 4,
+								'callback' => 'bb_update_users_like_reaction',
+								'args'     => array( $chunk, $activity_id, $reaction_id ),
 							)
 						);
-						$bp_background_updater->save()->schedule_event();
+						$bb_background_updater->save()->schedule_event();
 					}
 				} else {
 					bb_update_users_like_reaction( $meta_value, $activity_id, $reaction_id );
