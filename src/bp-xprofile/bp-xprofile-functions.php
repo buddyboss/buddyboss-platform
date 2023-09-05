@@ -2472,7 +2472,7 @@ function bb_xprofile_get_field_type( $field_id ) {
  * @return void
  */
 function bb_xprofile_update_social_network_fields() {
-	global $wpdb, $bp_background_updater;
+	global $wpdb, $bb_background_updater;
 
 	/**
 	 * Check the google+ was setup or not in social network field.
@@ -2493,20 +2493,22 @@ function bb_xprofile_update_social_network_fields() {
 				if ( ! empty( $google_field_id ) ) {
 					$wpdb->query( "DELETE FROM {$table_name} WHERE id = {$google_field_id}" ); //phpcs:ignore
 
-					$bp_background_updater->data(
+					$bb_background_updater->data(
 						array(
-							array(
-								'callback' => 'bb_remove_google_plus_fields',
-								'args'     => array( $network_field_id, $field_name ),
-							),
+							'type'     => 'xprofile',
+							'group'    => 'bb_remove_google_plus_fields',
+							'data_id'  => $network_field_id,
+							'priority' => 5,
+							'callback' => 'bb_remove_google_plus_fields',
+							'args'     => array( $network_field_id, $field_name ),
 						)
 					);
 
-					$bp_background_updater->save();
+					$bb_background_updater->save();
 				}
 			}
 		}
-		$bp_background_updater->dispatch();
+		$bb_background_updater->dispatch();
 	}
 }
 
@@ -2521,7 +2523,7 @@ function bb_xprofile_update_social_network_fields() {
  * @return void
  */
 function bb_remove_google_plus_fields( $field_id, $field_name ) {
-	global $wpdb, $bp_background_updater;
+	global $wpdb, $bb_background_updater;
 	if ( empty( $field_name ) || empty( $field_id ) ) {
 		return;
 	}
@@ -2545,14 +2547,17 @@ function bb_remove_google_plus_fields( $field_id, $field_name ) {
 			}
 		}
 
-		$bp_background_updater->data(
+		$bb_background_updater->data(
 			array(
-				array(
-					'callback' => 'bb_remove_google_plus_fields',
-					'args'     => array( $field_id, $field_name ),
-				),
+				'type'     => 'xprofile',
+				'group'    => 'bb_remove_google_plus_fields',
+				'data_id'  => $field_id,
+				'priority' => 5,
+				'callback' => 'bb_remove_google_plus_fields',
+				'args'     => array( $field_id, $field_name ),
 			)
 		);
-		$bp_background_updater->save()->dispatch();
+
+		$bb_background_updater->save()->dispatch();
 	}
 }
