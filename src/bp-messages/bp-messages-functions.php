@@ -2952,7 +2952,7 @@ function bb_messages_migration() {
 	$sql .= ' WHERE mm_users.message_id IS NULL AND mm_type.message_id IS NULL';
 
 	// Retrieve all messages that are missing the required specified metadata.
-	$messages = $wpdb->get_results( $wpdb->prepare( $sql, 'group_message_group_joined', 'group_message_group_left', 'yes', 'group_message_users', 'group_message_type' ) );
+	$messages = $wpdb->get_results( $wpdb->prepare( $sql, 'group_message_group_joined', 'group_message_group_left', 'yes', 'group_message_users', 'group_message_type' ) ); // phpcs:ignore
 
 	if ( ! empty( $messages ) ) {
 		foreach ( $messages as $message ) {
