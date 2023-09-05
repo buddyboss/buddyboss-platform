@@ -6674,8 +6674,8 @@ form.acomment-edit div.dropzone .dz-preview .dz-image {
 }
 
 form.acomment-edit div.dropzone .dz-preview .dz-image img {
-  width: 60px;
-  height: 60px;
+  max-width: 60px;
+  height: auto;
   object-fit: cover;
 }
 
