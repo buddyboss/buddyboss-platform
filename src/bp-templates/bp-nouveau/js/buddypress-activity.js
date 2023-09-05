@@ -2769,6 +2769,16 @@ window.bp = window.bp || {};
 
 				this.models[form_activity_id] = model;
 			}
+
+			if (
+				'undefined' === typeof activity_comment_data.media &&
+				'undefined' === typeof activity_comment_data.document &&
+				'undefined' === typeof activity_comment_data.video &&
+				'undefined' === typeof activity_comment_data.gif
+			) {
+				form.find( '.ac-reply-toolbar .post-elements-buttons-item' ).removeClass( 'disable' );
+			}
+			
 		},
 
 		resetActivityCommentForm: function ( form ) {
