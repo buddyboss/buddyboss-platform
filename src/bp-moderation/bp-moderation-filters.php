@@ -993,7 +993,7 @@ add_action( 'bp_after_group_manage_members_list', 'bb_moderation_before_activity
 /**
  * Check for the next process available into the DB with the same item_id then skip the current process.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.20
  *
  * @param object $batch Object of data to process.
  *

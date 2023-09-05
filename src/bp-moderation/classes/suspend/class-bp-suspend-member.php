@@ -86,7 +86,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.20
 	 * Introduce new params $args.
 	 *
 	 * @param int   $user_id user id.
@@ -123,7 +123,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.20
 	 * Introduce new params $args.
 	 *
 	 * @param int   $user_id user id.
