@@ -482,6 +482,10 @@ function bp_version_updater() {
 			if ( function_exists( 'bb_messages_migration' ) ) {
 				bb_messages_migration();
 			}
+
+			if ( function_exists( 'bb_xprofile_update_social_network_fields' ) ) {
+				bb_xprofile_update_social_network_fields();
+			}
 		}
 	}
 
