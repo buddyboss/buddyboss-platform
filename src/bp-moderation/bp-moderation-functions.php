@@ -1939,7 +1939,7 @@ function bb_moderation_to_hide_forum_activity( $activity_id ) {
 /**
  * Run Migration related to the Moderation.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.20
  *
  * @return void
  */
@@ -1949,7 +1949,7 @@ function bb_moderation_migration_on_update() {
 	/**
 	 * Migrate old data to new background jobs.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.20
 	 */
 	$sql = "DELETE FROM {$wpdb->options} WHERE `option_name` LIKE 'wp_1_bp_updater_batch_%' AND `option_value` LIKE '%BP_Suspend_%'";
 	$wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
