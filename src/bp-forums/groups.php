@@ -429,13 +429,13 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				// Check for the last associated values if no forum set from setting.
 				if ( empty( $forum_ids ) ) {
 
-					$last_forum_ids = groups_get_groupmeta( $group_id, 'last_forum_id' );
+					$last_forum_id = (int) groups_get_groupmeta( $group_id, 'last_forum_id' );
 
-					if ( ! empty( $last_forum_ids ) ) {
+					if ( ! empty( $last_forum_id ) ) {
 
-						$forum_ids     = array_values( $last_forum_ids );
-						$forum_id      = (int) ( ! empty( $forum_ids ) && is_array( $forum_ids ) ? current( $forum_ids ) : $forum_ids );
-						$last_forum_id = $forum_id;
+						$forum_ids = (array) $last_forum_id;
+						$forum_id  = $last_forum_id;
+
 						// Flag to remove the last associations meta.
 						$restored_associations = true;
 
@@ -443,10 +443,8 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 						$last_group_ids = get_post_meta( $forum_id, '_last_bbp_group_ids', true );
 						$last_group_ids = ! empty( $last_group_ids ) ? array_filter( $last_group_ids ) : array();
 
-						if (
-							in_array( $group_id, $last_group_ids, true ) &&
-							in_array( $forum_id, $last_forum_ids, true )
-						) {
+						if ( in_array( $group_id, $last_group_ids, true ) ) {
+
 							// Look for forum can be associated.
 							$valid_forum = $this->forum_can_associate_with_group( $forum_id, $group_id, false );
 
