@@ -44,8 +44,8 @@ function bp_settings_action_general() {
 
 	// Define local defaults.
 	$bp            = buddypress(); // The instance.
-	$email_error   = false;        // invalid|blocked|taken|empty|nochange.
-	$pass_error    = false;        // invalid|mismatch|empty|nochange.
+	$email_error   = '';           // Email error code: invalid|blocked|taken|empty|nochange.
+	$pass_error    = '';           // Password error code: invalid|mismatch|empty|nochange.
 	$pass_changed  = false;        // true if the user changes their password.
 	$email_changed = false;        // true if the user changes their email.
 	$feedback_type = 'error';      // success|error.
@@ -86,10 +86,14 @@ function bp_settings_action_general() {
 					if ( isset( $email_checks['in_use'] ) ) {
 						$email_error = 'taken';
 					}
+
+					if ( isset( $email_checks['bb_restricted_email'] ) ) {
+						$email_error = 'bb_restricted_email';
+					}
 				}
 
 				// Store a hash to enable email validation.
-				if ( false === $email_error ) {
+				if ( empty( $email_error ) ) {
 					$hash = wp_generate_password( 32, false );
 
 					$pending_email = array(
@@ -118,7 +122,7 @@ function bp_settings_action_general() {
 
 				// No change.
 			} else {
-				$email_error = false;
+				$email_error = '';
 			}
 
 			// Email address cannot be empty.
@@ -200,6 +204,9 @@ function bp_settings_action_general() {
 		case 'empty':
 			$feedback['email_empty'] = __( 'Email address cannot be empty.', 'buddyboss' );
 			break;
+		case 'bb_restricted_email':
+			$feedback['bb_restricted_email'] = __( 'This email address or domain has been blacklisted. If you think you are seeing this in error, please contact the site administrator.', 'buddyboss' );
+			break;
 		case false:
 			// No change.
 			break;
@@ -225,7 +232,7 @@ function bp_settings_action_general() {
 	}
 
 	// Send notification when user send password.
-	if ( true === $pass_changed && false === $pass_error ) {
+	if ( true === $pass_changed && empty( $pass_error ) ) {
 		// If the user is changing their password, send them a confirmation email.
 		if (
 			! bb_enabled_legacy_email_preference() &&
@@ -272,12 +279,26 @@ function bp_settings_action_general() {
 	}
 
 	// No errors so show a simple success message.
-	if ( ( ( false === $email_error ) || ( false === $pass_error ) ) && ( ( true === $pass_changed ) || ( true === $email_changed ) ) ) {
+	if (
+		(
+			empty( $email_error ) ||
+			empty( $pass_error )
+		) &&
+		(
+			true === $pass_changed ||
+			true === $email_changed
+		)
+	) {
 		$feedback[]    = __( 'Your settings have been saved.', 'buddyboss' );
 		$feedback_type = 'success';
 
 		// Some kind of errors occurred.
-	} elseif ( ( ( false === $email_error ) || ( false === $pass_error ) ) && ( ( false === $pass_changed ) || ( false === $email_changed ) ) ) {
+	} elseif (
+		empty( $email_error ) &&
+		empty( $pass_error ) &&
+		false === $pass_changed &&
+		false === $email_changed
+	) {
 		if ( bp_is_my_profile() ) {
 			$feedback['nochange'] = __( 'No changes were made to your account.', 'buddyboss' );
 		} else {

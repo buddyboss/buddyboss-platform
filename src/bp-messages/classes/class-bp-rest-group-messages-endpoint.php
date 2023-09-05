@@ -846,29 +846,31 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 
 			// Else "Private Reply (BCC)" selected.
 		} else {
-			global $bb_email_background_updater;
+			global $bb_background_updater;
 
 			$all_members = $members;
 
 			if ( ! empty( $members ) ) {
 				if (
 					! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) &&
-					( $bb_email_background_updater instanceof BP_Email_Background_Updater )
+					( $bb_background_updater instanceof BB_Background_Updater )
 				) {
 					$chunk_members = array_chunk( $members, function_exists( 'bb_get_email_queue_min_count' ) ? bb_get_email_queue_min_count() : 10 );
 					if ( ! empty( $chunk_members ) ) {
 						foreach ( $chunk_members as $key => $members ) {
-							$bb_email_background_updater->data(
+							$bb_background_updater->data(
 								array(
-									array(
-										'callback' => 'bb_send_group_message_background',
-										'args'     => array( $_POST, $members, bp_loggedin_user_id(), $message, true ),
-									),
-								)
+									'type'     => 'email',
+									'group'    => 'group_private_message',
+									'data_id'  => $group,
+									'priority' => 5,
+									'callback' => 'bb_send_group_message_background',
+									'args'     => array( $_POST, $members, bp_loggedin_user_id(), $message, true ),
+								),
 							);
-							$bb_email_background_updater->save();
+							$bb_background_updater->save();
 						}
-						$bb_email_background_updater->dispatch();
+						$bb_background_updater->dispatch();
 					}
 
 					$message = true;
