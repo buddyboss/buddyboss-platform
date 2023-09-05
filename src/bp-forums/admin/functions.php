@@ -346,7 +346,7 @@ function bb_check_column_exists( $opdb, $table_name, $column_name ) {
 
 	if ( bb_check_table_exists( $opdb, $table_name ) ) {
 		$field_array = $opdb->get_results( "DESCRIBE {$table_name}", ARRAY_A );
-		if ( $field_array !== false ) {
+		if ( false !== $field_array ) {
 			$field_names = array_column( $field_array, 'Field' );
 
 			return in_array( $column_name, $field_names );
