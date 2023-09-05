@@ -2800,6 +2800,7 @@ window.bp = window.bp || {};
 			form_submit_btn.attr( 'data-add-edit-label', form_submit_btn.val() ).val( form_submit_btn_attr_val );
 
 			form.find( '#ac-input-' + form_activity_id ).html( '' );
+			form.removeClass( 'has-content' );
 			this.destroyCommentMediaUploader( form_activity_id );
 			this.destroyCommentDocumentUploader( form_activity_id );
 			this.destroyCommentVideoUploader( form_activity_id );
