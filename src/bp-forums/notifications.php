@@ -828,7 +828,7 @@ add_action( 'template_redirect', 'bb_forums_remove_screen_notifications' );
 /**
  * Delete forum reply notification once delete forum reply.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.20
  *
  * @param WP_Post $post_data Forum's reply post data.
  *
