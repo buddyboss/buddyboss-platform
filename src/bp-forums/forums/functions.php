@@ -1952,12 +1952,12 @@ function bbp_exclude_forum_ids( $type = 'string' ) {
 	if ( ! bbp_is_user_keymaster() ) {
 
 		// Private forums
-		if ( ! current_user_can( 'read_private_forums' ) && ( ! bbp_is_favorites() && ! bbp_is_subscriptions() && ! bbp_is_replies_created() && ! bbp_is_topics_created() ) ) {
+		if ( ! current_user_can( 'read_private_forums' ) ) {
 			$private = bbp_get_private_forum_ids();
 		}
 
 		// Hidden forums
-		if ( ! current_user_can( 'read_hidden_forums' ) && ( ! bbp_is_favorites() && ! bbp_is_subscriptions() && ! bbp_is_replies_created() && ! bbp_is_topics_created() ) ) {
+		if ( ! current_user_can( 'read_hidden_forums' ) ) {
 			$hidden = bbp_get_hidden_forum_ids();
 		}
 

@@ -4262,14 +4262,21 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 
 	if ( $original_activity->user_id != $commenter_id ) {
 		if (
-			function_exists( 'bb_moderation_allowed_specific_notification' ) &&
-			bb_moderation_allowed_specific_notification(
-				array(
-					'type'              => buddypress()->activity->id,
-					'group_id'          => 'groups' === $original_activity->component ? $original_activity->item_id : '',
-					'recipient_user_id' => $original_activity->user_id,
-					'sender_id'         => $original_activity->user_id,
+			(
+				function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+				bb_moderation_allowed_specific_notification(
+					array(
+						'type'              => buddypress()->activity->id,
+						'group_id'          => 'groups' === $original_activity->component ? $original_activity->item_id : '',
+						'recipient_user_id' => $original_activity->user_id,
+						'sender_id'         => $original_activity->user_id,
+					)
 				)
+			) ||
+			(
+				'groups' === $original_activity->component &&
+				1 === $original_activity->hide_sitewide &&
+				! groups_is_user_member( $original_activity->user_id, $original_activity->item_id )
 			)
 		) {
 			return;
@@ -4331,14 +4338,21 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 
 	if ( $parent_comment->user_id != $commenter_id && $original_activity->user_id != $parent_comment->user_id ) {
 		if (
-			function_exists( 'bb_moderation_allowed_specific_notification' ) &&
-			bb_moderation_allowed_specific_notification(
-				array(
-					'type'              => buddypress()->activity->id,
-					'group_id'          => 'groups' === $original_activity->component ? $original_activity->item_id : '',
-					'recipient_user_id' => $parent_comment->user_id,
-					'sender_id'         => $original_activity->user_id,
+			(
+				function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+				bb_moderation_allowed_specific_notification(
+					array(
+						'type'              => buddypress()->activity->id,
+						'group_id'          => 'groups' === $original_activity->component ? $original_activity->item_id : '',
+						'recipient_user_id' => $parent_comment->user_id,
+						'sender_id'         => $original_activity->user_id,
+					)
 				)
+			) ||
+			(
+				'groups' === $parent_comment->component &&
+				1 === $parent_comment->hide_sitewide &&
+				! groups_is_user_member( $parent_comment->user_id, $parent_comment->item_id )
 			)
 		) {
 			return;
@@ -4526,7 +4540,17 @@ add_action( 'bp_after_activity_comment', 'bp_activity_comment_embed_after_recurs
  * @return mixed The cached embeds for this activity item.
  */
 function bp_embed_activity_cache( $cache, $id, $cachekey ) {
-	return bp_activity_get_meta( $id, $cachekey );
+	$data = bp_activity_get_meta( $id, $cachekey );
+
+	if (
+		! empty( $data ) &&
+		false !== strpos( $data, 'loom.com' ) &&
+		false !== strpos( $data, 'sandbox' )
+	) {
+		return false;
+	}
+
+	return $data;
 }
 
 /**
@@ -5976,20 +6000,22 @@ function bb_activity_create_following_post_notification( $args, $paged = 1 ) {
 	}
 
 	if ( count( $follower_users ) > 0 ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
 
 		$args['user_ids'] = $follower_users;
 		$args['paged']    = $paged;
-		$bp_background_updater->data(
+		$bb_background_updater->data(
 			array(
-				array(
-					'callback' => 'bb_activity_following_post_notification',
-					'args'     => array( $args ),
-				),
-			)
+				'type'     => 'email',
+				'group'    => 'activity_following_post',
+				'data_id'  => $args['item_id'],
+				'priority' => 5,
+				'callback' => 'bb_activity_following_post_notification',
+				'args'     => array( $args ),
+			),
 		);
 
-		$bp_background_updater->save()->dispatch();
+		$bb_background_updater->save()->dispatch();
 	}
 
 	if ( isset( $args['user_ids'] ) ) {
