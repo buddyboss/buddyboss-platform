@@ -6829,6 +6829,11 @@ form.acomment-edit .activity-attached-gif-container .gif-image-remove:hover .bb-
   opacity: 1;
 }
 
+#buddypress form.acomment-edit .ac-reply-content input[type="submit"].loading {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
 .bp-ac-form-cotainer {
   display: -webkit-box;
   display: -ms-flexbox;

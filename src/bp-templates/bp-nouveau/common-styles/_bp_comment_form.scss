@@ -366,6 +366,14 @@ form.acomment-edit {
 			}
 		}
 	}
+
+	.ac-reply-content input[type="submit"].loading {
+
+		#buddypress & {
+			opacity: 0.4;
+			pointer-events: none;
+		}
+	}
 }
 
 .bp-ac-form-cotainer {
