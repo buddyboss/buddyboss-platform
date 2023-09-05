@@ -946,9 +946,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		$medias = BP_Media::get(
 			array(
-				'in'    	=> $media_ids,
-				'video' 	=> true,
-				'per_page'	=> 0,
+				'in'    => $media_ids,
+				'video' => true,
 			)
 		);
 
@@ -2349,7 +2348,6 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		$medias = $this->assemble_response_data(
 			array(
-				'per_page'  => 0,
 				'media_ids' => $media_ids,
 				'sort'      => 'ASC',
 				'order_by'  => 'menu_order',
@@ -2905,7 +2903,6 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		$medias = $this->assemble_response_data(
 			array(
-				'per_page'  => 0,
 				'media_ids' => $media_ids,
 				'sort'      => 'ASC',
 				'order_by'  => 'menu_order',
@@ -3293,7 +3290,6 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		$medias = $this->assemble_response_data(
 			array(
-				'per_page'         => 0,
 				'media_ids'        => $media_ids,
 				'sort'             => 'ASC',
 				'order_by'         => 'menu_order',
