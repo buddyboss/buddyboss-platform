@@ -73,10 +73,10 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 		// Set requirement for last name based on display format.
 		if ( isset( $bb_display_name_format ) ) {
-			if ( 'first_last_name' === $bb_display_name_format ) {
-				$lastname_field_id = bp_xprofile_lastname_field_id();
-				bp_xprofile_update_field_meta( $lastname_field_id, 'default_visibility', 'public' );
-
+			if (
+				'first_last_name' === $bb_display_name_format ||
+				'first_name' === $bb_display_name_format
+			) {
 				$firstname_field_id = bp_xprofile_firstname_field_id();
 				bp_xprofile_update_field_meta( $firstname_field_id, 'default_visibility', 'public' );
 				bp_xprofile_update_field_meta( $firstname_field_id, 'allow_custom_visibility', 'disabled' );
@@ -85,15 +85,11 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 				$field              = xprofile_get_field( $firstname_field_id );
 				$field->is_required = true;
 				$field->save();
-			} elseif ( 'first_name' === $bb_display_name_format ) {
-				$firstname_field_id = bp_xprofile_firstname_field_id();
-				bp_xprofile_update_field_meta( $firstname_field_id, 'default_visibility', 'public' );
-				bp_xprofile_update_field_meta( $firstname_field_id, 'allow_custom_visibility', 'disabled' );
 
-				// Make the first name field to required if not in required list.
-				$field              = xprofile_get_field( $firstname_field_id );
-				$field->is_required = true;
-				$field->save();
+				if ( 'first_last_name' === $bb_display_name_format ) {
+					$lastname_field_id = bp_xprofile_lastname_field_id();
+					bp_xprofile_update_field_meta( $lastname_field_id, 'default_visibility', 'public' );
+				}
 			} elseif ( 'nickname' === $bb_display_name_format ) {
 				$nickname_field_id = bp_xprofile_nickname_field_id();
 				bp_xprofile_update_field_meta( $nickname_field_id, 'default_visibility', 'public' );

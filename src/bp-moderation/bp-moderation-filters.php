@@ -989,3 +989,90 @@ add_action( 'bp_after_activity_entry', 'bb_moderation_after_activity_entry_callb
 add_action( 'bp_after_activity_comment_entry', 'bb_moderation_after_activity_entry_callback' );
 add_action( 'bp_after_group_members_list', 'bb_moderation_after_activity_entry_callback' );
 add_action( 'bp_after_group_manage_members_list', 'bb_moderation_before_activity_entry_callback' );
+
+/**
+ * Check for the next process available into the DB with the same item_id then skip the current process.
+ *
+ * @since BuddyBoss 2.4.20
+ *
+ * @param object $batch Object of data to process.
+ *
+ * @return void
+ */
+function bb_moderation_async_request_batch_process( $batch ) {
+	global $bb_background_updater, $wpdb;
+	if (
+		empty( $batch ) ||
+		! property_exists( $batch, 'group' ) ||
+		empty( $batch->group ) ||
+		false === strpos( $batch->group, 'bb_moderation_' )
+	) {
+		return;
+	}
+
+	$group_name = $batch->group;
+	$item_id    = $batch->item_id;
+	$type       = $batch->type;
+
+	$next_group_name = '';
+	if ( false !== strpos( $group_name, 'unsuspend' ) ) {
+		$next_group_name = str_replace( 'unsuspend', 'suspend', $group_name );
+	} elseif ( false !== strpos( $group_name, 'suspend' ) ) {
+		$next_group_name = str_replace( 'suspend', 'unsuspend', $group_name );
+	} elseif ( false !== strpos( $group_name, 'unhide' ) ) {
+		$next_group_name = str_replace( 'unhide', 'hide', $group_name );
+	} elseif ( false !== strpos( $group_name, 'hide' ) ) {
+		$next_group_name = str_replace( 'hide', 'unhide', $group_name );
+	}
+
+	if ( empty( $next_group_name ) ) {
+		return;
+	}
+
+	$table_name = $bb_background_updater::$table_name;
+
+	$sql  = "SELECT * from {$table_name} WHERE `group` = %s AND data_id = %s AND type = %s ORDER BY priority, id ASC LIMIT 1";
+	$data = $wpdb->get_results( $wpdb->prepare( $sql, $next_group_name, $item_id, $type ) ); // phpcs:ignore
+
+	if ( ! empty( $data ) ) {
+		$next_batch       = current( $data );
+		$next_batch->data = maybe_unserialize( $next_batch->data );
+
+		$current_data = ! empty( $batch->data['args'] ) ? $batch->data['args'] : array();
+		$next_data    = ! empty( $next_batch->data['args'] ) ? $next_batch->data['args'] : array();
+
+		$current_args = ! empty( $current_data ) ? end( $current_data ) : array();
+		$next_args    = ! empty( $next_data ) ? end( $next_data ) : array();
+
+		// Used for suspend/unsuspend.
+		if (
+			isset( $current_args['action_suspend'] ) &&
+			isset( $next_args['action_suspend'] ) &&
+			(int) $current_args['action_suspend'] === (int) $next_args['action_suspend']
+		) {
+			$batch->data = array();
+			error_log( sprintf( 'Skip suspend process: `%s` next found: `%s`', $batch->key, $next_batch->id ) );
+
+			// Used for hide_parent argument check.
+		} elseif (
+			isset( $current_args['hide_parent'] ) &&
+			isset( $next_args['hide_parent'] ) &&
+			(int) $current_args['hide_parent'] !== (int) $next_args['hide_parent']
+		) {
+			$batch->data = array();
+			error_log( sprintf( 'Skip parent process: `%s` next found: `%s`', $batch->key, $next_batch->id ) );
+			// Used for hide_sitewide argument check.
+		} elseif (
+			! empty( $next_data ) &&
+			! empty( $current_data ) &&
+			isset( $next_data[1] ) &&
+			isset( $current_data[1] ) &&
+			(int) $next_data[1] !== (int) $current_data[1]
+		) {
+			$batch->data = array();
+			error_log( sprintf( 'Skip sitewide process: `%s` next found: `%s`', $batch->key, $next_batch->id ) );
+		}
+	}
+}
+add_action( 'bb_async_request_batch_process', 'bb_moderation_async_request_batch_process', 10, 1 );
+
