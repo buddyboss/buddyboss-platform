@@ -6802,6 +6802,7 @@ form.acomment-edit .activity-attached-gif-container {
   width: auto !important;
   display: table;
   min-height: auto !important;
+  margin-top: 15px;
 }
 
 form.acomment-edit .activity-attached-gif-container .gif-image-container {
