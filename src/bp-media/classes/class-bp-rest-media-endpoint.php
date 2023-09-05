@@ -3175,6 +3175,13 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		} else {
 			delete_post_meta( $post_id, '_gif_data' );
 			delete_post_meta( $post_id, '_gif_raw_data' );
+
+			// Delete activity meta as well.
+			$main_activity_id = get_post_meta( $post_id, '_bbp_activity_id', true );
+			if ( ! empty( $main_activity_id ) && bp_is_active( 'activity' ) ) {
+				bp_activity_delete_meta( $main_activity_id, '_gif_data' );
+				bp_activity_delete_meta( $main_activity_id, '_gif_raw_data' );
+			}
 		}
 	}
 

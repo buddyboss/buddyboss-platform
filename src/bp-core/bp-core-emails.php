@@ -72,7 +72,7 @@ function bb_email_queue() {
  * @return bool
  */
 function bb_is_email_queue() {
-	return function_exists( 'bb_email_queue' ) && class_exists( 'BP_Email_Background_Updater' ) && apply_filters( 'bb_is_email_queue', ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) );
+	return function_exists( 'bb_email_queue' ) && class_exists( 'BB_Background_Updater' ) && apply_filters( 'bb_is_email_queue', ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) );
 }
 
 /**
