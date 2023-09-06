@@ -172,6 +172,7 @@ function bp_document_activity_entry() {
 			'include'  => $document_ids,
 			'order_by' => 'menu_order',
 			'sort'     => 'ASC',
+			'per_page' => 0,
 		)
 	) ) { ?>
 		<div class="bb-activity-media-wrap bb-media-length-1 ">
@@ -205,6 +206,7 @@ function bp_document_activity_append_document( $content, $activity ) {
 		'include'  => $document_ids,
 		'order_by' => 'menu_order',
 		'sort'     => 'ASC',
+		'per_page' => 0,
 	);
 
 	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_document_support_enabled() ) {
@@ -257,6 +259,7 @@ function bp_document_activity_comment_entry( $comment_id ) {
 		'sort'     => 'ASC',
 		'user_id'  => false,
 		'privacy'  => array(),
+		'per_page' => 0,
 	);
 
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
@@ -767,6 +770,7 @@ function bp_document_forums_embed_attachments( $content, $id ) {
 			'order_by' => 'menu_order',
 			'sort'     => 'ASC',
 			'privacy'  => array( 'forums' ),
+			'per_page' => 0,
 		)
 	) ) {
 		ob_start();
