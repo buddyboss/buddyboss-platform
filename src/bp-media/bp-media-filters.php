@@ -405,7 +405,7 @@ function bp_media_activity_comment_entry( $comment_id ) {
  * @return bool
  */
 function bp_media_update_activity_media_meta( $content, $user_id, $activity_id ) {
-	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit;
+	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit, $bb_activity_comment_edit;
 
 	$medias           = filter_input( INPUT_POST, 'media', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 	$medias           = ! empty( $medias ) ? $medias : array();
@@ -433,7 +433,17 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 	if ( ! isset( $medias ) || empty( $medias ) ) {
 
 		// delete media ids and meta for activity if empty media in request.
-		if ( ! empty( $activity_id ) && $bp_activity_edit && isset( $_POST['edit'] ) ) {
+		if (
+			! empty( $activity_id ) &&
+			(
+				(
+					$bp_activity_edit && isset( $_POST['edit'] )
+				) ||
+				(
+					$bb_activity_comment_edit && isset( $_POST['edit_comment'] )
+				)
+			)
+		) {
 			$old_media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
 
 			if ( ! empty( $old_media_ids ) ) {
