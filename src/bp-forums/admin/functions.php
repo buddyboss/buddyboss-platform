@@ -302,7 +302,7 @@ function bbp_core_get_import_forum_tools_settings_admin_tabs( $tabs ) {
 add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bbp_core_get_import_forum_tools_settings_admin_tabs', 16, 1 );
 
 /**
- * Function to check table exists or not.
+ * Function to check table exists or not for converter.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -327,7 +327,7 @@ function bb_check_table_exists( $opdb, $table_name ) {
 }
 
 /**
- * Function to check column exists or not.
+ * Function to check column exists or not for converter.
  *
  * @since BuddyBoss [BBVERSION]
  *
