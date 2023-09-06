@@ -206,6 +206,7 @@ function bp_document_activity_append_document( $content, $activity ) {
 		'include'  => $document_ids,
 		'order_by' => 'menu_order',
 		'sort'     => 'ASC',
+		'per_page' => 0,
 	);
 
 	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_document_support_enabled() ) {
