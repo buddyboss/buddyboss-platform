@@ -424,7 +424,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 				}
 				bp_activity_delete_meta( $activity_id, 'bp_document_ids' );
 
-				// Delete media meta from activity for activity comment.
+				// Delete document meta from activity for activity comment.
 				if ( $bb_activity_comment_edit ) {
 					bp_activity_delete_meta( $activity_id, 'bp_document_id' );
 					bp_activity_delete_meta( $activity_id, 'bp_document_activity' );
