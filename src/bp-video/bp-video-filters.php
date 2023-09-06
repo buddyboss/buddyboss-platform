@@ -1694,7 +1694,7 @@ function bp_video_get_edit_activity_data( $activity ) {
 					continue;
 				}
 
-				$video               = new BP_Video( $video_id );
+				$video = new BP_Video( $video_id );
 
 				if ( empty( $video->id ) ) {
 					continue;
