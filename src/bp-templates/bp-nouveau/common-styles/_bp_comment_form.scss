@@ -107,6 +107,10 @@ form.acomment-edit {
 				border: 0;
 				padding: 0;
 
+				p {
+					margin-bottom: 0;
+				}
+
 				&:focus {
 					box-shadow: none;
 				}
