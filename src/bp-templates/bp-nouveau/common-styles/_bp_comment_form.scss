@@ -347,10 +347,9 @@ form.acomment-edit {
 		width: auto !important;
 		display: table;
 		min-height: auto !important;
-		margin-top: 15px;
 
 		.gif-image-container {
-			margin: 0;
+			margin: 15px 0 0;
 
 			img {
 				border-radius: 4px;
@@ -362,7 +361,7 @@ form.acomment-edit {
 
 		.gif-image-remove {
 			right: -8px;
-			top: -8px;
+			top: 7px;
 
 			.bb-icon-times {
 				opacity: 0.4;

@@ -6811,11 +6811,10 @@ form.acomment-edit .activity-attached-gif-container {
   width: auto !important;
   display: table;
   min-height: auto !important;
-  margin-top: 15px;
 }
 
 form.acomment-edit .activity-attached-gif-container .gif-image-container {
-  margin: 0;
+  margin: 15px 0 0;
 }
 
 form.acomment-edit .activity-attached-gif-container .gif-image-container img {
@@ -6827,7 +6826,7 @@ form.acomment-edit .activity-attached-gif-container .gif-image-container img {
 
 form.acomment-edit .activity-attached-gif-container .gif-image-remove {
   right: -8px;
-  top: -8px;
+  top: 7px;
 }
 
 form.acomment-edit .activity-attached-gif-container .gif-image-remove .bb-icon-times {
