@@ -2466,11 +2466,11 @@ function bp_media_get_edit_activity_data( $activity ) {
 					continue;
 				}
 
+				$media = new BP_Media( $media_id );
+
 				if ( empty( $media->id ) ) {
 					continue;
 				}
-
-				$media = new BP_Media( $media_id );
 
 				$activity['media'][] = array(
 					'id'            => $media_id,
