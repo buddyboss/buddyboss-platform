@@ -2460,6 +2460,10 @@ function bp_media_get_edit_activity_data( $activity ) {
 					continue;
 				}
 
+				if ( empty( $media->id ) ) {
+					continue;
+				}
+
 				$media = new BP_Media( $media_id );
 
 				$activity['media'][] = array(
