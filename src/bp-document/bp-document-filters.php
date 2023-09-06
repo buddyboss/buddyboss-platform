@@ -372,7 +372,7 @@ function bp_document_change_popup_download_text_in_comment( $text ) {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_update_activity_document_meta( $content, $user_id, $activity_id ) {
-	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit;
+	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit, $bb_activity_comment_edit;
 
 	$documents           = filter_input( INPUT_POST, 'document', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 	$documents           = ! empty( $documents ) ? $documents : array();
@@ -400,7 +400,17 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 	if ( ! isset( $documents ) || empty( $documents ) ) {
 
 		// delete document ids and meta for activity if empty document in request.
-		if ( ! empty( $activity_id ) && $bp_activity_edit && isset( $_POST['edit'] ) ) {
+		if (
+			! empty( $activity_id ) &&
+			(
+				(
+					$bp_activity_edit && isset( $_POST['edit'] )
+				) ||
+				(
+					$bb_activity_comment_edit && isset( $_POST['edit_comment'] )
+				)
+			)
+		) {
 			$old_document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
 
 			if ( ! empty( $old_document_ids ) ) {
@@ -413,6 +423,12 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 					}
 				}
 				bp_activity_delete_meta( $activity_id, 'bp_document_ids' );
+
+				// Delete media meta from activity for activity comment.
+				if ( $bb_activity_comment_edit ) {
+					bp_activity_delete_meta( $activity_id, 'bp_document_id' );
+					bp_activity_delete_meta( $activity_id, 'bp_document_activity' );
+				}
 			}
 		}
 		return false;
@@ -1894,10 +1910,16 @@ function bp_document_get_edit_activity_data( $activity ) {
 			$folder_id    = 0;
 
 			foreach ( $document_ids as $document_id ) {
+
 				if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $document_id, BP_Moderation_Document::$moderation_type ) ) {
 					continue;
 				}
+
 				$document = new BP_Document( $document_id );
+
+				if ( empty( $document->id ) ) {
+					continue;
+				}
 
 				$size = 0;
 				$file = get_attached_file( $document->attachment_id );
