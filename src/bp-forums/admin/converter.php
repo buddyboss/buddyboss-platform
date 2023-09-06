@@ -1323,7 +1323,11 @@ abstract class BBP_Converter_Base {
 		foreach ( $this->field_map as $item ) {
 
 			// Yay a match, and we have a from table, too.
-			if ( ( $item['to_type'] === $to_type ) && ! empty( $item['from_tablename'] ) ) {
+			if (
+				( $item['to_type'] === $to_type ) &&
+				! empty( $item['from_tablename'] ) &&
+				bb_check_table_exists( $this->opdb, $this->opdb->prefix . $item['from_tablename'] )
+			) {
 
 				// $from_tablename was set from a previous loop iteration.
 				if ( ! empty( $from_tablename ) ) {
