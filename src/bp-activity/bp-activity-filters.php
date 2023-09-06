@@ -2801,9 +2801,41 @@ add_filter( 'bb_add_feature_image_blog_post_as_activity_content', 'bb_add_featur
  * @param object $video Video object.
  */
 function bp_activity_video_add( $video ) {
-	global $bp_video_upload_count, $bp_new_activity_comment, $bp_activity_post_update_id, $bp_activity_post_update;
+	global $bp_video_upload_count, $bp_new_activity_comment, $bp_activity_post_update_id, $bp_activity_post_update, $bb_activity_comment_edit, $bb_activity_comment_edit_id;
 
-	if ( ! empty( $video ) && empty( $video->activity_id ) ) {
+	// Check the current action is edit activity comment.
+	if (
+		$bb_activity_comment_edit &&
+		isset( $_POST['edit_comment'] ) &&
+		! empty( $bb_activity_comment_edit_id ) &&
+		! empty( $video ) &&
+		empty( $video->activity_id )
+	) {
+		if ( bp_is_active( 'groups' ) && empty( $video->group_id ) ) {
+			$comment = new BP_Activity_Activity( $bb_activity_comment_edit_id );
+
+			if ( ! empty( $comment->item_id ) ) {
+				$comment_activity = new BP_Activity_Activity( $comment->item_id );
+				if ( ! empty( $comment_activity->component ) && buddypress()->groups->id === $comment_activity->component ) {
+					$video->group_id = $comment_activity->item_id;
+				}
+			}
+		}
+
+		$video->activity_id = $bb_activity_comment_edit_id;
+		$video->privacy     = 'comment';
+		$video->album_id    = 0;
+		$video->save();
+
+		// update activity meta.
+		bp_activity_update_meta( $bb_activity_comment_edit_id, 'bp_video_activity', '1' );
+		bp_activity_update_meta( $bb_activity_comment_edit_id, 'bp_video_id', $video->id );
+
+		// save attachment meta for activity.
+		update_post_meta( $video->attachment_id, 'bp_video_activity_id', $bb_activity_comment_edit_id );
+
+		// This is for create new activity or comment or edit activity.
+	} elseif ( ! empty( $video ) && empty( $video->activity_id ) ) {
 		$parent_activity_id = false;
 		if ( ! empty( $bp_activity_post_update ) && ! empty( $bp_activity_post_update_id ) ) {
 			$parent_activity_id = (int) $bp_activity_post_update_id;
@@ -2910,7 +2942,12 @@ function bp_activity_video_add( $video ) {
  * @return mixed
  */
 function bp_activity_create_parent_video_activity( $video_ids ) {
-	global $bp_video_upload_count, $bp_activity_post_update, $bp_video_upload_activity_content, $bp_activity_post_update_id, $bp_activity_edit;
+	global $bp_video_upload_count, $bp_activity_post_update, $bp_video_upload_activity_content, $bb_activity_comment_edit, $bb_activity_comment_edit_id;
+
+	// Return when current action is edit activity comment.
+	if ( $bb_activity_comment_edit && isset( $_POST['edit_comment'] ) && ! empty( $bb_activity_comment_edit_id ) ) {
+		return $video_ids;
+	}
 
 	if ( ! empty( $video_ids ) && empty( $bp_activity_post_update ) && ! isset( $_POST['edit'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
