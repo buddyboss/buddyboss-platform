@@ -706,9 +706,9 @@ class SMF extends BBP_Converter_Base {
 		$SMF_markup = preg_replace( '/\[\/td\]/', '</td>', $SMF_markup );
 
 		// Replace '[list]' with '<ul>'
-		$phpbb_uid = preg_replace( '/\[list\]/', '<ul>', $phpbb_uid );
+		$SMF_markup = preg_replace( '/\[list\]/', '<ul>', $SMF_markup );
 		// Replace '[liist type=decimal]' with '<ol type="a">'
-		$phpbb_uid = preg_replace( '/\[list\ type=decimal\]/', '<ol type="a">', $phpbb_uid );
+		$SMF_markup = preg_replace( '/\[list\ type=decimal\]/', '<ol type="a">', $SMF_markup );
 		// Replace '[li]' with '<li>'
 		$SMF_markup = preg_replace( '/\[li\]/', '<li>', $SMF_markup );
 		// Replace '[/li]' with '</li>'
