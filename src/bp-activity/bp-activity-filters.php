@@ -1721,9 +1721,41 @@ function bp_activity_has_media_activity_filter( $has_activities, $activities ) {
  * @param $media
  */
 function bp_activity_media_add( $media ) {
-	global $bp_media_upload_count, $bp_new_activity_comment, $bp_activity_post_update_id, $bp_activity_post_update;
+	global $bp_media_upload_count, $bp_new_activity_comment, $bp_activity_post_update_id, $bp_activity_post_update, $bb_activity_comment_edit, $bb_activity_comment_edit_id;
 
-	if ( ! empty( $media ) && empty( $media->activity_id ) ) {
+	// Check the current action is edit activity comment.
+	if (
+		$bb_activity_comment_edit &&
+		isset( $_POST['edit_comment'] ) &&
+		! empty( $bb_activity_comment_edit_id ) &&
+		! empty( $media ) &&
+		empty( $media->activity_id )
+	) {
+		if ( bp_is_active( 'groups' ) && empty( $media->group_id ) ) {
+			$comment = new BP_Activity_Activity( $bb_activity_comment_edit_id );
+
+			if ( ! empty( $comment->item_id ) ) {
+				$comment_activity = new BP_Activity_Activity( $comment->item_id );
+				if ( ! empty( $comment_activity->component ) && buddypress()->groups->id === $comment_activity->component ) {
+					$media->group_id = $comment_activity->item_id;
+				}
+			}
+		}
+
+		$media->activity_id = $bb_activity_comment_edit_id;
+		$media->privacy     = 'comment';
+		$media->album_id    = 0;
+		$media->save();
+
+		// update activity meta.
+		bp_activity_update_meta( $bb_activity_comment_edit_id, 'bp_media_activity', '1' );
+		bp_activity_update_meta( $bb_activity_comment_edit_id, 'bp_media_id', $media->id );
+
+		// save attachment meta for activity.
+		update_post_meta( $media->attachment_id, 'bp_media_activity_id', $bb_activity_comment_edit_id );
+
+		// This is for create new activity or comment or edit activity.
+	} elseif ( ! empty( $media ) && empty( $media->activity_id ) ) {
 		$parent_activity_id = false;
 		if ( ! empty( $bp_activity_post_update ) && ! empty( $bp_activity_post_update_id ) ) {
 			$parent_activity_id = (int) $bp_activity_post_update_id;
@@ -1830,7 +1862,11 @@ function bp_activity_media_add( $media ) {
  * @return mixed
  */
 function bp_activity_create_parent_media_activity( $media_ids ) {
-	global $bp_media_upload_count, $bp_activity_post_update, $bp_media_upload_activity_content, $bp_activity_post_update_id, $bp_activity_edit;
+	global $bp_media_upload_count, $bp_activity_post_update, $bp_media_upload_activity_content, $bb_activity_comment_edit, $bb_activity_comment_edit_id;
+
+	if ( $bb_activity_comment_edit && isset( $_POST['edit_comment'] ) && ! empty( $bb_activity_comment_edit_id ) ) {
+		return $media_ids;
+	}
 
 	if ( ! empty( $media_ids ) && empty( $bp_activity_post_update ) && ! isset( $_POST['edit'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
