@@ -1642,6 +1642,8 @@ window.bp = window.bp || {};
 				$( '.bb-videos-actions' ).show();
 			} else if ( typeof data !== 'undefined' && typeof data.response.scopes.personal !== 'undefined' && 0 === parseInt( data.response.scopes.personal ) ) {
 				$( '.bb-videos-actions' ).hide();
+			} else if ( typeof data !== 'undefined' && typeof data.response.scopes.personal !== 'undefined' && 0 !== parseInt( data.response.scopes.personal ) ) {
+				$( '.bb-videos-actions' ).show();
 			}
 		},
 
