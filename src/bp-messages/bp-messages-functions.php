@@ -2315,6 +2315,7 @@ function bb_get_message_response_object( $message ) {
 					'privacy'  => array( 'message' ),
 					'order_by' => 'menu_order',
 					'sort'     => 'ASC',
+					'per_page' => 0,
 				)
 			) ) {
 			$reply['media'] = array();
@@ -2349,6 +2350,7 @@ function bb_get_message_response_object( $message ) {
 					'privacy'  => array( 'message' ),
 					'order_by' => 'menu_order',
 					'sort'     => 'ASC',
+					'per_page' => 0,
 				)
 			)
 		) {
@@ -2408,6 +2410,7 @@ function bb_get_message_response_object( $message ) {
 					'include'  => $document_ids,
 					'order_by' => 'menu_order',
 					'sort'     => 'ASC',
+					'per_page' => 0,
 				)
 			) ) {
 			$reply['document'] = array();
