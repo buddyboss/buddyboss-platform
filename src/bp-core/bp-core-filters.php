@@ -2459,7 +2459,7 @@ add_filter( 'bp_core_number_format', 'bb_core_number_format_callback', 10, 1 );
 /**
  * Fix the issue with loom embed not working correctly.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.20
  *
  * @param string $return The returned oEmbed HTML.
  * @param object $data   A data object result from an oEmbed provider.
@@ -2480,7 +2480,7 @@ add_filter( 'oembed_dataparse', 'bb_oembed_dataparse', 999, 3 );
 /**
  * Make the loom video embed discoverable.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.20
  *
  * @param bool   $retval Return value to enabled discover support or not.
  * @param string $url    URL to parse for embed.
