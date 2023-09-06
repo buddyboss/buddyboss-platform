@@ -1586,6 +1586,11 @@ window.bp = window.bp || {};
 
 			if( ! $( event.currentTarget ).closest( '.ac-form' ).hasClass( 'acomment-edit' ) ) {
 				$( event.currentTarget ).toggleClass( 'active' );
+			} else {
+				if( dropzone_container.hasClass( 'open' ) && ! event.isCustomEvent ) {
+					dropzone_container.trigger( 'click' );
+					return;
+				}
 			}
 
 			var acCommentDefaultTemplate = document.getElementsByClassName( 'ac-reply-post-default-template' ).length ? document.getElementsByClassName( 'ac-reply-post-default-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
@@ -1820,6 +1825,11 @@ window.bp = window.bp || {};
 
 			if( ! $( event.currentTarget ).closest( '.ac-form' ).hasClass( 'acomment-edit' ) ) {
 				$( event.currentTarget ).toggleClass( 'active' );
+			} else {
+				if( dropzone_container.hasClass( 'open' ) && ! event.isCustomEvent ) {
+					dropzone_container.trigger( 'click' );
+					return;
+				}
 			}
 
 			var acCommentDocumentTemplate = document.getElementsByClassName( 'ac-reply-post-document-template' ).length ? document.getElementsByClassName( 'ac-reply-post-document-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
@@ -2057,6 +2067,11 @@ window.bp = window.bp || {};
 
 			if( ! $( event.currentTarget ).closest( '.ac-form' ).hasClass( 'acomment-edit' ) ) {
 				$( event.currentTarget ).toggleClass( 'active' );
+			} else {
+				if( dropzone_container.hasClass( 'open' ) && ! event.isCustomEvent ) {
+					dropzone_container.trigger( 'click' );
+					return;
+				}
 			}
 
 			var acCommentVideoTemplate = document.getElementsByClassName( 'ac-reply-post-video-template' ).length ? document.getElementsByClassName( 'ac-reply-post-video-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
