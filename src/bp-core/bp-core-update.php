@@ -474,6 +474,11 @@ function bp_version_updater() {
 			if ( function_exists( 'bb_moderation_migration_on_update' ) ) {
 				bb_moderation_migration_on_update();
 			}
+
+			// Create the table when class loaded.
+			if ( class_exists( '\BuddyBoss\Performance\Performance' ) ) {
+				\BuddyBoss\Performance\Performance::instance()->on_activation();
+			}
 		}
 	}
 
