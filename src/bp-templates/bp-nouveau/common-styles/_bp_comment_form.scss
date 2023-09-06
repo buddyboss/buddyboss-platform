@@ -138,6 +138,25 @@ form.acomment-edit {
 				padding: 5px 10px;
 			}
 		}
+
+		@media screen and (max-width: 1080px) and (min-width: 768px), screen and (max-width: 490px) {
+
+			.ac-reply-cancel,
+			input[name="ac_form_submit"] {
+				float: left;
+			}
+
+			.ac-reply-cancel {
+
+				#buddypress & {
+					margin-left: 10px;
+				}
+			}
+
+			.ac-textarea .ac-reply-toolbar {
+				position: static;
+			}
+		}
 	}
 
 	// Edit comment form Dropzone UI

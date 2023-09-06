@@ -6621,6 +6621,19 @@ form.acomment-edit .ac-reply-content input[name="ac_form_submit"] {
   padding: 5px 10px;
 }
 
+@media screen and (max-width: 1080px) and (min-width: 768px), screen and (max-width: 490px) {
+  form.acomment-edit .ac-reply-content .ac-reply-cancel,
+  form.acomment-edit .ac-reply-content input[name="ac_form_submit"] {
+    float: right;
+  }
+  #buddypress form.acomment-edit .ac-reply-content .ac-reply-cancel {
+    margin-right: 10px;
+  }
+  form.acomment-edit .ac-reply-content .ac-textarea .ac-reply-toolbar {
+    position: static;
+  }
+}
+
 form.acomment-edit .ac-reply-content .ac-textarea div.dropzone.open {
   margin-top: 0;
   margin-bottom: 0;
