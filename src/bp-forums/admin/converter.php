@@ -2240,6 +2240,10 @@ abstract class BBP_Converter_Base {
 	}
 
 	protected function callback_datetime( $field ) {
+		if ( empty( $field ) ) {
+			return '';
+		}
+
 		return is_numeric( $field )
 			? date( 'Y-m-d H:i:s', $field )
 			: date( 'Y-m-d H:i:s', strtotime( $field ) );
