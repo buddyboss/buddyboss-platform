@@ -1561,6 +1561,11 @@ abstract class BBP_Converter_Base {
 								break;
 							}
 
+							// Avoid trim deprecation error when post_title empty.
+							if ( ! empty( $insert_post['post_name'] ) && empty( $insert_post['post_title'] ) ) {
+								$insert_post['post_title'] = sanitize_title( $insert_post['post_name'] );
+							}
+
 							$post_id = wp_insert_post( $insert_post, true );
 
 							if ( is_numeric( $post_id ) && count( $insert_postmeta ) > 0 ) {
