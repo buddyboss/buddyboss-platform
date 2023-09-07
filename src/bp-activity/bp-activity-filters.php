@@ -360,9 +360,11 @@ function bp_activity_update_comment_privacy( $activity ) {
 	if ( ! empty( $activity_comments ) && ! empty( $activity_comments['activities'] ) && isset( $activity_comments['activities'][0]->children ) ) {
 		$children = $activity_comments['activities'][0]->children;
 		if ( ! empty( $children ) ) {
+			remove_action( 'bp_activity_after_save', 'bp_media_activity_save_gif_data', 2, 1 );
 			foreach ( $children as $comment ) {
 				bp_activity_comment_privacy_update( $comment, $activity->privacy );
 			}
+			add_action( 'bp_activity_after_save', 'bp_media_activity_save_gif_data', 2, 1 );
 		}
 	}
 }
