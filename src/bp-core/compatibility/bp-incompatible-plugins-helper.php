@@ -1080,8 +1080,9 @@ function bb_invite_anyone_compatibility_helper() {
 
 	// Check if Invite Anyone plugin exists.
 	if ( class_exists( 'BP_Invite_Anyone' ) ) {
-		require buddypress()->compatibility_dir . '/bp-invite-anyone-helpers.php';
+		require buddypress()->compatibility_dir . '/class-bb-invite-anyone-helpers.php';
 	}
 
 }
-add_action( 'init', 'bb_invite_anyone_compatibility_helper' );
+
+add_action( 'bp_init', 'bb_invite_anyone_compatibility_helper', 999 );

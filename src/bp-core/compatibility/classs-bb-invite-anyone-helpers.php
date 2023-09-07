@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'BB_Invite_Anyone_Plugin_Compatibility' ) ) {
+if ( ! class_exists( 'BB_Invite_Anyone_Plugin_Helpers' ) ) {
 
 	/**
 	 * BB_Invite_Anyone_Plugin_Compatibility Class.
@@ -21,7 +21,7 @@ if ( ! class_exists( 'BB_Invite_Anyone_Plugin_Compatibility' ) ) {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	class BB_Invite_Anyone_Plugin_Compatibility {
+	class BB_Invite_Anyone_Plugin_Helpers {
 
 		/**
 		 * The single instance of the class.
@@ -91,4 +91,4 @@ if ( ! class_exists( 'BB_Invite_Anyone_Plugin_Compatibility' ) ) {
 	}
 }
 
-BB_Invite_Anyone_Plugin_Compatibility::instance();
+BB_Invite_Anyone_Plugin_Helpers::instance();
