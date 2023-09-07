@@ -1135,6 +1135,8 @@ window.bp = window.bp || {};
 				$( '#ac-form-' + activity_id + ' #ac-input-' + activity_id ).focus();
 
 				if ( ! _.isUndefined( BP_Nouveau.media ) && ! _.isUndefined( BP_Nouveau.media.emoji ) && 'undefined' == typeof $( '#ac-input-' + activity_id ).data( 'emojioneArea' ) ) {
+					// Store HTML data of editor.
+					var editor_data = $( '#ac-input-' + activity_id ).html();
 					$( '#ac-input-' + activity_id ).emojioneArea(
 						{
 							standalone: true,
@@ -1174,6 +1176,10 @@ window.bp = window.bp || {};
 							}
 						}
 					);
+					// Restore HTML data of editor after emojioneArea intialized.
+					if ( target.hasClass( 'acomment-edit' ) && ! _.isNull( activity_comment_data ) ) {
+						$( '#ac-input-' + activity_id ).html( editor_data );
+					}
 				}
 			}
 
