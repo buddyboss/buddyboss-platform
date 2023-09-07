@@ -381,6 +381,8 @@ function bp_core_set_uri_globals() {
 				if ( bp_current_user_can( 'bp_moderate' ) ) {
 					bp_core_add_message( __( 'This user\'s profile is not yet activated. Only site admins can view this profile.', 'buddyboss' ), 'warning' );
 				} else {
+					$bp->displayed_user->id = 0;
+					$bp->current_component = '';
 					bp_do_404();
 					return;
 				}
