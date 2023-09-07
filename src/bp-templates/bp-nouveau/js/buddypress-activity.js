@@ -1181,6 +1181,20 @@ window.bp = window.bp || {};
 						$( '#ac-input-' + activity_id ).html( editor_data );
 					}
 				}
+
+				// Place caret at the end of the content.
+				if (
+					'undefined' !== typeof window.getSelection &&
+					'undefined' !== typeof document.createRange &&
+					( target.hasClass( 'acomment-edit' ) && ! _.isNull( activity_comment_data ) )
+				) {
+					var range = document.createRange();
+					range.selectNodeContents( $( '#ac-input-' + activity_id )[0] );
+					range.collapse( false );
+					var selection = window.getSelection();
+					selection.removeAllRanges();
+					selection.addRange( range );
+				}
 			}
 
 			if ( target.hasClass( 'activity-state-no-comments' ) ) {
