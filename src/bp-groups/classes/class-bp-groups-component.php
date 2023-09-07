@@ -175,7 +175,7 @@ class BP_Groups_Component extends BP_Component {
 
 			// Screens - Directory.
 			if (
-				! bp_is_user_groups() && bp_is_groups_directory() &&
+				bp_is_groups_directory() &&
 				(
 					! bp_is_current_action( 'type' ) ||
 					(

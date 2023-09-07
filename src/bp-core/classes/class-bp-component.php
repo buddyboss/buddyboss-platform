@@ -500,12 +500,6 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		 *                        function for a description.
 		 */
 		public function setup_nav( $main_nav = array(), $sub_nav = array() ) {
-			// Pending signup users profile should not visible at frontend.
-			$displayed_user = bp_get_displayed_user();
-			if ( ! current_user_can( 'administrator' ) && isset( $displayed_user->id ) && 2 === BP_Signup::check_user_status( $displayed_user->id ) ) {
-				bp_do_404();
-				return;
-			}
 			// No sub nav items without a main nav item.
 			if ( ! empty( $main_nav ) ) {
 				bp_core_new_nav_item( $main_nav, 'members' );
