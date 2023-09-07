@@ -409,8 +409,8 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
 }
 
 #bp-pending-invites-loader .dashicons-update:before {
-	content: "\e838";
-	font-family: bb-icons;
+	content: "\ef30";
+	font-family: "bb-icons";/* stylelint-disable-line */
 	font-size: 20px;
 	display: block;
 	-webkit-transform: scale(0.8);
@@ -431,8 +431,8 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
 }
 
 #bp-invites-submit-loader .dashicons-update:before {
-	content: "\e838";
-	font-family: bb-icons;
+	content: "\ef30";
+	font-family: "bb-icons";/* stylelint-disable-line */
 	font-size: 20px;
 	display: block;
 	-webkit-transform: scale(0.8);

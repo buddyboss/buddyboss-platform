@@ -262,6 +262,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		$where = apply_filters( 'bp_suspend_activity_get_where_conditions', $where, $this );
 
 		if ( ! empty( array_filter( $where ) ) ) {
+
 			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
 		}
 
@@ -290,7 +291,15 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 			return $restrict;
 		}
 
-		if ( 'activity_comment' !== $activity->type && BP_Core_Suspend::check_suspended_content( (int) $activity->id, self::$type ) ) {
+		if (
+			'activity_comment' !== $activity->type &&
+			BP_Core_Suspend::check_suspended_content( (int) $activity->id, self::$type ) &&
+			(
+				// Allow comment to group activity.
+				! bp_is_active( 'groups' ) ||
+				'groups' !== $activity->component
+			)
+		) {
 			return false;
 		}
 
@@ -307,9 +316,13 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function manage_hidden_activity( $activity_id, $hide_sitewide, $args = array() ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
 
-		$suspend_args = wp_parse_args(
+		if ( empty( $activity_id ) ) {
+			return;
+		}
+
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $activity_id,
@@ -323,20 +336,32 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 
 		$suspend_args = self::validate_keys( $suspend_args );
 
+		$group_name_args = array_merge(
+			$suspend_args,
+			array(
+				'custom_action' => 'hide',
+			)
+		);
+		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
+
 		BP_Core_Suspend::add_suspend( $suspend_args );
+
+		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $activity_id;
 
 		if ( $this->background_disabled ) {
 			$this->hide_related_content( $activity_id, $hide_sitewide, $args );
 		} else {
-			$bp_background_updater->data(
+			$bb_background_updater->data(
 				array(
-					array(
-						'callback' => array( $this, 'hide_related_content' ),
-						'args'     => array( $activity_id, $hide_sitewide, $args ),
-					),
-				)
+					'type'              => $this->item_type,
+					'group'             => $group_name,
+					'data_id'           => $activity_id,
+					'secondary_data_id' => $args['parent_id'],
+					'callback'          => array( $this, 'hide_related_content' ),
+					'args'              => array( $activity_id, $hide_sitewide, $args ),
+				),
 			);
-			$bp_background_updater->save()->schedule_event();
+			$bb_background_updater->save()->schedule_event();
 		}
 	}
 
@@ -351,9 +376,13 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function manage_unhidden_activity( $activity_id, $hide_sitewide, $force_all, $args = array() ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
 
-		$suspend_args = wp_parse_args(
+		if ( empty( $activity_id ) ) {
+			return;
+		}
+
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $activity_id,
@@ -379,20 +408,32 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 
 		$suspend_args = self::validate_keys( $suspend_args );
 
+		$group_name_args = array_merge(
+			$suspend_args,
+			array(
+				'custom_action' => 'unhide',
+			)
+		);
+		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
+
 		BP_Core_Suspend::remove_suspend( $suspend_args );
+
+		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $activity_id;
 
 		if ( $this->background_disabled ) {
 			$this->unhide_related_content( $activity_id, $hide_sitewide, $force_all, $args );
 		} else {
-			$bp_background_updater->data(
+			$bb_background_updater->data(
 				array(
-					array(
-						'callback' => array( $this, 'unhide_related_content' ),
-						'args'     => array( $activity_id, $hide_sitewide, $force_all, $args ),
-					),
-				)
+					'type'              => $this->item_type,
+					'group'             => $group_name,
+					'data_id'           => $activity_id,
+					'secondary_data_id' => $args['parent_id'],
+					'callback'          => array( $this, 'unhide_related_content' ),
+					'args'              => array( $activity_id, $hide_sitewide, $force_all, $args ),
+				),
 			);
-			$bp_background_updater->save()->schedule_event();
+			$bb_background_updater->save()->schedule_event();
 		}
 	}
 

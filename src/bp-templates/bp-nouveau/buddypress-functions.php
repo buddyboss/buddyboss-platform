@@ -178,31 +178,32 @@ class BP_Nouveau extends BP_Theme_Compat {
 		// We need to neutralize the BuddyPress core "bp_core_render_message()" once it has been added.
 		add_action( 'bp_actions', array( $this, 'neutralize_core_template_notices' ), 6 );
 
-		// Scripts
-		add_action( 'bp_enqueue_scripts', array( $this, 'register_scripts' ), 2 ); // Register theme JS
+		// Scripts.
+		add_action( 'bp_enqueue_scripts', array( $this, 'register_scripts' ), 2 ); // Register theme JS.
 		remove_action( 'bp_enqueue_scripts', 'bp_core_confirmation_js' );
-		add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_styles' ) ); // Enqueue theme CSS
-		add_action( 'bp_admin_enqueue_scripts', array( $this, 'enqueue_styles' ) ); // Enqueue theme CSS
-		add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_scripts' ) ); // Enqueue theme JS
-		add_filter( 'bp_enqueue_scripts', array( $this, 'localize_scripts' ) ); // Enqueue theme script localization
-		add_filter( 'wp_enqueue_scripts', array( $this, 'check_heartbeat_api' ), 99999 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ), 1 ); // Enqueue theme CSS.
+		add_action( 'bp_admin_enqueue_scripts', array( $this, 'enqueue_styles' ) ); // Enqueue theme CSS.
+		add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_scripts' ) ); // Enqueue theme JS.
+		add_filter( 'bp_enqueue_scripts', array( $this, 'localize_scripts' ) ); // Enqueue theme script localization.
+		add_filter( 'wp_enqueue_scripts', array( $this, 'check_heartbeat_api' ), PHP_INT_MAX );
+		add_filter( 'wp_enqueue_scripts', array( $this, 'presence_localize_scripts' ), PHP_INT_MAX ); // Enqueue theme script localization.
 
-		// Register login and forgot password popup link
+		// Register login and forgot password popup link.
 		add_action( 'login_enqueue_scripts', array( $this, 'register_scripts' ), 2 );
 		add_action( 'login_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 		add_action( 'login_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'login_head', array( $this, 'platform_login_scripts' ) );
 
-		// Body no-js class
+		// Body no-js class.
 		add_filter( 'body_class', array( $this, 'add_nojs_body_class' ), 20, 1 );
 
-		// Ajax querystring
+		// Ajax querystring.
 		add_filter( 'bp_ajax_querystring', 'bp_nouveau_ajax_querystring', 10, 2 );
 
-		// Register directory nav items
+		// Register directory nav items.
 		add_action( 'bp_screens', array( $this, 'setup_directory_nav' ), 15 );
 
-		// Set the BP Uri for the Ajax customizer preview
+		// Set the BP Uri for the Ajax customizer preview.
 		add_filter( 'bp_uri', array( $this, 'customizer_set_uri' ), 10, 1 );
 
 		// Set the forum slug on edit page from backend.
@@ -340,12 +341,25 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 * @since BuddyPress 3.0.0
 	 */
 	public function enqueue_styles() {
+		global $pagenow;
+
+		if (
+			! empty( $pagenow ) &&
+			in_array( $pagenow, array( 'plugin-editor.php', 'theme-editor.php' ), true )
+		) {
+			return;
+		}
+
 		$min = bp_core_get_minified_asset_suffix();
 		$rtl = '';
 
 		if ( is_rtl() ) {
 			$rtl = '-rtl';
 		}
+
+		// BB icon version.
+		$bb_icon_version = function_exists( 'bb_icon_font_map_data' ) ? bb_icon_font_map_data( 'version' ) : '';
+		$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : $this->version;
 
 		/**
 		 * Filters the BuddyPress Nouveau CSS dependencies.
@@ -367,14 +381,26 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 *
 		 * @param array $value Array of styles to enqueue.
 		 */
-		$styles = apply_filters( 'bp_nouveau_enqueue_styles', array(
-			'bp-nouveau' => array(
-				'file' => 'css/buddypress%1$s%2$s.css', 'dependencies' => $css_dependencies, 'version' => $this->version,
-			),
-			'bp-nouveau-icons' => array(
-				'file' => 'icons/bb-icons.css', 'dependencies' => array(), 'version' => $this->version,
+		$styles = apply_filters(
+			'bp_nouveau_enqueue_styles',
+			array(
+				'bp-nouveau-icons-map' => array(
+					'file'         => 'icons/css/icons-map%s.css',
+					'dependencies' => array(),
+					'version'      => $this->version,
+				),
+				'bp-nouveau-bb-icons'  => array(
+					'file'         => 'icons/css/bb-icons%1$s%2$s.css',
+					'dependencies' => array(),
+					'version'      => $bb_icon_version,
+				),
+				'bp-nouveau'           => array(
+					'file'         => 'css/buddypress%1$s%2$s.css',
+					'dependencies' => $css_dependencies,
+					'version'      => $this->version,
+				),
 			)
-		) );
+		);
 
 		if ( $styles ) {
 
@@ -383,7 +409,11 @@ class BP_Nouveau extends BP_Theme_Compat {
 					continue;
 				}
 
-				$file = sprintf( $style['file'], $rtl, $min );
+				if ( 'bp-nouveau-icons-map' === $handle ) {
+					$file = sprintf( $style['file'], $min );
+				} else {
+					$file = sprintf( $style['file'], $rtl, $min );
+				}
 
 				// Locate the asset if needed.
 				if ( false === strpos( $style['file'], '://' ) ) {
@@ -396,7 +426,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 					$file = $asset['uri'];
 				}
 
-				$data = wp_parse_args( $style, array(
+				$data = bp_parse_args( $style, array(
 					'dependencies' => array(),
 					'version'      => $this->version,
 					'type'         => 'screen',
@@ -465,8 +495,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 		$scripts['bp-nouveau-magnific-popup'] = array(
 			'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/magnific-popup.js',
-			'dependencies' => array(),
-			'footer'       => true,
+			'dependencies' => array( 'jquery' ),
+			'footer'       => false,
 		);
 
 		if ( bp_is_active( 'media' ) ) {
@@ -503,7 +533,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 				$file = $asset['uri'];
 			}
 
-			$data = wp_parse_args( $script, array(
+			$data = bp_parse_args( $script, array(
 				'dependencies' => array(),
 				'version'      => $this->version,
 				'footer'       => false,
@@ -591,15 +621,17 @@ class BP_Nouveau extends BP_Theme_Compat {
 	public function localize_scripts() {
 
 		$params = array(
-			'ajaxurl'             	=> bp_core_ajax_url(),
-			'only_admin_notice'   	=> __( 'As you are the only organizer of this group, you cannot leave it. You can either delete the group or promote another member to be an organizer first and then leave the group.', 'buddyboss' ),
-			'is_friend_confirm'   	=> __( 'Are you sure you want to remove your connection with this member?', 'buddyboss' ),
-			'confirm'             	=> __( 'Are you sure?', 'buddyboss' ),
-			'confirm_delete_set'  	=> __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss' ),
-			'show_x_comments'     	=> __( 'View previous comments', 'buddyboss' ),
-			'unsaved_changes'     	=> __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss' ),
-			'object_nav_parent'   	=> '#buddypress',
-			'empty_field' 			=> __( 'New Field', 'buddyboss' ),
+			'ajaxurl'            => bp_core_ajax_url(),
+			'only_admin_notice'  => __( 'As you are the only organizer of this group, you cannot leave it. You can either delete the group or promote another member to be an organizer first and then leave the group.', 'buddyboss' ),
+			'is_friend_confirm'  => __( 'Are you sure you want to remove your connection with this member?', 'buddyboss' ),
+			'confirm'            => __( 'Are you sure?', 'buddyboss' ),
+			'confirm_delete_set' => __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss' ),
+			'show_x_comments'    => __( 'View previous comments', 'buddyboss' ),
+			'unsaved_changes'    => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss' ),
+			'object_nav_parent'  => '#buddypress',
+			'anchorPlaceholderText' => __( 'Paste or type a link', 'buddyboss' ),
+			'empty_field'        => __( 'New Field', 'buddyboss' ),
+			'close'              => __( 'Close', 'buddyboss' ),
 		);
 
 		// If the Object/Item nav are in the sidebar
@@ -656,6 +688,37 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 * @param array $params Array of key/value pairs for AJAX usage.
 		 */
 		wp_localize_script( 'bp-nouveau', 'BP_Nouveau', apply_filters( 'bp_core_get_js_strings', $params ) );
+	}
+
+	/**
+	 * Load localizations for presence script.
+	 *
+	 * These localizations require information that may not be loaded even by init.
+	 *
+	 * @since BuddyBoss 2.1.4
+	 */
+	public function presence_localize_scripts() {
+
+		$params = array(
+			'heartbeat_enabled'         => bb_is_heartbeat_enabled(),
+			'presence_interval'         => bb_presence_interval(),
+			'presence_default_interval' => bb_presence_default_interval(),
+			'presence_time_span'        => bb_presence_time_span(),
+			'idle_inactive_span'        => bb_idle_inactive_span(),
+			'rest_nonce'                => wp_create_nonce( 'wp_rest' ),
+			'native_presence'           => (bool) bp_get_option( 'bb_use_core_native_presence', false ),
+			'native_presence_url'       => buddypress()->plugin_url . 'bp-core/bb-core-native-presence.php',
+			'presence_rest_url'         => home_url( 'wp-json/buddyboss/v1/members/presence' ),
+		);
+
+		/**
+		 * Filters core JavaScript strings for internationalization before AJAX usage.
+		 *
+		 * @since BuddyBoss 2.1.4
+		 *
+		 * @param array $params Array of key/value pairs for AJAX usage.
+		 */
+		wp_localize_script( 'bp-nouveau', 'BB_Nouveau_Presence', apply_filters( 'presence_localize_scripts', $params ) );
 	}
 
 	/**
@@ -820,7 +883,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		if ( false === strpos( $uri['path'], 'customize.php' ) ) {
 			return $path;
 		} else {
-			$vars = wp_parse_args( $uri['query'], array() );
+			$vars = bp_parse_args( $uri['query'], array() );
 
 			if ( ! empty( $vars['url'] ) ) {
 				$path = str_replace( get_site_url(), '', urldecode( $vars['url'] ) );

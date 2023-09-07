@@ -29,6 +29,16 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 	public $queries = array();
 
 	/**
+	 * Array of moderation queries.
+	 *
+	 * See {@see BP_Moderation_Query::__construct()} for information on query arguments.
+	 *
+	 * @since BuddyBoss 2.1.3
+	 * @var array
+	 */
+	public $args = array();
+
+	/**
 	 * Table alias.
 	 *
 	 * @since BuddyBoss 1.5.6
@@ -76,11 +86,12 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 	 *     }
 	 * }
 	 */
-	public function __construct( $query = array() ) {
+	public function __construct( $query = array(), $args = array()) {
 		if ( ! is_array( $query ) ) {
 			return;
 		}
 
+		$this->args    = $args;
 		$this->queries = $this->sanitize_query( $query );
 	}
 
@@ -172,7 +183,11 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 		$alias = ! empty( $this->table_alias ) ? "{$this->table_alias}." : '';
 
 		if ( in_array( $column, array( 'user_id' ), true ) ) {
-			$sql_chunks['join'][] = "LEFT JOIN {$bp->moderation->table_name_reports} mr ON ms.id = mr.moderation_id ";
+			$join_query = "LEFT JOIN {$bp->moderation->table_name_reports} mr ON ms.id = mr.moderation_id";
+			if( empty( $this->args ) || ! isset( $this->args['user_report'] ) ) {
+				$join_query .= ' and mr.user_report = 0 ';
+			}
+			$sql_chunks['join'][] = $join_query;
 			$alias                = 'mr.';
 		}
 

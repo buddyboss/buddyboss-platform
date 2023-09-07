@@ -119,7 +119,7 @@ function bbp_get_reply_post_type_supports() {
  * @uses                     current_user_can() To check if the current user is capable of editing
  *                           others' replies
  * @uses                     WP_Query To make query and get the replies
- * @uses                     WP_Rewrite::using_permalinks() To check if the blog is using permalinks
+ * @uses                     bbp_use_pretty_urls() To check if the site is using pretty URLs
  * @uses                     get_permalink() To get the permalink
  * @uses                     add_query_arg() To add custom args to the url
  * @uses                     apply_filters() Calls 'bbp_replies_pagination' with the pagination args
@@ -129,12 +129,11 @@ function bbp_get_reply_post_type_supports() {
  *                           and bbPres::reply_query
  */
 function bbp_has_replies( $args = '' ) {
-	global $wp_rewrite;
 
 	/** Defaults */
 
 	// Other defaults
-	$default_reply_search   = ! empty( $_REQUEST['rs'] ) ? $_REQUEST['rs'] : false;
+	$default_reply_search   = bbp_sanitize_search_request( 'rs' );
 	$default_post_parent    = ( bbp_is_single_topic() ) ? bbp_get_topic_id() : 'any';
 	$default_post_type      = ( bbp_is_single_topic() && bbp_show_lead_topic() ) ? bbp_get_reply_post_type() : array(
 		bbp_get_topic_post_type(),
@@ -144,16 +143,18 @@ function bbp_has_replies( $args = '' ) {
 
 	// Default query args
 	$default = array(
-		'post_type'           => $default_post_type,         // Only replies
-		'post_parent'         => $default_post_parent,       // Of this topic
-		'posts_per_page'      => bbp_get_replies_per_page(), // This many
-		'paged'               => bbp_get_paged(),            // On this page
-		'orderby'             => 'date',                     // Sorted by date
-		'order'               => 'ASC',                      // Oldest to newest
-		'hierarchical'        => $default_thread_replies,    // Hierarchical replies
-		'ignore_sticky_posts' => true,                       // Stickies not supported
-		's'                   => $default_reply_search,      // Maybe search
-		'moderation_query'    => false,
+		'post_type'                => $default_post_type,         // Only replies
+		'post_parent'              => $default_post_parent,       // Of this topic
+		'posts_per_page'           => bbp_get_replies_per_page(), // This many
+		'paged'                    => bbp_get_paged(),            // On this page
+		'orderby'                  => 'date',                     // Sorted by date
+		'order'                    => 'ASC',                      // Oldest to newest
+		'hierarchical'             => $default_thread_replies,    // Hierarchical replies
+		'ignore_sticky_posts'      => true,                       // Stickies not supported
+		's'                        => $default_reply_search,      // Maybe search
+		'moderation_query'         => false,
+		'update_post_family_cache' => true,
+		
 	);
 
 	// What are the default allowed statuses (based on user caps)
@@ -197,6 +198,11 @@ function bbp_has_replies( $args = '' ) {
 	// Call the query
 	$bbp->reply_query = new WP_Query( $r );
 
+	// Maybe prime last active posts.
+	if ( ! empty( $r['update_post_family_cache'] ) ) {
+		bbp_update_post_family_caches( $bbp->reply_query->posts );
+	}
+
 	// Add pagination values to query object
 	$bbp->reply_query->posts_per_page = $replies_per_page;
 	$bbp->reply_query->paged          = $r['paged'];
@@ -234,7 +240,7 @@ function bbp_has_replies( $args = '' ) {
 	if ( (int) $bbp->reply_query->found_posts && (int) $bbp->reply_query->posts_per_page ) {
 
 		// If pretty permalinks are enabled, make our pagination pretty
-		if ( $wp_rewrite->using_permalinks() ) {
+		if ( bbp_use_pretty_urls() ) {
 
 			// User's replies
 			if ( bbp_is_single_user_replies() ) {
@@ -244,8 +250,8 @@ function bbp_has_replies( $args = '' ) {
 			} elseif ( bbp_is_single_user() ) {
 				$base = bbp_get_user_profile_url( bbp_get_displayed_user_id() );
 
-				// Page or single post
-			} elseif ( is_page() || is_single() ) {
+				// Any single post (for shortcodes)
+			} elseif ( is_singular() ) {
 				$base = get_permalink();
 
 				// Single topic
@@ -253,7 +259,7 @@ function bbp_has_replies( $args = '' ) {
 				$base = get_permalink( bbp_get_topic_id() );
 			}
 
-			$base = trailingslashit( $base ) . user_trailingslashit( $wp_rewrite->pagination_base . '/%#%/' );
+			$base = trailingslashit( $base ) . user_trailingslashit( bbp_get_paged_slug() . '/%#%/' );
 
 			// Unpretty permalinks
 		} else {
@@ -290,15 +296,17 @@ function bbp_has_replies( $args = '' ) {
 		);
 
 		// Remove first page from pagination
-		if ( $wp_rewrite->using_permalinks() ) {
-			$bbp->reply_query->pagination_links = str_replace( $wp_rewrite->pagination_base . '/1/', '', $bbp->reply_query->pagination_links );
+		if ( bbp_use_pretty_urls() ) {
+			$bbp->reply_query->pagination_links = str_replace( bbp_get_paged_slug() . '/1/', '', $bbp->reply_query->pagination_links );
 		} else {
 			$bbp->reply_query->pagination_links = str_replace( '&#038;paged=1', '', $bbp->reply_query->pagination_links );
 		}
 	}
 
+	$have_replies = ( isset( $total_pages ) && $bbp->reply_query->paged > $total_pages ) ? false : $bbp->reply_query->have_posts();
+
 	// Return object
-	return apply_filters( 'bbp_has_replies', $bbp->reply_query->have_posts(), $bbp->reply_query );
+	return apply_filters( 'bbp_has_replies', $have_replies, $bbp->reply_query );
 }
 
 /**
@@ -497,7 +505,7 @@ function bbp_reply_url( $reply_id = 0 ) {
  * @uses                                 bbp_get_topic_permalink() To get the topic permalink
  * @uses                                 bbp_get_reply_position() To get the reply position
  * @uses                                 get_option() To get the replies per page option
- * @uses                                 WP_Rewrite::using_permalinks() To check if the blog uses
+ * @uses                                 bbp_use_pretty_urls() To check if the site uses pretty URLs
  *                                       permalinks
  * @uses                                 add_query_arg() To add custom args to the url
  * @uses                                 apply_filters() Calls 'bbp_get_reply_url' with the reply url,
@@ -511,7 +519,10 @@ function bbp_get_reply_url( $reply_id = 0, $redirect_to = '' ) {
 
 	// Hierarchical reply page
 	if ( bbp_thread_replies() ) {
-		$reply_page = ceil( (int) bbp_get_total_parent_reply( $topic_id ) / (int) bbp_get_replies_per_page() );
+		$reply_page = ceil( (int) bb_get_parent_reply_position( $reply_id, $topic_id ) / (int) bbp_get_replies_per_page() );
+		if ( 0 === (int) $reply_page ) {
+			$reply_page = 1;
+		}
 		// Standard reply page
 	} else {
 		$reply_page = ceil( (int) bbp_get_reply_position( $reply_id, $topic_id ) / (int) bbp_get_replies_per_page() );
@@ -527,11 +538,10 @@ function bbp_get_reply_url( $reply_id = 0, $redirect_to = '' ) {
 
 		// Include pagination
 	} else {
-		global $wp_rewrite;
 
 		// Pretty permalinks
-		if ( $wp_rewrite->using_permalinks() ) {
-			$url = trailingslashit( $topic_url ) . trailingslashit( $wp_rewrite->pagination_base ) . trailingslashit( $reply_page ) . $reply_hash;
+		if ( bbp_use_pretty_urls() ) {
+			$url = trailingslashit( $topic_url ) . trailingslashit( bbp_get_paged_slug() ) . trailingslashit( $reply_page ) . $reply_hash;
 
 			// Yucky links
 		} else {
@@ -697,7 +707,7 @@ function bbp_get_reply_excerpt( $reply_id = 0, $length = 100 ) {
 	}
 
 	if ( ! empty( $length ) && ( $excerpt_length > $length ) ) {
-		$excerpt  = substr( $excerpt, 0, $length - 1 );
+		$excerpt  = function_exists( 'mb_substr' ) ? mb_substr( $excerpt, 0, $length - 1 ) : substr( $excerpt, 0, $length - 1 );
 		$excerpt .= '&hellip;';
 	}
 
@@ -1157,31 +1167,35 @@ function bbp_reply_author_display_name( $reply_id = 0 ) {
 function bbp_get_reply_author_display_name( $reply_id = 0 ) {
 	$reply_id = bbp_get_reply_id( $reply_id );
 
-	// User is not a guest
+	// User is not a guest.
 	if ( ! bbp_is_reply_anonymous( $reply_id ) ) {
 
-		// Get the author ID
+		// Get the author ID.
 		$author_id = bbp_get_reply_author_id( $reply_id );
 
-		// Try to get a display name
-		$author_name = get_the_author_meta( 'display_name', $author_id );
+		// Get the author display name.
+		$author_name = ( function_exists( 'bp_core_get_user_displayname' ) ) ? bp_core_get_user_displayname( $author_id ) : '';
 
-		// Fall back to user login
+		if ( empty( $author_name ) ) {
+			$author_name = get_the_author_meta( 'display_name', $author_id );
+		}
+
+		// Fall back to user login.
 		if ( empty( $author_name ) ) {
 			$author_name = get_the_author_meta( 'user_login', $author_id );
 		}
 
-		// User does not have an account
+		// User does not have an account.
 	} else {
 		$author_name = get_post_meta( $reply_id, '_bbp_anonymous_name', true );
 	}
 
-	// If nothing could be found anywhere, use Anonymous
+	// If nothing could be found anywhere, use Anonymous.
 	if ( empty( $author_name ) ) {
 		$author_name = __( 'Anonymous', 'buddyboss' );
 	}
 
-	// Encode possible UTF8 display names
+	// Encode possible UTF8 display names.
 	if ( seems_utf8( $author_name ) === false ) {
 		$author_name = utf8_encode( $author_name );
 	}
@@ -1280,7 +1294,7 @@ function bbp_get_reply_author_link( $args = '' ) {
 			'link_title' => '',
 			'type'       => 'both',
 			'size'       => 80,
-			'sep'        => '&nbsp;',
+			'sep'        => '<span class="bbp-author-link-sep"></span>',
 			'show_role'  => false,
 		),
 		'get_reply_author_link'
@@ -1318,7 +1332,13 @@ function bbp_get_reply_author_link( $args = '' ) {
 
 		// Get avatar
 		if ( 'avatar' === $r['type'] || 'both' === $r['type'] ) {
+			if ( bp_is_active( 'moderation' ) ) {
+				add_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
+			}
 			$author_links['avatar'] = bbp_get_reply_author_avatar( $reply_id, $r['size'] );
+			if ( bp_is_active( 'moderation' ) ) {
+				remove_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
+			}
 		}
 
 		// Get display name
@@ -1804,7 +1824,7 @@ function bbp_get_reply_to_link( $args = array() ) {
 
 	// Add $uri to the array, to be passed through the filter
 	$r['uri'] = $uri;
-	$retval   = $r['link_before'] . '<a href="' . esc_url( $r['uri'] ) . '" class="bbp-reply-to-link" data-balloon=" ' . esc_html__( 'Reply', 'buddyboss' ) . ' " data-balloon-pos="up" ' . $onclick . '><i class="bb-icon-reply"></i><span class="bb-forum-reply-text">' . esc_html( $r['reply_text'] ) . '</span></a>' . $r['link_after'];
+	$retval   = $r['link_before'] . '<a href="' . esc_url( $r['uri'] ) . '" class="bbp-reply-to-link" data-balloon=" ' . esc_html__( 'Reply', 'buddyboss' ) . ' " data-balloon-pos="up" ' . $onclick . '><i class="bb-icon-l bb-icon-reply"></i><span class="bb-forum-reply-text">' . esc_html( $r['reply_text'] ) . '</span></a>' . $r['link_after'];
 
 	return apply_filters( 'bbp_get_reply_to_link', $retval, $r, $args );
 }
@@ -2136,9 +2156,7 @@ function bbp_reply_edit_url( $reply_id = 0 ) {
  * @uses                  bbp_get_reply_id() To get the reply id
  */
 function bbp_get_reply_edit_url( $reply_id = 0 ) {
-	global $wp_rewrite;
 
-	$bbp   = bbpress();
 	$reply = bbp_get_reply( bbp_get_reply_id( $reply_id ) );
 	if ( empty( $reply ) ) {
 		return;
@@ -2147,16 +2165,16 @@ function bbp_get_reply_edit_url( $reply_id = 0 ) {
 	$reply_link = bbp_remove_view_all( bbp_get_reply_permalink( $reply_id ) );
 
 	// Pretty permalinks
-	if ( $wp_rewrite->using_permalinks() ) {
-		$url = trailingslashit( $reply_link ) . $bbp->edit_id;
-		$url = trailingslashit( $url );
+	if ( false === strpos( $reply_link, '?' ) ) {
+		$url = trailingslashit( $reply_link ) . bbp_get_edit_slug();
+		$url = user_trailingslashit( $url );
 
 		// Unpretty permalinks
 	} else {
 		$url = add_query_arg(
 			array(
 				bbp_get_reply_post_type() => $reply->post_name,
-				$bbp->edit_id             => '1',
+				bbp_get_edit_rewrite_id() => '1'
 			),
 			$reply_link
 		);
@@ -2583,51 +2601,11 @@ function bbp_get_topic_pagination_count() {
 
 	// Define local variable(s)
 	$retstr      = '';
-	$total_int   = $bbp->reply_query->total_count; // thread_reply
+	$curr_page   = $bbp->reply_query->paged; // thread_reply
 	$total_pages = $bbp->reply_query->total_pages; // total_pages
-	// Set pagination values
-	$start_num = intval( ( $bbp->reply_query->paged - 1 ) * $bbp->reply_query->posts_per_page ) + 1;
-	$from_num  = bbp_number_format( $start_num );
-	$to_num    = bbp_number_format( ( $start_num + ( $bbp->reply_query->posts_per_page - 1 ) > $bbp->reply_query->found_posts ) ? $bbp->reply_query->found_posts : $start_num + ( $bbp->reply_query->posts_per_page - 1 ) );
-	$total     = bbp_number_format( $total_int );
 
-	if ( (int) $total_pages === (int) $bbp->reply_query->paged ) {
-		$to_num = $total;
-	}
-
-	// We are threading replies
-	if ( bbp_thread_replies() && bbp_is_single_topic() ) {
-		// Several replies in a topic with a single page
-		if ( empty( $to_num ) ) {
-			$retstr = sprintf( _n( 'Viewing %1$s reply', 'Viewing %1$s replies', $total_int, 'buddyboss' ), $total );
-
-			// Several replies in a topic with several pages
-		} else {
-			$retstr = sprintf( _n( 'Viewing %2$s of %4$s replies', 'Viewing %2$s - %3$s of %4$s replies', $bbp->reply_query->post_count, 'buddyboss' ), $bbp->reply_query->post_count, $from_num, $to_num, $total );
-		}
-		// We are not including the lead topic
-	} elseif ( bbp_show_lead_topic() ) {
-
-		// Several replies in a topic with a single page
-		if ( empty( $to_num ) ) {
-			$retstr = sprintf( _n( 'Viewing %1$s reply', 'Viewing %1$s replies', $total_int, 'buddyboss' ), $total );
-
-			// Several replies in a topic with several pages
-		} else {
-			$retstr = sprintf( _n( 'Viewing %2$s of %4$s replies', 'Viewing %2$s - %3$s of %4$s replies', $bbp->reply_query->post_count, 'buddyboss' ), $bbp->reply_query->post_count, $from_num, $to_num, $total );
-		}
-
-		// We are including the lead topic
-	} else {
-
-		// Several posts in a topic with a single page
-		if ( empty( $to_num ) ) {
-			$retstr = sprintf( _n( 'Viewing %1$s post', 'Viewing %1$s posts', $total_int, 'buddyboss' ), $total );
-
-			// Several posts in a topic with several pages
-		} else {
-			$retstr = sprintf( _n( 'Viewing %2$s of %4$s posts', 'Viewing %2$s - %3$s of %4$s posts', $bbp->reply_query->post_count, 'buddyboss' ), $bbp->reply_query->post_count, $from_num, $to_num, $total );
-		}
+	if( (int) $total_pages > 1 ) {
+		$retstr = sprintf( __( 'Page %1$s of %2$s', 'buddyboss' ), $curr_page, $total_pages );
 	}
 
 	// Filter and return
@@ -2691,6 +2669,11 @@ function bbp_get_form_reply_content() {
 	// Get _POST data
 	if ( bbp_is_post_request() && isset( $_POST['bbp_reply_content'] ) ) {
 		$reply_content = stripslashes( $_POST['bbp_reply_content'] );
+
+		// Remove unintentional empty paragraph coming from the medium editor when only link preview.
+		if ( preg_match('/^(<p><br><\/p>|<p><br \/><\/p>|<p><\/p>|<p><br\/><\/p>)$/i', $reply_content ) ) {
+			$reply_content = '';
+		}
 
 		// Get edit data
 	} elseif ( bbp_is_reply_edit() ) {
@@ -2830,9 +2813,9 @@ function bbp_update_total_parent_reply( $reply_id, $topic_id, $new_topic_reply_c
 				// Get child reply.
 				$post_status   = "'" . implode( "','", array( bbp_get_public_status_id() ) ) . "'";
 				$bbp_gtcpq_sql = $wpdb->prepare(
-					"SELECT COUNT({$wpdb->posts}.ID) FROM {$wpdb->posts} LEFT JOIN {$wpdb->postmeta} 
-				ON {$wpdb->postmeta}.post_id = {$wpdb->posts}.ID WHERE {$wpdb->posts}.post_parent = %d AND {$wpdb->posts}.post_status 
-				IN ( {$post_status} ) AND {$wpdb->posts}.post_type = '%s' AND {$wpdb->posts}.post_type = '%s' 
+					"SELECT COUNT({$wpdb->posts}.ID) FROM {$wpdb->posts} LEFT JOIN {$wpdb->postmeta}
+				ON {$wpdb->postmeta}.post_id = {$wpdb->posts}.ID WHERE {$wpdb->posts}.post_parent = %d AND {$wpdb->posts}.post_status
+				IN ( {$post_status} ) AND {$wpdb->posts}.post_type = '%s' AND {$wpdb->posts}.post_type = '%s'
 				AND {$wpdb->postmeta}.meta_key = '%s';",
 					$topic_id,
 					bbp_get_reply_post_type(),
@@ -2876,4 +2859,41 @@ function bbp_get_total_parent_reply( $topic_id ) {
 		$parent_reply_count = get_post_meta( $topic_id, '_bbp_parent_reply_count', true );
 		return $parent_reply_count;
 	}
+}
+
+/**
+ * Return the numeric position of a parent reply within a topic.
+ *
+ * @since BuddyBoss 2.0.6
+ *
+ * @param int $reply_id Optional. Reply id.
+ * @param int $topic_id Optional. Topic id.
+ *
+ * @uses  bbp_get_reply_ancestor_id() To get the reply id.
+ * @uses  bb_get_parent_replies_ids() Get the topic id of the reply id.
+ *
+ * @return int Reply position.
+ */
+function bb_get_parent_reply_position( $reply_id = 0, $topic_id = 0 ) {
+
+	// Bail if nothing passed.
+	if ( empty( $reply_id ) ) {
+		return false;
+	}
+
+	$topic_id = ! empty( $topic_id ) ? bbp_get_topic_id( $topic_id ) : bbp_get_reply_topic_id( $reply_id );
+
+	$reply_position     = get_post_field( 'menu_order', $reply_id );
+	// Fetch top level reply id if current reply id is the child reply.
+	$top_level_reply_id = bbp_get_reply_ancestor_id( $reply_id );
+	$parent_replies_ids = bb_get_parent_replies_ids( $topic_id, bbp_get_reply_post_type() );
+	if ( ! empty( $parent_replies_ids ) ) {
+		$topic_replies = array_reverse( $parent_replies_ids );
+		// Reverse replies array and search for current reply position.
+		$reply_position = array_search( (string) $top_level_reply_id, $topic_replies );
+		// Bump the position to compensate for the lead topic post.
+		$reply_position ++;
+	}
+
+	return (int) apply_filters( 'bb_get_parent_reply_position', $reply_position, $reply_id, $topic_id );
 }

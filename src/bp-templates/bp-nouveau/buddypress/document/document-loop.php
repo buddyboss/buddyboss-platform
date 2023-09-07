@@ -13,11 +13,11 @@ bp_nouveau_before_loop();
 
 if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 
-	$get_page = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING );
-	$order_by = filter_input( INPUT_POST, 'order_by', FILTER_SANITIZE_STRING );
-	$orderby  = filter_input( INPUT_POST, 'orderby', FILTER_SANITIZE_STRING );
-	$sort     = filter_input( INPUT_POST, 'sort', FILTER_SANITIZE_STRING );
-	$scope    = filter_input( INPUT_POST, 'scope', FILTER_SANITIZE_STRING );
+	$get_page = bb_filter_input_string( INPUT_POST, 'page' );
+	$order_by = bb_filter_input_string( INPUT_POST, 'order_by' );
+	$orderby  = bb_filter_input_string( INPUT_POST, 'orderby' );
+	$sort     = bb_filter_input_string( INPUT_POST, 'sort' );
+	$scope    = bb_filter_input_string( INPUT_POST, 'scope' );
 	$extras   = filter_input( INPUT_POST, 'extras', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 
 	if ( empty( $get_page ) || 1 === (int) $get_page ) :
@@ -47,13 +47,13 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
             <div class="data-head data-head-name <?php echo esc_attr( $active_title_class ); ?>" data-target="name">
 				<span>
 					<?php esc_html_e( 'Name', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
+					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
             </div>
             <div class="data-head data-head-modified <?php echo esc_attr( $active_date_class ); ?>" data-target="modified">
 				<span>
 					<?php esc_html_e( 'Modified', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
+					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
             </div>
             <div class="data-head data-head-origin <?php echo esc_attr( $active_group_class ); ?>" data-target="group">
@@ -62,7 +62,7 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 					?>
                     <span>
 					<?php esc_html_e( 'Group', 'buddyboss' ); ?>
-						<i class="bb-icon-triangle-fill"></i>
+						<i class="bb-icon-f bb-icon-caret-down"></i>
 					</span>
 					<?php
 				}
@@ -72,7 +72,7 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
             <div class="data-head data-head-visibility <?php echo esc_attr( $active_privacy_class ); ?>" data-target="visibility">
 				<span>
 					<?php esc_html_e( 'Visibility', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
+					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
             </div>
         </div><!-- .document-data-table-head -->

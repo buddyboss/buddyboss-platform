@@ -172,7 +172,7 @@ class BP_REST_Video_Details_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $tabs_items ) ) {
 			foreach ( $tabs_items as $key => $item ) {
 				$tabs[ $key ]['title']    = $item['text'];
-				$tabs[ $key ]['count']    = $item['count'];
+				$tabs[ $key ]['count']    = bp_core_number_format( $item['count'] );
 				$tabs[ $key ]['position'] = $item['position'];
 			}
 		}
@@ -188,7 +188,7 @@ class BP_REST_Video_Details_Endpoint extends WP_REST_Controller {
 	 * @return array
 	 */
 	public function get_video_privacy() {
-		$privacy = buddypress()->video->visibility_levels;
+		$privacy = apply_filters( 'bp_video_get_visibility_levels', buddypress()->video->visibility_levels );
 		$retval  = array();
 
 		if ( ! empty( $privacy ) ) {
@@ -215,7 +215,7 @@ class BP_REST_Video_Details_Endpoint extends WP_REST_Controller {
 	 * @return string
 	 */
 	public function bp_rest_video_object_results_video_all_scope( $querystring ) {
-		$querystring = wp_parse_args( $querystring );
+		$querystring = bp_parse_args( $querystring );
 
 		$querystring['scope'] = $this->video_endpoint->bp_rest_video_default_scope( 'all', array() );
 

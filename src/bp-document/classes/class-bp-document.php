@@ -87,6 +87,14 @@ class BP_Document {
 	var $activity_id;
 
 	/**
+	 * Message ID of the document item.
+	 *
+	 * @since BuddyBoss 2.3.60
+	 * @var int
+	 */
+	var $message_id;
+
+	/**
 	 * Privacy of the document item.
 	 *
 	 * @since BuddyBoss 1.4.0
@@ -191,6 +199,7 @@ class BP_Document {
 		$this->folder_id     = (int) $row->folder_id;
 		$this->group_id      = (int) $row->group_id;
 		$this->activity_id   = (int) $row->activity_id;
+		$this->message_id    = (int) $row->message_id;
 		$this->privacy       = $row->privacy;
 		$this->menu_order    = (int) $row->menu_order;
 		$this->date_created  = $row->date_created;
@@ -228,7 +237,7 @@ class BP_Document {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args(
+		$r  = bp_parse_args(
 			$args,
 			array(
 				'scope'          => '',              // Scope - Groups, friends etc.
@@ -658,6 +667,7 @@ class BP_Document {
 				$document->attachment_id = (int) $document->attachment_id;
 				$document->folder_id     = (int) $document->folder_id;
 				$document->activity_id   = (int) $document->activity_id;
+				$document->message_id    = (int) $document->message_id;
 				$document->group_id      = (int) $document->group_id;
 				$document->menu_order    = (int) $document->menu_order;
 				$document->parent        = (int) $document->folder_id;
@@ -674,7 +684,7 @@ class BP_Document {
 					if ( 'hidden' === $status || 'private' === $status ) {
 						$visibility = esc_html__( 'Group Members', 'buddyboss' );
 					} else {
-						$visibility = ucfirst( $status );
+						$visibility = esc_html__( ucfirst( $status ), 'buddyboss' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText
 					}
 				} else {
 					$visibility = '';
@@ -788,10 +798,10 @@ class BP_Document {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args(
+		$r  = bp_parse_args(
 			$args,
 			array(
-				'scope'               => '',              // Scope - Groups, friends etc.
+				'scope'               => '',              // Document scope - public, groups, friends, personal.
 				'page'                => 1,               // The current page.
 				'per_page'            => 20,              // Document items per page.
 				'max'                 => false,           // Max number of items to return.
@@ -802,11 +812,15 @@ class BP_Document {
 				'in'                  => false,           // Array of ids to limit query by (IN).
 				'search_terms'        => false,           // Terms to search by.
 				'privacy'             => false,           // public, loggedin, onlyme, friends, grouponly, message.
-				'count_total'         => false,           // Whether or not to use count_total.
+				'count_total'         => false,           // Whether to use count_total.
 				'user_directory'      => true,
-				'folder_id'           => 0,
-				'meta_query_document' => false,
-				'meta_query_folder'   => false,
+				'folder_id'           => 0,               // Folder id to filter on.
+				'meta_query_document' => false,           // Filter by activity meta. See WP_Meta_Query for format.
+				'meta_query_folder'   => false,           // Filter by activity meta. See WP_Meta_Query for format.
+				'moderation_query'    => false,           // Filter for exclude moderation.
+				'activity_id'         => false,           // Filter by activity id.
+				'group_id'            => false,           // Filter by group id.
+				'user_id'             => false,           // Filter by user id.
 			)
 		);
 
@@ -1068,9 +1082,8 @@ class BP_Document {
 		$documents = self::array_msort( $documents, array( $r['order_by'] => $direction ) );
 
 		$retval['total']          = ( ! empty( $documents ) ? count( $documents ) : 0 );
-		$retval['has_more_items'] = ! empty( $r['per_page'] ) && isset( $r['per_page'] ) && count( $documents ) > $r['per_page'];
 
-		if ( isset( $r['per_page'] ) && isset( $r['page'] ) && ! empty( $r['per_page'] ) && ! empty( $r['page'] ) && $retval['has_more_items'] ) {
+		if ( isset( $r['per_page'] ) && isset( $r['page'] ) && ! empty( $r['per_page'] ) && ! empty( $r['page'] ) ) {
 			$total                    = count( $documents );
 			$current_page             = $r['page'];
 			$item_per_page            = $r['per_page'];
@@ -1079,7 +1092,8 @@ class BP_Document {
 			$retval['has_more_items'] = $total > ( $current_page * $item_per_page );
 			$retval['documents']      = $documents;
 		} else {
-			$retval['documents'] = $documents;
+			$retval['documents']      = $documents;
+			$retval['has_more_items'] = false;
 		}
 
 		if ( ! empty( $documents ) && 'ids' !== $r['fields'] ) {
@@ -1511,7 +1525,7 @@ class BP_Document {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args(
+		$r  = bp_parse_args(
 			$args,
 			array(
 				'id'            => false,
@@ -1687,12 +1701,27 @@ class BP_Document {
 
 						// Deleting an activity.
 					} else {
-						if ( 'activity' !== $from && bp_activity_delete(
-							array(
-								'id'      => $activity->id,
-								'user_id' => $activity->user_id,
+						$activity_delete  = false;
+						$activity_content = ! empty( $activity->content ) ? wp_strip_all_tags( $activity->content, true ) : '';
+						if (
+							(
+								'activity' !== $from && empty( $activity_content )
+							) ||
+							(
+								'activity' === $from && ! empty( $activity->secondary_item_id )
 							)
-						) ) {
+						) {
+							$activity_delete = true;
+						}
+						if (
+							true === $activity_delete &&
+							bp_activity_delete(
+								array(
+									'id'      => $activity->id,
+									'user_id' => $activity->user_id,
+								)
+							)
+						) {
 							/** This action is documented in bp-activity/bp-activity-actions.php */
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 						}
@@ -1861,6 +1890,7 @@ class BP_Document {
 		$this->title         = apply_filters_ref_array( 'bp_document_title_before_save', array( $this->title, &$this ) );
 		$this->folder_id     = apply_filters_ref_array( 'bp_document_folder_id_before_save', array( $this->folder_id, &$this ) );
 		$this->activity_id   = apply_filters_ref_array( 'bp_document_activity_id_before_save', array( $this->activity_id, &$this ) );
+		$this->message_id    = apply_filters_ref_array( 'bp_document_message_id_before_save', array( $this->message_id, &$this ) );
 		$this->group_id      = apply_filters_ref_array( 'bp_document_group_id_before_save', array( $this->group_id, &$this ) );
 		$this->privacy       = apply_filters_ref_array( 'bp_document_privacy_before_save', array( $this->privacy, &$this ) );
 		$this->menu_order    = apply_filters_ref_array( 'bp_document_menu_order_before_save', array( $this->menu_order, &$this ) );
@@ -1898,9 +1928,9 @@ class BP_Document {
 
 		// If we have an existing ID, update the document item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, folder_id = %d, activity_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_modified = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_modified, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, folder_id = %d, activity_id = %d, message_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_modified = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_modified, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name} ( blog_id, attachment_id, user_id, title, folder_id, activity_id, group_id, privacy, menu_order, date_created, date_modified ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %s, %d, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->date_modified );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name} ( blog_id, attachment_id, user_id, title, folder_id, activity_id, message_id, group_id, privacy, menu_order, date_created, date_modified ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %d, %s, %d, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->date_modified );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
@@ -2014,10 +2044,10 @@ class BP_Document {
 			$document_meta_query = new WP_Meta_Query( $meta_query );
 
 			// WP_Meta_Query expects the table name at
-			// $wpdb->document_meta.
-			$wpdb->documentmeta = buddypress()->document->table_name_folder_meta;
+			// $wpdb->document_folder_meta.
+			$wpdb->document_foldermeta = buddypress()->document->table_name_folder_meta;
 
-			$meta_sql = $document_meta_query->get_sql( 'document_folder', 'f', 'id' );
+			$meta_sql = $document_meta_query->get_sql( 'folder', 'f', 'id' );
 
 			// Strip the leading AND - BP handles it in get().
 			$sql_array['where'] = preg_replace( '/^\sAND/', '', $meta_sql['where'] );

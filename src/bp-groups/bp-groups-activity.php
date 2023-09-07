@@ -174,7 +174,7 @@ function bp_groups_format_activity_action_activity_update( $action, $activity ) 
 	$user_link = bp_core_get_userlink( $activity->user_id );
 
 	$group      = groups_get_group( $activity->item_id );
-	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . esc_html( $group->name ) . '</a>';
+	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . bp_get_group_name( $group ) . '</a>';
 
 	$action = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), $user_link, $group_link );
 
@@ -219,14 +219,14 @@ function bp_groups_format_activity_action_group_details_updated( $action, $activ
 		$action = sprintf( __( '%1$s changed the name and description of the group %2$s', 'buddyboss' ), $user_link, $group_link );
 
 		// Name only.
-	} elseif ( ! empty( $changed['name']['old'] ) && ! empty( $changed['name']['new'] ) ) {
+	} elseif ( isset( $changed['name']['old'] ) && isset( $changed['name']['new'] ) ) {
 		$action = sprintf( __( '%1$s changed the name of the group %2$s from "%3$s" to "%4$s"', 'buddyboss' ), $user_link, $group_link, wp_strip_all_tags( $changed['name']['old'] ), wp_strip_all_tags( $changed['name']['new'] ) );
 
 		// Description only.
-	} elseif ( ! empty( $changed['description']['old'] ) && ! empty( $changed['description']['new'] ) ) {
+	} elseif ( isset( $changed['description']['old'] ) && isset( $changed['description']['new'] ) ) {
 		$action = sprintf( __( '%1$s changed the description of the group %2$s from "%3$s" to "%4$s"', 'buddyboss' ), $user_link, $group_link, wp_strip_all_tags( $changed['description']['old'] ), wp_strip_all_tags( $changed['description']['new'] ) );
 
-	} elseif ( ! empty( $changed['slug']['old'] ) && ! empty( $changed['slug']['new'] ) ) {
+	} elseif ( isset( $changed['slug']['old'] ) && isset( $changed['slug']['new'] ) ) {
 		$action = sprintf( __( '%1$s changed the permalink of the group %2$s.', 'buddyboss' ), $user_link, $group_link );
 
 	}
@@ -768,7 +768,7 @@ function bp_groups_leave_group_delete_recent_activity( $group_id, $user_id ) {
 	$membership = new BP_Groups_Member( $user_id, $group_id );
 
 	// Check the time period, and maybe delete their recent group activity.
-	if ( time() <= strtotime( '+5 minutes', (int) strtotime( $membership->date_modified ) ) ) {
+	if ( $membership->date_modified && time() <= strtotime( '+5 minutes', (int) strtotime( $membership->date_modified ) ) ) {
 		bp_activity_delete(
 			array(
 				'component' => buddypress()->groups->id,
@@ -782,3 +782,43 @@ function bp_groups_leave_group_delete_recent_activity( $group_id, $user_id ) {
 add_action( 'groups_leave_group', 'bp_groups_leave_group_delete_recent_activity', 10, 2 );
 add_action( 'groups_remove_member', 'bp_groups_leave_group_delete_recent_activity', 10, 2 );
 add_action( 'groups_ban_member', 'bp_groups_leave_group_delete_recent_activity', 10, 2 );
+
+/**
+ * Function will append join query to display group lists in the activity feed.
+ *
+ * @since BuddyBoss 2.1.7
+ *
+ * @param string $sql From SQL statement.
+ * @param array  $r   Array of parsed arguments for the get method.
+ *
+ * @return string
+ */
+function bb_groups_get_join_sql_for_activity( $sql, $r ) {
+	$bp_prefix = bp_core_get_table_prefix();
+	$sql      .= ' LEFT JOIN ' . $bp_prefix . 'bp_groups_groupmeta mt ON ( g.id = mt.group_id )';
+
+	return $sql;
+}
+
+/**
+ * Function will append where condition to display group lists in the activity feed.
+ *
+ * @since BuddyBoss 2.1.7
+ *
+ * @param array $where_conditions Where conditions SQL statement.
+ * @param array $r                Array of parsed arguments for the get method.
+ *
+ * @return mixed
+ */
+function bb_groups_get_where_conditions_for_activity( $where_conditions, $r ) {
+	$where_conditions['exclude_where'] = ' (
+		mt.meta_key = "activity_feed_status" AND
+		(
+			( mt.meta_value = "mods" AND ( m.is_mod = "1" OR m.is_admin = "1" ) ) OR
+			( mt.meta_value = "admins" AND m.is_admin = "1" ) OR
+			( mt.meta_value = "members" )
+		)
+	)';
+
+	return $where_conditions;
+}

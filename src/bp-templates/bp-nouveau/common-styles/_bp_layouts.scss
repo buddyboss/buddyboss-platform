@@ -296,44 +296,6 @@
 			display: flex;
 		}
 
-		.bp-navs.vertical {
-			border-right: 1px solid $med-light-grey;
-			border-bottom: 0;
-			float: left;
-			width: 25%;
-			overflow: visible;
-
-			ul {
-				margin: 0;
-			}
-
-			li {
-				float: none;
-				margin-right: 0;
-
-				&.selected a {
-					background: $grey;
-					color: $black;
-				}
-
-				&:focus,
-				&:hover {
-					background: $grey;
-				}
-
-				span {
-					background: $med-light-grey;
-					border-radius: 10%;
-					float: right;
-					margin-right: 2px;
-				}
-
-				&:hover span {
-					border-color: $light-grey;
-				}
-			} // li
-		}
-
 		.item-body {
 			-webkit-box-flex: 1;
 			-ms-flex: 1;
@@ -342,7 +304,7 @@
 			padding-left: 20px;
 		}
 
-		#subnav {
+		.subnav {
 			background: $light-grey;
 			margin: 0;
 			width: auto;
@@ -350,7 +312,7 @@
 			li {
 
 				@include font-size(16);
-				margin: $marg-sml 0;
+				margin: 0 0 $marg-sml;
 
 				a {
 					border-right: 1px solid $bp-border-dark;
@@ -374,11 +336,48 @@
 			li:last-child {
 
 				a {
-					border: none;
+					border-right: none;
 				}
 			}
 
-		} // close #subnav
+		} // close .subnav
+	}
+
+	.bb-single-main-nav--vertical {
+		border-right: 1px solid $med-light-grey;
+		border-bottom: 0;
+		float: left;
+		width: 25%;
+		overflow: visible;
+
+		ul {
+			margin: 0;
+		}
+
+		li {
+			float: none;
+			margin-right: 0;
+
+			&.selected a {
+				background: $grey;
+				color: $black;
+			}
+
+			&:focus,
+			&:hover {
+				background: $grey;
+			}
+
+			span {
+				border-radius: 10%;
+				float: right;
+				margin-right: 2px;
+			}
+
+			&:hover span {
+				border-color: $light-grey;
+			}
+		} // li
 	}
 
 	// Set the directory screens main navs as vertical aligned

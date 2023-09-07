@@ -57,6 +57,8 @@ class BB_Forums extends Integration_Abstract {
 			'bp_suspend_forum_topic_unsuspended', // Any Forum Topic Unsuspended.
 			'bp_suspend_forum_reply_suspended',   // Any Forum Reply Suspended.
 			'bp_suspend_forum_reply_unsuspended', // Any Forum Reply Unsuspended.
+			'bp_moderation_after_save',           // Update cache for forums when member blocked.
+			'bb_moderation_after_delete'          // Update cache for forums when member unblocked.
 		);
 
 		$this->purge_event( 'bbp-forums', $purge_events );
@@ -99,6 +101,8 @@ class BB_Forums extends Integration_Abstract {
 			'bp_suspend_forum_topic_unsuspended'                 => 1, // Any Forum Topic Unsuspended.
 			'bp_suspend_forum_reply_suspended'                   => 1, // Any Forum Reply Suspended.
 			'bp_suspend_forum_reply_unsuspended'                 => 1, // Any Forum Reply Unsuspended.
+			'bp_moderation_after_save'                           => 1, // Update cache for forums when member blocked.
+			'bb_moderation_after_delete'                         => 1, // Update cache for forums when member unblocked.
 
 			// Add Author Embed Support.
 			'profile_update'                                     => 1, // User updated on site.
@@ -149,6 +153,7 @@ class BB_Forums extends Integration_Abstract {
 	 */
 	public function event_save_post_forum( $forum_id ) {
 		$this->purge_item_cache_by_item_id( $forum_id );
+		$this->purge_subscription_cache_by_items( $forum_id );
 	}
 
 	/**
@@ -158,6 +163,7 @@ class BB_Forums extends Integration_Abstract {
 	 */
 	public function event_edit_post_forum( $forum_id ) {
 		$this->purge_item_cache_by_item_id( $forum_id );
+		$this->purge_subscription_cache_by_items( $forum_id );
 	}
 
 	/**
@@ -167,6 +173,7 @@ class BB_Forums extends Integration_Abstract {
 	 */
 	public function event_trashed_post( $forum_id ) {
 		$this->purge_item_cache_by_item_id( $forum_id );
+		$this->purge_subscription_cache_by_items( $forum_id );
 	}
 
 	/**
@@ -176,6 +183,7 @@ class BB_Forums extends Integration_Abstract {
 	 */
 	public function event_untrashed_post( $forum_id ) {
 		$this->purge_item_cache_by_item_id( $forum_id );
+		$this->purge_subscription_cache_by_items( $forum_id );
 	}
 
 	/**
@@ -185,6 +193,7 @@ class BB_Forums extends Integration_Abstract {
 	 */
 	public function event_deleted_post( $forum_id ) {
 		$this->purge_item_cache_by_item_id( $forum_id );
+		$this->purge_subscription_cache_by_items( $forum_id );
 	}
 
 	/**
@@ -195,6 +204,7 @@ class BB_Forums extends Integration_Abstract {
 	 */
 	public function event_bbp_add_user_subscription( $user_id, $forum_id ) {
 		$this->purge_item_cache_by_item_id( $forum_id );
+		$this->purge_subscription_cache_by_items( $forum_id );
 	}
 
 	/**
@@ -205,6 +215,7 @@ class BB_Forums extends Integration_Abstract {
 	 */
 	public function event_bbp_remove_user_subscription( $user_id, $forum_id ) {
 		$this->purge_item_cache_by_item_id( $forum_id );
+		$this->purge_subscription_cache_by_items( $forum_id );
 	}
 
 	/**
@@ -258,6 +269,7 @@ class BB_Forums extends Integration_Abstract {
 	 */
 	public function event_bbp_merged_topic( $destination_topic_id, $source_topic_id, $source_topic_forum_id ) {
 		$this->purge_item_cache_by_item_id( $source_topic_forum_id );
+		$this->purge_subscription_cache_by_items( $source_topic_forum_id );
 	}
 
 	/**
@@ -270,6 +282,7 @@ class BB_Forums extends Integration_Abstract {
 	public function event_bbp_post_move_reply( $move_reply_id, $source_topic_id, $destination_topic_id ) {
 		$destination_forum_id = bbp_get_topic_forum_id( $destination_topic_id );
 		$this->purge_item_cache_by_item_id( $destination_forum_id );
+		$this->purge_subscription_cache_by_items( $destination_forum_id );
 	}
 
 	/**
@@ -282,6 +295,7 @@ class BB_Forums extends Integration_Abstract {
 	public function event_bbp_post_split_topic( $from_reply_id, $source_topic_id, $destination_topic_id ) {
 		$destination_forum_id = bbp_get_topic_forum_id( $destination_topic_id );
 		$this->purge_item_cache_by_item_id( $destination_forum_id );
+		$this->purge_subscription_cache_by_items( $destination_forum_id );
 	}
 
 	/****************************** Group Embed Support *****************************/
@@ -396,6 +410,8 @@ class BB_Forums extends Integration_Abstract {
 			foreach ( $forum_ids as $forum_id ) {
 				$this->purge_item_cache_by_item_id( $forum_id );
 			}
+
+			$this->purge_subscription_cache_by_items( $forum_ids );
 		}
 	}
 
@@ -410,6 +426,8 @@ class BB_Forums extends Integration_Abstract {
 			foreach ( $forum_ids as $forum_id ) {
 				$this->purge_item_cache_by_item_id( $forum_id );
 			}
+
+			$this->purge_subscription_cache_by_items( $forum_ids );
 		}
 	}
 
@@ -420,6 +438,8 @@ class BB_Forums extends Integration_Abstract {
 	 */
 	public function event_bp_suspend_forum_suspended( $forum_id ) {
 		$this->purge_item_cache_by_item_id( $forum_id );
+
+		$this->purge_subscription_cache_by_items( $forum_id );
 	}
 
 	/**
@@ -429,6 +449,8 @@ class BB_Forums extends Integration_Abstract {
 	 */
 	public function event_bp_suspend_forum_unsuspended( $forum_id ) {
 		$this->purge_item_cache_by_item_id( $forum_id );
+
+		$this->purge_subscription_cache_by_items( $forum_id );
 	}
 
 	/**
@@ -471,6 +493,45 @@ class BB_Forums extends Integration_Abstract {
 		$this->purge_item_cache_by_item_id( $forum_id );
 	}
 
+	/**
+	 * Update cache for forums when member blocked.
+	 *
+	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 */
+	public function event_bp_moderation_after_save( $bp_moderation ) {
+		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
+			return;
+		}
+		$forum_ids = $this->get_forum_ids_by_userid( $bp_moderation->item_id );
+		if ( ! empty( $forum_ids ) ) {
+			foreach ( $forum_ids as $forum_id ) {
+				$this->purge_item_cache_by_item_id( $forum_id );
+			}
+
+			$this->purge_subscription_cache_by_items( $forum_ids );
+		}
+	}
+
+
+	/**
+	 * Update cache for topics when member unblocked.
+	 *
+	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 */
+	public function event_bb_moderation_after_delete( $bp_moderation ) {
+		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
+			return;
+		}
+		$forum_ids = $this->get_forum_ids_by_userid( $bp_moderation->item_id );
+		if ( ! empty( $forum_ids ) ) {
+			foreach ( $forum_ids as $forum_id ) {
+				$this->purge_item_cache_by_item_id( $forum_id );
+			}
+
+			$this->purge_subscription_cache_by_items( $forum_ids );
+		}
+	}
+
 	/****************************** Author Embed Support *****************************/
 	/**
 	 * User updated on site
@@ -483,6 +544,8 @@ class BB_Forums extends Integration_Abstract {
 			foreach ( $forum_ids as $forum_id ) {
 				$this->purge_item_cache_by_item_id( $forum_id );
 			}
+
+			$this->purge_subscription_cache_by_items( $forum_ids );
 		}
 	}
 
@@ -497,6 +560,8 @@ class BB_Forums extends Integration_Abstract {
 			foreach ( $forum_ids as $forum_id ) {
 				$this->purge_item_cache_by_item_id( $forum_id );
 			}
+
+			$this->purge_subscription_cache_by_items( $forum_ids );
 		}
 	}
 
@@ -511,6 +576,8 @@ class BB_Forums extends Integration_Abstract {
 			foreach ( $forum_ids as $forum_id ) {
 				$this->purge_item_cache_by_item_id( $forum_id );
 			}
+
+			$this->purge_subscription_cache_by_items( $forum_ids );
 		}
 	}
 
@@ -528,6 +595,8 @@ class BB_Forums extends Integration_Abstract {
 					foreach ( $forum_ids as $forum_id ) {
 						$this->purge_item_cache_by_item_id( $forum_id );
 					}
+
+					$this->purge_subscription_cache_by_items( $forum_ids );
 				}
 			}
 		}
@@ -629,5 +698,44 @@ class BB_Forums extends Integration_Abstract {
 	public function event_update_option_bp_default_custom_group_cover( $old_value, $value, $option ) {
 		Cache::instance()->purge_by_component( 'bbp-forums' );
 		Cache::instance()->purge_by_group( 'bbapp-deeplinking' );
+	}
+
+	/**
+	 * Purge items subscription cache.
+	 *
+	 * @param int|array $forum_ids Forum ids.
+	 */
+	private function purge_subscription_cache_by_items( $forum_ids ) {
+		if ( empty( $forum_ids ) ) {
+			return;
+		}
+
+		// Create an array if is not array.
+		$forum_ids = array_filter( wp_parse_id_list( $forum_ids ) );
+
+		if ( empty( $forum_ids ) ) {
+			return;
+		}
+
+		$args = array(
+			'user_id'       => false,
+			'type'          => 'topic',
+			'include_items' => $forum_ids,
+			'fields'        => 'id',
+			'status'        => null,
+		);
+
+		$all_subscription = bb_get_subscriptions(
+			$args,
+			true
+		);
+
+		if ( ! empty( $all_subscription['subscriptions'] ) ) {
+			foreach ( $all_subscription['subscriptions'] as $subscription_id ) {
+				Cache::instance()->purge_by_group( 'bb-subscriptions_' . $subscription_id );
+			}
+
+			Cache::instance()->purge_by_group( 'bb-subscriptions' );
+		}
 	}
 }

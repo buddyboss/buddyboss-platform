@@ -156,9 +156,24 @@ id="div-listing-<?php bp_document_id(); ?>">
 			<span class="media-folder_date"><?php bp_document_date(); ?></span>
 			<?php
 			if ( ! bp_is_user() ) {
+				$user_domain = bp_core_get_user_domain( bp_get_document_user_id() );
+				if ( ! empty( $user_domain ) && false !== strpos( 'user-edit.php', $user_domain ) ) {
+					$user_domain .= bp_get_document_slug();
+				}
 				?>
-				<span class="media-folder_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?><a
-							href="<?php echo esc_url( trailingslashit( bp_core_get_user_domain( bp_get_document_user_id() ) . bp_get_document_slug() ) ); ?>"><?php bp_document_author(); ?></a></span>
+				<span class="media-folder_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?>
+					<?php
+					if ( ! empty( $user_domain ) ) {
+						?>
+						<a href="<?php echo esc_url( trailingslashit( $user_domain ) ); ?>">
+							<?php bp_document_author(); ?>
+						</a>
+						<?php
+					} else {
+						bp_document_author();
+					}
+					?>
+				</span>
 				<?php
 			}
 			?>
@@ -180,7 +195,7 @@ id="div-listing-<?php bp_document_id(); ?>">
 					$group_status = bp_get_group_status( $group );
 					?>
 					<span class="media-folder_group"><?php echo wp_kses_post( $group_link ); ?></span>
-					<span class="media-folder_status"><?php echo ucfirst( $group_status ); ?></span>
+					<span class="media-folder_status"><?php echo esc_html__( ucfirst( $group_status ), 'buddyboss' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText ?></span>
 					<?php
 				} else {
 					?>
@@ -242,7 +257,7 @@ id="div-listing-<?php bp_document_id(); ?>">
 		<?php
 		if ( $show ) {
 			?>
-			<a href="#" class="media-folder_action__anchor"> <i class="bb-icon-menu-dots-v"></i> </a>
+			<a href="#" class="media-folder_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-v"></i> </a>
 			<div class="media-folder_action__list">
 				<ul>
 					<?php
@@ -300,7 +315,7 @@ id="div-listing-<?php bp_document_id(); ?>">
 							if ( $is_comment_doc ) {
 								?>
 								<li class="move_file disabled-move" data-balloon-pos="down"
-									data-balloon="<?php esc_html_e( 'Documents added in comment cannot be moved', 'buddyboss' ); ?>">
+									data-balloon="<?php esc_html_e( 'Document inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
 									<a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
 								</li>
 								<?php

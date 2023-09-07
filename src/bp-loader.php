@@ -5,7 +5,7 @@
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
- * Version:     1.9.3
+ * Version:     2.4.20
  * Text Domain: buddyboss
  * Domain Path: /languages/
  * License:     GPLv2 or later (license.txt)
@@ -24,7 +24,7 @@ if ( ! defined( 'BP_SOURCE_SUBDIRECTORY' ) && file_exists( dirname( __FILE__ ) .
 }
 
 if ( ! defined( 'BP_PLATFORM_VERSION' ) ) {
-	define( 'BP_PLATFORM_VERSION', '1.9.3' );
+	define( 'BP_PLATFORM_VERSION', '2.4.20' );
 }
 
 if ( ! defined( 'BP_PLATFORM_API' ) ) {
@@ -303,20 +303,6 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	define( 'BP_REQUIRED_PHP_VERSION', '5.3.0' );
 
 	/**
-	 * The main function responsible for returning the one true BuddyBoss Instance to functions everywhere.
-	 *
-	 * Use this function like you would a global variable, except without needing
-	 * to declare the global.
-	 *
-	 * Example: <?php $bp = buddypress(); ?>
-	 *
-	 * @return BuddyPress|null The one true BuddyPress Instance.
-	 */
-	function buddypress() {
-		return BuddyPress::instance();
-	}
-
-	/**
 	 * Adds an admin notice to installations that don't meet minimum PHP requirement.
 	 *
 	 * @since BuddyPress 2.8.0
@@ -346,6 +332,20 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		return;
 	} else {
 		require dirname( __FILE__ ) . '/class-buddypress.php';
+
+		/**
+		 * The main function responsible for returning the one true BuddyBoss Instance to functions everywhere.
+		 *
+		 * Use this function like you would a global variable, except without needing
+		 * to declare the global.
+		 *
+		 * Example: <?php $bp = buddypress(); ?>
+		 *
+		 * @return BuddyPress|null The one true BuddyPress Instance.
+		 */
+		function buddypress() {
+			return BuddyPress::instance();
+		}
 
 		// load the member switch class so all the hook prior to bp_init can be hook in.
 		require dirname( __FILE__ ) . '/bp-members/classes/class-bp-core-members-switching.php';

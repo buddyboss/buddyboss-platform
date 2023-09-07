@@ -1046,7 +1046,7 @@ function bp_get_activity_avatar( $args = '' ) {
 		'user_id' => false,
 	);
 
-	$r = wp_parse_args( $args, $defaults );
+	$r = bp_parse_args( $args, $defaults );
 	extract( $r, EXTR_SKIP );
 
 	if ( ! isset( $height ) && ! isset( $width ) ) {
@@ -1154,7 +1154,7 @@ function bp_activity_secondary_avatar( $args = '' ) {
 function bp_get_activity_secondary_avatar( $args = '' ) {
 	global $activities_template;
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'alt'        => '',
@@ -1331,7 +1331,7 @@ function bp_activity_action( $args = array() ) {
 function bp_get_activity_action( $args = array() ) {
 	global $activities_template;
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'no_timestamp' => false,
@@ -1900,7 +1900,7 @@ function bp_activity_comments( $args = '' ) {
 function bp_activity_get_comments( $args = '' ) {
 	global $activities_template;
 
-	if ( ! in_array( $activities_template->activity->type, array( 'bbp_reply_create', 'bbp_topic_create' ), true ) && ! bp_activity_can_comment() ) {
+	if ( in_array( $activities_template->activity->component, array( 'blogs' ), true ) && ! bp_activity_can_comment() ) {
 		return false;
 	}
 
@@ -2935,7 +2935,7 @@ function bp_activity_filter_links( $args = false ) {
  */
 function bp_get_activity_filter_links( $args = false ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'style' => 'list',
@@ -4011,18 +4011,20 @@ function bp_follower_ids( $args = '' ) {
  */
 function bp_get_follower_ids( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
-			'user_id' => bp_displayed_user_id(),
+			'user_id'  => bp_displayed_user_id(),
+			'page'     => false,
+			'per_page' => false
 		)
 	);
 
-	$ids = implode( ',', (array) bp_get_followers( array( 'user_id' => $r['user_id'] ) ) );
+	$ids = implode( ',', (array) bp_get_followers( $r ) );
 
 	$ids = empty( $ids ) ? 0 : $ids;
 
-	return apply_filters( 'bp_get_follower_ids', $ids, $r['user_id'] );
+	return apply_filters( 'bp_get_follower_ids', $ids, $r['user_id'], $r );
 }
 
 /**
@@ -4051,18 +4053,20 @@ function bp_following_ids( $args = '' ) {
  */
 function bp_get_following_ids( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'user_id' => bp_displayed_user_id(),
+			'page'     => false,
+			'per_page' => false,
 		)
 	);
 
-	$ids = implode( ',', (array) bp_get_following( array( 'user_id' => $r['user_id'] ) ) );
+	$ids = implode( ',', (array) bp_get_following( $r ) );
 
 	$ids = empty( $ids ) ? 0 : $ids;
 
-	return apply_filters( 'bp_get_following_ids', $ids, $r['user_id'] );
+	return apply_filters( 'bp_get_following_ids', $ids, $r['user_id'], $r );
 }
 
 /**
@@ -4107,10 +4111,10 @@ function bp_get_add_follow_button( $leader_id = false, $follower_id = false, $bu
 		)
 	);
 
-	$button_args = wp_parse_args( $button_args, get_class_vars( 'BP_Button' ) );
+	$button_args = bp_parse_args( $button_args, get_class_vars( 'BP_Button' ) );
 
 	if ( $is_following ) {
-		$button = wp_parse_args(
+		$button = bp_parse_args(
 			array(
 				'id'                => 'member_follow',
 				'component'         => 'members',
@@ -4134,7 +4138,7 @@ function bp_get_add_follow_button( $leader_id = false, $follower_id = false, $bu
 			$button_args
 		);
 	} else {
-		$button = wp_parse_args(
+		$button = bp_parse_args(
 			array(
 				'id'                => 'member_follow',
 				'component'         => 'members',

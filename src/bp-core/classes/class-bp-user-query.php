@@ -16,6 +16,8 @@ defined( 'ABSPATH' ) || exit;
  * Member directories, the Connections component, etc.
  *
  * @since BuddyPress 1.7.0
+ * @since BuddyPress 10.0.0 Added $date_query parameter.
+ * @since BuddyBoss 2.3.90 Added $date_query parameter.
  *
  * @param array            $query               {
  *                                              Query arguments. All items are optional.
@@ -49,6 +51,9 @@ defined( 'ABSPATH' ) || exit;
  *                                                  associated with $meta_key matches $meta_value. Default: false.
  * @type array             $xprofile_query      Filter results by xprofile data. Requires the xprofile component.
  *                                                  See {@see BP_XProfile_Query} for details.
+ * @type array             $date_query          Filter results by member last activity date. See first parameter of
+ *                                                  {@link WP_Date_Query::__construct()} for syntax. Only applicable if
+ *                                                  $type is either 'active', 'random', 'newest', or 'online'.
  * @type bool              $populate_extras     True if you want to fetch extra metadata
  *                                                  about returned users, such as total group and friend counts.
  * @type string            $count_total         Determines how BP_User_Query will do a count of total users matching
@@ -157,7 +162,7 @@ class BP_User_Query {
 		$this->setup_hooks();
 
 		if ( ! empty( $this->query_vars_raw ) ) {
-			$this->query_vars = wp_parse_args(
+			$this->query_vars = bp_parse_args(
 				$this->query_vars_raw,
 				array(
 					'type'                => 'newest',
@@ -177,6 +182,7 @@ class BP_User_Query {
 					'xprofile_query'      => false,
 					'populate_extras'     => true,
 					'count_total'         => 'count_query',
+					'date_query'          => false,
 				)
 			);
 
@@ -279,6 +285,8 @@ class BP_User_Query {
 				$sql['select']   = "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u";
 				$sql['where'][]  = $wpdb->prepare( "u.component = %s AND u.type = 'last_activity'", buddypress()->members->id );
 
+				$online_default_time = apply_filters( 'bb_default_online_presence_time', bb_presence_interval() + bb_presence_time_span() );
+
 				/**
 				 * Filters the threshold for activity timestamp minutes since to indicate online status.
 				 *
@@ -286,9 +294,15 @@ class BP_User_Query {
 				 *
 				 * @param int $value Amount of minutes for threshold. Default 15.
 				 */
-				$sql['where'][] = $wpdb->prepare( 'u.date_recorded >= DATE_SUB( UTC_TIMESTAMP(), INTERVAL %d MINUTE )', apply_filters( 'bp_user_query_online_interval', 15 ) );
+				$sql['where'][] = $wpdb->prepare( 'u.date_recorded >= DATE_SUB( UTC_TIMESTAMP(), INTERVAL %d MINUTE )', $online_default_time / 60 );
 				$sql['orderby'] = 'ORDER BY u.date_recorded';
 				$sql['order']   = 'DESC';
+
+				// Date query.
+				$date_query = BP_Date_Query::get_where_sql( $date_query, 'u.date_recorded' );
+				if ( ! empty( $date_query ) ) {
+					$sql['where']['date_query'] = $date_query;
+				}
 
 				break;
 
@@ -312,6 +326,12 @@ class BP_User_Query {
 						array( 'COALESCE( a.date_recorded, NULL )', 'DESC' ),
 						array( 'u.display_name', 'ASC' ),
 					);
+				}
+
+				// Date query.
+				$date_query = BP_Date_Query::get_where_sql( $date_query, 'a.date_recorded' );
+				if ( ! empty( $date_query ) ) {
+					$sql['where']['date_query'] = $date_query;
 				}
 
 				break;
@@ -386,7 +406,7 @@ class BP_User_Query {
 		/**
 		 * Filters the Join SQL statement.
 		 *
-         * @since BuddyBoss 1.5.6
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param string $sql      From SQL statement.
 		 * @param string $uid_name User ID field name.
@@ -494,7 +514,7 @@ class BP_User_Query {
 		/**
 		 * Filters the Where SQL statement.
 		 *
-         * @since BuddyBoss 1.5.6
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param string $sql      From SQL statement.
 		 * @param string $uid_name User ID field name.
@@ -556,7 +576,7 @@ class BP_User_Query {
 		if ( is_array( $this->uid_clauses['orderby'] ) ) {
 			$orderby_multiple = array();
 			foreach ( $this->uid_clauses['orderby'] as $part ) {
-				$orderby_multiple[] = $part[0] . ' ' . $part[1];// column_name DESC/ASC
+				$orderby_multiple[] = $part[0] . ' ' . $part[1];// column_name DESC/ASC.
 			}
 
 			$this->uid_clauses['orderby'] = 'ORDER BY ' . implode( ', ', $orderby_multiple );
@@ -607,7 +627,7 @@ class BP_User_Query {
 			'user_registered',
 			'user_activation_key',
 			'user_status',
-			'display_name'
+			'display_name',
 		);
 
 		if ( is_multisite() ) {
@@ -661,7 +681,7 @@ class BP_User_Query {
 		foreach ( $this->user_ids as $key => $uid ) {
 			if ( isset( $r[ $uid ] ) ) {
 				$r[ $uid ]->ID          = (int) $uid;
-				$r[ $uid ]->user_status = (int) $r[ $uid ]->user_status;
+				$r[ $uid ]->user_status = isset( $r[ $uid ]->user_status ) ? (int) $r[ $uid ]->user_status : 0;
 
 				$this->results[ $uid ] = $r[ $uid ];
 

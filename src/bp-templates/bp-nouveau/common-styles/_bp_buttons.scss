@@ -387,11 +387,11 @@
 		li .group-remove-invite-button {
 
 			span.icons:before {
-				content: "\e8f7";
-				font-family: bb-icons;
+				content: "\e828";
+				font-family: "bb-icons";/* stylelint-disable-line */
 				speak: none;
 				font-style: normal;
-				font-weight: 400;
+				font-weight: 100;
 				font-variant: normal;
 				text-transform: none;
 				line-height: 1;
@@ -401,5 +401,16 @@
 			}
 		}
 	} // close ul.item-list
+
+	.gd-list-view-select {
+
+		.dropdown-menu {
+
+			button.dropdown-item {
+				border-radius: unset;
+				width: 100%;
+			}
+		}
+	}
 
 } // close .buddypress-wrap

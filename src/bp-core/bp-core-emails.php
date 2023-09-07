@@ -72,7 +72,7 @@ function bb_email_queue() {
  * @return bool
  */
 function bb_is_email_queue() {
-	return function_exists( 'bb_email_queue' ) && class_exists( 'BP_Email_Background_Updater' ) && apply_filters( 'bb_is_email_queue', ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) );
+	return function_exists( 'bb_email_queue' ) && class_exists( 'BB_Background_Updater' ) && apply_filters( 'bb_is_email_queue', ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) );
 }
 
 /**
@@ -97,11 +97,22 @@ function bb_disabled_email_queue() {
  */
 function bb_email_queue_has_min_count( $recipients ) {
 	$min_recipients = false;
-	$min_count      = (int) apply_filters( 'bb_email_queue_min_count', 20 );
+	$min_count      = bb_get_email_queue_min_count();
 
 	if ( $min_count < count( (array) $recipients ) ) {
 		$min_recipients = true;
 	}
 
 	return $min_recipients;
+}
+
+/**
+ * Function to return minimum queue count to chunk large record.
+ *
+ * @since BuddyBoss 2.3.3
+ *
+ * @return int
+ */
+function bb_get_email_queue_min_count() {
+	return (int) apply_filters( 'bb_email_queue_min_count', 20 );
 }

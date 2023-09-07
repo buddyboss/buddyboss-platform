@@ -495,7 +495,7 @@ function bp_blogs_record_activity( $args = '' ) {
 		'hide_sitewide'     => false,
 	);
 
-	$r = wp_parse_args( $args, $defaults );
+	$r = bp_parse_args( $args, $defaults );
 
 	if ( ! empty( $r['action'] ) ) {
 
@@ -861,13 +861,23 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 		$comment_parent = bp_activity_get_meta( $params['parent_id'], "bp_blogs_{$post_type}_comment_id" );
 	}
 
+	/**
+	 * Filters the content of a comment.
+	 *
+	 * @since BuddyBoss 2.0.3
+	 *
+	 * @param string $content         Content for the posted comment.
+	 * @param int    $comment_id      The activity ID for the posted activity comment.
+	 */
+	$params['content'] = apply_filters( 'bp_activity_comment_content', $params['content'], $comment_id );
+
 	// Comment args.
 	$args = array(
 		'comment_post_ID'      => $parent_activity->secondary_item_id,
 		'comment_author'       => bp_core_get_user_displayname( $params['user_id'] ),
 		'comment_author_email' => $user->user_email,
 		'comment_author_url'   => bp_core_get_user_domain( $params['user_id'], $user->user_nicename, $user->user_login ),
-		'comment_content'      => $params['content'],
+		'comment_content'      => bp_activity_at_name_filter( $params['content'] ),
 		'comment_type'         => '', // Could be interesting to add 'buddypress' here...
 		'comment_parent'       => (int) $comment_parent,
 		'user_id'              => $params['user_id'],
@@ -876,6 +886,7 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 
 	// Prevent separate activity entry being made.
 	remove_action( 'comment_post', 'bp_activity_post_type_comment', 10 );
+	remove_action( 'wp_insert_comment', 'bb_post_new_comment_reply_notification_helper', 20, 2 );
 
 	// Handle multisite.
 	switch_to_blog( $parent_activity->item_id );
@@ -921,6 +932,7 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 	restore_current_blog();
 
 	// Add the comment hook back.
+	add_action( 'wp_insert_comment', 'bb_post_new_comment_reply_notification_helper', 20, 2 );
 	add_action( 'comment_post', 'bp_activity_post_type_comment', 10, 2 );
 
 	/**

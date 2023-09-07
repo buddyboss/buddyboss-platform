@@ -378,12 +378,12 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	public function prepare_item_for_response( $field, $request ) {
 		$data = array(
 			'name'        => ( isset( $field['name'] ) && ! empty( $field['name'] ) ? $field['name'] : '' ),
-			'label'       => ( isset( $field['label'] ) && ! empty( $field['label'] ) ? $field['label'] : '' ),
+			'label'       => ( isset( $field['label'] ) && ! empty( $field['label'] ) ? wp_specialchars_decode( $field['label'], ENT_QUOTES ) : '' ),
 			'type'        => ( isset( $field['field'] ) && ! empty( $field['field'] ) ? $field['field'] : '' ),
 			'value'       => ( isset( $field['value'] ) && ! empty( $field['value'] ) ? $field['value'] : '' ),
 			'placeholder' => ( isset( $field['placeholder'] ) && ! empty( $field['placeholder'] ) ? $field['placeholder'] : '' ),
 			'options'     => ( isset( $field['options'] ) && ! empty( $field['options'] ) ? $field['options'] : array() ),
-			'headline'    => ( isset( $field['group_label'] ) && ! empty( $field['group_label'] ) ? $field['group_label'] : '' ),
+			'headline'    => ( isset( $field['group_label'] ) && ! empty( $field['group_label'] ) ? wp_specialchars_decode( $field['group_label'], ENT_QUOTES ) : '' ),
 			'subfields'   => ( isset( $field['subfields'] ) && ! empty( $field['subfields'] ) ? $field['subfields'] : array() ),
 		);
 
@@ -681,6 +681,33 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 				foreach ( $notification_preferences as $group => $group_data ) {
 
+					if ( ! empty( $group_data['fields'] ) ) {
+						$group_data['fields'] = array_filter(
+							array_map(
+								function ( $fields ) {
+									if (
+										(
+											isset( $fields['notification_read_only'], $fields['default'] ) &&
+											true === (bool) $fields['notification_read_only'] &&
+											'yes' === (string) $fields['default']
+										) ||
+										(
+											! isset( $fields['notification_read_only'] ) ||
+											false === (bool) $fields['notification_read_only']
+										)
+									) {
+										return $fields;
+									}
+								},
+								$group_data['fields']
+							)
+						);
+					}
+
+					if ( empty( $group_data['fields'] ) ) {
+						continue;
+					}
+
 					if ( ! empty( $group_data['label'] ) ) {
 						$fields[] = array(
 							'name'        => '',
@@ -913,8 +940,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 				$fields        = array_merge( $fields, $fields_groups );
 			}
 
-			if ( bp_is_active( 'forums' ) ) {
-        
+			if ( bp_is_active( 'forums' ) && function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active() ) {
 				$fields_forums[] = array(
 					'name'        => '',
 					'label'       => '',
@@ -1007,6 +1033,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		$field_groups = bp_xprofile_get_groups(
 			array(
 				'fetch_fields'           => true,
+				'user_id'                => bp_loggedin_user_id(),
 				'fetch_field_data'       => true,
 				'fetch_visibility_level' => true,
 			)
@@ -1137,8 +1164,8 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 		// Define local defaults.
 		$bp            = buddypress(); // The instance.
-		$email_error   = false;
-		$pass_error    = false;
+		$email_error   = '';
+		$pass_error    = '';
 		$pass_changed  = false;        // true if the user changes their password .
 		$email_changed = false;        // true if the user changes their email.
 		$feedback      = array();      // array of strings for feedback.
@@ -1196,10 +1223,14 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 						if ( isset( $email_checks['in_use'] ) ) {
 							$email_error = 'taken';
 						}
+
+						if ( isset( $email_checks['bb_restricted_email'] ) ) {
+							$email_error = 'bb_restricted_email';
+						}
 					}
 
 					// Store a hash to enable email validation.
-					if ( false === $email_error ) {
+					if ( empty( $email_error ) ) {
 						$hash = wp_generate_password( 32, false );
 
 						$pending_email = array(
@@ -1229,7 +1260,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 					// No change.
 				} else {
-					$email_error = false;
+					$email_error = '';
 				}
 
 				// Email address cannot be empty.
@@ -1271,7 +1302,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 				empty( $post_fields['pass1'] )
 				&& empty( $post_fields['pass2'] )
 			) {
-				$pass_error = false;
+				$pass_error = '';
 
 				// One of the password boxes was left empty.
 			} elseif (
@@ -1304,8 +1335,8 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			}
 
 			if (
-				( false === $email_error )
-				&& ( false === $pass_error )
+				empty( $email_error )
+				&& ( empty( $pass_error ) )
 				&& ( wp_update_user( $update_user ) )
 			) {
 				$bp->displayed_user->userdata = bp_core_get_core_userdata( bp_displayed_user_id() );
@@ -1337,6 +1368,9 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			case 'empty':
 				$feedback['email_empty'] = esc_html__( 'Email address cannot be empty.', 'buddyboss' );
 				break;
+			case 'bb_restricted_email':
+				$feedback['bb_restricted_email'] = esc_html__( 'This email address or domain has been blacklisted. If you think you are seeing this in error, please contact the site administrator.', 'buddyboss' );
+				break;
 			case false:
 				// No change.
 				break;
@@ -1363,10 +1397,14 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 		// Some kind of errors occurred.
 		if (
-			( ( false === $email_error ) || ( false === $pass_error ) )
-			&& ( ( true !== $pass_changed ) && ( true !== $email_changed ) )
+			empty( $email_error ) &&
+			empty( $pass_error ) &&
+			false === $pass_changed &&
+			false === $email_changed
 		) {
-			$feedback['nochange'] = esc_html__( 'No changes were made to your account.', 'buddyboss' );
+			if ( empty( $feedback ) ) {
+				$feedback['nochange'] = esc_html__( 'No changes were made to your account.', 'buddyboss' );
+			}
 		} else {
 
 			// If the user is changing their password, send them a confirmation email.

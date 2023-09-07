@@ -141,10 +141,15 @@ class BBP_Converter {
 	 * @uses register_setting() To register various settings
 	 */
 	public function register_admin_settings() {
-
+		global $wp_settings_sections;
 		// Add the main section.
-		add_settings_section( 'bbpress_converter_main', __( 'Import Forums', 'buddyboss' ), 'bbp_converter_setting_callback_main_section', 'bbpress_converter' );
-
+		add_settings_section( 'bbpress_converter_main', '', 'bbp_converter_setting_callback_main_section', 'bbpress_converter' );
+		if ( function_exists( 'bb_admin_icons' ) ) {
+			$meta_icon = bb_admin_icons( 'bbpress_converter_main' );
+			if ( ! empty( $meta_icon ) ) {
+				$wp_settings_sections['bbpress_converter']['bbpress_converter_main']['icon'] = $meta_icon;
+			}
+		}
 		// System Select.
 		add_settings_field( '_bbp_converter_platform', __( 'Select Platform', 'buddyboss' ), 'bbp_converter_setting_callback_platform', 'bbpress_converter', 'bbpress_converter_main' );
 		register_setting( 'bbpress_converter_main', '_bbp_converter_platform', 'sanitize_text_field' );
@@ -398,9 +403,7 @@ class BBP_Converter {
 				: '',
 
 			// Convert Users.
-			'_bbp_converter_convert_users' => ! empty( $_POST['_bbp_converter_convert_users'] )
-				? (bool) $_POST['_bbp_converter_convert_users']
-				: false,
+			'_bbp_converter_convert_users' => ! empty( $_POST['_bbp_converter_convert_users'] ) ? (bool) $_POST['_bbp_converter_convert_users'] : false,
 
 			// DB User.
 			'_bbp_converter_db_user'       => ! empty( $_POST['_bbp_converter_db_user'] )
@@ -919,15 +922,15 @@ class BBP_Converter {
 	 * @since 2.1.0 bbPress (r3813)
 	 */
 	public static function sync_table( $drop = false ) {
-		global $wpdb;
 
 		// Setup DB.
-		$table_name   = $wpdb->prefix . 'bbp_converter_translator';
-		$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$table_name}'" ) === $table_name;
+		$bbp_db       = bbp_db();
+		$table_name   = $bbp_db->prefix . 'bbp_converter_translator';
+		$table_exists = $bbp_db->get_var( "SHOW TABLES LIKE '{$table_name}'" ) === $table_name;
 
 		// Maybe drop the sync table.
 		if ( ( true === $drop ) && ( true === $table_exists ) ) {
-			$wpdb->query( "DROP TABLE {$table_name}" );
+			$bbp_db->query( "DROP TABLE {$table_name}" );
 		}
 
 		// Maybe include the upgrade functions, for dbDelta().
@@ -943,13 +946,13 @@ class BBP_Converter {
 		$max_index_length = 75;
 
 		// Maybe override the character set.
-		if ( ! empty( $wpdb->charset ) ) {
-			$charset_collate .= "DEFAULT CHARACTER SET {$wpdb->charset}";
+		if ( ! empty( $bbp_db->charset ) ) {
+			$charset_collate .= "DEFAULT CHARACTER SET {$bbp_db->charset}";
 		}
 
 		// Maybe override the collation.
-		if ( ! empty( $wpdb->collate ) ) {
-			$charset_collate .= " COLLATE {$wpdb->collate}";
+		if ( ! empty( $bbp_db->collate ) ) {
+			$charset_collate .= " COLLATE {$bbp_db->collate}";
 		}
 
 		/** Translator */
@@ -1022,7 +1025,7 @@ abstract class BBP_Converter_Base {
 	protected $map_userid = array();
 
 	/**
-	 * @var str This is the charset for your wp database.
+	 * @var string This is the charset for your wp database.
 	 */
 	public $charset = '';
 
@@ -1032,7 +1035,7 @@ abstract class BBP_Converter_Base {
 	public $sync_table = false;
 
 	/**
-	 * @var str Sync table name.
+	 * @var string Sync table name.
 	 */
 	public $sync_table_name = '';
 
@@ -1067,7 +1070,6 @@ abstract class BBP_Converter_Base {
 	 * @since 2.1.0
 	 */
 	private function init() {
-		global $wpdb;
 
 		/** BBCode Parse Properties */
 
@@ -1094,14 +1096,14 @@ abstract class BBP_Converter_Base {
 		$db_prefix = get_option( '_bbp_converter_db_prefix', '' );
 
 		// Maybe add port to server.
-		if ( ! empty( $db_port ) && ! empty( $db_host ) && ! strstr( $db_host, ':' ) ) {
+		if ( ! empty( $db_port ) && ! empty( $db_host ) && ! str_contains( $db_host, ':' ) ) {
 			$db_host = "{$db_host}:{$db_port}";
 		}
 
 		/** Get database connections */
 
 		// Setup WordPress Database.
-		$this->wpdb = $wpdb;
+		$this->wpdb = bbp_db();
 
 		// Setup old forum Database.
 		$this->opdb = new wpdb( $db_user, $db_pass, $db_name, $db_host );
@@ -1125,9 +1127,7 @@ abstract class BBP_Converter_Base {
 		 * Syncing
 		 */
 		$this->sync_table_name = $this->wpdb->prefix . 'bbp_converter_translator';
-		$this->sync_table      = $this->sync_table_name === $this->wpdb->get_var( "SHOW TABLES LIKE '{$this->sync_table_name}'" )
-			? true
-			: false;
+		$this->sync_table      = $this->sync_table_name === $this->wpdb->get_var( "SHOW TABLES LIKE '{$this->sync_table_name}'" );
 
 		/**
 		 * Character set
@@ -1302,15 +1302,9 @@ abstract class BBP_Converter_Base {
 				$tablename = '';
 				break;
 
-			case 'forum_subscriptions':
-				$tablename = $this->wpdb->postmeta;
-				break;
-
-			case 'topic_subscriptions':
-				$tablename = $this->wpdb->postmeta;
-				break;
-
 			case 'favorites':
+			case 'topic_subscriptions':
+			case 'forum_subscriptions':
 				$tablename = $this->wpdb->postmeta;
 				break;
 
@@ -1626,10 +1620,18 @@ abstract class BBP_Converter_Base {
 	public function convert_forum_parents( $start = 1 ) {
 		$has_update = false;
 		$query      = ! empty( $this->sync_table )
-			? $this->wpdb->prepare( "SELECT value_id, meta_value FROM {$this->sync_table_name} WHERE meta_key = %s AND meta_value > 0 LIMIT {$start}, {$this->max_rows}", '_bbp_old_forum_parent_id' )
-			: $this->wpdb->prepare( "SELECT post_id AS value_id, meta_value FROM {$this->wpdb->postmeta} WHERE meta_key = %s AND meta_value > 0 LIMIT {$start}, {$this->max_rows}", '_bbp_old_forum_parent_id' );
+			? $this->wpdb->prepare( "SELECT value_id, meta_value FROM {$this->sync_table_name} WHERE meta_key = %s AND meta_value > 0", '_bbp_old_forum_parent_id' )
+			: $this->wpdb->prepare( "SELECT post_id AS value_id, meta_value FROM {$this->wpdb->postmeta} WHERE meta_key = %s AND meta_value > 0", '_bbp_old_forum_parent_id' );
 
-		foreach ( $this->count_rows_by_results( $query ) as $row ) {
+		// Set max row in '_bbp_converter_rows_in_step' variable.
+		if ( 0 === $start ) {
+			$this->count_rows_by_results( $query );
+		}
+
+		// Create main query.
+		$query = $this->wpdb->prepare( $query . " LIMIT %d, %d", $start, $this->max_rows );
+
+		foreach ( $this->get_results( $query ) as $row ) {
 			$parent_id = $this->callback_forumid( $row->meta_value );
 			$this->query( $this->wpdb->prepare( "UPDATE {$this->wpdb->posts} SET post_parent = %d WHERE ID = %d LIMIT 1", $parent_id, $row->value_id ) );
 			$has_update = true;
@@ -1646,10 +1648,18 @@ abstract class BBP_Converter_Base {
 	public function convert_topic_stickies( $start = 1 ) {
 		$has_update = false;
 		$query      = ! empty( $this->sync_table )
-			? $this->wpdb->prepare( "SELECT value_id, meta_value FROM {$this->sync_table_name} WHERE meta_key = %s AND meta_value = %s LIMIT {$start}, {$this->max_rows}", '_bbp_old_sticky_status_id', 'sticky' )
-			: $this->wpdb->prepare( "SELECT post_id AS value_id, meta_value FROM {$this->wpdb->postmeta} WHERE meta_key = %s AND meta_value = %s LIMIT {$start}, {$this->max_rows}", '_bbp_old_sticky_status_id', 'sticky' );
+			? $this->wpdb->prepare( "SELECT value_id, meta_value FROM {$this->sync_table_name} WHERE meta_key = %s AND meta_value = %s", '_bbp_old_sticky_status_id', 'sticky' )
+			: $this->wpdb->prepare( "SELECT post_id AS value_id, meta_value FROM {$this->wpdb->postmeta} WHERE meta_key = %s AND meta_value = %s", '_bbp_old_sticky_status_id', 'sticky' );
 
-		foreach ( $this->count_rows_by_results( $query ) as $row ) {
+		// Set max row in '_bbp_converter_rows_in_step' variable.
+		if ( 0 === $start ) {
+			$this->count_rows_by_results( $query );
+		}
+
+		// Create main query.
+		$query = $this->wpdb->prepare( $query . " LIMIT %d, %d", $start, $this->max_rows );
+
+		foreach ( $this->get_results( $query ) as $row ) {
 			bbp_stick_topic( $row->value_id );
 			$has_update = true;
 		}
@@ -1665,12 +1675,19 @@ abstract class BBP_Converter_Base {
 	public function convert_topic_super_stickies( $start = 1 ) {
 		$has_update = false;
 		$query      = ! empty( $this->sync_table )
-			? $this->wpdb->prepare( "SELECT value_id, meta_value FROM {$this->sync_table_name} WHERE meta_key = %s AND meta_value = %s LIMIT {$start}, {$this->max_rows}", '_bbp_old_sticky_status_id', 'super-sticky' )
-			: $this->wpdb->prepare( "SELECT post_id AS value_id, meta_value FROM {$this->wpdb->postmeta} WHERE meta_key = %s AND meta_value = %s LIMIT {$start}, {$this->max_rows}", '_bbp_old_sticky_status_id', 'super-sticky' );
+			? $this->wpdb->prepare( "SELECT value_id, meta_value FROM {$this->sync_table_name} WHERE meta_key = %s AND meta_value = %s", '_bbp_old_sticky_status_id', 'super-sticky' )
+			: $this->wpdb->prepare( "SELECT post_id AS value_id, meta_value FROM {$this->wpdb->postmeta} WHERE meta_key = %s AND meta_value = %s", '_bbp_old_sticky_status_id', 'super-sticky' );
 
-		foreach ( $this->count_rows_by_results( $query ) as $row ) {
-			$super = true;
-			bbp_stick_topic( $row->value_id, $super );
+		// Set max row in '_bbp_converter_rows_in_step' variable.
+		if ( 0 === $start ) {
+			$this->count_rows_by_results( $query );
+		}
+
+		// Create main query.
+		$query = $this->wpdb->prepare( $query . " LIMIT %d, %d", $start, $this->max_rows );
+
+		foreach ( $this->get_results( $query ) as $row ) {
+			bbp_stick_topic( $row->value_id, true );
 			$has_update = true;
 		}
 
@@ -1685,10 +1702,18 @@ abstract class BBP_Converter_Base {
 	public function convert_topic_closed_topics( $start = 1 ) {
 		$has_update = false;
 		$query      = ! empty( $this->sync_table )
-			? $this->wpdb->prepare( "SELECT value_id, meta_value FROM {$this->sync_table_name} WHERE meta_key = %s AND meta_value = %s LIMIT {$start}, {$this->max_rows}", '_bbp_old_closed_status_id', 'closed' )
-			: $this->wpdb->prepare( "SELECT post_id AS value_id, meta_value FROM {$this->wpdb->postmeta} WHERE meta_key = %s AND meta_value = %s LIMIT {$start}, {$this->max_rows}", '_bbp_old_closed_status_id', 'closed' );
+			? $this->wpdb->prepare( "SELECT value_id, meta_value FROM {$this->sync_table_name} WHERE meta_key = %s AND meta_value = %s", '_bbp_old_closed_status_id', 'closed' )
+			: $this->wpdb->prepare( "SELECT post_id AS value_id, meta_value FROM {$this->wpdb->postmeta} WHERE meta_key = %s AND meta_value = %s", '_bbp_old_closed_status_id', 'closed' );
 
-		foreach ( $this->count_rows_by_results( $query ) as $row ) {
+		// Set max row in '_bbp_converter_rows_in_step' variable.
+		if ( 0 === $start ) {
+			$this->count_rows_by_results( $query );
+		}
+
+		// Create main query.
+		$query = $this->wpdb->prepare( $query . " LIMIT %d, %d", $start, $this->max_rows );
+
+		foreach ( $this->get_results( $query ) as $row ) {
 			bbp_close_topic( $row->value_id );
 			$has_update = true;
 		}
@@ -1704,10 +1729,18 @@ abstract class BBP_Converter_Base {
 	public function convert_reply_to_parents( $start = 1 ) {
 		$has_update = false;
 		$query      = ! empty( $this->sync_table )
-			? $this->wpdb->prepare( "SELECT value_id, meta_value FROM {$this->sync_table_name} WHERE meta_key = %s AND meta_value > 0 LIMIT {$start}, {$this->max_rows}", '_bbp_old_reply_to_id' )
-			: $this->wpdb->prepare( "SELECT post_id AS value_id, meta_value FROM {$this->wpdb->postmeta} WHERE meta_key = %s AND meta_value > 0 LIMIT {$start}, {$this->max_rows}", '_bbp_old_reply_to_id' );
+			? $this->wpdb->prepare( "SELECT value_id, meta_value FROM {$this->sync_table_name} WHERE meta_key = %s AND meta_value > 0", '_bbp_old_reply_to_id' )
+			: $this->wpdb->prepare( "SELECT post_id AS value_id, meta_value FROM {$this->wpdb->postmeta} WHERE meta_key = %s AND meta_value > 0", '_bbp_old_reply_to_id' );
 
-		foreach ( $this->count_rows_by_results( $query ) as $row ) {
+		// Set max row in '_bbp_converter_rows_in_step' variable.
+		if ( 0 === $start ) {
+			$this->count_rows_by_results( $query );
+		}
+
+		// Create main query.
+		$query = $this->wpdb->prepare( $query . " LIMIT %d, %d", $start, $this->max_rows );
+
+		foreach ( $this->get_results( $query ) as $row ) {
 			$reply_to = $this->callback_reply_to( $row->meta_value );
 			$this->query( $this->wpdb->prepare( "UPDATE {$this->wpdb->postmeta} SET meta_value = %s WHERE meta_key = %s AND post_id = %d LIMIT 1", $reply_to, '_bbp_reply_to', $row->value_id ) );
 			$has_update = true;
@@ -1722,7 +1755,6 @@ abstract class BBP_Converter_Base {
 	 * @since 2.6.0 bbPress (r5538)
 	 */
 	public function convert_anonymous_topic_authors( $start = 1 ) {
-
 		$has_update = false;
 
 		if ( ! empty( $this->sync_table ) ) {
@@ -1732,8 +1764,7 @@ abstract class BBP_Converter_Base {
 				INNER JOIN {$this->sync_table_name} AS sync_table2
 				ON ( sync_table1.value_id = sync_table2.value_id )
 				WHERE sync_table1.meta_value = %s
-				AND sync_table2.meta_key = %s
-				LIMIT {$start}, {$this->max_rows}",
+				AND sync_table2.meta_key = %s",
 				'true',
 				'_bbp_old_topic_author_name_id'
 			);
@@ -1744,14 +1775,21 @@ abstract class BBP_Converter_Base {
 				INNER JOIN {$this->wpdb->postmeta} AS wp_postmeta2
 				ON ( wp_postmeta1.post_id = wp_postmeta2.post_id )
 				WHERE wp_postmeta1.meta_value = %s
-				AND wp_postmeta2.meta_key = %s
-				LIMIT {$start}, {$this->max_rows}",
+				AND wp_postmeta2.meta_key = %s",
 				'true',
 				'_bbp_old_topic_author_name_id'
 			);
 		}
 
-		foreach ( $this->count_rows_by_results( $query ) as $row ) {
+		// Set max row in '_bbp_converter_rows_in_step' variable.
+		if ( 0 === $start ) {
+			$this->count_rows_by_results( $query );
+		}
+
+		// Create main query.
+		$query = $this->wpdb->prepare( $query . " LIMIT %d, %d", $start, $this->max_rows );
+
+		foreach ( $this->get_results( $query ) as $row ) {
 			$anonymous_topic_author_id = 0;
 			$this->query( $this->wpdb->prepare( "UPDATE {$this->wpdb->posts} SET post_author = %d WHERE ID = %d LIMIT 1", $anonymous_topic_author_id, $row->topic_id ) );
 
@@ -1769,7 +1807,6 @@ abstract class BBP_Converter_Base {
 	 * @since 2.6.0 bbPress (r5538)
 	 */
 	public function convert_anonymous_reply_authors( $start = 1 ) {
-
 		$has_update = false;
 
 		if ( ! empty( $this->sync_table ) ) {
@@ -1779,8 +1816,7 @@ abstract class BBP_Converter_Base {
 				INNER JOIN {$this->sync_table_name} AS sync_table2
 				ON ( sync_table1.value_id = sync_table2.value_id )
 				WHERE sync_table1.meta_value = %s
-				AND sync_table2.meta_key = %s
-				LIMIT {$start}, {$this->max_rows}",
+				AND sync_table2.meta_key = %s",
 				'true',
 				'_bbp_old_reply_author_name_id'
 			);
@@ -1791,14 +1827,21 @@ abstract class BBP_Converter_Base {
 				INNER JOIN {$this->wpdb->postmeta} AS wp_postmeta2
 				ON ( wp_postmeta1.post_id = wp_postmeta2.post_id )
 				WHERE wp_postmeta1.meta_value = %s
-				AND wp_postmeta2.meta_key = %s
-				LIMIT {$start}, {$this->max_rows}",
+				AND wp_postmeta2.meta_key = %s",
 				'true',
 				'_bbp_old_reply_author_name_id'
 			);
 		}
 
-		foreach ( $this->count_rows_by_results( $query ) as $row ) {
+		// Set max row in '_bbp_converter_rows_in_step' variable.
+		if ( 0 === $start ) {
+			$this->count_rows_by_results( $query );
+		}
+
+		// Create main query.
+		$query = $this->wpdb->prepare( $query . " LIMIT %d, %d", $start, $this->max_rows );
+
+		foreach ( $this->get_results( $query ) as $row ) {
 			$anonymous_reply_author_id = 0;
 			$this->query( $this->wpdb->prepare( "UPDATE {$this->wpdb->posts} SET post_author = %d WHERE ID = %d LIMIT 1", $anonymous_reply_author_id, $row->reply_id ) );
 
@@ -1989,14 +2032,11 @@ abstract class BBP_Converter_Base {
 	 * @since 2.6.0 bbPress (r6637)
 	 *
 	 * @param string $query The literal MySQL query.
-	 * @return bool
 	 */
 	private function count_rows_by_results( $query = '' ) {
 		$results = $this->get_results( $query );
 
 		update_option( '_bbp_converter_rows_in_step', count( $results ) );
-
-		return $results;
 	}
 
 	/**
@@ -2183,7 +2223,7 @@ abstract class BBP_Converter_Base {
 			$bbcode->{$prop} = $value;
 		}
 
-		return html_entity_decode( $bbcode->Parse( $field ) );
+		return html_entity_decode( $bbcode->Parse( $field ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 	}
 
 	protected function callback_null( $field ) {

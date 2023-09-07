@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string|array Formatted notifications.
  */
-function messages_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id, $screen = 'web' ) {
+function messages_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id = 0, $screen = 'web' ) {
 	$total_items = (int) $total_items;
 	$text        = '';
 	$link        = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() . '/inbox' );
@@ -225,6 +225,7 @@ function bp_messages_message_sent_add_notification( $message ) {
 	if ( ! empty( $message->recipients ) ) {
 
 		$message_from = bp_messages_get_meta( $message->id, 'message_from', true ); // group.
+		$group        = bp_messages_get_meta( $message->id, 'group_id', true ); // group_id.
 		$action       = 'new_message';
 
 		if ( ! bb_enabled_legacy_email_preference() ) {
@@ -234,33 +235,58 @@ function bp_messages_message_sent_add_notification( $message ) {
 			}
 		}
 
+		// Disabled the notification for user who archived this thread.
+		foreach ( (array) $message->recipients as $r_key => $recipient ) {
+			if ( isset( $recipient->is_hidden ) && $recipient->is_hidden ) {
+				unset( $message->recipients[ $r_key ] );
+			}
+		}
+
+		$min_count = (int) apply_filters( 'bb_new_message_notifications_count', 20 );
 		if (
 			function_exists( 'bb_notifications_background_enabled' ) &&
 			true === bb_notifications_background_enabled() &&
-			count( $message->recipients ) > 20
+			count( $message->recipients ) > $min_count
 		) {
-			global $bb_notifications_background_updater;
+			global $bb_background_updater;
 			$recipients = (array) $message->recipients;
 			$user_ids   = wp_list_pluck( $recipients, 'user_id' );
-			$bb_notifications_background_updater->data(
+			$bb_background_updater->data(
 				array(
-					array(
-						'callback' => 'bb_add_background_notifications',
-						'args'     => array(
-							$user_ids,
-							$message->id,
-							$message->sender_id,
-							buddypress()->messages->id,
-							$action,
-							bp_core_current_time(),
-							true,
-						),
+					'type'     => 'notification',
+					'group'    => 'group_messages_new_message_notification',
+					'data_id'  => $group,
+					'priority' => 5,
+					'callback' => 'bb_add_background_notifications',
+					'args'     => array(
+						$user_ids,
+						$message->id,
+						$message->sender_id,
+						buddypress()->messages->id,
+						$action,
+						bp_core_current_time(),
+						true,
+						$message->sender_id,
+						$group,
 					),
-				)
+				),
 			);
-			$bb_notifications_background_updater->save()->dispatch();
+			$bb_background_updater->save()->dispatch();
 		} else {
 			foreach ( (array) $message->recipients as $recipient ) {
+				// Check the sender is blocked by/blocked/suspended/deleted recipient or not.
+				if (
+					function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+					bb_moderation_allowed_specific_notification(
+						array(
+							'type'              => buddypress()->messages->id,
+							'group_id'          => $group,
+							'recipient_user_id' => $recipient->user_id,
+						)
+					)
+				) {
+					continue;
+				}
 				bp_notifications_add_notification(
 					array(
 						'user_id'           => $recipient->user_id,

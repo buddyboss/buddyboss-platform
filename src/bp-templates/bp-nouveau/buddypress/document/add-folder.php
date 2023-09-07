@@ -16,7 +16,7 @@ if ( is_user_logged_in() && ! empty( $active_extensions ) && ( ( bp_is_my_profil
 
 	<div class="bb-media-actions-wrap album-actions-wrap">
 		<div class="bb-media-actions">
-			<a href="#" id="bb-create-folder" class="bb-create-folder button small outline"><i class="bb-icon-folder-stacked"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?></a>
+			<a href="#" id="bb-create-folder" class="bb-create-folder button small outline"><i class="bb-icon-l bb-icon-folder-alt"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?></a>
 		</div>
 	</div>
 

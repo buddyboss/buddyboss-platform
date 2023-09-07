@@ -180,6 +180,26 @@
 
 		} // @media
 
+		.group-search.loading {
+			position: relative;
+
+			&:after {
+				content: "\ef30";
+				font-weight: 400;
+				font-family: "bb-icons"; /* stylelint-disable-line */
+				font-size: 20px;
+				line-height: 1;
+				position: absolute;
+				right: -30px;
+				top: 7px;
+				text-align: center;
+				display: inline-block;
+				vertical-align: middle;
+				-webkit-animation: spin 2s infinite linear;
+				animation: spin 2s infinite linear;
+			}
+		}
+
 	} // close .subnav-filters
 
 	.notifications-options-nav {
@@ -232,7 +252,7 @@
 		line-height: 36px;
 
 		i {
-			font-size: 20px;
+			font-size: 24px;
 		}
 
 	}

@@ -1080,6 +1080,8 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 				'validate_callback' => 'rest_validate_request_arg',
 			);
 
+			unset( $args['privacy']['default'] );
+
 			$args['title']['required'] = false;
 		}
 

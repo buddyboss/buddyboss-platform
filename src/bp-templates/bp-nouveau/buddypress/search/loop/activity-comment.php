@@ -20,15 +20,26 @@
 
 		<div class="item activity-content">
 			<div class="activity-header">
-				<a href="<?php bp_activity_user_link(); ?>"><?php echo bp_core_get_user_displayname( bp_get_activity_user_id() ) ?></a>
+				<a href="<?php bp_activity_user_link(); ?>"><?php echo wp_kses_post( bp_core_get_user_displayname( bp_get_activity_user_id() ) ); ?></a>
+				<?php esc_html_e( 'replied to a post', 'buddyboss' ); ?>
 			</div>
 			<?php if ( bp_nouveau_activity_has_content() ) : ?>
 				<div class="activity-inner">
-					<a href="<?php echo bp_activity_get_permalink( bp_get_activity_id() ) ?>"><?php bp_nouveau_activity_content(); ?></a>
+					<?php
+					echo bp_create_excerpt(
+						bp_get_activity_content_body(),
+						100,
+						array(
+							'ending' => '&hellip;'
+						)
+					);
+					?>
 				</div>
 			<?php endif; ?>
 			<div class="item-meta">
-				<time><?php echo human_time_diff( bp_nouveau_get_activity_timestamp() ) . '&nbsp;' . esc_html__( 'ago', 'buddyboss' ) ?></time>
+				<a href="<?php echo esc_url( bp_activity_get_permalink( bp_get_activity_id() ) ); ?>">
+					<time><?php echo wp_kses_post( human_time_diff( bp_nouveau_get_activity_timestamp() ) ) . '&nbsp;' . esc_html__( 'ago', 'buddyboss' ); ?></time>
+				</a>
 			</div>
 		</div>
 	</div>

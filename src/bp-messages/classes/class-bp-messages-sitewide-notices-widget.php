@@ -105,7 +105,7 @@ class BP_Messages_Sitewide_Notices_Widget extends WP_Widget {
 	 * @return string|null Widget form output.
 	 */
 	public function form( $instance ) {
-		$instance = wp_parse_args(
+		$instance = bp_parse_args(
 			(array) $instance,
 			array(
 				'title' => '',

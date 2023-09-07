@@ -616,7 +616,7 @@ function bp_attachments_delete_file( $args = array() ) {
 			'type'       => 'cover-image',
 			'file'       => '',
 		),
-		'bp_attachments_delete_file_agrs'
+		'bp_attachments_delete_file_args'
 	);
 
 	$attachment_path = '';
@@ -630,6 +630,16 @@ function bp_attachments_delete_file( $args = array() ) {
 			$cover_url = bb_get_default_custom_upload_group_cover();
 			$subdir    = 'groups/0/cover-image';
 		}
+
+		/**
+		 * Filter to update the subdirectory.
+		 *
+		 * @since BuddyBoss 2.0.4
+		 *
+		 * @param string $subdir Subdirectory name.
+		 * @param array  $r      Arguments.
+		 */
+		$subdir = apply_filters( 'bb_attachments_delete_file_subdir', $subdir, $r );
 
 		$type_dir = trailingslashit( $upload_dir['basedir'] ) . $subdir;
 
@@ -740,7 +750,7 @@ function bp_attachments_get_plupload_default_settings() {
 	);
 
 	// WordPress is not allowing multi selection for iOs 7 device.. See #29602.
-	if ( wp_is_mobile() && strpos( $_SERVER['HTTP_USER_AGENT'], 'OS 7_' ) !== false &&
+	if ( wp_is_mobile() && isset( $_SERVER['HTTP_USER_AGENT'] ) && strpos( $_SERVER['HTTP_USER_AGENT'], 'OS 7_' ) !== false &&
 		strpos( $_SERVER['HTTP_USER_AGENT'], 'like Mac OS X' ) !== false ) {
 
 		$defaults['multi_selection'] = false;
@@ -1242,7 +1252,17 @@ function bp_attachments_get_cover_image_dimensions( $component = 'xprofile' ) {
 	$settings = bp_attachments_get_cover_image_settings( $component );
 
 	if ( empty( $settings ) ) {
-		return false;
+
+		/**
+		 * Filter here to edit the cover photo dimensions if needed.
+		 *
+		 * @since BuddyPress 2.4.0
+		 *
+		 * @param bool  false      Setting not found for the given component.
+		 * @param array  $settings An associative array containing all the feature settings.
+		 * @param string $compnent The requested component.
+		 */
+		return apply_filters( 'bp_attachments_get_cover_image_dimensions', false, $settings, $component );
 	}
 
 	// Get width and height.
@@ -1343,7 +1363,7 @@ function bp_attachments_get_group_has_cover_image( $group_id = 0 ) {
 		$cover_src = '';
 	}
 
-	return (bool) apply_filters( 'bp_attachments_get_user_has_cover_image', $cover_src, $group_id );
+	return (bool) apply_filters( 'bp_attachments_get_group_has_cover_image', $cover_src, $group_id );
 }
 
 /**
@@ -1575,8 +1595,12 @@ function bp_attachments_cover_image_ajax_upload() {
 		);
 	}
 
+	// Set some arguments for filters.
+	$item_id   = (int) $bp_params['item_id'];
+	$component = $object_data['component'];
+
 	/**
-	 * Filters BuddyPress image attachment sub directory.
+	 * Filters BuddyPress image attachment subdirectory.
 	 *
 	 * @since BuddyBoss 1.8.6
 	 *
@@ -1586,7 +1610,7 @@ function bp_attachments_cover_image_ajax_upload() {
 	 * @param string $type       The type of the attachment which is also the subdir where files are saved.
 	 *                           Defaults to 'cover-image'
 	 */
-	$cover_subdir = apply_filters( 'bb_attachments_get_attachment_sub_dir', $object_data['dir'] . '/' . $bp_params['item_id'] . '/cover-image', $object_data['dir'], $bp_params['item_id'], 'cover-image' );
+	$cover_subdir = apply_filters( 'bb_attachments_get_attachment_sub_dir', $object_data['dir'] . '/' . $item_id . '/cover-image', $object_data['dir'], $item_id, 'cover-image' );
 
 	$cover_dir = trailingslashit( $bp_attachments_uploads_dir['basedir'] ) . $cover_subdir;
 
@@ -1601,7 +1625,7 @@ function bp_attachments_cover_image_ajax_upload() {
 	 * @param string $type       The type of the attachment which is also the subdir where files are saved.
 	 *                           Defaults to 'cover-image'
 	 */
-	$cover_dir = apply_filters( 'bb_attachments_get_attachment_dir', $cover_dir, $object_data['dir'], $bp_params['item_id'], 'cover-image' );
+	$cover_dir = apply_filters( 'bb_attachments_get_attachment_dir', $cover_dir, $object_data['dir'], $item_id, 'cover-image' );
 
 	if ( 1 === validate_file( $cover_dir ) || ! is_dir( $cover_dir ) ) {
 		// Upload error response.
@@ -1625,7 +1649,7 @@ function bp_attachments_cover_image_ajax_upload() {
 	$cover = bp_attachments_cover_image_generate_file(
 		array(
 			'file'            => $uploaded['file'],
-			'component'       => $object_data['component'],
+			'component'       => $component,
 			'cover_image_dir' => $cover_dir,
 		),
 		$cover_image_attachment
@@ -1642,7 +1666,21 @@ function bp_attachments_cover_image_ajax_upload() {
 		);
 	}
 
+	$component = ( 'xprofile' === $component ? 'members' : $component );
+
 	$cover_url = trailingslashit( $bp_attachments_uploads_dir['baseurl'] ) . $cover_subdir . '/' . $cover['cover_basename'];
+
+	/**
+	 * Filters groups/members cover image attachment URL.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param string $cover_url URL to the image.
+	 * @param array  $cover     Cover array.
+	 * @param string $component Component either groups or members.
+	 * @param int    $item_id   Inform about the item id the cover image was set for either group id or member id.
+	 */
+	$cover_url = apply_filters( 'bp_' . $component . '_attachments_cover_image_url', $cover_url, $cover, $component, $item_id );
 
 	// 1 is success.
 	$feedback_code = 1;
@@ -1681,13 +1719,27 @@ function bp_attachments_cover_image_ajax_upload() {
 		$feedback_code
 	);
 
-	// Finally return the cover photo url to the UI.
+	// Give 3rd party plugins a chance to calculate the URL based on the id. I.e. if
+	// the image is offloaded to external storage.
+	$return_url = bp_attachments_get_attachment(
+		'url',
+		array(
+			'object_dir' => $component,
+			'item_id'    => $item_id,
+		)
+	);
+
+	if ( '' === $return_url ) {
+		$return_url = $cover_url;
+	}
+
+	// Finally, return the cover photo url to the UI.
 	bp_attachments_json_response(
 		true,
 		$is_html4,
 		array(
 			'name'          => $name,
-			'url'           => $cover_url,
+			'url'           => $return_url,
 			'feedback_code' => $feedback_code,
 		)
 	);
@@ -1734,6 +1786,16 @@ function bp_attachments_cover_image_ajax_delete() {
 		$component = $args['object'] . 's';
 		$dir       = $component;
 	}
+
+	/**
+	 * Update directory name while deleting the cover image.
+	 *
+	 * @since BuddyBoss 2.0.4
+	 *
+	 * @param string $dir  Directory name.
+	 * @param array  $args Arguments.
+	 */
+	$dir = apply_filters( 'bp_attachments_cover_image_ajax_delete_dir', $dir, $args );
 
 	// Handle delete.
 	if ( bp_attachments_delete_file(

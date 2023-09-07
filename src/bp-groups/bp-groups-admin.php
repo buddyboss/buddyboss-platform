@@ -117,7 +117,7 @@ function bp_groups_admin_load() {
 		// Delete groups forums
 		if ( ! empty( $gf_ids ) ) {
 			foreach ( $gf_ids as $gf_id ) {
-				$forum_ids = bbp_get_group_forum_ids( $gf_id );
+				$forum_ids = function_exists( 'bbp_get_group_forum_ids' ) ? bbp_get_group_forum_ids( $gf_id ) : array();
 				foreach ( $forum_ids as $forum_id ) {
 					wp_delete_post( $forum_id, true );
 				}
@@ -248,15 +248,33 @@ function bp_groups_admin_load() {
 
 	$bp = buddypress();
 
+	$group_localize_arr = array(
+		'add_member_placeholder' => __( 'Start typing a username to add a new member.', 'buddyboss' ),
+		'confirm_button'         => __( 'Confirm', 'buddyboss' ),
+		'cancel_button'          => __( 'Cancel', 'buddyboss' ),
+		'warn_on_leave'          => __( 'If you leave this page, you will lose any unsaved changes you have made to the group.', 'buddyboss' ),
+		'warn_on_attach_forum'   => __( 'Members cannot subscribe individually to forums inside a group, only to the group itself. By moving this forum into a group, all existing subscriptions to the forum will be removed.', 'buddyboss' ),
+	);
+
+	if ( isset( $_GET['page'], $_GET['gid'] ) && 'bp-groups' === $_GET['page'] && ! empty( $_GET['gid'] ) ) {
+		$connected_forum_id  = 0;
+		$requested_group_id  = (int) sanitize_text_field( wp_unslash( $_GET['gid'] ) );
+		$connected_forum_ids = function_exists( 'bbp_get_group_forum_ids' ) ? bbp_get_group_forum_ids( $requested_group_id ) : array();
+
+		// Get the first forum ID.
+		if ( ! empty( $connected_forum_ids ) ) {
+			$connected_forum_id = (int) is_array( $connected_forum_ids ) ? $connected_forum_ids[0] : $connected_forum_ids;
+		}
+
+		$group_localize_arr['group_connected_forum_id'] = $connected_forum_id;
+	}
+
 	// Enqueue CSS and JavaScript.
 	wp_enqueue_script( 'bp_groups_admin_js', $bp->plugin_url . "bp-groups/admin/js/admin{$min}.js", array( 'jquery', 'wp-ajax-response', 'jquery-ui-autocomplete' ), bp_get_version(), true );
 	wp_localize_script(
 		'bp_groups_admin_js',
 		'BP_Group_Admin',
-		array(
-			'add_member_placeholder' => __( 'Start typing a username to add a new member.', 'buddyboss' ),
-			'warn_on_leave'          => __( 'If you leave this page, you will lose any unsaved changes you have made to the group.', 'buddyboss' ),
-		)
+		$group_localize_arr
 	);
 	wp_enqueue_style( 'bp_groups_admin_css', $bp->plugin_url . "bp-groups/admin/css/admin{$min}.css", array(), bp_get_version() );
 
@@ -340,8 +358,8 @@ function bp_groups_admin_load() {
 		 *
 		 * @param array $value Array of allowed invite statuses.
 		 */
-		$allowed_invite_status = apply_filters( 'groups_allowed_invite_status', array( 'members', 'mods', 'admins' ) );
-		$invite_status         = in_array( $_POST['group-invite-status'], (array) $allowed_invite_status ) ? $_POST['group-invite-status'] : 'members';
+		$allowed_invite_status = bb_groups_get_settings_status( 'invite' );
+		$invite_status         = in_array( $_POST['group-invite-status'], (array) $allowed_invite_status ) ? $_POST['group-invite-status'] : bb_groups_settings_default_fallback( 'invite', current( $allowed_invite_status ) );
 
 		/**
 		 * Filters the allowed activity feed status values for the group.
@@ -350,8 +368,8 @@ function bp_groups_admin_load() {
 		 *
 		 * @param array $value Array of allowed activity feed statuses.
 		 */
-		$allowed_activity_feed_status = apply_filters( 'groups_allowed_activity_feed_status', array( 'members', 'mods', 'admins' ) );
-		$activity_feed_status         = in_array( $_POST['group-activity-feed-status'], (array) $allowed_activity_feed_status ) ? $_POST['group-activity-feed-status'] : 'members';
+		$allowed_activity_feed_status = bb_groups_get_settings_status( 'activity_feed' );
+		$activity_feed_status         = in_array( $_POST['group-activity-feed-status'], (array) $allowed_activity_feed_status ) ? $_POST['group-activity-feed-status'] : bb_groups_settings_default_fallback( 'activity_feed', current( $allowed_activity_feed_status ) );
 
 		/**
 		 * Filters the allowed media status values for the group.
@@ -360,8 +378,8 @@ function bp_groups_admin_load() {
 		 *
 		 * @param array $value Array of allowed media statuses.
 		 */
-		$allowed_media_status = apply_filters( 'groups_allowed_media_status', array( 'members', 'mods', 'admins' ) );
-		$media_status         = isset( $_POST['group-media-status'] ) && in_array( $_POST['group-media-status'], (array) $allowed_media_status ) ? $_POST['group-media-status'] : 'members';
+		$allowed_media_status = bb_groups_get_settings_status( 'media' );
+		$media_status         = isset( $_POST['group-media-status'] ) && in_array( $_POST['group-media-status'], (array) $allowed_media_status ) ? $_POST['group-media-status'] : bb_groups_settings_default_fallback( 'media', current( $allowed_media_status ) );
 
 		/**
 		 * Filters the allowed document status values for the group.
@@ -370,8 +388,8 @@ function bp_groups_admin_load() {
 		 *
 		 * @param array $value Array of allowed media statuses.
 		 */
-		$allowed_document_status = apply_filters( 'groups_allowed_document_status', array( 'members', 'mods', 'admins' ) );
-		$document_status         = isset( $_POST['group-document-status'] ) && in_array( $_POST['group-document-status'], (array) $allowed_document_status ) ? $_POST['group-document-status'] : 'members';
+		$allowed_document_status = bb_groups_get_settings_status( 'document' );
+		$document_status         = isset( $_POST['group-document-status'] ) && in_array( $_POST['group-document-status'], (array) $allowed_document_status ) ? $_POST['group-document-status'] : bb_groups_settings_default_fallback( 'document', current( $allowed_document_status ) );
 
 		/**
 		 * Filters the allowed video status values for the group.
@@ -380,9 +398,9 @@ function bp_groups_admin_load() {
 		 *
 		 * @param array $value Array of allowed media statuses.
 		 */
-		$allowed_video_status    = apply_filters( 'groups_allowed_video_status', array( 'members', 'mods', 'admins' ) );
-		$post_group_video_status = filter_input( INPUT_POST, 'group-video-status', FILTER_SANITIZE_STRING );
-		$video_status            = ! empty( $post_group_video_status ) && in_array( $post_group_video_status, (array) $allowed_video_status, true ) ? $post_group_video_status : 'members';
+		$allowed_video_status    = bb_groups_get_settings_status( 'video' );
+		$post_group_video_status = bb_filter_input_string( INPUT_POST, 'group-video-status' );
+		$video_status            = ! empty( $post_group_video_status ) && in_array( $post_group_video_status, (array) $allowed_video_status, true ) ? $post_group_video_status : bb_groups_settings_default_fallback( 'video', current( $allowed_video_status ) );
 
 		/**
 		 * Filters the allowed album status values for the group.
@@ -391,9 +409,9 @@ function bp_groups_admin_load() {
 		 *
 		 * @param array $value Array of allowed album statuses.
 		 */
-		$allowed_album_status    = apply_filters( 'groups_allowed_album_status', array( 'members', 'mods', 'admins' ) );
-		$post_group_album_status = filter_input( INPUT_POST, 'group-album-status', FILTER_SANITIZE_STRING );
-		$album_status            = ! empty( $post_group_album_status ) && in_array( $post_group_album_status, (array) $allowed_album_status, true ) ? $post_group_album_status : 'members';
+		$allowed_album_status    = bb_groups_get_settings_status( 'album' );
+		$post_group_album_status = bb_filter_input_string( INPUT_POST, 'group-album-status' );
+		$album_status            = ! empty( $post_group_album_status ) && in_array( $post_group_album_status, (array) $allowed_album_status, true ) ? $post_group_album_status : bb_groups_settings_default_fallback( 'album', current( $allowed_album_status ) );
 
 		/**
 		 * Filters the allowed album status values for the group.
@@ -402,8 +420,8 @@ function bp_groups_admin_load() {
 		 *
 		 * @param array $value Array of allowed album statuses.
 		 */
-		$allowed_message_status = apply_filters( 'groups_allowed_group_message_status', array( 'members', 'mods', 'admins' ) );
-		$message_status         = isset( $_POST['group-message-status'] ) && in_array( $_POST['group-message-status'], (array) $allowed_message_status ) ? $_POST['group-message-status'] : 'members';
+		$allowed_message_status = bb_groups_get_settings_status( 'message' );
+		$message_status         = isset( $_POST['group-message-status'] ) && in_array( $_POST['group-message-status'], (array) $allowed_message_status ) ? $_POST['group-message-status'] : bb_groups_settings_default_fallback( 'message', current( $allowed_message_status ) );
 
 		if ( ! groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status, $activity_feed_status, false, $media_status, $document_status, $video_status, $album_status, $message_status ) ) {
 			$error = $group_id;
@@ -786,7 +804,7 @@ function bp_groups_admin_edit() {
 										<div id="bp-groups-permalink-box">
 											<strong><?php esc_html_e( 'Permalink:', 'buddyboss' ); ?></strong>
 											<span id="bp-groups-permalink">
-												<?php bp_groups_directory_permalink(); ?> <input type="text" id="bp-groups-slug" name="bp-groups-slug" value="<?php bp_group_slug( $group ); ?>" autocomplete="off"> /
+												<?php bp_groups_directory_permalink(); ?> <input type="text" id="bp-groups-slug" name="bp-groups-slug" value="<?php echo rawurldecode( bp_get_group_slug( $group ) ); ?>" autocomplete="off"> /
 											</span>
 											<a href="<?php echo bp_group_permalink( $group ); ?>" class="button button-small" id="bp-groups-visit-group"><?php esc_html_e( 'Visit Group', 'buddyboss' ); ?></a>
 										</div>
@@ -1952,6 +1970,7 @@ function bp_group_type_custom_meta_boxes() {
 	$screen = get_current_screen();
 	add_meta_box( 'bp-group-type-label-box', __( 'Labels', 'buddyboss' ), 'bp_group_type_labels_meta_box', null, 'normal', 'high' );
 	add_meta_box( 'bp-group-type-permissions', __( 'Permissions', 'buddyboss' ), 'bp_group_type_permissions_meta_box', null, 'normal', 'high' );
+	add_meta_box( 'bp-group-type-label-color', esc_html__( 'Label Colors', 'buddyboss' ), 'bb_group_type_labelcolor_metabox', null, 'normal', 'high' );
 	if ( 'add' != $screen->action ) {
 		add_meta_box( 'bp-group-type-short-code', __( 'Shortcode', 'buddyboss' ), 'bp_group_shortcode_meta_box', null, 'normal', 'high' );
 	}
@@ -2508,6 +2527,7 @@ function bp_save_group_type_post_meta_box_data( $post_id ) {
 
 	$enable_filter = isset( $data['enable_filter'] ) ? absint( $data['enable_filter'] ) : 0; // default inactive
 	$enable_remove = isset( $data['enable_remove'] ) ? absint( $data['enable_remove'] ) : 0; // default inactive
+	$label_color   = isset( $data['label_color'] ) ? $data['label_color'] : '';
 
 	$member_type                           = ( isset( $_POST['bp-member-type'] ) ) ? $_POST['bp-member-type'] : '';
 	$member_type_group_invites             = ( isset( $_POST['bp-member-type-group-invites'] ) ) ? $_POST['bp-member-type-group-invites'] : '';
@@ -2530,6 +2550,7 @@ function bp_save_group_type_post_meta_box_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_group_type_enabled_member_type_join', $member_type );
 	update_post_meta( $post_id, '_bp_group_type_enabled_member_type_group_invites', $member_type_group_invites );
 	update_post_meta( $post_id, '_bp_group_type_restrict_invites_user_same_group_type', $get_restrict_invites_same_group_types );
+	update_post_meta( $post_id, '_bp_group_type_label_color', $label_color );
 }
 
 function bp_save_group_type_role_labels_post_meta_box_data( $post_id ) {
@@ -2603,4 +2624,49 @@ function bp_group_type_set_platform_tab_submenu_active( $parent_file ) {
 		}
 	}
 	return $parent_file;
+}
+
+/**
+ * Added new meta box as text and background color for group types label.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param $post Post data object.
+ */
+function bb_group_type_labelcolor_metabox( $post ) {
+	$post_type         = isset( $post->post_type ) ? $post->post_type : 'bp-group-type';
+	$meta_data         = get_post_meta( $post->ID, '_bp_group_type_label_color', true );
+	$label_color_data  = ! empty( $meta_data ) ? maybe_unserialize( $meta_data ) : array();
+	$color_type        = isset( $label_color_data['type'] ) ? $label_color_data['type'] : 'default';
+	$colorpicker_class = 'default' === $color_type ? $post_type . '-hide-colorpicker' : $post_type . '-show-colorpicker';
+	if ( function_exists( 'buddyboss_theme_get_option' ) && 'default' === $color_type ) {
+		$background_color = buddyboss_theme_get_option( 'label_background_color' );
+		$text_color       = buddyboss_theme_get_option( 'label_text_color' );
+	} else {
+		$background_color = isset( $label_color_data['background_color'] ) ? $label_color_data['background_color'] : '';
+		$text_color       = isset( $label_color_data['text_color'] ) ? $label_color_data['text_color'] : '';
+	}
+	?>
+	<div class="bb-meta-box-label-color-main">
+		<p><?php esc_html_e( 'Select which label colors to use for groups using this group type. Group Type labels are used in places such as group headers.', 'buddyboss' ); ?></p>
+		<p>
+			<select name="<?php echo esc_attr( $post_type ); ?>[label_color][type]" id="<?php echo esc_attr( $post_type ); ?>-label-color-type">
+				<option value="default" <?php selected( $color_type, 'default' ); ?>><?php esc_html_e( 'Default', 'buddyboss' ); ?></option>
+				<option value="custom" <?php selected( $color_type, 'custom' ); ?>><?php esc_html_e( 'Custom', 'buddyboss' ); ?></option>
+			</select>
+		</p>
+		<div id="<?php echo esc_attr( $post_type ); ?>-color-settings" class="<?php echo esc_attr( $post_type ); ?>-colorpicker <?php echo esc_attr( $colorpicker_class ); ?>">
+			<div class="bb-meta-box-colorpicker">
+				<div class="bb-colorpicker-row-one" id="<?php echo esc_attr( $post_type ); ?>-background-color-colorpicker">
+					<label class="bb-colorpicker-label"><?php esc_html_e( 'Background Color', 'buddyboss' ); ?></label>
+					<input id="<?php echo esc_attr( $post_type ); ?>-label-background-color" name="<?php echo esc_attr( $post_type ); ?>[label_color][background_color]" type="text" value="<?php echo esc_attr( $background_color ); ?>"/>
+				</div>
+				<div class="bb-colorpicker-row-one" id="<?php echo esc_attr( $post_type ); ?>-text-color-colorpicker">
+					<label class="bb-colorpicker-label"><?php esc_html_e( 'Text Color', 'buddyboss' ); ?></label>
+					<input id="<?php echo esc_attr( $post_type ); ?>-label-text-color" name="<?php echo esc_attr( $post_type ); ?>[label_color][text_color]" type="text" value="<?php echo esc_attr( $text_color ); ?>"/>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php
 }

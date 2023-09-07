@@ -189,6 +189,7 @@ function groups_notification_new_membership_request( $requesting_user_id = 0, $a
 			'group'                => $group,
 			'group.name'           => $group->name,
 			'group.id'             => $group_id,
+			'group.url'            => esc_url( bp_get_group_permalink( $group ) ),
 			'group-requests.url'   => esc_url( bp_get_group_permalink( $group ) . 'admin/membership-requests' ),
 			'membership.id'        => $membership_id,
 			'profile.url'          => esc_url( bp_core_get_user_domain( $requesting_user_id ) ),
@@ -373,6 +374,11 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
 		$invited_user_id = $member;
 	}
 
+	// Check the sender is blocked by recipient or not.
+	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $invited_user_id, $inviter_user_id ) ) {
+		return;
+	}
+
 	// Bail if member has already been invited.
 	if ( ! empty( $member->invite_sent ) ) {
 		return;
@@ -462,7 +468,7 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
  *
  * @return string
  */
-function groups_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id, $screen = 'web' ) {
+function groups_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id = 0, $screen = 'web' ) {
 
 	switch ( $action ) {
 		case 'new_membership_request':
@@ -1485,29 +1491,32 @@ function bb_groups_notification_groups_updated( $group_id = 0 ) {
 		unset( $user_ids[ $unset_sender_key ] );
 	}
 
+	$min_count = (int) apply_filters( 'bb_groups_details_updated_notifications_count', 20 );
 	if (
 		function_exists( 'bb_notifications_background_enabled' ) &&
 		true === bb_notifications_background_enabled() &&
-		count( $user_ids ) > 20
+		count( $user_ids ) > $min_count
 	) {
-		global $bb_notifications_background_updater;
-		$bb_notifications_background_updater->data(
+		global $bb_background_updater;
+		$bb_background_updater->data(
 			array(
-				array(
-					'callback' => 'bb_add_background_notifications',
-					'args'     => array(
-						$user_ids,
-						$group_id,
-						$sender_id,
-						buddypress()->groups->id,
-						'bb_groups_details_updated',
-						bp_core_current_time(),
-						true,
-					),
+				'type'     => 'notification',
+				'group'    => 'groups_updated_notification',
+				'data_id'  => $group_id,
+				'priority' => 5,
+				'callback' => 'bb_add_background_notifications',
+				'args'     => array(
+					$user_ids,
+					$group_id,
+					$sender_id,
+					buddypress()->groups->id,
+					'bb_groups_details_updated',
+					bp_core_current_time(),
+					true,
 				),
-			)
+			),
 		);
-		$bb_notifications_background_updater->save()->dispatch();
+		$bb_background_updater->save()->dispatch();
 	} else {
 		foreach ( $user_ids  as $user_id ) {
 			bp_notifications_add_notification(

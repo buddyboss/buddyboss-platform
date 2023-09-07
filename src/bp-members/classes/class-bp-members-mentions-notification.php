@@ -119,6 +119,7 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 			'members',
 			'bb_new_mention',
 			'bb_new_mention',
+			'bb-icon-f bb-icon-activity'
 		);
 
 		$this->register_notification_filter(
@@ -148,6 +149,79 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 	 * @return array|string
 	 */
 	public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen ) {
+
+		$notification = bp_notifications_get_notification( $notification_id );
+
+		if (
+			! empty( $notification ) &&
+			'bb_new_mention' === $notification->component_action &&
+			in_array( $notification->component_name, array( 'core' ), true )
+		) {
+			$comment                = get_comment( $notification->item_id );
+			$notification_type_html = esc_html__( 'comment', 'buddyboss' );
+			$notification_link      = bp_get_notifications_permalink();
+			$commenter_name         = '';
+
+			if ( ! empty( $comment ) ) {
+				$comment_author    = get_user_by( 'email', $comment->comment_author_email );
+				$notification_link = get_comment_link( $comment );
+				$commenter_name    = ! empty( $comment_author ) ? bp_core_get_user_displayname( $comment_author->ID ) : $comment->comment_author;
+			}
+
+			$notification_link = add_query_arg( 'cid', (int) $notification_id, $notification_link );
+			$amount            = 'single';
+
+			if ( 'web_push' === $screen ) {
+				if ( ! empty( $notification_type_html ) ) {
+					$text = sprintf(
+					/* translators: Activity type. */
+						__( 'Mentioned you in a %s', 'buddyboss' ),
+						$notification_type_html
+					);
+				} else {
+					$text = __( 'Mentioned you', 'buddyboss' );
+				}
+			} else {
+				if ( (int) $total_items > 1 ) {
+					$text = sprintf(
+					/* translators: %s: Total mentioned count. */
+						__( 'You have %1$d new mentions', 'buddyboss' ),
+						(int) $total_items
+					);
+					$amount = 'multiple';
+				} else {
+					if ( ! empty( $notification_type_html ) ) {
+						$text = sprintf(
+						/* translators: 1: User full name, 2: Activity type. */
+							esc_html__( '%1$s mentioned you in a %2$s', 'buddyboss' ),
+							$commenter_name,
+							$notification_type_html
+						);
+					} else {
+						$text = sprintf(
+						/* translators: %s: User full name. */
+							esc_html__( '%1$s mentioned you', 'buddyboss' ),
+							$commenter_name
+						);
+					}
+				}
+			}
+
+			$content = apply_filters(
+				'bb_core_' . $amount . '_' . $notification->component_action . '_notification',
+				array(
+					'link'  => $notification_link,
+					'text'  => $text,
+					'title' => $commenter_name,
+					'image' => bb_notification_avatar_url( $notification ),
+				),
+				$notification,
+				$notification_link,
+				$text,
+				$screen
+			);
+		}
+
 		return $content;
 	}
 
@@ -203,28 +277,41 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 				}
 			}
 
-			if ( (int) $total_items > 1 ) {
-				$text = sprintf(
-				/* translators: %s: Total mentioned count. */
-					__( 'You have %1$d new mentions', 'buddyboss' ),
-					(int) $total_items
-				);
-				$amount = 'multiple';
-			} else {
-				$amount = 'single';
+			$amount = 'single';
+
+			if ( 'web_push' === $screen ) {
 				if ( ! empty( $notification_type_html ) ) {
 					$text = sprintf(
-						/* translators: 1: User full name, 2: Activity type. */
-						esc_html__( '%1$s mentioned you in a %2$s', 'buddyboss' ),
-						$user_fullname,
+						/* translators: Activity type. */
+						__( 'Mentioned you in a %s', 'buddyboss' ),
 						$notification_type_html
 					);
 				} else {
+					$text = __( 'Mentioned you', 'buddyboss' );
+				}
+			} else {
+				if ( (int) $total_items > 1 ) {
 					$text = sprintf(
-						/* translators: %s: User full name. */
-						esc_html__( '%1$s mentioned you', 'buddyboss' ),
-						$user_fullname
+					/* translators: %s: Total mentioned count. */
+						__( 'You have %1$d new mentions', 'buddyboss' ),
+						(int) $total_items
 					);
+					$amount = 'multiple';
+				} else {
+					if ( ! empty( $notification_type_html ) ) {
+						$text = sprintf(
+						/* translators: 1: User full name, 2: Activity type. */
+							esc_html__( '%1$s mentioned you in a %2$s', 'buddyboss' ),
+							$user_fullname,
+							$notification_type_html
+						);
+					} else {
+						$text = sprintf(
+						/* translators: %s: User full name. */
+							esc_html__( '%1$s mentioned you', 'buddyboss' ),
+							$user_fullname
+						);
+					}
 				}
 			}
 
@@ -233,12 +320,15 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 			$content = apply_filters(
 				'bb_members_' . $amount . '_' . $notification->component_action . '_notification',
 				array(
-					'link' => $notification_link,
-					'text' => $text,
+					'link'  => $notification_link,
+					'text'  => $text,
+					'title' => $user_fullname,
+					'image' => bb_notification_avatar_url( $notification ),
 				),
 				$notification,
 				$notification_link,
-				$text
+				$text,
+				$screen
 			);
 
 		}
@@ -258,8 +348,10 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 				}
 			} else {
 				$content = array(
-					'text' => $content['text'],
-					'link' => $content['link'],
+					'text'  => $content['text'],
+					'link'  => $content['link'],
+					'title' => ( isset( $content['title'] ) ? $content['title'] : '' ),
+					'image' => ( isset( $content['image'] ) ? $content['image'] : '' ),
 				);
 			}
 		}

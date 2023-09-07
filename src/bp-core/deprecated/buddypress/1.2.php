@@ -43,7 +43,7 @@ function bp_activity_get_sitewide( $args = '' ) {
 		'filter'           => array(),
 	);
 
-	$args = wp_parse_args( $args, $defaults );
+	$args = bp_parse_args( $args, $defaults );
 
 	return apply_filters( 'bp_activity_get_sitewide', BP_Activity_Activity::get( $args ), $r );
 }

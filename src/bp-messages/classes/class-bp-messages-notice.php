@@ -431,7 +431,7 @@ class BP_Messages_Notice {
 	 * @return object List of notices to display.
 	 */
 	public static function get_notices( $args = array() ) {
-		$r = wp_parse_args(
+		$r = bp_parse_args(
 			$args,
 			array(
 				'pag_num'  => 20, // Number of notices per page.

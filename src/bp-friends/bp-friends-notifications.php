@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array|string
  */
-function friends_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id, $screen = 'web' ) {
+function friends_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id = 0, $screen = 'web' ) {
 
 	switch ( $action ) {
 		case 'friendship_accepted':
@@ -91,7 +91,7 @@ function friends_format_notifications( $action, $item_id, $secondary_item_id, $t
 	}
 
 	// Return either an HTML link or an array, depending on the requested format.
-	if ( 'string' == $format ) {
+	if ( 'string' === $format ) {
 
 		/**
 		 * Filters the format of friendship notifications based on type and amount * of notifications pending.
@@ -104,14 +104,17 @@ function friends_format_notifications( $action, $item_id, $secondary_item_id, $t
 		 *   - bp_friends_multiple_friendship_request_notification
 		 *
 		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 6.0.0 Adds the $secondary_item_id parameter.
+		 * @since BuddyBoss 2.3.90 Adds the $secondary_item_id parameter.
 		 *
-		 * @param string|array $value       Depending on format, an HTML link to new requests profile
-		 *                                  tab or array with link and text.
-		 * @param int          $total_items The total number of messaging-related notifications
-		 *                                  waiting for the user.
-		 * @param int          $item_id     The primary item ID.
+		 * @param string|array $value             Depending on format, an HTML link to new requests profile
+		 *                                        tab or array with link and text.
+		 * @param int          $total_items       The total number of messaging-related notifications
+		 *                                        waiting for the user.
+		 * @param int          $item_id           The primary item ID.
+		 * @param int          $secondary_item_id The secondary item ID.
 		 */
-		$return = apply_filters( 'bp_friends_' . $amount . '_friendship_' . $action . '_notification', '<a href="' . esc_url( $link ) . '">' . esc_html( $text ) . '</a>', (int) $total_items, $item_id );
+		$return = apply_filters( 'bp_friends_' . $amount . '_friendship_' . $action . '_notification', '<a href="' . esc_url( $link ) . '">' . esc_html( $text ) . '</a>', (int) $total_items, $item_id, $secondary_item_id );
 	} else {
 		/** This filter is documented in bp-friends/bp-friends-notifications.php */
 		$return = apply_filters(
@@ -121,7 +124,8 @@ function friends_format_notifications( $action, $item_id, $secondary_item_id, $t
 				'text' => $text,
 			),
 			(int) $total_items,
-			$item_id
+			$item_id,
+			$secondary_item_id
 		);
 	}
 
@@ -190,6 +194,10 @@ add_action( 'friends_screen_my_friends', 'bp_friends_mark_friendship_accepted_no
  */
 function bp_friends_friendship_requested_notification( $friendship_id, $initiator_user_id, $friend_user_id ) {
 
+	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $friend_user_id, $initiator_user_id ) ) {
+		return;
+	}
+
 	$action = 'friendship_request';
 	if ( ! bb_enabled_legacy_email_preference() ) {
 		$action = 'bb_connections_new_request';
@@ -233,6 +241,11 @@ add_action( 'friends_friendship_rejected', 'bp_friends_mark_friendship_rejected_
  * @param int $friend_user_id    The friendship request receiver user ID.
  */
 function bp_friends_add_friendship_accepted_notification( $friendship_id, $initiator_user_id, $friend_user_id ) {
+
+	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $initiator_user_id, $friend_user_id ) ) {
+		return;
+	}
+
 	// Remove the friend request notice.
 	bp_notifications_mark_notifications_by_item_id( $friend_user_id, $initiator_user_id, buddypress()->friends->id, 'friendship_request' );
 	bp_notifications_mark_notifications_by_item_id( $friend_user_id, $initiator_user_id, buddypress()->friends->id, 'bb_connections_new_request' );

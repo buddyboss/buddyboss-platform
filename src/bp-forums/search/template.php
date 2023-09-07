@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
  * @uses bbp_get_paged() To get the current page value
  * @uses bbp_get_search_terms() To get the search terms
  * @uses WP_Query To make query and get the search results
- * @uses WP_Rewrite::using_permalinks() To check if the blog is using permalinks
+ * @uses bbp_use_pretty_urls() To check if the site is using pretty URLs
  * @uses bbp_get_search_url() To get the forum search url
  * @uses paginate_links() To paginate search results
  * @uses apply_filters() Calls 'bbp_has_search_results' with
@@ -38,33 +38,36 @@ defined( 'ABSPATH' ) || exit;
  * @return object Multidimensional array of search information
  */
 function bbp_has_search_results( $args = '' ) {
-	global $wp_rewrite;
 
 	/** Defaults */
-
-	$default_post_type = array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() );
+	$default_search_terms = bbp_get_search_terms();
+	$default_post_types   = bbp_get_post_types();
 
 	// Default query args
 	$default = array(
-		'post_type'           => $default_post_type,         // Forums, topics, and replies
-		'posts_per_page'      => bbp_get_replies_per_page(), // This many
-		'paged'               => bbp_get_paged(),            // On this page
-		'orderby'             => 'date',                     // Sorted by date
-		'order'               => 'DESC',                     // Most recent first
-		'ignore_sticky_posts' => true,                       // Stickies not supported
-		's'                   => bbp_get_search_terms(),     // This is a search
+		'post_type'                => $default_post_types,        // Forums, topics, and replies
+		'posts_per_page'           => bbp_get_replies_per_page(), // This many
+		'paged'                    => bbp_get_paged(),            // On this page
+		'orderby'                  => 'date',                     // Sorted by date
+		'order'                    => 'DESC',                     // Most recent first
+		'ignore_sticky_posts'      => true,                       // Stickies not supported,
+		'update_post_family_cache' => true,                       // Conditionally prime the cache for related posts
+
+		// Conditionally prime the cache for last active posts.
+		'update_post_family_cache' => true
 	);
+
+	// Only set 's' if search terms exist
+	// https://bbpress.trac.wordpress.org/ticket/2607
+	if ( false !== $default_search_terms ) {
+		$default['s'] = $default_search_terms;
+	}
 
 	// What are the default allowed statuses (based on user caps)
 	if ( bbp_get_view_all() ) {
 
 		// Default view=all statuses
-		$post_statuses = array(
-			bbp_get_public_status_id(),
-			bbp_get_closed_status_id(),
-			bbp_get_spam_status_id(),
-			bbp_get_trash_status_id(),
-		);
+		$post_statuses = array_keys( bbp_get_topic_statuses() );
 
 		// Add support for private status
 		if ( current_user_can( 'read_private_topics' ) ) {
@@ -72,13 +75,11 @@ function bbp_has_search_results( $args = '' ) {
 		}
 
 		// Join post statuses together
-		$default['post_status'] = implode( ',', $post_statuses );
+		$default['post_status'] = $post_statuses;
 
 		// Lean on the 'perm' query var value of 'readable' to provide statuses
 	} else {
-
 		$default['perm'] = 'readable';
-		
 	}
 
 	/** Setup */
@@ -92,14 +93,16 @@ function bbp_has_search_results( $args = '' ) {
 	// Call the query
 	if ( ! empty( $r['s'] ) ) {
 		$bbp->search_query = new WP_Query( $r );
-	} else {
-		unset( $r['s'] );
-		$bbp->search_query = new WP_Query( $r );
+	}
+
+	// Maybe prime last active posts.
+	if ( ! empty( $r['update_post_family_cache'] ) ) {
+		bbp_update_post_family_caches( $bbp->search_query->posts );
 	}
 
 	// Add pagination values to query object
-	$bbp->search_query->posts_per_page = $r['posts_per_page'];
-	$bbp->search_query->paged          = $r['paged'];
+	$bbp->search_query->posts_per_page = (int) $r['posts_per_page'];
+	$bbp->search_query->paged          = (int) $r['paged'];
 
 	// Never home, regardless of what parse_query says
 	$bbp->search_query->is_home = false;
@@ -107,40 +110,20 @@ function bbp_has_search_results( $args = '' ) {
 	// Only add pagination is query returned results
 	if ( ! empty( $bbp->search_query->found_posts ) && ! empty( $bbp->search_query->posts_per_page ) ) {
 
-		// Array of arguments to add after pagination links
+		// Array of arguments to add after pagination links.
 		$add_args = array();
 
-		// If pretty permalinks are enabled, make our pagination pretty
-		if ( $wp_rewrite->using_permalinks() ) {
-
-			// Shortcode territory
-			if ( is_page() || is_single() ) {
-				$base = trailingslashit( get_permalink() );
-
-				// Default search location
-			} else {
-				$base = trailingslashit( bbp_get_search_results_url() );
-			}
-
-			// Add pagination base
-			$base = $base . user_trailingslashit( $wp_rewrite->pagination_base . '/%#%/' );
-
-			// Unpretty permalinks
-		} else {
-			$base = add_query_arg( 'paged', '%#%' );
-		}
-
-		// Add args
+		// Add args.
 		if ( bbp_get_view_all() ) {
 			$add_args['view'] = 'all';
 		}
 
-		// Add pagination to query object
+		// Add pagination to query object.
 		$bbp->search_query->pagination_links = paginate_links(
 			apply_filters(
 				'bbp_search_results_pagination',
 				array(
-					'base'      => $base,
+					'base'      => bbp_get_search_pagination_base(),
 					'format'    => '',
 					'total'     => ceil( (int) $bbp->search_query->found_posts / (int) $r['posts_per_page'] ),
 					'current'   => (int) $bbp->search_query->paged,
@@ -153,8 +136,8 @@ function bbp_has_search_results( $args = '' ) {
 		);
 
 		// Remove first page from pagination
-		if ( $wp_rewrite->using_permalinks() ) {
-			$bbp->search_query->pagination_links = str_replace( $wp_rewrite->pagination_base . '/1/', '', $bbp->search_query->pagination_links );
+		if ( bbp_get_paged_slug() ) {
+			$bbp->search_query->pagination_links = str_replace( bbp_get_paged_slug() . '/1/', '', $bbp->search_query->pagination_links );
 		} else {
 			$bbp->search_query->pagination_links = str_replace( '&#038;paged=1', '', $bbp->search_query->pagination_links );
 		}
@@ -216,13 +199,13 @@ function bbp_search_title() {
 	echo bbp_get_search_title();
 }
 
-	/**
-	 * Get the search page title
-	 *
-	 * @since bbPress (r4579)
-	 *
-	 * @uses bbp_get_search_terms()
-	 */
+/**
+ * Get the search page title
+ *
+ * @since bbPress (r4579)
+ *
+ * @uses bbp_get_search_terms()
+ */
 function bbp_get_search_title() {
 
 	// Get search terms
@@ -250,24 +233,24 @@ function bbp_get_search_title() {
 function bbp_search_url() {
 	echo esc_url( bbp_get_search_url() );
 }
-	/**
-	 * Return the search url
-	 *
-	 * @since bbPress (r4579)
-	 *
-	 * @uses user_trailingslashit() To fix slashes
-	 * @uses trailingslashit() To fix slashes
-	 * @uses bbp_get_forums_url() To get the root forums url
-	 * @uses bbp_get_search_slug() To get the search slug
-	 * @uses add_query_arg() To help make unpretty permalinks
-	 * @return string Search url
-	 */
+
+/**
+ * Return the search url
+ *
+ * @since bbPress (r4579)
+ *
+ * @uses user_trailingslashit() To fix slashes
+ * @uses trailingslashit() To fix slashes
+ * @uses bbp_get_forums_url() To get the root forums url
+ * @uses bbp_get_search_slug() To get the search slug
+ * @uses add_query_arg() To help make unpretty permalinks
+ * @return string Search url
+ */
 function bbp_get_search_url( $default = true ) {
-	global $wp_rewrite;
 
 	// Pretty permalinks
-	if ( $wp_rewrite->using_permalinks() ) {
-		$url = $wp_rewrite->root . bbp_get_search_slug();
+	if ( bbp_use_pretty_urls() ) {
+		$url = bbp_get_root_url() . bbp_get_search_slug();
 		$url = home_url( user_trailingslashit( $url ) );
 
 		// Unpretty permalinks
@@ -293,33 +276,33 @@ function bbp_get_search_url( $default = true ) {
 function bbp_search_results_url() {
 	echo esc_url( bbp_get_search_results_url() );
 }
-	/**
-	 * Return the search url
-	 *
-	 * @since bbPress (r4928)
-	 *
-	 * @uses user_trailingslashit() To fix slashes
-	 * @uses trailingslashit() To fix slashes
-	 * @uses bbp_get_forums_url() To get the root forums url
-	 * @uses bbp_get_search_slug() To get the search slug
-	 * @uses add_query_arg() To help make unpretty permalinks
-	 * @return string Search url
-	 */
+
+/**
+ * Return the search url
+ *
+ * @since bbPress (r4928)
+ *
+ * @uses user_trailingslashit() To fix slashes
+ * @uses trailingslashit() To fix slashes
+ * @uses bbp_get_forums_url() To get the root forums url
+ * @uses bbp_get_search_slug() To get the search slug
+ * @uses add_query_arg() To help make unpretty permalinks
+ * @return string Search url
+ */
 function bbp_get_search_results_url() {
-	global $wp_rewrite;
 
 	// Get the search terms
 	$search_terms = bbp_get_search_terms();
 
 	// Pretty permalinks
-	if ( $wp_rewrite->using_permalinks() ) {
+	if ( bbp_use_pretty_urls() ) {
 
 		// Root search URL
-		$url = $wp_rewrite->root . bbp_get_search_slug();
+		$url = bbp_get_root_url() . bbp_get_search_slug();
 
 		// Append search terms
 		if ( ! empty( $search_terms ) ) {
-			$url = trailingslashit( $url ) . user_trailingslashit( urlencode( $search_terms ) );
+			$url = trailingslashit( $url ) . urlencode( $search_terms );
 		}
 
 		// Run through home_url()
@@ -342,22 +325,22 @@ function bbp_get_search_results_url() {
  * @uses bbp_get_search_terms() To get the search terms
  */
 function bbp_search_terms( $search_terms = '' ) {
-	echo bbp_get_search_terms( $search_terms );
+	echo esc_attr( bbp_get_search_terms( $search_terms ) );
 }
 
-	/**
-	 * Get the search terms
-	 *
-	 * @since bbPress (r4579)
-	 *
-	 * If search terms are supplied, those are used. Otherwise check the
-	 * search rewrite id query var.
-	 *
-	 * @param string $passed_terms Optional. Search terms
-	 * @uses sanitize_title() To sanitize the search terms
-	 * @uses get_query_var() To get the search terms from query variable
-	 * @return bool|string Search terms on success, false on failure
-	 */
+/**
+ * Get the search terms
+ *
+ * @since bbPress (r4579)
+ *
+ * If search terms are supplied, those are used. Otherwise check the
+ * search rewrite id query var.
+ *
+ * @param string $passed_terms Optional. Search terms
+ * @uses sanitize_title() To sanitize the search terms
+ * @uses get_query_var() To get the search terms from query variable
+ * @return bool|string Search terms on success, false on failure
+ */
 function bbp_get_search_terms( $passed_terms = '' ) {
 
 	// Sanitize terms if they were passed in
@@ -371,7 +354,7 @@ function bbp_get_search_terms( $passed_terms = '' ) {
 		$search_terms = get_query_var( bbp_get_search_rewrite_id(), null );
 
 		// Searching globally
-		if ( ! is_null( $search_terms )  ) {
+		if ( ! is_null( $search_terms ) ) {
 			$search_terms = wp_unslash( $search_terms );
 
 			// Other searches
@@ -411,6 +394,40 @@ function bbp_get_search_terms( $passed_terms = '' ) {
 }
 
 /**
+ * Return the base URL used inside of pagination links.
+ *
+ * @since 2.6.0 bbPress (r6679)
+ * @since BuddyBoss 2.4.00
+ *
+ * @return string
+ */
+function bbp_get_search_pagination_base() {
+
+	// If pretty permalinks are enabled, make our pagination pretty.
+	if ( bbp_use_pretty_urls() ) {
+
+		// Any single post (for shortcodes).
+		if ( is_singular() ) {
+			$base = get_permalink();
+
+			// Default search location.
+		} else {
+			$base = bbp_get_search_results_url();
+		}
+
+		// Add pagination base.
+		$base = trailingslashit( $base ) . user_trailingslashit( bbp_get_paged_slug() . '/%#%/' );
+
+		// Unpretty permalinks.
+	} else {
+		$base = add_query_arg( 'paged', '%#%' );
+	}
+
+	// Filter & return.
+	return apply_filters( 'bbp_get_search_pagination_base', $base );
+}
+
+/**
  * Output the search result pagination count
  *
  * @since bbPress (r4579)
@@ -421,16 +438,16 @@ function bbp_search_pagination_count() {
 	echo bbp_get_search_pagination_count();
 }
 
-	/**
-	 * Return the search results pagination count
-	 *
-	 * @since bbPress (r4579)
-	 *
-	 * @uses bbp_number_format() To format the number value
-	 * @uses apply_filters() Calls 'bbp_get_search_pagination_count' with the
-	 *                        pagination count
-	 * @return string Search pagination count
-	 */
+/**
+ * Return the search results pagination count
+ *
+ * @since bbPress (r4579)
+ *
+ * @uses bbp_number_format() To format the number value
+ * @uses apply_filters() Calls 'bbp_get_search_pagination_count' with the
+ *                        pagination count
+ * @return string Search pagination count
+ */
 function bbp_get_search_pagination_count() {
 	$bbp = bbpress();
 
@@ -469,15 +486,15 @@ function bbp_search_pagination_links() {
 	echo bbp_get_search_pagination_links();
 }
 
-	/**
-	 * Return search pagination links
-	 *
-	 * @since bbPress (r4579)
-	 *
-	 * @uses apply_filters() Calls 'bbp_get_search_pagination_links' with the
-	 *                        pagination links
-	 * @return string Search pagination links
-	 */
+/**
+ * Return search pagination links
+ *
+ * @since bbPress (r4579)
+ *
+ * @uses apply_filters() Calls 'bbp_get_search_pagination_links' with the
+ *                        pagination links
+ * @return string Search pagination links
+ */
 function bbp_get_search_pagination_links() {
 	$bbp = bbpress();
 

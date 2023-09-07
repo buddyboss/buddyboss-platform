@@ -5,7 +5,7 @@
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
- * Version:     1.9.3
+ * Version:     2.4.20
  * Text Domain: buddyboss
  * Domain Path: /bp-languages/
  * License:     GPLv2 or later (license.txt)

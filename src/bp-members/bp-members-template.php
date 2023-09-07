@@ -276,6 +276,9 @@ function bp_get_activate_slug() {
  * display a list of members.
  *
  * @since BuddyPress 1.2.0
+ * @since BuddyPress 7.0.0 Added `xprofile_query` and `user_ids` parameters.
+ * @since BuddyPress 10.0.0 Added `$date_query` parameter.
+ * @since BuddyBoss 2.3.90 Added `xprofile_query`, `user_ids`, `date_query` parameters.
  *
  * @global object $members_template {@link BP_Members_Template}
  *
@@ -303,6 +306,8 @@ function bp_get_activate_slug() {
  *     @type array|int|string|bool $exclude             Exclude users from results by ID. Accepts an array, a single
  *                                                      integer, a comma-separated list of IDs, or false (to disable
  *                                                      this limiting). Default: false.
+ *     @type array|string|bool     $user_ids            An array or comma-separated list of IDs, or false (to
+ *                                                      disable this limiting). Default: false.
  *     @type int                   $user_id             If provided, results are limited to the friends of the specified
  *                                                      user. When on a user's Connections page, defaults to the ID of the
  *                                                      displayed user. Otherwise defaults to 0.
@@ -319,6 +324,11 @@ function bp_get_activate_slug() {
  *                                                      Default: false.
  *     @type mixed                 $meta_value          When used with meta_key, limits results by the a matching
  *                                                      usermeta value. Default: false.
+ *     @type array                 $xprofile_query      Filter results by xprofile data. Requires the xprofile
+ *                                                      component. See {@see BP_XProfile_Query} for details.
+ *     @type array                 $date_query          Filter results by member last activity date. See first parameter of
+ *                                                      {@link WP_Date_Query::__construct()} for syntax. Only applicable if
+ *                                                      $type is either 'active', 'random', 'newest', or 'online'.
  *     @type bool                  $populate_extras     Whether to fetch optional data, such as friend counts.
  *                                                      Default: true.
  * }
@@ -377,7 +387,7 @@ function bp_has_members( $args = array() ) {
 	$member_type__not_in = array();
 
 	$args = bp_parse_args( $args, array() );
-	// Exclude Member Types
+	// Exclude Member Types.
 	if ( ( empty( $args['scope'] ) || 'all' === $args['scope'] ) && ( ! bp_is_user() && empty( $member_type ) && empty( $args['member_type'] ) ) ) {
 		// get all excluded member types.
 		$bp_member_type_ids = bp_get_removed_member_types();
@@ -401,6 +411,7 @@ function bp_has_members( $args = array() ) {
 
 			'include'             => $include,    // Pass a user_id or a list (comma-separated or array) of user_ids to only show these users.
 			'exclude'             => false,    // Pass a user_id or a list (comma-separated or array) of user_ids to exclude these users.
+			'user_ids'            => false,
 
 			'user_id'             => $user_id, // Pass a user_id to only show friends of this user.
 			'member_type'         => $member_type,
@@ -411,7 +422,9 @@ function bp_has_members( $args = array() ) {
 			'meta_key'            => false,    // Only return users with this usermeta.
 			'meta_value'          => false,    // Only return users where the usermeta value matches. Requires meta_key.
 
-			'populate_extras'     => true,      // Fetch usermeta? Connection count, last active etc.
+			'populate_extras'     => true,     // Fetch usermeta? Connection count, last active etc.
+			'xprofile_query'      => false,
+			'date_query'          => false,    // Filter members by last activity.
 		),
 		'has_members'
 	);
@@ -431,23 +444,7 @@ function bp_has_members( $args = array() ) {
 	}
 
 	// Query for members and populate $members_template global.
-	$members_template = new BP_Core_Members_Template(
-		$r['type'],
-		$r['page'],
-		$r['per_page'],
-		$r['max'],
-		$r['user_id'],
-		$r['search_terms'],
-		$r['include'],
-		$r['populate_extras'],
-		$r['exclude'],
-		$r['meta_key'],
-		$r['meta_value'],
-		$r['page_arg'],
-		$r['member_type'],
-		$r['member_type__in'],
-		$r['member_type__not_in']
-	);
+	$members_template = new BP_Core_Members_Template( $r );
 
 	/**
 	 * Filters whether or not BuddyPress has members to iterate over.
@@ -824,7 +821,7 @@ function bp_get_member_avatar( $args = '' ) {
 		'alt'    => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $fullname ),
 	);
 
-	$r = wp_parse_args( $args, $defaults );
+	$r = bp_parse_args( $args, $defaults );
 	extract( $r, EXTR_SKIP );
 
 	/**
@@ -1098,7 +1095,7 @@ function bp_get_member_profile_data( $args = '' ) {
 		'user_id' => $default_user_id,
 	);
 
-	$r = wp_parse_args( $args, $defaults );
+	$r = bp_parse_args( $args, $defaults );
 
 	// If we're in a members loop, get the data from the global.
 	if ( ! empty( $members_template->member->profile_data ) ) {
@@ -1178,7 +1175,7 @@ function bp_member_registered( $args = array() ) {
 function bp_get_member_registered( $args = array() ) {
 	global $members_template;
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'relative' => true,
@@ -1536,7 +1533,7 @@ function bp_loggedin_user_avatar( $args = '' ) {
 	 */
 function bp_get_loggedin_user_avatar( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'item_id' => bp_loggedin_user_id(),
@@ -1594,7 +1591,7 @@ function bp_displayed_user_avatar( $args = '' ) {
 	 */
 function bp_get_displayed_user_avatar( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'item_id' => bp_displayed_user_id(),
@@ -2491,7 +2488,7 @@ function bp_get_signup_avatar( $args = '' ) {
 		'alt'   => __( 'Your Profile Photo', 'buddyboss' ),
 	);
 
-	$r = wp_parse_args( $args, $defaults );
+	$r = bp_parse_args( $args, $defaults );
 	extract( $r, EXTR_SKIP );
 
 	// Avatar DIR is found.
@@ -2694,7 +2691,7 @@ function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 
 	$old_user = bp_current_member_switched();
 
-	$button_args = wp_parse_args( $button_args, get_class_vars( 'BP_Button' ) );
+	$button_args = bp_parse_args( $button_args, get_class_vars( 'BP_Button' ) );
 
 	$user = get_userdata( $user_id );
 	$link = BP_Core_Members_Switching::maybe_switch_url( $user );
@@ -2711,7 +2708,7 @@ function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 	);
 
 	if ( $old_user && ( $old_user->ID === $user->ID || bp_is_my_profile() ) ) {
-		$button = wp_parse_args(
+		$button = bp_parse_args(
 			array(
 				'id'                => 'member_switch',
 				'component'         => 'members',
@@ -2728,7 +2725,7 @@ function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 			$button_args
 		);
 	} else {
-		$button = wp_parse_args(
+		$button = bp_parse_args(
 			array(
 				'id'                => 'member_switch',
 				'component'         => 'members',
@@ -3013,4 +3010,59 @@ function bb_member_directories_get_profile_actions( $user_id, $button_type = fal
 	} elseif ( 'secondary' === $button_type ) {
 		return $buttons['secondary'];
 	}
+}
+
+/**
+ * Get the member last activity time.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param array $args Array of arguments.
+ *
+ * @return mixed|string|void
+ */
+function bb_get_member_last_activity_time( $args = array() ) {
+	global $members_template;
+
+	// Parse the activity format.
+	$r = bp_parse_args(
+		$args,
+		array(
+			'active_format' => true,
+			'relative'      => true,
+		)
+	);
+
+	// Backwards compatibility for anyone forcing a 'true' active_format.
+	if ( true === $r['active_format'] ) {
+		$r['active_format'] = __( '%s', 'buddyboss' );
+	}
+
+	// Member has logged in at least one time.
+	if ( isset( $members_template->member->last_activity ) ) {
+		// We do not want relative time, so return now.
+		// @todo Should the 'bp_member_last_active' filter be applied here?
+		if ( ! $r['relative'] ) {
+			return esc_attr( $members_template->member->last_activity );
+		}
+
+		// Backwards compatibility for pre 1.5 'ago' strings.
+		$last_activity = ! empty( $r['active_format'] )
+			? bp_core_get_last_activity( $members_template->member->last_activity, $r['active_format'] )
+			: bp_core_time_since( $members_template->member->last_activity );
+
+		// Member has never logged in or been active.
+	} else {
+		$last_activity = esc_html__( 'Never active', 'buddyboss' );
+	}
+
+	/**
+	 * Filters the current members last active time.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param string $last_activity Formatted time since last activity.
+	 * @param array  $r             Array of parsed arguments for query.
+	 */
+	return apply_filters( 'bb_get_member_last_activity_time', $last_activity, $r );
 }

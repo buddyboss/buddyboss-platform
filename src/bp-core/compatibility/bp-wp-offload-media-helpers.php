@@ -64,6 +64,7 @@ class BB_AS3CF_Plugin_Compatibility {
 		add_filter( 'bb_video_get_symlink', array( $this, 'bp_video_offload_get_video_url' ), PHP_INT_MAX, 4 );
 		add_filter( 'bb_media_settings_callback_symlink_direct_access', array( $this, 'bb_media_directory_callback_check_access' ), PHP_INT_MAX, 2 );
 		add_filter( 'bb_media_check_default_access', array( $this, 'bb_media_check_default_access_access' ), PHP_INT_MAX, 1 );
+		add_filter( 'bbp_get_topic_content', array( $this, 'bb_offload_get_content' ), 10, 1 );
 
 		add_action( 'bp_core_before_regenerate_attachment_thumbnails', array( $this, 'bb_offload_download_add_back_to_local' ) );
 		add_action( 'bp_core_after_regenerate_attachment_thumbnails', array( $this, 'bb_offload_download_remove_back_to_local' ) );
@@ -103,9 +104,10 @@ class BB_AS3CF_Plugin_Compatibility {
 		$uploads = wp_upload_dir();
 		if ( ! empty( $directory ) && class_exists( 'AS3CF_Utils' ) ) {
 			foreach ( $sample_ids as $id => $v ) {
-				$paths = AS3CF_Utils::get_attachment_file_paths( $v, false, false, false );
-				$file  = str_replace( $uploads['basedir'], $uploads['baseurl'], $paths['original'] );
-				$fetch = wp_remote_get( $file );
+				$paths         = AS3CF_Utils::get_attachment_file_paths( $v, false, false, false );
+				$original_path = ( isset( $paths ) && isset( $paths['original'] ) ? $paths['original'] : $paths['__as3cf_primary'] );
+				$file          = str_replace( $uploads['basedir'], $uploads['baseurl'], $original_path );
+				$fetch         = wp_remote_get( $file );
 				if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
 					$directory[] = $id;
 				}
@@ -130,7 +132,7 @@ class BB_AS3CF_Plugin_Compatibility {
 	public function bb_offload_do_symlink( $can, $id, $attachment_id, $size ) {
 
 		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		$server_from_local          = (bool) $remove_local_files_setting['serve-from-s3'];
+		$server_from_local          = ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['serve-from-s3'] ) && (bool) $remove_local_files_setting['serve-from-s3'] );
 
 		if ( ! $server_from_local ) {
 			return true;
@@ -174,7 +176,7 @@ class BB_AS3CF_Plugin_Compatibility {
 				$attachment_url = wp_get_attachment_image_url( $attachment_id, 'full' );
 			}
 
-			$image_array = @getimagesize( $attachment_url );
+			$image_array = ( false !== $attachment_url ? @getimagesize( $attachment_url ) : array() );
 
 			if ( ! $attachment_url || empty( $image_array ) ) {
 
@@ -213,8 +215,13 @@ class BB_AS3CF_Plugin_Compatibility {
 	public function bp_media_offload_get_preview_url( $attachment_url, $media_id, $attachment_id, $size, $symlink ) {
 
 		if ( ! $symlink ) {
-			$media          = new BP_Media( $media_id );
-			$attachment_url = wp_get_attachment_url( $media->attachment_id );
+			$media        = new BP_Media( $media_id );
+			$get_metadata = wp_get_attachment_metadata( $media->attachment_id );
+			if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
+				$attachment_url = wp_get_attachment_image_url( $media->attachment_id, $size );
+			} else {
+				$attachment_url = wp_get_attachment_url( $media->attachment_id );
+			}
 		}
 
 		return $attachment_url;
@@ -282,6 +289,25 @@ class BB_AS3CF_Plugin_Compatibility {
 	 */
 	public function bb_offload_download_remove_back_to_local() {
 		remove_filter( 'as3cf_get_attached_file_copy_back_to_local', '__return_true' );
+	}
+
+	/**
+	 * Fix the media url issue with API post_content on API.
+	 *
+	 * @since BuddyBoss 2.3.50
+	 *
+	 * @param string $content Post content.
+	 *
+	 * @return mixed|string
+	 */
+	public function bb_offload_get_content( $content ) {
+		global $as3cf;
+
+		if ( ! empty( $as3cf->filter_local ) ) {
+			$content = $as3cf->filter_local->filter_post( $content );
+		}
+
+		return $content;
 	}
 
 }

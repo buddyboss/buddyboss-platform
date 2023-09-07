@@ -87,7 +87,7 @@ function bp_nouveau_notifications_init_filters() {
 function bp_nouveau_notifications_register_filter( $args = array() ) {
 	$bp_nouveau = bp_nouveau();
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'id'       => '',
@@ -119,6 +119,9 @@ function bp_nouveau_notifications_register_filter( $args = array() ) {
  */
 function bp_nouveau_notifications_get_filters( $id = '' ) {
 	$bp_nouveau = bp_nouveau();
+	if ( ! isset( $bp_nouveau->notifications->filters ) ) {
+		return false;
+	}
 
 	// Get all filters
 	if ( empty( $id ) ) {

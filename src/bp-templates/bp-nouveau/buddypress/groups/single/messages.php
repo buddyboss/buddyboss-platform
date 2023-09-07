@@ -9,10 +9,11 @@
  */
 ?>
 
+	<?php bp_get_template_part( 'groups/single/parts/messages-subnav' ); ?>
+	
 	<div id="group-messages-container">
 
 		<?php
-		bp_get_template_part( 'groups/single/parts/messages-subnav' );
 
 		switch ( bp_get_group_current_messages_tab() ) :
 

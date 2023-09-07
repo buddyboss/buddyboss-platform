@@ -82,6 +82,7 @@ add_action( 'bbp_init', 'bbp_register', 0 );
 add_action( 'bbp_init', 'bbp_add_rewrite_tags', 20 );
 add_action( 'bbp_init', 'bbp_add_rewrite_rules', 30 );
 add_action( 'bbp_init', 'bbp_add_permastructs', 40 );
+add_action( 'bbp_init', 'bbp_setup_engagements', 50  );
 add_action( 'bbp_init', 'bbp_ready', 999 );
 
 /**
@@ -214,12 +215,10 @@ add_action( 'bbp_trash_topic', 'bbp_remove_topic_from_all_favorites' );
 add_action( 'bbp_delete_topic', 'bbp_remove_topic_from_all_favorites' );
 
 // Subscriptions.
-add_action( 'bbp_trash_topic', 'bbp_remove_topic_from_all_subscriptions' );
 add_action( 'bbp_delete_topic', 'bbp_remove_topic_from_all_subscriptions' );
-add_action( 'bbp_trash_forum', 'bbp_remove_forum_from_all_subscriptions' );
 add_action( 'bbp_delete_forum', 'bbp_remove_forum_from_all_subscriptions' );
-add_action( 'bbp_new_reply', 'bbp_notify_topic_subscribers', 11, 5 );
-add_action( 'bbp_new_topic', 'bbp_notify_forum_subscribers', 11, 4 );
+add_action( 'bbp_new_reply', 'bbp_notify_topic_subscribers', 9999, 5 );
+add_action( 'bbp_new_topic', 'bbp_notify_forum_subscribers', 9999, 4 );
 
 // Sticky.
 add_action( 'bbp_trash_topic', 'bbp_unstick_topic' );
@@ -302,6 +301,15 @@ add_action( 'bbp_get_request', 'bbp_search_results_redirect', 10 );
 // Maybe convert the users password.
 add_action( 'bbp_login_form_login', 'bbp_user_maybe_convert_pass' );
 
+add_action( 'wp_ajax_post_topic_reply_draft', 'bb_post_topic_reply_draft' );
+
+add_action( 'wp_footer', 'bb_forum_add_content_popup' );
+
+add_action( 'bbp_new_topic', 'bb_forums_save_link_preview_data' );
+add_action( 'bbp_new_reply', 'bb_forums_save_link_preview_data' );
+add_action( 'bbp_edit_topic', 'bb_forums_save_link_preview_data' );
+add_action( 'bbp_edit_reply', 'bb_forums_save_link_preview_data' );
+
 /**
  * Register the forum notifications.
  *
@@ -328,7 +336,7 @@ function forums_notification_settings() {
 	}
 
 	// Bail out if legacy method not enabled.
-	if ( false === bb_enabled_legacy_email_preference() ) {
+	if ( false === bb_enabled_legacy_email_preference() || ! bbp_is_subscriptions_active() ) {
 		return;
 	}
 
@@ -400,3 +408,313 @@ function forums_notification_settings() {
 	<?php
 }
 add_action( 'bp_notification_settings', 'forums_notification_settings', 11 );
+
+/**
+ * Save topic/reply draft data.
+ *
+ * @since BuddyBoss 2.0.4
+ */
+function bb_post_topic_reply_draft() {
+	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_topic_reply_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_topic_reply_draft'], 'post_topic_reply_draft_data' ) ) {
+		wp_send_json_error();
+	}
+
+	$draft_topic_reply = $_REQUEST['draft_topic_reply'] ?? '';
+	$usermeta_key      = 'bb_user_topic_reply_draft';
+	$user_id           = bp_loggedin_user_id();
+	$all_data          = array();
+
+	if ( ! empty( $_REQUEST['draft_topic_reply'] ) && ! is_array( $_REQUEST['draft_topic_reply'] ) ) {
+		$draft_topic_reply = json_decode( stripslashes( $draft_topic_reply ), true );
+	}
+
+	if ( ! empty( $_REQUEST['all_data'] ) && ! is_array( $_REQUEST['all_data'] ) ) {
+		$all_data = json_decode( stripslashes( $_REQUEST['all_data'] ), true );
+	}
+
+	if ( is_array( $draft_topic_reply ) && isset( $draft_topic_reply['data_key'], $draft_topic_reply['object'] ) ) {
+
+		$existing_draft = bp_get_user_meta( $user_id, $usermeta_key, true );
+
+		if ( isset( $existing_draft[ $draft_topic_reply['data_key'] ] ) ) {
+			$removed_data = $existing_draft[ $draft_topic_reply['data_key'] ];
+
+			// Delete medias.
+			if ( isset( $removed_data['bbp_media'] ) && ! empty( $removed_data['bbp_media'] ) ) {
+				$remove_media_data = json_decode( stripslashes( $removed_data['bbp_media'] ), true );
+
+				if ( ! empty( $remove_media_data ) ) {
+					foreach ( $remove_media_data as $media_attachment ) {
+						if ( ! empty( $media_attachment['id'] ) && 0 < (int) $media_attachment['id'] ) {
+							wp_delete_attachment( $media_attachment['id'], true );
+						}
+					}
+				}
+			}
+
+			// Delete documents.
+			if ( isset( $removed_data['bbp_document'] ) && ! empty( $removed_data['bbp_document'] ) ) {
+				$remove_document_data = json_decode( stripslashes( $removed_data['bbp_document'] ), true );
+
+				if ( ! empty( $remove_document_data ) ) {
+					foreach ( $remove_document_data as $document_attachment ) {
+						if ( ! empty( $document_attachment['id'] ) && 0 < (int) $document_attachment['id'] ) {
+							wp_delete_attachment( $document_attachment['id'], true );
+						}
+					}
+				}
+			}
+
+			// Delete videos.
+			if ( isset( $removed_data['bbp_video'] ) && ! empty( $removed_data['bbp_video'] ) ) {
+				$remove_video_data = json_decode( stripslashes( $removed_data['bbp_video'] ), true );
+
+				if ( ! empty( $remove_video_data ) ) {
+					foreach ( $remove_video_data as $video_attachment ) {
+						if ( ! empty( $video_attachment['id'] ) && 0 < (int) $video_attachment['id'] ) {
+							wp_delete_attachment( $video_attachment['id'], true );
+						}
+					}
+				}
+			}
+
+			unset( $existing_draft[ $draft_topic_reply['data_key'] ] );
+		}
+
+		if ( empty( $existing_draft ) || is_string( $existing_draft ) ) {
+			$existing_draft = array();
+		}
+
+		if ( isset( $draft_topic_reply['post_action'] ) && 'update' === $draft_topic_reply['post_action'] ) {
+
+			// Set media draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
+			if ( isset( $draft_topic_reply['data']['bbp_media'] ) && ! empty( $draft_topic_reply['data']['bbp_media'] ) ) {
+				$new_media_data = json_decode( stripslashes( $draft_topic_reply['data']['bbp_media'] ), true );
+
+				if ( ! empty( $new_media_data ) ) {
+					foreach ( $new_media_data as $media_key => $new_media_attachment ) {
+						if ( ! isset( $new_media_attachment['bb_media_draft'] ) ) {
+							$new_media_data[ $media_key ]['bb_media_draft'] = 1;
+							update_post_meta( $new_media_attachment['id'], 'bb_media_draft', 1 );
+						}
+					}
+				}
+
+				$draft_topic_reply['data']['bbp_media'] = wp_json_encode( $new_media_data );
+			}
+
+			// Set document draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
+			if ( isset( $draft_topic_reply['data']['bbp_document'] ) && ! empty( $draft_topic_reply['data']['bbp_document'] ) ) {
+				$new_document_data = json_decode( stripslashes( $draft_topic_reply['data']['bbp_document'] ), true );
+
+				if ( ! empty( $new_document_data ) ) {
+					foreach ( $new_document_data as $document_key => $new_document_attachment ) {
+						if ( ! isset( $new_document_attachment['bb_media_draft'] ) ) {
+							$new_document_data[ $document_key ]['bb_media_draft'] = 1;
+							update_post_meta( $new_document_attachment['id'], 'bb_media_draft', 1 );
+						}
+					}
+				}
+
+				$draft_topic_reply['data']['bbp_document'] = wp_json_encode( $new_document_data );
+			}
+
+			// Set video draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
+			if ( isset( $draft_topic_reply['data']['bbp_video'] ) && ! empty( $draft_topic_reply['data']['bbp_video'] ) ) {
+				$new_video_data = json_decode( stripslashes( $draft_topic_reply['data']['bbp_video'] ), true );
+
+				if ( ! empty( $new_video_data ) ) {
+					foreach ( $new_video_data as $video_key => $new_video_attachment ) {
+						if ( ! isset( $new_video_attachment['bb_media_draft'] ) ) {
+							$new_video_data[ $video_key ]['bb_media_draft'] = 1;
+							update_post_meta( $new_video_attachment['id'], 'bb_media_draft', 1 );
+						}
+					}
+				}
+
+				$draft_topic_reply['data']['bbp_video'] = wp_json_encode( $new_video_data );
+			}
+
+			$existing_draft[ $draft_topic_reply['data_key'] ] = $draft_topic_reply;
+
+			if ( ! empty( $all_data ) ) {
+
+				foreach ( $all_data as $data_key => $d_data ) {
+
+					// Avoid conflict with current data.
+					if ( $draft_topic_reply['data_key'] === $data_key ) {
+						continue;
+					}
+
+					// Update the all data.
+					if ( isset( $existing_draft[ $data_key ] ) ) {
+						$existing_draft[ $data_key ]['data'] = $d_data;
+					}
+				}
+			}
+		}
+
+		bp_update_user_meta( $user_id, $usermeta_key, $existing_draft );
+	}
+
+	wp_send_json_success(
+		array(
+			'draft_activity' => $draft_topic_reply,
+		)
+	);
+}
+
+/**
+ * Function add pop up for single page forum content.
+ *
+ * @since BuddyBoss 2.2.1
+ */
+function bb_forum_add_content_popup() {
+	global $template_forum_ids;
+
+	if ( empty( $template_forum_ids ) ) {
+		return;
+	}
+
+	$template_forum_ids = array_unique( $template_forum_ids );
+
+	// Output the extracted IDs.
+	foreach ( $template_forum_ids as $forum_id ) {
+	?>
+		<!-- Forum description popup -->
+		<div class="bb-action-popup" id="single-forum-description-popup-<?php echo esc_attr( $forum_id ); ?>" style="display: none">
+			<transition name="modal">
+				<div class="modal-mask bb-white bbm-model-wrap">
+					<div class="modal-wrapper">
+						<div class="modal-container">
+							<header class="bb-model-header">
+								<h4><span class="target_name"><?php echo esc_html__( 'Forum Description', 'buddyboss' ); ?></span></h4>
+								<a class="bb-close-action-popup bb-model-close-button" href="#">
+									<span class="bb-icon-l bb-icon-times"></span>
+								</a>
+							</header>
+							<div class="bb-action-popup-content">
+								<?php echo wpautop( wp_kses_post( bbp_get_forum_content( $forum_id ) ) ); ?>
+							</div>
+						</div>
+					</div>
+				</div>
+			</transition>
+		</div> <!-- .bb-action-popup -->
+	<?php
+	}
+
+	unset( $template_forum_ids );
+}
+
+/**
+ * Save link preview data into topic/reply meta key "_link_preview_data"
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param int $post_id Discussion/Reply id.
+ */
+function bb_forums_save_link_preview_data( $post_id ) {
+
+	$link_preview_data = array();
+
+	if (
+		empty( $_POST['action'] ) || //phpcs:ignore WordPress.Security.NonceVerification.Missing
+		! in_array(
+			$_POST['action'], // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			array(
+				'bbp-new-topic',
+				'bbp-new-reply',
+				'reply',
+				'bbp-edit-topic',
+				'bbp-edit-reply',
+			),
+			true
+		)
+	) {
+		return false;
+	}
+
+	if ( ! empty( $_POST['link_preview_data'] ) ) {
+		$link_preview_data = get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) );
+	} else {
+
+		// Allow Link preview related keys.
+		$allowed_keys = array(
+			'link_url',
+			'link_embed',
+			'link_title',
+			'link_description',
+			'link_image',
+			'link_image_index_save'
+		);
+
+		// Filter the $_POST array to only include allowed keys.
+		$link_preview_data = array_filter( $_POST, function( $key ) use ( $allowed_keys ) {
+			return in_array( $key, $allowed_keys );
+		}, ARRAY_FILTER_USE_KEY );
+	}
+
+	$link_url = '';
+	if ( ! empty( $link_preview_data['link_url'] ) ) {
+		$parsed_url = wp_parse_url( $link_preview_data['link_url'] );
+		if ( ! $parsed_url || empty( $parsed_url['host'] ) ) {
+			$link_url = 'http://' . $link_preview_data['link_url'];
+		} else {
+			$link_url = $link_preview_data['link_url'];
+		}
+	}
+
+	$link_url   = ! empty( $link_url ) ? filter_var( $link_url, FILTER_VALIDATE_URL ) : '';
+	$link_embed = isset( $link_preview_data['link_embed'] ) ? filter_var( $link_preview_data['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false;
+
+	// Check if link url is set or not.
+	if ( empty( $link_url ) ) {
+		if ( false === $link_embed ) {
+			update_post_meta( $post_id, '_link_embed', '0' );
+
+			// This will remove the preview data if the activity don't have anymore link in content.
+			update_post_meta( $post_id, '_link_preview_data', '' );
+		}
+
+		return;
+	}
+
+	$link_title       = ! empty( $link_preview_data['link_title'] ) ? filter_var( $link_preview_data['link_title'] ) : '';
+	$link_description = ! empty( $link_preview_data['link_description'] ) ? filter_var( $link_preview_data['link_description'] ) : '';
+	$link_image       = ! empty( $link_preview_data['link_image'] ) ? filter_var( $link_preview_data['link_image'], FILTER_VALIDATE_URL ) : '';
+
+	// Check if link embed was used.
+	if ( true === $link_embed && ! empty( $link_url ) ) {
+		update_post_meta( $post_id, '_link_embed', $link_url );
+		update_post_meta( $post_id, '_link_preview_data', '' );
+
+		return;
+	} else {
+		update_post_meta( $post_id, '_link_embed', '0' );
+	}
+
+	$preview_data['url'] = $link_url;
+
+	if ( ! empty( $link_image ) ) {
+		$attachment_id = bb_media_sideload_attachment( $link_image );
+		if ( $attachment_id ) {
+			$preview_data['attachment_id'] = $attachment_id;
+		} else {
+			// store non downloadable urls as it is in preview data.
+			$preview_data['image_url'] = $link_image;
+		}
+	}
+
+	$preview_data['link_image_index_save'] = isset( $link_preview_data['link_image_index_save'] ) ? filter_var( $link_preview_data['link_image_index_save'] ) : '';
+
+	if ( ! empty( $link_title ) ) {
+		$preview_data['title'] = $link_title;
+	}
+
+	if ( ! empty( $link_description ) ) {
+		$preview_data['description'] = $link_description;
+	}
+
+	update_post_meta( $post_id, '_link_preview_data', $preview_data );
+}

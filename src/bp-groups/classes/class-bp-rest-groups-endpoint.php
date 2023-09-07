@@ -120,6 +120,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Boolean} [enable_forum] Whether the Group has a forum enabled or not.
 	 * @apiParam {Boolean} [show_hidden] Whether results should include hidden Groups.
 	 * @apiParam {String=all,personal} [scope=all] Limit result set to items with a specific scope.
+	 * @apiParam {Boolean} [can_post] Fetch current users groups which can post activity in it.
 	 */
 	public function get_items( $request ) {
 		$args = array(
@@ -138,11 +139,15 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			'per_page'     => $request['per_page'],
 			'status'       => $request['status'],
 			'page'         => $request['page'],
+			'can_post'     => (bool) $request['can_post'],
 		);
-
 		if ( empty( $request['parent_id'] ) ) {
 			$args['parent_id'] = null;
-			if ( true === (bool) bp_enable_group_hide_subgroups() ) {
+			if (
+				true === (bool) bp_enable_group_hide_subgroups() &&
+				isset( $request['user_id'] ) &&
+				0 === (int) $request['user_id']
+			) {
 				$args['parent_id'] = 0;
 			}
 		}
@@ -198,8 +203,15 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 		$args = apply_filters( 'bp_rest_groups_get_items_query_args', $args, $request );
 
 		// Actually, query it.
+		if ( true === $args['can_post'] && function_exists( 'bb_groups_get_join_sql_for_activity' ) && function_exists( 'bb_groups_get_where_conditions_for_activity' ) ) {
+			add_filter( 'bp_groups_get_join_sql', 'bb_groups_get_join_sql_for_activity', 10, 2 );
+			add_filter( 'bp_groups_get_where_conditions', 'bb_groups_get_where_conditions_for_activity', 10, 2 );
+		}
 		$groups = groups_get_groups( $args );
-
+		if ( true === $args['can_post'] && function_exists( 'bb_groups_get_join_sql_for_activity' ) && function_exists( 'bb_groups_get_where_conditions_for_activity' ) ) {
+			remove_filter( 'bp_groups_get_join_sql', 'bb_groups_get_join_sql_for_activity', 10, 2 );
+			remove_filter( 'bp_groups_get_where_conditions', 'bb_groups_get_where_conditions_for_activity', 10, 2 );
+		}
 		// Users need (at least, should we be more restrictive ?) to be logged in to use the edit context.
 		if ( 'edit' === $request->get_param( 'context' ) && ! is_user_logged_in() ) {
 			$request->set_param( 'context', 'view' );
@@ -729,6 +741,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			'enable_forum'       => $this->bp_rest_group_is_forum_enabled( $item ),
 			'link'               => bp_get_group_permalink( $item ),
 			'name'               => bp_get_group_name( $item ),
+			'name_raw'           => $item->name,
 			'slug'               => bp_get_group_slug( $item ),
 			'status'             => bp_get_group_status( $item ),
 			'types'              => bp_groups_get_group_type( $item->id, false ),
@@ -749,6 +762,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			'can_join'           => $this->bp_rest_user_can_join( $item ),
 			'can_post'           => $this->bp_rest_user_can_post( $item ),
 			'create_media'       => ( bp_is_active( 'media' ) && groups_can_user_manage_media( bp_loggedin_user_id(), $item->id ) ),
+			'create_album'       => ( bp_is_active( 'media' ) && groups_can_user_manage_albums( bp_loggedin_user_id(), $item->id ) ),
 			'create_video'       => ( bp_is_active( 'video' ) && groups_can_user_manage_video( bp_loggedin_user_id(), $item->id ) ),
 			'create_document'    => ( bp_is_active( 'document' ) && groups_can_user_manage_document( bp_loggedin_user_id(), $item->id ) ),
 		);
@@ -829,6 +843,19 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			$data['types'] = array();
 		}
 
+		if ( ! empty( $data['types'] ) ) {
+			$group_type_data                     = array();
+			$group_type_data['group_type_label'] = isset( $data['group_type_label'] ) && ! empty( $data['group_type_label'] ) ? $data['group_type_label'] : '';
+			$group_type_data['types']            = bp_groups_get_group_type( $item->id, false );
+			// Group type's label background and text color.
+			$group_type       = isset( $data['types'][0] ) ? $data['types'][0] : '';
+			$label_color_data = function_exists( 'bb_get_group_type_label_colors' ) ? bb_get_group_type_label_colors( $group_type ) : '';
+			if ( ! empty( $label_color_data ) ) {
+				$group_type_data['label_colors'] = $label_color_data;
+			}
+			$data['group_type'] = $group_type_data;
+		}
+
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 
 		// If this is the 'edit' context, fill in more details--similar to "populate_extras".
@@ -868,6 +895,16 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 					$data['mods'][] = $user;
 				}
 			}
+		}
+
+		// Member subscribed the group or not?
+		if ( function_exists( 'bb_is_enabled_subscription' ) && bb_is_enabled_subscription( 'group' ) ) {
+			$subscribed = 0;
+			if ( is_user_logged_in() && function_exists( 'bb_is_member_subscribed_group' ) ) {
+				$subscribed = bb_is_member_subscribed_group( $item->id, bp_loggedin_user_id() );
+			}
+			$data['is_subscribed'] = ! empty( $subscribed );
+			$data['subscribed_id'] = empty( $subscribed ) ? 0 : $subscribed;
 		}
 
 		$data     = $this->add_additional_fields_to_object( $data, $request );
@@ -1040,7 +1077,14 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function can_user_delete_or_update( $group ) {
-		return ( bp_current_user_can( 'bp_moderate' ) || bp_loggedin_user_id() === $group->creator_id );
+		return (
+			bp_current_user_can( 'bp_moderate' ) ||
+			bp_loggedin_user_id() === $group->creator_id ||
+			(
+				function_exists( 'groups_is_user_admin' ) &&
+				groups_is_user_admin( bp_loggedin_user_id(), $group->id )
+			)
+		);
 	}
 
 	/**
@@ -1124,6 +1168,10 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	public function get_endpoint_args_for_item_schema( $method = WP_REST_Server::CREATABLE ) {
 		$args = WP_REST_Controller::get_endpoint_args_for_item_schema( $method );
 		$key  = 'get_item';
+
+		if ( isset( $args['can_post'] ) && WP_REST_Server::READABLE !== $method ) {
+			unset( $args['can_post'] );
+		}
 
 		if ( WP_REST_Server::CREATABLE === $method || WP_REST_Server::EDITABLE === $method ) {
 			$key                         = 'create_item';
@@ -1233,6 +1281,12 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
+				),
+				'name_raw'           => array(
+					'context'     => array( 'edit' ),
+					'description' => __( 'Content for the name of the Group, as it exists in the database.', 'buddyboss' ),
+					'type'        => 'string',
+					'readonly'    => true,
 				),
 				'slug'               => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -1431,6 +1485,12 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
+				'create_album'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether the user has permission to create an album to the group or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
 				'create_video'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether the user has permission to upload video to the group or not.', 'buddyboss' ),
@@ -1441,6 +1501,12 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether the user has permission to upload document to the group or not.', 'buddyboss' ),
 					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+				'group_type'         => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether the group type details will pass.', 'buddyboss' ),
+					'type'        => 'array',
 					'readonly'    => true,
 				),
 			),
@@ -1495,6 +1561,23 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 				'description' => __( 'Whether to check the default cover image or not.', 'buddyboss' ),
 				'type'        => 'boolean',
 				'context'     => array( 'embed', 'view', 'edit' ),
+				'readonly'    => true,
+			);
+		}
+
+		// Group subscriptions related schemas.
+		if ( function_exists( 'bb_is_enabled_subscription' ) && bb_is_enabled_subscription( 'group' ) ) {
+			$schema['properties']['is_subscribed'] = array(
+				'context'     => array( 'embed', 'view', 'edit' ),
+				'description' => __( 'The current user is subscribed of a group or not.', 'buddyboss' ),
+				'type'        => 'boolean',
+				'readonly'    => true,
+			);
+
+			$schema['properties']['subscribed_id'] = array(
+				'context'     => array( 'embed', 'view', 'edit' ),
+				'description' => __( 'The group subscription ID of current user.', 'buddyboss' ),
+				'type'        => 'integer',
 				'readonly'    => true,
 			);
 		}
@@ -1631,6 +1714,14 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			'default'           => 'all',
 			'enum'              => array( 'all', 'personal' ),
 			'sanitize_callback' => 'sanitize_text_field',
+			'validate_callback' => 'rest_validate_request_arg',
+		);
+
+		$params['can_post'] = array(
+			'description'       => __( 'Fetch current users groups which can post activity in it.', 'buddyboss' ),
+			'default'           => false,
+			'type'              => 'boolean',
+			'sanitize_callback' => 'rest_sanitize_boolean',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 

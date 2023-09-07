@@ -79,6 +79,14 @@ class BP_Media {
 	var $activity_id;
 
 	/**
+	 * Message ID of the media item.
+	 *
+	 * @since BuddyBoss 2.3.60
+	 * @var int
+	 */
+	var $message_id;
+
+	/**
 	 * Group ID of the media item.
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -175,6 +183,7 @@ class BP_Media {
 		$this->title         = $row->title;
 		$this->album_id      = (int) $row->album_id;
 		$this->activity_id   = (int) $row->activity_id;
+		$this->message_id    = (int) $row->message_id;
 		$this->group_id      = (int) $row->group_id;
 		$this->privacy       = $row->privacy;
 		$this->menu_order    = (int) $row->menu_order;
@@ -201,6 +210,7 @@ class BP_Media {
 		$this->title         = apply_filters_ref_array( 'bp_media_title_before_save', array( $this->title, &$this ) );
 		$this->album_id      = apply_filters_ref_array( 'bp_media_album_id_before_save', array( $this->album_id, &$this ) );
 		$this->activity_id   = apply_filters_ref_array( 'bp_media_activity_id_before_save', array( $this->activity_id, &$this ) );
+		$this->message_id    = apply_filters_ref_array( 'bp_media_message_id_before_save', array( $this->message_id, &$this ) );
 		$this->group_id      = apply_filters_ref_array( 'bp_media_group_id_before_save', array( $this->group_id, &$this ) );
 		$this->privacy       = apply_filters_ref_array( 'bp_media_privacy_before_save', array( $this->privacy, &$this ) );
 		$this->menu_order    = apply_filters_ref_array( 'bp_media_menu_order_before_save', array( $this->menu_order, &$this ) );
@@ -239,9 +249,9 @@ class BP_Media {
 
 		// If we have an existing ID, update the media item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, message_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name} ( blog_id, attachment_id, user_id, title, album_id, activity_id, group_id, privacy, menu_order, date_created ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %s, %d, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name} ( blog_id, attachment_id, user_id, title, album_id, activity_id, message_id, group_id, privacy, menu_order, date_created ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %d, %s, %d, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
@@ -296,23 +306,27 @@ class BP_Media {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args(
+		$r  = bp_parse_args(
 			$args,
 			array(
-				'scope'        => '',              // Scope - Groups, friends etc.
-				'page'         => 1,               // The current page.
-				'per_page'     => 20,              // Media items per page.
-				'max'          => false,           // Max number of items to return.
-				'fields'       => 'all',           // Fields to include.
-				'sort'         => 'DESC',          // ASC or DESC.
-				'order_by'     => 'date_created',  // Column to order by.
-				'exclude'      => false,           // Array of ids to exclude.
-				'in'           => false,           // Array of ids to limit query by (IN).
-				'search_terms' => false,           // Terms to search by.
-				'album_id'     => false,           // Album ID.
-				'privacy'      => false,           // public, loggedin, onlyme, friends, grouponly, message.
-				'count_total'  => false,           // Whether or not to use count_total.
-				'video'        => false,            // Whether to include videos.
+				'scope'            => '',              // Scope - Groups, friends etc.
+				'page'             => 1,               // The current page.
+				'per_page'         => 20,              // Media items per page.
+				'max'              => false,           // Max number of items to return.
+				'fields'           => 'all',           // Fields to include.
+				'sort'             => 'DESC',          // ASC or DESC.
+				'order_by'         => 'date_created',  // Column to order by.
+				'exclude'          => false,           // Array of ids to exclude.
+				'in'               => false,           // Array of ids to limit query by (IN).
+				'search_terms'     => false,           // Terms to search by.
+				'album_id'         => false,           // Album ID.
+				'privacy'          => false,           // public, loggedin, onlyme, friends, grouponly, message.
+				'count_total'      => false,           // Whether to use count_total.
+				'video'            => false,           // Whether to include videos.
+				'user_id'          => false,           // Filter by user id.
+				'activity_id'      => false,           // Filter by activity id.
+				'group_id'         => false,           // Filter by group id.
+				'moderation_query' => false,           // Filter to include moderation.
 			)
 		);
 
@@ -657,6 +671,7 @@ class BP_Media {
 				$media->attachment_id = (int) $media->attachment_id;
 				$media->album_id      = (int) $media->album_id;
 				$media->activity_id   = (int) $media->activity_id;
+				$media->message_id    = (int) $media->message_id;
 				$media->group_id      = (int) $media->group_id;
 				$media->menu_order    = (int) $media->menu_order;
 			}
@@ -1031,7 +1046,7 @@ class BP_Media {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args(
+		$r  = bp_parse_args(
 			$args,
 			array(
 				'id'            => false,
@@ -1193,12 +1208,27 @@ class BP_Media {
 
 						// Deleting an activity.
 					} else {
-						if ( 'activity' !== $from && bp_activity_delete(
-							array(
-								'id'      => $activity->id,
-								'user_id' => $activity->user_id,
+						$activity_delete  = false;
+						$activity_content = ! empty( $activity->content ) ? wp_strip_all_tags( $activity->content, true ) : '';
+						if (
+							(
+								'activity' !== $from && empty( $activity_content )
+							) ||
+							(
+								'activity' === $from && ! empty( $activity->secondary_item_id )
 							)
-						) ) {
+						) {
+							$activity_delete = true;
+						}
+						if (
+							true === $activity_delete &&
+							bp_activity_delete(
+								array(
+									'id'      => $activity->id,
+									'user_id' => $activity->user_id,
+								)
+							)
+						) {
 							/** This action is documented in bp-activity/bp-activity-actions.php */
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 						}

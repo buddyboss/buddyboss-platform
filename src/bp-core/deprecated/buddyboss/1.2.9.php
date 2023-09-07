@@ -22,7 +22,7 @@ function bp_member_type_exclude_users_from_directory_and_searches( $qs = false, 
 
 	_deprecated_function( __FUNCTION__, '1.2.9' );
 
-	$args = wp_parse_args( $qs );
+	$args = bp_parse_args( $qs );
 
 	if ( $object !== 'members' ) {
 		return $qs;
@@ -103,7 +103,7 @@ function bp_member_type_query( $query ) {
 	if ( isset( $type_id ) ) {
 
 		// Alter SELECT with INNER JOIN
-		$query->uid_clauses['select'] .= " INNER JOIN {$wpdb->prefix}term_relationships r ON u.{$query->uid_name} = r.object_id ";
+		$query->uid_clauses['select'] .= " INNER JOIN {$wpdb->term_relationships} r ON u.{$query->uid_name} = r.object_id ";
 
 		// Alter WHERE clause
 		$query_where_glue             = empty( $query->uid_clauses['where'] ) ? ' WHERE ' : ' AND ';

@@ -97,7 +97,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 				'email_content'       => __( "<a href=\"{{{initiator.url}}}\">{{initiator.name}}</a> wants to add you as a connection.\n\n{{{member.card}}}\n\n<a href=\"{{{friend-requests.url}}}\">Click here</a> to manage this and all other pending requests.", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "{{initiator.name}} wants to add you as a connection.\n\nTo accept this request and manage all of your pending requests, visit: {{{friend-requests.url}}}\n\nTo view {{initiator.name}}'s profile, visit: {{{initiator.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'A member recieves a new connection request', 'buddyboss' ),
+				'situation_label'     => __( 'A member receives a new connection request', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you an invitation to connect.', 'buddyboss' ),
 			),
 			'bb_connections_new_request'
@@ -190,71 +190,88 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 
 		// Friends request accepted.
 		if ( ! empty( $notification ) && 'friends' === $notification->component_name && 'bb_connections_request_accepted' === $notification->component_action ) {
+			$amount = 'single';
 
-			$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_friends_slug() . '/my-friends' );
-
-			// Set up the string and the filter.
-			if ( (int) $total_items > 1 ) {
-				$text = sprintf(
-				/* translators: total members count */
-					esc_html__( '%d members accepted your connection requests', 'buddyboss' ),
-					(int) $total_items
-				);
-				$amount = 'multiple';
+			if ( 'web_push' === $screen ) {
+				$notification_link = trailingslashit( bp_core_get_user_domain( $notification->user_id ) . bp_get_friends_slug() . '/my-friends' );
+				$text              = __( 'Has accepted your connection request', 'buddyboss' );
 			} else {
-				$text = sprintf(
-				/* translators: member name */
-					esc_html__( '%s has accepted your connection request', 'buddyboss' ),
-					bp_core_get_user_displayname( $item_id )
-				);
-				$amount = 'single';
+				$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_friends_slug() . '/my-friends' );
+
+				// Set up the string and the filter.
+				if ( (int) $total_items > 1 ) {
+					$text = sprintf(
+					/* translators: total members count */
+						esc_html__( '%d members accepted your connection requests', 'buddyboss' ),
+						(int) $total_items
+					);
+					$amount = 'multiple';
+				} else {
+					$text = sprintf(
+					/* translators: member name */
+						esc_html__( '%s has accepted your connection request', 'buddyboss' ),
+						bp_core_get_user_displayname( $item_id )
+					);
+
+				}
 			}
 
 			$content = apply_filters(
 				'bb_friends_' . $amount . '_' . $notification->component_action . '_notification',
 				array(
-					'link' => $notification_link,
-					'text' => $text,
+					'link'  => $notification_link,
+					'text'  => $text,
+					'title' => bp_core_get_user_displayname( $notification->item_id ),
+					'image' => bb_notification_avatar_url( $notification ),
 				),
 				$notification,
 				$text,
-				$notification_link
+				$notification_link,
+				$screen
 			);
 		}
 
 		// Friends request sent.
 		if ( ! empty( $notification ) && 'friends' === $notification->component_name && 'bb_connections_new_request' === $notification->component_action ) {
 
-			$notification_link = bp_loggedin_user_domain() . bp_get_friends_slug() . '/requests/?new';
-
-			// Set up the string and the filter.
-			if ( (int) $total_items > 1 ) {
-				$text = sprintf(
-					/* translators: total number. */
-					esc_html__( 'You have %d pending requests to connect', 'buddyboss' ),
-					(int) $total_items
-				);
-
-				$amount = 'multiple';
+			$amount = 'single';
+			if ( 'web_push' === $screen ) {
+				$notification_link = bp_core_get_user_domain( $notification->user_id ) . bp_get_friends_slug() . '/requests/?new';
+				$text              = __( 'Sent you a connection request', 'buddyboss' );
 			} else {
-				$text = sprintf(
-					/* translators: users display name. */
-					esc_html__( '%s has sent you a connection request', 'buddyboss' ),
-					bp_core_get_user_displayname( $item_id )
-				);
+				$notification_link = bp_loggedin_user_domain() . bp_get_friends_slug() . '/requests/?new';
 
-				$amount = 'single';
+				// Set up the string and the filter.
+				if ( (int) $total_items > 1 ) {
+					$text = sprintf(
+					/* translators: total number. */
+						esc_html__( 'You have %d pending requests to connect', 'buddyboss' ),
+						(int) $total_items
+					);
+
+					$amount = 'multiple';
+				} else {
+					$text = sprintf(
+					/* translators: users display name. */
+						esc_html__( '%s has sent you a connection request', 'buddyboss' ),
+						bp_core_get_user_displayname( $item_id )
+					);
+
+				}
 			}
 
 			$content = apply_filters(
 				'bb_friends_' . $amount . '_' . $notification->component_action . '_notification',
 				array(
-					'link' => $notification_link,
-					'text' => $text,
+					'link'  => $notification_link,
+					'text'  => $text,
+					'title' => bp_core_get_user_displayname( $notification->item_id ),
+					'image' => bb_notification_avatar_url( $notification ),
 				),
 				$notification,
 				$text,
-				$notification_link
+				$notification_link,
+				$screen
 			);
 		}
 
@@ -273,13 +290,14 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 				}
 			} else {
 				$content = array(
-					'text' => $content['text'],
-					'link' => $content['link'],
+					'text'  => $content['text'],
+					'link'  => $content['link'],
+					'title' => ( isset( $content['title'] ) ? $content['title'] : '' ),
+					'image' => ( isset( $content['image'] ) ? $content['image'] : '' ),
 				);
 			}
 		}
 
 		return $content;
 	}
-
 }

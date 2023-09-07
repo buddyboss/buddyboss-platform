@@ -174,6 +174,10 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Meta button for activity discussion.
 			add_filter( 'bb_nouveau_get_activity_inner_buttons', array( $this, 'nouveau_get_activity_entry_buttons' ), 10, 2 );
+
+			// Allow slash in topic reply.
+			add_filter( 'bbp_activity_topic_create_excerpt', 'addslashes', 5 );
+			add_filter( 'bbp_activity_reply_create_excerpt', 'addslashes', 5 );
 		}
 
 		/**
@@ -195,15 +199,27 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 * @uses bp_activity_set_action()
 		 */
 		public function register_activity_actions() {
-			// Sitewide activity stream items
-			bp_activity_set_action( $this->component, $this->topic_create, esc_html__( 'New forum discussion', 'buddyboss' ), array( $this, 'topic_activity_action_callback' ) );
-			bp_activity_set_action( $this->component, $this->reply_create, esc_html__( 'New forum reply', 'buddyboss' ), array( $this, 'reply_activity_action_callback' ) );
 
-			if ( bp_is_active( 'groups' ) ) {
-				// Group activity stream items.
-				bp_activity_set_action( buddypress()->groups->id, $this->topic_create, esc_html__( 'New forum discussion', 'buddyboss' ), array( $this, 'topic_activity_action_callback' ) );
-				bp_activity_set_action( buddypress()->groups->id, $this->reply_create, esc_html__( 'New forum reply', 'buddyboss' ), array( $this, 'reply_activity_action_callback' ) );
-			}
+			// Sitewide activity stream items
+			bp_activity_set_action(
+				$this->component,
+				$this->topic_create,
+				esc_html__( 'New forum discussion', 'buddyboss' ),
+				array( $this, 'bbp_format_activity_action_new_topic' ),
+				esc_html__( 'Discussions', 'buddyboss' ),
+				array( 'activity', 'member', 'member_groups', 'group' )
+				
+			);
+
+			bp_activity_set_action(
+				$this->component,
+				$this->reply_create,
+				esc_html__( 'New forum reply', 'buddyboss' ),
+				array( $this, 'bbp_format_activity_action_new_reply' ),
+				esc_html__( 'Replies', 'buddyboss' ),
+				array( 'activity', 'member', 'member_groups', 'group' )
+			);
+
 		}
 
 		/**
@@ -348,10 +364,10 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		}
 
 		/**
-		 * Render the activity content for discussion activity. 
+		 * Render the activity content for discussion activity.
 		 *
 		 * @since BuddyBoss 1.7.2
-		 * 
+		 *
 		 * @param string $content  Activit content.
 		 * @param object $activity Activit data.
 		 *
@@ -396,9 +412,39 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$topic_permalink = ( ! empty( $topic->ID ) && bbp_is_reply( $topic->ID ) ) ? bbp_get_reply_url( $topic->ID ) : bbp_get_topic_permalink( $topic_id );
 			$topic_title     = get_post_field( 'post_title', $topic_id, 'raw' );
 			$reply_to_text   = ( ! empty( $topic->ID ) && bbp_is_reply( $topic->ID ) ) ? sprintf( '<span class="bb-reply-lable">%1$s</span>', esc_html__( 'Reply to', 'buddyboss' ) ) : '';
-			$content         = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s %3$s</a></p> <div class="bb-content-inr-wrap">%4$s</div>', esc_url( $topic_permalink ), $reply_to_text, $topic_title, $content );
 
-			return $content;
+			if ( ! bb_is_rest() ) {
+				// Check if link embed or link preview and append the content accordingly.
+				$post_id    = ( ! empty( $topic->ID ) && bbp_is_reply( $topic->ID ) ) ? $topic->ID : $topic_id;
+				$link_embed = get_post_meta( $post_id, '_link_embed', true );
+				if ( ! empty( $link_embed ) ) {
+					if ( bbp_is_reply( $post_id ) ) {
+						$content = bbp_reply_content_autoembed_paragraph( $content, $post_id );
+					} else {
+						$content = bbp_topic_content_autoembed_paragraph( $content, $post_id );
+					}
+				} else {
+					$content = bb_forums_link_preview( $content, $post_id );
+				}
+			}
+
+			if ( ! empty( $reply_to_text ) && ! empty( $topic_title ) ) {
+				$content = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s %3$s</a></p> <div class="bb-content-inr-wrap">%4$s</div>', esc_url( $topic_permalink ), $reply_to_text, $topic_title, $content );
+			} elseif ( empty( $reply_to_text ) && ! empty( $topic_title ) ) {
+				$content = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s</a></p> <div class="bb-content-inr-wrap">%3$s</div>', esc_url( $topic_permalink ), $topic_title, $content );
+			} elseif ( ! empty( $reply_to_text ) && empty( $topic_title ) ) {
+				$content = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s</a></p> <div class="bb-content-inr-wrap">%3$s</div>', esc_url( $topic_permalink ), $reply_to_text, $content );
+			}
+
+			/**
+			 * Filters the activity content for forum.
+			 *
+			 * @since BuddyBoss 2.3.50
+			 *
+			 * @param array $content  Activity content
+			 * @param array $activity Activity object
+			 */
+			return apply_filters( 'bb_forum_before_activity_content', $content, $activity );
 		}
 
 		/**
@@ -452,7 +498,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 						__( 'Join Discussion', 'buddyboss' )
 					),
 					'button_attr'       => array(
-						'class'         => 'button bb-icon-discussion bp-secondary-action',
+						'class'         => 'button bb-icon-l bb-icon-comments-square bp-secondary-action',
 						'aria-expanded' => 'false',
 						'href'          => bbp_get_topic_permalink( $topic_id ),
 					),
@@ -475,10 +521,10 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 					$topic    = bbp_get_reply( $reply_id );
 					$topic_id = $topic->post_parent;
 				}
-				
+
 				// Redirect to.
 				$redirect_to = bbp_get_redirect_to();
-		
+
 				// Get the reply URL.
 				$reply_url = bbp_get_reply_url( $reply_id, $redirect_to );
 
@@ -495,7 +541,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 						__( 'Join Discussion', 'buddyboss' )
 					),
 					'button_attr'       => array(
-						'class'         => 'button bb-icon-discussion bp-secondary-action',
+						'class'         => 'button bb-icon-l bb-icon-comments-square bp-secondary-action',
 						'aria-expanded' => 'false',
 						'href'          => $reply_url,
 					),
@@ -647,6 +693,24 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				$topic_author_id = bbp_get_topic_author_id( $topic_id );
 
 				$this->topic_create( $topic_id, $forum_id, array(), $topic_author_id );
+			} elseif( bbp_get_spam_status_id() === $post->post_status ) {
+
+				// Mark related activity as spam if topic marked as spam.
+				if ( $activity_id = $this->get_activity_id( $topic_id ) ) {
+
+					$activity = new BP_Activity_Activity( $activity_id );
+
+					if ( empty( $activity->id ) ) {
+						return false;
+					}
+
+					do_action( 'bp_activity_before_action_spam_activity', $activity->id, $activity );
+
+					// Mark as spam.
+					bp_activity_mark_as_spam( $activity );
+					$activity->save();
+				}
+				return false;
 			} else {
 				$this->topic_delete( $topic_id );
 			}
@@ -804,100 +868,28 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				$reply_author_id = bbp_get_reply_author_id( $reply_id );
 
 				$this->reply_create( $reply_id, $topic_id, $forum_id, array(), $reply_author_id );
+			} elseif( bbp_get_spam_status_id() === $post->post_status ) {
+
+				// Mark related activity as spam if reply marked as spam.
+				if ( $activity_id = $this->get_activity_id( $reply_id ) ) {
+
+					$activity = new BP_Activity_Activity( $activity_id );
+
+					if ( empty( $activity->id ) ) {
+						return false;
+					}
+
+					do_action( 'bp_activity_before_action_spam_activity', $activity->id, $activity );
+
+					// Mark as spam.
+					bp_activity_mark_as_spam( $activity );
+					$activity->save();
+				}
+				return false;
 			} else {
 				$this->reply_delete( $reply_id );
 			}
 		}
-
-		/**
-		 * Modify the topic title from user timeline.
-		 *
-		 * @since BuddyBoss 1.7.2
-		 *
-		 * @param string $action    Activity content.
-		 * @param object $activity  Activity data.
-		 *
-		 * @uses bbp_get_topic_forum_id()    Get forum id from topic id.
-		 * @uses bbp_get_user_profile_link() Get user profile link.
-		 * @uses bbp_get_forum_permalink()   Get forum permalink.
-		 *
-		 * @return string
-		 */
-		public function topic_activity_action_callback( $action, $activity ) {
-			// Return default action when activity type is not topic.
-			if ( $this->topic_create !== $activity->type ) {
-				return $action;
-			}
-
-			// Set forum id when activity component is not groups.
-			if ( $this->component === $activity->component ) {
-				$topic_id = $activity->item_id;
-				$forum_id = bbp_get_topic_forum_id( $topic_id );
-			}
-
-			// Set forum id when activity component is groups.
-			if ( 'groups' === $activity->component ) {
-				$topic_id = $activity->secondary_item_id;
-				$forum_id = bbp_get_topic_forum_id( $topic_id );
-			}
-
-			// User.
-			$user_id   = $activity->user_id;
-			$user_link = bbp_get_user_profile_link( $user_id );
-
-			// Forum.
-			$forum_permalink = bbp_get_forum_permalink( $forum_id );
-			$forum_title     = get_post_field( 'post_title', $forum_id, 'raw' );
-			$forum_link      = '<a href="' . $forum_permalink . '">' . $forum_title . '</a>';
-
-			return sprintf(
-				esc_html__( '%1$s started a new discussion in the forum %2$s', 'buddyboss' ),
-				$user_link,
-				$forum_link
-			);
-		}
-
-		/**
-		 * Modify the reply title from user timeline.
-		 *
-		 * @since BuddyBoss 1.7.2
-		 *
-		 * @param obj $action
-		 * @param obj $activity
-		 *
-		 * @uses bbp_get_reply_forum_id()    Get forum id from reply id.
-		 * @uses bbp_get_topic_forum_id()    Get forum id from topic id.
-		 * @uses bbp_get_user_profile_link() Get user profile link.
-		 * @uses bbp_get_forum_permalink()   Get forum permalink.
-		 *
-		 * @return string
-		 */
-		public function reply_activity_action_callback( $action, $activity ) {
-			$user_id  = $activity->user_id;
-			$reply_id = $activity->item_id;
-			$forum_id = bbp_get_reply_forum_id( $reply_id );
-
-			// User.
-			$user_link = bbp_get_user_profile_link( $user_id );
-
-			// Update forum id when activity component is groups.
-			if ( 'groups' === $activity->component ) {
-				$topic_id = $activity->secondary_item_id;
-				$forum_id = bbp_get_topic_forum_id( $topic_id );
-			}
-
-			// Forum.
-			$forum_permalink = bbp_get_forum_permalink( $forum_id );
-			$forum_title     = get_post_field( 'post_title', $forum_id, 'raw' );
-			$forum_link      = '<a href="' . $forum_permalink . '">' . $forum_title . '</a>';
-
-			return sprintf(
-				esc_html__( '%1$s replied to a discussion in the forum %2$s', 'buddyboss' ),
-				$user_link,
-				$forum_link
-			);
-		}
-
 		public function group_forum_topic_activity_action_callback( $action, $activity ) {
 			$user_id  = $activity->user_id;
 			$topic_id = $activity->secondary_item_id;
@@ -1077,6 +1069,154 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			}
 
 			return $single_topic;
+		}
+
+		/**
+		 * Formats the dynamic activity action for new topics.
+		 *
+		 * @since bbPress 2.6.0 (r6370)
+		 * @since BuddyBoss 2.4.00
+		 *
+		 * @param string $action   The current action string.
+		 * @param object $activity The activity object.
+		 *
+		 * @return string The formatted activity action.
+		 */
+		function bbp_format_activity_action_new_topic( $action, $activity ) {
+			$action = $this->bbp_format_activity_action_new_post( bbp_get_topic_post_type(), $action, $activity );
+
+			/**
+			* Filters the formatted activity action new topic string.
+			*
+			* @since bbPress 2.6.0 (r6370)
+			* @since BuddyBoss 2.4.00
+			*
+			* @param string               $action   Activity action string value
+			* @param BP_Activity_Activity $activity Activity item object
+			*/
+			return apply_filters( 'bbp_format_activity_action_new_topic', $action, $activity );
+		}
+
+		/**
+		* Formats the dynamic activity action for new replies.
+		*
+		* @since bbPress 2.6.0 (r6370)
+		* @since BuddyBoss 2.4.00
+		*
+		* @param string $action   The current action string.
+		* @param object $activity The activity object.
+		*
+		* @return string The formatted activity action.
+		*/
+		function bbp_format_activity_action_new_reply( $action, $activity ) {
+			$action = $this->bbp_format_activity_action_new_post( bbp_get_reply_post_type(), $action, $activity );
+
+			/**
+			* Filters the formatted activity action new reply string.
+			*
+			* @since bbPress 2.6.0 (r6370)
+		 	* @since BuddyBoss 2.4.00
+			*
+			* @param string               $action   Activity action string value.
+			* @param BP_Activity_Activity $activity Activity item object.
+			*/
+			return apply_filters( 'bbp_format_activity_action_new_reply', $action, $activity );
+		}
+
+		/**
+		 * Generic function to format the dynamic activity title for topics/replies.
+		 *
+		 * @since bbPress 2.6.0 (r6370)
+		 * @since BuddyBoss 2.4.00
+		 *
+		 * @param string               $type     The type of post. Expects `topic` or `reply`.
+		 * @param string               $action   The current action string.
+		 * @param BP_Activity_Activity $activity The activity object.
+		 *
+		 * @return string The formatted activity action.
+		 */
+		function bbp_format_activity_action_new_post( $type = '', $action = '', $activity = false ) {
+
+			// Get actions.
+			$actions = $this->bbp_get_activity_actions();
+
+			// Bail early if we don't have a valid type.
+			if ( ! in_array( $type, array_keys( $actions ), true ) ) {
+				return $action;
+			}
+
+			// Bail if intercepted.
+			$intercept = bbp_maybe_intercept( __FUNCTION__, func_get_args() );
+			if ( bbp_is_intercepted( $intercept ) ) {
+				return $intercept;
+			}
+
+			// Groups component
+			if ( 'groups' === $activity->component ) {
+				if ( 'topic' === $type ) {
+					$topic_id = bbp_get_topic_id( $activity->secondary_item_id );
+					$forum_id = bbp_get_topic_forum_id( $topic_id );
+				} else {
+					$topic_id = bbp_get_reply_topic_id( $activity->secondary_item_id );
+					$forum_id = bbp_get_topic_forum_id( $topic_id );
+				}
+
+			// General component (bbpress/forums/other).
+			} else {
+				if ( 'topic' === $type ) {
+					$topic_id = bbp_get_topic_id( $activity->item_id );
+					$forum_id = bbp_get_forum_id( $activity->secondary_item_id );
+				} else {
+					$topic_id = bbp_get_topic_id( $activity->secondary_item_id );
+					$forum_id = bbp_get_topic_forum_id( $topic_id );
+				}
+			}
+
+			// User link for topic author
+			$user_link = bbp_get_user_profile_link( $activity->user_id );
+
+			// Topic link
+			$topic_permalink = bbp_get_topic_permalink( $topic_id );
+			$topic_title     = get_post_field( 'post_title', $topic_id, 'raw' );
+			$topic_link      = '<a href="' . esc_url( $topic_permalink ) . '">' . esc_html( $topic_title ) . '</a>';
+
+			// Forum link
+			$forum_permalink = bbp_get_forum_permalink( $forum_id );
+			$forum_title     = get_post_field( 'post_title', $forum_id, 'raw' );
+			$forum_link      = '<a href="' . esc_url( $forum_permalink ) . '">' . esc_html( $forum_title ) . '</a>';
+
+			// Format
+			$activity_action = sprintf( $actions[ $type ], $user_link, $topic_link, $forum_link );
+
+			/**
+			* Filters the formatted activity action new activity string.
+			*
+			* @since bbPress 2.6.0 (r6370)
+			* @since BuddyBoss 2.4.00
+			*
+			* @param string               $activity_action Activity action string value.
+			* @param string               $type            The type of post. Expects `topic` or `reply`.
+			* @param string               $action          The current action string.
+			* @param BP_Activity_Activity $activity        The activity object.
+			*/
+			return apply_filters( 'bbp_format_activity_action_new_post', $activity_action, $type, $action, $activity );
+		}
+
+		/**
+		 * Return an array of allowed activity actions.
+		 *
+		 * @since bbPress 2.6.0 (r6370)
+		 * @since BuddyBoss 2.4.00
+		 *
+		 * @return array
+		 */
+		function bbp_get_activity_actions() {
+
+			// Filter & return.
+			return (array) apply_filters( 'bbp_get_activity_actions', array(
+				'topic' => esc_html__( '%1$s started the discussion %2$s in the forum %3$s', 'buddyboss' ),
+				'reply' => esc_html__( '%1$s replied to the discussion %2$s in the forum %3$s', 'buddyboss' )
+			) );
 		}
 	}
 endif;
