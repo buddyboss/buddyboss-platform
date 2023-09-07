@@ -84,6 +84,12 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			'class' => 'hidden',
 		) );
 
+		// Allow Activity comment edit setting.
+		$this->add_field( '_bb_enable_activity_comment_edit', __( 'Edit Comment', 'buddyboss' ), 'bb_admin_setting_callback_enable_activity_comment_edit', 'intval' );
+		$this->add_field( '_bb_activity_comment_edit_time', __( 'Edit Comment Time Limit', 'buddyboss' ), '__return_true', 'intval', array(
+			'class' => 'hidden',
+		) );
+
 		// Allow subscriptions setting.
 		$this->add_field( '_bp_enable_heartbeat_refresh', __( 'Activity auto-refresh', 'buddyboss' ), 'bp_admin_setting_callback_heartbeat', 'intval' );
 
