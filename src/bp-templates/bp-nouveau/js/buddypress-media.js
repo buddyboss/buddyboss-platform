@@ -1187,7 +1187,7 @@ window.bp = window.bp || {};
 				var $media_list = buddyPressSelector.find( '.media-list:not(.existing-media-list)' );
 				$media_list.find( '.bb-media-check-wrap [name="bb-media-select"]:checked' ).each(
 					function () {
-						$( this ).closest( '.bb-photo-thumb' ).addClass( 'loading deleting' );
+						$( this ).closest( '.bb-item-thumb' ).addClass( 'loading deleting' );
 						media.push( $( this ).val() );
 					}
 				);
@@ -1195,7 +1195,7 @@ window.bp = window.bp || {};
 				if ( $media_list.parent().parent().hasClass( 'album-single-view' ) ) {
 					$media_list.find( '.bb-video-check-wrap [name="bb-video-select"]:checked' ).each(
 						function () {
-							$( this ).closest( '.bb-video-thumb' ).addClass( 'loading deleting' );
+							$( this ).closest( '.bb-item-thumb' ).addClass( 'loading deleting' );
 							media.push( $( this ).val() );
 						}
 					);
@@ -1293,16 +1293,11 @@ window.bp = window.bp || {};
 									} );
 									if ( $( '#buddypress' ).find( '.media-list:not(.existing-media-list)' ).find( 'li:not(.load-more)' ).length == 0 ) {
 										$( '.bb-photos-actions' ).hide();
-										var $loadMore = $( '#buddypress' ).find( '.media-list:not(.existing-media-list)' ).find( 'li.load-more' );
-										if ( 0 === $loadMore.length ) {
-											feedback = '<aside class="bp-feedback bp-messages info">\n' +
+										feedback = '<aside class="bp-feedback bp-messages info">\n' +
 											'\t<span class="bp-icon" aria-hidden="true"></span>\n' +
 											'\t<p>' + BP_Nouveau.media.i18n_strings.no_photos_found + '</p>\n' +
 											'\t</aside>';
-											$( '#buddypress [data-bp-list="media"]' ).html( feedback );
-										} else {
-											location.reload();
-										}
+										$( '#buddypress [data-bp-list="media"]' ).html( feedback );
 									}
 								}
 							}
@@ -1342,16 +1337,11 @@ window.bp = window.bp || {};
 								}
 								if ( $( '#buddypress' ).find( '.media-list:not(.existing-media-list)' ).find( 'li:not(.load-more)' ).length == 0 ) {
 									$( '.bb-photos-actions' ).hide();
-									var $loadMore = $( '#buddypress' ).find( '.media-list:not(.existing-media-list)' ).find( 'li.load-more' );
-									if ( 0 === $loadMore.length ) {
-										feedback = '<aside class="bp-feedback bp-messages info">\n' +
+									feedback = '<aside class="bp-feedback bp-messages info">\n' +
 										'\t<span class="bp-icon" aria-hidden="true"></span>\n' +
 										'\t<p>' + BP_Nouveau.media.i18n_strings.no_photos_found + '</p>\n' +
 										'\t</aside>';
-										$( '#buddypress [data-bp-list="media"]' ).html( feedback );
-									} else {
-										location.reload();
-									}
+									$( '#buddypress [data-bp-list="media"]' ).html( feedback );
 								}
 							} else {
 								$( '#buddypress #media-stream.media' ).prepend( response.data.feedback );
