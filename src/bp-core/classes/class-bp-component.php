@@ -500,6 +500,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		 *                        function for a description.
 		 */
 		public function setup_nav( $main_nav = array(), $sub_nav = array() ) {
+
 			// No sub nav items without a main nav item.
 			if ( ! empty( $main_nav ) ) {
 				bp_core_new_nav_item( $main_nav, 'members' );
