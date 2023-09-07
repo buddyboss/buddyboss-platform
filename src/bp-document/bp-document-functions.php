@@ -320,17 +320,17 @@ function bp_document_format_size_units( $bytes, $post_string = false, $type = 'b
 
 /**
  * Retrieve an document or documents.
- * The bp_document_get() function shares all arguments with BP_Document::get().
+ * The bp_document_get() function shares all arguments with BP_Document::documents().
  * The following is a list of bp_document_get() parameters that have different
- * default values from BP_Document::get() (value in parentheses is
+ * default values from BP_Document::documents() (value in parentheses is
  * the default for the bp_document_get()).
  *   - 'per_page' (false)
  *
- * @param array|string $args See BP_Document::get() for description.
+ * @param array|string $args See BP_Document::documents() for description.
  *
- * @return array $document See BP_Document::get() for description.
+ * @return array $document See BP_Document::documents() for description.
  * @since BuddyBoss 1.4.0
- * @see   BP_Document::get() For more information on accepted arguments
+ * @see   BP_Document::documents() For more information on accepted arguments
  *        and the format of the returned value.
  */
 function bp_document_get( $args = '' ) {
@@ -339,27 +339,28 @@ function bp_document_get( $args = '' ) {
 		$args,
 		array(
 			'max'                 => false,        // Maximum number of results to return.
-			'fields'              => 'all',
+			'fields'              => 'all',        // Fields to include.
 			'page'                => 1,            // Page 1 without a per_page will result in no pagination.
 			'per_page'            => false,        // results per page.
 			'sort'                => 'DESC',       // sort ASC or DESC.
 			'order_by'            => false,        // order by.
-			'scope'               => false,
+			'scope'               => false,        // Document Scope - public, friends, groups, personal.
 
 			// want to limit the query.
-			'user_id'             => false,
-			'activity_id'         => false,
-			'folder_id'           => false,
-			'group_id'            => false,
+			'user_id'             => false,        // Filter by user id.
+			'activity_id'         => false,        // Filter by activity id.
+			'folder_id'           => false,        // Filter by folder id.
+			'group_id'            => false,        // Filter by group id.
 			'search_terms'        => false,        // Pass search terms as a string.
-			'privacy'             => false,        // privacy of document.
+			'privacy'             => false,        // Privacy of document. public, loggedin, onlyme, friends, grouponly, message.
+			'in'                  => false,        // Array of ids to limit query by (IN).
 			'exclude'             => false,        // Comma-separated list of activity IDs to exclude.
 			'count_total'         => false,
 			'user_directory'      => true,
 
-			'meta_query_document' => false,         // Filter by activity meta. See WP_Meta_Query for format.
-			'meta_query_folder'   => false,          // Filter by activity meta. See WP_Meta_Query for format.
-			'moderation_query'    => true,         // Filter for exclude moderation query.
+			'meta_query_document' => false,        // Filter by activity meta. See WP_Meta_Query for format.
+			'meta_query_folder'   => false,        // Filter by activity meta. See WP_Meta_Query for format.
+			'moderation_query'    => true,         // Filter to include moderation query.
 		),
 		'document_get'
 	);
@@ -378,6 +379,7 @@ function bp_document_get( $args = '' ) {
 			'search_terms'        => $r['search_terms'],
 			'scope'               => $r['scope'],
 			'privacy'             => $r['privacy'],
+			'in'                  => ! empty( $r['include'] ) ? $r['include'] : $r['in'],
 			'exclude'             => $r['exclude'],
 			'count_total'         => $r['count_total'],
 			'fields'              => $r['fields'],
@@ -418,31 +420,33 @@ function bp_document_get_specific( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'document_ids' => false,      // A single document_id or array of IDs.
-			'max'          => false,      // Maximum number of results to return.
-			'page'         => 1,          // Page 1 without a per_page will result in no pagination.
-			'per_page'     => false,      // Results per page.
-			'sort'         => 'DESC',     // Sort ASC or DESC.
-			'order_by'     => false,      // Sort ASC or DESC.
-			'folder_id'    => false,      // Sort ASC or DESC.
-			'folder'       => false,
-			'meta_query'   => false,
-			'privacy'      => false,      // privacy to filter.
+			'document_ids'     => false,      // A single document_id or array of IDs.
+			'max'              => false,      // Maximum number of results to return.
+			'page'             => 1,          // Page 1 without a per_page will result in no pagination.
+			'per_page'         => false,      // Results per page.
+			'sort'             => 'DESC',     // Sort ASC or DESC.
+			'order_by'         => false,      // Sort ASC or DESC.
+			'folder_id'        => false,      // Sort ASC or DESC.
+			'folder'           => false,
+			'meta_query'       => false,
+			'privacy'          => false,      // privacy to filter.
+			'moderation_query' => true,
 		),
 		'document_get_specific'
 	);
 
 	$get_args = array(
-		'in'         => $r['document_ids'],
-		'max'        => $r['max'],
-		'page'       => $r['page'],
-		'per_page'   => $r['per_page'],
-		'sort'       => $r['sort'],
-		'order_by'   => $r['order_by'],
-		'folder_id'  => $r['folder_id'],
-		'folder'     => $r['folder'],
-		'privacy'    => $r['privacy'],      // privacy to filter.
-		'meta_query' => $r['meta_query'],
+		'in'               => $r['document_ids'],
+		'max'              => $r['max'],
+		'page'             => $r['page'],
+		'per_page'         => $r['per_page'],
+		'sort'             => $r['sort'],
+		'order_by'         => $r['order_by'],
+		'folder_id'        => $r['folder_id'],
+		'folder'           => $r['folder'],
+		'privacy'          => $r['privacy'],      // privacy to filter.
+		'meta_query'       => $r['meta_query'],
+		'moderation_query' => $r['moderation_query'],
 	);
 
 	/**
@@ -496,6 +500,7 @@ function bp_document_add( $args = '' ) {
 			'folder_id'     => false,                   // Optional: ID of the folder.
 			'group_id'      => false,                   // Optional: ID of the group.
 			'activity_id'   => false,                   // The ID of activity.
+			'message_id'    => false,                   // The ID of message.
 			'privacy'       => 'public',                // Optional: privacy of the document e.g. public.
 			'menu_order'    => 0,                       // Optional:  Menu order.
 			'date_created'  => bp_core_current_time(),  // The GMT time that this document was recorded.
@@ -514,6 +519,7 @@ function bp_document_add( $args = '' ) {
 	$document->folder_id     = (int) $r['folder_id'];
 	$document->group_id      = (int) $r['group_id'];
 	$document->activity_id   = (int) $r['activity_id'];
+	$document->message_id    = (int) $r['message_id'];
 	$document->privacy       = $r['privacy'];
 	$document->menu_order    = $r['menu_order'];
 	$document->date_created  = $r['date_created'];
@@ -547,6 +553,7 @@ function bp_document_add( $args = '' ) {
 
 	// document is saved for attachment.
 	update_post_meta( $document->attachment_id, 'bp_document_saved', true );
+	update_post_meta( $document->attachment_id, 'bp_document_id', $document->id );
 
 	/**
 	 * Fires at the end of the execution of adding a new document item, before returning the new document item ID.
@@ -606,6 +613,7 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 							'folder_id'     => ! empty( $document['folder_id'] ) ? $document['folder_id'] : $folder_id,
 							'group_id'      => ! empty( $document['group_id'] ) ? $document['group_id'] : $group_id,
 							'activity_id'   => $bp_document->activity_id,
+							'message_id'    => $bp_document->message_id,
 							'privacy'       => $bp_document->privacy,
 							'menu_order'    => ! empty( $document['menu_order'] ) ? $document['menu_order'] : false,
 							'date_modified' => bp_core_current_time(),
@@ -1240,6 +1248,12 @@ function bp_document_delete_orphaned_attachments() {
 				'value'   => '',
 			),
 		),
+		'date_query'     => array(
+			array(
+				'column' => 'post_date_gmt',
+				'before' => '6 hours ago',
+			),
+		),
 	);
 
 	$document_wp_query = new WP_query( $args );
@@ -1254,6 +1268,8 @@ function bp_document_delete_orphaned_attachments() {
 
 	add_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10, 2 );
 	add_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10, 2 );
+
+	bb_document_remove_orphaned_download();
 }
 
 /**
@@ -1398,11 +1414,38 @@ function bp_document_upload() {
 
 	do_action( 'bb_document_upload', $attachment );
 
+	// get saved document id.
+	$document_id = (int) get_post_meta( $attachment->ID, 'bp_document_id', true );
+
 	// Generate document attachment preview link.
 	$attachment_id   = 'forbidden_' . $attachment->ID;
 	$attachment_url  = home_url( '/' ) . 'bb-attachment-document-preview/' . base64_encode( $attachment_id );
 	$attachment_file = get_attached_file( $attachment->ID );
 	$attachment_size = is_file( $attachment_file ) ? bp_document_size_format( filesize( get_attached_file( $attachment->ID ) ) ) : 0;
+
+	if (
+		! empty( $document_id ) &&
+		(
+			bp_is_group_messages() ||
+			bp_is_messages_component() ||
+			(
+				! empty( $_POST['component'] ) &&
+				'messages' === $_POST['component']
+			)
+		)
+	) {
+		$attachment_url = bp_document_get_preview_url( $document_id, $attachment->ID );
+		$extension      = bp_document_extension( $attachment->ID );
+
+		if ( in_array( $extension, bp_get_document_preview_video_extensions(), true ) ) {
+			$attachment_url = bb_document_video_get_symlink( $document_id, true );
+		}
+
+		if ( empty( $attachment_url ) ) {
+			$attachment_url = bp_document_get_preview_url( $document_id, $attachment->ID );
+		}
+
+	}
 
 	if ( 0 === $attachment_size ) {
 
@@ -1420,7 +1463,7 @@ function bp_document_upload() {
 
 	$result = array(
 		'id'                => (int) $attachment->ID,
-		'url'               => esc_url( $attachment_url ),
+		'url'               => esc_url( untrailingslashit( $attachment_url ) ),
 		'name'              => esc_attr( pathinfo( basename( $attachment_file ), PATHINFO_FILENAME ) ),
 		'full_name'         => esc_attr( basename( $attachment_file ) ),
 		'type'              => esc_attr( 'document' ),
@@ -1626,7 +1669,7 @@ function bp_document_svg_icon( $extension, $attachment_id = 0, $type = 'font' ) 
 				// added svg icon support.
 				if ( 'svg' === $type ) {
 					$svg_icons = array_column( bp_document_svg_icon_list(), 'svg', 'icon' );
-					$icon      = $svg_icons[ $icon ];
+					$icon      = isset( $svg_icons[ $icon ] ) ? $svg_icons[ $icon ] : '';
 				}
 
 				return apply_filters( 'bp_document_svg_icon', $icon, $extension );
@@ -1891,7 +1934,7 @@ function bp_document_svg_icon( $extension, $attachment_id = 0, $type = 'font' ) 
 		case 'jpg':
 		case 'jpeg':
 			$svg = array(
-				'font' => 'bb-icon-file-jpg',
+				'font' => 'bb-icon-file-image',
 				'svg'  => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-jpg</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.736 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0h9.728zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM16 13.504c1.6 0 2.912 1.248 3.008 2.816v8.192c0 1.6-1.248 2.88-2.816 2.976h-8.192c-1.6 0-2.912-1.248-2.976-2.816l-0.032-0.16v-8c0-1.6 1.248-2.912 2.848-3.008h8.16zM16 14.496h-8c-1.056 0-1.92 0.832-1.984 1.856v8.16c0 0.064 0 0.096 0 0.16l2.624-2.432c0.384-0.384 1.024-0.352 1.408 0.032v0l1.376 1.504 3.328-3.84c0.352-0.416 0.992-0.448 1.408-0.096 0.032 0.032 0.064 0.064 0.096 0.096l1.76 1.92v-5.344c0-1.056-0.832-1.92-1.856-2.016h-0.16zM10.752 18.112c0.704 0 1.248 0.544 1.248 1.248 0 0.672-0.544 1.248-1.248 1.248s-1.248-0.576-1.248-1.248c0-0.704 0.544-1.248 1.248-1.248z"></path></svg>',
 			);
 			break;
@@ -2057,7 +2100,7 @@ function bp_document_user_document_folder_tree_view_li_html( $user_id = 0, $grou
 
 	$document_folder_table = $bp->document->table_name_folder;
 
-	$type = filter_input( INPUT_GET, 'type', FILTER_SANITIZE_STRING );
+	$type = bb_filter_input_string( INPUT_GET, 'type' );
 	$id   = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT );
 
 	if ( 0 === $group_id ) {
@@ -2285,8 +2328,8 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 				// Update activity data.
 				if ( bp_activity_user_can_delete( $activity ) ) {
 					// Make the activity document own.
-					$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
-					$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
+					$status                      = bp_is_active( 'groups' ) ? bp_get_group_status( groups_get_group( $activity->item_id ) ) : '';
+					$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 					$activity->secondary_item_id = 0;
 					$activity->privacy           = $destination_privacy;
 					$activity->save();
@@ -2357,8 +2400,8 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 						if ( bp_activity_user_can_delete( $activity ) ) {
 
 							// Make the activity document own.
-							$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
-							$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
+							$status                      = bp_is_active( 'groups' ) ? bp_get_group_status( groups_get_group( $activity->item_id ) ) : '';
+							$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 							$activity->secondary_item_id = 0;
 							$activity->privacy           = $destination_privacy;
 							$activity->save();
@@ -2589,8 +2632,10 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	// Change attachment post metas & rename files.
 	foreach ( get_intermediate_image_sizes() as $size ) {
 		$size_data = image_get_intermediate_size( $attachment_document_id, $size );
-
-		@unlink( $uploads_path . DIRECTORY_SEPARATOR . $size_data['path'] );
+		$attachment_path = ! empty( $size_data['path'] ) ? $uploads_path . DIRECTORY_SEPARATOR . $size_data['path'] : '';
+		if ( ! empty( $attachment_path ) && file_exists( $attachment_path ) ) {
+			@unlink( $attachment_path );
+		}
 	}
 
 	if ( ! @rename( $file_abs_path, $new_file_abs_path ) ) {
@@ -2675,7 +2720,9 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 		)
 	);
 
-	@unlink( $file_abs_path );
+	if ( file_exists( $file_abs_path ) ) {
+		@unlink( $file_abs_path );
+	}
 
 	return $response;
 }
@@ -3572,7 +3619,6 @@ function bp_document_get_forum_id( $document_id ) {
 			}
 		}
 	}
-	wp_reset_postdata();
 
 	if ( ! $forum_id ) {
 		$topics_document_query = new WP_Query(
@@ -3604,7 +3650,6 @@ function bp_document_get_forum_id( $document_id ) {
 				}
 			}
 		}
-		wp_reset_postdata();
 	}
 
 	if ( ! $forum_id ) {
@@ -3639,7 +3684,6 @@ function bp_document_get_forum_id( $document_id ) {
 				}
 			}
 		}
-		wp_reset_postdata();
 	}
 
 	return apply_filters( 'bp_document_get_forum_id', $forum_id, $document_id );
@@ -3675,6 +3719,13 @@ function bp_document_get_thread_id( $document_id ) {
 				if ( $thread_id ) {
 					break;
 				}
+			}
+		}
+
+		if ( empty( $thread_id ) ) {
+			$document_object = new BP_Document( $document_id );
+			if ( ! empty( $document_object->attachment_id ) ) {
+				$thread_id = get_post_meta( $document_object->attachment_id, 'thread_id', true );
 			}
 		}
 	}
@@ -3940,8 +3991,10 @@ function bp_document_delete_symlinks( $document ) {
 					$group_status    = bp_get_group_status( $group_object );
 					$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $privacy . sanitize_key( $name ) );
 				}
-				if ( file_exists( $attachment_path ) ) {
-					unlink( $attachment_path );
+
+				// If rename the file then preview doesn't exist but symbolic is available in the folder. So, checked the file is not empty then remove it from symbolic.
+				if ( ! empty( $attachment_path ) ) {
+					@unlink( $attachment_path ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 				}
 			}
 		}
@@ -4380,7 +4433,7 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 		}
 	}
 
-	$attachment_url = ! empty( $attachment_url ) && ! bb_enable_symlinks() ? user_trailingslashit( $attachment_url ) : $attachment_url;
+	$attachment_url = ! empty( $attachment_url ) && ! bb_enable_symlinks() ? untrailingslashit( $attachment_url ) : $attachment_url;
 
 	/**
 	 * Filter url here to audio url.
@@ -4957,4 +5010,36 @@ function bp_document_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
 	}
 
 	return apply_filters( 'bp_document_query_privacy', $privacy, $user_id, $group_id, $scope );
+}
+
+/**
+ * Function to delete the temporary download folder which create while downloding the document directory.
+ *
+ * @since BuddyBoss 2.3.80
+ *
+ * @return void
+ */
+function bb_document_remove_orphaned_download() {
+	if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+	}
+
+	$wp_files_system = new \WP_Filesystem_Direct( array() );
+
+	$six_hours_ago = time() - ( HOUR_IN_SECONDS * 6 ); // Get the timestamp 6 hours ago.
+	$uploadDir     = wp_upload_dir(); // Get the path to the upload directory.
+	$dir           = $uploadDir['basedir']; // Get the base directory path.
+
+	// Get all the subdirectories in the upload directory.
+	$folders = glob( $dir . '/*', GLOB_ONLYDIR );
+
+	foreach ( $folders as $folder ) {
+		$folder_timestamp = filemtime( $folder );
+
+		// If the folder is older than 6 hours and contains "-download-folder-" in the name, print it.
+		if ( $folder_timestamp < $six_hours_ago && stristr( $folder, '-download-folder-' ) !== false ) {
+			$wp_files_system->delete( $folder, true );
+		}
+	}
 }

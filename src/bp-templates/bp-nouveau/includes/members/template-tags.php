@@ -594,8 +594,15 @@ function bp_nouveau_get_members_buttons( $args ) {
 		}
 	}
 
-	if ( bp_is_active( 'messages' ) && ( ! $bp_force_friendship_to_message || ( $bp_force_friendship_to_message && bp_is_active( 'friends' ) && friends_check_friendship( bp_loggedin_user_id(), $user_id ) ) )
-		) {
+	if (
+		bp_is_active( 'messages' ) &&
+		bb_messages_user_can_send_message(
+			array(
+				'sender_id'     => bp_loggedin_user_id(),
+				'recipients_id' => $user_id,
+			)
+		)
+	) {
 
 		$message_button_args = array();
 		if ( ! empty( $prefix_link_text ) || ! empty( $postfix_link_text ) ) {
@@ -639,7 +646,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 					'class' => $parent_class,
 				),
 				'button_attr'              => array(
-					'href'                 => wp_nonce_url( trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) . 'compose/?r=' . bp_activity_get_user_mentionname( $user_id ) ),
+					'href'                 => wp_nonce_url( trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) . 'compose/?r=' . bp_members_get_user_nicename( $user_id ) ),
 					'id'                   => false,
 					'class'                => $button_args['link_class'],
 					'rel'                  => '',
@@ -721,7 +728,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 				array(
 					'parent_element' => $parent_element,
 					'parent_attr'    => array(
-						'id'    => $button_args['wrapper_id'],
+						'id'    => 'user-block-' . bp_displayed_user_id(),
 						'class' => $parent_class,
 					),
 					'button_element' => $button_element,
@@ -734,7 +741,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 				array(
 					'parent_element' => $parent_element,
 					'parent_attr'    => array(
-						'id'    => $button_args['wrapper_id'],
+						'id'    => 'user-report-' . bp_displayed_user_id(),
 						'class' => $parent_class,
 					),
 					'button_element' => $button_element,

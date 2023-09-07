@@ -87,6 +87,7 @@ add_filter( 'bp_core_get_user_displayname', 'xprofile_filter_get_user_display_na
 add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_nickname_value', 10, 4 );
 add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_phone_value', 10, 4 );
 add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_social_networks_value', 10, 4 );
+add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_website_url_value', 10, 3 );
 
 // Display name adjustment
 add_filter( 'bp_set_current_user', 'bp_xprofile_adjust_current_user_display_name' );
@@ -238,20 +239,26 @@ function xprofile_filter_kses( $content, $data_obj = null, $field_id = null ) {
 
 		if ( 'socialnetworks' === $field_type ) {
 			$social_tags = array(
-				'div'  => array(
+				'div'    => array(
+					'class' => 1,
+					'id'    => 1,
+				),
+				'span'   => array(
 					'class' => 1,
 				),
-				'span' => array(
+				'i'      => array(
 					'class' => 1,
 				),
-				'p'    => array(),
-				'i'    => array(
-					'class' => 1,
-				),
-				'a'    => array(
+				'a'      => array(
 					'href'   => 1,
 					'target' => 1,
 					'data-*' => 1,
+					'class'  => 1,
+				),
+				'p'      => array(),
+				'h4'     => array(),
+				'header' => array(
+					'class' => 1,
 				),
 			);
 
@@ -459,7 +466,7 @@ function bp_xprofile_escape_field_data( $value, $field_type, $field_id ) {
 			$data_obj = new BP_XProfile_ProfileData( $field_id, bp_displayed_user_id() );
 		}
 
-		$value = xprofile_filter_kses( $value, $data_obj );
+		$value = xprofile_filter_kses( $value, $data_obj, $field_id );
 	} elseif ( 'socialnetworks' === $field_type ) {
 		$data_obj = null;
 		if ( bp_is_user() ) {
@@ -844,14 +851,28 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 	$value      = strtolower( $value );
 	$field_name = xprofile_get_field( $field_id )->name;
 
-	// Empty nickname
+	// Empty nickname.
 	if ( '' === trim( $value ) ) {
 		return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
 	}
 
-	// only alpha numeric, underscore, dash
+	// only alpha numeric, underscore, dash.
 	if ( ! preg_match( '/^([A-Za-z0-9-_\.]+)$/', $value ) ) {
 		return sprintf( __( 'Invalid %s. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss' ), $field_name );
+	}
+
+	// Check user unique identifier exist.
+	$check_exists = $wpdb->get_var( // phpcs:ignore
+		$wpdb->prepare(
+			"SELECT count(*) FROM {$wpdb->usermeta} WHERE meta_key = %s AND meta_value = %s",
+			'bb_profile_slug',
+			$value
+		)
+	);
+
+	if ( $check_exists > 0 ) {
+		// translators: Nickname field.
+		return sprintf( __( 'Invalid %s.', 'buddyboss' ), $field_name );
 	}
 
 	// must be shorter then 32 characters
@@ -1052,8 +1073,8 @@ function bp_xprofile_validate_social_networks_value( $retval, $field_id, $value,
 
 	if ( 1 === $field->is_required ) {
 		foreach ( $value as $key => $val ) {
-			$value = trim( $val );
-			if ( empty( $value ) ) {
+			$val = trim( $val );
+			if ( empty( $val ) ) {
 				return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
 			}
 		}
@@ -1067,6 +1088,43 @@ function bp_xprofile_validate_social_networks_value( $retval, $field_id, $value,
 			$key = bp_social_network_search_key( $k, $providers );
 			return sprintf( __( 'Please enter valid %s profile url.', 'buddyboss' ), $providers[ $key ]->name );
 		}
+	}
+
+	return $retval;
+}
+
+/**
+ * Validate website field values.
+ *
+ * @since BuddyBoss 2.4.20
+ *
+ * @param mixed  $retval     The return value.
+ * @param string $field_id   The ID of the field.
+ * @param string $value      The value to validate.
+ *
+ * @return mixed
+ */
+function bp_xprofile_validate_website_url_value( $retval, $field_id, $value ) {
+	$field = xprofile_get_field( $field_id, null, false );
+
+	if ( 'url' !== $field->type || $retval ) {
+		return $retval;
+	}
+
+	if ( 1 === $field->is_required && '' === trim( $value ) ) {
+		return sprintf(
+			/* translators: Field name. */
+			__( '%s is required and not allowed to be empty.', 'buddyboss' ),
+			$field->name
+		);
+	}
+
+	if ( ! empty( $value ) && ! wp_http_validate_url( $value ) ) {
+		return sprintf(
+			/* translators: Field name. */
+			__( 'Invalid %s. Please enter a valid URL.', 'buddyboss' ),
+			$field->name
+		);
 	}
 
 	return $retval;
@@ -1266,51 +1324,61 @@ function bb_xprofile_repair_user_nicknames( $repair_list ) {
  * This function will work as migration process which will update user nicknames.
  *
  * @since BuddyBoss 1.7.9
+ * @since BuddyBoss 2.3.50 Added support to skip updating nickname if modified by the user.
  */
 function bb_xprofile_repair_user_nicknames_callback() {
 	global $wpdb;
 
 	$records_updated = 0;
-	$users_query     = "
-		SELECT
-			users.ID, users.display_name, users.user_login, users.user_nicename, meta.meta_value
-		FROM
-			`{$wpdb->users}` as users, `{$wpdb->usermeta}` as meta
-		WHERE
-			users.ID = meta.user_ID
-			and meta.meta_key = 'nickname'
-			and users.user_nicename != meta.meta_value";
-	$records         = $wpdb->get_results( $users_query );
+
+	$users_query = "SELECT users.ID, users.display_name, users.user_login, users.user_nicename, meta.meta_value, xprofile.value as xprofile_nickname
+					FROM `{$wpdb->users}` as users
+					LEFT JOIN `{$wpdb->usermeta}` as meta ON users.ID = meta.user_ID AND meta.meta_key = 'nickname'
+					LEFT JOIN `{$wpdb->base_prefix}bp_xprofile_data` as xprofile ON users.ID = xprofile.user_id AND xprofile.field_id = %d
+					WHERE users.user_nicename != COALESCE(meta.meta_value, users.user_nicename) OR users.user_nicename != COALESCE(xprofile.value, users.user_nicename)";
+
+	$records = $wpdb->get_results( $wpdb->prepare( $users_query, bp_xprofile_nickname_field_id() ) );
 
 	if ( ! empty( $records ) ) {
-		$wpdb->query(
-			"UPDATE
-				`{$wpdb->usermeta}` as meta, `{$wpdb->users}` as users
-			SET
-				meta.meta_value = users.user_nicename
-			WHERE
-				users.ID = meta.user_ID
-				and meta.meta_key = 'nickname'
-				and users.user_nicename != meta.meta_value"
-		);
-		$wpdb->query(
-			$wpdb->prepare(
-				"UPDATE
-					`{$wpdb->users}` as users, `{$wpdb->prefix}bp_xprofile_data` as xprofile
-				SET
-					xprofile.value = users.user_nicename
-				WHERE
-					users.ID = xprofile.user_id
-					and xprofile.field_id = %d
-					and users.user_nicename != xprofile.value",
-				bp_xprofile_nickname_field_id()
-			)
-		);
-		$records_updated = sprintf( __( '%s user nicknames updated successfully.', 'buddyboss' ), number_format_i18n( count( $records ) ) );
+		foreach ( $records as $record ) {
+			$invalid = bp_xprofile_validate_nickname_value( '', bp_xprofile_nickname_field_id(), $record->xprofile_nickname, $record->ID );
+
+			if (
+				! empty( $record->xprofile_nickname ) &&
+				empty( $invalid ) &&
+				$record->xprofile_nickname === $record->meta_value
+			) {
+				// Skip updating nickname if xprofile field is modified by the user.
+				continue;
+			}
+
+			$wpdb->update(
+				$wpdb->usermeta,
+				array( 'meta_value' => $record->user_nicename ),
+				array( 'user_id' => $record->ID, 'meta_key' => 'nickname' ),
+				array( '%s' ),
+				array( '%d', '%s' )
+			);
+
+			$wpdb->update(
+				"{$wpdb->base_prefix}bp_xprofile_data",
+				array( 'value' => $record->user_nicename ),
+				array( 'user_id' => $record->ID, 'field_id' => bp_xprofile_nickname_field_id() ),
+				array( '%s' ),
+				array( '%d', '%d' )
+			);
+
+			$records_updated ++;
+		}
 	}
+
 	return array(
 		'status'  => 1,
-		'records' => $records_updated,
+		'records' => sprintf(
+			/* translators: updated records count. */
+			__( '%s user nicknames updated successfully.', 'buddyboss' ),
+			bp_core_number_format( $records_updated )
+		),
 		'message' => __( 'Repairing user nicknames &hellip; Complete!', 'buddyboss' ),
 	);
 }

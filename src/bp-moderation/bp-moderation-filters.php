@@ -113,14 +113,14 @@ function bp_moderation_content_report() {
 		'message' => '',
 	);
 
-	$nonce     = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+	$nonce     = bb_filter_input_string( INPUT_POST, '_wpnonce' );
 	$item_id   = filter_input( INPUT_POST, 'content_id', FILTER_SANITIZE_NUMBER_INT );
-	$item_type = filter_input( INPUT_POST, 'content_type', FILTER_SANITIZE_STRING );
-	$category  = filter_input( INPUT_POST, 'report_category', FILTER_SANITIZE_STRING );
+	$item_type = bb_filter_input_string( INPUT_POST, 'content_type' );
+	$category  = bb_filter_input_string( INPUT_POST, 'report_category' );
 	if ( 'other' !== $category ) {
 		$category = filter_input( INPUT_POST, 'report_category', FILTER_SANITIZE_NUMBER_INT );
 	}
-	$item_note = filter_input( INPUT_POST, 'note', FILTER_SANITIZE_STRING );
+	$item_note = bb_filter_input_string( INPUT_POST, 'note' );
 
 	if ( empty( $item_id ) || empty( $item_type ) || empty( $category ) ) {
 		$response['message'] = new WP_Error(
@@ -238,7 +238,7 @@ function bp_moderation_block_member() {
 		'redirect' => '',
 	);
 
-	$nonce   = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+	$nonce   = bb_filter_input_string( INPUT_POST, '_wpnonce' );
 	$item_id = filter_input( INPUT_POST, 'content_id', FILTER_SANITIZE_NUMBER_INT );
 
 	if ( empty( $item_id ) ) {
@@ -340,7 +340,7 @@ function bp_moderation_unblock_user() {
 		'message' => '',
 	);
 
-	$nonce   = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING );
+	$nonce   = bb_filter_input_string( INPUT_POST, 'nonce' );
 	$item_id = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
 
 	if ( empty( $item_id ) ) {
@@ -397,9 +397,9 @@ function bp_moderation_content_actions_request() {
 		'message' => '',
 	);
 
-	$nonce      = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING );
-	$item_type  = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
-	$sub_action = filter_input( INPUT_POST, 'sub_action', FILTER_SANITIZE_STRING );
+	$nonce      = bb_filter_input_string( INPUT_POST, 'nonce' );
+	$item_type  = bb_filter_input_string( INPUT_POST, 'type' );
+	$sub_action = bb_filter_input_string( INPUT_POST, 'sub_action' );
 	$item_id    = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
 
 	if ( empty( $item_id ) || empty( $item_type ) ) {
@@ -463,9 +463,9 @@ function bp_moderation_user_actions_request() {
 		'message' => '',
 	);
 
-	$nonce      = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING );
-	$item_type  = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
-	$sub_action = filter_input( INPUT_POST, 'sub_action', FILTER_SANITIZE_STRING );
+	$nonce      = bb_filter_input_string( INPUT_POST, 'nonce' );
+	$item_type  = bb_filter_input_string( INPUT_POST, 'type' );
+	$sub_action = bb_filter_input_string( INPUT_POST, 'sub_action' );
 	$item_id    = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
 
 	if ( empty( $item_id ) || empty( $item_type ) ) {
@@ -699,7 +699,7 @@ add_filter( 'bp_repair_list', 'bb_moderation_migrate_old_data' );
  */
 function bb_moderation_admin_repair_old_moderation_data() {
 	global $wpdb;
-	$suspend_table            = "{$wpdb->prefix}bp_suspend";
+	$suspend_table            = "{$wpdb->base_prefix}bp_suspend";
 	$offset                   = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 	$sql_offset               = $offset - 1;
 	$moderated_activities_sql = $wpdb->prepare( "SELECT id,item_id,item_type FROM {$suspend_table} WHERE item_type IN ('media','video','document') GROUP BY id ORDER BY id DESC LIMIT 10 OFFSET %d", $sql_offset );
@@ -745,15 +745,17 @@ add_filter( 'bp_core_get_js_dependencies', 'bp_moderation_get_js_dependencies', 
  * @since BuddyBoss 2.0.3
  *
  * @param bool $retval  Default false.
- * @param int  $item_id Blocking User ID.
- * @param int  $user_id Blocked User ID.
+ * @param int  $item_id Blocking User ID ( Receiver user id ).
+ * @param int  $user_id Current User ID.
  *
  * @return bool True if the user blocked/suspended otherwise false.
  */
 function bb_moderation_is_recipient_moderated( $retval, $item_id, $user_id ) {
-	if ( bp_moderation_is_user_blocked( $user_id, $item_id ) ) {
-		return true;
-	} elseif ( bp_moderation_is_user_suspended( $item_id ) ) {
+	if (
+		bp_moderation_is_user_blocked( $item_id ) ||
+		bb_moderation_is_user_blocked_by( $item_id ) ||
+		bp_moderation_is_user_suspended( $item_id )
+	) {
 		return true;
 	}
 
@@ -864,7 +866,7 @@ add_filter( 'manage_edit-bpm_category_columns', 'bb_category_show_when_reporting
  *
  * @return mixed Term meta data.
  */
-function bb_category_show_when_reporting_column_display( $string = '', $column_name, $term_id ) {
+function bb_category_show_when_reporting_column_display( $string = '', $column_name = '', $term_id = 0 ) {
 	$value             = get_term_meta( $term_id, $column_name, true );
 	$show_when_options = bb_moderation_get_reporting_category_fields_array();
 	return ( isset( $show_when_options[ $value ] ) ? esc_attr( $show_when_options[ $value ] ) : esc_attr__( 'Content', 'buddyboss' ) );
@@ -971,6 +973,7 @@ function bb_moderation_before_activity_entry_callback() {
 add_action( 'bp_before_activity_entry', 'bb_moderation_before_activity_entry_callback' );
 add_action( 'bp_before_activity_comment_entry', 'bb_moderation_before_activity_entry_callback' );
 add_action( 'bp_before_group_members_list', 'bb_moderation_before_activity_entry_callback' );
+add_action( 'bp_before_group_manage_members_list', 'bb_moderation_before_activity_entry_callback' );
 
 /**
  * Filter to update the avatar url for the after activity comment, group posts/comment, group members.
@@ -985,3 +988,91 @@ function bb_moderation_after_activity_entry_callback() {
 add_action( 'bp_after_activity_entry', 'bb_moderation_after_activity_entry_callback' );
 add_action( 'bp_after_activity_comment_entry', 'bb_moderation_after_activity_entry_callback' );
 add_action( 'bp_after_group_members_list', 'bb_moderation_after_activity_entry_callback' );
+add_action( 'bp_after_group_manage_members_list', 'bb_moderation_before_activity_entry_callback' );
+
+/**
+ * Check for the next process available into the DB with the same item_id then skip the current process.
+ *
+ * @since BuddyBoss 2.4.20
+ *
+ * @param object $batch Object of data to process.
+ *
+ * @return void
+ */
+function bb_moderation_async_request_batch_process( $batch ) {
+	global $bb_background_updater, $wpdb;
+	if (
+		empty( $batch ) ||
+		! property_exists( $batch, 'group' ) ||
+		empty( $batch->group ) ||
+		false === strpos( $batch->group, 'bb_moderation_' )
+	) {
+		return;
+	}
+
+	$group_name = $batch->group;
+	$item_id    = $batch->item_id;
+	$type       = $batch->type;
+
+	$next_group_name = '';
+	if ( false !== strpos( $group_name, 'unsuspend' ) ) {
+		$next_group_name = str_replace( 'unsuspend', 'suspend', $group_name );
+	} elseif ( false !== strpos( $group_name, 'suspend' ) ) {
+		$next_group_name = str_replace( 'suspend', 'unsuspend', $group_name );
+	} elseif ( false !== strpos( $group_name, 'unhide' ) ) {
+		$next_group_name = str_replace( 'unhide', 'hide', $group_name );
+	} elseif ( false !== strpos( $group_name, 'hide' ) ) {
+		$next_group_name = str_replace( 'hide', 'unhide', $group_name );
+	}
+
+	if ( empty( $next_group_name ) ) {
+		return;
+	}
+
+	$table_name = $bb_background_updater::$table_name;
+
+	$sql  = "SELECT * from {$table_name} WHERE `group` = %s AND data_id = %s AND type = %s ORDER BY priority, id ASC LIMIT 1";
+	$data = $wpdb->get_results( $wpdb->prepare( $sql, $next_group_name, $item_id, $type ) ); // phpcs:ignore
+
+	if ( ! empty( $data ) ) {
+		$next_batch       = current( $data );
+		$next_batch->data = maybe_unserialize( $next_batch->data );
+
+		$current_data = ! empty( $batch->data['args'] ) ? $batch->data['args'] : array();
+		$next_data    = ! empty( $next_batch->data['args'] ) ? $next_batch->data['args'] : array();
+
+		$current_args = ! empty( $current_data ) ? end( $current_data ) : array();
+		$next_args    = ! empty( $next_data ) ? end( $next_data ) : array();
+
+		// Used for suspend/unsuspend.
+		if (
+			isset( $current_args['action_suspend'] ) &&
+			isset( $next_args['action_suspend'] ) &&
+			(int) $current_args['action_suspend'] === (int) $next_args['action_suspend']
+		) {
+			$batch->data = array();
+			error_log( sprintf( 'Skip suspend process: `%s` next found: `%s`', $batch->key, $next_batch->id ) );
+
+			// Used for hide_parent argument check.
+		} elseif (
+			isset( $current_args['hide_parent'] ) &&
+			isset( $next_args['hide_parent'] ) &&
+			(int) $current_args['hide_parent'] !== (int) $next_args['hide_parent']
+		) {
+			$batch->data = array();
+			error_log( sprintf( 'Skip parent process: `%s` next found: `%s`', $batch->key, $next_batch->id ) );
+			// Used for hide_sitewide argument check.
+		} elseif (
+			! empty( $next_data ) &&
+			! empty( $current_data ) &&
+			isset( $next_data[1] ) &&
+			isset( $current_data[1] ) &&
+			(int) $next_data[1] !== (int) $current_data[1]
+		) {
+			$batch->data = array();
+			error_log( sprintf( 'Skip sitewide process: `%s` next found: `%s`', $batch->key, $next_batch->id ) );
+		}
+	}
+}
+add_action( 'bb_async_request_batch_process', 'bb_moderation_async_request_batch_process', 10, 1 );
+

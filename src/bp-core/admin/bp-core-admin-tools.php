@@ -384,13 +384,21 @@ function bp_admin_repair_list() {
 		);
 	}
 
-	// Groups:
-	// - user group count.
+	// Group repair actions.
 	if ( bp_is_active( 'groups' ) ) {
+
+		// User group count.
 		$repair_list[10] = array(
 			'bp-group-count',
 			esc_html__( 'Repair total groups count for each member', 'buddyboss' ),
 			'bp_admin_repair_group_count',
+		);
+
+		// Recalculate group members count for each group.
+		$repair_list[124] = array(
+			'bp-group-members-count',
+			esc_html__( 'Recalculate the total members count for each group', 'buddyboss' ),
+			'bp_admin_repair_group_member_count',
 		);
 	}
 
@@ -1234,7 +1242,7 @@ function bp_admin_repair_tools_wrapper_function() {
 		),
 	);
 
-	$type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+	$type = bb_filter_input_string( INPUT_POST, 'type' );
 
 	if ( empty( $type ) ) {
 		wp_send_json_error( $response );
@@ -1483,9 +1491,7 @@ function bb_sync_profile_completion_widget() {
 						 * There is not any direct way to check gravatar set for user.
 						 * Need to check $profile_url is send 200 status or not.
 						 */
-						remove_filter( 'get_avatar_url', 'bp_core_get_avatar_data_url_filter', 10 );
 						$profile_url = get_avatar_url( $user->ID, array( 'default' => '404' ) );
-						add_filter( 'get_avatar_url', 'bp_core_get_avatar_data_url_filter', 10, 3 );
 
 						$headers = get_headers( $profile_url, 1 );
 						if ( $headers[0] === 'HTTP/1.1 200 OK' && isset( $headers['Link'] ) ) {
@@ -1525,4 +1531,102 @@ function bb_sync_profile_completion_widget() {
 			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
 		);
 	}
+}
+
+/**
+ * Function will recalculate the group total members count
+ * and remove the orphaned group members records.
+ *
+ * @since BuddyBoss 2.3.90
+ *
+ * @return array
+ */
+function bp_admin_repair_group_member_count() {
+	global $wpdb;
+
+	if ( ! bp_is_active( 'groups' ) ) {
+		return;
+	}
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$bp     = buddypress();
+
+	/**
+	 * Check and delete orphan group members records from wp_bp_groups_members table
+	 * if user doesn't exist in users table.
+	 */
+	if ( 0 === $offset ) {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$wpdb->query( "DELETE m, mm FROM {$wpdb->prefix}bp_groups_members AS m LEFT JOIN {$wpdb->users} AS u ON u.ID = m.user_id LEFT JOIN {$wpdb->prefix}bp_groups_membermeta AS mm ON m.ID = mm.member_id WHERE u.ID IS NULL" );
+	}
+
+	// Fetch all groups.
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$group_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT id FROM {$wpdb->prefix}bp_groups ORDER BY id DESC LIMIT 20 OFFSET %d", $offset ) );
+
+	if ( ! empty( $group_ids ) ) {
+		foreach ( $group_ids as $group_id ) {
+			// Remove cached group member count.
+			$cache_key = 'bp_group_get_total_member_count_' . $group_id;
+			wp_cache_delete( $cache_key, 'bp_groups' );
+
+			$select_sql = "SELECT COUNT(u.ID) FROM {$bp->groups->table_name_members} m";
+			$join_sql   = "LEFT JOIN {$wpdb->users} u ON u.ID = m.user_id";
+
+			// Where conditions.
+			$where_conditions          = array();
+			$where_conditions['where'] = $wpdb->prepare( 'm.group_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0', $group_id );
+
+			/**
+			 * Filters the MySQL WHERE conditions for the group members count.
+			 *
+			 * @since BuddyBoss 2.3.90
+			 *
+			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
+			 * @param string $ud_name          moderation type
+			 */
+			$where_conditions = apply_filters( 'bb_group_member_count_where_sql', $where_conditions, 'user_id' );
+
+			// Join the where conditions together.
+			$where_sql = 'WHERE ' . join( ' AND ', $where_conditions );
+
+			/**
+			 * Filters the MySQL JOIN conditions for the group members count.
+			 *
+			 * @since BuddyBoss 2.3.90
+			 *
+			 * @param array  $join_sql Current conditions for MySQL JOIN statement.
+			 * @param string $ud_name  moderation type
+			 */
+			$join_sql = apply_filters( 'bb_group_member_count_join_sql', $join_sql, 'user_id' );
+
+			$sql = "{$select_sql} {$join_sql} {$where_sql}";
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+			$member_count = $wpdb->get_var( $sql );
+
+			groups_update_groupmeta( $group_id, 'total_member_count', absint( $member_count ) );
+			wp_cache_set( $cache_key, absint( $member_count ), 'bp_groups' );
+
+			$offset++;
+		}
+
+		return array(
+			'status'  => 'running',
+			'offset'  => $offset,
+			'records' => sprintf(
+				/* translators: %s: number of groups */
+				esc_html__( '%s groups member count updated successfully.', 'buddyboss' ),
+				bp_core_number_format( $offset )
+			),
+		);
+	}
+
+	$statement = esc_html__( 'Recalculating the total group members count for each group &hellip; %s', 'buddyboss' );
+
+	return array(
+		'status'  => 1,
+		'message' => sprintf( $statement, esc_html__( 'Complete!', 'buddyboss' ) ),
+	);
 }

@@ -139,28 +139,32 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param array $where_conditions Activity Where sql.
-	 * @param array $args             Query arguments.
+	 * @param array  $where_conditions Activity Where sql.
+	 * @param string $args             Search terms.
 	 *
 	 * @return mixed Where SQL
 	 */
-	public function update_where_sql( $where_conditions, $args = array() ) {
-		if ( isset( $args['moderation_query'] ) && false === $args['moderation_query'] ) {
-			return $where_conditions;
-		}
+	public function update_where_sql( $where_conditions, $args = '' ) {
 
 		$where                  = array();
-		$where['suspend_where'] = $this->exclude_where_query();
+		if ( function_exists( 'bb_did_filter' ) && ! bb_did_filter( 'bp_activity_comments_search_where_conditions' ) ) {
+			$where['suspend_where'] = $this->exclude_where_query();
+		}
 
 		/**
 		 * Filters the hidden activity comment Where SQL statement.
 		 *
 		 * @since BuddyBoss 1.5.6
 		 *
-		 * @param array $where Query to hide suspended user's activity comment.
-		 * @param array $class current class object.
+		 * @since BuddyBoss 2.3.50
+		 * Introduce new params $where_conditions and $search_term.
+		 *
+		 * @param array  $where            Query to hide suspended user's activity comment.
+		 * @param array  $class            current class object.
+		 * @param array  $where_conditions Where condition for activity comment search.
+		 * @param string $search_term      Search term.
 		 */
-		$where = apply_filters( 'bp_suspend_activity_comment_get_where_conditions', $where, $this );
+		$where = apply_filters( 'bp_suspend_activity_comment_get_where_conditions', $where, $this, $where_conditions, $args );
 
 		if ( ! empty( array_filter( $where ) ) ) {
 			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
@@ -179,7 +183,11 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function manage_hidden_activity_comment( $acomment_id, $hide_sitewide, $args = array() ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
+
+		if ( empty( $acomment_id ) ) {
+			return;
+		}
 
 		$suspend_args = bp_parse_args(
 			$args,
@@ -195,20 +203,32 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 
 		$suspend_args = self::validate_keys( $suspend_args );
 
+		$group_name_args = array_merge(
+			$suspend_args,
+			array(
+				'custom_action' => 'hide',
+			)
+		);
+		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
+
 		BP_Core_Suspend::add_suspend( $suspend_args );
+
+		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $acomment_id;
 
 		if ( $this->background_disabled ) {
 			$this->hide_related_content( $acomment_id, $hide_sitewide, $args );
 		} else {
-			$bp_background_updater->data(
+			$bb_background_updater->data(
 				array(
-					array(
-						'callback' => array( $this, 'hide_related_content' ),
-						'args'     => array( $acomment_id, $hide_sitewide, $args ),
-					),
-				)
+					'type'              => $this->item_type,
+					'group'             => $group_name,
+					'data_id'           => $acomment_id,
+					'secondary_data_id' => $args['parent_id'],
+					'callback'          => array( $this, 'hide_related_content' ),
+					'args'              => array( $acomment_id, $hide_sitewide, $args ),
+				),
 			);
-			$bp_background_updater->save()->schedule_event();
+			$bb_background_updater->save()->schedule_event();
 		}
 	}
 
@@ -223,7 +243,11 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function manage_unhidden_activity_comment( $acomment_id, $hide_sitewide, $force_all, $args = array() ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
+
+		if ( empty( $acomment_id ) ) {
+			return;
+		}
 
 		$suspend_args = bp_parse_args(
 			$args,
@@ -251,20 +275,32 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 
 		$suspend_args = self::validate_keys( $suspend_args );
 
+		$group_name_args = array_merge(
+			$suspend_args,
+			array(
+				'custom_action' => 'unhide',
+			)
+		);
+		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
+
 		BP_Core_Suspend::remove_suspend( $suspend_args );
+
+		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $acomment_id;
 
 		if ( $this->background_disabled ) {
 			$this->unhide_related_content( $acomment_id, $hide_sitewide, $force_all, $args );
 		} else {
-			$bp_background_updater->data(
+			$bb_background_updater->data(
 				array(
-					array(
-						'callback' => array( $this, 'unhide_related_content' ),
-						'args'     => array( $acomment_id, $hide_sitewide, $force_all, $args ),
-					),
-				)
+					'type'              => $this->item_type,
+					'group'             => $group_name,
+					'data_id'           => $acomment_id,
+					'secondary_data_id' => $args['parent_id'],
+					'callback'          => array( $this, 'unhide_related_content' ),
+					'args'              => array( $acomment_id, $hide_sitewide, $force_all, $args ),
+				),
 			);
-			$bp_background_updater->save()->schedule_event();
+			$bb_background_updater->save()->schedule_event();
 		}
 	}
 

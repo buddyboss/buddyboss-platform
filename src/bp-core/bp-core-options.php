@@ -47,6 +47,9 @@ function bp_get_default_options() {
 
 		'bp-display-name-format'                     => 'first_name',
 
+		// Default profile slug format.
+		'bb_profile_slug_format'                     => 'username',
+
 		// Enable/Disable Profile Type.
 		'bp-member-type-enable-disable'              => false,
 
@@ -95,6 +98,9 @@ function bp_get_default_options() {
 
 		// Group Types.
 		'bp-disable-group-type-creation'             => false,
+
+		// Group Subscriptions.
+		'bb_enable_group_subscriptions'              => true,
 
 		// Auto Group Membership Approval.
 		'bp-enable-group-auto-join'                  => false,
@@ -1245,6 +1251,28 @@ function bp_force_friendship_to_message( $default = false ) {
 }
 
 /**
+ * Check the activity auto follow enabled or not.
+ *
+ * @since BuddyBoss 2.3.1
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ *
+ * @return bool True if Auto Follow is enabled, otherwise false.
+ */
+function bb_is_friends_auto_follow_active( $default = false ) {
+
+	/**
+	 * Filter whether the activity auto follow enabled or not.
+	 *
+	 * @since BuddyBoss 2.3.1
+	 *
+	 * @param bool $value Whether the activity auto follow enabled or not.
+	 */
+	return (bool) apply_filters( 'bb_is_friends_auto_follow_active', bp_is_active( 'activity' ) && bp_get_option( 'bb_enable_friends_auto_follow', $default ) );
+}
+
+/**
  * Is member type disabled?
  *
  * @since BuddyBoss 1.0.0
@@ -2263,3 +2291,87 @@ function bb_get_default_custom_upload_group_cover() {
 	return apply_filters( 'bb_get_default_custom_upload_group_cover', bp_get_option( 'bp-default-custom-group-cover' ) );
 }
 
+/**
+ * Is group subscription turned off?
+ *
+ * @since BuddyBoss 2.2.8
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ *
+ * @return bool True if group subscription is enabled, otherwise false.
+ */
+function bb_enable_group_subscriptions( $default = true ) {
+
+	/**
+	 * Filters whether group subscription is turned off.
+	 *
+	 * @since BuddyBoss 2.2.8
+	 *
+	 * @param bool $value Whether group subscription is turned off.
+	 */
+	return (bool) apply_filters( 'bb_enable_group_subscriptions', (bool) bp_get_option( 'bb_enable_group_subscriptions', $default ) );
+}
+
+/**
+ * Get profile slug format.
+ *
+ * @since BuddyBoss 2.3.1
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                      Default: username.
+ * @return string profile slug format.
+ */
+function bb_get_profile_slug_format( $default = 'username' ) {
+
+	/**
+	 * Filters default profile slug format.
+	 *
+	 * @since BuddyBoss 2.3.1
+	 *
+	 * @param string $value Default profile slug format.
+	 */
+	return apply_filters( 'bb_get_profile_slug_format', bp_get_option( 'bb_profile_slug_format', $default ) );
+}
+
+/**
+ * Get domain restrictions setting value from the database.
+ *
+ * @since BuddyBoss 2.4.11
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ * @return array Domain restrictions setting value.
+ */
+function bb_domain_restrictions_setting( $default = array() ) {
+
+	/**
+	 * Filters domain restriction settings.
+	 *
+	 * @since BuddyBoss 2.4.11
+	 *
+	 * @param array $value Domain restrictions setting value.
+	 */
+	return apply_filters( 'bb_domain_restrictions_setting', bp_get_option( 'bb-domain-restrictions', $default ) );
+}
+
+/**
+ * Get email restrictions setting value from the database.
+ *
+ * @since BuddyBoss 2.4.11
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ * @return array Email restrictions setting value.
+ */
+function bb_email_restrictions_setting( $default = array() ) {
+
+	/**
+	 * Filters email restriction settings.
+	 *
+	 * @since BuddyBoss 2.4.11
+	 *
+	 * @param array $value Email restrictions setting value.
+	 */
+	return apply_filters( 'bb_email_restrictions_setting', bp_get_option( 'bb-email-restrictions', $default ) );
+}

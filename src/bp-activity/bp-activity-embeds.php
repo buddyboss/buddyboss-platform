@@ -142,7 +142,7 @@ function bp_activity_get_embed_excerpt( $content = '' ) {
 	 * bp_activity_truncate_entry() includes the 'Read More' link, which is why
 	 * we're using this instead of bp_create_excerpt().
 	 */
-	$content = html_entity_decode( $content );
+	$content = html_entity_decode( $content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 	$content = bp_activity_truncate_entry(
 		$content,
 		array(
@@ -296,7 +296,7 @@ EOD;
 			}
 
 			if ( true === isset( $anchor_text ) ) {
-				$caption .= sprintf( '<a rel="nofollow" href="%1$s" onclick="top.location.href=\'%1$s\'">%2$s</a>', esc_url( $url ), apply_filters( 'the_title', $anchor_text ) );
+				$caption .= sprintf( '<a rel="nofollow" href="%1$s" onclick="top.location.href=\'%1$s\'">%2$s</a>', esc_url( $url ), apply_filters( 'the_title', $anchor_text, 0 ) );
 			}
 
 			// Set up caption.

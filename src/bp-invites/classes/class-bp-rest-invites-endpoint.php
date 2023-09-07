@@ -219,8 +219,9 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$invite_exists_array = array();
-		$failed_invite       = array();
+		$invite_exists_array     = array();
+		$failed_invite           = array();
+		$invite_restricted_array = array();
 
 		$bp = buddypress();
 
@@ -236,12 +237,23 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 				) {
 					if ( email_exists( (string) $field['email_id'] ) ) {
 						$invite_exists_array[] = $field['email_id'];
-					} else {
+					} elseif ( ! function_exists( 'bb_is_allowed_register_email_address' ) ) {
 						$invite_correct_array[] = array(
 							'name'        => $field['name'],
 							'email'       => $field['email_id'],
 							'member_type' => ( isset( $field['profile_type'] ) && ! empty( $field['profile_type'] ) ) ? $field['profile_type'] : '',
 						);
+					} elseif (
+						function_exists( 'bb_is_allowed_register_email_address' ) &&
+						bb_is_allowed_register_email_address( $field['email_id'] )
+					) {
+						$invite_correct_array[] = array(
+							'name'        => $field['name'],
+							'email'       => $field['email_id'],
+							'member_type' => ( isset( $field['profile_type'] ) && ! empty( $field['profile_type'] ) ) ? $field['profile_type'] : '',
+						);
+					} else {
+						$invite_restricted_array[] =  $field['email_id'];
 					}
 				} else {
 					$invite_wrong_array[] = array(
@@ -386,6 +398,10 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $failed_invite ) ) {
 			$retval['failed'] = trim( __( 'Invitations did not send because these email addresses are invalid:', 'buddyboss' ) . ' ' . implode( ', ', wp_list_pluck( array_filter( $failed_invite ), 'email' ) ) );
+		}
+
+		if ( ! empty( $invite_restricted_array ) ) {
+			$retval['failed'] = trim( __( 'Invitations did not send to the following email addresses, because the address or domain has been blacklisted:', 'buddyboss' ) . ' ' . implode( ', ', $invite_restricted_array ) );
 		}
 
 		if ( ! empty( $invitations_ids ) ) {
@@ -931,7 +947,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 	protected function prepare_date_response( $date_gmt, $date = null ) {
 		// Use the date if passed.
 		if ( isset( $date ) ) {
-			return mysql_to_rfc3339( $date );
+			return mysql_to_rfc3339( $date ); // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_to_rfc3339, PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
 		}
 
 		// Return null if $date_gmt is empty/zeros.
@@ -940,6 +956,6 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		}
 
 		// Return the formatted datetime.
-		return mysql_to_rfc3339( $date_gmt );
+		return mysql_to_rfc3339( $date_gmt ); // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_to_rfc3339, PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
 	}
 }

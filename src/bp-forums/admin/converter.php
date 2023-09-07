@@ -922,15 +922,15 @@ class BBP_Converter {
 	 * @since 2.1.0 bbPress (r3813)
 	 */
 	public static function sync_table( $drop = false ) {
-		global $wpdb;
 
 		// Setup DB.
-		$table_name   = $wpdb->prefix . 'bbp_converter_translator';
-		$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$table_name}'" ) === $table_name;
+		$bbp_db       = bbp_db();
+		$table_name   = $bbp_db->prefix . 'bbp_converter_translator';
+		$table_exists = $bbp_db->get_var( "SHOW TABLES LIKE '{$table_name}'" ) === $table_name;
 
 		// Maybe drop the sync table.
 		if ( ( true === $drop ) && ( true === $table_exists ) ) {
-			$wpdb->query( "DROP TABLE {$table_name}" );
+			$bbp_db->query( "DROP TABLE {$table_name}" );
 		}
 
 		// Maybe include the upgrade functions, for dbDelta().
@@ -946,13 +946,13 @@ class BBP_Converter {
 		$max_index_length = 75;
 
 		// Maybe override the character set.
-		if ( ! empty( $wpdb->charset ) ) {
-			$charset_collate .= "DEFAULT CHARACTER SET {$wpdb->charset}";
+		if ( ! empty( $bbp_db->charset ) ) {
+			$charset_collate .= "DEFAULT CHARACTER SET {$bbp_db->charset}";
 		}
 
 		// Maybe override the collation.
-		if ( ! empty( $wpdb->collate ) ) {
-			$charset_collate .= " COLLATE {$wpdb->collate}";
+		if ( ! empty( $bbp_db->collate ) ) {
+			$charset_collate .= " COLLATE {$bbp_db->collate}";
 		}
 
 		/** Translator */
@@ -1070,7 +1070,6 @@ abstract class BBP_Converter_Base {
 	 * @since 2.1.0
 	 */
 	private function init() {
-		global $wpdb;
 
 		/** BBCode Parse Properties */
 
@@ -1104,7 +1103,7 @@ abstract class BBP_Converter_Base {
 		/** Get database connections */
 
 		// Setup WordPress Database.
-		$this->wpdb = $wpdb;
+		$this->wpdb = bbp_db();
 
 		// Setup old forum Database.
 		$this->opdb = new wpdb( $db_user, $db_pass, $db_name, $db_host );
@@ -2224,7 +2223,7 @@ abstract class BBP_Converter_Base {
 			$bbcode->{$prop} = $value;
 		}
 
-		return html_entity_decode( $bbcode->Parse( $field ) );
+		return html_entity_decode( $bbcode->Parse( $field ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 	}
 
 	protected function callback_null( $field ) {

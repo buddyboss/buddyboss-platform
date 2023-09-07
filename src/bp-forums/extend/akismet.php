@@ -155,7 +155,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 				'comment_type'         => $post_data['post_type'],
 				'permalink'            => $post_permalink,
 				'referrer'             => $_SERVER['HTTP_REFERER'],
-				'user_agent'           => $_SERVER['HTTP_USER_AGENT'],
+				'user_agent'           => isset( $_SERVER['HTTP_USER_AGENT'] ) ?? '',
 				'user_ID'              => $post_data['post_author'],
 				'user_ip'              => bbp_current_author_ip(),
 				'user_role'            => $this->get_user_roles( $post_data['post_author'] ),

@@ -118,9 +118,16 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 
 				// Check if force friendship is enabled and check recipients.
 				if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
-					foreach ( $members as $f => $member ) {
-						if ( ! friends_check_friendship( bp_loggedin_user_id(), $member ) ) {
-							unset( $members[ $f ] );
+					if ( ! bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) ) {
+						foreach ( $members as $f => $member ) {
+							if (
+								! (
+									bb_messages_allowed_messaging_without_connection( $member ) ||
+									friends_check_friendship( bp_loggedin_user_id(), $member )
+								)
+							) {
+								unset( $members[ $f ] );
+							}
 						}
 					}
 				}
@@ -144,9 +151,20 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 				if ( ! $can_send_group_message ) {
 					$not_access_list[] = bp_core_get_user_displayname( $member );
 				}
+			}
 
-				if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && ! friends_check_friendship( bp_loggedin_user_id(), $member ) ) {
-					$not_friends[] = bp_core_get_user_displayname( $member );
+			if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
+				if ( ! bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) ) {
+					foreach ( $members as $f => $member ) {
+						if (
+							! (
+								bb_messages_allowed_messaging_without_connection( $member ) ||
+								friends_check_friendship( bp_loggedin_user_id(), $member )
+							)
+						) {
+							$not_friends[] = bp_core_get_user_displayname( $member );
+						}
+					}
 				}
 			}
 
@@ -828,29 +846,31 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 
 			// Else "Private Reply (BCC)" selected.
 		} else {
-			global $bb_email_background_updater;
+			global $bb_background_updater;
 
 			$all_members = $members;
 
 			if ( ! empty( $members ) ) {
 				if (
 					! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) &&
-					( $bb_email_background_updater instanceof BP_Email_Background_Updater )
+					( $bb_background_updater instanceof BB_Background_Updater )
 				) {
-					$chunk_members = array_chunk( $members, 10 );
+					$chunk_members = array_chunk( $members, function_exists( 'bb_get_email_queue_min_count' ) ? bb_get_email_queue_min_count() : 10 );
 					if ( ! empty( $chunk_members ) ) {
 						foreach ( $chunk_members as $key => $members ) {
-							$bb_email_background_updater->data(
+							$bb_background_updater->data(
 								array(
-									array(
-										'callback' => 'bb_send_group_message_background',
-										'args'     => array( $_POST, $members, bp_loggedin_user_id(), $message, true ),
-									),
-								)
+									'type'     => 'email',
+									'group'    => 'group_private_message',
+									'data_id'  => $group,
+									'priority' => 5,
+									'callback' => 'bb_send_group_message_background',
+									'args'     => array( $_POST, $members, bp_loggedin_user_id(), $message, true ),
+								),
 							);
-							$bb_email_background_updater->save();
+							$bb_background_updater->save();
 						}
-						$bb_email_background_updater->dispatch();
+						$bb_background_updater->dispatch();
 					}
 
 					$message = true;
@@ -1111,6 +1131,8 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 				)
 			);
 		} elseif ( ! empty( $send ) ) {
+			BP_Messages_Thread::$noCache = true;
+
 			$thread     = new BP_Messages_Thread( (int) $send );
 			$recipients = $thread->get_recipients();
 
@@ -1126,12 +1148,15 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 				$retval['message'] = __( 'Your message was sent to all members of this group.', 'buddyboss' );
 			}
 
-			$last_message  = wp_list_filter( $thread->messages, array( 'id' => $thread->last_message_id ) );
-			$last_message  = reset( $last_message );
-			$fields_update = $this->update_additional_fields_for_object( $last_message, $request );
+			$last_message = wp_list_filter( $thread->messages, array( 'id' => $thread->last_message_id ) );
+			$last_message = reset( $last_message );
 
-			if ( is_wp_error( $fields_update ) ) {
-				return $fields_update;
+			if ( ! empty( $last_message ) ) {
+				$fields_update = $this->update_additional_fields_for_object( $last_message, $request );
+
+				if ( is_wp_error( $fields_update ) ) {
+					return $fields_update;
+				}
 			}
 
 			$retval['data'][] = $this->prepare_response_for_collection(

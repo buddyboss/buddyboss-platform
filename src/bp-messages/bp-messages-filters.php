@@ -67,6 +67,10 @@ add_filter( 'bp_get_message_notice_text', 'bb_autop' );
 add_filter( 'bp_get_the_thread_message_content', 'bb_autop' );
 add_filter( 'bp_get_message_thread_content', 'bb_autop' );
 
+add_filter( 'bp_get_message_thread_excerpt', 'bb_messages_make_nofollow_filter' );
+add_filter( 'bp_get_the_thread_message_content', 'bb_messages_make_nofollow_filter' );
+add_filter( 'bp_get_message_thread_content', 'bb_messages_make_nofollow_filter' );
+
 add_filter( 'bp_get_message_notice_subject', 'stripslashes_deep' );
 add_filter( 'bp_get_message_notice_text', 'stripslashes_deep' );
 add_filter( 'bp_get_message_thread_subject', 'stripslashes_deep' );
@@ -162,7 +166,7 @@ function bp_messages_filter_kses( $content ) {
  */
 function maybe_redirects_to_previous_thread_message() {
 	$recipient = bp_get_messages_username_value();
-	$user_id   = bp_core_get_userid( $recipient );
+	$user_id   = bp_core_get_userid_from_nicename( $recipient );
 
 	$thread_id = BP_Messages_Message::get_existing_thread( array( $user_id ), bp_loggedin_user_id() );
 	if ( ! $thread_id ) {
@@ -179,6 +183,47 @@ function maybe_redirects_to_previous_thread_message() {
 
 	wp_safe_redirect( $thread_url );
 	exit();
+}
+
+/**
+ * Catch links in messages text so target="_blank" and rel=nofollow can be added.
+ *
+ * @since BuddyBoss 2.2.4
+ *
+ * @param string $text Messages text.
+ *
+ * @return string $text Text with rel=nofollow added to any links.
+ */
+function bb_messages_make_nofollow_filter( $text ) {
+	return preg_replace_callback( '|<a (.+?)>|i', 'bb_messages_make_nofollow_filter_callback', $text );
+}
+
+/**
+ * Add rel=nofollow to a link.
+ *
+ * @since BuddyBoss 2.2.4
+ *
+ * @param array $matches Items matched by preg_replace_callback() in bb_messages_make_nofollow_filter_callback().
+ *
+ * @return string $text Link with rel=nofollow added.
+ */
+function bb_messages_make_nofollow_filter_callback( $matches ) {
+	$text = $matches[1];
+	$text = str_replace( array( ' rel="nofollow"', " rel='nofollow'" ), '', $text );
+
+	// Extract URL from href.
+	preg_match_all( '#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $text, $match );
+
+	$url_host      = ( isset( $match[0] ) && isset( $match[0][0] ) ? wp_parse_url( $match[0][0], PHP_URL_HOST ) : '' );
+	$base_url_host = wp_parse_url( site_url(), PHP_URL_HOST );
+
+	// If site link then nothing to do.
+	if ( $url_host === $base_url_host || empty( $url_host ) ) {
+		return "<a $text rel=\"nofollow\">";
+		// Else open in new tab.
+	} else {
+		return "<a target='_blank' $text rel=\"nofollow\">";
+	}
 }
 
 /**
@@ -224,6 +269,7 @@ function bp_group_messages_groups_membership_accepted( $user_id, $group_id, $acc
 				'content'    => '<p> </p>',
 				'date_sent'  => $date_sent = bp_core_current_time(),
 				'error_type' => 'wp_error',
+				'mark_read'  => true,
 			)
 		);
 
@@ -365,6 +411,7 @@ function bp_group_messages_join_new_member( $group_id, $user_id ) {
 				'content'    => '<p> </p>',
 				'date_sent'  => bp_core_current_time(),
 				'error_type' => 'wp_error',
+				'mark_read'  => true,
 			)
 		);
 		add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
@@ -420,6 +467,7 @@ function bp_group_messages_remove_group_member_from_thread( $group_id, $user_id 
 				'content'    => '<p> </p>',
 				'date_sent'  => bp_core_current_time(),
 				'error_type' => 'wp_error',
+				'mark_read'  => true,
 			)
 		);
 		add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
@@ -479,6 +527,7 @@ function bp_group_messages_accept_new_member( $user_id, $group_id ) {
 				'content'    => '<p> </p>',
 				'date_sent'  => $date_sent = bp_core_current_time(),
 				'error_type' => 'wp_error',
+				'mark_read'  => true,
 			)
 		);
 
@@ -662,6 +711,7 @@ function bp_messages_add_user_to_group_message_thread( $group_id, $user_id ) {
 					'content'    => '<p> </p>',
 					'date_sent'  => bp_core_current_time(),
 					'error_type' => 'wp_error',
+					'mark_read'  => true,
 				)
 			);
 			add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
@@ -723,6 +773,7 @@ function bp_messages_remove_user_to_group_message_thread( $group_id, $user_id ) 
 					'content'    => '<p> </p>',
 					'date_sent'  => bp_core_current_time(),
 					'error_type' => 'wp_error',
+					'mark_read'  => true,
 				)
 			);
 			add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
@@ -842,18 +893,21 @@ function bp_core_get_js_strings_callback( $params ) {
 	$params['nonce']['bp_moderation_content_nonce'] = wp_create_nonce( 'bp-moderation-content' );
 	$params['current']['message_user_id']           = bp_loggedin_user_id();
 
-	$hidden_threads = BP_Messages_Thread::get_current_threads_for_user(
-		array(
-			'fields'      => 'ids',
-			'user_id'     => bp_loggedin_user_id(),
-			'is_hidden'   => true,
-			'thread_type' => 'archived',
-		)
-	);
-
 	$archived_threads_ids = array();
-	if ( ! empty( $hidden_threads ) ) {
-		$archived_threads_ids = $hidden_threads['threads'];
+
+	if ( is_user_logged_in() ) {
+		$hidden_threads = BP_Messages_Thread::get_current_threads_for_user(
+			array(
+				'fields'      => 'ids',
+				'user_id'     => bp_loggedin_user_id(),
+				'is_hidden'   => true,
+				'thread_type' => 'archived',
+			)
+		);
+
+		if ( ! empty( $hidden_threads ) ) {
+			$archived_threads_ids = $hidden_threads['threads'];
+		}
 	}
 
 	$params['archived_threads'] = $archived_threads_ids;
@@ -980,7 +1034,7 @@ function bb_messages_compose_action_sub_nav() {
 		</a>
 		<ul class="bb_more_options_list message_action__list">
 			<li class="archived-messages">
-				<a href="<?php bb_messages_archived_url(); ?>" data-action="more_options"><?php echo esc_html__( 'Archived messages', 'buddyboss' ); ?></a>
+				<a href="<?php bb_messages_archived_url(); ?>" class="archived-page" data-action="more_options"><?php echo esc_html__( 'Archived messages', 'buddyboss' ); ?></a>
 			</li>
 			<?php
 			if ( bp_is_user_messages() && bp_is_active( 'notifications' ) ) {
@@ -1080,6 +1134,7 @@ add_action( 'bp_init', 'bb_schedule_event_on_update_notification_settings', 2 );
  */
 function bb_digest_message_email_notifications() {
 	global $wpdb;
+	$bp_prefix = bp_core_get_table_prefix();
 
 	// Get all defined time.
 	$db_delay_time = bb_get_delay_email_notifications_time();
@@ -1094,7 +1149,7 @@ function bb_digest_message_email_notifications() {
 
 			$results = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT m.*, r.user_id, r.unread_count FROM `{$wpdb->prefix}bp_messages_messages` AS m LEFT JOIN `{$wpdb->prefix}bp_messages_recipients` AS r ON m.thread_id = r.thread_id LEFT JOIN `{$wpdb->prefix}bp_messages_meta` AS meta1 ON ( m.id = meta1.message_id AND meta1.meta_key = 'bb_sent_digest_email' ) WHERE m.date_sent >= %s AND m.date_sent <= %s AND r.unread_count > %d AND r.is_deleted = %d AND m.sender_id != r.user_id AND r.is_hidden = %d AND meta1.message_id IS NULL ORDER BY m.thread_id, m.id ASC",
+					"SELECT m.*, r.user_id, r.unread_count FROM `{$bp_prefix}bp_messages_messages` AS m LEFT JOIN `{$bp_prefix}bp_messages_recipients` AS r ON m.thread_id = r.thread_id LEFT JOIN `{$bp_prefix}bp_messages_meta` AS meta1 ON ( m.id = meta1.message_id AND meta1.meta_key = 'bb_sent_digest_email' ) WHERE m.date_sent >= %s AND m.date_sent <= %s AND r.unread_count > %d AND r.is_deleted = %d AND m.sender_id != r.user_id AND r.is_hidden = %d AND meta1.message_id IS NULL ORDER BY m.thread_id, m.id ASC",
 					$start_date,
 					$current_date,
 					0,
@@ -1151,26 +1206,28 @@ function bb_digest_message_email_notifications() {
 					$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( (array) $thread['recipients'] );
 
 					if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
-						global $bb_email_background_updater;
+						global $bb_background_updater;
 
-						$chunk_recipient_array = array_chunk( $thread['recipients'], 10 );
+						$chunk_recipient_array = array_chunk( $thread['recipients'], bb_get_email_queue_min_count() );
 
 						if ( ! empty( $chunk_recipient_array ) ) {
 							foreach ( $chunk_recipient_array as $chunk_recipient ) {
-								$bb_email_background_updater->data(
+								$bb_background_updater->data(
 									array(
-										array(
-											'callback' => 'bb_render_digest_messages_template',
-											'args'     => array(
-												$chunk_recipient,
-												$thread['thread_id'],
-											),
+										'type'     => 'email',
+										'group'    => 'digest_email_messages',
+										'data_id'  => $thread['thread_id'],
+										'priority' => 5,
+										'callback' => 'bb_render_digest_messages_template',
+										'args'     => array(
+											$chunk_recipient,
+											$thread['thread_id'],
 										),
-									)
+									),
 								);
-								$bb_email_background_updater->save();
+								$bb_background_updater->save();
 							}
-							$bb_email_background_updater->dispatch();
+							$bb_background_updater->dispatch();
 						}
 					} else {
 						bb_render_digest_messages_template( $thread['recipients'], $thread['thread_id'] );
@@ -1194,6 +1251,7 @@ add_action( 'bb_digest_email_notifications_hook', 'bb_digest_message_email_notif
  */
 function bb_recipients_recipient_get_join_sql_with_group_members( $sql, $r ) {
 	global $wpdb;
-	$sql .= ' JOIN ' . $wpdb->prefix . 'bp_groups_members gm ON ( gm.user_id = r.user_id )';
+	$sql .= ' JOIN ' . $wpdb->base_prefix . 'bp_groups_members gm ON ( gm.user_id = r.user_id )';
 	return $sql;
 }
+

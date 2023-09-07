@@ -133,7 +133,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		);
 
 		if ( ! empty( $request['search'] ) ) {
-			$args['s'] = $request['search'];
+			$args['s'] = $this->bbp_sanitize_search_request( $request['search'] );
 		}
 
 		if ( ! empty( $request['author'] ) ) {
@@ -391,7 +391,10 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @return WP_REST_Response | WP_Error
 	 * @since 0.1.0
 	 *
-	 * @api            {POST} /wp-json/buddyboss/v1/subscribe/:id Subscribe/Unsubscribe Forum
+	 * NOTICE: Since 2.2.2, forum subscriptions have been migrated to a
+	 * new API for subscribing users to notifications: /wp-json/buddyboss/v1/subscriptions
+	 *
+	 * @api            {POST} /wp-json/buddyboss/v1/forums/subscribe/:id Subscribe/Unsubscribe Forum
 	 * @apiName        GetBBPForumSubscribe
 	 * @apiGroup       Forums
 	 * @apiDescription Subscribe/Unsubscribe forum for the user.
@@ -412,7 +415,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			$success = bbp_remove_user_subscription( $user_id, $forum->ID );
 			$action  = 'unsubscribe';
 		} elseif ( false === $is_subscription ) {
-			$success = bbp_add_user_subscription( $user_id, $forum->ID );
+			$success = (bool) bbp_add_user_subscription( $user_id, $forum->ID );
 			$action  = 'subscribe';
 		}
 
@@ -462,7 +465,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			$retval = true;
 			$forum  = bbp_get_forum( $request->get_param( 'id' ) );
 
-			if ( ! bbp_is_subscriptions_active() ) {
+			if ( ! bb_is_enabled_subscription( 'forum' ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
 					__( 'Subscription was disabled.', 'buddyboss' ),
@@ -572,7 +575,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			$this->prepare_password_response( $forum->post_password );
 		}
 
-		$data['short_content'] = wp_trim_excerpt( $forum->post_content );
+		$data['short_content'] = wp_trim_excerpt( '', $forum->ID );
 
 		$content = apply_filters( 'the_content', $forum->post_content );
 
@@ -1038,7 +1041,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	public function prepare_date_response( $date_gmt, $date = null ) {
 		// Use the date if passed.
 		if ( isset( $date ) ) {
-			return mysql_to_rfc3339( $date );
+			return mysql_to_rfc3339( $date ); // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_to_rfc3339, PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
 		}
 
 		// Return null if $date_gmt is empty/zeros.
@@ -1047,7 +1050,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		}
 
 		// Return the formatted datetime.
-		return mysql_to_rfc3339( $date_gmt );
+		return mysql_to_rfc3339( $date_gmt ); // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_to_rfc3339, PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
 	}
 
 	/**
@@ -1214,7 +1217,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			'subscribed' => false,
 		);
 
-		if ( bbp_is_subscriptions_active() && current_user_can( 'edit_user', $user_id ) ) {
+		if ( bb_is_enabled_subscription( 'forum' ) && current_user_can( 'edit_user', $user_id ) ) {
 			$state['subscribed'] = bbp_is_user_subscribed( $user_id, $forum_id );
 		}
 
@@ -1489,5 +1492,42 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		) {
 			return array( 'participate' );
 		}
+	}
+
+	/**
+	 * Removed lazyload from link preview embed.
+	 *
+	 * @param string $content Topic or reply content.
+	 * @param int    $post_id Topic or reply id.
+	 *
+	 * @return string $content
+	 */
+	public function bp_rest_forums_remove_lazyload( $content, $post_id ) {
+		$link_embed = get_post_meta( $post_id, '_link_embed', true );
+
+		if ( empty( $link_embed ) ) {
+			return $content;
+		}
+
+		$content = preg_replace( '/iframe(.*?)data-lazy-type="iframe"/is', 'iframe$1', $content );
+		$content = preg_replace( '/iframe(.*?)class="lazy/is', 'iframe$1class="', $content );
+		$content = preg_replace( '/iframe(.*?)data-src=/is', 'iframe$1src=', $content );
+
+		return $content;
+	}
+
+	/**
+	 * Sanitize a query argument used to pass some search terms.
+	 * Accepts a single parameter to be used for forums, topics, or replies.
+	 *
+	 * @param string $terms Search Term.
+	 *
+	 * @return string
+	 */
+	public function bbp_sanitize_search_request( $term ) {
+		$retval = ! empty( $term ) && is_string( $term ) ? urldecode( trim( $term ) ) : '';
+
+		// Filter & return.
+		return apply_filters( 'bbp_sanitize_search_request', $retval, $term );
 	}
 }

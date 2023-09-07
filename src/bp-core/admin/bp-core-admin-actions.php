@@ -66,6 +66,11 @@ add_action( 'bp_admin_menu', 'bp_admin_separator' );
 // Check user nickname on backend user edit page.
 add_action( 'user_profile_update_errors', 'bb_check_user_nickname', 10, 3 );
 
+// Validate if email address is allowed or blacklisted.
+add_action( 'user_profile_update_errors', 'bb_validate_restricted_email_on_registration', PHP_INT_MAX, 3 );
+add_action( 'personal_options_update', 'bb_validate_restricted_email_on_profile_update', 1 ); // Edit the login user profile from backend.
+add_action( 'edit_user_profile_update', 'bb_validate_restricted_email_on_profile_update', 1 ); // Edit other users profile from backend.
+
 /**
  * When a new site is created in a multisite installation, run the activation
  * routine on that site.
@@ -263,6 +268,19 @@ function bp_register_admin_integrations() {
 function bb_check_user_nickname( &$errors, $update, &$user ) {
 	global $wpdb;
 
+	// Check user unique identifier exist.
+	$check_exists = $wpdb->get_var( // phpcs:ignore
+		$wpdb->prepare(
+			"SELECT count(*) FROM {$wpdb->usermeta} WHERE meta_key = %s AND meta_value = %s",
+			'bb_profile_slug',
+			$user->user_login
+		)
+	);
+
+	if ( $check_exists > 0 ) {
+		return $errors->add( 'invalid_nickname', __( 'Invalid Nickname', 'buddyboss' ), array( 'form-field' => 'nickname' ) );
+	}
+
 	$un_name = ( ! empty( $user->nickname ) ) ? $user->nickname : $user->user_login;
 
 	$where = array(
@@ -334,3 +352,60 @@ function bb_admin_check_valid_giphy_key() {
 
 }
 add_action( 'wp_ajax_bb_admin_check_valid_giphy_key', 'bb_admin_check_valid_giphy_key' );
+
+/**
+ * Validate the email address allowed to register as per the registration restriction settings.
+ *
+ * @since BuddyBoss 2.4.11
+ *
+ * @param object $errors error object.
+ * @param bool   $update updating user or adding user.
+ * @param object $user   user data.
+ *
+ * @return object
+ */
+function bb_validate_restricted_email_on_registration( $errors, $update, $user ) {
+
+	// Check if email address allowed.
+	if ( ! bb_is_allowed_register_email_address( $user->user_email ) ) {
+		if ( $update ) {
+			$old_user_data = get_userdata( $user->ID );
+
+			// Allow already saved emails.
+			if ( $old_user_data->user_email === $user->user_email ) {
+				return $errors;
+			}
+		}
+		$errors->add( 'bb_restricted_email', __( 'This email address or domain has been blacklisted. If you think you are seeing this in error, please contact the site administrator.', 'buddyboss' ), array( 'form-field' => 'email' ) );
+	}
+
+	return $errors;
+}
+
+/**
+ * Validate & prevent email update and related email.
+ *
+ * @since BuddyBoss 2.4.11
+ *
+ * @param int $user_id User ID.
+ */
+function bb_validate_restricted_email_on_profile_update( $user_id ) {
+
+	if (
+		! empty( $_REQUEST['email'] ) && // phpcs:ignore
+		! empty( $_REQUEST['action'] ) && // phpcs:ignore
+		'update' === $_REQUEST['action'] // phpcs:ignore
+	) {
+		$email = $_REQUEST['email']; // phpcs:ignore
+		$old_user_data = get_userdata( $user_id );
+		if (
+			$old_user_data->user_email !== $email &&
+			! bb_is_allowed_register_email_address( $email )
+		) {
+
+			// Prevent email updates and related email.
+			remove_action( 'personal_options_update', 'send_confirmation_on_profile_email' );
+			add_filter( 'send_email_change_email', '__return_false', 0 );
+		}
+	}
+}

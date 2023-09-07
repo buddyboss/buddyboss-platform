@@ -142,7 +142,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $request['search'] ) ) {
-			$args['s'] = $this->bbp_sanitize_search_request( $request['search'] );
+			$args['s'] = $this->forum_endpoint->bbp_sanitize_search_request( $request['search'] );
 		}
 
 		if ( ! empty( $request['author'] ) ) {
@@ -626,6 +626,27 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	public function create_item( $request ) {
 		$request->set_param( 'context', 'edit' );
 
+		/**
+		 * Map data into POST to work with link preview.
+		 */
+		$post_map = array(
+			'link_url'         => 'link_url',
+			'link_embed'       => 'link_embed',
+			'link_title'       => 'link_title',
+			'link_description' => 'link_description',
+			'link_image'       => 'link_image',
+		);
+
+		if ( ! empty( $request ) ) {
+			foreach ( $post_map as $key => $val ) {
+				if ( isset( $request[ $val ] ) ) {
+					$_POST[ $key ] = $request[ $val ];
+				}
+			}
+		}
+
+		$_POST['action'] = 'bbp-new-topic'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
 		$topic = $this->prepare_topic_for_database( $request );
 
 		// Define local variable(s).
@@ -711,11 +732,16 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 				(
 					! empty( $request['bbp_media_gif']['url'] ) &&
 					! empty( $request['bbp_media_gif']['mp4'] )
-				)
-				|| (
+				) ||
+				(
 					function_exists( 'bp_is_forums_video_support_enabled' )
 					&& false !== bp_is_forums_video_support_enabled()
 					&& ! empty( $request['bbp_videos'] )
+				) ||
+				(
+					function_exists( 'bbp_use_autoembed' )
+					&& false !== bbp_use_autoembed()
+					&& ! empty( $request['link_url'] )
 				)
 			)
 		) {
@@ -1073,7 +1099,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		 * Removed notification sent and called additionally.
 		 * Due to we have moved all filters on title and content.
 		 */
-		remove_action( 'bbp_new_topic', 'bbp_notify_forum_subscribers', 11, 4 );
+		remove_action( 'bbp_new_topic', 'bbp_notify_forum_subscribers', 9999, 4 );
 
 		/** Update counts, etc... */
 		do_action( 'bbp_new_topic', $topic_id, $forum_id, $anonymous_data, $topic_author );
@@ -1115,7 +1141,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		}
 
 		// Handle Subscription Checkbox.
-		if ( bbp_is_subscriptions_active() ) {
+		if ( bb_is_enabled_subscription( 'topic' ) ) {
 			$author_id = bbp_get_user_id( 0, true, true );
 			// Check if subscribed.
 			$subscribed = bbp_is_user_subscribed( $author_id, $topic_id );
@@ -1268,6 +1294,27 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 				)
 			);
 		}
+
+		/**
+		 * Map data into POST to work with link preview.
+		 */
+		$post_map = array(
+			'link_url'         => 'link_url',
+			'link_embed'       => 'link_embed',
+			'link_title'       => 'link_title',
+			'link_description' => 'link_description',
+			'link_image'       => 'link_image',
+		);
+
+		if ( ! empty( $post_map ) ) {
+			foreach ( $post_map as $key => $val ) {
+				if ( isset( $request[ $val ] ) ) {
+					$_POST[ $key ] = $request[ $val ];
+				}
+			}
+		}
+
+		$_POST['action'] = 'bbp-edit-topic'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		// Topic exists.
 		// Check users ability to create new topic.
@@ -1439,11 +1486,16 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 				(
 					! empty( $request['bbp_media_gif']['url'] ) &&
 					! empty( $request['bbp_media_gif']['mp4'] )
-				)
-				|| (
+				) ||
+				(
 					function_exists( 'bp_is_forums_video_support_enabled' )
 					&& false !== bp_is_forums_video_support_enabled()
 					&& ! empty( $request['bbp_videos'] )
+				) ||
+				(
+					function_exists( 'bbp_use_autoembed' )
+					&& false !== bbp_use_autoembed()
+					&& ! empty( $request['link_url'] )
 				)
 			)
 		) {
@@ -1686,7 +1738,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		}
 
 		// Handle Subscription Checkbox.
-		if ( bbp_is_subscriptions_active() ) {
+		if ( bb_is_enabled_subscription( 'topic' ) ) {
 			$author_id = bbp_get_user_id( 0, true, true );
 			// Check if subscribed.
 			$subscribed = bbp_is_user_subscribed( $author_id, $topic_id );
@@ -2010,7 +2062,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			'sticky'                => bbp_is_topic_sticky( $topic->ID ),
 			'total_reply_count'     => ( bbp_show_lead_topic() ? bbp_get_topic_reply_count( $topic->ID ) : bbp_get_topic_post_count( $topic->ID ) ),
 			'last_reply_id'         => bbp_get_topic_last_reply_id( $topic->ID ),
-			'last_active_author'    => bbp_get_topic_last_active_id( $topic->ID ),
+			'last_active_author'    => bbp_get_reply_author_id( bbp_get_topic_last_active_id( $topic->ID ) ),
 			'last_active_time'      => $this->forum_endpoint->bbp_rest_get_topic_last_active_time( $topic->ID ),
 			'is_closed'             => bbp_is_topic_closed( $topic->ID ),
 			'voice_count'           => (int) get_post_meta( $topic->ID, '_bbp_voice_count', true ),
@@ -2027,6 +2079,11 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 				: false
 			),
 			'classes'               => bbp_get_topic_class( $topic->ID ),
+			'title'                 => '',
+			'content'               => array(),
+			'short_content'         => '',
+			'preview_data'          => '',
+			'link_embed_url'        => '',
 		);
 
 		$data['title'] = array(
@@ -2039,11 +2096,13 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			$this->forum_endpoint->prepare_password_response( $topic->post_password );
 		}
 
-		$data['short_content'] = wp_trim_excerpt( $topic->post_content );
+		$data['short_content'] = wp_trim_excerpt( '', $topic->ID );
 
 		remove_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_gif', 98, 2 );
 		remove_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 98, 2 );
 		remove_filter( 'bbp_get_topic_content', 'bp_video_forums_embed_attachments', 98, 2 );
+		remove_filter( 'bbp_get_topic_content', 'bb_forums_link_preview', 999, 2 ); // Removed link preview from content.
+		remove_filter( 'bbp_get_topic_content', 'bbp_topic_content_autoembed_paragraph', 99999, 1 ); // Removed link embed from content.
 		remove_filter( 'bbp_get_topic_content', 'bp_document_forums_embed_attachments', 999999, 2 );
 
 		$data['content'] = array(
@@ -2054,6 +2113,8 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_gif', 98, 2 );
 		add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 98, 2 );
 		add_filter( 'bbp_get_topic_content', 'bp_video_forums_embed_attachments', 98, 2 );
+		add_filter( 'bbp_get_topic_content', 'bb_forums_link_preview', 999, 2 ); // Restore link preview to content.
+		add_filter( 'bbp_get_topic_content', 'bbp_topic_content_autoembed_paragraph', 99999, 1 ); // Restore link embed to content.
 		add_filter( 'bbp_get_topic_content', 'bp_document_forums_embed_attachments', 999999, 2 );
 
 		// Don't leave our cookie lying around: https://github.com/WP-API/WP-API/issues/1055.
@@ -2061,6 +2122,27 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			$_COOKIE[ 'wp-postpass_' . COOKIEHASH ] = '';
 		}
 		/* -- Prepare content */
+
+		// Add iframe embedded data in separate object.
+		$link_embed = get_post_meta( $topic->ID, '_link_embed', true );
+
+		if ( ! empty( $link_embed ) ) {
+
+			$data['link_embed_url'] = $link_embed;
+
+			$embed_data = bp_core_parse_url( $link_embed );
+
+			if (
+				isset( $embed_data['wp_embed'] ) &&
+				$embed_data['wp_embed'] &&
+				! empty( $embed_data['description'] )
+			) {
+				$data['preview_data'] = $embed_data['description'];
+				$data['preview_data'] = $this->forum_endpoint->bp_rest_forums_remove_lazyload( $data['preview_data'], $topic->ID );
+			}
+		} else {
+			$data['preview_data'] = bb_forums_link_preview( '', $topic->ID );
+		}
 
 		$data['group'] = (
 			(
@@ -2327,11 +2409,6 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 						),
 					),
 				),
-				'short_content'            => array(
-					'description' => __( 'Short Content of the topic.', 'buddyboss' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-				),
 				'content'                  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The content of the topic.', 'buddyboss' ),
@@ -2348,6 +2425,23 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 					),
+				),
+				'short_content'            => array(
+					'description' => __( 'Short Content of the topic.', 'buddyboss' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+				),
+				'preview_data'             => array(
+					'description' => __( 'WordPress Embed and link preview data.', 'buddyboss' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'link_embed_url'    => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'WordPress Embed URL.', 'buddyboss' ),
+					'type'        => 'string',
+					'readonly'    => true,
 				),
 				'group'                    => array(
 					'description' => __( 'Topic forum\'s group.', 'buddyboss' ),
@@ -2673,7 +2767,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			$state['favorited'] = bbp_is_user_favorite( $user_id, $topic_id );
 		}
 
-		if ( bbp_is_subscriptions_active() && current_user_can( 'edit_user', $user_id ) ) {
+		if ( bb_is_enabled_subscription( 'topic' ) && current_user_can( 'edit_user', $user_id ) ) {
 			$state['subscribed'] = bbp_is_user_subscribed( $user_id, $topic_id );
 		}
 
@@ -2867,30 +2961,6 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		$super = array();
 
 		return $super;
-	}
-
-	/**
-	 * Sanitize a query argument used to pass some search terms.
-	 * Accepts a single parameter to be used for forums, topics, or replies.
-	 * - from bbp_sanitize_search_request();
-	 *
-	 * @since 2.6.0 bbPress (r6903)
-	 *
-	 * @param string $terms Search Term.
-	 *
-	 * @return mixed
-	 */
-	public function bbp_sanitize_search_request( $terms ) {
-		// Maybe implode if an array.
-		if ( is_array( $terms ) ) {
-			$terms = implode( ' ', $terms );
-		}
-
-		// Sanitize.
-		$retval = sanitize_title( trim( $terms ) );
-
-		// Filter & return.
-		return apply_filters( 'bbp_sanitize_search_request', $retval, $query_arg );
 	}
 
 	/**

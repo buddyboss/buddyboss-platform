@@ -21,6 +21,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 	 *
 	 * @since BuddyPress 1.5.0
 	 */
+	#[\AllowDynamicProperties]
 	class BP_Component {
 
 		/** Variables *************************************************************/

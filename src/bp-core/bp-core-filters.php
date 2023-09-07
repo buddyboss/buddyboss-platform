@@ -113,6 +113,8 @@ add_filter( 'comments_open', 'bp_comments_open', 10, 2 );
 // Prevent DB query for WP's main loop.
 add_filter( 'posts_pre_query', 'bp_core_filter_wp_query', 10, 2 );
 
+// Remove deleted members link from mention for blog comment.
+add_filter( 'comment_text', 'bb_mention_remove_deleted_users_link', 20, 1 );
 /**
  * Prevent specific pages (eg 'Activate') from showing on page listings.
  *
@@ -625,7 +627,7 @@ function bp_modify_page_title( $title = '', $sep = '&raquo;', $seplocation = 'ri
 	if ( true === $title_tag_compatibility ) {
 		$bp_title_parts['site'] = $blogname;
 
-		if ( ( $paged >= 2 || $page >= 2 ) && ! is_404() && ! bp_is_single_activity() ) {
+		if ( ( $paged >= 2 || $page >= 2 ) && ! is_404() && ! bp_is_single_activity() && ! bp_is_user_messages() ) {
 			$bp_title_parts['page'] = sprintf( __( 'Page %s', 'buddyboss' ), max( $paged, $page ) );
 		}
 	}
@@ -685,7 +687,7 @@ function bp_modify_document_title_parts( $title = array() ) {
 	);
 
 	// Add the pagination number if needed (not sure if this is necessary).
-	if ( isset( $title['page'] ) && ! bp_is_single_activity() ) {
+	if ( isset( $title['page'] ) && ! bp_is_single_activity() && ! bp_is_user_messages() ) {
 		$bp_title['page'] = $title['page'];
 	}
 
@@ -786,34 +788,143 @@ function bp_setup_nav_menu_item( $menu_item ) {
 
 		// Highlight the current page.
 	} else {
-		$current = bp_get_requested_url();
-		if ( strpos( $current, $menu_item->url ) !== false ) {
-			if ( is_array( $menu_item->classes ) ) {
+		$current            = bp_get_requested_url();
+		$url_parts          = explode( '/', untrailingslashit( $menu_item->url ) );
+		$menu_item->classes = is_array( $menu_item->classes ) ? $menu_item->classes : array();
+
+		if ( untrailingslashit( $current ) === untrailingslashit( $menu_item->url ) ) {
+			$menu_item->classes[] = 'current_page_item';
+			$menu_item->classes[] = 'current-menu-item';
+		} else {
+
+			if ( bp_loggedin_user_domain() && strpos( $current, bp_loggedin_user_domain() ) !== false ) {
+				if (
+					(
+						! in_array( 'settings', $url_parts, true ) &&
+						(
+							(
+								bp_is_user_profile() &&
+								! bp_is_user_profile_edit() &&
+								! bp_is_user_change_avatar() &&
+								! bp_is_user_change_cover_image() &&
+								'profile' === end( $url_parts )
+							) ||
+							(
+								bp_is_user_profile_edit() &&
+								'edit' === end( $url_parts )
+							) ||
+							(
+								bp_is_user_change_avatar() &&
+								'change-avatar' === end( $url_parts )
+							) ||
+							(
+								bp_is_user_change_cover_image() &&
+								'change-cover-image' === end( $url_parts )
+							) ||
+							(
+								in_array( 'bp-profile-nav', $menu_item->classes, true ) &&
+								(
+									bp_is_user_profile_edit() ||
+									bp_is_user_change_avatar() ||
+									bp_is_user_change_cover_image()
+								)
+							)
+						)
+					) ||
+					(
+						in_array( 'settings', $url_parts, true ) &&
+						(
+							(
+								bp_is_user_settings_general() &&
+								'settings' === end( $url_parts )
+							) ||
+							(
+								bp_is_user_settings_profile() &&
+								'profile' === end( $url_parts )
+							) ||
+							(
+								bp_is_user_settings_notifications() &&
+								'subscriptions' === bp_action_variable() &&
+								'notifications' === end( $url_parts ) &&
+								in_array( 'bp-settings-notifications-sub-nav', $menu_item->classes, true )
+							) ||
+							(
+								in_array( 'bp-settings-nav', $menu_item->classes, true ) &&
+								(
+									bp_is_user_settings_general() ||
+									bp_is_user_settings_profile() ||
+									bp_is_user_settings_notifications()
+								)
+							)
+						)
+					) ||
+					(
+						bp_is_user_invites() &&
+						'sent-invites' === bp_current_action() &&
+						in_array( 'bp-invites-nav', $menu_item->classes, true )
+					) ||
+					(
+						bp_is_user_activity() &&
+						in_array( 'bp-activity-nav', $menu_item->classes, true ) &&
+						(
+							'groups' === bp_current_action() ||
+							'mentions' === bp_current_action() ||
+							'following' === bp_current_action() ||
+							'friends' === bp_current_action()
+						)
+					) ||
+					(
+						bp_is_user_notifications() &&
+						'read' === bp_current_action() &&
+						in_array( 'bp-notifications-nav', $menu_item->classes, true )
+					) ||
+					(
+						bp_is_user_messages() &&
+						in_array( 'bp-messages-nav', $menu_item->classes, true ) &&
+						(
+							'compose' === bp_current_action() ||
+							'archived' === bp_current_action()
+						)
+					) ||
+					(
+						bp_is_friends_component() &&
+						'requests' === bp_current_action() &&
+						in_array( 'bp-friends-nav', $menu_item->classes, true )
+					) ||
+					(
+						bp_is_groups_component() &&
+						'invites' === bp_current_action() &&
+						in_array( 'bp-groups-nav', $menu_item->classes, true )
+					) ||
+					(
+						bp_is_user_albums() &&
+						in_array( 'bp-photos-nav', $menu_item->classes, true )
+					) ||
+					(
+						bp_is_forums_component() &&
+						(
+							'favorites' === bp_current_action() ||
+							'replies' === bp_current_action()
+						) &&
+						in_array( 'bp-forums-nav', $menu_item->classes, true )
+					)
+				) {
+					$menu_item->classes[] = 'current_page_item';
+					$menu_item->classes[] = 'current-menu-item';
+				}
+			} elseif (
+				bp_is_groups_component() &&
+				bp_is_group_create() &&
+				(
+					'create' === end( $url_parts ) ||
+					in_array( 'bp-groups-nav', $menu_item->classes, true )
+				)
+			) {
 				$menu_item->classes[] = 'current_page_item';
 				$menu_item->classes[] = 'current-menu-item';
-			} else {
-				$menu_item->classes = array( 'current_page_item', 'current-menu-item' );
-			}
-		} else {
-			if ( in_array( $current, array( bp_loggedin_user_domain() ) ) ) {
-				if ( function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
-					$tab       = bp_nouveau_get_appearance_settings( 'user_default_tab' );
-					$component = $tab;
-					if ( $component && in_array( $component, array( 'document' ), true ) ) {
-						$component = 'media';
-					} elseif ( $component && in_array( $component, array( 'video' ), true ) ) {
-						$component = 'media';
-					} elseif ( $component && in_array( $component, array( 'profile' ), true ) ) {
-						$component = 'xprofile';
-					}
-					if ( bp_is_active( $component ) ) {
-						if ( strpos( $menu_item->url, $tab ) !== false ) {
-							$menu_item->classes   = is_array( $menu_item->classes ) ? $menu_item->classes : array();
-							$menu_item->classes[] = 'current_page_item';
-							$menu_item->classes[] = 'current-menu-item';
-						}
-					}
-				}
+			} elseif ( strpos( $current, $menu_item->url ) !== false ) {
+				$menu_item->classes[] = 'current_page_item';
+				$menu_item->classes[] = 'current-menu-item';
 			}
 		}
 	}
@@ -2153,7 +2264,7 @@ add_filter( 'nav_menu_link_attributes', 'bb_change_nav_menu_links', 10, 4 );
  */
 function bb_change_nav_menu_class( $classes, $item, $args, $depth ) {
 
-	if ( isset( $item->menu_type ) && 'buddyboss' === $item->menu_type ) {
+	if ( isset( $item->menu_type ) && 'buddyboss' === $item->menu_type && ! bp_is_groups_component() ) {
 		if ( bp_loggedin_user_domain() !== bp_displayed_user_domain() ) {
 			$classes = array_diff( $classes, array( 'current-menu-item', 'current_page_item' ) );
 		}
@@ -2221,13 +2332,10 @@ function bb_heartbeat_member_presence_info( $response = array(), $data = array()
 		return $response;
 	}
 
-	bp_core_record_activity( true );
+	bp_core_record_activity();
 
-	$interval_time     = bb_presence_interval();
-	$presence_user_ids = wp_parse_id_list( $data['presence_users'] );
-	$compare_time      = $interval_time + 5;
-
-	$response['users_presence'] = bb_get_users_presence( $presence_user_ids, $compare_time );
+	$presence_user_ids          = wp_parse_id_list( $data['presence_users'] );
+	$response['users_presence'] = bb_get_users_presence( $presence_user_ids );
 
 	return $response;
 }
@@ -2247,7 +2355,9 @@ add_filter( 'heartbeat_nopriv_received', 'bb_heartbeat_member_presence_info', 11
 function bb_heartbeat_settings( $settings ) {
 	$interval_time = bb_presence_interval();
 
-	if ( ! empty( $settings['interval'] ) && $settings['interval'] !== $interval_time ) {
+	if ( isset( $settings['interval'] ) && $settings['interval'] !== $interval_time ) {
+		bp_update_option( 'bb_presence_interval', absint( $settings['interval'] ) );
+	} else {
 		bp_delete_option( 'bb_presence_interval' );
 	}
 
@@ -2255,3 +2365,134 @@ function bb_heartbeat_settings( $settings ) {
 }
 
 add_filter( 'heartbeat_settings', 'bb_heartbeat_settings', PHP_INT_MAX, 1 );
+
+/**
+ * Function to update menu order for Theme Options and License Key in the BuddyBoss menu.
+ *
+ * @since BuddyBoss 2.2.2
+ *
+ * @param array $menu_order Menu order.
+ *
+ * @return array
+ */
+function buddyboss_menu_order( $menu_order ) {
+	global $submenu;
+	$buddyboss_theme_options_menu = array();
+	$buddyboss_theme_font_menu    = array();
+	$buddyboss_updater_menu       = array();
+	$sep_position                 = 0;
+
+	$after_sep = array();
+
+	if ( ! empty( $submenu['buddyboss-platform'] ) ) {
+		foreach ( $submenu['buddyboss-platform'] as $key => $val ) {
+			if ( isset( $val[2] ) ) {
+
+				if ( 'buddyboss_theme_options' === $val[2] ) {
+					$buddyboss_theme_options_menu = $submenu['buddyboss-platform'][ $key ];
+					unset( $submenu['buddyboss-platform'][ $key ] );
+					continue;
+				}
+
+				if ( 'edit.php?post_type=buddyboss_fonts' === $val[2] ) {
+					$buddyboss_theme_font_menu = $submenu['buddyboss-platform'][ $key ];
+					unset( $submenu['buddyboss-platform'][ $key ] );
+					continue;
+				}
+
+				if ( 'buddyboss-updater' === $val[2] ) {
+					$buddyboss_updater_menu = $submenu['buddyboss-platform'][ $key ];
+					unset( $submenu['buddyboss-platform'][ $key ] );
+					continue;
+				}
+
+				if ( 0 !== $sep_position ) {
+					$after_sep[] = $val;
+					unset( $submenu['buddyboss-platform'][ $key ] );
+				}
+
+				if ( 'bp-plugin-seperator' === $val[2] && 0 === $sep_position ) {
+					$sep_position = $key;
+				}
+			}
+		}
+
+		if ( ! empty( $buddyboss_theme_options_menu ) ) {
+			$submenu['buddyboss-platform'][ ++ $sep_position ] = $buddyboss_theme_options_menu; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		}
+
+		if ( ! empty( $buddyboss_theme_font_menu ) ) {
+			$submenu['buddyboss-platform'][ ++ $sep_position ] = $buddyboss_theme_font_menu; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		}
+
+		if ( ! empty( $after_sep ) ) {
+			foreach ( $after_sep as $menu ) {
+				$submenu['buddyboss-platform'][ ++ $sep_position ] = $menu; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			}
+		}
+
+		if ( ! empty( $buddyboss_updater_menu ) ) {
+			$submenu['buddyboss-platform'][ ++ $sep_position ] = $buddyboss_updater_menu; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		}
+	}
+
+	return $menu_order;
+}
+
+add_filter( 'menu_order', 'buddyboss_menu_order' );
+
+/**
+ * Function to remove html entity from number format.
+ *
+ * @since BuddyBoss 2.3.1
+ *
+ * @param string $formatted The number to be formatted.
+ *
+ * @return string
+ */
+function bb_core_number_format_callback( $formatted ) {
+	return html_entity_decode( $formatted, ENT_NOQUOTES );
+}
+
+add_filter( 'bp_core_number_format', 'bb_core_number_format_callback', 10, 1 );
+
+/**
+ * Fix the issue with loom embed not working correctly.
+ *
+ * @since BuddyBoss 2.4.20
+ *
+ * @param string $return The returned oEmbed HTML.
+ * @param object $data   A data object result from an oEmbed provider.
+ * @param string $url    The URL of the content to be embedded.
+ *
+ * @return array|mixed|string|string[]|null
+ */
+function bb_oembed_dataparse( $return, $data, $url ) {
+	if ( ! empty( $return ) && false !== strpos( $return, 'loom.com' ) ) {
+		$return = preg_replace( '/\s*sandbox\s*=\s*(["\']).*?\1/', '', $return );
+	}
+
+	return $return;
+}
+
+add_filter( 'oembed_dataparse', 'bb_oembed_dataparse', 999, 3 );
+
+/**
+ * Make the loom video embed discoverable.
+ *
+ * @since BuddyBoss 2.4.20
+ *
+ * @param bool   $retval Return value to enabled discover support or not.
+ * @param string $url    URL to parse for embed.
+ *
+ * @return bool
+ */
+function bb_loom_oembed_discover_support( $retval, $url ) {
+	if ( ! empty( $url ) && false !== strpos( $url, 'loom.com' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
+
+add_filter( 'bb_oembed_discover_support', 'bb_loom_oembed_discover_support', 10, 2 );

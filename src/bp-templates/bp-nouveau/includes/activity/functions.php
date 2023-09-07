@@ -182,7 +182,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		);
 
 		// the groups component is active & the current user is at least a member of 1 group
-		if ( bp_is_active( 'groups' ) && bp_has_groups( array( 'user_id' => bp_loggedin_user_id(), 'max' => 1 ) ) ) {
+		if ( bp_is_active( 'groups' ) && bp_has_groups( array( 'user_id' => bp_loggedin_user_id(), 'max' => 1, 'search_terms' => false ) ) ) {
 			$activity_objects['group'] = array(
 				'text'                      => esc_html__( 'Post in: Group', 'buddyboss' ),
 				'autocomplete_placeholder'  => esc_html__( 'Search groups', 'buddyboss' ),
@@ -201,31 +201,11 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 			);
 			$cache_key  = 'bbp_default_groups_' . md5( maybe_serialize( $group_args ) );
 			if ( ! isset( $group_query_cache[ $cache_key ] ) ) {
-
-				$exclude_groups = array();
-
-				$group_exclude_args = array(
-					'user_id'     => bp_loggedin_user_id(),
-					'show_hidden' => true,
-					'per_page'    => - 1,
-					'orderby'     => 'name',
-					'order'       => 'ASC',
-					'fields'      => 'ids',
-				);
-				$groups = groups_get_groups( $group_exclude_args );
-
-				if ( ! empty( $groups['groups'] ) ) {
-					foreach ( $groups['groups'] as $exclude_group_id ) {
-						if ( ! groups_is_user_allowed_posting( bp_loggedin_user_id(), $exclude_group_id ) ) {
-							$exclude_groups[] = $exclude_group_id;
-						}
-					}
-				}
-				
-				if ( ! empty( $exclude_groups ) ){
-					$group_args['exclude'] = $exclude_groups;
-				}
+				add_filter( 'bp_groups_get_join_sql', 'bb_groups_get_join_sql_for_activity', 10, 2 );
+				add_filter( 'bp_groups_get_where_conditions', 'bb_groups_get_where_conditions_for_activity', 10, 2 );
 				$group_query_cache[ $cache_key ] = groups_get_groups( $group_args );
+				remove_filter( 'bp_groups_get_join_sql', 'bb_groups_get_join_sql_for_activity', 10, 2 );
+				remove_filter( 'bp_groups_get_where_conditions', 'bb_groups_get_where_conditions_for_activity', 10, 2 );
 			}
 			$groups = $group_query_cache[ $cache_key ];
 
@@ -668,3 +648,5 @@ function bp_nouveau_activity_customizer_controls( $controls = array() ) {
 //		),
 	) );
 }
+
+

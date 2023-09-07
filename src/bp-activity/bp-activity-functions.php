@@ -685,7 +685,7 @@ function bp_activity_type_supports( $activity_type = '', $feature = '' ) {
 				$bp->activity->track = bp_activity_get_post_types_tracking_args();
 			}
 
-			// Post Type activities
+			// Post Type activities.
 			if ( ! empty( $bp->activity->track[ $activity_type ] ) ) {
 				if ( isset( $bp->activity->track[ $activity_type ]->activity_comment ) ) {
 					$retval = $bp->activity->track[ $activity_type ]->activity_comment;
@@ -696,9 +696,13 @@ function bp_activity_type_supports( $activity_type = '', $feature = '' ) {
 					$retval = $bp->activity->track[ $activity_type ]->comments_tracking && ! bp_disable_blogforum_comments();
 				}
 
-				// Retired Forums component
+				// Retired Forums component.
 			} elseif ( 'new_forum_topic' === $activity_type || 'new_forum_post' === $activity_type ) {
 				$retval = ! bp_disable_blogforum_comments();
+
+				// Comment is disabled for discussion and reply discussion.
+			} elseif ( 'bbp_topic_create' === $activity_type || 'bbp_reply_create' === $activity_type ) {
+				$retval = false;
 
 				// By Default, all other activity types are supporting comments.
 			} else {
@@ -1233,7 +1237,7 @@ function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
 				if ( $user_id != $current_user_id ) {
 					$user_display_name = bp_core_get_user_displayname( $user_id );
 					if ( strpos( $like_text, $user_display_name ) === false ) {
-						$carry .= $user_display_name . '&#10;';
+						$carry .= $user_display_name . ',&#10;';
 					}
 				}
 
@@ -1242,7 +1246,7 @@ function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
 		);
 	}
 
-	return $favorited_users;
+	return ! empty( $favorited_users ) ? trim( $favorited_users, ',&#10;' ) : '';
 }
 
 /**
@@ -2275,6 +2279,9 @@ function bp_activity_post_update( $args = '' ) {
 	// }
 
 	if ( bp_is_user_inactive( $r['user_id'] ) ) {
+		if ( 'wp_error' === $r['error_type'] ) {
+			return new WP_Error( 'bp_activity_inactive_user', __( 'User account has not yet been activated.', 'buddyboss' ) );
+		}
 		return false;
 	}
 
@@ -3919,7 +3926,7 @@ function bp_activity_create_summary( $content, $activity ) {
 
 	// Generate a text excerpt for this activity item (and remove any oEmbeds URLs).
 	$summary = bp_create_excerpt(
-		html_entity_decode( $content ),
+		html_entity_decode( $content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ),
 		225,
 		array(
 			'html'              => false,
@@ -4144,7 +4151,7 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
 				if ( ! empty( $parent_activity ) && 'blogs' === $parent_activity->component ) {
 					$notification_type_html = esc_html__( 'post', 'buddyboss' );
 					$title_text             = get_the_title( $parent_activity->secondary_item_id );
-					$message_link           = get_permalink( $activity->secondary_item_id );
+					$message_link           = get_permalink( $parent_activity->secondary_item_id );
 				} else {
 					$notification_type_html = esc_html__( 'post', 'buddyboss' );
 				}
@@ -4210,6 +4217,7 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 	$original_activity = new BP_Activity_Activity( $params['activity_id'] );
 	$poster_name       = bp_core_get_user_displayname( $commenter_id );
 	$thread_link       = bp_activity_get_permalink( $params['activity_id'] );
+	$usernames         = bp_activity_do_mentions() ? bp_activity_find_mentions( $params['content'] ) : array();
 
 	remove_filter( 'bp_get_activity_content_body', 'convert_smilies' );
 	remove_filter( 'bp_get_activity_content_body', 'wpautop' );
@@ -4228,9 +4236,37 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 	}
 
 	if ( $original_activity->user_id != $commenter_id ) {
+		if (
+			(
+				function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+				bb_moderation_allowed_specific_notification(
+					array(
+						'type'              => buddypress()->activity->id,
+						'group_id'          => 'groups' === $original_activity->component ? $original_activity->item_id : '',
+						'recipient_user_id' => $original_activity->user_id,
+						'sender_id'         => $original_activity->user_id,
+					)
+				)
+			) ||
+			(
+				'groups' === $original_activity->component &&
+				1 === $original_activity->hide_sitewide &&
+				! groups_is_user_member( $original_activity->user_id, $original_activity->item_id )
+			)
+		) {
+			return;
+		}
+
+		$send_email = true;
+
+		if ( ! empty( $usernames ) && array_key_exists( $original_activity->user_id, $usernames ) ) {
+			if ( true === bb_is_notification_enabled( $original_activity->user_id, 'bb_new_mention' ) ) {
+				$send_email = false;
+			}
+		}
 
 		// Send an email if the user hasn't opted-out.
-		if ( true === bb_is_notification_enabled( $original_activity->user_id, $type_key ) && false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $original_activity->user_id, $commenter_id ) ) {
+		if ( true === $send_email && true === bb_is_notification_enabled( $original_activity->user_id, $type_key ) ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => $original_activity->user_id,
@@ -4276,9 +4312,37 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 	$parent_comment = new BP_Activity_Activity( $params['parent_id'] );
 
 	if ( $parent_comment->user_id != $commenter_id && $original_activity->user_id != $parent_comment->user_id ) {
+		if (
+			(
+				function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+				bb_moderation_allowed_specific_notification(
+					array(
+						'type'              => buddypress()->activity->id,
+						'group_id'          => 'groups' === $original_activity->component ? $original_activity->item_id : '',
+						'recipient_user_id' => $parent_comment->user_id,
+						'sender_id'         => $original_activity->user_id,
+					)
+				)
+			) ||
+			(
+				'groups' === $parent_comment->component &&
+				1 === $parent_comment->hide_sitewide &&
+				! groups_is_user_member( $parent_comment->user_id, $parent_comment->item_id )
+			)
+		) {
+			return;
+		}
+
+		$send_email = true;
+
+		if ( ! empty( $usernames ) && array_key_exists( $parent_comment->user_id, $usernames ) ) {
+			if ( true === bb_is_notification_enabled( $parent_comment->user_id, 'bb_new_mention' ) ) {
+				$send_email = false;
+			}
+		}
 
 		// Send an email if the user hasn't opted-out.
-		if ( true === bb_is_notification_enabled( $parent_comment->user_id, $type_key ) && false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $parent_comment->user_id, $commenter_id )  ) {
+		if ( true === $send_email && true === bb_is_notification_enabled( $parent_comment->user_id, $type_key ) ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => $parent_comment->user_id,
@@ -4451,7 +4515,17 @@ add_action( 'bp_after_activity_comment', 'bp_activity_comment_embed_after_recurs
  * @return mixed The cached embeds for this activity item.
  */
 function bp_embed_activity_cache( $cache, $id, $cachekey ) {
-	return bp_activity_get_meta( $id, $cachekey );
+	$data = bp_activity_get_meta( $id, $cachekey );
+
+	if (
+		! empty( $data ) &&
+		false !== strpos( $data, 'loom.com' ) &&
+		false !== strpos( $data, 'sandbox' )
+	) {
+		return false;
+	}
+
+	return $data;
 }
 
 /**
@@ -4886,11 +4960,13 @@ function bp_get_followers( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'user_id' => bp_displayed_user_id(),
+			'user_id'  => bp_displayed_user_id(),
+			'page'     => false,
+			'per_page' => false,
 		)
 	);
 
-	return apply_filters( 'bp_get_followers', BP_Activity_Follow::get_followers( $r['user_id'] ) );
+	return apply_filters( 'bp_get_followers', BP_Activity_Follow::get_followers( $r['user_id'], $r ) );
 }
 
 /**
@@ -4909,11 +4985,13 @@ function bp_get_following( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'user_id' => bp_displayed_user_id(),
+			'user_id'  => bp_displayed_user_id(),
+			'page'     => false,
+			'per_page' => false,
 		)
 	);
 
-	return apply_filters( 'bp_get_following', BP_Activity_Follow::get_following( $r['user_id'] ) );
+	return apply_filters( 'bp_get_following', BP_Activity_Follow::get_following( $r['user_id'], $r ) );
 }
 
 /**
@@ -5243,133 +5321,6 @@ function bp_activity_action_parse_url() {
 }
 
 add_action( 'wp_ajax_bp_activity_parse_url', 'bp_activity_action_parse_url' );
-
-/**
- * Download an image from the specified URL and attach it to a post.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param string $file The URL of the image to download
- *
- * @return int|void
- */
-function bp_activity_media_sideload_attachment( $file ) {
-	if ( empty( $file ) ) {
-		return;
-	}
-
-	// Set variables for storage, fix file filename for query strings.
-	preg_match( '/[^\?]+\.(jpe?g|jpe|gif|png|svg|bmp|mp4)\b/i', $file, $matches );
-	$file_array = array();
-
-	if ( empty( $matches ) ) {
-		return;
-	}
-
-	$file_array['name'] = basename( $matches[0] );
-
-	// Load function download_url if not exists.
-	if ( ! function_exists( 'download_url' ) ) {
-		require_once ABSPATH . 'wp-admin/includes/file.php';
-	}
-
-	// Download file to temp location.
-	$file                   = preg_replace( '/^:*?\/\//', $protocol = strtolower( substr( $_SERVER['SERVER_PROTOCOL'], 0, strpos( $_SERVER['SERVER_PROTOCOL'], '/' ) ) ) . '://', $file );
-	$file                   = str_replace( '&amp;', '&', $file );
-	$file_array['tmp_name'] = download_url( $file );
-
-	// If error storing temporarily, return the error.
-	if ( is_wp_error( $file_array['tmp_name'] ) ) {
-		return;
-	}
-
-	// Do the validation and storage stuff.
-	$id = bp_activity_media_handle_sideload( $file_array );
-
-	// If error storing permanently, unlink.
-	if ( is_wp_error( $id ) ) {
-		return;
-	}
-
-	return $id;
-}
-
-/**
- * This handles a sideloaded file in the same way as an uploaded file is handled by {@link media_handle_upload()}
- *
- * @since BuddyBoss 1.0.0
- *
- * @param array $file_array Array similar to a {@link $_FILES} upload array
- * @param array $post_data  allows you to overwrite some of the attachment
- *
- * @return int|object The ID of the attachment or a WP_Error on failure
- */
-function bp_activity_media_handle_sideload( $file_array, $post_data = array() ) {
-
-	$overrides = array( 'test_form' => false );
-
-	$time = current_time( 'mysql' );
-	if ( $post = get_post() ) {
-		if ( substr( $post->post_date, 0, 4 ) > 0 ) {
-			$time = $post->post_date;
-		}
-	}
-
-	$file = wp_handle_sideload( $file_array, $overrides, $time );
-	if ( isset( $file['error'] ) ) {
-		return new WP_Error( 'upload_error', $file['error'] );
-	}
-
-	$url     = $file['url'];
-	$type    = $file['type'];
-	$file    = $file['file'];
-	$title   = preg_replace( '/\.[^.]+$/', '', basename( $file ) );
-	$content = '';
-
-	// Load function wp_read_image_metadata if not exists.
-	if ( ! function_exists( 'wp_read_image_metadata' ) ) {
-		require_once ABSPATH . 'wp-admin/includes/image.php';
-	}
-
-	// Use image exif/iptc data for title and caption defaults if possible.
-	if ( $image_meta = @wp_read_image_metadata( $file ) ) {
-		if ( trim( $image_meta['title'] ) && ! is_numeric( sanitize_title( $image_meta['title'] ) ) ) {
-			$title = $image_meta['title'];
-		}
-		if ( trim( $image_meta['caption'] ) ) {
-			$content = $image_meta['caption'];
-		}
-	}
-
-	if ( isset( $desc ) ) {
-		$title = $desc;
-	}
-
-	// Construct the attachment array.
-	$attachment = array_merge(
-		array(
-			'post_mime_type' => $type,
-			'guid'           => $url,
-			'post_title'     => $title,
-			'post_content'   => $content,
-		),
-		$post_data
-	);
-
-	// This should never be set as it would then overwrite an existing attachment.
-	if ( isset( $attachment['ID'] ) ) {
-		unset( $attachment['ID'] );
-	}
-
-	// Save the attachment metadata
-	$id = wp_insert_attachment( $attachment, $file );
-
-	if ( ! is_wp_error( $id ) ) {
-		wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $file ) );
-	}
-
-	return $id;
-}
 
 /**
  * Function to add the content on top of activity listing
@@ -5825,4 +5776,279 @@ function bb_bp_get_add_follow_button( $button ) {
 	$button['button_element'] = 'button';
 
 	return $button;
+}
+
+/**
+ * Function to send email and notification to followers when new activity post created.
+ *
+ * @since BuddyBoss 2.2.3
+ *
+ * @param array $args Array of arguments.
+ */
+function bb_activity_following_post_notification( $args ) {
+
+	$r = bp_parse_args(
+		$args,
+		array(
+			'activity'  => '',
+			'usernames' => array(),
+			'item_id'   => '',
+			'user_ids'  => array(),
+		)
+	);
+
+	if ( empty( $r['user_ids'] ) || empty( $r['activity'] ) ) {
+		return;
+	}
+
+	$activity_id      = $r['activity']->id;
+	$activity_user_id = ! empty( $r['item_id'] ) ? $r['item_id'] : $r['activity']->user_id;
+	$poster_name      = bp_core_get_user_displayname( $activity_user_id );
+	$activity_link    = bp_activity_get_permalink( $activity_id );
+	$media_ids        = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
+	$document_ids     = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+	$video_ids        = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
+
+	if ( $media_ids ) {
+		$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
+		if ( count( $media_ids ) > 1 ) {
+			$text = __( 'some photos', 'buddyboss' );
+		} else {
+			$text = __( 'a photo', 'buddyboss' );
+		}
+	} elseif ( $document_ids ) {
+		$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
+		if ( count( $document_ids ) > 1 ) {
+			$text = __( 'some documents', 'buddyboss' );
+		} else {
+			$text = __( 'a document', 'buddyboss' );
+		}
+	} elseif ( $video_ids ) {
+		$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
+		if ( count( $video_ids ) > 1 ) {
+			$text = __( 'some videos', 'buddyboss' );
+		} else {
+			$text = __( 'a video', 'buddyboss' );
+		}
+	} else {
+		$text = __( 'an update', 'buddyboss' );
+	}
+
+	$args = array(
+		'tokens' => array(
+			'activity'      => $r['activity'],
+			'activity.type' => $text,
+			'poster.name'   => $poster_name,
+			'activity.url'  => esc_url( $activity_link ),
+		),
+	);
+
+	foreach ( $r['user_ids'] as $key => $user_id ) {
+		$user_id           = (int) $user_id;
+		$send_mail         = true;
+		$send_notification = true;
+
+		if ( ! empty( $r['usernames'] ) && isset( $r['usernames'][ $user_id ] ) ) {
+			if ( true === bb_is_notification_enabled( $user_id, 'bb_new_mention' ) ) {
+				$send_mail = false;
+			}
+		}
+
+		if (
+			'friends' === $r['activity']->privacy &&
+			bp_is_active( 'friends' ) &&
+			(int) $user_id !== (int) $activity_user_id &&
+			! friends_check_friendship( $user_id, $activity_user_id )
+		) {
+			$send_notification = false;
+			$send_mail         = false;
+		}
+
+		// It will check some condition to following notification disable, user blocked , mention notification enable
+		// and mention available in post for follower user.
+		if ( false === bb_is_notification_enabled( $user_id, 'bb_activity_following_post' ) ) {
+			$send_mail = false;
+		}
+
+		if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $activity_user_id ) ) {
+			$send_notification = false;
+			$send_mail         = false;
+		}
+
+		if ( true === $send_mail ) {
+			$unsubscribe_args = array(
+				'user_id'           => $user_id,
+				'notification_type' => 'new-activity-following',
+			);
+
+			$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+
+			// Send notification email.
+			bp_send_email( 'new-activity-following', $user_id, $args );
+		}
+
+		if ( true === $send_notification && bp_is_active( 'notifications' ) ) {
+			add_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
+			bp_notifications_add_notification(
+				array(
+					'user_id'           => $user_id,
+					'item_id'           => $activity_id,
+					'secondary_item_id' => $activity_user_id,
+					'component_name'    => buddypress()->activity->id,
+					'component_action'  => 'bb_activity_following_post',
+					'date_notified'     => bp_core_current_time(),
+					'is_new'            => 1,
+				)
+			);
+			remove_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
+		}
+	}
+}
+
+/**
+ * Check whether activity comment is group comment or not.
+ *
+ * @since BuddyBoss 2.3.50
+ *
+ * @param object|int $comment Activity comment ID or object.
+ *
+ * @return bool
+ */
+function bb_is_group_activity_comment( $comment = 0 ) {
+
+	$comment_id = 0;
+	if ( empty( $comment ) ) {
+		global $activities_template;
+		$comment_id = isset( $activities_template->activity->current_comment->id ) ? $activities_template->activity->current_comment->id : 0;
+	} elseif ( is_array( $comment ) ) {
+		$comment_id = (int) $comment['id'];
+	} elseif ( is_object( $comment ) ) {
+		$comment_id = (int) $comment->id;
+	} elseif ( is_int( $comment ) ) {
+		$comment_id = (int) $comment;
+	}
+
+	if ( empty( $comment_id ) ) {
+		return false;
+	}
+
+	$comment = new BP_Activity_Activity( $comment_id );
+
+	if ( ! empty( $comment->item_id ) && ! empty( $comment->user_id ) ) {
+		$main_activity = new BP_Activity_Activity( $comment->item_id );
+
+		if (
+			! empty( $main_activity->component ) &&
+			'groups' === $main_activity->component
+		) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * Function to create a paginated backgroud job for activity following notifications.
+ *
+ * @since BuddyBoss 2.3.70
+ *
+ * @param array $args  Array of arguments.
+ * @param array $paged Current page number for pagination.
+ */
+function bb_activity_create_following_post_notification( $args, $paged = 1 ) {
+	if ( empty( $paged ) ) {
+		$paged = 1;
+	}
+
+	$per_page       = apply_filters( 'bb_following_min_count', 20 );
+	$follower_users = bp_get_followers(
+		array(
+			'user_id'  => $args['item_id'],
+			'per_page' => $per_page,
+			'page'     => $paged
+		)
+	);
+
+	if ( empty( $follower_users ) ) {
+		return;
+	}
+
+	if ( count( $follower_users ) > 0 ) {
+		global $bb_background_updater;
+
+		$args['user_ids'] = $follower_users;
+		$args['paged']    = $paged;
+		$bb_background_updater->data(
+			array(
+				'type'     => 'email',
+				'group'    => 'activity_following_post',
+				'data_id'  => $args['item_id'],
+				'priority' => 5,
+				'callback' => 'bb_activity_following_post_notification',
+				'args'     => array( $args ),
+			),
+		);
+
+		$bb_background_updater->save()->dispatch();
+	}
+
+	if ( isset( $args['user_ids'] ) ) {
+		unset( $args['user_ids'] );
+	}
+
+	if ( isset( $args['paged'] ) ) {
+		unset( $args['paged'] );
+	}
+
+	// Call recursive to finish update for all records.
+	$paged++;
+	bb_activity_create_following_post_notification( $args, $paged );
+}
+
+/**
+ * Returns the list of available BuddyPress activity types.
+ *
+ * @since BuddyPress 9.0.0
+ * @since BuddyBoss 2.3.90
+ *
+ * @return array An array of activity type labels keyed by type names.
+ */
+function bp_activity_get_types_list() {
+	$actions_object = bp_activity_get_actions();
+	$actions_array  = get_object_vars( $actions_object );
+
+	$types = array();
+	foreach ( $actions_array as $component => $actions ) {
+		$new_types = wp_list_pluck( $actions, 'label', 'key' );
+
+		if ( $types ) {
+			// Makes sure activity types are unique.
+			$new_types = array_diff_key( $new_types, $types );
+
+			if ( 'friends' === $component ) {
+				$new_types = array_diff_key(
+					array(
+						'friendship_accepted'              => false,
+						'friendship_created'               => false,
+						'friends_register_activity_action' => false,
+					),
+					$new_types
+				);
+
+				$new_types['friendship_accepted,friendship_created'] = __( 'Friendships', 'buddyboss' );
+			}
+		}
+
+		$types = array_merge( $types, $new_types );
+	}
+
+	/**
+	 * Filter here to edit the activity types list.
+	 *
+	 * @since BuddyPress 9.0.0
+	 *
+	 * @param array $types An array of activity type labels keyed by type names.
+	 */
+	return apply_filters( 'bp_activity_get_types_list', $types );
 }

@@ -246,9 +246,9 @@ function bbp_view_query( $view = '', $new_args = '' ) {
  */
 function bbp_get_view_query_args( $view ) {
 	$view   = bbp_get_view_id( $view );
-	$retval = ! empty( $view ) ? bbpress()->views[ $view ]['query'] : false;
+	$retval = ! empty( $view ) && ! empty( $bbp->views[ $view ] ) ? bbpress()->views[ $view ]['query'] : array();
 
-	return apply_filters( 'bbp_get_view_query_args', $retval, $view );
+	return (array) apply_filters( 'bbp_get_view_query_args', $retval, $view );
 }
 
 /** Errors ********************************************************************/
@@ -547,12 +547,20 @@ function bbp_get_paged_rewrite_id() {
  * Get the slug used for paginated requests
  *
  * @since bbPress (r4926)
- * @global object $wp_rewrite The WP_Rewrite object
  * @return string
  */
 function bbp_get_paged_slug() {
-	global $wp_rewrite;
-	return $wp_rewrite->pagination_base;
+	// Default
+	$retval  = 'page';
+	$rewrite = bbp_rewrite();
+
+	// Use $wp_rewrite->pagination_base if available.
+	if ( property_exists( $rewrite, 'pagination_base' ) ) {
+		$retval = $rewrite->pagination_base;
+	}
+
+	// Filter & return.
+	return apply_filters( 'bbp_get_paged_slug', $retval );
 }
 
 /**
@@ -701,11 +709,25 @@ function bbp_get_global_object( $name = '', $type = '', $default = null ) {
 }
 
 /**
+ * Return the database class being used to interface with the environment.
+ *
+ * This function is abstracted to avoid global touches to the primary database
+ * class. bbPress supports WordPress's `$wpdb` global by default, and can be
+ * filtered to support other configurations if needed.
+ *
+ * @since 2.5.8 bbPress (r5814)
+ * @since BuddyBoss 2.3.90
+ *
+ * @return object
+ */
+function bbp_db() {
+	return bbp_get_global_object( 'wpdb', 'WPDB' );
+}
+
+/**
  * Is the environment using pretty URLs?
  *
  * @since 2.5.8 bbPress (r5814)
- *
- * @global object $wp_rewrite The WP_Rewrite object
  *
  * @return bool
  */
@@ -1029,3 +1051,121 @@ function bbp_get_empty_datetime() {
 	return (string) apply_filters( 'bbp_get_default_zero_date', $retval, $db_version );
 }
 
+/**
+ * Get default forum image URL.
+ *
+ * @since BuddyBoss 2.2.6
+ *
+ * @param string $size This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
+ *
+ * @return string Return default forum image URL.
+ */
+function bb_get_forum_default_image( $size = 'full' ) {
+	$filename = 'bb-default-forum.png';
+	if ( 'full' !== $size ) {
+		$filename = 'bb-default-forum-150.png';
+	}
+	/**
+	 * Filters default forum image URL.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string $value Default forum image URL.
+	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
+	 */
+	return apply_filters( 'bb_get_forum_default_image', esc_url( buddypress()->plugin_url . 'bp-core/images/' . $filename ), $size );
+}
+
+/**
+ * Perform a safe, local redirect somewhere inside the current site.
+ *
+ * On some setups, passing the value of wp_get_referer() may result in an empty
+ * value for $location, which results in an error on redirection. If $location
+ * is empty, we can safely redirect back to the forum root. This might change
+ * in a future version, possibly to the site root.
+ *
+ * @since 2.6.0 bbPress (r5658)
+ * @since BuddyBoss 2.3.4
+ *
+ * @see   bbp_redirect_to_field()
+ *
+ * @param string $location The URL to redirect the user to.
+ * @param int    $status   Optional. The numeric code to give in the redirect
+ *                         headers. Default: 302.
+ */
+function bbp_redirect( $location = '', $status = 302 ) {
+
+	// Prevent errors from empty $location.
+	if ( empty( $location ) ) {
+		$location = bbp_get_forums_url();
+	}
+
+	// Setup the safe redirect.
+	wp_safe_redirect( $location, $status );
+
+	// Exit so the redirect takes place immediately.
+	exit();
+}
+
+/**
+ * Function to check the forums favourite legacy is enabled or not.
+ *
+ * @since BuddyBoss 2.3.4
+ *
+ * @todo Legacy support will disable after certain version.
+ *
+ * @return bool True if forums favourite legacy is enabled otherwise false.
+ */
+function bb_forum_favourite_legacy_data_support() {
+	return (bool) apply_filters( 'bb_forum_favourite_legacy_data_support', true );
+}
+
+/**
+ * Get the root URL.
+ *
+ * @since bbPress 2.5.8 (r5814)
+ * @since BuddyBoss 2.4.00
+ *
+ * @return string
+ */
+function bbp_get_root_url() {
+
+	// Default.
+	$retval  = '';
+	$rewrite = bbp_rewrite();
+
+	// Use $wp_rewrite->root if available.
+	if ( property_exists( $rewrite, 'root' ) ) {
+		$retval = $rewrite->root;
+	}
+
+	// Filter & return.
+	return apply_filters( 'bbp_get_root_url', $retval );
+}
+
+
+/** Global Helpers ************************************************************/
+
+/**
+ * Return if debugging scripts or not.
+ *
+ * @since 2.6.7 (r7188)
+ * @since BuddyBoss 2.4.00
+ *
+ * @return bool True if debugging scripts. False if not debugging scripts.
+ */
+function bbp_doing_script_debug() {
+	return defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
+}
+
+/**
+ * Return if auto-saving or not.
+ *
+ * @since 2.6.7 (r7188)
+ * @since BuddyBoss 2.4.00
+ *
+ * @return bool True if mid auto-save. False if not mid auto-save.
+ */
+function bbp_doing_autosave() {
+	return defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE;
+}

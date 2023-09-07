@@ -56,7 +56,8 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		add_filter( 'get_comment_time', array( $this, 'blocked_get_comment_time' ), 10, 5 );
 		add_filter( 'comment_reply_link', array( $this, 'blocked_comment_reply_link' ), 10, 3 );
 		add_filter( 'edit_comment_link', array( $this, 'blocked_edit_comment_link' ), 10, 2 );
-
+		add_filter( 'comments_clauses', array( $this, 'bb_blocked_comments_pre_query' ), 10, 2 );
+		add_filter( 'get_comment_excerpt', array( $this, 'bb_blocked_get_comment_excerpt' ), 10, 3 );
 	}
 
 	/**
@@ -107,7 +108,11 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function manage_hidden_comment( $comment_id, $hide_sitewide, $args = array() ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
+
+		if ( empty( $comment_id ) ) {
+			return;
+		}
 
 		$suspend_args = bp_parse_args(
 			$args,
@@ -123,20 +128,32 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 
 		$suspend_args = self::validate_keys( $suspend_args );
 
+		$group_name_args = array_merge(
+			$suspend_args,
+			array(
+				'custom_action' => 'hide',
+			)
+		);
+		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
+
 		BP_Core_Suspend::add_suspend( $suspend_args );
+
+		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $comment_id;
 
 		if ( $this->background_disabled ) {
 			$this->hide_related_content( $comment_id, $hide_sitewide, $args );
 		} else {
-			$bp_background_updater->data(
+			$bb_background_updater->data(
 				array(
-					array(
-						'callback' => array( $this, 'hide_related_content' ),
-						'args'     => array( $comment_id, $hide_sitewide, $args ),
-					),
-				)
+					'type'              => $this->item_type,
+					'group'             => $group_name,
+					'data_id'           => $comment_id,
+					'secondary_data_id' => $args['parent_id'],
+					'callback'          => array( $this, 'hide_related_content' ),
+					'args'              => array( $comment_id, $hide_sitewide, $args ),
+				),
 			);
-			$bp_background_updater->save()->schedule_event();
+			$bb_background_updater->save()->schedule_event();
 		}
 	}
 
@@ -151,7 +168,11 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function manage_unhidden_comment( $comment_id, $hide_sitewide, $force_all, $args = array() ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
+
+		if ( empty( $comment_id ) ) {
+			return;
+		}
 
 		$suspend_args = bp_parse_args(
 			$args,
@@ -179,20 +200,32 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 
 		$suspend_args = self::validate_keys( $suspend_args );
 
+		$group_name_args = array_merge(
+			$suspend_args,
+			array(
+				'custom_action' => 'unhide',
+			)
+		);
+		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
+
 		BP_Core_Suspend::remove_suspend( $suspend_args );
+
+		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $comment_id;
 
 		if ( $this->background_disabled ) {
 			$this->unhide_related_content( $comment_id, $hide_sitewide, $force_all, $args );
 		} else {
-			$bp_background_updater->data(
+			$bb_background_updater->data(
 				array(
-					array(
-						'callback' => array( $this, 'unhide_related_content' ),
-						'args'     => array( $comment_id, $hide_sitewide, $force_all, $args ),
-					),
-				)
+					'type'              => $this->item_type,
+					'group'             => $group_name,
+					'data_id'           => $comment_id,
+					'secondary_data_id' => $args['parent_id'],
+					'callback'          => array( $this, 'unhide_related_content' ),
+					'args'              => array( $comment_id, $hide_sitewide, $force_all, $args ),
+				),
 			);
-			$bp_background_updater->save()->schedule_event();
+			$bb_background_updater->save()->schedule_event();
 		}
 	}
 
@@ -211,8 +244,14 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 			return $comment_text;
 		}
 
+		$comment_author_id = ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
 		if ( $this->check_is_hidden( $comment->comment_ID ) ) {
-			$comment_text = esc_html__( 'This content has been hidden as the member is suspended.', 'buddyboss' );
+			$is_user_suspended = bp_moderation_is_user_suspended( $comment_author_id );
+			if ( $is_user_suspended ) {
+				$comment_text = bb_moderation_is_suspended_message( $comment_text, $this->item_type, $comment->comment_ID );
+			} else {
+				$comment_text = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
+			}
 		}
 
 		return $comment_text;
@@ -234,7 +273,10 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 
 		$user_id = BP_Moderation_Comment::get_content_owner_id( $comment_id );
 		if ( $this->check_is_hidden( $comment_id ) ) {
-			$return = bb_moderation_is_suspended_label( $user_id );
+			$is_user_suspended = bp_moderation_is_user_suspended( $user_id );
+			if ( $is_user_suspended ) {
+				$return = bb_moderation_is_suspended_label( $user_id );
+			}
 		}
 
 		return $return;
@@ -254,7 +296,10 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 
 		$user_id = BP_Moderation_Comment::get_content_owner_id( $comment_id );
 		if ( $this->check_is_hidden( $comment_id ) ) {
-			$author = bb_moderation_is_suspended_label( $user_id );
+			$is_user_suspended = bp_moderation_is_user_suspended( $user_id );
+			if ( $is_user_suspended ) {
+				$author = bb_moderation_is_suspended_label( $user_id );
+			}
 		}
 
 		return $author;
@@ -464,15 +509,64 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 */
 	private function check_is_hidden( $comment_id ) {
 
-		if ( BP_Core_Suspend::check_suspended_content( $comment_id, self::$type ) ) {
-			return true;
-		}
-
 		$author_id = BP_Moderation_Comment::get_content_owner_id( $comment_id );
-		if ( bp_moderation_is_user_suspended( $author_id ) ) {
+
+		if (
+			( BP_Core_Suspend::check_suspended_content( $comment_id, self::$type ) ) ||
+			( ! empty( $author_id ) && bp_moderation_is_user_suspended( $author_id ) )
+		) {
 			return true;
 		}
 
 		return false;
+	}
+
+	/**
+	 * Function to exclude is_suspended users comment from recent comment widget.
+	 *
+	 * @since BuddyBoss 2.2.5
+	 *
+	 * @param string[] $comment_data An associative array of comment query clauses.
+	 * @param object   $query        Current instance of WP_Comment_Query (passed by reference).
+	 *
+	 * @return mixed
+	 */
+	public function bb_blocked_comments_pre_query( $comment_data, $query ) {
+		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'widget_comments_args' ) ) {
+			global $wpdb;
+			$comment_data['join']  .= ' ' . $this->exclude_joint_query( $wpdb->comments . '.user_id', BP_Moderation_Members::$moderation_type );
+			$comment_data['where'] .= ' AND ' . $this->exclude_where_query();
+		}
+
+		return $comment_data;
+	}
+
+	/**
+	 * Update comment excerpt text for blocked comment.
+	 *
+	 * @since BuddyBoss 2.2.5
+	 *
+	 * @param string     $excerpt    The comment excerpt text.
+	 * @param string     $comment_id The comment ID as a numeric string.
+	 * @param WP_Comment $comment    The comment object.
+	 *
+	 * @return mixed|string
+	 */
+	public function bb_blocked_get_comment_excerpt( $excerpt, $comment_id, $comment ) {
+		if ( ! $comment instanceof WP_Comment ) {
+			return $excerpt;
+		}
+
+		$comment_author_id = ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
+		if ( $this->check_is_hidden( $comment_id ) ) {
+			$is_user_suspended = bp_moderation_is_user_suspended( $comment_author_id );
+			if ( $is_user_suspended ) {
+				$excerpt = bb_moderation_is_suspended_message( $excerpt, $this->item_type, $comment->comment_ID );
+			} else {
+				$excerpt = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
+			}
+		}
+
+		return $excerpt;
 	}
 }

@@ -717,7 +717,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
@@ -984,7 +984,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
@@ -1274,7 +1274,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
@@ -1392,8 +1392,9 @@ window.bp = window.bp || {};
 				this.video_dropzone_obj.destroy();
 			}
 			this.dropzone_video = [];
+			$( '#bp-video-post-content' ).val('');
 
-			var currentPopup = $( event.currentTarget ).closest( '#bp-video-uploader' );
+			var currentPopup = $( event.target ).closest( '#bp-video-uploader' );
 
 			$( '.close-create-popup-album' ).trigger( 'click' );
 			$( '.close-create-popup-folder' ).trigger( 'click' );
@@ -1599,14 +1600,14 @@ window.bp = window.bp || {};
 								) {
 									$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#video-personal-li a span.count' ).text( response.data.video_personal_count );
 								}
-								
+
 								if (
 									'undefined' !== typeof response.data &&
 									'undefined' !== typeof response.data.video_group_count
 								) {
 									$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#videos-groups-li a span.count' ).text( response.data.video_group_count );
 								}
-								
+
 								buddyPressSelector.find( '.video-list:not(.existing-video-list)' ).find( '.bb-video-check-wrap [name="bb-video-select"]:checked' ).each(
 									function () {
 										$( this ).closest( 'li' ).remove();
@@ -1713,7 +1714,7 @@ window.bp = window.bp || {};
 
 			this.closeUploader( event );
 			$( '#bp-video-create-album' ).hide();
-			$( '#bb-album-title' ).val( '' );
+			$( '#bb-album-title' ).val( '' ).removeClass( 'error' );
 
 		},
 
@@ -2297,6 +2298,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bb-next-media', this.next.bind( this ) );
 			$( document ).on( 'click', '.bp-add-video-activity-description', this.openVideoActivityDescription.bind( this ) );
 			$( document ).on( 'click', '#bp-activity-description-new-reset', this.closeVideoActivityDescription.bind( this ) );
+			$( document ).on( 'keyup', '.bp-edit-video-activity-description #add-activity-description', this.MediaActivityDescriptionUpdate.bind(this));
 			$( document ).on( 'click', '#bp-activity-description-new-submit', this.submitVideoActivityDescription.bind( this ) );
 			$( document ).on( 'bp_activity_ajax_delete_request_video', this.videoActivityDeleted.bind( this ) );
 
@@ -2320,7 +2322,14 @@ window.bp = window.bp || {};
 			self.showVideo();
 			self.navigationCommands();
 
-			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_video && typeof self.current_video.activity_id !== 'undefined' && self.current_video.activity_id != 0 && ! self.current_video.is_forum && self.current_video.privacy !== 'comment' ) {
+			if (
+				typeof BP_Nouveau.activity !== 'undefined' &&
+				self.current_video &&
+				typeof self.current_video.activity_id !== 'undefined' &&
+				self.current_video.activity_id != 0 &&
+				! self.current_video.is_forum &&
+				self.current_video.privacy !== 'comment'
+			) {
 				self.getActivity();
 			} else {
 				self.getVideosDescription();
@@ -2708,6 +2717,14 @@ window.bp = window.bp || {};
 			target.parents( '.activity-video-description' ).find( '.bp-edit-video-activity-description' ).hide().removeClass( 'open' );
 		},
 
+		MediaActivityDescriptionUpdate: function( event ) {
+			if( $( event.currentTarget ).val().trim() !== '' ) {
+				$( event.currentTarget ).closest( '.bp-edit-video-activity-description' ).addClass( 'has-content' );
+			} else {
+				$( event.currentTarget ).closest( '.bp-edit-video-activity-description' ).removeClass( 'has-content' );
+			}
+		},
+
 		submitVideoActivityDescription: function ( event ) {
 			event.preventDefault();
 
@@ -2844,8 +2861,9 @@ window.bp = window.bp || {};
 			$( '.video-js:not(.loaded)' ).each(
 				function () {
 
-					var self    = this;
-					var options = { 'controlBar' : { 'volumePanel' : { 'inline' : false } } };
+					var self   		= this;
+					var options 	= { 'controlBar' : { 'volumePanel' : { 'inline' : false } } };
+					var player_id 	= $( this ).attr( 'id' );
 
 					var videoIndex                   = $( this ).attr( 'id' );
 					player[ $( this ).attr( 'id' ) ] = videojs(
@@ -2872,8 +2890,8 @@ window.bp = window.bp || {};
                         }
 					);
 
-					if ( player[ $( this ).attr( 'id' ) ] !== undefined) {
-						player[ $( this ).attr( 'id' ) ].seekButtons(
+					if ( player[ player_id ] !== undefined && ( $( this ).find('.skip-back').length == 0 && $( this ).find('.skip-forward').length == 0 ) ) {
+						player[ player_id ].seekButtons(
 							{
 								forward: 5,
 								back: 5

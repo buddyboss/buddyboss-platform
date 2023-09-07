@@ -18,29 +18,55 @@ function bp_core_register_common_scripts() {
 	$min = bp_core_get_minified_asset_suffix();
 	$url = buddypress()->plugin_url . 'bp-core/js/';
 
-	/*
-	 * Moment.js locale.
-	 *
-	 * Try to map current WordPress locale to a moment.js locale file for loading.
-	 *
-	 * eg. French (France) locale for WP is fr_FR. Here, we try to find fr-fr.js
-	 *     (this file doesn't exist).
-	 */
-	$locale = sanitize_file_name( strtolower( get_locale() ) );
-	$locale = str_replace( '_', '-', $locale );
-	if ( file_exists( buddypress()->core->path . "bp-core/js/vendor/moment-js/locale/{$locale}{$min}.js" ) ) {
-		$moment_locale_url = $url . "vendor/moment-js/locale/{$locale}{$min}.js";
+	// Is WordPress' moment dist library registered?
+	$is_moment_registered = wp_script_is( 'moment', 'registered' );
+	$moment_locale_url    = '';
 
+	/*
+	 * In 11.0.0 we are deprecating `bp-moment` in favor of WordPress' already bundled `moment`.
+	 * @todo completely remove `bp-moment` in 12.0.0.
+	 */
+	if ( ! $is_moment_registered ) {
 		/*
-		* Try to find the short-form locale.
+		* Moment.js locale.
 		*
-		* eg. French (France) locale for WP is fr_FR. Here, we try to find fr.js
-		*     (this exists).
+		* Try to map current WordPress locale to a moment.js locale file for loading.
+		*
+		* eg. French (France) locale for WP is fr_FR. Here, we try to find fr-fr.js
+		*     (this file doesn't exist).
 		*/
-	} else {
-		$locale = substr( $locale, 0, strpos( $locale, '-' ) );
+		$wp_locale = sanitize_file_name( strtolower( get_locale() ) );
+
+		// WP uses ISO 639-2 or -3 codes for some locales, which we must translate back to ISO 639-1.
+		$iso_locales = array(
+			'bel' => 'be',
+			'bre' => 'br',
+			'kir' => 'ky',
+			'mri' => 'mi',
+			'ssw' => 'ss',
+		);
+
+		if ( isset( $iso_locales[ $wp_locale ] ) ) {
+			$locale = $iso_locales[ $wp_locale ];
+		} else {
+			$locale = $wp_locale;
+		}
+
+		$locale = str_replace( '_', '-', $locale );
 		if ( file_exists( buddypress()->core->path . "bp-core/js/vendor/moment-js/locale/{$locale}{$min}.js" ) ) {
 			$moment_locale_url = $url . "vendor/moment-js/locale/{$locale}{$min}.js";
+
+			/*
+			* Try to find the short-form locale.
+			*
+			* eg. French (France) locale for WP is fr_FR. Here, we try to find fr.js
+			*     (this exists).
+			*/
+		} else {
+			$locale = substr( $locale, 0, strpos( $locale, '-' ) );
+			if ( file_exists( buddypress()->core->path . "bp-core/js/vendor/moment-js/locale/{$locale}{$min}.js" ) ) {
+				$moment_locale_url = $url . "vendor/moment-js/locale/{$locale}{$min}.js";
+			}
 		}
 	}
 
@@ -144,7 +170,7 @@ function bp_core_register_common_scripts() {
 			'footer'       => true,
 		),
 		'emojionearea'                  => array(
-			'file'         => "{$url}emojionearea-edited.js",
+			'file'         => "{$url}emojionearea-edited{$min}.js",
 			'dependencies' => array( 'emojione' ),
 			'footer'       => true,
 		),
@@ -206,13 +232,23 @@ function bp_core_register_common_scripts() {
 		);
 	}
 
-	// Version 2.7 - Add Moment.js locale to our $scripts array if we found one.
-	if ( isset( $moment_locale_url ) ) {
-		$scripts['bp-moment-locale'] = array(
-			'file'         => esc_url( $moment_locale_url ),
-			'dependencies' => array( 'bp-moment' ),
-			'footer'       => true,
-		);
+	/*
+	 * In 11.0.0 we are deprecating `bp-moment` in favor of WordPress' already bundled `moment`.
+	 * @todo completely remove `bp-moment` in 12.0.0.
+	 */
+	if ( ! $is_moment_registered ) {
+		$scripts['bp-moment']         = array( 'file' => "{$url}vendor/moment-js/moment{$min}.js", 'dependencies' => array(), 'footer' => true );
+		$bp_livestamp                 = $scripts['bp-livestamp'];
+		$bp_livestamp['dependencies'] = array( 'jquery', 'bp-moment' );
+
+		// Reset 'bp-livestamp' after 'bp-moment'.
+		unset( $scripts['bp-livestamp'] );
+		$scripts['bp-livestamp'] = $bp_livestamp;
+
+		// Version 2.7 - Add Moment.js locale to our $scripts array if we found one.
+		if ( $moment_locale_url ) {
+			$scripts['bp-moment-locale'] = array( 'file' => esc_url( $moment_locale_url ), 'dependencies' => array( 'bp-moment' ), 'footer' => true );
+		}
 	}
 
 	/**
@@ -779,12 +815,41 @@ function bp_core_enqueue_livestamp() {
 	 */
 	if ( wp_script_is( 'bp-moment-locale', 'registered' ) ) {
 		wp_enqueue_script( 'bp-moment-locale' );
-
-		if ( function_exists( 'wp_add_inline_script' ) ) {
-			wp_add_inline_script( 'bp-livestamp', bp_core_moment_js_config() );
-		} else {
-			add_action( 'wp_footer', '_bp_core_moment_js_config_footer', 20 );
-		}
+		wp_add_inline_script( 'bp-livestamp', bp_core_moment_js_config() );
+	} else {
+		wp_add_inline_script(
+			'moment',
+			sprintf(
+				"moment.updateLocale( '%s', %s );",
+				get_user_locale(),
+				wp_json_encode(
+					array(
+						'relativeTime' => array(
+							/* Translators: %s is the relative time (eg: in a few seconds). */
+							'future' => __( 'in %s', 'buddyboss' ),
+							/* translators: %s: the human time diff. */
+							'past'   => __( '%s ago', 'buddyboss' ),
+							's'      => __( 'a few seconds', 'buddyboss' ),
+							'm'      => __( 'a minute', 'buddyboss' ),
+							/* Translators: %d is the amount of minutes. */
+							'mm'     => __( '%d minutes', 'buddyboss' ),
+							'h'      => __( 'an hour', 'buddyboss' ),
+							/* Translators: %d is the amount of hours. */
+							'hh'     => __( '%d hours', 'buddyboss' ),
+							'd'      => __( 'a day', 'buddyboss' ),
+							/* Translators: %d is the amount of days. */
+							'dd'     => __( '%d days', 'buddyboss' ),
+							'M'      => __( 'a month', 'buddyboss' ),
+							/* Translators: %d is the amount of months. */
+							'MM'     => __( '%d months', 'buddyboss' ),
+							'y'      => __( 'a year', 'buddyboss' ),
+							/* Translators: %d is the amount of years. */
+							'yy'     => __( '%d years', 'buddyboss' ),
+						),
+					)
+				)
+			)
+		);
 	}
 
 	wp_enqueue_script( 'bp-livestamp' );
@@ -793,11 +858,15 @@ function bp_core_enqueue_livestamp() {
 /**
  * Return moment.js config.
  *
- * @since BuddyPress 2.7.0
+ * @since             BuddyPress 2.7.0
+ * @deprecated        2.3.90 Softly deprecated as we're keeping the function into this file
+ *                    to avoid fatal errors if deprecated code is ignored.
  *
  * @return string
  */
 function bp_core_moment_js_config() {
+	_deprecated_function( __FUNCTION__, '2.3.90' );
+
 	// Grab the locale from the enqueued JS.
 	$moment_locale = wp_scripts()->query( 'bp-moment-locale' );
 	$moment_locale = substr( $moment_locale->src, strpos( $moment_locale->src, '/moment-js/locale/' ) + 18 );
@@ -810,23 +879,6 @@ jQuery(function() {
 EOD;
 
 	return $inline_js;
-}
-
-/**
- * Print moment.js config in page footer.
- *
- * Will be removed once we set our minimum version of WP 4.5.
- *
- * @since BuddyPress 2.7.0
- *
- * @access private
- */
-function _bp_core_moment_js_config_footer() {
-	if ( ! wp_script_is( 'bp-moment-locale' ) ) {
-		return;
-	}
-
-	printf( '<script>%s</script>', bp_core_moment_js_config() );
 }
 
 /**
@@ -921,6 +973,7 @@ function bp_core_register_page_js() {
 
 	if ( bp_is_register_page() && bp_get_xprofile_member_type_field_id() > 0 ) {
 		wp_enqueue_script( 'bp-register-page' );
+		wp_enqueue_editor();
 
 		$data = array(
 			'ajaxurl'        => bp_core_ajax_url(),
@@ -939,20 +992,33 @@ function bp_core_register_page_js() {
 add_action( 'bp_enqueue_scripts', 'bp_core_register_page_js' );
 
 function bp_core_enqueue_isInViewPort() {
-	if ( bp_is_user_media() ||
-		 bp_is_single_album() ||
-		 bp_is_media_directory() ||
-		 bp_is_activity_component() ||
-		 bp_is_group_activity() ||
-		 bp_is_group_media() ||
-		 bp_is_group_albums() ||
-		 bp_is_messages_component() ||
-		 ( function_exists( 'bp_is_profile_media_support_enabled' ) && bp_is_profile_media_support_enabled() ) ||
-		 ( function_exists( 'bp_is_group_media_support_enabled' ) && bp_is_group_media_support_enabled() ) ||
-		 ( function_exists( 'bp_is_group_albums_support_enabled' ) && bp_is_group_albums_support_enabled() ) ||
-		 ( function_exists( 'bp_is_messages_media_support_enabled' ) && bp_is_messages_media_support_enabled() )
+	if (
+		bp_is_user_media() ||
+		bp_is_single_album() ||
+		bp_is_media_directory() ||
+		bp_is_activity_component() ||
+		bp_is_group_activity() ||
+		bp_is_group_media() ||
+		bp_is_group_albums() ||
+		bp_is_messages_component() ||
+		( function_exists( 'bp_is_profile_media_support_enabled' ) && bp_is_profile_media_support_enabled() ) ||
+		( function_exists( 'bp_is_group_media_support_enabled' ) && bp_is_group_media_support_enabled() ) ||
+		( function_exists( 'bp_is_group_albums_support_enabled' ) && bp_is_group_albums_support_enabled() ) ||
+		( function_exists( 'bp_is_messages_media_support_enabled' ) && bp_is_messages_media_support_enabled() )
 	) {
 		wp_enqueue_script( 'isInViewport' );
 	}
 }
+
 add_action( 'bp_enqueue_scripts', 'bp_core_enqueue_isInViewPort', 5 );
+
+/**
+ * Load the JS template for link preview.
+ *
+ * @since BuddyBoss 2.3.60
+ */
+function bb_load_link_preview_js_template() {
+	bp_get_template_part( 'common/js-templates/members/bb-link-preview' );
+}
+
+add_action( 'bp_enqueue_scripts', 'bb_load_link_preview_js_template' );

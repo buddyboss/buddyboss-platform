@@ -85,6 +85,9 @@ add_action( 'load-tools_page_bbp-reset', 'bbp_admin_reset_handler' );
 // Add sample permalink filter
 add_filter( 'post_type_link', 'bbp_filter_sample_permalink', 10, 4 );
 
+// Add quick stats to dashboard glance elements.
+add_filter( 'dashboard_glance_items', 'bbp_filter_dashboard_glance_items', -99 );
+
 /**
  * When a new site is created in a multisite installation, run the activation
  * routine on that site
