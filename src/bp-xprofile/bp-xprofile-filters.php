@@ -87,6 +87,7 @@ add_filter( 'bp_core_get_user_displayname', 'xprofile_filter_get_user_display_na
 add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_nickname_value', 10, 4 );
 add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_phone_value', 10, 4 );
 add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_social_networks_value', 10, 4 );
+add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_website_url_value', 10, 3 );
 
 // Display name adjustment
 add_filter( 'bp_set_current_user', 'bp_xprofile_adjust_current_user_display_name' );
@@ -1087,6 +1088,43 @@ function bp_xprofile_validate_social_networks_value( $retval, $field_id, $value,
 			$key = bp_social_network_search_key( $k, $providers );
 			return sprintf( __( 'Please enter valid %s profile url.', 'buddyboss' ), $providers[ $key ]->name );
 		}
+	}
+
+	return $retval;
+}
+
+/**
+ * Validate website field values.
+ *
+ * @since BuddyBoss 2.4.20
+ *
+ * @param mixed  $retval     The return value.
+ * @param string $field_id   The ID of the field.
+ * @param string $value      The value to validate.
+ *
+ * @return mixed
+ */
+function bp_xprofile_validate_website_url_value( $retval, $field_id, $value ) {
+	$field = xprofile_get_field( $field_id, null, false );
+
+	if ( 'url' !== $field->type || $retval ) {
+		return $retval;
+	}
+
+	if ( 1 === $field->is_required && '' === trim( $value ) ) {
+		return sprintf(
+			/* translators: Field name. */
+			__( '%s is required and not allowed to be empty.', 'buddyboss' ),
+			$field->name
+		);
+	}
+
+	if ( ! empty( $value ) && ! wp_http_validate_url( $value ) ) {
+		return sprintf(
+			/* translators: Field name. */
+			__( 'Invalid %s. Please enter a valid URL.', 'buddyboss' ),
+			$field->name
+		);
 	}
 
 	return $retval;
