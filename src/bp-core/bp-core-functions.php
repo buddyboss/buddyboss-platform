@@ -594,12 +594,10 @@ function bp_core_update_directory_page_ids( $blog_page_ids ) {
 function bp_core_get_directory_pages() {
 	global $wpdb;
 
-	$is_multisite = is_multisite();
-	$get_current_blog_id = get_current_blog_id();
 	$cache_key = 'directory_pages';
 
-	if ( $is_multisite ) {
-		$cache_key = 'directory_pages_' . $get_current_blog_id;
+	if ( is_multisite() ) {
+		$cache_key = $cache_key . '_' . get_current_blog_id();
 	}
 
 	// Look in cache first.
