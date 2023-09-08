@@ -1051,6 +1051,11 @@ function bp_add_activation_redirect() {
 		return;
 	}
 
+	// Install the API cache table on plugin activation if mu file was found.
+	if ( class_exists( '\BuddyBoss\Performance\Performance' ) ) {
+		\BuddyBoss\Performance\Performance::instance()->on_activation();
+	}
+
 	// Record that this is a new installation, so we show the right
 	// welcome message.
 	if ( bp_is_install() ) {
