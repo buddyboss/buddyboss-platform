@@ -537,3 +537,62 @@ function bb_subscriptions_clear_cache_after_update_secondary_item_id( $r ) {
 }
 
 add_action( 'bb_subscriptions_after_update_secondary_item_id', 'bb_subscriptions_clear_cache_after_update_secondary_item_id', 10 );
+
+/**
+ * Clear cache when add/remove user item reaction.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_reaction_id User reaction id.
+ *
+ * @return void
+ */
+function bb_reaction_clear_cache_user_item( $user_reaction_id ) {
+	bp_core_reset_incrementor( 'bb_reactions' );
+	if ( ! empty( $user_reaction_id ) ) {
+		wp_cache_delete( $user_reaction_id, 'bb_reactions' );
+	}
+}
+
+add_action( 'bb_reaction_after_add_user_item_reaction', 'bb_reaction_clear_cache_user_item', 10, 1 );
+add_action( 'bb_reaction_after_remove_user_item_reaction', 'bb_reaction_clear_cache_user_item', 10, 1 );
+
+/**
+ * Clear cache when update user reaction.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int|false $deleted   The number of rows deleted, or false on error.
+ * @param array     $r         Args of user item reactions.
+ * @param object    $reactions Reaction data.
+ *
+ * @return void
+ */
+function bb_reaction_clear_cache_remove_user_item( $deleted, $r, $reactions ) {
+	bp_core_reset_incrementor( 'bb_reactions' );
+	if ( ! empty( $reactions ) ) {
+		foreach ( $reactions as $reaction ) {
+			wp_cache_delete( $reaction->id, 'bb_reactions' );
+		}
+	}
+}
+
+add_action( 'bb_reaction_after_remove_user_item_reactions', 'bb_reaction_clear_cache_remove_user_item', 10, 3 );
+
+/**
+ * Clear cache when reaction data updated.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $reaction_data_id Reaction data id.
+ *
+ * @return void
+ */
+function bb_reaction_clear_cache_reactions_data( $reaction_data_id ) {
+	bp_core_reset_incrementor( 'bb_reaction_data' );
+	if ( ! empty( $reaction_data_id ) ) {
+		wp_cache_delete( $reaction_data_id, 'bb_reaction_data' );
+	}
+}
+
+add_action( 'bb_reaction_after_add_reactions_data', 'bb_reaction_clear_cache_reactions_data', 10, 1 );
