@@ -246,6 +246,18 @@ window.bp = window.bp || {};
 				}
 			);
 
+			window.activity_edit_editor.subscribe( 'editablePaste', function ( e ) {
+				setTimeout( function() {
+					// Wrap all target <li> elements in a single <ul>
+					var targetLiElements = $(e.target).find('li').filter(function() {
+						return !$(this).parent().is('ul') && !$(this).parent().is('ol');
+					});
+					if (targetLiElements.length > 0) {
+						targetLiElements.wrapAll('<ul></ul>');
+					}
+				}, 0 );
+			});
+
 			// Now Show the Modal.
 			$activityForm.addClass( 'modal-popup' ).closest('body').addClass( 'activity-modal-open' );
 
@@ -3204,6 +3216,18 @@ window.bp = window.bp || {};
 										}
 									}
 								);
+
+								window.activity_editor.subscribe( 'editablePaste', function ( e ) {
+									setTimeout( function() {
+										// Wrap all target <li> elements in a single <ul>
+										var targetLiElements = $(e.target).find('li').filter(function() {
+											return !$(this).parent().is('ul') && !$(this).parent().is('ol');
+										});
+										if (targetLiElements.length > 0) {
+											targetLiElements.wrapAll('<ul></ul>');
+										}
+									}, 0 );
+								});
 							}
 						}
 					);
