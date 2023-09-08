@@ -1794,6 +1794,9 @@ window.bp = window.bp || {};
 									tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' ).find( '.toolbar-button' ).removeClass( 'active' );
 								}
 								$( self.dropzone_obj.element ).removeClass( 'files-uploaded' );
+								self.validateCommentContent( commentForm.find( '.ac-textarea' ).children( '.ac-input' ) );
+							} else {
+								target.closest( '.ac-form' ).addClass( 'has-content' );
 							}
 						}
 					);
@@ -2036,6 +2039,9 @@ window.bp = window.bp || {};
 									tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' ).find( '.toolbar-button' ).removeClass( 'active' );
 								}
 								$( self.dropzone_document_obj.element ).removeClass( 'files-uploaded' );
+								self.validateCommentContent( commentForm.find( '.ac-textarea' ).children( '.ac-input' ) );
+							} else {
+								target.closest( '.ac-form' ).addClass( 'has-content' );
 							}
 						}
 					);
@@ -2301,6 +2307,9 @@ window.bp = window.bp || {};
 									tool_box.find( '.ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' ).find( '.toolbar-button' ).removeClass( 'active' );
 								}
 								$( self.dropzone_video_obj.element ).removeClass( 'files-uploaded' );
+								self.validateCommentContent( commentForm.find( '.ac-textarea' ).children( '.ac-input' ) );
+							} else {
+								target.closest( '.ac-form' ).addClass( 'has-content' );
 							}
 						}
 					);
@@ -2866,6 +2875,20 @@ window.bp = window.bp || {};
 		disabledCommentGifPicker: function ( toolbar ) {
 			if ( toolbar.find( '.ac-reply-gif-button' ) ) {
 				toolbar.find( '.ac-reply-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+			}
+		},
+
+		validateCommentContent: function ( input ) {
+			var $activity_comment_content = input.html();
+
+			var content = $.trim( $activity_comment_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+			content = content.replace( /&nbsp;/g, ' ' );
+
+			var content_text = input.text().trim();
+			if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0 ) {
+				input.closest( 'form' ).addClass( 'has-content' );
+			} else {
+				input.closest( 'form' ).removeClass( 'has-content' );
 			}
 		}
 

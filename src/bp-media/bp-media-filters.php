@@ -1392,15 +1392,13 @@ function bp_media_activity_save_gif_data( $activity ) {
 
 	// if edit activity then delete attachment and clear activity meta.
 	if ( $is_delete_gif ) {
-		if ( $bp_activity_edit && isset( $_POST['edit'] ) && empty( $gif_data ) && isset( $_POST['id'] ) && $activity->id === intval( $_POST['id'] ) ) {
-			if ( ! empty( $gif_old_data ) ) {
-				wp_delete_attachment( $gif_old_data['still'], true );
-				wp_delete_attachment( $gif_old_data['mp4'], true );
-			}
-
-			bp_activity_delete_meta( $activity->id, '_gif_data' );
-			bp_activity_delete_meta( $activity->id, '_gif_raw_data' );
+		if ( ! empty( $gif_old_data ) ) {
+			wp_delete_attachment( $gif_old_data['still'], true );
+			wp_delete_attachment( $gif_old_data['mp4'], true );
 		}
+
+		bp_activity_delete_meta( $activity->id, '_gif_data' );
+		bp_activity_delete_meta( $activity->id, '_gif_raw_data' );
 	}
 
 	if ( ! empty( $gif_data ) && ! isset( $gif_data['bp_gif_current_data'] ) ) {

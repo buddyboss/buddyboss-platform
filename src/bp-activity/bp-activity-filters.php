@@ -363,11 +363,9 @@ function bp_activity_update_comment_privacy( $activity ) {
 	if ( ! empty( $activity_comments ) && ! empty( $activity_comments['activities'] ) && isset( $activity_comments['activities'][0]->children ) ) {
 		$children = $activity_comments['activities'][0]->children;
 		if ( ! empty( $children ) ) {
-			remove_action( 'bp_activity_after_save', 'bp_media_activity_save_gif_data', 2, 1 );
 			foreach ( $children as $comment ) {
 				bp_activity_comment_privacy_update( $comment, $activity->privacy );
 			}
-			add_action( 'bp_activity_after_save', 'bp_media_activity_save_gif_data', 2, 1 );
 		}
 	}
 }
@@ -381,6 +379,9 @@ function bp_activity_update_comment_privacy( $activity ) {
  * @param string               $privacy Parent Activity privacy.
  */
 function bp_activity_comment_privacy_update( $comment, $privacy ) {
+	// Remove this action because when update the activity with GIF then this GIF also attach to comment who have GIF.
+	remove_action( 'bp_activity_after_save', 'bp_media_activity_save_gif_data', 2, 1 );
+
 	$comment_activity          = new BP_Activity_Activity( $comment->id );
 	$comment_activity->privacy = $privacy;
 	$comment_activity->save();
@@ -390,6 +391,7 @@ function bp_activity_comment_privacy_update( $comment, $privacy ) {
 			bp_activity_comment_privacy_update( $child_comment, $privacy );
 		}
 	}
+	add_action( 'bp_activity_after_save', 'bp_media_activity_save_gif_data', 2, 1 );
 }
 
 /**
