@@ -92,7 +92,13 @@ function bp_core_clear_directory_pages_cache_page_edit( $post_id = 0 ) {
 		return;
 	}
 
-	wp_cache_delete( 'directory_pages', 'bp_pages' );
+	$cache_key = 'directory_pages';
+
+	if ( is_multisite() ) {
+		$cache_key = $cache_key . '_' . get_current_blog_id();
+	}
+
+	wp_cache_delete( $cache_key, 'bp_pages' );
 }
 add_action( 'save_post', 'bp_core_clear_directory_pages_cache_page_edit' );
 
@@ -105,7 +111,14 @@ add_action( 'save_post', 'bp_core_clear_directory_pages_cache_page_edit' );
  */
 function bp_core_clear_directory_pages_cache_settings_edit( $option ) {
 	if ( 'bp-pages' === $option ) {
-		wp_cache_delete( 'directory_pages', 'bp_pages' );
+
+		$cache_key = 'directory_pages';
+
+		if ( is_multisite() ) {
+			$cache_key = $cache_key . '_' . get_current_blog_id();
+		}
+
+		wp_cache_delete( $cache_key, 'bp_pages' );
 	}
 }
 add_action( 'update_option', 'bp_core_clear_directory_pages_cache_settings_edit' );
