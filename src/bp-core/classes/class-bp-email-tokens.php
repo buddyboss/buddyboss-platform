@@ -1658,7 +1658,7 @@ class BP_Email_Tokens {
 			$gif_data = get_post_meta( $tokens['reply.id'], '_gif_data', true );
 		}
 
-		if ( 
+		if (
 			empty( $formatted_tokens['reply.content'] ) &&
 			empty( $gif_data ) &&
 			empty( $document_ids ) &&
@@ -1967,7 +1967,7 @@ class BP_Email_Tokens {
 			$gif_data = get_post_meta( $tokens['discussion.id'], '_gif_data', true );
 		}
 
-		if ( 
+		if (
 			empty( $formatted_tokens['discussion.content'] ) &&
 			empty( $gif_data ) &&
 			empty( $document_ids ) &&
