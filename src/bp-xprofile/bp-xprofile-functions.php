@@ -1721,7 +1721,12 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 						$html .= '<span class="social-more-link social"><a target="_blank" data-balloon-pos="up" data-balloon="' . esc_html__( 'See all', 'buddyboss' ) . '" href="#social-networks-popup" class="show-action-popup"><i class="bb-icon-rf bb-icon-ellipsis-h"></i></a></span>';
 						break;
 					}
-					$html .= '<span class="social ' . esc_attr( $providers[ $key ]->value ) . '"><a target="_blank" data-balloon-pos="up" data-balloon="' . esc_attr( $providers[ $key ]->name ) . '" href="' . esc_url( $original_option_value ) . '"><i class="bb-icon-rf bb-icon-brand-' . esc_attr( strtolower( $providers[ $key ]->value ) ) . '"></i></a></span>';
+
+					if ( 'twitter' === $providers[ $key ]->value ) {
+						$html .= '<span class="social ' . esc_attr( $providers[ $key ]->value ) . '"><a target="_blank" data-balloon-pos="up" data-balloon="X" href="' . esc_url( $original_option_value ) . '"><i class="bb-icon-rf bb-icon-brand-x"></i></a></span>';
+					} else {
+						$html .= '<span class="social ' . esc_attr( $providers[ $key ]->value ) . '"><a target="_blank" data-balloon-pos="up" data-balloon="' . esc_attr( $providers[ $key ]->name ) . '" href="' . esc_url( $original_option_value ) . '"><i class="bb-icon-rf bb-icon-brand-' . esc_attr( strtolower( $providers[ $key ]->value ) ) . '"></i></a></span>';
+					}
 				}
 				$i++;
 			}
