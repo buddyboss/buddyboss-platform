@@ -6598,6 +6598,7 @@ form.acomment-edit .ac-reply-content .ac-textarea {
 form.acomment-edit .ac-reply-content .ac-textarea .ac-input[contenteditable="true"] {
   border: 0;
   padding: 0;
+  min-height: 21px;
 }
 
 form.acomment-edit .ac-reply-content .ac-textarea .ac-input[contenteditable="true"] p {
