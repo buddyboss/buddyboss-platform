@@ -2559,7 +2559,7 @@ window.bp = window.bp || {};
 					tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).removeClass( 'no-click' );
 				}
 
-				if( tool_box_comment.find( '.ac-textarea' ).children( '.ac-input' ).length > 0 ) {
+				if ( tool_box_comment.find( '.ac-textarea' ).children( '.ac-input' ).length > 0 ) {
 					var $activity_comment_content = tool_box_comment.find( '.ac-textarea' ).children( '.ac-input' ).html();
 
 					var content = $.trim( $activity_comment_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );

@@ -388,6 +388,7 @@ function bp_activity_comment_privacy_update( $comment, $privacy ) {
 			bp_activity_comment_privacy_update( $child_comment, $privacy );
 		}
 	}
+
 	add_action( 'bp_activity_after_save', 'bp_media_activity_save_gif_data', 2, 1 );
 }
 
