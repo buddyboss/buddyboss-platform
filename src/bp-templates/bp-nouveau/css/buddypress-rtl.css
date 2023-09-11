@@ -7621,6 +7621,11 @@ body.no-js .single-item-header .js-self-profile-button {
   max-width: 150px;
 }
 
+#item-header-cover-image #item-header-content {
+  position: relative;
+  z-index: 2;
+}
+
 #item-header-cover-image #item-header-content .bp-group-type {
   display: none;
 }
