@@ -1746,7 +1746,12 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 										foreach ( $original_option_values as $key => $original_option_value ) {
 											if ( '' !== $original_option_value ) {
 												$key   = bp_social_network_search_key( $key, $providers );
-												$html .= '<span class="social ' . esc_attr( $providers[ $key ]->value ) . '"><a target="_blank" data-balloon-pos="up" data-balloon="' . esc_attr( $providers[ $key ]->name ) . '" href="' . esc_url( $original_option_value ) . '"><i class="bb-icon-rf bb-icon-brand-' . esc_attr( strtolower( $providers[ $key ]->value ) ) . '"></i></a></span>';
+
+												if ( 'twitter' === $providers[ $key ]->value ) {
+													$html .= '<span class="social ' . esc_attr( $providers[ $key ]->value ) . '"><a target="_blank" data-balloon-pos="up" data-balloon="X" href="' . esc_url( $original_option_value ) . '"><i class="bb-icon-rf bb-icon-brand-x"></i></a></span>';
+												} else {
+													$html .= '<span class="social ' . esc_attr( $providers[ $key ]->value ) . '"><a target="_blank" data-balloon-pos="up" data-balloon="' . esc_attr( $providers[ $key ]->name ) . '" href="' . esc_url( $original_option_value ) . '"><i class="bb-icon-rf bb-icon-brand-' . esc_attr( strtolower( $providers[ $key ]->value ) ) . '"></i></a></span>';
+												}
 											}
 										}
 										$html .= '</div>
