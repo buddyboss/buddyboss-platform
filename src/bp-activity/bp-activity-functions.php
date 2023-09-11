@@ -3155,6 +3155,7 @@ function bp_activity_new_comment( $args = '' ) {
 	wp_cache_delete( $activity_id, 'bp_activity_comments' );
 	wp_cache_delete( 'bp_get_child_comments_' . $activity_id, 'bp_activity_comments' );
 
+	// Walk the tree to clear caches for all parent items.
 	$clear_id = $r['parent_id'];
 	while ( $clear_id != $activity_id ) {
 		$clear_object = new BP_Activity_Activity( $clear_id );
