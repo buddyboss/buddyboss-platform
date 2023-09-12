@@ -711,6 +711,8 @@ class BP_Email_Tokens {
 												<?php
 												if ( ! empty( $activity ) ) {
 
+													$meta_id = $activity->id;
+
 													if ( in_array( $activity->content, array( '&nbsp;', '&#8203;' ), true ) ) {
 														$activity->content = '';
 													}
@@ -739,10 +741,15 @@ class BP_Email_Tokens {
 														add_filter( 'bp_get_activity_content_body', array( $bp->embed, 'autoembed' ), 8, 2 );
 														add_filter( 'bp_get_activity_content_body', array( $bp->embed, 'run_shortcode' ), 7, 2 );
 													}
+
+
 												} else {
+													$meta_id = ! empty( $tokens['reply_id'] ) ? $tokens['reply_id'] : $tokens['topic_id'];
 													// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 													echo $content;
 												}
+
+												echo $this->get_email_media( $meta_id, $tokens, 'mentioned' );
 												?>
 											</div>
 										</td>
@@ -2588,12 +2595,24 @@ class BP_Email_Tokens {
 			$document_wrap_style = 'padding: 15px 0 15px 0;';
 			$media_elem_style    = 'width: 250px; vertical-align: top; height: 200px; overflow: hidden;padding:0;';
 
+			$is_mentioned = false;
+			if ( 'mentioned' === $type ) {
+				$is_mentioned = true;
+				$activity     = $tokens['activity'] ?? false;
+
+				if ( ! empty( $activity ) ) {
+					$type = ( 'activity_comment' === $activity->type ) ? 'activity_reply' : 'activity';
+				} else {
+					$type = ! empty( $tokens['reply_id'] ) ? 'reply' : 'discussion';
+				}
+			}
+
 			if ( 'activity' === $type || 'activity_reply' === $type ) {
 				$media_ids    = bp_activity_get_meta( $meta_id, 'bp_media_ids', true );
 				$video_ids    = bp_activity_get_meta( $meta_id, 'bp_video_ids', true );
 				$document_ids = bp_activity_get_meta( $meta_id, 'bp_document_ids', true );
 				$gif_data     = bp_activity_get_meta( $meta_id, '_gif_data', true );
-				$image_url    = ( 'activity' === $type ) ? $tokens['activity.url'] : bp_activity_get_permalink( $meta_id );
+				$image_url    = ( $is_mentioned ) ? $tokens['mentioned.url'] : ( ( 'activity' === $type ) ? $tokens['activity.url'] : bp_activity_get_permalink( $meta_id ) );
 			} elseif ( 'message' === $type ) {
 				$media_ids           = bp_messages_get_meta( $meta_id, 'bp_media_ids', true );
 				$video_ids           = bp_messages_get_meta( $meta_id, 'bp_video_ids', true );
