@@ -220,6 +220,11 @@ function bp_core_register_common_scripts() {
 			'dependencies' => array(),
 			'footer'       => false,
 		),
+		'bb-wp-emoji-loader'            => array(
+			'file'         => "{$url}bb-wp-emoji-loader{$min}.js",
+			'dependencies' => array(),
+			'footer'       => false,
+		),
 
 	);
 
@@ -1019,3 +1024,22 @@ function bb_load_link_preview_js_template() {
 	bp_get_template_part( 'common/js-templates/members/bb-link-preview' );
 }
 add_action( 'bp_enqueue_scripts', 'bb_load_link_preview_js_template' );
+
+/**
+ * Load the JS to replace emoji with image.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_load_emoji_detection_script() {
+	// Get the current WordPress version.
+	$wp_version = get_bloginfo('version');
+
+	// Check if the WordPress version is 6.2 or above
+	if ( version_compare( $wp_version, '6.2', '>=' ) ) {
+
+		// Image emoji support.
+		wp_enqueue_script( 'bb-wp-emoji-loader' );
+
+	}
+}
+add_action( 'wp_head', 'bb_load_emoji_detection_script', 7 );
