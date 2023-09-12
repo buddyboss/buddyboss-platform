@@ -6113,11 +6113,9 @@ function bb_activity_migration() {
  * @return void
  */
 function bb_migrate_activity_like_reaction( $paged = 1 ) {
-	global $wpdb, $bb_background_updater;
+	global $wpdb, $bp, $bb_background_updater;
 
 	$reaction_id = bb_load_reaction()->bb_reactions_get_reaction_id();
-
-	$bp_prefix = bp_core_get_table_prefix();
 
 	if ( empty( $paged ) ) {
 		$paged = 1;
@@ -6128,7 +6126,7 @@ function bb_migrate_activity_like_reaction( $paged = 1 ) {
 
 	$results = $wpdb->get_results(
 		$wpdb->prepare(
-			"SELECT * FROM {$bp_prefix}bp_activity_meta WHERE meta_key = 'bp_favorite_users' ORDER BY activity_id LIMIT %d offset %d",
+			"SELECT * FROM {$bp->activity->table_name_meta} WHERE meta_key = 'bp_favorite_users' ORDER BY activity_id LIMIT %d offset %d",
 			$per_page,
 			$offset
 		)
