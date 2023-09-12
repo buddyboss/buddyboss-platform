@@ -4239,8 +4239,11 @@ function bb_activity_comment_user_can_edit( $activity_comment = false, $privacy_
 	// Assume the user cannot edit the activity item.
 	$can_edit = false;
 
-	// Only logged in users can edit activity comment and Activity must be of type 'activity_update', 'activity_comment'
-	if ( is_user_logged_in() && in_array( $activity_comment->type, array( 'activity_update', 'activity_comment' ) ) ) {
+	// Only logged in users can edit activity comment and Activity must be of type 'activity_update', 'activity_comment'.
+	if (
+		is_user_logged_in() &&
+		in_array( $activity_comment->type, array( 'activity_update', 'activity_comment' ), true )
+	) {
 
 		// Users are allowed to edit their own activity.
 		if ( isset( $activity_comment->user_id ) && ( bp_loggedin_user_id() === $activity_comment->user_id ) ) {
@@ -4256,7 +4259,7 @@ function bb_activity_comment_user_can_edit( $activity_comment = false, $privacy_
 	if ( $can_edit && ! $privacy_edit ) {
 
 		// Check activity comment edit time expiration.
-		$activity_comment_edit_time        = (int) bb_get_activity_comment_edit_time(); // for 10 minutes, 600
+		$activity_comment_edit_time        = (int) bb_get_activity_comment_edit_time(); // for 10 minutes, 600.
 		$bp_dd_get_time                    = bp_core_current_time( true, 'timestamp' );
 		$activity_comment_edit_expire_time = strtotime( $activity_comment->date_recorded ) + $activity_comment_edit_time;
 
@@ -4271,8 +4274,8 @@ function bb_activity_comment_user_can_edit( $activity_comment = false, $privacy_
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param object $activity_comment Current activity item object.
 	 * @param bool   $can_edit         Whether the user can edit the item.
+	 * @param object $activity_comment Current activity item object.
 	 */
 	return (bool) apply_filters( 'bb_activity_comment_user_can_edit', $can_edit, $activity_comment );
 }

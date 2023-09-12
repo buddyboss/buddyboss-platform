@@ -1604,10 +1604,10 @@ window.bp = window.bp || {};
 
 			event.preventDefault();
 
-			if( ! $( event.currentTarget ).closest( '.ac-form' ).hasClass( 'acomment-edit' ) ) {
+			if ( ! $( event.currentTarget ).closest( '.ac-form' ).hasClass( 'acomment-edit' ) ) {
 				$( event.currentTarget ).toggleClass( 'active' );
 			} else {
-				if( dropzone_container.hasClass( 'open' ) && ! event.isCustomEvent ) {
+				if ( dropzone_container.hasClass( 'open' ) && ! event.isCustomEvent ) {
 					dropzone_container.trigger( 'click' );
 					return;
 				}
@@ -1846,10 +1846,10 @@ window.bp = window.bp || {};
 
 			event.preventDefault();
 
-			if( ! $( event.currentTarget ).closest( '.ac-form' ).hasClass( 'acomment-edit' ) ) {
+			if ( ! $( event.currentTarget ).closest( '.ac-form' ).hasClass( 'acomment-edit' ) ) {
 				$( event.currentTarget ).toggleClass( 'active' );
 			} else {
-				if( dropzone_container.hasClass( 'open' ) && ! event.isCustomEvent ) {
+				if ( dropzone_container.hasClass( 'open' ) && ! event.isCustomEvent ) {
 					dropzone_container.trigger( 'click' );
 					return;
 				}
@@ -2091,10 +2091,10 @@ window.bp = window.bp || {};
 
 			event.preventDefault();
 
-			if( ! $( event.currentTarget ).closest( '.ac-form' ).hasClass( 'acomment-edit' ) ) {
+			if ( ! $( event.currentTarget ).closest( '.ac-form' ).hasClass( 'acomment-edit' ) ) {
 				$( event.currentTarget ).toggleClass( 'active' );
 			} else {
-				if( dropzone_container.hasClass( 'open' ) && ! event.isCustomEvent ) {
+				if ( dropzone_container.hasClass( 'open' ) && ! event.isCustomEvent ) {
 					dropzone_container.trigger( 'click' );
 					return;
 				}
