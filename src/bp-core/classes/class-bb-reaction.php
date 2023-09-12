@@ -1856,5 +1856,22 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			bp_activity_remove_user_favorite( $get->item_id, $get->user_id );
 		}
+
+		/**
+		 * Get reaction id from option table.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return int|void
+		 */
+		public function bb_reactions_get_reaction_id() {
+			$reaction_id = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
+
+			if ( empty( $reaction_id ) ) {
+				return;
+			}
+
+			return $reaction_id;
+		}
 	}
 }

@@ -995,7 +995,7 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0 ) {
 
 		// Add user reaction.
 		if ( ! empty( $activity_id ) && function_exists( 'bb_load_reaction' ) ) {
-			$reaction_id = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
+			$reaction_id = bb_load_reaction()->bb_reactions_get_reaction_id();
 			bb_load_reaction()->bb_add_user_item_reaction(
 				array(
 					'item_type'   => 'activity',
@@ -1090,7 +1090,7 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0 ) {
 
 				// Remove user reaction.
 				if ( ! empty( $activity_id ) && function_exists( 'bb_load_reaction' ) ) {
-					$reaction_id = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
+					$reaction_id = bb_load_reaction()->bb_reactions_get_reaction_id();
 					bb_load_reaction()->bb_remove_user_item_reactions(
 						array(
 							'item_id'     => $activity_id,
@@ -6115,7 +6115,7 @@ function bb_activity_migration() {
 function bb_migrate_activity_like_reaction( $paged = 1 ) {
 	global $wpdb, $bb_background_updater;
 
-	$reaction_id = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
+	$reaction_id = bb_load_reaction()->bb_reactions_get_reaction_id();
 
 	$bp_prefix = bp_core_get_table_prefix();
 
