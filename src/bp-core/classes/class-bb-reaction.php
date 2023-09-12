@@ -1864,7 +1864,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @return int|void
 		 */
-		public function bb_reactions_get_reaction_id() {
+		public function bb_reactions_get_like_reaction_id() {
 			$reaction_id = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
 
 			if ( empty( $reaction_id ) ) {
