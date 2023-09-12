@@ -648,7 +648,7 @@ class BP_Email_Tokens {
 			return $output;
 		}
 
-		$user_id = isset( $activity->user_id ) ? $activity->user_id : $author_id;
+		$user_id = $activity->user_id ?? $author_id;
 
 		ob_start();
 
@@ -869,6 +869,8 @@ class BP_Email_Tokens {
 															$activity_comment->content = '';
 														}
 														echo apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity_comment->content, &$activity_comment ) );
+
+														echo $this->get_email_media( $activity_comment->id, $tokens, 'activity_reply' );
 
 														/**
 														 * Display text after activity comment.
@@ -2583,14 +2585,15 @@ class BP_Email_Tokens {
 			$media_args          = array();
 			$media_wrap_style    = 'padding: 15px 0; width: 250px; height: 200px;';
 			$video_wrap_style    = 'padding: 15px 0; width: 250px;';
-			$document_wrap_style = 'padding: 15px 0 15px 0; width: 250px;';
+			$document_wrap_style = 'padding: 15px 0 15px 0;';
 			$media_elem_style    = 'width: 250px; vertical-align: top; height: 200px; overflow: hidden;padding:0;';
 
-			if ( 'activity' === $type ) {
+			if ( 'activity' === $type || 'activity_reply' === $type ) {
 				$media_ids    = bp_activity_get_meta( $meta_id, 'bp_media_ids', true );
 				$video_ids    = bp_activity_get_meta( $meta_id, 'bp_video_ids', true );
 				$document_ids = bp_activity_get_meta( $meta_id, 'bp_document_ids', true );
 				$gif_data     = bp_activity_get_meta( $meta_id, '_gif_data', true );
+				$image_url    = ( 'activity' === $type ) ? $tokens['activity.url'] : bp_activity_get_permalink( $meta_id );
 			} elseif ( 'message' === $type ) {
 				$media_ids           = bp_messages_get_meta( $meta_id, 'bp_media_ids', true );
 				$video_ids           = bp_messages_get_meta( $meta_id, 'bp_video_ids', true );
