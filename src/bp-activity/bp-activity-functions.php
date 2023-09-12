@@ -6162,7 +6162,7 @@ function bb_migrate_activity_like_reaction( $paged = 1 ) {
 function bb_activity_like_reaction_background_process( $results, $paged, $reaction_id ) {
 	global $wpdb, $bb_background_updater;
 
-	$bp_prefix = bp_core_get_table_prefix();
+	$user_reaction_table = bb_load_reaction()::$user_reaction_table;
 
 	if ( empty( $results ) ) {
 		return;
@@ -6175,7 +6175,7 @@ function bb_activity_like_reaction_background_process( $results, $paged, $reacti
 			$implode_meta_value = implode( ',', wp_parse_id_list( $meta_value ) );
 			$data               = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT user_id FROM {$bp_prefix}bb_user_reactions
+					"SELECT user_id FROM {$user_reaction_table}
                         WHERE item_id = %d AND reaction_id = %d AND user_id IN ( {$implode_meta_value} )",
 					$result->activity_id,
 					$reaction_id
