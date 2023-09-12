@@ -272,19 +272,19 @@
 	window.wp = window.wp || {};
 
 	var script = document.createElement( 'script' );
-	script.src = settings.source.twemoji;
+	script.src = settings.source.twemoji || settings.source.concatemoji;
 	script.defer = true;
 	document.head.appendChild( script );
 
 	/**
 	 * @namespace wp.emoji
 	 */
-	window.wp.emoji = new bbEmoji();
+	window.wp.bbemoji = new bbEmoji();
 
 	// Check if the DOMContentLoaded event has already fired.
 	document.addEventListener( 'DOMContentLoaded', function() {
 		settings.DOMReady = true;
-		window.wp.emoji.load();
+		window.wp.bbemoji.load();
 	});
 
 } )( window, window._wpemojiSettings );

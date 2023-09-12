@@ -220,8 +220,8 @@ function bp_core_register_common_scripts() {
 			'dependencies' => array(),
 			'footer'       => false,
 		),
-		'bb-wp-emoji-loader'            => array(
-			'file'         => "{$url}bb-wp-emoji-loader{$min}.js",
+		'bb-emoji-loader'            => array(
+			'file'         => "{$url}bb-emoji-loader{$min}.js",
 			'dependencies' => array(),
 			'footer'       => false,
 		),
@@ -1038,7 +1038,7 @@ function bb_load_emoji_detection_script() {
 	if ( version_compare( $wp_version, '6.2', '>=' ) ) {
 
 		// Image emoji support.
-		wp_enqueue_script( 'bb-wp-emoji-loader' );
+		wp_enqueue_script( 'bb-emoji-loader' );
 
 	}
 }
