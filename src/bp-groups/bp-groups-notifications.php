@@ -1491,32 +1491,39 @@ function bb_groups_notification_groups_updated( $group_id = 0 ) {
 		unset( $user_ids[ $unset_sender_key ] );
 	}
 
-	$min_count = (int) apply_filters( 'bb_groups_details_updated_notifications_count', 20 );
+	$min_count = (int) apply_filters( 'bb_groups_details_updated_notifications_count', 10 );
 	if (
 		function_exists( 'bb_notifications_background_enabled' ) &&
 		true === bb_notifications_background_enabled() &&
 		count( $user_ids ) > $min_count
 	) {
 		global $bb_background_updater;
-		$bb_background_updater->data(
-			array(
-				'type'     => 'notification',
-				'group'    => 'groups_updated_notification',
-				'data_id'  => $group_id,
-				'priority' => 5,
-				'callback' => 'bb_add_background_notifications',
-				'args'     => array(
-					$user_ids,
-					$group_id,
-					$sender_id,
-					buddypress()->groups->id,
-					'bb_groups_details_updated',
-					bp_core_current_time(),
-					true,
-				),
-			),
-		);
-		$bb_background_updater->save()->dispatch();
+
+		$chunk_user_ids = array_chunk( $user_ids, $min_count );
+		if ( ! empty( $chunk_user_ids ) ) {
+			foreach ( $chunk_user_ids as $chunk_user_id ) {
+				$bb_background_updater->data(
+					array(
+						'type'     => 'notification',
+						'group'    => 'groups_updated_notification',
+						'data_id'  => $group_id,
+						'priority' => 5,
+						'callback' => 'bb_add_background_notifications',
+						'args'     => array(
+							$chunk_user_id,
+							$group_id,
+							$sender_id,
+							buddypress()->groups->id,
+							'bb_groups_details_updated',
+							bp_core_current_time(),
+							true,
+						),
+					),
+				);
+				$bb_background_updater->save();
+			}
+		}
+		$bb_background_updater->dispatch();
 	} else {
 		foreach ( $user_ids  as $user_id ) {
 			bp_notifications_add_notification(
