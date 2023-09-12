@@ -994,7 +994,7 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0 ) {
 		do_action( 'bp_activity_add_user_favorite', $activity_id, $user_id );
 
 		// Add user reaction.
-		if ( ! empty( $activity_id ) && function_exists( 'bb_load_reaction' ) ) {
+		if ( function_exists( 'bb_load_reaction' ) ) {
 			$reaction_id = bb_load_reaction()->bb_reactions_get_reaction_id();
 			bb_load_reaction()->bb_add_user_item_reaction(
 				array(
@@ -1089,7 +1089,7 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0 ) {
 				do_action( 'bp_activity_remove_user_favorite', $activity_id, $user_id );
 
 				// Remove user reaction.
-				if ( ! empty( $activity_id ) && function_exists( 'bb_load_reaction' ) ) {
+				if ( function_exists( 'bb_load_reaction' ) ) {
 					$reaction_id = bb_load_reaction()->bb_reactions_get_reaction_id();
 					bb_load_reaction()->bb_remove_user_item_reactions(
 						array(
