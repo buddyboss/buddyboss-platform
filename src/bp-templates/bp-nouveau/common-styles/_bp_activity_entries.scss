@@ -336,6 +336,7 @@
 				font-weight: 300;
 			}
 
+
 			.edit-activity:before {
 				content: "\ee5a";
 				font-size: 20px;
@@ -595,7 +596,8 @@
 						content: "\eeb4";
 					}
 
-					&.edit-activity:before {
+					&.acomment-edit:before,
+						&.edit-activity:before {
 						content: "\ee5a";
 						font-size: 20px;
 					}
