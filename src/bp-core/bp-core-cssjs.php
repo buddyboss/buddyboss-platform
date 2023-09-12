@@ -220,12 +220,16 @@ function bp_core_register_common_scripts() {
 			'dependencies' => array(),
 			'footer'       => false,
 		),
-		'bb-emoji-loader'            => array(
-			'file'         => "{$url}bb-emoji-loader{$min}.js",
+		'bb-twemoji'                    => array(
+			'file'         => includes_url( "js/twemoji{$min}.js" ),
 			'dependencies' => array(),
 			'footer'       => false,
 		),
-
+		'bb-emoji-loader'               => array(
+			'file'         => "{$url}bb-emoji-loader{$min}.js",
+			'dependencies' => array( 'bb-twemoji' ),
+			'footer'       => false,
+		),
 	);
 
 	// Add the "register.js" file if it's a register page and Profile Type field.
@@ -1032,14 +1036,54 @@ add_action( 'bp_enqueue_scripts', 'bb_load_link_preview_js_template' );
  */
 function bb_load_emoji_detection_script() {
 	// Get the current WordPress version.
-	$wp_version = get_bloginfo('version');
+	$wp_version = get_bloginfo( 'version' );
 
-	// Check if the WordPress version is 6.2 or above
-	if ( version_compare( $wp_version, '6.2', '>=' ) ) {
+	// Check if the WordPress version is above 6.0.
+	if ( version_compare( $wp_version, '6.0', '>' ) ) {
+
+		$settings = array(
+			/**
+			 * Filters the URL where emoji png images are hosted.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $url The emoji base URL for png images.
+			 */
+			'baseUrl' => apply_filters( 'bb_emoji_url', 'https://s.w.org/images/core/emoji/14.0.0/72x72/' ),
+
+			/**
+			 * Filters the extension of the emoji png files.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $extension The emoji extension for png files. Default .png.
+			 */
+			'ext'     => apply_filters( 'bb_emoji_ext', '.png' ),
+
+			/**
+			 * Filters the URL where emoji SVG images are hosted.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $url The emoji base URL for svg images.
+			 */
+			'svgUrl'  => apply_filters( 'bb_emoji_svg_url', 'https://s.w.org/images/core/emoji/14.0.0/svg/' ),
+
+			/**
+			 * Filters the extension of the emoji SVG files.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $extension The emoji extension for svg files. Default .svg.
+			 */
+			'svgExt'  => apply_filters( 'bb_emoji_svg_ext', '.svg' ),
+		);
 
 		// Image emoji support.
+		wp_enqueue_script( 'bb-twemoji' );
+		wp_localize_script( 'bb-twemoji', 'bbemojiSettings', $settings );
 		wp_enqueue_script( 'bb-emoji-loader' );
-
 	}
 }
-add_action( 'wp_head', 'bb_load_emoji_detection_script', 7 );
+
+add_action( 'bp_enqueue_scripts', 'bb_load_emoji_detection_script', 7 );

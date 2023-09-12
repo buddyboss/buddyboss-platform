@@ -70,10 +70,12 @@
 			twemoji = window.twemoji;
 			loaded = true;
 
+			var apply_elements = document.querySelectorAll('#buddypress, #bbpress-forums' );
+
 			// Initialize the mutation observer, which checks all added nodes for
 			// replaceable emoji characters.
 			if ( MutationObserver ) {
-				new MutationObserver( function( mutationRecords ) {
+				var bb_MutationObserver = new MutationObserver( function( mutationRecords ) {
 					var i = mutationRecords.length,
 						addedNodes, removedNodes, ii, node;
 
@@ -135,13 +137,20 @@
 							}
 						}
 					}
-				} ).observe( document.body, {
-					childList: true,
-					subtree: true
 				} );
+
+				apply_elements.forEach( function ( element ) {
+					bb_MutationObserver.observe( element, {
+						childList: true,
+						subtree: true,
+					} );
+				} );
+
 			}
 
-			parse( document.body );
+			apply_elements.forEach( function ( element ) {
+				parse( element );
+			} );
 		}
 
 		/**
@@ -218,12 +227,12 @@
 							return false;
 					}
 
-					if ( settings.supports.everythingExceptFlag &&
-						! /^1f1(?:e[6-9a-f]|f[0-9a-f])-1f1(?:e[6-9a-f]|f[0-9a-f])$/.test( icon ) && // Country flags.
-						! /^(1f3f3-fe0f-200d-1f308|1f3f4-200d-2620-fe0f)$/.test( icon )             // Rainbow and pirate flags.
-					) {
-						return false;
-					}
+					// if (
+					// 	! /^1f1(?:e[6-9a-f]|f[0-9a-f])-1f1(?:e[6-9a-f]|f[0-9a-f])$/.test( icon ) && // Country flags.
+					// 	! /^(1f3f3-fe0f-200d-1f308|1f3f4-200d-2620-fe0f)$/.test( icon )             // Rainbow and pirate flags.
+					// ) {
+					// 	return false;
+					// }
 
 					return ''.concat( options.base, icon, options.ext );
 				},
@@ -270,12 +279,6 @@
 	}
 
 	window.wp = window.wp || {};
-
-	var script = document.createElement( 'script' );
-	script.src = settings.source.twemoji || settings.source.concatemoji;
-	script.defer = true;
-	document.head.appendChild( script );
-
 	/**
 	 * @namespace wp.emoji
 	 */
@@ -283,8 +286,7 @@
 
 	// Check if the DOMContentLoaded event has already fired.
 	document.addEventListener( 'DOMContentLoaded', function() {
-		settings.DOMReady = true;
 		window.wp.bbemoji.load();
 	});
 
-} )( window, window._wpemojiSettings );
+} )( window, window.bbemojiSettings );
