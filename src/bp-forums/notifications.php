@@ -432,6 +432,9 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 						'author_id'         => $author_id,
 						'reply_text'        => esc_html__( 'View Reply', 'buddyboss' ),
 						'title_text'        => $title_text,
+						'forum_id'          => $forum_id,
+						'topic_id'          => $topic_id,
+						'reply_id'          => $reply_id,
 					),
 				);
 
@@ -440,7 +443,7 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 		}
 	}
 }
-add_action( 'bbp_new_reply', 'bbp_buddypress_add_notification', 10, 7 );
+add_action( 'bbp_new_reply', 'bbp_buddypress_add_notification', 9999, 7 );
 
 /**
  * Hooked into the new topic function, this notification action is responsible
@@ -572,6 +575,8 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 						'author_id'         => $author_id,
 						'reply_text'        => esc_html__( 'View Discussion', 'buddyboss' ),
 						'title_text'        => $title_text,
+						'forum_id'          => $forum_id,
+						'topic_id'          => $topic_id,
 					),
 				);
 
@@ -580,7 +585,7 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 		}
 	}
 }
-add_action( 'bbp_new_topic', 'bbp_buddypress_add_topic_notification', 10, 2 );
+add_action( 'bbp_new_topic', 'bbp_buddypress_add_topic_notification', 9999, 2 );
 
 /**
  * Mark notifications as read when reading a topic

@@ -2628,7 +2628,7 @@ class BP_Email_Tokens {
 				$video_ids    = get_post_meta( $meta_id, 'bp_video_ids', true );
 				$document_ids = get_post_meta( $meta_id, 'bp_document_ids', true );
 				$gif_data     = get_post_meta( $meta_id, '_gif_data', true );
-				$image_url    = ( 'reply' === $type ) ? $tokens['reply.url'] : $tokens['discussion.url'];
+				$image_url    = ( $is_mentioned ) ? $tokens['mentioned.url'] : ( ( 'reply' === $type ) ? $tokens['reply.url'] : $tokens['discussion.url'] );
 				$media_args   = array( 'privacy' => false );
 				$media_wrap_style    = 'padding: 5px 0 10px;';
 				$video_wrap_style    = 'padding: 5px 0 10px';
