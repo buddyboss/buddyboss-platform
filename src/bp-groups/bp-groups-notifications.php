@@ -74,9 +74,9 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
 		$type_key = bb_get_prefences_key( 'legacy', $type_key );
 	}
 
-    $bg_process = false;
+	$background_process = false;
 	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && 1 < count( (array) $user_ids ) ) {
-		$bg_process = true;
+		$background_process = true;
 	}
 	foreach ( (array) $user_ids as $user_id ) {
 
@@ -100,14 +100,14 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
 				'unsubscribe'  => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 			),
 		);
-		if ( true === $bg_process ) {
+		if ( true === $background_process ) {
 			bb_email_queue()->add_record( 'groups-details-updated', (int) $user_id, $args );
 		} else {
 			bp_send_email( 'groups-details-updated', (int) $user_id, $args );
 		}
 	}
 
-	if ( true === $bg_process ) {
+	if ( true === $background_process ) {
 		// call email background process.
 		bb_email_queue()->bb_email_background_process();
 	}

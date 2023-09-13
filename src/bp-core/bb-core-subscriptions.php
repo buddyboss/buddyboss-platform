@@ -1104,7 +1104,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 		return;
 	}
 
-	$min_count = (int) apply_filters( 'bb_subscription_queue_min_count', 10 );
+	$min_count = (int) apply_filters( 'bb_subscription_queue_min_count', 20 );
 
 	$parse_args = array(
 		'type'              => $type,
@@ -1128,14 +1128,19 @@ function bb_send_notifications_to_subscribers( $args ) {
 		$parse_args['usernames'] = $usernames;
 	}
 
+	$background_process = false;
 	if (
 		isset( $subscriptions['total'] ) &&
-		$subscriptions['total'] > $min_count
+		1 < $subscriptions['total']
 	) {
+		$background_process = true;
+	}
+
+	if ( true === $background_process ) {
 		global $bb_background_updater;
 		$chunk_user_ids = array_chunk( $subscriptions['subscriptions'], $min_count );
 		if ( ! empty( $chunk_user_ids ) ) {
-			foreach ( $chunk_user_ids as $key => $user_ids ) {
+			foreach ( $chunk_user_ids as $user_ids ) {
 				$parse_args['user_ids'] = $user_ids;
 
 				$bb_background_updater->data(
