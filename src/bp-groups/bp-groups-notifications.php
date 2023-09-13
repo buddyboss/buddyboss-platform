@@ -69,14 +69,15 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
 
 	$user_ids = BP_Groups_Member::get_group_member_ids( $group->id );
 
-	// check if it has enough recipients to use batch emails.
-	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( (array) $user_ids );
-
 	$type_key = 'notification_groups_group_updated';
 	if ( ! bb_enabled_legacy_email_preference() ) {
 		$type_key = bb_get_prefences_key( 'legacy', $type_key );
 	}
 
+    $bg_process = false;
+	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && 1 < count( (array) $user_ids ) ) {
+		$bg_process = true;
+	}
 	foreach ( (array) $user_ids as $user_id ) {
 
 		// Continue if member opted out of receiving this email.
@@ -99,13 +100,16 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
 				'unsubscribe'  => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 			),
 		);
-		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
+		if ( true === $bg_process ) {
 			bb_email_queue()->add_record( 'groups-details-updated', (int) $user_id, $args );
-			// call email background process.
-			bb_email_queue()->bb_email_background_process();
 		} else {
 			bp_send_email( 'groups-details-updated', (int) $user_id, $args );
 		}
+	}
+
+	if ( true === $bg_process ) {
+		// call email background process.
+		bb_email_queue()->bb_email_background_process();
 	}
 
 	/**
