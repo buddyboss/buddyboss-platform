@@ -497,10 +497,12 @@ function bp_activity_at_name_filter_updates( $activity ) {
 			$activity->content = preg_replace( $pattern, "<a class='bp-suggestions-mention' href='" . bp_core_get_user_domain( $user_id ) . "' rel='nofollow'>@$username</a>", $activity->content );
 		}
 
-		// Add our hook to send @mention emails after the activity item is saved.
-		add_action( 'bp_activity_posted_update', 'bb_activity_at_name_send_emails', 12, 3 );
-		add_action( 'bp_groups_posted_update', 'bb_group_activity_at_name_send_emails', 12, 4 );
-		add_action( 'bp_activity_comment_posted', 'bb_activity_comment_at_name_send_emails', 12, 3 );
+		if ( ! bb_is_rest() ) {
+			// Add our hook to send @mention emails after the activity item is saved.
+			add_action( 'bp_activity_posted_update', 'bb_activity_at_name_send_emails', 12, 3 );
+			add_action( 'bp_groups_posted_update', 'bb_group_activity_at_name_send_emails', 12, 4 );
+			add_action( 'bp_activity_comment_posted', 'bb_activity_comment_at_name_send_emails', 12, 3 );
+		}
 
 		// Temporary variable to avoid having to run bp_activity_find_mentions() again.
 		buddypress()->activity->mentioned_users = $usernames;
