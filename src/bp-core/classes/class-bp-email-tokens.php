@@ -746,12 +746,15 @@ class BP_Email_Tokens {
 												} else {
 													$meta_id = ! empty( $tokens['reply_id'] ) ? $tokens['reply_id'] : $tokens['topic_id'];
 													// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-													echo $content;
+													echo wpautop( $content );
 												}
-
-												echo $this->get_email_media( $meta_id, $tokens, 'mentioned' );
 												?>
 											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<?php echo $this->get_email_media( $meta_id, $tokens, 'mentioned' ); ?>
 										</td>
 									</tr>
 									</tbody>

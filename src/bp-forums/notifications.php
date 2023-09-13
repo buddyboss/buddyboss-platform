@@ -537,11 +537,26 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 
 				/** Mail */
 
+				// Remove filters from reply content and topic title to prevent content
+				// from being encoded with HTML entities, wrapped in paragraph tags, etc...
+				remove_all_filters( 'bbp_get_topic_content' );
+				remove_all_filters( 'bbp_get_topic_title' );
+
 				// Strip tags from text and setup mail data.
 				$topic_content = bbp_kses_data( bbp_get_topic_content( $topic_id ) );
 				$topic_url     = bbp_get_topic_permalink( $topic_id );
 				$author_id     = bbp_get_topic_author_id( $topic_id );
 				$title_text    = bbp_get_topic_title( $topic_id );
+
+				// Check if link embed or link preview and append the content accordingly.
+				if ( bbp_use_autoembed() ) {
+					$link_embed = get_post_meta( $topic_id, '_link_embed', true );
+					if ( empty( preg_replace( '/(?:<p>\s*<\/p>\s*)+|<p>(\s|(?:<br>|<\/br>|<br\/?>))*<\/p>/', '', $topic_content ) ) && ! empty( $link_embed ) ) {
+						$topic_content .= bbp_make_clickable( $link_embed );
+					} else {
+						$topic_content = bb_forums_link_preview( $topic_content, $topic_id );
+					}
+				}
 
 				$group_ids  = bbp_get_forum_group_ids( $forum_id );
 				$group_id   = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
