@@ -76,6 +76,27 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 
 		}
 
+		// Redirection Settings Section.
+		$this->add_section( 'bb_redirection', __( 'Redirection', 'buddyboss' ), '', 'bb_admin_redirection_setting_tutorial' );
+
+		$args          = array();
+		$args['class'] = 'child-no-padding-first';
+		$this->add_field( 'bb-registration-redirection', __( 'After Registration', 'buddyboss' ), 'bb_admin_setting_callback_registration_redirection', 'string', $args );
+		
+		$args          = array();
+		$args['class'] = 'child-no-padding registration-redirection-text-box';
+		$this->add_field( 'bb-custom-registration-redirection', '', 'bp_admin_setting_callback_custom_registration_redirection', 'string', $args );
+
+		$this->add_field( 'bb-login-redirection', __( 'After Login', 'buddyboss' ), 'bb_admin_setting_callback_login_redirection', 'string' );
+		$args          = array();
+		$args['class'] = 'child-no-padding login-redirection-text-box';
+		$this->add_field( 'bb-custom-login-redirection', '', 'bp_admin_setting_callback_custom_login_redirection', 'string', $args );
+
+		$this->add_field( 'bb-logout-redirection', __( 'After Logout', 'buddyboss' ), 'bb_admin_setting_callback_logout_redirection', 'string' );
+		$args          = array();
+		$args['class'] = 'child-no-padding logout-redirection-text-box';
+		$this->add_field( 'bb-custom-logout-redirection', '', 'bp_admin_setting_callback_custom_logout_redirection', 'string', $args );
+
 		// Email domain restriction section.
 		$this->add_section( 'bb_registration_restrictions', __( 'Registration Restrictions', 'buddyboss' ), 'bb_admin_setting_callback_registration_restrictions_instructions', 'bb_registration_restrictions_tutorial' );
 

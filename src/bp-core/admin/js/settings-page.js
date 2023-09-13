@@ -2426,6 +2426,95 @@ window.bp = window.bp || {};
 					}
 				}
 			);
+
+			// Registration Redirection Settings Show/Hide.
+			var regRedSettings = $( '#bb-registration-redirection' );
+			var currentRegRedSettings = '0';
+
+			if ( regRedSettings.length ) {
+				currentRegRedSettings = regRedSettings.val();
+				if ( '0' === currentRegRedSettings ) {
+					$( '.registration-redirection-text-box' ).show();
+					regRedSettings.next().hide();
+				} else {
+					$( '.registration-redirection-text-box' ).hide();
+					regRedSettings.next().show();
+				}
+
+				$( regRedSettings ).change(
+					function () {
+						currentRegRedSettings = $( this ).val();
+						if ( '0' === currentRegRedSettings ) {
+							$( '.registration-redirection-text-box' ).show();
+							regRedSettings.next().hide();
+						} else {
+							$( '.registration-redirection-text-box' ).hide();
+							regRedSettings.next().show();
+						}
+
+					}
+				);
+			}
+
+			// Login Redirection Settings Show/Hide.
+			var loginRedSettings = $( '#bb-login-redirection' );
+			var currentLoginRedSettings = '0';
+
+			if ( loginRedSettings.length ) {
+				currentLoginRedSettings = loginRedSettings.val();
+
+				if ( '0' === currentLoginRedSettings ) {
+					$( '.login-redirection-text-box' ).show();
+					loginRedSettings.next().hide();
+				} else {
+					$( '.login-redirection-text-box' ).hide();
+					loginRedSettings.next().show();
+				}
+
+				$( loginRedSettings ).change(
+					function () {
+						currentLoginRedSettings = $( this ).val();
+						if ( '0' === currentLoginRedSettings ) {
+							$( '.login-redirection-text-box' ).show();
+							loginRedSettings.next().hide();
+						} else {
+							$( '.login-redirection-text-box' ).hide();
+							loginRedSettings.next().show();
+						}
+
+					}
+				);
+			}
+
+			// Logout Redirection Settings Show/Hide.
+			var logoutRedSettings = $( '#bb-logout-redirection' );
+			var currentLogoutRedSettings = '0';
+
+			if ( logoutRedSettings.length ) {
+				currentLogoutRedSettings = logoutRedSettings.val();
+
+				if ( '0' === currentLogoutRedSettings ) {
+					$( '.logout-redirection-text-box' ).show();
+					logoutRedSettings.next().hide();
+				} else {
+					$( '.logout-redirection-text-box' ).hide();
+					logoutRedSettings.next().show();
+				}
+
+				$( logoutRedSettings ).change(
+					function () {
+						currentLogoutRedSettings = $( this ).val();
+						if ( '0' === currentLogoutRedSettings ) {
+							$( '.logout-redirection-text-box' ).show();
+							logoutRedSettings.next().hide();
+						} else {
+							$( '.logout-redirection-text-box' ).hide();
+							logoutRedSettings.next().show();
+						}
+
+					}
+				);
+			}
 		}
 	);
 
