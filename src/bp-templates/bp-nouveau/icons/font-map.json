@@ -1,6 +1,6 @@
 {
     "name": "bb-icons",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "copyright": "BuddyBoss",
     "groups": [
         {
@@ -719,6 +719,12 @@
             "css": "brand-xing",
             "code": 60923,
             "label": "XING",
+            "group": "brands"
+        },
+        {
+            "css": "brand-x",
+            "code": 59922,
+            "label": "X",
             "group": "brands"
         },
         {
