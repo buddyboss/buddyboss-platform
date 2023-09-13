@@ -83,6 +83,15 @@
 						addedNodes = mutationRecords[ i ].addedNodes;
 						removedNodes = mutationRecords[ i ].removedNodes;
 						ii = addedNodes.length;
+						var mtagname = mutationRecords[ i ].target.tagName;
+						if ( mtagname === 'BODY' ) {
+							var mtag = mutationRecords[ i ].target.querySelectorAll( '#buddypress, #bbpress-forums' );
+							if ( mtag.length > 0 ) {
+								mtag.forEach( renderEmoji );
+							}
+
+							return;
+						}
 
 						/*
 						 * Checks if an image has been replaced by a text element
@@ -139,18 +148,17 @@
 					}
 				} );
 
-				apply_elements.forEach( function ( element ) {
-					bb_MutationObserver.observe( element, {
-						childList: true,
-						subtree: true,
-					} );
+				bb_MutationObserver.observe( document.body, {
+					childList: true,
+					subtree: true,
 				} );
-
 			}
 
-			apply_elements.forEach( function ( element ) {
-				parse( element );
-			} );
+			apply_elements.forEach( renderEmoji );
+		}
+
+		function renderEmoji( element ) {
+			parse( element );
 		}
 
 		/**
