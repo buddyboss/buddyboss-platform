@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.4.11\n"
+"Project-Id-Version: BuddyBoss Platform 2.4.20\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-09-04 09:33:40+00:00\n"
+"POT-Creation-Date: 2023-09-05 06:43:27+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -11233,7 +11233,7 @@ msgstr ""
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1363
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1604
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1793
-#: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:1007
+#: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:1009
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1203
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1306
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1495
@@ -25656,51 +25656,51 @@ msgstr ""
 msgid "Sorry, Your message cannot be empty."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:895
+#: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:897
 #. translators: Message member count.
 msgid "Your message was sent privately to %s members of this group."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:899
+#: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:901
 msgid "Your message was sent privately to all members of this group."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:935
+#: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:937
 msgid "Sorry, you need to be logged in to create a group message."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:970
+#: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:972
 msgid "Information for the user."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:975
+#: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:977
 msgid "Message thread"
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:1015
+#: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:1017
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:2145
 msgid "Content of the Message to add to the Thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:1022
+#: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:1024
 msgid "Group thread users individual or all."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:1030
+#: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:1032
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:2577
 msgid "Limit result to messages created by a specific user."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:1038
+#: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:1040
 msgid "Type of message, Group thread or private reply."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:1142
+#: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:1144
 #. translators: Message member count.
 msgid "Your message was sent to %s members of this group."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:1146
+#: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:1148
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:1826
 msgid "Your message was sent to all members of this group."
 msgstr ""
