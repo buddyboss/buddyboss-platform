@@ -1646,9 +1646,9 @@ function bp_xprofile_social_network_provider() {
 	$options[] = (object) array(
 		'id'                => 15,
 		'is_default_option' => false,
-		'name'              => __( 'X', 'buddyboss' ),
+		'name'              => __( 'Twitter', 'buddyboss' ),
 		'value'             => 'twitter',
-		'svg'               => '<svg viewBox="0 0 24 24" fill="none"><path d="M8.54996 6.78142H7.54716L15.462 17.2186H16.4548L8.54996 6.78142Z" fill="#333"/><path d="M12 24C18.6274 24 24 18.6274 24 12C24 5.37258 18.6274 0 12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24ZM5 5.5H9.15412L12.3916 9.77458L15.8503 5.51925H18.1382L13.4978 11.2352L19 18.5H14.8583L11.3528 13.8773L7.61027 18.4872H5.31001L10.2446 12.416L5 5.5Z" fill="#333"/></svg>',
+		'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#333" d="M16 0c-8.8 0-16 7.2-16 16s7.2 16 16 16c8.8 0 16-7.2 16-16s-7.2-16-16-16v0zM22.4 12.704v0.384c0 4.32-3.296 9.312-9.312 9.312-1.888 0-3.584-0.512-4.992-1.504h0.8c1.504 0 3.008-0.512 4.096-1.408-1.376 0-2.592-0.992-3.104-2.304 0.224 0 0.416 0.128 0.608 0.128 0.32 0 0.608 0 0.896-0.128-1.504-0.288-2.592-1.6-2.592-3.2v0c0.416 0.224 0.896 0.416 1.504 0.416-0.896-0.608-1.504-1.6-1.504-2.688 0-0.608 0.192-1.216 0.416-1.728 1.6 2.016 4 3.328 6.784 3.424-0.096-0.224-0.096-0.512-0.096-0.704 0-1.792 1.504-3.296 3.296-3.296 0.896 0 1.792 0.384 2.4 0.992 0.704-0.096 1.504-0.416 2.112-0.8-0.224 0.8-0.8 1.408-1.408 1.792 0.704-0.096 1.312-0.288 1.888-0.48-0.576 0.8-1.184 1.376-1.792 1.792v0z"></path></svg>',
 	);
 	$options[] = (object) array(
 		'id'                => 16,
@@ -1722,12 +1722,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 						$html .= '<span class="social-more-link social"><a target="_blank" data-balloon-pos="up" data-balloon="' . esc_html__( 'See all', 'buddyboss' ) . '" href="#social-networks-popup" class="show-action-popup"><i class="bb-icon-rf bb-icon-ellipsis-h"></i></a></span>';
 						break;
 					}
-
-					if ( 'twitter' === $providers[ $key ]->value ) {
-						$html .= '<span class="social ' . esc_attr( $providers[ $key ]->value ) . '"><a target="_blank" data-balloon-pos="up" data-balloon="X" href="' . esc_url( $original_option_value ) . '"><i class="bb-icon-rf bb-icon-brand-x"></i></a></span>';
-					} else {
-						$html .= '<span class="social ' . esc_attr( $providers[ $key ]->value ) . '"><a target="_blank" data-balloon-pos="up" data-balloon="' . esc_attr( $providers[ $key ]->name ) . '" href="' . esc_url( $original_option_value ) . '"><i class="bb-icon-rf bb-icon-brand-' . esc_attr( strtolower( $providers[ $key ]->value ) ) . '"></i></a></span>';
-					}
+					$html .= '<span class="social ' . esc_attr( $providers[ $key ]->value ) . '"><a target="_blank" data-balloon-pos="up" data-balloon="' . esc_attr( $providers[ $key ]->name ) . '" href="' . esc_url( $original_option_value ) . '"><i class="bb-icon-rf bb-icon-brand-' . esc_attr( strtolower( $providers[ $key ]->value ) ) . '"></i></a></span>';
 				}
 				$i++;
 			}
@@ -1747,12 +1742,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 										foreach ( $original_option_values as $key => $original_option_value ) {
 											if ( '' !== $original_option_value ) {
 												$key   = bp_social_network_search_key( $key, $providers );
-
-												if ( 'twitter' === $providers[ $key ]->value ) {
-													$html .= '<span class="social ' . esc_attr( $providers[ $key ]->value ) . '"><a target="_blank" data-balloon-pos="up" data-balloon="X" href="' . esc_url( $original_option_value ) . '"><i class="bb-icon-rf bb-icon-brand-x"></i></a></span>';
-												} else {
-													$html .= '<span class="social ' . esc_attr( $providers[ $key ]->value ) . '"><a target="_blank" data-balloon-pos="up" data-balloon="' . esc_attr( $providers[ $key ]->name ) . '" href="' . esc_url( $original_option_value ) . '"><i class="bb-icon-rf bb-icon-brand-' . esc_attr( strtolower( $providers[ $key ]->value ) ) . '"></i></a></span>';
-												}
+												$html .= '<span class="social ' . esc_attr( $providers[ $key ]->value ) . '"><a target="_blank" data-balloon-pos="up" data-balloon="' . esc_attr( $providers[ $key ]->name ) . '" href="' . esc_url( $original_option_value ) . '"><i class="bb-icon-rf bb-icon-brand-' . esc_attr( strtolower( $providers[ $key ]->value ) ) . '"></i></a></span>';
 											}
 										}
 										$html .= '</div>
