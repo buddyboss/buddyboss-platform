@@ -71,8 +71,9 @@ add_filter( 'bp_core_widget_user_display_name', 'strip_tags' );
 add_filter( 'bp_core_widget_user_display_name', 'esc_html' );
 
 // Redirects.
-add_filter('login_redirect', 'bb_login_redirect', PHP_INT_MAX, 3 );
-add_filter('logout_redirect', 'bb_logout_redirect', PHP_INT_MAX, 3 );
+add_filter( 'login_redirect', 'bb_login_redirect', PHP_INT_MAX, 3 );
+add_filter( 'logout_redirect', 'bb_logout_redirect', PHP_INT_MAX, 3 );
+add_filter( 'registration_redirect', 'bb_registration_redirect', PHP_INT_MAX, 2 );
 
 // Avatars.
 /**
@@ -2510,66 +2511,7 @@ add_filter( 'bb_oembed_discover_support', 'bb_loom_oembed_discover_support', 10,
 function bb_login_redirect( $redirect_to, $request, $user ) {
 
 	if ( $user && is_object( $user ) && is_a( $user, 'WP_User' ) ) {
-
-		// Check for the general settings for login redirection.
-		$login_redirect = bb_login_redirection();
-
-		// Check if any page or custom URL is set.
-		if ( '' !== $login_redirect ) {
-			if ( '0' === $login_redirect ) {
-				$custom_url = esc_url( bb_custom_login_redirection() );
-				if ( ! empty( $custom_url ) ) {
-
-					// Custom Page URL.
-					$redirect_to = $custom_url;
-				}
-			} else {
-
-				// Page ID.
-				// $login_redirect = intval( $login_redirect );
-				if (
-					! empty( $login_redirect ) &&
-					is_numeric( $login_redirect ) &&
-					'publish' === get_post_status( $login_redirect )
-				) {
-					$redirect_to = get_permalink( $login_redirect );
-				}
-			}
-		}
-
-		// Check for profile type settings for login redirection.
-		if ( false !== bp_member_type_enable_disable() )  {
-			$member_type = bp_get_member_type( $user->ID );
-			if ( false !== $member_type ) {
-				$member_type_post_id = bp_member_type_post_by_type( $member_type );
-				if ( ! empty( $member_type_post_id ) ) {
-					$member_type_login_redirect = get_post_meta( $member_type_post_id, '_bp_member_type_login_redirection', true );
-
-					// Check if any page or custom URL is set.
-					if ( '' !== $member_type_login_redirect ) {
-						if ( '0' === $member_type_login_redirect ) {
-							$custom_url = get_post_meta( $member_type_post_id, '_bp_member_type_custom_login_redirection', true );
-							if ( ! empty( $custom_url ) ) {
-
-								// Custom Page URL.
-								$redirect_to = $custom_url;
-							}
-						} else {
-
-							// Page ID.
-							// $member_type_login_redirect = intval( $member_type_login_redirect );
-							if (
-								! empty( $member_type_login_redirect ) &&
-								is_numeric( $member_type_login_redirect ) &&
-								'publish' === get_post_status( $member_type_login_redirect )
-							) {
-								$redirect_to = get_permalink( $member_type_login_redirect );
-							}
-						}
-					}
-				}
-			}
-		}
+		$redirect_to = bb_redirect_after_action( $redirect_to, $user->ID, 'login' );
 	}
 
 	return $redirect_to;
@@ -2583,65 +2525,106 @@ function bb_login_redirect( $redirect_to, $request, $user ) {
 function bb_logout_redirect( $redirect_to, $request, $user ) {
 
 	if ( $user && is_object( $user ) && is_a( $user, 'WP_User' ) ) {
+		$redirect_to = bb_redirect_after_action( $redirect_to, $user->ID, 'logout' );
+	}
 
-		// Check for the general settings for logout redirection.
-		$logout_redirect = bb_logout_redirection();
+	return $redirect_to;
+}
 
-		// Check if any page or custom URL is set.
-		if ( '' !== $logout_redirect ) {
-			if ( '0' === $logout_redirect ) {
-				$custom_url = esc_url( bb_custom_logout_redirection() );
-				if ( ! empty( $custom_url ) ) {
+/**
+ * Redirect after registration.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_registration_redirect( $redirect_to, $user_id ) {
 
-					// Custom Page URL.
-					$redirect_to = $custom_url;
-				}
-			} else {
+	if ( $user_id && ! ( is_object( $user_id ) && is_a( $user_id, 'WP_Error' ) ) ) {
+		$redirect_to = bb_redirect_after_action( $redirect_to, $user_id, 'registration' );
+	}
 
-				// Page ID.
-				if (
-					! empty( $logout_redirect ) &&
-					is_numeric( $logout_redirect ) &&
-					'publish' === get_post_status( $logout_redirect )
-				) {
-					$redirect_to = get_permalink( $logout_redirect );
-				}
+	return $redirect_to;
+}
+
+
+/**
+ * Allow third party domains for redirections.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_redirection_allowed_third_party_domains( $hosts ) {
+	$allow_custom_url_domains = array();
+	$custom_url = esc_url( bb_custom_registration_redirection() );
+	if ( ! empty( $custom_url ) ) {
+		$allow_custom_url_domains[] = $custom_url;
+	}
+	$custom_url = esc_url( bb_custom_login_redirection() );
+	if ( ! empty( $custom_url ) ) {
+		$allow_custom_url_domains[] = $custom_url;
+	}
+	$custom_url = esc_url( bb_custom_logout_redirection() );
+	if ( ! empty( $custom_url ) ) {
+		$allow_custom_url_domains[] = $custom_url;
+	}
+
+	// Get member type redirection custom urls.
+	$args = array(
+		'post_type'      => 'bp-member-type', // Replace with your custom post type or 'post' for regular posts
+		'posts_per_page' => - 1, // To get all posts
+		'post_status'    => 'publish', // Filter by published posts
+		'meta_query'     => array(
+			'relation' => 'OR', // Use 'OR' to search for any of the specified meta keys
+			array(
+				'key'     => '_bp_member_type_custom_registration_redirection',
+				'compare' => 'EXISTS', // Check if the key exists
+			),
+			array(
+				'key'     => '_bp_member_type_custom_login_redirection',
+				'compare' => 'EXISTS',
+			),
+			array(
+				'key'     => '_bp_member_type_custom_logout_redirection',
+				'compare' => 'EXISTS',
+			),
+		),
+	);
+
+	$query = new WP_Query( $args );
+
+	if ( $query->have_posts() ) {
+		while ( $query->have_posts() ) {
+			$query->the_post();
+
+			// Retrieve the meta values
+			$custom_url = get_post_meta( get_the_ID(), '_bp_member_type_custom_registration_redirection', true );
+
+			if ( ! empty( $custom_url ) ) {
+				$allow_custom_url_domains[] = $custom_url;
 			}
-		}
 
-		// Check for profile type settings for logout redirection.
-		if ( false !== bp_member_type_enable_disable() ) {
-			$member_type = bp_get_member_type( $user->ID );
-			if ( false !== $member_type ) {
-				$member_type_post_id = bp_member_type_post_by_type( $member_type );
-				if ( ! empty( $member_type_post_id ) ) {
-					$member_type_logout_redirect = get_post_meta( $member_type_post_id, '_bp_member_type_logout_redirection', true );
+			$custom_url = get_post_meta( get_the_ID(), '_bp_member_type_custom_login_redirection', true );
+			if ( ! empty( $custom_url ) ) {
+				$allow_custom_url_domains[] = $custom_url;
+			}
 
-					// Check if any page or custom URL is set.
-					if ( '' !== $member_type_logout_redirect ) {
-						if ( '0' === $member_type_logout_redirect ) {
-							$custom_url = get_post_meta( $member_type_post_id, '_bp_member_type_custom_logout_redirection', true );
-							if ( ! empty( $custom_url ) ) {
-
-								// Custom Page URL.
-								$redirect_to = $custom_url;
-							}
-						} else {
-
-							// Page ID.
-							if (
-								! empty( $member_type_logout_redirect ) &&
-								is_numeric( $member_type_logout_redirect ) &&
-								'publish' === get_post_status( $member_type_logout_redirect )
-							) {
-								$redirect_to = get_permalink( $member_type_logout_redirect );
-							}
-						}
-					}
-				}
+			$custom_url = get_post_meta( get_the_ID(), '_bp_member_type_custom_logout_redirection', true );
+			if ( ! empty( $custom_url ) ) {
+				$allow_custom_url_domains[] = $custom_url;
 			}
 		}
 	}
 
-	return $redirect_to;
+	wp_reset_postdata();
+
+	if ( count( $allow_custom_url_domains ) > 0 ) {
+		foreach ( $allow_custom_url_domains as $url ) {
+			$parsed_url   = parse_url( $url );
+			$current_host = $_SERVER['HTTP_HOST'];
+
+			if ( $parsed_url['host'] !== $current_host ) {
+				$hosts[] = $parsed_url['host'];
+			}
+		}
+	}
+
+	return $hosts;
 }

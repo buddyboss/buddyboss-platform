@@ -2383,7 +2383,7 @@ function bb_email_restrictions_setting( $default = array() ) {
  *
  * @param string $default Optional. Fallback value if not found in the database.
  *                        Default: Empty string.
- * @return array Registration redirection setting value.
+ * @return string Registration redirection setting value.
  */
 function bb_registration_redirection( $default = array() ) {
 
@@ -2392,7 +2392,7 @@ function bb_registration_redirection( $default = array() ) {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array $value Registration registration setting value.
+	 * @param string $value Registration registration setting value.
 	 */
 	return apply_filters( 'bb_registration_redirection', bp_get_option( 'bb-registration-redirection', $default ) );
 }
@@ -2413,7 +2413,7 @@ function bb_login_redirection( $default = '' ) {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array $value Login redirection setting value.
+	 * @param string $value Login redirection setting value.
 	 */
 	return apply_filters( 'bb_login_redirection', bp_get_option( 'bb-login-redirection', $default ) );
 }
@@ -2434,7 +2434,7 @@ function bb_logout_redirection( $default = '' ) {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array $value Logout redirection setting value.
+	 * @param string $value Logout redirection setting value.
 	 */
 	return apply_filters( 'bb_logout_redirection', bp_get_option( 'bb-logout-redirection', $default ) );
 }
