@@ -711,7 +711,7 @@ class BP_Email_Tokens {
 												<?php
 												if ( ! empty( $activity ) ) {
 
-													$meta_id = $activity->id;
+													$object_id = $activity->id;
 
 													if ( in_array( $activity->content, array( '&nbsp;', '&#8203;' ), true ) ) {
 														$activity->content = '';
@@ -744,7 +744,7 @@ class BP_Email_Tokens {
 
 
 												} else {
-													$meta_id = ! empty( $tokens['reply_id'] ) ? $tokens['reply_id'] : $tokens['topic_id'];
+													$object_id = ! empty( $tokens['reply_id'] ) ? $tokens['reply_id'] : $tokens['topic_id'];
 													// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 													echo wpautop( $content );
 												}
@@ -754,7 +754,7 @@ class BP_Email_Tokens {
 									</tr>
 									<tr>
 										<td>
-											<?php echo $this->get_email_media( $meta_id, $tokens, 'mentioned' ); ?>
+											<?php echo $this->get_email_media( $object_id, $tokens, 'mentioned' ); ?>
 										</td>
 									</tr>
 									</tbody>
@@ -2580,12 +2580,24 @@ class BP_Email_Tokens {
 		return $commenter_url;
 	}
 
-	public function get_email_media( $meta_id, $tokens, $type = 'activity' ) {
+	/**
+	 * Generate the output of media/document/video/GIF preview for the notification.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int    $object_id Post ID.
+	 * @param array  $tokens    Token array.
+	 * @param string $type      Type email notification.
+	 *
+	 * @return string html for the output.
+	 */
+	public function get_email_media( $object_id, $tokens, $type = 'activity' ) {
+		$object_id        = (int) $object_id;
 		$receiver_user_id = $tokens['receiver-user.id'] ?? 0;
 		$settings         = bp_email_get_appearance_settings();
 
 		ob_start();
-		if ( bp_is_active( 'media' ) ) {
+		if ( ! empty( $object_id ) && bp_is_active( 'media' ) ) {
 
 			$media_ids           = '';
 			$video_ids           = '';
@@ -2611,26 +2623,26 @@ class BP_Email_Tokens {
 			}
 
 			if ( 'activity' === $type || 'activity_reply' === $type ) {
-				$media_ids    = bp_activity_get_meta( $meta_id, 'bp_media_ids', true );
-				$video_ids    = bp_activity_get_meta( $meta_id, 'bp_video_ids', true );
-				$document_ids = bp_activity_get_meta( $meta_id, 'bp_document_ids', true );
-				$gif_data     = bp_activity_get_meta( $meta_id, '_gif_data', true );
-				$image_url    = ( $is_mentioned ) ? $tokens['mentioned.url'] : ( ( 'activity' === $type ) ? $tokens['activity.url'] : bp_activity_get_permalink( $meta_id ) );
+				$media_ids    = bp_activity_get_meta( $object_id, 'bp_media_ids', true );
+				$video_ids    = bp_activity_get_meta( $object_id, 'bp_video_ids', true );
+				$document_ids = bp_activity_get_meta( $object_id, 'bp_document_ids', true );
+				$gif_data     = bp_activity_get_meta( $object_id, '_gif_data', true );
+				$image_url    = ( $is_mentioned ) ? $tokens['mentioned.url'] : ( ( 'activity' === $type ) ? $tokens['activity.url'] : bp_activity_get_permalink( $object_id ) );
 			} elseif ( 'message' === $type ) {
-				$media_ids           = bp_messages_get_meta( $meta_id, 'bp_media_ids', true );
-				$video_ids           = bp_messages_get_meta( $meta_id, 'bp_video_ids', true );
-				$document_ids        = bp_messages_get_meta( $meta_id, 'bp_document_ids', true );
-				$gif_data            = bp_messages_get_meta( $meta_id, '_gif_data', true );
+				$media_ids           = bp_messages_get_meta( $object_id, 'bp_media_ids', true );
+				$video_ids           = bp_messages_get_meta( $object_id, 'bp_video_ids', true );
+				$document_ids        = bp_messages_get_meta( $object_id, 'bp_document_ids', true );
+				$gif_data            = bp_messages_get_meta( $object_id, '_gif_data', true );
 				$image_url           = $tokens['message.url'];
 				$media_wrap_style    = 'padding: 10px 0;';
 				$video_wrap_style    = 'padding: 10px 0;';
 				$document_wrap_style = 'padding: 10px 0;';
 				$media_elem_style    = 'width: 250px; vertical-align: top; height: 200px; overflow: hidden;';
 			} elseif ( 'discussion' === $type || 'reply' === $type ) {
-				$media_ids           = get_post_meta( $meta_id, 'bp_media_ids', true );
-				$video_ids           = get_post_meta( $meta_id, 'bp_video_ids', true );
-				$document_ids        = get_post_meta( $meta_id, 'bp_document_ids', true );
-				$gif_data            = get_post_meta( $meta_id, '_gif_data', true );
+				$media_ids           = get_post_meta( $object_id, 'bp_media_ids', true );
+				$video_ids           = get_post_meta( $object_id, 'bp_video_ids', true );
+				$document_ids        = get_post_meta( $object_id, 'bp_document_ids', true );
+				$gif_data            = get_post_meta( $object_id, '_gif_data', true );
 				$image_url           = ( $is_mentioned ) ? $tokens['mentioned.url'] : ( ( 'reply' === $type ) ? $tokens['reply.url'] : $tokens['discussion.url'] );
 				$media_args          = array( 'privacy' => false );
 				$media_wrap_style    = 'padding: 5px 0 10px;';
