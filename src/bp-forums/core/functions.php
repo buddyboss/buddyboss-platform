@@ -246,7 +246,7 @@ function bbp_view_query( $view = '', $new_args = '' ) {
  */
 function bbp_get_view_query_args( $view ) {
 	$view   = bbp_get_view_id( $view );
-	$retval = ! empty( $view ) && ! empty( $bbp->views[ $view ] ) ? bbpress()->views[ $view ]['query'] : array();
+	$retval = ! empty( $view ) && ! empty( bbpress()->views[ $view ] ) ? bbpress()->views[ $view ]['query'] : array();
 
 	return (array) apply_filters( 'bbp_get_view_query_args', $retval, $view );
 }
