@@ -1648,25 +1648,31 @@ class BP_Activity_Activity {
 				/**
 				 * Filters the MySQL From query for legacy activity comment.
 				 *
-                 * @since BuddyBoss 1.5.6
+				 * @since BuddyBoss 1.5.6
 				 *
 				 * @param string $from Activity Comment from query
-				 *
 				 */
 				$sql['from'] = apply_filters( 'bp_activity_comments_get_join_sql', $sql['from'] );
 
 				/**
 				 * Filters the MySQL Where query for legacy activity comment.
 				 *
-                 * @since BuddyBoss 1.5.6
+				 * @since BuddyBoss 1.5.6
 				 *
 				 * @param string $where Activity Comment from query
-				 *
 				 */
 				$sql['where'] = apply_filters( 'bp_activity_comments_get_where_conditions', $sql['where'] );
 
-				$sql = "{$sql['select']} {$sql['from']} {$sql['where']} {$sql['misc']}";
+				/**
+				 * Filters the MySQL From query for order by activity comment.
+				 *
+				 * @since BuddyBoss 2.4.20
+				 *
+				 * @param string $misc Activity Comment from query
+				 */
+				$sql['misc'] = apply_filters( 'bp_activity_comments_get_misc_sql', $sql['misc'] );
 
+				$sql = "{$sql['select']} {$sql['from']} {$sql['where']} {$sql['misc']}";
 				$sql = $wpdb->prepare( $sql, $top_level_parent_id, $left, $right );
 
 				$descendant_ids = $wpdb->get_col( $sql );
