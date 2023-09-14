@@ -1,77 +1,77 @@
 /*!
- * BuddyBoss Icon 1.0.2 - https://buddyboss.com
+ * BuddyBoss Icon 1.0.3 - https://buddyboss.com
  * License - MIT
  * Copyright 2022
  */
 
 @font-face {
   font-family: 'bb-icons';
-  src: url('../fonts/round-lined.eot?1677145026');
-  src: url('../fonts/round-lined.eot?1677145026#iefix') format('embedded-opentype'),
-            url('../fonts/round-lined.woff2?1677145026') format('woff2'),
-            url('../fonts/round-lined.woff?1677145026') format('woff'),
-            url('../fonts/round-lined.ttf?1677145026') format('truetype'),
-            url('../fonts/round-lined.svg?1677145026#round-lined') format('svg');
+  src: url('../fonts/round-lined.eot?1693997272');
+  src: url('../fonts/round-lined.eot?1693997272#iefix') format('embedded-opentype'),
+            url('../fonts/round-lined.woff2?1693997272') format('woff2'),
+            url('../fonts/round-lined.woff?1693997272') format('woff'),
+            url('../fonts/round-lined.ttf?1693997272') format('truetype'),
+            url('../fonts/round-lined.svg?1693997272#round-lined') format('svg');
   font-weight: 100;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'bb-icons';
-  src: url('../fonts/round-filled.eot?1677145026');
-  src: url('../fonts/round-filled.eot?1677145026#iefix') format('embedded-opentype'),
-            url('../fonts/round-filled.woff2?1677145026') format('woff2'),
-            url('../fonts/round-filled.woff?1677145026') format('woff'),
-            url('../fonts/round-filled.ttf?1677145026') format('truetype'),
-            url('../fonts/round-filled.svg?1677145026#round-lined') format('svg');
+  src: url('../fonts/round-filled.eot?1693997272');
+  src: url('../fonts/round-filled.eot?1693997272#iefix') format('embedded-opentype'),
+            url('../fonts/round-filled.woff2?1693997272') format('woff2'),
+            url('../fonts/round-filled.woff?1693997272') format('woff'),
+            url('../fonts/round-filled.ttf?1693997272') format('truetype'),
+            url('../fonts/round-filled.svg?1693997272#round-lined') format('svg');
   font-weight: 200;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'bb-icons';
-  src: url('../fonts/filled.eot?1677145026');
-  src: url('../fonts/filled.eot?1677145026#iefix') format('embedded-opentype'),
-            url('../fonts/filled.woff2?1677145026') format('woff2'),
-            url('../fonts/filled.woff?1677145026') format('woff'),
-            url('../fonts/filled.ttf?1677145026') format('truetype'),
-            url('../fonts/filled.svg?1677145026#round-lined') format('svg');
+  src: url('../fonts/filled.eot?1693997272');
+  src: url('../fonts/filled.eot?1693997272#iefix') format('embedded-opentype'),
+            url('../fonts/filled.woff2?1693997272') format('woff2'),
+            url('../fonts/filled.woff?1693997272') format('woff'),
+            url('../fonts/filled.ttf?1693997272') format('truetype'),
+            url('../fonts/filled.svg?1693997272#round-lined') format('svg');
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'bb-icons';
-  src: url('../fonts/lined.eot?1677145026');
-  src: url('../fonts/lined.eot?1677145026#iefix') format('embedded-opentype'),
-            url('../fonts/lined.woff2?1677145026') format('woff2'),
-            url('../fonts/lined.woff?1677145026') format('woff'),
-            url('../fonts/lined.ttf?1677145026') format('truetype'),
-            url('../fonts/lined.svg?1677145026#round-lined') format('svg');
+  src: url('../fonts/lined.eot?1693997272');
+  src: url('../fonts/lined.eot?1693997272#iefix') format('embedded-opentype'),
+            url('../fonts/lined.woff2?1693997272') format('woff2'),
+            url('../fonts/lined.woff?1693997272') format('woff'),
+            url('../fonts/lined.ttf?1693997272') format('truetype'),
+            url('../fonts/lined.svg?1693997272#round-lined') format('svg');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'bb-icons';
-  src: url('../fonts/box-lined.eot?1677145026');
-  src: url('../fonts/box-lined.eot?1677145026#iefix') format('embedded-opentype'),
-            url('../fonts/box-lined.woff2?1677145026') format('woff2'),
-            url('../fonts/box-lined.woff?1677145026') format('woff'),
-            url('../fonts/box-lined.ttf?1677145026') format('truetype'),
-            url('../fonts/box-lined.svg?1677145026#round-lined') format('svg');
+  src: url('../fonts/box-lined.eot?1693997272');
+  src: url('../fonts/box-lined.eot?1693997272#iefix') format('embedded-opentype'),
+            url('../fonts/box-lined.woff2?1693997272') format('woff2'),
+            url('../fonts/box-lined.woff?1693997272') format('woff'),
+            url('../fonts/box-lined.ttf?1693997272') format('truetype'),
+            url('../fonts/box-lined.svg?1693997272#round-lined') format('svg');
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'bb-icons';
-  src: url('../fonts/box-filled.eot?1677145026');
-  src: url('../fonts/box-filled.eot?1677145026#iefix') format('embedded-opentype'),
-            url('../fonts/box-filled.woff2?1677145026') format('woff2'),
-            url('../fonts/box-filled.woff?1677145026') format('woff'),
-            url('../fonts/box-filled.ttf?1677145026') format('truetype'),
-            url('../fonts/box-filled.svg?1677145026#round-lined') format('svg');
+  src: url('../fonts/box-filled.eot?1693997272');
+  src: url('../fonts/box-filled.eot?1693997272#iefix') format('embedded-opentype'),
+            url('../fonts/box-filled.woff2?1693997272') format('woff2'),
+            url('../fonts/box-filled.woff?1693997272') format('woff'),
+            url('../fonts/box-filled.ttf?1693997272') format('truetype'),
+            url('../fonts/box-filled.svg?1693997272#round-lined') format('svg');
   font-weight: 600;
   font-style: normal;
 }
@@ -787,6 +787,12 @@
 }
 
 /* '' */
+
+.bb-icon-brand-x:before {
+  content: '\ea12';
+}
+
+/* '' */
 
 .bb-icon-activity-slash:before {
   content: '\ed90';
