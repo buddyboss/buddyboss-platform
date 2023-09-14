@@ -994,8 +994,8 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0 ) {
 		do_action( 'bp_activity_add_user_favorite', $activity_id, $user_id );
 
 		// Add user reaction.
-		if ( ! empty( $activity_id ) && function_exists( 'bb_load_reaction' ) ) {
-			$reaction_id = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
+		if ( function_exists( 'bb_load_reaction' ) ) {
+			$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
 			bb_load_reaction()->bb_add_user_item_reaction(
 				array(
 					'item_type'   => 'activity',
@@ -1089,8 +1089,8 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0 ) {
 				do_action( 'bp_activity_remove_user_favorite', $activity_id, $user_id );
 
 				// Remove user reaction.
-				if ( ! empty( $activity_id ) && function_exists( 'bb_load_reaction' ) ) {
-					$reaction_id = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
+				if ( function_exists( 'bb_load_reaction' ) ) {
+					$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
 					bb_load_reaction()->bb_remove_user_item_reactions(
 						array(
 							'item_id'     => $activity_id,
@@ -6113,11 +6113,9 @@ function bb_activity_migration() {
  * @return void
  */
 function bb_migrate_activity_like_reaction( $paged = 1 ) {
-	global $wpdb, $bb_background_updater;
+	global $wpdb, $bp, $bb_background_updater;
 
-	$reaction_id = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
-
-	$bp_prefix = bp_core_get_table_prefix();
+	$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
 
 	if ( empty( $paged ) ) {
 		$paged = 1;
@@ -6128,7 +6126,7 @@ function bb_migrate_activity_like_reaction( $paged = 1 ) {
 
 	$results = $wpdb->get_results(
 		$wpdb->prepare(
-			"SELECT * FROM {$bp_prefix}bp_activity_meta WHERE meta_key = 'bp_favorite_users' ORDER BY activity_id LIMIT %d offset %d",
+			"SELECT * FROM {$bp->activity->table_name_meta} WHERE meta_key = 'bp_favorite_users' ORDER BY activity_id LIMIT %d offset %d",
 			$per_page,
 			$offset
 		)
@@ -6164,7 +6162,7 @@ function bb_migrate_activity_like_reaction( $paged = 1 ) {
 function bb_activity_like_reaction_background_process( $results, $paged, $reaction_id ) {
 	global $wpdb, $bb_background_updater;
 
-	$bp_prefix = bp_core_get_table_prefix();
+	$user_reaction_table = bb_load_reaction()::$user_reaction_table;
 
 	if ( empty( $results ) ) {
 		return;
@@ -6177,7 +6175,7 @@ function bb_activity_like_reaction_background_process( $results, $paged, $reacti
 			$implode_meta_value = implode( ',', wp_parse_id_list( $meta_value ) );
 			$data               = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT user_id FROM {$bp_prefix}bb_user_reactions
+					"SELECT user_id FROM {$user_reaction_table}
                         WHERE item_id = %d AND reaction_id = %d AND user_id IN ( {$implode_meta_value} )",
 					$result->activity_id,
 					$reaction_id
