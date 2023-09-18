@@ -85,7 +85,7 @@ add_filter( 'bp_get_message_thread_content', 'stripslashes_deep', 1 );
 // Actions
 add_action( 'messages_screen_compose', 'maybe_redirects_to_previous_thread_message' );
 
-add_action( 'groups_join_group', 'bp_group_messages_join_new_member', 10, 2 );
+add_action( 'groups_join_group', 'bp_messages_add_user_to_group_message_thread', 10, 2 );
 add_action( 'groups_accept_invite', 'bp_group_messages_accept_new_member', 10, 2 );
 add_action( 'groups_banned_member', 'bp_group_messages_banned_member', 10, 2 );
 add_action( 'groups_ban_member', 'bp_group_messages_admin_banned_member', 10, 2 );
@@ -372,62 +372,6 @@ function bp_media_messages_save_group_data( &$message ) {
 		}
 	}
 }
-
-/**
- * Add new message to a existing group thread when someone join in group.
- *
- * @since BuddyBoss 1.2.9
- *
- * @param int $group_id Group id.
- * @param int $user_id User id.
- */
-function bp_group_messages_join_new_member( $group_id, $user_id ) {
-	global $wpdb, $bp;
-
-	$group_thread = (int) groups_get_groupmeta( (int) $group_id, 'group_message_thread' );
-
-	if ( $group_thread > 0 ) {
-
-		$first_message     = BP_Messages_Thread::get_first_message( $group_thread );
-		$message_users_ids = bp_messages_get_meta( $first_message->id, 'message_users_ids', true ); // users list.
-		$message_users_ids = explode( ',', $message_users_ids );
-		array_push( $message_users_ids, $user_id );
-
-		bp_messages_update_meta( $first_message->id, 'message_users_ids', implode( ',', $message_users_ids ) );
-
-		$wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->messages->table_name_recipients} ( user_id, thread_id, unread_count ) VALUES ( %d, %d, 0 )", $user_id, $group_thread ) );
-
-		if ( bb_is_last_message_group_join_message( $group_thread, $user_id ) ) {
-			return;
-		}
-
-		remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-		remove_action( 'messages_message_sent', 'bp_messages_message_sent_add_notification', 10 );
-		$new_reply = messages_new_message(
-			array(
-				'thread_id'  => $group_thread,
-				'sender_id'  => $user_id,
-				'subject'    => false,
-				'content'    => '<p> </p>',
-				'date_sent'  => bp_core_current_time(),
-				'error_type' => 'wp_error',
-				'mark_read'  => true,
-			)
-		);
-		add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-		add_action( 'messages_message_sent', 'bp_messages_message_sent_add_notification', 10 );
-
-		$last_message = BP_Messages_Thread::get_last_message( $group_thread );
-		bp_messages_update_meta( $last_message->id, 'group_message_group_joined', 'yes' );
-		bp_messages_update_meta( $last_message->id, 'group_id', $group_id );
-		$joined_user = array(
-			'user_id' => $user_id,
-			'time'    => bp_core_current_time(),
-		);
-		bp_messages_update_meta( $last_message->id, 'group_message_group_joined_users', array( $joined_user ) );
-	}
-}
-
 
 /**
  * Add new message to a existing group thread when someone remove from group.

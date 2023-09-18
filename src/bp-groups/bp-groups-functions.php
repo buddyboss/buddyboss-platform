@@ -691,26 +691,7 @@ function groups_join_group( $group_id, $user_id = 0 ) {
 		groups_update_membermeta( $new_member->id, 'joined_from', 'admin' );
 	}
 
-	// Record this in activity feeds.
-	if ( bp_is_active( 'activity' ) ) {
-		groups_record_activity(
-			array(
-				'type'    => 'joined_group',
-				'item_id' => $group_id,
-				'user_id' => $user_id,
-			)
-		);
-	}
-
-	/**
-	 * Fires after a user joins a group.
-	 *
-	 * @since BuddyPress 1.0.0
-	 *
-	 * @param int $group_id ID of the group.
-	 * @param int $user_id  ID of the user joining the group.
-	 */
-	do_action( 'groups_join_group', $group_id, $user_id );
+	bb_groups_after_join_group( $group_id, $user_id );
 
 	return true;
 }
@@ -5229,4 +5210,41 @@ function bb_groups_settings_default_fallback( $setting_type, $val = '' ) {
 	 * @param string $val Value of group settings.
 	 */
 	return apply_filters( 'bp_group_' . $setting_type . '_status_fallback', $val );
+}
+
+/**
+ * Handle actions after new group member join.
+ *
+ * @since [BBVERSION]
+ *
+ * @param int $group_id Group id.
+ * @param int $user_id  User id.
+ */
+function bb_groups_after_join_group( $group_id, $user_id ) {
+
+	// Record this in activity feeds.
+	if ( bp_is_active( 'activity' ) ) {
+		groups_record_activity(
+			array(
+				'type'    => 'joined_group',
+				'item_id' => $group_id,
+				'user_id' => $user_id,
+			)
+		);
+	}
+
+	// Add user to group message thread.
+	if ( bp_is_active( 'messages' ) ) {
+		bp_messages_add_user_to_group_message_thread( $group_id, $user_id );
+	}
+
+	/**
+	 * Fires after a user joins a group.
+	 *
+	 * @since BuddyPress 1.0.0
+	 *
+	 * @param int $group_id ID of the group.
+	 * @param int $user_id  ID of the user joining the group.
+	 */
+	do_action( 'groups_join_group', $group_id, $user_id );
 }

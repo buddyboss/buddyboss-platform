@@ -772,9 +772,8 @@ class SyncGenerator {
 		}
 
 		$groupMember->save();
-		if ( bp_is_active( 'messages' ) ) {
-			bp_messages_add_user_to_group_message_thread( $this->bpGroupId, $userId );
-		}
+
+		bb_groups_after_join_group( $this->bpGroupId, $userId );
 	}
 
 	/**
