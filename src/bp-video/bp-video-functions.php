@@ -459,7 +459,7 @@ function bp_video_get( $args = '' ) {
 			'sort'             => 'DESC',       // sort ASC or DESC.
 			'order_by'         => false,        // order by.
 
-			'scope'            => false,
+			'scope'            => false,        // public, friends, groups, personal.
 
 			// want to limit the query.
 			'user_id'          => false,
@@ -467,10 +467,11 @@ function bp_video_get( $args = '' ) {
 			'album_id'         => false,
 			'group_id'         => false,
 			'search_terms'     => false,        // Pass search terms as a string.
-			'privacy'          => false,        // privacy of video.
-			'exclude'          => false,        // Comma-separated list of activity IDs to exclude.
-			'count_total'      => false,
-			'moderation_query' => true,         // Filter for exclude moderation query.
+			'privacy'          => false,        // Privacy of video - public, loggedin, onlyme, friends, grouponly, message.
+			'exclude'          => false,        // Comma-separated list of IDs to exclude.
+			'in'               => false,        // Comma-separated list of IDs to include.
+			'moderation_query' => true,         // Filter to include moderation query.
+			'count_total'      => false,        // Whether to count the total number of items in the query.
 		),
 		'video_get'
 	);
@@ -490,6 +491,7 @@ function bp_video_get( $args = '' ) {
 			'scope'            => $r['scope'],
 			'privacy'          => $r['privacy'],
 			'exclude'          => $r['exclude'],
+			'in'               => ! empty( $r['include'] ) ? $r['include'] : $r['in'],
 			'count_total'      => $r['count_total'],
 			'fields'           => $r['fields'],
 			'moderation_query' => $r['moderation_query'],
@@ -870,7 +872,7 @@ function bp_video_preview_image_by_js( $video ) {
 function bp_video_add_generate_thumb_background_process( $video_id ) {
 
 	if ( class_exists( 'FFMpeg\FFMpeg' ) ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
 		$ffmpeg = bb_video_check_is_ffmpeg_binary();
 
 		if ( ! empty( $ffmpeg->error ) && ! empty( trim( $ffmpeg->error ) ) ) {
@@ -905,14 +907,18 @@ function bp_video_add_generate_thumb_background_process( $video_id ) {
 
 		if ( count( $is_default_images ) <= 1 ) {
 
-			$bp_background_updater->push_to_queue(
+			$bb_background_updater->push_to_queue(
 				array(
+					'type'     => 'video',
+					'group'    => 'video_thumbnail',
+					'data_id'  => $video_id,
+					'priority' => 5,
 					'callback' => 'bp_video_background_create_thumbnail',
 					'args'     => array( $video ),
 				)
 			);
 
-			$bp_background_updater->save()->schedule_event();
+			$bb_background_updater->save()->schedule_event();
 
 		}
 
@@ -1531,20 +1537,20 @@ function bp_video_album_get( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'max'              => false,                    // Maximum number of results to return.
+			'max'              => false,           // Maximum number of results to return.
 			'fields'           => 'all',
-			'page'             => 1,                        // Page 1 without a per_page will result in no pagination.
-			'per_page'         => false,                    // results per page.
-			'sort'             => 'DESC',                   // sort ASC or DESC.
+			'page'             => 1,               // Page 1 without a per_page will result in no pagination.
+			'per_page'         => false,           // results per page.
+			'sort'             => 'DESC',          // sort ASC or DESC.
 
 			'search_terms'     => false,           // Pass search terms as a string.
 			'exclude'          => false,           // Comma-separated list of activity IDs to exclude.
 			// want to limit the query.
 			'user_id'          => false,
 			'group_id'         => false,
-			'privacy'          => false,                    // privacy of album.
+			'privacy'          => false,           // privacy of album.
+			'moderation_query' => true,            // Filter to include moderation query.
 			'count_total'      => false,
-			'moderation_query' => true,             // Filter for exclude moderation query.
 		),
 		'video_album_get'
 	);
@@ -3008,6 +3014,7 @@ function bp_video_get_activity_video( $activity_id ) {
 			'order_by' => 'menu_order',
 			'sort'     => 'ASC',
 			'user_id'  => false,
+			'per_page' => 0,
 		);
 
 		$activity = new BP_Activity_Activity( (int) $activity_id );

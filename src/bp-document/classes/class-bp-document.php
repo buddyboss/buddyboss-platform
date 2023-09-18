@@ -343,10 +343,6 @@ class BP_Document {
 		if ( ! empty( $r['in'] ) ) {
 			$in                     = implode( ',', wp_parse_id_list( $r['in'] ) );
 			$where_conditions['in'] = "d.id IN ({$in})";
-
-			// we want to disable limit query when include document ids.
-			$r['page']     = false;
-			$r['per_page'] = false;
 		}
 
 		if ( ! empty( $r['activity_id'] ) ) {
@@ -801,7 +797,7 @@ class BP_Document {
 		$r  = bp_parse_args(
 			$args,
 			array(
-				'scope'               => '',              // Scope - Groups, friends etc.
+				'scope'               => '',              // Document scope - public, groups, friends, personal.
 				'page'                => 1,               // The current page.
 				'per_page'            => 20,              // Document items per page.
 				'max'                 => false,           // Max number of items to return.
@@ -812,11 +808,15 @@ class BP_Document {
 				'in'                  => false,           // Array of ids to limit query by (IN).
 				'search_terms'        => false,           // Terms to search by.
 				'privacy'             => false,           // public, loggedin, onlyme, friends, grouponly, message.
-				'count_total'         => false,           // Whether or not to use count_total.
+				'count_total'         => false,           // Whether to use count_total.
 				'user_directory'      => true,
-				'folder_id'           => 0,
-				'meta_query_document' => false,
-				'meta_query_folder'   => false,
+				'folder_id'           => 0,               // Folder id to filter on.
+				'meta_query_document' => false,           // Filter by activity meta. See WP_Meta_Query for format.
+				'meta_query_folder'   => false,           // Filter by activity meta. See WP_Meta_Query for format.
+				'moderation_query'    => false,           // Filter for exclude moderation.
+				'activity_id'         => false,           // Filter by activity id.
+				'group_id'            => false,           // Filter by group id.
+				'user_id'             => false,           // Filter by user id.
 			)
 		);
 
@@ -2040,10 +2040,10 @@ class BP_Document {
 			$document_meta_query = new WP_Meta_Query( $meta_query );
 
 			// WP_Meta_Query expects the table name at
-			// $wpdb->document_meta.
-			$wpdb->documentmeta = buddypress()->document->table_name_folder_meta;
+			// $wpdb->document_folder_meta.
+			$wpdb->document_foldermeta = buddypress()->document->table_name_folder_meta;
 
-			$meta_sql = $document_meta_query->get_sql( 'document_folder', 'f', 'id' );
+			$meta_sql = $document_meta_query->get_sql( 'folder', 'f', 'id' );
 
 			// Strip the leading AND - BP handles it in get().
 			$sql_array['where'] = preg_replace( '/^\sAND/', '', $meta_sql['where'] );

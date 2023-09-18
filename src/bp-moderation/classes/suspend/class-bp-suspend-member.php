@@ -86,16 +86,18 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int $user_id user id.
+	 * @since BuddyBoss 2.4.20
+	 * Introduce new params $args.
+	 *
+	 * @param int   $user_id user id.
+	 * @param array $args    Suspend users arg.
 	 */
-	public static function suspend_user( $user_id ) {
-		BP_Core_Suspend::add_suspend(
-			array(
-				'item_id'        => $user_id,
-				'item_type'      => self::$type,
-				'user_suspended' => 1,
-			)
-		);
+	public static function suspend_user( $user_id, $args = array() ) {
+		$args['item_id']        = $user_id;
+		$args['item_type']      = self::$type;
+		$args['user_suspended'] = 1;
+
+		BP_Core_Suspend::add_suspend( $args );
 
 		/**
 		 * Add related content of reported item into hidden list
@@ -121,16 +123,18 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int $user_id user id.
+	 * @since BuddyBoss 2.4.20
+	 * Introduce new params $args.
+	 *
+	 * @param int   $user_id user id.
+	 * @param array $args    Unsuspend users arg.
 	 */
-	public static function unsuspend_user( $user_id ) {
-		BP_Core_Suspend::add_suspend(
-			array(
-				'item_id'        => $user_id,
-				'item_type'      => self::$type,
-				'user_suspended' => 0,
-			)
-		);
+	public static function unsuspend_user( $user_id, $args = array() ) {
+		$args['item_id']        = $user_id;
+		$args['item_type']      = self::$type;
+		$args['user_suspended'] = 0;
+
+		BP_Core_Suspend::add_suspend( $args );
 
 		/**
 		 * Remove related content of reported item from hidden list.
@@ -371,7 +375,11 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function manage_hidden_member( $member_id, $hide_sitewide, $args = array() ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
+
+		if ( empty( $member_id ) ) {
+			return;
+		}
 
 		$force_bg_process = false;
 		if ( isset( $args['force_bg_process'] ) ) {
@@ -399,20 +407,30 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		$suspend_args = self::validate_keys( $suspend_args );
 
+		$group_name_args = array_merge(
+			$suspend_args,
+			array(
+				'custom_action' => 'hide',
+			)
+		);
+		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
+
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
 		if ( $this->background_disabled || ! $force_bg_process ) {
 			$this->hide_related_content( $member_id, $hide_sitewide, $args );
 		} else {
-			$bp_background_updater->data(
+			$bb_background_updater->data(
 				array(
-					array(
-						'callback' => array( $this, 'hide_related_content' ),
-						'args'     => array( $member_id, $hide_sitewide, $args ),
-					),
+					'type'              => $this->item_type,
+					'group'             => $group_name,
+					'data_id'           => $member_id,
+					'secondary_data_id' => $this->item_type . '_' . $member_id,
+					'callback'          => array( $this, 'hide_related_content' ),
+					'args'              => array( $member_id, $hide_sitewide, $args ),
 				)
 			);
-			$bp_background_updater->save()->schedule_event();
+			$bb_background_updater->save()->schedule_event();
 		}
 	}
 
@@ -427,7 +445,11 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function manage_unhidden_member( $member_id, $hide_sitewide, $force_all, $args = array() ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
+
+		if ( empty( $member_id ) ) {
+			return;
+		}
 
 		$force_bg_process = false;
 		if ( isset( $args['force_bg_process'] ) ) {
@@ -455,20 +477,30 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		$suspend_args = self::validate_keys( $suspend_args );
 
+		$group_name_args = array_merge(
+			$suspend_args,
+			array(
+				'custom_action' => 'unhide',
+			)
+		);
+		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
+
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
 		if ( $this->background_disabled || ! $force_bg_process ) {
 			$this->unhide_related_content( $member_id, $hide_sitewide, $force_all, $args );
 		} else {
-			$bp_background_updater->data(
+			$bb_background_updater->data(
 				array(
-					array(
-						'callback' => array( $this, 'unhide_related_content' ),
-						'args'     => array( $member_id, $hide_sitewide, $force_all, $args ),
-					),
-				)
+					'type'              => $this->item_type,
+					'group'             => $group_name,
+					'data_id'           => $member_id,
+					'secondary_data_id' => $this->item_type . '_' . $member_id,
+					'callback'          => array( $this, 'unhide_related_content' ),
+					'args'              => array( $member_id, $hide_sitewide, $force_all, $args ),
+				),
 			);
-			$bp_background_updater->save()->schedule_event();
+			$bb_background_updater->save()->schedule_event();
 		}
 	}
 
@@ -639,7 +671,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @return array
 	 */
 	protected function get_related_contents( $member_id, $args = array() ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
 
 		$action           = ! empty( $args['action'] ) ? $args['action'] : '';
 		$page             = ! empty( $args['page'] ) ? $args['page'] : - 1;
@@ -659,16 +691,18 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 					$chunk_results = array_chunk( $friend_ids, $min_count );
 					if ( ! empty( $chunk_results ) ) {
 						foreach ( $chunk_results as $chunk_result ) {
-							$bp_background_updater->data(
+							$bb_background_updater->data(
 								array(
-									array(
-										'callback' => array( $this, 'bb_update_member_friend_count' ),
-										'args'     => array( $member_id, $chunk_result, $action ),
-									),
-								)
+									'type'              => 'member_count',
+									'group'             => 'bb_update_member_friend_count',
+									'data_id'           => $member_id,
+									'secondary_data_id' => $member_id,
+									'callback'          => array( $this, 'bb_update_member_friend_count' ),
+									'args'              => array( $member_id, $chunk_result, $action ),
+								),
 							);
 
-							$bp_background_updater->save()->dispatch();
+							$bb_background_updater->save()->dispatch();
 						}
 					}
 				}
@@ -682,15 +716,17 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 			if ( count( $group_ids ) > $min_count ) {
 				foreach ( array_chunk( $group_ids, $min_count ) as $chunk ) {
-					$bp_background_updater->data(
+					$bb_background_updater->data(
 						array(
-							array(
-								'callback' => 'bb_update_group_member_count',
-								'args'     => array( $chunk ),
-							),
-						)
+							'type'              => 'group_member_count',
+							'group'             => 'bb_update_group_member_count',
+							'data_id'           => $chunk,
+							'secondary_data_id' => $member_id,
+							'callback'          => 'bb_update_group_member_count',
+							'args'              => array( $chunk ),
+						),
 					);
-					$bp_background_updater->save()->schedule_event();
+					$bb_background_updater->save()->schedule_event();
 				}
 			} else {
 				bb_update_group_member_count( $group_ids );

@@ -2054,7 +2054,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		if ( 'group' === $message_from && $bp_get_the_thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
 			$is_group_thread = 1;
 
-			if ( isset( $thread->feedback_erro ) && 'notice' !== $thread->feedback_error['type'] ) {
+			if ( isset( $thread->feedback_error ) && 'notice' !== $thread->feedback_error['type'] ) {
 				unset( $thread->feedback_error );
 			}
 		}
@@ -2482,6 +2482,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					'sort'             => 'ASC',
 					'user_id'          => false,
 					'moderation_query' => $has_message_updated,
+					'per_page'         => 0,
 				)
 			) ) {
 				$thread->messages[ $i ]['media'] = array();
@@ -2518,6 +2519,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'sort'             => 'ASC',
 						'user_id'          => false,
 						'moderation_query' => $has_message_updated,
+						'per_page'         => 0,
 					)
 				)
 			) {
@@ -2577,6 +2579,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					'order_by'         => 'menu_order',
 					'sort'             => 'ASC',
 					'moderation_query' => $has_message_updated,
+					'per_page'         => 0,
 				)
 			) ) {
 				$thread->messages[ $i ]['document'] = array();
