@@ -1177,6 +1177,7 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 	// from being encoded with HTML entities, wrapped in paragraph tags, etc...
 	remove_all_filters( 'bbp_get_reply_content' );
 	remove_all_filters( 'bbp_get_topic_title' );
+	add_filter( 'bbp_get_reply_content', 'convert_smilies', 20 );
 
 	// Strip tags from text and setup mail data.
 	$topic_title   = wp_strip_all_tags( bbp_get_topic_title( $topic_id ) );
@@ -1308,6 +1309,8 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 	// from being encoded with HTML entities, wrapped in paragraph tags, etc...
 	remove_all_filters( 'bbp_get_topic_content' );
 	remove_all_filters( 'bbp_get_topic_title' );
+	add_filter( 'bbp_get_topic_content', 'convert_smilies', 20 );
+
 
 	// Strip tags from text and setup mail data.
 	$topic_title   = wp_strip_all_tags( bbp_get_topic_title( $topic_id ) );
