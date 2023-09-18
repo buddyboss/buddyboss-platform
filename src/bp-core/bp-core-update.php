@@ -487,6 +487,11 @@ function bp_version_updater() {
 			if ( function_exists( 'bb_messages_migration' ) ) {
 				bb_messages_migration();
 			}
+
+			// Run migration about activity.
+			if ( function_exists( 'bb_activity_migration' ) ) {
+				bb_activity_migration();
+			}
 		}
 	}
 

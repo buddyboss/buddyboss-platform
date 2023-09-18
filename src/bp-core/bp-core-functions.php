@@ -8968,3 +8968,16 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 		return $is_allowed;
 	}
 }
+
+/**
+ * Function to load the instance of the class BB_Reaction.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return null|BB_Reaction|void
+ */
+function bb_load_reaction() {
+	if ( class_exists( 'BB_Reaction' ) ) {
+		return BB_Reaction::instance();
+	}
+}
