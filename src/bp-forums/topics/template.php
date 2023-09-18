@@ -134,7 +134,20 @@ function bbp_get_topics_pagination_base( $forum_id = 0 ) {
 			if ( has_shortcode( get_the_content(), 'bbp-forum-index' ) ) {
 				$base = bbp_get_topics_url();
 			} else {
-				$base = get_permalink();
+				// If archive page set as homepage.
+				if ( bbp_is_forum_archive() ) {
+					if ( 'forums' === bbp_show_on_root() ) {
+						$base = bbp_get_topics_url();
+					} elseif ( 'topics' === bbp_show_on_root() ) {
+						$base = bbp_get_forums_url();
+					}
+				} elseif ( bbp_is_topic_archive() ) {
+					$base = bbp_get_topics_url();
+                    
+					// Page or single post.
+				} else {
+					$base = get_permalink();
+				}
 			}
 
 			// View.
