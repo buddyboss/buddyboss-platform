@@ -937,7 +937,7 @@ a.layout-grid-view {
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list > li {
-  min-width: 300px;
+  min-width: 280px;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-cover.cover-large a {
@@ -7565,6 +7565,11 @@ body.no-js .single-item-header .js-self-profile-button {
 
 #item-header-cover-image #item-header-avatar img.avatar {
   max-width: 150px;
+}
+
+#item-header-cover-image #item-header-content {
+  position: relative;
+  z-index: 2;
 }
 
 #item-header-cover-image #item-header-content .bp-group-type {
@@ -24227,7 +24232,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(180deg);
+  transform: rotateY(-180deg);
 }
 
 @media screen and (max-width: 768px) {
