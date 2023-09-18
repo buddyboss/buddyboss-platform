@@ -2998,6 +2998,7 @@ function bp_media_get_activity_media( $activity_id ) {
 			'order_by' => 'menu_order',
 			'sort'     => 'ASC',
 			'user_id'  => false,
+			'per_page' => 0,
 		);
 
 		$activity = new BP_Activity_Activity( (int) $activity_id );
