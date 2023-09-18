@@ -474,6 +474,10 @@ function bp_version_updater() {
 			if ( function_exists( 'bb_moderation_migration_on_update' ) ) {
 				bb_moderation_migration_on_update();
 			}
+
+			if ( function_exists( 'bb_xprofile_update_social_network_fields' ) ) {
+				bb_xprofile_update_social_network_fields();
+			}
 		}
 	}
 
