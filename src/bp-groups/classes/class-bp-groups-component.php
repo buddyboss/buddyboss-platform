@@ -713,31 +713,14 @@ class BP_Groups_Component extends BP_Component {
 			// member and does not have an outstanding invitation,
 			// show a "Request Membership" nav item.
 			if ( groups_check_for_membership_request( bp_loggedin_user_id(), $this->current_group->id ) || bp_current_user_can( 'groups_request_membership', array( 'group_id' => $this->current_group->id ) ) ) {
-
-				// Don't Show the menu if restrict invite is enabled and member is not a part of parent group.
-				$parent_group_id = bp_get_parent_group_id( $this->current_group->id );
-				if ( isset( $parent_group_id ) && $parent_group_id > 0 && true === bp_enable_group_hierarchies() && true === bp_enable_group_restrict_invites() ) {
-					$is_member = groups_is_user_member( bp_loggedin_user_id(), $parent_group_id );
-					if ( false !== $is_member ) {
-						$sub_nav[] = array(
-							'name'            => __( 'Request Access', 'buddyboss' ),
-							'slug'            => 'request-membership',
-							'parent_url'      => $group_link,
-							'parent_slug'     => $this->current_group->slug,
-							'screen_function' => 'groups_screen_group_request_membership',
-							'position'        => 30,
-						);
-					}
-				} else {
-					$sub_nav[] = array(
-						'name'            => __( 'Request Access', 'buddyboss' ),
-						'slug'            => 'request-membership',
-						'parent_url'      => $group_link,
-						'parent_slug'     => $this->current_group->slug,
-						'screen_function' => 'groups_screen_group_request_membership',
-						'position'        => 30,
-					);
-				}
+				$sub_nav[] = array(
+					'name'            => __( 'Request Access', 'buddyboss' ),
+					'slug'            => 'request-membership',
+					'parent_url'      => $group_link,
+					'parent_slug'     => $this->current_group->slug,
+					'screen_function' => 'groups_screen_group_request_membership',
+					'position'        => 30,
+				);
 			}
 
 			if ( bp_is_active( 'friends' ) && bp_groups_user_can_send_invites() ) {
