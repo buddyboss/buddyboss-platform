@@ -2482,6 +2482,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					'sort'             => 'ASC',
 					'user_id'          => false,
 					'moderation_query' => $has_message_updated,
+					'per_page'         => 0,
 				)
 			) ) {
 				$thread->messages[ $i ]['media'] = array();
@@ -2518,6 +2519,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'sort'             => 'ASC',
 						'user_id'          => false,
 						'moderation_query' => $has_message_updated,
+						'per_page'         => 0,
 					)
 				)
 			) {
@@ -2577,6 +2579,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					'order_by'         => 'menu_order',
 					'sort'             => 'ASC',
 					'moderation_query' => $has_message_updated,
+					'per_page'         => 0,
 				)
 			) ) {
 				$thread->messages[ $i ]['document'] = array();
