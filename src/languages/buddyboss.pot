@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.4.20\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-09-18 10:26:29+00:00\n"
+"POT-Creation-Date: 2023-09-18 10:35:06+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -6597,7 +6597,7 @@ msgstr ""
 #: bp-core/bp-core-avatars.php:355
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:873
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/change-avatar.php:17
-#: bp-xprofile/bp-xprofile-functions.php:2141
+#: bp-xprofile/bp-xprofile-functions.php:2149
 #: bp-xprofile/classes/class-bp-xprofile-component.php:287
 #: bp-xprofile/classes/class-bp-xprofile-component.php:402
 #: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:141
@@ -9273,7 +9273,7 @@ msgstr ""
 #: bp-members/classes/class-bp-core-whos-online-widget.php:177
 #: bp-members/classes/class-bp-core-whos-online-widget.php:406
 #: bp-members/classes/class-bp-core-whos-online-widget.php:458
-#: bp-xprofile/bp-xprofile-functions.php:1714
+#: bp-xprofile/bp-xprofile-functions.php:1722
 msgid "See all"
 msgstr ""
 
@@ -10512,7 +10512,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:443
 #: bp-groups/classes/class-bp-groups-component.php:967
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:882
-#: bp-xprofile/bp-xprofile-functions.php:2162
+#: bp-xprofile/bp-xprofile-functions.php:2170
 #: bp-xprofile/classes/class-bp-xprofile-component.php:300
 #: bp-xprofile/classes/class-bp-xprofile-component.php:412
 #: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:144
@@ -32315,6 +32315,10 @@ msgstr ""
 
 #: bp-xprofile/bp-xprofile-functions.php:1670
 msgid "YouTube"
+msgstr ""
+
+#: bp-xprofile/bp-xprofile-functions.php:1678
+msgid "X"
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-repeaters.php:772
