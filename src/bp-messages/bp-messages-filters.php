@@ -618,7 +618,7 @@ function bp_group_messages_unbanned_member( $group_id, $user_id ) {
 }
 
 /**
- * Remove member to Group thread when h/she joined the group.
+ * Add member to Group thread when h/she joined the group.
  *
  * @since BuddyBoss 1.3.0
  *
@@ -683,7 +683,7 @@ function bp_messages_add_user_to_group_message_thread( $group_id, $user_id ) {
 }
 
 /**
- * Add member to Group thread when h/she joined the group.
+ * Remove member to Group thread when h/she joined the group.
  *
  * @since BuddyBoss 1.3.0
  *
