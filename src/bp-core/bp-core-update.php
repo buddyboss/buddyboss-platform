@@ -483,6 +483,10 @@ function bp_version_updater() {
 			if ( class_exists( '\BuddyBoss\Performance\Performance' ) ) {
 				\BuddyBoss\Performance\Performance::instance()->on_activation();
 			}
+
+			if ( function_exists( 'bb_messages_migration' ) ) {
+				bb_messages_migration();
+			}
 		}
 	}
 
