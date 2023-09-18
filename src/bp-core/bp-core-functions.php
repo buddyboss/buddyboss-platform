@@ -594,8 +594,14 @@ function bp_core_update_directory_page_ids( $blog_page_ids ) {
 function bp_core_get_directory_pages() {
 	global $wpdb;
 
+	$cache_key = 'directory_pages';
+
+	if ( is_multisite() ) {
+		$cache_key = $cache_key . '_' . get_current_blog_id();
+	}
+
 	// Look in cache first.
-	$pages = wp_cache_get( 'directory_pages', 'bp_pages' );
+	$pages = wp_cache_get( $cache_key, 'bp_pages' );
 
 	if ( false === $pages ) {
 
@@ -639,7 +645,7 @@ function bp_core_get_directory_pages() {
 			}
 		}
 
-		wp_cache_set( 'directory_pages', $pages, 'bp_pages' );
+		wp_cache_set( $cache_key, $pages, 'bp_pages' );
 	}
 
 	/**
@@ -8973,5 +8979,18 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 		return true;
 	} else {
 		return $is_allowed;
+	}
+}
+
+/**
+ * Function to load the instance of the class BB_Reaction.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return null|BB_Reaction|void
+ */
+function bb_load_reaction() {
+	if ( class_exists( 'BB_Reaction' ) ) {
+		return BB_Reaction::instance();
 	}
 }
