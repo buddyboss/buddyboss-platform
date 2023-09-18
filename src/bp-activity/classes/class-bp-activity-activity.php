@@ -1666,7 +1666,7 @@ class BP_Activity_Activity {
 				/**
 				 * Filters the MySQL From query for order by activity comment.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 2.4.20
 				 *
 				 * @param string $misc Activity Comment from query
 				 */

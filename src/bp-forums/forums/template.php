@@ -934,7 +934,7 @@ function bbp_list_forums( $args = '' ) {
 /**
  * Output a list of forums recursively.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.20
  *
  * @param mixed $args The function supports these args:
  *                    - before: To put before the output. Defaults to '<ul class="bbp-forums">'
@@ -1020,7 +1020,7 @@ function bb_get_list_forums_recursively( $args = array() ) {
 		/**
 		 * Modify the output of a list of forums recursively using filters.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @param string $output The processed output of the list of forums.
 		 * @param array  $r      An array of parameters and settings related to the output.
