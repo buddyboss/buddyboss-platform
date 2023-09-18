@@ -55,7 +55,8 @@ if ( groups_check_user_has_invite( bp_loggedin_user_id(), bp_get_current_group_i
 				(
 					! empty( $parent_group_id ) &&
 					false !== $is_member
-				)
+				) ||
+				false === bp_enable_group_restrict_invites()
 			)
 		) { ?>
 		<p>
@@ -72,7 +73,7 @@ if ( groups_check_user_has_invite( bp_loggedin_user_id(), bp_get_current_group_i
 
 			<?php wp_nonce_field( 'groups_request_membership' ); ?>
 		</form><!-- #request-membership-form -->
-	<?php } elseif ( ! empty( $parent_group_id ) && true === bp_enable_group_hierarchies() && true === bp_enable_group_restrict_invites() ) {
+	<?php } else {
 			$parent_group  = groups_get_group( $parent_group_id );
 			printf( __( 'First, join the parent group "%s" and then you can access the child group "%s".', 'buddyboss' ), $parent_group->name, bp_get_group_name() );
 	} ?>
