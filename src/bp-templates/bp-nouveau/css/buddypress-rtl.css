@@ -2129,6 +2129,12 @@ a.layout-grid-view {
   padding-bottom: 10px;
 }
 
+.bp-nouveau-activity-form-placeholder-.modal-popup .focus-in--privacy .whats-new-scroll-view,
+.activity-update-form.modal-popup .focus-in--privacy .whats-new-scroll-view {
+  min-height: auto;
+  padding-bottom: 0;
+}
+
 .bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-form,
 .activity-update-form.modal-popup #whats-new-form {
   width: 800px;
@@ -24221,7 +24227,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(180deg);
+  transform: rotateY(-180deg);
 }
 
 @media screen and (max-width: 768px) {

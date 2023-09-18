@@ -101,7 +101,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			wp_enqueue_script(
 				'bp-admin',
 				buddypress()->plugin_url . 'bp-core/admin/js/settings-page.js',
-				array( 'jquery' ),
+				array( 'jquery', 'jquery-ui-sortable' ),
 				buddypress()->version,
 				true
 			);
@@ -241,10 +241,10 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			$cover_dimensions = bb_attachments_get_default_custom_cover_image_dimensions();
 
-			$localize_arg     = array(
-				'ajax_url'            => admin_url( 'admin-ajax.php' ),
-				'select_document'     => esc_js( __( 'Please upload a file to check the MIME Type.', 'buddyboss' ) ),
-				'tools'               => array(
+			$localize_arg = array(
+				'ajax_url'                     => admin_url( 'admin-ajax.php' ),
+				'select_document'              => esc_js( __( 'Please upload a file to check the MIME Type.', 'buddyboss' ) ),
+				'tools'                        => array(
 					'default_data'  => array(
 						'submit_button_message' => esc_js( __( 'Are you sure you want to import data? This action is going to alter your database. If this is a live website you may want to create a backup of your database first.', 'buddyboss' ) ),
 						'clear_button_message'  => esc_js( __( 'Are you sure you want to delete all Default Data content? Content that was created by you and others, and not by this default data installer, will not be deleted.', 'buddyboss' ) ),
@@ -253,15 +253,15 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 						'validate_site_id_message' => esc_html__( 'Select site to repair the forums', 'buddyboss' ),
 					),
 				),
-				'moderation'          => array(
+				'moderation'                   => array(
 					'suspend_confirm_message'   => esc_js( __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
 					'unsuspend_confirm_message' => esc_js( __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
 				),
-				'cover_size_alert'    => array(
+				'cover_size_alert'             => array(
 					'profile' => esc_html__( 'Changing the Cover Image Size will reposition all of your members cover images. Are you sure you wish to save these changes?', 'buddyboss' ),
 					'group'   => esc_html__( 'Changing the Cover Image Size will reposition all of your groups cover images. Are you sure you wish to save these changes?', 'buddyboss' ),
 				),
-				'avatar_settings'     => array(
+				'avatar_settings'              => array(
 					'wordpress_show_avatar'    => bp_get_option( 'show_avatars' ),
 					'wordpress_avatar_default' => bp_get_option( 'avatar_default', 'mystery' ),
 					'wordpress_avatar_types'   => array(
@@ -274,7 +274,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 						'retro',
 					),
 				),
-				'profile_group_cover' => array(
+				'profile_group_cover'          => array(
 					'select_file'       => esc_js( esc_html__( 'No file was uploaded.', 'buddyboss' ) ),
 					'file_upload_error' => esc_js( esc_html__( 'There was a problem uploading the cover photo.', 'buddyboss' ) ),
 					'feedback_messages' => array(
@@ -302,12 +302,18 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 						'json'   => true,
 					),
 				),
-				'member_directories'  => array(
+				'member_directories'           => array(
 					'profile_actions'    => function_exists( 'bb_get_member_directory_profile_actions' ) ? bb_get_member_directory_profile_actions() : array(),
 					'profile_action_btn' => function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '',
 				),
-				'email_template'      => array(
+				'email_template'               => array(
 					'html' => $email_template,
+				),
+				'bb_registration_restrictions' => array(
+					'feedback_messages' => array(
+						'empty'     => esc_html__( 'The rule content cannot be empty.', 'buddyboss' ),
+						'duplicate' => esc_html__( 'The rule content cannot be duplicate.', 'buddyboss' ),
+					),
 				),
 			);
 
@@ -400,14 +406,42 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		 */
 		public function settings_save() {
 			global $wp_settings_fields;
-
 			$fields = isset( $wp_settings_fields[ $this->tab_name ] ) ? (array) $wp_settings_fields[ $this->tab_name ] : array();
 
 			foreach ( $fields as $section => $settings ) {
 				foreach ( $settings as $setting_name => $setting ) {
-
-					if ( in_array( $setting_name, array( 'bp-enable-private-network-public-content', 'bb-enable-private-rss-feeds-public-content', 'bb-enable-private-rest-apis-public-content' ), true ) ) {
+					if (
+						in_array(
+							$setting_name,
+							array(
+								'bp-enable-private-network-public-content',
+								'bb-enable-private-rss-feeds-public-content',
+								'bb-enable-private-rest-apis-public-content',
+							),
+							true
+						)
+					) {
 						$value = isset( $_POST[ $setting_name ] ) ? sanitize_textarea_field( wp_unslash( $_POST[ $setting_name ] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+					} elseif (
+						in_array(
+							$setting_name,
+							array(
+								'bb-domain-restrictions',
+								'bb-email-restrictions',
+							),
+							true
+						)
+					) {
+
+						unset( $_POST[ $setting_name ]['placeholder_priority_index'] );
+						$value = $_POST[ $setting_name ];
+
+						if ( 'bb-domain-restrictions' === $setting_name ) {
+
+							//Re-index as per priority.
+							$value = array_values( $value );
+						}
+
 					} else {
 						$value = isset( $_POST[ $setting_name ] ) ? ( is_array( $_POST[ $setting_name ] ) ? map_deep( wp_unslash( $_POST[ $setting_name ] ), 'sanitize_text_field' ) : sanitize_text_field( wp_unslash( $_POST[ $setting_name ] ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 					}

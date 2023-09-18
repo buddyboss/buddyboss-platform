@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.2.2
 Requires PHP: 5.6.20
-Stable tag: 2.4.10
+Stable tag: 2.4.20
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,31 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.4.20 =
+* Enhancement: Core - The Background Process working when suspending and un-suspending users got stuck creating an infinite loop
+* Enhancement: Custom Development - Add the missing hooks into the Activity Comments
+* Bug: Activity - New Activity Post ‘Privacy’ option had white spacing above the options
+* Bug: Activity - When editing a posts Giff within Discussion or Discussion reply, the Giff still remained in the Activity Feed.
+* Bug: Core - Add default parameters and documentation to media, documents and videos "get" functions
+* Bug: Core - Display name setting code correction
+* Bug: Core - Fix typo in the core template
+* Bug: Core - Hyperlink was not working in the Safari browser on Activity feed posts
+* Bug: Core - Profile field "website" did not check for URL validation
+* Bug: Core - Removed the unsupported URL preview that WordPress Embed shows when not supporting to just showing the link in this case
+* Bug: Core - When WP DEBUG is turned on with Error Display on, this displayed warning on the "Admin" Profile page
+* Bug: Forums - When adding YouTube link before text caused the preview to glitch
+* Bug: Forums - Forum and discussion Image Missing in Email
+* Bug: Forums - Multilevel Forums were not displaying correctly on BB Forums List widget.
+* Bug: Forums - Topic in hidden/private forum is still visible within the users profile
+* Bug: Forums - URL previews were not showing correctly for both topics and replies.
+* Bug: Forums - When going back to a draft post then the ‘Post’ button would be greyed out
+* Bug: Media - When leaving a Private or Hidden groups, users stall had permissions to upload and download media from that group
+* Bug: Messages - Message inbox the mark as Unread/Read option was showing different in the message to the sidebar ellipses option
+* Bug: Notifications - Deleted group posts still showed the Notification and return Not Found
+
+= 2.4.11 =
+* New Feature! - This new 'Restrict Registration' feature allows you to restrict or allow specific email or domains from registering on your site
 
 = 2.4.10 =
 * Bug: Activity - If a link contains a @user mention, the rest of the link was being cut off
