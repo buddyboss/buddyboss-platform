@@ -85,7 +85,6 @@ add_filter( 'bp_get_message_thread_content', 'stripslashes_deep', 1 );
 // Actions
 add_action( 'messages_screen_compose', 'maybe_redirects_to_previous_thread_message' );
 
-add_action( 'groups_join_group', 'bp_messages_add_user_to_group_message_thread', 10, 2 );
 add_action( 'groups_accept_invite', 'bp_group_messages_accept_new_member', 10, 2 );
 add_action( 'groups_banned_member', 'bp_group_messages_banned_member', 10, 2 );
 add_action( 'groups_ban_member', 'bp_group_messages_admin_banned_member', 10, 2 );
@@ -679,7 +678,6 @@ function bp_messages_add_user_to_group_message_thread( $group_id, $user_id ) {
 			bp_messages_update_meta( $last_message->id, 'group_message_group_joined_users', array( $joined_user ) );
 		}
 	}
-
 }
 
 /**
