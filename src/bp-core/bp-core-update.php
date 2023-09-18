@@ -475,6 +475,10 @@ function bp_version_updater() {
 				bb_moderation_migration_on_update();
 			}
 
+			if ( function_exists( 'bb_xprofile_update_social_network_fields' ) ) {
+				bb_xprofile_update_social_network_fields();
+			}
+
 			// Create the table when class loaded.
 			if ( class_exists( '\BuddyBoss\Performance\Performance' ) ) {
 				\BuddyBoss\Performance\Performance::instance()->on_activation();
