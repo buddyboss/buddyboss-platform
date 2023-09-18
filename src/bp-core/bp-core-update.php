@@ -468,6 +468,22 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version !== $current_db ) {
+			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
+
+			// Run migration about the moderation.
+			if ( function_exists( 'bb_moderation_migration_on_update' ) ) {
+				bb_moderation_migration_on_update();
+			}
+
+			if ( function_exists( 'bb_xprofile_update_social_network_fields' ) ) {
+				bb_xprofile_update_social_network_fields();
+			}
+
+			// Create the table when class loaded.
+			if ( class_exists( '\BuddyBoss\Performance\Performance' ) ) {
+				\BuddyBoss\Performance\Performance::instance()->on_activation();
+			}
+
 			if ( function_exists( 'bb_messages_migration' ) ) {
 				bb_messages_migration();
 			}
@@ -1041,6 +1057,11 @@ function bp_add_activation_redirect() {
 	// Bail if activating from network, or bulk.
 	if ( isset( $_GET['activate-multi'] ) ) {
 		return;
+	}
+
+	// Install the API cache table on plugin activation if mu file was found.
+	if ( class_exists( '\BuddyBoss\Performance\Performance' ) ) {
+		\BuddyBoss\Performance\Performance::instance()->on_activation();
 	}
 
 	// Record that this is a new installation, so we show the right
