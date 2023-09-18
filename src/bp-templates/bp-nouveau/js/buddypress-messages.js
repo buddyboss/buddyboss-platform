@@ -2307,6 +2307,18 @@ window.bp = window.bp || {};
 						} );
 					}
 
+					bp.Nouveau.Messages.mediumEditor.subscribe( 'editablePaste', function ( e ) {
+						setTimeout( function() {
+							// Wrap all target <li> elements in a single <ul>
+							var targetLiElements = $(e.target).find('li').filter(function() {
+								return !$(this).parent().is('ul') && !$(this).parent().is('ol');
+							});
+							if (targetLiElements.length > 0) {
+								targetLiElements.wrapAll('<ul></ul>');
+							}
+						}, 0 );
+					});
+
 					$( document ).on( 'keyup', '.bp-messages-content .medium-editor-toolbar-input', function ( event ) {
 
 						var URL = event.target.value;
