@@ -937,7 +937,7 @@ a.layout-grid-view {
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list > li {
-  min-width: 300px;
+  min-width: 280px;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-cover.cover-large a {
@@ -2127,6 +2127,12 @@ a.layout-grid-view {
   overflow: auto;
   width: 100%;
   padding-bottom: 10px;
+}
+
+.bp-nouveau-activity-form-placeholder-.modal-popup .focus-in--privacy .whats-new-scroll-view,
+.activity-update-form.modal-popup .focus-in--privacy .whats-new-scroll-view {
+  min-height: auto;
+  padding-bottom: 0;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-form,
@@ -7559,6 +7565,11 @@ body.no-js .single-item-header .js-self-profile-button {
 
 #item-header-cover-image #item-header-avatar img.avatar {
   max-width: 150px;
+}
+
+#item-header-cover-image #item-header-content {
+  position: relative;
+  z-index: 2;
 }
 
 #item-header-cover-image #item-header-content .bp-group-type {

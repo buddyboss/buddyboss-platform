@@ -276,14 +276,6 @@ jQuery( document ).ready(
 
 				});
 
-				if ( 'undefined' !== typeof bp.Nouveau.TopicReplyDraft ) {
-					jQuery( 'form[name="new-post"]' ).each(
-						function () {
-							var topicReplyDraft = new bp.Nouveau.TopicReplyDraft( jQuery( this ) );
-							topicReplyDraft.displayTopicReplyDraft();
-						}
-					);
-				}
 			}
 
 			// Add Click event to show / hide text formatting Toolbar for reply form.
@@ -453,14 +445,6 @@ jQuery( document ).ready(
 
 				});
 
-				if ( 'undefined' !== typeof bp.Nouveau.TopicReplyDraft ) {
-					jQuery( 'form[name="new-post"]' ).each(
-						function () {
-							var topicReplyDraft = new bp.Nouveau.TopicReplyDraft( jQuery( this ) );
-							topicReplyDraft.displayTopicReplyDraft();
-						}
-					);
-				}
 			}
 
 			// Add Click event to show / hide text formatting Toolbar for topic form.

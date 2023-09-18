@@ -143,6 +143,7 @@ function bp_media_activity_entry() {
 		'order_by' => 'menu_order',
 		'sort'     => 'ASC',
 		'user_id'  => false,
+		'per_page' => 0,
 	);
 
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() ) {
@@ -239,6 +240,7 @@ function bp_media_activity_append_media( $content, $activity ) {
 			'include'  => $media_ids,
 			'order_by' => 'menu_order',
 			'sort'     => 'ASC',
+			'per_page' => 0,
 		);
 
 		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
@@ -331,6 +333,7 @@ function bp_media_activity_comment_entry( $comment_id ) {
 		'sort'     => 'ASC',
 		'user_id'  => false,
 		'privacy'  => array(),
+		'per_page' => 0,
 	);
 
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
@@ -815,6 +818,7 @@ function bp_media_forums_embed_attachments( $content, $id ) {
 			'order_by' => 'menu_order',
 			'privacy'  => array( 'forums' ),
 			'sort'     => 'ASC',
+			'per_page' => 0,
 		)
 	) ) {
 		ob_start();
@@ -963,6 +967,13 @@ function bp_media_forums_save_gif_data( $post_id ) {
 	} else {
 		delete_post_meta( $post_id, '_gif_data' );
 		delete_post_meta( $post_id, '_gif_raw_data' );
+
+		// Delete activity meta as well.
+		$main_activity_id = get_post_meta( $post_id, '_bbp_activity_id', true );
+		if ( ! empty( $main_activity_id ) && bp_is_active( 'activity' ) ) {
+			bp_activity_delete_meta( $main_activity_id, '_gif_data' );
+			bp_activity_delete_meta( $main_activity_id, '_gif_raw_data' );
+		}
 	}
 }
 

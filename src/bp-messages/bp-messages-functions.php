@@ -1085,36 +1085,38 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( $recipients );
 
 	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
-		global $bb_email_background_updater;
+		global $bb_background_updater;
 		$chunk_recipients = array_chunk( $recipients, bb_get_email_queue_min_count() );
 		if ( ! empty( $chunk_recipients ) ) {
 			foreach ( $chunk_recipients as $key => $data_recipients ) {
-				$bb_email_background_updater->data(
+				$bb_background_updater->data(
 					array(
-						array(
-							'callback' => 'bb_render_messages_recipients',
-							'args'     => array(
-								$data_recipients,
-								'group-message-email',
-								bp_get_messages_slug(),
-								$thread_id,
-								$sender_id,
-								array(
-									'message_id'  => $id,
-									'usermessage' => stripslashes( $message ),
-									'message'     => stripslashes( $message ),
-									'sender.id'   => $sender_id,
-									'sender.name' => $sender_name,
-									'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
-									'group.name'  => $group_name,
-								),
+						'type'     => 'email',
+						'group'    => 'group_messages_new_message_email',
+						'data_id'  => $group,
+						'priority' => 5,
+						'callback' => 'bb_render_messages_recipients',
+						'args'     => array(
+							$data_recipients,
+							'group-message-email',
+							bp_get_messages_slug(),
+							$thread_id,
+							$sender_id,
+							array(
+								'message_id'  => $id,
+								'usermessage' => stripslashes( $message ),
+								'message'     => stripslashes( $message ),
+								'sender.id'   => $sender_id,
+								'sender.name' => $sender_name,
+								'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
+								'group.name'  => $group_name,
 							),
 						),
-					)
+					),
 				);
-				$bb_email_background_updater->save();
+				$bb_background_updater->save();
 			}
-			$bb_email_background_updater->dispatch();
+			$bb_background_updater->dispatch();
 		}
 	} else {
 		// Send an email to each recipient.
@@ -2300,6 +2302,7 @@ function bb_get_message_response_object( $message ) {
 					'privacy'  => array( 'message' ),
 					'order_by' => 'menu_order',
 					'sort'     => 'ASC',
+					'per_page' => 0,
 				)
 			) ) {
 			$reply['media'] = array();
@@ -2334,6 +2337,7 @@ function bb_get_message_response_object( $message ) {
 					'privacy'  => array( 'message' ),
 					'order_by' => 'menu_order',
 					'sort'     => 'ASC',
+					'per_page' => 0,
 				)
 			)
 		) {
@@ -2393,6 +2397,7 @@ function bb_get_message_response_object( $message ) {
 					'include'  => $document_ids,
 					'order_by' => 'menu_order',
 					'sort'     => 'ASC',
+					'per_page' => 0,
 				)
 			) ) {
 			$reply['document'] = array();
@@ -2924,4 +2929,44 @@ function bb_messages_update_recipient_user_query_uid_clauses( $sql, BP_User_Quer
 	}
 
 	return $sql;
+}
+
+/**
+ * Run migration for resolving the issue related to the messages.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_messages_migration() {
+	global $wpdb;
+	$db_prefix = bp_core_get_table_prefix();
+
+	/**
+	 * Run migration for resolving group message thread meta fix.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	$message      = $db_prefix . 'bp_messages_messages';
+	$message_meta = $db_prefix . 'bp_messages_meta';
+
+	$sql  = "SELECT m.id, m.thread_id FROM {$message} m";
+	$sql .= " INNER JOIN {$message_meta} mm ON mm.message_id = m.id AND ( (mm.meta_key = '%s' OR mm.meta_key = '%s') AND mm.meta_value = '%s' ) ";
+	$sql .= " LEFT JOIN {$message_meta} mm_users ON mm_users.message_id = m.id AND mm_users.meta_key = '%s'";
+	$sql .= " LEFT JOIN {$message_meta} mm_type ON mm_type.message_id = m.id AND mm_type.meta_key = '%s'";
+	$sql .= ' WHERE mm_users.message_id IS NULL AND mm_type.message_id IS NULL';
+
+	// Retrieve all messages that are missing the required specified metadata.
+	$messages = $wpdb->get_results( $wpdb->prepare( $sql, 'group_message_group_joined', 'group_message_group_left', 'yes', 'group_message_users', 'group_message_type' ) ); // phpcs:ignore
+
+	if ( ! empty( $messages ) ) {
+		foreach ( $messages as $message ) {
+			$first_message = BP_Messages_Thread::get_first_message( $message->thread_id );
+			$message_users = bp_messages_get_meta( $first_message->id, 'group_message_users', true );
+			$message_type  = bp_messages_get_meta( $first_message->id, 'group_message_type', true );
+
+			bp_messages_update_meta( $message->id, 'group_message_users', $message_users );
+			bp_messages_update_meta( $message->id, 'group_message_type', $message_type );
+		}
+	}
 }

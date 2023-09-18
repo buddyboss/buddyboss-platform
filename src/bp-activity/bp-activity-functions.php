@@ -993,6 +993,18 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0 ) {
 		 */
 		do_action( 'bp_activity_add_user_favorite', $activity_id, $user_id );
 
+		// Add user reaction.
+		if ( function_exists( 'bb_load_reaction' ) ) {
+			$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
+			bb_load_reaction()->bb_add_user_item_reaction(
+				array(
+					'item_type'   => 'activity',
+					'reaction_id' => $reaction_id,
+					'item_id'     => $activity_id,
+				)
+			);
+		}
+
 		// Success.
 		return true;
 
@@ -1075,6 +1087,19 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0 ) {
 				 * @param int $user_id     ID of the user doing the unfavoriting.
 				 */
 				do_action( 'bp_activity_remove_user_favorite', $activity_id, $user_id );
+
+				// Remove user reaction.
+				if ( function_exists( 'bb_load_reaction' ) ) {
+					$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
+					bb_load_reaction()->bb_remove_user_item_reactions(
+						array(
+							'item_id'     => $activity_id,
+							'item_type'   => 'activity',
+							'user_id'     => $user_id,
+							'reaction_id' => $reaction_id,
+						)
+					);
+				}
 
 				// Success.
 				return true;
@@ -4237,14 +4262,21 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 
 	if ( $original_activity->user_id != $commenter_id ) {
 		if (
-			function_exists( 'bb_moderation_allowed_specific_notification' ) &&
-			bb_moderation_allowed_specific_notification(
-				array(
-					'type'              => buddypress()->activity->id,
-					'group_id'          => 'groups' === $original_activity->component ? $original_activity->item_id : '',
-					'recipient_user_id' => $original_activity->user_id,
-					'sender_id'         => $original_activity->user_id,
+			(
+				function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+				bb_moderation_allowed_specific_notification(
+					array(
+						'type'              => buddypress()->activity->id,
+						'group_id'          => 'groups' === $original_activity->component ? $original_activity->item_id : '',
+						'recipient_user_id' => $original_activity->user_id,
+						'sender_id'         => $original_activity->user_id,
+					)
 				)
+			) ||
+			(
+				'groups' === $original_activity->component &&
+				1 === $original_activity->hide_sitewide &&
+				! groups_is_user_member( $original_activity->user_id, $original_activity->item_id )
 			)
 		) {
 			return;
@@ -4306,14 +4338,21 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 
 	if ( $parent_comment->user_id != $commenter_id && $original_activity->user_id != $parent_comment->user_id ) {
 		if (
-			function_exists( 'bb_moderation_allowed_specific_notification' ) &&
-			bb_moderation_allowed_specific_notification(
-				array(
-					'type'              => buddypress()->activity->id,
-					'group_id'          => 'groups' === $original_activity->component ? $original_activity->item_id : '',
-					'recipient_user_id' => $parent_comment->user_id,
-					'sender_id'         => $original_activity->user_id,
+			(
+				function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+				bb_moderation_allowed_specific_notification(
+					array(
+						'type'              => buddypress()->activity->id,
+						'group_id'          => 'groups' === $original_activity->component ? $original_activity->item_id : '',
+						'recipient_user_id' => $parent_comment->user_id,
+						'sender_id'         => $original_activity->user_id,
+					)
 				)
+			) ||
+			(
+				'groups' === $parent_comment->component &&
+				1 === $parent_comment->hide_sitewide &&
+				! groups_is_user_member( $parent_comment->user_id, $parent_comment->item_id )
 			)
 		) {
 			return;
@@ -4501,7 +4540,17 @@ add_action( 'bp_after_activity_comment', 'bp_activity_comment_embed_after_recurs
  * @return mixed The cached embeds for this activity item.
  */
 function bp_embed_activity_cache( $cache, $id, $cachekey ) {
-	return bp_activity_get_meta( $id, $cachekey );
+	$data = bp_activity_get_meta( $id, $cachekey );
+
+	if (
+		! empty( $data ) &&
+		false !== strpos( $data, 'loom.com' ) &&
+		false !== strpos( $data, 'sandbox' )
+	) {
+		return false;
+	}
+
+	return $data;
 }
 
 /**
@@ -5951,20 +6000,22 @@ function bb_activity_create_following_post_notification( $args, $paged = 1 ) {
 	}
 
 	if ( count( $follower_users ) > 0 ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
 
 		$args['user_ids'] = $follower_users;
 		$args['paged']    = $paged;
-		$bp_background_updater->data(
+		$bb_background_updater->data(
 			array(
-				array(
-					'callback' => 'bb_activity_following_post_notification',
-					'args'     => array( $args ),
-				),
-			)
+				'type'     => 'email',
+				'group'    => 'activity_following_post',
+				'data_id'  => $args['item_id'],
+				'priority' => 5,
+				'callback' => 'bb_activity_following_post_notification',
+				'args'     => array( $args ),
+			),
 		);
 
-		$bp_background_updater->save()->dispatch();
+		$bb_background_updater->save()->dispatch();
 	}
 
 	if ( isset( $args['user_ids'] ) ) {
@@ -6025,4 +6076,166 @@ function bp_activity_get_types_list() {
 	 * @param array $types An array of activity type labels keyed by type names.
 	 */
 	return apply_filters( 'bp_activity_get_types_list', $types );
+}
+
+/**
+ * Activity migration.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_activity_migration() {
+
+	/**
+	 * Like migration into reaction.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	if ( class_exists( 'BB_Reaction' ) ) {
+		bb_load_reaction()->create_table();
+		bb_load_reaction()->bb_register_activity_like();
+
+		// Migration Like to Reaction.
+		if ( function_exists( 'bb_migrate_activity_like_reaction' ) ) {
+			bb_migrate_activity_like_reaction();
+		}
+	}
+}
+
+/**
+ * Migrate activity like reaction.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $paged Current page for fetch records.
+ *
+ * @return void
+ */
+function bb_migrate_activity_like_reaction( $paged = 1 ) {
+	global $wpdb, $bp, $bb_background_updater;
+
+	$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
+
+	if ( empty( $paged ) ) {
+		$paged = 1;
+	}
+
+	$per_page = 20;
+	$offset   = ( ( $paged - 1 ) * $per_page );
+
+	$results = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT * FROM {$bp->activity->table_name_meta} WHERE meta_key = 'bp_favorite_users' ORDER BY activity_id LIMIT %d offset %d",
+			$per_page,
+			$offset
+		)
+	);
+
+	if ( empty( $results ) ) {
+		return;
+	}
+
+	$bb_background_updater->push_to_queue(
+		array(
+			'type'     => 'migration',
+			'group'    => 'bb_activity_like_reaction',
+			'priority' => 5,
+			'callback' => 'bb_activity_like_reaction_background_process',
+			'args'     => array( $results, $paged, $reaction_id ),
+		)
+	);
+	$bb_background_updater->save()->schedule_event();
+}
+
+/**
+ * Function to run like reaction within background process.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $results     Activity like data.
+ * @param int   $paged       Current page for migration.
+ * @param int   $reaction_id Reaction ID.
+ *
+ * @return void
+ */
+function bb_activity_like_reaction_background_process( $results, $paged, $reaction_id ) {
+	global $wpdb, $bb_background_updater;
+
+	$user_reaction_table = bb_load_reaction()::$user_reaction_table;
+
+	if ( empty( $results ) ) {
+		return;
+	}
+
+	foreach ( $results as $result ) {
+		$activity_id = (int) $result->activity_id;
+		$meta_value  = maybe_unserialize( $result->meta_value );
+		if ( ! empty( $meta_value ) ) {
+			$implode_meta_value = implode( ',', wp_parse_id_list( $meta_value ) );
+			$data               = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT user_id FROM {$user_reaction_table}
+                        WHERE item_id = %d AND reaction_id = %d AND user_id IN ( {$implode_meta_value} )",
+					$result->activity_id,
+					$reaction_id
+				),
+				ARRAY_A
+			);
+
+			// Extract the user_id values using array_column
+			$user_ids = array_column( $data, 'user_id' );
+			if ( ! empty( $user_ids ) ) {
+				$meta_value = array_diff( $meta_value, $user_ids );
+			}
+
+			if ( ! empty( $meta_value) ) {
+				$min_count = (int) apply_filters( 'bb_update_users_like_reaction', 20 );
+				if ( count( $meta_value ) > $min_count ) {
+					foreach ( array_chunk( $meta_value, $min_count ) as $chunk ) {
+						$bb_background_updater->push_to_queue(
+							array(
+								'type'     => 'migration',
+								'group'    => 'bb_update_users_like_reaction',
+								'priority' => 4,
+								'callback' => 'bb_update_users_like_reaction',
+								'args'     => array( $chunk, $activity_id, $reaction_id ),
+							)
+						);
+						$bb_background_updater->save()->schedule_event();
+					}
+				} else {
+					bb_update_users_like_reaction( $meta_value, $activity_id, $reaction_id );
+				}
+			}
+		}
+	}
+
+	// Call recursive to finish update for all records.
+	$paged ++;
+	bb_migrate_activity_like_reaction( $paged );
+}
+
+/**
+ * Add user item reaction.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $user_ids    Array of user ids.
+ * @param int   $activity_id Activity id.
+ * @param int   $reaction_id Reaction id.
+ *
+ * @return void
+ */
+function bb_update_users_like_reaction( $user_ids, $activity_id, $reaction_id ) {
+	foreach ( $user_ids as $user_id ) {
+		bb_load_reaction()->bb_add_user_item_reaction(
+			array(
+				'user_id'     => $user_id,
+				'reaction_id' => $reaction_id,
+				'item_id'     => $activity_id,
+				'item_type'   => 'activity',
+			)
+		);
+	}
 }

@@ -307,21 +307,23 @@ class BP_Video {
 		$r  = bp_parse_args(
 			$args,
 			array(
-				'scope'        => '',              // Scope - Groups, friends etc.
-				'page'         => 1,               // The current page.
-				'per_page'     => 20,              // Video items per page.
-				'max'          => false,           // Max number of items to return.
-				'fields'       => 'all',           // Fields to include.
-				'sort'         => 'DESC',          // ASC or DESC.
-				'order_by'     => 'date_created',  // Column to order by.
-				'exclude'      => false,           // Array of ids to exclude.
-				'in'           => false,           // Array of ids to limit query by (IN).
-				'search_terms' => false,           // Terms to search by.
-				'album_id'     => false,           // Album ID.
-				'user_id'      => false,           // User ID.
-				'group_id'     => false,           // Group ID.
-				'privacy'      => false,           // public, loggedin, onlyme, friends, grouponly, message.
-				'count_total'  => false,           // Whether or not to use count_total.
+				'page'             => 1,               // The current page.
+				'scope'            => '',              // Scope - Groups, friends etc.
+				'per_page'         => 20,              // Video items per page.
+				'max'              => false,           // Max number of items to return.
+				'fields'           => 'all',           // Fields to include.
+				'sort'             => 'DESC',          // ASC or DESC.
+				'order_by'         => 'date_created',  // Column to order by.
+				'exclude'          => false,           // Array of ids to exclude.
+				'in'               => false,           // Array of ids to limit query by (IN).
+				'search_terms'     => false,           // Terms to search by.
+				'album_id'         => false,           // Album ID.
+				'user_id'          => false,           // User ID.
+				'group_id'         => false,           // Group ID.
+				'activity_id'      => false,           // Activity ID.
+				'privacy'          => false,           // public, loggedin, onlyme, friends, grouponly, message.
+				'moderation_query' => false,           // Whether to include moderation or not.
+				'count_total'      => false,           // Whether to use count_total.
 			)
 		);
 
@@ -408,10 +410,6 @@ class BP_Video {
 		if ( ! empty( $r['in'] ) ) {
 			$in                     = implode( ',', wp_parse_id_list( $r['in'] ) );
 			$where_conditions['in'] = "m.id IN ({$in})";
-
-			// we want to disable limit query when include video ids.
-			$r['page']     = false;
-			$r['per_page'] = false;
 		}
 
 		if ( ! empty( $r['activity_id'] ) ) {
