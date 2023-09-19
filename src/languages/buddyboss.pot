@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.4.30\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-09-19 06:43:41+00:00\n"
+"POT-Creation-Date: 2023-09-19 12:02:08+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -153,7 +153,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-list-table.php:416
 #: bp-activity/classes/class-bp-activity-oembed-extension.php:137
 #: bp-core/admin/settings/bp-admin-setting-activity.php:21
-#: bp-core/bp-core-cssjs.php:304
+#: bp-core/bp-core-cssjs.php:227
 #: bp-moderation/classes/class-bp-moderation-activity.php:120
 #: bp-search/bp-search-functions.php:376 bp-search/bp-search-settings.php:952
 msgid "Activity"
@@ -418,10 +418,10 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:863
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:35
 #: bp-templates/bp-nouveau/buddypress/video/single-album.php:34
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1311
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1383
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1457
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1633
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1312
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1384
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1458
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1634
 #: bp-templates/bp-nouveau/includes/document/ajax.php:455
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1203
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1238
@@ -541,8 +541,8 @@ msgstr ""
 #: bp-moderation/classes/class-bp-moderation-activity.php:521
 #: bp-moderation/classes/class-bp-moderation-forum-replies.php:275
 #: bp-templates/bp-nouveau/buddypress/assets/emails/single-bp-email.php:408
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:848
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:956
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:849
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:957
 #. translators: accessibility text
 msgid "Reply"
 msgstr ""
@@ -578,9 +578,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/video/video-create-album.php:27
 #: bp-templates/bp-nouveau/buddypress/video/video-move.php:27
 #: bp-templates/bp-nouveau/includes/activity/functions.php:236
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1327
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1397
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1473
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1328
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1398
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1474
 #: bp-templates/bp-nouveau/includes/document/ajax.php:465
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1213
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1248
@@ -591,8 +591,8 @@ msgstr ""
 
 #: bp-activity/bp-activity-adminbar.php:46
 #: bp-core/admin/settings/bp-admin-setting-activity.php:82
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1628
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1632
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1629
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1633
 msgid "Edit Activity"
 msgstr ""
 
@@ -1205,9 +1205,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/video/actions.php:43
 #: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:109
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:90
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1732
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1733
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1929
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1734
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1930
 #: bp-templates/bp-nouveau/includes/notifications/functions.php:253
 #: bp-templates/bp-nouveau/includes/notifications/template-tags.php:114
 #: bp-xprofile/bp-xprofile-admin.php:920
@@ -1554,7 +1554,7 @@ msgid "Replies disabled"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:682
-#: bp-core/bp-core-cssjs.php:430
+#: bp-core/bp-core-cssjs.php:353
 #: bp-templates/bp-nouveau/buddypress-functions.php:627
 msgid "Are you sure?"
 msgstr ""
@@ -2864,7 +2864,7 @@ msgstr ""
 
 #: bp-blogs/bp-blogs-template.php:1402
 #: bp-core/admin/settings/bp-admin-setting-search.php:22
-#: bp-core/bp-core-cssjs.php:310 bp-core/deprecated/buddypress/1.5.php:440
+#: bp-core/bp-core-cssjs.php:233 bp-core/deprecated/buddypress/1.5.php:440
 #: bp-core/profile-search/templates/members/bps-form-default.php:229
 #: bp-forums/admin/settings.php:156 bp-forums/admin/settings.php:344
 #: bp-forums/common/template.php:2701 bp-forums/search/template.php:216
@@ -6653,27 +6653,27 @@ msgstr ""
 msgid "You must log in to access the page you requested."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:282
+#: bp-core/bp-core-cssjs.php:205
 msgid "The results could not be loaded."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:283
+#: bp-core/bp-core-cssjs.php:206
 msgid "Please delete %% character"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:284
+#: bp-core/bp-core-cssjs.php:207
 msgid "Please enter %% or more characters"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:285
+#: bp-core/bp-core-cssjs.php:208
 msgid "Loading more results…"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:286
+#: bp-core/bp-core-cssjs.php:209
 msgid "You can only select %% item"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:287
+#: bp-core/bp-core-cssjs.php:210
 #: bp-forums/templates/default/bbpress/form-attachments.php:214
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-gif-media-search-dropdown.php:23
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-gif-media-search-dropdown.php:23
@@ -6683,133 +6683,134 @@ msgstr ""
 msgid "No results found"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:288
+#: bp-core/bp-core-cssjs.php:211
 msgid "Searching…"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:289
+#: bp-core/bp-core-cssjs.php:212
 msgid "Remove all items"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:290
+#: bp-core/bp-core-cssjs.php:213
 msgid "Start typing to find members"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:300
+#: bp-core/bp-core-cssjs.php:223
 msgid "Recent"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:301
+#: bp-core/bp-core-cssjs.php:224
 msgid "Smileys & People"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:302
+#: bp-core/bp-core-cssjs.php:225
 msgid "Animals & Nature"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:303
+#: bp-core/bp-core-cssjs.php:226
 msgid "Food & Drink"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:305
+#: bp-core/bp-core-cssjs.php:228
 msgid "Travel & Places"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:306
+#: bp-core/bp-core-cssjs.php:229
 msgid "Objects"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:307
+#: bp-core/bp-core-cssjs.php:230
 msgid "Symbols"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:308
+#: bp-core/bp-core-cssjs.php:231
 msgid "Flags"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:309
+#: bp-core/bp-core-cssjs.php:232
 msgid "Diversity"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:322
+#: bp-core/bp-core-cssjs.php:245
 msgid "Drop files here to upload"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:323
+#: bp-core/bp-core-cssjs.php:246
 msgid "Your browser does not support drag'n'drop file uploads."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:324
+#: bp-core/bp-core-cssjs.php:247
 msgid ""
 "Please use the fallback form below to upload your files like in the olden "
 "days."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:325
+#: bp-core/bp-core-cssjs.php:248
 #: bp-templates/bp-nouveau/includes/media/functions.php:138
 msgid "File size is too big ({{filesize}} MB). Max file size: {{maxFilesize}} MB."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:326
+#: bp-core/bp-core-cssjs.php:249
 msgid "You can't upload files of this type."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:327
+#: bp-core/bp-core-cssjs.php:250
 msgid "Server responded with {{statusCode}} code."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:328
+#: bp-core/bp-core-cssjs.php:251
 msgid "Cancel upload"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:329
+#: bp-core/bp-core-cssjs.php:252
 msgid "Upload canceled."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:330
+#: bp-core/bp-core-cssjs.php:253
 #: bp-templates/bp-nouveau/includes/media/functions.php:150
 #: bp-templates/bp-nouveau/includes/video/functions.php:135
 msgid "Are you sure you want to cancel this upload?"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:331
+#: bp-core/bp-core-cssjs.php:254
 msgid "Remove file"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:332
+#: bp-core/bp-core-cssjs.php:255
 msgid "You cannot upload more than 10 files at a time."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:829
+#: bp-core/bp-core-cssjs.php:748
 #. Translators: %s is the relative time (eg: in a few seconds).
 msgid "in %s"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:831 bp-core/bp-core-functions.php:1213
+#: bp-core/bp-core-cssjs.php:750 bp-core/bp-core-functions.php:1213
 #: bp-forums/common/functions.php:115
 #. translators: %s: the human time diff.
 #. translators: The time since the older date.
 msgid "%s ago"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:832
-msgid "a few seconds"
+#: bp-core/bp-core-cssjs.php:751 bp-forums/admin/settings.php:455
+#: bp-forums/common/functions.php:125
+msgid "seconds"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:833 bp-core/bp-core-functions.php:1327
+#: bp-core/bp-core-cssjs.php:752 bp-core/bp-core-functions.php:1327
 msgid "a minute"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:835
+#: bp-core/bp-core-cssjs.php:754
 #. Translators: %d is the amount of minutes.
 msgid "%d minutes"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:836 bp-core/bp-core-functions.php:1320
+#: bp-core/bp-core-cssjs.php:755 bp-core/bp-core-functions.php:1320
 msgid "an hour"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:838 bp-messages/bp-messages-functions.php:2127
+#: bp-core/bp-core-cssjs.php:757 bp-messages/bp-messages-functions.php:2127
 #: bp-messages/bp-messages-functions.php:2136
 #: bp-messages/bp-messages-functions.php:2145
 #. Translators: %d is the amount of hours.
@@ -6817,42 +6818,42 @@ msgstr ""
 msgid "%d hours"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:839 bp-core/bp-core-functions.php:1313
+#: bp-core/bp-core-cssjs.php:758 bp-core/bp-core-functions.php:1313
 msgid "a day"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:841
+#: bp-core/bp-core-cssjs.php:760
 #. Translators: %d is the amount of days.
 msgid "%d days"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:842
+#: bp-core/bp-core-cssjs.php:761
 msgid "a month"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:844
+#: bp-core/bp-core-cssjs.php:763
 #. Translators: %d is the amount of months.
 msgid "%d months"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:845 bp-core/bp-core-functions.php:1279
+#: bp-core/bp-core-cssjs.php:764 bp-core/bp-core-functions.php:1279
 msgid "a year"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:847
+#: bp-core/bp-core-cssjs.php:766
 #. Translators: %d is the amount of years.
 msgid "%d years"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:982
+#: bp-core/bp-core-cssjs.php:874
 msgid "Mismatch"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:983
+#: bp-core/bp-core-cssjs.php:875
 msgid "Enter valid email"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:984
+#: bp-core/bp-core-cssjs.php:876
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:720
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:790
 #: bp-members/screens/register.php:161 bp-members/screens/register.php:209
@@ -11067,9 +11068,9 @@ msgstr ""
 #: bp-messages/bp-messages-functions.php:2518
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:34
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:267
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1342
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1414
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1490
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1343
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1415
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1491
 #: bp-templates/bp-nouveau/includes/document/ajax.php:478
 #: bp-templates/bp-nouveau/includes/document/functions.php:102
 #: bp-templates/bp-nouveau/includes/document/functions.php:105
@@ -13037,10 +13038,6 @@ msgstr ""
 
 #: bp-forums/admin/settings.php:439 bp-forums/common/functions.php:124
 msgid "minutes"
-msgstr ""
-
-#: bp-forums/admin/settings.php:455 bp-forums/common/functions.php:125
-msgid "seconds"
 msgstr ""
 
 #: bp-forums/admin/settings.php:476
@@ -26706,8 +26703,8 @@ msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-comment.php:334
 #: bp-templates/bp-nouveau/buddypress/members/members-loop.php:222
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1563
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1845
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1564
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1846
 msgid "More Options"
 msgstr ""
 
@@ -28830,8 +28827,8 @@ msgid "Edit Privacy"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:290
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1182
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1204
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1183
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1205
 msgid "Edit Post Privacy"
 msgstr ""
 
@@ -29252,8 +29249,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:86
 #: bp-templates/bp-nouveau/buddypress/video/add-video-thumbnail.php:22
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:61
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1670
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1671
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1672
 #: bp-templates/bp-nouveau/includes/video/functions.php:153
 msgid "Change Thumbnail"
 msgstr ""
@@ -29635,19 +29632,9 @@ msgstr ""
 msgid "moderated"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/search/loop/activity-ajax.php:37
-msgid " ago"
-msgstr ""
-
 #: bp-templates/bp-nouveau/buddypress/search/loop/activity-comment-ajax.php:28
 #: bp-templates/bp-nouveau/buddypress/search/loop/activity-comment.php:24
 msgid "replied to a post"
-msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/search/loop/activity-comment-ajax.php:37
-#: bp-templates/bp-nouveau/buddypress/search/loop/activity-comment.php:41
-#: bp-templates/bp-nouveau/buddypress/search/loop/activity.php:41
-msgid "ago"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:41
@@ -29982,33 +29969,34 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:737
 #. translators: 1: user profile link, 2: user name, 3: activity permalink, 4:
-#. activity recorded date, 5: activity timestamp, 6: activity human time since
+#. activity recorded date, 5: activity timestamp, 6: activity timestamp, 7:
+#. activity human time since
 msgid ""
 "<a class=\"author-name\" href=\"%1$s\">%2$s</a> <a href=\"%3$s\" "
 "class=\"activity-time-since\"><time class=\"time-since\" datetime=\"%4$s\" "
-"data-bp-timestamp=\"%5$d\">%6$s</time></a>"
+"data-bp-timestamp=\"%5$d\" data-livestamp=\"%6$s\">%7$s</time></a>"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1178
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1179
 msgid "Edit Album Privacy"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1200
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1201
 msgid "Edit Folder Privacy"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1262
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1263
 msgid "(edited)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1310
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1322
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1382
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1388
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1391
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1456
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1462
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1465
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1311
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1323
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1383
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1389
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1392
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1457
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1463
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1466
 #: bp-templates/bp-nouveau/includes/document/ajax.php:454
 #: bp-templates/bp-nouveau/includes/document/ajax.php:460
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1202
@@ -30018,9 +30006,9 @@ msgstr ""
 msgid "Add a description"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1326
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1396
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1471
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1327
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1397
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1472
 #: bp-templates/bp-nouveau/includes/document/ajax.php:464
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1212
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1247
