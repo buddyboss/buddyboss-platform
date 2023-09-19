@@ -968,6 +968,9 @@ class BP_Messages_Thread {
 
 		$additional_where = array();
 
+		// Get only actual message.
+		$additional_where[] = "m.id NOT IN ( SELECT DISTINCT message_id FROM {$bp->messages->table_name_meta} WHERE meta_key IN ( 'bp_messages_deleted', 'group_message_group_joined', 'group_message_group_left' ) )";
+
 		if ( 'unarchived' === $r['thread_type'] ) {
 			if ( ! empty( $r['include'] ) ) {
 				$user_threads_query = $r['include'];
@@ -1234,12 +1237,8 @@ class BP_Messages_Thread {
 			$total_threads = $total_threads_cached;
 		}
 
-		// Sort threads by date_sent.
+		// Format threads data.
 		foreach ( (array) $thread_ids as $thread ) {
-			$last_message = self::get_last_message( $thread->thread_id );
-			if ( ! empty( $last_message ) && ! empty( $last_message->date_sent ) && $last_message->date_sent !== $thread->date_sent ) {
-				$thread->date_sent = $last_message->date_sent;
-			}
 			$sorted_threads[ $thread->thread_id ] = strtotime( $thread->date_sent );
 		}
 

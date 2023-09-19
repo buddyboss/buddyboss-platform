@@ -8995,6 +8995,17 @@
   },
   {
     "type": "GET",
+    "url": "/wp-json/buddyboss/v1/reactions",
+    "title": "Get Reactions",
+    "name": "GetBBReactions",
+    "group": "Reactions",
+    "description": "<p>Retrieve supported reactions</p>",
+    "version": "1.0.0",
+    "filename": "src/bp-core/classes/class-bb-rest-reactions-endpoint.php",
+    "groupTitle": "Reactions"
+  },
+  {
+    "type": "GET",
     "url": "/wp-json/buddyboss/v1/settings",
     "title": "Settings",
     "name": "GetBBSettings",
@@ -9470,6 +9481,198 @@
     },
     "filename": "src/bp-core/classes/class-bb-rest-subscriptions-endpoint.php",
     "groupTitle": "Subscriptions"
+  },
+  {
+    "type": "DELETE",
+    "url": "/wp-json/buddyboss/v1/user-reactions/:id",
+    "title": "Delete User Reaction",
+    "name": "DeleteUserReaction",
+    "group": "User_Reaction",
+    "description": "<p>Delete a single user reaction.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the user reaction.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-reactions-endpoint.php",
+    "groupTitle": "User_Reaction"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/user-reactions",
+    "title": "Get Reactions",
+    "name": "GetBBUserReactions",
+    "group": "User_Reactions",
+    "description": "<p>Retrieve user reactions</p>",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "description": "<p>Current page of the collection.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "per_page",
+            "defaultValue": "10",
+            "description": "<p>Maximum number of items to be returned in result set.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "reaction_id",
+            "description": "<p>Limit result set to items with a specific Reaction ID.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "item_type",
+            "description": "<p>Limit result set to items with a specific item type.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "item_id",
+            "description": "<p>Limit result set to items with a specific item ID.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "user_id",
+            "description": "<p>Limit result set to items with a specific user ID.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "allowedValues": [
+              "asc",
+              "desc"
+            ],
+            "optional": true,
+            "field": "order",
+            "defaultValue": "desc",
+            "description": "<p>Order sort attribute ascending or descending.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "allowedValues": [
+              "id",
+              "date_created"
+            ],
+            "optional": true,
+            "field": "order_by",
+            "defaultValue": "id",
+            "description": "<p>Order by a specific parameter.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-reactions-endpoint.php",
+    "groupTitle": "User_Reactions"
+  },
+  {
+    "type": "POST",
+    "url": "/wp-json/buddyboss/v1/user-reactions",
+    "title": "Create user reactions",
+    "name": "CreateUserReaction",
+    "group": "User_reaction",
+    "description": "<p>Create user reactions</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "reaction_id",
+            "description": "<p>The ID of reaction.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "item_type",
+            "description": "<p>Type of item.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "item_id",
+            "description": "<p>The ID of item.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "user_id",
+            "description": "<p>The ID for the author of the reaction.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-reactions-endpoint.php",
+    "groupTitle": "User_reaction"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/user-reactions/:id",
+    "title": "Get user reaction",
+    "name": "GetBBUserReaction",
+    "group": "User_reaction",
+    "description": "<p>Retrieve single user reaction</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the user reaction.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-reactions-endpoint.php",
+    "groupTitle": "User_reaction"
   },
   {
     "type": "POST",

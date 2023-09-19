@@ -440,7 +440,6 @@ function bb_updater_handle_cron_healthcheck() {
 	global $bb_background_updater;
 	if (
 		is_object( $bb_background_updater ) &&
-		property_exists( $bb_background_updater, 'is_updating' ) &&
 		$bb_background_updater->is_updating()
 	) {
 		$bb_background_updater->schedule_event();

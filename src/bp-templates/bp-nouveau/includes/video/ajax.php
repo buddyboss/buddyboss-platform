@@ -369,7 +369,14 @@ function bp_nouveau_ajax_video_save() {
 	$video = '';
 	if ( ! empty( $video_ids ) ) {
 		ob_start();
-		if ( bp_has_video( array( 'include' => implode( ',', $video_ids ) ) ) ) {
+		if (
+			bp_has_video(
+				array(
+					'include'  => implode( ',', $video_ids ),
+					'per_page' => 0,
+				)
+			)
+		) {
 			while ( bp_video() ) {
 				bp_the_video();
 				bp_get_template_part( 'video/entry' );
@@ -630,7 +637,14 @@ function bp_nouveau_ajax_video_move_to_album() {
 	$video_html = '';
 	if ( ! empty( $video_ids ) ) {
 		ob_start();
-		if ( bp_has_video( array( 'include' => implode( ',', $video_ids ) ) ) ) {
+		if (
+			bp_has_video(
+				array(
+					'include'  => implode( ',', $video_ids ),
+					'per_page' => 0,
+				)
+			)
+		) {
 			while ( bp_video() ) {
 				bp_the_video();
 				bp_get_template_part( 'video/entry' );
