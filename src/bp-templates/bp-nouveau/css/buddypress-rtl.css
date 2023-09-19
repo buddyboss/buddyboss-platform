@@ -18875,8 +18875,8 @@ body.login .login-popup .mfp-close:hover {
   opacity: 1;
 }
 
-#media-stream .media-list.bb-item-thumb .loading.deleting,
-#video-stream .video-list.bb-item-thumb .loading.deleting {
+#media-stream .media-list .bb-item-thumb.loading.deleting,
+#video-stream .video-list .bb-item-thumb.loading.deleting {
   opacity: 0.6;
   pointer-events: none;
 }

@@ -8985,7 +8985,7 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 /**
  * Function to load the instance of the class BB_Reaction.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.30
  *
  * @return null|BB_Reaction|void
  */

@@ -2475,7 +2475,7 @@ function bb_xprofile_get_field_type( $field_id ) {
 /**
  * Function to update xprofile social networks field values.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.30
  *
  * @return void
  */
@@ -2523,7 +2523,7 @@ function bb_xprofile_update_social_network_fields() {
 /**
  * Function to remove google+ field values from xprofile data.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.30
  *
  * @param int    $field_id   To check against the filed id.
  * @param string $field_name To check against the filed name.
