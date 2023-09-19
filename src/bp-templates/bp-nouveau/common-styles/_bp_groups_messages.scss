@@ -382,12 +382,7 @@
 }
 
 #buddypress #send_group_message_form .select2-search__field {
-	background: transparent;
-	border-width: 0;
-	min-width: 100%;
-	width: 100% !important;
-	padding-left: 0;
-	height: 30px;
+	display: none;
 }
 
 #buddypress #send_group_message_form li:first-child .select2-search__field {
