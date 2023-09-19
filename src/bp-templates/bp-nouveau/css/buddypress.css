@@ -6682,6 +6682,19 @@ form.acomment-edit .ac-reply-content input[name="ac_form_submit"] {
   padding: 5px 10px;
 }
 
+.bb-media-model-container form.acomment-edit .ac-reply-content .ac-reply-cancel,
+.bb-media-model-container form.acomment-edit .ac-reply-content input[name="ac_form_submit"] {
+  float: left;
+}
+
+#buddypress .bb-media-model-container form.acomment-edit .ac-reply-content .ac-reply-cancel {
+  margin-left: 10px;
+}
+
+.bb-media-model-container form.acomment-edit .ac-reply-content .ac-textarea .ac-reply-toolbar {
+  position: static;
+}
+
 @media screen and (max-width: 1080px) and (min-width: 768px), screen and (max-width: 490px) {
   form.acomment-edit .ac-reply-content .ac-reply-cancel,
   form.acomment-edit .ac-reply-content input[name="ac_form_submit"] {
@@ -19164,7 +19177,6 @@ a.bb-close-model {
 
 .bb-media-info-section .activity-comments .acomment-meta {
   font-size: 13px;
-  overflow: hidden;
 }
 
 .bb-media-info-section .activity-comments .acomment-content {

@@ -140,6 +140,25 @@ form.acomment-edit {
 			}
 		}
 
+		.bb-media-model-container & {
+
+			.ac-reply-cancel,
+			input[name="ac_form_submit"] {
+				float: left;
+			}
+
+			.ac-reply-cancel {
+
+				#buddypress & {
+					margin-left: 10px;
+				}
+			}
+
+			.ac-textarea .ac-reply-toolbar {
+				position: static;
+			}
+		}
+
 		@media screen and (max-width: 1080px) and (min-width: 768px), screen and (max-width: 490px) {
 
 			.ac-reply-cancel,
