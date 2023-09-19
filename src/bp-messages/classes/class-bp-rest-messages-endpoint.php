@@ -502,8 +502,10 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		$thread_id = ! empty( $request['id'] ) ? (int) $request['id'] : 0;
+
 		if ( ! empty( $request['bp_media_ids'] ) && function_exists( 'bb_user_has_access_upload_media' ) ) {
-			$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, 0, 'message' );
+			$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 			if ( ! $can_send_media ) {
 				return new WP_Error(
 					'bp_rest_bp_message_media',
@@ -516,7 +518,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $request['bp_documents'] ) && function_exists( 'bb_user_has_access_upload_document' ) ) {
-			$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, 0, 'message' );
+			$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 			if ( ! $can_send_document ) {
 				return new WP_Error(
 					'bp_rest_bp_message_document',
@@ -529,7 +531,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $request['bp_videos'] ) && function_exists( 'bb_user_has_access_upload_video' ) ) {
-			$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), 0, 0, 'message' );
+			$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 			if ( ! $can_send_video ) {
 				return new WP_Error(
 					'bp_rest_bp_message_video',
@@ -542,7 +544,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $request['media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
-			$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, 0, 'message' );
+			$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 			if ( ! $can_send_gif ) {
 				return new WP_Error(
 					'bp_rest_bp_message_gif',
@@ -558,24 +560,24 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			empty( $request['message'] )
 			&& ! (
 				(
-					function_exists( 'bp_is_messages_media_support_enabled' )
-					&& false !== bp_is_messages_media_support_enabled()
+					function_exists( 'bb_user_has_access_upload_media' )
+					&& false !== bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' )
 					&& ! empty( $request['bp_media_ids'] )
 				)
 				|| (
-					function_exists( 'bp_is_messages_gif_support_enabled' )
-					&& false !== bp_is_messages_gif_support_enabled()
+					function_exists( 'bb_user_has_access_upload_gif' )
+					&& false !== bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' )
 					&& ! empty( $request['media_gif']['url'] )
 					&& ! empty( $request['media_gif']['mp4'] )
 				)
 				|| (
-					function_exists( 'bp_is_messages_document_support_enabled' )
-					&& false !== bp_is_messages_document_support_enabled()
+					function_exists( 'bb_user_has_access_upload_document' )
+					&& false !== bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' )
 					&& ! empty( $request['bp_documents'] )
 				)
 				|| (
-					function_exists( 'bp_is_messages_video_support_enabled' )
-					&& false !== bp_is_messages_video_support_enabled()
+					function_exists( 'bb_user_has_access_upload_video' )
+					&& false !== bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' )
 					&& ! empty( $request['bp_videos'] )
 				)
 			)
@@ -603,7 +605,8 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			$group_id      = bp_messages_get_meta( $first_message->id, 'group_id', true ); // group id.
 
 			if ( ! empty( $group_id ) ) {
-				$group = groups_get_group( $group_id );
+				$group          = groups_get_group( $group_id );
+				$_POST['group'] = $group_id;
 			}
 		}
 
@@ -2643,9 +2646,29 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$thread->group_id        = $group_id;
 		$thread->is_group_thread = $is_group_message_thread;
 
-		$retval['can_manage_media']    = bp_is_active( 'media' ) && apply_filters( 'bp_user_can_create_message_media', bp_is_messages_media_support_enabled(), $thread, $recipient->user_id );
-		$retval['can_manage_video']    = bp_is_active( 'video' ) && apply_filters( 'bp_user_can_create_message_video', bp_is_messages_video_support_enabled(), $thread, $recipient->user_id );
-		$retval['can_manage_document'] = bp_is_active( 'document' ) && apply_filters( 'bp_user_can_create_message_document', bp_is_messages_document_support_enabled(), $thread, $recipient->user_id );
+		if (
+			bp_is_active( 'media' ) &&
+			function_exists( 'bb_user_has_access_upload_media' ) &&
+			bb_user_has_access_upload_media( $group_id, $recipient->user_id, 0, $thread->thread_id )
+		) {
+			$retval['can_manage_media'] = apply_filters( 'bp_user_can_create_message_media', true, $thread, $recipient->user_id );
+		}
+
+		if (
+			bp_is_active( 'video' ) &&
+			function_exists( 'bb_user_has_access_upload_video' ) &&
+			bb_user_has_access_upload_video( $group_id, $recipient->user_id, 0, $thread->thread_id )
+		) {
+			$retval['can_manage_video'] = apply_filters( 'bp_user_can_create_message_video', true, $thread, $recipient->user_id );
+		}
+
+		if (
+			bp_is_active( 'document' ) &&
+			function_exists( 'bb_user_has_access_upload_document' ) &&
+			bb_user_has_access_upload_document( $group_id, $recipient->user_id, 0, $thread->thread_id )
+		) {
+			$retval['can_manage_document'] = apply_filters( 'bp_user_can_create_message_document', true, $thread, $recipient->user_id );
+		}
 
 		if ( isset( $recipient->is_hidden ) ) {
 			$retval['hide_thread'] = true;

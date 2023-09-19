@@ -946,8 +946,9 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		$medias = BP_Media::get(
 			array(
-				'in'    => $media_ids,
-				'video' => true,
+				'in'       => $media_ids,
+				'video'    => true,
+				'per_page' => 0,
 			)
 		);
 
@@ -2348,6 +2349,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		$medias = $this->assemble_response_data(
 			array(
+				'per_page'  => 0,
 				'media_ids' => $media_ids,
 				'sort'      => 'ASC',
 				'order_by'  => 'menu_order',
@@ -2687,11 +2689,13 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					$component = 'groups';
 				}
 			}
-			if ( 'blogs' === $parent_activity->component ||
-			     (
-				     ! empty( $activity['component'] ) &&
-				     'blogs' === $activity['component']
-			     )
+
+			if (
+				'blogs' === $parent_activity->component ||
+				(
+					! empty( $activity['component'] ) &&
+					'blogs' === $activity['component']
+				)
 			) {
 				return false;
 			}
@@ -2903,6 +2907,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		$medias = $this->assemble_response_data(
 			array(
+				'per_page'  => 0,
 				'media_ids' => $media_ids,
 				'sort'      => 'ASC',
 				'order_by'  => 'menu_order',
@@ -3224,7 +3229,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * @param array  $data      The message value for the REST response.
 	 * @param string $attribute The REST Field key used into the REST response.
 	 *
-	 * @return string            The value of the REST Field to include into the REST response.
+	 * @return array|void The value of the REST Field to include into the REST response.
 	 */
 	protected function bp_media_ids_get_rest_field_callback_messages( $data, $attribute ) {
 		$message_id = $data['id'];
@@ -3233,85 +3238,67 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$thread_id       = ( isset( $data['thread_id'] ) ? $data['thread_id'] : 0 );
-		$is_group_thread = false;
-
+		$thread_id = ! empty( $data['thread_id'] ) ? $data['thread_id'] : 0;
 		if ( empty( $thread_id ) ) {
 			return;
 		}
 
-		if ( function_exists( 'bb_messages_is_group_thread' ) ) {
-			$is_group_thread = bb_messages_is_group_thread( $thread_id );
-		} else {
-			$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
-			$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
-			$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
-			$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
-			$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
-
-			if ( 'group' === $message_from && $thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
-				$is_group_thread = true;
-			}
-		}
+		$group_name   = ! empty( $data['group_name'] ) ? $data['group_name'] : '';
+		$message_from = ! empty( $data['message_from'] ) ? $data['message_from'] : '';
 
 		if (
+			bp_is_active( 'media' ) &&
 			(
 				(
-					empty( $is_group_thread ) ||
-					(
-						! empty( $is_group_thread ) &&
-						! bp_is_active( 'groups' )
-					)
-				) &&
-				! bp_is_messages_media_support_enabled()
-			) ||
-			(
-				bp_is_active( 'groups' ) &&
-				! empty( $is_group_thread ) &&
-				! bp_is_group_media_support_enabled()
+					! empty( $group_name ) &&
+					'group' === $message_from &&
+					bp_is_group_media_support_enabled()
+				) ||
+				(
+					'group' !== $message_from &&
+					bp_is_messages_media_support_enabled()
+				)
 			)
 		) {
-			return;
-		}
+			$media_ids = bp_messages_get_meta( $message_id, 'bp_media_ids', true );
+			$media_id  = bp_messages_get_meta( $message_id, 'bp_media_id', true );
+			$media_ids = trim( $media_ids );
+			$media_ids = explode( ',', $media_ids );
 
-		$media_ids = bp_messages_get_meta( $message_id, 'bp_media_ids', true );
-		$media_id  = bp_messages_get_meta( $message_id, 'bp_media_id', true );
-		$media_ids = trim( $media_ids );
-		$media_ids = explode( ',', $media_ids );
+			if ( ! empty( $media_id ) ) {
+				$media_ids[] = $media_id;
+				$media_ids   = array_filter( array_unique( $media_ids ) );
+			}
 
-		if ( ! empty( $media_id ) ) {
-			$media_ids[] = $media_id;
-			$media_ids   = array_filter( array_unique( $media_ids ) );
-		}
+			if ( empty( $media_ids ) ) {
+				return;
+			}
 
-		if ( empty( $media_ids ) ) {
-			return;
-		}
-
-		$medias = $this->assemble_response_data(
-			array(
-				'media_ids'        => $media_ids,
-				'sort'             => 'ASC',
-				'order_by'         => 'menu_order',
-				'moderation_query' => false,
-			)
-		);
-
-		if ( empty( $medias['medias'] ) ) {
-			return;
-		}
-
-		$retval = array();
-		$object = new WP_REST_Request();
-		$object->set_param( 'context', 'view' );
-
-		foreach ( $medias['medias'] as $media ) {
-			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $media, $object )
+			$medias = $this->assemble_response_data(
+				array(
+					'media_ids'        => $media_ids,
+					'sort'             => 'ASC',
+					'order_by'         => 'menu_order',
+					'moderation_query' => false,
+				)
 			);
-		}
 
-		return $retval;
+			if ( empty( $medias['medias'] ) ) {
+				return;
+			}
+
+			$retval = array();
+			$object = new WP_REST_Request();
+			$object->set_param( 'context', 'view' );
+
+			foreach ( $medias['medias'] as $media ) {
+				$retval[] = $this->prepare_response_for_collection(
+					$this->prepare_item_for_response( $media, $object )
+				);
+			}
+
+			return $retval;
+		}
 	}
 
 	/**
@@ -3368,7 +3355,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$thread->group_id        = $group_id;
 		$thread->is_group_thread = $is_group_message_thread;
 
-		if ( empty( apply_filters( 'bp_user_can_create_message_media', bp_is_messages_media_support_enabled(), $thread, bp_loggedin_user_id() ) ) ) {
+		if ( empty( apply_filters( 'bp_user_can_create_message_media', bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' ), $thread, bp_loggedin_user_id() ) ) ) {
 			$value->bp_media_ids = null;
 
 			return $value;
@@ -3399,75 +3386,54 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	/**
 	 * The function to use to get medias gif for the Messages REST Field.
 	 *
-	 * @param array $message   The message value for the REST response.
+	 * @param array $message The message value for the REST response.
 	 *
-	 * @return string            The value of the REST Field to include into the REST response.
+	 * @return array|void The value of the REST Field to include into the REST response.
 	 */
 	protected function bp_gif_data_get_rest_field_callback_messages( $message ) {
-
 		$message_id = $message['id'];
 
 		if ( empty( $message_id ) ) {
 			return;
 		}
 
-		$thread_id       = ( isset( $message['thread_id'] ) ? $message['thread_id'] : 0 );
-		$is_group_thread = false;
-
+		$thread_id = ! empty( $message['thread_id'] ) ? $message['thread_id'] : 0;
 		if ( empty( $thread_id ) ) {
 			return;
 		}
 
-		if ( function_exists( 'bb_messages_is_group_thread' ) ) {
-			$is_group_thread = bb_messages_is_group_thread( $thread_id );
-		} else {
-			$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
-			$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
-			$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
-			$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
-			$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
-
-			if ( 'group' === $message_from && $thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
-				$is_group_thread = true;
-			}
-		}
+		$group_name   = ! empty( $message['group_name'] ) ? $message['group_name'] : '';
+		$message_from = ! empty( $message['message_from'] ) ? $message['message_from'] : '';
 
 		if (
+			bp_is_active( 'media' ) &&
 			(
 				(
-					empty( $is_group_thread ) ||
-					(
-						! empty( $is_group_thread ) &&
-						! bp_is_active( 'groups' )
-					)
-				) &&
-				! bp_is_messages_gif_support_enabled()
-			) ||
-			(
-				bp_is_active( 'groups' ) &&
-				! empty( $is_group_thread ) &&
-				! bp_is_groups_gif_support_enabled()
+					! empty( $group_name ) &&
+					'group' === $message_from &&
+					bp_is_groups_gif_support_enabled()
+				) ||
+				(
+					'group' !== $message_from &&
+					bp_is_messages_gif_support_enabled()
+				)
 			)
 		) {
-			return;
+			$gif_data = bp_messages_get_meta( $message_id, '_gif_data', true );
+
+			if ( empty( $gif_data ) ) {
+				return;
+			}
+
+			$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+			$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
+
+			return array(
+				'preview_url' => $preview_url,
+				'video_url'   => $video_url,
+				'rendered'    => $this->bp_rest_media_message_embed_gif( $message_id ),
+			);
 		}
-
-		$gif_data = bp_messages_get_meta( $message_id, '_gif_data', true );
-
-		if ( empty( $gif_data ) ) {
-			return;
-		}
-
-		$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
-		$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
-
-		$retval = array(
-			'preview_url' => $preview_url,
-			'video_url'   => $video_url,
-			'rendered'    => $this->bp_rest_media_message_embed_gif( $message_id ),
-		);
-
-		return $retval;
 	}
 
 	/**
@@ -3731,11 +3697,13 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					$component = 'groups';
 				}
 			}
-			if ( 'blogs' === $parent_activity->component ||
-			     (
-				     ! empty( $activity['component'] ) &&
-				     'blogs' === $activity['component']
-			     )
+
+			if (
+				'blogs' === $parent_activity->component ||
+				(
+					! empty( $activity['component'] ) &&
+					'blogs' === $activity['component']
+				)
 			) {
 				return false;
 			}
@@ -3785,11 +3753,13 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					$component = 'groups';
 				}
 			}
-			if ( 'blogs' === $parent_activity->component ||
-			     (
-				     ! empty( $activity['component'] ) &&
-				     'blogs' === $activity['component']
-			     )
+
+			if (
+				'blogs' === $parent_activity->component ||
+				(
+					! empty( $activity['component'] ) &&
+					'blogs' === $activity['component']
+				)
 			) {
 				return false;
 			}
