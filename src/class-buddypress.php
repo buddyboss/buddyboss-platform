@@ -330,7 +330,7 @@ class BuddyPress {
 
 		/** Versions */
 		$this->version    = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined( 'BP_VERSION' ) ? BP_VERSION : '1.0.0' );
-		$this->db_version = 20565;
+		$this->db_version = 20601;
 
 		/** Loading */
 
@@ -716,6 +716,7 @@ class BuddyPress {
 			'BP_Suspend_Message'                           => 'suspend',
 			'BB_Subscriptions'                             => 'core',
 			'BB_Background_Updater'                        => 'core',
+			'BB_Reaction'                                  => 'core',
 
 			// BuddyBoss Platform Rest API classes.
 			'BP_REST_Components_Endpoint'                  => 'core',
@@ -777,6 +778,7 @@ class BuddyPress {
 			'BP_REST_Moderation_Endpoint'                  => 'moderation',
 			'BP_REST_Moderation_Report_Endpoint'           => 'moderation',
 			'BB_REST_Subscriptions_Endpoint'               => 'core',
+			'BB_REST_Reactions_Endpoint'                   => 'core',
 		);
 
 		$component = null;

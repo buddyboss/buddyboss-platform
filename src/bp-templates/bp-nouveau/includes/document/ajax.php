@@ -600,7 +600,14 @@ function bp_nouveau_ajax_document_document_save() {
 	$document     = '';
 	if ( ! empty( $document_ids ) ) {
 		ob_start();
-		if ( bp_has_document( array( 'include' => implode( ',', $document_ids ) ) ) ) {
+		if (
+			bp_has_document(
+				array(
+					'include'  => implode( ',', $document_ids ),
+					'per_page' => 0,
+				)
+			)
+		) {
 			while ( bp_document() ) {
 				bp_the_document();
 				bp_get_template_part( 'document/document-entry' );
@@ -1019,7 +1026,14 @@ function bp_nouveau_ajax_document_update_file_name() {
 
 			// Generate the document HTML to update the preview links.
 			ob_start();
-			if ( bp_has_document( array( 'include' => $document['document_id'] ) ) ) {
+			if (
+				bp_has_document(
+					array(
+						'include'  => $document['document_id'],
+						'per_page' => 0,
+					)
+				)
+			) {
 				while ( bp_document() ) {
 					bp_the_document();
 					bp_get_template_part( 'document/document-entry' );
