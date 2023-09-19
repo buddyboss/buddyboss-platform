@@ -344,6 +344,8 @@ class BP_Core extends BP_Component {
 				'bp_pages',
 				'bp_invitations',
 				'bb_subscriptions',
+				'bb_reactions',
+				'bb_reaction_data'
 			)
 		);
 
