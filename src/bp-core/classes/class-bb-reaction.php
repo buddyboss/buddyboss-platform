@@ -3,7 +3,7 @@
  * Reaction class.
  *
  * @package BuddyBoss\Core
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.30
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 	/**
 	 * BuddyBoss Reaction object.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.30
 	 */
 	#[\AllowDynamicProperties]
 	class BB_Reaction {
@@ -21,7 +21,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * The single instance of the class.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @access private
 		 * @var self
@@ -31,7 +31,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Post type.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @access private
 		 * @var mixed|null
@@ -41,7 +41,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * User reaction table name.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @access public
 		 * @var string
@@ -51,7 +51,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Reaction item types.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @var array
 		 */
@@ -60,7 +60,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Reaction data table name.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @access public
 		 * @var string
@@ -70,7 +70,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Cache group for user reaction.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @access public
 		 * @var string
@@ -80,7 +80,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Cache group for reaction data.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @access public
 		 * @var string
@@ -90,7 +90,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Check initialize action status.
 		 *
-		 * @since  BuddyBoss [BBVERSION]
+		 * @since  BuddyBoss 2.4.30
 		 *
 		 * @access private
 		 * @var bool
@@ -100,7 +100,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Get the instance of this class.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @return Controller|BB_Reaction|null
 		 */
@@ -117,7 +117,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Constructor method.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 */
 		public function __construct() {
 			$bp_prefix = bp_core_get_table_prefix();
@@ -150,7 +150,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Created custom table for reactions.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @return void
 		 */
@@ -217,7 +217,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Register post type.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @return void
 		 */
@@ -243,7 +243,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Return labels used by the reaction post type.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @return array
 		 */
@@ -273,7 +273,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Add new reaction.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @param array $args {
 		 *                    Reaction arguments.
@@ -333,7 +333,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Remove reaction.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @param int $reaction_id Reaction id.
 		 *
@@ -360,7 +360,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Get all reaction data.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @return array
 		 */
@@ -376,7 +376,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Update the bb_reactions transient.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 */
 		private function bb_update_reactions_transient() {
 			// Get all reactions.
@@ -419,7 +419,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Register reaction item type.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @param string $type Item Type.
 		 * @param array  $args Array of arguments.
@@ -455,7 +455,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Function to add user reaction.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @param array $args Arguments of user reaction.
 		 *
@@ -538,7 +538,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			/**
 			 * Fires before the add user item reaction in DB.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.4.30
 			 *
 			 * @param array $r Args of user item reactions.
 			 */
@@ -596,7 +596,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			/**
 			 * Fires after the add user item reaction in DB.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.4.30
 			 *
 			 * @param int   $user_reaction_id User reaction id.
 			 * @param array $r                Array of parsed arguments.
@@ -611,7 +611,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Remove single user reaction based on reaction id.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @param int $user_reaction_id ID of the user reaction.
 		 *
@@ -628,7 +628,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			/**
 			 * Fires before the remove user item reaction.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.4.30
 			 *
 			 * @param int $user_reaction_id User reaction id.
 			 */
@@ -651,7 +651,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			/**
 			 * Fires after the remove user item reaction.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.4.30
 			 *
 			 * @param int       $user_reaction_id User reaction id.
 			 * @param int|false $deleted          The number of rows deleted, or false on error.
@@ -674,7 +674,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Remove user reactions based on args.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @param array $args Args of user reactions.
 		 *
@@ -701,7 +701,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			/**
 			 * Fires before the remove user item reactions.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.4.30
 			 *
 			 * @param array $r Args of user item reactions.
 			 */
@@ -749,7 +749,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			/**
 			 * Fires after the remove user item reactions.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.4.30
 			 *
 			 * @param int|false $deleted      The number of rows deleted, or false on error.
 			 * @param array     $r            Args of user item reactions.
@@ -765,7 +765,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Query for user reactions.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @param array $args {
 		 * An array of arguments. All items are optional.
@@ -895,7 +895,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			/**
 			 * Filters the MySQL WHERE conditions for the user reaction get sql method.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.4.30
 			 *
 			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 			 * @param array  $r                Parsed arguments passed into method.
@@ -915,7 +915,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			/**
 			 * Filter the MySQL JOIN clause for the main user reaction query.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.4.30
 			 *
 			 * @param string $join_sql   JOIN clause.
 			 * @param array  $r          Method parameters.
@@ -944,7 +944,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			/**
 			 * Filters the paged user reaction MySQL statement.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.4.30
 			 *
 			 * @param string $user_reaction_ids_sql MySQL's statement used to query for Reaction IDs.
 			 * @param array  $r                     Array of arguments passed into method.
@@ -994,7 +994,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				/**
 				 * Filters the total user reaction MySQL statement.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 2.4.30
 				 *
 				 * @param string $sql       MySQL statement used to query for total videos.
 				 * @param string $where_sql MySQL WHERE statement portion.
@@ -1019,7 +1019,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Fetch single user reaction.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @param int $user_reaction_id User reaction id.
 		 *
@@ -1047,7 +1047,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Get user reactions count.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @param array $args Args of the user reactions count.
 		 *
@@ -1077,7 +1077,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Get current user reactions count.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @param array $args Args of the user reactions count.
 		 *
@@ -1100,7 +1100,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Get reactions data.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @param array $args Args of reaction data.
 		 *
@@ -1205,7 +1205,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			/**
 			 * Filters the MySQL WHERE conditions for get reaction data sql method.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.4.30
 			 *
 			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 			 * @param array  $r                Parsed arguments passed into method.
@@ -1225,7 +1225,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			/**
 			 * Filter the MySQL JOIN clause for the main reaction data query.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.4.30
 			 *
 			 * @param string $join_sql   JOIN clause.
 			 * @param array  $r          Method parameters.
@@ -1254,7 +1254,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			/**
 			 * Filters the paged reaction data MySQL statement.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.4.30
 			 *
 			 * @param string $user_reaction_ids_sql MySQL's statement used to query for Reaction IDs.
 			 * @param array  $r                     Array of arguments passed into method.
@@ -1304,7 +1304,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				/**
 				 * Filters the total reaction data MySQL statement.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 2.4.30
 				 *
 				 * @param string $sql       MySQL statement used to query for total videos.
 				 * @param string $where_sql MySQL WHERE statement portion.
@@ -1329,7 +1329,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Add reaction data.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @param array $args Args of reaction data.
 		 *
@@ -1354,7 +1354,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			/**
 			 * Fires before the add user item reaction in DB.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.4.30
 			 *
 			 * @param array $r Args of user item reactions.
 			 */
@@ -1428,7 +1428,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			/**
 			 * Fires after the add user item reaction in DB.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.4.30
 			 *
 			 * @param int   $reaction_data_id Reaction data id.
 			 * @param array $r                Args of user item reactions.
@@ -1441,7 +1441,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Prepare reaction summary data when reaction to any item.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @param array $args Args of reaction data.
 		 *
@@ -1506,7 +1506,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Add or update total item reaction count.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @param array $args Args of reaction data.
 		 *
@@ -1553,7 +1553,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Add or update total item reaction count based on reaction id.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @param array $args Args of reaction data.
 		 */
@@ -1617,7 +1617,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Add or update total reaction count.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @return false|int|WP_Error
 		 */
@@ -1652,7 +1652,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Fetch the single reaction data.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @param int $reaction_data_id Reaction data id.
 		 *
@@ -1680,7 +1680,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Add or update total reaction count.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @param array $args Args of reaction data.
 		 *
@@ -1715,7 +1715,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Get registered reaction item types.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @return mixed|null
 		 */
@@ -1726,7 +1726,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Validate callback for reaction item type.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @param array $args Array of arguments.
 		 *
@@ -1771,7 +1771,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Setup Like reaction for the activity.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @return void
 		 */
@@ -1788,7 +1788,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Function to fetch reaction total count with id.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @param array $args Array of arguments.
 		 *
@@ -1809,7 +1809,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Backward compatibility to add user favorite.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @param int   $user_reaction_id User reaction id.
 		 * @param array $args             Array of arguments.
@@ -1834,7 +1834,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Backward compatibility to remove user favorite.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @param int       $user_reaction_id User reaction id.
 		 * @param int|false $deleted          The number of rows deleted, or false on error.
@@ -1860,7 +1860,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Get reaction id from option table.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.30
 		 *
 		 * @return int|void
 		 */

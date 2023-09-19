@@ -2,7 +2,7 @@
 /**
  * BP REST: BB_REST_Reactions_Endpoint class
  *
- * @since   [BBVERSION]
+ * @since   2.4.30
  * @package BuddyBoss
  */
 
@@ -11,14 +11,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Reactions endpoints.
  *
- * @since [BBVERSION]
+ * @since 2.4.30
  */
 class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Constructor.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.4.30
 	 */
 	public function __construct() {
 		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
@@ -28,7 +28,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.4.30
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -92,7 +92,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	/**
 	 * Retrieve reactions
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.4.30
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -129,7 +129,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	/**
 	 * Check if a given request has access to reaction items.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.4.30
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
@@ -160,7 +160,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	/**
 	 * Retrieve user reactions.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.4.30
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -220,7 +220,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	/**
 	 * Check if a given request has access to user reaction items.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.4.30
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
@@ -608,7 +608,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepares user reaction data for return as an object.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.4.30
 	 *
 	 * @param BB_Reaction     $item    Reaction object.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -646,7 +646,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.4.30
 	 *
 	 * @param BB_Reaction     $item    Reaction object.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -802,7 +802,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	/**
 	 * Get the reaction schema, conforming to JSON Schema.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.4.30
 	 *
 	 * @return array
 	 */
@@ -836,7 +836,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		/**
 		 * Filters the get reactions schema.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.4.30
 		 *
 		 * @param array $schema The endpoint schema.
 		 */
@@ -846,7 +846,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	/**
 	 * Get the user reaction schema, conforming to JSON Schema.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.4.30
 	 *
 	 * @return array
 	 */

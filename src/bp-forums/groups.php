@@ -1864,7 +1864,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * Exclude the forum if the forum is child forum.
 		 *
 		 * @since BuddyBoss 1.7.8
-		 * @since BuddyBoss [BBVERSION] $show_error parameter added.
+		 * @since BuddyBoss 2.4.30 $show_error parameter added.
 		 *
 		 * @param array $forum_id   Fourm ids.
 		 * @param int   $group_id   Group id.
