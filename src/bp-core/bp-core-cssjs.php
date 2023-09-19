@@ -713,7 +713,11 @@ add_action( 'bp_enqueue_scripts', 'bp_add_cover_image_inline_css', 11 );
  * @since BuddyPress 2.7.0
  */
 function bp_core_add_livestamp() {
-	if ( ! is_buddypress() && ( ! function_exists( 'bp_search_is_search' ) || ! bp_search_is_search() ) ) {
+	if (
+		! is_buddypress() &&
+		( ! function_exists( 'bp_search_is_search' ) || ! bp_search_is_search() ) &&
+		did_action( 'elementor/theme/before_do_single' )
+	) {
 		return;
 	}
 
