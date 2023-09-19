@@ -94,6 +94,8 @@ function messages_new_message( $args = '' ) {
 		}
 	}
 
+	$group_id = ! empty( $_POST['group'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['group'] ) ) : 0;
+
 	/**
 	 * Filter to validate message content.
 	 *
@@ -118,7 +120,7 @@ function messages_new_message( $args = '' ) {
 	}
 
 	if ( ! empty( $_POST['media'] ) ) {
-		$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
+		$can_send_media = bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_media ) {
 			$error_code = 'messages_empty_content';
 			$feedback   = __( 'You don\'t have access to send the media. ', 'buddyboss' );
@@ -127,7 +129,7 @@ function messages_new_message( $args = '' ) {
 	}
 
 	if ( ! empty( $_POST['document'] ) ) {
-		$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
+		$can_send_document = bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_document ) {
 			$error_code = 'messages_empty_content';
 			$feedback   = __( 'You don\'t have access to send the document. ', 'buddyboss' );
@@ -136,7 +138,7 @@ function messages_new_message( $args = '' ) {
 	}
 
 	if ( ! empty( $_POST['video'] ) ) {
-		$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
+		$can_send_video = bb_user_has_access_upload_video( $group_id, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_video ) {
 			$error_code = 'messages_empty_content';
 			$feedback   = __( 'You don\'t have access to send the video. ', 'buddyboss' );
@@ -145,7 +147,7 @@ function messages_new_message( $args = '' ) {
 	}
 
 	if ( ! empty( $_POST['gif_data'] ) ) {
-		$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
+		$can_send_gif = bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_gif ) {
 			$error_code = 'messages_empty_content';
 			$feedback   = __( 'You don\'t have access to send the gif. ', 'buddyboss' );
@@ -2182,9 +2184,15 @@ function bb_get_message_response_object( $message ) {
 	}
 	$sender_display_name = apply_filters( 'bp_get_the_thread_message_sender_name', $sender_display_name );
 
+	// Check message media, document, video, GIF access.
+	$has_message_media_access    = bb_user_has_access_upload_media( 0, $sender_id, 0, $thread_id, 'message' );
+	$has_message_document_access = bb_user_has_access_upload_document( 0, $sender_id, 0, $thread_id, 'message' );
+	$has_message_video_access    = bb_user_has_access_upload_video( 0, $sender_id, 0, $thread_id, 'message' );
+	$has_message_gif_access      = bb_user_has_access_upload_gif( 0, $sender_id, 0, $thread_id, 'message' );
+
 	$has_media = false;
 	if ( empty( $excerpt ) ) {
-		if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
+		if ( bp_is_active( 'media' ) && $has_message_media_access ) {
 			$media_ids = bp_messages_get_meta( $message_id, 'bp_media_ids', true );
 
 			if ( ! empty( $media_ids ) ) {
@@ -2198,7 +2206,7 @@ function bb_get_message_response_object( $message ) {
 			}
 		}
 
-		if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) {
+		if ( bp_is_active( 'media' ) && $has_message_video_access ) {
 			$video_ids = bp_messages_get_meta( $message_id, 'bp_video_ids', true );
 
 			if ( ! empty( $video_ids ) ) {
@@ -2212,7 +2220,7 @@ function bb_get_message_response_object( $message ) {
 			}
 		}
 
-		if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
+		if ( bp_is_active( 'media' ) && $has_message_document_access ) {
 			$document_ids = bp_messages_get_meta( $message_id, 'bp_document_ids', true );
 
 			if ( ! empty( $document_ids ) ) {
@@ -2226,7 +2234,7 @@ function bb_get_message_response_object( $message ) {
 			}
 		}
 
-		if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) {
+		if ( bp_is_active( 'media' ) && $has_message_gif_access ) {
 			$gif_data = bp_messages_get_meta( $message_id, '_gif_data', true );
 
 			if ( ! empty( $gif_data ) ) {
@@ -2293,7 +2301,7 @@ function bb_get_message_response_object( $message ) {
 
 	}
 
-	if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
+	if ( bp_is_active( 'media' ) && $has_message_media_access ) {
 		$media_ids = bp_messages_get_meta( $message_id, 'bp_media_ids', true );
 
 		if ( ! empty( $media_ids ) && bp_has_media(
@@ -2326,7 +2334,7 @@ function bb_get_message_response_object( $message ) {
 		}
 	}
 
-	if ( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() ) {
+	if ( bp_is_active( 'video' ) && $has_message_video_access ) {
 		$video_ids = bp_messages_get_meta( $message_id, 'bp_video_ids', true );
 
 		if (
@@ -2389,7 +2397,7 @@ function bb_get_message_response_object( $message ) {
 		}
 	}
 
-	if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
+	if ( bp_is_active( 'media' ) && $has_message_document_access ) {
 		$document_ids = bp_messages_get_meta( $message_id, 'bp_document_ids', true );
 
 		if ( ! empty( $document_ids ) && bp_has_document(
@@ -2527,7 +2535,7 @@ function bb_get_message_response_object( $message ) {
 		}
 	}
 
-	if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) {
+	if ( bp_is_active( 'media' ) && $has_message_gif_access ) {
 		$gif_data = bp_messages_get_meta( $message_id, '_gif_data', true );
 
 		if ( ! empty( $gif_data ) ) {
