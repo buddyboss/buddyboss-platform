@@ -554,7 +554,7 @@ add_action( 'bb_subscriptions_after_update_secondary_item_id', 'bb_subscriptions
 /**
  * Clear cache when add/remove user item reaction.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.30
  *
  * @param int $user_reaction_id User reaction id.
  *
@@ -573,7 +573,7 @@ add_action( 'bb_reaction_after_remove_user_item_reaction', 'bb_reaction_clear_us
 /**
  * Clear cache when update user reaction.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.30
  *
  * @param int|false $deleted   The number of rows deleted, or false on error.
  * @param array     $r         Args of user item reactions.
@@ -595,7 +595,7 @@ add_action( 'bb_reaction_after_remove_user_item_reactions', 'bb_reaction_clear_r
 /**
  * Clear cache when reaction data updated.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.30
  *
  * @param int $reaction_data_id Reaction data id.
  *

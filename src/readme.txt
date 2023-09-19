@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.2.2
 Requires PHP: 8.0
-Stable tag: 2.4.20
+Stable tag: 2.4.30
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,26 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.4.30 =
+* Enhancement: Activity - database alterations made in preparations for future activity features
+* Enhancement: Core - Allow options within the new blacklist/whitelist feature so that user can block the email plus aliases.
+* Enhancement: Forums - Automatically reconnect an existing forum when reenabling the forum within a group
+* Bug: Core - API issues addressed when activating BuddyBoss platform plugin
+* Bug: Core - Design issue when posting a discussion when using Firefox browser
+* Bug: Core - Pagination problem occurred on pages where the group type shortcode was used
+* Bug: Core - Paging was disabled when fetching media, videos and documents based on specific ids
+* Bug: Forums - Add direct link for the grouped forum instead on the Discussions links to removed the unnecessary redirect
+* Bug: Forums - Discussions pagination was not working when setting the forum page as the home page
+* Bug: Forums - Forum was not importing from Invision
+* Bug: Groups - When Group Message feature is disbaled, existing messages associated to groups are now removed from users inbox
+* Bug: Messages - Attached media in a group message sent by a group member was not viewable by other members
+* Bug: Messages - Messages thread order was not staying in the correct order when paginating
+* Bug: Multisite - BuddyBoss component pages were not assigned correctly across the subsites
+* Bug: Profiles - Pending signup user profile were visible on the frontend in some cases
+* Bug: Profiles - Removed Google+ from 'Social Networks' profile field
+* Bug: Profiles - Update Twitter name to X on all Social Links
+* Bug: Tools - SMF forum import tool could not keep the hierarchical relationships between forum > discussion > reply
 
 = 2.4.20 =
 * Enhancement: Core - The Background Process working when suspending and un-suspending users got stuck creating an infinite loop

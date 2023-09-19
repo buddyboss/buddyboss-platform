@@ -6081,7 +6081,7 @@ function bp_activity_get_types_list() {
 /**
  * Activity migration.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.30
  *
  * @return void
  */
@@ -6090,7 +6090,7 @@ function bb_activity_migration() {
 	/**
 	 * Like migration into reaction.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.30
 	 */
 	if ( class_exists( 'BB_Reaction' ) ) {
 		bb_load_reaction()->create_table();
@@ -6106,7 +6106,7 @@ function bb_activity_migration() {
 /**
  * Migrate activity like reaction.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.30
  *
  * @param int $paged Current page for fetch records.
  *
@@ -6151,7 +6151,7 @@ function bb_migrate_activity_like_reaction( $paged = 1 ) {
 /**
  * Function to run like reaction within background process.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.30
  *
  * @param array $results     Activity like data.
  * @param int   $paged       Current page for migration.
@@ -6219,7 +6219,7 @@ function bb_activity_like_reaction_background_process( $results, $paged, $reacti
 /**
  * Add user item reaction.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.30
  *
  * @param array $user_ids    Array of user ids.
  * @param int   $activity_id Activity id.

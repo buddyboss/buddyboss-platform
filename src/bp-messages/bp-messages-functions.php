@@ -2942,7 +2942,7 @@ function bb_messages_update_recipient_user_query_uid_clauses( $sql, BP_User_Quer
 /**
  * Run migration for resolving the issue related to the messages.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.30
  *
  * @return void
  */
@@ -2953,7 +2953,7 @@ function bb_messages_migration() {
 	/**
 	 * Run migration for resolving group message thread meta fix.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.30
 	 */
 	$message      = $db_prefix . 'bp_messages_messages';
 	$message_meta = $db_prefix . 'bp_messages_meta';
