@@ -475,15 +475,6 @@ function bp_version_updater() {
 				bb_moderation_migration_on_update();
 			}
 
-			// Run migration about activity.
-			if ( function_exists( 'bb_activity_migration' ) ) {
-				bb_activity_migration();
-			}
-
-			if ( function_exists( 'bb_messages_migration' ) ) {
-				bb_messages_migration();
-			}
-
 			if ( function_exists( 'bb_xprofile_update_social_network_fields' ) ) {
 				bb_xprofile_update_social_network_fields();
 			}
@@ -491,6 +482,15 @@ function bp_version_updater() {
 			// Create the table when class loaded.
 			if ( class_exists( '\BuddyBoss\Performance\Performance' ) ) {
 				\BuddyBoss\Performance\Performance::instance()->on_activation();
+			}
+
+			if ( function_exists( 'bb_messages_migration' ) ) {
+				bb_messages_migration();
+			}
+
+			// Run migration about activity.
+			if ( function_exists( 'bb_activity_migration' ) ) {
+				bb_activity_migration();
 			}
 		}
 	}

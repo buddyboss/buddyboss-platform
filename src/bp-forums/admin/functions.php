@@ -304,7 +304,7 @@ add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bbp_core_get_import_forum_
 /**
  * Function to check table exists or not for converter.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.30
  *
  * @param object $opdb       Old forum Database.
  * @param string $table_name Old forums table name.
@@ -329,7 +329,7 @@ function bb_check_table_exists( $opdb, $table_name ) {
 /**
  * Function to check column exists or not for converter.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.30
  *
  * @param object $opdb        Old forum Database.
  * @param string $table_name  Old forums table name.

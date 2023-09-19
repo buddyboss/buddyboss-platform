@@ -890,6 +890,11 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			$forum_id        = $this->forum_id;
 			$default_actions = array( 'page', $this->topic_slug, $this->reply_slug );
 
+			if ( empty( $forum_id ) ) {
+				$forum_ids = bbp_get_group_forum_ids( bp_get_current_group_id() );
+				$forum_id  = array_shift( $forum_ids );
+			}
+
 			if ( ! in_array( $forum_action, $default_actions, true ) ) {
 				$forum_action = false;
 			}
@@ -1713,7 +1718,11 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		public function forum_redirect_canonical() {
 			$group_id = bp_get_current_group_id();
 
-			if ( empty( $group_id ) || ! bp_is_current_action( $this->slug ) ) {
+			if (
+				empty( $group_id ) ||
+				! bp_is_current_action( $this->slug ) ||
+				empty( bp_action_variables() )
+			) {
 				return;
 			}
 
@@ -1855,7 +1864,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * Exclude the forum if the forum is child forum.
 		 *
 		 * @since BuddyBoss 1.7.8
-		 * @since BuddyBoss [BBVERSION] $show_error parameter added.
+		 * @since BuddyBoss 2.4.30 $show_error parameter added.
 		 *
 		 * @param array $forum_id   Fourm ids.
 		 * @param int   $group_id   Group id.

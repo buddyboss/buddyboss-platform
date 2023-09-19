@@ -1152,7 +1152,7 @@ if ( bbp_allow_anonymous() ) {
 /**
  * Backup the last group forum associations.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.30
  *
  * @param int $group_id Group ID.
  * @param int $forum_id Forum ID.
