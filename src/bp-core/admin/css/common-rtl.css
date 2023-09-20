@@ -3008,7 +3008,8 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
   vertical-align: top;
   display: inline-block;
   line-height: 1;
-  font-size: 14px;
+  font-weight: 300;
+  font-size: 15px;
 }
 
 .bb-inactive-field > td,
