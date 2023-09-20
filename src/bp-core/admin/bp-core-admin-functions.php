@@ -3548,7 +3548,7 @@ function bb_member_type_redirection_metabox( $post ) {
 				<th scope="row">After Login</th>
 				<td>
 					<select name="bp-member-type[login_redirection]" id="bb-login-redirection">
-						<option value="" <?php selected( '', $login_redirection ); ?>><?php esc_html_e( 'Select', 'buddyboss' ); ?></option>
+						<option value="" <?php selected( '', $login_redirection ); ?>><?php esc_html_e( 'Default', 'buddyboss' ); ?></option>
 						<option value="0" <?php selected( 0, $login_redirection ); ?>><?php esc_html_e( 'Custom URL', 'buddyboss' ); ?></option>
 						<?php
 						$pages = bb_get_published_pages();
@@ -3588,7 +3588,7 @@ function bb_member_type_redirection_metabox( $post ) {
 				<th scope="row">After Logout</th>
 				<td>
 					<select name="bp-member-type[logout_redirection]" id="bb-logout-redirection">
-						<option value="" <?php selected( '', $logout_redirection ); ?>><?php esc_html_e( 'Select', 'buddyboss' ); ?></option>
+						<option value="" <?php selected( '', $logout_redirection ); ?>><?php esc_html_e( 'Default', 'buddyboss' ); ?></option>
 						<option value="0" <?php selected( 0, $logout_redirection ); ?>><?php esc_html_e( 'Custom URL', 'buddyboss' ); ?></option>
 						<?php
 						$pages = bb_get_published_pages();
