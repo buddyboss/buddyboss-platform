@@ -73,7 +73,6 @@ add_filter( 'bp_core_widget_user_display_name', 'esc_html' );
 // Redirects.
 add_filter( 'login_redirect', 'bb_login_redirect', PHP_INT_MAX, 3 );
 add_filter( 'logout_redirect', 'bb_logout_redirect', PHP_INT_MAX, 3 );
-add_filter( 'registration_redirect', 'bb_registration_redirect', PHP_INT_MAX, 2 );
 
 // Avatars.
 /**
@@ -2530,21 +2529,6 @@ function bb_logout_redirect( $redirect_to, $request, $user ) {
 
 	return $redirect_to;
 }
-
-/**
- * Redirect after registration.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_registration_redirect( $redirect_to, $user_id ) {
-
-	if ( $user_id && ! ( is_object( $user_id ) && is_a( $user_id, 'WP_Error' ) ) ) {
-		$redirect_to = bb_redirect_after_action( $redirect_to, $user_id, 'registration' );
-	}
-
-	return $redirect_to;
-}
-
 
 /**
  * Allow third party domains for redirections.

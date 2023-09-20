@@ -3510,6 +3510,13 @@ function bb_member_type_labelcolor_metabox( $post ) {
 	<?php
 }
 
+/**
+ * Added new meta box for member types redirection settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param $post Post data object.
+ */
 function bb_member_type_redirection_metabox( $post ) {
 	$login_redirection               = get_post_meta( $post->ID, '_bp_member_type_login_redirection', true );
 	$custom_login_redirection        = get_post_meta( $post->ID, '_bp_member_type_custom_login_redirection', true );
