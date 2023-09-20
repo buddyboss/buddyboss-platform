@@ -74,8 +74,13 @@ if ( groups_check_user_has_invite( bp_loggedin_user_id(), bp_get_current_group_i
 			<?php wp_nonce_field( 'groups_request_membership' ); ?>
 		</form><!-- #request-membership-form -->
 	<?php } else {
-			$parent_group  = groups_get_group( $parent_group_id );
-			printf( __( 'First, join the parent group "%s" and then you can access the child group "%s".', 'buddyboss' ), $parent_group->name, bp_get_group_name() );
+			$parent_group      = groups_get_group( $parent_group_id );
+			$parent_group_name = sprintf( '<a class="bp-parent-group-title" href="%s">%s</a>',
+				esc_url( bp_get_group_permalink( $parent_group ) ),
+				esc_html( bp_get_group_name( $parent_group ) )
+			);
+
+			printf( __( 'You must first be a member of the parent group "%s" before you can join this group.', 'buddyboss' ), $parent_group_name );
 	} ?>
 
 <?php else : ?>
