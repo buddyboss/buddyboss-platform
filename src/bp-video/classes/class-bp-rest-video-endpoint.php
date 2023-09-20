@@ -1805,24 +1805,22 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( function_exists( 'bp_is_messages_video_support_enabled' ) && true === bp_is_messages_video_support_enabled() ) {
-			// Messages Video Video Support.
-			bp_rest_register_field(
-				'messages',      // Id of the BuddyPress component the REST field is about.
-				'bp_videos', // Used into the REST response/request.
-				array(
-					'get_callback'    => array( $this, 'bp_video_ids_get_rest_field_callback_messages' ),
-					// The function to use to get the value of the REST Field.
-					'update_callback' => array( $this, 'bp_video_ids_update_rest_field_callback_messages' ),
-					// The function to use to update the value of the REST Field.
-					'schema'          => array(                                // The example_field REST schema.
-						'description' => 'Messages Videos.',
-						'type'        => 'object',
-						'context'     => array( 'view', 'edit' ),
-					),
-				)
-			);
-		}
+		// Messages Video Support.
+		bp_rest_register_field(
+			'messages',      // Id of the BuddyPress component the REST field is about.
+			'bp_videos', // Used into the REST response/request.
+			array(
+				'get_callback'    => array( $this, 'bp_video_ids_get_rest_field_callback_messages' ),
+				// The function to use to get the value of the REST Field.
+				'update_callback' => array( $this, 'bp_video_ids_update_rest_field_callback_messages' ),
+				// The function to use to update the value of the REST Field.
+				'schema'          => array(                                // The example_field REST schema.
+					'description' => 'Messages Videos.',
+					'type'        => 'object',
+					'context'     => array( 'view', 'edit' ),
+				),
+			)
+		);
 
 		// Added param to main activity to check the comment has access to upload video or not.
 		bp_rest_register_field(
@@ -1886,6 +1884,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 
 		$videos = $this->assemble_response_data(
 			array(
+				'per_page'  => 0,
 				'video_ids' => $video_ids,
 				'sort'      => 'ASC',
 				'order_by'  => 'menu_order',
@@ -2133,6 +2132,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 
 		$videos = $this->assemble_response_data(
 			array(
+				'per_page'  => 0,
 				'video_ids' => $video_ids,
 				'sort'      => 'ASC',
 				'order_by'  => 'menu_order',
@@ -2291,7 +2291,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 	 * @param array  $data      The message value for the REST response.
 	 * @param string $attribute The REST Field key used into the REST response.
 	 *
-	 * @return string            The value of the REST Field to include into the REST response.
+	 * @return array|void The value of the REST Field to include into the REST response.
 	 */
 	protected function bp_video_ids_get_rest_field_callback_messages( $data, $attribute ) {
 		$message_id = $data['id'];
@@ -2300,44 +2300,68 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$video_ids = bp_messages_get_meta( $message_id, 'bp_video_ids', true );
-		$video_id  = bp_messages_get_meta( $message_id, 'bp_video_id', true );
-		$video_ids = trim( $video_ids );
-		$video_ids = explode( ',', $video_ids );
-
-		if ( ! empty( $video_id ) ) {
-			$video_ids[] = $video_id;
-			$video_ids   = array_filter( array_unique( $video_ids ) );
-		}
-
-		if ( empty( $video_ids ) ) {
+		$thread_id = ! empty( $data['thread_id'] ) ? $data['thread_id'] : 0;
+		if ( empty( $thread_id ) ) {
 			return;
 		}
 
-		$videos = $this->assemble_response_data(
-			array(
-				'video_ids'        => $video_ids,
-				'sort'             => 'ASC',
-				'order_by'         => 'menu_order',
-				'moderation_query' => false,
+		$group_name   = ! empty( $data['group_name'] ) ? $data['group_name'] : '';
+		$message_from = ! empty( $data['message_from'] ) ? $data['message_from'] : '';
+
+		if (
+			bp_is_active( 'video' ) &&
+			(
+				(
+					! empty( $group_name ) &&
+					'group' === $message_from &&
+					bp_is_group_video_support_enabled()
+				) ||
+				(
+					'group' !== $message_from &&
+					bp_is_messages_video_support_enabled()
+				)
 			)
-		);
+		) {
+			$video_ids = bp_messages_get_meta( $message_id, 'bp_video_ids', true );
+			$video_id  = bp_messages_get_meta( $message_id, 'bp_video_id', true );
+			$video_ids = trim( $video_ids );
+			$video_ids = explode( ',', $video_ids );
 
-		if ( empty( $videos['videos'] ) ) {
-			return;
-		}
+			if ( ! empty( $video_id ) ) {
+				$video_ids[] = $video_id;
+				$video_ids   = array_filter( array_unique( $video_ids ) );
+			}
 
-		$retval = array();
-		$object = new WP_REST_Request();
-		$object->set_param( 'context', 'view' );
+			if ( empty( $video_ids ) ) {
+				return;
+			}
 
-		foreach ( $videos['videos'] as $video ) {
-			$retval[] = $this->prepare_response_for_collection(
-				$this->media_endpoint->prepare_item_for_response( $video, $object )
+			$videos = $this->assemble_response_data(
+				array(
+					'per_page'         => 0,
+					'video_ids'        => $video_ids,
+					'sort'             => 'ASC',
+					'order_by'         => 'menu_order',
+					'moderation_query' => false,
+				)
 			);
-		}
 
-		return $retval;
+			if ( empty( $videos['videos'] ) ) {
+				return;
+			}
+
+			$retval = array();
+			$object = new WP_REST_Request();
+			$object->set_param( 'context', 'view' );
+
+			foreach ( $videos['videos'] as $video ) {
+				$retval[] = $this->prepare_response_for_collection(
+					$this->media_endpoint->prepare_item_for_response( $video, $object )
+				);
+			}
+
+			return $retval;
+		}
 	}
 
 	/**
@@ -2362,6 +2386,40 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 
 		$videos = wp_parse_id_list( $object );
 		if ( empty( $videos ) ) {
+			$value->bp_videos = null;
+
+			return $value;
+		}
+
+		$thread_id = $value->thread_id;
+
+		if ( function_exists( 'bb_user_has_access_upload_video' ) ) {
+			$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
+			if ( ! $can_send_video ) {
+				$value->bp_videos = null;
+
+				return $value;
+			}
+		}
+
+		$thread = new BP_Messages_Thread( $thread_id );
+
+		$is_group_message_thread = false;
+		$first_message           = BP_Messages_Thread::get_first_message( $thread->thread_id );
+		$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
+		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+		$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
+		$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
+		$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
+
+		if ( 'group' === $message_from && $thread->thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
+			$is_group_message_thread = true;
+		}
+
+		$thread->group_id        = $group_id;
+		$thread->is_group_thread = $is_group_message_thread;
+
+		if ( empty( apply_filters( 'bp_user_can_create_message_video', bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' ), $thread, bp_loggedin_user_id() ) ) ) {
 			$value->bp_videos = null;
 
 			return $value;
@@ -2500,11 +2558,13 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 					$component = 'groups';
 				}
 			}
-			if ( 'blogs' === $parent_activity->component ||
-			     (
-				     ! empty( $activity['component'] ) &&
-				     'blogs' === $activity['component']
-			     )
+
+			if (
+				'blogs' === $parent_activity->component ||
+				(
+					! empty( $activity['component'] ) &&
+					'blogs' === $activity['component']
+				)
 			) {
 				return false;
 			}

@@ -141,6 +141,7 @@ function bp_media_activity_entry() {
 		'order_by' => 'menu_order',
 		'sort'     => 'ASC',
 		'user_id'  => false,
+		'per_page' => 0,
 	);
 
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() ) {
@@ -237,6 +238,7 @@ function bp_media_activity_append_media( $content, $activity ) {
 			'include'  => $media_ids,
 			'order_by' => 'menu_order',
 			'sort'     => 'ASC',
+			'per_page' => 0,
 		);
 
 		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
@@ -329,6 +331,7 @@ function bp_media_activity_comment_entry( $comment_id ) {
 		'sort'     => 'ASC',
 		'user_id'  => false,
 		'privacy'  => array(),
+		'per_page' => 0,
 	);
 
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
@@ -813,6 +816,7 @@ function bp_media_forums_embed_attachments( $content, $id ) {
 			'order_by' => 'menu_order',
 			'privacy'  => array( 'forums' ),
 			'sort'     => 'ASC',
+			'per_page' => 0,
 		)
 	) ) {
 		ob_start();
@@ -979,8 +983,10 @@ function bp_media_forums_save_gif_data( $post_id ) {
  * @param $message
  */
 function bp_media_attach_media_to_message( &$message ) {
+	$group_id = ! empty( $_POST['group'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['group'] ) ) : 0;
+
 	if (
-		bp_is_messages_media_support_enabled() &&
+		bb_user_has_access_upload_media( $group_id, $message->sender_id, 0, $message->thread_id, 'message' ) &&
 		! empty( $message->id ) &&
 		(
 			! empty( $_POST['media'] ) ||
@@ -1149,26 +1155,29 @@ function bp_media_user_messages_delete_attached_gif( $thread_id, $message_ids, $
  * @param $message
  */
 function bp_media_messages_save_gif_data( &$message ) {
+	$group_id = ! empty( $_POST['group'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['group'] ) ) : 0;
 
-	if ( empty( $_POST['gif_data'] ) ) {
-		return;
+	if (
+		bb_user_has_access_upload_gif( $group_id, $message->sender_id, 0, $message->thread_id, 'message' ) &&
+		! empty( $message->id ) &&
+		! empty( $_POST['gif_data'] )
+	) {
+		$gif_data = $_POST['gif_data'];
+
+		$still = $gif_data['images']['480w_still']['url'];
+		$mp4   = $gif_data['images']['original_mp4']['mp4'];
+
+		bp_messages_update_meta(
+			$message->id,
+			'_gif_data',
+			array(
+				'still' => $still,
+				'mp4'   => $mp4,
+			)
+		);
+
+		bp_messages_update_meta( $message->id, '_gif_raw_data', $gif_data );
 	}
-
-	$gif_data = $_POST['gif_data'];
-
-	$still = $gif_data['images']['480w_still']['url'];
-	$mp4   = $gif_data['images']['original_mp4']['mp4'];
-
-	bp_messages_update_meta(
-		$message->id,
-		'_gif_data',
-		array(
-			'still' => $still,
-			'mp4'   => $mp4,
-		)
-	);
-
-	bp_messages_update_meta( $message->id, '_gif_raw_data', $gif_data );
 }
 
 /**
@@ -1183,7 +1192,13 @@ function bp_media_messages_save_gif_data( &$message ) {
  * @return bool
  */
 function bp_media_message_validated_content( $validated_content, $content, $post ) {
-	if ( ! bp_is_messages_media_support_enabled() || ! isset( $post['media'] ) ) {
+	$group_id  = ! empty( $post['group'] ) ? (int) sanitize_text_field( wp_unslash( $post['group'] ) ) : 0;
+	$thread_id = ! empty( $post['thread_id'] ) ? (int) sanitize_text_field( wp_unslash( $post['thread_id'] ) ) : 0;
+
+	if (
+		! bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), 0, $thread_id, 'message' ) ||
+		! isset( $post['media'] )
+	) {
 		return (bool) $validated_content;
 	}
 
@@ -1202,7 +1217,13 @@ function bp_media_message_validated_content( $validated_content, $content, $post
  * @return bool
  */
 function bp_media_gif_message_validated_content( $validated_content, $content, $post ) {
-	if ( ! bp_is_messages_gif_support_enabled() || ! isset( $post['gif_data'] ) ) {
+	$group_id  = ! empty( $post['group'] ) ? (int) sanitize_text_field( wp_unslash( $post['group'] ) ) : 0;
+	$thread_id = ! empty( $post['thread_id'] ) ? (int) sanitize_text_field( wp_unslash( $post['thread_id'] ) ) : 0;
+
+	if (
+		! bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), 0, $thread_id, 'message' ) ||
+		! isset( $post['gif_data'] )
+	) {
 		return (bool) $validated_content;
 	}
 
@@ -2814,17 +2835,21 @@ add_filter( 'redirect_canonical', 'bb_media_remove_specific_trailing_slash', 999
  * @return mixed
  */
 function bb_messages_media_save( $attachment ) {
+	$thread_id            = ! empty( $_POST['thread_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['thread_id'] ) ) : 0;
+	$group_id             = ! empty( $_POST['group_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['group_id'] ) ) : 0;
+	$component            = ! empty( $_POST['component'] ) ? sanitize_text_field( wp_unslash( $_POST['component'] ) ) : '';
+	$is_message_component = ( bp_is_group_messages() || bp_is_messages_component() || ( ! empty( $component ) && 'messages' === $component ) );
+
+	if ( empty( $group_id ) && bp_is_group_messages() ) {
+		$group = groups_get_current_group();
+		if ( ! empty( $group ) ) {
+			$group_id = $group->id;
+		}
+	}
 
 	if (
-		(
-			bp_is_group_messages() ||
-			bp_is_messages_component() ||
-			(
-				! empty( $_POST['component'] ) &&
-				'messages' === $_POST['component']
-			)
-		) &&
-		bp_is_messages_media_support_enabled() &&
+		$is_message_component &&
+		bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), 0, $thread_id, 'message' ) &&
 		! empty( $attachment )
 	) {
 
