@@ -467,6 +467,10 @@ function bp_version_updater() {
 			bb_update_to_2_4_10();
 		}
 
+		if ( $raw_db_version < 20651 ) {
+			bb_update_to_2_4_12();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3224,5 +3228,34 @@ function bb_update_to_2_4_10() {
 				$member->promote( 'admin' );
 			}
 		}
+	}
+}
+
+/**
+ * Add 'description' column to bp_media and bp_document table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_4_12() {
+	global $wpdb, $bp;
+
+	if ( ! bp_is_active( 'media' ) ) {
+		return;
+	}
+
+	// Add 'description' column in 'bp_media' table.
+	$media_row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$bp->media->table_name}' AND column_name = 'description'" ); //phpcs:ignore
+
+	if ( empty( $media_row ) ) {
+		$wpdb->query( "ALTER TABLE {$bp->media->table_name} ADD `description` text AFTER `title`" ); //phpcs:ignore
+	}
+
+	// Add 'description' column in 'bp_document' table.
+	$document_row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$bp->document->table_name}' AND column_name = 'description'" ); //phpcs:ignore
+
+	if ( empty( $document_row ) ) {
+		$wpdb->query( "ALTER TABLE {$bp->document->table_name} ADD `description` text AFTER `title`" ); //phpcs:ignore
 	}
 }
