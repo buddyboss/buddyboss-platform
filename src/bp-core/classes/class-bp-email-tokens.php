@@ -2645,7 +2645,6 @@ class BP_Email_Tokens {
 				$document_ids        = get_post_meta( $object_id, 'bp_document_ids', true );
 				$gif_data            = get_post_meta( $object_id, '_gif_data', true );
 				$image_url           = ( $is_mentioned ) ? $tokens['mentioned.url'] : ( ( 'reply' === $type ) ? $tokens['reply.url'] : $tokens['discussion.url'] );
-				$media_args          = array( 'privacy' => false );
 				$media_wrap_style    = 'padding: 5px 0 10px;';
 				$video_wrap_style    = 'padding: 5px 0 10px';
 				$document_wrap_style = 'padding: 5px 0 10px;';
@@ -2666,6 +2665,7 @@ class BP_Email_Tokens {
 								'order_by' => 'menu_order',
 								'sort'     => 'ASC',
 								'per_page' => 5,
+								'privacy'  => false,
 							),
 							$media_args
 						)
@@ -2715,6 +2715,7 @@ class BP_Email_Tokens {
 								'order_by' => 'menu_order',
 								'sort'     => 'ASC',
 								'per_page' => 5,
+								'privacy'  => false,
 							),
 							$media_args
 						)
@@ -2766,6 +2767,7 @@ class BP_Email_Tokens {
 								'order_by' => 'menu_order',
 								'sort'     => 'ASC',
 								'per_page' => 5,
+								'privacy'  => false,
 							),
 							$media_args
 						)
