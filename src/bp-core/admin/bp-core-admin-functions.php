@@ -2284,10 +2284,10 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_member_type_allow_messaging_without_connection', $allow_messaging_without_connection );
 
 	// Redirections.
-	$login_redirection                  = $data['login_redirection'] ?? '';
-	$custom_login_redirection           = $data['custom_login_redirection'] ?? '';
-	$logout_redirection                 = $data['logout_redirection'] ?? '';
-	$custom_logout_redirection          = $data['custom_logout_redirection'] ?? '';
+	$login_redirection         = $data['login_redirection'] ?? '';
+	$custom_login_redirection  = $data['custom_login_redirection'] ?? '';
+	$logout_redirection        = $data['logout_redirection'] ?? '';
+	$custom_logout_redirection = $data['custom_logout_redirection'] ?? '';
 
 	update_post_meta( $post_id, '_bp_member_type_login_redirection', $login_redirection );
 	update_post_meta( $post_id, '_bp_member_type_custom_login_redirection', $custom_login_redirection );
@@ -3515,13 +3515,13 @@ function bb_member_type_labelcolor_metabox( $post ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param $post Post data object.
+ * @param Object $post Post data object.
  */
 function bb_member_type_redirection_metabox( $post ) {
-	$login_redirection               = get_post_meta( $post->ID, '_bp_member_type_login_redirection', true );
-	$custom_login_redirection        = get_post_meta( $post->ID, '_bp_member_type_custom_login_redirection', true );
-	$logout_redirection              = get_post_meta( $post->ID, '_bp_member_type_logout_redirection', true );
-	$custom_logout_redirection       = get_post_meta( $post->ID, '_bp_member_type_custom_logout_redirection', true );
+	$login_redirection         = get_post_meta( $post->ID, '_bp_member_type_login_redirection', true );
+	$custom_login_redirection  = get_post_meta( $post->ID, '_bp_member_type_custom_login_redirection', true );
+	$logout_redirection        = get_post_meta( $post->ID, '_bp_member_type_logout_redirection', true );
+	$custom_logout_redirection = get_post_meta( $post->ID, '_bp_member_type_custom_logout_redirection', true );
 	?>
 	<table class="form-table">
 		<tbody>
@@ -3532,12 +3532,19 @@ function bb_member_type_redirection_metabox( $post ) {
 					printf(
 						'<p class="description">%s</p>',
 						sprintf(
-							__( 'Redirect this profile type. When you change the redirection settings in a profile type this will then take priority and override redirection global settings in <a target="_blank" href="%s">Buddyboss - Settings - General</a>.', 'buddyboss' ),
-							add_query_arg(
-								array(
-									'page' => 'bp-settings#bb_redirection',
+							/* translators:  */
+							esc_html__( 'Redirect this profile type. When you change the redirection settings in a profile type this will then take priority and override redirection global settings in %s', 'buddyboss' ),
+							sprintf(
+								'<a href="%s">%s</a>',
+								esc_url(
+									add_query_arg(
+										array(
+											'page' => 'bp-settings#bb_redirection',
+										),
+										admin_url( 'admin.php' )
+									)
 								),
-								admin_url( 'admin.php' )
+								esc_html__( 'Buddyboss - Settings - General', 'buddyboss' )
 							)
 						)
 					);
@@ -3552,9 +3559,9 @@ function bb_member_type_redirection_metabox( $post ) {
 						<option value="0" <?php selected( 0, $login_redirection ); ?>><?php esc_html_e( 'Custom URL', 'buddyboss' ); ?></option>
 						<?php
 						$pages = bb_get_published_pages();
-						foreach( $pages as $id => $title ) {
+						foreach ( $pages as $id => $title ) {
 							?>
-							<option value="<?php echo $id; ?>" <?php selected( $id, $login_redirection ); ?>><?php echo $title; ?></option>
+							<option value="<?php echo esc_attr( $id ); ?>" <?php selected( $id, $login_redirection ); ?>><?php echo esc_html( $title ); ?></option>
 							<?php
 						}
 						?>
@@ -3572,8 +3579,7 @@ function bb_member_type_redirection_metabox( $post ) {
 			<tr class="child-no-padding login-redirection-text-box" style="display: none;">
 				<th scope="row"></th>
 				<td>
-					<input style="width: 89%;" id="bb-custom-login-redirection" name="bp-member-type[custom_login_redirection]" type="text"
-						   value="<?php echo esc_url( $custom_login_redirection ); ?>">
+					<input style="width: 89%;" id="bb-custom-login-redirection" name="bp-member-type[custom_login_redirection]" type="text" value="<?php echo esc_url( $custom_login_redirection ); ?>">
 					<p class="bb-description">
 						<?php
 						esc_html_e(
@@ -3592,9 +3598,9 @@ function bb_member_type_redirection_metabox( $post ) {
 						<option value="0" <?php selected( 0, $logout_redirection ); ?>><?php esc_html_e( 'Custom URL', 'buddyboss' ); ?></option>
 						<?php
 						$pages = bb_get_published_pages();
-						foreach( $pages as $id => $title ) {
+						foreach ( $pages as $id => $title ) {
 							?>
-							<option value="<?php echo $id; ?>" <?php selected( $id, $logout_redirection ); ?>><?php echo $title; ?></option>
+							<option value="<?php echo esc_attr( $id ); ?>" <?php selected( $id, $logout_redirection ); ?>><?php echo esc_html( $title ); ?></option>
 							<?php
 						}
 						?>
@@ -3612,8 +3618,7 @@ function bb_member_type_redirection_metabox( $post ) {
 			<tr class="child-no-padding logout-redirection-text-box" style="display: none;">
 			<th scope="row"></th>
 			<td>
-				<input style="width: 89%;" id="bb-custom-logout-redirection" name="bp-member-type[custom_logout_redirection]" type="text"
-					   value="<?php echo esc_url( $custom_logout_redirection ); ?>">
+				<input style="width: 89%;" id="bb-custom-logout-redirection" name="bp-member-type[custom_logout_redirection]" type="text" value="<?php echo esc_url( $custom_logout_redirection ); ?>">
 				<p class="bb-description">
 					<?php
 					esc_html_e(
