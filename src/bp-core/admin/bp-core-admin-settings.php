@@ -3341,57 +3341,6 @@ if ( ! function_exists( 'bb_get_published_pages' ) ) {
 }
 
 /**
- * Admin settings for showing the registration redirection settings.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_admin_setting_callback_registration_redirection() {
-	$registration_redirection = bb_registration_redirection();
-	?>
-	<select name="bb-registration-redirection" id="bb-registration-redirection">
-		<option value="" <?php selected( '', $registration_redirection ); ?>><?php esc_html_e( 'Select', 'buddyboss' ); ?></option>
-		<option value="0" <?php selected( 0, $registration_redirection ); ?>><?php esc_html_e( 'Custom URL', 'buddyboss' ); ?></option>
-		<?php
-			$pages = bb_get_published_pages();
-			foreach( $pages as $id => $title ) {
-				?>
-				<option value="<?php echo $id; ?>" <?php selected( $id, $registration_redirection ); ?>><?php echo $title; ?></option>
-				<?php
-			}
-		?>
-	</select>
-
-	<p class="description">
-		<?php
-			esc_html_e(
-				'Select a page or external link to redirect your members to after they register.',
-				'buddyboss'
-			)
-		?>
-	</p>
-	<?php
-}
-
-/**
- * Admin settings for showing the custom registration redirection page url.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bp_admin_setting_callback_custom_registration_redirection() {
-	?>
-	<input style="width: 89%;" id="bb-custom-registration-redirection" name="bb-custom-registration-redirection" type="text" value="<?php echo esc_url( bb_custom_registration_redirection() ); ?>" />
-	<p class="description">
-		<?php
-			esc_html_e(
-				'Select a page or external link to redirect your members to after they register.',
-				'buddyboss'
-			)
-		?>
-	</p>
-	<?php
-}
-
-/**
  * Admin settings for showing the login redirection settings.
  *
  * @since BuddyBoss [BBVERSION]

@@ -2553,10 +2553,6 @@ function bb_registration_redirect( $redirect_to, $user_id ) {
  */
 function bb_redirection_allowed_third_party_domains( $hosts ) {
 	$allow_custom_url_domains = array();
-	$custom_url = esc_url( bb_custom_registration_redirection() );
-	if ( ! empty( $custom_url ) ) {
-		$allow_custom_url_domains[] = $custom_url;
-	}
 	$custom_url = esc_url( bb_custom_login_redirection() );
 	if ( ! empty( $custom_url ) ) {
 		$allow_custom_url_domains[] = $custom_url;
@@ -2574,10 +2570,6 @@ function bb_redirection_allowed_third_party_domains( $hosts ) {
 		'meta_query'     => array(
 			'relation' => 'OR', // Use 'OR' to search for any of the specified meta keys
 			array(
-				'key'     => '_bp_member_type_custom_registration_redirection',
-				'compare' => 'EXISTS', // Check if the key exists
-			),
-			array(
 				'key'     => '_bp_member_type_custom_login_redirection',
 				'compare' => 'EXISTS',
 			),
@@ -2594,21 +2586,15 @@ function bb_redirection_allowed_third_party_domains( $hosts ) {
 		while ( $query->have_posts() ) {
 			$query->the_post();
 
-			// Retrieve the meta values
-			$custom_url = get_post_meta( get_the_ID(), '_bp_member_type_custom_registration_redirection', true );
-
-			if ( ! empty( $custom_url ) ) {
-				$allow_custom_url_domains[] = $custom_url;
-			}
-
+			// Retrieve the meta values.
 			$custom_url = get_post_meta( get_the_ID(), '_bp_member_type_custom_login_redirection', true );
 			if ( ! empty( $custom_url ) ) {
-				$allow_custom_url_domains[] = $custom_url;
+				$allow_custom_url_domains[] = esc_url( $custom_url );
 			}
 
 			$custom_url = get_post_meta( get_the_ID(), '_bp_member_type_custom_logout_redirection', true );
 			if ( ! empty( $custom_url ) ) {
-				$allow_custom_url_domains[] = $custom_url;
+				$allow_custom_url_domains[] = esc_url( $custom_url );
 			}
 		}
 	}
@@ -2620,7 +2606,10 @@ function bb_redirection_allowed_third_party_domains( $hosts ) {
 			$parsed_url   = parse_url( $url );
 			$current_host = $_SERVER['HTTP_HOST'];
 
-			if ( $parsed_url['host'] !== $current_host ) {
+			if (
+				isset( $parsed_url['host'] ) &&
+				$parsed_url['host'] !== $current_host
+			) {
 				$hosts[] = $parsed_url['host'];
 			}
 		}

@@ -7857,6 +7857,9 @@ function bb_admin_icons( $id ) {
 		case 'bp_web_push_notification_settings':
 			$meta_icon = $bb_icon_bf . ' bb-icon-paste';
 			break;
+		case 'bb_redirection':
+			$meta_icon = $bb_icon_bf . ' bb-icon-sign-in';
+			break;
 		default:
 			$meta_icon = '';
 	}
@@ -8970,11 +8973,11 @@ function bb_is_allowed_register_email_address( $email = '' ) {
  *
  * @param string $redirect_to Original redirect URL.
  * @param int    $user_id     User ID.
- * @param string $action      Type of action i.e. registration, login or logout.
+ * @param string $action      Type of action i.e. login or logout.
  *
  * @return string $redirect_to Updated redirect URL.
  */
-function bb_redirect_after_action( $redirect_to, $user_id = 0, $action = '' ) {
+function bb_redirect_after_action( $redirect_to, $user_id = 0, $action = 'login' ) {
 
 	$redirect_setting = '';
 
@@ -8982,14 +8985,18 @@ function bb_redirect_after_action( $redirect_to, $user_id = 0, $action = '' ) {
 		$redirect_setting = bb_login_redirection();
 	} elseif ( 'logout' === $action ) {
 		$redirect_setting = bb_logout_redirection();
-	} elseif ( 'registration' === $action ) {
-		$redirect_setting = bb_registration_redirection();
 	}
 
 	// Check if any page or custom URL is set.
 	if ( '' !== $redirect_setting ) {
 		if ( '0' === $redirect_setting ) {
-			$custom_url = esc_url( bb_custom_redirection( $action ) );
+
+			if ( 'login' === $action ) {
+				$custom_url = esc_url( bb_custom_login_redirection() );
+			} elseif ( 'logout' === $action ) {
+				$custom_url = esc_url( bb_custom_logout_redirection() );
+			}
+
 			if ( ! empty( $custom_url ) ) {
 
 				// Custom Page URL.
@@ -9043,5 +9050,6 @@ function bb_redirect_after_action( $redirect_to, $user_id = 0, $action = '' ) {
 
 	// Support for custom third party URLs.
 	add_filter( 'allowed_redirect_hosts', 'bb_redirection_allowed_third_party_domains' );
+
 	return $redirect_to;
 }

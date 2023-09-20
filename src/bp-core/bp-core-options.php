@@ -2377,27 +2377,6 @@ function bb_email_restrictions_setting( $default = array() ) {
 }
 
 /**
- * Get registration redirection settings value from the database.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $default Optional. Fallback value if not found in the database.
- *                        Default: Empty string.
- * @return string Registration redirection setting value.
- */
-function bb_registration_redirection( $default = array() ) {
-
-	/**
-	 * Filters registration restriction settings.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $value Registration registration setting value.
-	 */
-	return apply_filters( 'bb_registration_redirection', bp_get_option( 'bb-registration-redirection', $default ) );
-}
-
-/**
  * Get login redirection settings value from the database.
  *
  * @since BuddyBoss [BBVERSION]
@@ -2437,27 +2416,6 @@ function bb_logout_redirection( $default = '' ) {
 	 * @param string $value Logout redirection setting value.
 	 */
 	return apply_filters( 'bb_logout_redirection', bp_get_option( 'bb-logout-redirection', $default ) );
-}
-
-/**
- * Get custom registration redirection setting value from the database.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $default Optional. Fallback value if not found in the database.
- *                        Default: Empty string.
- * @return string Custom registration redirection setting value.
- */
-function bb_custom_registration_redirection( $default = '' ) {
-
-	/**
-	 * Filters custom registration page URL.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $value Custom registration page URL.
-	 */
-	return apply_filters( 'bb_custom_registration_redirection', bp_get_option( 'bb-custom-registration-redirection', $default ) );
 }
 
 /**

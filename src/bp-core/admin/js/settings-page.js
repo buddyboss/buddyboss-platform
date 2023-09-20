@@ -2427,35 +2427,6 @@ window.bp = window.bp || {};
 				}
 			);
 
-			// Registration Redirection Settings Show/Hide.
-			var regRedSettings = $( '#bb-registration-redirection' );
-			var currentRegRedSettings = '0';
-
-			if ( regRedSettings.length ) {
-				currentRegRedSettings = regRedSettings.val();
-				if ( '0' === currentRegRedSettings ) {
-					$( '.registration-redirection-text-box' ).show();
-					regRedSettings.next().hide();
-				} else {
-					$( '.registration-redirection-text-box' ).hide();
-					regRedSettings.next().show();
-				}
-
-				$( regRedSettings ).change(
-					function () {
-						currentRegRedSettings = $( this ).val();
-						if ( '0' === currentRegRedSettings ) {
-							$( '.registration-redirection-text-box' ).show();
-							regRedSettings.next().hide();
-						} else {
-							$( '.registration-redirection-text-box' ).hide();
-							regRedSettings.next().show();
-						}
-
-					}
-				);
-			}
-
 			// Login Redirection Settings Show/Hide.
 			var loginRedSettings = $( '#bb-login-redirection' );
 			var currentLoginRedSettings = '0';
@@ -2577,7 +2548,7 @@ window.bp = window.bp || {};
 					$( '.bb-domain-restrictions-listing .registration-restrictions-select' ).find( 'option' ).attr( 'disabled', false );
 				} else {
 					var $select = $listing.find( '.registration-restrictions-rule:not(.custom) .registration-restrictions-input-select' );
-					if ( 
+					if (
 						0 === $select.find( 'option[value="only_allow"]:selected' ).length &&
 						0 === $select.find( 'option[value="always_allow"]:selected' ).length
 					) {

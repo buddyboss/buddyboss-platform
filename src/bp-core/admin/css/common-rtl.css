@@ -3001,7 +3001,7 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
 
 .bb-inactive-field > th:before,
 .bb-pro-inactive > th:before {
-  content: "\e97c";
+  content: "\eecc";
   font-family: "bb-icons";
   /* stylelint-disable-line */
   margin-left: 5px;

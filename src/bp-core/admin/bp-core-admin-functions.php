@@ -2282,18 +2282,13 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_member_type_enable_invite', $enable_group_type_enable_invite );
 	update_post_meta( $post_id, '_bp_member_type_label_color', $label_color );
 	update_post_meta( $post_id, '_bp_member_type_allow_messaging_without_connection', $allow_messaging_without_connection );
-error_log( print_r($data, true) );
-	// Redirections.
 
-	$registration_redirection           = $data['registration_redirection'] ?? '';
-	$custom_registration_redirection    = $data['custom_registration_redirection'] ?? '';
+	// Redirections.
 	$login_redirection                  = $data['login_redirection'] ?? '';
 	$custom_login_redirection           = $data['custom_login_redirection'] ?? '';
 	$logout_redirection                 = $data['logout_redirection'] ?? '';
 	$custom_logout_redirection          = $data['custom_logout_redirection'] ?? '';
 
-	update_post_meta( $post_id, '_bp_member_type_registration_redirection', $registration_redirection );
-	update_post_meta( $post_id, '_bp_member_type_custom_registration_redirection', $custom_registration_redirection );
 	update_post_meta( $post_id, '_bp_member_type_login_redirection', $login_redirection );
 	update_post_meta( $post_id, '_bp_member_type_custom_login_redirection', $custom_login_redirection );
 	update_post_meta( $post_id, '_bp_member_type_logout_redirection', $logout_redirection );
@@ -3516,8 +3511,6 @@ function bb_member_type_labelcolor_metabox( $post ) {
 }
 
 function bb_member_type_redirection_metabox( $post ) {
-	$registration_redirection        = get_post_meta( $post->ID, '_bp_member_type_registration_redirection', true );
-	$custom_registration_redirection = get_post_meta( $post->ID, '_bp_member_type_custom_registration_redirection', true );
 	$login_redirection               = get_post_meta( $post->ID, '_bp_member_type_login_redirection', true );
 	$custom_login_redirection        = get_post_meta( $post->ID, '_bp_member_type_custom_login_redirection', true );
 	$logout_redirection              = get_post_meta( $post->ID, '_bp_member_type_logout_redirection', true );
@@ -3542,46 +3535,6 @@ function bb_member_type_redirection_metabox( $post ) {
 						)
 					);
 					?>
-				</td>
-			</tr>
-			<tr class="child-no-padding">
-				<th scope="row">After Registration</th>
-				<td>
-					<select name="bp-member-type[registration_redirection]" id="bb-registration-redirection">
-						<option value="" <?php selected( '', $registration_redirection ); ?>><?php esc_html_e( 'Select', 'buddyboss' ); ?></option>
-						<option value="0" <?php selected( 0, $registration_redirection ); ?>><?php esc_html_e( 'Custom URL', 'buddyboss' ); ?></option>
-						<?php
-						$pages = bb_get_published_pages();
-						foreach( $pages as $id => $title ) {
-							?>
-							<option value="<?php echo $id; ?>" <?php selected( $id, $registration_redirection ); ?>><?php echo $title; ?></option>
-							<?php
-						}
-						?>
-					</select>
-					<p class="bb-description">
-						<?php
-						esc_html_e(
-							'Select a page or external link to redirect your members to after they register.',
-							'buddyboss'
-						)
-						?>
-					</p>
-				</td>
-			</tr>
-			<tr class="child-no-padding registration-redirection-text-box" style="display: none;">
-				<th scope="row"></th>
-				<td>
-					<input style="width: 89%;" id="bb-custom-registration-redirection" name="bp-member-type[custom_registration_redirection]" type="text"
-						   value="<?php echo esc_url( $custom_registration_redirection ); ?>" />
-					<p class="bb-description">
-						<?php
-						esc_html_e(
-							'Select a page or external link to redirect your members to after they register.',
-							'buddyboss'
-						)
-						?>
-					</p>
 				</td>
 			</tr>
 			<tr>
