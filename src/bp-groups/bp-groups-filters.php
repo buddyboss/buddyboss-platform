@@ -1171,7 +1171,7 @@ function bb_subscription_send_subscribe_group_notifications( $content, $user_id,
 		)
 	);
 }
-add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
+add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
 
 /**
  * Add group subscription repair list item.
