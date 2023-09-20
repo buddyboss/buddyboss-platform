@@ -2471,7 +2471,20 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 		$is_group_thread = bb_messages_is_group_thread( $thread_id );
 
-		if ( bp_is_active( 'media' ) && ( ( ( empty( $is_group_thread ) || ( ! empty( $is_group_thread ) && ! bp_is_active( 'groups' ) ) ) && bp_is_messages_media_support_enabled() ) || ( bp_is_active( 'groups' ) && ! empty( $is_group_thread ) && bp_is_group_media_support_enabled() ) ) ) {
+		if (
+			bp_is_active( 'media' ) &&
+			(
+				(
+					$group_id &&
+					'group' === $message_from &&
+					bp_is_group_media_support_enabled()
+				) ||
+				(
+					'group' !== $message_from &&
+					bp_is_messages_media_support_enabled()
+				)
+			)
+		) {
 			$media_ids = bp_messages_get_meta( $bp_get_the_thread_message_id, 'bp_media_ids', true );
 
 			if ( ! empty( $media_ids ) && bp_has_media(
@@ -2482,6 +2495,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					'sort'             => 'ASC',
 					'user_id'          => false,
 					'moderation_query' => $has_message_updated,
+					'per_page'         => 0,
 				)
 			) ) {
 				$thread->messages[ $i ]['media'] = array();
@@ -2505,7 +2519,20 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			}
 		}
 
-		if ( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() ) {
+		if (
+			bp_is_active( 'video' ) &&
+			(
+				(
+					$group_id &&
+					'group' === $message_from &&
+					bp_is_group_video_support_enabled()
+				) ||
+				(
+					'group' !== $message_from &&
+					bp_is_messages_video_support_enabled()
+				)
+			)
+		) {
 			$video_ids = bp_messages_get_meta( $bp_get_the_thread_message_id, 'bp_video_ids', true );
 
 			if (
@@ -2518,6 +2545,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'sort'             => 'ASC',
 						'user_id'          => false,
 						'moderation_query' => $has_message_updated,
+						'per_page'         => 0,
 					)
 				)
 			) {
@@ -2568,7 +2596,20 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			}
 		}
 
-		if ( bp_is_active( 'media' ) && ( ( ( empty( $is_group_thread ) || ( ! empty( $is_group_thread ) && ! bp_is_active( 'groups' ) ) ) && bp_is_messages_document_support_enabled() ) || ( bp_is_active( 'groups' ) && ! empty( $is_group_thread ) && bp_is_group_document_support_enabled() ) ) ) {
+		if (
+			bp_is_active( 'media' ) &&
+			(
+				(
+					$group_id &&
+					'group' === $message_from &&
+					bp_is_group_document_support_enabled()
+				) ||
+				(
+					'group' !== $message_from &&
+					bp_is_messages_document_support_enabled()
+				)
+			)
+		) {
 			$document_ids = bp_messages_get_meta( $bp_get_the_thread_message_id, 'bp_document_ids', true );
 
 			if ( ! empty( $document_ids ) && bp_has_document(
@@ -2577,6 +2618,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					'order_by'         => 'menu_order',
 					'sort'             => 'ASC',
 					'moderation_query' => $has_message_updated,
+					'per_page'         => 0,
 				)
 			) ) {
 				$thread->messages[ $i ]['document'] = array();
@@ -2707,7 +2749,20 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			}
 		}
 
-		if ( bp_is_active( 'media' ) && ( ( ( empty( $is_group_thread ) || ( ! empty( $is_group_thread ) && ! bp_is_active( 'groups' ) ) ) && bp_is_messages_gif_support_enabled() ) || ( bp_is_active( 'groups' ) && ! empty( $is_group_thread ) && bp_is_groups_gif_support_enabled() ) ) ) {
+		if (
+			bp_is_active( 'media' ) &&
+			(
+				(
+					$group_id &&
+					'group' === $message_from &&
+					bp_is_groups_gif_support_enabled()
+				) ||
+				(
+					'group' !== $message_from &&
+					bp_is_messages_gif_support_enabled()
+				)
+			)
+		) {
 			$gif_data = bp_messages_get_meta( $bp_get_the_thread_message_id, '_gif_data', true );
 
 			if ( ! empty( $gif_data ) && ! $has_message_updated ) {
