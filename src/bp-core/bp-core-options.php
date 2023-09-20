@@ -2383,6 +2383,7 @@ function bb_email_restrictions_setting( $default = array() ) {
  *
  * @param string $default Optional. Fallback value if not found in the database.
  *                        Default: Empty string.
+ *
  * @return string Login redirection setting value.
  */
 function bb_login_redirection( $default = '' ) {
@@ -2404,6 +2405,7 @@ function bb_login_redirection( $default = '' ) {
  *
  * @param string $default Optional. Fallback value if not found in the database.
  *                        Default: Empty string.
+ *
  * @return string Logout redirection setting value.
  */
 function bb_logout_redirection( $default = '' ) {
@@ -2425,6 +2427,7 @@ function bb_logout_redirection( $default = '' ) {
  *
  * @param string $default Optional. Fallback value if not found in the database.
  *                        Default: Empty string.
+ *
  * @return string Login redirection setting value.
  */
 function bb_custom_login_redirection( $default = '' ) {
@@ -2446,6 +2449,7 @@ function bb_custom_login_redirection( $default = '' ) {
  *
  * @param string $default Optional. Fallback value if not found in the database.
  *                        Default: Empty string.
+ *
  * @return string Logout redirection setting value.
  */
 function bb_custom_logout_redirection( $default = '' ) {

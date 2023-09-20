@@ -9016,7 +9016,7 @@ function bb_redirect_after_action( $redirect_to, $user_id = 0, $action = 'login'
 	}
 
 	// Check for profile type settings for login redirection.
-	if ( false !== bp_member_type_enable_disable() )  {
+	if ( false !== bp_member_type_enable_disable() ) {
 		$member_type = bp_get_member_type( $user_id );
 		if ( false !== $member_type ) {
 			$member_type_post_id = bp_member_type_post_by_type( $member_type );
