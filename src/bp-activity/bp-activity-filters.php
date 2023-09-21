@@ -169,6 +169,7 @@ add_action( 'bp_activity_includes', 'bb_load_activity_notifications' );
 add_filter( 'bp_get_activity_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
 add_filter( 'bp_get_activity_content_body', 'bb_mention_remove_deleted_users_link', 20, 1 );
 add_filter( 'bp_activity_comment_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
+add_filter( 'comment_max_links_url', 'bb_moderation_remove_mention_count', 10, 3 );
 
 /** Functions *****************************************************************/
 
@@ -3548,4 +3549,31 @@ function bb_group_activity_at_name_send_emails( $content, $user_id, $group_id, $
 function bb_activity_comment_at_name_send_emails( $comment_id, $r, $activity ) {
 	$activity = new BP_Activity_Activity( $comment_id );
 	bp_activity_at_name_send_emails( $activity );
+}
+
+/**
+ * Function will remove the mention link count.
+ *
+ * @param int    $num_links The number of links found.
+ * @param string $url       Comment author's URL. Included in allowed links total.
+ * @param string $comment   Content of the comment.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int The max link count for comment moderation.
+ */
+function bb_moderation_remove_mention_count( $num_links, $url, $comment ) {
+
+	// Match all links for mentions using preg_match_all.
+	$pattern = "/<a\s+class='bp-suggestions-mention'\s+href='(.*?)'/";
+	if ( preg_match_all( $pattern, $comment, $matches ) ) {
+		$mention_links = $matches[1];
+	}
+
+	// No mention links.
+	if ( empty( $mention_links ) ) {
+		return $num_links;
+	}
+
+	return ( $num_links - count( $mention_links ) );
 }
