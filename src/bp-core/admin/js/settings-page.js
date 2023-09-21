@@ -2427,6 +2427,22 @@ window.bp = window.bp || {};
 				}
 			);
 
+			// Redirection select box Select2
+			if( typeof $.fn.select2 !== 'undefined' ) {
+				if( $( '#bb-login-redirection' ).length > 0 ) {
+					$( '#bb-login-redirection' ).select2({
+						containerCssClass: 'custom-select2',
+						dropdownCssClass: 'custom-dropdown-select2'
+					});
+				}
+				if( $( '#bb-logout-redirection' ).length > 0 ) {
+					$( '#bb-logout-redirection' ).select2({
+						containerCssClass: 'custom-select2',
+						dropdownCssClass: 'custom-dropdown-select2'
+					});
+				}
+			}
+
 			// Login Redirection Settings Show/Hide.
 			var loginRedSettings = $( '#bb-login-redirection' );
 			var currentLoginRedSettings = '0';
@@ -2436,10 +2452,10 @@ window.bp = window.bp || {};
 
 				if ( '0' === currentLoginRedSettings ) {
 					$( '.login-redirection-text-box' ).show();
-					loginRedSettings.next().hide();
+					loginRedSettings.closest( 'td' ).find( '.description' ).hide();
 				} else {
 					$( '.login-redirection-text-box' ).hide();
-					loginRedSettings.next().show();
+					loginRedSettings.closest( 'td' ).find( '.description' ).show();
 				}
 
 				$( loginRedSettings ).change(
@@ -2447,10 +2463,10 @@ window.bp = window.bp || {};
 						currentLoginRedSettings = $( this ).val();
 						if ( '0' === currentLoginRedSettings ) {
 							$( '.login-redirection-text-box' ).show();
-							loginRedSettings.next().hide();
+							loginRedSettings.closest( 'td' ).find( '.description' ).hide();
 						} else {
 							$( '.login-redirection-text-box' ).hide();
-							loginRedSettings.next().show();
+							loginRedSettings.closest( 'td' ).find( '.description' ).show();
 						}
 
 					}
@@ -2466,10 +2482,10 @@ window.bp = window.bp || {};
 
 				if ( '0' === currentLogoutRedSettings ) {
 					$( '.logout-redirection-text-box' ).show();
-					logoutRedSettings.next().hide();
+					logoutRedSettings.closest( 'td' ).find( '.description' ).hide();
 				} else {
 					$( '.logout-redirection-text-box' ).hide();
-					logoutRedSettings.next().show();
+					logoutRedSettings.closest( 'td' ).find( '.description' ).show();
 				}
 
 				$( logoutRedSettings ).change(
@@ -2477,10 +2493,10 @@ window.bp = window.bp || {};
 						currentLogoutRedSettings = $( this ).val();
 						if ( '0' === currentLogoutRedSettings ) {
 							$( '.logout-redirection-text-box' ).show();
-							logoutRedSettings.next().hide();
+							logoutRedSettings.closest( 'td' ).find( '.description' ).hide();
 						} else {
 							$( '.logout-redirection-text-box' ).hide();
-							logoutRedSettings.next().show();
+							logoutRedSettings.closest( 'td' ).find( '.description' ).show();
 						}
 
 					}
