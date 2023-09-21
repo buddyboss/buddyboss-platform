@@ -102,7 +102,10 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			$screen    = get_current_screen();
 			$screen_id = $screen ? $screen->id : '';
 
-			if ( 'buddyboss_page_bp-settings' === $screen_id ) {
+			if (
+				'buddyboss_page_bp-settings' === $screen_id ||
+				'bp-member-type' === $screen_id
+			) {
 				wp_enqueue_script( 'bp-select2' );
 				wp_enqueue_style( 'bp-select2' );
 			}
