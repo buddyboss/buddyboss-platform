@@ -8978,7 +8978,7 @@ function bb_is_allowed_register_email_address( $email = '' ) {
  * @return string $redirect_to Updated redirect URL.
  */
 function bb_redirect_after_action( $redirect_to, $user_id = 0, $action = 'login' ) {
-
+	$custom_url       = '';
 	$redirect_setting = '';
 
 	if ( 'login' === $action ) {
@@ -8990,7 +8990,6 @@ function bb_redirect_after_action( $redirect_to, $user_id = 0, $action = 'login'
 	// Check if any page or custom URL is set.
 	if ( '' !== $redirect_setting ) {
 		if ( '0' === $redirect_setting ) {
-
 			if ( 'login' === $action ) {
 				$custom_url = esc_url( bb_custom_login_redirection() );
 			} elseif ( 'logout' === $action ) {
@@ -9023,8 +9022,11 @@ function bb_redirect_after_action( $redirect_to, $user_id = 0, $action = 'login'
 			if ( ! empty( $member_type_post_id ) ) {
 
 				$member_type_redirect_setting = get_post_meta( $member_type_post_id, '_bp_member_type_' . $action . '_redirection', true );
+
 				// Check if any page or custom URL is set.
 				if ( '' !== $member_type_redirect_setting ) {
+
+					$custom_url = '';
 					if ( '0' === $member_type_redirect_setting ) {
 						$custom_url = get_post_meta( $member_type_post_id, '_bp_member_type_custom_' . $action . '_redirection', true );
 						if ( ! empty( $custom_url ) ) {
@@ -9049,7 +9051,9 @@ function bb_redirect_after_action( $redirect_to, $user_id = 0, $action = 'login'
 	}
 
 	// Support for custom third party URLs.
-	add_filter( 'allowed_redirect_hosts', 'bb_redirection_allowed_third_party_domains' );
+	if ( ! empty( $custom_url ) ) {
+		add_filter( 'allowed_redirect_hosts', 'bb_redirection_allowed_third_party_domains' );
+	}
 
 	return $redirect_to;
 }

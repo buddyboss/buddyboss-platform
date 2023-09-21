@@ -41,7 +41,7 @@ defined( 'ABSPATH' ) || exit;
  */
 add_filter( 'request', 'bp_request', 10 );
 add_filter( 'template_include', 'bp_template_include', 10 );
-add_filter( 'login_redirect', 'bp_login_redirect', 10, 3 );
+add_filter( 'login_redirect', 'bp_login_redirect', PHP_INT_MAX, 3 );
 add_filter( 'map_meta_cap', 'bp_map_meta_caps', 10, 4 );
 
 // Add some filters to feedback messages.
@@ -71,7 +71,7 @@ add_filter( 'bp_core_widget_user_display_name', 'strip_tags' );
 add_filter( 'bp_core_widget_user_display_name', 'esc_html' );
 
 // Redirects.
-add_filter( 'login_redirect', 'bb_login_redirect', PHP_INT_MAX, 3 );
+add_filter( 'bp_login_redirect', 'bb_login_redirect', PHP_INT_MAX, 3 );
 add_filter( 'logout_redirect', 'bb_logout_redirect', PHP_INT_MAX, 3 );
 
 // Avatars.
@@ -2512,7 +2512,7 @@ function bb_login_redirect( $redirect_to, $request, $user ) {
 	if ( $user && is_object( $user ) && is_a( $user, 'WP_User' ) ) {
 
 		// Exclude admins.
-		if ( in_array( 'administrator', $user->roles ) ) {
+		if ( in_array( 'administrator', $user->roles, true ) ) {
 			return $redirect_to;
 		}
 		$redirect_to = bb_redirect_after_action( $redirect_to, $user->ID, 'login' );
@@ -2531,7 +2531,7 @@ function bb_logout_redirect( $redirect_to, $request, $user ) {
 	if ( $user && is_object( $user ) && is_a( $user, 'WP_User' ) ) {
 
 		// Exclude admins.
-		if ( in_array( 'administrator', $user->roles ) ) {
+		if ( in_array( 'administrator', $user->roles, true ) ) {
 			return $redirect_to;
 		}
 		$redirect_to = bb_redirect_after_action( $redirect_to, $user->ID, 'logout' );
