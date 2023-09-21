@@ -2725,10 +2725,19 @@ class BP_Email_Tokens {
 						<?php
 						while ( bp_video() ) {
 							bp_the_video();
-							$poster_thumb = bp_get_video_activity_thumb();
-							if ( empty( $poster_thumb ) ) {
-								$poster_thumb = bp_get_video_popup_thumb();
+
+							global $video_template;
+
+							$attachment_thumb_id = bb_get_video_thumb_id( $video_template->video->attachment_id );
+
+							if ( ! empty( $attachment_thumb_id ) ) {
+								$poster_thumb = bb_video_get_thumb_url( $video_template->video->id, $attachment_thumb_id, 'bb-video-activity-image', true, $receiver_user_id );
+
+								if ( empty( $poster_thumb ) ) {
+									$poster_thumb = bb_video_get_thumb_url( $video_template->video->id, $attachment_thumb_id, 'bb-video-poster-popup-image', true, $receiver_user_id );
+								}
 							}
+
 							if ( empty( $poster_thumb ) ) {
 								$poster_thumb = bb_get_video_default_placeholder_image();
 							}

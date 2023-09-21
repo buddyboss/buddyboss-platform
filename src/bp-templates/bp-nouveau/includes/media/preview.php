@@ -25,6 +25,7 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 		add_filter(
 			'bp_loggedin_user_id',
 			function( $user_id ) use ( $receiver_id ) {
+				wp_set_current_user( $receiver_id );
 				return $receiver_id;
 			}
 		);

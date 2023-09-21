@@ -1907,6 +1907,7 @@ function bb_setup_video_preview() {
 	add_rewrite_rule( 'bb-video-preview/([^/]+)/([^/]+)/?$', 'index.php?bb-video-preview=$matches[1]&id1=$matches[2]', 'top' );
 	add_rewrite_rule( 'bb-video-thumb-preview/([^/]+)/([^/]+)/?$', 'index.php?bb-video-thumb-preview=$matches[1]&id1=$matches[2]', 'top' );
 	add_rewrite_rule( 'bb-video-thumb-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?bb-video-thumb-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
+	add_rewrite_rule( 'bb-video-thumb-preview/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?bb-video-thumb-preview=$matches[1]&id1=$matches[2]&size=$matches[3]&receiver=$matches[4]', 'top' );
 }
 
 /**
@@ -1922,6 +1923,7 @@ function bb_setup_query_video_preview( $query_vars ) {
 	$query_vars[] = 'bb-video-preview';
 	$query_vars[] = 'bb-video-thumb-preview';
 	$query_vars[] = 'id1';
+	$query_vars[] = 'receiver';
 
 	return $query_vars;
 }
