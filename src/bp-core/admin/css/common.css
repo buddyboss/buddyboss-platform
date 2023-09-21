@@ -3717,6 +3717,10 @@ table.moderations .column-member img {
   vertical-align: middle;
 }
 
+.custom-select2 .select2-selection__arrow {
+  display: none;
+}
+
 .select2-container--open .custom-select2 {
   border-radius: 3px 3px 0 0;
 }
@@ -3737,4 +3741,5 @@ table.moderations .column-member img {
 
 .custom-dropdown-select2 .select2-results__options li.select2-results__option--highlighted {
   background-color: rgba(170, 170, 170, 0.5);
+  color: inherit;
 }

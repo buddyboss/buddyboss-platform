@@ -4023,6 +4023,10 @@ table.moderations .column-member {
 	cursor: pointer;
 	vertical-align: middle;
 
+	.select2-selection__arrow {
+		display: none;
+	}
+
 	.select2-container--open & {
 		border-radius: 3px 3px 0 0;
 	}
@@ -4044,6 +4048,7 @@ table.moderations .column-member {
 
 			&.select2-results__option--highlighted {
 				background-color: rgba(170, 170, 170, 0.5);
+				color: inherit;
 			}
 		}
 	}
