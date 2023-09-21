@@ -104,6 +104,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			if ( 'buddyboss_page_bp-settings' === $screen_id ) {
 				wp_enqueue_script( 'bp-select2' );
+				wp_enqueue_style( 'bp-select2' );
 			}
 
 			wp_enqueue_script(
