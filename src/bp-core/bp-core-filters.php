@@ -2510,6 +2510,11 @@ add_filter( 'bb_oembed_discover_support', 'bb_loom_oembed_discover_support', 10,
 function bb_login_redirect( $redirect_to, $request, $user ) {
 
 	if ( $user && is_object( $user ) && is_a( $user, 'WP_User' ) ) {
+
+		// Exclude admins.
+		if ( in_array( 'administrator', $user->roles ) ) {
+			return $redirect_to;
+		}
 		$redirect_to = bb_redirect_after_action( $redirect_to, $user->ID, 'login' );
 	}
 
@@ -2524,6 +2529,11 @@ function bb_login_redirect( $redirect_to, $request, $user ) {
 function bb_logout_redirect( $redirect_to, $request, $user ) {
 
 	if ( $user && is_object( $user ) && is_a( $user, 'WP_User' ) ) {
+
+		// Exclude admins.
+		if ( in_array( 'administrator', $user->roles ) ) {
+			return $redirect_to;
+		}
 		$redirect_to = bb_redirect_after_action( $redirect_to, $user->ID, 'logout' );
 	}
 
