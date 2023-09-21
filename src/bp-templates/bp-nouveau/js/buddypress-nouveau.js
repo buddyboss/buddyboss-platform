@@ -3252,6 +3252,7 @@ window.bp = window.bp || {};
 										$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-no-thumbnail' );
 										clearInterval( timer );
 									}
+									attempts++;
 								}
 								return success;
 							};
