@@ -2452,10 +2452,10 @@ window.bp = window.bp || {};
 
 				if ( '0' === currentLoginRedSettings ) {
 					$( '.login-redirection-text-box' ).show();
-					loginRedSettings.closest( 'td' ).find( '.description' ).hide();
+					loginRedSettings.closest( 'td' ).find( '.description, .bb-description' ).hide();
 				} else {
 					$( '.login-redirection-text-box' ).hide();
-					loginRedSettings.closest( 'td' ).find( '.description' ).show();
+					loginRedSettings.closest( 'td' ).find( '.description, .bb-description' ).show();
 				}
 
 				$( loginRedSettings ).change(
@@ -2463,10 +2463,10 @@ window.bp = window.bp || {};
 						currentLoginRedSettings = $( this ).val();
 						if ( '0' === currentLoginRedSettings ) {
 							$( '.login-redirection-text-box' ).show();
-							loginRedSettings.closest( 'td' ).find( '.description' ).hide();
+							loginRedSettings.closest( 'td' ).find( '.description, .bb-description' ).hide();
 						} else {
 							$( '.login-redirection-text-box' ).hide();
-							loginRedSettings.closest( 'td' ).find( '.description' ).show();
+							loginRedSettings.closest( 'td' ).find( '.description, .bb-description' ).show();
 						}
 
 					}
@@ -2482,10 +2482,10 @@ window.bp = window.bp || {};
 
 				if ( '0' === currentLogoutRedSettings ) {
 					$( '.logout-redirection-text-box' ).show();
-					logoutRedSettings.closest( 'td' ).find( '.description' ).hide();
+					logoutRedSettings.closest( 'td' ).find( '.description, .bb-description' ).hide();
 				} else {
 					$( '.logout-redirection-text-box' ).hide();
-					logoutRedSettings.closest( 'td' ).find( '.description' ).show();
+					logoutRedSettings.closest( 'td' ).find( '.description, .bb-description' ).show();
 				}
 
 				$( logoutRedSettings ).change(
@@ -2493,10 +2493,10 @@ window.bp = window.bp || {};
 						currentLogoutRedSettings = $( this ).val();
 						if ( '0' === currentLogoutRedSettings ) {
 							$( '.logout-redirection-text-box' ).show();
-							logoutRedSettings.closest( 'td' ).find( '.description' ).hide();
+							logoutRedSettings.closest( 'td' ).find( '.description, .bb-description' ).hide();
 						} else {
 							$( '.logout-redirection-text-box' ).hide();
-							logoutRedSettings.closest( 'td' ).find( '.description' ).show();
+							logoutRedSettings.closest( 'td' ).find( '.description, .bb-description' ).show();
 						}
 
 					}
