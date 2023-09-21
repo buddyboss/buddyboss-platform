@@ -3569,7 +3569,7 @@ function bb_member_type_redirection_metabox( $post ) {
 					<p class="bb-description">
 						<?php
 						esc_html_e(
-							'Select a page or external link to redirect your members to after they register.',
+							'Select a page or external link to redirect your members to after they login.',
 							'buddyboss'
 						)
 						?>
@@ -3608,7 +3608,7 @@ function bb_member_type_redirection_metabox( $post ) {
 					<p class="bb-description">
 						<?php
 						esc_html_e(
-							'Select a page or external link to redirect your members to after they register.',
+							'Select a page or external link to redirect your members to after they logout.',
 							'buddyboss'
 						)
 						?>
