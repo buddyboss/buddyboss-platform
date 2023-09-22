@@ -1,129 +1,143 @@
 // Livestamp.js / v1.1.2 / (c) 2012 Matt Bradley / MIT License
-(function($, moment) {
-  var updateInterval = 1e3,
-      paused = false,
-      $livestamps = $([]),
+(function ($, moment) {
+	var updateInterval = 1e3,
+		paused         = false,
+		$livestamps    = $( [] ),
 
-  init = function() {
-    livestampGlobal.resume();
-  },
+	init = function () {
+		livestampGlobal.resume();
+	},
 
-  prep = function($el, timestamp) {
-    var oldData = $el.data('livestampdata');
-    if (typeof timestamp == 'number')
-      timestamp *= 1e3;
+	prep = function ( $el, timestamp ) {
+		var oldData = $el.data( 'livestampdata' );
+		if ( typeof timestamp == 'number' ) {
+			timestamp *= 1e3;
+		}
 
-    $el.removeAttr('data-livestamp')
-      .removeData('livestamp');
+		$el.removeAttr( 'data-livestamp' ).removeData( 'livestamp' );
 
-    timestamp = moment(timestamp);
-    if (moment.isMoment(timestamp) && !isNaN(+timestamp)) {
-      var newData = $.extend({ }, { 'original': $el.contents() }, oldData);
-      newData.moment = moment(timestamp);
+		timestamp = moment( timestamp );
+		if ( moment.isMoment( timestamp ) && ! isNaN( +timestamp ) ) {
+			var newData = $.extend( {}, {'original': $el.contents()}, oldData );
 
-      $el.data('livestampdata', newData).empty();
-      $livestamps.push($el[0]);
-    }
-  },
+			newData.moment = moment( timestamp );
 
-  run = function() {
-    if (paused) return;
-    livestampGlobal.update();
-    setTimeout(run, updateInterval);
-  },
+			$el.data( 'livestampdata', newData ).empty();
+			$livestamps.push( $el[0] );
+		}
+	},
 
-  livestampGlobal = {
-    update: function() {
-      $('[data-livestamp]').each(function() {
-        var $this = $(this);
-        prep($this, $this.data('livestamp'));
-      });
+	run = function () {
+		if ( paused ) {
+			return;
+		}
+		livestampGlobal.update();
+		setTimeout( run, updateInterval );
+	},
 
-      var toRemove = [];
-      $livestamps.each(function() {
-        var $this = $(this),
-            data = $this.data('livestampdata');
+	livestampGlobal = {
+		update: function () {
+			$( '[data-livestamp]' ).each(
+				function () {
+					var $this = $( this );
+					prep( $this, $this.data( 'livestamp' ) );
+				}
+			);
 
-        if (data === undefined)
-          toRemove.push(this);
-        else if (moment.isMoment(data.moment)) {
-          var from = $this.html(),
-              to = data.moment.fromNow();
+			var toRemove = [];
+			$livestamps.each(
+				function () {
+					var $this = $( this ),
+						data  = $this.data( 'livestampdata' );
 
-          if (from != to) {
-            var e = $.Event('change.livestamp');
-            $this.trigger(e, [from, to]);
-            if (!e.isDefaultPrevented())
-              $this.html(to);
-          }
-        }
-      });
+					if ( data === undefined ) {
+						toRemove.push( this );
+					} else if ( moment.isMoment( data.moment ) ) {
+						var from = $this.html(),
+							to   = data.moment.fromNow();
 
-      $livestamps = $livestamps.not(toRemove);
-    },
+						if ( from != to ) {
+							var e = $.Event( 'change.livestamp' );
+							$this.trigger( e, [from, to] );
+							if ( ! e.isDefaultPrevented() ) {
+								$this.html( to );
+							}
+						}
+					}
+				}
+			);
 
-    pause: function() {
-      paused = true;
-    },
+			$livestamps = $livestamps.not( toRemove );
+		},
 
-    resume: function() {
-      paused = false;
-      run();
-    },
+		pause: function () {
+			paused = true;
+		},
 
-    interval: function(interval) {
-      if (interval === undefined)
-        return updateInterval;
-      updateInterval = interval;
-    }
-  },
+		resume: function () {
+			paused = false;
+			run();
+		},
 
-  livestampLocal = {
-    add: function($el, timestamp) {
-      if (typeof timestamp == 'number')
-        timestamp *= 1e3;
-      timestamp = moment(timestamp);
+		interval: function (interval) {
+			if ( interval === undefined ) {
+				return updateInterval;
+			}
+			updateInterval = interval;
+		}
+	},
 
-      if (moment.isMoment(timestamp) && !isNaN(+timestamp)) {
-        $el.each(function() {
-          prep($(this), timestamp);
-        });
-        livestampGlobal.update();
-      }
+	livestampLocal = {
+		add: function ( $el, timestamp ) {
+			if ( typeof timestamp == 'number' ) {
+				timestamp *= 1e3;
+			}
 
-      return $el;
-    },
+			timestamp = moment( timestamp );
 
-    destroy: function($el) {
-      $livestamps = $livestamps.not($el);
-      $el.each(function() {
-        var $this = $(this),
-            data = $this.data('livestampdata');
+			if ( moment.isMoment( timestamp ) && ! isNaN( +timestamp ) ) {
+				$el.each(
+					function () {
+						prep( $( this ), timestamp );
+					}
+				);
+				livestampGlobal.update();
+			}
 
-        if (data === undefined)
-          return $el;
+			return $el;
+		},
 
-        $this
-          .html(data.original ? data.original : '')
-          .removeData('livestampdata');
-      });
+		destroy: function ( $el ) {
+			$livestamps = $livestamps.not( $el );
+			$el.each(
+				function () {
+					var $this = $( this ),
+						data  = $this.data( 'livestampdata' );
 
-      return $el;
-    },
+					if ( data === undefined ) {
+						return $el;
+					}
 
-    isLivestamp: function($el) {
-      return $el.data('livestampdata') !== undefined;
-    }
-  };
+					$this.html( data.original ? data.original : '' ).removeData( 'livestampdata' );
+				}
+			);
 
-  $.livestamp = livestampGlobal;
-  $(init);
-  $.fn.livestamp = function(method, options) {
-    if (!livestampLocal[method]) {
-      options = method;
-      method = 'add';
-    }
+			return $el;
+		},
 
-    return livestampLocal[method](this, options);
-  };
-})(jQuery, moment);
+		isLivestamp: function ($el) {
+			return $el.data( 'livestampdata' ) !== undefined;
+		}
+	};
+
+	$.livestamp = livestampGlobal;
+	$( init );
+	$.fn.livestamp = function (method, options) {
+		if ( ! livestampLocal[method] ) {
+			options = method;
+			method  = 'add';
+		}
+
+		return livestampLocal[method]( this, options );
+	};
+})( jQuery, moment );
