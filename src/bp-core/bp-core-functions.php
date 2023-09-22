@@ -594,8 +594,14 @@ function bp_core_update_directory_page_ids( $blog_page_ids ) {
 function bp_core_get_directory_pages() {
 	global $wpdb;
 
+	$cache_key = 'directory_pages';
+
+	if ( is_multisite() ) {
+		$cache_key = $cache_key . '_' . get_current_blog_id();
+	}
+
 	// Look in cache first.
-	$pages = wp_cache_get( 'directory_pages', 'bp_pages' );
+	$pages = wp_cache_get( $cache_key, 'bp_pages' );
 
 	if ( false === $pages ) {
 
@@ -639,7 +645,7 @@ function bp_core_get_directory_pages() {
 			}
 		}
 
-		wp_cache_set( 'directory_pages', $pages, 'bp_pages' );
+		wp_cache_set( $cache_key, $pages, 'bp_pages' );
 	}
 
 	/**
@@ -8879,7 +8885,20 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 	// Check if the email address is allowed or not.
 	foreach ( $email_restrictions as $key => $rule ) {
 		$rule_email = ( ! empty( $rule['address'] ) ? strtolower( trim( $rule['address'] ) ) : '' );
-		if ( $email === $rule_email ) {
+
+		// Split the email addresses into parts using '@'.
+		$rule_email_parts  = explode( '@', $rule_email );
+		$input_email_parts = explode( '@', $email );
+	 
+		// Remove aliases, everything after '+'.
+		$rule_email_user  = explode( '+', $rule_email_parts[0] )[0];
+		$input_email_user = explode( '+', $input_email_parts[0] )[0];
+
+		// Compose the email address without the alias.
+		$rule_email  = $rule_email_user . '@' . $rule_email_parts[1];
+		$input_email = $input_email_user . '@' . $input_email_parts[1];
+
+		if ( $input_email === $rule_email ) {
 			if ( 'always_allow' === $rule['condition'] ) {
 				return true;
 			} elseif ( 'never_allow' === $rule['condition'] ) {
@@ -8933,7 +8952,7 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 
 			if ( preg_match( $pattern, $domain_and_ext ) ) {
 				if ( 'only_allow' === $rule_condition ) {
-					return true;
+					$is_allowed = true;
 				} elseif ( 'always_allow' === $rule_condition ) {
 					$is_allowed = true;
 				} elseif ( 'never_allow' === $rule_condition ) {
@@ -8944,7 +8963,7 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 			// Domain with * as placeholder.
 		} elseif ( '*' === $rule_domain && $extension === $rule_tld ) {
 			if ( 'only_allow' === $rule_condition ) {
-				return true;
+				$is_allowed = true;
 			} elseif ( 'always_allow' === $rule_condition ) {
 				$is_allowed = true;
 			} elseif ( 'never_allow' === $rule_condition ) {
@@ -8954,7 +8973,7 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 	}
 
 	// If only allowed occurred but rules not matched.
-	if ( true === $only_allow ) {
+	if ( true === $only_allow && '' === $is_allowed ) {
 		return false;
 	}
 
@@ -9056,4 +9075,17 @@ function bb_redirect_after_action( $redirect_to, $user_id = 0, $action = 'login'
 	}
 
 	return $redirect_to;
+}
+
+/**
+ * Function to load the instance of the class BB_Reaction.
+ *
+ * @since BuddyBoss 2.4.30
+ *
+ * @return null|BB_Reaction|void
+ */
+function bb_load_reaction() {
+	if ( class_exists( 'BB_Reaction' ) ) {
+		return BB_Reaction::instance();
+	}
 }

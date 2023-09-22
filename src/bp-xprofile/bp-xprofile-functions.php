@@ -1567,13 +1567,6 @@ function bp_xprofile_social_network_provider() {
 		'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#333" d="M16 0c-8.837 0-16 7.212-16 16.109s7.163 16.109 16 16.109 16-7.212 16-16.109-7.163-16.109-16-16.109zM9 21c-2.761 0-5-2.239-5-5s2.239-5 5-5 5 2.239 5 5c0 2.761-2.239 5-5 5zM23 21c-2.761 0-5-2.239-5-5s2.239-5 5-5 5 2.239 5 5c0 2.761-2.239 5-5 5z"></path></svg>',
 	);
 	$options[] = (object) array(
-		'id'                => 3,
-		'is_default_option' => false,
-		'name'              => __( 'Google+', 'buddyboss' ),
-		'value'             => 'google',
-		'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#333" d="M16 0c-8.838 0-16 7.162-16 16s7.162 16 16 16 16-7.163 16-16-7.163-16-16-16zM12 24c-4.425 0-8-3.575-8-8s3.575-8 8-8c2.162 0 3.969 0.787 5.363 2.094l-2.175 2.088c-0.594-0.569-1.631-1.231-3.188-1.231-2.731 0-4.963 2.263-4.963 5.050s2.231 5.050 4.963 5.050c3.169 0 4.356-2.275 4.538-3.45h-4.537v-2.744h7.556c0.069 0.4 0.125 0.8 0.125 1.325 0 4.575-3.063 7.819-7.681 7.819zM26 16v2h-2v-2h-2v-2h2v-2h2v2h2v2h-2z"></path></svg>',
-	);
-	$options[] = (object) array(
 		'id'                => 4,
 		'is_default_option' => false,
 		'name'              => __( 'Instagram', 'buddyboss' ),
@@ -1677,6 +1670,14 @@ function bp_xprofile_social_network_provider() {
 		'name'              => __( 'YouTube', 'buddyboss' ),
 		'value'             => 'youTube',
 		'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#333" d="M16 0c-8.8 0-16 7.2-16 16s7.2 16 16 16c8.8 0 16-7.2 16-16s-7.2-16-16-16v0zM24 16.608c0 1.28-0.192 2.592-0.192 2.592s-0.192 1.088-0.608 1.6c-0.608 0.608-1.312 0.608-1.6 0.704-2.208 0.192-5.6 0.192-5.6 0.192s-4.192 0-5.408-0.192c-0.384-0.096-1.184 0-1.792-0.704-0.512-0.512-0.608-1.6-0.608-1.6s-0.192-1.312-0.192-2.592v-1.216c0-1.28 0.192-2.592 0.192-2.592s0.224-1.088 0.608-1.6c0.608-0.608 1.312-0.608 1.6-0.704 2.208-0.192 5.6-0.192 5.6-0.192s3.392 0 5.6 0.192c0.288 0 0.992 0 1.6 0.704 0.512 0.512 0.608 1.6 0.608 1.6s0.192 1.312 0.192 2.592v1.216zM14.304 18.112l4.384-2.304-4.384-2.208v4.512z"></path></svg>',
+	);
+
+	$options[] = (object) array(
+		'id'                => 19,
+		'is_default_option' => false,
+		'name'              => __( 'X', 'buddyboss' ),
+		'value'             => 'x',
+		'svg'               => '<svg viewBox="0 0 24 24" fill="none"><path d="M8.54996 6.78142H7.54716L15.462 17.2186H16.4548L8.54996 6.78142Z" fill="#333"/><path d="M12 24C18.6274 24 24 18.6274 24 12C24 5.37258 18.6274 0 12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24ZM5 5.5H9.15412L12.3916 9.77458L15.8503 5.51925H18.1382L13.4978 11.2352L19 18.5H14.8583L11.3528 13.8773L7.61027 18.4872H5.31001L10.2446 12.416L5 5.5Z" fill="#333"/></svg>',
 	);
 
 	return apply_filters( 'bp_xprofile_fields_social_networks_provider', $options );
@@ -2469,4 +2470,102 @@ function bb_xprofile_get_field_type( $field_id ) {
 	}
 
 	return $field_type;
+}
+
+/**
+ * Function to update xprofile social networks field values.
+ *
+ * @since BuddyBoss 2.4.30
+ *
+ * @return void
+ */
+function bb_xprofile_update_social_network_fields() {
+	global $wpdb, $bb_background_updater;
+
+	/**
+	 * Check the google+ was setup or not in social network field.
+	 */
+	$table_name      = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+	$social_networks = $wpdb->get_col( "SELECT id FROM {$table_name} a WHERE type = 'socialnetworks'" ); //phpcs:ignore
+	if (
+		! empty( $social_networks ) &&
+		! is_wp_error( $social_networks )
+	) {
+		foreach ( $social_networks as $network_field_id ) {
+			$field = xprofile_get_field( $network_field_id );
+			if ( ! empty( $field->id ) ) {
+				$field_name      = 'google';
+				$sql             = $wpdb->prepare( "SELECT id from {$table_name} WHERE parent_id = %d AND name = %s", $field->id, $field_name ); // phpcs:ignore
+				$google_field_id = $wpdb->get_var( $sql ); //phpcs:ignore
+
+				if ( ! empty( $google_field_id ) ) {
+					$wpdb->query( "DELETE FROM {$table_name} WHERE id = {$google_field_id}" ); //phpcs:ignore
+
+					$bb_background_updater->data(
+						array(
+							'type'     => 'xprofile',
+							'group'    => 'bb_remove_google_plus_fields',
+							'data_id'  => $network_field_id,
+							'priority' => 5,
+							'callback' => 'bb_remove_google_plus_fields',
+							'args'     => array( $network_field_id, $field_name ),
+						)
+					);
+
+					$bb_background_updater->save();
+				}
+			}
+		}
+		$bb_background_updater->dispatch();
+	}
+}
+
+/**
+ * Function to remove google+ field values from xprofile data.
+ *
+ * @since BuddyBoss 2.4.30
+ *
+ * @param int    $field_id   To check against the filed id.
+ * @param string $field_name To check against the filed name.
+ *
+ * @return void
+ */
+function bb_remove_google_plus_fields( $field_id, $field_name ) {
+	global $wpdb, $bb_background_updater;
+	if ( empty( $field_name ) || empty( $field_id ) ) {
+		return;
+	}
+
+	$table_name = bp_core_get_table_prefix() . 'bp_xprofile_data';
+	$user_ids   = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT user_id FROM {$table_name} WHERE field_id = %d and value like %s limit 0, 20", $field_id, '%' . $wpdb->esc_like( $field_name ) . '%' ) ); // phpcs:ignore
+
+	if (
+		! empty( $user_ids ) &&
+		! is_wp_error( $user_ids )
+	) {
+		foreach ( $user_ids as $user_id ) {
+			$field_data = new BP_XProfile_ProfileData( $field_id, $user_id );
+			$data_value = maybe_unserialize( $field_data->value );
+			if ( ! empty( $data_value ) && isset( $data_value[ $field_name ] ) ) {
+				$field_value = $data_value[ $field_name ];
+				unset( $data_value[ $field_name ] );
+				update_user_meta( $user_id, 'bb_xprofile_social_google_plus', $field_value );
+				$field_data->value = maybe_serialize( $data_value );
+				$field_data->save();
+			}
+		}
+
+		$bb_background_updater->data(
+			array(
+				'type'     => 'xprofile',
+				'group'    => 'bb_remove_google_plus_fields',
+				'data_id'  => $field_id,
+				'priority' => 5,
+				'callback' => 'bb_remove_google_plus_fields',
+				'args'     => array( $field_id, $field_name ),
+			)
+		);
+
+		$bb_background_updater->save()->dispatch();
+	}
 }
