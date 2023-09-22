@@ -748,7 +748,8 @@ function bp_core_enqueue_livestamp() {
 						'future' => __( 'in %s', 'buddyboss' ),
 						/* translators: %s: the human time diff. */
 						'past'   => __( '%s ago', 'buddyboss' ),
-						's'      => __( 'seconds', 'buddyboss' ),
+						's'      => __( 'second', 'buddyboss' ),
+						'ss'     => __( '%d seconds', 'buddyboss' ),
 						'm'      => __( 'a minute', 'buddyboss' ),
 						/* Translators: %d is the amount of minutes. */
 						'mm'     => __( '%d minutes', 'buddyboss' ),
@@ -758,6 +759,9 @@ function bp_core_enqueue_livestamp() {
 						'd'      => __( 'a day', 'buddyboss' ),
 						/* Translators: %d is the amount of days. */
 						'dd'     => __( '%d days', 'buddyboss' ),
+						'w'      => __( 'a week', 'buddyboss' ),
+						/* Translators: %d is the amount of weeks. */
+						'ww'     => __( '%d weeks', 'buddyboss' ),
 						'M'      => __( 'a month', 'buddyboss' ),
 						/* Translators: %d is the amount of months. */
 						'MM'     => __( '%d months', 'buddyboss' ),
