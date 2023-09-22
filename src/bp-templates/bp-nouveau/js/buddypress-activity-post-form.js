@@ -2571,6 +2571,20 @@ window.bp = window.bp || {};
 					tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).removeClass( 'no-click' );
 				}
 
+				if ( tool_box_comment.find( '.ac-textarea' ).children( '.ac-input' ).length > 0 ) {
+					var $activity_comment_content = tool_box_comment.find( '.ac-textarea' ).children( '.ac-input' ).html();
+
+					var content = $.trim( $activity_comment_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+					content = content.replace( /&nbsp;/g, ' ' );
+
+					var content_text = tool_box_comment.find( '.ac-textarea' ).children( '.ac-input' ).text().trim();
+					if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0 ) {
+						$( tool_box_comment ).closest( 'form' ).addClass( 'has-content' );
+					} else {
+						$( tool_box_comment ).closest( 'form' ).removeClass( 'has-content' );
+					}
+				}
+
 				if ( ! _.isUndefined( event ) && ! _.isEmpty( old_gif_data ) && _.isEmpty( this.model.get( 'gif_data' ) ) ) {
 					bp.draft_content_changed = true;
 				}

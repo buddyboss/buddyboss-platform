@@ -91,6 +91,8 @@ add_filter( 'query_vars', 'bb_setup_attachment_media_preview_query' );
 add_action( 'template_include', 'bb_setup_attachment_media_preview_template', PHP_INT_MAX );
 
 add_action( 'bp_activity_after_email_content', 'bb_gif_activity_after_email_content' );
+
+add_filter( 'bb_activity_comment_get_edit_data', 'bp_media_get_edit_activity_data' );
 /**
  * Add Media items for search
  */
@@ -406,7 +408,7 @@ function bp_media_activity_comment_entry( $comment_id ) {
  * @return bool
  */
 function bp_media_update_activity_media_meta( $content, $user_id, $activity_id ) {
-	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit;
+	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit, $bb_activity_comment_edit;
 
 	$medias           = filter_input( INPUT_POST, 'media', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 	$medias           = ! empty( $medias ) ? $medias : array();
@@ -434,7 +436,17 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 	if ( ! isset( $medias ) || empty( $medias ) ) {
 
 		// delete media ids and meta for activity if empty media in request.
-		if ( ! empty( $activity_id ) && $bp_activity_edit && isset( $_POST['edit'] ) ) {
+		if (
+			! empty( $activity_id ) &&
+			(
+				(
+					$bp_activity_edit && isset( $_POST['edit'] )
+				) ||
+				(
+					$bb_activity_comment_edit && isset( $_POST['edit_comment'] )
+				)
+			)
+		) {
 			$old_media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
 
 			if ( ! empty( $old_media_ids ) ) {
@@ -446,6 +458,12 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 					}
 				}
 				bp_activity_delete_meta( $activity_id, 'bp_media_ids' );
+
+				// Delete media meta from activity for activity comment.
+				if ( $bb_activity_comment_edit ) {
+					bp_activity_delete_meta( $activity_id, 'bp_media_id' );
+					bp_activity_delete_meta( $activity_id, 'bp_media_activity' );
+				}
 			}
 		}
 
@@ -481,7 +499,7 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 	if ( ! empty( $activity_id ) ) {
 
 		// Delete media if not exists in current media ids.
-		if ( isset( $_POST['edit'] ) ) {
+		if ( isset( $_POST['edit'] ) || isset( $_POST['edit_comment'] ) ) {
 			$old_media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
 			$old_media_ids = explode( ',', $old_media_ids );
 
@@ -1345,17 +1363,31 @@ function bp_media_comment_embed_gif( $comment_id ) {
  * @param $activity
  */
 function bp_media_activity_save_gif_data( $activity ) {
-	global $bp_activity_edit;
+	global $bp_activity_edit, $bb_activity_comment_edit;
 
-	if ( ! ( $bp_activity_edit && isset( $_POST['edit'] ) ) && empty( $_POST['gif_data'] ) ) {
+	if ( !
+		(
+			( $bp_activity_edit && isset( $_POST['edit'] ) ) ||
+			( $bb_activity_comment_edit && isset( $_POST['edit_comment'] ) )
+		) &&
+		empty( $_POST['gif_data'] )
+	) {
 		return;
 	}
 
 	$gif_data     = ! empty( $_POST['gif_data'] ) ? $_POST['gif_data'] : array();
 	$gif_old_data = bp_activity_get_meta( $activity->id, '_gif_data', true );
 
-	// if edit activity then delete attachment and clear activity meta.
+	// if edit activity/comment, then delete attachment and clear activity meta.
+	$is_delete_gif = false;
 	if ( $bp_activity_edit && isset( $_POST['edit'] ) && empty( $gif_data ) && isset( $_POST['id'] ) && $activity->id === intval( $_POST['id'] ) ) {
+		$is_delete_gif = true;
+	} elseif ( $bb_activity_comment_edit && isset( $_POST['edit_comment'] ) && empty( $gif_data ) ) {
+		$is_delete_gif = true;
+	}
+
+	// if edit activity then delete attachment and clear activity meta.
+	if ( $is_delete_gif ) {
 		if ( ! empty( $gif_old_data ) ) {
 			wp_delete_attachment( $gif_old_data['still'], true );
 			wp_delete_attachment( $gif_old_data['mp4'], true );
@@ -2477,6 +2509,10 @@ function bp_media_get_edit_activity_data( $activity ) {
 				}
 
 				$media = new BP_Media( $media_id );
+
+				if ( empty( $media->id ) ) {
+					continue;
+				}
 
 				$activity['media'][] = array(
 					'id'            => $media_id,
