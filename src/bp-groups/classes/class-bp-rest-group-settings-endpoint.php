@@ -1280,6 +1280,44 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		$forum_ids = array_values( bbp_get_group_forum_ids( $group_id ) );
 
+		// Check for the last associated values if no forum set from setting.
+		if ( $edit_forum && empty( $forum_ids ) ) {
+
+			$last_forum_id = (int) groups_get_groupmeta( $group_id, 'last_forum_id' );
+
+			if ( ! empty( $last_forum_id ) ) {
+
+				$forum_ids = (array) $last_forum_id;
+				$forum_id  = $last_forum_id;
+
+				// Flag to remove the last associations meta.
+				$restored_associations = true;
+
+				// Check if same values associated in group and forum.
+				$last_group_ids = get_post_meta( $forum_id, '_last_bbp_group_ids', true );
+				$last_group_ids = ! empty( $last_group_ids ) ? array_filter( $last_group_ids ) : array();
+
+				if ( in_array( $group_id, $last_group_ids ) ) {
+
+					// Look for forum can be associated.
+					$valid_forum = $group_forum_extention->forum_can_associate_with_group( $forum_id, $group_id, false );
+
+					// Look for forum if exits.
+					$forum_exist = bbp_get_forum( $forum_id );
+					if ( empty( $valid_forum ) || empty( $forum_exist ) ) {
+						$restored_associations = false;
+					}
+				} else {
+					$restored_associations = false;
+				}
+
+				if ( false === $restored_associations ) {
+					$forum_ids = array();
+					$forum_id  = 0;
+				}
+			}
+		}
+
 		// Normalize group forum relationships now.
 		if ( ! empty( $forum_ids ) ) {
 
@@ -1306,11 +1344,24 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		}
 
 		// Update the group ID and forum ID relationships.
-		bbp_update_group_forum_ids( $group_id, (array) $forum_ids );
 		bbp_update_forum_group_ids( $forum_id, (array) $group_id );
+		bbp_update_group_forum_ids( $group_id, (array) $forum_ids );
 
 		// Update the group forum setting.
 		$group = $group_forum_extention->toggle_group_forum( $group_id, $edit_forum, $forum_id );
+
+		if ( true === $edit_forum ) {
+			// Delete last associations forum id.
+			if ( ! empty( $last_forum_id ) ) {
+				delete_post_meta( $last_forum_id, '_last_bbp_group_ids' );
+			}
+
+			// Update associations forum id.
+			if ( ! empty( $forum_id ) ) {
+				delete_post_meta( $forum_id, '_last_bbp_group_ids' );
+			}
+			groups_delete_groupmeta( $group_id, 'last_forum_id' );
+		}
 
 		// Create a new forum.
 		if ( empty( $forum_id ) && ( true === $edit_forum ) ) {
