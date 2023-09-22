@@ -183,7 +183,7 @@ add_filter( 'bp_activity_maybe_load_mentions_scripts', 'bp_groups_maybe_load_men
  * @param BP_Activity_Activity $activity  Activity object.
  * @return bool
  */
-function bp_groups_disable_at_mention_notification_for_non_public_groups( $send, $usernames, $user_id, BP_Activity_Activity $activity ) {
+function bp_groups_disable_at_mention_notification_for_non_public_groups( $send, $usernames, $user_id, $activity ) {
 	// Skip the check for administrators, who can get notifications from non-public groups.
 	if ( bp_user_can( $user_id, 'bp_moderate' ) ) {
 		return $send;
@@ -1170,7 +1170,7 @@ function bb_subscription_send_subscribe_group_notifications( $content, $user_id,
 		)
 	);
 }
-add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
+add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
 
 /**
  * Add group subscription repair list item.

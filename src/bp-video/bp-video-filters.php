@@ -52,8 +52,6 @@ add_filter( 'bp_repair_list', 'bp_video_add_admin_repair_items' );
 // Download Video.
 add_action( 'init', 'bp_video_download_url_file' );
 
-add_action( 'bp_activity_after_email_content', 'bp_video_activity_after_email_content' );
-
 // Delete symlinks for videos when before saved.
 add_action( 'bp_video_before_save', 'bb_video_delete_symlinks' );
 
@@ -1645,32 +1643,6 @@ function bp_video_parse_file_path( $file_path ) {
 }
 
 /**
- * Added text on the email when replied on the activity.
- *
- * @since BuddyBoss 1.7.0
- *
- * @param BP_Activity_Activity $activity Activity Object.
- */
-function bp_video_activity_after_email_content( $activity ) {
-	$video_ids = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
-
-	if ( ! empty( $video_ids ) ) {
-		$video_ids  = explode( ',', $video_ids );
-		$video_text = sprintf(
-			_n( '%s video', '%s videos', count( $video_ids ), 'buddyboss' ), // phpcs:ignore
-			bp_core_number_format( count( $video_ids ) )
-		);
-		$content    = sprintf(
-			/* translator: 1. Activity link, 2. Activity video count */
-			__( '<a href="%1$s" target="_blank">%2$s uploaded</a>', 'buddyboss' ), // phpcs:ignore
-			bp_activity_get_permalink( $activity->id ),
-			$video_text
-		);
-		echo wpautop( $content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-	}
-}
-
-/**
  * Adds activity video data for the edit activity
  *
  * @param array $activity activity object.
@@ -1933,6 +1905,7 @@ function bb_setup_video_preview() {
 	add_rewrite_rule( 'bb-video-preview/([^/]+)/([^/]+)/?$', 'index.php?bb-video-preview=$matches[1]&id1=$matches[2]', 'top' );
 	add_rewrite_rule( 'bb-video-thumb-preview/([^/]+)/([^/]+)/?$', 'index.php?bb-video-thumb-preview=$matches[1]&id1=$matches[2]', 'top' );
 	add_rewrite_rule( 'bb-video-thumb-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?bb-video-thumb-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
+	add_rewrite_rule( 'bb-video-thumb-preview/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?bb-video-thumb-preview=$matches[1]&id1=$matches[2]&size=$matches[3]&receiver=$matches[4]', 'top' );
 }
 
 /**
@@ -1948,6 +1921,7 @@ function bb_setup_query_video_preview( $query_vars ) {
 	$query_vars[] = 'bb-video-preview';
 	$query_vars[] = 'bb-video-thumb-preview';
 	$query_vars[] = 'id1';
+	$query_vars[] = 'receiver';
 
 	return $query_vars;
 }
