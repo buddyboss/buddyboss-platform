@@ -300,3 +300,58 @@ function bbp_core_get_import_forum_tools_settings_admin_tabs( $tabs ) {
 	return $tabs;
 }
 add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bbp_core_get_import_forum_tools_settings_admin_tabs', 16, 1 );
+
+/**
+ * Function to check table exists or not for converter.
+ *
+ * @since BuddyBoss 2.4.30
+ *
+ * @param object $opdb       Old forum Database.
+ * @param string $table_name Old forums table name.
+ *
+ * @return bool
+ */
+function bb_check_table_exists( $opdb, $table_name ) {
+	if ( empty( $opdb ) || empty( $table_name ) ) {
+		return false;
+	}
+
+	$query          = $opdb->prepare( "SHOW TABLES LIKE %s", $table_name );
+	$existing_table = $opdb->get_var( $query );
+
+	if ( $existing_table === $table_name ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * Function to check column exists or not for converter.
+ *
+ * @since BuddyBoss 2.4.30
+ *
+ * @param object $opdb        Old forum Database.
+ * @param string $table_name  Old forums table name.
+ * @param string $column_name Old forums tables column name.
+ *
+ * @return bool
+ */
+function bb_check_column_exists( $opdb, $table_name, $column_name ) {
+	if ( empty( $opdb ) || empty( $table_name ) || empty( $column_name ) ) {
+		return false;
+	}
+
+	$table_name = $opdb->prefix . $table_name;
+
+	if ( bb_check_table_exists( $opdb, $table_name ) ) {
+		$field_array = $opdb->get_results( "DESCRIBE {$table_name}", ARRAY_A );
+		if ( false !== $field_array ) {
+			$field_names = array_column( $field_array, 'Field' );
+
+			return in_array( $column_name, $field_names );
+		}
+	}
+
+	return false;
+}

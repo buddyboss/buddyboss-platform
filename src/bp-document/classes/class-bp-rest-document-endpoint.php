@@ -2384,6 +2384,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 		$documents = $this->assemble_response_data(
 			array(
+				'per_page'     => 0,
 				'document_ids' => $document_ids,
 				'sort'         => 'ASC',
 				'order_by'     => 'menu_order',
@@ -2625,7 +2626,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 * @param array  $data      The message value for the REST response.
 	 * @param string $attribute The REST Field key used into the REST response.
 	 *
-	 * @return string            The value of the REST Field to include into the REST response.
+	 * @return array|void The value of the REST Field to include into the REST response.
 	 */
 	protected function bp_documents_get_rest_field_callback_messages( $data, $attribute ) {
 		$message_id = $data['id'];
@@ -2634,85 +2635,68 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$thread_id       = ( isset( $data['thread_id'] ) ? $data['thread_id'] : 0 );
-		$is_group_thread = false;
-
+		$thread_id = ! empty( $data['thread_id'] ) ? $data['thread_id'] : 0;
 		if ( empty( $thread_id ) ) {
 			return;
 		}
 
-		if ( function_exists( 'bb_messages_is_group_thread' ) ) {
-			$is_group_thread = bb_messages_is_group_thread( $thread_id );
-		} else {
-			$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
-			$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
-			$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
-			$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
-			$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
-
-			if ( 'group' === $message_from && $thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
-				$is_group_thread = true;
-			}
-		}
+		$group_name   = ! empty( $data['group_name'] ) ? $data['group_name'] : '';
+		$message_from = ! empty( $data['message_from'] ) ? $data['message_from'] : '';
 
 		if (
+			bp_is_active( 'media' ) &&
 			(
 				(
-					empty( $is_group_thread ) ||
-					(
-						! empty( $is_group_thread ) &&
-						! bp_is_active( 'groups' )
-					)
-				) &&
-				! bp_is_messages_document_support_enabled()
-			) ||
-			(
-				bp_is_active( 'groups' ) &&
-				! empty( $is_group_thread ) &&
-				! bp_is_group_document_support_enabled()
+					! empty( $group_name ) &&
+					'group' === $message_from &&
+					bp_is_group_document_support_enabled()
+				) ||
+				(
+					'group' !== $message_from &&
+					bp_is_messages_document_support_enabled()
+				)
 			)
 		) {
-			return;
-		}
+			$document_ids = bp_messages_get_meta( $message_id, 'bp_document_ids', true );
+			$document_id  = bp_messages_get_meta( $message_id, 'bp_document_id', true );
+			$document_ids = trim( $document_ids );
+			$document_ids = explode( ',', $document_ids );
 
-		$document_ids = bp_messages_get_meta( $message_id, 'bp_document_ids', true );
-		$document_id  = bp_messages_get_meta( $message_id, 'bp_document_id', true );
-		$document_ids = trim( $document_ids );
-		$document_ids = explode( ',', $document_ids );
+			if ( ! empty( $document_id ) ) {
+				$document_ids[] = $document_id;
+				$document_ids   = array_filter( array_unique( $document_ids ) );
+			}
 
-		if ( ! empty( $document_id ) ) {
-			$document_ids[] = $document_id;
-			$document_ids   = array_filter( array_unique( $document_ids ) );
-		}
+			if ( empty( $document_ids ) ) {
+				return;
+			}
 
-		if ( empty( $document_ids ) ) {
-			return;
-		}
-
-		$documents = $this->assemble_response_data(
-			array(
-				'document_ids'     => $document_ids,
-				'sort'             => 'ASC',
-				'order_by'         => 'menu_order',
-				'moderation_query' => false,
-			)
-		);
-
-		if ( empty( $documents['documents'] ) ) {
-			return;
-		}
-
-		$retval = array();
-		$object = new WP_REST_Request();
-		$object->set_param( 'support', 'message' );
-
-		foreach ( $documents['documents'] as $document ) {
-			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $document, $object )
+			$documents = $this->assemble_response_data(
+				array(
+					'per_page'         => 0,
+					'document_ids'     => $document_ids,
+					'sort'             => 'ASC',
+					'order_by'         => 'menu_order',
+					'moderation_query' => false,
+				)
 			);
-		}
 
-		return $retval;
+			if ( empty( $documents['documents'] ) ) {
+				return;
+			}
+
+			$retval = array();
+			$object = new WP_REST_Request();
+			$object->set_param( 'support', 'message' );
+
+			foreach ( $documents['documents'] as $document ) {
+				$retval[] = $this->prepare_response_for_collection(
+					$this->prepare_item_for_response( $document, $object )
+				);
+			}
+
+			return $retval;
+		}
 	}
 
 	/**
@@ -2771,7 +2755,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		$thread->group_id        = $group_id;
 		$thread->is_group_thread = $is_group_message_thread;
 
-		if ( empty( apply_filters( 'bp_user_can_create_message_document', bp_is_messages_document_support_enabled(), $thread, bp_loggedin_user_id() ) ) ) {
+		if ( empty( apply_filters( 'bp_user_can_create_message_document', bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' ), $thread, bp_loggedin_user_id() ) ) ) {
 			$value->bp_media_ids = null;
 
 			return $value;
@@ -2866,6 +2850,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 		$documents = $this->assemble_response_data(
 			array(
+				'per_page'     => 0,
 				'document_ids' => $document_ids,
 				'sort'         => 'ASC',
 				'order_by'     => 'menu_order',
