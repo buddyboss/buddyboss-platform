@@ -552,6 +552,20 @@ function bp_nouveau_ajax_media_move_to_album() {
 				bp_get_template_part( 'media/entry' );
 			}
 		}
+
+		if (
+			bp_has_video(
+				array(
+					'include'  => implode( ',', $media_ids ),
+					'per_page' => 0,
+				)
+			)
+		) {
+			while ( bp_video() ) {
+				bp_the_video();
+				bp_get_template_part( 'video/entry' );
+			}
+		}
 		$media = ob_get_contents();
 		ob_end_clean();
 	}
