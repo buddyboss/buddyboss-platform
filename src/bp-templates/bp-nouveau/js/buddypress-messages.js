@@ -1455,6 +1455,10 @@ window.bp = window.bp || {};
 			}
 		},
 
+		getCurrentThreadUrl: function() {
+			return Backbone.history.getFragment().split(/[?#]/)[0];
+		},
+
 		updateReadUnreadLink: function( threadId ) {
 
 			if ( !threadId ) {
@@ -2307,6 +2311,18 @@ window.bp = window.bp || {};
 						} );
 					}
 
+					bp.Nouveau.Messages.mediumEditor.subscribe( 'editablePaste', function ( e ) {
+						setTimeout( function() {
+							// Wrap all target <li> elements in a single <ul>
+							var targetLiElements = $(e.target).find('li').filter(function() {
+								return !$(this).parent().is('ul') && !$(this).parent().is('ol');
+							});
+							if (targetLiElements.length > 0) {
+								targetLiElements.wrapAll('<ul></ul>');
+							}
+						}, 0 );
+					});
+
 					$( document ).on( 'keyup', '.bp-messages-content .medium-editor-toolbar-input', function ( event ) {
 
 						var URL = event.target.value;
@@ -2476,8 +2492,9 @@ window.bp = window.bp || {};
 						formData.append( 'action', 'media_upload' );
 						formData.append( '_wpnonce', BP_Nouveau.nonces.media );
 
-						var parts = Backbone.history.getFragment().split( '/' );
-						var newArray = $.map( parts, function ( v ) {
+						var url       = bp.Nouveau.Messages.getCurrentThreadUrl();
+						var parts     = url.split( '/' );
+						var newArray  = $.map( parts, function ( v ) {
 							return v === '' ? null : v;
 						} );
 						var thread_id = newArray.pop();
@@ -2693,8 +2710,9 @@ window.bp = window.bp || {};
 						formData.append( 'action', 'document_document_upload' );
 						formData.append( '_wpnonce', BP_Nouveau.nonces.media );
 
-						var parts = Backbone.history.getFragment().split( '/' );
-						var newArray = $.map( parts, function ( v ) {
+						var url       = bp.Nouveau.Messages.getCurrentThreadUrl();
+						var parts     = url.split( '/' );
+						var newArray  = $.map( parts, function ( v ) {
 							return v === '' ? null : v;
 						} );
 						var thread_id = newArray.pop();
@@ -2922,8 +2940,9 @@ window.bp = window.bp || {};
 						formData.append( 'action', 'video_upload' );
 						formData.append( '_wpnonce', BP_Nouveau.nonces.video );
 
-						var parts = Backbone.history.getFragment().split( '/' );
-						var newArray = $.map( parts, function ( v ) {
+						var url       = bp.Nouveau.Messages.getCurrentThreadUrl();
+						var parts     = url.split( '/' );
+						var newArray  = $.map( parts, function ( v ) {
 							return v === '' ? null : v;
 						} );
 						var thread_id = newArray.pop();
@@ -5386,7 +5405,11 @@ window.bp = window.bp || {};
 				// add scroll event for the auto load messages without user having to click the button.
 				$( '#bp-message-thread-list' ).on( 'scroll', this.messages_scrolled );
 
-				if ( 0 !== parseInt( this.options.thread.get( 'group_id' ) ) && 'private' !== this.options.thread.get( 'group_message_type' ) ) {
+				if (
+					0 !== parseInt( this.options.thread.get( 'group_id' ) ) &&
+					'open' === this.options.thread.get( 'group_message_type' ) &&
+					'all' === this.options.thread.get( 'group_message_users' )
+				) {
 					this.model.set( 'is_group', true );
 				}
 				this.messageAttachments = new bp.Views.MessagesAttachments( { model: this.model } );

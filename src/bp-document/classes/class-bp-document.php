@@ -343,10 +343,6 @@ class BP_Document {
 		if ( ! empty( $r['in'] ) ) {
 			$in                     = implode( ',', wp_parse_id_list( $r['in'] ) );
 			$where_conditions['in'] = "d.id IN ({$in})";
-
-			// we want to disable limit query when include document ids.
-			$r['page']     = false;
-			$r['per_page'] = false;
 		}
 
 		if ( ! empty( $r['activity_id'] ) ) {

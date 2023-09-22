@@ -2688,6 +2688,11 @@ function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 	if ( ! $user_id ) {
 		return false;
 	}
+    
+	// If user is pending then view as button should not show to admin.
+	if ( ! bp_is_user_active( $user_id ) ) {
+		return false;
+	}
 
 	$old_user = bp_current_member_switched();
 

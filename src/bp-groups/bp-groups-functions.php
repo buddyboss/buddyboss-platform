@@ -1533,7 +1533,7 @@ function groups_is_user_allowed_posting( $user_id, $group_id ) {
 function groups_can_user_manage_media( $user_id, $group_id ) {
 	$is_allowed = false;
 
-	if ( ! is_user_logged_in() ) {
+	if ( empty( $user_id ) ) {
 		return false;
 	}
 
@@ -4424,7 +4424,7 @@ function groups_can_user_manage_folders( $user_id, $group_id ) {
 function groups_can_user_manage_document( $user_id, $group_id ) {
 	$is_allowed = false;
 
-	if ( ! is_user_logged_in() ) {
+	if ( empty( $user_id ) ) {
 		return false;
 	}
 
@@ -4639,7 +4639,7 @@ add_action( 'groups_cover_image_deleted', 'bp_groups_reset_cover_image_position'
 function groups_can_user_manage_video( $user_id, $group_id ) {
 	$is_allowed = false;
 
-	if ( ! is_user_logged_in() ) {
+	if ( empty( $user_id ) ) {
 		return false;
 	}
 

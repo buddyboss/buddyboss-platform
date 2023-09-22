@@ -413,9 +413,6 @@ class BP_Media {
 		if ( ! empty( $r['in'] ) ) {
 			$in                     = implode( ',', wp_parse_id_list( $r['in'] ) );
 			$where_conditions['in'] = "m.id IN ({$in})";
-			// we want to disable limit query when include media ids.
-			$r['page']     = false;
-			$r['per_page'] = false;
 		}
 
 		if ( ! empty( $r['activity_id'] ) ) {
