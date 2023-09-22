@@ -8986,6 +8986,19 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 }
 
 /**
+ * Function to load the instance of the class BB_Reaction.
+ *
+ * @since BuddyBoss 2.4.30
+ *
+ * @return null|BB_Reaction|void
+ */
+function bb_load_reaction() {
+	if ( class_exists( 'BB_Reaction' ) ) {
+		return BB_Reaction::instance();
+	}
+}
+
+/**
  * Wrapper function to get the redirect url as per action.
  *
  * @since BuddyBoss [BBVERSION]
@@ -9075,17 +9088,4 @@ function bb_redirect_after_action( $redirect_to, $user_id = 0, $action = 'login'
 	}
 
 	return $redirect_to;
-}
-
-/**
- * Function to load the instance of the class BB_Reaction.
- *
- * @since BuddyBoss 2.4.30
- *
- * @return null|BB_Reaction|void
- */
-function bb_load_reaction() {
-	if ( class_exists( 'BB_Reaction' ) ) {
-		return BB_Reaction::instance();
-	}
 }
