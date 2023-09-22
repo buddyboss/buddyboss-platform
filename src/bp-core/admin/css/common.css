@@ -41,6 +41,7 @@ TABLE OF CONTENTS:
 15.0 Admin bar Notification
 16.0 Moderation
 17.0 Domain restriction
+18.0 Redirection Settings
 ------------------------------------------------------------------------------*/
 /*------------------------------------------------------------------------------
  * 1.0 Welcome Screen
@@ -3001,14 +3002,15 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
 
 .bb-inactive-field > th:before,
 .bb-pro-inactive > th:before {
-  content: "\e97c";
+  content: "\eecc";
   font-family: "bb-icons";
   /* stylelint-disable-line */
   margin-right: 5px;
   vertical-align: top;
   display: inline-block;
   line-height: 1;
-  font-size: 14px;
+  font-weight: 300;
+  font-size: 15px;
 }
 
 .bb-inactive-field > td,
@@ -3693,4 +3695,51 @@ table.moderations .column-member img {
     max-width: inherit;
     margin: 20px 0;
   }
+}
+
+/*------------------------------------------------------------------------------
+ * 18.0 Redirection Settings
+ *----------------------------------------------------------------------------*/
+.custom-select2 {
+  font-size: 14px;
+  line-height: 2;
+  color: #2c3338;
+  border: 1px solid #8c8f94;
+  box-shadow: none;
+  border-radius: 3px;
+  padding: 0 24px 0 8px;
+  min-height: 30px;
+  max-width: 25rem;
+  -webkit-appearance: none;
+  background: #fff url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E) no-repeat right 5px top 55%;
+  background-size: 16px 16px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.custom-select2 .select2-selection__arrow {
+  display: none;
+}
+
+.select2-container--open .custom-select2 {
+  border-radius: 3px 3px 0 0;
+}
+
+.custom-dropdown-select2 .select2-search__field {
+  min-height: 25px;
+  line-height: 1;
+}
+
+.custom-dropdown-select2 .select2-results__options {
+  max-height: 240px;
+  overflow: auto;
+}
+
+.custom-dropdown-select2 .select2-results__options li {
+  padding: 6px 10px;
+}
+
+.custom-dropdown-select2 .select2-results__options li.select2-results__option--highlighted {
+  background-color: rgba(170, 170, 170, 0.5);
+  color: inherit;
 }
