@@ -491,7 +491,7 @@ function bp_nouveau_ajax_media_move_to_album() {
 		wp_send_json_error( $response );
 	}
 
-	$medias = bb_filter_input_string( INPUT_POST, 'medias', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$medias = filter_input( INPUT_POST, 'medias', FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY );
 
 	if ( empty( $medias ) ) {
 		$response['feedback'] = sprintf(
