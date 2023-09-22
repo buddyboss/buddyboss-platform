@@ -78,6 +78,7 @@ add_action( 'template_include', 'bb_setup_attachment_video_preview_template', PH
 
 add_action( 'bb_video_upload', 'bb_messages_video_save' );
 
+add_filter( 'bb_activity_comment_get_edit_data', 'bp_video_get_edit_activity_data' );
 /**
  * Add video theatre template for activity pages.
  *
@@ -366,7 +367,7 @@ function bp_video_activity_comment_entry( $comment_id ) {
  * @return bool
  */
 function bp_video_update_activity_video_meta( $content, $user_id, $activity_id ) {
-	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit;
+	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit, $bb_activity_comment_edit;
 
 	$post_video       = filter_input( INPUT_POST, 'video', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 	$post_edit        = bb_filter_input_string( INPUT_POST, 'edit' );
@@ -395,7 +396,17 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 	if ( ! isset( $post_video ) || empty( $post_video ) ) {
 
 		// delete video ids and meta for activity if empty video in request.
-		if ( ! empty( $activity_id ) && $bp_activity_edit && isset( $post_edit ) ) {
+		if (
+			! empty( $activity_id ) &&
+			(
+				(
+					$bp_activity_edit && isset( $post_edit )
+				) ||
+				(
+					$bb_activity_comment_edit && isset( $_POST['edit_comment'] )
+				)
+			)
+		) {
 			$old_video_ids = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
 
 			if ( ! empty( $old_video_ids ) ) {
@@ -407,6 +418,12 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 					}
 				}
 				bp_activity_delete_meta( $activity_id, 'bp_video_ids' );
+
+				// Delete video meta from activity for activity comment.
+				if ( $bb_activity_comment_edit ) {
+					bp_activity_delete_meta( $activity_id, 'bp_video_id' );
+					bp_activity_delete_meta( $activity_id, 'bp_video_activity' );
+				}
 			}
 		}
 		return false;
@@ -441,7 +458,7 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 	if ( ! empty( $activity_id ) ) {
 
 		// Delete video if not exists in current video ids.
-		if ( isset( $post_edit ) ) {
+		if ( isset( $post_edit ) || isset( $_POST['edit_comment'] ) ) {
 			$old_video_ids = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
 			$old_video_ids = array_filter( explode( ',', $old_video_ids ) );
 
@@ -1692,7 +1709,12 @@ function bp_video_get_edit_activity_data( $activity ) {
 					continue;
 				}
 
-				$video               = new BP_Video( $video_id );
+				$video = new BP_Video( $video_id );
+
+				if ( empty( $video->id ) ) {
+					continue;
+				}
+
 				$get_existing        = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
 				$thumb               = '';
 				$attachment_thumb_id = bb_get_video_thumb_id( $video->attachment_id );
