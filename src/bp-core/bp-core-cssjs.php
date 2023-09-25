@@ -796,6 +796,20 @@ function bp_core_enqueue_livestamp() {
 			'unknown_text'      => apply_filters( 'bp_core_time_since_unknown_text', esc_html__( 'sometime', 'buddyboss' ) ),
 			'right_now_text'    => apply_filters( 'bp_core_time_since_right_now_text', esc_html__( 'a second', 'buddyboss' ) ),
 			'ago_text'          => apply_filters( 'bp_core_time_since_ago_text', esc_html__( '%s ago', 'buddyboss' ) ),
+			'second_text'       => __( 'a second', 'buddyboss' ),
+			'seconds_text'      => __( 'seconds', 'buddyboss' ),
+			'minute_text'       => __( 'a minute', 'buddyboss' ),
+			'minutes_text'      => __( 'minutes', 'buddyboss' ),
+			'hour_text'         => __( 'an hour', 'buddyboss' ),
+			'hours_text'        => __( 'hours', 'buddyboss' ),
+			'day_text'          => __( 'a day', 'buddyboss' ),
+			'days_text'         => __( 'days', 'buddyboss' ),
+			'week_text'         => __( 'a week', 'buddyboss' ),
+			'weeks_text'        => __( 'weeks', 'buddyboss' ),
+			'month_text'        => __( 'a month', 'buddyboss' ),
+			'months_text'       => __( 'months', 'buddyboss' ),
+			'year_text'         => __( 'a year', 'buddyboss' ),
+			'years_text'        => __( 'years', 'buddyboss' ),
 		)
 	);
 
