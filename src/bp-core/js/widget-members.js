@@ -64,7 +64,7 @@ jQuery( document ).ready(
 						jQuery( '#members-list' ).length &&
 						jQuery( '#recently-active-members').length &&
 						jQuery( '#recently-active-members').hasClass( 'selected' ) ) {
-						jQuery( '#members-list' ).html( data.buddyboss_members_widget_active );
+						jQuery( '.widget_bp_core_members_widget' ).find('#members-list').html( data.buddyboss_members_widget_active );
 					}
 
 					jQuery( '.bs-heartbeat-reload' ).addClass( 'hide' );
