@@ -315,7 +315,10 @@ class BP_Core_Members_Widget extends WP_Widget {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return array
+ * @param array  $response The Heartbeat response.
+ * @param array  $data     The $_POST data sent.
+ *
+ * @return array The Heartbeat response.
  */
 function buddyboss_members_widget_active_heartbeat( $response = array(), $data = array() ) {
 	global $members_template;
