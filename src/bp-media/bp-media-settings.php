@@ -1931,16 +1931,17 @@ function bb_media_settings_callback_symlink_support() {
 		$delivery_provider = ! empty( $wp_offload_media['delivery-provider'] ) && 'storage' !== $wp_offload_media['delivery-provider'] ? ucwords( $wp_offload_media['delivery-provider'] ) : 'Amazon S3';
 		$serve_from_server = ( isset( $wp_offload_media ) && isset( $wp_offload_media['serve-from-s3'] ) && (bool) $wp_offload_media['serve-from-s3'] );
 	}
+
+	?>
+	<input name="bp_media_symlink_support" id="bp_media_symlink_support" type="checkbox" value="1" <?php checked( bb_enable_symlinks() ); ?> <?php echo ( $offload_media && $serve_from_server ) ? 'disabled' : ''; ?>/>
+	<label for="bp_media_symlink_support">
+		<?php 
+		esc_html_e( 'Enable symbolic links. If you are having issues with media display, try disabling this option.', 'buddyboss' ); ?>
+	</label>
+
+	<?php
+
 	if ( ! ( $offload_media && $serve_from_server ) ) {
-		?>
-		<input name="bp_media_symlink_support" id="bp_media_symlink_support" type="checkbox" value="1" <?php checked( bb_enable_symlinks() ); ?> />
-		<label for="bp_media_symlink_support">
-			<?php 
-			esc_html_e( 'Enable symbolic links. If you are having issues with media display, try disabling this option.', 'buddyboss' ); ?>
-		</label>
-
-		<?php
-
 		$has_error = false;
 		if ( true === bb_check_server_disabled_symlink() ) {
 			bp_update_option( 'bp_media_symlink_support', 0 );
