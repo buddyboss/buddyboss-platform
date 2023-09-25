@@ -774,6 +774,31 @@ function bp_core_enqueue_livestamp() {
 		)
 	);
 
+	wp_localize_script(
+		'bp-livestamp',
+		'bb_livestamp',
+		array(
+			'year_in_seconds'   => YEAR_IN_SECONDS,
+			'day_in_seconds'    => DAY_IN_SECONDS,
+			'week_in_seconds'   => WEEK_IN_SECONDS,
+			'hour_in_seconds'   => HOUR_IN_SECONDS,
+			'minute_in_seconds' => MINUTE_IN_SECONDS,
+			'chunks'            => array(
+				YEAR_IN_SECONDS,
+				YEAR_IN_SECONDS / 6,
+				30 * DAY_IN_SECONDS,
+				WEEK_IN_SECONDS,
+				DAY_IN_SECONDS,
+				HOUR_IN_SECONDS,
+				MINUTE_IN_SECONDS,
+				1,
+			),
+			'unknown_text'      => apply_filters( 'bp_core_time_since_unknown_text', esc_html__( 'sometime', 'buddyboss' ) ),
+			'right_now_text'    => apply_filters( 'bp_core_time_since_right_now_text', esc_html__( 'a second', 'buddyboss' ) ),
+			'ago_text'          => apply_filters( 'bp_core_time_since_ago_text', esc_html__( '%s ago', 'buddyboss' ) ),
+		)
+	);
+
 	wp_enqueue_script( 'bp-livestamp' );
 }
 
