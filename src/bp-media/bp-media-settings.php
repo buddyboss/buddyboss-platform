@@ -1924,11 +1924,14 @@ function bp_media_settings_callback_extension_video_support() {
 function bb_media_settings_callback_symlink_support() {
 
 	$serve_from_server = false;
+	$offload_media     = false;
 	if ( class_exists( 'Amazon_S3_And_CloudFront' ) ) {
 		$wp_offload_media  = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+		$offload_media     = ( isset( $wp_offload_media ) && isset( $wp_offload_media['copy-to-s3'] ) && (bool) $wp_offload_media['copy-to-s3'] );
+		$delivery_provider = ! empty( $wp_offload_media['delivery-provider'] ) && 'storage' !== $wp_offload_media['delivery-provider'] ? ucwords( $wp_offload_media['delivery-provider'] ) : 'Amazon S3';
 		$serve_from_server = ( isset( $wp_offload_media ) && isset( $wp_offload_media['serve-from-s3'] ) && (bool) $wp_offload_media['serve-from-s3'] );
 	}
-	if ( ! $serve_from_server ) {
+	if ( ! ( $offload_media && $serve_from_server ) ) {
 		?>
 		<input name="bp_media_symlink_support" id="bp_media_symlink_support" type="checkbox" value="1" <?php checked( bb_enable_symlinks() ); ?> />
 		<label for="bp_media_symlink_support">
@@ -1999,7 +2002,7 @@ function bb_media_settings_callback_symlink_support() {
 		<div class="bp-messages-feedback">
 			<div class="bp-feedback warning">
 				<span class="bp-icon" aria-hidden="true"></span>
-				<p><?php esc_html_e( 'Symbolic links are disabled due to media being offloaded to Amazon S3', 'buddyboss' ); ?></p>
+				<p><?php printf( esc_html__( 'Symbolic links are disabled due to media being offloaded to %s', 'buddyboss' ), $delivery_provider ); ?></p>
 			</div>
 		</div>
 		<?php
@@ -2024,15 +2027,17 @@ function bb_media_settings_callback_symlink_direct_access() {
 	$document_attachment_id = 0;
 	$bypass_check           = apply_filters( 'bb_media_check_default_access', 0 );
 
-	$serve_from_server = false;
 	$remove_local_file = false;
+	$offload_media     = false;
 	if ( class_exists( 'Amazon_S3_And_CloudFront' ) ) {
 		$wp_offload_media  = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+		$offload_media     = ( isset( $wp_offload_media ) && isset( $wp_offload_media['copy-to-s3'] ) && (bool) $wp_offload_media['copy-to-s3'] );
+		$delivery_provider = ! empty( $wp_offload_media['delivery-provider'] ) && 'storage' !== $wp_offload_media['delivery-provider'] ? ucwords( $wp_offload_media['delivery-provider'] ) : 'Amazon S3';
 		$remove_local_file = ( isset( $wp_offload_media ) && isset( $wp_offload_media['remove-local-file'] ) && (bool) $wp_offload_media['remove-local-file'] );
 	}
 
 	// Check if removed local file.
-	if ( ! $remove_local_file ) {
+	if ( ! ( $offload_media && $remove_local_file ) ) {
 		if ( ! $bypass_check ) {
 
 			// Add upload filters.
@@ -2139,7 +2144,7 @@ function bb_media_settings_callback_symlink_direct_access() {
 		// If offloaded and removed local file.
 		printf(
 			'<div class="bp-messages-feedback"><div class="bp-feedback warning"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div></div>',
-			esc_html__( 'Direct access to your media files and folders is disabled due to media being offloaded to Amazon S3', 'buddyboss' )
+			sprintf( esc_html__( 'Direct access to your media files and folders is disabled due to media being offloaded to %s', 'buddyboss' ), $delivery_provider )
 		);
 	}
 	printf(
