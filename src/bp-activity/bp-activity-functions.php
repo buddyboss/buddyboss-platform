@@ -6341,6 +6341,7 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 		$can_edit_privacy = false;
 	}
 
+	remove_filter( 'bp_get_activity_content', 'wpautop' );
 	/**
 	 * Filter here to edit the activity comment edit data.
 	 *
