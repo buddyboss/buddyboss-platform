@@ -5043,3 +5043,54 @@ function bb_document_remove_orphaned_download() {
 		}
 	}
 }
+
+
+/**
+ * Run migration for document description from post table to media table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_document_description_migration() {
+	global $wpdb, $bp, $bb_background_updater;
+
+	$documents = $wpdb->get_results( $wpdb->prepare( "SELECT id, attachment_id FROM {$bp->document->table_name} ORDER BY id ASC" ) );
+
+	if ( ! empty( $documents ) ) {
+		$min_count = (int) apply_filters( 'bb_update_migrate_document_description', 20 );
+		foreach ( array_chunk( $documents, $min_count ) as $chunk ) {
+			$bb_background_updater->push_to_queue(
+				array(
+					'type'     => 'migration',
+					'group'    => 'bb_update_migrate_document_description',
+					'priority' => 4,
+					'callback' => 'bb_update_migrate_document_description',
+					'args'     => array( $chunk ),
+				)
+			);
+			$bb_background_updater->save()->schedule_event();
+		}
+	}
+}
+
+/**
+ * Update document description from post table to media table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $documents Array of document ID and attachment ID.
+ *
+ * @return void
+ */
+function bb_update_migrate_document_description( $documents ) {
+	global $wpdb, $bp;
+
+	if ( empty( $documents ) ) {
+		return;
+	}
+
+	foreach ( $documents as $document ) {
+		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name} SET `description` = (SELECT post_content FROM {$wpdb->posts} WHERE ID = %d) WHERE id = %d", $document->attachment_id, $document->id ) );
+	}
+}

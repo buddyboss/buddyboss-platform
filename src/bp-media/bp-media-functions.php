@@ -4062,3 +4062,53 @@ function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
 	}
 	return (bool) ( ! is_wp_error( $cache[ $api_key ] ) && isset( $cache[ $api_key ]['response']['code'] ) && 200 === $cache[ $api_key ]['response']['code'] );
 }
+
+/**
+ * Run migration for media and video description from post table to media table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_media_description_migration() {
+	global $wpdb, $bp, $bb_background_updater;
+
+	$medias = $wpdb->get_results( $wpdb->prepare( "SELECT id, attachment_id FROM {$bp->media->table_name} ORDER BY id ASC" ) );
+
+	if ( ! empty( $medias ) ) {
+		$min_count = (int) apply_filters( 'bb_update_migrate_media_description', 20 );
+		foreach ( array_chunk( $medias, $min_count ) as $chunk ) {
+			$bb_background_updater->push_to_queue(
+				array(
+					'type'     => 'migration',
+					'group'    => 'bb_update_migrate_media_description',
+					'priority' => 4,
+					'callback' => 'bb_update_migrate_media_description',
+					'args'     => array( $chunk ),
+				)
+			);
+			$bb_background_updater->save()->schedule_event();
+		}
+	}
+}
+
+/**
+ * Update media and video description from post table to media table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $medias Array of media ID and attachment ID.
+ *
+ * @return void
+ */
+function bb_update_migrate_media_description( $medias ) {
+	global $wpdb, $bp;
+
+	if ( empty( $medias ) ) {
+		return;
+	}
+
+	foreach ( $medias as $media ) {
+		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->media->table_name} SET `description` = (SELECT post_content FROM {$wpdb->posts} WHERE ID = %d) WHERE id = %d", $media->attachment_id, $media->id ) );
+	}
+}

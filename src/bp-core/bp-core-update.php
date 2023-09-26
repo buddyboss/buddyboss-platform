@@ -496,6 +496,16 @@ function bp_version_updater() {
 			if ( function_exists( 'bb_activity_migration' ) ) {
 				bb_activity_migration();
 			}
+
+			// Run migration about media/video description.
+			if ( function_exists( 'bb_media_description_migration' ) ) {
+				bb_media_description_migration();
+			}
+
+			// Run migration about document description.
+			if ( function_exists( 'bb_document_description_migration' ) ) {
+				bb_document_description_migration();
+			}
 		}
 	}
 
