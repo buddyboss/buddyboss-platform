@@ -1673,6 +1673,14 @@ function bp_xprofile_social_network_provider() {
 	);
 
 	$options[] = (object) array(
+		'id'                => 19,
+		'is_default_option' => false,
+		'name'              => __( 'X', 'buddyboss' ),
+		'value'             => 'x',
+		'svg'               => '<svg viewBox="0 0 24 24" fill="none"><path d="M8.54996 6.78142H7.54716L15.462 17.2186H16.4548L8.54996 6.78142Z" fill="#333"/><path d="M12 24C18.6274 24 24 18.6274 24 12C24 5.37258 18.6274 0 12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24ZM5 5.5H9.15412L12.3916 9.77458L15.8503 5.51925H18.1382L13.4978 11.2352L19 18.5H14.8583L11.3528 13.8773L7.61027 18.4872H5.31001L10.2446 12.416L5 5.5Z" fill="#333"/></svg>',
+	);
+
+	$options[] = (object) array(
 		'id'                => 20,
 		'is_default_option' => false,
 		'name'              => __( 'TikTok', 'buddyboss' ),
@@ -2475,7 +2483,7 @@ function bb_xprofile_get_field_type( $field_id ) {
 /**
  * Function to update xprofile social networks field values.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.30
  *
  * @return void
  */
@@ -2523,7 +2531,7 @@ function bb_xprofile_update_social_network_fields() {
 /**
  * Function to remove google+ field values from xprofile data.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.30
  *
  * @param int    $field_id   To check against the filed id.
  * @param string $field_name To check against the filed name.
