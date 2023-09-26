@@ -2017,7 +2017,7 @@ function bb_media_settings_callback_symlink_support() {
  */
 function bb_media_settings_callback_symlink_direct_access() {
 
-	$get_sample_ids         = array();
+	$get_sample_local_urls  = array();
 	$video_attachment_id    = 0;
 	$media_attachment_id    = 0;
 	$document_attachment_id = 0;
@@ -2045,7 +2045,7 @@ function bb_media_settings_callback_symlink_direct_access() {
 				require_once ABSPATH . 'wp-admin/includes/image.php';
 				$attachment_data = wp_generate_attachment_metadata( $video_attachment_id, $upload_file['file'] );
 				wp_update_attachment_metadata( $video_attachment_id, $attachment_data );
-				$get_sample_ids['bb_videos'] = $video_attachment_id;
+				$get_sample_local_urls['bb_videos'] = $upload_file['url'];
 			}
 		}
 		// Remove upload filters.
@@ -2069,7 +2069,7 @@ function bb_media_settings_callback_symlink_direct_access() {
 				require_once ABSPATH . 'wp-admin/includes/image.php';
 				$attachment_data = wp_generate_attachment_metadata( $media_attachment_id, $upload_file['file'] );
 				wp_update_attachment_metadata( $media_attachment_id, $attachment_data );
-				$get_sample_ids['bb_medias'] = $media_attachment_id;
+				$get_sample_local_urls['bb_medias'] = $upload_file['url'];
 			}
 		}
 		remove_filter( 'upload_dir', 'bp_media_upload_dir_script' );
@@ -2092,20 +2092,18 @@ function bb_media_settings_callback_symlink_direct_access() {
 				require_once ABSPATH . 'wp-admin/includes/image.php';
 				$attachment_data = wp_generate_attachment_metadata( $document_attachment_id, $upload_file['file'] );
 				wp_update_attachment_metadata( $document_attachment_id, $attachment_data );
-				$get_sample_ids['bb_documents'] = $document_attachment_id;
+				$get_sample_local_urls['bb_documents'] = $upload_file['url'];
 			}
 		}
 		remove_filter( 'upload_dir', 'bp_document_upload_dir_script' );
 
 		$directory = array();
-		foreach ( $get_sample_ids as $id => $v ) {
-			$fetch = wp_remote_get( wp_get_attachment_image_url( $v ), array( 'sslverify' => false ) );
+		foreach ( $get_sample_local_urls as $id => $v ) {
+			$fetch = wp_remote_get( $v, array( 'sslverify' => false ) );
 			if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
 				$directory[] = $id;
 			}
 		}
-
-		$directory = apply_filters( 'bb_media_settings_callback_symlink_direct_access', $directory, $get_sample_ids );
 
 		if ( ! empty( $directory ) ) {
 
