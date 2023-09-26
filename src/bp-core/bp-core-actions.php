@@ -434,13 +434,12 @@ add_action( 'bp_init_background_updater', 'bb_handle_cron_healthcheck' );
 /**
  * Check and reschedule the newly added background process if queue is not empty.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.20
  */
 function bb_updater_handle_cron_healthcheck() {
 	global $bb_background_updater;
 	if (
 		is_object( $bb_background_updater ) &&
-		property_exists( $bb_background_updater, 'is_updating' ) &&
 		$bb_background_updater->is_updating()
 	) {
 		$bb_background_updater->schedule_event();

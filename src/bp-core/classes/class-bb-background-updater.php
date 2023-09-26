@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\BackgroundUpdater
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.20
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -19,7 +19,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Prefix.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @var string
 		 * @access protected
@@ -29,7 +29,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Action.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @var string
 		 * @access protected
@@ -39,7 +39,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Identifier.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @var mixed
 		 * @access protected
@@ -49,7 +49,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Data.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @var array
 		 * @access protected
@@ -59,7 +59,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Start time of current process.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @var int
 		 * @access protected
@@ -69,7 +69,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Cron_hook_identifier.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @var string
 		 * @access protected
@@ -79,7 +79,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Cron_interval_identifier.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @var string
 		 * @access protected
@@ -89,7 +89,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * The status set when process is cancelling.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @var int
 		 */
@@ -98,7 +98,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * The status set when process is paused or pausing.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @var int
 		 */
@@ -107,7 +107,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Background job queue table name.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @var string
 		 */
@@ -116,7 +116,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Initiate new async request.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 */
 		public function __construct() {
 			$this->identifier = $this->prefix . '_' . $this->action;
@@ -136,7 +136,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Created custom table for background job queue.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @return void
 		 */
@@ -188,7 +188,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		 * Restart the background process if not already running
 		 * and data exists in the queue.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 */
 		public function handle_cron_healthcheck() {
 			if ( $this->is_processing() ) {
@@ -208,7 +208,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Schedule the cron healthcheck job.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 * @access public
 		 *
 		 * @param mixed $schedules Schedules.
@@ -241,7 +241,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Dispatch the async request.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @return array|WP_Error|false HTTP Response array, WP_Error on failure, or false if not attempted.
 		 */
@@ -263,7 +263,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Get query args.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @return array
 		 */
@@ -280,7 +280,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 			/**
 			 * Filters the post arguments used during an async request.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.4.20
 			 *
 			 * @param array $url
 			 */
@@ -290,7 +290,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Get query URL.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @return string
 		 */
@@ -304,7 +304,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 			/**
 			 * Filters the post arguments used during an async request.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.4.20
 			 *
 			 * @param string $url
 			 */
@@ -314,7 +314,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Get post args.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @return array
 		 */
@@ -334,7 +334,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 			/**
 			 * Filters the post arguments used during an async request.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.4.20
 			 *
 			 * @param array $args
 			 */
@@ -346,7 +346,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		 *
 		 * Check for correct nonce and pass to handler.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @return void|mixed
 		 */
@@ -388,7 +388,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Should the process exit with wp_die?
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @param mixed $return What to return if filter says don't die, default is null.
 		 *
@@ -398,7 +398,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 			/**
 			 * Should wp_die be used?
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.4.20
 			 *
 			 * @return bool
 			 */
@@ -415,7 +415,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		 * Pass each queue item to the task handler, while remaining
 		 * within server memory and time limit constraints.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 */
 		protected function handle() {
 			$this->lock_process();
@@ -423,7 +423,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 			/**
 			 * Number of seconds to sleep between batches. Defaults to 0 seconds, minimum 0.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.4.20
 			 *
 			 * @param int $seconds
 			 */
@@ -479,7 +479,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Is the background process currently running?
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @return bool
 		 */
@@ -495,7 +495,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Is queue empty?
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @return bool
 		 */
@@ -506,7 +506,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Clear scheduled cron healthcheck event.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 */
 		protected function clear_scheduled_event() {
 			$timestamp = wp_next_scheduled( $this->cron_hook_identifier );
@@ -519,7 +519,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Schedule the cron healthcheck event.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 */
 		public function schedule_event() {
 			if ( ! wp_next_scheduled( $this->cron_hook_identifier ) ) {
@@ -532,7 +532,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		 *
 		 * Note, save must be called in order to persist queued items to a batch for processing.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @param mixed $data Data.
 		 *
@@ -562,7 +562,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Set data used during the request.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @param array $data Data.
 		 *
@@ -592,7 +592,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Save the queued items for future processing.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @return $this
 		 */
@@ -655,7 +655,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Get the status key.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @return string
 		 */
@@ -667,7 +667,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Update a batch's queued items.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @param string $key  Key.
 		 * @param array  $data Data.
@@ -696,7 +696,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Delete a batch of queued items.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @param string $key Key.
 		 *
@@ -719,7 +719,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Delete entire job queue.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 */
 		public function delete_all() {
 			$batches = $this->get_batches();
@@ -736,7 +736,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Cancel job on next batch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 */
 		public function cancel() {
 			update_site_option( $this->get_status_key(), self::STATUS_CANCELLED );
@@ -748,7 +748,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Has the process been cancelled?
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @return bool
 		 */
@@ -766,7 +766,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Called when background process has been cancelled.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 */
 		protected function cancelled() {
 			do_action( $this->identifier . '_cancelled' );
@@ -775,7 +775,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Pause job on next batch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 */
 		public function pause() {
 			update_site_option( $this->get_status_key(), self::STATUS_PAUSED );
@@ -784,7 +784,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Is the job paused?
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @return bool
 		 */
@@ -801,7 +801,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Called when background process has been paused.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 */
 		protected function paused() {
 			do_action( $this->identifier . '_paused' );
@@ -810,7 +810,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Resume job.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 */
 		public function resume() {
 			delete_site_option( $this->get_status_key() );
@@ -823,7 +823,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Called when background process has been resumed.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 */
 		protected function resumed() {
 			do_action( $this->identifier . '_resumed' );
@@ -832,7 +832,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Is queued?
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @return bool
 		 */
@@ -843,7 +843,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Is the tool currently active, e.g. starting, working, paused or cleaning up?
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @return bool
 		 */
@@ -858,7 +858,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		 * Override if applicable, but the duration should be greater than that
 		 * defined in the time_exceeded() method.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 */
 		protected function lock_process() {
 			$this->start_time = time(); // Set start time of current process.
@@ -874,7 +874,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		 *
 		 * Unlock the process so that other instances can spawn.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @return object $this
 		 */
@@ -890,7 +890,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		 * Override if applicable, but ensure that the below actions are
 		 * performed, or, call parent::complete().
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 */
 		protected function complete() {
 			delete_site_option( $this->get_status_key() );
@@ -904,7 +904,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Called when background process has completed.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 */
 		protected function completed() {
 			// phpcs:ignore
@@ -916,7 +916,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Get batch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @return stdClass Return the first batch of queued items.
 		 */
@@ -933,7 +933,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Get batches.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @param int $limit Number of batches to return, defaults to all.
 		 *
@@ -1001,7 +1001,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		 * Ensures the batch process never exceeds 90%
 		 * of the maximum WordPress memory.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @return bool
 		 */
@@ -1020,7 +1020,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Get memory limit in bytes.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @return int
 		 */
@@ -1046,7 +1046,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		 * Ensures the batch never exceeds a sensible time limit.
 		 * A timeout limit of 30s is common on shared hosting.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @return bool
 		 */
@@ -1066,7 +1066,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		 *
 		 * Stop processing queue items, clear cron job and delete batch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 * @deprecated 1.1.0 Superseded.
 		 * @see cancel()
 		 */
@@ -1082,7 +1082,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		 * in the next pass through. Or, return false to remove the
 		 * item from the queue.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @param string $callback Update callback function.
 		 *
@@ -1127,7 +1127,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		 *
 		 * Stop processing queue items, clear cronjob and delete all batches.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 */
 		public function kill_process() {
 			if ( ! $this->is_queue_empty() ) {
@@ -1139,7 +1139,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Delete all batches.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @return WC_Background_Process
 		 */
@@ -1156,7 +1156,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		/**
 		 * Is the updater running?
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.20
 		 *
 		 * @return boolean
 		 */
