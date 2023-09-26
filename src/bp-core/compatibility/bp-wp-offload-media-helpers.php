@@ -110,7 +110,7 @@ class BB_AS3CF_Plugin_Compatibility {
 				$paths         = AS3CF_Utils::get_attachment_file_paths( $v, false, false, false );
 				$original_path = ( isset( $paths ) && isset( $paths['original'] ) ? $paths['original'] : $paths['__as3cf_primary'] );
 				$file          = str_replace( $uploads['basedir'], $uploads['baseurl'], $original_path );
-				$fetch         = wp_remote_get( $file );
+				$fetch         = wp_remote_get( $file, array( 'sslverify' => false ) );
 				if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
 					$directory[] = $id;
 				}
