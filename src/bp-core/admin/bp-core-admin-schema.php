@@ -29,7 +29,7 @@ function bp_core_install( $active_components = false ) {
 		/** This filter is documented in bp-core/admin/bp-core-admin-components.php */
 		$active_components = apply_filters( 'bp_active_components', bp_get_option( 'bp-active-components' ) );
 
-		// check for xprofile is active component in db or not if not then update it
+		// check for xprofile is active component in db or not if not then update it.
 		if ( empty( $active_components['xprofile'] ) ) {
 			$active_components['xprofile'] = 1;
 
@@ -40,6 +40,11 @@ function bp_core_install( $active_components = false ) {
 	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
 		// Install email queue table.
 		bb_email_queue()::create_db_table();
+	}
+
+	if ( function_exists( 'bb_load_reaction' ) ) {
+		// Create table for the bb reactions.
+		bb_load_reaction()->create_table();
 	}
 
 	// Install Activity Feeds even when inactive (to store last_activity data).
@@ -103,6 +108,10 @@ function bp_core_install( $active_components = false ) {
 	if ( ! empty( $active_components['moderation'] ) ) {
 		bp_core_install_suspend();
 		bp_core_install_moderation();
+	}
+
+	if ( class_exists( '\BuddyBoss\Performance\Performance' ) ) {
+		\BuddyBoss\Performance\Performance::instance()->on_activation();
 	}
 
 	do_action( 'bp_core_install', $active_components );
