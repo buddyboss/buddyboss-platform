@@ -2269,7 +2269,6 @@ function bp_get_activity_comment_content( $activity_comment_id = 0 ) {
 	}
 
 	/** This filter is documented in bp-activity/bp-activity-template.php */
-	// $content = apply_filters( 'bp_get_activity_content', $activity_comment->content );
 	$content = apply_filters_ref_array( 'bp_get_activity_content', array( $activity_comment->content, &$activity_comment ) );
 
 	/**
