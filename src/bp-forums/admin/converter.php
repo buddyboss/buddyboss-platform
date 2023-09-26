@@ -1323,7 +1323,11 @@ abstract class BBP_Converter_Base {
 		foreach ( $this->field_map as $item ) {
 
 			// Yay a match, and we have a from table, too.
-			if ( ( $item['to_type'] === $to_type ) && ! empty( $item['from_tablename'] ) ) {
+			if (
+				( $item['to_type'] === $to_type ) &&
+				! empty( $item['from_tablename'] ) &&
+				bb_check_table_exists( $this->opdb, $this->opdb->prefix . $item['from_tablename'] )
+			) {
 
 				// $from_tablename was set from a previous loop iteration.
 				if ( ! empty( $from_tablename ) ) {
@@ -1555,6 +1559,11 @@ abstract class BBP_Converter_Base {
 						default:
 							if ( 0 === count( $insert_post ) ) {
 								break;
+							}
+
+							// Avoid trim deprecation error when post_title empty.
+							if ( ! empty( $insert_post['post_name'] ) && empty( $insert_post['post_title'] ) ) {
+								$insert_post['post_title'] = sanitize_title( $insert_post['post_name'] );
 							}
 
 							$post_id = wp_insert_post( $insert_post, true );
@@ -2048,7 +2057,10 @@ abstract class BBP_Converter_Base {
 	 * @return bool
 	 */
 	private function count_rows_by_table( $table_name = '' ) {
-		$count = (int) $this->opdb->get_var( "SELECT COUNT(*) FROM {$table_name}" );
+		$count = 0;
+		if ( bb_check_table_exists( $this->opdb, $this->opdb->prefix . $table_name ) ) {
+			$count = (int) $this->opdb->get_var( "SELECT COUNT(*) FROM {$table_name}" );
+		}
 
 		return update_option( '_bbp_converter_rows_in_step', $count );
 	}
@@ -2233,6 +2245,10 @@ abstract class BBP_Converter_Base {
 	}
 
 	protected function callback_datetime( $field ) {
+		if ( empty( $field ) ) {
+			return '';
+		}
+
 		return is_numeric( $field )
 			? date( 'Y-m-d H:i:s', $field )
 			: date( 'Y-m-d H:i:s', strtotime( $field ) );

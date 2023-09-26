@@ -376,6 +376,18 @@ function bp_core_set_uri_globals() {
 				}
 			}
 
+			// If the displayed user is marked as a pending, 404 (unless logged-in user is a super admin).
+			if ( bp_displayed_user_id() && ! bp_is_user_active( bp_displayed_user_id() ) ) {
+				if ( bp_current_user_can( 'bp_moderate' ) ) {
+					bp_core_add_message( __( 'This user\'s profile is not yet activated. Only site admins can view this profile.', 'buddyboss' ), 'warning' );
+				} else {
+					$bp->displayed_user->id = 0;
+					$bp->current_component = '';
+					bp_do_404();
+					return;
+				}
+			}
+
 			// Bump the offset.
 			if ( bp_displayed_user_id() ) {
 				if ( isset( $bp_uri[ $uri_offset + 2 ] ) ) {
