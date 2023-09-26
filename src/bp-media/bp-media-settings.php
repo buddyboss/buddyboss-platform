@@ -1923,64 +1923,82 @@ function bp_media_settings_callback_extension_video_support() {
  */
 function bb_media_settings_callback_symlink_support() {
 
+	$is_offloaded = apply_filters( 'bb_media_offload_delivered', false );
+
 	?>
-	<input name="bp_media_symlink_support" id="bp_media_symlink_support" type="checkbox" value="1" <?php checked( bb_enable_symlinks() ); ?> />
+	<input name="bp_media_symlink_support" id="bp_media_symlink_support" type="checkbox" value="1" <?php checked( bb_enable_symlinks() ); ?> <?php echo $is_offloaded ? 'disabled' : ''; ?>/>
 	<label for="bp_media_symlink_support">
-		<?php esc_html_e( 'Enable symbolic links. If you are having issues with media display, try disabling this option.', 'buddyboss' ); ?>
+		<?php 
+		esc_html_e( 'Enable symbolic links. If you are having issues with media display, try disabling this option.', 'buddyboss' ); ?>
 	</label>
 
 	<?php
-	$has_error = false;
-	if ( true === bb_check_server_disabled_symlink() ) {
-		bp_update_option( 'bp_media_symlink_support', 0 );
-		$has_error = true;
-		?>
-		<div class="bp-messages-feedback">
-			<div class="bp-feedback warning">
-				<span class="bp-icon" aria-hidden="true"></span>
-				<p><?php esc_html_e( 'Symbolic function disabled on your server. Please contact your hosting provider.', 'buddyboss' ); ?></p>
-			</div>
-		</div>
-		<?php
-	}
 
-	if ( empty( $has_error ) && bb_enable_symlinks() && empty( bp_get_option( 'bb_media_symlink_type' ) ) ) {
-		?>
-		<div class="bp-messages-feedback">
-			<div class="bp-feedback warning">
-				<span class="bp-icon" aria-hidden="true"></span>
-				<p><?php esc_html_e( 'Symbolic links don\'t seem to work on your server. Please contact BuddyBoss for support.', 'buddyboss' ); ?></p>
+	if ( ! $is_offloaded ) {
+		$has_error = false;
+		if ( true === bb_check_server_disabled_symlink() ) {
+			bp_update_option( 'bp_media_symlink_support', 0 );
+			$has_error = true;
+			?>
+			<div class="bp-messages-feedback">
+				<div class="bp-feedback warning">
+					<span class="bp-icon" aria-hidden="true"></span>
+					<p><?php esc_html_e( 'Symbolic function disabled on your server. Please contact your hosting provider.', 'buddyboss' ); ?></p>
+				</div>
 			</div>
-		</div>
-		<?php
-	}
+			<?php
+		}
 
-	if ( true === (bool) bp_get_option( 'bb_display_support_error' ) ) {
-		?>
-		<div class="bp-messages-feedback">
-			<div class="bp-feedback warning">
-				<span class="bp-icon" aria-hidden="true"></span>
-				<p><?php esc_html_e( 'Symbolic links don\'t seem to work on your server. Please contact BuddyBoss for support.', 'buddyboss' ); ?></p>
+		if ( empty( $has_error ) && bb_enable_symlinks() && empty( bp_get_option( 'bb_media_symlink_type' ) ) ) {
+			?>
+			<div class="bp-messages-feedback">
+				<div class="bp-feedback warning">
+					<span class="bp-icon" aria-hidden="true"></span>
+					<p><?php esc_html_e( 'Symbolic links don\'t seem to work on your server. Please contact BuddyBoss for support.', 'buddyboss' ); ?></p>
+				</div>
 			</div>
-		</div>
-		<?php
-	}
+			<?php
+		}
 
-	if ( empty( bb_enable_symlinks() ) ) {
+		if ( true === (bool) bp_get_option( 'bb_display_support_error' ) ) {
+			?>
+			<div class="bp-messages-feedback">
+				<div class="bp-feedback warning">
+					<span class="bp-icon" aria-hidden="true"></span>
+					<p><?php esc_html_e( 'Symbolic links don\'t seem to work on your server. Please contact BuddyBoss for support.', 'buddyboss' ); ?></p>
+				</div>
+			</div>
+			<?php
+		}
+
+		if ( empty( bb_enable_symlinks() ) ) {
+			?>
+			<div class="bp-messages-feedback">
+				<div class="bp-feedback warning">
+					<span class="bp-icon" aria-hidden="true"></span>
+					<p><?php esc_html_e( 'Symbolic links are disabled', 'buddyboss' ); ?></p>
+				</div>
+			</div>
+			<?php
+		} elseif ( ! $has_error && bb_enable_symlinks() ) {
+			?>
+			<div class="bp-messages-feedback">
+				<div class="bp-feedback success">
+					<span class="bp-icon" aria-hidden="true"></span>
+					<p><?php esc_html_e( 'Symbolic links are activated', 'buddyboss' ); ?></p>
+				</div>
+			</div>
+			<?php
+		}
+	} else {
+
+		// Offload delivery provider.
+		$delivery_provider = apply_filters( 'bb_media_offload_delivery_provider', 'Other' );
 		?>
 		<div class="bp-messages-feedback">
 			<div class="bp-feedback warning">
 				<span class="bp-icon" aria-hidden="true"></span>
-				<p><?php esc_html_e( 'Symbolic links are disabled', 'buddyboss' ); ?></p>
-			</div>
-		</div>
-		<?php
-	} elseif ( ! $has_error && bb_enable_symlinks() ) {
-		?>
-		<div class="bp-messages-feedback">
-			<div class="bp-feedback success">
-				<span class="bp-icon" aria-hidden="true"></span>
-				<p><?php esc_html_e( 'Symbolic links are activated', 'buddyboss' ); ?></p>
+				<p><?php printf( esc_html__( 'Symbolic links are disabled due to media being offloaded to %s', 'buddyboss' ), $delivery_provider ); ?></p>
 			</div>
 		</div>
 		<?php
@@ -2003,8 +2021,9 @@ function bb_media_settings_callback_symlink_direct_access() {
 	$video_attachment_id    = 0;
 	$media_attachment_id    = 0;
 	$document_attachment_id = 0;
-	$bypass_check           = apply_filters( 'bb_media_check_default_access', 0 );
+	$bypass_check           = apply_filters( 'bb_media_check_default_access', false );
 
+	// Check if removed local file.
 	if ( ! $bypass_check ) {
 
 		// Add upload filters.
@@ -2080,7 +2099,7 @@ function bb_media_settings_callback_symlink_direct_access() {
 
 		$directory = array();
 		foreach ( $get_sample_ids as $id => $v ) {
-			$fetch = wp_remote_get( wp_get_attachment_image_url( $v ) );
+			$fetch = wp_remote_get( wp_get_attachment_image_url( $v ), array( 'sslverify' => false ) );
 			if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
 				$directory[] = $id;
 			}
@@ -2102,9 +2121,14 @@ function bb_media_settings_callback_symlink_direct_access() {
 			);
 		}
 	} else {
+
+		// Offload delivery provider.
+		$delivery_provider = apply_filters( 'bb_media_offload_delivery_provider', 'Other' );
+	
+		// If offloaded and removed local file.
 		printf(
-			'<div class="bp-messages-feedback"><div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div></div>',
-			esc_html__( 'Direct access to your media files and folders is blocked', 'buddyboss' )
+			'<div class="bp-messages-feedback"><div class="bp-feedback warning"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div></div>',
+			sprintf( esc_html__( 'Direct access to your media files and folders is disabled due to media being offloaded to %s', 'buddyboss' ), $delivery_provider )
 		);
 	}
 
