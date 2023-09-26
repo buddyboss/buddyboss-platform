@@ -1022,6 +1022,19 @@ function bp_nouveau_ajax_media_description_save() {
 		}
 	}
 
+	$video_id = get_post_meta( $attachment_id, 'bp_video_id', true );
+	if ( ! empty( $video_id ) ) {
+		$video = new BP_Video( $video_id );
+
+		if ( ! empty( $video->id ) ) {
+			$video->description = $description;
+			$video->save();
+
+			$response['description'] = $description;
+			wp_send_json_success( $response );
+		}
+	}
+
 	wp_send_json_error( $response );
 }
 
