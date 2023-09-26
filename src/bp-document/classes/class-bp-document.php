@@ -151,6 +151,14 @@ class BP_Document {
 	public $error_type = 'bool';
 
 	/**
+	 * Description of the document item.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @var string
+	 */
+	var $description;
+
+	/**
 	 * Constructor method.
 	 *
 	 * @param int|bool $id Optional. The ID of a specific activity item.
@@ -196,6 +204,7 @@ class BP_Document {
 		$this->attachment_id = (int) $row->attachment_id;
 		$this->user_id       = (int) $row->user_id;
 		$this->title         = $row->title;
+		$this->description   = $row->description;
 		$this->folder_id     = (int) $row->folder_id;
 		$this->group_id      = (int) $row->group_id;
 		$this->activity_id   = (int) $row->activity_id;
@@ -1884,6 +1893,7 @@ class BP_Document {
 		$this->attachment_id = apply_filters_ref_array( 'bp_document_attachment_id_before_save', array( $this->attachment_id, &$this ) );
 		$this->user_id       = apply_filters_ref_array( 'bp_document_user_id_before_save', array( $this->user_id, &$this ) );
 		$this->title         = apply_filters_ref_array( 'bp_document_title_before_save', array( $this->title, &$this ) );
+		$this->description   = apply_filters_ref_array( 'bp_document_description_before_save', array( $this->description, &$this ) );
 		$this->folder_id     = apply_filters_ref_array( 'bp_document_folder_id_before_save', array( $this->folder_id, &$this ) );
 		$this->activity_id   = apply_filters_ref_array( 'bp_document_activity_id_before_save', array( $this->activity_id, &$this ) );
 		$this->message_id    = apply_filters_ref_array( 'bp_document_message_id_before_save', array( $this->message_id, &$this ) );
@@ -1924,9 +1934,9 @@ class BP_Document {
 
 		// If we have an existing ID, update the document item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, folder_id = %d, activity_id = %d, message_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_modified = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_modified, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, folder_id = %d, activity_id = %d, message_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_modified = %s, description = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_modified, $this->description, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name} ( blog_id, attachment_id, user_id, title, folder_id, activity_id, message_id, group_id, privacy, menu_order, date_created, date_modified ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %d, %s, %d, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->date_modified );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name} ( blog_id, attachment_id, user_id, title, description, folder_id, activity_id, message_id, group_id, privacy, menu_order, date_created, date_modified ) VALUES ( %d, %d, %d, %s, %s, %d, %d, %d, %d, %s, %d, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->description, $this->folder_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->date_modified );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
