@@ -1923,17 +1923,10 @@ function bp_media_settings_callback_extension_video_support() {
  */
 function bb_media_settings_callback_symlink_support() {
 
-	$serve_from_server = false;
-	$offload_media     = false;
-	if ( class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-		$wp_offload_media  = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		$offload_media     = ( isset( $wp_offload_media ) && isset( $wp_offload_media['copy-to-s3'] ) && (bool) $wp_offload_media['copy-to-s3'] );
-		$delivery_provider = ! empty( $wp_offload_media['delivery-provider'] ) && 'storage' !== $wp_offload_media['delivery-provider'] ? ucwords( $wp_offload_media['delivery-provider'] ) : 'Amazon S3';
-		$serve_from_server = ( isset( $wp_offload_media ) && isset( $wp_offload_media['serve-from-s3'] ) && (bool) $wp_offload_media['serve-from-s3'] );
-	}
+	$is_offloaded = apply_filters( 'bb_media_offload_delivered', false );
 
 	?>
-	<input name="bp_media_symlink_support" id="bp_media_symlink_support" type="checkbox" value="1" <?php checked( bb_enable_symlinks() ); ?> <?php echo ( $offload_media && $serve_from_server ) ? 'disabled' : ''; ?>/>
+	<input name="bp_media_symlink_support" id="bp_media_symlink_support" type="checkbox" value="1" <?php checked( bb_enable_symlinks() ); ?> <?php echo $is_offloaded ? 'disabled' : ''; ?>/>
 	<label for="bp_media_symlink_support">
 		<?php 
 		esc_html_e( 'Enable symbolic links. If you are having issues with media display, try disabling this option.', 'buddyboss' ); ?>
@@ -1941,7 +1934,7 @@ function bb_media_settings_callback_symlink_support() {
 
 	<?php
 
-	if ( ! ( $offload_media && $serve_from_server ) ) {
+	if ( ! $is_offloaded ) {
 		$has_error = false;
 		if ( true === bb_check_server_disabled_symlink() ) {
 			bp_update_option( 'bp_media_symlink_support', 0 );
@@ -1998,7 +1991,9 @@ function bb_media_settings_callback_symlink_support() {
 			<?php
 		}
 	} else {
-		// Offloaded.
+
+		// Offload delivery provider.
+		$delivery_provider = apply_filters( 'bb_media_offload_delivery_provider', 'Other' );
 		?>
 		<div class="bp-messages-feedback">
 			<div class="bp-feedback warning">
@@ -2026,115 +2021,99 @@ function bb_media_settings_callback_symlink_direct_access() {
 	$video_attachment_id    = 0;
 	$media_attachment_id    = 0;
 	$document_attachment_id = 0;
-	$bypass_check           = apply_filters( 'bb_media_check_default_access', 0 );
-
-	$remove_local_file = false;
-	$offload_media     = false;
-	if ( class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-		$wp_offload_media  = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		$offload_media     = ( isset( $wp_offload_media ) && isset( $wp_offload_media['copy-to-s3'] ) && (bool) $wp_offload_media['copy-to-s3'] );
-		$delivery_provider = ! empty( $wp_offload_media['delivery-provider'] ) && 'storage' !== $wp_offload_media['delivery-provider'] ? ucwords( $wp_offload_media['delivery-provider'] ) : 'Amazon S3';
-		$remove_local_file = ( isset( $wp_offload_media ) && isset( $wp_offload_media['remove-local-file'] ) && (bool) $wp_offload_media['remove-local-file'] );
-	}
+	$bypass_check           = apply_filters( 'bb_media_check_default_access', false );
 
 	// Check if removed local file.
-	if ( ! ( $offload_media && $remove_local_file ) ) {
-		if ( ! $bypass_check ) {
+	if ( ! $bypass_check ) {
 
-			// Add upload filters.
-			add_filter( 'upload_dir', 'bp_video_upload_dir_script' );
-			$file        = buddypress()->plugin_dir . 'bp-core/images/suspended-mystery-man.jpg';
-			$filename    = basename( $file );
-			$upload_file = wp_upload_bits( $filename, null, file_get_contents( $file ) );
+		// Add upload filters.
+		add_filter( 'upload_dir', 'bp_video_upload_dir_script' );
+		$file        = buddypress()->plugin_dir . 'bp-core/images/suspended-mystery-man.jpg';
+		$filename    = basename( $file );
+		$upload_file = wp_upload_bits( $filename, null, file_get_contents( $file ) );
 
-			if ( ! $upload_file['error'] ) {
-				$wp_filetype         = wp_check_filetype( $filename, null );
-				$attachment          = array(
-					'post_mime_type' => $wp_filetype['type'],
-					'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
-					'post_content'   => '',
-					'post_status'    => 'inherit',
-				);
-				$video_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
-				if ( ! is_wp_error( $video_attachment_id ) ) {
-					require_once ABSPATH . 'wp-admin/includes/image.php';
-					$attachment_data = wp_generate_attachment_metadata( $video_attachment_id, $upload_file['file'] );
-					wp_update_attachment_metadata( $video_attachment_id, $attachment_data );
-					$get_sample_ids['bb_videos'] = $video_attachment_id;
-				}
+		if ( ! $upload_file['error'] ) {
+			$wp_filetype         = wp_check_filetype( $filename, null );
+			$attachment          = array(
+				'post_mime_type' => $wp_filetype['type'],
+				'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
+				'post_content'   => '',
+				'post_status'    => 'inherit',
+			);
+			$video_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
+			if ( ! is_wp_error( $video_attachment_id ) ) {
+				require_once ABSPATH . 'wp-admin/includes/image.php';
+				$attachment_data = wp_generate_attachment_metadata( $video_attachment_id, $upload_file['file'] );
+				wp_update_attachment_metadata( $video_attachment_id, $attachment_data );
+				$get_sample_ids['bb_videos'] = $video_attachment_id;
 			}
-			// Remove upload filters.
-			remove_filter( 'upload_dir', 'bp_video_upload_dir_script' );
+		}
+		// Remove upload filters.
+		remove_filter( 'upload_dir', 'bp_video_upload_dir_script' );
 
-			add_filter( 'upload_dir', 'bp_media_upload_dir_script' );
-			$file        = buddypress()->plugin_dir . 'bp-core/images/suspended-mystery-man.jpg';
-			$filename    = basename( $file );
-			$upload_file = wp_upload_bits( $filename, null, file_get_contents( $file ) );
+		add_filter( 'upload_dir', 'bp_media_upload_dir_script' );
+		$file        = buddypress()->plugin_dir . 'bp-core/images/suspended-mystery-man.jpg';
+		$filename    = basename( $file );
+		$upload_file = wp_upload_bits( $filename, null, file_get_contents( $file ) );
 
-			if ( ! $upload_file['error'] ) {
-				$wp_filetype         = wp_check_filetype( $filename, null );
-				$attachment          = array(
-					'post_mime_type' => $wp_filetype['type'],
-					'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
-					'post_content'   => '',
-					'post_status'    => 'inherit',
-				);
-				$media_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
-				if ( ! is_wp_error( $media_attachment_id ) ) {
-					require_once ABSPATH . 'wp-admin/includes/image.php';
-					$attachment_data = wp_generate_attachment_metadata( $media_attachment_id, $upload_file['file'] );
-					wp_update_attachment_metadata( $media_attachment_id, $attachment_data );
-					$get_sample_ids['bb_medias'] = $media_attachment_id;
-				}
+		if ( ! $upload_file['error'] ) {
+			$wp_filetype         = wp_check_filetype( $filename, null );
+			$attachment          = array(
+				'post_mime_type' => $wp_filetype['type'],
+				'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
+				'post_content'   => '',
+				'post_status'    => 'inherit',
+			);
+			$media_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
+			if ( ! is_wp_error( $media_attachment_id ) ) {
+				require_once ABSPATH . 'wp-admin/includes/image.php';
+				$attachment_data = wp_generate_attachment_metadata( $media_attachment_id, $upload_file['file'] );
+				wp_update_attachment_metadata( $media_attachment_id, $attachment_data );
+				$get_sample_ids['bb_medias'] = $media_attachment_id;
 			}
-			remove_filter( 'upload_dir', 'bp_media_upload_dir_script' );
+		}
+		remove_filter( 'upload_dir', 'bp_media_upload_dir_script' );
 
-			add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
-			$file        = buddypress()->plugin_dir . 'bp-core/images/suspended-mystery-man.jpg';
-			$filename    = basename( $file );
-			$upload_file = wp_upload_bits( $filename, null, file_get_contents( $file ) );
+		add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
+		$file        = buddypress()->plugin_dir . 'bp-core/images/suspended-mystery-man.jpg';
+		$filename    = basename( $file );
+		$upload_file = wp_upload_bits( $filename, null, file_get_contents( $file ) );
 
-			if ( ! $upload_file['error'] ) {
-				$wp_filetype            = wp_check_filetype( $filename, null );
-				$attachment             = array(
-					'post_mime_type' => $wp_filetype['type'],
-					'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
-					'post_content'   => '',
-					'post_status'    => 'inherit',
-				);
-				$document_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
-				if ( ! is_wp_error( $document_attachment_id ) ) {
-					require_once ABSPATH . 'wp-admin/includes/image.php';
-					$attachment_data = wp_generate_attachment_metadata( $document_attachment_id, $upload_file['file'] );
-					wp_update_attachment_metadata( $document_attachment_id, $attachment_data );
-					$get_sample_ids['bb_documents'] = $document_attachment_id;
-				}
+		if ( ! $upload_file['error'] ) {
+			$wp_filetype            = wp_check_filetype( $filename, null );
+			$attachment             = array(
+				'post_mime_type' => $wp_filetype['type'],
+				'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
+				'post_content'   => '',
+				'post_status'    => 'inherit',
+			);
+			$document_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
+			if ( ! is_wp_error( $document_attachment_id ) ) {
+				require_once ABSPATH . 'wp-admin/includes/image.php';
+				$attachment_data = wp_generate_attachment_metadata( $document_attachment_id, $upload_file['file'] );
+				wp_update_attachment_metadata( $document_attachment_id, $attachment_data );
+				$get_sample_ids['bb_documents'] = $document_attachment_id;
 			}
-			remove_filter( 'upload_dir', 'bp_document_upload_dir_script' );
+		}
+		remove_filter( 'upload_dir', 'bp_document_upload_dir_script' );
 
-			$directory = array();
-			foreach ( $get_sample_ids as $id => $v ) {
-				$fetch = wp_remote_get( wp_get_attachment_image_url( $v ), array( 'sslverify' => false ) );
-				if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
-					$directory[] = $id;
-				}
+		$directory = array();
+		foreach ( $get_sample_ids as $id => $v ) {
+			$fetch = wp_remote_get( wp_get_attachment_image_url( $v ), array( 'sslverify' => false ) );
+			if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
+				$directory[] = $id;
 			}
+		}
 
-			$directory = apply_filters( 'bb_media_settings_callback_symlink_direct_access', $directory, $get_sample_ids );
+		$directory = apply_filters( 'bb_media_settings_callback_symlink_direct_access', $directory, $get_sample_ids );
 
-			if ( ! empty( $directory ) ) {
+		if ( ! empty( $directory ) ) {
 
-				printf(
-					'<div class="bp-messages-feedback"><div class="bp-feedback warning"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div></div>',
-					esc_html__( 'Direct access to your media files and folders is not blocked', 'buddyboss' )
-				);
+			printf(
+				'<div class="bp-messages-feedback"><div class="bp-feedback warning"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div></div>',
+				esc_html__( 'Direct access to your media files and folders is not blocked', 'buddyboss' )
+			);
 
-			} else {
-				printf(
-					'<div class="bp-messages-feedback"><div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div></div>',
-					esc_html__( 'Direct access to your media files and folders is blocked', 'buddyboss' )
-				);
-			}
 		} else {
 			printf(
 				'<div class="bp-messages-feedback"><div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div></div>',
@@ -2142,12 +2121,17 @@ function bb_media_settings_callback_symlink_direct_access() {
 			);
 		}
 	} else {
+
+		// Offload delivery provider.
+		$delivery_provider = apply_filters( 'bb_media_offload_delivery_provider', 'Other' );
+	
 		// If offloaded and removed local file.
 		printf(
 			'<div class="bp-messages-feedback"><div class="bp-feedback warning"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div></div>',
 			sprintf( esc_html__( 'Direct access to your media files and folders is disabled due to media being offloaded to %s', 'buddyboss' ), $delivery_provider )
 		);
 	}
+
 	printf(
 		'<p class="description"><p>%s <a href="%s">%s</a> %s</p></p>',
 		esc_html__( 'If our plugin is unable to automatically block direct access to your media files and folders, please follow the steps in our ', 'buddyboss' ),
