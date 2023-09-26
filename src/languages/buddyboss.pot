@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.4.30\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-09-19 12:02:08+00:00\n"
+"POT-Creation-Date: 2023-09-26 07:17:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -6785,32 +6785,37 @@ msgstr ""
 msgid "in %s"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:750 bp-core/bp-core-functions.php:1213
-#: bp-forums/common/functions.php:115
+#: bp-core/bp-core-cssjs.php:750 bp-core/bp-core-cssjs.php:798
+#: bp-core/bp-core-functions.php:1213 bp-forums/common/functions.php:115
 #. translators: %s: the human time diff.
 #. translators: The time since the older date.
 msgid "%s ago"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:751 bp-forums/admin/settings.php:455
-#: bp-forums/common/functions.php:125
-msgid "seconds"
+#: bp-core/bp-core-cssjs.php:751 bp-forums/common/functions.php:125
+msgid "second"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:752 bp-core/bp-core-functions.php:1327
+#: bp-core/bp-core-cssjs.php:752
+msgid "%d seconds"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:753 bp-core/bp-core-cssjs.php:801
+#: bp-core/bp-core-functions.php:1327
 msgid "a minute"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:754
+#: bp-core/bp-core-cssjs.php:755
 #. Translators: %d is the amount of minutes.
 msgid "%d minutes"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:755 bp-core/bp-core-functions.php:1320
+#: bp-core/bp-core-cssjs.php:756 bp-core/bp-core-cssjs.php:803
+#: bp-core/bp-core-functions.php:1320
 msgid "an hour"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:757 bp-messages/bp-messages-functions.php:2127
+#: bp-core/bp-core-cssjs.php:758 bp-messages/bp-messages-functions.php:2127
 #: bp-messages/bp-messages-functions.php:2136
 #: bp-messages/bp-messages-functions.php:2145
 #. Translators: %d is the amount of hours.
@@ -6818,42 +6823,94 @@ msgstr ""
 msgid "%d hours"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:758 bp-core/bp-core-functions.php:1313
+#: bp-core/bp-core-cssjs.php:759 bp-core/bp-core-cssjs.php:805
+#: bp-core/bp-core-functions.php:1313
 msgid "a day"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:760
+#: bp-core/bp-core-cssjs.php:761
 #. Translators: %d is the amount of days.
 msgid "%d days"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:761
+#: bp-core/bp-core-cssjs.php:762 bp-core/bp-core-cssjs.php:807
+#: bp-core/bp-core-functions.php:1306
+msgid "a week"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:764
+#. Translators: %d is the amount of weeks.
+msgid "%d weeks"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:765 bp-core/bp-core-cssjs.php:809
 msgid "a month"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:763
+#: bp-core/bp-core-cssjs.php:767
 #. Translators: %d is the amount of months.
 msgid "%d months"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:764 bp-core/bp-core-functions.php:1279
+#: bp-core/bp-core-cssjs.php:768 bp-core/bp-core-cssjs.php:811
+#: bp-core/bp-core-functions.php:1279
 msgid "a year"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:766
+#: bp-core/bp-core-cssjs.php:770
 #. Translators: %d is the amount of years.
 msgid "%d years"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:874
+#: bp-core/bp-core-cssjs.php:796 bp-core/bp-core-functions.php:1194
+#: bp-forums/common/functions.php:113
+msgid "sometime"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:797 bp-core/bp-core-cssjs.php:799
+#: bp-core/bp-core-functions.php:1203
+msgid "a second"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:800 bp-forums/admin/settings.php:455
+#: bp-forums/common/functions.php:125
+msgid "seconds"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:802 bp-forums/admin/settings.php:439
+#: bp-forums/common/functions.php:124
+msgid "minutes"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:804 bp-forums/common/functions.php:123
+msgid "hours"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:806 bp-forums/common/functions.php:122
+msgid "days"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:808 bp-forums/common/functions.php:121
+msgid "weeks"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:810 bp-forums/common/functions.php:120
+msgid "months"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:812 bp-forums/common/functions.php:119
+msgid "years"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:917
 msgid "Mismatch"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:875
+#: bp-core/bp-core-cssjs.php:918
 msgid "Enter valid email"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:876
+#: bp-core/bp-core-cssjs.php:919
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:720
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:790
 #: bp-members/screens/register.php:161 bp-members/screens/register.php:209
@@ -7083,14 +7140,6 @@ msgstr ""
 msgid "Photos"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:1194 bp-forums/common/functions.php:113
-msgid "sometime"
-msgstr ""
-
-#: bp-core/bp-core-functions.php:1203
-msgid "a second"
-msgstr ""
-
 #: bp-core/bp-core-functions.php:1281
 #. translators: The display years count from the older date.
 msgid "%s year"
@@ -7111,10 +7160,6 @@ msgid "%s week"
 msgid_plural "%s weeks"
 msgstr[0] ""
 msgstr[1] ""
-
-#: bp-core/bp-core-functions.php:1306
-msgid "a week"
-msgstr ""
 
 #: bp-core/bp-core-functions.php:1315
 #. translators: The display days count from the older date.
@@ -13036,10 +13081,6 @@ msgstr ""
 msgid "Akismet Spam Protection"
 msgstr ""
 
-#: bp-forums/admin/settings.php:439 bp-forums/common/functions.php:124
-msgid "minutes"
-msgstr ""
-
 #: bp-forums/admin/settings.php:476
 msgid "Allow guest users without accounts to create discussions and replies"
 msgstr ""
@@ -15674,48 +15715,24 @@ msgstr ""
 msgid "year"
 msgstr ""
 
-#: bp-forums/common/functions.php:119
-msgid "years"
-msgstr ""
-
 #: bp-forums/common/functions.php:120
 msgid "month"
-msgstr ""
-
-#: bp-forums/common/functions.php:120
-msgid "months"
 msgstr ""
 
 #: bp-forums/common/functions.php:121
 msgid "week"
 msgstr ""
 
-#: bp-forums/common/functions.php:121
-msgid "weeks"
-msgstr ""
-
 #: bp-forums/common/functions.php:122
 msgid "day"
-msgstr ""
-
-#: bp-forums/common/functions.php:122
-msgid "days"
 msgstr ""
 
 #: bp-forums/common/functions.php:123
 msgid "hour"
 msgstr ""
 
-#: bp-forums/common/functions.php:123
-msgid "hours"
-msgstr ""
-
 #: bp-forums/common/functions.php:124
 msgid "minute"
-msgstr ""
-
-#: bp-forums/common/functions.php:125
-msgid "second"
 msgstr ""
 
 #: bp-forums/common/functions.php:541 bp-forums/common/functions.php:580
