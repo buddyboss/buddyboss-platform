@@ -86,8 +86,6 @@ class BB_AS3CF_Plugin_Compatibility {
 	public function bb_media_check_default_access_access( $bypass ) {
 		$wp_offload_media = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
 
-		$remove_local_file = false;
-		$offload_media     = false;
 		$offload_media     = ( isset( $wp_offload_media ) && isset( $wp_offload_media['copy-to-s3'] ) && (bool) $wp_offload_media['copy-to-s3'] );
 		$remove_local_file = ( isset( $wp_offload_media ) && isset( $wp_offload_media['remove-local-file'] ) && (bool) $wp_offload_media['remove-local-file'] );
 		$bypass            = ( $offload_media && $remove_local_file );
