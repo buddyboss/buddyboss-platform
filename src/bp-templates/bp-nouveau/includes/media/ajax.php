@@ -1009,12 +1009,20 @@ function bp_nouveau_ajax_media_description_save() {
 		wp_send_json_error( $response );
 	}
 
-	$media_post['ID']           = $attachment_id;
-	$media_post['post_content'] = $description;
-	wp_update_post( $media_post );
+	$media_id = get_post_meta( $attachment_id, 'bp_media_id', true );
+	if ( ! empty( $media_id ) ) {
+		$media = new BP_Media( $media_id );
 
-	$response['description'] = $description;
-	wp_send_json_success( $response );
+		if ( ! empty( $media->id ) ) {
+			$media->description = $description;
+			$media->save();
+
+			$response['description'] = $description;
+			wp_send_json_success( $response );
+		}
+	}
+
+	wp_send_json_error( $response );
 }
 
 add_filter( 'bp_nouveau_object_template_result', 'bp_nouveau_object_template_results_media_tabs', 10, 2 );
