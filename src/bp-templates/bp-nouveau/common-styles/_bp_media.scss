@@ -4078,9 +4078,8 @@ body.search-results.bb-template-v2 .search_results {
 		padding-right: 30px;
 	}
 
-	&.is-loading .search-form_reset {
-		opacity: 0.3;
-		pointer-events: none;
+	&.bp-invites-search-form.is-loading .search-form_reset {
+		display: none !important; // To override jQuery inline CSS
 	}
 
 }

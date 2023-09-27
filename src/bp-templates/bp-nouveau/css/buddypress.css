@@ -21638,10 +21638,9 @@ body.search-results.bb-template-v2 .search_results .search-document-list .media-
   padding-right: 30px;
 }
 
-.buddypress .buddypress-wrap .search-form-has-reset.is-loading .search-form_reset,
-.search-form-has-reset.is-loading .search-form_reset {
-  opacity: 0.3;
-  pointer-events: none;
+.buddypress .buddypress-wrap .search-form-has-reset.bp-invites-search-form.is-loading .search-form_reset,
+.search-form-has-reset.bp-invites-search-form.is-loading .search-form_reset {
+  display: none !important;
 }
 
 body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .bp-media-header-wrap-inner {
