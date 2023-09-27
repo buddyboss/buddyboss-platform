@@ -3282,3 +3282,18 @@ function bb_get_buddyboss_registration_notice() {
 
 	return $bb_registration_notice;
 }
+
+
+/**
+ * Allow pinned activity posts.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_callback_enable_activity_pinned_posts() {
+	?>
+
+	<input id="_bb_enable_activity_pinned_posts" name="_bb_enable_activity_pinned_posts" type="checkbox" value="1" <?php checked( bb_is_activity_pinned_posts_active( false ) ); ?> />
+	<label for="_bb_enable_activity_pinned_posts"><?php esc_html_e( 'Allow group owners and moderator to pin posts', 'buddyboss' ); ?></label>
+
+	<?php
+}

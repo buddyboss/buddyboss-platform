@@ -2375,3 +2375,24 @@ function bb_email_restrictions_setting( $default = array() ) {
 	 */
 	return apply_filters( 'bb_email_restrictions_setting', bp_get_option( 'bb-email-restrictions', $default ) );
 }
+
+/**
+ * Check whether activity pinned posts are enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True    If activity pinned posts are enabled, otherwise false.
+ */
+function bb_is_activity_pinned_posts_active( $default = false ) {
+
+	/**
+	 * Filters whether or not activity pinned posts are enabled.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value Whether or not activity pinned posts are enabled.
+	 */
+	return (bool) apply_filters( 'bb_is_activity_pinned_posts_active', (bool) bp_get_option( '_bb_enable_activity_pinned_posts', $default ) );
+}
