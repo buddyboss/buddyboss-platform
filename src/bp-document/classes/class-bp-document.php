@@ -290,7 +290,7 @@ class BP_Document {
 		// Searching.
 		if ( $r['search_terms'] ) {
 			$search_terms_like              = '%' . bp_esc_like( $r['search_terms'] ) . '%';
-			$where_conditions['search_sql'] = $wpdb->prepare( 'd.title LIKE %s', $search_terms_like );
+			$where_conditions['search_sql'] = $wpdb->prepare( '( d.title LIKE %s OR d.description LIKE %s )', $search_terms_like, $search_terms_like );
 
 			/**
 			 * Filters whether or not to include users for search parameters.
@@ -865,6 +865,7 @@ class BP_Document {
 			$where_conditions_document['search_sql'] = $wpdb->prepare( '( d.title LIKE %s', $search_terms_like );
 			$where_conditions_folder['search_sql']   = $wpdb->prepare( 'f.title LIKE %s', $search_terms_like );
 
+			$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR d.description LIKE %s ', $search_terms_like );
 			$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR dm.meta_key = "extension" AND dm.meta_value LIKE %s ', $search_terms_like );
 			$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR dm.meta_key = "file_name" AND dm.meta_value LIKE %s )', $search_terms_like );
 
