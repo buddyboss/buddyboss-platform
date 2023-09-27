@@ -21638,6 +21638,12 @@ body.search-results.bb-template-v2 .search_results .search-document-list .media-
   padding-left: 30px;
 }
 
+.buddypress .buddypress-wrap .search-form-has-reset.is-loading .search-form_reset,
+.search-form-has-reset.is-loading .search-form_reset {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
 body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .bp-media-header-wrap-inner {
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;

@@ -4078,6 +4078,11 @@ body.search-results.bb-template-v2 .search_results {
 		padding-right: 30px;
 	}
 
+	&.is-loading .search-form_reset {
+		opacity: 0.3;
+		pointer-events: none;
+	}
+
 }
 
 body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .bp-media-header-wrap-inner {
