@@ -2665,6 +2665,7 @@ class BP_Email_Tokens {
 								'order_by' => 'menu_order',
 								'sort'     => 'ASC',
 								'per_page' => 5,
+								'user_id'  => false,
 								'privacy'  => false,
 							),
 							$media_args
@@ -2715,6 +2716,7 @@ class BP_Email_Tokens {
 								'order_by' => 'menu_order',
 								'sort'     => 'ASC',
 								'per_page' => 5,
+								'user_id'  => false,
 								'privacy'  => false,
 							),
 							$media_args
@@ -2776,6 +2778,7 @@ class BP_Email_Tokens {
 								'order_by' => 'menu_order',
 								'sort'     => 'ASC',
 								'per_page' => 5,
+								'user_id'  => false,
 								'privacy'  => false,
 							),
 							$media_args
