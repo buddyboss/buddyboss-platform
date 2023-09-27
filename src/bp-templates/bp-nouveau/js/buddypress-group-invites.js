@@ -1015,7 +1015,9 @@ window.bp = window.bp || {};
 									feedbackParagraphTagSelectorLeft.html( response.data.feedback );
 									$( '.bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback' ).show();
 								}
-								form.removeClass( 'is-loading' );
+								setTimeout( function() {
+									form.removeClass( 'is-loading' );
+								}, 500 );
 							}
 						}
 					);
@@ -1072,7 +1074,9 @@ window.bp = window.bp || {};
 									feedbackParagraphTagSelectorLeft.html( response.data.feedback );
 									$( '.bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback' ).show();
 								}
-								form.removeClass( 'is-loading' );
+								setTimeout( function() {
+									form.removeClass( 'is-loading' );
+								}, 500 );
 							}
 						}
 					);
