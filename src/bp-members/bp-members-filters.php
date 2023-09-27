@@ -318,9 +318,17 @@ function bp_members_filter_video_personal_scope( $retval = array(), $filter = ar
 
 	if ( ! empty( $filter['search_terms'] ) ) {
 		$retval[] = array(
-			'column'  => 'title',
-			'compare' => 'LIKE',
-			'value'   => $filter['search_terms'],
+			'relation' => 'OR',
+			array(
+				'column'  => 'title',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+			array(
+				'column'  => 'description',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			)
 		);
 	}
 

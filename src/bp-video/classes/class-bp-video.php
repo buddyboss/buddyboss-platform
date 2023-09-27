@@ -359,7 +359,7 @@ class BP_Video {
 		// Searching.
 		if ( $r['search_terms'] ) {
 			$search_terms_like              = '%' . bp_esc_like( $r['search_terms'] ) . '%';
-			$where_conditions['search_sql'] = $wpdb->prepare( 'm.title LIKE %s', $search_terms_like );
+			$where_conditions['search_sql'] = $wpdb->prepare( '( m.title LIKE %s OR m.description LIKE %s )', $search_terms_like, $search_terms_like );
 
 			/**
 			 * Filters whether or not to include users for search parameters.
