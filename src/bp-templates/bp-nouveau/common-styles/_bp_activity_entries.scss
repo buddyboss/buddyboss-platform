@@ -413,6 +413,10 @@
 		margin-right: 35px;
 	}
 
+	.is-pinned .bp-activity-head {
+		margin-right: 55px;
+	}
+
 	.bb-activity-more-options-wrap {
 		position: absolute;
 		right: 15px;
@@ -589,6 +593,26 @@
 
 		}
 
+	}
+
+	.bb-pin-action {
+		position: absolute;
+		right: 20px;
+		font-size: 22px;
+		top: 10px;
+
+		.bb-pin-action_button {
+			cursor: default;
+		}
+
+		[class*="bb-icon"] {
+			font-size: 22px;
+			color: #939597;
+		}
+	}
+
+	.bb-activity-more-options-wrap + .bb-pin-action {
+		right: 45px;
 	}
 
 	.comment-item {

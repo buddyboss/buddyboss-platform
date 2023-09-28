@@ -3690,6 +3690,10 @@ input.search-query-input {
   margin-right: 35px;
 }
 
+.activity-list .is-pinned .bp-activity-head {
+  margin-right: 55px;
+}
+
 .activity-list .bb-activity-more-options-wrap {
   position: absolute;
   right: 15px;
@@ -3851,6 +3855,26 @@ input.search-query-input {
     -ms-transform: translate(-90%, 0);
     transform: translate(-90%, 0);
   }
+}
+
+.activity-list .bb-pin-action {
+  position: absolute;
+  right: 20px;
+  font-size: 22px;
+  top: 10px;
+}
+
+.activity-list .bb-pin-action .bb-pin-action_button {
+  cursor: default;
+}
+
+.activity-list .bb-pin-action [class*="bb-icon"] {
+  font-size: 22px;
+  color: #939597;
+}
+
+.activity-list .bb-activity-more-options-wrap + .bb-pin-action {
+  right: 45px;
 }
 
 #buddypress .activity-list .comment-item .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.delete:before {
