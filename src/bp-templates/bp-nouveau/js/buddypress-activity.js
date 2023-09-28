@@ -1195,6 +1195,23 @@ window.bp = window.bp || {};
 					selection.removeAllRanges();
 					selection.addRange( range );
 				}
+
+				if ( ! _.isUndefined( window.MediumEditor ) && ! $( '#ac-input-' + activity_id ).hasClass( 'medium-editor-element' ) ) {
+					window.activity_comment_editor = new window.MediumEditor(
+						$( '#ac-input-' + activity_id )[0],
+						{
+							placeholder: false,
+							toolbar: false,
+							paste: {
+								forcePlainText: false,
+								cleanPastedHTML: false
+							},
+							keyboardCommands: false,
+							imageDragging: false,
+							anchorPreview: false,
+						}
+					);
+				}
 			}
 
 			if ( target.hasClass( 'activity-state-no-comments' ) ) {
