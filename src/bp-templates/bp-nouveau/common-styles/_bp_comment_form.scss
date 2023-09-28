@@ -36,6 +36,22 @@ form.ac-form {
 				border-radius: 3px;
 				border: 1px solid #ccc;
 
+				&.medium-editor-element {
+					min-height: auto;
+
+					p {
+						margin-bottom: 0.5em;
+
+						&:last-child {
+							margin-bottom: 0;
+						}
+
+						&:empty {
+							min-height: 1em;
+						}
+					}
+				}
+
 				&:focus {
 
 					@include box-shadow( 0 0 6px $med-light-grey );

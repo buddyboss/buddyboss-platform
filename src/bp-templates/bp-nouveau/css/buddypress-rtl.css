@@ -6435,6 +6435,14 @@ span.dashicons.dashicons-admin-file:before {
   margin-bottom: 0.5em;
 }
 
+.buddypress-wrap .activity-comments .acomment-content p:last-child {
+  margin-bottom: 0;
+}
+
+.buddypress-wrap .activity-comments .acomment-content p:empty {
+  min-height: 1em;
+}
+
 .buddypress-wrap .activity-comments .acomment-content .bb-activity-video-wrap,
 .buddypress-wrap .activity-comments .acomment-content .bb-activity-media-wrap {
   margin: 15px 0;
@@ -6573,6 +6581,22 @@ form.ac-form .ac-reply-content .ac-textarea .ac-input[contenteditable="true"] {
   width: 100%;
   border-radius: 3px;
   border: 1px solid #ccc;
+}
+
+form.ac-form .ac-reply-content .ac-textarea .ac-input[contenteditable="true"].medium-editor-element {
+  min-height: auto;
+}
+
+form.ac-form .ac-reply-content .ac-textarea .ac-input[contenteditable="true"].medium-editor-element p {
+  margin-bottom: 0.5em;
+}
+
+form.ac-form .ac-reply-content .ac-textarea .ac-input[contenteditable="true"].medium-editor-element p:last-child {
+  margin-bottom: 0;
+}
+
+form.ac-form .ac-reply-content .ac-textarea .ac-input[contenteditable="true"].medium-editor-element p:empty {
+  min-height: 1em;
 }
 
 form.ac-form .ac-reply-content .ac-textarea .ac-input[contenteditable="true"]:focus {
