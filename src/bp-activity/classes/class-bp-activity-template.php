@@ -186,6 +186,8 @@ class BP_Activity_Template {
 			'show_hidden'       => false,
 			'spam'              => 'ham_only',
 			'update_meta_cache' => true,
+			'show_pinned_post'  => false,
+			'pinned_post_type'  => '',
 		);
 		$r        = bp_parse_args( $args, $defaults );
 		extract( $r );
@@ -241,6 +243,8 @@ class BP_Activity_Template {
 					'in'                => $in,
 					'spam'              => $spam,
 					'update_meta_cache' => $update_meta_cache,
+					'show_pinned_post'  => $show_pinned_post,
+					'pinned_post_type'  => $pinned_post_type,
 				)
 			);
 		}

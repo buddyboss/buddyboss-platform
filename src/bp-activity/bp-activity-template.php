@@ -283,6 +283,10 @@ function bp_has_activities( $args = '' ) {
 			'date_query'        => false,        // Filter by date. See first parameter of WP_Date_Query for format.
 			'filter_query'      => false,        // Advanced filtering.  See BP_Activity_Query for format.
 
+			// Pinned post.
+			'show_pinned_post'  => false,        // Show pinned activities on the top.
+			'pinned_post_type'  => '',           // Type of feed - group, activity.
+
 			// Searching.
 			'search_terms'      => $search_terms_default,
 			'update_meta_cache' => true,
@@ -349,6 +353,23 @@ function bp_has_activities( $args = '' ) {
 	// argument. This prevents backpat errors with AJAX.
 	if ( ! empty( $r['include'] ) && ( 'ham_only' === $r['spam'] ) ) {
 		$r['spam'] = 'all';
+	}
+
+	$scope_array = explode( ',', $r['scope'] );
+
+	// Pinned post.
+	if (
+		(
+			bp_is_activity_directory() &&
+			in_array( 'public', $scope_array )
+		) ||
+		bp_is_group_activity()
+	) {
+		$r['show_pinned_post'] = true;
+		$r['pinned_post_type'] = 'activity';
+		if ( bp_is_group_activity() ) {
+			$r['pinned_post_type'] = 'group';
+		}
 	}
 
 	/*

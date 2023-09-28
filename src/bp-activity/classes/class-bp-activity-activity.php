@@ -543,6 +543,30 @@ class BP_Activity_Activity {
 			$sort     = '';
 		}
 
+		// Pinned post.
+		if ( ! empty( $r['show_pinned_post'] ) && ! empty( $r['pinned_post_type'] ) ) {
+			$pinned_id = 0;
+			if ( 'group' === $r['pinned_post_type'] ) {
+				if (
+					! empty( $r['filter']['primary_id'] ) &&
+					! empty( $r['filter']['object'] ) &&
+					'groups' === $r['filter']['object']
+				) {
+					$group_id  = $r['filter']['primary_id'];
+					$pinned_id = groups_get_groupmeta( $group_id, 'bb_pinned_posts' );
+				}
+			} elseif ( 'activity' === $r['pinned_post_type'] ) {
+				$pinned_id = bp_get_option( 'bb_pinned_posts', 0 );
+			}
+
+			if ( ! empty( $pinned_id ) ) {
+				$order_by = 'CASE
+								WHEN a.id = ' . $pinned_id . ' THEN 1
+								ELSE 0
+							END DESC, ' . $order_by;
+			}
+		}
+
 		// Hide Hidden Items?
 		if ( ! $r['show_hidden'] ) {
 			$where_conditions['hidden_sql'] = 'a.hide_sitewide = 0';
@@ -734,6 +758,7 @@ class BP_Activity_Activity {
 			 * @param array  $r                Array of arguments passed into method.
 			 */
 			$activity_ids_sql = apply_filters( 'bp_activity_paged_activities_sql', $activity_ids_sql, $r );
+			// error_log( $activity_ids_sql );
 			/*
 			 * Queries that include 'last_activity' are cached separately,
 			 * since they are generally much less long-lived.

@@ -2046,6 +2046,8 @@ function bp_activity_get( $args = '' ) {
 			 * );
 			 */
 			'filter'            => array(),
+			'show_pinned_post'  => false,
+			'pinned_post_type'  => '',
 		),
 		'activity_get'
 	);
@@ -2072,6 +2074,8 @@ function bp_activity_get( $args = '' ) {
 			'update_meta_cache' => $r['update_meta_cache'],
 			'count_total'       => $r['count_total'],
 			'fields'            => $r['fields'],
+			'show_pinned_post'  => $r['show_pinned_post'],
+			'pinned_post_type'  => $r['pinned_post_type'],
 		)
 	);
 
