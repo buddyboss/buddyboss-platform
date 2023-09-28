@@ -3268,4 +3268,16 @@ function bb_update_to_2_4_12() {
 	if ( empty( $document_row ) ) {
 		$wpdb->query( "ALTER TABLE {$bp->document->table_name} ADD `description` text AFTER `title`" ); //phpcs:ignore
 	}
+
+	// Purge all the cache.
+	wp_cache_flush();
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear medias API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-photos' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-albums' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-document' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-video' );
+	}
 }
