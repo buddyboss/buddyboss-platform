@@ -1876,6 +1876,11 @@ ul.bb-albums-list {
 		.bp-tooltip[data-bp-tooltip-pos="up"]:before {
 			transform: translate(-5px, 0);
 		}
+
+		.bb-open-media-theatre,
+		.bb-open-video-theatre {
+			pointer-events: none;
+		}
 	}
 }
 

@@ -19579,6 +19579,11 @@ ul.bb-albums-list .load-more {
   transform: translate(-5px, 0);
 }
 
+.modal-container .bp-existing-media-wrap .media-list > li .bb-open-media-theatre,
+.modal-container .bp-existing-media-wrap .media-list > li .bb-open-video-theatre {
+  pointer-events: none;
+}
+
 .bb-model-close-button .bb-icon-close {
   font-size: 28px !important;
 }
