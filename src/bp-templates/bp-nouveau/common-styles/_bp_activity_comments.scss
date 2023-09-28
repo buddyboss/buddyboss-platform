@@ -82,6 +82,14 @@
 
 			p {
 				margin-bottom: 0.5em;
+
+				&:last-child {
+					margin-bottom: 0;
+				}
+
+				&:empty {
+					min-height: 1em;
+				}
 			}
 
 			.bb-activity-video-wrap,

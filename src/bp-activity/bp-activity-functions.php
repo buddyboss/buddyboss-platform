@@ -6360,10 +6360,6 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 		$can_edit_privacy = false;
 	}
 
-	remove_filter( 'bp_get_activity_content', 'wpautop' );
-	$content = stripslashes( bp_get_activity_comment_content( $activity_comment_id ) );
-	add_filter( 'bp_get_activity_content', 'wpautop' );
-
 	/**
 	 * Filter here to edit the activity comment edit data.
 	 *
@@ -6378,7 +6374,7 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 			'can_edit_privacy' => $can_edit_privacy,
 			'album_id'         => $album_id,
 			'folder_id'        => $folder_id,
-			'content'          => $content,
+			'content'          => stripslashes( bp_get_activity_comment_content( $activity_comment_id ) ),
 			'item_id'          => $activity_comment->item_id,
 			'object'           => $activity_comment->component,
 			'privacy'          => $activity_comment->privacy,
