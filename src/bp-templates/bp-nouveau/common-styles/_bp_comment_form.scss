@@ -45,6 +45,10 @@ form.ac-form {
 						&:last-child {
 							margin-bottom: 0;
 						}
+
+						&:empty {
+							min-height: 1em;
+						}
 					}
 				}
 
