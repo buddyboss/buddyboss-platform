@@ -323,12 +323,12 @@ class BB_AS3CF_Plugin_Compatibility {
 	 * @return bool
 	 */
 	public function bb_media_offload_delivered( $is_offloaded ) {
-		
+
 		$wp_offload_media  = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
 		$offload_media     = ( isset( $wp_offload_media ) && isset( $wp_offload_media['copy-to-s3'] ) && (bool) $wp_offload_media['copy-to-s3'] );
 		$serve_from_server = ( isset( $wp_offload_media ) && isset( $wp_offload_media['serve-from-s3'] ) && (bool) $wp_offload_media['serve-from-s3'] );
 		$is_offloaded      = ( $offload_media && $serve_from_server );
-	
+
 		return $is_offloaded;
 	}
 
@@ -341,10 +341,10 @@ class BB_AS3CF_Plugin_Compatibility {
 	 *
 	 * @return string
 	 */
-	public function bb_media_offload_delivery_provider( $delivery_provider  ) {
+	public function bb_media_offload_delivery_provider( $delivery_provider ) {
 
 		$wp_offload_media  = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		$delivery_provider = ! empty( $wp_offload_media['delivery-provider'] ) && 'storage' !== $wp_offload_media['delivery-provider'] ? ucwords( $wp_offload_media['delivery-provider'] ) : 'Amazon S3';
+		$delivery_provider = ! empty( $wp_offload_media['delivery-provider'] ) && 'storage' !== $wp_offload_media['delivery-provider'] ? ucwords( $wp_offload_media['delivery-provider'] ) : __( 'Amazon S3', 'buddyboss' );
 
 		return $delivery_provider;
 	}
