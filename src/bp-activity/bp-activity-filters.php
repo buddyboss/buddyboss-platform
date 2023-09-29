@@ -3386,3 +3386,13 @@ function bb_send_email_to_follower( $follower ) {
 	}
 }
 add_action( 'bp_start_following', 'bb_send_email_to_follower' );
+
+/**
+ * Add Pin Post confirmation to the activity loop
+ *
+ * @since [BBVERSION]
+ */
+function bp_activity_pinpost_confirmation_modal_add() {
+	bp_get_template_part( 'activity/confirmation-modal' );
+}
+add_action( 'bp_after_directory_activity_list', 'bp_activity_pinpost_confirmation_modal_add' );
