@@ -19963,6 +19963,19 @@ ul.bb-albums-list .load-more {
   display: none;
 }
 
+.modal-container .bp-existing-media-wrap .media-list > li .bp-tooltip[data-bp-tooltip-pos="up"]:after {
+  transform: translate(10px, 0);
+}
+
+.modal-container .bp-existing-media-wrap .media-list > li .bp-tooltip[data-bp-tooltip-pos="up"]:before {
+  transform: translate(5px, 0);
+}
+
+.modal-container .bp-existing-media-wrap .media-list > li .bb-open-media-theatre,
+.modal-container .bp-existing-media-wrap .media-list > li .bb-open-video-theatre {
+  pointer-events: none;
+}
+
 .bb-model-close-button .bb-icon-close {
   font-size: 28px !important;
 }
