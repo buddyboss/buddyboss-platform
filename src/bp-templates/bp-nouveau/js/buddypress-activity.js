@@ -1381,6 +1381,11 @@ window.bp = window.bp || {};
 
 				}
 			}
+
+			// Pin OR UnPin the activity.
+			if ( target.hasClass( 'pin-activity' ) || target.hasClass( 'unpin-activity' ) ) {
+				alert('Post pinned');
+			}
 		},
 
 		/**

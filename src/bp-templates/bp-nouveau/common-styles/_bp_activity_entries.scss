@@ -563,6 +563,14 @@
 							content: "\ef48";
 						}
 
+						&.pin-activity:before {
+							content: "\e804";
+						}
+
+						&.unpin-activity:before {
+							content: "\e9e9";
+						}
+
 						&.ac-video-thumbnail-edit:before {
 							content: "\eeb4";
 						}

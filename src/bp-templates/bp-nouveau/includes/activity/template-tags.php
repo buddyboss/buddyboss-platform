@@ -1762,6 +1762,26 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 				esc_html( $delete_args['data_bp_tooltip'] )
 			),
 		);
+
+		$buttons['activity_pin'] = array(
+			'id'                => 'activity_pin',
+			'component'         => 'activity',
+			'parent_element'    => $parent_element,
+			'parent_attr'       => $parent_attr,
+			'must_be_logged_in' => true,
+			'button_element'    => $button_element,
+			'button_attr'       => array(
+				'id'            => '',
+				'href'          => '',
+				'class'         => 'button item-button bp-secondary-action pin-activity', // TODO: Make this class value dynamic and change 'pin-activity' to 'unpin-activity' when pinned
+				'data-bp-nonce' => '',
+			),
+			'link_text'         => sprintf(
+				'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
+				__( 'Pin Post', 'buddyboss' ), // TODO: Make this text dynamic and change 'Pin Post' to 'Remove Pin Post' when pinned
+				__( 'Pin Post', 'buddyboss' )
+			),
+		);
 	}
 
 	/**
