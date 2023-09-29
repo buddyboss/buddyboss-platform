@@ -1878,6 +1878,22 @@ ul.bb-albums-list {
 	.media-list li .video-action-wrap {
 		display: none;
 	}
+
+	.media-list > li {
+
+		.bp-tooltip[data-bp-tooltip-pos="up"]:after {
+			transform: translate(-10px, 0);
+		}
+
+		.bp-tooltip[data-bp-tooltip-pos="up"]:before {
+			transform: translate(-5px, 0);
+		}
+
+		.bb-open-media-theatre,
+		.bb-open-video-theatre {
+			pointer-events: none;
+		}
+	}
 }
 
 .bb-model-close-button .bb-icon-close {
