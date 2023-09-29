@@ -2739,6 +2739,10 @@ function bp_get_activity_css_class() {
 		$class .= ' wp-link-embed';
 	}
 
+	if ( ! empty( $activities_template->pinned_id ) && bp_get_activity_id() === (int) $activities_template->pinned_id ) {
+		$class .= ' bb-pinned';
+	}
+
 	/**
 	 * Filters the determined classes to add to the HTML element.
 	 *

@@ -553,10 +553,10 @@ class BP_Activity_Activity {
 					'groups' === $r['filter']['object']
 				) {
 					$group_id  = $r['filter']['primary_id'];
-					$pinned_id = groups_get_groupmeta( $group_id, 'bb_pinned_posts' );
+					$pinned_id = groups_get_groupmeta( $group_id, 'bb_pinned_post' );
 				}
 			} elseif ( 'activity' === $r['pinned_post_type'] ) {
-				$pinned_id = bp_get_option( 'bb_pinned_posts', 0 );
+				$pinned_id = bp_get_option( 'bb_pinned_post', 0 );
 			}
 
 			if ( ! empty( $pinned_id ) ) {

@@ -108,6 +108,14 @@ class BP_Activity_Template {
 	public $full_name;
 
 	/**
+	 *  Pinned activity id.
+	 *
+	 * @since BuddyPress [BBVERSION]
+	 * @var int
+	 */
+	public $pinned_id;
+
+	/**
 	 * Constructor method.
 	 *
 	 * The arguments passed to this class constructor are of the same
@@ -247,6 +255,21 @@ class BP_Activity_Template {
 					'pinned_post_type'  => $pinned_post_type,
 				)
 			);
+			
+			$pinned_id = 0;
+			if ( 'group' === $pinned_post_type ) {
+				if (
+					! empty( $filter['primary_id'] ) &&
+					! empty( $filter['object'] ) &&
+					'groups' === $filter['object']
+				) {
+					$group_id  = $filter['primary_id'];
+					$pinned_id = groups_get_groupmeta( $group_id, 'bb_pinned_post' );
+				}
+			} elseif ( 'activity' === $pinned_post_type ) {
+				$pinned_id = bp_get_option( 'bb_pinned_post', 0 );
+			}
+			$this->pinned_id = $pinned_id;
 		}
 
 		// The total_activity_count property will be set only if a
