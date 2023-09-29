@@ -988,7 +988,10 @@ window.bp = window.bp || {};
 					feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
 					feedbackSelectorLeftClass.addClass( 'info' );
 					feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_invites.loading );
-
+					var form = $( e.currentTarget ).closest( 'form' );
+					form.addClass( 'is-loading' );
+					$( 'button.search-form_reset' ).hide();
+					
 					$.ajax(
 						{
 							type: 'POST',
@@ -1013,6 +1016,12 @@ window.bp = window.bp || {};
 									feedbackParagraphTagSelectorLeft.html( response.data.feedback );
 									$( '.bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback' ).show();
 								}
+								form.removeClass( 'is-loading' );
+								setTimeout( function() {
+									if ( ! form.hasClass( 'is-loading' ) ) {
+										$( 'button.search-form_reset' ).show();
+									}
+								}, 800 );
 							}
 						}
 					);
@@ -1042,6 +1051,9 @@ window.bp = window.bp || {};
 						'page'     	   : page,
 						'search_terms' : searchText
 					};
+					var form = $( e.currentTarget ).closest( 'form' );
+					form.addClass( 'is-loading' );
+					$( 'button.search-form_reset' ).hide();
 
 					$.ajax(
 						{
@@ -1049,6 +1061,7 @@ window.bp = window.bp || {};
 							url: BP_Nouveau.ajaxurl,
 							data: data,
 							success: function (response) {
+
 								if ( response.success ) {
 									listSelector.html( '' );
 									listSelector.html( response.data.html );
@@ -1067,6 +1080,13 @@ window.bp = window.bp || {};
 									feedbackParagraphTagSelectorLeft.html( response.data.feedback );
 									$( '.bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback' ).show();
 								}
+
+								form.removeClass( 'is-loading' );
+								setTimeout( function() {
+									if ( ! form.hasClass( 'is-loading' ) ) {
+										$( 'button.search-form_reset' ).show();
+									}
+								}, 800 );
 							}
 						}
 					);
