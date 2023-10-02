@@ -263,13 +263,15 @@ class BP_Activity_Template {
 					! empty( $filter['object'] ) &&
 					'groups' === $filter['object']
 				) {
-					$group_id  = $filter['primary_id'];
-					$pinned_id = groups_get_groupmeta( $group_id, 'bb_pinned_post' );
+					$group_id           = $filter['primary_id'];
+					$pinned_id          = groups_get_groupmeta( $group_id, 'bb_pinned_post' );
+					$this->pinned_scope = 'group';
 				}
 			} elseif ( 'activity' === $pinned_post_type ) {
-				$pinned_id = bp_get_option( 'bb_pinned_post', 0 );
+				$pinned_id          = bp_get_option( 'bb_pinned_post', 0 );
+				$this->pinned_scope = 'activity';
 			}
-			$this->pinned_id = $pinned_id;
+			$this->pinned_id    = $pinned_id;
 		}
 
 		// The total_activity_count property will be set only if a

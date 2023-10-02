@@ -1414,10 +1414,9 @@ window.bp = window.bp || {};
 							response = JSON.parse( response );
 						}
 						if ( response.success && 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.feedback ) {
-							var activity_list = target.closest( '#activity-stream > ul' );
-							var message_modal = target.closest( '#activity-stream' ).siblings( '#bb-confirmation-modal' );
-							message_modal.find('.bb-action-popup-content').html( response.data.feedback );
-							target.closest( '#activity-stream' ).siblings( '#bb-confirmation-modal' ).show();
+							var activity_list   = target.closest( '#activity-stream > ul' );
+							var activity_stream = target.closest( '#activity-stream' );
+							var message_modal   = activity_stream.siblings( '#bb-confirmation-modal' );
 
 							// Change the pinned class and label.
 							if ( 'pin_activity' === pin_action ) {
@@ -1428,13 +1427,25 @@ window.bp = window.bp || {};
 								target.closest( 'li.activity-item' ).addClass( 'bb-pinned' );
 								target.addClass( 'unpin-activity' );
 								target.removeClass( 'pin-activity' );
-								target.find('span').html( BP_Nouveau.activity.strings.unpinPost );
+
+								if ( activity_stream.hasClass('single-group') ) {
+									target.find('span').html( BP_Nouveau.activity.strings.unpinGroupPost );
+								} else {
+									target.find('span').html( BP_Nouveau.activity.strings.unpinPost );
+								}
 							} else if ( 'unpin_activity' === pin_action ) {
 								target.closest( 'li.activity-item' ).removeClass( 'bb-pinned' );
 								target.addClass( 'pin-activity' );
 								target.removeClass( 'unpin-activity' );
-								target.find('span').html( BP_Nouveau.activity.strings.pinPost );
+								if ( activity_stream.hasClass('single-group') ) {
+									target.find('span').html( BP_Nouveau.activity.strings.pinGroupPost );
+								} else {
+									target.find('span').html( BP_Nouveau.activity.strings.pinPost );
+								}
 							}
+
+							message_modal.find('.bb-action-popup-content').html( response.data.feedback );
+							target.closest( '#activity-stream' ).siblings( '#bb-confirmation-modal' ).show();
 						}
 					}
 				);

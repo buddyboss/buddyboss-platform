@@ -1762,26 +1762,82 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 				esc_html( $delete_args['data_bp_tooltip'] )
 			),
 		);
+	}
 
-		$buttons['activity_pin'] = array(
-			'id'                => 'activity_pin',
-			'component'         => 'activity',
-			'parent_element'    => $parent_element,
-			'parent_attr'       => $parent_attr,
-			'must_be_logged_in' => true,
-			'button_element'    => $button_element,
-			'button_attr'       => array(
-				'id'            => '',
-				'href'          => '',
-				'class'         => 'button item-button bp-secondary-action pin-activity', // TODO: Make this class value dynamic and change 'pin-activity' to 'unpin-activity' when pinned
-				'data-bp-nonce' => '',
-			),
-			'link_text'         => sprintf(
-				'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
-				__( 'Pin Post', 'buddyboss' ), // TODO: Make this text dynamic and change 'Pin Post' to 'Remove Pin Post' when pinned
-				__( 'Pin Post', 'buddyboss' )
-			),
-		);
+	// Pin post action only for allowed posts based on user role.
+	if (
+		(
+			bp_is_group_activity() &&
+			(
+				bp_current_user_can( 'administrator' ) ||
+			 	( 
+					bbp_group_is_mod() ||
+					bbp_group_is_admin()
+				)
+			)
+		) ||
+		(
+			bp_current_user_can( 'administrator' ) &&
+			bp_is_activity_directory() &&
+			! empty( $GLOBALS['activities_template']->pinned_scope ) &&
+			'activity' === $GLOBALS['activities_template']->pinned_scope
+		)
+	) {
+
+		// Additional checks for main activity screen.
+		if ( bp_is_activity_directory() ) {
+
+			// Use array_filter to find the activity with the matching ID.
+			$matched_activity = array_values(
+				array_filter( $GLOBALS['activities_template']->activities, function ( $activity ) use ( $activity_id ) {
+					return $activity->id === $activity_id;
+				} )
+			);
+		}
+
+		// Remove for activities related to group for main activity screen.
+		if (
+			bp_is_group_activity() ||
+			(
+				! empty( $matched_activity ) &&
+				! empty( $matched_activity[0] ) &&
+				! empty( $matched_activity[0]->component ) &&
+				'groups' !== $matched_activity[0]->component
+			)
+
+		) {
+
+			$pinned_action_label = bp_is_group_activity() ? esc_html__( 'Pin to Group', 'buddyboss' ) : esc_html__( 'Pin to Feed', 'buddyboss' );
+			$pinned_action_class = 'pin-activity';
+			if ( ! empty( $GLOBALS['activities_template']->pinned_id ) ) {
+				$pinned_id = $GLOBALS['activities_template']->pinned_id;
+
+				if ( (int) $activity_id === (int) $pinned_id ) {
+					$pinned_action_label = bp_is_group_activity() ? esc_html__( 'Unpin from Group', 'buddyboss' ) : esc_html__( 'Unpin from Feed', 'buddyboss' );
+					$pinned_action_class = 'unpin-activity';
+				}
+			}
+
+			$buttons['activity_pin'] = array(
+				'id'                => 'activity_pin',
+				'component'         => 'activity',
+				'parent_element'    => $parent_element,
+				'parent_attr'       => $parent_attr,
+				'must_be_logged_in' => true,
+				'button_element'    => $button_element,
+				'button_attr'       => array(
+					'id'            => '',
+					'href'          => '',
+					'class'         => 'button item-button bp-secondary-action ' . $pinned_action_class, // TODO: Make this class value dynamic and change 'pin-activity' to 'unpin-activity' when pinned
+					'data-bp-nonce' => '',
+				),
+				'link_text'         => sprintf(
+					'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
+					$pinned_action_label,
+					$pinned_action_label
+				),
+			);
+		}
 	}
 
 	/**

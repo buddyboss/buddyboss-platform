@@ -1050,12 +1050,8 @@ function bb_nouveau_ajax_activity_update_pinned_post() {
 			$updated_value = $_POST['id'];
 			$response[ 'feedback' ] = esc_html__( 'Your post has been pinned', 'buddyboss' );
 		}
+
 		// Check if group activity or normal activity.
-		// error_log(print_r(  $activity,true ) );
-
-		// error_log(print_r( bp_is_group_activity(),true ) );
-		// error_log(print_r( bp_is_activity_directory(),true ) );
-
 		if ( 'groups' === $activity->component && ! empty( $activity->item_id ) ) {
 			$oldvalue = groups_get_groupmeta( $activity->item_id, 'bb_pinned_post' );
 			groups_update_groupmeta( $activity->item_id, 'bb_pinned_post', $updated_value );

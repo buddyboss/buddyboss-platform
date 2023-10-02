@@ -170,6 +170,8 @@ add_filter( 'bp_get_activity_content', 'bb_mention_remove_deleted_users_link', 2
 add_filter( 'bp_get_activity_content_body', 'bb_mention_remove_deleted_users_link', 20, 1 );
 add_filter( 'bp_activity_comment_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
 
+add_action( 'bp_after_directory_activity_list', 'bb_activity_pinpost_confirmation_modal_template' );
+
 /** Functions *****************************************************************/
 
 /**
@@ -3392,7 +3394,6 @@ add_action( 'bp_start_following', 'bb_send_email_to_follower' );
  *
  * @since [BBVERSION]
  */
-function bp_activity_pinpost_confirmation_modal_add() {
+function bb_activity_pinpost_confirmation_modal_template() {
 	bp_get_template_part( 'activity/confirmation-modal' );
 }
-add_action( 'bp_after_directory_activity_list', 'bp_activity_pinpost_confirmation_modal_add' );
