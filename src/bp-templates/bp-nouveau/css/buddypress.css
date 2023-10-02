@@ -3833,11 +3833,11 @@ input.search-query-input {
 }
 
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.pin-activity:before {
-  content: "\e804";
+  content: "\e9e9";
 }
 
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.unpin-activity:before {
-  content: "\e9e9";
+  content: "\ea13";
 }
 
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.ac-video-thumbnail-edit:before {
