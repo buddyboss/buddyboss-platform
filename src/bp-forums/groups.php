@@ -349,11 +349,12 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				</div>
 
 				<?php if ( is_admin() && bbp_is_user_keymaster() ) : ?>
-					<hr class="bb-sep-line" />
-					<div class="field-group">
-						<h4 class="bb-section-title"><?php esc_html_e( 'Connected Forum', 'buddyboss' ); ?></h4>
-						<p class="bb-section-info"><?php esc_html_e( 'Only site administrators can reconfigure which forum belongs to this group.', 'buddyboss' ); ?></p>
-						<?php
+					<div id='bb_group_forum_list' style="<?php echo $checked ? '' : 'display:none'; ?>">
+						<hr class="bb-sep-line" />
+						<div class="field-group">
+							<h4 class="bb-section-title"><?php esc_html_e( 'Connected Forum', 'buddyboss' ); ?></h4>
+							<p class="bb-section-info"><?php esc_html_e( 'Only site administrators can reconfigure which forum belongs to this group.', 'buddyboss' ); ?></p>
+							<?php
 							bbp_dropdown(
 								array(
 									'select_id'          => 'bbp_group_forum_id',
@@ -363,7 +364,8 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 									'disabled_walker'    => false,
 								)
 							);
-						?>
+							?>
+						</div>
 					</div>
 				<?php endif; ?>
 
@@ -415,14 +417,59 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Keymasters have the ability to reconfigure forums
 			if ( bbp_is_user_keymaster() ) {
-				$forum_ids = ! empty( $_POST['bbp_group_forum_id'] ) ? (array) (int) $_POST['bbp_group_forum_id'] : array();
 
-				// Use the existing forum IDs
+				if ( true === $edit_forum ) {
+					$forum_ids = ! empty( $_POST['bbp_group_forum_id'] ) ? (array) (int) $_POST['bbp_group_forum_id'] : array();
+				} else {
+
+					// Get saved values in DB.
+					$forum_ids = array_values( bbp_get_group_forum_ids( $group_id ) );
+				}
+
+				// Check for the last associated values if no forum set from setting.
+				if ( empty( $forum_ids ) ) {
+
+					$last_forum_id = (int) groups_get_groupmeta( $group_id, 'last_forum_id' );
+
+					if ( ! empty( $last_forum_id ) ) {
+
+						$forum_ids = (array) $last_forum_id;
+						$forum_id  = $last_forum_id;
+
+						// Flag to remove the last associations meta.
+						$restored_associations = true;
+
+						// Check if same values associated in group and forum.
+						$last_group_ids = get_post_meta( $forum_id, '_last_bbp_group_ids', true );
+						$last_group_ids = ! empty( $last_group_ids ) ? array_filter( $last_group_ids ) : array();
+
+						if ( in_array( $group_id, $last_group_ids, true ) ) {
+
+							// Look for forum can be associated.
+							$valid_forum = $this->forum_can_associate_with_group( $forum_id, $group_id, false );
+
+							// Look for forum if exits.
+							$forum_exist = bbp_get_forum( $forum_id );
+							if ( empty( $valid_forum ) || empty( $forum_exist ) ) {
+								$restored_associations = false;
+							}
+						} else {
+							$restored_associations = false;
+						}
+
+						if ( false === $restored_associations ) {
+							$forum_ids = array();
+							$forum_id  = 0;
+						}
+					}
+				}
+
+				// Use the existing forum IDs.
 			} else {
 				$forum_ids = array_values( bbp_get_group_forum_ids( $group_id ) );
 			}
 
-			// Normalize group forum relationships now
+			// Normalize group forum relationships now.
 			if ( ! empty( $forum_ids ) ) {
 
 				// No support for multiple forums yet.
@@ -452,11 +499,25 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Update the forum ID and group ID relationships.
 			$this->update_forum_group_ids( $group_id, $forum_id );
-			// Update the group ID and forum ID relationships
+
+			// Update the group ID and forum ID relationships.
 			bbp_update_group_forum_ids( $group_id, (array) $forum_ids );
 
-			// Update the group forum setting
+			// Update the group forum setting.
 			$group = $this->toggle_group_forum( $group_id, $edit_forum, $forum_id );
+
+			if ( true === $edit_forum ) {
+				// Delete last associations forum id.
+				if ( ! empty( $last_forum_id ) ) {
+					delete_post_meta( $last_forum_id, '_last_bbp_group_ids' );
+				}
+
+				// Update associations forum id.
+				if ( ! empty( $forum_id ) ) {
+					delete_post_meta( $forum_id, '_last_bbp_group_ids' );
+				}
+				groups_delete_groupmeta( $group_id, 'last_forum_id' );
+			}
 
 			// Create a new forum
 			if ( empty( $forum_id ) && ( true === $edit_forum ) ) {
@@ -828,6 +889,11 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			$forum_action    = bp_action_variable( $offset );
 			$forum_id        = $this->forum_id;
 			$default_actions = array( 'page', $this->topic_slug, $this->reply_slug );
+
+			if ( empty( $forum_id ) ) {
+				$forum_ids = bbp_get_group_forum_ids( bp_get_current_group_id() );
+				$forum_id  = array_shift( $forum_ids );
+			}
 
 			if ( ! in_array( $forum_action, $default_actions, true ) ) {
 				$forum_action = false;
@@ -1652,7 +1718,11 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		public function forum_redirect_canonical() {
 			$group_id = bp_get_current_group_id();
 
-			if ( empty( $group_id ) || ! bp_is_current_action( $this->slug ) ) {
+			if (
+				empty( $group_id ) ||
+				! bp_is_current_action( $this->slug ) ||
+				empty( bp_action_variables() )
+			) {
 				return;
 			}
 
@@ -1794,15 +1864,17 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * Exclude the forum if the forum is child forum.
 		 *
 		 * @since BuddyBoss 1.7.8
+		 * @since BuddyBoss 2.4.30 $show_error parameter added.
 		 *
-		 * @param array $forum_id  Fourm ids.
-		 * @param int   $group_id  Group id.
+		 * @param array $forum_id   Fourm ids.
+		 * @param int   $group_id   Group id.
+		 * @param bool  $show_error Show error or not.
 		 *
 		 * @uses bbp_get_forum() Get forum.
 		 *
 		 * @return bool
 		 */
-		public function forum_can_associate_with_group( $forum_id, $group_id ) {
+		public function forum_can_associate_with_group( $forum_id, $group_id, $show_error = true ) {
 
 			$group_forum_ids = bbp_get_group_forum_ids( $group_id );
 			$forum           = bbp_get_forum( $forum_id );
@@ -1816,19 +1888,28 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Child forums are not allowed to associate with any groups.
 			if ( ! empty( $forum->post_parent ) ) {
-				bp_core_add_message( __( 'Child forums are not allowed to associate with any groups.', 'buddyboss' ), 'error' );
+				if ( $show_error ) {
+					bp_core_add_message( __( 'Child forums are not allowed to associate with any groups.', 'buddyboss' ), 'error' );
+				}
+
 				return false;
 			}
 
 			// Category type forums are not allowed to associate with any groups.
 			if ( 'category' === $forum_type ) {
-				bp_core_add_message( __( 'Category type forums are not allowed to associate with any groups.', 'buddyboss' ), 'error' );
+				if ( $show_error ) {
+					bp_core_add_message( __( 'Category type forums are not allowed to associate with any groups.', 'buddyboss' ), 'error' );
+				}
+
 				return false;
 			}
 
 			// Do not allow the same Forum to be associated with more than one Group.
 			if ( ! empty( $forum_groups ) && ! in_array( $group_id, $forum_groups, true ) ) {
-				bp_core_add_message( __( 'This forum is already associated with other groups.', 'buddyboss' ), 'error' );
+				if ( $show_error ) {
+					bp_core_add_message( __( 'This forum is already associated with other groups.', 'buddyboss' ), 'error' );
+				}
+
 				return false;
 			}
 
