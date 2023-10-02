@@ -4075,5 +4075,10 @@ function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
 function bb_media_migration() {
 	global $wpdb, $bp;
 
-	$wpdb->query( "UPDATE {$bp->media->table_name} AS m JOIN {$wpdb->posts} AS p ON p.ID = m.attachment_id SET m.description = p.post_content" );
+	/**
+	 * Migrate media description from post table to media table.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	$wpdb->query( "UPDATE {$bp->media->table_name} AS m JOIN {$wpdb->posts} AS p ON p.ID = m.attachment_id SET m.description = p.post_content" ); // phpcs:ignore
 }

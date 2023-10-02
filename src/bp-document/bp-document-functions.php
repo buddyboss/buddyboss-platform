@@ -5056,5 +5056,10 @@ function bb_document_remove_orphaned_download() {
 function bb_document_migration() {
 	global $wpdb, $bp;
 
-	$wpdb->query( "UPDATE {$bp->document->table_name} AS d JOIN {$wpdb->posts} AS p ON p.ID = d.attachment_id SET d.description = p.post_content" );
+	/**
+	 * Migrate documents description from post table to document table.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	$wpdb->query( "UPDATE {$bp->document->table_name} AS d JOIN {$wpdb->posts} AS p ON p.ID = d.attachment_id SET d.description = p.post_content" ); // phpcs:ignore
 }
