@@ -14,38 +14,40 @@
 bp_nouveau_activity_hook( 'before', 'comment_entry' );
 ?>
 
-<li id="acomment-<?php bp_activity_comment_id(); ?>" class="<?php bp_activity_comment_css_class(); ?>" data-bp-activity-comment-id="<?php bp_activity_comment_id(); ?>">
+<li id="acomment-<?php bp_activity_comment_id(); ?>" class="<?php bp_activity_comment_css_class(); ?>" data-bp-activity-comment-id="<?php bp_activity_comment_id(); ?>" data-bp-timestamp="<?php bb_nouveau_activity_comment_timestamp(); ?>" data-bp-activity-comment="<?php bb_nouveau_edit_activity_comment_data(); ?>">
 
-	<?php bb_nouveau_activity_comment_bubble_buttons(); ?>
+	<div id="acomment-display-<?php bp_activity_comment_id(); ?>" class="acomment-display">
 
-	<div class="acomment-avatar item-avatar">
-		<a href="<?php bp_activity_comment_user_link(); ?>">
+		<?php bb_nouveau_activity_comment_bubble_buttons(); ?>
+
+		<div class="acomment-avatar item-avatar">
+			<a href="<?php bp_activity_comment_user_link(); ?>">
+				<?php
+				bp_activity_avatar(
+					array(
+						'type'    => 'thumb',
+						'user_id' => bp_get_activity_comment_user_id(),
+					)
+				);
+				?>
+			</a>
+		</div>
+
+		<div class="acomment-meta">
+			<?php bp_nouveau_activity_comment_action(); ?>
+		</div>
+
+		<div class="acomment-content">
 			<?php
-			bp_activity_avatar(
-				array(
-					'type'    => 'thumb',
-					'user_id' => bp_get_activity_comment_user_id(),
-				)
-			);
+			bp_activity_comment_content();
+			do_action( 'bp_activity_after_comment_content', bp_get_activity_comment_id() );
 			?>
-		</a>
+		</div>
+		<?php bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) ); ?>
 	</div>
+	<div id="acomment-edit-form-<?php bp_activity_comment_id(); ?>" class="acomment-edit-form"></div>
 
-	<div class="acomment-meta">
-		<?php bp_nouveau_activity_comment_action(); ?>
-	</div>
-
-	<div class="acomment-content">
-		<?php
-		bp_activity_comment_content();
-		do_action( 'bp_activity_after_comment_content', bp_get_activity_comment_id() );
-		?>
-	</div>
-
-	<?php
-	bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) );
-	bp_nouveau_activity_recurse_comments( bp_activity_current_comment() );
-	?>
+	<?php bp_nouveau_activity_recurse_comments( bp_activity_current_comment() ); ?>
 </li>
 <?php
 bp_nouveau_activity_hook( 'after', 'comment_entry' );
