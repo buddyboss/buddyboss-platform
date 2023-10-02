@@ -2998,6 +2998,7 @@ function bp_media_get_activity_media( $activity_id ) {
 			'order_by' => 'menu_order',
 			'sort'     => 'ASC',
 			'user_id'  => false,
+			'per_page' => 0,
 		);
 
 		$activity = new BP_Activity_Activity( (int) $activity_id );
@@ -3434,16 +3435,17 @@ function bp_media_delete_symlinks( $media ) {
 /**
  * Return the preview url of the file.
  *
+ * @since BuddyBoss 1.7.0
+ *
  * @param int    $media_id      Media ID.
  * @param int    $attachment_id Attachment ID.
  * @param string $size          Size of preview.
  * @param bool   $generate      Generate Symlink or not.
+ * @param int    $receiver_id   Receiver user ID.
  *
  * @return mixed|void
- *
- * @since BuddyBoss 1.7.0
  */
-function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-media-activity-image', $generate = true ) {
+function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-media-activity-image', $generate = true, $receiver_id = 0 ) {
 	$attachment_url = '';
 
 	/**
@@ -3496,6 +3498,10 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 				$media_id       = 'forbidden_' . $media_id;
 				$attachment_id  = 'forbidden_' . $attachment_id;
 				$attachment_url = home_url( '/' ) . 'bb-media-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $media_id ) . '/' . $size;
+
+				if ( 0 < $receiver_id ) {
+					$attachment_url = $attachment_url . '/' . base64_encode( 'receiver_' . $receiver_id );
+				}
 			}
 		}
 	}
@@ -3774,8 +3780,9 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 		case 'grouponly':
 			if ( bp_is_active( 'groups' ) ) {
 
-				$is_admin = groups_is_user_admin( $current_user_id, $media_group_id );
-				$is_mod   = groups_is_user_mod( $current_user_id, $media_group_id );
+				$is_admin  = groups_is_user_admin( $current_user_id, $media_group_id );
+				$is_mod    = groups_is_user_mod( $current_user_id, $media_group_id );
+				$is_member = groups_is_user_member( $current_user_id, $media_group_id );
 
 				if ( $media_user_id === $current_user_id || $is_admin ) {
 					$can_view     = true;
@@ -3804,7 +3811,7 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 				}
 
 				$the_group = groups_get_group( $media_group_id );
-				if ( $the_group->id > 0 && $the_group->user_has_access ) {
+				if ( $is_member || ( $the_group->id > 0 && $the_group->user_has_access ) ) {
 					$can_view     = true;
 					$can_download = true;
 				}

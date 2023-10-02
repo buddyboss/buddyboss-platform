@@ -61,8 +61,6 @@ add_filter( 'bp_repair_list', 'bp_document_add_admin_repair_items' );
 // Change label for global search.
 add_filter( 'bp_search_label_search_type', 'bp_document_search_label_search' );
 
-add_action( 'bp_activity_after_email_content', 'bp_document_activity_after_email_content' );
-
 add_filter( 'bp_get_activity_entry_css_class', 'bp_document_activity_entry_css_class' );
 
 // Delete symlinks for documents when before saved.
@@ -172,6 +170,7 @@ function bp_document_activity_entry() {
 			'include'  => $document_ids,
 			'order_by' => 'menu_order',
 			'sort'     => 'ASC',
+			'per_page' => 0,
 		)
 	) ) { ?>
 		<div class="bb-activity-media-wrap bb-media-length-1 ">
@@ -205,6 +204,7 @@ function bp_document_activity_append_document( $content, $activity ) {
 		'include'  => $document_ids,
 		'order_by' => 'menu_order',
 		'sort'     => 'ASC',
+		'per_page' => 0,
 	);
 
 	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_document_support_enabled() ) {
@@ -257,6 +257,7 @@ function bp_document_activity_comment_entry( $comment_id ) {
 		'sort'     => 'ASC',
 		'user_id'  => false,
 		'privacy'  => array(),
+		'per_page' => 0,
 	);
 
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
@@ -767,6 +768,7 @@ function bp_document_forums_embed_attachments( $content, $id ) {
 			'order_by' => 'menu_order',
 			'sort'     => 'ASC',
 			'privacy'  => array( 'forums' ),
+			'per_page' => 0,
 		)
 	) ) {
 		ob_start();
@@ -794,9 +796,10 @@ function bp_document_forums_embed_attachments( $content, $id ) {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_attach_document_to_message( &$message ) {
+	$group_id = ! empty( $_POST['group'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['group'] ) ) : 0;
 
 	if (
-		bp_is_messages_document_support_enabled() &&
+		bb_user_has_access_upload_document( $group_id, $message->sender_id, 0, $message->thread_id, 'message' ) &&
 		! empty( $message->id ) &&
 		(
 			! empty( $_POST['document'] ) ||
@@ -912,7 +915,13 @@ function bp_document_user_messages_delete_attached_document( $thread_id, $messag
  * @since BuddyBoss 1.5.1
  */
 function bp_document_message_validated_content( $validated_content, $content, $post ) {
-	if ( ! bp_is_messages_document_support_enabled() || ! isset( $post['document'] ) ) {
+	$group_id  = ! empty( $post['group'] ) ? (int) sanitize_text_field( wp_unslash( $post['group'] ) ) : 0;
+	$thread_id = ! empty( $post['thread_id'] ) ? (int) sanitize_text_field( wp_unslash( $post['thread_id'] ) ) : 0;
+
+	if (
+		! bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), 0, $thread_id, 'message' ) ||
+		! isset( $post['document'] )
+	) {
 		return (bool) $validated_content;
 	}
 
@@ -1837,32 +1846,6 @@ function bp_members_filter_folder_public_scope( $retval = array(), $filter = arr
 add_filter( 'bp_document_set_folder_public_scope_args', 'bp_members_filter_folder_public_scope', 10, 2 );
 
 /**
- * Added text on the email when replied on the activity.
- *
- * @since BuddyBoss 1.4.7
- *
- * @param BP_Activity_Activity $activity Activity Object.
- */
-function bp_document_activity_after_email_content( $activity ) {
-	$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
-
-	if ( ! empty( $document_ids ) ) {
-		$document_ids  = explode( ',', $document_ids );
-		$document_text = sprintf(
-			_n( '%s document', '%s documents', count( $document_ids ), 'buddyboss' ),
-			bp_core_number_format( count( $document_ids ) )
-		);
-		$content       = sprintf(
-			/* translator: 1. Activity link, 2. Activity document count */
-			__( '<a href="%1$s" target="_blank">%2$s uploaded</a>', 'buddyboss' ),
-			bp_activity_get_permalink( $activity->id ),
-			$document_text
-		);
-		echo wpautop( $content );
-	}
-}
-
-/**
  * Adds activity document data for the edit activity
  *
  * @param array $activity Activity data.
@@ -2148,17 +2131,21 @@ add_filter( 'redirect_canonical', 'bb_document_remove_specific_trailing_slash', 
  * @return mixed
  */
 function bb_messages_document_save( $attachment ) {
+	$thread_id            = ! empty( $_POST['thread_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['thread_id'] ) ) : 0;
+	$group_id             = ! empty( $_POST['group_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['group_id'] ) ) : 0;
+	$component            = ! empty( $_POST['component'] ) ? sanitize_text_field( wp_unslash( $_POST['component'] ) ) : '';
+	$is_message_component = ( bp_is_group_messages() || bp_is_messages_component() || ( ! empty( $component ) && 'messages' === $component ) );
+
+	if ( empty( $group_id ) && bp_is_group_messages() ) {
+		$group = groups_get_current_group();
+		if ( ! empty( $group ) ) {
+			$group_id = $group->id;
+		}
+	}
 
 	if (
-		(
-			bp_is_group_messages() ||
-			bp_is_messages_component() ||
-			(
-				! empty( $_POST['component'] ) &&
-				'messages' === $_POST['component']
-			)
-		) &&
-		bp_is_messages_document_support_enabled() &&
+		$is_message_component &&
+		bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), 0, $thread_id, 'message' ) &&
 		! empty( $attachment )
 	) {
 		$documents[] = array(

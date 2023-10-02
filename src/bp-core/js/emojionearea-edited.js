@@ -1376,6 +1376,11 @@ document = window.document || {};
 						var textArea = $( 'textarea.bbp-the-content' ).get( 0 );
 						var init = textArea.selectionStart;
 						var emojiUnicode = emojione.shortnameToUnicode( emojibtn.data( "name" ) );
+						var unsupported_shortnames = [ ":relaxed:", ":frowning2:" ];
+						var unicodeChar = emojibtn.data( "name" );
+						if ( unsupported_shortnames.includes( unicodeChar ) ) {
+							emojiUnicode = emojione.convert( emojione.emojioneList[ unicodeChar ].uc_match );
+						}
 						var emojiUnicodeLength = emojiUnicode.length;
 						textArea.value = textArea.value.slice( 0, init ) + emojiUnicode + textArea.value.slice( init );
 						textArea.setSelectionRange( init + emojiUnicodeLength, init + emojiUnicodeLength );
