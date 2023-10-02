@@ -61,8 +61,6 @@ add_filter( 'bp_repair_list', 'bp_document_add_admin_repair_items' );
 // Change label for global search.
 add_filter( 'bp_search_label_search_type', 'bp_document_search_label_search' );
 
-add_action( 'bp_activity_after_email_content', 'bp_document_activity_after_email_content' );
-
 add_filter( 'bp_get_activity_entry_css_class', 'bp_document_activity_entry_css_class' );
 
 // Delete symlinks for documents when before saved.
@@ -1846,32 +1844,6 @@ function bp_members_filter_folder_public_scope( $retval = array(), $filter = arr
 }
 
 add_filter( 'bp_document_set_folder_public_scope_args', 'bp_members_filter_folder_public_scope', 10, 2 );
-
-/**
- * Added text on the email when replied on the activity.
- *
- * @since BuddyBoss 1.4.7
- *
- * @param BP_Activity_Activity $activity Activity Object.
- */
-function bp_document_activity_after_email_content( $activity ) {
-	$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
-
-	if ( ! empty( $document_ids ) ) {
-		$document_ids  = explode( ',', $document_ids );
-		$document_text = sprintf(
-			_n( '%s document', '%s documents', count( $document_ids ), 'buddyboss' ),
-			bp_core_number_format( count( $document_ids ) )
-		);
-		$content       = sprintf(
-			/* translator: 1. Activity link, 2. Activity document count */
-			__( '<a href="%1$s" target="_blank">%2$s uploaded</a>', 'buddyboss' ),
-			bp_activity_get_permalink( $activity->id ),
-			$document_text
-		);
-		echo wpautop( $content );
-	}
-}
 
 /**
  * Adds activity document data for the edit activity
