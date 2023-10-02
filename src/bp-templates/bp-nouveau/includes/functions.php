@@ -1533,8 +1533,9 @@ function bp_nouveau_get_submit_button( $action = '' ) {
 				'nonce_key'  => '_wpnonce_new_activity_comment',
 				'wrapper'    => false,
 				'attributes' => array(
-					'name'  => 'ac_form_submit',
-					'value' => __( 'Post', 'buddyboss' ),
+					'name'                => 'ac_form_submit',
+					'value'               => __( 'Post', 'buddyboss' ),
+					'data-add-edit-label' => __( 'Save', 'buddyboss' ),
 				),
 			),
 			'member-data-export'            => array(

@@ -410,10 +410,6 @@ class BP_Video {
 		if ( ! empty( $r['in'] ) ) {
 			$in                     = implode( ',', wp_parse_id_list( $r['in'] ) );
 			$where_conditions['in'] = "m.id IN ({$in})";
-
-			// we want to disable limit query when include video ids.
-			$r['page']     = false;
-			$r['per_page'] = false;
 		}
 
 		if ( ! empty( $r['activity_id'] ) ) {
@@ -947,7 +943,7 @@ class BP_Video {
 	 * @return array|bool An array of deleted video IDs on success, false on failure.
 	 */
 	public static function delete( $args = array(), $from = false ) {
-		global $wpdb;
+		global $wpdb, $bb_activity_comment_edit;
 
 		$bp = buddypress();
 		$r  = bp_parse_args(
@@ -1117,7 +1113,7 @@ class BP_Video {
 		}
 
 		// delete related activity.
-		if ( ! empty( $activity_ids ) && bp_is_active( 'activity' ) ) {
+		if ( ! empty( $activity_ids ) && bp_is_active( 'activity' ) && ! $bb_activity_comment_edit ) {
 
 			foreach ( $activity_ids as $activity_id ) {
 				$activity = new BP_Activity_Activity( (int) $activity_id );

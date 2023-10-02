@@ -246,6 +246,18 @@ window.bp = window.bp || {};
 				}
 			);
 
+			window.activity_edit_editor.subscribe( 'editablePaste', function ( e ) {
+				setTimeout( function() {
+					// Wrap all target <li> elements in a single <ul>
+					var targetLiElements = $(e.target).find('li').filter(function() {
+						return !$(this).parent().is('ul') && !$(this).parent().is('ol');
+					});
+					if (targetLiElements.length > 0) {
+						targetLiElements.wrapAll('<ul></ul>');
+					}
+				}, 0 );
+			});
+
 			// Now Show the Modal.
 			$activityForm.addClass( 'modal-popup' ).closest('body').addClass( 'activity-modal-open' );
 
@@ -2559,6 +2571,20 @@ window.bp = window.bp || {};
 					tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).removeClass( 'no-click' );
 				}
 
+				if ( tool_box_comment.find( '.ac-textarea' ).children( '.ac-input' ).length > 0 ) {
+					var $activity_comment_content = tool_box_comment.find( '.ac-textarea' ).children( '.ac-input' ).html();
+
+					var content = $.trim( $activity_comment_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+					content = content.replace( /&nbsp;/g, ' ' );
+
+					var content_text = tool_box_comment.find( '.ac-textarea' ).children( '.ac-input' ).text().trim();
+					if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0 ) {
+						$( tool_box_comment ).closest( 'form' ).addClass( 'has-content' );
+					} else {
+						$( tool_box_comment ).closest( 'form' ).removeClass( 'has-content' );
+					}
+				}
+
 				if ( ! _.isUndefined( event ) && ! _.isEmpty( old_gif_data ) && _.isEmpty( this.model.get( 'gif_data' ) ) ) {
 					bp.draft_content_changed = true;
 				}
@@ -3204,6 +3230,18 @@ window.bp = window.bp || {};
 										}
 									}
 								);
+
+								window.activity_editor.subscribe( 'editablePaste', function ( e ) {
+									setTimeout( function() {
+										// Wrap all target <li> elements in a single <ul>
+										var targetLiElements = $(e.target).find('li').filter(function() {
+											return !$(this).parent().is('ul') && !$(this).parent().is('ol');
+										});
+										if (targetLiElements.length > 0) {
+											targetLiElements.wrapAll('<ul></ul>');
+										}
+									}, 0 );
+								});
 							}
 						}
 					);
