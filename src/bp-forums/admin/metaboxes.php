@@ -420,7 +420,7 @@ function bbp_topic_metabox( $post ) {
 	</p>
 
 	<input name="ping_status" type="hidden" id="ping_status" value="open" />
-
+	<input name="old_parent_id" type="hidden" id="old_parent_id" value="<?php echo esc_attr( bbp_get_topic_forum_id( $post_id ) ); ?>" />
 	<?php
 	wp_nonce_field( 'bbp_topic_metabox_save', 'bbp_topic_metabox' );
 	do_action( 'bbp_topic_metabox', $post );
