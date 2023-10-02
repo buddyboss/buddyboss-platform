@@ -9671,8 +9671,9 @@ msgid "Display post featured image?"
 msgstr ""
 
 #: bp-core/classes/class-bp-core-notification-abstract.php:184
-#: bp-core/profile-search/bps-xprofile.php:381
-#: bp-core/profile-search/bps-xprofile.php:735
+#: bp-core/profile-search/bps-xprofile.php:354
+#: bp-core/profile-search/bps-xprofile.php:708
+#: bp-media/bp-media-settings.php:1995 bp-media/bp-media-settings.php:2131
 #: bp-moderation/classes/class-bp-moderation-report-list-table.php:274
 #: bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php:104
 #: bp-moderation/screens/content-report-form.php:59
@@ -10107,6 +10108,10 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:896
 #: bp-templates/bp-nouveau/includes/groups/classes.php:272
 msgid "Manage"
+msgstr ""
+
+#: bp-core/compatibility/bp-wp-offload-media-helpers.php:347
+msgid "Amazon S3"
 msgstr ""
 
 #: bp-core/deprecated/buddyboss/1.0.php:256
@@ -23054,58 +23059,70 @@ msgid ""
 "document upload."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1929
+#: bp-media/bp-media-settings.php:1931
 msgid ""
 "Enable symbolic links. If you are having issues with media display, try "
 "disabling this option."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1941
+#: bp-media/bp-media-settings.php:1945
 msgid ""
 "Symbolic function disabled on your server. Please contact your hosting "
 "provider."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1952 bp-media/bp-media-settings.php:1963
+#: bp-media/bp-media-settings.php:1956 bp-media/bp-media-settings.php:1967
 msgid ""
 "Symbolic links don't seem to work on your server. Please contact BuddyBoss "
 "for support."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1974
+#: bp-media/bp-media-settings.php:1978
 msgid "Symbolic links are disabled"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1983
+#: bp-media/bp-media-settings.php:1987
 msgid "Symbolic links are activated"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1990
+#: bp-media/bp-media-settings.php:2004
+#. translators: Provider name.
+msgid "Symbolic links are disabled due to media being offloaded to %s"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:2015
 msgid ""
 "Symbolic links are used to create \"shortcuts\" to media files uploaded by "
 "members, providing optimal security and performance. If symbolic links are "
 "disabled, a fallback method will be used to protect your media files."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:2095
+#: bp-media/bp-media-settings.php:2119
 msgid "Direct access to your media files and folders is not blocked"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:2101 bp-media/bp-media-settings.php:2107
+#: bp-media/bp-media-settings.php:2125
 msgid "Direct access to your media files and folders is blocked"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:2113
+#: bp-media/bp-media-settings.php:2138
+#. translators: Provider name.
+msgid ""
+"Direct access to your media files and folders is disabled due to media "
+"being offloaded to %s"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:2146
 msgid ""
 "If our plugin is unable to automatically block direct access to your media "
 "files and folders, please follow the steps in our "
 msgstr ""
 
-#: bp-media/bp-media-settings.php:2115
+#: bp-media/bp-media-settings.php:2148
 msgid "Media Permissions"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:2116
+#: bp-media/bp-media-settings.php:2149
 msgid " tutorial to configure your server."
 msgstr ""
 

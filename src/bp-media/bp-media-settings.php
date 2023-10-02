@@ -6,7 +6,7 @@
  * @since BuddyBoss 1.0.0
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -359,14 +359,14 @@ add_action( 'bp_admin_setting_media_register_fields', 'bb_admin_setting_media_ac
 /**
  * Get settings fields by section.
  *
- * @param string $section_id
+ * @param string $section_id Section ID.
  *
  * @return mixed False if section is invalid, array of fields otherwise.
  * @since BuddyBoss 1.0.0
  */
 function bp_media_get_settings_fields_for_section( $section_id = '' ) {
 
-	// Bail if section is empty
+	// Bail if section is empty.
 	if ( empty( $section_id ) ) {
 		return false;
 	}
@@ -406,24 +406,24 @@ function bp_media_form_option( $option, $default = '', $slug = false ) {
  */
 function bp_media_get_form_option( $option, $default = '', $slug = false ) {
 
-	// Get the option and sanitize it
+	// Get the option and sanitize it.
 	$value = get_option( $option, $default );
 
 	// Slug?
 	if ( true === $slug ) {
 		$value = esc_attr( apply_filters( 'editable_slug', $value ) );
 
-		// Not a slug
+		// Not a slug.
 	} else {
 		$value = esc_attr( $value );
 	}
 
-	// Fallback to default
+	// Fallback to default.
 	if ( empty( $value ) ) {
 		$value = $default;
 	}
 
-	// Allow plugins to further filter the output
+	// Allow plugins to further filter the output.
 	return apply_filters( 'bp_media_get_form_option', $value, $option );
 }
 
@@ -1928,8 +1928,7 @@ function bb_media_settings_callback_symlink_support() {
 	?>
 	<input name="bp_media_symlink_support" id="bp_media_symlink_support" type="checkbox" value="1" <?php checked( bb_enable_symlinks() ); ?> <?php echo $is_offloaded ? 'disabled' : ''; ?>/>
 	<label for="bp_media_symlink_support">
-		<?php 
-		esc_html_e( 'Enable symbolic links. If you are having issues with media display, try disabling this option.', 'buddyboss' ); ?>
+		<?php esc_html_e( 'Enable symbolic links. If you are having issues with media display, try disabling this option.', 'buddyboss' ); ?>
 	</label>
 
 	<?php
@@ -1993,12 +1992,20 @@ function bb_media_settings_callback_symlink_support() {
 	} else {
 
 		// Offload delivery provider.
-		$delivery_provider = apply_filters( 'bb_media_offload_delivery_provider', 'Other' );
+		$delivery_provider = apply_filters( 'bb_media_offload_delivery_provider', __( 'Other', 'buddyboss' ) );
 		?>
 		<div class="bp-messages-feedback">
 			<div class="bp-feedback warning">
 				<span class="bp-icon" aria-hidden="true"></span>
-				<p><?php printf( esc_html__( 'Symbolic links are disabled due to media being offloaded to %s', 'buddyboss' ), $delivery_provider ); ?></p>
+				<p>
+					<?php
+					printf(
+						/* translators: Provider name. */
+						esc_html__( 'Symbolic links are disabled due to media being offloaded to %s', 'buddyboss' ),
+						esc_html( $delivery_provider )
+					);
+					?>
+				</p>
 			</div>
 		</div>
 		<?php
@@ -2017,11 +2024,11 @@ function bb_media_settings_callback_symlink_support() {
  */
 function bb_media_settings_callback_symlink_direct_access() {
 
-	$get_sample_ids         = array();
+	$get_sample_local_urls  = array();
 	$video_attachment_id    = 0;
 	$media_attachment_id    = 0;
 	$document_attachment_id = 0;
-	$bypass_check           = apply_filters( 'bb_media_check_default_access', false );
+	$bypass_check           = (bool) apply_filters( 'bb_media_check_default_access', false );
 
 	// Check if removed local file.
 	if ( ! $bypass_check ) {
@@ -2045,7 +2052,7 @@ function bb_media_settings_callback_symlink_direct_access() {
 				require_once ABSPATH . 'wp-admin/includes/image.php';
 				$attachment_data = wp_generate_attachment_metadata( $video_attachment_id, $upload_file['file'] );
 				wp_update_attachment_metadata( $video_attachment_id, $attachment_data );
-				$get_sample_ids['bb_videos'] = $video_attachment_id;
+				$get_sample_local_urls['bb_videos'] = $upload_file['url'];
 			}
 		}
 		// Remove upload filters.
@@ -2069,7 +2076,7 @@ function bb_media_settings_callback_symlink_direct_access() {
 				require_once ABSPATH . 'wp-admin/includes/image.php';
 				$attachment_data = wp_generate_attachment_metadata( $media_attachment_id, $upload_file['file'] );
 				wp_update_attachment_metadata( $media_attachment_id, $attachment_data );
-				$get_sample_ids['bb_medias'] = $media_attachment_id;
+				$get_sample_local_urls['bb_medias'] = $upload_file['url'];
 			}
 		}
 		remove_filter( 'upload_dir', 'bp_media_upload_dir_script' );
@@ -2092,20 +2099,18 @@ function bb_media_settings_callback_symlink_direct_access() {
 				require_once ABSPATH . 'wp-admin/includes/image.php';
 				$attachment_data = wp_generate_attachment_metadata( $document_attachment_id, $upload_file['file'] );
 				wp_update_attachment_metadata( $document_attachment_id, $attachment_data );
-				$get_sample_ids['bb_documents'] = $document_attachment_id;
+				$get_sample_local_urls['bb_documents'] = $upload_file['url'];
 			}
 		}
 		remove_filter( 'upload_dir', 'bp_document_upload_dir_script' );
 
 		$directory = array();
-		foreach ( $get_sample_ids as $id => $v ) {
-			$fetch = wp_remote_get( wp_get_attachment_image_url( $v ), array( 'sslverify' => false ) );
+		foreach ( $get_sample_local_urls as $id => $v ) {
+			$fetch = wp_remote_get( $v, array( 'sslverify' => false ) );
 			if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
 				$directory[] = $id;
 			}
 		}
-
-		$directory = apply_filters( 'bb_media_settings_callback_symlink_direct_access', $directory, $get_sample_ids );
 
 		if ( ! empty( $directory ) ) {
 
@@ -2123,12 +2128,16 @@ function bb_media_settings_callback_symlink_direct_access() {
 	} else {
 
 		// Offload delivery provider.
-		$delivery_provider = apply_filters( 'bb_media_offload_delivery_provider', 'Other' );
-	
+		$delivery_provider = apply_filters( 'bb_media_offload_delivery_provider', __( 'Other', 'buddyboss' ) );
+
 		// If offloaded and removed local file.
 		printf(
 			'<div class="bp-messages-feedback"><div class="bp-feedback warning"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div></div>',
-			sprintf( esc_html__( 'Direct access to your media files and folders is disabled due to media being offloaded to %s', 'buddyboss' ), $delivery_provider )
+			sprintf(
+				/* translators: Provider name. */
+				esc_html__( 'Direct access to your media files and folders is disabled due to media being offloaded to %s', 'buddyboss' ),
+				esc_html( $delivery_provider )
+			)
 		);
 	}
 
