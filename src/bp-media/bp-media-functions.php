@@ -4070,64 +4070,10 @@ function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int $paged Page number.
- *
  * @return void
  */
-function bb_media_description_migration( $paged = 1 ) {
-	global $wpdb, $bp, $bb_background_updater;
-
-	if ( empty( $paged ) ) {
-		$paged = 1;
-	}
-
-	$per_page = (int) apply_filters( 'bb_update_migrate_media_description', 30 );
-	$offset   = ( ( $paged - 1 ) * $per_page );
-
-	$medias = $wpdb->get_results(
-		$wpdb->prepare(
-			"SELECT id, attachment_id FROM {$bp->media->table_name} ORDER BY id ASC LIMIT %d offset %d",
-			$per_page,
-			$offset
-		)
-	);
-
-	if ( ! empty( $medias ) ) {
-		$bb_background_updater->push_to_queue(
-			array(
-				'type'     => 'migration',
-				'group'    => 'bb_update_migrate_media_description',
-				'priority' => 4,
-				'callback' => 'bb_update_migrate_media_description',
-				'args'     => array( $medias, $paged ),
-			)
-		);
-		$bb_background_updater->save()->schedule_event();
-	}
-}
-
-/**
- * Update media and video description from post table to media table.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param array $medias Array of media ID and attachment ID.
- * @param int   $paged  Page number.
- *
- * @return void
- */
-function bb_update_migrate_media_description( $medias, $paged ) {
+function bb_media_migration() {
 	global $wpdb, $bp;
 
-	if ( empty( $medias ) ) {
-		return;
-	}
-
-	foreach ( $medias as $media ) {
-		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->media->table_name} SET `description` = (SELECT post_content FROM {$wpdb->posts} WHERE ID = %d) WHERE id = %d", $media->attachment_id, $media->id ) );
-	}
-
-	// Call recursive to finish update for all records.
-	$paged++;
-	bb_media_description_migration( $paged );
+	$wpdb->query( "UPDATE {$bp->media->table_name} AS m JOIN {$wpdb->posts} AS p ON p.ID = m.attachment_id SET m.description = p.post_content" );
 }

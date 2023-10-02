@@ -498,13 +498,13 @@ function bp_version_updater() {
 			}
 
 			// Run migration about media/video description.
-			if ( function_exists( 'bb_media_description_migration' ) ) {
-				bb_media_description_migration();
+			if ( function_exists( 'bb_media_migration' ) ) {
+				bb_media_migration();
 			}
 
 			// Run migration about document description.
-			if ( function_exists( 'bb_document_description_migration' ) ) {
-				bb_document_description_migration();
+			if ( function_exists( 'bb_document_migration' ) ) {
+				bb_document_migration();
 			}
 		}
 	}

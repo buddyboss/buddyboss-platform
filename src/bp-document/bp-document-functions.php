@@ -5046,70 +5046,15 @@ function bb_document_remove_orphaned_download() {
 	}
 }
 
-
 /**
  * Run migration for document description from post table to media table.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int $paged Page number.
- *
  * @return void
  */
-function bb_document_description_migration( $paged = 1 ) {
-	global $wpdb, $bp, $bb_background_updater;
-
-	if ( empty( $paged ) ) {
-		$paged = 1;
-	}
-
-	$per_page = (int) apply_filters( 'bb_update_migrate_document_description', 30 );
-	$offset   = ( ( $paged - 1 ) * $per_page );
-
-	$documents = $wpdb->get_results(
-		$wpdb->prepare(
-			"SELECT id, attachment_id FROM {$bp->document->table_name} ORDER BY id ASC LIMIT %d offset %d",
-			$per_page,
-			$offset
-		)
-	);
-
-	if ( ! empty( $documents ) ) {
-		$bb_background_updater->push_to_queue(
-			array(
-				'type'     => 'migration',
-				'group'    => 'bb_update_migrate_document_description',
-				'priority' => 4,
-				'callback' => 'bb_update_migrate_document_description',
-				'args'     => array( $documents, $paged ),
-			)
-		);
-		$bb_background_updater->save()->schedule_event();
-	}
-}
-
-/**
- * Update document description from post table to media table.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param array $documents Array of document ID and attachment ID.
- * @param int   $paged     Page number.
- *
- * @return void
- */
-function bb_update_migrate_document_description( $documents, $paged ) {
+function bb_document_migration() {
 	global $wpdb, $bp;
 
-	if ( empty( $documents ) ) {
-		return;
-	}
-
-	foreach ( $documents as $document ) {
-		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name} SET `description` = (SELECT post_content FROM {$wpdb->posts} WHERE ID = %d) WHERE id = %d", $document->attachment_id, $document->id ) );
-	}
-
-	// Call recursive to finish update for all records.
-	$paged++;
-	bb_document_description_migration( $paged );
+	$wpdb->query( "UPDATE {$bp->document->table_name} AS d JOIN {$wpdb->posts} AS p ON p.ID = d.attachment_id SET d.description = p.post_content" );
 }
