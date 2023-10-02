@@ -85,7 +85,7 @@ function bp_core_register_common_scripts() {
 
 		// Version 2.7.
 		'bp-livestamp'        => array(
-			'file'         => "{$url}vendor/livestamp{$min}.js",
+			'file'         => "{$url}livestamp{$min}.js",
 			'dependencies' => array( 'jquery', 'moment' ),
 			'footer'       => true,
 		),

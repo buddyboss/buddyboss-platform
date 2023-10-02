@@ -55,7 +55,7 @@
 						toRemove.push( this );
 					} else if ( moment.isMoment( data.moment ) ) {
 						var from = $this.html();
-						var to   = bbHumanizeFormat( data.moment );
+						var to   = bbHumanizeFormat( data.moment ); // Do not update this function because it's updated based on this PR https://github.com/buddyboss/buddyboss-platform/pull/3339.
 
 						if ( from != to ) {
 							var e = $.Event( 'change.livestamp' );
@@ -131,6 +131,7 @@
 		}
 	};
 
+	// Do not remove this function. This is a custom function to render based on platform bp_core_current_time function.
 	bbHumanizeFormat = function ( timestamp ) {
 		var currentDate = moment();
 		var fromDate 	= moment( timestamp ).utc();
@@ -207,6 +208,7 @@
 		return output;
 	};
 
+	// Do not remove this function.
 	bbConcateString = function ( string1, string2 ) {
 		return string1 + ' ' + string2;
 	};
