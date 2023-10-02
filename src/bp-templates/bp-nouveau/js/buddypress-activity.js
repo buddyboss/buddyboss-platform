@@ -1384,7 +1384,60 @@ window.bp = window.bp || {};
 
 			// Pin OR UnPin the activity.
 			if ( target.hasClass( 'pin-activity' ) || target.hasClass( 'unpin-activity' ) ) {
-				target.closest( '#activity-stream' ).siblings( '#bb-confirmation-modal' ).show();
+				// Stop event propagation.
+				event.preventDefault();
+
+				if ( ! activity_id ) {
+					return event;
+				}
+
+				target.addClass( 'loading' );
+
+				var pin_action = 'pin_activity';
+				if ( target.hasClass( 'unpin-activity' ) ) {
+					pin_action = 'unpin_activity';
+				}
+
+				parent.ajax(
+					{
+						action     : 'activity_update_pinned_post',
+						id         : activity_id,
+						pin_action : pin_action
+					},
+					'activity'
+				).done(
+					function( response ) {
+						target.removeClass( 'loading' );
+
+						// Check for JSON output.
+						if ( 'object' !== typeof response ) {
+							response = JSON.parse( response );
+						}
+						if ( response.success && 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.feedback ) {
+							var activity_list = target.closest( '#activity-stream > ul' );
+							var message_modal = target.closest( '#activity-stream' ).siblings( '#bb-confirmation-modal' );
+							message_modal.find('.bb-action-popup-content').html( response.data.feedback );
+							target.closest( '#activity-stream' ).siblings( '#bb-confirmation-modal' ).show();
+
+							// Change the pinned class and label.
+							if ( 'pin_activity' === pin_action ) {
+
+								// Remove class from all old pinned.
+								activity_list.find( 'li.activity-item' ).removeClass( 'bb-pinned' );
+
+								target.closest( 'li.activity-item' ).addClass( 'bb-pinned' );
+								target.addClass( 'unpin-activity' );
+								target.removeClass( 'pin-activity' );
+								target.find('span').html( BP_Nouveau.activity.strings.unpinPost );
+							} else if ( 'unpin_activity' === pin_action ) {
+								target.closest( 'li.activity-item' ).removeClass( 'bb-pinned' );
+								target.addClass( 'pin-activity' );
+								target.removeClass( 'unpin-activity' );
+								target.find('span').html( BP_Nouveau.activity.strings.pinPost );
+							}
+						}
+					}
+				);
 			}
 		},
 

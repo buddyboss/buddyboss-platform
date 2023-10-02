@@ -3690,10 +3690,6 @@ input.search-query-input {
   margin-right: 35px;
 }
 
-.activity-list .bb-pinned .bp-activity-head {
-  margin-right: 55px;
-}
-
 .activity-list .bb-activity-more-options-wrap {
   position: absolute;
   right: 15px;
@@ -3870,6 +3866,7 @@ input.search-query-input {
   right: 20px;
   font-size: 22px;
   top: 10px;
+  display: none;
 }
 
 .activity-list .bb-pin-action .bb-pin-action_button {
@@ -3879,6 +3876,14 @@ input.search-query-input {
 .activity-list .bb-pin-action [class*="bb-icon"] {
   font-size: 22px;
   color: #939597;
+}
+
+.activity-list .bb-pinned .bp-activity-head {
+  margin-right: 55px;
+}
+
+.activity-list .bb-pinned .bb-pin-action {
+  display: block;
 }
 
 .activity-list .bb-activity-more-options-wrap + .bb-pin-action {

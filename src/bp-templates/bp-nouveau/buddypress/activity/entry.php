@@ -38,17 +38,11 @@ if ( false !== strpos( bp_get_activity_css_class(), 'bb-pinned' ) ) {
 
 	<?php bb_nouveau_activity_entry_bubble_buttons(); ?>
 
-	<?php
-	if ( $bb_is_pinned ) {
-		?>
-		<div class="bb-pin-action">
-			<span class="bb-pin-action_button" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Pinned Post', 'buddyboss' ); ?>">
-				<i class="bb-icon-f bb-icon-thumbtack"></i>
-			</span>
-		</div>
-		<?php
-	}
-	?>
+	<div class="bb-pin-action">
+		<span class="bb-pin-action_button" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Pinned Post', 'buddyboss' ); ?>">
+			<i class="bb-icon-f bb-icon-thumbtack"></i>
+		</span>
+	</div>
 
 	<div class="activity-avatar item-avatar">
 

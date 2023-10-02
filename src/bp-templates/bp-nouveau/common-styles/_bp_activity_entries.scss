@@ -413,10 +413,6 @@
 		margin-right: 35px;
 	}
 
-	.bb-pinned .bp-activity-head {
-		margin-right: 55px;
-	}
-
 	.bb-activity-more-options-wrap {
 		position: absolute;
 		right: 15px;
@@ -608,6 +604,7 @@
 		right: 20px;
 		font-size: 22px;
 		top: 10px;
+		display: none;
 
 		.bb-pin-action_button {
 			cursor: default;
@@ -617,6 +614,18 @@
 			font-size: 22px;
 			color: #939597;
 		}
+	}
+
+	.bb-pinned {
+
+		.bp-activity-head {
+			margin-right: 55px;
+		}
+
+		.bb-pin-action {
+			display: block;
+		}
+
 	}
 
 	.bb-activity-more-options-wrap + .bb-pin-action {

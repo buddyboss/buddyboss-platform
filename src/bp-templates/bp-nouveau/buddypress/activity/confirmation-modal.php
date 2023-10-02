@@ -16,14 +16,14 @@
 			<div class="modal-wrapper">
 				<div class="modal-container">
 					<header class="bb-model-header">
-                        <h4>Confirmation</h4>
-                        <a class="bb-close-action-popup bb-model-close-button" id="bp-confirmation-model-close" href="#">
+						<h4><?php esc_html_e( 'Pinned Post', 'buddyboss' ); ?></h4>
+						<a class="bb-close-action-popup bb-model-close-button" id="bp-confirmation-model-close" href="#">
 							<span class="bb-icon-l bb-icon-times"></span>
 						</a>
 					</header>
 					<div class="bb-action-popup-content">
-                        Your post has been pinned
-                    </div>
+						<?php esc_html_e( 'Your post has been pinned', 'buddyboss' ); ?>
+					</div>
 				</div>
 			</div>
 		</div>

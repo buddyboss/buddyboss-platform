@@ -85,6 +85,12 @@ add_action(
 					'nopriv'   => false,
 				),
 			),
+			array(
+				'activity_update_pinned_post' => array(
+					'function' => 'bb_nouveau_ajax_activity_update_pinned_post',
+					'nopriv'   => true,
+				),
+			),
 		);
 
 		foreach ( $ajax_actions as $ajax_action ) {
@@ -997,6 +1003,73 @@ function bp_nouveau_ajax_activity_update_privacy() {
 		add_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2 );
 
 		$response = apply_filters( 'bb_ajax_activity_update_privacy', array(), $_POST );
+
+		wp_send_json_success( $response );
+	} else {
+		wp_send_json_error();
+	}
+}
+
+/**
+ * Update activity pinned post.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string JSON reply
+ */
+function bb_nouveau_ajax_activity_update_pinned_post() {
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error();
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+		wp_send_json_error();
+	}
+
+	if ( empty( $_POST['pin_action'] ) ) {
+		wp_send_json_error();
+	}
+
+	if ( empty( $_POST['id'] ) ) {
+		wp_send_json_error();
+	}
+
+	if ( ! in_array( $_POST['pin_action'], array( 'pin_activity', 'unpin_activity' ) ) ) {
+		wp_send_json_error();
+	}
+
+	$activity = new BP_Activity_Activity( (int) $_POST['id'] );
+
+	if ( $activity ) {
+		
+		if ( 'unpin_activity' === $_POST['pin_action'] ) {
+			$updated_value = '';
+			$response[ 'feedback' ] = esc_html__( 'Your post has been unpinned', 'buddyboss' );
+		} else {
+			$updated_value = $_POST['id'];
+			$response[ 'feedback' ] = esc_html__( 'Your post has been pinned', 'buddyboss' );
+		}
+		// Check if group activity or normal activity.
+		// error_log(print_r(  $activity,true ) );
+
+		// error_log(print_r( bp_is_group_activity(),true ) );
+		// error_log(print_r( bp_is_activity_directory(),true ) );
+
+		if ( 'groups' === $activity->component && ! empty( $activity->item_id ) ) {
+			$oldvalue = groups_get_groupmeta( $activity->item_id, 'bb_pinned_post' );
+			groups_update_groupmeta( $activity->item_id, 'bb_pinned_post', $updated_value );
+		} else {
+			$oldvalue = bp_get_option( 'bb_pinned_post' );
+			bp_update_option( 'bb_pinned_post', $updated_value );
+		}
+
+		// Check if already exists and updating new value.
+		if ( ! empty( $updated_value ) && ! empty( $oldvalue ) && (int) $oldvalue !== (int) $updated_value) {
+			$response[ 'feedback' ] = esc_html__( 'Your pinned post has been updated', 'buddyboss' );
+		}
+
+		$response = apply_filters( 'bb_ajax_activity_update_pinned_post', $response, $_POST );
 
 		wp_send_json_success( $response );
 	} else {

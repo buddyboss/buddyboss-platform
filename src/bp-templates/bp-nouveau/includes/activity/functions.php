@@ -238,6 +238,10 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'commentsLabel'       => esc_html__( '%d Comments', 'buddyboss' ),
 		'loadingMore'         => esc_html__( 'Loading...', 'buddyboss' ),
 		'discardButton'       => esc_html__( 'Discard Draft', 'buddyboss' ),
+		'pinPost'             => esc_html__( 'Pin to Feed', 'buddyboss' ),
+		'unpinPost'           => esc_html__( 'Unpin from Feed', 'buddyboss' ),
+		'pinGroupPost'        => esc_html__( 'Pin to Group', 'buddyboss' ),
+		'unpinGroupPost'      => esc_html__( 'Unpin from Group', 'buddyboss' ),
 	);
 
     if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
