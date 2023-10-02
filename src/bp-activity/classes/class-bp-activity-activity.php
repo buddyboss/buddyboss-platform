@@ -1207,7 +1207,7 @@ class BP_Activity_Activity {
 
 		$bp = buddypress();
 
-		$where_args = false;
+		$where_args = array();
 
 		if ( ! empty( $user_id ) ) {
 			$where_args[] = $wpdb->prepare( 'user_id = %d', $user_id );
