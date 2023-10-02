@@ -197,6 +197,11 @@ class BP_Media {
 		$this->privacy       = $row->privacy;
 		$this->menu_order    = (int) $row->menu_order;
 		$this->date_created  = $row->date_created;
+
+		// Added fallback to get description.
+		if ( empty( $this->description ) ) {
+			$this->description = get_post_field( 'post_content', $this->attachment_id );
+		}
 	}
 
 	/**

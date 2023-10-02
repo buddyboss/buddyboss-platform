@@ -215,6 +215,10 @@ class BP_Document {
 		$this->date_modified = $row->date_modified;
 		$this->extension     = bp_document_extension( $this->attachment_id );
 
+		// Added fallback to get description.
+		if ( empty( $this->description ) ) {
+			$this->description = get_post_field( 'post_content', $this->attachment_id );
+		}
 	}
 
 	/**
