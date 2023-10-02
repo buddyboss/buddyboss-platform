@@ -1009,6 +1009,11 @@ function bp_nouveau_ajax_media_description_save() {
 		wp_send_json_error( $response );
 	}
 
+	// Added backward compatibility.
+	$media_post['ID']           = $attachment_id;
+	$media_post['post_content'] = $description;
+	wp_update_post( $media_post );
+
 	$media_id = get_post_meta( $attachment_id, 'bp_media_id', true );
 	if ( ! empty( $media_id ) ) {
 		$media = new BP_Media( $media_id );

@@ -1091,6 +1091,11 @@ function bp_nouveau_ajax_video_description_save() {
 		wp_send_json_error( $response );
 	}
 
+	// Added backward compatibility.
+	$video_post['ID']           = $attachment_id;
+	$video_post['post_content'] = $description;
+	wp_update_post( $video_post );
+
 	$video_id = get_post_meta( $attachment_id, 'bp_video_id', true );
 	if ( ! empty( $video_id ) ) {
 		$video = new BP_Video( $video_id );
