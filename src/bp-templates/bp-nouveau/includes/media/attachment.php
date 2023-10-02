@@ -9,7 +9,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-global $bp;
+global $bp, $wpdb;
 
 if ( empty( get_query_var( 'media-attachment-id' ) ) ) {
 	echo '// Silence is golden.';
@@ -34,12 +34,12 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 
 	if (
 		$media &&
-		 (
-			 ! isset( $thread_arr ) ||
-			 empty( $thread_arr ) ||
-			 ! isset( $thread_arr[1] ) ||
-			 (int) $thread_arr[1] <= 0
-		 )
+		(
+			! isset( $thread_arr ) ||
+			empty( $thread_arr ) ||
+			! isset( $thread_arr[1] ) ||
+			(int) $thread_arr[1] <= 0
+		)
 	) {
 		echo '// Silence is golden.';
 		exit();

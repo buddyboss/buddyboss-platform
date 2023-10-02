@@ -502,8 +502,12 @@ function bp_activity_at_name_filter_updates( $activity ) {
 			$activity->content = preg_replace( $pattern, "<a class='bp-suggestions-mention' href='" . bp_core_get_user_domain( $user_id ) . "' rel='nofollow'>@$username</a>", $activity->content );
 		}
 
-		// Add our hook to send @mention emails after the activity item is saved.
-		add_action( 'bp_activity_after_save', 'bp_activity_at_name_send_emails' );
+		if ( ! bb_is_rest() ) {
+			// Add our hook to send @mention emails after the activity item is saved.
+			add_action( 'bp_activity_posted_update', 'bb_activity_at_name_send_emails', 12, 3 );
+			add_action( 'bp_groups_posted_update', 'bb_group_activity_at_name_send_emails', 10, 4 );
+			add_action( 'bp_activity_comment_posted', 'bb_activity_comment_at_name_send_emails', 12, 3 );
+		}
 
 		// Temporary variable to avoid having to run bp_activity_find_mentions() again.
 		buddypress()->activity->mentioned_users = $usernames;
@@ -1964,14 +1968,14 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 		}
 
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
-			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
+			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
 			$activity_id = groups_post_update(
 				array(
 					'content'  => $content,
 					'group_id' => $group_id,
 				)
 			);
-			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
+			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
 		} else {
 			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
@@ -2379,14 +2383,14 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 		}
 
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
-			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
+			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
 			$activity_id = groups_post_update(
 				array(
 					'content'  => $content,
 					'group_id' => $group_id,
 				)
 			);
-			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
+			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
 		} else {
 			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
@@ -3044,14 +3048,14 @@ function bp_activity_create_parent_video_activity( $video_ids ) {
 		}
 
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
-			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
+			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
 			$activity_id = groups_post_update(
 				array(
 					'content'  => $content,
 					'group_id' => $group_id,
 				)
 			);
-			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
+			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
 		} else {
 			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
@@ -3502,3 +3506,46 @@ function bb_send_email_to_follower( $follower ) {
 	}
 }
 add_action( 'bp_start_following', 'bb_send_email_to_follower' );
+
+/**
+ * Function will send main activity mention notification.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content     Content of the activity post update.
+ * @param int    $user_id     ID of the user posting the activity update.
+ * @param int    $activity_id ID of the activity item being updated.
+ */
+function bb_activity_at_name_send_emails( $content, $user_id, $activity_id ) {
+	$activity = new BP_Activity_Activity( $activity_id );
+	bp_activity_at_name_send_emails( $activity );
+}
+
+/**
+ * Function will send group main activity mention notification.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content     The content of the update.
+ * @param int    $user_id     ID of the user posting the update.
+ * @param int    $group_id    ID of the group being posted to.
+ * @param bool   $activity_id Whether or not the activity recording succeeded.
+ */
+function bb_group_activity_at_name_send_emails( $content, $user_id, $group_id, $activity_id ) {
+	$activity = new BP_Activity_Activity( $activity_id );
+	bp_activity_at_name_send_emails( $activity );
+}
+
+/**
+ * Function will send activity comment mention notification.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int                  $comment_id ID of the newly posted activity comment.
+ * @param array                $args       Array of parsed comment arguments.
+ * @param BP_Activity_Activity $activity   Activity item being commented on.
+ */
+function bb_activity_comment_at_name_send_emails( $comment_id, $r, $activity ) {
+	$activity = new BP_Activity_Activity( $comment_id );
+	bp_activity_at_name_send_emails( $activity );
+}

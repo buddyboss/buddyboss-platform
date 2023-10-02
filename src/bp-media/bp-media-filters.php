@@ -62,7 +62,6 @@ add_filter( 'bp_repair_list', 'bp_media_add_admin_repair_items' );
 add_action( 'init', 'bp_media_download_url_file' );
 
 add_filter( 'bp_search_label_search_type', 'bp_media_search_label_search' );
-add_action( 'bp_activity_after_email_content', 'bp_media_activity_after_email_content' );
 
 add_filter( 'bp_get_activity_entry_css_class', 'bp_media_activity_entry_css_class' );
 
@@ -2447,32 +2446,6 @@ function bp_media_parse_file_path( $file_path ) {
 }
 
 /**
- * Added text on the email when replied on the activity.
- *
- * @since BuddyBoss 1.4.7
- *
- * @param BP_Activity_Activity $activity Activity Object.
- */
-function bp_media_activity_after_email_content( $activity ) {
-	$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
-
-	if ( ! empty( $media_ids ) ) {
-		$media_ids  = explode( ',', $media_ids );
-		$photo_text = sprintf(
-			_n( '%s photo', '%s photos', count( $media_ids ), 'buddyboss' ),
-			bp_core_number_format( count( $media_ids ) )
-		);
-		$content    = sprintf(
-		/* translator: 1. Activity link, 2. Activity photo count */
-			__( '<a href="%1$s" target="_blank">%2$s uploaded</a>', 'buddyboss' ),
-			bp_activity_get_permalink( $activity->id ),
-			$photo_text
-		);
-		echo wpautop( $content );
-	}
-}
-
-/**
  * Adds activity media data for the edit activity
  *
  * @param array $activity Activity data.
@@ -2746,6 +2719,7 @@ function bp_video_activity_entry_css_class( $class ) {
 function bb_setup_media_preview() {
 	add_rewrite_rule( 'bb-media-preview/([^/]+)/([^/]+)/?$', 'index.php?bb-media-preview=$matches[1]&id1=$matches[2]', 'top' );
 	add_rewrite_rule( 'bb-media-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?bb-media-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
+	add_rewrite_rule( 'bb-media-preview/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?bb-media-preview=$matches[1]&id1=$matches[2]&size=$matches[3]&receiver=$matches[4]', 'top' );
 }
 
 /**
@@ -2761,6 +2735,7 @@ function bb_setup_query_media_preview( $query_vars ) {
 	$query_vars[] = 'bb-media-preview';
 	$query_vars[] = 'id1';
 	$query_vars[] = 'size';
+	$query_vars[] = 'receiver';
 
 	return $query_vars;
 }
@@ -2768,11 +2743,11 @@ function bb_setup_query_media_preview( $query_vars ) {
 /**
  * Setup template for the media preview.
  *
+ * @since BuddyBoss 1.7.2
+ *
  * @param string $template Template path to include.
  *
- * @return array
- *
- * @since BuddyBoss 1.7.2
+ * @return string
  */
 function bb_setup_template_for_media_preview( $template ) {
 	if ( get_query_var( 'bb-media-preview' ) === false || empty( get_query_var( 'bb-media-preview' ) ) ) {
@@ -2952,24 +2927,3 @@ function bb_messages_media_save( $attachment ) {
 }
 
 add_action( 'bb_media_upload', 'bb_messages_media_save' );
-
-/**
- * Added text on the email when replied on the activity.
- *
- * @since BuddyBoss 2.3.80
- *
- * @param BP_Activity_Activity $activity Activity Object.
- */
-function bb_gif_activity_after_email_content( $activity ) {
-	$gif_ids = bp_activity_get_meta( $activity->id, '_gif_data', true );
-
-	if ( ! empty( $gif_ids ) ) {
-		$content = sprintf(
-		/* translator: 1. Activity link, 2. gif text */
-			'<a href="%1$s" target="_blank">%2$s</a>',
-			bp_activity_get_permalink( $activity->id ),
-			esc_html__( 'Sent you a gif', 'buddyboss' )
-		);
-		echo wpautop( $content );
-	}
-}
