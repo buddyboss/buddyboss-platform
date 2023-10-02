@@ -94,6 +94,8 @@ function messages_new_message( $args = '' ) {
 		}
 	}
 
+	$group_id = ! empty( $_POST['group'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['group'] ) ) : 0;
+
 	/**
 	 * Filter to validate message content.
 	 *
@@ -118,7 +120,7 @@ function messages_new_message( $args = '' ) {
 	}
 
 	if ( ! empty( $_POST['media'] ) ) {
-		$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
+		$can_send_media = bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_media ) {
 			$error_code = 'messages_empty_content';
 			$feedback   = __( 'You don\'t have access to send the media. ', 'buddyboss' );
@@ -127,7 +129,7 @@ function messages_new_message( $args = '' ) {
 	}
 
 	if ( ! empty( $_POST['document'] ) ) {
-		$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
+		$can_send_document = bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_document ) {
 			$error_code = 'messages_empty_content';
 			$feedback   = __( 'You don\'t have access to send the document. ', 'buddyboss' );
@@ -136,7 +138,7 @@ function messages_new_message( $args = '' ) {
 	}
 
 	if ( ! empty( $_POST['video'] ) ) {
-		$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
+		$can_send_video = bb_user_has_access_upload_video( $group_id, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_video ) {
 			$error_code = 'messages_empty_content';
 			$feedback   = __( 'You don\'t have access to send the video. ', 'buddyboss' );
@@ -145,7 +147,7 @@ function messages_new_message( $args = '' ) {
 	}
 
 	if ( ! empty( $_POST['gif_data'] ) ) {
-		$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
+		$can_send_gif = bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_gif ) {
 			$error_code = 'messages_empty_content';
 			$feedback   = __( 'You don\'t have access to send the gif. ', 'buddyboss' );
@@ -984,12 +986,13 @@ function messages_notification_new_message( $raw_args = array() ) {
 				'recipient'  => $ud,
 				'arguments'  => array(
 					'tokens' => array(
-						'message_id'  => $id,
-						'usermessage' => stripslashes( $message ),
-						'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
-						'sender.name' => $sender_name,
-						'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
-						'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+						'message_id'       => $id,
+						'usermessage'      => stripslashes( $message ),
+						'message.url'      => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
+						'sender.name'      => $sender_name,
+						'usersubject'      => sanitize_text_field( stripslashes( $subject ) ),
+						'receiver-user.id' => $recipient->user_id,
+						'unsubscribe'      => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 					),
 				),
 			);
@@ -1000,12 +1003,13 @@ function messages_notification_new_message( $raw_args = array() ) {
 				$ud,
 				array(
 					'tokens' => array(
-						'message_id'  => $id,
-						'usermessage' => stripslashes( $message ),
-						'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
-						'sender.name' => $sender_name,
-						'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
-						'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+						'message_id'       => $id,
+						'usermessage'      => stripslashes( $message ),
+						'message.url'      => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
+						'sender.name'      => $sender_name,
+						'usersubject'      => sanitize_text_field( stripslashes( $subject ) ),
+						'receiver-user.id' => $recipient->user_id,
+						'unsubscribe'      => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 					),
 				)
 			);
@@ -1170,15 +1174,16 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 				$ud,
 				array(
 					'tokens' => array(
-						'message_id'  => $id,
-						'usermessage' => stripslashes( $message ),
-						'message'     => stripslashes( $message ),
-						'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
-						'sender.id'   => $sender_id,
-						'sender.name' => $sender_name,
-						'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
-						'group.name'  => $group_name,
-						'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+						'message_id'       => $id,
+						'usermessage'      => stripslashes( $message ),
+						'message'          => stripslashes( $message ),
+						'message.url'      => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
+						'sender.id'        => $sender_id,
+						'sender.name'      => $sender_name,
+						'usersubject'      => sanitize_text_field( stripslashes( $subject ) ),
+						'receiver-user.id' => $recipient->user_id,
+						'group.name'       => $group_name,
+						'unsubscribe'      => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 					),
 				)
 			);
@@ -1660,8 +1665,9 @@ function bb_render_messages_recipients( $recipients, $email_type, $message_slug,
 			'notification_type' => 'group-message-email',
 		);
 
-		$tokens['message.url'] = esc_url( bp_core_get_user_domain( $recipient->user_id ) . $message_slug . '/view/' . $thread_id . '/' );
-		$tokens['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+		$tokens['message.url']      = esc_url( bp_core_get_user_domain( $recipient->user_id ) . $message_slug . '/view/' . $thread_id . '/' );
+		$tokens['receiver-user.id'] = $recipient->user_id;
+		$tokens['unsubscribe']      = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
 
 		bp_send_email(
 			$email_type,
@@ -2182,9 +2188,15 @@ function bb_get_message_response_object( $message ) {
 	}
 	$sender_display_name = apply_filters( 'bp_get_the_thread_message_sender_name', $sender_display_name );
 
+	// Check message media, document, video, GIF access.
+	$has_message_media_access    = bb_user_has_access_upload_media( 0, $sender_id, 0, $thread_id, 'message' );
+	$has_message_document_access = bb_user_has_access_upload_document( 0, $sender_id, 0, $thread_id, 'message' );
+	$has_message_video_access    = bb_user_has_access_upload_video( 0, $sender_id, 0, $thread_id, 'message' );
+	$has_message_gif_access      = bb_user_has_access_upload_gif( 0, $sender_id, 0, $thread_id, 'message' );
+
 	$has_media = false;
 	if ( empty( $excerpt ) ) {
-		if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
+		if ( bp_is_active( 'media' ) && $has_message_media_access ) {
 			$media_ids = bp_messages_get_meta( $message_id, 'bp_media_ids', true );
 
 			if ( ! empty( $media_ids ) ) {
@@ -2198,7 +2210,7 @@ function bb_get_message_response_object( $message ) {
 			}
 		}
 
-		if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) {
+		if ( bp_is_active( 'media' ) && $has_message_video_access ) {
 			$video_ids = bp_messages_get_meta( $message_id, 'bp_video_ids', true );
 
 			if ( ! empty( $video_ids ) ) {
@@ -2212,7 +2224,7 @@ function bb_get_message_response_object( $message ) {
 			}
 		}
 
-		if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
+		if ( bp_is_active( 'media' ) && $has_message_document_access ) {
 			$document_ids = bp_messages_get_meta( $message_id, 'bp_document_ids', true );
 
 			if ( ! empty( $document_ids ) ) {
@@ -2226,7 +2238,7 @@ function bb_get_message_response_object( $message ) {
 			}
 		}
 
-		if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) {
+		if ( bp_is_active( 'media' ) && $has_message_gif_access ) {
 			$gif_data = bp_messages_get_meta( $message_id, '_gif_data', true );
 
 			if ( ! empty( $gif_data ) ) {
@@ -2293,7 +2305,7 @@ function bb_get_message_response_object( $message ) {
 
 	}
 
-	if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
+	if ( bp_is_active( 'media' ) && $has_message_media_access ) {
 		$media_ids = bp_messages_get_meta( $message_id, 'bp_media_ids', true );
 
 		if ( ! empty( $media_ids ) && bp_has_media(
@@ -2302,6 +2314,7 @@ function bb_get_message_response_object( $message ) {
 					'privacy'  => array( 'message' ),
 					'order_by' => 'menu_order',
 					'sort'     => 'ASC',
+					'per_page' => 0,
 				)
 			) ) {
 			$reply['media'] = array();
@@ -2325,7 +2338,7 @@ function bb_get_message_response_object( $message ) {
 		}
 	}
 
-	if ( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() ) {
+	if ( bp_is_active( 'video' ) && $has_message_video_access ) {
 		$video_ids = bp_messages_get_meta( $message_id, 'bp_video_ids', true );
 
 		if (
@@ -2336,6 +2349,7 @@ function bb_get_message_response_object( $message ) {
 					'privacy'  => array( 'message' ),
 					'order_by' => 'menu_order',
 					'sort'     => 'ASC',
+					'per_page' => 0,
 				)
 			)
 		) {
@@ -2387,7 +2401,7 @@ function bb_get_message_response_object( $message ) {
 		}
 	}
 
-	if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
+	if ( bp_is_active( 'media' ) && $has_message_document_access ) {
 		$document_ids = bp_messages_get_meta( $message_id, 'bp_document_ids', true );
 
 		if ( ! empty( $document_ids ) && bp_has_document(
@@ -2395,6 +2409,7 @@ function bb_get_message_response_object( $message ) {
 					'include'  => $document_ids,
 					'order_by' => 'menu_order',
 					'sort'     => 'ASC',
+					'per_page' => 0,
 				)
 			) ) {
 			$reply['document'] = array();
@@ -2524,7 +2539,7 @@ function bb_get_message_response_object( $message ) {
 		}
 	}
 
-	if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) {
+	if ( bp_is_active( 'media' ) && $has_message_gif_access ) {
 		$gif_data = bp_messages_get_meta( $message_id, '_gif_data', true );
 
 		if ( ! empty( $gif_data ) ) {
@@ -2926,4 +2941,44 @@ function bb_messages_update_recipient_user_query_uid_clauses( $sql, BP_User_Quer
 	}
 
 	return $sql;
+}
+
+/**
+ * Run migration for resolving the issue related to the messages.
+ *
+ * @since BuddyBoss 2.4.30
+ *
+ * @return void
+ */
+function bb_messages_migration() {
+	global $wpdb;
+	$db_prefix = bp_core_get_table_prefix();
+
+	/**
+	 * Run migration for resolving group message thread meta fix.
+	 *
+	 * @since BuddyBoss 2.4.30
+	 */
+	$message      = $db_prefix . 'bp_messages_messages';
+	$message_meta = $db_prefix . 'bp_messages_meta';
+
+	$sql  = "SELECT m.id, m.thread_id FROM {$message} m";
+	$sql .= " INNER JOIN {$message_meta} mm ON mm.message_id = m.id AND ( (mm.meta_key = '%s' OR mm.meta_key = '%s') AND mm.meta_value = '%s' ) ";
+	$sql .= " LEFT JOIN {$message_meta} mm_users ON mm_users.message_id = m.id AND mm_users.meta_key = '%s'";
+	$sql .= " LEFT JOIN {$message_meta} mm_type ON mm_type.message_id = m.id AND mm_type.meta_key = '%s'";
+	$sql .= ' WHERE mm_users.message_id IS NULL AND mm_type.message_id IS NULL';
+
+	// Retrieve all messages that are missing the required specified metadata.
+	$messages = $wpdb->get_results( $wpdb->prepare( $sql, 'group_message_group_joined', 'group_message_group_left', 'yes', 'group_message_users', 'group_message_type' ) ); // phpcs:ignore
+
+	if ( ! empty( $messages ) ) {
+		foreach ( $messages as $message ) {
+			$first_message = BP_Messages_Thread::get_first_message( $message->thread_id );
+			$message_users = bp_messages_get_meta( $first_message->id, 'group_message_users', true );
+			$message_type  = bp_messages_get_meta( $first_message->id, 'group_message_type', true );
+
+			bp_messages_update_meta( $message->id, 'group_message_users', $message_users );
+			bp_messages_update_meta( $message->id, 'group_message_type', $message_type );
+		}
+	}
 }

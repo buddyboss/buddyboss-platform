@@ -52,8 +52,6 @@ add_filter( 'bp_repair_list', 'bp_video_add_admin_repair_items' );
 // Download Video.
 add_action( 'init', 'bp_video_download_url_file' );
 
-add_action( 'bp_activity_after_email_content', 'bp_video_activity_after_email_content' );
-
 // Delete symlinks for videos when before saved.
 add_action( 'bp_video_before_save', 'bb_video_delete_symlinks' );
 
@@ -78,6 +76,7 @@ add_action( 'template_include', 'bb_setup_attachment_video_preview_template', PH
 
 add_action( 'bb_video_upload', 'bb_messages_video_save' );
 
+add_filter( 'bb_activity_comment_get_edit_data', 'bp_video_get_edit_activity_data' );
 /**
  * Add video theatre template for activity pages.
  *
@@ -118,6 +117,7 @@ function bp_video_activity_entry() {
 		'order_by' => 'menu_order',
 		'sort'     => 'ASC',
 		'user_id'  => false,
+		'per_page' => 0,
 	);
 
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() ) {
@@ -207,6 +207,7 @@ function bp_video_activity_append_video( $content, $activity ) {
 			'include'  => $video_ids,
 			'order_by' => 'menu_order',
 			'sort'     => 'ASC',
+			'per_page' => 0,
 		);
 
 		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
@@ -294,6 +295,7 @@ function bp_video_activity_comment_entry( $comment_id ) {
 		'order_by' => 'menu_order',
 		'sort'     => 'ASC',
 		'user_id'  => false,
+		'per_page' => 0,
 	);
 
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
@@ -363,7 +365,7 @@ function bp_video_activity_comment_entry( $comment_id ) {
  * @return bool
  */
 function bp_video_update_activity_video_meta( $content, $user_id, $activity_id ) {
-	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit;
+	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit, $bb_activity_comment_edit;
 
 	$post_video       = filter_input( INPUT_POST, 'video', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 	$post_edit        = bb_filter_input_string( INPUT_POST, 'edit' );
@@ -392,7 +394,17 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 	if ( ! isset( $post_video ) || empty( $post_video ) ) {
 
 		// delete video ids and meta for activity if empty video in request.
-		if ( ! empty( $activity_id ) && $bp_activity_edit && isset( $post_edit ) ) {
+		if (
+			! empty( $activity_id ) &&
+			(
+				(
+					$bp_activity_edit && isset( $post_edit )
+				) ||
+				(
+					$bb_activity_comment_edit && isset( $_POST['edit_comment'] )
+				)
+			)
+		) {
 			$old_video_ids = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
 
 			if ( ! empty( $old_video_ids ) ) {
@@ -404,6 +416,12 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 					}
 				}
 				bp_activity_delete_meta( $activity_id, 'bp_video_ids' );
+
+				// Delete video meta from activity for activity comment.
+				if ( $bb_activity_comment_edit ) {
+					bp_activity_delete_meta( $activity_id, 'bp_video_id' );
+					bp_activity_delete_meta( $activity_id, 'bp_video_activity' );
+				}
 			}
 		}
 		return false;
@@ -438,7 +456,7 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 	if ( ! empty( $activity_id ) ) {
 
 		// Delete video if not exists in current video ids.
-		if ( isset( $post_edit ) ) {
+		if ( isset( $post_edit ) || isset( $_POST['edit_comment'] ) ) {
 			$old_video_ids = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
 			$old_video_ids = array_filter( explode( ',', $old_video_ids ) );
 
@@ -712,6 +730,7 @@ function bp_video_forums_embed_attachments( $content, $id ) {
 			'order_by' => 'menu_order',
 			'privacy'  => array( 'forums' ),
 			'sort'     => 'ASC',
+			'per_page' => 0,
 		)
 	) ) {
 		ob_start();
@@ -746,17 +765,21 @@ function bp_video_forums_embed_attachments( $content, $id ) {
  * @return mixed
  */
 function bb_messages_video_save( $attachment ) {
+	$thread_id            = ! empty( $_POST['thread_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['thread_id'] ) ) : 0;
+	$group_id             = ! empty( $_POST['group_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['group_id'] ) ) : 0;
+	$component            = ! empty( $_POST['component'] ) ? sanitize_text_field( wp_unslash( $_POST['component'] ) ) : '';
+	$is_message_component = ( bp_is_group_messages() || bp_is_messages_component() || ( ! empty( $component ) && 'messages' === $component ) );
+
+	if ( empty( $group_id ) && bp_is_group_messages() ) {
+		$group = groups_get_current_group();
+		if ( ! empty( $group ) ) {
+			$group_id = $group->id;
+		}
+	}
 
 	if (
-		(
-			bp_is_group_messages() ||
-			bp_is_messages_component() ||
-			(
-				! empty( $_POST['component'] ) &&
-				'messages' === $_POST['component']
-			)
-		) &&
-		bp_is_messages_video_support_enabled() &&
+		$is_message_component &&
+		bb_user_has_access_upload_video( $group_id, bp_loggedin_user_id(), 0, $thread_id, 'message' ) &&
 		! empty( $attachment )
 	) {
 		$videos[] = array(
@@ -802,9 +825,10 @@ function bb_messages_video_save( $attachment ) {
  * @param object $message message object.
  */
 function bp_video_attach_video_to_message( &$message ) {
+	$group_id = ! empty( $_POST['group'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['group'] ) ) : 0;
 
 	if (
-		bp_is_messages_video_support_enabled() &&
+		bb_user_has_access_upload_video( $group_id, $message->sender_id, 0, $message->thread_id, 'message' ) &&
 		! empty( $message->id ) &&
 		(
 			! empty( $_POST['video'] ) ||
@@ -926,7 +950,13 @@ function bp_video_user_messages_delete_attached_video( $thread_id, $message_ids,
  * @return bool
  */
 function bp_video_message_validated_content( $validated_content, $content, $post ) {
-	if ( ! bp_is_messages_video_support_enabled() || ! isset( $post['video'] ) ) {
+	$group_id  = ! empty( $post['group'] ) ? (int) sanitize_text_field( wp_unslash( $post['group'] ) ) : 0;
+	$thread_id = ! empty( $post['thread_id'] ) ? (int) sanitize_text_field( wp_unslash( $post['thread_id'] ) ) : 0;
+
+	if (
+		! bb_user_has_access_upload_video( $group_id, bp_loggedin_user_id(), 0, $thread_id, 'message' ) ||
+		! isset( $post['video'] )
+	) {
 		return (bool) $validated_content;
 	}
 
@@ -1613,32 +1643,6 @@ function bp_video_parse_file_path( $file_path ) {
 }
 
 /**
- * Added text on the email when replied on the activity.
- *
- * @since BuddyBoss 1.7.0
- *
- * @param BP_Activity_Activity $activity Activity Object.
- */
-function bp_video_activity_after_email_content( $activity ) {
-	$video_ids = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
-
-	if ( ! empty( $video_ids ) ) {
-		$video_ids  = explode( ',', $video_ids );
-		$video_text = sprintf(
-			_n( '%s video', '%s videos', count( $video_ids ), 'buddyboss' ), // phpcs:ignore
-			bp_core_number_format( count( $video_ids ) )
-		);
-		$content    = sprintf(
-			/* translator: 1. Activity link, 2. Activity video count */
-			__( '<a href="%1$s" target="_blank">%2$s uploaded</a>', 'buddyboss' ), // phpcs:ignore
-			bp_activity_get_permalink( $activity->id ),
-			$video_text
-		);
-		echo wpautop( $content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-	}
-}
-
-/**
  * Adds activity video data for the edit activity
  *
  * @param array $activity activity object.
@@ -1677,7 +1681,12 @@ function bp_video_get_edit_activity_data( $activity ) {
 					continue;
 				}
 
-				$video               = new BP_Video( $video_id );
+				$video = new BP_Video( $video_id );
+
+				if ( empty( $video->id ) ) {
+					continue;
+				}
+
 				$get_existing        = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
 				$thumb               = '';
 				$attachment_thumb_id = bb_get_video_thumb_id( $video->attachment_id );
@@ -1896,6 +1905,7 @@ function bb_setup_video_preview() {
 	add_rewrite_rule( 'bb-video-preview/([^/]+)/([^/]+)/?$', 'index.php?bb-video-preview=$matches[1]&id1=$matches[2]', 'top' );
 	add_rewrite_rule( 'bb-video-thumb-preview/([^/]+)/([^/]+)/?$', 'index.php?bb-video-thumb-preview=$matches[1]&id1=$matches[2]', 'top' );
 	add_rewrite_rule( 'bb-video-thumb-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?bb-video-thumb-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
+	add_rewrite_rule( 'bb-video-thumb-preview/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?bb-video-thumb-preview=$matches[1]&id1=$matches[2]&size=$matches[3]&receiver=$matches[4]', 'top' );
 }
 
 /**
@@ -1911,6 +1921,7 @@ function bb_setup_query_video_preview( $query_vars ) {
 	$query_vars[] = 'bb-video-preview';
 	$query_vars[] = 'bb-video-thumb-preview';
 	$query_vars[] = 'id1';
+	$query_vars[] = 'receiver';
 
 	return $query_vars;
 }

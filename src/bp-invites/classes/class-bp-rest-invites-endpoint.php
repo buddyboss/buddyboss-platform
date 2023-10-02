@@ -222,6 +222,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		$invite_exists_array     = array();
 		$failed_invite           = array();
 		$invite_restricted_array = array();
+		$duplicate_email_inputs  = array();
 
 		$bp = buddypress();
 
@@ -235,6 +236,12 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 					&& '' !== $field['email_id']
 					&& is_email( $field['email_id'] )
 				) {
+					// Ignore duplicate email input.
+					if ( in_array( $field['email_id'], $duplicate_email_inputs, true ) ) {
+						continue;
+					}
+					$duplicate_email_inputs[] = strtolower( trim( $field['email_id'] ) );
+
 					if ( email_exists( (string) $field['email_id'] ) ) {
 						$invite_exists_array[] = $field['email_id'];
 					} elseif ( ! function_exists( 'bb_is_allowed_register_email_address' ) ) {

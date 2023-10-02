@@ -487,7 +487,7 @@ class BP_Activity_Activity {
 		// Searching.
 		if ( $r['search_terms'] ) {
 			$search_terms_like              = '%' . bp_esc_like( $r['search_terms'] ) . '%';
-			$where_conditions['search_sql'] = $wpdb->prepare( 'a.content LIKE %s', $search_terms_like );
+			$where_conditions['search_sql'] = $wpdb->prepare( 'ExtractValue( a.content, "//text()" ) LIKE %s', $search_terms_like );
 
 			/**
 			 * Filters whether or not to include users for search parameters.
@@ -1207,7 +1207,7 @@ class BP_Activity_Activity {
 
 		$bp = buddypress();
 
-		$where_args = false;
+		$where_args = array();
 
 		if ( ! empty( $user_id ) ) {
 			$where_args[] = $wpdb->prepare( 'user_id = %d', $user_id );
