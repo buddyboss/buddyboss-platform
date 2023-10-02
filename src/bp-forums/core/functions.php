@@ -244,9 +244,10 @@ function bbp_view_query( $view = '', $new_args = '' ) {
  * @uses bbp_get_view_id() To get the view id
  * @return array Query arguments
  */
-function bbp_get_view_query_args( $view ) {
+function bbp_get_view_query_args( $view = '' ) {
+	$bbp    = bbpress();
 	$view   = bbp_get_view_id( $view );
-	$retval = ! empty( $view ) && ! empty( $bbp->views[ $view ] ) ? bbpress()->views[ $view ]['query'] : array();
+	$retval = ! empty( $view ) && ! empty( $bbp->views[ $view ] ) ? $bbp->views[ $view ]['query'] : array();
 
 	return (array) apply_filters( 'bbp_get_view_query_args', $retval, $view );
 }
