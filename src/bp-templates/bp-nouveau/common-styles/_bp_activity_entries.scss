@@ -561,10 +561,12 @@
 
 						&.pin-activity:before {
 							content: "\e9e9";
+							font-size: 19px;
 						}
 
 						&.unpin-activity:before {
 							content: "\ea13";
+							font-size: 19px;
 						}
 
 						&.ac-video-thumbnail-edit:before {

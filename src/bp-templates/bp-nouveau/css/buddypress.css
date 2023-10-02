@@ -3834,10 +3834,12 @@ input.search-query-input {
 
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.pin-activity:before {
   content: "\e9e9";
+  font-size: 19px;
 }
 
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.unpin-activity:before {
   content: "\ea13";
+  font-size: 19px;
 }
 
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.ac-video-thumbnail-edit:before {
