@@ -608,6 +608,21 @@ function groups_leave_group( $group_id, $user_id = 0 ) {
 		}
 	}
 
+	// If group restrict invites is enabled and any member left parent group then also remove from all child groups.
+	if (
+		! empty( $group_id ) &&
+		true === bp_enable_group_hierarchies() &&
+		true === bp_enable_group_restrict_invites() ) {
+		$groups = bp_get_descendent_groups( $group_id, $user_id );
+		if ( ! empty( $groups ) ) {
+			foreach ( $groups as $group ) {
+				if ( $group->is_member ) {
+					groups_leave_group( $group->id, $user_id );
+				}
+			}
+		}
+	}
+
 	if ( ! BP_Groups_Member::delete( $user_id, $group_id ) ) {
 		return false;
 	}
