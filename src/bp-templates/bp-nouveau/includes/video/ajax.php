@@ -1091,12 +1091,25 @@ function bp_nouveau_ajax_video_description_save() {
 		wp_send_json_error( $response );
 	}
 
+	// Added backward compatibility.
 	$video_post['ID']           = $attachment_id;
 	$video_post['post_content'] = $description;
 	wp_update_post( $video_post );
 
-	$response['description'] = $description;
-	wp_send_json_success( $response );
+	$video_id = get_post_meta( $attachment_id, 'bp_video_id', true );
+	if ( ! empty( $video_id ) ) {
+		$video = new BP_Video( $video_id );
+
+		if ( ! empty( $video->id ) ) {
+			$video->description = $description;
+			$video->save();
+
+			$response['description'] = $description;
+			wp_send_json_success( $response );
+		}
+	}
+
+	wp_send_json_error( $response );
 }
 
 add_filter( 'bp_nouveau_object_template_result', 'bp_nouveau_object_template_results_video_tabs', 10, 2 );
