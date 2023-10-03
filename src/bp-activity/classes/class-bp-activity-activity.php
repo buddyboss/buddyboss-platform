@@ -568,7 +568,7 @@ class BP_Activity_Activity {
 							END DESC, ' . $order_by;
 
 				if ( ! empty( $where_conditions['filter_sql'] ) ) {
-					$where_conditions['filter_sql'] = $where_conditions['filter_sql'] . ' OR ' . $wpdb->prepare( 'a.id = %d', $pinned_id );
+					$where_conditions['filter_sql'] = '(' . $where_conditions['filter_sql'] . ' OR ' . $wpdb->prepare( 'a.id = %d', $pinned_id ) . ')';
 				}
 			}
 		}

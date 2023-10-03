@@ -398,6 +398,8 @@ window.bp = window.bp || {};
 				$( selector ).append( content ).find( 'li.activity-item' ).each( this.hideSingleUrl );
 			} else if ( 'prepend' === method ) {
 				$( selector ).prepend( content ).find( 'li.activity-item' ).each( this.hideSingleUrl );
+			} else if ( 'after' === method ) {
+				$( selector ).after( content ).find( 'li.activity-item' ).each( this.hideSingleUrl );
 			} else {
 				$( selector ).html( content ).find( 'li.activity-item' ).each( this.hideSingleUrl );
 			}
