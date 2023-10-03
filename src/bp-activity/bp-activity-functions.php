@@ -6373,7 +6373,7 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
  *
  * @param array $args Arguments related to pin unpin activity or group feed post.
  *
- * @return bool|string Update type pinned|updatedpinned|unpinned.
+ * @return bool|string Update type pinned|pin_updated|unpinned.
  */
 function bb_activity_pin_unpin_post( $args = array() ) {
 	$r = bp_parse_args(
@@ -6381,14 +6381,15 @@ function bb_activity_pin_unpin_post( $args = array() ) {
 		array(
 			'pin_action'  => 'pin_activity',
 			'activity_id' => 0,
-			'return_type' => 'boolean',
+			'retval'      => 'bool',
 		)
 	);
 
-	$retval   = '';
+	$retval = '';
+
 	$activity = new BP_Activity_Activity( (int) $r['activity_id'] );
 
-	if ( $activity ) {
+	if ( ! empty( $activity->id ) ) {
 
 		if ( 'unpin_activity' === $r['pin_action'] ) {
 			$updated_value = '';
@@ -6409,19 +6410,17 @@ function bb_activity_pin_unpin_post( $args = array() ) {
 
 		// Check if already exists and updating new value.
 		if ( ! empty( $updated_value ) && ! empty( $old_value ) && (int) $old_value !== (int) $updated_value ) {
-			$retval = 'updatedpinned';
+			$retval = 'pin_updated';
 		}
-
 	}
 
-	if ( 'boolean' === $r['return_type'] ) {
-		
+	if ( 'bool' === $r['retval'] ) {
+
 		if ( ! empty( $retval ) ) {
 			$retval = true;
 		} else {
 			$retval = false;
 		}
-
 	}
 
 	return $retval;

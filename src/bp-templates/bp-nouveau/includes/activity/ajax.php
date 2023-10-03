@@ -436,7 +436,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 			'activity_id' => $_POST['form_id'],
 			'content'     => $_POST['content'],
 			'parent_id'   => $_POST['comment_id'],
-			'skip_error'  => false === $content ? false : true // Pass true when $content will be not empty.
+			'skip_error'  => false === $content ? false : true, // Pass true when $content will be not empty.
 		)
 	);
 
@@ -514,7 +514,7 @@ function bp_nouveau_ajax_get_activity_objects() {
 	}
 
 	if ( 'group' === $_POST['type'] ) {
-		$exclude_groups = array();
+		$exclude_groups                     = array();
 		$exclude_groups_args                = array();
 		$exclude_groups_args['user_id']     = bp_loggedin_user_id();
 		$exclude_groups_args['show_hidden'] = true;
@@ -545,7 +545,7 @@ function bp_nouveau_ajax_get_activity_objects() {
 		if ( isset( $_POST['search'] ) ) {
 			$args['search_terms'] = $_POST['search'];
 		}
-		if ( ! empty( $exclude_groups ) ){
+		if ( ! empty( $exclude_groups ) ) {
 			$args['exclude'] = $exclude_groups;
 		}
 
@@ -889,7 +889,6 @@ function bb_nouveau_ajax_post_draft_activity() {
 						}
 					}
 				}
-
 			}
 
 			$draft_activity['data'] = false;
@@ -1022,45 +1021,48 @@ function bp_nouveau_ajax_activity_update_privacy() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return string JSON reply
+ * @return string
  */
 function bb_nouveau_ajax_activity_update_pinned_post() {
+	$response = array(
+		'feedback' => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' )
+	);
+
 	if ( ! bp_is_post_request() ) {
-		wp_send_json_error();
+		wp_send_json_error( $response );
 	}
 
 	// Nonce check!
 	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
-		wp_send_json_error();
+		wp_send_json_error( $response );
 	}
 
 	if ( empty( $_POST['pin_action'] ) ) {
-		wp_send_json_error();
+		wp_send_json_error( $response );
 	}
 
 	if ( empty( $_POST['id'] ) ) {
-		wp_send_json_error();
+		wp_send_json_error( $response );
 	}
 
 	if ( ! in_array( $_POST['pin_action'], array( 'pin_activity', 'unpin_activity' ) ) ) {
-		wp_send_json_error();
+		wp_send_json_error( $response );
 	}
 
-
-	$args = array (
+	$args = array(
 		'pin_action'  => $_POST['pin_action'],
 		'activity_id' => (int) $_POST['id'],
-		'return_type' => 'string',
+		'retval'      => 'string',
 	);
 
 	$retval = bb_activity_pin_unpin_post( $args );
-	if ( ! empty( $retval ) ) {
 
+	if ( ! empty( $retval ) ) {
 		if ( 'unpinned' === $retval ) {
 			$response['feedback'] = esc_html__( 'Your post has been unpinned', 'buddyboss' );
 		} elseif ( 'pinned' === $retval ) {
 			$response['feedback'] = esc_html__( 'Your post has been pinned', 'buddyboss' );
-		} elseif ( 'updatedpinned' === $retval ){
+		} elseif ( 'pin_updated' === $retval ) {
 			$response['feedback'] = esc_html__( 'Your pinned post has been updated', 'buddyboss' );
 		}
 
@@ -1068,6 +1070,6 @@ function bb_nouveau_ajax_activity_update_pinned_post() {
 
 		wp_send_json_success( $response );
 	} else {
-		wp_send_json_error();
+		wp_send_json_error( $response );
 	}
 }
