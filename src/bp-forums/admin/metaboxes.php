@@ -219,7 +219,7 @@ function bbp_dashboard_widget_right_now() {
 					<?php
 					$num  = empty( $r['empty_topic_tag_count'] ) ? 0 : (int) $r['empty_topic_tag_count'];
 					$text = sprintf(
-						/* translators: Total Hidden Reply. */
+						/* translators: Total Empty Discussion Tag. */
 						_n( '%s Empty Discussion Tag', '%s Empty Discussion Tags', $num, 'buddyboss' ),
 						'<span class="b b-hidden-topic-tags">' . number_format_i18n( $num ) . '</span>'
 					);
