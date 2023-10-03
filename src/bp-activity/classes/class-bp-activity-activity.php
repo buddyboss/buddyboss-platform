@@ -537,15 +537,17 @@ class BP_Activity_Activity {
 				break;
 		}
 		$order_by = 'a.' . $r['order_by'];
+
 		// Support order by fields for generally.
 		if ( ! empty( $r['in'] ) && 'in' === $r['order_by'] ) {
 			$order_by = 'FIELD(a.id, ' . implode( ',', wp_parse_id_list( $r['in'] ) ) . ')';
 			$sort     = '';
 		}
 
+		$pinned_id = 0;
+
 		// Pinned post.
 		if ( ! empty( $r['pin_type'] ) ) {
-			$pinned_id = 0;
 			if ( 'group' === $r['pin_type'] ) {
 				if (
 					! empty( $r['filter']['primary_id'] ) &&
@@ -564,6 +566,10 @@ class BP_Activity_Activity {
 								WHEN a.id = ' . $pinned_id . ' THEN 1
 								ELSE 0
 							END DESC, ' . $order_by;
+
+				if ( ! empty( $where_conditions['filter_sql'] ) ) {
+					$where_conditions['filter_sql'] = $where_conditions['filter_sql'] . ' OR ' . $wpdb->prepare( 'a.id = %d', $pinned_id );
+				}
 			}
 		}
 
@@ -758,7 +764,7 @@ class BP_Activity_Activity {
 			 * @param array  $r                Array of arguments passed into method.
 			 */
 			$activity_ids_sql = apply_filters( 'bp_activity_paged_activities_sql', $activity_ids_sql, $r );
-			// error_log( $activity_ids_sql );
+
 			/*
 			 * Queries that include 'last_activity' are cached separately,
 			 * since they are generally much less long-lived.

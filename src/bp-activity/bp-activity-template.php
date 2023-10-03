@@ -359,7 +359,6 @@ function bp_has_activities( $args = '' ) {
 		$r['pin_type'] = bb_activity_pin_type( $r );
 	}
 
-
 	/*
 	 * Query
 	 */
