@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.2.2
 Requires PHP: 8.0
-Stable tag: 2.4.30
+Stable tag: 2.4.40
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,27 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.4.40 =
+* New Feature! - Allow users to Edit Activity Comments
+* Bug: Activity - Activity search : Search results are getting incorrect.
+* Bug: Activity - Video uploading issue on Activity feed due to missing video thumbnail
+* Bug: Core - "Relaxed" Emoji is not showing correctly
+* Bug: Core - Added a 'Successfully Saved' message in the plugin when saving settings
+* Bug: Core - Fatal error when registering users with Magyar language selected
+* Bug: Core - Profile, photos tab was showing delete and select all buttons even with no uploaded media
+* Bug: Core - Text Smilies were not converting to emojis when first added in discussions reply.
+* Bug: Core - Wordpress dashboard shown in mobile size, profile dropdown arrow in admin bar would position incorrectly
+* Bug: Custom Development - 'groups_join_group' hook not called when member is added to BuddyBoss Group via LearnDash sync
+* Bug: Forums - Changing the parent forum from backend was not working for the forums that is associated with groups
+* Bug: Forums - Discussion shortcodes not returning the correct results
+* Bug: Groups - Subscription emails were delayed when saving the new group feed and updating the group details in frontend
+* Bug: Groups - When subgroup restrict access setting is active a new message alerting users to first request access to the parent group will appear if a user tries to access a subgroup first
+* Bug: LearnDash - Undefined variable $post warning in LearnDash topics removed
+* Bug: Messages - Image link was broken for Messages in Email
+* Bug: Multisite - Profile search page is not working in admin area if platform is network activated
+* Bug: The Events Calendar - When the private website option is enabled from the BuddyBoss platform, the filters in the Events Calendar was not working
+* Bug: Widgets - Who’s Online widget was not accurately showing members online status
 
 = 2.4.30 =
 * Enhancement: Activity - database alterations made in preparations for future activity features

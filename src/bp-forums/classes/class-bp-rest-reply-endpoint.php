@@ -1149,6 +1149,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 * Due to we have moved all filters on title and content.
 		 */
 		remove_action( 'bbp_new_reply', 'bbp_notify_topic_subscribers', 9999, 5 );
+		remove_action( 'bbp_new_reply', 'bbp_buddypress_add_notification', 9999, 7 );
 
 		/** Update counts, etc... */
 		do_action( 'bbp_new_reply', $reply_id, $topic_id, $forum_id, $anonymous_data, $reply_author, false, $reply_to );
@@ -1166,6 +1167,10 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 
 		if ( is_wp_error( $fields_update ) ) {
 			return $fields_update;
+		}
+
+		if ( function_exists( 'bbp_buddypress_add_notification' ) ) {
+			bbp_buddypress_add_notification( $reply_id, $topic_id, $forum_id, $anonymous_data, $reply_author, false, $reply_to );
 		}
 
 		/**

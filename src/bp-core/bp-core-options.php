@@ -2379,7 +2379,7 @@ function bb_email_restrictions_setting( $default = array() ) {
 /**
  * Check whether Activity comment edit is enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.40
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
@@ -2390,7 +2390,7 @@ function bb_is_activity_comment_edit_enabled( $default = false ) {
 	/**
 	 * Filters whether Activity comment edit is enabled.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.40
 	 *
 	 * @param bool $value Whether Activity comment edit is enabled.
 	 */
@@ -2400,7 +2400,7 @@ function bb_is_activity_comment_edit_enabled( $default = false ) {
 /**
  * Get BuddyBoss activity comment Time option.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.40
  *
  * @param bool $default when option not found, function will return $default value.
  *
