@@ -1503,8 +1503,19 @@ window.bp = window.bp || {};
 							// Change the pinned class and label.
 							if ( 'pin_activity' === pin_action ) {
 
-								// Remove class from all old pinned.
+								// Remove class from all old pinned and update action labels and icons.
 								activity_list.find( 'li.activity-item' ).removeClass( 'bb-pinned' );
+
+								activity_list.find( 'li.activity-item' ).each( function() {
+									var action = $( this ).find( '.unpin-activity' );
+									action.removeClass( 'unpin-activity' ).addClass( 'pin-activity' );
+
+									if ( activity_stream.hasClass('single-group') ) {
+										action.find('span').html( BP_Nouveau.activity.strings.pinGroupPost );
+									} else {
+										action.find('span').html( BP_Nouveau.activity.strings.pinPost );
+									}
+								});
 
 								target.closest( 'li.activity-item' ).addClass( 'bb-pinned' );
 								target.addClass( 'unpin-activity' );

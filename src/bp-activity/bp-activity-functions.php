@@ -6367,3 +6367,64 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 		)
 	);
 }
+
+/**
+ * Pin or unpin activity or group feed post.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args Arguments related to pin unpin activity or group feed post.
+ *
+ * @return bool|string Update type pinned|updatedpinned|unpinned.
+ */
+function bb_activity_pin_unpin_post( $args = array() ) {
+	$r = bp_parse_args(
+		$args,
+		array(
+			'pin_action'  => 'pin_activity',
+			'activity_id' => 0,
+			'return_type' => 'boolean',
+		)
+	);
+
+	$retval   = '';
+	$activity = new BP_Activity_Activity( (int) $r['activity_id'] );
+
+	if ( $activity ) {
+
+		if ( 'unpin_activity' === $r['pin_action'] ) {
+			$updated_value = '';
+			$retval        = 'unpinned';
+		} else {
+			$updated_value = $r['activity_id'];
+			$retval        = 'pinned';
+		}
+
+		// Check if group activity or normal activity.
+		if ( 'groups' === $activity->component && ! empty( $activity->item_id ) ) {
+			$old_value = groups_get_groupmeta( $activity->item_id, 'bb_pinned_post' );
+			groups_update_groupmeta( $activity->item_id, 'bb_pinned_post', $updated_value );
+		} else {
+			$old_value = bp_get_option( 'bb_pinned_post' );
+			bp_update_option( 'bb_pinned_post', $updated_value );
+		}
+
+		// Check if already exists and updating new value.
+		if ( ! empty( $updated_value ) && ! empty( $old_value ) && (int) $old_value !== (int) $updated_value ) {
+			$retval = 'updatedpinned';
+		}
+
+	}
+
+	if ( 'boolean' === $r['return_type'] ) {
+		
+		if ( ! empty( $retval ) ) {
+			$retval = true;
+		} else {
+			$retval = false;
+		}
+
+	}
+
+	return $retval;
+}
