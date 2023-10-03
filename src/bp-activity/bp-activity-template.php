@@ -2241,7 +2241,7 @@ function bp_activity_comment_content() {
  * comments only.
  *
  * @since BuddyPress 1.5.0
- * @since BuddyBoss [BBVERSION] Added $activity_comment_id parameter to get activity comment content.
+ * @since BuddyBoss 2.4.40 Added $activity_comment_id parameter to get activity comment content.
  *
  * @param int     $activity_comment_id Activity comment ID.
  *
@@ -4221,7 +4221,7 @@ function bp_get_activity_entry_css_class() {
 /**
  * Determine if the current user can edit an activity comment item.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.40
  *
  * @param false|BP_Activity_Activity $activity_comment Optional. Falls back on the current item in the loop.
  * @param bool                       $privacy_edit     Optional. True if editing privacy.
@@ -4271,7 +4271,7 @@ function bb_activity_comment_user_can_edit( $activity_comment = false, $privacy_
 	/**
 	 * Filters whether the current user can edit an activity comment item.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.40
 	 *
 	 * @param bool   $can_edit         Whether the user can edit the item.
 	 * @param object $activity_comment Current activity item object.

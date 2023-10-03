@@ -1007,7 +1007,7 @@ class SyncGenerator {
 	/**
 	 * Update BB group member role.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.4.40
 	 *
 	 * @param object $group_member Member item.
 	 *

@@ -971,7 +971,7 @@ add_action( 'bp_enqueue_scripts', 'bb_load_link_preview_js_template' );
 /**
  * Load the JS to replace emoji with image.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.40
  */
 function bb_load_emoji_detection_script() {
 	// Get the current WordPress version.
@@ -984,7 +984,7 @@ function bb_load_emoji_detection_script() {
 			/**
 			 * Filters the URL where emoji png images are hosted.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.4.40
 			 *
 			 * @param string $url The emoji base URL for png images.
 			 */
@@ -993,7 +993,7 @@ function bb_load_emoji_detection_script() {
 			/**
 			 * Filters the extension of the emoji png files.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.4.40
 			 *
 			 * @param string $extension The emoji extension for png files. Default .png.
 			 */
@@ -1002,7 +1002,7 @@ function bb_load_emoji_detection_script() {
 			/**
 			 * Filters the URL where emoji SVG images are hosted.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.4.40
 			 *
 			 * @param string $url The emoji base URL for svg images.
 			 */
@@ -1011,7 +1011,7 @@ function bb_load_emoji_detection_script() {
 			/**
 			 * Filters the extension of the emoji SVG files.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.4.40
 			 *
 			 * @param string $extension The emoji extension for svg files. Default .svg.
 			 */
