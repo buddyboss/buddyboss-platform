@@ -30,7 +30,7 @@ class BP_Groups_Widget extends WP_Widget {
 		parent::__construct( false, __( '(BB) Social Groups', 'buddyboss' ), $widget_ops );
 
 		if ( is_customize_preview() || is_active_widget( false, false, $this->id_base ) ) {
-			add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+			add_action( 'bp_enqueue_community_scripts', array( $this, 'enqueue_scripts' ) );
 		}
 	}
 
@@ -63,7 +63,7 @@ class BP_Groups_Widget extends WP_Widget {
 		 * @param string $value Current user ID if user logged-in otherwise empty user ID.
 		 */
 		$user_id = apply_filters( 'bp_group_widget_user_id', get_current_user_id() );
-		
+
 		if ( 0 !== $user_id && empty( bp_get_total_group_count_for_user( $user_id ) ) ) {
 			$user_id = 0;
 		}
@@ -133,7 +133,7 @@ class BP_Groups_Widget extends WP_Widget {
 																	?>
 					 class="selected"<?php endif; ?>><?php _e( 'Active', 'buddyboss' ); ?></a>
 				<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
-				<a href="<?php bp_groups_directory_permalink(); ?>" id="popular-groups" 
+				<a href="<?php bp_groups_directory_permalink(); ?>" id="popular-groups"
 																<?php
 																if ( $instance['group_default'] == 'popular' ) :
 																	?>
@@ -172,7 +172,7 @@ class BP_Groups_Widget extends WP_Widget {
 			</ul>
 			<?php wp_nonce_field( 'groups_widget_groups_list', '_wpnonce-groups' ); ?>
 			<input type="hidden" name="groups_widget_max" id="groups_widget_max" value="<?php echo esc_attr( $max_groups ); ?>" />
-			
+
 			<div class="more-block"><a href="<?php bp_groups_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
 
 		<?php else : ?>

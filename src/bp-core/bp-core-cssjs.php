@@ -342,7 +342,7 @@ function bp_core_register_common_scripts() {
 		)
 	);
 }
-add_action( 'bp_enqueue_scripts', 'bp_core_register_common_scripts', 1 );
+add_action( 'bp_enqueue_community_scripts', 'bp_core_register_common_scripts', 1 );
 add_action( 'bp_admin_enqueue_scripts', 'bp_core_register_common_scripts', 1 );
 
 /**
@@ -417,7 +417,7 @@ function bp_core_register_common_styles() {
 		}
 	}
 }
-add_action( 'bp_enqueue_scripts', 'bp_core_register_common_styles', 1 );
+add_action( 'bp_enqueue_community_scripts', 'bp_core_register_common_styles', 1 );
 add_action( 'bp_admin_enqueue_scripts', 'bp_core_register_common_styles', 1 );
 
 /**
@@ -441,7 +441,7 @@ function bp_core_confirmation_js() {
 	);
 
 }
-add_action( 'bp_enqueue_scripts', 'bp_core_confirmation_js' );
+add_action( 'bp_enqueue_community_scripts', 'bp_core_confirmation_js' );
 add_action( 'bp_admin_enqueue_scripts', 'bp_core_confirmation_js' );
 
 /**
@@ -462,7 +462,7 @@ function bp_core_avatar_scripts() {
 	add_action( 'bp_after_group_admin_content', 'bp_avatar_template_check' );
 	add_action( 'bp_after_group_avatar_creation_step', 'bp_avatar_template_check' );
 }
-add_action( 'bp_enqueue_scripts', 'bp_core_avatar_scripts' );
+add_action( 'bp_enqueue_community_scripts', 'bp_core_avatar_scripts' );
 
 /**
  * Enqueues the css and js required by the Cover Photo UI.
@@ -477,7 +477,7 @@ function bp_core_cover_image_scripts() {
 	// Enqueue the Attachments scripts for the Cover Photo UI.
 	bp_attachments_enqueue_scripts( 'BP_Attachment_Cover_Image' );
 }
-add_action( 'bp_enqueue_scripts', 'bp_core_cover_image_scripts' );
+add_action( 'bp_enqueue_community_scripts', 'bp_core_cover_image_scripts' );
 
 /**
  * Enqueues jCrop library and hooks BP's custom cropper JS.
@@ -791,7 +791,7 @@ function bp_add_cover_image_inline_css( $return = false ) {
 		}
 	}
 }
-add_action( 'bp_enqueue_scripts', 'bp_add_cover_image_inline_css', 11 );
+add_action( 'bp_enqueue_community_scripts', 'bp_add_cover_image_inline_css', 11 );
 
 /**
  * Enqueues livestamp.js on BuddyPress pages.
@@ -805,7 +805,7 @@ function bp_core_add_livestamp() {
 
 	bp_core_enqueue_livestamp();
 }
-add_action( 'bp_enqueue_scripts', 'bp_core_add_livestamp' );
+add_action( 'bp_enqueue_community_scripts', 'bp_core_add_livestamp' );
 
 /**
  * Enqueue and localize livestamp.js script.
@@ -900,7 +900,7 @@ function bp_core_jquery_validate_scripts() {
 	// wp_enqueue_script( 'bp-jquery-validate' );
 	// add_action( 'wp_head', 'bp_core_add_jquery_validate_inline_js' );
 }
-add_action( 'bp_enqueue_scripts', 'bp_core_jquery_validate_scripts' );
+add_action( 'bp_enqueue_community_scripts', 'bp_core_jquery_validate_scripts' );
 
 
 /**
@@ -946,7 +946,7 @@ function bp_core_add_jquery_mask() {
 
 	add_action( 'wp_footer', 'bp_core_add_jquery_mask_inline_js' );
 }
-add_action( 'bp_enqueue_scripts', 'bp_core_add_jquery_mask' );
+add_action( 'bp_enqueue_community_scripts', 'bp_core_add_jquery_mask' );
 
 /**
  * Prints script to add input mask to all telephone fields.
@@ -998,7 +998,7 @@ function bp_core_register_page_js() {
 
 }
 
-add_action( 'bp_enqueue_scripts', 'bp_core_register_page_js' );
+add_action( 'bp_enqueue_community_scripts', 'bp_core_register_page_js' );
 
 function bp_core_enqueue_isInViewPort() {
 	if (
@@ -1019,7 +1019,7 @@ function bp_core_enqueue_isInViewPort() {
 	}
 }
 
-add_action( 'bp_enqueue_scripts', 'bp_core_enqueue_isInViewPort', 5 );
+add_action( 'bp_enqueue_community_scripts', 'bp_core_enqueue_isInViewPort', 5 );
 
 /**
  * Load the JS template for link preview.
@@ -1030,7 +1030,7 @@ function bb_load_link_preview_js_template() {
 	bp_get_template_part( 'common/js-templates/members/bb-link-preview' );
 }
 
-add_action( 'bp_enqueue_scripts', 'bb_load_link_preview_js_template' );
+add_action( 'bp_enqueue_community_scripts', 'bb_load_link_preview_js_template' );
 
 /**
  * Load the JS to replace emoji with image.

@@ -759,7 +759,7 @@ function bb_load_member_type_label_custom_css() {
 		wp_add_inline_style( 'bp-nouveau', $member_type_custom_css );
 	}
 }
-add_action( 'bp_enqueue_scripts', 'bb_load_member_type_label_custom_css', 12 );
+add_action( 'bp_enqueue_community_scripts', 'bb_load_member_type_label_custom_css', 12 );
 
 /**
  * Remove all subscription associations for a given user.

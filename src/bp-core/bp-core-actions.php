@@ -130,6 +130,9 @@ add_action( 'comment_post', 'bb_post_new_comment_reply_notification', 20, 3 );
 add_action( 'wp_insert_comment', 'bb_post_new_comment_reply_notification_helper', 20, 2 );
 add_action( 'transition_comment_status', 'bb_post_comment_on_status_change', 20, 3 );
 
+// Adds a new hook to be sure to enqueue scripts when `is_buddypress()` is true.
+add_action( 'bp_enqueue_scripts', 'bp_enqueue_community_scripts' );
+
 // Load the admin.
 if ( is_admin() ) {
 	add_action( 'bp_loaded', 'bp_admin' );
