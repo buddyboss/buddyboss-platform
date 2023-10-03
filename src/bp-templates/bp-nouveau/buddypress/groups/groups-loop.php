@@ -33,7 +33,7 @@ $group_cover_height = function_exists( 'bb_get_group_cover_image_height' ) ? bb_
 
 ?>
 
-<?php if ( bp_has_groups( bp_ajax_querystring( 'groups' ) . '&pin_activity_feed=1') ) : ?>
+<?php if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) : ?>
 
 	<?php bp_nouveau_pagination( 'top' ); ?>
 

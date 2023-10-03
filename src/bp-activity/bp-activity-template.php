@@ -355,29 +355,10 @@ function bp_has_activities( $args = '' ) {
 	}
 
 	// Pinned post.
-	if (
-		! empty( $r['scope'] ) &&
-		function_exists( 'did_action' ) &&
-		! did_action( 'get_template_part_activity/widget' )
-	) {
-
-		$scope_array = explode( ',', $r['scope'] );
-
-		if (
-			in_array( 'public', $scope_array ) &&
-			empty( $r['user_id'] ) &&
-			empty( $r['object'] )
-		) {
-			$r['pin_type'] = 'activity';
-		} elseif (
-			'activity' === $r['scope'] &&
-			empty( $r['object'] ) &&
-			'groups' === $r['object']
-		) {
-			$r['pin_type'] = 'group';
-		}
-
+	if ( empty( $r['pin_type'] ) ) {
+		$r['pin_type'] = bb_activity_pin_type( $r );
 	}
+
 
 	/*
 	 * Query

@@ -6425,3 +6425,49 @@ function bb_activity_pin_unpin_post( $args = array() ) {
 
 	return $retval;
 }
+
+/**
+ * Fetch the pin type based on the screen its activity/group.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args Array of Arguments.
+ *
+ * @return mixed|string
+ */
+function bb_activity_pin_type( $args ) {
+	$r = bp_parse_args(
+		$args,
+		array(
+			'pin_type' => '',
+			'scope'    => '',
+			'object'   => '',
+			'user_id'  => '',
+			'action'   => '',
+		)
+	);
+
+	$scope = is_array( $r['scope'] ) ? $r['scope'] : explode( ',', $r['scope'] );
+
+	if (
+		empty( $r['action'] ) &&
+		! empty( $scope ) &&
+		in_array( 'public', $scope, true ) &&
+		empty( $r['user_id'] ) &&
+		empty( $r['object'] )
+	) {
+		$r['pin_type'] = 'activity';
+	} elseif (
+		bp_is_active( 'groups' ) &&
+		! empty( $scope ) &&
+		in_array( 'activity', $scope, true ) &&
+		empty( $r['user_id'] ) &&
+		empty( $r['action'] ) &&
+		! empty( $r['object'] ) &&
+		'groups' === $r['object']
+	) {
+		$r['pin_type'] = 'group';
+	}
+
+	return $r['pin_type'];
+}
