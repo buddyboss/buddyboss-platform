@@ -2021,7 +2021,7 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 /**
  * Output the Activity comment timestamp into the bp-timestamp attribute.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.40
  */
 function bb_nouveau_activity_comment_timestamp() {
 	echo esc_attr( bb_nouveau_get_activity_comment_timestamp() );
@@ -2030,7 +2030,7 @@ function bb_nouveau_activity_comment_timestamp() {
 /**
  * Get the Activity comment timestamp.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.40
  *
  * @return integer The Activity comment timestamp.
  */
@@ -2038,7 +2038,7 @@ function bb_nouveau_get_activity_comment_timestamp() {
 	/**
 	 * Filter here to edit the activity comment timestamp.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.40
 	 *
 	 * @param integer $value The Activity comment timestamp.
 	 */
@@ -2048,7 +2048,7 @@ function bb_nouveau_get_activity_comment_timestamp() {
 /**
  * Output the Activity comment edit data.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.40
  */
 function bb_nouveau_edit_activity_comment_data() {
 	echo bb_nouveau_get_edit_activity_comment_data();
@@ -2057,7 +2057,7 @@ function bb_nouveau_edit_activity_comment_data() {
 /**
  * Get the Activity comment edit data.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.40
  *
  * @return string The Activity comment edit data.
  */
@@ -2069,7 +2069,7 @@ function bb_nouveau_get_edit_activity_comment_data() {
 /**
  * Get edited activity comment log.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.40
  *
  * @param int  $activity_comment_id Activity comment id.
  * @param bool $echo                Whether to print or not.

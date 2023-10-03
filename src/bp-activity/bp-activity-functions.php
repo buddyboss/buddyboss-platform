@@ -6295,7 +6295,7 @@ function bb_update_users_like_reaction( $user_ids, $activity_id, $reaction_id ) 
 /**
  * Get the Activity comment edit data.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.40
  *
  * @param int $activity_comment_id Activity comment ID.
  *
@@ -6345,7 +6345,7 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 	/**
 	 * Filter here to edit the activity comment edit data.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.40
 	 *
 	 * @param array $activity_comment_data The Activity comment edit data.
 	 */
