@@ -937,7 +937,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					'notification_type' => 'bbp-new-forum-topic',
 				);
 
-				$email_tokens['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+				$email_tokens['tokens']['unsubscribe']      = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+				$email_tokens['tokens']['receiver-user.id'] = $user_id;
 
 				// Send notification email.
 				bp_send_email( 'bbp-new-forum-topic', (int) $user_id, $email_tokens );
@@ -1050,7 +1051,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					'notification_type' => 'bbp-new-forum-reply',
 				);
 
-				$email_tokens['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+				$email_tokens['tokens']['unsubscribe']      = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+				$email_tokens['tokens']['receiver-user.id'] = $user_id;
 
 				// Send notification email.
 				bp_send_email( 'bbp-new-forum-reply', (int) $user_id, $email_tokens );

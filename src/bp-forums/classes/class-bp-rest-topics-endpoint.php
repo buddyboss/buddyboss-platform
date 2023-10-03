@@ -1100,8 +1100,9 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		 * Due to we have moved all filters on title and content.
 		 */
 		remove_action( 'bbp_new_topic', 'bbp_notify_forum_subscribers', 9999, 4 );
+		remove_action( 'bbp_new_topic', 'bbp_buddypress_add_topic_notification', 9999, 2 );
 
-		/** Update counts, etc... */
+ 		/** Update counts, etc... */
 		do_action( 'bbp_new_topic', $topic_id, $forum_id, $anonymous_data, $topic_author );
 
 		/** Stickies */
@@ -1164,6 +1165,10 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		if ( is_wp_error( $fields_update ) ) {
 			return $fields_update;
+		}
+
+		if ( function_exists( 'bbp_buddypress_add_topic_notification' ) ) {
+			bbp_buddypress_add_topic_notification( $topic_id, $forum_id );
 		}
 
 		$retval = $this->prepare_response_for_collection(

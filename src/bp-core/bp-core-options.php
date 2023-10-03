@@ -2377,6 +2377,35 @@ function bb_email_restrictions_setting( $default = array() ) {
 }
 
 /**
+ * Check whether Activity comment edit is enabled.
+ * @return bool True if Edit is enabled, otherwise false.
+ */
+function bb_is_activity_comment_edit_enabled( $default = false ) {
+
+	/**
+	 * Filters whether Activity comment edit is enabled.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value Whether Activity comment edit is enabled.
+	 */
+	return (bool) apply_filters( 'bb_is_activity_comment_edit_enabled', (bool) bp_get_option( '_bb_enable_activity_comment_edit', $default ) );
+}
+
+/**
+ * Get BuddyBoss activity comment Time option.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $default when option not found, function will return $default value.
+ *
+ * @return mixed|void
+ */
+function bb_get_activity_comment_edit_time( $default = false ) {
+	return apply_filters( 'bb_get_activity_comment_edit_time', bp_get_option( '_bb_activity_comment_edit_time', $default ) );
+}
+
+/**
  * Check whether activity pinned posts are enabled.
  *
  * @since BuddyBoss [BBVERSION]
