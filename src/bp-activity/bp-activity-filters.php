@@ -3539,7 +3539,7 @@ add_action( 'bp_start_following', 'bb_send_email_to_follower' );
 /**
  * Function will send main activity mention notification.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.40
  *
  * @param string $content     Content of the activity post update.
  * @param int    $user_id     ID of the user posting the activity update.
@@ -3553,7 +3553,7 @@ function bb_activity_at_name_send_emails( $content, $user_id, $activity_id ) {
 /**
  * Function will send group main activity mention notification.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.40
  *
  * @param string $content     The content of the update.
  * @param int    $user_id     ID of the user posting the update.
@@ -3568,7 +3568,7 @@ function bb_group_activity_at_name_send_emails( $content, $user_id, $group_id, $
 /**
  * Function will send activity comment mention notification.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.40
  *
  * @param int                  $comment_id ID of the newly posted activity comment.
  * @param array                $args       Array of parsed comment arguments.
