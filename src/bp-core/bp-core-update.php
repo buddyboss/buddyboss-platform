@@ -467,6 +467,10 @@ function bp_version_updater() {
 			bb_update_to_2_4_10();
 		}
 
+		if ( $raw_db_version < 20651 ) {
+			bb_update_to_2_4_12();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -491,6 +495,16 @@ function bp_version_updater() {
 			// Run migration about activity.
 			if ( function_exists( 'bb_activity_migration' ) ) {
 				bb_activity_migration();
+			}
+
+			// Run migration about media/video description.
+			if ( function_exists( 'bb_media_migration' ) ) {
+				bb_media_migration();
+			}
+
+			// Run migration about document description.
+			if ( function_exists( 'bb_document_migration' ) ) {
+				bb_document_migration();
 			}
 		}
 	}
@@ -3224,5 +3238,46 @@ function bb_update_to_2_4_10() {
 				$member->promote( 'admin' );
 			}
 		}
+	}
+}
+
+/**
+ * Add 'description' column to bp_media and bp_document table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_4_12() {
+	global $wpdb, $bp;
+
+	if ( ! bp_is_active( 'media' ) ) {
+		return;
+	}
+
+	// Add 'description' column in 'bp_media' table.
+	$media_row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$bp->media->table_name}' AND column_name = 'description'" ); //phpcs:ignore
+
+	if ( empty( $media_row ) ) {
+		$wpdb->query( "ALTER TABLE {$bp->media->table_name} ADD `description` text AFTER `title`" ); //phpcs:ignore
+	}
+
+	// Add 'description' column in 'bp_document' table.
+	$document_row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$bp->document->table_name}' AND column_name = 'description'" ); //phpcs:ignore
+
+	if ( empty( $document_row ) ) {
+		$wpdb->query( "ALTER TABLE {$bp->document->table_name} ADD `description` text AFTER `title`" ); //phpcs:ignore
+	}
+
+	// Purge all the cache.
+	wp_cache_flush();
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear medias API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-photos' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-albums' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-document' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-video' );
 	}
 }
