@@ -10,7 +10,7 @@
 
 bp_nouveau_before_loop(); ?>
 
-<?php if ( bp_has_activities( bp_ajax_querystring( 'activity' ) ) ) : ?>
+<?php if ( bp_has_activities( bp_ajax_querystring( 'activity' ) . '&pin_activity_feed=1' ) ) : ?>
 
 	<?php if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
 		<ul class="activity-list item-list bp-list">

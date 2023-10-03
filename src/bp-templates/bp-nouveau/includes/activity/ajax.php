@@ -1042,27 +1042,27 @@ function bb_nouveau_ajax_activity_update_pinned_post() {
 	$activity = new BP_Activity_Activity( (int) $_POST['id'] );
 
 	if ( $activity ) {
-		
+
 		if ( 'unpin_activity' === $_POST['pin_action'] ) {
-			$updated_value = '';
-			$response[ 'feedback' ] = esc_html__( 'Your post has been unpinned', 'buddyboss' );
+			$updated_value        = '';
+			$response['feedback'] = esc_html__( 'Your post has been unpinned', 'buddyboss' );
 		} else {
-			$updated_value = $_POST['id'];
-			$response[ 'feedback' ] = esc_html__( 'Your post has been pinned', 'buddyboss' );
+			$updated_value        = $_POST['id'];
+			$response['feedback'] = esc_html__( 'Your post has been pinned', 'buddyboss' );
 		}
 
 		// Check if group activity or normal activity.
 		if ( 'groups' === $activity->component && ! empty( $activity->item_id ) ) {
-			$oldvalue = groups_get_groupmeta( $activity->item_id, 'bb_pinned_post' );
+			$old_value = groups_get_groupmeta( $activity->item_id, 'bb_pinned_post' );
 			groups_update_groupmeta( $activity->item_id, 'bb_pinned_post', $updated_value );
 		} else {
-			$oldvalue = bp_get_option( 'bb_pinned_post' );
+			$old_value = bp_get_option( 'bb_pinned_post' );
 			bp_update_option( 'bb_pinned_post', $updated_value );
 		}
 
 		// Check if already exists and updating new value.
-		if ( ! empty( $updated_value ) && ! empty( $oldvalue ) && (int) $oldvalue !== (int) $updated_value) {
-			$response[ 'feedback' ] = esc_html__( 'Your pinned post has been updated', 'buddyboss' );
+		if ( ! empty( $updated_value ) && ! empty( $old_value ) && (int) $old_value !== (int) $updated_value ) {
+			$response['feedback'] = esc_html__( 'Your pinned post has been updated', 'buddyboss' );
 		}
 
 		$response = apply_filters( 'bb_ajax_activity_update_pinned_post', $response, $_POST );

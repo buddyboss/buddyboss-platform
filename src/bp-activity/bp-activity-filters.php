@@ -3390,7 +3390,7 @@ function bb_send_email_to_follower( $follower ) {
 add_action( 'bp_start_following', 'bb_send_email_to_follower' );
 
 /**
- * Add Pin Post confirmation to the activity loop
+ * Add Pin Post confirmation to the activity loop.
  *
  * @since [BBVERSION]
  */

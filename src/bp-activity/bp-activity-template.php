@@ -359,11 +359,14 @@ function bp_has_activities( $args = '' ) {
 
 	// Pinned post.
 	if (
+		! empty( $r['pin_activity_feed'] ) &&
 		(
-			bp_is_activity_directory() &&
-			in_array( 'public', $scope_array )
-		) ||
-		bp_is_group_activity()
+			(
+				bp_is_activity_directory() &&
+				in_array( 'public', $scope_array )
+			) ||
+			bp_is_group_activity()
+		)
 	) {
 		$r['show_pinned_post'] = true;
 		$r['pinned_post_type'] = 'activity';
