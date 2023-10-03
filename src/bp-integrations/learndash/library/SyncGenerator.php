@@ -25,6 +25,7 @@ class SyncGenerator {
 	protected $bpGroupId;
 	protected $ldGroupId;
 	protected $syncMetaKey = '_sync_group_id';
+	protected $syncTo;
 
 	/**
 	 * Constructor
@@ -744,10 +745,10 @@ class SyncGenerator {
 	protected function addUserToBpGroup( $userId, $type, $remove ) {
 		$groupMember = new BP_Groups_Member( $userId, $this->bpGroupId );
 
-		$syncTo = $this->getLdSyncToRole( $type );
+		$this->syncTo = $this->getLdSyncToRole( $type );
 
 		// ignore moderator in syncing as there's no moderator in learndash.
-		if ( 1 === $groupMember->is_mod && 'admin' === $syncTo ) {
+		if ( 1 === $groupMember->is_mod && 'admin' === $this->syncTo ) {
 			return false;
 		}
 
@@ -759,22 +760,11 @@ class SyncGenerator {
 			return $groupMember->remove();
 		}
 
-		$groupMember->group_id      = $this->bpGroupId;
-		$groupMember->user_id       = $userId;
-		$groupMember->is_admin      = 0;
-		$groupMember->is_mod        = 0;
-		$groupMember->is_confirmed  = 1;
-		$groupMember->date_modified = bp_core_current_time();
+		add_action( 'groups_member_before_save', array( $this, 'update_group_member_role' ), 10 );
 
-		if ( 'user' !== $syncTo ) {
-			$var               = "is_{$syncTo}";
-			$groupMember->$var = 1;
-		}
+		groups_join_group( $this->bpGroupId, $userId );
 
-		$groupMember->save();
-		if ( bp_is_active( 'messages' ) ) {
-			bp_messages_add_user_to_group_message_thread( $this->bpGroupId, $userId );
-		}
+		remove_action( 'groups_member_before_save', array( $this, 'update_group_member_role' ), 10 );
 	}
 
 	/**
@@ -1012,5 +1002,21 @@ class SyncGenerator {
 		$user = new \WP_User( (int) $userId );
 		// Remove role
 		$user->remove_role( 'group_leader' );
+	}
+
+	/**
+	 * Update BB group member role.
+	 *
+	 * @since 2.4.40
+	 *
+	 * @param object $group_member Member item.
+	 *
+	 * @return void
+	 */
+	public function update_group_member_role( $group_member ) {
+		if ( 'user' !== $this->syncTo ) {
+			$var				= "is_{$this->syncTo}";
+			$group_member->$var = 1;
+		}
 	}
 }

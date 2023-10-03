@@ -320,7 +320,7 @@ function bbp_forum_metabox( $post ) {
 				'options_only'       => false,
 				'show_none'          => __( '- Select Forum -', 'buddyboss' ),
 				'disable_categories' => false,
-				'disabled'           => empty( $group_ids ) ? false : true,
+				'disabled'           => ! empty( $group_ids ),
 			)
 		);
 		?>
