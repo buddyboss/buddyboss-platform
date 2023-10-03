@@ -284,8 +284,7 @@ function bp_has_activities( $args = '' ) {
 			'filter_query'      => false,        // Advanced filtering.  See BP_Activity_Query for format.
 
 			// Pinned post.
-			'show_pinned_post'  => false,        // Show pinned activities on the top.
-			'pinned_post_type'  => '',           // Type of feed - group, activity.
+			'pin_type'          => '',           // Show pinned post for type of feed - group, activity.
 
 			// Searching.
 			'search_terms'      => $search_terms_default,
@@ -355,24 +354,29 @@ function bp_has_activities( $args = '' ) {
 		$r['spam'] = 'all';
 	}
 
-	$scope_array = explode( ',', $r['scope'] );
-
 	// Pinned post.
 	if (
-		! empty( $r['pin_activity_feed'] ) &&
-		(
-			(
-				bp_is_activity_directory() &&
-				in_array( 'public', $scope_array )
-			) ||
-			bp_is_group_activity()
-		)
+		! empty( $r['scope'] ) &&
+		function_exists( 'did_action' ) &&
+		! did_action( 'get_template_part_activity/widget' )
 	) {
-		$r['show_pinned_post'] = true;
-		$r['pinned_post_type'] = 'activity';
-		if ( bp_is_group_activity() ) {
-			$r['pinned_post_type'] = 'group';
+
+		$scope_array = explode( ',', $r['scope'] );
+
+		if (
+			in_array( 'public', $scope_array ) &&
+			empty( $r['user_id'] ) &&
+			empty( $r['object'] )
+		) {
+			$r['pin_type'] = 'activity';
+		} elseif (
+			'activity' === $r['scope'] &&
+			empty( $r['object'] ) &&
+			'groups' === $r['object']
+		) {
+			$r['pin_type'] = 'group';
 		}
+
 	}
 
 	/*

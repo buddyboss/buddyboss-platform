@@ -194,8 +194,7 @@ class BP_Activity_Template {
 			'show_hidden'       => false,
 			'spam'              => 'ham_only',
 			'update_meta_cache' => true,
-			'show_pinned_post'  => false,
-			'pinned_post_type'  => '',
+			'pin_type'          => '',
 		);
 		$r        = bp_parse_args( $args, $defaults );
 		extract( $r );
@@ -251,13 +250,12 @@ class BP_Activity_Template {
 					'in'                => $in,
 					'spam'              => $spam,
 					'update_meta_cache' => $update_meta_cache,
-					'show_pinned_post'  => $show_pinned_post,
-					'pinned_post_type'  => $pinned_post_type,
+					'pin_type'          => $pin_type,
 				)
 			);
-			
+
 			$pinned_id = 0;
-			if ( 'group' === $pinned_post_type ) {
+			if ( 'group' === $pin_type ) {
 				if (
 					! empty( $filter['primary_id'] ) &&
 					! empty( $filter['object'] ) &&
@@ -267,11 +265,11 @@ class BP_Activity_Template {
 					$pinned_id          = groups_get_groupmeta( $group_id, 'bb_pinned_post' );
 					$this->pinned_scope = 'group';
 				}
-			} elseif ( 'activity' === $pinned_post_type ) {
+			} elseif ( 'activity' === $pin_type ) {
 				$pinned_id          = bp_get_option( 'bb_pinned_post', 0 );
 				$this->pinned_scope = 'activity';
 			}
-			$this->pinned_id    = $pinned_id;
+			$this->pinned_id = $pinned_id;
 		}
 
 		// The total_activity_count property will be set only if a

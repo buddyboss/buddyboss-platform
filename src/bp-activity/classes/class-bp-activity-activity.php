@@ -544,9 +544,9 @@ class BP_Activity_Activity {
 		}
 
 		// Pinned post.
-		if ( ! empty( $r['show_pinned_post'] ) && ! empty( $r['pinned_post_type'] ) ) {
+		if ( ! empty( $r['pin_type'] ) ) {
 			$pinned_id = 0;
-			if ( 'group' === $r['pinned_post_type'] ) {
+			if ( 'group' === $r['pin_type'] ) {
 				if (
 					! empty( $r['filter']['primary_id'] ) &&
 					! empty( $r['filter']['object'] ) &&
@@ -555,7 +555,7 @@ class BP_Activity_Activity {
 					$group_id  = $r['filter']['primary_id'];
 					$pinned_id = groups_get_groupmeta( $group_id, 'bb_pinned_post' );
 				}
-			} elseif ( 'activity' === $r['pinned_post_type'] ) {
+			} elseif ( 'activity' === $r['pin_type'] ) {
 				$pinned_id = bp_get_option( 'bb_pinned_post', 0 );
 			}
 
