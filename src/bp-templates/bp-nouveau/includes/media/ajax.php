@@ -426,20 +426,86 @@ function bp_nouveau_ajax_media_delete() {
 		}
 	}
 
+	$media_html_content   = '';
 	$media_personal_count = 0;
 	$media_group_count    = 0;
 	if ( bp_is_user_media() ) {
 		add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
-		bp_has_media( bp_ajax_querystring( 'media' ) );
+		$personal_args = bp_ajax_querystring( 'media' );
+		$personal_args = bp_parse_args( $personal_args );
+		unset( $personal_args['per_page'] );
+
+		$has_medias           = bp_has_media( $personal_args );
 		$media_personal_count = bp_core_number_format( $GLOBALS['media_template']->total_media_count );
+
+		ob_start();
+		if ( $has_medias ) {
+			while ( bp_media() ) {
+				bp_the_media();
+
+				bp_get_template_part( 'media/entry' );
+			}
+
+			if ( bp_media_has_more_items() ) {
+				?>
+				<li class="load-more">
+					<a class="button outline full" href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+				</li>
+				<?php
+			}
+		} else {
+			?>
+			<aside class="bp-feedback bp-messages info">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p><?php esc_html_e( 'Sorry, no photos were found', 'buddyboss' ); ?></p>
+			</aside>
+			<?php
+		}
+
+		$media_html_content = ob_get_contents();
+		ob_end_clean();
 		remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
 	}
-	if ( bp_is_group_media() ) {
 
-	    // Update the count of photos in groups in navigation menu.
-	    wp_cache_flush();
+	$group_media_html_content = '';
+	if ( bp_is_group_media() ) {
+		// Update the count of photos in groups in navigation menu.
+		wp_cache_flush();
 
 		$media_group_count = bp_media_get_total_group_media_count();
+
+		add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_groups_scope', 20 );
+		$group_args = bp_ajax_querystring( 'media' );
+		$group_args = bp_parse_args( $group_args );
+		unset( $group_args['per_page'] );
+
+		ob_start();
+		if ( bp_has_media( $group_args ) ) {
+			while ( bp_media() ) {
+				bp_the_media();
+
+				bp_get_template_part( 'media/entry' );
+			}
+
+			if ( bp_media_has_more_items() ) {
+				?>
+				<li class="load-more">
+					<a class="button outline full" href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+				</li>
+				<?php
+			}
+		} else {
+			?>
+			<aside class="bp-feedback bp-messages info">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p><?php esc_html_e( 'Sorry, no photos were found', 'buddyboss' ); ?></p>
+			</aside>
+			<?php
+		}
+
+		$group_media_html_content = ob_get_contents();
+		ob_end_clean();
+		remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_groups_scope', 20 );
 	}
 
 	if ( bp_is_group_albums() ) {
@@ -450,13 +516,15 @@ function bp_nouveau_ajax_media_delete() {
 
 	wp_send_json_success(
 		array(
-			'media'                => $media,
-			'media_ids'            => ( isset( $response['media_activity_ids'] ) ) ? $response['media_activity_ids'] : '',
-			'media_content'        => ( isset( $response['content'] ) ) ? $response['content'] : '',
-			'delete_activity'      => $delete_box,
-			'activity_content'     => $activity_content,
-			'media_personal_count' => $media_personal_count,
-			'media_group_count'    => $media_group_count,
+			'media'                    => $media,
+			'media_ids'                => ( isset( $response['media_activity_ids'] ) ) ? $response['media_activity_ids'] : '',
+			'media_content'            => ( isset( $response['content'] ) ) ? $response['content'] : '',
+			'delete_activity'          => $delete_box,
+			'activity_content'         => $activity_content,
+			'media_personal_count'     => $media_personal_count,
+			'media_group_count'        => $media_group_count,
+			'media_html_content'       => $media_html_content,
+			'group_media_html_content' => $group_media_html_content,
 		)
 	);
 

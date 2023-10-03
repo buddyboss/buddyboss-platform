@@ -1286,18 +1286,27 @@ window.bp = window.bp || {};
 									if ( response.data.media_group_count ) {
 										$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#photos-groups-li a span.count' ).text( response.data.media_group_count );
 									}
-									$.each( media, function ( index, value ) {
-										if ( $( '#media-stream ul.media-list li[data-id="' + value + '"]' ).length ) {
-											$( '#media-stream ul.media-list li[data-id="' + value + '"]' ).remove();
+
+									if ( 0 !== response.data.media_html_content.length ) {
+										if ( 0 === parseInt( response.data.media_personal_count ) ) {
+											$( '.bb-photos-actions' ).hide();
+											$( '#media-stream' ).html( response.data.media_html_content );
+										} else {
+											buddyPressSelector.find( '.media-list:not(.existing-media-list)' ).html( response.data.media_html_content );
 										}
-									} );
-									if ( $( '#buddypress' ).find( '.media-list:not(.existing-media-list)' ).find( 'li:not(.load-more)' ).length == 0 ) {
-										$( '.bb-photos-actions' ).hide();
-										feedback = '<aside class="bp-feedback bp-messages info">\n' +
-											'\t<span class="bp-icon" aria-hidden="true"></span>\n' +
-											'\t<p>' + BP_Nouveau.media.i18n_strings.no_photos_found + '</p>\n' +
-											'\t</aside>';
-										$( '#buddypress [data-bp-list="media"]' ).html( feedback );
+									} else if ( 0 !== response.data.group_media_html_content.length ) {
+										if ( 0 === parseInt( response.data.media_group_count ) ) {
+											$( '.bb-photos-actions' ).hide();
+											$( '#media-stream' ).html( response.data.group_media_html_content );
+										} else {
+											buddyPressSelector.find( '.media-list:not(.existing-media-list)' ).html( response.data.group_media_html_content );
+										}
+									} else {
+										$.each( media, function ( index, value ) {
+											if ( $( '#media-stream ul.media-list li[data-id="' + value + '"]' ).length ) {
+												$( '#media-stream ul.media-list li[data-id="' + value + '"]' ).remove();
+											}
+										} );
 									}
 								}
 							}
@@ -1335,17 +1344,37 @@ window.bp = window.bp || {};
 										}
 									);
 								}
-								if ( $( '#buddypress' ).find( '.media-list:not(.existing-media-list)' ).find( 'li:not(.load-more)' ).length == 0 ) {
-									$( '.bb-photos-actions' ).hide();
-									feedback = '<aside class="bp-feedback bp-messages info">\n' +
-										'\t<span class="bp-icon" aria-hidden="true"></span>\n' +
-										'\t<p>' + BP_Nouveau.media.i18n_strings.no_photos_found + '</p>\n' +
-										'\t</aside>';
-									$( '#buddypress [data-bp-list="media"]' ).html( feedback );
+
+								// inject media.
+								if ( 0 !== response.data.media_html_content.length ) {
+									if ( 0 === parseInt( response.data.media_personal_count ) ) {
+										$( '.bb-photos-actions' ).hide();
+										$( '#media-stream' ).html( response.data.media_html_content );
+									} else {
+										$media_list.html( response.data.media_html_content );
+									}
+								} else if ( 0 !== response.data.group_media_html_content.length ) {
+									if ( 0 === parseInt( response.data.media_group_count ) ) {
+										$( '.bb-photos-actions' ).hide();
+										$( '#media-stream' ).html( response.data.group_media_html_content );
+									} else {
+										$media_list.html( response.data.group_media_html_content );
+									}
+								} else {
+									$.each( media, function ( index, value ) {
+										if ( $( '#media-stream ul.media-list li[data-id="' + value + '"]' ).length ) {
+											$( '#media-stream ul.media-list li[data-id="' + value + '"]' ).remove();
+										}
+									} );
 								}
 							} else {
 								$( '#buddypress #media-stream.media' ).prepend( response.data.feedback );
 							}
+						}
+
+						var selectAllMedia = $( '.bp-nouveau #bb-select-deselect-all-media' );
+						if ( selectAllMedia.hasClass( 'selected' ) ) {
+							selectAllMedia.removeClass( 'selected' );
 						}
 
 						// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
