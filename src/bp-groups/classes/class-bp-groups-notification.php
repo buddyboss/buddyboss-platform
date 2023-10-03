@@ -1196,7 +1196,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					'notification_type' => $email_notification_type,
 				);
 
-				$email_tokens['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+				$email_tokens['tokens']['unsubscribe']      = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+				$email_tokens['tokens']['receiver-user.id'] = $user_id;
 
 				// Send notification email.
 				bp_send_email( $email_notification_type, (int) $user_id, $email_tokens );

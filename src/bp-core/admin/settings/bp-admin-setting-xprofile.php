@@ -152,7 +152,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			 *
 			 * To avoid that, we'll need to do a force redirect.
 			 */
-			wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bp-settings&tab=bp-xprofile' ) );
+			wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bp-settings&tab=bp-xprofile&updated=true' ) );
 			exit();
 		}
 

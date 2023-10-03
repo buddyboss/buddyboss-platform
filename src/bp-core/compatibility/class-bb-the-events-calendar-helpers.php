@@ -110,7 +110,6 @@ class BB_The_Event_Calendar_Helpers {
 					return $query_vars;
 				}
 
-				$query_vars['eventDisplay']     = 'default';
 				$query_vars['tribe_redirected'] = true;
 			}
 		}
