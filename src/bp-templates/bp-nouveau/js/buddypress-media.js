@@ -1235,7 +1235,6 @@ window.bp = window.bp || {};
 					data: data,
 					success: function ( response ) {
 						self.current_page = 1;
-						var feedback = '';
 						if ( fromWhere && fromWhere.length && 'activity' === fromWhere ) {
 							if ( response.success ) {
 								$.each( media, function ( index, value ) {

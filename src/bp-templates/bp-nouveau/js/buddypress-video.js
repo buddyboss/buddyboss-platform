@@ -1493,7 +1493,6 @@ window.bp = window.bp || {};
 					url: BP_Nouveau.ajaxurl,
 					data: data,
 					success: function ( response ) {
-						var feedback = '';
 						if ( fromWhere && fromWhere.length && 'activity' === fromWhere ) {
 							if ( response.success ) {
 								$.each(
@@ -2817,7 +2816,7 @@ window.bp = window.bp || {};
 						location.reload();
 					}
 				}
-				
+
 				$( document ).find( '[data-bp-list="activity"] .bb-open-video-theatre[data-id="' + self.current_video.id + '"]' ).closest( '.bb-activity-video-elem' ).remove();
 
 				for ( i = 0; i < self.videos.length; i++ ) {
