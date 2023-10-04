@@ -6444,23 +6444,29 @@ function bb_activity_pin_type( $args ) {
 			'object'   => '',
 			'user_id'  => '',
 			'action'   => '',
+			'filter'   => array(),
 		)
 	);
 
 	$scope = is_array( $r['scope'] ) ? $r['scope'] : explode( ',', $r['scope'] );
 
+	// Check web and API if main activity feed or the group feed.
 	if (
 		empty( $r['action'] ) &&
 		! empty( $scope ) &&
 		in_array( 'public', $scope, true ) &&
 		empty( $r['user_id'] ) &&
-		empty( $r['object'] )
+		empty( $r['object'] ) &&
+		empty( $r['filter']['object'] )
 	) {
 		$r['pin_type'] = 'activity';
 	} elseif (
 		bp_is_active( 'groups' ) &&
 		! empty( $scope ) &&
-		in_array( 'activity', $scope, true ) &&
+		(
+			in_array( 'activity', $scope, true ) ||
+			in_array( 'public', $scope, true )
+		) &&
 		empty( $r['user_id'] ) &&
 		empty( $r['action'] ) &&
 		(
