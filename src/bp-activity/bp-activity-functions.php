@@ -6463,8 +6463,18 @@ function bb_activity_pin_type( $args ) {
 		in_array( 'activity', $scope, true ) &&
 		empty( $r['user_id'] ) &&
 		empty( $r['action'] ) &&
-		! empty( $r['object'] ) &&
-		'groups' === $r['object']
+		(
+			(
+				! empty( $r['object'] ) &&
+				'groups' === $r['object']
+
+			) ||
+			(
+				! empty( $r['filter']['object'] ) &&
+				'groups' === $r['filter']['object']
+
+			)
+		)
 	) {
 		$r['pin_type'] = 'group';
 	}
