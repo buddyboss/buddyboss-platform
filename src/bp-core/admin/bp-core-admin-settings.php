@@ -3286,7 +3286,7 @@ function bb_get_buddyboss_registration_notice() {
 /**
  * Enable activity comment edit.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.40
  */
 function bb_admin_setting_callback_enable_activity_comment_edit() {
 	$edit_times = bp_activity_edit_times();

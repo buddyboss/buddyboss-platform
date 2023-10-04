@@ -413,7 +413,7 @@ function bb_validate_restricted_email_on_profile_update( $user_id ) {
 /**
  * Function to display notice when settings data saved.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.40
  */
 function bb_core_settings_saved_notice() {
 	if (
