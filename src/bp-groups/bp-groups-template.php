@@ -4348,6 +4348,15 @@ function bp_get_group_join_button( $group = false ) {
 			),
 		);
 
+		// If group has child group and invite restriction is enabled.
+		if (
+			true === bp_enable_group_hierarchies() &&
+			true === bp_enable_group_restrict_invites() &&
+			! empty( bp_get_descendent_groups( $group->id ) )
+		) {
+			$button['button_attr']['data-bb-is-parent'] = '1';
+		}
+
 		if ( $is_only_admin ) {
 			$button['button_attr']['data-only-admin'] = '1';
 		}

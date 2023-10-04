@@ -632,6 +632,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'anchorPlaceholderText' => __( 'Paste or type a link', 'buddyboss' ),
 			'empty_field'        => __( 'New Field', 'buddyboss' ),
 			'close'              => __( 'Close', 'buddyboss' ),
+			'parent_group_leave_confirm' => esc_html__( 'By leaving this main group you will automatically be removed and unsubscribed to any subgroups relating to this group.', 'buddyboss' ),
+			'group_leave_confirm'        => sprintf( '<p>%s<span class="bb-group-name"></span>?</p>', esc_html__( 'Are you sure you want to leave ', 'buddyboss' ) )
 		);
 
 		// If the Object/Item nav are in the sidebar
