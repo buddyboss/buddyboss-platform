@@ -5451,14 +5451,40 @@ function bb_set_user_profile_slug( int $user_id, bool $force = false ) {
  * @param array $user_ids User IDs.
  */
 function bb_set_bulk_user_profile_slug( $user_ids ) {
+	global $wpdb;
 
 	if ( empty( $user_ids ) ) {
 		return;
 	}
 
-	foreach ( $user_ids as $user_id ) {
-		bb_set_user_profile_slug( (int) $user_id );
+	$new_unique_identifier = bb_generate_user_random_profile_slugs( count( $user_ids ) );
+
+	$implode_user_ids = implode( ',', $user_ids );
+	$wpdb->query(
+		$wpdb->prepare(
+			"UPDATE {$wpdb->usermeta} SET meta_key = REPLACE(meta_key, %s, %s) WHERE meta_key LIKE 'bb_profile_slug_%' and user_id IN ({$implode_user_ids})",
+			'bb_profile_slug_',
+			'bb_profile_long_slug_'
+		)
+	);
+
+	// Insert 'bb_profile_slug' metakey.
+	$bps_sql = "INSERT INTO {$wpdb->usermeta} (user_id, meta_key, meta_value) VALUES ";
+	// Insert 'bb_profile_slug_{UUID}' metakey.
+	$bpsd_sql = "INSERT INTO {$wpdb->usermeta} (user_id, meta_key, meta_value) VALUES ";
+
+	foreach ( $user_ids as $key => $user_id ) {
+		$uuid = $new_unique_identifier[ $key ];
+
+		$bps_sql  .= "({$user_id}, 'bb_profile_slug', '{$uuid}'), ";
+		$bpsd_sql .= "({$user_id}, 'bb_profile_slug_{$uuid}', $user_id), ";
 	}
+
+	$bps_sql  = rtrim( $bps_sql, ', ' ); // Remove the trailing comma and space.
+	$bpsd_sql = rtrim( $bpsd_sql, ', ' ); // Remove the trailing comma and space.
+
+	$wpdb->query( $bps_sql );
+	$wpdb->query( $bpsd_sql );
 
 	// Flush WP cache.
 	wp_cache_flush();
