@@ -703,7 +703,7 @@ function bp_dd_import_users() {
 					$result = add_existing_user_to_blog(
 						array(
 							'user_id' => $userdata->ID,
-							'role'    => ! empty( $userdata->roles ) ? current( $userdata->roles ) : 'subscriber',
+							'role'    => get_option( 'default_role' ),
 						)
 					);
 
