@@ -27,11 +27,22 @@ if ( ! empty( $link_embed ) ) {
 	$link_url = $link_embed;
 }
 
+$bb_is_pinned = false;
+if ( false !== strpos( bp_get_activity_css_class(), 'bb-pinned' ) ) {
+    $bb_is_pinned = true;
+}
+
 ?>
 
 <li class="<?php bp_activity_css_class(); ?>" id="activity-<?php bp_activity_id(); ?>" data-bp-activity-id="<?php bp_activity_id(); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php bp_nouveau_edit_activity_data(); ?>" data-link-preview='<?php echo $link_preview_string; ?>' data-link-url='<?php echo $link_url; ?>'>
 
 	<?php bb_nouveau_activity_entry_bubble_buttons(); ?>
+
+	<div class="bb-pin-action">
+		<span class="bb-pin-action_button" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Pinned Post', 'buddyboss' ); ?>">
+			<i class="bb-icon-f bb-icon-thumbtack"></i>
+		</span>
+	</div>
 
 	<div class="activity-avatar item-avatar">
 

@@ -174,6 +174,8 @@ add_filter( 'comment_max_links_url', 'bb_moderation_remove_mention_count', 10, 3
 // Filter check the single embed URL wrap with "P" tag or not.
 add_filter( 'bp_activity_content_before_save', 'bb_activity_content_has_paragraph_tag' );
 
+add_action( 'bp_after_directory_activity_list', 'bb_activity_pinpost_confirmation_modal_template' );
+
 /** Functions *****************************************************************/
 
 /**
@@ -3604,4 +3606,13 @@ function bb_moderation_remove_mention_count( $num_links, $url, $comment ) {
 	}
 
 	return ( $num_links - count( $mention_links ) );
+}
+
+/**
+ * Add Pin Post confirmation to the activity loop.
+ *
+ * @since [BBVERSION]
+ */
+function bb_activity_pinpost_confirmation_modal_template() {
+	bp_get_template_part( 'activity/confirmation-modal' );
 }

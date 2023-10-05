@@ -565,6 +565,16 @@
 							content: "\ef48";
 						}
 
+						&.pin-activity:before {
+							content: "\e9e9";
+							font-size: 19px;
+						}
+
+						&.unpin-activity:before {
+							content: "\ea13";
+							font-size: 19px;
+						}
+
 						&.ac-video-thumbnail-edit:before {
 							content: "\eeb4";
 						}
@@ -596,6 +606,39 @@
 
 		}
 
+	}
+
+	.bb-pin-action {
+		position: absolute;
+		right: 20px;
+		font-size: 22px;
+		top: 10px;
+		display: none;
+
+		.bb-pin-action_button {
+			cursor: default;
+		}
+
+		[class*="bb-icon"] {
+			font-size: 22px;
+			color: #939597;
+		}
+	}
+
+	.bb-pinned {
+
+		.bp-activity-head {
+			margin-right: 55px;
+		}
+
+		.bb-pin-action {
+			display: block;
+		}
+
+	}
+
+	.bb-activity-more-options-wrap + .bb-pin-action {
+		right: 45px;
 	}
 
 	.comment-item {
