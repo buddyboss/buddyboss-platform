@@ -467,6 +467,10 @@ function bp_version_updater() {
 			bb_update_to_2_4_10();
 		}
 
+		if ( $raw_db_version < 20651 ) {
+			bb_update_to_2_4_50();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -2825,32 +2829,39 @@ function bb_update_to_2_3_41() {
  * @since BuddyBoss 2.3.41
  */
 function bb_core_update_repair_member_slug() {
-	global $wpdb, $bp_background_updater;
+	global $wpdb, $bp_background_updater, $is_member_slug_background;
 
-	$user_ids = $wpdb->get_col(
+	$user_limit = apply_filters( 'bb_core_update_repair_member_slug_limit', 50 );
+	$user_ids   = $wpdb->get_col(
 		$wpdb->prepare(
-			"SELECT u.ID FROM `{$wpdb->users}` AS u LEFT JOIN `{$wpdb->usermeta}` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) WHERE ( um.user_id IS NULL OR LENGTH(meta_value) = %d ) ORDER BY u.ID",
+			"SELECT u.ID FROM `{$wpdb->users}` AS u LEFT JOIN `{$wpdb->usermeta}` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) WHERE ( um.user_id IS NULL OR LENGTH(meta_value) = %d ) ORDER BY u.ID LIMIT %d, %d",
 			'bb_profile_slug',
-			40
+			40,
+			0,
+			$user_limit
 		)
 	);
 
 	if ( empty( $user_ids ) ) {
+		// Delete existing migration from options table.
+		$wpdb->query( "DELETE FROM {$wpdb->options} WHERE `option_name` LIKE 'wp_1_bp_updater_batch_%' AND `option_value` LIKE '%bb_set_bulk_user_profile_slug%'" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
 		return;
 	}
 
-	foreach ( array_chunk( $user_ids, 50 ) as $chunk ) {
-		$bp_background_updater->data(
-			array(
-				array(
-					'callback' => 'bb_set_bulk_user_profile_slug',
-					'args'     => array( $chunk ),
-				),
-			)
-		);
+	$is_member_slug_background = true;
+	bb_set_bulk_user_profile_slug( $user_ids );
 
-		$bp_background_updater->save()->schedule_event();
-	}
+	// Register a new background job.
+	$bp_background_updater->data(
+		array(
+			array(
+				'callback' => 'bb_core_update_repair_member_slug',
+				'args'     => array(),
+			),
+		)
+	);
+	$bp_background_updater->save()->schedule_event();
 }
 
 /**
@@ -3225,4 +3236,62 @@ function bb_update_to_2_4_10() {
 			}
 		}
 	}
+}
+
+function bb_update_to_2_4_50() {
+	global $wpdb, $bp_background_updater;
+
+	// Delete existing migration from options table.
+	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE `option_name` LIKE 'wp_1_bp_updater_batch_%' AND `option_value` LIKE '%bb_set_bulk_user_profile_slug%'" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+	// Register a new background process.
+	$bp_background_updater->data(
+		array(
+			array(
+				'callback' => 'bb_core_update_repair_member_slug',
+				'args'     => array(),
+			),
+		)
+	);
+	$bp_background_updater->save()->schedule_event();
+
+	$bp_background_updater->data(
+		array(
+			array(
+				'callback' => 'bb_core_update_repair_member_slug',
+				'args'     => array(),
+			),
+		)
+	);
+	$bp_background_updater->save()->schedule_event();
+
+	$bp_background_updater->data(
+		array(
+			array(
+				'callback' => 'bb_core_update_repair_member_slug',
+				'args'     => array(),
+			),
+		)
+	);
+	$bp_background_updater->save()->schedule_event();
+
+	$bp_background_updater->data(
+		array(
+			array(
+				'callback' => 'bb_core_update_repair_member_slug',
+				'args'     => array(),
+			),
+		)
+	);
+	$bp_background_updater->save()->schedule_event();
+
+	$bp_background_updater->data(
+		array(
+			array(
+				'callback' => 'bb_core_update_repair_member_slug',
+				'args'     => array(),
+			),
+		)
+	);
+	$bp_background_updater->save()->schedule_event();
 }

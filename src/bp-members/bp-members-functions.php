@@ -5451,13 +5451,14 @@ function bb_set_user_profile_slug( int $user_id, bool $force = false ) {
  * @param array $user_ids User IDs.
  */
 function bb_set_bulk_user_profile_slug( $user_ids ) {
-	global $wpdb;
+	global $wpdb, $is_member_slug_background;
 
 	if ( empty( $user_ids ) ) {
 		return;
 	}
 
-	$new_unique_identifier = bb_generate_user_random_profile_slugs( count( $user_ids ) );
+	$prefix                = ! empty( $is_member_slug_background ) ? 'b' : 'm';
+	$new_unique_identifier = bb_generate_user_random_profile_slugs( count( $user_ids ), $prefix );
 
 	$implode_user_ids = implode( ',', $user_ids );
 	$wpdb->query(
@@ -5485,6 +5486,9 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
 
 	$wpdb->query( $bps_sql );
 	$wpdb->query( $bpsd_sql );
+
+	// Rest the global variable.
+	$is_member_slug_background = false;
 
 	// Flush WP cache.
 	wp_cache_flush();
