@@ -36,6 +36,22 @@ form.ac-form {
 				border-radius: 3px;
 				border: 1px solid #ccc;
 
+				&.medium-editor-element {
+					min-height: auto;
+
+					p {
+						margin-bottom: 0.5em;
+
+						&:last-child {
+							margin-bottom: 0;
+						}
+
+						&:empty {
+							min-height: 1em;
+						}
+					}
+				}
+
 				&:focus {
 
 					@include box-shadow( 0 0 6px $med-light-grey );
@@ -75,6 +91,352 @@ form.ac-form {
 			}
 		}
 
+	}
+}
+
+// Edit Comment Form
+form.acomment-edit {
+
+	.bp-ac-form-cotainer {
+		align-items: flex-start;
+	}
+
+	.ac-reply-avatar img {
+		max-width: 34px;
+	}
+
+	.ac-reply-content {
+		border: 1px solid $bp-border-color;
+		border-radius: 4px;
+		padding: 7px;
+		margin-left: 10px;
+
+		&:focus-within {
+			border-color: $highlight;
+		}
+
+		.ac-textarea {
+			margin: 0 0 10px;
+			position: relative;
+
+			.ac-input[contenteditable="true"] {
+				border: 0;
+				padding: 0;
+				min-height: 21px;
+
+				p {
+					margin-bottom: 0;
+				}
+
+				&:focus {
+					box-shadow: none;
+				}
+			}
+
+			.ac-reply-toolbar {
+				position: absolute;
+				bottom: -45px;
+				left: 10px;
+			}
+		}
+
+		.ac-reply-cancel,
+		input[name="ac_form_submit"] {
+			float: right;
+		}
+
+		input[name="ac_form_submit"] {
+			margin-left: 5px;
+		}
+
+		.ac-reply-cancel {
+
+			#buddypress & {
+				padding: 5px 10px;
+			}
+		}
+
+		.bb-media-model-container & {
+
+			.ac-reply-cancel,
+			input[name="ac_form_submit"] {
+				float: left;
+			}
+
+			.ac-reply-cancel {
+
+				#buddypress & {
+					margin-left: 10px;
+				}
+			}
+
+			.ac-textarea .ac-reply-toolbar {
+				position: static;
+			}
+		}
+
+		@media screen and (max-width: 1080px) and (min-width: 768px), screen and (max-width: 490px) {
+
+			.ac-reply-cancel,
+			input[name="ac_form_submit"] {
+				float: left;
+			}
+
+			.ac-reply-cancel {
+
+				#buddypress & {
+					margin-left: 10px;
+				}
+			}
+
+			.ac-textarea .ac-reply-toolbar {
+				position: static;
+			}
+		}
+	}
+
+	// Edit comment form Dropzone UI
+
+	.ac-reply-content .ac-textarea div.dropzone.open {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+
+	div.dropzone {
+
+		.dz-default.dz-message {
+			display: none;
+			margin: 15px 6px 0 6px;
+			order: 99;
+		}
+
+		.dz-default.dz-message {
+			min-height: initial !important;
+			width: 60px;
+			height: 60px;
+			max-width: 60px !important;
+			position: relative;
+			background-color: $light-grey;
+
+			&:after {
+				content: "\e9ed";
+				font-family: bb-icons;
+				background-color: transparent;
+				font-size: 30px;
+				font-weight: 400;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				line-height: 1;
+				opacity: 0.4;
+				height: 100%;
+				width: 100%;
+				margin: 0;
+			}
+
+			&:hover:after {
+				opacity: 1;
+			}
+
+			.dz-button {
+				opacity: 0;
+				position: absolute;
+				inset: 0;
+				overflow: hidden;
+			}
+		}
+
+		.dz-preview {
+			min-width: 60px;
+			margin: 15px 6px 0 6px;
+
+			.dz-image {
+				height: 60px;
+
+				img {
+					max-width: 60px;
+					height: auto;
+					object-fit: cover;
+				}
+			}
+		}
+
+		&.video-dropzone {
+
+			div.dz-preview.dz-file-preview {
+				min-width: 80px;
+				width: 80px;
+
+				.dz-details {
+					min-height: 60px;
+					height: 60px;
+					width: 80px;
+				}
+
+				.dz-remove {
+					background-color: #e7e7ea;
+					margin-left: 0;
+					left: inherit;
+					height: 20px;
+					width: 20px;
+					top: -8px;
+					right: -8px;
+
+					&:after {
+						color: #9ea8b3;
+						font-size: 20px;
+						line-height: 1;
+					}
+				}
+
+			}
+
+			.dz-default.dz-message:after {
+				content: "\e9f1";
+				font-size: 32px;
+			}
+
+			&.dz-started .dz-default.dz-message {
+				max-width: 80px !important;
+				width: 80px;
+				min-height: 60px !important;
+				height: 60px;
+			}
+
+			.dz-progress-count {
+				display: none;
+			}
+
+		}
+
+		&.document-dropzone {
+
+			.dz-preview {
+
+				&.dz-complete .dz-details {
+					padding: 5px;
+
+					.dz-filename {
+						margin-top: 1px;
+						font-size: 10px;
+						line-height: 1;
+					}
+
+					.dz-size {
+						font-size: 8px;
+						line-height: 1.5;
+					}
+
+					.dz-icon {
+						height: 24px;
+						margin-top: 0;
+
+						> [class*="bb-icon"],
+						&:before {
+							font-size: 24px;
+						}
+					}
+				}
+
+				.dz-details .dz-filename {
+					font-size: 10px;
+					line-height: 1.6;
+					bottom: 4px;
+				}
+
+				.dz-remove {
+					background-color: #e7e7ea;
+					top: -8px;
+					right: -8px;
+				}
+
+				.dz-progress-ring-wrap {
+					margin-top: -7px;
+				}
+			}
+
+			.dz-default.dz-message:after {
+				content: "\eef9";
+			}
+		}
+
+		.dz-preview.dz-file-preview .dz-details {
+			background-color: $light-grey;
+			min-height: 60px;
+			width: 60px;
+		}
+
+		&.dz-started.files-uploaded:not(.dz-max-files-reached) .dz-default.dz-message {
+			display: flex;
+		}
+
+		.dz-remove {
+			height: 20px;
+			width: 20px;
+			top: -8px;
+			right: -8px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			box-shadow: 0 1px 1.5px rgba(0, 0, 0, 0.08) !important;
+		}
+
+		.dz-preview .dz-progress-ring-wrap {
+			height: 30px;
+			width: 30px;
+
+			[class*=" bb-icon-"] {
+				font-size: 20px;
+			}
+
+			.dz-progress-ring {
+				scale: 0.6;
+				margin: -10px;
+			}
+		}
+	}
+
+	.activity-attached-gif-container {
+		background: none !important;
+		height: auto !important;
+		width: auto !important;
+		display: table;
+		min-height: auto !important;
+
+		.gif-image-container {
+			margin: 15px 0 0;
+
+			img {
+				border-radius: 4px;
+				height: 60px;
+				width: 60px;
+				object-fit: cover;
+			}
+		}
+
+		.gif-image-remove {
+			right: -8px;
+			top: 7px;
+
+			.bb-icon-times {
+				opacity: 0.4;
+			}
+
+			&:hover {
+
+				.bb-icon-times {
+					opacity: 1;
+				}
+			}
+		}
+	}
+
+	.ac-reply-content input[type="submit"].loading {
+
+		#buddypress & {
+			opacity: 0.4;
+			pointer-events: none;
+		}
 	}
 }
 

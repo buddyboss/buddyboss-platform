@@ -7,20 +7,37 @@ if ( empty( get_query_var( 'bb-video-thumb-preview' ) ) && empty( get_query_var(
 
 $encode_id    = base64_decode( get_query_var( 'bb-video-thumb-preview' ) );
 $encode_id1   = base64_decode( get_query_var( 'id1' ) );
+$receiver     = base64_decode( get_query_var( 'receiver' ) );
 $size         = ( ! empty( get_query_var( 'size' ) ) ? get_query_var( 'size' ) : '' );
 $explode_arr  = explode( 'forbidden_', $encode_id );
 $explode_arr1 = explode( 'forbidden_', $encode_id1 );
+$receiver_arr = explode( 'receiver_', $receiver );
 $upload_dir   = wp_upload_dir();
 $upload_dir   = $upload_dir['basedir'];
 
-if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] ) && (int) $explode_arr[1] > 0 &&
-     isset( $explode_arr1 ) && ! empty( $explode_arr1 ) && isset( $explode_arr1[1] ) && (int) $explode_arr1[1] > 0 ) {
+if (
+	! empty( $explode_arr ) && isset( $explode_arr[1] ) && (int) $explode_arr[1] > 0 &&
+	! empty( $explode_arr1 ) && isset( $explode_arr1[1] ) && (int) $explode_arr1[1] > 0
+) {
+
+	// Set the receiver ID as the current user ID if it exists.
+	if ( ! empty( $receiver_arr ) && isset( $receiver_arr[1] ) && 0 < $receiver_arr[1] ) {
+		$receiver_id = $receiver_arr[1];
+		add_filter(
+			'bp_loggedin_user_id',
+			function( $user_id ) use ( $receiver_id ) {
+				wp_set_current_user( $receiver_id );
+				return $receiver_id;
+			}
+		);
+	}
+
 	$attachment_id    = (int) $explode_arr[1];
 	$id1              = (int) $explode_arr1[1];
 	$document_privacy = ( function_exists( 'bb_media_user_can_access' ) ) ? bb_media_user_can_access( $id1, 'video' ) : true;
 	$can_view         = isset( $document_privacy['can_view'] ) && true === (bool) $document_privacy['can_view'];
-	if ( $can_view ) {
 
+	if ( $can_view ) {
 		if ( '' !== $size ) {
 			$file               = image_get_intermediate_size( $attachment_id, $size );
 			$attached_file_info = pathinfo( get_attached_file( $attachment_id ) );

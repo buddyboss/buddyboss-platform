@@ -559,14 +559,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$prime       = $request['primary_item_id'];
 		$activity_id = 0;
 
-		remove_action( 'bp_activity_after_save', 'bp_activity_at_name_send_emails' );
-
 		// Post a regular activity update.
 		if ( 'activity_update' === $type ) {
 			if ( bp_is_active( 'groups' ) && ! is_null( $prime ) ) {
-				remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
+				remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
 				$activity_id = groups_post_update( $prepared_activity );
-				add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
+				add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
 			} else {
 				remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 				$activity_id = bp_activity_post_update( $prepared_activity );
@@ -595,8 +593,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$activity_id = bp_activity_add( $prepared_activity );
 		}
 
-		add_action( 'bp_activity_after_save', 'bp_activity_at_name_send_emails' );
-
 		if ( ! is_numeric( $activity_id ) ) {
 			return new WP_Error(
 				'bp_rest_user_cannot_create_activity',
@@ -621,7 +617,13 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			return $fields_update;
 		}
 
+		if ( empty( $prepared_activity->id ) ) {
+			remove_filter( 'bp_activity_at_name_do_notifications', '__return_false' );
+		}
 		bp_activity_at_name_send_emails( $activity );
+		if ( empty( $prepared_activity->id ) ) {
+			add_filter( 'bp_activity_at_name_do_notifications', '__return_false' );
+		}
 
 		if ( 'activity_update' === $type ) {
 			if ( bp_is_active( 'groups' ) && ! is_null( $prime ) ) {
@@ -1286,6 +1288,33 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		if ( 'activity_comment' === $activity->type ) {
+			$can_edit = (
+				function_exists( 'bb_is_activity_comment_edit_enabled' )
+				&& bb_is_activity_comment_edit_enabled()
+				&& function_exists( 'bb_activity_comment_user_can_edit' )
+				&& bb_activity_comment_user_can_edit( $activity )
+			) && (
+				isset( $activity->privacy ) &&
+				! in_array( $activity->privacy, array( 'document', 'media', 'video' ), true )
+			);
+
+			$edited_date = bp_activity_get_meta( $activity->id, '_is_edited', true );
+			$edited_date = ! empty( $edited_date ) ? $edited_date : $activity->date_recorded;
+			$date_recorded = bp_rest_prepare_date_response( $edited_date );
+		} else {
+			$can_edit = (
+				function_exists( 'bp_is_activity_edit_enabled' )
+				&& bp_is_activity_edit_enabled()
+				&& function_exists( 'bp_activity_user_can_edit' )
+				&& bp_activity_user_can_edit( $activity )
+			) && (
+				isset( $activity->privacy ) &&
+				! in_array( $activity->privacy, array( 'document', 'media', 'video' ), true )
+			);
+			$date_recorded = bp_rest_prepare_date_response( $activity->date_recorded );
+		}
+
 		$data = array(
 			'user_id'           => $activity->user_id,
 			'name'              => bp_core_get_user_displayname( $activity->user_id ),
@@ -1294,7 +1323,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				'raw'      => bb_rest_raw_content( $activity->content ),
 				'rendered' => $this->render_item( $activity ),
 			),
-			'date'              => bp_rest_prepare_date_response( $activity->date_recorded ),
+			'date'              => $date_recorded,
 			'id'                => $activity->id,
 			'link'              => bp_activity_get_permalink( $activity->id ),
 			'primary_item_id'   => $activity->item_id,
@@ -1308,19 +1337,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'can_favorite'      => bp_activity_can_favorite(),
 			'favorite_count'    => $this->get_activity_favorite_count( $activity->id ),
 			'can_comment'       => ( 'activity_comment' === $activity->type ) ? bp_activity_can_comment_reply( $activity ) : bp_activity_can_comment(),
-			'can_edit'          => (
-				(
-					function_exists( 'bp_is_activity_edit_enabled' )
-					&& bp_is_activity_edit_enabled()
-					&& function_exists( 'bp_activity_user_can_edit' )
-					&& bp_activity_user_can_edit( $activity )
-				) && (
-					isset( $activity->privacy ) &&
-					! in_array( $activity->privacy, array( 'document', 'media', 'video' ), true )
-				)
-				? true
-				: false
-			),
+			'can_edit'          => $can_edit,
 			'is_edited'         => ! empty( bp_activity_get_meta( $activity->id, '_is_edited', true ) ),
 			'can_delete'        => bp_activity_user_can_delete( $activity ),
 			'content_stripped'  => html_entity_decode( wp_strip_all_tags( $activity->content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ),
@@ -1367,7 +1384,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 						// Use a regular expression to find the src URL.
 						preg_match( '/src="([^"]+)"/', $match[0], $matches );
 						if ( ! empty( $matches[1] ) ) {
-	
+
 							// Set link_embed_url with the iframe src URL as a fallback.
 							$data['link_embed_url'] = $matches[1];
 						}

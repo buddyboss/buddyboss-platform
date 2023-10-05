@@ -2375,3 +2375,37 @@ function bb_email_restrictions_setting( $default = array() ) {
 	 */
 	return apply_filters( 'bb_email_restrictions_setting', bp_get_option( 'bb-email-restrictions', $default ) );
 }
+
+/**
+ * Check whether Activity comment edit is enabled.
+ *
+ * @since BuddyBoss 2.4.40
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if Edit is enabled, otherwise false.
+ */
+function bb_is_activity_comment_edit_enabled( $default = false ) {
+
+	/**
+	 * Filters whether Activity comment edit is enabled.
+	 *
+	 * @since BuddyBoss 2.4.40
+	 *
+	 * @param bool $value Whether Activity comment edit is enabled.
+	 */
+	return (bool) apply_filters( 'bb_is_activity_comment_edit_enabled', (bool) bp_get_option( '_bb_enable_activity_comment_edit', $default ) );
+}
+
+/**
+ * Get BuddyBoss activity comment Time option.
+ *
+ * @since BuddyBoss 2.4.40
+ *
+ * @param bool $default when option not found, function will return $default value.
+ *
+ * @return mixed|void
+ */
+function bb_get_activity_comment_edit_time( $default = false ) {
+	return apply_filters( 'bb_get_activity_comment_edit_time', bp_get_option( '_bb_activity_comment_edit_time', $default ) );
+}
