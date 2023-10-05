@@ -1770,14 +1770,14 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		(
 			bp_is_group_activity() &&
 			(
+				bp_current_user_can( 'administrator' ) ||
 				(
 					bb_is_active_activity_pinned_posts() &&
 					(
 						bbp_group_is_mod() ||
 						bbp_group_is_admin()
 					) 
-				) ||
-				bp_current_user_can( 'administrator' )
+				)
 			)
 			
 		) ||
