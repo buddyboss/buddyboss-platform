@@ -1055,31 +1055,33 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 			$user_groups = $logged_in_user_groups['groups'];
 		}
 
-		$group_activity = array(
-			'relation' => 'AND',
-			array(
-				'column' => 'component',
-				'value'  => buddypress()->groups->id,
-			),
-			array(
-				'relation' => 'OR',
-				array(
-					'column'  => 'item_id',
-					'compare' => 'IN',
-					'value'   => (array) $public_groups,
-				),
-				array(
-					'column'  => 'item_id',
-					'compare' => 'IN',
-					'value'   => (array) $user_groups,
-				),
-			),
-		);
-
 		$show_hidden = array(
-			$show_hidden,
-			$group_activity,
-			'relation' => 'AND',
+			'relation' => 'OR',
+			array(
+				'column'  => 'component',
+				'value'   => buddypress()->groups->id,
+				'compare' => '!=',
+			),
+			array(
+				'relation' => 'AND',
+				array(
+					'column' => 'component',
+					'value'  => buddypress()->groups->id,
+				),
+				array(
+					'relation' => 'OR',
+					array(
+						'column'  => 'item_id',
+						'compare' => 'IN',
+						'value'   => (array) $public_groups,
+					),
+					array(
+						'column'  => 'item_id',
+						'compare' => 'IN',
+						'value'   => (array) $user_groups,
+					),
+				),
+			),
 		);
 	}
 
