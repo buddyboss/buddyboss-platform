@@ -492,6 +492,11 @@ function bp_version_updater() {
 			if ( function_exists( 'bb_activity_migration' ) ) {
 				bb_activity_migration();
 			}
+
+			// Run migration to delete group related orphan topics notification subscription.
+			if ( function_exists( 'bb_delete_orphan_topic_notification_subscriptions' ) ) {
+				bb_delete_orphan_topic_notification_subscriptions();
+			}
 		}
 	}
 
