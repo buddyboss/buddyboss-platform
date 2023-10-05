@@ -562,10 +562,10 @@ class BP_Activity_Activity {
 			}
 
 			if ( ! empty( $pinned_id ) ) {
-				$order_by = 'CASE
-								WHEN a.id = ' . $pinned_id . ' THEN 1
-								ELSE 0
-							END DESC, ' . $order_by;
+				$order_by = $wpdb->prepare( 'CASE
+												WHEN a.id = %d THEN 1
+												ELSE 0
+											END DESC, %s', (int) $pinned_id, $order_by );
 
 				if ( ! empty( $where_conditions['filter_sql'] ) ) {
 					$where_conditions['filter_sql'] = '(' . $where_conditions['filter_sql'] . ' OR ' . $wpdb->prepare( 'a.id = %d', $pinned_id ) . ')';

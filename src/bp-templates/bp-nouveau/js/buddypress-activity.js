@@ -1475,9 +1475,9 @@ window.bp = window.bp || {};
 
 				target.addClass( 'loading' );
 
-				var pin_action = 'pin_activity';
+				var pin_action = 'pin';
 				if ( target.hasClass( 'unpin-activity' ) ) {
-					pin_action = 'unpin_activity';
+					pin_action = 'unpin';
 				}
 
 				parent.ajax(
@@ -1501,7 +1501,7 @@ window.bp = window.bp || {};
 							var message_modal   = activity_stream.siblings( '#bb-confirmation-modal' );
 
 							// Change the pinned class and label.
-							if ( 'pin_activity' === pin_action ) {
+							if ( 'pin' === pin_action ) {
 
 								// Remove class from all old pinned and update action labels and icons.
 								activity_list.find( 'li.activity-item' ).removeClass( 'bb-pinned' );
@@ -1526,7 +1526,7 @@ window.bp = window.bp || {};
 								} else {
 									target.find('span').html( BP_Nouveau.activity.strings.unpinPost );
 								}
-							} else if ( 'unpin_activity' === pin_action ) {
+							} else if ( 'unpin' === pin_action ) {
 								target.closest( 'li.activity-item' ).removeClass( 'bb-pinned' );
 								target.addClass( 'pin-activity' );
 								target.removeClass( 'unpin-activity' );
