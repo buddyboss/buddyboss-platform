@@ -116,6 +116,14 @@ class BP_Activity_Template {
 	public $pinned_id;
 
 	/**
+	 *  Pinned activity scope.
+	 *
+	 * @since BuddyPress [BBVERSION]
+	 * @var string
+	 */
+	public $pinned_scope;
+
+	/**
 	 * Constructor method.
 	 *
 	 * The arguments passed to this class constructor are of the same

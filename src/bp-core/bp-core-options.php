@@ -2414,7 +2414,7 @@ function bb_get_activity_comment_edit_time( $default = false ) {
  *                      Default: false.
  * @return bool True    If activity pinned posts are enabled, otherwise false.
  */
-function bb_is_activity_pinned_posts_active( $default = false ) {
+function bb_is_active_activity_pinned_posts( $default = false ) {
 
 	/**
 	 * Filters whether or not activity pinned posts are enabled.
@@ -2423,5 +2423,5 @@ function bb_is_activity_pinned_posts_active( $default = false ) {
 	 *
 	 * @param bool $value Whether or not activity pinned posts are enabled.
 	 */
-	return (bool) apply_filters( 'bb_is_activity_pinned_posts_active', (bool) bp_get_option( '_bb_enable_activity_pinned_posts', $default ) );
+	return (bool) apply_filters( 'bb_is_active_activity_pinned_posts', (bool) bp_get_option( '_bb_enable_activity_pinned_posts', $default ) );
 }

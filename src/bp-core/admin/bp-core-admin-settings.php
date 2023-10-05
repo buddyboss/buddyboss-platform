@@ -3318,7 +3318,7 @@ function bb_admin_setting_callback_enable_activity_comment_edit() {
 function bb_admin_setting_callback_enable_activity_pinned_posts() {
 	?>
 
-	<input id="_bb_enable_activity_pinned_posts" name="_bb_enable_activity_pinned_posts" type="checkbox" value="1" <?php checked( bb_is_activity_pinned_posts_active( false ) ); ?> />
+	<input id="_bb_enable_activity_pinned_posts" name="_bb_enable_activity_pinned_posts" type="checkbox" value="1" <?php checked( bb_is_active_activity_pinned_posts( false ) ); ?> />
 	<label for="_bb_enable_activity_pinned_posts"><?php esc_html_e( 'Allow group owners and moderator to pin posts', 'buddyboss' ); ?></label>
 
 	<?php

@@ -1045,12 +1045,12 @@ function bb_nouveau_ajax_activity_update_pinned_post() {
 		wp_send_json_error( $response );
 	}
 
-	if ( ! in_array( $_POST['pin_action'], array( 'pin_activity', 'unpin_activity' ) ) ) {
+	if ( ! in_array( $_POST['pin_action'], array( 'pin', 'unpin' ) ) ) {
 		wp_send_json_error( $response );
 	}
 
 	$args = array(
-		'pin_action'  => $_POST['pin_action'],
+		'action'      => $_POST['pin_action'],
 		'activity_id' => (int) $_POST['id'],
 		'retval'      => 'string',
 	);

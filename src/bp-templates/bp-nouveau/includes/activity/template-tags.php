@@ -1769,14 +1769,17 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	if (
 		(
 			bp_is_group_activity() &&
-			bb_is_activity_pinned_posts_active() &&
 			(
-				bp_current_user_can( 'administrator' ) ||
 				(
-					bbp_group_is_mod() ||
-					bbp_group_is_admin()
-				)
+					bb_is_active_activity_pinned_posts() &&
+					(
+						bbp_group_is_mod() ||
+						bbp_group_is_admin()
+					) 
+				) ||
+				bp_current_user_can( 'administrator' )
 			)
+			
 		) ||
 		(
 			bp_current_user_can( 'administrator' ) &&

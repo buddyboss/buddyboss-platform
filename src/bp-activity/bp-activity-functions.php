@@ -6371,7 +6371,7 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param array $args Arguments related to pin unpin activity or group feed post.
+ * @param array $args Arguments related to pin/unpin activity or group feed post.
  *
  * @return bool|string Update type pinned|pin_updated|unpinned.
  */
@@ -6379,7 +6379,7 @@ function bb_activity_pin_unpin_post( $args = array() ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'pin_action'  => 'pin_activity',
+			'action'      => 'pin',
 			'activity_id' => 0,
 			'retval'      => 'bool',
 		)
@@ -6391,7 +6391,7 @@ function bb_activity_pin_unpin_post( $args = array() ) {
 
 	if ( ! empty( $activity->id ) ) {
 
-		if ( 'unpin_activity' === $r['pin_action'] ) {
+		if ( 'unpin' === $r['action'] ) {
 			$updated_value = '';
 			$retval        = 'unpinned';
 		} else {
