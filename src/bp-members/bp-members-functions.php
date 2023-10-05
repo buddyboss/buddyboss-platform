@@ -5499,12 +5499,14 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
  * Function to generate the unique keys.
  *
  * @since BuddyBoss 2.3.41
+ * @since BuddyBoss [BBVERSION] Added $prefix argument.
  *
- * @param int $max_ids How many unique IDs need to be generated? Default 1.
+ * @param int    $max_ids How many unique IDs need to be generated? Default 1.
+ * @param string $prefix  Prefix key to add in UUID with 'm' and 'b'. Default 'm'.
  *
  * @return array
  */
-function bb_generate_user_random_profile_slugs( $max_ids = 1 ) {
+function bb_generate_user_random_profile_slugs( $max_ids = 1, $prefix = 'm' ) {
 	$max_ids       = absint( $max_ids );
 	$start         = 0;
 	$length        = 8;
@@ -5515,9 +5517,9 @@ function bb_generate_user_random_profile_slugs( $max_ids = 1 ) {
 	/**
 	 * Generate the missing ids.
 	 */
-	$generate_ids_func = function( $generated_ids ) use ( $max_ids, $start, $length ) {
+	$generate_ids_func = function( $generated_ids ) use ( $max_ids, $start, $length, $prefix ) {
 		while ( count( $generated_ids ) < $max_ids ) { // phpcs:ignore Squiz.PHP.DisallowSizeFunctionsInLoops.Found
-			$generated_ids[] = strtolower( substr( sha1( wp_generate_password( 40 ) ), $start, $length ) );
+			$generated_ids[] = strtolower( substr( $prefix . sha1( wp_generate_password( 40 ) ), $start, $length ) );
 		}
 
 		return $generated_ids;
