@@ -596,7 +596,15 @@ function bb_single_topic_no_replies_redirect_to_404( $template ) {
 
 add_filter( 'template_include', 'bb_single_topic_no_replies_redirect_to_404' );
 
-
+/**
+ * Hides single URL from forum topic and reply content.
+ *
+ * @since [BBVERSION]
+ * 
+ * @param string $content The forum topic or reply content.
+ * 
+ * @return string
+ */
 function bb_forums_hide_single_url( $content ) {
 	if ( empty( $content ) ) {
 		return $content;
@@ -606,10 +614,9 @@ function bb_forums_hide_single_url( $content ) {
 		return $content;
 	}
 
-	if ( preg_match( '/<p[^>]*>.*?<\/p>/', $content, $matches) && ! empty( $matches ) ) {
-		$to_check		= $matches[0];
-		// $topic_content	= implode( '', $matches  );	// Extract only post content. '$content' also contains author, edit and other details. 
-		$raw_content	= preg_replace( array( '/<a[^>]*>/', '/<\/a>/', '/<p[^>]*>/', '/<\/p>/', '/\n/', '/\r/' ), array( '', '', '', '' ), $to_check );
+	if ( preg_match_all( '/<p[^>]*>.*?<\/p>/', $content, $matches ) && ! empty( $matches[0] ) ) {
+		$topic_content	= implode( '', $matches[0]  );	// Extract only post content. '$content' also contains author, edit and other details. 
+		$raw_content	= preg_replace( array( '/<a[^>]*>/', '/<\/a>/', '/<p[^>]*>/', '/<\/p>/', '/<iframe[^>]*>.*?<\/iframe>/', '/\n/', '/\r/' ), array( '', '', '', '', '' ), $topic_content );
 		$content_length	= strlen( $raw_content );
 		$prefixes		= '/^(http\:\/\/|https\:\/\/|www\.)/';
 		$url			= '';
@@ -624,7 +631,6 @@ function bb_forums_hide_single_url( $content ) {
 			}
 
 			if ( ! empty( $url ) && empty( trim( str_replace( $url, '', $raw_content ) ) ) ) {
-				// $to_replace = str_replace( '<p', '<p style="display: none;"', $to_check );
 				$content	= preg_replace( '/^<p/', '<p style="display: none;"', $content, 1 );
 			}
 		}
