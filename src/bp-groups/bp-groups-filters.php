@@ -101,7 +101,7 @@ add_action( 'bp_actions', 'bb_group_subscriptions_handler' );
 add_filter( 'bp_groups_get_where_count_conditions', 'bb_groups_count_update_where_sql', 10, 2 );
 
 // Remove from group forums and topics.
-add_action( 'groups_leave_group', 'bb_groups_unsubscribe_group_forum', 10, 2 );
+add_action( 'groups_leave_group', 'bb_groups_unsubscribe_group_forums_topic', 10, 2 );
 
 /**
  * Filter output of Group Description through WordPress's KSES API.
@@ -1407,7 +1407,7 @@ function bb_groups_count_update_where_sql( $where_conditions, $args = array() ) 
 }
 
 /**
- * Unsubscribe a user from a group forum topic.
+ * Unsubscribe a user from a group forum topics.
  *
  * @since BuddyBoss [BB_VERSION]
  *
@@ -1416,7 +1416,7 @@ function bb_groups_count_update_where_sql( $where_conditions, $args = array() ) 
  *
  * @return void
  */
-function bb_groups_unsubscribe_group_forum( $group_id, $user_id ) {
+function bb_groups_unsubscribe_group_forums_topic( $group_id, $user_id ) {
 
 	// Use current group if none is set.
 	if ( empty( $group_id ) ) {
@@ -1428,10 +1428,13 @@ function bb_groups_unsubscribe_group_forum( $group_id, $user_id ) {
 		$user_id = bp_loggedin_user_id();
 	}
 
-	$forum_ids = bbp_get_group_forum_ids( $group_id );
 	$topic_ids = bbp_get_user_subscribed_topic_ids( $user_id );
+	if ( empty( $topic_ids ) ) {
+		return;
+	}
 
-	if ( empty( $forum_ids ) && empty( $topic_ids ) ) {
+	$forum_ids = bbp_get_group_forum_ids( $group_id );
+	if ( empty( $forum_ids ) ) {
 		return;
 	}
 
