@@ -1270,7 +1270,6 @@ function bb_forums_notification_subscriptions_background_process( $results, $pag
 			$topics = BB_Subscriptions::get(
 				array(
 					'type'              => 'topic',
-					'fields'            => array( 'id', 'user_id' ),
 					'secondary_item_id' => $forum_id,
 				)
 			);
