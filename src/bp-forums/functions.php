@@ -1193,7 +1193,7 @@ function bb_forums_migration() {
 	if ( bp_is_active( 'groups' ) ) {
 
 		/**
-		 * Migrate orphan group topic notification subscriptions.
+		 * Migrate orphan group's forum discussion notification subscriptions.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
