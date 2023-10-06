@@ -1418,18 +1418,13 @@ function bb_groups_count_update_where_sql( $where_conditions, $args = array() ) 
  */
 function bb_groups_unsubscribe_group_forums_topic( $group_id, $user_id ) {
 
-	// Use current group if none is set.
-	if ( empty( $group_id ) ) {
-		$group_id = bp_get_current_group_id();
+	// Bail if forum is disabled.
+	if ( ! bp_is_active( 'forums' ) ) {
+		return;
 	}
 
-	// Use current user if none is set.
-	if ( empty( $user_id ) ) {
-		$user_id = bp_loggedin_user_id();
-	}
-
-	$topic_ids = bbp_get_user_subscribed_topic_ids( $user_id );
-	if ( empty( $topic_ids ) ) {
+	// Bail if group id and user id is not set.
+	if ( empty( $group_id ) || empty( $user_id ) ) {
 		return;
 	}
 
@@ -1438,15 +1433,25 @@ function bb_groups_unsubscribe_group_forums_topic( $group_id, $user_id ) {
 		return;
 	}
 
+	$notifications = BB_Subscriptions::get(
+		array(
+			'user_id'           => $user_id,
+			'type'              => 'topic',
+			'fields'            => 'item_id',
+			'secondary_item_id' => $forum_ids,
+		)
+	);
+
+	if ( empty( $notifications['subscriptions'] ) ) {
+		return;
+	}
+
 	// Loop through subscribed topics and remove user from this group related topics.
-	foreach ( (array) $topic_ids as $topic_id ) {
+	foreach ( (array) $notifications['subscriptions'] as $topic_id ) {
 		$topic_forum_id = bbp_get_topic_forum_id( $topic_id );
 		if (
-			in_array( $topic_forum_id, $forum_ids, true ) &&
-			(
-				bbp_is_forum_private( $topic_forum_id ) ||
-				bbp_is_forum_hidden( $topic_forum_id )
-			)
+			bbp_is_forum_private( $topic_forum_id ) ||
+			bbp_is_forum_hidden( $topic_forum_id )
 		) {
 			bbp_remove_user_topic_subscription( $user_id, $topic_id );
 		}
