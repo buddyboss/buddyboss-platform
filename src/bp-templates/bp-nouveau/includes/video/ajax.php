@@ -524,12 +524,14 @@ function bp_nouveau_ajax_video_delete() {
 	$video_group_count    = 0;
 	if ( bp_is_user_video() ) {
 		add_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
-		$personal_args = bp_ajax_querystring( 'video' );
-		$personal_args = bp_parse_args( $personal_args );
-		unset( $personal_args['per_page'] );
 
-		$has_videos           = bp_has_video( $personal_args );
+		$video_args = bp_ajax_querystring( 'video' );
+		$video_args = bp_parse_args( $video_args );
+		unset( $video_args['per_page'] );
+		$has_videos           = bp_has_video( $video_args );
 		$video_personal_count = bp_core_number_format( $GLOBALS['video_template']->total_video_count );
+
+		remove_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
 
 		ob_start();
 		if ( $has_videos ) {
@@ -555,9 +557,7 @@ function bp_nouveau_ajax_video_delete() {
 			<?php
 		}
 
-		$video_html_content = ob_get_contents();
-		ob_end_clean();
-		remove_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
+		$video_html_content = ob_get_clean();
 	}
 
 	$group_video_html_content = '';
@@ -569,12 +569,15 @@ function bp_nouveau_ajax_video_delete() {
 		$video_group_count = bp_video_get_total_group_video_count();
 
 		add_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_groups_scope', 20 );
-		$group_args = bp_ajax_querystring( 'video' );
-		$group_args = bp_parse_args( $group_args );
-		unset( $group_args['per_page'] );
+		$group_video_args = bp_ajax_querystring( 'video' );
+		$group_video_args = bp_parse_args( $group_video_args );
+		unset( $group_video_args['per_page'] );
+		$has_group_videos = bp_has_video( $group_video_args );
+
+		remove_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_groups_scope', 20 );
 
 		ob_start();
-		if ( bp_has_video( $group_args ) ) {
+		if ( $has_group_videos ) {
 			while ( bp_video() ) {
 				bp_the_video();
 
@@ -597,9 +600,7 @@ function bp_nouveau_ajax_video_delete() {
 			<?php
 		}
 
-		$group_video_html_content = ob_get_contents();
-		ob_end_clean();
-		remove_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_groups_scope', 20 );
+		$group_video_html_content = ob_get_clean();
 	}
 
 	if ( bp_is_group_albums() ) {

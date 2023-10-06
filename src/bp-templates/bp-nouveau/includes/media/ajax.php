@@ -421,8 +421,9 @@ function bp_nouveau_ajax_media_delete() {
 					bp_get_template_part( 'activity/entry' );
 				}
 			}
-			$activity_content = ob_get_contents();
-			ob_end_clean();
+
+			$activity_content = ob_get_clean();
+
 		}
 	}
 
@@ -431,12 +432,14 @@ function bp_nouveau_ajax_media_delete() {
 	$media_group_count    = 0;
 	if ( bp_is_user_media() ) {
 		add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
-		$personal_args = bp_ajax_querystring( 'media' );
-		$personal_args = bp_parse_args( $personal_args );
-		unset( $personal_args['per_page'] );
 
-		$has_medias           = bp_has_media( $personal_args );
+		$media_args = bp_ajax_querystring( 'media' );
+		$media_args = bp_parse_args( $media_args );
+		unset( $media_args['per_page'] );
+		$has_medias           = bp_has_media( $media_args );
 		$media_personal_count = bp_core_number_format( $GLOBALS['media_template']->total_media_count );
+
+		remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
 
 		ob_start();
 		if ( $has_medias ) {
@@ -462,9 +465,7 @@ function bp_nouveau_ajax_media_delete() {
 			<?php
 		}
 
-		$media_html_content = ob_get_contents();
-		ob_end_clean();
-		remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
+		$media_html_content = ob_get_clean();
 	}
 
 	$group_media_html_content = '';
@@ -475,12 +476,16 @@ function bp_nouveau_ajax_media_delete() {
 		$media_group_count = bp_media_get_total_group_media_count();
 
 		add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_groups_scope', 20 );
-		$group_args = bp_ajax_querystring( 'media' );
-		$group_args = bp_parse_args( $group_args );
-		unset( $group_args['per_page'] );
+
+		$group_media_args = bp_ajax_querystring( 'media' );
+		$group_media_args = bp_parse_args( $group_media_args );
+		unset( $group_media_args['per_page'] );
+		$has_group_medias = bp_has_media( $group_media_args );
+
+		remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_groups_scope', 20 );
 
 		ob_start();
-		if ( bp_has_media( $group_args ) ) {
+		if ( $has_group_medias ) {
 			while ( bp_media() ) {
 				bp_the_media();
 
@@ -505,7 +510,6 @@ function bp_nouveau_ajax_media_delete() {
 
 		$group_media_html_content = ob_get_contents();
 		ob_end_clean();
-		remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_groups_scope', 20 );
 	}
 
 	if ( bp_is_group_albums() ) {
