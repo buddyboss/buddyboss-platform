@@ -1185,77 +1185,78 @@ function bb_update_last_group_forum_associations( $group_id = 0, $forum_id = 0 )
 /**
  * Run migration for resolving the issue related to the forums.
  *
- * @since BuddyBoss [BB_VERSION]
+ * @since BuddyBoss [BBVERSION]
  */
 function bb_forums_migration() {
-	if ( bp_is_active( 'groups' ) ) {
-		// Migrate orphan group topic notification subscriptions.
-		bb_migrate_group_topic_notification_subscriptions();
-	}
-}
-
-/**
- * Migrate group related topic notification subscriptions.
- *
- * @param integer $paged
- *
- * @return void
- */
-function bb_migrate_group_topic_notification_subscriptions( $paged = 1 ) {
 	global $wpdb, $bb_background_updater;
 
-	if ( empty( $paged ) ) {
-		$paged = 1;
+	if ( bp_is_active( 'groups' ) ) {
+
+		/**
+		 * Migrate orphan group topic notification subscriptions.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		$subscription_tbl = BB_Subscriptions::get_subscription_tbl();
+
+		// phpcs:ignore
+		$results          = $wpdb->get_results(
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				"SELECT DISTINCT secondary_item_id FROM {$subscription_tbl} WHERE type = %s ORDER BY id DESC",
+				'topic',
+			)
+		);
+
+		if ( ! empty( $results ) ) {
+			$min_count = apply_filters( 'bb_update_group_discussion_subscription_count', 10 );
+			if ( count( $results ) > $min_count ) {
+				foreach ( array_chunk( $results, $min_count ) as $chunk ) {
+					$bb_background_updater->push_to_queue(
+						array(
+							'type'     => 'migration',
+							'group'    => 'bb_forums_notification_subscriptions',
+							'priority' => 5,
+							'callback' => 'bb_update_groups_discussion_subscriptions_background_process',
+							'args'     => array( $chunk ),
+						)
+					);
+					$bb_background_updater->save()->schedule_event();
+				}
+			} else {
+				$bb_background_updater->push_to_queue(
+					array(
+						'type'     => 'migration',
+						'group'    => 'bb_forums_notification_subscriptions',
+						'priority' => 5,
+						'callback' => 'bb_update_groups_discussion_subscriptions_background_process',
+						'args'     => array( $results ),
+					)
+				);
+
+				$bb_background_updater->save()->schedule_event();
+			}
+		}
 	}
-
-	$per_page = 10;
-	$offset   = ( ( $paged - 1 ) * $per_page );
-
-	$subscription_tbl = BB_Subscriptions::get_subscription_tbl();
-	$results          = $wpdb->get_results(
-		$wpdb->prepare(
-			"SELECT distinct( secondary_item_id ) FROM {$subscription_tbl} WHERE type = %s ORDER BY id LIMIT %d offset %d",
-			'topic',
-			$per_page,
-			$offset
-		)
-	);
-
-	if ( empty( $results ) ) {
-		return;
-	}
-
-	$bb_background_updater->push_to_queue(
-		array(
-			'type'     => 'migration',
-			'group'    => 'bb_forums_notification_subscriptions',
-			'priority' => 5,
-			'callback' => 'bb_forums_notification_subscriptions_background_process',
-			'args'     => array( $results, $paged ),
-		)
-	);
-
-	$bb_background_updater->save()->schedule_event();
 }
 
 /**
- * Function to run forums notification subscription within background process.
+ * Function to run discussion notification subscription within background process.
  *
- * @since BuddyBoss [BB_VERSION]
+ * @since BuddyBoss [BBVERSION]
  *
- * @param array $results Subscription results.
- * @param int   $paged   Current page for migration.
+ * @param array $subscriptions Subscription results.
  *
  * @return void
  */
-function bb_forums_notification_subscriptions_background_process( $results, $paged ) {
+function bb_update_groups_discussion_subscriptions_background_process( $subscriptions ) {
 
-	if ( empty( $results ) ) {
+	if ( empty( $subscriptions ) ) {
 		return;
 	}
 
 	// Remove orphan forum topics notification subscriptions if user is not a member of related private/hidden group.
-	foreach ( $results as $subscription ) {
+	foreach ( $subscriptions as $subscription ) {
 		$forum_id  = $subscription->secondary_item_id;
 		$group_ids = bbp_get_forum_group_ids( $forum_id );
 		$group_id  = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
@@ -1280,12 +1281,9 @@ function bb_forums_notification_subscriptions_background_process( $results, $pag
 
 			foreach ( $topics['subscriptions'] as $topic ) {
 				if ( ! groups_is_user_member( $topic->user_id, $group_id ) ) {
-					bb_delete_subscription( $topic->id );
+					bbp_remove_user_topic_subscription( $topic->user_id, $topic->item_id );
 				}
 			}
 		}
 	}
-
-	$paged++;
-	bb_migrate_group_topic_notification_subscriptions( $paged );
 }
