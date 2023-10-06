@@ -5471,21 +5471,15 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
 
 	// Insert 'bb_profile_slug' metakey.
 	$bps_sql = "INSERT INTO {$wpdb->usermeta} (user_id, meta_key, meta_value) VALUES ";
-	// Insert 'bb_profile_slug_{UUID}' metakey.
-	$bpsd_sql = "INSERT INTO {$wpdb->usermeta} (user_id, meta_key, meta_value) VALUES ";
 
 	foreach ( $user_ids as $key => $user_id ) {
 		$uuid = $new_unique_identifier[ $key ];
 
-		$bps_sql  .= "({$user_id}, 'bb_profile_slug', '{$uuid}'), ";
-		$bpsd_sql .= "({$user_id}, 'bb_profile_slug_{$uuid}', $user_id), ";
+		$bps_sql .= "({$user_id}, 'bb_profile_slug', '{$uuid}'), ({$user_id}, 'bb_profile_slug_{$uuid}', $user_id), ";
 	}
 
-	$bps_sql  = rtrim( $bps_sql, ', ' ); // Remove the trailing comma and space.
-	$bpsd_sql = rtrim( $bpsd_sql, ', ' ); // Remove the trailing comma and space.
-
+	$bps_sql = rtrim( $bps_sql, ', ' ); // Remove the trailing comma and space.
 	$wpdb->query( $bps_sql );
-	$wpdb->query( $bpsd_sql );
 
 	// Rest the global variable.
 	$is_member_slug_background = false;
