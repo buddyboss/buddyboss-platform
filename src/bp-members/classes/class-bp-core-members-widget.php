@@ -313,7 +313,7 @@ class BP_Core_Members_Widget extends WP_Widget {
 /**
  * Periodically update active members for Members widget.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.40
  *
  * @param array  $response The Heartbeat response.
  * @param array  $data     The $_POST data sent.
