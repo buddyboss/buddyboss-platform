@@ -2829,7 +2829,7 @@ function bb_update_to_2_3_41() {
  * @since BuddyBoss 2.3.41
  */
 function bb_core_update_repair_member_slug() {
-	global $wpdb, $bp_background_updater, $is_member_slug_background;
+	global $wpdb, $bb_background_updater, $is_member_slug_background;
 
 	$user_limit = apply_filters( 'bb_core_update_repair_member_slug_limit', 50 );
 	$user_ids   = $wpdb->get_col(
@@ -2853,15 +2853,16 @@ function bb_core_update_repair_member_slug() {
 	bb_set_bulk_user_profile_slug( $user_ids );
 
 	// Register a new background job.
-	$bp_background_updater->data(
+	$bb_background_updater->data(
 		array(
-			array(
-				'callback' => 'bb_core_update_repair_member_slug',
-				'args'     => array(),
-			),
-		)
+			'type'     => 'repair_member_slug',
+			'group'    => 'bb_core_update_repair_member_slug',
+			'priority' => 5,
+			'callback' => 'bb_core_update_repair_member_slug',
+			'args'     => array(),
+		),
 	);
-	$bp_background_updater->save()->schedule_event();
+	$bb_background_updater->save()->dispatch();
 }
 
 /**
@@ -3239,59 +3240,64 @@ function bb_update_to_2_4_10() {
 }
 
 function bb_update_to_2_4_50() {
-	global $wpdb, $bp_background_updater;
+	global $wpdb, $bb_background_updater;
 
 	// Delete existing migration from options table.
 	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE `option_name` LIKE 'wp_1_bp_updater_batch_%' AND `option_value` LIKE '%bb_set_bulk_user_profile_slug%'" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 	// Register a new background process.
-	$bp_background_updater->data(
+	$bb_background_updater->data(
 		array(
-			array(
-				'callback' => 'bb_core_update_repair_member_slug',
-				'args'     => array(),
-			),
-		)
+			'type'     => 'repair_member_slug',
+			'group'    => 'bb_core_update_repair_member_slug',
+			'priority' => 5,
+			'callback' => 'bb_core_update_repair_member_slug',
+			'args'     => array(),
+		),
 	);
-	$bp_background_updater->save()->schedule_event();
+	$bb_background_updater->save()->dispatch();
 
-	$bp_background_updater->data(
+	$bb_background_updater->data(
 		array(
-			array(
-				'callback' => 'bb_core_update_repair_member_slug',
-				'args'     => array(),
-			),
-		)
+			'type'     => 'repair_member_slug',
+			'group'    => 'bb_core_update_repair_member_slug',
+			'priority' => 5,
+			'callback' => 'bb_core_update_repair_member_slug',
+			'args'     => array(),
+		),
 	);
-	$bp_background_updater->save()->schedule_event();
+	$bb_background_updater->save()->dispatch();
 
-	$bp_background_updater->data(
+	$bb_background_updater->data(
 		array(
-			array(
-				'callback' => 'bb_core_update_repair_member_slug',
-				'args'     => array(),
-			),
-		)
+			'type'     => 'repair_member_slug',
+			'group'    => 'bb_core_update_repair_member_slug',
+			'priority' => 5,
+			'callback' => 'bb_core_update_repair_member_slug',
+			'args'     => array(),
+		),
 	);
-	$bp_background_updater->save()->schedule_event();
+	$bb_background_updater->save()->dispatch();
 
-	$bp_background_updater->data(
+	$bb_background_updater->data(
 		array(
-			array(
-				'callback' => 'bb_core_update_repair_member_slug',
-				'args'     => array(),
-			),
-		)
+			'type'     => 'repair_member_slug',
+			'group'    => 'bb_core_update_repair_member_slug',
+			'priority' => 5,
+			'callback' => 'bb_core_update_repair_member_slug',
+			'args'     => array(),
+		),
 	);
-	$bp_background_updater->save()->schedule_event();
+	$bb_background_updater->save()->dispatch();
 
-	$bp_background_updater->data(
+	$bb_background_updater->data(
 		array(
-			array(
-				'callback' => 'bb_core_update_repair_member_slug',
-				'args'     => array(),
-			),
-		)
+			'type'     => 'repair_member_slug',
+			'group'    => 'bb_core_update_repair_member_slug',
+			'priority' => 5,
+			'callback' => 'bb_core_update_repair_member_slug',
+			'args'     => array(),
+		),
 	);
-	$bp_background_updater->save()->schedule_event();
+	$bb_background_updater->save()->dispatch();
 }
