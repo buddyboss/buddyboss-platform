@@ -5230,30 +5230,3 @@ function bb_groups_settings_default_fallback( $setting_type, $val = '' ) {
 	 */
 	return apply_filters( 'bp_group_' . $setting_type . '_status_fallback', $val );
 }
-
-/**
- * Remove orphan forum topics notification subscriptions if user is not a member of related private/hidden group.
- *
- * @since BuddyBoss [BB_VERSION]
- */
-function bb_delete_orphan_topic_notification_subscriptions() {
-	global $wpdb;
-
-	$subscription_tbl    = $wpdb->base_prefix . 'bb_notifications_subscriptions';
-	$topic_subscriptions = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$subscription_tbl} WHERE type = %s", 'topic' ) );
-	if ( empty( $topic_subscriptions ) ) {
-		return;
-	}
-
-	foreach ( $topic_subscriptions as $subscription ) {
-		$forum_id = $subscription->secondary_item_id;
-		if ( bbp_is_forum_private( $forum_id ) || bbp_is_forum_hidden( $forum_id ) ){
-			$group_ids = bbp_get_forum_group_ids( $forum_id );
-			foreach ( $group_ids as $group_id ) {
-				if ( ! groups_is_user_member( $subscription->user_id, $group_id ) ) {
-					bb_delete_subscription( $subscription->id );
-				}
-			}
-		}
-	}
-}

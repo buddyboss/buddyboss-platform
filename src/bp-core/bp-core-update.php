@@ -493,9 +493,9 @@ function bp_version_updater() {
 				bb_activity_migration();
 			}
 
-			// Run migration to delete group related orphan topics notification subscription.
-			if ( function_exists( 'bb_delete_orphan_topic_notification_subscriptions' ) ) {
-				bb_delete_orphan_topic_notification_subscriptions();
+			// Run migration about forums.
+			if ( function_exists( 'bb_forums_migration' ) ) {
+				bb_forums_migration();
 			}
 		}
 	}
