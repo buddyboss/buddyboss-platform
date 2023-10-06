@@ -390,6 +390,8 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			// Activity Settings.
 			$results['bp_enable_activity_edit']         = bp_is_activity_edit_enabled();
 			$results['bp_activity_edit_time']           = bp_get_activity_edit_time( - 1 );
+			$results['bb_enable_activity_comment_edit'] = bb_is_activity_comment_edit_enabled();
+			$results['bb_activity_comment_edit_time']   = bb_get_activity_comment_edit_time( - 1 );
 			$results['bp_enable_heartbeat_refresh']     = bp_is_activity_heartbeat_active();
 			$results['bp_enable_activity_autoload']     = bp_is_activity_autoload_active();
 			$results['bp_enable_activity_tabs']         = bp_is_activity_tabs_active();
@@ -570,7 +572,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 
 		$native_presence               = (bool) bp_get_option( 'bb_use_core_native_presence', false );
 		$results['bb-native-presence'] = true === $native_presence ? buddypress()->plugin_url . 'bp-core/bb-core-native-presence.php' : '';
-		
+
 		// Allowed messaging without connection for profile types.
 		if (
 			bp_member_type_enable_disable() &&
