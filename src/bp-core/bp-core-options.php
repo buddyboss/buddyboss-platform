@@ -2411,7 +2411,7 @@ function bb_get_activity_comment_edit_time( $default = false ) {
  * @since BuddyBoss [BBVERSION]
  *
  * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: false.
+ *                      Default: true.
  * @return bool True    If activity pinned posts are enabled, otherwise false.
  */
 function bb_is_active_activity_pinned_posts( $default = false ) {

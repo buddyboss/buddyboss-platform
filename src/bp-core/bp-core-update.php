@@ -467,6 +467,10 @@ function bp_version_updater() {
 			bb_update_to_2_4_10();
 		}
 
+		if ( $raw_db_version < 20761 ) {
+			bb_update_to_2_4_50();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3225,4 +3229,15 @@ function bb_update_to_2_4_10() {
 			}
 		}
 	}
+}
+
+/**
+ * For existing install disable pin post setting by default.
+ * 
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_4_50() {
+	bp_update_option( '_bb_enable_activity_pinned_posts', 0 );
 }
