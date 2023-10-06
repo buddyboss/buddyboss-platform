@@ -986,12 +986,13 @@ function messages_notification_new_message( $raw_args = array() ) {
 				'recipient'  => $ud,
 				'arguments'  => array(
 					'tokens' => array(
-						'message_id'  => $id,
-						'usermessage' => stripslashes( $message ),
-						'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
-						'sender.name' => $sender_name,
-						'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
-						'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+						'message_id'       => $id,
+						'usermessage'      => stripslashes( $message ),
+						'message.url'      => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
+						'sender.name'      => $sender_name,
+						'usersubject'      => sanitize_text_field( stripslashes( $subject ) ),
+						'receiver-user.id' => $recipient->user_id,
+						'unsubscribe'      => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 					),
 				),
 			);
@@ -1002,12 +1003,13 @@ function messages_notification_new_message( $raw_args = array() ) {
 				$ud,
 				array(
 					'tokens' => array(
-						'message_id'  => $id,
-						'usermessage' => stripslashes( $message ),
-						'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
-						'sender.name' => $sender_name,
-						'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
-						'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+						'message_id'       => $id,
+						'usermessage'      => stripslashes( $message ),
+						'message.url'      => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
+						'sender.name'      => $sender_name,
+						'usersubject'      => sanitize_text_field( stripslashes( $subject ) ),
+						'receiver-user.id' => $recipient->user_id,
+						'unsubscribe'      => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 					),
 				)
 			);
@@ -1172,15 +1174,16 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 				$ud,
 				array(
 					'tokens' => array(
-						'message_id'  => $id,
-						'usermessage' => stripslashes( $message ),
-						'message'     => stripslashes( $message ),
-						'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
-						'sender.id'   => $sender_id,
-						'sender.name' => $sender_name,
-						'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
-						'group.name'  => $group_name,
-						'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+						'message_id'       => $id,
+						'usermessage'      => stripslashes( $message ),
+						'message'          => stripslashes( $message ),
+						'message.url'      => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
+						'sender.id'        => $sender_id,
+						'sender.name'      => $sender_name,
+						'usersubject'      => sanitize_text_field( stripslashes( $subject ) ),
+						'receiver-user.id' => $recipient->user_id,
+						'group.name'       => $group_name,
+						'unsubscribe'      => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 					),
 				)
 			);
@@ -1662,8 +1665,9 @@ function bb_render_messages_recipients( $recipients, $email_type, $message_slug,
 			'notification_type' => 'group-message-email',
 		);
 
-		$tokens['message.url'] = esc_url( bp_core_get_user_domain( $recipient->user_id ) . $message_slug . '/view/' . $thread_id . '/' );
-		$tokens['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+		$tokens['message.url']      = esc_url( bp_core_get_user_domain( $recipient->user_id ) . $message_slug . '/view/' . $thread_id . '/' );
+		$tokens['receiver-user.id'] = $recipient->user_id;
+		$tokens['unsubscribe']      = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
 
 		bp_send_email(
 			$email_type,

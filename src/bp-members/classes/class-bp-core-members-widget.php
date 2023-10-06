@@ -122,7 +122,7 @@ class BP_Core_Members_Widget extends WP_Widget {
 						?>
 						class="selected"<?php endif; ?>><?php esc_html_e( 'Newest', 'buddyboss' ); ?></a>
 				<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
-				<a href="<?php bp_members_directory_permalink(); ?>" id="recently-active-members"
+				<a href="<?php bp_members_directory_permalink(); ?>" id="recently-active-members" data-max="<?php echo esc_attr( $settings['max_members'] ); ?>"
 					<?php
 					if ( 'active' === $settings['member_default'] ) :
 						?>
@@ -309,3 +309,81 @@ class BP_Core_Members_Widget extends WP_Widget {
 		);
 	}
 }
+
+/**
+ * Periodically update active members for Members widget.
+ *
+ * @since BuddyBoss 2.4.40
+ *
+ * @param array  $response The Heartbeat response.
+ * @param array  $data     The $_POST data sent.
+ *
+ * @return array The Heartbeat response.
+ */
+function buddyboss_members_widget_active_heartbeat( $response = array(), $data = array() ) {
+	global $members_template;
+
+	if ( empty( $data['buddyboss_members_widget_active'] ) ) {
+		return $response;
+	}
+
+	$max_members = (int) $data['buddyboss_members_widget_active'];
+
+	// Back up global.
+	$old_members_template = $members_template;
+
+	$members_args = array(
+		'user_id'         => 0,
+		'type'            => 'active',
+		'per_page'        => $max_members,
+		'max'             => $max_members,
+		'populate_extras' => true,
+		'search_terms'    => false,
+		'exclude'         => ( function_exists( 'bp_get_users_of_removed_member_types' ) && ! empty( bp_get_users_of_removed_member_types() ) ) ? bp_get_users_of_removed_member_types() : '',
+	);
+
+	ob_start();
+	if ( bp_has_members( $members_args ) ) :
+		while ( bp_members() ) :
+			bp_the_member();
+
+			$moderation_class = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $members_template->member->id ) ? 'bp-user-suspended' : '';
+			$moderation_class = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $members_template->member->id ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
+			?>
+			<li class="vcard">
+				<div class="item-avatar">
+					<a href="<?php bp_member_permalink(); ?>"  class="<?php echo esc_attr( $moderation_class ); ?>">
+						<?php bp_member_avatar(); ?>
+						<?php bb_user_presence_html( $members_template->member->id ); ?>
+					</a>
+				</div>
+
+				<div class="item">
+					<div class="item-title fn">
+						<a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a>
+					</div>
+					<div class="item-meta">
+						<span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_member_last_active( array( 'relative' => false ) ) ); ?>"><?php bp_member_last_active(); ?></span>
+					</div>
+				</div>
+			</li>
+
+		<?php endwhile; ?>
+	<?php else : ?>
+		<div class="widget-error">
+			<?php esc_html_e( 'There is no member found, please try another filter.', 'buddyboss' ); ?>
+		</div>
+	<?php endif;
+
+	$active_members_html = ob_get_clean();
+
+	// Restore the global.
+	$members_template = $old_members_template;
+
+	$response['buddyboss_members_widget_active'] = $active_members_html;
+
+	return $response;
+}
+
+add_filter( 'heartbeat_received', 'buddyboss_members_widget_active_heartbeat', 10, 2 );
+add_filter( 'heartbeat_nopriv_received', 'buddyboss_members_widget_active_heartbeat', 10, 2 );

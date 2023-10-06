@@ -1700,7 +1700,11 @@ function bbp_get_dropdown( $args = '' ) {
 	if ( empty( $r['options_only'] ) ) {
 
 		// Should this select appear disabled?
-		$disabled = disabled( isset( bbpress()->options[ $r['disabled'] ] ), true, false );
+		if ( is_bool( $r['disabled'] ) ) {
+			$disabled = disabled( $r['disabled'], true, false );
+		} else {
+			$disabled = disabled( isset( bbpress()->options[ $r['disabled'] ] ), true, false );
+		}
 
 		// Setup the tab index attribute.
 		$tab = ! empty( $r['tab'] ) ? ' tabindex="' . intval( $r['tab'] ) . '"' : '';
