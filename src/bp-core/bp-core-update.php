@@ -2843,8 +2843,15 @@ function bb_core_update_repair_member_slug() {
 	);
 
 	if ( empty( $user_ids ) ) {
+		$table_name = bp_core_get_table_prefix() . 'bb_background_job_queue';
 		// Delete existing migration from options table.
-		$wpdb->query( "DELETE FROM {$wpdb->options} WHERE `option_name` LIKE 'wp_1_bp_updater_batch_%' AND `option_value` LIKE '%bb_set_bulk_user_profile_slug%'" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM {$table_name} WHERE `type` = %s AND `group` = %s",
+				'repair_member_slug',
+				'bb_core_update_repair_member_slug'
+			)
+		); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		return;
 	}
