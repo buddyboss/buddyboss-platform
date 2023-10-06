@@ -409,3 +409,35 @@ function bb_validate_restricted_email_on_profile_update( $user_id ) {
 		}
 	}
 }
+
+/**
+ * Function to display notice when settings data saved.
+ *
+ * @since BuddyBoss 2.4.40
+ */
+function bb_core_settings_saved_notice() {
+	if (
+		isset( $_GET['page'] ) &&
+		(
+			'bp-settings' === $_GET['page'] ||
+			'bp-pages' === $_GET['page'] ||
+			'bp-integrations' === $_GET['page']
+		) &&
+		(
+			isset( $_GET['updated'] ) ||
+			isset( $_GET['edited'] ) ||
+			isset( $_GET['added'] )
+		)
+	) {
+		add_settings_error(
+			'general',
+			'settings_updated',
+			__( 'Settings saved successfully.', 'buddyboss' ),
+			'updated'
+		);
+	}
+
+	settings_errors();
+}
+
+add_action( 'bp_admin_notices', 'bb_core_settings_saved_notice', 1010 );
