@@ -1200,7 +1200,7 @@ function bb_forums_migration() {
 		$subscription_tbl = BB_Subscriptions::get_subscription_tbl();
 
 		// phpcs:ignore
-		$results          = $wpdb->get_results(
+		$results = $wpdb->get_results(
 			$wpdb->prepare(
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				"SELECT DISTINCT secondary_item_id FROM {$subscription_tbl} WHERE type = %s ORDER BY id DESC",
