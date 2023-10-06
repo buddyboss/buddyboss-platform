@@ -508,8 +508,7 @@ function bp_nouveau_ajax_media_delete() {
 			<?php
 		}
 
-		$group_media_html_content = ob_get_contents();
-		ob_end_clean();
+		$group_media_html_content = ob_get_clean();
 	}
 
 	if ( bp_is_group_albums() ) {
