@@ -490,6 +490,9 @@ window.bp = window.bp || {};
 								// It's the very first media, let's make sure the container can welcome it!
 								if ( ! $( '#video-stream ul.media-list' ).length ) {
 									$( '#video-stream' ).html( $( '<ul></ul>' ).addClass( 'video-list item-list bp-list bb-video-list grid' ) );
+								}
+
+								if ( $( '.bb-video-actions' ).length > 0 ) {
 									$( '.bb-video-actions' ).show();
 								}
 
@@ -1642,6 +1645,8 @@ window.bp = window.bp || {};
 				$( '.bb-videos-actions' ).show();
 			} else if ( typeof data !== 'undefined' && typeof data.response.scopes.personal !== 'undefined' && 0 === parseInt( data.response.scopes.personal ) ) {
 				$( '.bb-videos-actions' ).hide();
+			} else if ( typeof data !== 'undefined' && typeof data.response.scopes.personal !== 'undefined' && 0 !== parseInt( data.response.scopes.personal ) ) {
+				$( '.bb-videos-actions' ).show();
 			}
 		},
 
@@ -2773,7 +2778,23 @@ window.bp = window.bp || {};
 			var self = this, i = 0;
 			if ( self.is_open_video && typeof data !== 'undefined' && data.action === 'delete_activity' && self.current_video.activity_id == data.id ) {
 
-				$( document ).find( '[data-bp-list="video"] .bb-open-video-theatre[data-id="' + self.current_video.id + '"]' ).closest( 'li' ).remove();
+				var $deleted_item = $( document ).find( '[data-bp-list="video"] .bb-open-video-theatre[data-id="' + self.current_video.id + '"]' );
+				var $deleted_item_parent_list = $deleted_item.parents( 'ul' );
+
+				$deleted_item.closest( 'li' ).remove();
+
+				if ( 0 === $deleted_item_parent_list.find( 'li:not(.load-more)' ).length ) {
+
+					// No item.
+					if ( $( '.bb-videos-actions' ).length > 0 ) {
+						$( '.bb-videos-actions' ).hide();
+					}
+
+					if ( 1 === $deleted_item_parent_list.find( 'li.load-more' ).length ) {
+						location.reload();
+					}
+				}
+				
 				$( document ).find( '[data-bp-list="activity"] .bb-open-video-theatre[data-id="' + self.current_video.id + '"]' ).closest( '.bb-activity-video-elem' ).remove();
 
 				for ( i = 0; i < self.videos.length; i++ ) {
