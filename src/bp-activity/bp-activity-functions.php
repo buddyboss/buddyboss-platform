@@ -6412,6 +6412,16 @@ function bb_activity_pin_unpin_post( $args = array() ) {
 		if ( ! empty( $updated_value ) && ! empty( $old_value ) && (int) $old_value !== (int) $updated_value ) {
 			$retval = 'pin_updated';
 		}
+
+		/**
+		 * Fires after activity pin/unpin post.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int    $activity_id Activity ID.
+		 * @param string $action      Action type pin/unpin.
+		 */
+		do_action( 'bb_activity_pin_unpin_post', $activity->id, $r['action'] );
 	}
 
 	if ( 'bool' === $r['retval'] ) {
