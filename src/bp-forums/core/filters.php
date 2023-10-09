@@ -600,9 +600,9 @@ add_filter( 'template_include', 'bb_single_topic_no_replies_redirect_to_404' );
  * Hides single URL from forum topic and reply content.
  *
  * @since [BBVERSION]
- * 
+ *
  * @param string $content The forum topic or reply content.
- * 
+ *
  * @return string
  */
 function bb_forums_hide_single_url( $content ) {
@@ -615,7 +615,7 @@ function bb_forums_hide_single_url( $content ) {
 	}
 
 	if ( preg_match_all( '/<p[^>]*>.*?<\/p>/', $content, $matches ) && ! empty( $matches[0] ) ) {
-		$topic_content	= implode( '', $matches[0]  );	// Extract only post content. '$content' also contains author, edit and other details. 
+		$topic_content	= implode( '', $matches[0]  );	// Extract only post content. '$content' also contains author, edit and other details.
 		$raw_content	= preg_replace( array( '/<a[^>]*>/', '/<\/a>/', '/<p[^>]*>/', '/<\/p>/', '/<iframe[^>]*>.*?<\/iframe>/', '/\n/', '/\r/' ), array( '', '', '', '', '' ), $topic_content );
 		$content_length	= strlen( $raw_content );
 		$prefixes		= '/^(http\:\/\/|https\:\/\/|www\.)/';
