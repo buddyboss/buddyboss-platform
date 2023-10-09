@@ -394,13 +394,12 @@ window.bp = window.bp || {};
 			 * - prepend: the content will be added before selector's content
 			 */
 			method = method || 'reset';
-			var _this = this;
 			if ( 'append' === method ) {
-				$( selector ).append( content ).find( 'li.activity-item' ).each( function() { _this.hideSingleUrl( this, '.activity-inner' ); } );
+				$( selector ).append( content ).find( 'li.activity-item' ).each( this.hideSingleUrl );
 			} else if ( 'prepend' === method ) {
-				$( selector ).prepend( content ).find( 'li.activity-item' ).each( function() { _this.hideSingleUrl( this, '.activity-inner' ); } );
+				$( selector ).prepend( content ).find( 'li.activity-item' ).each( this.hideSingleUrl );
 			} else {
-				$( selector ).html( content ).find( 'li.activity-item' ).each( function() { _this.hideSingleUrl( this, '.activity-inner' ); } );
+				$( selector ).html( content ).find( 'li.activity-item' ).each( this.hideSingleUrl );
 			}
 
 			if ( 'undefined' !== typeof bp_mentions || 'undefined' !== typeof bp.mentions ) {
@@ -420,7 +419,6 @@ window.bp = window.bp || {};
 				);
 			}
 		},
-		
 		/**
 		 * [hideSingleUrl description]
 		 *
@@ -429,8 +427,8 @@ window.bp = window.bp || {};
 		 * @param  {[type]} settings [description]
 		 * @return {[type]}       [description]
 		 */
-		hideSingleUrl: function ( container, selector ) {
-			var _findtext  = $( container ).find( selector + ' > p' ).removeAttr( 'br' ).removeAttr( 'a' ).text();
+		hideSingleUrl: function () {
+			var _findtext  = $( this ).find( '.activity-inner > p' ).removeAttr( 'br' ).removeAttr( 'a' ).text();
 			var _url       = '',
 				newString  = '',
 				startIndex = '',
@@ -458,8 +456,8 @@ window.bp = window.bp || {};
 					newString = $.trim( _findtext.replace( _url, '' ) );
 				}
 
-				if ( $.trim( newString ).length === 0 && $( container ).find( 'iframe' ).length !== 0 && _url !== '' ) {
-					$( container ).find( selector + ' > p:first' ).hide();
+				if ( $.trim( newString ).length === 0 && $( this ).find( 'iframe' ).length !== 0 && _url !== '' ) {
+					$( this ).find( '.activity-inner > p:first' ).hide();
 				}
 			}
 		},
