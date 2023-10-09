@@ -2869,7 +2869,7 @@ function bb_core_update_repair_member_slug() {
 			'args'     => array(),
 		),
 	);
-	$bb_background_updater->save()->dispatch();
+	$bb_background_updater->save()->schedule_event();
 }
 
 /**
@@ -3273,7 +3273,7 @@ function bb_update_to_2_4_50() {
 			'args'     => array(),
 		),
 	);
-	$bb_background_updater->save()->dispatch();
+	$bb_background_updater->save()->schedule_event();
 
 	$bb_background_updater->data(
 		array(
@@ -3284,7 +3284,7 @@ function bb_update_to_2_4_50() {
 			'args'     => array(),
 		),
 	);
-	$bb_background_updater->save()->dispatch();
+	$bb_background_updater->save()->schedule_event();
 
 	$bb_background_updater->data(
 		array(
@@ -3295,7 +3295,7 @@ function bb_update_to_2_4_50() {
 			'args'     => array(),
 		),
 	);
-	$bb_background_updater->save()->dispatch();
+	$bb_background_updater->save()->schedule_event();
 
 	$bb_background_updater->data(
 		array(
@@ -3306,5 +3306,5 @@ function bb_update_to_2_4_50() {
 			'args'     => array(),
 		),
 	);
-	$bb_background_updater->save()->dispatch();
+	$bb_background_updater->save()->schedule_event();
 }
