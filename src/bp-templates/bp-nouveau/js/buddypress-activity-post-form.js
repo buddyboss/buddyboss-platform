@@ -963,7 +963,7 @@ window.bp = window.bp || {};
 
 						var bpActivityEvent = new Event( 'bp_activity_edit' );
 
-						bp.Nouveau.Activity.postForm.displayEditDraftActivityData( activity_data, bpActivityEvent );
+						bp.Nouveau.Activity.postForm.displayEditDraftActivityData( activity_data, bpActivityEvent, activity_data.link_url );
 					}
 
 				},
@@ -1252,6 +1252,17 @@ window.bp = window.bp || {};
 					_wpnonce_post_draft: BP_Nouveau.activity.params.post_draft_nonce,
 					draft_activity: bp.draft_activity
 				};
+
+				// Some firewalls restrict iframe tag in form post like wordfence.
+				if (
+					! _.isUndefined( draft_data.draft_activity ) &&
+					! _.isUndefined( draft_data.draft_activity.data ) &&
+					! _.isUndefined( draft_data.draft_activity.data.link_description ) &&
+					! _.isUndefined( draft_data.draft_activity.data.link_embed ) &&
+					true === draft_data.draft_activity.data.link_embed
+				) {
+					draft_data.draft_activity.data.link_description = '';
+				}
 
 				// Send data to server.
 				bp.draft_ajax_request = bp.ajax.post( 'post_draft_activity', draft_data ).done(
@@ -5378,6 +5389,15 @@ window.bp = window.bp || {};
 					if ( ! bp.privacyEditable ) {
 						data.privacy = bp.privacy;
 					}
+				}
+
+				// Some firewalls restrict iframe tag in form post like wordfence.
+				if (
+					! _.isUndefined( data.link_description ) &&
+					! _.isUndefined( data.link_embed ) &&
+					true === data.link_embed
+				) {
+					data.link_description = '';
 				}
 
 				bp.ajax.post( 'post_update', data ).done(
