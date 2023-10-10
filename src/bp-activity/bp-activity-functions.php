@@ -6363,3 +6363,47 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 		)
 	);
 }
+
+/**
+ * Check CPT comment global settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $post_type custom post type.
+ * @param bool $value     Actual value from the database.
+ *
+ * @return bool True if activity comments are enabled for CPT, otherwise false.
+ */
+function bb_activity_is_enabled_cpt_comment( $post_type, $value ) {
+
+	switch ( $post_type ) {
+		case 'sfwd-courses':
+			$sfwd_courses_settings = bp_get_option( 'learndash_settings_courses_cpt', array() );
+			$supports_comments     = isset( $sfwd_courses_settings['supports'] ) && in_array( 'comments', $sfwd_courses_settings['supports'], true );
+			break;
+		case 'sfwd-lessons':
+			$sfwd_lesson_settings = bp_get_option( 'learndash_settings_lessons_cpt', array() );
+			$supports_comments    = isset( $sfwd_lesson_settings['supports'] ) && in_array( 'comments', $sfwd_lesson_settings['supports'], true );
+			break;
+		case 'sfwd-topic':
+			$sfwd_topic_settings = bp_get_option( 'learndash_settings_topics_cpt', array() );
+			$supports_comments   = isset( $sfwd_topic_settings['supports'] ) && in_array( 'comments', $sfwd_topic_settings['supports'], true );
+			break;
+		case 'sfwd-quiz':
+			$sfwd_quiz_settings = bp_get_option( 'learndash_settings_quizzes_cpt', array() );
+			$supports_comments  = isset( $sfwd_quiz_settings['supports'] ) && in_array( 'comments', $sfwd_quiz_settings['supports'], true );
+			break;
+		case 'groups':
+			$sfwd_group_settings = bp_get_option( 'learndash_settings_groups_cpt', array() );
+			$supports_comments   = isset( $sfwd_group_settings['supports'] ) && in_array( 'comments', $sfwd_group_settings['supports'], true );
+			break;
+		case 'sfwd-assignment':
+			$sfwd_assignment_settings = bp_get_option( 'learndash_settings_assignments_cpt', array() );
+			$supports_comments        = isset( $sfwd_assignment_settings['comment_status'] ) && 'yes' === $sfwd_assignment_settings['comment_status'];
+			break;
+		default:
+			$supports_comments = ! empty( bp_get_option( 'default_comment_status' ) );
+	}
+
+	return $supports_comments;
+}
