@@ -2417,11 +2417,11 @@ function bb_get_activity_comment_edit_time( $default = false ) {
 function bb_is_active_activity_pinned_posts( $default = false ) {
 
 	/**
-	 * Filters whether or not activity pinned posts are enabled.
+	 * Filters whether activity pinned posts are enabled.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param bool $value Whether or not activity pinned posts are enabled.
+	 * @param bool $value Whether activity pinned posts are enabled.
 	 */
 	return (bool) apply_filters( 'bb_is_active_activity_pinned_posts', (bool) bp_get_option( '_bb_enable_activity_pinned_posts', $default ) );
 }
