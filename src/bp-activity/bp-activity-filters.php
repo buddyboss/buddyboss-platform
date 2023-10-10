@@ -3549,3 +3549,22 @@ function bb_activity_comment_at_name_send_emails( $comment_id, $r, $activity ) {
 	$activity = new BP_Activity_Activity( $comment_id );
 	bp_activity_at_name_send_emails( $activity );
 }
+
+/**
+ * Function to join with activity meta table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $join_sql JOIN clause.
+ * @param array  $args     Method parameters.
+ *
+ * @return string
+ */
+function bb_activity_join_with_activity_meta_sql( $join_sql, $args = array() ) {
+	global $wpdb, $bp;
+	$join_sql .= "LEFT JOIN {$bp->activity->table_name_meta} m ON ( m.activity_id = a.id )";
+
+	return $join_sql;
+}
+add_filter( 'bp_activity_get_join_sql', 'bb_activity_join_with_activity_meta_sql', 10, 2 );
+
