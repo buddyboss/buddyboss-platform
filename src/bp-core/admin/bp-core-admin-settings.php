@@ -786,7 +786,7 @@ function bp_profile_photos_tutorial() {
 					add_query_arg(
 						array(
 							'page'    => 'bp-help',
-							'article' => 125202,
+							'article' => 72341,
 						),
 						'admin.php'
 					)
@@ -844,7 +844,7 @@ function bp_group_avatar_tutorial() {
 					add_query_arg(
 						array(
 							'page'    => 'bp-help',
-							'article' => 62811,
+							'article' => 125202,
 						),
 						'admin.php'
 					)
