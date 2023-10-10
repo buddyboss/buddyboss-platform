@@ -203,6 +203,13 @@ function _bp_profile_search_admin_js() {
  * @since BuddyBoss 1.0.0
  */
 function bp_profile_search_main_form() {
+	/**
+	 * Filters the BuddyBoss Profile Search form ID.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $form_id BuddyBoss Profile Search form ID.
+	 */
 	return (int) apply_filters( 'bp_profile_search_main_form', bp_get_option( 'bp_profile_search_main_form' ) );
 }
 
