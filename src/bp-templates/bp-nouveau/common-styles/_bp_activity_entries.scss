@@ -620,6 +620,7 @@
 		}
 	}
 
+	.loading-pin,
 	.bb-pinned {
 
 		.bp-activity-head {
@@ -636,17 +637,13 @@
 		right: 45px;
 	}
 
-	.activity-item.loading-pin .bb-pin-action {
-		display: block;
+	.activity-item.loading-pin .bb-pin-action [class*="bb-icon"] {
+		animation: spin 2s infinite linear;
+		display: inline-block;
 
-		[class*="bb-icon"] {
-			animation: spin 2s infinite linear;
-			display: inline-block;
-
-			&:before {
-				content: "\ef30";
-				font-size: 20px;
-			}
+		&:before {
+			content: "\ef30";
+			font-size: 20px;
 		}
 	}
 
