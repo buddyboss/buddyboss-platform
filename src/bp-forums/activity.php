@@ -633,6 +633,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			// Add the activity entry ID as a meta value to the topic
 			if ( ! empty( $activity_id ) ) {
 				update_post_meta( $topic_id, '_bbp_activity_id', $activity_id );
+				bp_activity_update_meta( $activity_id, 'post_title', $topic_title );
 			}
 		}
 
