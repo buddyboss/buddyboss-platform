@@ -3565,7 +3565,7 @@ function bb_activity_comment_at_name_send_emails( $comment_id, $r, $activity ) {
  * @return string
  */
 function bb_activity_join_with_activity_meta_sql( $join_sql, $args = array() ) {
-	global $wpdb, $bp;
+	global $bp;
 	$join_sql .= "LEFT JOIN {$bp->activity->table_name_meta} m ON ( m.activity_id = a.id )";
 
 	return $join_sql;
