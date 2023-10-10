@@ -3092,6 +3092,7 @@ function bp_get_member_type_post_type_labels() {
 	return apply_filters(
 		'bp_get_member_type_post_type_labels',
 		array(
+			'add_new'            => __( 'Add New', 'buddyboss' ),
 			'add_new_item'       => __( 'New Profile Type', 'buddyboss' ),
 			'all_items'          => __( 'Profile Types', 'buddyboss' ),
 			'edit_item'          => __( 'Edit Profile Type', 'buddyboss' ),
