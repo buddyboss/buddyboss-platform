@@ -333,6 +333,7 @@ function bp_activity_save_link_data( $activity ) {
 
 	if ( ! empty( $link_title ) ) {
 		$preview_data['title'] = $link_title;
+		// Add post title in activity meta. will help to search link preview's title in feed.
 		bp_activity_update_meta( $activity->id, 'post_title', $link_title );
 	}
 
