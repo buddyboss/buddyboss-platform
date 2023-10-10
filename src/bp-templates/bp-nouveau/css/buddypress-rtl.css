@@ -3892,6 +3892,20 @@ input.search-query-input {
   left: 45px;
 }
 
+.activity-list .activity-item.loading-pin .bb-pin-action {
+  display: block;
+}
+
+.activity-list .activity-item.loading-pin .bb-pin-action [class*="bb-icon"] {
+  animation: spin 2s infinite linear;
+  display: inline-block;
+}
+
+.activity-list .activity-item.loading-pin .bb-pin-action [class*="bb-icon"]:before {
+  content: "\ef30";
+  font-size: 20px;
+}
+
 #buddypress .activity-list .comment-item .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.delete:before {
   vertical-align: bottom;
 }
@@ -24609,7 +24623,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(-180deg);
+  transform: rotateY(180deg);
 }
 
 @media screen and (max-width: 768px) {

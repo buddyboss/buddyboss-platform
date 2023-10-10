@@ -636,6 +636,20 @@
 		right: 45px;
 	}
 
+	.activity-item.loading-pin .bb-pin-action {
+		display: block;
+
+		[class*="bb-icon"] {
+			animation: spin 2s infinite linear;
+			display: inline-block;
+
+			&:before {
+				content: "\ef30";
+				font-size: 20px;
+			}
+		}
+	}
+
 	.comment-item {
 
 		.bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.delete:before {

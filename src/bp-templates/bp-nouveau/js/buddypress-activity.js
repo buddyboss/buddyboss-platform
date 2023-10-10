@@ -1473,7 +1473,7 @@ window.bp = window.bp || {};
 					return event;
 				}
 
-				target.addClass( 'loading' );
+				target.closest( '.activity-item' ).addClass( 'loading-pin' );
 
 				var pin_action = 'pin';
 				if ( target.hasClass( 'unpin-activity' ) ) {
@@ -1489,7 +1489,7 @@ window.bp = window.bp || {};
 					'activity'
 				).done(
 					function( response ) {
-						target.removeClass( 'loading' );
+						target.closest( '.activity-item' ).removeClass( 'loading-pin' );
 
 						// Check for JSON output.
 						if ( 'object' !== typeof response ) {
