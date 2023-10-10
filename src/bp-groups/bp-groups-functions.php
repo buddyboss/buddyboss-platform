@@ -3757,6 +3757,7 @@ function bp_groups_get_group_type_post_type_labels() {
 	return apply_filters(
 		'bp_groups_get_group_type_post_type_labels',
 		array(
+			'add_new'            => __( 'Add New', 'buddyboss' ),
 			'add_new_item'       => __( 'New Group Type', 'buddyboss' ),
 			'all_items'          => __( 'Group Types', 'buddyboss' ),
 			'edit_item'          => __( 'Edit Group Type', 'buddyboss' ),
