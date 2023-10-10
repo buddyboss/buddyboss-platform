@@ -333,6 +333,7 @@ function bp_activity_save_link_data( $activity ) {
 
 	if ( ! empty( $link_title ) ) {
 		$preview_data['title'] = $link_title;
+		bp_activity_update_meta( $activity->id, 'post_title', $link_title );
 	}
 
 	if ( ! empty( $link_description ) ) {
