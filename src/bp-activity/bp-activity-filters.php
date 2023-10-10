@@ -3568,3 +3568,21 @@ function bb_activity_join_with_activity_meta_sql( $join_sql, $args = array() ) {
 }
 add_filter( 'bp_activity_get_join_sql', 'bb_activity_join_with_activity_meta_sql', 10, 2 );
 
+/**
+ * Allow search CPT's post title in the activity feed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $where_sql         Post content search sql
+ * @param string $search_terms_like Search string
+ * @param array  $args              Method parameters.
+ *
+ * @return string|null
+ */
+function bb_activity_search_cpt_post_title( $where_sql, $search_terms_like, $args = array() ) {
+	global $wpdb;
+	$where_sql .= $wpdb->prepare( ' OR m.meta_key = %s AND m.meta_value LIKE %s', 'post_title', $search_terms_like );
+
+	return $where_sql;
+}
+add_filter( 'bb_activity_include_cpt_post_title_search', 'bb_activity_search_cpt_post_title', 10, 2 );
