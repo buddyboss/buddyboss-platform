@@ -203,7 +203,7 @@ function _bp_profile_search_admin_js() {
  * @since BuddyBoss 1.0.0
  */
 function bp_profile_search_main_form() {
-	return (int) bp_get_option( 'bp_profile_search_main_form' );
+	return (int) apply_filters( 'bp_profile_search_main_form', bp_get_option( 'bp_profile_search_main_form' ) );
 }
 
 /**
