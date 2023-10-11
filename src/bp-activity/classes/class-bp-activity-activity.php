@@ -487,18 +487,11 @@ class BP_Activity_Activity {
 		// Searching.
 		if ( $r['search_terms'] ) {
 			$search_terms_like  = '%' . bp_esc_like( $r['search_terms'] ) . '%';
-			$content_search_sql = $wpdb->prepare( 'ExtractValue( a.content, "//text()" ) LIKE %s', $search_terms_like );
+			$where_conditions['search_sql'] = $wpdb->prepare( 'ExtractValue( a.content, "//text()" ) LIKE %s', $search_terms_like );
 
-			/**
-			 * Function to allow CPT's title in activity feed.
-			 *
-			 * @since BuddyBoss [BBVERSION]
-			 *
-			 * @param string $content_search_sql Post content search sql.
-			 * @param string $search_terms_like  Search string.
-			 * @param array  $r                  Method parameters.
-			 */
-			$where_conditions['search_sql'] = apply_filters( 'bb_activity_include_cpt_post_title_search', $content_search_sql, $search_terms_like, $r );
+			// Allow search CPT's post title in the activity feed.
+			$join_sql .= "LEFT JOIN {$bp->activity->table_name_meta} m ON ( m.activity_id = a.id )";
+			$where_conditions['search_sql'] .= $wpdb->prepare( ' OR m.meta_key = %s AND m.meta_value LIKE %s', 'post_title', $search_terms_like );
 
 			/**
 			 * Filters whether or not to include users for search parameters.
