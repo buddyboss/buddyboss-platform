@@ -168,6 +168,8 @@ function bp_get_default_options() {
 		'widget_bp_core_recently_active_widget'      => false,
 		'widget_bp_groups_widget'                    => false,
 		'widget_bp_messages_sitewide_notices_widget' => false,
+
+		'_bb_enable_activity_pinned_posts'           => true,
 	);
 
 	/**

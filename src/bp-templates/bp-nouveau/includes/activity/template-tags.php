@@ -1788,25 +1788,12 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		)
 	) {
 
-		// Additional checks for main activity screen.
-		if ( bp_is_activity_directory() ) {
-
-			// Use array_filter to find the activity with the matching ID.
-			$matched_activity = array_values(
-				array_filter( $GLOBALS['activities_template']->activities, function ( $activity ) use ( $activity_id ) {
-					return $activity->id === $activity_id;
-				} )
-			);
-		}
-
 		// Remove for activities related to group for main activity screen.
 		if (
 			bp_is_group_activity() ||
 			(
-				! empty( $matched_activity ) &&
-				! empty( $matched_activity[0] ) &&
-				! empty( $matched_activity[0]->component ) &&
-				'groups' !== $matched_activity[0]->component
+				bp_is_activity_directory() &&
+				'groups' !== bp_get_activity_object_name()
 			)
 
 		) {
