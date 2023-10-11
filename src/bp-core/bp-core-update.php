@@ -468,7 +468,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 20651 ) {
-			bb_update_to_2_4_50();
+			bb_update_to_2_4_41();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
@@ -3240,7 +3240,7 @@ function bb_update_to_2_4_10() {
  *
  * @return void
  */
-function bb_update_to_2_4_50() {
+function bb_update_to_2_4_41() {
 	global $wpdb, $bb_background_updater;
 
 	// Delete existing `bb_set_bulk_user_profile_slug` background jobs from options table.
