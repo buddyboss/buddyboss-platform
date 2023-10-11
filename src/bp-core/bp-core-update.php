@@ -3112,25 +3112,9 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
 			isset( $result->meta_value ) &&
 			preg_match( '/^\d+(?:,\d+)*$/', $result->meta_value )
 		) {
-
 			$query = $wpdb->prepare( "UPDATE {$table_name} SET message_id = %d WHERE id IN ( {$result->meta_value} )", $result->message_id );
 
 			$wpdb->query( $query );
-
-			$id_array = explode( ',', $result->meta_value );
-			if ( ! empty( $id_array ) ) {
-				foreach ( $id_array as $media_id ) {
-					$media = '';
-					if ( 'bp_document_ids' === $result->meta_key && class_exists( 'BP_Document' ) ) {
-						$media = new BP_Document( $media_id );
-					} elseif ( class_exists( 'BP_Media' ) ) {
-						$media = new BP_Media( $media_id );
-					}
-					if ( ! empty( $media ) ) {
-						update_post_meta( $media->attachment_id, 'bp_media_parent_message_id', $media->message_id );
-					}
-				}
-			}
 		}
 	}
 
