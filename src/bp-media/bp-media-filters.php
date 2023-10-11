@@ -1040,7 +1040,6 @@ function bp_media_attach_media_to_message( &$message ) {
 					$media->save();
 
 					update_post_meta( $media->attachment_id, 'bp_media_saved', true );
-					update_post_meta( $media->attachment_id, 'bp_media_parent_message_id', $message->id );
 					update_post_meta( $media->attachment_id, 'thread_id', $message->thread_id );
 				}
 			}
@@ -2914,8 +2913,6 @@ function bb_messages_media_save( $attachment ) {
 		$media_ids = bp_media_add_handler( $medias, 'message' );
 
 		if ( ! is_wp_error( $media_ids ) ) {
-			update_post_meta( $attachment->ID, 'bp_media_parent_message_id', 0 );
-
 			// Message not actually sent.
 			update_post_meta( $attachment->ID, 'bp_media_saved', 0 );
 
