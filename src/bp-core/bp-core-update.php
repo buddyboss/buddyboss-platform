@@ -2832,7 +2832,9 @@ function bb_core_update_repair_member_slug() {
 	global $wpdb, $bb_background_updater, $is_member_slug_background;
 
 	$user_limit = apply_filters( 'bb_core_update_repair_member_slug_limit', 50 );
-	$user_ids   = $wpdb->get_col(
+
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
+	$user_ids = $wpdb->get_col(
 		$wpdb->prepare(
 			"SELECT u.ID FROM `{$wpdb->users}` AS u LEFT JOIN `{$wpdb->usermeta}` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) WHERE ( um.user_id IS NULL OR LENGTH(meta_value) = %d ) ORDER BY u.ID LIMIT %d, %d",
 			'bb_profile_slug',
@@ -2843,15 +2845,16 @@ function bb_core_update_repair_member_slug() {
 	);
 
 	if ( empty( $user_ids ) ) {
-		$table_name = bp_core_get_table_prefix() . 'bb_background_job_queue';
+		$table_name = $bb_background_updater::$table_name;
 		// Delete existing migration from options table.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->query(
 			$wpdb->prepare(
-				"DELETE FROM {$table_name} WHERE `type` = %s AND `group` = %s",
+				"DELETE FROM {$table_name} WHERE `type` = %s AND `group` = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				'repair_member_slug',
 				'bb_core_update_repair_member_slug'
 			)
-		); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		);
 
 		return;
 	}
@@ -3230,11 +3233,19 @@ function bb_update_to_2_4_10() {
 	}
 }
 
+/**
+ * Migrate member slug generated background jobs.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
 function bb_update_to_2_4_50() {
 	global $wpdb, $bb_background_updater;
 
-	// Delete existing migration from options table.
-	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE `option_name` LIKE 'wp_1_bp_updater_batch_%' AND `option_value` LIKE '%bb_set_bulk_user_profile_slug%'" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	// Delete existing `bb_set_bulk_user_profile_slug` background jobs from options table.
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE `option_name` LIKE 'wp_1_bp_updater_batch_%' AND `option_value` LIKE '%bb_set_bulk_user_profile_slug%'" );
 
 	// Register a new background process.
 	$bb_background_updater->data(

@@ -5461,8 +5461,11 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
 	$new_unique_identifier = bb_generate_user_random_profile_slugs( count( $user_ids ), $prefix );
 
 	$implode_user_ids = implode( ',', $user_ids );
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	$wpdb->query(
 		$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery
 			"UPDATE {$wpdb->usermeta} SET meta_key = REPLACE(meta_key, %s, %s) WHERE meta_key LIKE 'bb_profile_slug_%' and user_id IN ({$implode_user_ids})",
 			'bb_profile_slug_',
 			'bb_profile_long_slug_'
@@ -5479,7 +5482,7 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
 	}
 
 	$bps_sql = rtrim( $bps_sql, ', ' ); // Remove the trailing comma and space.
-	$wpdb->query( $bps_sql );
+	$wpdb->query( $bps_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 	// Rest the global variable.
 	$is_member_slug_background = false;
