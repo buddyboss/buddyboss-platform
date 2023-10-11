@@ -554,7 +554,7 @@ window.bp = window.bp || {};
 		submitCreateAlbumInPopup: function ( event ) {
 			event.preventDefault();
 
-
+			var self = this;
 			var targetPopup = $( event.currentTarget ).closest( '.open-popup' );
 			var currentAction = $( targetPopup ).find( '.bp-media-create-popup-album-submit' );
 			var hiddenValue = targetPopup.find( '.bb-album-selected-id' ).val();
@@ -649,6 +649,7 @@ window.bp = window.bp || {};
 									}
 								} );
 
+								self.updateAlbumNavCount();
 								currentAction.removeClass( 'loading' );
 							} else {
 								currentAction.removeClass( 'loading' );
@@ -6370,6 +6371,22 @@ window.bp = window.bp || {};
 
 				// Submit create media album.
 				$( '#bp-media-create-album #bp-media-create-album-submit:visible' ).trigger( 'click' );
+			}
+		},
+
+		/**
+		 * Update album nav count on create new album.
+		 */
+		updateAlbumNavCount: function () {
+			if ( $( '.single-screen-navs.groups-nav' ).find( 'ul li#albums-groups-li' ) ) {
+				var nav		= $( '.single-screen-navs.groups-nav' ).find( 'ul li#albums-groups-li' );
+				var count	= parseInt( $( nav ).find( 'span.count' ).text() );
+				console.log( count );
+				if ( 'NaN' === count || 'undefined' === count ) {
+					$( nav ).find( 'a#albums' ).append( '<span class="count">' + ++count + '</span>' ); 
+				} else {
+					$( nav ).find( 'span.count' ).text( ++count );
+				}
 			}
 		}
 	};

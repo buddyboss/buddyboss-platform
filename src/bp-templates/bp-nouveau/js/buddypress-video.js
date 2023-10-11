@@ -2234,7 +2234,7 @@ window.bp = window.bp || {};
 											}
 										}
 									);
-
+									bp.Nouveau.Media.updateAlbumNavCount();
 									currentAction.removeClass( 'loading' );
 								}
 							}
