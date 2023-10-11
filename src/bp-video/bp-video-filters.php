@@ -794,8 +794,6 @@ function bb_messages_video_save( $attachment ) {
 		$video_ids = bp_video_add_handler( $videos, 'message' );
 
 		if ( ! is_wp_error( $video_ids ) ) {
-			update_post_meta( $attachment->ID, 'bp_media_parent_message_id', 0 );
-
 			// Message not actually sent.
 			update_post_meta( $attachment->ID, 'bp_video_saved', 0 );
 
@@ -873,7 +871,6 @@ function bp_video_attach_video_to_message( &$message ) {
 				}
 
 				update_post_meta( $video->attachment_id, 'bp_video_saved', true );
-				update_post_meta( $video->attachment_id, 'bp_media_parent_message_id', $message->id );
 				update_post_meta( $video->attachment_id, 'thread_id', $message->thread_id );
 
 			}
