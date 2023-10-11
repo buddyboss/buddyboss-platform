@@ -169,6 +169,7 @@ function bp_get_default_options() {
 		'widget_bp_groups_widget'                    => false,
 		'widget_bp_messages_sitewide_notices_widget' => false,
 
+		// Enabled activity pinned posts.
 		'_bb_enable_activity_pinned_posts'           => true,
 	);
 
