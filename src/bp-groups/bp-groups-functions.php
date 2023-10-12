@@ -5245,3 +5245,93 @@ function bb_groups_settings_default_fallback( $setting_type, $val = '' ) {
 	 */
 	return apply_filters( 'bp_group_' . $setting_type . '_status_fallback', $val );
 }
+
+/**
+ * Run migration for resolving the issue related to the groups.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_group_migration() {
+
+	// When 'group restrict invites' is on, remove subgroup members not in the parent group.
+	if (
+		true === bp_enable_group_hierarchies() &&
+		true === bp_enable_group_restrict_invites() &&
+		function_exists( 'bb_groups_migrate_subgroup_member' )
+	) {
+		bb_groups_migrate_subgroup_member();
+	}
+
+}
+
+/**
+ * Migrate subgroup members.
+ *
+ * @return void
+ */
+function bb_groups_migrate_subgroup_member() {
+	global $wpdb, $bb_background_updater;
+
+	$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}bp_groups g WHERE g.parent_id != 0" );
+
+	if ( ! empty( $results ) ) {
+		$min_count = apply_filters( 'bb_update_subgroup_member_count', 10 );
+		if ( count( $results ) > $min_count ) {
+			foreach ( array_chunk( $results, $min_count ) as $chunk ) {
+				$bb_background_updater->push_to_queue(
+					array(
+						'type'     => 'migration',
+						'group'    => 'bb_groups_subgroup_membership',
+						'priority' => 5,
+						'callback' => 'bb_update_groups_subgroup_membership_background_process',
+						'args'     => array( $chunk ),
+					)
+				);
+				$bb_background_updater->save()->schedule_event();
+			}
+		} else {
+			$bb_background_updater->push_to_queue(
+				array(
+					'type'     => 'migration',
+					'group'    => 'bb_groups_subgroup_membership',
+					'priority' => 5,
+					'callback' => 'bb_update_groups_subgroup_membership_background_process',
+					'args'     => array( $results ),
+				)
+			);
+			$bb_background_updater->save()->schedule_event();
+		}
+	}
+}
+
+/**
+ * Function to run sungroup membership removal within background process.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $subgroups Subgroups results.
+ *
+ * @return void
+ */
+function bb_update_groups_subgroup_membership_background_process( $subgroups ) {
+
+	if ( empty( $subgroups ) ) {
+		return;
+	}
+
+	// Remove members from subgroups.
+	foreach ( $subgroups as $group ) {
+		$parent_group_id = $group->parent_id;
+		$members         = groups_get_group_members( array( 'group_id' => $group->id ) );
+
+		if ( empty( $members['members'] ) ) {
+			continue;
+		}
+
+		foreach ( $members['members'] as $member ) {
+			if ( ! groups_is_user_member( $member->user_id, $parent_group_id ) ) {
+				groups_leave_group( $group->id, $member->user_id );
+			}
+		}
+	}
+}

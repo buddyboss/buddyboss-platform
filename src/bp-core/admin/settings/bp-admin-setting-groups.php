@@ -43,6 +43,8 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$group_avatar_type_before_saving = bb_get_default_group_avatar_type();
 		$group_cover_type_before_saving  = bb_get_default_group_cover_type();
 
+		$group_restrict_invites_before_saving  = bp_enable_group_restrict_invites();
+
 		parent::settings_save();
 
 		$group_avatar_type_after_saving = bb_get_default_group_avatar_type();
@@ -72,6 +74,14 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 
 			bp_update_option( 'bp-default-group-cover-type', $group_cover_type_before_saving );
 		}
+
+		$group_restrict_invites_after_saving = bb_filter_input_string( INPUT_POST, 'bp-enable-group-restrict-invites' );
+		if ( empty( $group_restrict_invites_before_saving ) && '1' === $group_restrict_invites_after_saving ) {
+			if ( function_exists( 'bb_groups_migrate_subgroup_member' ) ) {
+				bb_groups_migrate_subgroup_member();
+			}
+		}
+
 	}
 
 	/**
