@@ -168,6 +168,9 @@ function bp_get_default_options() {
 		'widget_bp_core_recently_active_widget'      => false,
 		'widget_bp_groups_widget'                    => false,
 		'widget_bp_messages_sitewide_notices_widget' => false,
+
+		// Enabled activity pinned posts.
+		'_bb_enable_activity_pinned_posts'           => true,
 	);
 
 	/**
@@ -2510,11 +2513,11 @@ function bb_custom_logout_redirection( $default = '' ) {
 function bb_is_active_activity_pinned_posts( $default = false ) {
 
 	/**
-	 * Filters whether or not activity pinned posts are enabled.
+	 * Filters whether activity pinned posts are enabled.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param bool $value Whether or not activity pinned posts are enabled.
+	 * @param bool $value Whether activity pinned posts are enabled.
 	 */
 	return (bool) apply_filters( 'bb_is_active_activity_pinned_posts', (bool) bp_get_option( '_bb_enable_activity_pinned_posts', $default ) );
 }

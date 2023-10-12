@@ -625,6 +625,7 @@
 		}
 	}
 
+	.loading-pin,
 	.bb-pinned {
 
 		.bp-activity-head {
@@ -639,6 +640,16 @@
 
 	.bb-activity-more-options-wrap + .bb-pin-action {
 		right: 45px;
+	}
+
+	.activity-item.loading-pin .bb-pin-action [class*="bb-icon"] {
+		animation: spin 2s infinite linear;
+		display: inline-block;
+
+		&:before {
+			content: "\ef30";
+			font-size: 20px;
+		}
 	}
 
 	.comment-item {

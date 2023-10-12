@@ -5512,7 +5512,7 @@ window.bp = window.bp || {};
 							}
 
 							// Check if there is a pinned activity with .bb-pinned class
-							var pinned_activity = $( '#activity-stream ul.activity-list li.bb-pinned' ).last();
+							var pinned_activity = $( '#activity-stream ul.activity-list li:first.bb-pinned' );
 
 							if ( pinned_activity.length > 0 ) {
 

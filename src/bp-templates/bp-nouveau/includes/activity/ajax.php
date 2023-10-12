@@ -1031,11 +1031,11 @@ function bp_nouveau_ajax_activity_update_privacy() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return string
+ * @return void
  */
 function bb_nouveau_ajax_activity_update_pinned_post() {
 	$response = array(
-		'feedback' => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' )
+		'feedback' => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
 	);
 
 	if ( ! bp_is_post_request() ) {
@@ -1055,7 +1055,7 @@ function bb_nouveau_ajax_activity_update_pinned_post() {
 		wp_send_json_error( $response );
 	}
 
-	if ( ! in_array( $_POST['pin_action'], array( 'pin', 'unpin' ) ) ) {
+	if ( ! in_array( $_POST['pin_action'], array( 'pin', 'unpin' ), true ) ) {
 		wp_send_json_error( $response );
 	}
 
