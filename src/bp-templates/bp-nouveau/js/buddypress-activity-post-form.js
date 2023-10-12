@@ -5765,8 +5765,18 @@ window.bp = window.bp || {};
 								$( '#activity-stream' ).html( $( '<ul></ul>' ).addClass( 'activity-list item-list bp-list' ) );
 							}
 
-							// Prepend the activity.
-							bp.Nouveau.inject( '#activity-stream ul.activity-list', response.activity, 'prepend' );
+							// Check if there is a pinned activity with .bb-pinned class
+							var pinned_activity = $( '#activity-stream ul.activity-list li:first.bb-pinned' );
+
+							if ( pinned_activity.length > 0 ) {
+
+								// If a pinned activity with .bb-pinned class is found, insert after it.
+								bp.Nouveau.inject( '#activity-stream ul.activity-list li.bb-pinned', response.activity, 'after' );
+							} else {
+
+								// Prepend the activity.
+								bp.Nouveau.inject( '#activity-stream ul.activity-list', response.activity, 'prepend' );
+							}
 
 							// replace dummy image with original image by faking scroll event.
 							jQuery( window ).scroll();

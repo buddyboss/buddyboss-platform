@@ -102,6 +102,7 @@ add_filter( 'bp_groups_get_where_count_conditions', 'bb_groups_count_update_wher
 
 // Remove from group forums and topics.
 add_action( 'groups_leave_group', 'bb_groups_unsubscribe_group_forums_topic', 10, 2 );
+add_action( 'bp_after_group_activity_content', 'bb_group_activity_pinpost_confirmation_modal_template' );
 
 /**
  * Filter output of Group Description through WordPress's KSES API.
@@ -1471,4 +1472,13 @@ function bb_groups_unsubscribe_group_forums_topic( $group_id, $user_id ) {
 			bbp_remove_user_topic_subscription( $user_id, $topic_id );
 		}
 	}
+}
+
+/*	
+ * Add Pin Post confirmation to the activity loop
+ *
+ * @since [BBVERSION]
+ */
+function bb_group_activity_pinpost_confirmation_modal_template() {
+	bp_get_template_part( 'activity/confirmation-modal' );
 }

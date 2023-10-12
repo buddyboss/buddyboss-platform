@@ -283,6 +283,9 @@ function bp_has_activities( $args = '' ) {
 			'date_query'        => false,        // Filter by date. See first parameter of WP_Date_Query for format.
 			'filter_query'      => false,        // Advanced filtering.  See BP_Activity_Query for format.
 
+			// Pinned post.
+			'pin_type'          => '',           // Show pinned post for type of feed - group, activity.
+
 			// Searching.
 			'search_terms'      => $search_terms_default,
 			'update_meta_cache' => true,
@@ -349,6 +352,11 @@ function bp_has_activities( $args = '' ) {
 	// argument. This prevents backpat errors with AJAX.
 	if ( ! empty( $r['include'] ) && ( 'ham_only' === $r['spam'] ) ) {
 		$r['spam'] = 'all';
+	}
+
+	// Pinned post.
+	if ( empty( $r['pin_type'] ) ) {
+		$r['pin_type'] = bb_activity_pin_type( $r );
 	}
 
 	/*
@@ -2729,6 +2737,10 @@ function bp_get_activity_css_class() {
 
 	if ( '0' !== bp_activity_get_meta( bp_get_activity_id(), '_link_embed', true ) ) {
 		$class .= ' wp-link-embed';
+	}
+
+	if ( ! empty( $activities_template->pinned_id ) && bp_get_activity_id() === (int) $activities_template->pinned_id ) {
+		$class .= ' bb-pinned';
 	}
 
 	/**

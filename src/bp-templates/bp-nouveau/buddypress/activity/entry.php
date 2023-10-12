@@ -33,6 +33,12 @@ if ( ! empty( $link_embed ) ) {
 
 	<?php bb_nouveau_activity_entry_bubble_buttons(); ?>
 
+	<div class="bb-pin-action">
+		<span class="bb-pin-action_button" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Pinned Post', 'buddyboss' ); ?>">
+			<i class="bb-icon-f bb-icon-thumbtack"></i>
+		</span>
+	</div>
+
 	<div class="activity-avatar item-avatar">
 
 		<a href="<?php bp_activity_user_link(); ?>">

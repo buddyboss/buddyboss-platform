@@ -2046,6 +2046,7 @@ function bp_activity_get( $args = '' ) {
 			 * );
 			 */
 			'filter'            => array(),
+			'pin_type'          => '',
 		),
 		'activity_get'
 	);
@@ -2072,6 +2073,7 @@ function bp_activity_get( $args = '' ) {
 			'update_meta_cache' => $r['update_meta_cache'],
 			'count_total'       => $r['count_total'],
 			'fields'            => $r['fields'],
+			'pin_type'          => $r['pin_type'],
 		)
 	);
 
@@ -6380,4 +6382,136 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 			'privacy'          => $activity_comment->privacy,
 		)
 	);
+}
+
+/**
+ * Pin or unpin activity or group feed post.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args Arguments related to pin/unpin activity or group feed post.
+ *
+ * @return bool|string Update type pinned|pin_updated|unpinned.
+ */
+function bb_activity_pin_unpin_post( $args = array() ) {
+	$r = bp_parse_args(
+		$args,
+		array(
+			'action'      => 'pin',
+			'activity_id' => 0,
+			'retval'      => 'bool',
+		)
+	);
+
+	$retval = '';
+
+	$activity = new BP_Activity_Activity( (int) $r['activity_id'] );
+
+	if ( ! empty( $activity->id ) ) {
+
+		if ( 'unpin' === $r['action'] ) {
+			$updated_value = '';
+			$retval        = 'unpinned';
+		} else {
+			$updated_value = $r['activity_id'];
+			$retval        = 'pinned';
+		}
+
+		// Check if group activity or normal activity.
+		if ( 'groups' === $activity->component && ! empty( $activity->item_id ) ) {
+			$old_value = groups_get_groupmeta( $activity->item_id, 'bb_pinned_post' );
+			groups_update_groupmeta( $activity->item_id, 'bb_pinned_post', $updated_value );
+		} else {
+			$old_value = bp_get_option( 'bb_pinned_post' );
+			bp_update_option( 'bb_pinned_post', $updated_value );
+		}
+
+		// Check if already exists and updating new value.
+		if ( ! empty( $updated_value ) && ! empty( $old_value ) && (int) $old_value !== (int) $updated_value ) {
+			$retval = 'pin_updated';
+		}
+
+		/**
+		 * Fires after activity pin/unpin post.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int    $activity_id Activity ID.
+		 * @param string $action      Action type pin/unpin.
+		 */
+		do_action( 'bb_activity_pin_unpin_post', $activity->id, $r['action'] );
+	}
+
+	if ( 'bool' === $r['retval'] ) {
+
+		if ( ! empty( $retval ) ) {
+			$retval = true;
+		} else {
+			$retval = false;
+		}
+	}
+
+	return $retval;
+}
+
+/**
+ * Fetch the pin type based on the screen its activity/group.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args Array of Arguments.
+ *
+ * @return mixed|string
+ */
+function bb_activity_pin_type( $args ) {
+	$r = bp_parse_args(
+		$args,
+		array(
+			'pin_type' => '',
+			'scope'    => '',
+			'object'   => '',
+			'user_id'  => '',
+			'action'   => '',
+			'filter'   => array(),
+		)
+	);
+
+	$scope = is_array( $r['scope'] ) ? $r['scope'] : explode( ',', $r['scope'] );
+
+	// Check web and API if main activity feed or the group feed.
+	if (
+		empty( $r['action'] ) &&
+		! empty( $scope ) &&
+		in_array( 'public', $scope, true ) &&
+		empty( $r['user_id'] ) &&
+		empty( $r['object'] ) &&
+		empty( $r['filter']['object'] )
+	) {
+		$r['pin_type'] = 'activity';
+	} elseif (
+		bp_is_active( 'groups' ) &&
+		! empty( $scope ) &&
+		(
+			in_array( 'activity', $scope, true ) ||
+			in_array( 'public', $scope, true )
+		) &&
+		empty( $r['user_id'] ) &&
+		empty( $r['action'] ) &&
+		(
+			(
+				! empty( $r['object'] ) &&
+				'groups' === $r['object']
+
+			) ||
+			(
+				! empty( $r['filter']['object'] ) &&
+				'groups' === $r['filter']['object']
+
+			)
+		)
+	) {
+		$r['pin_type'] = 'group';
+	}
+
+	return $r['pin_type'];
 }
