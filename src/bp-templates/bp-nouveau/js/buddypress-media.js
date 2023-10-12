@@ -6378,15 +6378,16 @@ window.bp = window.bp || {};
 		 * Update album nav count on create new album.
 		 */
 		updateAlbumNavCount: function () {
-			if ( $( '.single-screen-navs.groups-nav' ).find( 'ul li#albums-groups-li' ) ) {
-				var nav		= $( '.single-screen-navs.groups-nav' ).find( 'ul li#albums-groups-li' );
-				var count	= parseInt( $( nav ).find( 'span.count' ).text() );
-				console.log( count );
-				if ( 'NaN' === count || 'undefined' === count ) {
-					$( nav ).find( 'a#albums' ).append( '<span class="count">' + ++count + '</span>' ); 
-				} else {
-					$( nav ).find( 'span.count' ).text( ++count );
-				}
+			if ( $( '.single-screen-navs.groups-nav' ).find( 'ul li#albums-groups-li' ).length < 1 ) {
+				return;
+			}
+			
+			var nav		= $( '.single-screen-navs.groups-nav' ).find( 'ul li#albums-groups-li' );
+			var count	= $( nav ).find( 'span.count' ).text();
+			if ( parseInt( count ) > 0 ) {
+				$( nav ).find( 'span.count' ).text( ++count );
+			} else {
+				$( nav ).find( 'a#albums' ).append( '<span class="count">1</span>' ); 
 			}
 		}
 	};
