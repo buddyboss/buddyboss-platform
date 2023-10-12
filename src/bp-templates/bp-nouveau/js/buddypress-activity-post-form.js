@@ -5771,7 +5771,7 @@ window.bp = window.bp || {};
 							if ( pinned_activity.length > 0 ) {
 
 								// If a pinned activity with .bb-pinned class is found, insert after it.
-								bp.Nouveau.inject( '#activity-stream ul.activity-list li.bb-pinned', response.activity, 'after' );
+								bp.Nouveau.inject( '#activity-stream ul.activity-list li:first.bb-pinned', response.activity, 'after' );
 							} else {
 
 								// Prepend the activity.
