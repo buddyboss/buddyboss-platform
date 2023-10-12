@@ -5267,6 +5267,8 @@ function bb_group_migration() {
 /**
  * Migrate subgroup members.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @return void
  */
 function bb_groups_migrate_subgroup_member() {
