@@ -608,6 +608,10 @@ function groups_leave_group( $group_id, $user_id = 0 ) {
 		}
 	}
 
+	if ( ! BP_Groups_Member::delete( $user_id, $group_id ) ) {
+		return false;
+	}
+
 	// If group restrict invites is enabled and any member left parent group then also remove from all child groups.
 	if (
 		! empty( $group_id ) &&
@@ -621,10 +625,6 @@ function groups_leave_group( $group_id, $user_id = 0 ) {
 				}
 			}
 		}
-	}
-
-	if ( ! BP_Groups_Member::delete( $user_id, $group_id ) ) {
-		return false;
 	}
 
 	bp_core_add_message( __( 'You successfully left the group.', 'buddyboss' ) );
@@ -5256,8 +5256,7 @@ function bb_group_migration() {
 	// When 'group restrict invites' is on, remove subgroup members not in the parent group.
 	if (
 		true === bp_enable_group_hierarchies() &&
-		true === bp_enable_group_restrict_invites() &&
-		function_exists( 'bb_groups_migrate_subgroup_member' )
+		true === bp_enable_group_restrict_invites()
 	) {
 		bb_groups_migrate_subgroup_member();
 	}
@@ -5274,10 +5273,14 @@ function bb_group_migration() {
 function bb_groups_migrate_subgroup_member() {
 	global $wpdb, $bb_background_updater;
 
-	$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}bp_groups g WHERE g.parent_id != 0" );
+	$sql  = "SELECT g.id, g.parent_id, gm.user_id FROM {$wpdb->prefix}bp_groups g";
+	$sql .= " INNER JOIN {$wpdb->prefix}bp_groups_members gm ON gm.group_id = g.id";
+	$sql .= " WHERE g.parent_id != 0 and gm.is_confirmed = 1";
+
+	$results = $wpdb->get_results( $sql );
 
 	if ( ! empty( $results ) ) {
-		$min_count = apply_filters( 'bb_update_subgroup_member_count', 10 );
+		$min_count = apply_filters( 'bb_update_subgroup_member_count', 20 );
 		if ( count( $results ) > $min_count ) {
 			foreach ( array_chunk( $results, $min_count ) as $chunk ) {
 				$bb_background_updater->push_to_queue(
@@ -5323,17 +5326,8 @@ function bb_update_groups_subgroup_membership_background_process( $subgroups ) {
 
 	// Remove members from subgroups.
 	foreach ( $subgroups as $group ) {
-		$parent_group_id = $group->parent_id;
-		$members         = groups_get_group_members( array( 'group_id' => $group->id ) );
-
-		if ( empty( $members['members'] ) ) {
-			continue;
-		}
-
-		foreach ( $members['members'] as $member ) {
-			if ( ! groups_is_user_member( $member->user_id, $parent_group_id ) ) {
-				groups_leave_group( $group->id, $member->user_id );
-			}
+		if ( ! groups_is_user_member( $group->user_id, $group->parent_id ) ) {
+			groups_leave_group( $group->id, $group->user_id );
 		}
 	}
 }

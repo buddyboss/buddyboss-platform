@@ -81,9 +81,9 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		 */
 		$group_restrict_invites_after_saving = bb_filter_input_string( INPUT_POST, 'bp-enable-group-restrict-invites' );
 		if (
+			true === bp_enable_group_hierarchies() &&
 			empty( $group_restrict_invites_before_saving ) &&
-			'1' === $group_restrict_invites_after_saving &&
-			function_exists( 'bb_groups_migrate_subgroup_member' )
+			'1' === $group_restrict_invites_after_saving
 		) {
 			bb_groups_migrate_subgroup_member();
 		}
