@@ -5293,7 +5293,7 @@ function bb_groups_migrate_subgroup_member() {
 						'args'     => array( $chunk ),
 					)
 				);
-				$bb_background_updater->save()();
+				$bb_background_updater->save();
 			}
 		} else {
 			$bb_background_updater->push_to_queue(
