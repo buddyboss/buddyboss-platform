@@ -5317,9 +5317,10 @@ function bb_groups_migrate_subgroup_member() {
 function bb_update_groups_subgroup_membership_background_process() {
 	global $wpdb, $bp, $bb_background_updater;
 
-	$sql = "SELECT g.id, g.parent_id, gm.user_id FROM {$bp->groups->table_name} g";
-	$sql .= " INNER JOIN {$bp->groups->table_name_members} gm ON gm.group_id = g.id";
-	$sql .= ' WHERE g.parent_id != 0 and gm.is_confirmed = 1 limit 50';
+	$sql = "SELECT gm.group_id, gm.user_id FROM {$bp->groups->table_name_members} gm
+			LEFT JOIN {$bp->groups->table_name} g ON gm.group_id = g.id
+			LEFT JOIN {$bp->groups->table_name} parent ON g.parent_id = parent.id
+			WHERE g.parent_id != 0 AND gm.is_admin = 0 AND gm.is_mod = 0 AND gm.is_confirmed = 1 ORDER BY parent.id, g.id LIMIT 50;";
 
 	// phpcs:ignore
 	$groups = $wpdb->get_results( $sql );
@@ -5341,9 +5342,7 @@ function bb_update_groups_subgroup_membership_background_process() {
 
 	// Remove members from subgroups.
 	foreach ( $groups as $group ) {
-		if ( ! groups_is_user_member( $group->user_id, $group->parent_id ) ) {
-			groups_leave_group( $group->id, $group->user_id );
-		}
+		groups_leave_group( $group->group_id, $group->user_id );
 	}
 
 	$bb_background_updater->push_to_queue(
