@@ -596,7 +596,7 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 							'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : $album_id,
 							'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : $group_id,
 							'activity_id'   => $bp_media->activity_id,
-							'message_id'    => $bp_media->message_id,
+							'message_id'    => ! empty( $bp_media->message_id ) ? $bp_media->message_id : $media['message_id'],
 							'privacy'       => $bp_media->privacy,
 							'menu_order'    => ! empty( $media['menu_order'] ) ? $media['menu_order'] : false,
 							'date_created'  => $bp_media->date_created,
@@ -611,6 +611,7 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 						'title'         => $media['name'],
 						'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : $album_id,
 						'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : $group_id,
+						'message_id'    => ! empty( $media['message_id'] ) ? $media['message_id'] : 0,
 						'menu_order'    => ! empty( $media['menu_order'] ) ? $media['menu_order'] : false,
 						'privacy'       => ! empty( $media['privacy'] ) && in_array( $media['privacy'], array_merge( array_keys( bp_media_get_visibility_levels() ), array( 'message' ) ) ) ? $media['privacy'] : $privacy,
 					)
