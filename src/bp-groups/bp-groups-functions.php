@@ -4057,7 +4057,7 @@ function bp_group_type_short_code_add_body_class( $class ) {
 		 *This class commented because this class will add when buddypanel enable
 		 *and this condition already in the theme
 		 */
-		//$class[] = 'bb-buddypanel';
+		// $class[] = 'bb-buddypanel';
 	}
 	return $class;
 }
@@ -5271,12 +5271,13 @@ function bb_group_migration() {
  * @return void
  */
 function bb_groups_migrate_subgroup_member() {
-	global $wpdb, $bb_background_updater;
+	global $wpdb, $bp, $bb_background_updater;
 
-	$sql  = "SELECT g.id, g.parent_id, gm.user_id FROM {$wpdb->prefix}bp_groups g";
-	$sql .= " INNER JOIN {$wpdb->prefix}bp_groups_members gm ON gm.group_id = g.id";
-	$sql .= " WHERE g.parent_id != 0 and gm.is_confirmed = 1";
+	$sql  = "SELECT g.id, g.parent_id, gm.user_id FROM {$bp->groups->table_name} g";
+	$sql .= " INNER JOIN {$bp->groups->table_name_members} gm ON gm.group_id = g.id";
+	$sql .= ' WHERE g.parent_id != 0 and gm.is_confirmed = 1';
 
+	// phpcs:ignore
 	$results = $wpdb->get_results( $sql );
 
 	if ( ! empty( $results ) ) {
@@ -5292,7 +5293,7 @@ function bb_groups_migrate_subgroup_member() {
 						'args'     => array( $chunk ),
 					)
 				);
-				$bb_background_updater->save()->schedule_event();
+				$bb_background_updater->save()();
 			}
 		} else {
 			$bb_background_updater->push_to_queue(
@@ -5304,8 +5305,10 @@ function bb_groups_migrate_subgroup_member() {
 					'args'     => array( $results ),
 				)
 			);
-			$bb_background_updater->save()->schedule_event();
+			$bb_background_updater->save();
 		}
+
+		$bb_background_updater->dispatch();
 	}
 }
 
@@ -5314,18 +5317,18 @@ function bb_groups_migrate_subgroup_member() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param array $subgroups Subgroups results.
+ * @param array $groups Groups results.
  *
  * @return void
  */
-function bb_update_groups_subgroup_membership_background_process( $subgroups ) {
+function bb_update_groups_subgroup_membership_background_process( $groups ) {
 
-	if ( empty( $subgroups ) ) {
+	if ( empty( $groups ) ) {
 		return;
 	}
 
 	// Remove members from subgroups.
-	foreach ( $subgroups as $group ) {
+	foreach ( $groups as $group ) {
 		if ( ! groups_is_user_member( $group->user_id, $group->parent_id ) ) {
 			groups_leave_group( $group->id, $group->user_id );
 		}
