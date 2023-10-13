@@ -5356,5 +5356,5 @@ function bb_update_groups_subgroup_membership_background_process() {
 		)
 	);
 
-	$bb_background_updater->save()->save_schedule();
+	$bb_background_updater->save()->schedule_event();
 }
