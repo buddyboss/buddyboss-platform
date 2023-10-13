@@ -486,7 +486,7 @@ class BP_Activity_Activity {
 
 		// Searching.
 		if ( $r['search_terms'] ) {
-			$search_terms_like  = '%' . bp_esc_like( $r['search_terms'] ) . '%';
+			$search_terms_like              = '%' . bp_esc_like( $r['search_terms'] ) . '%';
 			$where_conditions['search_sql'] = $wpdb->prepare( 'ExtractValue( a.content, "//text()" ) LIKE %s', $search_terms_like );
 
 			// Allow search CPT's post title in the activity feed.
