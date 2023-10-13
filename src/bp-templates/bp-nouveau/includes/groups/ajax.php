@@ -287,12 +287,13 @@ function bp_nouveau_ajax_joinleave_group() {
 				 * When inside the group or in the loggedin user's group memberships screen
 				 * we need to reload the page.
 				 */
-				$bp_is_group = bp_is_group() || ( bp_is_user_groups() && bp_is_my_profile() ) || ( bp_is_groups_directory() && ! empty( bp_get_descendent_groups( $group->id ) ) );
+				$bp_is_group = bp_is_group() || ( bp_is_user_groups() && bp_is_my_profile() );
 
 				$response = array(
-					'contents' => bp_get_group_join_button( $group ),
-					'is_group' => $bp_is_group,
-					'type'     => 'success',
+					'contents'  => bp_get_group_join_button( $group ),
+					'is_group'  => $bp_is_group,
+					'is_parent' => ! empty( bp_get_descendent_groups( $group->id ) ) ? true : false,
+					'type'      => 'success',
 				);
 
 				if ( 'hidden' === $group->status ) {

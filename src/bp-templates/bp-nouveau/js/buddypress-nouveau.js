@@ -2110,6 +2110,11 @@ window.bp = window.bp || {};
 								}
 							}
 
+							// If group is parent and page is group directory, then load active tab.
+							if ( undefined !== response.data.is_group && response.data.is_parent ) {
+								$( '#buddypress .groups-nav li.selected a' ).trigger( 'click' );
+							}
+
 							if (
 								'undefined' !== typeof response.data.is_group_subscription &&
 								true === response.data.is_group_subscription &&
