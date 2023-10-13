@@ -5457,7 +5457,7 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
 		return;
 	}
 
-	$prefix                = ! empty( $is_member_slug_background ) ? 'b' : 'm';
+	$prefix                = ! empty( $is_member_slug_background ) ? 'b' : '';
 	$new_unique_identifier = bb_generate_user_random_profile_slugs( count( $user_ids ), $prefix );
 
 	$implode_user_ids = implode( ',', $user_ids );
@@ -5503,11 +5503,11 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
  * @since BuddyBoss [BBVERSION] Added $prefix argument.
  *
  * @param int    $max_ids How many unique IDs need to be generated? Default 1.
- * @param string $prefix  Prefix key to add in UUID with 'm' and 'b'. Default 'm'.
+ * @param string $prefix  Prefix key to add in UUID. In backgound it will be 'b' or empty.
  *
  * @return array
  */
-function bb_generate_user_random_profile_slugs( $max_ids = 1, $prefix = 'm' ) {
+function bb_generate_user_random_profile_slugs( $max_ids = 1, $prefix = '' ) {
 	$max_ids       = absint( $max_ids );
 	$start         = 0;
 	$length        = 8;
