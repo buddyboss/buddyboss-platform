@@ -5500,7 +5500,7 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
  * Function to generate the unique keys.
  *
  * @since BuddyBoss 2.3.41
- * @since BuddyBoss [BBVERSION] Added $prefix argument.
+ * @since BuddyBoss 2.4.41 Added $prefix argument.
  *
  * @param int    $max_ids How many unique IDs need to be generated? Default 1.
  * @param string $prefix  Prefix key to add in UUID. In backgound it will be 'b' or empty.
