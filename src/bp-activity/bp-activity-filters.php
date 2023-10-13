@@ -170,6 +170,8 @@ add_filter( 'bp_get_activity_content', 'bb_mention_remove_deleted_users_link', 2
 add_filter( 'bp_get_activity_content_body', 'bb_mention_remove_deleted_users_link', 20, 1 );
 add_filter( 'bp_activity_comment_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
 
+add_action( 'edit_post', 'bb_cpt_post_title_save', 999, 2 );
+
 /** Functions *****************************************************************/
 
 /**
@@ -3552,4 +3554,33 @@ function bb_group_activity_at_name_send_emails( $content, $user_id, $group_id, $
 function bb_activity_comment_at_name_send_emails( $comment_id, $r, $activity ) {
 	$activity = new BP_Activity_Activity( $comment_id );
 	bp_activity_at_name_send_emails( $activity );
+}
+
+/**
+ * Function to add post title in activity meta for the post, and other CPTS.
+ * It will help to search CPT in the feed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $post_id post id of the topic or reply.
+ * @param object $post Post data.
+ */
+function bb_cpt_post_title_save( $post_id, $post ) {
+	if ( empty( $post_id ) ) {
+		return;
+	}
+
+	$activity_id = bp_activity_get_activity_id(
+		array(
+			'component'         => 'blogs',
+			'type'              => 'new_blog_' . $post->post_type,
+			'secondary_item_id' => $post_id,
+		)
+	);
+
+	if ( empty( $activity_id ) ) {
+		return;
+	}
+
+	bp_activity_update_meta( $activity_id, 'post_title', $post->post_title );
 }

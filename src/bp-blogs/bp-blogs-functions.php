@@ -634,9 +634,6 @@ function bp_blogs_publish_post_activity_meta( $activity_id, $post, $args ) {
 	$admin_filters = 'New ' . $singular_label_name . ' published';
 	bp_activity_update_meta( $activity_id, 'admin_filters', $admin_filters );
 
-	// Add post title in activity meta. will help to search CPT in feed.
-	bp_activity_update_meta( $activity_id, 'post_title', $post->post_title );
-
 	// Update the blog's last activity.
 	bp_blogs_update_blogmeta( $args['item_id'], 'last_activity', bp_core_current_time() );
 
