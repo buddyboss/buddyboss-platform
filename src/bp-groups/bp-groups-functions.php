@@ -5271,59 +5271,71 @@ function bb_group_migration() {
  * @return void
  */
 function bb_groups_migrate_subgroup_member() {
-	global $wpdb, $bp, $bb_background_updater;
+	global $bb_background_updater;
 
-	$sql  = "SELECT g.id, g.parent_id, gm.user_id FROM {$bp->groups->table_name} g";
-	$sql .= " INNER JOIN {$bp->groups->table_name_members} gm ON gm.group_id = g.id";
-	$sql .= ' WHERE g.parent_id != 0 and gm.is_confirmed = 1';
+	$bb_background_updater->push_to_queue(
+		array(
+			'type'     => 'migration',
+			'group'    => 'bb_groups_subgroup_membership',
+			'priority' => 5,
+			'callback' => 'bb_update_groups_subgroup_membership_background_process',
+			'args'     => array(),
+		)
+	);
+	$bb_background_updater->save()->dispatch();
 
-	// phpcs:ignore
-	$results = $wpdb->get_results( $sql );
+	$bb_background_updater->push_to_queue(
+		array(
+			'type'     => 'migration',
+			'group'    => 'bb_groups_subgroup_membership',
+			'priority' => 5,
+			'callback' => 'bb_update_groups_subgroup_membership_background_process',
+			'args'     => array(),
+		)
+	);
+	$bb_background_updater->save()->schedule_event();
 
-	if ( ! empty( $results ) ) {
-		$min_count = apply_filters( 'bb_update_subgroup_member_count', 20 );
-		if ( count( $results ) > $min_count ) {
-			foreach ( array_chunk( $results, $min_count ) as $chunk ) {
-				$bb_background_updater->push_to_queue(
-					array(
-						'type'     => 'migration',
-						'group'    => 'bb_groups_subgroup_membership',
-						'priority' => 5,
-						'callback' => 'bb_update_groups_subgroup_membership_background_process',
-						'args'     => array( $chunk ),
-					)
-				);
-				$bb_background_updater->save();
-			}
-		} else {
-			$bb_background_updater->push_to_queue(
-				array(
-					'type'     => 'migration',
-					'group'    => 'bb_groups_subgroup_membership',
-					'priority' => 5,
-					'callback' => 'bb_update_groups_subgroup_membership_background_process',
-					'args'     => array( $results ),
-				)
-			);
-			$bb_background_updater->save();
-		}
-
-		$bb_background_updater->dispatch();
-	}
+	$bb_background_updater->push_to_queue(
+		array(
+			'type'     => 'migration',
+			'group'    => 'bb_groups_subgroup_membership',
+			'priority' => 5,
+			'callback' => 'bb_update_groups_subgroup_membership_background_process',
+			'args'     => array(),
+		)
+	);
+	$bb_background_updater->save()->schedule_event();
 }
 
 /**
- * Function to run sungroup membership removal within background process.
+ * Function to run subgroup membership removal within background process.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param array $groups Groups results.
- *
  * @return void
  */
-function bb_update_groups_subgroup_membership_background_process( $groups ) {
+function bb_update_groups_subgroup_membership_background_process() {
+	global $wpdb, $bp, $bb_background_updater;
+
+	$sql = "SELECT g.id, g.parent_id, gm.user_id FROM {$bp->groups->table_name} g";
+	$sql .= " INNER JOIN {$bp->groups->table_name_members} gm ON gm.group_id = g.id";
+	$sql .= ' WHERE g.parent_id != 0 and gm.is_confirmed = 1 limit 50';
+
+	// phpcs:ignore
+	$groups = $wpdb->get_results( $sql );
 
 	if ( empty( $groups ) ) {
+		$table_name = $bb_background_updater::$table_name;
+		// Delete remaining background processes.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM {$table_name} WHERE `type` = %s AND `group` = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				'migration',
+				'bb_groups_subgroup_membership'
+			)
+		);
+
 		return;
 	}
 
@@ -5333,4 +5345,16 @@ function bb_update_groups_subgroup_membership_background_process( $groups ) {
 			groups_leave_group( $group->id, $group->user_id );
 		}
 	}
+
+	$bb_background_updater->push_to_queue(
+		array(
+			'type'     => 'migration',
+			'group'    => 'bb_groups_subgroup_membership',
+			'priority' => 5,
+			'callback' => 'bb_update_groups_subgroup_membership_background_process',
+			'args'     => array(),
+		)
+	);
+
+	$bb_background_updater->save()->save_schedule();
 }
