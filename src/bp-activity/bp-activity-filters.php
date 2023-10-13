@@ -3572,7 +3572,7 @@ function bb_cpt_post_title_save( $post_id, $post ) {
 
 	$activity_id = bp_activity_get_activity_id(
 		array(
-			'component'         => 'blogs',
+			'component'         => buddypress()->blogs->id,
 			'type'              => 'new_blog_' . $post->post_type,
 			'secondary_item_id' => $post_id,
 		)
