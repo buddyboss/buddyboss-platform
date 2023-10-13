@@ -613,7 +613,7 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 							'folder_id'     => ! empty( $document['folder_id'] ) ? $document['folder_id'] : $folder_id,
 							'group_id'      => ! empty( $document['group_id'] ) ? $document['group_id'] : $group_id,
 							'activity_id'   => $bp_document->activity_id,
-							'message_id'    => $bp_document->message_id,
+							'message_id'    => ! empty( $bp_document->message_id ) ? $bp_document->message_id : $document['message_id'],
 							'privacy'       => $bp_document->privacy,
 							'menu_order'    => ! empty( $document['menu_order'] ) ? $document['menu_order'] : false,
 							'date_modified' => bp_core_current_time(),
@@ -641,6 +641,7 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 						'folder_id'     => ! empty( $document['folder_id'] ) ? $document['folder_id'] : $folder_id,
 						'group_id'      => ! empty( $document['group_id'] ) ? $document['group_id'] : $group_id,
 						'privacy'       => ! empty( $document['privacy'] ) && in_array( $document['privacy'], array_merge( array_keys( bp_document_get_visibility_levels() ), array( 'message' ) ) ) ? $document['privacy'] : $privacy,
+						'message_id'    => ! empty( $document['message_id'] ) ? $document['message_id'] : 0,
 						'menu_order'    => ! empty( $document['menu_order'] ) ? $document['menu_order'] : 0,
 					)
 				);
