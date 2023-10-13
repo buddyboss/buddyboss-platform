@@ -57,6 +57,10 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.4.41 =
+* Bug: Activity - When commenting or replying to a comment on a post some users were seeing “Server error or connection is lost. Please try again later." message
+* Bug: Core - When selecting to generate members unique identifier (profile url), the process was causing a crash due to a background code issue which has now bee refactored
+
 = 2.4.40 =
 * New Feature! - Allow users to Edit Activity Comments
 * Bug: Activity - Activity search : Search results are getting incorrect.
