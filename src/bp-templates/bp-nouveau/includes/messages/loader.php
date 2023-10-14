@@ -74,7 +74,7 @@ class BP_Nouveau_Messages {
 		add_action( 'bp_messages_setup_nav', 'bp_nouveau_messages_adjust_nav' );
 
 		// Remove deprecated scripts
-		remove_action( 'bp_enqueue_scripts', 'messages_add_autocomplete_js' );
+		remove_action( 'bp_enqueue_community_scripts', 'messages_add_autocomplete_js' );
 
 		// Enqueue the scripts for the new UI
 		add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_messages_enqueue_scripts' );

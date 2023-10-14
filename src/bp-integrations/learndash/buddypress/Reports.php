@@ -43,7 +43,7 @@ class Reports {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function init() {
-		add_action( 'bp_enqueue_scripts', array( $this, 'registerReportsScript' ) );
+		add_action( 'bp_enqueue_community_scripts', array( $this, 'registerReportsScript' ) );
 
 		// add plugable templates to report actions
 		add_action( 'bp_ld_sync/reports', array( $this, 'showReportFilters' ), 10 );

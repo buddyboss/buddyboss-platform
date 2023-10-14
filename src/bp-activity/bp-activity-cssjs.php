@@ -54,7 +54,7 @@ function bp_activity_mentions_script() {
 	 */
 	do_action( 'bp_activity_mentions_prime_results' );
 }
-add_action( 'bp_enqueue_scripts', 'bp_activity_mentions_script' );
+add_action( 'bp_enqueue_community_scripts', 'bp_activity_mentions_script' );
 add_action( 'bp_admin_enqueue_scripts', 'bp_activity_mentions_script' );
 
 /**

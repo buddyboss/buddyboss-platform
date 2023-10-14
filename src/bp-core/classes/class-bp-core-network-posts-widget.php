@@ -40,7 +40,7 @@ class BP_Core_Network_Posts_Widget extends WP_Widget {
 		);
 
 		if ( is_customize_preview() || is_active_widget( false, false, $this->id_base ) ) {
-			add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+			add_action( 'bp_enqueue_community_scripts', array( $this, 'enqueue_scripts' ) );
 		}
 	}
 
@@ -94,7 +94,7 @@ class BP_Core_Network_Posts_Widget extends WP_Widget {
 		}
 
 		if ( $blogs ) {
-			?> <ul id="network-list" class="item-list" aria-live="polite" aria-relevant="all" aria-atomic="true"> 
+			?> <ul id="network-list" class="item-list" aria-live="polite" aria-relevant="all" aria-atomic="true">
 			<?php
 			foreach ( $blogs as $blog_key ) {
 				switch_to_blog( $blog_key );

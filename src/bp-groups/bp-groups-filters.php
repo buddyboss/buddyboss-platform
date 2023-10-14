@@ -422,11 +422,11 @@ function bp_groups_allow_mods_to_delete_activity( $can_delete, $activity ) {
 		$group = groups_get_group( $activity->item_id );
 
 		// As per the new logic moderator can delete the activity of all the users. So removed the && ! groups_is_user_admin( $activity->user_id, $activity->item_id ) condition.
-		if ( 
-			! empty( $group ) && 
+		if (
+			! empty( $group ) &&
 			(
 				groups_is_user_mod( get_current_user_id(), $activity->item_id ) ||
-				groups_is_user_admin( get_current_user_id(), $activity->item_id ) 
+				groups_is_user_admin( get_current_user_id(), $activity->item_id )
 			)
 		) {
 			$can_delete = true;
@@ -1068,7 +1068,7 @@ function bb_load_group_type_label_custom_css() {
 		wp_add_inline_style( 'bp-nouveau', $group_type_custom_css );
 	}
 }
-add_action( 'bp_enqueue_scripts', 'bb_load_group_type_label_custom_css', 12 );
+add_action( 'bp_enqueue_community_scripts', 'bb_load_group_type_label_custom_css', 12 );
 
 /**
  * Send subscription notification to users after post an activity.

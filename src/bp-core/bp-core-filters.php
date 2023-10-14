@@ -2169,7 +2169,7 @@ function bb_add_default_cover_image_inline_css() {
 
 	wp_add_inline_style( 'bp-nouveau', $css_rules );
 }
-add_action( 'bp_enqueue_scripts', 'bb_add_default_cover_image_inline_css', 12 );
+add_action( 'bp_enqueue_community_scripts', 'bb_add_default_cover_image_inline_css', 12 );
 
 /**
  * Enable gravatars for members when Profile Avatars is WordPress.
