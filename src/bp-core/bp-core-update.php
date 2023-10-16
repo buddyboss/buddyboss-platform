@@ -2550,17 +2550,14 @@ function bb_update_to_2_2_9() {
  * @return void
  */
 function bb_create_background_member_friends_count( $paged = 1 ) {
-	global $bp_background_updater;
+	global $bb_background_updater;
 
 	if ( ! bp_is_active( 'friends' ) ) {
 		return;
 	}
 
-	if ( empty( $paged ) ) {
-		$paged = 1;
-	}
-
-	$per_page = 50;
+	$per_page = apply_filters( 'bb_core_update_update_member_friends_count_limit', 50 );
+	$paged    = empty( $paged ) ? 1 : $paged;
 	$offset   = ( ( $paged - 1 ) * $per_page );
 
 	$user_ids = get_users(
@@ -2583,15 +2580,16 @@ function bb_create_background_member_friends_count( $paged = 1 ) {
 		return;
 	}
 
-	$bp_background_updater->data(
+	$bb_background_updater->data(
 		array(
-			array(
-				'callback' => 'bb_migrate_member_friends_count',
-				'args'     => array( $user_ids, $paged ),
-			),
-		)
+			'type'     => 'update_member_friends_count',
+			'group'    => 'bb_migrate_member_friends_count',
+			'priority' => 5,
+			'callback' => 'bb_migrate_member_friends_count',
+			'args'     => array( $user_ids, $paged ),
+		),
 	);
-	$bp_background_updater->save()->schedule_event();
+	$bb_background_updater->save()->schedule_event();
 }
 
 /**
@@ -2610,12 +2608,17 @@ function bb_migrate_member_friends_count( $user_ids, $paged ) {
 	}
 
 	foreach ( $user_ids as $user_id ) {
-		bp_has_members( 'type=alphabetical&page=1&scope=personal&per_page=1&user_id=' . $user_id );
-		$query_friend_count = (int) $GLOBALS['members_template']->total_member_count;
-		$meta_friend_count  = (int) friends_get_total_friend_count( $user_id );
+		$friends = bp_core_get_users(
+			array(
+				'type'            => 'alphabetical',
+				'user_id'         => $user_id,
+				'per_page'        => 1,
+				'populate_extras' => false,
+			)
+		);
 
-		if ( $query_friend_count !== $meta_friend_count ) {
-			bp_update_user_meta( $user_id, 'total_friend_count', $query_friend_count );
+		if ( ! empty( $friends ) ) {
+			bp_update_user_meta( $user_id, 'total_friend_count', (int) $friends['total'] );
 		}
 	}
 
@@ -3302,4 +3305,14 @@ function bb_update_to_2_4_41() {
 		),
 	);
 	$bb_background_updater->save()->schedule_event();
+}
+
+function bb_update_to_2_4_44(){
+	global $wpdb;
+
+	// Delete existing `bb_set_bulk_user_profile_slug` background jobs from options table.
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE `option_name` LIKE 'wp_1_bp_updater_batch_%' AND `option_value` LIKE '%bb_migrate_member_friends_count%'" );
+
+	bb_create_background_member_friends_count();
 }
