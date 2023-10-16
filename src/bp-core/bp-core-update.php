@@ -3300,7 +3300,7 @@ function bb_update_to_2_4_12() {
 /**
  * Migrate member slug generated background jobs.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.41
  *
  * @return void
  */
