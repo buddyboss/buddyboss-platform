@@ -6207,7 +6207,7 @@ function bb_migrate_activity_like_reaction( $paged = 1 ) {
 			'type'     => 'migration',
 			'group'    => 'bb_activity_like_reaction_migration',
 			'priority' => 4,
-			'callback' => 'bb_activity_like_reaction_background_process',
+			'callback' => 'bb_activity_like_reaction_background_process_migration',
 			'args'     => array( $results, $paged, $reaction_id ),
 		)
 	);
@@ -6236,7 +6236,7 @@ function bb_migrate_activity_like_reaction( $paged = 1 ) {
  *
  * @return void
  */
-function bb_activity_like_reaction_background_process( $results, $paged, $reaction_id ) {
+function bb_activity_like_reaction_background_process_migration( $results, $paged, $reaction_id ) {
 	global $wpdb, $bb_background_updater;
 
 	$user_reaction_table = bb_load_reaction()::$user_reaction_table;
@@ -6260,7 +6260,7 @@ function bb_activity_like_reaction_background_process( $results, $paged, $reacti
 				ARRAY_A
 			);
 
-			// Extract the user_id values using array_column
+			// Extract the user_id values using array_column.
 			$user_ids = array_column( $data, 'user_id' );
 			if ( ! empty( $user_ids ) ) {
 				$meta_value = array_diff( $meta_value, $user_ids );
