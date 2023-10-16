@@ -649,7 +649,7 @@ window.bp = window.bp || {};
 									}
 								} );
 
-								self.updateAlbumNavCount();
+								self.updateAlbumNavCount( response.data.album_count );
 								currentAction.removeClass( 'loading' );
 							} else {
 								currentAction.removeClass( 'loading' );
@@ -6377,15 +6377,15 @@ window.bp = window.bp || {};
 		/**
 		 * Update album nav count on create new album.
 		 */
-		updateAlbumNavCount: function () {
+		updateAlbumNavCount: function ( count ) {
 			if ( $( '.single-screen-navs.groups-nav' ).find( 'ul li#albums-groups-li' ).length < 1 ) {
 				return;
 			}
-			
-			var nav		= $( '.single-screen-navs.groups-nav' ).find( 'ul li#albums-groups-li' );
-			var count	= $( nav ).find( 'span.count' ).text();
-			if ( parseInt( count ) > 0 ) {
-				$( nav ).find( 'span.count' ).text( ++count );
+
+			var nav  = $( '.single-screen-navs.groups-nav' ).find( 'ul li#albums-groups-li' );
+
+			if ( $( nav ).find( 'span.count' ).length > 0 ) {
+				$( nav ).find( 'span.count' ).text( count );
 			} else {
 				$( nav ).find( 'a#albums' ).append( '<span class="count">1</span>' ); 
 			}
