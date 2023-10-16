@@ -85,6 +85,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 			true === (bool) bp_enable_group_restrict_invites()
 		) {
 			bb_groups_migrate_subgroup_member();
+			bb_groups_migrate_group_invitation();
 		}
 	}
 

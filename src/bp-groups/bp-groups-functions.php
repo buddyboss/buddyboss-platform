@@ -5259,6 +5259,7 @@ function bb_group_migration() {
 		true === bp_enable_group_restrict_invites()
 	) {
 		bb_groups_migrate_subgroup_member();
+		bb_groups_migrate_group_invitation();
 	}
 
 }
@@ -5351,6 +5352,76 @@ function bb_update_groups_subgroup_membership_background_process() {
 			'group'    => 'bb_groups_subgroup_membership',
 			'priority' => 5,
 			'callback' => 'bb_update_groups_subgroup_membership_background_process',
+			'args'     => array(),
+		)
+	);
+
+	$bb_background_updater->save()->schedule_event();
+}
+
+/**
+ * Migrate group invitations.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_groups_migrate_group_invitation() {
+	global $bb_background_updater;
+
+	$bb_background_updater->push_to_queue(
+		array(
+			'type'     => 'migration',
+			'group'    => 'bb_groups_invitation',
+			'priority' => 10,
+			'callback' => 'bb_update_groups_invitation_background_process',
+			'args'     => array(),
+		)
+	);
+
+	$bb_background_updater->save()->schedule_event();
+}
+
+/**
+ * Function to run group invites removal within background process.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_groups_invitation_background_process() {
+	global $wpdb, $bp, $bb_background_updater;
+
+	$invites_table_name = BP_Invitation_Manager::get_table_name();
+
+	$sql = "SELECT i.user_id, i.item_id, i.type FROM {$invites_table_name} i
+			INNER JOIN {$bp->groups->table_name} g ON g.id = i.item_id
+			LEFT JOIN {$bp->groups->table_name_members} gm ON gm.group_id = g.parent_id AND gm.user_id = i.user_id
+			WHERE g.parent_id != 0 AND gm.group_id IS NULL
+			ORDER BY i.id LIMIT 1;";
+
+	// phpcs:ignore
+	$group_invitations = $wpdb->get_results( $sql );
+
+	if ( empty( $group_invitations ) ) {
+		return;
+	}
+
+	// Remove group invite where user is not a member of parent group.
+	foreach ( $group_invitations as $invitation ) {
+		if ( 'request' === $invitation->type ) {
+			groups_reject_membership_request( false, $invitation->user_id, $invitation->item_id );
+		} else {
+			groups_delete_invite( $invitation->user_id, $invitation->item_id );
+		}
+	}
+
+	$bb_background_updater->push_to_queue(
+		array(
+			'type'     => 'migration',
+			'group'    => 'bb_groups_invitation',
+			'priority' => 10,
+			'callback' => 'bb_update_groups_invitation_background_process',
 			'args'     => array(),
 		)
 	);
