@@ -717,7 +717,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 							'album_id'      => ! empty( $video['album_id'] ) ? $video['album_id'] : $album_id,
 							'group_id'      => ! empty( $video['group_id'] ) ? $video['group_id'] : $group_id,
 							'activity_id'   => $bp_video->activity_id,
-							'message_id'    => $bp_video->message_id,
+							'message_id'    => ! empty( $bp_video->message_id ) ? $bp_video->message_id : $video['message_id'],
 							'privacy'       => $bp_video->privacy,
 							'menu_order'    => ! empty( $video['menu_order'] ) ? $video['menu_order'] : false,
 							'date_created'  => $bp_video->date_created,
@@ -732,6 +732,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 						'title'         => $video['name'],
 						'album_id'      => ! empty( $video['album_id'] ) ? $video['album_id'] : $album_id,
 						'group_id'      => ! empty( $video['group_id'] ) ? $video['group_id'] : $group_id,
+						'message_id'    => ! empty( $video['message_id'] ) ? $video['message_id'] : 0,
 						'menu_order'    => ! empty( $video['menu_order'] ) ? $video['menu_order'] : false,
 						'privacy'       => ! empty( $video['privacy'] ) && in_array( $video['privacy'], array_merge( array_keys( bp_video_get_visibility_levels() ), array( 'message' ) ), true ) ? $video['privacy'] : $privacy,
 					)
