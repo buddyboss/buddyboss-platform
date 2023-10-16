@@ -228,8 +228,11 @@ function bp_helper_plugins_loaded_callback() {
 	 */
 	if ( in_array( 'memberpress/memberpress.php', $bp_plugins ) ) {
 		add_filter( 'mepr_design_style_handles', function ( $allowed_handles ) {
-			$allowed_handles[] = 'admin-bar';
-			$allowed_handles[] = 'bp-admin-bar';
+
+			if ( is_admin_bar_showing() ) {
+				$allowed_handles[] = 'admin-bar';
+				$allowed_handles[] = 'bp-admin-bar';
+			}
 
 			return $allowed_handles;
 		} );
