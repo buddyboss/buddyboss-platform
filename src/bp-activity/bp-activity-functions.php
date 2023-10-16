@@ -6252,8 +6252,7 @@ function bb_activity_like_reaction_background_process_migration( $results, $page
 			$implode_meta_value = implode( ',', wp_parse_id_list( $meta_value ) );
 			$data               = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT user_id FROM {$user_reaction_table}
-                        WHERE item_id = %d AND reaction_id = %d AND user_id IN ( {$implode_meta_value} )",
+					"SELECT user_id FROM {$user_reaction_table} WHERE item_id = %d AND reaction_id = %d AND user_id IN ( {$implode_meta_value} )",
 					$result->activity_id,
 					$reaction_id
 				),
@@ -6266,7 +6265,7 @@ function bb_activity_like_reaction_background_process_migration( $results, $page
 				$meta_value = array_diff( $meta_value, $user_ids );
 			}
 
-			if ( ! empty( $meta_value) ) {
+			if ( ! empty( $meta_value ) ) {
 				$min_count = (int) apply_filters( 'bb_update_users_like_reaction', 20 );
 				if ( count( $meta_value ) > $min_count ) {
 					foreach ( array_chunk( $meta_value, $min_count ) as $chunk ) {
@@ -6274,7 +6273,7 @@ function bb_activity_like_reaction_background_process_migration( $results, $page
 							array(
 								'type'     => 'migration',
 								'group'    => 'bb_update_users_like_reaction',
-								'priority' => 4,
+								'priority' => 3,
 								'callback' => 'bb_update_users_like_reaction',
 								'args'     => array( $chunk, $activity_id, $reaction_id ),
 							)
