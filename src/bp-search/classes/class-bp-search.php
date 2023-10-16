@@ -886,7 +886,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				$class = $item == $this->search_args['search_subset'] ? 'active current' : '';
 				// this filter can be used to change display of 'posts' to 'Blog Posts' etc..
 
-				$label = isset( $search_items[ $item ] ) ? $search_items[ $item ] : $item;
+				$label = isset( $search_items[ $item ] ) ? $search_items[ $item ] : ucwords( $item );
 
 				$label = apply_filters( 'bp_search_label_search_type', $label );
 
