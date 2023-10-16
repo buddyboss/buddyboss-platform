@@ -6158,10 +6158,10 @@ function bb_activity_migration( $raw_db_version, $current_db ) {
 		if (
 			! $is_already_run &&
 			(
-				$raw_db_version < 20601 || // Reaction release version.
-				$raw_db_version < 20674 // Last release version.
+				$raw_db_version < 20601 || // Reaction release version 2.4.30.
+				$raw_db_version < 20674 // Last release version 2.4.41.
 			) &&
-			$current_db >= 20674 // Current DB version.
+			$current_db >= 20674 // Current DB version 2.4.50.
 		) {
 			set_transient( 'bb_migrate_activity_reaction', 'yes', HOUR_IN_SECONDS );
 			bb_migrate_activity_like_reaction();
