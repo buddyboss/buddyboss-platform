@@ -23,7 +23,7 @@ class BB_TutorLMS_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function initialize() {
-		$this->tab_order      = 30;
+		$this->tab_order      = 52;
 		$this->intro_template = $this->root_path . '/templates/admin/integration-tab-intro.php';
 	}
 
