@@ -501,6 +501,11 @@ function bp_version_updater() {
 				bb_activity_migration();
 			}
 
+			// Run migration about forums.
+			if ( function_exists( 'bb_forums_migration' ) ) {
+				bb_forums_migration();
+			}
+
 			// Run migration about media/video description.
 			if ( function_exists( 'bb_media_migration' ) ) {
 				bb_media_migration();
