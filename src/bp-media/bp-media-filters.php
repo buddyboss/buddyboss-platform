@@ -62,7 +62,6 @@ add_filter( 'bp_repair_list', 'bp_media_add_admin_repair_items' );
 add_action( 'init', 'bp_media_download_url_file' );
 
 add_filter( 'bp_search_label_search_type', 'bp_media_search_label_search' );
-add_action( 'bp_activity_after_email_content', 'bp_media_activity_after_email_content' );
 
 add_filter( 'bp_get_activity_entry_css_class', 'bp_media_activity_entry_css_class' );
 
@@ -90,7 +89,7 @@ add_action( 'bp_add_rewrite_rules', 'bb_setup_attachment_media_preview' );
 add_filter( 'query_vars', 'bb_setup_attachment_media_preview_query' );
 add_action( 'template_include', 'bb_setup_attachment_media_preview_template', PHP_INT_MAX );
 
-add_action( 'bp_activity_after_email_content', 'bb_gif_activity_after_email_content' );
+add_filter( 'bb_activity_comment_get_edit_data', 'bp_media_get_edit_activity_data' );
 /**
  * Add Media items for search
  */
@@ -406,7 +405,7 @@ function bp_media_activity_comment_entry( $comment_id ) {
  * @return bool
  */
 function bp_media_update_activity_media_meta( $content, $user_id, $activity_id ) {
-	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit;
+	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit, $bb_activity_comment_edit;
 
 	$medias           = filter_input( INPUT_POST, 'media', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 	$medias           = ! empty( $medias ) ? $medias : array();
@@ -434,7 +433,17 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 	if ( ! isset( $medias ) || empty( $medias ) ) {
 
 		// delete media ids and meta for activity if empty media in request.
-		if ( ! empty( $activity_id ) && $bp_activity_edit && isset( $_POST['edit'] ) ) {
+		if (
+			! empty( $activity_id ) &&
+			(
+				(
+					$bp_activity_edit && isset( $_POST['edit'] )
+				) ||
+				(
+					$bb_activity_comment_edit && isset( $_POST['edit_comment'] )
+				)
+			)
+		) {
 			$old_media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
 
 			if ( ! empty( $old_media_ids ) ) {
@@ -446,6 +455,12 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 					}
 				}
 				bp_activity_delete_meta( $activity_id, 'bp_media_ids' );
+
+				// Delete media meta from activity for activity comment.
+				if ( $bb_activity_comment_edit ) {
+					bp_activity_delete_meta( $activity_id, 'bp_media_id' );
+					bp_activity_delete_meta( $activity_id, 'bp_media_activity' );
+				}
 			}
 		}
 
@@ -481,7 +496,7 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 	if ( ! empty( $activity_id ) ) {
 
 		// Delete media if not exists in current media ids.
-		if ( isset( $_POST['edit'] ) ) {
+		if ( isset( $_POST['edit'] ) || isset( $_POST['edit_comment'] ) ) {
 			$old_media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
 			$old_media_ids = explode( ',', $old_media_ids );
 
@@ -1023,7 +1038,6 @@ function bp_media_attach_media_to_message( &$message ) {
 					$media->save();
 
 					update_post_meta( $media->attachment_id, 'bp_media_saved', true );
-					update_post_meta( $media->attachment_id, 'bp_media_parent_message_id', $message->id );
 					update_post_meta( $media->attachment_id, 'thread_id', $message->thread_id );
 				}
 			}
@@ -1345,17 +1359,31 @@ function bp_media_comment_embed_gif( $comment_id ) {
  * @param $activity
  */
 function bp_media_activity_save_gif_data( $activity ) {
-	global $bp_activity_edit;
+	global $bp_activity_edit, $bb_activity_comment_edit;
 
-	if ( ! ( $bp_activity_edit && isset( $_POST['edit'] ) ) && empty( $_POST['gif_data'] ) ) {
+	if ( !
+		(
+			( $bp_activity_edit && isset( $_POST['edit'] ) ) ||
+			( $bb_activity_comment_edit && isset( $_POST['edit_comment'] ) )
+		) &&
+		empty( $_POST['gif_data'] )
+	) {
 		return;
 	}
 
 	$gif_data     = ! empty( $_POST['gif_data'] ) ? $_POST['gif_data'] : array();
 	$gif_old_data = bp_activity_get_meta( $activity->id, '_gif_data', true );
 
-	// if edit activity then delete attachment and clear activity meta.
+	// if edit activity/comment, then delete attachment and clear activity meta.
+	$is_delete_gif = false;
 	if ( $bp_activity_edit && isset( $_POST['edit'] ) && empty( $gif_data ) && isset( $_POST['id'] ) && $activity->id === intval( $_POST['id'] ) ) {
+		$is_delete_gif = true;
+	} elseif ( $bb_activity_comment_edit && isset( $_POST['edit_comment'] ) && empty( $gif_data ) ) {
+		$is_delete_gif = true;
+	}
+
+	// if edit activity then delete attachment and clear activity meta.
+	if ( $is_delete_gif ) {
 		if ( ! empty( $gif_old_data ) ) {
 			wp_delete_attachment( $gif_old_data['still'], true );
 			wp_delete_attachment( $gif_old_data['mp4'], true );
@@ -1979,9 +2007,17 @@ function bp_media_filter_public_scope( $retval = array(), $filter = array() ) {
 
 	if ( ! empty( $filter['search_terms'] ) ) {
 		$args[] = array(
-			'column'  => 'title',
-			'compare' => 'LIKE',
-			'value'   => $filter['search_terms'],
+			'relation' => 'OR',
+			array(
+				'column'  => 'title',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+			array(
+				'column'  => 'description',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			)
 		);
 	}
 
@@ -2415,32 +2451,6 @@ function bp_media_parse_file_path( $file_path ) {
 }
 
 /**
- * Added text on the email when replied on the activity.
- *
- * @since BuddyBoss 1.4.7
- *
- * @param BP_Activity_Activity $activity Activity Object.
- */
-function bp_media_activity_after_email_content( $activity ) {
-	$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
-
-	if ( ! empty( $media_ids ) ) {
-		$media_ids  = explode( ',', $media_ids );
-		$photo_text = sprintf(
-			_n( '%s photo', '%s photos', count( $media_ids ), 'buddyboss' ),
-			bp_core_number_format( count( $media_ids ) )
-		);
-		$content    = sprintf(
-		/* translator: 1. Activity link, 2. Activity photo count */
-			__( '<a href="%1$s" target="_blank">%2$s uploaded</a>', 'buddyboss' ),
-			bp_activity_get_permalink( $activity->id ),
-			$photo_text
-		);
-		echo wpautop( $content );
-	}
-}
-
-/**
  * Adds activity media data for the edit activity
  *
  * @param array $activity Activity data.
@@ -2477,6 +2487,10 @@ function bp_media_get_edit_activity_data( $activity ) {
 				}
 
 				$media = new BP_Media( $media_id );
+
+				if ( empty( $media->id ) ) {
+					continue;
+				}
 
 				$activity['media'][] = array(
 					'id'            => $media_id,
@@ -2710,6 +2724,7 @@ function bp_video_activity_entry_css_class( $class ) {
 function bb_setup_media_preview() {
 	add_rewrite_rule( 'bb-media-preview/([^/]+)/([^/]+)/?$', 'index.php?bb-media-preview=$matches[1]&id1=$matches[2]', 'top' );
 	add_rewrite_rule( 'bb-media-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?bb-media-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
+	add_rewrite_rule( 'bb-media-preview/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?bb-media-preview=$matches[1]&id1=$matches[2]&size=$matches[3]&receiver=$matches[4]', 'top' );
 }
 
 /**
@@ -2725,6 +2740,7 @@ function bb_setup_query_media_preview( $query_vars ) {
 	$query_vars[] = 'bb-media-preview';
 	$query_vars[] = 'id1';
 	$query_vars[] = 'size';
+	$query_vars[] = 'receiver';
 
 	return $query_vars;
 }
@@ -2732,11 +2748,11 @@ function bb_setup_query_media_preview( $query_vars ) {
 /**
  * Setup template for the media preview.
  *
+ * @since BuddyBoss 1.7.2
+ *
  * @param string $template Template path to include.
  *
- * @return array
- *
- * @since BuddyBoss 1.7.2
+ * @return string
  */
 function bb_setup_template_for_media_preview( $template ) {
 	if ( get_query_var( 'bb-media-preview' ) === false || empty( get_query_var( 'bb-media-preview' ) ) ) {
@@ -2891,8 +2907,6 @@ function bb_messages_media_save( $attachment ) {
 		$media_ids = bp_media_add_handler( $medias, 'message' );
 
 		if ( ! is_wp_error( $media_ids ) ) {
-			update_post_meta( $attachment->ID, 'bp_media_parent_message_id', 0 );
-
 			// Message not actually sent.
 			update_post_meta( $attachment->ID, 'bp_media_saved', 0 );
 
@@ -2916,24 +2930,3 @@ function bb_messages_media_save( $attachment ) {
 }
 
 add_action( 'bb_media_upload', 'bb_messages_media_save' );
-
-/**
- * Added text on the email when replied on the activity.
- *
- * @since BuddyBoss 2.3.80
- *
- * @param BP_Activity_Activity $activity Activity Object.
- */
-function bb_gif_activity_after_email_content( $activity ) {
-	$gif_ids = bp_activity_get_meta( $activity->id, '_gif_data', true );
-
-	if ( ! empty( $gif_ids ) ) {
-		$content = sprintf(
-		/* translator: 1. Activity link, 2. gif text */
-			'<a href="%1$s" target="_blank">%2$s</a>',
-			bp_activity_get_permalink( $activity->id ),
-			esc_html__( 'Sent you a gif', 'buddyboss' )
-		);
-		echo wpautop( $content );
-	}
-}
