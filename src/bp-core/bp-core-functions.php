@@ -7863,6 +7863,9 @@ function bb_admin_icons( $id ) {
 		case 'bp_web_push_notification_settings':
 			$meta_icon = $bb_icon_bf . ' bb-icon-paste';
 			break;
+		case 'bp_tutor-integration':
+			$meta_icon = $bb_icon_bf . ' bb-icon-brand-tutorlms';
+			break;
 		default:
 			$meta_icon = '';
 	}
