@@ -769,6 +769,7 @@ function bp_nouveau_ajax_media_album_save() {
 			'redirect_url' => $redirect_url,
 			'tree_view'    => $ul,
 			'album_id'     => $album_id,
+			'album_count'  => (int) bp_media_get_total_group_album_count(),
 		)
 	);
 }
