@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.4.41\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-10-17 11:40:19+00:00\n"
+"POT-Creation-Date: 2023-10-17 11:49:16+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -285,7 +285,7 @@ msgstr ""
 msgid "Link"
 msgstr ""
 
-#: bp-activity/bp-activity-admin.php:270 bp-forums/admin/metaboxes.php:367
+#: bp-activity/bp-activity-admin.php:270 bp-forums/admin/metaboxes.php:390
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1773
 msgid "Type"
 msgstr ""
@@ -537,9 +537,9 @@ msgstr ""
 #: bp-core/classes/class-bp-email-tokens.php:644
 #: bp-core/classes/class-bp-email-tokens.php:914
 #: bp-core/classes/class-bp-email-tokens.php:1126
-#: bp-forums/admin/metaboxes.php:109 bp-forums/admin/settings.php:336
-#: bp-forums/replies/template.php:51 bp-forums/replies/template.php:1784
-#: bp-forums/replies/template.php:1827 bp-forums/topics/template.php:3357
+#: bp-forums/admin/settings.php:336 bp-forums/replies/template.php:51
+#: bp-forums/replies/template.php:1784 bp-forums/replies/template.php:1827
+#: bp-forums/topics/template.php:3357
 #: bp-moderation/classes/class-bp-moderation-activity.php:521
 #: bp-moderation/classes/class-bp-moderation-forum-replies.php:275
 #: bp-templates/bp-nouveau/buddypress/assets/emails/single-bp-email.php:408
@@ -4211,9 +4211,8 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:444
 #: bp-core/admin/bp-core-admin-settings.php:456
-#: bp-core/bb-core-subscriptions.php:600 bp-forums/admin/metaboxes.php:65
-#: bp-forums/admin/metaboxes.php:487 bp-forums/admin/replies.php:621
-#: bp-forums/admin/settings.php:312
+#: bp-core/bb-core-subscriptions.php:600 bp-forums/admin/metaboxes.php:510
+#: bp-forums/admin/replies.php:621 bp-forums/admin/settings.php:312
 #: bp-forums/classes/class-bp-forums-notification.php:128
 #: bp-forums/templates/default/bbpress/content-single-topic-lead.php:21
 #: bp-forums/templates/default/bbpress/content-single-topic-lead.php:90
@@ -6385,9 +6384,9 @@ msgid ""
 msgstr ""
 
 #: bp-core/bb-core-subscriptions.php:599 bp-forums/admin/forums.php:497
-#: bp-forums/admin/metaboxes.php:48 bp-forums/admin/metaboxes.php:398
-#: bp-forums/admin/metaboxes.php:459 bp-forums/admin/replies.php:620
-#: bp-forums/admin/settings.php:304 bp-forums/admin/topics.php:678
+#: bp-forums/admin/metaboxes.php:421 bp-forums/admin/metaboxes.php:482
+#: bp-forums/admin/replies.php:620 bp-forums/admin/settings.php:304
+#: bp-forums/admin/topics.php:678
 #: bp-forums/classes/class-bp-forums-notification.php:188
 #: bp-forums/forums/functions.php:1759 bp-forums/forums/template.php:51
 #: bp-forums/groups.php:52
@@ -7549,7 +7548,7 @@ msgid "Search Emails"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:3348 bp-core/bp-core-functions.php:3444
-#: bp-core/bp-core-functions.php:7371 bp-forums/admin/metaboxes.php:579
+#: bp-core/bp-core-functions.php:7371 bp-forums/admin/metaboxes.php:602
 #: bp-members/classes/class-bp-members-admin.php:2467
 #: bp-members/classes/class-bp-members-list-table.php:157
 #: bp-members/classes/class-bp-members-list-table.php:173
@@ -8016,7 +8015,7 @@ msgid "Details"
 msgstr ""
 
 #: bp-core/bp-core-options.php:46 bp-core/deprecated/buddypress/1.5.php:159
-#: bp-forums/admin/metaboxes.php:573 bp-groups/bp-groups-admin.php:1463
+#: bp-forums/admin/metaboxes.php:596 bp-groups/bp-groups-admin.php:1463
 #: bp-groups/classes/class-bp-groups-list-table.php:436
 #: bp-members/classes/class-bp-members-list-table.php:156
 #: bp-members/classes/class-bp-members-ms-list-table.php:143
@@ -10208,7 +10207,7 @@ msgstr ""
 msgid "About Me"
 msgstr ""
 
-#: bp-core/deprecated/buddypress/1.5.php:177 bp-forums/admin/metaboxes.php:585
+#: bp-core/deprecated/buddypress/1.5.php:177 bp-forums/admin/metaboxes.php:608
 #: bp-templates/bp-nouveau/includes/members/functions.php:459
 #: bp-xprofile/classes/class-bp-xprofile-field-type-url.php:28
 #: bp-xprofile/classes/class-bp-xprofile-field-type-url.php:118
@@ -12517,175 +12516,167 @@ msgstr ""
 msgid "Reset Forums"
 msgstr ""
 
-#: bp-forums/admin/metaboxes.php:84 bp-forums/admin/settings.php:320
-#: bp-forums/topics/template.php:3788
-msgid "Discussion Tag"
-msgid_plural "Discussion Tags"
-msgstr[0] ""
-msgstr[1] ""
-
-#: bp-forums/admin/metaboxes.php:131
-msgid "Users &amp; Moderation"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:139
-#: bp-integrations/learndash/buddypress/Reports.php:442
-#: bp-integrations/learndash/library/ReportsGenerator.php:354
-#: bp-moderation/classes/class-bp-moderation-members.php:123
-msgid "User"
-msgid_plural "Users"
-msgstr[0] ""
-msgstr[1] ""
-
-#: bp-forums/admin/metaboxes.php:158
-msgid "Hidden Discussion"
-msgid_plural "Hidden Discussions"
-msgstr[0] ""
-msgstr[1] ""
-
-#: bp-forums/admin/metaboxes.php:180
-msgid "Hidden Reply"
-msgid_plural "Hidden Replies"
-msgstr[0] ""
-msgstr[1] ""
-
-#: bp-forums/admin/metaboxes.php:202
-msgid "Empty Discussion Tag"
-msgid_plural "Empty Discussion Tags"
-msgstr[0] ""
-msgstr[1] ""
-
-#: bp-forums/admin/metaboxes.php:266 bp-forums/admin/metaboxes.php:267
-#: bp-forums/admin/metaboxes.php:366
-#: bp-forums/templates/default/bbpress/form-topic.php:145
-msgid "Type:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:278 bp-forums/admin/metaboxes.php:279
-#: bp-forums/admin/metaboxes.php:378
-msgid "Status:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:290 bp-forums/admin/metaboxes.php:291
-msgid "Visibility:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:304
-msgid "Parent:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:305
-msgid "Forum Parent"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:321 bp-forums/admin/metaboxes.php:414
-#: bp-forums/admin/metaboxes.php:475
-msgid "- Select Forum -"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:330
-msgid "Order:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:331
-msgid "Forum Order"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:379
-msgid "Select whether to open or close the discussion."
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:397 bp-forums/admin/metaboxes.php:458
-#: bp-forums/groups.php:1230
-#: bp-forums/templates/default/bbpress/form-topic.php:124
-#: bp-forums/topics/template.php:63
-msgid "Forum:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:486 bp-forums/replies/template.php:63
-msgid "Discussion:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:504
-msgid "- Select Discussion -"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:515
-msgid "Reply To:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:516
-msgid "Reply To"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:533
-msgid "- Select Reply -"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:572
-#: bp-forums/templates/default/bbpress/form-topic-tag.php:36
-msgid "Name:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:578
-msgid "Email:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:584
-#: bp-forums/templates/default/bbpress/form-anonymous.php:31
-msgid "Website:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:592
-msgid "ID:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:593 bp-groups/bp-groups-admin.php:1462
-msgid "ID"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:600
-msgid "IP:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:601
-msgid "IP Address"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:645
-#. translators: %s: number of users
-msgid "%s User"
-msgid_plural "%s Users"
-msgstr[0] ""
-msgstr[1] ""
-
-#: bp-forums/admin/metaboxes.php:660
+#: bp-forums/admin/metaboxes.php:50 bp-forums/admin/metaboxes.php:683
+#. translators: Total Forums.
 #. translators: %s: number of forums
 msgid "%s Forum"
 msgid_plural "%s Forums"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-forums/admin/metaboxes.php:675
+#: bp-forums/admin/metaboxes.php:69 bp-forums/admin/metaboxes.php:698
+#. translators: Total Discussions.
 #. translators: %s: number of topics
 msgid "%s Discussion"
 msgid_plural "%s Discussions"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-forums/admin/metaboxes.php:690
+#: bp-forums/admin/metaboxes.php:91 bp-forums/admin/metaboxes.php:729
+#. translators: Total Discussion Tag.
+#. translators: %s: number of topic tags
+msgid "%s Discussion Tag"
+msgid_plural "%s Discussion Tags"
+msgstr[0] ""
+msgstr[1] ""
+
+#: bp-forums/admin/metaboxes.php:118 bp-forums/admin/metaboxes.php:713
+#. translators: Total Replies.
 #. translators: %s: number of replies
 msgid "%s Reply"
 msgid_plural "%s Replies"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-forums/admin/metaboxes.php:706
-#. translators: %s: number of topic tags
-msgid "%s Discussion Tag"
-msgid_plural "%s Discussion Tags"
+#: bp-forums/admin/metaboxes.php:141
+msgid "Users &amp; Moderation"
+msgstr ""
+
+#: bp-forums/admin/metaboxes.php:151 bp-forums/admin/metaboxes.php:668
+#. translators: Total Users.
+#. translators: %s: number of users
+msgid "%s User"
+msgid_plural "%s Users"
 msgstr[0] ""
 msgstr[1] ""
+
+#: bp-forums/admin/metaboxes.php:173
+#. translators: Total Hidden Discussions.
+msgid "%s Hidden Discussion"
+msgid_plural "%s Hidden Discussions"
+msgstr[0] ""
+msgstr[1] ""
+
+#: bp-forums/admin/metaboxes.php:198
+#. translators: Total Hidden Reply.
+msgid "%s Hidden Reply"
+msgid_plural "%s Hidden Replies"
+msgstr[0] ""
+msgstr[1] ""
+
+#: bp-forums/admin/metaboxes.php:223
+#. translators: Total Empty Discussion Tag.
+msgid "%s Empty Discussion Tag"
+msgid_plural "%s Empty Discussion Tags"
+msgstr[0] ""
+msgstr[1] ""
+
+#: bp-forums/admin/metaboxes.php:289 bp-forums/admin/metaboxes.php:290
+#: bp-forums/admin/metaboxes.php:389
+#: bp-forums/templates/default/bbpress/form-topic.php:145
+msgid "Type:"
+msgstr ""
+
+#: bp-forums/admin/metaboxes.php:301 bp-forums/admin/metaboxes.php:302
+#: bp-forums/admin/metaboxes.php:401
+msgid "Status:"
+msgstr ""
+
+#: bp-forums/admin/metaboxes.php:313 bp-forums/admin/metaboxes.php:314
+msgid "Visibility:"
+msgstr ""
+
+#: bp-forums/admin/metaboxes.php:327
+msgid "Parent:"
+msgstr ""
+
+#: bp-forums/admin/metaboxes.php:328
+msgid "Forum Parent"
+msgstr ""
+
+#: bp-forums/admin/metaboxes.php:344 bp-forums/admin/metaboxes.php:437
+#: bp-forums/admin/metaboxes.php:498
+msgid "- Select Forum -"
+msgstr ""
+
+#: bp-forums/admin/metaboxes.php:353
+msgid "Order:"
+msgstr ""
+
+#: bp-forums/admin/metaboxes.php:354
+msgid "Forum Order"
+msgstr ""
+
+#: bp-forums/admin/metaboxes.php:402
+msgid "Select whether to open or close the discussion."
+msgstr ""
+
+#: bp-forums/admin/metaboxes.php:420 bp-forums/admin/metaboxes.php:481
+#: bp-forums/groups.php:1230
+#: bp-forums/templates/default/bbpress/form-topic.php:124
+#: bp-forums/topics/template.php:63
+msgid "Forum:"
+msgstr ""
+
+#: bp-forums/admin/metaboxes.php:509 bp-forums/replies/template.php:63
+msgid "Discussion:"
+msgstr ""
+
+#: bp-forums/admin/metaboxes.php:527
+msgid "- Select Discussion -"
+msgstr ""
+
+#: bp-forums/admin/metaboxes.php:538
+msgid "Reply To:"
+msgstr ""
+
+#: bp-forums/admin/metaboxes.php:539
+msgid "Reply To"
+msgstr ""
+
+#: bp-forums/admin/metaboxes.php:556
+msgid "- Select Reply -"
+msgstr ""
+
+#: bp-forums/admin/metaboxes.php:595
+#: bp-forums/templates/default/bbpress/form-topic-tag.php:36
+msgid "Name:"
+msgstr ""
+
+#: bp-forums/admin/metaboxes.php:601
+msgid "Email:"
+msgstr ""
+
+#: bp-forums/admin/metaboxes.php:607
+#: bp-forums/templates/default/bbpress/form-anonymous.php:31
+msgid "Website:"
+msgstr ""
+
+#: bp-forums/admin/metaboxes.php:615
+msgid "ID:"
+msgstr ""
+
+#: bp-forums/admin/metaboxes.php:616 bp-groups/bp-groups-admin.php:1462
+msgid "ID"
+msgstr ""
+
+#: bp-forums/admin/metaboxes.php:623
+msgid "IP:"
+msgstr ""
+
+#: bp-forums/admin/metaboxes.php:624
+msgid "IP Address"
+msgstr ""
 
 #: bp-forums/admin/replies.php:135
 msgid ""
@@ -13065,6 +13056,10 @@ msgstr ""
 
 #: bp-forums/admin/settings.php:241
 msgid "Forums Directory shows"
+msgstr ""
+
+#: bp-forums/admin/settings.php:320 bp-forums/topics/template.php:3788
+msgid "Discussion Tag"
 msgstr ""
 
 #: bp-forums/admin/settings.php:328
@@ -21725,6 +21720,12 @@ msgstr ""
 
 #: bp-integrations/learndash/buddypress/Reports.php:425
 msgid "Assignments"
+msgstr ""
+
+#: bp-integrations/learndash/buddypress/Reports.php:442
+#: bp-integrations/learndash/library/ReportsGenerator.php:354
+#: bp-moderation/classes/class-bp-moderation-members.php:123
+msgid "User"
 msgstr ""
 
 #: bp-integrations/learndash/buddypress/Reports.php:452
