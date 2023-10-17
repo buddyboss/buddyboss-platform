@@ -54,7 +54,7 @@ class Dependencies {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function dependencyChecker() {
-		$this->is_tutorlms_active = class_exists( 'Tutor' ) ? true : false;
+		$this->is_tutorlms_active = function_exists( 'tutor' ) ? true : false;
 		do_action( $this->is_tutorlms_active ? 'bb_tutorlms/depencencies_loaded' : 'bb_tutorlms/depencencies_failed', $this );
 	}
 
