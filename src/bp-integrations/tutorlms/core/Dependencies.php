@@ -28,7 +28,7 @@ class Dependencies {
 	 */
 	public function __construct() {
 		 $this->dependencies = array(
-			 'tutorlms_init' => __( 'TutorLMS LMS', 'buddyboss' ),
+			 'tutorlms_init' => __( 'TutorLMS', 'buddyboss' ),
 		 );
 
 		 $this->appendDependencyChecker();
