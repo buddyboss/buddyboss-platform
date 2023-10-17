@@ -44,13 +44,12 @@ class BB_TutorLMS_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	public function register_fields() {
 
 	    $fields = array(
-		    'buddypress' => array( $this, 'registerBuddypressSettings' ),
-		    'coursetab'  => [$this, 'registerCourseTab'],
+		    'buddyboss' => array( $this, 'registerBuddypressSettings' ),
 		    // 'reports' => [$this, 'registerReportsSettings'],
 	    );
 
 	    if ( ! bp_is_active( 'groups' ) ) {
-		    unset( $fields['buddypress'] );
+		    unset( $fields['buddyboss'] );
 		    unset( $fields['tutorlms'] );
         }
 
@@ -90,185 +89,86 @@ class BB_TutorLMS_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function registerBuddypressSettings() {
-		$this->current_section = 'buddypress';
+		$this->current_section = 'buddyboss';
 
 		$this->add_section(
-			'bb_tutor-buddypress',
-			__( 'Social groups <span>&rarr; TutorLMS groups</span>', 'buddyboss' ),
+			'bp_tutor-integration',
+			__( 'TutorLMS <span>&rarr; Social groups</span>', 'buddyboss' ),
 			'',
 			'bb_tutorial_social_group_sync'
 		);
 
 		$this->add_checkbox_field(
 			'enabled',
-			__( 'Social Group Sync', 'buddyboss' ),
+			__( 'TutorLMS Group Sync', 'buddyboss' ),
 			array(
-				'input_text'   => sprintf(
-				/* translators: 1. From text. 2. Group link. 3. To text link. 4. post type group link. */
-					'%1$s %2$s %3$s %4$s %5$s',
-					esc_html__( 'Enable group sync functionality ', 'buddyboss' ),
-					sprintf(
-					/* translators: 1. From text. */
-						'<strong><em>%s</em></strong>',
-						esc_html__( 'from', 'buddyboss' )
+				'input_text'   => esc_html__( 'Enable TutorLMS course to be used within social groups', 'buddyboss' ),
+				'input_run_js' => 'buddyboss_enabled',
+			)
+		);
+
+		$this->add_checkbox_field(
+			'show_in_tl_display_course_tab_in_groups',
+			__( 'Group Course Tab', 'buddyboss' ),
+			array(
+				'input_text'        => __( 'Display "Courses" tab in Social Groups', 'buddyboss' ),
+				'input_run_js'      => 'buddyboss_show_in_bp_create',
+				'input_description' => __( 'Course organizers have the option to manage whether they want a course tab to show and which courses specifically they would like to show.', 'buddyboss' ),
+				'class'             => 'js-show-on-buddyboss_enabled',
+			)
+		);
+
+		$this->add_checkbox_field(
+			'show_in_tl_tab_visibility',
+			__( 'Tab Visibility', 'buddyboss' ),
+			array(
+				'input_text'        => __( 'Allow group organizers to hide the "Course" tab during course creation and from the manage course screen.', 'buddyboss' ),
+				'input_run_js'      => 'buddyboss_show_in_bp_create',
+				'class'             => 'js-show-on-buddyboss_enabled',
+			)
+		);
+
+		$this->add_checkbox_field(
+			'show_in_tl_course_visibility',
+			__( 'Course Visibility', 'buddyboss' ),
+			array(
+				'input_text'        => __( 'Allow group organizers to choose which courses to show within the course tab.', 'buddyboss' ),
+				'input_run_js'      => 'buddyboss_show_in_bp_create',
+				'class'             => 'js-show-on-buddyboss_enabled',
+			)
+		);
+
+		$this->add_checkbox_field(
+			'show_in_tl_notification',
+			__( 'Notification', 'buddyboss' ),
+			array(
+				'input_text' => __( 'Send TutorLMS notifications using the BuddyBoss notification systems', 'buddyboss' ),
+				'input_description' => sprintf(
+				/* translators: URL. */
+					__( 'You can manage notification types in the BuddyBoss <a href="%s" target="_blank">notification settings.</a> When enabled, you do not need to use the TutorLMS Email Notifications or Notifications add-ons.', 'buddyboss' ),
+					esc_url(
+						add_query_arg(
+							array(
+								'page' => 'bp-settings',
+								'tab'  => 'bp-notifications',
+							),
+							admin_url( 'admin.php' )
+						)
 					),
-					sprintf(
-					/* translators: 1. Group link. 2. Group Text. */
-						'<a href="%1$s">%2$s</a>',
-						esc_url(
-							add_query_arg(
-								array(
-									'page' => 'bb-groups',
-								),
-								admin_url( 'admin.php' )
-							)
-						),
-						esc_html__( 'BuddyBoss Social Groups', 'buddyboss' )
-					),
-					sprintf(
-					/* translators: 1. To text. */
-						'<strong><em>%s</em></strong>',
-						esc_html__( 'to', 'buddyboss' )
-					),
-					sprintf(
-					/* translators: 1. Post type group link. 2. Post type group text. */
-						'<a href="%1$s">%2$s</a>',
-						esc_url(
-							add_query_arg(
-								array(
-									'post_type' => 'groups',
-								),
-								admin_url( 'edit.php' )
-							)
-						),
-						esc_html__( 'TutorLMS Groups', 'buddyboss' )
-					)
 				),
-				'input_run_js' => 'buddypress_enabled',
+				'input_run_js' => 'buddyboss_show_in_bp_create',
+				'class' => 'js-show-on-buddyboss_enabled',
 			)
 		);
 
 		$this->add_checkbox_field(
-			'show_in_bp_create',
-			__( 'Create TutorLMS Group', 'buddyboss' ),
+			'show_in_tl_use_bb_profiles',
+			__( 'BuddyPress Profiles', 'buddyboss' ),
 			array(
-				'input_text'   => __( 'Allow social group organizers to create associated TutorLMS groups during the group creation process', 'buddyboss' ),
-				'input_run_js' => 'buddypress_show_in_bp_create',
-				'class'        => 'js-show-on-buddypress_enabled',
+				'input_text'        => __( 'Use BuddyBoss for public profiles and user settings', 'buddyboss' ),
+				'input_run_js'      => 'buddyboss_show_in_bp_create',
+				'class'             => 'js-show-on-buddyboss_enabled',
 			)
-		);
-
-		$this->add_checkbox_field(
-			'show_in_bp_manage',
-			__( 'Manage TutorLMS Group', 'buddyboss' ),
-			array(
-				'input_text' => __( 'Allow social group organizers to manage associated TutorLMS groups after the group creation process', 'buddyboss' ),
-				'class'      => 'js-show-on-buddypress_enabled',
-			)
-		);
-
-		$this->add_select_field(
-			'tab_access',
-			__( 'Course Tab Visibility', 'buddyboss' ),
-			array(
-				'input_options'     => array(
-					'anyone'   => __( 'Anyone', 'buddyboss' ),
-					'loggedin' => __( 'Loggedin Users', 'buddyboss' ),
-					'member'   => __( 'Group Members', 'buddyboss' ),
-					'noone'    => __( 'No one', 'buddyboss' ),
-				),
-				'input_default'     => 'admin',
-				'input_description' => __( 'Select who can see the course tab in social groups', 'buddyboss' ),
-				'class'             => 'js-show-on-buddypress_enabled',
-			)
-		);
-
-		$this->add_checkbox_field(
-			'default_auto_sync',
-			__( 'Auto Create TutorLMS Group', 'buddyboss' ),
-			array(
-				'input_text'        => __( 'Automatically create and associate a TutorLMS group upon creation', 'buddyboss' ),
-				'input_description' => __( 'Required if you want an associated TutorLMS group, and course tab is disabled during creation', 'buddyboss' ),
-				'class'             => 'js-show-on-buddypress_enabled',
-			)
-		);
-
-		$this->add_checkbox_field(
-			'delete_ld_on_delete',
-			__( 'Auto Delete TutorLMS Group', 'buddyboss' ),
-			array(
-				'input_text'        => __( 'Automatically delete the associated TutorLMS group when the social group is deleted', 'buddyboss' ),
-				'input_description' => __( 'Uncheck this to delete the group manually', 'buddyboss' ),
-				'class'             => 'js-show-on-buddypress_enabled',
-			)
-		);
-
-		$this->add_select_field(
-			'default_admin_sync_to',
-			__( 'Sync Organizers', 'buddyboss' ),
-			array(
-				'input_options'     => array(
-					'admin' => __( 'Group Leader', 'buddyboss' ),
-					'user'  => __( 'Group User', 'buddyboss' ),
-					'none'  => __( 'None', 'buddyboss' ),
-				),
-				'input_default'     => 'admin',
-				'input_description' => __( 'Social group "Organizers" will be assigned to the above role in TutorLMS groups', 'buddyboss' ),
-				'class'             => 'js-show-on-buddypress_enabled',
-			)
-		);
-
-		$this->add_select_field(
-			'default_mod_sync_to',
-			__( 'Sync Moderators', 'buddyboss' ),
-			array(
-				'input_options'     => array(
-					'admin' => __( 'Group Leader', 'buddyboss' ),
-					'user'  => __( 'Group User', 'buddyboss' ),
-					'none'  => __( 'None', 'buddyboss' ),
-				),
-				'input_default'     => 'admin',
-				'input_description' => __( 'Social group "Moderators" will be assigned to the above role in TutorLMS groups', 'buddyboss' ),
-				'class'             => 'js-show-on-buddypress_enabled',
-			)
-		);
-
-		$this->add_select_field(
-			'default_user_sync_to',
-			__( 'Sync Members', 'buddyboss' ),
-			array(
-				'input_options'     => array(
-					'user' => __( 'Group User', 'buddyboss' ),
-					'none' => __( 'None', 'buddyboss' ),
-				),
-				'input_default'     => 'user',
-				'input_description' => __( 'Social group "Members" will be assigned to the above role in TutorLMS groups', 'buddyboss' ),
-				'class'             => 'js-show-on-buddypress_enabled',
-			)
-		);
-	}
-
-	/**
-	 * Register BuddyPress for TutorLMS related settings
-	 *
-	 * @since BuddyBoss 1.2.0
-	 */
-	public function registerCourseTab() {
-		$this->current_section = 'course';
-		$this->add_section(
-			'bb_tutor_course_tab-buddypress',
-			__('Profiles', 'buddyboss'),
-			'',
-			'bb_profiles_tutorial_my_courses'
-			
-		);
-		$this->add_checkbox_field(
-			'courses_visibility',
-			__('My Courses Tab', 'buddyboss'),
-			[
-				'input_text' => __('Display "Courses" tab in profiles', 'buddyboss'),
-				'input_description' => __( 'Adds a tab to the logged in member\'s profile displaying all courses they are enrolled in, and a matching link in the profile dropdown. If any certificates have been created, adds a sub-tab showing all certificates the member has earned.', 'buddyboss' ),
-			]
 		);
 	}
 
