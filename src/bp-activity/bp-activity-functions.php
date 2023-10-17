@@ -6154,10 +6154,14 @@ function bp_activity_get_types_list() {
  * Activity migration.
  *
  * @since BuddyBoss 2.4.30
+ * @since BuddyBoss [BBVERSION] Added support for the $raw_db_version and $current_db.
+ *
+ * @param int $raw_db_version Raw database version.
+ * @param int $current_db Current DB version.
  *
  * @return void
  */
-function bb_activity_migration() {
+function bb_activity_migration( $raw_db_version, $current_db ) {
 
 	/**
 	 * Like migration into reaction.
@@ -6168,8 +6172,18 @@ function bb_activity_migration() {
 		bb_load_reaction()->create_table();
 		bb_load_reaction()->bb_register_activity_like();
 
+		$is_already_run = get_transient( 'bb_migrate_activity_reaction' );
+
 		// Migration Like to Reaction.
-		if ( function_exists( 'bb_migrate_activity_like_reaction' ) ) {
+		if (
+			! $is_already_run &&
+			(
+				$raw_db_version < 20601 || // Reaction release version 2.4.30.
+				$raw_db_version < 20674 // Last release version 2.4.41.
+			) &&
+			$current_db >= 20674 // Current DB version 2.4.50.
+		) {
+			set_transient( 'bb_migrate_activity_reaction', true, HOUR_IN_SECONDS );
 			bb_migrate_activity_like_reaction();
 		}
 	}
@@ -6198,7 +6212,7 @@ function bb_migrate_activity_like_reaction( $paged = 1 ) {
 
 	$results = $wpdb->get_results(
 		$wpdb->prepare(
-			"SELECT * FROM {$bp->activity->table_name_meta} WHERE meta_key = 'bp_favorite_users' ORDER BY activity_id LIMIT %d offset %d",
+			"SELECT * FROM {$bp->activity->table_name_meta} WHERE meta_key = 'bp_favorite_users' ORDER BY activity_id ASC LIMIT %d offset %d",
 			$per_page,
 			$offset
 		)
@@ -6211,13 +6225,24 @@ function bb_migrate_activity_like_reaction( $paged = 1 ) {
 	$bb_background_updater->push_to_queue(
 		array(
 			'type'     => 'migration',
-			'group'    => 'bb_activity_like_reaction',
-			'priority' => 5,
-			'callback' => 'bb_activity_like_reaction_background_process',
+			'group'    => 'bb_activity_like_reaction_migration',
+			'priority' => 4,
+			'callback' => 'bb_activity_like_reaction_background_process_migration',
 			'args'     => array( $results, $paged, $reaction_id ),
 		)
 	);
 	$bb_background_updater->save()->schedule_event();
+
+	// Delete previous existing migration from background jobs table.
+	$table_name = $bb_background_updater::$table_name;
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$wpdb->query(
+		$wpdb->prepare(
+			"DELETE FROM {$table_name} WHERE `type` = %s AND `group` = %s ORDER BY id ASC limit 500", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			'migration',
+			'bb_activity_like_reaction'
+		)
+	);
 }
 
 /**
@@ -6231,7 +6256,7 @@ function bb_migrate_activity_like_reaction( $paged = 1 ) {
  *
  * @return void
  */
-function bb_activity_like_reaction_background_process( $results, $paged, $reaction_id ) {
+function bb_activity_like_reaction_background_process_migration( $results, $paged, $reaction_id ) {
 	global $wpdb, $bb_background_updater;
 
 	$user_reaction_table = bb_load_reaction()::$user_reaction_table;
@@ -6247,21 +6272,20 @@ function bb_activity_like_reaction_background_process( $results, $paged, $reacti
 			$implode_meta_value = implode( ',', wp_parse_id_list( $meta_value ) );
 			$data               = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT user_id FROM {$user_reaction_table}
-                        WHERE item_id = %d AND reaction_id = %d AND user_id IN ( {$implode_meta_value} )",
+					"SELECT user_id FROM {$user_reaction_table} WHERE item_id = %d AND reaction_id = %d AND user_id IN ( {$implode_meta_value} )",
 					$result->activity_id,
 					$reaction_id
 				),
 				ARRAY_A
 			);
 
-			// Extract the user_id values using array_column
+			// Extract the user_id values using array_column.
 			$user_ids = array_column( $data, 'user_id' );
 			if ( ! empty( $user_ids ) ) {
 				$meta_value = array_diff( $meta_value, $user_ids );
 			}
 
-			if ( ! empty( $meta_value) ) {
+			if ( ! empty( $meta_value ) ) {
 				$min_count = (int) apply_filters( 'bb_update_users_like_reaction', 20 );
 				if ( count( $meta_value ) > $min_count ) {
 					foreach ( array_chunk( $meta_value, $min_count ) as $chunk ) {
@@ -6269,7 +6293,7 @@ function bb_activity_like_reaction_background_process( $results, $paged, $reacti
 							array(
 								'type'     => 'migration',
 								'group'    => 'bb_update_users_like_reaction',
-								'priority' => 4,
+								'priority' => 3,
 								'callback' => 'bb_update_users_like_reaction',
 								'args'     => array( $chunk, $activity_id, $reaction_id ),
 							)

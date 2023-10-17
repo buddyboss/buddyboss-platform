@@ -502,7 +502,7 @@ function bp_version_updater() {
 
 			// Run migration about activity.
 			if ( function_exists( 'bb_activity_migration' ) ) {
-				bb_activity_migration();
+				bb_activity_migration( $raw_db_version, $current_db );
 			}
 
 			// Run migration about media/video description.
