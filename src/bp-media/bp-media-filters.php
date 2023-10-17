@@ -89,8 +89,6 @@ add_action( 'bp_add_rewrite_rules', 'bb_setup_attachment_media_preview' );
 add_filter( 'query_vars', 'bb_setup_attachment_media_preview_query' );
 add_action( 'template_include', 'bb_setup_attachment_media_preview_template', PHP_INT_MAX );
 
-add_action( 'bp_activity_after_email_content', 'bb_gif_activity_after_email_content' );
-
 add_filter( 'bb_activity_comment_get_edit_data', 'bp_media_get_edit_activity_data' );
 /**
  * Add Media items for search
@@ -1040,7 +1038,6 @@ function bp_media_attach_media_to_message( &$message ) {
 					$media->save();
 
 					update_post_meta( $media->attachment_id, 'bp_media_saved', true );
-					update_post_meta( $media->attachment_id, 'bp_media_parent_message_id', $message->id );
 					update_post_meta( $media->attachment_id, 'thread_id', $message->thread_id );
 				}
 			}
@@ -2910,8 +2907,6 @@ function bb_messages_media_save( $attachment ) {
 		$media_ids = bp_media_add_handler( $medias, 'message' );
 
 		if ( ! is_wp_error( $media_ids ) ) {
-			update_post_meta( $attachment->ID, 'bp_media_parent_message_id', 0 );
-
 			// Message not actually sent.
 			update_post_meta( $attachment->ID, 'bp_media_saved', 0 );
 
