@@ -2207,3 +2207,20 @@ function bb_messages_document_save( $attachment ) {
 }
 
 add_action( 'bb_document_upload', 'bb_messages_document_save' );
+
+/**
+ * Added the content on top of document listing.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_document_directory_page_content() {
+
+	$page_ids = bp_core_get_directory_page_ids();
+
+	if ( ! empty( $page_ids['document'] ) ) {
+		$document_page_content = get_post_field( 'post_content', $page_ids['document'] );
+		echo apply_filters( 'the_content', $document_page_content ); // phpcs:ignore
+	}
+}
+
+add_action( 'bp_before_directory_document', 'bb_document_directory_page_content' );
