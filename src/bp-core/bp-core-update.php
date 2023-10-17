@@ -471,6 +471,10 @@ function bp_version_updater() {
 			bb_update_to_2_4_41();
 		}
 
+		if ( $raw_db_version < 20664 ) {
+			bb_update_to_2_4_43();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -2585,7 +2589,7 @@ function bb_create_background_member_friends_count( $paged = 1 ) {
 			'type'     => 'update_member_friends_count',
 			'group'    => 'bb_migrate_member_friends_count',
 			'priority' => 5,
-			'callback' => 'bb_migrate_member_friends_count',
+			'callback' => 'bb_migrate_member_friends_count_callback',
 			'args'     => array( $user_ids, $paged ),
 		),
 	);
@@ -2602,7 +2606,7 @@ function bb_create_background_member_friends_count( $paged = 1 ) {
  *
  * @return void
  */
-function bb_migrate_member_friends_count( $user_ids, $paged ) {
+function bb_migrate_member_friends_count_callback( $user_ids, $paged ) {
 	if ( empty( $user_ids ) ) {
 		return;
 	}
@@ -3307,10 +3311,9 @@ function bb_update_to_2_4_41() {
 	$bb_background_updater->save()->schedule_event();
 }
 
-function bb_update_to_2_4_44(){
+function bb_update_to_2_4_43(){
 	global $wpdb;
 
-	// Delete existing `bb_set_bulk_user_profile_slug` background jobs from options table.
 	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE `option_name` LIKE 'wp_1_bp_updater_batch_%' AND `option_value` LIKE '%bb_migrate_member_friends_count%'" );
 
