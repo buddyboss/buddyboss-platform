@@ -6382,12 +6382,12 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			var nav  = $( '.single-screen-navs.groups-nav' ).find( 'ul li#albums-groups-li' );
+			var nav = $( '.single-screen-navs.groups-nav' ).find( 'ul li#albums-groups-li' );
 
 			if ( $( nav ).find( 'span.count' ).length > 0 ) {
 				$( nav ).find( 'span.count' ).text( count );
 			} else {
-				$( nav ).find( 'a#albums' ).append( '<span class="count">1</span>' ); 
+				$( nav ).find( 'a#albums' ).append( '<span class="count">' + count + '</span>' );
 			}
 		}
 	};
