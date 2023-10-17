@@ -5488,13 +5488,13 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
 	// Rest the global variable.
 	$is_member_slug_background = false;
 
-	// Flush WP cache.
-	wp_cache_flush();
-
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		BuddyBoss\Performance\Cache::instance()->purge_all();
 	}
+
+	// Flush WP cache.
+	wp_cache_flush();
 }
 
 /**
