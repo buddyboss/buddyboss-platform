@@ -6163,7 +6163,7 @@ function bb_activity_migration( $raw_db_version, $current_db ) {
 			) &&
 			$current_db >= 20674 // Current DB version 2.4.50.
 		) {
-			set_transient( 'bb_migrate_activity_reaction', 'yes', HOUR_IN_SECONDS );
+			set_transient( 'bb_migrate_activity_reaction', true, HOUR_IN_SECONDS );
 			bb_migrate_activity_like_reaction();
 		}
 	}
