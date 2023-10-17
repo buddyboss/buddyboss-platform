@@ -229,6 +229,23 @@ function bp_helper_plugins_loaded_callback() {
 			}
 		);
 	}
+
+	/**
+	 * Include plugin when plugin is activated
+	 *
+	 * Support Memberpress
+	 */
+	if ( in_array( 'memberpress/memberpress.php', $bp_plugins ) ) {
+		add_filter( 'mepr_design_style_handles', function ( $allowed_handles ) {
+
+			if ( is_admin_bar_showing() ) {
+				$allowed_handles[] = 'admin-bar';
+				$allowed_handles[] = 'bp-admin-bar';
+			}
+
+			return $allowed_handles;
+		} );
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
