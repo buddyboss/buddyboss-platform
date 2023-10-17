@@ -1,6 +1,6 @@
 <div class="wrap">
 
-	<div class="bb-admin-card section-bp_tutor-integration">
+	<div class="bp-admin-card section-bp_tutor-integration">
 		<?php
 		$meta_icon      = bb_admin_icons( 'bp_tutor-integration' );
 		$meta_icon_html = '';
@@ -25,7 +25,7 @@
 			<p>
 			<?php
 				printf(
-					__( 'You need to activate the <a href="%s">Social Groups component</a> in order to sync TutorLMS groups with Social groups.', 'buddyboss' ),
+					__( 'You need to activate the <a href="%s">Social Groups component</a> in order to sync TutorLMS with Social groups.', 'buddyboss' ),
 					add_query_arg(
 						array(
 							'page' => 'bb-components',
