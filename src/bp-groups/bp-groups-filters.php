@@ -598,9 +598,17 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 
 	if ( ! empty( $filter['search_terms'] ) ) {
 		$args[] = array(
-			'column'  => 'title',
-			'compare' => 'LIKE',
-			'value'   => $filter['search_terms'],
+			'relation' => 'OR',
+			array(
+				'column'  => 'title',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+			array(
+				'column'  => 'description',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			)
 		);
 	}
 
@@ -696,9 +704,17 @@ function bp_groups_filter_video_scope( $retval = array(), $filter = array() ) {
 
 	if ( ! empty( $filter['search_terms'] ) ) {
 		$args[] = array(
-			'column'  => 'title',
-			'compare' => 'LIKE',
-			'value'   => $filter['search_terms'],
+			'relation' => 'OR',
+			array(
+				'column'  => 'title',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+			array(
+				'column'  => 'description',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			)
 		);
 	}
 
