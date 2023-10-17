@@ -733,14 +733,16 @@ function bp_nouveau_get_activity_comment_action() {
 	return apply_filters(
 		'bp_nouveau_get_activity_comment_action',
 		sprintf(
-			/* translators: 1: user profile link, 2: user name, 3: activity permalink, 4: activity recorded date, 5: activity timestamp, 6: activity human time since */
-			__( '<a class="author-name" href="%1$s">%2$s</a> <a href="%3$s" class="activity-time-since"><time class="time-since" datetime="%4$s" data-bp-timestamp="%5$d">%6$s</time></a>', 'buddyboss' ),
+			/* translators: 1: user profile link, 2: user name, 3: activity permalink, 4: activity recorded date, 5: activity timestamp, 6: activity timestamp, 7: activity human time since, 8: Edited text */
+			__( '<a class="author-name" href="%1$s">%2$s</a> <a href="%3$s" class="activity-time-since"><time class="time-since" datetime="%4$s" data-bp-timestamp="%5$d" data-livestamp="%6$s">%7$s</time></a>%8$s', 'buddyboss' ),
 			esc_url( bp_get_activity_comment_user_link() ),
 			esc_html( bp_get_activity_comment_name() ),
 			esc_url( bp_get_activity_comment_permalink() ),
 			esc_attr( bp_get_activity_comment_date_recorded_raw() ),
 			esc_attr( strtotime( bp_get_activity_comment_date_recorded_raw() ) ),
-			esc_attr( bp_get_activity_comment_date_recorded() )
+			esc_attr( bp_core_get_iso8601_date( bp_get_activity_comment_date_recorded_raw() ) ),
+			esc_attr( bp_get_activity_comment_date_recorded() ),
+			bb_nouveau_activity_comment_is_edited()
 		)
 	);
 }
@@ -1866,6 +1868,7 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 
 	$activity_comment_id = bp_get_activity_comment_id();
 	$activity_id         = bp_get_activity_id();
+	$current_comment     = bp_activity_current_comment();
 
 	if ( ! $activity_comment_id || ! $activity_id ) {
 		return $buttons;
@@ -1899,6 +1902,28 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 	}
 
 	$buttons = array();
+
+	if ( 'activity_comment' === $current_comment->type && bb_activity_comment_user_can_edit() && bb_is_activity_comment_edit_enabled() ) {
+		$buttons['activity_comment_edit'] = array(
+			'id'                => 'activity_comment_edit',
+			'position'          => 30,
+			'component'         => 'activity',
+			'parent_element'    => $parent_element,
+			'parent_attr'       => $parent_attr,
+			'must_be_logged_in' => true,
+			'button_element'    => $button_element,
+			'button_attr'       => array(
+				'href'  => '#',
+				'class' => 'edit acomment-edit bp-secondary-action',
+				'title' => __( 'Edit Comment', 'buddyboss' ),
+			),
+			'link_text'         => sprintf(
+				'<span class="bp-screen-reader-text">%1$s</span><span class="edit-label">%2$s</span>',
+				__( 'Edit Comment', 'buddyboss' ),
+				__( 'Edit', 'buddyboss' )
+			),
+		);
+	}
 
 	if ( bp_is_active( 'moderation' ) ) {
 		$buttons['activity_comment_report'] = bp_activity_comment_get_report_link(
@@ -1940,6 +1965,7 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 			$buttons['activity_comment_delete']['button_attr']['href'] = bp_get_activity_comment_delete_link();
 		}
 	}
+
 	/**
 	 * Filter to add your buttons, use the position argument to choose where to insert it.
 	 *
@@ -1972,8 +1998,6 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 		return array();
 	}
 
-
-
 	/**
 	 * Leave a chance to adjust the $return
 	 *
@@ -1993,4 +2017,88 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 	);
 
 	return $return;
+}
+
+/**
+ * Output the Activity comment timestamp into the bp-timestamp attribute.
+ *
+ * @since BuddyBoss 2.4.40
+ */
+function bb_nouveau_activity_comment_timestamp() {
+	echo esc_attr( bb_nouveau_get_activity_comment_timestamp() );
+}
+
+/**
+ * Get the Activity comment timestamp.
+ *
+ * @since BuddyBoss 2.4.40
+ *
+ * @return integer The Activity comment timestamp.
+ */
+function bb_nouveau_get_activity_comment_timestamp() {
+	/**
+	 * Filter here to edit the activity comment timestamp.
+	 *
+	 * @since BuddyBoss 2.4.40
+	 *
+	 * @param integer $value The Activity comment timestamp.
+	 */
+	return apply_filters( 'bb_nouveau_get_activity_comment_timestamp', strtotime( bp_get_activity_comment_date_recorded() ) );
+}
+
+/**
+ * Output the Activity comment edit data.
+ *
+ * @since BuddyBoss 2.4.40
+ */
+function bb_nouveau_edit_activity_comment_data() {
+	echo bb_nouveau_get_edit_activity_comment_data();
+}
+
+/**
+ * Get the Activity comment edit data.
+ *
+ * @since BuddyBoss 2.4.40
+ *
+ * @return string The Activity comment edit data.
+ */
+function bb_nouveau_get_edit_activity_comment_data() {
+	return htmlentities( wp_json_encode( bb_activity_comment_get_edit_data( bp_get_activity_comment_id() ) ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
+}
+
+
+/**
+ * Get edited activity comment log.
+ *
+ * @since BuddyBoss 2.4.40
+ *
+ * @param int  $activity_comment_id Activity comment id.
+ * @param bool $echo                Whether to print or not.
+ *
+ * @return string text.
+ */
+function bb_nouveau_activity_comment_is_edited( $activity_comment_id = 0, $echo = false ) {
+	$activity_comment_text = '';
+
+	if ( empty( $activity_comment_id ) ) {
+		$activity_comment_id = bp_get_activity_comment_id();
+	}
+
+	if ( empty( $activity_comment_id ) ) {
+		return $activity_comment_text;
+	}
+
+	$is_edited = bp_activity_get_meta( $activity_comment_id, '_is_edited', true );
+
+	if ( $is_edited ) {
+		$activity_comment_text = '<span class="bb-activity-edited-text" data-balloon-pos="up" data-balloon="' . bp_core_time_since( $is_edited ) . '"> ' . __( '(edited)', 'buddyboss' ) . ' </span>';
+	}
+
+	$rendered_text = apply_filters( 'bb_nouveau_activity_comment_is_edited', $activity_comment_text, $activity_comment_id );
+
+	if ( $echo ) {
+		echo $rendered_text;
+	} else {
+		return $rendered_text;
+	}
 }
