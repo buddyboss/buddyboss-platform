@@ -2241,22 +2241,35 @@ function bp_activity_comment_content() {
  * comments only.
  *
  * @since BuddyPress 1.5.0
+ * @since BuddyBoss 2.4.40 Added $activity_comment_id parameter to get activity comment content.
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @param int     $activity_comment_id Activity comment ID.
  *
  * @return string $content The content of the current activity comment.
+ * @global object $activities_template {@link BP_Activity_Template}
  */
-function bp_get_activity_comment_content() {
+function bp_get_activity_comment_content( $activity_comment_id = 0 ) {
 	global $activities_template;
 
+	$activity_comment = new stdClass();
+	if ( ! empty( $activity_comment_id ) ) {
+		$activity_comment = new BP_Activity_Activity( $activity_comment_id );
+	} elseif ( ! empty( $activities_template->activity->current_comment ) ) {
+		$activity_comment = $activities_template->activity->current_comment;
+	}
+
+	// check activity comment exists.
+	if ( empty( $activity_comment->id ) ) {
+		return '';
+	}
+
 	// scrape off activity content if it contain empty characters only
-	if ( in_array( $activities_template->activity->current_comment->content, array( '&nbsp;', '&#8203;' ) ) ) {
-		$activities_template->activity->current_comment->content = '';
+	if ( in_array( $activity_comment->content, array( '&nbsp;', '&#8203;' ) ) ) {
+		$activity_comment->content = '';
 	}
 
 	/** This filter is documented in bp-activity/bp-activity-template.php */
-	// $content = apply_filters( 'bp_get_activity_content', $activities_template->activity->current_comment->content );
-	$content = apply_filters_ref_array( 'bp_get_activity_content', array( $activities_template->activity->current_comment->content, &$activities_template->activity->current_comment ) );
+	$content = apply_filters_ref_array( 'bp_get_activity_content', array( $activity_comment->content, &$activity_comment ) );
 
 	/**
 	 * Filters the content of the current activity comment.
@@ -4205,3 +4218,63 @@ function bp_get_activity_entry_css_class() {
 	return apply_filters( 'bp_get_activity_entry_css_class', $class );
 }
 
+/**
+ * Determine if the current user can edit an activity comment item.
+ *
+ * @since BuddyBoss 2.4.40
+ *
+ * @param false|BP_Activity_Activity $activity_comment Optional. Falls back on the current item in the loop.
+ * @param bool                       $privacy_edit     Optional. True if editing privacy.
+ *
+ * @return bool True if can edit, false otherwise.
+ */
+function bb_activity_comment_user_can_edit( $activity_comment = false, $privacy_edit = false ) {
+
+	// Try to use current activity comment if none was passed.
+	if ( empty( $activity_comment ) ) {
+		$activity_comment = bp_activity_current_comment();
+	}
+
+	// Assume the user cannot edit the activity item.
+	$can_edit = false;
+
+	// Only logged in users can edit activity comment and Activity must be of type 'activity_update', 'activity_comment'.
+	if (
+		is_user_logged_in() &&
+		in_array( $activity_comment->type, array( 'activity_update', 'activity_comment' ), true )
+	) {
+
+		// Users are allowed to edit their own activity.
+		if ( isset( $activity_comment->user_id ) && ( bp_loggedin_user_id() === $activity_comment->user_id ) ) {
+			$can_edit = true;
+		}
+
+		// Viewing a single item, and this user is an admin of that item.
+		if ( bp_is_single_item() && bp_is_item_admin() ) {
+			$can_edit = true;
+		}
+	}
+
+	if ( $can_edit && ! $privacy_edit ) {
+
+		// Check activity comment edit time expiration.
+		$activity_comment_edit_time        = (int) bb_get_activity_comment_edit_time(); // for 10 minutes, 600.
+		$bp_dd_get_time                    = bp_core_current_time( true, 'timestamp' );
+		$activity_comment_edit_expire_time = strtotime( $activity_comment->date_recorded ) + $activity_comment_edit_time;
+
+		// Checking if expire time still greater than current time.
+		if ( - 1 !== $activity_comment_edit_time && $activity_comment_edit_expire_time <= $bp_dd_get_time ) {
+			$can_edit = false;
+		}
+	}
+
+	/**
+	 * Filters whether the current user can edit an activity comment item.
+	 *
+	 * @since BuddyBoss 2.4.40
+	 *
+	 * @param bool   $can_edit         Whether the user can edit the item.
+	 * @param object $activity_comment Current activity item object.
+	 */
+	return (bool) apply_filters( 'bb_activity_comment_user_can_edit', $can_edit, $activity_comment );
+}

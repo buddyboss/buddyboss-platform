@@ -155,8 +155,19 @@ function bbp_is_forum_archive() {
 	// Get the main query global.
 	$wp_query = bbp_get_wp_query();
 
+	// Forum page id.
+	$forum_page_id = (int) bp_get_option( '_bbp_root_slug_custom_slug' );
+
 	// In forum archive.
-	if ( is_post_type_archive( bbp_get_forum_post_type() ) || bbp_is_query_name( 'bbp_forum_archive' ) || ! empty( $wp_query->bbp_show_topics_on_root ) || absint( $wp_query->get( 'page_id' ) ) === (int) bp_get_option( '_bbp_root_slug_custom_slug' ) ) {
+	if (
+		is_post_type_archive( bbp_get_forum_post_type() ) ||
+		bbp_is_query_name( 'bbp_forum_archive' ) ||
+		! empty( $wp_query->bbp_show_topics_on_root ) ||
+		(
+			! empty( $forum_page_id ) &&
+			absint( $wp_query->get( 'page_id' ) ) === $forum_page_id
+		)
+	) {
 		$retval = true;
 	}
 
@@ -1689,7 +1700,11 @@ function bbp_get_dropdown( $args = '' ) {
 	if ( empty( $r['options_only'] ) ) {
 
 		// Should this select appear disabled?
-		$disabled = disabled( isset( bbpress()->options[ $r['disabled'] ] ), true, false );
+		if ( is_bool( $r['disabled'] ) ) {
+			$disabled = disabled( $r['disabled'], true, false );
+		} else {
+			$disabled = disabled( isset( bbpress()->options[ $r['disabled'] ] ), true, false );
+		}
 
 		// Setup the tab index attribute.
 		$tab = ! empty( $r['tab'] ) ? ' tabindex="' . intval( $r['tab'] ) . '"' : '';

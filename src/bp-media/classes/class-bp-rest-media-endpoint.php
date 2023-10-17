@@ -2386,7 +2386,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 */
 	protected function bp_media_ids_update_rest_field_callback( $object, $value, $attribute ) {
 
-		global $bp_activity_edit, $bp_media_upload_count, $bp_new_activity_comment, $bp_activity_post_update_id, $bp_activity_post_update;
+		global $bp_activity_edit, $bp_media_upload_count, $bp_new_activity_comment, $bp_activity_post_update_id, $bp_activity_post_update, $bb_activity_comment_edit, $bb_activity_comment_edit_id;
 
 		$group_id = 0;
 		if ( 'groups' === $value->component ) {
@@ -2413,15 +2413,25 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return $value;
 		}
 
-		$bp_activity_edit = ( isset( $value->edit ) ? true : false );
-		// phpcs:ignore
-		$_POST['edit'] = $bp_activity_edit;
+		// Set variable if current action is edit activity comment.
+		$is_edit_activity_comment = $bb_activity_comment_edit && 'activity_comment' === $value->type && isset( $_POST['edit_comment'] );
 
-		if ( false === $bp_activity_edit && empty( $object ) ) {
-			return $value;
+		if ( $is_edit_activity_comment ) {
+			$bb_activity_comment_edit_id = $value->id;
+			if ( false === $bb_activity_comment_edit && empty( $object ) ) {
+				return $value;
+			}
+		} else {
+			$bp_activity_edit = ( isset( $value->edit ) ? true : false );
+			// phpcs:ignore
+			$_POST['edit'] = $bp_activity_edit;
+
+			if ( false === $bp_activity_edit && empty( $object ) ) {
+				return $value;
+			}
 		}
 
-		$bp_new_activity_comment = ( 'activity_comment' === $value->type ? $value->id : 0 );
+		$bp_new_activity_comment = ( ( 'activity_comment' === $value->type && false === $bb_activity_comment_edit ) ? $value->id : 0 );
 
 		$activity_id = $value->id;
 		$privacy     = $value->privacy;
@@ -2442,8 +2452,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		$bp_activity_post_update    = true;
-		$bp_activity_post_update_id = $activity_id;
+		if ( ! $is_edit_activity_comment ) {
+			$bp_activity_post_update    = true;
+			$bp_activity_post_update_id = $activity_id;
+		}
 
 		if ( ! empty( $value->component ) && 'groups' === $value->component ) {
 			$group_id = $value->item_id;
@@ -2458,6 +2470,12 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					bp_media_delete( array( 'id' => $media_id ), 'activity' );
 				}
 				bp_activity_delete_meta( $activity_id, 'bp_media_ids' );
+
+				// Delete media meta from activity for activity comment.
+				if ( $is_edit_activity_comment ) {
+					bp_activity_delete_meta( $activity_id, 'bp_media_id' );
+					bp_activity_delete_meta( $activity_id, 'bp_media_activity' );
+				}
 			}
 
 			return $value;
@@ -2588,6 +2606,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * @return object
 	 */
 	protected function bp_gif_data_update_rest_field_callback( $object, $value, $attribute ) {
+		global $bp_activity_edit, $bb_activity_comment_edit, $bb_activity_comment_edit_id;
 
 		if ( 'media_gif' !== $attribute ) {
 			return $value;
@@ -2613,18 +2632,35 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return $value;
 		}
 
-		$bp_activity_edit = ( isset( $value->edit ) ? true : false );
-		// phpcs:ignore
-		$_POST['edit'] = $bp_activity_edit;
+		// Set variable if current action is edit activity comment.
+		$is_edit_activity_comment = $bb_activity_comment_edit && 'activity_comment' === $value->type && isset( $_POST['edit_comment'] );
 
-		if ( empty( $object ) && false === $bp_activity_edit ) {
-			return $value;
+		if ( $is_edit_activity_comment ) {
+			$bb_activity_comment_edit_id = $value->id;
+			if ( false === $bb_activity_comment_edit && empty( $object ) ) {
+				return $value;
+			}
+		} else {
+			$bp_activity_edit = ( isset( $value->edit ) ? true : false );
+			// phpcs:ignore
+			$_POST['edit'] = $bp_activity_edit;
+
+			if ( empty( $object ) && false === $bp_activity_edit ) {
+				return $value;
+			}
 		}
 
 		$still = $object['url'];
 		$mp4   = $object['mp4'];
 
-		if ( true === $bp_activity_edit && empty( $still ) && empty( $mp4 ) ) {
+		if (
+			(
+				true === $bp_activity_edit ||
+				true === $bb_activity_comment_edit
+			) &&
+			empty( $still ) &&
+			empty( $mp4 )
+		) {
 			bp_activity_delete_meta(
 				$value->id,
 				'_gif_data'
