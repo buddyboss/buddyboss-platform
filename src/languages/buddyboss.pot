@@ -4940,7 +4940,7 @@ msgid "Allow members to edit their comment for a duration of"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:3322
-msgid "Allow group owners and moderator to pin posts"
+msgid "Allow group owners and moderators to pin posts"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:38
