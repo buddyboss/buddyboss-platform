@@ -471,8 +471,8 @@ function bp_version_updater() {
 			bb_update_to_2_4_41();
 		}
 
-		if ( $raw_db_version < 20651 ) {
-			bb_update_to_2_4_12();
+		if ( $raw_db_version < 20674 ) {
+			bb_update_to_2_4_50();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
@@ -3325,7 +3325,7 @@ function bb_update_to_2_4_41() {
  *
  * @return void
  */
-function bb_update_to_2_4_12() {
+function bb_update_to_2_4_50() {
 	global $wpdb, $bp;
 
 	if ( ! bp_is_active( 'media' ) ) {
