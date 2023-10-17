@@ -369,7 +369,14 @@ function bp_nouveau_ajax_video_save() {
 	$video = '';
 	if ( ! empty( $video_ids ) ) {
 		ob_start();
-		if ( bp_has_video( array( 'include' => implode( ',', $video_ids ) ) ) ) {
+		if (
+			bp_has_video(
+				array(
+					'include'  => implode( ',', $video_ids ),
+					'per_page' => 0,
+				)
+			)
+		) {
 			while ( bp_video() ) {
 				bp_the_video();
 				bp_get_template_part( 'video/entry' );
@@ -630,7 +637,14 @@ function bp_nouveau_ajax_video_move_to_album() {
 	$video_html = '';
 	if ( ! empty( $video_ids ) ) {
 		ob_start();
-		if ( bp_has_video( array( 'include' => implode( ',', $video_ids ) ) ) ) {
+		if (
+			bp_has_video(
+				array(
+					'include'  => implode( ',', $video_ids ),
+					'per_page' => 0,
+				)
+			)
+		) {
 			while ( bp_video() ) {
 				bp_the_video();
 				bp_get_template_part( 'video/entry' );
@@ -1077,12 +1091,25 @@ function bp_nouveau_ajax_video_description_save() {
 		wp_send_json_error( $response );
 	}
 
+	// Added backward compatibility.
 	$video_post['ID']           = $attachment_id;
 	$video_post['post_content'] = $description;
 	wp_update_post( $video_post );
 
-	$response['description'] = $description;
-	wp_send_json_success( $response );
+	$video_id = get_post_meta( $attachment_id, 'bp_video_id', true );
+	if ( ! empty( $video_id ) ) {
+		$video = new BP_Video( $video_id );
+
+		if ( ! empty( $video->id ) ) {
+			$video->description = $description;
+			$video->save();
+
+			$response['description'] = $description;
+			wp_send_json_success( $response );
+		}
+	}
+
+	wp_send_json_error( $response );
 }
 
 add_filter( 'bp_nouveau_object_template_result', 'bp_nouveau_object_template_results_video_tabs', 10, 2 );

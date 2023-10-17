@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.2.2
 Requires PHP: 5.6.20
-Stable tag: 2.4.20
+Stable tag: 2.4.41
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,51 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.4.41 =
+* Bug: Activity - When commenting or replying to a comment on a post some users were seeing “Server error or connection is lost. Please try again later." message
+* Bug: Core - When selecting to generate members unique identifier (profile url), the process was causing a crash due to a background code issue which has now bee refactored
+
+= 2.4.40 =
+* New Feature! - Allow users to Edit Activity Comments
+* Bug: Activity - Activity search : Search results are getting incorrect.
+* Bug: Activity - Video uploading issue on Activity feed due to missing video thumbnail
+* Bug: Core - "Relaxed" Emoji is not showing correctly
+* Bug: Core - Added a 'Successfully Saved' message in the plugin when saving settings
+* Bug: Core - Fatal error when registering users with Magyar language selected
+* Bug: Core - Profile, photos tab was showing delete and select all buttons even with no uploaded media
+* Bug: Core - Text Smilies were not converting to emojis when first added in discussions reply.
+* Bug: Core - Wordpress dashboard shown in mobile size, profile dropdown arrow in admin bar would position incorrectly
+* Bug: Custom Development - 'groups_join_group' hook not called when member is added to BuddyBoss Group via LearnDash sync
+* Bug: Forums - Changing the parent forum from backend was not working for the forums that is associated with groups
+* Bug: Forums - Discussion shortcodes not returning the correct results
+* Bug: Groups - Subscription emails were delayed when saving the new group feed and updating the group details in frontend
+* Bug: Groups - When subgroup restrict access setting is active a new message alerting users to first request access to the parent group will appear if a user tries to access a subgroup first
+* Bug: LearnDash - Undefined variable $post warning in LearnDash topics removed
+* Bug: Messages - Image link was broken for Messages in Email
+* Bug: Multisite - Profile search page is not working in admin area if platform is network activated
+* Bug: The Events Calendar - When the private website option is enabled from the BuddyBoss platform, the filters in the Events Calendar was not working
+* Bug: Widgets - Who’s Online widget was not accurately showing members online status
+
+= 2.4.30 =
+* Enhancement: Activity - database alterations made in preparations for future activity features
+* Enhancement: Core - Allow options within the new blacklist/whitelist feature so that user can block the email plus aliases.
+* Enhancement: Forums - Automatically reconnect an existing forum when reenabling the forum within a group
+* Bug: Core - API issues addressed when activating BuddyBoss platform plugin
+* Bug: Core - Design issue when posting a discussion when using Firefox browser
+* Bug: Core - Pagination problem occurred on pages where the group type shortcode was used
+* Bug: Core - Paging was disabled when fetching media, videos and documents based on specific ids
+* Bug: Forums - Add direct link for the grouped forum instead on the Discussions links to removed the unnecessary redirect
+* Bug: Forums - Discussions pagination was not working when setting the forum page as the home page
+* Bug: Forums - Forum was not importing from Invision
+* Bug: Groups - When Group Message feature is disbaled, existing messages associated to groups are now removed from users inbox
+* Bug: Messages - Attached media in a group message sent by a group member was not viewable by other members
+* Bug: Messages - Messages thread order was not staying in the correct order when paginating
+* Bug: Multisite - BuddyBoss component pages were not assigned correctly across the subsites
+* Bug: Profiles - Pending signup user profile were visible on the frontend in some cases
+* Bug: Profiles - Removed Google+ from 'Social Networks' profile field
+* Bug: Profiles - Update Twitter name to X on all Social Links
+* Bug: Tools - SMF forum import tool could not keep the hierarchical relationships between forum > discussion > reply
 
 = 2.4.20 =
 * Enhancement: Core - The Background Process working when suspending and un-suspending users got stuck creating an infinite loop

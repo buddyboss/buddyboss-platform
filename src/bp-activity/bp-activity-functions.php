@@ -993,6 +993,18 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0 ) {
 		 */
 		do_action( 'bp_activity_add_user_favorite', $activity_id, $user_id );
 
+		// Add user reaction.
+		if ( function_exists( 'bb_load_reaction' ) ) {
+			$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
+			bb_load_reaction()->bb_add_user_item_reaction(
+				array(
+					'item_type'   => 'activity',
+					'reaction_id' => $reaction_id,
+					'item_id'     => $activity_id,
+				)
+			);
+		}
+
 		// Success.
 		return true;
 
@@ -1075,6 +1087,19 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0 ) {
 				 * @param int $user_id     ID of the user doing the unfavoriting.
 				 */
 				do_action( 'bp_activity_remove_user_favorite', $activity_id, $user_id );
+
+				// Remove user reaction.
+				if ( function_exists( 'bb_load_reaction' ) ) {
+					$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
+					bb_load_reaction()->bb_remove_user_item_reactions(
+						array(
+							'item_id'     => $activity_id,
+							'item_type'   => 'activity',
+							'user_id'     => $user_id,
+							'reaction_id' => $reaction_id,
+						)
+					);
+				}
 
 				// Success.
 				return true;
@@ -2995,6 +3020,8 @@ add_action( 'delete_comment', 'bp_activity_post_type_remove_comment', 10, 1 );
  * @return WP_Error|bool|int The ID of the comment on success, otherwise false.
  */
 function bp_activity_new_comment( $args = '' ) {
+	global $bb_activity_comment_edit;
+
 	$bp = buddypress();
 
 	$r = bp_parse_args(
@@ -3085,22 +3112,64 @@ function bp_activity_new_comment( $args = '' ) {
 	 */
 	$comment_content = apply_filters( 'bp_activity_comment_content', $r['content'], 'new' );
 
-	// Insert the activity comment.
-	$comment_id = bp_activity_add(
-		array(
-			'id'                => $r['id'],
-			'content'           => $comment_content,
-			'component'         => buddypress()->activity->id,
-			'type'              => 'activity_comment',
-			'primary_link'      => $r['primary_link'],
-			'user_id'           => $r['user_id'],
-			'item_id'           => $activity_id,
-			'secondary_item_id' => $r['parent_id'],
-			'hide_sitewide'     => $is_hidden,
-			'privacy'           => $privacy,
-			'error_type'        => $r['error_type'],
-		)
-	);
+	$bb_activity_comment_edit = false;
+	if ( ! empty( $r['id'] ) ) {
+		$activity_comment = new BP_Activity_Activity( $r['id'] );
+
+		if ( ! empty( $activity_comment->id ) ) {
+			$bb_activity_comment_edit = true;
+
+			if ( ! bb_activity_comment_user_can_edit( $activity_comment ) ) {
+				if ( 'wp_error' === $r['error_type'] ) {
+					return new WP_Error( 'error', __( 'Allowed time for editing this activity comment is passed already, you can not edit now.', 'buddyboss' ) );
+				} else {
+					return false;
+				}
+			}
+
+			$comment_id = bp_activity_add(
+				array(
+					'id'                => $activity_comment->id,
+					'action'            => $activity_comment->action,
+					'content'           => $comment_content,
+					'component'         => $activity_comment->component,
+					'type'              => $activity_comment->type,
+					'primary_link'      => $activity_comment->primary_link,
+					'user_id'           => $activity_comment->user_id,
+					'item_id'           => $activity_comment->item_id,
+					'secondary_item_id' => $activity_comment->secondary_item_id,
+					'recorded_time'     => $activity_comment->date_recorded,
+					'hide_sitewide'     => $activity_comment->hide_sitewide,
+					'is_spam'           => $activity_comment->is_spam,
+					'privacy'           => $activity_comment->privacy,
+					'error_type'        => $r['error_type'],
+				)
+			);
+
+			/**
+			 * Addition from the BuddyBoss
+			 * Add meta to ensure that this activity has been edited.
+			 */
+			bp_activity_update_meta( $activity_comment->id, '_is_edited', bp_core_current_time() );
+		}
+	} else {
+		// Insert the activity comment.
+		$comment_id = bp_activity_add(
+			array(
+				'id'                => $r['id'],
+				'content'           => $comment_content,
+				'component'         => buddypress()->activity->id,
+				'type'              => 'activity_comment',
+				'primary_link'      => $r['primary_link'],
+				'user_id'           => $r['user_id'],
+				'item_id'           => $activity_id,
+				'secondary_item_id' => $r['parent_id'],
+				'hide_sitewide'     => $is_hidden,
+				'privacy'           => $privacy,
+				'error_type'        => $r['error_type'],
+			)
+		);
+	}
 
 	// Bail on failure.
 	if ( false === $comment_id || is_wp_error( $comment_id ) ) {
@@ -4394,6 +4463,13 @@ function bp_show_streamed_activity_comment() {
  * @param array $params     Parameters to use with notification.
  */
 function bp_activity_new_comment_notification_helper( $comment_id, $params ) {
+	global $bb_activity_comment_edit;
+
+	// Return if $comment_id empty or edit activity comment.
+	if ( empty( $comment_id ) || $bb_activity_comment_edit ) {
+		return;
+	}
+
 	bp_activity_new_comment_notification( $comment_id, $params['user_id'], $params );
 }
 add_action( 'bp_activity_comment_posted', 'bp_activity_new_comment_notification_helper', 10, 2 );
@@ -5881,7 +5957,8 @@ function bb_activity_following_post_notification( $args ) {
 				'notification_type' => 'new-activity-following',
 			);
 
-			$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+			$args['tokens']['unsubscribe']      = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+			$args['tokens']['receiver-user.id'] = $user_id;
 
 			// Send notification email.
 			bp_send_email( 'new-activity-following', $user_id, $args );
@@ -6051,4 +6128,238 @@ function bp_activity_get_types_list() {
 	 * @param array $types An array of activity type labels keyed by type names.
 	 */
 	return apply_filters( 'bp_activity_get_types_list', $types );
+}
+
+/**
+ * Activity migration.
+ *
+ * @since BuddyBoss 2.4.30
+ *
+ * @return void
+ */
+function bb_activity_migration() {
+
+	/**
+	 * Like migration into reaction.
+	 *
+	 * @since BuddyBoss 2.4.30
+	 */
+	if ( class_exists( 'BB_Reaction' ) ) {
+		bb_load_reaction()->create_table();
+		bb_load_reaction()->bb_register_activity_like();
+
+		// Migration Like to Reaction.
+		if ( function_exists( 'bb_migrate_activity_like_reaction' ) ) {
+			bb_migrate_activity_like_reaction();
+		}
+	}
+}
+
+/**
+ * Migrate activity like reaction.
+ *
+ * @since BuddyBoss 2.4.30
+ *
+ * @param int $paged Current page for fetch records.
+ *
+ * @return void
+ */
+function bb_migrate_activity_like_reaction( $paged = 1 ) {
+	global $wpdb, $bp, $bb_background_updater;
+
+	$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
+
+	if ( empty( $paged ) ) {
+		$paged = 1;
+	}
+
+	$per_page = 20;
+	$offset   = ( ( $paged - 1 ) * $per_page );
+
+	$results = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT * FROM {$bp->activity->table_name_meta} WHERE meta_key = 'bp_favorite_users' ORDER BY activity_id LIMIT %d offset %d",
+			$per_page,
+			$offset
+		)
+	);
+
+	if ( empty( $results ) ) {
+		return;
+	}
+
+	$bb_background_updater->push_to_queue(
+		array(
+			'type'     => 'migration',
+			'group'    => 'bb_activity_like_reaction',
+			'priority' => 5,
+			'callback' => 'bb_activity_like_reaction_background_process',
+			'args'     => array( $results, $paged, $reaction_id ),
+		)
+	);
+	$bb_background_updater->save()->schedule_event();
+}
+
+/**
+ * Function to run like reaction within background process.
+ *
+ * @since BuddyBoss 2.4.30
+ *
+ * @param array $results     Activity like data.
+ * @param int   $paged       Current page for migration.
+ * @param int   $reaction_id Reaction ID.
+ *
+ * @return void
+ */
+function bb_activity_like_reaction_background_process( $results, $paged, $reaction_id ) {
+	global $wpdb, $bb_background_updater;
+
+	$user_reaction_table = bb_load_reaction()::$user_reaction_table;
+
+	if ( empty( $results ) ) {
+		return;
+	}
+
+	foreach ( $results as $result ) {
+		$activity_id = (int) $result->activity_id;
+		$meta_value  = maybe_unserialize( $result->meta_value );
+		if ( ! empty( $meta_value ) ) {
+			$implode_meta_value = implode( ',', wp_parse_id_list( $meta_value ) );
+			$data               = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT user_id FROM {$user_reaction_table}
+                        WHERE item_id = %d AND reaction_id = %d AND user_id IN ( {$implode_meta_value} )",
+					$result->activity_id,
+					$reaction_id
+				),
+				ARRAY_A
+			);
+
+			// Extract the user_id values using array_column
+			$user_ids = array_column( $data, 'user_id' );
+			if ( ! empty( $user_ids ) ) {
+				$meta_value = array_diff( $meta_value, $user_ids );
+			}
+
+			if ( ! empty( $meta_value) ) {
+				$min_count = (int) apply_filters( 'bb_update_users_like_reaction', 20 );
+				if ( count( $meta_value ) > $min_count ) {
+					foreach ( array_chunk( $meta_value, $min_count ) as $chunk ) {
+						$bb_background_updater->push_to_queue(
+							array(
+								'type'     => 'migration',
+								'group'    => 'bb_update_users_like_reaction',
+								'priority' => 4,
+								'callback' => 'bb_update_users_like_reaction',
+								'args'     => array( $chunk, $activity_id, $reaction_id ),
+							)
+						);
+						$bb_background_updater->save()->schedule_event();
+					}
+				} else {
+					bb_update_users_like_reaction( $meta_value, $activity_id, $reaction_id );
+				}
+			}
+		}
+	}
+
+	// Call recursive to finish update for all records.
+	$paged ++;
+	bb_migrate_activity_like_reaction( $paged );
+}
+
+/**
+ * Add user item reaction.
+ *
+ * @since BuddyBoss 2.4.30
+ *
+ * @param array $user_ids    Array of user ids.
+ * @param int   $activity_id Activity id.
+ * @param int   $reaction_id Reaction id.
+ *
+ * @return void
+ */
+function bb_update_users_like_reaction( $user_ids, $activity_id, $reaction_id ) {
+	foreach ( $user_ids as $user_id ) {
+		bb_load_reaction()->bb_add_user_item_reaction(
+			array(
+				'user_id'     => $user_id,
+				'reaction_id' => $reaction_id,
+				'item_id'     => $activity_id,
+				'item_type'   => 'activity',
+			)
+		);
+	}
+}
+
+/**
+ * Get the Activity comment edit data.
+ *
+ * @since BuddyBoss 2.4.40
+ *
+ * @param int $activity_comment_id Activity comment ID.
+ *
+ * @return array|bool The Activity comment edit data or false otherwise.
+ */
+function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
+	global $activities_template;
+
+	// check activity comment empty or not.
+	if ( empty( $activity_comment_id ) && empty( $activities_template ) ) {
+		return false;
+	}
+
+	$activity_comment = new stdClass();
+	// get activity comment.
+	if ( ! empty( $activity_comment_id ) ) {
+		$activity_comment = new BP_Activity_Activity( $activity_comment_id );
+	} elseif ( ! empty( $activities_template->activity->current_comment ) ) {
+		$activity_comment = $activities_template->activity->current_comment;
+	}
+
+	// check activity comment exists.
+	if ( empty( $activity_comment->id ) ) {
+		return false;
+	}
+
+	$can_edit_privacy                = true;
+	$album_id                        = 0;
+	$folder_id                       = 0;
+	$album_activity_comment__id      = bp_activity_get_meta( $activity_comment_id, 'bp_media_album_activity', true );
+	$album_video_activity_comment_id = bp_activity_get_meta( $activity_comment_id, 'bp_video_album_activity', true );
+
+	if ( ! empty( $album_activity_comment__id ) || ! empty( $album_video_activity_comment_id ) ) {
+		$album_id = $album_activity_comment__id;
+	}
+
+	$folder_activity_comment_id = bp_activity_get_meta( $activity_comment_id, 'bp_document_folder_activity', true );
+	if ( ! empty( $folder_activity_comment_id ) ) {
+		$folder_id = $folder_activity_comment_id;
+	}
+
+	// if album or folder activity comment, then set privacy edit to always false.
+	if ( $album_id || $folder_id ) {
+		$can_edit_privacy = false;
+	}
+
+	/**
+	 * Filter here to edit the activity comment edit data.
+	 *
+	 * @since BuddyBoss 2.4.40
+	 *
+	 * @param array $activity_comment_data The Activity comment edit data.
+	 */
+	return apply_filters(
+		'bb_activity_comment_get_edit_data',
+		array(
+			'id'               => $activity_comment_id,
+			'can_edit_privacy' => $can_edit_privacy,
+			'album_id'         => $album_id,
+			'folder_id'        => $folder_id,
+			'content'          => stripslashes( bp_get_activity_comment_content( $activity_comment_id ) ),
+			'item_id'          => $activity_comment->item_id,
+			'object'           => $activity_comment->component,
+			'privacy'          => $activity_comment->privacy,
+		)
+	);
 }

@@ -43,8 +43,24 @@ if ( groups_check_user_has_invite( bp_loggedin_user_id(), bp_get_current_group_i
 		</p>
 	</aside>
 
-	<?php elseif ( ! bp_group_has_requested_membership() ) : ?>
-	<?php if ( bb_groups_user_can_send_membership_requests( bp_get_current_group_id() ) ) { ?>
+	<?php
+	elseif ( ! bp_group_has_requested_membership() ) :
+		$parent_group_id = bp_get_parent_group_id( bp_get_current_group_id() );
+		$is_member       = groups_is_user_member( bp_loggedin_user_id(), $parent_group_id );
+
+		if (
+			bb_groups_user_can_send_membership_requests( bp_get_current_group_id() ) &&
+			(
+				empty( $parent_group_id ) ||
+				(
+					! empty( $parent_group_id ) &&
+					false !== $is_member
+				) ||
+				false === bp_enable_group_restrict_invites()
+			)
+		) {
+			?>
+
 		<p>
 			<?php echo sprintf( __( 'You are requesting to become a member of the group "%s".', 'buddyboss' ), bp_get_group_name() ); ?>
 		</p>
@@ -59,10 +75,21 @@ if ( groups_check_user_has_invite( bp_loggedin_user_id(), bp_get_current_group_i
 
 			<?php wp_nonce_field( 'groups_request_membership' ); ?>
 		</form><!-- #request-membership-form -->
-	<?php } ?>
+			<?php
+		} else {
+			$parent_group      = groups_get_group( $parent_group_id );
+			$parent_group_name = sprintf(
+				'<a class="bp-parent-group-title" href="%s">%s</a>',
+				esc_url( bp_get_group_permalink( $parent_group ) ),
+				esc_html( bp_get_group_name( $parent_group ) )
+			);
+
+			printf( __( 'You must first be a member of the parent group "%s" before you can join this group.', 'buddyboss' ), $parent_group_name );
+		}
+		?>
 
 <?php else : ?>
-    <?php bp_nouveau_user_feedback( 'group-requested-membership' ); ?>
+	<?php bp_nouveau_user_feedback( 'group-requested-membership' ); ?>
 <?php endif; ?>
 
 <?php

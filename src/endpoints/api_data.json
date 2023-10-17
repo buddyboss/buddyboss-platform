@@ -330,6 +330,42 @@
     "groupTitle": "Activity"
   },
   {
+    "type": "DELETE",
+    "url": "/wp-json/buddyboss/v1/activity/:id/comment/:comment_id",
+    "title": "Delete activity comment",
+    "name": "DeleteBBActivityComment",
+    "group": "Activity",
+    "description": "<p>Delete single activity comment</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "comment_id",
+            "description": "<p>A unique numeric ID for the activity comment.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-activity/classes/class-bp-rest-activity-comment-endpoint.php",
+    "groupTitle": "Activity"
+  },
+  {
     "type": "GET",
     "url": "/wp-json/buddyboss/v1/activity/:id/comment",
     "title": "Get activity comments",
@@ -607,6 +643,55 @@
   },
   {
     "type": "GET",
+    "url": "/wp-json/buddyboss/v1/activity/:id/comment/:comment_id",
+    "title": "Get Activity Comment",
+    "name": "GetBBActivityComment",
+    "group": "Activity",
+    "description": "<p>Retrieve single activity comment</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "comment_id",
+            "description": "<p>A unique numeric ID for the activity comment.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "stream",
+              "threaded",
+              "false"
+            ],
+            "optional": true,
+            "field": "display_comments",
+            "defaultValue": "false",
+            "description": "<p>No comments by default, stream for within stream display, threaded for below each activity item.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-activity/classes/class-bp-rest-activity-comment-endpoint.php",
+    "groupTitle": "Activity"
+  },
+  {
+    "type": "GET",
     "url": "/wp-json/buddyboss/v1/activity/link-preview",
     "title": "Link Preview",
     "name": "GetBBActivityLinkPreview",
@@ -787,6 +872,91 @@
       }
     },
     "filename": "src/bp-activity/classes/class-bp-rest-activity-endpoint.php",
+    "groupTitle": "Activity"
+  },
+  {
+    "type": "PATCH",
+    "url": "/wp-json/buddyboss/v1/activity/:id/comment/:comment_id",
+    "title": "Update activity comment",
+    "name": "UpdateBBActivityComment",
+    "group": "Activity",
+    "description": "<p>Update single activity comment</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "comment_id",
+            "description": "<p>A unique numeric ID for the activity comment.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "parent_id",
+            "description": "<p>The ID of some other object activity associated with this one.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "user_id",
+            "description": "<p>The ID for the author of the activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "content",
+            "description": "<p>Allowed HTML content for the activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "bp_media_ids",
+            "description": "<p>Media specific IDs when Media component is enable.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "bp_videos",
+            "description": "<p>Video specific IDs when Media component is enable.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "bp_documents",
+            "description": "<p>Document specific IDs when Media component is enable.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "media_gif",
+            "description": "<p>Save gif data into activity when Media component is enable. param(url,mp4)</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-activity/classes/class-bp-rest-activity-comment-endpoint.php",
     "groupTitle": "Activity"
   },
   {
@@ -8995,6 +9165,17 @@
   },
   {
     "type": "GET",
+    "url": "/wp-json/buddyboss/v1/reactions",
+    "title": "Get Reactions",
+    "name": "GetBBReactions",
+    "group": "Reactions",
+    "description": "<p>Retrieve supported reactions</p>",
+    "version": "1.0.0",
+    "filename": "src/bp-core/classes/class-bb-rest-reactions-endpoint.php",
+    "groupTitle": "Reactions"
+  },
+  {
+    "type": "GET",
     "url": "/wp-json/buddyboss/v1/settings",
     "title": "Settings",
     "name": "GetBBSettings",
@@ -9470,6 +9651,198 @@
     },
     "filename": "src/bp-core/classes/class-bb-rest-subscriptions-endpoint.php",
     "groupTitle": "Subscriptions"
+  },
+  {
+    "type": "DELETE",
+    "url": "/wp-json/buddyboss/v1/user-reactions/:id",
+    "title": "Delete User Reaction",
+    "name": "DeleteUserReaction",
+    "group": "User_Reaction",
+    "description": "<p>Delete a single user reaction.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the user reaction.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-reactions-endpoint.php",
+    "groupTitle": "User_Reaction"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/user-reactions",
+    "title": "Get Reactions",
+    "name": "GetBBUserReactions",
+    "group": "User_Reactions",
+    "description": "<p>Retrieve user reactions</p>",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "description": "<p>Current page of the collection.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "per_page",
+            "defaultValue": "10",
+            "description": "<p>Maximum number of items to be returned in result set.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "reaction_id",
+            "description": "<p>Limit result set to items with a specific Reaction ID.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "item_type",
+            "description": "<p>Limit result set to items with a specific item type.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "item_id",
+            "description": "<p>Limit result set to items with a specific item ID.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "user_id",
+            "description": "<p>Limit result set to items with a specific user ID.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "allowedValues": [
+              "asc",
+              "desc"
+            ],
+            "optional": true,
+            "field": "order",
+            "defaultValue": "desc",
+            "description": "<p>Order sort attribute ascending or descending.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "allowedValues": [
+              "id",
+              "date_created"
+            ],
+            "optional": true,
+            "field": "order_by",
+            "defaultValue": "id",
+            "description": "<p>Order by a specific parameter.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-reactions-endpoint.php",
+    "groupTitle": "User_Reactions"
+  },
+  {
+    "type": "POST",
+    "url": "/wp-json/buddyboss/v1/user-reactions",
+    "title": "Create user reactions",
+    "name": "CreateUserReaction",
+    "group": "User_reaction",
+    "description": "<p>Create user reactions</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "reaction_id",
+            "description": "<p>The ID of reaction.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "item_type",
+            "description": "<p>Type of item.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "item_id",
+            "description": "<p>The ID of item.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "user_id",
+            "description": "<p>The ID for the author of the reaction.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-reactions-endpoint.php",
+    "groupTitle": "User_reaction"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/user-reactions/:id",
+    "title": "Get user reaction",
+    "name": "GetBBUserReaction",
+    "group": "User_reaction",
+    "description": "<p>Retrieve single user reaction</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the user reaction.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-reactions-endpoint.php",
+    "groupTitle": "User_reaction"
   },
   {
     "type": "POST",

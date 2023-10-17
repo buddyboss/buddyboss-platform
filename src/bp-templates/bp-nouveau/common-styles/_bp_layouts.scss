@@ -465,3 +465,13 @@
 		top: 32px;
 	}
 }
+
+@media screen and (max-width: 782px) {
+
+	#wpadminbar .menupop .menupop > .ab-item {
+
+		.wp-admin-bar-arrow:before {
+			position: initial;
+		}
+	}
+}
