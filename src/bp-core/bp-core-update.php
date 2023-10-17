@@ -496,6 +496,11 @@ function bp_version_updater() {
 			if ( function_exists( 'bb_activity_migration' ) ) {
 				bb_activity_migration();
 			}
+
+			// Run migration about forums.
+			if ( function_exists( 'bb_forums_migration' ) ) {
+				bb_forums_migration();
+			}
 		}
 	}
 
