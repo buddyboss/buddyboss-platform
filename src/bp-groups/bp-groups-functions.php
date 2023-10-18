@@ -5252,20 +5252,21 @@ function bb_groups_settings_default_fallback( $setting_type, $val = '' ) {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_group_migration() {
+	$is_already_run = get_transient( 'bb_group_migration' );
 
-	// When 'group restrict invites' is on, remove subgroup members not in the parent group.
-	if (
-		true === bp_enable_group_hierarchies() &&
-		true === bp_enable_group_restrict_invites()
-	) {
-		bb_groups_migrate_subgroup_member();
-		bb_groups_migrate_group_invitation();
+	if ( $is_already_run ) {
+		return;
 	}
 
+	set_transient( 'bb_group_migration', true, HOUR_IN_SECONDS );
+
+	// When 'group restrict invites' is on, remove subgroup members not in the parent group.
+	bb_groups_migrate_subgroup_member();
 }
 
 /**
  * Migrate subgroup members.
+ * When 'group restrict invites' is on, remove subgroup members not in the parent group.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -5273,39 +5274,82 @@ function bb_group_migration() {
  */
 function bb_groups_migrate_subgroup_member() {
 	global $bb_background_updater;
+	if (
+		true === bp_enable_group_hierarchies() &&
+		true === bp_enable_group_restrict_invites()
+	) {
+		// Background job for group membership table.
+		$bb_background_updater->push_to_queue(
+			array(
+				'type'     => 'migration',
+				'group'    => 'bb_groups_subgroup_membership',
+				'priority' => 5,
+				'callback' => 'bb_update_groups_subgroup_membership_background_process',
+				'args'     => array(),
+			)
+		);
+		$bb_background_updater->save()->dispatch();
 
-	$bb_background_updater->push_to_queue(
-		array(
-			'type'     => 'migration',
-			'group'    => 'bb_groups_subgroup_membership',
-			'priority' => 5,
-			'callback' => 'bb_update_groups_subgroup_membership_background_process',
-			'args'     => array(),
-		)
-	);
-	$bb_background_updater->save()->dispatch();
+		// Background job for group invite table.
+		$bb_background_updater->push_to_queue(
+			array(
+				'type'     => 'migration',
+				'group'    => 'bb_groups_subgroup_invitation',
+				'priority' => 5,
+				'callback' => 'bb_update_groups_invitation_background_process',
+				'args'     => array(),
+			)
+		);
+		$bb_background_updater->save()->schedule_event();
 
-	$bb_background_updater->push_to_queue(
-		array(
-			'type'     => 'migration',
-			'group'    => 'bb_groups_subgroup_membership',
-			'priority' => 5,
-			'callback' => 'bb_update_groups_subgroup_membership_background_process',
-			'args'     => array(),
-		)
-	);
-	$bb_background_updater->save()->schedule_event();
+		// Background job for group membership table.
+		$bb_background_updater->push_to_queue(
+			array(
+				'type'     => 'migration',
+				'group'    => 'bb_groups_subgroup_membership',
+				'priority' => 5,
+				'callback' => 'bb_update_groups_subgroup_membership_background_process',
+				'args'     => array(),
+			)
+		);
+		$bb_background_updater->save()->schedule_event();
 
-	$bb_background_updater->push_to_queue(
-		array(
-			'type'     => 'migration',
-			'group'    => 'bb_groups_subgroup_membership',
-			'priority' => 5,
-			'callback' => 'bb_update_groups_subgroup_membership_background_process',
-			'args'     => array(),
-		)
-	);
-	$bb_background_updater->save()->schedule_event();
+		// Background job for group invite table.
+		$bb_background_updater->push_to_queue(
+			array(
+				'type'     => 'migration',
+				'group'    => 'bb_groups_subgroup_invitation',
+				'priority' => 5,
+				'callback' => 'bb_update_groups_invitation_background_process',
+				'args'     => array(),
+			)
+		);
+		$bb_background_updater->save()->schedule_event();
+
+		// Background job for group membership table.
+		$bb_background_updater->push_to_queue(
+			array(
+				'type'     => 'migration',
+				'group'    => 'bb_groups_subgroup_membership',
+				'priority' => 5,
+				'callback' => 'bb_update_groups_subgroup_membership_background_process',
+				'args'     => array(),
+			)
+		);
+		$bb_background_updater->save()->schedule_event();
+
+		// Background job for group invite table.
+		$bb_background_updater->push_to_queue(
+			array(
+				'type'     => 'migration',
+				'group'    => 'bb_groups_subgroup_invitation',
+				'priority' => 5,
+				'callback' => 'bb_update_groups_invitation_background_process',
+				'args'     => array(),
+			)
+		);
+		$bb_background_updater->save()->schedule_event();
+	}
 }
 
 /**
@@ -5318,15 +5362,21 @@ function bb_groups_migrate_subgroup_member() {
 function bb_update_groups_subgroup_membership_background_process() {
 	global $wpdb, $bp, $bb_background_updater;
 
+	$limit = (int) apply_filters( 'bb_limit_subgroup_membership_migration', 50 );
+
 	$sql = "SELECT gm.group_id, gm.user_id FROM {$bp->groups->table_name_members} gm
 			LEFT JOIN {$bp->groups->table_name} g ON gm.group_id = g.id
 			LEFT JOIN {$bp->groups->table_name} parent ON g.parent_id = parent.id
-			WHERE g.parent_id != 0 AND gm.is_admin = 0 AND gm.is_mod = 0 AND gm.is_confirmed = 1 ORDER BY parent.id, g.id LIMIT 50;";
+			WHERE g.parent_id != 0 AND gm.is_admin = 0 AND gm.is_mod = 0 AND gm.is_confirmed = 1 ORDER BY parent.id, g.id LIMIT {$limit};";
 
 	// phpcs:ignore
 	$groups = $wpdb->get_results( $sql );
 
-	if ( empty( $groups ) ) {
+	if (
+		empty( $groups ) ||
+		true !== bp_enable_group_hierarchies() ||
+		true !== bp_enable_group_restrict_invites()
+	) {
 		$table_name = $bb_background_updater::$table_name;
 		// Delete remaining background processes.
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -5359,28 +5409,6 @@ function bb_update_groups_subgroup_membership_background_process() {
 	$bb_background_updater->save()->schedule_event();
 }
 
-/**
- * Migrate group invitations.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return void
- */
-function bb_groups_migrate_group_invitation() {
-	global $bb_background_updater;
-
-	$bb_background_updater->push_to_queue(
-		array(
-			'type'     => 'migration',
-			'group'    => 'bb_groups_invitation',
-			'priority' => 10,
-			'callback' => 'bb_update_groups_invitation_background_process',
-			'args'     => array(),
-		)
-	);
-
-	$bb_background_updater->save()->schedule_event();
-}
 
 /**
  * Function to run group invites removal within background process.
@@ -5391,6 +5419,7 @@ function bb_groups_migrate_group_invitation() {
  */
 function bb_update_groups_invitation_background_process() {
 	global $wpdb, $bp, $bb_background_updater;
+	$limit = (int) apply_filters( 'bb_limit_subgroup_membership_migration', 50 );
 
 	$invites_table_name = BP_Invitation_Manager::get_table_name();
 
@@ -5398,12 +5427,16 @@ function bb_update_groups_invitation_background_process() {
 			INNER JOIN {$bp->groups->table_name} g ON g.id = i.item_id
 			LEFT JOIN {$bp->groups->table_name_members} gm ON gm.group_id = g.parent_id AND gm.user_id = i.user_id
 			WHERE g.parent_id != 0 AND gm.group_id IS NULL
-			ORDER BY i.id LIMIT 1;";
+			ORDER BY i.id LIMIT {$limit};";
 
 	// phpcs:ignore
 	$group_invitations = $wpdb->get_results( $sql );
 
-	if ( empty( $group_invitations ) ) {
+	if (
+		empty( $group_invitations ) ||
+		true !== bp_enable_group_hierarchies() ||
+		true !== bp_enable_group_restrict_invites()
+	) {
 		return;
 	}
 
@@ -5419,8 +5452,8 @@ function bb_update_groups_invitation_background_process() {
 	$bb_background_updater->push_to_queue(
 		array(
 			'type'     => 'migration',
-			'group'    => 'bb_groups_invitation',
-			'priority' => 10,
+			'group'    => 'bb_groups_subgroup_invitation',
+			'priority' => 5,
 			'callback' => 'bb_update_groups_invitation_background_process',
 			'args'     => array(),
 		)
