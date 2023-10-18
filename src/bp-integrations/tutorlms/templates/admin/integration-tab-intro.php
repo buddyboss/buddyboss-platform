@@ -68,7 +68,7 @@
 			<p>
 			<?php
 				printf(
-					__( 'BuddyBoss Platform has integration settings for %s. If using TutorLMS we add the ability to sync TutorLMS groups with social groups, to connect TutorLMS courses to social groups, and more. If using our BuddyBoss Theme we also include styling for TutorLMS.', 'buddyboss' ),
+					__( 'BuddyBoss Platform has integration settings for %s. If using TutorLMS we add the ability to add courses to groups as an instructor and utilize the BuddyBoss activity feeds for Course, Lessons & Topics. We have also taken the time to style TutorLMS to match our theme for styling.', 'buddyboss' ),
 					sprintf(
 						'<a href="%s">%s</a>',
 						'https://learndash.idevaffiliate.com/111.html',
