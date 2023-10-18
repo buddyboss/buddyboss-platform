@@ -3326,7 +3326,7 @@ function bb_update_to_2_4_41() {
 /**
  * Add 'description' column to bp_media and bp_document table.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.50
  *
  * @return void
  */

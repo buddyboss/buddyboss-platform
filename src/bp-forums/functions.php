@@ -1185,7 +1185,7 @@ function bb_update_last_group_forum_associations( $group_id = 0, $forum_id = 0 )
 /**
  * Run migration for resolving the issue related to the forums.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.50
  *
  * @param int $raw_db_version Raw database version.
  */
@@ -1203,7 +1203,7 @@ function bb_forums_migration( $raw_db_version ) {
 		/**
 		 * Migrate orphan group's forum discussion notification subscriptions.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.50
 		 */
 		$subscription_tbl = BB_Subscriptions::get_subscription_tbl();
 
@@ -1253,7 +1253,7 @@ function bb_forums_migration( $raw_db_version ) {
 /**
  * Function to run discussion notification subscription within background process.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.50
  *
  * @param array $subscriptions Subscription results.
  *

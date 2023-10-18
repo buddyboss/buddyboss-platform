@@ -3560,7 +3560,7 @@ function bb_activity_comment_at_name_send_emails( $comment_id, $r, $activity ) {
  * @param string $url       Comment author's URL. Included in allowed links total.
  * @param string $comment   Content of the comment.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.50
  *
  * @return int The max link count for comment moderation.
  */
