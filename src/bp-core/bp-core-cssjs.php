@@ -194,7 +194,7 @@ function bp_core_register_common_scripts() {
 	 * @since BuddyPress 2.3.0 'bp-plupload', 'bp-avatar', 'bp-webcam' added.
 	 * @since BuddyPress 2.4.0 'bp-cover-image' added.
 	 * @since BuddyPress 2.7.0 'bp-moment', 'bp-livestamp' added. 'bp-moment-locale' is added conditionally if a moment.js locale file is found.
-	 * @since BuddyBoss [BBVERSION] Removed 'bp-moment' and used WordPress moment.js.
+	 * @since BuddyBoss 2.4.50 Removed 'bp-moment' and used WordPress moment.js.
 	 *
 	 * @param array $value Array of javascript file information to register.
 	 */

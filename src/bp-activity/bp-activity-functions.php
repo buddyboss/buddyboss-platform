@@ -6154,7 +6154,7 @@ function bp_activity_get_types_list() {
  * Activity migration.
  *
  * @since BuddyBoss 2.4.30
- * @since BuddyBoss [BBVERSION] Added support for the $raw_db_version and $current_db.
+ * @since BuddyBoss 2.4.50 Added support for the $raw_db_version and $current_db.
  *
  * @param int $raw_db_version Raw database version.
  * @param int $current_db Current DB version.

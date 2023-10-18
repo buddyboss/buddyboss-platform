@@ -3553,7 +3553,7 @@ function bb_group_activity_at_name_send_emails( $content, $user_id, $group_id, $
  * @since BuddyBoss 2.4.40
  *
  * @param int                  $comment_id ID of the newly posted activity comment.
- * @param array                $args       Array of parsed comment arguments.
+ * @param array                $r          Array of parsed comment arguments.
  * @param BP_Activity_Activity $activity   Activity item being commented on.
  */
 function bb_activity_comment_at_name_send_emails( $comment_id, $r, $activity ) {
@@ -3568,7 +3568,7 @@ function bb_activity_comment_at_name_send_emails( $comment_id, $r, $activity ) {
  * @param string $url       Comment author's URL. Included in allowed links total.
  * @param string $comment   Content of the comment.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.50
  *
  * @return int The max link count for comment moderation.
  */

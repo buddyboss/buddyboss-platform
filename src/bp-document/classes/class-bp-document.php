@@ -153,7 +153,7 @@ class BP_Document {
 	/**
 	 * Description of the document item.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.50
 	 * @var string
 	 */
 	var $description;
