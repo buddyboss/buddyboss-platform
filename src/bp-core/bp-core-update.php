@@ -503,7 +503,7 @@ function bp_version_updater() {
 
 			// Run migration about forums.
 			if ( function_exists( 'bb_forums_migration' ) ) {
-				bb_forums_migration();
+				bb_forums_migration( $raw_db_version );
 			}
 
 			// Run migration about media/video description.
@@ -3326,7 +3326,7 @@ function bb_update_to_2_4_41() {
 /**
  * Add 'description' column to bp_media and bp_document table.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.50
  *
  * @return void
  */
