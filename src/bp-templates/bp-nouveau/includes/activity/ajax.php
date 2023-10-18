@@ -1059,7 +1059,7 @@ function bb_nouveau_ajax_activity_update_pinned_post() {
 
 	if ( ! empty( $retval ) ) {
 		if ( 'unpinned' === $retval ) {
-			$response['feedback'] = esc_html__( 'Your post has been unpinned', 'buddyboss' );
+			$response['feedback'] = esc_html__( 'Your pinned post has been removed', 'buddyboss' );
 		} elseif ( 'pinned' === $retval ) {
 			$response['feedback'] = esc_html__( 'Your post has been pinned', 'buddyboss' );
 		} elseif ( 'pin_updated' === $retval ) {
