@@ -503,7 +503,7 @@ function bp_version_updater() {
 
 			// Run migration about forums.
 			if ( function_exists( 'bb_forums_migration' ) ) {
-				bb_forums_migration();
+				bb_forums_migration( $raw_db_version );
 			}
 
 			// Run migration about media/video description.

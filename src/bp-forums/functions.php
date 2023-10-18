@@ -1186,11 +1186,19 @@ function bb_update_last_group_forum_associations( $group_id = 0, $forum_id = 0 )
  * Run migration for resolving the issue related to the forums.
  *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $raw_db_version Raw database version.
  */
-function bb_forums_migration() {
+function bb_forums_migration( $raw_db_version ) {
 	global $wpdb, $bb_background_updater;
 
-	if ( bp_is_active( 'groups' ) ) {
+	$is_already_run = get_transient( 'bb_forums_migration' );
+
+	if ( $is_already_run ) {
+		return;
+	}
+
+	if ( bp_is_active( 'groups' ) && $raw_db_version < 20674 ) { // Release version 2.4.50.
 
 		/**
 		 * Migrate orphan group's forum discussion notification subscriptions.
@@ -1238,6 +1246,8 @@ function bb_forums_migration() {
 			}
 		}
 	}
+
+	set_transient( 'bb_forums_migration', true, HOUR_IN_SECONDS );
 }
 
 /**
