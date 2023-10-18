@@ -5451,34 +5451,63 @@ function bb_set_user_profile_slug( int $user_id, bool $force = false ) {
  * @param array $user_ids User IDs.
  */
 function bb_set_bulk_user_profile_slug( $user_ids ) {
+	global $wpdb, $is_member_slug_background;
 
 	if ( empty( $user_ids ) ) {
 		return;
 	}
 
-	foreach ( $user_ids as $user_id ) {
-		bb_set_user_profile_slug( (int) $user_id );
+	$prefix                = ! empty( $is_member_slug_background ) ? 'b' : '';
+	$new_unique_identifier = bb_generate_user_random_profile_slugs( count( $user_ids ), $prefix );
+
+	$implode_user_ids = implode( ',', $user_ids );
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$wpdb->query(
+		$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery
+			"UPDATE {$wpdb->usermeta} SET meta_key = REPLACE(meta_key, %s, %s) WHERE meta_key LIKE 'bb_profile_slug_%' and user_id IN ({$implode_user_ids})",
+			'bb_profile_slug_',
+			'bb_profile_long_slug_'
+		)
+	);
+
+	// Insert 'bb_profile_slug' metakey.
+	$bps_sql = "INSERT INTO {$wpdb->usermeta} (user_id, meta_key, meta_value) VALUES ";
+
+	foreach ( $user_ids as $key => $user_id ) {
+		$uuid = $new_unique_identifier[ $key ];
+
+		$bps_sql .= "({$user_id}, 'bb_profile_slug', '{$uuid}'), ({$user_id}, 'bb_profile_slug_{$uuid}', $user_id), ";
 	}
 
-	// Flush WP cache.
-	wp_cache_flush();
+	$bps_sql = rtrim( $bps_sql, ', ' ); // Remove the trailing comma and space.
+	$wpdb->query( $bps_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+	// Rest the global variable.
+	$is_member_slug_background = false;
 
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		BuddyBoss\Performance\Cache::instance()->purge_all();
 	}
+
+	// Flush WP cache.
+	wp_cache_flush();
 }
 
 /**
  * Function to generate the unique keys.
  *
  * @since BuddyBoss 2.3.41
+ * @since BuddyBoss 2.4.41 Added $prefix argument.
  *
- * @param int $max_ids How many unique IDs need to be generated? Default 1.
+ * @param int    $max_ids How many unique IDs need to be generated? Default 1.
+ * @param string $prefix  Prefix key to add in UUID. In backgound it will be 'b' or empty.
  *
  * @return array
  */
-function bb_generate_user_random_profile_slugs( $max_ids = 1 ) {
+function bb_generate_user_random_profile_slugs( $max_ids = 1, $prefix = '' ) {
 	$max_ids       = absint( $max_ids );
 	$start         = 0;
 	$length        = 8;
@@ -5489,9 +5518,9 @@ function bb_generate_user_random_profile_slugs( $max_ids = 1 ) {
 	/**
 	 * Generate the missing ids.
 	 */
-	$generate_ids_func = function( $generated_ids ) use ( $max_ids, $start, $length ) {
+	$generate_ids_func = function( $generated_ids ) use ( $max_ids, $start, $length, $prefix ) {
 		while ( count( $generated_ids ) < $max_ids ) { // phpcs:ignore Squiz.PHP.DisallowSizeFunctionsInLoops.Found
-			$generated_ids[] = strtolower( substr( sha1( wp_generate_password( 40 ) ), $start, $length ) );
+			$generated_ids[] = strtolower( substr( $prefix . sha1( wp_generate_password( 40 ) ), $start, $length ) );
 		}
 
 		return $generated_ids;

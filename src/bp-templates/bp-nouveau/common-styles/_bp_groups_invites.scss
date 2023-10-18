@@ -62,11 +62,7 @@
 }
 
 #buddypress #send_group_invite_form .select2-search__field {
-	background: transparent;
-	border-width: 0;
-	min-width: 100%;
-	width: 100% !important;
-	padding-left: 0;
+	display: none;
 }
 
 body.groups.group-invites .select2-dropdown .select2-results__option {

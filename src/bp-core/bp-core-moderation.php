@@ -113,18 +113,20 @@ function bp_core_check_for_moderation( $user_id = 0, $title = '', $content = '',
 		$num_links = preg_match_all( '/(http|ftp|https):\/\//i', $content, $match_out );
 
 		// Allow for bumping the max to include the user's URL.
+		$url = '';
 		if ( ! empty( $_post['url'] ) ) {
-
-			/**
-			 * Filters the maximum amount of links allowed to include the user's URL.
-			 *
-			 * @since BuddyPress 1.6.0
-			 *
-			 * @param string $num_links How many links found.
-			 * @param string $value     User's url.
-			 */
-			$num_links = apply_filters( 'comment_max_links_url', $num_links, $_post['url'] );
+			$url = $_post['url'];
 		}
+
+		/**
+		 * Filters the maximum amount of links allowed to include the user's URL.
+		 *
+		 * @since BuddyPress 1.6.0
+		 *
+		 * @param string $num_links How many links found.
+		 * @param string $value     User's url.
+		 */
+		$num_links = apply_filters( 'comment_max_links_url', $num_links, $url, $content );
 
 		// Das ist zu viele links!
 		if ( $num_links >= $max_links ) {

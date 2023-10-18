@@ -100,6 +100,9 @@ add_action( 'bp_actions', 'bb_group_subscriptions_handler' );
 // Filter group count.
 add_filter( 'bp_groups_get_where_count_conditions', 'bb_groups_count_update_where_sql', 10, 2 );
 
+// Remove from group forums and topics.
+add_action( 'groups_leave_group', 'bb_groups_unsubscribe_group_forums_topic', 10, 2 );
+
 /**
  * Filter output of Group Description through WordPress's KSES API.
  *
@@ -595,9 +598,17 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 
 	if ( ! empty( $filter['search_terms'] ) ) {
 		$args[] = array(
-			'column'  => 'title',
-			'compare' => 'LIKE',
-			'value'   => $filter['search_terms'],
+			'relation' => 'OR',
+			array(
+				'column'  => 'title',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+			array(
+				'column'  => 'description',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			)
 		);
 	}
 
@@ -693,9 +704,17 @@ function bp_groups_filter_video_scope( $retval = array(), $filter = array() ) {
 
 	if ( ! empty( $filter['search_terms'] ) ) {
 		$args[] = array(
-			'column'  => 'title',
-			'compare' => 'LIKE',
-			'value'   => $filter['search_terms'],
+			'relation' => 'OR',
+			array(
+				'column'  => 'title',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+			array(
+				'column'  => 'description',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			)
 		);
 	}
 
@@ -1401,4 +1420,56 @@ function bb_groups_count_update_where_sql( $where_conditions, $args = array() ) 
 	}
 
 	return $where_conditions;
+}
+
+/**
+ * Unsubscribe a user from a group forum topics.
+ *
+ * @since BuddyBoss 2.4.50
+ *
+ * @param int $group_id Group ID
+ * @param int $user_id  User ID
+ *
+ * @return void
+ */
+function bb_groups_unsubscribe_group_forums_topic( $group_id, $user_id ) {
+
+	// Bail if forum is disabled.
+	if ( ! bp_is_active( 'forums' ) ) {
+		return;
+	}
+
+	// Bail if group id and user id is not set.
+	if ( empty( $group_id ) || empty( $user_id ) ) {
+		return;
+	}
+
+	$forum_ids = bbp_get_group_forum_ids( $group_id );
+	if ( empty( $forum_ids ) ) {
+		return;
+	}
+
+	$notifications = BB_Subscriptions::get(
+		array(
+			'user_id'           => $user_id,
+			'type'              => 'topic',
+			'fields'            => 'item_id',
+			'secondary_item_id' => $forum_ids,
+		)
+	);
+
+	if ( empty( $notifications['subscriptions'] ) ) {
+		return;
+	}
+
+	// Loop through subscribed topics and remove user from this group related topics.
+	foreach ( (array) $notifications['subscriptions'] as $topic_id ) {
+		$topic_forum_id = bbp_get_topic_forum_id( $topic_id );
+		if (
+			bbp_is_forum_private( $topic_forum_id ) ||
+			bbp_is_forum_hidden( $topic_forum_id )
+		) {
+			bbp_remove_user_topic_subscription( $user_id, $topic_id );
+		}
+	}
 }
