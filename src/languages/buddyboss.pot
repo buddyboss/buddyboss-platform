@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.4.40\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-10-12 11:40:15+00:00\n"
+"POT-Creation-Date: 2023-10-18 03:15:41+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2042,7 +2042,7 @@ msgstr ""
 msgid "Embedded Activity Item"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-template.php:337
+#: bp-activity/classes/class-bp-activity-template.php:338
 #: bp-blogs/classes/class-bp-blogs-template.php:197
 #: bp-document/classes/class-bp-document-folder-template.php:222
 #: bp-document/classes/class-bp-document-template.php:249
@@ -2058,7 +2058,7 @@ msgstr ""
 msgid "&larr;"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-template.php:338
+#: bp-activity/classes/class-bp-activity-template.php:339
 #: bp-blogs/classes/class-bp-blogs-template.php:198
 #: bp-document/classes/class-bp-document-folder-template.php:223
 #: bp-document/classes/class-bp-document-template.php:250
@@ -5468,7 +5468,9 @@ msgid "Activity tabs"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:103
-msgid "Pinned posts"
+#: bp-templates/bp-nouveau/buddypress/activity/confirmation-modal.php:19
+#: bp-templates/bp-nouveau/buddypress/activity/entry.php:37
+msgid "Pinned Post"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:109
@@ -28204,11 +28206,6 @@ msgstr ""
 msgid "Load More"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/activity/confirmation-modal.php:19
-#: bp-templates/bp-nouveau/buddypress/activity/entry.php:37
-msgid "Pinned Post"
-msgstr ""
-
 #: bp-templates/bp-nouveau/buddypress/activity/confirmation-modal.php:25
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1064
 msgid "Your post has been pinned"
@@ -29980,7 +29977,7 @@ msgid "There was a problem marking this operation. Please try again."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1062
-msgid "Your post has been unpinned"
+msgid "Your pinned post has been removed"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1066
