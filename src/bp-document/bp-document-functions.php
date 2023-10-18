@@ -497,6 +497,7 @@ function bp_document_add( $args = '' ) {
 			'attachment_id' => false,                   // attachment id.
 			'user_id'       => bp_loggedin_user_id(),   // user_id of the uploader.
 			'title'         => '',                      // title of document being added.
+			'description'   => '',                      // description of document being added.
 			'folder_id'     => false,                   // Optional: ID of the folder.
 			'group_id'      => false,                   // Optional: ID of the group.
 			'activity_id'   => false,                   // The ID of activity.
@@ -516,6 +517,7 @@ function bp_document_add( $args = '' ) {
 	$document->attachment_id = $r['attachment_id'];
 	$document->user_id       = (int) $r['user_id'];
 	$document->title         = $r['title'];
+	$document->description   = wp_filter_nohtml_kses( $r['description'] );
 	$document->folder_id     = (int) $r['folder_id'];
 	$document->group_id      = (int) $r['group_id'];
 	$document->activity_id   = (int) $r['activity_id'];
@@ -5042,4 +5044,22 @@ function bb_document_remove_orphaned_download() {
 			$wp_files_system->delete( $folder, true );
 		}
 	}
+}
+
+/**
+ * Run migration for document description from post table to media table.
+ *
+ * @since BuddyBoss 2.4.50
+ *
+ * @return void
+ */
+function bb_document_migration() {
+	global $wpdb, $bp;
+
+	/**
+	 * Migrate documents description from post table to document table.
+	 *
+	 * @since BuddyBoss 2.4.50
+	 */
+	$wpdb->query( "UPDATE {$bp->document->table_name} AS d JOIN {$wpdb->posts} AS p ON p.ID = d.attachment_id SET d.description = p.post_content" ); // phpcs:ignore
 }
