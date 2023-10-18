@@ -1956,7 +1956,7 @@ window.bp = window.bp || {};
 				if ( leave_group_popup.length ) {
 
 					var leave_group_content = leave_group_popup.find( '.bb-leave-group-content' );
-					var is_parent_group     = $( target ).attr( 'data-bb-is-parent' );
+					var is_parent_group = item.hasClass( 'has-child' ) ? true : false;
 
 					leave_group_content.html( is_parent_group ? BP_Nouveau.parent_group_leave_confirm : BP_Nouveau.group_leave_confirm );
 					if ( ! is_parent_group) {

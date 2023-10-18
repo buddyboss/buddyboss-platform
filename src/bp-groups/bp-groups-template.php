@@ -384,7 +384,7 @@ function bp_has_groups( $args = '' ) {
 			$group_type = explode( ',', $_REQUEST['group_type'] );
 		}
 	}
-	
+
 	$status = array();
  	if ( ! empty( $_GET['status'] ) ) {
  		if ( is_array( $_GET['status'] ) ) {
@@ -668,6 +668,15 @@ function bp_get_group_class( $classes = array() ) {
 		$classes[] = 'group-no-avatar';
 	} else {
 		$classes[] = 'group-has-avatar';
+	}
+
+	// If group has child group and invite restriction is enabled.
+	if (
+		true === bp_enable_group_hierarchies() &&
+		true === bp_enable_group_restrict_invites() &&
+		! empty( bp_get_descendent_groups( bp_get_group_id() ) )
+	) {
+		$classes[] = 'has-child';
 	}
 
 	/**
@@ -4347,15 +4356,6 @@ function bp_get_group_join_button( $group = false ) {
 				'data-bb-group-link'   => esc_url( bp_get_group_permalink( $group ) ),
 			),
 		);
-
-		// If group has child group and invite restriction is enabled.
-		if (
-			true === bp_enable_group_hierarchies() &&
-			true === bp_enable_group_restrict_invites() &&
-			! empty( bp_get_descendent_groups( $group->id ) )
-		) {
-			$button['button_attr']['data-bb-is-parent'] = '1';
-		}
 
 		if ( $is_only_admin ) {
 			$button['button_attr']['data-only-admin'] = '1';
