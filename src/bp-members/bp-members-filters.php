@@ -846,8 +846,8 @@ function bb_repair_member_profile_links_callback() {
 	global $wpdb;
 
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-	$offset   = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
-	$per_page = 20;
+	$offset    = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$per_page  = apply_filters( 'bb_core_update_repair_member_slug_limit', 50 );
 
 	// Set limit while repair the member slug.
 	$user_ids = $wpdb->get_col(

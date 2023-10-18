@@ -139,7 +139,7 @@ class BP_Media {
 	/**
 	 * Description of the media item.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.50
 	 * @var string
 	 */
 	var $description;

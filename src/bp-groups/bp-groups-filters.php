@@ -1424,7 +1424,7 @@ function bb_groups_count_update_where_sql( $where_conditions, $args = array() ) 
 /**
  * Unsubscribe a user from a group forum topics.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.50
  *
  * @param int $group_id Group ID
  * @param int $user_id  User ID
