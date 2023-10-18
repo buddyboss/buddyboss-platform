@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.4.40\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-10-18 03:15:41+00:00\n"
+"POT-Creation-Date: 2023-10-18 09:11:43+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -29977,7 +29977,7 @@ msgid "There was a problem marking this operation. Please try again."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1062
-msgid "Your pinned post has been removed"
+msgid "Your post has been unpinned"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1066
