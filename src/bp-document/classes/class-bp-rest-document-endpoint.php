@@ -1340,7 +1340,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			'attachment_id'         => ( isset( $document->attachment_id ) ? $document->attachment_id : 0 ),
 			'user_id'               => $document->user_id,
 			'title'                 => $document->title,
-			'description'           => wp_specialchars_decode( $document->description, ENT_QUOTES ),
+			'description'           => ( ! empty( $document->description ) ? wp_specialchars_decode( $document->description, ENT_QUOTES ) : '' ),
 			'type'                  => ( empty( $document->attachment_id ) ? 'folder' : 'document' ),
 			'folder_id'             => $document->parent,
 			'group_id'              => $document->group_id,
