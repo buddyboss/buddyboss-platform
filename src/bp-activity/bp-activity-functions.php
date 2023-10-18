@@ -6506,7 +6506,14 @@ function bb_activity_pin_type( $args ) {
 	if (
 		empty( $r['action'] ) &&
 		! empty( $scope ) &&
-		in_array( 'public', $scope, true ) &&
+		(
+			in_array( 'public', $scope, true ) ||
+			(
+				true === bp_is_relevant_feed_enabled() &&
+				count( $scope ) > 1 &&
+				! in_array( 'public', $scope, true )
+			)
+		) &&
 		empty( $r['user_id'] ) &&
 		empty( $r['object'] ) &&
 		empty( $r['filter']['object'] )
