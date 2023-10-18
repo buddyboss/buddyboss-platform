@@ -2042,7 +2042,7 @@ msgstr ""
 msgid "Embedded Activity Item"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-template.php:337
+#: bp-activity/classes/class-bp-activity-template.php:338
 #: bp-blogs/classes/class-bp-blogs-template.php:197
 #: bp-document/classes/class-bp-document-folder-template.php:222
 #: bp-document/classes/class-bp-document-template.php:249
@@ -2058,7 +2058,7 @@ msgstr ""
 msgid "&larr;"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-template.php:338
+#: bp-activity/classes/class-bp-activity-template.php:339
 #: bp-blogs/classes/class-bp-blogs-template.php:198
 #: bp-document/classes/class-bp-document-folder-template.php:223
 #: bp-document/classes/class-bp-document-template.php:250
@@ -5509,7 +5509,9 @@ msgid "Activity tabs"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:103
-msgid "Pinned posts"
+#: bp-templates/bp-nouveau/buddypress/activity/confirmation-modal.php:19
+#: bp-templates/bp-nouveau/buddypress/activity/entry.php:37
+msgid "Pinned Post"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:109
@@ -28309,11 +28311,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/video/ajax.php:547
 #: bp-templates/bp-nouveau/includes/video/ajax.php:590
 msgid "Load More"
-msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/activity/confirmation-modal.php:19
-#: bp-templates/bp-nouveau/buddypress/activity/entry.php:37
-msgid "Pinned Post"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/activity/confirmation-modal.php:25
