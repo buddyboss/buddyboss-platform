@@ -5437,6 +5437,17 @@ function bb_update_groups_invitation_background_process() {
 		true !== bp_enable_group_hierarchies() ||
 		true !== bp_enable_group_restrict_invites()
 	) {
+		$table_name = $bb_background_updater::$table_name;
+		// Delete remaining background processes.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM {$table_name} WHERE `type` = %s AND `group` = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				'migration',
+				'bb_groups_subgroup_invitation'
+			)
+		);
+
 		return;
 	}
 
