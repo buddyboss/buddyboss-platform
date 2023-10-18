@@ -1435,7 +1435,7 @@ function bb_group_activity_pinpost_confirmation_modal_template() {
 
 /** Unsubscribe a user from a group forum topics.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.50
  *
  * @param int $group_id Group ID
  * @param int $user_id  User ID

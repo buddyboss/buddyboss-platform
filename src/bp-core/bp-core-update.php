@@ -467,15 +467,11 @@ function bp_version_updater() {
 			bb_update_to_2_4_10();
 		}
 
-		if ( $raw_db_version < 20651 ) {
-			bb_update_to_2_4_12();
-		}
-
 		if ( $raw_db_version < 20654 ) {
 			bb_update_to_2_4_41();
 		}
 
-		if ( $raw_db_version < 20761 ) {
+		if ( $raw_db_version < 20674 ) {
 			bb_update_to_2_4_50();
 		}
 
@@ -505,6 +501,11 @@ function bp_version_updater() {
 				bb_activity_migration( $raw_db_version, $current_db );
 			}
 
+			// Run migration about forums.
+			if ( function_exists( 'bb_forums_migration' ) ) {
+				bb_forums_migration( $raw_db_version );
+			}
+
 			// Run migration about media/video description.
 			if ( function_exists( 'bb_media_migration' ) ) {
 				bb_media_migration();
@@ -513,11 +514,6 @@ function bp_version_updater() {
 			// Run migration about document description.
 			if ( function_exists( 'bb_document_migration' ) ) {
 				bb_document_migration();
-			}
-
-			// Run migration about forums.
-			if ( function_exists( 'bb_forums_migration' ) ) {
-				bb_forums_migration();
 			}
 		}
 	}
@@ -3257,57 +3253,6 @@ function bb_update_to_2_4_10() {
 }
 
 /**
- * Add 'description' column to bp_media and bp_document table.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return void
- */
-function bb_update_to_2_4_12() {
-	global $wpdb, $bp;
-
-	if ( ! bp_is_active( 'media' ) ) {
-		return;
-	}
-
-	// Add 'description' column in 'bp_media' table.
-	$media_row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$bp->media->table_name}' AND column_name = 'description'" ); //phpcs:ignore
-
-	if ( empty( $media_row ) ) {
-		$wpdb->query( "ALTER TABLE {$bp->media->table_name} ADD `description` text AFTER `title`" ); //phpcs:ignore
-	}
-
-	// Add 'description' column in 'bp_document' table.
-	$document_row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$bp->document->table_name}' AND column_name = 'description'" ); //phpcs:ignore
-
-	if ( empty( $document_row ) ) {
-		$wpdb->query( "ALTER TABLE {$bp->document->table_name} ADD `description` text AFTER `title`" ); //phpcs:ignore
-	}
-
-	// Purge all the cache.
-	wp_cache_flush();
-
-	// Purge all the cache for API.
-	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		// Clear medias API cache.
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-photos' );
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-albums' );
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-document' );
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-video' );
-	}
-}
-
-/**
-* For existing install disable pin post setting by default.
-* @since BuddyBoss [BBVERSION]
-*
-* @return void
-*/
-function bb_update_to_2_4_50() {
-	bp_update_option( '_bb_enable_activity_pinned_posts', 0 );
-}
-
-/**
  * Migrate member slug generated background jobs.
  *
  * @since BuddyBoss 2.4.41
@@ -3376,4 +3321,47 @@ function bb_update_to_2_4_41() {
 		),
 	);
 	$bb_background_updater->save()->schedule_event();
+}
+
+/**
+ * Add 'description' column to bp_media and bp_document table.
+ *
+ * @since BuddyBoss 2.4.50
+ *
+ * @return void
+ */
+function bb_update_to_2_4_50() {
+	global $wpdb, $bp;
+
+	if ( ! bp_is_active( 'media' ) ) {
+		return;
+	}
+
+	// Add 'description' column in 'bp_media' table.
+	$media_row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$bp->media->table_name}' AND column_name = 'description'" ); //phpcs:ignore
+
+	if ( empty( $media_row ) ) {
+		$wpdb->query( "ALTER TABLE {$bp->media->table_name} ADD `description` text AFTER `title`" ); //phpcs:ignore
+	}
+
+	// Add 'description' column in 'bp_document' table.
+	$document_row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$bp->document->table_name}' AND column_name = 'description'" ); //phpcs:ignore
+
+	if ( empty( $document_row ) ) {
+		$wpdb->query( "ALTER TABLE {$bp->document->table_name} ADD `description` text AFTER `title`" ); //phpcs:ignore
+	}
+
+	// Purge all the cache.
+	wp_cache_flush();
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear medias API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-photos' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-albums' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-document' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-video' );
+	}
+
+	bp_update_option( '_bb_enable_activity_pinned_posts', 0 );
 }

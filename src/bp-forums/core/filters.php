@@ -599,7 +599,7 @@ add_filter( 'template_include', 'bb_single_topic_no_replies_redirect_to_404' );
 /**
  * Hides single URL from forum topic and reply content.
  *
- * @since [BBVERSION]
+ * @since 2.4.50
  *
  * @param string $content The forum topic or reply content.
  *

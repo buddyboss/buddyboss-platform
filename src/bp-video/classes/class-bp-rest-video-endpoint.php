@@ -1620,6 +1620,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 				'id'            => $id,
 				'attachment_id' => $wp_attachment_id,
 				'title'         => $title,
+				'description'   => wp_filter_nohtml_kses( $content ),
 				'activity_id'   => $video_activity_id,
 				'message_id'    => $message_id,
 				'album_id'      => ( ! empty( $args['album_id'] ) ? $args['album_id'] : false ),
@@ -1645,7 +1646,8 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 					update_post_meta( $wp_attachment_id, 'bp_video_activity_id', $video_activity_id );
 				}
 
-				// save video description while update.
+				// Added backward compatibility.
+				// Save video description while update.
 				if ( false !== $content ) {
 					$video_post['ID']           = $wp_attachment_id;
 					$video_post['post_content'] = wp_filter_nohtml_kses( $content );
@@ -1655,7 +1657,6 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 				bp_video_add_generate_thumb_background_process( $video_id );
 
 				$created_video_ids[] = $video_id;
-
 			}
 
 			if ( ! empty( $all_videos ) ) {

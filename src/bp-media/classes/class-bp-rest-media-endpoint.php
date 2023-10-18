@@ -1424,7 +1424,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'attachment_id'         => $media->attachment_id,
 			'user_id'               => $media->user_id,
 			'title'                 => $media->title,
-			'description'           => wp_specialchars_decode( get_post_field( 'post_content', $media->attachment_id ), ENT_QUOTES ),
+			'description'           => wp_specialchars_decode( $media->description, ENT_QUOTES ),
 			'album_id'              => $media->album_id,
 			'group_id'              => $media->group_id,
 			'activity_id'           => $media->activity_id,
@@ -1919,6 +1919,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				'id'            => $id,
 				'attachment_id' => $wp_attachment_id,
 				'title'         => $title,
+				'description'   => wp_filter_nohtml_kses( $content ),
 				'activity_id'   => $media_activity_id,
 				'message_id'    => $message_id,
 				'album_id'      => ( ! empty( $args['album_id'] ) ? $args['album_id'] : false ),
@@ -1944,7 +1945,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					update_post_meta( $wp_attachment_id, 'bp_media_activity_id', $media_activity_id );
 				}
 
-				// save media description while update.
+				// Added backward compatibility.
+				// Save media description while update.
 				if ( false !== $content ) {
 					$media_post['ID']           = $wp_attachment_id;
 					$media_post['post_content'] = wp_filter_nohtml_kses( $content );
@@ -1952,7 +1954,6 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				}
 
 				$created_media_ids[] = $media_id;
-
 			}
 
 			if ( ! empty( $all_medias ) ) {

@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.4.41\n"
+"Project-Id-Version: BuddyBoss Platform 2.4.50\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-10-18 09:11:43+00:00\n"
+"POT-Creation-Date: 2023-10-18 09:33:24+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1862,13 +1862,13 @@ msgid "A new post by someone a member is following"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:590
-#: bp-core/bp-core-update.php:2243
+#: bp-core/bp-core-update.php:2239
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] {{poster.name}} posted {{activity.type}}."
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:592
-#: bp-core/bp-core-update.php:2245
+#: bp-core/bp-core-update.php:2241
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}}:\n"
@@ -1877,7 +1877,7 @@ msgid ""
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:594
-#: bp-core/bp-core-update.php:2247
+#: bp-core/bp-core-update.php:2243
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "{{poster.name}} posted {{activity.type}}:\n"
@@ -1888,7 +1888,7 @@ msgid ""
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:595
-#: bp-core/bp-core-update.php:2278
+#: bp-core/bp-core-update.php:2274
 msgid "New activity post by someone a member is following"
 msgstr ""
 
@@ -2002,13 +2002,13 @@ msgid "A member is followed by someone"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:845
-#: bp-core/bp-core-update.php:2321
+#: bp-core/bp-core-update.php:2317
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] {{follower.name}} started following you"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:847
-#: bp-core/bp-core-update.php:2323
+#: bp-core/bp-core-update.php:2319
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "<a href=\"{{{follower.url}}}\">{{follower.name}}</a> started following you.\n"
@@ -2017,7 +2017,7 @@ msgid ""
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:849
-#: bp-core/bp-core-update.php:2325
+#: bp-core/bp-core-update.php:2321
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "{{follower.name}} started following you.\n"
@@ -2026,7 +2026,7 @@ msgid ""
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:850
-#: bp-core/bp-core-update.php:2356
+#: bp-core/bp-core-update.php:2352
 msgid "A member receives a new follower"
 msgstr ""
 
@@ -2290,7 +2290,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:109
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1833
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1151
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1544
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1543
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1356
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1611
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1195
@@ -2537,7 +2537,7 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:389
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1277
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:2404
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1119
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1094
 #. translators: 1: Full avatar width in pixels. 2: Full avatar height in pixels
 #. translators: Full image size for the member Avatar
 #. translators: 1: Full avatar width in pixels. 2: Full avatar height in pixels
@@ -2552,7 +2552,7 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:397
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1285
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:2411
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1127
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1102
 #. translators: 1: Thumb avatar width in pixels. 2: Thumb avatar height in
 #. pixels
 #. translators: Thumb imaze size for the member Avatar
@@ -2593,7 +2593,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:2099
 #: bp-core/classes/class-bb-rest-reactions-endpoint.php:778
 #: bp-core/classes/class-bb-rest-subscriptions-endpoint.php:878
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1724
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1723
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1133
 #: bp-groups/classes/class-bp-rest-group-invites-endpoint.php:1222
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:1613
@@ -2603,7 +2603,7 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:1501
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:809
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:818
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1180
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1155
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1455
 msgid "Order sort attribute ascending or descending."
 msgstr ""
@@ -2949,7 +2949,7 @@ msgstr ""
 #: bp-blogs/classes/class-bp-blogs-component.php:282
 #: bp-blogs/classes/class-bp-blogs-theme-compat.php:119
 #: bp-blogs/classes/class-bp-blogs-theme-compat.php:187
-#: bp-core/bp-core-functions.php:794 bp-core/bp-core-update.php:1045
+#: bp-core/bp-core-functions.php:794 bp-core/bp-core-update.php:1041
 msgid "Sites"
 msgstr ""
 
@@ -3880,8 +3880,8 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:1112
 #: bp-core/admin/bp-core-admin-settings.php:3375
 #: bp-core/admin/bp-core-admin-settings.php:3425
-#: bp-document/bp-document-functions.php:2038
-#: bp-groups/bp-groups-admin.php:2654 bp-video/bp-video-functions.php:2570
+#: bp-document/bp-document-functions.php:2039
+#: bp-groups/bp-groups-admin.php:2654 bp-video/bp-video-functions.php:2571
 msgid "Default"
 msgstr ""
 
@@ -4990,8 +4990,8 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:53 bp-core/bp-core-functions.php:797
 #: bp-document/bp-document-filters.php:126
-#: bp-document/bp-document-functions.php:2219
-#: bp-document/bp-document-functions.php:2222
+#: bp-document/bp-document-functions.php:2220
+#: bp-document/bp-document-functions.php:2223
 #: bp-document/classes/class-bp-document-component.php:70
 #: bp-document/classes/class-bp-document-component.php:260
 #: bp-document/classes/class-bp-document-component.php:262
@@ -5057,7 +5057,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:129
 #: bp-core/admin/settings/bp-admin-setting-groups.php:232
 #: bp-core/bp-core-functions.php:795 bp-core/bp-core-template.php:561
-#: bp-core/bp-core-update.php:1047
+#: bp-core/bp-core-update.php:1043
 #: bp-core/classes/class-bp-email-tokens.php:457 bp-forums/admin/topics.php:717
 #: bp-groups/bp-groups-admin.php:1444 bp-groups/bp-groups-admin.php:2101
 #: bp-groups/bp-groups-functions.php:4309
@@ -5119,7 +5119,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:120
 #: bp-core/admin/settings/bp-admin-setting-groups.php:24
 #: bp-core/bp-core-functions.php:793 bp-core/bp-core-template.php:565
-#: bp-core/bp-core-update.php:1046
+#: bp-core/bp-core-update.php:1042
 #: bp-core/compatibility/bp-rankmath-plugin-helpers.php:41
 #: bp-core/gdpr/class-bp-group-export.php:27
 #: bp-core/gdpr/class-bp-group-export.php:57 bp-groups/bp-groups-admin.php:37
@@ -5906,11 +5906,11 @@ msgid "Registration Settings"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-video.php:24
-#: bp-document/bp-document-functions.php:2083
+#: bp-document/bp-document-functions.php:2084
 #: bp-moderation/classes/class-bp-moderation-activity.php:565
 #: bp-moderation/classes/class-bp-moderation-activity.php:572
 #: bp-moderation/classes/class-bp-moderation-video.php:220
-#: bp-video/bp-video-functions.php:2615
+#: bp-video/bp-video-functions.php:2616
 msgid "Video"
 msgstr ""
 
@@ -7939,7 +7939,7 @@ msgstr ""
 msgid "Activate a new account and site"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4000 bp-core/bp-core-update.php:1946
+#: bp-core/bp-core-functions.php:4000 bp-core/bp-core-update.php:1942
 msgid "A member is mentioned in an activity post"
 msgstr ""
 
@@ -7947,7 +7947,7 @@ msgstr ""
 msgid "You will no longer receive emails when someone mentions you in an update."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4008 bp-core/bp-core-update.php:1947
+#: bp-core/bp-core-functions.php:4008 bp-core/bp-core-update.php:1943
 msgid "A member is mentioned in a group activity post"
 msgstr ""
 
@@ -8296,45 +8296,45 @@ msgstr ""
 msgid "Default Forum for %s Group"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1044
+#: bp-core/bp-core-update.php:1040
 msgid "Site-Wide Activity"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1420
+#: bp-core/bp-core-update.php:1416
 #: bp-templates/bp-nouveau/includes/video/functions.php:312
 msgid "MP4"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1428
+#: bp-core/bp-core-update.php:1424
 #: bp-templates/bp-nouveau/includes/video/functions.php:320
 msgid "WebM"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1436
+#: bp-core/bp-core-update.php:1432
 #: bp-templates/bp-nouveau/includes/video/functions.php:328
 msgid "Ogg"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1444
+#: bp-core/bp-core-update.php:1440
 #: bp-templates/bp-nouveau/includes/video/functions.php:336
 msgid "Quicktime"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1948
+#: bp-core/bp-core-update.php:1944
 msgid "A Zoom meeting is scheduled in a group"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1949
+#: bp-core/bp-core-update.php:1945
 msgid "A Zoom webinar is scheduled in a group"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2485
+#: bp-core/bp-core-update.php:2481
 #: bp-groups/classes/class-bp-groups-notification.php:793
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] {{poster.name}} posted {{activity.type}} in {{group.name}}"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2487
+#: bp-core/bp-core-update.php:2483
 #: bp-groups/classes/class-bp-groups-notification.php:795
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
@@ -8344,7 +8344,7 @@ msgid ""
 "{{{activity.content}}}"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2489
+#: bp-core/bp-core-update.php:2485
 #: bp-groups/classes/class-bp-groups-notification.php:797
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
@@ -8355,18 +8355,18 @@ msgid ""
 "View the post: {{{activity.url}}}"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2493
+#: bp-core/bp-core-update.php:2489
 #: bp-groups/classes/class-bp-groups-notification.php:798
 msgid "New activity post in a group a member is subscribed to"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2497
+#: bp-core/bp-core-update.php:2493
 #: bp-groups/classes/class-bp-groups-notification.php:836
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] New discussion in {{group.name}}"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2499
+#: bp-core/bp-core-update.php:2495
 #: bp-groups/classes/class-bp-groups-notification.php:838
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
@@ -8376,7 +8376,7 @@ msgid ""
 "{{{discussion.content}}}"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2501
+#: bp-core/bp-core-update.php:2497
 #: bp-groups/classes/class-bp-groups-notification.php:840
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
@@ -8388,18 +8388,18 @@ msgid ""
 "Discussion Link: {{discussion.url}}"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2505
+#: bp-core/bp-core-update.php:2501
 #: bp-groups/classes/class-bp-groups-notification.php:841
 msgid "New forum discussion in a group a member is subscribed to"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2925
+#: bp-core/bp-core-update.php:2921
 #: bp-core/classes/class-bb-post-notification.php:89
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] {{commenter.name}} replied to your comment"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2927
+#: bp-core/bp-core-update.php:2923
 #: bp-core/classes/class-bb-post-notification.php:91
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
@@ -8409,7 +8409,7 @@ msgid ""
 "{{{comment_reply}}}"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2929
+#: bp-core/bp-core-update.php:2925
 #: bp-core/classes/class-bb-post-notification.php:93
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
@@ -8420,7 +8420,7 @@ msgid ""
 "View the comment: {{{comment.url}}}"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2960
+#: bp-core/bp-core-update.php:2956
 #: bp-core/classes/class-bb-post-notification.php:81
 #: bp-core/classes/class-bb-post-notification.php:94
 msgid "A member receives a reply to their WordPress post comment"
@@ -9374,7 +9374,7 @@ msgstr ""
 
 #: bp-core/classes/class-bp-admin-tab.php:288
 #: bp-core/classes/class-bp-attachment.php:162
-#: bp-document/bp-document-functions.php:1523
+#: bp-document/bp-document-functions.php:1524
 #: bp-media/bp-media-functions.php:183 bp-video/bp-video-functions.php:157
 #: bp-video/bp-video-functions.php:305
 msgid "No file was uploaded."
@@ -9546,28 +9546,28 @@ msgid "The uploaded file exceeds the maximum allowed file size of: %s"
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:161
-#: bp-document/bp-document-functions.php:1522
+#: bp-document/bp-document-functions.php:1523
 #: bp-media/bp-media-functions.php:182 bp-video/bp-video-functions.php:156
 #: bp-video/bp-video-functions.php:304
 msgid "The uploaded file was only partially uploaded."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:164
-#: bp-document/bp-document-functions.php:1525
+#: bp-document/bp-document-functions.php:1526
 #: bp-media/bp-media-functions.php:185 bp-video/bp-video-functions.php:159
 #: bp-video/bp-video-functions.php:307
 msgid "Missing a temporary folder."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:165
-#: bp-document/bp-document-functions.php:1526
+#: bp-document/bp-document-functions.php:1527
 #: bp-media/bp-media-functions.php:186 bp-video/bp-video-functions.php:160
 #: bp-video/bp-video-functions.php:308
 msgid "Failed to write file to disk."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:166
-#: bp-document/bp-document-functions.php:1527
+#: bp-document/bp-document-functions.php:1528
 #: bp-media/bp-media-functions.php:187 bp-video/bp-video-functions.php:161
 #: bp-video/bp-video-functions.php:309
 msgid "File upload stopped by extension."
@@ -11272,85 +11272,85 @@ msgstr ""
 msgid "Repairing documents &hellip; Complete!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1405
+#: bp-document/bp-document-functions.php:1406
 msgid "Please login in order to upload file document."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1521
+#: bp-document/bp-document-functions.php:1522
 #: bp-video/bp-video-functions.php:155 bp-video/bp-video-functions.php:303
 msgid "The uploaded file exceeds "
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1552
+#: bp-document/bp-document-functions.php:1553
 msgid "Error while uploading document."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2043
+#: bp-document/bp-document-functions.php:2044
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:163
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:248
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:96
-#: bp-video/bp-video-functions.php:2575
+#: bp-video/bp-video-functions.php:2576
 msgid "Archive"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2048
-#: bp-video/bp-video-functions.php:2580
+#: bp-document/bp-document-functions.php:2049
+#: bp-video/bp-video-functions.php:2581
 msgid "Audio"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2053
-#: bp-video/bp-video-functions.php:2585
+#: bp-document/bp-document-functions.php:2054
+#: bp-video/bp-video-functions.php:2586
 msgid "Code"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2058
-#: bp-video/bp-video-functions.php:2590
+#: bp-document/bp-document-functions.php:2059
+#: bp-video/bp-video-functions.php:2591
 msgid "Design"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2063
+#: bp-document/bp-document-functions.php:2064
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:48
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/members/bb-link-preview.php:44
-#: bp-video/bp-video-functions.php:2595
+#: bp-video/bp-video-functions.php:2596
 msgid "Image"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2068
-#: bp-video/bp-video-functions.php:2600
+#: bp-document/bp-document-functions.php:2069
+#: bp-video/bp-video-functions.php:2601
 msgid "Presentation"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2073
-#: bp-video/bp-video-functions.php:2605
+#: bp-document/bp-document-functions.php:2074
+#: bp-video/bp-video-functions.php:2606
 msgid "Spreadsheet"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2078
-#: bp-video/bp-video-functions.php:2610
+#: bp-document/bp-document-functions.php:2079
+#: bp-video/bp-video-functions.php:2611
 msgid "Text"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2226
+#: bp-document/bp-document-functions.php:2227
 msgid "..."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2615
+#: bp-document/bp-document-functions.php:2616
 msgid "The document name is empty!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2618
+#: bp-document/bp-document-functions.php:2619
 msgid "Bad characters or invalid document name!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2621
+#: bp-document/bp-document-functions.php:2622
 msgid "A file with that name already exists in the containing folder!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2624
+#: bp-document/bp-document-functions.php:2625
 msgid "The document containing directory is not writable!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2645
+#: bp-document/bp-document-functions.php:2646
 msgid "File renaming error!"
 msgstr ""
 
@@ -11577,8 +11577,8 @@ msgid "Document Content."
 msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1167
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1538
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1775
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1537
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1774
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:99
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1058
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1173
@@ -11611,27 +11611,27 @@ msgid "A unique numeric ID for the Document Folder."
 msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1181
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1562
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1561
 msgid "Privacy of the document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1415
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1414
 #: bp-messages/bp-messages-functions.php:2463
 #: bp-templates/bp-nouveau/buddypress/document/audio-preview.php:23
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2668
 msgid "Your browser does not support the audio element."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1444
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1443
 msgid "Click to expand"
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1490
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1489
 #. translators: %s: download url
 msgid "A unique numeric ID for the Document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1496
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1495
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1569
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:903
 #: bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php:721
@@ -11639,172 +11639,172 @@ msgstr ""
 msgid "Current Site ID."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1502
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1501
 msgid "Unique identifier for the document object."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1508
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1507
 msgid "The ID for the author of the document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1514
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1513
 msgid "The Document title."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1520
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1519
 msgid "The Document description."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1526
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1525
 msgid "Whether it is a document or folder."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1532
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1531
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1166
 msgid "A unique numeric ID for the parent Folder."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1550
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1549
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1617
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1318
 msgid "A unique numeric ID for the Message thread."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1556
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1555
 msgid "Based on this hide like/comment button for document activity comments."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1569
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1568
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1636
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1337
 msgid "Order of the item."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1575
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1574
 msgid "The date the document was created, in the site's timezone."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1582
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1581
 msgid "The date the document was modified, in the site's timezone."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1589
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1588
 msgid "Group name associate with the document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1595
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1594
 msgid "Group status associate with the document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1601
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1600
 msgid "Visibility of the document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1607
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1606
 msgid "Count of the child documents and folders of the folder."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1613
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1612
 msgid "Download URL for the document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1619
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1618
 msgid "Document file extension."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1625
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1624
 msgid "Document file description."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1631
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1630
 msgid "Document Icon based on the extension."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1637
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1636
 msgid "Full name of the document file with extension."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1643
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1642
 msgid "Size of the uploaded document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1649
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1648
 msgid "Message preview for the document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1655
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1654
 msgid "Wordpress Document Data."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1661
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1660
 msgid "Document URL with full image size."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1667
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1666
 msgid "Document URL with thumbnail image size."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1673
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1672
 msgid "Document URL for the activity image size."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1679
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1678
 msgid "Meta items for the document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1687
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1686
 msgid "The User's nice name to create a document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1693
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1692
 msgid "The User's login name to create a document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1699
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1698
 msgid "The User's display name to create a document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1733
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1732
 msgid "Order documents by which attribute."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1742
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1741
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1151
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1171
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1780
 msgid "Maximum number of results to return"
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1749
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1748
 msgid "Scope of the Document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1760
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1759
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1158
 msgid "Limit results to a specific user."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1768
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1767
 msgid "A unique numeric ID for the Folder."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1782
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1781
 msgid "A unique numeric ID for the Document's Activity."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1789
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1788
 msgid "Privacy of the Document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1800
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1799
 msgid "Ensure result set includes specific document IDs."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1809
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1808
 msgid "Ensure result set excludes specific document IDs."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1818
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1817
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1209
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1220
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1848
@@ -11812,7 +11812,7 @@ msgstr ""
 msgid "Show total count or not."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1824
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1823
 msgid "Type of document."
 msgstr ""
 
@@ -20421,7 +20421,7 @@ msgid "Limit result set to invites that have been sent, not sent, or include all
 msgstr ""
 
 #: bp-groups/classes/class-bp-rest-group-invites-endpoint.php:1211
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1163
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1138
 msgid "Name of the field to order according to."
 msgstr ""
 
@@ -22780,7 +22780,7 @@ msgstr ""
 msgid "Re-Run Migration"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1595 bp-media/bp-media-functions.php:2268
+#: bp-media/bp-media-filters.php:1595 bp-media/bp-media-functions.php:2269
 msgid ""
 "BuddyBoss Media data update is complete! Any previously uploaded member "
 "photos should display in their profiles now."
@@ -22855,7 +22855,7 @@ msgstr ""
 msgid "Error while uploading media."
 msgstr ""
 
-#: bp-media/bp-media-functions.php:2269
+#: bp-media/bp-media-functions.php:2270
 msgid "BuddyBoss Media data update is failing!"
 msgstr ""
 
@@ -23293,9 +23293,9 @@ msgstr ""
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:953
 #: bp-media/classes/class-bp-rest-media-details-endpoint.php:327
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1346
-#: bp-media/classes/class-bp-rest-media-endpoint.php:2768
-#: bp-media/classes/class-bp-rest-media-endpoint.php:2810
-#: bp-media/classes/class-bp-rest-media-endpoint.php:2852
+#: bp-media/classes/class-bp-rest-media-endpoint.php:2769
+#: bp-media/classes/class-bp-rest-media-endpoint.php:2811
+#: bp-media/classes/class-bp-rest-media-endpoint.php:2853
 msgid "Media specific IDs."
 msgstr ""
 
@@ -23572,28 +23572,28 @@ msgstr ""
 msgid "Ensure result set excludes specific media IDs."
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:2018
+#: bp-media/classes/class-bp-rest-media-endpoint.php:2019
 msgid "Error creating media, please try again."
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:2776
+#: bp-media/classes/class-bp-rest-media-endpoint.php:2777
 msgid "Save gif data into activity"
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:2781
-#: bp-media/classes/class-bp-rest-media-endpoint.php:2823
-#: bp-media/classes/class-bp-rest-media-endpoint.php:2865
+#: bp-media/classes/class-bp-rest-media-endpoint.php:2782
+#: bp-media/classes/class-bp-rest-media-endpoint.php:2824
+#: bp-media/classes/class-bp-rest-media-endpoint.php:2866
 msgid "URL for the gif media from object `480w_still->url`"
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:2788
-#: bp-media/classes/class-bp-rest-media-endpoint.php:2830
-#: bp-media/classes/class-bp-rest-media-endpoint.php:2872
+#: bp-media/classes/class-bp-rest-media-endpoint.php:2789
+#: bp-media/classes/class-bp-rest-media-endpoint.php:2831
+#: bp-media/classes/class-bp-rest-media-endpoint.php:2873
 msgid "Gif file URL from object `original_mp4->mp4`"
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:2818
-#: bp-media/classes/class-bp-rest-media-endpoint.php:2860
+#: bp-media/classes/class-bp-rest-media-endpoint.php:2819
+#: bp-media/classes/class-bp-rest-media-endpoint.php:2861
 msgid "Save gif data into topic."
 msgstr ""
 
@@ -27722,145 +27722,146 @@ msgid "Unread %s"
 msgstr ""
 
 #: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:60
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1031
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1006
 msgid "A unique numeric ID for the notification."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:196
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:207
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:171
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:182
 msgid "Sorry, you are not allowed to see the notifications."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:276
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:251
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1538
 msgid "Sorry, you are not allowed to see the notification."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:289
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:548
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:264
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:523
 msgid "Invalid notification ID."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:297
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:272
 msgid "Sorry, you cannot view this notification."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:367
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:342
 msgid "Cannot create new notification."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:449
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:424
 msgid "Notification is already with the status you are trying to update into."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:462
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:437
 msgid "Cannot update the status of this notification."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1037
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1012
 msgid "The ID of the user the notification is addressed to."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1043
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1018
 msgid "The ID of the item associated with the notification."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1048
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1023
 msgid "The ID of the secondary item associated with the notification."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1053
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1028
 msgid "The name of the BuddyPress component the notification relates to."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1058
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1033
 msgid "The name of the component's action the notification is about."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1062
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1037
 msgid "The date the notification was created, in the site's timezone."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1069
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1044
 msgid "Whether it's a new notification or not."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1075
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1050
 msgid "The name of the notification object."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1080
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1055
 msgid "The ID of the notification object."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1085
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1060
 msgid "Description of notification."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1090
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1065
 msgid "HTML description for the object, transformed for display."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1099
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1074
 msgid "Link URL for the notification."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1104
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1079
 msgid "Rest Actions which perform accept/reject based on the status."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1109
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1084
 msgid "Readonly for the moderated members notification."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1134
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1109
 msgid "Avatar URLs for the notification."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1189
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1164
 msgid "Limit result set to notifications associated with a specific component"
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1197
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1172
 msgid ""
 "Limit result set to notifications associated with a specific component's "
 "action name."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1205
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1180
 msgid "Limit result set to notifications addressed to a specific user."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1213
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1188
 msgid "Limit result set to notifications associated with a specific item ID."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1221
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1196
 msgid ""
 "Limit result set to notifications associated with a specific secondary item "
 "ID."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1229
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1204
 msgid "Limit result set to items from specific states."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1283
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1310
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1322
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1346
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1358
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1258
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1285
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1297
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1321
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1333
 msgid "Accepted"
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1285
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1324
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1360
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1260
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1299
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1335
 msgid "Pending"
 msgstr ""
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1295
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1334
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1370
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1270
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1309
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1345
 msgid "Rejected"
 msgstr ""
 
@@ -32101,11 +32102,11 @@ msgstr ""
 msgid "Error while uploading video."
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4118
+#: bp-video/bp-video-functions.php:4119
 msgid "FFMpeg\\FFMpeg class not found"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4157
+#: bp-video/bp-video-functions.php:4158
 msgid "FFMpeg\\FFProbe class not found"
 msgstr ""
 
@@ -32236,9 +32237,9 @@ msgid "Sorry, you need to be logged in to delete this video."
 msgstr ""
 
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1185
-#: bp-video/classes/class-bp-rest-video-endpoint.php:2086
-#: bp-video/classes/class-bp-rest-video-endpoint.php:2107
-#: bp-video/classes/class-bp-rest-video-endpoint.php:2129
+#: bp-video/classes/class-bp-rest-video-endpoint.php:2087
+#: bp-video/classes/class-bp-rest-video-endpoint.php:2108
+#: bp-video/classes/class-bp-rest-video-endpoint.php:2130
 msgid "Video specific IDs."
 msgstr ""
 
@@ -32352,7 +32353,7 @@ msgstr ""
 msgid "Ensure result set excludes specific video IDs."
 msgstr ""
 
-#: bp-video/classes/class-bp-rest-video-endpoint.php:1720
+#: bp-video/classes/class-bp-rest-video-endpoint.php:1721
 msgid "Error creating video, please try again."
 msgstr ""
 
@@ -33805,32 +33806,32 @@ msgctxt "member latest update in member directory"
 msgid "- &quot;%s&quot;"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3434
+#: bp-document/bp-document-functions.php:3435
 #. translators: Memory unit for terabyte.
 msgctxt "memory unit"
 msgid "TB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3436
+#: bp-document/bp-document-functions.php:3437
 #. translators: Memory unit for gigabyte.
 msgctxt "memory unit"
 msgid "GB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3438
+#: bp-document/bp-document-functions.php:3439
 #. translators: Memory unit for megabyte.
 msgctxt "memory unit"
 msgid "MB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3440
+#: bp-document/bp-document-functions.php:3441
 #. translators: Memory unit for kilobyte.
 msgctxt "memory unit"
 msgid "KB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3442
-#: bp-document/bp-document-functions.php:3447
+#: bp-document/bp-document-functions.php:3443
+#: bp-document/bp-document-functions.php:3448
 #. translators: Memory unit for byte.
 msgctxt "memory unit"
 msgid "B"

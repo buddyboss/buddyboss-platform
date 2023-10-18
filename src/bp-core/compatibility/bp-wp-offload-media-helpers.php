@@ -316,7 +316,7 @@ class BB_AS3CF_Plugin_Compatibility {
 	/**
 	 * Check if media offloaded.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.50
 	 *
 	 * @param bool $is_offloaded If media offloaded.
 	 *
@@ -335,7 +335,7 @@ class BB_AS3CF_Plugin_Compatibility {
 	/**
 	 * Media offload delevery provider.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.50
 	 *
 	 * @param string $delivery_provider Media offload delevery provider.
 	 *

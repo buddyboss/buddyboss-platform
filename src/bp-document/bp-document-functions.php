@@ -5051,7 +5051,7 @@ function bb_document_remove_orphaned_download() {
 /**
  * Run migration for document description from post table to media table.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.50
  *
  * @return void
  */
@@ -5061,7 +5061,7 @@ function bb_document_migration() {
 	/**
 	 * Migrate documents description from post table to document table.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.50
 	 */
 	$wpdb->query( "UPDATE {$bp->document->table_name} AS d JOIN {$wpdb->posts} AS p ON p.ID = d.attachment_id SET d.description = p.post_content" ); // phpcs:ignore
 }
