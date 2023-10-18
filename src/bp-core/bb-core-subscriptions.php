@@ -1128,29 +1128,37 @@ function bb_send_notifications_to_subscribers( $args ) {
 		$parse_args['usernames'] = $usernames;
 	}
 
+	$background_process = false;
 	if (
 		isset( $subscriptions['total'] ) &&
-		$subscriptions['total'] > $min_count
+		1 < $subscriptions['total']
 	) {
-		global $bp_background_updater;
+		$background_process = true;
+	}
+
+	if ( true === $background_process ) {
+		global $bb_background_updater;
 		$chunk_user_ids = array_chunk( $subscriptions['subscriptions'], $min_count );
 		if ( ! empty( $chunk_user_ids ) ) {
-			foreach ( $chunk_user_ids as $key => $user_ids ) {
+			foreach ( $chunk_user_ids as $user_ids ) {
 				$parse_args['user_ids'] = $user_ids;
-				$bp_background_updater->data(
+
+				$bb_background_updater->data(
 					array(
-						array(
-							'callback' => $send_callback,
-							'args'     => array( $parse_args ),
-						),
-					)
+						'type'     => 'notification',
+						'group'    => 'send_notifications_to_subscribers',
+						'data_id'  => $item_id,
+						'priority' => 5,
+						'callback' => $send_callback,
+						'args'     => array( $parse_args ),
+					),
 				);
 
-				$bp_background_updater->save();
+				$bb_background_updater->save();
 			}
 		}
 
-		$bp_background_updater->dispatch();
+		$bb_background_updater->dispatch();
 	} else {
 		$parse_args['user_ids'] = $subscriptions['subscriptions'];
 		call_user_func(
@@ -1158,6 +1166,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 			$parse_args
 		);
 	}
+
 }
 
 /**

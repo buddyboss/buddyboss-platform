@@ -484,6 +484,7 @@ function bp_media_add( $args = '' ) {
 			'attachment_id' => false,                   // attachment id.
 			'user_id'       => bp_loggedin_user_id(),   // user_id of the uploader.
 			'title'         => '',                      // title of media being added.
+			'description'   => '',                      // description of media being added.
 			'album_id'      => false,                   // Optional: ID of the album.
 			'group_id'      => false,                   // Optional: ID of the group.
 			'activity_id'   => false,                   // The ID of activity.
@@ -502,6 +503,7 @@ function bp_media_add( $args = '' ) {
 	$media->attachment_id = $r['attachment_id'];
 	$media->user_id       = (int) $r['user_id'];
 	$media->title         = $r['title'];
+	$media->description   = wp_filter_nohtml_kses( $r['description'] );
 	$media->album_id      = (int) $r['album_id'];
 	$media->group_id      = (int) $r['group_id'];
 	$media->activity_id   = (int) $r['activity_id'];
@@ -3435,16 +3437,17 @@ function bp_media_delete_symlinks( $media ) {
 /**
  * Return the preview url of the file.
  *
+ * @since BuddyBoss 1.7.0
+ *
  * @param int    $media_id      Media ID.
  * @param int    $attachment_id Attachment ID.
  * @param string $size          Size of preview.
  * @param bool   $generate      Generate Symlink or not.
+ * @param int    $receiver_id   Receiver user ID.
  *
  * @return mixed|void
- *
- * @since BuddyBoss 1.7.0
  */
-function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-media-activity-image', $generate = true ) {
+function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-media-activity-image', $generate = true, $receiver_id = 0 ) {
 	$attachment_url = '';
 
 	/**
@@ -3497,6 +3500,10 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 				$media_id       = 'forbidden_' . $media_id;
 				$attachment_id  = 'forbidden_' . $attachment_id;
 				$attachment_url = home_url( '/' ) . 'bb-media-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $media_id ) . '/' . $size;
+
+				if ( 0 < $receiver_id ) {
+					$attachment_url = $attachment_url . '/' . base64_encode( 'receiver_' . $receiver_id );
+				}
 			}
 		}
 	}
@@ -3775,8 +3782,9 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 		case 'grouponly':
 			if ( bp_is_active( 'groups' ) ) {
 
-				$is_admin = groups_is_user_admin( $current_user_id, $media_group_id );
-				$is_mod   = groups_is_user_mod( $current_user_id, $media_group_id );
+				$is_admin  = groups_is_user_admin( $current_user_id, $media_group_id );
+				$is_mod    = groups_is_user_mod( $current_user_id, $media_group_id );
+				$is_member = groups_is_user_member( $current_user_id, $media_group_id );
 
 				if ( $media_user_id === $current_user_id || $is_admin ) {
 					$can_view     = true;
@@ -3805,7 +3813,7 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 				}
 
 				$the_group = groups_get_group( $media_group_id );
-				if ( $the_group->id > 0 && $the_group->user_has_access ) {
+				if ( $is_member || ( $the_group->id > 0 && $the_group->user_has_access ) ) {
 					$can_view     = true;
 					$can_download = true;
 				}
@@ -4061,4 +4069,22 @@ function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
 		return $cache[ $api_key ];
 	}
 	return (bool) ( ! is_wp_error( $cache[ $api_key ] ) && isset( $cache[ $api_key ]['response']['code'] ) && 200 === $cache[ $api_key ]['response']['code'] );
+}
+
+/**
+ * Run migration for media and video description from post table to media table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_media_migration() {
+	global $wpdb, $bp;
+
+	/**
+	 * Migrate media description from post table to media table.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	$wpdb->query( "UPDATE {$bp->media->table_name} AS m JOIN {$wpdb->posts} AS p ON p.ID = m.attachment_id SET m.description = p.post_content" ); // phpcs:ignore
 }

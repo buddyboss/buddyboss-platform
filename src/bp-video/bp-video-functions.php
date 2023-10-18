@@ -604,6 +604,7 @@ function bp_video_add( $args = '' ) {
 			'attachment_id' => false,                   // attachment id.
 			'user_id'       => bp_loggedin_user_id(),   // user_id of the uploader.
 			'title'         => '',                      // title of video being added.
+			'description'   => '',                      // description of video being added.
 			'album_id'      => false,                   // Optional: ID of the album.
 			'group_id'      => false,                   // Optional: ID of the group.
 			'activity_id'   => false,                   // The ID of activity.
@@ -622,6 +623,7 @@ function bp_video_add( $args = '' ) {
 	$video->attachment_id = $r['attachment_id'];
 	$video->user_id       = (int) $r['user_id'];
 	$video->title         = $r['title'];
+	$video->description   = wp_filter_nohtml_kses( $r['description'] );
 	$video->album_id      = (int) $r['album_id'];
 	$video->group_id      = (int) $r['group_id'];
 	$video->activity_id   = (int) $r['activity_id'];
@@ -3401,16 +3403,17 @@ function bp_video_delete_video_previews() {
 /**
  * Return the preview url of the file.
  *
+ * @since BuddyBoss 1.7.0
+ *
  * @param int    $video_id      Video ID.
  * @param int    $attachment_id Attachment ID.
  * @param string $size          Size of preview.
  * @param bool   $generate      Generate Symlink or not.
+ * @param int    $receiver_id   Receiver user ID.
  *
  * @return mixed|void
- *
- * @since BuddyBoss 1.7.0
  */
-function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'bb-video-activity-image', $generate = true ) {
+function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'bb-video-activity-image', $generate = true, $receiver_id = 0 ) {
 
 	$attachment_url = '';
 
@@ -3435,6 +3438,10 @@ function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'bb-video-ac
 			$video_id       = 'forbidden_' . $video_id;
 			$attachment_id  = 'forbidden_' . $attachment_id;
 			$attachment_url = home_url( '/' ) . 'bb-video-thumb-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $video_id ) . '/' . $size;
+
+			if ( 0 < $receiver_id ) {
+				$attachment_url = $attachment_url . '/' . base64_encode( 'receiver_' . $receiver_id );
+			}
 		}
 
 		if ( empty( $attachment_url ) ) {
