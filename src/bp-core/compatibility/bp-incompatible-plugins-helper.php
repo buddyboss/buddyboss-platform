@@ -227,14 +227,12 @@ function bp_helper_plugins_loaded_callback() {
 	 * Support Memberpress
 	 */
 	if ( in_array( 'memberpress/memberpress.php', $bp_plugins ) ) {
-		add_filter( 'mepr_design_style_handles', function ( $allowed_handles ) {
+		add_filter( 'mepr_design_style_handle_prefixes', function ( $allowed_handle_prefixes ) {
+			$allowed_handle_prefixes[] = 'admin-bar';
+			$allowed_handle_prefixes[] = 'bp-';
+			$allowed_handle_prefixes[] = 'bb-';
 
-			if ( is_admin_bar_showing() ) {
-				$allowed_handles[] = 'admin-bar';
-				$allowed_handles[] = 'bp-admin-bar';
-			}
-
-			return $allowed_handles;
+			return $allowed_handle_prefixes;
 		} );
 	}
 }
