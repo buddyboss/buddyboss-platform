@@ -57,6 +57,30 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.4.50 =
+* Enhancement: Core - Background process logic for reactions updated
+* Enhancement: Media - Provide mechanism to search media by description in the directory and global search
+* Enhancement: Profiles - Added TikTok to Social Network Links
+* Bug: Activity - Issues were found with tagging more than 1 member in activity post's comments
+* Bug: Activity - When activity tabs and the relevant activity setting was turned on, users were unable to see their own posts on the activity feed.
+* Bug: Core - Adding a photo was not working from the user profile, Select Photo tab in Albums
+* Bug: Core - Changing passwords from the account page was not working
+* Bug: Core - Remove connection confirmation pop up was showing twice one after another
+* Bug: Forums - Changing a Forums privacy setting from public to private, the forum would automatically revert back to public
+* Bug: Forums - If a Forums page was not set then Forums content was populating the Blog page
+* Bug: Forums - When moving a discussion from group forum back to standalone forum, the discussion remained in the group
+* Bug: Forums - Youtube links were not shown correctly in forum topic replies with / without additional text
+* Bug: Messages - Emoji on messaging were not working properly
+* Bug: Messages - When sending a group message, the recipient text box was clickable and showed the text box
+* Bug: Multisite - BuddyBoss default users import is causing a Fatal error in MultiSite
+* Bug: Notifications - Notification were being sent when user created a reply even after the user had then left a hidden or private group
+* Bug: Platform - New notification message added to Media settings Direct access when direct access to media is blocked by Offload Media
+* Bug: Profiles - shortcode: [group type=”competition”], from BuddyPress User Profile Tab Creator Pro the cover image on the profile was not displaying
+* Bug: Report - Typo error in Report/Block member menu in the message sidebar for single private message
+* Bug: Styling - Search Form reset button styling issue when inviting users during group creation process on the frontend
+* Bug: Translations - Translation issue in Loco Translate with translations switching back to English
+* Bug: Widgets - Some strings were not able to translate dashboard widget
+
 = 2.4.41 =
 * Bug: Activity - When commenting or replying to a comment on a post some users were seeing “Server error or connection is lost. Please try again later." message
 * Bug: Core - When selecting to generate members unique identifier (profile url), the process was causing a crash due to a background code issue which has now bee refactored
