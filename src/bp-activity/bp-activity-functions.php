@@ -6394,11 +6394,10 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
  * @since BuddyBoss [BBVERSION]
  *
  * @param bool $post_type custom post type.
- * @param bool $value     Actual value from the database.
  *
  * @return bool True if activity comments are enabled for CPT, otherwise false.
  */
-function bb_activity_is_enabled_cpt_comment( $post_type, $value ) {
+function bb_activity_is_enabled_cpt_global_comment( $post_type ) {
 
 	switch ( $post_type ) {
 		case 'sfwd-courses':
@@ -6426,8 +6425,8 @@ function bb_activity_is_enabled_cpt_comment( $post_type, $value ) {
 			$supports_comments        = isset( $sfwd_assignment_settings['comment_status'] ) && 'yes' === $sfwd_assignment_settings['comment_status'];
 			break;
 		default:
-			$supports_comments = ! empty( bp_get_option( 'default_comment_status' ) );
+			$supports_comments = true;
 	}
 
-	return $supports_comments;
+	return apply_filters( 'bb_activity_is_enabled_cpt_global_comment', $supports_comments, $post_type );
 }
