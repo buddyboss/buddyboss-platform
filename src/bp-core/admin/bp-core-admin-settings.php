@@ -493,6 +493,16 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 	</div>
 
 	<div class="avatar-custom-input">
+		<input id="bp-default-profile-avatar-display-name" name="bp-default-profile-avatar-type" type="radio" value="display-name" <?php checked( bb_get_default_profile_avatar_type(), 'display-name' ); ?> />
+		<label for="bp-default-profile-avatar-display-name">
+			<div class="img-block">
+				<img class="display-name-profile-avatar" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-profile-avatar-legacy.jpg' ); ?>" />
+			</div>
+			<span><?php esc_html_e( 'Display Name', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+
+	<div class="avatar-custom-input">
 		<input id="bp-default-profile-avatar-custom" name="bp-default-profile-avatar-type" type="radio" value="custom" <?php checked( bb_get_default_profile_avatar_type(), 'custom' ); ?> />
 		<label for="bp-default-profile-avatar-custom">
 			<div class="img-block">
@@ -502,6 +512,17 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 		</label>
 	</div>
 
+	<p class="description bp-default-profile-avatar-display-name-description <?php echo ( 'display-name' !== bb_get_default_profile_avatar_type() ) ? 'bp-hide' : ''; ?>">
+		<?php
+		echo sprintf(
+			__( 'Display name will show either a single initial or double initial depending on your display name option in %s settings.', 'buddyboss' ),
+			sprintf(
+				'<a href="#bp-display-name-format">%s</a>',
+				__( 'Profile', 'buddyboss' )
+			)
+		);
+		?>
+	</p>
 	<p class="description"><?php esc_html_e( 'Select which image should be used for members who haven\'t uploaded a profile avatar.', 'buddyboss' ); ?></p>
 
 	<div class="bp-cover-image-status bb-wordpress-profile-gravatar-warning" style="display:none;">

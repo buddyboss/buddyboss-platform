@@ -1325,6 +1325,12 @@ window.bp = window.bp || {};
 							defaultProfileAvatarCustomContainer.addClass( 'bp-hide' );
 						}
 
+						if ( 'display-name' === this.value ) {
+							$( '.bp-default-profile-avatar-display-name-description' ).removeClass( 'bp-hide' );
+						} else {
+							$( '.bp-default-profile-avatar-display-name-description' ).addClass( 'bp-hide' );
+						}
+
 						if ( typeof profileAvatarURL.length !== 'undefined' && 0 < profileAvatarURL.length ) {
 							previewContainer.find( '.preview_avatar_cover' ).addClass( 'has-avatar' );
 						}
@@ -2488,7 +2494,7 @@ window.bp = window.bp || {};
 					$( '.bb-domain-restrictions-listing .registration-restrictions-select' ).find( 'option' ).attr( 'disabled', false );
 				} else {
 					var $select = $listing.find( '.registration-restrictions-rule:not(.custom) .registration-restrictions-input-select' );
-					if ( 
+					if (
 						0 === $select.find( 'option[value="only_allow"]:selected' ).length &&
 						0 === $select.find( 'option[value="always_allow"]:selected' ).length
 					) {

@@ -419,7 +419,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 		$current_value = bp_core_display_name_format();
 
-		printf( '<select name="%1$s" for="%1$s">', 'bp-display-name-format' );
+		printf( '<select name="%1$s" id="%1$s" for="%1$s">', 'bp-display-name-format' );
 		foreach ( $options as $key => $value ) {
 			printf(
 				'<option value="%s" %s>%s</option>',
