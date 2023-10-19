@@ -515,6 +515,7 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 	<p class="description bp-default-profile-avatar-display-name-description <?php echo ( 'display-name' !== bb_get_default_profile_avatar_type() ) ? 'bp-hide' : ''; ?>">
 		<?php
 		echo sprintf(
+		/* translators: Profile text with link. */
 			__( 'Display name will show either a single initial or double initial depending on your display name option in %s settings.', 'buddyboss' ),
 			sprintf(
 				'<a href="#bp-display-name-format">%s</a>',
@@ -927,8 +928,10 @@ function bp_admin_setting_callback_default_group_avatar_type() {
 	<p class="description bp-default-group-avatar-group-name-description <?php echo ( 'group-name' !== bb_get_default_group_avatar_type() ) ? 'bp-hide' : ''; ?>">
 		<?php
 		echo sprintf(
+		/* translators: Profile text with link. */
 			__( 'Display name will show either single initial or double initial depending on your display name option in %s settings.', 'buddyboss' ),
 			sprintf(
+			/* translators: 1: Profile link, 2: Profile text. */
 				'<a href="%1$s#bp-display-name-format">%2$s</a>',
 				bp_get_admin_url(
 					add_query_arg(
