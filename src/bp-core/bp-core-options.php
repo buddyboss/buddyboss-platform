@@ -902,7 +902,7 @@ function bp_disable_blogforum_comments( $default = false ) {
 function bb_is_post_type_feed_comment_enable( $post_type, $default = false ) {
 	$option_name  = bb_post_type_feed_comment_option_name( $post_type );
 	$option_value = (bool) bp_get_option( $option_name, $default );
-	$is_enabled   = bb_activity_is_enabled_cpt_comment( $post_type, $option_value );
+	$is_enabled   = bb_activity_is_enabled_cpt_global_comment( $post_type );
 	/**
 	 * Filters whether or not custom post type feed comments are enable.
 	 *
@@ -910,7 +910,7 @@ function bb_is_post_type_feed_comment_enable( $post_type, $default = false ) {
 	 *
 	 * @param bool $value Whether or not custom post type activity feed comments are enable.
 	 */
-	return (bool) apply_filters( 'bb_is_post_type_feed_comment_enable', $is_enabled, $post_type );
+	return (bool) apply_filters( 'bb_is_post_type_feed_comment_enable', ( $is_enabled && $option_value ), $post_type );
 }
 
 /**
