@@ -471,8 +471,8 @@ function bp_version_updater() {
 			bb_update_to_2_4_41();
 		}
 
-		if ( $raw_db_version < 20664 ) {
-			bb_update_to_2_4_43();
+		if ( $raw_db_version < 20701 ) {
+			bb_update_to_2_4_60();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
@@ -3311,8 +3311,22 @@ function bb_update_to_2_4_41() {
 	$bb_background_updater->save()->schedule_event();
 }
 
-function bb_update_to_2_4_43(){
+/**
+ * Migrate a background job to new table for update the friends count when member suspend/un-suspend.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_4_60() {
 	global $wpdb;
+
+	$is_already_run = get_transient( 'bb_update_to_2_4_60' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_update_to_2_4_60', true, HOUR_IN_SECONDS );
 
 	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE `option_name` LIKE 'wp_1_bp_updater_batch_%' AND `option_value` LIKE '%bb_migrate_member_friends_count%'" );
