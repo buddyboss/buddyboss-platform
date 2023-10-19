@@ -1711,6 +1711,12 @@ window.bp = window.bp || {};
 							groupAvatarURL = $( '.' + this.value + '-group-avatar' ).prop( 'src' );
 						}
 
+						if ( 'group-name' === this.value ) {
+							$( '.bp-default-group-avatar-group-name-description' ).removeClass( 'bp-hide' );
+						} else {
+							$( '.bp-default-group-avatar-group-name-description' ).addClass( 'bp-hide' );
+						}
+
 						if ( typeof groupAvatarURL.length !== 'undefined' && 0 < groupAvatarURL.length ) {
 							previewContainer.find( '.preview_avatar_cover' ).addClass( 'has-avatar' );
 						}

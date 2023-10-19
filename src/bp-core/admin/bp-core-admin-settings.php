@@ -905,6 +905,16 @@ function bp_admin_setting_callback_default_group_avatar_type() {
 	</div>
 
 	<div class="avatar-custom-input">
+		<input id="bp-default-group-avatar-group-name" name="bp-default-group-avatar-type" type="radio" value="group-name" <?php checked( bb_get_default_group_avatar_type(), 'group-name' ); ?> />
+		<label for="bp-default-group-avatar-group-name">
+			<div class="img-block">
+				<img class="group-name-group-avatar" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-group-avatar-legacy.jpg' ); ?>" />
+			</div>
+			<span><?php esc_html_e( 'Group Name', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+
+	<div class="avatar-custom-input">
 		<input id="bp-default-group-avatar-custom" name="bp-default-group-avatar-type" type="radio" value="custom" <?php checked( bb_get_default_group_avatar_type(), 'custom' ); ?> />
 		<label for="bp-default-group-avatar-custom">
 			<div class="img-block">
@@ -913,6 +923,27 @@ function bp_admin_setting_callback_default_group_avatar_type() {
 			<span><?php esc_html_e( 'Custom', 'buddyboss' ); ?></span>
 		</label>
 	</div>
+
+	<p class="description bp-default-group-avatar-group-name-description <?php echo ( 'group-name' !== bb_get_default_group_avatar_type() ) ? 'bp-hide' : ''; ?>">
+		<?php
+		echo sprintf(
+			__( 'Display name will show either single initial or double initial depending on your display name option in %s settings.', 'buddyboss' ),
+			sprintf(
+				'<a href="%1$s#bp-display-name-format">%2$s</a>',
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page' => 'bp-settings',
+							'tab'  => 'bp-xprofile',
+						),
+						'admin.php'
+					)
+				),
+				__( 'Profile', 'buddyboss' )
+			)
+		);
+		?>
+	</p>
 	<?php
 }
 
