@@ -1544,6 +1544,13 @@ window.bp = window.bp || {};
 							target.closest( '#activity-stream' ).siblings( '#bb-confirmation-modal' ).show();
 						}
 					}
+				).fail(
+					function() {
+						target.closest( '.activity-item' ).removeClass( 'loading-pin' );
+						var message_modal = target.closest( '#activity-stream' ).siblings( '#bb-confirmation-modal' );
+						message_modal.find('.bb-action-popup-content').html( BP_Nouveau.activity.strings.pinPostError );
+						message_modal.show();
+					}
 				);
 			}
 		},
