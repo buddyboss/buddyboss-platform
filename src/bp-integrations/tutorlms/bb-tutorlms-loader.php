@@ -1,21 +1,22 @@
 <?php
 /**
- * BuddyBoss TutorLMS Loader.
+ * BuddyBoss TutorLMS Integration Loader.
  *
  * @package BuddyBoss\TutorLMS
- * @since BuddyBoss 1.0.0
+ *
+ * @since BuddyBoss [BBVERSION]
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Set up the bp TutorLMS integration.
+ * Set up the BB TutorLMS integration.
  *
  * @since BuddyBoss [BBVERSION]
  */
 function bb_register_tutorlms_integration() {
-	require_once dirname( __FILE__ ) . '/bp-tutorlms-integration.php';
+	require_once dirname( __FILE__ ) . '/bb-tutorlms-integration.php';
 	buddypress()->integrations['tutorlms'] = new BB_TutorLMS_Integration();
 }
-add_action( 'bp_setup_integrations', 'bb_register_tutorlms_integration' );
+add_action( 'bp_setup_integrations', 'bb_register_tutorlms_integration', 20 );

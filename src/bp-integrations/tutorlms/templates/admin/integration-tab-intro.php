@@ -66,16 +66,7 @@
 				</div>
 			</h2>
 			<p>
-			<?php
-				printf(
-					__( 'BuddyBoss Platform has integration settings for %s. If using TutorLMS we add the ability to add courses to groups as an instructor and utilize the BuddyBoss activity feeds for Course, Lessons & Topics. We have also taken the time to style TutorLMS to match our theme for styling.', 'buddyboss' ),
-					sprintf(
-						'<a href="%s">%s</a>',
-						'https://learndash.idevaffiliate.com/111.html',
-						__( 'TutorLMS LMS', 'buddyboss' )
-					)
-				)
-				?>
+			<?php echo __( 'BuddyBoss Platform has integration settings for TutorLMS. If using TutorLMS we add the ability to add courses to groups as an instructor and utilize the BuddyBoss activity feeds for Course, Lessons & Topics. We have also taken the time to style TutorLMS to match our theme for styling.', 'buddyboss' ); ?>
 			</p>
 		<?php endif; ?>
 	</div>
