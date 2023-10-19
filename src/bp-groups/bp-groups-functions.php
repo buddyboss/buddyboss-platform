@@ -5364,10 +5364,12 @@ function bb_update_groups_subgroup_membership_background_process() {
 
 	$limit = (int) apply_filters( 'bb_limit_subgroup_membership_migration', 50 );
 
-	$sql = "SELECT gm.group_id, gm.user_id FROM {$bp->groups->table_name_members} gm
-			LEFT JOIN {$bp->groups->table_name} g ON gm.group_id = g.id
-			LEFT JOIN {$bp->groups->table_name} parent ON g.parent_id = parent.id
-			WHERE g.parent_id != 0 AND gm.is_admin = 0 AND gm.is_mod = 0 AND gm.is_confirmed = 1 ORDER BY parent.id, g.id LIMIT {$limit};";
+	$sql = "SELECT gm.group_id, gm.user_id
+		FROM {$bp->groups->table_name_members} gm
+		INNER JOIN {$bp->groups->table_name} g ON gm.group_id = g.id
+		LEFT JOIN {$bp->groups->table_name_members} pgm ON pgm.group_id = g.parent_id AND pgm.user_id = gm.user_id
+		WHERE g.parent_id != 0 AND gm.is_admin = 0 AND gm.is_mod = 0 AND gm.is_confirmed = 1 AND pgm.group_id IS NULL
+		ORDER BY pgm.group_id, g.id LIMIT {$limit};";
 
 	// phpcs:ignore
 	$groups = $wpdb->get_results( $sql );
