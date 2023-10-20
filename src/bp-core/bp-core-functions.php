@@ -9099,7 +9099,7 @@ function bb_generate_default_avatar( $args ) {
 							<tspan x="50%" dy="0" text-anchor="middle" dominant-baseline="middle">' . $item_name . '</tspan>
 					</text>
 				</svg>';
-		$svg_image = 'https://platform.test/wp-content/plugins/buddyboss-platform/src/bp-core/images/bb-profile-avatar-legacy.jpg';
+		$svg_image = buddypress()->plugin_url . 'bp-core/images/bb-profile-avatar-legacy.jpg';
 		update_user_meta( $r['item_id'], 'default-user-avatar-svg', $svg_image );
 	} else {
 		$svg = '<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
@@ -9108,7 +9108,7 @@ function bb_generate_default_avatar( $args ) {
                         <tspan x="50%" dy="0" text-anchor="middle" dominant-baseline="middle">' . $item_name . '</tspan>
                     </text>
 				</svg>';
-		$svg_image = 'https://platform.test/wp-content/plugins/buddyboss-platform/src/bp-core/images/bb-group-avatar-legacy.jpg';
+		$svg_image = buddypress()->plugin_url . 'bp-core/images/bb-group-avatar-legacy.jpg';
 		groups_update_groupmeta( $r['item_id'], 'default-group-avatar-svg', $svg_image );
 	}
 
