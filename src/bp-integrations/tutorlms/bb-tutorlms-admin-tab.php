@@ -141,7 +141,12 @@ class BB_TutorLMS_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			'bb_tutorlms_group_sync_settings_section' => array(
 				'page'              => 'TutorLMS',
 				'title'             => $group_sync_title,
-				'tutorial_callback' => array( $this, 'setting_callback_tutorlms_tutorial' ),
+				'tutorial_callback' => array( $this, 'setting_callback_tutorlms_group_sync_tutorial' ),
+			),
+			'bb_tutorlms_posts_activity_settings_section' => array(
+				'page'              => 'TutorLMS',
+				'title'             => __( 'Posts in Activity Feed', 'buddyboss' ),
+				'tutorial_callback' => array( $this, 'setting_callback_tutorlms_posts_activity_tutorial' ),
 			),
 		);
 
@@ -212,7 +217,70 @@ class BB_TutorLMS_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'args'              => array(),
 			),
 		);
+
+		$fields['bb_tutorlms_posts_activity_settings_section'] = array(
+			'bb-tutorlms-enable'                => array(
+				'title'             => __( 'Custom Posts', 'buddyboss' ),
+				'callback'          => array( $this, 'bb_tutorlms_posts_activity_callback' ),
+				'sanitize_callback' => 'string',
+				'args'              => array(),
+			),
+		);
         return $fields;
+	}
+
+	/**
+	 * Link to TutorLMS Group Sync Settings tutorial.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function setting_callback_tutorlms_group_sync_tutorial() {
+		?>
+        <p>
+            <a class="button" href="
+			<?php
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => '125826',
+						),
+						'admin.php'
+					)
+				)
+			);
+			?>
+			"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+        </p>
+		<?php
+	}
+
+	/**
+	 * Link to TutorLMS Posts Activity tutorial.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function setting_callback_tutorlms_posts_activity_tutorial() {
+		?>
+        <p>
+            <a class="button" href="
+			<?php
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => '125826',
+						),
+						'admin.php'
+					)
+				)
+			);
+			?>
+			"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+        </p>
+		<?php
 	}
 
 	/**
@@ -351,29 +419,24 @@ class BB_TutorLMS_Admin_Integration_Tab extends BP_Admin_Integration_tab {
     }
 
 	/**
-	 * Link to TutorLMS Settings tutorial.
+	 * Callback function TutorLMS post types.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function setting_callback_tutorlms_tutorial() {
+	public function bb_tutorlms_posts_activity_callback() {
 		?>
-		<p>
-			<a class="button" href="
-			<?php
-				echo esc_url(
-					bp_get_admin_url(
-						add_query_arg(
-							array(
-								'page'    => 'bp-help',
-								'article' => '125826',
-							),
-							'admin.php'
-						)
-					)
-				);
-			?>
-			"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
-		</p>
+        <p class="description">
+			<?php esc_html_e( 'Select which custom post types show in the activity feed when members instructors and site owners publish them, you can select whether or not to show comments in these activity posts.', 'buddyboss' ); ?>
+        </p>
+        <tr class="child-no-padding">
+            <th scope="row"></th>
+            <td>
+                <input name="bb-tutorlms[course]" id="bb-tutorlms-course" type="checkbox" value="1" />
+                <label for="course">
+					<?php esc_html_e( 'Course', 'buddyboss' ); ?>
+                </label>
+            </td>
+        </tr>
 		<?php
 	}
 
