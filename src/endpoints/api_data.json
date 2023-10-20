@@ -7895,6 +7895,22 @@
     "groupTitle": "Notifications"
   },
   {
+    "type": "PATCH",
+    "url": "/wp-json/buddyboss/v1/notifications/bulk/read",
+    "title": "Notification read in bulk",
+    "name": "UpdateBBNotificationRead",
+    "group": "Notifications",
+    "description": "<p>Mark as read bulk notifications</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "filename": "src/bp-notifications/classes/class-bp-rest-notifications-endpoint.php",
+    "groupTitle": "Notifications"
+  },
+  {
     "type": "POST",
     "url": "/wp-json/buddyboss/v1/xprofile/fields",
     "title": "Create xProfile Field",
