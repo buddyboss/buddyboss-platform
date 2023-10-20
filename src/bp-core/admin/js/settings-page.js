@@ -511,6 +511,21 @@ window.bp = window.bp || {};
 							}
 						}
 					);
+
+				// Show confirmation dialog when user enable restrict invite option.
+				$( document ).on(
+					'click',
+					'#bp-enable-group-restrict-invites',
+					function () {
+						if ( true === this.checked ) {
+							if ( confirm( BP_ADMIN.group.restrict_invites_confirm_message ) ) {
+								return true;
+							} else {
+								return false;
+							}
+						}
+					}
+				);
 			}
 
 			// Hide/show group header element group type.

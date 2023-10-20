@@ -325,6 +325,9 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 						'duplicate' => esc_html__( 'The rule content cannot be duplicate.', 'buddyboss' ),
 					),
 				),
+				'group'                        => array(
+					'restrict_invites_confirm_message' => esc_html__( 'By enabling this option members that are already part of sub-groups and not the parent groups will automatically be removed from all sub-groups.', 'buddyboss' ),
+				)
 			);
 
 			// Localize only post_type is member type and group type.
