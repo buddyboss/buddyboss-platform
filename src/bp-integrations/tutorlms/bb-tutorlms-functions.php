@@ -1,6 +1,6 @@
 <?php
 /**
- * TutorLMS integration helpers
+ * TutorLMS integration helpers.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -272,4 +272,24 @@ function bb_tutorlms_user_finished_quiz( $default = 0 ) {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	return apply_filters( 'bb_tutorlms_user_finished_quiz', bb_get_tutorlms_settings( 'bb-tutorlms-user-finished-quiz', $default ) );
+}
+
+/**
+ * Function to return all TutorLMS post types.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return mixed|null
+ */
+function bb_tutorlms_get_post_types() {
+	$tutorlms_post_types = array(
+		tutor()->course_post_type,
+		tutor()->lesson_post_type,
+		tutor()->topics_post_type,
+		tutor()->assignment_post_type,
+		tutor()->enrollment_post_type,
+		tutor()->quiz_post_type,
+	);
+
+	return apply_filters( 'bb_tutorlms_get_post_types', $tutorlms_post_types );
 }
