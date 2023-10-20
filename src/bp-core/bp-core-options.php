@@ -1957,6 +1957,13 @@ function bb_feed_post_types() {
 	// Exclude BP CPT.
 	$bp_exclude_cpt = array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
 
+	if ( function_exists( 'tutor') && function_exists( 'bb_tutorlms_get_post_types' ) ) {
+		$bp_exclude_cpt = array_merge(
+			$bp_exclude_cpt,
+			bb_tutorlms_get_post_types()
+		);
+	}
+
 	$bp_excluded_cpt = array();
 
 	foreach ( $post_types as $post_type ) {
