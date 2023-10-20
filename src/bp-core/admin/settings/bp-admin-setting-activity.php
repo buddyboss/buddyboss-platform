@@ -28,6 +28,28 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	}
 
 	public function settings_save() {
+
+		// Get old values for cpt and check if it disabled then keep it and later will save it.
+		$cpt_types          = apply_filters( 'bb_activity_global_setting_comment_cpt', array( 'sfwd-courses', 'sfwd-lessons', 'sfwd-topic', 'sfwd-quiz', 'sfwd-assignment', 'groups' ) );
+		$filtered_cpt_types = array_values(
+			array_filter(
+				array_map(
+					function ( $post_type ) {
+						if ( ! bb_activity_is_enabled_cpt_global_comment( $post_type ) ) {
+							return $post_type;
+						}
+					},
+					$cpt_types
+				)
+			)
+		);
+
+		$old_cpt_comments_values = array();
+		foreach ( $filtered_cpt_types as $cpt ) {
+			$option_name                             = bb_post_type_feed_comment_option_name( $cpt );
+			$old_cpt_comments_values[ $option_name ] = bp_get_option( $option_name, false );
+		}
+
 		parent::settings_save();
 
 		$bp                = buddypress();
@@ -72,6 +94,13 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		// Mapping the component pages in page settings except registration pages.
 		bp_core_add_page_mappings( $bp->active_components, 'keep', false );
 		bp_update_option( 'bp-active-components', $bp->active_components );
+
+		// Do not override the setting which previously saved.
+		if ( ! empty( $old_cpt_comments_values ) ) {
+			foreach ( $old_cpt_comments_values as $cpt_comment_key => $cpt_comment_val ) {
+				bp_update_option( $cpt_comment_key, $cpt_comment_val );
+			}
+		}
 
 	}
 
