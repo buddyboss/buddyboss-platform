@@ -1752,6 +1752,72 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		);
 	}
 
+	// Pin post action only for allowed posts based on user role.
+	if (
+		(
+			bp_is_group_activity() &&
+			(
+				bp_current_user_can( 'administrator' ) ||
+				(
+					bb_is_active_activity_pinned_posts() &&
+					(
+						bbp_group_is_mod() ||
+						bbp_group_is_admin()
+					)
+				)
+			)
+		) ||
+		(
+			bp_current_user_can( 'administrator' ) &&
+			bp_is_activity_directory() &&
+			! empty( $GLOBALS['activities_template']->pinned_scope ) &&
+			'activity' === $GLOBALS['activities_template']->pinned_scope
+		)
+	) {
+
+		// Remove for activities related to group for main activity screen.
+		if (
+			bp_is_group_activity() ||
+			(
+				bp_is_activity_directory() &&
+				'groups' !== bp_get_activity_object_name()
+			)
+
+		) {
+
+			$pinned_action_label = bp_is_group_activity() ? esc_html__( 'Pin to Group', 'buddyboss' ) : esc_html__( 'Pin to Feed', 'buddyboss' );
+			$pinned_action_class = 'pin-activity';
+			if ( ! empty( $GLOBALS['activities_template']->pinned_id ) ) {
+				$pinned_id = $GLOBALS['activities_template']->pinned_id;
+
+				if ( (int) $activity_id === (int) $pinned_id ) {
+					$pinned_action_label = bp_is_group_activity() ? esc_html__( 'Unpin from Group', 'buddyboss' ) : esc_html__( 'Unpin from Feed', 'buddyboss' );
+					$pinned_action_class = 'unpin-activity';
+				}
+			}
+
+			$buttons['activity_pin'] = array(
+				'id'                => 'activity_pin',
+				'component'         => 'activity',
+				'parent_element'    => $parent_element,
+				'parent_attr'       => $parent_attr,
+				'must_be_logged_in' => true,
+				'button_element'    => $button_element,
+				'button_attr'       => array(
+					'id'            => '',
+					'href'          => '',
+					'class'         => 'button item-button bp-secondary-action ' . $pinned_action_class,
+					'data-bp-nonce' => '',
+				),
+				'link_text'         => sprintf(
+					'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
+					$pinned_action_label,
+					$pinned_action_label
+				),
+			);
+		}
+	}
+
 	/**
 	 * Filter to add your buttons, use the position argument to choose where to insert it.
 	 *

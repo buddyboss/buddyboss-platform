@@ -1463,6 +1463,96 @@ window.bp = window.bp || {};
 
 				}
 			}
+
+			// Pin OR UnPin the activity.
+			if ( target.hasClass( 'pin-activity' ) || target.hasClass( 'unpin-activity' ) ) {
+				// Stop event propagation.
+				event.preventDefault();
+
+				if ( ! activity_id ) {
+					return event;
+				}
+
+				target.closest( '.activity-item' ).addClass( 'loading-pin' );
+
+				var pin_action = 'pin';
+				if ( target.hasClass( 'unpin-activity' ) ) {
+					pin_action = 'unpin';
+				}
+
+				parent.ajax(
+					{
+						action     : 'activity_update_pinned_post',
+						id         : activity_id,
+						pin_action : pin_action
+					},
+					'activity'
+				).done(
+					function( response ) {
+						target.closest( '.activity-item' ).removeClass( 'loading-pin' );
+
+						// Check for JSON output.
+						if ( 'object' !== typeof response ) {
+							response = JSON.parse( response );
+						}
+						if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.feedback ) {
+							var activity_list   = target.closest( '#activity-stream > ul' );
+							var activity_stream = target.closest( '#activity-stream' );
+							var message_modal   = activity_stream.siblings( '#bb-confirmation-modal' );
+
+							if ( response.success ) {
+
+								// Change the pinned class and label.
+								if ( 'pin' === pin_action ) {
+
+									// Remove class from all old pinned and update action labels and icons.
+									activity_list.find( 'li.activity-item' ).removeClass( 'bb-pinned' );
+
+									activity_list.find( 'li.activity-item' ).each( function() {
+										var action = $( this ).find( '.unpin-activity' );
+										action.removeClass( 'unpin-activity' ).addClass( 'pin-activity' );
+
+										if ( activity_stream.hasClass('single-group') ) {
+											action.find('span').html( BP_Nouveau.activity.strings.pinGroupPost );
+										} else {
+											action.find('span').html( BP_Nouveau.activity.strings.pinPost );
+										}
+									});
+
+									target.closest( 'li.activity-item' ).addClass( 'bb-pinned' );
+									target.addClass( 'unpin-activity' );
+									target.removeClass( 'pin-activity' );
+
+									if ( activity_stream.hasClass('single-group') ) {
+										target.find('span').html( BP_Nouveau.activity.strings.unpinGroupPost );
+									} else {
+										target.find('span').html( BP_Nouveau.activity.strings.unpinPost );
+									}
+								} else if ( 'unpin' === pin_action ) {
+									target.closest( 'li.activity-item' ).removeClass( 'bb-pinned' );
+									target.addClass( 'pin-activity' );
+									target.removeClass( 'unpin-activity' );
+									if ( activity_stream.hasClass('single-group') ) {
+										target.find('span').html( BP_Nouveau.activity.strings.pinGroupPost );
+									} else {
+										target.find('span').html( BP_Nouveau.activity.strings.pinPost );
+									}
+								}
+							}
+
+							message_modal.find('.bb-action-popup-content').html( response.data.feedback );
+							target.closest( '#activity-stream' ).siblings( '#bb-confirmation-modal' ).show();
+						}
+					}
+				).fail(
+					function() {
+						target.closest( '.activity-item' ).removeClass( 'loading-pin' );
+						var message_modal = target.closest( '#activity-stream' ).siblings( '#bb-confirmation-modal' );
+						message_modal.find('.bb-action-popup-content').html( BP_Nouveau.activity.strings.pinPostError );
+						message_modal.show();
+					}
+				);
+			}
 		},
 
 		/**

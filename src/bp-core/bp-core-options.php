@@ -168,6 +168,9 @@ function bp_get_default_options() {
 		'widget_bp_core_recently_active_widget'      => false,
 		'widget_bp_groups_widget'                    => false,
 		'widget_bp_messages_sitewide_notices_widget' => false,
+
+		// Enabled activity pinned posts.
+		'_bb_enable_activity_pinned_posts'           => true,
 	);
 
 	/**
@@ -2496,4 +2499,25 @@ function bb_custom_logout_redirection( $default = '' ) {
 	 * @param string $value Custom logout page URL.
 	 */
 	return apply_filters( 'bb_custom_logout_redirection', bp_get_option( 'bb-custom-logout-redirection', $default ) );
+}
+
+/**
+* Check whether activity pinned posts are enabled.
+*
+* @since BuddyBoss [BBVERSION]
+*
+* @param bool $default Optional. Fallback value if not found in the database.
+*                      Default: true.
+* @return bool True    If activity pinned posts are enabled, otherwise false.
+*/
+function bb_is_active_activity_pinned_posts( $default = false ) {
+
+   /**
+	* Filters whether activity pinned posts are enabled.
+	*
+	* @since BuddyBoss [BBVERSION]
+	*
+	* @param bool $value Whether activity pinned posts are enabled.
+	*/
+   return (bool) apply_filters( 'bb_is_active_activity_pinned_posts', (bool) bp_get_option( '_bb_enable_activity_pinned_posts', $default ) );
 }
