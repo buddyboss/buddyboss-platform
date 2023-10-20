@@ -6488,8 +6488,8 @@ function bb_get_custom_buddyboss_group_cover() {
  */
 function bb_attachments_get_default_profile_group_avatar_image( $params ) {
 
-	$object = isset( $params['object'] ) ? $params['object'] : 'user';
-	$size   = isset( $params['type'] ) ? $params['type'] : 'full';
+	$object = $params['object'] ?? 'user';
+	$size   = $params['type'] ?? 'full';
 
 	$avatar_image_url       = false;
 	$disable_avatar_uploads = ( 'user' === $object ) ? bp_disable_avatar_uploads() : bp_disable_group_avatar_uploads();
@@ -6513,6 +6513,10 @@ function bb_attachments_get_default_profile_group_avatar_image( $params ) {
 				// Default Profile Avatar = Legacy.
 			} elseif ( 'legacy' === $default_profile_avatar_type ) {
 				$avatar_image_url = bb_get_legacy_profile_avatar( $size );
+
+				// Default Profile Avatar = Display Name.
+			} elseif ( 'display-name' === $default_profile_avatar_type ) {
+				$avatar_image_url = empty( $params['item_id'] ) ? buddypress()->plugin_url . 'bp-core/images/bb-profile-avatar-legacy.jpg' : bb_get_default_svg_avatar( $params );
 
 				// Default Profile Avatar = Custom.
 			} elseif ( 'custom' === $default_profile_avatar_type ) {
@@ -6544,6 +6548,8 @@ function bb_attachments_get_default_profile_group_avatar_image( $params ) {
 			$avatar_image_url = bb_get_buddyboss_group_avatar( $size );
 		} elseif ( 'legacy' === $group_avatar_type ) {
 			$avatar_image_url = bb_get_legacy_group_avatar( $size );
+		} elseif ( 'group-name' === $group_avatar_type ) {
+			$avatar_image_url = empty( $params['item_id'] ) ? buddypress()->plugin_url . 'bp-core/images/bb-group-avatar-legacy.jpg' : bb_get_default_svg_avatar( $params );
 		} elseif ( 'custom' === $group_avatar_type ) {
 			$avatar_image_url = bb_get_default_custom_upload_group_avatar( bb_get_buddyboss_group_avatar( $size ), $size );
 		}
@@ -8886,7 +8892,7 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 		// Split the email addresses into parts using '@'.
 		$rule_email_parts  = explode( '@', $rule_email );
 		$input_email_parts = explode( '@', $email );
-	 
+
 		// Remove aliases, everything after '+'.
 		$rule_email_user  = explode( '+', $rule_email_parts[0] )[0];
 		$input_email_user = explode( '+', $input_email_parts[0] )[0];
@@ -8993,4 +8999,118 @@ function bb_load_reaction() {
 	if ( class_exists( 'BB_Reaction' ) ) {
 		return BB_Reaction::instance();
 	}
+}
+
+function bb_get_predefined_pallet() {
+	return apply_filters(
+		'bb_get_predefined_pallet',
+		array( '#dc143c', '#b22222', '#8b0000', '#663399', '#4682b4', '#8a2be2', '#9400d3', '#9932cc', '#800080', '#4b0082', '#6a5acd', '#c71585', '#483d8b', '#4169e1', '#0000cd', '#000080', '#191970', '#008000', '#006400', '#8b4513', '#a0522d' )
+	);
+}
+
+function bb_get_default_svg_avatar( $params ) {
+	$object  = $params['object'] ?? 'user';
+	$item_id = $params['item_id'] ?? 0;
+
+	$avatar_image_url = false;
+
+	if ( empty( $item_id ) ) {
+		return $avatar_image_url;
+	}
+
+	if ( 'user' === $object ) {
+		$avatar_image_url = get_user_meta( $item_id, 'default-user-avatar-svg', true );
+	} else {
+		$avatar_image_url = groups_get_groupmeta( $item_id, 'default-group-avatar-svg', true );
+	}
+
+	if ( empty( $avatar_image_url ) ) {
+		$avatar_image_url = bb_generate_default_avatar( $params );
+	}
+
+	return $avatar_image_url;
+}
+
+function bb_generate_default_avatar( $args ) {
+	$r = bp_parse_args(
+		$args,
+		array(
+			'item_id'   => 0,
+			'object'    => 0,
+			'item_name' => '',
+		)
+	);
+
+	if ( empty( $r['item_id'] ) || empty( $r['object'] ) ) {
+		return false;
+	}
+
+	if ( empty( $r['item_name'] ) ) {
+		if ( 'user' === $r['object'] ) {
+			$r['item_name'] = bp_core_get_user_displayname( $r['item_id'] );
+		} else {
+			$group          = groups_get_group( $r['item_id'] );
+			$r['item_name'] = bp_get_group_name( $group );
+		}
+	}
+
+	$display_format = bp_core_display_name_format();
+
+	$char1 = $r['item_name'][0];
+	$char2 = '';
+	if ( 'first_last_name' === $display_format ) {
+		$words = explode( ' ', $r['item_name'] );
+		if ( 2 <= count( $words ) ) {
+			$char2 = $words[1][0];
+		}
+	}
+
+	$item_name = ucfirst( $char1 ) . strtolower( $char2 );
+
+	if ( 'user' === $r['object'] ) {
+		$pallet = get_user_meta( $r['item_id'], 'default-user-avatar-svg-background-code', true );
+	} else {
+		$pallet = groups_get_groupmeta( $r['item_id'], 'default-group-avatar-svg-background-code', true );
+	}
+
+	if ( empty( $pallet ) ) {
+		$all_pallets = bb_get_predefined_pallet();
+		$pallet      = $all_pallets[ array_rand( $all_pallets ) ];
+
+		if ( 'user' === $r['object'] ) {
+			update_user_meta( $r['item_id'], 'default-user-avatar-svg-background-code', $pallet );
+		} else {
+			groups_update_groupmeta( $r['item_id'], 'default-group-avatar-svg-background-code', $pallet );
+		}
+	}
+
+	$font_family = 'Arial, sans-serif';
+	$font_size   = '36';
+	if ( function_exists( 'buddyboss_theme_get_option' ) && buddyboss_theme_get_option( 'custom_typography' ) ) {
+		$body_fonts  = buddyboss_theme_get_option( 'boss_body_font_family' );
+		$font_family = $body_fonts['font-family'];
+		$font_size   = str_replace( 'px', '', $body_fonts['font-size'] );
+	}
+
+	if ( 'user' === $r['object'] ) {
+		$svg = '<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+					<circle cx="100" cy="100" r="90" fill="' . $pallet . '" />
+					<text x="50%" y="50%" font-family="' . $font_family . '" font-size="' . $font_size . '" fill="#ffffff" text-anchor="middle" dominant-baseline="middle">
+							<tspan x="50%" dy="0" text-anchor="middle" dominant-baseline="middle">' . $item_name . '</tspan>
+					</text>
+				</svg>';
+		$svg_image = 'https://platform.test/wp-content/plugins/buddyboss-platform/src/bp-core/images/bb-profile-avatar-legacy.jpg';
+		update_user_meta( $r['item_id'], 'default-user-avatar-svg', $svg_image );
+	} else {
+		$svg = '<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="10" y="10" width="180" height="180" rx="20" ry="20" fill="' . $pallet . '" />
+                    <text x="50%" y="50%" font-family="' . $font_family . '" font-size="' . $font_size . '" fill="#ffffff" text-anchor="middle" dominant-baseline="middle">
+                        <tspan x="50%" dy="0" text-anchor="middle" dominant-baseline="middle">' . $item_name . '</tspan>
+                    </text>
+				</svg>';
+		$svg_image = 'https://platform.test/wp-content/plugins/buddyboss-platform/src/bp-core/images/bb-group-avatar-legacy.jpg';
+		groups_update_groupmeta( $r['item_id'], 'default-group-avatar-svg', $svg_image );
+	}
+
+	return $svg_image;
 }
