@@ -6546,3 +6546,46 @@ function bb_activity_pin_type( $args ) {
 
 	return $r['pin_type'];
 }
+
+/**
+ * Check CPT comment global settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $post_type custom post type.
+ *
+ * @return bool True if activity comments are enabled for CPT, otherwise false.
+ */
+function bb_activity_is_enabled_cpt_global_comment( $post_type ) {
+
+	switch ( $post_type ) {
+		case 'sfwd-courses':
+			$sfwd_courses_settings = bp_get_option( 'learndash_settings_courses_cpt', array() );
+			$supports_comments     = isset( $sfwd_courses_settings['supports'] ) && in_array( 'comments', $sfwd_courses_settings['supports'], true );
+			break;
+		case 'sfwd-lessons':
+			$sfwd_lesson_settings = bp_get_option( 'learndash_settings_lessons_cpt', array() );
+			$supports_comments    = isset( $sfwd_lesson_settings['supports'] ) && in_array( 'comments', $sfwd_lesson_settings['supports'], true );
+			break;
+		case 'sfwd-topic':
+			$sfwd_topic_settings = bp_get_option( 'learndash_settings_topics_cpt', array() );
+			$supports_comments   = isset( $sfwd_topic_settings['supports'] ) && in_array( 'comments', $sfwd_topic_settings['supports'], true );
+			break;
+		case 'sfwd-quiz':
+			$sfwd_quiz_settings = bp_get_option( 'learndash_settings_quizzes_cpt', array() );
+			$supports_comments  = isset( $sfwd_quiz_settings['supports'] ) && in_array( 'comments', $sfwd_quiz_settings['supports'], true );
+			break;
+		case 'groups':
+			$sfwd_group_settings = bp_get_option( 'learndash_settings_groups_cpt', array() );
+			$supports_comments   = isset( $sfwd_group_settings['supports'] ) && in_array( 'comments', $sfwd_group_settings['supports'], true );
+			break;
+		case 'sfwd-assignment':
+			$sfwd_assignment_settings = bp_get_option( 'learndash_settings_assignments_cpt', array() );
+			$supports_comments        = isset( $sfwd_assignment_settings['comment_status'] ) && 'yes' === $sfwd_assignment_settings['comment_status'];
+			break;
+		default:
+			$supports_comments = true;
+	}
+
+	return apply_filters( 'bb_activity_is_enabled_cpt_global_comment', $supports_comments, $post_type );
+}
