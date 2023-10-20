@@ -74,6 +74,8 @@ add_filter( 'bp_core_widget_user_display_name', 'esc_html' );
 add_filter( 'bp_login_redirect', 'bb_login_redirect', PHP_INT_MAX, 3 );
 add_filter( 'logout_redirect', 'bb_logout_redirect', PHP_INT_MAX, 3 );
 
+add_action( 'bp_admin_init', 'bb_updated_component_emails' );
+
 // Avatars.
 /**
  * Disable gravatars fallback for member avatars.
@@ -2610,4 +2612,24 @@ function bb_redirection_allowed_third_party_domains( $hosts ) {
 	}
 
 	return $hosts;
+}
+
+/**
+ * Install emails on plugin activation.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_updated_component_emails() {
+	global $plugin_page;
+
+	if (
+		'bp-components' === $plugin_page &&
+		! empty( $_GET['action'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		! empty( $_GET['added'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		'true' === $_GET['added'] // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	) {
+		bp_admin_install_emails();
+	}
 }
