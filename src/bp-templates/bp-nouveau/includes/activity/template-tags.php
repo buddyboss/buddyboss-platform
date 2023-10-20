@@ -733,13 +733,14 @@ function bp_nouveau_get_activity_comment_action() {
 	return apply_filters(
 		'bp_nouveau_get_activity_comment_action',
 		sprintf(
-			/* translators: 1: user profile link, 2: user name, 3: activity permalink, 4: activity recorded date, 5: activity timestamp, 6: activity human time since, 7: Edited text */
-			__( '<a class="author-name" href="%1$s">%2$s</a> <a href="%3$s" class="activity-time-since"><time class="time-since" datetime="%4$s" data-bp-timestamp="%5$d">%6$s</time></a>%7$s', 'buddyboss' ),
+			/* translators: 1: user profile link, 2: user name, 3: activity permalink, 4: activity recorded date, 5: activity timestamp, 6: activity timestamp, 7: activity human time since, 8: Edited text */
+			__( '<a class="author-name" href="%1$s">%2$s</a> <a href="%3$s" class="activity-time-since"><time class="time-since" datetime="%4$s" data-bp-timestamp="%5$d" data-livestamp="%6$s">%7$s</time></a>%8$s', 'buddyboss' ),
 			esc_url( bp_get_activity_comment_user_link() ),
 			esc_html( bp_get_activity_comment_name() ),
 			esc_url( bp_get_activity_comment_permalink() ),
 			esc_attr( bp_get_activity_comment_date_recorded_raw() ),
 			esc_attr( strtotime( bp_get_activity_comment_date_recorded_raw() ) ),
+			esc_attr( bp_core_get_iso8601_date( bp_get_activity_comment_date_recorded_raw() ) ),
 			esc_attr( bp_get_activity_comment_date_recorded() ),
 			bb_nouveau_activity_comment_is_edited()
 		)
@@ -1298,15 +1299,15 @@ function bp_nouveau_video_activity_description( $activity_id = 0 ) {
 		return;
 	}
 
-	$content = get_post_field( 'post_content', $attachment_id );
+	$video = new BP_Video( $video_id );
 
 	echo '<div class="activity-media-description">' .
-		 '<div class="bp-media-activity-description">' . $content . '</div>'; // phpcs:ignore
+		 '<div class="bp-media-activity-description">' . $video->description . '</div>'; // phpcs:ignore
 
 	if ( bp_activity_user_can_edit( false, true ) ) {
 		?>
 
-		<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>" href="#">
+		<a class="bp-add-media-activity-description <?php echo( ! empty( $video->description ) ? 'show-edit' : 'show-add' ); ?>" href="#">
 			<span class="bb-icon-l bb-icon-edit "></span>
 			<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss' ); ?></span>
 			<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
@@ -1320,7 +1321,7 @@ function bp_nouveau_video_activity_description( $activity_id = 0 ) {
 
 		<div class="bp-edit-media-activity-description" style="display: none;">
 			<div class="innerWrap">
-				<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo wp_kses_post( $content ); ?></textarea>
+				<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo wp_kses_post( $video->description ); ?></textarea>
 			</div>
 			<div class="in-profile description-new-submit">
 				<input type="hidden" id="bp-attachment-id" value="<?php echo esc_attr( $attachment_id ); ?>">
@@ -1370,27 +1371,22 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
 		return;
 	}
 
-	$content = get_post_field( 'post_content', $attachment_id );
+	$media = new BP_Media( $media_id );
 
 	echo '<div class="activity-media-description">' .
-		 '<div class="bp-media-activity-description">' . $content . '</div>';
+		 '<div class="bp-media-activity-description">' . $media->description . '</div>';
 
 	if ( bp_activity_user_can_edit( false, true ) ) {
 		?>
 
-		<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>" href="#">
+		<a class="bp-add-media-activity-description <?php echo( ! empty( $media->description ) ? 'show-edit' : 'show-add' ); ?>" href="#">
 			<span class="bb-icon-l bb-icon-edit"></span>
 			<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
 			<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
 		</a>
 		<div class="bp-edit-media-activity-description" style="display: none;">
 			<div class="innerWrap">
-				<textarea id="add-activity-description"
-					  title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
-					  class="textInput"
-					  name="caption_text"
-					  placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
-					  role="textbox"><?php echo $content; ?></textarea>
+				<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo $media->description; ?></textarea>
 			</div>
 			<div class="in-profile description-new-submit">
 				<input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
@@ -1410,8 +1406,7 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
 			$download_url = bp_media_download_link( $attachment_id, $media_id );
 			if ( $download_url ) {
 				?>
-				<a class="download-media"
-				   href="<?php echo esc_url( $download_url ); ?>">
+				<a class="download-media" href="<?php echo esc_url( $download_url ); ?>">
 					<?php _e( 'Download', 'buddyboss' ); ?>
 				</a>
 				<?php
@@ -1443,35 +1438,27 @@ function bp_nouveau_document_activity_description( $activity_id = 0 ) {
 		return;
 	}
 
-	$content = get_post_field( 'post_content', $attachment_id );
+	$document = new BP_Document( $document_id );
 
 	echo '<div class="activity-media-description">' .
-		 '<div class="bp-media-activity-description">' . $content . '</div>';
+		 '<div class="bp-media-activity-description">' . $document->description . '</div>';
 
 	if ( bp_activity_user_can_edit( false, true ) ) {
 		?>
 
-		<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
-		   href="#">
-			   <span class="bb-icon-l bb-icon-edit"></span>
+		<a class="bp-add-media-activity-description <?php echo( ! empty( $document->description ) ? 'show-edit' : 'show-add' ); ?>" href="#">
+			<span class="bb-icon-l bb-icon-edit"></span>
 			<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
 			<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
 		</a>
 		<div class="bp-edit-media-activity-description" style="display: none;">
 			<div class="innerWrap">
-						<textarea id="add-activity-description"
-								  title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
-								  class="textInput"
-								  name="caption_text"
-								  placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
-								  role="textbox"><?php echo $content; ?></textarea>
+				<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo $document->description; ?></textarea>
 			</div>
 			<div class="in-profile description-new-submit">
-								<input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
-				<input type="submit" id="bp-activity-description-new-submit" class="button small"
-					   name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
-				<input type="reset" id="bp-activity-description-new-reset" class="text-button small"
-					   value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
+				<input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
+				<input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
+				<input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
 			</div>
 		</div>
 
