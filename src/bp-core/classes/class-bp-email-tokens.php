@@ -267,7 +267,6 @@ class BP_Email_Tokens {
 																			<tr>
 																				<td height="34px" style="vertical-align: middle;">
 																					<?php
-																					if ( bp_is_active( 'friends' ) )
 																					$group_members_count = bp_get_group_total_members( $group );
 																					$member_text         = ( $group_members_count > 1 ) ? __( 'members', 'buddyboss' ) : __( 'member', 'buddyboss' );
 																					?>
@@ -1239,8 +1238,8 @@ class BP_Email_Tokens {
 																				<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.8125 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;">
 																					<span style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; opacity: 0.85;"><?php echo $friend_count; ?></span> <?php echo $connection_text; ?>
 																				</div>
-																				<?php 
-																				} 
+																				<?php
+																			}
 																			?>
 																			</td>
 																		</tr>
