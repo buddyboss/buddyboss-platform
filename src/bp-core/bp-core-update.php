@@ -467,6 +467,14 @@ function bp_version_updater() {
 			bb_update_to_2_4_10();
 		}
 
+		if ( $raw_db_version < 20654 ) {
+			bb_update_to_2_4_41();
+		}
+
+		if ( $raw_db_version < 20674 ) {
+			bb_update_to_2_4_50();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -490,7 +498,22 @@ function bp_version_updater() {
 
 			// Run migration about activity.
 			if ( function_exists( 'bb_activity_migration' ) ) {
-				bb_activity_migration();
+				bb_activity_migration( $raw_db_version, $current_db );
+			}
+
+			// Run migration about forums.
+			if ( function_exists( 'bb_forums_migration' ) ) {
+				bb_forums_migration( $raw_db_version );
+			}
+
+			// Run migration about media/video description.
+			if ( function_exists( 'bb_media_migration' ) ) {
+				bb_media_migration();
+			}
+
+			// Run migration about document description.
+			if ( function_exists( 'bb_document_migration' ) ) {
+				bb_document_migration();
 			}
 		}
 	}
@@ -2825,32 +2848,50 @@ function bb_update_to_2_3_41() {
  * @since BuddyBoss 2.3.41
  */
 function bb_core_update_repair_member_slug() {
-	global $wpdb, $bp_background_updater;
+	global $wpdb, $bb_background_updater, $is_member_slug_background;
 
+	$user_limit = apply_filters( 'bb_core_update_repair_member_slug_limit', 50 );
+
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
 	$user_ids = $wpdb->get_col(
 		$wpdb->prepare(
-			"SELECT u.ID FROM `{$wpdb->users}` AS u LEFT JOIN `{$wpdb->usermeta}` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) WHERE ( um.user_id IS NULL OR LENGTH(meta_value) = %d ) ORDER BY u.ID",
+			"SELECT u.ID FROM `{$wpdb->users}` AS u LEFT JOIN `{$wpdb->usermeta}` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) WHERE ( um.user_id IS NULL OR LENGTH(meta_value) = %d ) ORDER BY u.ID LIMIT %d, %d",
 			'bb_profile_slug',
-			40
+			40,
+			0,
+			$user_limit
 		)
 	);
 
 	if ( empty( $user_ids ) ) {
-		return;
-	}
-
-	foreach ( array_chunk( $user_ids, 50 ) as $chunk ) {
-		$bp_background_updater->data(
-			array(
-				array(
-					'callback' => 'bb_set_bulk_user_profile_slug',
-					'args'     => array( $chunk ),
-				),
+		$table_name = $bb_background_updater::$table_name;
+		// Delete existing migration from options table.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM {$table_name} WHERE `type` = %s AND `group` = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				'repair_member_slug',
+				'bb_core_update_repair_member_slug'
 			)
 		);
 
-		$bp_background_updater->save()->schedule_event();
+		return;
 	}
+
+	$is_member_slug_background = true;
+	bb_set_bulk_user_profile_slug( $user_ids );
+
+	// Register a new background job.
+	$bb_background_updater->data(
+		array(
+			'type'     => 'repair_member_slug',
+			'group'    => 'bb_core_update_repair_member_slug',
+			'priority' => 5,
+			'callback' => 'bb_core_update_repair_member_slug',
+			'args'     => array(),
+		),
+	);
+	$bb_background_updater->save()->schedule_event();
 }
 
 /**
@@ -3093,25 +3134,9 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
 			isset( $result->meta_value ) &&
 			preg_match( '/^\d+(?:,\d+)*$/', $result->meta_value )
 		) {
-
 			$query = $wpdb->prepare( "UPDATE {$table_name} SET message_id = %d WHERE id IN ( {$result->meta_value} )", $result->message_id );
 
 			$wpdb->query( $query );
-
-			$id_array = explode( ',', $result->meta_value );
-			if ( ! empty( $id_array ) ) {
-				foreach ( $id_array as $media_id ) {
-					$media = '';
-					if ( 'bp_document_ids' === $result->meta_key && class_exists( 'BP_Document' ) ) {
-						$media = new BP_Document( $media_id );
-					} elseif ( class_exists( 'BP_Media' ) ) {
-						$media = new BP_Media( $media_id );
-					}
-					if ( ! empty( $media ) ) {
-						update_post_meta( $media->attachment_id, 'bp_media_parent_message_id', $media->message_id );
-					}
-				}
-			}
 		}
 	}
 
@@ -3224,5 +3249,117 @@ function bb_update_to_2_4_10() {
 				$member->promote( 'admin' );
 			}
 		}
+	}
+}
+
+/**
+ * Migrate member slug generated background jobs.
+ *
+ * @since BuddyBoss 2.4.41
+ *
+ * @return void
+ */
+function bb_update_to_2_4_41() {
+	global $wpdb, $bb_background_updater;
+
+	// Delete existing `bb_set_bulk_user_profile_slug` background jobs from options table.
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE `option_name` LIKE 'wp_1_bp_updater_batch_%' AND `option_value` LIKE '%bb_set_bulk_user_profile_slug%'" );
+
+	// Register a new background process.
+	$bb_background_updater->data(
+		array(
+			'type'     => 'repair_member_slug',
+			'group'    => 'bb_core_update_repair_member_slug',
+			'priority' => 5,
+			'callback' => 'bb_core_update_repair_member_slug',
+			'args'     => array(),
+		),
+	);
+	$bb_background_updater->save()->dispatch();
+
+	$bb_background_updater->data(
+		array(
+			'type'     => 'repair_member_slug',
+			'group'    => 'bb_core_update_repair_member_slug',
+			'priority' => 5,
+			'callback' => 'bb_core_update_repair_member_slug',
+			'args'     => array(),
+		),
+	);
+	$bb_background_updater->save()->schedule_event();
+
+	$bb_background_updater->data(
+		array(
+			'type'     => 'repair_member_slug',
+			'group'    => 'bb_core_update_repair_member_slug',
+			'priority' => 5,
+			'callback' => 'bb_core_update_repair_member_slug',
+			'args'     => array(),
+		),
+	);
+	$bb_background_updater->save()->schedule_event();
+
+	$bb_background_updater->data(
+		array(
+			'type'     => 'repair_member_slug',
+			'group'    => 'bb_core_update_repair_member_slug',
+			'priority' => 5,
+			'callback' => 'bb_core_update_repair_member_slug',
+			'args'     => array(),
+		),
+	);
+	$bb_background_updater->save()->schedule_event();
+
+	$bb_background_updater->data(
+		array(
+			'type'     => 'repair_member_slug',
+			'group'    => 'bb_core_update_repair_member_slug',
+			'priority' => 5,
+			'callback' => 'bb_core_update_repair_member_slug',
+			'args'     => array(),
+		),
+	);
+	$bb_background_updater->save()->schedule_event();
+}
+
+/**
+ * Add 'description' column to bp_media and bp_document table.
+ *
+ * @since BuddyBoss 2.4.50
+ *
+ * @return void
+ */
+function bb_update_to_2_4_50() {
+	global $wpdb, $bp;
+
+	if ( ! bp_is_active( 'media' ) ) {
+		return;
+	}
+
+	// Add 'description' column in 'bp_media' table.
+	$media_row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$bp->media->table_name}' AND column_name = 'description'" ); //phpcs:ignore
+
+	if ( empty( $media_row ) ) {
+		$wpdb->query( "ALTER TABLE {$bp->media->table_name} ADD `description` text AFTER `title`" ); //phpcs:ignore
+	}
+
+	// Add 'description' column in 'bp_document' table.
+	$document_row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$bp->document->table_name}' AND column_name = 'description'" ); //phpcs:ignore
+
+	if ( empty( $document_row ) ) {
+		$wpdb->query( "ALTER TABLE {$bp->document->table_name} ADD `description` text AFTER `title`" ); //phpcs:ignore
+	}
+
+	// Purge all the cache.
+	wp_cache_flush();
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear medias API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-photos' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-albums' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-document' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-video' );
 	}
 }
