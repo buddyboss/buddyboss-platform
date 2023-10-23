@@ -285,7 +285,7 @@ class BB_TutorLMS_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				foreach ( $tutorlms_post_types as $post_type ) {
 					$option_name         = bb_post_type_feed_option_name( $post_type );
 					$post_type_obj       = get_post_type_object( $post_type );
-					$child_comment_class = ! bb_tutorlms_post_type_feed_enable( $post_type ) ? 'bp-display-none' : '';
+					$child_comment_class = ! bp_is_post_type_feed_enable( $post_type ) ? 'bp-display-none' : '';
 					$child_option_name   = bb_post_type_feed_comment_option_name( $post_type );
 
 					// Main post type.
