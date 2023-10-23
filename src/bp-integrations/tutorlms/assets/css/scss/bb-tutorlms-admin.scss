@@ -1,0 +1,24 @@
+.buddyboss_page_bp-integrations {
+	.section-bb_tutorlms_posts_activity_settings_section {
+		.form-table {
+			.child-no-padding.bp-child-post-type {
+				td {
+					background: #f0f0f1;
+					margin: 10px 0 0 10px;
+					padding: 10px 15px 10px 20px;
+					border: 1px solid #ccd0d4;
+					display: block;
+					border-radius: 4px;
+
+					p {
+						margin: 0;
+					}
+				}
+
+				&.child-custom-post-type td {
+					margin: 10px 0 10px 10px;
+				}
+			}
+		}
+	}
+}

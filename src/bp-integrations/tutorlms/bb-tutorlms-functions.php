@@ -22,6 +22,17 @@ function bb_tutorlms_integration_url( $path = '' ) {
 }
 
 /**
+ * Returns TutorLMS Integration path.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $path Path to tutorlms integration.
+ */
+function bb_tutorlms_integration_path( $path = '' ) {
+	return trailingslashit( buddypress()->integration_dir ) . 'tutorlms/' . trim( $path, '/\\' );
+}
+
+/**
  * Get TutorLMS settings.
  *
  * @since BuddyBoss [BBVERSION]
@@ -292,4 +303,52 @@ function bb_tutorlms_get_post_types() {
 	);
 
 	return apply_filters( 'bb_tutorlms_get_post_types', $tutorlms_post_types );
+}
+
+/**
+ * Checks if post type feed is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $post_type Post Type.
+ * @param bool   $default Optional. Fallback value if not found in the database.
+ *                        Default: false.
+ *
+ * @return bool Is post type feed enabled or not
+ */
+function bb_tutorlms_post_type_feed_enable( $post_type, $default = false ) {
+	$option_name = bb_post_type_feed_option_name( $post_type );
+
+	/**
+	 * Filters whether post type feed enabled or not.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value Whether post type feed enabled or not.
+	 */
+	return (bool) apply_filters( 'bb_tutorlms_post_type_feed_enable', bb_get_tutorlms_settings( $option_name, $default ) );
+}
+
+/**
+ * Describe the activity comment is enable or not for custom post type.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $post_type custom post type.
+ * @param bool $default   Optional. Fallback value if not found in the database.
+ *                        Default: false.
+ * @return bool True if activity comments are enable for blog and forum
+ *              items, otherwise false.
+ */
+function bb_tutorlms_post_type_feed_comment_enable( $post_type, $default = false ) {
+	$option_name = bb_post_type_feed_comment_option_name( $post_type );
+
+	/**
+	 * Filters whether or not custom post type feed comments are enable.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value Whether or not custom post type activity feed comments are enable.
+	 */
+	return (bool) apply_filters( 'bb_tutorlms_post_type_feed_comment_enable', bb_get_tutorlms_settings( $option_name, $default ) );
 }
