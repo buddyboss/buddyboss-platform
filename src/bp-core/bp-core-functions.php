@@ -9114,3 +9114,47 @@ function bb_generate_default_avatar( $args ) {
 
 	return $svg_image;
 }
+
+function bb_delete_default_user_svg_avatar( $item_ids = array() ) {
+	global $wpdb, $wp_filesystem;
+
+	$delete_query = $wpdb->prepare("DELETE FROM $wpdb->usermeta WHERE meta_key = %s", 'default-user-avatar-svg' );
+	if ( ! empty( $item_ids ) ) {
+		$delete_query .= " AND user_id IN (" . implode( ',', $item_ids ) . ")";
+	}
+
+	$wpdb->query( $delete_query );
+
+	$user_avatar_dir = bp_core_avatar_upload_path() . '/avatars/default/';
+	if ( is_dir( $user_avatar_dir ) ) {
+		if ( ! empty( $item_ids ) ) {
+			foreach ( $item_ids as $user_id ) {
+				$wp_filesystem->delete( $user_avatar_dir . $user_id . '/', true );
+			}
+		} else {
+			$wp_filesystem->delete( $user_avatar_dir, true );
+		}
+	}
+}
+
+function bb_delete_default_group_svg_avatar( $item_ids = array() ) {
+	global $wpdb, $bp, $wp_filesystem;
+
+	$delete_query = $wpdb->prepare("DELETE FROM $bp->groups->table_name_groupmeta WHERE meta_key = %s", 'default-group-avatar-svg' );
+	if ( ! empty( $item_ids ) ) {
+		$delete_query .= " AND group_id IN (" . implode( ',', $item_ids ) . ")";
+	}
+
+	$wpdb->query( $delete_query );
+
+	$group_avatar_dir = bp_core_avatar_upload_path() . '/group-avatars/default/';
+	if ( is_dir( $group_avatar_dir ) ) {
+		if ( ! empty( $item_ids ) ) {
+			foreach ( $item_ids as $group_id ) {
+				$wp_filesystem->delete( $group_avatar_dir . $group_id . '/', true );
+			}
+		} else {
+			$wp_filesystem->delete( $group_avatar_dir, true );
+		}
+	}
+}
