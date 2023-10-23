@@ -137,6 +137,15 @@ module.exports = function (grunt) {
 					src: ['bp-integrations/pusher/assets/css/scss/*.scss'],
 					dest: SOURCE_DIR + 'bp-integrations/pusher/assets/css/',
 				},
+				tutorlms: {
+					cwd: SOURCE_DIR,
+					expand: true,
+					extDot: 'last',
+					ext: '.css',
+					flatten: true,
+					src: ['bp-integrations/tutorlms/assets/css/scss/*.scss'],
+					dest: SOURCE_DIR + 'bp-integrations/tutorlms/assets/css/',
+				},
 			},
 			rtlcss: {
 				options: {
