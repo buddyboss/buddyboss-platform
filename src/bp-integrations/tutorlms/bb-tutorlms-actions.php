@@ -33,7 +33,7 @@ function bb_save_tutor_course( $post_ID, $post_data ) {
 		 * So we need to fetch post data from post_id.
 		 * We can remove get_post once we get all required data from $post_data as functions args.
 		 */
-		$postData = get_post( $post_ID );
-		bp_activity_post_type_publish( $post_ID, $postData );
+		$post_data = get_post( $post_ID );
+		bp_activity_post_type_publish( $post_ID, $post_data );
 	}
 }
