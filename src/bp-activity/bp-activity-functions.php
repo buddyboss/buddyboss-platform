@@ -6583,6 +6583,10 @@ function bb_activity_is_enabled_cpt_global_comment( $post_type ) {
 			$sfwd_assignment_settings = bp_get_option( 'learndash_settings_assignments_cpt', array() );
 			$supports_comments        = isset( $sfwd_assignment_settings['comment_status'] ) && 'yes' === $sfwd_assignment_settings['comment_status'];
 			break;
+		case 'lesson':
+			$tutor_lesson_settings = (array) maybe_unserialize( get_option( 'tutor_option' ) );
+			$supports_comments     = isset( $tutor_lesson_settings['enable_comment_for_lesson'] ) && 'on' === $tutor_lesson_settings['enable_comment_for_lesson'];
+			break;
 		default:
 			$supports_comments = true;
 	}
