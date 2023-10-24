@@ -30,7 +30,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	public function settings_save() {
 
 		// Get old values for cpt and check if it disabled then keep it and later will save it.
-		$cpt_types          = apply_filters( 'bb_activity_global_setting_comment_cpt', array( 'sfwd-courses', 'sfwd-lessons', 'sfwd-topic', 'sfwd-quiz', 'sfwd-assignment', 'groups' ) );
+		$cpt_types          = apply_filters( 'bb_activity_global_setting_comment_cpt', array( 'sfwd-courses', 'sfwd-lessons', 'sfwd-topic', 'sfwd-quiz', 'sfwd-assignment', 'groups', 'lesson' ) );
 		$filtered_cpt_types = array_values(
 			array_filter(
 				array_map(
