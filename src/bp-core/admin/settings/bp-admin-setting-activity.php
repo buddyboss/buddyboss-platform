@@ -30,48 +30,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	public function settings_save() {
 		parent::settings_save();
 
-		$bp                = buddypress();
-		$active_components = $bp->active_components;
-
-		// Flag for activate the blogs component only if any CPT OR blog posts have enabled the activity feed.
-		$is_blog_component_active = false;
-
-		// Get all active custom post type.
-		$post_types = get_post_types( array( 'public' => true ) );
-
-		foreach ( $post_types as $cpt ) {
-			// Exclude all the custom post type which is already in BuddyPress Activity support.
-			if ( in_array(
-				$cpt,
-				array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' )
-			) ) {
-				continue;
-			}
-
-			$enable_blog_feeds = isset( $_POST[ "bp-feed-custom-post-type-$cpt" ] );
-
-			if ( $enable_blog_feeds ) {
-				$is_blog_component_active = true;
-			}
-		}
-
-		// Add blogs component to $active_components list.
-		if ( $is_blog_component_active ) {
-			$active_components['blogs'] = '1';
-		} else {
-			unset( $active_components['blogs'] );
-		}
-
-		// Save settings and upgrade schema.
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-		require_once $bp->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
-
-		$bp->active_components = $active_components;
-		bp_core_install( $bp->active_components );
-
-		// Mapping the component pages in page settings except registration pages.
-		bp_core_add_page_mappings( $bp->active_components, 'keep', false );
-		bp_update_option( 'bp-active-components', $bp->active_components );
+		bb_cpt_feed_enabled_disabled();
 
 	}
 

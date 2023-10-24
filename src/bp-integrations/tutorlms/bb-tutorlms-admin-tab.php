@@ -92,6 +92,8 @@ class BB_TutorLMS_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			}
 		}
 		bp_update_option( 'bb-tutorlms', $bb_tutorlms_arr );
+
+		bb_cpt_feed_enabled_disabled();
 	}
 
 	/**
@@ -194,6 +196,10 @@ class BB_TutorLMS_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 */
 	public function bb_tutorlms_get_settings_fields() {
 		$fields = array();
+
+		if ( ! function_exists( 'tutor' ) ) {
+			return $fields;
+		}
 
 		$bb_tutorlms_group_sync_field['bb-tutorlms-enable'] = array(
 			'title'             => __( 'TutorLMS Group Sync', 'buddyboss' ),

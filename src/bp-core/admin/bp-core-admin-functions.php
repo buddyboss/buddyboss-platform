@@ -3497,3 +3497,59 @@ function bb_member_type_labelcolor_metabox( $post ) {
 	</div>
 	<?php
 }
+
+/**
+ * Function to check any CPT enabled or disabled. If enabled then its set blog component active.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_cpt_feed_enabled_disabled() {
+	$bp                = buddypress();
+	$active_components = $bp->active_components;
+
+	// Get all active custom post type.
+	$post_types = get_post_types( array( 'public' => true ) );
+
+	// Get all active custom post type.
+	$is_blog_component_active = false;
+
+	remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
+
+	foreach ( $post_types as $cpt ) {
+		// Exclude all the custom post type which is already in BuddyPress Activity support.
+		if ( in_array(
+			$cpt,
+			bb_feed_excluded_post_types()
+		) ) {
+			continue;
+		}
+
+		$enable_blog_feeds = bp_get_option( 'bp-feed-custom-post-type-' . $cpt );
+
+		if ( $enable_blog_feeds ) {
+			$is_blog_component_active = true;
+		}
+	}
+
+	add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
+
+	// Add blogs component to $active_components list.
+	if ( $is_blog_component_active ) {
+		$active_components['blogs'] = '1';
+	} else {
+		unset( $active_components['blogs'] );
+	}
+
+	// Save settings and upgrade schema.
+	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+	require_once $bp->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
+
+	$bp->active_components = $active_components;
+	bp_core_install( $bp->active_components );
+
+	// Mapping the component pages in page settings except registration pages.
+	bp_core_add_page_mappings( $bp->active_components, 'keep', false );
+	bp_update_option( 'bp-active-components', $bp->active_components );
+}
