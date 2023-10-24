@@ -1955,14 +1955,7 @@ function bb_feed_post_types() {
 	$post_types = get_post_types( array( 'public' => true ) );
 
 	// Exclude BP CPT.
-	$bp_exclude_cpt = array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
-
-	if ( function_exists( 'tutor') && function_exists( 'bb_tutorlms_get_post_types' ) ) {
-		$bp_exclude_cpt = array_merge(
-			$bp_exclude_cpt,
-			bb_tutorlms_get_post_types()
-		);
-	}
+	$bp_exclude_cpt = bb_feed_excluded_post_types();
 
 	$bp_excluded_cpt = array();
 
@@ -1976,6 +1969,23 @@ function bb_feed_post_types() {
 	}
 
 	return $bp_excluded_cpt;
+}
+
+/**
+ * Function to exclude Custom post types for activity settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array.
+ */
+function bb_feed_excluded_post_types() {
+
+	/**
+	 * Function to exclude Custom post types for activity settings.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	return apply_filters( 'bb_feed_excluded_post_types', array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' ) );
 }
 
 /**
