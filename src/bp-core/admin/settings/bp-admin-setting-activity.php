@@ -59,17 +59,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		$is_blog_component_active = false;
 
 		// Get all active custom post type.
-		$post_types = get_post_types( array( 'public' => true ) );
+		$post_types = bb_feed_post_types();
 
 		foreach ( $post_types as $cpt ) {
-			// Exclude all the custom post type which is already in BuddyPress Activity support.
-			if ( in_array(
-				$cpt,
-				array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' )
-			) ) {
-				continue;
-			}
-
 			$enable_blog_feeds = isset( $_POST[ "bp-feed-custom-post-type-$cpt" ] );
 
 			if ( $enable_blog_feeds ) {
