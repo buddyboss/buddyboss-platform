@@ -149,23 +149,25 @@ function bbp_filter_sample_permalink( $post_link, $_post, $leavename = false, $s
  */
 function bbp_sanitize_slug( $slug = '' ) {
 
-	// Don't allow multiple slashes in a row
+	// Don't allow multiple slashes in a row.
 	$value = preg_replace( '#/+#', '/', str_replace( '#', '', $slug ) );
 
-	// Strip out unsafe or unusable chars
+	// Strip out unsafe or unusable chars.
 	$value = esc_url_raw( $value );
 
-	// esc_url_raw() adds a scheme via esc_url(), so let's remove it
+	// esc_url_raw() adds a scheme via esc_url(), so let's remove it.
 	$value = str_replace( 'http://', '', $value );
 
 	// Trim off first and last slashes.
-	//
 	// We already prevent double slashing elsewhere, but let's prevent
 	// accidental poisoning of options values where we can.
 	$value = ltrim( $value, '/' );
 	$value = rtrim( $value, '/' );
 
-	// Filter the result and return
+	// Remove all the accents from the slug.
+	$value = remove_accents( $value );
+
+	// Filter the result and return.
 	return apply_filters( 'bbp_sanitize_slug', $value, $slug );
 }
 
@@ -182,6 +184,7 @@ function bbp_do_uninstall( $site_id = 0 ) {
 
 	switch_to_blog( $site_id );
 	bbp_delete_options();
+	bbp_remove_roles();
 	bbp_remove_caps();
 	flush_rewrite_rules();
 	restore_current_blog();
@@ -297,3 +300,58 @@ function bbp_core_get_import_forum_tools_settings_admin_tabs( $tabs ) {
 	return $tabs;
 }
 add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bbp_core_get_import_forum_tools_settings_admin_tabs', 16, 1 );
+
+/**
+ * Function to check table exists or not for converter.
+ *
+ * @since BuddyBoss 2.4.30
+ *
+ * @param object $opdb       Old forum Database.
+ * @param string $table_name Old forums table name.
+ *
+ * @return bool
+ */
+function bb_check_table_exists( $opdb, $table_name ) {
+	if ( empty( $opdb ) || empty( $table_name ) ) {
+		return false;
+	}
+
+	$query          = $opdb->prepare( "SHOW TABLES LIKE %s", $table_name );
+	$existing_table = $opdb->get_var( $query );
+
+	if ( $existing_table === $table_name ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * Function to check column exists or not for converter.
+ *
+ * @since BuddyBoss 2.4.30
+ *
+ * @param object $opdb        Old forum Database.
+ * @param string $table_name  Old forums table name.
+ * @param string $column_name Old forums tables column name.
+ *
+ * @return bool
+ */
+function bb_check_column_exists( $opdb, $table_name, $column_name ) {
+	if ( empty( $opdb ) || empty( $table_name ) || empty( $column_name ) ) {
+		return false;
+	}
+
+	$table_name = $opdb->prefix . $table_name;
+
+	if ( bb_check_table_exists( $opdb, $table_name ) ) {
+		$field_array = $opdb->get_results( "DESCRIBE {$table_name}", ARRAY_A );
+		if ( false !== $field_array ) {
+			$field_names = array_column( $field_array, 'Field' );
+
+			return in_array( $column_name, $field_names );
+		}
+	}
+
+	return false;
+}

@@ -330,6 +330,42 @@ define({ "api": [
     "groupTitle": "Activity"
   },
   {
+    "type": "DELETE",
+    "url": "/wp-json/buddyboss/v1/activity/:id/comment/:comment_id",
+    "title": "Delete activity comment",
+    "name": "DeleteBBActivityComment",
+    "group": "Activity",
+    "description": "<p>Delete single activity comment</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "comment_id",
+            "description": "<p>A unique numeric ID for the activity comment.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-activity/classes/class-bp-rest-activity-comment-endpoint.php",
+    "groupTitle": "Activity"
+  },
+  {
     "type": "GET",
     "url": "/wp-json/buddyboss/v1/activity/:id/comment",
     "title": "Get activity comments",
@@ -607,6 +643,55 @@ define({ "api": [
   },
   {
     "type": "GET",
+    "url": "/wp-json/buddyboss/v1/activity/:id/comment/:comment_id",
+    "title": "Get Activity Comment",
+    "name": "GetBBActivityComment",
+    "group": "Activity",
+    "description": "<p>Retrieve single activity comment</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "comment_id",
+            "description": "<p>A unique numeric ID for the activity comment.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "stream",
+              "threaded",
+              "false"
+            ],
+            "optional": true,
+            "field": "display_comments",
+            "defaultValue": "false",
+            "description": "<p>No comments by default, stream for within stream display, threaded for below each activity item.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-activity/classes/class-bp-rest-activity-comment-endpoint.php",
+    "groupTitle": "Activity"
+  },
+  {
+    "type": "GET",
     "url": "/wp-json/buddyboss/v1/activity/link-preview",
     "title": "Link Preview",
     "name": "GetBBActivityLinkPreview",
@@ -787,6 +872,91 @@ define({ "api": [
       }
     },
     "filename": "src/bp-activity/classes/class-bp-rest-activity-endpoint.php",
+    "groupTitle": "Activity"
+  },
+  {
+    "type": "PATCH",
+    "url": "/wp-json/buddyboss/v1/activity/:id/comment/:comment_id",
+    "title": "Update activity comment",
+    "name": "UpdateBBActivityComment",
+    "group": "Activity",
+    "description": "<p>Update single activity comment</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "comment_id",
+            "description": "<p>A unique numeric ID for the activity comment.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "parent_id",
+            "description": "<p>The ID of some other object activity associated with this one.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "user_id",
+            "description": "<p>The ID for the author of the activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "content",
+            "description": "<p>Allowed HTML content for the activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "bp_media_ids",
+            "description": "<p>Media specific IDs when Media component is enable.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "bp_videos",
+            "description": "<p>Video specific IDs when Media component is enable.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "bp_documents",
+            "description": "<p>Document specific IDs when Media component is enable.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "media_gif",
+            "description": "<p>Save gif data into activity when Media component is enable. param(url,mp4)</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-activity/classes/class-bp-rest-activity-comment-endpoint.php",
     "groupTitle": "Activity"
   },
   {
@@ -3378,6 +3548,35 @@ define({ "api": [
   },
   {
     "type": "GET",
+    "url": "/wp-json/buddyboss/v1/forums/link-preview",
+    "title": "Link Preview",
+    "name": "GetBBForumsLinkPreview",
+    "group": "Forums",
+    "description": "<p>Retrieve link preview Forums.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "url",
+            "description": "<p>URL for the generate link preview.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-forums/classes/class-bb-rest-forums-link-preview-endpoint.php",
+    "groupTitle": "Forums"
+  },
+  {
+    "type": "GET",
     "url": "/wp-json/buddyboss/v1/forums/:id",
     "title": "Forum",
     "name": "GetBBPForum",
@@ -3407,7 +3606,7 @@ define({ "api": [
   },
   {
     "type": "POST",
-    "url": "/wp-json/buddyboss/v1/subscribe/:id",
+    "url": "/wp-json/buddyboss/v1/forums/subscribe/:id",
     "title": "Subscribe/Unsubscribe Forum",
     "name": "GetBBPForumSubscribe",
     "group": "Forums",
@@ -4398,6 +4597,13 @@ define({ "api": [
             "field": "scope",
             "defaultValue": "all",
             "description": "<p>Limit result set to items with a specific scope.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "can_post",
+            "description": "<p>Fetch current users groups which can post activity in it.</p>"
           }
         ]
       }
@@ -6458,6 +6664,35 @@ define({ "api": [
   },
   {
     "type": "POST",
+    "url": "/wp-json/buddyboss/v1/members/presence",
+    "title": "Member Presence State",
+    "name": "GetBBMembers-MembersPresence",
+    "group": "Members",
+    "description": "<p>Members Presence.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": false,
+            "field": "ids",
+            "description": "<p>A unique numeric ID for the members</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-members/classes/class-bp-rest-members-actions-endpoint.php",
+    "groupTitle": "Members"
+  },
+  {
+    "type": "POST",
     "url": "/wp-json/buddyboss/v1/members/action/:user_id",
     "title": "Member Action",
     "name": "GetBBMembers-UpdateMembersAction",
@@ -6863,6 +7098,13 @@ define({ "api": [
             "optional": false,
             "field": "user_id",
             "description": "<p>Limit result to messages created by a specific user.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "is_hidden",
+            "description": "<p>List the archived threads.</p>"
           }
         ]
       }
@@ -6947,6 +7189,28 @@ define({ "api": [
             "optional": false,
             "field": "group_id",
             "description": "<p>Group id to search members.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": true,
+            "field": "exclude",
+            "description": "<p>Ensure result set excludes specific member IDs.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "description": "<p>Current page of the collection.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "per_page",
+            "defaultValue": "10",
+            "description": "<p>Maximum number of items to be returned in result set.</p>"
           }
         ]
       }
@@ -7380,24 +7644,44 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "Number",
-            "optional": false,
-            "field": "group_id",
-            "description": "<p>The ID of the group to which the user has been invited.</p>"
+            "optional": true,
+            "field": "item_id",
+            "description": "<p>The ID of the item associated with the notification.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "secondary_item_id",
+            "description": "<p>The ID of the secondary item associated with the notification.</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
-            "field": "message",
-            "description": "<p>The optional message to send to the invited user.</p>"
+            "optional": true,
+            "field": "component",
+            "description": "<p>The name of the component associated with the notification.</p>"
           },
           {
             "group": "Parameter",
-            "type": "Boolean",
+            "type": "String",
             "optional": true,
-            "field": "send_invite",
-            "defaultValue": "true",
-            "description": "<p>Whether the invite should be sent to the invitee.</p>"
+            "field": "action",
+            "description": "<p>The name of the component action associated with the notification.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "date",
+            "description": "<p>The date the notification was sent/created.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "is_new",
+            "description": "<p>Whether the notification is new or not.</p>"
           }
         ]
       }
@@ -7607,6 +7891,22 @@ define({ "api": [
         ]
       }
     },
+    "filename": "src/bp-notifications/classes/class-bp-rest-notifications-endpoint.php",
+    "groupTitle": "Notifications"
+  },
+  {
+    "type": "PATCH",
+    "url": "/wp-json/buddyboss/v1/notifications/bulk/read",
+    "title": "Notification read in bulk",
+    "name": "UpdateBBNotificationRead",
+    "group": "Notifications",
+    "description": "<p>Mark as read bulk notifications</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
     "filename": "src/bp-notifications/classes/class-bp-rest-notifications-endpoint.php",
     "groupTitle": "Notifications"
   },
@@ -8881,6 +9181,17 @@ define({ "api": [
   },
   {
     "type": "GET",
+    "url": "/wp-json/buddyboss/v1/reactions",
+    "title": "Get Reactions",
+    "name": "GetBBReactions",
+    "group": "Reactions",
+    "description": "<p>Retrieve supported reactions</p>",
+    "version": "1.0.0",
+    "filename": "src/bp-core/classes/class-bb-rest-reactions-endpoint.php",
+    "groupTitle": "Reactions"
+  },
+  {
+    "type": "GET",
     "url": "/wp-json/buddyboss/v1/settings",
     "title": "Settings",
     "name": "GetBBSettings",
@@ -9106,6 +9417,448 @@ define({ "api": [
     },
     "filename": "src/bp-members/classes/class-bp-rest-signup-endpoint.php",
     "groupTitle": "Signups"
+  },
+  {
+    "type": "POST",
+    "url": "/wp-json/buddyboss/v1/subscription",
+    "title": "Create Subscription",
+    "name": "CreateBBSubscription",
+    "group": "Subscription",
+    "description": "<p>Create subscription</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "forum",
+              "topic"
+            ],
+            "optional": false,
+            "field": "type",
+            "description": "<p>The type subscription.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "item_id",
+            "description": "<p>The ID of forum/topic.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "secondary_item_id",
+            "description": "<p>ID of the parent forum/topic.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "user_id",
+            "description": "<p>The ID of the user who created the Subscription. default logged-in user id.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "blog_id",
+            "description": "<p>The ID of site. default current site id.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-subscriptions-endpoint.php",
+    "groupTitle": "Subscription"
+  },
+  {
+    "type": "DELETE",
+    "url": "/wp-json/buddyboss/v1/subscription/:id",
+    "title": "Delete Subscription",
+    "name": "DeleteBBSubscription",
+    "group": "Subscriptions",
+    "description": "<p>Delete a subscription.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the Subscription.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-subscriptions-endpoint.php",
+    "groupTitle": "Subscriptions"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/subscription/:id",
+    "title": "Get Subscription",
+    "name": "GetBBSubscription",
+    "group": "Subscriptions",
+    "description": "<p>Retrieve single subscription</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the Subscription.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-subscriptions-endpoint.php",
+    "groupTitle": "Subscriptions"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/subscription-types",
+    "title": "Get Subscription types",
+    "name": "GetBBSubscriptionTypes",
+    "group": "Subscriptions",
+    "description": "<p>Retrieve subscription Types</p>",
+    "version": "1.0.0",
+    "filename": "src/bp-core/classes/class-bb-rest-subscriptions-endpoint.php",
+    "groupTitle": "Subscriptions"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/subscription",
+    "title": "Get Subscriptions",
+    "name": "GetBBSubscriptions",
+    "group": "Subscriptions",
+    "description": "<p>Retrieve subscriptions</p>",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "defaultValue": "1",
+            "description": "<p>Current page of the collection.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "per_page",
+            "defaultValue": "10",
+            "description": "<p>Maximum number of items to be returned in result set.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "search",
+            "description": "<p>Limit results to those matching a string.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "forum",
+              "topic"
+            ],
+            "optional": true,
+            "field": "type",
+            "description": "<p>Limit results based on subscription type.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "asc",
+              "desc"
+            ],
+            "optional": true,
+            "field": "order",
+            "defaultValue": "desc",
+            "description": "<p>Order sort attribute ascending or descending.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "id",
+              "type",
+              "item_id",
+              "date_recorded"
+            ],
+            "optional": true,
+            "field": "orderby",
+            "defaultValue": "date_recorded",
+            "description": "<p>Order Subscriptions by which attribute.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "blog_id",
+            "description": "<p>Get subscription site wise. Default current site ID.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "item_id",
+            "description": "<p>Get Subscriptions that are user subscribed items.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "secondary_item_id",
+            "description": "<p>Get Subscriptions that are children of the subscribed items.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "status",
+            "defaultValue": "1",
+            "description": "<p>Active Subscriptions. 1 = Active, 0 = Inactive.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "include",
+            "description": "<p>Ensure result set includes Subscriptions with specific IDs.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "exclude",
+            "description": "<p>Ensure result set excludes Subscriptions with specific IDs.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-subscriptions-endpoint.php",
+    "groupTitle": "Subscriptions"
+  },
+  {
+    "type": "DELETE",
+    "url": "/wp-json/buddyboss/v1/user-reactions/:id",
+    "title": "Delete User Reaction",
+    "name": "DeleteUserReaction",
+    "group": "User_Reaction",
+    "description": "<p>Delete a single user reaction.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the user reaction.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-reactions-endpoint.php",
+    "groupTitle": "User_Reaction"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/user-reactions",
+    "title": "Get Reactions",
+    "name": "GetBBUserReactions",
+    "group": "User_Reactions",
+    "description": "<p>Retrieve user reactions</p>",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "description": "<p>Current page of the collection.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "per_page",
+            "defaultValue": "10",
+            "description": "<p>Maximum number of items to be returned in result set.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "reaction_id",
+            "description": "<p>Limit result set to items with a specific Reaction ID.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "item_type",
+            "description": "<p>Limit result set to items with a specific item type.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "item_id",
+            "description": "<p>Limit result set to items with a specific item ID.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "user_id",
+            "description": "<p>Limit result set to items with a specific user ID.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "allowedValues": [
+              "asc",
+              "desc"
+            ],
+            "optional": true,
+            "field": "order",
+            "defaultValue": "desc",
+            "description": "<p>Order sort attribute ascending or descending.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "allowedValues": [
+              "id",
+              "date_created"
+            ],
+            "optional": true,
+            "field": "order_by",
+            "defaultValue": "id",
+            "description": "<p>Order by a specific parameter.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-reactions-endpoint.php",
+    "groupTitle": "User_Reactions"
+  },
+  {
+    "type": "POST",
+    "url": "/wp-json/buddyboss/v1/user-reactions",
+    "title": "Create user reactions",
+    "name": "CreateUserReaction",
+    "group": "User_reaction",
+    "description": "<p>Create user reactions</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "reaction_id",
+            "description": "<p>The ID of reaction.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "item_type",
+            "description": "<p>Type of item.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "item_id",
+            "description": "<p>The ID of item.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "user_id",
+            "description": "<p>The ID for the author of the reaction.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-reactions-endpoint.php",
+    "groupTitle": "User_reaction"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/user-reactions/:id",
+    "title": "Get user reaction",
+    "name": "GetBBUserReaction",
+    "group": "User_reaction",
+    "description": "<p>Retrieve single user reaction</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the user reaction.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-reactions-endpoint.php",
+    "groupTitle": "User_reaction"
   },
   {
     "type": "POST",

@@ -18,32 +18,6 @@ function bp_core_register_common_scripts() {
 	$min = bp_core_get_minified_asset_suffix();
 	$url = buddypress()->plugin_url . 'bp-core/js/';
 
-	/*
-	 * Moment.js locale.
-	 *
-	 * Try to map current WordPress locale to a moment.js locale file for loading.
-	 *
-	 * eg. French (France) locale for WP is fr_FR. Here, we try to find fr-fr.js
-	 *     (this file doesn't exist).
-	 */
-	$locale = sanitize_file_name( strtolower( get_locale() ) );
-	$locale = str_replace( '_', '-', $locale );
-	if ( file_exists( buddypress()->core->path . "bp-core/js/vendor/moment-js/locale/{$locale}{$min}.js" ) ) {
-		$moment_locale_url = $url . "vendor/moment-js/locale/{$locale}{$min}.js";
-
-		/*
-		* Try to find the short-form locale.
-		*
-		* eg. French (France) locale for WP is fr_FR. Here, we try to find fr.js
-		*     (this exists).
-		*/
-	} else {
-		$locale = substr( $locale, 0, strpos( $locale, '-' ) );
-		if ( file_exists( buddypress()->core->path . "bp-core/js/vendor/moment-js/locale/{$locale}{$min}.js" ) ) {
-			$moment_locale_url = $url . "vendor/moment-js/locale/{$locale}{$min}.js";
-		}
-	}
-
 	// Set up default scripts to register.
 	$scripts = array(
 		// Legacy.
@@ -110,14 +84,9 @@ function bp_core_register_common_scripts() {
 		),
 
 		// Version 2.7.
-		'bp-moment'           => array(
-			'file'         => "{$url}vendor/moment-js/moment{$min}.js",
-			'dependencies' => array(),
-			'footer'       => true,
-		),
 		'bp-livestamp'        => array(
-			'file'         => "{$url}vendor/livestamp{$min}.js",
-			'dependencies' => array( 'jquery', 'bp-moment' ),
+			'file'         => "{$url}livestamp{$min}.js",
+			'dependencies' => array( 'jquery', 'moment' ),
 			'footer'       => true,
 		),
 
@@ -144,7 +113,7 @@ function bp_core_register_common_scripts() {
 			'footer'       => true,
 		),
 		'emojionearea'                  => array(
-			'file'         => "{$url}emojionearea-edited.js",
+			'file'         => "{$url}emojionearea-edited{$min}.js",
 			'dependencies' => array( 'emojione' ),
 			'footer'       => true,
 		),
@@ -194,7 +163,16 @@ function bp_core_register_common_scripts() {
 			'dependencies' => array(),
 			'footer'       => false,
 		),
-
+		'bb-twemoji'                    => array(
+			'file'         => includes_url( "js/twemoji{$min}.js" ),
+			'dependencies' => array(),
+			'footer'       => false,
+		),
+		'bb-emoji-loader'               => array(
+			'file'         => "{$url}bb-emoji-loader{$min}.js",
+			'dependencies' => array( 'bb-twemoji' ),
+			'footer'       => false,
+		),
 	);
 
 	// Add the "register.js" file if it's a register page and Profile Type field.
@@ -203,15 +181,6 @@ function bp_core_register_common_scripts() {
 			'file'         => "{$url}register{$min}.js",
 			'dependencies' => array( 'jquery' ),
 			'footer'       => false,
-		);
-	}
-
-	// Version 2.7 - Add Moment.js locale to our $scripts array if we found one.
-	if ( isset( $moment_locale_url ) ) {
-		$scripts['bp-moment-locale'] = array(
-			'file'         => esc_url( $moment_locale_url ),
-			'dependencies' => array( 'bp-moment' ),
-			'footer'       => true,
 		);
 	}
 
@@ -224,8 +193,8 @@ function bp_core_register_common_scripts() {
 	 * @since BuddyPress 2.1.0 'jquery-caret', 'jquery-atwho' added.
 	 * @since BuddyPress 2.3.0 'bp-plupload', 'bp-avatar', 'bp-webcam' added.
 	 * @since BuddyPress 2.4.0 'bp-cover-image' added.
-	 * @since BuddyPress 2.7.0 'bp-moment', 'bp-livestamp' added.
-	 *              'bp-moment-locale' is added conditionally if a moment.js locale file is found.
+	 * @since BuddyPress 2.7.0 'bp-moment', 'bp-livestamp' added. 'bp-moment-locale' is added conditionally if a moment.js locale file is found.
+	 * @since BuddyBoss 2.4.50 Removed 'bp-moment' and used WordPress moment.js.
 	 *
 	 * @param array $value Array of javascript file information to register.
 	 */
@@ -241,26 +210,19 @@ function bp_core_register_common_scripts() {
 	/**
 	 * Translation for select2 script text.
 	 */
-	$bp_select2 = array( 'lang' => 'en' );
-
-	if ( ! function_exists( 'wp_get_available_translations' ) ) {
-		require_once ABSPATH . 'wp-admin/includes/translation-install.php';
-		$translations = wp_get_available_translations();
-	} else {
-		$translations = wp_get_available_translations();
-	}
-
-	if ( ! empty( $translations ) ) {
-		$file_path = buddypress()->plugin_dir . 'bp-core/js/';
-		if ( isset( $translations[ get_locale() ] ) && ! empty( current( $translations[ get_locale() ]['iso'] ) ) && file_exists( $file_path . 'vendor/i18n/' . current( $translations[ get_locale() ]['iso'] ) . '.js' ) ) {
-			$lang               = current( $translations[ get_locale() ]['iso'] );
-			$bp_select2['lang'] = $lang;
-			wp_register_script( 'bp-select2-local', "{$url}vendor/i18n/{$bp_select2['lang']}.js", array( 'bp-select2' ), $version, false );
-		} elseif ( ! empty( get_bloginfo( 'language' ) ) && file_exists( $file_path . 'vendor/i18n/' . get_bloginfo( 'language' ) . '.js' ) ) {
-			$bp_select2['lang'] = get_bloginfo( 'language' );
-			wp_register_script( 'bp-select2-local', "{$url}vendor/i18n/{$bp_select2['lang']}.js", array( 'bp-select2' ), $version, false );
-		}
-	}
+	$bp_select2 = array(
+		'i18n' => array(
+			'errorLoading'     => esc_js( __( 'The results could not be loaded.', 'buddyboss' ) ),
+			'inputTooLong'     => esc_js( __( 'Please delete %% character', 'buddyboss' ) ),
+			'inputTooShort'    => esc_js( __( 'Please enter %% or more characters', 'buddyboss' ) ),
+			'loadingMore'      => esc_js( __( 'Loading more results…', 'buddyboss' ) ),
+			'maximumSelected'  => esc_js( __( 'You can only select %% item', 'buddyboss' ) ),
+			'noResults'        => esc_js( __( 'No results found', 'buddyboss' ) ),
+			'searching'        => esc_js( __( 'Searching…', 'buddyboss' ) ),
+			'removeAllItems'   => esc_js( __( 'Remove all items', 'buddyboss' ) ),
+			'msginputTooShort' => esc_js( __( 'Start typing to find members', 'buddyboss' ) ),
+		),
+	);
 
 	wp_localize_script( 'bp-select2', 'bp_select2', $bp_select2 );
 
@@ -761,7 +723,11 @@ add_action( 'bp_enqueue_scripts', 'bp_add_cover_image_inline_css', 11 );
  * @since BuddyPress 2.7.0
  */
 function bp_core_add_livestamp() {
-	if ( ! is_buddypress() ) {
+	if (
+		! is_buddypress() &&
+		( ! function_exists( 'bp_search_is_search' ) || ! bp_search_is_search() ) &&
+		did_action( 'elementor/theme/before_do_single' )
+	) {
 		return;
 	}
 
@@ -776,64 +742,88 @@ add_action( 'bp_enqueue_scripts', 'bp_core_add_livestamp' );
  */
 function bp_core_enqueue_livestamp() {
 	// If bp-livestamp isn't enqueued, do it now.
-	if ( wp_script_is( 'bp-livestamp' ) ) {
+	if ( wp_script_is( 'bp-livestamp' ) || ! wp_script_is( 'moment', 'registered' ) ) {
 		return;
 	}
 
-	/*
-	 * Only enqueue Moment.js locale if we registered it in
-	 * bp_core_register_common_scripts().
-	 */
-	if ( wp_script_is( 'bp-moment-locale', 'registered' ) ) {
-		wp_enqueue_script( 'bp-moment-locale' );
+	wp_add_inline_script(
+		'moment',
+		sprintf(
+			"moment.updateLocale( '%s', %s );",
+			get_user_locale(),
+			wp_json_encode(
+				array(
+					'relativeTime' => array(
+						/* Translators: %s is the relative time (eg: in a few seconds). */
+						'future' => __( 'in %s', 'buddyboss' ),
+						/* translators: %s: the human time diff. */
+						'past'   => __( '%s ago', 'buddyboss' ),
+						's'      => __( 'second', 'buddyboss' ),
+						'ss'     => __( '%d seconds', 'buddyboss' ),
+						'm'      => __( 'a minute', 'buddyboss' ),
+						/* Translators: %d is the amount of minutes. */
+						'mm'     => __( '%d minutes', 'buddyboss' ),
+						'h'      => __( 'an hour', 'buddyboss' ),
+						/* Translators: %d is the amount of hours. */
+						'hh'     => __( '%d hours', 'buddyboss' ),
+						'd'      => __( 'a day', 'buddyboss' ),
+						/* Translators: %d is the amount of days. */
+						'dd'     => __( '%d days', 'buddyboss' ),
+						'w'      => __( 'a week', 'buddyboss' ),
+						/* Translators: %d is the amount of weeks. */
+						'ww'     => __( '%d weeks', 'buddyboss' ),
+						'M'      => __( 'a month', 'buddyboss' ),
+						/* Translators: %d is the amount of months. */
+						'MM'     => __( '%d months', 'buddyboss' ),
+						'y'      => __( 'a year', 'buddyboss' ),
+						/* Translators: %d is the amount of years. */
+						'yy'     => __( '%d years', 'buddyboss' ),
+					),
+				)
+			)
+		)
+	);
 
-		if ( function_exists( 'wp_add_inline_script' ) ) {
-			wp_add_inline_script( 'bp-livestamp', bp_core_moment_js_config() );
-		} else {
-			add_action( 'wp_footer', '_bp_core_moment_js_config_footer', 20 );
-		}
-	}
+	wp_localize_script(
+		'bp-livestamp',
+		'bb_livestamp',
+		array(
+			'year_in_seconds'   => YEAR_IN_SECONDS,
+			'day_in_seconds'    => DAY_IN_SECONDS,
+			'week_in_seconds'   => WEEK_IN_SECONDS,
+			'hour_in_seconds'   => HOUR_IN_SECONDS,
+			'minute_in_seconds' => MINUTE_IN_SECONDS,
+			'chunks'            => array(
+				YEAR_IN_SECONDS,
+				YEAR_IN_SECONDS / 6,
+				30 * DAY_IN_SECONDS,
+				WEEK_IN_SECONDS,
+				DAY_IN_SECONDS,
+				HOUR_IN_SECONDS,
+				MINUTE_IN_SECONDS,
+				1,
+			),
+			'unknown_text'      => apply_filters( 'bp_core_time_since_unknown_text', esc_html__( 'sometime', 'buddyboss' ) ),
+			'right_now_text'    => apply_filters( 'bp_core_time_since_right_now_text', esc_html__( 'a second', 'buddyboss' ) ),
+			'ago_text'          => apply_filters( 'bp_core_time_since_ago_text', esc_html__( '%s ago', 'buddyboss' ) ),
+			'second_text'       => __( 'a second', 'buddyboss' ),
+			'seconds_text'      => __( 'seconds', 'buddyboss' ),
+			'minute_text'       => __( 'a minute', 'buddyboss' ),
+			'minutes_text'      => __( 'minutes', 'buddyboss' ),
+			'hour_text'         => __( 'an hour', 'buddyboss' ),
+			'hours_text'        => __( 'hours', 'buddyboss' ),
+			'day_text'          => __( 'a day', 'buddyboss' ),
+			'days_text'         => __( 'days', 'buddyboss' ),
+			'week_text'         => __( 'a week', 'buddyboss' ),
+			'weeks_text'        => __( 'weeks', 'buddyboss' ),
+			'month_text'        => __( 'a month', 'buddyboss' ),
+			'months_text'       => __( 'months', 'buddyboss' ),
+			'year_text'         => __( 'a year', 'buddyboss' ),
+			'years_text'        => __( 'years', 'buddyboss' ),
+		)
+	);
 
 	wp_enqueue_script( 'bp-livestamp' );
-}
-
-/**
- * Return moment.js config.
- *
- * @since BuddyPress 2.7.0
- *
- * @return string
- */
-function bp_core_moment_js_config() {
-	// Grab the locale from the enqueued JS.
-	$moment_locale = wp_scripts()->query( 'bp-moment-locale' );
-	$moment_locale = substr( $moment_locale->src, strpos( $moment_locale->src, '/moment-js/locale/' ) + 18 );
-	$moment_locale = str_replace( '.js', '', $moment_locale );
-
-	$inline_js = <<<EOD
-jQuery(function() {
-	moment.locale( '{$moment_locale}' );
-});
-EOD;
-
-	return $inline_js;
-}
-
-/**
- * Print moment.js config in page footer.
- *
- * Will be removed once we set our minimum version of WP 4.5.
- *
- * @since BuddyPress 2.7.0
- *
- * @access private
- */
-function _bp_core_moment_js_config_footer() {
-	if ( ! wp_script_is( 'bp-moment-locale' ) ) {
-		return;
-	}
-
-	printf( '<script>%s</script>', bp_core_moment_js_config() );
 }
 
 /**
@@ -928,6 +918,7 @@ function bp_core_register_page_js() {
 
 	if ( bp_is_register_page() && bp_get_xprofile_member_type_field_id() > 0 ) {
 		wp_enqueue_script( 'bp-register-page' );
+		wp_enqueue_editor();
 
 		$data = array(
 			'ajaxurl'        => bp_core_ajax_url(),
@@ -946,20 +937,92 @@ function bp_core_register_page_js() {
 add_action( 'bp_enqueue_scripts', 'bp_core_register_page_js' );
 
 function bp_core_enqueue_isInViewPort() {
-	if ( bp_is_user_media() ||
-		 bp_is_single_album() ||
-		 bp_is_media_directory() ||
-		 bp_is_activity_component() ||
-		 bp_is_group_activity() ||
-		 bp_is_group_media() ||
-		 bp_is_group_albums() ||
-		 bp_is_messages_component() ||
-		 ( function_exists( 'bp_is_profile_media_support_enabled' ) && bp_is_profile_media_support_enabled() ) ||
-		 ( function_exists( 'bp_is_group_media_support_enabled' ) && bp_is_group_media_support_enabled() ) ||
-		 ( function_exists( 'bp_is_group_albums_support_enabled' ) && bp_is_group_albums_support_enabled() ) ||
-		 ( function_exists( 'bp_is_messages_media_support_enabled' ) && bp_is_messages_media_support_enabled() )
+	if (
+		bp_is_user_media() ||
+		bp_is_single_album() ||
+		bp_is_media_directory() ||
+		bp_is_activity_component() ||
+		bp_is_group_activity() ||
+		bp_is_group_media() ||
+		bp_is_group_albums() ||
+		bp_is_messages_component() ||
+		( function_exists( 'bp_is_profile_media_support_enabled' ) && bp_is_profile_media_support_enabled() ) ||
+		( function_exists( 'bp_is_group_media_support_enabled' ) && bp_is_group_media_support_enabled() ) ||
+		( function_exists( 'bp_is_group_albums_support_enabled' ) && bp_is_group_albums_support_enabled() ) ||
+		( function_exists( 'bp_is_messages_media_support_enabled' ) && bp_is_messages_media_support_enabled() )
 	) {
 		wp_enqueue_script( 'isInViewport' );
 	}
 }
+
 add_action( 'bp_enqueue_scripts', 'bp_core_enqueue_isInViewPort', 5 );
+
+/**
+ * Load the JS template for link preview.
+ *
+ * @since BuddyBoss 2.3.60
+ */
+function bb_load_link_preview_js_template() {
+	bp_get_template_part( 'common/js-templates/members/bb-link-preview' );
+}
+
+add_action( 'bp_enqueue_scripts', 'bb_load_link_preview_js_template' );
+
+/**
+ * Load the JS to replace emoji with image.
+ *
+ * @since BuddyBoss 2.4.40
+ */
+function bb_load_emoji_detection_script() {
+	// Get the current WordPress version.
+	$wp_version = get_bloginfo( 'version' );
+
+	// Check if the WordPress version is above 6.0.
+	if ( version_compare( $wp_version, '6.0', '>' ) ) {
+
+		$settings = array(
+			/**
+			 * Filters the URL where emoji png images are hosted.
+			 *
+			 * @since BuddyBoss 2.4.40
+			 *
+			 * @param string $url The emoji base URL for png images.
+			 */
+			'baseUrl' => apply_filters( 'bb_emoji_url', 'https://s.w.org/images/core/emoji/14.0.0/72x72/' ),
+
+			/**
+			 * Filters the extension of the emoji png files.
+			 *
+			 * @since BuddyBoss 2.4.40
+			 *
+			 * @param string $extension The emoji extension for png files. Default .png.
+			 */
+			'ext'     => apply_filters( 'bb_emoji_ext', '.png' ),
+
+			/**
+			 * Filters the URL where emoji SVG images are hosted.
+			 *
+			 * @since BuddyBoss 2.4.40
+			 *
+			 * @param string $url The emoji base URL for svg images.
+			 */
+			'svgUrl'  => apply_filters( 'bb_emoji_svg_url', 'https://s.w.org/images/core/emoji/14.0.0/svg/' ),
+
+			/**
+			 * Filters the extension of the emoji SVG files.
+			 *
+			 * @since BuddyBoss 2.4.40
+			 *
+			 * @param string $extension The emoji extension for svg files. Default .svg.
+			 */
+			'svgExt'  => apply_filters( 'bb_emoji_svg_ext', '.svg' ),
+		);
+
+		// Image emoji support.
+		wp_enqueue_script( 'bb-twemoji' );
+		wp_localize_script( 'bb-twemoji', 'bbemojiSettings', $settings );
+		wp_enqueue_script( 'bb-emoji-loader' );
+	}
+}
+
+add_action( 'bp_enqueue_scripts', 'bb_load_emoji_detection_script', 7 );

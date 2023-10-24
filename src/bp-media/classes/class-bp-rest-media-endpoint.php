@@ -194,6 +194,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			$args['activity_id'] = $request['activity_id'];
 		}
 
+		if ( ! empty( $request['message_id'] ) ) {
+			$args['message_id'] = $request['message_id'];
+		}
+
 		if ( ! empty( $request['privacy'] ) ) {
 			$args['privacy'] = $request['privacy'];
 		}
@@ -481,6 +485,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			$args['content'] = $request['content'];
 		}
 
+		if ( isset( $request['message_id'] ) && ! empty( $request['message_id'] ) ) {
+			$args['message_id'] = $request['message_id'];
+		}
+
 		if (
 			function_exists( 'bb_media_user_can_upload' ) &&
 			! bb_media_user_can_upload( bp_loggedin_user_id(), (int) ( isset( $args['group_id'] ) ? $args['group_id'] : 0 ) )
@@ -644,7 +652,9 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 							'status' => 404,
 						)
 					);
-				} elseif ( function_exists( 'bp_get_attachment_media_id' ) && ! empty( bp_get_attachment_media_id( (int) $attachment_id ) ) && empty( $request['album_id'] ) ) {
+				} elseif ( 'messages' !== $request['component'] &&
+					function_exists( 'bp_get_attachment_media_id' ) && ! empty( bp_get_attachment_media_id( (int) $attachment_id ) ) &&
+					empty( $request['album_id'] ) ) {
 					$retval = new WP_Error(
 						'bp_rest_duplicate_media_upload_id',
 						sprintf(
@@ -715,7 +725,9 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'group_id'      => $media->group_id,
 			'album_id'      => $media->album_id,
 			'activity_id'   => $media->activity_id,
+			'message_id'    => $media->message_id,
 			'user_id'       => $media->user_id,
+			'menu_order'    => $media->menu_order,
 		);
 
 		if ( isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
@@ -724,6 +736,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		if ( isset( $request['privacy'] ) && ! empty( $request['privacy'] ) ) {
 			$args['privacy'] = $request['privacy'];
+		}
+
+		if ( isset( $request['message_id'] ) && ! empty( $request['message_id'] ) ) {
+			$args['message_id'] = $request['message_id'];
 		}
 
 		if ( isset( $request['album_id'] ) && (int) $args['album_id'] !== (int) $request['album_id'] ) {
@@ -930,8 +946,9 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		$medias = BP_Media::get(
 			array(
-				'in'    => $media_ids,
-				'video' => true,
+				'in'       => $media_ids,
+				'video'    => true,
+				'per_page' => 0,
 			)
 		);
 
@@ -1076,7 +1093,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! bp_media_user_can_delete( $id ) ) {
-			return WP_Error(
+			return new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, you are not allowed to delete this media.', 'buddyboss' ),
 				array(
@@ -1178,6 +1195,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 */
 	public function upload_item( $request ) {
 
+		if ( 'messages' === $request->get_param( 'component' ) ) {
+			$_POST['component'] = 'messages';
+		}
+
 		$file = $request->get_file_params();
 
 		if ( empty( $file ) ) {
@@ -1232,7 +1253,12 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'upload_id'    => $upload['id'],
 			'upload'       => $upload['url'],
 			'upload_thumb' => $upload['thumb'],
+			'name'         => $upload['name'],
 		);
+
+		if ( 'messages' === $request->get_param( 'component' ) && isset( $upload['msg_url'] ) ) {
+			$retval['msg_url'] = $upload['msg_url'];
+		}
 
 		$response = rest_ensure_response( $retval );
 
@@ -1398,10 +1424,11 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'attachment_id'         => $media->attachment_id,
 			'user_id'               => $media->user_id,
 			'title'                 => $media->title,
-			'description'           => get_post_field( 'post_content', $media->attachment_id ),
+			'description'           => wp_specialchars_decode( $media->description, ENT_QUOTES ),
 			'album_id'              => $media->album_id,
 			'group_id'              => $media->group_id,
 			'activity_id'           => $media->activity_id,
+			'message_id'            => $media->message_id,
 			'hide_activity_actions' => false,
 			'privacy'               => $media->privacy,
 			'menu_order'            => $media->menu_order,
@@ -1582,6 +1609,12 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				'activity_id'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'A unique numeric ID for the activity.', 'buddyboss' ),
+					'readonly'    => true,
+					'type'        => 'integer',
+				),
+				'message_id'            => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'A unique numeric ID for the Message thread.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
@@ -1841,6 +1874,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$content       = ( isset( $args['content'] ) ? $args['content'] : false );
 		$user_id       = ( ! empty( $args['user_id'] ) ? $args['user_id'] : get_current_user_id() );
 		$id            = ( ! empty( $args['id'] ) ? $args['id'] : '' );
+		$message_id    = ( ! empty( $args['message_id'] ) ? $args['message_id'] : 0 );
 
 		$group_id = ( ! empty( $args['group_id'] ) ? $args['group_id'] : false );
 		$album_id = ( ! empty( $args['album_id'] ) ? $args['album_id'] : false );
@@ -1881,19 +1915,25 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			// extract the nice title name.
 			$title = get_the_title( $wp_attachment_id );
 
-			$media_id = bp_media_add(
-				array(
-					'id'            => $id,
-					'attachment_id' => $wp_attachment_id,
-					'title'         => $title,
-					'activity_id'   => $media_activity_id,
-					'album_id'      => ( ! empty( $args['album_id'] ) ? $args['album_id'] : false ),
-					'group_id'      => ( ! empty( $args['group_id'] ) ? $args['group_id'] : false ),
-					'privacy'       => $media_privacy,
-					'user_id'       => $user_id,
-					'error_type'    => 'wp_error',
-				)
+			$add_media_args = array(
+				'id'            => $id,
+				'attachment_id' => $wp_attachment_id,
+				'title'         => $title,
+				'description'   => wp_filter_nohtml_kses( $content ),
+				'activity_id'   => $media_activity_id,
+				'message_id'    => $message_id,
+				'album_id'      => ( ! empty( $args['album_id'] ) ? $args['album_id'] : false ),
+				'group_id'      => ( ! empty( $args['group_id'] ) ? $args['group_id'] : false ),
+				'privacy'       => $media_privacy,
+				'user_id'       => $user_id,
+				'error_type'    => 'wp_error',
 			);
+
+			if ( isset( $args['menu_order'] ) ) {
+				$add_media_args['menu_order'] = ( ! empty( $args['menu_order'] ) ? $args['menu_order'] : 0 );
+			}
+
+			$media_id = bp_media_add( $add_media_args );
 
 			if ( is_int( $media_id ) ) {
 
@@ -1905,7 +1945,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					update_post_meta( $wp_attachment_id, 'bp_media_activity_id', $media_activity_id );
 				}
 
-				// save media description while update.
+				// Added backward compatibility.
+				// Save media description while update.
 				if ( false !== $content ) {
 					$media_post['ID']           = $wp_attachment_id;
 					$media_post['post_content'] = wp_filter_nohtml_kses( $content );
@@ -1913,7 +1954,6 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				}
 
 				$created_media_ids[] = $media_id;
-
 			}
 
 			if ( ! empty( $all_medias ) ) {
@@ -1946,6 +1986,16 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 			if ( ! empty( $valid_upload_ids ) ) {
 				foreach ( $valid_upload_ids as $wp_attachment_id ) {
+
+					// Check if media id already available for the messages.
+					if ( 'message' === $media_privacy ) {
+						$mid = get_post_meta( $wp_attachment_id, 'bp_media_id', true );
+
+						if ( ! empty( $mid ) ) {
+							$created_media_ids[] = $mid;
+							continue;
+						}
+					}
 
 					// extract the nice title name.
 					$title = get_the_title( $wp_attachment_id );
@@ -2300,8 +2350,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		$medias = $this->assemble_response_data(
 			array(
+				'per_page'  => 0,
 				'media_ids' => $media_ids,
 				'sort'      => 'ASC',
+				'order_by'  => 'menu_order',
 			)
 		);
 
@@ -2310,9 +2362,12 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
+		$object = new WP_REST_Request();
+		$object->set_param( 'context', 'view' );
+
 		foreach ( $medias['medias'] as $media ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $media, array( 'context' => 'view' ) )
+				$this->prepare_item_for_response( $media, $object )
 			);
 		}
 
@@ -2332,7 +2387,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 */
 	protected function bp_media_ids_update_rest_field_callback( $object, $value, $attribute ) {
 
-		global $bp_activity_edit, $bp_media_upload_count, $bp_new_activity_comment, $bp_activity_post_update_id, $bp_activity_post_update;
+		global $bp_activity_edit, $bp_media_upload_count, $bp_new_activity_comment, $bp_activity_post_update_id, $bp_activity_post_update, $bb_activity_comment_edit, $bb_activity_comment_edit_id;
 
 		$group_id = 0;
 		if ( 'groups' === $value->component ) {
@@ -2359,15 +2414,25 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return $value;
 		}
 
-		$bp_activity_edit = ( isset( $value->edit ) ? true : false );
-		// phpcs:ignore
-		$_POST['edit'] = $bp_activity_edit;
+		// Set variable if current action is edit activity comment.
+		$is_edit_activity_comment = $bb_activity_comment_edit && 'activity_comment' === $value->type && isset( $_POST['edit_comment'] );
 
-		if ( false === $bp_activity_edit && empty( $object ) ) {
-			return $value;
+		if ( $is_edit_activity_comment ) {
+			$bb_activity_comment_edit_id = $value->id;
+			if ( false === $bb_activity_comment_edit && empty( $object ) ) {
+				return $value;
+			}
+		} else {
+			$bp_activity_edit = ( isset( $value->edit ) ? true : false );
+			// phpcs:ignore
+			$_POST['edit'] = $bp_activity_edit;
+
+			if ( false === $bp_activity_edit && empty( $object ) ) {
+				return $value;
+			}
 		}
 
-		$bp_new_activity_comment = ( 'activity_comment' === $value->type ? $value->id : 0 );
+		$bp_new_activity_comment = ( ( 'activity_comment' === $value->type && false === $bb_activity_comment_edit ) ? $value->id : 0 );
 
 		$activity_id = $value->id;
 		$privacy     = $value->privacy;
@@ -2388,8 +2453,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		$bp_activity_post_update    = true;
-		$bp_activity_post_update_id = $activity_id;
+		if ( ! $is_edit_activity_comment ) {
+			$bp_activity_post_update    = true;
+			$bp_activity_post_update_id = $activity_id;
+		}
 
 		if ( ! empty( $value->component ) && 'groups' === $value->component ) {
 			$group_id = $value->item_id;
@@ -2404,6 +2471,12 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					bp_media_delete( array( 'id' => $media_id ), 'activity' );
 				}
 				bp_activity_delete_meta( $activity_id, 'bp_media_ids' );
+
+				// Delete media meta from activity for activity comment.
+				if ( $is_edit_activity_comment ) {
+					bp_activity_delete_meta( $activity_id, 'bp_media_id' );
+					bp_activity_delete_meta( $activity_id, 'bp_media_activity' );
+				}
 			}
 
 			return $value;
@@ -2459,7 +2532,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				foreach ( $old_media_ids as $media_id ) {
 
 					if ( ! in_array( (int) $media_id, $media_ids, true ) ) {
-						bp_media_delete( array( 'id' => $media_id ) );
+						bp_media_delete( array( 'id' => $media_id ), 'activity' );
 					}
 				}
 			}
@@ -2534,6 +2607,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * @return object
 	 */
 	protected function bp_gif_data_update_rest_field_callback( $object, $value, $attribute ) {
+		global $bp_activity_edit, $bb_activity_comment_edit, $bb_activity_comment_edit_id;
 
 		if ( 'media_gif' !== $attribute ) {
 			return $value;
@@ -2559,18 +2633,35 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return $value;
 		}
 
-		$bp_activity_edit = ( isset( $value->edit ) ? true : false );
-		// phpcs:ignore
-		$_POST['edit'] = $bp_activity_edit;
+		// Set variable if current action is edit activity comment.
+		$is_edit_activity_comment = $bb_activity_comment_edit && 'activity_comment' === $value->type && isset( $_POST['edit_comment'] );
 
-		if ( empty( $object ) && false === $bp_activity_edit ) {
-			return $value;
+		if ( $is_edit_activity_comment ) {
+			$bb_activity_comment_edit_id = $value->id;
+			if ( false === $bb_activity_comment_edit && empty( $object ) ) {
+				return $value;
+			}
+		} else {
+			$bp_activity_edit = ( isset( $value->edit ) ? true : false );
+			// phpcs:ignore
+			$_POST['edit'] = $bp_activity_edit;
+
+			if ( empty( $object ) && false === $bp_activity_edit ) {
+				return $value;
+			}
 		}
 
 		$still = $object['url'];
 		$mp4   = $object['mp4'];
 
-		if ( true === $bp_activity_edit && empty( $still ) && empty( $mp4 ) ) {
+		if (
+			(
+				true === $bp_activity_edit ||
+				true === $bb_activity_comment_edit
+			) &&
+			empty( $still ) &&
+			empty( $mp4 )
+		) {
 			bp_activity_delete_meta(
 				$value->id,
 				'_gif_data'
@@ -2635,11 +2726,13 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					$component = 'groups';
 				}
 			}
-			if ( 'blogs' === $parent_activity->component ||
-			     (
-				     ! empty( $activity['component'] ) &&
-				     'blogs' === $activity['component']
-			     )
+
+			if (
+				'blogs' === $parent_activity->component ||
+				(
+					! empty( $activity['component'] ) &&
+					'blogs' === $activity['component']
+				)
 			) {
 				return false;
 			}
@@ -2851,8 +2944,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		$medias = $this->assemble_response_data(
 			array(
+				'per_page'  => 0,
 				'media_ids' => $media_ids,
 				'sort'      => 'ASC',
+				'order_by'  => 'menu_order',
 			)
 		);
 
@@ -2861,9 +2956,11 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
+		$object = new WP_REST_Request();
+
 		foreach ( $medias['medias'] as $media ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $media, array() )
+				$this->prepare_item_for_response( $media, $object )
 			);
 		}
 
@@ -3120,6 +3217,13 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		} else {
 			delete_post_meta( $post_id, '_gif_data' );
 			delete_post_meta( $post_id, '_gif_raw_data' );
+
+			// Delete activity meta as well.
+			$main_activity_id = get_post_meta( $post_id, '_bbp_activity_id', true );
+			if ( ! empty( $main_activity_id ) && bp_is_active( 'activity' ) ) {
+				bp_activity_delete_meta( $main_activity_id, '_gif_data' );
+				bp_activity_delete_meta( $main_activity_id, '_gif_raw_data' );
+			}
 		}
 	}
 
@@ -3162,7 +3266,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * @param array  $data      The message value for the REST response.
 	 * @param string $attribute The REST Field key used into the REST response.
 	 *
-	 * @return string            The value of the REST Field to include into the REST response.
+	 * @return array|void The value of the REST Field to include into the REST response.
 	 */
 	protected function bp_media_ids_get_rest_field_callback_messages( $data, $attribute ) {
 		$message_id = $data['id'];
@@ -3171,80 +3275,67 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$thread_id       = ( isset( $data['thread_id'] ) ? $data['thread_id'] : 0 );
-		$is_group_thread = false;
-
+		$thread_id = ! empty( $data['thread_id'] ) ? $data['thread_id'] : 0;
 		if ( empty( $thread_id ) ) {
 			return;
 		}
 
-		if ( function_exists( 'bb_messages_is_group_thread' ) ) {
-			$is_group_thread = bb_messages_is_group_thread( $thread_id );
-		} else {
-			$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
-			$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
-			$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
-			$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
-			$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
-
-			if ( 'group' === $message_from && $thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
-				$is_group_thread = true;
-			}
-		}
+		$group_name   = ! empty( $data['group_name'] ) ? $data['group_name'] : '';
+		$message_from = ! empty( $data['message_from'] ) ? $data['message_from'] : '';
 
 		if (
+			bp_is_active( 'media' ) &&
 			(
 				(
-					empty( $is_group_thread ) ||
-					(
-						! empty( $is_group_thread ) &&
-						! bp_is_active( 'groups' )
-					)
-				) &&
-				! bp_is_messages_media_support_enabled()
-			) ||
-			(
-				bp_is_active( 'groups' ) &&
-				! empty( $is_group_thread ) &&
-				! bp_is_group_media_support_enabled()
+					! empty( $group_name ) &&
+					'group' === $message_from &&
+					bp_is_group_media_support_enabled()
+				) ||
+				(
+					'group' !== $message_from &&
+					bp_is_messages_media_support_enabled()
+				)
 			)
 		) {
-			return;
-		}
+			$media_ids = bp_messages_get_meta( $message_id, 'bp_media_ids', true );
+			$media_id  = bp_messages_get_meta( $message_id, 'bp_media_id', true );
+			$media_ids = trim( $media_ids );
+			$media_ids = explode( ',', $media_ids );
 
-		$media_ids = bp_messages_get_meta( $message_id, 'bp_media_ids', true );
-		$media_id  = bp_messages_get_meta( $message_id, 'bp_media_id', true );
-		$media_ids = trim( $media_ids );
-		$media_ids = explode( ',', $media_ids );
+			if ( ! empty( $media_id ) ) {
+				$media_ids[] = $media_id;
+				$media_ids   = array_filter( array_unique( $media_ids ) );
+			}
 
-		if ( ! empty( $media_id ) ) {
-			$media_ids[] = $media_id;
-			$media_ids   = array_filter( array_unique( $media_ids ) );
-		}
+			if ( empty( $media_ids ) ) {
+				return;
+			}
 
-		if ( empty( $media_ids ) ) {
-			return;
-		}
-
-		$medias = $this->assemble_response_data(
-			array(
-				'media_ids' => $media_ids,
-				'sort'      => 'ASC',
-			)
-		);
-
-		if ( empty( $medias['medias'] ) ) {
-			return;
-		}
-
-		$retval = array();
-		foreach ( $medias['medias'] as $media ) {
-			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $media, array( 'context' => 'view' ) )
+			$medias = $this->assemble_response_data(
+				array(
+					'media_ids'        => $media_ids,
+					'sort'             => 'ASC',
+					'order_by'         => 'menu_order',
+					'moderation_query' => false,
+				)
 			);
-		}
 
-		return $retval;
+			if ( empty( $medias['medias'] ) ) {
+				return;
+			}
+
+			$retval = array();
+			$object = new WP_REST_Request();
+			$object->set_param( 'context', 'view' );
+
+			foreach ( $medias['medias'] as $media ) {
+				$retval[] = $this->prepare_response_for_collection(
+					$this->prepare_item_for_response( $media, $object )
+				);
+			}
+
+			return $retval;
+		}
 	}
 
 	/**
@@ -3301,7 +3392,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$thread->group_id        = $group_id;
 		$thread->is_group_thread = $is_group_message_thread;
 
-		if ( empty( apply_filters( 'bp_user_can_create_message_media', bp_is_messages_media_support_enabled(), $thread, bp_loggedin_user_id() ) ) ) {
+		if ( empty( apply_filters( 'bp_user_can_create_message_media', bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' ), $thread, bp_loggedin_user_id() ) ) ) {
 			$value->bp_media_ids = null;
 
 			return $value;
@@ -3332,75 +3423,54 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	/**
 	 * The function to use to get medias gif for the Messages REST Field.
 	 *
-	 * @param array $message   The message value for the REST response.
+	 * @param array $message The message value for the REST response.
 	 *
-	 * @return string            The value of the REST Field to include into the REST response.
+	 * @return array|void The value of the REST Field to include into the REST response.
 	 */
 	protected function bp_gif_data_get_rest_field_callback_messages( $message ) {
-
 		$message_id = $message['id'];
 
 		if ( empty( $message_id ) ) {
 			return;
 		}
 
-		$thread_id       = ( isset( $message['thread_id'] ) ? $message['thread_id'] : 0 );
-		$is_group_thread = false;
-
+		$thread_id = ! empty( $message['thread_id'] ) ? $message['thread_id'] : 0;
 		if ( empty( $thread_id ) ) {
 			return;
 		}
 
-		if ( function_exists( 'bb_messages_is_group_thread' ) ) {
-			$is_group_thread = bb_messages_is_group_thread( $thread_id );
-		} else {
-			$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
-			$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
-			$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
-			$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
-			$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
-
-			if ( 'group' === $message_from && $thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
-				$is_group_thread = true;
-			}
-		}
+		$group_name   = ! empty( $message['group_name'] ) ? $message['group_name'] : '';
+		$message_from = ! empty( $message['message_from'] ) ? $message['message_from'] : '';
 
 		if (
+			bp_is_active( 'media' ) &&
 			(
 				(
-					empty( $is_group_thread ) ||
-					(
-						! empty( $is_group_thread ) &&
-						! bp_is_active( 'groups' )
-					)
-				) &&
-				! bp_is_messages_gif_support_enabled()
-			) ||
-			(
-				bp_is_active( 'groups' ) &&
-				! empty( $is_group_thread ) &&
-				! bp_is_groups_gif_support_enabled()
+					! empty( $group_name ) &&
+					'group' === $message_from &&
+					bp_is_groups_gif_support_enabled()
+				) ||
+				(
+					'group' !== $message_from &&
+					bp_is_messages_gif_support_enabled()
+				)
 			)
 		) {
-			return;
+			$gif_data = bp_messages_get_meta( $message_id, '_gif_data', true );
+
+			if ( empty( $gif_data ) ) {
+				return;
+			}
+
+			$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+			$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
+
+			return array(
+				'preview_url' => $preview_url,
+				'video_url'   => $video_url,
+				'rendered'    => $this->bp_rest_media_message_embed_gif( $message_id ),
+			);
 		}
-
-		$gif_data = bp_messages_get_meta( $message_id, '_gif_data', true );
-
-		if ( empty( $gif_data ) ) {
-			return;
-		}
-
-		$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
-		$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
-
-		$retval = array(
-			'preview_url' => $preview_url,
-			'video_url'   => $video_url,
-			'rendered'    => $this->bp_rest_media_message_embed_gif( $message_id ),
-		);
-
-		return $retval;
 	}
 
 	/**
@@ -3664,11 +3734,13 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					$component = 'groups';
 				}
 			}
-			if ( 'blogs' === $parent_activity->component ||
-			     (
-				     ! empty( $activity['component'] ) &&
-				     'blogs' === $activity['component']
-			     )
+
+			if (
+				'blogs' === $parent_activity->component ||
+				(
+					! empty( $activity['component'] ) &&
+					'blogs' === $activity['component']
+				)
 			) {
 				return false;
 			}
@@ -3718,11 +3790,13 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					$component = 'groups';
 				}
 			}
-			if ( 'blogs' === $parent_activity->component ||
-			     (
-				     ! empty( $activity['component'] ) &&
-				     'blogs' === $activity['component']
-			     )
+
+			if (
+				'blogs' === $parent_activity->component ||
+				(
+					! empty( $activity['component'] ) &&
+					'blogs' === $activity['component']
+				)
 			) {
 				return false;
 			}

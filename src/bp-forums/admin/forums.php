@@ -571,7 +571,7 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 		 * @since bbPress (r2577)
 		 *
 		 * @param array $actions Actions
-		 * @param array $forum Forum object
+		 * @param object $forum Forum object
 		 * @uses bbp_forum_content() To output forum description
 		 * @return array $actions Actions
 		 */
@@ -583,8 +583,17 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 
 			unset( $actions['inline hide-if-no-js'] );
 
-			// simple hack to show the forum description under the title
-			bbp_forum_content( $forum->ID );
+			// Only show content if user can read it and there is no password.
+			if ( current_user_can( 'read_forum', $forum->ID ) && ! post_password_required( $forum ) ) {
+
+				// Get the forum description.
+				$content = bbp_get_forum_content( $forum->ID );
+
+				// Only proceed if there is a description.
+				if ( ! empty( $content ) ) {
+					echo '<div class="bbp-escaped-content">' . wp_strip_all_tags( wp_trim_excerpt( $content, $forum ) ) . '</div>';
+				}
+			}
 
 			return $actions;
 		}

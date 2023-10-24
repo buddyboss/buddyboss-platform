@@ -2,8 +2,8 @@
 /**
  * BuddyBoss LearnDash integration SyncGenerator class.
  *
+ * @since   BuddyBoss 1.0.0
  * @package BuddyBoss\LearnDash
- * @since BuddyBoss 1.0.0
  */
 
 namespace Buddyboss\LearndashIntegration\Library;
@@ -25,13 +25,14 @@ class SyncGenerator {
 	protected $bpGroupId;
 	protected $ldGroupId;
 	protected $syncMetaKey = '_sync_group_id';
+	protected $syncTo;
 
 	/**
 	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function __construct( $bpGroupId = null, $ldGroupId = null ) {
+	public function __construct( $bpGroupId = 0, $ldGroupId = 0 ) {
 		$this->bpGroupId = $bpGroupId;
 		$this->ldGroupId = $ldGroupId;
 
@@ -40,7 +41,7 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Check if there's a ld group
+	 * Check if there's a ld group.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -49,7 +50,7 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Check if there's a bp group
+	 * Check if there's a bp group.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -58,7 +59,7 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Get the ld group id
+	 * Get the ld group id.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -67,7 +68,7 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Get the bp group id
+	 * Get the bp group id.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -76,7 +77,7 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Associate current bp group to a ld group
+	 * Associate current bp group to a ld group.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -86,7 +87,7 @@ class SyncGenerator {
 		}
 
 		$this->syncingToLearndash(
-			function() use ( $ldGroupId ) {
+			function () use ( $ldGroupId ) {
 				$ldGroup = get_post( $ldGroupId );
 
 				if ( ! $ldGroupId || ! $ldGroup ) {
@@ -104,7 +105,7 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Un-associate the current bp group from ld group
+	 * Un-associate the current bp group from ld group.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -119,26 +120,26 @@ class SyncGenerator {
 	}
 
 	/**
-	 * delete the bp group without trigging sync
+	 * delete the bp group without triggering sync.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function deleteBpGroup( $bpGroupId ) {
 		$this->syncingToBuddypress(
-			function() use ( $bpGroupId ) {
+			function () use ( $bpGroupId ) {
 				groups_delete_group( $bpGroupId );
 			}
 		);
 	}
 
 	/**
-	 * delete the ld group without trigging sync
+	 * delete the ld group without triggering sync.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function deleteLdGroup( $ldGroupId ) {
 		$this->syncingToLearndash(
-			function() use ( $ldGroupId ) {
+			function () use ( $ldGroupId ) {
 				$this->remove_ld_group_author_role( $ldGroupId );
 				wp_delete_post( $ldGroupId, true );
 			}
@@ -153,11 +154,11 @@ class SyncGenerator {
 	 *
 	 * @param int $ld_group_id Leardash group id.
 	 *
-	 * @uses learndash_is_admin_user()                Is the author has administrator role.
-	 * @uses learndash_is_group_leader_user()         Is the author has group_leader role.
-	 * @uses learndash_get_administrators_group_ids() Gets the list of group IDs administered by the user.
-	 *
 	 * @return void
+	 *
+	 * @uses  learndash_is_group_leader_user()         Is the author has group_leader role.
+	 * @uses  learndash_get_administrators_group_ids() Gets the list of group IDs administered by the user.     *
+	 * @uses  learndash_is_admin_user()                Is the author has administrator role.
 	 */
 	public function remove_ld_group_author_role( $ld_group_id ) {
 
@@ -185,17 +186,17 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Associate current ld group to bp group
+	 * Associate current ld group to bp group.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function associateToBuddypress( $bpGroupId = null ) {
+	public function associateToBuddypress( $bpGroupId = 0 ) {
 		if ( $this->bpGroupId && ! $bpGroupId ) {
 			return $this;
 		}
 
 		$this->syncingToBuddypress(
-			function() use ( $bpGroupId ) {
+			function () use ( $bpGroupId ) {
 				$bpGroup = groups_get_group( $bpGroupId );
 
 				if ( ! $bpGroupId || ! $bpGroup->id ) {
@@ -213,7 +214,7 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Un associate current ld group from bp group
+	 * Un associate current ld group from bp group.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -228,12 +229,12 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Run a full users sync up bp group to ld group
+	 * Run a full users sync up bp group to ld group.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function fullSyncToLearndash() {
-		 $lastSynced = groups_get_groupmeta( $this->bpGroupId, '_last_sync', true ) ?: 0;
+		$lastSynced = groups_get_groupmeta( $this->bpGroupId, '_last_sync', true ) ?: 0;
 
 		if ( $lastSynced > $this->getLastSyncTimestamp( 'bp' ) ) {
 			return;
@@ -244,7 +245,7 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Run a full users sync up ld group to bp group
+	 * Run a full users sync up ld group to bp group.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -260,13 +261,13 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Sync the bp admins to ld
+	 * Sync the bp admins to ld.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function syncBpAdmins() {
 		$this->syncingToLearndash(
-			function() {
+			function () {
 				$adminIds = groups_get_group_admins( $this->bpGroupId );
 
 				foreach ( $adminIds as $admin ) {
@@ -281,13 +282,13 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Sync the bp mods to ld
+	 * Sync the bp mods to ld.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function syncBpMods() {
 		$this->syncingToLearndash(
-			function() {
+			function () {
 				$modIds = groups_get_group_mods( $this->bpGroupId );
 
 				foreach ( $modIds as $mod ) {
@@ -302,13 +303,13 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Sync the bp members to ld
+	 * Sync the bp members to ld.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function syncBpUsers() {
 		$this->syncingToLearndash(
-			function() {
+			function () {
 				$members = groups_get_group_members(
 					array(
 						'group_id' => $this->bpGroupId,
@@ -329,13 +330,13 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Sync the ld admins to bp
+	 * Sync the ld admins to bp.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function syncLdAdmins() {
 		$this->syncingToBuddypress(
-			function() {
+			function () {
 				$adminIds = learndash_get_groups_administrator_ids( $this->ldGroupId );
 
 				foreach ( $adminIds as $adminId ) {
@@ -348,13 +349,13 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Sync the ld students to bp
+	 * Sync the ld students to bp.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function syncLdUsers() {
 		$this->syncingToBuddypress(
-			function() {
+			function () {
 				$userIds = learndash_get_groups_user_ids( $this->ldGroupId );
 
 				foreach ( $userIds as $userId ) {
@@ -367,13 +368,17 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Sync a bp admin to ld
+	 * Sync a bp admin to ld.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function syncBpAdmin( $userId, $remove = false, $clearCache = true ) {
+		if ( empty( $this->ldGroupId ) ) {
+			$this->ldGroupId = 0;
+		}
+
 		$this->syncingToLearndash(
-			function() use ( $userId, $remove ) {
+			function () use ( $userId, $remove ) {
 				call_user_func_array( $this->getBpSyncFunction( 'admin' ), array( $userId, $this->ldGroupId, $remove ) );
 				$this->maybeRemoveAsLdUser( 'admin', $userId );
 				$this->promoteAsGroupLeader( $userId, 'admin', $remove );
@@ -388,13 +393,17 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Sync a bp mod to ld
+	 * Sync a bp mod to ld.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function syncBpMod( $userId, $remove = false, $clearCache = true ) {
+		if ( empty( $this->ldGroupId ) ) {
+			$this->ldGroupId = 0;
+		}
+
 		$this->syncingToLearndash(
-			function() use ( $userId, $remove ) {
+			function () use ( $userId, $remove ) {
 				call_user_func_array( $this->getBpSyncFunction( 'mod' ), array( $userId, $this->ldGroupId, $remove ) );
 				$this->maybeRemoveAsLdUser( 'mod', $userId );
 				$this->promoteAsGroupLeader( $userId, 'mod', $remove );
@@ -409,13 +418,17 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Sync a bp member to ld
+	 * Sync a bp member to ld.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function syncBpMember( $userId, $remove = false, $clearCache = true ) {
+		if ( empty( $this->ldGroupId ) ) {
+			$this->ldGroupId = 0;
+		}
+
 		$this->syncingToLearndash(
-			function() use ( $userId, $remove ) {
+			function () use ( $userId, $remove ) {
 				call_user_func_array( $this->getBpSyncFunction( 'user' ), array( $userId, $this->ldGroupId, $remove ) );
 
 				// if sync to user, we need to remove previous admin
@@ -433,7 +446,7 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Check before Sync a bp member to ld
+	 * Check before Sync a bp member to ld.
 	 *
 	 * @since BuddyBoss 1.5.0
 	 */
@@ -465,13 +478,13 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Sync a ld admin to bp
+	 * Sync a ld admin to bp.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function syncLdAdmin( $userId, $remove = false ) {
 		$this->syncingToBuddypress(
-			function() use ( $userId, $remove ) {
+			function () use ( $userId, $remove ) {
 				$this->addUserToBpGroup( $userId, 'admin', $remove );
 			}
 		);
@@ -480,7 +493,7 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Sync a ld student to bp
+	 * Sync a ld student to bp.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -498,7 +511,7 @@ class SyncGenerator {
 		}
 
 		$this->syncingToBuddypress(
-			function() use ( $userId, $remove ) {
+			function () use ( $userId, $remove ) {
 				$this->addUserToBpGroup( $userId, 'user', $remove );
 			}
 		);
@@ -507,7 +520,7 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Verify the givent group ids still exists in db
+	 * Verify the givent group ids still exists in db.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -522,7 +535,7 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Populate the class data based on given input
+	 * Populate the class data based on given input.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -537,7 +550,7 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Find the bp group id on current ld group
+	 * Find the bp group id on current ld group.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -546,7 +559,7 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Find the ld group id on current bp group
+	 * Find the ld group id on current bp group.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -557,17 +570,18 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Sasve bp group id to current ld group
+	 * Sasve bp group id to current ld group.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function setBpGroupId() {
-		 update_post_meta( $this->ldGroupId, $this->syncMetaKey, $this->bpGroupId );
+		update_post_meta( $this->ldGroupId, $this->syncMetaKey, $this->bpGroupId );
+
 		return $this;
 	}
 
 	/**
-	 * Sasve ld group id to current bp group
+	 * Sasve ld group id to current bp group.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -575,11 +589,12 @@ class SyncGenerator {
 		if ( function_exists( 'groups_get_groupmeta' ) ) {
 			groups_update_groupmeta( $this->bpGroupId, $this->syncMetaKey, $this->ldGroupId );
 		}
+
 		return $this;
 	}
 
 	/**
-	 * Force id sync
+	 * Force id sync.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -588,21 +603,22 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Remove bp group id from current ld group
+	 * Remove bp group id from current ld group.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function unsetBpGroupMeta( $removeProp = true ) {
 		if ( $removeProp ) {
-			$this->bpGroupId = null;
+			$this->bpGroupId = 0;
 		}
 
 		delete_post_meta( $this->ldGroupId, $this->syncMetaKey );
+
 		return $this;
 	}
 
 	/**
-	 * Remove ld group id from current bp group
+	 * Remove ld group id from current bp group.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -612,27 +628,29 @@ class SyncGenerator {
 		}
 
 		groups_delete_groupmeta( $this->bpGroupId, $this->syncMetaKey );
+
 		return $this;
 	}
 
 	/**
-	 * Force unsync group ids
+	 * Force unsync group ids.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function unsetSyncGropuIds() {
 		$this->unsetBpGroupMeta( false )->unsetLdGroupMeta( false );
-		$this->bpGroupId = $this->ldGroupId = null;
+		$this->bpGroupId = $this->ldGroupId = 0;
+
 		return $this;
 	}
 
 	/**
-	 * Greate a ld group based on current bp group
+	 * Greate a ld group based on current bp group.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function createLearndashGroup() {
-		 $bpGroup = groups_get_group( $this->bpGroupId );
+		$bpGroup = groups_get_group( $this->bpGroupId );
 
 		$this->ldGroupId = wp_insert_post(
 			array(
@@ -646,7 +664,7 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Create bp group based on current ld group
+	 * Create bp group based on current ld group.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -662,7 +680,7 @@ class SyncGenerator {
 
 		$this->bpGroupId = groups_create_group(
 			array(
-				'name'      => $ldGroup->post_title ?: "For Social Group: {$this->ldGroupId}",
+				'name'      => $ldGroup->post_title ?: sprintf( __( 'For Social Group: %s', 'buddyboss' ), $this->ldGroupId ),
 				'status'    => $settings->get( 'learndash.default_bp_privacy' ),
 				'parent_id' => $bp_parent_group_id,
 			)
@@ -674,7 +692,7 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Maybe remove ld user if user is promote or demote from bp
+	 * Maybe remove ld user if user is promote or demote from bp.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -688,7 +706,7 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Get the bp role to sync to
+	 * Get the bp role to sync to.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -697,7 +715,7 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Get the function that update ld group role
+	 * Get the function that update ld group role.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -711,7 +729,7 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Get the ld role to sync to
+	 * Get the ld role to sync to.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -720,41 +738,37 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Add a user to bp group by role
+	 * Add a user to bp group by role.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function addUserToBpGroup( $userId, $type, $remove ) {
 		$groupMember = new BP_Groups_Member( $userId, $this->bpGroupId );
-		$syncTo      = $this->getLdSyncToRole( $type );
+
+		$this->syncTo = $this->getLdSyncToRole( $type );
+
+		// ignore moderator in syncing as there's no moderator in learndash.
+		if ( 1 === $groupMember->is_mod && 'admin' === $this->syncTo ) {
+			return false;
+		}
 
 		if ( $remove ) {
 			if ( bp_is_active( 'messages' ) ) {
 				bp_messages_remove_user_to_group_message_thread( $this->bpGroupId, $userId );
 			}
+
 			return $groupMember->remove();
 		}
 
-		$groupMember->group_id      = $this->bpGroupId;
-		$groupMember->user_id       = $userId;
-		$groupMember->is_admin      = 0;
-		$groupMember->is_mod        = 0;
-		$groupMember->is_confirmed  = 1;
-		$groupMember->date_modified = bp_core_current_time();
+		add_action( 'groups_member_before_save', array( $this, 'update_group_member_role' ), 10 );
 
-		if ( 'user' !== $syncTo ) {
-			$var               = "is_{$syncTo}";
-			$groupMember->$var = 1;
-		}
+		groups_join_group( $this->bpGroupId, $userId );
 
-		$groupMember->save();
-		if ( bp_is_active( 'messages' ) ) {
-			bp_messages_add_user_to_group_message_thread( $this->bpGroupId, $userId );
-		}
+		remove_action( 'groups_member_before_save', array( $this, 'update_group_member_role' ), 10 );
 	}
 
 	/**
-	 * Clear the ld cache after sync
+	 * Clear the ld cache after sync.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -764,7 +778,7 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Wrapper to prevent infinite 2 way sync when syncing to learndash
+	 * Wrapper to prevent infinite 2 way sync when syncing to learndash.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -779,7 +793,7 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Wrapper to prevent infinite 2 way sync when syncing to buddypress
+	 * Wrapper to prevent infinite 2 way sync when syncing to buddypress.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -794,7 +808,7 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Get the timestamp when the group is last synced
+	 * Get the timestamp when the group is last synced.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -808,13 +822,12 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Update a ld group based on current bp group
-	 *
-	 * @param string $ld_group_id Group id for learndash
-	 *
-	 * @param int    $groupId Group id for buddyboss
+	 * Update a ld group based on current bp group.
 	 *
 	 * @since BuddyBoss 1.5.7
+	 *
+	 * @param int    $groupId     Group id for buddyboss.
+	 * @param string $ld_group_id Group id for learndash.
 	 */
 	public function updateLearndashGroup( $ld_group_id, $groupId ) {
 		$bpGroup = groups_get_group( $groupId );
@@ -834,13 +847,12 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Update a bp group based on current ld group
-	 *
-	 * @param string $ld_group_id Group id for learndash
-	 *
-	 * @param int    $groupId Group id for buddyboss
+	 * Update a bp group based on current ld group.
 	 *
 	 * @since BuddyBoss 1.5.7
+	 *
+	 * @param int    $groupId     Group id for buddyboss.
+	 * @param string $ld_group_id Group id for learndash.
 	 */
 	public function updateBuddypressGroup( $ld_group_id, $groupId ) {
 		$ldGroup  = get_post( $ld_group_id );
@@ -858,8 +870,8 @@ class SyncGenerator {
 				array(
 					'group_id'    => $groupId,
 					'creator_id'  => $ldGroup->post_author,
-					'name'        => $ldGroup->post_title ?: "For Social Group: {$this->ldGroupId}",
-					'status'      => $settings->get( 'learndash.default_bp_privacy' ),
+					'name'        => $ldGroup->post_title ?: sprintf( __( 'For Social Group: %s', 'buddyboss' ), $this->ldGroupId ),
+					//'status'      => $settings->get( 'learndash.default_bp_privacy' ),
 					'description' => $ldGroup->post_content,
 					'slug'        => $ldGroup->post_name,
 					'parent_id'   => $bp_parent_group_id,
@@ -893,6 +905,7 @@ class SyncGenerator {
 		// Remove user.
 		if ( true === $remove || 'user' === $ldRole ) {
 			$this->remove_group_leader_role( $userId );
+
 			return;
 		}
 
@@ -912,9 +925,9 @@ class SyncGenerator {
 	 *
 	 * @since BuddyBoss 1.6.3
 	 *
-	 * @uses bp_get_option() Get options value.
-	 *
 	 * @return array
+	 *
+	 * @uses  bp_get_option() Get options value.
 	 */
 	public function default_sync_options() {
 		$options = bp_get_option( 'bp_ld_sync_settings', array() );
@@ -937,13 +950,13 @@ class SyncGenerator {
 	 *
 	 * @since BuddyBoss 1.6.3
 	 *
-	 * @param int    $userId  BB group member id.
-	 * @param string $role BB member role in group.
-	 *
-	 * @uses set_group_leader_role()    Add group leader role.
-	 * @uses remove_group_leader_role() Remove group leader role.
+	 * @param int    $userId BB group member id.
+	 * @param string $role   BB member role in group.
 	 *
 	 * @return void
+	 *
+	 * @uses  remove_group_leader_role() Remove group leader role.
+	 * @uses  set_group_leader_role()    Add group leader role.
 	 */
 	public function member_role_generate( $userId, $role ) {
 		if ( 'admin' === $role ) {
@@ -960,10 +973,10 @@ class SyncGenerator {
 	 *
 	 * @param int $userID Member id.
 	 *
-	 * @uses learndash_is_admin_user()        Is member admin user.
-	 * @uses learndash_is_group_leader_user() Is member has already group leader role.
-	 *
 	 * @return void
+	 *
+	 * @uses  learndash_is_group_leader_user() Is member has already group leader role.
+	 * @uses  learndash_is_admin_user()        Is member admin user.
 	 */
 	public function set_group_leader_role( $userId ) {
 		// If the user has already 'Administrator' or 'group_leader' role.
@@ -989,5 +1002,21 @@ class SyncGenerator {
 		$user = new \WP_User( (int) $userId );
 		// Remove role
 		$user->remove_role( 'group_leader' );
+	}
+
+	/**
+	 * Update BB group member role.
+	 *
+	 * @since 2.4.40
+	 *
+	 * @param object $group_member Member item.
+	 *
+	 * @return void
+	 */
+	public function update_group_member_role( $group_member ) {
+		if ( 'user' !== $this->syncTo ) {
+			$var				= "is_{$this->syncTo}";
+			$group_member->$var = 1;
+		}
 	}
 }

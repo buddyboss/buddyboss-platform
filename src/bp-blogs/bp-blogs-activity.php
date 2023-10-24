@@ -829,6 +829,13 @@ add_action( 'delete_post', 'bp_blogs_remove_post' );
  * @param object $parent_activity Parameters of the parent activity item (in this case, the blog post).
  */
 function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_activity ) {
+	global $bb_activity_comment_edit;
+
+	// Return if $comment_id empty or edit activity comment.
+	if ( $bb_activity_comment_edit ) {
+		return;
+	}
+
 	// if parent activity isn't a post type having the buddypress-activity support, stop now!
 	if ( ! bp_activity_type_supports( $parent_activity->type, 'post-type-comment-tracking' ) ) {
 		return;
@@ -877,7 +884,7 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 		'comment_author'       => bp_core_get_user_displayname( $params['user_id'] ),
 		'comment_author_email' => $user->user_email,
 		'comment_author_url'   => bp_core_get_user_domain( $params['user_id'], $user->user_nicename, $user->user_login ),
-		'comment_content'      => $params['content'],
+		'comment_content'      => bp_activity_at_name_filter( $params['content'] ),
 		'comment_type'         => '', // Could be interesting to add 'buddypress' here...
 		'comment_parent'       => (int) $comment_parent,
 		'user_id'              => $params['user_id'],
@@ -886,6 +893,7 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 
 	// Prevent separate activity entry being made.
 	remove_action( 'comment_post', 'bp_activity_post_type_comment', 10 );
+	remove_action( 'wp_insert_comment', 'bb_post_new_comment_reply_notification_helper', 20, 2 );
 
 	// Handle multisite.
 	switch_to_blog( $parent_activity->item_id );
@@ -931,6 +939,7 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 	restore_current_blog();
 
 	// Add the comment hook back.
+	add_action( 'wp_insert_comment', 'bb_post_new_comment_reply_notification_helper', 20, 2 );
 	add_action( 'comment_post', 'bp_activity_post_type_comment', 10, 2 );
 
 	/**
@@ -1076,6 +1085,21 @@ function bp_blogs_sync_activity_edit_to_post_comment( BP_Activity_Activity $acti
 	// Restore actions
 	add_action( 'transition_comment_status', 'bp_activity_transition_post_type_comment_status', 10, 3 );
 	add_action( 'bp_activity_post_type_comment', 'bp_blogs_comment_sync_activity_comment', 10, 4 );
+
+	// If activity comment edited and it's a blog, then set activity comment content as blank.
+	$activity->primary_link = get_comment_link( $post_comment_id );
+
+	/**
+	 * Now that the activity id exists and the post comment was created, we don't need to update
+	 * the content of the comment as there are no chances it has evolved.
+	 */
+	remove_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
+
+	$activity->content = '';
+	$activity->save();
+
+	// Add the edit activity comment hook back.
+	add_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
 
 	restore_current_blog();
 }

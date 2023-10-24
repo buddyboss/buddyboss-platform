@@ -107,7 +107,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'video_type'                         => implode( ',', array_unique( $allowed ) ),
 		'profile_video'                      => bp_is_profile_video_support_enabled() && bb_video_user_can_upload( bp_loggedin_user_id(), 0 ),
 		'profile_album'                      => bp_is_profile_albums_support_enabled(),
-		'group_video'                        => bp_is_group_video_support_enabled() && ( bb_video_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && bp_is_group_single() ? bp_get_current_group_id() : $group_id ) ) || bp_is_activity_directory() ),
+		'group_video'                        => bp_is_group_video_support_enabled() && ( bb_video_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && bp_is_group_single() ? bp_get_current_group_id() : $group_id ) ) || bp_is_activity_directory() || bp_is_user_messages() ),
 		'group_album'                        => bp_is_group_albums_support_enabled(),
 		'messages_video'                     => bp_is_messages_video_support_enabled() && bb_user_can_create_video(),
 		'messages_video_active'              => bp_is_messages_video_support_enabled(),
@@ -157,7 +157,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'album_delete_error'      => __( 'There was a problem deleting the album.', 'buddyboss' ),
 		'video_delete_confirm'    => __( 'Are you sure you want to delete this video?', 'buddyboss' ),
 		'video_enlarge_text'      => __( 'Enlarge', 'buddyboss' ),
-		'video_fullscreen_text'   => __( 'Enter fullscreen', 'buddyboss' ),
+		'video_fullscreen_text'   => __( 'Full screen', 'buddyboss' ),
 		'video_play_text'         => __( 'Play', 'buddyboss' ),
 		'video_pause_text'        => __( 'Pause', 'buddyboss' ),
 		'video_uploaded_text'     => __( 'Uploaded', 'buddyboss' ),
@@ -166,6 +166,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'video_speed_text'        => __( 'Speed', 'buddyboss' ),
 		'video_skip_back_text'    => __( 'Step Back (5)', 'buddyboss' ),
 		'video_skip_forward_text' => __( 'Step Forward (5)', 'buddyboss' ),
+		'video_picture_in_text'   => __( 'This video is playing in the miniplayer.', 'buddyboss' ),
 	);
 
 	return $params;

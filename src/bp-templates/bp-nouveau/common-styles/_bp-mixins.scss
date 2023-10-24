@@ -327,10 +327,7 @@
 // Vertical centering - all in one, this is a
 // fixed mixin for one result/requirement.
 // This class allows us to center child elements
-// using flexbox. This is a progressive enhancement,
-// it won't work in all browsers, older browser will simply
-// fall back to non centered or using older techniques.
-// N.B It would be preferable to remove the older property syntax
+// using flexbox.
 
 @mixin center-vert() {
 	display: -webkit-box; // older
@@ -341,6 +338,25 @@
 	-webkit-align-items: center;
 	-webkit-box-align: center; // old
 	align-items: center; // current specs
+}
+
+// Vertical and Horizontal centering - all in one, this is a
+// fixed mixin for one result/requirement.
+// This class allows us to center child elements
+// using flexbox.
+
+@mixin center-horizontal-vert() {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+	-ms-flex-align: center;
+	-webkit-align-items: center;
+	-webkit-box-align: center;
+	align-items: center;
 }
 
 // Layout elements / lists as grids

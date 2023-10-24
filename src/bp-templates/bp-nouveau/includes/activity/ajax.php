@@ -418,8 +418,15 @@ function bp_nouveau_ajax_new_activity_comment() {
 		wp_send_json_error( $response );
 	}
 
+	$edit_comment_id = 0;
+	if ( ! empty( $_POST['edit_comment'] ) ) {
+		$_POST['edit_comment'] = true;
+		$edit_comment_id       = sanitize_text_field( wp_unslash( $_POST['comment_id'] ) );
+	}
+
 	$comment_id = bp_activity_new_comment(
 		array(
+			'id'          => $edit_comment_id,
 			'activity_id' => $_POST['form_id'],
 			'content'     => $_POST['content'],
 			'parent_id'   => $_POST['comment_id'],
@@ -573,7 +580,7 @@ function bp_nouveau_ajax_post_update() {
 		wp_send_json_error();
 	}
 
-	if ( ! strlen( trim( html_entity_decode( wp_strip_all_tags( $_POST['content'] ) ) ) ) ) {
+	if ( ! strlen( trim( html_entity_decode( wp_strip_all_tags( $_POST['content'] ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ) ) {
 
 		// check activity toolbar options if one of them is set, activity can be empty.
 		$toolbar_option = false;
@@ -629,7 +636,8 @@ function bp_nouveau_ajax_post_update() {
 
 		$media_ids      = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
 		$existing_media = ( ! empty( $media_ids ) ) ? explode( ',', $media_ids ) : array();
-		$posted_media   = array_column( $_POST['media'], 'media_id' ) ? wp_list_pluck( $_POST['media'], 'media_id' ) : array(); //phpcs:ignore
+		$posted_media   = array_column( $_POST['media'], 'media_id' );
+		$posted_media   = wp_parse_id_list( $posted_media );
 		$is_same_media  = ( count( $existing_media ) === count( $posted_media ) && ! array_diff( $existing_media, $posted_media ) );
 
 		if ( ! bb_media_user_can_upload( bp_loggedin_user_id(), $group_id ) && ! $is_same_media ) {
@@ -651,7 +659,8 @@ function bp_nouveau_ajax_post_update() {
 
 		$document_ids      = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
 		$existing_document = ( ! empty( $document_ids ) ) ? explode( ',', $document_ids ) : array();
-		$posted_document   = array_column( $_POST['document'], 'document_id' ) ? wp_list_pluck( $_POST['document'], 'document_id' ) : array(); //phpcs:ignore
+		$posted_document   = array_column( $_POST['document'], 'document_id' );
+		$posted_document   = wp_parse_id_list( $posted_document );
 		$is_same_document  = ( count( $existing_document ) === count( $posted_document ) && ! array_diff( $existing_document, $posted_document ) );
 
 		if ( ! bb_document_user_can_upload( bp_loggedin_user_id(), $group_id ) && ! $is_same_document ) {

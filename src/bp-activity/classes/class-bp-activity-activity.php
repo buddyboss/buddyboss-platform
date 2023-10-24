@@ -432,7 +432,8 @@ class BP_Activity_Activity {
 				'spam'              => 'ham_only',      // Spam status.
 				'update_meta_cache' => true,            // Whether or not to update meta cache.
 				'count_total'       => false,           // Whether or not to use count_total.
-			)
+			),
+			'bb_get_activities'
 		);
 
 		// Select conditions.
@@ -486,7 +487,7 @@ class BP_Activity_Activity {
 		// Searching.
 		if ( $r['search_terms'] ) {
 			$search_terms_like              = '%' . bp_esc_like( $r['search_terms'] ) . '%';
-			$where_conditions['search_sql'] = $wpdb->prepare( 'a.content LIKE %s', $search_terms_like );
+			$where_conditions['search_sql'] = $wpdb->prepare( 'ExtractValue( a.content, "//text()" ) LIKE %s', $search_terms_like );
 
 			/**
 			 * Filters whether or not to include users for search parameters.
@@ -1046,9 +1047,6 @@ class BP_Activity_Activity {
 	 *
 	 * We use BP_Date_Query, which extends WP_Date_Query, to do the heavy lifting
 	 * of parsing the date_query array and creating the necessary SQL clauses.
-	 * However, since BP_Activity_Activity::get() builds its SQL differently than
-	 * WP_Query, we have to alter the return value (stripping the leading AND
-	 * keyword from the query).
 	 *
 	 * @since BuddyPress 2.1.0
 	 *
@@ -1057,15 +1055,7 @@ class BP_Activity_Activity {
 	 * @return string
 	 */
 	public static function get_date_query_sql( $date_query = array() ) {
-		$sql = '';
-
-		// Date query.
-		if ( ! empty( $date_query ) && is_array( $date_query ) ) {
-			$date_query = new BP_Date_Query( $date_query, 'date_recorded' );
-			$sql        = preg_replace( '/^\sAND/', '', $date_query->get_sql() );
-		}
-
-		return $sql;
+		return BP_Date_Query::get_where_sql( $date_query, 'a.date_recorded' );
 	}
 
 	/**
@@ -1217,7 +1207,7 @@ class BP_Activity_Activity {
 
 		$bp = buddypress();
 
-		$where_args = false;
+		$where_args = array();
 
 		if ( ! empty( $user_id ) ) {
 			$where_args[] = $wpdb->prepare( 'user_id = %d', $user_id );
@@ -1515,6 +1505,19 @@ class BP_Activity_Activity {
 		// Merge the comments with the activity items.
 		foreach ( (array) $activities as $key => $activity ) {
 			if ( isset( $activity_comments[ $activity->id ] ) ) {
+
+				// Apply condition for non group activity.
+				// Logged-in member CAN’T see comments by the member in other member’s posts of is/has blocked users.
+				if (
+					bp_is_active( 'moderation' ) &&
+					is_user_logged_in() &&
+					'groups' !== $activity->component &&
+					! empty( $activity_comments[ $activity->id ] ) &&
+					get_current_user_id() !== $activity->user_id
+				) {
+					$activity_comments[ $activity->id ] = self::get_filtered_activity_comments( $activity_comments[ $activity->id ] );
+				}
+
 				$activities[ $key ]->children = $activity_comments[ $activity->id ];
 			}
 		}
@@ -1550,12 +1553,12 @@ class BP_Activity_Activity {
 		// We store the string 'none' to cache the fact that the
 		// activity item has no comments.
 		if ( 'none' === $comments ) {
-			$comments = false;
+			$comments = array();
 
 			// A true cache miss.
 		} elseif ( empty( $comments ) ) {
-
-			$bp = buddypress();
+			$comments = array();
+			$bp       = buddypress();
 
 			// Select the user's fullname with the query.
 			if ( bp_is_active( 'xprofile' ) ) {
@@ -1645,25 +1648,31 @@ class BP_Activity_Activity {
 				/**
 				 * Filters the MySQL From query for legacy activity comment.
 				 *
-                 * @since BuddyBoss 1.5.6
+				 * @since BuddyBoss 1.5.6
 				 *
 				 * @param string $from Activity Comment from query
-				 *
 				 */
 				$sql['from'] = apply_filters( 'bp_activity_comments_get_join_sql', $sql['from'] );
 
 				/**
 				 * Filters the MySQL Where query for legacy activity comment.
 				 *
-                 * @since BuddyBoss 1.5.6
+				 * @since BuddyBoss 1.5.6
 				 *
 				 * @param string $where Activity Comment from query
-				 *
 				 */
 				$sql['where'] = apply_filters( 'bp_activity_comments_get_where_conditions', $sql['where'] );
 
-				$sql = "{$sql['select']} {$sql['from']} {$sql['where']} {$sql['misc']}";
+				/**
+				 * Filters the MySQL From query for order by activity comment.
+				 *
+				 * @since BuddyBoss 2.4.20
+				 *
+				 * @param string $misc Activity Comment from query
+				 */
+				$sql['misc'] = apply_filters( 'bp_activity_comments_get_misc_sql', $sql['misc'] );
 
+				$sql = "{$sql['select']} {$sql['from']} {$sql['where']} {$sql['misc']}";
 				$sql = $wpdb->prepare( $sql, $top_level_parent_id, $left, $right );
 
 				$descendant_ids = $wpdb->get_col( $sql );
@@ -1725,7 +1734,7 @@ class BP_Activity_Activity {
 			// miss the next time the activity comments are fetched.
 			// Storing the string 'none' is a hack workaround to
 			// avoid unnecessary queries.
-			if ( false === $comments ) {
+			if ( false === $comments || empty( $comments ) ) {
 				$cache_value = 'none';
 			} else {
 				$cache_value = $comments;
@@ -2042,5 +2051,32 @@ class BP_Activity_Activity {
 		$bp = buddypress();
 
 		return $wpdb->get_var( $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET hide_sitewide = 1 WHERE user_id = %d", $user_id ) );
+	}
+
+	/**
+	 * Hide all is/has blocked user activity comments on other member posts.
+	 *
+	 * @since BuddyBoss 2.3.50
+	 *
+	 * @param array|object $activity_comments The activity object or array.
+	 *
+	 * @return array|object
+	 */
+	public static function get_filtered_activity_comments( $activity_comments ) {
+		if ( ! empty( $activity_comments ) ) {
+			foreach ( $activity_comments as $activity_id => $activity_comment ) {
+				if (
+					! empty( $activity_comment ) &&
+					bb_moderation_is_user_blocked_by( $activity_comment->user_id ) ||
+					bp_moderation_is_user_blocked( $activity_comment->user_id )
+				) {
+					unset( $activity_comments[ $activity_id ] );
+				} elseif ( ! empty( $activity_comment->children ) ) {
+					$activity_comment->children = self::get_filtered_activity_comments( $activity_comment->children );
+				}
+			}
+		}
+
+		return $activity_comments;
 	}
 }

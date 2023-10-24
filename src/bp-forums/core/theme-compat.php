@@ -526,7 +526,7 @@ function bbp_template_include_theme_compat( $template = '' ) {
 
 			// ...or use the existing page title?
 		} else {
-			$new_title = apply_filters( 'the_title', $page->post_title );
+			$new_title = apply_filters( 'the_title', $page->post_title, $page->ID );
 		}
 
 		// Reset post
@@ -602,7 +602,7 @@ function bbp_template_include_theme_compat( $template = '' ) {
 
 			// ...or use the existing page title?
 		} else {
-			$new_title = apply_filters( 'the_title', $page->post_title );
+			$new_title = apply_filters( 'the_title', $page->post_title, $page->ID );
 		}
 
 		// Reset post
@@ -819,7 +819,7 @@ function bbp_template_include_theme_compat( $template = '' ) {
  *
  * @since bbPress (r2628)
  * @param string $redirect_url Redirect url
- * @uses WP_Rewrite::using_permalinks() To check if the blog is using permalinks
+ * @uses bbp_use_pretty_urls() To check if the blog is using permalinks
  * @uses bbp_get_paged() To get the current page number
  * @uses bbp_is_single_topic() To check if it's a topic page
  * @uses bbp_is_single_forum() To check if it's a forum page
@@ -830,7 +830,7 @@ function bbp_redirect_canonical( $redirect_url ) {
 	global $wp_rewrite;
 
 	// Canonical is for the beautiful
-	if ( $wp_rewrite->using_permalinks() ) {
+	if ( bbp_use_pretty_urls() ) {
 
 		// If viewing beyond page 1 of several
 		if ( 1 < bbp_get_paged() ) {
@@ -982,21 +982,17 @@ function bbp_restore_all_filters( $tag, $priority = false ) {
  * @param int  $post_id ID of the post to check
  * @return bool True if open, false if closed
  */
-function bbp_force_comment_status( $open, $post_id = 0 ) {
+function bbp_force_comment_status( $open = false, $post_id = 0 ) {
 
 	// Get the post type of the post ID
 	$post_type = get_post_type( $post_id );
 
 	// Default return value is what is passed in $open
-	$retval = $open;
+	$retval = (bool) $open;
 
-	// Only force for Forums post types
-	switch ( $post_type ) {
-		case bbp_get_forum_post_type():
-		case bbp_get_topic_post_type():
-		case bbp_get_reply_post_type():
-			$retval = false;
-			break;
+	// Only force for bbpress post types.
+	if ( in_array( $post_type, bbp_get_post_types(), true ) ) {
+		$retval = false;
 	}
 
 	// Allow override of the override

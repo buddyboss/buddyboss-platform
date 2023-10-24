@@ -31,7 +31,16 @@
 					<div class="bb-field-steps bb-field-steps-1">
 
 						<div class="bb-dropzone-wrap bp-media-upload-tab-content bp-upload-tab-content" id="bp-dropzone-content">
-							<?php if ( bp_is_active( 'forums' ) && ! bbp_is_single_forum() && ! bbp_is_single_topic() && ! bp_is_messages_component() && bp_is_active( 'activity' ) ) : ?>
+							<?php
+							if (
+								(
+									! bp_is_active( 'forums' ) ||
+									( bp_is_active( 'forums' ) && ! bbp_is_single_forum() && ! bbp_is_single_topic() )
+								) &&
+								! bp_is_messages_component() &&
+								bp_is_active( 'activity' )
+							) :
+								?>
 								<div class="media-uploader-post-content">
 									<textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php bp_is_group() ? esc_html_e( 'Write something about your photos, to be shown on the group feed', 'buddyboss' ) : esc_html_e( 'Write something about your photos, to be shown on your timeline', 'buddyboss' ); ?>"></textarea>
 								</div>
@@ -52,7 +61,7 @@
 													<div class="dz-size" data-dz-size></div>
 												</div>
 												<div class="dz-progress-ring-wrap">
-													<i class="bb-icon-f bb-icon-image"></i>
+													<i class="bb-icon-f bb-icon-camera"></i>
 													<svg class="dz-progress-ring" width="54" height="54">
 														<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 													</svg>
@@ -132,7 +141,7 @@
 					<footer class="bb-model-footer media-uploader-footer">
 						<a href="#" class="bp-media-open-create-popup-folder" style="display: none;">
 							<i class="bb-icon-l bb-icon-plus"></i>
-							Create new album
+							<?php esc_html_e( 'Create new album', 'buddyboss' ); ?>
 						</a>
 						<?php if ( ! bp_is_group() ) : ?>
 							<div class="bb-dropdown-wrap">

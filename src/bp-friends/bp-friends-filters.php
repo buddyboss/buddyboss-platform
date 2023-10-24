@@ -106,9 +106,17 @@ function bp_friends_filter_media_scope( $retval = array(), $filter = array() ) {
 
 	if ( ! empty( $filter['search_terms'] ) ) {
 		$retval[] = array(
-			'column'  => 'title',
-			'compare' => 'LIKE',
-			'value'   => $filter['search_terms'],
+			'relation' => 'OR',
+			array(
+				'column'  => 'title',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+			array(
+				'column'  => 'description',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			)
 		);
 	}
 
@@ -175,9 +183,17 @@ function bp_friends_filter_video_scope( $retval = array(), $filter = array() ) {
 
 	if ( ! empty( $filter['search_terms'] ) ) {
 		$retval[] = array(
-			'column'  => 'title',
-			'compare' => 'LIKE',
-			'value'   => $filter['search_terms'],
+			'relation' => 'OR',
+			array(
+				'column'  => 'title',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+			array(
+				'column'  => 'description',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			)
 		);
 	}
 
@@ -456,3 +472,23 @@ function bb_load_friends_notifications() {
 }
 // Load Group Notifications.
 add_action( 'bp_friends_includes', 'bb_load_friends_notifications' );
+
+/**
+ * Function to prevent friendship to that user who has blocked and who is blocked the current user.
+ *
+ * @since BuddyBoss 2.3.50
+ *
+ * @param BP_Friends_Friendship $value Current friendship request object.
+ */
+function bb_friends_friendship_before_save( $value ) {
+	if ( bp_is_active( 'moderation' ) ) {
+		if (
+			bb_moderation_is_user_blocked_by( $value->friend_user_id ) ||
+			bp_moderation_is_user_blocked( $value->friend_user_id )
+		) {
+			$value->friend_user_id = '';
+		}
+	}
+}
+
+add_action( 'friends_friendship_before_save', 'bb_friends_friendship_before_save', 10, 1 );

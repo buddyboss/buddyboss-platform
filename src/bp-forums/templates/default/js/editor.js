@@ -32,7 +32,8 @@ jQuery( document ).ready(
 								text: window.bbpEditorJsStrs.description,
 								hideOnClick: true
 							},
-							toolbar: toolbarOptions,
+							// toolbar: toolbarOptions,
+							toolbar: Object.assign(toolbarOptions, { relativeContainer: jQuery( element ).closest( '.bbp-forum-form' ).closest( '.bbp-forum-form' ).find( '#whats-new-toolbar' )[0] } ),
 							paste: {
 								forcePlainText: false,
 								cleanPastedHTML: true,
@@ -48,6 +49,7 @@ jQuery( document ).ready(
 							},
 							imageDragging: false,
 							anchor: {
+								placeholderText: BP_Nouveau.anchorPlaceholderText,
 								linkValidation: true
 							}
 						}
@@ -81,20 +83,34 @@ jQuery( document ).ready(
 								}
 							);
 							bbp_forum_content.val( jQuery(dummy_element).html() );
+
+							// Enable submit button if content is available.
+							var $reply_content   = jQuery( element ).html();
+
+							$reply_content = jQuery.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+							$reply_content = $reply_content.replace( /&nbsp;/g, ' ' );
+
+							var content_text = jQuery( '<p>' + $reply_content + '</p>' ).text();
+							if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
+								jQuery( element ).closest( 'form' ).addClass( 'has-content' );
+							} else {
+								jQuery( element ).closest( 'form' ).removeClass( 'has-content' );
+							}
 						}
 					);
 
-					element.addEventListener( 'paste', function ( event ) {
-						// Get user's pasted data.
-						var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
-							data = clipboardData.getData( 'text/plain' );
+					window.forums_medium_forum_editor[key].subscribe( 'editablePaste', function ( e ) {
+						// Wrap all target <li> elements in a single <ul>
+						var targetLiElements = jQuery(e.target).find('li').filter(function() {
+							return !jQuery(this).parent().is('ul') && !jQuery(this).parent().is('ol');
+						});
+						if (targetLiElements.length > 0) {
+							targetLiElements.wrapAll('<ul></ul>');
+							// Update content into input field
+							jQuery( e.target ).closest( 'form' ).find( '#bbp_forum_content' ).val( window.forums_medium_forum_editor[key].getContent() );
+						}
+					});
 
-						// Insert the filtered content.
-						document.execCommand( 'insertHTML', false, data );
-
-						// Prevent the standard paste behavior.
-						event.preventDefault();
-					} );
 				});
 			}
 
@@ -135,7 +151,8 @@ jQuery( document ).ready(
 								text: window.bbpEditorJsStrs.type_reply,
 								hideOnClick: true
 							},
-							toolbar: toolbarOptions,
+							// toolbar: toolbarOptions,
+							toolbar: Object.assign(toolbarOptions, { relativeContainer: jQuery( element ).closest( '.bbp-reply-form' ).closest( '.bbp-reply-form' ).find( '#whats-new-toolbar' )[0] } ),
 							paste: {
 								forcePlainText: false,
 								cleanPastedHTML: true,
@@ -151,6 +168,7 @@ jQuery( document ).ready(
 							},
 							imageDragging: false,
 							anchor: {
+								placeholderText: BP_Nouveau.anchorPlaceholderText,
 								linkValidation: true
 							}
 						}
@@ -184,26 +202,88 @@ jQuery( document ).ready(
 								}
 							);
 							bbp_reply_content.val( jQuery(dummy_element).html() );
+
+							// Enable submit button if content is available.
+							var $reply_content   = jQuery( element ).html();
+
+							$reply_content = jQuery.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+							$reply_content = $reply_content.replace( /&nbsp;/g, ' ' );
+
+							var content_text = jQuery( '<p>' + $reply_content + '</p>' ).text();
+							if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
+								jQuery( element ).closest( 'form' ).addClass( 'has-content' );
+							} else {
+								jQuery( element ).closest( 'form' ).removeClass( 'has-content' );
+							}
+
+							if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
+								if ( window.forums_medium_reply_editor[key].linkTimeout != null ) {
+									clearTimeout( window.forums_medium_reply_editor[key].linkTimeout );
+								}
+
+								window.forums_medium_reply_editor[key].linkTimeout = setTimeout(
+									function () {
+										var form = jQuery(element).closest( 'form' );
+										window.forums_medium_reply_editor[key].linkTimeout = null;
+										bp.Nouveau.linkPreviews.currentTarget = window.forums_medium_reply_editor[key];
+										bp.Nouveau.linkPreviews.scrapURL( bbp_reply_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
+									},
+									500
+								);
+							}
 						}
 					);
 
-					element.addEventListener( 'paste', function ( event ) {
-						// Get user's pasted data.
-						var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
-							data = clipboardData.getData( 'text/plain' );
+					window.forums_medium_reply_editor[key].subscribe( 'editablePaste', function ( e ) {
+						// Wrap all target <li> elements in a single <ul>
+						var targetLiElements = jQuery(e.target).find('li').filter(function() {
+							return !jQuery(this).parent().is('ul') && !jQuery(this).parent().is('ol');
+						});
+						if (targetLiElements.length > 0) {
+							targetLiElements.wrapAll('<ul></ul>');
+							// Update content into input field
+							jQuery( e.target ).closest( 'form' ).find( '#bbp_reply_content' ).val( window.forums_medium_reply_editor[key].getContent() );
+						}
+					});
 
-						// Insert the filtered content.
-						document.execCommand( 'insertHTML', false, data );
+					if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
+						var bbp_reply_content = jQuery(element).closest('form').find( '#bbp_reply_content' );
+						var form = jQuery(element).closest( 'form' );
+						bp.Nouveau.linkPreviews.scrapURL( bbp_reply_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
 
-						// Prevent the standard paste behavior.
-						event.preventDefault();
-					} );
+						var link_preview_input = jQuery( element ).closest( 'form' ).find( '#link_preview_data' );
+						if( link_preview_input.length > 0) {
+							link_preview_input.on( 'change', function() {
+								if( link_preview_input.val() !== '' ) {
+									var link_preview_data = JSON.parse( link_preview_input.val() );
+									if( link_preview_data && link_preview_data.link_url !== '' ) {
+										jQuery( element ).closest( 'form' ).addClass( 'has-link-preview' );
+									} else {
+										jQuery( element ).closest( 'form' ).removeClass( 'has-link-preview' );
+									}
+								}
+							});
+						}
+					}
+
+					jQuery('a.bp-suggestions-mention:empty').remove();
+					setTimeout(
+						function () {
+							jQuery('a.bp-suggestions-mention:empty').remove();
+						},
+						500
+					);
+
 				});
+
 			}
 
 			// Add Click event to show / hide text formatting Toolbar for reply form.
 			jQuery( document ).on( 'click', '.bbp-reply-form #whats-new-toolbar .show-toolbar', function ( e ) {
 				e.preventDefault();
+				if( jQuery( this ).closest( '.bbpress-forums-activity.bb-quick-reply-form-wrap' ).length > 0) {
+					return;
+				}
 				var key = jQuery( e.currentTarget ).closest( '.bbp-reply-form' ).find( '.bbp_editor_reply_content' ).data( 'key' );
 				var medium_editor = jQuery( e.currentTarget ).closest( '.bbp-form' ).find( '.medium-editor-toolbar' );
 				jQuery( e.currentTarget ).find( '.toolbar-button' ).toggleClass( 'active' );
@@ -238,7 +318,8 @@ jQuery( document ).ready(
 								text: window.bbpEditorJsStrs.type_topic,
 								hideOnClick: true
 							},
-							toolbar: toolbarOptions,
+							// toolbar: toolbarOptions,
+							toolbar: Object.assign(toolbarOptions, { relativeContainer: jQuery( element ).closest( '.bbp-topic-form ' ).find( '#whats-new-toolbar' )[0] } ),
 							paste: {
 								forcePlainText: false,
 								cleanPastedHTML: true,
@@ -254,6 +335,7 @@ jQuery( document ).ready(
 							},
 							imageDragging: false,
 							anchor: {
+								placeholderText: BP_Nouveau.anchorPlaceholderText,
 								linkValidation: true
 							}
 						}
@@ -289,21 +371,80 @@ jQuery( document ).ready(
 								}
 							);
 							bbp_topic_content.val( jQuery(dummy_element).html() );
+
+							// Enable submit button if content is available.
+							var $reply_content   = jQuery( element ).html();
+
+							$reply_content = jQuery.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+							$reply_content = $reply_content.replace( /&nbsp;/g, ' ' );
+
+							var content_text = jQuery( '<p>' + $reply_content + '</p>' ).text();
+							if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
+								jQuery( element ).closest( 'form' ).addClass( 'has-content' );
+							} else {
+								jQuery( element ).closest( 'form' ).removeClass( 'has-content' );
+							}
+
+							if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
+								if ( window.forums_medium_topic_editor[key].linkTimeout != null ) {
+									clearTimeout( window.forums_medium_topic_editor[key].linkTimeout );
+								}
+
+								window.forums_medium_topic_editor[key].linkTimeout = setTimeout(
+									function () {
+										var form = jQuery(element).closest('form');
+										window.forums_medium_topic_editor[key].linkTimeout = null;
+										bp.Nouveau.linkPreviews.currentTarget = window.forums_medium_topic_editor[key];
+										bp.Nouveau.linkPreviews.scrapURL( bbp_topic_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
+									},
+									500
+								);
+							}
 						}
 					);
 
-					element.addEventListener( 'paste', function ( event ) {
-						// Get user's pasted data.
-						var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
-							data = clipboardData.getData( 'text/plain' );
+					window.forums_medium_topic_editor[key].subscribe( 'editablePaste', function ( e ) {
+						// Wrap all target <li> elements in a single <ul>
+						var targetLiElements = jQuery(e.target).find('li').filter(function() {
+							return !jQuery(this).parent().is('ul') && !jQuery(this).parent().is('ol');
+						});
+						if (targetLiElements.length > 0) {
+							targetLiElements.wrapAll('<ul></ul>');
+							// Update content into input field
+							jQuery( e.target ).closest( 'form' ).find( '#bbp_topic_content' ).val( window.forums_medium_topic_editor[key].getContent() );
+						}
+					});
 
-						// Insert the filtered content.
-						document.execCommand( 'insertHTML', false, data );
+					if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
+						var bbp_topic_content = jQuery(element).closest('form').find( '#bbp_topic_content' );
+						var form = jQuery(element).closest( 'form' );
+						bp.Nouveau.linkPreviews.scrapURL( bbp_topic_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
 
-						// Prevent the standard paste behavior.
-						event.preventDefault();
-					} );
+						var link_preview_input = jQuery( element ).closest( 'form' ).find( '#link_preview_data' );
+						if( link_preview_input.length > 0) {
+							link_preview_input.on( 'change', function() {
+								if( link_preview_input.val() !== '' ) {
+									var link_preview_data = JSON.parse( link_preview_input.val() );
+									if( link_preview_data && link_preview_data.link_url !== '' ) {
+										jQuery( element ).closest( 'form' ).addClass( 'has-link-preview' );
+									} else {
+										jQuery( element ).closest( 'form' ).removeClass( 'has-link-preview' );
+									}
+								}
+							});
+						}
+					}
+
+					jQuery('a.bp-suggestions-mention:empty').remove();
+					setTimeout(
+						function () {
+							jQuery('a.bp-suggestions-mention:empty').remove();
+						},
+						500
+					);
+
 				});
+
 			}
 
 			// Add Click event to show / hide text formatting Toolbar for topic form.
@@ -425,7 +566,8 @@ jQuery( document ).ready(
 										text: window.bbpEditorJsStrs.description,
 										hideOnClick: true
 									},
-									toolbar: toolbarOptions,
+									// toolbar: toolbarOptions,
+									toolbar: Object.assign(toolbarOptions, { relativeContainer: jQuery( element ).closest( '.bbp-forum-form' ).find( '#whats-new-toolbar' )[0] } ),
 									paste: {
 										forcePlainText: false,
 										cleanPastedHTML: true,
@@ -441,6 +583,7 @@ jQuery( document ).ready(
 									},
 									imageDragging: false,
 									anchor: {
+										placeholderText: BP_Nouveau.anchorPlaceholderText,
 										linkValidation: true
 									}
 								}
@@ -455,8 +598,70 @@ jQuery( document ).ready(
 									for( var i = 0; i < atwho_query.length; i++ ) {
 										jQuery(atwho_query[i]).replaceWith( atwho_query[i].innerText );
 									}
+
+									// Enable submit button if content is available.
+									var $reply_content   = jQuery( element ).html();
+
+									$reply_content = jQuery.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+									$reply_content = $reply_content.replace( /&nbsp;/g, ' ' );
+
+									var content_text = jQuery( '<p>' + $reply_content + '</p>' ).text();
+									if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
+										jQuery( element ).closest( 'form' ).addClass( 'has-content' );
+									} else {
+										jQuery( element ).closest( 'form' ).removeClass( 'has-content' );
+									}
+
+									if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
+										if ( window.forums_medium_forum_editor[key].linkTimeout != null ) {
+											clearTimeout( window.forums_medium_forum_editor[key].linkTimeout );
+										}
+
+										window.forums_medium_forum_editor[key].linkTimeout = setTimeout(
+											function () {
+												var form = jQuery(element).closest('form');
+												window.forums_medium_forum_editor[key].linkTimeout = null;
+												bp.Nouveau.linkPreviews.currentTarget = window.forums_medium_forum_editor[key];
+												bp.Nouveau.linkPreviews.scrapURL( bbp_forum_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
+											},
+											500
+										);
+									}
 								}
 							);
+
+							window.forums_medium_forum_editor[key].subscribe( 'editablePaste', function ( e ) {
+								// Wrap all target <li> elements in a single <ul>
+								var targetLiElements = jQuery(e.target).find('li').filter(function() {
+									return !jQuery(this).parent().is('ul') && !jQuery(this).parent().is('ol');
+								});
+								if (targetLiElements.length > 0) {
+									targetLiElements.wrapAll('<ul></ul>');
+									// Update content into input field
+									jQuery( e.target ).closest( 'form' ).find( '#bbp_forum_content' ).val( window.forums_medium_forum_editor[key].getContent() );
+								}
+							});
+
+							if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
+								var bbp_forum_content = jQuery(element).closest('form').find( '#bbp_forum_content' );
+								var form = jQuery(element).closest( 'form' );
+								bp.Nouveau.linkPreviews.scrapURL( bbp_forum_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
+
+								var link_preview_input = jQuery( element ).closest( 'form' ).find( '#link_preview_data' );
+								if( link_preview_input.length > 0) {
+									link_preview_input.on( 'change', function() {
+										if( link_preview_input.val() !== '' ) {
+											var link_preview_data = JSON.parse( link_preview_input.val() );
+											if( link_preview_data && link_preview_data.link_url !== '' ) {
+												jQuery( element ).closest( 'form' ).addClass( 'has-link-preview' );
+											} else {
+												jQuery( element ).closest( 'form' ).removeClass( 'has-link-preview' );
+											}
+										}
+									});
+								}
+							}
+
 						});
 					}
 					if ( jQuery( '.bbp_editor_reply_content' ).length ) {
@@ -476,7 +681,8 @@ jQuery( document ).ready(
 										text: window.bbpEditorJsStrs.type_reply,
 										hideOnClick: true
 									},
-									toolbar: toolbarOptions,
+									// toolbar: toolbarOptions,
+									toolbar: Object.assign(toolbarOptions, { relativeContainer: jQuery( element ).closest( '.bbp-reply-form' ).find( '#whats-new-toolbar' )[0] } ),
 									paste: {
 										forcePlainText: false,
 										cleanPastedHTML: true,
@@ -492,6 +698,7 @@ jQuery( document ).ready(
 									},
 									imageDragging: false,
 									anchor: {
+										placeholderText: BP_Nouveau.anchorPlaceholderText,
 										linkValidation: true
 									}
 								}
@@ -506,8 +713,69 @@ jQuery( document ).ready(
 									for( var i = 0; i < atwho_query.length; i++ ) {
 										jQuery(atwho_query[i]).replaceWith( atwho_query[i].innerText );
 									}
+
+									// Enable submit button if content is available.
+									var $reply_content   = jQuery( element ).html();
+
+									$reply_content = jQuery.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+									$reply_content = $reply_content.replace( /&nbsp;/g, ' ' );
+
+									var content_text = jQuery( '<p>' + $reply_content + '</p>' ).text();
+									if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
+										jQuery( element ).closest( 'form' ).addClass( 'has-content' );
+									} else {
+										jQuery( element ).closest( 'form' ).removeClass( 'has-content' );
+									}
+
+									if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
+										if ( window.forums_medium_reply_editor[key].linkTimeout != null ) {
+											clearTimeout( window.forums_medium_reply_editor[key].linkTimeout );
+										}
+
+										window.forums_medium_reply_editor[key].linkTimeout = setTimeout(
+											function () {
+												var form = jQuery(element).closest( 'form' );
+												window.forums_medium_reply_editor[key].linkTimeout = null;
+												bp.Nouveau.linkPreviews.currentTarget = window.forums_medium_reply_editor[key];
+												bp.Nouveau.linkPreviews.scrapURL( bbp_reply_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
+											},
+											500
+										);
+									}
 								}
 							);
+
+							window.forums_medium_reply_editor[key].subscribe( 'editablePaste', function ( e ) {
+								// Wrap all target <li> elements in a single <ul>
+								var targetLiElements = jQuery(e.target).find('li').filter(function() {
+									return !jQuery(this).parent().is('ul') && !jQuery(this).parent().is('ol');
+								});
+								if (targetLiElements.length > 0) {
+									targetLiElements.wrapAll('<ul></ul>');
+									// Update content into input field
+									jQuery( e.target ).closest( 'form' ).find( '#bbp_reply_content' ).val( window.forums_medium_reply_editor[key].getContent() );
+								}
+							});
+
+							if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
+								var bbp_reply_content = jQuery(element).closest('form').find( '#bbp_reply_content' );
+								var form = jQuery(element).closest( 'form' );
+								bp.Nouveau.linkPreviews.scrapURL( bbp_reply_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
+
+								var link_preview_input = jQuery( element ).closest( 'form' ).find( '#link_preview_data' );
+								if( link_preview_input.length > 0) {
+									link_preview_input.on( 'change', function() {
+										if( link_preview_input.val() !== '' ) {
+											var link_preview_data = JSON.parse( link_preview_input.val() );
+											if( link_preview_data && link_preview_data.link_url !== '' ) {
+												jQuery( element ).closest( 'form' ).addClass( 'has-link-preview' );
+											} else {
+												jQuery( element ).closest( 'form' ).removeClass( 'has-link-preview' );
+											}
+										}
+									});
+								}
+							}
 						});
 					}
 					if ( jQuery( '.bbp_editor_topic_content' ).length ) {
@@ -527,7 +795,8 @@ jQuery( document ).ready(
 										text: window.bbpEditorJsStrs.type_topic,
 										hideOnClick: true
 									},
-									toolbar: toolbarOptions,
+									// toolbar: toolbarOptions,
+									toolbar: Object.assign(toolbarOptions, { relativeContainer: jQuery( element ).closest( '.bbp-topic-form' ).find( '#whats-new-toolbar' )[0] } ),
 									paste: {
 										forcePlainText: false,
 										cleanPastedHTML: true,
@@ -543,6 +812,7 @@ jQuery( document ).ready(
 									},
 									imageDragging: false,
 									anchor: {
+										placeholderText: BP_Nouveau.anchorPlaceholderText,
 										linkValidation: true
 									}
 								}
@@ -558,8 +828,69 @@ jQuery( document ).ready(
 									for( var i = 0; i < atwho_query.length; i++ ) {
 										jQuery(atwho_query[i]).replaceWith( atwho_query[i].innerText );
 									}
+
+									// Enable submit button if content is available.
+									var $reply_content   = jQuery( element ).html();
+
+									$reply_content = jQuery.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+									$reply_content = $reply_content.replace( /&nbsp;/g, ' ' );
+
+									var content_text = jQuery( '<p>' + $reply_content + '</p>' ).text();
+									if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
+										jQuery( element ).closest( 'form' ).addClass( 'has-content' );
+									} else {
+										jQuery( element ).closest( 'form' ).removeClass( 'has-content' );
+									}
+
+									if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
+										if ( window.forums_medium_topic_editor[key].linkTimeout != null ) {
+											clearTimeout( window.forums_medium_topic_editor[key].linkTimeout );
+										}
+
+										window.forums_medium_topic_editor[key].linkTimeout = setTimeout(
+											function () {
+												var form = jQuery(element).closest( 'form' );
+												window.forums_medium_topic_editor[key].linkTimeout = null;
+												bp.Nouveau.linkPreviews.currentTarget = window.forums_medium_topic_editor[key];
+												bp.Nouveau.linkPreviews.scrapURL( bbp_topic_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
+											},
+											500
+										);
+									}
 								}
 							);
+
+							window.forums_medium_topic_editor[key].subscribe( 'editablePaste', function ( e ) {
+								// Wrap all target <li> elements in a single <ul>
+								var targetLiElements = jQuery(e.target).find('li').filter(function() {
+									return !jQuery(this).parent().is('ul') && !jQuery(this).parent().is('ol');
+								});
+								if (targetLiElements.length > 0) {
+									targetLiElements.wrapAll('<ul></ul>');
+									// Update content into input field
+									jQuery( e.target ).closest( 'form' ).find( '#bbp_topic_content' ).val( window.forums_medium_topic_editor[key].getContent() );
+								}
+							});
+
+							if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
+								var bbp_topic_content = jQuery(element).closest('form').find( '#bbp_topic_content' );
+								var form = jQuery(element).closest( 'form' );
+								bp.Nouveau.linkPreviews.scrapURL( bbp_topic_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
+
+								var link_preview_input = jQuery( element ).closest( 'form' ).find( '#link_preview_data' );
+								if( link_preview_input.length > 0) {
+									link_preview_input.on( 'change', function() {
+										if( link_preview_input.val() !== '' ) {
+											var link_preview_data = JSON.parse( link_preview_input.val() );
+											if( link_preview_data && link_preview_data.link_url !== '' ) {
+												jQuery( element ).closest( 'form' ).addClass( 'has-link-preview' );
+											} else {
+												jQuery( element ).closest( 'form' ).removeClass( 'has-link-preview' );
+											}
+										}
+									});
+								}
+							}
 						});
 					}
 				}

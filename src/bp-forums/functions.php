@@ -4,7 +4,7 @@
  * Main Forums BuddyBoss Class
  *
  * @package BuddyBoss\Forums
- * @todo maybe move to BuddyBoss Forums once bbPress 1.1 can be removed
+ * @todo    maybe move to BuddyBoss Forums once bbPress 1.1 can be removed
  */
 
 // Exit if accessed directly.
@@ -57,29 +57,27 @@ function bbp_filter_user_id( $user_id = 0, $displayed_user_fallback = true, $cur
 	// Easy empty checking.
 	if ( ! empty( $user_id ) && is_numeric( $user_id ) ) {
 		$bbp_user_id = $user_id;
-	}
-
-	// Currently viewing or editing a user.
-	elseif ( ( true === $displayed_user_fallback ) && ! empty( $did ) ) {
+		// Currently viewing or editing a user.
+	} elseif ( ( true === $displayed_user_fallback ) && ! empty( $did ) ) {
 		$bbp_user_id = $did;
-	}
-
-	// Maybe fallback on the current_user ID.
-	elseif ( ( true === $current_user_fallback ) && ! empty( $lid ) ) {
+		// Maybe fallback on the current_user ID.
+	} elseif ( ( true === $current_user_fallback ) && ! empty( $lid ) ) {
 		$bbp_user_id = $lid;
 	}
 
 	return $bbp_user_id;
 }
+
 add_filter( 'bbp_get_user_id', 'bbp_filter_user_id', 10, 3 );
 
 /**
  * Filter the Forums is_single_user function with BuddyBoss equivalent
  *
+ * @since bbPress (r3552)
+ *
  * @param bool $is Optional. Default false
  *
  * @return bool True if viewing single user, false if not
- * @since bbPress (r3552)
  */
 function bbp_filter_is_single_user( $is = false ) {
 	if ( ! empty( $is ) ) {
@@ -88,6 +86,7 @@ function bbp_filter_is_single_user( $is = false ) {
 
 	return bp_is_user();
 }
+
 add_filter( 'bbp_is_single_user', 'bbp_filter_is_single_user', 10, 1 );
 
 /**
@@ -96,6 +95,7 @@ add_filter( 'bbp_is_single_user', 'bbp_filter_is_single_user', 10, 1 );
  * @since bbPress (r3552)
  *
  * @param bool $is Optional. Default false
+ *
  * @return bool True if viewing single user, false if not
  */
 function bbp_filter_is_user_home( $is = false ) {
@@ -105,17 +105,20 @@ function bbp_filter_is_user_home( $is = false ) {
 
 	return bp_is_my_profile();
 }
+
 add_filter( 'bbp_is_user_home', 'bbp_filter_is_user_home', 10, 1 );
 
 /**
  * Add the topic title to the <title> if viewing a single group forum topic
  *
- * @param string $new_title The title to filter
+ * @since bbPress (r5161)
+ *
  * @param string $old_title (Not used)
  * @param string $sep       The separator to use
  *
+ * @param string $new_title The title to filter
+ *
  * @return string The possibly modified title
- * @since bbPress (r5161)
  */
 function bbp_filter_modify_page_title( $new_title = '', $old_title = '', $sep = '' ) {
 
@@ -145,6 +148,7 @@ function bbp_filter_modify_page_title( $new_title = '', $old_title = '', $sep = 
 	// Return the title.
 	return $new_title;
 }
+
 add_action( 'bp_modify_page_title', 'bbp_filter_modify_page_title', 10, 3 );
 
 /** BuddyBoss Screens ********************************************************/
@@ -154,8 +158,8 @@ add_action( 'bp_modify_page_title', 'bbp_filter_modify_page_title', 10, 3 );
  *
  * @since bbPress (r3552)
  *
- * @uses add_action() To add the content hook
- * @uses bp_core_load_template() To load the plugins template
+ * @uses  add_action() To add the content hook
+ * @uses  bp_core_load_template() To load the plugins template
  */
 function bbp_member_forums_screen_topics() {
 	add_action( 'bp_template_content', 'bbp_member_forums_topics_content' );
@@ -167,8 +171,8 @@ function bbp_member_forums_screen_topics() {
  *
  * @since bbPress (r3552)
  *
- * @uses add_action() To add the content hook
- * @uses bp_core_load_template() To load the plugins template
+ * @uses  add_action() To add the content hook
+ * @uses  bp_core_load_template() To load the plugins template
  */
 function bbp_member_forums_screen_replies() {
 	add_action( 'bp_template_content', 'bbp_member_forums_replies_content' );
@@ -180,8 +184,8 @@ function bbp_member_forums_screen_replies() {
  *
  * @since bbPress (r3552)
  *
- * @uses add_action() To add the content hook
- * @uses bp_core_load_template() To load the plugins template
+ * @uses  add_action() To add the content hook
+ * @uses  bp_core_load_template() To load the plugins template
  */
 function bbp_member_forums_screen_favorites() {
 	add_action( 'bp_template_content', 'bbp_member_forums_favorites_content' );
@@ -193,8 +197,8 @@ function bbp_member_forums_screen_favorites() {
  *
  * @since bbPress (r3552)
  *
- * @uses add_action() To add the content hook
- * @uses bp_core_load_template() To load the plugins template
+ * @uses  add_action() To add the content hook
+ * @uses  bp_core_load_template() To load the plugins template
  */
 function bbp_member_forums_screen_subscriptions() {
 	add_action( 'bp_template_content', 'bbp_member_forums_subscriptions_content' );
@@ -208,17 +212,13 @@ function bbp_member_forums_screen_subscriptions() {
  *
  * @since bbPress (r3552)
  *
- * @uses bbp_get_template_part()s
+ * @uses  bbp_get_template_part()s
  */
 function bbp_member_forums_topics_content() {
 	?>
-
 	<div id="bbpress-forums">
-
 		<?php bbp_get_template_part( 'user', 'topics-created' ); ?>
-
 	</div>
-
 	<?php
 }
 
@@ -227,17 +227,13 @@ function bbp_member_forums_topics_content() {
  *
  * @since bbPress (r3552)
  *
- * @uses bbp_get_template_part()
+ * @uses  bbp_get_template_part()
  */
 function bbp_member_forums_replies_content() {
 	?>
-
 	<div id="bbpress-forums">
-
 		<?php bbp_get_template_part( 'user', 'replies-created' ); ?>
-
 	</div>
-
 	<?php
 }
 
@@ -246,17 +242,13 @@ function bbp_member_forums_replies_content() {
  *
  * @since bbPress (r3552)
  *
- * @uses bbp_get_template_part()
+ * @uses  bbp_get_template_part()
  */
 function bbp_member_forums_favorites_content() {
 	?>
-
 	<div id="bbpress-forums">
-
 		<?php bbp_get_template_part( 'user', 'favorites' ); ?>
-
 	</div>
-
 	<?php
 }
 
@@ -265,17 +257,13 @@ function bbp_member_forums_favorites_content() {
  *
  * @since bbPress (r3552)
  *
- * @uses bbp_get_template_part()
+ * @uses  bbp_get_template_part()
  */
 function bbp_member_forums_subscriptions_content() {
 	?>
-
 	<div id="bbpress-forums">
-
 		<?php bbp_get_template_part( 'user', 'subscriptions' ); ?>
-
 	</div>
-
 	<?php
 }
 
@@ -291,8 +279,9 @@ function bbp_member_forums_subscriptions_content() {
 /**
  * Get forum ID's for a group
  *
- * @param type $group_id
  * @since bbPress (r3653)
+ *
+ * @param type $group_id
  */
 function bbp_get_group_forum_ids( $group_id = 0 ) {
 
@@ -323,8 +312,9 @@ function bbp_get_group_forum_ids( $group_id = 0 ) {
 /**
  * Get group ID's for a forum
  *
- * @param type $forum_id
  * @since bbPress (r3653)
+ *
+ * @param type $forum_id
  */
 function bbp_get_forum_group_ids( $forum_id = 0 ) {
 
@@ -355,8 +345,9 @@ function bbp_get_forum_group_ids( $forum_id = 0 ) {
 /**
  * Get forum ID's for a group
  *
- * @param type $group_id
  * @since bbPress (r3653)
+ *
+ * @param type $group_id
  */
 function bbp_update_group_forum_ids( $group_id = 0, $forum_ids = array() ) {
 
@@ -375,8 +366,9 @@ function bbp_update_group_forum_ids( $group_id = 0, $forum_ids = array() ) {
 /**
  * Update group ID's for a forum
  *
- * @param type $forum_id
  * @since bbPress (r3653)
+ *
+ * @param type $forum_id
  */
 function bbp_update_forum_group_ids( $forum_id = 0, $group_ids = array() ) {
 	$forum_id = bbp_get_forum_id( $forum_id );
@@ -391,8 +383,9 @@ function bbp_update_forum_group_ids( $forum_id = 0, $group_ids = array() ) {
 /**
  * Add a group to a forum
  *
- * @param type $group_id
  * @since bbPress (r3653)
+ *
+ * @param type $group_id
  */
 function bbp_add_group_id_to_forum( $forum_id = 0, $group_id = 0 ) {
 
@@ -410,6 +403,7 @@ function bbp_add_group_id_to_forum( $forum_id = 0, $group_id = 0 ) {
 	// Maybe update the groups forums.
 	if ( ! in_array( $group_id, $group_ids ) ) {
 		$group_ids[] = $group_id;
+
 		return bbp_update_forum_group_ids( $forum_id, $group_ids );
 	}
 }
@@ -417,8 +411,9 @@ function bbp_add_group_id_to_forum( $forum_id = 0, $group_id = 0 ) {
 /**
  * Remove a forum from a group
  *
- * @param type $group_id
  * @since bbPress (r3653)
+ *
+ * @param type $group_id
  */
 function bbp_add_forum_id_to_group( $group_id = 0, $forum_id = 0 ) {
 
@@ -436,6 +431,7 @@ function bbp_add_forum_id_to_group( $group_id = 0, $forum_id = 0 ) {
 	// Maybe update the groups forums.
 	if ( ! in_array( $forum_id, $forum_ids ) ) {
 		$forum_ids[] = $forum_id;
+
 		return bbp_update_group_forum_ids( $group_id, $forum_ids );
 	}
 }
@@ -443,8 +439,9 @@ function bbp_add_forum_id_to_group( $group_id = 0, $forum_id = 0 ) {
 /**
  * Remove a group from a forum
  *
- * @param type $group_id
  * @since bbPress (r3653)
+ *
+ * @param type $group_id
  */
 function bbp_remove_group_id_from_forum( $forum_id = 0, $group_id = 0 ) {
 
@@ -460,8 +457,9 @@ function bbp_remove_group_id_from_forum( $forum_id = 0, $group_id = 0 ) {
 	$group_ids = bbp_get_forum_group_ids( $forum_id );
 
 	// Maybe update the groups forums.
-	if ( in_array( $group_id, $group_ids ) ) {
+	if ( in_array( $group_id, $group_ids, true ) ) {
 		$group_ids = array_diff( array_values( $group_ids ), (array) $group_id );
+		bb_update_last_group_forum_associations( $group_id, $forum_id );
 		return bbp_update_forum_group_ids( $forum_id, $group_ids );
 	}
 }
@@ -469,8 +467,9 @@ function bbp_remove_group_id_from_forum( $forum_id = 0, $group_id = 0 ) {
 /**
  * Remove a forum from a group
  *
- * @param type $group_id
  * @since bbPress (r3653)
+ *
+ * @param type $group_id
  */
 function bbp_remove_forum_id_from_group( $group_id = 0, $forum_id = 0 ) {
 
@@ -486,8 +485,9 @@ function bbp_remove_forum_id_from_group( $group_id = 0, $forum_id = 0 ) {
 	$forum_ids = bbp_get_group_forum_ids( $group_id );
 
 	// Maybe update the groups forums.
-	if ( in_array( $forum_id, $forum_ids ) ) {
+	if ( in_array( $forum_id, $forum_ids, true ) ) {
 		$forum_ids = array_diff( array_values( $forum_ids ), (array) $forum_id );
+		bb_update_last_group_forum_associations( $group_id, $forum_id );
 		return bbp_update_group_forum_ids( $group_id, $forum_ids );
 	}
 }
@@ -495,8 +495,9 @@ function bbp_remove_forum_id_from_group( $group_id = 0, $forum_id = 0 ) {
 /**
  * Remove a group from aall forums
  *
- * @param type $group_id
  * @since bbPress (r3653)
+ *
+ * @param type $group_id
  */
 function bbp_remove_group_id_from_all_forums( $group_id = 0 ) {
 
@@ -517,8 +518,9 @@ function bbp_remove_group_id_from_all_forums( $group_id = 0 ) {
 /**
  * Remove a forum from all groups
  *
- * @param type $forum_id
  * @since bbPress (r3653)
+ *
+ * @param type $forum_id
  */
 function bbp_remove_forum_id_from_all_groups( $forum_id = 0 ) {
 
@@ -538,10 +540,11 @@ function bbp_remove_forum_id_from_all_groups( $forum_id = 0 ) {
  * @since bbPress (r4571)
  *
  * @param int $forum_id
- * @uses bbp_get_forum_id() To get the forum id
- * @uses bbp_get_forum_group_ids() To get the forum's group ids
- * @uses apply_filters() Calls 'bbp_forum_is_group_forum' with the forum id
+ *
  * @return bool True if it is a group forum, false if not
+ * @uses  bbp_get_forum_group_ids() To get the forum's group ids
+ * @uses  apply_filters() Calls 'bbp_forum_is_group_forum' with the forum id
+ * @uses  bbp_get_forum_id() To get the forum id
  */
 function bbp_is_forum_group_forum( $forum_id = 0 ) {
 
@@ -564,13 +567,13 @@ function bbp_is_forum_group_forum( $forum_id = 0 ) {
  *
  * @since bbPress (r4632)
  *
- * @uses is_user_logged_in()
- * @uses bp_is_group()
- * @uses bbpress()
- * @uses get_current_user_id()
- * @uses bp_get_current_group_id()
- * @uses groups_is_user_admin()
  * @return bool If current user is an admin of the current group
+ * @uses  bp_is_group()
+ * @uses  bbpress()
+ * @uses  get_current_user_id()
+ * @uses  bp_get_current_group_id()
+ * @uses  groups_is_user_admin()
+ * @uses  is_user_logged_in()
  */
 function bbp_group_is_admin() {
 
@@ -595,13 +598,13 @@ function bbp_group_is_admin() {
  *
  * @since bbPress (r4632)
  *
- * @uses is_user_logged_in()
- * @uses bp_is_group()
- * @uses bbpress()
- * @uses get_current_user_id()
- * @uses bp_get_current_group_id()
- * @uses groups_is_user_admin()
  * @return bool If current user is a moderator of the current group
+ * @uses  bp_is_group()
+ * @uses  bbpress()
+ * @uses  get_current_user_id()
+ * @uses  bp_get_current_group_id()
+ * @uses  groups_is_user_admin()
+ * @uses  is_user_logged_in()
  */
 function bbp_group_is_mod() {
 
@@ -626,13 +629,13 @@ function bbp_group_is_mod() {
  *
  * @since bbPress (r4632)
  *
- * @uses is_user_logged_in()
- * @uses bp_is_group()
- * @uses bbpress()
- * @uses get_current_user_id()
- * @uses bp_get_current_group_id()
- * @uses groups_is_user_admin()
  * @return bool If current user is a member of the current group
+ * @uses  bp_is_group()
+ * @uses  bbpress()
+ * @uses  get_current_user_id()
+ * @uses  bp_get_current_group_id()
+ * @uses  groups_is_user_admin()
+ * @uses  is_user_logged_in()
  */
 function bbp_group_is_member() {
 
@@ -657,13 +660,13 @@ function bbp_group_is_member() {
  *
  * @since bbPress (r4632)
  *
- * @uses is_user_logged_in()
- * @uses bp_is_group()
- * @uses bbpress()
- * @uses get_current_user_id()
- * @uses bp_get_current_group_id()
- * @uses groups_is_user_admin()
  * @return bool If current user is banned from the current group
+ * @uses  bp_is_group()
+ * @uses  bbpress()
+ * @uses  get_current_user_id()
+ * @uses  bp_get_current_group_id()
+ * @uses  groups_is_user_admin()
+ * @uses  is_user_logged_in()
  */
 function bbp_group_is_banned() {
 
@@ -688,13 +691,13 @@ function bbp_group_is_banned() {
  *
  * @since bbPress (r4632)
  *
- * @uses is_user_logged_in()
- * @uses bp_is_group()
- * @uses bbpress()
- * @uses get_current_user_id()
- * @uses bp_get_current_group_id()
- * @uses groups_is_user_admin()
  * @return bool If current user the creator of the current group
+ * @uses  bp_is_group()
+ * @uses  bbpress()
+ * @uses  get_current_user_id()
+ * @uses  bp_get_current_group_id()
+ * @uses  groups_is_user_admin()
+ * @uses  is_user_logged_in()
  */
 function bbp_group_is_creator() {
 
@@ -736,6 +739,7 @@ function bbp_forum_topics_reply_enable_tinymce_editor( $args = array() ) {
 
 	return $args;
 }
+
 add_filter( 'bbp_after_get_the_content_parse_args', 'bbp_forum_topics_reply_enable_tinymce_editor' );
 
 /**
@@ -791,6 +795,20 @@ function bbp_forum_update_forum_status_when_group_updates( $group_id ) {
 							'post_status' => $status,
 						)
 					);
+
+					$child_forums = bb_get_all_nested_subforums( $forum_id );
+					if ( $child_forums ) {
+						foreach ( $child_forums as $child_forum_id ) {
+							if ( get_post_status( $child_forum_id ) !== $status ) {
+								wp_update_post(
+									array(
+										'ID'          => $child_forum_id,
+										'post_status' => $status,
+									)
+								);
+							}
+						}
+					}
 				}
 			}
 		}
@@ -809,9 +827,10 @@ add_action( 'bp_group_admin_after_edit_screen_save', 'bbp_forum_update_forum_sta
  * if not associated with any group then it searches for the parent forums to fetch group associated
  * otherwise returns false
  *
+ * @since BuddyBoss 1.1.9
+ *
  * @param $forum_id
  *
- * @since BuddyBoss 1.1.9
  * @return bool|int|mixed
  */
 function bbp_forum_recursive_group_id( $forum_id ) {
@@ -854,6 +873,7 @@ function bbp_forum_recursive_group_id( $forum_id ) {
 
 	return false;
 }
+
 add_action( 'wp_ajax_search_tags', 'bbp_forum_topic_reply_ajax_form_search_tags' );
 
 /**
@@ -916,7 +936,7 @@ function bbp_forum_topic_reply_ajax_form_search_tags() {
 	wp_send_json_success(
 		array(
 			'results' => array_map(
-				function( $result ) {
+				function ( $result ) {
 					return array(
 						'id'   => $result->slug,
 						'text' => $result->name,
@@ -933,9 +953,9 @@ function bbp_forum_topic_reply_ajax_form_search_tags() {
  *
  * @since BuddyBoss 1.7.8
  *
- * @param array  $terms terms name.
- * @param int    $topic_id topic id.
- * @param string $taxonomy taxonomy name.
+ * @param array  $terms          terms name.
+ * @param int    $topic_id       topic id.
+ * @param string $taxonomy       taxonomy name.
  * @param string $existing_terms comma separated existing terms name.
  *
  * @return array|false|WP_Error Array of term taxonomy IDs of affected terms. WP_Error or false on failure.
@@ -957,7 +977,7 @@ function bb_add_topic_tags( $terms, $topic_id, $taxonomy, $existing_terms = '' )
 				function ( $single ) use ( $taxonomy ) {
 					$get_term = get_term_by( 'name', $single, $taxonomy );
 					if ( ! empty( $get_term->slug ) ) {
-						  return $get_term->slug;
+						return $get_term->slug;
 					}
 				},
 				$deleted_terms
@@ -1012,14 +1032,15 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 
 	$params['forums'] = array(
 		'params'  => array(
-			'bb_current_user_id' => $user_id
+			'bb_current_user_id' => $user_id,
+			'link_preview'       => bbp_use_autoembed() ? true : false,
 		),
 		'nonces'  => array(
-			'post_topic_reply_draft' => wp_create_nonce( 'post_topic_reply_draft_data' )
+			'post_topic_reply_draft' => wp_create_nonce( 'post_topic_reply_draft_data' ),
 		),
 		'strings' => array(
 			'discardButton' => esc_html__( 'Discard Draft', 'buddyboss' ),
-		)
+		),
 	);
 
 	$params['forums']['draft'] = array();
@@ -1034,4 +1055,245 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 
 	return $params;
 }
+
 add_filter( 'bp_core_get_js_strings', 'bb_nouveau_forum_localize_scripts', 10, 1 );
+
+/**
+ * Update the forum/topic subscription when topic and forum merge/split/update parent.
+ *
+ * @since BuddyBoss 2.2.6
+ *
+ * @param int     $post_id Post ID.
+ * @param WP_Post $post    Post object.
+ */
+function bb_subscription_update_secondary_item( $post_id, $post ) {
+	if ( empty( $post_id ) || empty( $post ) ) {
+		return;
+	}
+
+	// Check the post type.
+	if ( empty( $post->post_type ) || ! in_array( $post->post_type, array( bbp_get_forum_post_type(), bbp_get_topic_post_type() ), true ) ) {
+		return;
+	}
+
+	$subscription_type = '';
+	if ( bbp_get_forum_post_type() === $post->post_type ) {
+		$subscription_type = 'forum';
+	} elseif ( bbp_get_topic_post_type() === $post->post_type ) {
+		$subscription_type = 'topic';
+	}
+
+	if ( empty( $subscription_type ) ) {
+		return;
+	}
+
+	// Update the secondary item ID.
+	BB_Subscriptions::update_secondary_item_id(
+		array(
+			'type'              => $subscription_type,
+			'item_id'           => $post->ID,
+			'secondary_item_id' => $post->post_parent,
+		)
+	);
+}
+
+add_action( 'edit_post', 'bb_subscription_update_secondary_item', 999, 2 );
+
+/**
+ * Return true if a forum is a group forum.
+ *
+ * @since BuddyBoss 2.2.8
+ *
+ * @param int $forum_id Forum ID.
+ *
+ * @return bool True if it is a group forum, false if not.
+ */
+function bb_is_forum_group_forum( $forum_id = 0 ) {
+
+	// Validate.
+	$forum_id = bbp_get_forum_id( $forum_id );
+
+	$retval = function_exists( 'bbp_is_group_forums_active' ) && function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_group_forums_active() && bbp_is_forum_group_forum( $forum_id );
+
+	return (bool) apply_filters( 'bb_is_forum_group_forum', $retval, $forum_id );
+}
+
+/**
+ * AJAX endpoint for link preview URL parser.
+ *
+ * @since BuddyBoss 2.3.60
+ */
+function bb_forums_link_preview_parse_url() {
+	// Get URL.
+	$url = isset( $_POST['url'] ) ? $_POST['url'] : ''; // phpcs:ignore
+
+	// Check if URL is validated.
+	if ( empty( $url ) || ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+		wp_send_json( array( 'error' => __( 'URL is not valid.', 'buddyboss' ) ) );
+	}
+
+	// Get URL parsed data.
+	$parse_url_data = bp_core_parse_url( $url );
+
+	// If empty data then send error.
+	if ( empty( $parse_url_data ) ) {
+		wp_send_json( array( 'error' => esc_html__( 'There was a problem generating a link preview.', 'buddyboss' ) ) );
+	}
+
+	// send json success.
+	wp_send_json( $parse_url_data );
+}
+
+add_action( 'wp_ajax_bb_forums_parse_url', 'bb_forums_link_preview_parse_url' );
+if ( bbp_allow_anonymous() ) {
+	add_action( 'wp_ajax_nopriv_bb_forums_parse_url', 'bb_forums_link_preview_parse_url' );
+}
+
+/**
+ * Backup the last group forum associations.
+ *
+ * @since BuddyBoss 2.4.30
+ *
+ * @param int $group_id Group ID.
+ * @param int $forum_id Forum ID.
+ */
+function bb_update_last_group_forum_associations( $group_id = 0, $forum_id = 0 ) {
+	if ( empty( $forum_id ) ) {
+		return;
+	}
+	$forum_id = bbp_get_forum_id( $forum_id );
+
+	// Use current group if none is set.
+	if ( empty( $group_id ) ) {
+		$group_id = bp_get_current_group_id();
+	}
+
+	// Get the values to backup.
+	$group_ids = array_filter( bbp_get_forum_group_ids( $forum_id ) );
+	$forum_ids = array_filter( bbp_get_group_forum_ids( $group_id ) );
+
+	if (
+		in_array( $group_id, $group_ids, true ) &&
+		in_array( $forum_id, $forum_ids, true )
+	) {
+		// Save the backups.
+		update_post_meta( $forum_id, '_last_bbp_group_ids', $group_ids );
+		groups_update_groupmeta( $group_id, 'last_forum_id', $forum_id );
+	}
+}
+
+/**
+ * Run migration for resolving the issue related to the forums.
+ *
+ * @since BuddyBoss 2.4.50
+ *
+ * @param int $raw_db_version Raw database version.
+ */
+function bb_forums_migration( $raw_db_version ) {
+	global $wpdb, $bb_background_updater;
+
+	$is_already_run = get_transient( 'bb_forums_migration' );
+
+	if ( $is_already_run ) {
+		return;
+	}
+
+	if ( bp_is_active( 'groups' ) && $raw_db_version < 20674 ) { // Release version 2.4.50.
+
+		/**
+		 * Migrate orphan group's forum discussion notification subscriptions.
+		 *
+		 * @since BuddyBoss 2.4.50
+		 */
+		$subscription_tbl = BB_Subscriptions::get_subscription_tbl();
+
+		// phpcs:ignore
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				"SELECT DISTINCT secondary_item_id FROM {$subscription_tbl} WHERE type = %s ORDER BY id DESC",
+				'topic',
+			)
+		);
+
+		if ( ! empty( $results ) ) {
+			$min_count = apply_filters( 'bb_update_group_discussion_subscription_count', 10 );
+			if ( count( $results ) > $min_count ) {
+				foreach ( array_chunk( $results, $min_count ) as $chunk ) {
+					$bb_background_updater->push_to_queue(
+						array(
+							'type'     => 'migration',
+							'group'    => 'bb_forums_notification_subscriptions',
+							'priority' => 5,
+							'callback' => 'bb_update_groups_discussion_subscriptions_background_process',
+							'args'     => array( $chunk ),
+						)
+					);
+					$bb_background_updater->save()->schedule_event();
+				}
+			} else {
+				$bb_background_updater->push_to_queue(
+					array(
+						'type'     => 'migration',
+						'group'    => 'bb_forums_notification_subscriptions',
+						'priority' => 5,
+						'callback' => 'bb_update_groups_discussion_subscriptions_background_process',
+						'args'     => array( $results ),
+					)
+				);
+
+				$bb_background_updater->save()->schedule_event();
+			}
+		}
+	}
+
+	set_transient( 'bb_forums_migration', true, HOUR_IN_SECONDS );
+}
+
+/**
+ * Function to run discussion notification subscription within background process.
+ *
+ * @since BuddyBoss 2.4.50
+ *
+ * @param array $subscriptions Subscription results.
+ *
+ * @return void
+ */
+function bb_update_groups_discussion_subscriptions_background_process( $subscriptions ) {
+
+	if ( empty( $subscriptions ) ) {
+		return;
+	}
+
+	// Remove orphan forum topics notification subscriptions if user is not a member of related private/hidden group.
+	foreach ( $subscriptions as $subscription ) {
+		$forum_id  = $subscription->secondary_item_id;
+		$group_ids = bbp_get_forum_group_ids( $forum_id );
+		$group_id  = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
+
+		if (
+			! empty( $group_id ) &&
+			(
+				bbp_is_forum_private( $forum_id ) ||
+				bbp_is_forum_hidden( $forum_id )
+			)
+		) {
+			$topics = BB_Subscriptions::get(
+				array(
+					'type'              => 'topic',
+					'secondary_item_id' => $forum_id,
+				)
+			);
+
+			if ( empty( $topics['subscriptions'] ) ) {
+				continue;
+			}
+
+			foreach ( $topics['subscriptions'] as $topic ) {
+				if ( ! groups_is_user_member( $topic->user_id, $group_id ) ) {
+					bbp_remove_user_topic_subscription( $topic->user_id, $topic->item_id );
+				}
+			}
+		}
+	}
+}

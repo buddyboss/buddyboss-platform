@@ -430,7 +430,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 	$params['class'] = apply_filters( 'bp_core_avatar_class', $params['class'], $params['item_id'], $params['object'], $params );
 
 	// Use an alias to leave the param unchanged.
-	$avatar_classes = $params['class'];
+	$avatar_classes = ! empty( $params['class'] ) ? $params['class'] : array();
 	if ( ! is_array( $avatar_classes ) ) {
 		$avatar_classes = explode( ' ', $avatar_classes );
 	}
@@ -695,7 +695,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 			if ( false === $response ) {
 				$gravcheck = 'https://www.gravatar.com/avatar/' . md5( strtolower( $params['email'] ) ) . '?d=404';
 				$response  = get_headers( $gravcheck );
-				set_transient( $key, $response, DAY_IN_SECONDS );
+				set_transient( $key, $response, 3 * HOUR_IN_SECONDS );
 			}
 			if ( isset( $response[0] ) && $response[0] == 'HTTP/1.1 404 Not Found' ) {
 
@@ -884,7 +884,7 @@ function bp_core_delete_existing_avatar( $args = '' ) {
 		} elseif ( 'group' == $object ) {
 			$item_id = buddypress()->groups->current_group->id;
 		} elseif ( 'blog' == $object ) {
-			$item_id = $current_blog->id;
+			$item_id = get_current_blog_id();
 		}
 
 		/** This filter is documented in bp-core/bp-core-avatars.php */
@@ -915,7 +915,7 @@ function bp_core_delete_existing_avatar( $args = '' ) {
 	/** This filter is documented in bp-core/bp-core-avatars.php */
 	$avatar_folder_dir = apply_filters( 'bp_core_avatar_folder_dir', bp_core_avatar_upload_path() . '/' . $avatar_dir . '/' . $item_id, $item_id, $object, $avatar_dir );
 
-	if ( ! file_exists( $avatar_folder_dir ) ) {
+	if ( ! is_dir( $avatar_folder_dir ) ) {
 		return false;
 	}
 
@@ -1000,7 +1000,7 @@ function bp_avatar_ajax_delete() {
 		}
 
 		$return = array(
-			'avatar'        => html_entity_decode( $avatar ),
+			'avatar'        => html_entity_decode( $avatar, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ),
 			'feedback_code' => 4,
 			'item_id'       => $avatar_data['item_id'],
 		);
@@ -2198,7 +2198,9 @@ function bp_avatar_is_front_edit() {
  */
 function bp_avatar_use_webcam() {
 	global $is_safari, $is_IE, $is_chrome;
-
+	$browser	= bb_core_get_browser();
+	$is_firefox	= isset( $browser['name'] ) ? 'Firefox' === $browser['b_name'] : false;
+	
 	/**
 	 * Do not use the webcam feature for mobile devices
 	 * to avoid possible confusions.
@@ -2212,7 +2214,7 @@ function bp_avatar_use_webcam() {
 	 *
 	 * @see http://caniuse.com/#feat=stream
 	 */
-	if ( $is_safari || $is_IE || ( $is_chrome && ! is_ssl() ) ) {
+	if ( ( $is_safari && isset( $browser['version'] ) && $browser['version'] < 11 ) || $is_IE || ( ( $is_chrome || $is_firefox ) && ! is_ssl() ) ) {
 		return false;
 	}
 

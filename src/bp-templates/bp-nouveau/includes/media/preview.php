@@ -7,15 +7,29 @@ if ( empty( get_query_var( 'bb-media-preview' ) ) && empty( get_query_var( 'id1'
 
 $encode_id       = base64_decode( get_query_var( 'bb-media-preview' ) );
 $encode_id1      = base64_decode( get_query_var( 'id1' ) );
+$receiver        = base64_decode( get_query_var( 'receiver' ) );
 $explode_arr     = explode( 'forbidden_', $encode_id );
 $explode_arr1    = explode( 'forbidden_', $encode_id1 );
+$receiver_arr    = explode( 'receiver_', $receiver );
 $size            = ( ! empty( get_query_var( 'size' ) ) ? get_query_var( 'size' ) : '' );
 $upload_dir      = wp_upload_dir();
 $upload_dir      = $upload_dir['basedir'];
 $output_file_src = '';
 
 if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] ) && (int) $explode_arr[1] > 0 &&
-     isset( $explode_arr1 ) && ! empty( $explode_arr1 ) && isset( $explode_arr1[1] ) && (int) $explode_arr1[1] > 0 ) {
+	isset( $explode_arr1 ) && ! empty( $explode_arr1 ) && isset( $explode_arr1[1] ) && (int) $explode_arr1[1] > 0 ) {
+
+	// Set the receiver ID as the current user ID if it exists.
+	if ( ! empty( $receiver_arr ) && isset( $receiver_arr[1] ) && 0 < $receiver_arr[1] ) {
+		$receiver_id = $receiver_arr[1];
+		add_filter(
+			'bp_loggedin_user_id',
+			function( $user_id ) use ( $receiver_id ) {
+				wp_set_current_user( $receiver_id );
+				return $receiver_id;
+			}
+		);
+	}
 
 	$attachment_id      = (int) $explode_arr[1];
 	$id1                = (int) $explode_arr1[1];
@@ -96,6 +110,8 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 		}
 
 		header( "Content-Type: $type" );
+		header( 'Cache-Control: max-age=2592000, public' );
+		header( 'Expires: ' . gmdate( 'D, d M Y H:i:s', time() + 2592000 ) . ' GMT' );
 		readfile( "$output_file_src" );
 	} else {
 		echo '// Silence is golden.';

@@ -30,13 +30,13 @@ if ( $group_id > 0 ) {
 }
 ?>
 <div class="document-action-wrap">
-	<a href="#" class="document-action_collapse" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Collapse', 'buddyboss' ); ?>"><i class="bb-icon-arrow-up bb-icon-l document-icon-collapse"></i></a>
+	<a href="#" class="document-action_collapse" data-balloon-pos="up" data-tooltip-collapse="<?php esc_attr_e( 'Collapse', 'buddyboss' ); ?>" data-balloon="<?php esc_attr_e( 'Expand', 'buddyboss' ); ?>"><i class="bb-icon-merge bb-icon-l document-icon-collapse"></i></a>
 	<a href="<?php echo esc_url( $download_url ); ?>" class="document-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Download', 'buddyboss' ); ?>">
 		<i class="bb-icon-l bb-icon-download"></i>
 	</a>
 
 	<a href="#" target="_blank" class="document-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
-		<i class="bb-icon-f bb-icon-ellipsis-v"></i>
+		<i class="bb-icon-f bb-icon-ellipsis-h"></i>
 	</a>
 	<div class="document-action_list">
 		<ul class="conflict-activity-ul-li-comment">
@@ -52,7 +52,7 @@ if ( $group_id > 0 ) {
 				if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
 					if ( $is_comment_doc ) {
 						?>
-						<li class="move_file document-action-class move-disabled" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Documents added in comment cannot be moved', 'buddyboss' ); ?>">
+						<li class="move_file document-action-class move-disabled" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Document inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
 							<a href="#"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
 						</li>
 						<?php

@@ -111,6 +111,10 @@ class BP_Core_Suspend {
 			unset( $args['blocked_user'] );
 		}
 
+		if ( isset( $args['parent_id'] ) ) {
+			unset( $args['parent_id'] );
+		}
+
 		/**
 		 * Hook fire before item suspended
 		 *
@@ -126,6 +130,14 @@ class BP_Core_Suspend {
 				'item_id'   => $args['item_id'],
 				'item_type' => $args['item_type'],
 			);
+
+			if ( empty( $args['user_report'] ) ) {
+				unset( $args['user_report'] );
+			}
+
+			if ( empty( $args['report'] ) ) {
+				unset( $args['report'] );
+			}
 
 			$wpdb->update( $table_name, $args, $where ); // phpcs:ignore
 		} else {
@@ -277,6 +289,10 @@ class BP_Core_Suspend {
 		if ( ! empty( $args['blocked_user'] ) ) {
 			$member = $args['blocked_user'];
 			unset( $args['blocked_user'] );
+		}
+
+		if ( isset( $args['parent_id'] ) ) {
+			unset( $args['parent_id'] );
 		}
 
 		/**

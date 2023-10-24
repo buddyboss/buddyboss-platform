@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Message Box Template Class
  */
+#[\AllowDynamicProperties]
 class BP_Messages_Box_Template {
 
 	/**
@@ -139,6 +140,7 @@ class BP_Messages_Box_Template {
 				'search_terms' => '',
 				'include'      => false,
 				'is_hidden'    => false,
+				'thread_type'  => 'unarchived',
 				'meta_query'   => array(),
 			)
 		);
@@ -171,6 +173,7 @@ class BP_Messages_Box_Template {
 					'search_terms' => $this->search_terms,
 					'include'      => $this->include,
 					'is_hidden'    => $this->is_hidden,
+					'thread_type'  => $r['thread_type'],
 					'meta_query'   => $r['meta_query'],
 				)
 			);
@@ -320,15 +323,23 @@ class BP_Messages_Box_Template {
 		if ( ! bp_is_current_action( 'notices' ) && ! empty( $this->thread->messages ) ) {
 			$last_message_index = 0;
 
-			$this->thread->last_message_id      = $this->thread->messages[ $last_message_index ]->id;
-			$this->thread->last_message_date    = $this->thread->messages[ $last_message_index ]->date_sent;
-			$this->thread->last_sender_id       = $this->thread->messages[ $last_message_index ]->sender_id;
-			$this->thread->last_message_subject = $this->thread->messages[ $last_message_index ]->subject;
-			$this->thread->last_message_content = $this->thread->messages[ $last_message_index ]->message;
+			if ( isset( $this->thread->last_message->id ) && (int) $this->thread->last_message->id > 0 ) {
+				$this->thread->last_message_id      = $this->thread->last_message->id;
+				$this->thread->last_message_date    = $this->thread->last_message->date_sent;
+				$this->thread->last_sender_id       = $this->thread->last_message->sender_id;
+				$this->thread->last_message_subject = $this->thread->last_message->subject;
+				$this->thread->last_message_content = $this->thread->last_message->message;
+			} else {
+				$this->thread->last_message_id      = $this->thread->messages[ $last_message_index ]->id;
+				$this->thread->last_message_date    = $this->thread->messages[ $last_message_index ]->date_sent;
+				$this->thread->last_sender_id       = $this->thread->messages[ $last_message_index ]->sender_id;
+				$this->thread->last_message_subject = $this->thread->messages[ $last_message_index ]->subject;
+				$this->thread->last_message_content = $this->thread->messages[ $last_message_index ]->message;
+			}
 		}
 
 		// Loop has just started.
-		if ( 0 == $this->current_thread ) {
+		if ( 0 === $this->current_thread ) {
 
 			/**
 			 * Fires if at the start of the message thread loop.

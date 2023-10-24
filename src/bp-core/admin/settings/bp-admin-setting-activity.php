@@ -68,7 +68,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 		$bp->active_components = $active_components;
 		bp_core_install( $bp->active_components );
-		bp_core_add_page_mappings( $bp->active_components );
+
+		// Mapping the component pages in page settings except registration pages.
+		bp_core_add_page_mappings( $bp->active_components, 'keep', false );
 		bp_update_option( 'bp-active-components', $bp->active_components );
 
 	}
@@ -79,6 +81,12 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		// Allow Activity edit setting.
 		$this->add_field( '_bp_enable_activity_edit', __( 'Edit Activity', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_edit', 'intval' );
 		$this->add_field( '_bp_activity_edit_time', __( 'Edit Activity Time Limit', 'buddyboss' ), '__return_true', 'intval', array(
+			'class' => 'hidden',
+		) );
+
+		// Allow Activity comment edit setting.
+		$this->add_field( '_bb_enable_activity_comment_edit', __( 'Edit Comment', 'buddyboss' ), 'bb_admin_setting_callback_enable_activity_comment_edit', 'intval' );
+		$this->add_field( '_bb_activity_comment_edit_time', __( 'Edit Comment Time Limit', 'buddyboss' ), '__return_true', 'intval', array(
 			'class' => 'hidden',
 		) );
 

@@ -382,12 +382,7 @@
 }
 
 #buddypress #send_group_message_form .select2-search__field {
-	background: transparent;
-	border-width: 0;
-	min-width: 100%;
-	width: 100% !important;
-	padding-left: 0;
-	height: 30px;
+	display: none;
 }
 
 #buddypress #send_group_message_form li:first-child .select2-search__field {
@@ -762,10 +757,37 @@ span.icons:before {
 	margin: 20px;
 }
 
-.bp-single-message-content .bp-message-content-wrap p.joined {
+.bp-single-message-wrap .bb-messages-group-notices {
+	width: 100%;
+	text-align: center;
 	color: #847d7d;
-	font-style: italic;
+	font-size: 11px;
 	font-weight: 500;
+	line-height: 17px;
+	margin: -5px 0;
+
+	p {
+		margin-bottom: 0;
+		line-height: 17px;
+	}
+
+	strong {
+		font-weight: 600;
+	}
+
+	.bp-tooltip {
+		display: inline-block;
+		color: #847d7d;
+
+		&:after {
+			font-size: 11px;
+			line-height: 14px;
+			max-width: 190px;
+			white-space: normal;
+			width: max-content;
+		}
+	}
+
 }
 
 .total-members-text:empty {
@@ -786,15 +808,25 @@ span.icons:before {
 }
 
 .bb-group-message-info {
-	font-size: 12px;
-	font-style: italic;
+	font-size: 13px;
 	color: #939597;
-	letter-spacing: -0.21px;
-	line-height: 1;
-	margin-top: 6px;
+	line-height: 1.5;
+	margin-top: 5px;
+
+	&:before {
+		content: "\e95d";
+		display: inline-block;
+		font-family: "bb-icons";/* stylelint-disable-line */
+		font-size: 18px;
+		line-height: 1;
+		margin: -1px 5px 0 0;
+		vertical-align: middle;
+	}
 
 	#buddypress & a {
-		text-decoration: underline;
+		text-decoration: none;
+		font-weight: 500;
+		color: inherit;
 	}
 }
 
@@ -870,36 +902,6 @@ span.icons:before {
 
 .message-lists {
 
-	.group-thread .thread-avatar {
-		position: relative;
-
-		&:before {
-			content: "\f307";
-			font-family: dashicons;
-			font-style: normal;
-			speak: none;
-			text-decoration: inherit;
-			text-transform: none;
-			text-rendering: auto;
-			-webkit-font-smoothing: antialiased;
-			-moz-osx-font-smoothing: grayscale;
-			width: 18px;
-			height: 18px;
-			font-size: 14px;
-			position: absolute;
-			background: #fff;
-			color: #939597;
-			border-radius: 50%;
-			border: 1px solid;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			line-height: 1;
-			right: -6px;
-			top: 2px;
-		}
-	}
-
 	.thread-avatar {
 		position: relative;
 
@@ -921,19 +923,6 @@ span.icons:before {
 
 	.thread-item {
 		transform: translate3d(0, 0, 0);
-
-		.close-conversation {
-			color: #939597;
-			position: absolute;
-			right: 22px;
-			bottom: 0;
-			opacity: 0;
-			transition: all ease 0.3s;
-		}
-
-		&:hover .close-conversation {
-			opacity: 1;
-		}
 	}
 
 }
@@ -989,9 +978,9 @@ span.icons:before {
 	line-height: 0;
 
 	&:after {
-		content: "\f465";
+		content: "\ee5a";
 		font-size: 20px;
-		font-family: dashicons;
+		font-family: bb-icons;
 		vertical-align: top;
 		text-align: center;
 		transition: color 0.1s ease-in;

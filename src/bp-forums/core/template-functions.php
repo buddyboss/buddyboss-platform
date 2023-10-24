@@ -118,6 +118,91 @@ function bbp_locate_template( $template_names, $load = false, $require_once = tr
 }
 
 /**
+ * Locate an enqueueable file on the server. Used before being enqueued.
+ *
+ * If SCRIPT_DEBUG is set and the file includes a .min suffix, this function
+ * will automatically attempt to locate a non-minified version of that file.
+ *
+ * If SCRIPT_DEBUG is not set and the file exclude a .min suffix, this function
+ * will automatically attempt to locate a minified version of that file.
+ *
+ * See: https://bbpress.trac.wordpress.org/ticket/3218
+ *
+ * @since 2.6.0
+ * @since BuddyBoss 2.4.00
+ *
+ * @param string $file
+ *
+ * @return boolean
+ */
+function bbp_locate_enqueueable( $file = '' ) {
+
+	// Bail if no file to locate.
+	if ( empty( $file ) ) {
+		return false;
+	}
+
+	// Add file to files array.
+	$files = array( $file );
+
+	// Get the file variant (minified or not, but opposite of $file).
+	$file_is_min  = ( false !== strpos( $file, '.min' ) );
+	$file_variant = ( false === $file_is_min )
+		? str_replace( array( '.css', '.js' ), array( '.min.css', '.min.js' ), $file )
+		: str_replace( '.min', '', $file );
+
+	// Are we debugging?
+	$script_debug = bbp_doing_script_debug();
+
+	// Debugging, so prefer unminified files.
+	if ( true === $script_debug ) {
+		if ( true === $file_is_min ) {
+			array_unshift( $files, $file_variant );
+		} else {
+			array_push( $files, $file_variant );
+		}
+
+		// Not debugging, so prefer minified files.
+	} elseif ( false === $script_debug ) {
+		if ( true === $file_is_min ) {
+			array_push( $files, $file_variant );
+		} else {
+			array_unshift( $files, $file_variant );
+		}
+	}
+
+	// Return first found file location in the stack.
+	return bbp_locate_template( $files, false, false );
+}
+
+/**
+ * Convert an enqueueable file path to a URL.
+ *
+ * @since 2.6.0
+ * @since BuddyBoss 2.4.00
+ *
+ * @param string $file
+ *
+ * @return string
+ */
+function bbp_urlize_enqueueable( $file = '' ) {
+
+	// Get DIR and URL.
+	$content_dir = constant( 'WP_CONTENT_DIR' );
+	$content_url = content_url();
+
+	// IIS (Windows) here.
+	// Replace back slashes with forward slash.
+	if ( false !== strpos( $file, '\\' ) ) {
+		$file        = str_replace( '\\', '/', $file        );
+		$content_dir = str_replace( '\\', '/', $content_dir );
+	}
+
+	// Return path to file relative to site URL.
+	return str_replace( $content_dir, $content_url, $file );
+}
+
+/**
  * Enqueue a script from the highest priority location in the template stack.
  *
  * Registers the style if file provided (does NOT overwrite) and enqueues.
@@ -136,51 +221,27 @@ function bbp_locate_template( $template_names, $load = false, $require_once = tr
  *
  * @return string The style filename if one is located.
  */
-function bbp_enqueue_style( $handle = '', $file = '', $dependencies = array(), $version = false, $media = 'all' ) {
+function bbp_enqueue_style( $handle = '', $file = '', $deps = array(), $ver = false, $media = 'all' ) {
 
-	// No file found yet
-	$located = false;
+	// Attempt to locate an enqueueable.
+	$located = bbp_locate_enqueueable( $file );
 
-	// Trim off any slashes from the template name
-	$file = ltrim( $file, '/' );
-
-	// Make sure there is always a version
-	if ( empty( $version ) ) {
-		$version = bbp_get_version();
-	}
-
-	// Loop through template stack
-	foreach ( (array) bbp_get_template_stack() as $template_location ) {
-
-		// Continue if $template_location is empty
-		if ( empty( $template_location ) ) {
-			continue;
-		}
-
-		// Check child theme first
-		if ( file_exists( trailingslashit( $template_location ) . $file ) ) {
-			$located = trailingslashit( $template_location ) . $file;
-			break;
-		}
-	}
-
-	// Enqueue if located
+	// Enqueue if located.
 	if ( ! empty( $located ) ) {
 
-		$content_dir = constant( 'WP_CONTENT_DIR' );
-
-		// IIS (Windows) here
-		// Replace back slashes with forward slash
-		if ( strpos( $located, '\\' ) !== false ) {
-			$located     = str_replace( '\\', '/', $located );
-			$content_dir = str_replace( '\\', '/', $content_dir );
+		// Make sure there is always a version.
+		if ( empty( $ver ) ) {
+			$ver = bp_get_version();
 		}
 
-		// Make path to file relative to site URL
-		$located = str_replace( $content_dir, content_url(), $located );
+		// Make path to file relative to site URL.
+		$located = bbp_urlize_enqueueable( $located );
 
-		// Enqueue the style
-		wp_enqueue_style( $handle, $located, $dependencies, $version, $media );
+		// Register the style.
+		wp_register_style( $handle, $located, $deps, $ver, $media );
+
+		// Enqueue the style.
+		wp_enqueue_style( $handle );
 	}
 
 	return $located;
@@ -204,51 +265,27 @@ function bbp_enqueue_style( $handle = '', $file = '', $dependencies = array(), $
  *
  * @return string The script filename if one is located.
  */
-function bbp_enqueue_script( $handle = '', $file = '', $dependencies = array(), $version = false, $in_footer = 'all' ) {
+function bbp_enqueue_script( $handle = '', $file = '', $deps = array(), $ver = false, $in_footer = 'all' ) {
 
-	// No file found yet
-	$located = false;
+	// Attempt to locate an enqueueable.
+	$located = bbp_locate_enqueueable( $file );
 
-	// Trim off any slashes from the template name
-	$file = ltrim( $file, '/' );
-
-	// Make sure there is always a version
-	if ( empty( $version ) ) {
-		$version = bbp_get_version();
-	}
-
-	// Loop through template stack
-	foreach ( (array) bbp_get_template_stack() as $template_location ) {
-
-		// Continue if $template_location is empty
-		if ( empty( $template_location ) ) {
-			continue;
-		}
-
-		// Check child theme first
-		if ( file_exists( trailingslashit( $template_location ) . $file ) ) {
-			$located = trailingslashit( $template_location ) . $file;
-			break;
-		}
-	}
-
-	// Enqueue if located
+	// Enqueue if located.
 	if ( ! empty( $located ) ) {
 
-		$content_dir = constant( 'WP_CONTENT_DIR' );
-
-		// IIS (Windows) here
-		// Replace back slashes with forward slash
-		if ( strpos( $located, '\\' ) !== false ) {
-			$located     = str_replace( '\\', '/', $located );
-			$content_dir = str_replace( '\\', '/', $content_dir );
+		// Make sure there is always a version.
+		if ( empty( $ver ) ) {
+			$ver = bp_get_version();
 		}
 
-		// Make path to file relative to site URL
-		$located = str_replace( $content_dir, content_url(), $located );
+		// Make path to file relative to site URL.
+		$located = bbp_urlize_enqueueable( $located );
 
-		// Enqueue the style
-		wp_enqueue_script( $handle, $located, $dependencies, $version, $in_footer );
+		// Register the style.
+		wp_register_script( $handle, $located, $deps, $ver, $in_footer );
+
+		// Enqueue the style.
+		wp_enqueue_script( $handle );
 	}
 
 	return $located;
@@ -315,12 +352,17 @@ function bbp_deregister_template_stack( $location_callback = '', $priority = 10 
 function bbp_get_template_stack() {
 	global $wp_filter, $merged_filters, $wp_current_filter;
 
-	// Setup some default variables
+	// Setup some default variables.
 	$tag  = 'bbp_template_stack';
 	$args = $stack = array();
 
 	// Add 'bbp_template_stack' to the current filter array.
 	$wp_current_filter[] = $tag;
+
+	// Bail if no stack setup.
+	if ( empty( $wp_filter[ $tag ] ) ) {
+		return array();
+	}
 
 	// Sort.
 	if ( class_exists( 'WP_Hook' ) ) {
@@ -370,10 +412,10 @@ function bbp_buffer_template_part( $slug, $name = null, $echo = true ) {
 
 	bbp_get_template_part( $slug, $name );
 
-	// Get the output buffer contents
+	// Get the output buffer contents.
 	$output = ob_get_clean();
 
-	// Echo or return the output buffer contents
+	// Echo or return the output buffer contents.
 	if ( true === $echo ) {
 		echo $output;
 	} else {
@@ -408,10 +450,25 @@ function bbp_get_query_template( $type, $templates = array() ) {
 	// Filter possible templates, try to match one, and set any Forums theme
 	// compat properties so they can be cross-checked later.
 	$templates = apply_filters( "bbp_get_{$type}_template", $templates );
-	$templates = bbp_set_theme_compat_templates( $templates );
-	$template  = bbp_locate_template( $templates );
-	$template  = bbp_set_theme_compat_template( $template );
 
+	// Stash the possible templates for this query, for later use.
+	$templates = bbp_set_theme_compat_templates( $templates );
+
+	// Try to locate a template in the stack.
+	$template = bbp_locate_template( $templates );
+
+	/*
+	 * The current theme is using the WordPress Full Site Editing feature.
+	 * BuddyPress then needs to use the WordPress template canvas to retrieve the community content.
+	 */
+	if ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
+		$template = ABSPATH . WPINC . '/template-canvas.php';
+	}
+
+	// Stash the located template for this query, for later use.
+	$template = bbp_set_theme_compat_template( $template );
+
+	// Filter & return.
 	return apply_filters( "bbp_{$type}_template", $template );
 }
 
@@ -442,10 +499,10 @@ function bbp_get_template_locations( $templates = array() ) {
 function bbp_add_template_stack_locations( $stacks = array() ) {
 	$retval = array();
 
-	// Get alternate locations
+	// Get alternate locations.
 	$locations = bbp_get_template_locations();
 
-	// Loop through locations and stacks and combine
+	// Loop through locations and stacks and combine.
 	foreach ( (array) $stacks as $stack ) {
 		foreach ( (array) $locations as $custom_location ) {
 			$retval[] = untrailingslashit( trailingslashit( $stack ) . $custom_location );
@@ -616,8 +673,8 @@ function bbp_parse_query( $posts_query ) {
 		// Check if the view exists by checking if there are query args are set
 		$view_args = bbp_get_view_query_args( $bbp_view );
 
-		// Bail if view args is false (view isn't registered)
-		if ( false === $view_args ) {
+		// Bail if view args are empty.
+		if ( empty( $view_args ) ) {
 			$posts_query->set_404();
 			return;
 		}

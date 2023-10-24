@@ -532,13 +532,34 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 @import "../common-styles/_bp_admin_notification_dropdown";
 
+/*
+*-----------------------------------------
+* @section 19.0 - Toast Messages
+*-----------------------------------------
+*/
+
+// Import Toast Messages
+
+@import "../common-styles/_bp_toast_messages";
+
 
 /*
 *-----------------------------------------
-* @section 19.0 - Emojione Area custom Override
+* @section 20.0 - Emojione Area custom Override
 *-----------------------------------------
 */
 
 // Import Emojione Area custom Override
 
 @import "../common-styles/_bp_emojione_area";
+
+
+/*
+*-----------------------------------------
+* @section 21.0 - Link Preview
+*-----------------------------------------
+*/
+
+// Import Link Preview
+
+@import "../common-styles/_link_preview";

@@ -137,6 +137,10 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 	 */
 	public function upload_item( $request ) {
 
+		if ( 'messages' === $request->get_param( 'component' ) ) {
+			$_POST['component'] = 'messages';
+		}
+
 		$file = $request->get_file_params();
 
 		if ( empty( $file ) ) {
@@ -198,7 +202,13 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		$retval = array(
 			'upload_id' => $upload['id'],
 			'name'      => $upload['name'],
+			'url'       => $upload['url'],
+			'ext'       => $upload['ext'],
 		);
+
+		if ( 'messages' === $request->get_param( 'component' ) && isset( $upload['vid_msg_url'] ) ) {
+			$retval['vid_msg_url'] = $upload['vid_msg_url'];
+		}
 
 		$response = rest_ensure_response( $retval );
 
@@ -314,6 +324,10 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $request['activity_id'] ) ) {
 			$args['activity_id'] = $request['activity_id'];
+		}
+
+		if ( ! empty( $request['message_id'] ) ) {
+			$args['message_id'] = $request['message_id'];
 		}
 
 		if ( ! empty( $request['privacy'] ) ) {
@@ -601,6 +615,10 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			$args['content'] = $request['content'];
 		}
 
+		if ( isset( $request['message_id'] ) && ! empty( $request['message_id'] ) ) {
+			$args['message_id'] = $request['message_id'];
+		}
+
 		/**
 		 * Filter the query arguments for the request.
 		 *
@@ -756,7 +774,9 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 							'status' => 404,
 						)
 					);
-				} elseif ( function_exists( 'bp_get_attachment_video_id' ) && ! empty( bp_get_attachment_video_id( (int) $attachment_id ) ) && empty( $request['album_id'] ) ) {
+				} elseif ( 'messages' !== $request['component'] &&
+					function_exists( 'bp_get_attachment_video_id' ) && ! empty( bp_get_attachment_video_id( (int) $attachment_id ) ) &&
+					empty( $request['album_id'] ) ) {
 					$retval = new WP_Error(
 						'bp_rest_duplicate_video_upload_id',
 						sprintf(
@@ -826,7 +846,9 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			'group_id'      => $video->group_id,
 			'album_id'      => $video->album_id,
 			'activity_id'   => $video->activity_id,
+			'message_id'    => $video->message_id,
 			'user_id'       => $video->user_id,
+			'menu_order'    => $video->menu_order,
 		);
 
 		if ( isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
@@ -835,6 +857,10 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 
 		if ( isset( $request['privacy'] ) && ! empty( $request['privacy'] ) ) {
 			$args['privacy'] = $request['privacy'];
+		}
+
+		if ( isset( $request['message_id'] ) && ! empty( $request['message_id'] ) ) {
+			$args['message_id'] = $request['message_id'];
 		}
 
 		if ( isset( $request['album_id'] ) && (int) $args['album_id'] !== (int) $request['album_id'] ) {
@@ -1287,6 +1313,12 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
+				'message_id'            => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'A unique numeric ID for the Message thread.', 'buddyboss' ),
+					'readonly'    => true,
+					'type'        => 'integer',
+				),
 				'hide_activity_actions' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Based on this hide like/comment button for media activity comments.', 'buddyboss' ),
@@ -1543,6 +1575,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		$content       = ( isset( $args['content'] ) ? $args['content'] : false );
 		$user_id       = ( ! empty( $args['user_id'] ) ? $args['user_id'] : get_current_user_id() );
 		$id            = ( ! empty( $args['id'] ) ? $args['id'] : '' );
+		$message_id    = ( ! empty( $args['message_id'] ) ? $args['message_id'] : 0 );
 
 		$group_id = ( ! empty( $args['group_id'] ) ? $args['group_id'] : false );
 		$album_id = ( ! empty( $args['album_id'] ) ? $args['album_id'] : false );
@@ -1583,19 +1616,25 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			// extract the nice title name.
 			$title = get_the_title( $wp_attachment_id );
 
-			$video_id = bp_video_add(
-				array(
-					'id'            => $id,
-					'attachment_id' => $wp_attachment_id,
-					'title'         => $title,
-					'activity_id'   => $video_activity_id,
-					'album_id'      => ( ! empty( $args['album_id'] ) ? $args['album_id'] : false ),
-					'group_id'      => ( ! empty( $args['group_id'] ) ? $args['group_id'] : false ),
-					'privacy'       => $video_privacy,
-					'user_id'       => $user_id,
-					'error_type'    => 'wp_error',
-				)
+			$add_video_args = array(
+				'id'            => $id,
+				'attachment_id' => $wp_attachment_id,
+				'title'         => $title,
+				'description'   => wp_filter_nohtml_kses( $content ),
+				'activity_id'   => $video_activity_id,
+				'message_id'    => $message_id,
+				'album_id'      => ( ! empty( $args['album_id'] ) ? $args['album_id'] : false ),
+				'group_id'      => ( ! empty( $args['group_id'] ) ? $args['group_id'] : false ),
+				'privacy'       => $video_privacy,
+				'user_id'       => $user_id,
+				'error_type'    => 'wp_error',
 			);
+
+			if ( isset( $args['menu_order'] ) ) {
+				$add_video_args['menu_order'] = ( ! empty( $args['menu_order'] ) ? $args['menu_order'] : 0 );
+			}
+
+			$video_id = bp_video_add( $add_video_args );
 
 			if ( is_int( $video_id ) ) {
 
@@ -1607,7 +1646,8 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 					update_post_meta( $wp_attachment_id, 'bp_video_activity_id', $video_activity_id );
 				}
 
-				// save video description while update.
+				// Added backward compatibility.
+				// Save video description while update.
 				if ( false !== $content ) {
 					$video_post['ID']           = $wp_attachment_id;
 					$video_post['post_content'] = wp_filter_nohtml_kses( $content );
@@ -1617,7 +1657,6 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 				bp_video_add_generate_thumb_background_process( $video_id );
 
 				$created_video_ids[] = $video_id;
-
 			}
 
 			if ( ! empty( $all_videos ) ) {
@@ -1651,6 +1690,15 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			if ( ! empty( $valid_upload_ids ) ) {
 				foreach ( $valid_upload_ids as $wp_attachment_id ) {
 
+					// Check if media id already available for the messages.
+					if ( 'message' === $video_privacy ) {
+						$mid = get_post_meta( $wp_attachment_id, 'bp_video_id', true );
+
+						if ( ! empty( $mid ) ) {
+							$created_video_ids[] = $mid;
+							continue;
+						}
+					}
 					// extract the nice title name.
 					$title = get_the_title( $wp_attachment_id );
 
@@ -1758,24 +1806,22 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( function_exists( 'bp_is_messages_video_support_enabled' ) && true === bp_is_messages_video_support_enabled() ) {
-			// Messages Video Video Support.
-			bp_rest_register_field(
-				'messages',      // Id of the BuddyPress component the REST field is about.
-				'bp_videos', // Used into the REST response/request.
-				array(
-					'get_callback'    => array( $this, 'bp_video_ids_get_rest_field_callback_messages' ),
-					// The function to use to get the value of the REST Field.
-					'update_callback' => array( $this, 'bp_video_ids_update_rest_field_callback_messages' ),
-					// The function to use to update the value of the REST Field.
-					'schema'          => array(                                // The example_field REST schema.
-						'description' => 'Messages Videos.',
-						'type'        => 'object',
-						'context'     => array( 'view', 'edit' ),
-					),
-				)
-			);
-		}
+		// Messages Video Support.
+		bp_rest_register_field(
+			'messages',      // Id of the BuddyPress component the REST field is about.
+			'bp_videos', // Used into the REST response/request.
+			array(
+				'get_callback'    => array( $this, 'bp_video_ids_get_rest_field_callback_messages' ),
+				// The function to use to get the value of the REST Field.
+				'update_callback' => array( $this, 'bp_video_ids_update_rest_field_callback_messages' ),
+				// The function to use to update the value of the REST Field.
+				'schema'          => array(                                // The example_field REST schema.
+					'description' => 'Messages Videos.',
+					'type'        => 'object',
+					'context'     => array( 'view', 'edit' ),
+				),
+			)
+		);
 
 		// Added param to main activity to check the comment has access to upload video or not.
 		bp_rest_register_field(
@@ -1839,8 +1885,10 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 
 		$videos = $this->assemble_response_data(
 			array(
+				'per_page'  => 0,
 				'video_ids' => $video_ids,
 				'sort'      => 'ASC',
+				'order_by'  => 'menu_order',
 			)
 		);
 
@@ -1849,9 +1897,10 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
+		$object = new WP_REST_Request();
 		foreach ( $videos['videos'] as $video ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->media_endpoint->prepare_item_for_response( $video, array() )
+				$this->media_endpoint->prepare_item_for_response( $video, $object )
 			);
 		}
 
@@ -1871,23 +1920,52 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 	 */
 	protected function bp_video_ids_update_rest_field_callback( $object, $value, $attribute ) {
 
-		global $bp_activity_edit, $bp_video_upload_count, $bp_new_activity_comment, $bp_activity_post_update_id, $bp_activity_post_update;
+		global $bp_activity_edit, $bp_video_upload_count, $bp_new_activity_comment, $bp_activity_post_update_id, $bp_activity_post_update, $bb_activity_comment_edit, $bb_activity_comment_edit_id;
 
-		if ( 'bp_videos' !== $attribute ) {
+		$group_id = 0;
+		if ( 'groups' === $value->component ) {
+			$group_id = $value->item_id;
+		}
+
+		if ( 'activity_comment' === $value->type && ! empty( $value->secondary_item_id ) && ! empty( $value->item_id ) ) {
+			$parent_activity = new BP_Activity_Activity( (int) $value->item_id );
+			if ( ! empty( $parent_activity->id ) ) {
+				$group_id = $parent_activity->item_id;
+			}
+			unset( $parent_activity );
+		}
+
+		if (
+			'bp_videos' !== $attribute ||
+			(
+				function_exists( 'bb_video_user_can_upload' ) &&
+				! bb_video_user_can_upload( bp_loggedin_user_id(), (int) $group_id )
+			)
+		) {
 			$value->bp_videos = null;
 
 			return $value;
 		}
 
-		$bp_activity_edit = ( isset( $value->edit ) ? true : false );
-		// phpcs:ignore
-		$_POST['edit'] = $bp_activity_edit;
+		// Set variable if current action is edit activity comment.
+		$is_edit_activity_comment = $bb_activity_comment_edit && 'activity_comment' === $value->type && isset( $_POST['edit_comment'] );
 
-		if ( false === $bp_activity_edit && empty( $object ) ) {
-			return $value;
+		if ( $is_edit_activity_comment ) {
+			$bb_activity_comment_edit_id = $value->id;
+			if ( false === $bb_activity_comment_edit && empty( $object ) ) {
+				return $value;
+			}
+		} else {
+			$bp_activity_edit = ( isset( $value->edit ) ? true : false );
+			// phpcs:ignore
+			$_POST['edit'] = $bp_activity_edit;
+
+			if ( false === $bp_activity_edit && empty( $object ) ) {
+				return $value;
+			}
 		}
 
-		$bp_new_activity_comment = ( 'activity_comment' === $value->type ? $value->id : 0 );
+		$bp_new_activity_comment = ( ( 'activity_comment' === $value->type && false === $bb_activity_comment_edit ) ? $value->id : 0 );
 
 		$activity_id = $value->id;
 		$privacy     = $value->privacy;
@@ -1908,8 +1986,10 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		$bp_activity_post_update    = true;
-		$bp_activity_post_update_id = $activity_id;
+		if ( ! $is_edit_activity_comment ) {
+			$bp_activity_post_update    = true;
+			$bp_activity_post_update_id = $activity_id;
+		}
 
 		if ( ! empty( $value->component ) && 'groups' === $value->component ) {
 			$group_id = $value->item_id;
@@ -1924,6 +2004,12 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 					bp_video_delete( array( 'id' => $video_id ), 'activity' );
 				}
 				bp_activity_delete_meta( $activity_id, 'bp_video_ids' );
+
+				// Delete media meta from activity for activity comment.
+				if ( $is_edit_activity_comment ) {
+					bp_activity_delete_meta( $activity_id, 'bp_video_id' );
+					bp_activity_delete_meta( $activity_id, 'bp_video_activity' );
+				}
 			}
 
 			return $value;
@@ -1979,7 +2065,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 				foreach ( $old_video_ids as $video_id ) {
 
 					if ( ! in_array( (int) $video_id, $video_ids, true ) ) {
-						bp_video_delete( array( 'id' => $video_id ) );
+						bp_video_delete( array( 'id' => $video_id ), 'activity' );
 					}
 				}
 			}
@@ -2084,8 +2170,10 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 
 		$videos = $this->assemble_response_data(
 			array(
+				'per_page'  => 0,
 				'video_ids' => $video_ids,
 				'sort'      => 'ASC',
+				'order_by'  => 'menu_order',
 			)
 		);
 
@@ -2094,9 +2182,11 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
+		$object = new WP_REST_Request();
+
 		foreach ( $videos['videos'] as $video ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->media_endpoint->prepare_item_for_response( $video, array() )
+				$this->media_endpoint->prepare_item_for_response( $video, $object )
 			);
 		}
 
@@ -2239,7 +2329,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 	 * @param array  $data      The message value for the REST response.
 	 * @param string $attribute The REST Field key used into the REST response.
 	 *
-	 * @return string            The value of the REST Field to include into the REST response.
+	 * @return array|void The value of the REST Field to include into the REST response.
 	 */
 	protected function bp_video_ids_get_rest_field_callback_messages( $data, $attribute ) {
 		$message_id = $data['id'];
@@ -2248,39 +2338,68 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$video_ids = bp_messages_get_meta( $message_id, 'bp_video_ids', true );
-		$video_id  = bp_messages_get_meta( $message_id, 'bp_video_id', true );
-		$video_ids = trim( $video_ids );
-		$video_ids = explode( ',', $video_ids );
-
-		if ( ! empty( $video_id ) ) {
-			$video_ids[] = $video_id;
-			$video_ids   = array_filter( array_unique( $video_ids ) );
-		}
-
-		if ( empty( $video_ids ) ) {
+		$thread_id = ! empty( $data['thread_id'] ) ? $data['thread_id'] : 0;
+		if ( empty( $thread_id ) ) {
 			return;
 		}
 
-		$videos = $this->assemble_response_data(
-			array(
-				'video_ids' => $video_ids,
-				'sort'      => 'ASC',
+		$group_name   = ! empty( $data['group_name'] ) ? $data['group_name'] : '';
+		$message_from = ! empty( $data['message_from'] ) ? $data['message_from'] : '';
+
+		if (
+			bp_is_active( 'video' ) &&
+			(
+				(
+					! empty( $group_name ) &&
+					'group' === $message_from &&
+					bp_is_group_video_support_enabled()
+				) ||
+				(
+					'group' !== $message_from &&
+					bp_is_messages_video_support_enabled()
+				)
 			)
-		);
+		) {
+			$video_ids = bp_messages_get_meta( $message_id, 'bp_video_ids', true );
+			$video_id  = bp_messages_get_meta( $message_id, 'bp_video_id', true );
+			$video_ids = trim( $video_ids );
+			$video_ids = explode( ',', $video_ids );
 
-		if ( empty( $videos['videos'] ) ) {
-			return;
-		}
+			if ( ! empty( $video_id ) ) {
+				$video_ids[] = $video_id;
+				$video_ids   = array_filter( array_unique( $video_ids ) );
+			}
 
-		$retval = array();
-		foreach ( $videos['videos'] as $video ) {
-			$retval[] = $this->prepare_response_for_collection(
-				$this->media_endpoint->prepare_item_for_response( $video, array() )
+			if ( empty( $video_ids ) ) {
+				return;
+			}
+
+			$videos = $this->assemble_response_data(
+				array(
+					'per_page'         => 0,
+					'video_ids'        => $video_ids,
+					'sort'             => 'ASC',
+					'order_by'         => 'menu_order',
+					'moderation_query' => false,
+				)
 			);
-		}
 
-		return $retval;
+			if ( empty( $videos['videos'] ) ) {
+				return;
+			}
+
+			$retval = array();
+			$object = new WP_REST_Request();
+			$object->set_param( 'context', 'view' );
+
+			foreach ( $videos['videos'] as $video ) {
+				$retval[] = $this->prepare_response_for_collection(
+					$this->media_endpoint->prepare_item_for_response( $video, $object )
+				);
+			}
+
+			return $retval;
+		}
 	}
 
 	/**
@@ -2305,6 +2424,40 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 
 		$videos = wp_parse_id_list( $object );
 		if ( empty( $videos ) ) {
+			$value->bp_videos = null;
+
+			return $value;
+		}
+
+		$thread_id = $value->thread_id;
+
+		if ( function_exists( 'bb_user_has_access_upload_video' ) ) {
+			$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
+			if ( ! $can_send_video ) {
+				$value->bp_videos = null;
+
+				return $value;
+			}
+		}
+
+		$thread = new BP_Messages_Thread( $thread_id );
+
+		$is_group_message_thread = false;
+		$first_message           = BP_Messages_Thread::get_first_message( $thread->thread_id );
+		$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
+		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+		$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
+		$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
+		$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
+
+		if ( 'group' === $message_from && $thread->thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
+			$is_group_message_thread = true;
+		}
+
+		$thread->group_id        = $group_id;
+		$thread->is_group_thread = $is_group_message_thread;
+
+		if ( empty( apply_filters( 'bp_user_can_create_message_video', bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' ), $thread, bp_loggedin_user_id() ) ) ) {
 			$value->bp_videos = null;
 
 			return $value;
@@ -2443,11 +2596,13 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 					$component = 'groups';
 				}
 			}
-			if ( 'blogs' === $parent_activity->component ||
-			     (
-				     ! empty( $activity['component'] ) &&
-				     'blogs' === $activity['component']
-			     )
+
+			if (
+				'blogs' === $parent_activity->component ||
+				(
+					! empty( $activity['component'] ) &&
+					'blogs' === $activity['component']
+				)
 			) {
 				return false;
 			}

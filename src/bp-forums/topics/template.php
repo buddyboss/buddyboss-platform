@@ -125,13 +125,30 @@ function bbp_get_topics_pagination_base( $forum_id = 0 ) {
 		} elseif ( bbp_is_favorites() ) {
 			$base = bbp_get_favorites_permalink( bbp_get_displayed_user_id() );
 
-			// User's subscriptions.
-		} elseif ( bbp_is_subscriptions() ) {
-			$base = bbp_get_subscriptions_permalink( bbp_get_displayed_user_id() );
-
 			// Root profile page.
 		} elseif ( bbp_is_single_user() ) {
 			$base = bbp_get_user_profile_url( bbp_get_displayed_user_id() );
+
+			// Any single post (for shortcodes, ahead of shortcodeables below)
+		} elseif ( is_singular() ) {
+			if ( has_shortcode( get_the_content(), 'bbp-forum-index' ) ) {
+				$base = bbp_get_topics_url();
+			} else {
+				// If archive page set as homepage.
+				if ( bbp_is_forum_archive() ) {
+					if ( 'forums' === bbp_show_on_root() ) {
+						$base = bbp_get_topics_url();
+					} elseif ( 'topics' === bbp_show_on_root() ) {
+						$base = bbp_get_forums_url();
+					}
+				} elseif ( bbp_is_topic_archive() ) {
+					$base = bbp_get_topics_url();
+                    
+					// Page or single post.
+				} else {
+					$base = get_permalink();
+				}
+			}
 
 			// View.
 		} elseif ( bbp_is_single_view() ) {
@@ -140,14 +157,6 @@ function bbp_get_topics_pagination_base( $forum_id = 0 ) {
 			// Topic tag.
 		} elseif ( bbp_is_topic_tag() ) {
 			$base = bbp_get_topic_tag_link();
-
-			// Page or single post.
-		} elseif ( is_page() || is_single() ) {
-			if ( has_shortcode( get_the_content(), 'bbp-forum-index' ) ) {
-				$base = bbp_get_topics_url();
-			} else {
-				$base = get_permalink();
-			}
 
 			// Forum archive.
 		} elseif ( bbp_is_forum_archive() ) {
@@ -161,7 +170,7 @@ function bbp_get_topics_pagination_base( $forum_id = 0 ) {
 		} elseif ( bbp_is_topic_archive() ) {
 			$base = bbp_get_topics_url();
 
-			// Default.
+			// Page or single post.
 		} else {
 			$base = get_permalink( $forum_id );
 		}
@@ -218,7 +227,7 @@ function bbp_show_lead_topic( $show_lead = true ) {
  * @uses                  bbp_get_super_stickies() To get the super stickies
  * @uses                  bbp_get_stickies() To get the forum stickies
  * @uses                  wpdb::get_results() To execute our query and get the results
- * @uses                  WP_Rewrite::using_permalinks() To check if the blog is using permalinks
+ * @uses                  bbp_use_pretty_urls() To check if the site is using pretty URLs
  * @uses                  get_permalink() To get the permalink
  * @uses                  add_query_arg() To add custom args to the url
  * @uses                  apply_filters() Calls 'bbp_topics_pagination' with the pagination args
@@ -238,16 +247,18 @@ function bbp_has_topics( $args = '' ) {
 
 	// Default argument array.
 	$default = array(
-		'post_type'      => bbp_get_topic_post_type(),  // Narrow query down to Forums topics.
-		'post_parent'    => $default_post_parent,       // Forum ID.
-		'meta_key'       => '_bbp_last_active_time',    // Make sure topic has some last activity time.
-		'orderby'        => 'meta_value',               // 'meta_value', 'author', 'date', 'title', 'modified', 'parent', rand',
-		'order'          => 'DESC',                     // 'ASC', 'DESC'.
-		'posts_per_page' => bbp_get_topics_per_page(),  // Topics per page.
-		'paged'          => bbp_get_paged(),            // Page Number.
-		's'              => $default_topic_search,      // Topic Search.
-		'show_stickies'  => $default_show_stickies,     // Ignore sticky topics?
-		'max_num_pages'  => false,                      // Maximum number of pages to show.
+		'post_type'                => bbp_get_topic_post_type(),  // Narrow query down to Forums topics.
+		'post_parent'              => $default_post_parent,       // Forum ID.
+		'meta_key'                 => '_bbp_last_active_time',    // Make sure topic has some last activity time.
+		'meta_type'                => 'DATETIME',
+		'orderby'                  => 'meta_value',               // 'meta_value', 'author', 'date', 'title', 'modified', 'parent', rand',
+		'order'                    => 'DESC',                     // 'ASC', 'DESC'.
+		'posts_per_page'           => bbp_get_topics_per_page(),  // Topics per page.
+		'paged'                    => bbp_get_paged(),            // Page Number.
+		's'                        => $default_topic_search,      // Topic Search.
+		'show_stickies'            => $default_show_stickies,     // Ignore sticky topics?
+		'max_num_pages'            => false,                      // Maximum number of pages to show.
+		'update_post_family_cache' => true,
 	);
 
 	// What are the default allowed statuses (based on user caps).
@@ -930,22 +941,19 @@ function bbp_topic_pagination( $args = '' ) {
  *                    - after: After the links
  *
  * @return string Pagination links
- * @uses                                 bbp_get_topic_id() To get the topic id
- * @uses                                 WP_Rewrite::using_permalinks() To check if the blog is using
- *                                       permalinks
- * @uses                                 user_trailingslashit() To add a trailing slash
- * @uses                                 trailingslashit() To add a trailing slash
- * @uses                                 get_permalink() To get the permalink of the topic
- * @uses                                 add_query_arg() To add query args
- * @uses                                 bbp_get_topic_reply_count() To get topic reply count
- * @uses                                 bbp_show_topic_lead() Are we showing the topic as a lead?
- * @uses                                 get_option() To get replies per page option
- * @uses                                 paginate_links() To paginate the links
- * @uses                                 apply_filters() Calls 'bbp_get_topic_pagination' with the links
- *                                       and arguments
+ * @uses bbp_get_topic_id()          To get the topic id
+ * @uses bbp_use_pretty_urls()       To check if the blog is using permalinks
+ * @uses user_trailingslashit()      To add a trailing slash
+ * @uses trailingslashit()           To add a trailing slash
+ * @uses get_permalink()             To get the permalink of the topic
+ * @uses add_query_arg()             To add query args
+ * @uses bbp_get_topic_reply_count() To get topic reply count
+ * @uses bbp_show_topic_lead()       Are we showing the topic as a lead?
+ * @uses get_option()                To get replies per page option
+ * @uses paginate_links()            To paginate the links
+ * @uses apply_filters()             Calls 'bbp_get_topic_pagination' with the links  and arguments
  */
 function bbp_get_topic_pagination( $args = '' ) {
-	global $wp_rewrite;
 
 	// Bail if threading replies
 	if ( bbp_thread_replies() ) {
@@ -964,8 +972,8 @@ function bbp_get_topic_pagination( $args = '' ) {
 	);
 
 	// If pretty permalinks are enabled, make our pagination pretty
-	if ( $wp_rewrite->using_permalinks() ) {
-		$base = trailingslashit( get_permalink( $r['topic_id'] ) ) . user_trailingslashit( $wp_rewrite->pagination_base . '/%#%/' );
+	if ( bbp_use_pretty_urls() ) {
+		$base = trailingslashit( get_permalink( $r['topic_id'] ) ) . user_trailingslashit( bbp_get_paged_slug() . '/%#%/' );
 	} else {
 		$base = add_query_arg( 'paged', '%#%', get_permalink( $r['topic_id'] ) );
 	}
@@ -995,8 +1003,8 @@ function bbp_get_topic_pagination( $args = '' ) {
 	if ( ! empty( $pagination_links ) ) {
 
 		// Remove first page from pagination
-		if ( $wp_rewrite->using_permalinks() ) {
-			$pagination_links = str_replace( $wp_rewrite->pagination_base . '/1/', '', $pagination_links );
+		if ( bbp_use_pretty_urls() ) {
+			$pagination_links = str_replace( bbp_get_paged_slug() . '/1/', '', $pagination_links );
 		} else {
 			$pagination_links = str_replace( '&#038;paged=1', '', $pagination_links );
 		}
@@ -1657,7 +1665,13 @@ function bbp_get_topic_author_link( $args = '' ) {
 
 		// Get avatar
 		if ( 'avatar' === $r['type'] || 'both' === $r['type'] ) {
+			if ( bp_is_active( 'moderation' ) ) {
+				add_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
+			}
 			$author_links['avatar'] = bbp_get_topic_author_avatar( $topic_id, $r['size'] );
+			if ( bp_is_active( 'moderation' ) ) {
+				remove_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
+			}
 		}
 
 		// Get display name
@@ -2329,31 +2343,29 @@ function bbp_get_topic_replies_link( $topic_id = 0 ) {
 	$topic_id = $topic->ID;
 	$replies  = sprintf( _n( '%s reply', '%s replies', bbp_get_topic_reply_count( $topic_id, true ), 'buddyboss' ), bbp_get_topic_reply_count( $topic_id ) );
 	$retval   = '';
+	$link     = bbp_get_topic_permalink( $topic_id );
 
 	// First link never has view=all
 	if ( bbp_get_view_all( 'edit_others_replies' ) ) {
-		$retval .= "<a href='" . esc_url( bbp_remove_view_all( bbp_get_topic_permalink( $topic_id ) ) ) . "'>$replies</a>";
+		$retval .= "<a href='" . esc_url( bbp_remove_view_all( $link ) ) . "'>" . esc_html( $replies ) . "</a>";
 	} else {
 		$retval .= $replies;
 	}
 
 	// Any deleted replies?
-	$deleted = bbp_get_topic_reply_count_hidden( $topic_id );
+	$deleted_int = bbp_get_topic_reply_count_hidden( $topic_id, true  );
 
-	// This forum has hidden topics
-	if ( ! empty( $deleted ) && current_user_can( 'edit_others_replies' ) ) {
+	// This topic has hidden replies.
+	if ( ! empty( $deleted_int ) && current_user_can( 'edit_others_replies' ) ) {
 
-		// Extra text
-		$extra = sprintf( __( ' (+ %d hidden)', 'buddyboss' ), $deleted );
+		// Hidden replies.
+		$deleted_num = bbp_get_topic_reply_count_hidden( $topic_id, false );
+		$extra       = ' ' . sprintf( _n( '(+%s hidden)', '(+%s hidden)', $deleted_int, 'buddyboss' ), $deleted_num );
 
-		// No link
-		if ( bbp_get_view_all() ) {
-			$retval .= " $extra";
-
-			// Link
-		} else {
-			$retval .= " <a href='" . esc_url( bbp_add_view_all( bbp_get_topic_permalink( $topic_id ), true ) ) . "'>$extra</a>";
-		}
+		// Hidden link.
+		$retval .= ! bbp_get_view_all( 'edit_others_replies' )
+			? " <a href='" . esc_url( bbp_add_view_all( $link, true ) ) . "'>" . esc_html( $extra ) . "</a>"
+			: " {$extra}";
 	}
 
 	return apply_filters( 'bbp_get_topic_replies_link', $retval, $topic_id );
@@ -2816,7 +2828,6 @@ function bbp_topic_edit_url( $topic_id = 0 ) {
  * @uses                  bbp_get_topic_id() To get the topic id
  */
 function bbp_get_topic_edit_url( $topic_id = 0 ) {
-	global $wp_rewrite;
 
 	$bbp = bbpress();
 
@@ -2828,10 +2839,11 @@ function bbp_get_topic_edit_url( $topic_id = 0 ) {
 	// Remove view=all link from edit
 	$topic_link = bbp_remove_view_all( bbp_get_topic_permalink( $topic_id ) );
 
-	// Pretty permalinks
-	if ( $wp_rewrite->using_permalinks() ) {
-		$url = trailingslashit( $topic_link ) . $bbp->edit_id;
-		$url = trailingslashit( $url );
+	// Pretty permalinks, previously used `bbp_use_pretty_urls()`
+	// https://bbpress.trac.wordpress.org/ticket/3054
+	if ( false === strpos( $topic_link, '?' ) ) {
+		$url = trailingslashit( $topic_link ) . bbp_get_edit_slug();
+		$url = user_trailingslashit( $url );
 
 		// Unpretty permalinks
 	} else {
@@ -3622,23 +3634,28 @@ function bbp_get_form_topic_type_dropdown( $args = '' ) {
 	}
 
 	// Used variables
-	$tab = ! empty( $r['tab'] ) ? ' tabindex="' . (int) $r['tab'] . '"' : '';
+	$tab = ! empty( $r['tab'] ) ? ' tabindex="' . esc_attr( (int) $r['tab'] ) . '"' : '';
 
 	// Start an output buffer, we'll finish it after the select loop
-	ob_start(); ?>
+	ob_start();
 
-    <select name="<?php echo esc_attr( $r['select_id'] ); ?>"
-            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?>>
+	// Get topic sticky types.
+	$topic_sticky_types = bbp_get_topic_types();
 
-		<?php foreach ( bbp_get_topic_types() as $key => $label ) : ?>
-
-            <option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $r['selected'] ); ?>>
-                <span><?php _e( 'Type: ', 'buddyboss' ); ?></span><?php echo esc_html( $label ); ?></option>
-
-		<?php endforeach; ?>
-
-    </select>
-
+	// Get current topic id
+	$topic_id = bbp_get_topic_id( $r['topic_id'] );
+	if ( ! empty( $topic_id ) && bb_is_group_forum_topic( $topic_id ) ) {
+		unset( $topic_sticky_types['super'] );
+	}
+	?>
+		<select name="<?php echo esc_attr( $r['select_id'] ); ?>" id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?>>
+			<?php foreach ( $topic_sticky_types as $key => $label ) : ?>
+				<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $r['selected'] ); ?>>
+					<span><?php _e( 'Type: ', 'buddyboss' ); ?></span>
+					<?php echo esc_html( $label ); ?>
+				</option>
+			<?php endforeach; ?>
+		</select>
 	<?php
 
 	// Return the results
@@ -4002,7 +4019,6 @@ function bbp_topic_tag_edit_link( $tag = '' ) {
  * @uses  get_term_by()
  */
 function bbp_get_topic_tag_edit_link( $tag = '' ) {
-	global $wp_rewrite;
 
 	// Get the term
 	if ( ! empty( $tag ) ) {
@@ -4015,16 +4031,11 @@ function bbp_get_topic_tag_edit_link( $tag = '' ) {
 	// Add before and after if description exists
 	if ( ! empty( $term->term_id ) ) {
 
-		$bbp = bbpress();
+		// Pretty or ugly URL.
+		$retval = bbp_use_pretty_urls()
+		? user_trailingslashit( trailingslashit( bbp_get_topic_tag_link() ) . bbp_get_edit_slug() )
+		: add_query_arg( array( bbp_get_edit_rewrite_id() => '1' ), bbp_get_topic_tag_link() );
 
-		// Pretty
-		if ( $wp_rewrite->using_permalinks() ) {
-			$retval = user_trailingslashit( trailingslashit( bbp_get_topic_tag_link() ) . $bbp->edit_id );
-
-			// Ugly
-		} else {
-			$retval = add_query_arg( array( $bbp->edit_id => '1' ), bbp_get_topic_tag_link() );
-		}
 
 		// No link
 	} else {
@@ -4156,6 +4167,11 @@ function bbp_get_form_topic_content() {
 	if ( bbp_is_post_request() && isset( $_POST['bbp_topic_content'] ) ) {
 		$topic_content = stripslashes( $_POST['bbp_topic_content'] );
 
+		// Remove unintentional empty paragraph coming from the medium editor when only link preview.
+		if ( preg_match('/^(<p><br><\/p>|<p><br \/><\/p>|<p><\/p>|<p><br\/><\/p>)$/i', $topic_content ) ) {
+			$topic_content = '';
+		}
+
 		// Get edit data
 	} elseif ( bbp_is_topic_edit() ) {
 		$topic_content = bbp_get_global_post_field( 'post_content', 'raw' );
@@ -4219,6 +4235,10 @@ function bbp_get_form_topic_tags() {
 			case bbp_get_reply_post_type():
 				$topic_id = bbp_get_reply_topic_id( get_the_ID() );
 				break;
+			default:
+				// If post type doesn't match and topic id is set via shortcode.
+				$topic_id = bbp_get_topic_id();
+			break;
 		}
 
 		$new_terms = array();
@@ -4312,35 +4332,26 @@ function bbp_form_topic_subscribed() {
  */
 function bbp_get_form_topic_subscribed() {
 
-	// Get _POST data
+	// Default value.
+ 	$topic_subscribed = false;
+
+	// Get _POST data.
 	if ( bbp_is_post_request() && isset( $_POST['bbp_topic_subscription'] ) ) {
 		$topic_subscribed = (bool) $_POST['bbp_topic_subscription'];
 
-		// Get edit data
+		// Get edit data.
 	} elseif ( bbp_is_topic_edit() || bbp_is_reply_edit() ) {
 
-		// Get current posts author
-		$post_author = bbp_get_global_post_field( 'post_author', 'raw' );
+		// Get current posts author.
+		$post_author      = (int) bbp_get_global_post_field( 'post_author', 'raw' );
+		$topic_subscribed = bbp_is_user_subscribed( $post_author, bbp_get_topic_id() );
 
-		// Post author is not the current user
-		if ( bbp_get_current_user_id() !== $post_author ) {
-			$topic_subscribed = bbp_is_user_subscribed_to_topic( $post_author );
-
-			// Post author is the current user
-		} else {
-			$topic_subscribed = bbp_is_user_subscribed_to_topic( bbp_get_current_user_id() );
-		}
-
-		// Get current status
+		// Get current status.
 	} elseif ( bbp_is_single_topic() ) {
-		$topic_subscribed = bbp_is_user_subscribed_to_topic( bbp_get_current_user_id() );
-
-		// No data
-	} else {
-		$topic_subscribed = false;
+		$topic_subscribed = bbp_is_user_subscribed( bbp_get_current_user_id(), bbp_get_topic_id() );
 	}
 
-	// Get checked output
+	// Get checked output.
 	$checked = checked( $topic_subscribed, true, false );
 
 	return apply_filters( 'bbp_get_form_topic_subscribed', $checked, $topic_subscribed );

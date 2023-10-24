@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
+#[AllowDynamicProperties]
 class BP_XProfile_Group {
 
 	/**
@@ -63,6 +64,15 @@ class BP_XProfile_Group {
 	 * @var array Fields of group.
 	 */
 	public $fields;
+
+	/**
+	 * Static cache key for the groups.
+	 *
+	 * @since BuddyBoss 2.1.6
+	 *
+	 * @var array Fields of cache.
+	 */
+	public static $bp_xprofile_group_ids = array();
 
 	/**
 	 * Initialize and/or populate profile field group.
@@ -242,35 +252,37 @@ class BP_XProfile_Group {
 	 * and field data.
 	 *
 	 * @since BuddyPress 1.2.0
+	 * @since BuddyPress 2.4.0 Introduced `$member_type` argument.
+	 * @since BuddyPress 11.0.0 `$profile_group_id` accepts an array of profile group ids.
+	 * @since BuddyBoss 2.3.90 `$profile_group_id` accepts an array of profile group ids.
 	 *
 	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @param array $args {
 	 *  Array of optional arguments:
-	 *      @type int          $profile_group_id  Limit results to a single profile group.
-	 *      @type int          $user_id           Required if you want to load a specific user's data.
-	 *                                            Default: displayed user's ID.
-	 *      @type array|string $member_type       Limit fields by those restricted to a given profile type, or array of
-	 *                                            profile types. If `$user_id` is provided, the value of `$member_type`
-	 *                                            will be overridden by the profile types of the provided user. The
-	 *                                            special value of 'any' will return only those fields that are
-	 *                                            unrestricted by profile type - i.e., those applicable to any type.
-	 *      @type bool         $hide_empty_groups True to hide groups that don't have any fields. Default: false.
-	 *      @type bool         $hide_empty_fields True to hide fields where the user has not provided data.
-	 *                                            Default: false.
-	 *      @type bool         $fetch_fields      Whether to fetch each group's fields. Default: false.
-	 *      @type bool         $fetch_field_data  Whether to fetch data for each field. Requires a $user_id.
-	 *                                            Default: false.
-	 *      @type array        $exclude_groups    Comma-separated list or array of group IDs to exclude.
-	 *      @type array        $exclude_fields    Comma-separated list or array of field IDs to exclude.
-	 *      @type array        $includ_fields    Comma-separated list or array of field IDs to include.
-	 *      @type bool         $update_meta_cache Whether to pre-fetch xprofilemeta for all retrieved groups, fields,
-	 *                                            and data. Default: true.
-	 * }
+	 *      @type int|int[]|bool $profile_group_id   Limit results to a single profile group.
+	 *      @type int            $user_id            Required if you want to load a specific user's data.
+	 *                                               Default: displayed user's ID.
+	 *      @type array|string   $member_type        Limit fields by those restricted to a given profile type, or array of
+	 *                                               profile types. If `$user_id` is provided, the value of `$member_type`
+	 *                                               will be overridden by the profile types of the provided user. The
+	 *                                               special value of 'any' will return only those fields that are
+	 *                                               unrestricted by profile type - i.e., those applicable to any type.
+	 *      @type bool           $hide_empty_groups  True to hide groups that don't have any fields. Default: false.
+	 *      @type bool           $hide_empty_fields  True to hide fields where the user has not provided data.
+	 *                                               Default: false.
+	 *      @type bool           $fetch_fields       Whether to fetch each group's fields. Default: false.
+	 *      @type bool           $fetch_field_data   Whether to fetch data for each field. Requires a $user_id.
+	 *                                               Default: false.
+	 *      @type array          $exclude_groups     Comma-separated list or array of group IDs to exclude.
+	 *      @type array          $exclude_fields     Comma-separated list or array of field IDs to exclude.
+	 *      @type array          $includ_fields      Comma-separated list or array of field IDs to include.
+	 *      @type bool           $update_meta_cache  Whether to pre-fetch xprofilemeta for all retrieved groups, fields,
+	 *                                               and data. Default: true.
+	 *  }
 	 * @return array $groups
 	 */
 	public static function get( $args = array() ) {
-		static $bp_xprofile_group_ids = array();
 		static $bp_xprofile_field_ids = array();
 		global $wpdb;
 
@@ -303,8 +315,9 @@ class BP_XProfile_Group {
 		);
 
 		// WHERE.
-		if ( ! empty( $r['profile_group_id'] ) ) {
-			$where_sql = $wpdb->prepare( 'WHERE g.id = %d', $r['profile_group_id'] );
+		if ( ! empty( $r['profile_group_id'] ) && ! is_bool( $r['profile_group_id'] ) ) {
+			$profile_group_ids = join( ',', wp_parse_id_list( $r['profile_group_id'] ) );
+			$where_sql         = "WHERE g.id IN ({$profile_group_ids})";
 		} elseif ( $r['exclude_groups'] ) {
 			$exclude   = join( ',', wp_parse_id_list( $r['exclude_groups'] ) );
 			$where_sql = "WHERE g.id NOT IN ({$exclude})";
@@ -316,15 +329,15 @@ class BP_XProfile_Group {
 
 		// Include or exclude empty groups.
 		$cache_key = 'bp_xprofile_group_ids_' . md5( maybe_serialize( $r ) . '_' . maybe_serialize( $where_sql ) );
-		if ( ! isset( $bp_xprofile_group_ids[ $cache_key ] ) ) {
+		if ( ! isset( self::$bp_xprofile_group_ids[ $cache_key ] ) ) {
 			if ( ! empty( $r['hide_empty_groups'] ) ) {
 				$group_ids = $wpdb->get_col( "SELECT DISTINCT g.id FROM {$bp->profile->table_name_groups} g INNER JOIN {$bp->profile->table_name_fields} f ON g.id = f.group_id {$where_sql} ORDER BY g.group_order ASC" );
 			} else {
 				$group_ids = $wpdb->get_col( "SELECT DISTINCT g.id FROM {$bp->profile->table_name_groups} g {$where_sql} ORDER BY g.group_order ASC" );
 			}
-			$bp_xprofile_group_ids[ $cache_key ] = $group_ids;
+			self::$bp_xprofile_group_ids[ $cache_key ] = $group_ids;
 		} else {
-			$group_ids = $bp_xprofile_group_ids[ $cache_key ];
+			$group_ids = self::$bp_xprofile_group_ids[ $cache_key ];
 		}
 
 		// Get all group data.
@@ -427,7 +440,7 @@ class BP_XProfile_Group {
 
 		// Fetch the fields.
 		$cache_field_key = 'bp_xprofile_field_ids_' . md5( maybe_serialize( $r ) );
-		if ( ! isset( $bp_xprofile_field_ids[ $cache_field_key ] ) ) {
+		if ( ! isset( $bp_xprofile_field_ids[ $cache_field_key ] ) || is_admin() ) {
 			$field_ids                           = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id IN ( {$group_ids_in} ) AND parent_id = 0 {$exclude_fields_sql} {$in_sql} ORDER BY field_order" );
 			$bp_xprofile_field_ids[ $cache_field_key ] = $field_ids;
 		} else {
@@ -894,7 +907,7 @@ class BP_XProfile_Group {
 						<div id="post-body-content">
 							<div id="titlediv">
 								<div class="titlewrap">
-									<label id="title-prompt-text" for="title"><?php esc_html_e( 'Field Set Name (required)', 'buddyboss' ); ?></label>
+									<label id="title-prompt-text" for="title" class="screen-reader-text"><?php esc_html_e( 'Field Set Name (required)', 'buddyboss' ); ?></label>
 									<input type="text" name="group_name" id="title" value="<?php echo esc_attr( $this->name ); ?>" autocomplete="off" />
 								</div>
 							</div>

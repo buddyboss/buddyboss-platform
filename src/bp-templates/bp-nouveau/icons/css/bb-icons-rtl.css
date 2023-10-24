@@ -1,77 +1,77 @@
 /*!
- * BuddyBoss Icon 1.0.0 - https://buddyboss.com
+ * BuddyBoss Icon 1.0.3 - https://buddyboss.com
  * License - MIT
  * Copyright 2022
  */
 
 @font-face {
   font-family: 'bb-icons';
-  src: url('../fonts/round-lined.eot?1657953049');
-  src: url('../fonts/round-lined.eot?1657953049#iefix') format('embedded-opentype'),
-            url('../fonts/round-lined.woff2?1657953049') format('woff2'),
-            url('../fonts/round-lined.woff?1657953049') format('woff'),
-            url('../fonts/round-lined.ttf?1657953049') format('truetype'),
-            url('../fonts/round-lined.svg?1657953049#round-lined') format('svg');
+  src: url('../fonts/round-lined.eot?1693997272');
+  src: url('../fonts/round-lined.eot?1693997272#iefix') format('embedded-opentype'),
+            url('../fonts/round-lined.woff2?1693997272') format('woff2'),
+            url('../fonts/round-lined.woff?1693997272') format('woff'),
+            url('../fonts/round-lined.ttf?1693997272') format('truetype'),
+            url('../fonts/round-lined.svg?1693997272#round-lined') format('svg');
   font-weight: 100;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'bb-icons';
-  src: url('../fonts/round-filled.eot?1657953049');
-  src: url('../fonts/round-filled.eot?1657953049#iefix') format('embedded-opentype'),
-            url('../fonts/round-filled.woff2?1657953049') format('woff2'),
-            url('../fonts/round-filled.woff?1657953049') format('woff'),
-            url('../fonts/round-filled.ttf?1657953049') format('truetype'),
-            url('../fonts/round-filled.svg?1657953049#round-lined') format('svg');
+  src: url('../fonts/round-filled.eot?1693997272');
+  src: url('../fonts/round-filled.eot?1693997272#iefix') format('embedded-opentype'),
+            url('../fonts/round-filled.woff2?1693997272') format('woff2'),
+            url('../fonts/round-filled.woff?1693997272') format('woff'),
+            url('../fonts/round-filled.ttf?1693997272') format('truetype'),
+            url('../fonts/round-filled.svg?1693997272#round-lined') format('svg');
   font-weight: 200;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'bb-icons';
-  src: url('../fonts/filled.eot?1657953049');
-  src: url('../fonts/filled.eot?1657953049#iefix') format('embedded-opentype'),
-            url('../fonts/filled.woff2?1657953049') format('woff2'),
-            url('../fonts/filled.woff?1657953049') format('woff'),
-            url('../fonts/filled.ttf?1657953049') format('truetype'),
-            url('../fonts/filled.svg?1657953049#round-lined') format('svg');
+  src: url('../fonts/filled.eot?1693997272');
+  src: url('../fonts/filled.eot?1693997272#iefix') format('embedded-opentype'),
+            url('../fonts/filled.woff2?1693997272') format('woff2'),
+            url('../fonts/filled.woff?1693997272') format('woff'),
+            url('../fonts/filled.ttf?1693997272') format('truetype'),
+            url('../fonts/filled.svg?1693997272#round-lined') format('svg');
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'bb-icons';
-  src: url('../fonts/lined.eot?1657953049');
-  src: url('../fonts/lined.eot?1657953049#iefix') format('embedded-opentype'),
-            url('../fonts/lined.woff2?1657953049') format('woff2'),
-            url('../fonts/lined.woff?1657953049') format('woff'),
-            url('../fonts/lined.ttf?1657953049') format('truetype'),
-            url('../fonts/lined.svg?1657953049#round-lined') format('svg');
+  src: url('../fonts/lined.eot?1693997272');
+  src: url('../fonts/lined.eot?1693997272#iefix') format('embedded-opentype'),
+            url('../fonts/lined.woff2?1693997272') format('woff2'),
+            url('../fonts/lined.woff?1693997272') format('woff'),
+            url('../fonts/lined.ttf?1693997272') format('truetype'),
+            url('../fonts/lined.svg?1693997272#round-lined') format('svg');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'bb-icons';
-  src: url('../fonts/box-lined.eot?1657953049');
-  src: url('../fonts/box-lined.eot?1657953049#iefix') format('embedded-opentype'),
-            url('../fonts/box-lined.woff2?1657953049') format('woff2'),
-            url('../fonts/box-lined.woff?1657953049') format('woff'),
-            url('../fonts/box-lined.ttf?1657953049') format('truetype'),
-            url('../fonts/box-lined.svg?1657953049#round-lined') format('svg');
+  src: url('../fonts/box-lined.eot?1693997272');
+  src: url('../fonts/box-lined.eot?1693997272#iefix') format('embedded-opentype'),
+            url('../fonts/box-lined.woff2?1693997272') format('woff2'),
+            url('../fonts/box-lined.woff?1693997272') format('woff'),
+            url('../fonts/box-lined.ttf?1693997272') format('truetype'),
+            url('../fonts/box-lined.svg?1693997272#round-lined') format('svg');
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'bb-icons';
-  src: url('../fonts/box-filled.eot?1657953049');
-  src: url('../fonts/box-filled.eot?1657953049#iefix') format('embedded-opentype'),
-            url('../fonts/box-filled.woff2?1657953049') format('woff2'),
-            url('../fonts/box-filled.woff?1657953049') format('woff'),
-            url('../fonts/box-filled.ttf?1657953049') format('truetype'),
-            url('../fonts/box-filled.svg?1657953049#round-lined') format('svg');
+  src: url('../fonts/box-filled.eot?1693997272');
+  src: url('../fonts/box-filled.eot?1693997272#iefix') format('embedded-opentype'),
+            url('../fonts/box-filled.woff2?1693997272') format('woff2'),
+            url('../fonts/box-filled.woff?1693997272') format('woff'),
+            url('../fonts/box-filled.ttf?1693997272') format('truetype'),
+            url('../fonts/box-filled.svg?1693997272#round-lined') format('svg');
   font-weight: 600;
   font-style: normal;
 }
@@ -170,11 +170,23 @@
 
 /* '' */
 
+.bb-icon-award-slash:before {
+  content: '\e805';
+}
+
+/* '' */
+
 .bb-icon-car-small:before {
   content: '\e806';
 }
 
 /* '' */
+
+.bb-icon-brand-facebook-f:before {
+  content: '\e807';
+}
+
+/* '' */
 
 .bb-icon-angle-down:before {
   content: '\e826';
@@ -548,11 +560,239 @@
 
 /* '' */
 
+.bb-icon-hand-pointer:before {
+  content: '\e9ec';
+}
+
+/* '' */
+
+.bb-icon-image-plus:before {
+  content: '\e9ed';
+}
+
+/* '' */
+
+.bb-icon-minimize:before {
+  content: '\e9ee';
+}
+
+/* '' */
+
+.bb-icon-spinner-alt:before {
+  content: '\e9ef';
+}
+
+/* '' */
+
 .bb-icon-picture-in-picture:before {
   content: '\e9f0';
 }
 
 /* '' */
+
+.bb-icon-video-plus:before {
+  content: '\e9f1';
+}
+
+/* '' */
+
+.bb-icon-cart-slash:before {
+  content: '\e9f2';
+}
+
+/* '' */
+
+.bb-icon-brand-intercom:before {
+  content: '\e9f3';
+}
+
+/* '' */
+
+.bb-icon-cloud-check:before {
+  content: '\e9f4';
+}
+
+/* '' */
+
+.bb-icon-cloud-exclamation:before {
+  content: '\e9f5';
+}
+
+/* '' */
+
+.bb-icon-cloud-times:before {
+  content: '\e9f6';
+}
+
+/* '' */
+
+.bb-icon-crown:before {
+  content: '\e9f7';
+}
+
+/* '' */
+
+.bb-icon-emoticon-confused:before {
+  content: '\e9f8';
+}
+
+/* '' */
+
+.bb-icon-folder-download:before {
+  content: '\e9f9';
+}
+
+/* '' */
+
+.bb-icon-folder-move:before {
+  content: '\e9fa';
+}
+
+/* '' */
+
+.bb-icon-folder-upload:before {
+  content: '\e9fb';
+}
+
+/* '' */
+
+.bb-icon-grip-h:before {
+  content: '\e9fc';
+}
+
+/* '' */
+
+.bb-icon-grip-v:before {
+  content: '\e9fd';
+}
+
+/* '' */
+
+.bb-icon-image-move:before {
+  content: '\e9fe';
+}
+
+/* '' */
+
+.bb-icon-mobile-slash:before {
+  content: '\e9ff';
+}
+
+/* '' */
+
+.bb-icon-split:before {
+  content: '\ea00';
+}
+
+/* '' */
+
+.bb-icon-star-slash:before {
+  content: '\ea01';
+}
+
+/* '' */
+
+.bb-icon-stopwatch:before {
+  content: '\ea02';
+}
+
+/* '' */
+
+.bb-icon-strikethrough:before {
+  content: '\ea03';
+}
+
+/* '' */
+
+.bb-icon-trophy-slash:before {
+  content: '\ea04';
+}
+
+/* '' */
+
+.bb-icon-u-turn-down:before {
+  content: '\ea05';
+}
+
+/* '' */
+
+.bb-icon-u-turn-left:before {
+  content: '\ea06';
+}
+
+/* '' */
+
+.bb-icon-u-turn-right:before {
+  content: '\ea07';
+}
+
+/* '' */
+
+.bb-icon-u-turn-up:before {
+  content: '\ea08';
+}
+
+/* '' */
+
+.bb-icon-user-arrow-down:before {
+  content: '\ea09';
+}
+
+/* '' */
+
+.bb-icon-user-arrow-up:before {
+  content: '\ea0a';
+}
+
+/* '' */
+
+.bb-icon-user-crown:before {
+  content: '\ea0b';
+}
+
+/* '' */
+
+.bb-icon-user-friends-plus:before {
+  content: '\ea0c';
+}
+
+/* '' */
+
+.bb-icon-file-article:before {
+  content: '\ea0d';
+}
+
+/* '' */
+
+.bb-icon-globe-alt:before {
+  content: '\ea0e';
+}
+
+/* '' */
+
+.bb-icon-newspaper:before {
+  content: '\ea0f';
+}
+
+/* '' */
+
+.bb-icon-user-cancel:before {
+  content: '\ea10';
+}
+
+/* '' */
+
+.bb-icon-user-info:before {
+  content: '\ea11';
+}
+
+/* '' */
+
+.bb-icon-brand-x:before {
+  content: '\ea12';
+}
+
+/* '' */
 
 .bb-icon-activity-slash:before {
   content: '\ed90';
@@ -1100,7 +1340,7 @@
 
 /* '' */
 
-.bb-icon-closed-capitioning:before {
+.bb-icon-closed-captioning:before {
   content: '\ee1b';
 }
 

@@ -57,17 +57,51 @@ function bp_video_upload() {
 	 */
 	do_action( 'bb_video_upload', $attachment );
 
+	// get saved video id.
+	$video_id = (int) get_post_meta( $attachment->ID, 'bp_video_id', true );
+
 	$name = $attachment->post_title;
 
 	// Generate video attachment preview link.
-	$attachment_id  = 'forbidden_' . $attachment->ID;
-	$attachment_url = home_url( '/' ) . 'bb-attachment-video-preview/' . base64_encode( $attachment_id );
+	$attachment_id     = 'forbidden_' . $attachment->ID;
+	$attachment_url    = home_url( '/' ) . 'bb-attachment-video-preview/' . base64_encode( $attachment_id );
+	$video_message_url = ( isset( $_POST ) && isset( $_POST['thread_id'] ) ? home_url( '/' ) . 'bb-attachment-video-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( 'thread_' . $_POST['thread_id'] ) : '' );
+
+	$file_url = wp_get_attachment_url( $attachment->ID );
+	$filetype = wp_check_filetype( $file_url );
+	$ext      = $filetype['ext'];
+	if ( empty( $ext ) ) {
+		$path = parse_url( $file_url, PHP_URL_PATH );
+		$ext  = pathinfo( basename( $path ), PATHINFO_EXTENSION );
+	}
+	// https://stackoverflow.com/questions/40995987/how-to-play-mov-files-in-video-tag/40999234#40999234.
+	// https://stackoverflow.com/a/44858204.
+	if ( in_array( $ext, array( 'mov', 'm4v' ), true ) ) {
+		$ext = 'mp4';
+	}
+
+	if (
+		! empty( $video_id ) &&
+		(
+			bp_is_group_messages() ||
+			bp_is_messages_component() ||
+			(
+				! empty( $_POST['component'] ) &&
+				'messages' === $_POST['component']
+			)
+		)
+	) {
+		$attachment_url    = bb_video_get_symlink( $video_id );
+		$video_message_url = $attachment_url;
+	}
 
 	$result = array(
-		'id'    => (int) $attachment->ID,
-		'thumb' => '',
-		'url'   => esc_url( $attachment_url ),
-		'name'  => esc_attr( $name ),
+		'id'          => (int) $attachment->ID,
+		'thumb'       => '',
+		'url'         => esc_url( untrailingslashit( $attachment_url ) ),
+		'name'        => esc_attr( $name ),
+		'ext'         => esc_attr( $ext ),
+		'vid_msg_url' => esc_url( untrailingslashit( $video_message_url ) ),
 	);
 
 	return $result;
@@ -425,7 +459,7 @@ function bp_video_get( $args = '' ) {
 			'sort'             => 'DESC',       // sort ASC or DESC.
 			'order_by'         => false,        // order by.
 
-			'scope'            => false,
+			'scope'            => false,        // public, friends, groups, personal.
 
 			// want to limit the query.
 			'user_id'          => false,
@@ -433,10 +467,11 @@ function bp_video_get( $args = '' ) {
 			'album_id'         => false,
 			'group_id'         => false,
 			'search_terms'     => false,        // Pass search terms as a string.
-			'privacy'          => false,        // privacy of video.
-			'exclude'          => false,        // Comma-separated list of activity IDs to exclude.
-			'count_total'      => false,
-			'moderation_query' => true,         // Filter for exclude moderation query.
+			'privacy'          => false,        // Privacy of video - public, loggedin, onlyme, friends, grouponly, message.
+			'exclude'          => false,        // Comma-separated list of IDs to exclude.
+			'in'               => false,        // Comma-separated list of IDs to include.
+			'moderation_query' => true,         // Filter to include moderation query.
+			'count_total'      => false,        // Whether to count the total number of items in the query.
 		),
 		'video_get'
 	);
@@ -456,6 +491,7 @@ function bp_video_get( $args = '' ) {
 			'scope'            => $r['scope'],
 			'privacy'          => $r['privacy'],
 			'exclude'          => $r['exclude'],
+			'in'               => ! empty( $r['include'] ) ? $r['include'] : $r['in'],
 			'count_total'      => $r['count_total'],
 			'fields'           => $r['fields'],
 			'moderation_query' => $r['moderation_query'],
@@ -493,29 +529,31 @@ function bp_video_get_specific( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'video_ids' => false,      // A single video_id or array of IDs.
-			'max'       => false,      // Maximum number of results to return.
-			'page'      => 1,          // Page 1 without a per_page will result in no pagination.
-			'per_page'  => false,      // Results per page.
-			'sort'      => 'DESC',     // Sort ASC or DESC.
-			'order_by'  => false,      // Sort ASC or DESC.
-			'privacy'   => false,      // privacy to filter.
-			'album_id'  => false,      // Album ID.
-			'user_id'   => false,      // User ID.
+			'video_ids'        => false,      // A single video_id or array of IDs.
+			'max'              => false,      // Maximum number of results to return.
+			'page'             => 1,          // Page 1 without a per_page will result in no pagination.
+			'per_page'         => false,      // Results per page.
+			'sort'             => 'DESC',     // Sort ASC or DESC.
+			'order_by'         => false,      // Sort ASC or DESC.
+			'privacy'          => false,      // privacy to filter.
+			'album_id'         => false,      // Album ID.
+			'user_id'          => false,      // User ID.
+			'moderation_query' => true,
 		),
 		'video_get_specific'
 	);
 
 	$get_args = array(
-		'in'       => $r['video_ids'],
-		'max'      => $r['max'],
-		'page'     => $r['page'],
-		'per_page' => $r['per_page'],
-		'sort'     => $r['sort'],
-		'order_by' => $r['order_by'],
-		'privacy'  => $r['privacy'],
-		'album_id' => $r['album_id'],
-		'user_id'  => $r['user_id'],
+		'in'               => $r['video_ids'],
+		'max'              => $r['max'],
+		'page'             => $r['page'],
+		'per_page'         => $r['per_page'],
+		'sort'             => $r['sort'],
+		'order_by'         => $r['order_by'],
+		'privacy'          => $r['privacy'],
+		'album_id'         => $r['album_id'],
+		'user_id'          => $r['user_id'],
+		'moderation_query' => $r['moderation_query'],
 	);
 
 	/**
@@ -566,9 +604,11 @@ function bp_video_add( $args = '' ) {
 			'attachment_id' => false,                   // attachment id.
 			'user_id'       => bp_loggedin_user_id(),   // user_id of the uploader.
 			'title'         => '',                      // title of video being added.
+			'description'   => '',                      // description of video being added.
 			'album_id'      => false,                   // Optional: ID of the album.
 			'group_id'      => false,                   // Optional: ID of the group.
 			'activity_id'   => false,                   // The ID of activity.
+			'message_id'    => false,                   // The ID of message.
 			'privacy'       => 'public',                // Optional: privacy of the video e.g. public.
 			'menu_order'    => 0,                       // Optional:  Menu order.
 			'date_created'  => bp_core_current_time(),  // The GMT time that this video was recorded.
@@ -583,9 +623,11 @@ function bp_video_add( $args = '' ) {
 	$video->attachment_id = $r['attachment_id'];
 	$video->user_id       = (int) $r['user_id'];
 	$video->title         = $r['title'];
+	$video->description   = wp_filter_nohtml_kses( $r['description'] );
 	$video->album_id      = (int) $r['album_id'];
 	$video->group_id      = (int) $r['group_id'];
 	$video->activity_id   = (int) $r['activity_id'];
+	$video->message_id    = (int) $r['message_id'];
 	$video->privacy       = $r['privacy'];
 	$video->menu_order    = $r['menu_order'];
 	$video->date_created  = $r['date_created'];
@@ -603,7 +645,7 @@ function bp_video_add( $args = '' ) {
 		}
 	}
 
-	$action = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+	$action = bb_filter_input_string( INPUT_POST, 'action' );
 	if ( isset( $action ) && 'groups_get_group_members_send_message' === $action ) {
 		$video->privacy = 'message';
 	}
@@ -619,6 +661,7 @@ function bp_video_add( $args = '' ) {
 
 	// video is saved for attachment.
 	update_post_meta( $video->attachment_id, 'bp_video_saved', true );
+	update_post_meta( $video->attachment_id, 'bp_video_id', $video->id );
 
 	/**
 	 * Fires at the end of the execution of adding a new video item, before returning the new video item ID.
@@ -676,6 +719,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 							'album_id'      => ! empty( $video['album_id'] ) ? $video['album_id'] : $album_id,
 							'group_id'      => ! empty( $video['group_id'] ) ? $video['group_id'] : $group_id,
 							'activity_id'   => $bp_video->activity_id,
+							'message_id'    => $bp_video->message_id,
 							'privacy'       => $bp_video->privacy,
 							'menu_order'    => ! empty( $video['menu_order'] ) ? $video['menu_order'] : false,
 							'date_created'  => $bp_video->date_created,
@@ -707,6 +751,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 			if ( $video_id ) {
 				$video_ids[] = $video_id;
 			}
+
 		}
 	}
 
@@ -829,10 +874,10 @@ function bp_video_preview_image_by_js( $video ) {
 function bp_video_add_generate_thumb_background_process( $video_id ) {
 
 	if ( class_exists( 'FFMpeg\FFMpeg' ) ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
 		$ffmpeg = bb_video_check_is_ffmpeg_binary();
 
-		if ( ! empty( trim( $ffmpeg->error ) ) ) {
+		if ( ! empty( $ffmpeg->error ) && ! empty( trim( $ffmpeg->error ) ) ) {
 			return;
 		}
 
@@ -864,14 +909,18 @@ function bp_video_add_generate_thumb_background_process( $video_id ) {
 
 		if ( count( $is_default_images ) <= 1 ) {
 
-			$bp_background_updater->push_to_queue(
+			$bb_background_updater->push_to_queue(
 				array(
+					'type'     => 'video',
+					'group'    => 'video_thumbnail',
+					'data_id'  => $video_id,
+					'priority' => 5,
 					'callback' => 'bp_video_background_create_thumbnail',
 					'args'     => array( $video ),
 				)
 			);
 
-			$bp_background_updater->save()->schedule_event();
+			$bb_background_updater->save()->schedule_event();
 
 		}
 
@@ -1490,20 +1539,20 @@ function bp_video_album_get( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'max'              => false,                    // Maximum number of results to return.
+			'max'              => false,           // Maximum number of results to return.
 			'fields'           => 'all',
-			'page'             => 1,                        // Page 1 without a per_page will result in no pagination.
-			'per_page'         => false,                    // results per page.
-			'sort'             => 'DESC',                   // sort ASC or DESC.
+			'page'             => 1,               // Page 1 without a per_page will result in no pagination.
+			'per_page'         => false,           // results per page.
+			'sort'             => 'DESC',          // sort ASC or DESC.
 
 			'search_terms'     => false,           // Pass search terms as a string.
 			'exclude'          => false,           // Comma-separated list of activity IDs to exclude.
 			// want to limit the query.
 			'user_id'          => false,
 			'group_id'         => false,
-			'privacy'          => false,                    // privacy of album.
+			'privacy'          => false,           // privacy of album.
+			'moderation_query' => true,            // Filter to include moderation query.
 			'count_total'      => false,
-			'moderation_query' => true,             // Filter for exclude moderation query.
 		),
 		'video_album_get'
 	);
@@ -1814,14 +1863,20 @@ function bp_video_delete_orphaned_attachments() {
 			'relation' => 'AND',
 			array(
 				'key'   => 'bp_video_saved',
-				'value' => '0'
+				'value' => '0',
 			),
 			array(
 				'key'     => 'bb_media_draft',
 				'compare' => 'NOT EXISTS',
-				'value'   => ''
-			)
-		)
+				'value'   => '',
+			),
+		),
+		'date_query'     => array(
+			array(
+				'column' => 'post_date_gmt',
+				'before' => '6 hours ago',
+			),
+		),
 	);
 
 	$video_wp_query = new WP_query( $args );
@@ -2195,6 +2250,13 @@ function bp_video_get_thread_id( $video_id ) {
 				}
 			}
 		}
+
+		if ( empty( $thread_id ) ) {
+			$video_object = new BP_Video( $video_id );
+			if ( ! empty( $video_object->attachment_id ) ) {
+				$thread_id = get_post_meta( $video_object->attachment_id, 'thread_id', true );
+			}
+		}
 	}
 
 	/**
@@ -2244,10 +2306,10 @@ function bp_video_download_link( $attachment_id, $video_id ) {
  * @since BuddyBoss 1.7.0
  */
 function bp_video_download_url_file() {
-	$attachment_id       = filter_input( INPUT_GET, 'attachment_id', FILTER_SANITIZE_STRING );
-	$download_video_file = filter_input( INPUT_GET, 'download_video_file', FILTER_SANITIZE_STRING );
-	$video_file          = filter_input( INPUT_GET, 'video_file', FILTER_SANITIZE_STRING );
-	$video_type          = filter_input( INPUT_GET, 'video_type', FILTER_SANITIZE_STRING );
+	$attachment_id       = bb_filter_input_string( INPUT_GET, 'attachment_id' );
+	$download_video_file = bb_filter_input_string( INPUT_GET, 'download_video_file' );
+	$video_file          = bb_filter_input_string( INPUT_GET, 'video_file' );
+	$video_type          = bb_filter_input_string( INPUT_GET, 'video_type' );
 	$can_download_btn    = false;
 
 	if ( isset( $attachment_id ) && isset( $download_video_file ) && isset( $video_file ) && isset( $video_type ) ) { // phpcs:ignore WordPress.Security.NonceVerification
@@ -2324,7 +2386,6 @@ function bp_video_get_forum_id( $video_id ) {
 			}
 		}
 	}
-	wp_reset_postdata();
 
 	if ( ! $forum_id ) {
 		$topics_video_query = new WP_Query(
@@ -2356,7 +2417,6 @@ function bp_video_get_forum_id( $video_id ) {
 				}
 			}
 		}
-		wp_reset_postdata();
 	}
 
 	if ( ! $forum_id ) {
@@ -2391,7 +2451,6 @@ function bp_video_get_forum_id( $video_id ) {
 				}
 			}
 		}
-		wp_reset_postdata();
 	}
 
 	/**
@@ -2804,8 +2863,8 @@ function bp_video_move_video_to_album( $video_id = 0, $album_id = 0, $group_id =
 				// Update activity data.
 				if ( bp_activity_user_can_delete( $activity ) ) {
 					// Make the activity video own.
-					$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
-					$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 :$activity->hide_sitewide;
+					$status                      = bp_is_active( 'groups' ) ? bp_get_group_status( groups_get_group( $activity->item_id ) ) : '';
+					$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : $activity->hide_sitewide;
 					$activity->secondary_item_id = 0;
 					$activity->privacy           = $destination_privacy;
 					$activity->save();
@@ -2878,8 +2937,8 @@ function bp_video_move_video_to_album( $video_id = 0, $album_id = 0, $group_id =
 						if ( bp_activity_user_can_delete( $activity ) ) {
 
 							// Make the activity video own.
-							$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
-							$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
+							$status                      = bp_is_active( 'groups' ) ? bp_get_group_status( groups_get_group( $activity->item_id ) ) : '';
+							$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 							$activity->secondary_item_id = 0;
 							$activity->privacy           = $destination_privacy;
 							$activity->save();
@@ -2957,6 +3016,7 @@ function bp_video_get_activity_video( $activity_id ) {
 			'order_by' => 'menu_order',
 			'sort'     => 'ASC',
 			'user_id'  => false,
+			'per_page' => 0,
 		);
 
 		$activity = new BP_Activity_Activity( (int) $activity_id );
@@ -3036,7 +3096,7 @@ function bp_video_get_activity_video( $activity_id ) {
  */
 function bp_video_upload_dir( $pathdata ) {
 
-	$action = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+	$action = bb_filter_input_string( INPUT_POST, 'action' );
 
 	if ( isset( $action ) && ( 'video_upload' === $action || 'video_thumbnail_upload' === $action ) ) { // WPCS: CSRF ok, input var ok.
 		if ( empty( $pathdata['subdir'] ) ) {
@@ -3196,7 +3256,7 @@ function bb_video_is_ffmpeg_installed() {
 		return false;
 	} elseif ( class_exists( 'FFMpeg\FFMpeg' ) ) {
 		$ffmpeg = bb_video_check_is_ffmpeg_binary();
-		if ( ! empty( trim( $ffmpeg->error ) ) ) {
+		if ( ! empty( $ffmpeg->error ) && ! empty( trim( $ffmpeg->error ) ) ) {
 			return false;
 		} else {
 			return true;
@@ -3343,16 +3403,17 @@ function bp_video_delete_video_previews() {
 /**
  * Return the preview url of the file.
  *
+ * @since BuddyBoss 1.7.0
+ *
  * @param int    $video_id      Video ID.
  * @param int    $attachment_id Attachment ID.
  * @param string $size          Size of preview.
  * @param bool   $generate      Generate Symlink or not.
+ * @param int    $receiver_id   Receiver user ID.
  *
  * @return mixed|void
- *
- * @since BuddyBoss 1.7.0
  */
-function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'bb-video-activity-image', $generate = true ) {
+function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'bb-video-activity-image', $generate = true, $receiver_id = 0 ) {
 
 	$attachment_url = '';
 
@@ -3377,6 +3438,10 @@ function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'bb-video-ac
 			$video_id       = 'forbidden_' . $video_id;
 			$attachment_id  = 'forbidden_' . $attachment_id;
 			$attachment_url = home_url( '/' ) . 'bb-video-thumb-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $video_id ) . '/' . $size;
+
+			if ( 0 < $receiver_id ) {
+				$attachment_url = $attachment_url . '/' . base64_encode( 'receiver_' . $receiver_id );
+			}
 		}
 
 		if ( empty( $attachment_url ) ) {
@@ -3385,6 +3450,8 @@ function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'bb-video-ac
 	} else {
 		$attachment_url = wp_get_attachment_url( $attachment_id );
 	}
+
+	$attachment_url = ! empty( $attachment_url ) && ! bb_enable_symlinks() ? untrailingslashit( $attachment_url ) : $attachment_url;
 
 	/**
 	 * Filter to get video thumb url.
@@ -4306,7 +4373,7 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $genera
 		if ( ! bb_enable_symlinks() ) {
 			$video_id       = 'forbidden_' . $video->id;
 			$attachment_id  = 'forbidden_' . $attachment_id;
-			$attachment_url = home_url( '/' ) . 'bb-video-thumb-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $video_id ) . '/' . $size;
+			$attachment_url = untrailingslashit( home_url( '/' ) . 'bb-video-thumb-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $video_id ) . '/' . $size );
 
 		} else {
 

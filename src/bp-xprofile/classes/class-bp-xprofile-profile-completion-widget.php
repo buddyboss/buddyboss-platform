@@ -68,6 +68,9 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 			return;
 		}
 
+		/** This filter is documented in https://developer.wordpress.org/reference/hooks/widget_title/ */
+		$instance['title'] = apply_filters( 'widget_title', ! empty( $instance['title'] ) ? $instance['title'] : '', $instance );
+
 		/* Widget Template */
 
 		echo $args['before_widget'];

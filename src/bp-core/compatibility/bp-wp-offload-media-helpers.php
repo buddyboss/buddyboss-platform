@@ -64,9 +64,13 @@ class BB_AS3CF_Plugin_Compatibility {
 		add_filter( 'bb_video_get_symlink', array( $this, 'bp_video_offload_get_video_url' ), PHP_INT_MAX, 4 );
 		add_filter( 'bb_media_settings_callback_symlink_direct_access', array( $this, 'bb_media_directory_callback_check_access' ), PHP_INT_MAX, 2 );
 		add_filter( 'bb_media_check_default_access', array( $this, 'bb_media_check_default_access_access' ), PHP_INT_MAX, 1 );
+		add_filter( 'bbp_get_topic_content', array( $this, 'bb_offload_get_content' ), 10, 1 );
 
 		add_action( 'bp_core_before_regenerate_attachment_thumbnails', array( $this, 'bb_offload_download_add_back_to_local' ) );
 		add_action( 'bp_core_after_regenerate_attachment_thumbnails', array( $this, 'bb_offload_download_remove_back_to_local' ) );
+
+		add_filter( 'bb_media_offload_delivered', array( $this, 'bb_media_offload_delivered' ) );
+		add_filter( 'bb_media_offload_delivery_provider', array( $this, 'bb_media_offload_delivery_provider' ) );
 
 	}
 
@@ -80,11 +84,11 @@ class BB_AS3CF_Plugin_Compatibility {
 	 * @since BuddyBoss 1.8.0
 	 */
 	public function bb_media_check_default_access_access( $bypass ) {
-		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+		$wp_offload_media = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
 
-		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['remove-local-file'] ) && '1' === $remove_local_files_setting['remove-local-file'] ) {
-			$bypass = true;
-		}
+		$offload_media     = ( isset( $wp_offload_media ) && isset( $wp_offload_media['copy-to-s3'] ) && (bool) $wp_offload_media['copy-to-s3'] );
+		$remove_local_file = ( isset( $wp_offload_media ) && isset( $wp_offload_media['remove-local-file'] ) && (bool) $wp_offload_media['remove-local-file'] );
+		$bypass            = ( $offload_media && $remove_local_file );
 
 		return $bypass;
 	}
@@ -106,7 +110,7 @@ class BB_AS3CF_Plugin_Compatibility {
 				$paths         = AS3CF_Utils::get_attachment_file_paths( $v, false, false, false );
 				$original_path = ( isset( $paths ) && isset( $paths['original'] ) ? $paths['original'] : $paths['__as3cf_primary'] );
 				$file          = str_replace( $uploads['basedir'], $uploads['baseurl'], $original_path );
-				$fetch         = wp_remote_get( $file );
+				$fetch         = wp_remote_get( $file, array( 'sslverify' => false ) );
 				if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
 					$directory[] = $id;
 				}
@@ -288,6 +292,61 @@ class BB_AS3CF_Plugin_Compatibility {
 	 */
 	public function bb_offload_download_remove_back_to_local() {
 		remove_filter( 'as3cf_get_attached_file_copy_back_to_local', '__return_true' );
+	}
+
+	/**
+	 * Fix the media url issue with API post_content on API.
+	 *
+	 * @since BuddyBoss 2.3.50
+	 *
+	 * @param string $content Post content.
+	 *
+	 * @return mixed|string
+	 */
+	public function bb_offload_get_content( $content ) {
+		global $as3cf;
+
+		if ( ! empty( $as3cf->filter_local ) ) {
+			$content = $as3cf->filter_local->filter_post( $content );
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Check if media offloaded.
+	 *
+	 * @since BuddyBoss 2.4.50
+	 *
+	 * @param bool $is_offloaded If media offloaded.
+	 *
+	 * @return bool
+	 */
+	public function bb_media_offload_delivered( $is_offloaded ) {
+
+		$wp_offload_media  = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+		$offload_media     = ( isset( $wp_offload_media ) && isset( $wp_offload_media['copy-to-s3'] ) && (bool) $wp_offload_media['copy-to-s3'] );
+		$serve_from_server = ( isset( $wp_offload_media ) && isset( $wp_offload_media['serve-from-s3'] ) && (bool) $wp_offload_media['serve-from-s3'] );
+		$is_offloaded      = ( $offload_media && $serve_from_server );
+
+		return $is_offloaded;
+	}
+
+	/**
+	 * Media offload delevery provider.
+	 *
+	 * @since BuddyBoss 2.4.50
+	 *
+	 * @param string $delivery_provider Media offload delevery provider.
+	 *
+	 * @return string
+	 */
+	public function bb_media_offload_delivery_provider( $delivery_provider ) {
+
+		$wp_offload_media  = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+		$delivery_provider = ! empty( $wp_offload_media['delivery-provider'] ) && 'storage' !== $wp_offload_media['delivery-provider'] ? ucwords( $wp_offload_media['delivery-provider'] ) : __( 'Amazon S3', 'buddyboss' );
+
+		return $delivery_provider;
 	}
 
 }

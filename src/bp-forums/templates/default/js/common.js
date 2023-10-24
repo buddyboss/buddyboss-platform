@@ -1,5 +1,6 @@
+/* global bp_select2, bbpCommonJsData */
 jQuery( document ).ready(
-	function () {
+	function ( $ ) {
 
 		var $tagsSelect = jQuery( 'body' ).find( '.bbp_topic_tags_dropdown' );
 		var tagsArrayData = [];
@@ -14,14 +15,41 @@ jQuery( document ).ready(
 				}
 
 				jQuery( element ).select2( {
+					dropdownParent: jQuery( element ).closest('form').parent(),
 					placeholder: jQuery( element ).attr( 'placeholder' ),
 					minimumInputLength: 1,
 					closeOnSelect: true,
 					tags: true,
-					language: ( typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined' ) ? bp_select2.lang : 'en',
-					dropdownCssClass: 'bb-select-dropdown',
+					language: {
+						errorLoading: function () {
+							return bp_select2.i18n.errorLoading;
+						},
+						inputTooLong: function ( e ) {
+							var n = e.input.length - e.maximum;
+							return bp_select2.i18n.inputTooLong.replace( '%%', n );
+						},
+						inputTooShort: function ( e ) {
+							return bp_select2.i18n.inputTooShort.replace( '%%', (e.minimum - e.input.length) );
+						},
+						loadingMore: function () {
+							return bp_select2.i18n.loadingMore;
+						},
+						maximumSelected: function ( e ) {
+							return bp_select2.i18n.maximumSelected.replace( '%%', e.maximum );
+						},
+						noResults: function () {
+							return bp_select2.i18n.noResults;
+						},
+						searching: function () {
+							return bp_select2.i18n.searching;
+						},
+						removeAllItems: function () {
+							return bp_select2.i18n.removeAllItems;
+						}
+					},
+					dropdownCssClass: 'bb-select-dropdown bb-tag-list-dropdown',
 					containerCssClass: 'bb-select-container',
-					tokenSeparators: [ ',', ' ' ],
+					tokenSeparators: [ ',' ],
 					ajax: {
 						url: bbpCommonJsData.ajax_url,
 						dataType: 'json',
@@ -54,31 +82,41 @@ jQuery( document ).ready(
 				} );
 
 				// Add element into the Arrdata array.
-				jQuery( element ).on( 'select2:select', function ( e ) {
-					var select_options = jQuery( 'body #bbp_topic_tags_dropdown option' );
-					var tagsArrayData = jQuery.map( select_options, function ( option ) {
-						return option.text;
-					} );
-					var tags = tagsArrayData.join( ',' );
-					jQuery( 'body #bbp_topic_tags' ).val( tags );
+				jQuery( element ).on(
+					'select2:select',
+					function ( e ) {
+						var form = jQuery( element ).closest( 'form' ),
+							bbp_topic_tags = form.find( '#bbp_topic_tags' ),
+							existingTags   = bbp_topic_tags.val(),
+							tagsArrayData  = existingTags && existingTags.length > 0 ? existingTags.split( ',' ) : [],
+							data           = e.params.data;
 
-					jQuery( 'body .select2-search__field' ).trigger( 'click' );
-					jQuery( 'body .select2-search__field' ).trigger( 'click' );
-				} );
+						tagsArrayData.push( data.id );
+						var tags = tagsArrayData.join( ',' );
+						bbp_topic_tags.val( tags );
+
+						form.find( '.select2-search__field' ).trigger( 'click' );
+						form.find( '.select2-search__field' ).trigger( 'click' );
+					}
+				);
 
 				// Remove element into the Arrdata array.
 				jQuery( element ).on( 'select2:unselect', function ( e ) {
+					var form = jQuery( element ).closest( 'form' );
 					var data = e.params.data;
-					jQuery( 'body #bbp_topic_tags_dropdown option[value="' + data.id + '"]' ).remove();
-					var select_options = jQuery( 'body #bbp_topic_tags_dropdown option' );
-					var tagsArrayData = jQuery.map( select_options, function ( option ) {
+
+					form.find( '.bbp_topic_tags_dropdown option[value="' + data.id + '"]' ).remove();
+					var select_options = form.find( '.bbp_topic_tags_dropdown option' );
+					var tagsArrayData  = jQuery.map( select_options, function ( option ) {
 						return option.text;
 					} );
 					tagsArrayData = jQuery.grep( tagsArrayData, function ( value ) {
 						return value !== data.id;
 					} );
 					var tags = tagsArrayData.join( ',' );
-					jQuery( 'body #bbp_topic_tags' ).val( tags );
+
+					form.find( '#bbp_topic_tags' ).val( tags );
+
 					if ( tags.length === 0 ) {
 						jQuery( window ).scrollTop( jQuery( window ).scrollTop() + 1 );
 					}
@@ -97,6 +135,7 @@ jQuery( document ).ready(
 			jQuery( 'medium-editor-action' ).removeClass( 'medium-editor-button-active' );
 			jQuery( '.medium-editor-toolbar-actions' ).show();
 			jQuery( '.medium-editor-toolbar-form' ).removeClass( 'medium-editor-toolbar-form-active' );
+			jQuery( '#whats-new-attachments .bb-url-scrapper-container' ).remove();
 		} );
 
 		var topicReplyButton = jQuery( 'body .bbp-topic-reply-link' );
@@ -146,6 +185,9 @@ jQuery( document ).ready(
 									if ( typeof window.forums_medium_forum_editor !== 'undefined' && typeof window.forums_medium_forum_editor[ key ] !== 'undefined' ) {
 										window.forums_medium_forum_editor[ key ].checkContentChanged();
 									}
+									if ( typeof window.forums_medium_topic_editor == 'undefined' ) {
+										$( '#bbpress-forums .bbp-the-content' ).keyup();
+									}
 									jQuery( '#' + elem_id )[ 0 ].emojioneArea.hidePicker();
 								},
 								search_keypress: function() {
@@ -153,7 +195,7 @@ jQuery( document ).ready(
 									var small = _this.search.val().toLowerCase();
 									_this.search.val(small);
 								},
-								
+
 								picker_show: function () {
 									$( this.button[0] ).closest( '.post-emoji' ).addClass('active');
 								},
@@ -175,13 +217,40 @@ jQuery( document ).ready(
 				if ( $tagsSelect.length ) {
 					$tagsSelect.select2( {
 						placeholder: $tagsSelect.attr( 'placeholder' ),
+						dropdownParent: $tagsSelect.closest('form').parent(),
 						minimumInputLength: 1,
 						closeOnSelect: true,
 						tags: true,
-						language: ( typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined' ) ? bp_select2.lang : 'en',
-						dropdownCssClass: 'bb-select-dropdown',
+						language: {
+							errorLoading: function () {
+								return bp_select2.i18n.errorLoading;
+							},
+							inputTooLong: function ( e ) {
+								var n = e.input.length - e.maximum;
+								return bp_select2.i18n.inputTooLong.replace( '%%', n );
+							},
+							inputTooShort: function ( e ) {
+								return bp_select2.i18n.inputTooShort.replace( '%%', (e.minimum - e.input.length) );
+							},
+							loadingMore: function () {
+								return bp_select2.i18n.loadingMore;
+							},
+							maximumSelected: function ( e ) {
+								return bp_select2.i18n.maximumSelected.replace( '%%', e.maximum );
+							},
+							noResults: function () {
+								return bp_select2.i18n.noResults;
+							},
+							searching: function () {
+								return bp_select2.i18n.searching;
+							},
+							removeAllItems: function () {
+								return bp_select2.i18n.removeAllItems;
+							}
+						},
+						dropdownCssClass: 'bb-select-dropdown bb-tag-list-dropdown',
 						containerCssClass: 'bb-select-container',
-						tokenSeparators: [ ',', ' ' ],
+						tokenSeparators: [ ',' ],
 						ajax: {
 							url: bbpCommonJsData.ajax_url,
 							dataType: 'json',
@@ -240,5 +309,38 @@ jQuery( document ).ready(
 				}
 			} );
 		}
+
+		jQuery( document ).on( 'keyup', '#bbp_topic_title', function ( e ) {
+			if ( jQuery( e.currentTarget ).val().trim() !== '' ) {
+				jQuery( e.currentTarget ).closest( 'form' ).addClass( 'has-title' );
+			} else {
+				jQuery( e.currentTarget ).closest( 'form' ).removeClass( 'has-title' );
+			}
+		} );
+
+		if ( jQuery( 'textarea#bbp_topic_content' ).length !== 0 ) {
+			// Enable submit button if content is available.
+			jQuery( '#bbp_topic_content' ).on( 'keyup', function() {
+				var $reply_content = jQuery( '#bbp_topic_content' ).val().trim();
+				if ( $reply_content !== '' ) {
+					jQuery( this ).closest( 'form' ).addClass( 'has-content' );
+				} else {
+					jQuery( this ).closest( 'form' ).removeClass( 'has-content' );
+				}
+			} );
+		}
+
+		if ( jQuery( 'textarea#bbp_reply_content' ).length !== 0 ) {
+			// Enable submit button if content is available.
+			jQuery( '#bbp_reply_content' ).on( 'keyup', function() {
+				var $reply_content = jQuery( '#bbp_reply_content' ).val().trim();
+				if ( $reply_content !== '' ) {
+					jQuery( this ).closest( 'form' ).addClass( 'has-content' );
+				} else {
+					jQuery( this ).closest( 'form' ).removeClass( 'has-content' );
+				}
+			} );
+		}
+
 	}
 );

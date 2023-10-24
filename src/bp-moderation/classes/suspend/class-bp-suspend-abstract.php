@@ -101,14 +101,19 @@ abstract class BP_Suspend_Abstract {
 	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $item_id_field Items ID field name with alias of table.
+	 * @param string $item_type     Item type field name with the alias of table.
 	 *
 	 * @return string|void
 	 */
-	protected function exclude_joint_query( $item_id_field ) {
+	protected function exclude_joint_query( $item_id_field, $item_type = '' ) {
 		global $wpdb;
 		$bp = buddypress();
 
-		return ' ' . $wpdb->prepare( "LEFT JOIN {$bp->table_prefix}bp_suspend {$this->alias} ON ( {$this->alias}.item_type = %s AND {$this->alias}.item_id = $item_id_field )", $this->item_type ); // phpcs:ignore
+		if ( empty( $item_type ) ) {
+			$item_type = $this->item_type;
+		}
+
+		return ' ' . $wpdb->prepare( "LEFT JOIN {$bp->table_prefix}bp_suspend {$this->alias} ON ( {$this->alias}.item_type = %s AND {$this->alias}.item_id = $item_id_field )", $item_type ); // phpcs:ignore
 	}
 
 	/**
@@ -132,7 +137,7 @@ abstract class BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function hide_related_content( $item_id, $hide_sitewide = 0, $args = array() ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
 
 		$args = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
 
@@ -159,6 +164,8 @@ abstract class BP_Suspend_Abstract {
 			$page = $args['page'];
 		}
 
+		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $item_id;
+
 		$related_contents = array_filter( $this->get_related_contents( $item_id, $args ) );
 
 		if ( ! empty( $related_contents ) ) {
@@ -168,7 +175,13 @@ abstract class BP_Suspend_Abstract {
 
 						if (
 							BP_Core_Suspend::check_hidden_content( $content_id, $content_type ) ||
-							BP_Core_Suspend::check_suspended_content( $content_id, $content_type )
+							(
+								(
+									! empty( $args['action_suspend'] ) ||
+									! empty( $args['user_suspended'] )
+								) &&
+								BP_Core_Suspend::check_suspended_content( $content_id, $content_type )
+							)
 						) {
 							continue;
 						}
@@ -211,16 +224,31 @@ abstract class BP_Suspend_Abstract {
 				$args['page'] = ++$page;
 				$this->hide_related_content( $item_id, $hide_sitewide, $args );
 			} else {
-				$args['page'] = ++$page;
-				$bp_background_updater->data(
+				$group_name_args = array_merge(
+					$args,
 					array(
-						array(
-							'callback' => array( $this, 'hide_related_content' ),
-							'args'     => array( $item_id, $hide_sitewide, $args ),
-						),
+						'item_id'       => $item_id,
+						'item_type'     => $this->item_type,
+						'hide_sitewide' => $hide_sitewide,
+						'custom_action' => 'hide',
 					)
 				);
-				$bp_background_updater->save()->schedule_event();
+				$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
+
+				$args['page'] = ++$page;
+
+				$parent_id = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $item_id;
+				$bb_background_updater->data(
+					array(
+						'type'              => $this->item_type,
+						'group'             => $group_name,
+						'data_id'           => $item_id,
+						'secondary_data_id' => $parent_id,
+						'callback'          => array( $this, 'hide_related_content' ),
+						'args'              => array( $item_id, $hide_sitewide, $args ),
+					),
+				);
+				$bb_background_updater->save()->schedule_event();
 			}
 		}
 	}
@@ -267,7 +295,7 @@ abstract class BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function unhide_related_content( $item_id, $hide_sitewide = 0, $force_all = 0, $args = array() ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
 
 		$args = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
 
@@ -295,6 +323,8 @@ abstract class BP_Suspend_Abstract {
 			$page = $args['page'];
 		}
 
+		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $item_id;
+
 		$related_contents = array_filter( $this->get_related_contents( $item_id, $args ) );
 
 		if ( ! empty( $related_contents ) ) {
@@ -317,7 +347,13 @@ abstract class BP_Suspend_Abstract {
 							) &&
 							! (
 								BP_Core_Suspend::check_hidden_content( $content_id, $content_type ) ||
-								BP_Core_Suspend::check_suspended_content( $content_id, $content_type )
+								(
+									(
+										! empty( $args['action_suspend'] ) ||
+										! empty( $args['user_suspended'] )
+									) &&
+									BP_Core_Suspend::check_suspended_content( $content_id, $content_type )
+								)
 							)
 						) {
 							continue;
@@ -353,16 +389,32 @@ abstract class BP_Suspend_Abstract {
 				$args['page'] = ++$page;
 				$this->unhide_related_content( $item_id, $hide_sitewide, $force_all, $args );
 			} else {
-				$args['page'] = ++$page;
-				$bp_background_updater->data(
+
+				$group_name_args = array_merge(
+					$args,
 					array(
-						array(
-							'callback' => array( $this, 'unhide_related_content' ),
-							'args'     => array( $item_id, $hide_sitewide, $force_all, $args ),
-						),
+						'item_id'       => $item_id,
+						'item_type'     => $this->item_type,
+						'hide_sitewide' => $hide_sitewide,
+						'custom_action' => 'unhide',
 					)
 				);
-				$bp_background_updater->save()->schedule_event();
+				$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
+
+				$args['page'] = ++$page;
+
+				$parent_id = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $item_id;
+				$bb_background_updater->data(
+					array(
+						'type'              => $this->item_type,
+						'group'             => $group_name,
+						'data_id'           => $item_id,
+						'secondary_data_id' => $parent_id,
+						'callback'          => array( $this, 'unhide_related_content' ),
+						'args'              => array( $item_id, $hide_sitewide, $force_all, $args ),
+					),
+				);
+				$bb_background_updater->save()->schedule_event();
 			}
 		}
 	}
@@ -468,6 +520,48 @@ abstract class BP_Suspend_Abstract {
 		}
 
 		return ! empty( $result );
+	}
+
+	/**
+	 * Return group name based on argument.
+	 *
+	 * @since BuddyBoss 2.4.20
+	 *
+	 * @param array $args Array of arguments.
+	 *
+	 * @return string
+	 */
+	public function bb_moderation_get_action_type( $args ) {
+		$type = '';
+		if (
+			empty( $args ) ||
+			empty( $args['item_id'] ) ||
+			empty( $args['item_type'] )
+		) {
+			return 'bb_moderation';
+		}
+
+		if ( BP_Suspend_Member::$type === $args['item_type'] ) {
+			if ( ! empty( $args['action_suspend'] ) ) {
+				if ( ! empty( $args['user_suspended'] ) ) {
+					$type = 'suspend';
+				} else {
+					$type = 'unsuspend';
+				}
+			}
+		} elseif ( isset( $args['hide_parent'] ) ) {
+			if ( ! empty( $args['hide_parent'] ) ) {
+				$type = 'hide_parent';
+			} else {
+				$type = 'unhide_parent';
+			}
+		}
+
+		if ( empty( $type ) && ! empty( $args['custom_action'] ) ) {
+			$type = $args['custom_action'];
+		}
+
+		return 'bb_moderation_' . $type . '_' . $args['item_type'] . '_' . $args['item_id'];
 	}
 
 }

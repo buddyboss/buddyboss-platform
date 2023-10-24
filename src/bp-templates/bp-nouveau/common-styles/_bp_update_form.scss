@@ -233,6 +233,7 @@
 	}
 }
 
+#whats-new-form.media-uploading,
 #whats-new-form.focus-in--empty {
 
 	#aw-whats-new-submit {
@@ -603,6 +604,16 @@
 		border-top: 1px solid $bp-border-color;
 	}
 
+	@media screen and (max-width: 480px) {
+
+		.has-draft .whats-new-form-footer {
+			flex-direction: column;
+			align-items: center;
+			padding-top: $pad-med;
+		}
+
+	}
+
 	#whats-new-toolbar .post-elements-buttons-item.disable,
 	#whats-new-toolbar .post-elements-buttons-item.no-click:not(.active) {
 		pointer-events: initial;
@@ -688,10 +699,15 @@
 
 		.whats-new-scroll-view {
 			max-height: calc(100vh - 280px);
+			min-height: 150px;
 			overflow: auto;
 			width: 100%;
-			overscroll-behavior: contain; // Prevent page scroll when scrolling the popup
 			padding-bottom: 10px;
+		}
+
+		.focus-in--privacy .whats-new-scroll-view {
+			min-height: auto;
+			padding-bottom: 0;
 		}
 
 		#whats-new-form {
@@ -699,6 +715,14 @@
 			max-width: 90%;
 			margin: auto;
 			box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
+
+			@media screen and (max-width: 768px) and (min-height: 550px) {
+
+				.bb-is-mobile & {
+					top: -70px;
+				}
+
+			}
 		}
 
 		.gif-media-search-dropdown {
@@ -871,7 +895,8 @@
 }
 
 #whats-new-toolbar,
-#whats-new-messages-toolbar {
+#whats-new-messages-toolbar,
+#whats-new-formatting-toolbar {
 	position: relative;
 	display: -webkit-box;
 	display: -ms-flexbox;
@@ -1184,8 +1209,8 @@
 }
 
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
-	bottom: -24px;
-	left: -15px;
+	bottom: -11px;
+	left: 0;
 }
 
 .activity-update-form .focus-in .medium-editor-toolbar {
@@ -1266,12 +1291,14 @@
 		right: 12px;
 		transform: translate(0, -50%);
 		z-index: 6;
-		width: 20px;
-		height: 20px;
+		width: 15px;
+		height: 15px;
 		cursor: pointer;
 
 		i {
-			font-size: 20px;
+			font-size: 15px;
+			font-weight: 200;
+			line-height: 1;
 			color: rgba(18, 43, 70, 0.4);
 			display: block;
 		}
@@ -1621,13 +1648,20 @@
 .bb-media-model-container {
 
 	.bb-media-privacy-wrap .activity-privacy {
-		left: auto;
-		right: -20px;
+		left: -5px;
+		right: auto;
 	}
 
 	.bb-media-privacy-wrap .activity-privacy:before {
-		left: auto;
-		right: 44px;
+		left: 20px;
+		right: auto;
+	}
+
+	.bb-media-privacy-wrap .activity-privacy {
+
+		a {
+			font-weight: 400;
+		}
 	}
 
 }
@@ -1671,17 +1705,19 @@ div[class*="attached-gif-container"] {
 		video {
 			margin: 0;
 			max-width: 100%;
+			border-radius: 4px;
 		}
 	}
 
 	.gif-play-button {
-		height: 80px;
-		width: 80px;
+		height: 60px;
+		width: 60px;
+		font-size: 60px;
 		position: absolute;
 		left: 50%;
-		margin-left: -40px;
+		margin-left: -30px;
 		top: 50%;
-		margin-top: -40px;
+		margin-top: -30px;
 
 		.bb-icon-play-thin {
 			font-size: 80px;
@@ -1693,16 +1729,18 @@ div[class*="attached-gif-container"] {
 	}
 
 	.gif-icon {
-		background: url(../images/gif-symbol.png) bottom left no-repeat;
+		background: url(../images/GIF.svg) center no-repeat;
 		position: absolute;
-		width: 100%;
-		height: 100%;
 		display: block;
-		bottom: 30px;
-		left: 10px;
-		background-size: 40px 30px;
-		max-width: 40px;
-		max-height: 30px;
+		height: 28px;
+		width: 44px;
+		bottom: 0;
+		left: 0;
+		border-radius: 0 4px 0 0;
+		background-size: 28px;
+		padding: 8px;
+		background-color: #000;
+		opacity: 0.45;
 	}
 }
 
@@ -1722,12 +1760,40 @@ div[class*="attached-gif-container"] {
 		display: block;
 		width: 300px;
 	}
+
+	.gif-alert {
+		justify-content: center;
+		flex-flow: column;
+		min-height: 100px;
+		display: none;
+
+		&.show {
+
+			@include center-vert();
+		}
+
+		[class*="bb-icon"] {
+			font-size: 30px;
+			color: $black;
+			opacity: 0.4;
+		}
+
+		p {
+			color: $black;
+			font-size: 13px;
+			font-weight: 500;
+			line-height: 1.5;
+			opacity: 0.4;
+		}
+
+	}
+
 }
 
 @media screen and (min-width: 768px) {
 
 	.gif-media-search-dropdown.open {
-		width: 360px;
+		width: 320px;
 	}
 
 }

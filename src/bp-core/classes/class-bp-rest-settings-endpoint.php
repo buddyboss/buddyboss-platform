@@ -306,6 +306,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 
 			// Blocking Settings.
 			$results['bpm_blocking_member_blocking']        = bp_is_moderation_member_blocking_enable( false );
+			$results['bpm_blocking_member_reporting']       = bb_is_moderation_member_reporting_enable( false );
 			$results['bpm_blocking_auto_suspend']           = bp_is_moderation_auto_suspend_enable( false );
 			$results['bpm_blocking_auto_suspend_threshold'] = bp_moderation_get_setting( 'bpm_blocking_auto_suspend_threshold', '5' );
 			$results['bpm_blocking_email_notification']     = bp_is_moderation_blocking_email_notification_enable( false );
@@ -389,6 +390,8 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			// Activity Settings.
 			$results['bp_enable_activity_edit']         = bp_is_activity_edit_enabled();
 			$results['bp_activity_edit_time']           = bp_get_activity_edit_time( - 1 );
+			$results['bb_enable_activity_comment_edit'] = bb_is_activity_comment_edit_enabled();
+			$results['bb_activity_comment_edit_time']   = bb_get_activity_comment_edit_time( - 1 );
 			$results['bp_enable_heartbeat_refresh']     = bp_is_activity_heartbeat_active();
 			$results['bp_enable_activity_autoload']     = bp_is_activity_autoload_active();
 			$results['bp_enable_activity_tabs']         = bp_is_activity_tabs_active();
@@ -552,6 +555,33 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 		}
 
 		$results['bp-active-components'] = array_keys( apply_filters( 'bp_active_components', bp_get_option( 'bp-active-components' ) ) );
+
+		$results['bb-presence-interval'] = (
+			function_exists( 'bb_presence_interval' ) ?
+			( bb_presence_interval() <= 60 ? bb_presence_interval() : bb_presence_default_interval() )
+			: 0
+		);
+
+		if ( function_exists( 'bb_enabled_legacy_email_preference' ) && ! bb_enabled_legacy_email_preference() ) {
+			$results['bbp_enable_forum_subscriptions'] = function_exists( 'bb_is_enabled_subscription' ) && bb_is_enabled_subscription( 'forum' );
+			$results['bbp_enable_topic_subscriptions'] = function_exists( 'bb_is_enabled_subscription' ) && bb_is_enabled_subscription( 'topic' );
+			$results['bb_enable_group_subscriptions']  = function_exists( 'bb_is_enabled_subscription' ) && bb_is_enabled_subscription( 'group' );
+		}
+
+		$results['bb-presence-idle-inactive-span'] = function_exists( 'bb_idle_inactive_span' ) ? bb_idle_inactive_span() : 180;
+
+		$native_presence               = (bool) bp_get_option( 'bb_use_core_native_presence', false );
+		$results['bb-native-presence'] = true === $native_presence ? buddypress()->plugin_url . 'bp-core/bb-core-native-presence.php' : '';
+
+		// Allowed messaging without connection for profile types.
+		if (
+			bp_member_type_enable_disable() &&
+			bp_is_active( 'messages' ) &&
+			bp_is_active( 'friends' ) &&
+			true === (bool) bp_get_option( 'bp-force-friendship-to-message', false )
+		) {
+			$results['bp_member_types_allowed_messaging_without_connection'] = get_option( 'bp_member_types_allowed_messaging_without_connection' );
+		}
 
 		return $results;
 	}

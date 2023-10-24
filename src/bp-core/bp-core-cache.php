@@ -92,7 +92,13 @@ function bp_core_clear_directory_pages_cache_page_edit( $post_id = 0 ) {
 		return;
 	}
 
-	wp_cache_delete( 'directory_pages', 'bp_pages' );
+	$cache_key = 'directory_pages';
+
+	if ( is_multisite() ) {
+		$cache_key = $cache_key . '_' . get_current_blog_id();
+	}
+
+	wp_cache_delete( $cache_key, 'bp_pages' );
 }
 add_action( 'save_post', 'bp_core_clear_directory_pages_cache_page_edit' );
 
@@ -105,7 +111,14 @@ add_action( 'save_post', 'bp_core_clear_directory_pages_cache_page_edit' );
  */
 function bp_core_clear_directory_pages_cache_settings_edit( $option ) {
 	if ( 'bp-pages' === $option ) {
-		wp_cache_delete( 'directory_pages', 'bp_pages' );
+
+		$cache_key = 'directory_pages';
+
+		if ( is_multisite() ) {
+			$cache_key = $cache_key . '_' . get_current_blog_id();
+		}
+
+		wp_cache_delete( $cache_key, 'bp_pages' );
 	}
 }
 add_action( 'update_option', 'bp_core_clear_directory_pages_cache_settings_edit' );
@@ -341,8 +354,13 @@ function bp_core_delete_incremented_cache( $key, $group ) {
  * @return string
  */
 function bp_core_get_incremented_cache_key( $key, $group ) {
+	global $wpdb;
 	$incrementor = bp_core_get_incrementor( $group );
-	$cache_key   = md5( $key . $incrementor );
+
+	// Removes the placeholder escape strings from a query.
+	$key       = $wpdb->remove_placeholder_escape( $key );
+	$cache_key = md5( $key . $incrementor );
+
 	return $cache_key;
 }
 
@@ -396,3 +414,198 @@ function bp_invitations_reset_cache_incrementor() {
 }
 add_action( 'bp_invitation_after_save', 'bp_invitations_reset_cache_incrementor' );
 add_action( 'bp_invitation_after_delete', 'bp_invitations_reset_cache_incrementor' );
+
+/**
+ * Clear bbpress subscriptions cache.
+ *
+ * @since BuddyBoss 2.2.6
+ *
+ * @param int $subscription_id The subscription ID.
+ *
+ * @return void
+ */
+function bb_subscriptions_clear_bbpress_cache( $subscription_id ) {
+	if ( $subscription_id ) {
+		// Delete the bbpress subscription cache.
+		$subscription = bb_subscriptions_get_subscription( $subscription_id );
+		if ( ! empty( $subscription->item_id ) ) {
+			if ( 'forum' === $subscription->type ) {
+				wp_cache_delete( 'bbp_get_forum_subscribers_' . $subscription->item_id, 'bbpress_users' );
+			} elseif ( 'topic' === $subscription->type ) {
+				wp_cache_delete( 'bbp_get_topic_subscribers_' . $subscription->item_id, 'bbpress_users' );
+			}
+		}
+	}
+}
+
+/**
+ * Reset incremental cache for add/delete subscription.
+ *
+ * @since BuddyBoss 2.2.6
+ *
+ * @return void
+ */
+function bb_subscriptions_reset_cache_incrementor() {
+	bp_core_reset_incrementor( 'bb_subscriptions' );
+}
+
+add_action( 'bb_create_subscription', 'bb_subscriptions_reset_cache_incrementor' );
+add_action( 'bb_delete_subscription', 'bb_subscriptions_reset_cache_incrementor' );
+
+/**
+ * Clear a cached subscription item when that item is updated.
+ *
+ * @since BuddyBoss 2.2.6
+ *
+ * @param BB_Subscriptions $subscription Subscription object.
+ */
+function bb_subscriptions_clear_cache_for_subscription( $subscription ) {
+	if ( ! empty( $subscription->id ) ) {
+		wp_cache_delete( $subscription->id, 'bb_subscriptions' );
+
+		// Delete the existing subscription cache.
+		bb_subscriptions_clear_bbpress_cache( $subscription->id );
+	}
+}
+
+add_action( 'bb_subscriptions_after_save', 'bb_subscriptions_clear_cache_for_subscription' );
+add_action( 'bb_subscriptions_after_delete_subscription', 'bb_subscriptions_clear_cache_for_subscription' );
+
+/**
+ * Clear cache while updating the status of the subscriptions.
+ *
+ * @since BuddyBoss 2.2.6
+ *
+ * @param string $type    Type subscription item.
+ * @param int    $item_id The subscription item ID.
+ *
+ * @return void
+ */
+function bb_subscriptions_clear_cache_after_update_status( $type, $item_id ) {
+
+	if ( empty( $type ) || empty( $item_id ) ) {
+		return;
+	}
+
+	$subscription_ids = bb_get_subscriptions(
+		array(
+			'type'    => $type,
+			'item_id' => $item_id,
+			'user_id' => false,
+			'fields'  => 'id',
+			'status'  => null,
+		),
+		true
+	);
+
+	if ( ! empty( $subscription_ids['subscriptions'] ) ) {
+		bp_core_reset_incrementor( 'bb_subscriptions' );
+
+		foreach ( $subscription_ids['subscriptions'] as $id ) {
+			wp_cache_delete( $id, 'bb_subscriptions' );
+
+			// Delete the existing subscription cache.
+			bb_subscriptions_clear_bbpress_cache( $id );
+		}
+	}
+}
+
+add_action( 'bb_subscriptions_after_update_subscription_status', 'bb_subscriptions_clear_cache_after_update_status', 10, 2 );
+
+
+/**
+ * Clear cache while updating the secondary item ID of the subscriptions.
+ *
+ * @since BuddyBoss 2.2.6
+ *
+ * @param array $r Subscription arguments.
+ *
+ * @return void
+ */
+function bb_subscriptions_clear_cache_after_update_secondary_item_id( $r ) {
+
+	if ( empty( $r ) ) {
+		return;
+	}
+
+	$subscription_ids = bb_get_subscriptions(
+		array(
+			'type'    => $r['type'],
+			'item_id' => $r['item_id'],
+			'fields'  => 'id',
+		),
+		true
+	);
+
+	if ( ! empty( $subscription_ids['subscriptions'] ) ) {
+		bp_core_reset_incrementor( 'bb_subscriptions' );
+
+		foreach ( $subscription_ids['subscriptions'] as $id ) {
+			wp_cache_delete( $id, 'bb_subscriptions' );
+
+			// Delete the existing subscription cache.
+			bb_subscriptions_clear_bbpress_cache( $id );
+		}
+	}
+}
+
+add_action( 'bb_subscriptions_after_update_secondary_item_id', 'bb_subscriptions_clear_cache_after_update_secondary_item_id', 10 );
+
+/**
+ * Clear cache when add/remove user item reaction.
+ *
+ * @since BuddyBoss 2.4.30
+ *
+ * @param int $user_reaction_id User reaction id.
+ *
+ * @return void
+ */
+function bb_reaction_clear_user_item_cache( $user_reaction_id ) {
+	bp_core_reset_incrementor( 'bb_reactions' );
+	if ( ! empty( $user_reaction_id ) ) {
+		wp_cache_delete( $user_reaction_id, 'bb_reactions' );
+	}
+}
+
+add_action( 'bb_reaction_after_add_user_item_reaction', 'bb_reaction_clear_user_item_cache', 10, 1 );
+add_action( 'bb_reaction_after_remove_user_item_reaction', 'bb_reaction_clear_user_item_cache', 10, 1 );
+
+/**
+ * Clear cache when update user reaction.
+ *
+ * @since BuddyBoss 2.4.30
+ *
+ * @param int|false $deleted   The number of rows deleted, or false on error.
+ * @param array     $r         Args of user item reactions.
+ * @param object    $reactions Reaction data.
+ *
+ * @return void
+ */
+function bb_reaction_clear_remove_user_item_cache( $deleted, $r, $reactions ) {
+	bp_core_reset_incrementor( 'bb_reactions' );
+	if ( ! empty( $reactions ) ) {
+		foreach ( $reactions as $reaction ) {
+			wp_cache_delete( $reaction->id, 'bb_reactions' );
+		}
+	}
+}
+
+add_action( 'bb_reaction_after_remove_user_item_reactions', 'bb_reaction_clear_remove_user_item_cache', 10, 3 );
+
+/**
+ * Clear cache when reaction data updated.
+ *
+ * @since BuddyBoss 2.4.30
+ *
+ * @param int $reaction_data_id Reaction data id.
+ *
+ * @return void
+ */
+function bb_reaction_clear_reactions_data_cache( $reaction_data_id ) {
+	bp_core_reset_incrementor( 'bb_reaction_data' );
+	if ( ! empty( $reaction_data_id ) ) {
+		wp_cache_delete( $reaction_data_id, 'bb_reaction_data' );
+	}
+}
+
+add_action( 'bb_reaction_after_add_reactions_data', 'bb_reaction_clear_reactions_data_cache', 10, 1 );

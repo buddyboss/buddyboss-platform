@@ -79,6 +79,14 @@ class BP_Video {
 	public $activity_id;
 
 	/**
+	 * Message ID of the video item.
+	 *
+	 * @since BuddyBoss 2.3.60
+	 * @var int
+	 */
+	var $message_id;
+
+	/**
 	 * Group ID of the video item.
 	 *
 	 * @since BuddyBoss 1.7.0
@@ -129,6 +137,14 @@ class BP_Video {
 	public $error_type = 'bool';
 
 	/**
+	 * Description of the video item.
+	 *
+	 * @since BuddyBoss 2.4.50
+	 * @var string
+	 */
+	var $description;
+
+	/**
 	 * Constructor method.
 	 *
 	 * @since BuddyBoss 1.7.0
@@ -173,12 +189,19 @@ class BP_Video {
 		$this->attachment_id = (int) $row->attachment_id;
 		$this->user_id       = (int) $row->user_id;
 		$this->title         = $row->title;
+		$this->description   = $row->description;
 		$this->album_id      = (int) $row->album_id;
 		$this->activity_id   = (int) $row->activity_id;
+		$this->message_id    = (int) $row->message_id;
 		$this->group_id      = (int) $row->group_id;
 		$this->privacy       = $row->privacy;
 		$this->menu_order    = (int) $row->menu_order;
 		$this->date_created  = $row->date_created;
+
+		// Added fallback to get description.
+		if ( empty( $this->description ) ) {
+			$this->description = get_post_field( 'post_content', $this->attachment_id );
+		}
 	}
 
 	/**
@@ -199,8 +222,10 @@ class BP_Video {
 		$this->attachment_id = apply_filters_ref_array( 'bp_video_attachment_id_before_save', array( $this->attachment_id, &$this ) );
 		$this->user_id       = apply_filters_ref_array( 'bp_video_user_id_before_save', array( $this->user_id, &$this ) );
 		$this->title         = apply_filters_ref_array( 'bp_video_title_before_save', array( $this->title, &$this ) );
+		$this->description   = apply_filters_ref_array( 'bp_video_description_before_save', array( $this->description, &$this ) );
 		$this->album_id      = apply_filters_ref_array( 'bp_video_album_id_before_save', array( $this->album_id, &$this ) );
 		$this->activity_id   = apply_filters_ref_array( 'bp_video_activity_id_before_save', array( $this->activity_id, &$this ) );
+		$this->message_id    = apply_filters_ref_array( 'bp_video_message_id_before_save', array( $this->message_id, &$this ) );
 		$this->group_id      = apply_filters_ref_array( 'bp_video_group_id_before_save', array( $this->group_id, &$this ) );
 		$this->privacy       = apply_filters_ref_array( 'bp_video_privacy_before_save', array( $this->privacy, &$this ) );
 		$this->menu_order    = apply_filters_ref_array( 'bp_video_menu_order_before_save', array( $this->menu_order, &$this ) );
@@ -237,9 +262,9 @@ class BP_Video {
 
 		// If we have an existing ID, update the video item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->video->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->id ); //phpcs:ignore
+			$q = $wpdb->prepare( "UPDATE {$bp->video->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, message_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s, description = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->description, $this->id ); //phpcs:ignore
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->video->table_name} ( blog_id, attachment_id, user_id, title, album_id, activity_id, group_id, privacy, menu_order, date_created, type ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %s, %d, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, 'video' );  //phpcs:ignore
+			$q = $wpdb->prepare( "INSERT INTO {$bp->video->table_name} ( blog_id, attachment_id, user_id, title, description, album_id, activity_id, message_id, group_id, privacy, menu_order, date_created, type ) VALUES ( %d, %d, %d, %s, %s, %d, %d, %d, %d, %s, %d, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->description, $this->album_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, 'video' );  //phpcs:ignore
 		}
 
 		if ( false === $wpdb->query( $q ) ) { //phpcs:ignore
@@ -297,21 +322,23 @@ class BP_Video {
 		$r  = bp_parse_args(
 			$args,
 			array(
-				'scope'        => '',              // Scope - Groups, friends etc.
-				'page'         => 1,               // The current page.
-				'per_page'     => 20,              // Video items per page.
-				'max'          => false,           // Max number of items to return.
-				'fields'       => 'all',           // Fields to include.
-				'sort'         => 'DESC',          // ASC or DESC.
-				'order_by'     => 'date_created',  // Column to order by.
-				'exclude'      => false,           // Array of ids to exclude.
-				'in'           => false,           // Array of ids to limit query by (IN).
-				'search_terms' => false,           // Terms to search by.
-				'album_id'     => false,           // Album ID.
-				'user_id'      => false,           // User ID.
-				'group_id'     => false,           // Group ID.
-				'privacy'      => false,           // public, loggedin, onlyme, friends, grouponly, message.
-				'count_total'  => false,           // Whether or not to use count_total.
+				'page'             => 1,               // The current page.
+				'scope'            => '',              // Scope - Groups, friends etc.
+				'per_page'         => 20,              // Video items per page.
+				'max'              => false,           // Max number of items to return.
+				'fields'           => 'all',           // Fields to include.
+				'sort'             => 'DESC',          // ASC or DESC.
+				'order_by'         => 'date_created',  // Column to order by.
+				'exclude'          => false,           // Array of ids to exclude.
+				'in'               => false,           // Array of ids to limit query by (IN).
+				'search_terms'     => false,           // Terms to search by.
+				'album_id'         => false,           // Album ID.
+				'user_id'          => false,           // User ID.
+				'group_id'         => false,           // Group ID.
+				'activity_id'      => false,           // Activity ID.
+				'privacy'          => false,           // public, loggedin, onlyme, friends, grouponly, message.
+				'moderation_query' => false,           // Whether to include moderation or not.
+				'count_total'      => false,           // Whether to use count_total.
 			)
 		);
 
@@ -337,7 +364,7 @@ class BP_Video {
 		// Searching.
 		if ( $r['search_terms'] ) {
 			$search_terms_like              = '%' . bp_esc_like( $r['search_terms'] ) . '%';
-			$where_conditions['search_sql'] = $wpdb->prepare( 'm.title LIKE %s', $search_terms_like );
+			$where_conditions['search_sql'] = $wpdb->prepare( '( m.title LIKE %s OR m.description LIKE %s )', $search_terms_like, $search_terms_like );
 
 			/**
 			 * Filters whether or not to include users for search parameters.
@@ -398,10 +425,6 @@ class BP_Video {
 		if ( ! empty( $r['in'] ) ) {
 			$in                     = implode( ',', wp_parse_id_list( $r['in'] ) );
 			$where_conditions['in'] = "m.id IN ({$in})";
-
-			// we want to disable limit query when include video ids.
-			$r['page']     = false;
-			$r['per_page'] = false;
 		}
 
 		if ( ! empty( $r['activity_id'] ) ) {
@@ -610,6 +633,7 @@ class BP_Video {
 				$video->attachment_id = (int) $video->attachment_id;
 				$video->album_id      = (int) $video->album_id;
 				$video->activity_id   = (int) $video->activity_id;
+				$video->message_id    = (int) $video->message_id;
 				$video->group_id      = (int) $video->group_id;
 				$video->menu_order    = (int) $video->menu_order;
 			}
@@ -934,7 +958,7 @@ class BP_Video {
 	 * @return array|bool An array of deleted video IDs on success, false on failure.
 	 */
 	public static function delete( $args = array(), $from = false ) {
-		global $wpdb;
+		global $wpdb, $bb_activity_comment_edit;
 
 		$bp = buddypress();
 		$r  = bp_parse_args(
@@ -1104,7 +1128,7 @@ class BP_Video {
 		}
 
 		// delete related activity.
-		if ( ! empty( $activity_ids ) && bp_is_active( 'activity' ) ) {
+		if ( ! empty( $activity_ids ) && bp_is_active( 'activity' ) && ! $bb_activity_comment_edit ) {
 
 			foreach ( $activity_ids as $activity_id ) {
 				$activity = new BP_Activity_Activity( (int) $activity_id );
@@ -1130,12 +1154,27 @@ class BP_Video {
 
 						// Deleting an activity.
 					} else {
-						if ( 'activity' !== $from && bp_activity_delete(
-							array(
-								'id'      => $activity->id,
-								'user_id' => $activity->user_id,
+						$activity_delete  = false;
+						$activity_content = ! empty( $activity->content ) ? wp_strip_all_tags( $activity->content, true ) : '';
+						if (
+							(
+								'activity' !== $from && empty( $activity_content )
+							) ||
+							(
+								'activity' === $from && ! empty( $activity->secondary_item_id )
 							)
-						) ) {
+						) {
+							$activity_delete = true;
+						}
+						if (
+							true === $activity_delete &&
+							bp_activity_delete(
+								array(
+									'id'      => $activity->id,
+									'user_id' => $activity->user_id,
+								)
+							)
+						) {
 							/** This action is documented in bp-activity/bp-activity-actions.php */
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 						}
