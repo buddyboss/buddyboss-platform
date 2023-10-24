@@ -621,20 +621,25 @@ class BP_Nouveau extends BP_Theme_Compat {
 	public function localize_scripts() {
 
 		$params = array(
-			'ajaxurl'               => bp_core_ajax_url(),
-			'only_admin_notice'     => __( 'As you are the only organizer of this group, you cannot leave it. You can either delete the group or promote another member to be an organizer first and then leave the group.', 'buddyboss' ),
-			'is_friend_confirm'     => __( 'Are you sure you want to remove your connection with this member?', 'buddyboss' ),
-			'confirm'               => __( 'Are you sure?', 'buddyboss' ),
-			'confirm_delete_set'    => __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss' ),
-			'show_x_comments'       => __( 'View previous comments', 'buddyboss' ),
-			'unsaved_changes'       => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss' ),
-			'object_nav_parent'     => '#buddypress',
-			'anchorPlaceholderText' => __( 'Paste or type a link', 'buddyboss' ),
-			'empty_field'           => __( 'New Field', 'buddyboss' ),
-			'close'                 => __( 'Close', 'buddyboss' ),
+			'ajaxurl'                    => bp_core_ajax_url(),
+			'only_admin_notice'          => __( 'As you are the only organizer of this group, you cannot leave it. You can either delete the group or promote another member to be an organizer first and then leave the group.', 'buddyboss' ),
+			'is_friend_confirm'          => __( 'Are you sure you want to remove your connection with this member?', 'buddyboss' ),
+			'confirm'                    => __( 'Are you sure?', 'buddyboss' ),
+			'confirm_delete_set'         => __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss' ),
+			'show_x_comments'            => __( 'View previous comments', 'buddyboss' ),
+			'unsaved_changes'            => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss' ),
+			'object_nav_parent'          => '#buddypress',
+			'anchorPlaceholderText'      => __( 'Paste or type a link', 'buddyboss' ),
+			'empty_field'                => __( 'New Field', 'buddyboss' ),
+			'close'                      => __( 'Close', 'buddyboss' ),
+			'parent_group_leave_confirm' => esc_html__( 'By leaving this main group you will automatically be removed and unsubscribed to any subgroups relating to this group.', 'buddyboss' ),
+			'group_leave_confirm'        => sprintf(
+				'<p>%s<span class="bb-group-name"></span>?</p>',
+				esc_html__( 'Are you sure you want to leave ', 'buddyboss' )
+			),
 		);
 
-		// If the Object/Item nav are in the sidebar
+		// If the Object/Item nav are in the sidebar.
 		if ( bp_nouveau_is_object_nav_in_sidebar() ) {
 			$params['object_nav_parent'] = '.buddypress_object_nav';
 		}

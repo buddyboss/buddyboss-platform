@@ -520,6 +520,11 @@ function bp_version_updater() {
 			if ( function_exists( 'bb_document_migration' ) ) {
 				bb_document_migration();
 			}
+
+			// Run migration about group.
+			if ( function_exists( 'bb_group_migration' ) ) {
+				bb_group_migration();
+			}
 		}
 	}
 
