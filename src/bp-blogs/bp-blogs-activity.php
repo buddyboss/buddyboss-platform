@@ -82,7 +82,9 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 		$params->position        = 5;
 	} else {
 
+		remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
 		$enabled = bp_is_post_type_feed_enable( $post_type );
+		add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
 		if ( $enabled ) {
 
 			$args = array(
@@ -130,8 +132,9 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 		$post_types = get_post_types( array( 'public' => true ) );
 
 		// Exclude BP CPT.
-		$bp_exclude_cpt = array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
-
+		remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
+		$bp_exclude_cpt = bb_feed_excluded_post_types();
+		add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
 		$bp_allowed_cpt = array();
 		foreach ( $post_types as $p_type ) {
 			// Exclude all the custom post type which is already in BuddyPress Activity support.
