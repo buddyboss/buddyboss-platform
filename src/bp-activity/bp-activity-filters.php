@@ -172,6 +172,7 @@ add_filter( 'bp_activity_comment_content', 'bb_mention_remove_deleted_users_link
 add_filter( 'comment_max_links_url', 'bb_moderation_remove_mention_count', 10, 3 );
 
 add_action( 'bp_after_directory_activity_list', 'bb_activity_pinpost_confirmation_modal_template' );
+add_action( 'bp_after_member_activity_content', 'bb_activity_pinpost_confirmation_modal_template' );
 
 /** Functions *****************************************************************/
 
