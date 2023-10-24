@@ -293,6 +293,10 @@ function bb_tutorlms_user_finished_quiz( $default = 0 ) {
  * @return mixed|null
  */
 function bb_tutorlms_get_post_types() {
+	if ( ! function_exists( 'tutor' ) ) {
+		return;
+	}
+
 	$tutorlms_post_types = array(
 		tutor()->course_post_type,
 		tutor()->lesson_post_type,
