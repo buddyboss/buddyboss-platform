@@ -1955,21 +1955,8 @@ function bb_feed_post_types() {
 	// Get all active custom post type.
 	$post_types = get_post_types( array( 'public' => true ) );
 
-	// Exclude BP CPT.
-	$bp_exclude_cpt = array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
-
-	$bp_excluded_cpt = array();
-
-	foreach ( $post_types as $post_type ) {
-		// Exclude all the custom post type which is already in BuddyPress Activity support.
-		if ( in_array( $post_type, $bp_exclude_cpt, true ) ) {
-			continue;
-		}
-
-		$bp_excluded_cpt[] = $post_type;
-	}
-
-	return $bp_excluded_cpt;
+	// Use array_diff to exclude specific post types.
+	return array_diff( $post_types, bb_feed_excluded_post_types() );
 }
 
 /**
@@ -2409,4 +2396,21 @@ function bb_is_activity_comment_edit_enabled( $default = false ) {
  */
 function bb_get_activity_comment_edit_time( $default = false ) {
 	return apply_filters( 'bb_get_activity_comment_edit_time', bp_get_option( '_bb_activity_comment_edit_time', $default ) );
+}
+
+/**
+ * Function to exclude Custom post types for activity settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array.
+ */
+function bb_feed_excluded_post_types() {
+
+	/**
+	 * Function to exclude Custom post types for activity settings.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	return apply_filters( 'bb_feed_excluded_post_types', array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' ) );
 }
