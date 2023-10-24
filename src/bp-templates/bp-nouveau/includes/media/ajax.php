@@ -491,7 +491,7 @@ function bp_nouveau_ajax_media_move_to_album() {
 		wp_send_json_error( $response );
 	}
 
-	$medias = bb_filter_input_string( INPUT_POST, 'medias', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$medias = filter_input( INPUT_POST, 'medias', FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY );
 
 	if ( empty( $medias ) ) {
 		$response['feedback'] = sprintf(
@@ -550,6 +550,20 @@ function bp_nouveau_ajax_media_move_to_album() {
 			while ( bp_media() ) {
 				bp_the_media();
 				bp_get_template_part( 'media/entry' );
+			}
+		}
+
+		if (
+			bp_has_video(
+				array(
+					'include'  => implode( ',', $media_ids ),
+					'per_page' => 0,
+				)
+			)
+		) {
+			while ( bp_video() ) {
+				bp_the_video();
+				bp_get_template_part( 'video/entry' );
 			}
 		}
 		$media = ob_get_contents();
@@ -1009,12 +1023,51 @@ function bp_nouveau_ajax_media_description_save() {
 		wp_send_json_error( $response );
 	}
 
+	// Added backward compatibility.
 	$media_post['ID']           = $attachment_id;
 	$media_post['post_content'] = $description;
 	wp_update_post( $media_post );
 
-	$response['description'] = $description;
-	wp_send_json_success( $response );
+	$media_id = get_post_meta( $attachment_id, 'bp_media_id', true );
+	if ( ! empty( $media_id ) ) {
+		$media = new BP_Media( $media_id );
+
+		if ( ! empty( $media->id ) ) {
+			$media->description = $description;
+			$media->save();
+
+			$response['description'] = $description;
+			wp_send_json_success( $response );
+		}
+	}
+
+	$video_id = get_post_meta( $attachment_id, 'bp_video_id', true );
+	if ( ! empty( $video_id ) ) {
+		$video = new BP_Video( $video_id );
+
+		if ( ! empty( $video->id ) ) {
+			$video->description = $description;
+			$video->save();
+
+			$response['description'] = $description;
+			wp_send_json_success( $response );
+		}
+	}
+
+	$document_id = get_post_meta( $attachment_id, 'bp_document_id', true );
+	if ( ! empty( $document_id ) ) {
+		$document = new BP_Document( $document_id );
+
+		if ( ! empty( $document->id ) ) {
+			$document->description = $description;
+			$document->save();
+
+			$response['description'] = $description;
+			wp_send_json_success( $response );
+		}
+	}
+
+	wp_send_json_error( $response );
 }
 
 add_filter( 'bp_nouveau_object_template_result', 'bp_nouveau_object_template_results_media_tabs', 10, 2 );
@@ -1162,7 +1215,6 @@ function bp_nouveau_ajax_media_get_media_description() {
 	}
 
 	if ( empty( trim( $media_description ) ) ) {
-		$content          = get_post_field( 'post_content', $attachment_id );
 		$media_privacy    = bb_media_user_can_access( $media_id, 'photo' );
 		$can_download_btn = true === (bool) $media_privacy['can_download'];
 		$can_edit_btn     = true === (bool) $media_privacy['can_edit'];
@@ -1193,11 +1245,11 @@ function bp_nouveau_ajax_media_get_media_description() {
 					</div>
 				</div>
 				<div class="activity-media-description">
-					<div class="bp-media-activity-description"><?php echo esc_html( $content ); ?></div>
+					<div class="bp-media-activity-description"><?php echo esc_html( $media->description ); ?></div>
 					<?php
 					if ( $can_edit_btn ) {
 						?>
-						<a class="bp-add-media-activity-description <?php echo ( ! empty( $content ) ? esc_attr( 'show-edit' ) : esc_attr( 'show-add' ) ); ?>" href="#">
+						<a class="bp-add-media-activity-description <?php echo ( ! empty( $media->description ) ? esc_attr( 'show-edit' ) : esc_attr( 'show-add' ) ); ?>" href="#">
 							<span class="bb-icon-l bb-icon-edit"></span>
 							<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss' ); ?></span>
 							<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
@@ -1205,7 +1257,7 @@ function bp_nouveau_ajax_media_get_media_description() {
 
 						<div class="bp-edit-media-activity-description" style="display: none;">
 							<div class="innerWrap">
-								<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo sanitize_textarea_field( $content ); ?></textarea>
+								<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo sanitize_textarea_field( $media->description ); ?></textarea>
 							</div>
 							<div class="in-profile description-new-submit">
 								<input type="hidden" id="bp-attachment-id" value="<?php echo esc_attr( $attachment_id ); ?>">
