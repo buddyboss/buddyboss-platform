@@ -300,10 +300,8 @@ function bb_tutorlms_get_post_types() {
 	$tutorlms_post_types = array(
 		tutor()->course_post_type,
 		tutor()->lesson_post_type,
-		tutor()->topics_post_type,
-		tutor()->assignment_post_type,
-		tutor()->enrollment_post_type,
 		tutor()->quiz_post_type,
+		tutor()->assignment_post_type,
 	);
 
 	return apply_filters( 'bb_tutorlms_get_post_types', $tutorlms_post_types );
