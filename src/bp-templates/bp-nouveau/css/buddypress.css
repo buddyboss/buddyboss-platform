@@ -17484,6 +17484,7 @@ SEARCH RESULTS PAGE
 }
 
 .bp-search-page .results-group ul#activity-stream li.activity-item .activity-inner {
+  border: 0;
   margin: 0;
   padding: 0;
   background: transparent;
