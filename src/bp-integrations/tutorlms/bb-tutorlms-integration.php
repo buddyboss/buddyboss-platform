@@ -50,6 +50,8 @@ class BB_TutorLMS_Integration extends BP_Integration {
 		$slashed_path = trailingslashit( buddypress()->integration_dir ) . $this->id . '/';
 
 		$includes = array(
+			'actions',
+			'filters',
 			'functions',
 		);
 
