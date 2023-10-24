@@ -1967,8 +1967,23 @@ function bb_feed_post_types() {
  * @return array.
  */
 function bb_feed_not_allowed_comment_post_types() {
-	// Exclude BP CPT.
-	return array( 'forum', 'product', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
+	$post_types = bb_feed_post_types();
+
+	$bp_exclude_cpt = array();
+	foreach ( $post_types as $post_type ) {
+		if ( ! post_type_supports( $post_type, 'comments' ) ) {
+			$bp_exclude_cpt[] = $post_type;
+		}
+	}
+
+	$bp_exclude_cpt = array_merge( array( 'forum', 'product', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' ), $bp_exclude_cpt );
+
+	/**
+	 * Function to exclude Custom post types for activity settings.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	return apply_filters( 'bb_feed_not_allowed_comment_post_types', $bp_exclude_cpt );
 }
 
 /**
