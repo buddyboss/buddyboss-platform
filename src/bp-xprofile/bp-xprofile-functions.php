@@ -1694,7 +1694,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 	global $wpdb;
 	global $bp;
 
-	$social_networks_field = $wpdb->get_row( "SELECT a.id, a.name, a.group_id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " );
+	$social_networks_field = $wpdb->get_row( "SELECT a.id, a.name FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " );
 	$social_networks_id    = $social_networks_field->id;
 	$social_networks_text  = $social_networks_field->name;
 
@@ -1711,14 +1711,22 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 
 		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) );
 
-		$social_settings_options = $wpdb->get_results( $wpdb->prepare( "SELECT name FROM {$bp->profile->table_name_fields} WHERE parent_id = %d AND group_id = %d", $social_networks_id, $social_networks_field->group_id ), ARRAY_A );
-		$social_settings_options = array_column( $social_settings_options, 'name' );
+		$social_settings_field   = xprofile_get_field( $social_networks_id, $user_id );
+		$social_settings_options = $social_settings_field->get_children();
 
-		if ( isset( $original_option_values ) && ! empty( $original_option_values ) && is_array( $original_option_values ) ) {
+		if ( 
+			isset( $original_option_values ) &&
+			! empty( $original_option_values ) &&
+			is_array( $original_option_values ) &&
+			! empty( $social_settings_options )
+		) {
+
+			$original_option_values = array_intersect_key( $original_option_values, array_flip( array_column( $social_settings_options, 'name' ) ) );
+
 			$i            = 0;
 			$is_more_link = count( array_filter( $original_option_values ) ) > 3;
 			foreach ( $original_option_values as $key => $original_option_value ) {
-				if ( '' !== $original_option_value && in_array( $key, $social_settings_options ) ) {
+				if ( '' !== $original_option_value ) {
 					$key = bp_social_network_search_key( $key, $providers );
 
 					if ( $is_more_link && 2 === $i ) {
