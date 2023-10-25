@@ -62,6 +62,7 @@ window.bp = window.bp || {};
 			this.is_topic_reply_form_submit = false;
 			this.draft_content_changed      = false;
 			this.all_draft_data             = {};
+			this.bbp_lead_topic_tags        = '';
 			this.bp_nouveau_forums_data     = ( 'undefined' !== typeof BP_Nouveau.forums.draft ) ? BP_Nouveau.forums.draft : {};
 			this.topic_reply_draft          = {
 				object: false,
@@ -221,6 +222,17 @@ window.bp = window.bp || {};
 				} else if ( 0 < this.bbp_topic_id && 0 < this.bbp_reply_to ) {
 					this.topic_reply_draft.data_key = 'draft_reply_' + this.bbp_topic_id + '_' + this.bbp_reply_to;
 				}
+			}
+
+			// Get the lead discussion tags.
+			var topic_tags  = [];
+			var tagSelector = this.is_bb_theme ? '.item-tags ul li' : '.bbp-topic-tags p a';
+			this.currentForm.closest( '#bbpress-forums' ).find( tagSelector ).each( function() {
+				topic_tags.push( $(this).text().trim() );
+			} );
+
+			if ( topic_tags.length > 0) {
+				this.bbp_lead_topic_tags = topic_tags.join( ',' );
 			}
 
 			if ( this.bbp_topic_id && forms.length > 1 ) {
@@ -406,6 +418,25 @@ window.bp = window.bp || {};
 				target.find( bbp_topic_subscription_id ).prop( 'checked', false );
 			} else if ( 'reply' === this.topic_reply_draft.object && ! $( '#subscribe-' + this.bbp_topic_id ).hasClass( 'is-subscribed' ) ) {
 				target.find( bbp_topic_subscription_id ).prop( 'checked', false );
+			}
+
+			// Reset tags with lead discussion tags.
+			if ( 'undefined' !== typeof this.bbp_lead_topic_tags && '' !== this.bbp_lead_topic_tags ) {
+
+				console.log( this.bbp_lead_topic_tags );
+				target.find( '#bbp_topic_tags' ).val( this.bbp_lead_topic_tags );
+
+				var tags_element = target.find( '#bbp_topic_tags_dropdown' );
+				tags_element.val( '' );
+
+				_.each(
+					this.bbp_lead_topic_tags.split( ',' ),
+					function( val ) {
+						tags_element.append( new Option( val, val, false, true ) );
+					}
+				);
+
+				tags_element.trigger( 'change' );
 			}
 
 			// Reset media.
