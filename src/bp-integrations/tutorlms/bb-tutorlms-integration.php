@@ -36,7 +36,7 @@ class BB_TutorLMS_Integration extends BP_Integration {
 		$this->includes();
 
 		require_once dirname( __FILE__ ) . '/includes/class-bb-tutorlms-group.php';
-//		new BB_TutorLMS_Group();
+		new BB_TutorLMS_Group();
 	}
 
 	/**
