@@ -157,9 +157,9 @@ function bb_tutorlms_course_visibility( $default = 0 ) {
  *
  * @return array Is any TutorLMS courses activities enabled.
  */
-function bb_get_enabled_tutorlms_course_activities( $key ) {
+function bb_get_enabled_tutorlms_course_activities( $key = '' ) {
 
-	$option_name = ! empty( $key ) ? 'bb-tutorlms-course-activity.' . $key : '';
+	$option_name = ! empty( $key ) ? 'bb-tutorlms-course-activity.' . $key : 'bb-tutorlms-course-activity';
 
 	/**
 	 * Filters to get enabled TutorLMS courses activities.
