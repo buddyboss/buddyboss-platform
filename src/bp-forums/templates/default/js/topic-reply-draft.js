@@ -408,11 +408,6 @@ window.bp = window.bp || {};
 				target.find( bbp_topic_subscription_id ).prop( 'checked', false );
 			}
 
-			// Reset tags.
-			target.find( '#bbp_topic_tags' ).val( '' );
-			target.find( '#bbp_topic_tags_dropdown' ).val( '' );
-			target.find( '#bbp_topic_tags_dropdown' ).trigger( 'change' );
-
 			// Reset media.
 			target.find( '#bbp_media' ).val( '' );
 			if ( 'undefined' !== typeof media_dropzone_container.length && 0 < media_dropzone_container.length ) {
@@ -776,6 +771,7 @@ window.bp = window.bp || {};
 				$form.find( '#bbp_topic_tags' ).val( activity_data.bbp_topic_tags );
 
 				var tags_element = $form.find( '#bbp_topic_tags_dropdown' );
+				tags_element.val( '' );
 
 				_.each(
 					activity_data.bbp_topic_tags.split( ',' ),
@@ -874,6 +870,7 @@ window.bp = window.bp || {};
 				$form.find( '#bbp_topic_tags' ).val( activity_data.bbp_topic_tags );
 
 				var tags_element = $form.find( '#bbp_topic_tags_dropdown' );
+				tags_element.val( '' );
 
 				_.each(
 					activity_data.bbp_topic_tags.split( ',' ),
