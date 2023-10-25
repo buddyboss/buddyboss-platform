@@ -37,21 +37,31 @@ function bb_tutorlms_integration_path( $path = '' ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $key     Optional. Get setting by key.
+ * @param string $keys    Optional. Get setting by key.
  * @param string $default Optional. Default value if value or setting not available.
  *
  * @return array|string
  */
-function bb_get_tutorlms_settings( $key = '', $default = '' ) {
+function bb_get_tutorlms_settings( $keys = '', $default = '' ) {
 	$settings = bp_get_option( 'bb-tutorlms', array() );
 
-	if ( ! empty( $key ) ) {
-		$settings = isset( $settings[ $key ] ) ? $settings[ $key ] : $default;
+	if ( ! empty( $keys ) ) {
+		if ( is_string( $keys ) ) {
+			$keys = explode( '.', $keys );
+		}
+
+		foreach ( $keys as $key ) {
+			if ( isset( $settings[ $key ] ) ) {
+				$settings = $settings[ $key ];
+			} else {
+				return $default;
+			}
+		}
 	} elseif ( empty( $settings ) ) {
 		$settings = array();
 	}
 
-	return apply_filters( 'bb_get_tutorlms_settings', $settings, $key, $default );
+	return apply_filters( 'bb_get_tutorlms_settings', $settings, $keys, $default );
 }
 
 /**
@@ -139,150 +149,24 @@ function bb_tutorlms_course_visibility( $default = 0 ) {
 }
 
 /**
- * Checks if TutorLMS user enrolled course enable.
+ * Function to get enabled TutorLMS courses activities.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param integer $default TutorLMS user enrolled course enabled by default.
+ * @param string $key TutorLMS course activity slug.
  *
- * @return bool Is TutorLMS user enrolled course enabled or not.
+ * @return array Is any TutorLMS courses activities enabled.
  */
-function bb_tutorlms_user_enrolled_course( $default = 0 ) {
+function bb_get_enabled_tutorlms_course_activities( $key ) {
+
+	$option_name = ! empty( $key ) ? 'bb-tutorlms-course-activity.' . $key : '';
 
 	/**
-	 * Filters TutorLMS user enrolled course enabled settings.
-	 *
-	 * @param integer $default TutorLMS user enrolled course enabled by default.
+	 * Filters to get enabled TutorLMS courses activities.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	return apply_filters( 'bb_tutorlms_user_enrolled_course', bb_get_tutorlms_settings( 'bb-tutorlms-user-enrolled-course', $default ) );
-}
-
-/**
- * Checks if TutorLMS user started course enable.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param integer $default TutorLMS user started course enabled by default.
- *
- * @return bool Is TutorLMS user started course enabled or not.
- */
-function bb_tutorlms_user_started_course( $default = 0 ) {
-
-	/**
-	 * Filters TutorLMS user started course enabled settings.
-	 *
-	 * @param integer $default TutorLMS user started course enabled by default.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	return apply_filters( 'bb_tutorlms_user_started_course', bb_get_tutorlms_settings( 'bb-tutorlms-user-started-course', $default ) );
-}
-
-/**
- * Checks if TutorLMS user completes course enable.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param integer $default TutorLMS user completes course enabled by default.
- *
- * @return bool Is TutorLMS user completes course enabled or not.
- */
-function bb_tutorlms_user_completes_course( $default = 0 ) {
-
-	/**
-	 * Filters TutorLMS user completes course enabled settings.
-	 *
-	 * @param integer $default TutorLMS user completes course enabled by default.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	return apply_filters( 'bb_tutorlms_user_completes_course', bb_get_tutorlms_settings( 'bb-tutorlms-user-completes-course', $default ) );
-}
-
-/**
- * Checks if TutorLMS user creates lesson enable.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param integer $default TutorLMS user creates lesson enabled by default.
- *
- * @return bool Is TutorLMS user creates lesson enabled or not.
- */
-function bb_tutorlms_user_creates_lesson( $default = 0 ) {
-
-	/**
-	 * Filters TutorLMS user creates lesson enabled settings.
-	 *
-	 * @param integer $default TutorLMS user creates lesson enabled by default.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	return apply_filters( 'bb_tutorlms_user_creates_lesson', bb_get_tutorlms_settings( 'bb-tutorlms-user-creates-lesson', $default ) );
-}
-
-/**
- * Checks if TutorLMS user updates lesson enable.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param integer $default TutorLMS user updates lesson enabled by default.
- *
- * @return bool Is TutorLMS user updates lesson enabled or not.
- */
-function bb_tutorlms_user_updates_lesson( $default = 0 ) {
-
-	/**
-	 * Filters TutorLMS user updates lesson enabled settings.
-	 *
-	 * @param integer $default TutorLMS user updates lesson enabled by default.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	return apply_filters( 'bb_tutorlms_user_updates_lesson', bb_get_tutorlms_settings( 'bb-tutorlms-user-updates-lesson', $default ) );
-}
-
-/**
- * Checks if TutorLMS user started quiz enable.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param integer $default TutorLMS user started quiz enabled by default.
- *
- * @return bool Is TutorLMS user started quiz enabled or not.
- */
-function bb_tutorlms_user_started_quiz( $default = 0 ) {
-
-	/**
-	 * Filters TutorLMS user started quiz enabled settings.
-	 *
-	 * @param integer $default TutorLMS user started quiz enabled by default.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	return apply_filters( 'bb_tutorlms_user_started_quiz', bb_get_tutorlms_settings( 'bb-tutorlms-user-started-quiz', $default ) );
-}
-
-/**
- * Checks if TutorLMS user finished quiz enable.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param integer $default TutorLMS user finished quiz enabled by default.
- *
- * @return bool Is TutorLMS user finished quiz enabled or not.
- */
-function bb_tutorlms_user_finished_quiz( $default = 0 ) {
-
-	/**
-	 * Filters TutorLMS user finished quiz enabled settings.
-	 *
-	 * @param integer $default TutorLMS user finished quiz enabled by default.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	return apply_filters( 'bb_tutorlms_user_finished_quiz', bb_get_tutorlms_settings( 'bb-tutorlms-user-finished-quiz', $default ) );
+	return apply_filters( 'bb_tutorlms_course_activities', bb_get_tutorlms_settings( $option_name ) );
 }
 
 /**
@@ -307,3 +191,44 @@ function bb_tutorlms_get_post_types() {
 	return apply_filters( 'bb_tutorlms_get_post_types', $tutorlms_post_types );
 }
 
+/**
+ * TutorLMS course activities.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bb_tutrolms_course_activities( $keys = array() ) {
+	$activities = array(
+		'bb-tutorlms-user-enrolled-course'  => __( 'User enrolled in a course', 'buddyboss' ),
+		'bb-tutorlms-user-started-course'   => __( 'User started a course', 'buddyboss' ),
+		'bb-tutorlms-user-completes-course' => __( 'User completes a course', 'buddyboss' ),
+		'bb-tutorlms-user-creates-lesson'   => __( 'User creates a lesson', 'buddyboss' ),
+		'bb-tutorlms-user-updates-lesson'   => __( 'User updates a lesson', 'buddyboss' ),
+		'bb-tutorlms-user-started-quiz'     => __( 'User started a quiz', 'buddyboss' ),
+		'bb-tutorlms-user-finished-quiz'    => __( 'User finished a quiz', 'buddyboss' ),
+	);
+
+	$result = ! empty( $keys ) ? array_intersect_key( $activities, $keys ) : $activities;
+
+	return $result;
+}
+
+/**
+ * Check TutorLMS course is setup or not for group main tab.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool Returns true if TutorLMS is setup.
+ */
+function bb_tutorlms_is_group_setup() {
+	if (
+		! bp_is_active( 'groups' ) ||
+		! bb_tutorlms_enable() ||
+		! bb_tutorlms_group_course_tab()
+	) {
+		return false;
+	}
+
+	return true;
+}

@@ -76,14 +76,14 @@ class BB_TutorLMS_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 */
 	public function settings_save() {
 		$bb_tutorlms_arr = array();
-		$fields = $this->bb_tutorlms_get_settings_fields();
+		$fields          = $this->bb_tutorlms_get_settings_fields();
 		foreach ( (array) $fields as $section_id => $section_fields ) {
 			foreach ( (array) $section_fields as $field_id => $field ) {
 				if ( is_callable( $field['sanitize_callback'] ) ) {
 					$value = $field['sanitize_callback']( $value );
 				}
 				if ( 'bb_tutorlms_group_sync_settings_section' === $section_id ) {
-					$bb_tutorlms_arr[ $field_id ] = isset( $_POST[ $field_id ] ) ? $_POST[ $field_id ] : 0;
+					$bb_tutorlms_arr[ $field_id ] = isset( $_POST['bb-tutorlms'][ $field_id ] ) ? ( is_array( $_POST['bb-tutorlms'][ $field_id ] ) ? $_POST['bb-tutorlms'][ $field_id ] : $_POST['bb-tutorlms'][ $field_id ] ) : 0;
 				}
 				if ( 'bb_tutorlms_posts_activity_settings_section' === $section_id ) {
 					$value = isset( $_POST[ $field_id ] ) ? $_POST[ $field_id ] : 0;
@@ -227,53 +227,11 @@ class BB_TutorLMS_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'args'              => array(),
 			);
 			if ( bp_is_active( 'activity' ) ) {
-				$bb_tutorlms_group_sync_field['bb-tutorlms-course-activity-info']  = array(
+				$bb_tutorlms_group_sync_field['bb-tutorlms-course-activity']  = array(
 					'title'             => __( 'Display Course Activity', 'buddyboss' ),
 					'callback'          => array( $this, 'bb_tutorlms_display_course_activity_callback' ),
 					'sanitize_callback' => 'string',
 					'args'              => array(),
-				);
-				$bb_tutorlms_group_sync_field['bb-tutorlms-user-enrolled-course']  = array(
-					'title'             => ' ',
-					'callback'          => array( $this, 'bb_tutorlms_user_enrolled_course_callback' ),
-					'sanitize_callback' => 'string',
-					'args'              => array( 'class' => 'child-no-padding' ),
-				);
-				$bb_tutorlms_group_sync_field['bb-tutorlms-user-started-course']   = array(
-					'title'             => ' ',
-					'callback'          => array( $this, 'bb_tutorlms_user_started_course_callback' ),
-					'sanitize_callback' => 'string',
-					'args'              => array( 'class' => 'child-no-padding' ),
-				);
-				$bb_tutorlms_group_sync_field['bb-tutorlms-user-completes-course'] = array(
-					'title'             => ' ',
-					'callback'          => array( $this, 'bb_tutorlms_user_completes_course_callback' ),
-					'sanitize_callback' => 'string',
-					'args'              => array( 'class' => 'child-no-padding' ),
-				);
-				$bb_tutorlms_group_sync_field['bb-tutorlms-user-creates-lesson']   = array(
-					'title'             => ' ',
-					'callback'          => array( $this, 'bb_tutorlms_user_creates_lesson_callback' ),
-					'sanitize_callback' => 'string',
-					'args'              => array( 'class' => 'child-no-padding' ),
-				);
-				$bb_tutorlms_group_sync_field['bb-tutorlms-user-updates-lesson']   = array(
-					'title'             => ' ',
-					'callback'          => array( $this, 'bb_tutorlms_user_updates_lesson_callback' ),
-					'sanitize_callback' => 'string',
-					'args'              => array( 'class' => 'child-no-padding' ),
-				);
-				$bb_tutorlms_group_sync_field['bb-tutorlms-user-started-quiz']     = array(
-					'title'             => ' ',
-					'callback'          => array( $this, 'bb_tutorlms_user_started_quiz_callback' ),
-					'sanitize_callback' => 'string',
-					'args'              => array( 'class' => 'child-no-padding' ),
-				);
-				$bb_tutorlms_group_sync_field['bb-tutorlms-user-finished-quiz']    = array(
-					'title'             => ' ',
-					'callback'          => array( $this, 'bb_tutorlms_user_finished_quiz_callback' ),
-					'sanitize_callback' => 'string',
-					'args'              => array( 'class' => 'child-no-padding' ),
 				);
 			}
 		}
@@ -389,7 +347,7 @@ class BB_TutorLMS_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 */
 	public function bb_tutorlms_group_sync_callback() {
 		?>
-        <input name="bb-tutorlms-enable" id="bb-tutorlms-enable" type="checkbox" value="1" <?php checked( bb_tutorlms_enable() ); ?>/>
+        <input name="bb-tutorlms[bb-tutorlms-enable]" id="bb-tutorlms-enable" type="checkbox" value="1" <?php checked( bb_tutorlms_enable() ); ?>/>
         <label for="bb-tutorlms-enable">
 			<?php esc_html_e( 'Enable TutorLMS course to be used within social groups', 'buddyboss' ); ?>
         </label>
@@ -403,7 +361,7 @@ class BB_TutorLMS_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 */
 	public function bb_tutorlms_group_course_tab_callback() {
 		?>
-        <input name="bb-tutorlms-group-course-tab" id="bb-tutorlms-group-course-tab" type="checkbox" value="1" <?php checked( bb_tutorlms_group_course_tab() ); ?>/>
+        <input name="bb-tutorlms[bb-tutorlms-group-course-tab]" id="bb-tutorlms-group-course-tab" type="checkbox" value="1" <?php checked( bb_tutorlms_group_course_tab() ); ?>/>
         <label for="bb-tutorlms-group-course-tab">
 			<?php esc_html_e( 'Display "Courses" tab in Social Groups', 'buddyboss' ); ?>
         </label>
@@ -420,7 +378,7 @@ class BB_TutorLMS_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 */
     public function bb_tutorlms_course_tab_visibility_callback() {
 	    ?>
-        <input name="bb-tutorlms-course-tab-visibility" id="bb-tutorlms-course-tab-visibility" type="checkbox" value="1" <?php checked( bb_tutorlms_course_tab_visibility() ); ?>/>
+        <input name="bb-tutorlms[bb-tutorlms-course-tab-visibility]" id="bb-tutorlms-course-tab-visibility" type="checkbox" value="1" <?php checked( bb_tutorlms_course_tab_visibility() ); ?>/>
         <label for="bb-tutorlms-course-tab-visibility">
 		    <?php esc_html_e( 'Allow group organizers to hide the "Course" tab during course creation and from the manage course screen.', 'buddyboss' ); ?>
         </label>
@@ -434,7 +392,7 @@ class BB_TutorLMS_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 */
 	public function bb_tutorlms_course_visibility_callback() {
 		?>
-        <input name="bb-tutorlms-course-visibility" id="bb-tutorlms-course-visibility" type="checkbox" value="1" <?php checked( bb_tutorlms_course_visibility() ); ?>/>
+        <input name="bb-tutorlms[bb-tutorlms-course-visibility]" id="bb-tutorlms-course-visibility" type="checkbox" value="1" <?php checked( bb_tutorlms_course_visibility() ); ?>/>
         <label for="bb-tutorlms-course-visibility">
 			<?php esc_html_e( 'Allow group organizers to choose which courses to show within the course tab.', 'buddyboss' ); ?>
         </label>
@@ -446,109 +404,28 @@ class BB_TutorLMS_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-    public function bb_tutorlms_display_course_activity_callback() {
-        ?>
+	public function bb_tutorlms_display_course_activity_callback() {
+		?>
         <p class="description">
-		    <?php esc_html_e( 'Any option selected below will show in group creation and group manage screens to allow group organizer to enable or disable course activity posts for their own group.', 'buddyboss' ); ?>
+			<?php esc_html_e( 'Any option selected below will show in group creation and group manage screens to allow group organizer to enable or disable course activity posts for their own group.', 'buddyboss' ); ?>
         </p>
-        <?php
-    }
-
-	/**
-	 * Callback function TutorLMS user enrolled course.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	public function bb_tutorlms_user_enrolled_course_callback() {
-		?>
-        <input name="bb-tutorlms-user-enrolled-course" id="bb-tutorlms-user-enrolled-course" type="checkbox" value="1" <?php checked( bb_tutorlms_user_enrolled_course() ); ?>/>
-        <label for="bp-zoom-enable-groups">
-			<?php esc_html_e( 'User enrolled in a course', 'buddyboss' ); ?>
-        </label>
 		<?php
-	}
-
-	/**
-	 * Callback function TutorLMS user started a course.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	public function bb_tutorlms_user_started_course_callback() {
+		$tutorlms_course_activities = bb_tutrolms_course_activities();
+		if ( ! empty( $tutorlms_course_activities ) ) {
+			foreach ( $tutorlms_course_activities as $key => $value ) {
+				$checked = bb_get_enabled_tutorlms_course_activities( $key );
+				?>
+                <tr class="child-no-padding">
+                    <th scope="row"></th>
+                    <td>
+                        <input name="bb-tutorlms[bb-tutorlms-course-activity][<?php echo esc_attr( $key ); ?>]" id="<?php echo esc_attr( $key ); ?>" type="checkbox" value="1" <?php checked( $checked, '1' ); ?>/>
+                        <label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $value ); ?></label>
+                    </td>
+                </tr>
+				<?php
+			}
+		}
 		?>
-        <input name="bb-tutorlms-user-started-course" id="bb-tutorlms-user-started-course" type="checkbox" value="1" <?php checked( bb_tutorlms_user_started_course() ); ?>/>
-        <label for="bp-zoom-enable-groups">
-			<?php esc_html_e( 'User started a course', 'buddyboss' ); ?>
-        </label>
-		<?php
-	}
-
-	/**
-	 * Callback function TutorLMS user completes a course.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	public function bb_tutorlms_user_completes_course_callback() {
-		?>
-        <input name="bb-tutorlms-user-completes-course" id="bb-tutorlms-user-completes-course" type="checkbox" value="1" <?php checked( bb_tutorlms_user_completes_course() ); ?>/>
-        <label for="bp-zoom-enable-groups">
-			<?php esc_html_e( 'User completes a course', 'buddyboss' ); ?>
-        </label>
-		<?php
-	}
-
-	/**
-	 * Callback function TutorLMS user creates a lesson.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	public function bb_tutorlms_user_creates_lesson_callback() {
-		?>
-        <input name="bb-tutorlms-user-creates-lesson" id="bb-tutorlms-user-creates-lesson" type="checkbox" value="1" <?php checked( bb_tutorlms_user_creates_lesson() ); ?>/>
-        <label for="bp-zoom-enable-groups">
-			<?php esc_html_e( 'User creates a lesson', 'buddyboss' ); ?>
-        </label>
-		<?php
-	}
-
-	/**
-	 * Callback function TutorLMS user updates a lesson.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	public function bb_tutorlms_user_updates_lesson_callback() {
-		?>
-        <input name="bb-tutorlms-user-updates-lesson" id="bb-tutorlms-user-updates-lesson" type="checkbox" value="1" <?php checked( bb_tutorlms_user_updates_lesson() ); ?>/>
-        <label for="bp-zoom-enable-groups">
-			<?php esc_html_e( 'User updates a lesson', 'buddyboss' ); ?>
-        </label>
-		<?php
-	}
-
-	/**
-	 * Callback function TutorLMS user started a quiz.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	public function bb_tutorlms_user_started_quiz_callback() {
-		?>
-        <input name="bb-tutorlms-user-started-quiz" id="bb-tutorlms-user-started-quiz" type="checkbox" value="1" <?php checked( bb_tutorlms_user_started_quiz() ); ?>/>
-        <label for="bp-zoom-enable-groups">
-			<?php esc_html_e( 'User started a quiz', 'buddyboss' ); ?>
-        </label>
-		<?php
-	}
-
-	/**
-	 * Callback function TutorLMS user finished a quiz.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	public function bb_tutorlms_user_finished_quiz_callback() {
-		?>
-        <input name="bb-tutorlms-user-finished-quiz" id="bb-tutorlms-user-finished-quiz" type="checkbox" value="1" <?php checked( bb_tutorlms_user_finished_quiz() ); ?>/>
-        <label for="bp-zoom-enable-groups">
-			<?php esc_html_e( 'User finished a quiz', 'buddyboss' ); ?>
-        </label>
 		<?php
 	}
 
