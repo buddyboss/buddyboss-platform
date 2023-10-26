@@ -127,6 +127,8 @@ jQuery( document ).ready(
 
 		// "remove all tags" button event listener
 		jQuery( 'body' ).on( 'click', '.js-modal-close', function () {
+			$tagsSelect.val( '' );
+			$tagsSelect.trigger( 'change' ); // Notify any JS components that the value changed
 			jQuery( 'body' ).removeClass( 'popup-modal-reply' );
 			jQuery( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );
 			jQuery( '#show-toolbar-button' ).removeClass( 'active' );
@@ -141,6 +143,8 @@ jQuery( document ).ready(
 			topicReplyButton.click(
 				function () {
 					jQuery( 'body' ).addClass( 'popup-modal-reply' );
+					$tagsSelect.val( '' );
+					$tagsSelect.trigger( 'change' ); // Notify any JS components that the value changed
 				}
 			);
 		}
