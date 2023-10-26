@@ -400,6 +400,8 @@ function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_
 	// Now update the status.
 	$group->status = $status;
 
+	$old_parent = $group->parent_id;
+
 	// Update the parent ID if necessary.
 	if ( false !== $parent_id ) {
 		$group->parent_id = $parent_id;
@@ -442,6 +444,16 @@ function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_
 	// Set the message status.
 	if ( $message_status ) {
 		groups_update_groupmeta( $group->id, 'message_status', $message_status );
+	}
+
+	if (
+		! empty( $parent_id ) &&
+		$old_parent !== $parent_id &&
+		true === bp_enable_group_hierarchies() &&
+		true === bp_enable_group_restrict_invites()
+	) {
+		$parents = bb_get_parent_group_ids( $group->id );
+		bb_groups_add_subgroup_members( $group->id, $parents );
 	}
 
 	groups_update_groupmeta( $group->id, 'last_activity', bp_core_current_time() );
@@ -5229,4 +5241,112 @@ function bb_groups_settings_default_fallback( $setting_type, $val = '' ) {
 	 * @param string $val Value of group settings.
 	 */
 	return apply_filters( 'bp_group_' . $setting_type . '_status_fallback', $val );
+}
+
+function bb_get_parent_group_ids( $group_id ) {
+	global $wpdb, $bp;
+
+	$parent_groups = array();
+
+	if ( empty( $group_id ) ) {
+		return $parent_groups;
+	}
+
+	$current_group_id = $group_id;
+
+	while ( 0 !== $current_group_id ) {
+		// phpcs:ignore
+		$parent_id = $wpdb->get_var( $wpdb->prepare( "SELECT parent_id FROM {$bp->groups->table_name} WHERE id = %d", $current_group_id ) );
+
+		if ( ! empty( $parent_id ) ) {
+			// If a parent group exists, add it to the array.
+			$parent_groups[]  = $parent_id;
+			$current_group_id = $parent_id;
+		} else {
+			// If there's no parent group (0), break out of the loop.
+			break;
+		}
+	}
+
+	return $parent_groups;
+}
+
+function bb_groups_add_subgroup_members( $group_id, $parent_group_ids ) {
+	global $bb_background_updater;
+	if (
+		true === bp_enable_group_hierarchies() &&
+		true === bp_enable_group_restrict_invites() &&
+		! empty( $parent_group_ids )
+	) {
+		foreach ( $parent_group_ids as $parent_group_id ) {
+			// Background job to add child group members to the parent groups.
+			$bb_background_updater->push_to_queue(
+				array(
+					'type'     => 'groups',
+					'group'    => 'bb_groups_add_subgroup_members',
+					'priority' => 5,
+					'callback' => 'bb_update_groups_members_background_process',
+					'args'     => array( $group_id, $parent_group_id ),
+				)
+			);
+			$bb_background_updater->save()->dispatch();
+		}
+	}
+}
+
+function bb_update_groups_members_background_process( $group_id, $parent_id ) {
+	global $wpdb, $bp, $bb_background_updater;
+
+	if (
+		empty( $group_id ) ||
+		empty( $parent_id )
+	) {
+		return;
+	}
+
+	$paged = groups_get_groupmeta( $parent_id, 'bb_update_groups_members_paged' );
+	if ( empty( $paged ) ) {
+		$paged = 1;
+	}
+
+	$limit  = (int) apply_filters( 'bb_limit_update_groups_members', 50 );
+	$offset = ( ( $paged - 1 ) * $limit );
+
+	$sql = $wpdb->prepare(
+		"SELECT a.user_id FROM {$bp->groups->table_name_members} AS a LEFT JOIN {$bp->groups->table_name_members} AS b ON a.user_id = b.user_id AND b.group_id = %d WHERE a.group_id = %d AND b.user_id IS NULL ORDER BY a.user_id ASC LIMIT %d OFFSET %d;",
+		$parent_id,
+		$group_id,
+		$limit,
+		$offset
+	);
+
+	// phpcs:ignore
+	$members = $wpdb->get_col( $sql );
+
+	if (
+		empty( $members ) ||
+		true !== bp_enable_group_hierarchies() ||
+		true !== bp_enable_group_restrict_invites()
+	) {
+		groups_delete_groupmeta( $parent_id, 'bb_update_groups_members_paged' );
+		return;
+	}
+
+	foreach ( $members as $member ) {
+		groups_join_group( $parent_id, $member );
+	}
+
+	groups_update_groupmeta( $parent_id, 'bb_update_groups_members_paged', $paged + 1 );
+
+	// Background job to add child group members to the parent groups.
+	$bb_background_updater->push_to_queue(
+		array(
+			'type'     => 'groups',
+			'group'    => 'bb_groups_add_subgroup_members',
+			'priority' => 5,
+			'callback' => 'bb_update_groups_members_background_process',
+			'args'     => array( $group_id, $parent_id ),
+		)
+	);
+	$bb_background_updater->save()->schedule_event();
 }
