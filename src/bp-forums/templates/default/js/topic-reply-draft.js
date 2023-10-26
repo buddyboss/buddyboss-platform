@@ -224,6 +224,10 @@ window.bp = window.bp || {};
 				}
 			}
 
+			if ( this.currentForm.hasClass( 'has-draft' ) ) {
+				this.currentForm.removeClass( 'has-draft' );
+			}
+
 			// Get the lead discussion tags.
 			this.updateLeadDiscussionTagsInForm();
 
