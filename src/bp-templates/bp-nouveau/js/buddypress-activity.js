@@ -1363,17 +1363,17 @@ window.bp = window.bp || {};
 										// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 									}
 
-									var tool_box_comment = activity_comments.find( '.ac-reply-content' );
-									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ) ) {
+									var tool_box_comment = form.find( '.ac-reply-content' );
+									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ).length > 0 ) {
 										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
 									}
-									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-document-button' ) ) {
+									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-document-button' ).length > 0  ) {
 										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
 									}
-									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-video-button' ) ) {
+									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-video-button' ).length > 0  ) {
 										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
 									}
-									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ) ) {
+									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).length > 0  ) {
 										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).removeClass( 'active ' );
 										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
 									}
