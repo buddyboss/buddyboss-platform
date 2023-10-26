@@ -81,7 +81,7 @@ class BB_TutorLMS_Group {
 	/**
 	 * Displays the TutorLMS metabox in BuddyBoss Group Admin UI.
 	 *
-	 * @param object $item (group object).
+	 * @param object $group (group object).
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
@@ -107,23 +107,21 @@ class BB_TutorLMS_Group {
                 <fieldset>
                     <h3><?php echo __( 'Select Course Activities', 'buddyboss' ); ?></h3>
                     <p class="bb-section-info">
-						<?php esc_html_e( 'Which TutorLMS activites should be displayed in this group?', 'buddyboss' ); ?>
+						<?php esc_html_e( 'Which TutorLMS activities should be displayed in this group?', 'buddyboss' ); ?>
                     </p>
 					<?php
-					if ( ! empty( $tutorlms_course_activities ) ) {
-						foreach ( $tutorlms_course_activities as $key => $value ) {
-							$checked = isset( $bb_tutorlms_groups['course-activity'][ $key ] ) ? $bb_tutorlms_groups['course-activity'][ $key ] : '0';
-							?>
-                            <div class="field-group bp-checkbox-wrap">
-                                <p class="checkbox bp-checkbox-wrap bp-group-option-enable">
-                                    <input type="checkbox" name="bb-tutorlms-group[course-activity][<?php echo esc_attr( $key ); ?>]" id="<?php echo esc_attr( $key ); ?>" class="bs-styled-checkbox" value="1" <?php checked( $checked, '1' ); ?>/>
-                                    <label for="bp-edit-group-tutorlms">
-                                        <span><?php echo esc_html( $value ); ?></span>
-                                    </label>
-                                </p>
-                            </div>
-							<?php
-						}
+					foreach ( $tutorlms_course_activities as $key => $value ) {
+						$checked = isset( $bb_tutorlms_groups['course-activity'][ $key ] ) ? $bb_tutorlms_groups['course-activity'][ $key ] : '0';
+						?>
+                        <div class="field-group bp-checkbox-wrap">
+                            <p class="checkbox bp-checkbox-wrap bp-group-option-enable">
+                                <input type="checkbox" name="bb-tutorlms-group[course-activity][<?php echo esc_attr( $key ); ?>]" id="<?php echo esc_attr( $key ); ?>" class="bs-styled-checkbox" value="1" <?php checked( $checked, '1' ); ?>/>
+                                <label for="bp-edit-group-tutorlms">
+                                    <span><?php echo esc_html( $value ); ?></span>
+                                </label>
+                            </p>
+                        </div>
+						<?php
 					}
 					?>
                 </fieldset>
