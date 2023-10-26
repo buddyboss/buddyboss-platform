@@ -225,15 +225,7 @@ window.bp = window.bp || {};
 			}
 
 			// Get the lead discussion tags.
-			var topic_tags  = [];
-			var tagSelector = this.is_bb_theme ? '.item-tags ul li' : '.bbp-topic-tags p a';
-			this.currentForm.closest( '#bbpress-forums' ).find( tagSelector ).each( function() {
-				topic_tags.push( $(this).text().trim() );
-			} );
-
-			if ( topic_tags.length > 0) {
-				this.bbp_lead_topic_tags = topic_tags.join( ',' );
-			}
+			this.updateLeadDiscussionTagsInForm();
 
 			if ( this.bbp_topic_id && forms.length > 1 ) {
 				this.updateSubscriptionCheckboxes();
@@ -245,6 +237,40 @@ window.bp = window.bp || {};
 			var bbp_topic_subscription_id = this.currentForm.find( '#bbp_topic_subscription' );
 			bbp_topic_subscription_id.prop( 'id', 'bbp_topic_subscription_' + this.bbp_topic_id );
 			bbp_topic_subscription_id.siblings( 'label' ).prop( 'for', 'bbp_topic_subscription_' + this.bbp_topic_id );
+		};
+
+		this.updateLeadDiscussionTagsInForm = function() {
+
+			if ( !this.currentForm ) {
+				return;
+			}
+
+			var topic_tags   = [];
+			var tagSelector  = this.is_bb_theme ? '.item-tags ul li' : '.bbp-topic-tags p a';
+			this.currentForm.closest( '#bbpress-forums' ).find( tagSelector ).each( function() {
+				topic_tags.push( $(this).text().trim() );
+			} );
+
+			if ( topic_tags.length > 0 ) {
+				this.bbp_lead_topic_tags = topic_tags.join( ',' );
+			} else {
+				this.bbp_lead_topic_tags = '';
+			}
+
+			this.currentForm.find( '#bbp_topic_tags' ).val( this.bbp_lead_topic_tags );
+			var tags_element = this.currentForm.find( '#bbp_topic_tags_dropdown' );
+			tags_element.val( '' );
+
+			if ( '' !== this.bbp_lead_topic_tags ) {
+				_.each(
+					this.bbp_lead_topic_tags.split( ',' ),
+					function( val ) {
+						tags_element.append( new Option( val, val, false, true ) );
+					}
+				);
+			}
+
+			tags_element.trigger( 'change' );
 		};
 
 		this.getTopicReplyDraftData = function() {
@@ -420,24 +446,10 @@ window.bp = window.bp || {};
 				target.find( bbp_topic_subscription_id ).prop( 'checked', false );
 			}
 
-			// Reset tags with lead discussion tags.
-			if ( 'undefined' !== typeof this.bbp_lead_topic_tags && '' !== this.bbp_lead_topic_tags ) {
-
-				console.log( this.bbp_lead_topic_tags );
-				target.find( '#bbp_topic_tags' ).val( this.bbp_lead_topic_tags );
-
-				var tags_element = target.find( '#bbp_topic_tags_dropdown' );
-				tags_element.val( '' );
-
-				_.each(
-					this.bbp_lead_topic_tags.split( ',' ),
-					function( val ) {
-						tags_element.append( new Option( val, val, false, true ) );
-					}
-				);
-
-				tags_element.trigger( 'change' );
-			}
+			// Reset tags.
+			target.find( '#bbp_topic_tags' ).val( '' );
+			target.find( '#bbp_topic_tags_dropdown' ).val( '' );
+			target.find( '#bbp_topic_tags_dropdown' ).trigger( 'change' );
 
 			// Reset media.
 			target.find( '#bbp_media' ).val( '' );
@@ -797,19 +809,21 @@ window.bp = window.bp || {};
 			}
 
 			// Tags.
-			if ( 'undefined' !== typeof activity_data.bbp_topic_tags && '' !== activity_data.bbp_topic_tags ) {
+			if ( 'undefined' !== typeof activity_data.bbp_topic_tags && null !== activity_data.bbp_topic_tags ) {
 
 				$form.find( '#bbp_topic_tags' ).val( activity_data.bbp_topic_tags );
 
 				var tags_element = $form.find( '#bbp_topic_tags_dropdown' );
 				tags_element.val( '' );
 
-				_.each(
-					activity_data.bbp_topic_tags.split( ',' ),
-					function( val ) {
-						tags_element.append( new Option( val, val, false, true ) );
-					}
-				);
+				if ( '' !== activity_data.bbp_topic_tags ) {
+					_.each(
+						activity_data.bbp_topic_tags.split( ',' ),
+						function( val ) {
+							tags_element.append( new Option( val, val, false, true ) );
+						}
+					);
+				}
 
 				tags_element.trigger( 'change' );
 			}
@@ -896,19 +910,21 @@ window.bp = window.bp || {};
 			}
 
 			// Tags.
-			if ( 'undefined' !== typeof activity_data.bbp_topic_tags && '' !== activity_data.bbp_topic_tags ) {
+			if ( 'undefined' !== typeof activity_data.bbp_topic_tags && null !== activity_data.bbp_topic_tags ) {
 
 				$form.find( '#bbp_topic_tags' ).val( activity_data.bbp_topic_tags );
 
 				var tags_element = $form.find( '#bbp_topic_tags_dropdown' );
 				tags_element.val( '' );
 
-				_.each(
-					activity_data.bbp_topic_tags.split( ',' ),
-					function( val ) {
-						tags_element.append( new Option( val, val, false, true ) );
-					}
-				);
+				if ( '' !== activity_data.bbp_topic_tags ) {
+					_.each(
+						activity_data.bbp_topic_tags.split( ',' ),
+						function( val ) {
+							tags_element.append( new Option( val, val, false, true ) );
+						}
+					);
+				}
 
 				tags_element.trigger( 'change' );
 			}
