@@ -805,7 +805,10 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 * @return string
 	 */
 	public function theme_compat_wrapper( $retval ) {
-		if ( false !== strpos( $retval, '<div id="buddypress"' ) ) {
+		if (
+			false !== strpos( $retval, '<div id="buddypress"' ) &&
+			false === strpos( $retval, 'bp-shortcode-wrap' )
+		) {
 			return $retval;
 		}
 
