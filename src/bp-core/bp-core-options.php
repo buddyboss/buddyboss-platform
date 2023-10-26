@@ -903,8 +903,9 @@ function bp_disable_blogforum_comments( $default = false ) {
  *              items, otherwise false.
  */
 function bb_is_post_type_feed_comment_enable( $post_type, $default = false ) {
-	$option_name = bb_post_type_feed_comment_option_name( $post_type );
-
+	$option_name  = bb_post_type_feed_comment_option_name( $post_type );
+	$option_value = (bool) bp_get_option( $option_name, $default );
+	$is_enabled   = bb_activity_is_enabled_cpt_global_comment( $post_type );
 	/**
 	 * Filters whether or not custom post type feed comments are enable.
 	 *
@@ -912,7 +913,7 @@ function bb_is_post_type_feed_comment_enable( $post_type, $default = false ) {
 	 *
 	 * @param bool $value Whether or not custom post type activity feed comments are enable.
 	 */
-	return (bool) apply_filters( 'bb_is_post_type_feed_comment_enable', (bool) bp_get_option( $option_name, $default ), $post_type );
+	return (bool) apply_filters( 'bb_is_post_type_feed_comment_enable', ( $is_enabled && $option_value ), $post_type );
 }
 
 /**
@@ -1957,21 +1958,8 @@ function bb_feed_post_types() {
 	// Get all active custom post type.
 	$post_types = get_post_types( array( 'public' => true ) );
 
-	// Exclude BP CPT.
-	$bp_exclude_cpt = array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
-
-	$bp_excluded_cpt = array();
-
-	foreach ( $post_types as $post_type ) {
-		// Exclude all the custom post type which is already in BuddyPress Activity support.
-		if ( in_array( $post_type, $bp_exclude_cpt, true ) ) {
-			continue;
-		}
-
-		$bp_excluded_cpt[] = $post_type;
-	}
-
-	return $bp_excluded_cpt;
+	// Use array_diff to exclude specific post types.
+	return array_diff( $post_types, bb_feed_excluded_post_types() );
 }
 
 /**
@@ -1982,8 +1970,23 @@ function bb_feed_post_types() {
  * @return array.
  */
 function bb_feed_not_allowed_comment_post_types() {
-	// Exclude BP CPT.
-	return array( 'forum', 'product', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
+	$post_types = bb_feed_post_types();
+
+	$bp_exclude_cpt = array();
+	foreach ( $post_types as $post_type ) {
+		if ( ! post_type_supports( $post_type, 'comments' ) ) {
+			$bp_exclude_cpt[] = $post_type;
+		}
+	}
+
+	$bp_exclude_cpt = array_merge( array( 'forum', 'product', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' ), $bp_exclude_cpt );
+
+	/**
+	 * Function to exclude Custom post types for activity settings.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	return apply_filters( 'bb_feed_not_allowed_comment_post_types', $bp_exclude_cpt );
 }
 
 /**
@@ -2520,4 +2523,20 @@ function bb_is_active_activity_pinned_posts( $default = false ) {
 	* @param bool $value Whether activity pinned posts are enabled.
 	*/
    return (bool) apply_filters( 'bb_is_active_activity_pinned_posts', (bool) bp_get_option( '_bb_enable_activity_pinned_posts', $default ) );
+}
+/**
+ * Function to exclude Custom post types for activity settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array.
+ */
+function bb_feed_excluded_post_types() {
+
+	/**
+	 * Function to exclude Custom post types for activity settings.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	return apply_filters( 'bb_feed_excluded_post_types', array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' ) );
 }
