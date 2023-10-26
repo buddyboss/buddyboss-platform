@@ -224,6 +224,7 @@ window.bp = window.bp || {};
 				}
 			}
 
+			// Remove draft button for new reply if class already added on form.
 			if ( this.currentForm.hasClass( 'has-draft' ) ) {
 				this.currentForm.removeClass( 'has-draft' );
 			}
@@ -243,6 +244,11 @@ window.bp = window.bp || {};
 			bbp_topic_subscription_id.siblings( 'label' ).prop( 'for', 'bbp_topic_subscription_' + this.bbp_topic_id );
 		};
 
+		/**
+		 * Updates the attached lead discussion tags in the form.
+		 *
+		 * @return {void}
+		 */
 		this.updateLeadDiscussionTagsInForm = function() {
 
 			if ( !this.currentForm ) {
