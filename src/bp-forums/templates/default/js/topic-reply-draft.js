@@ -263,9 +263,9 @@ window.bp = window.bp || {};
 
 			this.currentForm.find( '#bbp_topic_tags' ).val( this.bbp_lead_topic_tags );
 			var tags_element = this.currentForm.find( '#bbp_topic_tags_dropdown' );
-			tags_element.val( '' );
 
 			if ( '' !== this.bbp_lead_topic_tags ) {
+				tags_element.find( 'option' ).remove();
 				_.each(
 					this.bbp_lead_topic_tags.split( ',' ),
 					function( val ) {
