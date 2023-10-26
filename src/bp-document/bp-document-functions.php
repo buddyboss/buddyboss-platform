@@ -3995,7 +3995,7 @@ function bp_document_delete_symlinks( $document ) {
 				}
 
 				// If rename the file then preview doesn't exist but symbolic is available in the folder. So, checked the file is not empty then remove it from symbolic.
-				if ( ! empty( $attachment_path ) ) {
+				if ( file_exists( $attachment_path ) || ! empty( $attachment_path ) ) {
 					@unlink( $attachment_path ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 				}
 			}
