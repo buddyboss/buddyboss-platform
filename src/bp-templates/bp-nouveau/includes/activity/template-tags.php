@@ -1789,7 +1789,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		// Remove for activities related to group for main activity screen.
 		$pinned_action_label = bp_is_group_activity() ? esc_html__( 'Pin to Group', 'buddyboss' ) : ( 'groups' === bp_get_activity_object_name() ? esc_html__( 'Pin to Group', 'buddyboss' ) : esc_html__( 'Pin to Feed', 'buddyboss' ) );
 		$pinned_action_class = 'pin-activity';
-		$pinned_id           = ! empty( $GLOBALS['activities_template']->pinned_id ) ? $GLOBALS['activities_template']->pinned_id : 0;
+		$pinned_id           = ! empty( $GLOBALS['activities_template']->pinned_id ) ? $GLOBALS['activities_template']->pinned_id : bp_get_option( 'bb_pinned_post', 0 );
 
 		if ( 'groups' === bp_get_activity_object_name() && bp_is_active( 'groups' ) ) {
 			$group_id  = bp_get_activity_item_id();
