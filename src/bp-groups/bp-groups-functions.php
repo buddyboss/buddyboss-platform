@@ -298,6 +298,8 @@ function groups_edit_base_group_details( $args = array() ) {
 
 	$group->description = $r['description'];
 
+	$old_parent = $group->parent_id;
+
 	// Update the parent ID if necessary.
 	if ( false !== $r['parent_id'] ) {
 		$group->parent_id = $r['parent_id'];
@@ -305,6 +307,17 @@ function groups_edit_base_group_details( $args = array() ) {
 
 	if ( ! $group->save() ) {
 		return false;
+	}
+
+	// Added subgroup members to the parents groups when hierarchies and restriction enabled.
+	if (
+		! empty( $r['parent_id'] ) &&
+		$old_parent !== $r['parent_id'] &&
+		true === bp_enable_group_hierarchies() &&
+		true === bp_enable_group_restrict_invites()
+	) {
+		$parents = bb_get_parent_group_ids( $group->id );
+		bb_groups_add_subgroup_members( $group->id, $parents );
 	}
 
 	// Maybe update the "previous_slug" groupmeta.
@@ -446,6 +459,7 @@ function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_
 		groups_update_groupmeta( $group->id, 'message_status', $message_status );
 	}
 
+	// Added subgroup members to the parents groups when hierarchies and restriction enabled.
 	if (
 		! empty( $parent_id ) &&
 		$old_parent !== $parent_id &&
@@ -5243,6 +5257,15 @@ function bb_groups_settings_default_fallback( $setting_type, $val = '' ) {
 	return apply_filters( 'bp_group_' . $setting_type . '_status_fallback', $val );
 }
 
+/**
+ * Fetch all top level parent group ids.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $group_id Group ID.
+ *
+ * @return array
+ */
 function bb_get_parent_group_ids( $group_id ) {
 	global $wpdb, $bp;
 
@@ -5271,6 +5294,16 @@ function bb_get_parent_group_ids( $group_id ) {
 	return $parent_groups;
 }
 
+/**
+ * Function to add child group members to the parent groups.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int   $group_id         Current group ids.
+ * @param array $parent_group_ids Array of int values for the parent groups.
+ *
+ * @return void
+ */
 function bb_groups_add_subgroup_members( $group_id, $parent_group_ids ) {
 	global $bb_background_updater;
 	if (
@@ -5294,6 +5327,16 @@ function bb_groups_add_subgroup_members( $group_id, $parent_group_ids ) {
 	}
 }
 
+/**
+ * Function to add child group members to the parent group.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $group_id  Group ID.
+ * @param int $parent_id Parent group id.
+ *
+ * @return void
+ */
 function bb_update_groups_members_background_process( $group_id, $parent_id ) {
 	global $wpdb, $bp, $bb_background_updater;
 
@@ -5313,6 +5356,7 @@ function bb_update_groups_members_background_process( $group_id, $parent_id ) {
 	$offset = ( ( $paged - 1 ) * $limit );
 
 	$sql = $wpdb->prepare(
+		// phpcs:ignore
 		"SELECT a.user_id FROM {$bp->groups->table_name_members} AS a LEFT JOIN {$bp->groups->table_name_members} AS b ON a.user_id = b.user_id AND b.group_id = %d WHERE a.group_id = %d AND b.user_id IS NULL ORDER BY a.user_id ASC LIMIT %d OFFSET %d;",
 		$parent_id,
 		$group_id,
