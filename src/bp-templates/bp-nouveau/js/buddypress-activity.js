@@ -1504,13 +1504,21 @@ window.bp = window.bp || {};
 
 								var scope = bp.Nouveau.getStorage( 'bp-activity', 'scope' );
 								var update_pinned_icon = false;
+								var is_group_activity  = false;
+								var activity_group_id  = '';
+
+								if ( target.closest( 'li.activity-item' ).hasClass('groups') ) {
+									is_group_activity = true;
+									activity_group_id = target.closest( 'li.activity-item' ).attr('class').match(/group-\d+/);
+									activity_group_id = activity_group_id[0].replace( 'group-', '' );
+								}
 								
 								if ( activity_stream.hasClass( 'single-user' ) ) {
 									update_pinned_icon = false;
 								} else if (  
 									activity_stream.hasClass( 'activity' ) && 
 									'all' === scope &&
-									! target.closest( 'li.activity-item' ).hasClass('groups')
+									! is_group_activity
 								) {
 									update_pinned_icon = true;
 								} else if (  activity_stream.hasClass( 'single-group' ) ) {
@@ -1525,11 +1533,17 @@ window.bp = window.bp || {};
 										activity_list.find( 'li.activity-item' ).removeClass( 'bb-pinned' );
 									}
 
-									activity_list.find( 'li.activity-item' ).each( function() {
+									var update_pin_actions = 'li.activity-item:not(.groups)';
+									if( is_group_activity && ! activity_stream.hasClass( 'single-group' ) ) {
+										update_pin_actions = 'li.activity-item.group-' + activity_group_id;
+									} else if( is_group_activity && activity_stream.hasClass( 'single-group' ) ) {
+										update_pin_actions = 'li.activity-item';
+									}
+									activity_list.find( update_pin_actions ).each( function() {
 										var action = $( this ).find( '.unpin-activity' );
 										action.removeClass( 'unpin-activity' ).addClass( 'pin-activity' );
 
-										if ( activity_stream.hasClass('single-group') ) {
+										if ( is_group_activity ) {
 											action.find('span').html( BP_Nouveau.activity.strings.pinGroupPost );
 										} else {
 											action.find('span').html( BP_Nouveau.activity.strings.pinPost );

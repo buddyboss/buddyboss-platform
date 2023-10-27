@@ -100,8 +100,6 @@ add_action( 'bp_actions', 'bb_group_subscriptions_handler' );
 // Filter group count.
 add_filter( 'bp_groups_get_where_count_conditions', 'bb_groups_count_update_where_sql', 10, 2 );
 
-add_action( 'bp_after_group_activity_content', 'bb_group_activity_pinpost_confirmation_modal_template' );
-
 // Remove from group forums and topics.
 add_action( 'groups_leave_group', 'bb_groups_unsubscribe_group_forums_topic', 10, 2 );
 

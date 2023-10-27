@@ -176,6 +176,8 @@ add_filter( 'bp_activity_content_before_save', 'bb_activity_content_has_paragrap
 
 add_action( 'bp_after_directory_activity_list', 'bb_activity_pinpost_confirmation_modal_template' );
 add_action( 'bp_after_member_activity_content', 'bb_activity_pinpost_confirmation_modal_template' );
+add_action( 'bp_after_group_activity_content', 'bb_activity_pinpost_confirmation_modal_template' );
+add_action( 'bp_after_single_activity_content', 'bb_activity_pinpost_confirmation_modal_template' );
 
 add_action( 'edit_post', 'bb_cpt_post_title_save', 999, 2 );
 

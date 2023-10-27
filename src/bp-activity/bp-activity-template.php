@@ -2743,6 +2743,10 @@ function bp_get_activity_css_class() {
 		$class .= ' bb-pinned';
 	}
 
+	if ( 'groups' === $activities_template->activity->component ) {
+		$class .= ' group-'. $activities_template->activity->item_id;
+	}
+
 	/**
 	 * Filters the determined classes to add to the HTML element.
 	 *
