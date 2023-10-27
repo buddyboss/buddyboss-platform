@@ -1768,54 +1768,56 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 			)
 		) ||
 		(
-			bp_current_user_can( 'administrator' ) &&
-			bp_is_activity_directory() &&
-			! empty( $GLOBALS['activities_template']->pinned_scope ) &&
-			'activity' === $GLOBALS['activities_template']->pinned_scope
+			( 
+				bp_is_activity_directory() || 
+				bp_is_user_activity()
+			) &&
+			(
+				bp_current_user_can( 'administrator' ) ||
+				(
+					'groups' == bp_get_activity_object_name() &&
+					bb_is_active_activity_pinned_posts() &&
+					(
+						groups_is_user_admin( bp_loggedin_user_id(), bp_get_activity_item_id() ) ||
+						groups_is_user_mod( bp_loggedin_user_id(), bp_get_activity_item_id() )
+					)
+				)
+			)
 		)
 	) {
 
 		// Remove for activities related to group for main activity screen.
-		if (
-			bp_is_group_activity() ||
-			(
-				bp_is_activity_directory() &&
-				'groups' !== bp_get_activity_object_name()
-			)
 
-		) {
+		$pinned_action_label = bp_is_group_activity() ? esc_html__( 'Pin to Group', 'buddyboss' ) : ( 'groups' == bp_get_activity_object_name() ? esc_html__( 'Pin to Group', 'buddyboss' ) : esc_html__( 'Pin to Feed', 'buddyboss' ) );
+		$pinned_action_class = 'pin-activity';
+		if ( ! empty( $GLOBALS['activities_template']->pinned_id ) ) {
+			$pinned_id = $GLOBALS['activities_template']->pinned_id;
 
-			$pinned_action_label = bp_is_group_activity() ? esc_html__( 'Pin to Group', 'buddyboss' ) : esc_html__( 'Pin to Feed', 'buddyboss' );
-			$pinned_action_class = 'pin-activity';
-			if ( ! empty( $GLOBALS['activities_template']->pinned_id ) ) {
-				$pinned_id = $GLOBALS['activities_template']->pinned_id;
-
-				if ( (int) $activity_id === (int) $pinned_id ) {
-					$pinned_action_label = bp_is_group_activity() ? esc_html__( 'Unpin from Group', 'buddyboss' ) : esc_html__( 'Unpin from Feed', 'buddyboss' );
-					$pinned_action_class = 'unpin-activity';
-				}
+			if ( (int) $activity_id === (int) $pinned_id ) {
+				$pinned_action_label = bp_is_group_activity() ? esc_html__( 'Unpin from Group', 'buddyboss' ) : ( 'groups' == bp_get_activity_object_name() ? esc_html__( 'Unpin from Group', 'buddyboss' ) : esc_html__( 'Unpin from Feed', 'buddyboss' ) );
+				$pinned_action_class = 'unpin-activity';
 			}
-
-			$buttons['activity_pin'] = array(
-				'id'                => 'activity_pin',
-				'component'         => 'activity',
-				'parent_element'    => $parent_element,
-				'parent_attr'       => $parent_attr,
-				'must_be_logged_in' => true,
-				'button_element'    => $button_element,
-				'button_attr'       => array(
-					'id'            => '',
-					'href'          => '',
-					'class'         => 'button item-button bp-secondary-action ' . $pinned_action_class,
-					'data-bp-nonce' => '',
-				),
-				'link_text'         => sprintf(
-					'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
-					$pinned_action_label,
-					$pinned_action_label
-				),
-			);
 		}
+
+		$buttons['activity_pin'] = array(
+			'id'                => 'activity_pin',
+			'component'         => 'activity',
+			'parent_element'    => $parent_element,
+			'parent_attr'       => $parent_attr,
+			'must_be_logged_in' => true,
+			'button_element'    => $button_element,
+			'button_attr'       => array(
+				'id'            => '',
+				'href'          => '',
+				'class'         => 'button item-button bp-secondary-action ' . $pinned_action_class,
+				'data-bp-nonce' => '',
+			),
+			'link_text'         => sprintf(
+				'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
+				$pinned_action_label,
+				$pinned_action_label
+			),
+		);
 	}
 
 	/**

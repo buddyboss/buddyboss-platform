@@ -1502,11 +1502,28 @@ window.bp = window.bp || {};
 
 							if ( response.success ) {
 
+								var scope = bp.Nouveau.getStorage( 'bp-activity', 'scope' );
+								var update_pinned_icon = false;
+								
+								if ( activity_stream.hasClass( 'single-user' ) ) {
+									update_pinned_icon = false;
+								} else if (  
+									activity_stream.hasClass( 'activity' ) && 
+									'all' === scope &&
+									! target.closest( 'li.activity-item' ).hasClass('groups')
+								) {
+									update_pinned_icon = true;
+								} else if (  activity_stream.hasClass( 'single-group' ) ) {
+									update_pinned_icon = true;
+								}
+
 								// Change the pinned class and label.
 								if ( 'pin' === pin_action ) {
 
 									// Remove class from all old pinned and update action labels and icons.
-									activity_list.find( 'li.activity-item' ).removeClass( 'bb-pinned' );
+									if ( update_pinned_icon ) {
+										activity_list.find( 'li.activity-item' ).removeClass( 'bb-pinned' );
+									}
 
 									activity_list.find( 'li.activity-item' ).each( function() {
 										var action = $( this ).find( '.unpin-activity' );
@@ -1519,11 +1536,14 @@ window.bp = window.bp || {};
 										}
 									});
 
-									target.closest( 'li.activity-item' ).addClass( 'bb-pinned' );
+									if ( update_pinned_icon ) {
+										target.closest( 'li.activity-item' ).addClass( 'bb-pinned' );
+									}
+									
 									target.addClass( 'unpin-activity' );
 									target.removeClass( 'pin-activity' );
 
-									if ( activity_stream.hasClass('single-group') ) {
+									if ( target.closest( 'li.activity-item' ).hasClass('groups') ) {
 										target.find('span').html( BP_Nouveau.activity.strings.unpinGroupPost );
 									} else {
 										target.find('span').html( BP_Nouveau.activity.strings.unpinPost );
@@ -1532,7 +1552,7 @@ window.bp = window.bp || {};
 									target.closest( 'li.activity-item' ).removeClass( 'bb-pinned' );
 									target.addClass( 'pin-activity' );
 									target.removeClass( 'unpin-activity' );
-									if ( activity_stream.hasClass('single-group') ) {
+									if ( target.closest( 'li.activity-item' ).hasClass('groups') ) {
 										target.find('span').html( BP_Nouveau.activity.strings.pinGroupPost );
 									} else {
 										target.find('span').html( BP_Nouveau.activity.strings.pinPost );
