@@ -5347,21 +5347,14 @@ function bb_update_groups_members_background_process( $group_id, $parent_id ) {
 		return;
 	}
 
-	$paged = groups_get_groupmeta( $parent_id, 'bb_update_groups_members_paged' );
-	if ( empty( $paged ) ) {
-		$paged = 1;
-	}
-
-	$limit  = (int) apply_filters( 'bb_limit_update_groups_members', 50 );
-	$offset = ( ( $paged - 1 ) * $limit );
+	$limit = (int) apply_filters( 'bb_limit_update_groups_members', 30 );
 
 	$sql = $wpdb->prepare(
 		// phpcs:ignore
-		"SELECT a.user_id FROM {$bp->groups->table_name_members} AS a LEFT JOIN {$bp->groups->table_name_members} AS b ON a.user_id = b.user_id AND b.group_id = %d WHERE a.group_id = %d AND b.user_id IS NULL ORDER BY a.user_id ASC LIMIT %d OFFSET %d;",
+		"SELECT gm1.user_id FROM {$bp->groups->table_name_members} AS gm1 LEFT JOIN {$bp->groups->table_name_members} AS gm2 ON gm1.user_id = gm2.user_id AND gm2.group_id = %d WHERE gm1.group_id = %d AND gm2.user_id IS NULL ORDER BY gm1.user_id ASC LIMIT %d;",
 		$parent_id,
 		$group_id,
-		$limit,
-		$offset
+		$limit
 	);
 
 	// phpcs:ignore
@@ -5372,15 +5365,12 @@ function bb_update_groups_members_background_process( $group_id, $parent_id ) {
 		true !== bp_enable_group_hierarchies() ||
 		true !== bp_enable_group_restrict_invites()
 	) {
-		groups_delete_groupmeta( $parent_id, 'bb_update_groups_members_paged' );
 		return;
 	}
 
 	foreach ( $members as $member ) {
 		groups_join_group( $parent_id, $member );
 	}
-
-	groups_update_groupmeta( $parent_id, 'bb_update_groups_members_paged', $paged + 1 );
 
 	// Background job to add child group members to the parent groups.
 	$bb_background_updater->push_to_queue(
