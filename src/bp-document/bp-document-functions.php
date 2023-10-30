@@ -2659,7 +2659,7 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 		// Add upload filters.
 		bb_document_add_upload_filters();
 
-		wp_delete_attachment_files( $attachment_document_id, $old_meta, '', $file_abs_path );
+		wp_delete_attachment_files( $attachment_document_id, $old_meta, array(), $file_abs_path );
 
 		// Remove upload filters.
 		bb_document_remove_upload_filters();
