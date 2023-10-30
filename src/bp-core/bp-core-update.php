@@ -475,7 +475,7 @@ function bp_version_updater() {
 			bb_update_to_2_4_50();
 		}
 
-		if ( $raw_db_version < 20701 ) {
+		if ( $raw_db_version < 20761 ) {
 			bb_update_to_2_4_60();
 		}
 
@@ -3374,12 +3374,11 @@ function bb_update_to_2_4_50() {
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-document' );
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-video' );
 	}
-
-	bp_update_option( '_bb_enable_activity_pinned_posts', 0 );
 }
 
 /**
  * Migrate a background job to new table for update the friends count when member suspend/un-suspend.
+ * For existing install disable pin post setting by default.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -3399,4 +3398,6 @@ function bb_update_to_2_4_60() {
 	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE `option_name` LIKE 'wp_1_bp_updater_batch_%' AND `option_value` LIKE '%bb_migrate_member_friends_count%'" );
 
 	bb_create_background_member_friends_count();
+
+	bp_update_option( '_bb_enable_activity_pinned_posts', 0 );
 }
