@@ -2374,10 +2374,11 @@ function bb_get_message_response_object( $message ) {
 						<p class="bb-video-duration"><?php bp_video_length(); ?></p>
 						<?php
 					}
-					$thumbnail_url = bb_video_get_thumb_url( bp_get_video_id(), bp_get_video_attachment_id(), 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
 
-					if ( empty( $thumbnail_url ) ) {
-						$thumbnail_url = bb_get_video_default_placeholder_image();
+					$poster_id     = bb_get_video_thumb_id( bp_get_video_attachment_id() );
+					$thumbnail_url = bb_get_video_default_placeholder_image();
+					if ( $poster_id ) {
+						$thumbnail_url = bb_video_get_thumb_url( bp_get_video_id(), $poster_id, 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
 					}
 					?>
 					<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap hide" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php bp_video_popup_thumb(); ?>" data-privacy="<?php bp_video_privacy(); ?>"  data-attachment-id="<?php bp_video_attachment_id(); ?>" href="#">
@@ -2387,7 +2388,6 @@ function bb_get_message_response_object( $message ) {
 					$video_html = ob_get_clean();
 					$video_html = str_replace( 'video-js', 'video-js single-activity-video', $video_html );
 					$video_html = str_replace( 'id="theatre-video', 'id="video', $video_html );
-
 				}
 
 				$reply['video'][] = array(

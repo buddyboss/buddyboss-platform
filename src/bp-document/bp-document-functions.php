@@ -2642,6 +2642,9 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 		}
 	}
 
+	// Delete symlink before renaming the main file.
+	bp_document_delete_symlinks( $document_id );
+
 	if ( ! @rename( $file_abs_path, $new_file_abs_path ) ) {
 		return __( 'File renaming error!', 'buddyboss' );
 	}
@@ -2651,6 +2654,19 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 		require_once ABSPATH . 'wp-admin/includes/file.php';
 		require_once ABSPATH . 'wp-admin/includes/media.php';
 	}
+
+	// Delete thumbnails after renaming.
+	$old_meta = wp_get_attachment_metadata( $attachment_document_id );
+	if ( ! empty( $old_meta['sizes'] ) ) {
+		// Add upload filters.
+		bb_document_add_upload_filters();
+
+		wp_delete_attachment_files( $attachment_document_id, $old_meta, array(), $file_abs_path );
+
+		// Remove upload filters.
+		bb_document_remove_upload_filters();
+	}
+
 	update_post_meta( $attachment_document_id, '_wp_attached_file', $new_file_rel_path );
 	wp_update_attachment_metadata( $attachment_document_id, wp_generate_attachment_metadata( $attachment_document_id, $new_file_abs_path ) );
 
@@ -3997,7 +4013,7 @@ function bp_document_delete_symlinks( $document ) {
 				}
 
 				// If rename the file then preview doesn't exist but symbolic is available in the folder. So, checked the file is not empty then remove it from symbolic.
-				if ( ! empty( $attachment_path ) ) {
+				if ( file_exists( $attachment_path ) ) {
 					@unlink( $attachment_path ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 				}
 			}
