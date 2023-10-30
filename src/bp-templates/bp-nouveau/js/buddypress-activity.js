@@ -320,6 +320,7 @@ window.bp = window.bp || {};
 				 * stream and eventually remove similar ids to avoid "double".
 				 */
 				var activities = $.parseHTML( this.heartbeat_data.newest );
+				var has_pinned = false;
 
 				$.each(
 					activities,
@@ -329,8 +330,18 @@ window.bp = window.bp || {};
 								$( '#' + $( activity ).prop( 'id' ) ).remove();
 							}
 						}
+
+						// Check if the activity is pinned by heartbeat.
+						if ( $( activity ).hasClass( 'bb-pinned' ) ) {
+							has_pinned = true;
+						}
 					}
 				);
+
+				// Remove other pinned activities.
+				if ( true === has_pinned ) {
+					$( event.delegateTarget ).find( '.activity-list' ).find( '.bb-pinned' ).removeClass( 'bb-pinned' );
+				}
 
 				// Now the stream is cleaned, prepend newest.
 				$( event.delegateTarget ).find( '.activity-list' ).prepend( this.heartbeat_data.newest ).find( 'li.activity-item' ).each( bp.Nouveau.hideSingleUrl ).trigger( 'bp_heartbeat_prepend', this.heartbeat_data );
