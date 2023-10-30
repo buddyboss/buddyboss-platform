@@ -6,7 +6,7 @@
  * @package BuddyBoss\Theme
  */
 
-$forum_id = bbp_topic_id();
+$forum_id = bbp_get_forum_id();
 if ( bbp_is_forum_category( $forum_id ) ) {
 
 	$tc_int      = bbp_get_forum_topic_count( $forum_id, false );
@@ -26,6 +26,7 @@ if ( bbp_is_forum_category( $forum_id ) ) {
 
 	?>
 
+	<br />
 	<div class="bp-feedback info">
 		<span class="bp-icon" aria-hidden="true"></span>
 		<p><?php echo $feedback_message; ?></p>
