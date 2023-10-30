@@ -340,7 +340,24 @@ window.bp = window.bp || {};
 
 				// Remove other pinned activities.
 				if ( true === has_pinned ) {
-					$( event.delegateTarget ).find( '.activity-list' ).find( '.bb-pinned' ).removeClass( 'bb-pinned' );
+
+					var old_pinned = $( event.delegateTarget ).find( '.activity-list' ).find( '.bb-pinned' );
+					old_pinned.each(function() {
+						var action = $( this ).find( '.unpin-activity' );
+						var is_group_activity = false;
+						
+						action.removeClass( 'unpin-activity' ).addClass( 'pin-activity' );
+						if ( $(this).hasClass('groups') ) {
+							is_group_activity = true;
+						}
+
+						if ( is_group_activity ) {
+							action.find('span').html( BP_Nouveau.activity.strings.pinGroupPost );
+						} else {
+							action.find('span').html( BP_Nouveau.activity.strings.pinPost );
+						}
+					});
+					old_pinned.removeClass( 'bb-pinned' );
 				}
 
 				// Now the stream is cleaned, prepend newest.
