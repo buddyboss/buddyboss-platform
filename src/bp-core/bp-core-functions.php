@@ -9019,9 +9019,9 @@ function bb_get_default_svg_avatar( $params ) {
 	}
 
 	if ( 'user' === $object ) {
-		$avatar_image_url = get_user_meta( $item_id, 'default-user-avatar-svg', true );
+		$avatar_image_url = get_user_meta( $item_id, 'default-user-avatar-png', true );
 	} else {
-		$avatar_image_url = groups_get_groupmeta( $item_id, 'default-group-avatar-svg', true );
+		$avatar_image_url = groups_get_groupmeta( $item_id, 'default-group-avatar-png', true );
 	}
 
 	if ( empty( $avatar_image_url ) ) {
@@ -9068,9 +9068,9 @@ function bb_generate_default_avatar( $args ) {
 	$item_name = ucfirst( $char1 ) . strtolower( $char2 );
 
 	if ( 'user' === $r['object'] ) {
-		$pallet = get_user_meta( $r['item_id'], 'default-user-avatar-svg-background-code', true );
+		$pallet = get_user_meta( $r['item_id'], 'default-user-avatar-png-background-code', true );
 	} else {
-		$pallet = groups_get_groupmeta( $r['item_id'], 'default-group-avatar-svg-background-code', true );
+		$pallet = groups_get_groupmeta( $r['item_id'], 'default-group-avatar-png-background-code', true );
 	}
 
 	if ( empty( $pallet ) ) {
@@ -9078,9 +9078,9 @@ function bb_generate_default_avatar( $args ) {
 		$pallet      = $all_pallets[ array_rand( $all_pallets ) ];
 
 		if ( 'user' === $r['object'] ) {
-			update_user_meta( $r['item_id'], 'default-user-avatar-svg-background-code', $pallet );
+			update_user_meta( $r['item_id'], 'default-user-avatar-png-background-code', $pallet );
 		} else {
-			groups_update_groupmeta( $r['item_id'], 'default-group-avatar-svg-background-code', $pallet );
+			groups_update_groupmeta( $r['item_id'], 'default-group-avatar-png-background-code', $pallet );
 		}
 	}
 
@@ -9092,33 +9092,113 @@ function bb_generate_default_avatar( $args ) {
 		$font_size   = str_replace( 'px', '', $body_fonts['font-size'] );
 	}
 
+	$font_family = ABSPATH . '/Verdana.ttf';
+
 	if ( 'user' === $r['object'] ) {
-		$svg = '<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-					<circle cx="100" cy="100" r="90" fill="' . $pallet . '" />
-					<text x="50%" y="50%" font-family="' . $font_family . '" font-size="' . $font_size . '" fill="#ffffff" text-anchor="middle" dominant-baseline="middle">
-							<tspan x="50%" dy="0" text-anchor="middle" dominant-baseline="middle">' . $item_name . '</tspan>
-					</text>
-				</svg>';
-		$svg_image = buddypress()->plugin_url . 'bp-core/images/bb-profile-avatar-legacy.jpg';
-		update_user_meta( $r['item_id'], 'default-user-avatar-svg', $svg_image );
+
+		$default_avatar = bb_generate_gd_avatar_by_name(
+			array(
+				'object'    => $r['object'],
+				'item_id'   => $r['item_id'],
+				'text'      => $item_name,
+				'bg_color'  => $pallet,
+				'font'      => $font_family,
+				'font_size' => $font_size,
+			)
+		);
+
+		update_user_meta( $r['item_id'], 'default-user-avatar-png', $default_avatar );
 	} else {
-		$svg = '<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="10" y="10" width="180" height="180" rx="20" ry="20" fill="' . $pallet . '" />
-                    <text x="50%" y="50%" font-family="' . $font_family . '" font-size="' . $font_size . '" fill="#ffffff" text-anchor="middle" dominant-baseline="middle">
-                        <tspan x="50%" dy="0" text-anchor="middle" dominant-baseline="middle">' . $item_name . '</tspan>
-                    </text>
-				</svg>';
-		$svg_image = buddypress()->plugin_url . 'bp-core/images/bb-group-avatar-legacy.jpg';
-		groups_update_groupmeta( $r['item_id'], 'default-group-avatar-svg', $svg_image );
+		$default_avatar = bb_generate_gd_avatar_by_name(
+			array(
+				'object'    => $r['object'],
+				'item_id'   => $r['item_id'],
+				'text'      => $item_name,
+				'bg_color'  => $pallet,
+				'font'      => $font_family,
+				'font_size' => $font_size,
+			)
+		);
+		groups_update_groupmeta( $r['item_id'], 'default-group-avatar-png', $default_avatar );
 	}
 
-	return $svg_image;
+	return $default_avatar;
+}
+
+function bb_generate_gd_avatar_by_name( $args ){
+	$r = bp_parse_args(
+		$args,
+		array(
+			'item_id'    => 0,
+			'object'     => '',
+			'text'       => '',
+			'width'      => 300,
+			'height'     => 300,
+			'font_size'  => 120,
+			'bg_color'   => '#008000',
+			'text_color' => '#FFFFFF',
+			'font'       => __DIR__ . '/Verdana.ttf',
+		)
+	);
+
+	if ( empty( $r['object'] ) || empty( $r['text'] ) || empty( $r['item_id'] ) ) {
+		return false;
+	}
+
+	// Generate filename.
+	$filename = $r['item_id'] . time() . '.png';
+
+	// Set upload directory and URL based on object.
+	$file_path = bp_core_avatar_upload_path() . '/group-avatars/default/' . $r['item_id'] . '/';
+	$file_url  = bp_core_get_upload_dir( 'url' ) . '/group-avatars/default/' . $r['item_id'] . '/' . $filename;
+	if ( 'user' === $r['object'] ) {
+		$file_path = bp_core_avatar_upload_path() . '/avatars/default/' . $r['item_id'] . '/';
+		$file_url  = bp_core_get_upload_dir( 'url' ) . '/avatars/default/' . $r['item_id'] . '/' . $filename;
+	}
+
+	// If folder not exists then create.
+	if ( ! is_dir( $file_path ) ) {
+
+		// Create temp folder.
+		wp_mkdir_p( $file_path );
+		chmod( $file_path, 0777 );
+	}
+
+	$r['font_size'] = (int) apply_filters( 'bb_gd_avatar_font_size', (int) $r['font_size'] );
+
+	$file     = $file_path . $filename;
+	$gd_image = imagecreatetruecolor( $r['width'], $r['height'] );
+
+	// Define the background color.
+	$filtered_bg_color = imagecolorallocate( $gd_image, hexdec( substr( $r['bg_color'], 1, 2 ) ), hexdec( substr( $r['bg_color'], 3, 2 ) ), hexdec( substr( $r['bg_color'], 5, 2 ) ) );
+	imagefill( $gd_image, 0, 0, $filtered_bg_color );
+
+	// Define the text color.
+	$text_color = imagecolorallocate( $gd_image, hexdec( substr( $r['text_color'], 1, 2 ) ), hexdec( substr( $r['text_color'], 3, 2 ) ), hexdec( substr( $r['text_color'], 5, 2 ) ) );
+
+	// Determine the size of the text so we can center it.
+	$box          = imagettfbbox( $r['font_size'], 0, $r['font'], $r['text'] );
+	$text_width   = abs( $box[2] ) - abs( $box[0] );
+	$text_height  = abs( $box[5] ) - abs( $box[3] );
+	$image_width  = imagesx( $gd_image );
+	$image_height = imagesy( $gd_image );
+	$x            = floor( ( $image_width - $text_width ) / 2 );
+	$y            = ceil( ( $image_height + $text_height ) / 2 );
+
+	// Add text.
+	imagettftext( $gd_image, $r['font_size'], 0, $x, $y, $text_color, $r['font'], $r['text'] );
+
+	// Output and destroy image.
+	imagepng( $gd_image, $file );
+	imagedestroy( $gd_image );
+
+	return $file_url;
 }
 
 function bb_delete_default_user_svg_avatar( $item_ids = array(), $is_delete_dir = true ) {
 	global $wpdb, $wp_filesystem;
 
-	$delete_query = $wpdb->prepare("DELETE FROM $wpdb->usermeta WHERE meta_key = %s", 'default-user-avatar-svg' );
+	$delete_query = $wpdb->prepare("DELETE FROM $wpdb->usermeta WHERE meta_key = %s", 'default-user-avatar-png' );
 	if ( ! empty( $item_ids ) ) {
 		$delete_query .= " AND user_id IN (" . implode( ',', $item_ids ) . ")";
 	}
@@ -9142,7 +9222,7 @@ function bb_delete_default_user_svg_avatar( $item_ids = array(), $is_delete_dir 
 function bb_delete_default_group_svg_avatar( $item_ids = array(), $is_delete_dir = true ) {
 	global $wpdb, $bp, $wp_filesystem;
 
-	$delete_query = $wpdb->prepare("DELETE FROM $bp->groups->table_name_groupmeta WHERE meta_key = %s", 'default-group-avatar-svg' );
+	$delete_query = $wpdb->prepare("DELETE FROM $bp->groups->table_name_groupmeta WHERE meta_key = %s", 'default-group-avatar-png' );
 	if ( ! empty( $item_ids ) ) {
 		$delete_query .= " AND group_id IN (" . implode( ',', $item_ids ) . ")";
 	}
