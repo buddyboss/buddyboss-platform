@@ -9137,12 +9137,12 @@ function bb_generate_default_png_avatar( $args ) {
 			'font_size'  => 120,
 			'bg_color'   => '#008000',
 			'text_color' => '#FFFFFF',
-			'font'       => __DIR__ . '/Verdana.ttf',
+			'font'       => function_exists( 'buddyboss_theme') ?  get_template_directory() . '/assets/fonts/SFUIText-Regular.ttf' : '',
 			'library'    => '',
 		)
 	);
 
-	if ( empty( $r['object'] ) || empty( $r['text'] ) || empty( $r['item_id'] ) ) {
+	if ( empty( $r['object'] ) || empty( $r['text'] ) || empty( $r['item_id'] ) || empty( $r['font'] ) ) {
 		return false;
 	}
 
