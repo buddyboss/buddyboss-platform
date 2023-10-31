@@ -40,8 +40,9 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 	 * Save options.
 	 */
 	public function settings_save() {
-		$group_avatar_type_before_saving = bb_get_default_group_avatar_type();
-		$group_cover_type_before_saving  = bb_get_default_group_cover_type();
+		$group_avatar_type_before_saving      = bb_get_default_group_avatar_type();
+		$group_cover_type_before_saving       = bb_get_default_group_cover_type();
+		$group_restrict_invites_before_saving = bp_enable_group_restrict_invites();
 
 		parent::settings_save();
 
@@ -80,6 +81,19 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 			}
 
 			bp_update_option( 'bp-default-group-cover-type', $group_cover_type_before_saving );
+		}
+
+		/**
+		 * Migrate the subgroups members if group restrict invites is enabled and member is not part of parent group.
+		 *
+		 * @since BuddyBoss 2.4.60
+		 */
+		if (
+			true === bp_enable_group_hierarchies() &&
+			empty( $group_restrict_invites_before_saving ) &&
+			true === (bool) bp_enable_group_restrict_invites()
+		) {
+			bb_groups_migrate_subgroup_member();
 		}
 	}
 

@@ -55,7 +55,10 @@ function bp_members_signup_sanitization() {
 
 	// Add the filters to each field.
 	foreach ( $fields as $filter ) {
-		add_filter( $filter, 'esc_html', 1 );
+		// Remove filter to support apostrophe in useremail.
+		if ( 'bp_get_signup_email_value' !== $filter ) {
+			add_filter( $filter, 'esc_html', 1 );
+		}
 		add_filter( $filter, 'wp_filter_kses', 2 );
 		add_filter( $filter, 'stripslashes', 3 );
 	}

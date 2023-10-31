@@ -25,13 +25,16 @@
 			<?php if ( bp_nouveau_activity_has_content() ) : ?>
 				<div class="activity-inner">
 					<?php
+					add_filter( 'bp_activity_allowed_tags', 'bb_network_search_allowed_tags' );
+					$content = preg_replace('/<p[^>]*>(.*?)<\/p>/is', "$1 ", bp_activity_filter_kses( bp_get_activity_content_body() ) );
 					echo bp_create_excerpt(
-						bp_get_activity_content_body(),
+						$content,
 						100,
 						array(
 							'ending' => '&hellip;'
 						)
 					);
+					remove_filter( 'bp_activity_allowed_tags', 'bb_network_search_allowed_tags' );
 					?>
 				</div>
 			<?php endif; ?>
