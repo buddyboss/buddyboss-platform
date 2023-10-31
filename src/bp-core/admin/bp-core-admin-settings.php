@@ -952,29 +952,6 @@ function bp_admin_setting_callback_default_group_avatar_type() {
 		?>
 	</p>
 	<input type="hidden" name="bb-is-available-image-library" value="<?php echo bb_is_available_image_library(); ?>">
-
-	<p class="description bp-default-group-avatar-group-name-description <?php echo ( 'group-name' !== bb_get_default_group_avatar_type() ) ? 'bp-hide' : ''; ?>">
-		<?php
-		echo sprintf(
-		/* translators: Profile text with link. */
-			__( 'Display name will show either single initial or double initial depending on your display name option in %s settings.', 'buddyboss' ),
-			sprintf(
-			/* translators: 1: Profile link, 2: Profile text. */
-				'<a href="%1$s#bp-display-name-format">%2$s</a>',
-				bp_get_admin_url(
-					add_query_arg(
-						array(
-							'page' => 'bp-settings',
-							'tab'  => 'bp-xprofile',
-						),
-						'admin.php'
-					)
-				),
-				__( 'Profile', 'buddyboss' )
-			)
-		);
-		?>
-	</p>
 	<?php
 }
 
