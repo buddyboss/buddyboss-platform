@@ -29,6 +29,7 @@ add_filter( 'bp_repair_list', 'bb_repair_member_profile_links', 12 );
 add_action( 'bb_assign_default_member_type_to_activate_user_on_admin', 'bb_set_default_member_type_to_activate_user_on_admin', 1, 2 );
 
 add_action( 'update_option_bp-display-name-format', 'bb_member_remove_default_png_avatar_on_update_display_name', 10, 3 );
+add_action( 'deleted_user', 'bb_member_remove_default_png_avatar_on_deleted_user' );
 
 /**
  * Load additional sign-up sanitization filters on bp_loaded.
@@ -984,4 +985,16 @@ function bb_member_remove_default_png_avatar_on_update_display_name( $old_value,
 		// Delete default SVG for users.
 		bb_delete_default_user_png_avatar();
 	}
+}
+
+/**
+ * Delete default PNG for member when delete the user.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_member_remove_default_png_avatar_on_deleted_user( $id ) {
+	// Delete default PNG for users.
+	bb_delete_default_user_png_avatar( array( $id ) );
 }
