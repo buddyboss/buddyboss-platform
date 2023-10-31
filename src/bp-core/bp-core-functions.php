@@ -9066,6 +9066,10 @@ function bb_generate_default_avatar( $args ) {
 		}
 	}
 
+	if ( empty( $r['item_name'] ) ) {
+		return false;
+	}
+
 	$char1 = $r['item_name'][0];
 	$char2 = '';
 	if ( 'user' === $r['object'] ) {
