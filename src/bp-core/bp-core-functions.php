@@ -6516,7 +6516,7 @@ function bb_attachments_get_default_profile_group_avatar_image( $params ) {
 
 				// Default Profile Avatar = Display Name.
 			} elseif ( 'display-name' === $default_profile_avatar_type ) {
-				$avatar_image_url = empty( $params['item_id'] ) ? buddypress()->plugin_url . 'bp-core/images/bb-profile-avatar-legacy.jpg' : bb_get_default_svg_avatar( $params );
+				$avatar_image_url = empty( $params['item_id'] ) ? buddypress()->plugin_url . 'bp-core/images/bb-profile-avatar-legacy.jpg' : bb_get_default_png_avatar( $params );
 
 				// Default Profile Avatar = Custom.
 			} elseif ( 'custom' === $default_profile_avatar_type ) {
@@ -6549,7 +6549,7 @@ function bb_attachments_get_default_profile_group_avatar_image( $params ) {
 		} elseif ( 'legacy' === $group_avatar_type ) {
 			$avatar_image_url = bb_get_legacy_group_avatar( $size );
 		} elseif ( 'group-name' === $group_avatar_type ) {
-			$avatar_image_url = empty( $params['item_id'] ) ? buddypress()->plugin_url . 'bp-core/images/bb-group-avatar-legacy.jpg' : bb_get_default_svg_avatar( $params );
+			$avatar_image_url = empty( $params['item_id'] ) ? buddypress()->plugin_url . 'bp-core/images/bb-group-avatar-legacy.jpg' : bb_get_default_png_avatar( $params );
 		} elseif ( 'custom' === $group_avatar_type ) {
 			$avatar_image_url = bb_get_default_custom_upload_group_avatar( bb_get_buddyboss_group_avatar( $size ), $size );
 		}
@@ -9018,7 +9018,7 @@ function bb_get_predefined_pallet() {
 	);
 }
 
-function bb_get_default_svg_avatar( $params ) {
+function bb_get_default_png_avatar( $params ) {
 	$object  = $params['object'] ?? 'user';
 	$item_id = $params['item_id'] ?? 0;
 
@@ -9286,7 +9286,7 @@ function bb_generate_imagick_default_avatar( $args ) {
 	return $file_url;
 }
 
-function bb_delete_default_user_svg_avatar( $item_ids = array(), $is_delete_dir = true ) {
+function bb_delete_default_user_png_avatar( $item_ids = array(), $is_delete_dir = true ) {
 	global $wpdb, $wp_filesystem;
 
 	$delete_query = $wpdb->prepare("DELETE FROM $wpdb->usermeta WHERE meta_key = %s", 'default-user-avatar-png' );
@@ -9310,7 +9310,7 @@ function bb_delete_default_user_svg_avatar( $item_ids = array(), $is_delete_dir 
 	}
 }
 
-function bb_delete_default_group_svg_avatar( $item_ids = array(), $is_delete_dir = true ) {
+function bb_delete_default_group_png_avatar( $item_ids = array(), $is_delete_dir = true ) {
 	global $wpdb, $bp, $wp_filesystem;
 
 	$delete_query = $wpdb->prepare("DELETE FROM $bp->groups->table_name_groupmeta WHERE meta_key = %s", 'default-group-avatar-png' );
