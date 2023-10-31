@@ -153,7 +153,7 @@ function bp_settings_action_general() {
 
 			// Both password fields were empty.
 		} elseif ( empty( $_POST['pass1'] ) && empty( $_POST['pass2'] ) ) {
-			$pass_error = false;
+			$pass_error = '';
 
 			// One of the password boxes was left empty.
 		} elseif ( ( empty( $_POST['pass1'] ) && ! empty( $_POST['pass2'] ) ) || ( ! empty( $_POST['pass1'] ) && empty( $_POST['pass2'] ) ) ) {
@@ -181,7 +181,7 @@ function bp_settings_action_general() {
 		// Restrict to send WordPress notification when change password from BuddyBoss.
 		add_filter( 'send_password_change_email', '__return_false' );
 
-		if ( ( false === $email_error ) && ( false === $pass_error ) && ( wp_update_user( $update_user ) ) ) {
+		if ( ( empty( $email_error ) ) && ( empty( $pass_error ) ) && ( wp_update_user( $update_user ) ) ) {
 			$bp->displayed_user->userdata = bp_core_get_core_userdata( bp_displayed_user_id() );
 		}
 
