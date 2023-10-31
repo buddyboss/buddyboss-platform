@@ -9146,7 +9146,7 @@ function bb_generate_gd_default_avatar( $args ){
 	}
 
 	// Generate filename.
-	$filename = $r['item_id'] . time() . '.png';
+	$filename = time() . $r['item_id'] . '.png';
 
 	// Set upload directory and URL based on object.
 	$file_path = bp_core_avatar_upload_path() . '/group-avatars/default/' . $r['item_id'] . '/';
