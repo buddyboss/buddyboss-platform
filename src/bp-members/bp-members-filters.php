@@ -971,7 +971,7 @@ function bb_generate_member_profile_links_on_update() {
 }
 
 /**
- * Delete default SVG for member and group when update the display name format.
+ * Delete default PNG for members when update the display name format.
  *
  * @since BuddyBoss [BBVERSION]
  *
