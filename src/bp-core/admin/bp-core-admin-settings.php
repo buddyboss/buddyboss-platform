@@ -3309,3 +3309,55 @@ function bb_admin_setting_callback_enable_activity_comment_edit() {
 
 	<?php
 }
+
+/**
+ * Reactions settings enable markups.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_reactions_settings_callback_reaction_types() {
+	?>
+	<p class="description"><?php esc_html_e( 'Which type of content should members be able to react to?', 'buddyboss' ); ?></p>
+
+	<br/>
+	<input name="bb_reaction_activity_posts"
+		id="bb_reaction_activity_posts"
+		type="checkbox"
+		value="1"
+		<?php checked( bb_is_reaction_activity_posts_enabled() ); ?>
+	/>
+	<label for="bb_reaction_activity_posts">
+		<?php esc_html_e( 'Activity posts', 'buddyboss' ); ?>
+	</label>
+
+	<br/><br/>
+	<input name="bb_reaction_activity_comments"
+		id="bb_reaction_activity_comments"
+		type="checkbox"
+		value="1"
+		<?php checked( bb_is_reaction_activity_comments_enabled() ); ?>
+	/>
+	<label for="bb_reaction_activity_comments">
+		<?php esc_html_e( 'Activity comments', 'buddyboss' ); ?>
+	</label>
+	<?php
+}
+
+/**
+ * Reaction mode markups.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_reactions_settings_callback_reaction_mode() {
+	?>
+	<input name="bb_reaction_mode"
+		id="bb_reaction_mode"
+		type="radio"
+		value="1"
+		<?php checked( bp_is_activity_like_active() ); ?>
+	/>
+	<label for="bb_reaction_mode">
+		<?php esc_html_e( 'Likes', 'buddyboss' ); ?>
+	</label>
+	<?php
+}

@@ -7863,6 +7863,9 @@ function bb_admin_icons( $id ) {
 		case 'bp_web_push_notification_settings':
 			$meta_icon = $bb_icon_bf . ' bb-icon-paste';
 			break;
+		case 'bp_reaction_settings_section':
+			$meta_icon = $bb_icon_bf . ' bb-icon-like';
+			break;
 		default:
 			$meta_icon = '';
 	}
@@ -8993,4 +8996,84 @@ function bb_load_reaction() {
 	if ( class_exists( 'BB_Reaction' ) ) {
 		return BB_Reaction::instance();
 	}
+}
+
+/**
+ * Get the Reactions settings sections.
+ *
+ * @return array
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_reactions_get_settings_sections() {
+
+	$settings = array(
+		'bp_reaction_settings_section'    => array(
+			'page'              => 'reaction',
+			'title'             => esc_html__( 'Reactions', 'buddyboss' ),
+			//'tutorial_callback' => '',
+		),
+	);
+
+	return (array) apply_filters( 'bb_reactions_get_settings_sections', $settings );
+}
+
+/**
+ * Get reaction settings fields by section.
+ *
+ * @param string $section_id Section ID.
+ *
+ * @return mixed False if section is invalid, array of fields otherwise.
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_reactions_get_settings_fields_for_section( $section_id = '' ) {
+
+	// Bail if section is empty.
+	if ( empty( $section_id ) ) {
+		return false;
+	}
+
+	$fields = bb_reactions_get_settings_fields();
+	$retval = isset( $fields[ $section_id ] ) ? $fields[ $section_id ] : false;
+
+	return (array) apply_filters( 'bb_reactions_get_settings_fields_for_section', $retval, $section_id );
+}
+
+/**
+ * Get all of the reactions settings fields.
+ *
+ * @return array
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_reactions_get_settings_fields() {
+
+	$fields = array();
+
+	if ( bp_is_active( 'activity' ) ) {
+		$fields['bp_reaction_settings_section'] = array(
+			'bb_reaction_activity_posts'  => array(
+				'title'             => esc_html__( 'Enable reactions', 'buddyboss' ),
+				'callback'          => 'bb_reactions_settings_callback_reaction_types',
+				'sanitize_callback' => 'absint',
+				'args'              => array(),
+			),
+
+			'bb_reaction_activity_comments'  => array(
+				'title'             => esc_html__( 'Activity Comments', 'buddyboss' ),
+				'callback'          => '__return_true',
+				'sanitize_callback' => 'absint',
+				'args'              => array(
+					'class' => 'hidden',
+				),
+			),
+
+			'bb_reaction_mode'  => array(
+				'title'             => esc_html__( 'Reactions Mode', 'buddyboss' ),
+				'callback'          => 'bb_reactions_settings_callback_reaction_mode',
+				'sanitize_callback' => 'absint',
+				'args'              => array(),
+			),
+		);
+	}
+
+	return (array) apply_filters( 'bb_reactions_get_settings_fields', $fields );
 }

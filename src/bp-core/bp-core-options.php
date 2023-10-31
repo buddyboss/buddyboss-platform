@@ -2409,3 +2409,29 @@ function bb_is_activity_comment_edit_enabled( $default = false ) {
 function bb_get_activity_comment_edit_time( $default = false ) {
 	return apply_filters( 'bb_get_activity_comment_edit_time', bp_get_option( '_bb_activity_comment_edit_time', $default ) );
 }
+
+/**
+ * Check whether Reaction for activity posts is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if reaction for activity posts is enabled, otherwise false.
+ */
+function bb_is_reaction_activity_posts_enabled( $default = true ) {
+	return (bool) apply_filters( 'bb_is_reaction_activity_posts_enabled', (bool) bp_get_option( 'bb_reaction_activity_posts', $default ) );
+}
+
+/**
+ * Check whether Reaction for activity comments is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: False.
+ * @return bool True if reaction for activity comments is enabled, otherwise false.
+ */
+function bb_is_reaction_activity_comments_enabled( $default = false ) {
+	return (bool) apply_filters( 'bb_is_reaction_activity_comments_enabled', (bool) bp_get_option( 'bb_reaction_activity_comments', $default ) );
+}
