@@ -612,6 +612,21 @@ function groups_leave_group( $group_id, $user_id = 0 ) {
 		return false;
 	}
 
+	// If group restrict invites is enabled and any member left parent group then also remove from all child groups.
+	if (
+		! empty( $group_id ) &&
+		true === bp_enable_group_hierarchies() &&
+		true === bp_enable_group_restrict_invites() ) {
+		$groups = bp_get_descendent_groups( $group_id, $user_id );
+		if ( ! empty( $groups ) ) {
+			foreach ( $groups as $group ) {
+				if ( $group->is_member ) {
+					groups_leave_group( $group->id, $user_id );
+				}
+			}
+		}
+	}
+
 	bp_core_add_message( __( 'You successfully left the group.', 'buddyboss' ) );
 
 	/**
@@ -4042,7 +4057,7 @@ function bp_group_type_short_code_add_body_class( $class ) {
 		 *This class commented because this class will add when buddypanel enable
 		 *and this condition already in the theme
 		 */
-		//$class[] = 'bb-buddypanel';
+		// $class[] = 'bb-buddypanel';
 	}
 	return $class;
 }
@@ -5229,4 +5244,233 @@ function bb_groups_settings_default_fallback( $setting_type, $val = '' ) {
 	 * @param string $val Value of group settings.
 	 */
 	return apply_filters( 'bp_group_' . $setting_type . '_status_fallback', $val );
+}
+
+/**
+ * Run migration for resolving the issue related to the groups.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_group_migration() {
+	$is_already_run = get_transient( 'bb_group_migration' );
+
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_group_migration', true, HOUR_IN_SECONDS );
+
+	// When 'group restrict invites' is on, remove subgroup members not in the parent group.
+	bb_groups_migrate_subgroup_member();
+}
+
+/**
+ * Migrate subgroup members.
+ * When 'group restrict invites' is on, remove subgroup members not in the parent group.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_groups_migrate_subgroup_member() {
+	global $bb_background_updater;
+	if (
+		true === bp_enable_group_hierarchies() &&
+		true === bp_enable_group_restrict_invites()
+	) {
+		// Background job for group membership table.
+		$bb_background_updater->push_to_queue(
+			array(
+				'type'     => 'migration',
+				'group'    => 'bb_groups_subgroup_membership',
+				'priority' => 5,
+				'callback' => 'bb_update_groups_subgroup_membership_background_process',
+				'args'     => array(),
+			)
+		);
+		$bb_background_updater->save()->dispatch();
+
+		// Background job for group invite table.
+		$bb_background_updater->push_to_queue(
+			array(
+				'type'     => 'migration',
+				'group'    => 'bb_groups_subgroup_invitation',
+				'priority' => 5,
+				'callback' => 'bb_update_groups_invitation_background_process',
+				'args'     => array(),
+			)
+		);
+		$bb_background_updater->save()->schedule_event();
+
+		// Background job for group membership table.
+		$bb_background_updater->push_to_queue(
+			array(
+				'type'     => 'migration',
+				'group'    => 'bb_groups_subgroup_membership',
+				'priority' => 5,
+				'callback' => 'bb_update_groups_subgroup_membership_background_process',
+				'args'     => array(),
+			)
+		);
+		$bb_background_updater->save()->schedule_event();
+
+		// Background job for group invite table.
+		$bb_background_updater->push_to_queue(
+			array(
+				'type'     => 'migration',
+				'group'    => 'bb_groups_subgroup_invitation',
+				'priority' => 5,
+				'callback' => 'bb_update_groups_invitation_background_process',
+				'args'     => array(),
+			)
+		);
+		$bb_background_updater->save()->schedule_event();
+
+		// Background job for group membership table.
+		$bb_background_updater->push_to_queue(
+			array(
+				'type'     => 'migration',
+				'group'    => 'bb_groups_subgroup_membership',
+				'priority' => 5,
+				'callback' => 'bb_update_groups_subgroup_membership_background_process',
+				'args'     => array(),
+			)
+		);
+		$bb_background_updater->save()->schedule_event();
+
+		// Background job for group invite table.
+		$bb_background_updater->push_to_queue(
+			array(
+				'type'     => 'migration',
+				'group'    => 'bb_groups_subgroup_invitation',
+				'priority' => 5,
+				'callback' => 'bb_update_groups_invitation_background_process',
+				'args'     => array(),
+			)
+		);
+		$bb_background_updater->save()->schedule_event();
+	}
+}
+
+/**
+ * Function to run subgroup membership removal within background process.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_groups_subgroup_membership_background_process() {
+	global $wpdb, $bp, $bb_background_updater;
+
+	$limit = (int) apply_filters( 'bb_limit_subgroup_membership_migration', 50 );
+
+	$sql = "SELECT gm.group_id, gm.user_id
+		FROM {$bp->groups->table_name_members} gm
+		INNER JOIN {$bp->groups->table_name} g ON gm.group_id = g.id
+		LEFT JOIN {$bp->groups->table_name_members} pgm ON pgm.group_id = g.parent_id AND pgm.user_id = gm.user_id
+		WHERE g.parent_id != 0 AND gm.is_admin = 0 AND gm.is_mod = 0 AND gm.is_confirmed = 1 AND pgm.group_id IS NULL
+		ORDER BY pgm.group_id, g.id LIMIT {$limit};";
+
+	// phpcs:ignore
+	$groups = $wpdb->get_results( $sql );
+
+	if (
+		empty( $groups ) ||
+		true !== bp_enable_group_hierarchies() ||
+		true !== bp_enable_group_restrict_invites()
+	) {
+		$table_name = $bb_background_updater::$table_name;
+		// Delete remaining background processes.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM {$table_name} WHERE `type` = %s AND `group` = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				'migration',
+				'bb_groups_subgroup_membership'
+			)
+		);
+
+		return;
+	}
+
+	// Remove members from subgroups.
+	foreach ( $groups as $group ) {
+		groups_leave_group( $group->group_id, $group->user_id );
+	}
+
+	$bb_background_updater->push_to_queue(
+		array(
+			'type'     => 'migration',
+			'group'    => 'bb_groups_subgroup_membership',
+			'priority' => 5,
+			'callback' => 'bb_update_groups_subgroup_membership_background_process',
+			'args'     => array(),
+		)
+	);
+
+	$bb_background_updater->save()->schedule_event();
+}
+
+
+/**
+ * Function to run group invites removal within background process.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_groups_invitation_background_process() {
+	global $wpdb, $bp, $bb_background_updater;
+	$limit = (int) apply_filters( 'bb_limit_subgroup_membership_migration', 50 );
+
+	$invites_table_name = BP_Invitation_Manager::get_table_name();
+
+	$sql = "SELECT i.user_id, i.item_id, i.type FROM {$invites_table_name} i
+			INNER JOIN {$bp->groups->table_name} g ON g.id = i.item_id
+			LEFT JOIN {$bp->groups->table_name_members} gm ON gm.group_id = g.parent_id AND gm.user_id = i.user_id
+			WHERE g.parent_id != 0 AND gm.group_id IS NULL
+			ORDER BY i.id LIMIT {$limit};";
+
+	// phpcs:ignore
+	$group_invitations = $wpdb->get_results( $sql );
+
+	if (
+		empty( $group_invitations ) ||
+		true !== bp_enable_group_hierarchies() ||
+		true !== bp_enable_group_restrict_invites()
+	) {
+		$table_name = $bb_background_updater::$table_name;
+		// Delete remaining background processes.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM {$table_name} WHERE `type` = %s AND `group` = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				'migration',
+				'bb_groups_subgroup_invitation'
+			)
+		);
+
+		return;
+	}
+
+	// Remove group invite where user is not a member of parent group.
+	foreach ( $group_invitations as $invitation ) {
+		if ( 'request' === $invitation->type ) {
+			groups_reject_membership_request( false, $invitation->user_id, $invitation->item_id );
+		} else {
+			groups_delete_invite( $invitation->user_id, $invitation->item_id );
+		}
+	}
+
+	$bb_background_updater->push_to_queue(
+		array(
+			'type'     => 'migration',
+			'group'    => 'bb_groups_subgroup_invitation',
+			'priority' => 5,
+			'callback' => 'bb_update_groups_invitation_background_process',
+			'args'     => array(),
+		)
+	);
+
+	$bb_background_updater->save()->schedule_event();
 }
