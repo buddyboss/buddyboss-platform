@@ -786,7 +786,7 @@ function bp_profile_photos_tutorial() {
 					add_query_arg(
 						array(
 							'page'    => 'bp-help',
-							'article' => 125202,
+							'article' => 72341,
 						),
 						'admin.php'
 					)
@@ -844,7 +844,7 @@ function bp_group_avatar_tutorial() {
 					add_query_arg(
 						array(
 							'page'    => 'bp-help',
-							'article' => 62811,
+							'article' => 125202,
 						),
 						'admin.php'
 					)
@@ -1800,9 +1800,10 @@ function bp_feed_settings_callback_post_type( $args ) {
  * @return void
  */
 function bb_feed_settings_callback_post_type_comments( $args ) {
-	$post_type     = $args['post_type'];
-	$option_name   = bb_post_type_feed_comment_option_name( $post_type );
-	$post_type_obj = get_post_type_object( $post_type );
+	$post_type              = $args['post_type'];
+	$option_name            = bb_post_type_feed_comment_option_name( $post_type );
+	$post_type_obj          = get_post_type_object( $post_type );
+	$is_cpt_comment_enabled = bb_activity_is_enabled_cpt_global_comment( $post_type );
 
 	if ( in_array( $post_type, bb_feed_not_allowed_comment_post_types(), true ) ) {
 		?>
@@ -1827,6 +1828,7 @@ function bb_feed_settings_callback_post_type_comments( $args ) {
 		type="checkbox"
 		value="1"
 		<?php checked( bb_is_post_type_feed_comment_enable( $post_type, false ) ); ?>
+		<?php disabled( $is_cpt_comment_enabled, false ); ?>
 	/>
 	<label for="<?php echo esc_attr( $option_name ); ?>">
 		<?php echo 'post' === $post_type ? esc_html__( 'Enable WordPress Post comments in the activity feed', 'buddyboss' ) : sprintf( esc_html__( 'Enable %s comments in the activity feed.', 'buddyboss' ), esc_html( $post_type_obj->labels->name ) ); ?>
