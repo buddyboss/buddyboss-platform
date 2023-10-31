@@ -1340,7 +1340,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			'attachment_id'         => ( isset( $document->attachment_id ) ? $document->attachment_id : 0 ),
 			'user_id'               => $document->user_id,
 			'title'                 => $document->title,
-			'description'           => '',
+			'description'           => ( ! empty( $document->description ) ? wp_specialchars_decode( $document->description, ENT_QUOTES ) : '' ),
 			'type'                  => ( empty( $document->attachment_id ) ? 'folder' : 'document' ),
 			'folder_id'             => $document->parent,
 			'group_id'              => $document->group_id,
@@ -1387,7 +1387,6 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $document->attachment_id ) ) {
-			$data['description']  = wp_specialchars_decode( get_post_field( 'post_content', $document->attachment_id ), ENT_QUOTES );
 			$data['download_url'] = bp_document_download_link( $document->attachment_id, $document->id );
 			$data['extension']    = bp_document_extension( $document->attachment_id );
 			$data['svg_icon']     = bp_document_svg_icon( $data['extension'], $document->attachment_id, 'svg' );
@@ -1995,6 +1994,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				'id'            => $id,
 				'attachment_id' => $wp_attachment_id,
 				'title'         => $title,
+				'description'   => wp_filter_nohtml_kses( $content ),
 				'activity_id'   => $document_activity_id,
 				'message_id'    => $message_id,
 				'folder_id'     => ( ! empty( $args['folder_id'] ) ? $args['folder_id'] : false ),
@@ -2020,7 +2020,8 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					update_post_meta( $wp_attachment_id, 'bp_document_activity_id', $document_activity_id );
 				}
 
-				// save document description while update.
+				// Added backward compatibility.
+				// Save document description while update.
 				if ( false !== $content ) {
 					$document_post['ID']           = $wp_attachment_id;
 					$document_post['post_content'] = wp_filter_nohtml_kses( $content );
@@ -2028,7 +2029,6 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				}
 
 				$created_document_ids[] = $document_id;
-
 			}
 
 			if ( ! empty( $all_documents ) ) {

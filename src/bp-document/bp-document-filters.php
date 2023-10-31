@@ -853,7 +853,6 @@ function bp_document_attach_document_to_message( &$message ) {
 					$document->save();
 
 					update_post_meta( $document->attachment_id, 'bp_document_saved', true );
-					update_post_meta( $document->attachment_id, 'bp_media_parent_message_id', $message->id );
 					update_post_meta( $document->attachment_id, 'thread_id', $message->thread_id );
 					bp_document_update_meta( $document_id, 'thread_id', $message->thread_id );
 				}
@@ -2183,8 +2182,6 @@ function bb_messages_document_save( $attachment ) {
 		$document_ids = bp_document_add_handler( $documents, 'message' );
 
 		if ( ! is_wp_error( $document_ids ) ) {
-			update_post_meta( $attachment->ID, 'bp_media_parent_message_id', 0 );
-
 			// Message not actually sent.
 			update_post_meta( $attachment->ID, 'bp_document_saved', 0 );
 
@@ -2207,3 +2204,20 @@ function bb_messages_document_save( $attachment ) {
 }
 
 add_action( 'bb_document_upload', 'bb_messages_document_save' );
+
+/**
+ * Added the content on top of document listing.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_document_directory_page_content() {
+
+	$page_ids = bp_core_get_directory_page_ids();
+
+	if ( ! empty( $page_ids['document'] ) ) {
+		$document_page_content = get_post_field( 'post_content', $page_ids['document'] );
+		echo apply_filters( 'the_content', $document_page_content ); // phpcs:ignore
+	}
+}
+
+add_action( 'bp_before_directory_document', 'bb_document_directory_page_content' );

@@ -6134,10 +6134,14 @@ function bp_activity_get_types_list() {
  * Activity migration.
  *
  * @since BuddyBoss 2.4.30
+ * @since BuddyBoss 2.4.50 Added support for the $raw_db_version and $current_db.
+ *
+ * @param int $raw_db_version Raw database version.
+ * @param int $current_db Current DB version.
  *
  * @return void
  */
-function bb_activity_migration() {
+function bb_activity_migration( $raw_db_version, $current_db ) {
 
 	/**
 	 * Like migration into reaction.
@@ -6148,8 +6152,18 @@ function bb_activity_migration() {
 		bb_load_reaction()->create_table();
 		bb_load_reaction()->bb_register_activity_like();
 
+		$is_already_run = get_transient( 'bb_migrate_activity_reaction' );
+
 		// Migration Like to Reaction.
-		if ( function_exists( 'bb_migrate_activity_like_reaction' ) ) {
+		if (
+			! $is_already_run &&
+			(
+				$raw_db_version < 20601 || // Reaction release version 2.4.30.
+				$raw_db_version < 20674 // Last release version 2.4.41.
+			) &&
+			$current_db >= 20674 // Current DB version 2.4.50.
+		) {
+			set_transient( 'bb_migrate_activity_reaction', true, HOUR_IN_SECONDS );
 			bb_migrate_activity_like_reaction();
 		}
 	}
@@ -6178,7 +6192,7 @@ function bb_migrate_activity_like_reaction( $paged = 1 ) {
 
 	$results = $wpdb->get_results(
 		$wpdb->prepare(
-			"SELECT * FROM {$bp->activity->table_name_meta} WHERE meta_key = 'bp_favorite_users' ORDER BY activity_id LIMIT %d offset %d",
+			"SELECT * FROM {$bp->activity->table_name_meta} WHERE meta_key = 'bp_favorite_users' ORDER BY activity_id ASC LIMIT %d offset %d",
 			$per_page,
 			$offset
 		)
@@ -6191,13 +6205,24 @@ function bb_migrate_activity_like_reaction( $paged = 1 ) {
 	$bb_background_updater->push_to_queue(
 		array(
 			'type'     => 'migration',
-			'group'    => 'bb_activity_like_reaction',
-			'priority' => 5,
-			'callback' => 'bb_activity_like_reaction_background_process',
+			'group'    => 'bb_activity_like_reaction_migration',
+			'priority' => 4,
+			'callback' => 'bb_activity_like_reaction_background_process_migration',
 			'args'     => array( $results, $paged, $reaction_id ),
 		)
 	);
 	$bb_background_updater->save()->schedule_event();
+
+	// Delete previous existing migration from background jobs table.
+	$table_name = $bb_background_updater::$table_name;
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$wpdb->query(
+		$wpdb->prepare(
+			"DELETE FROM {$table_name} WHERE `type` = %s AND `group` = %s ORDER BY id ASC limit 500", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			'migration',
+			'bb_activity_like_reaction'
+		)
+	);
 }
 
 /**
@@ -6211,7 +6236,7 @@ function bb_migrate_activity_like_reaction( $paged = 1 ) {
  *
  * @return void
  */
-function bb_activity_like_reaction_background_process( $results, $paged, $reaction_id ) {
+function bb_activity_like_reaction_background_process_migration( $results, $paged, $reaction_id ) {
 	global $wpdb, $bb_background_updater;
 
 	$user_reaction_table = bb_load_reaction()::$user_reaction_table;
@@ -6227,21 +6252,20 @@ function bb_activity_like_reaction_background_process( $results, $paged, $reacti
 			$implode_meta_value = implode( ',', wp_parse_id_list( $meta_value ) );
 			$data               = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT user_id FROM {$user_reaction_table}
-                        WHERE item_id = %d AND reaction_id = %d AND user_id IN ( {$implode_meta_value} )",
+					"SELECT user_id FROM {$user_reaction_table} WHERE item_id = %d AND reaction_id = %d AND user_id IN ( {$implode_meta_value} )",
 					$result->activity_id,
 					$reaction_id
 				),
 				ARRAY_A
 			);
 
-			// Extract the user_id values using array_column
+			// Extract the user_id values using array_column.
 			$user_ids = array_column( $data, 'user_id' );
 			if ( ! empty( $user_ids ) ) {
 				$meta_value = array_diff( $meta_value, $user_ids );
 			}
 
-			if ( ! empty( $meta_value) ) {
+			if ( ! empty( $meta_value ) ) {
 				$min_count = (int) apply_filters( 'bb_update_users_like_reaction', 20 );
 				if ( count( $meta_value ) > $min_count ) {
 					foreach ( array_chunk( $meta_value, $min_count ) as $chunk ) {
@@ -6249,7 +6273,7 @@ function bb_activity_like_reaction_background_process( $results, $paged, $reacti
 							array(
 								'type'     => 'migration',
 								'group'    => 'bb_update_users_like_reaction',
-								'priority' => 4,
+								'priority' => 3,
 								'callback' => 'bb_update_users_like_reaction',
 								'args'     => array( $chunk, $activity_id, $reaction_id ),
 							)
@@ -6362,4 +6386,51 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 			'privacy'          => $activity_comment->privacy,
 		)
 	);
+}
+
+/**
+ * Check CPT comment global settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $post_type custom post type.
+ *
+ * @return bool True if activity comments are enabled for CPT, otherwise false.
+ */
+function bb_activity_is_enabled_cpt_global_comment( $post_type ) {
+
+	switch ( $post_type ) {
+		case 'sfwd-courses':
+			$sfwd_courses_settings = bp_get_option( 'learndash_settings_courses_cpt', array() );
+			$supports_comments     = isset( $sfwd_courses_settings['supports'] ) && in_array( 'comments', $sfwd_courses_settings['supports'], true );
+			break;
+		case 'sfwd-lessons':
+			$sfwd_lesson_settings = bp_get_option( 'learndash_settings_lessons_cpt', array() );
+			$supports_comments    = isset( $sfwd_lesson_settings['supports'] ) && in_array( 'comments', $sfwd_lesson_settings['supports'], true );
+			break;
+		case 'sfwd-topic':
+			$sfwd_topic_settings = bp_get_option( 'learndash_settings_topics_cpt', array() );
+			$supports_comments   = isset( $sfwd_topic_settings['supports'] ) && in_array( 'comments', $sfwd_topic_settings['supports'], true );
+			break;
+		case 'sfwd-quiz':
+			$sfwd_quiz_settings = bp_get_option( 'learndash_settings_quizzes_cpt', array() );
+			$supports_comments  = isset( $sfwd_quiz_settings['supports'] ) && in_array( 'comments', $sfwd_quiz_settings['supports'], true );
+			break;
+		case 'groups':
+			$sfwd_group_settings = bp_get_option( 'learndash_settings_groups_cpt', array() );
+			$supports_comments   = isset( $sfwd_group_settings['supports'] ) && in_array( 'comments', $sfwd_group_settings['supports'], true );
+			break;
+		case 'sfwd-assignment':
+			$sfwd_assignment_settings = bp_get_option( 'learndash_settings_assignments_cpt', array() );
+			$supports_comments        = isset( $sfwd_assignment_settings['comment_status'] ) && 'yes' === $sfwd_assignment_settings['comment_status'];
+			break;
+		case 'lesson':
+			$tutor_lesson_settings = (array) maybe_unserialize( get_option( 'tutor_option' ) );
+			$supports_comments     = isset( $tutor_lesson_settings['enable_comment_for_lesson'] ) && 'on' === $tutor_lesson_settings['enable_comment_for_lesson'];
+			break;
+		default:
+			$supports_comments = true;
+	}
+
+	return apply_filters( 'bb_activity_is_enabled_cpt_global_comment', $supports_comments, $post_type );
 }
