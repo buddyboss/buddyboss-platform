@@ -512,6 +512,20 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 		</label>
 	</div>
 
+	<p class="bp-notice notice bp-default-profile-avatar-display-name-notice <?php echo ( 'display-name' !== bb_get_default_profile_avatar_type() || ! empty( bb_is_available_image_library() ) ) ? 'bp-hide' : ''; ?>">
+		<?php
+		echo sprintf(
+		/* translators: Imagick text with link. */
+			__( 'Your Server needs %s installed to enable initials avatar. Ask your web host.', 'buddyboss' ),
+			sprintf(
+				'<a href="https://github.com/ImageMagick/ImageMagick">%s</a>',
+				__( 'Imagick', 'buddyboss' )
+			)
+		);
+		?>
+	</p>
+	<input type="hidden" name="bb-is-available-image-library" value="<?php echo bb_is_available_image_library(); ?>">
+
 	<p class="description bp-default-profile-avatar-display-name-description <?php echo ( 'display-name' !== bb_get_default_profile_avatar_type() ) ? 'bp-hide' : ''; ?>">
 		<?php
 		echo sprintf(
