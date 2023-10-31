@@ -9051,7 +9051,10 @@ function bb_generate_default_avatar( $args ) {
 		)
 	);
 
-	if ( empty( $r['item_id'] ) || empty( $r['object'] ) ) {
+	// Check the image library is available or not.
+	$image_library = bb_is_available_image_library();
+
+	if ( empty( $r['item_id'] ) || empty( $r['object'] ) || empty( $image_library ) ) {
 		return false;
 	}
 
@@ -9104,8 +9107,7 @@ function bb_generate_default_avatar( $args ) {
 
 	$font_family = ABSPATH . '/Verdana.ttf';
 
-	if ( 'user' === $r['object'] ) {
-
+	if ( 'gd' === $image_library ) {
 		$default_avatar = bb_generate_gd_default_avatar(
 			array(
 				'object'    => $r['object'],
@@ -9116,19 +9118,22 @@ function bb_generate_default_avatar( $args ) {
 				'font_size' => $font_size,
 			)
 		);
+	} else {
+		$default_avatar = bb_generate_imagick_default_avatar(
+			array(
+				'object'    => $r['object'],
+				'item_id'   => $r['item_id'],
+				'text'      => $item_name,
+				'bg_color'  => $pallet,
+				'font'      => $font_family,
+				'font_size' => $font_size,
+			)
+		);
+	}
 
+	if ( 'user' === $r['object'] ) {
 		update_user_meta( $r['item_id'], 'default-user-avatar-png', $default_avatar );
 	} else {
-		$default_avatar = bb_generate_gd_default_avatar(
-			array(
-				'object'    => $r['object'],
-				'item_id'   => $r['item_id'],
-				'text'      => $item_name,
-				'bg_color'  => $pallet,
-				'font'      => $font_family,
-				'font_size' => $font_size,
-			)
-		);
 		groups_update_groupmeta( $r['item_id'], 'default-group-avatar-png', $default_avatar );
 	}
 
