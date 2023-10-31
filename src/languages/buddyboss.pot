@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.4.50\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-10-31 05:34:56+00:00\n"
+"POT-Creation-Date: 2023-10-31 05:37:34+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -425,8 +425,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1621
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1909
 #: bp-templates/bp-nouveau/includes/document/ajax.php:454
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1256
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1251
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1327
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1319
 #: bp-xprofile/bp-xprofile-admin.php:915
 #: bp-xprofile/bp-xprofile-repeaters.php:836
 #: bp-xprofile/bp-xprofile-repeaters.php:838
@@ -584,8 +584,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1394
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1461
 #: bp-templates/bp-nouveau/includes/document/ajax.php:464
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1266
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1261
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1337
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1329
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1519
 #: bp-xprofile/classes/class-bp-xprofile-group.php:981
 msgid "Cancel"
@@ -3138,20 +3138,20 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/media/ajax.php:132
 #: bp-templates/bp-nouveau/includes/media/ajax.php:228
 #: bp-templates/bp-nouveau/includes/media/ajax.php:346
-#: bp-templates/bp-nouveau/includes/media/ajax.php:476
-#: bp-templates/bp-nouveau/includes/media/ajax.php:591
-#: bp-templates/bp-nouveau/includes/media/ajax.php:715
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1347
+#: bp-templates/bp-nouveau/includes/media/ajax.php:547
+#: bp-templates/bp-nouveau/includes/media/ajax.php:662
+#: bp-templates/bp-nouveau/includes/media/ajax.php:786
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1418
 #: bp-templates/bp-nouveau/includes/video/ajax.php:155
 #: bp-templates/bp-nouveau/includes/video/ajax.php:325
 #: bp-templates/bp-nouveau/includes/video/ajax.php:441
-#: bp-templates/bp-nouveau/includes/video/ajax.php:568
-#: bp-templates/bp-nouveau/includes/video/ajax.php:673
-#: bp-templates/bp-nouveau/includes/video/ajax.php:778
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1354
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1428
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1530
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1600
+#: bp-templates/bp-nouveau/includes/video/ajax.php:636
+#: bp-templates/bp-nouveau/includes/video/ajax.php:741
+#: bp-templates/bp-nouveau/includes/video/ajax.php:846
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1422
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1496
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1598
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1668
 #: bp-templates/bp-nouveau/includes/xprofile/ajax.php:49
 msgid "There was a problem performing this action. Please try again."
 msgstr ""
@@ -11183,9 +11183,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/document/ajax.php:477
 #: bp-templates/bp-nouveau/includes/document/functions.php:102
 #: bp-templates/bp-nouveau/includes/document/functions.php:105
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1279
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1350
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2732
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1275
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1343
 msgid "Download"
 msgstr ""
 
@@ -25502,7 +25502,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:202
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:115
 #: bp-templates/bp-nouveau/includes/media/functions.php:185
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1476
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1544
 #: bp-templates/bp-nouveau/includes/video/functions.php:147
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:204
 #: bp-xprofile/classes/class-bp-xprofile-field-type-multiselectbox.php:208
@@ -28231,7 +28231,11 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1296
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1454
 #: bp-templates/bp-nouveau/includes/media/ajax.php:164
+#: bp-templates/bp-nouveau/includes/media/ajax.php:455
+#: bp-templates/bp-nouveau/includes/media/ajax.php:498
 #: bp-templates/bp-nouveau/includes/video/ajax.php:187
+#: bp-templates/bp-nouveau/includes/video/ajax.php:547
+#: bp-templates/bp-nouveau/includes/video/ajax.php:590
 msgid "Load More"
 msgstr ""
 
@@ -29930,15 +29934,15 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/document/ajax.php:257
 #: bp-templates/bp-nouveau/includes/document/ajax.php:336
 #: bp-templates/bp-nouveau/includes/document/ajax.php:506
-#: bp-templates/bp-nouveau/includes/media/ajax.php:789
-#: bp-templates/bp-nouveau/includes/media/ajax.php:868
-#: bp-templates/bp-nouveau/includes/media/ajax.php:911
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1138
+#: bp-templates/bp-nouveau/includes/media/ajax.php:860
+#: bp-templates/bp-nouveau/includes/media/ajax.php:939
+#: bp-templates/bp-nouveau/includes/media/ajax.php:982
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1209
 #: bp-templates/bp-nouveau/includes/video/ajax.php:282
-#: bp-templates/bp-nouveau/includes/video/ajax.php:847
-#: bp-templates/bp-nouveau/includes/video/ajax.php:956
-#: bp-templates/bp-nouveau/includes/video/ajax.php:999
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1188
+#: bp-templates/bp-nouveau/includes/video/ajax.php:915
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1024
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1067
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1256
 msgid "There was a problem displaying the content. Please try again."
 msgstr ""
 
@@ -30097,10 +30101,10 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1456
 #: bp-templates/bp-nouveau/includes/document/ajax.php:453
 #: bp-templates/bp-nouveau/includes/document/ajax.php:459
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1255
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1261
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1250
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1256
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1326
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1332
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1318
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1324
 msgid "Add a description"
 msgstr ""
 
@@ -30108,8 +30112,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1393
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1460
 #: bp-templates/bp-nouveau/includes/document/ajax.php:463
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1265
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1260
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1336
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1328
 msgid "Done Editing"
 msgstr ""
 
@@ -30237,9 +30241,9 @@ msgid "uploaded a document"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/document/ajax.php:519
-#: bp-templates/bp-nouveau/includes/media/ajax.php:886
+#: bp-templates/bp-nouveau/includes/media/ajax.php:957
 #: bp-templates/bp-nouveau/includes/video/ajax.php:300
-#: bp-templates/bp-nouveau/includes/video/ajax.php:974
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1042
 msgid "Please provide attachment id to delete."
 msgstr ""
 
@@ -30335,8 +30339,8 @@ msgid "You don't have permission to update this document privacy."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1563
-#: bp-templates/bp-nouveau/includes/media/ajax.php:646
-#: bp-templates/bp-nouveau/includes/video/ajax.php:720
+#: bp-templates/bp-nouveau/includes/media/ajax.php:717
+#: bp-templates/bp-nouveau/includes/video/ajax.php:788
 msgid "Invalid privacy status."
 msgstr ""
 
@@ -30893,10 +30897,13 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/functions.php:1000
 #: bp-templates/bp-nouveau/includes/functions.php:1020
+#: bp-templates/bp-nouveau/includes/media/ajax.php:463
+#: bp-templates/bp-nouveau/includes/media/ajax.php:506
 msgid "Sorry, no photos were found."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/functions.php:1004
+#: bp-templates/bp-nouveau/includes/media/ajax.php:463
 msgid "Sorry, no photos or videos were found."
 msgstr ""
 
@@ -31345,7 +31352,7 @@ msgid "widgets (content blocks)"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/ajax.php:260
-#: bp-templates/bp-nouveau/includes/media/ajax.php:499
+#: bp-templates/bp-nouveau/includes/media/ajax.php:570
 msgid "Please upload media before saving."
 msgstr ""
 
@@ -31357,74 +31364,78 @@ msgstr ""
 msgid "There was a problem deleting media."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:510
+#: bp-templates/bp-nouveau/includes/media/ajax.php:506
+msgid "Sorry, no photos & videos were found."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/media/ajax.php:581
 msgid "Please provide album to move media."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:527
+#: bp-templates/bp-nouveau/includes/media/ajax.php:598
 msgid "There was a problem when trying to move the media."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:614
-#: bp-templates/bp-nouveau/includes/video/ajax.php:696
+#: bp-templates/bp-nouveau/includes/media/ajax.php:685
+#: bp-templates/bp-nouveau/includes/video/ajax.php:764
 msgid "Please enter title of album."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:664
-#: bp-templates/bp-nouveau/includes/video/ajax.php:738
+#: bp-templates/bp-nouveau/includes/media/ajax.php:735
+#: bp-templates/bp-nouveau/includes/video/ajax.php:806
 msgid "There was a problem when trying to create the album."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:739
-#: bp-templates/bp-nouveau/includes/video/ajax.php:802
+#: bp-templates/bp-nouveau/includes/media/ajax.php:810
+#: bp-templates/bp-nouveau/includes/video/ajax.php:870
 msgid "Please provide ID of album to delete."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:748
-#: bp-templates/bp-nouveau/includes/video/ajax.php:811
+#: bp-templates/bp-nouveau/includes/media/ajax.php:819
+#: bp-templates/bp-nouveau/includes/video/ajax.php:879
 msgid "You do not have permission to delete this album."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:929
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1000
 msgid "Please provide media id to update."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:940
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1028
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1011
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1096
 msgid "Please provide privacy to update."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:949
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1037
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1020
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1105
 msgid "Privacy option is not valid."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:958
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1029
 msgid "You don't have a permission to update privacy."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:992
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1059
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1063
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1127
 msgid "There was a problem. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1010
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1021
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1077
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1088
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1081
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1092
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1145
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1156
 msgid "There was an error in updating a description. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1244
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1315
 msgid "uploaded an image"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1318
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1389
 msgid " Medias"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1381
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1389
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1452
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1460
 msgid "You don't have permission to move this media."
 msgstr ""
 
@@ -31818,7 +31829,7 @@ msgid "By creating an account you are agreeing to the %s."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/video/ajax.php:357
-#: bp-templates/bp-nouveau/includes/video/ajax.php:591
+#: bp-templates/bp-nouveau/includes/video/ajax.php:659
 msgid "Please upload video before saving."
 msgstr ""
 
@@ -31830,28 +31841,34 @@ msgstr ""
 msgid "There was a problem deleting video."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/ajax.php:602
+#: bp-templates/bp-nouveau/includes/video/ajax.php:555
+#: bp-templates/bp-nouveau/includes/video/ajax.php:598
+#: bp-templates/bp-nouveau/includes/video/functions.php:151
+msgid "Sorry, no videos were found"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/video/ajax.php:670
 msgid "Please provide album to move video."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/ajax.php:628
+#: bp-templates/bp-nouveau/includes/video/ajax.php:696
 msgid "There was a problem when trying to move the video."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1017
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1085
 msgid "Please provide video id to update."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1239
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1307
 msgid "uploaded an video"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1329
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1397
 msgid " Videos"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1388
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1396
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1456
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1464
 msgid "You don't have permission to move this video."
 msgstr ""
 
@@ -31884,10 +31901,6 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/video/functions.php:131
 msgid "You are allowed to upload only 1 thumb at a time."
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/video/functions.php:151
-msgid "Sorry, no videos were found"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/video/functions.php:156
