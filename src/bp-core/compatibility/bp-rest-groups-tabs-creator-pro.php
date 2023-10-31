@@ -34,7 +34,19 @@ if ( ! function_exists( 'bp_rest_group_tabs_creator_pro' ) ) {
 
 			if ( ! empty( $active_tabs ) ) {
 				foreach ( $active_tabs as $active_tab ) {
+
+					// if not active or no unique key, do not register.
+					if ( ! $active_tab->is_active || ! $active_tab->slug ) {
+						continue;
+					}
+
 					$current_group = bp_is_group() ? groups_get_current_group() : null;
+
+					// do not add tab if does not apply to this group.
+					if ( ! bpgtc_is_tab_available( $active_tab, $current_group ) ) {
+						continue;
+					}
+
 					if ( ! empty( $active_tab->link ) ) {
 						$link = trailingslashit( bpgtc_parse_group_tab_url( $active_tab->link ) );
 					} else {
@@ -111,8 +123,8 @@ if ( ! function_exists( 'array_msort' ) ) {
 			$i   = 0;
 			$arr = array();
 			foreach ( $ret as $k => $v ) {
-				$ret[ $i ] = (object) $v;
-				$arr[ $i ] = (object) $v;
+				$ret[ $i ] = $v;
+				$arr[ $i ] = $v;
 				$i ++;
 			}
 		}

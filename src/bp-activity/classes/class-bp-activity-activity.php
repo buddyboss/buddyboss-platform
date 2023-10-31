@@ -489,6 +489,10 @@ class BP_Activity_Activity {
 			$search_terms_like              = '%' . bp_esc_like( $r['search_terms'] ) . '%';
 			$where_conditions['search_sql'] = $wpdb->prepare( 'ExtractValue( a.content, "//text()" ) LIKE %s', $search_terms_like );
 
+			// Allow search CPT's post title in the activity feed.
+			$join_sql .= "LEFT JOIN {$bp->activity->table_name_meta} m ON ( m.activity_id = a.id )";
+			$where_conditions['search_sql'] .= $wpdb->prepare( ' OR m.meta_key = %s AND m.meta_value LIKE %s', 'post_title', $search_terms_like );
+
 			/**
 			 * Filters whether or not to include users for search parameters.
 			 *
