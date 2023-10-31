@@ -162,6 +162,8 @@ add_filter( 'bbp_get_topic_content', 'do_blocks', 9 );
 add_filter( 'bbp_get_topic_content', 'wpautop', 40 );
 add_filter( 'bbp_get_topic_content', 'bbp_remove_html_tags', 45 );
 add_filter( 'bbp_get_topic_content', 'bbp_rel_nofollow', 50 );
+add_filter( 'bbp_get_topic_content', 'bb_forums_hide_single_url', 999999, 1 );
+add_filter( 'bbp_get_reply_content', 'bb_forums_hide_single_url', 999999, 1 );
 
 // Form textarea output - undo the code-trick done pre-save, and sanitize
 add_filter( 'bbp_get_form_forum_content', 'bbp_code_trick_reverse' );
@@ -593,3 +595,46 @@ function bb_single_topic_no_replies_redirect_to_404( $template ) {
 }
 
 add_filter( 'template_include', 'bb_single_topic_no_replies_redirect_to_404' );
+
+/**
+ * Hides single URL from forum topic and reply content.
+ *
+ * @since 2.4.50
+ *
+ * @param string $content The forum topic or reply content.
+ *
+ * @return string
+ */
+function bb_forums_hide_single_url( $content ) {
+	if ( empty( $content ) ) {
+		return $content;
+	}
+
+	if ( strpos( $content, '<iframe' ) === false ) {
+		return $content;
+	}
+
+	if ( preg_match_all( '/<p[^>]*>.*?<\/p>/', $content, $matches ) && ! empty( $matches[0] ) ) {
+		$topic_content	= implode( '', $matches[0]  );	// Extract only post content. '$content' also contains author, edit and other details.
+		$raw_content	= preg_replace( array( '/<a[^>]*>/', '/<\/a>/', '/<p[^>]*>/', '/<\/p>/', '/<iframe[^>]*>.*?<\/iframe>/', '/\n/', '/\r/' ), array( '', '', '', '', '' ), $topic_content );
+		$content_length	= strlen( $raw_content );
+		$prefixes		= '/^(http\:\/\/|https\:\/\/|www\.)/';
+		$url			= '';
+
+		if ( preg_match( $prefixes, $raw_content ) ) {
+			for ( $i = 0; $i < $content_length; $i++ ) {
+				if ( in_array( $raw_content[ $i ], array( ' ', '\n', '\r' ) ) ) {
+					break;
+				} else {
+					$url .= $raw_content[ $i ];
+				}
+			}
+
+			if ( ! empty( $url ) && empty( trim( str_replace( $url, '', $raw_content ) ) ) ) {
+				$content	= preg_replace( '/^<p/', '<p style="display: none;"', $content, 1 );
+			}
+		}
+	}
+
+	return $content;
+}

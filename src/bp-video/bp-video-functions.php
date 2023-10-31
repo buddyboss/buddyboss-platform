@@ -604,6 +604,7 @@ function bp_video_add( $args = '' ) {
 			'attachment_id' => false,                   // attachment id.
 			'user_id'       => bp_loggedin_user_id(),   // user_id of the uploader.
 			'title'         => '',                      // title of video being added.
+			'description'   => '',                      // description of video being added.
 			'album_id'      => false,                   // Optional: ID of the album.
 			'group_id'      => false,                   // Optional: ID of the group.
 			'activity_id'   => false,                   // The ID of activity.
@@ -622,6 +623,7 @@ function bp_video_add( $args = '' ) {
 	$video->attachment_id = $r['attachment_id'];
 	$video->user_id       = (int) $r['user_id'];
 	$video->title         = $r['title'];
+	$video->description   = wp_filter_nohtml_kses( $r['description'] );
 	$video->album_id      = (int) $r['album_id'];
 	$video->group_id      = (int) $r['group_id'];
 	$video->activity_id   = (int) $r['activity_id'];
@@ -717,7 +719,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 							'album_id'      => ! empty( $video['album_id'] ) ? $video['album_id'] : $album_id,
 							'group_id'      => ! empty( $video['group_id'] ) ? $video['group_id'] : $group_id,
 							'activity_id'   => $bp_video->activity_id,
-							'message_id'    => $bp_video->message_id,
+							'message_id'    => ! empty( $bp_video->message_id ) ? $bp_video->message_id : $video['message_id'],
 							'privacy'       => $bp_video->privacy,
 							'menu_order'    => ! empty( $video['menu_order'] ) ? $video['menu_order'] : false,
 							'date_created'  => $bp_video->date_created,
@@ -732,6 +734,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 						'title'         => $video['name'],
 						'album_id'      => ! empty( $video['album_id'] ) ? $video['album_id'] : $album_id,
 						'group_id'      => ! empty( $video['group_id'] ) ? $video['group_id'] : $group_id,
+						'message_id'    => ! empty( $video['message_id'] ) ? $video['message_id'] : 0,
 						'menu_order'    => ! empty( $video['menu_order'] ) ? $video['menu_order'] : false,
 						'privacy'       => ! empty( $video['privacy'] ) && in_array( $video['privacy'], array_merge( array_keys( bp_video_get_visibility_levels() ), array( 'message' ) ), true ) ? $video['privacy'] : $privacy,
 					)
