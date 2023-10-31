@@ -439,6 +439,14 @@ class BP_Groups_Group {
 			bp_core_remove_temp_directory( $type_dir . 'groups/' . $this->id );
 		}
 
+		// Delete group default PNG avatars.
+		$upload_path = bp_core_avatar_upload_path();
+		if ( function_exists( 'system' ) ) {
+			system( 'rm -rf ' . escapeshellarg( $upload_path . '/group-avatars/default/' . $this->id ) );
+		} else {
+			bp_core_remove_temp_directory( $upload_path . '/group-avatars/default/' . $this->id );
+		}
+
 		return true;
 	}
 
