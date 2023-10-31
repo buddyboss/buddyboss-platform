@@ -9098,11 +9098,9 @@ function bb_generate_default_avatar( $args ) {
 	}
 
 	$font_family = 'Arial, sans-serif';
-	$font_size   = '36';
 	if ( function_exists( 'buddyboss_theme_get_option' ) && buddyboss_theme_get_option( 'custom_typography' ) ) {
 		$body_fonts  = buddyboss_theme_get_option( 'boss_body_font_family' );
 		$font_family = $body_fonts['font-family'];
-		$font_size   = str_replace( 'px', '', $body_fonts['font-size'] );
 	}
 
 	$font_family = ABSPATH . '/Verdana.ttf';
@@ -9115,7 +9113,6 @@ function bb_generate_default_avatar( $args ) {
 				'text'      => $item_name,
 				'bg_color'  => $pallet,
 				'font'      => $font_family,
-				'font_size' => $font_size,
 			)
 		);
 	} else {
@@ -9126,7 +9123,6 @@ function bb_generate_default_avatar( $args ) {
 				'text'      => $item_name,
 				'bg_color'  => $pallet,
 				'font'      => $font_family,
-				'font_size' => $font_size,
 			)
 		);
 	}
