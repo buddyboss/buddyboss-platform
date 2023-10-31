@@ -9105,27 +9105,16 @@ function bb_generate_default_avatar( $args ) {
 
 	$font_family = ABSPATH . '/Verdana.ttf';
 
-	if ( 'gd' === $image_library ) {
-		$default_avatar = bb_generate_gd_default_avatar(
-			array(
-				'object'    => $r['object'],
-				'item_id'   => $r['item_id'],
-				'text'      => $item_name,
-				'bg_color'  => $pallet,
-				'font'      => $font_family,
-			)
-		);
-	} else {
-		$default_avatar = bb_generate_imagick_default_avatar(
-			array(
-				'object'    => $r['object'],
-				'item_id'   => $r['item_id'],
-				'text'      => $item_name,
-				'bg_color'  => $pallet,
-				'font'      => $font_family,
-			)
-		);
-	}
+	$default_avatar = bb_generate_default_png_avatar(
+		array(
+			'object'   => $r['object'],
+			'item_id'  => $r['item_id'],
+			'text'     => $item_name,
+			'bg_color' => $pallet,
+			'font'     => $font_family,
+			'library'  => $image_library,
+		)
+	);
 
 	if ( 'user' === $r['object'] ) {
 		update_user_meta( $r['item_id'], 'default-user-avatar-png', $default_avatar );
@@ -9136,7 +9125,7 @@ function bb_generate_default_avatar( $args ) {
 	return $default_avatar;
 }
 
-function bb_generate_gd_default_avatar( $args ) {
+function bb_generate_default_png_avatar( $args ) {
 	$r = bp_parse_args(
 		$args,
 		array(
@@ -9149,6 +9138,7 @@ function bb_generate_gd_default_avatar( $args ) {
 			'bg_color'   => '#008000',
 			'text_color' => '#FFFFFF',
 			'font'       => __DIR__ . '/Verdana.ttf',
+			'library'    => '',
 		)
 	);
 
@@ -9175,113 +9165,69 @@ function bb_generate_gd_default_avatar( $args ) {
 		chmod( $file_path, 0777 );
 	}
 
-	$r['font_size'] = (int) apply_filters( 'bb_gd_avatar_font_size', (int) $r['font_size'] );
+	$r['font_size'] = (int) apply_filters( 'bb_gd_avatar_font_size', (int) $r['font_size'], $r );
 
-	$file     = $file_path . $filename;
-	$gd_image = imagecreatetruecolor( $r['width'], $r['height'] );
-
-	// Define the background color.
-	$filtered_bg_color = imagecolorallocate( $gd_image, hexdec( substr( $r['bg_color'], 1, 2 ) ), hexdec( substr( $r['bg_color'], 3, 2 ) ), hexdec( substr( $r['bg_color'], 5, 2 ) ) );
-	imagefill( $gd_image, 0, 0, $filtered_bg_color );
-
-	// Define the text color.
-	$text_color = imagecolorallocate( $gd_image, hexdec( substr( $r['text_color'], 1, 2 ) ), hexdec( substr( $r['text_color'], 3, 2 ) ), hexdec( substr( $r['text_color'], 5, 2 ) ) );
-
-	// Determine the size of the text so we can center it.
-	$box          = imagettfbbox( $r['font_size'], 0, $r['font'], $r['text'] );
-	$text_width   = abs( $box[2] ) - abs( $box[0] );
-	$text_height  = abs( $box[5] ) - abs( $box[3] );
-	$image_width  = imagesx( $gd_image );
-	$image_height = imagesy( $gd_image );
-	$x            = floor( ( $image_width - $text_width ) / 2 );
-	$y            = ceil( ( $image_height + $text_height ) / 2 );
-
-	// Add text.
-	imagettftext( $gd_image, $r['font_size'], 0, $x, $y, $text_color, $r['font'], $r['text'] );
-
-	// Output and destroy image.
-	imagepng( $gd_image, $file );
-	imagedestroy( $gd_image );
-
-	return $file_url;
-}
-
-function bb_generate_imagick_default_avatar( $args ) {
-	$r = bp_parse_args(
-		$args,
-		array(
-			'item_id'    => 0,
-			'object'     => '',
-			'text'       => '',
-			'width'      => 300,
-			'height'     => 300,
-			'font_size'  => 120,
-			'bg_color'   => '#008000',
-			'text_color' => '#FFFFFF',
-			'font'       => __DIR__ . '/Verdana.ttf',
-		)
-	);
-
-	if ( empty( $r['object'] ) || empty( $r['text'] ) || empty( $r['item_id'] ) ) {
-		return false;
-	}
-
-	// Generate filename.
-	$filename = time() . $r['item_id'] . '.png';
-
-	// Set upload directory and URL based on object.
-	$file_path = bp_core_avatar_upload_path() . '/group-avatars/default/' . $r['item_id'] . '/';
-	$file_url  = bp_core_get_upload_dir( 'url' ) . '/group-avatars/default/' . $r['item_id'] . '/' . $filename;
-	if ( 'user' === $r['object'] ) {
-		$file_path = bp_core_avatar_upload_path() . '/avatars/default/' . $r['item_id'] . '/';
-		$file_url  = bp_core_get_upload_dir( 'url' ) . '/avatars/default/' . $r['item_id'] . '/' . $filename;
-	}
-
-	// If folder not exists then create.
-	if ( ! is_dir( $file_path ) ) {
-
-		// Create temp folder.
-		wp_mkdir_p( $file_path );
-		chmod( $file_path, 0777 );
-	}
-
-	$r['font_size'] = (int) apply_filters( 'bb_gd_avatar_font_size', (int) $r['font_size'] );
-
-	// File with full path.
 	$file = $file_path . $filename;
 
-	// Given a basic image.
-	$image = new Imagick();
-	$image->newImage( $r['width'], $r['height'], new ImagickPixel( $r['bg_color'] ) );
+	if ( 'gd' === $r['library'] ) {
+		$gd_image = imagecreatetruecolor( $r['width'], $r['height'] );
 
-	// Let's define a ROI rectangle.
-	$rect = array(
-		'x' => 0,
-		'y' => 0,
-		'h' => $r['height'],
-		'w' => $r['width'],
-	);
+		// Define the background color.
+		$filtered_bg_color = imagecolorallocate( $gd_image, hexdec( substr( $r['bg_color'], 1, 2 ) ), hexdec( substr( $r['bg_color'], 3, 2 ) ), hexdec( substr( $r['bg_color'], 5, 2 ) ) );
+		imagefill( $gd_image, 0, 0, $filtered_bg_color );
 
-	// Define your text-rendering context.
-	$ctx = new ImagickDraw();
-	$ctx->setFillColor( new ImagickPixel( $r['text_color'] ) );
-	$ctx->setFont( $r['font'] ); // Set the font family
-	$ctx->setFontSize( $r['font_size'] );
+		// Define the text color.
+		$text_color = imagecolorallocate( $gd_image, hexdec( substr( $r['text_color'], 1, 2 ) ), hexdec( substr( $r['text_color'], 3, 2 ) ), hexdec( substr( $r['text_color'], 5, 2 ) ) );
 
-	// Query who it will render with the image stack.
-	$metrics = $image->queryFontMetrics( $ctx, $r['text'] );
+		// Determine the size of the text so we can center it.
+		$box          = imagettfbbox( $r['font_size'], 0, $r['font'], $r['text'] );
+		$text_width   = abs( $box[2] ) - abs( $box[0] );
+		$text_height  = abs( $box[5] ) - abs( $box[3] );
+		$image_width  = imagesx( $gd_image );
+		$image_height = imagesy( $gd_image );
+		$x            = floor( ( $image_width - $text_width ) / 2 );
+		$y            = ceil( ( $image_height + $text_height ) / 2 );
 
-	// Adjust starting x,y as needed to meet your requirements.
-	$offset = array(
-		'x' => $rect['x'] + $rect['w'] / 2 - $metrics['textWidth'] / 2,
-		'y' => $rect['y'] + $rect['h'] / 2 + $metrics['textHeight'] / 2 + $metrics['descender'],
-	);
+		// Add text.
+		imagettftext( $gd_image, $r['font_size'], 0, $x, $y, $text_color, $r['font'], $r['text'] );
 
-	// Draw text.
-	$image->annotateImage( $ctx, $offset['x'], $offset['y'], 0, $r['text'] );
+		// Output and destroy image.
+		imagepng( $gd_image, $file );
+		imagedestroy( $gd_image );
+	} else {
+		// Given a basic image.
+		$image = new Imagick();
+		$image->newImage( $r['width'], $r['height'], new ImagickPixel( $r['bg_color'] ) );
 
-	// Write to disk.
-	$image->writeImage( $file );
+		// Let's define a ROI rectangle.
+		$rect = array(
+			'x' => 0,
+			'y' => 0,
+			'h' => $r['height'],
+			'w' => $r['width'],
+		);
+
+		// Define your text-rendering context.
+		$ctx = new ImagickDraw();
+		$ctx->setFillColor( new ImagickPixel( $r['text_color'] ) );
+		$ctx->setFont( $r['font'] ); // Set the font family
+		$ctx->setFontSize( $r['font_size'] );
+
+		// Query who it will render with the image stack.
+		$metrics = $image->queryFontMetrics( $ctx, $r['text'] );
+
+		// Adjust starting x,y as needed to meet your requirements.
+		$offset = array(
+			'x' => $rect['x'] + $rect['w'] / 2 - $metrics['textWidth'] / 2,
+			'y' => $rect['y'] + $rect['h'] / 2 + $metrics['textHeight'] / 2 + $metrics['descender'],
+		);
+
+		// Draw text.
+		$image->annotateImage( $ctx, $offset['x'], $offset['y'], 0, $r['text'] );
+
+		// Write to disk.
+		$image->writeImage( $file );
+	}
 
 	return $file_url;
 }
