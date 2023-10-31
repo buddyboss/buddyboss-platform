@@ -6393,7 +6393,7 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 /**
  * Check CPT comment global settings.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.60
  *
  * @param bool $post_type custom post type.
  *
@@ -6440,7 +6440,7 @@ function bb_activity_is_enabled_cpt_global_comment( $post_type ) {
 /**
  * Pin or unpin activity or group feed post.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.60
  *
  * @param array $args Arguments related to pin/unpin activity or group feed post.
  *
@@ -6487,7 +6487,7 @@ function bb_activity_pin_unpin_post( $args = array() ) {
 		/**
 		 * Fires after activity pin/unpin post.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.60
 		 *
 		 * @param int    $activity_id Activity ID.
 		 * @param string $action      Action type pin/unpin.
@@ -6510,7 +6510,7 @@ function bb_activity_pin_unpin_post( $args = array() ) {
 /**
  * Fetch the pin type based on the screen its activity/group.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.60
  *
  * @param array $args Array of Arguments.
  *

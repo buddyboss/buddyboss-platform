@@ -2208,7 +2208,7 @@ add_action( 'bb_document_upload', 'bb_messages_document_save' );
 /**
  * Added the content on top of document listing.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.60
  */
 function bb_document_directory_page_content() {
 

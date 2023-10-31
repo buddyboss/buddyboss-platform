@@ -3595,7 +3595,7 @@ function bb_moderation_remove_mention_count( $num_links, $url, $comment ) {
  * Function to add post title in activity meta for the post, and other CPTS.
  * It will help to search CPT in the feed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.60
  *
  * @param int    $post_id post id of the topic or reply.
  * @param object $post Post data.
@@ -3623,7 +3623,7 @@ function bb_cpt_post_title_save( $post_id, $post ) {
 /**
  * Add Pin Post confirmation to the activity loop.
  *
- * @since [BBVERSION]
+ * @since 2.4.60
  */
 function bb_activity_pinpost_confirmation_modal_template() {
 	bp_get_template_part( 'activity/confirmation-modal' );

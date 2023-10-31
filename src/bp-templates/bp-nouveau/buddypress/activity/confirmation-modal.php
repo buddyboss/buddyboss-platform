@@ -4,7 +4,7 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/document/confirmation-modal.php.
  *
- * @since   [BBVERSION]
+ * @since   2.4.60
  * @package BuddyBoss\Core
  */
 
