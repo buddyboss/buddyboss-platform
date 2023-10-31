@@ -982,9 +982,6 @@ function bb_member_remove_default_svg_on_update_display_name( $old_value, $value
 		$old_value !== $value
 	) {
 		// Delete default SVG for users.
-		bb_delete_default_user_png_avatar( array(), false );
-
-		// Delete default SVG for groups.
-		bb_delete_default_group_png_avatar( array(), false );
+		bb_delete_default_user_png_avatar();
 	}
 }
