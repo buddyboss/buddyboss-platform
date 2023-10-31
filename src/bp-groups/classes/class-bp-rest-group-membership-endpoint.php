@@ -698,6 +698,25 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		// If group restrict invites is enabled and any member left parent group then also remove from all child groups.
+		if (
+			! empty( $request['group_id'] ) &&
+			! empty( $request['user_id'] ) &&
+			function_exists( 'bp_enable_group_hierarchies' ) &&
+			function_exists( 'bp_enable_group_restrict_invites' ) &&
+			true === bp_enable_group_hierarchies() &&
+			true === bp_enable_group_restrict_invites()
+		) {
+			$groups = bp_get_descendent_groups( $request['group_id'], $request['user_id'] );
+			if ( ! empty( $groups ) && function_exists( 'groups_leave_group' ) ) {
+				foreach ( $groups as $group ) {
+					if ( $group->is_member ) {
+						groups_leave_group( $group->id, $request['user_id'] );
+					}
+				}
+			}
+		}
+
 		/**
 		 * Fires after a group member has been removed.
 		 *
