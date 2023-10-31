@@ -9125,7 +9125,7 @@ function bb_generate_default_avatar( $args ) {
 	return $default_avatar;
 }
 
-function bb_generate_gd_default_avatar( $args ){
+function bb_generate_gd_default_avatar( $args ) {
 	$r = bp_parse_args(
 		$args,
 		array(
