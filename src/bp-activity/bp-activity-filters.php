@@ -173,6 +173,11 @@ add_filter( 'comment_max_links_url', 'bb_moderation_remove_mention_count', 10, 3
 
 add_action( 'edit_post', 'bb_cpt_post_title_save', 999, 2 );
 
+add_action( 'bp_after_directory_activity_list', 'bb_activity_pinpost_confirmation_modal_template' );
+add_action( 'bp_after_member_activity_content', 'bb_activity_pinpost_confirmation_modal_template' );
+add_action( 'bp_after_group_activity_content', 'bb_activity_pinpost_confirmation_modal_template' );
+add_action( 'bp_after_single_activity_content', 'bb_activity_pinpost_confirmation_modal_template' );
+
 /** Functions *****************************************************************/
 
 /**
@@ -3613,4 +3618,13 @@ function bb_cpt_post_title_save( $post_id, $post ) {
 	}
 
 	bp_activity_update_meta( $activity_id, 'post_title', $post->post_title );
+}
+
+/**
+ * Add Pin Post confirmation to the activity loop.
+ *
+ * @since [BBVERSION]
+ */
+function bb_activity_pinpost_confirmation_modal_template() {
+	bp_get_template_part( 'activity/confirmation-modal' );
 }
