@@ -939,6 +939,20 @@ function bp_admin_setting_callback_default_group_avatar_type() {
 		</label>
 	</div>
 
+	<p class="bp-notice notice bp-default-group-avatar-group-name-notice <?php echo ( 'group-name' !== bb_get_default_group_avatar_type() || ! empty( bb_is_available_image_library() ) ) ? 'bp-hide' : ''; ?>">
+		<?php
+		echo sprintf(
+		/* translators: Imagick text with link. */
+			__( 'Your Server needs %s installed to enable initials avatar. Ask your web host.', 'buddyboss' ),
+			sprintf(
+				'<a href="https://github.com/ImageMagick/ImageMagick">%s</a>',
+				__( 'Imagick', 'buddyboss' )
+			)
+		);
+		?>
+	</p>
+	<input type="hidden" name="bb-is-available-image-library" value="<?php echo bb_is_available_image_library(); ?>">
+
 	<p class="description bp-default-group-avatar-group-name-description <?php echo ( 'group-name' !== bb_get_default_group_avatar_type() ) ? 'bp-hide' : ''; ?>">
 		<?php
 		echo sprintf(

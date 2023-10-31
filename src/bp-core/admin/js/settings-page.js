@@ -1716,10 +1716,16 @@ window.bp = window.bp || {};
 							groupAvatarURL = $( '.' + this.value + '-group-avatar' ).prop( 'src' );
 						}
 
+						var group_is_available_image_library = $( 'input[name="bb-is-available-image-library"]' ).val();
 						if ( 'group-name' === this.value ) {
 							$( '.bp-default-group-avatar-group-name-description' ).removeClass( 'bp-hide' );
+
+							if ( 0 === group_is_available_image_library.length ) {
+								$( '.bp-default-group-avatar-group-name-notice' ).removeClass( 'bp-hide' );
+							}
 						} else {
 							$( '.bp-default-group-avatar-group-name-description' ).addClass( 'bp-hide' );
+							$( '.bp-default-group-avatar-group-name-notice' ).addClass( 'bp-hide' );
 						}
 
 						if ( typeof groupAvatarURL.length !== 'undefined' && 0 < groupAvatarURL.length ) {

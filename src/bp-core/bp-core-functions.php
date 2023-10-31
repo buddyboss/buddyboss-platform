@@ -9001,6 +9001,16 @@ function bb_load_reaction() {
 	}
 }
 
+function bb_is_available_image_library() {
+	if ( extension_loaded( 'gd' ) ) {
+		return 'gd';
+	} elseif ( class_exists( 'Imagick' ) ) {
+		return 'imagick';
+	}
+
+	return false;
+}
+
 function bb_get_predefined_pallet() {
 	return apply_filters(
 		'bb_get_predefined_pallet',
