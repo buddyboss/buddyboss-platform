@@ -3315,7 +3315,7 @@ function bb_admin_setting_callback_enable_activity_comment_edit() {
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_reactions_settings_callback_reaction_types() {
+function bb_reactions_settings_callback_reaction_on_activity() {
 	?>
 	<p class="description"><?php esc_html_e( 'Which type of content should members be able to react to?', 'buddyboss' ); ?></p>
 

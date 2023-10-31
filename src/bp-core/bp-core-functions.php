@@ -9052,7 +9052,7 @@ function bb_reactions_get_settings_fields() {
 		$fields['bp_reaction_settings_section'] = array(
 			'bb_reaction_activity_posts'  => array(
 				'title'             => esc_html__( 'Enable reactions', 'buddyboss' ),
-				'callback'          => 'bb_reactions_settings_callback_reaction_types',
+				'callback'          => 'bb_reactions_settings_callback_reaction_on_activity',
 				'sanitize_callback' => 'absint',
 				'args'              => array(),
 			),
