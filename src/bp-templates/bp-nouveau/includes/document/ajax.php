@@ -354,7 +354,7 @@ function bp_nouveau_ajax_document_get_document_description() {
 		wp_send_json_error( $response );
 	}
 
-	$document     = new BP_Document( $document_id );
+	$document = new BP_Document( $document_id );
 	if ( bp_is_active( 'activity' ) && ! empty( $document->activity_id ) ) {
 
 		remove_action( 'bp_activity_entry_content', 'bp_document_activity_entry' );
@@ -414,7 +414,6 @@ function bp_nouveau_ajax_document_get_document_description() {
 	}
 
 	if ( empty( trim( $document_description ) ) ) {
-		$content          = get_post_field( 'post_content', $attachment_id );
 		$document_privacy = bb_media_user_can_access( $document_id, 'document' );
 		$can_download_btn = true === (bool) $document_privacy['can_download'];
 		$can_edit_btn     = true === (bool) $document_privacy['can_edit'];
@@ -445,11 +444,11 @@ function bp_nouveau_ajax_document_get_document_description() {
 					</div>
 				</div>
 				<div class="activity-media-description">
-					<div class="bp-media-activity-description"><?php echo esc_html( $content ); ?></div>
+					<div class="bp-media-activity-description"><?php echo esc_html( $document->description ); ?></div>
 					<?php
 					if ( $can_edit_btn ) {
 						?>
-						<a class="bp-add-media-activity-description <?php echo ( ! empty( $content ) ? esc_attr( 'show-edit' ) : esc_attr( 'show-add' ) ); ?>" href="#">
+						<a class="bp-add-media-activity-description <?php echo ( ! empty( $document->description ) ? esc_attr( 'show-edit' ) : esc_attr( 'show-add' ) ); ?>" href="#">
 							<span class="bb-icon-l bb-icon-edit"></span>
 							<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss' ); ?></span>
 							<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
@@ -457,7 +456,7 @@ function bp_nouveau_ajax_document_get_document_description() {
 
 						<div class="bp-edit-media-activity-description" style="display: none;">
 							<div class="innerWrap">
-								<textarea id="add-activity-description" title="<?php esc_attr_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_attr_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo sanitize_textarea_field( $content ); ?></textarea>
+								<textarea id="add-activity-description" title="<?php esc_attr_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_attr_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo sanitize_textarea_field( $document->description ); ?></textarea>
 							</div>
 							<div class="in-profile description-new-submit">
 								<input type="hidden" id="bp-attachment-id" value="<?php echo esc_attr( $attachment_id ); ?>">
