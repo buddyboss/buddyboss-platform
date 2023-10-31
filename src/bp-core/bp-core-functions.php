@@ -9258,7 +9258,7 @@ function bb_delete_default_user_png_avatar( $item_ids = array(), $is_delete_dir 
 function bb_delete_default_group_png_avatar( $item_ids = array(), $is_delete_dir = true ) {
 	global $wpdb, $bp, $wp_filesystem;
 
-	$delete_query = $wpdb->prepare("DELETE FROM $bp->groups->table_name_groupmeta WHERE meta_key = %s", 'default-group-avatar-png' );
+	$delete_query = $wpdb->prepare( "DELETE FROM {$bp->groups->table_name_groupmeta} WHERE meta_key = %s", 'default-group-avatar-png' );
 	if ( ! empty( $item_ids ) ) {
 		$delete_query .= " AND group_id IN (" . implode( ',', $item_ids ) . ")";
 	}
