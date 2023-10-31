@@ -87,6 +87,20 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 				'schema' => array( $this, 'get_item_schema' ),
 			)
 		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/bulk/read',
+			array(
+				array(
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => array( $this, 'update_read' ),
+					'permission_callback' => array( $this, 'update_read_permissions_check' ),
+					'args'                => $this->get_endpoint_args_for_read_schema(),
+				),
+				'schema' => array( $this, 'get_item_schema' ),
+			)
+		);
 	}
 
 	/**
@@ -115,46 +129,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Boolean} [is_new=true] Limit result set to items from specific states.
 	 */
 	public function get_items( $request ) {
-		$args = array(
-			'user_id'           => $request['user_id'],
-			'item_id'           => $request['item_id'],
-			'secondary_item_id' => $request['secondary_item_id'],
-			'component_name'    => $request['component_name'],
-			'component_action'  => $request['component_action'],
-			'order_by'          => $request['order_by'],
-			'sort_order'        => strtoupper( $request['sort_order'] ),
-			'is_new'            => $request['is_new'],
-			'page'              => $request['page'],
-			'per_page'          => $request['per_page'],
-		);
-
-		if ( empty( $request['component_action'] ) ) {
-			$args['component_action'] = false;
-		}
-
-		if ( empty( $request['component_name'] ) ) {
-			$args['component_name'] = bp_notifications_get_registered_components();
-		}
-
-		if ( ! empty( $request['include'] ) ) {
-			$args['id'] = $request['include'];
-			if (
-				! empty( $args['order_by'] )
-				&& 'include' === $args['order_by']
-			) {
-				$args['order_by'] = 'in';
-			}
-		}
-
-		/**
-		 * Filter the query arguments for the request.
-		 *
-		 * @param array           $args    Key value array of query var to query value.
-		 * @param WP_REST_Request $request The request sent to the API.
-		 *
-		 * @since 0.1.0
-		 */
-		$args = apply_filters( 'bp_rest_notifications_get_items_query_args', $args, $request );
+		$args = $this->prepare_get_item_for_database( $request );
 
 		// Actually, query it.
 		$notifications = BP_Notifications_Notification::get( $args );
@@ -1476,5 +1451,190 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		}
 
 		return $url;
+	}
+
+	/**
+	 * Mark as read notification for the current user's.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return WP_REST_Response | WP_Error
+	 *
+	 * @api            {PATCH} /wp-json/buddyboss/v1/notifications/bulk/read Notification read in bulk
+	 * @apiName        UpdateBBNotificationRead
+	 * @apiGroup       Notifications
+	 * @apiDescription Mark as read bulk notifications
+	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser
+	 */
+	public function update_read( $request ) {
+		$schema   = $this->get_endpoint_args_for_read_schema();
+		$page     = ! empty( $request->get_param( 'page' ) ) ? (int) $request->get_param( 'page' ) : 1;
+		$per_page = ! empty( $request->get_param( 'per_page' ) ) ? (int) $request->get_param( 'per_page' ) : $schema['per_page']['default'];
+
+		$user_id          = get_current_user_id();
+		$notification_ids = BP_Notifications_Notification::get(
+			array(
+				'user_id'           => $user_id,
+				'order_by'          => 'date_notified',
+				'sort_order'        => 'DESC',
+				'page'              => 1,
+				'per_page'          => ( $per_page * $page ),
+				'update_meta_cache' => false,
+				'fields'            => 'id',
+			)
+		);
+		if ( $notification_ids ) {
+			foreach ( $notification_ids as $notification_id ) {
+				BP_Notifications_Notification::update(
+					array( 'is_new' => 0 ),
+					array( 'id' => $notification_id )
+				);
+			}
+		}
+
+		/**
+		 * Fire after user read notifications has been updated via the REST API.
+		 *
+		 * @since 0.1.0
+		 *
+		 * @param array           $notification_ids Array of notification IDs.
+		 * @param WP_REST_Request $request          The request sent to the API.
+		 */
+		do_action( 'bp_rest_after_notifications_mark_read', $notification_ids, $request );
+
+		// Get another unread notification.
+		$request->set_param( 'user_id', $user_id );
+		$request->set_param( 'page', 1 );
+		$request->set_param( 'is_new', true );
+		$response = $this->get_items( $request );
+
+		/**
+		 * Fire after user read notifications has been updated via the REST API.
+		 *
+		 * @since 0.1.0
+		 *
+		 * @param WP_REST_Request  $request  The request sent to the API.
+		 * @param WP_REST_Response $response The response data.
+		 */
+		do_action( 'bp_rest_notifications_update_read', $response, $request );
+
+		return $response;
+	}
+
+	/**
+	 * Check if a given request has access to update user notifications.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return bool|WP_Error
+	 * @since 0.1.0
+	 */
+	public function update_read_permissions_check( $request ) {
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to see the notification.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
+
+		if ( is_user_logged_in() ) {
+			$retval = true;
+		}
+
+		/**
+		 * Filter the notifications `update_read` permissions check.
+		 *
+		 * @param bool|WP_Error   $retval  Returned value.
+		 * @param WP_REST_Request $request The request sent to the API.
+		 *
+		 * @since 0.1.0
+		 */
+		return apply_filters( 'bp_rest_notifications_update_read_permissions_check', $retval, $request );
+	}
+
+	/**
+	 * Prepare a notification arguments for get items.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 *
+	 * @return array
+	 */
+	protected function prepare_get_item_for_database( $request ) {
+		$args = array(
+			'user_id'           => $request->get_param( 'user_id' ),
+			'item_id'           => $request->get_param( 'item_id' ),
+			'secondary_item_id' => $request->get_param( 'secondary_item_id' ),
+			'component_name'    => $request->get_param( 'component_name' ),
+			'component_action'  => $request->get_param( 'component_action' ),
+			'order_by'          => $request->get_param( 'order_by' ),
+			'sort_order'        => strtoupper( $request->get_param( 'sort_order' ) ),
+			'is_new'            => $request->get_param( 'is_new' ),
+			'page'              => $request->get_param( 'page' ),
+			'per_page'          => $request->get_param( 'per_page' ),
+		);
+
+		if ( empty( $request->get_param( 'component_action' ) ) ) {
+			$args['component_action'] = false;
+		}
+
+		if ( empty( $request->get_param( 'component_name' ) ) ) {
+			$args['component_name'] = bp_notifications_get_registered_components();
+		}
+
+		if ( ! empty( $request->get_param( 'include' ) ) ) {
+			$args['id'] = $request->get_param( 'include' );
+			if (
+				! empty( $args['order_by'] )
+				&& 'include' === $args['order_by']
+			) {
+				$args['order_by'] = 'in';
+			}
+		}
+
+		/**
+		 * Filter the query arguments for the request.
+		 *
+		 * @param array           $args    Key value array of query var to query value.
+		 * @param WP_REST_Request $request The request sent to the API.
+		 *
+		 * @since 0.1.0
+		 */
+		return apply_filters( 'bp_rest_notifications_get_items_query_args', $args, $request );
+	}
+
+	/**
+	 * Select the item schema arguments needed for the EDITABLE method to read notification.
+	 *
+	 * @param string $method Optional. HTTP method of the request.
+	 *
+	 * @return array Endpoint arguments.
+	 * @since 0.1.0
+	 */
+	public function get_endpoint_args_for_read_schema( $method = WP_REST_Server::EDITABLE ) {
+		$args = parent::get_collection_params();
+		$key  = 'update_read';
+
+		$support_args = array();
+
+		if ( array_key_exists( 'per_page', $args ) ) {
+			$support_args['per_page']            = $args['per_page'];
+			$support_args['per_page']['default'] = 25;
+		}
+
+		/**
+		 * Filters the method query arguments.
+		 *
+		 * @param array  $args   Query arguments.
+		 * @param string $method HTTP method of the request.
+		 *
+		 * @since 0.1.0
+		 */
+		return apply_filters( "bp_rest_notifications_{$key}_query_arguments", $support_args, $method );
 	}
 }
