@@ -63,6 +63,8 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 
 			// Trigger function to delete profile completion data when switch language.
 			add_action( 'wpml_language_has_switched', 'bp_core_xprofile_clear_all_user_progress_cache' );
+
+			add_filter( 'bp_profile_search_main_form', array( $this, 'bb_profile_search_main_form' ) );
 		}
 
 		/**
@@ -167,6 +169,36 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			}
 
 			return $page_ids;
+		}
+
+		/**
+		 * Added support for the profile search translatable.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $post_id Profile search post id.
+		 *
+		 * @return int
+		 */
+		public function bb_profile_search_main_form( $post_id ) {
+			global $sitepress;
+			if ( $sitepress->is_translated_post_type( 'bp_ps_form' ) ) {
+				$args = array(
+					'post_type'        => 'bp_ps_form',
+					'post_status'      => 'publish',
+					'numberposts'      => 1,
+					'fields'           => 'ids',
+					'suppress_filters' => false,
+					'lang'             => ICL_LANGUAGE_CODE, // Get the current language code.
+				);
+
+				$profile_query = get_posts( $args );
+				if ( ! empty( $profile_query ) ) {
+					return current( $profile_query );
+				}
+			}
+
+			return $post_id;
 		}
 
 	}

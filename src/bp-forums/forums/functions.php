@@ -922,7 +922,7 @@ function bbp_privatize_forum( $forum_id = 0, $current_visibility = '' ) {
 
 		// Update forums visibility setting
 		$bbp_db = bbp_db();
-		$bbp_db->update( $wpbbp_dbdb->posts, array( 'post_status' => bbp_get_private_status_id() ), array( 'ID' => $forum_id ) );
+		$bbp_db->update( $bbp_db->posts, array( 'post_status' => bbp_get_private_status_id() ), array( 'ID' => $forum_id ) );
 		wp_transition_post_status( bbp_get_private_status_id(), $current_visibility, get_post( $forum_id ) );
 		bbp_clean_post_cache( $forum_id );
 	}

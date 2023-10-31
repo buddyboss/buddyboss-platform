@@ -53,7 +53,10 @@ function bp_members_signup_sanitization() {
 
 	// Add the filters to each field.
 	foreach ( $fields as $filter ) {
-		add_filter( $filter, 'esc_html', 1 );
+		// Remove filter to support apostrophe in useremail.
+		if ( 'bp_get_signup_email_value' !== $filter ) {
+			add_filter( $filter, 'esc_html', 1 );
+		}
 		add_filter( $filter, 'wp_filter_kses', 2 );
 		add_filter( $filter, 'stripslashes', 3 );
 	}
@@ -236,9 +239,17 @@ function bp_members_filter_media_personal_scope( $retval = array(), $filter = ar
 
 	if ( ! empty( $filter['search_terms'] ) ) {
 		$retval[] = array(
-			'column'  => 'title',
-			'compare' => 'LIKE',
-			'value'   => $filter['search_terms'],
+			'relation' => 'OR',
+			array(
+				'column'  => 'title',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+			array(
+				'column'  => 'description',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			)
 		);
 	}
 
@@ -310,9 +321,17 @@ function bp_members_filter_video_personal_scope( $retval = array(), $filter = ar
 
 	if ( ! empty( $filter['search_terms'] ) ) {
 		$retval[] = array(
-			'column'  => 'title',
-			'compare' => 'LIKE',
-			'value'   => $filter['search_terms'],
+			'relation' => 'OR',
+			array(
+				'column'  => 'title',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+			array(
+				'column'  => 'description',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			)
 		);
 	}
 
