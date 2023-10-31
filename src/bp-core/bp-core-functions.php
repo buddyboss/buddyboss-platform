@@ -9066,18 +9066,19 @@ function bb_generate_default_avatar( $args ) {
 		}
 	}
 
-	$display_format = bp_core_display_name_format();
-
 	$char1 = $r['item_name'][0];
 	$char2 = '';
-	if ( 'first_last_name' === $display_format ) {
-		$words = explode( ' ', $r['item_name'] );
-		if ( 2 <= count( $words ) ) {
-			$char2 = $words[1][0];
+	if ( 'user' === $r['object'] ) {
+		$display_format = bp_core_display_name_format();
+		if ( 'first_last_name' === $display_format ) {
+			$words = explode( ' ', $r['item_name'] );
+			if ( 2 <= count( $words ) ) {
+				$char2 = $words[1][0];
+			}
 		}
 	}
 
-	$item_name = ucfirst( $char1 ) . strtolower( $char2 );
+	$item_name = strtoupper( $char1 . $char2 );
 
 	if ( 'user' === $r['object'] ) {
 		$pallet = get_user_meta( $r['item_id'], 'default-user-avatar-png-background-code', true );
