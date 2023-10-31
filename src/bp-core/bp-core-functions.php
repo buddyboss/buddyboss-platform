@@ -9096,7 +9096,7 @@ function bb_generate_default_avatar( $args ) {
 
 	if ( 'user' === $r['object'] ) {
 
-		$default_avatar = bb_generate_gd_avatar_by_name(
+		$default_avatar = bb_generate_gd_default_avatar(
 			array(
 				'object'    => $r['object'],
 				'item_id'   => $r['item_id'],
@@ -9109,7 +9109,7 @@ function bb_generate_default_avatar( $args ) {
 
 		update_user_meta( $r['item_id'], 'default-user-avatar-png', $default_avatar );
 	} else {
-		$default_avatar = bb_generate_gd_avatar_by_name(
+		$default_avatar = bb_generate_gd_default_avatar(
 			array(
 				'object'    => $r['object'],
 				'item_id'   => $r['item_id'],
@@ -9125,7 +9125,7 @@ function bb_generate_default_avatar( $args ) {
 	return $default_avatar;
 }
 
-function bb_generate_gd_avatar_by_name( $args ){
+function bb_generate_gd_default_avatar( $args ){
 	$r = bp_parse_args(
 		$args,
 		array(
