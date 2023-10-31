@@ -6515,7 +6515,7 @@ function bb_attachments_get_default_profile_group_avatar_image( $params ) {
 
 				// Default Profile Avatar = Display Name.
 			} elseif ( 'display-name' === $default_profile_avatar_type ) {
-				$avatar_image_url = empty( $params['item_id'] ) ? buddypress()->plugin_url . 'bp-core/images/bb-profile-avatar-legacy.jpg' : bb_get_default_png_avatar( $params );
+				$avatar_image_url = empty( $params['item_id'] ) ? buddypress()->plugin_url . 'bp-core/images/bb-profile-avatar-display-name.png' : bb_get_default_png_avatar( $params );
 
 				// Default Profile Avatar = Custom.
 			} elseif ( 'custom' === $default_profile_avatar_type ) {
@@ -6548,7 +6548,7 @@ function bb_attachments_get_default_profile_group_avatar_image( $params ) {
 		} elseif ( 'legacy' === $group_avatar_type ) {
 			$avatar_image_url = bb_get_legacy_group_avatar( $size );
 		} elseif ( 'group-name' === $group_avatar_type ) {
-			$avatar_image_url = empty( $params['item_id'] ) ? buddypress()->plugin_url . 'bp-core/images/bb-group-avatar-legacy.jpg' : bb_get_default_png_avatar( $params );
+			$avatar_image_url = empty( $params['item_id'] ) ? buddypress()->plugin_url . 'bp-core/images/bb-group-avatar-display-name.png' : bb_get_default_png_avatar( $params );
 		} elseif ( 'custom' === $group_avatar_type ) {
 			$avatar_image_url = bb_get_default_custom_upload_group_avatar( bb_get_buddyboss_group_avatar( $size ), $size );
 		}

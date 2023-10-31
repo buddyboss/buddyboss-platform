@@ -496,7 +496,7 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 		<input id="bp-default-profile-avatar-display-name" name="bp-default-profile-avatar-type" type="radio" value="display-name" <?php checked( bb_get_default_profile_avatar_type(), 'display-name' ); ?> />
 		<label for="bp-default-profile-avatar-display-name">
 			<div class="img-block">
-				<img class="display-name-profile-avatar" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-profile-avatar-legacy.jpg' ); ?>"/>
+				<img class="display-name-profile-avatar" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-profile-avatar-display-name.png' ); ?>"/>
 			</div>
 			<span><?php esc_html_e( 'Display Name', 'buddyboss' ); ?></span>
 		</label>
@@ -923,7 +923,7 @@ function bp_admin_setting_callback_default_group_avatar_type() {
 		<input id="bp-default-group-avatar-group-name" name="bp-default-group-avatar-type" type="radio" value="group-name" <?php checked( bb_get_default_group_avatar_type(), 'group-name' ); ?> />
 		<label for="bp-default-group-avatar-group-name">
 			<div class="img-block">
-				<img class="group-name-group-avatar" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-group-avatar-legacy.jpg' ); ?>" />
+				<img class="group-name-group-avatar" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-group-avatar-display-name.png' ); ?>" />
 			</div>
 			<span><?php esc_html_e( 'Group Name', 'buddyboss' ); ?></span>
 		</label>
