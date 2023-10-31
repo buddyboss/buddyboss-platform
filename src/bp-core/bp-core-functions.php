@@ -9195,6 +9195,86 @@ function bb_generate_gd_default_avatar( $args ){
 	return $file_url;
 }
 
+function bb_generate_imagick_default_avatar( $args ) {
+	$r = bp_parse_args(
+		$args,
+		array(
+			'item_id'    => 0,
+			'object'     => '',
+			'text'       => '',
+			'width'      => 300,
+			'height'     => 300,
+			'font_size'  => 120,
+			'bg_color'   => '#008000',
+			'text_color' => '#FFFFFF',
+			'font'       => __DIR__ . '/Verdana.ttf',
+		)
+	);
+
+	if ( empty( $r['object'] ) || empty( $r['text'] ) || empty( $r['item_id'] ) ) {
+		return false;
+	}
+
+	// Generate filename.
+	$filename = time() . $r['item_id'] . '.png';
+
+	// Set upload directory and URL based on object.
+	$file_path = bp_core_avatar_upload_path() . '/group-avatars/default/' . $r['item_id'] . '/';
+	$file_url  = bp_core_get_upload_dir( 'url' ) . '/group-avatars/default/' . $r['item_id'] . '/' . $filename;
+	if ( 'user' === $r['object'] ) {
+		$file_path = bp_core_avatar_upload_path() . '/avatars/default/' . $r['item_id'] . '/';
+		$file_url  = bp_core_get_upload_dir( 'url' ) . '/avatars/default/' . $r['item_id'] . '/' . $filename;
+	}
+
+	// If folder not exists then create.
+	if ( ! is_dir( $file_path ) ) {
+
+		// Create temp folder.
+		wp_mkdir_p( $file_path );
+		chmod( $file_path, 0777 );
+	}
+
+	$r['font_size'] = (int) apply_filters( 'bb_gd_avatar_font_size', (int) $r['font_size'] );
+
+	// File with full path.
+	$file = $file_path . $filename;
+
+	// Given a basic image.
+	$image = new Imagick();
+	$image->newImage( $r['width'], $r['height'], new ImagickPixel( $r['bg_color'] ) );
+
+	// Let's define a ROI rectangle.
+	$rect = array(
+		'x' => 0,
+		'y' => 0,
+		'h' => $r['height'],
+		'w' => $r['width'],
+	);
+
+	// Define your text-rendering context.
+	$ctx = new ImagickDraw();
+	$ctx->setFillColor( new ImagickPixel( $r['text_color'] ) );
+	$ctx->setFont( $r['font'] ); // Set the font family
+	$ctx->setFontSize( $r['font_size'] );
+
+	// Query who it will render with the image stack.
+	$metrics = $image->queryFontMetrics( $ctx, $r['text'] );
+
+	// Adjust starting x,y as needed to meet your requirements.
+	$offset = array(
+		'x' => $rect['x'] + $rect['w'] / 2 - $metrics['textWidth'] / 2,
+		'y' => $rect['y'] + $rect['h'] / 2 + $metrics['textHeight'] / 2 + $metrics['descender'],
+	);
+
+	// Draw text.
+	$image->annotateImage( $ctx, $offset['x'], $offset['y'], 0, $r['text'] );
+
+	// Write to disk.
+	$image->writeImage( $file );
+
+	return $file_url;
+}
+
 function bb_delete_default_user_svg_avatar( $item_ids = array(), $is_delete_dir = true ) {
 	global $wpdb, $wp_filesystem;
 
