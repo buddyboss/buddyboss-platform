@@ -69,7 +69,7 @@ class BB_Admin_Setting_Reactions extends BP_Admin_Setting_tab {
 		}
 
 		/**
-		 * Fires to register Media tab settings fields and section.
+		 * Fires to register "reactions" tab settings fields and section.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
