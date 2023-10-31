@@ -118,7 +118,7 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 				$privacy[] = 'loggedin';
 			}
 
-			$sql['from'] = "FROM {$bp->activity->table_name} a";
+			$sql['from'] = "FROM {$bp->activity->table_name} a LEFT JOIN {$bp->activity->table_name_meta} m ON ( m.activity_id = a.id )";
 
 			/**
 			 * Filter the MySQL JOIN clause for the activity Search query.
@@ -132,8 +132,16 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 			// searching only activity updates, others don't make sense.
 			$where_conditions   = array( '1=1' );
 			$where_conditions[] = "is_spam = 0
-				AND ExtractValue(a.content, '//text()') LIKE %s
-				AND a.type = 'activity_update'
+				AND (
+						(
+							ExtractValue(a.content, '//text()') LIKE %s
+							AND a.type = 'activity_update'
+						) OR
+						(
+							m.meta_key = 'post_title'
+							AND m.meta_value LIKE %s
+						)
+				)
 				AND
 				(
 					( a.privacy IN ( '" . implode( "','", $privacy ) . "' ) AND a.component != 'groups' AND a.hide_sitewide = 0 ) " .
@@ -157,8 +165,10 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 
 			$sql = "{$sql['select']} {$sql['from']} {$sql['where']}";
 
-			$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
-			$sql                 = $wpdb->prepare( $sql, $query_placeholder );
+			$search_term_placeholder = '%' . $wpdb->esc_like( $search_term ) . '%';
+			$query_placeholder[]     = $search_term_placeholder;
+			$query_placeholder[]     = $search_term_placeholder;
+			$sql                     = $wpdb->prepare( $sql, $query_placeholder );
 
 			return apply_filters(
 				'Bp_Search_Activities_sql',
