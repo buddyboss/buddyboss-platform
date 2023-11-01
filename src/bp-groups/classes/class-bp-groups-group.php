@@ -309,7 +309,11 @@ class BP_Groups_Group {
 			$this->slug = groups_check_slug( $this->slug );
 		}
 
+		$old_group_name = '';
 		if ( ! empty( $this->id ) ) {
+			// Get the group name from the database.
+			$old_group_name = bp_get_group_name( groups_get_group( $this->id ) );
+
 			$sql = $wpdb->prepare(
 				"UPDATE {$bp->groups->table_name} SET
 					creator_id = %d,
@@ -364,6 +368,10 @@ class BP_Groups_Group {
 
 		if ( empty( $this->id ) ) {
 			$this->id = $wpdb->insert_id;
+		} elseif ( ! empty( $old_group_name ) && $this->name !== $old_group_name ) {
+			if ( strtoupper( $old_group_name[0] ) !== strtoupper( $this->name[0] ) ) {
+				bb_delete_default_group_png_avatar( array( $this->id ) );
+			}
 		}
 
 		/**
