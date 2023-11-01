@@ -3359,6 +3359,90 @@ function bb_reactions_settings_callback_reaction_mode() {
 				/>
 				<?php echo $reaction_mode['label']; ?>
 			</label>
+			<div class="bb_emotions_list">
+
+				<div class="bb_emotions_item">
+					<div class="bb_emotions_actions">
+						<div class="bb_emotions_actions_enable">
+							<input type="checkbox" name="" checked="checked">
+						</div>
+						<button class="bb_emotions_actions_remove">
+							<i class="bb-icon-l bb-icon-times"></i>
+						</button>
+					</div>
+
+					<div class="bb_emotions_icon">
+						<img src="https://s.w.org/images/core/emoji/14.0.0/svg/1f643.svg" />
+					</div>
+
+					<div class="bb_emotions_footer">
+						<span>Like</span>
+						<button class="bb_emotions_edit"><i class="bb-icon-l bb-icon-pencil"></i></button>
+					</div>
+				</div>
+
+				<div class="bb_emotions_item">
+					<div class="bb_emotions_actions">
+						<div class="bb_emotions_actions_enable">
+							<input type="checkbox" name="" checked="checked">
+						</div>
+						<button class="bb_emotions_actions_remove">
+							<i class="bb-icon-l bb-icon-times"></i>
+						</button>
+					</div>
+
+					<div class="bb_emotions_icon">
+						<i class="bb-icon-thumbs-up" style="font-weight:200;color:#aeae16;"></i>
+					</div>
+
+					<div class="bb_emotions_footer">
+						<span>Like</span>
+						<button class="bb_emotions_edit"><i class="bb-icon-l bb-icon-pencil"></i></button>
+					</div>
+				</div>
+
+				<div class="bb_emotions_item">
+					<div class="bb_emotions_actions">
+						<div class="bb_emotions_actions_enable">
+							<input type="checkbox" name="" checked="checked">
+						</div>
+						<button class="bb_emotions_actions_remove">
+							<i class="bb-icon-l bb-icon-times"></i>
+						</button>
+					</div>
+
+					<div class="bb_emotions_icon">
+						<img src="https://s.w.org/images/core/emoji/14.0.0/svg/1f644.svg" />
+					</div>
+
+					<div class="bb_emotions_footer">
+						<span>Like</span>
+						<button class="bb_emotions_edit"><i class="bb-icon-l bb-icon-pencil"></i></button>
+					</div>
+				</div>
+
+				<div class="bb_emotions_item">
+					<div class="bb_emotions_actions">
+						<div class="bb_emotions_actions_enable">
+							<input type="checkbox" name="" checked="checked">
+						</div>
+						<button class="bb_emotions_actions_remove">
+							<i class="bb-icon-l bb-icon-times"></i>
+						</button>
+					</div>
+
+					<div class="bb_emotions_icon">
+						<img src="https://s.w.org/images/core/emoji/14.0.0/svg/1f622.svg" />
+					</div>
+
+					<div class="bb_emotions_footer">
+						<span>Like</span>
+						<button class="bb_emotions_edit"><i class="bb-icon-l bb-icon-pencil"></i></button>
+					</div>
+				</div>
+
+
+			</div>
 			<?php
 		}
 	}

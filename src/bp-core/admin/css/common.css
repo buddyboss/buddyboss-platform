@@ -3699,3 +3699,104 @@ table.moderations .column-member img {
     margin: 20px 0;
   }
 }
+
+/* Reaction Settings */
+.bb_emotions_list {
+  display: flex;
+  gap: 12px;
+  margin: 25px 0;
+}
+
+.bb_emotions_list .bb_emotions_item {
+  border: 1px solid #c3c4c7;
+  border-radius: 4px;
+  position: relative;
+}
+
+.bb_emotions_list .bb_emotions_item button {
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+}
+
+.bb_emotions_list .bb_emotions_actions_remove {
+  position: absolute;
+  top: -9px;
+  right: -9px;
+  color: #a7aaaD;
+  cursor: pointer;
+}
+
+.bb_emotions_list .bb_emotions_actions_remove:hover {
+  color: #787c82;
+}
+
+.bb_emotions_list .bb_emotions_actions_remove i {
+  font-size: 18px;
+  font-weight: 200;
+  background-color: #fff;
+  border-radius: 50%;
+  display: block;
+}
+
+.bb_emotions_list .bb_emotions_actions_remove i:before {
+  margin: 0;
+}
+
+.bb_emotions_list .bb_emotions_actions_enable {
+  position: absolute;
+  top: 7px;
+  left: 7px;
+}
+
+.bb_emotions_list .bb_emotions_icon {
+  display: flex;
+  justify-self: center;
+  align-items: center;
+  background-color: #f6f7f7;
+  padding: 17px 35px;
+  border-bottom: 1px solid #c3c4c7;
+  border-radius: 4px 4px 0 0;
+}
+
+.bb_emotions_list .bb_emotions_icon img {
+  width: 40px;
+}
+
+.bb_emotions_list .bb_emotions_icon i {
+  display: flex;
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 40px;
+}
+
+.bb_emotions_list .bb_emotions_icon i:before {
+  margin: 0;
+}
+
+.bb_emotions_list .bb_emotions_footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+}
+
+.bb_emotions_list .bb_emotions_footer span {
+  color: #1d2327;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.bb_emotions_list .bb_emotions_footer .bb_emotions_edit {
+  color: #a7aaad;
+  cursor: pointer;
+}
+
+.bb_emotions_list .bb_emotions_footer .bb_emotions_edit:hover {
+  color: #787c82;
+}
+
+.bb_emotions_list .bb_emotions_footer .bb_emotions_edit i {
+  font-size: 18px;
+}
