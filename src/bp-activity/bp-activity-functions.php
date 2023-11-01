@@ -6173,7 +6173,7 @@ function bb_activity_migration( $raw_db_version, $current_db ) {
 
 			bp_add_option( 'bb_reaction_activity_posts', $is_activity_like_active ? 1 : 0 );
 			bp_add_option( 'bb_reaction_activity_comments', 0 );
-			bp_add_option( 'bb_get_reaction_mode', 'likes' );
+			bp_add_option( 'bb_reaction_mode', 'likes' );
 			bp_delete_option( '_bp_enable_activity_like' );
 		}
 	}
