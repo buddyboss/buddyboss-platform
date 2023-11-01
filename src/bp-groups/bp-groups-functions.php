@@ -5250,7 +5250,7 @@ function bb_groups_settings_default_fallback( $setting_type, $val = '' ) {
 /**
  * Run migration for resolving the issue related to the groups.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.60
  */
 function bb_group_migration() {
 	$is_already_run = get_transient( 'bb_group_migration' );
@@ -5269,7 +5269,7 @@ function bb_group_migration() {
  * Migrate subgroup members.
  * When 'group restrict invites' is on, remove subgroup members not in the parent group.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.60
  *
  * @return void
  */
@@ -5356,7 +5356,7 @@ function bb_groups_migrate_subgroup_member() {
 /**
  * Function to run subgroup membership removal within background process.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.60
  *
  * @return void
  */
@@ -5416,7 +5416,7 @@ function bb_update_groups_subgroup_membership_background_process() {
 /**
  * Function to run group invites removal within background process.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.60
  *
  * @return void
  */

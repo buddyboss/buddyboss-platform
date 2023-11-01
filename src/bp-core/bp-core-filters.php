@@ -2506,7 +2506,7 @@ add_filter( 'bb_oembed_discover_support', 'bb_loom_oembed_discover_support', 10,
 /**
  * Install emails on plugin activation.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.60
  *
  * @return void
  */

@@ -3468,7 +3468,7 @@ function bp_admin_setting_callback_custom_logout_redirection() {
 /**
  * Allow pinned activity posts.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.60
  */
 function bb_admin_setting_callback_enable_activity_pinned_posts() {
 	?>

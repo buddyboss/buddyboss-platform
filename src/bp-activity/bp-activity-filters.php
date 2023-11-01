@@ -171,12 +171,12 @@ add_filter( 'bp_get_activity_content_body', 'bb_mention_remove_deleted_users_lin
 add_filter( 'bp_activity_comment_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
 add_filter( 'comment_max_links_url', 'bb_moderation_remove_mention_count', 10, 3 );
 
+add_action( 'edit_post', 'bb_cpt_post_title_save', 999, 2 );
+
 add_action( 'bp_after_directory_activity_list', 'bb_activity_pinpost_confirmation_modal_template' );
 add_action( 'bp_after_member_activity_content', 'bb_activity_pinpost_confirmation_modal_template' );
 add_action( 'bp_after_group_activity_content', 'bb_activity_pinpost_confirmation_modal_template' );
 add_action( 'bp_after_single_activity_content', 'bb_activity_pinpost_confirmation_modal_template' );
-
-add_action( 'edit_post', 'bb_cpt_post_title_save', 999, 2 );
 
 /** Functions *****************************************************************/
 
@@ -3592,19 +3592,10 @@ function bb_moderation_remove_mention_count( $num_links, $url, $comment ) {
 }
 
 /**
- * Add Pin Post confirmation to the activity loop.
- *
- * @since [BBVERSION]
- */
-function bb_activity_pinpost_confirmation_modal_template() {
-	bp_get_template_part( 'activity/confirmation-modal' );
-}
-
-/**
  * Function to add post title in activity meta for the post, and other CPTS.
  * It will help to search CPT in the feed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.60
  *
  * @param int    $post_id post id of the topic or reply.
  * @param object $post Post data.
@@ -3627,4 +3618,13 @@ function bb_cpt_post_title_save( $post_id, $post ) {
 	}
 
 	bp_activity_update_meta( $activity_id, 'post_title', $post->post_title );
+}
+
+/**
+ * Add Pin Post confirmation to the activity loop.
+ *
+ * @since 2.4.60
+ */
+function bb_activity_pinpost_confirmation_modal_template() {
+	bp_get_template_part( 'activity/confirmation-modal' );
 }

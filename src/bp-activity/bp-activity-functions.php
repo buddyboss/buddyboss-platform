@@ -6391,9 +6391,56 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 }
 
 /**
+ * Check CPT comment global settings.
+ *
+ * @since BuddyBoss 2.4.60
+ *
+ * @param bool $post_type custom post type.
+ *
+ * @return bool True if activity comments are enabled for CPT, otherwise false.
+ */
+function bb_activity_is_enabled_cpt_global_comment( $post_type ) {
+
+	switch ( $post_type ) {
+		case 'sfwd-courses':
+			$sfwd_courses_settings = bp_get_option( 'learndash_settings_courses_cpt', array() );
+			$supports_comments     = isset( $sfwd_courses_settings['supports'] ) && in_array( 'comments', $sfwd_courses_settings['supports'], true );
+			break;
+		case 'sfwd-lessons':
+			$sfwd_lesson_settings = bp_get_option( 'learndash_settings_lessons_cpt', array() );
+			$supports_comments    = isset( $sfwd_lesson_settings['supports'] ) && in_array( 'comments', $sfwd_lesson_settings['supports'], true );
+			break;
+		case 'sfwd-topic':
+			$sfwd_topic_settings = bp_get_option( 'learndash_settings_topics_cpt', array() );
+			$supports_comments   = isset( $sfwd_topic_settings['supports'] ) && in_array( 'comments', $sfwd_topic_settings['supports'], true );
+			break;
+		case 'sfwd-quiz':
+			$sfwd_quiz_settings = bp_get_option( 'learndash_settings_quizzes_cpt', array() );
+			$supports_comments  = isset( $sfwd_quiz_settings['supports'] ) && in_array( 'comments', $sfwd_quiz_settings['supports'], true );
+			break;
+		case 'groups':
+			$sfwd_group_settings = bp_get_option( 'learndash_settings_groups_cpt', array() );
+			$supports_comments   = isset( $sfwd_group_settings['supports'] ) && in_array( 'comments', $sfwd_group_settings['supports'], true );
+			break;
+		case 'sfwd-assignment':
+			$sfwd_assignment_settings = bp_get_option( 'learndash_settings_assignments_cpt', array() );
+			$supports_comments        = isset( $sfwd_assignment_settings['comment_status'] ) && 'yes' === $sfwd_assignment_settings['comment_status'];
+			break;
+		case 'lesson':
+			$tutor_lesson_settings = (array) maybe_unserialize( get_option( 'tutor_option' ) );
+			$supports_comments     = isset( $tutor_lesson_settings['enable_comment_for_lesson'] ) && 'on' === $tutor_lesson_settings['enable_comment_for_lesson'];
+			break;
+		default:
+			$supports_comments = true;
+	}
+
+	return apply_filters( 'bb_activity_is_enabled_cpt_global_comment', $supports_comments, $post_type );
+}
+
+/**
  * Pin or unpin activity or group feed post.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.60
  *
  * @param array $args Arguments related to pin/unpin activity or group feed post.
  *
@@ -6440,7 +6487,7 @@ function bb_activity_pin_unpin_post( $args = array() ) {
 		/**
 		 * Fires after activity pin/unpin post.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.60
 		 *
 		 * @param int    $activity_id Activity ID.
 		 * @param string $action      Action type pin/unpin.
@@ -6463,7 +6510,7 @@ function bb_activity_pin_unpin_post( $args = array() ) {
 /**
  * Fetch the pin type based on the screen its activity/group.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.60
  *
  * @param array $args Array of Arguments.
  *
@@ -6527,51 +6574,4 @@ function bb_activity_pin_type( $args ) {
 	}
 
 	return $r['pin_type'];
-}
-
-/**
- * Check CPT comment global settings.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param bool $post_type custom post type.
- *
- * @return bool True if activity comments are enabled for CPT, otherwise false.
- */
-function bb_activity_is_enabled_cpt_global_comment( $post_type ) {
-
-	switch ( $post_type ) {
-		case 'sfwd-courses':
-			$sfwd_courses_settings = bp_get_option( 'learndash_settings_courses_cpt', array() );
-			$supports_comments     = isset( $sfwd_courses_settings['supports'] ) && in_array( 'comments', $sfwd_courses_settings['supports'], true );
-			break;
-		case 'sfwd-lessons':
-			$sfwd_lesson_settings = bp_get_option( 'learndash_settings_lessons_cpt', array() );
-			$supports_comments    = isset( $sfwd_lesson_settings['supports'] ) && in_array( 'comments', $sfwd_lesson_settings['supports'], true );
-			break;
-		case 'sfwd-topic':
-			$sfwd_topic_settings = bp_get_option( 'learndash_settings_topics_cpt', array() );
-			$supports_comments   = isset( $sfwd_topic_settings['supports'] ) && in_array( 'comments', $sfwd_topic_settings['supports'], true );
-			break;
-		case 'sfwd-quiz':
-			$sfwd_quiz_settings = bp_get_option( 'learndash_settings_quizzes_cpt', array() );
-			$supports_comments  = isset( $sfwd_quiz_settings['supports'] ) && in_array( 'comments', $sfwd_quiz_settings['supports'], true );
-			break;
-		case 'groups':
-			$sfwd_group_settings = bp_get_option( 'learndash_settings_groups_cpt', array() );
-			$supports_comments   = isset( $sfwd_group_settings['supports'] ) && in_array( 'comments', $sfwd_group_settings['supports'], true );
-			break;
-		case 'sfwd-assignment':
-			$sfwd_assignment_settings = bp_get_option( 'learndash_settings_assignments_cpt', array() );
-			$supports_comments        = isset( $sfwd_assignment_settings['comment_status'] ) && 'yes' === $sfwd_assignment_settings['comment_status'];
-			break;
-		case 'lesson':
-			$tutor_lesson_settings = (array) maybe_unserialize( get_option( 'tutor_option' ) );
-			$supports_comments     = isset( $tutor_lesson_settings['enable_comment_for_lesson'] ) && 'on' === $tutor_lesson_settings['enable_comment_for_lesson'];
-			break;
-		default:
-			$supports_comments = true;
-	}
-
-	return apply_filters( 'bb_activity_is_enabled_cpt_global_comment', $supports_comments, $post_type );
 }

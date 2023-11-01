@@ -1984,7 +1984,7 @@ function bb_feed_not_allowed_comment_post_types() {
 	/**
 	 * Function to exclude Custom post types for activity settings.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.60
 	 */
 	return apply_filters( 'bb_feed_not_allowed_comment_post_types', $bp_exclude_cpt );
 }
@@ -2417,6 +2417,45 @@ function bb_get_activity_comment_edit_time( $default = false ) {
 }
 
 /**
+ * Function to exclude Custom post types for activity settings.
+ *
+ * @since BuddyBoss 2.4.60
+ *
+ * @return array.
+ */
+function bb_feed_excluded_post_types() {
+
+	/**
+	 * Function to exclude Custom post types for activity settings.
+	 *
+	 * @since BuddyBoss 2.4.60
+	 */
+	return apply_filters( 'bb_feed_excluded_post_types', array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' ) );
+}
+
+/**
+ * Check whether activity pinned posts are enabled.
+ *
+ * @since BuddyBoss 2.4.60
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ *
+ * @return bool True    If activity pinned posts are enabled, otherwise false.
+ */
+function bb_is_active_activity_pinned_posts( $default = false ) {
+
+	/**
+	 * Filters whether activity pinned posts are enabled.
+	 *
+	 * @since BuddyBoss 2.4.60
+	 *
+	 * @param bool $value Whether activity pinned posts are enabled.
+	 */
+	return (bool) apply_filters( 'bb_is_active_activity_pinned_posts', (bool) bp_get_option( '_bb_enable_activity_pinned_posts', $default ) );
+}
+
+/**
  * Get login redirection settings value from the database.
  *
  * @since BuddyBoss [BBVERSION]
@@ -2502,41 +2541,4 @@ function bb_custom_logout_redirection( $default = '' ) {
 	 * @param string $value Custom logout page URL.
 	 */
 	return apply_filters( 'bb_custom_logout_redirection', bp_get_option( 'bb-custom-logout-redirection', $default ) );
-}
-
-/**
-* Check whether activity pinned posts are enabled.
-*
-* @since BuddyBoss [BBVERSION]
-*
-* @param bool $default Optional. Fallback value if not found in the database.
-*                      Default: true.
-* @return bool True    If activity pinned posts are enabled, otherwise false.
-*/
-function bb_is_active_activity_pinned_posts( $default = false ) {
-
-   /**
-	* Filters whether activity pinned posts are enabled.
-	*
-	* @since BuddyBoss [BBVERSION]
-	*
-	* @param bool $value Whether activity pinned posts are enabled.
-	*/
-   return (bool) apply_filters( 'bb_is_active_activity_pinned_posts', (bool) bp_get_option( '_bb_enable_activity_pinned_posts', $default ) );
-}
-/**
- * Function to exclude Custom post types for activity settings.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return array.
- */
-function bb_feed_excluded_post_types() {
-
-	/**
-	 * Function to exclude Custom post types for activity settings.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	return apply_filters( 'bb_feed_excluded_post_types', array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' ) );
 }

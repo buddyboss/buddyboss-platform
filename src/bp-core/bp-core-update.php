@@ -477,7 +477,6 @@ function bp_version_updater() {
 
 		if ( $raw_db_version < 20761 ) {
 			bb_update_to_2_4_60();
-			bb_update_to_2_4_61();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
@@ -3378,55 +3377,14 @@ function bb_update_to_2_4_50() {
 }
 
 /**
+ * Migrate a background job to new table for update the friends count when member suspend/un-suspend.
  * For existing install disable pin post setting by default.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.60
  *
  * @return void
  */
 function bb_update_to_2_4_60() {
-	global $wpdb, $bp;
-
-	if ( ! bp_is_active( 'media' ) ) {
-		return;
-	}
-
-	// Add 'description' column in 'bp_media' table.
-	$media_row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$bp->media->table_name}' AND column_name = 'description'" ); //phpcs:ignore
-
-	if ( empty( $media_row ) ) {
-		$wpdb->query( "ALTER TABLE {$bp->media->table_name} ADD `description` text AFTER `title`" ); //phpcs:ignore
-	}
-
-	// Add 'description' column in 'bp_document' table.
-	$document_row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$bp->document->table_name}' AND column_name = 'description'" ); //phpcs:ignore
-
-	if ( empty( $document_row ) ) {
-		$wpdb->query( "ALTER TABLE {$bp->document->table_name} ADD `description` text AFTER `title`" ); //phpcs:ignore
-	}
-
-	// Purge all the cache.
-	wp_cache_flush();
-
-	// Purge all the cache for API.
-	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		// Clear medias API cache.
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-photos' );
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-albums' );
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-document' );
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-video' );
-	}
-
-}
-
-/**
- * Migrate a background job to new table for update the friends count when member suspend/un-suspend.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return void
- */
-function bb_update_to_2_4_61() {
 	global $wpdb;
 
 	$is_already_run = get_transient( 'bb_update_to_2_4_60' );
@@ -3436,9 +3394,10 @@ function bb_update_to_2_4_61() {
 
 	set_transient( 'bb_update_to_2_4_60', true, HOUR_IN_SECONDS );
 
+	bp_update_option( '_bb_enable_activity_pinned_posts', 0 );
+
 	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE `option_name` LIKE 'wp_1_bp_updater_batch_%' AND `option_value` LIKE '%bb_migrate_member_friends_count%'" );
 
 	bb_create_background_member_friends_count();
-	bp_update_option( '_bb_enable_activity_pinned_posts', 0 );
 }

@@ -110,7 +110,7 @@ class BP_Activity_Template {
 	/**
 	 *  Pinned activity id.
 	 *
-	 * @since BuddyPress [BBVERSION]
+	 * @since BuddyPress 2.4.60
 	 * @var int
 	 */
 	public $pinned_id;
@@ -118,7 +118,7 @@ class BP_Activity_Template {
 	/**
 	 *  Pinned activity scope.
 	 *
-	 * @since BuddyPress [BBVERSION]
+	 * @since BuddyPress 2.4.60
 	 * @var string
 	 */
 	public $pinned_scope;
