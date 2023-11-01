@@ -38,11 +38,7 @@
 				</cite>
 
 				<div class="bp-activity-info">
-					<?php
-					add_filter( 'bp_insert_activity_meta', 'bb_activity_remove_livestamp_attribute', 20, 1 );
-					bp_activity_action();
-					remove_filter( 'bp_insert_activity_meta', 'bb_activity_remove_livestamp_attribute', 20, 1 );
-					?>
+					<?php bp_activity_action(); ?>
 				</div>
 			</div>
 
