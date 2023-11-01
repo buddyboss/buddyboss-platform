@@ -77,7 +77,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		/**
 		 * Migrate the subgroups members if group restrict invites is enabled and member is not part of parent group.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.60
 		 */
 		if (
 			true === bp_enable_group_hierarchies() &&

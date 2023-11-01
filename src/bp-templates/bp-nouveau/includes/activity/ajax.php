@@ -1029,7 +1029,7 @@ function bp_nouveau_ajax_activity_update_privacy() {
 /**
  * Update activity pinned post.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.60
  *
  * @return void
  */

@@ -2062,23 +2062,28 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			if ( ! empty( $valid_upload_ids ) ) {
 				foreach ( $valid_upload_ids as $wp_attachment_id ) {
 
-					// Check if document id already available for the messages.
-					if ( 'message' === $document_privacy ) {
-						$mid = get_post_meta( $wp_attachment_id, 'bp_document_id', true );
-
-						if ( ! empty( $mid ) ) {
-							$created_document_ids[] = $mid;
-							continue;
-						}
-					}
 					// extract the nice title name.
 					$title = get_the_title( $wp_attachment_id );
 
-					$documents[] = array(
-						'id'      => $wp_attachment_id,
-						'name'    => $title,
-						'privacy' => $document_privacy,
+					$document = array(
+						'id'          => $wp_attachment_id,
+						'name'        => $title,
+						'privacy'     => $document_privacy,
+						'message_id'  => $message_id,
+						'activity_id' => $activity_id,
+						'folder_id'   => ( ! empty( $args['folder_id'] ) ? $args['folder_id'] : false ),
+						'group_id'    => ( ! empty( $args['group_id'] ) ? $args['group_id'] : false ),
 					);
+
+					// Check if document id already available for the messages.
+					if ( 'message' === $document_privacy ) {
+						$mid = get_post_meta( $wp_attachment_id, 'bp_document_id', true );
+						if ( ! empty( $mid ) ) {
+							$document['document_id'] = $mid;
+						}
+					}
+
+					$documents[] = $document;
 				}
 			}
 
@@ -2745,8 +2750,6 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			return $value;
 		}
 
-		$thread_id = $value->thread_id;
-
 		if ( function_exists( 'bb_user_has_access_upload_document' ) ) {
 			$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 			if ( ! $can_send_document ) {
@@ -2782,6 +2785,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		$args = array(
 			'document_ids' => $documents,
 			'privacy'      => 'message',
+			'message_id'   => $message_id,
 		);
 
 		remove_action( 'bp_document_add', 'bp_activity_document_add', 9 );
@@ -2904,11 +2908,8 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	protected function bbp_document_update_rest_field_callback( $object, $value ) {
 
 		$documents = wp_parse_id_list( $object );
-		if ( empty( $documents ) ) {
-			$value->bbp_documents = null;
 
-			return $value;
-		}
+		$edit = ( isset( $value->edit ) ? true : false );
 
 		$post_id = $value->ID;
 
@@ -2923,17 +2924,17 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			$forum_id = bbp_get_topic_forum_id( $post_id );
 		}
 
+		$group_ids = bbp_get_forum_group_ids( $forum_id );
+		$group_id  = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
+
 		if ( function_exists( 'bb_user_has_access_upload_document' ) ) {
-			$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
+			$can_send_document = bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
 			if ( ! $can_send_document ) {
 				$value->bbp_documents = null;
 
 				return $value;
 			}
 		}
-
-		$group_ids = bbp_get_forum_group_ids( $forum_id );
-		$group_id  = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
 
 		// save activity id if it is saved in forums and enabled in platform settings.
 		$main_activity_id = get_post_meta( $post_id, '_bbp_activity_id', true );
@@ -2942,6 +2943,16 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		$existing_document_ids            = get_post_meta( $post_id, 'bp_document_ids', true );
 		$existing_document_attachment_ids = array();
 		$existing_document_attachments    = array();
+
+		if (
+			empty( $documents ) &&
+			true === $edit &&
+			empty( $existing_document_ids )
+		) {
+			$value->bbp_documents = null;
+
+			return $value;
+		}
 
 		if ( ! empty( $existing_document_ids ) ) {
 			$existing_document_ids = explode( ',', $existing_document_ids );
