@@ -9107,7 +9107,7 @@ function bb_generate_default_avatar( $args ) {
 		$font_family = $body_fonts['font-family'];
 	}
 
-	$font_family = ABSPATH . '/Verdana.ttf';
+	$font_family = ABSPATH . '/arial.ttf';
 
 	$default_avatar = bb_generate_default_png_avatar(
 		array(
@@ -9173,67 +9173,68 @@ function bb_generate_default_png_avatar( $args ) {
 
 	$file = $file_path . $filename;
 
-	if ( 'gd' === $r['library'] ) {
-		$gd_image = imagecreatetruecolor( $r['width'], $r['height'] );
+	$chose_editor = _wp_image_editor_choose();
+	// Set up image editor object.
+	$image_editor = wp_get_image_editor( buddypress()->plugin_dir . 'bp-core/images/blank.png' );
 
-		// Define the background color.
-		$filtered_bg_color = imagecolorallocate( $gd_image, hexdec( substr( $r['bg_color'], 1, 2 ) ), hexdec( substr( $r['bg_color'], 3, 2 ) ), hexdec( substr( $r['bg_color'], 5, 2 ) ) );
-		imagefill( $gd_image, 0, 0, $filtered_bg_color );
+	// Check if image editor is available and create text on the image.
+	if ( ! is_wp_error( $image_editor ) ) {
+		$text_dimensions = imagettfbbox( $r['font_size'], 0, $r['font'], $r['text'] );
 
-		// Define the text color.
-		$text_color = imagecolorallocate( $gd_image, hexdec( substr( $r['text_color'], 1, 2 ) ), hexdec( substr( $r['text_color'], 3, 2 ) ), hexdec( substr( $r['text_color'], 5, 2 ) ) );
+		// Extract width and height from the bounding box.
+		$text_width  = abs( $text_dimensions[2] - $text_dimensions[0] ); // Width (right - left).
+		$text_height = abs( $text_dimensions[5] - $text_dimensions[3] ); // Height (bottom - top).
 
-		// Determine the size of the text so we can center it.
-		$box          = imagettfbbox( $r['font_size'], 0, $r['font'], $r['text'] );
-		$text_width   = abs( $box[2] ) - abs( $box[0] );
-		$text_height  = abs( $box[5] ) - abs( $box[3] );
-		$image_width  = imagesx( $gd_image );
-		$image_height = imagesy( $gd_image );
-		$x            = floor( ( $image_width - $text_width ) / 2 );
-		$y            = ceil( ( $image_height + $text_height ) / 2 );
+		$image_size   = $image_editor->get_size();
+		$image_width  = $image_size['width'];
+		$image_height = $image_size['height'];
 
-		// Add text.
-		imagettftext( $gd_image, $r['font_size'], 0, $x, $y, $text_color, $r['font'], $r['text'] );
+		$text_x = ( ( $image_width - $text_width ) / 2 ) - 12;
+		$text_y = ( ( $image_height + $text_height ) / 2 ) - 3;
 
-		// Output and destroy image.
-		imagepng( $gd_image, $file );
-		imagedestroy( $gd_image );
-	} else {
-		// Given a basic image.
-		$image = new Imagick();
-		$image->newImage( $r['width'], $r['height'], new ImagickPixel( $r['bg_color'] ) );
+		$rf_image_editor = new ReflectionClass( $image_editor );
+		$property        = $rf_image_editor->getProperty( 'image' );
+		$property->setAccessible( true );
+		$image = $property->getValue( $image_editor );
 
-		// Let's define a ROI rectangle.
-		$rect = array(
-			'x' => 0,
-			'y' => 0,
-			'h' => $r['height'],
-			'w' => $r['width'],
-		);
+		if ( 'WP_Image_Editor_GD' === $chose_editor ) {
+			// Define the background color.
+			$filtered_bg_color = imagecolorallocate( $image, hexdec( substr( $r['bg_color'], 1, 2 ) ), hexdec( substr( $r['bg_color'], 3, 2 ) ), hexdec( substr( $r['bg_color'], 5, 2 ) ) );
+			$text_color        = imagecolorallocate( $image, hexdec( substr( $r['text_color'], 1, 2 ) ), hexdec( substr( $r['text_color'], 3, 2 ) ), hexdec( substr( $r['text_color'], 5, 2 ) ) );
 
-		// Define your text-rendering context.
-		$ctx = new ImagickDraw();
-		$ctx->setFillColor( new ImagickPixel( $r['text_color'] ) );
-		$ctx->setFont( $r['font'] ); // Set the font family
-		$ctx->setFontSize( $r['font_size'] );
+			imagefill( $image, 0, 0, $filtered_bg_color );
+			imagettftext( $image, $r['font_size'], 0, $text_x, $text_y, $text_color, $r['font'], $r['text'] );
 
-		// Query who it will render with the image stack.
-		$metrics = $image->queryFontMetrics( $ctx, $r['text'] );
+		} else {
+			$image = new Imagick();
+			$image->setAntiAlias( true );
+			$image->setResolution( 300, 300 );
+			$image->newImage( $image_width, $image_height, new ImagickPixel( $r['bg_color'] ) );
 
-		// Adjust starting x,y as needed to meet your requirements.
-		$offset = array(
-			'x' => $rect['x'] + $rect['w'] / 2 - $metrics['textWidth'] / 2,
-			'y' => $rect['y'] + $rect['h'] / 2 + $metrics['textHeight'] / 2 + $metrics['descender'],
-		);
+			// Set up the text properties.
+			$draw = new ImagickDraw();
+			$draw->setFont( $r['font'] ); // Path to your TrueType font file.
+			$draw->setResolution( 95, 95 ); // text resolution.
+			$draw->setFontSize( $r['font_size'] ); // Font size.
+			$draw->setFillColor( new ImagickPixel( $r['text_color'] ) ); // Text color.
+			$draw->setGravity( Imagick::GRAVITY_CENTER ); // Set the text to be centered.
 
-		// Draw text.
-		$image->annotateImage( $ctx, $offset['x'], $offset['y'], 0, $r['text'] );
+			// Add text to the image.
+			$image->annotateImage( $draw, 0, 0, 0, $r['text'] );
+			$image->setImageFormat( 'png' );
+		}
 
-		// Write to disk.
-		$image->writeImage( $file );
+		$property->setValue( $image_editor, $image );
+
+		// Save the image with the text as a PNG.
+		$result = $image_editor->save( $file, 'image/png' );
+
+		if ( ! is_wp_error( $result ) ) {
+			return $file_url;
+		}
 	}
 
-	return $file_url;
+	return '';
 }
 
 function bb_delete_default_user_png_avatar( $item_ids = array(), $is_delete_dir = true ) {
