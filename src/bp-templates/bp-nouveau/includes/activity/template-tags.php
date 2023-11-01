@@ -1761,8 +1761,8 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 				(
 					bb_is_active_activity_pinned_posts() &&
 					(
-						bbp_group_is_mod() ||
-						bbp_group_is_admin()
+						groups_is_user_admin( bp_loggedin_user_id(), bp_get_activity_item_id() ) ||
+						groups_is_user_mod( bp_loggedin_user_id(), bp_get_activity_item_id() )
 					)
 				)
 			)
