@@ -9010,6 +9010,15 @@ function bb_is_available_image_library() {
 	return false;
 }
 
+function bb_core_get_first_character( $string ) {
+
+	if ( function_exists( 'mb_strtoupper' ) && function_exists( 'mb_substr' ) ) {
+		return mb_strtoupper( mb_substr( $string, 0, 1 ) );
+	}
+
+	return strtoupper( substr( $string, 0, 1 ) );
+}
+
 function bb_get_predefined_palette() {
 	/**
 	 * Filters the color palette should have a minimum of 12 color codes and a maximum of 21.
@@ -9106,14 +9115,14 @@ function bb_generate_default_avatar( $args ) {
 		return false;
 	}
 
-	$char1 = $r['item_name'][0];
+	$char1 = bb_core_get_first_character( $r['item_name'] );
 	$char2 = '';
 	if ( 'user' === $r['object'] ) {
 		$display_format = bp_core_display_name_format();
 		if ( 'first_last_name' === $display_format ) {
 			$words = explode( ' ', $r['item_name'] );
 			if ( 2 <= count( $words ) ) {
-				$char2 = $words[1][0];
+				$char2 = bb_core_get_first_character( $words[1] );
 			}
 		}
 	}

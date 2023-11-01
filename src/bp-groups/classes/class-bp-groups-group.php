@@ -369,7 +369,7 @@ class BP_Groups_Group {
 		if ( empty( $this->id ) ) {
 			$this->id = $wpdb->insert_id;
 		} elseif ( ! empty( $old_group_name ) && $this->name !== $old_group_name ) {
-			if ( strtoupper( $old_group_name[0] ) !== strtoupper( $this->name[0] ) ) {
+			if ( bb_core_get_first_character( $old_group_name ) !== bb_core_get_first_character( $this->name ) ) {
 				bb_delete_default_group_png_avatar( array( $this->id ) );
 			}
 		}
