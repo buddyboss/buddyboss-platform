@@ -174,7 +174,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		/**
 		 * Added support for the profile search translatable.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.4.60
 		 *
 		 * @param int $post_id Profile search post id.
 		 *

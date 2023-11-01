@@ -2617,7 +2617,7 @@ function bb_redirection_allowed_third_party_domains( $hosts ) {
 /**
  * Install emails on plugin activation.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.60
  *
  * @return void
  */

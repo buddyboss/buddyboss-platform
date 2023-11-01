@@ -857,7 +857,7 @@ function bb_search_get_search_stopwords() {
 /**
  * Function to remove tags for activity network search.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.60
  *
  * @param array $tags Html tags.
  *

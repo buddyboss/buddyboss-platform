@@ -206,7 +206,7 @@ function bp_profile_search_main_form() {
 	/**
 	 * Filters the BuddyBoss Profile Search form ID.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.60
 	 *
 	 * @param int $form_id BuddyBoss Profile Search form ID.
 	 */
