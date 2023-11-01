@@ -975,6 +975,10 @@ function bb_generate_member_profile_links_on_update() {
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * @param mixed  $old_value The old option value.
+ * @param mixed  $value     The new option value.
+ * @param string $option    Option name.
+ *
  * @return void
  */
 function bb_member_remove_default_png_avatar_on_update_display_name( $old_value, $value, $option ) {
@@ -991,6 +995,8 @@ function bb_member_remove_default_png_avatar_on_update_display_name( $old_value,
  * Delete default PNG for member when delete the user.
  *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $id ID of the user.
  *
  * @return void
  */
