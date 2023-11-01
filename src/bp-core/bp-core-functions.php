@@ -9033,6 +9033,13 @@ function bb_get_default_png_avatar( $params ) {
 		$avatar_image_url = groups_get_groupmeta( $item_id, 'default-group-avatar-png', true );
 	}
 
+	if ( ! empty( $avatar_image_url ) ) {
+		$avatar_image_path = str_replace( bp_core_get_upload_dir( 'url' ), bp_core_avatar_upload_path(), $avatar_image_url );
+		if ( ! file_exists( $avatar_image_path ) ) {
+			$avatar_image_url = '';
+		}
+	}
+
 	if ( empty( $avatar_image_url ) ) {
 		$avatar_image_url = bb_generate_default_avatar( $params );
 	}
