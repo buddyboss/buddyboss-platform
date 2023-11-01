@@ -138,6 +138,9 @@ add_filter( 'bp_before_has_profile_parse_args', 'bb_xprofile_set_social_network_
 // When email changed then check profile completion for gravatar.
 add_action( 'profile_update', 'bb_profile_update_completion_user_progress', 10, 2 );
 
+// When first and last changed then delete the user default PNG avatar.
+add_action( 'xprofile_data_before_save', 'bb_xprofile_remove_default_png_avatar_on_update_user_details', 999, 1 );
+
 /**
  * Sanitize each field option name for saving to the database.
  *
@@ -1480,4 +1483,46 @@ function bb_xprofile_set_social_network_param( $args = array() ) {
  */
 function bb_core_xprofile_clear_group_cache() {
 	BP_XProfile_Group::$bp_xprofile_group_ids = array();
+}
+
+/**
+ * Delete the user default PNG avatar when update the first and last name.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param BP_XProfile_ProfileData $field Instance of the profile data being saved.
+ */
+function bb_xprofile_remove_default_png_avatar_on_update_user_details( $field ) {
+	if (
+		empty( $field->field_id ) ||
+		empty( $field->user_id )
+	) {
+		return;
+	}
+
+	$current_value = get_option( 'bp-display-name-format' );
+	$field_ids     = array();
+	if (
+		'first_name' === $current_value ||
+		'first_last_name' === $current_value
+	) {
+		$field_ids[] = bp_xprofile_firstname_field_id();
+		if ( 'first_last_name' === $current_value ) {
+			$field_ids[] = bp_xprofile_lastname_field_id();
+		}
+	} elseif ( 'nickname' === $current_value ) {
+		$field_ids[] = bp_xprofile_nickname_field_id();
+	}
+
+	if ( ! in_array( $field->field_id, $field_ids, true ) ) {
+		return;
+	}
+
+	$new_value = ( ! empty( $field->value ) ? bb_core_get_first_character( $field->value ) : '' );
+	$old_value = xprofile_get_field_data( $field->field_id, $field->user_id );
+	$old_value = ( ! empty( $old_value ) ? bb_core_get_first_character( $old_value ) : '' );
+
+	if ( $new_value !== $old_value ) {
+		bb_delete_default_user_png_avatar( array( $field->user_id ) );
+	}
 }
