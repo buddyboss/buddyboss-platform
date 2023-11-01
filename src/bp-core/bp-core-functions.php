@@ -9010,10 +9010,39 @@ function bb_is_available_image_library() {
 	return false;
 }
 
-function bb_get_predefined_pallet() {
+function bb_get_predefined_palette() {
+	/**
+	 * Filters the color palette should have a minimum of 12 color codes and a maximum of 21.
+	 *
+	 * @since BuddyBoss [BBVSERION]
+	 *
+	 * @param array $palette Array of color palette.
+	 */
 	return apply_filters(
-		'bb_get_predefined_pallet',
-		array( '#dc143c', '#b22222', '#8b0000', '#663399', '#4682b4', '#8a2be2', '#9400d3', '#9932cc', '#800080', '#4b0082', '#6a5acd', '#c71585', '#483d8b', '#4169e1', '#0000cd', '#000080', '#191970', '#008000', '#006400', '#8b4513', '#a0522d' )
+		'bb_get_predefined_palette',
+		array(
+			1  => '#dc143c',
+			2  => '#b22222',
+			3  => '#8b0000',
+			4  => '#663399',
+			5  => '#4682b4',
+			6  => '#8a2be2',
+			7  => '#9400d3',
+			8  => '#9932cc',
+			9  => '#800080',
+			10 => '#4b0082',
+			11 => '#6a5acd',
+			12 => '#c71585',
+			13 => '#483d8b',
+			14 => '#4169e1',
+			15 => '#0000cd',
+			16 => '#000080',
+			17 => '#191970',
+			18 => '#008000',
+			19 => '#006400',
+			20 => '#8b4513',
+			21 => '#a0522d'
+		)
 	);
 }
 
@@ -9091,20 +9120,20 @@ function bb_generate_default_avatar( $args ) {
 
 	$item_name = strtoupper( $char1 . $char2 );
 
+	$all_palettes = bb_get_predefined_palette();
 	if ( 'user' === $r['object'] ) {
-		$pallet = get_user_meta( $r['item_id'], 'default-user-avatar-png-background-code', true );
+		$palette = get_user_meta( $r['item_id'], 'default-user-avatar-png-background-color-palette', true );
 	} else {
-		$pallet = groups_get_groupmeta( $r['item_id'], 'default-group-avatar-png-background-code', true );
+		$palette = groups_get_groupmeta( $r['item_id'], 'default-group-avatar-png-background-color-palette', true );
 	}
 
-	if ( empty( $pallet ) ) {
-		$all_pallets = bb_get_predefined_pallet();
-		$pallet      = $all_pallets[ array_rand( $all_pallets ) ];
+	if ( empty( $palette ) ) {
+		$palette = array_rand( $all_palettes );
 
 		if ( 'user' === $r['object'] ) {
-			update_user_meta( $r['item_id'], 'default-user-avatar-png-background-code', $pallet );
+			update_user_meta( $r['item_id'], 'default-user-avatar-png-background-color-palette', $palette );
 		} else {
-			groups_update_groupmeta( $r['item_id'], 'default-group-avatar-png-background-code', $pallet );
+			groups_update_groupmeta( $r['item_id'], 'default-group-avatar-png-background-color-palette', $palette );
 		}
 	}
 
@@ -9121,7 +9150,7 @@ function bb_generate_default_avatar( $args ) {
 			'object'   => $r['object'],
 			'item_id'  => $r['item_id'],
 			'text'     => $item_name,
-			'bg_color' => $pallet,
+			'bg_color' => $all_palettes[ $palette ],
 			'font'     => $font_family,
 			'library'  => $image_library,
 		)
