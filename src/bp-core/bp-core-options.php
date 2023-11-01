@@ -1172,8 +1172,10 @@ function bp_is_activity_follow_active( $default = false ) {
 function bp_is_activity_like_active( $default = true ) {
 
 	$is_activity_post_like_active = false;
-	if ( 'likes' === bb_get_reaction_mode( $default ? 'likes' : '' ) &&
-		bb_is_reaction_activity_posts_enabled( $default ) ) {
+	if (
+		'likes' === bb_get_reaction_mode() &&
+		bb_is_reaction_activity_posts_enabled( $default )
+	) {
 		$is_activity_post_like_active = true;
 	}
 
@@ -2435,10 +2437,10 @@ function bb_is_reaction_activity_posts_enabled( $default = true ) {
  * @since BuddyBoss [BBVERSION]
  *
  * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: False.
+ *                      Default: True.
  * @return bool True if reaction for activity comments is enabled, otherwise false.
  */
-function bb_is_reaction_activity_comments_enabled( $default = false ) {
+function bb_is_reaction_activity_comments_enabled( $default = true ) {
 	return (bool) apply_filters( 'bb_is_reaction_activity_comments_enabled', (bool) bp_get_option( 'bb_reaction_activity_comments', $default ) );
 }
 

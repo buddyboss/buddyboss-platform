@@ -6166,6 +6166,16 @@ function bb_activity_migration( $raw_db_version, $current_db ) {
 			set_transient( 'bb_migrate_activity_reaction', true, HOUR_IN_SECONDS );
 			bb_migrate_activity_like_reaction();
 		}
+
+		// Migrate the activity like settings with reaction settings.
+		if ( $current_db >= 20674 ) {
+			$is_activity_like_active = (bool) bp_get_option( '_bp_enable_activity_like' );
+
+			bp_add_option( 'bb_reaction_activity_posts', $is_activity_like_active ? 1 : 0 );
+			bp_add_option( 'bb_reaction_activity_comments', 0 );
+			bp_add_option( 'bb_get_reaction_mode', 'likes' );
+			bp_delete_option( '_bp_enable_activity_like' );
+		}
 	}
 }
 
