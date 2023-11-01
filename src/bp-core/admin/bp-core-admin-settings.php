@@ -3344,20 +3344,37 @@ function bb_reactions_settings_callback_reaction_on_activity() {
 }
 
 /**
- * Reaction mode markups.
+ * Add reaction mode settings.
  *
  * @since BuddyBoss [BBVERSION]
  */
 function bb_reactions_settings_callback_reaction_mode() {
-	?>
-	<input name="bb_reaction_mode"
-		id="bb_reaction_mode"
-		type="radio"
-		value="1"
-		<?php checked( bp_is_activity_like_active() ); ?>
-	/>
-	<label for="bb_reaction_mode">
-		<?php esc_html_e( 'Likes', 'buddyboss' ); ?>
-	</label>
-	<?php
+
+	$reactions_modes = array(
+		array(
+			'label'      => esc_html__( 'Likes', 'buddyboss' ),
+			'name'       => 'bb_reaction_mode',
+			'value'      => 'likes',
+			'id'         => 'bb_reaction_mode_likes',
+			'is_checked' => 'likes' === bb_get_reaction_mode(),
+		)
+	);
+
+	$reactions_modes = apply_filters( 'bb_setting_reaction_mode_args', $reactions_modes );
+
+	if ( ! empty( $reactions_modes ) && is_array( $reactions_modes ) ) {
+		foreach ( $reactions_modes as $reaction_mode ) {
+			?>
+			<label for="<?php echo $reaction_mode['id']; ?>">
+				<input name="<?php echo $reaction_mode['name']; ?>"
+					id="<?php echo $reaction_mode['id']; ?>"
+					type="radio"
+					value="<?php echo $reaction_mode['value']; ?>"
+					<?php echo checked( $reaction_mode['is_checked'] ); ?>
+				/>
+				<?php echo $reaction_mode['label']; ?>
+			</label>
+			<?php
+		}
+	}
 }

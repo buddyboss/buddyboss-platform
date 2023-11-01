@@ -2435,3 +2435,15 @@ function bb_is_reaction_activity_posts_enabled( $default = true ) {
 function bb_is_reaction_activity_comments_enabled( $default = false ) {
 	return (bool) apply_filters( 'bb_is_reaction_activity_comments_enabled', (bool) bp_get_option( 'bb_reaction_activity_comments', $default ) );
 }
+
+/**
+ * Get currently active reaction mode.
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: 'likes'
+ *
+ * @return string The reaction mode, either 'likes' or 'emotions'.
+ */
+function bb_get_reaction_mode( $default = 'likes' ) {
+	return apply_filters( 'bb_get_reaction_mode', bp_get_option( 'bb_reaction_mode', $default ) );
+}

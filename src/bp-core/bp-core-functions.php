@@ -9069,7 +9069,7 @@ function bb_reactions_get_settings_fields() {
 			'bb_reaction_mode'  => array(
 				'title'             => esc_html__( 'Reactions Mode', 'buddyboss' ),
 				'callback'          => 'bb_reactions_settings_callback_reaction_mode',
-				'sanitize_callback' => 'absint',
+				'sanitize_callback' => 'sanitize_text_field',
 				'args'              => array(),
 			),
 		);
