@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.4.61 =
+* Bug: Groups - When forum discussions was inactive this caused a conflict with loading group feeds when enabling pinned posts
+
 = 2.4.60 =
 * New Feature! - Pin to Activity feed also know as Pin to Posts
 * Enhancement: Groups - Updated Groups Tab Creator Pro plugin support
