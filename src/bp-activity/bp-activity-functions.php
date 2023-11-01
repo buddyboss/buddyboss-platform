@@ -6169,7 +6169,7 @@ function bb_activity_migration( $raw_db_version, $current_db ) {
 
 		// Migrate the activity like settings with reaction settings.
 		if ( $current_db >= 20674 ) {
-			$is_activity_like_active = (bool) bp_get_option( '_bp_enable_activity_like' );
+			$is_activity_like_active = (bool) bp_get_option( '_bp_enable_activity_like', true );
 
 			bp_add_option( 'bb_reaction_activity_posts', $is_activity_like_active ? 1 : 0 );
 			bp_add_option( 'bb_reaction_activity_comments', 0 );
