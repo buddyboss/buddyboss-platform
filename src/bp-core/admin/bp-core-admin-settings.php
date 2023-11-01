@@ -325,21 +325,6 @@ function bp_admin_setting_callback_enable_activity_follow() {
 }
 
 /**
- * Allow like activity stream.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_admin_setting_callback_enable_activity_like() {
-	?>
-
-	<input id="_bp_enable_activity_like" name="_bp_enable_activity_like" type="checkbox" value="1" <?php checked( bp_is_activity_like_active( true ) ); ?> />
-	<label for="_bp_enable_activity_like"><?php esc_html_e( 'Allow your members to "Like" each other\'s activity posts', 'buddyboss' ); ?></label>
-
-	<?php
-}
-
-
-/**
  * Allow link previews in activity posts.
  *
  * @since BuddyBoss 1.0.0

@@ -1171,6 +1171,12 @@ function bp_is_activity_follow_active( $default = false ) {
  */
 function bp_is_activity_like_active( $default = true ) {
 
+	$is_activity_post_like_active = false;
+	if ( 'likes' === bb_get_reaction_mode( $default ? 'likes' : '' ) &&
+		bb_is_reaction_activity_posts_enabled( $default ) ) {
+		$is_activity_post_like_active = true;
+	}
+
 	/**
 	 * Filters whether or not Activity Like is enabled.
 	 *
@@ -1178,7 +1184,7 @@ function bp_is_activity_like_active( $default = true ) {
 	 *
 	 * @param bool $value Whether or not Activity Like is enabled.
 	 */
-	return (bool) apply_filters( 'bp_is_activity_like_active', (bool) bp_get_option( '_bp_enable_activity_like', $default ) );
+	return (bool) apply_filters( 'bp_is_activity_like_active', $is_activity_post_like_active );
 }
 
 
