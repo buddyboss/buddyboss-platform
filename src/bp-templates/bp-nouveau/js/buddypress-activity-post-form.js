@@ -3021,10 +3021,6 @@ window.bp = window.bp || {};
 					}
 				}
 
-				if ( this.isMentionURL( urlString, urlText ) ) {
-					return;
-				}
-
 				if ( '' !== urlString ) {
 					this.loadURLPreview( urlString );
 				} else if( activity_URL_preview !== undefined ){
@@ -3073,23 +3069,22 @@ window.bp = window.bp || {};
 				return responseUrl;
 			},
 
-			isMentionURL: function( urlString, urlText ) {
+			isMentionURL: function( urlString ) {
 				var isMentionURL	= false;
-				var urlStringText	= '';
 				var	membersSlug 	= window.location.href + BP_Nouveau.activity.params.objects.members.slug + '/';
 				urlString        	= urlString.replace('"', '');
-				urlText         	= urlText.replace( /&nbsp;/g, '' );
 
-				if( $.parseHTML( urlText ).length > 0 ) {
-					urlStringText = $.trim( $( $.parseHTML( urlText ) ).find('a[href="'+ urlString +'"]:first').text() );
-					if( urlString.includes( membersSlug ) || 0 === urlStringText.indexOf('@') ) {
-						isMentionURL = true;
-					}
+				if( urlString.includes( membersSlug ) ) {
+					isMentionURL = true;
 				}
 				return isMentionURL;
 			},
 
 			loadURLPreview: function ( url ) {
+				if ( this.isMentionURL( url ) ) {
+					return;
+				}
+
 				var self = this;
 
 				var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?$/;
