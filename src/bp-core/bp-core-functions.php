@@ -9000,6 +9000,15 @@ function bb_load_reaction() {
 	}
 }
 
+/**
+ * Function to retrieve the first character of the give string and make it uppercase.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $string String to find first character.
+ *
+ * @return string
+ */
 function bb_core_get_first_character( $string ) {
 
 	if ( function_exists( 'mb_strtoupper' ) && function_exists( 'mb_substr' ) ) {
@@ -9009,6 +9018,13 @@ function bb_core_get_first_character( $string ) {
 	return strtoupper( substr( $string, 0, 1 ) );
 }
 
+/**
+ * Function to return pre-defined color palettes.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
 function bb_get_predefined_palette() {
 	/**
 	 * Filters the color palette should have a minimum of 12 color codes and a maximum of 21.
@@ -9045,6 +9061,15 @@ function bb_get_predefined_palette() {
 	);
 }
 
+/**
+ * Function to retrieve the default PNG avatar if don't exists then generate.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $params Array of avatar details.
+ *
+ * @return string
+ */
 function bb_get_default_png_avatar( $params ) {
 	$object  = $params['object'] ?? 'user';
 	$item_id = $params['item_id'] ?? 0;
@@ -9075,6 +9100,15 @@ function bb_get_default_png_avatar( $params ) {
 	return $avatar_image_url;
 }
 
+/**
+ * Function to prepare array to generate the default PNG avatar.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args Array of avatar details.
+ *
+ * @return string
+ */
 function bb_generate_default_avatar( $args ) {
 	$r = bp_parse_args(
 		$args,
@@ -9089,7 +9123,7 @@ function bb_generate_default_avatar( $args ) {
 	$image_library = _wp_image_editor_choose();
 
 	if ( empty( $r['item_id'] ) || empty( $r['object'] ) || empty( $image_library ) ) {
-		return false;
+		return '';
 	}
 
 	if ( empty( $r['item_name'] ) ) {
@@ -9102,7 +9136,7 @@ function bb_generate_default_avatar( $args ) {
 	}
 
 	if ( empty( $r['item_name'] ) ) {
-		return false;
+		return '';
 	}
 
 	$char1 = bb_core_get_first_character( $r['item_name'] );
@@ -9163,6 +9197,15 @@ function bb_generate_default_avatar( $args ) {
 	return $default_avatar;
 }
 
+/**
+ * Function to generate the default PNG avatar.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args Array of avatar details.
+ *
+ * @return string
+ */
 function bb_generate_default_png_avatar( $args ) {
 	$r = bp_parse_args(
 		$args,
@@ -9180,7 +9223,7 @@ function bb_generate_default_png_avatar( $args ) {
 	);
 
 	if ( empty( $r['object'] ) || empty( $r['text'] ) || empty( $r['item_id'] ) || empty( $r['font'] ) ) {
-		return false;
+		return '';
 	}
 
 	// Generate filename.
@@ -9270,6 +9313,16 @@ function bb_generate_default_png_avatar( $args ) {
 	return '';
 }
 
+/**
+ * Function to delete the user default PNG avatar.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $item_ids      Array of user IDs.
+ * @param bool  $is_delete_dir True then delete directory. Default true.
+ *
+ * @return void
+ */
 function bb_delete_default_user_png_avatar( $item_ids = array(), $is_delete_dir = true ) {
 	global $wpdb, $wp_filesystem;
 
@@ -9294,6 +9347,16 @@ function bb_delete_default_user_png_avatar( $item_ids = array(), $is_delete_dir 
 	}
 }
 
+/**
+ * Function to delete the group default PNG avatar.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $item_ids      Array of group IDs.
+ * @param bool  $is_delete_dir True then delete directory. Default true.
+ *
+ * @return void
+ */
 function bb_delete_default_group_png_avatar( $item_ids = array(), $is_delete_dir = true ) {
 	global $wpdb, $bp, $wp_filesystem;
 
