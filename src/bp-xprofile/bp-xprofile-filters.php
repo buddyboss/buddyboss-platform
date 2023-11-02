@@ -135,6 +135,8 @@ add_action( 'user_profile_update_errors', 'bb_validate_user_nickname_on_user_upd
 
 add_filter( 'bp_before_has_profile_parse_args', 'bb_xprofile_set_social_network_param' );
 
+add_filter( 'bp_before_has_profile_parse_args', 'bb_xprofile_set_member_type_param' );
+
 // When email changed then check profile completion for gravatar.
 add_action( 'profile_update', 'bb_profile_update_completion_user_progress', 10, 2 );
 
@@ -1480,4 +1482,14 @@ function bb_xprofile_set_social_network_param( $args = array() ) {
  */
 function bb_core_xprofile_clear_group_cache() {
 	BP_XProfile_Group::$bp_xprofile_group_ids = array();
+}
+
+function bb_xprofile_set_member_type_param( $args = array() ) {
+	global $bp;
+
+	if ( bp_invites_member_invite_invitation_page() ) {
+		$args['member_type'] = $bp->signup->invite_profile_type;
+	}
+
+	return $args;
 }

@@ -254,6 +254,7 @@ function bp_invites_member_invite_register_screen_message() {
 			$post_id                  = $posts[0]->ID;
 			$get_invite_profile_type  = get_post_meta( $post_id, '_bp_invitee_member_type', true );
 			if ( isset( $get_invite_profile_type ) && '' !== $get_invite_profile_type ) {
+				$bp->signup->invite_profile_type = $get_invite_profile_type;
 				$member_type_post_id = bp_member_type_post_by_type( $get_invite_profile_type );
 				?>
 				<script>
