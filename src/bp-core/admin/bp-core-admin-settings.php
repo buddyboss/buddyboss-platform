@@ -3366,7 +3366,7 @@ function bb_reactions_settings_callback_reaction_mode() {
 						<div class="bb_emotions_actions_enable">
 							<input type="checkbox" name="" checked="checked">
 						</div>
-						<button class="bb_emotions_actions_remove">
+						<button class="bb_emotions_actions_remove" aria-label="<?php esc_attr_e( 'Remove Emotion', 'buddyboss' ); ?>">
 							<i class="bb-icon-l bb-icon-times"></i>
 						</button>
 					</div>
@@ -3377,7 +3377,7 @@ function bb_reactions_settings_callback_reaction_mode() {
 
 					<div class="bb_emotions_footer">
 						<span>Like</span>
-						<button class="bb_emotions_edit"><i class="bb-icon-l bb-icon-pencil"></i></button>
+						<button class="bb_emotions_edit" aria-label="<?php esc_attr_e( 'Edit Emotion', 'buddyboss' ); ?>"><i class="bb-icon-l bb-icon-pencil"></i></button>
 					</div>
 				</div>
 
@@ -3386,7 +3386,7 @@ function bb_reactions_settings_callback_reaction_mode() {
 						<div class="bb_emotions_actions_enable">
 							<input type="checkbox" name="" checked="checked">
 						</div>
-						<button class="bb_emotions_actions_remove">
+						<button class="bb_emotions_actions_remove" aria-label="<?php esc_attr_e( 'Remove Emotion', 'buddyboss' ); ?>">
 							<i class="bb-icon-l bb-icon-times"></i>
 						</button>
 					</div>
@@ -3397,7 +3397,7 @@ function bb_reactions_settings_callback_reaction_mode() {
 
 					<div class="bb_emotions_footer">
 						<span>Like</span>
-						<button class="bb_emotions_edit"><i class="bb-icon-l bb-icon-pencil"></i></button>
+						<button class="bb_emotions_edit" aria-label="<?php esc_attr_e( 'Edit Emotion', 'buddyboss' ); ?>"><i class="bb-icon-l bb-icon-pencil"></i></button>
 					</div>
 				</div>
 
@@ -3406,7 +3406,7 @@ function bb_reactions_settings_callback_reaction_mode() {
 						<div class="bb_emotions_actions_enable">
 							<input type="checkbox" name="" checked="checked">
 						</div>
-						<button class="bb_emotions_actions_remove">
+						<button class="bb_emotions_actions_remove" aria-label="<?php esc_attr_e( 'Remove Emotion', 'buddyboss' ); ?>">
 							<i class="bb-icon-l bb-icon-times"></i>
 						</button>
 					</div>
@@ -3417,7 +3417,7 @@ function bb_reactions_settings_callback_reaction_mode() {
 
 					<div class="bb_emotions_footer">
 						<span>Like</span>
-						<button class="bb_emotions_edit"><i class="bb-icon-l bb-icon-pencil"></i></button>
+						<button class="bb_emotions_edit" aria-label="<?php esc_attr_e( 'Edit Emotion', 'buddyboss' ); ?>"><i class="bb-icon-l bb-icon-pencil"></i></button>
 					</div>
 				</div>
 
@@ -3426,7 +3426,7 @@ function bb_reactions_settings_callback_reaction_mode() {
 						<div class="bb_emotions_actions_enable">
 							<input type="checkbox" name="" checked="checked">
 						</div>
-						<button class="bb_emotions_actions_remove">
+						<button class="bb_emotions_actions_remove" aria-label="<?php esc_attr_e( 'Remove Emotion', 'buddyboss' ); ?>">
 							<i class="bb-icon-l bb-icon-times"></i>
 						</button>
 					</div>
@@ -3437,12 +3437,33 @@ function bb_reactions_settings_callback_reaction_mode() {
 
 					<div class="bb_emotions_footer">
 						<span>Like</span>
-						<button class="bb_emotions_edit"><i class="bb-icon-l bb-icon-pencil"></i></button>
+						<button class="bb_emotions_edit" aria-label="<?php esc_attr_e( 'Edit Emotion', 'buddyboss' ); ?>"><i class="bb-icon-l bb-icon-pencil"></i></button>
 					</div>
+				</div>
+
+				<div class="bb_emotions_item bb_emotions_item_action">
+					<button class="bb_emotions_add_new" aria-label="<?php esc_attr_e( 'Ad New Emotion', 'buddyboss' ); ?>" data-bp-tooltip="<?php esc_attr_e( 'Add new', 'buddyboss' ); ?>" data-bp-tooltip-pos="<?php esc_attr_e( 'up', 'buddyboss' ); ?>">
+						<i class="bb-icon-f bb-icon-plus"></i>
+					</button>
 				</div>
 
 
 			</div>
+			// ToDo: This is temporary, Should be moved later
+			<script>
+				window.onload = function(){
+					setTimeout(() => {
+						jQuery( '.bb_emotions_list' ).sortable( {
+						update: function (data) {
+							console.log(data);
+						},
+						cursor: "move",
+						helper: "clone",
+						cancel: ".bb_emotions_item_action",
+					} );
+					}, 2000);
+				}
+			</script>
 			<?php
 		}
 	}

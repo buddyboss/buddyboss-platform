@@ -3708,9 +3708,11 @@ table.moderations .column-member img {
 }
 
 .bb_emotions_list .bb_emotions_item {
+  background-color: #fff;
   border: 1px solid #c3c4c7;
   border-radius: 4px;
   position: relative;
+  cursor: move;
 }
 
 .bb_emotions_list .bb_emotions_item button {
@@ -3719,11 +3721,40 @@ table.moderations .column-member img {
   padding: 0;
 }
 
+.bb_emotions_list .bb_emotions_item.ui-sortable-placeholder {
+  border: 1px dashed #c3c4c7;
+  visibility: visible !important;
+}
+
+.bb_emotions_list .bb_emotions_item.bb_emotions_item_action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 110px;
+  border-color: #dcdcde;
+  background-color: #f6f7f7;
+}
+
+.bb_emotions_list .bb_emotions_item.bb_emotions_item_action:hover {
+  border-color: #646970;
+}
+
+.bb_emotions_list .bb_emotions_item.bb_emotions_item_action button {
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+}
+
+.bb_emotions_list .bb_emotions_item.bb_emotions_item_action [class*=" bb-icon-"] {
+  color: #a7aaad;
+  font-size: 59px;
+}
+
 .bb_emotions_list .bb_emotions_actions_remove {
   position: absolute;
   top: -9px;
   right: -9px;
-  color: #a7aaaD;
+  color: #a7aaad;
   cursor: pointer;
 }
 
