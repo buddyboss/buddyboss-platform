@@ -217,6 +217,10 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 			}
 		}
 
+		if ( bp_is_active( 'members' ) ) {
+			$activity_objects['members']['slug'] = buddypress()->members->slug;
+		}
+
 		/**
 		 * Filters the activity objects to apply for localized javascript data.
 		 *

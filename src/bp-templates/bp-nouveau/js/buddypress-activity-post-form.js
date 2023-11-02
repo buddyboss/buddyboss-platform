@@ -3021,6 +3021,10 @@ window.bp = window.bp || {};
 					}
 				}
 
+				if ( this.isMentionURL( urlString, urlText ) ) {
+					return;
+				}
+
 				if ( '' !== urlString ) {
 					this.loadURLPreview( urlString );
 				} else if( activity_URL_preview !== undefined ){
@@ -3066,8 +3070,23 @@ window.bp = window.bp || {};
 				if ( div.innerHTML.length > 0 ) {
 					responseUrl = div.innerHTML;
 				}
-
 				return responseUrl;
+			},
+
+			isMentionURL: function( urlString, urlText ) {
+				var isMentionURL	= false;
+				var urlStringText	= '';
+				var	membersSlug 	= window.location.href + BP_Nouveau.activity.params.objects.members.slug + '/';
+				urlString        	= urlString.replace('"', '');
+				urlText         	= urlText.replace( /&nbsp;/g, '' );
+
+				if( $.parseHTML( urlText ).length > 0 ) {
+					urlStringText = $.trim( $( $.parseHTML( urlText ) ).find('a[href="'+ urlString +'"]:first').text() );
+					if( urlString.includes( membersSlug ) || 0 === urlStringText.indexOf('@') ) {
+						isMentionURL = true;
+					}
+				}
+				return isMentionURL;
 			},
 
 			loadURLPreview: function ( url ) {
