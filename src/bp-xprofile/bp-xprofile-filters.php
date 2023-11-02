@@ -1495,7 +1495,7 @@ function bb_core_xprofile_clear_group_cache() {
  */
 function bb_xprofile_set_member_type_param( $args = array() ) {
 	global $bp;
-	error_log( __LINE__ . ' ' . print_r( $_GET, true ));
+	
 	if ( bp_invites_member_invite_invitation_page() ) {
 		$args['member_type'] = $bp->signup->invite_profile_type;
 	}
