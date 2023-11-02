@@ -685,6 +685,10 @@ class BP_Nouveau extends BP_Theme_Compat {
 			$params['customizer_settings'] = bp_nouveau_get_temporary_setting( 'any' );
 		}
 
+		if ( bp_is_active( 'members' ) ) {
+			$params['members']['link'] = trailingslashit( bp_get_root_domain() . '/' . bp_get_members_slug() . '/' );
+		}
+
 		/**
 		 * Filters core JavaScript strings for internationalization before AJAX usage.
 		 *

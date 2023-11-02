@@ -4067,7 +4067,7 @@ window.bp = window.bp || {};
 			},
 
 			loadURLPreview: function ( url ) {
-				if ( bp.Views.WhatsNew.isMentionURL( url ) ) {
+				if ( this.isMentionURL( url ) ) {
 					return;
 				}
 				
@@ -4154,6 +4154,17 @@ window.bp = window.bp || {};
 						self.setURLResponse( urlResponse, url );
 					}
 				}
+			},
+			
+			isMentionURL: function( urlString ) {
+				var isMentionURL = false;
+				var membersLink  = BP_Nouveau.members.link;
+				urlString        = urlString.replace('"', '');
+				if( ! _.isUndefined( membersLink ) && urlString.includes( membersLink ) ) {
+					isMentionURL = true;
+				}
+
+				return isMentionURL;
 			},
 
 			setURLResponse: function ( response, url ) {
