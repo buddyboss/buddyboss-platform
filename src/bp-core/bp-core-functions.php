@@ -9207,6 +9207,8 @@ function bb_generate_default_avatar( $args ) {
  * @return string
  */
 function bb_generate_default_png_avatar( $args ) {
+	global $wp_filesystem;
+
 	$r = bp_parse_args(
 		$args,
 		array(
@@ -9237,13 +9239,16 @@ function bb_generate_default_png_avatar( $args ) {
 		$file_url  = bp_core_get_upload_dir( 'url' ) . '/avatars/default/' . $r['item_id'] . '/' . $filename;
 	}
 
-	// If folder not exists then create.
-	if ( ! is_dir( $file_path ) ) {
+	if ( ! is_object( $wp_filesystem ) ) {
+		if ( ! function_exists( 'WP_Filesystem' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
 
-		// Create temp folder.
-		wp_mkdir_p( $file_path );
-		chmod( $file_path, 0777 );
+		WP_Filesystem();
 	}
+
+	$wp_filesystem->rmdir( $file_path, true );
+	$wp_filesystem->mkdir( $file_path, FS_CHMOD_DIR );
 
 	$r['font_size'] = (int) apply_filters( 'bb_gd_avatar_font_size', (int) $r['font_size'], $r );
 
