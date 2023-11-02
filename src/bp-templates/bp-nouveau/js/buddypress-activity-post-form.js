@@ -3066,22 +3066,12 @@ window.bp = window.bp || {};
 				if ( div.innerHTML.length > 0 ) {
 					responseUrl = div.innerHTML;
 				}
+
 				return responseUrl;
 			},
 
-			isMentionURL: function( urlString ) {
-				var isMentionURL = false;
-				var	membersLink  = BP_Nouveau.activity.params.objects.members.link;
-				urlString        = urlString.replace('"', '');
-				if( ! _.isUndefined( membersLink ) && urlString.includes( membersLink ) ) {
-					isMentionURL = true;
-				}
-
-				return isMentionURL;
-			},
-
 			loadURLPreview: function ( url ) {
-				if ( this.isMentionURL( url ) ) {
+				if ( bp.Nouveau.linkPreviews.isMentionURL( url ) ) {
 					return;
 				}
 
