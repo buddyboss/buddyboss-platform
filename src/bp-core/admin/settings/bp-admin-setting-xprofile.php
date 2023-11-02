@@ -135,7 +135,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		}
 
 		// Check the image extension/library and based on that saves the settings.
-		if ( 'display-name' === $default_profile_avatar_type_after_saving && empty( bb_is_available_image_library() ) ) {
+		if ( 'display-name' === $default_profile_avatar_type_after_saving && empty( _wp_image_editor_choose() ) ) {
 
 			if ( 'display-name' === $default_profile_avatar_type_before_saving ) {
 				$default_profile_avatar_type_before_saving = 'buddyboss';

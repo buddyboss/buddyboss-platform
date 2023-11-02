@@ -9000,16 +9000,6 @@ function bb_load_reaction() {
 	}
 }
 
-function bb_is_available_image_library() {
-	if ( extension_loaded( 'gd' ) ) {
-		return 'gd';
-	} elseif ( class_exists( 'Imagick' ) ) {
-		return 'imagick';
-	}
-
-	return false;
-}
-
 function bb_core_get_first_character( $string ) {
 
 	if ( function_exists( 'mb_strtoupper' ) && function_exists( 'mb_substr' ) ) {
@@ -9096,7 +9086,7 @@ function bb_generate_default_avatar( $args ) {
 	);
 
 	// Check the image library is available or not.
-	$image_library = bb_is_available_image_library();
+	$image_library = _wp_image_editor_choose();
 
 	if ( empty( $r['item_id'] ) || empty( $r['object'] ) || empty( $image_library ) ) {
 		return false;
@@ -9161,7 +9151,6 @@ function bb_generate_default_avatar( $args ) {
 			'text'     => $item_name,
 			'bg_color' => $all_palettes[ $palette ],
 			'font'     => $font_family,
-			'library'  => $image_library,
 		)
 	);
 
@@ -9187,7 +9176,6 @@ function bb_generate_default_png_avatar( $args ) {
 			'bg_color'   => '#008000',
 			'text_color' => '#FFFFFF',
 			'font'       => function_exists( 'buddyboss_theme') ?  get_template_directory() . '/assets/fonts/SFUIText-Regular.ttf' : '',
-			'library'    => '',
 		)
 	);
 
