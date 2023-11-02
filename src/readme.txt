@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.4.62 =
+* Bug: Forums - Adding content to Wordpress settings comment moderation, this was causing a critical error when adding a new discussion or replying to discussions
+
 = 2.4.61 =
 * Bug: Groups - When forum discussions was inactive this caused a conflict with loading group feeds when enabling pinned posts
 
