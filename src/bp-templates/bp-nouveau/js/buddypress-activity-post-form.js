@@ -3070,13 +3070,13 @@ window.bp = window.bp || {};
 			},
 
 			isMentionURL: function( urlString ) {
-				var isMentionURL	= false;
-				var	membersSlug 	= window.location.href + BP_Nouveau.activity.params.objects.members.slug + '/';
-				urlString        	= urlString.replace('"', '');
-
-				if( urlString.includes( membersSlug ) ) {
+				var isMentionURL = false;
+				var	membersLink  = BP_Nouveau.activity.params.objects.members.link;
+				urlString        = urlString.replace('"', '');
+				if( ! _.isUndefined( membersLink ) && urlString.includes( membersLink ) ) {
 					isMentionURL = true;
 				}
+
 				return isMentionURL;
 			},
 

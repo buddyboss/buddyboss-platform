@@ -218,7 +218,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		}
 
 		if ( bp_is_active( 'members' ) ) {
-			$activity_objects['members']['slug'] = buddypress()->members->slug;
+			$activity_objects['members']['link'] = trailingslashit( bp_get_root_domain() . '/' . bp_get_members_slug() . '/' );
 		}
 
 		/**
