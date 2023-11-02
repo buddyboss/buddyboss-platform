@@ -1819,6 +1819,11 @@ function bp_get_user_has_avatar( $user_id = 0 ) {
 		)
 	);
 
+	// Check that the avatar has '/default/USER_ID/' path.
+	if ( false !== strpos( $avatar, '/default/' . $user_id . '/' ) ) {
+		$retval = false;
+	}
+
 	if ( false !== strpos( $avatar, '/' . $user_id . '/' ) ) {
 		$retval = true;
 	}
@@ -2200,7 +2205,7 @@ function bp_avatar_use_webcam() {
 	global $is_safari, $is_IE, $is_chrome;
 	$browser	= bb_core_get_browser();
 	$is_firefox	= isset( $browser['name'] ) ? 'Firefox' === $browser['b_name'] : false;
-	
+
 	/**
 	 * Do not use the webcam feature for mobile devices
 	 * to avoid possible confusions.
