@@ -3449,7 +3449,7 @@ function bb_reactions_settings_callback_reaction_mode() {
 
 
 			</div>
-			// ToDo: This is temporary, Should be moved later
+			<!-- // ToDo: This is temporary, Should be moved later -->
 			<script>
 				window.onload = function(){
 					setTimeout(() => {
