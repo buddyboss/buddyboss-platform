@@ -4067,6 +4067,10 @@ window.bp = window.bp || {};
 			},
 
 			loadURLPreview: function ( url ) {
+				if ( bp.Views.WhatsNew.isMentionURL( url ) ) {
+					return;
+				}
+				
 				var self = this;
 
 				// Already same preview then return.
