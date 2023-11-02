@@ -3453,14 +3453,13 @@ function bb_reactions_settings_callback_reaction_mode() {
 			<script>
 				window.onload = function(){
 					setTimeout(() => {
-						jQuery( '.bb_emotions_list' ).sortable( {
-						update: function (data) {
-							console.log(data);
-						},
-						cursor: "move",
-						helper: "clone",
-						cancel: ".bb_emotions_item_action",
-					} );
+						jQuery( '.bb_emotions_list' ).sortable({
+							cursor: "move",
+							items: "> div:not(.bb_emotions_item_action)",
+							update: function (data) {
+								console.log(data);
+							},
+						} );
 					}, 2000);
 				}
 			</script>
