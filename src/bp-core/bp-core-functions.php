@@ -9148,10 +9148,21 @@ function bb_generate_default_avatar( $args ) {
 	$char2 = '';
 	if ( 'user' === $r['object'] ) {
 		$display_format = bp_core_display_name_format();
-		if ( 'first_last_name' === $display_format ) {
-			$words = explode( ' ', $r['item_name'] );
-			if ( 2 <= count( $words ) ) {
-				$char2 = bb_core_get_first_character( $words[1] );
+		if (
+			'first_last_name' === $display_format &&
+			function_exists( 'bp_is_active' ) &&
+			bp_is_active( 'xprofile' )
+		) {
+			// Get the last field ID and its visibility.
+			$last_filed_id    = bp_xprofile_lastname_field_id();
+			$field_visibility = xprofile_get_field_visibility_level( $last_filed_id, $r['item_id'] );
+
+			// If visibility is public, then display second character.
+			if ( 'public' === $field_visibility ) {
+				$words = explode( ' ', $r['item_name'] );
+				if ( 2 <= count( $words ) ) {
+					$char2 = bb_core_get_first_character( $words[1] );
+				}
 			}
 		}
 	}
