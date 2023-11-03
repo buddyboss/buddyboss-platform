@@ -9169,6 +9169,11 @@ function bb_generate_default_avatar( $args ) {
 
 	$item_name = strtoupper( $char1 . $char2 );
 
+	// Allowed only english or number character.
+	if ( ! preg_match( '/^[A-Za-z0-9]+$/i', $item_name ) ) {
+		return $prepare_response;
+	}
+
 	$all_palettes = bb_get_predefined_palette();
 	if ( 'user' === $r['object'] ) {
 		$palette = get_user_meta( $r['item_id'], 'default-user-avatar-png-background-color-palette', true );
