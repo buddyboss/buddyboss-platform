@@ -519,22 +519,88 @@ function bp_nouveau_ajax_video_delete() {
 		}
 	}
 
+	$video_html_content   = '';
 	$video_personal_count = 0;
 	$video_group_count    = 0;
-
 	if ( bp_is_user_video() ) {
 		add_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
-		bp_has_video( bp_ajax_querystring( 'video' ) );
+
+		$video_args = bp_ajax_querystring( 'video' );
+		$video_args = bp_parse_args( $video_args );
+		unset( $video_args['per_page'] );
+		$has_videos           = bp_has_video( $video_args );
 		$video_personal_count = bp_core_number_format( $GLOBALS['video_template']->total_video_count );
+
 		remove_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
+
+		ob_start();
+		if ( $has_videos ) {
+			while ( bp_video() ) {
+				bp_the_video();
+
+				bp_get_template_part( 'video/entry' );
+			}
+
+			if ( bp_video_has_more_items() ) {
+				?>
+				<li class="load-more">
+					<a class="button outline full" href="<?php bp_video_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+				</li>
+				<?php
+			}
+		} else {
+			?>
+			<aside class="bp-feedback bp-messages info">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p><?php esc_html_e( 'Sorry, no videos were found', 'buddyboss' ); ?></p>
+			</aside>
+			<?php
+		}
+
+		$video_html_content = ob_get_clean();
 	}
 
+	$group_video_html_content = '';
 	if ( bp_is_group_video() ) {
 
 		// Update the count of photos in groups in navigation menu.
 		wp_cache_flush();
 
 		$video_group_count = bp_video_get_total_group_video_count();
+
+		add_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_groups_scope', 20 );
+		$group_video_args = bp_ajax_querystring( 'video' );
+		$group_video_args = bp_parse_args( $group_video_args );
+		unset( $group_video_args['per_page'] );
+		$has_group_videos = bp_has_video( $group_video_args );
+
+		remove_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_groups_scope', 20 );
+
+		ob_start();
+		if ( $has_group_videos ) {
+			while ( bp_video() ) {
+				bp_the_video();
+
+				bp_get_template_part( 'video/entry' );
+			}
+
+			if ( bp_video_has_more_items() ) {
+				?>
+				<li class="load-more">
+					<a class="button outline full" href="<?php bp_video_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+				</li>
+				<?php
+			}
+		} else {
+			?>
+			<aside class="bp-feedback bp-messages info">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p><?php esc_html_e( 'Sorry, no videos were found', 'buddyboss' ); ?></p>
+			</aside>
+			<?php
+		}
+
+		$group_video_html_content = ob_get_clean();
 	}
 
 	if ( bp_is_group_albums() ) {
@@ -545,13 +611,15 @@ function bp_nouveau_ajax_video_delete() {
 
 	wp_send_json_success(
 		array(
-			'video'                => $video,
-			'video_personal_count' => $video_personal_count,
-			'video_group_count'    => $video_group_count,
-			'video_ids'            => ( isset( $response['video_activity_ids'] ) ) ? $response['video_activity_ids'] : '',
-			'video_content'        => ( isset( $response['content'] ) ) ? $response['content'] : '',
-			'delete_activity'      => $delete_box,
-			'activity_content'     => $activity_content,
+			'video'                    => $video,
+			'video_personal_count'     => $video_personal_count,
+			'video_group_count'        => $video_group_count,
+			'video_ids'                => ( isset( $response['video_activity_ids'] ) ) ? $response['video_activity_ids'] : '',
+			'video_content'            => ( isset( $response['content'] ) ) ? $response['content'] : '',
+			'delete_activity'          => $delete_box,
+			'activity_content'         => $activity_content,
+			'video_html_content'       => $video_html_content,
+			'group_video_html_content' => $group_video_html_content,
 		)
 	);
 }
