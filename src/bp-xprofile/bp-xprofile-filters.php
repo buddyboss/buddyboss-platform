@@ -138,8 +138,11 @@ add_filter( 'bp_before_has_profile_parse_args', 'bb_xprofile_set_social_network_
 // When email changed then check profile completion for gravatar.
 add_action( 'profile_update', 'bb_profile_update_completion_user_progress', 10, 2 );
 
-// When first and last changed then delete the user default PNG avatar.
+// When first and last changed, then delete the user default PNG avatar.
 add_action( 'xprofile_data_before_save', 'bb_xprofile_remove_default_png_avatar_on_update_user_details', 999, 1 );
+
+// When visibility settings changed, then delete the user default PNG avatar.
+add_action( 'updated_xprofile_field_meta', 'bb_xprofile_remove_default_png_avatar_on_update_visibility', 10, 3 );
 
 /**
  * Sanitize each field option name for saving to the database.
@@ -1524,5 +1527,31 @@ function bb_xprofile_remove_default_png_avatar_on_update_user_details( $field ) 
 
 	if ( $new_value !== $old_value ) {
 		bb_delete_default_user_png_avatar( array( $field->user_id ) );
+	}
+}
+
+/**
+ * Delete user meta for default PNG when update visibility related settings from backend.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $meta_id   ID of updated metadata entry.
+ * @param int    $object_id ID of the object metadata is for.
+ * @param string $meta_key  Metadata key.
+ *
+ * @return void
+ */
+function bb_xprofile_remove_default_png_avatar_on_update_visibility( $meta_id, $object_id, $meta_key ) {
+
+	$last_filed_id = bp_xprofile_lastname_field_id();
+	if (
+		(
+			'allow_custom_visibility' === $meta_key ||
+			'default_visibility' === $meta_key
+		) &&
+		function_exists( 'bb_delete_default_user_png_avatar' ) &&
+		$last_filed_id === $object_id
+	) {
+		bb_delete_default_user_png_avatar( array(), false );
 	}
 }
