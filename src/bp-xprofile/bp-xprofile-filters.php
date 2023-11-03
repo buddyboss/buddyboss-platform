@@ -144,6 +144,9 @@ add_action( 'xprofile_data_before_save', 'bb_xprofile_remove_default_png_avatar_
 // When visibility settings changed, then delete the user default PNG avatar.
 add_action( 'updated_xprofile_field_meta', 'bb_xprofile_remove_default_png_avatar_on_update_visibility', 10, 3 );
 
+// When visibility settings changed by the user, then delete the user default PNG avatar.
+add_filter( 'update_user_metadata', 'bb_xprofile_remove_default_png_avatar_on_user_update_visibility', 10, 5 );
+
 /**
  * Sanitize each field option name for saving to the database.
  *
@@ -1554,4 +1557,62 @@ function bb_xprofile_remove_default_png_avatar_on_update_visibility( $meta_id, $
 	) {
 		bb_delete_default_user_png_avatar( array(), false );
 	}
+}
+
+/**
+ * Delete user meta for default PNG when update own visibility related settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param null|bool $retval      Whether to allow updating metadata for the given type.
+ * @param int       $object_id   ID of the object metadata is for.
+ * @param string    $meta_key    Metadata key.
+ * @param mixed     $meta_value  Metadata value. Must be serializable if non-scalar.
+ * @param mixed     $prev_value  Optional. Previous value to check before updating.
+ *                               If specified, only update existing metadata entries with
+ *                               this value. Otherwise, update all entries.
+ *
+ * @return bool
+ */
+function bb_xprofile_remove_default_png_avatar_on_user_update_visibility( $retval, $object_id, $meta_key, $meta_value, $prev_value ) {
+
+	if (
+		'bp_xprofile_visibility_levels' === $meta_key &&
+		! empty( $meta_value ) &&
+		function_exists( 'bb_delete_default_user_png_avatar' )
+	) {
+		$last_filed_id            = bp_xprofile_lastname_field_id();
+		$new_last_name_visibility = $meta_value[ $last_filed_id ] ?? '';
+
+		// Compare existing value to new value if no prev value given and the key exists only once.
+		if ( empty( $prev_value ) ) {
+			$old_value = get_metadata_raw( 'user', $object_id, $meta_key );
+			if ( is_countable( $old_value ) && count( $old_value ) === 1 ) {
+
+				// Get old last name visibility.
+				$old_last_name_visibility = $old_value[0][ $last_filed_id ] ?? '';
+
+				if ( $new_last_name_visibility === $old_last_name_visibility ) {
+					return $retval;
+				}
+
+				// Get allowed visibility levels.
+				$allowed_values = bp_xprofile_get_visibility_levels();
+				if ( ! empty( $allowed_values['public'] ) ) {
+					unset( $allowed_values['public'] );
+
+					if (
+						array_key_exists( $new_last_name_visibility, $allowed_values ) &&
+						array_key_exists( $old_last_name_visibility, $allowed_values )
+					) {
+						return $retval;
+					}
+				}
+			}
+		}
+
+		bb_delete_default_user_png_avatar( array( $object_id ) );
+	}
+
+	return $retval;
 }
