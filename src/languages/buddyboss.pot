@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.4.60\n"
+"Project-Id-Version: BuddyBoss Platform 2.4.62\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-11-01 05:19:17+00:00\n"
+"POT-Creation-Date: 2023-11-03 08:58:37+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3847,7 +3847,7 @@ msgid "Default Data"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:3130 bp-forums/admin/admin.php:209
-#: bp-forums/admin/functions.php:242 bp-forums/admin/functions.php:274
+#: bp-forums/admin/functions.php:216 bp-forums/admin/functions.php:248
 #: bp-forums/admin/tools.php:46
 msgid "Repair Forums"
 msgstr ""
@@ -3857,7 +3857,7 @@ msgid "Forum Repair"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:3139 bp-forums/admin/admin.php:220
-#: bp-forums/admin/functions.php:246 bp-forums/admin/functions.php:296
+#: bp-forums/admin/functions.php:220 bp-forums/admin/functions.php:270
 #: bp-forums/admin/settings.php:1185
 msgid "Import Forums"
 msgstr ""
@@ -12678,7 +12678,7 @@ msgstr ""
 msgid "Forum draft updated. <a target=\"_blank\" href=\"%s\">Preview forum</a>"
 msgstr ""
 
-#: bp-forums/admin/functions.php:250 bp-forums/admin/tools.php:1831
+#: bp-forums/admin/functions.php:224 bp-forums/admin/tools.php:1831
 msgid "Reset Forums"
 msgstr ""
 
