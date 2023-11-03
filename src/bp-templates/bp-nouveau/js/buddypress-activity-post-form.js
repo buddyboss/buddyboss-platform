@@ -2997,6 +2997,7 @@ window.bp = window.bp || {};
 				//Remove mentioned members Link
 				var tempNode = $( '<div></div>' ).html( urlText );
 				tempNode.find( 'a.bp-suggestions-mention' ).remove();
+				tempNode.find( '[rel="nofollow"]' ).remove() ;
 				urlText = tempNode.html();
 
 				if ( urlText.indexOf( '<img' ) >= 0 ) {
@@ -3071,10 +3072,6 @@ window.bp = window.bp || {};
 			},
 
 			loadURLPreview: function ( url ) {
-				if ( bp.Nouveau.linkPreviews.isMentionURL( url ) ) {
-					return;
-				}
-
 				var self = this;
 
 				var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?$/;
