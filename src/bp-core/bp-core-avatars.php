@@ -1819,13 +1819,13 @@ function bp_get_user_has_avatar( $user_id = 0 ) {
 		)
 	);
 
+	if ( false !== strpos( $avatar, '/' . $user_id . '/' ) ) {
+		$retval = true;
+	}
+
 	// Check that the avatar has '/default/USER_ID/' path.
 	if ( false !== strpos( $avatar, '/default/' . $user_id . '/' ) ) {
 		$retval = false;
-	}
-
-	if ( false !== strpos( $avatar, '/' . $user_id . '/' ) ) {
-		$retval = true;
 	}
 
 	// Support WP User Avatar Plugin default avatar image.
