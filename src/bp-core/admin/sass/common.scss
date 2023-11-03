@@ -2743,6 +2743,14 @@ h2.has_tutorial_btn {
 
 	}
 
+	.no-field-notice {
+
+		.bp-admin-card & {
+			margin: 15px 0;
+			padding: 10px;
+		}
+	}
+
 }
 
 .buddyboss_page_bp-settings #TB_window #TB_ajaxContent .bp-avatar-status .bp-uploader-progress div.error {

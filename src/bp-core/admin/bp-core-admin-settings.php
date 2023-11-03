@@ -512,7 +512,7 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 		</label>
 	</div>
 
-	<p class="bp-notice notice bp-default-profile-avatar-display-name-notice <?php echo ( 'display-name' !== bb_get_default_profile_avatar_type() || ! empty( _wp_image_editor_choose() ) ) ? 'bp-hide' : ''; ?>">
+	<p class="no-field-notice bp-default-profile-avatar-display-name-notice <?php echo ( 'display-name' !== bb_get_default_profile_avatar_type() || ! empty( _wp_image_editor_choose() ) ) ? 'bp-hide' : ''; ?>">
 		<?php
 		echo sprintf(
 		/* translators: Imagick text with link. */
@@ -939,7 +939,7 @@ function bp_admin_setting_callback_default_group_avatar_type() {
 		</label>
 	</div>
 
-	<p class="bp-notice notice bp-default-group-avatar-group-name-notice <?php echo ( 'group-name' !== bb_get_default_group_avatar_type() || ! empty( _wp_image_editor_choose() ) ) ? 'bp-hide' : ''; ?>">
+	<p class="no-field-notice bp-default-group-avatar-group-name-notice <?php echo ( 'group-name' !== bb_get_default_group_avatar_type() || ! empty( _wp_image_editor_choose() ) ) ? 'bp-hide' : ''; ?>">
 		<?php
 		echo sprintf(
 		/* translators: Imagick text with link. */
