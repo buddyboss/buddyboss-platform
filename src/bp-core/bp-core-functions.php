@@ -9034,7 +9034,7 @@ function bb_get_predefined_palette() {
 	 * @param array $palette Array of color palette.
 	 */
 	return apply_filters(
-		'bb_get_predefined_palette',
+		'bb_predefined_palette',
 		array(
 			1  => '#dc143c',
 			2  => '#b22222',
