@@ -9074,10 +9074,10 @@ function bb_get_default_png_avatar( $params ) {
 	$object  = $params['object'] ?? 'user';
 	$item_id = $params['item_id'] ?? 0;
 
-	$avatar_image_url = false;
+	$fallback_avatar  = buddypress()->plugin_url . 'bp-core/images/bb-profile-avatar-buddyboss.jpg';
 
 	if ( empty( $item_id ) ) {
-		return $avatar_image_url;
+		return $fallback_avatar;
 	}
 
 	if ( 'user' === $object ) {
@@ -9094,10 +9094,10 @@ function bb_get_default_png_avatar( $params ) {
 	}
 
 	if ( empty( $avatar_image_url ) ) {
-		$avatar_image_url = bb_generate_default_avatar( $params );
+		$avatar_image_url = bb_generate_default_avatar( $params )['url'];
 	}
 
-	return $avatar_image_url;
+	return ! empty( $avatar_image_url ) ? $avatar_image_url : $fallback_avatar;
 }
 
 /**
@@ -9107,7 +9107,7 @@ function bb_get_default_png_avatar( $params ) {
  *
  * @param array $args Array of avatar details.
  *
- * @return string
+ * @return array
  */
 function bb_generate_default_avatar( $args ) {
 	$r = bp_parse_args(
@@ -9119,11 +9119,16 @@ function bb_generate_default_avatar( $args ) {
 		)
 	);
 
+	$prepare_response = array(
+		'path' => '',
+		'url'  => '',
+	);
+
 	// Check the image library is available or not.
 	$image_library = _wp_image_editor_choose();
 
 	if ( empty( $r['item_id'] ) || empty( $r['object'] ) || empty( $image_library ) ) {
-		return '';
+		return $prepare_response;
 	}
 
 	if ( empty( $r['item_name'] ) ) {
@@ -9136,7 +9141,7 @@ function bb_generate_default_avatar( $args ) {
 	}
 
 	if ( empty( $r['item_name'] ) ) {
-		return '';
+		return $prepare_response;
 	}
 
 	$char1 = bb_core_get_first_character( $r['item_name'] );
@@ -9157,7 +9162,7 @@ function bb_generate_default_avatar( $args ) {
 	if ( 'user' === $r['object'] ) {
 		$palette = get_user_meta( $r['item_id'], 'default-user-avatar-png-background-color-palette', true );
 	} else {
-		$palette = groups_get_groupmeta( $r['item_id'], 'default-group-avatar-png-background-color-palette', true );
+		$palette = groups_get_groupmeta( $r['item_id'], 'default-group-avatar-png-background-color-palette' );
 	}
 
 	if ( empty( $palette ) ) {
@@ -9185,7 +9190,12 @@ function bb_generate_default_avatar( $args ) {
 		groups_update_groupmeta( $r['item_id'], 'default-group-avatar-png', $default_avatar );
 	}
 
-	return $default_avatar;
+	if ( ! empty( $default_avatar ) ) {
+		$prepare_response['url']  = $default_avatar;
+		$prepare_response['path'] = str_replace( bp_core_get_upload_dir( 'url' ), bp_core_avatar_upload_path(), $default_avatar );;
+	}
+
+	return $prepare_response;
 }
 
 /**
