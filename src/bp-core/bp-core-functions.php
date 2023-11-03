@@ -9170,21 +9170,12 @@ function bb_generate_default_avatar( $args ) {
 		}
 	}
 
-	$font_family = 'Arial, sans-serif';
-	if ( function_exists( 'buddyboss_theme_get_option' ) && buddyboss_theme_get_option( 'custom_typography' ) ) {
-		$body_fonts  = buddyboss_theme_get_option( 'boss_body_font_family' );
-		$font_family = $body_fonts['font-family'];
-	}
-
-	$font_family = ABSPATH . '/arial.ttf';
-
 	$default_avatar = bb_generate_default_png_avatar(
 		array(
 			'object'   => $r['object'],
 			'item_id'  => $r['item_id'],
 			'text'     => $item_name,
 			'bg_color' => $all_palettes[ $palette ],
-			'font'     => $font_family,
 		)
 	);
 
@@ -9217,15 +9208,49 @@ function bb_generate_default_png_avatar( $args ) {
 			'text'       => '',
 			'width'      => 300,
 			'height'     => 300,
-			'font_size'  => 120,
 			'bg_color'   => '#008000',
-			'text_color' => '#FFFFFF',
-			'font'       => function_exists( 'buddyboss_theme') ?  get_template_directory() . '/assets/fonts/SFUIText-Regular.ttf' : '',
 		)
 	);
 
-	if ( empty( $r['object'] ) || empty( $r['text'] ) || empty( $r['item_id'] ) || empty( $r['font'] ) ) {
+	if ( empty( $r['object'] ) || empty( $r['text'] ) || empty( $r['item_id'] ) ) {
 		return '';
+	}
+
+	/**
+	 * Set font family full path to render text on image.
+	 *
+	 * @since BuddyBoss [BBVSERION]
+	 *
+	 * @param string $font_family Full path of font family. It should be a TTF file.
+	 */
+	$font_family = apply_filters( 'bb_default_png_avatar_font_family', trailingslashit( buddypress()->plugin_dir ) . 'bp-core/fonts/SFUIText-Regular.ttf' );
+
+	if ( empty( $font_family ) ) {
+		return '';
+	}
+
+	/**
+	 * Set font color to render text on image.
+	 *
+	 * @since BuddyBoss [BBVSERION]
+	 *
+	 * @param string $png_text_color The color of the font to display on image.
+	 */
+	$png_text_color = apply_filters( 'bb_default_png_avatar_text_color', '#FFFFFF' );
+	if ( empty( $png_text_color ) ) {
+		$png_text_color = '#FFFFFF';
+	}
+
+	/**
+	 * Set font size to render text on image.
+	 *
+	 * @since BuddyBoss [BBVSERION]
+	 *
+	 * @param int $font_size The font size of the text to display on image.
+	 */
+	$font_size = (int) apply_filters( 'bb_default_png_avatar_text_font_size', 120 );
+	if ( empty( $font_size ) ) {
+		$font_size = 120;
 	}
 
 	// Generate filename.
@@ -9250,8 +9275,6 @@ function bb_generate_default_png_avatar( $args ) {
 	$wp_filesystem->rmdir( $file_path, true );
 	$wp_filesystem->mkdir( $file_path, FS_CHMOD_DIR );
 
-	$r['font_size'] = (int) apply_filters( 'bb_gd_avatar_font_size', (int) $r['font_size'], $r );
-
 	$file = $file_path . $filename;
 
 	$chose_editor = _wp_image_editor_choose();
@@ -9260,7 +9283,7 @@ function bb_generate_default_png_avatar( $args ) {
 
 	// Check if image editor is available and create text on the image.
 	if ( ! is_wp_error( $image_editor ) ) {
-		$text_dimensions = imagettfbbox( $r['font_size'], 0, $r['font'], $r['text'] );
+		$text_dimensions = imagettfbbox( $font_size, 0, $font_family, $r['text'] );
 
 		// Extract width and height from the bounding box.
 		$text_width  = abs( $text_dimensions[2] - $text_dimensions[0] ); // Width (right - left).
@@ -9281,10 +9304,10 @@ function bb_generate_default_png_avatar( $args ) {
 		if ( 'WP_Image_Editor_GD' === $chose_editor ) {
 			// Define the background color.
 			$filtered_bg_color = imagecolorallocate( $image, hexdec( substr( $r['bg_color'], 1, 2 ) ), hexdec( substr( $r['bg_color'], 3, 2 ) ), hexdec( substr( $r['bg_color'], 5, 2 ) ) );
-			$text_color        = imagecolorallocate( $image, hexdec( substr( $r['text_color'], 1, 2 ) ), hexdec( substr( $r['text_color'], 3, 2 ) ), hexdec( substr( $r['text_color'], 5, 2 ) ) );
+			$text_color        = imagecolorallocate( $image, hexdec( substr( $png_text_color, 1, 2 ) ), hexdec( substr( $png_text_color, 3, 2 ) ), hexdec( substr( $png_text_color, 5, 2 ) ) );
 
 			imagefill( $image, 0, 0, $filtered_bg_color );
-			imagettftext( $image, $r['font_size'], 0, $text_x, $text_y, $text_color, $r['font'], $r['text'] );
+			imagettftext( $image, $font_size, 0, $text_x, $text_y, $text_color, $font_family, $r['text'] );
 
 		} else {
 			$image = new Imagick();
@@ -9294,10 +9317,10 @@ function bb_generate_default_png_avatar( $args ) {
 
 			// Set up the text properties.
 			$draw = new ImagickDraw();
-			$draw->setFont( $r['font'] ); // Path to your TrueType font file.
+			$draw->setFont( $font_family ); // Path to your TrueType font file.
 			$draw->setResolution( 95, 95 ); // text resolution.
-			$draw->setFontSize( $r['font_size'] ); // Font size.
-			$draw->setFillColor( new ImagickPixel( $r['text_color'] ) ); // Text color.
+			$draw->setFontSize( $font_size ); // Font size.
+			$draw->setFillColor( new ImagickPixel( $png_text_color ) ); // Text color.
 			$draw->setGravity( Imagick::GRAVITY_CENTER ); // Set the text to be centered.
 
 			// Add text to the image.
