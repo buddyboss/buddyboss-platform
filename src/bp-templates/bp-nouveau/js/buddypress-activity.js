@@ -1124,7 +1124,7 @@ window.bp = window.bp || {};
 								content = content.replace( /&nbsp;/g, ' ' );
 
 								var content_text = jQuery( e.currentTarget ).text().trim();
-								if ( content_text !== '' || content.includes( 'class="emoji"' ) || content.indexOf( 'emojioneemoji' ) >= 0 ) {
+								if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0 ) {
 									jQuery( e.currentTarget ).closest( 'form' ).addClass( 'has-content' );
 								} else {
 									jQuery( e.currentTarget ).closest( 'form' ).removeClass( 'has-content' );
