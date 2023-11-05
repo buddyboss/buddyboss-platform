@@ -1073,7 +1073,9 @@ function bb_nouveau_ajax_activity_update_pinned_post() {
 		}
 
 		$response = apply_filters( 'bb_ajax_activity_update_pinned_post', $response, $_POST );
+	}
 
+	if ( ! empty( $retval ) && in_array( $retval, array( 'unpinned', 'pinned', 'pin_updated' ), true ) ) {
 		wp_send_json_success( $response );
 	} else {
 		wp_send_json_error( $response );
