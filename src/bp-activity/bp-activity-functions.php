@@ -6453,7 +6453,7 @@ function bb_activity_pin_unpin_post( $args = array() ) {
 			'action'      => 'pin',
 			'activity_id' => 0,
 			'retval'      => 'bool',
-			'user_id'     => bp_loggedin_user_id()
+			'user_id'     => bp_loggedin_user_id(),
 		)
 	);
 
@@ -6482,15 +6482,14 @@ function bb_activity_pin_unpin_post( $args = array() ) {
 			$is_admin = groups_is_user_admin( $r['user_id'], $activity->item_id );
 			$is_mod   = groups_is_user_mod( $r['user_id'], $activity->item_id );
 
-			if ( $is_admin || $is_mod ) {
+			if ( $is_admin || $is_mod || bp_current_user_can( 'administrator' ) ) {
 				$old_value = groups_get_groupmeta( $activity->item_id, 'bb_pinned_post' );
 				groups_update_groupmeta( $activity->item_id, 'bb_pinned_post', $updated_value );
 			} else {
 				return 'not_allowed';
 			}
-
 		} else {
-			if ( bp_current_user_can( 'bp_moderate' ) ) {
+			if ( bp_current_user_can( 'administrator' ) ) {
 				$old_value = bp_get_option( 'bb_pinned_post' );
 				bp_update_option( 'bb_pinned_post', $updated_value );
 			} else {
