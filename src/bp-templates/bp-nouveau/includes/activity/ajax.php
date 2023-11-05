@@ -1048,6 +1048,10 @@ function bb_nouveau_ajax_activity_update_pinned_post() {
 		wp_send_json_error( $response );
 	}
 
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error( $response );
+	}
+
 	// Nonce check!
 	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
 		wp_send_json_error( $response );
@@ -1078,12 +1082,16 @@ function bb_nouveau_ajax_activity_update_pinned_post() {
 			$response['feedback'] = esc_html__( 'Your pinned post has been removed', 'buddyboss' );
 		} elseif ( 'pinned' === $retval ) {
 			$response['feedback'] = esc_html__( 'Your post has been pinned', 'buddyboss' );
+		} elseif ( 'not_allowed' === $retval || 'not_member' === $retval ) {
+			$response['feedback'] = esc_html__( 'Your are not allowed to pinned or unpinned the post', 'buddyboss' );
 		} elseif ( 'pin_updated' === $retval ) {
 			$response['feedback'] = esc_html__( 'Your pinned post has been updated', 'buddyboss' );
 		}
 
 		$response = apply_filters( 'bb_ajax_activity_update_pinned_post', $response, $_POST );
+	}
 
+	if ( ! empty( $retval ) && in_array( $retval, array( 'unpinned', 'pinned', 'pin_updated' ), true ) ) {
 		wp_send_json_success( $response );
 	} else {
 		wp_send_json_error( $response );
