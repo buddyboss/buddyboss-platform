@@ -6457,7 +6457,8 @@ function bb_activity_pin_unpin_post( $args = array() ) {
 		)
 	);
 
-	$retval = '';
+	$retval    = '';
+	$old_value = '';
 
 	$activity = new BP_Activity_Activity( (int) $r['activity_id'] );
 
@@ -6476,24 +6477,24 @@ function bb_activity_pin_unpin_post( $args = array() ) {
 
 			// Check the user is moderator or organizer and part of the group.
 			if ( ! groups_is_user_member( $r['user_id'], $activity->item_id ) ) {
-				return 'not_member';
-			}
-
-			$is_admin = groups_is_user_admin( $r['user_id'], $activity->item_id );
-			$is_mod   = groups_is_user_mod( $r['user_id'], $activity->item_id );
-
-			if ( $is_admin || $is_mod || bp_current_user_can( 'administrator' ) ) {
-				$old_value = groups_get_groupmeta( $activity->item_id, 'bb_pinned_post' );
-				groups_update_groupmeta( $activity->item_id, 'bb_pinned_post', $updated_value );
+				$retval = 'not_member';
 			} else {
-				return 'not_allowed';
+				$is_admin = groups_is_user_admin( $r['user_id'], $activity->item_id );
+				$is_mod   = groups_is_user_mod( $r['user_id'], $activity->item_id );
+
+				if ( $is_admin || $is_mod || bp_current_user_can( 'administrator' ) ) {
+					$old_value = groups_get_groupmeta( $activity->item_id, 'bb_pinned_post' );
+					groups_update_groupmeta( $activity->item_id, 'bb_pinned_post', $updated_value );
+				} else {
+					$retval = 'not_allowed';
+				}
 			}
 		} else {
 			if ( bp_current_user_can( 'administrator' ) ) {
 				$old_value = bp_get_option( 'bb_pinned_post' );
 				bp_update_option( 'bb_pinned_post', $updated_value );
 			} else {
-				return 'not_allowed';
+				$retval = 'not_allowed';
 			}
 		}
 
