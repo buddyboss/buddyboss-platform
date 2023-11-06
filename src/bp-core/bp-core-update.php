@@ -479,10 +479,6 @@ function bp_version_updater() {
 			bb_update_to_2_4_60();
 		}
 
-		if ( $raw_db_version < 20764 ) {
-			bb_update_to_2_4_70();
-		}
-
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3404,20 +3400,4 @@ function bb_update_to_2_4_60() {
 	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE `option_name` LIKE 'wp_1_bp_updater_batch_%' AND `option_value` LIKE '%bb_migrate_member_friends_count%'" );
 
 	bb_create_background_member_friends_count();
-}
-
-/**
- * Clear web and api cache on the update.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return void
- */
-function bb_update_to_2_4_70() {
-	wp_cache_flush();
-	// Purge all the cache for API.
-	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		// Clear members API cache.
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-members' );
-	}
 }
