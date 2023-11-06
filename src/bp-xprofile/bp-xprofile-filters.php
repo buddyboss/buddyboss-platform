@@ -1570,17 +1570,21 @@ function bb_xprofile_remove_default_png_avatar_on_update_visibility( $retval, $o
 		return $retval;
 	}
 
-	// Get allowed visibility levels.
-	$allowed_values = bp_xprofile_get_visibility_levels();
-	if ( ! empty( $allowed_values['public'] ) ) {
-		unset( $allowed_values['public'] );
-	}
+	if ( 'default_visibility' === $meta_key ) {
 
-	if ( 'default_visibility' === $meta_key &&
-		array_key_exists( $meta_value, $allowed_values ) &&
-		array_key_exists( $prev_value, $allowed_values )
-	) {
-		return $retval;
+		// Get allowed visibility levels.
+		$allowed_values = bp_xprofile_get_visibility_levels();
+		if ( ! empty( $allowed_values['public'] ) ) {
+			unset( $allowed_values['public'] );
+		}
+
+		if (
+			array_key_exists( $meta_value, $allowed_values ) &&
+			array_key_exists( $prev_value, $allowed_values )
+		) {
+			return $retval;
+		}
+
 	}
 
 	bb_delete_default_user_png_avatar( array(), false );
@@ -1629,13 +1633,13 @@ function bb_xprofile_remove_default_png_avatar_on_user_update_visibility( $retva
 				$allowed_values = bp_xprofile_get_visibility_levels();
 				if ( ! empty( $allowed_values['public'] ) ) {
 					unset( $allowed_values['public'] );
+				}
 
-					if (
-						array_key_exists( $new_last_name_visibility, $allowed_values ) &&
-						array_key_exists( $old_last_name_visibility, $allowed_values )
-					) {
-						return $retval;
-					}
+				if (
+					array_key_exists( $new_last_name_visibility, $allowed_values ) &&
+					array_key_exists( $old_last_name_visibility, $allowed_values )
+				) {
+					return $retval;
 				}
 			}
 		}
