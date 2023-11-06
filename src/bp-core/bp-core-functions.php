@@ -9010,12 +9010,18 @@ function bb_load_reaction() {
  * @return string
  */
 function bb_core_get_first_character( $string ) {
-
 	if ( function_exists( 'mb_strtoupper' ) && function_exists( 'mb_substr' ) ) {
-		return mb_strtoupper( mb_substr( $string, 0, 1 ) );
+		$character = mb_strtoupper( mb_substr( $string, 0, 1 ) );
+	} else {
+		$character = strtoupper( substr( $string, 0, 1 ) );
 	}
 
-	return strtoupper( substr( $string, 0, 1 ) );
+	// Allowed only english or number character.
+	if ( ! preg_match( '/^[A-Za-z0-9]+$/i', $character ) ) {
+		$character = '';
+	}
+
+	return $character;
 }
 
 /**
@@ -9168,9 +9174,7 @@ function bb_generate_default_avatar( $args ) {
 	}
 
 	$item_name = strtoupper( $char1 . $char2 );
-
-	// Allowed only english or number character.
-	if ( ! preg_match( '/^[A-Za-z0-9]+$/i', $item_name ) ) {
+	if ( empty( $item_name ) ) {
 		return $prepare_response;
 	}
 
