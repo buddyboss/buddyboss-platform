@@ -310,7 +310,7 @@ jQuery( document ).ready(
 			} );
 		}
 
-		jQuery( document ).on( 'keyup', '#bbp_topic_title', function ( e ) {
+		jQuery( document ).on( 'input', '#bbp_topic_title', function ( e ) {
 			if ( jQuery( e.currentTarget ).val().trim() !== '' ) {
 				jQuery( e.currentTarget ).closest( 'form' ).addClass( 'has-title' );
 			} else {
