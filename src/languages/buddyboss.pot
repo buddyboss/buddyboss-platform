@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.4.62\n"
+"Project-Id-Version: BuddyBoss Platform 2.4.63\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-11-02 13:10:13+00:00\n"
+"POT-Creation-Date: 2023-11-05 09:34:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2419,12 +2419,12 @@ msgid "Your post has been unpinned"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1262
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1064
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1068
 msgid "Your post has been pinned"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1264
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1066
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1072
 msgid "Your pinned post has been updated"
 msgstr ""
 
@@ -30047,8 +30047,12 @@ msgstr ""
 msgid "This activity has been marked as spam and is no longer visible."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1062
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1066
 msgid "Your pinned post has been removed"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1070
+msgid "Your are not allowed to pinned or unpinned the post"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:100
