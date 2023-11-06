@@ -6368,6 +6368,11 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 		$can_edit_privacy = false;
 	}
 
+	// Remove filter to get the complete content for edit activity comment.
+	remove_filter( 'bp_get_activity_content', 'bp_activity_truncate_entry', 5 );
+	$activity_comment_content = bp_get_activity_comment_content( $activity_comment_id );
+	add_filter( 'bp_get_activity_content', 'bp_activity_truncate_entry', 5 );
+
 	/**
 	 * Filter here to edit the activity comment edit data.
 	 *
@@ -6382,7 +6387,7 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 			'can_edit_privacy' => $can_edit_privacy,
 			'album_id'         => $album_id,
 			'folder_id'        => $folder_id,
-			'content'          => stripslashes( bp_get_activity_comment_content( $activity_comment_id ) ),
+			'content'          => stripslashes( $activity_comment_content ),
 			'item_id'          => $activity_comment->item_id,
 			'object'           => $activity_comment->component,
 			'privacy'          => $activity_comment->privacy,
