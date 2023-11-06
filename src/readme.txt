@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.3.2
 Requires PHP: 5.6.20
-Stable tag: 2.4.60
+Stable tag: 2.4.63
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,15 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.4.63 =
+* Hotfix: Activity - Fixed vulnerability where any user could pin posts
+
+= 2.4.62 =
+* Bug: Forums - Adding content to Wordpress settings comment moderation, this was causing a critical error when adding a new discussion or replying to discussions
+
+= 2.4.61 =
+* Bug: Groups - When forum discussions was inactive this caused a conflict with loading group feeds when enabling pinned posts
 
 = 2.4.60 =
 * New Feature! - Pin to Activity feed also know as Pin to Posts
