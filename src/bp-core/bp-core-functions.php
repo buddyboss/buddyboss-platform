@@ -9212,62 +9212,6 @@ function bb_generate_default_avatar( $args ) {
 		$palette = array_rand( $all_palettes );
 	}
 
-	$default_avatar = bb_generate_default_png_avatar(
-		array(
-			'object'   => $r['object'],
-			'item_id'  => $r['item_id'],
-			'text'     => $item_name,
-			'bg_color' => $all_palettes[ $palette ],
-		)
-	);
-
-	if ( ! empty( $default_avatar ) ) {
-
-		if ( 'user' === $r['object'] ) {
-			update_user_meta( $r['item_id'], 'default-user-avatar-png-background-color-palette', $palette );
-		} else {
-			groups_update_groupmeta( $r['item_id'], 'default-group-avatar-png-background-color-palette', $palette );
-		}
-
-		if ( 'user' === $r['object'] ) {
-			update_user_meta( $r['item_id'], 'default-user-avatar-png', $default_avatar );
-		} else {
-			groups_update_groupmeta( $r['item_id'], 'default-group-avatar-png', $default_avatar );
-		}
-
-		$prepare_response['url']  = $default_avatar;
-		$prepare_response['path'] = str_replace( bp_core_get_upload_dir( 'url' ), bp_core_avatar_upload_path(), $default_avatar );
-	}
-
-	return $prepare_response;
-}
-
-/**
- * Function to generate the default PNG avatar.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param array $args Array of avatar details.
- *
- * @return string
- */
-function bb_generate_default_png_avatar( $args ) {
-	$r = bp_parse_args(
-		$args,
-		array(
-			'item_id'  => 0,
-			'object'   => '',
-			'text'     => '',
-			'width'    => 300,
-			'height'   => 300,
-			'bg_color' => '#008000',
-		)
-	);
-
-	if ( empty( $r['object'] ) || empty( $r['text'] ) || empty( $r['item_id'] ) ) {
-		return '';
-	}
-
 	/**
 	 * Set font family full path to render text on image.
 	 *
@@ -9278,13 +9222,11 @@ function bb_generate_default_png_avatar( $args ) {
 	$font_family = apply_filters( 'bb_default_png_avatar_font_family', trailingslashit( buddypress()->plugin_dir ) . 'bp-core/fonts/SFUIText-Regular.ttf' );
 
 	if ( empty( $font_family ) ) {
-		return '';
+		return $prepare_response;
 	}
 
 	// Setup default if empty.
-	if ( empty( $r['bg_color'] ) ) {
-		$r['bg_color'] = '#008000';
-	}
+	$bg_color = ! empty( $all_palettes[ $palette ] ) ? $all_palettes[ $palette ] : '#008000';
 
 	/**
 	 * Set font color to render text on image.
@@ -9325,15 +9267,16 @@ function bb_generate_default_png_avatar( $args ) {
 	$wp_filesystem->rmdir( $file_path, true );
 	$wp_filesystem->mkdir( $file_path, FS_CHMOD_DIR );
 
-	$file = $file_path . $filename;
+	$file           = $file_path . $filename;
+	$chose_editor   = _wp_image_editor_choose();
+	$default_avatar = '';
 
-	$chose_editor = _wp_image_editor_choose();
 	// Set up image editor object.
 	$image_editor = wp_get_image_editor( buddypress()->plugin_dir . 'bp-core/images/blank.png' );
 
 	// Check if image editor is available and create text on the image.
 	if ( ! is_wp_error( $image_editor ) ) {
-		$text_dimensions = imagettfbbox( $font_size, 0, $font_family, $r['text'] );
+		$text_dimensions = imagettfbbox( $font_size, 0, $font_family, $item_name );
 
 		// Extract width and height from the bounding box.
 		$text_width  = abs( $text_dimensions[2] - $text_dimensions[0] ); // Width (right - left).
@@ -9353,17 +9296,17 @@ function bb_generate_default_png_avatar( $args ) {
 
 		if ( 'WP_Image_Editor_GD' === $chose_editor ) {
 			// Define the background color.
-			$filtered_bg_color = imagecolorallocate( $image, hexdec( substr( $r['bg_color'], 1, 2 ) ), hexdec( substr( $r['bg_color'], 3, 2 ) ), hexdec( substr( $r['bg_color'], 5, 2 ) ) );
+			$filtered_bg_color = imagecolorallocate( $image, hexdec( substr( $bg_color, 1, 2 ) ), hexdec( substr( $bg_color, 3, 2 ) ), hexdec( substr( $bg_color, 5, 2 ) ) );
 			$text_color        = imagecolorallocate( $image, hexdec( substr( $png_text_color, 1, 2 ) ), hexdec( substr( $png_text_color, 3, 2 ) ), hexdec( substr( $png_text_color, 5, 2 ) ) );
 
 			imagefill( $image, 0, 0, $filtered_bg_color );
-			imagettftext( $image, $font_size, 0, $text_x, $text_y, $text_color, $font_family, $r['text'] );
+			imagettftext( $image, $font_size, 0, $text_x, $text_y, $text_color, $font_family, $item_name );
 
 		} else {
 			$image = new Imagick();
 			$image->setAntiAlias( true );
 			$image->setResolution( 300, 300 );
-			$image->newImage( $image_width, $image_height, new ImagickPixel( $r['bg_color'] ) );
+			$image->newImage( $image_width, $image_height, new ImagickPixel( $bg_color ) );
 
 			// Set up the text properties.
 			$draw = new ImagickDraw();
@@ -9374,7 +9317,7 @@ function bb_generate_default_png_avatar( $args ) {
 			$draw->setGravity( Imagick::GRAVITY_CENTER ); // Set the text to be centered.
 
 			// Add text to the image.
-			$image->annotateImage( $draw, 0, 0, 0, $r['text'] );
+			$image->annotateImage( $draw, 0, 0, 0, $item_name );
 			$image->setImageFormat( 'png' );
 		}
 
@@ -9384,11 +9327,29 @@ function bb_generate_default_png_avatar( $args ) {
 		$result = $image_editor->save( $file, 'image/png' );
 
 		if ( ! is_wp_error( $result ) ) {
-			return $file_url;
+			$default_avatar = $file_url;
 		}
 	}
 
-	return '';
+	if ( ! empty( $default_avatar ) ) {
+
+		if ( 'user' === $r['object'] ) {
+			update_user_meta( $r['item_id'], 'default-user-avatar-png-background-color-palette', $palette );
+		} else {
+			groups_update_groupmeta( $r['item_id'], 'default-group-avatar-png-background-color-palette', $palette );
+		}
+
+		if ( 'user' === $r['object'] ) {
+			update_user_meta( $r['item_id'], 'default-user-avatar-png', $default_avatar );
+		} else {
+			groups_update_groupmeta( $r['item_id'], 'default-group-avatar-png', $default_avatar );
+		}
+
+		$prepare_response['url']  = $default_avatar;
+		$prepare_response['path'] = str_replace( bp_core_get_upload_dir( 'url' ), bp_core_avatar_upload_path(), $default_avatar );
+	}
+
+	return $prepare_response;
 }
 
 /**
