@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.4.62\n"
+"Project-Id-Version: BuddyBoss Platform 2.4.63\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-11-03 08:58:37+00:00\n"
+"POT-Creation-Date: 2023-11-06 04:33:29+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2419,12 +2419,12 @@ msgid "Your post has been unpinned"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1262
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1064
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1068
 msgid "Your post has been pinned"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1264
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1066
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1072
 msgid "Your pinned post has been updated"
 msgstr ""
 
@@ -10291,13 +10291,16 @@ msgstr ""
 msgid "This discussion has no replies."
 msgstr ""
 
-#: bp-core/deprecated/buddyboss/1.0.php:727 bp-forums/topics/template.php:2344
+#: bp-core/deprecated/buddyboss/1.0.php:727
+#: bp-forums/templates/default/bbpress/feedback-forum-category.php:16
+#: bp-forums/topics/template.php:2344
 msgid "%s reply"
 msgid_plural "%s replies"
 msgstr[0] ""
 msgstr[1] ""
 
 #: bp-core/deprecated/buddyboss/1.0.php:743 bp-forums/forums/template.php:1631
+#: bp-forums/templates/default/bbpress/feedback-forum-category.php:20
 msgid "%s discussion"
 msgid_plural "%s discussions"
 msgstr[0] ""
@@ -16917,6 +16920,10 @@ msgstr ""
 msgid "Hidden Replies"
 msgstr ""
 
+#: bp-forums/templates/default/bbpress/feedback-forum-category.php:25
+msgid "This forum category has %1$s and %2$s."
+msgstr ""
+
 #: bp-forums/templates/default/bbpress/feedback-logged-in.php:13
 msgid "You are already logged in."
 msgstr ""
@@ -22602,7 +22609,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-invites/bp-invites-functions.php:379
+#: bp-invites/bp-invites-functions.php:395
 msgid "To accept this invitation, please visit %%ACCEPTURL%%"
 msgstr ""
 
@@ -30115,8 +30122,12 @@ msgstr ""
 msgid "This activity has been marked as spam and is no longer visible."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1062
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1066
 msgid "Your pinned post has been removed"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1070
+msgid "Your are not allowed to pinned or unpinned the post"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:100
