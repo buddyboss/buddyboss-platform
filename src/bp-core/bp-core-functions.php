@@ -9252,8 +9252,6 @@ function bb_generate_default_avatar( $args ) {
  * @return string
  */
 function bb_generate_default_png_avatar( $args ) {
-	global $wp_filesystem;
-
 	$r = bp_parse_args(
 		$args,
 		array(
@@ -9323,14 +9321,7 @@ function bb_generate_default_png_avatar( $args ) {
 		$file_url  = bp_core_get_upload_dir( 'url' ) . '/avatars/default/' . $r['item_id'] . '/' . $filename;
 	}
 
-	if ( ! is_object( $wp_filesystem ) ) {
-		if ( ! function_exists( 'WP_Filesystem' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/file.php';
-		}
-
-		WP_Filesystem();
-	}
-
+	$wp_filesystem = bb_wp_filesystem();
 	$wp_filesystem->rmdir( $file_path, true );
 	$wp_filesystem->mkdir( $file_path, FS_CHMOD_DIR );
 
@@ -9411,7 +9402,7 @@ function bb_generate_default_png_avatar( $args ) {
  * @return void
  */
 function bb_delete_default_user_png_avatar( $item_ids = array(), $is_delete_dir = true ) {
-	global $wpdb, $wp_filesystem;
+	global $wpdb;
 
 	$delete_query = $wpdb->prepare("DELETE FROM $wpdb->usermeta WHERE meta_key = %s", 'default-user-avatar-png' );
 	if ( ! empty( $item_ids ) ) {
@@ -9421,6 +9412,7 @@ function bb_delete_default_user_png_avatar( $item_ids = array(), $is_delete_dir 
 	$wpdb->query( $delete_query );
 
 	if ( $is_delete_dir ) {
+		$wp_filesystem   = bb_wp_filesystem();
 		$user_avatar_dir = bp_core_avatar_upload_path() . '/avatars/default/';
 		if ( is_dir( $user_avatar_dir ) ) {
 			if ( ! empty( $item_ids ) ) {
@@ -9445,7 +9437,7 @@ function bb_delete_default_user_png_avatar( $item_ids = array(), $is_delete_dir 
  * @return void
  */
 function bb_delete_default_group_png_avatar( $item_ids = array(), $is_delete_dir = true ) {
-	global $wpdb, $bp, $wp_filesystem;
+	global $wpdb, $bp;
 
 	$delete_query = $wpdb->prepare( "DELETE FROM {$bp->groups->table_name_groupmeta} WHERE meta_key = %s", 'default-group-avatar-png' );
 	if ( ! empty( $item_ids ) ) {
@@ -9455,6 +9447,7 @@ function bb_delete_default_group_png_avatar( $item_ids = array(), $is_delete_dir
 	$wpdb->query( $delete_query );
 
 	if ( $is_delete_dir ) {
+		$wp_filesystem    = bb_wp_filesystem();
 		$group_avatar_dir = bp_core_avatar_upload_path() . '/group-avatars/default/';
 		if ( is_dir( $group_avatar_dir ) ) {
 			if ( ! empty( $item_ids ) ) {
