@@ -9001,6 +9001,29 @@ function bb_load_reaction() {
 }
 
 /**
+ * Function to check WP_Filesystem object available or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return object
+ */
+function bb_wp_filesystem() {
+	global $wp_filesystem;
+
+	if ( ! is_object( $wp_filesystem ) ) {
+
+		// Check if WP_Filesystem not exists then include file.
+		if ( ! function_exists( 'WP_Filesystem' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+
+		WP_Filesystem();
+	}
+
+	return $wp_filesystem;
+}
+
+/**
  * Function to retrieve the first character of the give string and make it uppercase.
  *
  * @since BuddyBoss [BBVERSION]
