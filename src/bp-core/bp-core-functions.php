@@ -9183,12 +9183,6 @@ function bb_generate_default_avatar( $args ) {
 
 	if ( empty( $palette ) ) {
 		$palette = array_rand( $all_palettes );
-
-		if ( 'user' === $r['object'] ) {
-			update_user_meta( $r['item_id'], 'default-user-avatar-png-background-color-palette', $palette );
-		} else {
-			groups_update_groupmeta( $r['item_id'], 'default-group-avatar-png-background-color-palette', $palette );
-		}
 	}
 
 	$default_avatar = bb_generate_default_png_avatar(
@@ -9200,15 +9194,22 @@ function bb_generate_default_avatar( $args ) {
 		)
 	);
 
-	if ( 'user' === $r['object'] ) {
-		update_user_meta( $r['item_id'], 'default-user-avatar-png', $default_avatar );
-	} else {
-		groups_update_groupmeta( $r['item_id'], 'default-group-avatar-png', $default_avatar );
-	}
-
 	if ( ! empty( $default_avatar ) ) {
+
+		if ( 'user' === $r['object'] ) {
+			update_user_meta( $r['item_id'], 'default-user-avatar-png-background-color-palette', $palette );
+		} else {
+			groups_update_groupmeta( $r['item_id'], 'default-group-avatar-png-background-color-palette', $palette );
+		}
+
+		if ( 'user' === $r['object'] ) {
+			update_user_meta( $r['item_id'], 'default-user-avatar-png', $default_avatar );
+		} else {
+			groups_update_groupmeta( $r['item_id'], 'default-group-avatar-png', $default_avatar );
+		}
+
 		$prepare_response['url']  = $default_avatar;
-		$prepare_response['path'] = str_replace( bp_core_get_upload_dir( 'url' ), bp_core_avatar_upload_path(), $default_avatar );;
+		$prepare_response['path'] = str_replace( bp_core_get_upload_dir( 'url' ), bp_core_avatar_upload_path(), $default_avatar );
 	}
 
 	return $prepare_response;
@@ -9229,12 +9230,12 @@ function bb_generate_default_png_avatar( $args ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'item_id'    => 0,
-			'object'     => '',
-			'text'       => '',
-			'width'      => 300,
-			'height'     => 300,
-			'bg_color'   => '#008000',
+			'item_id'  => 0,
+			'object'   => '',
+			'text'     => '',
+			'width'    => 300,
+			'height'   => 300,
+			'bg_color' => '#008000',
 		)
 	);
 
@@ -9253,6 +9254,11 @@ function bb_generate_default_png_avatar( $args ) {
 
 	if ( empty( $font_family ) ) {
 		return '';
+	}
+
+	// Setup default if empty.
+	if ( empty( $r['bg_color'] ) ) {
+		$r['bg_color'] = '#008000';
 	}
 
 	/**
