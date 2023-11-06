@@ -3294,6 +3294,7 @@ window.bp = window.bp || {};
 				//Remove mentioned members Link
 				var tempNode = $( '<div></div>' ).html( urlText );
 				tempNode.find( 'a.bp-suggestions-mention' ).remove();
+				tempNode.find( '[rel="nofollow"]' ).remove() ;
 				urlText = tempNode.html();
 
 				if ( urlText.indexOf( '<img' ) >= 0 ) {
