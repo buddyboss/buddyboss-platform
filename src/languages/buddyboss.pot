@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.4.62\n"
+"Project-Id-Version: BuddyBoss Platform 2.4.63\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-11-02 13:10:13+00:00\n"
+"POT-Creation-Date: 2023-11-06 04:31:59+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2419,12 +2419,12 @@ msgid "Your post has been unpinned"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1262
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1080
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1084
 msgid "Your post has been pinned"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1264
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1082
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1088
 msgid "Your pinned post has been updated"
 msgstr ""
 
@@ -22611,7 +22611,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-invites/bp-invites-functions.php:379
+#: bp-invites/bp-invites-functions.php:395
 msgid "To accept this invitation, please visit %%ACCEPTURL%%"
 msgstr ""
 
@@ -30136,8 +30136,12 @@ msgstr ""
 msgid "This activity has been marked as spam and is no longer visible."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1078
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1082
 msgid "Your pinned post has been removed"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1086
+msgid "Your are not allowed to pinned or unpinned the post"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:100
