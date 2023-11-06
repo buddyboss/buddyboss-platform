@@ -311,7 +311,6 @@ jQuery( document ).ready(
 		}
 
 		jQuery( document ).on( 'input', '#bbp_topic_title', function ( e ) {
-			console.log(jQuery( e.currentTarget ).val().trim())
 			if ( jQuery( e.currentTarget ).val().trim() !== '' ) {
 				jQuery( e.currentTarget ).closest( 'form' ).addClass( 'has-title' );
 			} else {
