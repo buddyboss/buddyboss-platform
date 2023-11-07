@@ -586,7 +586,7 @@ function bb_get_subscriptions_types( $singular = false ) {
 	$types                   = array();
 	$all_subscriptions_types = bb_register_subscriptions_types();
 
-	if ( ! bb_enabled_legacy_email_preference() && bp_is_active( 'notifications' ) ) {
+	if ( ! bb_enabled_legacy_email_preference() ) {
 		if ( ! empty( $all_subscriptions_types ) ) {
 			foreach ( $all_subscriptions_types as $type ) {
 				if ( bb_is_enabled_subscription( $type['subscription_type'] ) ) {
