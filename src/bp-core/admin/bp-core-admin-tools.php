@@ -996,7 +996,14 @@ function bp_admin_install_emails() {
 			continue;
 		}
 
-		$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ) );
+		$args = bp_parse_args( $email, $defaults, 'install_email_' . $id );
+
+		$page_exist = post_exists( $args['post_title'], '', '', bp_get_email_post_type() );
+		if ( ! empty( $page_exist ) && 'publish' === get_post_status( $page_exist ) ) {
+			continue;
+		}
+
+		$post_id = wp_insert_post( $args );
 		if ( ! $post_id ) {
 			continue;
 		}
