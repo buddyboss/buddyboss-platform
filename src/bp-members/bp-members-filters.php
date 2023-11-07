@@ -987,7 +987,7 @@ function bb_member_remove_default_png_avatar_on_update_display_name( $old_value,
 		$old_value !== $value
 	) {
 		// Delete default SVG for users.
-		bb_delete_default_user_png_avatar();
+		bb_delete_default_user_png_avatar( array(), false );
 	}
 }
 
