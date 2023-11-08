@@ -3513,9 +3513,13 @@ function bb_cpt_feed_enabled_disabled() {
 	$is_blog_component_active = false;
 
 	// Get all active custom post type.
-	remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
+    if ( function_exists( 'bb_feed_not_allowed_tutorlms_post_types' ) ) {
+	    remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
+    }
 	$post_types = bb_feed_post_types();
-	add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
+	if ( function_exists( 'bb_feed_not_allowed_tutorlms_post_types' ) ) {
+		add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
+	}
 
 	foreach ( $post_types as $cpt ) {
 		$enable_blog_feeds = isset( $_POST[ "bp-feed-custom-post-type-$cpt" ] );
