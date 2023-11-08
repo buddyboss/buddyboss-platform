@@ -9032,7 +9032,7 @@ function bb_reactions_get_settings_fields_for_section( $section_id = '' ) {
 	}
 
 	$fields = bb_reactions_get_settings_fields();
-	$retval = isset( $fields[ $section_id ] ) ? $fields[ $section_id ] : false;
+	$retval = $fields[ $section_id ] ?? false;
 
 	return (array) apply_filters( 'bb_reactions_get_settings_fields_for_section', $retval, $section_id );
 }
