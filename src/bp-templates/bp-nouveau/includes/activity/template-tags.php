@@ -290,6 +290,114 @@ function bp_nouveau_activity_state() {
 				</span>
 			</a>
 		<?php endif; ?>
+		<div class="activity-state-popup">
+			<div class="activity-state-popup_overlay"></div>
+			<div class="activity-state-popup_inner">
+				<div class="activity-state-popup_title">
+					<h4>Reactions</h4>
+				</div>
+				<div class="activity-state-popup_tab">
+						<div class="activity-state-popup_tab_panel">
+							<ul>
+								<li>
+									<a href="#" class="active" data-tab="activity-state_all">All</a>
+								</li>
+								<li>
+									<a href="#" data-tab="activity-state_thumbsup">
+										<i class="bb-icon-rf bb-icon-thumbs-up"></i>
+										<span>55</span>
+									</a>
+								</li>
+								<li>
+									<a href="#" data-tab="activity-state_love">
+										<i class="bb-icon-rf bb-icon-heart"></i>
+										<span>80</span>
+									</a>
+								</li>
+								<li>
+									<a href="#" data-tab="activity-state_laugh">
+										<img src="<?php echo get_template_directory_uri(); ?>/assets/images/laugh.png" alt="Laugh">
+										<span>59</span>
+									</a>
+								</li>
+								<li>
+									<a href="#" data-tab="activity-state_thumbsup">
+										<img src="<?php echo get_template_directory_uri(); ?>/assets/images/laugh.png" alt="Laugh">
+										<span>37</span>
+									</a>
+								</li>
+							</ul>
+						</div>
+						<div class="activity-state-popup_tab_content">
+							<div class="activity-state-popup_tab_item activity-state_all active">
+								<ul class="activity-state_users">
+									<li class="activity-state_user">
+										<div class="activity-state_user__avatar">
+											<a href="#">
+												<img src="" alt="" />
+												<div class="activity-state_user__reaction">
+													<i class="bb-icon-rf bb-icon-thumbs-up"></i>
+												</div>
+											</a>
+										</div>
+										<div class="activity-state_user__name">
+											<a href="#">John Doe</a>
+										</div>
+									</li>
+									<li class="activity-state_user">
+										<div class="activity-state_user__avatar">
+											<a href="#">
+												<img src="" alt="" />
+												<div class="activity-state_user__reaction">
+													<i class="bb-icon-rf bb-icon-heart"></i>
+												</div>
+											</a>
+										</div>
+										<div class="activity-state_user__name">
+											<a href="#">John Doe</a>
+										</div>
+										<div class="activity-state_user__role">
+											Student
+										</div>
+									</li>
+									<li class="activity-state_user">
+										<div class="activity-state_user__avatar">
+											<a href="#">
+												<img src="" alt="" />
+												<div class="activity-state_user__reaction">
+													<img src="<?php echo get_template_directory_uri(); ?>/assets/images/laugh.png" alt="Laugh">
+												</div>
+											</a>
+										</div>
+										<div class="activity-state_user__name">
+											<a href="#">John Doe</a>
+										</div>
+										<div class="activity-state_user__role">
+											Coach
+										</div>
+									</li>
+									<li class="activity-state_user">
+										<div class="activity-state_user__avatar">
+											<a href="#">
+												<img src="" alt="" />
+												<div class="activity-state_user__reaction">
+													<img src="<?php echo get_template_directory_uri(); ?>/assets/images/laugh.png" alt="Laugh">
+												</div>
+											</a>
+										</div>
+										<div class="activity-state_user__name">
+											<a href="#">John Doe</a>
+										</div>
+										<div class="activity-state_user__role">
+											Admin
+										</div>
+									</li>
+								</ul>	
+							</div>
+						</div>
+					</div>
+			</div>
+		</div>
 	</div>
 	<?php
 }
