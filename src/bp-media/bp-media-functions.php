@@ -598,7 +598,7 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 							'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : $album_id,
 							'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : $group_id,
 							'activity_id'   => $bp_media->activity_id,
-							'message_id'    => $bp_media->message_id,
+							'message_id'    => ! empty( $bp_media->message_id ) ? $bp_media->message_id : $media['message_id'],
 							'privacy'       => $bp_media->privacy,
 							'menu_order'    => ! empty( $media['menu_order'] ) ? $media['menu_order'] : false,
 							'date_created'  => $bp_media->date_created,
@@ -613,6 +613,7 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 						'title'         => $media['name'],
 						'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : $album_id,
 						'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : $group_id,
+						'message_id'    => ! empty( $media['message_id'] ) ? $media['message_id'] : 0,
 						'menu_order'    => ! empty( $media['menu_order'] ) ? $media['menu_order'] : false,
 						'privacy'       => ! empty( $media['privacy'] ) && in_array( $media['privacy'], array_merge( array_keys( bp_media_get_visibility_levels() ), array( 'message' ) ) ) ? $media['privacy'] : $privacy,
 					)
@@ -4074,7 +4075,7 @@ function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
 /**
  * Run migration for media and video description from post table to media table.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.50
  *
  * @return void
  */
@@ -4084,7 +4085,7 @@ function bb_media_migration() {
 	/**
 	 * Migrate media description from post table to media table.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.50
 	 */
 	$wpdb->query( "UPDATE {$bp->media->table_name} AS m JOIN {$wpdb->posts} AS p ON p.ID = m.attachment_id SET m.description = p.post_content" ); // phpcs:ignore
 }
