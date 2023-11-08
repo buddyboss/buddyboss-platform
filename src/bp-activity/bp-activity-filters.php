@@ -178,6 +178,8 @@ add_action( 'bp_after_member_activity_content', 'bb_activity_pinpost_confirmatio
 add_action( 'bp_after_group_activity_content', 'bb_activity_pinpost_confirmation_modal_template' );
 add_action( 'bp_after_single_activity_content', 'bb_activity_pinpost_confirmation_modal_template' );
 
+add_filter( 'bb_activity_comment_get_edit_data', 'bb_blogs_activity_comment_edit_content', 9999 );
+
 /** Functions *****************************************************************/
 
 /**
@@ -3627,4 +3629,44 @@ function bb_cpt_post_title_save( $post_id, $post ) {
  */
 function bb_activity_pinpost_confirmation_modal_template() {
 	bp_get_template_part( 'activity/confirmation-modal' );
+}
+
+/**
+ * Get the content directly from the blog post comment. 
+ *
+ * @since BuddyBoss [BBVERSION]
+ * 
+ * @param array $activity_comment_data The Activity comment edit data.
+ *
+ * @return array $activity_comment_data The Activity comment edit data.
+ */
+function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
+
+	if ( 
+		! empty( $activity_comment_data['id'] ) &&
+		! empty( $activity_comment_data['item_id'] )
+	) {
+
+		// Get main parent activity object.
+		$parent_activity = new BP_Activity_Activity( $activity_comment_data['item_id'] );
+
+		if (
+			! empty( $parent_activity->id ) &&
+			'blogs' === $parent_activity->component &&
+		 	! empty( $parent_activity->secondary_item_id ) &&
+			! empty( get_post_type( $parent_activity->secondary_item_id ) ) &&
+			'new_blog_' . get_post_type( $parent_activity->secondary_item_id ) === $parent_activity->type
+		) {
+
+			$comment_id = bp_activity_get_meta( $activity_comment_data['id'], 'bp_blogs_' . get_post_type( $parent_activity->secondary_item_id ) . '_comment_id', true );
+			if ( $comment_id ) {
+				$comment = get_comment( $comment_id );
+				if ( ! empty( $comment->comment_content ) ) {
+					$activity_comment_data[ 'content' ] = stripslashes( $comment->comment_content );
+				}
+			}
+		}
+	}
+
+	return $activity_comment_data;
 }
