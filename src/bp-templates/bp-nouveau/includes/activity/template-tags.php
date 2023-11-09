@@ -538,6 +538,43 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 	$output .= ob_get_clean();
 
 	$has_content = trim( $output, ' ' );
+
+	// Todo: Make Reactions dynamic and move to appropriate place.
+	$output .= '
+		<div class="ac-emotions_list">
+			<div class="ac-emotion_item">
+				<a href="#" class="ac-emotion_btn" data-bp-tooltip-pos="up" data-bp-tooltip="Thumbsup">
+					<i class="bb-icon-thumbs-up" style="font-weight:200;color:#aeae16;"></i>
+				</a>
+			</div>
+			<div class="ac-emotion_item">
+				<a href="#" class="ac-emotion_btn" data-bp-tooltip-pos="up" data-bp-tooltip="Happy">
+					<img src="https://s.w.org/images/core/emoji/14.0.0/svg/1f643.svg" alt="Smiley" />
+				</a>
+			</div>
+			<div class="ac-emotion_item">
+				<a href="#" class="ac-emotion_btn" data-bp-tooltip-pos="up" data-bp-tooltip="Confused">
+					<img src="https://s.w.org/images/core/emoji/14.0.0/svg/1f644.svg" alt="Confused" />
+				</a>
+			</div>
+			<div class="ac-emotion_item">
+				<a href="#" class="ac-emotion_btn" data-bp-tooltip-pos="up" data-bp-tooltip="Sad">
+					<img src="https://s.w.org/images/core/emoji/14.0.0/svg/1f622.svg" alt="Sad">
+				</a>
+			</div>
+			<div class="ac-emotion_item">
+				<a href="#" class="ac-emotion_btn" data-bp-tooltip-pos="up" data-bp-tooltip="Thumbsdown">
+					<i class="bb-icon-thumbs-down" style="font-weight:200;color:#d33f3f;"></i>
+				</a>
+			</div>
+			<div class="ac-emotion_item">
+				<a href="#" class="ac-emotion_btn" data-bp-tooltip-pos="up" data-bp-tooltip="Angry">
+					<img src="https://s.w.org/images/core/emoji/14.0.0/svg/1f621.svg" alt="Angry" />
+				</a>
+			</div>
+		</div>
+	';
+
 	if ( ! $has_content ) {
 		return;
 	}
