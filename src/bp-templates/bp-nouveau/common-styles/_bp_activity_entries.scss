@@ -244,178 +244,6 @@
 				}
 			}
 
-			.activity-state-popup {
-				display: none;
-				position: fixed;
-				inset: 0;
-				z-index: 999;
-				background-color: rgba(250, 251, 253, 0.9);
-				box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
-
-				&.active {
-					display: block;
-				}
-
-				.activity-state-popup_overlay {
-					position: fixed;
-					left: 0;
-					right: 0;
-					top: 0;
-					bottom: 0;
-				}
-
-				.activity-state-popup_inner {
-					position: fixed;
-					left: 50%;
-					top: 50%;
-					transform: translate(-50%, -50%);
-					background-color: $white;
-					border: 1px solid $bp-border-color;
-					border-radius: 10px;
-					padding: 25px;
-					width: 100%;
-					max-width: 550px;
-					max-height: calc(100% - 80px);
-					overflow: auto;
-				}
-
-				.activity-state-popup_title h4 {
-					font-size: 20px;
-					font-weight: 600;
-					line-height: 1.5;
-					margin: 0 0 10px;
-				}
-
-				.activity-state-popup_tab {
-
-					.activity-state-popup_tab_panel {
-						margin-bottom: 10px;
-
-						ul {
-							display: flex;
-							flex-wrap: wrap;
-							margin: 0;
-
-							li {
-								margin: 0;
-								padding: 0;
-
-								> a {
-									display: flex;
-									align-items: center;
-									justify-content: center;
-									color: $meta-text-dark;
-									font-size: 14px;
-									font-weight: 500;
-									line-height: 1.5;
-									min-height: 40px;
-									min-width: 70px;
-									border-bottom: 2px solid transparent;
-	
-									> i,
-									> img {
-										font-size: 20px;
-										margin-right: 4px;
-									}
-	
-									> img {
-										width: 20px;
-										height: 20px;
-										object-fit: cover;
-									}
-	
-									> span {
-										color: $light-text;
-										font-size: 14px;
-										font-weight: 500;
-										line-height: 1.5;
-									}
-	
-									&.active {
-										border-bottom-color: $text-link-hover;
-									}
-								}
-							}
-						}
-					}
-
-					.activity-state-popup_tab_item {
-						display: none;
-
-						.activity-state_users {
-							max-height: 350px;
-							overflow: auto;
-							margin: 0 -25px;
-							padding: 0 25px;
-						}
-
-						.activity-state_user {
-							display: flex;
-							flex-wrap: wrap;
-							align-items: center;
-
-							.activity-state_user__avatar {
-								width: 38px;
-								height: 38px;
-								object-fit: cover;
-								position: relative;
-								margin-right: 13px;
-
-								.activity-state_user__reaction {
-									display: flex;
-									background-color: $white;
-									border-radius: 50%;
-									padding: 2px;
-									position: absolute;
-									right: -6px;
-									bottom: 0;
-
-									> i {
-										font-size: 14px;
-										line-height: 1;
-									}
-
-									> img {
-										height: 14px;
-										width: 14px;
-										object-fit: cover;
-									}
-								}
-							}
-
-							.activity-state_user__name {
-								color: $meta-text-dark;
-								font-size: 18px;
-								font-weight: 600;
-								line-height: 1.33;
-
-								a {
-									color: $meta-text-dark;
-									font-size: 16px;
-									font-weight: 600;
-								}
-							}
-
-							.activity-state_user__role {
-								color: $white;
-								font-size: 11px;
-								font-weight: 600;
-								background-color: #595895;
-								border-radius: 4px;
-								padding: 4px 8px;
-								margin-left: auto;
-							}
-						}
-
-						&.active {
-							display: block;
-						}
-					}
-
-
-				}
-			}
-
 		}
 
 		// close .activity-content
@@ -839,6 +667,178 @@
 			top: -7px;
 		}
 
+	}
+
+	.activity-state-popup {
+		display: none;
+		position: fixed;
+		inset: 0;
+		z-index: 999;
+		background-color: rgba(250, 251, 253, 0.9);
+		box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
+
+		&.active {
+			display: block;
+		}
+
+		.activity-state-popup_overlay {
+			position: fixed;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+		}
+
+		.activity-state-popup_inner {
+			position: fixed;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+			background-color: $white;
+			border: 1px solid $bp-border-color;
+			border-radius: 10px;
+			padding: 25px;
+			width: 100%;
+			max-width: 550px;
+			max-height: calc(100% - 80px);
+			overflow: auto;
+		}
+
+		.activity-state-popup_title h4 {
+			font-size: 20px;
+			font-weight: 600;
+			line-height: 1.5;
+			margin: 0 0 10px;
+		}
+
+		.activity-state-popup_tab {
+
+			.activity-state-popup_tab_panel {
+				margin-bottom: 10px;
+
+				ul {
+					display: flex;
+					flex-wrap: wrap;
+					margin: 0;
+
+					li {
+						margin: 0;
+						padding: 0;
+
+						> a {
+							display: flex;
+							align-items: center;
+							justify-content: center;
+							color: $meta-text-dark;
+							font-size: 14px;
+							font-weight: 500;
+							line-height: 1.5;
+							min-height: 40px;
+							min-width: 70px;
+							border-bottom: 2px solid transparent;
+
+							> i,
+							> img {
+								font-size: 20px;
+								margin-right: 4px;
+							}
+
+							> img {
+								width: 20px;
+								height: 20px;
+								object-fit: cover;
+							}
+
+							> span {
+								color: $light-text;
+								font-size: 14px;
+								font-weight: 500;
+								line-height: 1.5;
+							}
+
+							&.active {
+								border-bottom-color: $text-link-hover;
+							}
+						}
+					}
+				}
+			}
+
+			.activity-state-popup_tab_item {
+				display: none;
+
+				.activity-state_users {
+					max-height: 350px;
+					overflow: auto;
+					margin: 0 -25px;
+					padding: 0 25px;
+				}
+
+				.activity-state_user {
+					display: flex;
+					flex-wrap: wrap;
+					align-items: center;
+
+					.activity-state_user__avatar {
+						width: 38px;
+						height: 38px;
+						object-fit: cover;
+						position: relative;
+						margin-right: 13px;
+
+						.activity-state_user__reaction {
+							display: flex;
+							background-color: $white;
+							border-radius: 50%;
+							padding: 2px;
+							position: absolute;
+							right: -6px;
+							bottom: 0;
+
+							> i {
+								font-size: 14px;
+								line-height: 1;
+							}
+
+							> img {
+								height: 14px;
+								width: 14px;
+								object-fit: cover;
+							}
+						}
+					}
+
+					.activity-state_user__name {
+						color: $meta-text-dark;
+						font-size: 18px;
+						font-weight: 600;
+						line-height: 1.33;
+
+						a {
+							color: $meta-text-dark;
+							font-size: 16px;
+							font-weight: 600;
+						}
+					}
+
+					.activity-state_user__role {
+						color: $white;
+						font-size: 11px;
+						font-weight: 600;
+						background-color: #595895;
+						border-radius: 4px;
+						padding: 4px 8px;
+						margin-left: auto;
+					}
+				}
+
+				&.active {
+					display: block;
+				}
+			}
+
+
+		}
 	}
 
 	// close .activity-item
