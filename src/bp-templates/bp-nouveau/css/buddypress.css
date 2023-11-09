@@ -4085,6 +4085,62 @@ input.search-query-input {
   display: block;
 }
 
+.activity-list .activity-item .ac-emotions_list {
+  position: absolute;
+  left: 0;
+  bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background-color: #fff;
+  border: 1px solid #eee;
+  border-radius: 34px;
+  box-shadow: 0px 2px 4px -2px black;
+}
+
+.activity-list .activity-item .ac-emotions_list .ac-emotion_item {
+  display: flex;
+}
+
+.activity-list .activity-item .ac-emotions_list .ac-emotion_item a {
+  padding: 0;
+}
+
+.activity-list .activity-item .ac-emotions_list .ac-emotion_item a:after {
+  font-size: 11px;
+  letter-spacing: normal;
+  padding: 4px 6px;
+  bottom: 110%;
+}
+
+.activity-list .activity-item .ac-emotions_list .ac-emotion_item a:before {
+  display: none;
+}
+
+.activity-list .activity-item .ac-emotions_list .ac-emotion_item a:hover i,
+.activity-list .activity-item .ac-emotions_list .ac-emotion_item a:hover img {
+  transform: scale(1.3);
+}
+
+.activity-list .activity-item .ac-emotions_list .ac-emotion_item i,
+.activity-list .activity-item .ac-emotions_list .ac-emotion_item img {
+  display: block;
+  transition: all linear 0.2s;
+  transform-origin: bottom;
+}
+
+.activity-list .activity-item .ac-emotions_list .ac-emotion_item img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+}
+
+.activity-list .activity-item .ac-emotions_list .ac-emotion_item i {
+  font-size: 40px;
+  line-height: 1;
+}
+
 @media screen and (min-width: 46.8em) {
   .activity-list.bp-list {
     padding: 30px;
