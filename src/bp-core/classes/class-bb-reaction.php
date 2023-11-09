@@ -287,8 +287,14 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$r = bp_parse_args(
 				$args,
 				array(
-					'name' => '',
-					'icon' => null,
+					'name'              => '',
+					'type'              => '',
+					'icon'              => '',
+					'icon_color'        => '#000000',
+					'icon_text'         => '',
+					'icon_text_color'   => '#000000',
+					'notification_text' => '',
+					'icon_path'         => '',
 				)
 			);
 
@@ -304,8 +310,14 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			}
 
 			$post_content = array(
-				'name' => $r['name'],
-				'icon' => $r['icon'],
+				'name'              => $r['name'],
+				'type'              => $r['type'],
+				'icon'              => $r['icon'],
+				'icon_color'        => $r['icon_color'],
+				'icon_text'         => $r['icon_text'],
+				'icon_text_color'   => $r['icon_text_color'],
+				'notification_text' => $r['notification_text'],
+				'icon_path'         => $r['icon_path'],
 			);
 
 			// Prepare reaction data.
@@ -403,9 +415,15 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 						isset( $reaction_data['name'] )
 					) {
 						$reactions_data[] = array(
-							'id'   => $reaction->ID,
-							'name' => $reaction_data['name'],
-							'icon' => $reaction_data['icon'],
+							'id'                => $reaction->ID,
+							'name'              => $reaction_data['name'],
+							'icon'              => $reaction_data['icon'],
+							'type'              => $reaction_data['type'],
+							'icon_text'         => $reaction_data['icon_text'],
+							'icon_color'        => $reaction_data['icon_color'],
+							'text_color'        => $reaction_data['icon_text_color'],
+							'notification_text' => $reaction_data['notification_text'],
+							'icon_path'         => $reaction_data['icon_path'],
 						);
 					}
 				}
