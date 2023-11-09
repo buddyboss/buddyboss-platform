@@ -305,8 +305,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			// Validate if a duplicate name exists before adding.
 			$existing_reaction = get_page_by_path( $post_title, OBJECT, self::$post_type );
-			if ( $existing_reaction ) {
-				return;
+			if ( is_a( $existing_reaction, 'WP_Post' ) ) {
+				return $existing_reaction->ID;
 			}
 
 			$post_content = array(
@@ -1796,7 +1796,19 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		public function bb_register_activity_like() {
 			$reaction_id = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
 			if ( empty( $reaction_id ) ) {
-				$reaction_id = $this->bb_add_reaction( array( 'name' => 'Like' ) );
+				$reaction_id = $this->bb_add_reaction(
+					array(
+						'name'              => 'Like',
+						'icon'              => 'like',
+						'type'              => 'emojis',
+						'icon_color'        => '#000000',
+						'icon_text'         => 'Like',
+						'text_color'        => '#000000',
+						'notification_text' => 'Like',
+						'icon_path'         => '',
+					)
+				);
+
 				if ( ! empty( $reaction_id ) ) {
 					bp_update_option( 'bb_reactions_default_like_reaction_added', (int) $reaction_id );
 				}
