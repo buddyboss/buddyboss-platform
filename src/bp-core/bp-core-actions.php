@@ -1046,3 +1046,47 @@ function bb_core_registered_notification_components( $component_names ) {
 }
 
 add_action( 'bp_notifications_get_registered_components', 'bb_core_registered_notification_components', 20, 1 );
+
+/**
+ * Removed duplicate background jobs from the table if exists.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object $batch Batch object.
+ *
+ * @return void
+ */
+function bb_background_remove_duplicate_async_request_batch_process( $batch ) {
+	global $bb_background_updater, $wpdb;
+
+	if (
+		empty( $batch ) ||
+		! property_exists( $batch, 'group' ) ||
+		empty( $batch->group ) ||
+		empty( $batch->data ) ||
+		empty( $batch->data['args'] )
+	) {
+		return;
+	}
+
+	$table_name = $bb_background_updater::$table_name;
+
+	$del_sql = $wpdb->prepare(
+		"DELETE FROM {$table_name} WHERE `type` = %s AND `group` = %s AND `data_id` = %s AND `secondary_data_id` = %s AND `data` = %s AND `priority` = %d AND `blog_id` = %d AND `id` != %d",
+		array(
+			$batch->type,
+			$batch->group,
+			$batch->item_id,
+			$batch->secondary_id,
+			maybe_serialize( $batch->data ),
+			$batch->priority,
+			$batch->blog_id,
+			$batch->key,
+		)
+	);
+
+	$wpdb->query( $del_sql );
+}
+
+add_action( 'bb_async_request_batch_process', 'bb_background_remove_duplicate_async_request_batch_process', 1, 1 );
+
