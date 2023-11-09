@@ -29,32 +29,6 @@ class BB_Admin_Setting_Reactions extends BP_Admin_Setting_tab {
 	}
 
 	/**
-	 * Settings saved.
-	 */
-	public function settings_saved() {
-		$action_type   = bb_pro_filter_input_string( INPUT_POST, 'action_type' );
-		$is_migration  = bb_pro_filter_input_string( INPUT_POST, 'is_migration' );
-		$redirect_args = array(
-			'updated' => 'true'
-		);
-
-		if ( ! empty( $action_type ) ) {
-			$redirect_args['action_type'] = $action_type;
-
-			if ( 'yes' === $is_migration ) {
-				$redirect_args['step'] = 'status';
-			}
-		}
-
-		bp_core_redirect(
-			bp_core_admin_setting_url(
-				$this->tab_name,
-				$redirect_args
-			)
-		);
-	}
-
-	/**
 	 * Registers the fields for the reaction settings sections.
 	 *
 	 * @return void
