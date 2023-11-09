@@ -3573,10 +3573,11 @@ input.search-query-input {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  background-color: #fafafa;
+  background-color: #fff;
   border: 1px solid #eee;
   border-radius: 10px;
   padding: 25px;
+  width: 100%;
   max-width: 550px;
   max-height: calc(100% - 80px);
   overflow: auto;
@@ -3666,14 +3667,18 @@ input.search-query-input {
 }
 
 .activity-list .activity-item .activity-content .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item .activity-state_user .activity-state_user__avatar .activity-state_user__reaction {
+  display: flex;
+  background-color: #fff;
+  border-radius: 50%;
+  padding: 2px;
   position: absolute;
   right: -6px;
   bottom: 0;
-  border: 1px solid #fff;
 }
 
 .activity-list .activity-item .activity-content .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item .activity-state_user .activity-state_user__avatar .activity-state_user__reaction > i {
   font-size: 14px;
+  line-height: 1;
 }
 
 .activity-list .activity-item .activity-content .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item .activity-state_user .activity-state_user__avatar .activity-state_user__reaction > img {
@@ -3691,6 +3696,7 @@ input.search-query-input {
 
 .activity-list .activity-item .activity-content .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item .activity-state_user .activity-state_user__name a {
   color: #222;
+  font-size: 16px;
   font-weight: 600;
 }
 

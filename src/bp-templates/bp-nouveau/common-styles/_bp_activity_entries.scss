@@ -269,7 +269,7 @@
 					left: 50%;
 					top: 50%;
 					transform: translate(-50%, -50%);
-					background-color: $off-white;
+					background-color: $white;
 					border: 1px solid $bp-border-color;
 					border-radius: 10px;
 					padding: 25px;
@@ -362,13 +362,17 @@
 								margin-right: 13px;
 
 								.activity-state_user__reaction {
+									display: flex;
+									background-color: $white;
+									border-radius: 50%;
+									padding: 2px;
 									position: absolute;
 									right: -6px;
 									bottom: 0;
-									border: 1px solid #fff;
 
 									> i {
 										font-size: 14px;
+										line-height: 1;
 									}
 
 									> img {
@@ -387,6 +391,7 @@
 
 								a {
 									color: $meta-text-dark;
+									font-size: 16px;
 									font-weight: 600;
 								}
 							}
