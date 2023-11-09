@@ -283,7 +283,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @return int|void|WP_Error
 		 */
-		private function bb_add_reaction( $args ) {
+		public function bb_add_reaction( $args ) {
 			$r = bp_parse_args(
 				$args,
 				array(
@@ -339,7 +339,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @return void
 		 */
-		private function bb_remove_reaction( $reaction_id ) {
+		public function bb_remove_reaction( $reaction_id ) {
 			if ( empty( $reaction_id ) ) {
 				return;
 			}
@@ -378,7 +378,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @since BuddyBoss 2.4.30
 		 */
-		private function bb_update_reactions_transient() {
+		public function bb_update_reactions_transient() {
 			// Get all reactions.
 			$args = array(
 				'fields'                 => array( 'ids', 'post_title', 'post_content' ),
@@ -1106,7 +1106,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @return array
 		 */
-		private function bb_get_reactions_data( $args = array() ) {
+		public function bb_get_reactions_data( $args = array() ) {
 			global $wpdb;
 
 			$r = bp_parse_args(
@@ -1335,7 +1335,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @return false|int|WP_Error
 		 */
-		private function bb_add_reactions_data( $args ) {
+		public function bb_add_reactions_data( $args ) {
 			global $wpdb;
 
 			$r = bp_parse_args(
@@ -1658,7 +1658,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @return array|bool|mixed|object|stdClass|null
 		 */
-		private function bb_get_reaction_data( $reaction_data_id ) {
+		public function bb_get_reaction_data( $reaction_data_id ) {
 			global $wpdb;
 
 			if ( empty( $reaction_data_id ) ) {
