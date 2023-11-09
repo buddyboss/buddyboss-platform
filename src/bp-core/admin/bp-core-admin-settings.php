@@ -3382,6 +3382,7 @@ function bb_reactions_settings_callback_reaction_mode() {
 					value="<?php echo $reaction_mode['value']; ?>"
 					<?php echo checked( $reaction_mode['is_checked'] ); ?>
 					data-count="<?php echo $reaction_mode['count']; ?>"
+					data-current-val="<?php echo bb_get_reaction_mode(); ?>"
 				/>
 				<?php echo $reaction_mode['label']; ?>
 			</label>
