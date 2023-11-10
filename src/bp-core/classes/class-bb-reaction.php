@@ -292,7 +292,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'icon'              => '',
 					'icon_color'        => '#000000',
 					'icon_text'         => '',
-					'icon_text_color'   => '#000000',
+					'text_color'        => '#000000',
 					'notification_text' => '',
 					'icon_path'         => '',
 				)
@@ -315,7 +315,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				'icon'              => $r['icon'],
 				'icon_color'        => $r['icon_color'],
 				'icon_text'         => $r['icon_text'],
-				'icon_text_color'   => $r['icon_text_color'],
+				'text_color'        => $r['text_color'],
 				'notification_text' => $r['notification_text'],
 				'icon_path'         => $r['icon_path'],
 			);
@@ -334,6 +334,76 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$reaction_id = wp_insert_post( $reaction_data );
 
 			// If the reaction was successfully added, update the transient.
+			if ( ! is_wp_error( $reaction_id ) && ! empty( $reaction_id ) ) {
+				// Update bb_reactions transient.
+				$this->bb_update_reactions_transient();
+			}
+
+			return $reaction_id;
+		}
+
+		/**
+		 * Update existing reaction.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int   $reaction_id Reaction ID.
+		 * @param array $args List of arguments.
+		 *
+		 * @return int|void|WP_Error
+		 */
+		public function bb_update_reaction( $reaction_id, $args ) {
+			$r = bp_parse_args(
+				$args,
+				array(
+					'name'              => '',
+					'type'              => '',
+					'icon'              => '',
+					'icon_color'        => '#000000',
+					'icon_text'         => '',
+					'text_color'        => '#000000',
+					'notification_text' => '',
+					'icon_path'         => '',
+				)
+			);
+
+			$post_title = ! empty( $r['name'] ) ? sanitize_title( $r['name'] ) : '';
+			if ( empty( $post_title ) || empty( $reaction_id ) ) {
+				return;
+			}
+
+			// Check post is exist or not.
+			$existing_reaction = get_post( $reaction_id );
+			if ( empty( $existing_reaction ) ) {
+				return;
+			}
+
+			$post_content = array(
+				'name'              => $r['name'],
+				'type'              => $r['type'],
+				'icon'              => $r['icon'],
+				'icon_color'        => $r['icon_color'],
+				'icon_text'         => $r['icon_text'],
+				'text_color'        => $r['text_color'],
+				'notification_text' => $r['notification_text'],
+				'icon_path'         => $r['icon_path'],
+			);
+
+			// Prepare reaction data.
+			$reaction_data = array(
+				'ID'           => $reaction_id,
+				'post_title'   => $r['name'],
+				'post_name'    => $post_title,
+				'post_type'    => self::$post_type,
+				'post_status'  => 'publish',
+				'post_content' => maybe_serialize( $post_content ),
+				'post_author'  => bp_loggedin_user_id(),
+			);
+
+			// Update the existing reaction.
+			$reaction_id = wp_update_post( $reaction_data );
+
+			// If the reaction was successfully updated then update the transient.
 			if ( ! is_wp_error( $reaction_id ) && ! empty( $reaction_id ) ) {
 				// Update bb_reactions transient.
 				$this->bb_update_reactions_transient();
@@ -421,7 +491,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 							'type'              => $reaction_data['type'],
 							'icon_text'         => $reaction_data['icon_text'],
 							'icon_color'        => $reaction_data['icon_color'],
-							'text_color'        => $reaction_data['icon_text_color'],
+							'text_color'        => $reaction_data['text_color'],
 							'notification_text' => $reaction_data['notification_text'],
 							'icon_path'         => $reaction_data['icon_path'],
 						);
