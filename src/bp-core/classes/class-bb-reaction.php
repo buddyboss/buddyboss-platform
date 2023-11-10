@@ -444,15 +444,40 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @since BuddyBoss 2.4.30
 		 *
+		 * @param string $mode      Reaction mode 'like', 'emotions'. Default is 'likes'.
+		 * @param bool   $is_active Fetch all active reactions. Default is true.
+		 *
 		 * @return array
 		 */
-		public function bb_get_reactions() {
-			$reactions = get_transient( 'bb_reactions', '' );
-			if ( ! empty( $reactions ) ) {
-				return maybe_unserialize( $reactions );
+		public function bb_get_reactions( $mode = 'like', $is_active = true ) {
+			$filtered_reactions = array();
+			$reactions          = get_transient( 'bb_reactions' );
+			$all_reactions      = ! empty( $reactions ) ? maybe_unserialize( $reactions ) : array();
+
+			if ( ! empty( $all_reactions ) ) {
+				$filtered_reactions = array_values(
+					array_filter(
+						$all_reactions,
+						function ( $reaction ) use ( $mode, $is_active ) {
+							if (
+								( $mode === 'likes' && $reaction['is_like'] ) ||
+								(
+									$mode === 'emotions' &&
+									$reaction['is_emotion'] &&
+									(
+										! $is_active ||
+										$reaction['is_emotion_active']
+									)
+								)
+							) {
+								return $reaction;
+							}
+						}
+					)
+				);
 			}
 
-			return array();
+			return $filtered_reactions;
 		}
 
 		/**
