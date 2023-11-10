@@ -3632,17 +3632,17 @@ function bb_activity_pinpost_confirmation_modal_template() {
 }
 
 /**
- * Get the content directly from the blog post comment. 
+ * Get the content directly from the blog post comment.
  *
  * @since BuddyBoss [BBVERSION]
- * 
+ *
  * @param array $activity_comment_data The Activity comment edit data.
  *
  * @return array $activity_comment_data The Activity comment edit data.
  */
 function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
 
-	if ( 
+	if (
 		! empty( $activity_comment_data['id'] ) &&
 		! empty( $activity_comment_data['item_id'] )
 	) {
@@ -3662,7 +3662,7 @@ function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
 			if ( $comment_id ) {
 				$comment = get_comment( $comment_id );
 				if ( ! empty( $comment->comment_content ) ) {
-					$activity_comment_data[ 'content' ] = stripslashes( $comment->comment_content );
+					$activity_comment_data['content'] = stripslashes( wpautop( $comment->comment_content ) );
 				}
 			}
 		}
