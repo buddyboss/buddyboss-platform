@@ -1879,18 +1879,19 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			if ( empty( $reaction_id ) ) {
 				$reaction_id = $this->bb_add_reaction(
 					array(
-						'name'              => 'Like',
-						'icon'              => 'like',
-						'type'              => 'emojis',
-						'icon_color'        => '#000000',
-						'icon_text'         => 'Like',
-						'text_color'        => '#000000',
-						'notification_text' => 'Like',
+						'name'              => 'Likes',
+						'icon'              => 'likes',
+						'type'              => '',
+						'icon_color'        => '',
+						'icon_text'         => 'Likes',
+						'text_color'        => '',
+						'notification_text' => 'Likes',
 						'icon_path'         => '',
 					)
 				);
 
 				if ( ! empty( $reaction_id ) ) {
+					update_post_meta( $reaction_id, 'is_like', true );
 					bp_update_option( 'bb_reactions_default_like_reaction_added', (int) $reaction_id );
 				}
 			}
