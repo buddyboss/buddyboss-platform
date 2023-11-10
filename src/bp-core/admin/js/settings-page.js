@@ -74,6 +74,17 @@ window.bp = window.bp || {};
 					$( '.label-bp-reinstall-emails' ).css('background-color', 'transparent');
 				}, 1500);
 			}
+
+			var bbTutrolmsgroupCourse = bbgetUrlParameter( 'scrollto' );
+			if ( 'bpmigratetutorgroupcourse' === bbTutrolmsgroupCourse ) {
+				$('html, body').animate({
+					scrollTop: $( '#bp-migrate-tutorlms-buddypress-group-course' ).offset().top
+				}, 1500);
+				$( '.label-bp-migrate-tutorlms-buddypress-group-course' ).css('background-color', '#faafaa');
+				setTimeout(function () {
+					$( '.label-bp-migrate-tutorlms-buddypress-group-course' ).css('background-color', 'transparent');
+				}, 1500);
+			}
 			/* jshint ignore:end */
 
 			$( '[data-run-js-condition]' ).each(
