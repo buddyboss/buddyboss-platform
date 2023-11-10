@@ -509,16 +509,6 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 						is_array( $reaction_data ) &&
 						isset( $reaction_data['name'] )
 					) {
-						$reaction_count = $this->bb_get_user_reactions_count(
-							array(
-								'reaction_id' => $reaction->ID,
-								'per_page'    => 1,
-								'paged'       => 1,
-								'order'       => 'ASC',
-								'count_total' => true
-							)
-						);
-
 						$reactions_data[] = array(
 							'id'                => $reaction->ID,
 							'name'              => $reaction_data['name'],
@@ -529,7 +519,9 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 							'text_color'        => $reaction_data['text_color'],
 							'notification_text' => $reaction_data['notification_text'],
 							'icon_path'         => $reaction_data['icon_path'],
-							'reaction_count'    => $reaction_count,
+							'is_like'           => (bool) get_post_meta( $reaction->ID, 'is_like', true ),
+							'is_emotion'        => (bool) get_post_meta( $reaction->ID, 'is_emotion', true ),
+							'is_emotion_active' => (bool) get_post_meta( $reaction->ID, 'is_emotion_active', true ),
 						);
 					}
 				}
