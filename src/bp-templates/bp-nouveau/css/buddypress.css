@@ -3992,7 +3992,7 @@ input.search-query-input {
 .activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_panel ul li > a > i,
 .activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_panel ul li > a > img {
   font-size: 20px;
-  margin-right: 4px;
+  margin-right: 8px;
 }
 
 .activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_panel ul li > a > img {
@@ -4027,6 +4027,8 @@ input.search-query-input {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  padding: 10px 0;
+  margin: 0;
 }
 
 .activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item .activity-state_user .activity-state_user__avatar {
@@ -4035,6 +4037,11 @@ input.search-query-input {
   object-fit: cover;
   position: relative;
   margin-right: 13px;
+}
+
+.activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item .activity-state_user .activity-state_user__avatar img.avatar {
+  width: 100%;
+  max-width: 100%;
 }
 
 .activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item .activity-state_user .activity-state_user__avatar .activity-state_user__reaction {
@@ -6757,6 +6764,51 @@ span.dashicons.dashicons-admin-file:before {
 .buddypress-wrap .activity-comments .ac-form .ac-reply-content input[name="ac_form_submit"] {
   opacity: 0.4;
   pointer-events: none;
+}
+
+.buddypress-wrap .activity-comments .comment-reactions {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  box-shadow: 0 0 4px -2px black;
+  padding: 2px;
+  border-radius: 24px;
+  cursor: pointer;
+}
+
+.buddypress-wrap .activity-comments .comment-reactions .comment-reactions_count {
+  font-size: 13px;
+  margin: 0 2px 0 3px;
+}
+
+.buddypress-wrap .activity-comments .comment-reactions .comment-reactions_items {
+  display: flex;
+  flex-flow: row;
+}
+
+.buddypress-wrap .activity-comments .comment-reactions .comment-reactions_items .reactions_item {
+  display: flex;
+  background-color: #fff;
+  border-radius: 50%;
+  padding: 2px;
+}
+
+.buddypress-wrap .activity-comments .comment-reactions .comment-reactions_items .reactions_item + .reactions_item {
+  margin-left: -4px;
+}
+
+.buddypress-wrap .activity-comments .comment-reactions .comment-reactions_items .reactions_item > i {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.buddypress-wrap .activity-comments .comment-reactions .comment-reactions_items .reactions_item > img {
+  height: 14px;
+  width: 14px;
+  object-fit: cover;
 }
 
 .buddypress-wrap .mini .activity-comments {

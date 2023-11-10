@@ -741,7 +741,7 @@
 							> i,
 							> img {
 								font-size: 20px;
-								margin-right: 4px;
+								margin-right: 8px;
 							}
 
 							> img {
@@ -779,6 +779,8 @@
 					display: flex;
 					flex-wrap: wrap;
 					align-items: center;
+					padding: 10px 0;
+					margin: 0;
 
 					.activity-state_user__avatar {
 						width: 38px;
@@ -786,6 +788,11 @@
 						object-fit: cover;
 						position: relative;
 						margin-right: 13px;
+
+						img.avatar {
+							width: 100%;
+							max-width: 100%;
+						}
 
 						.activity-state_user__reaction {
 							display: flex;
