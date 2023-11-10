@@ -1177,7 +1177,10 @@ function bp_is_activity_like_active( $default = true ) {
 
 	$is_activity_post_like_active = false;
 	if (
-		'likes' === bb_get_reaction_mode() &&
+		(
+			'likes' === bb_get_reaction_mode() ||
+			'emotions' === bb_get_reaction_mode()
+		) &&
 		bb_is_reaction_activity_posts_enabled( $default )
 	) {
 		$is_activity_post_like_active = true;

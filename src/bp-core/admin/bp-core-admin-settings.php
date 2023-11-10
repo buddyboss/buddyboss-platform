@@ -3358,6 +3358,15 @@ function bb_reactions_settings_callback_reaction_mode() {
 			'value'      => 'likes',
 			'id'         => 'bb_reaction_mode_likes',
 			'is_checked' => 'likes' === bb_get_reaction_mode(),
+			'count'      => bb_load_reaction()->bb_get_user_reactions_count(
+				array(
+					'reaction_id' => bb_load_reaction()->bb_reactions_get_like_reaction_id(),
+					'per_page'    => 1,
+					'paged'       => 1,
+					'order'       => 'ASC',
+					'count_total' => true
+				)
+			)
 		)
 	);
 
@@ -3372,6 +3381,8 @@ function bb_reactions_settings_callback_reaction_mode() {
 					type="radio"
 					value="<?php echo $reaction_mode['value']; ?>"
 					<?php echo checked( $reaction_mode['is_checked'] ); ?>
+					data-count="<?php echo $reaction_mode['count']; ?>"
+					data-current-val="<?php echo bb_get_reaction_mode(); ?>"
 				/>
 				<?php echo $reaction_mode['label']; ?>
 			</label>
