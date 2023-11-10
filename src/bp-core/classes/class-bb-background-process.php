@@ -397,6 +397,28 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 		}
 
 		/**
+		 * Should the process exit with wp_die?
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param mixed $return What to return if filter says don't die, default is null.
+		 *
+		 * @return void|mixed
+		 */
+		protected function maybe_wp_die( $return = null ) {
+			/**
+			 * Should wp_die be used?
+			 *
+			 * @return bool
+			 */
+			if ( apply_filters( $this->identifier . '_wp_die', true ) ) {
+				wp_die();
+			}
+
+			return $return;
+		}
+
+		/**
 		 * Handle a dispatched request.
 		 *
 		 * Pass each queue item to the task handler, while remaining
