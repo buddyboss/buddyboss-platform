@@ -4088,19 +4088,34 @@ input.search-query-input {
 .activity-list .activity-item .ac-emotions_list {
   position: absolute;
   left: 0;
-  bottom: 30px;
-  display: flex;
+  bottom: 10px;
+  display: none;
   align-items: center;
   gap: 8px;
   padding: 6px 8px;
   background-color: #fff;
   border: 1px solid #eee;
   border-radius: 34px;
-  box-shadow: 0px 2px 4px -2px black;
+  box-shadow: 0 2px 4px -2px black;
+  transition: all ease 0.2s;
+  transition-delay: 500ms;
+}
+
+.activity-list .activity-item .ac-emotions_list:hover, .activity-list .activity-item .ac-emotions_list.active {
+  display: flex;
+  bottom: 25px;
+}
+
+.activity-list .activity-item .ac-emotions_list:hover .ac-emotion_item, .activity-list .activity-item .ac-emotions_list.active .ac-emotion_item {
+  top: 0;
 }
 
 .activity-list .activity-item .ac-emotions_list .ac-emotion_item {
   display: flex;
+  position: relative;
+  top: 10px;
+  transition: all ease 0.2s;
+  transition-delay: 500ms;
 }
 
 .activity-list .activity-item .ac-emotions_list .ac-emotion_item a {

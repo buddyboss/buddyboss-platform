@@ -843,61 +843,81 @@
 	}
 
 	// Activity reaction actions
-	.activity-item .ac-emotions_list {
-		position: absolute;
-		left: 0;
-		bottom: 30px;
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		padding: 6px 8px;
-		background-color: $white;
-		border: 1px solid $bp-border-color;
-		border-radius: 34px;
-		box-shadow: 0px 2px 4px -2px rgba(0, 0, 0, 13%);
 
-		.ac-emotion_item {
-			display: flex;
+	.activity-item {
 
-			a {
-				padding: 0;
+		.ac-emotions_list {
+			position: absolute;
+			left: 0;
+			bottom: 10px;
+			display: none;
+			align-items: center;
+			gap: 8px;
+			padding: 6px 8px;
+			background-color: $white;
+			border: 1px solid $bp-border-color;
+			border-radius: 34px;
+			box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 13%);
+			transition: all ease 0.2s;
+			transition-delay: 500ms;
 
-				&:after {
-					font-size: 11px;
-					letter-spacing: normal;
-					padding: 4px 6px;
-					bottom: 110%;
+			&:hover,
+			&.active {
+				display: flex;
+				bottom: 25px;
+
+				.ac-emotion_item {
+					top: 0;
 				}
+			}
 
-				&:before {
-					display: none;
-				}
+			.ac-emotion_item {
+				display: flex;
+				position: relative;
+				top: 10px;
+				transition: all ease 0.2s;
+				transition-delay: 500ms;
 
-				&:hover {
+				a {
+					padding: 0;
 
-					i,
-					img {
-						transform: scale(1.3);
+					&:after {
+						font-size: 11px;
+						letter-spacing: normal;
+						padding: 4px 6px;
+						bottom: 110%;
+					}
+
+					&:before {
+						display: none;
+					}
+
+					&:hover {
+
+						i,
+						img {
+							transform: scale(1.3);
+						}
 					}
 				}
-			}
 
-			i,
-			img {
-				display: block;
-				transition: all linear 0.2s;
-				transform-origin: bottom;
-			}
+				i,
+				img {
+					display: block;
+					transition: all linear 0.2s;
+					transform-origin: bottom;
+				}
 
-			img {
-				width: 40px;
-				height: 40px;
-				object-fit: cover;
-			}
+				img {
+					width: 40px;
+					height: 40px;
+					object-fit: cover;
+				}
 
-			i {
-				font-size: 40px;
-				line-height: 1;
+				i {
+					font-size: 40px;
+					line-height: 1;
+				}
 			}
 		}
 	}
