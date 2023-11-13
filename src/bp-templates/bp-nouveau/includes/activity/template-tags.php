@@ -269,10 +269,10 @@ function bp_nouveau_activity_state() {
 		<a href="javascript:void(0);" class="activity-state-likes">
 			<div class="activity-state-reactions">
 				<div class="reactions_item">
-					<i class="bb-icon-thumbs-up" style="font-weight:200;color:#aeae16;"></i>
+					<i class="bb-icon-heart" style="font-weight:200;color: #f00;"></i>
 				</div>
 				<div class="reactions_item">
-					<img src="https://s.w.org/images/core/emoji/14.0.0/svg/1f643.svg" alt="Smiley">
+					<i class="bb-icon-thumbs-up" style="font-weight:200;color: #00f;"></i>
 				</div>
 				<div class="reactions_item">
 					<img src="https://s.w.org/images/core/emoji/14.0.0/svg/1f644.svg" alt="Confused">
