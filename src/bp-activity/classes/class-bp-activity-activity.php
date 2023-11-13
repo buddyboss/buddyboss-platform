@@ -489,6 +489,10 @@ class BP_Activity_Activity {
 			$search_terms_like              = '%' . bp_esc_like( $r['search_terms'] ) . '%';
 			$where_conditions['search_sql'] = $wpdb->prepare( 'ExtractValue( a.content, "//text()" ) LIKE %s', $search_terms_like );
 
+			// Allow search CPT's post title in the activity feed.
+			$join_sql .= "LEFT JOIN {$bp->activity->table_name_meta} m ON ( m.activity_id = a.id )";
+			$where_conditions['search_sql'] .= $wpdb->prepare( ' OR m.meta_key = %s AND m.meta_value LIKE %s', 'post_title', $search_terms_like );
+
 			/**
 			 * Filters whether or not to include users for search parameters.
 			 *
@@ -537,10 +541,37 @@ class BP_Activity_Activity {
 				break;
 		}
 		$order_by = 'a.' . $r['order_by'];
+
 		// Support order by fields for generally.
 		if ( ! empty( $r['in'] ) && 'in' === $r['order_by'] ) {
 			$order_by = 'FIELD(a.id, ' . implode( ',', wp_parse_id_list( $r['in'] ) ) . ')';
 			$sort     = '';
+		}
+
+		$pinned_id = 0;
+
+		// Pinned post.
+		if ( ! empty( $r['pin_type'] ) ) {
+			if ( 'group' === $r['pin_type'] ) {
+				if (
+					! empty( $r['filter']['primary_id'] ) &&
+					! empty( $r['filter']['object'] ) &&
+					'groups' === $r['filter']['object']
+				) {
+					$group_id  = $r['filter']['primary_id'];
+					$pinned_id = groups_get_groupmeta( $group_id, 'bb_pinned_post' );
+				}
+			} elseif ( 'activity' === $r['pin_type'] ) {
+				$pinned_id = bp_get_option( 'bb_pinned_post', 0 );
+			}
+
+			if ( ! empty( $pinned_id ) ) {
+				$order_by = $wpdb->prepare( 'CASE WHEN a.id = %d THEN 1 ELSE 0 END DESC, %s', (int) $pinned_id, $order_by );
+
+				if ( ! empty( $where_conditions['filter_sql'] ) ) {
+					$where_conditions['filter_sql'] = '(' . $where_conditions['filter_sql'] . ' OR ' . $wpdb->prepare( 'a.id = %d', $pinned_id ) . ')';
+				}
+			}
 		}
 
 		// Hide Hidden Items?
@@ -734,6 +765,7 @@ class BP_Activity_Activity {
 			 * @param array  $r                Array of arguments passed into method.
 			 */
 			$activity_ids_sql = apply_filters( 'bp_activity_paged_activities_sql', $activity_ids_sql, $r );
+
 			/*
 			 * Queries that include 'last_activity' are cached separately,
 			 * since they are generally much less long-lived.

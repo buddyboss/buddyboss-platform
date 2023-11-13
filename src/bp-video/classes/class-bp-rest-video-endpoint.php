@@ -1690,23 +1690,29 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			if ( ! empty( $valid_upload_ids ) ) {
 				foreach ( $valid_upload_ids as $wp_attachment_id ) {
 
+					// extract the nice title name.
+					$title = get_the_title( $wp_attachment_id );
+
+					$video = array(
+						'id'          => $wp_attachment_id,
+						'name'        => $title,
+						'privacy'     => $video_privacy,
+						'message_id'  => $message_id,
+						'activity_id' => $activity_id,
+						'folder_id'   => $album_id,
+						'group_id'    => $group_id,
+					);
+
 					// Check if media id already available for the messages.
 					if ( 'message' === $video_privacy ) {
 						$mid = get_post_meta( $wp_attachment_id, 'bp_video_id', true );
 
 						if ( ! empty( $mid ) ) {
-							$created_video_ids[] = $mid;
-							continue;
+							$video['video_id'] = $mid;
 						}
 					}
-					// extract the nice title name.
-					$title = get_the_title( $wp_attachment_id );
 
-					$videos[] = array(
-						'id'      => $wp_attachment_id,
-						'name'    => $title,
-						'privacy' => $video_privacy,
-					);
+					$videos[] = $video;
 				}
 			}
 
@@ -2209,12 +2215,6 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 
 		$edit = ( isset( $value->edit ) ? true : false );
 
-		if ( empty( $videos ) && false === $edit ) {
-			$value->bbp_video = null;
-
-			return $value;
-		}
-
 		$post_id = $value->ID;
 
 		// save activity id if it is saved in forums and enabled in platform settings.
@@ -2230,10 +2230,29 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		$group_ids = bbp_get_forum_group_ids( $forum_id );
 		$group_id  = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
 
+		if ( function_exists( 'bb_user_has_access_upload_video' ) ) {
+			$can_send_video = bb_user_has_access_upload_video( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
+			if ( ! $can_send_video ) {
+				$value->bbp_video = null;
+
+				return $value;
+			}
+		}
+
 		// fetch currently uploaded video ids.
 		$existing_video_ids            = get_post_meta( $post_id, 'bp_video_ids', true );
 		$existing_video_attachments    = array();
 		$existing_video_attachment_ids = array();
+
+		if (
+			empty( $videos ) &&
+			true === $edit &&
+			empty( $existing_video_ids )
+		) {
+			$value->bbp_video = null;
+
+			return $value;
+		}
 
 		if ( ! empty( $existing_video_ids ) ) {
 			$existing_video_ids = explode( ',', $existing_video_ids );
@@ -2466,6 +2485,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		$args = array(
 			'upload_ids' => $videos,
 			'privacy'    => 'message',
+			'message_id' => $message_id,
 		);
 
 		remove_action( 'bp_video_add', 'bp_activity_video_add', 9 );
