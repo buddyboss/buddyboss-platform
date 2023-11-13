@@ -61,6 +61,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * New Feature! - Login Logout Redirect, redirects users on login and logout as a global setting and by profile type
 * Bug: Activity - The post button was not enabled when using only emojis without any accompanying text entered directly from the keyboard
 * Bug: Activity - When copying and pasting a post that included a tagged member, it would generate a preview thumbnail
+* Bug: Core - Code refactoring of background processes updated to use options instead of transients
 * Bug: Core - The social network on the profile header did not update when removing a social network in the settings
 * Bug: Core - Videos text showing lower case in Global Search result
 * Bug: Forums - Enabling the Forums component results in a 500 error on the site when using Avada.
