@@ -1,6 +1,6 @@
 {
     "name": "bb-icons",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "copyright": "BuddyBoss",
     "groups": [
         {
@@ -3233,6 +3233,12 @@
             "css": "thumbtack-star",
             "code": 59881,
             "label": "Thumbtack Star",
+            "group": "interfaces"
+        },
+        {
+            "css": "thumbtack-times",
+            "code": 59923,
+            "label": "Thumbtack Times",
             "group": "interfaces"
         }
     ]

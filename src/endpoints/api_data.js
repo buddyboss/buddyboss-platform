@@ -581,6 +581,17 @@ define({ "api": [
             "optional": true,
             "field": "privacy",
             "description": "<p>Privacy of the activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "activity",
+              "group"
+            ],
+            "optional": true,
+            "field": "pin_type",
+            "description": "<p>Show pin activity of feed type.</p>"
           }
         ]
       }
@@ -981,6 +992,46 @@ define({ "api": [
             "optional": false,
             "field": "id",
             "description": "<p>A unique numeric ID for the activity</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-activity/classes/class-bp-rest-activity-endpoint.php",
+    "groupTitle": "Activity"
+  },
+  {
+    "type": "PATCH",
+    "url": "/wp-json/buddyboss/v1/activity/:id/favorite",
+    "title": "Activity favorite",
+    "name": "UpdateBBActivityPin",
+    "group": "Activity",
+    "description": "<p>Make activity pin/unpin</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "Administrator or the Group Admin/Moderator"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the activity</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "pin",
+              "unpin"
+            ],
+            "optional": true,
+            "field": "pin_action",
+            "description": "<p>Pin or unpin activity of feed type.</p>"
           }
         ]
       }

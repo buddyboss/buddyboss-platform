@@ -62,6 +62,7 @@ window.bp = window.bp || {};
 			this.is_topic_reply_form_submit = false;
 			this.draft_content_changed      = false;
 			this.all_draft_data             = {};
+			this.bbp_lead_topic_tags        = '';
 			this.bp_nouveau_forums_data     = ( 'undefined' !== typeof BP_Nouveau.forums.draft ) ? BP_Nouveau.forums.draft : {};
 			this.topic_reply_draft          = {
 				object: false,
@@ -223,6 +224,14 @@ window.bp = window.bp || {};
 				}
 			}
 
+			// Remove draft button for new reply if class already added on form.
+			if ( this.currentForm.hasClass( 'has-draft' ) ) {
+				this.currentForm.removeClass( 'has-draft' );
+			}
+
+			// Get the lead discussion tags.
+			this.updateLeadDiscussionTagsInForm();
+
 			if ( this.bbp_topic_id && forms.length > 1 ) {
 				this.updateSubscriptionCheckboxes();
 			}
@@ -233,6 +242,45 @@ window.bp = window.bp || {};
 			var bbp_topic_subscription_id = this.currentForm.find( '#bbp_topic_subscription' );
 			bbp_topic_subscription_id.prop( 'id', 'bbp_topic_subscription_' + this.bbp_topic_id );
 			bbp_topic_subscription_id.siblings( 'label' ).prop( 'for', 'bbp_topic_subscription_' + this.bbp_topic_id );
+		};
+
+		/**
+		 * Updates the attached lead discussion tags in the form.
+		 *
+		 * @return {void}
+		 */
+		this.updateLeadDiscussionTagsInForm = function() {
+
+			if ( !this.currentForm ) {
+				return;
+			}
+
+			var topic_tags   = [];
+			var tagSelector  = this.is_bb_theme ? '.item-tags ul li' : '.bbp-topic-tags p a';
+			this.currentForm.closest( '#bbpress-forums' ).find( tagSelector ).each( function() {
+				topic_tags.push( $(this).text().trim() );
+			} );
+
+			if ( topic_tags.length > 0 ) {
+				this.bbp_lead_topic_tags = topic_tags.join( ',' );
+			} else {
+				this.bbp_lead_topic_tags = '';
+			}
+
+			this.currentForm.find( '#bbp_topic_tags' ).val( this.bbp_lead_topic_tags );
+			var tags_element = this.currentForm.find( '#bbp_topic_tags_dropdown' );
+
+			if ( '' !== this.bbp_lead_topic_tags ) {
+				tags_element.find( 'option' ).remove();
+				_.each(
+					this.bbp_lead_topic_tags.split( ',' ),
+					function( val ) {
+						tags_element.append( new Option( val, val, false, true ) );
+					}
+				);
+			}
+
+			tags_element.trigger( 'change' );
 		};
 
 		this.getTopicReplyDraftData = function() {
@@ -771,18 +819,21 @@ window.bp = window.bp || {};
 			}
 
 			// Tags.
-			if ( 'undefined' !== typeof activity_data.bbp_topic_tags && '' !== activity_data.bbp_topic_tags ) {
+			if ( 'undefined' !== typeof activity_data.bbp_topic_tags && null !== activity_data.bbp_topic_tags ) {
 
 				$form.find( '#bbp_topic_tags' ).val( activity_data.bbp_topic_tags );
 
 				var tags_element = $form.find( '#bbp_topic_tags_dropdown' );
+				tags_element.val( '' );
 
-				_.each(
-					activity_data.bbp_topic_tags.split( ',' ),
-					function( val ) {
-						tags_element.append( new Option( val, val, false, true ) );
-					}
-				);
+				if ( '' !== activity_data.bbp_topic_tags ) {
+					_.each(
+						activity_data.bbp_topic_tags.split( ',' ),
+						function( val ) {
+							tags_element.append( new Option( val, val, false, true ) );
+						}
+					);
+				}
 
 				tags_element.trigger( 'change' );
 			}
@@ -869,18 +920,21 @@ window.bp = window.bp || {};
 			}
 
 			// Tags.
-			if ( 'undefined' !== typeof activity_data.bbp_topic_tags && '' !== activity_data.bbp_topic_tags ) {
+			if ( 'undefined' !== typeof activity_data.bbp_topic_tags && null !== activity_data.bbp_topic_tags ) {
 
 				$form.find( '#bbp_topic_tags' ).val( activity_data.bbp_topic_tags );
 
 				var tags_element = $form.find( '#bbp_topic_tags_dropdown' );
+				tags_element.val( '' );
 
-				_.each(
-					activity_data.bbp_topic_tags.split( ',' ),
-					function( val ) {
-						tags_element.append( new Option( val, val, false, true ) );
-					}
-				);
+				if ( '' !== activity_data.bbp_topic_tags ) {
+					_.each(
+						activity_data.bbp_topic_tags.split( ',' ),
+						function( val ) {
+							tags_element.append( new Option( val, val, false, true ) );
+						}
+					);
+				}
 
 				tags_element.trigger( 'change' );
 			}
