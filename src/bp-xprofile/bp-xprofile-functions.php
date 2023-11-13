@@ -1719,7 +1719,18 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 
 		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) );
 
-		if ( isset( $original_option_values ) && ! empty( $original_option_values ) && is_array( $original_option_values ) ) {
+		$social_settings_field   = xprofile_get_field( $social_networks_id, $user_id );
+		$social_settings_options = $social_settings_field->get_children();
+
+		if ( 
+			isset( $original_option_values ) &&
+			! empty( $original_option_values ) &&
+			is_array( $original_option_values ) &&
+			! empty( $social_settings_options )
+		) {
+
+			$original_option_values = array_intersect_key( $original_option_values, array_flip( array_column( $social_settings_options, 'name' ) ) );
+
 			$i            = 0;
 			$is_more_link = count( array_filter( $original_option_values ) ) > 3;
 			foreach ( $original_option_values as $key => $original_option_value ) {
