@@ -1711,6 +1711,7 @@ function bp_member_type_custom_metaboxes() {
 	add_meta_box( 'bp-member-type-label-box', __( 'Labels', 'buddyboss' ), 'bp_member_type_labels_metabox', null, 'normal', 'high' );
 	add_meta_box( 'bp-member-type-permissions', __( 'Permissions', 'buddyboss' ), 'bp_member_type_permissions_metabox', null, 'normal', 'high' );
 	add_meta_box( 'bp-member-type-wp-role', __( 'WordPress Role', 'buddyboss' ), 'bp_member_type_wprole_metabox', null, 'normal', 'high' );
+	add_meta_box( 'bp-member-type-redirection', __( 'Redirection', 'buddyboss' ), 'bb_member_type_redirection_metabox', null, 'normal', 'high' );
 	add_meta_box( 'bp-member-type-label-color', esc_html__( 'Label Colors', 'buddyboss' ), 'bb_member_type_labelcolor_metabox', null, 'normal', 'high' );
 	if ( 'add' != $screen->action ) {
 		add_meta_box( 'bp-member-type-shortcode', __( 'Shortcode', 'buddyboss' ), 'bp_profile_shortcode_metabox', null, 'normal', 'high' );
@@ -2281,6 +2282,17 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_member_type_enable_invite', $enable_group_type_enable_invite );
 	update_post_meta( $post_id, '_bp_member_type_label_color', $label_color );
 	update_post_meta( $post_id, '_bp_member_type_allow_messaging_without_connection', $allow_messaging_without_connection );
+
+	// Redirections.
+	$login_redirection         = $data['login_redirection'] ?? '';
+	$custom_login_redirection  = $data['custom_login_redirection'] ?? '';
+	$logout_redirection        = $data['logout_redirection'] ?? '';
+	$custom_logout_redirection = $data['custom_logout_redirection'] ?? '';
+
+	update_post_meta( $post_id, '_bp_member_type_login_redirection', $login_redirection );
+	update_post_meta( $post_id, '_bp_member_type_custom_login_redirection', $custom_login_redirection );
+	update_post_meta( $post_id, '_bp_member_type_logout_redirection', $logout_redirection );
+	update_post_meta( $post_id, '_bp_member_type_custom_logout_redirection', $custom_logout_redirection );
 
 	// Update all profile types which are allowed to message without connections.
 	$profile_types_allowed_messaging = get_option( 'bp_member_types_allowed_messaging_without_connection', array() );
@@ -3495,5 +3507,129 @@ function bb_member_type_labelcolor_metabox( $post ) {
 			</div>
 		</div>
 	</div>
+	<?php
+}
+
+/**
+ * Added new meta box for member types redirection settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param Object $post Post data object.
+ */
+function bb_member_type_redirection_metabox( $post ) {
+	$login_redirection         = get_post_meta( $post->ID, '_bp_member_type_login_redirection', true );
+	$custom_login_redirection  = get_post_meta( $post->ID, '_bp_member_type_custom_login_redirection', true );
+	$logout_redirection        = get_post_meta( $post->ID, '_bp_member_type_logout_redirection', true );
+	$custom_logout_redirection = get_post_meta( $post->ID, '_bp_member_type_custom_logout_redirection', true );
+	?>
+	<table class="form-table">
+		<tbody>
+			<tr class="child-no-padding-first">
+				<th scope="row"></th>
+				<td>
+					<?php
+					printf(
+						'<p class="description">%s</p>',
+						sprintf(
+							/* translators:  */
+							esc_html__( 'Redirect this profile type. When you change the redirection settings in a profile type this will then take priority and override redirection global settings in %s', 'buddyboss' ),
+							sprintf(
+								'<a href="%s">%s</a>',
+								esc_url(
+									add_query_arg(
+										array(
+											'page' => 'bp-settings#bb_redirection',
+										),
+										admin_url( 'admin.php' )
+									)
+								),
+								esc_html__( 'Buddyboss - Settings - General', 'buddyboss' )
+							)
+						)
+					);
+					?>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">After Login</th>
+				<td>
+					<select name="bp-member-type[login_redirection]" id="bb-login-redirection">
+						<option value="" <?php selected( '', $login_redirection ); ?>><?php esc_html_e( 'Default', 'buddyboss' ); ?></option>
+						<option value="0" <?php selected( 0, $login_redirection ); ?>><?php esc_html_e( 'Custom URL', 'buddyboss' ); ?></option>
+						<?php
+						$pages = bb_get_published_pages();
+						foreach ( $pages as $id => $title ) {
+							?>
+							<option value="<?php echo esc_attr( $id ); ?>" <?php selected( $id, $login_redirection ); ?>><?php echo esc_html( $title ); ?></option>
+							<?php
+						}
+						?>
+					</select>
+					<p class="bb-description">
+						<?php
+						esc_html_e(
+							'Select a page or external link to redirect your members to after they login.',
+							'buddyboss'
+						)
+						?>
+					</p>
+				</td>
+			</tr>
+			<tr class="child-no-padding login-redirection-text-box" style="display: none;">
+				<th scope="row"></th>
+				<td>
+					<input style="width: 89%;" id="bb-custom-login-redirection" name="bp-member-type[custom_login_redirection]" type="text" value="<?php echo esc_url( $custom_login_redirection ); ?>">
+					<p class="bb-description">
+						<?php
+						esc_html_e(
+							'Select a page or external link to redirect your members to after they login.',
+							'buddyboss'
+						)
+						?>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">After Logout</th>
+				<td>
+					<select name="bp-member-type[logout_redirection]" id="bb-logout-redirection">
+						<option value="" <?php selected( '', $logout_redirection ); ?>><?php esc_html_e( 'Default', 'buddyboss' ); ?></option>
+						<option value="0" <?php selected( 0, $logout_redirection ); ?>><?php esc_html_e( 'Custom URL', 'buddyboss' ); ?></option>
+						<?php
+						$pages = bb_get_published_pages();
+						foreach ( $pages as $id => $title ) {
+							?>
+							<option value="<?php echo esc_attr( $id ); ?>" <?php selected( $id, $logout_redirection ); ?>><?php echo esc_html( $title ); ?></option>
+							<?php
+						}
+						?>
+					</select>
+					<p class="bb-description">
+						<?php
+						esc_html_e(
+							'Select a page or external link to redirect your members to after they logout.',
+							'buddyboss'
+						)
+						?>
+					</p>
+				</td>
+			</tr>
+			<tr class="child-no-padding logout-redirection-text-box" style="display: none;">
+			<th scope="row"></th>
+			<td>
+				<input style="width: 89%;" id="bb-custom-logout-redirection" name="bp-member-type[custom_logout_redirection]" type="text" value="<?php echo esc_url( $custom_logout_redirection ); ?>">
+				<p class="bb-description">
+					<?php
+					esc_html_e(
+						'Select a page or external link to redirect your members to after they logout.',
+						'buddyboss'
+					)
+					?>
+				</p>
+			</td>
+		</tr>
+		</tbody>
+	</table>
 	<?php
 }
