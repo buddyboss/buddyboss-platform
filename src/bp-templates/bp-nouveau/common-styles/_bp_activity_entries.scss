@@ -263,13 +263,13 @@
 				}
 
 				> i {
-					font-size: 14px;
+					font-size: 18px;
 					line-height: 1;
 				}
 
 				> img {
-					height: 14px;
-					width: 14px;
+					height: 18px;
+					width: 18px;
 					object-fit: cover;
 				}
 			}
@@ -277,18 +277,6 @@
 
 		.activity-content .activity-state-reactions {
 			display: inline-flex;
-
-			.reactions_item {
-
-				> i {
-					font-size: 18px;
-				}
-
-				> img {
-					height: 18px;
-					width: 18px;
-				}
-			}
 		}
 
 		// close .activity-content
