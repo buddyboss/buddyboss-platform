@@ -3576,6 +3576,7 @@ input.search-query-input {
 
 .activity-list .activity-item .activity-content .activity-state-reactions {
   display: inline-flex;
+  vertical-align: middle;
 }
 
 .activity-list .activity-item .activity-inner p {
@@ -6811,6 +6812,14 @@ span.dashicons.dashicons-admin-file:before {
 .buddypress-wrap .activity-comments .comment-reactions .comment-reactions_count {
   font-size: 13px;
   margin: 0 2px 0 3px;
+}
+
+.buddypress-wrap .activity-comments .bb-activity-more-options-wrap {
+  top: -3px;
+}
+
+.buddypress-wrap .activity-comments .bb-activity-more-options-wrap .bb-activity-more-options-action i {
+  font-size: 16px;
 }
 
 .buddypress-wrap .mini .activity-comments {
