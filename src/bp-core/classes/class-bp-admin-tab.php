@@ -98,6 +98,18 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		}
 
 		public function register_admin_script() {
+
+			$screen    = get_current_screen();
+			$screen_id = $screen ? $screen->id : '';
+
+			if (
+				'buddyboss_page_bp-settings' === $screen_id ||
+				'bp-member-type' === $screen_id
+			) {
+				wp_enqueue_script( 'bp-select2' );
+				wp_enqueue_style( 'bp-select2' );
+			}
+
 			wp_enqueue_script(
 				'bp-admin',
 				buddypress()->plugin_url . 'bp-core/admin/js/settings-page.js',
@@ -106,8 +118,6 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				true
 			);
 
-			$screen         = get_current_screen();
-			$screen_id      = $screen ? $screen->id : '';
 			$email_template = '';
 
 			if ( 'edit-bp-email' === $screen_id ) {

@@ -3325,3 +3325,157 @@ function bb_admin_setting_callback_enable_activity_pinned_posts() {
 
 	<?php
 }
+
+/**
+ * Link to redirection tutorial.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_redirection_setting_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 126835,
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
+ * Get the published page list.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array Associative array of page id and page title of pages.
+ */
+function bb_get_published_pages() {
+	static $published_pages = array();
+
+	if ( ! empty( $published_pages ) ) {
+		return $published_pages;
+	}
+
+	$pages = get_pages(
+		array(
+			'post_status' => 'publish',
+		)
+	);
+
+	foreach ( $pages as $page ) {
+		$published_pages[ $page->ID ] = $page->post_title;
+	}
+
+	return $published_pages;
+}
+
+/**
+ * Admin settings for showing the login redirection settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_callback_login_redirection() {
+	$login_redirection = bb_login_redirection();
+	?>
+	<select name="bb-login-redirection" id="bb-login-redirection">
+		<option value="" <?php selected( '', $login_redirection ); ?>><?php esc_html_e( 'Default', 'buddyboss' ); ?></option>
+		<option value="0" <?php selected( 0, $login_redirection ); ?>><?php esc_html_e( 'Custom URL', 'buddyboss' ); ?></option>
+		<?php
+		$pages = bb_get_published_pages();
+		foreach ( $pages as $id => $title ) {
+			?>
+			<option value="<?php echo esc_attr( $id ); ?>" <?php selected( $id, $login_redirection ); ?>><?php echo esc_html( $title ); ?></option>
+			<?php
+		}
+		?>
+	</select>
+	<p class="description">
+		<?php
+		esc_html_e(
+			'Select a page or external link to redirect your members to after they login.',
+			'buddyboss'
+		);
+		?>
+	</p>
+	<?php
+}
+
+/**
+ * Admin settings for showing the custom login redirection page url.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_custom_login_redirection() {
+	?>
+	<input style="width: 89%;" id="bb-custom-login-redirection" name="bb-custom-login-redirection" type="text" value="<?php echo esc_url( bb_custom_login_redirection() ); ?>"/>
+	<p class="description">
+		<?php
+		esc_html_e(
+			'Select a page or external link to redirect your members to after they login.',
+			'buddyboss'
+		)
+		?>
+	</p>
+	<?php
+}
+
+/**
+ * Admin settings for showing the logout redirection settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_callback_logout_redirection() {
+	$logout_redirection = bb_logout_redirection();
+	?>
+	<select name="bb-logout-redirection" id="bb-logout-redirection">
+		<option value="" <?php selected( '', $logout_redirection ); ?>><?php esc_html_e( 'Default', 'buddyboss' ); ?></option>
+		<option value="0" <?php selected( 0, $logout_redirection ); ?>><?php esc_html_e( 'Custom URL', 'buddyboss' ); ?></option>
+		<?php
+		$pages = bb_get_published_pages();
+		foreach ( $pages as $id => $title ) {
+			?>
+			<option value="<?php echo esc_attr( $id ); ?>" <?php selected( $id, $logout_redirection ); ?>><?php echo esc_html( $title ); ?></option>
+			<?php
+		}
+		?>
+	</select>
+	<p class="description">
+		<?php
+		esc_html_e(
+			'Select a page or external link to redirect your members to after they logout.',
+			'buddyboss'
+		)
+		?>
+	</p>
+	<?php
+}
+
+/**
+ * Admin settings for showing the custom logout redirection page url.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_custom_logout_redirection() {
+	?>
+	<input style="width: 89%;" id="bb-custom-logout-redirection" name="bb-custom-logout-redirection" type="text" value="<?php echo esc_url( bb_custom_logout_redirection() ); ?>"/>
+	<p class="description">
+		<?php
+		esc_html_e(
+			'Select a page or external link to redirect your members to after they logout.',
+			'buddyboss'
+		);
+		?>
+	</p>
+	<?php
+}
