@@ -6487,8 +6487,8 @@ function bb_get_custom_buddyboss_group_cover() {
  */
 function bb_attachments_get_default_profile_group_avatar_image( $params ) {
 
-	$object = isset( $params['object'] ) ? $params['object'] : 'user';
-	$size   = isset( $params['type'] ) ? $params['type'] : 'full';
+	$object = $params['object'] ?? 'user';
+	$size   = $params['type'] ?? 'full';
 
 	$avatar_image_url       = false;
 	$disable_avatar_uploads = ( 'user' === $object ) ? bp_disable_avatar_uploads() : bp_disable_group_avatar_uploads();
@@ -6512,6 +6512,10 @@ function bb_attachments_get_default_profile_group_avatar_image( $params ) {
 				// Default Profile Avatar = Legacy.
 			} elseif ( 'legacy' === $default_profile_avatar_type ) {
 				$avatar_image_url = bb_get_legacy_profile_avatar( $size );
+
+				// Default Profile Avatar = Display Name.
+			} elseif ( 'display-name' === $default_profile_avatar_type ) {
+				$avatar_image_url = empty( $params['item_id'] ) ? buddypress()->plugin_url . 'bp-core/images/bb-profile-avatar-display-name.png' : bb_get_default_png_avatar( $params );
 
 				// Default Profile Avatar = Custom.
 			} elseif ( 'custom' === $default_profile_avatar_type ) {
@@ -6543,6 +6547,8 @@ function bb_attachments_get_default_profile_group_avatar_image( $params ) {
 			$avatar_image_url = bb_get_buddyboss_group_avatar( $size );
 		} elseif ( 'legacy' === $group_avatar_type ) {
 			$avatar_image_url = bb_get_legacy_group_avatar( $size );
+		} elseif ( 'group-name' === $group_avatar_type ) {
+			$avatar_image_url = empty( $params['item_id'] ) ? buddypress()->plugin_url . 'bp-core/images/bb-group-avatar-display-name.png' : bb_get_default_png_avatar( $params );
 		} elseif ( 'custom' === $group_avatar_type ) {
 			$avatar_image_url = bb_get_default_custom_upload_group_avatar( bb_get_buddyboss_group_avatar( $size ), $size );
 		}
@@ -9087,4 +9093,426 @@ function bb_redirect_after_action( $redirect_to, $user_id = 0, $action = 'login'
 	}
 
 	return $redirect_to;
+}
+
+/**
+ * Function to check WP_Filesystem object available or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return object
+ */
+function bb_wp_filesystem() {
+	global $wp_filesystem;
+
+	if ( ! is_object( $wp_filesystem ) ) {
+
+		// Check if WP_Filesystem not exists then include file.
+		if ( ! function_exists( 'WP_Filesystem' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+
+		WP_Filesystem();
+	}
+
+	return $wp_filesystem;
+}
+
+/**
+ * Function to retrieve the first character of the give string and make it uppercase.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $string String to find first character.
+ *
+ * @return string
+ */
+function bb_core_get_first_character( $string ) {
+	if ( function_exists( 'mb_strtoupper' ) && function_exists( 'mb_substr' ) ) {
+		$character = mb_strtoupper( mb_substr( $string, 0, 1 ) );
+	} else {
+		$character = strtoupper( substr( $string, 0, 1 ) );
+	}
+
+	// Allowed only english or number character.
+	if ( ! preg_match( '/^[A-Za-z0-9]+$/i', $character ) ) {
+		$character = '';
+	}
+
+	return $character;
+}
+
+/**
+ * Function to return pre-defined color palettes.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bb_get_predefined_palette() {
+	/**
+	 * Filters the color palette should have a minimum of 12 color codes and a maximum of 21.
+	 *
+	 * @since BuddyBoss [BBVSERION]
+	 *
+	 * @param array $palette Array of color palette.
+	 */
+	return apply_filters(
+		'bb_predefined_palette',
+		array(
+			1  => '#dc143c',
+			2  => '#b22222',
+			3  => '#8b0000',
+			4  => '#663399',
+			5  => '#4682b4',
+			6  => '#8a2be2',
+			7  => '#9400d3',
+			8  => '#9932cc',
+			9  => '#800080',
+			10 => '#4b0082',
+			11 => '#6a5acd',
+			12 => '#c71585',
+			13 => '#483d8b',
+			14 => '#4169e1',
+			15 => '#0000cd',
+			16 => '#000080',
+			17 => '#191970',
+			18 => '#008000',
+			19 => '#006400',
+			20 => '#8b4513',
+			21 => '#a0522d'
+		)
+	);
+}
+
+/**
+ * Function to retrieve the default PNG avatar if don't exists then generate.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $params Array of avatar details.
+ *
+ * @return string
+ */
+function bb_get_default_png_avatar( $params ) {
+	$object  = $params['object'] ?? 'user';
+	$item_id = $params['item_id'] ?? 0;
+
+	$fallback_avatar  = buddypress()->plugin_url . 'bp-core/images/bb-profile-avatar-buddyboss.jpg';
+
+	if ( empty( $item_id ) ) {
+		return $fallback_avatar;
+	}
+
+	if ( 'user' === $object ) {
+		$avatar_image_url = get_user_meta( $item_id, 'default-user-avatar-png', true );
+	} else {
+		$avatar_image_url = groups_get_groupmeta( $item_id, 'default-group-avatar-png', true );
+	}
+
+	if ( ! empty( $avatar_image_url ) ) {
+		$avatar_image_path = str_replace( bp_core_get_upload_dir( 'url' ), bp_core_avatar_upload_path(), $avatar_image_url );
+		if ( ! file_exists( $avatar_image_path ) ) {
+			$avatar_image_url = '';
+		}
+	}
+
+	if ( empty( $avatar_image_url ) ) {
+		$avatar_image_url = bb_generate_default_avatar( $params )['url'];
+	}
+
+	return ! empty( $avatar_image_url ) ? $avatar_image_url : $fallback_avatar;
+}
+
+/**
+ * Function to prepare array to generate the default PNG avatar.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args Array of avatar details.
+ *
+ * @return array
+ */
+function bb_generate_default_avatar( $args ) {
+	$r = bp_parse_args(
+		$args,
+		array(
+			'item_id'   => 0,
+			'object'    => 0,
+			'item_name' => '',
+		)
+	);
+
+	$prepare_response = array(
+		'path' => '',
+		'url'  => '',
+	);
+
+	// Check the image library is available or not.
+	$image_library = _wp_image_editor_choose();
+
+	if ( empty( $r['item_id'] ) || empty( $r['object'] ) || empty( $image_library ) ) {
+		return $prepare_response;
+	}
+
+	if ( empty( $r['item_name'] ) ) {
+		if ( 'user' === $r['object'] ) {
+			$r['item_name'] = bp_core_get_user_displayname( $r['item_id'] );
+		} else {
+			$group          = groups_get_group( $r['item_id'] );
+			$r['item_name'] = bp_get_group_name( $group );
+		}
+	}
+
+	if ( empty( $r['item_name'] ) ) {
+		return $prepare_response;
+	}
+
+	$char1 = bb_core_get_first_character( $r['item_name'] );
+	$char2 = '';
+	if ( 'user' === $r['object'] ) {
+		$display_format = bp_core_display_name_format();
+		if (
+			'first_last_name' === $display_format &&
+			function_exists( 'bp_is_active' ) &&
+			bp_is_active( 'xprofile' )
+		) {
+			// Get the last field ID and its visibility.
+			$last_filed_id    = bp_xprofile_lastname_field_id();
+			$field_visibility = xprofile_get_field_visibility_level( $last_filed_id, $r['item_id'] );
+
+			// If visibility is public, then display second character.
+			if ( 'public' === $field_visibility ) {
+				$words = explode( ' ', $r['item_name'] );
+				if ( 2 <= count( $words ) ) {
+					$char2 = bb_core_get_first_character( $words[1] );
+				}
+			}
+		}
+	}
+
+	$item_name = strtoupper( $char1 . $char2 );
+	if ( empty( $item_name ) ) {
+		return $prepare_response;
+	}
+
+	$all_palettes = bb_get_predefined_palette();
+	if ( 'user' === $r['object'] ) {
+		$palette = get_user_meta( $r['item_id'], 'default-user-avatar-png-background-color-palette', true );
+	} else {
+		$palette = groups_get_groupmeta( $r['item_id'], 'default-group-avatar-png-background-color-palette' );
+	}
+
+	if ( empty( $palette ) ) {
+		$palette = array_rand( $all_palettes );
+	}
+
+	/**
+	 * Set font family full path to render text on image.
+	 *
+	 * @since BuddyBoss [BBVSERION]
+	 *
+	 * @param string $font_family Full path of font family. It should be a TTF file.
+	 */
+	$font_family = apply_filters( 'bb_default_png_avatar_font_family', trailingslashit( buddypress()->plugin_dir ) . 'bp-core/fonts/SFUIText-Regular.ttf' );
+
+	if ( empty( $font_family ) ) {
+		return $prepare_response;
+	}
+
+	// Setup default if empty.
+	$bg_color = ! empty( $all_palettes[ $palette ] ) ? $all_palettes[ $palette ] : '#008000';
+
+	/**
+	 * Set font color to render text on image.
+	 *
+	 * @since BuddyBoss [BBVSERION]
+	 *
+	 * @param string $png_text_color The color of the font to display on image.
+	 */
+	$png_text_color = apply_filters( 'bb_default_png_avatar_text_color', '#FFFFFF' );
+	if ( empty( $png_text_color ) ) {
+		$png_text_color = '#FFFFFF';
+	}
+
+	/**
+	 * Set font size to render text on image.
+	 *
+	 * @since BuddyBoss [BBVSERION]
+	 *
+	 * @param int $font_size The font size of the text to display on image.
+	 */
+	$font_size = (int) apply_filters( 'bb_default_png_avatar_text_font_size', 120 );
+	if ( empty( $font_size ) ) {
+		$font_size = 120;
+	}
+
+	// Generate filename.
+	$filename = time() . $r['item_id'] . '.png';
+
+	// Set upload directory and URL based on object.
+	$file_path = bp_core_avatar_upload_path() . '/group-avatars/default/' . $r['item_id'] . '/';
+	$file_url  = bp_core_get_upload_dir( 'url' ) . '/group-avatars/default/' . $r['item_id'] . '/' . $filename;
+	if ( 'user' === $r['object'] ) {
+		$file_path = bp_core_avatar_upload_path() . '/avatars/default/' . $r['item_id'] . '/';
+		$file_url  = bp_core_get_upload_dir( 'url' ) . '/avatars/default/' . $r['item_id'] . '/' . $filename;
+	}
+
+	$wp_filesystem = bb_wp_filesystem();
+	$wp_filesystem->rmdir( $file_path, true );
+	$wp_filesystem->mkdir( $file_path, FS_CHMOD_DIR );
+
+	$file           = $file_path . $filename;
+	$chose_editor   = _wp_image_editor_choose();
+	$default_avatar = '';
+
+	// Set up image editor object.
+	$image_editor = wp_get_image_editor( buddypress()->plugin_dir . 'bp-core/images/blank.png' );
+
+	// Check if image editor is available and create text on the image.
+	if ( ! is_wp_error( $image_editor ) ) {
+		$text_dimensions = imagettfbbox( $font_size, 0, $font_family, $item_name );
+
+		// Extract width and height from the bounding box.
+		$text_width  = abs( $text_dimensions[2] - $text_dimensions[0] ); // Width (right - left).
+		$text_height = abs( $text_dimensions[5] - $text_dimensions[3] ); // Height (bottom - top).
+
+		$image_size   = $image_editor->get_size();
+		$image_width  = $image_size['width'];
+		$image_height = $image_size['height'];
+
+		$text_x = ( ( $image_width - $text_width ) / 2 ) - 12;
+		$text_y = ( ( $image_height + $text_height ) / 2 ) - 3;
+
+		$rf_image_editor = new ReflectionClass( $image_editor );
+		$property        = $rf_image_editor->getProperty( 'image' );
+		$property->setAccessible( true );
+		$image = $property->getValue( $image_editor );
+
+		if ( 'WP_Image_Editor_GD' === $chose_editor ) {
+			// Define the background color.
+			$filtered_bg_color = imagecolorallocate( $image, hexdec( substr( $bg_color, 1, 2 ) ), hexdec( substr( $bg_color, 3, 2 ) ), hexdec( substr( $bg_color, 5, 2 ) ) );
+			$text_color        = imagecolorallocate( $image, hexdec( substr( $png_text_color, 1, 2 ) ), hexdec( substr( $png_text_color, 3, 2 ) ), hexdec( substr( $png_text_color, 5, 2 ) ) );
+
+			imagefill( $image, 0, 0, $filtered_bg_color );
+			imagettftext( $image, $font_size, 0, $text_x, $text_y, $text_color, $font_family, $item_name );
+
+		} else {
+			$image = new Imagick();
+			$image->setAntiAlias( true );
+			$image->setResolution( 300, 300 );
+			$image->newImage( $image_width, $image_height, new ImagickPixel( $bg_color ) );
+
+			// Set up the text properties.
+			$draw = new ImagickDraw();
+			$draw->setFont( $font_family ); // Path to your TrueType font file.
+			$draw->setResolution( 95, 95 ); // text resolution.
+			$draw->setFontSize( $font_size ); // Font size.
+			$draw->setFillColor( new ImagickPixel( $png_text_color ) ); // Text color.
+			$draw->setGravity( Imagick::GRAVITY_CENTER ); // Set the text to be centered.
+
+			// Add text to the image.
+			$image->annotateImage( $draw, 0, 0, 0, $item_name );
+			$image->setImageFormat( 'png' );
+		}
+
+		$property->setValue( $image_editor, $image );
+
+		// Save the image with the text as a PNG.
+		$result = $image_editor->save( $file, 'image/png' );
+
+		if ( ! is_wp_error( $result ) ) {
+			$default_avatar = $file_url;
+		}
+	}
+
+	if ( ! empty( $default_avatar ) ) {
+
+		if ( 'user' === $r['object'] ) {
+			update_user_meta( $r['item_id'], 'default-user-avatar-png-background-color-palette', $palette );
+		} else {
+			groups_update_groupmeta( $r['item_id'], 'default-group-avatar-png-background-color-palette', $palette );
+		}
+
+		if ( 'user' === $r['object'] ) {
+			update_user_meta( $r['item_id'], 'default-user-avatar-png', $default_avatar );
+		} else {
+			groups_update_groupmeta( $r['item_id'], 'default-group-avatar-png', $default_avatar );
+		}
+
+		$prepare_response['url']  = $default_avatar;
+		$prepare_response['path'] = str_replace( bp_core_get_upload_dir( 'url' ), bp_core_avatar_upload_path(), $default_avatar );
+	}
+
+	return $prepare_response;
+}
+
+/**
+ * Function to delete the user default PNG avatar.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $item_ids      Array of user IDs.
+ * @param bool  $is_delete_dir True then delete directory. Default true.
+ *
+ * @return void
+ */
+function bb_delete_default_user_png_avatar( $item_ids = array(), $is_delete_dir = true ) {
+	global $wpdb;
+
+	$delete_query = $wpdb->prepare("DELETE FROM $wpdb->usermeta WHERE meta_key = %s", 'default-user-avatar-png' );
+	if ( ! empty( $item_ids ) ) {
+		$delete_query .= " AND user_id IN (" . implode( ',', $item_ids ) . ")";
+	}
+
+	$wpdb->query( $delete_query );
+
+	if ( $is_delete_dir ) {
+		$wp_filesystem   = bb_wp_filesystem();
+		$user_avatar_dir = bp_core_avatar_upload_path() . '/avatars/default/';
+		if ( is_dir( $user_avatar_dir ) ) {
+			if ( ! empty( $item_ids ) ) {
+				foreach ( $item_ids as $user_id ) {
+					$wp_filesystem->delete( $user_avatar_dir . $user_id . '/', true );
+				}
+			} else {
+				$wp_filesystem->delete( $user_avatar_dir, true );
+			}
+		}
+	}
+}
+
+/**
+ * Function to delete the group default PNG avatar.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $item_ids      Array of group IDs.
+ * @param bool  $is_delete_dir True then delete directory. Default true.
+ *
+ * @return void
+ */
+function bb_delete_default_group_png_avatar( $item_ids = array(), $is_delete_dir = true ) {
+	global $wpdb, $bp;
+
+	$delete_query = $wpdb->prepare( "DELETE FROM {$bp->groups->table_name_groupmeta} WHERE meta_key = %s", 'default-group-avatar-png' );
+	if ( ! empty( $item_ids ) ) {
+		$delete_query .= " AND group_id IN (" . implode( ',', $item_ids ) . ")";
+	}
+
+	$wpdb->query( $delete_query );
+
+	if ( $is_delete_dir ) {
+		$wp_filesystem    = bb_wp_filesystem();
+		$group_avatar_dir = bp_core_avatar_upload_path() . '/group-avatars/default/';
+		if ( is_dir( $group_avatar_dir ) ) {
+			if ( ! empty( $item_ids ) ) {
+				foreach ( $item_ids as $group_id ) {
+					$wp_filesystem->delete( $group_avatar_dir . $group_id . '/', true );
+				}
+			} else {
+				$wp_filesystem->delete( $group_avatar_dir, true );
+			}
+		}
+	}
 }

@@ -28,6 +28,9 @@ add_filter( 'bp_repair_list', 'bb_repair_member_profile_links', 12 );
 
 add_action( 'bb_assign_default_member_type_to_activate_user_on_admin', 'bb_set_default_member_type_to_activate_user_on_admin', 1, 2 );
 
+add_action( 'update_option_bp-display-name-format', 'bb_member_remove_default_png_avatar_on_update_display_name', 10, 3 );
+add_action( 'deleted_user', 'bb_member_remove_default_png_avatar_on_deleted_user' );
+
 /**
  * Load additional sign-up sanitization filters on bp_loaded.
  *
@@ -964,4 +967,39 @@ function bb_generate_member_profile_links_on_update() {
 			$bp_background_updater->save()->dispatch();
 		}
 	}
+}
+
+/**
+ * Delete default PNG for members when update the display name format.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed  $old_value The old option value.
+ * @param mixed  $value     The new option value.
+ * @param string $option    Option name.
+ *
+ * @return void
+ */
+function bb_member_remove_default_png_avatar_on_update_display_name( $old_value, $value, $option ) {
+	if (
+		'bp-display-name-format' === $option &&
+		$old_value !== $value
+	) {
+		// Delete default SVG for users.
+		bb_delete_default_user_png_avatar( array(), false );
+	}
+}
+
+/**
+ * Delete default PNG for member when delete the user.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $id ID of the user.
+ *
+ * @return void
+ */
+function bb_member_remove_default_png_avatar_on_deleted_user( $id ) {
+	// Delete default PNG for users.
+	bb_delete_default_user_png_avatar( array( $id ) );
 }
