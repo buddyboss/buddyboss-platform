@@ -1340,7 +1340,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			'attachment_id'         => ( isset( $document->attachment_id ) ? $document->attachment_id : 0 ),
 			'user_id'               => $document->user_id,
 			'title'                 => $document->title,
-			'description'           => '',
+			'description'           => ( ! empty( $document->description ) ? wp_specialchars_decode( $document->description, ENT_QUOTES ) : '' ),
 			'type'                  => ( empty( $document->attachment_id ) ? 'folder' : 'document' ),
 			'folder_id'             => $document->parent,
 			'group_id'              => $document->group_id,
@@ -1387,7 +1387,6 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $document->attachment_id ) ) {
-			$data['description']  = wp_specialchars_decode( get_post_field( 'post_content', $document->attachment_id ), ENT_QUOTES );
 			$data['download_url'] = bp_document_download_link( $document->attachment_id, $document->id );
 			$data['extension']    = bp_document_extension( $document->attachment_id );
 			$data['svg_icon']     = bp_document_svg_icon( $data['extension'], $document->attachment_id, 'svg' );
@@ -1995,6 +1994,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				'id'            => $id,
 				'attachment_id' => $wp_attachment_id,
 				'title'         => $title,
+				'description'   => wp_filter_nohtml_kses( $content ),
 				'activity_id'   => $document_activity_id,
 				'message_id'    => $message_id,
 				'folder_id'     => ( ! empty( $args['folder_id'] ) ? $args['folder_id'] : false ),
@@ -2020,7 +2020,8 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					update_post_meta( $wp_attachment_id, 'bp_document_activity_id', $document_activity_id );
 				}
 
-				// save document description while update.
+				// Added backward compatibility.
+				// Save document description while update.
 				if ( false !== $content ) {
 					$document_post['ID']           = $wp_attachment_id;
 					$document_post['post_content'] = wp_filter_nohtml_kses( $content );
@@ -2028,7 +2029,6 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				}
 
 				$created_document_ids[] = $document_id;
-
 			}
 
 			if ( ! empty( $all_documents ) ) {
@@ -2062,23 +2062,28 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			if ( ! empty( $valid_upload_ids ) ) {
 				foreach ( $valid_upload_ids as $wp_attachment_id ) {
 
-					// Check if document id already available for the messages.
-					if ( 'message' === $document_privacy ) {
-						$mid = get_post_meta( $wp_attachment_id, 'bp_document_id', true );
-
-						if ( ! empty( $mid ) ) {
-							$created_document_ids[] = $mid;
-							continue;
-						}
-					}
 					// extract the nice title name.
 					$title = get_the_title( $wp_attachment_id );
 
-					$documents[] = array(
-						'id'      => $wp_attachment_id,
-						'name'    => $title,
-						'privacy' => $document_privacy,
+					$document = array(
+						'id'          => $wp_attachment_id,
+						'name'        => $title,
+						'privacy'     => $document_privacy,
+						'message_id'  => $message_id,
+						'activity_id' => $activity_id,
+						'folder_id'   => ( ! empty( $args['folder_id'] ) ? $args['folder_id'] : false ),
+						'group_id'    => ( ! empty( $args['group_id'] ) ? $args['group_id'] : false ),
 					);
+
+					// Check if document id already available for the messages.
+					if ( 'message' === $document_privacy ) {
+						$mid = get_post_meta( $wp_attachment_id, 'bp_document_id', true );
+						if ( ! empty( $mid ) ) {
+							$document['document_id'] = $mid;
+						}
+					}
+
+					$documents[] = $document;
 				}
 			}
 
@@ -2425,7 +2430,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 */
 	protected function bp_documents_update_rest_field_callback( $object, $value, $attribute ) {
 
-		global $bp_activity_edit, $bp_document_upload_count, $bp_new_activity_comment, $bp_activity_post_update_id, $bp_activity_post_update;
+		global $bp_activity_edit, $bp_document_upload_count, $bp_new_activity_comment, $bp_activity_post_update_id, $bp_activity_post_update, $bb_activity_comment_edit, $bb_activity_comment_edit_id;
 
 		$group_id = 0;
 		if ( 'groups' === $value->component ) {
@@ -2452,15 +2457,25 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			return $value;
 		}
 
-		$bp_activity_edit = ( isset( $value->edit ) ? true : false );
-		// phpcs:ignore
-		$_POST['edit'] = $bp_activity_edit;
+		// Set variable if current action is edit activity comment.
+		$is_edit_activity_comment = $bb_activity_comment_edit && 'activity_comment' === $value->type && isset( $_POST['edit_comment'] );
 
-		if ( false === $bp_activity_edit && empty( $object ) ) {
-			return $value;
+		if ( $is_edit_activity_comment ) {
+			$bb_activity_comment_edit_id = $value->id;
+			if ( false === $bb_activity_comment_edit && empty( $object ) ) {
+				return $value;
+			}
+		} else {
+			$bp_activity_edit = ( isset( $value->edit ) ? true : false );
+			// phpcs:ignore
+			$_POST['edit'] = $bp_activity_edit;
+
+			if ( false === $bp_activity_edit && empty( $object ) ) {
+				return $value;
+			}
 		}
 
-		$bp_new_activity_comment = ( 'activity_comment' === $value->type ? $value->id : 0 );
+		$bp_new_activity_comment = ( ( 'activity_comment' === $value->type && false === $bb_activity_comment_edit ) ? $value->id : 0 );
 
 		$activity_id = $value->id;
 		$privacy     = $value->privacy;
@@ -2482,8 +2497,10 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		$bp_activity_post_update    = true;
-		$bp_activity_post_update_id = $activity_id;
+		if ( ! $is_edit_activity_comment ) {
+			$bp_activity_post_update    = true;
+			$bp_activity_post_update_id = $activity_id;
+		}
 
 		if ( ! empty( $value->component ) && 'groups' === $value->component ) {
 			$group_id = $value->item_id;
@@ -2499,6 +2516,12 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					bp_document_delete( array( 'id' => $document_id ), 'activity' );
 				}
 				bp_activity_delete_meta( $activity_id, 'bp_document_ids' );
+
+				// Delete media meta from activity for activity comment.
+				if ( $is_edit_activity_comment ) {
+					bp_activity_delete_meta( $activity_id, 'bp_document_id' );
+					bp_activity_delete_meta( $activity_id, 'bp_document_activity' );
+				}
 			}
 
 			return $value;
@@ -2727,8 +2750,6 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			return $value;
 		}
 
-		$thread_id = $value->thread_id;
-
 		if ( function_exists( 'bb_user_has_access_upload_document' ) ) {
 			$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 			if ( ! $can_send_document ) {
@@ -2764,6 +2785,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		$args = array(
 			'document_ids' => $documents,
 			'privacy'      => 'message',
+			'message_id'   => $message_id,
 		);
 
 		remove_action( 'bp_document_add', 'bp_activity_document_add', 9 );
@@ -2886,11 +2908,8 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	protected function bbp_document_update_rest_field_callback( $object, $value ) {
 
 		$documents = wp_parse_id_list( $object );
-		if ( empty( $documents ) ) {
-			$value->bbp_documents = null;
 
-			return $value;
-		}
+		$edit = ( isset( $value->edit ) ? true : false );
 
 		$post_id = $value->ID;
 
@@ -2905,17 +2924,17 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			$forum_id = bbp_get_topic_forum_id( $post_id );
 		}
 
+		$group_ids = bbp_get_forum_group_ids( $forum_id );
+		$group_id  = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
+
 		if ( function_exists( 'bb_user_has_access_upload_document' ) ) {
-			$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
+			$can_send_document = bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
 			if ( ! $can_send_document ) {
 				$value->bbp_documents = null;
 
 				return $value;
 			}
 		}
-
-		$group_ids = bbp_get_forum_group_ids( $forum_id );
-		$group_id  = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
 
 		// save activity id if it is saved in forums and enabled in platform settings.
 		$main_activity_id = get_post_meta( $post_id, '_bbp_activity_id', true );
@@ -2924,6 +2943,16 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		$existing_document_ids            = get_post_meta( $post_id, 'bp_document_ids', true );
 		$existing_document_attachment_ids = array();
 		$existing_document_attachments    = array();
+
+		if (
+			empty( $documents ) &&
+			true === $edit &&
+			empty( $existing_document_ids )
+		) {
+			$value->bbp_documents = null;
+
+			return $value;
+		}
 
 		if ( ! empty( $existing_document_ids ) ) {
 			$existing_document_ids = explode( ',', $existing_document_ids );

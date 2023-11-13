@@ -330,6 +330,42 @@ define({ "api": [
     "groupTitle": "Activity"
   },
   {
+    "type": "DELETE",
+    "url": "/wp-json/buddyboss/v1/activity/:id/comment/:comment_id",
+    "title": "Delete activity comment",
+    "name": "DeleteBBActivityComment",
+    "group": "Activity",
+    "description": "<p>Delete single activity comment</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "comment_id",
+            "description": "<p>A unique numeric ID for the activity comment.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-activity/classes/class-bp-rest-activity-comment-endpoint.php",
+    "groupTitle": "Activity"
+  },
+  {
     "type": "GET",
     "url": "/wp-json/buddyboss/v1/activity/:id/comment",
     "title": "Get activity comments",
@@ -545,6 +581,17 @@ define({ "api": [
             "optional": true,
             "field": "privacy",
             "description": "<p>Privacy of the activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "activity",
+              "group"
+            ],
+            "optional": true,
+            "field": "pin_type",
+            "description": "<p>Show pin activity of feed type.</p>"
           }
         ]
       }
@@ -603,6 +650,55 @@ define({ "api": [
       }
     },
     "filename": "src/bp-activity/classes/class-bp-rest-activity-endpoint.php",
+    "groupTitle": "Activity"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/activity/:id/comment/:comment_id",
+    "title": "Get Activity Comment",
+    "name": "GetBBActivityComment",
+    "group": "Activity",
+    "description": "<p>Retrieve single activity comment</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "comment_id",
+            "description": "<p>A unique numeric ID for the activity comment.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "stream",
+              "threaded",
+              "false"
+            ],
+            "optional": true,
+            "field": "display_comments",
+            "defaultValue": "false",
+            "description": "<p>No comments by default, stream for within stream display, threaded for below each activity item.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-activity/classes/class-bp-rest-activity-comment-endpoint.php",
     "groupTitle": "Activity"
   },
   {
@@ -791,6 +887,91 @@ define({ "api": [
   },
   {
     "type": "PATCH",
+    "url": "/wp-json/buddyboss/v1/activity/:id/comment/:comment_id",
+    "title": "Update activity comment",
+    "name": "UpdateBBActivityComment",
+    "group": "Activity",
+    "description": "<p>Update single activity comment</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "comment_id",
+            "description": "<p>A unique numeric ID for the activity comment.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "parent_id",
+            "description": "<p>The ID of some other object activity associated with this one.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "user_id",
+            "description": "<p>The ID for the author of the activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "content",
+            "description": "<p>Allowed HTML content for the activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "bp_media_ids",
+            "description": "<p>Media specific IDs when Media component is enable.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "bp_videos",
+            "description": "<p>Video specific IDs when Media component is enable.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "bp_documents",
+            "description": "<p>Document specific IDs when Media component is enable.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "media_gif",
+            "description": "<p>Save gif data into activity when Media component is enable. param(url,mp4)</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-activity/classes/class-bp-rest-activity-comment-endpoint.php",
+    "groupTitle": "Activity"
+  },
+  {
+    "type": "PATCH",
     "url": "/wp-json/buddyboss/v1/activity/:id/favorite",
     "title": "Activity favorite",
     "name": "UpdateBBActivityFavorite",
@@ -811,6 +992,46 @@ define({ "api": [
             "optional": false,
             "field": "id",
             "description": "<p>A unique numeric ID for the activity</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-activity/classes/class-bp-rest-activity-endpoint.php",
+    "groupTitle": "Activity"
+  },
+  {
+    "type": "PATCH",
+    "url": "/wp-json/buddyboss/v1/activity/:id/favorite",
+    "title": "Activity favorite",
+    "name": "UpdateBBActivityPin",
+    "group": "Activity",
+    "description": "<p>Make activity pin/unpin</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "Administrator or the Group Admin/Moderator"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the activity</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "pin",
+              "unpin"
+            ],
+            "optional": true,
+            "field": "pin_action",
+            "description": "<p>Pin or unpin activity of feed type.</p>"
           }
         ]
       }
@@ -7721,6 +7942,22 @@ define({ "api": [
         ]
       }
     },
+    "filename": "src/bp-notifications/classes/class-bp-rest-notifications-endpoint.php",
+    "groupTitle": "Notifications"
+  },
+  {
+    "type": "PATCH",
+    "url": "/wp-json/buddyboss/v1/notifications/bulk/read",
+    "title": "Notification read in bulk",
+    "name": "UpdateBBNotificationRead",
+    "group": "Notifications",
+    "description": "<p>Mark as read bulk notifications</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
     "filename": "src/bp-notifications/classes/class-bp-rest-notifications-endpoint.php",
     "groupTitle": "Notifications"
   },

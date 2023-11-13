@@ -614,11 +614,6 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$activity_action  = apply_filters( 'bbp_activity_topic_create', $activity_text, $user_id, $topic_id, $forum_id );
 			$activity_content = apply_filters( 'bbp_activity_topic_create_excerpt', $topic_content );
 
-			// Remove activity's notification for mentions.
-			add_action( 'bp_activity_before_save', function() {
-				remove_action( 'bp_activity_after_save', 'bp_activity_at_name_send_emails' );
-			}, 99 );
-
 			// Compile and record the activity stream results
 			$activity_id = $this->record_activity(
 				array(
@@ -638,6 +633,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			// Add the activity entry ID as a meta value to the topic
 			if ( ! empty( $activity_id ) ) {
 				update_post_meta( $topic_id, '_bbp_activity_id', $activity_id );
+				bp_activity_update_meta( $activity_id, 'post_title', $topic_title );
 			}
 		}
 
@@ -785,11 +781,6 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$activity_action  = apply_filters( 'bbp_activity_reply_create', $activity_text, $user_id, $reply_id, $topic_id );
 			$activity_content = apply_filters( 'bbp_activity_reply_create_excerpt', $reply_content );
 
-			// Remove activity's notification for mentions.
-			add_action( 'bp_activity_before_save', function() {
-				remove_action( 'bp_activity_after_save', 'bp_activity_at_name_send_emails' );
-			}, 99 );
-
 			// Compile and record the activity stream results
 			$activity_id = $this->record_activity(
 				array(
@@ -809,6 +800,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			// Add the activity entry ID as a meta value to the reply
 			if ( ! empty( $activity_id ) ) {
 				update_post_meta( $reply_id, '_bbp_activity_id', $activity_id );
+				bp_activity_update_meta( $activity_id, 'post_title', $topic_title );
 			}
 		}
 

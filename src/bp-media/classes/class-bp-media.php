@@ -137,6 +137,14 @@ class BP_Media {
 	public $error_type = 'bool';
 
 	/**
+	 * Description of the media item.
+	 *
+	 * @since BuddyBoss 2.4.50
+	 * @var string
+	 */
+	var $description;
+
+	/**
 	 * Constructor method.
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -181,6 +189,7 @@ class BP_Media {
 		$this->attachment_id = (int) $row->attachment_id;
 		$this->user_id       = (int) $row->user_id;
 		$this->title         = $row->title;
+		$this->description   = $row->description;
 		$this->album_id      = (int) $row->album_id;
 		$this->activity_id   = (int) $row->activity_id;
 		$this->message_id    = (int) $row->message_id;
@@ -188,6 +197,11 @@ class BP_Media {
 		$this->privacy       = $row->privacy;
 		$this->menu_order    = (int) $row->menu_order;
 		$this->date_created  = $row->date_created;
+
+		// Added fallback to get description.
+		if ( empty( $this->description ) ) {
+			$this->description = get_post_field( 'post_content', $this->attachment_id );
+		}
 	}
 
 	/**
@@ -208,6 +222,7 @@ class BP_Media {
 		$this->attachment_id = apply_filters_ref_array( 'bp_media_attachment_id_before_save', array( $this->attachment_id, &$this ) );
 		$this->user_id       = apply_filters_ref_array( 'bp_media_user_id_before_save', array( $this->user_id, &$this ) );
 		$this->title         = apply_filters_ref_array( 'bp_media_title_before_save', array( $this->title, &$this ) );
+		$this->description   = apply_filters_ref_array( 'bp_media_description_before_save', array( $this->description, &$this ) );
 		$this->album_id      = apply_filters_ref_array( 'bp_media_album_id_before_save', array( $this->album_id, &$this ) );
 		$this->activity_id   = apply_filters_ref_array( 'bp_media_activity_id_before_save', array( $this->activity_id, &$this ) );
 		$this->message_id    = apply_filters_ref_array( 'bp_media_message_id_before_save', array( $this->message_id, &$this ) );
@@ -249,9 +264,9 @@ class BP_Media {
 
 		// If we have an existing ID, update the media item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, message_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, message_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s, description = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->description, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name} ( blog_id, attachment_id, user_id, title, album_id, activity_id, message_id, group_id, privacy, menu_order, date_created ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %d, %s, %d, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name} ( blog_id, attachment_id, user_id, title, description, album_id, activity_id, message_id, group_id, privacy, menu_order, date_created ) VALUES ( %d, %d, %d, %s, %s, %d, %d, %d, %d, %s, %d, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->description, $this->album_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
@@ -352,7 +367,7 @@ class BP_Media {
 		// Searching.
 		if ( $r['search_terms'] ) {
 			$search_terms_like              = '%' . bp_esc_like( $r['search_terms'] ) . '%';
-			$where_conditions['search_sql'] = $wpdb->prepare( 'm.title LIKE %s', $search_terms_like );
+			$where_conditions['search_sql'] = $wpdb->prepare( '( m.title LIKE %s OR m.description LIKE %s )', $search_terms_like, $search_terms_like );
 
 			/**
 			 * Filters whether or not to include users for search parameters.
@@ -1040,7 +1055,7 @@ class BP_Media {
 	 * @return array|bool An array of deleted media IDs on success, false on failure.
 	 */
 	public static function delete( $args = array(), $from = false ) {
-		global $wpdb;
+		global $wpdb, $bb_activity_comment_edit;
 
 		$bp = buddypress();
 		$r  = bp_parse_args(
@@ -1186,7 +1201,7 @@ class BP_Media {
 		}
 
 		// delete related activity.
-		if ( ! empty( $activity_ids ) && bp_is_active( 'activity' ) ) {
+		if ( ! empty( $activity_ids ) && bp_is_active( 'activity' ) && ! $bb_activity_comment_edit ) {
 
 			foreach ( $activity_ids as $activity_id ) {
 				$activity = new BP_Activity_Activity( (int) $activity_id );

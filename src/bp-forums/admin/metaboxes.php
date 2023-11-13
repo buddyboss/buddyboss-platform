@@ -44,34 +44,39 @@ function bbp_dashboard_widget_right_now() {
 			<tr class="first">
 
 				<?php
-					$num  = empty( $r['forum_count'] ) ? 0 : (int) $r['forum_count'];
-					$text = _n( 'Forum', 'Forums', $num, 'buddyboss' );
-					if ( current_user_can( 'publish_forums' ) ) {
-						$link = add_query_arg( array( 'post_type' => bbp_get_forum_post_type() ), admin_url( null, 'edit.php' ) );
-						$num  = '<a href="' . esc_url( $link ) . '">' . $num . '</a>';
-						$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
-					}
+				$num  = empty( $r['forum_count'] ) ? 0 : (int) $r['forum_count'];
+				$text = sprintf(
+					/* translators: Total Forums. */
+					_n( '%s Forum', '%s Forums', $num, 'buddyboss' ),
+					'<span class="b b-forums">' . number_format_i18n( $num ) . '</span>'
+				);
+				if ( current_user_can( 'publish_forums' ) ) {
+					$link = add_query_arg( array( 'post_type' => bbp_get_forum_post_type() ), admin_url( null, 'edit.php' ) );
+					$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
+				}
 				?>
 
-				<td class="first b b-forums"><?php echo $num; ?></td>
-				<td class="t forums"><?php echo $text; ?></td>
+				<td colspan="2" class="t forums"><?php echo $text; ?></td>
 
 			</tr>
 
 			<tr>
 
 				<?php
-					$num  = empty( $r['topic_count'] ) ? 0 : (int) $r['topic_count'];
-					$text = _n( 'Discussion', 'Discussions', $num, 'buddyboss' );
+				$num  = empty( $r['topic_count'] ) ? 0 : (int) $r['topic_count'];
+				$text = sprintf(
+					/* translators: Total Discussions. */
+					_n( '%s Discussion', '%s Discussions', $num, 'buddyboss' ),
+					'<span class="b b-topics">' . number_format_i18n( $num ) . '</span>'
+				);
+
 				if ( current_user_can( 'publish_topics' ) ) {
 					$link = add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), admin_url( null, 'edit.php' ) );
-					$num  = '<a href="' . esc_url( $link ) . '">' . $num . '</a>';
 					$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
 				}
 				?>
 
-				<td class="first b b-topics"><?php echo $num; ?></td>
-				<td class="t topics"><?php echo $text; ?></td>
+				<td colspan="2" class="t topics"><?php echo $text; ?></td>
 
 			</tr>
 
@@ -80,8 +85,12 @@ function bbp_dashboard_widget_right_now() {
 				<tr>
 
 					<?php
-						$num  = empty( $r['topic_tag_count'] ) ? 0 : (int) $r['topic_tag_count'];
-						$text = _n( 'Discussion Tag', 'Discussion Tags', $num, 'buddyboss' );
+					$num  = empty( $r['topic_tag_count'] ) ? 0 : (int) $r['topic_tag_count'];
+					$text = sprintf(
+						/* translators: Total Discussion Tag. */
+						_n( '%s Discussion Tag', '%s Discussion Tags', $num, 'buddyboss' ),
+						'<span class="b b-topic_tags">' . number_format_i18n( $num ) . '</span>'
+					);
 					if ( current_user_can( 'manage_topic_tags' ) ) {
 						$link = add_query_arg(
 							array(
@@ -90,13 +99,11 @@ function bbp_dashboard_widget_right_now() {
 							),
 							admin_url( null, 'edit-tags.php' )
 						);
-						$num  = '<a href="' . esc_url( $link ) . '">' . $num . '</a>';
 						$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
 					}
 					?>
 
-					<td class="first b b-topic_tags"><span class="total-count"><?php echo $num; ?></span></td>
-					<td class="t topic_tags"><?php echo $text; ?></td>
+					<td colspan="2" class="t topic_tags"><?php echo $text; ?></td>
 
 				</tr>
 
@@ -105,17 +112,20 @@ function bbp_dashboard_widget_right_now() {
 			<tr>
 
 				<?php
-					$num  = empty( $r['reply_count'] ) ? 0 : (int) $r['reply_count'];
-					$text = _n( 'Reply', 'Replies', $num, 'buddyboss' );
+				$num  = empty( $r['reply_count'] ) ? 0 : (int) $r['reply_count'];
+				$text = sprintf(
+					/* translators: Total Replies. */
+					_n( '%s Reply', '%s Replies', $num, 'buddyboss' ),
+					'<span class="b b-replies">' . number_format_i18n( $num ) . '</span>'
+				);
+
 				if ( current_user_can( 'publish_replies' ) ) {
 					$link = add_query_arg( array( 'post_type' => bbp_get_reply_post_type() ), admin_url( null, 'edit.php' ) );
-					$num  = '<a href="' . esc_url( $link ) . '">' . $num . '</a>';
 					$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
 				}
 				?>
 
-				<td class="first b b-replies"><?php echo $num; ?></td>
-				<td class="t replies"><?php echo $text; ?></td>
+				<td colspan="2" class="t replies"><?php echo $text; ?></td>
 
 			</tr>
 
@@ -135,17 +145,20 @@ function bbp_dashboard_widget_right_now() {
 			<tr class="first">
 
 				<?php
-					$num  = empty( $r['user_count'] ) ? 0 : (int) $r['user_count'];
-					$text = _n( 'User', 'Users', $num, 'buddyboss' );
+				$num  = empty( $r['user_count'] ) ? 0 : (int) $r['user_count'];
+				$text = sprintf(
+					/* translators: Total Users. */
+					_n( '%s User', '%s Users', $num, 'buddyboss' ),
+					'<span class="b b-users">' . number_format_i18n( $num ) . '</span>'
+				);
+
 				if ( current_user_can( 'edit_users' ) ) {
 					$link = admin_url( null, 'users.php' );
-					$num  = '<a href="' . esc_url( $link ) . '">' . $num . '</a>';
 					$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
 				}
 				?>
 
-				<td class="b b-users"><span class="total-count"><?php echo $num; ?></span></td>
-				<td class="last t users"><?php echo $text; ?></td>
+				<td colspan="2" class="last t users"><?php echo $text; ?></td>
 
 			</tr>
 
@@ -154,18 +167,21 @@ function bbp_dashboard_widget_right_now() {
 				<tr>
 
 					<?php
-						$num  = $r['topic_count_hidden'];
-						$text = _n( 'Hidden Discussion', 'Hidden Discussions', $num, 'buddyboss' );
-						$link = add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), admin_url( null, 'edit.php' ) );
+					$num  = $r['topic_count_hidden'];
+					$text = sprintf(
+						/* translators: Total Hidden Discussions. */
+						_n( '%s Hidden Discussion', '%s Hidden Discussions', $num, 'buddyboss' ),
+						'<span class="b b-hidden-topics">' . number_format_i18n( $num ) . '</span>'
+					);
+
+					$link = add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), admin_url( null, 'edit.php' ) );
 					if ( '0' !== $num ) {
 						$link = add_query_arg( array( 'post_status' => bbp_get_spam_status_id() ), $link );
 					}
-						$num  = '<a href="' . esc_url( $link ) . '" title="' . esc_attr( $r['hidden_topic_title'] ) . '">' . $num . '</a>';
-						$text = '<a class="waiting" href="' . esc_url( $link ) . '" title="' . esc_attr( $r['hidden_topic_title'] ) . '">' . $text . '</a>';
+					$text = '<a class="waiting" href="' . esc_url( $link ) . '" title="' . esc_attr( $r['hidden_topic_title'] ) . '">' . $text . '</a>';
 					?>
 
-					<td class="b b-hidden-topics"><?php echo $num; ?></td>
-					<td class="last t hidden-replies"><?php echo $text; ?></td>
+					<td colspan="2" class="last t hidden-replies"><?php echo $text; ?></td>
 
 				</tr>
 
@@ -176,18 +192,21 @@ function bbp_dashboard_widget_right_now() {
 				<tr>
 
 					<?php
-						$num  = $r['reply_count_hidden'];
-						$text = _n( 'Hidden Reply', 'Hidden Replies', $r['reply_count_hidden'], 'buddyboss' );
-						$link = add_query_arg( array( 'post_type' => bbp_get_reply_post_type() ), admin_url( null, 'edit.php' ) );
+					$num  = $r['reply_count_hidden'];
+					$text = sprintf(
+						/* translators: Total Hidden Reply. */
+						_n( '%s Hidden Reply', '%s Hidden Replies', $num, 'buddyboss' ),
+						'<span class="b b-hidden-replies">' . number_format_i18n( $num ) . '</span>'
+					);
+
+					$link = add_query_arg( array( 'post_type' => bbp_get_reply_post_type() ), admin_url( null, 'edit.php' ) );
 					if ( '0' !== $num ) {
 						$link = add_query_arg( array( 'post_status' => bbp_get_spam_status_id() ), $link );
 					}
-						$num  = '<a href="' . esc_url( $link ) . '" title="' . esc_attr( $r['hidden_reply_title'] ) . '">' . $num . '</a>';
-						$text = '<a class="waiting" href="' . esc_url( $link ) . '" title="' . esc_attr( $r['hidden_reply_title'] ) . '">' . $text . '</a>';
+					$text = '<a class="waiting" href="' . esc_url( $link ) . '" title="' . esc_attr( $r['hidden_reply_title'] ) . '">' . $text . '</a>';
 					?>
 
-					<td class="b b-hidden-replies"><?php echo $num; ?></td>
-					<td class="last t hidden-replies"><?php echo $text; ?></td>
+					<td colspan="2" class="last t hidden-replies"><?php echo $text; ?></td>
 
 				</tr>
 
@@ -198,21 +217,25 @@ function bbp_dashboard_widget_right_now() {
 				<tr>
 
 					<?php
-						$num  = empty( $r['empty_topic_tag_count'] ) ? 0 : (int) $r['empty_topic_tag_count'];
-						$text = _n( 'Empty Discussion Tag', 'Empty Discussion Tags', $num, 'buddyboss' );
-						$link = add_query_arg(
-							array(
-								'taxonomy'  => bbp_get_topic_tag_tax_id(),
-								'post_type' => bbp_get_topic_post_type(),
-							),
-							admin_url( null, 'edit-tags.php' )
-						);
-						$num  = '<a href="' . esc_url( $link ) . '">' . $num . '</a>';
-						$text = '<a class="waiting" href="' . esc_url( $link ) . '">' . $text . '</a>';
+					$num  = empty( $r['empty_topic_tag_count'] ) ? 0 : (int) $r['empty_topic_tag_count'];
+					$text = sprintf(
+						/* translators: Total Empty Discussion Tag. */
+						_n( '%s Empty Discussion Tag', '%s Empty Discussion Tags', $num, 'buddyboss' ),
+						'<span class="b b-hidden-topic-tags">' . number_format_i18n( $num ) . '</span>'
+					);
+
+					$link = add_query_arg(
+						array(
+							'taxonomy'  => bbp_get_topic_tag_tax_id(),
+							'post_type' => bbp_get_topic_post_type(),
+						),
+						admin_url( null, 'edit-tags.php' )
+					);
+
+					$text = '<a class="waiting" href="' . esc_url( $link ) . '">' . $text . '</a>';
 					?>
 
-					<td class="b b-hidden-topic-tags"><?php echo $num; ?></td>
-					<td class="last t hidden-topic-tags"><?php echo $text; ?></td>
+					<td colspan="2" class="last t hidden-topic-tags"><?php echo $text; ?></td>
 
 				</tr>
 
@@ -320,7 +343,7 @@ function bbp_forum_metabox( $post ) {
 				'options_only'       => false,
 				'show_none'          => __( '- Select Forum -', 'buddyboss' ),
 				'disable_categories' => false,
-				'disabled'           => empty( $group_ids ) ? false : true,
+				'disabled'           => ! empty( $group_ids ),
 			)
 		);
 		?>
@@ -420,7 +443,7 @@ function bbp_topic_metabox( $post ) {
 	</p>
 
 	<input name="ping_status" type="hidden" id="ping_status" value="open" />
-
+	<input name="old_parent_id" type="hidden" id="old_parent_id" value="<?php echo esc_attr( bbp_get_topic_forum_id( $post_id ) ); ?>" />
 	<?php
 	wp_nonce_field( 'bbp_topic_metabox_save', 'bbp_topic_metabox' );
 	do_action( 'bbp_topic_metabox', $post );

@@ -294,7 +294,7 @@ class BP_User_Query {
 				 *
 				 * @param int $value Amount of minutes for threshold. Default 15.
 				 */
-				$sql['where'][] = $wpdb->prepare( 'u.date_recorded >= DATE_SUB( UTC_TIMESTAMP(), INTERVAL %d MINUTE )', $online_default_time / 60 );
+				$sql['where'][] = $wpdb->prepare( 'TIMESTAMPDIFF( SECOND, u.date_recorded, UTC_TIMESTAMP() ) <= %d', $online_default_time );
 				$sql['orderby'] = 'ORDER BY u.date_recorded';
 				$sql['order']   = 'DESC';
 

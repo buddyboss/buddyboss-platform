@@ -118,6 +118,32 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				'schema' => array( $this, 'get_item_schema' ),
 			)
 		);
+
+		// Register the activity pin route.
+		register_rest_route(
+			$this->namespace,
+			$activity_endpoint . '/pin',
+			array(
+				'args'   => array(
+					'id'         => array(
+						'description' => __( 'A unique numeric ID for the activity.', 'buddyboss' ),
+						'type'        => 'integer',
+						'required'    => true,
+					),
+					'remove_pin' => array(
+						'description' => __( 'If true then remove pin.', 'buddyboss' ),
+						'type'        => 'boolean',
+						'default'     => false,
+					),
+				),
+				array(
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => array( $this, 'update_pin' ),
+					'permission_callback' => array( $this, 'update_pin_permissions_check' ),
+				),
+				'schema' => array( $this, 'get_item_schema' ),
+			)
+		);
 	}
 
 	/**
@@ -152,6 +178,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @apiParam {String} [type] Limit result set to items with a specific activity type.
 	 * @apiParam {String=stream,threaded,false} [display_comments=false] No comments by default, stream for within stream display, threaded for below each activity item.
 	 * @apiParam {Array=public,loggedin,onlyme,friends,media} [privacy] Privacy of the activity.
+	 * @apiParam {String=activity,group} [pin_type] Show pin activity of feed type.
 	 */
 	public function get_items( $request ) {
 		global $bp;
@@ -175,6 +202,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'show_hidden'       => false,
 			'update_meta_cache' => true,
 			'filter'            => array(),
+			'pin_type'          => $request['pin_type'],
 		);
 
 		if ( empty( $args['display_comments'] ) || 'false' === $args['display_comments'] ) {
@@ -266,6 +294,10 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$args['privacy'] = 'public';
 		}
 
+		if ( empty( $args['pin_type'] ) ) {
+			$args['pin_type'] = bb_activity_pin_type( $args );
+		}
+
 		/**
 		 * Filter the query arguments for the request.
 		 *
@@ -275,6 +307,11 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		 * @since 0.1.0
 		 */
 		$args = apply_filters( 'bp_rest_activity_get_items_query_args', $args, $request );
+
+		global $pin_type;
+		if ( isset( $args['pin_type'] ) ) {
+			$pin_type = $args['pin_type'];
+		}
 
 		// Actually, query it.
 		$activities = bp_activity_get( $args );
@@ -476,7 +513,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		$_POST[ 'action' ] = 'new-activity';
+		$_POST['action'] = 'new-activity';
 
 		$prepared_activity  = $this->prepare_item_for_database( $request );
 		$request['content'] = isset( $prepared_activity->content ) ? $prepared_activity->content : $request['content'];
@@ -559,14 +596,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$prime       = $request['primary_item_id'];
 		$activity_id = 0;
 
-		remove_action( 'bp_activity_after_save', 'bp_activity_at_name_send_emails' );
-
 		// Post a regular activity update.
 		if ( 'activity_update' === $type ) {
 			if ( bp_is_active( 'groups' ) && ! is_null( $prime ) ) {
-				remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
+				remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
 				$activity_id = groups_post_update( $prepared_activity );
-				add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
+				add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
 			} else {
 				remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 				$activity_id = bp_activity_post_update( $prepared_activity );
@@ -595,8 +630,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$activity_id = bp_activity_add( $prepared_activity );
 		}
 
-		add_action( 'bp_activity_after_save', 'bp_activity_at_name_send_emails' );
-
 		if ( ! is_numeric( $activity_id ) ) {
 			return new WP_Error(
 				'bp_rest_user_cannot_create_activity',
@@ -621,7 +654,13 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			return $fields_update;
 		}
 
+		if ( empty( $prepared_activity->id ) ) {
+			remove_filter( 'bp_activity_at_name_do_notifications', '__return_false' );
+		}
 		bp_activity_at_name_send_emails( $activity );
+		if ( empty( $prepared_activity->id ) ) {
+			add_filter( 'bp_activity_at_name_do_notifications', '__return_false' );
+		}
 
 		if ( 'activity_update' === $type ) {
 			if ( bp_is_active( 'groups' ) && ! is_null( $prime ) ) {
@@ -792,7 +831,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		$_POST[ 'action' ] = 'edit-activity';
+		$_POST[ 'action' ] = 'edit-activity'; // phpcs:ignore
 
 		$allow_edit = $this->bp_rest_activitiy_edit_data( $activity_object );
 		$activity   = new BP_Activity_Activity( $activity_object->id );
@@ -1177,6 +1216,174 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	}
 
 	/**
+	 * Update the activity pin.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return WP_REST_Response | WP_Error
+	 *
+	 * @since 0.1.0
+	 *
+	 * @api            {PATCH} /wp-json/buddyboss/v1/activity/:id/favorite Activity favorite
+	 * @apiName        UpdateBBActivityPin
+	 * @apiGroup       Activity
+	 * @apiDescription Make activity pin/unpin
+	 * @apiVersion     1.0.0
+	 * @apiPermission  Administrator or the Group Admin/Moderator
+	 * @apiParam {Number} id A unique numeric ID for the activity
+	 * @apiParam {String=pin,unpin} [pin_action] Pin or unpin activity of feed type.
+	 */
+	public function update_pin( $request ) {
+		global $pin_type;
+		$activity   = $this->get_activity_object( $request->get_param( 'id' ) );
+		$result     = false;
+		$pin_action = '';
+
+		if ( true === (bool) $request->get_param( 'remove_pin' ) ) {
+			$pin_action = 'unpin';
+		} else {
+			$pin_action = 'pin';
+		}
+
+		$args = array(
+			'action'      => $pin_action,
+			'activity_id' => (int) $activity->id,
+			'retval'      => 'string',
+		);
+
+		$pin_type = ( 'groups' === $activity->component && ! empty( $activity->item_id ) ) ? 'group' : 'activity';
+
+		$result = bb_activity_pin_unpin_post( $args );
+
+		if ( ! empty( $result ) ) {
+			if ( 'unpinned' === $result ) {
+				$feedback = esc_html__( 'Your post has been unpinned', 'buddyboss' );
+			} elseif ( 'pinned' === $result ) {
+				$feedback = esc_html__( 'Your post has been pinned', 'buddyboss' );
+			} elseif ( 'pin_updated' === $result ) {
+				$feedback = esc_html__( 'Your pinned post has been updated', 'buddyboss' );
+			}
+		} else {
+			return new WP_Error(
+				'bp_rest_activity_cannot_update_pin',
+				__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+				array(
+					'status' => 500,
+				)
+			);
+		}
+
+		// Setting context.
+		$request->set_param( 'context', 'edit' );
+
+		// Prepare the response now the user favorites has been updated.
+		$res_activity = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $activity, $request )
+		);
+
+		$retval = array(
+			'feedback' => $feedback,
+			'activity' => $res_activity,
+		);
+
+		$response = rest_ensure_response( $retval );
+
+		/**
+		 * Fires after user pin/unpin activity has been updated via the REST API.
+		 *
+		 * @param BP_Activity_Activity $activity       The updated activity.
+		 * @param WP_REST_Response     $response       The response data.
+		 * @param WP_REST_Request      $request        The request sent to the API.
+		 *
+		 * @since 0.1.0
+		 */
+		do_action( 'bp_rest_activity_update_pin', $activity, $response, $request );
+
+		return $response;
+	}
+
+	/**
+	 * Check if a given request has access to pin or unpin activity.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return bool|WP_Error
+	 * @since 0.1.0
+	 */
+	public function update_pin_permissions_check( $request ) {
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
+
+		$activity = $this->get_activity_object( $request->get_param( 'id' ) );
+		if ( empty( $activity->id ) ) {
+			$retval = new WP_Error(
+				'bp_rest_invalid_id',
+				__( 'Invalid activity ID.', 'buddyboss' ),
+				array(
+					'status' => 404,
+				)
+			);
+		}
+
+		global $pin_type;
+		if ( 'groups' === $activity->component && ! empty( $activity->item_id ) ) {
+			$pin_type = 'group';
+		} else {
+			$pin_type = 'activity';
+		}
+
+		if (
+			is_user_logged_in() &&
+			(
+				(
+					'group' === $pin_type &&
+					(
+						bp_current_user_can( 'administrator' ) ||
+						(
+							bb_is_active_activity_pinned_posts() &&
+							(
+								groups_is_user_mod( get_current_user_id(), $activity->item_id ) ||
+								groups_is_user_admin( get_current_user_id(), $activity->item_id )
+							)
+						)
+					)
+				) ||
+				(
+					'activity' === $pin_type &&
+					(
+						bp_current_user_can( 'administrator' ) ||
+						(
+							'groups' === $activity->component &&
+							bb_is_active_activity_pinned_posts() &&
+							(
+								groups_is_user_mod( get_current_user_id(), $activity->item_id ) ||
+								groups_is_user_admin( get_current_user_id(), $activity->item_id )
+							)
+						)
+					)
+				)
+			)
+		) {
+			$retval = true;
+		}
+
+		/**
+		 * Filter the activity `update_pin` permissions check.
+		 *
+		 * @param bool|WP_Error   $retval  Returned value.
+		 * @param WP_REST_Request $request The request sent to the API.
+		 *
+		 * @since 0.1.0
+		 */
+		return apply_filters( 'bp_rest_activity_update_pin_permissions_check', $retval, $request );
+	}
+
+	/**
 	 * Renders the content of an activity.
 	 *
 	 * @param BP_Activity_Activity $activity Activity data.
@@ -1270,7 +1477,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 */
 	public function prepare_item_for_response( $activity, $request ) {
 		$top_level_parent_id = 'activity_comment' === $activity->type ? $activity->item_id : 0;
-		global $activities_template, $bp;
+		global $activities_template, $bp, $pin_type;
 		$activities_template                            = new \stdClass();
 		$activities_template->disable_blogforum_replies = (bool) bp_core_get_root_option( 'bp-disable-blogforum-comments' );
 		$activities_template->activity                  = $activity;
@@ -1286,6 +1493,34 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		if ( 'activity_comment' === $activity->type ) {
+			$can_edit = (
+				function_exists( 'bb_is_activity_comment_edit_enabled' )
+				&& bb_is_activity_comment_edit_enabled()
+				&& function_exists( 'bb_activity_comment_user_can_edit' )
+				&& bb_activity_comment_user_can_edit( $activity )
+			) && (
+				isset( $activity->privacy ) &&
+				! in_array( $activity->privacy, array( 'document', 'media', 'video' ), true )
+			);
+
+			$edited_date   = bp_activity_get_meta( $activity->id, '_is_edited', true );
+			$edited_date   = ! empty( $edited_date ) ? $edited_date : $activity->date_recorded;
+			$date_recorded = bp_rest_prepare_date_response( $edited_date );
+		} else {
+			$can_edit = (
+				function_exists( 'bp_is_activity_edit_enabled' )
+				&& bp_is_activity_edit_enabled()
+				&& function_exists( 'bp_activity_user_can_edit' )
+				&& bp_activity_user_can_edit( $activity )
+			) && (
+				isset( $activity->privacy ) &&
+				! in_array( $activity->privacy, array( 'document', 'media', 'video' ), true )
+			);
+
+			$date_recorded = bp_rest_prepare_date_response( $activity->date_recorded );
+		}
+
 		$data = array(
 			'user_id'           => $activity->user_id,
 			'name'              => bp_core_get_user_displayname( $activity->user_id ),
@@ -1294,7 +1529,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				'raw'      => bb_rest_raw_content( $activity->content ),
 				'rendered' => $this->render_item( $activity ),
 			),
-			'date'              => bp_rest_prepare_date_response( $activity->date_recorded ),
+			'date'              => $date_recorded,
 			'id'                => $activity->id,
 			'link'              => bp_activity_get_permalink( $activity->id ),
 			'primary_item_id'   => $activity->item_id,
@@ -1308,19 +1543,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'can_favorite'      => bp_activity_can_favorite(),
 			'favorite_count'    => $this->get_activity_favorite_count( $activity->id ),
 			'can_comment'       => ( 'activity_comment' === $activity->type ) ? bp_activity_can_comment_reply( $activity ) : bp_activity_can_comment(),
-			'can_edit'          => (
-				(
-					function_exists( 'bp_is_activity_edit_enabled' )
-					&& bp_is_activity_edit_enabled()
-					&& function_exists( 'bp_activity_user_can_edit' )
-					&& bp_activity_user_can_edit( $activity )
-				) && (
-					isset( $activity->privacy ) &&
-					! in_array( $activity->privacy, array( 'document', 'media', 'video' ), true )
-				)
-				? true
-				: false
-			),
+			'can_edit'          => $can_edit,
 			'is_edited'         => ! empty( bp_activity_get_meta( $activity->id, '_is_edited', true ) ),
 			'can_delete'        => bp_activity_user_can_delete( $activity ),
 			'content_stripped'  => html_entity_decode( wp_strip_all_tags( $activity->content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ),
@@ -1329,6 +1552,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'feature_media'     => '',
 			'preview_data'      => '',
 			'link_embed_url'    => '',
+			'is_pinned'         => false,
+			'can_pin'           => false,
 		);
 
 		// Add feature image as separate object which added last in the content.
@@ -1367,7 +1592,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 						// Use a regular expression to find the src URL.
 						preg_match( '/src="([^"]+)"/', $match[0], $matches );
 						if ( ! empty( $matches[1] ) ) {
-	
+
 							// Set link_embed_url with the iframe src URL as a fallback.
 							$data['link_embed_url'] = $matches[1];
 						}
@@ -1382,7 +1607,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$link_preview = bp_activity_link_preview( '', $activity );
 		if ( ! empty( $link_preview ) ) {
 			$data['preview_data'] = $link_preview;
-		} elseif ( empty( $link_preview )  && in_array( $activity->type, array( 'bbp_reply_create', 'bbp_topic_create' ), true ) ) {
+		} elseif ( empty( $link_preview ) && in_array( $activity->type, array( 'bbp_reply_create', 'bbp_topic_create' ), true ) ) {
 			$data['preview_data'] = $this->bp_rest_activity_remove_lazyload( $data['preview_data'], $activity, true );
 		}
 
@@ -1412,6 +1637,52 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					$data['can_favorite'] = false;
 				}
 			}
+		}
+
+		$pinned_id = 0;
+
+		if ( 'groups' === $activity->component ) {
+			$pinned_id = groups_get_groupmeta( $activity->item_id, 'bb_pinned_post' );
+		} else {
+			$pinned_id = bp_get_option( 'bb_pinned_post', 0 );
+		}
+
+		// Pinned post.
+		if ( ! empty( $pinned_id ) && (int) $pinned_id === (int) $activity->id ) {
+			$data['is_pinned'] = true;
+		}
+
+		// Show pin actions.
+		if (
+			(
+				'group' === $pin_type &&
+				(
+					bp_current_user_can( 'administrator' ) ||
+					(
+						bb_is_active_activity_pinned_posts() &&
+						(
+							groups_is_user_mod( get_current_user_id(), $activity->item_id ) ||
+							groups_is_user_admin( get_current_user_id(), $activity->item_id )
+						)
+					)
+				)
+			) ||
+			(
+				'group' !== $pin_type &&
+				(
+					bp_current_user_can( 'administrator' ) ||
+					(
+						'groups' === $activity->component &&
+						bb_is_active_activity_pinned_posts() &&
+						(
+							groups_is_user_mod( get_current_user_id(), $activity->item_id ) ||
+							groups_is_user_admin( get_current_user_id(), $activity->item_id )
+						)
+					)
+				)
+			)
+		) {
+			$data['can_pin'] = true;
 		}
 
 		// Get item schema.
@@ -2010,6 +2281,18 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					'type'        => 'string',
 					'readonly'    => true,
 				),
+				'is_pinned'         => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Is perticular activity is pinned.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+				'can_pin'           => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Is user allowed to pin and unpin the respective activity.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
 			),
 		);
 
@@ -2424,6 +2707,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 *
 	 * @param string               $content  Activity Content.
 	 * @param BP_Activity_Activity $activity Activity object.
+	 * @param bool                 $preview  Enabled preview or not.
 	 *
 	 * @return null|string|string[]
 	 */

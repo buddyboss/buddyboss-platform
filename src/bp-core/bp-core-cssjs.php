@@ -18,58 +18,6 @@ function bp_core_register_common_scripts() {
 	$min = bp_core_get_minified_asset_suffix();
 	$url = buddypress()->plugin_url . 'bp-core/js/';
 
-	// Is WordPress' moment dist library registered?
-	$is_moment_registered = wp_script_is( 'moment', 'registered' );
-	$moment_locale_url    = '';
-
-	/*
-	 * In 11.0.0 we are deprecating `bp-moment` in favor of WordPress' already bundled `moment`.
-	 * @todo completely remove `bp-moment` in 12.0.0.
-	 */
-	if ( ! $is_moment_registered ) {
-		/*
-		* Moment.js locale.
-		*
-		* Try to map current WordPress locale to a moment.js locale file for loading.
-		*
-		* eg. French (France) locale for WP is fr_FR. Here, we try to find fr-fr.js
-		*     (this file doesn't exist).
-		*/
-		$wp_locale = sanitize_file_name( strtolower( get_locale() ) );
-
-		// WP uses ISO 639-2 or -3 codes for some locales, which we must translate back to ISO 639-1.
-		$iso_locales = array(
-			'bel' => 'be',
-			'bre' => 'br',
-			'kir' => 'ky',
-			'mri' => 'mi',
-			'ssw' => 'ss',
-		);
-
-		if ( isset( $iso_locales[ $wp_locale ] ) ) {
-			$locale = $iso_locales[ $wp_locale ];
-		} else {
-			$locale = $wp_locale;
-		}
-
-		$locale = str_replace( '_', '-', $locale );
-		if ( file_exists( buddypress()->core->path . "bp-core/js/vendor/moment-js/locale/{$locale}{$min}.js" ) ) {
-			$moment_locale_url = $url . "vendor/moment-js/locale/{$locale}{$min}.js";
-
-			/*
-			* Try to find the short-form locale.
-			*
-			* eg. French (France) locale for WP is fr_FR. Here, we try to find fr.js
-			*     (this exists).
-			*/
-		} else {
-			$locale = substr( $locale, 0, strpos( $locale, '-' ) );
-			if ( file_exists( buddypress()->core->path . "bp-core/js/vendor/moment-js/locale/{$locale}{$min}.js" ) ) {
-				$moment_locale_url = $url . "vendor/moment-js/locale/{$locale}{$min}.js";
-			}
-		}
-	}
-
 	// Set up default scripts to register.
 	$scripts = array(
 		// Legacy.
@@ -136,14 +84,9 @@ function bp_core_register_common_scripts() {
 		),
 
 		// Version 2.7.
-		'bp-moment'           => array(
-			'file'         => "{$url}vendor/moment-js/moment{$min}.js",
-			'dependencies' => array(),
-			'footer'       => true,
-		),
 		'bp-livestamp'        => array(
-			'file'         => "{$url}vendor/livestamp{$min}.js",
-			'dependencies' => array( 'jquery', 'bp-moment' ),
+			'file'         => "{$url}livestamp{$min}.js",
+			'dependencies' => array( 'jquery', 'moment' ),
 			'footer'       => true,
 		),
 
@@ -220,7 +163,16 @@ function bp_core_register_common_scripts() {
 			'dependencies' => array(),
 			'footer'       => false,
 		),
-
+		'bb-twemoji'                    => array(
+			'file'         => includes_url( "js/twemoji{$min}.js" ),
+			'dependencies' => array(),
+			'footer'       => false,
+		),
+		'bb-emoji-loader'               => array(
+			'file'         => "{$url}bb-emoji-loader{$min}.js",
+			'dependencies' => array( 'bb-twemoji' ),
+			'footer'       => false,
+		),
 	);
 
 	// Add the "register.js" file if it's a register page and Profile Type field.
@@ -232,25 +184,6 @@ function bp_core_register_common_scripts() {
 		);
 	}
 
-	/*
-	 * In 11.0.0 we are deprecating `bp-moment` in favor of WordPress' already bundled `moment`.
-	 * @todo completely remove `bp-moment` in 12.0.0.
-	 */
-	if ( ! $is_moment_registered ) {
-		$scripts['bp-moment']         = array( 'file' => "{$url}vendor/moment-js/moment{$min}.js", 'dependencies' => array(), 'footer' => true );
-		$bp_livestamp                 = $scripts['bp-livestamp'];
-		$bp_livestamp['dependencies'] = array( 'jquery', 'bp-moment' );
-
-		// Reset 'bp-livestamp' after 'bp-moment'.
-		unset( $scripts['bp-livestamp'] );
-		$scripts['bp-livestamp'] = $bp_livestamp;
-
-		// Version 2.7 - Add Moment.js locale to our $scripts array if we found one.
-		if ( $moment_locale_url ) {
-			$scripts['bp-moment-locale'] = array( 'file' => esc_url( $moment_locale_url ), 'dependencies' => array( 'bp-moment' ), 'footer' => true );
-		}
-	}
-
 	/**
 	 * Filters the BuddyBoss Core javascript files to register.
 	 *
@@ -260,8 +193,8 @@ function bp_core_register_common_scripts() {
 	 * @since BuddyPress 2.1.0 'jquery-caret', 'jquery-atwho' added.
 	 * @since BuddyPress 2.3.0 'bp-plupload', 'bp-avatar', 'bp-webcam' added.
 	 * @since BuddyPress 2.4.0 'bp-cover-image' added.
-	 * @since BuddyPress 2.7.0 'bp-moment', 'bp-livestamp' added.
-	 *              'bp-moment-locale' is added conditionally if a moment.js locale file is found.
+	 * @since BuddyPress 2.7.0 'bp-moment', 'bp-livestamp' added. 'bp-moment-locale' is added conditionally if a moment.js locale file is found.
+	 * @since BuddyBoss 2.4.50 Removed 'bp-moment' and used WordPress moment.js.
 	 *
 	 * @param array $value Array of javascript file information to register.
 	 */
@@ -790,7 +723,11 @@ add_action( 'bp_enqueue_scripts', 'bp_add_cover_image_inline_css', 11 );
  * @since BuddyPress 2.7.0
  */
 function bp_core_add_livestamp() {
-	if ( ! is_buddypress() ) {
+	if (
+		! is_buddypress() &&
+		( ! function_exists( 'bp_search_is_search' ) || ! bp_search_is_search() ) &&
+		did_action( 'elementor/theme/before_do_single' )
+	) {
 		return;
 	}
 
@@ -805,80 +742,88 @@ add_action( 'bp_enqueue_scripts', 'bp_core_add_livestamp' );
  */
 function bp_core_enqueue_livestamp() {
 	// If bp-livestamp isn't enqueued, do it now.
-	if ( wp_script_is( 'bp-livestamp' ) ) {
+	if ( wp_script_is( 'bp-livestamp' ) || ! wp_script_is( 'moment', 'registered' ) ) {
 		return;
 	}
 
-	/*
-	 * Only enqueue Moment.js locale if we registered it in
-	 * bp_core_register_common_scripts().
-	 */
-	if ( wp_script_is( 'bp-moment-locale', 'registered' ) ) {
-		wp_enqueue_script( 'bp-moment-locale' );
-		wp_add_inline_script( 'bp-livestamp', bp_core_moment_js_config() );
-	} else {
-		wp_add_inline_script(
-			'moment',
-			sprintf(
-				"moment.updateLocale( '%s', %s );",
-				get_user_locale(),
-				wp_json_encode(
-					array(
-						'relativeTime' => array(
-							/* Translators: %s is the relative time (eg: in a few seconds). */
-							'future' => __( 'in %s', 'buddyboss' ),
-							/* translators: %s: the human time diff. */
-							'past'   => __( '%s ago', 'buddyboss' ),
-							's'      => __( 'a few seconds', 'buddyboss' ),
-							'm'      => __( 'a minute', 'buddyboss' ),
-							/* Translators: %d is the amount of minutes. */
-							'mm'     => __( '%d minutes', 'buddyboss' ),
-							'h'      => __( 'an hour', 'buddyboss' ),
-							/* Translators: %d is the amount of hours. */
-							'hh'     => __( '%d hours', 'buddyboss' ),
-							'd'      => __( 'a day', 'buddyboss' ),
-							/* Translators: %d is the amount of days. */
-							'dd'     => __( '%d days', 'buddyboss' ),
-							'M'      => __( 'a month', 'buddyboss' ),
-							/* Translators: %d is the amount of months. */
-							'MM'     => __( '%d months', 'buddyboss' ),
-							'y'      => __( 'a year', 'buddyboss' ),
-							/* Translators: %d is the amount of years. */
-							'yy'     => __( '%d years', 'buddyboss' ),
-						),
-					)
+	wp_add_inline_script(
+		'moment',
+		sprintf(
+			"moment.updateLocale( '%s', %s );",
+			get_user_locale(),
+			wp_json_encode(
+				array(
+					'relativeTime' => array(
+						/* Translators: %s is the relative time (eg: in a few seconds). */
+						'future' => __( 'in %s', 'buddyboss' ),
+						/* translators: %s: the human time diff. */
+						'past'   => __( '%s ago', 'buddyboss' ),
+						's'      => __( 'second', 'buddyboss' ),
+						'ss'     => __( '%d seconds', 'buddyboss' ),
+						'm'      => __( 'a minute', 'buddyboss' ),
+						/* Translators: %d is the amount of minutes. */
+						'mm'     => __( '%d minutes', 'buddyboss' ),
+						'h'      => __( 'an hour', 'buddyboss' ),
+						/* Translators: %d is the amount of hours. */
+						'hh'     => __( '%d hours', 'buddyboss' ),
+						'd'      => __( 'a day', 'buddyboss' ),
+						/* Translators: %d is the amount of days. */
+						'dd'     => __( '%d days', 'buddyboss' ),
+						'w'      => __( 'a week', 'buddyboss' ),
+						/* Translators: %d is the amount of weeks. */
+						'ww'     => __( '%d weeks', 'buddyboss' ),
+						'M'      => __( 'a month', 'buddyboss' ),
+						/* Translators: %d is the amount of months. */
+						'MM'     => __( '%d months', 'buddyboss' ),
+						'y'      => __( 'a year', 'buddyboss' ),
+						/* Translators: %d is the amount of years. */
+						'yy'     => __( '%d years', 'buddyboss' ),
+					),
 				)
 			)
-		);
-	}
+		)
+	);
+
+	wp_localize_script(
+		'bp-livestamp',
+		'bb_livestamp',
+		array(
+			'year_in_seconds'   => YEAR_IN_SECONDS,
+			'day_in_seconds'    => DAY_IN_SECONDS,
+			'week_in_seconds'   => WEEK_IN_SECONDS,
+			'hour_in_seconds'   => HOUR_IN_SECONDS,
+			'minute_in_seconds' => MINUTE_IN_SECONDS,
+			'chunks'            => array(
+				YEAR_IN_SECONDS,
+				YEAR_IN_SECONDS / 6,
+				30 * DAY_IN_SECONDS,
+				WEEK_IN_SECONDS,
+				DAY_IN_SECONDS,
+				HOUR_IN_SECONDS,
+				MINUTE_IN_SECONDS,
+				1,
+			),
+			'unknown_text'      => apply_filters( 'bp_core_time_since_unknown_text', esc_html__( 'sometime', 'buddyboss' ) ),
+			'right_now_text'    => apply_filters( 'bp_core_time_since_right_now_text', esc_html__( 'a second', 'buddyboss' ) ),
+			'ago_text'          => apply_filters( 'bp_core_time_since_ago_text', esc_html__( '%s ago', 'buddyboss' ) ),
+			'second_text'       => __( 'a second', 'buddyboss' ),
+			'seconds_text'      => __( 'seconds', 'buddyboss' ),
+			'minute_text'       => __( 'a minute', 'buddyboss' ),
+			'minutes_text'      => __( 'minutes', 'buddyboss' ),
+			'hour_text'         => __( 'an hour', 'buddyboss' ),
+			'hours_text'        => __( 'hours', 'buddyboss' ),
+			'day_text'          => __( 'a day', 'buddyboss' ),
+			'days_text'         => __( 'days', 'buddyboss' ),
+			'week_text'         => __( 'a week', 'buddyboss' ),
+			'weeks_text'        => __( 'weeks', 'buddyboss' ),
+			'month_text'        => __( 'a month', 'buddyboss' ),
+			'months_text'       => __( 'months', 'buddyboss' ),
+			'year_text'         => __( 'a year', 'buddyboss' ),
+			'years_text'        => __( 'years', 'buddyboss' ),
+		)
+	);
 
 	wp_enqueue_script( 'bp-livestamp' );
-}
-
-/**
- * Return moment.js config.
- *
- * @since             BuddyPress 2.7.0
- * @deprecated        2.3.90 Softly deprecated as we're keeping the function into this file
- *                    to avoid fatal errors if deprecated code is ignored.
- *
- * @return string
- */
-function bp_core_moment_js_config() {
-	_deprecated_function( __FUNCTION__, '2.3.90' );
-
-	// Grab the locale from the enqueued JS.
-	$moment_locale = wp_scripts()->query( 'bp-moment-locale' );
-	$moment_locale = substr( $moment_locale->src, strpos( $moment_locale->src, '/moment-js/locale/' ) + 18 );
-	$moment_locale = str_replace( '.js', '', $moment_locale );
-
-	$inline_js = <<<EOD
-jQuery(function() {
-	moment.locale( '{$moment_locale}' );
-});
-EOD;
-
-	return $inline_js;
 }
 
 /**
@@ -1022,3 +967,62 @@ function bb_load_link_preview_js_template() {
 }
 
 add_action( 'bp_enqueue_scripts', 'bb_load_link_preview_js_template' );
+
+/**
+ * Load the JS to replace emoji with image.
+ *
+ * @since BuddyBoss 2.4.40
+ */
+function bb_load_emoji_detection_script() {
+	// Get the current WordPress version.
+	$wp_version = get_bloginfo( 'version' );
+
+	// Check if the WordPress version is above 6.0.
+	if ( version_compare( $wp_version, '6.0', '>' ) ) {
+
+		$settings = array(
+			/**
+			 * Filters the URL where emoji png images are hosted.
+			 *
+			 * @since BuddyBoss 2.4.40
+			 *
+			 * @param string $url The emoji base URL for png images.
+			 */
+			'baseUrl' => apply_filters( 'bb_emoji_url', 'https://s.w.org/images/core/emoji/14.0.0/72x72/' ),
+
+			/**
+			 * Filters the extension of the emoji png files.
+			 *
+			 * @since BuddyBoss 2.4.40
+			 *
+			 * @param string $extension The emoji extension for png files. Default .png.
+			 */
+			'ext'     => apply_filters( 'bb_emoji_ext', '.png' ),
+
+			/**
+			 * Filters the URL where emoji SVG images are hosted.
+			 *
+			 * @since BuddyBoss 2.4.40
+			 *
+			 * @param string $url The emoji base URL for svg images.
+			 */
+			'svgUrl'  => apply_filters( 'bb_emoji_svg_url', 'https://s.w.org/images/core/emoji/14.0.0/svg/' ),
+
+			/**
+			 * Filters the extension of the emoji SVG files.
+			 *
+			 * @since BuddyBoss 2.4.40
+			 *
+			 * @param string $extension The emoji extension for svg files. Default .svg.
+			 */
+			'svgExt'  => apply_filters( 'bb_emoji_svg_ext', '.svg' ),
+		);
+
+		// Image emoji support.
+		wp_enqueue_script( 'bb-twemoji' );
+		wp_localize_script( 'bb-twemoji', 'bbemojiSettings', $settings );
+		wp_enqueue_script( 'bb-emoji-loader' );
+	}
+}
+
+add_action( 'bp_enqueue_scripts', 'bb_load_emoji_detection_script', 7 );

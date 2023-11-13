@@ -692,6 +692,19 @@
 	}
 }
 
+#media-stream .media-list,
+#video-stream .video-list {
+
+	.bb-item-thumb {
+
+		&.loading.deleting {
+			opacity: 0.6;
+			pointer-events: none;
+		}
+
+	}
+}
+
 .bb-action-check-wrap {
 	position: absolute;
 	transition: 0.3s all;
@@ -998,7 +1011,6 @@ a.bb-close-model {
 
 		.acomment-meta {
 			font-size: 13px;
-			overflow: hidden;
 		}
 
 		.acomment-content {
@@ -1865,6 +1877,22 @@ ul.bb-albums-list {
 	.media-list li .media-action-wrap,
 	.media-list li .video-action-wrap {
 		display: none;
+	}
+
+	.media-list > li {
+
+		.bp-tooltip[data-bp-tooltip-pos="up"]:after {
+			transform: translate(-10px, 0);
+		}
+
+		.bp-tooltip[data-bp-tooltip-pos="up"]:before {
+			transform: translate(-5px, 0);
+		}
+
+		.bb-open-media-theatre,
+		.bb-open-video-theatre {
+			pointer-events: none;
+		}
 	}
 }
 
