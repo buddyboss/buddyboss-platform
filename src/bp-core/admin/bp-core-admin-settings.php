@@ -3341,7 +3341,7 @@ function bb_admin_redirection_setting_tutorial() {
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
-						'article' => 126835,
+						'article' => 127063,
 					),
 					'admin.php'
 				)
