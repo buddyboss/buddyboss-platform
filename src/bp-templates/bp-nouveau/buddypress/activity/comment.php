@@ -45,7 +45,7 @@ bp_nouveau_activity_hook( 'before', 'comment_entry' );
 		</div>
 		<?php bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) ); ?>
 		<div class="comment-reactions">
-			<div class="comment-reactions_items">
+			<div class="activity-state-reactions">
 				<div class="reactions_item">
 					<i class="bb-icon-thumbs-up" style="font-weight:200;color:#aeae16;"></i>
 				</div>

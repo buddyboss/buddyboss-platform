@@ -3547,6 +3547,46 @@ input.search-query-input {
   display: inline-block;
 }
 
+.activity-list .activity-item .activity-state-reactions {
+  display: flex;
+  flex-flow: row;
+}
+
+.activity-list .activity-item .activity-state-reactions .reactions_item {
+  display: flex;
+  background-color: #fff;
+  border-radius: 50%;
+  padding: 2px;
+}
+
+.activity-list .activity-item .activity-state-reactions .reactions_item + .reactions_item {
+  margin-right: -4px;
+}
+
+.activity-list .activity-item .activity-state-reactions .reactions_item > i {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.activity-list .activity-item .activity-state-reactions .reactions_item > img {
+  height: 14px;
+  width: 14px;
+  object-fit: cover;
+}
+
+.activity-list .activity-item .activity-content .activity-state-reactions {
+  display: inline-flex;
+}
+
+.activity-list .activity-item .activity-content .activity-state-reactions .reactions_item > i {
+  font-size: 18px;
+}
+
+.activity-list .activity-item .activity-content .activity-state-reactions .reactions_item > img {
+  height: 18px;
+  width: 18px;
+}
+
 .activity-list .activity-item .activity-inner p {
   word-break: break-word;
 }
@@ -6782,33 +6822,6 @@ span.dashicons.dashicons-admin-file:before {
 .buddypress-wrap .activity-comments .comment-reactions .comment-reactions_count {
   font-size: 13px;
   margin: 0 3px 0 2px;
-}
-
-.buddypress-wrap .activity-comments .comment-reactions .comment-reactions_items {
-  display: flex;
-  flex-flow: row;
-}
-
-.buddypress-wrap .activity-comments .comment-reactions .comment-reactions_items .reactions_item {
-  display: flex;
-  background-color: #fff;
-  border-radius: 50%;
-  padding: 2px;
-}
-
-.buddypress-wrap .activity-comments .comment-reactions .comment-reactions_items .reactions_item + .reactions_item {
-  margin-right: -4px;
-}
-
-.buddypress-wrap .activity-comments .comment-reactions .comment-reactions_items .reactions_item > i {
-  font-size: 14px;
-  line-height: 1;
-}
-
-.buddypress-wrap .activity-comments .comment-reactions .comment-reactions_items .reactions_item > img {
-  height: 14px;
-  width: 14px;
-  object-fit: cover;
 }
 
 .buddypress-wrap .mini .activity-comments {

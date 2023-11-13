@@ -267,6 +267,17 @@ function bp_nouveau_activity_state() {
 	?>
 	<div class="activity-state <?php echo $like_text ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
 		<a href="javascript:void(0);" class="activity-state-likes">
+			<div class="activity-state-reactions">
+				<div class="reactions_item">
+					<i class="bb-icon-thumbs-up" style="font-weight:200;color:#aeae16;"></i>
+				</div>
+				<div class="reactions_item">
+					<img src="https://s.w.org/images/core/emoji/14.0.0/svg/1f643.svg" alt="Smiley">
+				</div>
+				<div class="reactions_item">
+					<img src="https://s.w.org/images/core/emoji/14.0.0/svg/1f644.svg" alt="Confused">
+				</div>
+			</div>
 			<span class="like-text hint--bottom hint--medium hint--multiline" data-hint="<?php echo ( $favorited_users ) ? $favorited_users : ''; ?>">
 				<?php echo $like_text ?: ''; ?>
 			</span>

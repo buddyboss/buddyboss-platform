@@ -215,33 +215,6 @@
 				font-size: 13px;
 				margin: 0 2px 0 3px;
 			}
-
-			.comment-reactions_items {
-				display: flex;
-				flex-flow: row;
-
-				.reactions_item {
-					display: flex;
-					background-color: $white;
-					border-radius: 50%;
-					padding: 2px;
-
-					+ .reactions_item {
-						margin-left: -4px;
-					}
-
-					> i {
-						font-size: 14px;
-						line-height: 1;
-					}
-
-					> img {
-						height: 14px;
-						width: 14px;
-						object-fit: cover;
-					}
-				}
-			}
 		}
 
 	} // close .activity-comments
