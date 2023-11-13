@@ -5871,11 +5871,23 @@ function bb_activity_following_post_notification( $args ) {
 			'activity'  => '',
 			'usernames' => array(),
 			'item_id'   => '',
-			'user_ids'  => array(),
+			'paged'     => 1,
 		)
 	);
 
-	if ( empty( $r['user_ids'] ) || empty( $r['activity'] ) ) {
+	$per_page       = apply_filters( 'bb_following_min_count', 20 );
+	$follower_users = bp_get_followers(
+		array(
+			'user_id'  => $r['item_id'],
+			'per_page' => $per_page,
+			'page'     => $r['paged'],
+		)
+	);
+
+	if (
+		empty( $follower_users ) ||
+		empty( $r['activity'] )
+	) {
 		return;
 	}
 
@@ -5921,7 +5933,7 @@ function bb_activity_following_post_notification( $args ) {
 		),
 	);
 
-	foreach ( $r['user_ids'] as $key => $user_id ) {
+	foreach ( $follower_users as $key => $user_id ) {
 		$user_id           = (int) $user_id;
 		$send_mail         = true;
 		$send_notification = true;
@@ -5982,6 +5994,9 @@ function bb_activity_following_post_notification( $args ) {
 			remove_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 		}
 	}
+
+	$r['paged'] = $r['paged'] + 1;
+	bb_activity_create_following_post_notification( $r );
 }
 
 /**
@@ -6031,58 +6046,25 @@ function bb_is_group_activity_comment( $comment = 0 ) {
  * Function to create a paginated backgroud job for activity following notifications.
  *
  * @since BuddyBoss 2.3.70
+ * @since BuddyBoss [BBVERSION] removed the $paged parameter.
  *
  * @param array $args  Array of arguments.
- * @param array $paged Current page number for pagination.
  */
-function bb_activity_create_following_post_notification( $args, $paged = 1 ) {
-	if ( empty( $paged ) ) {
-		$paged = 1;
-	}
+function bb_activity_create_following_post_notification( $args ) {
+	global $bb_background_updater;
 
-	$per_page       = apply_filters( 'bb_following_min_count', 20 );
-	$follower_users = bp_get_followers(
+	$bb_background_updater->data(
 		array(
-			'user_id'  => $args['item_id'],
-			'per_page' => $per_page,
-			'page'     => $paged
-		)
+			'type'     => 'email',
+			'group'    => 'activity_following_post',
+			'data_id'  => $args['item_id'],
+			'priority' => 5,
+			'callback' => 'bb_activity_following_post_notification',
+			'args'     => array( $args ),
+		),
 	);
 
-	if ( empty( $follower_users ) ) {
-		return;
-	}
-
-	if ( count( $follower_users ) > 0 ) {
-		global $bb_background_updater;
-
-		$args['user_ids'] = $follower_users;
-		$args['paged']    = $paged;
-		$bb_background_updater->data(
-			array(
-				'type'     => 'email',
-				'group'    => 'activity_following_post',
-				'data_id'  => $args['item_id'],
-				'priority' => 5,
-				'callback' => 'bb_activity_following_post_notification',
-				'args'     => array( $args ),
-			),
-		);
-
-		$bb_background_updater->save()->dispatch();
-	}
-
-	if ( isset( $args['user_ids'] ) ) {
-		unset( $args['user_ids'] );
-	}
-
-	if ( isset( $args['paged'] ) ) {
-		unset( $args['paged'] );
-	}
-
-	// Call recursive to finish update for all records.
-	$paged++;
-	bb_activity_create_following_post_notification( $args, $paged );
+	$bb_background_updater->save()->dispatch();
 }
 
 /**
@@ -6453,10 +6435,12 @@ function bb_activity_pin_unpin_post( $args = array() ) {
 			'action'      => 'pin',
 			'activity_id' => 0,
 			'retval'      => 'bool',
+			'user_id'     => bp_loggedin_user_id(),
 		)
 	);
 
-	$retval = '';
+	$retval    = '';
+	$old_value = '';
 
 	$activity = new BP_Activity_Activity( (int) $r['activity_id'] );
 
@@ -6472,11 +6456,28 @@ function bb_activity_pin_unpin_post( $args = array() ) {
 
 		// Check if group activity or normal activity.
 		if ( 'groups' === $activity->component && ! empty( $activity->item_id ) ) {
-			$old_value = groups_get_groupmeta( $activity->item_id, 'bb_pinned_post' );
-			groups_update_groupmeta( $activity->item_id, 'bb_pinned_post', $updated_value );
+
+			// Check the user is moderator or organizer and part of the group.
+			if ( ! groups_is_user_member( $r['user_id'], $activity->item_id ) ) {
+				$retval = 'not_member';
+			} else {
+				$is_admin = groups_is_user_admin( $r['user_id'], $activity->item_id );
+				$is_mod   = groups_is_user_mod( $r['user_id'], $activity->item_id );
+
+				if ( $is_admin || $is_mod || bp_current_user_can( 'administrator' ) ) {
+					$old_value = groups_get_groupmeta( $activity->item_id, 'bb_pinned_post' );
+					groups_update_groupmeta( $activity->item_id, 'bb_pinned_post', $updated_value );
+				} else {
+					$retval = 'not_allowed';
+				}
+			}
 		} else {
-			$old_value = bp_get_option( 'bb_pinned_post' );
-			bp_update_option( 'bb_pinned_post', $updated_value );
+			if ( bp_current_user_can( 'administrator' ) ) {
+				$old_value = bp_get_option( 'bb_pinned_post' );
+				bp_update_option( 'bb_pinned_post', $updated_value );
+			} else {
+				$retval = 'not_allowed';
+			}
 		}
 
 		// Check if already exists and updating new value.
