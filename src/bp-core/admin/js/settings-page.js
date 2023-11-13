@@ -511,6 +511,21 @@ window.bp = window.bp || {};
 							}
 						}
 					);
+
+				// Show confirmation dialog when user enable restrict invite option.
+				$( document ).on(
+					'click',
+					'#bp-enable-group-restrict-invites',
+					function () {
+						if ( true === this.checked ) {
+							if ( confirm( BP_ADMIN.group.restrict_invites_confirm_message ) ) {
+								return true;
+							} else {
+								return false;
+							}
+						}
+					}
+				);
 			}
 
 			// Hide/show group header element group type.
@@ -2426,6 +2441,82 @@ window.bp = window.bp || {};
 					}
 				}
 			);
+
+			// Redirection select box Select2
+			if( typeof $.fn.select2 !== 'undefined' ) {
+				if( $( '#bb-login-redirection' ).length > 0 ) {
+					$( '#bb-login-redirection' ).select2({
+						containerCssClass: 'custom-select2',
+						dropdownCssClass: 'custom-dropdown-select2'
+					});
+				}
+				if( $( '#bb-logout-redirection' ).length > 0 ) {
+					$( '#bb-logout-redirection' ).select2({
+						containerCssClass: 'custom-select2',
+						dropdownCssClass: 'custom-dropdown-select2'
+					});
+				}
+			}
+
+			// Login Redirection Settings Show/Hide.
+			var loginRedSettings = $( '#bb-login-redirection' );
+			var currentLoginRedSettings = '0';
+
+			if ( loginRedSettings.length ) {
+				currentLoginRedSettings = loginRedSettings.val();
+
+				if ( '0' === currentLoginRedSettings ) {
+					$( '.login-redirection-text-box' ).show();
+					loginRedSettings.closest( 'td' ).find( '.description, .bb-description' ).hide();
+				} else {
+					$( '.login-redirection-text-box' ).hide();
+					loginRedSettings.closest( 'td' ).find( '.description, .bb-description' ).show();
+				}
+
+				$( loginRedSettings ).change(
+					function () {
+						currentLoginRedSettings = $( this ).val();
+						if ( '0' === currentLoginRedSettings ) {
+							$( '.login-redirection-text-box' ).show();
+							loginRedSettings.closest( 'td' ).find( '.description, .bb-description' ).hide();
+						} else {
+							$( '.login-redirection-text-box' ).hide();
+							loginRedSettings.closest( 'td' ).find( '.description, .bb-description' ).show();
+						}
+
+					}
+				);
+			}
+
+			// Logout Redirection Settings Show/Hide.
+			var logoutRedSettings = $( '#bb-logout-redirection' );
+			var currentLogoutRedSettings = '0';
+
+			if ( logoutRedSettings.length ) {
+				currentLogoutRedSettings = logoutRedSettings.val();
+
+				if ( '0' === currentLogoutRedSettings ) {
+					$( '.logout-redirection-text-box' ).show();
+					logoutRedSettings.closest( 'td' ).find( '.description, .bb-description' ).hide();
+				} else {
+					$( '.logout-redirection-text-box' ).hide();
+					logoutRedSettings.closest( 'td' ).find( '.description, .bb-description' ).show();
+				}
+
+				$( logoutRedSettings ).change(
+					function () {
+						currentLogoutRedSettings = $( this ).val();
+						if ( '0' === currentLogoutRedSettings ) {
+							$( '.logout-redirection-text-box' ).show();
+							logoutRedSettings.closest( 'td' ).find( '.description, .bb-description' ).hide();
+						} else {
+							$( '.logout-redirection-text-box' ).hide();
+							logoutRedSettings.closest( 'td' ).find( '.description, .bb-description' ).show();
+						}
+
+					}
+				);
+			}
 		}
 	);
 
@@ -2488,7 +2579,7 @@ window.bp = window.bp || {};
 					$( '.bb-domain-restrictions-listing .registration-restrictions-select' ).find( 'option' ).attr( 'disabled', false );
 				} else {
 					var $select = $listing.find( '.registration-restrictions-rule:not(.custom) .registration-restrictions-input-select' );
-					if ( 
+					if (
 						0 === $select.find( 'option[value="only_allow"]:selected' ).length &&
 						0 === $select.find( 'option[value="always_allow"]:selected' ).length
 					) {

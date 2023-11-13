@@ -4786,10 +4786,9 @@ function bp_core_parse_url( $url ) {
 		$response = wp_safe_remote_get(
 			$url,
 			array(
-				'redirection' => 1,
 				'stream'      => true,
 				'headers'     => array(
-					'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0',
+					'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0',
 				),
 			),
 		);
@@ -4854,7 +4853,7 @@ function bp_core_parse_url( $url ) {
 		$parsed_url_data['error']       = '';
 		$parsed_url_data['wp_embed']    = true;
 	} else {
-		$args = array( 'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0' );
+		$args = array( 'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0' );
 
 		if ( bb_is_same_site_url( $url ) ) {
 			$args['sslverify'] = false;
@@ -7863,6 +7862,9 @@ function bb_admin_icons( $id ) {
 		case 'bp_web_push_notification_settings':
 			$meta_icon = $bb_icon_bf . ' bb-icon-paste';
 			break;
+		case 'bb_redirection':
+			$meta_icon = $bb_icon_bf . ' bb-icon-sign-in';
+			break;
 		default:
 			$meta_icon = '';
 	}
@@ -8886,7 +8888,7 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 		// Split the email addresses into parts using '@'.
 		$rule_email_parts  = explode( '@', $rule_email );
 		$input_email_parts = explode( '@', $email );
-	 
+
 		// Remove aliases, everything after '+'.
 		$rule_email_user  = explode( '+', $rule_email_parts[0] )[0];
 		$input_email_user = explode( '+', $input_email_parts[0] )[0];
@@ -8993,4 +8995,96 @@ function bb_load_reaction() {
 	if ( class_exists( 'BB_Reaction' ) ) {
 		return BB_Reaction::instance();
 	}
+}
+
+/**
+ * Wrapper function to get the redirect url as per action.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $redirect_to Original redirect URL.
+ * @param int    $user_id     User ID.
+ * @param string $action      Type of action i.e. login or logout.
+ *
+ * @return string $redirect_to Updated redirect URL.
+ */
+function bb_redirect_after_action( $redirect_to, $user_id = 0, $action = 'login' ) {
+	$custom_url       = '';
+	$redirect_setting = '';
+
+	if ( 'login' === $action ) {
+		$redirect_setting = bb_login_redirection();
+	} elseif ( 'logout' === $action ) {
+		$redirect_setting = bb_logout_redirection();
+	}
+
+	// Check if any page or custom URL is set.
+	if ( '' !== $redirect_setting ) {
+		if ( '0' === $redirect_setting ) {
+			if ( 'login' === $action ) {
+				$custom_url = esc_url( bb_custom_login_redirection() );
+			} elseif ( 'logout' === $action ) {
+				$custom_url = esc_url( bb_custom_logout_redirection() );
+			}
+
+			if ( ! empty( $custom_url ) ) {
+
+				// Custom Page URL.
+				$redirect_to = $custom_url;
+			}
+		} else {
+
+			// Page ID.
+			if (
+				! empty( $redirect_setting ) &&
+				is_numeric( $redirect_setting ) &&
+				'publish' === get_post_status( $redirect_setting )
+			) {
+				$redirect_to = get_permalink( $redirect_setting );
+			}
+		}
+	}
+
+	// Check for profile type settings for login redirection.
+	if ( false !== bp_member_type_enable_disable() ) {
+		$member_type = bp_get_member_type( $user_id );
+		if ( false !== $member_type ) {
+			$member_type_post_id = bp_member_type_post_by_type( $member_type );
+			if ( ! empty( $member_type_post_id ) ) {
+
+				$member_type_redirect_setting = get_post_meta( $member_type_post_id, '_bp_member_type_' . $action . '_redirection', true );
+
+				// Check if any page or custom URL is set.
+				if ( '' !== $member_type_redirect_setting ) {
+
+					$custom_url = '';
+					if ( '0' === $member_type_redirect_setting ) {
+						$custom_url = get_post_meta( $member_type_post_id, '_bp_member_type_custom_' . $action . '_redirection', true );
+						if ( ! empty( $custom_url ) ) {
+
+							// Custom Page URL.
+							$redirect_to = $custom_url;
+						}
+					} else {
+
+						// Page ID.
+						if (
+							! empty( $member_type_redirect_setting ) &&
+							is_numeric( $member_type_redirect_setting ) &&
+							'publish' === get_post_status( $member_type_redirect_setting )
+						) {
+							$redirect_to = get_permalink( $member_type_redirect_setting );
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// Support for custom third party URLs.
+	if ( ! empty( $custom_url ) ) {
+		add_filter( 'allowed_redirect_hosts', 'bb_redirection_allowed_third_party_domains' );
+	}
+
+	return $redirect_to;
 }
