@@ -4786,10 +4786,9 @@ function bp_core_parse_url( $url ) {
 		$response = wp_safe_remote_get(
 			$url,
 			array(
-				'redirection' => 1,
 				'stream'      => true,
 				'headers'     => array(
-					'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0',
+					'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0',
 				),
 			),
 		);
@@ -4854,7 +4853,7 @@ function bp_core_parse_url( $url ) {
 		$parsed_url_data['error']       = '';
 		$parsed_url_data['wp_embed']    = true;
 	} else {
-		$args = array( 'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0' );
+		$args = array( 'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0' );
 
 		if ( bb_is_same_site_url( $url ) ) {
 			$args['sslverify'] = false;
@@ -8886,7 +8885,7 @@ function bb_is_allowed_register_email_address( $email = '' ) {
 		// Split the email addresses into parts using '@'.
 		$rule_email_parts  = explode( '@', $rule_email );
 		$input_email_parts = explode( '@', $email );
-	 
+
 		// Remove aliases, everything after '+'.
 		$rule_email_user  = explode( '+', $rule_email_parts[0] )[0];
 		$input_email_user = explode( '+', $input_email_parts[0] )[0];

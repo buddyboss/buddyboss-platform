@@ -35,6 +35,7 @@ class BB_Activity extends Integration_Abstract {
 			'bp_activity_after_save',       // Any activity privacy update.
 			'bp_activity_delete',           // Any Activity deleted.
 			'bp_activity_delete_comment',   // Any Activity comment deleted.
+			'bb_activity_pin_unpin_post',   // Any Activity pin/unpin.
 
 			// Added moderation support.
 			'bp_suspend_activity_suspended',           // Any Activity Suspended.
@@ -65,6 +66,7 @@ class BB_Activity extends Integration_Abstract {
 			'updated_activity_meta'                   => 2, // Any Activity meta update.
 			'bp_activity_add_user_favorite'           => 1, // if activity added in user favorite list.
 			'bp_activity_remove_user_favorite'        => 1, // if activity remove from user favorite list.
+			'bb_activity_pin_unpin_post'              => 1, // Any Activity pin/unpin.
 
 			// Added Moderation Support.
 			'bp_suspend_activity_suspended'           => 1, // Any Activity Suspended.
@@ -168,6 +170,15 @@ class BB_Activity extends Integration_Abstract {
 	 * @param int $activity_id Activity id.
 	 */
 	public function event_bp_activity_remove_user_favorite( $activity_id ) {
+		$this->purge_item_cache_by_item_id( $activity_id );
+	}
+
+	/**
+	 * Pin/Unpin Activity.
+	 *
+	 * @param int $activity_id Activity id.
+	 */
+	public function event_bb_activity_pin_unpin_post( $activity_id ) {
 		$this->purge_item_cache_by_item_id( $activity_id );
 	}
 
