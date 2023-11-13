@@ -1752,6 +1752,76 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		);
 	}
 
+	// Pin post action only for allowed posts based on user role.
+	if (
+		(
+			bp_is_group_activity() &&
+			(
+				bp_current_user_can( 'administrator' ) ||
+				(
+					bb_is_active_activity_pinned_posts() &&
+					(
+						groups_is_user_admin( bp_loggedin_user_id(), bp_get_activity_item_id() ) ||
+						groups_is_user_mod( bp_loggedin_user_id(), bp_get_activity_item_id() )
+					)
+				)
+			)
+		) ||
+		(
+			(
+				bp_is_activity_directory() ||
+				bp_is_user_activity()
+			) &&
+			(
+				bp_current_user_can( 'administrator' ) ||
+				(
+					'groups' === bp_get_activity_object_name() &&
+					bb_is_active_activity_pinned_posts() &&
+					(
+						groups_is_user_admin( bp_loggedin_user_id(), bp_get_activity_item_id() ) ||
+						groups_is_user_mod( bp_loggedin_user_id(), bp_get_activity_item_id() )
+					)
+				)
+			)
+		)
+	) {
+
+		// Remove for activities related to group for main activity screen.
+		$pinned_action_label = bp_is_group_activity() ? esc_html__( 'Pin to Group', 'buddyboss' ) : ( 'groups' === bp_get_activity_object_name() ? esc_html__( 'Pin to Group', 'buddyboss' ) : esc_html__( 'Pin to Feed', 'buddyboss' ) );
+		$pinned_action_class = 'pin-activity';
+		$pinned_id           = ! empty( $GLOBALS['activities_template']->pinned_id ) ? $GLOBALS['activities_template']->pinned_id : bp_get_option( 'bb_pinned_post', 0 );
+
+		if ( 'groups' === bp_get_activity_object_name() && bp_is_active( 'groups' ) ) {
+			$group_id  = bp_get_activity_item_id();
+			$pinned_id = groups_get_groupmeta( $group_id, 'bb_pinned_post' );
+		}
+
+		if ( ! empty( $pinned_id ) && (int) $activity_id === (int) $pinned_id ) {
+			$pinned_action_label = bp_is_group_activity() ? esc_html__( 'Unpin from Group', 'buddyboss' ) : ( 'groups' === bp_get_activity_object_name() ? esc_html__( 'Unpin from Group', 'buddyboss' ) : esc_html__( 'Unpin from Feed', 'buddyboss' ) );
+			$pinned_action_class = 'unpin-activity';
+		}
+
+		$buttons['activity_pin'] = array(
+			'id'                => 'activity_pin',
+			'component'         => 'activity',
+			'parent_element'    => $parent_element,
+			'parent_attr'       => $parent_attr,
+			'must_be_logged_in' => true,
+			'button_element'    => $button_element,
+			'button_attr'       => array(
+				'id'            => '',
+				'href'          => '',
+				'class'         => 'button item-button bp-secondary-action ' . $pinned_action_class,
+				'data-bp-nonce' => '',
+			),
+			'link_text'         => sprintf(
+				'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
+				$pinned_action_label,
+				$pinned_action_label
+			),
+		);
+	}
+
 	/**
 	 * Filter to add your buttons, use the position argument to choose where to insert it.
 	 *
