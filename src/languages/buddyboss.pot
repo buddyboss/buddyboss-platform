@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.4.63\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-11-05 09:34:19+00:00\n"
+"POT-Creation-Date: 2023-11-13 09:27:28+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -858,7 +858,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-functions.php:1293
 #: bp-core/admin/bp-core-admin-functions.php:686
-#: bp-core/admin/bp-core-admin-functions.php:2506
+#: bp-core/admin/bp-core-admin-functions.php:2518
 #: bp-core/admin/bp-core-admin-tools.php:34
 #: bp-core/admin/bp-core-admin-tools.php:231
 #: bp-core/admin/bp-core-admin-tools.php:913
@@ -3576,16 +3576,21 @@ msgid "WordPress Role"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1714
+#: bp-core/admin/settings/bp-admin-setting-general.php:80
+msgid "Redirection"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-functions.php:1715
 #: bp-groups/bp-groups-admin.php:1973
 msgid "Label Colors"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1716
+#: bp-core/admin/bp-core-admin-functions.php:1717
 #: bp-groups/bp-groups-admin.php:1975
 msgid "Shortcode"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1743
+#: bp-core/admin/bp-core-admin-functions.php:1744
 #: bp-members/bp-members-admin.php:33 bp-members/bp-members-admin.php:99
 #: bp-members/bp-members-functions.php:3112
 #: bp-members/bp-members-functions.php:3637
@@ -3596,102 +3601,102 @@ msgstr ""
 msgid "Profile Type"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1750
+#: bp-core/admin/bp-core-admin-functions.php:1751
 #: bp-groups/bp-groups-admin.php:2007 bp-groups/bp-groups-admin.php:2052
 #: bp-groups/bp-groups-admin.php:2080 bp-groups/bp-groups-admin.php:2108
 msgid "Plural Label"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1754
+#: bp-core/admin/bp-core-admin-functions.php:1755
 msgid "e.g. Students"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1760
+#: bp-core/admin/bp-core-admin-functions.php:1761
 #: bp-groups/bp-groups-admin.php:2015 bp-groups/bp-groups-admin.php:2060
 #: bp-groups/bp-groups-admin.php:2088 bp-groups/bp-groups-admin.php:2116
 msgid "Singular Label"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1764
+#: bp-core/admin/bp-core-admin-functions.php:1765
 msgid "e.g. Student"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1795
+#: bp-core/admin/bp-core-admin-functions.php:1796
 #: bp-members/bp-members-functions.php:3640
 msgid "Members Directory"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1810
+#: bp-core/admin/bp-core-admin-functions.php:1811
 msgid "Display this profile type in \"Types\" filter in Members Directory"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1826
+#: bp-core/admin/bp-core-admin-functions.php:1827
 msgid "Hide all members of this type from Members Directory"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1827
+#: bp-core/admin/bp-core-admin-functions.php:1828
 msgid ""
 "Enabling this option hides all members with this profile type from the "
 "members directory, including the \"Members\" and \"Recently Active "
 "Members\" widgets."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1841
+#: bp-core/admin/bp-core-admin-functions.php:1842
 msgid "Hide all members of this type from Network Search results"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1842
+#: bp-core/admin/bp-core-admin-functions.php:1843
 msgid ""
 "Enabling this option hides all members with this profile type from network "
 "search results."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1855
+#: bp-core/admin/bp-core-admin-functions.php:1856
 msgid "Profile Field"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1864
+#: bp-core/admin/bp-core-admin-functions.php:1865
 #: bp-xprofile/classes/class-bp-rest-xprofile-types-endpoint.php:404
 msgid ""
 "Allow users to self-select as this profile type from the \"Profile Type\" "
 "profile field dropdown."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1877
+#: bp-core/admin/bp-core-admin-functions.php:1878
 #: bp-core/admin/settings/bp-admin-setting-friends.php:34
 msgid "Messaging"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1886
+#: bp-core/admin/bp-core-admin-functions.php:1887
 msgid "Allow this profile type to send and receive messages without being connected"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1907
+#: bp-core/admin/bp-core-admin-functions.php:1908
 msgid "Group Type Creation"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1915
+#: bp-core/admin/bp-core-admin-functions.php:1916
 msgid ""
 "Select which group types this profile type is allowed to create. (Leave all "
 "unchecked to allow creation of any group type.)"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1947
+#: bp-core/admin/bp-core-admin-functions.php:1948
 msgid "(None - hide group type option)"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2024
+#: bp-core/admin/bp-core-admin-functions.php:2025
 msgid "Group Type Membership Approval"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2031
+#: bp-core/admin/bp-core-admin-functions.php:2032
 msgid ""
 "Automatically add members of this profile type to the following group "
 "types, after they have registered and activated their account. This setting "
 "does not apply to hidden groups."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2073
+#: bp-core/admin/bp-core-admin-functions.php:2074
 #: bp-core/bp-core-functions.php:2654 bp-invites/bp-invites-functions.php:59
 #: bp-invites/classes/class-bp-invites-component.php:217
 #: bp-invites/classes/class-bp-invites-component.php:284
@@ -3699,35 +3704,35 @@ msgstr ""
 msgid "Email Invites"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2081
+#: bp-core/admin/bp-core-admin-functions.php:2082
 msgid ""
 "Allow members to select the profile type that the invited recipient will be "
 "automatically assigned to on registration. If checked, select which of the "
 "below profile types can be assigned to the recipient:"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2126
+#: bp-core/admin/bp-core-admin-functions.php:2127
 msgid ""
 "To display all users with this profile type on a dedicated page, add the "
 "below shortcode to any WordPress page."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2129
+#: bp-core/admin/bp-core-admin-functions.php:2130
 #: bp-groups/bp-groups-admin.php:2313 bp-members/bp-members-functions.php:3892
 msgid "Copy to clipboard"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2157
+#: bp-core/admin/bp-core-admin-functions.php:2158
 msgid ""
 "Users of this profile type will be auto-assigned to the following WordPress "
 "roles (includes existing users):"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2165
+#: bp-core/admin/bp-core-admin-functions.php:2166
 msgid "(None)"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2332
+#: bp-core/admin/bp-core-admin-functions.php:2344
 msgid ""
 "As your profile is currently assigned to this profile type, you cannot "
 "change its associated WordPress role. Changing this setting would remove "
@@ -3737,36 +3742,36 @@ msgid ""
 "WordPress role."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2420
-#: bp-core/admin/bp-core-admin-functions.php:2422
+#: bp-core/admin/bp-core-admin-functions.php:2432
+#: bp-core/admin/bp-core-admin-functions.php:2434
 msgid "Profile type updated."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2424
+#: bp-core/admin/bp-core-admin-functions.php:2436
 msgid "Profile type published. "
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2426
+#: bp-core/admin/bp-core-admin-functions.php:2438
 msgid "Profile type saved."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2481
-#: bp-core/admin/bp-core-admin-functions.php:2482
-#: bp-core/admin/bp-core-admin-functions.php:3081
-#: bp-core/admin/bp-core-admin-functions.php:3099
-#: bp-core/admin/bp-core-admin-functions.php:3100
+#: bp-core/admin/bp-core-admin-functions.php:2493
+#: bp-core/admin/bp-core-admin-functions.php:2494
+#: bp-core/admin/bp-core-admin-functions.php:3093
+#: bp-core/admin/bp-core-admin-functions.php:3111
+#: bp-core/admin/bp-core-admin-functions.php:3112
 #: bp-core/admin/bp-core-admin-tools.php:249
 msgid "Repair Community"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2526
-#: bp-core/admin/bp-core-admin-functions.php:3060
-#: bp-core/admin/bp-core-admin-functions.php:3108
-#: bp-core/admin/bp-core-admin-functions.php:3109
+#: bp-core/admin/bp-core-admin-functions.php:2538
+#: bp-core/admin/bp-core-admin-functions.php:3072
+#: bp-core/admin/bp-core-admin-functions.php:3120
+#: bp-core/admin/bp-core-admin-functions.php:3121
 msgid "Import Profile Types"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2531
+#: bp-core/admin/bp-core-admin-functions.php:2543
 msgid ""
 "Import your existing <a href=\"%s\">profile types</a> (or \"member types\" "
 "in BuddyPress). You may have created these types <strong>manually via "
@@ -3775,32 +3780,32 @@ msgid ""
 "Then you can remove the old code or plugin."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2541
+#: bp-core/admin/bp-core-admin-functions.php:2553
 #: bp-media/bp-media-filters.php:1604
 msgid "Run Migration"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2572
+#: bp-core/admin/bp-core-admin-functions.php:2584
 msgid "Nothing to import"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2604
+#: bp-core/admin/bp-core-admin-functions.php:2616
 msgid "Successfully Imported"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2697
+#: bp-core/admin/bp-core-admin-functions.php:2709
 msgid "Added successfully"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2724
+#: bp-core/admin/bp-core-admin-functions.php:2736
 msgid ""
 "Profile avatars are currently provided by the BuddyBoss Platform. To use "
 "the WordPress avatar system, change the <strong>Profile Avatars</strong> "
 "setting to \"WordPress\" in the <a href=\"%s\">Profile</a> settings."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2767
-#: bp-core/admin/bp-core-admin-functions.php:2940
+#: bp-core/admin/bp-core-admin-functions.php:2779
+#: bp-core/admin/bp-core-admin-functions.php:2952
 #: bp-core/bp-core-functions.php:3342 bp-core/classes/class-bp-admin.php:649
 #: bp-core/classes/class-bp-admin.php:650
 #: bp-core/classes/class-bp-admin.php:660
@@ -3810,14 +3815,14 @@ msgstr ""
 msgid "Emails"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2848
+#: bp-core/admin/bp-core-admin-functions.php:2860
 #: bp-groups/bp-groups-admin.php:628
 #: bp-groups/classes/class-bp-rest-groups-details-endpoint.php:542
 #: bp-templates/bp-nouveau/includes/groups/functions.php:583
 msgid "All Groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2862
+#: bp-core/admin/bp-core-admin-functions.php:2874
 #: bp-core/admin/settings/bp-admin-setting-groups.php:261
 #: bp-core/admin/settings/bp-admin-setting-groups.php:264
 #: bp-core/deprecated/buddyboss/1.1.8.php:233
@@ -3827,78 +3832,78 @@ msgstr ""
 msgid "Group Types"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2872
+#: bp-core/admin/bp-core-admin-functions.php:2884
 #: bp-templates/bp-nouveau/includes/groups/functions.php:781
 msgid "Group Navigation"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2946
+#: bp-core/admin/bp-core-admin-functions.php:2958
 msgid "Customize Layout"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3033
+#: bp-core/admin/bp-core-admin-functions.php:3045
 #: bp-core/admin/bp-core-admin-tools.php:52
 msgid "Default Data"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3118 bp-forums/admin/admin.php:209
+#: bp-core/admin/bp-core-admin-functions.php:3130 bp-forums/admin/admin.php:209
 #: bp-forums/admin/functions.php:242 bp-forums/admin/functions.php:274
 #: bp-forums/admin/tools.php:46
 msgid "Repair Forums"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3119 bp-forums/admin/admin.php:210
+#: bp-core/admin/bp-core-admin-functions.php:3131 bp-forums/admin/admin.php:210
 msgid "Forum Repair"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3127 bp-forums/admin/admin.php:220
+#: bp-core/admin/bp-core-admin-functions.php:3139 bp-forums/admin/admin.php:220
 #: bp-forums/admin/functions.php:246 bp-forums/admin/functions.php:296
 #: bp-forums/admin/settings.php:1185
 msgid "Import Forums"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3128 bp-forums/admin/admin.php:221
+#: bp-core/admin/bp-core-admin-functions.php:3140 bp-forums/admin/admin.php:221
 msgid "Forum Import"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3327
+#: bp-core/admin/bp-core-admin-functions.php:3339
 #: bp-moderation/bp-moderation-admin.php:384
 #: bp-moderation/bp-moderation-admin.php:460
 msgid "Flagged Members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3339
+#: bp-core/admin/bp-core-admin-functions.php:3351
 #: bp-moderation/bp-moderation-admin.php:382
 #: bp-moderation/bp-moderation-admin.php:458
 msgid "Reported Content"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3353
+#: bp-core/admin/bp-core-admin-functions.php:3365
 #: bp-moderation/bp-moderation-admin.php:577
 #: bp-moderation/bp-moderation-settings.php:121
 #: bp-moderation/classes/class-bp-moderation-component.php:191
 msgid "Reporting Categories"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3384
+#: bp-core/admin/bp-core-admin-functions.php:3396
 msgid "Update to"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3385
+#: bp-core/admin/bp-core-admin-functions.php:3397
 msgid "BuddyBoss Platform Pro 1.2.0"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3386
-#: bp-core/admin/bp-core-admin-functions.php:3393
+#: bp-core/admin/bp-core-admin-functions.php:3398
+#: bp-core/admin/bp-core-admin-functions.php:3405
 #: bp-core/admin/bp-core-admin-settings.php:3281
 msgid "to unlock"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3391
+#: bp-core/admin/bp-core-admin-functions.php:3403
 msgid "Install"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3392
+#: bp-core/admin/bp-core-admin-functions.php:3404
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:251
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:268
 #: bp-notifications/bp-notifications-settings.php:505
@@ -3906,22 +3911,26 @@ msgstr ""
 msgid "BuddyBoss Platform Pro"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3478
+#: bp-core/admin/bp-core-admin-functions.php:3490
 msgid ""
 "Select which label colors to use for profiles using this profile type. "
 "Profile Type labels are used in places such as member directories and "
 "profile headers."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3481
+#: bp-core/admin/bp-core-admin-functions.php:3493
+#: bp-core/admin/bp-core-admin-functions.php:3558
+#: bp-core/admin/bp-core-admin-functions.php:3597
 #: bp-core/admin/bp-core-admin-settings.php:745
 #: bp-core/admin/bp-core-admin-settings.php:1112
+#: bp-core/admin/bp-core-admin-settings.php:3392
+#: bp-core/admin/bp-core-admin-settings.php:3442
 #: bp-document/bp-document-functions.php:2038
 #: bp-groups/bp-groups-admin.php:2654 bp-video/bp-video-functions.php:2571
 msgid "Default"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3482
+#: bp-core/admin/bp-core-admin-functions.php:3494
 #: bp-core/admin/bp-core-admin-settings.php:501
 #: bp-core/admin/bp-core-admin-settings.php:594
 #: bp-core/admin/bp-core-admin-settings.php:892
@@ -3933,14 +3942,50 @@ msgstr ""
 msgid "Custom"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3488
+#: bp-core/admin/bp-core-admin-functions.php:3500
 #: bp-groups/bp-groups-admin.php:2661
 msgid "Background Color"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3492
+#: bp-core/admin/bp-core-admin-functions.php:3504
 #: bp-groups/bp-groups-admin.php:2665
 msgid "Text Color"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-functions.php:3536
+#. translators:
+msgid ""
+"Redirect this profile type. When you change the redirection settings in a "
+"profile type this will then take priority and override redirection global "
+"settings in %s"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-functions.php:3547
+msgid "Buddyboss - Settings - General"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-functions.php:3559
+#: bp-core/admin/bp-core-admin-functions.php:3598
+#: bp-core/admin/bp-core-admin-settings.php:2412
+#: bp-core/admin/bp-core-admin-settings.php:3393
+#: bp-core/admin/bp-core-admin-settings.php:3443
+msgid "Custom URL"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-functions.php:3571
+#: bp-core/admin/bp-core-admin-functions.php:3585
+#: bp-core/admin/bp-core-admin-settings.php:3405
+#: bp-core/admin/bp-core-admin-settings.php:3424
+msgid "Select a page or external link to redirect your members to after they login."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-functions.php:3610
+#: bp-core/admin/bp-core-admin-functions.php:3624
+#: bp-core/admin/bp-core-admin-settings.php:3455
+#: bp-core/admin/bp-core-admin-settings.php:3474
+msgid ""
+"Select a page or external link to redirect your members to after they "
+"logout."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-help.php:36
@@ -3961,8 +4006,8 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-pages.php:39
 #: bp-core/admin/bp-core-admin-pages.php:42
 #: bp-core/admin/bp-core-admin-pages.php:46
-#: bp-core/classes/class-bp-admin-tab.php:503
-#: bp-core/classes/class-bp-admin-tab.php:526 bp-forums/groups.php:374
+#: bp-core/classes/class-bp-admin-tab.php:513
+#: bp-core/classes/class-bp-admin-tab.php:536 bp-forums/groups.php:374
 #: bp-integrations/compatibility/templates/admin/integration-tab-intro.php:48
 msgid "Save Settings"
 msgstr ""
@@ -4056,11 +4101,12 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:2679
 #: bp-core/admin/bp-core-admin-settings.php:2997
 #: bp-core/admin/bp-core-admin-settings.php:3024
+#: bp-core/admin/bp-core-admin-settings.php:3351
 #: bp-core/admin/settings/bp-admin-setting-friends.php:113
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:583
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:639
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:721
-#: bp-core/classes/class-bp-admin-tab.php:518
+#: bp-core/classes/class-bp-admin-tab.php:528
 #: bp-integrations/learndash/bp-learndash-functions.php:431
 #: bp-integrations/learndash/bp-learndash-functions.php:454
 #: bp-integrations/learndash/bp-learndash-functions.php:477
@@ -4730,10 +4776,6 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:2411
 msgid "BuddyBoss Registration"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:2412
-msgid "Custom URL"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:2419
@@ -5481,7 +5523,7 @@ msgid "Recalculating the total group members count for each group &hellip; %s"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:100
-#: bp-core/admin/settings/bp-admin-setting-general.php:137
+#: bp-core/admin/settings/bp-admin-setting-general.php:150
 msgid "Activity Settings"
 msgstr ""
 
@@ -5587,19 +5629,27 @@ msgstr ""
 msgid "Registration Form"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:80
-msgid "Registration Restrictions"
+#: bp-core/admin/settings/bp-admin-setting-general.php:82
+msgid "After Login"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:85
-msgid "Domain Restrictions"
-msgstr ""
-
-#: bp-core/admin/settings/bp-admin-setting-general.php:90
-msgid "Email Restrictions"
+#: bp-core/admin/settings/bp-admin-setting-general.php:87
+msgid "After Logout"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-general.php:93
+msgid "Registration Restrictions"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-general.php:98
+msgid "Domain Restrictions"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-general.php:103
+msgid "Email Restrictions"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-general.php:106
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:924
 #: bp-templates/bp-nouveau/buddypress/document/document-privacy.php:22
 #: bp-templates/bp-nouveau/buddypress/media/media-privacy.php:22
@@ -5609,36 +5659,36 @@ msgstr ""
 msgid "Privacy"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:96
+#: bp-core/admin/settings/bp-admin-setting-general.php:109
 msgid "Private Website"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:99
+#: bp-core/admin/settings/bp-admin-setting-general.php:112
 msgid "Public Website Content"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:103
+#: bp-core/admin/settings/bp-admin-setting-general.php:116
 msgid "Private REST APIs"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:115
+#: bp-core/admin/settings/bp-admin-setting-general.php:128
 msgid "Public REST APIs"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:119
+#: bp-core/admin/settings/bp-admin-setting-general.php:132
 msgid "Private RSS Feeds"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:121
+#: bp-core/admin/settings/bp-admin-setting-general.php:134
 msgid "Public RSS Feeds"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:128
+#: bp-core/admin/settings/bp-admin-setting-general.php:141
 #: bp-forums/admin/settings.php:1503
 msgid "Main Settings"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:134
+#: bp-core/admin/settings/bp-admin-setting-general.php:147
 msgid "Groups Settings"
 msgstr ""
 
@@ -6113,7 +6163,7 @@ msgstr ""
 #: bp-core/admin/templates/moderation-activate-alert-popup.php:19
 #: bp-core/admin/templates/moderation-deactivate-confirmation-popup.php:24
 #: bp-core/admin/templates/update-buddyboss.php:73
-#: bp-core/classes/class-bp-admin-tab.php:175
+#: bp-core/classes/class-bp-admin-tab.php:185
 msgid "Close pop-up"
 msgstr ""
 
@@ -6124,7 +6174,7 @@ msgstr ""
 #: bp-core/admin/templates/moderation-activate-alert-popup.php:21
 #: bp-core/admin/templates/moderation-deactivate-confirmation-popup.php:30
 #: bp-core/admin/templates/update-buddyboss.php:74
-#: bp-core/classes/class-bp-admin-tab.php:176 bp-forums/admin/topics.php:885
+#: bp-core/classes/class-bp-admin-tab.php:186 bp-forums/admin/topics.php:885
 #: bp-forums/topics/template.php:3024
 #: bp-templates/bp-nouveau/buddypress/common/notices/template-notices.php:18
 #: bp-templates/bp-nouveau/buddypress/document/theatre.php:15
@@ -6709,7 +6759,7 @@ msgid "Upload Error: %s"
 msgstr ""
 
 #: bp-core/bp-core-attachments.php:1582
-#: bp-core/classes/class-bp-admin-tab.php:279
+#: bp-core/classes/class-bp-admin-tab.php:289
 msgid "There was a problem uploading the cover photo."
 msgstr ""
 
@@ -7036,7 +7086,7 @@ msgstr ""
 msgid "Customize the appearance of emails sent by BuddyBoss."
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:28 bp-core/bp-core-filters.php:1334
+#: bp-core/bp-core-customizer-email.php:28 bp-core/bp-core-filters.php:1338
 #: bp-templates/bp-nouveau/includes/customizer.php:54
 msgid "BuddyBoss Emails"
 msgstr ""
@@ -7134,102 +7184,102 @@ msgstr ""
 msgid "Footer Text Size"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:454 bp-core/bp-core-filters.php:488
+#: bp-core/bp-core-filters.php:458 bp-core/bp-core-filters.php:492
 msgid "[User Set]"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:633
+#: bp-core/bp-core-filters.php:637
 msgid "Page %s"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:988
+#: bp-core/bp-core-filters.php:992
 msgid "BuddyBoss (logged-in)"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:993
+#: bp-core/bp-core-filters.php:997
 msgid "BuddyBoss (logged-out)"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1593
+#: bp-core/bp-core-filters.php:1597
 msgid ""
 "Please update BuddyBoss Theme to v1.5.0 to maintain compatibility with "
 "BuddyBoss Platform. Some icons in your theme will look wrong until you "
 "update."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1706
+#: bp-core/bp-core-filters.php:1710
 msgid "Every minute"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1710
+#: bp-core/bp-core-filters.php:1714
 msgid "Once in 5 minutes"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1714
+#: bp-core/bp-core-filters.php:1718
 msgid "Once in 10 minutes"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1718
+#: bp-core/bp-core-filters.php:1722
 msgid "Once in 15 minutes"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1722
+#: bp-core/bp-core-filters.php:1726
 msgid "Once in 30 minutes"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1726
+#: bp-core/bp-core-filters.php:1730
 msgid "Once Hourly"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1730
+#: bp-core/bp-core-filters.php:1734
 msgid "Once in 3 hours"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1734
+#: bp-core/bp-core-filters.php:1738
 msgid "Once in 12 hours"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1738
+#: bp-core/bp-core-filters.php:1742
 msgid "Once in 24 hours"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1742
+#: bp-core/bp-core-filters.php:1746
 msgid "Every 15 days"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1746
+#: bp-core/bp-core-filters.php:1750
 msgid "Every 30 days"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1814
+#: bp-core/bp-core-filters.php:1818
 msgid "There was a problem cropping custom profile avatar."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1815
+#: bp-core/bp-core-filters.php:1819
 msgid "The custom profile avatar was uploaded successfully."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1816
+#: bp-core/bp-core-filters.php:1820
 msgid "There was a problem deleting custom profile avatar. Please try again."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1817
+#: bp-core/bp-core-filters.php:1821
 msgid "The custom profile avatar was deleted successfully!"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1835
+#: bp-core/bp-core-filters.php:1839
 msgid "There was a problem cropping custom group avatar."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1836
+#: bp-core/bp-core-filters.php:1840
 msgid "The custom group avatar was uploaded successfully."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1837
+#: bp-core/bp-core-filters.php:1841
 msgid "There was a problem deleting custom group avatar. Please try again."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1838
+#: bp-core/bp-core-filters.php:1842
 msgid "The custom group avatar was deleted successfully!"
 msgstr ""
 
@@ -9272,47 +9322,47 @@ msgstr ""
 msgid "The item ID is required to create a subscription."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:154
-#: bp-core/classes/class-bp-admin-tab.php:168
+#: bp-core/classes/class-bp-admin-tab.php:164
+#: bp-core/classes/class-bp-admin-tab.php:178
 msgid "Emails Missing"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:156
-#: bp-core/classes/class-bp-admin-tab.php:170
+#: bp-core/classes/class-bp-admin-tab.php:166
+#: bp-core/classes/class-bp-admin-tab.php:180
 msgid "Email Missing"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:211
+#: bp-core/classes/class-bp-admin-tab.php:221
 msgid "Reset All Emails"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:230
+#: bp-core/classes/class-bp-admin-tab.php:240
 msgid "Install Missing Emails"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:246
+#: bp-core/classes/class-bp-admin-tab.php:256
 msgid "Please upload a file to check the MIME Type."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:249
+#: bp-core/classes/class-bp-admin-tab.php:259
 msgid ""
 "Are you sure you want to import data? This action is going to alter your "
 "database. If this is a live website you may want to create a backup of your "
 "database first."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:250
+#: bp-core/classes/class-bp-admin-tab.php:260
 msgid ""
 "Are you sure you want to delete all Default Data content? Content that was "
 "created by you and others, and not by this default data installer, will not "
 "be deleted."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:253
+#: bp-core/classes/class-bp-admin-tab.php:263
 msgid "Select site to repair the forums"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:257
+#: bp-core/classes/class-bp-admin-tab.php:267
 msgid ""
 "Please confirm you want to suspend this member. Members who are suspended "
 "will be logged out and not allowed to login again. Their content will be "
@@ -9320,7 +9370,7 @@ msgid ""
 "this process to complete."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:258
+#: bp-core/classes/class-bp-admin-tab.php:268
 msgid ""
 "Please confirm you want to unsuspend this member. Members who are "
 "unsuspended will be allowed to login again, and their content will no "
@@ -9328,19 +9378,19 @@ msgid ""
 "minutes for this process to complete."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:261
+#: bp-core/classes/class-bp-admin-tab.php:271
 msgid ""
 "Changing the Cover Image Size will reposition all of your members cover "
 "images. Are you sure you wish to save these changes?"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:262
+#: bp-core/classes/class-bp-admin-tab.php:272
 msgid ""
 "Changing the Cover Image Size will reposition all of your groups cover "
 "images. Are you sure you wish to save these changes?"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:278
+#: bp-core/classes/class-bp-admin-tab.php:288
 #: bp-core/classes/class-bp-attachment.php:162
 #: bp-document/bp-document-functions.php:1523
 #: bp-media/bp-media-functions.php:183 bp-video/bp-video-functions.php:157
@@ -9348,34 +9398,34 @@ msgstr ""
 msgid "No file was uploaded."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:283
+#: bp-core/classes/class-bp-admin-tab.php:293
 #. translators: 1. Cover image width. 2. Cover image height.
 msgid ""
 "Cover photo was uploaded successfully. For best results, upload an image "
 "that is %1$spx by %2$spx or larger."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:287
+#: bp-core/classes/class-bp-admin-tab.php:297
 msgid "Cover photo was uploaded successfully."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:288
+#: bp-core/classes/class-bp-admin-tab.php:298
 msgid "There was a problem deleting cover photo. Please try again."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:289
+#: bp-core/classes/class-bp-admin-tab.php:299
 msgid "Cover photo was deleted successfully."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:314
+#: bp-core/classes/class-bp-admin-tab.php:324
 msgid "The rule content cannot be empty."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:315
+#: bp-core/classes/class-bp-admin-tab.php:325
 msgid "The rule content cannot be duplicate."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:319
+#: bp-core/classes/class-bp-admin-tab.php:329
 msgid ""
 "By enabling this option members that are already part of sub-groups and not "
 "the parent groups will automatically be removed from all sub-groups."
@@ -33715,7 +33765,7 @@ msgctxt "Label for the Title field of the Recent Networkwide Posts widget"
 msgid "Title:"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:131
+#: bp-core/admin/settings/bp-admin-setting-general.php:144
 msgctxt "BuddyPress setting tab"
 msgid "Profile Settings"
 msgstr ""
