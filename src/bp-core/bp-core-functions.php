@@ -9006,7 +9006,7 @@ function bb_load_reaction() {
 /**
  * Wrapper function to get the redirect url as per action.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.70
  *
  * @param string $redirect_to Original redirect URL.
  * @param int    $user_id     User ID.

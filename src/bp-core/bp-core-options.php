@@ -2458,7 +2458,7 @@ function bb_is_active_activity_pinned_posts( $default = false ) {
 /**
  * Get login redirection settings value from the database.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.70
  *
  * @param string $default Optional. Fallback value if not found in the database.
  *                        Default: Empty string.
@@ -2470,7 +2470,7 @@ function bb_login_redirection( $default = '' ) {
 	/**
 	 * Filters login redirection settings.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.70
 	 *
 	 * @param string $value Login redirection setting value.
 	 */
@@ -2480,7 +2480,7 @@ function bb_login_redirection( $default = '' ) {
 /**
  * Get logout redirection setting value from the database.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.70
  *
  * @param string $default Optional. Fallback value if not found in the database.
  *                        Default: Empty string.
@@ -2492,7 +2492,7 @@ function bb_logout_redirection( $default = '' ) {
 	/**
 	 * Filters logout redirection settings.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.70
 	 *
 	 * @param string $value Logout redirection setting value.
 	 */
@@ -2502,7 +2502,7 @@ function bb_logout_redirection( $default = '' ) {
 /**
  * Get custom login redirection setting value from the database.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.70
  *
  * @param string $default Optional. Fallback value if not found in the database.
  *                        Default: Empty string.
@@ -2514,7 +2514,7 @@ function bb_custom_login_redirection( $default = '' ) {
 	/**
 	 * Filters custom login page URL.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.70
 	 *
 	 * @param string $value Custom login page URL.
 	 */
@@ -2524,7 +2524,7 @@ function bb_custom_login_redirection( $default = '' ) {
 /**
  * Get custom logout redirection setting value from the database.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.70
  *
  * @param string $default Optional. Fallback value if not found in the database.
  *                        Default: Empty string.
@@ -2536,7 +2536,7 @@ function bb_custom_logout_redirection( $default = '' ) {
 	/**
 	 * Filters custom logout page URL.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.70
 	 *
 	 * @param string $value Custom logout page URL.
 	 */

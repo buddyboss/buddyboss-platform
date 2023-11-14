@@ -3513,7 +3513,7 @@ function bb_member_type_labelcolor_metabox( $post ) {
 /**
  * Added new meta box for member types redirection settings.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.70
  *
  * @param Object $post Post data object.
  */
