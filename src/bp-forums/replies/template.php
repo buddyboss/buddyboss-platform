@@ -2139,7 +2139,7 @@ function bbp_get_reply_edit_link( $args = '' ) {
  * @uses  bbp_get_reply_edit_url() To get the reply edit url
  */
 function bbp_reply_edit_url( $reply_id = 0 ) {
-	echo esc_url( bbp_get_reply_edit_url( $reply_id ) );
+	echo bbp_get_reply_edit_url( $reply_id );
 }
 
 /**
@@ -2185,7 +2185,7 @@ function bbp_get_reply_edit_url( $reply_id = 0 ) {
 	// Maybe add view all
 	$url = bbp_add_view_all( $url );
 
-	return apply_filters( 'bbp_get_reply_edit_url', $url, $reply_id );
+	return apply_filters( 'bbp_get_reply_edit_url', esc_url( $url ), $reply_id );
 }
 
 /**
