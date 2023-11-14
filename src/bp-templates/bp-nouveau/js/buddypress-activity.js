@@ -1619,11 +1619,11 @@ window.bp = window.bp || {};
 				);
 			}
 
-			if ( target.hasClass( 'activity-state-likes' ) ) {
+			if ( target.hasClass( 'activity-state-likes' ) || target.parents('.activity-state-likes' ).length > 0 ) {
 				// Stop event propagation.
 				event.preventDefault();
 
-				target.siblings( '.activity-state-popup' ).addClass( 'active' );
+				target.closest( '.activity-content ' ).find( '.activity-state-popup' ).addClass( 'active' );
 			}
 
 			if( target.hasClass( 'comment-reactions' ) || target.parents('.comment-reactions' ).length > 0 ) {
