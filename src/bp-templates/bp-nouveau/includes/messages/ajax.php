@@ -1882,7 +1882,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		}
 	}
 
-	$last_message_id           = $thread_template->thread->messages[0]->id;
+	$last_message_id           = isset( $thread_template->thread->messages[0]->id ) ? $thread_template->thread->messages[0]->id : 0;
 	$bp_get_the_thread_id      = bp_get_the_thread_id();
 	$group_name                = '';
 	$group_avatar              = '';
