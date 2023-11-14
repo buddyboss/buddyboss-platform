@@ -4138,6 +4138,7 @@ input.search-query-input {
   position: absolute;
   right: 0;
   bottom: 10px;
+  z-index: 4;
   display: none;
   align-items: center;
   gap: 8px;
