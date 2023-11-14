@@ -2523,11 +2523,16 @@ function bb_updated_component_emails() {
 	}
 }
 
-
 /**
  * Redirect after login.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.70
+ *
+ * @param string  $redirect_to The redirect destination URL.
+ * @param string  $request     The requested redirect destination URL passed as a parameter.
+ * @param WP_User $user        WP_User object if login was successful.
+ *
+ * @return mixed|string
  */
 function bb_login_redirect( $redirect_to, $request, $user ) {
 
@@ -2546,7 +2551,13 @@ function bb_login_redirect( $redirect_to, $request, $user ) {
 /**
  * Redirect after logout.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.70
+ *
+ * @param string  $redirect_to The redirect destination URL.
+ * @param string  $request     The requested redirect destination URL passed as a parameter.
+ * @param WP_User $user        WP_User object if login was successful.
+ *
+ * @return mixed|string
  */
 function bb_logout_redirect( $redirect_to, $request, $user ) {
 
@@ -2565,11 +2576,13 @@ function bb_logout_redirect( $redirect_to, $request, $user ) {
 /**
  * Allow third party domains for redirections.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.70
+ *
+ * @param array $hosts Array of allowed hosts.
  */
 function bb_redirection_allowed_third_party_domains( $hosts ) {
 	$allow_custom_url_domains = array();
-	$custom_url = esc_url( bb_custom_login_redirection() );
+	$custom_url               = esc_url( bb_custom_login_redirection() );
 	if ( ! empty( $custom_url ) ) {
 		$allow_custom_url_domains[] = $custom_url;
 	}
@@ -2580,11 +2593,11 @@ function bb_redirection_allowed_third_party_domains( $hosts ) {
 
 	// Get member type redirection custom urls.
 	$args = array(
-		'post_type'      => 'bp-member-type', // Replace with your custom post type or 'post' for regular posts
-		'posts_per_page' => - 1, // To get all posts
-		'post_status'    => 'publish', // Filter by published posts
+		'post_type'      => 'bp-member-type', // Replace with your custom post type or 'post' for regular posts.
+		'posts_per_page' => - 1, // To get all posts.
+		'post_status'    => 'publish', // Filter by published posts.
 		'meta_query'     => array(
-			'relation' => 'OR', // Use 'OR' to search for any of the specified meta keys
+			'relation' => 'OR', // Use 'OR' to search for any of the specified meta keys.
 			array(
 				'key'     => '_bp_member_type_custom_login_redirection',
 				'compare' => 'EXISTS',
