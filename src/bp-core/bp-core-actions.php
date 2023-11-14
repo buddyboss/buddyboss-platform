@@ -1050,7 +1050,7 @@ add_action( 'bp_notifications_get_registered_components', 'bb_core_registered_no
 /**
  * Removed duplicate background jobs from the table if exists.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.70
  *
  * @param object $batch Batch object.
  *

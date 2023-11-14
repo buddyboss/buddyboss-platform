@@ -801,6 +801,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				&& empty( bp_activity_get_meta( $activity_object->id, 'bp_media_ids', true ) )
 				&& empty( bp_activity_get_meta( $activity_object->id, '_gif_data', true ) )
 				&& empty( bp_activity_get_meta( $activity_object->id, 'bp_document_ids', true ) )
+				&& empty( bp_activity_get_meta( $activity_object->id, 'bp_video_ids', true ) )
 			) && true === $this->bp_rest_activity_content_validate( $request )
 		) {
 			return new WP_Error(

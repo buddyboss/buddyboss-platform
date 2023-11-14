@@ -2051,7 +2051,7 @@ add_filter( 'redirect_canonical', 'bb_video_remove_specific_trailing_slash', 999
 /**
  * Videos search label.
  * 
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.70
  *
  * @param string $type Search label.
  *
