@@ -131,9 +131,9 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-privacy>li:not(.bb-edit-privacy)', bp.Nouveau, this.activityPrivacyChange.bind( this ) );
 			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', 'span.privacy', bp.Nouveau, this.togglePrivacyDropdown.bind( this ) );
 			$( '#bb-media-model-container .activity-list' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
-			$( '#buddypress [data-bp-list="activity"]' ).on( 'mouseover', '.button.fav', bp.Nouveau, this.showReactions.bind( this ) ).on('mouseout', '.button.fav', function() { clearTimeout(window.reactionHoverTimeout); } );
-			$( '#buddypress [data-bp-list="activity"]' ).on( 'mouseout', '.activity-meta .ac-emotions_list, .button.fav', bp.Nouveau, this.hideReactions.bind( this ) );
-			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-state-popup_overlay', bp.Nouveau, this.closeActivityState.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'mouseover', '.button.fav', bp.Nouveau, this.showReactions.bind( this ) ).on('mouseout', '.button.fav', function() { clearTimeout(window.reactionHoverTimeout); } );
+			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'mouseout', '.activity-meta .ac-emotions_list, .button.fav', bp.Nouveau, this.hideReactions.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.activity-state-popup_overlay', bp.Nouveau, this.closeActivityState.bind( this ) );
 			$( document ).keydown( this.commentFormAction );
 			$( document ).click( this.togglePopupDropdown );
 
