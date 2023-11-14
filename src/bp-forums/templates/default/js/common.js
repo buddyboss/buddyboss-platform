@@ -342,5 +342,23 @@ jQuery( document ).ready(
 			} );
 		}
 
+        jQuery( document ).on( 'input', '.bbp_editor_topic_content', function ( e ) {
+            var content = jQuery( e.currentTarget)[0];
+            if ( content.innerHTML.replace( /<p>/gi, '' ).replace( /<\/p>/gi, '' ).replace( /<br>/gi, '' ) === '' ) {
+                var topic_content = '';
+                content.innerHTML = topic_content;
+                jQuery( '#bbp_topic_content' ).val( topic_content );
+            }
+        });
+
+        jQuery( document ).on( 'input', '.bbp_editor_reply_content', function ( e ) {
+            var content = jQuery( e.currentTarget)[0];
+            if ( content.innerHTML.replace( /<p>/gi, '' ).replace( /<\/p>/gi, '' ).replace( /<br>/gi, '' ) === '' ) {
+                var reply_content = '';
+                content.innerHTML = reply_content;
+                jQuery( '#bbp_reply_content' ).val( reply_content );
+            }
+        });
+
 	}
 );
