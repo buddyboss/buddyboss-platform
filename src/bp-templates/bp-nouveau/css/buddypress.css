@@ -3964,7 +3964,7 @@ input.search-query-input {
   display: none;
   position: fixed;
   inset: 0;
-  z-index: 999;
+  z-index: 999999;
   background-color: rgba(250, 251, 253, 0.9);
   box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
 }
@@ -4138,7 +4138,7 @@ input.search-query-input {
   position: absolute;
   left: 0;
   bottom: 10px;
-  z-index: 4;
+  z-index: 99;
   display: none;
   align-items: center;
   gap: 8px;
@@ -6807,6 +6807,10 @@ span.dashicons.dashicons-admin-file:before {
 .buddypress-wrap .activity-comments .ac-form .ac-reply-content input[name="ac_form_submit"] {
   opacity: 0.4;
   pointer-events: none;
+}
+
+.buddypress-wrap .activity-comments li.comment-item {
+  position: relative;
 }
 
 .buddypress-wrap .activity-comments .comment-reactions {
