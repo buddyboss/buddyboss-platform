@@ -484,7 +484,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		 * @return bool
 		 */
 		public function is_processing() {
-			if ( get_site_transient( $this->identifier . '_process_lock' ) ) {
+			if ( get_site_option( $this->identifier . '_process_lock' ) ) {
 				// Process already running.
 				return true;
 			}
@@ -863,10 +863,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		protected function lock_process() {
 			$this->start_time = time(); // Set start time of current process.
 
-			$lock_duration = ( property_exists( $this, 'queue_lock_time' ) ) ? $this->queue_lock_time : 60; // 1 minute
-			$lock_duration = apply_filters( $this->identifier . '_queue_lock_time', $lock_duration );
-
-			set_site_transient( $this->identifier . '_process_lock', microtime(), $lock_duration );
+			update_site_option( $this->identifier . '_process_lock', microtime( true ) );
 		}
 
 		/**
@@ -879,7 +876,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		 * @return object $this
 		 */
 		protected function unlock_process() {
-			delete_site_transient( $this->identifier . '_process_lock' );
+			delete_site_option( $this->identifier . '_process_lock' );
 
 			return $this;
 		}
@@ -954,6 +951,8 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 			$value_item           = 'data_id';
 			$value_secondary_item = 'secondary_data_id';
 			$value_column         = 'data';
+			$priority             = 'priority';
+			$db_blog_id           = 'blog_id';
 
 			$sql = '
 			SELECT *
@@ -977,7 +976,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 
 			if ( ! empty( $items ) ) {
 				$batches = array_map(
-					function ( $item ) use ( $id, $group, $type, $value_item, $value_secondary_item, $value_column ) {
+					function ( $item ) use ( $id, $group, $type, $value_item, $value_secondary_item, $value_column, $priority, $db_blog_id ) {
 						$batch               = new stdClass();
 						$batch->key          = $item->{$id};
 						$batch->group        = $item->{$group};
@@ -985,6 +984,8 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 						$batch->item_id      = $item->{$value_item};
 						$batch->secondary_id = $item->{$value_secondary_item};
 						$batch->data         = maybe_unserialize( $item->{$value_column} );
+						$batch->priority     = $item->{$priority};
+						$batch->blog_id      = $item->{$db_blog_id};
 
 						return $batch;
 					},

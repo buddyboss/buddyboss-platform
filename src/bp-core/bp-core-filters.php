@@ -2526,7 +2526,7 @@ function bb_updated_component_emails() {
 /**
  * Redirect after login.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.70
  *
  * @param string  $redirect_to The redirect destination URL.
  * @param string  $request     The requested redirect destination URL passed as a parameter.
@@ -2551,7 +2551,7 @@ function bb_login_redirect( $redirect_to, $request, $user ) {
 /**
  * Redirect after logout.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.70
  *
  * @param string  $redirect_to The redirect destination URL.
  * @param string  $request     The requested redirect destination URL passed as a parameter.
@@ -2576,7 +2576,7 @@ function bb_logout_redirect( $redirect_to, $request, $user ) {
 /**
  * Allow third party domains for redirections.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.70
  *
  * @param array $hosts Array of allowed hosts.
  */

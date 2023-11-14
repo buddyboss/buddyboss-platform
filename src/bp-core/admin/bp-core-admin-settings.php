@@ -3329,7 +3329,7 @@ function bb_admin_setting_callback_enable_activity_pinned_posts() {
 /**
  * Link to redirection tutorial.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.70
  */
 function bb_admin_redirection_setting_tutorial() {
 	?>
@@ -3341,7 +3341,7 @@ function bb_admin_redirection_setting_tutorial() {
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
-						'article' => 126835,
+						'article' => 127063,
 					),
 					'admin.php'
 				)
@@ -3356,7 +3356,7 @@ function bb_admin_redirection_setting_tutorial() {
 /**
  * Get the published page list.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.70
  *
  * @return array Associative array of page id and page title of pages.
  */
@@ -3383,7 +3383,7 @@ function bb_get_published_pages() {
 /**
  * Admin settings for showing the login redirection settings.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.70
  */
 function bb_admin_setting_callback_login_redirection() {
 	$login_redirection = bb_login_redirection();
@@ -3414,7 +3414,7 @@ function bb_admin_setting_callback_login_redirection() {
 /**
  * Admin settings for showing the custom login redirection page url.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.70
  */
 function bp_admin_setting_callback_custom_login_redirection() {
 	?>
@@ -3433,7 +3433,7 @@ function bp_admin_setting_callback_custom_login_redirection() {
 /**
  * Admin settings for showing the logout redirection settings.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.70
  */
 function bb_admin_setting_callback_logout_redirection() {
 	$logout_redirection = bb_logout_redirection();
@@ -3464,7 +3464,7 @@ function bb_admin_setting_callback_logout_redirection() {
 /**
  * Admin settings for showing the custom logout redirection page url.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.70
  */
 function bp_admin_setting_callback_custom_logout_redirection() {
 	?>

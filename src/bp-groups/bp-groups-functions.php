@@ -5505,7 +5505,7 @@ function bb_update_groups_invitation_background_process() {
 /**
  * Fetch all top level parent group ids.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.70
  *
  * @param int $group_id Group ID.
  *
@@ -5542,7 +5542,7 @@ function bb_get_parent_group_ids( $group_id ) {
 /**
  * Function to add child group members to the parent groups.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.70
  *
  * @param int   $group_id         Current group ids.
  * @param array $parent_group_ids Array of int values for the parent groups.
@@ -5575,7 +5575,7 @@ function bb_groups_add_subgroup_members( $group_id, $parent_group_ids ) {
 /**
  * Function to add child group members to the parent group.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.70
  *
  * @param int $group_id  Group ID.
  * @param int $parent_id Parent group id.
