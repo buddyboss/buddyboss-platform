@@ -444,15 +444,40 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @since BuddyBoss 2.4.30
 		 *
+		 * @param string $mode      Reaction mode 'like', 'emotions'. Default is 'likes'.
+		 * @param bool   $is_active Fetch all active reactions. Default is true.
+		 *
 		 * @return array
 		 */
-		public function bb_get_reactions() {
-			$reactions = get_transient( 'bb_reactions', '' );
-			if ( ! empty( $reactions ) ) {
-				return maybe_unserialize( $reactions );
+		public function bb_get_reactions( $mode = 'like', $is_active = true ) {
+			$filtered_reactions = array();
+			$reactions          = get_transient( 'bb_reactions' );
+			$all_reactions      = ! empty( $reactions ) ? maybe_unserialize( $reactions ) : array();
+
+			if ( ! empty( $all_reactions ) ) {
+				$filtered_reactions = array_values(
+					array_filter(
+						$all_reactions,
+						function ( $reaction ) use ( $mode, $is_active ) {
+							if (
+								( $mode === 'likes' && $reaction['is_like'] ) ||
+								(
+									$mode === 'emotions' &&
+									$reaction['is_emotion'] &&
+									(
+										! $is_active ||
+										$reaction['is_emotion_active']
+									)
+								)
+							) {
+								return $reaction;
+							}
+						}
+					)
+				);
 			}
 
-			return array();
+			return $filtered_reactions;
 		}
 
 		/**
@@ -485,16 +510,6 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 						is_array( $reaction_data ) &&
 						isset( $reaction_data['name'] )
 					) {
-						$reaction_count = $this->bb_get_user_reactions_count(
-							array(
-								'reaction_id' => $reaction->ID,
-								'per_page'    => 1,
-								'paged'       => 1,
-								'order'       => 'ASC',
-								'count_total' => true
-							)
-						);
-
 						$reactions_data[] = array(
 							'id'                => $reaction->ID,
 							'name'              => $reaction_data['name'],
@@ -505,7 +520,9 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 							'text_color'        => $reaction_data['text_color'],
 							'notification_text' => $reaction_data['notification_text'],
 							'icon_path'         => $reaction_data['icon_path'],
-							'reaction_count'    => $reaction_count,
+							'is_like'           => (bool) get_post_meta( $reaction->ID, 'is_like', true ),
+							'is_emotion'        => (bool) get_post_meta( $reaction->ID, 'is_emotion', true ),
+							'is_emotion_active' => (bool) get_post_meta( $reaction->ID, 'is_emotion_active', true ),
 						);
 					}
 				}
@@ -1880,18 +1897,19 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			if ( empty( $reaction_id ) ) {
 				$reaction_id = $this->bb_add_reaction(
 					array(
-						'name'              => 'Like',
-						'icon'              => 'like',
-						'type'              => 'emojis',
-						'icon_color'        => '#000000',
-						'icon_text'         => 'Like',
-						'text_color'        => '#000000',
-						'notification_text' => 'Like',
+						'name'              => 'Likes',
+						'icon'              => 'likes',
+						'type'              => '',
+						'icon_color'        => '',
+						'icon_text'         => 'Likes',
+						'text_color'        => '',
+						'notification_text' => 'Likes',
 						'icon_path'         => '',
 					)
 				);
 
 				if ( ! empty( $reaction_id ) ) {
+					update_post_meta( $reaction_id, 'is_like', true );
 					bp_update_option( 'bb_reactions_default_like_reaction_added', (int) $reaction_id );
 				}
 			}
