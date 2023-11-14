@@ -467,6 +467,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				'post_type'              => self::$post_type,
 				'posts_per_page'         => - 1,
 				'orderby'                => 'menu_order',
+				'order'                  => 'ASC',
 				'post_status'            => 'publish',
 				'suppress_filters'       => false,
 				'update_post_meta_cache' => false,
