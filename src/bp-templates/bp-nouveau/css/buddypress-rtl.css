@@ -3557,6 +3557,16 @@ input.search-query-input {
   background-color: #fff;
   border-radius: 50%;
   padding: 2px;
+  position: relative;
+  z-index: 3;
+}
+
+.activity-list .activity-item .activity-state-reactions .reactions_item:nth-child(2) {
+  z-index: 2;
+}
+
+.activity-list .activity-item .activity-state-reactions .reactions_item:nth-child(3) {
+  z-index: 1;
 }
 
 .activity-list .activity-item .activity-state-reactions .reactions_item + .reactions_item {
