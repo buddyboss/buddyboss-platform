@@ -720,7 +720,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 						array(
 							'type'              => 'group_member_count',
 							'group'             => 'bb_update_group_member_count',
-							'data_id'           => $chunk,
+							'data_id'           => $member_id,
 							'secondary_data_id' => $member_id,
 							'callback'          => 'bb_update_group_member_count',
 							'args'              => array( $chunk ),
