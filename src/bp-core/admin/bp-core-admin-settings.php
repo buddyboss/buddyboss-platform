@@ -3366,7 +3366,8 @@ function bb_reactions_settings_callback_reaction_mode() {
 					'order'       => 'ASC',
 					'count_total' => true
 				)
-			)
+			),
+			'notice'     => esc_html__( 'A simple "Like" button will show for members to express their appreciation or acknowledgement.', 'buddyboss' ),
 		)
 	);
 
@@ -3386,6 +3387,21 @@ function bb_reactions_settings_callback_reaction_mode() {
 				/>
 				<?php echo $reaction_mode['label']; ?>
 			</label>
+			<?php
+		}
+
+		$notice_text = '';
+		if ( bb_get_reaction_mode() === 'likes' && ! empty( $reactions_modes[0]['notice'] ) ) {
+			$notice_text = $reactions_modes[0]['notice'];
+		} elseif ( bb_get_reaction_mode() === 'emotions' && !empty( $reactions_modes[1]['notice'] ) ) {
+			$notice_text = $reactions_modes[1]['notice'];
+		}
+
+		if ( ! empty( $notice_text ) ) {
+			?>
+			<div class="description bb-pro-reaction-description">
+				<?php echo $notice_text; ?>
+			</div>
 			<?php
 		}
 	}
