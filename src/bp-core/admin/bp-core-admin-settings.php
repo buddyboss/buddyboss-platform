@@ -3384,6 +3384,7 @@ function bb_reactions_settings_callback_reaction_mode() {
 					<?php echo checked( $reaction_mode['is_checked'] ); ?>
 					data-count="<?php echo ! empty( $reaction_mode['count'] ) ? $reaction_mode['count'] : 0; ?>"
 					data-current-val="<?php echo bb_get_reaction_mode(); ?>"
+					data-notice="<?php echo ! empty( $reaction_mode['notice'] ) ? $reaction_mode['notice'] : ''; ?>"
 				/>
 				<?php echo $reaction_mode['label']; ?>
 			</label>
@@ -3399,7 +3400,7 @@ function bb_reactions_settings_callback_reaction_mode() {
 
 		if ( ! empty( $notice_text ) ) {
 			?>
-			<div class="description bb-pro-reaction-description">
+			<div class="description bb-reaction-mode-description">
 				<?php echo $notice_text; ?>
 			</div>
 			<?php
