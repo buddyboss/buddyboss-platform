@@ -616,7 +616,7 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 							'folder_id'     => ! empty( $document['folder_id'] ) ? $document['folder_id'] : $folder_id,
 							'group_id'      => ! empty( $document['group_id'] ) ? $document['group_id'] : $group_id,
 							'activity_id'   => $bp_document->activity_id,
-							'message_id'    => ! empty( $bp_document->message_id ) ? $bp_document->message_id : $document['message_id'],
+							'message_id'    => ! empty( $bp_document->message_id ) ? $bp_document->message_id : ( ! empty( $document['message_id'] ) ? $document['message_id'] : 0 ),
 							'privacy'       => $bp_document->privacy,
 							'menu_order'    => ! empty( $document['menu_order'] ) ? $document['menu_order'] : false,
 							'date_modified' => bp_core_current_time(),
