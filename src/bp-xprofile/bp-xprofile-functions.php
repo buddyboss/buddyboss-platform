@@ -1451,7 +1451,14 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 	foreach ( (array) $default_visibility_levels as $d_field_id => $defaults ) {
 		// If the admin has forbidden custom visibility levels for this field, replace
 		// the user-provided setting with the default specified by the admin.
-		if ( isset( $defaults['allow_custom'] ) && isset( $defaults['default'] ) && 'disabled' == $defaults['allow_custom'] ) {
+		if (
+				isset( $defaults['allow_custom'] ) &&
+				isset( $defaults['default'] ) &&
+				(
+					empty( $user_visibility_levels[ $d_field_id ] ) ||
+					'disabled' === $defaults['allow_custom']
+				)
+		) {
 			$user_visibility_levels[ $d_field_id ] = $defaults['default'];
 		}
 	}
