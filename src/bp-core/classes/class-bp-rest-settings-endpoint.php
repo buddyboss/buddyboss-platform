@@ -583,6 +583,26 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			$results['bp_member_types_allowed_messaging_without_connection'] = get_option( 'bp_member_types_allowed_messaging_without_connection' );
 		}
 
+		// Cover image size warning.
+		if ( function_exists( 'bp_attachments_get_cover_image_dimensions' ) ) {
+			$cover_dimensions = bp_attachments_get_cover_image_dimensions();
+
+			$results['cover_image_warning'] = sprintf(
+				esc_html__( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss' ),
+				(int) $cover_dimensions['width'],
+				(int) $cover_dimensions['height']
+			);
+		}
+
+		// Avatar size warning.
+		if ( function_exists( 'bp_core_avatar_full_height' ) && function_exists( 'bp_core_avatar_full_width' ) ) {
+			$results['avatar_size_warning'] = sprintf(
+				esc_html__( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss' ),
+				bp_core_avatar_full_height(),
+				bp_core_avatar_full_width()
+			);
+		}
+
 		return $results;
 	}
 
