@@ -28,6 +28,28 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	}
 
 	public function settings_save() {
+
+		// Get old values for cpt and check if it disabled then keep it and later will save it.
+		$cpt_types          = apply_filters( 'bb_activity_global_setting_comment_cpt', array( 'sfwd-courses', 'sfwd-lessons', 'sfwd-topic', 'sfwd-quiz', 'sfwd-assignment', 'groups', 'lesson' ) );
+		$filtered_cpt_types = array_values(
+			array_filter(
+				array_map(
+					function ( $post_type ) {
+						if ( ! bb_activity_is_enabled_cpt_global_comment( $post_type ) ) {
+							return $post_type;
+						}
+					},
+					$cpt_types
+				)
+			)
+		);
+
+		$old_cpt_comments_values = array();
+		foreach ( $filtered_cpt_types as $cpt ) {
+			$option_name                             = bb_post_type_feed_comment_option_name( $cpt );
+			$old_cpt_comments_values[ $option_name ] = bp_get_option( $option_name, false );
+		}
+
 		parent::settings_save();
 
 		$bp                = buddypress();
@@ -37,17 +59,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		$is_blog_component_active = false;
 
 		// Get all active custom post type.
-		$post_types = get_post_types( array( 'public' => true ) );
+		$post_types = bb_feed_post_types();
 
 		foreach ( $post_types as $cpt ) {
-			// Exclude all the custom post type which is already in BuddyPress Activity support.
-			if ( in_array(
-				$cpt,
-				array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' )
-			) ) {
-				continue;
-			}
-
 			$enable_blog_feeds = isset( $_POST[ "bp-feed-custom-post-type-$cpt" ] );
 
 			if ( $enable_blog_feeds ) {
@@ -72,6 +86,13 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		// Mapping the component pages in page settings except registration pages.
 		bp_core_add_page_mappings( $bp->active_components, 'keep', false );
 		bp_update_option( 'bp-active-components', $bp->active_components );
+
+		// Do not override the setting which previously saved.
+		if ( ! empty( $old_cpt_comments_values ) ) {
+			foreach ( $old_cpt_comments_values as $cpt_comment_key => $cpt_comment_val ) {
+				bp_update_option( $cpt_comment_key, $cpt_comment_val );
+			}
+		}
 
 	}
 
@@ -98,6 +119,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 		// Allow scopes/tabs.
 		$this->add_field( '_bp_enable_activity_tabs', __( 'Activity tabs', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_tabs', 'intval' );
+
+		// Allow scopes/tabs.
+		$this->add_field( '_bb_enable_activity_pinned_posts', __( 'Pinned Post', 'buddyboss' ), 'bb_admin_setting_callback_enable_activity_pinned_posts', 'intval' );
 
 		// Allow follow.
 		$this->add_field( '_bp_enable_activity_follow', __( 'Follow', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_follow', 'intval' );

@@ -853,3 +853,18 @@ function bb_search_get_search_stopwords() {
 
 	return $stoped_keywords;
 }
+
+/**
+ * Function to remove tags for activity network search.
+ *
+ * @since BuddyBoss 2.4.60
+ *
+ * @param array $tags Html tags.
+ *
+ * @return mixed
+ */
+function bb_network_search_allowed_tags( $tags ) {
+	unset( $tags['blockquote'], $tags['img'], $tags['code'], $tags['ul'], $tags['ol'], $tags['li'], $tags['pre'], $tags['div'], $tags['span'] );
+
+	return $tags;
+}

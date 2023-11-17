@@ -169,6 +169,14 @@ add_action( 'bp_activity_includes', 'bb_load_activity_notifications' );
 add_filter( 'bp_get_activity_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
 add_filter( 'bp_get_activity_content_body', 'bb_mention_remove_deleted_users_link', 20, 1 );
 add_filter( 'bp_activity_comment_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
+add_filter( 'comment_max_links_url', 'bb_moderation_remove_mention_count', 10, 3 );
+
+add_action( 'edit_post', 'bb_cpt_post_title_save', 999, 2 );
+
+add_action( 'bp_after_directory_activity_list', 'bb_activity_pinpost_confirmation_modal_template' );
+add_action( 'bp_after_member_activity_content', 'bb_activity_pinpost_confirmation_modal_template' );
+add_action( 'bp_after_group_activity_content', 'bb_activity_pinpost_confirmation_modal_template' );
+add_action( 'bp_after_single_activity_content', 'bb_activity_pinpost_confirmation_modal_template' );
 
 /** Functions *****************************************************************/
 
@@ -333,6 +341,8 @@ function bp_activity_save_link_data( $activity ) {
 
 	if ( ! empty( $link_title ) ) {
 		$preview_data['title'] = $link_title;
+		// Add post title in activity meta. will help to search link preview's title in feed.
+		bp_activity_update_meta( $activity->id, 'post_title', $link_title );
 	}
 
 	if ( ! empty( $link_description ) ) {
@@ -1049,31 +1059,33 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 			$user_groups = $logged_in_user_groups['groups'];
 		}
 
-		$group_activity = array(
-			'relation' => 'AND',
-			array(
-				'column' => 'component',
-				'value'  => buddypress()->groups->id,
-			),
-			array(
-				'relation' => 'OR',
-				array(
-					'column'  => 'item_id',
-					'compare' => 'IN',
-					'value'   => (array) $public_groups,
-				),
-				array(
-					'column'  => 'item_id',
-					'compare' => 'IN',
-					'value'   => (array) $user_groups,
-				),
-			),
-		);
-
 		$show_hidden = array(
-			$show_hidden,
-			$group_activity,
-			'relation' => 'AND',
+			'relation' => 'OR',
+			array(
+				'column'  => 'component',
+				'value'   => buddypress()->groups->id,
+				'compare' => '!=',
+			),
+			array(
+				'relation' => 'AND',
+				array(
+					'column' => 'component',
+					'value'  => buddypress()->groups->id,
+				),
+				array(
+					'relation' => 'OR',
+					array(
+						'column'  => 'item_id',
+						'compare' => 'IN',
+						'value'   => (array) $public_groups,
+					),
+					array(
+						'column'  => 'item_id',
+						'compare' => 'IN',
+						'value'   => (array) $user_groups,
+					),
+				),
+			),
 		);
 	}
 
@@ -2703,15 +2715,17 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 			$comment_id        = bp_activity_get_meta( $activity->id, 'bp_blogs_' . $get_post_type . '_comment_id', true );
 			if ( $comment_id ) {
 				$comment = get_comment( $comment_id );
-				if ( apply_filters( 'bp_blogs_activity_comment_content_with_read_more', true ) ) {
-					$content = bp_create_excerpt( make_clickable( html_entity_decode( $comment->comment_content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) );
-					if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
-						$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
-						$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
-						$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $comment_id ), $append_text );
+				if ( ! empty( $comment->comment_content ) ) {
+					if ( apply_filters( 'bp_blogs_activity_comment_content_with_read_more', true ) ) {
+						$content = bp_create_excerpt( make_clickable( html_entity_decode( $comment->comment_content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) );
+						if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+							$content = str_replace( ' [&hellip;]', '&hellip;', $content );
+							$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
+							$content = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $comment_id ), $append_text );
+						}
+					} else {
+						$content = make_clickable( html_entity_decode( $comment->comment_content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
 					}
-				} else {
-					$content = make_clickable( html_entity_decode( $comment->comment_content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
 				}
 			}
 		}
@@ -3542,10 +3556,75 @@ function bb_group_activity_at_name_send_emails( $content, $user_id, $group_id, $
  * @since BuddyBoss 2.4.40
  *
  * @param int                  $comment_id ID of the newly posted activity comment.
- * @param array                $args       Array of parsed comment arguments.
+ * @param array                $r          Array of parsed comment arguments.
  * @param BP_Activity_Activity $activity   Activity item being commented on.
  */
 function bb_activity_comment_at_name_send_emails( $comment_id, $r, $activity ) {
 	$activity = new BP_Activity_Activity( $comment_id );
 	bp_activity_at_name_send_emails( $activity );
+}
+
+/**
+ * Function will remove the mention link count.
+ *
+ * @param int    $num_links The number of links found.
+ * @param string $url       Comment author's URL. Included in allowed links total.
+ * @param string $comment   Content of the comment.
+ *
+ * @since BuddyBoss 2.4.50
+ *
+ * @return int The max link count for comment moderation.
+ */
+function bb_moderation_remove_mention_count( $num_links, $url, $comment ) {
+
+	// Match all links for mentions using preg_match_all.
+	$pattern = "/<a\s+class='bp-suggestions-mention'\s+href='(.*?)'/";
+	if ( preg_match_all( $pattern, $comment, $matches ) ) {
+		$mention_links = $matches[1];
+	}
+
+	// No mention links.
+	if ( empty( $mention_links ) ) {
+		return $num_links;
+	}
+
+	return ( $num_links - count( $mention_links ) );
+}
+
+/**
+ * Function to add post title in activity meta for the post, and other CPTS.
+ * It will help to search CPT in the feed.
+ *
+ * @since BuddyBoss 2.4.60
+ *
+ * @param int    $post_id post id of the topic or reply.
+ * @param object $post Post data.
+ */
+function bb_cpt_post_title_save( $post_id, $post ) {
+	if ( empty( $post_id ) ) {
+		return;
+	}
+
+	$activity_id = bp_activity_get_activity_id(
+		array(
+			'component'         => buddypress()->blogs->id,
+			'type'              => 'new_blog_' . $post->post_type,
+			'secondary_item_id' => $post_id,
+		)
+	);
+
+	if ( empty( $activity_id ) ) {
+		return;
+	}
+
+	bp_activity_update_meta( $activity_id, 'post_title', $post->post_title );
+}
+
+/**
+ * Add Pin Post confirmation to the activity loop.
+ *
+ * @since 2.4.60
+ */
+function bb_activity_pinpost_confirmation_modal_template() {
+	bp_get_template_part( 'activity/confirmation-modal' );
 }

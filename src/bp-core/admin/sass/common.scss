@@ -40,6 +40,7 @@ TABLE OF CONTENTS:
 15.0 Admin bar Notification
 16.0 Moderation
 17.0 Domain restriction
+18.0 Redirection Settings
 ------------------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------------------
@@ -1073,6 +1074,11 @@ body.post-type-reply #edit-slug-box {
 
 #bbp-dashboard-right-now td.b a {
 	font-size: 18px;
+}
+
+#bbp-dashboard-right-now .t .b {
+	font-size: 18px;
+	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
 }
 
 #bbp-dashboard-right-now td.b a:hover {
@@ -3208,13 +3214,14 @@ table tbody td .bb-description {
 .bb-pro-inactive {
 
 	> th:before {
-		content: "\e97c";
+		content: "\eecc";
 		font-family: "bb-icons";/* stylelint-disable-line */
 		margin-right: 5px;
 		vertical-align: top;
 		display: inline-block;
 		line-height: 1;
-		font-size: 14px;
+		font-weight: 300;
+		font-size: 15px;
 	}
 
 	> td {
@@ -3998,4 +4005,56 @@ table.moderations .column-member {
 
 	}
 
+}
+
+
+/*------------------------------------------------------------------------------
+ * 18.0 Redirection Settings
+ *----------------------------------------------------------------------------*/
+
+.custom-select2 {
+	font-size: 14px;
+	line-height: 2;
+	color: #2c3338;
+	border: 1px solid #8c8f94;
+	box-shadow: none;
+	border-radius: 3px;
+	padding: 0 24px 0 8px;
+	min-height: 30px;
+	max-width: 25rem;
+	-webkit-appearance: none;
+	background: #fff url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E) no-repeat right 5px top 55%;
+	background-size: 16px 16px;
+	cursor: pointer;
+	vertical-align: middle;
+
+	.select2-selection__arrow {
+		display: none;
+	}
+
+	.select2-container--open & {
+		border-radius: 3px 3px 0 0;
+	}
+}
+
+.custom-dropdown-select2 {
+
+	.select2-search__field {
+		min-height: 25px;
+		line-height: 1;
+	}
+
+	.select2-results__options {
+		max-height: 240px;
+		overflow: auto;
+
+		li {
+			padding: 6px 10px;
+
+			&.select2-results__option--highlighted {
+				background-color: rgba(170, 170, 170, 0.5);
+				color: inherit;
+			}
+		}
+	}
 }

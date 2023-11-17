@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.2.2
+Tested up to: 6.3.2
 Requires PHP: 5.6.20
-Stable tag: 2.4.41
+Stable tag: 2.4.70
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,76 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.4.70 =
+* New Feature! - Login Logout Redirect, redirects users on login and logout as a global setting and by profile type
+* Bug: Activity - The post button was not enabled when using only emojis without any accompanying text entered directly from the keyboard
+* Bug: Activity - When copying and pasting a post that included a tagged member, it would generate a preview thumbnail
+* Bug: Core - Code refactoring of background processes updated to use options instead of transients
+* Bug: Core - The social network on the profile header did not update when removing a social network in the settings
+* Bug: Core - Videos text showing lower case in Global Search result
+* Bug: Forums - Enabling the Forums component results in a 500 error on the site when using Avada.
+* Bug: Forums - Lead topic tags automatically appear in inner reply form
+* Bug: Forums - When trying to import a forum with categories it appeared as empty on the front end
+* Bug: Groups - Moving groups into subgroups did not automatically add the members to the parent group hierarchy
+* Bug: Members - Connection count still showing in emails even with Member Connections component disabled
+* Bug: Messages - Console errors occurred when uploading videos and documents in Live Messaging
+* Bug: Notifications - When the notification component is disabled, the Group Subscription option was not visible
+* Bug: Performance - Posting was taking too long when user had a lot of followers
+* Bug: Profiles - The conditional profile field was not displaying correctly for email invites
+
+= 2.4.63 =
+* Hotfix: Activity - Fixed vulnerability where any user could pin posts
+
+= 2.4.62 =
+* Bug: Forums - Adding content to Wordpress settings comment moderation, this was causing a critical error when adding a new discussion or replying to discussions
+
+= 2.4.61 =
+* Bug: Groups - When forum discussions was inactive this caused a conflict with loading group feeds when enabling pinned posts
+
+= 2.4.60 =
+* New Feature! - Pin to Activity feed also know as Pin to Posts
+* Enhancement: Groups - Updated Groups Tab Creator Pro plugin support
+* Bug: Core - Background process update for migrating friend counts, enabling fewer queries and providing faster results.
+* Bug: Core - Page contents that were added on the Documents page were not showing
+* Bug: Core - Search Results was not returning posts from custom post type
+* Bug: Core - The scheduled task handling orphaned videos mistakenly deleted video content uploaded through the API in the messaging feature.
+* Bug: Core - Wordfence was blocking link embeds when the post had iframe content in the link description
+* Bug: Email - Emails were being incorrectly sanitised during signup
+* Bug: Email - Installing email templates while activating the component.
+* Bug: Forums - Video & Document content was not showing when you tried to edit content within a group or standalone forum discussion
+* Bug: Groups - Group Albums, album count did not update after a new album was created while uploading media
+* Bug: Groups - When the "Restrict Invitations" feature is enabled, leaving a parent group results in unintentionally leaving the associated subgroups.
+* Bug: LearnDash - When the author was mentioned in the comments, the mention notification directed users to the commenters profile instead of the course
+* Bug: Platform - "Add new" button in profile types and group types was showing incorrect text
+* Bug: Platform - Implemented support for profile search translation compatibility using WPML.
+* Bug: Platform - The Profile Images and Group images view tutorial buttons redirected to incorrect tutorials
+* Bug: Profiles - User profile photos/videos load more pagination was not working correctly when all items from the first page were deleted
+* Bug: Styling - Link previews for certain links were not showing the previews correctly
+
+= 2.4.50 =
+* Enhancement: Core - Background process logic for reactions updated
+* Enhancement: Media - Provide mechanism to search media by description in the directory and global search
+* Enhancement: Profiles - Added TikTok to Social Network Links
+* Bug: Activity - Issues were found with tagging more than 1 member in activity post's comments
+* Bug: Activity - When activity tabs and the relevant activity setting was turned on, users were unable to see their own posts on the activity feed.
+* Bug: Core - Adding a photo was not working from the user profile, Select Photo tab in Albums
+* Bug: Core - Changing passwords from the account page was not working
+* Bug: Core - Remove connection confirmation pop up was showing twice one after another
+* Bug: Forums - Changing a Forums privacy setting from public to private, the forum would automatically revert back to public
+* Bug: Forums - If a Forums page was not set then Forums content was populating the Blog page
+* Bug: Forums - When moving a discussion from group forum back to standalone forum, the discussion remained in the group
+* Bug: Forums - Youtube links were not shown correctly in forum topic replies with / without additional text
+* Bug: Messages - Emoji on messaging were not working properly
+* Bug: Messages - When sending a group message, the recipient text box was clickable and showed the text box
+* Bug: Multisite - BuddyBoss default users import is causing a Fatal error in MultiSite
+* Bug: Notifications - Notification were being sent when user created a reply even after the user had then left a hidden or private group
+* Bug: Platform - New notification message added to Media settings Direct access when direct access to media is blocked by Offload Media
+* Bug: Profiles - shortcode: [group type=”competition”], from BuddyPress User Profile Tab Creator Pro the cover image on the profile was not displaying
+* Bug: Report - Typo error in Report/Block member menu in the message sidebar for single private message
+* Bug: Styling - Search Form reset button styling issue when inviting users during group creation process on the frontend
+* Bug: Translations - Translation issue in Loco Translate with translations switching back to English
+* Bug: Widgets - Some strings were not able to translate dashboard widget
 
 = 2.4.41 =
 * Bug: Activity - When commenting or replying to a comment on a post some users were seeing “Server error or connection is lost. Please try again later." message

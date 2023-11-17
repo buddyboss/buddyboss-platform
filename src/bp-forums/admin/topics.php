@@ -330,6 +330,43 @@ if ( ! class_exists( 'BBP_Topics_Admin' ) ) :
 			// Formally update the topic
 			bbp_update_topic( $topic_id, $forum_id, $anonymous_data, $author_id, $is_edit );
 
+			$old_forum_id = ! empty( $_POST['old_parent_id'] ) ? $_POST['old_parent_id'] : 0;
+			if (
+				! empty( $old_forum_id ) &&
+				$forum_id !== $old_forum_id
+			) {
+
+				// Get forum stickies.
+				$old_stickies = bbp_get_stickies( $old_forum_id );
+
+				// Only proceed if stickies are found.
+				if ( ! empty( $old_stickies ) ) {
+
+					// Define local variables.
+					$updated_stickies = array();
+
+					// Loop through stickies of forum and add misses to the updated array.
+					foreach ( (array) $old_stickies as $sticky_topic_id ) {
+						if ( $topic_id !== $sticky_topic_id ) {
+							$updated_stickies[] = $sticky_topic_id;
+						}
+					}
+
+					// If stickies are different, update or delete them.
+					if ( $updated_stickies !== $old_stickies ) {
+
+						// No more stickies so delete the meta.
+						if ( empty( $updated_stickies ) ) {
+							delete_post_meta( $old_forum_id, '_bbp_sticky_topics' );
+
+							// Still stickies so update the meta.
+						} else {
+							update_post_meta( $old_forum_id, '_bbp_sticky_topics', $updated_stickies );
+						}
+					}
+				}
+			}
+
 			// Stickies
 			if ( ! empty( $_POST['bbp_stick_topic'] ) && in_array( $_POST['bbp_stick_topic'], array( 'stick', 'super', 'unstick' ) ) ) {
 

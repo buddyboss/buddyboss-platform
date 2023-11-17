@@ -3099,6 +3099,7 @@ function bp_get_member_type_post_type_labels() {
 	return apply_filters(
 		'bp_get_member_type_post_type_labels',
 		array(
+			'add_new'            => __( 'Add New', 'buddyboss' ),
 			'add_new_item'       => __( 'New Profile Type', 'buddyboss' ),
 			'all_items'          => __( 'Profile Types', 'buddyboss' ),
 			'edit_item'          => __( 'Edit Profile Type', 'buddyboss' ),
@@ -5487,13 +5488,13 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
 	// Rest the global variable.
 	$is_member_slug_background = false;
 
-	// Flush WP cache.
-	wp_cache_flush();
-
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		BuddyBoss\Performance\Cache::instance()->purge_all();
 	}
+
+	// Flush WP cache.
+	wp_cache_flush();
 }
 
 /**

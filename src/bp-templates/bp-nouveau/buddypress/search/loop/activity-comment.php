@@ -21,7 +21,7 @@
 		<div class="item activity-content">
 			<div class="activity-header">
 				<a href="<?php bp_activity_user_link(); ?>"><?php echo wp_kses_post( bp_core_get_user_displayname( bp_get_activity_user_id() ) ); ?></a>
-				<?php esc_html_e( 'replied to a post', 'buddyboss' ); ?>
+				<a href="<?php echo esc_url( bp_activity_get_permalink( bp_get_activity_id() ) ); ?>"><?php esc_html_e( 'replied to a post', 'buddyboss' ); ?></a>
 			</div>
 			<?php if ( bp_nouveau_activity_has_content() ) : ?>
 				<div class="activity-inner">
@@ -38,7 +38,13 @@
 			<?php endif; ?>
 			<div class="item-meta">
 				<a href="<?php echo esc_url( bp_activity_get_permalink( bp_get_activity_id() ) ); ?>">
-					<time><?php echo wp_kses_post( human_time_diff( bp_nouveau_get_activity_timestamp() ) ) . '&nbsp;' . esc_html__( 'ago', 'buddyboss' ); ?></time>
+					<?php
+					printf(
+						'<time class="time-since" data-livestamp="%1$s">%2$s</time>',
+						bp_core_get_iso8601_date( bp_get_activity_date_recorded() ),
+						bp_core_time_since( bp_get_activity_date_recorded() )
+					);
+					?>
 				</a>
 			</div>
 		</div>
