@@ -220,6 +220,21 @@ function bp_helper_plugins_loaded_callback() {
 			}
 		);
 	}
+
+	/**
+	 * Include plugin when plugin is activated
+	 *
+	 * Support Memberpress
+	 */
+	if ( in_array( 'memberpress/memberpress.php', $bp_plugins ) ) {
+		add_filter( 'mepr_design_style_handle_prefixes', function ( $allowed_handle_prefixes ) {
+			$allowed_handle_prefixes[] = 'admin-bar';
+			$allowed_handle_prefixes[] = 'bp-';
+			$allowed_handle_prefixes[] = 'bb-';
+
+			return $allowed_handle_prefixes;
+		} );
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
