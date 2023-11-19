@@ -9,7 +9,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-add_filter( 'wp_trim_words', 'bp_search_trim_block_search_result', 999, 4 );
+add_filter( 'wp_trim_words', 'bp_search_process_block_theme_search_result', 999, 4 );
 /**
  * Override Search page content for Block themes.
  *
@@ -22,10 +22,11 @@ add_filter( 'wp_trim_words', 'bp_search_trim_block_search_result', 999, 4 );
  * 
  * @return string
  */
-function bp_search_trim_block_search_result ( $text, $num_words, $more, $original_text ) {
-	if ( bp_search_is_search() ) {
+function bp_search_process_block_theme_search_result ( $text, $num_words, $more, $original_text ) {
+	if ( bp_search_is_search() && function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
 		$text = $original_text;
 	}
+
 	return $text;
 }
 
