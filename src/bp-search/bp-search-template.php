@@ -8,44 +8,21 @@
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
-{
-	// function custom_search_template( $template ) {
-	// 	if ( bp_search_is_search()  ) {
-	// 		$new_template = bp_get_template_part( 'search/results-page' );
-	// 		// var_dump(		$new_template);
-	// 		// die();
-	//         return $new_template;
-	//     }
-	//     return $template;
-	// }
-	// add_filter( 'render_block_data', 'bp_search_search_page_content', 10, 1 );
-	// add_filter( 'template_include', 'custom_search_template', 9 );
-	// add_filter( 'excerpt_more', 'bp_search_search_page_content', 9 );
-	// add_filter( 'get_the_excerpt', 'bp_search_search_page_content_for_block_theme', 999, 2 );
 
-	// function bp_search_search_page_content_for_block_theme ( $post_excerpt, $post ) {
-	// 	/**
-	// 	 * Reportedly, on some installations, the remove_filter call below, doesn't work and this filter is called over and over again.
-	// 	 * Possibly due to some other plugin/theme.
-	// 	 *
-	// 	 * Lets add another precautionary measure, a global flag.
-	// 	 *
-	// 	 * @since BuddyPress 1.1.3
-	// 	 */
-	// 	global $bpgs_main_content_filter_has_run;
-
-	// 	if ( bp_search_is_search() ) {
-	// 		remove_filter( 'get_the_excerpt', 'bp_search_search_page_content_for_block_theme', 999 );
-	// 		$bpgs_main_content_filter_has_run = '';
-	// 		$post_excerpt = bp_search_search_page_content( $post_excerpt );
-	// 	}
-
-	// 	return $post_excerpt;
-	// }
-}
-
-add_filter( 'wp_trim_words', 'trim_block_search_result', 999, 4 );
-function trim_block_search_result ( $text, $num_words, $more, $original_text ) {
+add_filter( 'wp_trim_words', 'bp_search_trim_block_search_result', 999, 4 );
+/**
+ * Override Search page content for Block themes.
+ *
+ * @param string $text          The trimmed text.
+ * @param int    $num_words     The number of words to trim the text to. Default 55.
+ * @param string $more          An optional string to append to the end of the trimmed text, e.g. &hellip;.
+ * @param string $original_text The text before it was trimmed.
+ * 
+ * @since [BBVERSION]
+ * 
+ * @return string
+ */
+function bp_search_trim_block_search_result ( $text, $num_words, $more, $original_text ) {
 	if ( bp_search_is_search() ) {
 		$text = $original_text;
 	}
