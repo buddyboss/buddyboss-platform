@@ -1452,12 +1452,12 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 		// If the admin has forbidden custom visibility levels for this field, replace
 		// the user-provided setting with the default specified by the admin.
 		if (
-				isset( $defaults['allow_custom'] ) &&
-				isset( $defaults['default'] ) &&
-				(
-					empty( $user_visibility_levels[ $d_field_id ] ) ||
-					'disabled' === $defaults['allow_custom']
-				)
+			isset( $defaults['allow_custom'] ) &&
+			isset( $defaults['default'] ) &&
+			(
+				empty( $user_visibility_levels[ $d_field_id ] ) ||
+				'disabled' === $defaults['allow_custom']
+			)
 		) {
 			$user_visibility_levels[ $d_field_id ] = $defaults['default'];
 		}
@@ -1729,7 +1729,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 		$social_settings_field   = xprofile_get_field( $social_networks_id, $user_id );
 		$social_settings_options = $social_settings_field->get_children();
 
-		if ( 
+		if (
 			isset( $original_option_values ) &&
 			! empty( $original_option_values ) &&
 			is_array( $original_option_values ) &&
