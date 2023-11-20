@@ -300,13 +300,16 @@ function messages_new_message( $args = '' ) {
 		}
 
 		// Format this to match existing recipients.
+		if ( false === $message->recipients ) {
+			$message->recipients = array();
+		}
+
 		foreach ( (array) $recipient_ids as $i => $recipient_id ) {
 			$message->recipients[ $i ]          = new stdClass();
 			$message->recipients[ $i ]->user_id = $recipient_id;
 		}
 
 		$previous_threads = BP_Messages_Message::get_existing_threads( $recipient_ids, $r['sender_id'], true );
-
 		$previous_thread  = null;
 		if ( $previous_threads ) {
 
