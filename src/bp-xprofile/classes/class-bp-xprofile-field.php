@@ -1582,7 +1582,7 @@ class BP_XProfile_Field {
 						<th><?php _e( 'Instructions', 'buddyboss' ); ?></th>
 						<td>
 							<textarea name="description" id="description" rows="6"
-									  cols="60"><?php echo esc_textarea( $this->description ); ?></textarea>
+									  cols="60"><?php echo ! empty( $this->description ) ? esc_textarea( $this->description ) : ''; ?></textarea>
 							<p class="description"><?php _e( 'Explain to members how best to fill out this field.', 'buddyboss' ); ?></p>
 						</td>
 					</tr>
