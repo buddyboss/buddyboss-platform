@@ -2906,6 +2906,7 @@ function bb_core_update_repair_member_slug() {
 		)
 	);
 
+	// If total background job is more than 6 then don't create new background job.
 	if ( ! empty( $total_bg->total ) && $total_bg->total > 6 ) {
 		return;
 	}
@@ -3476,7 +3477,9 @@ function bb_background_removed_orphaned_metadata() {
 }
 
 /**
+ * Delete the duplicate metas for the user profiles in the background.
  *
+ * @since BuddyBoss [BBVERSION]
  *
  * @return void
  */
@@ -3503,8 +3506,6 @@ function bb_core_removed_orphaned_member_slug() {
 	) {
 		return;
 	}
-
-	error_log( print_r( $users, 1 ) );
 
 	bb_set_bulk_user_profile_slug( $users );
 
