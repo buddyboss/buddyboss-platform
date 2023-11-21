@@ -3423,6 +3423,8 @@ function bb_update_to_2_4_60() {
 /**
  * Migrate a background job for remove the duplicate metas.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @return void
  */
 function bb_update_to_2_4_71() {
