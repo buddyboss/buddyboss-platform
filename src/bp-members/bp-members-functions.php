@@ -5699,9 +5699,6 @@ function bb_remove_orphaned_profile_slug( $user_id ) {
 
 	// Execute the initial deletion
 	$wpdb->query( $delete_query );
-	error_log( print_r( '----', 1 ) );
-	error_log( print_r( $user_id, 1 ) );
-	error_log( print_r( $wpdb->rows_affected, 1 ) );
 
 	// Recursive deletion until no more rows are affected
 	while ( $wpdb->rows_affected > 0 ) {
