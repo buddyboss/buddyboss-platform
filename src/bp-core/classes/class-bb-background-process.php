@@ -1136,5 +1136,30 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 			return false === $this->is_queue_empty();
 		}
 
+		/**
+		 * Get total job count by type and group.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $type  Job type.
+		 * @param string $group Job group.
+		 *
+		 * @return int
+		 */
+		public function get_job_count_by_type_group( $type = '', $group = '' ) {
+			global $wpdb;
+
+			$table = self::$table_name;
+
+			$result = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT count(DISTINCT id) as total FROM {$table} WHERE `type` = %s AND `group` = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					$type,
+					$group
+				)
+			);
+
+			return ! empty( $result->total ) ? $result->total : 0;
+		}
 	}
 }
