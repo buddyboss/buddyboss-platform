@@ -5696,7 +5696,7 @@ function bb_remove_orphaned_profile_slug( $user_id ) {
 	$condition_join = '(' . implode( ' OR ', $condition ) . ') AND ' . $wpdb->prepare( 'user_id = %d', $user_id );
 
 	// Initial deletion query
-	$delete_query = "DELETE FROM {$table_name} WHERE {$condition_join} LIMIT 1000";
+	$delete_query = "DELETE FROM {$table_name} WHERE {$condition_join} LIMIT 500";
 
 	// Execute the initial deletion
 	$wpdb->query( $delete_query );
