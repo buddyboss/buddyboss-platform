@@ -475,12 +475,21 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 		 * @return bool
 		 */
 		public function is_processing() {
-			if ( get_site_option( $this->identifier . '_process_lock' ) ) {
-				// Process already running.
-				return true;
+			$running = false;
+			$lock_timestamp = get_site_option( $this->identifier . '_process_lock' );
+			if ( ! empty( $lock_timestamp ) ) {
+
+				$lock_duration = ( property_exists( $this, 'queue_lock_time' ) ) ? $this->queue_lock_time : 60; // 1 minute
+				$lock_duration = apply_filters( $this->identifier . '_queue_lock_time', $lock_duration );
+
+				if ( microtime( true ) - $lock_timestamp > $lock_duration ) {
+					$this->unlock_process();
+				} else {
+					$running = true;
+				}
 			}
 
-			return false;
+			return $running;
 		}
 
 		/**
@@ -945,6 +954,8 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 			$value_item           = 'data_id';
 			$value_secondary_item = 'secondary_data_id';
 			$value_column         = 'data';
+			$priority             = 'priority';
+			$db_blog_id           = 'blog_id';
 
 			$sql = '
 			SELECT *
@@ -968,7 +979,7 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 
 			if ( ! empty( $items ) ) {
 				$batches = array_map(
-					function ( $item ) use ( $id, $group, $type, $value_item, $value_secondary_item, $value_column ) {
+					function ( $item ) use ( $id, $group, $type, $value_item, $value_secondary_item, $value_column, $priority, $db_blog_id ) {
 						$batch               = new stdClass();
 						$batch->key          = $item->{$id};
 						$batch->group        = $item->{$group};
@@ -976,6 +987,8 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 						$batch->item_id      = $item->{$value_item};
 						$batch->secondary_id = $item->{$value_secondary_item};
 						$batch->data         = maybe_unserialize( $item->{$value_column} );
+						$batch->priority     = $item->{$priority};
+						$batch->blog_id      = $item->{$db_blog_id};
 
 						return $batch;
 					},
