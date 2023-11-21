@@ -5683,16 +5683,17 @@ function bb_remove_orphaned_profile_slug( $user_id ) {
 	$condition      = array();
 	$condition_join = '';
 
-	if ( ! empty( $p_slug ) ) {
-
-		update_user_meta( $user_id, 'bb_profile_slug_' . $p_slug , $user_id );
-
-		$condition[] = $wpdb->prepare( "( meta_key LIKE 'bb_profile_slug_%' AND meta_key != %s )", "bb_profile_slug_{$p_slug}" );
-		$condition[] = "( meta_key LIKE 'bb_profile_long_slug_%' AND LENGTH(meta_key) < 61 )";
-		$condition[] = $wpdb->prepare( "( meta_key LIKE 'bb_profile_slug' AND meta_value != %s )", $p_slug );
-
-		$condition_join = '(' . implode( ' OR ', $condition ) . ') AND ' . $wpdb->prepare( 'user_id = %d', $user_id );
+	if ( empty( $p_slug ) || empty( $user_id ) ) {
+		return;
 	}
+
+	update_user_meta( $user_id, 'bb_profile_slug_' . $p_slug , $user_id );
+
+	$condition[] = $wpdb->prepare( "( meta_key LIKE 'bb_profile_slug_%' AND meta_key != %s )", "bb_profile_slug_{$p_slug}" );
+	$condition[] = "( meta_key LIKE 'bb_profile_long_slug_%' AND LENGTH(meta_key) < 61 )";
+	$condition[] = $wpdb->prepare( "( meta_key LIKE 'bb_profile_slug' AND meta_value != %s )", $p_slug );
+
+	$condition_join = '(' . implode( ' OR ', $condition ) . ') AND ' . $wpdb->prepare( 'user_id = %d', $user_id );
 
 	// Initial deletion query
 	$delete_query = "DELETE FROM {$table_name} WHERE {$condition_join} LIMIT 1000";
