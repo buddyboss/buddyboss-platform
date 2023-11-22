@@ -1,5 +1,8 @@
 /* jshint node:true */
 /* global module */
+
+const fs = require('fs');
+const potFile = 'src/languages/buddyboss.pot';
 module.exports = function (grunt) {
 	var sass       = require( 'node-sass' ),
 		SOURCE_DIR = 'src/',
@@ -38,6 +41,15 @@ module.exports = function (grunt) {
 			'!bp-core/css/medium-editor.css',
 			'!**/endpoints/**/*.css'
 		];
+
+	const languages = [
+		{ code: 'hi_IN', locale: 'hi' },
+		{ code: 'bg_BG', locale: 'bg' },
+		{ code: 'bn_BD', locale: 'bn' },
+		{ code: 'hsb', locale: 'hsb' },
+		{ code: 'zh_CN', locale: 'zh' },
+		// Add more languages as needed
+	];
 
 	require( 'matchdep' ).filterDev( ['grunt-*', '!grunt-legacy-util'] ).forEach( grunt.loadNpmTasks );
 	grunt.util = require( 'grunt-legacy-util' );
@@ -519,7 +531,32 @@ module.exports = function (grunt) {
 						]
 					}
 				}
-			}
+			},
+			po2mo: {
+				options: {
+					domainPath: 'src/languages',
+					languages: languages,
+				},
+				files: {
+					src: [ 'src/languages/*.po'],
+					expand: true,
+				},
+			},
+			shell: {
+				extract: {
+					command: 'xgettext -o ' + potFile + ' --keyword=_ --keyword=__ --keyword=n__ --keyword=pgettext:1c,2 --keyword=npgettext:1c,2,3 --from-code=UTF-8 bp-loader.php',
+				},
+				generatePoMo: {
+					command: function (lang) {
+						return 'msginit --input=' + potFile + ' --locale=' + lang + ' --output=src/languages/buddyboss-'+lang+'.po && msgfmt -o src/languages/buddyboss-'+lang+'.mo src/languages/buddyboss-'+lang+'.po';
+					}
+				},
+				updatePo: {
+					command: function (lang) {
+						return 'msgmerge --update --backup=off --force-po src/languages/buddyboss-' + lang + '.po ' + potFile;
+					}
+				},
+			},
 		}
 	);
 
@@ -562,6 +599,41 @@ module.exports = function (grunt) {
 			);
 		}
 	);
+
+
+	grunt.registerTask('addUpdatePoAndMo', function () {
+		languages.forEach(async function (lang) {
+			const existingFile = 'src/languages/buddyboss-' + lang.code + '.po';
+			if (fs.existsSync(existingFile)) {
+				// If translation file already exists, update it based on the .pot file
+				grunt.task.run(['shell:updatePo:' + lang.code]);
+				grunt.log.writeln(`Translation file for ${lang.code} updated successfully.`);
+			} else {
+				// If translation file doesn't exist, generate a new one
+				grunt.task.run(['shell:generatePoMo:' + lang.code]);
+				grunt.log.writeln(`Translation file for ${lang.code} created successfully.`);
+			}
+
+		});
+	});
+
+	// Define a function to generate tasks for each language
+	function generateTranslationTask(language) {
+		const taskName = `syncTranslation_${language.locale}`;
+		grunt.registerTask(taskName, () => {
+			const command = `node translate-script.js --project_id=translation-405906 --po_source=src/languages/buddyboss-${language.code}.po --po_dest=src/languages/buddyboss-${language.code}.po --mo=src/languages/buddyboss-${language.code}.mo --lang=${language.locale} --whitelist=whitelist.txt`;
+			const done = grunt.task.current.async();
+			grunt.util.spawn({ cmd: 'sh', args: ['-c', command] }, () => done());
+		});
+	}
+
+	languages.forEach((language) => {
+		// Create a task for each language
+		generateTranslationTask(language);
+	});
+
+	// Create a master task to run all language tasks
+	grunt.registerTask('sync-translation', languages.map((language) => `syncTranslation_${language.locale}`));
 
 	grunt.registerTask( 'test', 'Run all unit test tasks.', ['phpunit:default', 'phpunit:multisite'] );
 

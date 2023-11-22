@@ -22,3 +22,4 @@ vendor
 node_modules
 npm-debug.log
 *.zip
+google-service-account.json
