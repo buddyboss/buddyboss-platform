@@ -621,7 +621,7 @@ module.exports = function (grunt) {
 	function generateTranslationTask(language) {
 		const taskName = `syncTranslation_${language.locale}`;
 		grunt.registerTask(taskName, () => {
-			const command = `node translate-script.js --project_id=translation-405906 --po_source=src/languages/buddyboss-${language.code}.po --po_dest=src/languages/buddyboss-${language.code}.po --mo=src/languages/buddyboss-${language.code}.mo --lang=${language.locale} --whitelist=whitelist.txt`;
+			const command = `node translate-script.js --project_id=<GET_FROM_GOOGLE_CREDENTIALS_JSON_FILE> --po_source=src/languages/buddyboss-${language.code}.po --po_dest=src/languages/buddyboss-${language.code}.po --mo=src/languages/buddyboss-${language.code}.mo --lang=${language.locale} --whitelist=whitelist.txt`;
 			const done = grunt.task.current.async();
 			grunt.util.spawn({ cmd: 'sh', args: ['-c', command] }, () => done());
 		});
