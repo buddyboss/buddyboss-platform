@@ -22,7 +22,7 @@
         <?php endif; ?>
 
 	<?php endif; ?>
-    
+
     <?php if ( ( 'members' === bp_current_component() || 'groups' === bp_current_component() || 'friends' === bp_current_component() ) && ! bp_is_current_action( 'requests' ) ): ?>
         <?php bp_get_template_part( 'common/filters/grid-filters' ); ?>
     <?php endif; ?>
