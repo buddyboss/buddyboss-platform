@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.4.71 =
+* Bug: Core - Refactored the unique identifier profile slug character length so that there are no more duplications
+
 = 2.4.70 =
 * New Feature! - Login Logout Redirect, redirects users on login and logout as a global setting and by profile type
 * Bug: Activity - The post button was not enabled when using only emojis without any accompanying text entered directly from the keyboard
