@@ -530,7 +530,6 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		public function bb_update_reactions_transient() {
 			// Get all reactions.
 			$args = array(
-				'fields'                 => array( 'ids', 'post_title', 'post_content' ),
 				'post_type'              => self::$post_type,
 				'posts_per_page'         => - 1,
 				'orderby'                => 'menu_order',
