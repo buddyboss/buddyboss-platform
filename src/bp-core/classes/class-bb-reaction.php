@@ -491,7 +491,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @return array
 		 */
-		public function bb_get_reactions( $mode = 'like', $is_active = true ) {
+		public function bb_get_reactions( $mode = 'likes', $is_active = true ) {
 			$filtered_reactions = array();
 			$reactions          = get_transient( 'bb_reactions' );
 			$all_reactions      = ! empty( $reactions ) ? maybe_unserialize( $reactions ) : array();
