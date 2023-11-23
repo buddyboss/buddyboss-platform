@@ -305,10 +305,30 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				return;
 			}
 
-			// Validate if a duplicate name exists before adding.
-			$existing_reaction = get_page_by_path( $post_title, OBJECT, self::$post_type );
-			if ( is_a( $existing_reaction, 'WP_Post' ) ) {
-				return $existing_reaction->ID;
+			// Found the post if exists based on the emotions mode.
+			$args = array(
+				'name'        => $post_title,
+				'post_type'   => self::$post_type,
+				'post_status' => 'publish',
+				'numberposts' => 1,
+			);
+
+			if ( ! empty( $r['mode'] ) ) {
+				$args['meta_query'] = array(
+					array(
+						'key'     => 'is_emotion',
+						'value'   => ! empty( $r['mode'] ),
+						'compare' => 'bool',
+					),
+				);
+			}
+
+			$existing_reaction = get_posts( $args );
+			if( ! empty( $existing_reaction ) ) {
+				$existing_reaction = current( $existing_reaction );
+				if ( is_a( $existing_reaction, 'WP_Post' ) ) {
+					return $existing_reaction->ID;
+				}
 			}
 
 			$post_content = array(
