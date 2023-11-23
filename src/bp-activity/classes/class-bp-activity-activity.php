@@ -260,11 +260,11 @@ class BP_Activity_Activity {
 		$this->item_id           = apply_filters_ref_array( 'bp_activity_item_id_before_save', array( $this->item_id, &$this ) );
 		$this->secondary_item_id = apply_filters_ref_array( 'bp_activity_secondary_item_id_before_save', array( $this->secondary_item_id, &$this ) );
 		$this->user_id           = apply_filters_ref_array( 'bp_activity_user_id_before_save', array( $this->user_id, &$this ) );
-		$this->primary_link      = apply_filters_ref_array( 'bp_activity_primary_link_before_save', array( $this->primary_link, &$this ) );
+		$this->primary_link      = ! empty( $this->primary_link ) ? apply_filters_ref_array( 'bp_activity_primary_link_before_save', array( $this->primary_link, &$this ) ) : '';
 		$this->component         = apply_filters_ref_array( 'bp_activity_component_before_save', array( $this->component, &$this ) );
 		$this->type              = apply_filters_ref_array( 'bp_activity_type_before_save', array( $this->type, &$this ) );
-		$this->action            = apply_filters_ref_array( 'bp_activity_action_before_save', array( $this->action, &$this ) );
-		$this->content           = apply_filters_ref_array( 'bp_activity_content_before_save', array( $this->content, &$this ) );
+		$this->action            = ! empty( $this->action ) ? apply_filters_ref_array( 'bp_activity_action_before_save', array( $this->action, &$this ) ) : '';
+		$this->content           = ! empty( $this->content ) ? apply_filters_ref_array( 'bp_activity_content_before_save', array( $this->content, &$this ) ) : '';
 		$this->date_recorded     = apply_filters_ref_array( 'bp_activity_date_recorded_before_save', array( $this->date_recorded, &$this ) );
 		$this->hide_sitewide     = apply_filters_ref_array( 'bp_activity_hide_sitewide_before_save', array( $this->hide_sitewide, &$this ) );
 		$this->mptt_left         = apply_filters_ref_array( 'bp_activity_mptt_left_before_save', array( $this->mptt_left, &$this ) );
