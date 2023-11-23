@@ -295,6 +295,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'text_color'        => '#000000',
 					'notification_text' => '',
 					'icon_path'         => '',
+					'mode'              => '',
+					'is_emotion_active' => false,
 				)
 			);
 
@@ -335,6 +337,15 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			// If the reaction was successfully added, update the transient.
 			if ( ! is_wp_error( $reaction_id ) && ! empty( $reaction_id ) ) {
+
+				if ( ! empty( $r['mode'] ) && $r['mode'] === 'emotions' ) {
+					update_post_meta( $reaction_id, 'is_emotion', true );
+
+					if ( isset( $r['is_emotion_active'] ) ) {
+						update_post_meta( $reaction_id, 'is_emotion_active', (bool) $r['is_emotion_active'] );
+					}
+				}
+
 				// Update bb_reactions transient.
 				$this->bb_update_reactions_transient();
 			}
@@ -364,6 +375,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'text_color'        => '#000000',
 					'notification_text' => '',
 					'icon_path'         => '',
+					'mode'              => '',
+					'is_emotion_active' => false,
 				)
 			);
 
@@ -405,6 +418,15 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			// If the reaction was successfully updated then update the transient.
 			if ( ! is_wp_error( $reaction_id ) && ! empty( $reaction_id ) ) {
+
+				if ( ! empty( $r['mode'] ) && $r['mode'] === 'emotions' ) {
+					update_post_meta( $reaction_id, 'is_emotion', true );
+
+					if ( isset( $r['is_emotion_active'] ) ) {
+						update_post_meta( $reaction_id, 'is_emotion_active', (bool) $r['is_emotion_active'] );
+					}
+				}
+
 				// Update bb_reactions transient.
 				$this->bb_update_reactions_transient();
 			}
