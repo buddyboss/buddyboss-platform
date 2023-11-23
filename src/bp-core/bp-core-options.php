@@ -2554,13 +2554,37 @@ function bb_custom_logout_redirection( $default = '' ) {
 	return apply_filters( 'bb_custom_logout_redirection', bp_get_option( 'bb-custom-logout-redirection', $default ) );
 }
 
+function bb_get_all_reactions() {
+	return array(
+		'activity'         => array(
+			'label'     => esc_html__( 'Activity', 'buddyboss' ),
+			'disabled'  => ! bp_is_active( 'activity' ),
+			'component' => 'activity',
+			'enabled'   => bb_all_enabled_reactions( 'activity' ),
+		),
+		'activity_comment' => array(
+			'label'     => esc_html__( 'Activity Comment', 'buddyboss' ),
+			'disabled'  => ! bp_is_active( 'activity' ),
+			'component' => 'activity',
+			'enabled'   => bb_all_enabled_reactions( 'activity_comment' ),
+		),
+	);
+}
 function bb_all_enabled_reactions( $key = '' ) {
 	$get_reactions = (array) bp_get_option( 'bb_all_reactions', array() );
 	if ( empty( $key ) ) {
 		return $get_reactions;
 	}
 
-	return (bool) isset( $get_reactions[ $key ] ) ? $get_reactions[ $key ] : false;
+	$all_reactions = bb_get_all_reactions();
+
+	return (bool) (
+		isset( $get_reactions[ $key ] ) &&
+		$all_reactions[ $key ] &&
+		! empty( $all_reactions[ $key ]['component'] ) &&
+		bp_is_active( all_reactions[ $key ]['component'] ) &&
+		$get_reactions[ $key ]
+	);
 }
 
 /**

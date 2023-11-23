@@ -3472,18 +3472,7 @@ function bp_admin_setting_callback_custom_logout_redirection() {
  */
 function bb_reactions_settings_callback_all_reactions() {
 
-	$all_reactions = array(
-		'activity'         => array(
-			'label'    => esc_html__( 'Activity', 'buddyboss' ),
-			'disabled' => ! bp_is_active( 'activity' ),
-			'enabled'  => bb_all_enabled_reactions( 'activity' ),
-		),
-		'activity_comment' => array(
-			'label'    => esc_html__( 'Activity Comment', 'buddyboss' ),
-			'disabled' => ! bp_is_active( 'activity' ),
-			'enabled'  => bb_all_enabled_reactions( 'activity_comment' ),
-		),
-	);
+	$all_reactions = bb_get_all_reactions();
 	?>
 	<p class="description access_control_label_header"><?php esc_html_e( 'Which type of content should members be able to react to?', 'buddyboss' ); ?></p>
 
