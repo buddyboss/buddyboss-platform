@@ -3470,32 +3470,44 @@ function bp_admin_setting_callback_custom_logout_redirection() {
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_reactions_settings_callback_reaction_on_activity() {
+function bb_reactions_settings_callback_all_reactions() {
+
+	$all_reactions = array(
+		'activity'         => array(
+			'label'    => esc_html__( 'Activity', 'buddyboss' ),
+			'disabled' => ! bp_is_active( 'activity' ),
+			'enabled'  => bb_all_enabled_reactions( 'activity' ),
+		),
+		'activity_comment' => array(
+			'label'    => esc_html__( 'Activity Comment', 'buddyboss' ),
+			'disabled' => ! bp_is_active( 'activity' ),
+			'enabled'  => bb_all_enabled_reactions( 'activity_comment' ),
+		),
+	);
 	?>
 	<p class="description access_control_label_header"><?php esc_html_e( 'Which type of content should members be able to react to?', 'buddyboss' ); ?></p>
 
 	<br/>
-	<input name="bb_reaction_activity_posts"
-		id="bb_reaction_activity_posts"
-		type="checkbox"
-		value="1"
-		<?php checked( bb_is_reaction_activity_posts_enabled() ); ?>
-	/>
-	<label for="bb_reaction_activity_posts">
-		<?php esc_html_e( 'Activity posts', 'buddyboss' ); ?>
-	</label>
-
-	<br/><br/>
-	<input name="bb_reaction_activity_comments"
-		id="bb_reaction_activity_comments"
-		type="checkbox"
-		value="1"
-		<?php checked( bb_is_reaction_activity_comments_enabled() ); ?>
-	/>
-	<label for="bb_reaction_activity_comments">
-		<?php esc_html_e( 'Activity comments', 'buddyboss' ); ?>
-	</label>
 	<?php
+	foreach ( $all_reactions as $key => $field ) {
+		?>
+		<p>
+			<input
+				name="bb_all_reactions[<?php echo esc_attr( $key ); ?>]"
+				id="bb_all_reactions_<?php echo esc_attr( $key ); ?>"
+				type="checkbox"
+				value="1"
+				<?php
+				checked( $field['enabled'] );
+				disabled( $field['disabled'] );
+				?>
+			/>
+			<label for="bb_all_reactions_<?php echo $key; ?>">
+				<?php echo $field['label']; ?>
+			</label>
+		</p>
+		<?php
+	}
 }
 
 /**
