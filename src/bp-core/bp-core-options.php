@@ -2554,6 +2554,15 @@ function bb_custom_logout_redirection( $default = '' ) {
 	return apply_filters( 'bb_custom_logout_redirection', bp_get_option( 'bb-custom-logout-redirection', $default ) );
 }
 
+function bb_all_enabled_reactions( $key = '' ) {
+	$get_reactions = (array) bp_get_option( 'bb_all_reactions', array() );
+	if ( empty( $key ) ) {
+		return $get_reactions;
+	}
+
+	return (bool) isset( $get_reactions[ $key ] ) ? $get_reactions[ $key ] : false;
+}
+
 /**
  * Check whether Reaction for activity posts is enabled.
  *
@@ -2564,7 +2573,7 @@ function bb_custom_logout_redirection( $default = '' ) {
  * @return bool True if reaction for activity posts is enabled, otherwise false.
  */
 function bb_is_reaction_activity_posts_enabled( $default = true ) {
-	return (bool) apply_filters( 'bb_is_reaction_activity_posts_enabled', (bool) bp_get_option( 'bb_reaction_activity_posts', $default ) );
+	return (bool) apply_filters( 'bb_is_reaction_activity_posts_enabled', (bool) bb_all_enabled_reactions('activity') );
 }
 
 /**
@@ -2577,7 +2586,7 @@ function bb_is_reaction_activity_posts_enabled( $default = true ) {
  * @return bool True if reaction for activity comments is enabled, otherwise false.
  */
 function bb_is_reaction_activity_comments_enabled( $default = true ) {
-	return (bool) apply_filters( 'bb_is_reaction_activity_comments_enabled', (bool) bp_get_option( 'bb_reaction_activity_comments', $default ) );
+	return (bool) apply_filters( 'bb_is_reaction_activity_comments_enabled', (bool) bb_all_enabled_reactions( 'activity_comment' ) );
 }
 
 /**

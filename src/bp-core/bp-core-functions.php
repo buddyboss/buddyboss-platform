@@ -9142,32 +9142,20 @@ function bb_reactions_get_settings_fields() {
 
 	$fields = array();
 
-	if ( bp_is_active( 'activity' ) ) {
-		$fields['bp_reaction_settings_section'] = array(
-			'bb_reaction_activity_posts'  => array(
-				'title'             => esc_html__( 'Enable reactions', 'buddyboss' ),
-				'callback'          => 'bb_reactions_settings_callback_reaction_on_activity',
-				'sanitize_callback' => 'absint',
-				'args'              => array(),
-			),
+	$fields['bp_reaction_settings_section'] = array(
+		'bb_all_reactions' => array(
+			'title'             => esc_html__( 'Enable reactions', 'buddyboss' ),
+			'callback'          => 'bb_reactions_settings_callback_all_reactions',
+			'args'              => array(),
+		),
 
-			'bb_reaction_activity_comments'  => array(
-				'title'             => esc_html__( 'Activity Comments', 'buddyboss' ),
-				'callback'          => '__return_true',
-				'sanitize_callback' => 'absint',
-				'args'              => array(
-					'class' => 'hidden',
-				),
-			),
-
-			'bb_reaction_mode'  => array(
-				'title'             => esc_html__( 'Reactions Mode', 'buddyboss' ),
-				'callback'          => 'bb_reactions_settings_callback_reaction_mode',
-				'sanitize_callback' => 'sanitize_text_field',
-				'args'              => array(),
-			),
-		);
-	}
+		'bb_reaction_mode'  => array(
+			'title'             => esc_html__( 'Reactions Mode', 'buddyboss' ),
+			'callback'          => 'bb_reactions_settings_callback_reaction_mode',
+			'sanitize_callback' => 'sanitize_text_field',
+			'args'              => array(),
+		),
+	);
 
 	return (array) apply_filters( 'bb_reactions_get_settings_fields', $fields );
 }
