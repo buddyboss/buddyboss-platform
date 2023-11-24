@@ -28,6 +28,17 @@ class BB_Admin_Setting_Reactions extends BP_Admin_Setting_tab {
 		$this->tab_order = 51;
 	}
 
+	public function settings_save() {
+		/**
+		 * Fires before save the settings.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		do_action( 'bb_reaction_before_setting_save', $this->tab_name, $this );
+
+		parent::settings_save();
+	}
+
 	/**
 	 * Registers the fields for the reaction settings sections.
 	 *
