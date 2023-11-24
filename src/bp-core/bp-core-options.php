@@ -2560,13 +2560,11 @@ function bb_get_all_reactions() {
 			'label'     => esc_html__( 'Activity', 'buddyboss' ),
 			'disabled'  => ! bp_is_active( 'activity' ),
 			'component' => 'activity',
-			'enabled'   => bb_all_enabled_reactions( 'activity' ),
 		),
 		'activity_comment' => array(
 			'label'     => esc_html__( 'Activity Comment', 'buddyboss' ),
 			'disabled'  => ! bp_is_active( 'activity' ),
 			'component' => 'activity',
-			'enabled'   => bb_all_enabled_reactions( 'activity_comment' ),
 		),
 	);
 }
@@ -2582,7 +2580,7 @@ function bb_all_enabled_reactions( $key = '' ) {
 		isset( $get_reactions[ $key ] ) &&
 		$all_reactions[ $key ] &&
 		! empty( $all_reactions[ $key ]['component'] ) &&
-		bp_is_active( all_reactions[ $key ]['component'] ) &&
+		bp_is_active( $all_reactions[ $key ]['component'] ) &&
 		$get_reactions[ $key ]
 	);
 }

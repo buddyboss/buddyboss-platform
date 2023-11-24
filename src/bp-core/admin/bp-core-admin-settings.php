@@ -3479,6 +3479,8 @@ function bb_reactions_settings_callback_all_reactions() {
 	<br/>
 	<?php
 	foreach ( $all_reactions as $key => $field ) {
+
+		$field['enabled'] = bb_all_enabled_reactions( $key );
 		?>
 		<p>
 			<input
