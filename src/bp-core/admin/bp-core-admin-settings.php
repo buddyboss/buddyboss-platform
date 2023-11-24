@@ -3482,7 +3482,7 @@ function bb_reactions_settings_callback_all_reactions() {
 
 		$field['enabled'] = bb_all_enabled_reactions( $key );
 		?>
-		<p>
+		<div class="bb-reactions-setting-field">
 			<input
 				name="bb_all_reactions[<?php echo esc_attr( $key ); ?>]"
 				id="bb_all_reactions_<?php echo esc_attr( $key ); ?>"
@@ -3493,10 +3493,10 @@ function bb_reactions_settings_callback_all_reactions() {
 				disabled( $field['disabled'] );
 				?>
 			/>
-			<label for="bb_all_reactions_<?php echo $key; ?>">
-				<?php echo $field['label']; ?>
+			<label for="bb_all_reactions_<?php echo esc_attr( $key ); ?>">
+				<?php echo esc_html( $field['label'] ); ?>
 			</label>
-		</p>
+		</div>
 		<?php
 	}
 }
