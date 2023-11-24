@@ -297,6 +297,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'icon_path'         => '',
 					'mode'              => '',
 					'is_emotion_active' => false,
+					'menu_order'        => 0,
 				)
 			);
 
@@ -350,6 +351,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				'post_status'  => 'publish',
 				'post_content' => maybe_serialize( $post_content ),
 				'post_author'  => bp_loggedin_user_id(),
+				'menu_order'   => $r['menu_order'],
 			);
 
 			// Insert the new reaction.
@@ -397,6 +399,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'icon_path'         => '',
 					'mode'              => '',
 					'is_emotion_active' => false,
+					'menu_order'        => 0,
 				)
 			);
 
@@ -431,6 +434,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				'post_status'  => 'publish',
 				'post_content' => maybe_serialize( $post_content ),
 				'post_author'  => bp_loggedin_user_id(),
+				'menu_order'   => $r['menu_order'],
 			);
 
 			// Update the existing reaction.
