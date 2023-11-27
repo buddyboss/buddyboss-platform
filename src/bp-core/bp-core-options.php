@@ -2618,5 +2618,11 @@ function bb_is_reaction_activity_comments_enabled( $default = true ) {
  * @return string The reaction mode, either 'likes' or 'emotions'.
  */
 function bb_get_reaction_mode( $default = 'likes' ) {
-	return apply_filters( 'bb_get_reaction_mode', bp_get_option( 'bb_reaction_mode', $default ) );
+
+	$mode = bp_get_option( 'bb_reaction_mode', $default );
+	if ( ! function_exists( 'bb_platform_pro' ) ) {
+		$mode = 'likes';
+	}
+
+	return apply_filters( 'bb_get_reaction_mode', $mode );
 }
