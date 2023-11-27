@@ -484,12 +484,21 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 		 * @return bool
 		 */
 		public function is_processing() {
-			if ( get_site_option( $this->identifier . '_process_lock' ) ) {
-				// Process already running.
-				return true;
+			$running = false;
+			$lock_timestamp = get_site_option( $this->identifier . '_process_lock' );
+			if ( $lock_timestamp ) {
+
+				$lock_duration = ( property_exists( $this, 'queue_lock_time' ) ) ? $this->queue_lock_time : 60; // 1 minute
+				$lock_duration = apply_filters( $this->identifier . '_queue_lock_time', $lock_duration );
+
+				if ( microtime( true ) - $lock_timestamp > $lock_duration ) {
+					$this->unlock_process();
+				} else {
+					$running = true;
+				}
 			}
 
-			return false;
+			return $running;
 		}
 
 		/**

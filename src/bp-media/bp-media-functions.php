@@ -3796,7 +3796,7 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 					if ( 'photo' === $type && ( $is_admin || 'members' === bp_group_get_media_status( $media_group_id ) ) ) {
 						$can_edit = true;
 					}
-					if ( 'document' === $type && ( $is_admin || 'members' === bp_group_get_document_status( $media_group_id ) ) ) {
+					if ( ( 'document' === $type || 'folder' === $type ) && ( $is_admin || 'members' === bp_group_get_document_status( $media_group_id ) ) ) {
 						$can_edit = true;
 					}
 					if ( 'video' === $type && ( $is_admin || 'members' === bp_group_get_video_status( $media_group_id ) ) ) {
