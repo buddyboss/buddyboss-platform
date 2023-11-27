@@ -2364,7 +2364,7 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 						// Need to delete child activity.
 						$need_delete = $document->activity_id;
 
-						$document_album = (int) $document->album_id;
+						$document_folder = (int) $document->folder_id;
 
 						// Update document activity id to parent activity id.
 						$document->activity_id  = $parent_activity_id;
@@ -2380,8 +2380,8 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 						update_post_meta( $document->attachment_id, 'bp_document_saved', 1 );
 
 						bp_activity_delete_meta( $parent_activity_id, 'bp_document_folder_activity' );
-						if ( $document_album > 0 ) {
-							bp_activity_update_meta( $parent_activity_id, 'bp_document_folder_activity', $document_album );
+						if ( $document_folder > 0 ) {
+							bp_activity_update_meta( $parent_activity_id, 'bp_document_folder_activity', $document_folder );
 						}
 
 						// Update the activity meta first otherwise it will delete the document.

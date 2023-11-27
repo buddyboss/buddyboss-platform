@@ -2242,7 +2242,7 @@ function bp_activity_document_add( $document ) {
 
 		$document->activity_id = $bb_activity_comment_edit_id;
 		$document->privacy     = 'comment';
-		$document->album_id    = 0;
+		$document->folder_id   = 0;
 		$document->save();
 
 		// update activity meta.
@@ -2267,18 +2267,18 @@ function bp_activity_document_add( $document ) {
 				if ( ! empty( $comment->item_id ) ) {
 					$comment_activity = new BP_Activity_Activity( $comment->item_id );
 					if ( ! empty( $comment_activity->component ) && buddypress()->groups->id === $comment_activity->component ) {
-						$document->group_id = $comment_activity->item_id;
-						$document->privacy  = 'comment';
-						$document->album_id = 0;
+						$document->group_id  = $comment_activity->item_id;
+						$document->privacy   = 'comment';
+						$document->folder_id = 0;
 					}
 				}
 			}
 
 			// Check when new activity coment is empty then set privacy comment - 2121.
 			if ( ! empty( $bp_new_activity_comment ) ) {
-				$activity_id        = $bp_new_activity_comment;
-				$document->privacy  = 'comment';
-				$document->album_id = 0;
+				$activity_id         = $bp_new_activity_comment;
+				$document->privacy   = 'comment';
+				$document->folder_id = 0;
 			} else {
 
 				$args = array(
@@ -3601,7 +3601,7 @@ function bb_moderation_remove_mention_count( $num_links, $url, $comment ) {
  * @param object $post Post data.
  */
 function bb_cpt_post_title_save( $post_id, $post ) {
-	if ( empty( $post_id ) ) {
+	if ( empty( $post_id ) || empty( buddypress()->blogs ) ) {
 		return;
 	}
 

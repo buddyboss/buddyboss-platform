@@ -2156,7 +2156,7 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 				$profile_url = get_avatar_url( $user_id, array( 'default' => '404' ) );
 
 				$headers = get_headers( $profile_url, 1 );
-				if ( $headers[0] === 'HTTP/1.1 200 OK' && isset( $headers['Link'] ) ) {
+				if ( ( ! empty( $headers ) ) && $headers[0] === 'HTTP/1.1 200 OK' && isset( $headers['Link'] ) ) {
 					$is_profile_photo_uploaded = 1;
 					++ $grand_completed_fields;
 				}
