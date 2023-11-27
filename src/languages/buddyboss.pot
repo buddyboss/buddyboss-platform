@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.4.71\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-11-22 09:07:23+00:00\n"
+"POT-Creation-Date: 2023-11-27 09:43:55+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -6769,7 +6769,7 @@ msgstr ""
 #: bp-core/bp-core-avatars.php:355
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:873
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/change-avatar.php:17
-#: bp-xprofile/bp-xprofile-functions.php:2168
+#: bp-xprofile/bp-xprofile-functions.php:2175
 #: bp-xprofile/classes/class-bp-xprofile-component.php:287
 #: bp-xprofile/classes/class-bp-xprofile-component.php:402
 #: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:141
@@ -7427,7 +7427,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2565
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:507
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:522
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:39
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:57
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:98
@@ -9687,7 +9687,7 @@ msgstr ""
 #: bp-members/classes/class-bp-core-whos-online-widget.php:177
 #: bp-members/classes/class-bp-core-whos-online-widget.php:406
 #: bp-members/classes/class-bp-core-whos-online-widget.php:458
-#: bp-xprofile/bp-xprofile-functions.php:1741
+#: bp-xprofile/bp-xprofile-functions.php:1748
 msgid "See all"
 msgstr ""
 
@@ -10204,19 +10204,19 @@ msgstr ""
 msgid "There was a problem cropping your %s photo."
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:469
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:484
 msgid "Activate Forum Discussions Component"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:508
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:523
 msgid "activate"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:511
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:526
 msgid "LearnDash & bbPress Integration is deactivated."
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:512
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:527
 msgid ""
 "The LearnDash & bbPress Integration plugin can't work if LearnDash LMS "
 "plugin & %1$s component is deactivated. Please activate LearnDash LMS "
@@ -10919,7 +10919,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:443
 #: bp-groups/classes/class-bp-groups-component.php:950
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:882
-#: bp-xprofile/bp-xprofile-functions.php:2189
+#: bp-xprofile/bp-xprofile-functions.php:2196
 #: bp-xprofile/classes/class-bp-xprofile-component.php:300
 #: bp-xprofile/classes/class-bp-xprofile-component.php:412
 #: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:144
@@ -12768,7 +12768,7 @@ msgid "Select whether to open or close the discussion."
 msgstr ""
 
 #: bp-forums/admin/metaboxes.php:420 bp-forums/admin/metaboxes.php:481
-#: bp-forums/groups.php:1230
+#: bp-forums/groups.php:1231
 #: bp-forums/templates/default/bbpress/form-topic.php:124
 #: bp-forums/topics/template.php:63
 msgid "Forum:"
@@ -16243,7 +16243,7 @@ msgid "No recorded history. Akismet has not checked this post."
 msgstr ""
 
 #: bp-forums/forums/functions.php:125 bp-forums/forums/functions.php:415
-#: bp-forums/groups.php:410 bp-forums/groups.php:650
+#: bp-forums/groups.php:410 bp-forums/groups.php:651
 #: bp-forums/notifications.php:674 bp-forums/replies/functions.php:124
 #: bp-forums/replies/functions.php:622 bp-forums/replies/functions.php:1413
 #: bp-forums/topics/functions.php:131 bp-forums/topics/functions.php:614
@@ -16439,7 +16439,7 @@ msgid ""
 "delete existing forum content."
 msgstr ""
 
-#: bp-forums/groups.php:347 bp-forums/groups.php:635
+#: bp-forums/groups.php:347 bp-forums/groups.php:636
 msgid "Yes, I want this group to have a discussion forum."
 msgstr ""
 
@@ -16447,34 +16447,38 @@ msgstr ""
 msgid "Connected Forum"
 msgstr ""
 
-#: bp-forums/groups.php:586
+#: bp-forums/groups.php:571
+msgid "Group Forum details were successfully updated."
+msgstr ""
+
+#: bp-forums/groups.php:587
 msgid "Discussion Forum"
 msgstr ""
 
-#: bp-forums/groups.php:629
+#: bp-forums/groups.php:630
 msgid "Group Forum"
 msgstr ""
 
-#: bp-forums/groups.php:631
+#: bp-forums/groups.php:632
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:1227
 msgid ""
 "Create a discussion forum to allow members of this group to communicate in "
 "a structured, bulletin-board style fashion."
 msgstr ""
 
-#: bp-forums/groups.php:948
+#: bp-forums/groups.php:949
 msgid "This group does not currently have a forum."
 msgstr ""
 
-#: bp-forums/groups.php:1892
+#: bp-forums/groups.php:1893
 msgid "Child forums are not allowed to associate with any groups."
 msgstr ""
 
-#: bp-forums/groups.php:1901
+#: bp-forums/groups.php:1902
 msgid "Category type forums are not allowed to associate with any groups."
 msgstr ""
 
-#: bp-forums/groups.php:1910
+#: bp-forums/groups.php:1911
 msgid "This forum is already associated with other groups."
 msgstr ""
 
@@ -32683,79 +32687,79 @@ msgstr ""
 msgid "Repairing user nicknames &hellip; Complete!"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1558
+#: bp-xprofile/bp-xprofile-functions.php:1565
 msgid "Facebook"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1565
+#: bp-xprofile/bp-xprofile-functions.php:1572
 msgid "Flickr"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1572
+#: bp-xprofile/bp-xprofile-functions.php:1579
 msgid "Instagram"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1579
+#: bp-xprofile/bp-xprofile-functions.php:1586
 msgid "LinkedIn"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1586
+#: bp-xprofile/bp-xprofile-functions.php:1593
 msgid "Medium"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1593
+#: bp-xprofile/bp-xprofile-functions.php:1600
 msgid "Meetup"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1600
+#: bp-xprofile/bp-xprofile-functions.php:1607
 msgid "Pinterest"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1607
+#: bp-xprofile/bp-xprofile-functions.php:1614
 msgid "Quora"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1614
+#: bp-xprofile/bp-xprofile-functions.php:1621
 msgid "Reddit"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1621
+#: bp-xprofile/bp-xprofile-functions.php:1628
 msgid "Snapchat"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1628
+#: bp-xprofile/bp-xprofile-functions.php:1635
 msgid "Telegram"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1635
+#: bp-xprofile/bp-xprofile-functions.php:1642
 msgid "Tumblr"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1642
+#: bp-xprofile/bp-xprofile-functions.php:1649
 msgid "Twitch"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1649
+#: bp-xprofile/bp-xprofile-functions.php:1656
 msgid "Twitter"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1656
+#: bp-xprofile/bp-xprofile-functions.php:1663
 msgid "VK"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1663
+#: bp-xprofile/bp-xprofile-functions.php:1670
 msgid "WhatsApp"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1670
+#: bp-xprofile/bp-xprofile-functions.php:1677
 msgid "YouTube"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1678
+#: bp-xprofile/bp-xprofile-functions.php:1685
 msgid "X"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1686
+#: bp-xprofile/bp-xprofile-functions.php:1693
 msgid "TikTok"
 msgstr ""
 
@@ -33802,22 +33806,22 @@ msgctxt "widget name"
 msgid "BuddyBoss - Network Posts"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:313
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:328
 msgctxt "ui"
 msgid "Membership"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:331
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:346
 msgctxt "ui"
 msgid "Info"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:341
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:356
 msgctxt "ui"
 msgid "Subscriptions"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:351
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:366
 msgctxt "ui"
 msgid "Payments"
 msgstr ""
