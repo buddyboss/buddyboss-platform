@@ -911,7 +911,7 @@ window.bp = window.bp || {};
 
 						var bpActivityEvent = new Event( 'bp_activity_edit' );
 
-						bp.Nouveau.Activity.postForm.displayEditDraftActivityData( activity_data, bpActivityEvent );
+						bp.Nouveau.Activity.postForm.displayEditDraftActivityData( activity_data, bpActivityEvent, activity_data.link_url );
 					}
 
 				},
@@ -1200,6 +1200,17 @@ window.bp = window.bp || {};
 					_wpnonce_post_draft: BP_Nouveau.activity.params.post_draft_nonce,
 					draft_activity: bp.draft_activity
 				};
+
+				// Some firewalls restrict iframe tag in form post like wordfence.
+				if (
+					! _.isUndefined( draft_data.draft_activity ) &&
+					! _.isUndefined( draft_data.draft_activity.data ) &&
+					! _.isUndefined( draft_data.draft_activity.data.link_description ) &&
+					! _.isUndefined( draft_data.draft_activity.data.link_embed ) &&
+					true === draft_data.draft_activity.data.link_embed
+				) {
+					draft_data.draft_activity.data.link_description = '';
+				}
 
 				// Send data to server.
 				bp.draft_ajax_request = bp.ajax.post( 'post_draft_activity', draft_data ).done(
@@ -2986,6 +2997,7 @@ window.bp = window.bp || {};
 				//Remove mentioned members Link
 				var tempNode = $( '<div></div>' ).html( urlText );
 				tempNode.find( 'a.bp-suggestions-mention' ).remove();
+				tempNode.find( '[rel="nofollow"]' ).remove() ;
 				urlText = tempNode.html();
 
 				if ( urlText.indexOf( '<img' ) >= 0 ) {
@@ -4867,7 +4879,7 @@ window.bp = window.bp || {};
 				var content = $.trim( $whatsNew[0].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 				content     = content.replace( /&nbsp;/g, ' ' );
 
-				if ( $( $.parseHTML( content ) ).text().trim() !== '' || ( ! _.isUndefined( this.model.get( 'link_success' ) ) && true === this.model.get( 'link_success' ) ) || ( ! _.isUndefined( this.model.get( 'video' ) ) && 0 !== this.model.get('video').length ) || ( ! _.isUndefined( this.model.get( 'document' ) ) && 0 !== this.model.get('document').length ) || ( ! _.isUndefined( this.model.get( 'media' ) ) && 0 !== this.model.get('media').length ) || ( ! _.isUndefined( this.model.get( 'gif_data' ) ) && ! _.isEmpty( this.model.get( 'gif_data' ) ) ) ) {
+				if ( $( $.parseHTML( content ) ).text().trim() !== '' || content.includes( 'class="emoji"' ) || ( ! _.isUndefined( this.model.get( 'link_success' ) ) && true === this.model.get( 'link_success' ) ) || ( ! _.isUndefined( this.model.get( 'video' ) ) && 0 !== this.model.get('video').length ) || ( ! _.isUndefined( this.model.get( 'document' ) ) && 0 !== this.model.get('document').length ) || ( ! _.isUndefined( this.model.get( 'media' ) ) && 0 !== this.model.get('media').length ) || ( ! _.isUndefined( this.model.get( 'gif_data' ) ) && ! _.isEmpty( this.model.get( 'gif_data' ) ) ) ) {
 					this.$el.removeClass( 'focus-in--empty' );
 				} else {
 					this.$el.addClass( 'focus-in--empty' );
@@ -5328,6 +5340,15 @@ window.bp = window.bp || {};
 					}
 				}
 
+				// Some firewalls restrict iframe tag in form post like wordfence.
+				if (
+					! _.isUndefined( data.link_description ) &&
+					! _.isUndefined( data.link_embed ) &&
+					true === data.link_embed
+				) {
+					data.link_description = '';
+				}
+
 				bp.ajax.post( 'post_update', data ).done(
 					function ( response ) {
 
@@ -5439,8 +5460,18 @@ window.bp = window.bp || {};
 								$( '#activity-stream' ).html( $( '<ul></ul>' ).addClass( 'activity-list item-list bp-list' ) );
 							}
 
-							// Prepend the activity.
-							bp.Nouveau.inject( '#activity-stream ul.activity-list', response.activity, 'prepend' );
+							// Check if there is a pinned activity with .bb-pinned class
+							var pinned_activity = $( '#activity-stream ul.activity-list li:first.bb-pinned' );
+
+							if ( pinned_activity.length > 0 ) {
+
+								// If a pinned activity with .bb-pinned class is found, insert after it.
+								bp.Nouveau.inject( '#activity-stream ul.activity-list li:first.bb-pinned', response.activity, 'after' );
+							} else {
+
+								// Prepend the activity.
+								bp.Nouveau.inject( '#activity-stream ul.activity-list', response.activity, 'prepend' );
+							}
 
 							// replace dummy image with original image by faking scroll event.
 							jQuery( window ).scroll();

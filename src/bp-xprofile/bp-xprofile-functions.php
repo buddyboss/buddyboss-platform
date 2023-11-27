@@ -1451,7 +1451,14 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 	foreach ( (array) $default_visibility_levels as $d_field_id => $defaults ) {
 		// If the admin has forbidden custom visibility levels for this field, replace
 		// the user-provided setting with the default specified by the admin.
-		if ( isset( $defaults['allow_custom'] ) && isset( $defaults['default'] ) && 'disabled' == $defaults['allow_custom'] ) {
+		if (
+			isset( $defaults['allow_custom'] ) &&
+			isset( $defaults['default'] ) &&
+			(
+				empty( $user_visibility_levels[ $d_field_id ] ) ||
+				'disabled' === $defaults['allow_custom']
+			)
+		) {
 			$user_visibility_levels[ $d_field_id ] = $defaults['default'];
 		}
 	}
@@ -1719,7 +1726,18 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 
 		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) );
 
-		if ( isset( $original_option_values ) && ! empty( $original_option_values ) && is_array( $original_option_values ) ) {
+		$social_settings_field   = xprofile_get_field( $social_networks_id, $user_id );
+		$social_settings_options = $social_settings_field->get_children();
+
+		if (
+			isset( $original_option_values ) &&
+			! empty( $original_option_values ) &&
+			is_array( $original_option_values ) &&
+			! empty( $social_settings_options )
+		) {
+
+			$original_option_values = array_intersect_key( $original_option_values, array_flip( array_column( $social_settings_options, 'name' ) ) );
+
 			$i            = 0;
 			$is_more_link = count( array_filter( $original_option_values ) ) > 3;
 			foreach ( $original_option_values as $key => $original_option_value ) {

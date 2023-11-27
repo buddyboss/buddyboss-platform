@@ -786,7 +786,7 @@ function bp_profile_photos_tutorial() {
 					add_query_arg(
 						array(
 							'page'    => 'bp-help',
-							'article' => 125202,
+							'article' => 72341,
 						),
 						'admin.php'
 					)
@@ -844,7 +844,7 @@ function bp_group_avatar_tutorial() {
 					add_query_arg(
 						array(
 							'page'    => 'bp-help',
-							'article' => 62811,
+							'article' => 125202,
 						),
 						'admin.php'
 					)
@@ -1800,9 +1800,10 @@ function bp_feed_settings_callback_post_type( $args ) {
  * @return void
  */
 function bb_feed_settings_callback_post_type_comments( $args ) {
-	$post_type     = $args['post_type'];
-	$option_name   = bb_post_type_feed_comment_option_name( $post_type );
-	$post_type_obj = get_post_type_object( $post_type );
+	$post_type              = $args['post_type'];
+	$option_name            = bb_post_type_feed_comment_option_name( $post_type );
+	$post_type_obj          = get_post_type_object( $post_type );
+	$is_cpt_comment_enabled = bb_activity_is_enabled_cpt_global_comment( $post_type );
 
 	if ( in_array( $post_type, bb_feed_not_allowed_comment_post_types(), true ) ) {
 		?>
@@ -1827,6 +1828,7 @@ function bb_feed_settings_callback_post_type_comments( $args ) {
 		type="checkbox"
 		value="1"
 		<?php checked( bb_is_post_type_feed_comment_enable( $post_type, false ) ); ?>
+		<?php disabled( $is_cpt_comment_enabled, false ); ?>
 	/>
 	<label for="<?php echo esc_attr( $option_name ); ?>">
 		<?php echo 'post' === $post_type ? esc_html__( 'Enable WordPress Post comments in the activity feed', 'buddyboss' ) : sprintf( esc_html__( 'Enable %s comments in the activity feed.', 'buddyboss' ), esc_html( $post_type_obj->labels->name ) ); ?>
@@ -3307,5 +3309,173 @@ function bb_admin_setting_callback_enable_activity_comment_edit() {
 		?>
 	</select>
 
+	<?php
+}
+
+/**
+ * Allow pinned activity posts.
+ *
+ * @since BuddyBoss 2.4.60
+ */
+function bb_admin_setting_callback_enable_activity_pinned_posts() {
+	?>
+
+	<input id="_bb_enable_activity_pinned_posts" name="_bb_enable_activity_pinned_posts" type="checkbox" value="1" <?php checked( bb_is_active_activity_pinned_posts() ); ?> />
+	<label for="_bb_enable_activity_pinned_posts"><?php esc_html_e( 'Allow group owners and moderators to pin posts', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
+ * Link to redirection tutorial.
+ *
+ * @since BuddyBoss 2.4.70
+ */
+function bb_admin_redirection_setting_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 127063,
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
+ * Get the published page list.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @return array Associative array of page id and page title of pages.
+ */
+function bb_get_published_pages() {
+	static $published_pages = array();
+
+	if ( ! empty( $published_pages ) ) {
+		return $published_pages;
+	}
+
+	$pages = get_pages(
+		array(
+			'post_status' => 'publish',
+		)
+	);
+
+	foreach ( $pages as $page ) {
+		$published_pages[ $page->ID ] = $page->post_title;
+	}
+
+	return $published_pages;
+}
+
+/**
+ * Admin settings for showing the login redirection settings.
+ *
+ * @since BuddyBoss 2.4.70
+ */
+function bb_admin_setting_callback_login_redirection() {
+	$login_redirection = bb_login_redirection();
+	?>
+	<select name="bb-login-redirection" id="bb-login-redirection">
+		<option value="" <?php selected( '', $login_redirection ); ?>><?php esc_html_e( 'Default', 'buddyboss' ); ?></option>
+		<option value="0" <?php selected( 0, $login_redirection ); ?>><?php esc_html_e( 'Custom URL', 'buddyboss' ); ?></option>
+		<?php
+		$pages = bb_get_published_pages();
+		foreach ( $pages as $id => $title ) {
+			?>
+			<option value="<?php echo esc_attr( $id ); ?>" <?php selected( $id, $login_redirection ); ?>><?php echo esc_html( $title ); ?></option>
+			<?php
+		}
+		?>
+	</select>
+	<p class="description">
+		<?php
+		esc_html_e(
+			'Select a page or external link to redirect your members to after they login.',
+			'buddyboss'
+		);
+		?>
+	</p>
+	<?php
+}
+
+/**
+ * Admin settings for showing the custom login redirection page url.
+ *
+ * @since BuddyBoss 2.4.70
+ */
+function bp_admin_setting_callback_custom_login_redirection() {
+	?>
+	<input style="width: 89%;" id="bb-custom-login-redirection" name="bb-custom-login-redirection" type="text" value="<?php echo esc_url( bb_custom_login_redirection() ); ?>"/>
+	<p class="description">
+		<?php
+		esc_html_e(
+			'Select a page or external link to redirect your members to after they login.',
+			'buddyboss'
+		)
+		?>
+	</p>
+	<?php
+}
+
+/**
+ * Admin settings for showing the logout redirection settings.
+ *
+ * @since BuddyBoss 2.4.70
+ */
+function bb_admin_setting_callback_logout_redirection() {
+	$logout_redirection = bb_logout_redirection();
+	?>
+	<select name="bb-logout-redirection" id="bb-logout-redirection">
+		<option value="" <?php selected( '', $logout_redirection ); ?>><?php esc_html_e( 'Default', 'buddyboss' ); ?></option>
+		<option value="0" <?php selected( 0, $logout_redirection ); ?>><?php esc_html_e( 'Custom URL', 'buddyboss' ); ?></option>
+		<?php
+		$pages = bb_get_published_pages();
+		foreach ( $pages as $id => $title ) {
+			?>
+			<option value="<?php echo esc_attr( $id ); ?>" <?php selected( $id, $logout_redirection ); ?>><?php echo esc_html( $title ); ?></option>
+			<?php
+		}
+		?>
+	</select>
+	<p class="description">
+		<?php
+		esc_html_e(
+			'Select a page or external link to redirect your members to after they logout.',
+			'buddyboss'
+		)
+		?>
+	</p>
+	<?php
+}
+
+/**
+ * Admin settings for showing the custom logout redirection page url.
+ *
+ * @since BuddyBoss 2.4.70
+ */
+function bp_admin_setting_callback_custom_logout_redirection() {
+	?>
+	<input style="width: 89%;" id="bb-custom-logout-redirection" name="bb-custom-logout-redirection" type="text" value="<?php echo esc_url( bb_custom_logout_redirection() ); ?>"/>
+	<p class="description">
+		<?php
+		esc_html_e(
+			'Select a page or external link to redirect your members to after they logout.',
+			'buddyboss'
+		);
+		?>
+	</p>
 	<?php
 }

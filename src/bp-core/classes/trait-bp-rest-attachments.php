@@ -127,19 +127,6 @@ trait BP_REST_Attachments {
 
 		$warning = '';
 
-		// Bail with error if too small.
-		if ( true === $cover['is_too_small'] ) {
-
-			// Get cover image advised dimensions.
-			$cover_dimensions = bp_attachments_get_cover_image_dimensions( $component );
-			$warning          = sprintf(
-				/* translators: %$1s and %$2s is replaced with the correct sizes. */
-				__( 'You have selected an image that is smaller than recommended. For better results, make sure to upload an image that is larger than %1$spx wide, and %2$spx tall.', 'buddyboss' ),
-				(int) $cover_dimensions['width'],
-				(int) $cover_dimensions['height']
-			);
-		}
-
 		// Set the name of the file.
 		$name       = $file['file']['name'];
 		$name_parts = pathinfo( $name );
