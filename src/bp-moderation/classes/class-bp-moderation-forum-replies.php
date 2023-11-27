@@ -346,7 +346,6 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 				),
 				true
 			)
-			&& bp_is_forums_media_support_enabled()
 		) {
 			$is_forum_activity = true;
 		}

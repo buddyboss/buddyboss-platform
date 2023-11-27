@@ -511,6 +511,21 @@ window.bp = window.bp || {};
 							}
 						}
 					);
+
+				// Show confirmation dialog when user enable restrict invite option.
+				$( document ).on(
+					'click',
+					'#bp-enable-group-restrict-invites',
+					function () {
+						if ( true === this.checked ) {
+							if ( confirm( BP_ADMIN.group.restrict_invites_confirm_message ) ) {
+								return true;
+							} else {
+								return false;
+							}
+						}
+					}
+				);
 			}
 
 			// Hide/show group header element group type.
@@ -2079,22 +2094,29 @@ window.bp = window.bp || {};
 					$( this ).closest( 'tr' ).remove();
 					var totalCount = parseInt( $( '.extension-listing tr.extra-extension' ).length );
 					totalCount     = 1;
+					var media_type = 'bp_document';
+					if ( 
+						$( this ).closest('tr.custom-extension').length > 0 &&
+						$( this ).closest('tr.custom-extension').hasClass('video-extensions')
+					) {
+						media_type = 'bp_video';
+					}
 					parent.find( 'tbody tr.extra-extension' ).each(
 						function() {
-								$( this ).find( 'input.extension-check' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][is_active]' );
-								$( this ).find( 'input.extension-check' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][is_active]' );
-								$( this ).find( 'input.extension-name' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][name]' );
-								$( this ).find( 'input.extension-name' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][name]' );
-								$( this ).find( 'input.extension-hidden' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][hidden]' );
-								$( this ).find( 'input.extension-hidden' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][hidden]' );
-								$( this ).find( 'input.extension-extension' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][extension]' );
-								$( this ).find( 'input.extension-extension' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][extension]' );
-								$( this ).find( 'input.extension-mime' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][mime_type]' );
-								$( this ).find( 'input.extension-mime' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][mime_type]' );
-								$( this ).find( 'input.extension-desc' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][description]' );
-								$( this ).find( 'input.extension-desc' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][description]' );
-								$( this ).find( 'select.extension-icon' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][icon]' );
-								$( this ).find( 'select.extension-icon' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][icon]' );
+								$( this ).find( 'input.extension-check' ).attr( 'name', media_type + '_extensions_support[' + totalCount + '][is_active]' );
+								$( this ).find( 'input.extension-check' ).attr( 'data-name', media_type + '_extensions_support[' + totalCount + '][is_active]' );
+								$( this ).find( 'input.extension-name' ).attr( 'name', media_type + '_extensions_support[' + totalCount + '][name]' );
+								$( this ).find( 'input.extension-name' ).attr( 'data-name', media_type + '_extensions_support[' + totalCount + '][name]' );
+								$( this ).find( 'input.extension-hidden' ).attr( 'name', media_type + '_extensions_support[' + totalCount + '][hidden]' );
+								$( this ).find( 'input.extension-hidden' ).attr( 'data-name', media_type + '_extensions_support[' + totalCount + '][hidden]' );
+								$( this ).find( 'input.extension-extension' ).attr( 'name', media_type + '_extensions_support[' + totalCount + '][extension]' );
+								$( this ).find( 'input.extension-extension' ).attr( 'data-name', media_type + '_extensions_support[' + totalCount + '][extension]' );
+								$( this ).find( 'input.extension-mime' ).attr( 'name', media_type + '_extensions_support[' + totalCount + '][mime_type]' );
+								$( this ).find( 'input.extension-mime' ).attr( 'data-name', media_type + '_extensions_support[' + totalCount + '][mime_type]' );
+								$( this ).find( 'input.extension-desc' ).attr( 'name', media_type + '_extensions_support[' + totalCount + '][description]' );
+								$( this ).find( 'input.extension-desc' ).attr( 'data-name', media_type + '_extensions_support[' + totalCount + '][description]' );
+								$( this ).find( 'select.extension-icon' ).attr( 'name', media_type + '_extensions_support[' + totalCount + '][icon]' );
+								$( this ).find( 'select.extension-icon' ).attr( 'data-name', media_type + '_extensions_support[' + totalCount + '][icon]' );
 								totalCount = totalCount + 1;
 						}
 					);
@@ -2426,6 +2448,82 @@ window.bp = window.bp || {};
 					}
 				}
 			);
+
+			// Redirection select box Select2
+			if( typeof $.fn.select2 !== 'undefined' ) {
+				if( $( '#bb-login-redirection' ).length > 0 ) {
+					$( '#bb-login-redirection' ).select2({
+						containerCssClass: 'custom-select2',
+						dropdownCssClass: 'custom-dropdown-select2'
+					});
+				}
+				if( $( '#bb-logout-redirection' ).length > 0 ) {
+					$( '#bb-logout-redirection' ).select2({
+						containerCssClass: 'custom-select2',
+						dropdownCssClass: 'custom-dropdown-select2'
+					});
+				}
+			}
+
+			// Login Redirection Settings Show/Hide.
+			var loginRedSettings = $( '#bb-login-redirection' );
+			var currentLoginRedSettings = '0';
+
+			if ( loginRedSettings.length ) {
+				currentLoginRedSettings = loginRedSettings.val();
+
+				if ( '0' === currentLoginRedSettings ) {
+					$( '.login-redirection-text-box' ).show();
+					loginRedSettings.closest( 'td' ).find( '.description, .bb-description' ).hide();
+				} else {
+					$( '.login-redirection-text-box' ).hide();
+					loginRedSettings.closest( 'td' ).find( '.description, .bb-description' ).show();
+				}
+
+				$( loginRedSettings ).change(
+					function () {
+						currentLoginRedSettings = $( this ).val();
+						if ( '0' === currentLoginRedSettings ) {
+							$( '.login-redirection-text-box' ).show();
+							loginRedSettings.closest( 'td' ).find( '.description, .bb-description' ).hide();
+						} else {
+							$( '.login-redirection-text-box' ).hide();
+							loginRedSettings.closest( 'td' ).find( '.description, .bb-description' ).show();
+						}
+
+					}
+				);
+			}
+
+			// Logout Redirection Settings Show/Hide.
+			var logoutRedSettings = $( '#bb-logout-redirection' );
+			var currentLogoutRedSettings = '0';
+
+			if ( logoutRedSettings.length ) {
+				currentLogoutRedSettings = logoutRedSettings.val();
+
+				if ( '0' === currentLogoutRedSettings ) {
+					$( '.logout-redirection-text-box' ).show();
+					logoutRedSettings.closest( 'td' ).find( '.description, .bb-description' ).hide();
+				} else {
+					$( '.logout-redirection-text-box' ).hide();
+					logoutRedSettings.closest( 'td' ).find( '.description, .bb-description' ).show();
+				}
+
+				$( logoutRedSettings ).change(
+					function () {
+						currentLogoutRedSettings = $( this ).val();
+						if ( '0' === currentLogoutRedSettings ) {
+							$( '.logout-redirection-text-box' ).show();
+							logoutRedSettings.closest( 'td' ).find( '.description, .bb-description' ).hide();
+						} else {
+							$( '.logout-redirection-text-box' ).hide();
+							logoutRedSettings.closest( 'td' ).find( '.description, .bb-description' ).show();
+						}
+
+					}
+				);
+			}
 		}
 	);
 
@@ -2488,7 +2586,7 @@ window.bp = window.bp || {};
 					$( '.bb-domain-restrictions-listing .registration-restrictions-select' ).find( 'option' ).attr( 'disabled', false );
 				} else {
 					var $select = $listing.find( '.registration-restrictions-rule:not(.custom) .registration-restrictions-input-select' );
-					if ( 
+					if (
 						0 === $select.find( 'option[value="only_allow"]:selected' ).length &&
 						0 === $select.find( 'option[value="always_allow"]:selected' ).length
 					) {

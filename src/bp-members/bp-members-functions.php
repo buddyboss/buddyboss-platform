@@ -3099,6 +3099,7 @@ function bp_get_member_type_post_type_labels() {
 	return apply_filters(
 		'bp_get_member_type_post_type_labels',
 		array(
+			'add_new'            => __( 'Add New', 'buddyboss' ),
 			'add_new_item'       => __( 'New Profile Type', 'buddyboss' ),
 			'all_items'          => __( 'Profile Types', 'buddyboss' ),
 			'edit_item'          => __( 'Edit Profile Type', 'buddyboss' ),
@@ -5457,32 +5458,50 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
 		return;
 	}
 
-	$prefix                = ! empty( $is_member_slug_background ) ? 'b' : '';
-	$new_unique_identifier = bb_generate_user_random_profile_slugs( count( $user_ids ), $prefix );
-
 	$implode_user_ids = implode( ',', $user_ids );
 
 	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	$wpdb->query(
 		$wpdb->prepare(
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery
-			"UPDATE {$wpdb->usermeta} SET meta_key = REPLACE(meta_key, %s, %s) WHERE meta_key LIKE 'bb_profile_slug_%' and user_id IN ({$implode_user_ids})",
+			"UPDATE {$wpdb->usermeta} SET meta_key = REPLACE(meta_key, %s, %s) WHERE meta_key LIKE 'bb_profile_slug_%' AND LENGTH(meta_key) >= 56 AND user_id IN ({$implode_user_ids})",
 			'bb_profile_slug_',
 			'bb_profile_long_slug_'
 		)
 	);
 
-	// Insert 'bb_profile_slug' metakey.
-	$bps_sql = "INSERT INTO {$wpdb->usermeta} (user_id, meta_key, meta_value) VALUES ";
-
 	foreach ( $user_ids as $key => $user_id ) {
-		$uuid = $new_unique_identifier[ $key ];
 
-		$bps_sql .= "({$user_id}, 'bb_profile_slug', '{$uuid}'), ({$user_id}, 'bb_profile_slug_{$uuid}', $user_id), ";
+		// removed old user meta which have value length 40.
+		$wpdb->query( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE 'bb_profile_slug' AND user_id = {$user_id} AND LENGTH(meta_value) = 40" );
+
+		// fetch user slug if already exists.
+		$p_slug = bb_core_get_user_slug( $user_id );
+		if ( ! empty( $p_slug ) && strlen( $p_slug ) <= 12 ) {
+
+			bb_remove_orphaned_profile_slug( $user_id );
+
+			// Unset user if already setup.
+			unset( $user_ids[$key] );
+		}
 	}
 
-	$bps_sql = rtrim( $bps_sql, ', ' ); // Remove the trailing comma and space.
-	$wpdb->query( $bps_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$prefix                = ! empty( $is_member_slug_background ) ? 'b' : '';
+	$new_unique_identifier = bb_generate_user_random_profile_slugs( count( $user_ids ), $prefix );
+
+	$bps_sql_data = array();
+	foreach ( $user_ids as $key => $user_id ) {
+		if ( isset( $new_unique_identifier[ $key ] ) ) {
+			$uuid           = $new_unique_identifier[ $key ];
+			$bps_sql_data[] = "({$user_id}, 'bb_profile_slug', '{$uuid}'), ({$user_id}, 'bb_profile_slug_{$uuid}', $user_id)";
+		}
+	}
+
+	// Insert 'bb_profile_slug' metakey.
+	if ( ! empty( $bps_sql_data ) ) {
+		$bps_sql = "INSERT INTO {$wpdb->usermeta} (user_id, meta_key, meta_value) VALUES " . implode( ', ', $bps_sql_data ); // Remove the trailing comma and space.
+		$wpdb->query( $bps_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	}
 
 	// Rest the global variable.
 	$is_member_slug_background = false;
@@ -5645,4 +5664,45 @@ function bb_is_short_user_unique_identifier( $unique_identifier ) {
 
 	// Return false because unique identifier is 40 characters long.
 	return false;
+}
+
+/**
+ * Removed orphaned user meta.
+ *
+ * @param int $user_id user meta.
+ *
+ * @since BuddyBoss 2.4.71
+ *
+ * @return void
+ */
+function bb_remove_orphaned_profile_slug( $user_id ) {
+	global $wpdb;
+
+	$p_slug         = bb_core_get_user_slug( $user_id );
+	$table_name     = $wpdb->usermeta;
+	$condition      = array();
+	$condition_join = '';
+
+	if ( empty( $p_slug ) || empty( $user_id ) ) {
+		return;
+	}
+
+	update_user_meta( $user_id, 'bb_profile_slug_' . $p_slug , $user_id );
+
+	$condition[] = $wpdb->prepare( "( meta_key LIKE 'bb_profile_slug_%' AND meta_key != %s )", "bb_profile_slug_{$p_slug}" );
+	$condition[] = "( meta_key LIKE 'bb_profile_long_slug_%' AND LENGTH(meta_key) < 61 )";
+	$condition[] = $wpdb->prepare( "( meta_key LIKE 'bb_profile_slug' AND meta_value != %s )", $p_slug );
+
+	$condition_join = '(' . implode( ' OR ', $condition ) . ') AND ' . $wpdb->prepare( 'user_id = %d', $user_id );
+
+	// Initial deletion query
+	$delete_query = "DELETE FROM {$table_name} WHERE {$condition_join} LIMIT 500";
+
+	// Execute the initial deletion
+	$wpdb->query( $delete_query );
+
+	// Recursive deletion until no more rows are affected
+	while ( $wpdb->rows_affected > 0 ) {
+		bb_remove_orphaned_profile_slug( $user_id );
+	}
 }

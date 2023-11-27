@@ -398,6 +398,8 @@ window.bp = window.bp || {};
 				$( selector ).append( content ).find( 'li.activity-item' ).each( this.hideSingleUrl );
 			} else if ( 'prepend' === method ) {
 				$( selector ).prepend( content ).find( 'li.activity-item' ).each( this.hideSingleUrl );
+			} else if ( 'after' === method ) {
+				$( selector ).after( content ).find( 'li.activity-item' ).each( this.hideSingleUrl );
 			} else {
 				$( selector ).html( content ).find( 'li.activity-item' ).each( this.hideSingleUrl );
 			}
@@ -1954,7 +1956,15 @@ window.bp = window.bp || {};
 			var leave_group_anchor__link = $( target ).data( 'bb-group-link' );
 			if ( 'leave_group' === action && 'true' !== $( target ).attr( 'data-popup-shown' ) ) {
 				if ( leave_group_popup.length ) {
-					leave_group_popup.find( '.bb-leave-group-content .bb-group-name' ).html( '<a href="' + leave_group_anchor__link + '">' + leave_group__name + '</a>' );
+
+					var leave_group_content = leave_group_popup.find( '.bb-leave-group-content' );
+					var is_parent_group = item.hasClass( 'has-child' ) ? true : false;
+
+					leave_group_content.html( is_parent_group ? BP_Nouveau.parent_group_leave_confirm : BP_Nouveau.group_leave_confirm );
+					if ( ! is_parent_group) {
+						leave_group_content.find( '.bb-group-name' ).html( '<a href="' + leave_group_anchor__link + '">' + leave_group__name + '</a>' );
+					}
+
 					$( 'body' ).find( '[data-current-anchor="true"]' ).removeClass( 'bp-toggle-action-button bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button-clicked' ); // Add clicked class manually to run function.
 					leave_group_popup.show();
 					$( target ).attr( 'data-current-anchor', 'true' );
@@ -2109,6 +2119,11 @@ window.bp = window.bp || {};
 								} else {
 									return window.location.reload();
 								}
+							}
+
+							// If group is parent and page is group directory, then load active tab.
+							if ( undefined !== response.data.is_group && response.data.is_parent ) {
+								$( '#buddypress .groups-nav li.selected a' ).trigger( 'click' );
 							}
 
 							if (
@@ -3974,6 +3989,7 @@ window.bp = window.bp || {};
 				//Remove mentioned members Link
 				var tempNode = jQuery( '<div></div>' ).html( urlText );
 				tempNode.find( 'a.bp-suggestions-mention' ).remove();
+				tempNode.find( '[rel="nofollow"]' ).remove() ;
 				urlText = tempNode.html();
 
 				if ( urlText.indexOf( '<img' ) >= 0 ) {
