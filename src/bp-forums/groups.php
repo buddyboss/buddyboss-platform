@@ -568,6 +568,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Redirect after save when not in admin
 			if ( ! is_admin() ) {
+				bp_core_add_message( __( 'Group Forum details were successfully updated.', 'buddyboss' ) );
 				bp_core_redirect( trailingslashit( bp_get_group_permalink( buddypress()->groups->current_group ) . '/admin/' . $this->slug ) );
 			}
 		}
