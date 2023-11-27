@@ -139,10 +139,6 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'validate_callback' => array( $this, 'bb_validate_activity_reaction_request' ),
 				)
 			);
-
-			add_action( 'bb_reaction_after_add_user_item_reaction', array( $this, 'bb_add_activity_reaction_data' ), 10, 2 );
-			add_action( 'bb_reaction_after_remove_user_item_reaction', array( $this, 'bb_remove_activity_reaction_data' ), 10, 3 );
-
 		}
 
 		/******************* Required functions ******************/
@@ -1989,57 +1985,6 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$sql      = $wpdb->prepare( $data_sql, $item_type, $item_id ); // phpcs:ignore
 
 			return $wpdb->get_results( $sql ); // phpcs:ignore
-		}
-
-		/**
-		 * Backward compatibility to add user favorite.
-		 *
-		 * @since BuddyBoss 2.4.30
-		 *
-		 * @param int   $user_reaction_id User reaction id.
-		 * @param array $args             Array of arguments.
-		 *
-		 * @return void
-		 */
-		public function bb_add_activity_reaction_data( $user_reaction_id, $args ) {
-			if (
-				! bp_is_active( 'activity' ) ||
-				empty( $args['item_id'] ) ||
-				empty( $args['item_type'] ) ||
-				empty( $args['user_id'] ) ||
-				'activity' !== $args['item_type']
-			) {
-				return;
-			}
-
-			bp_activity_add_user_favorite( $args['item_id'], $args['user_id'] );
-
-		}
-
-		/**
-		 * Backward compatibility to remove user favorite.
-		 *
-		 * @since BuddyBoss 2.4.30
-		 *
-		 * @param int       $user_reaction_id User reaction id.
-		 * @param int|false $deleted          The number of rows deleted, or false on error.
-		 * @param object    $get              Reaction data.
-		 *
-		 * @return void
-		 */
-		public function bb_remove_activity_reaction_data( $user_reaction_id, $deleted, $get ) {
-			if (
-				! bp_is_active( 'activity' ) ||
-				empty( $get->item_type ) ||
-				'activity' !== $get->item_type ||
-				! $deleted ||
-				empty( $get->user_id ) ||
-				empty( $get->item_id )
-			) {
-				return;
-			}
-
-			bp_activity_remove_user_favorite( $get->item_id, $get->user_id );
 		}
 
 		/**
