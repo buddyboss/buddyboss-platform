@@ -1946,25 +1946,27 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @return void
 		 */
 		public function bb_register_activity_like() {
-			$reaction_id = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
+			$reaction_id   = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
+			$prepared_args = array(
+				'name'              => 'Likes',
+				'icon'              => 'likes',
+				'type'              => '',
+				'icon_color'        => '',
+				'icon_text'         => 'Likes',
+				'text_color'        => '',
+				'notification_text' => 'Likes',
+				'icon_path'         => '',
+				'mode'              => 'likes'
+			);
+
 			if ( empty( $reaction_id ) ) {
-				$reaction_id = $this->bb_add_reaction(
-					array(
-						'name'              => 'Likes',
-						'icon'              => 'likes',
-						'type'              => '',
-						'icon_color'        => '',
-						'icon_text'         => 'Likes',
-						'text_color'        => '',
-						'notification_text' => 'Likes',
-						'icon_path'         => '',
-					)
-				);
+				$reaction_id = $this->bb_add_reaction( $prepared_args );
 
 				if ( ! empty( $reaction_id ) ) {
-					update_post_meta( $reaction_id, 'is_like', true );
 					bp_update_option( 'bb_reactions_default_like_reaction_added', (int) $reaction_id );
 				}
+			} else {
+				$this->bb_update_reaction( $reaction_id, $prepared_args );
 			}
 		}
 
