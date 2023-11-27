@@ -28,6 +28,11 @@ class BB_Admin_Setting_Reactions extends BP_Admin_Setting_tab {
 		$this->tab_order = 51;
 	}
 
+	/**
+	 * Method to save the fields.
+	 *
+	 * @return void
+	 */
 	public function settings_save() {
 		/**
 		 * Fires before save the settings.
