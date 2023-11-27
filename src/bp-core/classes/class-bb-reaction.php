@@ -360,11 +360,15 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			// If the reaction was successfully added, update the transient.
 			if ( ! is_wp_error( $reaction_id ) && ! empty( $reaction_id ) ) {
 
-				if ( ! empty( $r['mode'] ) && $r['mode'] === 'emotions' ) {
-					update_post_meta( $reaction_id, 'is_emotion', true );
+				if ( ! empty( $r['mode'] ) ) {
+					if ( $r['mode'] === 'emotions' ) {
+						update_post_meta( $reaction_id, 'is_emotion', true );
 
-					if ( isset( $r['is_emotion_active'] ) ) {
-						update_post_meta( $reaction_id, 'is_emotion_active', (bool) $r['is_emotion_active'] );
+						if ( isset( $r['is_emotion_active'] ) ) {
+							update_post_meta( $reaction_id, 'is_emotion_active', (bool) $r['is_emotion_active'] );
+						}
+					} elseif ( $r['mode'] === 'likes' ) {
+						update_post_meta( $reaction_id, 'is_like', true );
 					}
 				}
 
@@ -408,7 +412,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				return;
 			}
 
-			// Check post is exist or not.
+			// Check post exists or not.
 			$existing_reaction = get_post( $reaction_id );
 			if ( empty( $existing_reaction ) ) {
 				return;
@@ -443,11 +447,15 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			// If the reaction was successfully updated then update the transient.
 			if ( ! is_wp_error( $reaction_id ) && ! empty( $reaction_id ) ) {
 
-				if ( ! empty( $r['mode'] ) && $r['mode'] === 'emotions' ) {
-					update_post_meta( $reaction_id, 'is_emotion', true );
+				if ( ! empty( $r['mode'] ) ) {
+					if ( $r['mode'] === 'emotions' ) {
+						update_post_meta( $reaction_id, 'is_emotion', true );
 
-					if ( isset( $r['is_emotion_active'] ) ) {
-						update_post_meta( $reaction_id, 'is_emotion_active', (bool) $r['is_emotion_active'] );
+						if ( isset( $r['is_emotion_active'] ) ) {
+							update_post_meta( $reaction_id, 'is_emotion_active', (bool) $r['is_emotion_active'] );
+						}
+					} elseif ( $r['mode'] === 'likes' ) {
+						update_post_meta( $reaction_id, 'is_like', true );
 					}
 				}
 
