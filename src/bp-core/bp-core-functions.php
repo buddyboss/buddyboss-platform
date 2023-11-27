@@ -9104,11 +9104,32 @@ function bb_reactions_get_settings_sections() {
 		'bp_reaction_settings_section'    => array(
 			'page'              => 'reaction',
 			'title'             => esc_html__( 'Reactions', 'buddyboss' ),
-			//'tutorial_callback' => '',
+			'tutorial_callback' => 'bp_admin_reaction_setting_tutorial',
+			'notice'            => (
+				sprintf(
+					wp_kses_post(
+						__( 'When switching reactions mode, use our %s to map existing reactions to the new options.', 'buddyboss' )
+					),
+					'<a href="#" target="_blank" >' . esc_html__( 'migration wizard', 'buddyboss' ) . '</a>'
+				)
+			),
 		),
 	);
 
 	return (array) apply_filters( 'bb_reactions_get_settings_sections', $settings );
+}
+
+/**
+ * Link to Reaction tutorial.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_reaction_setting_tutorial() {
+	?>
+	<p>
+		<a class="button" href="#"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
 }
 
 /**

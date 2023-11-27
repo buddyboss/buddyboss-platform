@@ -68,9 +68,10 @@ class BB_Admin_Setting_Reactions extends BP_Admin_Setting_tab {
 			$section_title     = ! empty( $section['title'] ) ? $section['title'] : '';
 			$section_callback  = ! empty( $section['callback'] ) ? $section['callback'] : false;
 			$tutorial_callback = ! empty( $section['tutorial_callback'] ) ? $section['tutorial_callback'] : false;
+			$notice            = ! empty( $section['notice'] ) ? $section['notice'] : false;
 
 			// Add the section.
-			$this->add_section( $section_id, $section_title, $section_callback, $tutorial_callback );
+			$this->add_section( $section_id, $section_title, $section_callback, $tutorial_callback, $notice );
 
 			// Loop through fields for this section.
 			foreach ( (array) $fields as $field_id => $field ) {
