@@ -9088,3 +9088,72 @@ function bb_redirect_after_action( $redirect_to, $user_id = 0, $action = 'login'
 
 	return $redirect_to;
 }
+
+/**
+ * Function will remove mention link from content if mentioned member is deleted.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $content Content.
+ *
+ * @return mixed
+ */
+function bb_mention_add_user_dynamic_link( $content ) {
+
+	if ( empty( $content ) ) {
+		return $content;
+	}
+
+	// Define a callback function for preg_replace_callback
+	$replace_callback = function ($matches) {
+		$userId = $matches[1]; // Extract the user ID from the match
+		return bp_core_get_user_domain( $userId ); // Replace this with your actual BuddyPress URL format
+
+	};
+
+	// Use preg_replace_callback to replace the placeholders
+	$processed_content = preg_replace_callback('/{{mention_user_id_(\d+)}}/', $replace_callback, $content);
+
+	return $processed_content;
+
+}
+
+/**
+ * Locate usernames in an content string, as designated by an @ sign.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param  array  $mentioned_users Associative array with user IDs as keys and usernames as values.
+ * @param string $content Content
+ * @return array|bool Associative array with user ID as key and username as
+ *                    value. Boolean false if no mentions found.
+ */
+function bb_find_mentions_by_mention_user_id( $mentioned_users, $content ) {
+
+	// Exclude mention in URL.
+	$pattern = '/{{mention_user_id_(\d+)}}/';
+	preg_match_all( $pattern, $content, $user_ids );
+
+	// Make sure there's only one instance of each username.
+	$user_ids = array_unique( $user_ids[1] );
+
+	// Bail if no usernames.
+	if ( empty( $user_ids ) ) {
+		return $mentioned_users;
+	}
+
+	// We've found some mentions! Check to see if users exist.
+	foreach ( $user_ids as $user_id ) {
+		$username = get_user_meta( $user_id, 'nickname', true );
+		// The user ID exists, so let's add it to our array.
+		if ( ! empty( $user_id ) ) {
+			$mentioned_users[ $user_id ] = $username;
+		}
+	}
+
+	if ( empty( $mentioned_users ) ) {
+		return $mentioned_users;
+	}
+
+	return $mentioned_users;
+}

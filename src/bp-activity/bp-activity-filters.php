@@ -38,6 +38,7 @@ if ( function_exists( 'wp_encode_emoji' ) ) {
 }
 
 add_filter( 'bp_activity_mentioned_users', 'bp_find_mentions_by_at_sign', 10, 2 );
+add_filter( 'bp_activity_mentioned_users', 'bb_find_mentions_by_mention_user_id', 10, 2 );
 
 add_filter( 'bp_get_activity_action', 'wptexturize' );
 add_filter( 'bp_get_activity_content_body', 'wptexturize' );
@@ -177,6 +178,9 @@ add_action( 'bp_after_directory_activity_list', 'bb_activity_pinpost_confirmatio
 add_action( 'bp_after_member_activity_content', 'bb_activity_pinpost_confirmation_modal_template' );
 add_action( 'bp_after_group_activity_content', 'bb_activity_pinpost_confirmation_modal_template' );
 add_action( 'bp_after_single_activity_content', 'bb_activity_pinpost_confirmation_modal_template' );
+
+add_filter( 'bp_get_activity_content', 'bb_mention_add_user_dynamic_link', 20, 1 );
+add_filter( 'bp_get_activity_content_body', 'bb_mention_add_user_dynamic_link', 20, 1 );
 
 /** Functions *****************************************************************/
 
@@ -508,8 +512,9 @@ function bp_activity_at_name_filter_updates( $activity ) {
 	if ( ! empty( $usernames ) ) {
 		// Replace @mention text with userlinks.
 		foreach ( (array) $usernames as $user_id => $username ) {
+			$display_name = bp_core_get_user_displayname( $user_id );
 			$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)/';
-			$activity->content = preg_replace( $pattern, "<a class='bp-suggestions-mention' href='" . bp_core_get_user_domain( $user_id ) . "' rel='nofollow'>@$username</a>", $activity->content );
+			$activity->content = preg_replace( $pattern, "<a class='bp-suggestions-mention' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>$display_name</a>", $activity->content );
 		}
 
 		if ( ! bb_is_rest() ) {
