@@ -173,7 +173,12 @@ function bp_get_default_options() {
 		'_bb_enable_activity_pinned_posts'           => true,
 
 		// Enabled reactions and their mode.
-		'bb_all_reactions'                           => array( 'activity', 'activity_comment' ),
+		'bb_all_reactions'                           => array(
+			array(
+				'activity'         => true,
+				'activity_comment' => true
+			)
+		),
 		'bb_reaction_mode'                           => 'likes',
 	);
 
