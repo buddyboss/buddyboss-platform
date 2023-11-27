@@ -446,7 +446,7 @@ function bbp_new_reply_handler( $action = '' ) {
 		} else {
 			$terms = (array) $terms;
 		}
-		$terms = bb_add_topic_tags( $terms, $topic_id, bbp_get_topic_tag_tax_id() );
+		$terms = bb_add_topic_tags( $terms, $topic_id, bbp_get_topic_tag_tax_id(), bbp_get_topic_tag_names( $topic_id ) );
 
 		// Term error.
 		if ( is_wp_error( $terms ) ) {
