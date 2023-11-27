@@ -3515,15 +3515,6 @@ function bb_reactions_settings_callback_reaction_mode() {
 			'value'      => 'likes',
 			'id'         => 'bb_reaction_mode_likes',
 			'is_checked' => 'likes' === bb_get_reaction_mode(),
-			'count'      => bb_load_reaction()->bb_get_user_reactions_count(
-				array(
-					'reaction_id' => bb_load_reaction()->bb_reactions_get_like_reaction_id(),
-					'per_page'    => 1,
-					'paged'       => 1,
-					'order'       => 'ASC',
-					'count_total' => true
-				)
-			),
 			'notice'     => esc_html__( 'A simple "Like" button will show for members to express their appreciation or acknowledgement.', 'buddyboss' ),
 		)
 	);
@@ -3539,7 +3530,6 @@ function bb_reactions_settings_callback_reaction_mode() {
 					type="radio"
 					value="<?php echo $reaction_mode['value']; ?>"
 					<?php echo checked( $reaction_mode['is_checked'] ); ?>
-					data-count="<?php echo ! empty( $reaction_mode['count'] ) ? $reaction_mode['count'] : 0; ?>"
 					data-current-val="<?php echo bb_get_reaction_mode(); ?>"
 					data-notice="<?php echo ! empty( $reaction_mode['notice'] ) ? $reaction_mode['notice'] : ''; ?>"
 				/>
