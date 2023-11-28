@@ -5483,11 +5483,11 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
 		if ( ! empty( $p_slug ) && strlen( $p_slug ) <= 12 ) {
 
 			// Remove duplicate meta with same value.
-			delete_user_meta( $user_id, 'bb_profile_slug' );
+			delete_user_meta( $user_id, 'bb_profile_slug', $p_slug );
 			update_user_meta( $user_id, 'bb_profile_slug', $p_slug );
 
 			// Remove duplicate meta with same value.
-			delete_user_meta( $user_id, 'bb_profile_slug_' . $p_slug );
+			delete_user_meta( $user_id, 'bb_profile_slug_' . $p_slug, $user_id );
 			update_user_meta( $user_id, 'bb_profile_slug_' . $p_slug, $user_id );
 
 			bb_remove_orphaned_profile_slug( $user_id );
