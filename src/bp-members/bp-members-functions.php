@@ -5611,6 +5611,10 @@ function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 )
 	}
 
 	if ( is_array( $unique_identifier ) ) {
+		$unique_identifier = array_filter( $unique_identifier );
+		if ( empty( $unique_identifier ) ) {
+			return $unique_identifier;
+		}
 		$prefixed_array = array_map( function ( $item ) {
 			return 'bb_profile_slug_' . $item;
 		}, $unique_identifier );
