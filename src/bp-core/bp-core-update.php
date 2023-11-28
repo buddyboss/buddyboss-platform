@@ -3488,7 +3488,7 @@ function bb_background_removed_orphaned_metadata() {
 function bb_core_removed_orphaned_member_slug() {
 	global $wpdb;
 
-	$limit = apply_filters( 'bb_core_removed_orphaned_member_slug_limit', 5 );
+	$limit = apply_filters( 'bb_core_removed_orphaned_member_slug_limit', 50 );
 
 	$query = "SELECT user_id FROM (
 		SELECT user_id, COUNT(*) AS count FROM {$wpdb->usermeta}

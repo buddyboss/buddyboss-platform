@@ -874,7 +874,7 @@ function bb_delete_forum_topic_reply_notification( $post_data ) {
 		return;
 	}
 
-	if ( 'trash' === $post_data->post_status ) {
+	if ( isset( $post_data->post_status ) && 'trash' === $post_data->post_status ) {
 		if ( bbp_get_reply_post_type() === $post_data->post_type ) {
 			bp_notifications_delete_all_notifications_by_type( $post_data->ID, 'forums', 'bb_forums_subscribed_reply' );
 		}
