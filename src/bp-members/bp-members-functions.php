@@ -5618,7 +5618,8 @@ function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 )
 		$profile_keys = '"' . implode( '","', $prefixed_array ) . '"';
 		$unique_identifier = '"' . implode( '","', $unique_identifier ) . '"';
 	} else {
-		$profile_keys = 'bb_profile_slug_' . $unique_identifier;
+		$profile_keys      = '"bb_profile_slug_' . $unique_identifier . '"';
+		$unique_identifier = '"' . $unique_identifier . '"';
 	}
 
 	// Prepare the statement to check unique identifier.
