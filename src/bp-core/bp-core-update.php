@@ -3423,7 +3423,7 @@ function bb_update_to_2_4_60() {
 /**
  * Migrate a background job for remove the duplicate metas.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.71
  *
  * @return void
  */
@@ -3443,7 +3443,7 @@ function bb_update_to_2_4_71() {
 /**
  * Register background jobs to delete the duplicate metas for the user profiles.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.71
  *
  * @return void
  */
@@ -3481,7 +3481,7 @@ function bb_background_removed_orphaned_metadata() {
 /**
  * Delete the duplicate metas for the user profiles in the background.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.71
  *
  * @return void
  */

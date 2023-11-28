@@ -5670,7 +5670,7 @@ function bb_is_short_user_unique_identifier( $unique_identifier ) {
  *
  * @param int $user_id user meta.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.71
  *
  * @return void
  */
