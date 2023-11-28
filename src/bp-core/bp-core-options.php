@@ -171,6 +171,15 @@ function bp_get_default_options() {
 
 		// Enabled activity pinned posts.
 		'_bb_enable_activity_pinned_posts'           => true,
+
+		// Enabled reactions and their mode.
+		'bb_all_reactions'                           => array(
+			array(
+				'activity'         => true,
+				'activity_comment' => true
+			)
+		),
+		'bb_reaction_mode'                           => 'likes',
 	);
 
 	/**
@@ -1175,6 +1184,11 @@ function bp_is_activity_follow_active( $default = false ) {
  */
 function bp_is_activity_like_active( $default = true ) {
 
+	$is_activity_post_like_active = false;
+	if ( bb_is_reaction_activity_posts_enabled( $default ) ) {
+		$is_activity_post_like_active = true;
+	}
+
 	/**
 	 * Filters whether or not Activity Like is enabled.
 	 *
@@ -1182,7 +1196,7 @@ function bp_is_activity_like_active( $default = true ) {
 	 *
 	 * @param bool $value Whether or not Activity Like is enabled.
 	 */
-	return (bool) apply_filters( 'bp_is_activity_like_active', (bool) bp_get_option( '_bp_enable_activity_like', $default ) );
+	return (bool) apply_filters( 'bp_is_activity_like_active', $is_activity_post_like_active );
 }
 
 
@@ -2453,4 +2467,167 @@ function bb_is_active_activity_pinned_posts( $default = false ) {
 	 * @param bool $value Whether activity pinned posts are enabled.
 	 */
 	return (bool) apply_filters( 'bb_is_active_activity_pinned_posts', (bool) bp_get_option( '_bb_enable_activity_pinned_posts', $default ) );
+}
+
+/**
+ * Get login redirection settings value from the database.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ *
+ * @return string Login redirection setting value.
+ */
+function bb_login_redirection( $default = '' ) {
+
+	/**
+	 * Filters login redirection settings.
+	 *
+	 * @since BuddyBoss 2.4.70
+	 *
+	 * @param string $value Login redirection setting value.
+	 */
+	return apply_filters( 'bb_login_redirection', bp_get_option( 'bb-login-redirection', $default ) );
+}
+
+/**
+ * Get logout redirection setting value from the database.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ *
+ * @return string Logout redirection setting value.
+ */
+function bb_logout_redirection( $default = '' ) {
+
+	/**
+	 * Filters logout redirection settings.
+	 *
+	 * @since BuddyBoss 2.4.70
+	 *
+	 * @param string $value Logout redirection setting value.
+	 */
+	return apply_filters( 'bb_logout_redirection', bp_get_option( 'bb-logout-redirection', $default ) );
+}
+
+/**
+ * Get custom login redirection setting value from the database.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ *
+ * @return string Login redirection setting value.
+ */
+function bb_custom_login_redirection( $default = '' ) {
+
+	/**
+	 * Filters custom login page URL.
+	 *
+	 * @since BuddyBoss 2.4.70
+	 *
+	 * @param string $value Custom login page URL.
+	 */
+	return apply_filters( 'bb_custom_login_redirection', bp_get_option( 'bb-custom-login-redirection', $default ) );
+}
+
+/**
+ * Get custom logout redirection setting value from the database.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ *
+ * @return string Logout redirection setting value.
+ */
+function bb_custom_logout_redirection( $default = '' ) {
+
+	/**
+	 * Filters custom logout page URL.
+	 *
+	 * @since BuddyBoss 2.4.70
+	 *
+	 * @param string $value Custom logout page URL.
+	 */
+	return apply_filters( 'bb_custom_logout_redirection', bp_get_option( 'bb-custom-logout-redirection', $default ) );
+}
+
+function bb_get_all_reactions() {
+	return array(
+		'activity'         => array(
+			'label'     => esc_html__( 'Activity', 'buddyboss' ),
+			'disabled'  => ! bp_is_active( 'activity' ),
+			'component' => 'activity',
+		),
+		'activity_comment' => array(
+			'label'     => esc_html__( 'Activity Comment', 'buddyboss' ),
+			'disabled'  => ! bp_is_active( 'activity' ),
+			'component' => 'activity',
+		),
+	);
+}
+function bb_all_enabled_reactions( $key = '' ) {
+	$get_reactions = (array) bp_get_option( 'bb_all_reactions', array() );
+	if ( empty( $key ) ) {
+		return $get_reactions;
+	}
+
+	$all_reactions = bb_get_all_reactions();
+
+	return (bool) (
+		isset( $get_reactions[ $key ] ) &&
+		$all_reactions[ $key ] &&
+		! empty( $all_reactions[ $key ]['component'] ) &&
+		bp_is_active( $all_reactions[ $key ]['component'] ) &&
+		$get_reactions[ $key ]
+	);
+}
+
+/**
+ * Check whether Reaction for activity posts is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if reaction for activity posts is enabled, otherwise false.
+ */
+function bb_is_reaction_activity_posts_enabled( $default = true ) {
+	return (bool) apply_filters( 'bb_is_reaction_activity_posts_enabled', (bool) bb_all_enabled_reactions('activity') );
+}
+
+/**
+ * Check whether Reaction for activity comments is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: True.
+ * @return bool True if reaction for activity comments is enabled, otherwise false.
+ */
+function bb_is_reaction_activity_comments_enabled( $default = true ) {
+	return (bool) apply_filters( 'bb_is_reaction_activity_comments_enabled', (bool) bb_all_enabled_reactions( 'activity_comment' ) );
+}
+
+/**
+ * Get currently active reaction mode.
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: 'likes'
+ *
+ * @return string The reaction mode, either 'likes' or 'emotions'.
+ */
+function bb_get_reaction_mode( $default = 'likes' ) {
+
+	$mode = bp_get_option( 'bb_reaction_mode', $default );
+	if ( ! function_exists( 'bb_platform_pro' ) ) {
+		$mode = 'likes';
+	}
+
+	return apply_filters( 'bb_get_reaction_mode', $mode );
 }

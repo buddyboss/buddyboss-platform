@@ -7862,6 +7862,12 @@ function bb_admin_icons( $id ) {
 		case 'bp_web_push_notification_settings':
 			$meta_icon = $bb_icon_bf . ' bb-icon-paste';
 			break;
+		case 'bb_redirection':
+			$meta_icon = $bb_icon_bf . ' bb-icon-sign-in';
+			break;
+		case 'bp_reaction_settings_section':
+			$meta_icon = $bb_icon_bf . ' bb-icon-like';
+			break;
 		default:
 			$meta_icon = '';
 	}
@@ -8992,4 +8998,185 @@ function bb_load_reaction() {
 	if ( class_exists( 'BB_Reaction' ) ) {
 		return BB_Reaction::instance();
 	}
+}
+
+/**
+ * Wrapper function to get the redirect url as per action.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @param string $redirect_to Original redirect URL.
+ * @param int    $user_id     User ID.
+ * @param string $action      Type of action i.e. login or logout.
+ *
+ * @return string $redirect_to Updated redirect URL.
+ */
+function bb_redirect_after_action( $redirect_to, $user_id = 0, $action = 'login' ) {
+	$custom_url       = '';
+	$redirect_setting = '';
+
+	if ( 'login' === $action ) {
+		$redirect_setting = bb_login_redirection();
+	} elseif ( 'logout' === $action ) {
+		$redirect_setting = bb_logout_redirection();
+	}
+
+	// Check if any page or custom URL is set.
+	if ( '' !== $redirect_setting ) {
+		if ( '0' === $redirect_setting ) {
+			if ( 'login' === $action ) {
+				$custom_url = esc_url( bb_custom_login_redirection() );
+			} elseif ( 'logout' === $action ) {
+				$custom_url = esc_url( bb_custom_logout_redirection() );
+			}
+
+			if ( ! empty( $custom_url ) ) {
+
+				// Custom Page URL.
+				$redirect_to = $custom_url;
+			}
+		} else {
+
+			// Page ID.
+			if (
+				! empty( $redirect_setting ) &&
+				is_numeric( $redirect_setting ) &&
+				'publish' === get_post_status( $redirect_setting )
+			) {
+				$redirect_to = get_permalink( $redirect_setting );
+			}
+		}
+	}
+
+	// Check for profile type settings for login redirection.
+	if ( false !== bp_member_type_enable_disable() ) {
+		$member_type = bp_get_member_type( $user_id );
+		if ( false !== $member_type ) {
+			$member_type_post_id = bp_member_type_post_by_type( $member_type );
+			if ( ! empty( $member_type_post_id ) ) {
+
+				$member_type_redirect_setting = get_post_meta( $member_type_post_id, '_bp_member_type_' . $action . '_redirection', true );
+
+				// Check if any page or custom URL is set.
+				if ( '' !== $member_type_redirect_setting ) {
+
+					$custom_url = '';
+					if ( '0' === $member_type_redirect_setting ) {
+						$custom_url = get_post_meta( $member_type_post_id, '_bp_member_type_custom_' . $action . '_redirection', true );
+						if ( ! empty( $custom_url ) ) {
+
+							// Custom Page URL.
+							$redirect_to = $custom_url;
+						}
+					} else {
+
+						// Page ID.
+						if (
+							! empty( $member_type_redirect_setting ) &&
+							is_numeric( $member_type_redirect_setting ) &&
+							'publish' === get_post_status( $member_type_redirect_setting )
+						) {
+							$redirect_to = get_permalink( $member_type_redirect_setting );
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// Support for custom third party URLs.
+	if ( ! empty( $custom_url ) ) {
+		add_filter( 'allowed_redirect_hosts', 'bb_redirection_allowed_third_party_domains' );
+	}
+
+	return $redirect_to;
+}
+
+/**
+ * Get the Reactions settings sections.
+ *
+ * @return array
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_reactions_get_settings_sections() {
+
+	$settings = array(
+		'bp_reaction_settings_section'    => array(
+			'page'              => 'reaction',
+			'title'             => esc_html__( 'Reactions', 'buddyboss' ),
+			'tutorial_callback' => 'bp_admin_reaction_setting_tutorial',
+			'notice'            => (
+				sprintf(
+					wp_kses_post(
+						__( 'When switching reactions mode, use our %s to map existing reactions to the new options.', 'buddyboss' )
+					),
+					'<a href="#" target="_blank" >' . esc_html__( 'migration wizard', 'buddyboss' ) . '</a>'
+				)
+			),
+		),
+	);
+
+	return (array) apply_filters( 'bb_reactions_get_settings_sections', $settings );
+}
+
+/**
+ * Link to Reaction tutorial.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_reaction_setting_tutorial() {
+	?>
+	<p>
+		<a class="button" href="#"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
+ * Get reaction settings fields by section.
+ *
+ * @param string $section_id Section ID.
+ *
+ * @return mixed False if section is invalid, array of fields otherwise.
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_reactions_get_settings_fields_for_section( $section_id = '' ) {
+
+	// Bail if section is empty.
+	if ( empty( $section_id ) ) {
+		return false;
+	}
+
+	$fields = bb_reactions_get_settings_fields();
+	$retval = $fields[ $section_id ] ?? false;
+
+	return (array) apply_filters( 'bb_reactions_get_settings_fields_for_section', $retval, $section_id );
+}
+
+/**
+ * Get all of the reactions settings fields.
+ *
+ * @return array
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_reactions_get_settings_fields() {
+
+	$fields = array();
+
+	$fields['bp_reaction_settings_section'] = array(
+		'bb_all_reactions' => array(
+			'title'             => esc_html__( 'Enable reactions', 'buddyboss' ),
+			'callback'          => 'bb_reactions_settings_callback_all_reactions',
+			'args'              => array(),
+		),
+
+		'bb_reaction_mode'  => array(
+			'title'             => esc_html__( 'Reactions Mode', 'buddyboss' ),
+			'callback'          => 'bb_reactions_settings_callback_reaction_mode',
+			'sanitize_callback' => 'sanitize_text_field',
+			'args'              => array(),
+		),
+	);
+
+	return (array) apply_filters( 'bb_reactions_get_settings_fields', $fields );
 }

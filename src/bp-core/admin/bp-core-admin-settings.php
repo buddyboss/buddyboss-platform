@@ -325,21 +325,6 @@ function bp_admin_setting_callback_enable_activity_follow() {
 }
 
 /**
- * Allow like activity stream.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_admin_setting_callback_enable_activity_like() {
-	?>
-
-	<input id="_bp_enable_activity_like" name="_bp_enable_activity_like" type="checkbox" value="1" <?php checked( bp_is_activity_like_active( true ) ); ?> />
-	<label for="_bp_enable_activity_like"><?php esc_html_e( 'Allow your members to "Like" each other\'s activity posts', 'buddyboss' ); ?></label>
-
-	<?php
-}
-
-
-/**
  * Allow link previews in activity posts.
  *
  * @since BuddyBoss 1.0.0
@@ -3324,4 +3309,248 @@ function bb_admin_setting_callback_enable_activity_pinned_posts() {
 	<label for="_bb_enable_activity_pinned_posts"><?php esc_html_e( 'Allow group owners and moderators to pin posts', 'buddyboss' ); ?></label>
 
 	<?php
+}
+
+/**
+ * Link to redirection tutorial.
+ *
+ * @since BuddyBoss 2.4.70
+ */
+function bb_admin_redirection_setting_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 127063,
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
+ * Get the published page list.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @return array Associative array of page id and page title of pages.
+ */
+function bb_get_published_pages() {
+	static $published_pages = array();
+
+	if ( ! empty( $published_pages ) ) {
+		return $published_pages;
+	}
+
+	$pages = get_pages(
+		array(
+			'post_status' => 'publish',
+		)
+	);
+
+	foreach ( $pages as $page ) {
+		$published_pages[ $page->ID ] = $page->post_title;
+	}
+
+	return $published_pages;
+}
+
+/**
+ * Admin settings for showing the login redirection settings.
+ *
+ * @since BuddyBoss 2.4.70
+ */
+function bb_admin_setting_callback_login_redirection() {
+	$login_redirection = bb_login_redirection();
+	?>
+	<select name="bb-login-redirection" id="bb-login-redirection">
+		<option value="" <?php selected( '', $login_redirection ); ?>><?php esc_html_e( 'Default', 'buddyboss' ); ?></option>
+		<option value="0" <?php selected( 0, $login_redirection ); ?>><?php esc_html_e( 'Custom URL', 'buddyboss' ); ?></option>
+		<?php
+		$pages = bb_get_published_pages();
+		foreach ( $pages as $id => $title ) {
+			?>
+			<option value="<?php echo esc_attr( $id ); ?>" <?php selected( $id, $login_redirection ); ?>><?php echo esc_html( $title ); ?></option>
+			<?php
+		}
+		?>
+	</select>
+	<p class="description">
+		<?php
+		esc_html_e(
+			'Select a page or external link to redirect your members to after they login.',
+			'buddyboss'
+		);
+		?>
+	</p>
+	<?php
+}
+
+/**
+ * Admin settings for showing the custom login redirection page url.
+ *
+ * @since BuddyBoss 2.4.70
+ */
+function bp_admin_setting_callback_custom_login_redirection() {
+	?>
+	<input style="width: 89%;" id="bb-custom-login-redirection" name="bb-custom-login-redirection" type="text" value="<?php echo esc_url( bb_custom_login_redirection() ); ?>"/>
+	<p class="description">
+		<?php
+		esc_html_e(
+			'Select a page or external link to redirect your members to after they login.',
+			'buddyboss'
+		)
+		?>
+	</p>
+	<?php
+}
+
+/**
+ * Admin settings for showing the logout redirection settings.
+ *
+ * @since BuddyBoss 2.4.70
+ */
+function bb_admin_setting_callback_logout_redirection() {
+	$logout_redirection = bb_logout_redirection();
+	?>
+	<select name="bb-logout-redirection" id="bb-logout-redirection">
+		<option value="" <?php selected( '', $logout_redirection ); ?>><?php esc_html_e( 'Default', 'buddyboss' ); ?></option>
+		<option value="0" <?php selected( 0, $logout_redirection ); ?>><?php esc_html_e( 'Custom URL', 'buddyboss' ); ?></option>
+		<?php
+		$pages = bb_get_published_pages();
+		foreach ( $pages as $id => $title ) {
+			?>
+			<option value="<?php echo esc_attr( $id ); ?>" <?php selected( $id, $logout_redirection ); ?>><?php echo esc_html( $title ); ?></option>
+			<?php
+		}
+		?>
+	</select>
+	<p class="description">
+		<?php
+		esc_html_e(
+			'Select a page or external link to redirect your members to after they logout.',
+			'buddyboss'
+		)
+		?>
+	</p>
+	<?php
+}
+
+/**
+ * Admin settings for showing the custom logout redirection page url.
+ *
+ * @since BuddyBoss 2.4.70
+ */
+function bp_admin_setting_callback_custom_logout_redirection() {
+	?>
+	<input style="width: 89%;" id="bb-custom-logout-redirection" name="bb-custom-logout-redirection" type="text" value="<?php echo esc_url( bb_custom_logout_redirection() ); ?>"/>
+	<p class="description">
+		<?php
+		esc_html_e(
+			'Select a page or external link to redirect your members to after they logout.',
+			'buddyboss'
+		);
+		?>
+	</p>
+	<?php
+}
+
+/**
+ * Reactions settings enable markups.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_reactions_settings_callback_all_reactions() {
+
+	$all_reactions = bb_get_all_reactions();
+	?>
+	<p class="description access_control_label_header"><?php esc_html_e( 'Which type of content should members be able to react to?', 'buddyboss' ); ?></p>
+
+	<br/>
+	<?php
+	foreach ( $all_reactions as $key => $field ) {
+
+		$field['enabled'] = bb_all_enabled_reactions( $key );
+		?>
+		<div class="bb-reactions-setting-field">
+			<input
+				name="bb_all_reactions[<?php echo esc_attr( $key ); ?>]"
+				id="bb_all_reactions_<?php echo esc_attr( $key ); ?>"
+				type="checkbox"
+				value="1"
+				<?php
+				checked( $field['enabled'] );
+				disabled( $field['disabled'] );
+				?>
+			/>
+			<label for="bb_all_reactions_<?php echo esc_attr( $key ); ?>">
+				<?php echo esc_html( $field['label'] ); ?>
+			</label>
+		</div>
+		<?php
+	}
+}
+
+/**
+ * Add reaction mode settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_reactions_settings_callback_reaction_mode() {
+
+	$reactions_modes = array(
+		array(
+			'label'      => esc_html__( 'Likes', 'buddyboss' ),
+			'name'       => 'bb_reaction_mode',
+			'value'      => 'likes',
+			'id'         => 'bb_reaction_mode_likes',
+			'is_checked' => 'likes' === bb_get_reaction_mode(),
+			'notice'     => esc_html__( 'A simple "Like" button will show for members to express their appreciation or acknowledgement.', 'buddyboss' ),
+		)
+	);
+
+	$reactions_modes = apply_filters( 'bb_setting_reaction_mode_args', $reactions_modes );
+
+	if ( ! empty( $reactions_modes ) && is_array( $reactions_modes ) ) {
+		foreach ( $reactions_modes as $reaction_mode ) {
+			?>
+			<label for="<?php echo $reaction_mode['id']; ?>">
+				<input name="<?php echo $reaction_mode['name']; ?>"
+					id="<?php echo $reaction_mode['id']; ?>"
+					type="radio"
+					value="<?php echo $reaction_mode['value']; ?>"
+					<?php echo checked( $reaction_mode['is_checked'] ); ?>
+					data-current-val="<?php echo bb_get_reaction_mode(); ?>"
+					data-notice="<?php echo ! empty( $reaction_mode['notice'] ) ? $reaction_mode['notice'] : ''; ?>"
+				/>
+				<?php echo $reaction_mode['label']; ?>
+			</label>
+			<?php
+		}
+
+		$notice_text = '';
+		if ( bb_get_reaction_mode() === 'likes' && ! empty( $reactions_modes[0]['notice'] ) ) {
+			$notice_text = $reactions_modes[0]['notice'];
+		} elseif ( bb_get_reaction_mode() === 'emotions' && !empty( $reactions_modes[1]['notice'] ) ) {
+			$notice_text = $reactions_modes[1]['notice'];
+		}
+
+		if ( ! empty( $notice_text ) ) {
+			?>
+			<div class="description bb-reaction-mode-description">
+				<?php echo $notice_text; ?>
+			</div>
+			<?php
+		}
+	}
 }

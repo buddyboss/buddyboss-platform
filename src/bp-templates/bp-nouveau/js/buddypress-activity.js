@@ -1119,7 +1119,7 @@ window.bp = window.bp || {};
 
 						// Register keyup event.
 						div_editor.addEventListener(
-							'keyup',
+							'input',
 							function ( e ) {
 								var $activity_comment_content = jQuery( e.currentTarget ).html();
 
