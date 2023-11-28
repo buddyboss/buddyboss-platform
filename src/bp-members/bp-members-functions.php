@@ -5475,9 +5475,20 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
 		// removed old user meta which have value length 40.
 		$wpdb->query( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE 'bb_profile_slug' AND user_id = {$user_id} AND LENGTH(meta_value) = 40" );
 
+		// Remove duplicate log slug with same value.
+		$wpdb->query( "DELETE um1 FROM {$wpdb->usermeta} um1, {$wpdb->usermeta} um2 WHERE um1.umeta_id > um2.umeta_id AND um1.meta_key = um2.meta_key AND um1.meta_key LIKE 'bb_profile_long_slug_%' AND LENGTH(um1.meta_key) >= 61 AND um1.user_id = {$user_id}" );
+
 		// fetch user slug if already exists.
 		$p_slug = bb_core_get_user_slug( $user_id );
 		if ( ! empty( $p_slug ) && strlen( $p_slug ) <= 12 ) {
+
+			// Remove duplicate meta with same value.
+			delete_user_meta( $user_id, 'bb_profile_slug', $p_slug );
+			update_user_meta( $user_id, 'bb_profile_slug', $p_slug );
+
+			// Remove duplicate meta with same value.
+			delete_user_meta( $user_id, 'bb_profile_slug_' . $p_slug, $user_id );
+			update_user_meta( $user_id, 'bb_profile_slug_' . $p_slug, $user_id );
 
 			bb_remove_orphaned_profile_slug( $user_id );
 
@@ -5686,8 +5697,6 @@ function bb_remove_orphaned_profile_slug( $user_id ) {
 	if ( empty( $p_slug ) || empty( $user_id ) ) {
 		return;
 	}
-
-	update_user_meta( $user_id, 'bb_profile_slug_' . $p_slug , $user_id );
 
 	$condition[] = $wpdb->prepare( "( meta_key LIKE 'bb_profile_slug_%' AND meta_key != %s )", "bb_profile_slug_{$p_slug}" );
 	$condition[] = "( meta_key LIKE 'bb_profile_long_slug_%' AND LENGTH(meta_key) < 61 )";

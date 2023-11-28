@@ -57,6 +57,19 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.4.80 =
+* Bug: Activity - Could not select any other media to upload to a new reply in the thread after previously uploading a GIF
+* Bug: Activity - When a user tried to edit a post, the Read More option was shown as part of the post
+* Bug: Core - The Last Name field did not work properly with the "Only Me" option when the "Allow members to override" setting was selected
+* Bug: Core - The search functionality and UI within our core pages are now working correctly
+* Bug: Core - When debug log was enabled in PHP 8.2 this then caused an error
+* Bug: Forums - Validation message is now working when the “Forums” setting of the Group is updated.
+* Bug: Groups - The member's single activity in Groups now shows correctly once group members leave that group
+* Bug: Media - Removing one of the added file extension on documents/videos also removed the rest of the extensions also
+* Bug: Media - The rename option within folders created under the group’s document tab has been added
+* Bug: Styling - Extra spacing added when removing URLs from posts with link preview
+* Bug: Styling - MemberPress Pro mode template pages UI breaks fixed
+
 = 2.4.71 =
 * Bug: Core - Refactored the unique identifier profile slug character length so that there are no more duplications
 
