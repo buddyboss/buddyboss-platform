@@ -2279,6 +2279,12 @@ function bp_core_map_user_registration( $user_id, $by_pass = false ) {
 
 		bp_xprofile_update_display_name( $user_id );
 	}
+
+	// Generate user profile slug on user registration.
+	$username = bb_core_get_user_slug( $user_id );
+	if ( empty( $username ) ) {
+		bb_set_user_profile_slug( $user_id );
+	}
 }
 add_action( 'user_register', 'bp_core_map_user_registration' );
 
