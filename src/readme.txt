@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.3.2
 Requires PHP: 8.0
-Stable tag: 2.4.70
+Stable tag: 2.4.71
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.4.71 =
+* Bug: Core - Refactored the unique identifier profile slug character length so that there are no more duplications
 
 = 2.4.70 =
 * New Feature! - Login Logout Redirect, redirects users on login and logout as a global setting and by profile type
