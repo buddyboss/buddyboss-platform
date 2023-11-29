@@ -966,3 +966,27 @@ function bb_generate_member_profile_links_on_update() {
 		}
 	}
 }
+
+/**
+ * Generate profile slug registration and activation.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id ID of user.
+ *
+ * @return void
+ */
+function bb_generate_member_profile_slug_on_activate( $user_id ) {
+	if ( empty( $user_id ) ) {
+		return;
+	}
+
+	$username = bb_core_get_user_slug( $user_id );
+	if ( empty( $username ) ) {
+		bb_set_user_profile_slug( $user_id );
+	}
+}
+
+add_action( 'bp_core_signup_user', 'bb_generate_member_profile_slug_on_activate', 10, 1 );
+add_action( 'bp_core_activated_user', 'bb_generate_member_profile_slug_on_activate', 10, 1 );
+
