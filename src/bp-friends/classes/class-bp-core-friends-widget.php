@@ -291,7 +291,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 	/**
 	 * Merge the widget settings into defaults array.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.80
 	 *
 	 * @param array $instance Widget instance settings.
 	 * @return array
