@@ -175,7 +175,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 	/**
 	 * Store group.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.4.80
 	 */
 	public $group;
 
