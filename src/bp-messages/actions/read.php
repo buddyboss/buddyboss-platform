@@ -22,7 +22,7 @@ function bp_messages_action_mark_read() {
 
 	$action = ! empty( $_GET['action'] ) ? $_GET['action'] : '';
 	$nonce  = ! empty( $_GET['_wpnonce'] ) ? $_GET['_wpnonce'] : '';
-	$id     = ! empty( $_GET['message_id'] ) ? intval( $_GET['message_id'] ) : '';
+	$id     = ! empty( $_GET['message_id'] ) ? intval( $_GET['message_id'] ) : 0;
 
 	// Bail if no action or no ID.
 	if ( 'read' !== $action || empty( $id ) || empty( $nonce ) ) {

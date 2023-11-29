@@ -298,6 +298,8 @@ function groups_edit_base_group_details( $args = array() ) {
 
 	$group->description = $r['description'];
 
+	$old_parent = $group->parent_id;
+
 	// Update the parent ID if necessary.
 	if ( false !== $r['parent_id'] ) {
 		$group->parent_id = $r['parent_id'];
@@ -305,6 +307,17 @@ function groups_edit_base_group_details( $args = array() ) {
 
 	if ( ! $group->save() ) {
 		return false;
+	}
+
+	// Added subgroup members to the parents groups when hierarchies and restriction enabled.
+	if (
+		! empty( $r['parent_id'] ) &&
+		$old_parent !== $r['parent_id'] &&
+		true === bp_enable_group_hierarchies() &&
+		true === bp_enable_group_restrict_invites()
+	) {
+		$parents = bb_get_parent_group_ids( $group->id );
+		bb_groups_add_subgroup_members( $group->id, $parents );
 	}
 
 	// Maybe update the "previous_slug" groupmeta.
@@ -400,6 +413,8 @@ function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_
 	// Now update the status.
 	$group->status = $status;
 
+	$old_parent = $group->parent_id;
+
 	// Update the parent ID if necessary.
 	if ( false !== $parent_id ) {
 		$group->parent_id = $parent_id;
@@ -442,6 +457,17 @@ function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_
 	// Set the message status.
 	if ( $message_status ) {
 		groups_update_groupmeta( $group->id, 'message_status', $message_status );
+	}
+
+	// Added subgroup members to the parents groups when hierarchies and restriction enabled.
+	if (
+		! empty( $parent_id ) &&
+		$old_parent !== $parent_id &&
+		true === bp_enable_group_hierarchies() &&
+		true === bp_enable_group_restrict_invites()
+	) {
+		$parents = bb_get_parent_group_ids( $group->id );
+		bb_groups_add_subgroup_members( $group->id, $parents );
 	}
 
 	groups_update_groupmeta( $group->id, 'last_activity', bp_core_current_time() );
@@ -5473,5 +5499,133 @@ function bb_update_groups_invitation_background_process() {
 		)
 	);
 
+	$bb_background_updater->save()->schedule_event();
+}
+
+/**
+ * Fetch all top level parent group ids.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @param int $group_id Group ID.
+ *
+ * @return array
+ */
+function bb_get_parent_group_ids( $group_id ) {
+	global $wpdb, $bp;
+
+	$parent_groups = array();
+
+	if ( empty( $group_id ) ) {
+		return $parent_groups;
+	}
+
+	$current_group_id = $group_id;
+
+	while ( 0 !== $current_group_id ) {
+		// phpcs:ignore
+		$parent_id = $wpdb->get_var( $wpdb->prepare( "SELECT parent_id FROM {$bp->groups->table_name} WHERE id = %d", $current_group_id ) );
+
+		if ( ! empty( $parent_id ) ) {
+			// If a parent group exists, add it to the array.
+			$parent_groups[]  = $parent_id;
+			$current_group_id = $parent_id;
+		} else {
+			// If there's no parent group (0), break out of the loop.
+			break;
+		}
+	}
+
+	return $parent_groups;
+}
+
+/**
+ * Function to add child group members to the parent groups.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @param int   $group_id         Current group ids.
+ * @param array $parent_group_ids Array of int values for the parent groups.
+ *
+ * @return void
+ */
+function bb_groups_add_subgroup_members( $group_id, $parent_group_ids ) {
+	global $bb_background_updater;
+	if (
+		true === bp_enable_group_hierarchies() &&
+		true === bp_enable_group_restrict_invites() &&
+		! empty( $parent_group_ids )
+	) {
+		foreach ( $parent_group_ids as $parent_group_id ) {
+			// Background job to add child group members to the parent groups.
+			$bb_background_updater->push_to_queue(
+				array(
+					'type'     => 'groups',
+					'group'    => 'bb_groups_add_subgroup_members',
+					'priority' => 5,
+					'callback' => 'bb_update_groups_members_background_process',
+					'args'     => array( $group_id, $parent_group_id ),
+				)
+			);
+			$bb_background_updater->save()->dispatch();
+		}
+	}
+}
+
+/**
+ * Function to add child group members to the parent group.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @param int $group_id  Group ID.
+ * @param int $parent_id Parent group id.
+ *
+ * @return void
+ */
+function bb_update_groups_members_background_process( $group_id, $parent_id ) {
+	global $wpdb, $bp, $bb_background_updater;
+
+	if (
+		empty( $group_id ) ||
+		empty( $parent_id )
+	) {
+		return;
+	}
+
+	$limit = (int) apply_filters( 'bb_limit_update_groups_members', 30 );
+
+	$sql = $wpdb->prepare(
+		// phpcs:ignore
+		"SELECT gm1.user_id FROM {$bp->groups->table_name_members} AS gm1 LEFT JOIN {$bp->groups->table_name_members} AS gm2 ON gm1.user_id = gm2.user_id AND gm2.group_id = %d WHERE gm1.group_id = %d AND gm2.user_id IS NULL ORDER BY gm1.user_id ASC LIMIT %d;",
+		$parent_id,
+		$group_id,
+		$limit
+	);
+
+	// phpcs:ignore
+	$members = $wpdb->get_col( $sql );
+
+	if (
+		empty( $members ) ||
+		true !== bp_enable_group_hierarchies() ||
+		true !== bp_enable_group_restrict_invites()
+	) {
+		return;
+	}
+
+	foreach ( $members as $member ) {
+		groups_join_group( $parent_id, $member );
+	}
+
+	// Background job to add child group members to the parent groups.
+	$bb_background_updater->push_to_queue(
+		array(
+			'type'     => 'groups',
+			'group'    => 'bb_groups_add_subgroup_members',
+			'priority' => 5,
+			'callback' => 'bb_update_groups_members_background_process',
+			'args'     => array( $group_id, $parent_id ),
+		)
+	);
 	$bb_background_updater->save()->schedule_event();
 }

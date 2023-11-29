@@ -77,6 +77,9 @@ add_action( 'template_include', 'bb_setup_attachment_video_preview_template', PH
 add_action( 'bb_video_upload', 'bb_messages_video_save' );
 
 add_filter( 'bb_activity_comment_get_edit_data', 'bp_video_get_edit_activity_data' );
+
+add_filter( 'bp_search_label_search_type', 'bb_video_search_label_search' );
+
 /**
  * Add video theatre template for activity pages.
  *
@@ -221,7 +224,7 @@ function bp_video_activity_append_video( $content, $activity ) {
 				$args['album_id'] = 'existing-video';
 			}
 		} else {
-			$args['privacy'] = bp_video_query_privacy( $activity->user_id, $group_id, $activity->component );
+			$args['privacy'] = bp_video_query_privacy( $activity->user_id, 0, $activity->component );
 
 			if ( 'activity_comment' === $activity->type ) {
 				$args['privacy'][] = 'comment';
@@ -2044,3 +2047,21 @@ function bb_video_remove_specific_trailing_slash( $redirect_url ) {
 	return $redirect_url;
 }
 add_filter( 'redirect_canonical', 'bb_video_remove_specific_trailing_slash', 9999 );
+
+/**
+ * Videos search label.
+ * 
+ * @since BuddyBoss 2.4.70
+ *
+ * @param string $type Search label.
+ *
+ * @return string
+ */
+function bb_video_search_label_search( $type ) {
+
+	if ( 'videos' === $type ) {
+		$type = esc_html__( 'Videos', 'buddyboss' );
+	}
+
+	return $type;
+}
