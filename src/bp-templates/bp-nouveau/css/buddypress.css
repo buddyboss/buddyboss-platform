@@ -3539,7 +3539,7 @@ input.search-query-input {
   display: inline-block;
 }
 
-.activity-list .activity-item .activity-content .activity-state.has-likes, .activity-list .activity-item .activity-content .activity-state.has-comments {
+.activity-list .activity-item .activity-content .activity-state.has-reactions, .activity-list .activity-item .activity-content .activity-state.has-likes, .activity-list .activity-item .activity-content .activity-state.has-comments {
   display: block;
 }
 

@@ -259,29 +259,28 @@ function bp_nouveau_get_activity_timestamp() {
  */
 function bp_nouveau_activity_state() {
 
-	$activity_id     = bp_get_activity_id();
-	$like_text       = bp_activity_get_favorite_users_string( $activity_id );
-	$comment_count   = bp_activity_get_comment_count();
-	$favorited_users = bp_activity_get_favorite_users_tooltip_string( $activity_id );
+	$activity_id   = bp_get_activity_id();
+	$comment_count = bp_activity_get_comment_count();
+
+	if ( bb_get_reaction_mode() === 'emotions' ) {
+		$reaction_text = bb_activity_reaction_count_string( $activity_id );
+	} else {
+		$like_text       = bp_activity_get_favorite_users_string( $activity_id );
+		$favorited_users = bp_activity_get_favorite_users_tooltip_string( $activity_id );
+	}
 
 	?>
-	<div class="activity-state <?php echo $like_text ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
+	<div class="activity-state <?php echo ! empty( $reaction_text ) ? 'has-reactions' : ''; ?> <?php echo ! empty( $like_text ) ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
 		<a href="javascript:void(0);" class="activity-state-likes">
-			<div class="activity-state-reactions">
-				<div class="reactions_item">
-					<i class="bb-icon-heart" style="font-weight:200;color: #f00;"></i>
-				</div>
-				<div class="reactions_item">
-					<i class="bb-icon-thumbs-up" style="font-weight:200;color: #00f;"></i>
-				</div>
-				<div class="reactions_item">
-					<img src="https://s.w.org/images/core/emoji/14.0.0/svg/1f644.svg" alt="Confused">
-				</div>
-			</div>
-			<span class="like-text hint--bottom hint--medium hint--multiline" data-hint="<?php echo ( $favorited_users ) ? $favorited_users : ''; ?>">
-				<?php echo $like_text ?: ''; ?>
+			<span class="like-text hint--bottom hint--medium hint--multiline" data-hint="<?php echo ! empty( $favorited_users ) ? $favorited_users : ''; ?>">
+				<?php echo ! empty( $like_text ) ? $like_text : ''; ?>
 			</span>
 		</a>
+
+		<?php
+			echo bb_get_activity_post_user_reaction_markup( $activity_id );
+		?>
+
 		<?php if ( bp_activity_can_comment() ) :
 			?>
 			<span class="ac-state-separator">&middot;</span>
@@ -301,139 +300,6 @@ function bp_nouveau_activity_state() {
 				</span>
 			</a>
 		<?php endif; ?>
-		<div class="activity-state-popup">
-			<div class="activity-state-popup_overlay"></div>
-			<div class="activity-state-popup_inner">
-				<div class="activity-state-popup_title">
-					<h4>Reactions</h4>
-				</div>
-				<div class="activity-state-popup_tab">
-						<div class="activity-state-popup_tab_panel">
-							<ul>
-								<li>
-									<a href="#" class="active" data-tab="activity-state_all">All</a>
-								</li>
-								<li>
-									<a href="#" data-tab="activity-state_smiley">
-										<img src="https://s.w.org/images/core/emoji/14.0.0/svg/1f643.svg" alt="Smiley" />
-										<span>55</span>
-									</a>
-								</li>
-								<li>
-									<a href="#" data-tab="activity-state_thumbsup">
-										<i class="bb-icon-thumbs-up" style="font-weight:200;color:#aeae16;"></i>
-										<span>80</span>
-									</a>
-								</li>
-								<li>
-									<a href="#" data-tab="activity-state_confused">
-										<img src="https://s.w.org/images/core/emoji/14.0.0/svg/1f644.svg" alt="Confused" />
-										<span>59</span>
-									</a>
-								</li>
-								<li>
-									<a href="#" data-tab="activity-state_sad">
-										<img src="https://s.w.org/images/core/emoji/14.0.0/svg/1f622.svg" alt="Sad">
-										<span>37</span>
-									</a>
-								</li>
-								<li>
-									<a href="#" data-tab="activity-state_thumbsdown">
-										<i class="bb-icon-thumbs-down" style="font-weight:200;color:#d33f3f;"></i>
-										<span>37</span>
-									</a>
-								</li>
-							</ul>
-						</div>
-						<div class="activity-state-popup_tab_content">
-							<div class="activity-state-popup_tab_item activity-state_all active">
-								<ul class="activity-state_users">
-									<li class="activity-state_user">
-										<div class="activity-state_user__avatar">
-											<a href="#">
-												<img class="avatar" src="http://localhost:8888/bb/wp-content/uploads/avatars/2/637775668aace-bpfull.jpg" alt="" />
-												<div class="activity-state_user__reaction">
-													<img src="https://s.w.org/images/core/emoji/14.0.0/svg/1f643.svg" alt="Smiley" />
-												</div>
-											</a>
-										</div>
-										<div class="activity-state_user__name">
-											<a href="#">John</a>
-										</div>
-										<div class="activity-state_user__role">
-											Admin
-										</div>
-									</li>
-									<li class="activity-state_user">
-										<div class="activity-state_user__avatar">
-											<a href="#">
-												<img class="avatar" src="http://localhost:8888/bb/wp-content/uploads/avatars/1408/653a29995c85e-bpfull.jpg" alt="" />
-												<div class="activity-state_user__reaction">
-													<i class="bb-icon-thumbs-up" style="font-weight:200;color:#aeae16;"></i>
-												</div>
-											</a>
-										</div>
-										<div class="activity-state_user__name">
-											<a href="#">Angela</a>
-										</div>
-										<div class="activity-state_user__role" style="background-color: #8ca884">
-											Student
-										</div>
-									</li>
-									<li class="activity-state_user">
-										<div class="activity-state_user__avatar">
-											<a href="#">
-												<img class="avatar" src="http://localhost:8888/bb/wp-content/uploads/avatars/23/5cd020262f7c6-bpfull.jpg" alt="" />
-												<div class="activity-state_user__reaction">
-													<img src="https://s.w.org/images/core/emoji/14.0.0/svg/1f644.svg" alt="Confused" />
-												</div>
-											</a>
-										</div>
-										<div class="activity-state_user__name">
-											<a href="#">Adele</a>
-										</div>
-										<div class="activity-state_user__role" style="background-color: #ca84a3">
-											Coach
-										</div>
-									</li>
-									<li class="activity-state_user">
-										<div class="activity-state_user__avatar">
-											<a href="#">
-												<img class="avatar" src="http://localhost:8888/bb/wp-content/uploads/avatars/16/5cca6f227a1db-bpfull.png" alt="" />
-												<div class="activity-state_user__reaction">
-													<i class="bb-icon-thumbs-down" style="font-weight:200;color:#d33f3f;"></i>
-												</div>
-											</a>
-										</div>
-										<div class="activity-state_user__name">
-											<a href="#">Arianna</a>
-										</div>
-										<div class="activity-state_user__role" style="background-color: #8ca884">
-											Student
-										</div>
-									</li>									
-									<li class="activity-state_user">
-										<div class="activity-state_user__avatar">
-											<a href="#">
-												<img class="avatar" src="http://localhost:8888/bb/wp-content/uploads/avatars/14/5cca67647676d-bpfull.jpg" alt="" />
-												<div class="activity-state_user__reaction">
-													<img src="https://s.w.org/images/core/emoji/14.0.0/svg/1f622.svg" alt="Sad">
-												</div>
-											</a>
-										</div>
-										<div class="activity-state_user__name">
-											<a href="#">Robert</a>
-										</div>
-										<div class="activity-state_user__role">
-											Admin
-										</div>
-									</li>
-								</ul>	
-							</div>
-						</div>
-					</div>
-			</div>
-		</div>
 	</div>
 	<?php
 }
@@ -551,40 +417,7 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 	$has_content = trim( $output, ' ' );
 
 	// Todo: Make Reactions dynamic and move to appropriate place.
-	$output .= '
-		<div class="ac-emotions_list">
-			<div class="ac-emotion_item">
-				<a href="#" class="ac-emotion_btn" data-bp-tooltip-pos="up" data-bp-tooltip="Thumbsup">
-					<i class="bb-icon-thumbs-up" style="font-weight:200;color:#aeae16;"></i>
-				</a>
-			</div>
-			<div class="ac-emotion_item">
-				<a href="#" class="ac-emotion_btn" data-bp-tooltip-pos="up" data-bp-tooltip="Happy">
-					<img src="https://s.w.org/images/core/emoji/14.0.0/svg/1f643.svg" alt="Smiley" />
-				</a>
-			</div>
-			<div class="ac-emotion_item">
-				<a href="#" class="ac-emotion_btn" data-bp-tooltip-pos="up" data-bp-tooltip="Confused">
-					<img src="https://s.w.org/images/core/emoji/14.0.0/svg/1f644.svg" alt="Confused" />
-				</a>
-			</div>
-			<div class="ac-emotion_item">
-				<a href="#" class="ac-emotion_btn" data-bp-tooltip-pos="up" data-bp-tooltip="Sad">
-					<img src="https://s.w.org/images/core/emoji/14.0.0/svg/1f622.svg" alt="Sad">
-				</a>
-			</div>
-			<div class="ac-emotion_item">
-				<a href="#" class="ac-emotion_btn" data-bp-tooltip-pos="up" data-bp-tooltip="Thumbsdown">
-					<i class="bb-icon-thumbs-down" style="font-weight:200;color:#d33f3f;"></i>
-				</a>
-			</div>
-			<div class="ac-emotion_item">
-				<a href="#" class="ac-emotion_btn" data-bp-tooltip-pos="up" data-bp-tooltip="Angry">
-					<img src="https://s.w.org/images/core/emoji/14.0.0/svg/1f621.svg" alt="Angry" />
-				</a>
-			</div>
-		</div>
-	';
+	$output .= bb_get_activity_post_reaction_markup();
 
 	if ( ! $has_content ) {
 		return;

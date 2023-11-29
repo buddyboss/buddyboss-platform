@@ -90,6 +90,11 @@ class BP_Activity_Component extends BP_Component {
 			$includes[] = 'admin';
 		}
 
+		$bb_reaction = buddypress()->plugin_dir . '/bp-activity/bb-activity-reactions.php';
+		if ( file_exists( $bb_reaction ) ) {
+			require_once $bb_reaction;
+		}
+
 		parent::includes( $includes );
 	}
 

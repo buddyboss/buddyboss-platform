@@ -878,6 +878,47 @@ window.bp = window.bp || {};
 
 			// Accordion open/close event
 			$( '.bb-accordion .bb-accordion_trigger' ).on( 'click', this.toggleAccordion );
+
+			// Reaction actions.
+			$( document ).on( 'click', '.ac-emotions_list .ac-emotion_btn', this.addReaction );
+
+		},
+
+		/**
+		 * Add reaction function.
+		 */
+		addReaction: function( event ) {
+
+			// Stop event propagation.
+			event.preventDefault();
+
+			var target    = $( this ), 
+			activity_item = target.parents( '.activity-item' ),
+			activity_id   = activity_item.data( 'bp-activity-id' ), 
+			reaction_item = target.parents('.ac-emotion_item'),
+			reaction_id   = reaction_item.data( 'reaction-id' ),
+			item_type     = 'activity';
+
+			console.log( 'Activity:' + activity_id );
+			console.log( 'reaction:' + reaction_id );
+
+			$.ajax(
+				{
+					url: BP_Nouveau.ajaxurl,
+					type: 'post',
+					data: {
+						action: 'bb_reaction_action',
+						reaction_id: reaction_id,
+						item_id: activity_id,
+						item_type: item_type,
+						_wpnonce: BP_Nouveau.nonces.activity,
+					}, success: function ( response ) {
+						console.log( response );
+						//window.location.reload( true );
+					}
+				}
+			);
+
 		},
 
 		/**
