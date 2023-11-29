@@ -1609,7 +1609,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $link_preview ) ) {
 			$data['preview_data'] = $link_preview;
 		} elseif ( empty( $link_preview ) && in_array( $activity->type, array( 'bbp_reply_create', 'bbp_topic_create' ), true ) ) {
-			$data['preview_data'] = $this->bp_rest_activity_remove_lazyload( $data['preview_data'], $activity, true );
+			$data['preview_data'] = $this->bp_rest_activity_remove_lazyload( $data['preview_data'], $activity, empty( $data['preview_data'] ) );
 		}
 
 		// remove comment options from media/document/video activity.

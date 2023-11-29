@@ -170,6 +170,15 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
  * @since BuddyPress 3.0.0
  */
 class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
+
+
+	/**
+	 * Store group.
+	 *
+	 * @since BuddyBoss 2.4.80
+	 */
+	public $group;
+
 	/**
 	 * Constructor
 	 *

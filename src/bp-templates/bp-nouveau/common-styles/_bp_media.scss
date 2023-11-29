@@ -5095,9 +5095,9 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 	}
 }
 
-.directory.media .media-options,
-.directory.document .document-options,
-.directory.video .video-options {
+.directory.media .site-main .media-options,
+.directory.document .site-main .document-options,
+.directory.video .site-main .video-options {
 	position: absolute;
 	right: 0;
 	top: 0;
@@ -5126,6 +5126,47 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 	padding-left: 32px;
 	font-size: 14px;
 	height: 39px;
+	outline: 0;
+}
+
+.buddypress-wrap {
+
+	.bp-invites-search-form,
+	form.bp-dir-search-form,
+	form.bp-messages-search-form {
+
+		&:before {
+			content: "\ef10";
+			color: inherit;
+			font-family: bb-icons;
+			font-size: 17px;
+			opacity: 0.4;
+			position: absolute;
+			left: 9px;
+			top: 4px;
+		}
+
+		input[type="search"]::-webkit-search-cancel-button {
+			display: none;
+		}
+
+	}
+}
+
+#dir-activity-search-form {
+
+	#dir-activity-search-submit {
+		opacity: 0;
+	}
+
+	#dir-activity-search {
+		border: 0;
+		background-color: transparent;
+		outline: 0;
+		padding-left: 35px;
+		font-size: 14px;
+		height: 34px;
+	}
 }
 
 .directory.media,

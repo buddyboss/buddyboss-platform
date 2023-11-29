@@ -920,7 +920,7 @@ class BP_XProfile_Group {
 										esc_html_e( 'Add description', 'buddyboss' );
 									?>
 									</label>
-									<textarea name="group_description" id="group_description" rows="8" cols="60"><?php echo esc_textarea( $this->description ); ?></textarea>
+									<textarea name="group_description" id="group_description" rows="8" cols="60"><?php echo ! empty( $this->description ) ? esc_textarea( $this->description ) : ''; ?></textarea>
 								</div>
 							</div>
 
