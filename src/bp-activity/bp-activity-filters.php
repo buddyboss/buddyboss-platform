@@ -3634,7 +3634,7 @@ function bb_activity_pinpost_confirmation_modal_template() {
 /**
  * Get the content directly from the blog post comment.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.80
  *
  * @param array $activity_comment_data The Activity comment edit data.
  *
