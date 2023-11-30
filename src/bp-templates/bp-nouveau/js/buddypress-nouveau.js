@@ -880,17 +880,18 @@ window.bp = window.bp || {};
 			$( '.bb-accordion .bb-accordion_trigger' ).on( 'click', this.toggleAccordion );
 
 			// Reaction actions.
-			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'mouseover', '.button.fav, .button.unfav, .button.has-reactions', bp.Nouveau, this.showReactions.bind( this ) ).on('mouseout', '.button.fav, .button.unfav', function() { clearTimeout(window.reactionHoverTimeout); } );
-			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'mouseout', '.activity-meta .ac-emotions_list, .button.fav, .button.unfav, .button.has-reactions', bp.Nouveau, this.hideReactions.bind( this ) );
-			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.activity-state-popup_overlay', bp.Nouveau, this.closeActivityState.bind( this ) );
-			$( document ).on( 'click', '.ac-emotions_list .ac-emotion_btn', this.addReaction );
+			$( document ).on( 'mouseover', 'a.button.fav, a.button.unfav, a.button.has-reactions', bp.Nouveau, this.showReactions.bind( this ) ).on('mouseout', '.button.fav, .button.unfav', function() { clearTimeout(window.reactionHoverTimeout); } );
+			$( document ).on( 'mouseout', '.activity-meta .ac-emotions_list, .button.fav, .button.unfav, .button.has-reactions', bp.Nouveau, this.hideReactions.bind( this ) );
+			$( document ).on( 'click', '.activity-state-popup_overlay', bp.Nouveau, this.closeActivityState.bind( this ) );
 
+			$( document ).on( 'click', '.ac-emotions_list .ac-emotion_btn', this.updateReaction );
+			$( document ).on( 'click', '.activity-meta .button.has-reactions', this.removeReaction );
 		},
 
 		/**
 		 * Add reaction function.
 		 */
-		addReaction: function( event ) {
+		updateReaction: function( event ) {
 
 			// Stop event propagation.
 			event.preventDefault();
@@ -910,18 +911,69 @@ window.bp = window.bp || {};
 					url: BP_Nouveau.ajaxurl,
 					type: 'post',
 					data: {
-						action: 'bb_reaction_action',
+						action: 'bb_update_reaction',
 						reaction_id: reaction_id,
 						item_id: activity_id,
 						item_type: item_type,
 						_wpnonce: BP_Nouveau.nonces.activity,
 					}, success: function ( response ) {
-						console.log( response );
-						window.location.reload( true );
+
+						console.log( response.data.reaction_counts );
+
+						if ( response.data.reaction_counts ) {
+							if ( activity_item.find('.activity-state-reactions').length >=1 ) {
+								activity_item.find('.activity-state-reactions').replaceWith( response.data.reaction_counts );
+							} else {
+								activity_item.find('.activity-state-likes').append( response.data.reaction_counts );
+							}
+						}
+
+						if ( response.data.reaction_button ) {
+							activity_item.find( '.activity-meta a.bp-secondary-action' ).replaceWith( response.data.reaction_button );
+						}
 					}
 				}
 			);
 
+		},
+
+		/**
+		 * Remove reaction function.
+		 */
+		removeReaction: function( event ) {
+			event.preventDefault();
+
+			var target    = $( this ), 
+			activity_item = target.parents( '.activity-item' ),
+			activity_id   = activity_item.data( 'bp-activity-id' ), 
+			item_type     = 'activity';
+
+			$.ajax(
+				{
+					url: BP_Nouveau.ajaxurl,
+					type: 'post',
+					data: {
+						action: 'bb_remove_reaction',
+						item_id: activity_id,
+						item_type: item_type,
+						_wpnonce: BP_Nouveau.nonces.activity,
+					}, success: function ( response ) {
+						if ( response.data.reaction_counts ) {
+							console.log( response.data.reaction_counts );
+
+							if ( activity_item.find('.activity-state-reactions').length >=1 ) {
+								activity_item.find('.activity-state-reactions').replaceWith( response.data.reaction_counts );
+							} else {
+								activity_item.find('.activity-state-likes').append( response.data.reaction_counts );
+							}
+
+							activity_item.find( '.activity-meta a.bp-secondary-action' ).replaceWith(response.data.reaction_button);
+						}
+
+						//window.location.reload( true );
+					}
+				}
+			);
 		},
 
 		/**
