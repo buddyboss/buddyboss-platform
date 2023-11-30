@@ -139,6 +139,66 @@ function bb_get_activity_post_reaction_markup() {
 }
 
 /**
+ * Get most reactions for activity.
+ *
+ * @param integer $item_id   ID of the item.
+ * @param string  $item_type Type of the item.
+ * @param integer $no_of_reactions Number of reactions to display.
+ *
+ * @return array|bool
+ */
+function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', $no_of_reactions = 3 ) {
+
+	if ( empty( $item_id ) ) {
+		return;
+	}
+
+	$bb_reaction   = BB_Reaction::instance();
+	$reaction_data = $bb_reaction->bb_get_reaction_reactions_count(
+		array(
+			'item_type' => $item_type,
+			'item_id'   => $item_id,
+		)
+	);
+
+	if ( empty( $reaction_data ) ) {
+		return;
+	}
+
+	usort(
+		$reaction_data,
+		function( $first, $second ) {
+			return $first->total - $second->total;
+		}
+	);
+
+	$reactions = array();
+
+	foreach ( $reaction_data as $reaction ) {
+		if ( 0 === $no_of_reactions ) {
+			break;
+		}
+
+		$reaction_post = get_post( $reaction->reaction_id );
+		if ( empty( $reaction_post->post_content ) ) {
+			continue;
+		}
+
+		// $is_active = get_post_meta( $reaction->reaction_id, 'is_emotion_active', true );
+		// if ( ! $is_active ) {
+		// continue;
+		// }
+
+		$reaction    = maybe_unserialize( $reaction_post->post_content );
+		$reactions[] = $reaction;
+
+		$no_of_reactions --;
+	}
+
+	return apply_filters( 'bb_get_activity_user_reactions', $reactions );
+}
+
+/**
  * Get user reactions list for activity post.
  *
  * @param int $activity_id Activity Id.
@@ -147,58 +207,30 @@ function bb_get_activity_post_reaction_markup() {
  */
 function bb_get_activity_post_user_reaction_markup( $activity_id ) {
 
-	$bb_reaction   = BB_Reaction::instance();
-	$reaction_data = $bb_reaction->bb_get_reactions_data(
-		array(
-			'name' => 'item_summary',
-			'rel1' => 'activity',
-			'rel2' => $activity_id,
-		)
-	);
+	if ( empty( $activity_id ) ) {
+		return;
+	}
 
-	$reaction_data   = current( $reaction_data['reaction_data'] );
-	$reaction_data   = maybe_unserialize( $reaction_data->value );
-	$reactions_count = $reaction_data['reactions_count'];
+	$most_reactions = bb_get_activity_most_reactions( $activity_id );
+	$output         = '';
 
-	$output = '';
-
-	if ( ! empty( $reaction_data['last_10_reactions'] ) ) {
-		$last_3_reactions = array_slice( $reaction_data['last_10_reactions'], -3 );
-
+	if ( ! empty( $most_reactions ) ) {
 		$output .= '<div class="activity-state-reactions">';
 
-		foreach ( $last_3_reactions as $reaction ) {
-			if ( empty( $reaction->reaction_id ) ) {
-				continue;
-			}
-
-			$reaction_post = get_post( $reaction->reaction_id );
-
-			if ( empty( $reaction_post->post_content ) ) {
-				continue;
-			}
-
-			// $is_active = get_post_meta( $reaction->reaction_id, 'is_emotion_active', true );
-			// if ( ! $is_active ) {
-			// continue;
-			// }
-
-			$reaction_content = maybe_unserialize( $reaction_post->post_content );
-
-			// error_log( print_r( $reaction_content, true ) );
-
+		foreach ( $most_reactions as $reaction ) {
 			$icon = '';
-			if ( 'bb-icons' === $reaction_content['type'] ) {
+
+			if ( 'bb-icons' === $reaction['type'] ) {
 				$icon = sprintf(
 					'<i class="bb-icon-%s" style="font-weight:200;color:%s;"></i>',
-					esc_attr( $reaction_content['icon'] ),
-					esc_attr( $reaction_content['icon_color'] ),
+					esc_attr( $reaction['icon'] ),
+					esc_attr( $reaction['icon_color'] ),
 				);
-			} elseif ( ! empty( $reaction_content['icon_path'] ) ) {
+			} elseif ( ! empty( $reaction['icon_path'] ) ) {
 				$icon = sprintf(
 					'<img src="%s" alt="%s" />',
-					esc_url( $reaction_content['icon_path'] ),
-					esc_attr( $reaction_content['icon_text'] )
+					esc_url( $reaction['icon_path'] ),
+					esc_attr( $reaction['icon_text'] )
 				);
 			} else {
 				$icon = sprintf(
@@ -214,15 +246,12 @@ function bb_get_activity_post_user_reaction_markup( $activity_id ) {
 			);
 		}
 
-		$output .= sprintf(
-			'<div class="activity-reactions_count">%s</div>',
-			$reactions_count['total']
-		);
+		// $output .= sprintf(
+		// '<div class="activity-reactions_count">%s</div>',
+		// $user_reactions['reactions_count']
+		// );
 
 		$output .= '</div>';
-
-		error_log( 'activity id' . $activity_id );
-		error_log( print_r( $output, true ) );
 	}
 
 	return apply_filters( 'bb_get_activity_post_user_reaction_markup', $output );
@@ -296,7 +325,7 @@ function bb_reaction_ajax_action() {
  * @param int $activity_id Post Id.
  * @return int|string
  */
-function bb_activity_reaction_count_string( $activity_id ) {
+function bb_activity_reaction_names_and_count( $activity_id ) {
 
 	if ( ! bp_is_activity_like_active() ) {
 		return 0;

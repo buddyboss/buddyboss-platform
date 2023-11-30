@@ -262,15 +262,16 @@ function bp_nouveau_activity_state() {
 	$activity_id   = bp_get_activity_id();
 	$comment_count = bp_activity_get_comment_count();
 
+	$has_reaction = false;
 	if ( bb_get_reaction_mode() === 'emotions' ) {
-		$reaction_text = bb_activity_reaction_count_string( $activity_id );
+		$has_reaction = true;
 	} else {
 		$like_text       = bp_activity_get_favorite_users_string( $activity_id );
 		$favorited_users = bp_activity_get_favorite_users_tooltip_string( $activity_id );
 	}
 
 	?>
-	<div class="activity-state <?php echo ! empty( $reaction_text ) ? 'has-reactions' : ''; ?> <?php echo ! empty( $like_text ) ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
+	<div class="activity-state <?php echo ! empty( $has_reaction ) ? 'has-reactions' : ''; ?> <?php echo ! empty( $like_text ) ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
 		<a href="javascript:void(0);" class="activity-state-likes">
 			<span class="like-text hint--bottom hint--medium hint--multiline" data-hint="<?php echo ! empty( $favorited_users ) ? $favorited_users : ''; ?>">
 				<?php echo ! empty( $like_text ) ? $like_text : ''; ?>
