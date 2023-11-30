@@ -33,9 +33,9 @@ function bb_nouveau_get_activity_post_reaction_button( $buttons, $activity_id ) 
 	$bb_reaction   = BB_Reaction::instance();
 	$user_reaction = $bb_reaction->bb_get_user_reactions(
 		array(
-			'item_type'   => 'activity',
-			'item_id'     => $activity_id,
-			'user_id'     => bp_loggedin_user_id(),
+			'item_type' => 'activity',
+			'item_id'   => $activity_id,
+			'user_id'   => bp_loggedin_user_id(),
 		)
 	);
 
@@ -53,20 +53,19 @@ function bb_nouveau_get_activity_post_reaction_button( $buttons, $activity_id ) 
 
 	$icon_text = $reaction_data['icon_text'];
 	$icon      = '';
-	$icon_text = sprintf( 'Like', 'buddyboss' );
-
 	if ( 'bb-icons' === $reaction_data['type'] ) {
 		$icon = sprintf(
-			'<i class="bb-icon-thumbs-up" style="font-weight:200;color:#aeae16;"></i>',
+			'<i class="bb-icon-thumbs-up" style="font-weight:200;color:%s;"></i>',
+			esc_attr( $reaction_data['icon_color'] ),
 		);
-
 	} elseif ( ! empty( $reaction_data['icon_path'] ) ) {
 		$icon = sprintf(
 			'<img src="%s" alt="%s" style="width:20px"/>',
 			esc_url( $reaction_data['icon_path'] ),
 			esc_attr( $reaction_data['icon_text'] )
 		);
-
+	} else {
+		$icon_text = sprintf( 'Like', 'buddyboss' );
 	}
 
 	$text_color = ! empty( $reaction_data['text_color'] ) ? $reaction_data['text_color'] : '#385DFF';
@@ -80,7 +79,9 @@ function bb_nouveau_get_activity_post_reaction_button( $buttons, $activity_id ) 
 		esc_attr( $text_color )
 	);
 
-	$buttons['activity_favorite']['button_attr']['class'] = $buttons['activity_favorite']['button_attr']['class'] . ' has_reaction';
+	if ( ! empty( $reaction_data['type'] ) ) {
+		$buttons['activity_favorite']['button_attr']['class'] = 'button has-reactions bp-secondary-action';
+	}
 
 	return $buttons;
 }
@@ -179,7 +180,7 @@ function bb_get_activity_post_user_reaction_markup( $activity_id ) {
 
 			// $is_active = get_post_meta( $reaction->reaction_id, 'is_emotion_active', true );
 			// if ( ! $is_active ) {
-			// 	continue;
+			// continue;
 			// }
 
 			$reaction_content = maybe_unserialize( $reaction_post->post_content );
@@ -189,9 +190,11 @@ function bb_get_activity_post_user_reaction_markup( $activity_id ) {
 			$icon = '';
 			if ( 'bb-icons' === $reaction_content['type'] ) {
 				$icon = sprintf(
-					'<i class="bb-icon-thumbs-up" style="font-weight:200;color:#aeae16;"></i>',
+					'<i class="bb-icon-%s" style="font-weight:200;color:%s;"></i>',
+					esc_attr( $reaction_content['icon'] ),
+					esc_attr( $reaction_content['icon_color'] ),
 				);
-			} elseif( ! empty( $reaction_content['icon_path'] ) ) {
+			} elseif ( ! empty( $reaction_content['icon_path'] ) ) {
 				$icon = sprintf(
 					'<img src="%s" alt="%s" />',
 					esc_url( $reaction_content['icon_path'] ),

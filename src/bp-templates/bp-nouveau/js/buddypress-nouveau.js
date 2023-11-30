@@ -880,6 +880,9 @@ window.bp = window.bp || {};
 			$( '.bb-accordion .bb-accordion_trigger' ).on( 'click', this.toggleAccordion );
 
 			// Reaction actions.
+			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'mouseover', '.button.fav, .button.unfav, .button.has-reactions', bp.Nouveau, this.showReactions.bind( this ) ).on('mouseout', '.button.fav, .button.unfav', function() { clearTimeout(window.reactionHoverTimeout); } );
+			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'mouseout', '.activity-meta .ac-emotions_list, .button.fav, .button.unfav, .button.has-reactions', bp.Nouveau, this.hideReactions.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.activity-state-popup_overlay', bp.Nouveau, this.closeActivityState.bind( this ) );
 			$( document ).on( 'click', '.ac-emotions_list .ac-emotion_btn', this.addReaction );
 
 		},
@@ -914,12 +917,43 @@ window.bp = window.bp || {};
 						_wpnonce: BP_Nouveau.nonces.activity,
 					}, success: function ( response ) {
 						console.log( response );
-						//window.location.reload( true );
+						window.location.reload( true );
 					}
 				}
 			);
 
 		},
+
+		/**
+		 * [closeActivityState description]
+		 *
+		 * @return {[type]}       [description]
+		 */
+		closeActivityState: function() {
+			$( '.activity-state-popup' ).removeClass( 'active' );
+		},
+
+		/**
+		 * [showReactions description]
+		 *
+		 * @return {[type]}       [description]
+		 */
+		showReactions: function( event ) {
+			var $this = $( event.currentTarget );
+			window.reactionHoverTimeout = setTimeout(function() {
+				$this.closest( '.activity-meta' ).find( '.ac-emotions_list' ).addClass( 'active' );
+			}, 500);
+		},
+
+		/**
+		 * [hideReactions description]
+		 *
+		 * @return {[type]}       [description]
+		 */
+		hideReactions: function( event ) {
+			$( event.currentTarget ).closest( '.activity-meta' ).find( '.ac-emotions_list' ).removeClass('active');
+		},
+
 
 		/**
 		 * [heartbeatSend description]
