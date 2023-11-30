@@ -9,27 +9,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-add_filter( 'wp_trim_words', 'bp_search_process_block_theme_search_result', 999, 4 );
-/**
- * Override Search page content for Block themes.
- *
- * @param string $text          The trimmed text.
- * @param int    $num_words     The number of words to trim the text to. Default 55.
- * @param string $more          An optional string to append to the end of the trimmed text, e.g. &hellip;.
- * @param string $original_text The text before it was trimmed.
- * 
- * @since [BBVERSION]
- * 
- * @return string
- */
-function bp_search_process_block_theme_search_result ( $text, $num_words, $more, $original_text ) {
-	if ( bp_search_is_search() && function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
-		$text = $original_text;
-	}
-
-	return $text;
-}
-
 add_filter( 'the_content', 'bp_search_search_page_content', 9 );
 /**
  * BuddyBoss Search page content.
@@ -113,3 +92,33 @@ function bp_search_filters() {
 function bp_search_results() {
 	BP_Search::instance()->print_results();
 }
+
+/**
+ * Filters the array of queried block templates array after they've been fetched.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param WP_Block_Template[] $query_result Array of found block templates.
+ *
+ * return WP_Block_Template[] $query_result
+ */
+function bb_search_set_block_template_content( $query_result ) {
+	if (
+		! empty( $query_result ) &&
+		bp_search_is_search() &&
+		function_exists( 'wp_is_block_theme' ) &&
+		wp_is_block_theme()
+	) {
+		foreach ( $query_result as $template_key => $template ) {
+			if (
+				'search' === $template->slug &&
+				str_contains( $template->content, 'wp:post-excerpt' )
+			) {
+				$query_result[ $template_key ]->content = str_replace( 'wp:post-excerpt', 'wp:post-content', $template->content );
+			}
+		}
+	}
+
+	return $query_result;
+}
+add_filter( 'get_block_templates', 'bb_search_set_block_template_content', 10, 1 );
