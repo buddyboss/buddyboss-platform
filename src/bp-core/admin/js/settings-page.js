@@ -74,7 +74,6 @@ window.bp = window.bp || {};
 					$( '.label-bp-reinstall-emails' ).css('background-color', 'transparent');
 				}, 1500);
 			}
-
 			/* jshint ignore:end */
 
 			$( '[data-run-js-condition]' ).each(
