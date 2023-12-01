@@ -6587,7 +6587,7 @@ function bb_activity_pin_type( $args ) {
  * @return bool
  */
 function bb_activity_action_edit_from_admin( $request ) {
-	if( 
+	if ( 
 		! empty( $request['bp-activities-type'] ) &&
 		'activity_update' === $request['bp-activities-type'] &&
 		! empty( $request['_wp_http_referer'] ) &&
