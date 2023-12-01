@@ -887,6 +887,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.ac-emotions_list .ac-emotion_btn', this.updateReaction );
 			$( document ).on( 'click', '.activity-meta .button.has-reactions', this.removeReaction );
 			$( document ).on( 'click', '.activity-state-reactions', this.showActivityReactions );
+			$( document ).on( 'click', '.activity-state-popup .activity-state-popup_tab_panel a', this.ReactionStatePopupTab );
 
 		},
 
@@ -1014,6 +1015,15 @@ window.bp = window.bp || {};
 			} else {
 				activity_item.find( '.activity-content .activity-state-popup' ).addClass( 'active' );
 			}
+		},
+
+		ReactionStatePopupTab: function( event ) {
+			event.preventDefault();
+			$( this ).closest( '.activity-state-popup' ).find( '.activity-state-popup_tab_panel li a' ).removeClass( 'active' );
+			$( this ).addClass( 'active' );
+			$( this ).closest( '.activity-state-popup' ).find( '.activity-state-popup_tab_content .activity-state-popup_tab_item' ).removeClass( 'active' );
+			$( this ).closest( '.activity-state-popup' ).find( '.' + $( this ).data( 'tab' ) ).addClass( 'active' );
+
 		},
 
 		/**
