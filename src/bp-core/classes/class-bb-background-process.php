@@ -1161,5 +1161,81 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 
 			return ! empty( $result->total ) ? $result->total : 0;
 		}
+
+		/**
+		 * Fetch records.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $args  Array to compare with data.
+		 *
+		 * @return array
+		 */
+		public function fetch_job_records( $args = array() ) {
+			global $wpdb;
+
+			$r = bp_parse_args(
+				$args,
+				array(
+					'blog_id'               => get_current_blog_id(),
+					'id'                    => '',
+					'group'                 => '',
+					'data_id'               => '',
+					'secondary_data_id'     => '',
+					'not_in_id'             => '',
+					'not_group'             => '',
+					'not_data_id'           => '',
+					'not_secondary_data_id' => '',
+				)
+			);
+
+			$table = self::$table_name;
+
+			$where_conditions = array(
+				'blog_id' => "blog_id = {$r['blog_id']}"
+			);
+
+			if ( ! empty( $r['id'] ) ) {
+				$id_in                  = implode( ',', wp_parse_id_list( $r['id'] ) );
+				$where_conditions['id'] = "id IN ({$id_in})";
+			}
+
+			if ( ! empty( $r['not_in_id'] ) ) {
+				$id_in                         = implode( ',', wp_parse_id_list( $r['not_in_id'] ) );
+				$where_conditions['not_in_id'] = "id NOT IN ({$id_in})";
+			}
+
+			if ( ! empty( $r['group'] ) ) {
+				$where_conditions['group'] = "group = '{$r['group']}'";
+			}
+
+			if ( ! empty( $r['not_group'] ) ) {
+				$where_conditions['not_group'] = "group != '{$r['not_group']}'";
+			}
+
+			if ( ! empty( $r['data_id'] ) ) {
+				$where_conditions['data_id'] = "data_id = '{$r['data_id']}'";
+			}
+
+			if ( ! empty( $r['not_data_id'] ) ) {
+				$where_conditions['not_data_id'] = "data_id != '{$r['not_data_id']}'";
+			}
+
+			if ( ! empty( $r['secondary_data_id'] ) ) {
+				$where_conditions['secondary_data_id'] = "secondary_data_id = '{$r['secondary_data_id']}'";
+			}
+
+			if ( ! empty( $r['not_secondary_data_id'] ) ) {
+				$where_conditions['not_secondary_data_id'] = "secondary_data_id != '{$r['not_secondary_data_id']}'";
+			}
+
+			// Join the where conditions together.
+			$where_sql = 'WHERE ' . join( ' AND ', $where_conditions );
+
+			$sql = "SELECT * FROM {$table} {$where_sql} ORDER BY priority, id ASC";
+
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			return $wpdb->get_results( $sql, ARRAY_A );
+		}
 	}
 }

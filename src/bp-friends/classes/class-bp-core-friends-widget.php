@@ -108,9 +108,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 			: sprintf( __( "%s's Connections", 'buddyboss' ), $this->get_user_display_name( bp_displayed_user_id() ) )
 		);
 
-		if ( empty( $instance['friend_default'] ) ) {
-			$instance['friend_default'] = 'active';
-		}
+		$instance = $this->parse_settings( $instance );
 
 		$members_args = array(
 			'user_id'         => absint( $user_id ),
@@ -221,6 +219,8 @@ class BP_Core_Friends_Widget extends WP_Widget {
 	function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
 
+		$new_instance = $this->parse_settings( (array) $new_instance );
+
 		$instance['max_friends']    = absint( $new_instance['max_friends'] );
 		$instance['friend_default'] = sanitize_text_field( $new_instance['friend_default'] );
 		$instance['link_title']     = ( $new_instance['link_title'] ) ? (bool) $new_instance['link_title'] : false;
@@ -237,12 +237,8 @@ class BP_Core_Friends_Widget extends WP_Widget {
 	 * @return void
 	 */
 	function form( $instance ) {
-		$defaults = array(
-			'max_friends'    => 5,
-			'friend_default' => 'active',
-			'link_title'     => false,
-		);
-		$instance = bp_parse_args( (array) $instance, $defaults );
+
+		$instance = $this->parse_settings( (array) $instance );
 
 		$max_friends    = $instance['max_friends'];
 		$friend_default = $instance['friend_default'];
@@ -290,5 +286,26 @@ class BP_Core_Friends_Widget extends WP_Widget {
 		}
 
 		return apply_filters( 'bp_core_widget_user_display_name', $display_name, $user_id );
+	}
+
+	/**
+	 * Merge the widget settings into defaults array.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $instance Widget instance settings.
+	 * @return array
+	 */
+	public function parse_settings( $instance = array() ) {
+		return bp_parse_args(
+			$instance,
+			array(
+				'title'          => __( 'My Connections', 'buddyboss' ),
+				'max_friends'    => 5,
+				'friend_default' => 'active',
+				'link_title'     => false,
+			),
+			'friends_widget_settings'
+		);
 	}
 }
