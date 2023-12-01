@@ -464,46 +464,42 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 
 	$is_current_user_reacted = false;
 	$current_logged_user_id  = bp_loggedin_user_id();
+	$current_key             = array_search( $current_logged_user_id, $reacted_users );
 
-	if ( ! empty( $current_logged_user_id ) && ( $key = array_search( $current_logged_user_id, $reacted_users ) ) !== false ) {
+	if ( ! empty( $current_logged_user_id ) && false !== $current_key ) {
 		$is_current_user_reacted = true;
 		if ( $reaction_count > 1 ) {
-			unset( $reacted_users[ $key ] );
+			unset( $reacted_users[ $current_key ] );
 		}
+
+		$friends   = friends_get_friend_user_ids( $current_logged_user_id );
+		$followers = bp_get_followers();
+
+		$friend_users   = array_diff( $friends, $reacted_users );
+		$follower_users = array_diff( $followers, $reacted_users );
 	}
 
-	$args = array(
-		'friend_user_id'    => $reacted_users,
-		'is_confirmed'      => 1,
-		'initiator_user_id' => $reacted_users,
-	);
-
-	// $friends = BP_Friends_Friendship::get_friendships(
-	// 	$current_logged_user_id,
-	// 	$args,
-	// 	'OR'
-	// );
-
-	// $friends = friends_get_friend_user_ids( $current_logged_user_id, false, $args );
-
-	//error_log( print_r( $friends, true ) );
-
 	$return_str = '';
-
 	if ( 1 === $reaction_count ) {
-		$display_name = bp_core_get_user_displayname( array_pop( $reacted_users ) ) ?? esc_html__( 'Unknown', 'buddyboss' );
+		$user_id      = bb_get_reacted_person( $reacted_users, $friend_users, $follower_users );
+		$display_name = bp_core_get_user_displayname( $user_id );
+		$display_name = ! empty( $display_name ) ? $display_name : esc_html__( 'Unknown', 'buddyboss' );
 		$return_str   = $is_current_user_reacted ? esc_html__( 'You', 'buddyboss' ) : $display_name;
 	} elseif ( 2 === $reaction_count ) {
-		$first_name  = bp_core_get_user_displayname( array_pop( $reacted_users ) ) ?? esc_html__( 'Unknown', 'buddyboss' );
-		$second_name = bp_core_get_user_displayname( array_pop( $reacted_users ) ) ?? esc_html__( 'Unknown', 'buddyboss' );
+		$user_id     = bb_get_reacted_person( $reacted_users, $friend_users, $follower_users );
+		$first_name  = bp_core_get_user_displayname( $user_id ) ?? esc_html__( 'Unknown', 'buddyboss' );
+		$user_id     = bb_get_reacted_person( $reacted_users, $friend_users, $follower_users );
+		$second_name = bp_core_get_user_displayname( $user_id ) ?? esc_html__( 'Unknown', 'buddyboss' );
 
 		$return_str = $is_current_user_reacted
 		? sprintf( esc_html__( 'You and %s', 'buddyboss' ), $first_name )
 		: sprintf( esc_html__( '%1$s and %2$s', 'buddyboss' ), $first_name, $second_name );
 	} elseif ( 3 <= $reaction_count && 100 > $reaction_count ) {
 		$reaction_count -= 2;
-		$first_name      = bp_core_get_user_displayname( array_pop( $reacted_users ) ) ?? esc_html__( 'Unknown', 'buddyboss' );
-		$second_name     = bp_core_get_user_displayname( array_pop( $reacted_users ) ) ?? esc_html__( 'Unknown', 'buddyboss' );
+		$user_id         = bb_get_reacted_person( $reacted_users, $friend_users, $follower_users );
+		$first_name      = bp_core_get_user_displayname( $user_id ) ?? esc_html__( 'Unknown', 'buddyboss' );
+		$user_id         = bb_get_reacted_person( $reacted_users, $friend_users, $follower_users );
+		$second_name     = bp_core_get_user_displayname( $user_id ) ?? esc_html__( 'Unknown', 'buddyboss' );
 
 		$return_str = $is_current_user_reacted
 		? sprintf( esc_html__( 'You, %s and ', 'buddyboss' ), $first_name )
@@ -534,3 +530,24 @@ function bb_format_reaction_count( $count ) {
 		return $count;
 	}
 }
+
+/**
+ * Get the reacted user id.
+ *
+ * @param array $reacted_users The reacted user IDs.
+ * @param array $friends       The friends user IDs.
+ * @param array $followers     The friends user IDs.
+ *
+ * @return int The user id.
+ */
+function bb_get_reacted_person( &$reacted_users, &$friends, &$followers ) {
+	if ( ! empty( $friends ) ) {
+		return array_pop( $friends );
+	} elseif ( ! empty( $followers ) ) {
+		return array_pop( $followers );
+	} else {
+		return array_pop( $reacted_users );
+	}
+}
+
+
