@@ -3537,10 +3537,13 @@ input.search-query-input {
 
 .activity-list .activity-item .activity-content .activity-state.has-comments .activity-state-comments {
   display: inline-block;
+  vertical-align: middle;
 }
 
 .activity-list .activity-item .activity-content .activity-state.has-reactions, .activity-list .activity-item .activity-content .activity-state.has-likes, .activity-list .activity-item .activity-content .activity-state.has-comments {
-  display: block;
+  display: flex;
+  gap: 5px;
+  align-items: center;
 }
 
 .activity-list .activity-item .activity-content .activity-state.has-likes.has-comments .ac-state-separator {
@@ -3584,8 +3587,17 @@ input.search-query-input {
   object-fit: cover;
 }
 
+.activity-list .activity-item .activity-state-reactions .activity-reactions_count {
+  margin-right: 3px;
+}
+
 .activity-list .activity-item .activity-content .activity-state-reactions {
   display: inline-flex;
+  align-items: center;
+}
+
+.activity-list .activity-item .activity-meta.action .bp-secondary-action > i {
+  display: inline-block;
   vertical-align: middle;
 }
 
@@ -24980,7 +24992,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(-180deg);
+  transform: rotateY(180deg);
 }
 
 @media screen and (max-width: 768px) {

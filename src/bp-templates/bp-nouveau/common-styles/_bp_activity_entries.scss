@@ -230,13 +230,16 @@
 
 					.activity-state-comments {
 						display: inline-block;
+						vertical-align: middle;
 					}
 				}
 
 				&.has-reactions,
 				&.has-likes,
 				&.has-comments {
-					display: block;
+					display: flex;
+					gap: 5px;
+					align-items: center;
 				}
 
 				&.has-likes.has-comments {
@@ -284,11 +287,23 @@
 					object-fit: cover;
 				}
 			}
+
+			.activity-reactions_count {
+				margin-left: 3px;
+			}
 		}
 
 		.activity-content .activity-state-reactions {
 			display: inline-flex;
-			vertical-align: middle;
+			align-items: center;
+		}
+
+		.activity-meta.action {
+
+			.bp-secondary-action > i {
+				display: inline-block;
+				vertical-align: middle;
+			}
 		}
 
 		// close .activity-content
