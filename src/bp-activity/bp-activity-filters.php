@@ -295,6 +295,17 @@ function bp_activity_save_link_data( $activity ) {
 
 	$link_url   = ! empty( $link_url ) ? filter_var( $link_url, FILTER_VALIDATE_URL ) : '';
 	$link_embed = isset( $_POST['link_embed'] ) ? filter_var( $_POST['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false;
+	$activity_edit_from_admin = bb_activity_action_edit_from_admin( $_POST );
+	
+	// Check and retain preview if activity is being edited from admin.
+	if ( $activity_edit_from_admin ) {
+		$link_preview_data = bp_activity_get_meta( $activity->id, '_link_preview_data', true );
+		$link_embed_data   = bp_activity_get_meta( $activity->id, '_link_embed', true );
+		bp_activity_update_meta( $activity->id, '_link_embed', $link_embed_data );
+		bp_activity_update_meta( $activity->id, '_link_preview_data', $link_preview_data );
+
+		return;
+	}
 
 	// Check if link url is set or not.
 	if ( empty( $link_url ) ) {
