@@ -886,6 +886,8 @@ window.bp = window.bp || {};
 
 			$( document ).on( 'click', '.ac-emotions_list .ac-emotion_btn', this.updateReaction );
 			$( document ).on( 'click', '.activity-meta .button.has-reactions', this.removeReaction );
+			$( document ).on( 'click', '.activity-state-reactions', this.showActivityReactions );;
+
 		},
 
 		/**
@@ -920,11 +922,12 @@ window.bp = window.bp || {};
 
 						console.log( response.data.reaction_counts );
 
-						if ( response.data.reaction_counts ) {
-							if ( activity_item.find('.activity-state-reactions').length >=1 ) {
-								activity_item.find('.activity-state-reactions').replaceWith( response.data.reaction_counts );
+						if ( typeof response.data.reaction_counts !== 'undefined' ) {
+							if ( activity_item.find('.activity-content .activity-state-reactions').length >=1 ) {
+								activity_item.find('.activity-content  .activity-state-reactions').replaceWith( response.data.reaction_counts );
 							} else {
-								activity_item.find('.activity-state-likes').append( response.data.reaction_counts );
+								activity_item.find('.activity-content .activity-state').prepend( response.data.reaction_counts );
+								//activity_item.find('.activity-state-likes').show();
 							}
 						}
 
@@ -948,6 +951,7 @@ window.bp = window.bp || {};
 			activity_id   = activity_item.data( 'bp-activity-id' ), 
 			item_type     = 'activity';
 
+			console.log( 'Activity:' + activity_id );
 			$.ajax(
 				{
 					url: BP_Nouveau.ajaxurl,
@@ -958,22 +962,38 @@ window.bp = window.bp || {};
 						item_type: item_type,
 						_wpnonce: BP_Nouveau.nonces.activity,
 					}, success: function ( response ) {
-						if ( response.data.reaction_counts ) {
-							console.log( response.data.reaction_counts );
+						// console.log( response.data.reaction_counts );
 
-							if ( activity_item.find('.activity-state-reactions').length >=1 ) {
-								activity_item.find('.activity-state-reactions').replaceWith( response.data.reaction_counts );
+						if ( typeof response.data.reaction_counts !== 'undefined' ) {
+							if ( activity_item.find('.activity-content .activity-state-reactions').length >=1 ) {
+								activity_item.find('.activity-content  .activity-state-reactions').replaceWith( response.data.reaction_counts );
 							} else {
-								activity_item.find('.activity-state-likes').append( response.data.reaction_counts );
+								activity_item.find('.activity-content .activity-state').prepend( response.data.reaction_counts );
+								//activity_item.find('.activity-state-likes').show();
 							}
-
-							activity_item.find( '.activity-meta a.bp-secondary-action' ).replaceWith(response.data.reaction_button);
 						}
 
+						if( response.data.reaction_button ) {
+							activity_item.find( '.activity-meta a.bp-secondary-action' ).replaceWith(response.data.reaction_button);
+						}
 						//window.location.reload( true );
 					}
 				}
 			);
+		},
+
+		showActivityReactions: function( event ) {
+			var target    = $( this ), 
+			activity_item = target.parents( '.activity-item' );
+
+			if ( activity_item.find( '.activity-content .activity-state-popup' ).length <= 0 ) {
+				var reactionsTemplate = $('#tmpl-activity-reactions-popup').html();
+				var reactionModal = _.template(reactionsTemplate);
+				var html = reactionModal( {} );
+				activity_item.find( '.activity-content ' ).append( html );
+			}
+
+			activity_item.find( '.activity-content .activity-state-popup' ).addClass( 'active' );
 		},
 
 		/**
