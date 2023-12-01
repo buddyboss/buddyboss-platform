@@ -120,50 +120,22 @@ function bb_search_set_block_template_content( $query_result, $query, $template_
 		wp_is_block_theme() &&
 		in_array( 'search', $query['slug__in'], true )
 	) {
-
-		$new_content = preg_replace('/\/\*\*[\s\S]*?\*\//', '', file_get_contents( bp_get_template_part( 'search/blocks/search' ) ) );
-		$new_content = str_replace( array( '<?php', '?>' ), '', $new_content );
+		add_filter( 'bp_locate_template_and_load', '__return_false' );
 
 		// Reset the template query array.
-		$query_result     = array();
-		$theme            = get_stylesheet();
-		$slug             = current( $query['slug__in'] );
-		$template_content = $new_content;
-		$blocks           = parse_blocks( $template_content );
+		$query_result = array();
+		$slug         = current( $query['slug__in'] );
 
-		$prepare_template                 = new WP_Block_Template();
-		$prepare_template->id             = $theme . '//' . $slug;
-		$prepare_template->theme          = $theme;
-		$prepare_template->slug           = $slug;
-		$prepare_template->content        = traverse_and_serialize_blocks( $blocks );
-		$prepare_template->source         = 'buddyboss';
-		$prepare_template->type           = $template_type;
-		$prepare_template->title          = ! empty( $template_file['title'] ) ? $template_file['title'] : $slug;
-		$prepare_template->status         = 'publish';
-		$prepare_template->has_theme_file = false;
-		$prepare_template->is_custom      = true;
-		$prepare_template->modified       = null;
+		$template_file    = array(
+			'path' => bp_get_template_part( 'search/blocks/search' ),
+			'slug' => $slug,
+		);
+		$prepare_template = _build_block_template_result_from_file( $template_file, $template_type );
 
+		// Set template to query results.
+		$query_result[] = $prepare_template;
 
-		// Get block templates.
-		$template_files = _get_block_templates_files( $template_type, $query );
-
-		// Replace all templates to buddyboss templates for search.
-		if ( ! empty( $template_files ) ) {
-			foreach ( $template_files as $template_file ) {
-				$data = _build_block_template_result_from_file( $template_file, $template_type );
-
-				// Set template to query results.
-				if ( $template_file['slug'] === 'search' || $template_file['slug'] === 'index' ) {
-					$query_result[] = $prepare_template;
-				} else {
-					$query_result[] = $data;
-				}
-			}
-		} else {
-			// Set template to query results.
-			$query_result[] = $prepare_template;
-		}
+		remove_filter( 'bp_locate_template_and_load', '__return_false' );
 	}
 
 	return $query_result;
