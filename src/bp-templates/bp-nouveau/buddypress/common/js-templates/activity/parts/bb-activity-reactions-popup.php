@@ -38,7 +38,7 @@
 								<# } #>
 							</a>
 						</li>
-						<#
+						<# 
 							isFirstItem = false;
 						}); 
 						#>
