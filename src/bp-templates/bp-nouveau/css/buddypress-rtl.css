@@ -4124,6 +4124,7 @@ input.search-query-input {
   font-size: 18px;
   font-weight: 600;
   line-height: 1.33;
+  text-transform: capitalize;
 }
 
 .activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item .activity-state_user .activity-state_user__name a {
@@ -4140,6 +4141,7 @@ input.search-query-input {
   border-radius: 4px;
   padding: 4px 8px;
   margin-right: auto;
+  text-transform: capitalize;
 }
 
 .activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item.active {

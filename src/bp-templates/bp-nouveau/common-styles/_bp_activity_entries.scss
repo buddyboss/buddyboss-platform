@@ -881,6 +881,7 @@
 						font-size: 18px;
 						font-weight: 600;
 						line-height: 1.33;
+						text-transform: capitalize;
 
 						a {
 							color: $meta-text-dark;
@@ -897,6 +898,7 @@
 						border-radius: 4px;
 						padding: 4px 8px;
 						margin-left: auto;
+						text-transform: capitalize;
 					}
 				}
 

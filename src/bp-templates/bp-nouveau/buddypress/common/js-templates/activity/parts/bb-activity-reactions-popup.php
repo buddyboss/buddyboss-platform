@@ -54,7 +54,7 @@
 							<# jQuery.each( reaction.users, function( key, user ) { #>
 								<li class="activity-state_user">
 									<div class="activity-state_user__avatar">
-										<a href="#">
+										<a href="{{ user.profile_url }}">
 											<img class="avatar" src="{{ user.avatar }}" alt="{{ user.name }}" />
 											<div class="activity-state_user__reaction">
 												<img src="{{ user.reaction_path }}" alt="{{ reaction.reaction_text }}" />

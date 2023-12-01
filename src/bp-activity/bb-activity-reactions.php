@@ -469,8 +469,6 @@ function bb_get_activity_reaction_ajax_callback() {
 	$bb_reaction   = BB_Reaction::instance();
 	$reaction_data = bb_get_activity_most_reactions( $item_id, $item_type, 6 );
 	foreach ( $reaction_data as $key => $reaction ) {
-
-		error_log( print_r( $reaction, true ) );
 		$user_reactions = $bb_reaction->bb_get_user_reactions(
 			array(
 				'item_id'     => $item_id,
@@ -490,6 +488,7 @@ function bb_get_activity_reaction_ajax_callback() {
 				'name'          => $user_data->display_name,
 				'role'          => ! empty( $user_data->roles ) ? $user_data->roles[0] : '',
 				'avatar'        => get_avatar_url( $user_id ),
+				'profile_url'   => bbp_get_user_profile_url( $user_id ),
 				'reaction_path' => $reaction['icon_path'],
 				'reaction_text' => $reaction['icon_text'],
 			);
