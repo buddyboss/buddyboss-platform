@@ -2735,7 +2735,10 @@ function bp_get_activity_css_class() {
 		$class .= ' has-comments';
 	}
 
-	if ( '0' !== bp_activity_get_meta( bp_get_activity_id(), '_link_embed', true ) || ! empty( bp_activity_get_meta( bp_get_activity_id(), '_link_preview_data', true ) ) ) {
+	if (
+		'0' !== bp_activity_get_meta( bp_get_activity_id(), '_link_embed', true ) ||
+		! empty( bp_activity_get_meta( bp_get_activity_id(), '_link_preview_data', true ) )
+	) {
 		$class .= ' wp-link-embed';
 	}
 
