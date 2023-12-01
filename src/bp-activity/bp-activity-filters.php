@@ -299,11 +299,6 @@ function bp_activity_save_link_data( $activity ) {
 	
 	// Check and retain preview if activity is being edited from admin.
 	if ( $activity_edit_from_admin ) {
-		$link_preview_data = bp_activity_get_meta( $activity->id, '_link_preview_data', true );
-		$link_embed_data   = bp_activity_get_meta( $activity->id, '_link_embed', true );
-		bp_activity_update_meta( $activity->id, '_link_embed', $link_embed_data );
-		bp_activity_update_meta( $activity->id, '_link_preview_data', $link_preview_data );
-
 		return;
 	}
 

@@ -6578,7 +6578,7 @@ function bb_activity_pin_type( $args ) {
 }
 
 /**
- * Checks if activity is being updated from admin panel.
+ * Checks if activity is being edited from admin panel.
  *
  * @since [BBVERSION]
  *
