@@ -469,6 +469,8 @@ function bb_get_activity_reaction_ajax_callback() {
 	$bb_reaction   = BB_Reaction::instance();
 	$reaction_data = bb_get_activity_most_reactions( $item_id, $item_type, 6 );
 	foreach ( $reaction_data as $key => $reaction ) {
+
+		error_log( print_r( $reaction, true ) );
 		$user_reactions = $bb_reaction->bb_get_user_reactions(
 			array(
 				'item_id'     => $item_id,
@@ -484,47 +486,50 @@ function bb_get_activity_reaction_ajax_callback() {
 			$user_data = get_userdata( $user_id );
 
 			$users[] = array(
-				'id'   => $user_id,
-				'name' => $user_data->display_name,
-				'role' => ! empty( $user_data->roles ) ? $user_data->roles[0] : '',
+				'id'            => $user_id,
+				'name'          => $user_data->display_name,
+				'role'          => ! empty( $user_data->roles ) ? $user_data->roles[0] : '',
+				'avatar'        => get_avatar_url( $user_id ),
+				'reaction_path' => $reaction['icon_path'],
+				'reaction_text' => $reaction['icon_text'],
 			);
 		}
 
 		$reaction_data[ $key ]['users'] = $users;
 	}
 
-	$all_reactions = array_reduce(
-		$reaction_data,
-		function ( $carry, $reaction ) {
-			$carry['total'] += $reaction['total'];
-			$carry['users']  = array_merge( $carry['users'], $reaction['users'] );
+	if ( count( $reaction_data ) >= 2 ) {
+		$all_reactions = array_reduce(
+			$reaction_data,
+			function ( $carry, $reaction ) {
+				$carry['total'] += $reaction['total'];
+				$carry['users']  = array_merge( $carry['users'], $reaction['users'] );
 
-			return $carry;
-		},
-		array(
-			'total' => 0,
-			'users' => array(),
-		)
-	);
+				return $carry;
+			},
+			array(
+				'total' => 0,
+				'users' => array(),
+			)
+		);
 
-	array_unshift(
-		$reaction_data,
-		array(
-			'name'      => 'All',
-			'type'      => 'all',
-			'icon'      => '',
-			'icon_text' => esc_html__( 'All', 'buddyboss' ),
-			'total'     => $all_reactions['total'],
-			'users'     => $all_reactions['users'],
-		)
-	);
-
-	// error_log( print_r( $reaction_data, true ) );
+		array_unshift(
+			$reaction_data,
+			array(
+				'name'      => 'All',
+				'type'      => 'all',
+				'icon'      => '',
+				'icon_text' => esc_html__( 'All', 'buddyboss' ),
+				'total'     => $all_reactions['total'],
+				'users'     => $all_reactions['users'],
+			)
+		);
+	}
 
 	wp_send_json_success(
 		array(
 			'item_id'   => $item_id,
-			'reactions' => $reaction_data,
+			'reactions' => (object) $reaction_data,
 		)
 	);
 }

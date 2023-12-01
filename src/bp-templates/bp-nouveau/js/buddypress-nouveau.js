@@ -992,8 +992,8 @@ window.bp = window.bp || {};
 			item_type     = 'activity';
 
 			if ( activity_item.find( '.activity-content .activity-state-popup' ).length <= 0 ) {
-				var reactionsTemplate = $('#tmpl-activity-reactions-popup').html();
-				var reactionModal = _.template(reactionsTemplate);
+				var reactionModal = wp.template('activity-reactions-popup');
+
 				$.ajax(
 					{
 						url: BP_Nouveau.ajaxurl,
@@ -1004,8 +1004,10 @@ window.bp = window.bp || {};
 							item_type: item_type,
 							_wpnonce: BP_Nouveau.nonces.activity,
 						}, success: function ( response ) {
-							if ( response.data.reactions ) {
-								var html = reactionModal( response.data.reactions );
+							console.log( response.data.reactions );
+							if ( typeof response.data.reactions !== 'undefined' ) {
+								var data = response.data.reactions;
+								var html = reactionModal( data );
 								activity_item.find( '.activity-content ' ).append( html );
 								activity_item.find( '.activity-content .activity-state-popup' ).addClass( 'active' );
 							}
