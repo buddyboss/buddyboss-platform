@@ -125,3 +125,22 @@
 	}
 }
 
+// BB search block for default theme
+.bb-search-block {
+
+	.bp-search-results-list .bp-search-item {
+
+		.item-avatar {
+			float: none;
+			width: auto;
+			margin: 0 12px 0 0;
+			max-width: inherit;
+
+			img {
+				height: auto;
+				max-width: 160px;
+				width: 100%;
+			}
+		}
+	}
+}

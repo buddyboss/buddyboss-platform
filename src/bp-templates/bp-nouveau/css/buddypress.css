@@ -12813,6 +12813,19 @@ ul.bbp-stats .bbp-count {
   padding: 6px 10px 7px;
 }
 
+.bb-search-block .bp-search-results-list .bp-search-item .item-avatar {
+  float: none;
+  width: auto;
+  margin: 0 12px 0 0;
+  max-width: inherit;
+}
+
+.bb-search-block .bp-search-results-list .bp-search-item .item-avatar img {
+  height: auto;
+  max-width: 160px;
+  width: 100%;
+}
+
 /**
 *-------------------------------------------------------------------------------
 * @section 7.0 - Tables - General
