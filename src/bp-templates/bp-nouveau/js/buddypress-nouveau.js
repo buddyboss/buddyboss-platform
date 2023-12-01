@@ -886,7 +886,7 @@ window.bp = window.bp || {};
 
 			$( document ).on( 'click', '.ac-emotions_list .ac-emotion_btn', this.updateReaction );
 			$( document ).on( 'click', '.activity-meta .button.has-reactions', this.removeReaction );
-			$( document ).on( 'click', '.activity-state-reactions', this.showActivityReactions );;
+			$( document ).on( 'click', '.activity-state-reactions', this.showActivityReactions );
 
 		},
 
@@ -983,17 +983,37 @@ window.bp = window.bp || {};
 		},
 
 		showActivityReactions: function( event ) {
+			event.preventDefault();
+
 			var target    = $( this ), 
-			activity_item = target.parents( '.activity-item' );
+			activity_item = target.parents( '.activity-item' ),
+			activity_id   = activity_item.data( 'bp-activity-id' ), 
+			item_type     = 'activity';
 
 			if ( activity_item.find( '.activity-content .activity-state-popup' ).length <= 0 ) {
 				var reactionsTemplate = $('#tmpl-activity-reactions-popup').html();
 				var reactionModal = _.template(reactionsTemplate);
-				var html = reactionModal( {} );
-				activity_item.find( '.activity-content ' ).append( html );
+				$.ajax(
+					{
+						url: BP_Nouveau.ajaxurl,
+						type: 'post',
+						data: {
+							action: 'bb_get_reactions',
+							item_id: activity_id,
+							item_type: item_type,
+							_wpnonce: BP_Nouveau.nonces.activity,
+						}, success: function ( response ) {
+							if ( response.data.reactions ) {
+								var html = reactionModal( response.data.reactions );
+								activity_item.find( '.activity-content ' ).append( html );
+								activity_item.find( '.activity-content .activity-state-popup' ).addClass( 'active' );
+							}
+						}
+					}
+				);
+			} else {
+				activity_item.find( '.activity-content .activity-state-popup' ).addClass( 'active' );
 			}
-
-			activity_item.find( '.activity-content .activity-state-popup' ).addClass( 'active' );
 		},
 
 		/**

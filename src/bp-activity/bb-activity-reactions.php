@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 add_action( 'wp_ajax_bb_update_reaction', 'bb_update_activity_reaction_ajax_callback' );
 add_action( 'wp_ajax_bb_remove_reaction', 'bb_remove_activity_reaction_ajax_callback' );
+add_action( 'wp_ajax_bb_get_reactions', 'bb_get_activity_reaction_ajax_callback' );
 
 add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bb_nouveau_get_activity_post_reaction_button', 10, 2 );
 add_action( 'bp_activity_action_delete_activity', 'bb_activity_delete_reactions', 10, 1 );
@@ -210,8 +211,11 @@ function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', 
 		// continue;
 		// }
 
-		$reaction    = maybe_unserialize( $reaction_post->post_content );
-		$reactions[] = $reaction;
+		$reaction_content = maybe_unserialize( $reaction_post->post_content );
+
+		$reaction_content['id']    = $reaction_post->ID;
+		$reaction_content['total'] = $reaction->total;
+		$reactions[]               = $reaction_content;
 
 		$no_of_reactions --;
 	}
@@ -433,11 +437,106 @@ function bb_remove_activity_reaction_ajax_callback() {
 }
 
 /**
- * Get reaction count for activity
+ * Get reactions data for an activity.
+ *
+ * @return mixed
+ */
+function bb_get_activity_reaction_ajax_callback() {
+
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error();
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'bp_nouveau_activity' ) ) {
+		wp_send_json_error(
+			__( 'Nonce verification failed', 'buddyboss' )
+		);
+	}
+
+	if ( empty( $_POST['item_id'] ) ) {
+		wp_send_json_error(
+			array(
+				'no_item_id' => esc_html__( 'No item id', 'buddyboss' ),
+			)
+		);
+	}
+
+	$item_id       = sanitize_text_field( $_POST['item_id'] );
+	$item_type     = sanitize_text_field( $_POST['item_type'] );
+	$reaction_data = array();
+
+	$bb_reaction   = BB_Reaction::instance();
+	$reaction_data = bb_get_activity_most_reactions( $item_id, $item_type, 6 );
+	foreach ( $reaction_data as $key => $reaction ) {
+		$user_reactions = $bb_reaction->bb_get_user_reactions(
+			array(
+				'item_id'     => $item_id,
+				'item_type'   => $item_type,
+				'reaction_id' => $reaction['id'],
+				'per_page'    => 20,
+				'fields'      => 'user_id',
+			)
+		);
+
+		$users = array();
+		foreach ( $user_reactions['reactions'] as $user_id ) {
+			$user_data = get_userdata( $user_id );
+
+			$users[] = array(
+				'id'   => $user_id,
+				'name' => $user_data->display_name,
+				'role' => ! empty( $user_data->roles ) ? $user_data->roles[0] : '',
+			);
+		}
+
+		$reaction_data[ $key ]['users'] = $users;
+	}
+
+	$all_reactions = array_reduce(
+		$reaction_data,
+		function ( $carry, $reaction ) {
+			$carry['total'] += $reaction['total'];
+			$carry['users']  = array_merge( $carry['users'], $reaction['users'] );
+
+			return $carry;
+		},
+		array(
+			'total' => 0,
+			'users' => array(),
+		)
+	);
+
+	array_unshift(
+		$reaction_data,
+		array(
+			'name'      => 'All',
+			'type'      => 'all',
+			'icon'      => '',
+			'icon_text' => esc_html__( 'All', 'buddyboss' ),
+			'total'     => $all_reactions['total'],
+			'users'     => $all_reactions['users'],
+		)
+	);
+
+	// error_log( print_r( $reaction_data, true ) );
+
+	wp_send_json_success(
+		array(
+			'item_id'   => $item_id,
+			'reactions' => $reaction_data,
+		)
+	);
+}
+
+/**
+ * Get reaction count for activity.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int $activity_id Post Id.
+ * @param int    $activity_id Post Id.
+ * @param string $activity_type Activity type.
+ *
  * @return int|string
  */
 function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'activity' ) {
