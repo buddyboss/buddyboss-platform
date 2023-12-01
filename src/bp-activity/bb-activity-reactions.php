@@ -217,10 +217,10 @@ function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', 
 		$reaction_content['total'] = $reaction->total;
 		$reactions[]               = $reaction_content;
 
-		$no_of_reactions --;
+		$no_of_reactions--;
 	}
 
-	return apply_filters( 'bb_get_activity_user_reactions', $reactions );
+	return apply_filters( 'bb_get_activity_most_reactions', $reactions );
 }
 
 /**
@@ -437,6 +437,53 @@ function bb_remove_activity_reaction_ajax_callback() {
 }
 
 /**
+ * Retrieves the user reactions for a specific activity.
+ *
+ * @param array $args The arguments for retrieving the user reactions.
+ *                    - reaction_id (int) The ID of the reaction (default: 0).
+ *                    - item_id (int) The ID of the item (default: 0).
+ *                    - user_id (int) The ID of the user (default: 0).
+ *                    - paged (int) The page number (default: 1).
+ *
+ * @return array The user reactions.
+ */
+function bb_get_activity_user_reactions( $args ) {
+
+	$args = bp_parse_args(
+		$args,
+		array(
+			'reaction_id' => 0,
+			'item_id'     => 0,
+			'user_id'     => 0,
+			'paged'       => 1,
+		),
+		'bb_get_activity_user_reactions_args'
+	);
+
+	$bb_reaction    = BB_Reaction::instance();
+	$reaction_data  = $bb_reaction->bb_get_user_reactions( $args );
+	$user_reactions = array();
+
+	if ( ! empty( $reaction_data['reactions'] ) ) {
+		foreach ( $reaction_data['reactions'] as $reaction ) {
+			$user_data     = get_userdata( $reaction->user_id );
+			$reaction_meta = get_post_field( 'post_content', $reaction->reaction_id );
+
+			$user_reactions[] = array(
+				'id'          => $reaction->user_id,
+				'name'        => $user_data->display_name,
+				'role'        => ! empty( $user_data->roles ) ? $user_data->roles[0] : '',
+				'avatar'      => get_avatar_url( $reaction->user_id ),
+				'profile_url' => bbp_get_user_profile_url( $reaction->user_id ),
+				'reaction'    => maybe_unserialize( $reaction_meta ),
+			);
+		}
+	}
+
+	return apply_filters( 'bb_get_activity_user_reactions', $user_reactions, $args );
+}
+
+/**
  * Get reactions data for an activity.
  *
  * @return mixed
@@ -464,54 +511,19 @@ function bb_get_activity_reaction_ajax_callback() {
 
 	$item_id       = sanitize_text_field( $_POST['item_id'] );
 	$item_type     = sanitize_text_field( $_POST['item_type'] );
-	$reaction_data = array();
-
-	$bb_reaction   = BB_Reaction::instance();
 	$reaction_data = bb_get_activity_most_reactions( $item_id, $item_type, 6 );
+
 	foreach ( $reaction_data as $key => $reaction ) {
-		$user_reactions = $bb_reaction->bb_get_user_reactions(
+		$reaction_data[ $key ]['users'] = bb_get_activity_user_reactions(
 			array(
 				'item_id'     => $item_id,
 				'item_type'   => $item_type,
 				'reaction_id' => $reaction['id'],
-				'per_page'    => 20,
-				'fields'      => 'user_id',
 			)
 		);
-
-		$users = array();
-		foreach ( $user_reactions['reactions'] as $user_id ) {
-			$user_data = get_userdata( $user_id );
-
-			$users[] = array(
-				'id'            => $user_id,
-				'name'          => $user_data->display_name,
-				'role'          => ! empty( $user_data->roles ) ? $user_data->roles[0] : '',
-				'avatar'        => get_avatar_url( $user_id ),
-				'profile_url'   => bbp_get_user_profile_url( $user_id ),
-				'reaction_path' => $reaction['icon_path'],
-				'reaction_text' => $reaction['icon_text'],
-			);
-		}
-
-		$reaction_data[ $key ]['users'] = $users;
 	}
 
 	if ( count( $reaction_data ) >= 2 ) {
-		$all_reactions = array_reduce(
-			$reaction_data,
-			function ( $carry, $reaction ) {
-				$carry['total'] += $reaction['total'];
-				$carry['users']  = array_merge( $carry['users'], $reaction['users'] );
-
-				return $carry;
-			},
-			array(
-				'total' => 0,
-				'users' => array(),
-			)
-		);
-
 		array_unshift(
 			$reaction_data,
 			array(
@@ -519,8 +531,12 @@ function bb_get_activity_reaction_ajax_callback() {
 				'type'      => 'all',
 				'icon'      => '',
 				'icon_text' => esc_html__( 'All', 'buddyboss' ),
-				'total'     => $all_reactions['total'],
-				'users'     => $all_reactions['users'],
+				'users'     => bb_get_activity_user_reactions(
+					array(
+						'item_id'   => $item_id,
+						'item_type' => $item_type,
+					)
+				),
 			)
 		);
 	}

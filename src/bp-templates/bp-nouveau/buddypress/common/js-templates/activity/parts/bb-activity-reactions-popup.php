@@ -24,7 +24,7 @@
 						jQuery.each( data, function( key, reaction ) {
 						#>
 						<li>
-							<a href="#" class="{{ isFirstItem ? 'active' : '' }}" data-tab="activity-state_{{key}}">
+							<a href="javascript:void(0);" class="{{ isFirstItem ? 'active' : '' }}" data-tab="activity-state_{{key}}" reaction-id="{{ reaction.id ? reaction.id : '0' }}">
 								<# if ( reaction.type === 'all' ) { #>
 									{{ reaction.icon_text }}
 								<# } else if ( reaction.type === 'bb-icons' ) { #>
@@ -57,7 +57,7 @@
 										<a href="{{ user.profile_url }}">
 											<img class="avatar" src="{{ user.avatar }}" alt="{{ user.name }}" />
 											<div class="activity-state_user__reaction">
-												<img src="{{ user.reaction_path }}" alt="{{ reaction.reaction_text }}" />
+												<img src="{{ user.reaction.icon_path }}" alt="{{ user.reaction.icon_text }}" />
 											</div>
 										</a>
 									</div>
