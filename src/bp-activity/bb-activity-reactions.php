@@ -325,43 +325,40 @@ function bb_get_activity_post_reaction_button_html( $reaction_id = 0, $has_react
 	}
 
 	$reaction_post = get_post( $reaction_id );
-	$reaction_data = maybe_unserialize( $reaction_post->post_content );
+	$reaction_data = ! empty( $reaction_post->post_content ) ? maybe_unserialize( $reaction_post->post_content ) : array();
+	$icon_html     = '';
 
-	$reaction_button = '';
-	if ( ! empty( $reaction_data ) ) {
-		$icon_text  = $reaction_data['icon_text'];
-		$text_color = ! empty( $reaction_data['text_color'] ) ? $reaction_data['text_color'] : '#385DFF';
-		$icon_html  = '';
-
-		if ( 'bb-icons' === $reaction_data['type'] ) {
-			$icon_html = sprintf(
-				'<i class="bb-icon-%s" style="font-weight:200;color:%s;"></i>',
-				esc_attr( $reaction_data['icon'] ),
-				esc_attr( $reaction_data['icon_color'] ),
-			);
-		} elseif ( ! empty( $reaction_data['icon_path'] ) ) {
-			$icon_html = sprintf(
-				'<img src="%s" alt="%s" style="width:20px"/>',
-				esc_url( $reaction_data['icon_path'] ),
-				esc_attr( $reaction_data['icon_text'] )
-			);
-		} else {
-			$icon_text = sprintf( 'Like', 'buddyboss' );
-		}
-
-		$reaction_button = sprintf(
-			'<a href="%1$s" class="button bp-secondary-action %5$s" aria-pressed="false">
-				<span class="bp-screen-reader-text">%2$s</span>
-				%3$s
-				<span class="like-count reactions_item" style="color:%4$s">%2$s</span>
-			</a>',
-			$has_reacted ? bp_get_activity_unfavorite_link() : bp_get_activity_favorite_link(),
-			esc_html( $icon_text ),
-			$icon_html,
-			esc_attr( $text_color ),
-			! empty( $reaction_button_class ) ? $reaction_button_class : 'fav',
+	if ( ! empty( $reaction_data['type'] ) && 'bb-icons' === $reaction_data['type'] ) {
+		$icon_text = $reaction_data['icon_text'];
+		$icon_html = sprintf(
+			'<i class="bb-icon-%s" style="font-weight:200;color:%s;"></i>',
+			esc_attr( $reaction_data['icon'] ),
+			esc_attr( $reaction_data['icon_color'] ),
 		);
+
+	} elseif ( ! empty( $reaction_data['icon_path'] ) ) {
+		$icon_text = $reaction_data['icon_text'];
+		$icon_html = sprintf(
+			'<img src="%s" alt="%s" style="width:20px"/>',
+			esc_url( $reaction_data['icon_path'] ),
+			esc_attr( $reaction_data['icon_text'] )
+		);
+	} else {
+		$icon_text = sprintf( 'Like', 'buddyboss' );
 	}
+
+	$reaction_button = sprintf(
+		'<a href="%1$s" class="button bp-secondary-action %5$s" aria-pressed="false">
+			<span class="bp-screen-reader-text">%2$s</span>
+			%3$s
+			<span class="like-count reactions_item" style="color:%4$s">%2$s</span>
+		</a>',
+		$has_reacted ? bp_get_activity_unfavorite_link() : bp_get_activity_favorite_link(),
+		esc_html( $icon_text ),
+		$icon_html,
+		! empty( $reaction_data['text_color'] ) ? esc_attr( $reaction_data['text_color'] ) : '#385DFF',
+		! empty( $reaction_button_class ) ? esc_attr( $reaction_button_class ) : 'fav',
+	);
 
 	return $reaction_button;
 }
