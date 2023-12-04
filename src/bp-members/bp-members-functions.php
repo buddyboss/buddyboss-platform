@@ -2279,6 +2279,12 @@ function bp_core_map_user_registration( $user_id, $by_pass = false ) {
 
 		bp_xprofile_update_display_name( $user_id );
 	}
+
+	// Generate user profile slug on user registration.
+	$username = bb_core_get_user_slug( $user_id );
+	if ( empty( $username ) ) {
+		bb_set_user_profile_slug( $user_id );
+	}
 }
 add_action( 'user_register', 'bp_core_map_user_registration' );
 
@@ -5354,7 +5360,6 @@ function bb_get_user_by_profile_slug( $profile_slug ) {
 
 	if ( ! isset( $cache[ $cache_key ] ) ) {
 		global $wpdb;
-		$bp_prefix = bp_core_get_table_prefix();
 
 		// Backward compatible to check 40 characters long unique slug or new slug as well.
 		$user_query = $wpdb->prepare(
@@ -5601,12 +5606,28 @@ function bb_generate_user_random_profile_slugs( $max_ids = 1, $prefix = '' ) {
 function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 ) {
 	global $wpdb;
 
+	if ( empty( $unique_identifier ) ) {
+		return $unique_identifier;
+	}
+
 	if ( is_array( $unique_identifier ) ) {
+		$unique_identifier = array_filter( $unique_identifier );
+		if ( empty( $unique_identifier ) ) {
+			return $unique_identifier;
+		}
+		$prefixed_array = array_map( function ( $item ) {
+			return 'bb_profile_slug_' . $item;
+		}, $unique_identifier );
+
+		$profile_keys = '"' . implode( '","', $prefixed_array ) . '"';
 		$unique_identifier = '"' . implode( '","', $unique_identifier ) . '"';
+	} else {
+		$profile_keys      = '"bb_profile_slug_' . $unique_identifier . '"';
+		$unique_identifier = '"' . $unique_identifier . '"';
 	}
 
 	// Prepare the statement to check unique identifier.
-	$prepare_user_query = "SELECT DISTINCT u.user_nicename, u.user_login FROM `{$wpdb->users}` AS u WHERE ( u.user_login IN ({$unique_identifier}) OR u.user_nicename IN ({$unique_identifier}) )";
+	$prepare_user_query = "SELECT u.user_nicename, u.user_login FROM `{$wpdb->users}` AS u WHERE ( u.user_login IN ({$unique_identifier}) OR u.user_nicename IN ({$unique_identifier}) )";
 
 	// Exclude the user to check unique identifier.
 	if ( ! empty( $user_id ) ) {
@@ -5621,16 +5642,13 @@ function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 )
 
 	$matched_uuids = array();
 	if ( ! empty( $user_val ) ) {
+		$user_val      = array_unique( $user_val );
 		$matched_uuids = array_column( $user_val, 'user_nicename' );
 		$matched_uuids = array_merge( $matched_uuids, array_column( $user_val, 'user_login' ) );
 	}
 
 	// Prepare the statement to check unique identifier.
-	$prepare_meta_query = $wpdb->prepare(
-		"SELECT DISTINCT um.meta_value FROM `{$wpdb->usermeta}` AS um WHERE ( um.meta_key = %s AND um.meta_value IN ({$unique_identifier}) ) OR ( um.meta_key = %s AND um.meta_value IN ({$unique_identifier}) )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		'bb_profile_slug',
-		'nickname'
-	);
+	$prepare_meta_query = "SELECT REPLACE( um.meta_key, 'bb_profile_slug_', '' ) as value FROM `{$wpdb->usermeta}` AS um WHERE ( um.meta_key IN ({$profile_keys}) )";
 
 	// Exclude the user to check unique identifier.
 	if ( ! empty( $user_id ) ) {
@@ -5641,10 +5659,10 @@ function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 )
 	}
 
 	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-	$meta_val = $wpdb->get_results( $prepare_meta_query );
+	$meta_val = $wpdb->get_col( $prepare_meta_query );
 
 	if ( ! empty( $meta_val ) ) {
-		$matched_uuids = array_merge( $matched_uuids, array_column( $meta_val, 'meta_value' ) );
+		$matched_uuids = array_merge( $matched_uuids, $meta_val );
 	}
 
 	return array_filter( array_unique( $matched_uuids ) );
