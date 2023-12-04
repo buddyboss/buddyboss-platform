@@ -27,14 +27,21 @@ function bp_search_search_page_content( $content ) {
 	global $bpgs_main_content_filter_has_run;
 
 	if ( bp_search_is_search() && 'yes' != $bpgs_main_content_filter_has_run ) {
-			remove_filter( 'the_content', 'bp_search_search_page_content', 9 );
-			remove_filter( 'the_content', 'wpautop' );
-			$bpgs_main_content_filter_has_run = 'yes';
-			// setup search resutls and all..
-			BP_Search::instance()->prepare_search_page();
-			ob_start();
-			bp_get_template_part( 'search/results-page' );
-			$content .= ob_get_clean();
+		if (
+			function_exists( 'wp_is_block_theme' ) &&
+			wp_is_block_theme()
+		) {
+			$content = '';
+		}
+
+		remove_filter( 'the_content', 'bp_search_search_page_content', 9 );
+		remove_filter( 'the_content', 'wpautop' );
+		$bpgs_main_content_filter_has_run = 'yes';
+		// setup search resutls and all..
+		BP_Search::instance()->prepare_search_page();
+		ob_start();
+		bp_get_template_part( 'search/results-page' );
+		$content .= ob_get_clean();
 	}
 
 	return $content;
