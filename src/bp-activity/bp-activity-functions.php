@@ -6576,26 +6576,3 @@ function bb_activity_pin_type( $args ) {
 
 	return $r['pin_type'];
 }
-
-/**
- * Checks if activity is being edited from admin panel.
- *
- * @since [BBVERSION]
- *
- * @param array $request POST array from request.
- *
- * @return bool
- */
-function bb_activity_action_edit_from_admin( $request ) {
-	if ( 
-		! empty( $request['bp-activities-type'] ) &&
-		'activity_update' === $request['bp-activities-type'] &&
-		! empty( $request['_wp_http_referer'] ) &&
-		strpos( $request['_wp_http_referer'], 'admin.php?page=bp-activity' ) !== false &&
-		strpos( $request['_wp_http_referer'], 'action=edit' ) !== false
-	) {
-		return true;
-	}
-
-	return false;
-}

@@ -266,18 +266,21 @@ function bp_activity_save_link_data( $activity ) {
 
 	// bail if the request is for privacy update.
 	if (
-		isset( $_POST['action'] ) &&
-		in_array(
-			$_POST['action'], // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			array(
-				'activity_update_privacy',
-				'bbp-new-topic',
-				'bbp-new-reply',
-				'bbp-edit-topic',
-				'bbp-edit-reply',
-			),
-			true
-		)
+		(
+			isset( $_POST['action'] ) &&
+			in_array(
+				$_POST['action'], // phpcs:ignore WordPress.Security.NonceVerification.Missing
+				array(
+					'activity_update_privacy',
+					'bbp-new-topic',
+					'bbp-new-reply',
+					'bbp-edit-topic',
+					'bbp-edit-reply',
+				),
+				true
+			)
+		) ||
+		( is_admin() && ! wp_doing_ajax() ) // bail if the request is from admin.
 	) {
 		return;
 	}
@@ -295,12 +298,6 @@ function bp_activity_save_link_data( $activity ) {
 
 	$link_url   = ! empty( $link_url ) ? filter_var( $link_url, FILTER_VALIDATE_URL ) : '';
 	$link_embed = isset( $_POST['link_embed'] ) ? filter_var( $_POST['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false;
-	$activity_edit_from_admin = bb_activity_action_edit_from_admin( $_POST );
-	
-	// Check and retain preview if activity is being edited from admin.
-	if ( $activity_edit_from_admin ) {
-		return;
-	}
 
 	// Check if link url is set or not.
 	if ( empty( $link_url ) ) {
