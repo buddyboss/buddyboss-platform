@@ -880,12 +880,14 @@ window.bp = window.bp || {};
 			$( '.bb-accordion .bb-accordion_trigger' ).on( 'click', this.toggleAccordion );
 
 			// Reaction actions.
-			$( document ).on( 'mouseover', 'a.button.fav, a.button.unfav, a.button.has-reactions', bp.Nouveau, this.showReactions.bind( this ) ).on('mouseout', '.button.fav, .button.unfav', function() { clearTimeout(window.reactionHoverTimeout); } );
-			$( document ).on( 'mouseout', '.activity-meta .ac-emotions_list, .button.fav, .button.unfav, .button.has-reactions', bp.Nouveau, this.hideReactions.bind( this ) );
+			$( document ).on( 'mouseover', 'a.button.fav, a.button.has-like, a.button.has-emotion', bp.Nouveau, this.showReactions.bind( this ) ).on('mouseout', '.button.fav, .button.unfav', function() { clearTimeout(window.reactionHoverTimeout); } );
+			$( document ).on( 'mouseout', '.activity-meta .ac-emotions_list, .button.fav, .button.has-like, .button.has-emotion', bp.Nouveau, this.hideReactions.bind( this ) );
 			$( document ).on( 'click', '.activity-state-popup_overlay', bp.Nouveau, this.closeActivityState.bind( this ) );
 
 			$( document ).on( 'click', '.ac-emotions_list .ac-emotion_btn', this.updateReaction );
-			$( document ).on( 'click', '.activity-meta .button.has-reactions', this.removeReaction );
+			$( document ).on( 'click', '.activity-meta a.button.fav', this.updateReaction );
+
+			$( document ).on( 'click', '.activity-meta .button.has-emotion', this.removeReaction );
 			$( document ).on( 'click', '.activity-state-reactions', this.showActivityReactions );
 			$( document ).on( 'click', '.activity-state-popup .activity-state-popup_tab_panel a', this.ReactionStatePopupTab );
 
@@ -906,8 +908,8 @@ window.bp = window.bp || {};
 			reaction_id   = reaction_item.data( 'reaction-id' ),
 			item_type     = 'activity';
 
-			console.log( 'Activity:' + activity_id );
-			console.log( 'reaction:' + reaction_id );
+			// console.log( 'Activity:' + activity_id );
+			// console.log( 'reaction:' + reaction_id );
 
 			$.ajax(
 				{

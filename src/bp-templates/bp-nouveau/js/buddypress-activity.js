@@ -126,11 +126,11 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.show-all', this.showComments );
 
 			// Activity actions.
-			//$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
 			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-privacy>li.bb-edit-privacy a', bp.Nouveau, this.activityPrivacyRedirect.bind( this ) );
 			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-privacy>li:not(.bb-edit-privacy)', bp.Nouveau, this.activityPrivacyChange.bind( this ) );
 			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', 'span.privacy', bp.Nouveau, this.togglePrivacyDropdown.bind( this ) );
-			//$( '#bb-media-model-container .activity-list' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
+			$( '#bb-media-model-container .activity-list' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
 			$( document ).keydown( this.commentFormAction );
 			$( document ).click( this.togglePopupDropdown );
 
@@ -730,103 +730,16 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		activityActions: function( event ) {
-			var parent                     = event.data, target = $( event.target ), activity_item = $( event.currentTarget ),
-				activity_id                = activity_item.data( 'bp-activity-id' ), stream = $( event.delegateTarget ),
+			var parent                     = event.data, target = $( event.target ), 
+				activity_item              = $( event.currentTarget ),
+				activity_id                = activity_item.data( 'bp-activity-id' ),
 				activity_state             = activity_item.find( '.activity-state' ),
 				comments_text              = activity_item.find( '.comments-count' ),
-				likes_text                 = activity_item.find( '.like-text' ),
 				item_id, form, model, self = this;
 
 			// In case the target is set to a span inside the link.
 			if ( $( target ).is( 'span' ) ) {
 				target = $( target ).closest( 'a' );
-			}
-
-			// Favoriting.
-			if ( target.hasClass( 'fav' ) || target.hasClass( 'unfav' ) ) {
-				var type = target.hasClass( 'fav' ) ? 'fav' : 'unfav';
-
-				// Stop event propagation.
-				event.preventDefault();
-
-				target.addClass( 'loading' );
-
-				parent.ajax( { action: 'activity_mark_' + type, 'id': activity_id }, 'activity' ).done(
-					function( response ) {
-						target.removeClass( 'loading' );
-
-						if ( false === response.success ) {
-							return;
-						} else {
-							target.fadeOut(
-								200,
-								function() {
-									if ( $( this ).find( 'span' ).first().length ) {
-										$( this ).find( 'span' ).first().html( response.data.content );
-									} else {
-										$( this ).html( response.data.content );
-									}
-									// $( this ).prop( 'title', response.data.content );
-
-									if ('false' === $( this ).attr( 'aria-pressed' ) ) {
-										$( this ).attr( 'aria-pressed', 'true' );
-									} else {
-										$( this ).attr( 'aria-pressed', 'false' );
-									}
-
-									if ( likes_text.length ) {
-										response.data.like_count ?
-											likes_text.text( response.data.like_count ) && activity_state.addClass( 'has-likes' ) :
-											likes_text.empty() && activity_state.removeClass( 'has-likes' );
-
-										// Update like tooltip.
-										var decoded = $( '<textarea/>' ).html( response.data.tooltip ).text();
-										likes_text.attr( 'data-hint', decoded );
-									}
-
-									if ( $( this ).find( '.like-count' ).length ) {
-										$( this ).find( '.like-count' ).html( response.data.content );
-									}
-
-									$( this ).fadeIn( 200 );
-								}
-							);
-						}
-
-						if ( 'fav' === type ) {
-							if ( undefined !== response.data.directory_tab ) {
-								if ( ! $( parent.objectNavParent + ' [data-bp-scope="favorites"]' ).length ) {
-									$( parent.objectNavParent + ' [data-bp-scope="all"]' ).after( response.data.directory_tab );
-								}
-							}
-
-							target.removeClass( 'fav' );
-							target.addClass( 'unfav' );
-
-						} else if ( 'unfav' === type ) {
-							var favoriteScope = $( '[data-bp-user-scope="favorites"]' ).hasClass( 'selected' ) || $( parent.objectNavParent + ' [data-bp-scope="favorites"]' ).hasClass( 'selected' );
-
-							// If on user's profile or on the favorites directory tab, remove the entry.
-							if ( favoriteScope ) {
-								activity_item.remove();
-							}
-
-							if ( undefined !== response.data.no_favorite ) {
-								// Remove the tab when on activity directory but not on the favorites tabs.
-								if ( $( parent.objectNavParent + ' [data-bp-scope="all"]' ).length && $( parent.objectNavParent + ' [data-bp-scope="all"]' ).hasClass( 'selected' ) ) {
-									$( parent.objectNavParent + ' [data-bp-scope="favorites"]' ).remove();
-
-									// In all the other cases, append a message to the empty stream.
-								} else if ( favoriteScope ) {
-									stream.append( response.data.no_favorite );
-								}
-							}
-
-							target.removeClass( 'unfav' );
-							target.addClass( 'fav' );
-						}
-					}
-				);
 			}
 
 			// Deleting or spamming.

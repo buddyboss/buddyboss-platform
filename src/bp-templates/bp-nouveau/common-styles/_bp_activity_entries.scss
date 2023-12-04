@@ -234,7 +234,7 @@
 					}
 				}
 
-				&.has-reactions,
+				&.has-emotion,
 				&.has-likes,
 				&.has-comments {
 					display: flex;
@@ -390,12 +390,12 @@
 				content: "\ef41";
 			}
 
+			.has-like:before,
 			.unfav:before {
 				content: "\ef41";
 				color: #0061ac;
 				font-weight: 300;
 			}
-
 
 			.edit-activity:before {
 				content: "\ee5a";

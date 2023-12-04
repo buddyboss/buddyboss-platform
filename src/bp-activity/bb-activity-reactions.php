@@ -15,9 +15,80 @@ add_action( 'wp_ajax_bb_update_reaction', 'bb_update_activity_reaction_ajax_call
 add_action( 'wp_ajax_bb_remove_reaction', 'bb_remove_activity_reaction_ajax_callback' );
 add_action( 'wp_ajax_bb_get_reactions', 'bb_get_activity_reaction_ajax_callback' );
 
-add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bb_nouveau_get_activity_post_reaction_button', 10, 2 );
-add_action( 'bp_activity_action_delete_activity', 'bb_activity_delete_reactions', 10, 1 );
+add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bb_nouveau_update_activity_post_reaction_button', 10, 2 );
+add_action( 'bp_activity_action_delete_activity', 'bb_activity_remove_activity_post_reactions', 10, 1 );
 
+/**
+ * Add user reaction for an activity post.
+ *
+ * @param int     $activity_id    The activity ID.
+ * @param int     $reaction_id    The reaction ID.
+ * @param string  $activity_type  The activity type.
+ * @param integer $user_id        Current logged in user ID.
+ *
+ * @return mixed
+ */
+function bp_activity_add_user_reaction( $activity_id, $reaction_id = 0, $activity_type = 'activity', $user_id = 0 ) {
+
+	if ( empty( $activity_id ) ) {
+		return false;
+	}
+
+	if ( empty( $reaction_id ) ) {
+		$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
+	}
+
+	if ( empty( $user_id ) ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
+	if ( empty( $reaction_id ) || empty( $user_id ) ) {
+		return;
+	}
+
+	$bb_reaction = BB_Reaction::instance();
+	$reaction    = $bb_reaction->bb_add_user_item_reaction(
+		array(
+			'reaction_id' => $reaction_id,
+			'item_id'     => $activity_id,
+			'user_id'     => $user_id,
+			'item_type'   => $activity_type,
+		)
+	);
+
+	return $reaction;
+}
+
+/**
+ * Remove user reaction for an activity post.
+ *
+ * @param int     $activity_id   The activity ID.
+ * @param string  $activity_type The activity type.
+ * @param integer $user_id       Current logged in user ID.
+ *
+ * @return mixed
+ */
+function bp_activity_remove_user_reaction( $activity_id, $activity_type = 'activity', $user_id = 0 ) {
+
+	if ( empty( $activity_id ) ) {
+		return false;
+	}
+
+	if ( empty( $user_id ) ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
+	$bb_reaction = BB_Reaction::instance();
+	$status      = $bb_reaction->bb_remove_user_item_reactions(
+		array(
+			'item_id'   => $activity_id,
+			'user_id'   => $user_id,
+			'item_type' => $activity_type,
+		)
+	);
+
+	return $status;
+}
 
 /**
  * Delete all reactions for an activity.
@@ -25,7 +96,12 @@ add_action( 'bp_activity_action_delete_activity', 'bb_activity_delete_reactions'
  * @param int $activity_id ID of the activity.
  * @return void
  */
-function bb_activity_delete_reactions( $activity_id ) {
+function bb_activity_remove_activity_post_reactions( $activity_id ) {
+
+	if ( ! empty( $activity_id ) ) {
+		return;
+	}
+
 	$bb_reaction = BB_Reaction::instance();
 	$bb_reaction->bb_remove_user_item_reactions(
 		array(
@@ -46,7 +122,7 @@ function bb_activity_delete_reactions( $activity_id ) {
  *
  * @since BuddyBoss 1.7.8
  */
-function bb_nouveau_get_activity_post_reaction_button( $buttons, $activity_id ) {
+function bb_nouveau_update_activity_post_reaction_button( $buttons, $activity_id ) {
 
 	if ( empty( $buttons['activity_favorite'] ) ) {
 		return $buttons;
@@ -101,19 +177,22 @@ function bb_nouveau_get_activity_post_reaction_button( $buttons, $activity_id ) 
 		esc_attr( $text_color )
 	);
 
-	if ( ! empty( $reaction_data['type'] ) ) {
-		$buttons['activity_favorite']['button_attr']['class'] = 'button has-reactions bp-secondary-action';
+	$class_name = 'has-emotion';
+	if ( empty( $reaction_data['type'] ) ) {
+		$class_name .= ' has-like';
 	}
+
+	$buttons['activity_favorite']['button_attr']['class'] = 'button bp-secondary-action ' . $class_name;
 
 	return $buttons;
 }
 
 /**
- * Get activity post reaction markup.
+ * Get reaction emoticons for activity post.
  *
  * @return HTML markup
  */
-function bb_get_activity_post_reaction_markup() {
+function bb_get_activity_post_emotions_popup() {
 
 	$output = '';
 
@@ -157,7 +236,7 @@ function bb_get_activity_post_reaction_markup() {
 		$output .= '</div>';
 	}
 
-	return apply_filters( 'bb_get_activity_post_reaction_markup', $output );
+	return apply_filters( 'bb_get_activity_post_emotions_popup', $output );
 }
 
 /**
@@ -224,13 +303,77 @@ function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', 
 }
 
 /**
+ * Get activity post reaction button html.
+ *
+ * @param int     $reaction_id      ID of the reaction.
+ * @param boolean $has_reacted User has reaction or not.
+ *
+ * @return mixed
+ */
+function bb_get_activity_post_reaction_button_html( $reaction_id = 0, $has_reacted = false ) {
+
+	$reaction_button_class = '';
+
+	$like_reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
+	if ( empty( $reaction_id ) || $reaction_id === $like_reaction_id ) {
+		$reaction_id           = $like_reaction_id;
+		$reaction_button_class = $has_reacted ? ' has-like' : '';
+	}
+
+	if ( $has_reacted ) {
+		$reaction_button_class .= ' has-emotion';
+	}
+
+	$reaction_post = get_post( $reaction_id );
+	$reaction_data = maybe_unserialize( $reaction_post->post_content );
+
+	$reaction_button = '';
+	if ( ! empty( $reaction_data ) ) {
+		$icon_text  = $reaction_data['icon_text'];
+		$text_color = ! empty( $reaction_data['text_color'] ) ? $reaction_data['text_color'] : '#385DFF';
+		$icon_html  = '';
+
+		if ( 'bb-icons' === $reaction_data['type'] ) {
+			$icon_html = sprintf(
+				'<i class="bb-icon-%s" style="font-weight:200;color:%s;"></i>',
+				esc_attr( $reaction_data['icon'] ),
+				esc_attr( $reaction_data['icon_color'] ),
+			);
+		} elseif ( ! empty( $reaction_data['icon_path'] ) ) {
+			$icon_html = sprintf(
+				'<img src="%s" alt="%s" style="width:20px"/>',
+				esc_url( $reaction_data['icon_path'] ),
+				esc_attr( $reaction_data['icon_text'] )
+			);
+		} else {
+			$icon_text = sprintf( 'Like', 'buddyboss' );
+		}
+
+		$reaction_button = sprintf(
+			'<a href="%1$s" class="button bp-secondary-action %5$s" aria-pressed="false">
+				<span class="bp-screen-reader-text">%2$s</span>
+				%3$s
+				<span class="like-count reactions_item" style="color:%4$s">%2$s</span>
+			</a>',
+			$has_reacted ? bp_get_activity_unfavorite_link() : bp_get_activity_favorite_link(),
+			esc_html( $icon_text ),
+			$icon_html,
+			esc_attr( $text_color ),
+			! empty( $reaction_button_class ) ? $reaction_button_class : 'fav',
+		);
+	}
+
+	return $reaction_button;
+}
+
+/**
  * Get user reactions list for activity post.
  *
  * @param int $activity_id Activity Id.
  *
  * @return HTML markup
  */
-function bb_get_activity_post_user_reaction_markup( $activity_id ) {
+function bb_get_activity_post_user_reactions_html( $activity_id ) {
 
 	if ( empty( $activity_id ) ) {
 		return;
@@ -282,7 +425,7 @@ function bb_get_activity_post_user_reaction_markup( $activity_id ) {
 		$output .= '</div>';
 	}
 
-	return apply_filters( 'bb_get_activity_post_user_reaction_markup', $output );
+	return apply_filters( 'bb_get_activity_post_user_reactions_html', $output );
 }
 
 /**
@@ -296,8 +439,6 @@ function bb_update_activity_reaction_ajax_callback() {
 		wp_send_json_error();
 	}
 
-	// error_log( print_r( $_POST, true ) );
-
 	// Nonce check!
 	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'bp_nouveau_activity' ) ) {
 		wp_send_json_error(
@@ -306,14 +447,18 @@ function bb_update_activity_reaction_ajax_callback() {
 	}
 
 	if ( empty( $_POST['reaction_id'] ) ) {
+		$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
+	} else {
+		$reaction_id = sanitize_text_field( $_POST['reaction_id'] );
+	}
+
+	if ( empty( $reaction_id ) ) {
 		wp_send_json_error(
 			array(
 				'no_reaction_id' => esc_html__( 'No reaction id', 'buddyboss' ),
 			)
 		);
 	}
-
-	$reaction_id = sanitize_text_field( $_POST['reaction_id'] );
 
 	if ( empty( $_POST['item_id'] ) ) {
 		wp_send_json_error(
@@ -325,59 +470,23 @@ function bb_update_activity_reaction_ajax_callback() {
 
 	$item_id   = sanitize_text_field( $_POST['item_id'] );
 	$item_type = sanitize_text_field( $_POST['item_type'] );
-
-	$bb_reaction = BB_Reaction::instance();
-	$bb_reaction->bb_add_user_item_reaction(
-		array(
-			'reaction_id' => $reaction_id,
-			'item_id'     => $item_id,
-			'user_id'     => get_current_user_id(),
-			'item_type'   => $item_type,
-		)
+	$reaction  = bp_activity_add_user_reaction(
+		$item_id,
+		$reaction_id,
+		$item_type
 	);
 
-	$reaction_post = get_post( $reaction_id );
-	$reaction_data = maybe_unserialize( $reaction_post->post_content );
-
-	if ( ! empty( $reaction_data ) ) {
-		$icon_text = $reaction_data['icon_text'];
-		$icon      = '';
-		if ( 'bb-icons' === $reaction_data['type'] ) {
-			$icon = sprintf(
-				'<i class="bb-icon-thumbs-up" style="font-weight:200;color:%s;"></i>',
-				esc_attr( $reaction_data['icon_color'] ),
-			);
-		} elseif ( ! empty( $reaction_data['icon_path'] ) ) {
-			$icon = sprintf(
-				'<img src="%s" alt="%s" style="width:20px"/>',
-				esc_url( $reaction_data['icon_path'] ),
-				esc_attr( $reaction_data['icon_text'] )
-			);
-		} else {
-			$icon_text = sprintf( 'Like', 'buddyboss' );
-		}
-
-		$text_color = ! empty( $reaction_data['text_color'] ) ? $reaction_data['text_color'] : '#385DFF';
-
-		$reaction_button = sprintf(
-			'<a href="%1$s" class="button has-reactions bp-secondary-action" aria-pressed="false">
-				<span class="bp-screen-reader-text">%2$s</span>
-				%3$s
-				<span class="like-count reactions_item" style="color:%4$s">%2$s</span>
-			</a>',
-			bp_get_activity_unfavorite_link(),
-			esc_html( $icon_text ),
-			$icon,
-			esc_attr( $text_color )
-		);
+	if ( is_wp_error( $reaction ) ) {
+		wp_send_json_error( $reaction->get_error_message() );
 	}
 
 	wp_send_json_success(
 		array(
 			'item_id'         => $item_id,
+			'item_type'       => $item_type,
 			'reaction_id'     => $reaction_id,
-			'reaction_counts' => bb_get_activity_post_user_reaction_markup( $item_id ),
-			'reaction_button' => $reaction_button,
+			'reaction_counts' => bb_get_activity_post_user_reactions_html( $item_id ),
+			'reaction_button' => bb_get_activity_post_reaction_button_html( $reaction_id, true ),
 		)
 	);
 }
@@ -410,28 +519,18 @@ function bb_remove_activity_reaction_ajax_callback() {
 
 	$item_id   = sanitize_text_field( $_POST['item_id'] );
 	$item_type = sanitize_text_field( $_POST['item_type'] );
+	$status    = bp_activity_remove_user_reaction( $item_id, $item_type );
 
-	$bb_reaction = BB_Reaction::instance();
-	$bb_reaction->bb_remove_user_item_reactions(
-		array(
-			'item_id'   => $item_id,
-			'user_id'   => get_current_user_id(),
-			'item_type' => $item_type,
-		)
-	);
+	if ( is_wp_error( $status ) ) {
+		wp_send_json_error( $status->get_error_message() );
+	}
 
 	wp_send_json_success(
 		array(
 			'item_id'         => $item_id,
-			'reaction_counts' => bb_get_activity_post_user_reaction_markup( $item_id ),
-			'reaction_button' => sprintf(
-				'<a href="%1$s" class="button fav bp-secondary-action" aria-pressed="false">
-					<span class="bp-screen-reader-text">%2$s</span>
-					<span class="like-count">%2$s</span>
-				</a>',
-				bp_get_activity_favorite_link(),
-				esc_html__( 'Likes', 'buddyboss' )
-			),
+			'item_type'       => $item_type,
+			'reaction_counts' => bb_get_activity_post_user_reactions_html( $item_id ),
+			'reaction_button' => bb_get_activity_post_reaction_button_html(),
 		)
 	);
 }
@@ -668,5 +767,3 @@ function bb_get_reacted_person( &$reacted_users, &$friends, &$followers ) {
 		return array_pop( $reacted_users );
 	}
 }
-
-

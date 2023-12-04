@@ -3540,7 +3540,7 @@ input.search-query-input {
   vertical-align: middle;
 }
 
-.activity-list .activity-item .activity-content .activity-state.has-reactions, .activity-list .activity-item .activity-content .activity-state.has-likes, .activity-list .activity-item .activity-content .activity-state.has-comments {
+.activity-list .activity-item .activity-content .activity-state.has-emotion, .activity-list .activity-item .activity-content .activity-state.has-likes, .activity-list .activity-item .activity-content .activity-state.has-comments {
   display: flex;
   gap: 5px;
   align-items: center;
@@ -3673,6 +3673,7 @@ input.search-query-input {
   content: "\ef41";
 }
 
+.activity-list .activity-item .bp-generic-meta.action .has-like:before,
 .activity-list .activity-item .bp-generic-meta.action .unfav:before {
   content: "\ef41";
   color: #0061ac;

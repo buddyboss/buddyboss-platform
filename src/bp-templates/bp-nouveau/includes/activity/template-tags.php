@@ -265,21 +265,14 @@ function bp_nouveau_activity_state() {
 	$has_reaction = false;
 	if ( bb_get_reaction_mode() === 'emotions' ) {
 		$has_reaction = true;
-	} else {
-		$like_text       = bp_activity_get_favorite_users_string( $activity_id );
-		$favorited_users = bp_activity_get_favorite_users_tooltip_string( $activity_id );
 	}
 
 	?>
-	<div class="activity-state <?php echo ! empty( $has_reaction ) ? 'has-reactions' : ''; ?> <?php echo ! empty( $like_text ) ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
-		<a href="javascript:void(0);" class="activity-state-likes">
-			<span class="like-text hint--bottom hint--medium hint--multiline" data-hint="<?php echo ! empty( $favorited_users ) ? $favorited_users : ''; ?>">
-				<?php echo ! empty( $like_text ) ? $like_text : ''; ?>
-			</span>
-		</a>
-
+	<div class="activity-state <?php echo ! empty( $has_reaction ) ? 'has-emotion' : 'has-likes'; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
 		<?php
-			echo bb_get_activity_post_user_reaction_markup( $activity_id );
+		if ( bb_is_reaction_activity_posts_enabled() ) {
+			echo bb_get_activity_post_user_reactions_html( $activity_id );
+		}
 		?>
 
 		<?php if ( bp_activity_can_comment() ) :
@@ -418,7 +411,7 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 	$has_content = trim( $output, ' ' );
 
 	// Todo: Make Reactions dynamic and move to appropriate place.
-	$output .= bb_get_activity_post_reaction_markup();
+	$output .= bb_get_activity_post_emotions_popup();
 
 	if ( ! $has_content ) {
 		return;
@@ -489,24 +482,14 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 
 		if ( ! bp_get_activity_is_favorite() ) {
 			$fav_args = array(
-				'parent_element' => $parent_element,
-				'parent_attr'    => $parent_attr,
-				'button_element' => $button_element,
 				'link_class'     => 'button fav bp-secondary-action',
-				// 'data_bp_tooltip'  => __( 'Like', 'buddyboss' ),
-				'link_text'      => __( 'Like', 'buddyboss' ),
 				'aria-pressed'   => 'false',
 				'link_attr'      => bp_get_activity_favorite_link(),
 			);
 
 		} else {
 			$fav_args = array(
-				'parent_element' => $parent_element,
-				'parent_attr'    => $parent_attr,
-				'button_element' => $button_element,
 				'link_class'     => 'button unfav bp-secondary-action',
-				// 'data_bp_tooltip' => __( 'Unlike', 'buddyboss' ),
-				'link_text'      => __( 'Unlike', 'buddyboss' ),
 				'aria-pressed'   => 'true',
 				'link_attr'      => bp_get_activity_unfavorite_link(),
 			);
@@ -519,12 +502,11 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 			'parent_element'    => $parent_element,
 			'parent_attr'       => $parent_attr,
 			'must_be_logged_in' => true,
-			'button_element'    => $fav_args['button_element'],
-			'link_text'         => sprintf( '<span class="bp-screen-reader-text">%1$s</span>  <span class="like-count">%2$s</span>', esc_html( $fav_args['link_text'] ), esc_html( $fav_args['link_text'] ) ),
+			'button_element'    => $button_element,
+			'link_text'         => sprintf( '<span class="bp-screen-reader-text">%1$s</span>  <span class="like-count">%1$s</span>', esc_html__( 'Like', 'buddyboss' ) ),
 			'button_attr'       => array(
 				$key           => $fav_args['link_attr'],
 				'class'        => $fav_args['link_class'],
-				// 'data-bp-tooltip' => $fav_args['data_bp_tooltip'],
 				'aria-pressed' => $fav_args['aria-pressed'],
 			),
 		);
