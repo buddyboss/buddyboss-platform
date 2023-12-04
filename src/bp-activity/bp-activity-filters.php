@@ -261,18 +261,21 @@ function bp_activity_save_link_data( $activity ) {
 
 	// bail if the request is for privacy update.
 	if (
-		isset( $_POST['action'] ) &&
-		in_array(
-			$_POST['action'], // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			array(
-				'activity_update_privacy',
-				'bbp-new-topic',
-				'bbp-new-reply',
-				'bbp-edit-topic',
-				'bbp-edit-reply',
-			),
-			true
-		)
+		(
+			isset( $_POST['action'] ) &&
+			in_array(
+				$_POST['action'], // phpcs:ignore WordPress.Security.NonceVerification.Missing
+				array(
+					'activity_update_privacy',
+					'bbp-new-topic',
+					'bbp-new-reply',
+					'bbp-edit-topic',
+					'bbp-edit-reply',
+				),
+				true
+			)
+		) ||
+		( is_admin() && ! wp_doing_ajax() ) // bail if the request is from admin.
 	) {
 		return;
 	}
