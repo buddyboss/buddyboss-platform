@@ -9,6 +9,7 @@
  * Background job to repair user profile slug.
  *
  * @since BuddyBoss 2.3.3
+ * @deprecated BuddyBoss [BBVERSION]
  *
  * @param int $paged Number of page.
  *
@@ -61,6 +62,7 @@ function bb_repair_member_unique_slug( $paged = 1 ) {
  * Delete duplicate bb_profile_slug_ key from the usermeta table.
  *
  * @since BuddyBoss 2.3.3
+ * @deprecated BuddyBoss [BBVERSION]
  *
  * @param array $user_ids Array of user ID.
  * @param int   $paged    Number of page.
@@ -93,6 +95,7 @@ function bb_remove_duplicate_member_slug( $user_ids, $paged ) {
  * This function will work as migration process which will repair member profile links.
  *
  * @since BuddyBoss 2.3.41
+ * @deprecated BuddyBoss [BBVERSION]
  *
  * @return array|void
  */
