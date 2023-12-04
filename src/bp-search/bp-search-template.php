@@ -27,14 +27,21 @@ function bp_search_search_page_content( $content ) {
 	global $bpgs_main_content_filter_has_run;
 
 	if ( bp_search_is_search() && 'yes' != $bpgs_main_content_filter_has_run ) {
-			remove_filter( 'the_content', 'bp_search_search_page_content', 9 );
-			remove_filter( 'the_content', 'wpautop' );
-			$bpgs_main_content_filter_has_run = 'yes';
-			// setup search resutls and all..
-			BP_Search::instance()->prepare_search_page();
-			ob_start();
-			bp_get_template_part( 'search/results-page' );
-			$content .= ob_get_clean();
+		if (
+			function_exists( 'wp_is_block_theme' ) &&
+			wp_is_block_theme()
+		) {
+			$content = '';
+		}
+
+		remove_filter( 'the_content', 'bp_search_search_page_content', 9 );
+		remove_filter( 'the_content', 'wpautop' );
+		$bpgs_main_content_filter_has_run = 'yes';
+		// setup search resutls and all..
+		BP_Search::instance()->prepare_search_page();
+		ob_start();
+		bp_get_template_part( 'search/results-page' );
+		$content .= ob_get_clean();
 	}
 
 	return $content;
@@ -92,3 +99,52 @@ function bp_search_filters() {
 function bp_search_results() {
 	BP_Search::instance()->print_results();
 }
+
+/**
+ * Filters the array of queried block templates array after they've been fetched.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param WP_Block_Template[] $query_result Array of found block templates.
+ * @param array               $query        {
+ *                                          Arguments to retrieve templates. All arguments are optional.
+ *
+ * @type string[]             $slug__in     List of slugs to include.
+ * @type int                  $wp_id        Post ID of customized template.
+ * @type string               $area         A 'wp_template_part_area' taxonomy value to filter by (for 'wp_template_part' template type only).
+ * @type string               $post_type    Post type to get the templates for.
+ *                                          }
+ *
+ * @param string              $template_type wp_template or wp_template_part.
+ *
+ * return WP_Block_Template[] $query_result
+ */
+function bb_search_set_block_template_content( $query_result, $query, $template_type ) {
+	// Check if the current page is buddyboss search page.
+	if (
+		bp_search_is_search() &&
+		function_exists( 'wp_is_block_theme' ) &&
+		wp_is_block_theme() &&
+		in_array( 'search', $query['slug__in'], true )
+	) {
+		add_filter( 'bp_locate_template_and_load', '__return_false' );
+
+		// Reset the template query array.
+		$query_result = array();
+		$slug         = current( $query['slug__in'] );
+
+		$template_file    = array(
+			'path' => bp_get_template_part( 'search/blocks/search' ),
+			'slug' => $slug,
+		);
+		$prepare_template = _build_block_template_result_from_file( $template_file, $template_type );
+
+		// Set template to query results.
+		$query_result[] = $prepare_template;
+
+		remove_filter( 'bp_locate_template_and_load', '__return_false' );
+	}
+
+	return $query_result;
+}
+add_filter( 'get_block_templates', 'bb_search_set_block_template_content', 10, 3 );
