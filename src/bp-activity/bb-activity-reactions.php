@@ -137,6 +137,10 @@ function bb_nouveau_update_activity_post_reaction_button( $buttons, $activity_id
 		)
 	);
 
+	if ( empty( $user_reaction ) ) {
+		return $buttons;
+	}
+
 	$user_reaction = current( $user_reaction['reactions'] );
 	if ( empty( $user_reaction ) ) {
 		return $buttons;
