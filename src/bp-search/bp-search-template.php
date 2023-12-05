@@ -148,3 +148,45 @@ function bb_search_set_block_template_content( $query_result, $query, $template_
 	return $query_result;
 }
 add_filter( 'get_block_templates', 'bb_search_set_block_template_content', 10, 3 );
+
+/**
+ * Force search non-empty for the block theme.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string   $search   Search SQL for WHERE clause.
+ * @param WP_Query $wp_query The current WP_Query object.
+ *
+ * @return mixed|string
+ */
+function bb_search_posts_search( $search, $wp_query ) {
+	// Check if this is the main search query
+	if ( is_admin() || ! $wp_query->is_main_query() ) {
+		return $search;
+	}
+
+	if (
+		bp_search_is_search() &&
+		function_exists( 'wp_is_block_theme' ) &&
+		wp_is_block_theme()
+	) {
+		$posts = get_posts( array(
+			'numberposts' => 1,
+			'fields'      => 'ids',
+			'post_type'   => array(
+				'page',
+				'post'
+			)
+		) );
+
+		if ( ! empty( $posts ) ) {
+			$post_id = current( $posts );
+			global $wpdb;
+			$search .= " OR {$wpdb->posts}.ID = {$post_id}";
+		}
+	}
+
+	return $search;
+}
+
+add_filter( 'posts_search', 'bb_search_posts_search', 10, 2 );
