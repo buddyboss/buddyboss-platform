@@ -1012,6 +1012,19 @@ window.bp = window.bp || {};
 								var html = reactionModal( data );
 								activity_item.find( '.activity-content ' ).append( html );
 								activity_item.find( '.activity-content .activity-state-popup' ).addClass( 'active' );
+								
+								// Load more emotions on scroll
+								var $reactions_list =  activity_item.find( '.activity-state-popup .activity-state-popup_tab_item ul' );
+								$reactions_list.on( 'scroll', function() {
+									var distanceFromBottom = $( this )[0].scrollHeight - $( this ).scrollTop() - $( this ).outerHeight();
+									var threshold = 10;
+									// Check if the user has scrolled to the bottom
+									if ( distanceFromBottom <= threshold ) {
+										var emotion_type = $( this ).parent().data( 'type' );
+										console.log( 'Load more ' + emotion_type );
+										// Trigger AJAX to load more emotions
+									}
+								});
 							}
 						}
 					}

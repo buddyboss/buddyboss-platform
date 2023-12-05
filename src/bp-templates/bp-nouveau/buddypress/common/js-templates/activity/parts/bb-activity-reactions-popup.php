@@ -50,7 +50,7 @@
 					isFirstItem = true;
 					jQuery.each( data, function( key, reaction ) {
 						#>
-						<div class="activity-state-popup_tab_item activity-state_{{key}} {{isFirstItem ? 'active' : ''}}">
+						<div class="activity-state-popup_tab_item activity-state_{{key}} {{isFirstItem ? 'active' : ''}}" data-type="{{reaction.type}}">
 							<ul class="activity-state_users">
 							<# jQuery.each( reaction.users, function( key, user ) { #>
 								<li class="activity-state_user">
