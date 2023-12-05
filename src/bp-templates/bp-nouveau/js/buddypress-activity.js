@@ -1608,7 +1608,7 @@ window.bp = window.bp || {};
 									'<div>' + response.data.feedback + '</div>',
 									'success',
 									null,
-									false
+									true
 								]
 							);
 						}
@@ -1623,7 +1623,7 @@ window.bp = window.bp || {};
 								'<div>' + BP_Nouveau.activity.strings.pinPostError + '</div>',
 								'error',
 								null,
-								false
+								true
 							]
 						);
 					}
