@@ -312,8 +312,7 @@ function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', 
 		return;
 	}
 
-	$bb_reaction   = BB_Reaction::instance();
-	$reaction_data = $bb_reaction->bb_get_reaction_reactions_count(
+	$reaction_data = bb_load_reaction()->bb_get_reaction_reactions_count(
 		array(
 			'item_type' => $item_type,
 			'item_id'   => $item_id,
@@ -326,14 +325,14 @@ function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', 
 
 	usort(
 		$reaction_data,
-		function( $first, $second ) {
-			return $first->total - $second->total;
+		function( $a, $b ) {
+			return $b->total <=> $a->total;
 		}
 	);
 
 	$reactions = array();
-
 	foreach ( $reaction_data as $reaction ) {
+
 		if ( 0 === $no_of_reactions ) {
 			break;
 		}
@@ -343,13 +342,20 @@ function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', 
 			continue;
 		}
 
-		// $is_active = get_post_meta( $reaction->reaction_id, 'is_emotion_active', true );
-		// if ( ! $is_active ) {
-		// continue;
-		// }
+		$reaction_meta = get_post_meta( $reaction->reaction_id );
 
-		$reaction_content = maybe_unserialize( $reaction_post->post_content );
+		// If emotion is not active then skip this reaction.
+		if (
+			isset( $reaction_meta['is_emotion'] ) &&
+			(
+				empty( $reaction_meta['is_emotion'][0] ) ||
+				empty( $reaction_meta['is_emotion_active'][0] )
+			)
+		) {
+			continue;
+		}
 
+		$reaction_content          = maybe_unserialize( $reaction_post->post_content );
 		$reaction_content['id']    = $reaction_post->ID;
 		$reaction_content['total'] = $reaction->total;
 		$reactions[]               = $reaction_content;
