@@ -665,7 +665,7 @@ function bb_get_activity_reaction_ajax_callback() {
 
 	$item_id       = sanitize_text_field( $_POST['item_id'] );
 	$item_type     = sanitize_text_field( $_POST['item_type'] );
-	$reaction_data = bb_get_activity_most_reactions( $item_id, $item_type, 6 );
+	$reaction_data = bb_get_activity_most_reactions( $item_id, $item_type, 7 );
 
 	foreach ( $reaction_data as $key => $reaction ) {
 		$reaction_data[ $key ]['total'] = bb_format_reaction_count( $reaction_data[ $key ]['total'] );
@@ -720,21 +720,22 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 		return 0;
 	}
 
-	$bb_reaction   = BB_Reaction::instance();
-	$reaction_data = $bb_reaction->bb_get_user_reactions(
+	$reaction_data = bb_load_reaction()->bb_get_user_reactions(
 		array(
-			'item_id'   => $activity_id,
-			'item_type' => $activity_type,
-			'fields'    => 'user_id',
+			'item_id'     => $activity_id,
+			'item_type'   => $activity_type,
+			'fields'      => 'user_id',
+			'per_page'    => 1000,
+			'count_total' => true,
 		)
 	);
 
-	$reacted_users  = ! empty( $reaction_data['reactions'] ) ? $reaction_data['reactions'] : array();
-	$reaction_count = is_countable( $reacted_users ) ? count( $reacted_users ) : 0;
-
-	if ( 0 === $reaction_count ) {
-		return 0;
+	if ( empty( $reaction_data['total'] ) || 1000 === $reaction_data['total'] ) {
+		return bb_format_reaction_count( $reaction_data['total'] );
 	}
+
+	$reacted_users  = ! empty( $reaction_data['reactions'] ) ? $reaction_data['reactions'] : array();
+	$reaction_count = ! empty( $reaction_data['total'] ) ? $reaction_data['total'] : 0;
 
 	$is_current_user_reacted = false;
 	$current_logged_user_id  = bp_loggedin_user_id();
@@ -746,11 +747,15 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 			unset( $reacted_users[ $current_key ] );
 		}
 
-		$friends   = friends_get_friend_user_ids( $current_logged_user_id );
-		$followers = bp_get_followers();
+		if ( function_exists( 'friends_get_friend_user_ids' ) ) {
+			$friends      = friends_get_friend_user_ids( $current_logged_user_id );
+			$friend_users = array_diff( $friends, $reacted_users );
+		}
 
-		$friend_users   = array_diff( $friends, $reacted_users );
-		$follower_users = array_diff( $followers, $reacted_users );
+		if ( function_exists( 'bp_get_followers' ) ) {
+			$followers      = bp_get_followers();
+			$follower_users = array_diff( $followers, $reacted_users );
+		}
 	}
 
 	$return_str = '';
@@ -768,7 +773,7 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 		$return_str = $is_current_user_reacted
 		? sprintf( esc_html__( 'You and %s', 'buddyboss' ), $first_name )
 		: sprintf( esc_html__( '%1$s and %2$s', 'buddyboss' ), $first_name, $second_name );
-	} elseif ( 3 <= $reaction_count && 100 > $reaction_count ) {
+	} elseif ( 3 <= $reaction_count && 1000 >= $reaction_count ) {
 		$reaction_count -= 2;
 		$user_id         = bb_get_reacted_person( $reacted_users, $friend_users, $follower_users );
 		$first_name      = bp_core_get_user_displayname( $user_id ) ?? esc_html__( 'Unknown', 'buddyboss' );
