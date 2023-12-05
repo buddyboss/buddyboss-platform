@@ -4078,6 +4078,12 @@ input.search-query-input {
   padding: 0 25px;
 }
 
+.activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item .reactions_loader {
+  font-size: 18px;
+  text-align: center;
+  line-height: 1;
+}
+
 .activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item .activity-state_user {
   display: flex;
   flex-wrap: wrap;
