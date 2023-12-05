@@ -610,6 +610,7 @@ function bb_get_activity_reaction_ajax_callback() {
 	$reaction_data = bb_get_activity_most_reactions( $item_id, $item_type, 6 );
 
 	foreach ( $reaction_data as $key => $reaction ) {
+		$reaction_data[ $key ]['total'] = bb_format_reaction_count( $reaction_data[ $key ]['total'] );
 		$reaction_data[ $key ]['users'] = bb_get_activity_user_reactions(
 			array(
 				'item_id'     => $item_id,
