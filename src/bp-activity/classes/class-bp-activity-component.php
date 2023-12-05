@@ -322,8 +322,14 @@ class BP_Activity_Component extends BP_Component {
 
 			// Favorite activity items.
 			if ( bp_is_activity_like_active() ) {
+
+				$item_name = _x( 'Likes', 'Profile activity screen sub nav', 'buddyboss' );
+				if ( 'emotions' === bb_get_reaction_mode() ) {
+					$item_name = _x( 'Reacted to', 'Profile activity screen sub nav', 'buddyboss' );
+				}
+
 				$sub_nav[] = array(
-					'name'            => _x( 'Likes', 'Profile activity screen sub nav', 'buddyboss' ),
+					'name'            => $item_name,
 					'slug'            => 'favorites',
 					'parent_url'      => $activity_link,
 					'parent_slug'     => $slug,
@@ -443,10 +449,15 @@ class BP_Activity_Component extends BP_Component {
 
 				// Favorite activity items.
 				if ( bp_is_activity_like_active() ) {
+					$item_title = _x( 'Likes', 'My Account Activity sub nav', 'buddyboss' );
+					if ( 'emotions' === bb_get_reaction_mode() ) {
+						$item_title = _x( 'Reacted to', 'My Account Activity sub nav', 'buddyboss' );
+					}
+
 					$wp_admin_nav[] = array(
 						'parent'   => 'my-account-' . $this->id,
 						'id'       => 'my-account-' . $this->id . '-favorites',
-						'title'    => _x( 'Likes', 'My Account Activity sub nav', 'buddyboss' ),
+						'title'    => $item_title,
 						'href'     => trailingslashit( $activity_link . 'favorites' ),
 						'position' => 10,
 					);
