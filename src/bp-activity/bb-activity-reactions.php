@@ -748,7 +748,7 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 	}
 
 	$reacted_users  = ! empty( $reaction_data['reactions'] ) ? $reaction_data['reactions'] : array();
-	$reaction_count = ! empty( $reaction_data['total'] ) ? $reaction_data['total'] : 0;
+	$reaction_count = ! empty( $reaction_data['total'] ) ? absint( $reaction_data['total'] ) : 0;
 
 	$is_current_user_reacted = false;
 	$current_logged_user_id  = bp_loggedin_user_id();
