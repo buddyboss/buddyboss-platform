@@ -844,7 +844,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @param array $args Args of user reactions.
 		 *
-		 * @return bool|int|mysqli_result|resource
+		 * @return bool|int|mysqli_result|resource|WP_Error
 		 */
 		public function bb_remove_user_item_reactions( $args ) {
 			global $wpdb;
@@ -890,10 +890,17 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			// User ID.
 			if ( ! empty( $r['user_id'] ) ) {
-				$where_args[] = $wpdb->prepare( 'user_id = %d', $r['user_id'] );
+				$where_args['user_id'] = $wpdb->prepare( 'user_id = %d', $r['user_id'] );
 			}
 
 			if ( empty( $where_args ) ) {
+				if ( 'wp_error' === $r['error_type'] ) {
+					return new WP_Error(
+						'bb_user_remove_reactions_invalid_argument',
+						__( 'Invalid request.', 'buddyboss' )
+					);
+				}
+
 				return false;
 			}
 
@@ -909,6 +916,13 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			// Bail if nothing was deleted.
 			if ( empty( $deleted ) ) {
+				if ( 'wp_error' === $r['error_type'] ) {
+					return new WP_Error(
+						'bb_user_remove_reactions_invalid_request',
+						__( 'Unable to removing the reaction.', 'buddyboss' )
+					);
+				}
+
 				return false;
 			}
 
@@ -1896,7 +1910,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @param array $args Array of arguments.
 		 *
-		 * @return bool|WP_Error
+		 * @return array|WP_Error
 		 */
 		public function bb_validate_activity_reaction_request( $args ) {
 			$r = bp_parse_args(
