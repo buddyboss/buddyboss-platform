@@ -132,11 +132,19 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			$this->bb_register_post_type();
 
-			// Register activity reaction item type.
+			// Register an activity reaction item type.
 			$this->bb_register_reaction_item_type(
 				'activity',
 				array(
 					'validate_callback' => array( $this, 'bb_validate_activity_reaction_request' ),
+				)
+			);
+
+			// Register an activity reaction item type.
+			$this->bb_register_reaction_item_type(
+				'activity_comment',
+				array(
+					'validate_callback' => array( $this, 'bb_validate_activity_comment_reaction_request' ),
 				)
 			);
 		}
@@ -2016,6 +2024,52 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			}
 
 			return $reaction_id;
+		}
+
+		/**
+		 * Validate callback for a reaction item type for activity comment.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $args Array of arguments.
+		 *
+		 * @return array|WP_Error
+		 */
+		public function bb_validate_activity_comment_reaction_request( $args ) {
+			$r = bp_parse_args(
+				$args,
+				array(
+					'item_type' => '',
+					'item_id'   => '',
+				)
+			);
+
+			$valid_item_ids = array();
+
+			if (
+				! bp_is_active( 'activity' ) ||
+				false === bb_is_reaction_activity_comments_enabled()
+			) {
+				return $valid_item_ids;
+			}
+
+			$activity_comment_ids = array();
+			if ( ! empty( $r['item_id'] ) && 'activity_comment' === $r['item_type'] ) {
+				$activities = BP_Activity_Activity::get(
+					array(
+						'per_page'         => 0,
+						'fields'           => 'ids',
+						'display_comments' => true,
+						'in'               => ! is_array( $r['item_id'] ) ? array( $r['item_id'] ) : $r['item_id'],
+					),
+				);
+
+				if ( ! empty( $activities['activities'] ) ) {
+					$activity_comment_ids = $activities['activities'];
+				}
+			}
+
+			return $activity_comment_ids;
 		}
 	}
 }
