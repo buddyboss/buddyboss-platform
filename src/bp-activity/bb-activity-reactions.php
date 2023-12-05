@@ -196,6 +196,18 @@ function bb_nouveau_update_activity_post_reaction_button( $buttons, $activity_id
 		return $buttons;
 	}
 
+	$reaction_meta = get_post_meta( $user_reaction->reaction_id );
+	// If reaction is not active then avoid button changes.
+	if (
+		isset( $reaction_meta['is_emotion'] ) &&
+		(
+			empty( $reaction_meta['is_emotion'][0] ) ||
+			empty( $reaction_meta['is_emotion_active'][0] )
+		)
+	) {
+		return $buttons;
+	}
+
 	$reaction      = get_post( $user_reaction->reaction_id );
 	$reaction_data = maybe_unserialize( $reaction->post_content );
 
