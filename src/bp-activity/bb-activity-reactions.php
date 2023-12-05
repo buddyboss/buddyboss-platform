@@ -150,7 +150,7 @@ function bb_activity_total_reactions_count_for_user( $user_id = 0 ) {
  */
 function bb_activity_remove_activity_post_reactions( $activity_id ) {
 
-	if ( ! empty( $activity_id ) ) {
+	if ( empty( $activity_id ) ) {
 		return;
 	}
 
