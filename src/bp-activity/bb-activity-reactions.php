@@ -53,6 +53,7 @@ function bp_activity_add_user_reaction( $activity_id, $reaction_id = 0, $activit
 			'item_id'     => $activity_id,
 			'user_id'     => $user_id,
 			'item_type'   => $activity_type,
+			'error_type'  => 'wp_error',
 		)
 	);
 
@@ -81,9 +82,10 @@ function bp_activity_remove_user_reaction( $activity_id, $activity_type = 'activ
 	$bb_reaction = BB_Reaction::instance();
 	$status      = $bb_reaction->bb_remove_user_item_reactions(
 		array(
-			'item_id'   => $activity_id,
-			'user_id'   => $user_id,
-			'item_type' => $activity_type,
+			'item_id'    => $activity_id,
+			'user_id'    => $user_id,
+			'item_type'  => $activity_type,
+			'error_type' => 'wp_error',
 		)
 	);
 
