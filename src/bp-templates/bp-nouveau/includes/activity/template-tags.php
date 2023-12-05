@@ -836,19 +836,65 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 
 	$buttons = array();
 
-	$buttons['activity_comment_reply'] = array(
-			'id'                => 'activity_comment_reply',
-			'position'          => 5,
+	// Add like button for activity comment.
+	if (
+		bb_activity_comment_can_favorite() &&
+		bb_is_reaction_activity_comments_enabled()
+	) {
+
+		// If button element set attr needs to be data-* else 'href'.
+		$key = ( 'button' === $button_element ) ? 'data-bp-nonce' : 'href';
+
+		if ( ! bb_get_activity_comment_is_favorite() ) {
+			$fav_args = array(
+				'button_element' => $button_element,
+				'link_class'     => 'button fav bp-secondary-action',
+				'link_text'      => __( 'Like', 'buddyboss' ),
+				'aria-pressed'   => 'false',
+				'link_attr'      => bb_get_activity_comment_favorite_link(),
+			);
+
+		} else {
+			$fav_args = array(
+				'button_element' => $button_element,
+				'link_class'     => 'button unfav bp-secondary-action',
+				'link_text'      => __( 'Unlike', 'buddyboss' ),
+				'aria-pressed'   => 'true',
+				'link_attr'      => bb_get_activity_comment_unfavorite_link(),
+			);
+		}
+
+		$buttons['activity_comment_favorite'] = array(
+			'id'                => 'activity_comment_favorite',
+			'position'          => 4,
 			'component'         => 'activity',
-			'must_be_logged_in' => true,
 			'parent_element'    => $parent_element,
 			'parent_attr'       => $parent_attr,
-			'button_element'    => $button_element,
-			'link_text'         => esc_html__( 'Reply', 'buddyboss' ),
+			'must_be_logged_in' => true,
+			'button_element'    => $fav_args['button_element'],
+			'link_text'         => sprintf( '<span class="bp-screen-reader-text">%1$s</span>  <span class="like-count">%2$s</span>', esc_html( $fav_args['link_text'] ), esc_html( $fav_args['link_text'] ) ),
 			'button_attr'       => array(
-					'class' => "acomment-reply bp-primary-action",
-					'id'    => sprintf( 'acomment-reply-%1$s-from-%2$s', $activity_id, $activity_comment_id ),
+				$key           => $fav_args['link_attr'],
+				'class'        => $fav_args['link_class'],
+				// 'data-bp-tooltip' => $fav_args['data_bp_tooltip'],
+				'aria-pressed' => $fav_args['aria-pressed'],
 			),
+		);
+	}
+
+	$buttons['activity_comment_reply'] = array(
+		'id'                => 'activity_comment_reply',
+		'position'          => 5,
+		'component'         => 'activity',
+		'must_be_logged_in' => true,
+		'parent_element'    => $parent_element,
+		'parent_attr'       => $parent_attr,
+		'button_element'    => $button_element,
+		'link_text'         => esc_html__( 'Reply', 'buddyboss' ),
+		'button_attr'       => array(
+			'class' => "acomment-reply bp-primary-action",
+			'id'    => sprintf( 'acomment-reply-%1$s-from-%2$s', $activity_id, $activity_comment_id ),
+		),
 	);
 
 	// If button element set add nonce link to data-attr attr
