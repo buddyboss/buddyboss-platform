@@ -46,8 +46,7 @@ function bp_activity_add_user_reaction( $activity_id, $reaction_id = 0, $activit
 		return;
 	}
 
-	$bb_reaction = BB_Reaction::instance();
-	$reaction    = $bb_reaction->bb_add_user_item_reaction(
+	$reaction = bb_load_reaction()->bb_add_user_item_reaction(
 		array(
 			'reaction_id' => $reaction_id,
 			'item_id'     => $activity_id,
@@ -79,8 +78,7 @@ function bp_activity_remove_user_reaction( $activity_id, $activity_type = 'activ
 		$user_id = bp_loggedin_user_id();
 	}
 
-	$bb_reaction = BB_Reaction::instance();
-	$status      = $bb_reaction->bb_remove_user_item_reactions(
+	$status = bb_load_reaction()->bb_remove_user_item_reactions(
 		array(
 			'item_id'    => $activity_id,
 			'user_id'    => $user_id,
@@ -156,8 +154,7 @@ function bb_activity_remove_activity_post_reactions( $activity_id ) {
 		return;
 	}
 
-	$bb_reaction = BB_Reaction::instance();
-	$bb_reaction->bb_remove_user_item_reactions(
+	bb_load_reaction()->bb_remove_user_item_reactions(
 		array(
 			'item_type' => 'activity',
 			'item_id'   => $activity_id,
@@ -182,8 +179,7 @@ function bb_nouveau_update_activity_post_reaction_button( $buttons, $activity_id
 		return $buttons;
 	}
 
-	$bb_reaction   = BB_Reaction::instance();
-	$user_reaction = $bb_reaction->bb_get_user_reactions(
+	$user_reaction = bb_load_reaction()->bb_get_user_reactions(
 		array(
 			'item_type' => 'activity',
 			'item_id'   => $activity_id,
@@ -620,8 +616,7 @@ function bb_get_activity_user_reactions( $args ) {
 		'bb_get_activity_user_reactions_args'
 	);
 
-	$bb_reaction    = BB_Reaction::instance();
-	$reaction_data  = $bb_reaction->bb_get_user_reactions( $args );
+	$reaction_data  = bb_load_reaction()->bb_get_user_reactions( $args );
 	$user_reactions = array();
 
 	if ( ! empty( $reaction_data['reactions'] ) ) {
