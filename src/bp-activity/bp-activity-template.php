@@ -4294,3 +4294,85 @@ function bb_activity_comment_user_can_edit( $activity_comment = false, $privacy_
 	 */
 	return (bool) apply_filters( 'bb_activity_comment_user_can_edit', $can_edit, $activity_comment );
 }
+
+/**
+ * Determine whether favorites are allowed.
+ *
+ * Defaults to true, but can be modified by plugins.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True if comment can receive comments.
+ */
+function bb_activity_comment_can_favorite() {
+
+	/**
+	 * Filters whether or not users can favorite activity comment items.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value Whether or not favoriting is enabled.
+	 */
+	return apply_filters( 'bb_activity_comment_can_favorite', true );
+}
+
+/**
+ * Return whether the current activity comment is in a current user's favorites.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @global object $activities_template {@link BP_Activity_Template}
+ *
+ * @return bool True if user favorite, false otherwise.
+ */
+function bb_get_activity_comment_is_favorite() {
+	/**
+	 * Filters whether the current activity comment item is in the current user's favorites.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value Whether or not the current activity item is in the current user's favorites.
+	 */
+	return (bool) apply_filters( 'bb_get_activity_comment_is_favorite', bb_activity_is_item_favorite( bp_get_activity_comment_id(), 'activity_comment' ) );
+}
+
+/**
+ * Return the activity comment favorite link.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @global object $activities_template {@link BP_Activity_Template}
+ *
+ * @return string The activity favorite link.
+ */
+function bb_get_activity_comment_favorite_link() {
+	/**
+	 * Filters the activity comment favorite link.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Constructed link for favoriting the activity comment.
+	 */
+	return apply_filters( 'bb_get_activity_comment_favorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/favorite/' . bp_get_activity_comment_id() . '/' ), 'mark_favorite' ) );
+}
+
+/**
+ * Return the activity comment unfavorite link.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @global object $activities_template {@link BP_Activity_Template}
+ *
+ * @return string The activity comment unfavorite link.
+ */
+function bb_get_activity_comment_unfavorite_link() {
+	/**
+	 * Filters the activity comment unfavorite link.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Constructed link for unfavoriting the activity comment.
+	 */
+	return apply_filters( 'bb_get_activity_comment_unfavorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/unfavorite/' . bp_get_activity_comment_id() . '/' ), 'unmark_favorite' ) );
+}
+

@@ -769,3 +769,33 @@ function bb_get_reacted_person( &$reacted_users, &$friends, &$followers ) {
 		return array_pop( $reacted_users );
 	}
 }
+
+/**
+ * Check whether the current item is in the user's favorites.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $item_id   The ID of activity/activity comment.
+ * @param string $item_type The item type.
+ * @param int    $user_id   The user ID.
+ *
+ * @return bool
+ */
+function bb_activity_is_item_favorite( $item_id, $item_type = 'activity', $user_id = 0 ) {
+
+	if ( empty( $item_id ) ) {
+		return false;
+	}
+
+	if ( empty( $user_id ) ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
+	return (bool) bb_load_reaction()->bb_get_user_reactions_count(
+		array(
+			'item_type' => $item_type,
+			'item_id'   => $item_id,
+			'user_id'   => $user_id,
+		)
+	);
+}
