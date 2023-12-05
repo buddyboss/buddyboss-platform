@@ -1016,18 +1016,7 @@ window.bp = window.bp || {};
 								// Load more emotions on scroll
 								var $reactions_list =  activity_item.find( '.activity-state-popup .activity-state-popup_tab_item ul' );
 								$reactions_list.on( 'scroll', function() {
-									if( ! $( this ).hasClass( 'loading' ) ) {
-										var distanceFromBottom = $( this )[0].scrollHeight - $( this ).scrollTop() - $( this ).outerHeight();
-										var threshold = 10;
-										// Check if the user has scrolled to the bottom
-										if ( distanceFromBottom <= threshold ) {
-											$( this ).append( '<li class="reactions_loader"><i class="b-icon-l bb-icon-spinner animate-spin"></i></li>' );
-											$( this ).addClass( 'loading' );
-											var emotion_type = $( this ).parent().data( 'type' );
-											console.log( 'Load more ' + emotion_type );
-											// Trigger AJAX to load more emotions
-										}
-									}
+									bp.Nouveau.ReactionLoadMore( $( this ) );
 								});
 							}
 						}
@@ -1035,6 +1024,20 @@ window.bp = window.bp || {};
 				);
 			} else {
 				activity_item.find( '.activity-content .activity-state-popup' ).addClass( 'active' );
+			}
+		},
+
+		ReactionLoadMore: function( element ) {
+			if( ! element.hasClass( 'loading' ) ) {
+				var distanceFromBottom = element[0].scrollHeight - element.scrollTop() - element.outerHeight();
+				var threshold = 10;
+				// Check if the user has scrolled to the bottom
+				if ( distanceFromBottom <= threshold ) {
+					element.append( '<li class="reactions_loader"><i class="b-icon-l bb-icon-spinner animate-spin"></i></li>' );
+					element.addClass( 'loading' );
+					var emotion_type = element.parent().data( 'type' );
+					// TODO: Trigger AJAX to load more emotions
+				}
 			}
 		},
 
