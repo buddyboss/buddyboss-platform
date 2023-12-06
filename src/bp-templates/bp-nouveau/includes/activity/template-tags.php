@@ -480,7 +480,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 			$key = 'href';
 		}
 
-		if ( ! bp_get_activity_is_favorite() ) {
+		if ( ! bb_activity_is_item_favorite( $activity_id ) ) {
 			$fav_args = array(
 				'link_class'     => 'button fav bp-secondary-action',
 				'aria-pressed'   => 'false',
