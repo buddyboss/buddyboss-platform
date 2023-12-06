@@ -378,12 +378,13 @@ function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', 
 /**
  * Get activity post reaction button html.
  *
- * @param int     $reaction_id      ID of the reaction.
+ * @param int     $item_id     ID of the Activity/Comment.
+ * @param int     $reaction_id ID of the reaction.
  * @param boolean $has_reacted User has reaction or not.
  *
  * @return mixed
  */
-function bb_get_activity_post_reaction_button_html( $reaction_id = 0, $has_reacted = false ) {
+function bb_get_activity_post_reaction_button_html( $item_id, $reaction_id = 0, $has_reacted = false ) {
 
 	$reaction_button_class = '';
 
@@ -426,7 +427,7 @@ function bb_get_activity_post_reaction_button_html( $reaction_id = 0, $has_react
 			%3$s
 			<span class="like-count reactions_item" style="color:%4$s">%2$s</span>
 		</a>',
-		$has_reacted ? bp_get_activity_unfavorite_link() : bp_get_activity_favorite_link(),
+		$has_reacted ? bp_get_activity_unfavorite_link( $item_id ) : bp_get_activity_favorite_link( $item_id ),
 		esc_html( $icon_text ),
 		$icon_html,
 		! empty( $reaction_data['text_color'] ) ? esc_attr( $reaction_data['text_color'] ) : '#385DFF',
@@ -556,7 +557,7 @@ function bb_update_activity_reaction_ajax_callback() {
 			'item_type'       => $item_type,
 			'reaction_id'     => $reaction_id,
 			'reaction_counts' => bb_get_activity_post_user_reactions_html( $item_id ),
-			'reaction_button' => bb_get_activity_post_reaction_button_html( $reaction_id, true ),
+			'reaction_button' => bb_get_activity_post_reaction_button_html( $item_id, $reaction_id, true ),
 		)
 	);
 }
@@ -600,7 +601,7 @@ function bb_remove_activity_reaction_ajax_callback() {
 			'item_id'         => $item_id,
 			'item_type'       => $item_type,
 			'reaction_counts' => bb_get_activity_post_user_reactions_html( $item_id ),
-			'reaction_button' => bb_get_activity_post_reaction_button_html(),
+			'reaction_button' => bb_get_activity_post_reaction_button_html( $item_id ),
 		)
 	);
 }

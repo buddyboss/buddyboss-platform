@@ -2637,12 +2637,18 @@ function bp_activity_favorite_link() {
  *
  * @since BuddyPress 1.2.0
  *
+ * @param int The activity ID.
  * @global object $activities_template {@link BP_Activity_Template}
  *
  * @return string The activity favorite link.
  */
-function bp_get_activity_favorite_link() {
-	global $activities_template;
+function bp_get_activity_favorite_link( $activity_id = 0 ) {
+
+	if ( empty( $activity_id ) ) {
+		global $activities_template;
+
+		$activity_id = $activities_template->activity->id;
+	}
 
 	/**
 	 * Filters the activity favorite link.
@@ -2651,7 +2657,7 @@ function bp_get_activity_favorite_link() {
 	 *
 	 * @param string $value Constructed link for favoriting the activity comment.
 	 */
-	return apply_filters( 'bp_get_activity_favorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/favorite/' . $activities_template->activity->id . '/' ), 'mark_favorite' ) );
+	return apply_filters( 'bp_get_activity_favorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/favorite/' . $activity_id . '/' ), 'mark_favorite' ) );
 }
 
 /**
@@ -2668,12 +2674,18 @@ function bp_activity_unfavorite_link() {
  *
  * @since BuddyPress 1.2.0
  *
+ * @param int The activity ID.
  * @global object $activities_template {@link BP_Activity_Template}
  *
  * @return string The activity unfavorite link.
  */
-function bp_get_activity_unfavorite_link() {
-	global $activities_template;
+function bp_get_activity_unfavorite_link( $activity_id = 0 ) {
+
+	if ( empty( $activity_id ) ) {
+		global $activities_template;
+
+		$activity_id = $activities_template->activity->id;
+	}
 
 	/**
 	 * Filters the activity unfavorite link.
@@ -2682,7 +2694,7 @@ function bp_get_activity_unfavorite_link() {
 	 *
 	 * @param string $value Constructed link for unfavoriting the activity comment.
 	 */
-	return apply_filters( 'bp_get_activity_unfavorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/unfavorite/' . $activities_template->activity->id . '/' ), 'unmark_favorite' ) );
+	return apply_filters( 'bp_get_activity_unfavorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/unfavorite/' . $activity_id . '/' ), 'unmark_favorite' ) );
 }
 
 /**
