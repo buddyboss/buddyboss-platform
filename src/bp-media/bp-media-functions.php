@@ -3709,8 +3709,12 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 		$media_user_id  = (int) $photo->user_id;
 		$media_privacy  = $photo->privacy;
 		$media_group_id = (int) $photo->group_id;
-		$forum_id       = bp_media_get_forum_id( $id );
-		$thread_id      = bp_media_get_thread_id( $id );
+		if ( 'forums' === $photo->privacy ) {
+			$forum_id = bp_media_get_forum_id( $id );
+		}
+		if ( 'message' === $photo->privacy ) {
+			$thread_id = bp_media_get_thread_id( $id );
+		}
 		$activity_id    = $photo->activity_id;
 		$attach_id      = $photo->attachment_id;
 	} elseif ( 'video' === $type ) {
@@ -3718,8 +3722,12 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 		$media_user_id  = (int) $video->user_id;
 		$media_privacy  = $video->privacy;
 		$media_group_id = (int) $video->group_id;
-		$forum_id       = bp_video_get_forum_id( $id );
-		$thread_id      = bp_video_get_thread_id( $id );
+		if ( 'forums' === $video->privacy ) {
+			$forum_id = bp_video_get_forum_id( $id );
+		}
+		if ( 'message' === $video->privacy ) {
+			$thread_id = bp_video_get_thread_id( $id );
+		}
 		$activity_id    = $video->activity_id;
 		$attach_id      = $video->attachment_id;
 	} elseif ( 'document' === $type ) {
@@ -3727,8 +3735,12 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 		$media_user_id  = (int) $document->user_id;
 		$media_privacy  = $document->privacy;
 		$media_group_id = (int) $document->group_id;
-		$forum_id       = bp_document_get_forum_id( $id );
-		$thread_id      = bp_document_get_thread_id( $id );
+		if ( 'forums' === $document->privacy ) {
+			$forum_id = bp_document_get_forum_id( $id );
+		}
+		if ( 'message' === $document->privacy ) {
+			$thread_id = bp_document_get_thread_id( $id );
+		}
 		$activity_id    = $document->activity_id;
 		$attach_id      = $document->attachment_id;
 	}
