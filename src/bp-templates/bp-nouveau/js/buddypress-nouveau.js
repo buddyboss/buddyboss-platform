@@ -994,34 +994,43 @@ window.bp = window.bp || {};
 			item_type     = 'activity';
 
 			if ( activity_item.find( '.activity-content .activity-state-popup' ).length <= 0 ) {
-				var reactionModal = wp.template('activity-reactions-popup');
 
-				$.ajax(
-					{
-						url: BP_Nouveau.ajaxurl,
-						type: 'post',
-						data: {
-							action: 'bb_get_reactions',
-							item_id: activity_id,
-							item_type: item_type,
-							_wpnonce: BP_Nouveau.nonces.activity,
-						}, success: function ( response ) {
-							console.log( response.data.reactions );
-							if ( typeof response.data.reactions !== 'undefined' ) {
-								var data = response.data.reactions;
-								var html = reactionModal( data );
-								activity_item.find( '.activity-content ' ).append( html );
-								activity_item.find( '.activity-content .activity-state-popup' ).addClass( 'active' );
-								
-								// Load more emotions on scroll
-								var $reactions_list =  activity_item.find( '.activity-state-popup .activity-state-popup_tab_item ul' );
-								$reactions_list.on( 'scroll', function() {
-									bp.Nouveau.ReactionLoadMore( $( this ), activity_id, item_type );
-								});
+				// Load Reactions template and show the popup
+				var reactionModal = wp.template('activity-reactions-popup');
+				var html = reactionModal();
+				activity_item.find( '.activity-content ' ).append( html );
+				activity_item.find( '.activity-content .activity-state-popup' ).addClass( 'active' );
+
+				// Get data if not fetched earlier
+				if ( ! activity_item.find( '.activity-content .activity-state-popup' ).hasClass( 'loaded' ) ) {
+
+					$.ajax(
+						{
+							url: BP_Nouveau.ajaxurl,
+							type: 'post',
+							data: {
+								action: 'bb_get_reactions',
+								item_id: activity_id,
+								item_type: item_type,
+								_wpnonce: BP_Nouveau.nonces.activity,
+							}, success: function ( response ) {
+								console.log( response.data.reactions );
+								if ( typeof response.data.reactions !== 'undefined' ) {
+									var data = response.data.reactions;
+									var html = reactionModal( data );
+									activity_item.find( '.activity-content .activity-state-popup' ).replaceWith( html );
+									activity_item.find( '.activity-content .activity-state-popup' ).addClass( 'loaded active' );
+									
+									// Load more emotions on scroll
+									var $reactions_list =  activity_item.find( '.activity-state-popup .activity-state-popup_tab_item ul' );
+									$reactions_list.on( 'scroll', function() {
+										bp.Nouveau.ReactionLoadMore( $( this ), activity_id, item_type );
+									});
+								}
 							}
 						}
-					}
-				);
+					);
+				}
 			} else {
 				activity_item.find( '.activity-content .activity-state-popup' ).addClass( 'active' );
 			}
