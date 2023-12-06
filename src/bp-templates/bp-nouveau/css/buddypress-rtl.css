@@ -3604,6 +3604,10 @@ input.search-query-input {
   vertical-align: middle;
 }
 
+.activity-list .activity-item .activity-meta.action .bp-secondary-action > img.custom {
+  border-radius: 100%;
+}
+
 #buddypress .activity-list .activity-item .activity-meta.action .bp-secondary-action > .like-count {
   line-height: 20px;
   display: inline-block;
@@ -4076,6 +4080,10 @@ input.search-query-input {
   object-fit: cover;
 }
 
+.activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_panel ul li > a > img.custom {
+  border-radius: 100%;
+}
+
 .activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_panel ul li > a > span {
   color: #767676;
   font-size: 14px;
@@ -4144,6 +4152,10 @@ input.search-query-input {
   height: 14px;
   width: 14px;
   object-fit: cover;
+}
+
+.activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item .activity-state_user .activity-state_user__avatar .activity-state_user__reaction > img.custom {
+  border-radius: 100%;
 }
 
 .activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item .activity-state_user .activity-state_user__name {
@@ -4240,6 +4252,10 @@ input.search-query-input {
   width: 40px;
   height: 40px;
   object-fit: cover;
+}
+
+.activity-list .activity-item .ac-emotions_list .ac-emotion_item img.custom {
+  border-radius: 100%;
 }
 
 .activity-list .activity-item .ac-emotions_list .ac-emotion_item i {

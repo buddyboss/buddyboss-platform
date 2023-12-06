@@ -310,6 +310,10 @@
 					vertical-align: middle;
 				}
 
+				> img.custom {
+					border-radius: 100%;
+				}
+
 				> .like-count {
 
 					#buddypress & {
@@ -834,6 +838,10 @@
 								width: 20px;
 								height: 20px;
 								object-fit: cover;
+
+								&.custom {
+									border-radius: 100%;
+								}
 							}
 
 							> span {
@@ -904,6 +912,10 @@
 								height: 14px;
 								width: 14px;
 								object-fit: cover;
+
+								&.custom {
+									border-radius: 100%;
+								}
 							}
 						}
 					}
@@ -1014,6 +1026,10 @@
 					width: 40px;
 					height: 40px;
 					object-fit: cover;
+
+					&.custom {
+						border-radius: 100%;
+					}
 				}
 
 				i {
