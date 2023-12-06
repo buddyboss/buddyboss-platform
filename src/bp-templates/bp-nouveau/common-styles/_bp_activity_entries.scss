@@ -228,7 +228,9 @@
 
 				&.has-comments {
 
+					.ac-state-separator,
 					.activity-state-comments {
+						color: var(--bb-body-text-color);
 						display: inline-block;
 						vertical-align: middle;
 					}
@@ -255,6 +257,7 @@
 		.activity-state-reactions {
 			display: flex;
 			flex-flow: row;
+			cursor: pointer;
 
 			.reactions_item {
 				display: flex;
@@ -300,9 +303,21 @@
 
 		.activity-meta.action {
 
-			.bp-secondary-action > i {
-				display: inline-block;
-				vertical-align: middle;
+			.bp-secondary-action {
+
+				> i {
+					display: inline-block;
+					vertical-align: middle;
+				}
+
+				> .like-count {
+
+					#buddypress & {
+						line-height: 20px;
+						display: inline-block;
+						vertical-align: middle;
+					}
+				}
 			}
 		}
 

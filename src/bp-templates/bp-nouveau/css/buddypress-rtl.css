@@ -3535,7 +3535,9 @@ input.search-query-input {
   background-color: transparent;
 }
 
+.activity-list .activity-item .activity-content .activity-state.has-comments .ac-state-separator,
 .activity-list .activity-item .activity-content .activity-state.has-comments .activity-state-comments {
+  color: var(--bb-body-text-color);
   display: inline-block;
   vertical-align: middle;
 }
@@ -3553,6 +3555,7 @@ input.search-query-input {
 .activity-list .activity-item .activity-state-reactions {
   display: flex;
   flex-flow: row;
+  cursor: pointer;
 }
 
 .activity-list .activity-item .activity-state-reactions .reactions_item {
@@ -3597,6 +3600,12 @@ input.search-query-input {
 }
 
 .activity-list .activity-item .activity-meta.action .bp-secondary-action > i {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+#buddypress .activity-list .activity-item .activity-meta.action .bp-secondary-action > .like-count {
+  line-height: 20px;
   display: inline-block;
   vertical-align: middle;
 }
