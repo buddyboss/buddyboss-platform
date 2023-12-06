@@ -876,11 +876,22 @@ window.bp = window.bp || {};
 			// Following widget more button click.
 			$( document ).on( 'click', '.more-following .count-more', this.bbWidgetMoreFollowing );
 
-			// Accordion open/close event
+			// Accordion open/close event.
 			$( '.bb-accordion .bb-accordion_trigger' ).on( 'click', this.toggleAccordion );
 
 			// Reaction actions.
-			$( document ).on( 'mouseover', 'a.button.fav, a.button.has-like, a.button.has-emotion', bp.Nouveau, this.showReactions.bind( this ) ).on('mouseout', '.button.fav, .button.unfav', function() { clearTimeout(window.reactionHoverTimeout); } );
+			$( document ).on(
+				'mouseover',
+				'a.button.fav, a.button.has-like, a.button.has-emotion',
+				bp.Nouveau,
+				this.showReactions.bind( this )
+			).on(
+				'mouseout',
+				'.button.fav, .button.unfav',
+				function() {
+					clearTimeout( window.reactionHoverTimeout );
+				}
+			);
 			$( document ).on( 'mouseout', '.activity-meta .ac-emotions_list, .button.fav, .button.has-like, .button.has-emotion', bp.Nouveau, this.hideReactions.bind( this ) );
 			$( document ).on( 'click', '.activity-state-popup_overlay', bp.Nouveau, this.closeActivityState.bind( this ) );
 
@@ -968,9 +979,9 @@ window.bp = window.bp || {};
 		removeReaction: function( event ) {
 			event.preventDefault();
 
-			var target    = $( this ), 
+			var target    = $( this ),
 			activity_item = target.parents( '.activity-item' ),
-			activity_id   = activity_item.data( 'bp-activity-id' ), 
+			activity_id   = activity_item.data( 'bp-activity-id' ),
 			item_type     = 'activity';
 
 			console.log( 'Activity:' + activity_id );
@@ -1007,9 +1018,9 @@ window.bp = window.bp || {};
 		showActivityReactions: function( event ) {
 			event.preventDefault();
 
-			var target    = $( this ), 
+			var target    = $( this ),
 			activity_item = target.parents( '.activity-item' ),
-			activity_id   = activity_item.data( 'bp-activity-id' ), 
+			activity_id   = activity_item.data( 'bp-activity-id' ),
 			item_type     = 'activity';
 
 			if ( activity_item.find( '.activity-content .activity-state-popup' ).length <= 0 ) {
@@ -1039,7 +1050,7 @@ window.bp = window.bp || {};
 									var html = reactionModal( data );
 									activity_item.find( '.activity-content .activity-state-popup' ).replaceWith( html );
 									activity_item.find( '.activity-content .activity-state-popup' ).addClass( 'loaded active' );
-									
+
 									// Load more emotions on scroll
 									var $reactions_list =  activity_item.find( '.activity-state-popup .activity-state-popup_tab_item ul' );
 									$reactions_list.on( 'scroll', function() {
