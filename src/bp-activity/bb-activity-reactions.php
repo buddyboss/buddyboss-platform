@@ -17,6 +17,7 @@ add_action( 'wp_ajax_bb_get_reactions', 'bb_get_activity_reaction_ajax_callback'
 
 add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bb_nouveau_update_activity_post_reaction_button', 10, 2 );
 add_action( 'bp_activity_action_delete_activity', 'bb_activity_remove_activity_post_reactions', 10, 1 );
+add_filter( 'bb_get_user_reactions_join_sql', 'bb_update_user_reactions_join_sql', 10, 1 );
 
 /**
  * Add user reaction for an activity post.
@@ -870,4 +871,20 @@ function bb_activity_is_item_favorite( $item_id, $item_type = 'activity', $user_
 			'user_id'   => $user_id,
 		)
 	);
+}
+
+/**
+ * Update user reactions sql to check reaction is active.
+ *
+ * @param string $join_sql The join sql.
+ *
+ * @return string The join sql.
+ */
+function bb_update_user_reactions_join_sql( $join_sql = '' ) {
+	global $wpdb;
+
+	$join_sql .= 'INNER JOIN '. $wpdb->postmeta . ' pm ON pm.post_id = ur.reaction_id';
+	$join_sql .= ' AND( ( pm.meta_key = "is_like" AND pm.meta_value = 1 ) OR ( pm.meta_key = "is_emotion_active" AND pm.meta_value = 1 ) )';
+
+	return $join_sql;
 }
