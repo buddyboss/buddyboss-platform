@@ -2637,7 +2637,7 @@ function bp_activity_favorite_link() {
  *
  * @since BuddyPress 1.2.0
  *
- * @param int The activity ID.
+ * @param int $activity_id The activity ID.
  * @global object $activities_template {@link BP_Activity_Template}
  *
  * @return string The activity favorite link.
@@ -2674,7 +2674,7 @@ function bp_activity_unfavorite_link() {
  *
  * @since BuddyPress 1.2.0
  *
- * @param int The activity ID.
+ * @param int $activity_id The activity ID.
  * @global object $activities_template {@link BP_Activity_Template}
  *
  * @return string The activity unfavorite link.
@@ -4354,11 +4354,17 @@ function bb_get_activity_comment_is_favorite() {
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * @param int $activity_comment_id The activity comment ID.
  * @global object $activities_template {@link BP_Activity_Template}
  *
  * @return string The activity favorite link.
  */
-function bb_get_activity_comment_favorite_link() {
+function bb_get_activity_comment_favorite_link( $activity_comment_id = 0 ) {
+
+	if ( empty( $activity_comment_id ) ) {
+		$activity_comment_id = bp_get_activity_comment_id();
+	}
+
 	/**
 	 * Filters the activity comment favorite link.
 	 *
@@ -4366,7 +4372,7 @@ function bb_get_activity_comment_favorite_link() {
 	 *
 	 * @param string $value Constructed link for favoriting the activity comment.
 	 */
-	return apply_filters( 'bb_get_activity_comment_favorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/favorite/' . bp_get_activity_comment_id() . '/' ), 'mark_favorite' ) );
+	return apply_filters( 'bb_get_activity_comment_favorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/favorite/' . $activity_comment_id . '/' ), 'mark_favorite' ) );
 }
 
 /**
@@ -4374,11 +4380,16 @@ function bb_get_activity_comment_favorite_link() {
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * @param int $activity_comment_id The activity comment ID.
  * @global object $activities_template {@link BP_Activity_Template}
  *
  * @return string The activity comment unfavorite link.
  */
-function bb_get_activity_comment_unfavorite_link() {
+function bb_get_activity_comment_unfavorite_link( $activity_comment_id = 0 ) {
+
+	if ( empty( $activity_comment_id ) ) {
+		$activity_comment_id = bp_get_activity_comment_id();
+	}
 	/**
 	 * Filters the activity comment unfavorite link.
 	 *
@@ -4386,6 +4397,6 @@ function bb_get_activity_comment_unfavorite_link() {
 	 *
 	 * @param string $value Constructed link for unfavoriting the activity comment.
 	 */
-	return apply_filters( 'bb_get_activity_comment_unfavorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/unfavorite/' . bp_get_activity_comment_id() . '/' ), 'unmark_favorite' ) );
+	return apply_filters( 'bb_get_activity_comment_unfavorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/unfavorite/' . $activity_comment_id . '/' ), 'unmark_favorite' ) );
 }
 
