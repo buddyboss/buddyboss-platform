@@ -17,7 +17,7 @@
 				<h4><?php esc_html_e( 'Reactions', 'buddyboss' ); ?></h4>
 			</div>
 			<# if ( ! data ) { #>
-				<i class="bb-icon-l bb-icon-spinner animate-spin"></i>
+				<p class="reaction-loader"><i class="bb-icon-l bb-icon-spinner animate-spin"></i></p>
 			<# } else { #>			
 				<div class="activity-state-popup_tab">
 					<div class="activity-state-popup_tab_panel">

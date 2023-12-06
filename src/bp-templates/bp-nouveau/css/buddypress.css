@@ -4015,6 +4015,7 @@ input.search-query-input {
   width: 100%;
   max-width: 550px;
   max-height: calc(100% - 80px);
+  min-height: 250px;
   overflow: auto;
 }
 
@@ -4023,6 +4024,16 @@ input.search-query-input {
   font-weight: 600;
   line-height: 1.5;
   margin: 0 0 10px;
+}
+
+.activity-list .activity-state-popup .reaction-loader {
+  font-size: 18px;
+  text-align: center;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
 }
 
 .activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_panel {
