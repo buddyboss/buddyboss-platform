@@ -319,7 +319,7 @@ function bb_get_activity_post_emotions_popup() {
 function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', $no_of_reactions = 3 ) {
 
 	if ( empty( $item_id ) ) {
-		return;
+		return false;
 	}
 
 	$reaction_data = bb_load_reaction()->bb_get_reaction_reactions_count(
@@ -330,7 +330,7 @@ function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', 
 	);
 
 	if ( empty( $reaction_data ) ) {
-		return;
+		return false;
 	}
 
 	usort(
