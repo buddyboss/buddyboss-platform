@@ -380,12 +380,13 @@ function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', 
  * Get activity post reaction button html.
  *
  * @param int     $item_id     ID of the Activity/Comment.
+ * @param string  $item_type   Type of Activity.
  * @param int     $reaction_id ID of the reaction.
  * @param boolean $has_reacted User has reaction or not.
  *
  * @return mixed
  */
-function bb_get_activity_post_reaction_button_html( $item_id, $reaction_id = 0, $has_reacted = false ) {
+function bb_get_activity_post_reaction_button_html( $item_id, $item_type = 'activity', $reaction_id = 0, $has_reacted = false ) {
 
 	$reaction_button_class = '';
 
@@ -419,7 +420,13 @@ function bb_get_activity_post_reaction_button_html( $item_id, $reaction_id = 0, 
 			esc_attr( $reaction_data['icon_text'] )
 		);
 	} else {
-		$icon_text = sprintf( 'Like', 'buddyboss' );
+		$icon_text = __( 'Like', 'buddyboss' );
+	}
+
+	if ( $has_reacted ) {
+		$reaction_link = ( 'activity' === $item_type ) ? bp_get_activity_unfavorite_link( $item_id ) : bb_get_activity_comment_unfavorite_link( $item_id );
+	} else {
+		$reaction_link = ( 'activity' === $item_type ) ? bp_get_activity_favorite_link( $item_id ) : bb_get_activity_comment_favorite_link( $item_id );
 	}
 
 	$reaction_button = sprintf(
@@ -428,7 +435,7 @@ function bb_get_activity_post_reaction_button_html( $item_id, $reaction_id = 0, 
 			%3$s
 			<span class="like-count reactions_item" style="color:%4$s">%2$s</span>
 		</a>',
-		$has_reacted ? bp_get_activity_unfavorite_link( $item_id ) : bp_get_activity_favorite_link( $item_id ),
+		$reaction_link,
 		esc_html( $icon_text ),
 		$icon_html,
 		! empty( $reaction_data['text_color'] ) ? esc_attr( $reaction_data['text_color'] ) : '#385DFF',
@@ -441,25 +448,28 @@ function bb_get_activity_post_reaction_button_html( $item_id, $reaction_id = 0, 
 /**
  * Get user reactions list for activity post.
  *
- * @param int $activity_id Activity Id.
+ * @param int    $activity_id Activity/Comment ID.
+ * @param string $item_type   Type of Activity.
  *
- * @return HTML markup
+ * @return string HTML markup
  */
-function bb_get_activity_post_user_reactions_html( $activity_id ) {
+function bb_get_activity_post_user_reactions_html( $activity_id, $item_type = 'activity' ) {
+	$output = '';
 
 	if ( empty( $activity_id ) ) {
-		return;
+		return $output;
 	}
 
-	$most_reactions = bb_get_activity_most_reactions( $activity_id );
-	$output         = '';
+	$reaction_count_class = 'activity-reactions_count';
+	if ( 'activity_comment' === $item_type ) {
+		$reaction_count_class = 'comment-reactions_count';
+	}
 
+	$most_reactions = bb_get_activity_most_reactions( $activity_id, $item_type );
 	if ( ! empty( $most_reactions ) ) {
 		$output .= '<div class="activity-state-reactions">';
 
 		foreach ( $most_reactions as $reaction ) {
-			$icon = '';
-
 			if ( 'bb-icons' === $reaction['type'] ) {
 				$icon = sprintf(
 					'<i class="bb-icon-%s" style="font-weight:200;color:%s;"></i>',
@@ -486,10 +496,11 @@ function bb_get_activity_post_user_reactions_html( $activity_id ) {
 			);
 		}
 
-		$name_and_count = bb_activity_reaction_names_and_count( $activity_id );
+		$name_and_count = bb_activity_reaction_names_and_count( $activity_id, $item_type );
 		if ( ! empty( $name_and_count ) ) {
 			$output .= sprintf(
-				'<div class="activity-reactions_count">%s</div>',
+				'<div class="%1$s">%2$s</div>',
+				$reaction_count_class,
 				$name_and_count
 			);
 		}
@@ -541,8 +552,15 @@ function bb_update_activity_reaction_ajax_callback() {
 	}
 
 	$item_id   = sanitize_text_field( $_POST['item_id'] );
-	$item_type = sanitize_text_field( $_POST['item_type'] );
-	$reaction  = bp_activity_add_user_reaction(
+	$item_type = 'activity';
+
+	// Load up the activity item.
+	$activity = new BP_Activity_Activity( $item_id );
+	if ( 'activity_comment' === $activity->type ) {
+		$item_type = 'activity_comment';
+	}
+
+	$reaction = bp_activity_add_user_reaction(
 		$item_id,
 		$reaction_id,
 		$item_type
@@ -557,8 +575,8 @@ function bb_update_activity_reaction_ajax_callback() {
 			'item_id'         => $item_id,
 			'item_type'       => $item_type,
 			'reaction_id'     => $reaction_id,
-			'reaction_counts' => bb_get_activity_post_user_reactions_html( $item_id ),
-			'reaction_button' => bb_get_activity_post_reaction_button_html( $item_id, $reaction_id, true ),
+			'reaction_counts' => bb_get_activity_post_user_reactions_html( $item_id, $item_type ),
+			'reaction_button' => bb_get_activity_post_reaction_button_html( $item_id, $item_type, $reaction_id, true ),
 		)
 	);
 }
@@ -601,8 +619,8 @@ function bb_remove_activity_reaction_ajax_callback() {
 		array(
 			'item_id'         => $item_id,
 			'item_type'       => $item_type,
-			'reaction_counts' => bb_get_activity_post_user_reactions_html( $item_id ),
-			'reaction_button' => bb_get_activity_post_reaction_button_html( $item_id ),
+			'reaction_counts' => bb_get_activity_post_user_reactions_html( $item_id, $item_type ),
+			'reaction_button' => bb_get_activity_post_reaction_button_html( $item_id, $item_type ),
 		)
 	);
 }

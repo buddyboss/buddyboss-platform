@@ -901,15 +901,26 @@ window.bp = window.bp || {};
 			// Stop event propagation.
 			event.preventDefault();
 
-			var target    = $( this ), 
-			activity_item = target.parents( '.activity-item' ),
-			activity_id   = activity_item.data( 'bp-activity-id' ), 
-			reaction_item = target.parents('.ac-emotion_item'),
-			reaction_id   = reaction_item.data( 'reaction-id' ),
-			item_type     = 'activity';
+			var target      = $( this ),
+				is_activity = true,
+				item_type   = 'activity',
+				item_id     = 0,
+				reaction_id = target.parents( '.ac-emotion_item' ).data( 'reaction-id' ),
+				main_el;
 
-			// console.log( 'Activity:' + activity_id );
-			// console.log( 'reaction:' + reaction_id );
+			var parent_el = target.parents( '.acomment-display' ).first();
+			if ( 0 < parent_el.length ) {
+				is_activity = false;
+				item_type   = 'activity_comment';
+			}
+
+			if ( ! is_activity ) {
+				main_el = target.parents( '.activity-comment' ).first();
+				item_id = main_el.data( 'bp-activity-comment-id' );
+			} else {
+				main_el = target.parents( '.activity-item' );
+				item_id = main_el.data( 'bp-activity-id' );
+			}
 
 			$.ajax(
 				{
@@ -918,24 +929,32 @@ window.bp = window.bp || {};
 					data: {
 						action: 'bb_update_reaction',
 						reaction_id: reaction_id,
-						item_id: activity_id,
-						item_type: item_type,
+						item_id: item_id,
 						_wpnonce: BP_Nouveau.nonces.activity,
 					}, success: function ( response ) {
 
 						console.log( response.data.reaction_counts );
 
-						if ( typeof response.data.reaction_counts !== 'undefined' ) {
-							if ( activity_item.find('.activity-content .activity-state-reactions').length >=1 ) {
-								activity_item.find('.activity-content  .activity-state-reactions').replaceWith( response.data.reaction_counts );
+						if ( 'undefined' !== typeof response.data.reaction_counts ) {
+							if ( is_activity ) {
+								if ( 0 < main_el.find( '.activity-content .activity-state-reactions' ).length ) {
+									main_el.find( '.activity-content  .activity-state-reactions' ).replaceWith( response.data.reaction_counts );
+								} else {
+									main_el.find( '.activity-content .activity-state' ).prepend( response.data.reaction_counts );
+								}
 							} else {
-								activity_item.find('.activity-content .activity-state').prepend( response.data.reaction_counts );
-								//activity_item.find('.activity-state-likes').show();
+								if ( 0 < main_el.find( '#acomment-display-' + item_id + ' .comment-reactions' ).length ) {
+									main_el.find( '#acomment-display-' + item_id + ' .comment-reactions' ).html( response.data.reaction_counts );
+								}
 							}
 						}
 
 						if ( response.data.reaction_button ) {
-							activity_item.find( '.activity-meta a.bp-secondary-action' ).replaceWith( response.data.reaction_button );
+							if ( is_activity ) {
+								main_el.find( '.activity-meta a.fav' ).replaceWith( response.data.reaction_button );
+							} else {
+								main_el.find( '#acomment-display-' + item_id + ' .activity-meta a.fav' ).replaceWith( response.data.reaction_button );
+							}
 						}
 					}
 				}

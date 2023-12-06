@@ -2788,7 +2788,7 @@ function bp_activity_comment_css_class() {
  */
 function bp_get_activity_comment_css_class() {
 
-	$class = ' comment-item';
+	$class = ' comment-item activity-comment';
 
 	// Fall back on current comment in activity loop.
 	$comment_depth = bp_activity_get_comment_depth();
