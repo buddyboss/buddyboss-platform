@@ -1016,7 +1016,7 @@ window.bp = window.bp || {};
 								// Load more emotions on scroll
 								var $reactions_list =  activity_item.find( '.activity-state-popup .activity-state-popup_tab_item ul' );
 								$reactions_list.on( 'scroll', function() {
-									bp.Nouveau.ReactionLoadMore( $( this ) );
+									bp.Nouveau.ReactionLoadMore( $( this ), activity_id, item_type );
 								});
 							}
 						}
@@ -1027,16 +1027,50 @@ window.bp = window.bp || {};
 			}
 		},
 
-		ReactionLoadMore: function( element ) {
+		ReactionLoadMore: function( element, item_id, item_type ) {
 			if( ! element.hasClass( 'loading' ) ) {
 				var distanceFromBottom = element[0].scrollHeight - element.scrollTop() - element.outerHeight();
 				var threshold = 10;
+
+				var reaction_id = element.parent().data( 'reaction-id' );
+				var total_pages = element.parent().data( 'total-pages' );
+				var paged       = element.parent().attr( 'data-paged' );
+				if ( typeof paged === 'undefined' || paged <= 0 ) {
+					paged = 1;
+				}
+
 				// Check if the user has scrolled to the bottom
-				if ( distanceFromBottom <= threshold ) {
+				if (
+					distanceFromBottom <= threshold &&
+					paged < total_pages &&
+					! element.hasClass( 'loading' )
+				) {
 					element.append( '<li class="reactions_loader"><i class="b-icon-l bb-icon-spinner animate-spin"></i></li>' );
 					element.addClass( 'loading' );
-					var emotion_type = element.parent().data( 'type' );
-					// TODO: Trigger AJAX to load more emotions
+					paged = parseInt( paged, 10 ) + 1;
+
+					$.ajax(
+						{
+							url: BP_Nouveau.ajaxurl,
+							type: 'post',
+							data: {
+								action: 'bb_user_reactions',
+								reaction_id: reaction_id,
+								item_id: item_id,
+								item_type: item_type,
+								paged: paged,
+								_wpnonce: BP_Nouveau.nonces.activity,
+							},
+							success: function ( response ) {
+								if ( typeof response.data.user_list !== 'undefined' ) {
+									element.parent().attr( 'data-paged', paged );
+									element.append( response.data.user_list );
+									element.find( '.reactions_loader' ).remove();
+									element.removeClass( 'loading' );
+								}
+							}
+						}
+					);
 				}
 			}
 		},

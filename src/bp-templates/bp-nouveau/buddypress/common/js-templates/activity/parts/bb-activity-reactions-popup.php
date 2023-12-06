@@ -29,13 +29,13 @@
 									{{ reaction.icon_text }}
 								<# } else if ( reaction.type === 'bb-icons' ) { #>
 									<i class="bb-icon-{{ reaction.icon }}" style="font-weight:200;color:{{ reaction.icon_color }};"></i>
-									<span>{{ reaction.total }}</span>
+									<span>{{ reaction.total_count }}</span>
 								<# } else if ( reaction.icon_path !== '' ) { #>
 									<img src="{{ reaction.icon_path }}" alt="{{ reaction.icon_text }}" />
-									<span>{{ reaction.total }}</span>
+									<span>{{ reaction.total_count }}</span>
 								<# } else { #>
 									<i class="bb-icon-thumbs-up" style="font-weight:200;color:#385DFF;"></i>
-									<span>{{ reaction.total }}</span>
+									<span>{{ reaction.total_count }}</span>
 								<# } #>
 							</a>
 						</li>
@@ -50,7 +50,7 @@
 					isFirstItem = true;
 					jQuery.each( data, function( key, reaction ) {
 						#>
-						<div class="activity-state-popup_tab_item activity-state_{{key}} {{isFirstItem ? 'active' : ''}}" data-type="{{reaction.type}}">
+						<div class="activity-state-popup_tab_item activity-state_{{key}} {{isFirstItem ? 'active' : ''}}" data-reaction-id="{{reaction.id ? reaction.id : '0'}}" data-paged="{{reaction.paged}}" data-total-pages="{{reaction.total_pages}}">
 							<ul class="activity-state_users">
 							<# jQuery.each( reaction.users, function( key, user ) { #>
 								<li class="activity-state_user">
@@ -69,7 +69,7 @@
 										</a>
 									</div>
 									<div class="activity-state_user__name">
-										<a href="#">{{ user.name }}</a>
+										<a href="{{ user.profile_url }}">{{ user.name }}</a>
 									</div>
 									<div class="activity-state_user__role">
 										{{ user.role }}

@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
 add_action( 'wp_ajax_bb_update_reaction', 'bb_update_activity_reaction_ajax_callback' );
 add_action( 'wp_ajax_bb_remove_reaction', 'bb_remove_activity_reaction_ajax_callback' );
 add_action( 'wp_ajax_bb_get_reactions', 'bb_get_activity_reaction_ajax_callback' );
+add_action( 'wp_ajax_bb_user_reactions', 'bb_get_user_reactions_ajax_callback' );
 
 add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bb_nouveau_update_activity_post_reaction_button', 10, 2 );
 add_action( 'bp_activity_action_delete_activity', 'bb_activity_remove_activity_post_reactions', 10, 1 );
@@ -626,6 +627,7 @@ function bb_get_activity_user_reactions( $args ) {
 			'item_id'     => 0,
 			'user_id'     => 0,
 			'paged'       => 1,
+			'count_total' => true,
 		),
 		'bb_get_activity_user_reactions_args'
 	);
@@ -647,9 +649,11 @@ function bb_get_activity_user_reactions( $args ) {
 				'reaction'    => maybe_unserialize( $reaction_meta ),
 			);
 		}
+
+		$reaction_data['reactions'] = $user_reactions;
 	}
 
-	return apply_filters( 'bb_get_activity_user_reactions', $user_reactions, $args );
+	return apply_filters( 'bb_get_activity_user_reactions', $reaction_data, $args );
 }
 
 /**
@@ -683,30 +687,42 @@ function bb_get_activity_reaction_ajax_callback() {
 	$reaction_data = bb_get_activity_most_reactions( $item_id, $item_type, 7 );
 
 	foreach ( $reaction_data as $key => $reaction ) {
-		$reaction_data[ $key ]['total'] = bb_format_reaction_count( $reaction_data[ $key ]['total'] );
-		$reaction_data[ $key ]['users'] = bb_get_activity_user_reactions(
+		$users_data = bb_get_activity_user_reactions(
 			array(
 				'item_id'     => $item_id,
 				'item_type'   => $item_type,
 				'reaction_id' => $reaction['id'],
+				'per_page'    => 20,
 			)
 		);
+
+		$reaction_data[ $key ]['users']       = $users_data['reactions'];
+		$reaction_data[ $key ]['paged']       = 1;
+		$reaction_data[ $key ]['total_pages'] = ceil( $reaction_data[ $key ]['total'] / 20 );
+		$reaction_data[ $key ]['total_count'] = bb_format_reaction_count( $reaction_data[ $key ]['total'] );
 	}
 
 	if ( count( $reaction_data ) >= 2 ) {
+
+		$users_data = bb_get_activity_user_reactions(
+			array(
+				'item_id'   => $item_id,
+				'item_type' => $item_type,
+				'per_page'  => 20,
+			)
+		);
+
 		array_unshift(
 			$reaction_data,
 			array(
-				'name'      => 'All',
-				'type'      => 'all',
-				'icon'      => '',
-				'icon_text' => esc_html__( 'All', 'buddyboss' ),
-				'users'     => bb_get_activity_user_reactions(
-					array(
-						'item_id'   => $item_id,
-						'item_type' => $item_type,
-					)
-				),
+				'name'        => 'All',
+				'type'        => 'all',
+				'icon'        => '',
+				'icon_text'   => esc_html__( 'All', 'buddyboss' ),
+				'users'       => $users_data['reactions'],
+				'paged'       => 1,
+				'total_pages' => ceil( $users_data['total'] / 20 ),
+				'total_count' => $users_data['total'],
 			)
 		);
 	}
@@ -888,4 +904,91 @@ function bb_update_user_reactions_join_sql( $join_sql = '' ) {
 	$join_sql .= ' AND( ( pm.meta_key = "is_like" AND pm.meta_value = 1 ) OR ( pm.meta_key = "is_emotion_active" AND pm.meta_value = 1 ) )';
 
 	return $join_sql;
+}
+
+function bb_get_user_reactions_ajax_callback() {
+
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error();
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'bp_nouveau_activity' ) ) {
+		wp_send_json_error(
+			__( 'Nonce verification failed', 'buddyboss' )
+		);
+	}
+
+	if ( empty( $_POST['item_id'] ) ) {
+		wp_send_json_error(
+			array(
+				'no_item_id' => esc_html__( 'No item id', 'buddyboss' ),
+			)
+		);
+	}
+
+	$item_id     = sanitize_text_field( $_POST['item_id'] );
+	$item_type   = sanitize_text_field( $_POST['item_type'] );
+	$reaction_id = sanitize_text_field( $_POST['reaction_id'] );
+	$paged       = sanitize_text_field( $_POST['paged'] );
+
+	$users_data = bb_get_activity_user_reactions(
+		array(
+			'item_id'     => $item_id,
+			'item_type'   => $item_type,
+			'reaction_id' => $reaction_id,
+			'paged'       => $paged,
+			'per_page'    => 20,
+		)
+	);
+
+	$user_list = '';
+	foreach ( $users_data['reactions'] as $user ) {
+
+		$icon_html = '';
+		if ( ! empty( $reaction_data['type'] ) && 'bb-icons' === $reaction_data['type'] ) {
+			$icon_html = sprintf(
+				'<i class="bb-icon-%s" style="font-weight:200;color:%s;"></i>',
+				esc_attr( $user['reaction']['icon'] ),
+				esc_attr( $user['reaction']['icon_color'] ),
+			);
+		} elseif ( ! empty( $user['reaction']['icon_path'] ) ) {
+			$icon_html = sprintf(
+				'<img src="%s" alt="%s"/>',
+				esc_url( $user['reaction']['icon_path'] ),
+				esc_attr( $user['reaction']['icon_text'] )
+			);
+		} else {
+			$icon_html = '<i class="bb-icon-thumbs-up" style="font-weight:200;color:#385DFF;"></i>';
+		}
+
+		$user_list .= sprintf(
+			'<li class="activity-state_user">
+				<div class="activity-state_user__avatar">
+					<a href="%1$s">
+						<img class="avatar" src="%2$s" alt="%3$s">
+						<div class="activity-state_user__reaction">%4$s</div>
+					</a>
+				</div>
+				<div class="activity-state_user__name">
+					<a href="%1$s">%3$s</a>
+				</div>
+				<div class="activity-state_user__role">
+					%5$s
+				</div>
+			</li>',
+			$user['profile_url'],
+			$user['avatar'],
+			$user['name'],
+			$icon_html,
+			$user['role']
+		);
+	}
+
+	wp_send_json_success(
+		array(
+			'user_list' => $user_list,
+		)
+	);
+
 }
