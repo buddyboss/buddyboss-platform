@@ -410,7 +410,7 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 
 	$has_content = trim( $output, ' ' );
 
-	// Todo: Make Reactions dynamic and move to appropriate place.
+	// Added emotion list.
 	$output .= bb_get_activity_post_emotions_popup();
 
 	if ( ! $has_content ) {
@@ -773,6 +773,10 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 
 	$output     .= ob_get_clean();
 	$has_content = trim( $output, ' ' );
+
+	// Added emotion list.
+	$output .= bb_get_activity_post_emotions_popup();
+
 	if ( ! $has_content ) {
 		return;
 	}
