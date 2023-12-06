@@ -608,8 +608,15 @@ function bb_remove_activity_reaction_ajax_callback() {
 	}
 
 	$item_id   = sanitize_text_field( $_POST['item_id'] );
-	$item_type = sanitize_text_field( $_POST['item_type'] );
-	$status    = bp_activity_remove_user_reaction( $item_id, $item_type );
+	$item_type = 'activity';
+
+	// Load up the activity item.
+	$activity = new BP_Activity_Activity( $item_id );
+	if ( 'activity_comment' === $activity->type ) {
+		$item_type = 'activity_comment';
+	}
+
+	$status = bp_activity_remove_user_reaction( $item_id, $item_type );
 
 	if ( is_wp_error( $status ) ) {
 		wp_send_json_error( $status->get_error_message() );
