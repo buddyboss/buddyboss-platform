@@ -695,12 +695,12 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 			'item_id'     => $activity_id,
 			'item_type'   => $activity_type,
 			'fields'      => 'user_id',
-			'per_page'    => 1000,
+			'per_page'    => 99,
 			'count_total' => true,
 		)
 	);
 
-	if ( empty( $reaction_data['total'] ) || 1000 === $reaction_data['total'] ) {
+	if ( empty( $reaction_data['total'] ) || 100 <= $reaction_data['total'] ) {
 		return bb_format_reaction_count( $reaction_data['total'] );
 	}
 
@@ -716,34 +716,66 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 		if ( $reaction_count > 1 ) {
 			unset( $reacted_users[ $current_key ] );
 		}
+	}
 
-		if ( function_exists( 'friends_get_friend_user_ids' ) ) {
-			$friends      = friends_get_friend_user_ids( $current_logged_user_id );
-			$friend_users = array_diff( $friends, $reacted_users );
-		}
+	$friend_users   = array();
+	$follower_users = array();
 
-		if ( function_exists( 'bp_get_followers' ) ) {
-			$followers      = bp_get_followers();
-			$follower_users = array_diff( $followers, $reacted_users );
+	// Get friends and followers.
+	if (
+		function_exists( 'friends_get_friend_user_ids' ) &&
+		$current_logged_user_id &&
+		(
+			(
+				$is_current_user_reacted &&
+				2 <= $reaction_count
+			) ||
+			(
+				! $is_current_user_reacted &&
+				1 <= $reaction_count
+			)
+		)
+	) {
+		$friends      = friends_get_friend_user_ids( $current_logged_user_id );
+		$friend_users = array_intersect( $friends, $reacted_users );
+
+		if ( count( $friend_users ) < $reaction_count && function_exists( 'bp_get_followers' ) ) {
+			$followers = bp_get_followers(
+				array(
+					'user_id'  => $current_logged_user_id,
+					'per_page' => -1,
+				)
+			);
+
+			$follower_users = array_intersect( $followers, $reacted_users );
 		}
 	}
 
 	$return_str = '';
 	if ( 1 === $reaction_count ) {
+
+		if ( $is_current_user_reacted ) {
+			return esc_html__( 'You', 'buddyboss' );
+		}
+
 		$user_id      = bb_get_reacted_person( $reacted_users, $friend_users, $follower_users );
 		$display_name = bp_core_get_user_displayname( $user_id );
 		$display_name = ! empty( $display_name ) ? $display_name : esc_html__( 'Unknown', 'buddyboss' );
-		$return_str   = $is_current_user_reacted ? esc_html__( 'You', 'buddyboss' ) : $display_name;
+		return $display_name;
 	} elseif ( 2 === $reaction_count ) {
 		$user_id     = bb_get_reacted_person( $reacted_users, $friend_users, $follower_users );
 		$first_name  = bp_core_get_user_displayname( $user_id ) ?? esc_html__( 'Unknown', 'buddyboss' );
+
+		// If current user reacted and next related user is also reacted.
+		if ( $is_current_user_reacted ) {
+			return sprintf( esc_html__( 'You and %s', 'buddyboss' ), $first_name );
+		}
+
+		// If current user not reacted and next 2 related user reacted.
 		$user_id     = bb_get_reacted_person( $reacted_users, $friend_users, $follower_users );
 		$second_name = bp_core_get_user_displayname( $user_id ) ?? esc_html__( 'Unknown', 'buddyboss' );
-
-		$return_str = $is_current_user_reacted
-		? sprintf( esc_html__( 'You and %s', 'buddyboss' ), $first_name )
-		: sprintf( esc_html__( '%1$s and %2$s', 'buddyboss' ), $first_name, $second_name );
-	} elseif ( 3 <= $reaction_count && 1000 >= $reaction_count ) {
+		return sprintf( esc_html__( '%1$s and %2$s', 'buddyboss' ), $first_name, $second_name );
+	} elseif ( 3 <= $reaction_count && 99 >= $reaction_count ) {
 		$reaction_count -= 2;
 		$user_id         = bb_get_reacted_person( $reacted_users, $friend_users, $follower_users );
 		$first_name      = bp_core_get_user_displayname( $user_id ) ?? esc_html__( 'Unknown', 'buddyboss' );
