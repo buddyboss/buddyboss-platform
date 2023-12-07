@@ -16,7 +16,6 @@ add_action( 'wp_ajax_bb_remove_reaction', 'bb_remove_activity_reaction_ajax_call
 add_action( 'wp_ajax_bb_get_reactions', 'bb_get_activity_reaction_ajax_callback' );
 add_action( 'wp_ajax_bb_user_reactions', 'bb_get_user_reactions_ajax_callback' );
 
-add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bb_nouveau_update_activity_post_reaction_button', 10, 2 );
 add_action( 'bp_activity_action_delete_activity', 'bb_activity_remove_activity_post_reactions', 10, 1 );
 add_filter( 'bb_get_user_reactions_join_sql', 'bb_update_user_reactions_join_sql', 10, 1 );
 
@@ -163,98 +162,6 @@ function bb_activity_remove_activity_post_reactions( $activity_id ) {
 			'user_id'   => 0,
 		)
 	);
-}
-
-/**
- * Function will replace the like/unlike button text with reaction text.
- *
- * @param array $buttons     Array of buttons.
- * @param int   $activity_id Activity ID.
- *
- * @return mixed
- *
- * @since BuddyBoss 1.7.8
- */
-function bb_nouveau_update_activity_post_reaction_button( $buttons, $activity_id ) {
-
-	if ( empty( $buttons['activity_favorite'] ) ) {
-		return $buttons;
-	}
-
-	$user_reaction = bb_load_reaction()->bb_get_user_reactions(
-		array(
-			'item_type' => 'activity',
-			'item_id'   => $activity_id,
-			'user_id'   => bp_loggedin_user_id(),
-		)
-	);
-
-	if ( empty( $user_reaction ) ) {
-		return $buttons;
-	}
-
-	$user_reaction = current( $user_reaction['reactions'] );
-	if ( empty( $user_reaction ) ) {
-		return $buttons;
-	}
-
-	$reaction_meta = get_post_meta( $user_reaction->reaction_id );
-	// If reaction is not active then avoid button changes.
-	if (
-		isset( $reaction_meta['is_emotion'] ) &&
-		(
-			empty( $reaction_meta['is_emotion'][0] ) ||
-			empty( $reaction_meta['is_emotion_active'][0] )
-		)
-	) {
-		return $buttons;
-	}
-
-	$reaction      = get_post( $user_reaction->reaction_id );
-	$reaction_data = maybe_unserialize( $reaction->post_content );
-
-	if ( empty( $reaction_data ) ) {
-		return $buttons;
-	}
-
-	$icon_text = $reaction_data['icon_text'];
-	$icon      = '';
-	if ( 'bb-icons' === $reaction_data['type'] ) {
-		$icon = sprintf(
-			'<i class="bb-icon-%s" style="font-weight:200;color:%s;"></i>',
-			esc_attr( $reaction_data['icon'] ),
-			esc_attr( $reaction_data['icon_color'] ),
-		);
-	} elseif ( ! empty( $reaction_data['icon_path'] ) ) {
-		$icon = sprintf(
-			'<img src="%s" class="%s" alt="%s" style="width:20px"/>',
-			esc_url( $reaction_data['icon_path'] ),
-			esc_attr( $reaction_data['type'] ),
-			esc_attr( $reaction_data['icon_text'] )
-		);
-	} else {
-		$icon_text = sprintf( 'Like', 'buddyboss' );
-	}
-
-	$text_color = ! empty( $reaction_data['text_color'] ) ? $reaction_data['text_color'] : '#385DFF';
-
-	$buttons['activity_favorite']['link_text'] = sprintf(
-		'<span class="bp-screen-reader-text">%1$s</span>
-		%2$s
-		<span class="like-count reactions_item" style="color:%3$s">%1$s</span>',
-		esc_html( $icon_text ),
-		$icon,
-		esc_attr( $text_color )
-	);
-
-	$class_name = 'has-emotion';
-	if ( empty( $reaction_data['type'] ) ) {
-		$class_name .= ' has-like';
-	}
-
-	$buttons['activity_favorite']['button_attr']['class'] = 'button bp-like-button bp-secondary-action ' . $class_name;
-
-	return $buttons;
 }
 
 /**
@@ -1022,4 +929,48 @@ function bb_get_user_reactions_ajax_callback() {
 		)
 	);
 
+}
+
+/**
+ * Get user reaction by item.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $item_id   The ID of activity/activity comment.
+ * @param string $item_type The item type.
+ * @param int    $user_id   The user ID.
+ *
+ * @return mixed
+ */
+function bb_activity_get_user_reaction_by_item( $item_id, $item_type = 'activity', $user_id = 0 ) {
+
+	if ( empty( $item_id ) ) {
+		return false;
+	}
+
+	if ( empty( $user_id ) ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
+	$user_reaction = bb_load_reaction()->bb_get_user_reactions(
+		array(
+			'item_type' => $item_type,
+			'item_id'   => $item_id,
+			'user_id'   => $user_id,
+			'fields'    => 'reaction_id',
+		)
+	);
+
+	if ( empty( $user_reaction['reactions'] ) ) {
+		return false;
+	}
+
+	$reaction_id   = current( $user_reaction['reactions'] );
+	$reaction      = get_post_field( 'post_content', $reaction_id );
+	$reaction_data = array(
+		'reaction_id' => $reaction_id,
+		'reaction'    => maybe_unserialize( $reaction ),
+	);
+
+	return $reaction_data;
 }
