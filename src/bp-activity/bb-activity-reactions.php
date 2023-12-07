@@ -581,12 +581,20 @@ function bb_get_activity_user_reactions( $args ) {
 		foreach ( $reaction_data['reactions'] as $reaction ) {
 			$user_data     = get_userdata( $reaction->user_id );
 			$reaction_meta = get_post_field( 'post_content', $reaction->reaction_id );
-			$member_type   = bp_get_member_type( $user_data->ID );
+			$type          = bp_get_member_type( $reaction->user_id );
+			$type_obj      = bp_get_member_type_object( $type );
+			$member_type   = esc_html__( 'Member', 'buddyboss' );
+
+			if ( ! empty( $type_obj ) ) {
+				$member_type = $type_obj->labels['singular_name'];
+			}
+
+			//$member_type = wp_kses_post( bp_get_user_member_type( bp_get_member_user_id() ) );
 
 			$user_reactions[] = array(
 				'id'          => $reaction->user_id,
 				'name'        => $user_data->display_name,
-				'member_type' => ! empty( $member_type ) ? $member_type : '',
+				'member_type' => $member_type,
 				'avatar'      => get_avatar_url( $reaction->user_id ),
 				'profile_url' => bbp_get_user_profile_url( $reaction->user_id ),
 				'reaction'    => maybe_unserialize( $reaction_meta ),
