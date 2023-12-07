@@ -768,8 +768,8 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 		$display_name = ! empty( $display_name ) ? $display_name : esc_html__( 'Unknown', 'buddyboss' );
 		return $display_name;
 	} elseif ( 2 === $reaction_count ) {
-		$user_id     = bb_get_reacted_person( $reacted_users, $friend_users, $follower_users );
-		$first_name  = bp_core_get_user_displayname( $user_id ) ?? esc_html__( 'Unknown', 'buddyboss' );
+		$user_id    = bb_get_reacted_person( $reacted_users, $friend_users, $follower_users );
+		$first_name = bp_core_get_user_displayname( $user_id ) ?? esc_html__( 'Unknown', 'buddyboss' );
 
 		// If current user reacted and next related user is also reacted.
 		if ( $is_current_user_reacted ) {
@@ -866,6 +866,11 @@ function bb_activity_is_item_favorite( $item_id, $item_type = 'activity', $user_
 	);
 }
 
+/**
+ * Get paginated user reactions data from ajax.
+ *
+ * @return void
+ */
 function bb_get_user_reactions_ajax_callback() {
 
 	if ( ! bp_is_post_request() ) {
