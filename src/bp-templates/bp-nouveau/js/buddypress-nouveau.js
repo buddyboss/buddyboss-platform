@@ -882,17 +882,17 @@ window.bp = window.bp || {};
 			// Reaction actions.
 			$( document ).on(
 				'mouseover',
-				'a.button.fav, a.button.has-like, a.button.has-emotion',
+				'a.button.fav, .button.unfav, a.button.has-like, a.button.has-emotion',
 				bp.Nouveau,
 				this.showReactions.bind( this )
 			).on(
 				'mouseout',
-				'.button.fav, .button.unfav',
+				'a.button.fav, .button.unfav, a.button.has-like, a.button.has-emotion',
 				function() {
 					clearTimeout( window.reactionHoverTimeout );
 				}
 			);
-			$( document ).on( 'mouseout', '.activity-meta .ac-emotions_list, .button.fav, .button.has-like, .button.has-emotion', bp.Nouveau, this.hideReactions.bind( this ) );
+			$( document ).on( 'mouseleave', '.activity-meta .ac-emotions_list, .button.fav, .button.unfav, .button.has-like, .button.has-emotion', bp.Nouveau, this.hideReactions.bind( this ) );
 			$( document ).on( 'click', '.activity-state-popup_overlay', bp.Nouveau, this.closeActivityState.bind( this ) );
 
 			$( document ).on( 'click', '.ac-emotions_list .ac-emotion_btn', this.updateReaction );
