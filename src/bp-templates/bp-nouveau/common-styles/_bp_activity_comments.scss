@@ -127,6 +127,18 @@
 				font-weight: 400;
 				text-transform: none;
 			}
+
+			a.bp-like-button:before {
+				display: none;
+			}
+
+			a.has-emotion {
+
+				> i,
+				> img {
+					display: none;
+				}
+			}
 		}
 
 		.show-all {

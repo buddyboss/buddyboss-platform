@@ -306,7 +306,7 @@
 			align-items: center;
 		}
 
-		.activity-meta.action {
+		> .activity-meta.action {
 
 			.bp-secondary-action {
 
@@ -1054,6 +1054,16 @@
 				}
 			}
 		}
+
+		.acomment-display .ac-emotions_list {
+
+			&:hover,
+			&.active {
+				bottom: 20px;
+			}
+
+		}
+
 	}
 
 	// close .activity-item

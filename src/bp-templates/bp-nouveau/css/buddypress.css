@@ -3604,16 +3604,16 @@ input.search-query-input {
   align-items: center;
 }
 
-.activity-list .activity-item .activity-meta.action .bp-secondary-action > i {
+.activity-list .activity-item > .activity-meta.action .bp-secondary-action > i {
   display: inline-block;
   vertical-align: middle;
 }
 
-.activity-list .activity-item .activity-meta.action .bp-secondary-action > img.custom {
+.activity-list .activity-item > .activity-meta.action .bp-secondary-action > img.custom {
   border-radius: 100%;
 }
 
-#buddypress .activity-list .activity-item .activity-meta.action .bp-secondary-action > .like-count {
+#buddypress .activity-list .activity-item > .activity-meta.action .bp-secondary-action > .like-count {
   line-height: 20px;
   display: inline-block;
   vertical-align: middle;
@@ -4271,6 +4271,10 @@ input.search-query-input {
 .activity-list .activity-item .ac-emotions_list .ac-emotion_item i {
   font-size: 40px;
   line-height: 1;
+}
+
+.activity-list .activity-item .acomment-display .ac-emotions_list:hover, .activity-list .activity-item .acomment-display .ac-emotions_list.active {
+  bottom: 20px;
 }
 
 @media screen and (min-width: 46.8em) {
@@ -6829,6 +6833,15 @@ span.dashicons.dashicons-admin-file:before {
   font-size: 14px;
   font-weight: 400;
   text-transform: none;
+}
+
+.buddypress-wrap .activity-comments .bp-generic-meta.action a.bp-like-button:before {
+  display: none;
+}
+
+.buddypress-wrap .activity-comments .bp-generic-meta.action a.has-emotion > i,
+.buddypress-wrap .activity-comments .bp-generic-meta.action a.has-emotion > img {
+  display: none;
 }
 
 .buddypress-wrap .activity-comments .show-all button {
