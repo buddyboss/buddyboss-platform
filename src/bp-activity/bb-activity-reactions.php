@@ -16,7 +16,9 @@ add_action( 'wp_ajax_bb_remove_reaction', 'bb_remove_activity_reaction_ajax_call
 add_action( 'wp_ajax_bb_get_reactions', 'bb_get_activity_reaction_ajax_callback' );
 add_action( 'wp_ajax_bb_user_reactions', 'bb_get_user_reactions_ajax_callback' );
 
+add_action( 'bp_activity_deleted_activities', 'bb_activity_remove_activity_post_reactions', 10, 1 );
 add_action( 'bp_activity_action_delete_activity', 'bb_activity_remove_activity_post_reactions', 10, 1 );
+
 add_filter( 'bb_get_user_reactions_join_sql', 'bb_update_user_reactions_join_sql', 10, 1 );
 
 /**
@@ -146,22 +148,27 @@ function bb_activity_total_reactions_count_for_user( $user_id = 0 ) {
 /**
  * Delete all reactions for an activity.
  *
- * @param int $activity_id ID of the activity.
+ * @param array|int $activity_ids ID of the activity.
  * @return void
  */
-function bb_activity_remove_activity_post_reactions( $activity_id ) {
+function bb_activity_remove_activity_post_reactions( $activity_ids ) {
 
-	if ( empty( $activity_id ) ) {
+	if ( empty( $activity_ids ) ) {
 		return;
 	}
 
-	bb_load_reaction()->bb_remove_user_item_reactions(
-		array(
-			'item_type' => 'activity',
-			'item_id'   => $activity_id,
-			'user_id'   => 0,
-		)
-	);
+	if ( ! is_array( $activity_ids ) ) {
+		$activity_ids = array( $activity_ids );
+	}
+
+	foreach ( $activity_ids as $key => $activity_id ) {
+		bb_load_reaction()->bb_remove_user_item_reactions(
+			array(
+				'item_id' => $activity_id,
+				'user_id' => 0,
+			)
+		);
+	}
 }
 
 /**
