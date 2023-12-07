@@ -74,9 +74,11 @@
 										<div class="activity-state_user__name">
 											<a href="{{ user.profile_url }}">{{ user.name }}</a>
 										</div>
+										<# if ( user.member_type ) { #>
 										<div class="activity-state_user__role">
-											{{ user.role }}
+											{{ user.member_type }}
 										</div>
+										<# } #>
 									</li>
 								<# }); #>
 								</ul>

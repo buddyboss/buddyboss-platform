@@ -657,11 +657,12 @@ function bb_get_activity_user_reactions( $args ) {
 		foreach ( $reaction_data['reactions'] as $reaction ) {
 			$user_data     = get_userdata( $reaction->user_id );
 			$reaction_meta = get_post_field( 'post_content', $reaction->reaction_id );
+			$member_type   = bp_get_member_type( $user_data->ID );
 
 			$user_reactions[] = array(
 				'id'          => $reaction->user_id,
 				'name'        => $user_data->display_name,
-				'role'        => ! empty( $user_data->roles ) ? $user_data->roles[0] : '',
+				'member_type' => ! empty( $member_type ) ? $member_type : '',
 				'avatar'      => get_avatar_url( $reaction->user_id ),
 				'profile_url' => bbp_get_user_profile_url( $reaction->user_id ),
 				'reaction'    => maybe_unserialize( $reaction_meta ),
@@ -980,6 +981,8 @@ function bb_get_user_reactions_ajax_callback() {
 			$icon_html = '<i class="bb-icon-thumbs-up" style="font-weight:200;color:#385DFF;"></i>';
 		}
 
+		$member_type = sprintf( '<div class="activity-state_user__role">%s</div>', $user['member_type'] );
+
 		$user_list .= sprintf(
 			'<li class="activity-state_user">
 				<div class="activity-state_user__avatar">
@@ -991,15 +994,13 @@ function bb_get_user_reactions_ajax_callback() {
 				<div class="activity-state_user__name">
 					<a href="%1$s">%3$s</a>
 				</div>
-				<div class="activity-state_user__role">
-					%5$s
-				</div>
+				%5$s
 			</li>',
 			$user['profile_url'],
 			$user['avatar'],
 			$user['name'],
 			$icon_html,
-			$user['role']
+			$member_type
 		);
 	}
 
