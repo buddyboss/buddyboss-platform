@@ -1024,7 +1024,7 @@ window.bp = window.bp || {};
 							if ( is_activity ) {
 								main_el.find( '.activity-meta a.bp-like-button.has-emotion:first' ).replaceWith( response.data.reaction_button );
 							} else {
-								main_el.find( '#acomment-display-' + item_id + ' .activity-meta a.a.bp-like-button.has-emotion' ).replaceWith( response.data.reaction_button );
+								main_el.find( '#acomment-display-' + item_id + ' .activity-meta a.bp-like-button.has-emotion' ).replaceWith( response.data.reaction_button );
 							}
 						}
 					}
