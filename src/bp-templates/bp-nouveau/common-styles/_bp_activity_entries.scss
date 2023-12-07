@@ -985,6 +985,17 @@
 				}
 			}
 
+			&.active {
+
+				.ac-emotion_item {
+
+					i,
+					img {
+						animation: popIn 0.2s ease-in-out 1;
+					}
+				}
+			}
+
 			.ac-emotion_item {
 				display: flex;
 				position: relative;

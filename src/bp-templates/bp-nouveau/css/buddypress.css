@@ -4213,6 +4213,11 @@ input.search-query-input {
   top: 0;
 }
 
+.activity-list .activity-item .ac-emotions_list.active .ac-emotion_item i,
+.activity-list .activity-item .ac-emotions_list.active .ac-emotion_item img {
+  animation: popIn 0.2s ease-in-out 1;
+}
+
 .activity-list .activity-item .ac-emotions_list .ac-emotion_item {
   display: flex;
   position: relative;
@@ -14311,6 +14316,15 @@ button[data-bp-close]:hover {
   }
   100% {
     left: 250%;
+  }
+}
+
+@keyframes popIn {
+  0% {
+    transform: translateY(20%) scale(0.8);
+  }
+  100% {
+    transform: translateY(0) scale(1);
   }
 }
 
