@@ -221,7 +221,8 @@ function bb_nouveau_update_activity_post_reaction_button( $buttons, $activity_id
 	$icon      = '';
 	if ( 'bb-icons' === $reaction_data['type'] ) {
 		$icon = sprintf(
-			'<i class="bb-icon-thumbs-up" style="font-weight:200;color:%s;"></i>',
+			'<i class="bb-icon-%s" style="font-weight:200;color:%s;"></i>',
+			esc_attr( $reaction_data['icon'] ),
 			esc_attr( $reaction_data['icon_color'] ),
 		);
 	} elseif ( ! empty( $reaction_data['icon_path'] ) ) {
