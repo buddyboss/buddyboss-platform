@@ -256,6 +256,7 @@
 
 		.activity-state-reactions {
 			display: flex;
+			align-items: center;
 			flex-flow: row;
 			cursor: pointer;
 
@@ -288,6 +289,10 @@
 					height: 18px;
 					width: 18px;
 					object-fit: cover;
+
+					&.custom {
+						border-radius: 100%;
+					}
 				}
 			}
 

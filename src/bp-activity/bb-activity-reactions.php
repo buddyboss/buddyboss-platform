@@ -325,8 +325,9 @@ function bb_get_activity_post_reaction_button_html( $item_id, $item_type = 'acti
 	} elseif ( ! empty( $reaction_data['icon_path'] ) ) {
 		$icon_text = $reaction_data['icon_text'];
 		$icon_html = sprintf(
-			'<img src="%s" alt="%s" style="width:20px"/>',
+			'<img src="%s" class="%s" alt="%s" style="width:20px"/>',
 			esc_url( $reaction_data['icon_path'] ),
+			esc_attr( $reaction_data['type'] ),
 			esc_attr( $reaction_data['icon_text'] )
 		);
 	} else {
@@ -388,8 +389,9 @@ function bb_get_activity_post_user_reactions_html( $activity_id, $item_type = 'a
 				);
 			} elseif ( ! empty( $reaction['icon_path'] ) ) {
 				$icon = sprintf(
-					'<img src="%s" alt="%s" />',
+					'<img src="%s" class="%s" alt="%s" />',
 					esc_url( $reaction['icon_path'] ),
+					esc_attr( $reaction['type'] ),
 					esc_attr( $reaction['icon_text'] )
 				);
 			} else {

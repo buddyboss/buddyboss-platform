@@ -3554,6 +3554,7 @@ input.search-query-input {
 
 .activity-list .activity-item .activity-state-reactions {
   display: flex;
+  align-items: center;
   flex-flow: row;
   cursor: pointer;
 }
@@ -3588,6 +3589,10 @@ input.search-query-input {
   height: 18px;
   width: 18px;
   object-fit: cover;
+}
+
+.activity-list .activity-item .activity-state-reactions .reactions_item > img.custom {
+  border-radius: 100%;
 }
 
 .activity-list .activity-item .activity-state-reactions .activity-reactions_count {
