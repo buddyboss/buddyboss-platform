@@ -757,8 +757,9 @@ function bb_get_activity_reaction_ajax_callback() {
 
 	wp_send_json_success(
 		array(
-			'item_id'   => $item_id,
-			'reactions' => (object) $reaction_data,
+			'item_id'       => $item_id,
+			'reaction_mode' => bb_get_reaction_mode(),
+			'reactions'     => (object) $reaction_data,
 		)
 	);
 }

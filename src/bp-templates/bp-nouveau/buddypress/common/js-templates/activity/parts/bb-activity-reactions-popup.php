@@ -13,18 +13,23 @@
 	<div class="activity-state-popup">
 		<div class="activity-state-popup_overlay"></div>
 		<div class="activity-state-popup_inner">
-			<div class="activity-state-popup_title">
-				<h4><?php esc_html_e( 'Reactions', 'buddyboss' ); ?></h4>
-			</div>
 			<# if ( ! data ) { #>
 				<p class="reaction-loader"><i class="bb-icon-l bb-icon-spinner animate-spin"></i></p>
-			<# } else { #>			
+			<# } else { #>
+				<div class="activity-state-popup_title">
+					<# if ( data.reaction_mode && data.reaction_mode === 'emotions' ) { #>
+						<h4><?php esc_html_e( 'Reactions', 'buddyboss' ); ?></h4>
+					<# } else { #>
+						<h4><?php esc_html_e( 'Likes', 'buddyboss' ); ?>({{ data.reactions[0].total }})</h4>
+					<# } #>
+				</div>
 				<div class="activity-state-popup_tab">
+					<# if ( data.reaction_mode && data.reaction_mode === 'emotions' ) { #>
 					<div class="activity-state-popup_tab_panel">
 						<ul>
 							<#
 							var isFirstItem = true;
-							jQuery.each( data, function( key, reaction ) {
+							jQuery.each( data.reactions, function( key, reaction ) {
 							#>
 							<li>
 								<a href="javascript:void(0);" class="{{ isFirstItem ? 'active' : '' }}" data-tab="activity-state_{{key}}" reaction-id="{{ reaction.id ? reaction.id : '0' }}">
@@ -48,10 +53,11 @@
 							#>
 						</ul>
 					</div>
+					<# } #>
 					<div class="activity-state-popup_tab_content">
 						<#
 						isFirstItem = true;
-						jQuery.each( data, function( key, reaction ) {
+						jQuery.each( data.reactions, function( key, reaction ) {
 							#>
 							<div class="activity-state-popup_tab_item activity-state_{{key}} {{isFirstItem ? 'active' : ''}}" data-reaction-id="{{reaction.id ? reaction.id : '0'}}" data-paged="{{reaction.paged}}" data-total-pages="{{reaction.total_pages}}">
 								<ul class="activity-state_users">

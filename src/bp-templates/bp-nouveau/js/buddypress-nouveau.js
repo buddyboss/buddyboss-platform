@@ -1063,7 +1063,7 @@ window.bp = window.bp || {};
 							}, success: function ( response ) {
 								console.log( response.data.reactions );
 								if ( typeof response.data.reactions !== 'undefined' ) {
-									var data = response.data.reactions;
+									var data = response.data;
 									var html = reactionModal( data );
 									activity_item.find( '.activity-content .activity-state-popup' ).replaceWith( html );
 									activity_item.find( '.activity-content .activity-state-popup' ).addClass( 'loaded active' );
