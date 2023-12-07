@@ -1068,6 +1068,13 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			if ( ! empty( $r['reaction_id'] ) ) {
 				$reaction_id_in                  = implode( ',', wp_parse_id_list( $r['reaction_id'] ) );
 				$where_conditions['reaction_id'] = "ur.reaction_id IN ({$reaction_id_in})";
+			} else {
+				// If no reaction_id is specified, get all reactions having active emotions.
+				if ( 'emotions' === bb_get_reaction_mode() ) {
+					$reactions                       = $this->bb_get_reactions( 'emotions' );
+					$reaction_id_in                  = implode( ',', wp_list_pluck( $reactions, 'id' ) );
+					$where_conditions['reaction_id'] = "ur.reaction_id IN ({$reaction_id_in})";
+				}
 			}
 
 			// item_id.
