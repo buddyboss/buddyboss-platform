@@ -4275,6 +4275,7 @@ input.search-query-input {
 
 .activity-list .activity-item .acomment-display .ac-emotions_list:hover, .activity-list .activity-item .acomment-display .ac-emotions_list.active {
   bottom: 20px;
+  left: -60px;
 }
 
 @media screen and (min-width: 46.8em) {
