@@ -251,7 +251,7 @@ function bb_nouveau_update_activity_post_reaction_button( $buttons, $activity_id
 		$class_name .= ' has-like';
 	}
 
-	$buttons['activity_favorite']['button_attr']['class'] = 'button bp-secondary-action ' . $class_name;
+	$buttons['activity_favorite']['button_attr']['class'] = 'button bp-like-button bp-secondary-action ' . $class_name;
 
 	return $buttons;
 }
@@ -432,7 +432,7 @@ function bb_get_activity_post_reaction_button_html( $item_id, $item_type = 'acti
 	}
 
 	$reaction_button = sprintf(
-		'<a href="%1$s" class="button bp-secondary-action %5$s" aria-pressed="false">
+		'<a href="%1$s" class="button bp-like-button bp-secondary-action %5$s" aria-pressed="false">
 			<span class="bp-screen-reader-text">%2$s</span>
 			%3$s
 			<span class="like-count reactions_item" style="color:%4$s">%2$s</span>

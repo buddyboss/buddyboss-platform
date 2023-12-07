@@ -482,14 +482,13 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 
 		if ( ! bb_activity_is_item_favorite( $activity_id ) ) {
 			$fav_args = array(
-				'link_class'     => 'button fav bp-secondary-action',
+				'link_class'     => 'button fav bp-secondary-action bp-like-button',
 				'aria-pressed'   => 'false',
 				'link_attr'      => bp_get_activity_favorite_link(),
 			);
-
 		} else {
 			$fav_args = array(
-				'link_class'     => 'button unfav bp-secondary-action',
+				'link_class'     => 'button unfav bp-secondary-action bp-like-button',
 				'aria-pressed'   => 'true',
 				'link_attr'      => bp_get_activity_unfavorite_link(),
 			);
@@ -852,7 +851,7 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 		if ( ! bb_get_activity_comment_is_favorite() ) {
 			$fav_args = array(
 				'button_element' => $button_element,
-				'link_class'     => 'button fav bp-secondary-action',
+				'link_class'     => 'button fav bp-secondary-action bp-like-button',
 				'link_text'      => __( 'Like', 'buddyboss' ),
 				'aria-pressed'   => 'false',
 				'link_attr'      => bb_get_activity_comment_favorite_link(),
@@ -861,7 +860,7 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 		} else {
 			$fav_args = array(
 				'button_element' => $button_element,
-				'link_class'     => 'button unfav bp-secondary-action',
+				'link_class'     => 'button unfav bp-secondary-action bp-like-button',
 				'link_text'      => __( 'Unlike', 'buddyboss' ),
 				'aria-pressed'   => 'true',
 				'link_attr'      => bb_get_activity_comment_unfavorite_link(),
