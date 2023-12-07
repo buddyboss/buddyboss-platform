@@ -34,7 +34,7 @@
 										<i class="bb-icon-{{ reaction.icon }}" style="font-weight:200;color:{{ reaction.icon_color }};"></i>
 										<span>{{ reaction.total_count }}</span>
 									<# } else if ( reaction.icon_path !== '' ) { #>
-										<img src="{{ reaction.icon_path }}" alt="{{ reaction.icon_text }}" />
+										<img src="{{ reaction.icon_path }}" class="{{ reaction.type }}" alt="{{ reaction.icon_text }}" />
 										<span>{{ reaction.total_count }}</span>
 									<# } else { #>
 										<i class="bb-icon-thumbs-up" style="font-weight:200;color:#385DFF;"></i>
@@ -64,7 +64,7 @@
 												<# if ( user.reaction.type === 'bb-icons' ) { #>
 													<i class="bb-icon-{{ user.reaction.icon }}" style="font-weight:200;color:{{ user.reaction.icon_color }};"></i>
 												<# } else if ( user.reaction.icon_path !== '' ) { #>
-													<img src="{{ user.reaction.icon_path }}" alt="{{ user.reaction.icon_text }}" />
+													<img src="{{ user.reaction.icon_path }}" class="{{ user.reaction.type }}" alt="{{ user.reaction.icon_text }}" />
 												<# } else { #>
 													<i class="bb-icon-thumbs-up" style="font-weight:200;color:#385DFF;"></i>
 												<# } #>

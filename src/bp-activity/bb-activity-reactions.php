@@ -226,8 +226,9 @@ function bb_nouveau_update_activity_post_reaction_button( $buttons, $activity_id
 		);
 	} elseif ( ! empty( $reaction_data['icon_path'] ) ) {
 		$icon = sprintf(
-			'<img src="%s" alt="%s" style="width:20px"/>',
+			'<img src="%s" class="%s" alt="%s" style="width:20px"/>',
 			esc_url( $reaction_data['icon_path'] ),
+			esc_attr( $reaction_data['type'] ),
 			esc_attr( $reaction_data['icon_text'] )
 		);
 	} else {
@@ -283,8 +284,9 @@ function bb_get_activity_post_emotions_popup() {
 				);
 			} else {
 				$icon = sprintf(
-					'<img src="%s" alt="%s" />',
+					'<img src="%s" class="%s" alt="%s" />',
 					esc_url( $emotion['icon_path'] ),
+					esc_attr( $emotion['type'] ),
 					esc_attr( $emotion['icon_text'] )
 				);
 			}
@@ -608,8 +610,15 @@ function bb_remove_activity_reaction_ajax_callback() {
 	}
 
 	$item_id   = sanitize_text_field( $_POST['item_id'] );
-	$item_type = sanitize_text_field( $_POST['item_type'] );
-	$status    = bp_activity_remove_user_reaction( $item_id, $item_type );
+	$item_type = 'activity';
+
+	// Load up the activity item.
+	$activity = new BP_Activity_Activity( $item_id );
+	if ( 'activity_comment' === $activity->type ) {
+		$item_type = 'activity_comment';
+	}
+
+	$status = bp_activity_remove_user_reaction( $item_id, $item_type );
 
 	if ( is_wp_error( $status ) ) {
 		wp_send_json_error( $status->get_error_message() );
@@ -973,8 +982,9 @@ function bb_get_user_reactions_ajax_callback() {
 			);
 		} elseif ( ! empty( $user['reaction']['icon_path'] ) ) {
 			$icon_html = sprintf(
-				'<img src="%s" alt="%s"/>',
+				'<img src="%s" class="%s" alt="%s"/>',
 				esc_url( $user['reaction']['icon_path'] ),
+				esc_attr( $user['reaction']['type'] ),
 				esc_attr( $user['reaction']['icon_text'] )
 			);
 		} else {
