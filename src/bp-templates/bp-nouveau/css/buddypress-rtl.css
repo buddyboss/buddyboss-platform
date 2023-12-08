@@ -6840,6 +6840,10 @@ span.dashicons.dashicons-admin-file:before {
   display: none;
 }
 
+.buddypress-wrap .activity-comments .bp-generic-meta.action a.bp-like-button .like-count {
+  margin-right: 0;
+}
+
 .buddypress-wrap .activity-comments .bp-generic-meta.action a.has-emotion > i,
 .buddypress-wrap .activity-comments .bp-generic-meta.action a.has-emotion > img {
   display: none;

@@ -128,8 +128,15 @@
 				text-transform: none;
 			}
 
-			a.bp-like-button:before {
-				display: none;
+			a.bp-like-button {
+
+				&:before {
+					display: none;
+				}
+
+				.like-count {
+					margin-left: 0;
+				}
 			}
 
 			a.has-emotion {
