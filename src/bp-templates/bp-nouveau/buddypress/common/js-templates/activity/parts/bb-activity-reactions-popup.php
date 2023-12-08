@@ -80,9 +80,13 @@
 										<div class="activity-state_user__name">
 											<a href="{{ user.profile_url }}">{{ user.name }}</a>
 										</div>
-										<# if ( user.member_type ) { #>
-										<div class="activity-state_user__role">
-											{{ user.member_type }}
+										<# if ( user.member_type ) {
+											var memberTypeLabel           = user.member_type.label ? user.member_type.label : '';
+											var memberTypeTextColor       = user.member_type.color.text;
+											var memberTypeBackgroundColor = user.member_type.color.background;
+										#>
+										<div class="activity-state_user__role" style="color:{{memberTypeTextColor}}; background-color:{{memberTypeBackgroundColor}};">
+											{{ memberTypeLabel }}
 										</div>
 										<# } #>
 									</li>
