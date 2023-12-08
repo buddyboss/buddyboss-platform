@@ -2034,6 +2034,29 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		}
 
 		/**
+		 * Get first active reaction id from emotions list.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return bool|int
+		 */
+		public function bb_reactions_get_first_emotion_reaction_id() {
+
+			if ( ! bb_is_reaction_emotions_enabled() ) {
+				return false;
+			}
+
+			$reactions = $this->bb_get_reactions( 'emotions' );
+			$reaction  = current( $reactions );
+
+			if ( empty( $reaction['id'] ) ) {
+				return false;
+			}
+
+			return $reaction['id'];
+		}
+
+		/**
 		 * Validate callback for a reaction item type for activity comment.
 		 *
 		 * @since BuddyBoss [BBVERSION]
