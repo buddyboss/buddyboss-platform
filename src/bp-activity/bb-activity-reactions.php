@@ -37,7 +37,7 @@ function bp_activity_add_user_reaction( $activity_id, $reaction_id = 0, $activit
 
 	if ( empty( $reaction_id ) && bb_is_reaction_emotions_enabled() ) {
 		$reaction_id = bb_load_reaction()->bb_reactions_get_first_emotion_reaction_id();
-	} else {
+	} elseif( empty( $reaction_id ) ) {
 		$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
 	}
 
