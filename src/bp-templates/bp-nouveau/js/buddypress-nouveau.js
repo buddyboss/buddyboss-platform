@@ -1157,7 +1157,7 @@ window.bp = window.bp || {};
 		showReactions: function( event ) {
 			var $this = $( event.currentTarget );
 			window.reactionHoverTimeout = setTimeout(function() {
-				$this.closest( '.activity-meta' ).find( '.ac-emotions_list' ).addClass( 'active' );
+				$this.closest( '.bp-generic-meta' ).find( '.ac-emotions_list' ).addClass( 'active' );
 			}, 500);
 		},
 
@@ -1167,7 +1167,7 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		hideReactions: function( event ) {
-			$( event.currentTarget ).closest( '.activity-meta' ).find( '.ac-emotions_list' ).removeClass('active');
+			$( event.currentTarget ).closest( '.bp-generic-meta' ).find( '.ac-emotions_list' ).removeClass('active');
 		},
 
 
