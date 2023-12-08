@@ -35,7 +35,9 @@ function bp_activity_add_user_reaction( $activity_id, $reaction_id = 0, $activit
 		return false;
 	}
 
-	if ( empty( $reaction_id ) ) {
+	if ( empty( $reaction_id ) && bb_is_reaction_emotions_enabled() ) {
+		$reaction_id = bb_load_reaction()->bb_reactions_get_first_emotion_reaction_id();
+	} else {
 		$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
 	}
 
@@ -44,7 +46,7 @@ function bp_activity_add_user_reaction( $activity_id, $reaction_id = 0, $activit
 	}
 
 	if ( empty( $reaction_id ) || empty( $user_id ) ) {
-		return;
+		return false;
 	}
 
 	$reaction = bb_load_reaction()->bb_add_user_item_reaction(
@@ -125,10 +127,11 @@ function bb_activity_get_user_reacted_item_ids( $user_id = 0, $activity_type = '
  * Get total count of reactions for a user.
  *
  * @param integer $user_id The user ID.
+ * @param string  $activity_type The activity type.
  *
  * @return int
  */
-function bb_activity_total_reactions_count_for_user( $user_id = 0 ) {
+function bb_activity_total_reactions_count_for_user( $user_id = 0, $activity_type = '' ) {
 
 	if ( empty( $user_id ) ) {
 		$user_id = bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id();
@@ -136,7 +139,8 @@ function bb_activity_total_reactions_count_for_user( $user_id = 0 ) {
 
 	$reaction_count = bb_load_reaction()->bb_get_user_reactions_count(
 		array(
-			'user_id' => $user_id,
+			'user_id'   => $user_id,
+			'item_type' => $activity_type,
 		)
 	);
 
@@ -453,30 +457,8 @@ function bb_update_activity_reaction_ajax_callback() {
 		$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
 	}
 
-	if ( empty( $reaction_id ) ) {
-		wp_send_json_error(
-			array(
-				'no_reaction_id' => esc_html__( 'No reaction id', 'buddyboss' ),
-			)
-		);
-	}
-
-	if ( empty( $_POST['item_id'] ) ) {
-		wp_send_json_error(
-			array(
-				'no_item_id' => esc_html__( 'No item id', 'buddyboss' ),
-			)
-		);
-	}
-
 	$item_id   = sanitize_text_field( $_POST['item_id'] );
-	$item_type = 'activity';
-
-	// Load up the activity item.
-	$activity = new BP_Activity_Activity( $item_id );
-	if ( 'activity_comment' === $activity->type ) {
-		$item_type = 'activity_comment';
-	}
+	$item_type = sanitize_text_field( $_POST['item_type'] );
 
 	$reaction = bp_activity_add_user_reaction(
 		$item_id,
@@ -484,19 +466,32 @@ function bb_update_activity_reaction_ajax_callback() {
 		$item_type
 	);
 
-	if ( is_wp_error( $reaction ) ) {
+	if ( is_wp_error( $reaction ) || empty( $reaction ) ) {
 		wp_send_json_error( $reaction->get_error_message() );
 	}
 
-	wp_send_json_success(
-		array(
-			'item_id'         => $item_id,
-			'item_type'       => $item_type,
-			'reaction_id'     => $reaction_id,
-			'reaction_counts' => bb_get_activity_post_user_reactions_html( $item_id, $item_type ),
-			'reaction_button' => bb_get_activity_post_reaction_button_html( $item_id, $item_type, $reaction_id, true ),
-		)
+	$response = array(
+		'reaction_counts' => bb_get_activity_post_user_reactions_html( $item_id, $item_type ),
+		'reaction_button' => bb_get_activity_post_reaction_button_html( $item_id, $item_type, $reaction_id, true ),
 	);
+
+	// Add likes/reacted tab when first time user react or like.
+	$current_user_fav_count = (int) bb_activity_total_reactions_count_for_user( bp_loggedin_user_id() );
+	if ( 1 === $current_user_fav_count ) {
+		$directory_tab = sprintf(
+			'<li id="activity-favorites" data-bp-scope="favorites" data-bp-object="activity">
+				<a href="%1$s">%2$s</a>
+			</li>',
+			esc_url( bp_loggedin_user_domain() . bp_get_activity_slug() . '/favorites/' ),
+			bb_is_reaction_emotions_enabled() ? esc_html__( 'Reacted to', 'buddyboss' ) : esc_html__( 'Likes', 'buddyboss' )
+		);
+
+		$response['directory_tab'] = $directory_tab;
+	} else {
+		$response['user_fav_count'] = $current_user_fav_count;
+	}
+
+	wp_send_json_success( $response );
 }
 
 /**
@@ -526,28 +521,34 @@ function bb_remove_activity_reaction_ajax_callback() {
 	}
 
 	$item_id   = sanitize_text_field( $_POST['item_id'] );
-	$item_type = 'activity';
-
-	// Load up the activity item.
-	$activity = new BP_Activity_Activity( $item_id );
-	if ( 'activity_comment' === $activity->type ) {
-		$item_type = 'activity_comment';
-	}
+	$item_type = sanitize_text_field( $_POST['item_type'] );
 
 	$status = bp_activity_remove_user_reaction( $item_id, $item_type );
 
-	if ( is_wp_error( $status ) ) {
+	if ( is_wp_error( $status ) || empty( $status ) ) {
 		wp_send_json_error( $status->get_error_message() );
 	}
 
-	wp_send_json_success(
-		array(
-			'item_id'         => $item_id,
-			'item_type'       => $item_type,
-			'reaction_counts' => bb_get_activity_post_user_reactions_html( $item_id, $item_type ),
-			'reaction_button' => bb_get_activity_post_reaction_button_html( $item_id, $item_type ),
-		)
+	$response = array(
+		'reaction_counts' => bb_get_activity_post_user_reactions_html( $item_id, $item_type ),
+		'reaction_button' => bb_get_activity_post_reaction_button_html( $item_id, $item_type ),
 	);
+
+	// If no likes/reacted activity found then remove tab and show no activity message.
+	$current_user_fav_count = (int) bb_activity_total_reactions_count_for_user( bp_loggedin_user_id() );
+	if ( 0 === $current_user_fav_count ) {
+		$no_activity_found = sprintf(
+			'<aside class="bp-feedback bp-messages info">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p>%s</p>
+			</aside>',
+			esc_html__( 'Sorry, there was no activity found.', 'buddyboss' )
+		);
+
+		$response['no_activity_found'] = $no_activity_found;
+	}
+
+	wp_send_json_success( $response );
 }
 
 /**

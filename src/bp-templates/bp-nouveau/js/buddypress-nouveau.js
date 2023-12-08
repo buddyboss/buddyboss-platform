@@ -941,11 +941,11 @@ window.bp = window.bp || {};
 						action: 'bb_update_reaction',
 						reaction_id: reaction_id,
 						item_id: item_id,
+						item_type: item_type,
 						_wpnonce: BP_Nouveau.nonces.activity,
 					}, success: function ( response ) {
 
-						console.log( response.data.reaction_counts );
-
+						// Update reacted user name and counts.
 						if ( 'undefined' !== typeof response.data.reaction_counts ) {
 							if ( is_activity ) {
 								if ( 0 < main_el.find( '.activity-content .activity-state-reactions' ).length ) {
@@ -960,12 +960,22 @@ window.bp = window.bp || {};
 							}
 						}
 
+						// Update reacted button.
 						if ( response.data.reaction_button ) {
 							if ( is_activity ) {
 								main_el.find( '.activity-meta a.bp-like-button:first' ).replaceWith( response.data.reaction_button );
 							} else {
 								main_el.find( '#acomment-display-' + item_id + ' .activity-meta a.bp-like-button' ).replaceWith( response.data.reaction_button );
 							}
+						}
+
+						// Add "Likes/React to" menu item on activity directory nav menu.
+						if (
+							typeof response.data.directory_tab !== 'undefined' &&
+							response.data.directory_tab !== '' &&
+							$( '.main-navs ul.component-navigation li[data-bp-scope="favorites"]' ).length <= 0
+						) {
+							$( '.main-navs ul.component-navigation li[data-bp-scope="all"]' ).after( response.data.directory_tab );
 						}
 					}
 				}
@@ -984,9 +994,12 @@ window.bp = window.bp || {};
 				item_id     = 0,
 				main_el;
 
+			var item_type = 'activity';
+			var stream_el = target.closest( '#activity-stream' );
 			var parent_el = target.parents( '.acomment-display' ).first();
 			if ( 0 < parent_el.length ) {
 				is_activity = false;
+				item_type   = 'activity_comment';
 			}
 
 			if ( ! is_activity ) {
@@ -1004,8 +1017,11 @@ window.bp = window.bp || {};
 					data: {
 						action: 'bb_remove_reaction',
 						item_id: item_id,
+						item_type: item_type,
 						_wpnonce: BP_Nouveau.nonces.activity,
 					}, success: function ( response ) {
+
+						// Update reacted user name and counts.
 						if ( 'undefined' !== typeof response.data.reaction_counts ) {
 							if ( is_activity ) {
 								if ( 0 < main_el.find( '.activity-content .activity-state-reactions' ).length ) {
@@ -1020,11 +1036,27 @@ window.bp = window.bp || {};
 							}
 						}
 
+						// Update react button.
 						if ( response.data.reaction_button ) {
 							if ( is_activity ) {
 								main_el.find( '.activity-meta a.bp-like-button.has-emotion:first' ).replaceWith( response.data.reaction_button );
 							} else {
 								main_el.find( '#acomment-display-' + item_id + ' .activity-meta a.bp-like-button.has-emotion' ).replaceWith( response.data.reaction_button );
+							}
+						}
+
+						// Add "Likes/React to" menu item on activity directory nav menu.
+						var favoriteScope = $( '.main-navs ul.component-navigation li[data-bp-scope="favorites"]' ).hasClass( 'selected' );
+						if ( favoriteScope && is_activity ) {
+							main_el.remove();
+						}
+
+						// Remove the tab when no likes/reactions on activity directory tab.
+						if ( typeof response.data.no_activity_found !== 'undefined' ) {
+							if ( favoriteScope ) {
+								stream_el.append( response.data.no_activity_found );
+							} else {
+								$( '.main-navs ul.component-navigation [data-bp-scope="favorites"]' ).remove();
 							}
 						}
 					}
