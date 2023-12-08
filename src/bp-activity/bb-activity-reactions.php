@@ -560,7 +560,7 @@ function bb_remove_activity_reaction_ajax_callback() {
  *
  * @return array The user reactions.
  */
-function bb_get_activity_user_reactions( $args ) {
+function bb_activity_get_reacted_users_data( $args ) {
 
 	$args = bp_parse_args(
 		$args,
@@ -571,7 +571,7 @@ function bb_get_activity_user_reactions( $args ) {
 			'paged'       => 1,
 			'count_total' => true,
 		),
-		'bb_get_activity_user_reactions_args'
+		'bb_activity_get_reacted_users_data_args'
 	);
 
 	$reaction_data  = bb_load_reaction()->bb_get_user_reactions( $args );
@@ -611,7 +611,7 @@ function bb_get_activity_user_reactions( $args ) {
 		$reaction_data['reactions'] = $user_reactions;
 	}
 
-	return apply_filters( 'bb_get_activity_user_reactions', $reaction_data, $args );
+	return apply_filters( 'bb_activity_get_reacted_users_data', $reaction_data, $args );
 }
 
 /**
@@ -645,7 +645,7 @@ function bb_get_activity_reaction_ajax_callback() {
 	$reaction_data = bb_get_activity_most_reactions( $item_id, $item_type, 7 );
 
 	foreach ( $reaction_data as $key => $reaction ) {
-		$users_data = bb_get_activity_user_reactions(
+		$users_data = bb_activity_get_reacted_users_data(
 			array(
 				'item_id'     => $item_id,
 				'item_type'   => $item_type,
@@ -662,7 +662,7 @@ function bb_get_activity_reaction_ajax_callback() {
 
 	if ( count( $reaction_data ) >= 2 ) {
 
-		$users_data = bb_get_activity_user_reactions(
+		$users_data = bb_activity_get_reacted_users_data(
 			array(
 				'item_id'   => $item_id,
 				'item_type' => $item_type,
@@ -912,7 +912,7 @@ function bb_get_user_reactions_ajax_callback() {
 	$reaction_id = sanitize_text_field( $_POST['reaction_id'] );
 	$paged       = sanitize_text_field( $_POST['paged'] );
 
-	$users_data = bb_get_activity_user_reactions(
+	$users_data = bb_activity_get_reacted_users_data(
 		array(
 			'item_id'     => $item_id,
 			'item_type'   => $item_type,
