@@ -179,12 +179,11 @@ function bb_get_activity_post_emotions_popup() {
 	$output = '';
 
 	if (
-		function_exists( 'bb_pro_get_reactions' ) &&
-		bb_is_reaction_activity_posts_enabled() &&
-		'emotions' == bb_get_reaction_mode()
+		bb_is_reaction_emotions_enabled() &&
+		bb_is_reaction_activity_posts_enabled()
 	) {
 		$output      .= '<div class="ac-emotions_list">';
-		$all_emotions = bb_pro_get_reactions( 'emotions' );
+		$all_emotions = bb_load_reaction()->bb_get_reactions( 'emotions', true );
 
 		foreach ( $all_emotions as $key => $emotion ) {
 			$icon = '';
