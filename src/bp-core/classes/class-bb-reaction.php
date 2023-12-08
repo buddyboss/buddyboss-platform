@@ -1949,9 +1949,10 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			if ( ! empty( $r['item_id'] ) && 'activity' === $r['item_type'] ) {
 				$activities = BP_Activity_Activity::get(
 					array(
-						'per_page' => 0,
-						'fields'   => 'ids',
-						'in'       => ! is_array( $r['item_id'] ) ? array( $r['item_id'] ) : $r['item_id'],
+						'per_page'    => 0,
+						'fields'      => 'ids',
+						'show_hidden' => true, // Support hide_sitewide as true like document activity.
+						'in'          => ! is_array( $r['item_id'] ) ? array( $r['item_id'] ) : $r['item_id'],
 					),
 				);
 
@@ -2090,6 +2091,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 						'per_page'         => 0,
 						'fields'           => 'ids',
 						'display_comments' => true,
+						'show_hidden'      => true, // Support hide_sitewide as true like document activity_comment.
 						'in'               => ! is_array( $r['item_id'] ) ? array( $r['item_id'] ) : $r['item_id'],
 					),
 				);
