@@ -446,10 +446,12 @@ function bb_update_activity_reaction_ajax_callback() {
 		);
 	}
 
-	if ( empty( $_POST['reaction_id'] ) ) {
-		$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
-	} else {
+	if ( ! empty( $_POST['reaction_id'] ) ) {
 		$reaction_id = sanitize_text_field( $_POST['reaction_id'] );
+	} elseif( empty( $_POST['reaction_id'] ) && bb_is_reaction_emotions_enabled() ) {
+		$reaction_id = bb_load_reaction()->bb_reactions_get_first_emotion_reaction_id();
+	} else {
+		$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
 	}
 
 	if ( empty( $reaction_id ) ) {
