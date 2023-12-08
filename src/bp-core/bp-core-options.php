@@ -2631,3 +2631,12 @@ function bb_get_reaction_mode( $default = 'likes' ) {
 
 	return apply_filters( 'bb_get_reaction_mode', $mode );
 }
+
+/**
+ * Check whether emotions is enabled.
+ *
+ * @return bool
+ */
+function bb_is_reaction_emotions_enabled() {
+	return (bool) apply_filters( 'bb_is_reaction_emotions_enabled', (bool) ( bb_get_reaction_mode() === 'emotions' ) );
+}
