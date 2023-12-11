@@ -282,6 +282,7 @@
 
 				> i {
 					font-size: 18px;
+					font-weight: 200;
 					line-height: 1;
 				}
 
@@ -311,8 +312,16 @@
 			.bp-secondary-action {
 
 				> i {
+					font-size: 20px;
+					font-weight: 200;
 					display: inline-block;
 					vertical-align: middle;
+				}
+
+				> img {
+					height: 20px;
+					width: 20px;
+					object-fit: cover;
 				}
 
 				> img.custom {

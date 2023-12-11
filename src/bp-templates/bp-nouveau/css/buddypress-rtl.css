@@ -3582,6 +3582,7 @@ input.search-query-input {
 
 .activity-list .activity-item .activity-state-reactions .reactions_item > i {
   font-size: 18px;
+  font-weight: 200;
   line-height: 1;
 }
 
@@ -3605,8 +3606,16 @@ input.search-query-input {
 }
 
 .activity-list .activity-item > .activity-meta.action .bp-secondary-action > i {
+  font-size: 20px;
+  font-weight: 200;
   display: inline-block;
   vertical-align: middle;
+}
+
+.activity-list .activity-item > .activity-meta.action .bp-secondary-action > img {
+  height: 20px;
+  width: 20px;
+  object-fit: cover;
 }
 
 .activity-list .activity-item > .activity-meta.action .bp-secondary-action > img.custom {
