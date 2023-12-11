@@ -638,6 +638,14 @@ function bb_get_activity_reaction_ajax_callback() {
 	$item_type     = sanitize_text_field( $_POST['item_type'] );
 	$reaction_data = bb_get_activity_most_reactions( $item_id, $item_type, 7 );
 
+	if ( empty( $reaction_data ) ) {
+		wp_send_json_error(
+			array(
+				'no_reactions' => esc_html__( 'No reactions', 'buddyboss' ),
+			)
+		);
+	}
+
 	foreach ( $reaction_data as $key => $reaction ) {
 		$users_data = bb_activity_get_reacted_users_data(
 			array(
@@ -654,7 +662,7 @@ function bb_get_activity_reaction_ajax_callback() {
 		$reaction_data[ $key ]['total_count'] = bb_format_reaction_count( $reaction_data[ $key ]['total'] );
 	}
 
-	if ( count( $reaction_data ) >= 2 ) {
+	if ( is_countable( $reaction_data ) && count( $reaction_data ) >= 2 ) {
 
 		$users_data = bb_activity_get_reacted_users_data(
 			array(
