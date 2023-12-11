@@ -57,6 +57,16 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.4.90 =
+* Enhancement: Core - Priority profile slug performance optimized
+* Bug: Activity - Link previews disappeared after editing the activity in the backend activity page
+* Bug: Core - Fatal error fix with the Presence PHP file
+* Bug: Core - Link embeds styling disappeared from the more recent versions
+* Bug: Core - Network search page was not working correctly with Block theme
+* Bug: Core - Pinned post pop up has been updated to a toast message
+* Bug: Core - Recently active, most members, newly created, and alphabetical filters are now showing up on the Group Directory page using Block theme
+* Bug: Core - When downloading folders on MacOS were showing empty
+
 = 2.4.80 =
 * Bug: Activity - Could not select any other media to upload to a new reply in the thread after previously uploading a GIF
 * Bug: Activity - When a user tried to edit a post, the Read More option was shown as part of the post
