@@ -388,11 +388,13 @@ function bb_get_activity_post_user_reactions_html( $activity_id, $item_type = 'a
 	}
 
 	$reaction_count_class = 'activity-reactions_count';
+	$no_of_emotions       = 3;
 	if ( 'activity_comment' === $item_type ) {
 		$reaction_count_class = 'comment-reactions_count';
+		$no_of_emotions       = 2;
 	}
 
-	$most_reactions = bb_get_activity_most_reactions( $activity_id, $item_type );
+	$most_reactions = bb_get_activity_most_reactions( $activity_id, $item_type, $no_of_emotions );
 	if ( ! empty( $most_reactions ) ) {
 		$output .= '<div class="activity-state-reactions">';
 
@@ -712,7 +714,7 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 		)
 	);
 
-	if ( empty( $reaction_data['total'] ) || 100 <= $reaction_data['total'] ) {
+	if ( empty( $reaction_data['total'] ) || 100 <= $reaction_data['total'] || 'activity_comment' === $activity_type ) {
 		return bb_format_reaction_count( $reaction_data['total'] );
 	}
 
