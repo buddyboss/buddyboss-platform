@@ -78,6 +78,9 @@ class BB_Topics extends Integration_Abstract {
 			'bbp_edit_reply'                     => 3, // When reply updated, update count and last reply id and author id.
 			'bbp_post_move_reply'                => 3, // When reply moved, update count and last reply id and author id.
 
+			'bb_subscriptions_after_save'                        => 1,  // Create subscription.
+			'bb_subscriptions_before_delete_subscription'        => 1,  // Delete subscription.
+
 			// Added moderation support.
 			'bp_suspend_forum_topic_suspended'   => 1, // Any Forum Topic Suspended.
 			'bp_suspend_forum_topic_unsuspended' => 1, // Any Forum Topic Unsuspended.
@@ -353,6 +356,37 @@ class BB_Topics extends Integration_Abstract {
 		$this->purge_item_cache_by_item_id( $source_topic_id );
 		$this->purge_subscription_cache_by_items( $destination_topic_id );
 		$this->purge_subscription_cache_by_items( $source_topic_id );
+	}
+
+	/**
+	 * When discussion has been subscribed.
+	 *
+	 * @param BB_Subscriptions $subscription Subscription object.
+	 */
+	public function event_bb_subscriptions_after_save( $subscription ) {
+		if (
+			! empty( $subscription->type ) &&
+			! empty( $subscription->item_id ) &&
+			$subscription->type == 'topic'
+		) {
+			$this->purge_item_cache_by_item_id( $subscription->item_id );
+		}
+	}
+
+	/**
+	 * When discussion subscription has been removed.
+	 *
+	 * @param int $subscription_id  Subscription id.
+	 */
+	public function event_bb_subscriptions_before_delete_subscription( $subscription_id ) {
+		$subscription = bb_subscriptions_get_subscription( $subscription_id );
+		if (
+			! empty( $subscription->type ) &&
+			! empty( $subscription->item_id ) &&
+			$subscription->type == 'topic'
+		) {
+			$this->purge_item_cache_by_item_id( $subscription->item_id );
+		}
 	}
 
 	/******************************* Moderation Support ******************************/
