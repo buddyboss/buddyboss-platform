@@ -1048,7 +1048,7 @@ function bb_activity_prepare_emotion_icon( $id_or_post_or_reaction ) {
 
 	if ( ! empty( $reaction_data['type'] ) && 'bb-icons' === $reaction_data['type'] ) {
 		$icon_html = sprintf(
-			'<i class="bb-icon-%s" style="font-weight:200;color:%s;"></i>',
+			'<i class="bb-icon-%s" style="color:%s;"></i>',
 			esc_attr( $reaction_data['icon'] ),
 			esc_attr( $reaction_data['icon_color'] ),
 		);
@@ -1060,7 +1060,7 @@ function bb_activity_prepare_emotion_icon( $id_or_post_or_reaction ) {
 			esc_attr( $reaction_data['icon_text'] )
 		);
 	} else {
-		$icon_html = '<i class="bb-icon-thumbs-up" style="font-weight:200;color:#385DFF;"></i>';
+		$icon_html = '<i class="bb-icon-thumbs-up default-thumb-icon"></i>';
 	}
 
 	return $icon_html;

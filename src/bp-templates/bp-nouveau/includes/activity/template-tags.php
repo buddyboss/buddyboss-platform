@@ -502,9 +502,6 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 
 				$prepared_icon = bb_activity_prepare_emotion_icon_with_text( $reaction );
 
-				// Set image height.
-				$prepared_icon['icon_html'] = str_replace( '<img src=', '<img style="width:20px" src=', $prepared_icon['icon_html'] );
-
 				if ( empty( $reaction['type'] ) && empty( $reaction['icon_path'] ) ) {
 					$link_classes .= ' has-like';
 				}
