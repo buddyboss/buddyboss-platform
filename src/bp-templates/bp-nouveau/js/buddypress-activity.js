@@ -1526,7 +1526,6 @@ window.bp = window.bp || {};
 						if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.feedback ) {
 							var activity_list   = target.closest( '#activity-stream > ul' );
 							var activity_stream = target.closest( '#activity-stream' );
-							var message_modal   = activity_stream.siblings( '#bb-confirmation-modal' );
 
 							if ( response.success ) {
 
@@ -1602,16 +1601,31 @@ window.bp = window.bp || {};
 								}
 							}
 
-							message_modal.find('.bb-action-popup-content').html( response.data.feedback );
-							target.closest( '#activity-stream' ).siblings( '#bb-confirmation-modal' ).show();
+							$( document ).trigger(
+								'bb_trigger_toast_message',
+								[
+									'',
+									'<div>' + response.data.feedback + '</div>',
+									'success',
+									null,
+									true
+								]
+							);
 						}
 					}
 				).fail(
 					function() {
 						target.closest( '.activity-item' ).removeClass( 'loading-pin' );
-						var message_modal = target.closest( '#activity-stream' ).siblings( '#bb-confirmation-modal' );
-						message_modal.find('.bb-action-popup-content').html( BP_Nouveau.activity.strings.pinPostError );
-						message_modal.show();
+						$( document ).trigger(
+							'bb_trigger_toast_message',
+							[
+								'',
+								'<div>' + BP_Nouveau.activity.strings.pinPostError + '</div>',
+								'error',
+								null,
+								true
+							]
+						);
 					}
 				);
 			}
