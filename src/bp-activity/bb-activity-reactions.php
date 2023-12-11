@@ -159,18 +159,12 @@ function bb_activity_remove_activity_post_reactions( $activity_ids ) {
 		return;
 	}
 
-	if ( ! is_array( $activity_ids ) ) {
-		$activity_ids = array( $activity_ids );
-	}
-
-	foreach ( $activity_ids as $key => $activity_id ) {
-		bb_load_reaction()->bb_remove_user_item_reactions(
-			array(
-				'item_id' => $activity_id,
-				'user_id' => 0,
-			)
-		);
-	}
+	bb_load_reaction()->bb_remove_user_item_reactions(
+		array(
+			'item_id' => $activity_ids,
+			'user_id' => 0,
+		)
+	);
 }
 
 /**
