@@ -176,53 +176,81 @@ function bb_activity_remove_activity_post_reactions( $activity_ids ) {
 /**
  * Get reaction emoticons for activity post.
  *
- * @return HTML markup
+ * @return string
  */
 function bb_get_activity_post_emotions_popup() {
-
 	$output = '';
 
 	if (
 		bb_is_reaction_emotions_enabled() &&
 		bb_is_reaction_activity_posts_enabled()
 	) {
-		$output      .= '<div class="ac-emotions_list">';
-		$all_emotions = bb_load_reaction()->bb_get_reactions( 'emotions', true );
-
-		foreach ( $all_emotions as $key => $emotion ) {
-			$icon = '';
-
-			if ( 'bb-icons' === $emotion['type'] ) {
-				$icon = sprintf(
-					'<i class="bb-icon-%s" style="font-weight:200;color:%s;"></i>',
-					esc_attr( $emotion['icon'] ),
-					esc_attr( $emotion['icon_color'] )
-				);
-			} else {
-				$icon = sprintf(
-					'<img src="%s" class="%s" alt="%s" />',
-					esc_url( $emotion['icon_path'] ),
-					esc_attr( $emotion['type'] ),
-					esc_attr( $emotion['icon_text'] )
-				);
-			}
-
-			$output .= sprintf(
-				'<div class="ac-emotion_item" data-reaction-id="%s">
-					<a href="#" class="ac-emotion_btn" data-bp-tooltip-pos="up" data-bp-tooltip="%s">
-					%s
-					</a>
-				</div>',
-				$emotion['id'],
-				$emotion['icon_text'],
-				$icon,
-			);
-		}
-
-		$output .= '</div>';
+		$output = bb_activity_prepare_web_emotions();
 	}
 
 	return apply_filters( 'bb_get_activity_post_emotions_popup', $output );
+}
+
+/**
+ * Get reaction emoticons for activity post comment.
+ *
+ * @return string
+ */
+function bb_get_activity_post_comment_emotions_popup() {
+	$output = '';
+
+	if (
+		bb_is_reaction_emotions_enabled() &&
+		bb_is_reaction_activity_comments_enabled()
+	) {
+		$output = bb_activity_prepare_web_emotions();
+	}
+
+	return apply_filters( 'bb_get_activity_post_comment_emotions_popup', $output );
+}
+
+/**
+ * Prepare a reaction emoticons list for web to show on hover.
+ *
+ * @return string
+ */
+function bb_activity_prepare_web_emotions() {
+
+	$output       = '<div class="ac-emotions_list">';
+	$all_emotions = bb_load_reaction()->bb_get_reactions( 'emotions' );
+
+	foreach ( $all_emotions as $emotion ) {
+
+		if ( 'bb-icons' === $emotion['type'] ) {
+			$icon = sprintf(
+				'<i class="bb-icon-%s" style="font-weight:200;color:%s;"></i>',
+				esc_attr( $emotion['icon'] ),
+				esc_attr( $emotion['icon_color'] )
+			);
+		} else {
+			$icon = sprintf(
+				'<img src="%s" class="%s" alt="%s" />',
+				esc_url( $emotion['icon_path'] ),
+				esc_attr( $emotion['type'] ),
+				esc_attr( $emotion['icon_text'] )
+			);
+		}
+
+		$output .= sprintf(
+			'<div class="ac-emotion_item" data-reaction-id="%s">
+				<a href="#" class="ac-emotion_btn" data-bp-tooltip-pos="up" data-bp-tooltip="%s">
+				%s
+				</a>
+			</div>',
+			$emotion['id'],
+			$emotion['icon_text'],
+			$icon,
+		);
+	}
+
+	$output .= '</div>';
+
+	return apply_filters( 'bb_activity_prepare_web_emotions', $output );
 }
 
 /**
