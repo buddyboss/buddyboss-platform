@@ -1067,21 +1067,40 @@ window.bp = window.bp || {};
 		showActivityReactions: function( event ) {
 			event.preventDefault();
 
-			var target    = $( this ),
-			activity_item = target.parents( '.activity-item' ),
-			activity_id   = activity_item.data( 'bp-activity-id' ),
-			item_type     = 'activity';
+			var target      = $( this ),
+				is_activity = true,
+				item_type   = 'activity',
+				item_id     = 0,
+				main_el,
+				activity_item;
 
-			if ( activity_item.find( '.activity-content .activity-state-popup' ).length <= 0 ) {
+			var parent_el = target.parents( '.acomment-display' ).first();
+			if ( 0 < parent_el.length ) {
+				is_activity = false;
+				item_type   = 'activity_comment';
+			}
 
-				// Load Reactions template and show the popup
-				var reactionModal = wp.template('activity-reactions-popup');
-				var html = reactionModal();
-				activity_item.find( '.activity-content ' ).append( html );
-				activity_item.find( '.activity-content .activity-state-popup' ).addClass( 'active' );
+			if ( ! is_activity ) {
+				main_el       = target.parents( '.activity-comment' ).first();
+				item_id       = main_el.data( 'bp-activity-comment-id' );
+				activity_item = main_el.find( '#acomment-display-' + item_id );
+			} else {
+				main_el       = target.parents( '.activity-item' );
+				item_id       = main_el.data( 'bp-activity-id' );
+				activity_item = main_el.find( '.activity-content' );
+			}
 
-				// Get data if not fetched earlier
-				if ( ! activity_item.find( '.activity-content .activity-state-popup' ).hasClass( 'loaded' ) ) {
+			if ( activity_item.find( '.activity-state-popup' ).length <= 0 ) {
+
+				// Load Reactions template and show the popup.
+				var reactionModal = wp.template( 'activity-reactions-popup' ),
+					html          = reactionModal();
+
+				activity_item.append( html );
+				activity_item.find( '.activity-state-popup' ).addClass( 'active' );
+
+				// Get data if not fetched earlier.
+				if ( ! activity_item.find( '.activity-state-popup' ).hasClass( 'loaded' ) ) {
 
 					$.ajax(
 						{
@@ -1089,7 +1108,7 @@ window.bp = window.bp || {};
 							type: 'post',
 							data: {
 								action: 'bb_get_reactions',
-								item_id: activity_id,
+								item_id: item_id,
 								item_type: item_type,
 								_wpnonce: BP_Nouveau.nonces.activity,
 							}, success: function ( response ) {
@@ -1097,37 +1116,40 @@ window.bp = window.bp || {};
 								if ( typeof response.data.reactions !== 'undefined' ) {
 									var data = response.data;
 									var html = reactionModal( data );
-									activity_item.find( '.activity-content .activity-state-popup' ).replaceWith( html );
-									activity_item.find( '.activity-content .activity-state-popup' ).addClass( 'loaded active' );
+									activity_item.find( '.activity-state-popup' ).replaceWith( html );
+									activity_item.find( '.activity-state-popup' ).addClass( 'loaded active' );
 
-									// Load more emotions on scroll
-									var $reactions_list =  activity_item.find( '.activity-state-popup .activity-state-popup_tab_item ul' );
-									$reactions_list.on( 'scroll', function() {
-										bp.Nouveau.ReactionLoadMore( $( this ), activity_id, item_type );
-									});
+									// Load more emotions on scroll.
+									var $reactions_list = activity_item.find( '.activity-state-popup .activity-state-popup_tab_item ul' );
+									$reactions_list.on(
+										'scroll',
+										function() {
+											bp.Nouveau.ReactionLoadMore( $( this ), item_id, item_type );
+										}
+									);
 								}
 							}
 						}
 					);
 				}
 			} else {
-				activity_item.find( '.activity-content .activity-state-popup' ).addClass( 'active' );
+				activity_item.find( '.activity-state-popup' ).addClass( 'active' );
 			}
 		},
 
 		ReactionLoadMore: function( element, item_id, item_type ) {
-			if( ! element.hasClass( 'loading' ) ) {
-				var distanceFromBottom = element[0].scrollHeight - element.scrollTop() - element.outerHeight();
-				var threshold = 10;
+			if ( ! element.hasClass( 'loading' ) ) {
+				var distanceFromBottom = element[0].scrollHeight - element.scrollTop() - element.outerHeight(),
+					threshold          = 10,
+					reaction_id        = element.parent().data( 'reaction-id' ),
+					total_pages        = element.parent().data( 'total-pages' ),
+					paged              = element.parent().attr( 'data-paged' );
 
-				var reaction_id = element.parent().data( 'reaction-id' );
-				var total_pages = element.parent().data( 'total-pages' );
-				var paged       = element.parent().attr( 'data-paged' );
-				if ( typeof paged === 'undefined' || paged <= 0 ) {
+				if ( 'undefined' === typeof paged || 0 >= paged ) {
 					paged = 1;
 				}
 
-				// Check if the user has scrolled to the bottom
+				// Check if the user has scrolled to the bottom.
 				if (
 					distanceFromBottom <= threshold &&
 					paged < total_pages &&
