@@ -499,24 +499,13 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 			if ( ! empty( $reaction_data['reaction'] ) ) {
 				$reaction     = $reaction_data['reaction'];
 				$link_classes = 'has-emotion';
-				$icon_text    = $reaction['icon_text'];
-				$icon_html    = '';
 
-				if ( ! empty( $reaction['type'] ) && 'bb-icons' === $reaction['type'] ) {
-					$icon_html = sprintf(
-						'<i class="bb-icon-%s" style="font-weight:200;color:%s;"></i>',
-						esc_attr( $reaction['icon'] ),
-						esc_attr( $reaction['icon_color'] ),
-					);
-				} elseif ( ! empty( $reaction['icon_path'] ) ) {
-					$icon_html = sprintf(
-						'<img src="%s" class="%s" alt="%s" style="width:20px"/>',
-						esc_url( $reaction['icon_path'] ),
-						esc_attr( $reaction['type'] ),
-						esc_attr( $reaction['icon_text'] )
-					);
-				} else {
-					$icon_text     = sprintf( 'Like', 'buddyboss' );
+				$prepared_icon = bb_activity_prepare_emotion_icon_with_text( $reaction );
+
+				// Set image height.
+				$prepared_icon['icon_html'] = str_replace( '<img src=', '<img style="width:20px" src=', $prepared_icon['icon_html'] );
+
+				if ( empty( $reaction['type'] ) && empty( $reaction['icon_path'] ) ) {
 					$link_classes .= ' has-like';
 				}
 
@@ -524,8 +513,8 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 					'<span class="bp-screen-reader-text">%1$s</span>
 					%2$s
 					<span class="like-count reactions_item" style="color:%3$s">%1$s</span>',
-					esc_html( $icon_text ),
-					$icon_html,
+					esc_html( $prepared_icon['icon_text'] ),
+					$prepared_icon['icon_html'],
 					! empty( $reaction['text_color'] ) ? esc_attr( $reaction['text_color'] ) : '#385DFF'
 				);
 			}
