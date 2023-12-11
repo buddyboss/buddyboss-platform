@@ -45,18 +45,11 @@ bp_nouveau_activity_hook( 'before', 'comment_entry' );
 		</div>
 		<?php bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) ); ?>
 		<div class="comment-reactions">
-			<div class="activity-state-reactions">
-				<div class="reactions_item">
-					<i class="bb-icon-heart" style="font-weight:200;color: #f00;"></i>
-				</div>
-				<div class="reactions_item">
-					<i class="bb-icon-thumbs-up" style="font-weight:200;color: #00f;"></i>
-				</div>
-				<div class="reactions_item">
-					<img src="https://s.w.org/images/core/emoji/14.0.0/svg/1f644.svg" alt="Confused" />
-				</div>
-			</div>
-			<div class="comment-reactions_count">5</div>
+			<?php
+			if ( bb_is_reaction_activity_comments_enabled() ) {
+				echo bb_get_activity_post_user_reactions_html( bp_get_activity_comment_id(), 'activity_comment' );
+			}
+			?>
 		</div>
 		<div class="activity-state-popup">
 			<div class="activity-state-popup_overlay"></div>
@@ -168,7 +161,7 @@ bp_nouveau_activity_hook( 'before', 'comment_entry' );
 										<div class="activity-state_user__role" style="background-color: #8ca884">
 											Student
 										</div>
-									</li>									
+									</li>
 									<li class="activity-state_user">
 										<div class="activity-state_user__avatar">
 											<a href="#">
@@ -185,7 +178,7 @@ bp_nouveau_activity_hook( 'before', 'comment_entry' );
 											Admin
 										</div>
 									</li>
-								</ul>	
+								</ul>
 							</div>
 						</div>
 					</div>
