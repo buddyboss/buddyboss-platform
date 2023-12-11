@@ -30,8 +30,11 @@ function bp_activity_action_mark_favorite() {
 	// Check the nonce.
 	check_admin_referer( 'mark_favorite' );
 
-	// @todo later will update.
-	$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
+	if ( bb_is_reaction_emotions_enabled() ) {
+		$reaction_id = bb_load_reaction()->bb_reactions_get_first_emotion_reaction_id();
+	} else {
+		$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
+	}
 
 	// Load up the activity item.
 	$activity = new BP_Activity_Activity( $activity_id );
