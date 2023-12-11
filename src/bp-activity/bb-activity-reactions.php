@@ -348,27 +348,7 @@ function bb_get_activity_post_reaction_button_html( $item_id, $item_type = 'acti
 
 	$reaction_post = get_post( $reaction_id );
 	$reaction_data = ! empty( $reaction_post->post_content ) ? maybe_unserialize( $reaction_post->post_content ) : array();
-	$icon_html     = '';
-
-	if ( ! empty( $reaction_data['type'] ) && 'bb-icons' === $reaction_data['type'] ) {
-		$icon_text = $reaction_data['icon_text'];
-		$icon_html = sprintf(
-			'<i class="bb-icon-%s" style="font-weight:200;color:%s;"></i>',
-			esc_attr( $reaction_data['icon'] ),
-			esc_attr( $reaction_data['icon_color'] ),
-		);
-
-	} elseif ( ! empty( $reaction_data['icon_path'] ) ) {
-		$icon_text = $reaction_data['icon_text'];
-		$icon_html = sprintf(
-			'<img src="%s" class="%s" alt="%s" style="width:20px"/>',
-			esc_url( $reaction_data['icon_path'] ),
-			esc_attr( $reaction_data['type'] ),
-			esc_attr( $reaction_data['icon_text'] )
-		);
-	} else {
-		$icon_text = __( 'Like', 'buddyboss' );
-	}
+	$prepared_icon = bb_activity_prepare_emotion_icon_with_text( $reaction_data );
 
 	if ( $has_reacted ) {
 		$reaction_link = ( 'activity' === $item_type ) ? bp_get_activity_unfavorite_link( $item_id ) : bb_get_activity_comment_unfavorite_link( $item_id );
@@ -383,8 +363,8 @@ function bb_get_activity_post_reaction_button_html( $item_id, $item_type = 'acti
 			<span class="like-count reactions_item" style="color:%4$s">%2$s</span>
 		</a>',
 		$reaction_link,
-		esc_html( $icon_text ),
-		$icon_html,
+		esc_html( $prepared_icon['icon_text'] ),
+		$prepared_icon['icon_html'],
 		! empty( $reaction_data['text_color'] ) ? esc_attr( $reaction_data['text_color'] ) : '#385DFF',
 		! empty( $reaction_button_class ) ? esc_attr( $reaction_button_class ) : 'fav',
 	);
@@ -417,25 +397,7 @@ function bb_get_activity_post_user_reactions_html( $activity_id, $item_type = 'a
 		$output .= '<div class="activity-state-reactions">';
 
 		foreach ( $most_reactions as $reaction ) {
-			if ( 'bb-icons' === $reaction['type'] ) {
-				$icon = sprintf(
-					'<i class="bb-icon-%s" style="font-weight:200;color:%s;"></i>',
-					esc_attr( $reaction['icon'] ),
-					esc_attr( $reaction['icon_color'] ),
-				);
-			} elseif ( ! empty( $reaction['icon_path'] ) ) {
-				$icon = sprintf(
-					'<img src="%s" class="%s" alt="%s" />',
-					esc_url( $reaction['icon_path'] ),
-					esc_attr( $reaction['type'] ),
-					esc_attr( $reaction['icon_text'] )
-				);
-			} else {
-				$icon = sprintf(
-					'<i class="bb-icon-thumbs-up" style="font-weight:200;color:#385DFF;"></i>',
-				);
-			}
-
+			$icon   = bb_activity_prepare_emotion_icon( $reaction );
 			$output .= sprintf(
 				'<div class="reactions_item">
 				%s
@@ -955,24 +917,7 @@ function bb_get_user_reactions_ajax_callback() {
 	$user_list = '';
 	foreach ( $users_data['reactions'] as $user ) {
 
-		$icon_html = '';
-		if ( ! empty( $reaction_data['type'] ) && 'bb-icons' === $reaction_data['type'] ) {
-			$icon_html = sprintf(
-				'<i class="bb-icon-%s" style="font-weight:200;color:%s;"></i>',
-				esc_attr( $user['reaction']['icon'] ),
-				esc_attr( $user['reaction']['icon_color'] ),
-			);
-		} elseif ( ! empty( $user['reaction']['icon_path'] ) ) {
-			$icon_html = sprintf(
-				'<img src="%s" class="%s" alt="%s"/>',
-				esc_url( $user['reaction']['icon_path'] ),
-				esc_attr( $user['reaction']['type'] ),
-				esc_attr( $user['reaction']['icon_text'] )
-			);
-		} else {
-			$icon_html = '<i class="bb-icon-thumbs-up" style="font-weight:200;color:#385DFF;"></i>';
-		}
-
+		$icon_html   = bb_activity_prepare_emotion_icon( $user['reaction'] );
 		$member_type = sprintf( '<div class="activity-state_user__role">%s</div>', $user['member_type'] );
 
 		$user_list .= sprintf(
@@ -1046,4 +991,83 @@ function bb_activity_get_user_reaction_by_item( $item_id, $item_type = 'activity
 	);
 
 	return $reaction_data;
+}
+
+/**
+ * Prepare emotion icon with text.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int|array|WP_Post $id_or_post_or_reaction Accepts a post ID, Emotion array, WP_Post object.
+ *
+ * @return array
+ */
+function bb_activity_prepare_emotion_icon_with_text( $id_or_post_or_reaction ) {
+	$reaction_data = array();
+
+	// Process the identifier.
+	if ( is_array( $id_or_post_or_reaction ) ) {
+		$reaction_data = $id_or_post_or_reaction;
+	} elseif ( is_object( $id_or_post_or_reaction ) ) {
+		$reaction_data = ! empty( $id_or_post_or_reaction->post_content ) ? maybe_unserialize( $id_or_post_or_reaction->post_content ) : array();
+	} elseif ( is_numeric( $id_or_post_or_reaction ) ) {
+		$id_or_post_or_reaction = get_post( absint( $id_or_post_or_reaction ) );
+		$reaction_data          = ! empty( $id_or_post_or_reaction->post_content ) ? maybe_unserialize( $id_or_post_or_reaction->post_content ) : array();
+	}
+
+	$icon_html = bb_activity_prepare_emotion_icon( $reaction_data );
+
+	if ( ! empty( $reaction_data['type'] ) || ! empty( $reaction_data['icon_path'] ) ) {
+		$icon_text = sanitize_text_field( $reaction_data['icon_text'] );
+	} else {
+		$icon_text = __( 'Like', 'buddyboss' );
+		$icon_html = '';
+	}
+
+	return array(
+		'icon_text' => $icon_text,
+		'icon_html' => $icon_html,
+	);
+}
+
+/**
+ * Prepare emotion icon.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int|array|WP_Post $id_or_post_or_reaction Accepts a post ID, Emotion array, WP_Post object.
+ *
+ * @return string
+ */
+function bb_activity_prepare_emotion_icon( $id_or_post_or_reaction ) {
+	$reaction_data = array();
+
+	// Process the identifier.
+	if ( is_array( $id_or_post_or_reaction ) ) {
+		$reaction_data = $id_or_post_or_reaction;
+	} elseif ( is_object( $id_or_post_or_reaction ) ) {
+		$reaction_data = ! empty( $id_or_post_or_reaction->post_content ) ? maybe_unserialize( $id_or_post_or_reaction->post_content ) : array();
+	} elseif ( is_numeric( $id_or_post_or_reaction ) ) {
+		$id_or_post_or_reaction = get_post( absint( $id_or_post_or_reaction ) );
+		$reaction_data          = ! empty( $id_or_post_or_reaction->post_content ) ? maybe_unserialize( $id_or_post_or_reaction->post_content ) : array();
+	}
+
+	if ( ! empty( $reaction_data['type'] ) && 'bb-icons' === $reaction_data['type'] ) {
+		$icon_html = sprintf(
+			'<i class="bb-icon-%s" style="font-weight:200;color:%s;"></i>',
+			esc_attr( $reaction_data['icon'] ),
+			esc_attr( $reaction_data['icon_color'] ),
+		);
+	} elseif ( ! empty( $reaction_data['icon_path'] ) ) {
+		$icon_html = sprintf(
+			'<img src="%s" class="%s" alt="%s"/>',
+			esc_url( $reaction_data['icon_path'] ),
+			esc_attr( $reaction_data['type'] ),
+			esc_attr( $reaction_data['icon_text'] )
+		);
+	} else {
+		$icon_html = '<i class="bb-icon-thumbs-up" style="font-weight:200;color:#385DFF;"></i>';
+	}
+
+	return $icon_html;
 }
