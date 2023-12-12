@@ -173,11 +173,6 @@ add_filter( 'comment_max_links_url', 'bb_moderation_remove_mention_count', 10, 3
 
 add_action( 'edit_post', 'bb_cpt_post_title_save', 999, 2 );
 
-add_action( 'bp_after_directory_activity_list', 'bb_activity_pinpost_confirmation_modal_template' );
-add_action( 'bp_after_member_activity_content', 'bb_activity_pinpost_confirmation_modal_template' );
-add_action( 'bp_after_group_activity_content', 'bb_activity_pinpost_confirmation_modal_template' );
-add_action( 'bp_after_single_activity_content', 'bb_activity_pinpost_confirmation_modal_template' );
-
 add_filter( 'bb_activity_comment_get_edit_data', 'bb_blogs_activity_comment_edit_content', 9999 );
 
 /** Functions *****************************************************************/
@@ -266,18 +261,21 @@ function bp_activity_save_link_data( $activity ) {
 
 	// bail if the request is for privacy update.
 	if (
-		isset( $_POST['action'] ) &&
-		in_array(
-			$_POST['action'], // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			array(
-				'activity_update_privacy',
-				'bbp-new-topic',
-				'bbp-new-reply',
-				'bbp-edit-topic',
-				'bbp-edit-reply',
-			),
-			true
-		)
+		(
+			isset( $_POST['action'] ) &&
+			in_array(
+				$_POST['action'], // phpcs:ignore WordPress.Security.NonceVerification.Missing
+				array(
+					'activity_update_privacy',
+					'bbp-new-topic',
+					'bbp-new-reply',
+					'bbp-edit-topic',
+					'bbp-edit-reply',
+				),
+				true
+			)
+		) ||
+		( is_admin() && ! wp_doing_ajax() ) // bail if the request is from admin.
 	) {
 		return;
 	}
@@ -3623,18 +3621,9 @@ function bb_cpt_post_title_save( $post_id, $post ) {
 }
 
 /**
- * Add Pin Post confirmation to the activity loop.
- *
- * @since 2.4.60
- */
-function bb_activity_pinpost_confirmation_modal_template() {
-	bp_get_template_part( 'activity/confirmation-modal' );
-}
-
-/**
  * Get the content directly from the blog post comment.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.80
  *
  * @param array $activity_comment_data The Activity comment edit data.
  *
