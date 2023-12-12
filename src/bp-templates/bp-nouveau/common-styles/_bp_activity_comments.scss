@@ -222,9 +222,13 @@
 			position: relative;
 		}
 
+		li > .acomment-display {
+			position: relative;
+		}
+
 		.comment-reactions {
 			position: absolute;
-			bottom: 15px;
+			bottom: -2px;
 			right: 0;
 			display: flex;
 			align-items: center;

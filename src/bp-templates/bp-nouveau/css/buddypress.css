@@ -6907,9 +6907,13 @@ span.dashicons.dashicons-admin-file:before {
   position: relative;
 }
 
+.buddypress-wrap .activity-comments li > .acomment-display {
+  position: relative;
+}
+
 .buddypress-wrap .activity-comments .comment-reactions {
   position: absolute;
-  bottom: 15px;
+  bottom: -2px;
   right: 0;
   display: flex;
   align-items: center;
