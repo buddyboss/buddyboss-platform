@@ -325,21 +325,6 @@ function bp_admin_setting_callback_enable_activity_follow() {
 }
 
 /**
- * Allow like activity stream.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_admin_setting_callback_enable_activity_like() {
-	?>
-
-	<input id="_bp_enable_activity_like" name="_bp_enable_activity_like" type="checkbox" value="1" <?php checked( bp_is_activity_like_active( true ) ); ?> />
-	<label for="_bp_enable_activity_like"><?php esc_html_e( 'Allow your members to "Like" each other\'s activity posts', 'buddyboss' ); ?></label>
-
-	<?php
-}
-
-
-/**
  * Allow link previews in activity posts.
  *
  * @since BuddyBoss 1.0.0
@@ -3538,4 +3523,94 @@ function bp_admin_setting_callback_custom_logout_redirection() {
 		?>
 	</p>
 	<?php
+}
+
+/**
+ * Reactions settings enable markups.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_reactions_settings_callback_all_reactions() {
+
+	$all_reactions = bb_get_all_reactions();
+	?>
+	<p class="description access_control_label_header"><?php esc_html_e( 'Which type of content should members be able to react to?', 'buddyboss' ); ?></p>
+
+	<br/>
+	<?php
+	foreach ( $all_reactions as $key => $field ) {
+
+		$field['enabled'] = bb_all_enabled_reactions( $key );
+		?>
+		<div class="bb-reactions-setting-field">
+			<input
+				name="bb_all_reactions[<?php echo esc_attr( $key ); ?>]"
+				id="bb_all_reactions_<?php echo esc_attr( $key ); ?>"
+				type="checkbox"
+				value="1"
+				<?php
+				checked( $field['enabled'] );
+				disabled( $field['disabled'] );
+				?>
+			/>
+			<label for="bb_all_reactions_<?php echo esc_attr( $key ); ?>">
+				<?php echo esc_html( $field['label'] ); ?>
+			</label>
+		</div>
+		<?php
+	}
+}
+
+/**
+ * Add reaction mode settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_reactions_settings_callback_reaction_mode() {
+
+	$reactions_modes = array(
+		array(
+			'label'      => esc_html__( 'Likes', 'buddyboss' ),
+			'name'       => 'bb_reaction_mode',
+			'value'      => 'likes',
+			'id'         => 'bb_reaction_mode_likes',
+			'is_checked' => 'likes' === bb_get_reaction_mode(),
+			'notice'     => esc_html__( 'A simple "Like" button will show for members to express their appreciation or acknowledgement.', 'buddyboss' ),
+		)
+	);
+
+	$reactions_modes = apply_filters( 'bb_setting_reaction_mode_args', $reactions_modes );
+
+	if ( ! empty( $reactions_modes ) && is_array( $reactions_modes ) ) {
+		foreach ( $reactions_modes as $reaction_mode ) {
+			?>
+			<label for="<?php echo $reaction_mode['id']; ?>">
+				<input name="<?php echo $reaction_mode['name']; ?>"
+					id="<?php echo $reaction_mode['id']; ?>"
+					type="radio"
+					value="<?php echo $reaction_mode['value']; ?>"
+					<?php echo checked( $reaction_mode['is_checked'] ); ?>
+					data-current-val="<?php echo bb_get_reaction_mode(); ?>"
+					data-notice="<?php echo ! empty( $reaction_mode['notice'] ) ? $reaction_mode['notice'] : ''; ?>"
+				/>
+				<?php echo $reaction_mode['label']; ?>
+			</label>
+			<?php
+		}
+
+		$notice_text = '';
+		if ( bb_get_reaction_mode() === 'likes' && ! empty( $reactions_modes[0]['notice'] ) ) {
+			$notice_text = $reactions_modes[0]['notice'];
+		} elseif ( bb_get_reaction_mode() === 'emotions' && !empty( $reactions_modes[1]['notice'] ) ) {
+			$notice_text = $reactions_modes[1]['notice'];
+		}
+
+		if ( ! empty( $notice_text ) ) {
+			?>
+			<div class="description bb-reaction-mode-description">
+				<?php echo $notice_text; ?>
+			</div>
+			<?php
+		}
+	}
 }

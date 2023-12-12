@@ -6150,6 +6150,22 @@ function bb_activity_migration( $raw_db_version, $current_db ) {
 			set_transient( 'bb_migrate_activity_reaction', true, HOUR_IN_SECONDS );
 			bb_migrate_activity_like_reaction();
 		}
+
+		// Migrate the activity like settings with reaction settings.
+		if ( $current_db >= 20674 ) {
+			$enabled_reactions = bp_get_option( 'bb_all_reactions', array() );
+
+			if ( ! isset( $enabled_reactions['activity'] ) ) {
+				$enabled_reactions['activity'] = (bool) bp_get_option( '_bp_enable_activity_like', true );
+			}
+
+			if ( ! isset( $enabled_reactions['activity_comment'] ) ) {
+				$enabled_reactions['activity_comment'] = false;
+			}
+
+			bp_update_option( 'bb_all_reactions', $enabled_reactions );
+			bp_add_option( 'bb_reaction_mode', 'likes' );
+		}
 	}
 }
 

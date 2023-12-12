@@ -714,6 +714,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			require_once $this->admin_dir . '/settings/bp-admin-setting-moderation.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-video.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-labs.php';
+			require_once $this->admin_dir . '/settings/bb-admin-setting-reactions.php';
+
 			// @todo: used for bp-performance will enable in feature.
 			// require_once $this->admin_dir . '/settings/bp-admin-setting-performance.php';
 		}
