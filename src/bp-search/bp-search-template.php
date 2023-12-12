@@ -103,7 +103,7 @@ function bp_search_results() {
 /**
  * Filters the array of queried block templates array after they've been fetched.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.90
  *
  * @param WP_Block_Template[] $query_result Array of found block templates.
  * @param array               $query        {
@@ -152,7 +152,7 @@ add_filter( 'get_block_templates', 'bb_search_set_block_template_content', 10, 3
 /**
  * Force search non-empty for the block theme.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.90
  *
  * @param string   $search   Search SQL for WHERE clause.
  * @param WP_Query $wp_query The current WP_Query object.

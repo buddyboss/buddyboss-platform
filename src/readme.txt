@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.3.2
 Requires PHP: 8.0
-Stable tag: 2.4.80
+Stable tag: 2.4.90
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,16 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.4.90 =
+* Enhancement: Core - Priority profile slug performance optimized
+* Bug: Activity - Link previews disappeared after editing the activity in the backend activity page
+* Bug: Core - Fatal error fix with the Presence PHP file
+* Bug: Core - Link embeds styling disappeared from the more recent versions
+* Bug: Core - Network search page was not working correctly with Block theme
+* Bug: Core - Pinned post pop up has been updated to a toast message
+* Bug: Core - Recently active, most members, newly created, and alphabetical filters are now showing up on the Group Directory page using Block theme
+* Bug: Core - When downloading folders on MacOS were showing empty
 
 = 2.4.80 =
 * Bug: Activity - Could not select any other media to upload to a new reply in the thread after previously uploading a GIF
