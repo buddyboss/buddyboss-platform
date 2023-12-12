@@ -146,9 +146,11 @@ class BP_Groups_Widget extends WP_Widget {
 					bp_the_group();
 					?>
 					<li <?php bp_group_class(); ?>>
+					<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
 						<div class="item-avatar">
 							<a href="<?php bp_group_permalink(); ?>"><?php bp_group_avatar_thumb(); ?></a>
 						</div>
+					<?php endif; ?>
 
 						<div class="item">
 							<div class="item-title"><?php bp_group_link(); ?></div>
