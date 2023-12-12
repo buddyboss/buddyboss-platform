@@ -165,9 +165,6 @@ class BP_Document_Template {
 		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
 		$this->pag_num  = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
 
-		// Get an array of the logged in user's favorite document.
-		$this->my_favs = bp_get_user_meta( bp_loggedin_user_id(), 'bp_favorite_document', true );
-
 		// Fetch specific document items based on ID's.
 		if ( ! empty( $include ) ) {
 
