@@ -185,6 +185,7 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 			foreach ( $nav_items as $key => $item ) {
 				$nav[ $key ]['title']    = $item['text'];
 				$nav[ $key ]['position'] = $item['position'];
+				$nav[ $key ]['slug']     = ! empty( $item['slug'] ) ? $item['slug'] : $key;
 			}
 		}
 
