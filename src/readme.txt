@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.3.2
 Requires PHP: 5.6.20
-Stable tag: 2.4.80
+Stable tag: 2.4.90
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
