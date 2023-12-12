@@ -935,7 +935,7 @@ function bb_set_default_member_type_to_activate_user_on_admin( $user_id, $member
 /**
  * Generate profile slug registration and activation.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.4.90
  *
  * @param int $user_id ID of user.
  *

@@ -682,6 +682,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			foreach ( $tabs_items as $key => $item ) {
 				$tabs[ $key ]['title']    = $item['text'];
 				$tabs[ $key ]['position'] = $item['position'];
+				$tabs[ $key ]['slug']     = $item['slug'];
 				$tabs[ $key ]['count']    = bp_core_number_format( $item['count'] );
 			}
 		}

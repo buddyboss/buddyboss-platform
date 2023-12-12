@@ -2,21 +2,21 @@
 /**
  * Deprecated functions.
  *
- * @deprecated BuddyBoss [BBVERSION]
+ * @deprecated BuddyBoss 2.4.90
  */
 
 /**
  * Background job to repair user profile slug.
  *
  * @since BuddyBoss 2.3.3
- * @deprecated BuddyBoss [BBVERSION]
+ * @deprecated BuddyBoss 2.4.90
  *
  * @param int $paged Number of page.
  *
  * @return void
  */
 function bb_repair_member_unique_slug( $paged = 1 ) {
-	_deprecated_function( __FUNCTION__, '[BBVERSION]' );
+	_deprecated_function( __FUNCTION__, '2.4.90' );
 
 	global $bp_background_updater;
 
@@ -62,7 +62,7 @@ function bb_repair_member_unique_slug( $paged = 1 ) {
  * Delete duplicate bb_profile_slug_ key from the usermeta table.
  *
  * @since BuddyBoss 2.3.3
- * @deprecated BuddyBoss [BBVERSION]
+ * @deprecated BuddyBoss 2.4.90
  *
  * @param array $user_ids Array of user ID.
  * @param int   $paged    Number of page.
@@ -70,7 +70,7 @@ function bb_repair_member_unique_slug( $paged = 1 ) {
  * @return void
  */
 function bb_remove_duplicate_member_slug( $user_ids, $paged ) {
-	_deprecated_function( __FUNCTION__, '[BBVERSION]' );
+	_deprecated_function( __FUNCTION__, '2.4.90' );
 
 	global $wpdb;
 
@@ -95,12 +95,12 @@ function bb_remove_duplicate_member_slug( $user_ids, $paged ) {
  * This function will work as migration process which will repair member profile links.
  *
  * @since BuddyBoss 2.3.41
- * @deprecated BuddyBoss [BBVERSION]
+ * @deprecated BuddyBoss 2.4.90
  *
  * @return array|void
  */
 function bb_generate_member_profile_links_on_update() {
-	_deprecated_function( __FUNCTION__, '[BBVERSION]' );
+	_deprecated_function( __FUNCTION__, '2.4.90' );
 
 	if ( ! bp_is_active( 'members' ) ) {
 		return;
