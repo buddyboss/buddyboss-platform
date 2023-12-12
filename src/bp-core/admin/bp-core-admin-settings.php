@@ -3554,3 +3554,36 @@ function bb_reactions_settings_callback_reaction_mode() {
 		}
 	}
 }
+
+function bb_reactions_settings_callback_reactions_button() {
+
+	$button_settings = bb_reaction_button_options();
+
+	$button_icon = isset( $button_settings['icon'] ) ? $button_settings['icon'] : 'thumbs-up';
+	$button_text = isset( $button_settings['text'] ) ? $button_settings['text'] : esc_html__( 'Like', 'buddyboss' );
+	?>
+	<label for="bb_reactions_button">
+		<button type="button" class="button" id="bb-reaction-button-chooser">
+			<i class="bb-icon-<?php echo esc_attr( $button_icon ); ?>"></i>
+		</button>
+
+		<input
+			type="hidden"
+			name="bb_reaction_button[icon]"
+			id="bb-reaction-button-hidden-field"
+			value="<?php echo esc_attr( $button_icon ); ?>"
+		/>
+		<input name="bb_reaction_button[text]"
+			id="bb_reaction_button_label"
+			type="text"
+			max-length="8"
+			value="<?php echo esc_attr( $button_text ); ?>"
+			placeholder="<?php esc_attr_e( 'Like', 'buddyboss' ); ?>"
+		/>
+
+		<p>
+			<?php esc_html_e( 'Change the icon and text used within the Reactions button. When using “Emotions”, clicking on the button will react with the first emotion from the list of options.', 'buddyboss' ); ?>
+		</p>
+	</label>
+	<?php
+}

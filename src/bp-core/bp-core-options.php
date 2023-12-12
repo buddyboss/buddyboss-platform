@@ -180,6 +180,12 @@ function bp_get_default_options() {
 			)
 		),
 		'bb_reaction_mode'                           => 'likes',
+		'bb_reaction_button'                         => array(
+			array(
+				'text' => esc_html__( 'Like', 'buddyboss' ),
+				'icon' => 'thumbs-up',
+			)
+		),
 	);
 
 	/**
@@ -2630,4 +2636,13 @@ function bb_get_reaction_mode( $default = 'likes' ) {
 	}
 
 	return apply_filters( 'bb_get_reaction_mode', $mode );
+}
+
+function bb_reaction_button_options( $key = '' ) {
+	$button_settings = (array) bp_get_option( 'bb_reactions_button', array() );
+	if ( empty( $key ) ) {
+		return $button_settings;
+	}
+
+	return $button_settings[ $key ];
 }

@@ -9176,6 +9176,16 @@ function bb_reactions_get_settings_fields() {
 			'sanitize_callback' => 'sanitize_text_field',
 			'args'              => array(),
 		),
+
+		'bb_reaction_emotions' => array(
+		),
+
+		'bb_reactions_button' => array(
+			'title'             => esc_html__( 'Reactions button', 'buddyboss' ),
+			'callback'          => 'bb_reactions_settings_callback_reactions_button',
+			'sanitize_callback' => 'sanitize_text_field',
+			'args'              => array(),
+		),
 	);
 
 	return (array) apply_filters( 'bb_reactions_get_settings_fields', $fields );
