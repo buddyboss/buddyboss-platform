@@ -14,7 +14,9 @@ defined( 'ABSPATH' ) || exit;
 add_action( 'wp_ajax_bb_update_reaction', 'bb_update_activity_reaction_ajax_callback' );
 add_action( 'wp_ajax_bb_remove_reaction', 'bb_remove_activity_reaction_ajax_callback' );
 add_action( 'wp_ajax_bb_get_reactions', 'bb_get_activity_reaction_ajax_callback' );
+add_action( 'wp_ajax_nopriv_bb_get_reactions', 'bb_get_activity_reaction_ajax_callback' );
 add_action( 'wp_ajax_bb_user_reactions', 'bb_get_user_reactions_ajax_callback' );
+add_action( 'wp_ajax_nopriv_bb_user_reactions', 'bb_get_user_reactions_ajax_callback' );
 
 add_action( 'bp_activity_deleted_activities', 'bb_activity_remove_activity_post_reactions', 10, 1 );
 add_action( 'bp_activity_action_delete_activity', 'bb_activity_remove_activity_post_reactions', 10, 1 );
