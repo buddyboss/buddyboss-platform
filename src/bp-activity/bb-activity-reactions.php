@@ -281,6 +281,7 @@ function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', 
 		return false;
 	}
 
+	// Sort by total reactions.
 	usort(
 		$reaction_data,
 		function( $a, $b ) {
@@ -301,6 +302,19 @@ function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', 
 		}
 
 		$reaction_meta = get_post_meta( $reaction->reaction_id );
+
+		// Condition to avoid emotions/like reaction based on active mode.
+		if (
+			(
+				! bb_is_reaction_emotions_enabled() &&
+				isset( $reaction_meta['is_emotion'] )
+			) || (
+				bb_is_reaction_emotions_enabled() &&
+				isset( $reaction_meta['is_like'] )
+			)
+		) {
+			continue;
+		}
 
 		// If emotion is not active then skip this reaction.
 		if (
@@ -988,6 +1002,7 @@ function bb_activity_get_user_reaction_by_item( $item_id, $item_type = 'activity
 			'item_id'   => $item_id,
 			'user_id'   => $user_id,
 			'fields'    => 'reaction_id',
+			'reaction_id' => bb_is_reaction_emotions_enabled() ? 0 : bb_load_reaction()->bb_reactions_get_like_reaction_id(),
 		)
 	);
 
