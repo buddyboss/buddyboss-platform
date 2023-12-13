@@ -182,7 +182,7 @@ function bp_get_default_options() {
 		'bb_reaction_mode'                           => 'likes',
 		'bb_reaction_button'                         => array(
 			array(
-				'text' => esc_html__( 'Like', 'buddyboss' ),
+				'text' => '',
 				'icon' => 'thumbs-up',
 			)
 		),

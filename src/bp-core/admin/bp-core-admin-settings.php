@@ -3555,25 +3555,31 @@ function bb_reactions_settings_callback_reaction_mode() {
 	}
 }
 
+/**
+ * Add reactions button settings.
+ *
+ * @return void
+ */
 function bb_reactions_settings_callback_reactions_button() {
 
 	$button_settings = bb_reaction_button_options();
+	$button_icon     = isset( $button_settings['icon'] ) ? $button_settings['icon'] : 'thumbs-up';
+	$button_text     = isset( $button_settings['text'] ) ? trim( $button_settings['text'] ) : '';
 
-	$button_icon = isset( $button_settings['icon'] ) ? $button_settings['icon'] : 'thumbs-up';
-	$button_text = isset( $button_settings['text'] ) ? $button_settings['text'] : esc_html__( 'Like', 'buddyboss' );
 	?>
 	<label for="bb_reactions_button">
 		<button type="button" class="button" id="bb-reaction-button-chooser">
 			<i class="bb-icon-<?php echo esc_attr( $button_icon ); ?>"></i>
 		</button>
-
 		<input
 			type="hidden"
-			name="bb_reaction_button[icon]"
+			name="bb_reactions_button[icon]"
 			id="bb-reaction-button-hidden-field"
 			value="<?php echo esc_attr( $button_icon ); ?>"
 		/>
-		<input name="bb_reaction_button[text]"
+
+		<input
+			name="bb_reactions_button[text]"
 			id="bb_reaction_button_label"
 			type="text"
 			max-length="8"

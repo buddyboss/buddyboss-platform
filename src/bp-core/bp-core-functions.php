@@ -9183,7 +9183,6 @@ function bb_reactions_get_settings_fields() {
 		'bb_reactions_button' => array(
 			'title'             => esc_html__( 'Reactions button', 'buddyboss' ),
 			'callback'          => 'bb_reactions_settings_callback_reactions_button',
-			'sanitize_callback' => 'sanitize_text_field',
 			'args'              => array(),
 		),
 	);
