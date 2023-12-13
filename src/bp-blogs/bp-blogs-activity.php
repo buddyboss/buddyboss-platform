@@ -126,7 +126,18 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 		 *
 		 * @param array $value Array of post types to track.
 		 */
-		$bp_allowed_cpt           = bb_feed_post_types();
+
+		// Allow tutor lesson comment tracking.
+		if ( function_exists( 'bb_feed_not_allowed_tutorlms_post_types' ) ) {
+			remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
+		}
+
+		$bp_allowed_cpt = bb_feed_post_types();
+
+		if ( function_exists( 'bb_feed_not_allowed_tutorlms_post_types' ) ) {
+			add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
+		}
+
 		$comment_post_types       = apply_filters( 'bp_blogs_record_comment_post_types', $bp_allowed_cpt );
 		$comment_post_types_array = array_flip( $comment_post_types );
 
