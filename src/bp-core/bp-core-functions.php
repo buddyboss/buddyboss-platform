@@ -9092,7 +9092,7 @@ function bb_redirect_after_action( $redirect_to, $user_id = 0, $action = 'login'
 /**
  * Remove action which used in thord party class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.00
  *
  * @param string $action Action name.
  * @param string $class  Class name.

@@ -1399,7 +1399,7 @@ function bp_is_post_type_feed_enable( $post_type, $default = false ) {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.00
 	 * Introduce new params $post_type and $default.
 	 *
 	 * @param bool   $value     Whether post type feed enabled or not.

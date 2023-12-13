@@ -3637,7 +3637,7 @@ function bb_member_type_redirection_metabox( $post ) {
 /**
  * Function to check any CPT enabled or disabled. If enabled then its set blog component active.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.00
  *
  * @return void
  */
