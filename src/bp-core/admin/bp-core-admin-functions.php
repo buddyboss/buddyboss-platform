@@ -3660,7 +3660,7 @@ function bb_cpt_feed_enabled_disabled() {
 	}
 
 	foreach ( $post_types as $cpt ) {
-		$enable_blog_feeds = isset( $_POST["bp-feed-custom-post-type-$cpt"] );
+		$enable_blog_feeds = apply_filters( 'bb_enable_blog_feed', isset( $_POST["bp-feed-custom-post-type-$cpt"] ), $cpt );
 
 		if ( $enable_blog_feeds ) {
 			$is_blog_component_active = true;
