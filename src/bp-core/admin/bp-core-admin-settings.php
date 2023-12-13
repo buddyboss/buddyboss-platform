@@ -3567,7 +3567,7 @@ function bb_reactions_settings_callback_reactions_button() {
 	$button_text     = isset( $button_settings['text'] ) ? trim( $button_settings['text'] ) : '';
 
 	?>
-	<label for="bb_reactions_button">
+	<label for="bb_reactions_button" class="bb-reaction-button-label">
 		<button type="button" class="button" id="bb-reaction-button-chooser">
 			<i class="bb-icon-<?php echo esc_attr( $button_icon ); ?>"></i>
 		</button>
@@ -3580,12 +3580,15 @@ function bb_reactions_settings_callback_reactions_button() {
 
 		<input
 			name="bb_reactions_button[text]"
-			id="bb_reaction_button_label"
+			id="bb-reaction-button-text"
 			type="text"
 			max-length="8"
 			value="<?php echo esc_attr( $button_text ); ?>"
 			placeholder="<?php esc_attr_e( 'Like', 'buddyboss' ); ?>"
 		/>
+		<span class="bb-reaction-button-text-limit">
+			<span><?php echo strlen( $button_text ); ?></span>/8
+		</span>
 
 		<p>
 			<?php esc_html_e( 'Change the icon and text used within the Reactions button. When using “Emotions”, clicking on the button will react with the first emotion from the list of options.', 'buddyboss' ); ?>
