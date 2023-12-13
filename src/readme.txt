@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.5.00 =
+* New Feature! - TutorLMS settings added to BuddyBoss integration page for adding courses to groups and choosing course activity posts into group feeds depending in user interactions
+
 = 2.4.90 =
 * Enhancement: Core - Priority profile slug performance optimized
 * Bug: Activity - Link previews disappeared after editing the activity in the backend activity page
