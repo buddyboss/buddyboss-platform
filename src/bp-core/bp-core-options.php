@@ -1413,9 +1413,15 @@ function bp_is_post_type_feed_enable( $post_type, $default = false ) {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param bool $value Whether post type feed enabled or not.
+	 * @since BuddyBoss 2.5.00
+	 * Introduce new params $post_type and $default.
+	 *
+	 * @param bool   $value     Whether post type feed enabled or not.
+	 * @param string $post_type Post type.
+	 * @param bool   $default   Optional. Fallback value if not found in the database.
+	 *                          Default: false.
 	 */
-	return (bool) apply_filters( 'bp_is_post_type_feed_enable', (bool) bp_get_option( bb_post_type_feed_option_name( $post_type ), $default ) );
+	return (bool) apply_filters( 'bp_is_post_type_feed_enable', (bool) bp_get_option( bb_post_type_feed_option_name( $post_type ), $default ), $post_type, $default );
 }
 
 /**

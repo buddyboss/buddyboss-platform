@@ -9099,6 +9099,37 @@ function bb_redirect_after_action( $redirect_to, $user_id = 0, $action = 'login'
 }
 
 /**
+ * Remove action which used in thord party class.
+ *
+ * @since BuddyBoss 2.5.00
+ *
+ * @param string $action Action name.
+ * @param string $class  Class name.
+ * @param string $method Method name.
+ */
+function bb_remove_class_action( $action, $class, $method ) {
+	global $wp_filter;
+	if ( isset( $wp_filter[ $action ] ) ) {
+		$len = strlen( $method );
+		foreach ( $wp_filter[ $action ] as $pri => $actions ) {
+			foreach ( $actions as $name => $def ) {
+				if ( substr( $name, - $len ) === $method ) {
+					if ( is_array( $def['function'] ) && ! empty( $def['function'] ) ) {
+						if ( get_class( $def['function'][0] ) === $class ) {
+							if ( is_object( $wp_filter[ $action ] ) && isset( $wp_filter[ $action ]->callbacks ) ) {
+								unset( $wp_filter[ $action ]->callbacks[ $pri ][ $name ] );
+							} else {
+								unset( $wp_filter[ $action ][ $pri ][ $name ] );
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+/**
  * Function to check WP_Filesystem object available or not.
  *
  * @since BuddyBoss [BBVERSION]
@@ -9520,7 +9551,7 @@ function bb_delete_default_group_png_avatar( $item_ids = array(), $is_delete_dir
 	}
 }
 
-/** 
+/**
  * Get the Reactions settings sections.
  *
  * @return array
