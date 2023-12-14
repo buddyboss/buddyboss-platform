@@ -9108,9 +9108,9 @@ function bb_reactions_get_settings_sections() {
 			'notice'            => (
 				sprintf(
 					wp_kses_post(
-						__( 'When switching reactions mode, use our %s to map existing reactions to the new options.', 'buddyboss' )
+						__( 'You can use our %s to convert existing reactions to a different type of reaction.', 'buddyboss' )
 					),
-					'<a href="#" target="_blank" >' . esc_html__( 'migration wizard', 'buddyboss' ) . '</a>'
+					'<a class="footer-reaction-migration-wizard" href="#!">' . esc_html__( 'migration wizard', 'buddyboss' ) . '</a>'
 				)
 			),
 		),
