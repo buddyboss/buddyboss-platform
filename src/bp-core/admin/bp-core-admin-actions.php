@@ -429,10 +429,19 @@ function bb_core_settings_saved_notice() {
 			isset( $_GET['added'] )
 		)
 	) {
+		$setting_message = __( 'Settings saved successfully.', 'buddyboss' );
+		if (
+			isset( $_GET['updated'] ) &&
+			'emotion_deleted' === $_GET['updated']
+		) {
+			$setting_message = get_transient( $_GET['updated'] );
+			delete_transient( $_GET['updated'] );
+		}
+
 		add_settings_error(
 			'general',
 			'settings_updated',
-			__( 'Settings saved successfully.', 'buddyboss' ),
+			$setting_message,
 			'updated'
 		);
 	}
