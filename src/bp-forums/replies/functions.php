@@ -2082,7 +2082,7 @@ function bbp_get_replies_per_rss_page( $default = 25 ) {
 function bbp_reply_content_autoembed() {
 	global $wp_embed;
 
-	if ( bbp_use_autoembed() && is_a( $wp_embed, 'WP_Embed' ) ) {
+	if ( is_a( $wp_embed, 'WP_Embed' ) ) {
 		// WordPress is not able to convert URLs to oembed if URL is in paragraph.
 		add_filter( 'bbp_get_reply_content', 'bbp_reply_content_autoembed_paragraph', 99999, 1 );
 	}
