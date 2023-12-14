@@ -3509,19 +3509,28 @@ function bb_reactions_settings_callback_all_reactions() {
 function bb_reactions_settings_callback_reaction_mode() {
 
 	$reactions_modes = array(
-		array(
+		'likes' => array(
 			'label'      => esc_html__( 'Likes', 'buddyboss' ),
 			'name'       => 'bb_reaction_mode',
 			'value'      => 'likes',
 			'id'         => 'bb_reaction_mode_likes',
 			'is_checked' => 'likes' === bb_get_reaction_mode(),
 			'notice'     => esc_html__( 'A simple "Like" button will show for members to express their appreciation or acknowledgement.', 'buddyboss' ),
-		)
+		),
+		'emotions' => array(
+			'label'      => esc_html__( 'Emotions', 'buddyboss-pro' ),
+			'name'       => '',
+			'value'      => '',
+			'id'         => '',
+			'is_checked' => false,
+			'notice'     => '',
+		),
 	);
 
 	$reactions_modes = apply_filters( 'bb_setting_reaction_mode_args', $reactions_modes );
 
 	if ( ! empty( $reactions_modes ) && is_array( $reactions_modes ) ) {
+		$notice_text = '';
 		foreach ( $reactions_modes as $reaction_mode ) {
 			?>
 			<label for="<?php echo $reaction_mode['id']; ?>">
@@ -3536,13 +3545,10 @@ function bb_reactions_settings_callback_reaction_mode() {
 				<?php echo $reaction_mode['label']; ?>
 			</label>
 			<?php
-		}
 
-		$notice_text = '';
-		if ( bb_get_reaction_mode() === 'likes' && ! empty( $reactions_modes[0]['notice'] ) ) {
-			$notice_text = $reactions_modes[0]['notice'];
-		} elseif ( bb_get_reaction_mode() === 'emotions' && !empty( $reactions_modes[1]['notice'] ) ) {
-			$notice_text = $reactions_modes[1]['notice'];
+			if ( ! empty( $reaction_mode['is_checked'] ) ) {
+				$notice_text = $reaction_mode['notice'];
+			}
 		}
 
 		if ( ! empty( $notice_text ) ) {

@@ -3397,6 +3397,14 @@ function bb_get_pro_label_notice() {
 			esc_html__( 'BuddyBoss Platform Pro 1.2.0', 'buddyboss' ),
 			esc_html__( 'to unlock', 'buddyboss' )
 		);
+	} elseif( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '2.4.0', '<=' ) ) {
+		// TODO: Update version condition above before release.
+		$bb_pro_notice = sprintf(
+			'<br/><span class="bb-head-notice"> %1$s <strong>%2$s</strong> %3$s</span>',
+			esc_html__( 'Update', 'buddyboss' ),
+			esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ),
+			esc_html__( 'to unlock', 'buddyboss' )
+		);
 	} else {
 		$bb_pro_notice = sprintf(
 			'<br/><span class="bb-head-notice"> %1$s <a target="_blank" href="https://www.buddyboss.com/platform/">%2$s</a> %3$s</span>',
@@ -3429,6 +3437,11 @@ function bb_get_pro_fields_class() {
 	}
 
 	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.9.1', '<=' ) ) {
+		$pro_class = 'bb-pro-inactive';
+	}
+
+	// TODO: Update version condition below before release.
+	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '2.4.0', '<=' ) ) {
 		$pro_class = 'bb-pro-inactive';
 	}
 
