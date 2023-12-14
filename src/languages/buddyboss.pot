@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.4.90\n"
+"Project-Id-Version: BuddyBoss Platform 2.5.00\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-12-12 11:49:43+00:00\n"
+"POT-Creation-Date: 2023-12-14 05:02:34+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -592,7 +592,7 @@ msgid "Cancel"
 msgstr ""
 
 #: bp-activity/bp-activity-adminbar.php:46
-#: bp-core/admin/settings/bp-admin-setting-activity.php:103
+#: bp-core/admin/settings/bp-admin-setting-activity.php:70
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1616
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1620
 msgid "Edit Activity"
@@ -1281,7 +1281,7 @@ msgid "Unfollow"
 msgstr ""
 
 #: bp-activity/bp-activity-template.php:4182
-#: bp-core/admin/settings/bp-admin-setting-activity.php:127
+#: bp-core/admin/settings/bp-admin-setting-activity.php:94
 #: bp-members/bp-members-admin.php:143
 #: bp-templates/bp-nouveau/includes/customizer.php:327
 msgid "Follow"
@@ -2785,43 +2785,43 @@ msgstr ""
 msgid "%s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:137
+#: bp-blogs/bp-blogs-activity.php:148
 msgid "New post comment posted"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:139
+#: bp-blogs/bp-blogs-activity.php:150
 msgid "Comments"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:162 cli/components/activity.php:822
+#: bp-blogs/bp-blogs-activity.php:173 cli/components/activity.php:822
 msgid "%1$s created the site %2$s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:244 bp-blogs/bp-blogs-activity.php:1620
+#: bp-blogs/bp-blogs-activity.php:255 bp-blogs/bp-blogs-activity.php:1631
 msgid "(no title)"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:268 bp-blogs/bp-blogs-activity.php:1672
+#: bp-blogs/bp-blogs-activity.php:279 bp-blogs/bp-blogs-activity.php:1683
 msgid "%1$s posted a new post, on the site %2$s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:270 bp-blogs/bp-blogs-activity.php:1674
+#: bp-blogs/bp-blogs-activity.php:281 bp-blogs/bp-blogs-activity.php:1685
 msgid "%1$s posted a new post."
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:394
+#: bp-blogs/bp-blogs-activity.php:405
 msgid "%1$s commented on the post, %2$s, on the site %3$s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:396 cli/components/activity.php:869
+#: bp-blogs/bp-blogs-activity.php:407 cli/components/activity.php:869
 msgid "%1$s commented on the post, %2$s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:1665
+#: bp-blogs/bp-blogs-activity.php:1676
 msgid "%1$s posted a new %2$s, on the site %3$s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:1667
+#: bp-blogs/bp-blogs-activity.php:1678
 msgid "%1$s posted a new %2$s."
 msgstr ""
 
@@ -4297,7 +4297,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:438
-#: bp-core/admin/settings/bp-admin-setting-activity.php:175
+#: bp-core/admin/settings/bp-admin-setting-activity.php:142
 msgid "WordPress"
 msgstr ""
 
@@ -5524,59 +5524,59 @@ msgstr ""
 msgid "Recalculating the total group members count for each group &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:100
+#: bp-core/admin/settings/bp-admin-setting-activity.php:67
 #: bp-core/admin/settings/bp-admin-setting-general.php:150
 msgid "Activity Settings"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:104
+#: bp-core/admin/settings/bp-admin-setting-activity.php:71
 msgid "Edit Activity Time Limit"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:109
+#: bp-core/admin/settings/bp-admin-setting-activity.php:76
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1974
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1978
 msgid "Edit Comment"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:110
+#: bp-core/admin/settings/bp-admin-setting-activity.php:77
 msgid "Edit Comment Time Limit"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:115
+#: bp-core/admin/settings/bp-admin-setting-activity.php:82
 msgid "Activity auto-refresh"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:118
+#: bp-core/admin/settings/bp-admin-setting-activity.php:85
 msgid "Activity auto-load"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:121
+#: bp-core/admin/settings/bp-admin-setting-activity.php:88
 msgid "Activity tabs"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:124
+#: bp-core/admin/settings/bp-admin-setting-activity.php:91
 #: bp-templates/bp-nouveau/buddypress/activity/entry.php:37
 msgid "Pinned Post"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:130
+#: bp-core/admin/settings/bp-admin-setting-activity.php:97
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:982
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:139
 #: bp-templates/bp-nouveau/includes/activity/functions.php:327
 msgid "Likes"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:133
+#: bp-core/admin/settings/bp-admin-setting-activity.php:100
 #: bp-forums/admin/settings.php:172
 msgid "Link Previews"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:136
+#: bp-core/admin/settings/bp-admin-setting-activity.php:103
 msgid "Relevant Activity"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:143
+#: bp-core/admin/settings/bp-admin-setting-activity.php:110
 msgid "Posts in Activity Feeds"
 msgstr ""
 
@@ -5584,7 +5584,7 @@ msgstr ""
 msgid "BuddyBoss Platform"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:189
+#: bp-core/admin/settings/bp-admin-setting-activity.php:156
 msgid "Custom Post Types"
 msgstr ""
 
