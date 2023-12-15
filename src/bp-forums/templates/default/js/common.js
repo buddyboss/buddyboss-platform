@@ -138,6 +138,14 @@ jQuery( document ).ready(
 			jQuery( '#whats-new-attachments .bb-url-scrapper-container' ).remove();
 		} );
 
+		// Implement support for BFCache.
+		window.addEventListener( 'unload', function () {
+			var form = jQuery( '.bbp-topic-form form' );
+			if ( form.length > 0 ) {
+				form[ 0 ].reset();
+			}
+		} );
+
 		var topicReplyButton = jQuery( 'body .bbp-topic-reply-link' );
 		if ( topicReplyButton.length ) {
 			topicReplyButton.click(

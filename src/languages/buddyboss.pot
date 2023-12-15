@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.5.00\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-12-14 04:58:43+00:00\n"
+"POT-Creation-Date: 2023-12-15 09:45:28+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3594,7 +3594,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:1744
 #: bp-members/bp-members-admin.php:33 bp-members/bp-members-admin.php:99
 #: bp-members/bp-members-functions.php:3118
-#: bp-members/bp-members-functions.php:3643
+#: bp-members/bp-members-functions.php:3645
 #: bp-members/classes/class-bp-members-admin.php:990
 #: bp-members/classes/class-bp-members-admin.php:2821
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php:31
@@ -3623,7 +3623,7 @@ msgid "e.g. Student"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1796
-#: bp-members/bp-members-functions.php:3646
+#: bp-members/bp-members-functions.php:3648
 msgid "Members Directory"
 msgstr ""
 
@@ -3719,7 +3719,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2130
-#: bp-groups/bp-groups-admin.php:2313 bp-members/bp-members-functions.php:3898
+#: bp-groups/bp-groups-admin.php:2313 bp-members/bp-members-functions.php:3900
 msgid "Copy to clipboard"
 msgstr ""
 
@@ -11018,7 +11018,7 @@ msgid "Field"
 msgstr ""
 
 #: bp-core/profile-search/bps-admin.php:84 bp-groups/bp-groups-admin.php:2329
-#: bp-members/bp-members-functions.php:3644
+#: bp-members/bp-members-functions.php:3646
 msgid "Label"
 msgstr ""
 
@@ -16823,7 +16823,7 @@ msgstr ""
 #: bp-groups/bp-groups-functions.php:4392
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:375
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:391
-#: bp-members/bp-members-functions.php:3920
+#: bp-members/bp-members-functions.php:3922
 #: bp-members/classes/class-bp-members-admin.php:972
 #: bp-moderation/bp-moderation-filters.php:921
 #: bp-moderation/classes/class-bp-moderation-list-table.php:235
@@ -19214,14 +19214,14 @@ msgid "Groups Filter"
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:2357 bp-groups/bp-groups-admin.php:2368
-#: bp-members/bp-members-functions.php:3672
-#: bp-members/bp-members-functions.php:3683
+#: bp-members/bp-members-functions.php:3674
+#: bp-members/bp-members-functions.php:3685
 msgid "Show"
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:2359 bp-groups/bp-groups-admin.php:2366
-#: bp-members/bp-members-functions.php:3674
-#: bp-members/bp-members-functions.php:3681
+#: bp-members/bp-members-functions.php:3676
+#: bp-members/bp-members-functions.php:3683
 #: bp-moderation/classes/class-bp-moderation-list-table.php:415
 #: bp-moderation/classes/class-bp-moderation-list-table.php:419
 #: bp-templates/bp-nouveau/includes/customizer-controls.php:149
@@ -19343,7 +19343,7 @@ msgid "Dropdown Order"
 msgstr ""
 
 #: bp-groups/bp-groups-functions.php:4997
-#: bp-members/bp-members-functions.php:5242
+#: bp-members/bp-members-functions.php:5244
 #: bp-xprofile/classes/class-bp-xprofile-field-type-number.php:28
 msgid "Number"
 msgstr ""
@@ -23907,7 +23907,7 @@ msgid "Edit Profile Type"
 msgstr ""
 
 #: bp-members/bp-members-functions.php:3112
-#: bp-members/bp-members-functions.php:3647
+#: bp-members/bp-members-functions.php:3649
 #: bp-members/classes/class-bp-members-admin.php:2268
 #: bp-members/classes/class-bp-members-admin.php:2290
 msgid "Users"
@@ -23925,50 +23925,50 @@ msgstr ""
 msgid "Search Profile Types"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3645
+#: bp-members/bp-members-functions.php:3647
 msgid "Members Filter"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3893
+#: bp-members/bp-members-functions.php:3895
 msgid ""
 "You have {total_users} members with this profile type, are you sure you "
 "would like to trash it?"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3894
+#: bp-members/bp-members-functions.php:3896
 msgid ""
 "You have {total_users} members with this profile type, are you sure you "
 "would like to delete it?"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3895
+#: bp-members/bp-members-functions.php:3897
 msgid ""
 "You have members with these profile types, are you sure you would like to "
 "trash it?"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3896
+#: bp-members/bp-members-functions.php:3898
 msgid ""
 "You have members with these profile types, are you sure you would like to "
 "delete it?"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3897
+#: bp-members/bp-members-functions.php:3899
 msgid "Copied"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3959
-#: bp-members/bp-members-functions.php:3967
-#: bp-members/bp-members-functions.php:3975
-#: bp-members/bp-members-functions.php:3979
+#: bp-members/bp-members-functions.php:3961
+#: bp-members/bp-members-functions.php:3969
+#: bp-members/bp-members-functions.php:3977
+#: bp-members/bp-members-functions.php:3981
 msgid "their"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3971
+#: bp-members/bp-members-functions.php:3973
 msgid "his"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3973
+#: bp-members/bp-members-functions.php:3975
 msgid "her"
 msgstr ""
 
