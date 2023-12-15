@@ -882,23 +882,24 @@ window.bp = window.bp || {};
 			// Reaction actions.
 			$( document ).on(
 				'mouseover',
-				'a.button.fav, .button.unfav, a.button.has-like, a.button.has-emotion',
+				'a.button.fav, .button.reaction, a.button.has-like, a.button.has-emotion',
 				bp.Nouveau,
 				this.showReactions.bind( this )
 			).on(
 				'mouseout',
-				'a.button.fav, .button.unfav, a.button.has-like, a.button.has-emotion',
+				'a.button.fav, .button.reaction, a.button.has-like, a.button.has-emotion',
 				function() {
 					clearTimeout( window.reactionHoverTimeout );
 				}
 			);
+
 			$( document ).on( 'mouseleave', '.activity-meta .ac-emotions_list, .button.fav, .button.unfav, .button.has-like, .button.has-emotion', bp.Nouveau, this.hideReactions.bind( this ) );
 			$( document ).on( 'click', '.activity-state-popup_overlay', bp.Nouveau, this.closeActivityState.bind( this ) );
 
 			$( document ).on( 'click', '.ac-emotions_list .ac-emotion_btn', this.updateReaction );
-			$( document ).on( 'click', '.activity-meta a.button.fav', this.updateReaction );
+			$( document ).on( 'click', '.activity-meta a.button.fav, .activity-meta a.button.reaction', this.updateReaction );
 
-			$( document ).on( 'click', '.activity-meta .button.has-emotion', this.removeReaction );
+			$( document ).on( 'click', '.activity-meta .button.has-emotion, .activity-meta .button.has-like', this.removeReaction );
 			$( document ).on( 'click', '.activity-state-reactions', this.showActivityReactions );
 			$( document ).on( 'click', '.activity-state-popup .activity-state-popup_tab_panel a', this.ReactionStatePopupTab );
 
@@ -1039,9 +1040,9 @@ window.bp = window.bp || {};
 						// Update react button.
 						if ( response.data.reaction_button ) {
 							if ( is_activity ) {
-								main_el.find( '.activity-meta a.bp-like-button.has-emotion:first' ).replaceWith( response.data.reaction_button );
+								main_el.find( '.activity-meta a.bp-like-button.has-reaction:first' ).replaceWith( response.data.reaction_button );
 							} else {
-								main_el.find( '#acomment-display-' + item_id + ' .activity-meta a.bp-like-button.has-emotion' ).replaceWith( response.data.reaction_button );
+								main_el.find( '#acomment-display-' + item_id + ' .activity-meta a.bp-like-button.has-reaction' ).replaceWith( response.data.reaction_button );
 							}
 						}
 
