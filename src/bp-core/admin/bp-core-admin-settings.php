@@ -3518,7 +3518,7 @@ function bb_reactions_settings_callback_reaction_mode() {
 			'notice'     => esc_html__( 'A simple "Like" button will show for members to express their appreciation or acknowledgement.', 'buddyboss' ),
 		),
 		'emotions' => array(
-			'label'      => esc_html__( 'Emotions', 'buddyboss-pro' ),
+			'label'      => esc_html__( 'Emotions', 'buddyboss' ),
 			'name'       => '',
 			'value'      => '',
 			'id'         => '',
