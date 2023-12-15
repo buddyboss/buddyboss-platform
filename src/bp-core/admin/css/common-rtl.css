@@ -42,6 +42,7 @@ TABLE OF CONTENTS:
 16.0 Moderation
 17.0 Domain restriction
 18.0 Redirection Settings
+19.0 Reactions Settings
 ------------------------------------------------------------------------------*/
 /*------------------------------------------------------------------------------
  * 1.0 Welcome Screen
@@ -3747,4 +3748,57 @@ table.moderations .column-member img {
 .custom-dropdown-select2 .select2-results__options li.select2-results__option--highlighted {
   background-color: rgba(170, 170, 170, 0.5);
   color: inherit;
+}
+
+/*------------------------------------------------------------------------------
+ * 19.0 Reactions Settings
+ *----------------------------------------------------------------------------*/
+.section-bp_reaction_settings_section > h2 {
+  width: 100%;
+}
+
+.section-bp_reaction_settings_section .bb-reactions-setting-field {
+  margin-top: 8px;
+}
+
+.section-bp_reaction_settings_section label[for="bb_reaction_mode_likes"] {
+  margin-left: 15px;
+}
+
+.section-bp_reaction_settings_section .bb-reaction-mode-description {
+  margin-top: 10px;
+}
+
+.section-bp_reaction_settings_section .bb-reaction-button-label .bb-reaction-button-text-limit {
+  display: none;
+}
+
+.section-bp_reaction_settings_section .bb-reaction-button-label .bb-reaction-button-text-limit.active {
+  display: inline-block;
+}
+
+.section-bp_reaction_settings_section .bb-reaction-button-label #bb-reaction-button-chooser {
+  padding: 3px;
+  border-color: #8c8f94;
+  vertical-align: middle;
+  border-radius: 4px;
+}
+
+.section-bp_reaction_settings_section .bb-reaction-button-label #bb-reaction-button-chooser > i {
+  color: #9b9f9b;
+  font-size: 24px;
+  display: block;
+  line-height: 1;
+}
+
+.section-bp_reaction_settings_section .bb-reaction-button-label #bb-reaction-button-chooser > i:before {
+  margin: 0;
+}
+
+.section-bp_reaction_settings_section .bb-reaction-button-label input#bb-reaction-button-text {
+  color: #2c3338;
+  font-size: 14px;
+  vertical-align: middle;
+  line-height: 31px;
+  border-radius: 4px;
 }
