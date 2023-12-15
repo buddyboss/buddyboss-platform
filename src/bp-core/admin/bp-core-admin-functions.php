@@ -3386,11 +3386,11 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
  *
  * @return string
  */
-function bb_get_pro_label_notice( $type = '' ) {
-	static $bb_pro_notice = '';
+function bb_get_pro_label_notice( $type = 'default' ) {
+	static $retval = array();
 
-	if ( '' !== $bb_pro_notice ) {
-		return $bb_pro_notice;
+	if ( isset( $retval[ $type ] ) ) {
+		return $retval[ $type ];
 	}
 
 	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.9.1', '<=' ) ) {
@@ -3421,6 +3421,8 @@ function bb_get_pro_label_notice( $type = '' ) {
 		);
 	}
 
+	$retval[ $type ] = $bb_pro_notice;
+
 	return $bb_pro_notice;
 }
 
@@ -3434,11 +3436,11 @@ function bb_get_pro_label_notice( $type = '' ) {
  *
  * @return string
  */
-function bb_get_pro_fields_class( $type = '') {
-	static $pro_class = '';
+function bb_get_pro_fields_class( $type = 'default' ) {
+	static $retval = array();
 
-	if ( '' !== $pro_class ) {
-		return $pro_class;
+	if ( isset( $retval[ $type ] ) ) {
+		return $retval[ $type ];
 	}
 
 	$pro_class = 'bb-pro-inactive';
@@ -3459,6 +3461,8 @@ function bb_get_pro_fields_class( $type = '') {
 	) {
 		$pro_class = 'bb-pro-inactive';
 	}
+
+	$retval[ $type ] = $pro_class;
 
 	return $pro_class;
 }
