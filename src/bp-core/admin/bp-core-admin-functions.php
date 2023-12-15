@@ -3380,10 +3380,13 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
  * Get label with platform pro notice if the platform is not active or not validate.
  *
  * @since BuddyBoss 1.9.1
+ * @since BuddyBoss [BBVERSION] Added support for type.
+ *
+ * @param string $type Type to check.
  *
  * @return string
  */
-function bb_get_pro_label_notice() {
+function bb_get_pro_label_notice( $type = '' ) {
 	static $bb_pro_notice = '';
 
 	if ( '' !== $bb_pro_notice ) {
@@ -3397,8 +3400,12 @@ function bb_get_pro_label_notice() {
 			esc_html__( 'BuddyBoss Platform Pro 1.2.0', 'buddyboss' ),
 			esc_html__( 'to unlock', 'buddyboss' )
 		);
-	} elseif( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '2.4.0', '<=' ) ) {
-		// @todo: Update version condition above before release.
+	} elseif (
+		function_exists( 'bb_platform_pro' ) &&
+		version_compare( bb_platform_pro()->version, '2.4.0', '<=' ) && // @todo: Update version condition above before release.
+		! empty( $type ) &&
+		'reaction' === $type
+	) {
 		$bb_pro_notice = sprintf(
 			'<br/><span class="bb-head-notice"> %1$s <strong>%2$s</strong> %3$s</span>',
 			esc_html__( 'Update', 'buddyboss' ),
@@ -3421,10 +3428,13 @@ function bb_get_pro_label_notice() {
  * Get class for buddyboss pro settings fields.
  *
  * @since BuddyBoss 1.9.1
+ * @since BuddyBoss [BBVERSION] Added support for type.
+ *
+ * @param string $type Type to check.
  *
  * @return string
  */
-function bb_get_pro_fields_class() {
+function bb_get_pro_fields_class( $type = '') {
 	static $pro_class = '';
 
 	if ( '' !== $pro_class ) {
@@ -3440,8 +3450,13 @@ function bb_get_pro_fields_class() {
 		$pro_class = 'bb-pro-inactive';
 	}
 
-	// @todo: Update version condition below before release.
-	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '2.4.0', '<=' ) ) {
+	// @todo: Update version condition above before release.
+	if (
+		! empty( $type ) &&
+		'reaction' === $type &&
+		function_exists( 'bb_platform_pro' ) &&
+		version_compare( bb_platform_pro()->version, '2.4.0', '<=' )
+	) {
 		$pro_class = 'bb-pro-inactive';
 	}
 
