@@ -3509,19 +3509,28 @@ function bb_reactions_settings_callback_all_reactions() {
 function bb_reactions_settings_callback_reaction_mode() {
 
 	$reactions_modes = array(
-		array(
+		'likes' => array(
 			'label'      => esc_html__( 'Likes', 'buddyboss' ),
 			'name'       => 'bb_reaction_mode',
 			'value'      => 'likes',
 			'id'         => 'bb_reaction_mode_likes',
 			'is_checked' => 'likes' === bb_get_reaction_mode(),
 			'notice'     => esc_html__( 'A simple "Like" button will show for members to express their appreciation or acknowledgement.', 'buddyboss' ),
-		)
+		),
+		'emotions' => array(
+			'label'      => esc_html__( 'Emotions', 'buddyboss-pro' ),
+			'name'       => '',
+			'value'      => '',
+			'id'         => '',
+			'is_checked' => false,
+			'notice'     => '',
+		),
 	);
 
 	$reactions_modes = apply_filters( 'bb_setting_reaction_mode_args', $reactions_modes );
 
 	if ( ! empty( $reactions_modes ) && is_array( $reactions_modes ) ) {
+		$notice_text = '';
 		foreach ( $reactions_modes as $reaction_mode ) {
 			?>
 			<label for="<?php echo $reaction_mode['id']; ?>">
@@ -3536,13 +3545,10 @@ function bb_reactions_settings_callback_reaction_mode() {
 				<?php echo $reaction_mode['label']; ?>
 			</label>
 			<?php
-		}
 
-		$notice_text = '';
-		if ( bb_get_reaction_mode() === 'likes' && ! empty( $reactions_modes[0]['notice'] ) ) {
-			$notice_text = $reactions_modes[0]['notice'];
-		} elseif ( bb_get_reaction_mode() === 'emotions' && !empty( $reactions_modes[1]['notice'] ) ) {
-			$notice_text = $reactions_modes[1]['notice'];
+			if ( ! empty( $reaction_mode['is_checked'] ) ) {
+				$notice_text = $reaction_mode['notice'];
+			}
 		}
 
 		if ( ! empty( $notice_text ) ) {
@@ -3553,4 +3559,46 @@ function bb_reactions_settings_callback_reaction_mode() {
 			<?php
 		}
 	}
+}
+
+/**
+ * Add reactions button settings.
+ *
+ * @return void
+ */
+function bb_reactions_settings_callback_reactions_button() {
+
+	$button_settings = bb_reaction_button_options();
+	$button_icon     = isset( $button_settings['icon'] ) ? $button_settings['icon'] : 'thumbs-up';
+	$button_text     = isset( $button_settings['text'] ) ? trim( $button_settings['text'] ) : '';
+
+	?>
+	<label for="bb_reactions_button" class="bb-reaction-button-label">
+		<button type="button" class="button" id="bb-reaction-button-chooser">
+			<i class="bb-icon-<?php echo esc_attr( $button_icon ); ?>"></i>
+		</button>
+		<input
+			type="hidden"
+			name="bb_reactions_button[icon]"
+			id="bb-reaction-button-hidden-field"
+			value="<?php echo esc_attr( $button_icon ); ?>"
+		/>
+
+		<input
+			name="bb_reactions_button[text]"
+			id="bb-reaction-button-text"
+			type="text"
+			max-length="8"
+			value="<?php echo esc_attr( $button_text ); ?>"
+			placeholder="<?php esc_attr_e( 'Like', 'buddyboss' ); ?>"
+		/>
+		<span class="bb-reaction-button-text-limit">
+			<span><?php echo strlen( $button_text ); ?></span>/8
+		</span>
+
+		<p>
+			<?php esc_html_e( 'Change the icon and text used within the Reactions button. When using “Emotions”, clicking on the button will react with the first emotion from the list of options.', 'buddyboss' ); ?>
+		</p>
+	</label>
+	<?php
 }

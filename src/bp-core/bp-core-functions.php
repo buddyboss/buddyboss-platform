@@ -9105,14 +9105,6 @@ function bb_reactions_get_settings_sections() {
 			'page'              => 'reaction',
 			'title'             => esc_html__( 'Reactions', 'buddyboss' ),
 			'tutorial_callback' => 'bp_admin_reaction_setting_tutorial',
-			'notice'            => (
-				sprintf(
-					wp_kses_post(
-						__( 'You can use our %s to convert existing reactions to a different type of reaction.', 'buddyboss' )
-					),
-					'<a class="footer-reaction-migration-wizard" href="#!">' . esc_html__( 'migration wizard', 'buddyboss' ) . '</a>'
-				)
-			),
 		),
 	);
 
@@ -9161,7 +9153,8 @@ function bb_reactions_get_settings_fields_for_section( $section_id = '' ) {
  */
 function bb_reactions_get_settings_fields() {
 
-	$fields = array();
+	$fields    = array();
+	$pro_class = bb_get_pro_fields_class();
 
 	$fields['bp_reaction_settings_section'] = array(
 		'bb_all_reactions' => array(
@@ -9171,10 +9164,24 @@ function bb_reactions_get_settings_fields() {
 		),
 
 		'bb_reaction_mode'  => array(
-			'title'             => esc_html__( 'Reactions Mode', 'buddyboss' ),
+			'title'             => esc_html__( 'Reactions Mode', 'buddyboss' ) . bb_get_pro_label_notice(),
 			'callback'          => 'bb_reactions_settings_callback_reaction_mode',
 			'sanitize_callback' => 'sanitize_text_field',
+			'args'              => array(
+				'class' => $pro_class
+			),
+		),
+
+		'bb_reaction_emotions' => array(
+		),
+
+		'bb_reactions_button' => array(
+			'title'             => esc_html__( 'Reactions button', 'buddyboss' ) . bb_get_pro_label_notice(),
+			'callback'          => 'bb_reactions_settings_callback_reactions_button',
 			'args'              => array(),
+			'args'              => array(
+				'class' => $pro_class
+			),
 		),
 	);
 

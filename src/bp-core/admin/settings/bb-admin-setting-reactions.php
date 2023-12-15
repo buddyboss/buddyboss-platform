@@ -34,6 +34,19 @@ class BB_Admin_Setting_Reactions extends BP_Admin_Setting_tab {
 	 * @return void
 	 */
 	public function settings_save() {
+
+		// Validate reactions button settings.
+		$reaction_button = ! empty( $_POST['bb_reactions_button'] ) ? $_POST['bb_reactions_button'] : array();
+		if ( ! empty( $reaction_button ) ) {
+			$reaction_button = array_map( 'trim', $reaction_button );
+			$reaction_button = array_map( 'sanitize_text_field', $reaction_button );
+
+			// If reaction button text is more then 8 characters then truncate it.
+			if ( ! empty( $reaction_button['text'] ) && strlen( $reaction_button['text'] ) > 8 ) {
+				$reaction_button['text'] = substr( $reaction_button['text'], 0, 8 );
+			}
+		}
+
 		/**
 		 * Fires before save the settings.
 		 *
@@ -42,6 +55,8 @@ class BB_Admin_Setting_Reactions extends BP_Admin_Setting_tab {
 		do_action( 'bb_reaction_before_setting_save', $this->tab_name, $this );
 
 		parent::settings_save();
+
+		bp_update_option( 'bb_reactions_button', $reaction_button );
 	}
 
 	/**
