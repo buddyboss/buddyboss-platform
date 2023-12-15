@@ -9105,14 +9105,6 @@ function bb_reactions_get_settings_sections() {
 			'page'              => 'reaction',
 			'title'             => esc_html__( 'Reactions', 'buddyboss' ),
 			'tutorial_callback' => 'bp_admin_reaction_setting_tutorial',
-			'notice'            => (
-				sprintf(
-					wp_kses_post(
-						__( 'When switching reactions mode, use our %s to map existing reactions to the new options.', 'buddyboss' )
-					),
-					'<a href="#" target="_blank" >' . esc_html__( 'migration wizard', 'buddyboss' ) . '</a>'
-				)
-			),
 		),
 	);
 

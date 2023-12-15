@@ -3398,7 +3398,7 @@ function bb_get_pro_label_notice() {
 			esc_html__( 'to unlock', 'buddyboss' )
 		);
 	} elseif( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '2.4.0', '<=' ) ) {
-		// TODO: Update version condition above before release.
+		// @todo: Update version condition above before release.
 		$bb_pro_notice = sprintf(
 			'<br/><span class="bb-head-notice"> %1$s <strong>%2$s</strong> %3$s</span>',
 			esc_html__( 'Update', 'buddyboss' ),
@@ -3440,7 +3440,7 @@ function bb_get_pro_fields_class() {
 		$pro_class = 'bb-pro-inactive';
 	}
 
-	// TODO: Update version condition below before release.
+	// @todo: Update version condition below before release.
 	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '2.4.0', '<=' ) ) {
 		$pro_class = 'bb-pro-inactive';
 	}
