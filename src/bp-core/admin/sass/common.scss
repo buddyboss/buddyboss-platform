@@ -4066,7 +4066,31 @@ table.moderations .column-member {
 
 .section-bp_reaction_settings_section {
 
+	> h2 {
+		width: 100%;
+	}
+
+	.bb-reactions-setting-field {
+		margin-top: 8px;
+	}
+
+	label[for="bb_reaction_mode_likes"] {
+		margin-right: 15px;
+	}
+
+	.bb-reaction-mode-description {
+		margin-top: 10px;
+	}
+
 	.bb-reaction-button-label {
+
+		.bb-reaction-button-text-limit {
+			display: none;
+
+			&.active {
+				display: inline-block;
+			}
+		}
 
 		#bb-reaction-button-chooser {
 			padding: 3px;

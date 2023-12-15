@@ -3753,6 +3753,30 @@ table.moderations .column-member img {
 /*------------------------------------------------------------------------------
  * 19.0 Reactions Settings
  *----------------------------------------------------------------------------*/
+.section-bp_reaction_settings_section > h2 {
+  width: 100%;
+}
+
+.section-bp_reaction_settings_section .bb-reactions-setting-field {
+  margin-top: 8px;
+}
+
+.section-bp_reaction_settings_section label[for="bb_reaction_mode_likes"] {
+  margin-left: 15px;
+}
+
+.section-bp_reaction_settings_section .bb-reaction-mode-description {
+  margin-top: 10px;
+}
+
+.section-bp_reaction_settings_section .bb-reaction-button-label .bb-reaction-button-text-limit {
+  display: none;
+}
+
+.section-bp_reaction_settings_section .bb-reaction-button-label .bb-reaction-button-text-limit.active {
+  display: inline-block;
+}
+
 .section-bp_reaction_settings_section .bb-reaction-button-label #bb-reaction-button-chooser {
   padding: 3px;
   border-color: #8c8f94;
