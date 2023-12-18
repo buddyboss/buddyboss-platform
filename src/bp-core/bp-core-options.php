@@ -2631,7 +2631,11 @@ function bb_is_reaction_activity_comments_enabled( $default = true ) {
 function bb_get_reaction_mode( $default = 'likes' ) {
 
 	$mode = bp_get_option( 'bb_reaction_mode', $default );
-	if ( ! function_exists( 'bb_platform_pro' ) ) {
+	if (
+		! class_exists( 'BB_Platform_Pro_Reaction' ) ||
+		! function_exists( 'bbp_pro_is_license_valid' ) ||
+		! bbp_pro_is_license_valid()
+	) {
 		$mode = 'likes';
 	}
 

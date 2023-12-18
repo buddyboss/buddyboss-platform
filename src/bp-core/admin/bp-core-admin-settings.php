@@ -3509,21 +3509,27 @@ function bb_reactions_settings_callback_all_reactions() {
 function bb_reactions_settings_callback_reaction_mode() {
 
 	$reactions_modes = array(
-		'likes' => array(
+		'likes'    => array(
 			'label'      => esc_html__( 'Likes', 'buddyboss' ),
 			'name'       => 'bb_reaction_mode',
 			'value'      => 'likes',
 			'id'         => 'bb_reaction_mode_likes',
 			'is_checked' => 'likes' === bb_get_reaction_mode(),
 			'notice'     => esc_html__( 'A simple "Like" button will show for members to express their appreciation or acknowledgement.', 'buddyboss' ),
+			'disabled'   => false,
 		),
 		'emotions' => array(
-			'label'      => esc_html__( 'Emotions', 'buddyboss' ),
-			'name'       => '',
-			'value'      => '',
-			'id'         => '',
-			'is_checked' => false,
-			'notice'     => '',
+			'label'      => esc_html__( 'Emotions', 'buddyboss-pro' ),
+			'name'       => 'bb_reaction_mode',
+			'value'      => 'emotions',
+			'id'         => 'bb_reaction_mode_emotions',
+			'is_checked' => 'emotions' === bb_get_reaction_mode(),
+			'notice'     => esc_html__( 'Members express their thoughts or feelings by selecting an emotion from a list of options.', 'buddyboss' ),
+			'disabled'   => (
+				! class_exists( 'BB_Platform_Pro_Reaction' ) ||
+				! function_exists( 'bbp_pro_is_license_valid' ) ||
+				! bbp_pro_is_license_valid()
+			),
 		),
 	);
 
@@ -3533,17 +3539,20 @@ function bb_reactions_settings_callback_reaction_mode() {
 		$notice_text = '';
 		foreach ( $reactions_modes as $reaction_mode ) {
 			?>
-			<label for="<?php echo $reaction_mode['id']; ?>">
-				<input name="<?php echo $reaction_mode['name']; ?>"
-					id="<?php echo $reaction_mode['id']; ?>"
-					type="radio"
-					value="<?php echo $reaction_mode['value']; ?>"
-					<?php echo checked( $reaction_mode['is_checked'] ); ?>
-					data-current-val="<?php echo bb_get_reaction_mode(); ?>"
-					data-notice="<?php echo ! empty( $reaction_mode['notice'] ) ? $reaction_mode['notice'] : ''; ?>"
-				/>
+            <label for="<?php echo $reaction_mode['id']; ?>" class="<?php echo esc_attr( ! empty( $reaction_mode['disabled'] ) ? 'disabled' : '' ); ?>">
+                <input name="<?php echo $reaction_mode['name']; ?>"
+                       id="<?php echo $reaction_mode['id']; ?>"
+                       type="radio"
+                       value="<?php echo $reaction_mode['value']; ?>"
+                       data-current-val="<?php echo bb_get_reaction_mode(); ?>"
+                       data-notice="<?php echo ! empty( $reaction_mode['notice'] ) ? $reaction_mode['notice'] : ''; ?>"
+					<?php
+					checked( $reaction_mode['is_checked'] );
+					disabled( $reaction_mode['disabled'] );
+					?>
+                />
 				<?php echo $reaction_mode['label']; ?>
-			</label>
+            </label>
 			<?php
 
 			if ( ! empty( $reaction_mode['is_checked'] ) ) {
