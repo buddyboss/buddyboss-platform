@@ -4159,6 +4159,7 @@ input.search-query-input {
 
 .activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item .activity-state_user .activity-state_user__avatar .activity-state_user__reaction > i {
   font-size: 14px;
+  font-weight: 200;
   line-height: 1;
 }
 
