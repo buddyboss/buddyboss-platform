@@ -91,7 +91,9 @@ jQuery( document ).ready(
 							tagsArrayData  = existingTags && existingTags.length > 0 ? existingTags.split( ',' ) : [],
 							data           = e.params.data;
 
-						tagsArrayData.push( data.id );
+						if ( ! tagsArrayData.includes( data.text ) ) {
+							tagsArrayData.push( data.text );
+						}
 						var tags = tagsArrayData.join( ',' );
 						bbp_topic_tags.val( tags );
 
