@@ -477,7 +477,7 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 		public function is_processing() {
 			$running = false;
 			$lock_timestamp = get_site_option( $this->identifier . '_process_lock' );
-			if ( ! empty( $lock_timestamp ) ) {
+			if ( $lock_timestamp ) {
 
 				$lock_duration = ( property_exists( $this, 'queue_lock_time' ) ) ? $this->queue_lock_time : 60; // 1 minute
 				$lock_duration = apply_filters( $this->identifier . '_queue_lock_time', $lock_duration );
@@ -863,10 +863,7 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 		protected function lock_process() {
 			$this->start_time = time(); // Set start time of current process.
 
-			$lock_duration = ( property_exists( $this, 'queue_lock_time' ) ) ? $this->queue_lock_time : 60; // 1 minute
-			$lock_duration = apply_filters( $this->identifier . '_queue_lock_time', $lock_duration );
-
-			update_site_option( $this->identifier . '_process_lock', microtime(), $lock_duration );
+			update_site_option( $this->identifier . '_process_lock', microtime( true ) );
 		}
 
 		/**
