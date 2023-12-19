@@ -957,11 +957,12 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 			$sql = '
 			SELECT *
 			FROM ' . $table . '
-			WHERE blog_id = %d
+			WHERE blog_id = %d and `group` != %s
 			ORDER BY priority, id ASC
 			';
 
 			$args[] = $blog_id;
+			$args[] = 'bb_pro_migrate_reactions';
 
 			if ( ! empty( $limit ) ) {
 				$sql .= ' LIMIT %d';
@@ -1117,7 +1118,7 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 
 			$table = self::$table_name;
 
-			$wpdb->query( "DELETE FROM {$table}" ); // @codingStandardsIgnoreLine.
+			$wpdb->query( "DELETE FROM {$table} WHERE `group` != 'bb_pro_migrate_reactions'" ); // @codingStandardsIgnoreLine.
 
 			return $this;
 		}
