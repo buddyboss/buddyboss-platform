@@ -1189,41 +1189,41 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 			$table = self::$table_name;
 
 			$where_conditions = array(
-				'blog_id' => "blog_id = {$r['blog_id']}"
+				'blog_id' => "`blog_id` = {$r['blog_id']}"
 			);
 
 			if ( ! empty( $r['id'] ) ) {
 				$id_in                  = implode( ',', wp_parse_id_list( $r['id'] ) );
-				$where_conditions['id'] = "id IN ({$id_in})";
+				$where_conditions['id'] = "`id` IN ({$id_in})";
 			}
 
 			if ( ! empty( $r['not_in_id'] ) ) {
 				$id_in                         = implode( ',', wp_parse_id_list( $r['not_in_id'] ) );
-				$where_conditions['not_in_id'] = "id NOT IN ({$id_in})";
+				$where_conditions['not_in_id'] = "`id` NOT IN ({$id_in})";
 			}
 
 			if ( ! empty( $r['group'] ) ) {
-				$where_conditions['group'] = "group = '{$r['group']}'";
+				$where_conditions['group'] = "`group` = '{$r['group']}'";
 			}
 
 			if ( ! empty( $r['not_group'] ) ) {
-				$where_conditions['not_group'] = "group != '{$r['not_group']}'";
+				$where_conditions['not_group'] = "`group` != '{$r['not_group']}'";
 			}
 
 			if ( ! empty( $r['data_id'] ) ) {
-				$where_conditions['data_id'] = "data_id = '{$r['data_id']}'";
+				$where_conditions['data_id'] = "`data_id` = '{$r['data_id']}'";
 			}
 
 			if ( ! empty( $r['not_data_id'] ) ) {
-				$where_conditions['not_data_id'] = "data_id != '{$r['not_data_id']}'";
+				$where_conditions['not_data_id'] = "`data_id` != '{$r['not_data_id']}'";
 			}
 
 			if ( ! empty( $r['secondary_data_id'] ) ) {
-				$where_conditions['secondary_data_id'] = "secondary_data_id = '{$r['secondary_data_id']}'";
+				$where_conditions['secondary_data_id'] = "`secondary_data_id` = '{$r['secondary_data_id']}'";
 			}
 
 			if ( ! empty( $r['not_secondary_data_id'] ) ) {
-				$where_conditions['not_secondary_data_id'] = "secondary_data_id != '{$r['not_secondary_data_id']}'";
+				$where_conditions['not_secondary_data_id'] = "`secondary_data_id` != '{$r['not_secondary_data_id']}'";
 			}
 
 			// Join the where conditions together.
