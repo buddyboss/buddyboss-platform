@@ -880,24 +880,9 @@ window.bp = window.bp || {};
 			$( '.bb-accordion .bb-accordion_trigger' ).on( 'click', this.toggleAccordion );
 
 			// Reaction actions.
-			$( document ).on(
-				'mouseover',
-				'a.button.fav, .button.reaction, a.button.has-like, a.button.has-emotion',
-				bp.Nouveau,
-				this.showReactions.bind( this )
-			).on(
-				'mouseout',
-				'a.button.fav, .button.reaction, a.button.has-like, a.button.has-emotion',
-				function() {
-					clearTimeout( window.reactionHoverTimeout );
-				}
-			);
-
-			$( document ).on( 'mouseleave', '.activity-item .ac-emotions_list, .button.fav, .button.unfav, .button.has-like, .button.has-emotion', bp.Nouveau, this.hideReactions.bind( this ) );
 			$( document ).on( 'click', '.activity-state-popup_overlay', bp.Nouveau, this.closeActivityState.bind( this ) );
 
 			$( document ).on( 'click', '.ac-emotions_list .ac-emotion_btn', this.updateReaction );
-
 			$( document ).on( 'click', '.activity-item a.button.fav, .activity-item a.button.reaction', this.updateReaction );
 			$( document ).on( 'click', '.activity-item .button.has-emotion, .activity-item .button.has-like', this.removeReaction );
 
@@ -1204,28 +1189,6 @@ window.bp = window.bp || {};
 		closeActivityState: function() {
 			$( '.activity-state-popup' ).removeClass( 'active' );
 		},
-
-		/**
-		 * [showReactions description]
-		 *
-		 * @return {[type]}       [description]
-		 */
-		showReactions: function( event ) {
-			var $this = $( event.currentTarget );
-			window.reactionHoverTimeout = setTimeout(function() {
-				$this.closest( '.bp-generic-meta' ).find( '.ac-emotions_list' ).addClass( 'active' );
-			}, 500);
-		},
-
-		/**
-		 * [hideReactions description]
-		 *
-		 * @return {[type]}       [description]
-		 */
-		hideReactions: function( event ) {
-			$( event.currentTarget ).closest( '.bp-generic-meta' ).find( '.ac-emotions_list' ).removeClass('active');
-		},
-
 
 		/**
 		 * [heartbeatSend description]
