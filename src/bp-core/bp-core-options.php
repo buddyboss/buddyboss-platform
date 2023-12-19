@@ -1399,9 +1399,15 @@ function bp_is_post_type_feed_enable( $post_type, $default = false ) {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param bool $value Whether post type feed enabled or not.
+	 * @since BuddyBoss 2.5.00
+	 * Introduce new params $post_type and $default.
+	 *
+	 * @param bool   $value     Whether post type feed enabled or not.
+	 * @param string $post_type Post type.
+	 * @param bool   $default   Optional. Fallback value if not found in the database.
+	 *                          Default: false.
 	 */
-	return (bool) apply_filters( 'bp_is_post_type_feed_enable', (bool) bp_get_option( bb_post_type_feed_option_name( $post_type ), $default ) );
+	return (bool) apply_filters( 'bp_is_post_type_feed_enable', (bool) bp_get_option( bb_post_type_feed_option_name( $post_type ), $default ), $post_type, $default );
 }
 
 /**
@@ -2453,4 +2459,92 @@ function bb_is_active_activity_pinned_posts( $default = false ) {
 	 * @param bool $value Whether activity pinned posts are enabled.
 	 */
 	return (bool) apply_filters( 'bb_is_active_activity_pinned_posts', (bool) bp_get_option( '_bb_enable_activity_pinned_posts', $default ) );
+}
+
+/**
+ * Get login redirection settings value from the database.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ *
+ * @return string Login redirection setting value.
+ */
+function bb_login_redirection( $default = '' ) {
+
+	/**
+	 * Filters login redirection settings.
+	 *
+	 * @since BuddyBoss 2.4.70
+	 *
+	 * @param string $value Login redirection setting value.
+	 */
+	return apply_filters( 'bb_login_redirection', bp_get_option( 'bb-login-redirection', $default ) );
+}
+
+/**
+ * Get logout redirection setting value from the database.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ *
+ * @return string Logout redirection setting value.
+ */
+function bb_logout_redirection( $default = '' ) {
+
+	/**
+	 * Filters logout redirection settings.
+	 *
+	 * @since BuddyBoss 2.4.70
+	 *
+	 * @param string $value Logout redirection setting value.
+	 */
+	return apply_filters( 'bb_logout_redirection', bp_get_option( 'bb-logout-redirection', $default ) );
+}
+
+/**
+ * Get custom login redirection setting value from the database.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ *
+ * @return string Login redirection setting value.
+ */
+function bb_custom_login_redirection( $default = '' ) {
+
+	/**
+	 * Filters custom login page URL.
+	 *
+	 * @since BuddyBoss 2.4.70
+	 *
+	 * @param string $value Custom login page URL.
+	 */
+	return apply_filters( 'bb_custom_login_redirection', bp_get_option( 'bb-custom-login-redirection', $default ) );
+}
+
+/**
+ * Get custom logout redirection setting value from the database.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ *
+ * @return string Logout redirection setting value.
+ */
+function bb_custom_logout_redirection( $default = '' ) {
+
+	/**
+	 * Filters custom logout page URL.
+	 *
+	 * @since BuddyBoss 2.4.70
+	 *
+	 * @param string $value Custom logout page URL.
+	 */
+	return apply_filters( 'bb_custom_logout_redirection', bp_get_option( 'bb-custom-logout-redirection', $default ) );
 }

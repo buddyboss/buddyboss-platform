@@ -5871,11 +5871,23 @@ function bb_activity_following_post_notification( $args ) {
 			'activity'  => '',
 			'usernames' => array(),
 			'item_id'   => '',
-			'user_ids'  => array(),
+			'paged'     => 1,
 		)
 	);
 
-	if ( empty( $r['user_ids'] ) || empty( $r['activity'] ) ) {
+	$per_page       = apply_filters( 'bb_following_min_count', 20 );
+	$follower_users = bp_get_followers(
+		array(
+			'user_id'  => $r['item_id'],
+			'per_page' => $per_page,
+			'page'     => $r['paged'],
+		)
+	);
+
+	if (
+		empty( $follower_users ) ||
+		empty( $r['activity'] )
+	) {
 		return;
 	}
 
@@ -5921,7 +5933,7 @@ function bb_activity_following_post_notification( $args ) {
 		),
 	);
 
-	foreach ( $r['user_ids'] as $key => $user_id ) {
+	foreach ( $follower_users as $key => $user_id ) {
 		$user_id           = (int) $user_id;
 		$send_mail         = true;
 		$send_notification = true;
@@ -5982,6 +5994,9 @@ function bb_activity_following_post_notification( $args ) {
 			remove_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 		}
 	}
+
+	$r['paged'] = $r['paged'] + 1;
+	bb_activity_create_following_post_notification( $r );
 }
 
 /**
@@ -6031,58 +6046,25 @@ function bb_is_group_activity_comment( $comment = 0 ) {
  * Function to create a paginated backgroud job for activity following notifications.
  *
  * @since BuddyBoss 2.3.70
+ * @since BuddyBoss 2.4.70 removed the $paged parameter.
  *
  * @param array $args  Array of arguments.
- * @param array $paged Current page number for pagination.
  */
-function bb_activity_create_following_post_notification( $args, $paged = 1 ) {
-	if ( empty( $paged ) ) {
-		$paged = 1;
-	}
+function bb_activity_create_following_post_notification( $args ) {
+	global $bb_background_updater;
 
-	$per_page       = apply_filters( 'bb_following_min_count', 20 );
-	$follower_users = bp_get_followers(
+	$bb_background_updater->data(
 		array(
-			'user_id'  => $args['item_id'],
-			'per_page' => $per_page,
-			'page'     => $paged
-		)
+			'type'     => 'email',
+			'group'    => 'activity_following_post',
+			'data_id'  => $args['item_id'],
+			'priority' => 5,
+			'callback' => 'bb_activity_following_post_notification',
+			'args'     => array( $args ),
+		),
 	);
 
-	if ( empty( $follower_users ) ) {
-		return;
-	}
-
-	if ( count( $follower_users ) > 0 ) {
-		global $bb_background_updater;
-
-		$args['user_ids'] = $follower_users;
-		$args['paged']    = $paged;
-		$bb_background_updater->data(
-			array(
-				'type'     => 'email',
-				'group'    => 'activity_following_post',
-				'data_id'  => $args['item_id'],
-				'priority' => 5,
-				'callback' => 'bb_activity_following_post_notification',
-				'args'     => array( $args ),
-			),
-		);
-
-		$bb_background_updater->save()->dispatch();
-	}
-
-	if ( isset( $args['user_ids'] ) ) {
-		unset( $args['user_ids'] );
-	}
-
-	if ( isset( $args['paged'] ) ) {
-		unset( $args['paged'] );
-	}
-
-	// Call recursive to finish update for all records.
-	$paged++;
-	bb_activity_create_following_post_notification( $args, $paged );
+	$bb_background_updater->save()->dispatch();
 }
 
 /**
@@ -6382,7 +6364,7 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 			'can_edit_privacy' => $can_edit_privacy,
 			'album_id'         => $album_id,
 			'folder_id'        => $folder_id,
-			'content'          => stripslashes( bp_get_activity_comment_content( $activity_comment_id ) ),
+			'content'          => stripslashes( $activity_comment->content ),
 			'item_id'          => $activity_comment->item_id,
 			'object'           => $activity_comment->component,
 			'privacy'          => $activity_comment->privacy,

@@ -439,16 +439,8 @@ function bp_version_updater() {
 			bb_update_to_2_3_1();
 		}
 
-		if ( $raw_db_version < 20001 ) {
-			bb_update_to_2_3_3();
-		}
-
 		if ( $raw_db_version < 20101 ) {
 			bb_update_to_2_3_4();
-		}
-
-		if ( $raw_db_version < 20111 ) {
-			bb_update_to_2_3_41();
 		}
 
 		if ( $raw_db_version < 20211 ) {
@@ -477,6 +469,10 @@ function bp_version_updater() {
 
 		if ( $raw_db_version < 20761 ) {
 			bb_update_to_2_4_60();
+		}
+
+		if ( $raw_db_version < 20861 ) {
+			bb_update_to_2_4_71();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
@@ -2707,99 +2703,6 @@ function bb_update_to_2_3_1() {
 		BB_Presence::bb_load_presence_api_mu_plugin();
 		BB_Presence::bb_check_native_presence_load_directly();
 	}
-
-	bb_generate_member_profile_links_on_update();
-}
-
-/**
- * Function to run while update.
- *
- * @since BuddyBoss 2.3.3
- *
- * @return void
- */
-function bb_update_to_2_3_3() {
-	bb_repair_member_unique_slug();
-}
-
-/**
- * Background job to repair user profile slug.
- *
- * @since BuddyBoss 2.3.3
- *
- * @param int $paged Number of page.
- *
- * @return void
- */
-function bb_repair_member_unique_slug( $paged = 1 ) {
-	global $bp_background_updater;
-
-	if ( empty( $paged ) ) {
-		$paged = 1;
-	}
-
-	$per_page = 50;
-	$offset   = ( ( $paged - 1 ) * $per_page );
-
-	$user_ids = get_users(
-		array(
-			'fields'     => 'ids',
-			'number'     => $per_page,
-			'offset'     => $offset,
-			'orderby'    => 'ID',
-			'order'      => 'ASC',
-			'meta_query' => array(
-				array(
-					'key'     => 'bb_profile_slug',
-					'compare' => 'EXISTS',
-				),
-			),
-		)
-	);
-
-	if ( empty( $user_ids ) ) {
-		return;
-	}
-
-	$bp_background_updater->data(
-		array(
-			array(
-				'callback' => 'bb_remove_duplicate_member_slug',
-				'args'     => array( $user_ids, $paged ),
-			),
-		)
-	);
-	$bp_background_updater->save()->schedule_event();
-}
-
-/**
- * Delete duplicate bb_profile_slug_ key from the usermeta table.
- *
- * @since BuddyBoss 2.3.3
- *
- * @param array $user_ids Array of user ID.
- * @param int   $paged    Number of page.
- *
- * @return void
- */
-function bb_remove_duplicate_member_slug( $user_ids, $paged ) {
-	global $wpdb;
-
-	foreach ( $user_ids as $user_id ) {
-		$unique_slug = bp_get_user_meta( $user_id, 'bb_profile_slug', true );
-
-		$wpdb->query(
-			$wpdb->prepare(
-			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery
-				"DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE 'bb_profile_slug_%' AND meta_key != %s AND user_id = %d",
-				"bb_profile_slug_{$unique_slug}",
-				$user_id
-			)
-		);
-	}
-
-	$paged++;
-	bb_repair_member_unique_slug( $paged );
 }
 
 /**
@@ -2837,24 +2740,6 @@ function bb_update_to_2_3_4() {
 }
 
 /**
- * Background job to update user profile slug.
- *
- * @since BuddyBoss 2.3.41
- *
- * @return void
- */
-function bb_update_to_2_3_41() {
-	$is_already_run = get_transient( 'bb_update_to_2_3_4' );
-	if ( $is_already_run ) {
-		return;
-	}
-
-	set_transient( 'bb_update_to_2_3_4', 'yes', DAY_IN_SECONDS );
-
-	bb_core_update_repair_member_slug();
-}
-
-/**
  * Update the member slugs.
  *
  * @since BuddyBoss 2.3.41
@@ -2867,7 +2752,7 @@ function bb_core_update_repair_member_slug() {
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
 	$user_ids = $wpdb->get_col(
 		$wpdb->prepare(
-			"SELECT u.ID FROM `{$wpdb->users}` AS u LEFT JOIN `{$wpdb->usermeta}` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) WHERE ( um.user_id IS NULL OR LENGTH(meta_value) = %d ) ORDER BY u.ID LIMIT %d, %d",
+			"SELECT u.ID FROM `{$wpdb->users}` AS u LEFT JOIN `{$wpdb->usermeta}` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) WHERE ( um.user_id IS NULL OR LENGTH(meta_value) = %d ) ORDER BY u.ID ASC LIMIT %d, %d",
 			'bb_profile_slug',
 			40,
 			0,
@@ -2875,8 +2760,9 @@ function bb_core_update_repair_member_slug() {
 		)
 	);
 
+	$table_name = $bb_background_updater::$table_name;
+
 	if ( empty( $user_ids ) ) {
-		$table_name = $bb_background_updater::$table_name;
 		// Delete existing migration from options table.
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->query(
@@ -2892,6 +2778,19 @@ function bb_core_update_repair_member_slug() {
 
 	$is_member_slug_background = true;
 	bb_set_bulk_user_profile_slug( $user_ids );
+
+	$total_bg = $wpdb->get_row(
+		$wpdb->prepare(
+			"SELECT count(DISTINCT id) as total FROM {$table_name} WHERE `type` = %s AND `group` = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			'repair_member_slug',
+			'bb_core_update_repair_member_slug'
+		)
+	);
+
+	// If total background job is more than 6 then don't create new background job.
+	if ( ! empty( $total_bg->total ) && $total_bg->total > 6 ) {
+		return;
+	}
 
 	// Register a new background job.
 	$bb_background_updater->data(
@@ -3400,4 +3299,99 @@ function bb_update_to_2_4_60() {
 	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE `option_name` LIKE 'wp_1_bp_updater_batch_%' AND `option_value` LIKE '%bb_migrate_member_friends_count%'" );
 
 	bb_create_background_member_friends_count();
+}
+
+/**
+ * Migrate a background job for remove the duplicate metas.
+ *
+ * @since BuddyBoss 2.4.71
+ *
+ * @return void
+ */
+function bb_update_to_2_4_71() {
+	global $wpdb;
+
+	$is_already_run = get_transient( 'bb_update_to_2_4_71' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	bb_background_removed_orphaned_metadata();
+
+	set_transient( 'bb_update_to_2_4_71', true, HOUR_IN_SECONDS );
+}
+
+/**
+ * Register background jobs to delete the duplicate metas for the user profiles.
+ *
+ * @since BuddyBoss 2.4.71
+ *
+ * @return void
+ */
+function bb_background_removed_orphaned_metadata() {
+	global $bb_background_updater, $wpdb;
+
+	$table_name = $bb_background_updater::$table_name;
+
+	$total_bg = $wpdb->get_row(
+		$wpdb->prepare(
+			"SELECT count(DISTINCT id) as total FROM {$table_name} WHERE `type` = %s AND `group` = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			'removed_orphaned_metadata',
+			'bb_core_removed_orphaned_member_slug'
+		)
+	);
+
+	// Ensure that the background job count does not exceed 4.
+	if ( ! empty( $total_bg->total ) && $total_bg->total > 4 ) {
+		return;
+	}
+
+	$bb_background_updater->data(
+		array(
+			'type'     => 'removed_orphaned_metadata',
+			'group'    => 'bb_core_removed_orphaned_member_slug',
+			'priority' => 3,
+			'callback' => 'bb_core_removed_orphaned_member_slug',
+			'args'     => array(),
+		),
+	);
+
+	$bb_background_updater->save()->schedule_event();
+}
+
+/**
+ * Delete the duplicate metas for the user profiles in the background.
+ *
+ * @since BuddyBoss 2.4.71
+ *
+ * @return void
+ */
+function bb_core_removed_orphaned_member_slug() {
+	global $wpdb;
+
+	$limit = apply_filters( 'bb_core_removed_orphaned_member_slug_limit', 50 );
+
+	$query = "SELECT user_id FROM (
+		SELECT user_id, COUNT(*) AS count FROM {$wpdb->usermeta}
+		    WHERE meta_key LIKE 'bb_profile_%'
+		    GROUP BY user_id
+		    ORDER BY count DESC
+		    LIMIT {$limit}
+		) AS t
+		WHERE count > 3;";
+
+	// Retrieve users with more than 3 profile slug metas.
+	$users = $wpdb->get_col( $query );
+
+	if (
+		empty( $users ) ||
+		is_wp_error( $users )
+	) {
+		return;
+	}
+
+	bb_set_bulk_user_profile_slug( $users );
+
+	// Re-register the background jobs until the result is empty.
+	bb_background_removed_orphaned_metadata();
 }
