@@ -9193,3 +9193,34 @@ function bb_reactions_get_settings_fields() {
 
 	return (array) apply_filters( 'bb_reactions_get_settings_fields', $fields );
 }
+
+/** 
+ * Remove action which used in thord party class.
+ *
+ * @since BuddyBoss 2.5.00
+ *
+ * @param string $action Action name.
+ * @param string $class  Class name.
+ * @param string $method Method name.
+ */
+function bb_remove_class_action( $action, $class, $method ) {
+	global $wp_filter;
+	if ( isset( $wp_filter[ $action ] ) ) {
+		$len = strlen( $method );
+		foreach ( $wp_filter[ $action ] as $pri => $actions ) {
+			foreach ( $actions as $name => $def ) {
+				if ( substr( $name, - $len ) === $method ) {
+					if ( is_array( $def['function'] ) && ! empty( $def['function'] ) ) {
+						if ( get_class( $def['function'][0] ) === $class ) {
+							if ( is_object( $wp_filter[ $action ] ) && isset( $wp_filter[ $action ]->callbacks ) ) {
+								unset( $wp_filter[ $action ]->callbacks[ $pri ][ $name ] );
+							} else {
+								unset( $wp_filter[ $action ][ $pri ][ $name ] );
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
