@@ -2638,7 +2638,7 @@ function bb_get_reaction_mode( $default = 'likes' ) {
 
 	$mode = bp_get_option( 'bb_reaction_mode', $default );
 	if (
-		! class_exists( 'BB_Platform_Pro_Reaction' ) ||
+		! class_exists( 'BB_Reactions' ) ||
 		! function_exists( 'bbp_pro_is_license_valid' ) ||
 		! bbp_pro_is_license_valid()
 	) {
