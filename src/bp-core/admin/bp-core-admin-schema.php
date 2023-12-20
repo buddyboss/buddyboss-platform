@@ -45,7 +45,6 @@ function bp_core_install( $active_components = false ) {
 	if ( function_exists( 'bb_load_reaction' ) ) {
 		// Create table for the bb reactions.
 		bb_load_reaction()->create_table();
-		bb_load_reaction()->bb_register_activity_like();
 	}
 
 	// Install Activity Feeds even when inactive (to store last_activity data).
