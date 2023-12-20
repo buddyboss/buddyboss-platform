@@ -9105,14 +9105,6 @@ function bb_reactions_get_settings_sections() {
 			'page'              => 'reaction',
 			'title'             => esc_html__( 'Reactions', 'buddyboss' ),
 			'tutorial_callback' => 'bp_admin_reaction_setting_tutorial',
-			'notice'            => (
-				sprintf(
-					wp_kses_post(
-						__( 'You can use our %s to convert existing reactions to a different type of reaction.', 'buddyboss' )
-					),
-					'<a class="footer-reaction-migration-wizard" href="#!">' . esc_html__( 'migration wizard', 'buddyboss' ) . '</a>'
-				)
-			),
 		),
 	);
 
@@ -9194,7 +9186,7 @@ function bb_reactions_get_settings_fields() {
 	return (array) apply_filters( 'bb_reactions_get_settings_fields', $fields );
 }
 
-/** 
+/**
  * Remove action which used in thord party class.
  *
  * @since BuddyBoss 2.5.00
