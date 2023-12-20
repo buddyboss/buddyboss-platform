@@ -4083,7 +4083,7 @@ table.moderations .column-member {
 	}
 
 	.bb-reaction-button-label {
-		display: flex;
+		display: flex !important; // Override WP default css
 		flex-wrap: wrap;
 		align-items: center;
 		gap: 5px;

@@ -3770,7 +3770,7 @@ table.moderations .column-member img {
 }
 
 .section-bp_reaction_settings_section .bb-reaction-button-label {
-  display: flex;
+  display: flex !important;
   flex-wrap: wrap;
   align-items: center;
   gap: 5px;
