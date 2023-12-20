@@ -6152,7 +6152,7 @@ function bb_activity_migration( $raw_db_version, $current_db ) {
 		}
 
 		// Migrate the activity like settings with reaction settings.
-		if ( $current_db >= 20674 ) {
+		if ( $current_db >= 20951 ) {
 			$enabled_reactions = bp_get_option( 'bb_all_reactions', array() );
 
 			if ( ! isset( $enabled_reactions['activity'] ) ) {
@@ -6164,7 +6164,11 @@ function bb_activity_migration( $raw_db_version, $current_db ) {
 			}
 
 			bp_update_option( 'bb_all_reactions', $enabled_reactions );
-			bp_add_option( 'bb_reaction_mode', 'likes' );
+
+			$mode = bp_get_option( 'bb_reaction_mode' );
+			if ( empty( $mode ) ) {
+				bp_add_option( 'bb_reaction_mode', 'likes' );
+			}
 		}
 	}
 }
