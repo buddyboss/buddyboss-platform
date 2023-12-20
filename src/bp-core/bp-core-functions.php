@@ -9118,9 +9118,23 @@ function bb_reactions_get_settings_sections() {
  */
 function bp_admin_reaction_setting_tutorial() {
 	?>
-	<p>
-		<a class="button" href="#"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
-	</p>
+    <p>
+        <a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62792, // @todo update when release.
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+    </p>
 	<?php
 }
 
