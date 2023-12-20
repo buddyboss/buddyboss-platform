@@ -3769,6 +3769,17 @@ table.moderations .column-member img {
   margin-top: 10px;
 }
 
+.section-bp_reaction_settings_section .bb-reaction-button-label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+}
+
+.section-bp_reaction_settings_section .bb-reaction-button-label > p {
+  width: 100%;
+}
+
 .section-bp_reaction_settings_section .bb-reaction-button-label .bb-reaction-button-text-limit {
   display: none;
 }
@@ -3782,6 +3793,8 @@ table.moderations .column-member img {
   border-color: #8c8f94;
   vertical-align: middle;
   border-radius: 4px;
+  min-height: auto;
+  margin: 0;
 }
 
 .section-bp_reaction_settings_section .bb-reaction-button-label #bb-reaction-button-chooser > i {
@@ -3799,6 +3812,9 @@ table.moderations .column-member img {
   color: #2c3338;
   font-size: 14px;
   vertical-align: middle;
-  line-height: 31px;
   border-radius: 4px;
+  width: auto;
+  min-height: 30px;
+  padding: 3px 8px;
+  line-height: 25px;
 }
