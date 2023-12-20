@@ -6167,7 +6167,7 @@ function bb_activity_migration( $raw_db_version, $current_db ) {
 
 			$mode = bp_get_option( 'bb_reaction_mode' );
 			if ( empty( $mode ) ) {
-				bp_add_option( 'bb_reaction_mode', 'likes' );
+				bp_update_option( 'bb_reaction_mode', 'likes' );
 			}
 		}
 	}
