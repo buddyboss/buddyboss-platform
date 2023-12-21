@@ -477,7 +477,7 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 		public function is_processing() {
 			$running = false;
 			$lock_timestamp = get_site_option( $this->identifier . '_process_lock' );
-			if ( ! empty( $lock_timestamp ) ) {
+			if ( $lock_timestamp ) {
 
 				$lock_duration = ( property_exists( $this, 'queue_lock_time' ) ) ? $this->queue_lock_time : 60; // 1 minute
 				$lock_duration = apply_filters( $this->identifier . '_queue_lock_time', $lock_duration );
@@ -863,10 +863,7 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 		protected function lock_process() {
 			$this->start_time = time(); // Set start time of current process.
 
-			$lock_duration = ( property_exists( $this, 'queue_lock_time' ) ) ? $this->queue_lock_time : 60; // 1 minute
-			$lock_duration = apply_filters( $this->identifier . '_queue_lock_time', $lock_duration );
-
-			update_site_option( $this->identifier . '_process_lock', microtime(), $lock_duration );
+			update_site_option( $this->identifier . '_process_lock', microtime( true ) );
 		}
 
 		/**
@@ -960,11 +957,12 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 			$sql = '
 			SELECT *
 			FROM ' . $table . '
-			WHERE blog_id = %d
+			WHERE blog_id = %d and `group` != %s
 			ORDER BY priority, id ASC
 			';
 
 			$args[] = $blog_id;
+			$args[] = 'bb_pro_migrate_reactions';
 
 			if ( ! empty( $limit ) ) {
 				$sql .= ' LIMIT %d';
@@ -1120,7 +1118,7 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 
 			$table = self::$table_name;
 
-			$wpdb->query( "DELETE FROM {$table}" ); // @codingStandardsIgnoreLine.
+			$wpdb->query( "DELETE FROM {$table} WHERE `group` != 'bb_pro_migrate_reactions'" ); // @codingStandardsIgnoreLine.
 
 			return $this;
 		}
@@ -1192,41 +1190,41 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 			$table = self::$table_name;
 
 			$where_conditions = array(
-				'blog_id' => "blog_id = {$r['blog_id']}"
+				'blog_id' => "`blog_id` = {$r['blog_id']}"
 			);
 
 			if ( ! empty( $r['id'] ) ) {
 				$id_in                  = implode( ',', wp_parse_id_list( $r['id'] ) );
-				$where_conditions['id'] = "id IN ({$id_in})";
+				$where_conditions['id'] = "`id` IN ({$id_in})";
 			}
 
 			if ( ! empty( $r['not_in_id'] ) ) {
 				$id_in                         = implode( ',', wp_parse_id_list( $r['not_in_id'] ) );
-				$where_conditions['not_in_id'] = "id NOT IN ({$id_in})";
+				$where_conditions['not_in_id'] = "`id` NOT IN ({$id_in})";
 			}
 
 			if ( ! empty( $r['group'] ) ) {
-				$where_conditions['group'] = "group = '{$r['group']}'";
+				$where_conditions['group'] = "`group` = '{$r['group']}'";
 			}
 
 			if ( ! empty( $r['not_group'] ) ) {
-				$where_conditions['not_group'] = "group != '{$r['not_group']}'";
+				$where_conditions['not_group'] = "`group` != '{$r['not_group']}'";
 			}
 
 			if ( ! empty( $r['data_id'] ) ) {
-				$where_conditions['data_id'] = "data_id = '{$r['data_id']}'";
+				$where_conditions['data_id'] = "`data_id` = '{$r['data_id']}'";
 			}
 
 			if ( ! empty( $r['not_data_id'] ) ) {
-				$where_conditions['not_data_id'] = "data_id != '{$r['not_data_id']}'";
+				$where_conditions['not_data_id'] = "`data_id` != '{$r['not_data_id']}'";
 			}
 
 			if ( ! empty( $r['secondary_data_id'] ) ) {
-				$where_conditions['secondary_data_id'] = "secondary_data_id = '{$r['secondary_data_id']}'";
+				$where_conditions['secondary_data_id'] = "`secondary_data_id` = '{$r['secondary_data_id']}'";
 			}
 
 			if ( ! empty( $r['not_secondary_data_id'] ) ) {
-				$where_conditions['not_secondary_data_id'] = "secondary_data_id != '{$r['not_secondary_data_id']}'";
+				$where_conditions['not_secondary_data_id'] = "`secondary_data_id` != '{$r['not_secondary_data_id']}'";
 			}
 
 			// Join the where conditions together.

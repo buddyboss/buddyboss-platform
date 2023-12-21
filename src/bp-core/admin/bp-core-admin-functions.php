@@ -3380,14 +3380,17 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
  * Get label with platform pro notice if the platform is not active or not validate.
  *
  * @since BuddyBoss 1.9.1
+ * @since BuddyBoss [BBVERSION] Added support for type.
+ *
+ * @param string $type Type to check.
  *
  * @return string
  */
-function bb_get_pro_label_notice() {
-	static $bb_pro_notice = '';
+function bb_get_pro_label_notice( $type = 'default' ) {
+	static $retval = array();
 
-	if ( '' !== $bb_pro_notice ) {
-		return $bb_pro_notice;
+	if ( isset( $retval[ $type ] ) ) {
+		return $retval[ $type ];
 	}
 
 	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.9.1', '<=' ) ) {
@@ -3395,6 +3398,18 @@ function bb_get_pro_label_notice() {
 			'<br/><span class="bb-head-notice"> %1$s <strong>%2$s</strong> %3$s</span>',
 			esc_html__( 'Update to', 'buddyboss' ),
 			esc_html__( 'BuddyBoss Platform Pro 1.2.0', 'buddyboss' ),
+			esc_html__( 'to unlock', 'buddyboss' )
+		);
+	} elseif (
+		function_exists( 'bb_platform_pro' ) &&
+		version_compare( bb_platform_pro()->version, '2.4.0', '<=' ) && // @todo: Update version condition above before release.
+		! empty( $type ) &&
+		'reaction' === $type
+	) {
+		$bb_pro_notice = sprintf(
+			'<br/><span class="bb-head-notice"> %1$s <strong>%2$s</strong> %3$s</span>',
+			esc_html__( 'Update', 'buddyboss' ),
+			esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ),
 			esc_html__( 'to unlock', 'buddyboss' )
 		);
 	} else {
@@ -3406,6 +3421,8 @@ function bb_get_pro_label_notice() {
 		);
 	}
 
+	$retval[ $type ] = $bb_pro_notice;
+
 	return $bb_pro_notice;
 }
 
@@ -3413,14 +3430,17 @@ function bb_get_pro_label_notice() {
  * Get class for buddyboss pro settings fields.
  *
  * @since BuddyBoss 1.9.1
+ * @since BuddyBoss [BBVERSION] Added support for type.
+ *
+ * @param string $type Type to check.
  *
  * @return string
  */
-function bb_get_pro_fields_class() {
-	static $pro_class = '';
+function bb_get_pro_fields_class( $type = 'default' ) {
+	static $retval = array();
 
-	if ( '' !== $pro_class ) {
-		return $pro_class;
+	if ( isset( $retval[ $type ] ) ) {
+		return $retval[ $type ];
 	}
 
 	$pro_class = 'bb-pro-inactive';
@@ -3431,6 +3451,18 @@ function bb_get_pro_fields_class() {
 	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.9.1', '<=' ) ) {
 		$pro_class = 'bb-pro-inactive';
 	}
+
+	// @todo: Update version condition above before release.
+	if (
+		! empty( $type ) &&
+		'reaction' === $type &&
+		function_exists( 'bb_platform_pro' ) &&
+		version_compare( bb_platform_pro()->version, '2.4.0', '<=' )
+	) {
+		$pro_class = 'bb-pro-inactive';
+	}
+
+	$retval[ $type ] = $pro_class;
 
 	return $pro_class;
 }

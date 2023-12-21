@@ -9556,22 +9556,19 @@ function bb_delete_default_group_png_avatar( $item_ids = array(), $is_delete_dir
  *
  * @return array
  * @since BuddyBoss [BBVERSION]
+ * Get the Reactions settings sections.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
  */
 function bb_reactions_get_settings_sections() {
 
 	$settings = array(
-		'bp_reaction_settings_section'    => array(
+		'bp_reaction_settings_section' => array(
 			'page'              => 'reaction',
 			'title'             => esc_html__( 'Reactions', 'buddyboss' ),
 			'tutorial_callback' => 'bp_admin_reaction_setting_tutorial',
-			'notice'            => (
-				sprintf(
-					wp_kses_post(
-						__( 'When switching reactions mode, use our %s to map existing reactions to the new options.', 'buddyboss' )
-					),
-					'<a href="#" target="_blank" >' . esc_html__( 'migration wizard', 'buddyboss' ) . '</a>'
-				)
-			),
 		),
 	);
 
@@ -9586,7 +9583,21 @@ function bb_reactions_get_settings_sections() {
 function bp_admin_reaction_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="#"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+		<a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62792, // @todo update when release.
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 	<?php
 }
@@ -9594,10 +9605,11 @@ function bp_admin_reaction_setting_tutorial() {
 /**
  * Get reaction settings fields by section.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param string $section_id Section ID.
  *
  * @return mixed False if section is invalid, array of fields otherwise.
- * @since BuddyBoss [BBVERSION]
  */
 function bb_reactions_get_settings_fields_for_section( $section_id = '' ) {
 
@@ -9615,12 +9627,14 @@ function bb_reactions_get_settings_fields_for_section( $section_id = '' ) {
 /**
  * Get all of the reactions settings fields.
  *
- * @return array
  * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
  */
 function bb_reactions_get_settings_fields() {
 
-	$fields = array();
+	$fields    = array();
+	$pro_class = bb_get_pro_fields_class( 'reaction' );
 
 	$fields['bp_reaction_settings_section'] = array(
 		'bb_all_reactions' => array(
@@ -9630,10 +9644,22 @@ function bb_reactions_get_settings_fields() {
 		),
 
 		'bb_reaction_mode'  => array(
-			'title'             => esc_html__( 'Reactions Mode', 'buddyboss' ),
+			'title'             => esc_html__( 'Reactions Mode', 'buddyboss' ) . bb_get_pro_label_notice( 'reaction' ),
 			'callback'          => 'bb_reactions_settings_callback_reaction_mode',
 			'sanitize_callback' => 'sanitize_text_field',
-			'args'              => array(),
+			'args'              => array(
+				'class' => $pro_class
+			),
+		),
+
+		'bb_reaction_emotions' => array(),
+
+		'bb_reactions_button' => array(
+			'title'             => esc_html__( 'Reactions button', 'buddyboss' ) . bb_get_pro_label_notice( 'reaction' ),
+			'callback'          => 'bb_reactions_settings_callback_reactions_button',
+			'args'              => array(
+				'class' => $pro_class
+			),
 		),
 	);
 

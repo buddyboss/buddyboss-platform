@@ -41,6 +41,7 @@ TABLE OF CONTENTS:
 16.0 Moderation
 17.0 Domain restriction
 18.0 Redirection Settings
+19.0 Reactions Settings
 ------------------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------------------
@@ -4063,6 +4064,79 @@ table.moderations .column-member {
 				background-color: rgba(170, 170, 170, 0.5);
 				color: inherit;
 			}
+		}
+	}
+}
+
+/*------------------------------------------------------------------------------
+ * 19.0 Reactions Settings
+ *----------------------------------------------------------------------------*/
+
+.section-bp_reaction_settings_section {
+
+	> h2 {
+		width: 100%;
+	}
+
+	.bb-reactions-setting-field {
+		margin-top: 8px;
+	}
+
+	label[for="bb_reaction_mode_likes"] {
+		margin-right: 15px;
+	}
+
+	.bb-reaction-mode-description {
+		margin-top: 10px;
+	}
+
+	.bb-reaction-button-label {
+		display: flex !important; // Override WP default css
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 5px;
+
+		> p {
+			width: 100%;
+		}
+
+		.bb-reaction-button-text-limit {
+			display: none;
+
+			&.active {
+				display: inline-block;
+			}
+		}
+
+		#bb-reaction-button-chooser {
+			padding: 3px;
+			border-color: #8c8f94;
+			vertical-align: middle;
+			border-radius: 4px;
+			min-height: auto;
+			margin: 0;
+
+			> i {
+				color: #9b9f9b;
+				font-size: 24px;
+				display: block;
+				line-height: 1;
+
+				&:before {
+					margin: 0;
+				}
+			}
+		}
+
+		input#bb-reaction-button-text {
+			color: #2c3338;
+			font-size: 14px;
+			vertical-align: middle;
+			border-radius: 4px;
+			width: auto;
+			min-height: 30px;
+			padding: 3px 8px;
+			line-height: 25px;
 		}
 	}
 }

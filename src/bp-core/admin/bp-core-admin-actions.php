@@ -429,12 +429,25 @@ function bb_core_settings_saved_notice() {
 			isset( $_GET['added'] )
 		)
 	) {
-		add_settings_error(
-			'general',
-			'settings_updated',
-			__( 'Settings saved successfully.', 'buddyboss' ),
-			'updated'
-		);
+
+		$setting_message = __( 'Settings saved successfully.', 'buddyboss' );
+		$setting_updated = isset( $_GET['updated'] ) ? sanitize_text_field( wp_unslash( $_GET['updated'] ) ) : '';
+
+		if ( 'emotion_deleted' === $setting_updated ) {
+			$setting_message = get_transient( $_GET['updated'] );
+			delete_transient( $_GET['updated'] );
+		} elseif ( 'no_message' === $setting_updated ) {
+			$setting_message = '';
+		}
+
+		if ( ! empty( $setting_message ) ) {
+			add_settings_error(
+				'general',
+				'settings_updated',
+				$setting_message,
+				'updated'
+			);
+		}
 	}
 
 	settings_errors();

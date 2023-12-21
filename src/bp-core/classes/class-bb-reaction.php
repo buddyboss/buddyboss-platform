@@ -139,6 +139,19 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'validate_callback' => array( $this, 'bb_validate_activity_reaction_request' ),
 				)
 			);
+
+			// Register an activity reaction item type.
+			$this->bb_register_reaction_item_type(
+				'activity_comment',
+				array(
+					'validate_callback' => array( $this, 'bb_validate_activity_comment_reaction_request' ),
+				)
+			);
+
+			// Added backward compatibility.
+			// @todo will remove it on a frontend task.
+			add_action( 'bb_reaction_after_add_user_item_reaction', array( $this, 'bb_add_activity_reaction_data' ), 10, 2 );
+			add_action( 'bb_reaction_after_remove_user_item_reaction', array( $this, 'bb_remove_activity_reaction_data' ), 10, 3 );
 		}
 
 		/******************* Required functions ******************/
@@ -951,7 +964,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *                                Default: 'all' (return BP_Subscription objects).
 		 * }
 		 *
-		 * @return WP_Error
+		 * @return WP_Error|bool|array
 		 */
 		public function bb_get_user_reactions( $args = array() ) {
 			global $wpdb;
@@ -1189,7 +1202,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @param int $user_reaction_id User reaction id.
 		 *
-		 * @return array|null
+		 * @return array|object|null|bool
 		 */
 		public function bb_get_user_reaction( $user_reaction_id ) {
 			global $wpdb;
@@ -1896,7 +1909,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @param array $args Array of arguments.
 		 *
-		 * @return bool|WP_Error
+		 * @return bool|WP_Error|array
 		 */
 		public function bb_validate_activity_reaction_request( $args ) {
 			$r = bp_parse_args(
@@ -2002,6 +2015,103 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			}
 
 			return $reaction_id;
+		}
+
+		/**
+		 * Validate callback for a reaction item type for activity comment.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $args Array of arguments.
+		 *
+		 * @return array|WP_Error
+		 */
+		public function bb_validate_activity_comment_reaction_request( $args ) {
+			$r = bp_parse_args(
+				$args,
+				array(
+					'item_type' => '',
+					'item_id'   => '',
+				)
+			);
+
+			$valid_item_ids = array();
+
+			if (
+				! bp_is_active( 'activity' ) ||
+				false === bb_is_reaction_activity_comments_enabled()
+			) {
+				return $valid_item_ids;
+			}
+
+			$activity_comment_ids = array();
+			if ( ! empty( $r['item_id'] ) && 'activity_comment' === $r['item_type'] ) {
+				$activities = BP_Activity_Activity::get(
+					array(
+						'per_page'         => 0,
+						'fields'           => 'ids',
+						'display_comments' => true,
+						'show_hidden'      => true, // Support hide_sitewide as true like document activity_comment.
+						'in'               => ! is_array( $r['item_id'] ) ? array( $r['item_id'] ) : $r['item_id'],
+					),
+				);
+
+				if ( ! empty( $activities['activities'] ) ) {
+					$activity_comment_ids = $activities['activities'];
+				}
+			}
+
+			return $activity_comment_ids;
+		}
+
+		/**
+		 * Backward compatibility to add user favorite.
+		 *
+		 * @since BuddyBoss 2.4.30
+		 *
+		 * @param int   $user_reaction_id User reaction id.
+		 * @param array $args             Array of arguments.
+		 *
+		 * @return void
+		 */
+		public function bb_add_activity_reaction_data( $user_reaction_id, $args ) {
+			if (
+				! bp_is_active( 'activity' ) ||
+				empty( $args['item_id'] ) ||
+				empty( $args['item_type'] ) ||
+				empty( $args['user_id'] ) ||
+				'activity' !== $args['item_type']
+			) {
+				return;
+			}
+
+			bp_activity_add_user_favorite( $args['item_id'], $args['user_id'] );
+		}
+
+		/**
+		 * Backward compatibility to remove user favorite.
+		 *
+		 * @since BuddyBoss 2.4.30
+		 *
+		 * @param int       $user_reaction_id User reaction id.
+		 * @param int|false $deleted          The number of rows deleted, or false on error.
+		 * @param object    $get              Reaction data.
+		 *
+		 * @return void
+		 */
+		public function bb_remove_activity_reaction_data( $user_reaction_id, $deleted, $get ) {
+			if (
+				! bp_is_active( 'activity' ) ||
+				empty( $get->item_type ) ||
+				'activity' !== $get->item_type ||
+				! $deleted ||
+				empty( $get->user_id ) ||
+				empty( $get->item_id )
+			) {
+				return;
+			}
+
+			bp_activity_remove_user_favorite( $get->item_id, $get->user_id );
 		}
 	}
 }
