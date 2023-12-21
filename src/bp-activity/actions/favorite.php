@@ -31,7 +31,7 @@ function bp_activity_action_mark_favorite() {
 	check_admin_referer( 'mark_favorite' );
 
 	if ( bb_is_reaction_emotions_enabled() ) {
-		$reaction_id = bb_load_reaction()->bb_reactions_get_first_emotion_reaction_id();
+		$reaction_id = bb_load_reaction()->bb_reactions_reaction_id();
 	} else {
 		$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
 	}

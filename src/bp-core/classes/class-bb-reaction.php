@@ -1074,6 +1074,9 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					$reactions                       = $this->bb_get_reactions( 'emotions' );
 					$reaction_id_in                  = implode( ',', wp_list_pluck( $reactions, 'id' ) );
 					$where_conditions['reaction_id'] = "ur.reaction_id IN ({$reaction_id_in})";
+				} else {
+					$reaction_id_in                  = $this->bb_reactions_get_like_reaction_id();
+					$where_conditions['reaction_id'] = "ur.reaction_id = {$reaction_id_in}";
 				}
 			}
 
@@ -2035,26 +2038,28 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		}
 
 		/**
-		 * Get first active reaction id from emotions list.
+		 * Get default reaction id.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @return bool|int
 		 */
-		public function bb_reactions_get_first_emotion_reaction_id() {
+		public function bb_reactions_reaction_id() {
+			static $reaction_id = 0;
 
-			if ( ! bb_is_reaction_emotions_enabled() ) {
-				return false;
+			if ( 0 !== $reaction_id ) {
+				return $reaction_id;
 			}
 
-			$reactions = $this->bb_get_reactions( 'emotions' );
-			$reaction  = current( $reactions );
-
-			if ( empty( $reaction['id'] ) ) {
-				return false;
+			if ( bb_is_reaction_emotions_enabled() ) {
+				$reactions   = $this->bb_get_reactions( 'emotions' );
+				$reaction    = current( $reactions );
+				$reaction_id = $reaction['id'];
+			} else {
+				$reaction_id = $this->bb_reactions_get_like_reaction_id();
 			}
 
-			return $reaction['id'];
+			return $reaction_id;
 		}
 
 		/**

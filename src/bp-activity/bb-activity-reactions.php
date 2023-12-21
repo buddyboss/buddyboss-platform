@@ -37,10 +37,8 @@ function bp_activity_add_user_reaction( $activity_id, $reaction_id = 0, $activit
 		return false;
 	}
 
-	if ( empty( $reaction_id ) && bb_is_reaction_emotions_enabled() ) {
-		$reaction_id = bb_load_reaction()->bb_reactions_get_first_emotion_reaction_id();
-	} elseif( empty( $reaction_id ) ) {
-		$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
+	if ( empty( $reaction_id ) ) {
+		$reaction_id = bb_load_reaction()->bb_reactions_reaction_id();
 	}
 
 	if ( empty( $user_id ) ) {
@@ -466,10 +464,8 @@ function bb_update_activity_reaction_ajax_callback() {
 
 	if ( ! empty( $_POST['reaction_id'] ) ) {
 		$reaction_id = sanitize_text_field( $_POST['reaction_id'] );
-	} elseif( empty( $_POST['reaction_id'] ) && bb_is_reaction_emotions_enabled() ) {
-		$reaction_id = bb_load_reaction()->bb_reactions_get_first_emotion_reaction_id();
 	} else {
-		$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
+		$reaction_id = bb_load_reaction()->bb_reactions_reaction_id();
 	}
 
 	$item_id   = sanitize_text_field( $_POST['item_id'] );
