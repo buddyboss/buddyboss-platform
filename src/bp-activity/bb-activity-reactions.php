@@ -348,23 +348,10 @@ function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', 
  */
 function bb_get_activity_post_reaction_button_html( $item_id, $item_type = 'activity', $reaction_id = 0, $has_reacted = false ) {
 
-	$reaction_button_class = '';
-	$like_reaction_id      = bb_load_reaction()->bb_reactions_get_like_reaction_id();
-	if ( empty( $reaction_id ) ) {
-		$reaction_id = $like_reaction_id;
-	}
-
-	$reaction_text_color = '';
-	if ( $has_reacted && $reaction_id === $like_reaction_id ) {
-		$reaction_button_class = 'has-like  has-reaction';
-		$reaction_text_color   = '#385DFF';
-	} elseif ( $has_reacted && $reaction_id !== $like_reaction_id ) {
-		$reaction_button_class = 'has-emotion has-reaction';
-	} else {
-		$reaction_button_class = 'fav';
-		if ( function_exists( 'bb_platform_pro' ) && ! empty( bb_reaction_button_options() ) ) {
-			$reaction_button_class = 'reaction';
-		}
+	$reaction_button_class = 'fav reaction';
+	if ( bb_activity_is_item_favorite( $item_id, $item_type ) ) {
+		$reaction_button_class = 'unfav reaction has-reaction';
+		$has_reacted           = true;
 	}
 
 	$reaction_post = get_post( $reaction_id );
@@ -386,7 +373,7 @@ function bb_get_activity_post_reaction_button_html( $item_id, $item_type = 'acti
 		$reaction_link,
 		! empty( $prepared_icon['icon_text'] ) ? $prepared_icon['icon_text'] : esc_html__( 'Like', 'buddyboss' ),
 		$item_type === 'activity' ? $prepared_icon['icon_html'] : '',
-		! empty( $reaction_data['text_color'] ) ? esc_attr( $reaction_data['text_color'] ) : $reaction_text_color,
+		! empty( $reaction_data['text_color'] ) ? esc_attr( $reaction_data['text_color'] ) : '#385DFF',
 		$reaction_button_class,
 	);
 
@@ -1052,19 +1039,11 @@ function bb_activity_prepare_emotion_icon_with_text( $id_or_post_or_reaction, $h
 	if ( ! empty( $reaction_data['type'] ) || ! empty( $reaction_data['icon_path'] ) ) {
 		$icon_text = sanitize_text_field( $reaction_data['icon_text'] );
 	} else {
-		$icon_text = __( 'Like', 'buddyboss' );
-		$icon_html = '';
-
-		// @todo: Check reaction support pro version function.
-		if ( function_exists( 'bb_platform_pro' ) && ! $has_reacted ) {
-			$button_settings = bb_reaction_button_options();
-			$icon_text       = ! empty( $button_settings['text'] ) ? $button_settings['text'] : $icon_text;
-			$icon_html       = sprintf(
-				'<i class="bb-icon-%s %s"></i>',
-				! empty( $button_settings['icon'] ) ? esc_attr( $button_settings['icon'] ) : 'thumbs-up',
-				! empty( $button_settings['text'] ) ? esc_attr( $button_settings['text'] ) : esc_attr( 'Like', 'buddyboss' ),
-			);
-		}
+		//@todo Need some cleanup about reaction button states.
+		$settings  = bb_get_reaction_button_settings();
+		$icon_text = ! empty( $settings['text'] ) && ! $has_reacted ? $settings['text'] : esc_html( 'Like', 'buddyboss' );
+		$icon      = ! empty( $settings['icon'] ) && ! $has_reacted ? $settings['icon'] : 'thumbs-up bb-icon-f';
+		$icon_html = '<span><i class="bb-icon-' . $icon . ' "></i></span>';
 	}
 
 	return array(
@@ -1108,9 +1087,46 @@ function bb_activity_prepare_emotion_icon( $id_or_post_or_reaction ) {
 			esc_attr( $reaction_data['type'] ),
 			esc_attr( $reaction_data['icon_text'] )
 		);
+	} elseif ( empty( $reaction_data['type'] ) && ! empty( $reaction_data['name'] ) ) {
+		$icon_html = '<i class="bb-icon-thumbs-up bb-icon-rf default-like"></i>';
 	} else {
-		$icon_html = '<i class="bb-icon-thumbs-up default-thumb-icon"></i>';
+		$settings  = bb_get_reaction_button_settings();
+		$icon_html = ! empty( $settings['icon'] ) ? sprintf( '<span></span><i class="bb-icon-%s"></i></span>', esc_attr( $settings['icon'] ) ) : '<span></span><i class="bb-icon-thumbs-up"></i></span>';
 	}
 
 	return $icon_html;
+}
+
+/**
+ * Get reaction button settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bb_get_reaction_button_settings() {
+
+	$args = array(
+		'icon' => 'thumbs-up',
+		'text' => esc_html( 'Like', 'buddyboss' ),
+	);
+
+	if (
+		! class_exists( 'BB_Reactions' ) ||
+		! function_exists( 'bbp_pro_is_license_valid' ) ||
+		! bbp_pro_is_license_valid()
+	) {
+		return $args;
+	}
+
+	$settings =  bb_reaction_button_options();
+	if ( ! empty( $settings['icon'] ) ) {
+		$args['icon'] = $settings['icon'];
+	}
+
+	if ( ! empty( $settings['text'] ) ) {
+		$args['text'] = $settings['text'];
+	}
+
+	return $args;
 }

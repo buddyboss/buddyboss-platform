@@ -480,29 +480,30 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 			$key = 'href';
 		}
 
-		// Default like button attributes.
 		$fav_args = array(
-			'link_class'   => 'button fav bp-secondary-action bp-like-button',
+			'class'        => 'button fav bp-secondary-action bp-like-button',
 			'aria-pressed' => 'false',
 			'link_attr'    => bp_get_activity_favorite_link(),
 			'link_text'    => sprintf(
 				'<span class="bp-screen-reader-text">%1$s</span><span class="like-count">%1$s</span>',
 				esc_html__( 'Like', 'buddyboss' )
-			)
+			),
 		);
 
-		// @todo: Check reaction support pro version function.
-		if ( ! bb_activity_is_item_favorite( $activity_id ) && function_exists( 'bb_platform_pro' ) ) {
-			// If reactions button is set and pro is active then add custom reaction button.
-			$button_settings        = bb_reaction_button_options();
+		if ( ! bb_activity_is_item_favorite( $activity_id ) ) {
+
+			// @todo: Do necessary changes in function to valid it.
+			$button_settings = bb_get_reaction_button_settings();
+
 			$fav_args['link_class'] = 'button fav reaction bp-secondary-action bp-like-button';
 			$fav_args['link_text']  = sprintf(
 				'<span class="bp-screen-reader-text">%1$s</span>
-				<i class="bb-icon-%2$s"></i>
+				<span><i class="bb-icon-%2$s"></i></span>
 				<span class="like-count">%1$s</span>',
 				! empty( $button_settings['text'] ) ? esc_html( $button_settings['text'] ) : esc_html( 'Like', 'buddyboss' ),
 				! empty( $button_settings['icon'] ) ? esc_attr( $button_settings['icon'] ) : 'thumbs-up'
 			);
+
 		} else {
 			// Get user reacted reaction data and prepare the link.
 			$reaction_data = bb_activity_get_user_reaction_by_item( $activity_id );
@@ -881,7 +882,7 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 		$key = ( 'button' === $button_element ) ? 'data-bp-nonce' : 'href';
 
 		$fav_args = array(
-			'class'        => 'button fav bp-secondary-action bp-like-button',
+			'class'        => 'button fav reaction bp-secondary-action bp-like-button',
 			'aria-pressed' => 'false',
 			$key           => bb_get_activity_comment_favorite_link(),
 			'link_text'    => sprintf(
@@ -890,11 +891,9 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 			),
 		);
 
-		// @todo: Check reaction support pro version function.
-		if ( ! bb_get_activity_comment_is_favorite() && function_exists( 'bb_platform_pro' ) ) {
-			// If reactions button is set and pro is active then add custom reaction button text.
-			$button_settings        = bb_reaction_button_options();
-			$fav_args['link_class'] = 'button reaction bp-secondary-action bp-like-button';
+		if ( ! bb_get_activity_comment_is_favorite() ) {
+			$button_settings = bb_get_reaction_button_settings();
+			$fav_args['link_class'] = 'button fav reaction bp-secondary-action bp-like-button';
 			$fav_args['link_text']  = sprintf(
 				'<span class="bp-screen-reader-text">%1$s</span>
 				<span class="like-count">%1$s</span>',
@@ -908,8 +907,9 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 				$reaction      = $reaction_data['reaction'];
 				$link_classes  = empty( $reaction['type'] ) ? 'has-like has-reaction' : 'has-emotion has-reaction';
 				$prepared_icon = bb_activity_prepare_emotion_icon_with_text( $reaction, true );
+
 				$fav_args      = array(
-					'class'        => sprintf( 'button bp-secondary-action bp-like-button %s', $link_classes ),
+					'class'        => sprintf( 'button unfav bp-secondary-action bp-like-button %s', $link_classes ),
 					'aria-pressed' => 'true',
 					$key           => bb_get_activity_comment_unfavorite_link(),
 					'link_text'    => sprintf(

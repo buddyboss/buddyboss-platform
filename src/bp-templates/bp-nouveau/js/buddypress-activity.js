@@ -730,11 +730,11 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		activityActions: function( event ) {
+
 			var parent                     = event.data, target = $( event.target ), activity_item = $( event.currentTarget ),
 				activity_id                = activity_item.data( 'bp-activity-id' ), stream = $( event.delegateTarget ),
 				activity_state             = activity_item.find( '.activity-state' ),
 				comments_text              = activity_item.find( '.comments-count' ),
-				likes_text                 = activity_item.find( '.like-text' ),
 				item_id, form, model, self = this;
 
 			// In case the target is set to a span inside the link.
@@ -742,16 +742,41 @@ window.bp = window.bp || {};
 				target = $( target ).closest( 'a' );
 			}
 
-			// Favoriting.
+			// Favorite and unfavorite logic.
 			if ( target.hasClass( 'fav' ) || target.hasClass( 'unfav' ) ) {
-				var type = target.hasClass( 'fav' ) ? 'fav' : 'unfav';
-
 				// Stop event propagation.
 				event.preventDefault();
 
+				var type        = target.hasClass( 'fav' ) ? 'fav' : 'unfav',
+					is_activity = true,
+					item_type   = 'activity',
+					parent_el   = target.parents( '.acomment-display' ).first(),
+					item_id     = 0,
+					main_el;
+
+				if ( 0 < parent_el.length ) {
+					is_activity = false;
+					item_type   = 'activity_comment';
+				}
+
+				if ( ! is_activity ) {
+					main_el = target.parents( '.activity-comment' ).first();
+					item_id = main_el.data( 'bp-activity-comment-id' );
+				} else {
+					main_el = target.parents( '.activity-item' );
+					item_id = main_el.data( 'bp-activity-id' );
+				}
+
 				target.addClass( 'loading' );
 
-				parent.ajax( { action: 'activity_mark_' + type, 'id': activity_id }, 'activity' ).done(
+				var data = {
+					action: 'activity_mark_' + type,
+					reaction_id: target.parents( '.ac-emotion_item' ).data( 'reaction-id' ),
+					item_id: item_id,
+					item_type: item_type,
+				};
+
+				parent.ajax( data, 'activity' ).done(
 					function( response ) {
 						target.removeClass( 'loading' );
 
@@ -761,12 +786,6 @@ window.bp = window.bp || {};
 							target.fadeOut(
 								200,
 								function() {
-									if ( $( this ).find( 'span' ).first().length ) {
-										$( this ).find( 'span' ).first().html( response.data.content );
-									} else {
-										$( this ).html( response.data.content );
-									}
-									// $( this ).prop( 'title', response.data.content );
 
 									if ('false' === $( this ).attr( 'aria-pressed' ) ) {
 										$( this ).attr( 'aria-pressed', 'true' );
@@ -774,18 +793,28 @@ window.bp = window.bp || {};
 										$( this ).attr( 'aria-pressed', 'false' );
 									}
 
-									if ( likes_text.length ) {
-										response.data.like_count ?
-											likes_text.text( response.data.like_count ) && activity_state.addClass( 'has-likes' ) :
-											likes_text.empty() && activity_state.removeClass( 'has-likes' );
-
-										// Update like tooltip.
-										var decoded = $( '<textarea/>' ).html( response.data.tooltip ).text();
-										likes_text.attr( 'data-hint', decoded );
+									// Update reacted user name and counts.
+									if ( 'undefined' !== typeof response.data.reaction_count ) {
+										if ( is_activity ) {
+											if ( 0 < main_el.find( '.activity-content .activity-state-reactions' ).length ) {
+												main_el.find( '.activity-content  .activity-state-reactions' ).replaceWith( response.data.reaction_count );
+											} else {
+												main_el.find( '.activity-content .activity-state' ).prepend( response.data.reaction_count );
+											}
+										} else {
+											if ( 0 < main_el.find( '#acomment-display-' + item_id + ' .comment-reactions' ).length ) {
+												main_el.find( '#acomment-display-' + item_id + ' .comment-reactions' ).html( response.data.reaction_count );
+											}
+										}
 									}
 
-									if ( $( this ).find( '.like-count' ).length ) {
-										$( this ).find( '.like-count' ).html( response.data.content );
+									// Update reacted button.
+									if ( response.data.reaction_button ) {
+										if ( is_activity ) {
+											main_el.find( '.bp-generic-meta a.bp-like-button:first' ).replaceWith( response.data.reaction_button );
+										} else {
+											main_el.find( '#acomment-display-' + item_id + ' .bp-generic-meta a.bp-like-button' ).replaceWith( response.data.reaction_button );
+										}
 									}
 
 									$( this ).fadeIn( 200 );
@@ -793,15 +822,15 @@ window.bp = window.bp || {};
 							);
 						}
 
+						// Add "Likes/Emotions" menu item on activity directory nav menu.
 						if ( 'fav' === type ) {
-							if ( undefined !== response.data.directory_tab ) {
-								if ( ! $( parent.objectNavParent + ' [data-bp-scope="favorites"]' ).length ) {
-									$( parent.objectNavParent + ' [data-bp-scope="all"]' ).after( response.data.directory_tab );
-								}
+							if (
+								typeof response.data.directory_tab !== 'undefined' &&
+								response.data.directory_tab !== '' &&
+								! $( parent.objectNavParent + ' [data-bp-scope="favorites"]' ).length
+							) {
+								$( parent.objectNavParent + ' [data-bp-scope="all"]' ).after( response.data.directory_tab );
 							}
-
-							target.removeClass( 'fav' );
-							target.addClass( 'unfav' );
 
 						} else if ( 'unfav' === type ) {
 							var favoriteScope = $( '[data-bp-user-scope="favorites"]' ).hasClass( 'selected' ) || $( parent.objectNavParent + ' [data-bp-scope="favorites"]' ).hasClass( 'selected' );
@@ -821,9 +850,6 @@ window.bp = window.bp || {};
 									stream.append( response.data.no_favorite );
 								}
 							}
-
-							target.removeClass( 'unfav' );
-							target.addClass( 'fav' );
 						}
 					}
 				);
