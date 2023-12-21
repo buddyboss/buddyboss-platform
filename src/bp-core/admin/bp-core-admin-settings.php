@@ -3573,6 +3573,8 @@ function bb_reactions_settings_callback_reaction_mode() {
 /**
  * Add reactions button settings.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @return void
  */
 function bb_reactions_settings_callback_reactions_button() {

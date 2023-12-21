@@ -2,9 +2,8 @@
 /**
  * Add admin Reactions settings page in Dashboard->BuddyBoss->Settings
  *
+ * @since   BuddyBoss [BBVERSION]
  * @package BuddyBoss\Core
- *
- * @since BuddyBoss [BBVERSION]
  */
 
 // Exit if accessed directly.
@@ -20,6 +19,8 @@ class BB_Admin_Setting_Reactions extends BP_Admin_Setting_tab {
 	/**
 	 * Initializes the function.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return void
 	 */
 	public function initialize() {
@@ -30,6 +31,8 @@ class BB_Admin_Setting_Reactions extends BP_Admin_Setting_tab {
 
 	/**
 	 * Method to save the fields.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return void
 	 */
@@ -61,6 +64,8 @@ class BB_Admin_Setting_Reactions extends BP_Admin_Setting_tab {
 
 	/**
 	 * Registers the fields for the reaction settings sections.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return void
 	 */

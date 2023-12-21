@@ -964,7 +964,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *                                Default: 'all' (return BP_Subscription objects).
 		 * }
 		 *
-		 * @return WP_Error
+		 * @return WP_Error|bool|array
 		 */
 		public function bb_get_user_reactions( $args = array() ) {
 			global $wpdb;
@@ -1202,7 +1202,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @param int $user_reaction_id User reaction id.
 		 *
-		 * @return array|null
+		 * @return array|object|null|bool
 		 */
 		public function bb_get_user_reaction( $user_reaction_id ) {
 			global $wpdb;
@@ -1909,7 +1909,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @param array $args Array of arguments.
 		 *
-		 * @return bool|WP_Error
+		 * @return bool|WP_Error|array
 		 */
 		public function bb_validate_activity_reaction_request( $args ) {
 			$r = bp_parse_args(
