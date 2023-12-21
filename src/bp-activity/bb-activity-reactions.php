@@ -901,11 +901,6 @@ function bb_activity_is_item_favorite( $item_id, $item_type = 'activity', $user_
 		'user_id'   => $user_id,
 	);
 
-	// If emotions is disabled then check with default reaction id.
-	if ( ! bb_is_reaction_emotions_enabled() ) {
-		$args['reaction_id'] = bb_load_reaction()->bb_reactions_get_like_reaction_id();
-	}
-
 	return (bool) bb_load_reaction()->bb_get_user_reactions_count( $args );
 }
 
