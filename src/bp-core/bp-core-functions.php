@@ -2369,7 +2369,8 @@ function bp_core_load_buddypress_textdomain() {
 		array(
 			trailingslashit( WP_LANG_DIR . '/' . $domain ),
 			trailingslashit( WP_LANG_DIR ),
-			trailingslashit( BP_PLUGIN_DIR . '/languages' ),
+			trailingslashit( BP_PLUGIN_DIR . 'languages' ),
+			trailingslashit( BP_PLUGIN_DIR . 'src/languages' ),
 		)
 	);
 
