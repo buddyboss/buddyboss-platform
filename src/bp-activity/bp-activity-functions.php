@@ -941,17 +941,22 @@ function bp_activity_get_user_favorites( $user_id = 0 ) {
  * @param int    $activity_id ID of the activity item being favorited.
  * @param int    $user_id     ID of the user favoriting the activity item.
  * @param string $type        Type of item. Possible values 'activity, 'activity_comment'.
+ * @param int    $reaction_id ID of reaction.
  *
  * @return WP_Error|object Object on success, WP_Error on failure.
  */
-function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $type = 'activity' ) {
+function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $type = 'activity', $reaction_id = 0 ) {
 
 	// Fallback to logged in user if no user_id is passed.
 	if ( empty( $user_id ) ) {
 		$user_id = bp_loggedin_user_id();
 	}
 
-	$reaction_id = bb_load_reaction()->bb_reactions_reaction_id();
+	// Fallback to the current selected mode in reaction if no reaction_id is passed.
+	if ( empty( $reaction_id ) ) {
+		$reaction_id = bb_load_reaction()->bb_reactions_reaction_id();
+	}
+
 	$reacted     = bb_load_reaction()->bb_add_user_item_reaction(
 		array(
 			'item_type'   => $type,
