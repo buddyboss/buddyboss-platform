@@ -7865,6 +7865,9 @@ function bb_admin_icons( $id ) {
 		case 'bb_redirection':
 			$meta_icon = $bb_icon_bf . ' bb-icon-sign-in';
 			break;
+		case 'bp_reaction_settings_section':
+			$meta_icon = $bb_icon_bf . ' bb-icon-like';
+			break;
 		default:
 			$meta_icon = '';
 	}
@@ -9118,4 +9121,115 @@ function bb_remove_class_action( $action, $class, $method ) {
 			}
 		}
 	}
+}
+
+/**
+ * Get the Reactions settings sections.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bb_reactions_get_settings_sections() {
+
+	$settings = array(
+		'bp_reaction_settings_section' => array(
+			'page'              => 'reaction',
+			'title'             => esc_html__( 'Reactions', 'buddyboss' ),
+			'tutorial_callback' => 'bp_admin_reaction_setting_tutorial',
+		),
+	);
+
+	return (array) apply_filters( 'bb_reactions_get_settings_sections', $settings );
+}
+
+/**
+ * Link to Reaction tutorial.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_reaction_setting_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62792, // @todo update when release.
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
+ * Get reaction settings fields by section.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $section_id Section ID.
+ *
+ * @return mixed False if section is invalid, array of fields otherwise.
+ */
+function bb_reactions_get_settings_fields_for_section( $section_id = '' ) {
+
+	// Bail if section is empty.
+	if ( empty( $section_id ) ) {
+		return false;
+	}
+
+	$fields = bb_reactions_get_settings_fields();
+	$retval = $fields[ $section_id ] ?? false;
+
+	return (array) apply_filters( 'bb_reactions_get_settings_fields_for_section', $retval, $section_id );
+}
+
+/**
+ * Get all of the reactions settings fields.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bb_reactions_get_settings_fields() {
+
+	$fields    = array();
+	$pro_class = bb_get_pro_fields_class( 'reaction' );
+
+	$fields['bp_reaction_settings_section'] = array(
+		'bb_all_reactions' => array(
+			'title'             => esc_html__( 'Enable reactions', 'buddyboss' ),
+			'callback'          => 'bb_reactions_settings_callback_all_reactions',
+			'args'              => array(),
+		),
+
+		'bb_reaction_mode'  => array(
+			'title'             => esc_html__( 'Reactions Mode', 'buddyboss' ) . bb_get_pro_label_notice( 'reaction' ),
+			'callback'          => 'bb_reactions_settings_callback_reaction_mode',
+			'sanitize_callback' => 'sanitize_text_field',
+			'args'              => array(
+				'class' => $pro_class
+			),
+		),
+
+		'bb_reaction_emotions' => array(),
+
+		'bb_reactions_button' => array(
+			'title'             => esc_html__( 'Reactions button', 'buddyboss' ) . bb_get_pro_label_notice( 'reaction' ),
+			'callback'          => 'bb_reactions_settings_callback_reactions_button',
+			'args'              => array(
+				'class' => $pro_class
+			),
+		),
+	);
+
+	return (array) apply_filters( 'bb_reactions_get_settings_fields', $fields );
 }

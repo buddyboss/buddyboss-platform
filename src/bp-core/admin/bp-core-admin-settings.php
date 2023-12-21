@@ -233,7 +233,7 @@ function bp_admin_setting_callback_heartbeat() {
 	} else {
 		echo 'disabled="disabled"'; }
 	?>
-	 />
+	/>
 	<label for="_bp_enable_heartbeat_refresh"><?php esc_html_e( 'Automatically check for new activity posts', 'buddyboss' ); ?></label>
 	<?php if ( '1' == $heartbeat_disabled ) { ?>
 		<p class="description"><?php _e( 'This feature requires the WordPress <a href="https://developer.wordpress.org/plugins/javascript/heartbeat-api/" target="_blank">Heartbeat API</a> to function, which is disabled on your server.', 'buddyboss' ); ?></p>
@@ -323,21 +323,6 @@ function bp_admin_setting_callback_enable_activity_follow() {
 
 	<?php
 }
-
-/**
- * Allow like activity stream.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_admin_setting_callback_enable_activity_like() {
-	?>
-
-	<input id="_bp_enable_activity_like" name="_bp_enable_activity_like" type="checkbox" value="1" <?php checked( bp_is_activity_like_active( true ) ); ?> />
-	<label for="_bp_enable_activity_like"><?php esc_html_e( 'Allow your members to "Like" each other\'s activity posts', 'buddyboss' ); ?></label>
-
-	<?php
-}
-
 
 /**
  * Allow link previews in activity posts.
@@ -1635,10 +1620,10 @@ function bp_core_admin_integrations() {
  */
 function bp_core_admin_buddyboss_app() {
 	?>
-		 <div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'BuddyBoss App', 'buddyboss' ) ); ?></h2>
-			<?php require buddypress()->plugin_dir . 'bp-core/admin/templates/about-buddyboss-app.php'; ?>
-		</div>
+	<div class="wrap">
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'BuddyBoss App', 'buddyboss' ) ); ?></h2>
+		<?php require buddypress()->plugin_dir . 'bp-core/admin/templates/about-buddyboss-app.php'; ?>
+	</div>
 	<?php
 }
 
@@ -3477,5 +3462,154 @@ function bp_admin_setting_callback_custom_logout_redirection() {
 		);
 		?>
 	</p>
+	<?php
+}
+
+/**
+ * Reactions settings enable markups.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_reactions_settings_callback_all_reactions() {
+
+	$all_reactions = bb_get_all_reactions();
+	?>
+	<p class="description access_control_label_header"><?php esc_html_e( 'Which type of content should members be able to react to?', 'buddyboss' ); ?></p>
+
+	<br/>
+	<?php
+	foreach ( $all_reactions as $key => $field ) {
+
+		$field['enabled'] = bb_all_enabled_reactions( $key );
+		?>
+		<div class="bb-reactions-setting-field">
+			<input
+				name="bb_all_reactions[<?php echo esc_attr( $key ); ?>]"
+				id="bb_all_reactions_<?php echo esc_attr( $key ); ?>"
+				type="checkbox"
+				value="1"
+				<?php
+				checked( $field['enabled'] );
+				disabled( $field['disabled'] );
+				?>
+			/>
+			<label for="bb_all_reactions_<?php echo esc_attr( $key ); ?>">
+				<?php echo esc_html( $field['label'] ); ?>
+			</label>
+		</div>
+		<?php
+	}
+}
+
+/**
+ * Add reaction mode settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_reactions_settings_callback_reaction_mode() {
+
+	$reactions_modes = array(
+		'likes'    => array(
+			'label'      => esc_html__( 'Likes', 'buddyboss' ),
+			'name'       => 'bb_reaction_mode',
+			'value'      => 'likes',
+			'id'         => 'bb_reaction_mode_likes',
+			'is_checked' => 'likes' === bb_get_reaction_mode(),
+			'notice'     => esc_html__( 'A simple "Like" button will show for members to express their appreciation or acknowledgement.', 'buddyboss' ),
+			'disabled'   => false,
+		),
+		'emotions' => array(
+			'label'      => esc_html__( 'Emotions', 'buddyboss' ),
+			'name'       => 'bb_reaction_mode',
+			'value'      => 'emotions',
+			'id'         => 'bb_reaction_mode_emotions',
+			'is_checked' => 'emotions' === bb_get_reaction_mode(),
+			'notice'     => esc_html__( 'Members express their thoughts or feelings by selecting an emotion from a list of options.', 'buddyboss' ),
+			'disabled'   => (
+				! class_exists( 'BB_Reactions' ) ||
+				! function_exists( 'bbp_pro_is_license_valid' ) ||
+				! bbp_pro_is_license_valid()
+			),
+		),
+	);
+
+	$reactions_modes = apply_filters( 'bb_setting_reaction_mode_args', $reactions_modes );
+
+	if ( ! empty( $reactions_modes ) && is_array( $reactions_modes ) ) {
+		$notice_text = '';
+		foreach ( $reactions_modes as $reaction_mode ) {
+			?>
+			<label for="<?php echo $reaction_mode['id']; ?>" class="<?php echo esc_attr( ! empty( $reaction_mode['disabled'] ) ? 'disabled' : '' ); ?>">
+				<input name="<?php echo $reaction_mode['name']; ?>"
+					id="<?php echo $reaction_mode['id']; ?>"
+					type="radio"
+					value="<?php echo $reaction_mode['value']; ?>"
+					data-current-val="<?php echo bb_get_reaction_mode(); ?>"
+					data-notice="<?php echo ! empty( $reaction_mode['notice'] ) ? $reaction_mode['notice'] : ''; ?>"
+					<?php
+					checked( $reaction_mode['is_checked'] );
+					disabled( $reaction_mode['disabled'] );
+					?>
+				/>
+				<?php echo $reaction_mode['label']; ?>
+			</label>
+			<?php
+
+			if ( ! empty( $reaction_mode['is_checked'] ) ) {
+				$notice_text = $reaction_mode['notice'];
+			}
+		}
+
+		if ( ! empty( $notice_text ) ) {
+			?>
+			<div class="description bb-reaction-mode-description">
+				<?php echo $notice_text; ?>
+			</div>
+			<?php
+		}
+	}
+}
+
+/**
+ * Add reactions button settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_reactions_settings_callback_reactions_button() {
+
+	$button_settings = bb_reaction_button_options();
+	$button_icon     = isset( $button_settings['icon'] ) ? $button_settings['icon'] : 'thumbs-up';
+	$button_text     = isset( $button_settings['text'] ) ? trim( $button_settings['text'] ) : '';
+
+	?>
+	<label for="bb_reactions_button" class="bb-reaction-button-label">
+		<button type="button" class="button" id="bb-reaction-button-chooser">
+			<i class="bb-icon-<?php echo esc_attr( $button_icon ); ?>"></i>
+		</button>
+		<input
+			type="hidden"
+			name="bb_reactions_button[icon]"
+			id="bb-reaction-button-hidden-field"
+			value="<?php echo esc_attr( $button_icon ); ?>"
+		/>
+
+		<input
+			name="bb_reactions_button[text]"
+			id="bb-reaction-button-text"
+			type="text"
+			max-length="8"
+			value="<?php echo esc_attr( $button_text ); ?>"
+			placeholder="<?php esc_attr_e( 'Like', 'buddyboss' ); ?>"
+		/>
+		<span class="bb-reaction-button-text-limit">
+			<span><?php echo strlen( $button_text ); ?></span>/8
+		</span>
+
+		<p>
+			<?php esc_html_e( 'Change the icon and text used within the Reactions button. When using “Emotions”, clicking on the button will react with the first emotion from the list of options.', 'buddyboss' ); ?>
+		</p>
+	</label>
 	<?php
 }

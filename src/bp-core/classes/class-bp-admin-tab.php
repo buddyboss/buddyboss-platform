@@ -507,6 +507,16 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			settings_fields( $this->tab_name );
 			$this->bp_custom_do_settings_sections( $this->tab_name );
 
+			/**
+			 * Added hook to add the custom data into the form.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $tab_name The tab name.
+			 * @param object $this     Current tab object.
+			 */
+			do_action( 'bp_admin_tab_form_html', $this->tab_name, $this );
+
 			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' === $_GET['tab'] && 'bp-settings' === $_GET['page'] ) {
 				?>
 			<p class="submit">
