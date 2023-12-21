@@ -1013,14 +1013,12 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $type = '
 		$user_id = bp_loggedin_user_id();
 	}
 
-	$reaction_id = bb_load_reaction()->bb_reactions_reaction_id();
-	$un_reacted  = bb_load_reaction()->bb_remove_user_item_reactions(
+	$un_reacted = bb_load_reaction()->bb_remove_user_item_reactions(
 		array(
-			'item_type'   => $type,
-			'reaction_id' => $reaction_id,
-			'item_id'     => $activity_id,
-			'user_id'     => $user_id,
-			'error_type'  => 'wp_error',
+			'item_type'  => $type,
+			'item_id'    => $activity_id,
+			'user_id'    => $user_id,
+			'error_type' => 'wp_error',
 		)
 	);
 
