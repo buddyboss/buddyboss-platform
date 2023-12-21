@@ -3604,7 +3604,7 @@ function bb_reactions_settings_callback_reactions_button() {
 			placeholder="<?php esc_attr_e( 'Like', 'buddyboss' ); ?>"
 		/>
 		<span class="bb-reaction-button-text-limit">
-			<span><?php echo strlen( $button_text ); ?></span>/8
+			<span><?php echo strlen( $button_text ); ?></span>/12
 		</span>
 
 		<p>
