@@ -233,7 +233,7 @@ function bp_admin_setting_callback_heartbeat() {
 	} else {
 		echo 'disabled="disabled"'; }
 	?>
-	 />
+	/>
 	<label for="_bp_enable_heartbeat_refresh"><?php esc_html_e( 'Automatically check for new activity posts', 'buddyboss' ); ?></label>
 	<?php if ( '1' == $heartbeat_disabled ) { ?>
 		<p class="description"><?php _e( 'This feature requires the WordPress <a href="https://developer.wordpress.org/plugins/javascript/heartbeat-api/" target="_blank">Heartbeat API</a> to function, which is disabled on your server.', 'buddyboss' ); ?></p>
@@ -1620,10 +1620,10 @@ function bp_core_admin_integrations() {
  */
 function bp_core_admin_buddyboss_app() {
 	?>
-		 <div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'BuddyBoss App', 'buddyboss' ) ); ?></h2>
-			<?php require buddypress()->plugin_dir . 'bp-core/admin/templates/about-buddyboss-app.php'; ?>
-		</div>
+	<div class="wrap">
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'BuddyBoss App', 'buddyboss' ) ); ?></h2>
+		<?php require buddypress()->plugin_dir . 'bp-core/admin/templates/about-buddyboss-app.php'; ?>
+	</div>
 	<?php
 }
 
@@ -3519,7 +3519,7 @@ function bb_reactions_settings_callback_reaction_mode() {
 			'disabled'   => false,
 		),
 		'emotions' => array(
-			'label'      => esc_html__( 'Emotions', 'buddyboss-pro' ),
+			'label'      => esc_html__( 'Emotions', 'buddyboss' ),
 			'name'       => 'bb_reaction_mode',
 			'value'      => 'emotions',
 			'id'         => 'bb_reaction_mode_emotions',
@@ -3539,20 +3539,20 @@ function bb_reactions_settings_callback_reaction_mode() {
 		$notice_text = '';
 		foreach ( $reactions_modes as $reaction_mode ) {
 			?>
-            <label for="<?php echo $reaction_mode['id']; ?>" class="<?php echo esc_attr( ! empty( $reaction_mode['disabled'] ) ? 'disabled' : '' ); ?>">
-                <input name="<?php echo $reaction_mode['name']; ?>"
-                       id="<?php echo $reaction_mode['id']; ?>"
-                       type="radio"
-                       value="<?php echo $reaction_mode['value']; ?>"
-                       data-current-val="<?php echo bb_get_reaction_mode(); ?>"
-                       data-notice="<?php echo ! empty( $reaction_mode['notice'] ) ? $reaction_mode['notice'] : ''; ?>"
+			<label for="<?php echo $reaction_mode['id']; ?>" class="<?php echo esc_attr( ! empty( $reaction_mode['disabled'] ) ? 'disabled' : '' ); ?>">
+				<input name="<?php echo $reaction_mode['name']; ?>"
+					id="<?php echo $reaction_mode['id']; ?>"
+					type="radio"
+					value="<?php echo $reaction_mode['value']; ?>"
+					data-current-val="<?php echo bb_get_reaction_mode(); ?>"
+					data-notice="<?php echo ! empty( $reaction_mode['notice'] ) ? $reaction_mode['notice'] : ''; ?>"
 					<?php
 					checked( $reaction_mode['is_checked'] );
 					disabled( $reaction_mode['disabled'] );
 					?>
-                />
+				/>
 				<?php echo $reaction_mode['label']; ?>
-            </label>
+			</label>
 			<?php
 
 			if ( ! empty( $reaction_mode['is_checked'] ) ) {
