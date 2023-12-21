@@ -12,13 +12,13 @@
 defined( 'ABSPATH' ) || exit;
 
 add_action( 'wp_ajax_bb_update_reaction', 'bb_update_activity_reaction_ajax_callback' );
+
 add_action( 'wp_ajax_bb_get_reactions', 'bb_get_activity_reaction_ajax_callback' );
 add_action( 'wp_ajax_nopriv_bb_get_reactions', 'bb_get_activity_reaction_ajax_callback' );
 add_action( 'wp_ajax_bb_user_reactions', 'bb_get_user_reactions_ajax_callback' );
 add_action( 'wp_ajax_nopriv_bb_user_reactions', 'bb_get_user_reactions_ajax_callback' );
 
-add_action( 'bp_activity_deleted_activities', 'bb_activity_remove_activity_post_reactions', 10, 1 );
-add_action( 'bp_activity_action_delete_activity', 'bb_activity_remove_activity_post_reactions', 10, 1 );
+add_action( 'bp_activity_after_delete', 'bb_activity_remove_activity_post_reactions', 10, 1 );
 
 /**
  * Add user reaction for an activity post.
@@ -149,17 +149,18 @@ function bb_activity_total_reactions_count_for_user( $user_id = 0, $activity_typ
 /**
  * Delete all reactions for an activity.
  *
- * @param array|int $activity_ids ID of the activity.
+ * @param array|int $activities Array of the activity.
  * @return void
  */
-function bb_activity_remove_activity_post_reactions( $activity_ids ) {
+function bb_activity_remove_activity_post_reactions( $activities ) {
 
-	if ( empty( $activity_ids ) ) {
+	if ( empty( $activities ) ) {
 		return;
 	}
 
-	if ( ! is_array( $activity_ids ) ) {
-		$activity_ids = array( $activity_ids );
+	$activity_ids = array_column( $activities, 'id');
+	if ( empty( $activity_ids ) ) {
+		return;
 	}
 
 	foreach ( $activity_ids as $key => $activity_id ) {
