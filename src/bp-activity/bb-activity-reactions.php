@@ -592,31 +592,33 @@ function bb_activity_get_reacted_users_data( $args ) {
 
 	if ( ! empty( $reaction_data['reactions'] ) ) {
 		foreach ( $reaction_data['reactions'] as $reaction ) {
-			$user_data     = get_userdata( $reaction->user_id );
+
 			$reaction_meta = get_post_field( 'post_content', $reaction->reaction_id );
 			$type          = function_exists( 'bp_get_member_type_object' ) ? bp_get_member_type( $reaction->user_id ) : '';
-			$type_obj      = function_exists( 'bp_get_member_type_object' ) ? bp_get_member_type_object( $type ) : '';
-			$color_data    = function_exists( 'bb_get_member_type_label_colors' ) ? bb_get_member_type_label_colors( $type ) : '';
+			$type_obj      = function_exists( 'bp_get_member_type_object' ) && ! empty( $type ) ? bp_get_member_type_object( $type ) : '';
+			$color_data    = function_exists( 'bb_get_member_type_label_colors' ) && ! empty( $type ) ? bb_get_member_type_label_colors( $type ) : '';
 
-			$member_type = esc_html__( 'Member', 'buddyboss' );
 			if ( ! empty( $type_obj ) ) {
 				$member_type = $type_obj->labels['singular_name'];
 			}
 
-			//$member_type = wp_kses_post( bp_get_user_member_type( bp_get_member_user_id() ) );
-
 			$user_reactions[] = array(
 				'id'          => $reaction->user_id,
-				'name'        => $user_data->display_name,
+				'name'        => bp_core_get_user_displayname( $reaction->user_id ),
 				'member_type' => array(
-					'label' => ! empty( $member_type ) ? $member_type : $type,
+					'label' => isset( $member_type ) ? $member_type : $type,
 					'color' => array(
 						'background' => ! empty( $color_data['background-color'] ) ? $color_data['background-color'] : '',
 						'text'       => ! empty( $color_data['color'] ) ? $color_data['color'] : '',
 					)
 				),
-				'avatar'      => get_avatar_url( $reaction->user_id ),
-				'profile_url' => bbp_get_user_profile_url( $reaction->user_id ),
+				'avatar'      => bp_core_fetch_avatar(
+					array(
+						'item_id' => $reaction->user_id,
+						'html'    => false,
+					)
+				),
+				'profile_url' => bp_core_get_user_domain( $reaction->user_id ),
 				'reaction'    => maybe_unserialize( $reaction_meta ),
 			);
 		}
@@ -952,7 +954,7 @@ function bb_get_user_reactions_ajax_callback() {
 	foreach ( $users_data['reactions'] as $user ) {
 
 		$icon_html   = bb_activity_prepare_emotion_icon( $user['reaction'] );
-		$member_type = sprintf( '<div class="activity-state_user__role">%s</div>', $user['member_type'] );
+		$member_type = ( ! empty( $user['member_type']['label'] ) ? sprintf( '<div class="activity-state_user__role">%s</div>', $user['member_type']['label'] ) : '' );
 
 		$user_list .= sprintf(
 			'<li class="activity-state_user">
