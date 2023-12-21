@@ -228,7 +228,7 @@
 
 				&.has-comments {
 
-					.ac-state-separator,
+					.activity-state-reactions + .ac-state-separator,
 					.activity-state-comments {
 						color: var(--bb-body-text-color);
 						display: inline-block;
@@ -244,9 +244,9 @@
 					align-items: center;
 				}
 
-				&.has-likes.has-comments {
+				&.has-comments {
 
-					.ac-state-separator {
+					.activity-state-reactions + .ac-state-separator {
 						display: inline-block;
 					}
 				}

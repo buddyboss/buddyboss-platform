@@ -3535,7 +3535,7 @@ input.search-query-input {
   background-color: transparent;
 }
 
-.activity-list .activity-item .activity-content .activity-state.has-comments .ac-state-separator,
+.activity-list .activity-item .activity-content .activity-state.has-comments .activity-state-reactions + .ac-state-separator,
 .activity-list .activity-item .activity-content .activity-state.has-comments .activity-state-comments {
   color: var(--bb-body-text-color);
   display: inline-block;
@@ -3548,7 +3548,7 @@ input.search-query-input {
   align-items: center;
 }
 
-.activity-list .activity-item .activity-content .activity-state.has-likes.has-comments .ac-state-separator {
+.activity-list .activity-item .activity-content .activity-state.has-comments .activity-state-reactions + .ac-state-separator {
   display: inline-block;
 }
 
