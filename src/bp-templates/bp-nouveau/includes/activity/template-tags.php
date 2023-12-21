@@ -495,7 +495,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 		if ( ! bb_activity_is_item_favorite( $activity_id ) && function_exists( 'bb_platform_pro' ) ) {
 			// If reactions button is set and pro is active then add custom reaction button.
 			$button_settings        = bb_reaction_button_options();
-			$fav_args['link_class'] = 'button reaction bp-secondary-action bp-like-button';
+			$fav_args['link_class'] = 'button fav reaction bp-secondary-action bp-like-button';
 			$fav_args['link_text']  = sprintf(
 				'<span class="bp-screen-reader-text">%1$s</span>
 				<span><i class="bb-icon-%2$s"></i></span>
@@ -511,7 +511,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 				$prepared_icon = bb_activity_prepare_emotion_icon_with_text( $reaction, true );
 				$link_classes  = empty( $reaction['type'] ) ? 'has-like has-reaction' : 'has-emotion has-reaction';
 				$fav_args      = array(
-					'link_class'   => sprintf( 'button bp-secondary-action bp-like-button %s', $link_classes ),
+					'link_class'   => sprintf( 'button unfav bp-secondary-action bp-like-button %s', $link_classes ),
 					'aria-pressed' => 'true',
 					'link_attr'    => bp_get_activity_unfavorite_link(),
 					'link_text'    => sprintf(

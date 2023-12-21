@@ -883,7 +883,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.activity-state-popup_overlay', bp.Nouveau, this.closeActivityState.bind( this ) );
 
 			$( document ).on( 'click', '.ac-emotions_list .ac-emotion_btn', this.updateReaction );
-			$( document ).on( 'click', '.activity-item a.button.fav, .activity-item a.button.reaction', this.updateReaction );
+			//$( document ).on( 'click', '.activity-item a.button.fav, .activity-item a.button.reaction', this.updateReaction );
 			$( document ).on( 'click', '.activity-item .button.has-emotion, .activity-item .button.has-like', this.removeReaction );
 
 			$( document ).on( 'click', '.activity-state-reactions', this.showActivityReactions );
