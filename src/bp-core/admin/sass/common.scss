@@ -4083,6 +4083,14 @@ table.moderations .column-member {
 	}
 
 	.bb-reaction-button-label {
+		display: flex !important; // Override WP default css
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 5px;
+
+		> p {
+			width: 100%;
+		}
 
 		.bb-reaction-button-text-limit {
 			display: none;
@@ -4097,6 +4105,8 @@ table.moderations .column-member {
 			border-color: #8c8f94;
 			vertical-align: middle;
 			border-radius: 4px;
+			min-height: auto;
+			margin: 0;
 
 			> i {
 				color: #9b9f9b;
@@ -4114,8 +4124,11 @@ table.moderations .column-member {
 			color: #2c3338;
 			font-size: 14px;
 			vertical-align: middle;
-			line-height: 31px;
 			border-radius: 4px;
+			width: auto;
+			min-height: 30px;
+			padding: 3px 8px;
+			line-height: 25px;
 		}
 	}
 }

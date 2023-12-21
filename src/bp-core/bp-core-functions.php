@@ -9093,26 +9093,50 @@ function bb_redirect_after_action( $redirect_to, $user_id = 0, $action = 'login'
 }
 
 /**
+ * Remove action which used in thord party class.
+ *
+ * @since BuddyBoss 2.5.00
+ *
+ * @param string $action Action name.
+ * @param string $class  Class name.
+ * @param string $method Method name.
+ */
+function bb_remove_class_action( $action, $class, $method ) {
+	global $wp_filter;
+	if ( isset( $wp_filter[ $action ] ) ) {
+		$len = strlen( $method );
+		foreach ( $wp_filter[ $action ] as $pri => $actions ) {
+			foreach ( $actions as $name => $def ) {
+				if ( substr( $name, - $len ) === $method ) {
+					if ( is_array( $def['function'] ) && ! empty( $def['function'] ) ) {
+						if ( get_class( $def['function'][0] ) === $class ) {
+							if ( is_object( $wp_filter[ $action ] ) && isset( $wp_filter[ $action ]->callbacks ) ) {
+								unset( $wp_filter[ $action ]->callbacks[ $pri ][ $name ] );
+							} else {
+								unset( $wp_filter[ $action ][ $pri ][ $name ] );
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+/**
  * Get the Reactions settings sections.
  *
- * @return array
  * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
  */
 function bb_reactions_get_settings_sections() {
 
 	$settings = array(
-		'bp_reaction_settings_section'    => array(
+		'bp_reaction_settings_section' => array(
 			'page'              => 'reaction',
 			'title'             => esc_html__( 'Reactions', 'buddyboss' ),
 			'tutorial_callback' => 'bp_admin_reaction_setting_tutorial',
-			'notice'            => (
-				sprintf(
-					wp_kses_post(
-						__( 'You can use our %s to convert existing reactions to a different type of reaction.', 'buddyboss' )
-					),
-					'<a class="footer-reaction-migration-wizard" href="#!">' . esc_html__( 'migration wizard', 'buddyboss' ) . '</a>'
-				)
-			),
 		),
 	);
 
@@ -9127,7 +9151,21 @@ function bb_reactions_get_settings_sections() {
 function bp_admin_reaction_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="#"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+		<a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62792, // @todo update when release.
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 	<?php
 }
@@ -9135,10 +9173,11 @@ function bp_admin_reaction_setting_tutorial() {
 /**
  * Get reaction settings fields by section.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param string $section_id Section ID.
  *
  * @return mixed False if section is invalid, array of fields otherwise.
- * @since BuddyBoss [BBVERSION]
  */
 function bb_reactions_get_settings_fields_for_section( $section_id = '' ) {
 
@@ -9156,8 +9195,9 @@ function bb_reactions_get_settings_fields_for_section( $section_id = '' ) {
 /**
  * Get all of the reactions settings fields.
  *
- * @return array
  * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
  */
 function bb_reactions_get_settings_fields() {
 
