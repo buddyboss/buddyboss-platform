@@ -30,12 +30,6 @@ function bp_activity_action_mark_favorite() {
 	// Check the nonce.
 	check_admin_referer( 'mark_favorite' );
 
-	if ( bb_is_reaction_emotions_enabled() ) {
-		$reaction_id = bb_load_reaction()->bb_reactions_reaction_id();
-	} else {
-		$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
-	}
-
 	// Load up the activity item.
 	$activity = new BP_Activity_Activity( $activity_id );
 
@@ -49,12 +43,7 @@ function bp_activity_action_mark_favorite() {
 		$redirect = wp_get_referer() . '#activity-' . $activity_id;
 	}
 
-	$reaction = bp_activity_add_user_reaction(
-		$activity_id,
-		$reaction_id,
-		$type
-	);
-
+	$reaction = bp_activity_add_user_favorite( $activity_id, 0, $type );
 	if ( is_wp_error( $reaction ) ) {
 		bp_core_add_message( $reaction->get_error_message(), 'error' );
 	} else {

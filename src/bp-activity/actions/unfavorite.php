@@ -44,11 +44,7 @@ function bp_activity_action_remove_favorite() {
 		$redirect = wp_get_referer() . '#activity-' . $activity_id;
 	}
 
-	$reaction = bp_activity_remove_user_reaction(
-		$activity_id,
-		$type
-	);
-
+	$reaction = bp_activity_remove_user_favorite( $activity_id, 0, $type );
 	if ( is_wp_error( $reaction ) ) {
 		bp_core_add_message( $reaction->get_error_message(), 'error' );
 	} else {

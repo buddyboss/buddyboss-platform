@@ -633,7 +633,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @param array $args Arguments of user reaction.
 		 *
-		 * @return false|int|WP_Error|object
+		 * @return bool|int|WP_Error|object
 		 */
 		public function bb_add_user_item_reaction( $args ) {
 			global $wpdb;
