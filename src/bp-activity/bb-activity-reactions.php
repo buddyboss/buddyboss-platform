@@ -1060,7 +1060,7 @@ function bb_activity_prepare_emotion_icon_with_text( $id_or_post_or_reaction, $h
 			$button_settings = bb_reaction_button_options();
 			$icon_text       = ! empty( $button_settings['text'] ) ? $button_settings['text'] : $icon_text;
 			$icon_html       = sprintf(
-				'<span><i class="bb-icon-%s %s"></i></span>',
+				'<i class="bb-icon-%s %s"></i>',
 				! empty( $button_settings['icon'] ) ? esc_attr( $button_settings['icon'] ) : 'thumbs-up',
 				! empty( $button_settings['text'] ) ? esc_attr( $button_settings['text'] ) : esc_attr( 'Like', 'buddyboss' ),
 			);

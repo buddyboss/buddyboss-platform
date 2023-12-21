@@ -498,7 +498,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 			$fav_args['link_class'] = 'button fav reaction bp-secondary-action bp-like-button';
 			$fav_args['link_text']  = sprintf(
 				'<span class="bp-screen-reader-text">%1$s</span>
-				<span><i class="bb-icon-%2$s"></i></span>
+				<i class="bb-icon-%2$s"></i>
 				<span class="like-count">%1$s</span>',
 				! empty( $button_settings['text'] ) ? esc_html( $button_settings['text'] ) : esc_html( 'Like', 'buddyboss' ),
 				! empty( $button_settings['icon'] ) ? esc_attr( $button_settings['icon'] ) : 'thumbs-up'

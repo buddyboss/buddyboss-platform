@@ -309,13 +309,24 @@
 
 		> .activity-meta.action {
 
-			.bp-secondary-action {
+			.button {
+
+				#buddypress & {
+					display: flex;
+					align-items: center;
+					column-gap: 2px;
+				}
 
 				> i {
-					font-size: 20px;
-					font-weight: 200;
+					font-size: 22px;
+					font-weight: 400;
 					display: inline-block;
 					vertical-align: middle;
+				}
+
+				&.has-reaction > i {
+					font-weight: 200;
+					font-size: 20px;
 				}
 
 				> img {
@@ -335,6 +346,10 @@
 						display: inline-block;
 						vertical-align: middle;
 					}
+				}
+
+				&.bp-like-button:before {
+					display: none;
 				}
 			}
 		}
