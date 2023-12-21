@@ -884,7 +884,6 @@ window.bp = window.bp || {};
 
 			$( document ).on( 'click', '.ac-emotions_list .ac-emotion_btn', this.updateReaction );
 			//$( document ).on( 'click', '.activity-item a.button.fav, .activity-item a.button.reaction', this.updateReaction );
-			//$( document ).on( 'click', '.activity-item .button.has-emotion, .activity-item .button.has-like', this.removeReaction );
 
 			$( document ).on( 'click', '.activity-state-reactions', this.showActivityReactions );
 			$( document ).on( 'click', '.activity-state-popup .activity-state-popup_tab_panel a', this.ReactionStatePopupTab );
@@ -968,87 +967,6 @@ window.bp = window.bp || {};
 				}
 			);
 
-		},
-
-		/**
-		 * Remove reaction function.
-		 */
-		removeReaction: function( event ) {
-			event.preventDefault();
-
-			var target      = $( this ),
-				is_activity = true,
-				item_id     = 0,
-				main_el;
-
-			var item_type = 'activity';
-			var stream_el = target.closest( '#activity-stream' );
-			var parent_el = target.parents( '.acomment-display' ).first();
-			if ( 0 < parent_el.length ) {
-				is_activity = false;
-				item_type   = 'activity_comment';
-			}
-
-			if ( ! is_activity ) {
-				main_el = target.parents( '.activity-comment' ).first();
-				item_id = main_el.data( 'bp-activity-comment-id' );
-			} else {
-				main_el = target.parents( '.activity-item' );
-				item_id = main_el.data( 'bp-activity-id' );
-			}
-
-			$.ajax(
-				{
-					url: BP_Nouveau.ajaxurl,
-					type: 'post',
-					data: {
-						action: 'bb_remove_reaction',
-						item_id: item_id,
-						item_type: item_type,
-						_wpnonce: BP_Nouveau.nonces.activity,
-					}, success: function ( response ) {
-
-						// Update reacted user name and counts.
-						if ( 'undefined' !== typeof response.data.reaction_counts ) {
-							if ( is_activity ) {
-								if ( 0 < main_el.find( '.activity-content .activity-state-reactions' ).length ) {
-									main_el.find( '.activity-content  .activity-state-reactions' ).replaceWith( response.data.reaction_counts );
-								} else {
-									main_el.find( '.activity-content .activity-state' ).prepend( response.data.reaction_counts );
-								}
-							} else {
-								if ( 0 < main_el.find( '#acomment-display-' + item_id + ' .comment-reactions' ).length ) {
-									main_el.find( '#acomment-display-' + item_id + ' .comment-reactions' ).html( response.data.reaction_counts );
-								}
-							}
-						}
-
-						// Update react button.
-						if ( response.data.reaction_button ) {
-							if ( is_activity ) {
-								main_el.find( '.bp-generic-meta a.bp-like-button.has-reaction:first' ).replaceWith( response.data.reaction_button );
-							} else {
-								main_el.find( '#acomment-display-' + item_id + ' .bp-generic-meta a.bp-like-button.has-reaction' ).replaceWith( response.data.reaction_button );
-							}
-						}
-
-						// Add "Likes/React to" menu item on activity directory nav menu.
-						var favoriteScope = $( '.main-navs ul.component-navigation li[data-bp-scope="favorites"]' ).hasClass( 'selected' );
-						if ( favoriteScope && is_activity ) {
-							main_el.remove();
-						}
-
-						// Remove the tab when no likes/reactions on activity directory tab.
-						if ( typeof response.data.no_activity_found !== 'undefined' ) {
-							if ( favoriteScope ) {
-								stream_el.append( response.data.no_activity_found );
-							} else {
-								$( '.main-navs ul.component-navigation [data-bp-scope="favorites"]' ).remove();
-							}
-						}
-					}
-				}
-			);
 		},
 
 		showActivityReactions: function( event ) {

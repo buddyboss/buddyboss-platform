@@ -12,7 +12,6 @@
 defined( 'ABSPATH' ) || exit;
 
 add_action( 'wp_ajax_bb_update_reaction', 'bb_update_activity_reaction_ajax_callback' );
-add_action( 'wp_ajax_bb_remove_reaction', 'bb_remove_activity_reaction_ajax_callback' );
 add_action( 'wp_ajax_bb_get_reactions', 'bb_get_activity_reaction_ajax_callback' );
 add_action( 'wp_ajax_nopriv_bb_get_reactions', 'bb_get_activity_reaction_ajax_callback' );
 add_action( 'wp_ajax_bb_user_reactions', 'bb_get_user_reactions_ajax_callback' );
@@ -487,63 +486,6 @@ function bb_update_activity_reaction_ajax_callback() {
 		$response['directory_tab'] = $directory_tab;
 	} else {
 		$response['user_fav_count'] = $current_user_fav_count;
-	}
-
-	wp_send_json_success( $response );
-}
-
-/**
- * Ajax callback for Reaction.
- *
- * @return mixed
- */
-function bb_remove_activity_reaction_ajax_callback() {
-
-	if ( ! bp_is_post_request() ) {
-		wp_send_json_error();
-	}
-
-	// Nonce check!
-	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'bp_nouveau_activity' ) ) {
-		wp_send_json_error(
-			__( 'Nonce verification failed', 'buddyboss' )
-		);
-	}
-
-	if ( empty( $_POST['item_id'] ) ) {
-		wp_send_json_error(
-			array(
-				'no_item_id' => esc_html__( 'No item id', 'buddyboss' ),
-			)
-		);
-	}
-
-	$item_id   = sanitize_text_field( $_POST['item_id'] );
-	$item_type = sanitize_text_field( $_POST['item_type'] );
-
-	$status = bp_activity_remove_user_reaction( $item_id, $item_type );
-
-	if ( is_wp_error( $status ) || empty( $status ) ) {
-		wp_send_json_error( $status->get_error_message() );
-	}
-
-	$response = array(
-		'reaction_counts' => bb_get_activity_post_user_reactions_html( $item_id, $item_type ),
-		'reaction_button' => bb_get_activity_post_reaction_button_html( $item_id, $item_type ),
-	);
-
-	// If no likes/reacted activity found then remove tab and show no activity message.
-	$current_user_fav_count = (int) bb_activity_total_reactions_count_for_user( bp_loggedin_user_id() );
-	if ( 0 === $current_user_fav_count ) {
-		$no_activity_found = sprintf(
-			'<aside class="bp-feedback bp-messages info">
-				<span class="bp-icon" aria-hidden="true"></span>
-				<p>%s</p>
-			</aside>',
-			esc_html__( 'Sorry, there was no activity found.', 'buddyboss' )
-		);
-
-		$response['no_activity_found'] = $no_activity_found;
 	}
 
 	wp_send_json_success( $response );
