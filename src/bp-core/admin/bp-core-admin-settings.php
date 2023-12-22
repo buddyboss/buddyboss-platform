@@ -3562,9 +3562,9 @@ function bb_reactions_settings_callback_reaction_mode() {
 
 		if ( ! empty( $notice_text ) ) {
 			?>
-			<div class="description bb-reaction-mode-description">
+			<p class="description bb-reaction-mode-description">
 				<?php echo $notice_text; ?>
-			</div>
+			</p>
 			<?php
 		}
 	}
