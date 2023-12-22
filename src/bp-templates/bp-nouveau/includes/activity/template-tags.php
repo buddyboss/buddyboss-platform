@@ -263,7 +263,7 @@ function bp_nouveau_activity_state() {
 	$comment_count = bp_activity_get_comment_count();
 
 	$has_reaction = false;
-	if ( bb_get_reaction_mode() === 'emotions' ) {
+	if ( bb_is_reaction_emotions_enabled() ) {
 		$has_reaction = true;
 	}
 

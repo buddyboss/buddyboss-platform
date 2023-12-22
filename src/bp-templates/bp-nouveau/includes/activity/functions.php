@@ -321,7 +321,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 		if ( bp_is_activity_like_active() && bp_get_total_favorite_count_for_user( bp_loggedin_user_id() ) ) {
 
 			$item_text = esc_html__( 'Likes', 'buddyboss' );
-			if ( 'emotions' === bb_get_reaction_mode() ) {
+			if ( bb_is_reaction_emotions_enabled() ) {
 				$item_text = esc_html__( 'Reacted to', 'buddyboss' );
 			}
 

@@ -320,7 +320,7 @@ class BP_Activity_Component extends BP_Component {
 			if ( bp_is_activity_like_active() ) {
 
 				$item_name = _x( 'Likes', 'Profile activity screen sub nav', 'buddyboss' );
-				if ( 'emotions' === bb_get_reaction_mode() ) {
+				if ( bb_is_reaction_emotions_enabled() ) {
 					$item_name = _x( 'Reacted to', 'Profile activity screen sub nav', 'buddyboss' );
 				}
 
@@ -446,7 +446,7 @@ class BP_Activity_Component extends BP_Component {
 				// Favorite activity items.
 				if ( bp_is_activity_like_active() ) {
 					$item_title = _x( 'Likes', 'My Account Activity sub nav', 'buddyboss' );
-					if ( 'emotions' === bb_get_reaction_mode() ) {
+					if ( bb_is_reaction_emotions_enabled() ) {
 						$item_title = _x( 'Reacted to', 'My Account Activity sub nav', 'buddyboss' );
 					}
 
