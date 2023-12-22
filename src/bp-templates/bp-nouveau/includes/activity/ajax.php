@@ -136,12 +136,15 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 	$reacted = bp_activity_add_user_favorite(
 		$item_id,
 		$user_id,
-		$item_type,
-		$reaction_id
+		array(
+			'type'        => $item_type,
+			'reaction_id' => $reaction_id,
+			'error_type'  => 'wp_error',
+		)
 	);
 
 	// If there was an error, return it.
-	if ( empty( $reacted ) || is_wp_error( $reacted ) ) {
+	if ( is_wp_error( $reacted ) ) {
 		wp_send_json_error( $reacted->get_error_message() );
 	}
 
@@ -198,10 +201,13 @@ function bp_nouveau_ajax_unmark_activity_favorite() {
 	$un_reacted = bp_activity_remove_user_favorite(
 		$item_id,
 		$user_id,
-		$item_type
+		array(
+			'type'       => $item_type,
+			'error_type' => 'wp_error',
+		)
 	);
 
-	if ( empty( $un_reacted ) || is_wp_error( $un_reacted ) ) {
+	if ( is_wp_error( $un_reacted ) ) {
 		wp_send_json_error( $un_reacted->get_error_message() );
 	}
 

@@ -937,33 +937,36 @@ function bp_activity_get_user_favorites( $user_id = 0 ) {
  * Add an activity feed item as a favorite for a user.
  *
  * @since BuddyPress 1.2.0
+ * @since BuddyBoss [BBVERSION] Added the `$args` parameter.
  *
- * @param int    $activity_id ID of the activity item being favorited.
- * @param int    $user_id     ID of the user favoriting the activity item.
- * @param string $type        Type of item. Possible values 'activity, 'activity_comment'.
- * @param int    $reaction_id ID of reaction.
+ * @param int   $activity_id ID of the activity item being favorited.
+ * @param int   $user_id     ID of the user favoriting the activity item.
+ * @param array $args        Array extra argument.
  *
- * @return WP_Error|object Object on success, WP_Error on failure.
+ * @return WP_Error|object|bool Object on success, WP_Error on failure.
  */
-function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $type = 'activity', $reaction_id = 0 ) {
+function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = array() ) {
+	$r = bp_parse_args(
+		$args,
+		array(
+			'type'        => 'activity',
+			'reaction_id' => bb_load_reaction()->bb_reactions_reaction_id(),
+			'error_type'  => 'bool',
+		)
+	);
 
 	// Fallback to logged in user if no user_id is passed.
 	if ( empty( $user_id ) ) {
 		$user_id = bp_loggedin_user_id();
 	}
 
-	// Fallback to the current selected mode in reaction if no reaction_id is passed.
-	if ( empty( $reaction_id ) ) {
-		$reaction_id = bb_load_reaction()->bb_reactions_reaction_id();
-	}
-
-	$reacted     = bb_load_reaction()->bb_add_user_item_reaction(
+	$reacted = bb_load_reaction()->bb_add_user_item_reaction(
 		array(
-			'item_type'   => $type,
-			'reaction_id' => $reaction_id,
+			'item_type'   => $r['type'],
+			'reaction_id' => $r['reaction_id'],
 			'item_id'     => $activity_id,
 			'user_id'     => $user_id,
-			'error_type'  => 'wp_error',
+			'error_type'  => $r['error_type'],
 		)
 	);
 
@@ -981,6 +984,10 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $type = 'act
 		do_action( 'bp_activity_add_user_favorite', $activity_id, $user_id );
 
 		// Success.
+		if ( 'bool' === $r['error_type'] ) {
+			return true;
+		}
+
 		return $reacted;
 
 		// Saving meta was unsuccessful for an unknown reason.
@@ -996,6 +1003,10 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $type = 'act
 		 */
 		do_action( 'bp_activity_add_user_favorite_fail', $activity_id, $user_id );
 
+		if ( 'bool' === $r['error_type'] ) {
+			return false;
+		}
+
 		return $reacted;
 	}
 }
@@ -1004,14 +1015,22 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $type = 'act
  * Remove an activity feed item as a favorite for a user.
  *
  * @since BuddyPress 1.2.0
+ * @since BuddyBoss [BBVERSION] Added the `$args` parameter.
  *
  * @param int    $activity_id ID of the activity item being unfavorited.
  * @param int    $user_id     ID of the user unfavoriting the activity item.
- * @param string $type        Type of item. Possible values 'activity, 'activity_comment'.
+ * @param array  $args        Array extra argument.
  *
- * @return WP_Error|object Object on success, WP_Error on failure.
+ * @return WP_Error|object|bool Object on success, WP_Error on failure.
  */
-function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $type = 'activity' ) {
+function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = array() ) {
+	$r = bp_parse_args(
+		$args,
+		array(
+			'type'        => 'activity',
+			'error_type'  => 'bool',
+		)
+	);
 
 	// Fallback to logged in user if no user_id is passed.
 	if ( empty( $user_id ) ) {
@@ -1020,14 +1039,14 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $type = '
 
 	$un_reacted = bb_load_reaction()->bb_remove_user_item_reactions(
 		array(
-			'item_type'  => $type,
+			'item_type'  => $r['type'],
 			'item_id'    => $activity_id,
 			'user_id'    => $user_id,
-			'error_type' => 'wp_error',
+			'error_type' => $r['error_type'],
 		)
 	);
 
-	if ( $un_reacted || ! is_wp_error( $un_reacted ) ) {
+	if ( ! is_wp_error( $un_reacted ) ) {
 
 		/**
 		 * Fires if bp_update_user_meta() is successful and before returning a true value for success.
@@ -1038,6 +1057,17 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $type = '
 		 * @param int $user_id     ID of the user doing the unfavoriting.
 		 */
 		do_action( 'bp_activity_remove_user_favorite', $activity_id, $user_id );
+
+		// Success.
+		if ( 'bool' === $r['error_type'] ) {
+			return true;
+		}
+
+		return $un_reacted;
+	}
+
+	if ( 'bool' === $r['error_type'] ) {
+		return false;
 	}
 
 	return $un_reacted;

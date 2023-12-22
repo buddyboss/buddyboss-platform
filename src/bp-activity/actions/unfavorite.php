@@ -44,9 +44,17 @@ function bp_activity_action_remove_favorite() {
 		$redirect = wp_get_referer() . '#activity-' . $activity_id;
 	}
 
-	$reaction = bp_activity_remove_user_favorite( $activity_id, 0, $type );
-	if ( is_wp_error( $reaction ) ) {
-		bp_core_add_message( $reaction->get_error_message(), 'error' );
+	$un_reacted = bp_activity_remove_user_favorite(
+		$activity_id,
+		0,
+		array(
+			'type'       => $type,
+			'error_type' => 'wp_error',
+		)
+	);
+
+	if ( is_wp_error( $un_reacted ) ) {
+		bp_core_add_message( $un_reacted->get_error_message(), 'error' );
 	} else {
 		bp_core_add_message( $message );
 	}
