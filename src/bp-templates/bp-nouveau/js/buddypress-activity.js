@@ -345,7 +345,7 @@ window.bp = window.bp || {};
 					old_pinned.each(function() {
 						var action = $( this ).find( '.unpin-activity' );
 						var is_group_activity = false;
-						
+
 						action.removeClass( 'unpin-activity' ).addClass( 'pin-activity' );
 						if ( $(this).hasClass('groups') ) {
 							is_group_activity = true;
@@ -758,7 +758,6 @@ window.bp = window.bp || {};
 					is_activity = true,
 					item_type   = 'activity',
 					parent_el   = target.parents( '.acomment-display' ).first(),
-					item_id     = 0,
 					main_el;
 
 				if ( reaction_id > 0 ) {
@@ -1576,11 +1575,11 @@ window.bp = window.bp || {};
 									activity_group_id = target.closest( 'li.activity-item' ).attr('class').match(/group-\d+/);
 									activity_group_id = activity_group_id[0].replace( 'group-', '' );
 								}
-								
+
 								if ( activity_stream.hasClass( 'single-user' ) ) {
 									update_pinned_icon = false;
-								} else if (  
-									activity_stream.hasClass( 'activity' ) && 
+								} else if (
+									activity_stream.hasClass( 'activity' ) &&
 									'all' === scope &&
 									! is_group_activity
 								) {
@@ -1617,7 +1616,7 @@ window.bp = window.bp || {};
 									if ( update_pinned_icon ) {
 										target.closest( 'li.activity-item' ).addClass( 'bb-pinned' );
 									}
-									
+
 									target.addClass( 'unpin-activity' );
 									target.removeClass( 'pin-activity' );
 
