@@ -509,7 +509,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 			$reaction_data = bb_activity_get_user_reaction_by_item( $activity_id );
 			if ( ! empty( $reaction_data['reaction'] ) ) {
 				$reaction      = $reaction_data['reaction'];
-				$prepared_icon = bb_activity_prepare_emotion_icon_with_text( $reaction, true );
+				$prepared_icon = bb_activity_get_reaction_button( $reaction_data['reaction_id'], true );
 				$link_classes  = empty( $reaction['type'] ) ? 'has-like has-reaction' : 'has-emotion has-reaction';
 				$fav_args      = array(
 					'link_class'   => sprintf( 'button unfav bp-secondary-action bp-like-button %s', $link_classes ),
@@ -906,7 +906,7 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 			if ( ! empty( $reaction_data['reaction'] ) ) {
 				$reaction      = $reaction_data['reaction'];
 				$link_classes  = empty( $reaction['type'] ) ? 'has-like has-reaction' : 'has-emotion has-reaction';
-				$prepared_icon = bb_activity_prepare_emotion_icon_with_text( $reaction, true );
+				$prepared_icon = bb_activity_get_reaction_button( $reaction_data['reaction_id'], true );
 
 				$fav_args      = array(
 					'class'        => sprintf( 'button unfav bp-secondary-action bp-like-button %s', $link_classes ),

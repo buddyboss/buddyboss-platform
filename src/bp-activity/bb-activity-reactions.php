@@ -268,7 +268,7 @@ function bb_get_activity_post_reaction_button_html( $item_id, $item_type = 'acti
 
 	$reaction_post = get_post( $reaction_id );
 	$reaction_data = ! empty( $reaction_post->post_content ) ? maybe_unserialize( $reaction_post->post_content ) : array();
-	$prepared_icon = bb_activity_prepare_emotion_icon_with_text( $reaction_data, $has_reacted );
+	$prepared_icon = bb_activity_get_reaction_button( $reaction_id, $has_reacted );
 
 	if ( $has_reacted ) {
 		$reaction_link = ( 'activity' === $item_type ) ? bp_get_activity_unfavorite_link( $item_id ) : bb_get_activity_comment_unfavorite_link( $item_id );
@@ -761,23 +761,33 @@ function bb_activity_get_user_reaction_by_item( $item_id, $item_type = 'activity
  *
  * @return array
  */
-function bb_activity_prepare_emotion_icon_with_text( $id_or_post_or_reaction, $has_reacted = false ) {
-	$reaction_data = array();
+function bb_activity_get_reaction_button( $reaction_id, $has_reacted = false ) {
+	$retval = array(
+		'icon_text' => '',
+		'icon_html' => '',
+	);
 
-	// Process the identifier.
-	if ( is_array( $id_or_post_or_reaction ) ) {
-		$reaction_data = $id_or_post_or_reaction;
-	} elseif ( is_object( $id_or_post_or_reaction ) ) {
-		$reaction_data = ! empty( $id_or_post_or_reaction->post_content ) ? maybe_unserialize( $id_or_post_or_reaction->post_content ) : array();
-	} elseif ( is_numeric( $id_or_post_or_reaction ) ) {
-		$id_or_post_or_reaction = get_post( absint( $id_or_post_or_reaction ) );
-		$reaction_data          = ! empty( $id_or_post_or_reaction->post_content ) ? maybe_unserialize( $id_or_post_or_reaction->post_content ) : array();
+	if ( bb_is_reaction_emotions_enabled() ) {
+		$all_emotions = bb_load_reaction()->bb_get_reactions( 'emotions' );
+		$all_emotions = array_column( $all_emotions, null, 'id' );
+	} else {
+		$all_emotions = bb_load_reaction()->bb_get_reactions();
+		$all_emotions = array_column( $all_emotions, null, 'id' );
 	}
 
-	$icon_html = bb_activity_prepare_emotion_icon( $reaction_data );
+	if (
+		empty( $all_emotions ) ||
+		empty( $reaction_id ) ||
+		! isset( $all_emotions[ $reaction_id ] )
+	) {
+		return $retval;
+	}
 
-	if ( ! empty( $reaction_data['type'] ) || ! empty( $reaction_data['icon_path'] ) ) {
-		$icon_text = sanitize_text_field( $reaction_data['icon_text'] );
+	$reaction  = $all_emotions[ $reaction_id ];
+	$icon_html = bb_activity_prepare_emotion_icon( $reaction_id );
+
+	if ( ! empty( $reaction['type'] ) || ! empty( $reaction['icon_path'] ) ) {
+		$icon_text = sanitize_text_field( $reaction['icon_text'] );
 	} else {
 		//@todo Need some cleanup about reaction button states.
 		$settings  = bb_get_reaction_button_settings();
@@ -786,10 +796,10 @@ function bb_activity_prepare_emotion_icon_with_text( $id_or_post_or_reaction, $h
 		$icon_html = '<span><i class="bb-icon-' . $icon . ' "></i></span>';
 	}
 
-	return array(
-		'icon_text' => $icon_text,
-		'icon_html' => $icon_html,
-	);
+	$retval['icon_text'] = $icon_text;
+	$retval['icon_html'] = $icon_html;
+
+	return $retval;
 }
 
 /**
