@@ -3813,6 +3813,12 @@ table.moderations .column-member img {
   margin: 0;
 }
 
+.section-bp_reaction_settings_section .bb-reaction-button-label #bb-reaction-button-chooser:focus {
+  border-color: #2271b1;
+  box-shadow: 0 0 0 1px #2271b1;
+  outline: 2px solid transparent;
+}
+
 .section-bp_reaction_settings_section .bb-reaction-button-label input#bb-reaction-button-text {
   color: #2c3338;
   font-size: 14px;
