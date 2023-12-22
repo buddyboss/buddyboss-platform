@@ -4118,6 +4118,12 @@ table.moderations .column-member {
 					margin: 0;
 				}
 			}
+
+			&:focus {
+				border-color: #2271b1;
+				box-shadow: 0 0 0 1px #2271b1;
+				outline: 2px solid transparent;
+			}
 		}
 
 		input#bb-reaction-button-text {
