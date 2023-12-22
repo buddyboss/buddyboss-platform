@@ -3182,8 +3182,7 @@ function bp_get_total_favorite_count_for_user( $user_id = 0 ) {
 
 		// Get user meta if user ID exists.
 		if ( ! empty( $user_id ) ) {
-			//$retval = bp_activity_total_favorites_for_user( $user_id );
-			$retval = bb_activity_total_reactions_count_for_user( $user_id );
+			$retval = bb_activity_total_reactions_count_for_user( $user_id, 'activity' );
 		}
 	}
 

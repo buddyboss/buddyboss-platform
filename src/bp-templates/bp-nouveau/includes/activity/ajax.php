@@ -151,9 +151,7 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 		//'tooltip'         => bp_activity_get_favorite_users_tooltip_string( $item_id ),
 	);
 
-	// @todo: Remove function to replace with new function logic.
-	//$fav_count = (int) bp_get_total_favorite_count_for_user( $user_id );
-	$fav_count = (int) bb_activity_total_reactions_count_for_user( $user_id );
+	$fav_count = (int) bp_get_total_favorite_count_for_user( $user_id );
 
 	if ( 1 === $fav_count ) {
 		$response['directory_tab'] = sprintf(
@@ -213,10 +211,7 @@ function bp_nouveau_ajax_unmark_activity_favorite() {
 		//'tooltip'         => bp_activity_get_favorite_users_tooltip_string( $_POST['id'] ),
 	);
 
-	//@todo: Ask we can replace this below function logic with new one.
-	//$fav_count = (int) bp_get_total_favorite_count_for_user( bp_loggedin_user_id() );
-	$fav_count = (int) bb_activity_total_reactions_count_for_user( $user_id );
-
+	$fav_count = (int) bp_get_total_favorite_count_for_user( $user_id );
 	if ( 0 === $fav_count && ! bp_is_single_activity() ) {
 		$response['no_favorite'] = sprintf(
 			'<aside class="bp-feedback bp-messages info">
