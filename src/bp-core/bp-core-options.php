@@ -2668,6 +2668,8 @@ function bb_get_reaction_mode( $default = 'likes' ) {
 /**
  * Check whether emotions is enabled.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @return bool
  */
 function bb_is_reaction_emotions_enabled() {
