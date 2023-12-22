@@ -964,7 +964,8 @@ window.bp = window.bp || {};
 					threshold          = 10,
 					reaction_id        = element.parent().data( 'reaction-id' ),
 					total_pages        = element.parent().data( 'total-pages' ),
-					paged              = element.parent().attr( 'data-paged' );
+					paged              = element.parent().attr( 'data-paged' ),
+					userReactions      = wp.template( 'activity-user-reactions-popup-list' );
 
 				if ( 'undefined' === typeof paged || 0 >= paged ) {
 					paged = 1;
@@ -985,7 +986,7 @@ window.bp = window.bp || {};
 							url: BP_Nouveau.ajaxurl,
 							type: 'post',
 							data: {
-								action: 'bb_user_reactions',
+								action: 'bb_get_reactions',
 								reaction_id: reaction_id,
 								item_id: item_id,
 								item_type: item_type,
@@ -993,9 +994,9 @@ window.bp = window.bp || {};
 								_wpnonce: BP_Nouveau.nonces.activity,
 							},
 							success: function ( response ) {
-								if ( typeof response.data.user_list !== 'undefined' ) {
+								if ( typeof response.data.reactions !== 'undefined' ) {
 									element.parent().attr( 'data-paged', paged );
-									element.append( response.data.user_list );
+									element.append( userReactions( response.data.reactions ) );
 									element.find( '.reactions_loader' ).remove();
 									element.removeClass( 'loading' );
 								}

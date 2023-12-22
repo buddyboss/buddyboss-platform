@@ -13,8 +13,6 @@ defined( 'ABSPATH' ) || exit;
 
 add_action( 'wp_ajax_bb_get_reactions', 'bb_get_activity_reaction_ajax_callback' );
 add_action( 'wp_ajax_nopriv_bb_get_reactions', 'bb_get_activity_reaction_ajax_callback' );
-add_action( 'wp_ajax_bb_user_reactions', 'bb_get_user_reactions_ajax_callback' );
-add_action( 'wp_ajax_nopriv_bb_user_reactions', 'bb_get_user_reactions_ajax_callback' );
 
 add_action( 'bp_activity_after_delete', 'bb_activity_remove_activity_post_reactions', 10, 1 );
 
@@ -450,62 +448,86 @@ function bb_get_activity_reaction_ajax_callback() {
 		);
 	}
 
-	$item_id       = sanitize_text_field( $_POST['item_id'] );
-	$item_type     = sanitize_text_field( $_POST['item_type'] );
-	$reaction_data = bb_get_activity_most_reactions( $item_id, $item_type, 7 );
+	$item_id   = sanitize_text_field( $_POST['item_id'] );
+	$item_type = sanitize_text_field( $_POST['item_type'] );
+	$paged     = 1;
 
-	if ( empty( $reaction_data ) ) {
-		wp_send_json_error(
-			array(
-				'no_reactions' => esc_html__( 'No reactions', 'buddyboss' ),
-			)
-		);
+	if ( ! empty( $_POST['paged'] ) ) {
+		$paged       = sanitize_text_field( $_POST['paged'] );
+		$reaction_id = sanitize_text_field( $_POST['reaction_id'] );
 	}
 
-	foreach ( $reaction_data as $key => $reaction ) {
+	$reaction_data = array();
+	if ( 1 === $paged ) {
+		$reaction_data = bb_get_activity_most_reactions( $item_id, $item_type, 7 );
+
+		if ( empty( $reaction_data ) ) {
+			wp_send_json_error(
+				array(
+					'no_reactions' => esc_html__( 'No reactions', 'buddyboss' ),
+				)
+			);
+		}
+
+		foreach ( $reaction_data as $key => $reaction ) {
+			$users_data = bb_activity_get_reacted_users_data(
+				array(
+					'item_id'     => $item_id,
+					'item_type'   => $item_type,
+					'reaction_id' => $reaction['id'],
+					'per_page'    => 20,
+				)
+			);
+
+			$reaction_data[ $key ]['users']       = $users_data['reactions'];
+			$reaction_data[ $key ]['paged']       = 1;
+			$reaction_data[ $key ]['total_pages'] = ceil( $reaction_data[ $key ]['total'] / 20 );
+			$reaction_data[ $key ]['total_count'] = bb_format_reaction_count( $reaction_data[ $key ]['total'] );
+		}
+
+		if ( is_countable( $reaction_data ) && count( $reaction_data ) >= 2 ) {
+
+			$users_data = bb_activity_get_reacted_users_data(
+				array(
+					'item_id'   => $item_id,
+					'item_type' => $item_type,
+					'per_page'  => 20,
+				)
+			);
+
+			array_unshift(
+				$reaction_data,
+				array(
+					'name'        => 'All',
+					'type'        => 'all',
+					'icon'        => '',
+					'icon_text'   => esc_html__( 'All', 'buddyboss' ),
+					'users'       => $users_data['reactions'],
+					'paged'       => 1,
+					'total_pages' => ceil( $users_data['total'] / 20 ),
+					'total_count' => $users_data['total'],
+				)
+			);
+		}
+	} elseif ( $paged > 1 ) {
+
 		$users_data = bb_activity_get_reacted_users_data(
 			array(
 				'item_id'     => $item_id,
 				'item_type'   => $item_type,
-				'reaction_id' => $reaction['id'],
+				'reaction_id' => $reaction_id,
+				'paged'       => $paged,
 				'per_page'    => 20,
 			)
 		);
 
-		$reaction_data[ $key ]['users']       = $users_data['reactions'];
-		$reaction_data[ $key ]['paged']       = 1;
-		$reaction_data[ $key ]['total_pages'] = ceil( $reaction_data[ $key ]['total'] / 20 );
-		$reaction_data[ $key ]['total_count'] = bb_format_reaction_count( $reaction_data[ $key ]['total'] );
-	}
-
-	if ( is_countable( $reaction_data ) && count( $reaction_data ) >= 2 ) {
-
-		$users_data = bb_activity_get_reacted_users_data(
-			array(
-				'item_id'   => $item_id,
-				'item_type' => $item_type,
-				'per_page'  => 20,
-			)
-		);
-
-		array_unshift(
-			$reaction_data,
-			array(
-				'name'        => 'All',
-				'type'        => 'all',
-				'icon'        => '',
-				'icon_text'   => esc_html__( 'All', 'buddyboss' ),
-				'users'       => $users_data['reactions'],
-				'paged'       => 1,
-				'total_pages' => ceil( $users_data['total'] / 20 ),
-				'total_count' => $users_data['total'],
-			)
-		);
+		$reaction_data['users'] = ! empty( $users_data['reactions'] ) ? $users_data['reactions'] : array();
 	}
 
 	wp_send_json_success(
 		array(
 			'item_id'       => $item_id,
+			'paged'         => $paged,
 			'reaction_mode' => bb_get_reaction_mode(),
 			'reactions'     => (object) $reaction_data,
 		)
@@ -697,82 +719,6 @@ function bb_activity_is_item_favorite( $item_id, $item_type = 'activity', $user_
 	);
 
 	return (bool) bb_load_reaction()->bb_get_user_reactions_count( $args );
-}
-
-/**
- * Get paginated user reactions data from ajax.
- *
- * @return void
- */
-function bb_get_user_reactions_ajax_callback() {
-
-	if ( ! bp_is_post_request() ) {
-		wp_send_json_error();
-	}
-
-	// Nonce check!
-	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'bp_nouveau_activity' ) ) {
-		wp_send_json_error(
-			__( 'Nonce verification failed', 'buddyboss' )
-		);
-	}
-
-	if ( empty( $_POST['item_id'] ) ) {
-		wp_send_json_error(
-			array(
-				'no_item_id' => esc_html__( 'No item id', 'buddyboss' ),
-			)
-		);
-	}
-
-	$item_id     = sanitize_text_field( $_POST['item_id'] );
-	$item_type   = sanitize_text_field( $_POST['item_type'] );
-	$reaction_id = sanitize_text_field( $_POST['reaction_id'] );
-	$paged       = sanitize_text_field( $_POST['paged'] );
-
-	$users_data = bb_activity_get_reacted_users_data(
-		array(
-			'item_id'     => $item_id,
-			'item_type'   => $item_type,
-			'reaction_id' => $reaction_id,
-			'paged'       => $paged,
-			'per_page'    => 20,
-		)
-	);
-
-	$user_list = '';
-	foreach ( $users_data['reactions'] as $user ) {
-
-		$icon_html   = bb_activity_prepare_emotion_icon( $user['reaction'] );
-		$member_type = ( ! empty( $user['member_type']['label'] ) ? sprintf( '<div class="activity-state_user__role">%s</div>', $user['member_type']['label'] ) : '' );
-
-		$user_list .= sprintf(
-			'<li class="activity-state_user">
-				<div class="activity-state_user__avatar">
-					<a href="%1$s">
-						<img class="avatar" src="%2$s" alt="%3$s">
-						<div class="activity-state_user__reaction">%4$s</div>
-					</a>
-				</div>
-				<div class="activity-state_user__name">
-					<a href="%1$s">%3$s</a>
-				</div>
-				%5$s
-			</li>',
-			$user['profile_url'],
-			$user['avatar'],
-			$user['name'],
-			$icon_html,
-			$member_type
-		);
-	}
-
-	wp_send_json_success(
-		array(
-			'user_list' => $user_list,
-		)
-	);
-
 }
 
 /**

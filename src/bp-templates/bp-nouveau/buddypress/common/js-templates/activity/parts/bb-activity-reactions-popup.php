@@ -17,14 +17,18 @@
 				<p class="reaction-loader"><i class="bb-icon-l bb-icon-spinner animate-spin"></i></p>
 			<# } else { #>
 				<div class="activity-state-popup_title">
-					<# if ( data.reaction_mode && data.reaction_mode === 'emotions' ) { #>
+					<#
+					var reactionCount = Object.keys(data.reactions).length;
+					if ( data.reaction_mode && data.reaction_mode === 'emotions' && reactionCount > 1 ) { #>
 						<h4><?php esc_html_e( 'Reactions', 'buddyboss' ); ?></h4>
+					<# } else if( data.reaction_mode && data.reaction_mode === 'emotions' && 1 === reactionCount ) { #>
+						<h4> {{data.reactions[0].icon_text}} ({{ data.reactions[0].total }})</h4>
 					<# } else { #>
 						<h4><?php esc_html_e( 'Likes', 'buddyboss' ); ?>({{ data.reactions[0].total }})</h4>
 					<# } #>
 				</div>
 				<div class="activity-state-popup_tab">
-					<# if ( data.reaction_mode && data.reaction_mode === 'emotions' ) { #>
+					<# if ( data.reaction_mode && data.reaction_mode === 'emotions' && reactionCount > 1 ) { #>
 					<div class="activity-state-popup_tab_panel">
 						<ul>
 							<#
@@ -80,13 +84,9 @@
 										<div class="activity-state_user__name">
 											<a href="{{ user.profile_url }}">{{ user.name }}</a>
 										</div>
-										<# if ( user.member_type ) {
-											var memberTypeLabel           = user.member_type.label ? user.member_type.label : '';
-											var memberTypeTextColor       = user.member_type.color.text;
-											var memberTypeBackgroundColor = user.member_type.color.background;
-										#>
-										<div class="activity-state_user__role" style="color:{{memberTypeTextColor}}; background-color:{{memberTypeBackgroundColor}};">
-											{{ memberTypeLabel }}
+										<# if ( user.member_type && user.member_type.label ) { #>
+										<div class="activity-state_user__role" style="color:{{user.member_type.color.text}}; background-color:{{user.member_type.color.background}};">
+											{{ user.member_type.label }}
 										</div>
 										<# } #>
 									</li>
@@ -102,4 +102,36 @@
 			<# } #>
 		</div>
 	</div>
+</script>
+
+<script type="text/html" id="tmpl-activity-user-reactions-popup-list">
+	<#
+	if ( data.users ) {
+		jQuery.each( data.users, function( key, user ) { #>
+			<li class="activity-state_user">
+				<div class="activity-state_user__avatar">
+					<a href="{{ user.profile_url }}">
+						<img class="avatar" src="{{ user.avatar }}" alt="{{ user.name }}" />
+						<div class="activity-state_user__reaction">
+						<# if ( user.reaction.type === 'bb-icons' ) { #>
+							<i class="bb-icon-{{ user.reaction.icon }}" style="font-weight:200;color:{{ user.reaction.icon_color }};"></i>
+						<# } else if ( user.reaction.icon_path !== '' ) { #>
+							<img src="{{ user.reaction.icon_path }}" class="{{ user.reaction.type }}" alt="{{ user.reaction.icon_text }}" />
+						<# } else { #>
+							<i class="bb-icon-thumbs-up" style="font-weight:200;color:#385DFF;"></i>
+						<# } #>
+						</div>
+					</a>
+				</div>
+				<div class="activity-state_user__name">
+					<a href="{{ user.profile_url }}">{{ user.name }}</a>
+				</div>
+				<# if ( user.member_type && user.member_type.label ) { #>
+				<div class="activity-state_user__role" style="color:{{user.member_type.color.text}}; background-color:{{user.member_type.color.background}};">
+					{{ user.member_type.label }}
+				</div>
+				<# } #>
+			</li>
+		<# });
+	}#>
 </script>
