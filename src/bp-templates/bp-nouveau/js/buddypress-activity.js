@@ -749,7 +749,7 @@ window.bp = window.bp || {};
 
 			// If emotion item exists then take reaction id and update the target.
 			var reaction_id = 0;
-			if ( target.parents( '.ac-emotion_item' ) && $( target ).is( 'img' ) ) {
+			if ( target.parents( '.ac-emotion_item' ) ) {
 				target      = $( target ).closest( 'a' );
 				reaction_id = target.parent( '.ac-emotion_item' ).attr( 'data-reaction-id' );
 			}
