@@ -737,12 +737,12 @@ window.bp = window.bp || {};
 				comments_text              = activity_item.find( '.comments-count' ),
 				item_id, form, model, self = this;
 
-			// In case the target is set to a span|img inside the link.
+			// In case the target is set to a span inside the link.
 			if ( $( target ).is( 'span' ) ) {
 				target = $( target ).closest( 'a' );
 			}
 
-			// If reaction exists then take reaction id.
+			// If emotion item exists then take reaction id and update the target.
 			var reaction_id = 0;
 			if ( target.parents( '.ac-emotion_item' ) && $( target ).is( 'img' ) ) {
 				target      = $( target ).closest( 'a' );
