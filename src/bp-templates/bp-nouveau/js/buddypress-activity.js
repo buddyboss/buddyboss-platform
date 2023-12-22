@@ -737,13 +737,20 @@ window.bp = window.bp || {};
 				comments_text              = activity_item.find( '.comments-count' ),
 				item_id, form, model, self = this;
 
-			// In case the target is set to a span inside the link.
+			// In case the target is set to a span|img inside the link.
 			if ( $( target ).is( 'span' ) ) {
 				target = $( target ).closest( 'a' );
 			}
 
+			// If reaction exists then take reaction id.
+			var reaction_id = 0;
+			if ( target.parents( '.ac-emotion_item' ) && $( target ).is( 'img' ) ) {
+				target      = $( target ).closest( 'a' );
+				reaction_id = target.parent( '.ac-emotion_item' ).attr( 'data-reaction-id' );
+			}
+
 			// Favorite and unfavorite logic.
-			if ( target.hasClass( 'fav' ) || target.hasClass( 'unfav' ) ) {
+			if ( target.hasClass( 'fav' ) || target.hasClass( 'unfav' ) || reaction_id > 0 ) {
 				// Stop event propagation.
 				event.preventDefault();
 
@@ -753,6 +760,10 @@ window.bp = window.bp || {};
 					parent_el   = target.parents( '.acomment-display' ).first(),
 					item_id     = 0,
 					main_el;
+
+				if ( reaction_id > 0 ) {
+					type = 'fav';
+				}
 
 				if ( 0 < parent_el.length ) {
 					is_activity = false;
@@ -771,7 +782,7 @@ window.bp = window.bp || {};
 
 				var data = {
 					action: 'activity_mark_' + type,
-					reaction_id: target.parents( '.ac-emotion_item' ).data( 'reaction-id' ),
+					reaction_id: reaction_id,
 					item_id: item_id,
 					item_type: item_type,
 				};

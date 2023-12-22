@@ -881,94 +881,10 @@ window.bp = window.bp || {};
 
 			// Reaction actions.
 			$( document ).on( 'click', '.activity-state-popup_overlay', bp.Nouveau, this.closeActivityState.bind( this ) );
-
-			$( document ).on( 'click', '.ac-emotions_list .ac-emotion_btn', this.updateReaction );
-			//$( document ).on( 'click', '.activity-item a.button.fav, .activity-item a.button.reaction', this.updateReaction );
-
 			$( document ).on( 'click', '.activity-state-reactions', this.showActivityReactions );
 			$( document ).on( 'click', '.activity-state-popup .activity-state-popup_tab_panel a', this.ReactionStatePopupTab );
 
 		},
-
-		/**
-		 * Add reaction function.
-		 */
-		updateReaction: function( event ) {
-
-			// Stop event propagation.
-			event.preventDefault();
-
-			var target      = $( this ),
-				is_activity = true,
-				item_type   = 'activity',
-				item_id     = 0,
-				reaction_id = target.parents( '.ac-emotion_item' ).data( 'reaction-id' ),
-				main_el;
-
-			var parent_el = target.parents( '.acomment-display' ).first();
-			if ( 0 < parent_el.length ) {
-				is_activity = false;
-				item_type   = 'activity_comment';
-			}
-
-			if ( ! is_activity ) {
-				main_el = target.parents( '.activity-comment' ).first();
-				item_id = main_el.data( 'bp-activity-comment-id' );
-			} else {
-				main_el = target.parents( '.activity-item' );
-				item_id = main_el.data( 'bp-activity-id' );
-			}
-
-			$.ajax(
-				{
-					url: BP_Nouveau.ajaxurl,
-					type: 'post',
-					data: {
-						action: 'bb_update_reaction',
-						reaction_id: reaction_id,
-						item_id: item_id,
-						item_type: item_type,
-						_wpnonce: BP_Nouveau.nonces.activity,
-					}, success: function ( response ) {
-
-						// Update reacted user name and counts.
-						if ( 'undefined' !== typeof response.data.reaction_counts ) {
-							if ( is_activity ) {
-								if ( 0 < main_el.find( '.activity-content .activity-state-reactions' ).length ) {
-									main_el.find( '.activity-content  .activity-state-reactions' ).replaceWith( response.data.reaction_counts );
-								} else {
-									main_el.find( '.activity-content .activity-state' ).prepend( response.data.reaction_counts );
-								}
-							} else {
-								if ( 0 < main_el.find( '#acomment-display-' + item_id + ' .comment-reactions' ).length ) {
-									main_el.find( '#acomment-display-' + item_id + ' .comment-reactions' ).html( response.data.reaction_counts );
-								}
-							}
-						}
-
-						// Update reacted button.
-						if ( response.data.reaction_button ) {
-							if ( is_activity ) {
-								main_el.find( '.bp-generic-meta a.bp-like-button:first' ).replaceWith( response.data.reaction_button );
-							} else {
-								main_el.find( '#acomment-display-' + item_id + ' .bp-generic-meta a.bp-like-button' ).replaceWith( response.data.reaction_button );
-							}
-						}
-
-						// Add "Likes/React to" menu item on activity directory nav menu.
-						if (
-							typeof response.data.directory_tab !== 'undefined' &&
-							response.data.directory_tab !== '' &&
-							$( '.main-navs ul.component-navigation li[data-bp-scope="favorites"]' ).length <= 0
-						) {
-							$( '.main-navs ul.component-navigation li[data-bp-scope="all"]' ).after( response.data.directory_tab );
-						}
-					}
-				}
-			);
-
-		},
-
 		showActivityReactions: function( event ) {
 			event.preventDefault();
 

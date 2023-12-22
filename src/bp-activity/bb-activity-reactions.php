@@ -11,8 +11,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-add_action( 'wp_ajax_bb_update_reaction', 'bb_update_activity_reaction_ajax_callback' );
-
 add_action( 'wp_ajax_bb_get_reactions', 'bb_get_activity_reaction_ajax_callback' );
 add_action( 'wp_ajax_nopriv_bb_get_reactions', 'bb_get_activity_reaction_ajax_callback' );
 add_action( 'wp_ajax_bb_user_reactions', 'bb_get_user_reactions_ajax_callback' );
@@ -429,67 +427,6 @@ function bb_get_activity_post_user_reactions_html( $activity_id, $item_type = 'a
 	}
 
 	return apply_filters( 'bb_get_activity_post_user_reactions_html', $output );
-}
-
-/**
- * Ajax callback for Reaction.
- *
- * @return mixed
- */
-function bb_update_activity_reaction_ajax_callback() {
-
-	if ( ! bp_is_post_request() ) {
-		wp_send_json_error();
-	}
-
-	// Nonce check!
-	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'bp_nouveau_activity' ) ) {
-		wp_send_json_error(
-			__( 'Nonce verification failed', 'buddyboss' )
-		);
-	}
-
-	if ( ! empty( $_POST['reaction_id'] ) ) {
-		$reaction_id = sanitize_text_field( $_POST['reaction_id'] );
-	} else {
-		$reaction_id = bb_load_reaction()->bb_reactions_reaction_id();
-	}
-
-	$item_id   = sanitize_text_field( $_POST['item_id'] );
-	$item_type = sanitize_text_field( $_POST['item_type'] );
-
-	$reaction = bp_activity_add_user_reaction(
-		$item_id,
-		$reaction_id,
-		$item_type
-	);
-
-	if ( is_wp_error( $reaction ) || empty( $reaction ) ) {
-		wp_send_json_error( $reaction->get_error_message() );
-	}
-
-	$response = array(
-		'reaction_counts' => bb_get_activity_post_user_reactions_html( $item_id, $item_type ),
-		'reaction_button' => bb_get_activity_post_reaction_button_html( $item_id, $item_type, $reaction_id, true ),
-	);
-
-	// Add likes/reacted tab when first time user react or like.
-	$current_user_fav_count = (int) bb_activity_total_reactions_count_for_user( bp_loggedin_user_id() );
-	if ( 1 === $current_user_fav_count ) {
-		$directory_tab = sprintf(
-			'<li id="activity-favorites" data-bp-scope="favorites" data-bp-object="activity">
-				<a href="%1$s">%2$s</a>
-			</li>',
-			esc_url( bp_loggedin_user_domain() . bp_get_activity_slug() . '/favorites/' ),
-			bb_is_reaction_emotions_enabled() ? esc_html__( 'Reacted to', 'buddyboss' ) : esc_html__( 'Likes', 'buddyboss' )
-		);
-
-		$response['directory_tab'] = $directory_tab;
-	} else {
-		$response['user_fav_count'] = $current_user_fav_count;
-	}
-
-	wp_send_json_success( $response );
 }
 
 /**
