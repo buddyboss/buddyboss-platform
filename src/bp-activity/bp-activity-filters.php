@@ -1190,10 +1190,8 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 			: bp_loggedin_user_id();
 	}
 
-	$favs = bb_activity_get_user_reacted_item_ids( $user_id );
-
 	// Determine the favorites.
-	//$favs = bp_activity_get_user_favorites( $user_id );
+	$favs = bp_activity_get_user_favorites( $user_id );
 	if ( empty( $favs ) ) {
 		$favs = array( 0 );
 	}

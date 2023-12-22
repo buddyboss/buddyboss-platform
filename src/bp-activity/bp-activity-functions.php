@@ -921,7 +921,7 @@ function bp_activity_get_user_favorites( $user_id = 0 ) {
 	}
 
 	// Get favorites for user.
-	$favs = bp_get_user_meta( $user_id, 'bp_favorite_activities', true );
+	$favs = bb_activity_get_user_reacted_item_ids( $user_id );
 
 	/**
 	 * Filters the favorited activity items for a specified user.
