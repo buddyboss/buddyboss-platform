@@ -175,6 +175,12 @@ add_action( 'edit_post', 'bb_cpt_post_title_save', 999, 2 );
 
 add_filter( 'bb_activity_comment_get_edit_data', 'bb_blogs_activity_comment_edit_content', 9999 );
 
+// Add activity reaction popup js template.
+add_action( 'bp_after_directory_activity_list', 'bb_load_reaction_popup_modal_js_template' );
+add_action( 'bp_after_member_activity_content', 'bb_load_reaction_popup_modal_js_template' );
+add_action( 'bp_after_group_activity_content', 'bb_load_reaction_popup_modal_js_template' );
+add_action( 'bp_after_single_activity_content', 'bb_load_reaction_popup_modal_js_template' );
+
 /** Functions *****************************************************************/
 
 /**
@@ -3658,4 +3664,20 @@ function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
 	}
 
 	return $activity_comment_data;
+}
+
+/**
+ * Load the JS template for reacted users and reactions in modal .
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_load_reaction_popup_modal_js_template() {
+
+	// If reaction is enabled for activity post or comment then load the template.
+	if (
+		bb_is_reaction_activity_posts_enabled() ||
+		bb_is_reaction_activity_comments_enabled()
+	) {
+		bp_get_template_part( 'common/js-templates/activity/parts/bb-activity-reactions-popup' );
+	}
 }
