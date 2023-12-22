@@ -186,75 +186,63 @@ function bb_activity_prepare_web_emotions() {
  *
  * @return array|bool
  */
-function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', $no_of_reactions = 3 ) {
+function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', $no_of_reactions = 0 ) {
 
 	if ( empty( $item_id ) ) {
 		return false;
 	}
 
-	$reaction_data = bb_load_reaction()->bb_get_reaction_reactions_count(
+	$reaction_data = bb_load_reaction()->bb_get_reactions_data(
 		array(
-			'item_type' => $item_type,
-			'item_id'   => $item_id,
+			'name'     => 'item_summary',
+			'rel1'     => $item_type,
+			'rel2'     => $item_id,
+			'per_page' => 1,
 		)
 	);
 
-	if ( empty( $reaction_data ) ) {
+	if ( empty( $reaction_data['reaction_data'] ) ) {
 		return false;
 	}
 
-	// Sort by total reactions.
-	usort(
-		$reaction_data,
-		function( $a, $b ) {
-			return $b->total <=> $a->total;
+	$reaction_data = current( $reaction_data['reaction_data'] );
+	$reaction_data = maybe_unserialize( $reaction_data->value );
+	$all_reactions = ! empty( $reaction_data['reactions_count'] ) ? $reaction_data['reactions_count'] : array();
+
+	if ( isset( $all_reactions['total'] ) ) {
+		unset( $all_reactions['total'] );
+	}
+
+	if ( empty( $all_reactions ) ) {
+		return;
+	}
+
+	$all_emotions = bb_load_reaction()->bb_get_reactions( 'emotions' );
+	$all_emotions = array_flip( array_column( $all_emotions, 'id' ) );
+
+	$all_reactions = array_intersect_key( $all_reactions, $all_emotions );
+	arsort( $all_reactions );
+
+	if ( empty( $no_of_reactions ) ) {
+		$no_of_reactions = 3;
+		if ( 'activity_comment' === $item_type ) {
+			$no_of_reactions = 2;
 		}
-	);
+	}
 
 	$reactions = array();
-	foreach ( $reaction_data as $reaction ) {
+	foreach ( $all_reactions as $reaction_id => $reaction_count ) {
 
 		if ( 0 === $no_of_reactions ) {
 			break;
 		}
 
-		$reaction_post = get_post( $reaction->reaction_id );
-		if ( empty( $reaction_post->post_content ) ) {
-			continue;
-		}
+		$reactions[] = array(
+			'id'    => $reaction_id,
+			'count' => $reaction_count,
+		);
 
-		$reaction_meta = get_post_meta( $reaction->reaction_id );
-
-		// Condition to avoid emotions/like reaction based on active mode.
-		if (
-			(
-				! bb_is_reaction_emotions_enabled() &&
-				isset( $reaction_meta['is_emotion'] )
-			) || (
-				bb_is_reaction_emotions_enabled() &&
-				isset( $reaction_meta['is_like'] )
-			)
-		) {
-			continue;
-		}
-
-		// If emotion is not active then skip this reaction.
-		if (
-			isset( $reaction_meta['is_emotion'] ) &&
-			(
-				empty( $reaction_meta['is_emotion'][0] ) ||
-				empty( $reaction_meta['is_emotion_active'][0] )
-			)
-		) {
-			continue;
-		}
-
-		$reaction_content          = maybe_unserialize( $reaction_post->post_content );
-		$reaction_content['id']    = $reaction_post->ID;
-		$reaction_content['total'] = $reaction->total;
-		$reactions[]               = $reaction_content;
-
-		$no_of_reactions--;
+		$no_of_reactions --;
 	}
 
 	return apply_filters( 'bb_get_activity_most_reactions', $reactions );
@@ -320,18 +308,16 @@ function bb_get_activity_post_user_reactions_html( $activity_id, $item_type = 'a
 	}
 
 	$reaction_count_class = 'activity-reactions_count';
-	$no_of_emotions       = 3;
 	if ( 'activity_comment' === $item_type ) {
 		$reaction_count_class = 'comment-reactions_count';
-		$no_of_emotions       = 2;
 	}
 
-	$most_reactions = bb_get_activity_most_reactions( $activity_id, $item_type, $no_of_emotions );
+	$most_reactions = bb_get_activity_most_reactions( $activity_id, $item_type );
 	if ( ! empty( $most_reactions ) ) {
 		$output .= '<div class="activity-state-reactions">';
 
 		foreach ( $most_reactions as $reaction ) {
-			$icon   = bb_activity_prepare_emotion_icon( $reaction );
+			$icon   = bb_activity_prepare_emotion_icon( $reaction['id'] );
 			$output .= sprintf(
 				'<div class="reactions_item">
 				%s
@@ -811,37 +797,46 @@ function bb_activity_prepare_emotion_icon_with_text( $id_or_post_or_reaction, $h
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int|array|WP_Post $id_or_post_or_reaction Accepts a post ID, Emotion array, WP_Post object.
+ * @param int|array|WP_Post $reaction_id Accepts a post ID, Emotion array, WP_Post object.
  *
  * @return string
  */
-function bb_activity_prepare_emotion_icon( $id_or_post_or_reaction ) {
-	$reaction_data = array();
+function bb_activity_prepare_emotion_icon( $reaction_id ) {
+	$icon_html = '';
 
-	// Process the identifier.
-	if ( is_array( $id_or_post_or_reaction ) ) {
-		$reaction_data = $id_or_post_or_reaction;
-	} elseif ( is_object( $id_or_post_or_reaction ) ) {
-		$reaction_data = ! empty( $id_or_post_or_reaction->post_content ) ? maybe_unserialize( $id_or_post_or_reaction->post_content ) : array();
-	} elseif ( is_numeric( $id_or_post_or_reaction ) ) {
-		$id_or_post_or_reaction = get_post( absint( $id_or_post_or_reaction ) );
-		$reaction_data          = ! empty( $id_or_post_or_reaction->post_content ) ? maybe_unserialize( $id_or_post_or_reaction->post_content ) : array();
+	$all_emotions = array();
+	if ( bb_is_reaction_emotions_enabled() ) {
+		$all_emotions = bb_load_reaction()->bb_get_reactions( 'emotions' );
+		$all_emotions = array_column( $all_emotions, null, 'id' );
+	} else {
+		$all_emotions = bb_load_reaction()->bb_get_reactions();
+		$all_emotions = array_column( $all_emotions, null, 'id' );
 	}
 
-	if ( ! empty( $reaction_data['type'] ) && 'bb-icons' === $reaction_data['type'] ) {
+	if (
+		empty( $all_emotions ) ||
+		empty( $reaction_id ) ||
+		! isset( $all_emotions[ $reaction_id ] )
+	) {
+		return $icon_html;
+	}
+
+	$reaction = $all_emotions[ $reaction_id ];
+
+	if ( ! empty( $reaction['type'] ) && 'bb-icons' === $reaction['type'] ) {
 		$icon_html = sprintf(
 			'<i class="bb-icon-%s" style="color:%s;"></i>',
-			esc_attr( $reaction_data['icon'] ),
-			esc_attr( $reaction_data['icon_color'] ),
+			esc_attr( $reaction['icon'] ),
+			esc_attr( $reaction['icon_color'] ),
 		);
-	} elseif ( ! empty( $reaction_data['icon_path'] ) ) {
+	} elseif ( ! empty( $reaction['icon_path'] ) ) {
 		$icon_html = sprintf(
 			'<img src="%s" class="%s" alt="%s"/>',
-			esc_url( $reaction_data['icon_path'] ),
-			esc_attr( $reaction_data['type'] ),
-			esc_attr( $reaction_data['icon_text'] )
+			esc_url( $reaction['icon_path'] ),
+			esc_attr( $reaction['type'] ),
+			esc_attr( $reaction['icon_text'] )
 		);
-	} elseif ( empty( $reaction_data['type'] ) && ! empty( $reaction_data['name'] ) ) {
+	} elseif ( empty( $reaction['type'] ) && ! empty( $reaction['name'] ) ) {
 		$icon_html = '<i class="bb-icon-thumbs-up bb-icon-rf default-like"></i>';
 	} else {
 		$settings  = bb_get_reaction_button_settings();
