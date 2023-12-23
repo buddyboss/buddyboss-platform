@@ -801,6 +801,9 @@ window.bp = window.bp || {};
 						'message' 	 	: $( 'textarea#send-invites-control' ).val(),
 						'users'   		: users_list
 					};
+					var self = $( this );
+
+					self.prop( 'disabled', true );
 
 					$.ajax(
 						{
@@ -886,6 +889,8 @@ window.bp = window.bp || {};
 										4000
 									); // <-- time in milliseconds
 								}
+
+								self.prop( 'disabled', false );
 							}
 						}
 					);
