@@ -3140,17 +3140,7 @@ function bp_activity_can_comment_reply( $comment = false ) {
  */
 function bp_activity_can_favorite() {
 
-	$retval = false;
-
-	if (
-		is_user_logged_in() &&
-		(
-			bb_is_reaction_activity_posts_enabled() ||
-			bb_is_reaction_activity_comments_enabled()
-		)
-	) {
-		$retval = true;
-	}
+	$retval = is_user_logged_in() && bb_is_reaction_activity_posts_enabled();
 
 	/**
 	 * Filters whether or not users can favorite activity items.
@@ -4333,14 +4323,16 @@ function bb_activity_comment_user_can_edit( $activity_comment = false, $privacy_
  */
 function bb_activity_comment_can_favorite() {
 
+	$retval = is_user_logged_in() && bb_is_reaction_activity_comments_enabled();
+
 	/**
 	 * Filters whether or not users can favorite activity comment items.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param bool $value Whether or not favoriting is enabled.
+	 * @param bool $value Whether or not comment favoriting is enabled.
 	 */
-	return apply_filters( 'bb_activity_comment_can_favorite', true );
+	return apply_filters( 'bb_activity_comment_can_favorite', $retval );
 }
 
 /**
