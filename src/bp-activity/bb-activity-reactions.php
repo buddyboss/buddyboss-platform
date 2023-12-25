@@ -659,25 +659,6 @@ function bb_format_reaction_count( $count ) {
 }
 
 /**
- * Get the reacted user id.
- *
- * @param array $reacted_users The reacted user IDs.
- * @param array $friends       The friends user IDs.
- * @param array $followers     The friends user IDs.
- *
- * @return int The user id.
- */
-function bb_get_reacted_person( &$reacted_users, &$friends, &$followers ) {
-	if ( ! empty( $friends ) ) {
-		return array_pop( $friends );
-	} elseif ( ! empty( $followers ) ) {
-		return array_pop( $followers );
-	} else {
-		return array_pop( $reacted_users );
-	}
-}
-
-/**
  * Check whether the current item is in the user's favorites.
  *
  * @since BuddyBoss [BBVERSION]
