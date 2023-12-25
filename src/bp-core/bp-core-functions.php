@@ -2372,6 +2372,8 @@ function bp_core_load_buddypress_textdomain() {
 		)
 	);
 
+	unload_textdomain( $domain );
+
 	// Try custom locations in WP_LANG_DIR.
 	foreach ( $locations as $location ) {
 		if ( load_textdomain( 'buddyboss', $location . $mofile_custom ) ) {
