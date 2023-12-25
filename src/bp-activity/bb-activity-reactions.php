@@ -467,8 +467,8 @@ function bb_get_activity_reaction_ajax_callback() {
 
 			$reaction_data[ $key ]['users']       = $users_data['reactions'];
 			$reaction_data[ $key ]['paged']       = 1;
-			$reaction_data[ $key ]['total_pages'] = ceil( $reaction_data[ $key ]['total'] / 20 );
-			$reaction_data[ $key ]['total_count'] = bb_format_reaction_count( $reaction_data[ $key ]['total'] );
+			$reaction_data[ $key ]['total_pages'] = ceil( $reaction_data[ $key ]['count'] / 20 );
+			$reaction_data[ $key ]['total_count'] = bb_format_reaction_count( $reaction_data[ $key ]['count'] );
 		}
 
 		if ( is_countable( $reaction_data ) && count( $reaction_data ) >= 2 ) {
