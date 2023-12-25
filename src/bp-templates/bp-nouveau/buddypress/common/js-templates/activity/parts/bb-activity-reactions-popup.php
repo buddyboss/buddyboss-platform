@@ -53,7 +53,7 @@
 							</li>
 							<#
 								isFirstItem = false;
-							}); 
+							});
 							#>
 						</ul>
 					</div>
@@ -95,7 +95,7 @@
 							</div>
 						<#
 							isFirstItem = false;
-						}); 
+						});
 						#>
 					</div>
 				</div>

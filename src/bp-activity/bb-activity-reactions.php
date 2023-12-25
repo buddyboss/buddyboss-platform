@@ -214,7 +214,7 @@ function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', 
 	}
 
 	if ( empty( $all_reactions ) ) {
-		return;
+		return false;
 	}
 
 	$all_emotions = bb_load_reaction()->bb_get_reactions( 'emotions' );
