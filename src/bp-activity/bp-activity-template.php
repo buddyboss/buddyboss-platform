@@ -3140,6 +3140,18 @@ function bp_activity_can_comment_reply( $comment = false ) {
  */
 function bp_activity_can_favorite() {
 
+	$retval = false;
+
+	if (
+		is_user_logged_in() &&
+		(
+			bb_is_reaction_activity_posts_enabled() ||
+			bb_is_reaction_activity_comments_enabled()
+		)
+	) {
+		$retval = true;
+	}
+
 	/**
 	 * Filters whether or not users can favorite activity items.
 	 *
@@ -3147,7 +3159,7 @@ function bp_activity_can_favorite() {
 	 *
 	 * @param bool $value Whether or not favoriting is enabled.
 	 */
-	return apply_filters( 'bp_activity_can_favorite', true );
+	return apply_filters( 'bp_activity_can_favorite', $retval );
 }
 
 /**
