@@ -756,9 +756,15 @@ function bb_activity_get_user_reaction_by_item( $item_id, $item_type = 'activity
  * @return array
  */
 function bb_activity_get_reaction_button( $reaction_id, $has_reacted = false ) {
+
+	$settings  = bb_get_reaction_button_settings();
+	$icon_text = ! empty( $settings['text'] ) ? $settings['text'] : esc_html( 'Like', 'buddyboss' );
+	$icon      = ! empty( $settings['icon'] ) && ! $has_reacted ? $settings['icon'] : 'thumbs-up bb-icon-f';
+	$icon_html = '<span><i class="bb-icon-' . $icon . ' "></i></span>';
+
 	$retval = array(
-		'icon_text' => '',
-		'icon_html' => '',
+		'icon_text' => $icon_text,
+		'icon_html' => $icon_html,
 	);
 
 	if ( bb_is_reaction_emotions_enabled() ) {
@@ -780,14 +786,11 @@ function bb_activity_get_reaction_button( $reaction_id, $has_reacted = false ) {
 	$reaction  = $all_emotions[ $reaction_id ];
 	$icon_html = bb_activity_prepare_emotion_icon( $reaction_id );
 
-	if ( ! empty( $reaction['type'] ) || ! empty( $reaction['icon_path'] ) ) {
+	if (
+		! empty( $reaction['type'] ) ||
+		! empty( $reaction['icon_path'] )
+	) {
 		$icon_text = sanitize_text_field( $reaction['icon_text'] );
-	} else {
-		// @todo Need some cleanup about reaction button states.
-		$settings  = bb_get_reaction_button_settings();
-		$icon_text = ! empty( $settings['text'] ) && ! $has_reacted ? $settings['text'] : esc_html( 'Like', 'buddyboss' );
-		$icon      = ! empty( $settings['icon'] ) && ! $has_reacted ? $settings['icon'] : 'thumbs-up bb-icon-f';
-		$icon_html = '<span><i class="bb-icon-' . $icon . ' "></i></span>';
 	}
 
 	$retval['icon_text'] = $icon_text;
