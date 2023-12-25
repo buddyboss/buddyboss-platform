@@ -3634,6 +3634,7 @@ input.search-query-input {
 }
 
 #buddypress .activity-list .activity-item > .activity-meta.action .button > .like-count {
+  color: #333;
   line-height: 20px;
   display: inline-block;
   vertical-align: middle;
@@ -3705,6 +3706,10 @@ input.search-query-input {
 
 .activity-list .activity-item .bp-generic-meta.action .acomment-reply.button:before {
   content: "\ee33";
+}
+
+.activity-list .activity-item .bp-generic-meta.action .acomment-reply.button .comment-count {
+  color: #333;
 }
 
 .activity-list .activity-item .bp-generic-meta.action .view:before {

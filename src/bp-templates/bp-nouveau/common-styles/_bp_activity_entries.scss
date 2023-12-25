@@ -342,6 +342,7 @@
 				> .like-count {
 
 					#buddypress & {
+						color: $black;
 						line-height: 20px;
 						display: inline-block;
 						vertical-align: middle;
@@ -426,8 +427,15 @@
 				vertical-align: middle;
 			}
 
-			.acomment-reply.button:before {
-				content: "\ee33";
+			.acomment-reply.button {
+
+				&:before {
+					content: "\ee33";
+				}
+
+				.comment-count {
+					color: $black;
+				}
 			}
 
 			.view:before {
