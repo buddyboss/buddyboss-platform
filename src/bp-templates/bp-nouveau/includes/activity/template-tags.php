@@ -480,50 +480,51 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 			$key = 'href';
 		}
 
+		$button_settings = bb_get_reaction_button_settings();
+
 		$fav_args = array(
-			'class'        => 'button fav bp-secondary-action bp-like-button',
+			'link_class'        => 'button fav bp-secondary-action bp-like-button',
 			'aria-pressed' => 'false',
 			'link_attr'    => bp_get_activity_favorite_link(),
 			'link_text'    => sprintf(
 				'<span class="bp-screen-reader-text">%1$s</span><span class="like-count">%1$s</span>',
-				esc_html__( 'Like', 'buddyboss' )
+				$button_settings['text']
 			),
 		);
 
 		if ( ! bb_activity_is_item_favorite( $activity_id ) ) {
+			$fav_args['link_class'] = $fav_args['link_class'] . ' reaction';
 
-			// @todo: Do necessary changes in function to valid it.
-			$button_settings = bb_get_reaction_button_settings();
-
-			$fav_args['link_class'] = 'button fav reaction bp-secondary-action bp-like-button';
-			$fav_args['link_text']  = sprintf(
+			$fav_args['link_text'] = sprintf(
 				'<span class="bp-screen-reader-text">%1$s</span>
 				<span><i class="bb-icon-%2$s"></i></span>
 				<span class="like-count">%1$s</span>',
-				! empty( $button_settings['text'] ) ? esc_html( $button_settings['text'] ) : esc_html( 'Like', 'buddyboss' ),
-				! empty( $button_settings['icon'] ) ? esc_attr( $button_settings['icon'] ) : 'thumbs-up'
+				$button_settings['text'],
+				esc_attr( $button_settings['icon'] )
 			);
 
 		} else {
 			// Get user reacted reaction data and prepare the link.
 			$reaction_data = bb_activity_get_user_reaction_by_item( $activity_id );
-			if ( ! empty( $reaction_data['reaction'] ) ) {
-				$reaction      = $reaction_data['reaction'];
-				$prepared_icon = bb_activity_get_reaction_button( $reaction_data['reaction_id'], true );
-				$link_classes  = empty( $reaction['type'] ) ? 'has-like has-reaction' : 'has-emotion has-reaction';
-				$fav_args      = array(
-					'link_class'   => sprintf( 'button unfav bp-secondary-action bp-like-button %s', $link_classes ),
+			if ( ! empty( $reaction_data['id'] ) ) {
+				$reaction_type = $reaction_data['type'];
+				$prepared_icon = bb_activity_get_reaction_button( $reaction_data['id'], true );
+				$link_classes  = empty( $reaction_type ) ? ' has-like has-reaction' : ' has-emotion has-reaction';
+
+				$fav_args = array(
 					'aria-pressed' => 'true',
 					'link_attr'    => bp_get_activity_unfavorite_link(),
 					'link_text'    => sprintf(
 						'<span class="bp-screen-reader-text">%1$s</span>
 						%2$s
-						<span class="like-count reactions_item" style="color:%3$s">%1$s</span>',
+						<span class="like-count reactions_item" style="%3$s">%1$s</span>',
 						esc_html( $prepared_icon['icon_text'] ),
 						$prepared_icon['icon_html'],
-						! empty( $reaction['text_color'] ) ? esc_attr( $reaction['text_color'] ) : '#385DFF'
+						! empty( $reaction['text_color'] ) ? esc_attr( 'color:' . $reaction['text_color'] ) : ''
 					),
 				);
+
+				$fav_args['link_class'] = str_replace( 'fav', 'unfav', $fav_args['link_class'] ) . $link_classes;
 			}
 		}
 

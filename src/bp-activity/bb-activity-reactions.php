@@ -271,8 +271,13 @@ function bb_get_activity_post_reaction_button_html( $item_id, $item_type = 'acti
 		$has_reacted           = true;
 	}
 
-	$reaction_post = get_post( $reaction_id );
-	$reaction_data = ! empty( $reaction_post->post_content ) ? maybe_unserialize( $reaction_post->post_content ) : array();
+	$reaction_data = array();
+
+	if ( ! empty( $reaction_id ) ) {
+		$reaction      = get_post_field( 'post_content', (int) $reaction_id );
+		$reaction_data = ! empty( $reaction ) ? maybe_unserialize( $reaction ) : array();
+	}
+
 	$prepared_icon = bb_activity_get_reaction_button( $reaction_id, $has_reacted );
 
 	if ( $has_reacted ) {
@@ -741,14 +746,21 @@ function bb_activity_get_user_reaction_by_item( $item_id, $item_type = 'activity
 		return false;
 	}
 
-	$reaction_id   = current( $user_reaction['reactions'] );
-	$reaction      = get_post_field( 'post_content', $reaction_id );
-	$reaction_data = array(
-		'reaction_id' => $reaction_id,
-		'reaction'    => maybe_unserialize( $reaction ),
-	);
+	$reaction_id = current( $user_reaction['reactions'] );
 
-	return $reaction_data;
+	if ( bb_is_reaction_emotions_enabled() ) {
+		$all_emotions = bb_load_reaction()->bb_get_reactions( 'emotions' );
+	} else {
+		$all_emotions = bb_load_reaction()->bb_get_reactions();
+	}
+
+	$all_emotions = array_column( $all_emotions, null, 'id' );
+
+	if ( isset( $all_emotions[ $reaction_id ] ) ) {
+		return $all_emotions[ $reaction_id ];
+	}
+
+	return array();
 }
 
 /**
