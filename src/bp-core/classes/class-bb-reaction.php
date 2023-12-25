@@ -1568,10 +1568,12 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				// Reaction need item type.
 			}
 
+			$reaction_data_id = 0;
+
 			$reactions_data = $this->bb_get_reactions_data( $r );
 			if ( ! empty( $reactions_data['reaction_data'] ) ) {
 				$reaction_data = current( $reactions_data['reaction_data'] );
-
+				$reaction_data_id = $reaction_data->id;
 				$sql = $wpdb->prepare(
 					// phpcs:ignore
 					'UPDATE ' . self::$reaction_data_table . ' SET
@@ -1621,7 +1623,9 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				}
 			}
 
-			$reaction_data_id = $wpdb->insert_id;
+			if ( empty( $reaction_data_id ) ) {
+				$reaction_data_id = $wpdb->insert_id;
+			}
 
 			/**
 			 * Fires after the add user item reaction in DB.
