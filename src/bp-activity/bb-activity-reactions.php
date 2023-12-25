@@ -465,6 +465,9 @@ function bb_get_activity_reaction_ajax_callback() {
 				)
 			);
 
+			// Added emotion information to show in a tab.
+			$reaction_data[ $key ] = array_merge( $reaction_data[ $key ], current( $users_data['reactions'] )['reaction'] );
+
 			$reaction_data[ $key ]['users']       = $users_data['reactions'];
 			$reaction_data[ $key ]['paged']       = 1;
 			$reaction_data[ $key ]['total_pages'] = ceil( $reaction_data[ $key ]['count'] / 20 );
