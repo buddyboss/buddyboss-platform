@@ -22,9 +22,9 @@
 					if ( data.reaction_mode && data.reaction_mode === 'emotions' && reactionCount > 1 ) { #>
 						<h4><?php esc_html_e( 'Reactions', 'buddyboss' ); ?></h4>
 					<# } else if( data.reaction_mode && data.reaction_mode === 'emotions' && 1 === reactionCount ) { #>
-						<h4> {{data.reactions[0].icon_text}} ({{ data.reactions[0].total }})</h4>
+						<h4> {{data.reactions[0].icon_text}} ({{ data.reactions[0].total_count }})</h4>
 					<# } else { #>
-						<h4><?php esc_html_e( 'Likes', 'buddyboss' ); ?>({{ data.reactions[0].total }})</h4>
+						<h4><?php esc_html_e( 'Likes', 'buddyboss' ); ?>({{ data.reactions[0].total_count }})</h4>
 					<# } #>
 				</div>
 				<div class="activity-state-popup_tab">
