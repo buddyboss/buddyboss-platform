@@ -217,7 +217,12 @@ function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', 
 		return false;
 	}
 
-	$all_emotions = bb_load_reaction()->bb_get_reactions( 'emotions' );
+	if ( bb_is_reaction_emotions_enabled() ) {
+		$all_emotions = bb_load_reaction()->bb_get_reactions( 'emotions' );
+	} else {
+		$all_emotions = bb_load_reaction()->bb_get_reactions();
+	}
+
 	$all_emotions = array_flip( array_column( $all_emotions, 'id' ) );
 
 	$all_reactions = array_intersect_key( $all_reactions, $all_emotions );
