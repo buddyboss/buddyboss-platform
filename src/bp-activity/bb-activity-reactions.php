@@ -280,12 +280,12 @@ function bb_get_activity_post_reaction_button_html( $item_id, $item_type = 'acti
 		'<a href="%1$s" class="button bp-like-button bp-secondary-action %5$s" aria-pressed="false">
 			<span class="bp-screen-reader-text">%2$s</span>
 			%3$s
-			<span class="like-count reactions_item" style="color:%4$s">%2$s</span>
+			<span class="like-count reactions_item" style="%4$s">%2$s</span>
 		</a>',
 		$reaction_link,
 		! empty( $prepared_icon['icon_text'] ) ? $prepared_icon['icon_text'] : esc_html__( 'Like', 'buddyboss' ),
 		$item_type === 'activity' ? $prepared_icon['icon_html'] : '',
-		! empty( $reaction_data['text_color'] ) ? esc_attr( $reaction_data['text_color'] ) : '#385DFF',
+		! empty( $reaction_data['text_color'] ) ? esc_attr( 'color:' . $reaction_data['text_color'] ) : '',
 		$reaction_button_class,
 	);
 
