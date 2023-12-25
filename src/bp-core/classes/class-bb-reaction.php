@@ -2067,6 +2067,40 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		}
 
 		/**
+		 * Get user reacted reaction id.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $args Array of arguments.
+		 *
+		 * @return int
+		 */
+		public function bb_user_reacted_reaction_id( $args ) {
+
+			if ( empty( $args['item_id'] ) || empty( $args['item_type'] ) ) {
+				return 0;
+			}
+
+			$user_reaction = $this->bb_get_user_reactions(
+				array(
+					'item_id'     => $args['item_id'],
+					'item_type'   => $args['item_type'],
+					'user_id'     => ! empty( $args['user_id'] ) ? $args['user_id'] : bp_loggedin_user_id(),
+					'fields'      => 'reaction_id',
+					'reaction_id' => bb_is_reaction_emotions_enabled() ? 0 : $this->bb_reactions_get_like_reaction_id(),
+				)
+			);
+
+			if ( empty( $user_reaction['reactions'] ) ) {
+				return 0;
+			}
+
+			$reaction_id = current( $user_reaction['reactions'] );
+
+			return (int) $reaction_id;
+		}
+
+		/**
 		 * Validate callback for a reaction item type for activity comment.
 		 *
 		 * @since BuddyBoss [BBVERSION]
