@@ -455,6 +455,9 @@ function bb_get_activity_reaction_ajax_callback() {
 			);
 		}
 
+		$all_emotions = bb_load_reaction()->bb_get_reactions( 'emotions' );
+		$all_emotions = array_column( $all_emotions, null, 'id' );
+
 		foreach ( $reaction_data as $key => $reaction ) {
 			$users_data = bb_activity_get_reacted_users_data(
 				array(
@@ -466,7 +469,8 @@ function bb_get_activity_reaction_ajax_callback() {
 			);
 
 			// Added emotion information to show in a tab.
-			$reaction_data[ $key ] = array_merge( $reaction_data[ $key ], current( $users_data['reactions'] )['reaction'] );
+			$emotion               = ! empty( $all_emotions[ $reaction['id'] ] ) ? $all_emotions[ $reaction['id'] ] : array();
+			$reaction_data[ $key ] = array_merge( $reaction_data[ $key ], $emotion );
 
 			$reaction_data[ $key ]['users']       = $users_data['reactions'];
 			$reaction_data[ $key ]['paged']       = 1;
