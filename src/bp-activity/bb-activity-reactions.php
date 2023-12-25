@@ -82,7 +82,7 @@ function bb_activity_remove_activity_post_reactions( $activities ) {
 		return;
 	}
 
-	$activity_ids = array_column( $activities, 'id');
+	$activity_ids = array_column( $activities, 'id' );
 	if ( empty( $activity_ids ) ) {
 		return;
 	}
@@ -317,7 +317,7 @@ function bb_get_activity_post_user_reactions_html( $activity_id, $item_type = 'a
 		$output .= '<div class="activity-state-reactions">';
 
 		foreach ( $most_reactions as $reaction ) {
-			$icon   = bb_activity_prepare_emotion_icon( $reaction['id'] );
+			$icon    = bb_activity_prepare_emotion_icon( $reaction['id'] );
 			$output .= sprintf(
 				'<div class="reactions_item">
 				%s
@@ -389,7 +389,7 @@ function bb_activity_get_reacted_users_data( $args ) {
 					'color' => array(
 						'background' => ! empty( $color_data['background-color'] ) ? $color_data['background-color'] : '',
 						'text'       => ! empty( $color_data['color'] ) ? $color_data['color'] : '',
-					)
+					),
 				),
 				'avatar'      => bp_core_fetch_avatar(
 					array(
@@ -565,7 +565,7 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 		}
 	}
 
-	$friend_users   = array();
+	$friend_users = array();
 
 	// Get friends and followers.
 	if (
@@ -577,13 +577,16 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 		$friend_users = friends_get_friend_user_ids( $current_logged_user_id );
 		if ( ! empty( $friend_users ) ) {
 			$index_map = array_flip( $friend_users );
-			usort( $reacted_users, function ( $a, $b ) use ( $index_map ) {
-				$index_a = isset( $index_map[ $a ] ) ? $index_map[ $a ] : PHP_INT_MAX;
-				$index_b = isset( $index_map[ $b ] ) ? $index_map[ $b ] : PHP_INT_MAX;
+			usort(
+				$reacted_users,
+				function ( $a, $b ) use ( $index_map ) {
+					$index_a = isset( $index_map[ $a ] ) ? $index_map[ $a ] : PHP_INT_MAX;
+					$index_b = isset( $index_map[ $b ] ) ? $index_map[ $b ] : PHP_INT_MAX;
 
-				// Compare the positions.
-				return $index_a - $index_b;
-			} );
+					// Compare the positions.
+					return $index_a - $index_b;
+				}
+			);
 		}
 	} elseif (
 		empty( $friend_users ) &&
@@ -601,29 +604,32 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 
 		if ( ! empty( $followers ) ) {
 			$index_map = array_flip( $followers );
-			usort( $reacted_users, function ( $a, $b ) use ( $index_map ) {
-				$index_a = isset( $index_map[ $a ] ) ? $index_map[ $a ] : PHP_INT_MAX;
-				$index_b = isset( $index_map[ $b ] ) ? $index_map[ $b ] : PHP_INT_MAX;
+			usort(
+				$reacted_users,
+				function ( $a, $b ) use ( $index_map ) {
+					$index_a = isset( $index_map[ $a ] ) ? $index_map[ $a ] : PHP_INT_MAX;
+					$index_b = isset( $index_map[ $b ] ) ? $index_map[ $b ] : PHP_INT_MAX;
 
-				// Compare the positions.
-				return $index_a - $index_b;
-			} );
+					// Compare the positions.
+					return $index_a - $index_b;
+				}
+			);
 		}
 	}
 
 	$return_str    = '';
-	$display_names = [];
+	$display_names = array();
 	if ( true === $is_current_user_reacted ) {
 		$display_names[] = esc_html__( 'You', 'buddyboss' );
 	}
 
 	if ( 0 !== $reaction_count ) {
-		$user_id = array_shift( $reacted_users );
+		$user_id         = array_shift( $reacted_users );
 		$display_names[] = bp_core_get_user_displayname( $user_id );
 	}
 
 	if ( count( $display_names ) < 2 && count( $reacted_users ) > 1 ) {
-		$user_id = array_shift( $reacted_users );
+		$user_id         = array_shift( $reacted_users );
 		$display_names[] = bp_core_get_user_displayname( $user_id );
 	}
 
@@ -711,10 +717,10 @@ function bb_activity_get_user_reaction_by_item( $item_id, $item_type = 'activity
 
 	$user_reaction = bb_load_reaction()->bb_get_user_reactions(
 		array(
-			'item_type' => $item_type,
-			'item_id'   => $item_id,
-			'user_id'   => $user_id,
-			'fields'    => 'reaction_id',
+			'item_type'   => $item_type,
+			'item_id'     => $item_id,
+			'user_id'     => $user_id,
+			'fields'      => 'reaction_id',
 			'reaction_id' => bb_is_reaction_emotions_enabled() ? 0 : bb_load_reaction()->bb_reactions_get_like_reaction_id(),
 		)
 	);
@@ -770,7 +776,7 @@ function bb_activity_get_reaction_button( $reaction_id, $has_reacted = false ) {
 	if ( ! empty( $reaction['type'] ) || ! empty( $reaction['icon_path'] ) ) {
 		$icon_text = sanitize_text_field( $reaction['icon_text'] );
 	} else {
-		//@todo Need some cleanup about reaction button states.
+		// @todo Need some cleanup about reaction button states.
 		$settings  = bb_get_reaction_button_settings();
 		$icon_text = ! empty( $settings['text'] ) && ! $has_reacted ? $settings['text'] : esc_html( 'Like', 'buddyboss' );
 		$icon      = ! empty( $settings['icon'] ) && ! $has_reacted ? $settings['icon'] : 'thumbs-up bb-icon-f';
@@ -859,7 +865,7 @@ function bb_get_reaction_button_settings() {
 		return $args;
 	}
 
-	$settings =  bb_reaction_button_options();
+	$settings = bb_reaction_button_options();
 	if ( ! empty( $settings['icon'] ) ) {
 		$args['icon'] = $settings['icon'];
 	}
