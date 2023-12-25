@@ -758,7 +758,7 @@ function bb_activity_get_user_reaction_by_item( $item_id, $item_type = 'activity
 function bb_activity_get_reaction_button( $reaction_id, $has_reacted = false ) {
 
 	$settings  = bb_get_reaction_button_settings();
-	$icon_text = ! empty( $settings['text'] ) ? $settings['text'] : esc_html( 'Like', 'buddyboss' );
+	$icon_text = ! empty( $settings['text'] ) && ! $has_reacted ? $settings['text'] : esc_html( 'Like', 'buddyboss' );
 	$icon      = ! empty( $settings['icon'] ) && ! $has_reacted ? $settings['icon'] : 'thumbs-up bb-icon-f';
 	$icon_html = '<span><i class="bb-icon-' . $icon . ' "></i></span>';
 
