@@ -749,15 +749,21 @@ window.bp = window.bp || {};
 
 			// If emotion item exists then take reaction id and update the target.
 			var reaction_id = 0;
-			if ( target.parents( '.ac-emotion_item' ) ) {
-				target      = $( target ).closest( 'a' );
-				reaction_id = target.parent( '.ac-emotion_item' ).attr( 'data-reaction-id' );
+			if (
+				target.parent( '.ac-emotion_btn' ) &&
+				! ( target.hasClass( 'fav' ) || target.hasClass( 'unfav' ) )
+				) {
+				reaction_id = target.parents( '.ac-emotion_item' ).attr( 'data-reaction-id' );
 			}
 
 			// Favorite and unfavorite logic.
 			if ( target.hasClass( 'fav' ) || target.hasClass( 'unfav' ) || reaction_id > 0 ) {
 				// Stop event propagation.
 				event.preventDefault();
+
+				if ( ! $( target ).is( 'a' ) ) {
+					target = $( target ).closest( 'a' );
+				}
 
 				var type        = target.hasClass( 'fav' ) ? 'fav' : 'unfav',
 					is_activity = true,
