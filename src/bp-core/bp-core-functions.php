@@ -2368,10 +2368,7 @@ function bp_core_load_buddypress_textdomain() {
 		'buddypress_locale_locations',
 		array(
 			trailingslashit( WP_LANG_DIR . '/' . $domain ),
-			trailingslashit( WP_LANG_DIR . '/' . 'plugins' ) ,
 			trailingslashit( WP_LANG_DIR ),
-			trailingslashit( BP_PLUGIN_DIR . 'languages' ),
-			trailingslashit( BP_PLUGIN_DIR . 'src/languages' ),
 		)
 	);
 
