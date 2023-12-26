@@ -880,7 +880,7 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 		$key = ( 'button' === $button_element ) ? 'data-bp-nonce' : 'href';
 
 		$fav_args = array(
-			'class'        => 'button fav reaction bp-secondary-action bp-like-button',
+			'class'   => 'button fav reaction bp-secondary-action bp-like-button',
 			'aria-pressed' => 'false',
 			$key           => bb_get_activity_comment_favorite_link(),
 			'link_text'    => sprintf(
@@ -890,32 +890,27 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 		);
 
 		if ( ! bb_get_activity_comment_is_favorite() ) {
-			$button_settings = bb_get_reaction_button_settings();
-			$fav_args['link_class'] = 'button fav reaction bp-secondary-action bp-like-button';
-			$fav_args['link_text']  = sprintf(
+			$button_settings       = bb_get_reaction_button_settings();
+			$fav_args['link_text'] = sprintf(
 				'<span class="bp-screen-reader-text">%1$s</span>
 				<span class="like-count">%1$s</span>',
 				! empty( $button_settings['text'] ) ? esc_html( $button_settings['text'] ) : esc_html( 'Like', 'buddyboss' ),
 			);
 		} else {
-
 			// Get user reacted reaction data and prepare the link.
 			$reaction_data = bb_activity_get_user_reaction_by_item( $activity_comment_id, 'activity_comment' );
-			if ( ! empty( $reaction_data['reaction'] ) ) {
-				$reaction      = $reaction_data['reaction'];
-				$link_classes  = empty( $reaction['type'] ) ? 'has-like has-reaction' : 'has-emotion has-reaction';
-				$prepared_icon = bb_activity_get_reaction_button( $reaction_data['reaction_id'], true );
+			if ( ! empty( $reaction_data ) ) {
+				$link_classes  = empty( $reaction_data['type'] ) ? 'has-like has-reaction' : 'has-emotion has-reaction';
+				$prepared_icon = bb_activity_get_reaction_button( $reaction_data['id'], true );
 
-				$fav_args      = array(
-					'class'        => sprintf( 'button unfav bp-secondary-action bp-like-button %s', $link_classes ),
-					'aria-pressed' => 'true',
-					$key           => bb_get_activity_comment_unfavorite_link(),
-					'link_text'    => sprintf(
-						'<span class="bp-screen-reader-text">%1$s</span>
-						<span class="like-count reactions_item" style="color:%2$s">%1$s</span>',
-						esc_html( $prepared_icon['icon_text'] ),
-						! empty( $reaction['text_color'] ) ? esc_attr( $reaction['text_color'] ) : '#385DFF'
-					),
+				$fav_args['class']   = str_replace( 'fav', 'unfav', $fav_args['class'] ) . ' ' . $link_classes;
+				$fav_args['aria-pressed'] = true;
+				$fav_args[ $key ]         = bb_get_activity_comment_unfavorite_link();
+				$fav_args['link_text']    = sprintf(
+					'<span class="bp-screen-reader-text">%1$s</span>
+						<span class="like-count reactions_item" style="%2$s">%1$s</span>',
+					esc_html( $prepared_icon['icon_text'] ),
+					! empty( $reaction_data['text_color'] ) ? esc_attr( 'color:' . $reaction_data['text_color'] ) : ''
 				);
 			}
 		}
