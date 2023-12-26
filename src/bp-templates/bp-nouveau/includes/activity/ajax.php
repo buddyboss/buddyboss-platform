@@ -225,6 +225,24 @@ function bp_nouveau_ajax_unmark_activity_favorite() {
 	$item_type = sanitize_text_field( $_POST['item_type'] );
 	$user_id   = bp_loggedin_user_id();
 
+	// Check if user try to un-react but there is no reaction id as per current reaction mode.
+	$reacted_reaction_id = bb_load_reaction()->bb_user_reacted_reaction_id(
+		array(
+			'item_id'   => $item_id,
+			'item_type' => $item_type,
+			'user_id'   => $user_id,
+		)
+	);
+
+	if ( empty( $reacted_reaction_id ) ) {
+		wp_send_json_error(
+			array(
+				// @todo: Update error message after confirmation.
+				'error_message' => esc_html__( 'Reacted reaction ID is missing.', 'buddyboss' ),
+			)
+		);
+	}
+
 	$un_reacted = bp_activity_remove_user_favorite(
 		$item_id,
 		$user_id,
