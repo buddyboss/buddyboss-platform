@@ -123,6 +123,19 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 		wp_send_json_error();
 	}
 
+	// Check if migration is in progress.
+	if (
+		function_exists( 'bb_pro_reaction_get_migration_status' ) &&
+		'inprogress' === bb_pro_reaction_get_migration_status()
+	) {
+		wp_send_json_error(
+			array(
+				// @todo: Update error message after confirmation.
+				'error_message' => esc_html__( 'Migration in progress, Please wait sometime.', 'buddyboss' ),
+			)
+		);
+	}
+
 	if ( ! empty( $_POST['reaction_id'] ) ) {
 		$reaction_id = sanitize_text_field( $_POST['reaction_id'] );
 	} else {
@@ -177,6 +190,7 @@ function bp_nouveau_ajax_mark_activity_favorite() {
  * @return string JSON reply
  */
 function bp_nouveau_ajax_unmark_activity_favorite() {
+
 	if ( ! bp_is_post_request() ) {
 		wp_send_json_error();
 	}
@@ -186,10 +200,23 @@ function bp_nouveau_ajax_unmark_activity_favorite() {
 		wp_send_json_error();
 	}
 
+	// Check if migration is in progress.
+	if (
+		function_exists( 'bb_pro_reaction_get_migration_status' ) &&
+		'inprogress' === bb_pro_reaction_get_migration_status()
+	) {
+		wp_send_json_error(
+			array(
+				// @todo: Update error message after confirmation.
+				'error_message' => esc_html__( 'Migration in progress, Please wait sometime.', 'buddyboss' ),
+			)
+		);
+	}
+
 	if ( empty( $_POST['item_id'] ) ) {
 		wp_send_json_error(
 			array(
-				'no_item_id' => esc_html__( 'No item id', 'buddyboss' ),
+				'error_message' => esc_html__( 'No item id', 'buddyboss' ),
 			)
 		);
 	}
