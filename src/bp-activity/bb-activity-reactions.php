@@ -800,7 +800,7 @@ function bb_activity_get_reaction_button( $reaction_id, $has_reacted = false ) {
 	$settings  = bb_get_reaction_button_settings();
 	$icon_text = ! empty( $settings['text'] ) && ! $has_reacted ? $settings['text'] : esc_html( 'Like', 'buddyboss' );
 	$icon      = ! empty( $settings['icon'] ) && ! $has_reacted ? $settings['icon'] : 'thumbs-up bb-icon-f';
-	$icon_html = '<span><i class="bb-icon-' . $icon . ' "></i></span>';
+	$icon_html = '<i class="bb-icon-' . $icon . ' "></i>';
 
 	$retval = array(
 		'icon_text' => $icon_text,
@@ -887,7 +887,11 @@ function bb_activity_prepare_emotion_icon( $reaction_id ) {
 		$icon_html = '<i class="bb-icon-thumbs-up bb-icon-rf default-like"></i>';
 	} else {
 		$settings  = bb_get_reaction_button_settings();
-		$icon_html = ! empty( $settings['icon'] ) ? sprintf( '<span></span><i class="bb-icon-%s"></i></span>', esc_attr( $settings['icon'] ) ) : '<span></span><i class="bb-icon-thumbs-up"></i></span>';
+		$icon_html = ! empty( $settings['icon'] ) ?
+			sprintf( '<i class="bb-icon-%s"></i>',
+				esc_attr( $settings['icon'] )
+			) :
+			'<i class="bb-icon-thumbs-up"></i>';
 	}
 
 	return $icon_html;
