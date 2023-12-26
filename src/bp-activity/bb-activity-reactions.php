@@ -542,15 +542,19 @@ function bb_get_activity_reaction_ajax_callback() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int    $activity_id Post Id.
+ * @param int    $activity_id   Post Id.
  * @param string $activity_type Activity type.
+ * @param int    $name_count    Name count to display.
  *
- * @return int|string
+ * @return string
  */
-function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'activity' ) {
+function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'activity', $name_count = 2 ) {
 
-	if ( ! bp_is_activity_like_active() ) {
-		return 0;
+	if (
+		( 'activity' === $activity_type && ! bb_is_reaction_activity_posts_enabled() ) ||
+		( 'activity_comment' === $activity_type && ! bb_is_reaction_activity_comments_enabled() )
+	) {
+		return '';
 	}
 
 	$reaction_data = bb_load_reaction()->bb_get_user_reactions(
@@ -563,12 +567,16 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 		)
 	);
 
-	if ( empty( $reaction_data['total'] ) || 100 <= $reaction_data['total'] || 'activity_comment' === $activity_type ) {
-		return bb_format_reaction_count( $reaction_data['total'] );
-	}
-
 	$reacted_users  = ! empty( $reaction_data['reactions'] ) ? $reaction_data['reactions'] : array();
 	$reaction_count = ! empty( $reaction_data['total'] ) ? absint( $reaction_data['total'] ) : 0;
+
+	if (
+		empty( $reaction_count ) ||
+		100 <= $reaction_count ||
+		'activity_comment' === $activity_type
+	) {
+		return bb_format_reaction_count( $reaction_count );
+	}
 
 	$is_current_user_reacted = false;
 	$current_logged_user_id  = get_current_user_id();
@@ -576,9 +584,8 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 
 	if ( ! empty( $current_logged_user_id ) && false !== $current_key ) {
 		$is_current_user_reacted = true;
-		if ( $reaction_count > 0 ) {
+		if ( ! empty( $reacted_users ) ) {
 			unset( $reacted_users[ $current_key ] );
-			$reaction_count = $reaction_count - 1;
 		}
 	}
 
@@ -588,7 +595,7 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 	if (
 		bp_is_active( 'friends' ) &&
 		! empty( $current_logged_user_id ) &&
-		$reaction_count > 1
+		count( $reacted_users ) > 1
 	) {
 
 		$friend_users = friends_get_friend_user_ids( $current_logged_user_id );
@@ -610,7 +617,7 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 		bp_is_activity_follow_active() &&
 		function_exists( 'bp_get_followers' ) &&
 		! empty( $current_logged_user_id ) &&
-		$reaction_count > 1
+		count( $reaction_count ) > 1
 	) {
 		$followers = bp_get_followers(
 			array(
@@ -638,28 +645,42 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 	$display_names = array();
 	if ( true === $is_current_user_reacted ) {
 		$display_names[] = esc_html__( 'You', 'buddyboss' );
+		$name_count--;
 	}
 
-	if ( 0 !== $reaction_count ) {
-		$user_id         = array_shift( $reacted_users );
-		$display_names[] = bp_core_get_user_displayname( $user_id );
-	}
+	if ( ! empty( $reacted_users ) ) {
+		$user_keys = [];
+		foreach ( $reacted_users as $k => $user_id ) {
+			if ( 0 === $name_count ) {
+				break;
+			}
 
-	if ( count( $display_names ) < 2 && count( $reacted_users ) > 1 ) {
-		$user_id         = array_shift( $reacted_users );
-		$display_names[] = bp_core_get_user_displayname( $user_id );
-	}
+			$user_keys[] = $k;
+			$display_names[] = bp_core_get_user_displayname( $user_id );
+			$name_count --;
+		}
 
-	$return_str = implode( ', ', $display_names );
+		$reacted_users = array_diff_key( $reacted_users, array_flip( $user_keys ) );
+	}
 
 	if ( count( $reacted_users ) > 0 ) {
-		$return_str .= sprintf(
-			esc_html__( ' and %s', 'buddyboss' ),
-			sprintf(
-				_n( 'other', '%s others', count( $reacted_users ), 'buddyboss' ),
-				bb_format_reaction_count( count( $reacted_users ) )
-			)
+		$display_names[] = sprintf(
+			_n( 'other', '%s others', count( $reacted_users ), 'buddyboss' ),
+			bb_format_reaction_count( count( $reacted_users ) )
 		);
+	}
+
+	// Get all names except the last one
+	$names_except_last = array_slice( $display_names, 0, - 1 );
+
+	// Concatenate names with commas.
+	$return_str = implode( ', ', $names_except_last );
+
+	// Add the last name with "and".
+	if ( $return_str ) {
+		$return_str .= __( ' and ', 'buddyboss' ) . end( $display_names );
+	} else {
+		$return_str = end( $display_names );
 	}
 
 	return $return_str;
