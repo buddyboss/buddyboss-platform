@@ -4799,9 +4799,9 @@ window.bp = window.bp || {};
 
 				if ( 'user' === BP_Nouveau.activity.params.object ) {
 					if ( ! BP_Nouveau.activity.params.access_control_settings.can_create_activity ) {
-						this.$el.addClass( 'bp-hide' );
+						this.$el.addClass( 'bp-hide' ).parent().addClass( 'bp-hide' );
 					} else {
-						this.$el.removeClass( 'bp-hide' );
+						this.$el.removeClass( 'bp-hide' ).parent().removeClass( 'bp-hide' );
 					}
 				}
 
@@ -5114,9 +5114,9 @@ window.bp = window.bp || {};
 
 				if ( 'user' === BP_Nouveau.activity.params.object ) {
 					if ( ! BP_Nouveau.activity.params.access_control_settings.can_create_activity ) {
-						this.$el.addClass( 'bp-hide' );
+						this.$el.addClass( 'bp-hide' ).parent().addClass( 'bp-hide' );
 					} else {
-						this.$el.removeClass( 'bp-hide' );
+						this.$el.removeClass( 'bp-hide' ).parent().removeClass( 'bp-hide' );
 					}
 				}
 
@@ -5707,9 +5707,9 @@ window.bp = window.bp || {};
 
 				if ( 'user' === BP_Nouveau.activity.params.object ) {
 					if ( ! BP_Nouveau.activity.params.access_control_settings.can_create_activity ) {
-						this.$el.addClass( 'bp-hide' );
+						this.$el.addClass( 'bp-hide' ).parent().addClass( 'bp-hide' );
 					} else {
-						this.$el.removeClass( 'bp-hide' );
+						this.$el.removeClass( 'bp-hide' ).parent().removeClass( 'bp-hide' );
 					}
 				}
 
