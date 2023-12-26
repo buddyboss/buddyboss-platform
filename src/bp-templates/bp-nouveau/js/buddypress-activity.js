@@ -802,7 +802,7 @@ window.bp = window.bp || {};
 						target.removeClass( 'loading' );
 
 						if ( false === response.success ) {
-							alert( response.data.error_message );
+							alert( response.data );
 							return;
 						} else {
 							target.fadeOut(

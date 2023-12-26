@@ -123,19 +123,6 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 		wp_send_json_error();
 	}
 
-	// Check if migration is in progress.
-	if (
-		function_exists( 'bb_pro_reaction_get_migration_status' ) &&
-		'inprogress' === bb_pro_reaction_get_migration_status()
-	) {
-		wp_send_json_error(
-			array(
-				// @todo: Update error message after confirmation.
-				'error_message' => esc_html__( 'Migration in progress, Please wait sometime.', 'buddyboss' ),
-			)
-		);
-	}
-
 	if ( ! empty( $_POST['reaction_id'] ) ) {
 		$reaction_id = sanitize_text_field( $_POST['reaction_id'] );
 	} else {
@@ -200,25 +187,8 @@ function bp_nouveau_ajax_unmark_activity_favorite() {
 		wp_send_json_error();
 	}
 
-	// Check if migration is in progress.
-	if (
-		function_exists( 'bb_pro_reaction_get_migration_status' ) &&
-		'inprogress' === bb_pro_reaction_get_migration_status()
-	) {
-		wp_send_json_error(
-			array(
-				// @todo: Update error message after confirmation.
-				'error_message' => esc_html__( 'Migration in progress, Please wait sometime.', 'buddyboss' ),
-			)
-		);
-	}
-
 	if ( empty( $_POST['item_id'] ) ) {
-		wp_send_json_error(
-			array(
-				'error_message' => esc_html__( 'No item id', 'buddyboss' ),
-			)
-		);
+		wp_send_json_error( esc_html__( 'No item id', 'buddyboss' ) );
 	}
 
 	$item_id   = sanitize_text_field( $_POST['item_id'] );

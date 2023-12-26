@@ -960,6 +960,23 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = arra
 		$user_id = bp_loggedin_user_id();
 	}
 
+	// Check if migration is in progress.
+	if (
+		function_exists( 'bb_pro_reaction_get_migration_status' ) &&
+		'inprogress' === bb_pro_reaction_get_migration_status()
+	) {
+
+		if ( 'bool' === $r['error_type'] ) {
+			return false;
+		} else {
+			return new WP_Error(
+				'bp_activity_add_user_favorite',
+				// @todo:Update error message later.
+				esc_html__( 'Migration in progress. Please try again later.', 'buddyboss' )
+			);
+		}
+	}
+
 	$reacted = bb_load_reaction()->bb_add_user_item_reaction(
 		array(
 			'item_type'   => $r['type'],
@@ -1035,6 +1052,22 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 	// Fallback to logged in user if no user_id is passed.
 	if ( empty( $user_id ) ) {
 		$user_id = bp_loggedin_user_id();
+	}
+
+	// Check if migration is in progress.
+	if (
+		function_exists( 'bb_pro_reaction_get_migration_status' ) &&
+		'inprogress' === bb_pro_reaction_get_migration_status()
+	) {
+		if ( 'bool' === $r['error_type'] ) {
+			return false;
+		} else {
+			return new WP_Error(
+				'bp_activity_add_user_favorite',
+				// @todo:Update error message later.
+				esc_html__( 'Migration in progress. Please try again later.', 'buddyboss' )
+			);
+		}
 	}
 
 	$un_reacted = bb_load_reaction()->bb_remove_user_item_reactions(
