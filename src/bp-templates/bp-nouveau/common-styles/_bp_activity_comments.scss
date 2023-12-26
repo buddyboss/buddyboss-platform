@@ -127,6 +127,25 @@
 				font-weight: 400;
 				text-transform: none;
 			}
+
+			a.bp-like-button {
+
+				&:before {
+					display: none;
+				}
+
+				.like-count {
+					margin-left: 0;
+				}
+			}
+
+			a.has-emotion {
+
+				> i,
+				> img {
+					display: none;
+				}
+			}
 		}
 
 		.show-all {
@@ -197,6 +216,38 @@
 				pointer-events: none;
 			}
 
+		}
+
+		li.comment-item {
+			position: relative;
+		}
+
+		li > .acomment-display {
+			position: relative;
+		}
+
+		.comment-reactions {
+			position: absolute;
+			bottom: -2px;
+			right: 0;
+			display: flex;
+			align-items: center;
+			padding: 2px;
+			border-radius: 24px;
+			cursor: pointer;
+
+			.comment-reactions_count {
+				font-size: 13px;
+				margin: 0 2px 0 3px;
+			}
+		}
+
+		.bb-activity-more-options-wrap {
+			top: -3px;
+
+			.bb-activity-more-options-action i {
+				font-size: 16px;
+			}
 		}
 
 	} // close .activity-comments

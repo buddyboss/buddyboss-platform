@@ -123,31 +123,50 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 		wp_send_json_error();
 	}
 
-	if ( bp_activity_add_user_favorite( $_POST['id'] ) ) {
-		$response = array(
-			'content'    => __( 'Unlike', 'buddyboss' ),
-			'like_count' => bp_activity_get_favorite_users_string( $_POST['id'] ),
-			'tooltip'    => bp_activity_get_favorite_users_tooltip_string( $_POST['id'] ),
-		); // here like_count is for activity total like count
-
-		if ( ! bp_is_user() ) {
-			$fav_count = (int) bp_get_total_favorite_count_for_user( bp_loggedin_user_id() );
-
-			if ( 1 === $fav_count ) {
-				$response['directory_tab'] = '<li id="activity-favorites" data-bp-scope="favorites" data-bp-object="activity">
-					<a href="' . bp_loggedin_user_domain() . bp_get_activity_slug() . '/favorites/">
-						' . esc_html__( 'Likes', 'buddyboss' ) . '
-					</a>
-				</li>';
-			} else {
-				$response['fav_count'] = $fav_count;
-			}
-		}
-
-		wp_send_json_success( $response );
+	if ( ! empty( $_POST['reaction_id'] ) ) {
+		$reaction_id = sanitize_text_field( $_POST['reaction_id'] );
 	} else {
-		wp_send_json_error();
+		$reaction_id = bb_load_reaction()->bb_reactions_reaction_id();
 	}
+
+	$item_id   = sanitize_text_field( $_POST['item_id'] );
+	$item_type = sanitize_text_field( $_POST['item_type'] );
+	$user_id   = bp_loggedin_user_id();
+
+	$reacted = bp_activity_add_user_favorite(
+		$item_id,
+		$user_id,
+		array(
+			'type'        => $item_type,
+			'reaction_id' => $reaction_id,
+			'error_type'  => 'wp_error',
+		)
+	);
+
+	// If there was an error, return it.
+	if ( is_wp_error( $reacted ) ) {
+		wp_send_json_error( $reacted->get_error_message() );
+	}
+
+	$response = array(
+		'reaction_button' => bb_get_activity_post_reaction_button_html( $item_id, $item_type, $reaction_id, true ),
+		'reaction_count'  => bb_get_activity_post_user_reactions_html( $item_id, $item_type ),
+		//'tooltip'         => bp_activity_get_favorite_users_tooltip_string( $item_id ),
+	);
+
+	$fav_count = (int) bp_get_total_favorite_count_for_user( $user_id );
+
+	if ( 1 === $fav_count ) {
+		$response['directory_tab'] = sprintf(
+			'<li id="activity-favorites" data-bp-scope="favorites" data-bp-object="activity">
+				<a href="%1$s"><div class="bb-component-nav-item-point">%2$s</div> </a>
+			</li>',
+			esc_url( bp_loggedin_user_domain() . bp_get_activity_slug() . '/favorites/' ),
+			bb_is_reaction_emotions_enabled() ? esc_html__( 'Reacted to', 'buddyboss' ) : esc_html__( 'Likes', 'buddyboss' )
+		);
+	}
+
+	wp_send_json_success( $response );
 }
 
 /**
@@ -158,6 +177,7 @@ function bp_nouveau_ajax_mark_activity_favorite() {
  * @return string JSON reply
  */
 function bp_nouveau_ajax_unmark_activity_favorite() {
+
 	if ( ! bp_is_post_request() ) {
 		wp_send_json_error();
 	}
@@ -167,27 +187,45 @@ function bp_nouveau_ajax_unmark_activity_favorite() {
 		wp_send_json_error();
 	}
 
-	if ( bp_activity_remove_user_favorite( $_POST['id'] ) ) {
-		$response = array(
-			'content'    => __( 'Like', 'buddyboss' ),
-			'like_count' => bp_activity_get_favorite_users_string( $_POST['id'] ),
-			'tooltip'    => bp_activity_get_favorite_users_tooltip_string( $_POST['id'] ),
-		); // here like_count is for activity total like count.
-
-		$fav_count = (int) bp_get_total_favorite_count_for_user( bp_loggedin_user_id() );
-
-		if ( 0 === $fav_count && ! bp_is_single_activity() ) {
-			$response['no_favorite'] = '<li><div class="bp-feedback bp-messages info">
-				' . __( 'Sorry, there was no activity found.', 'buddyboss' ) . '
-			</div></li>';
-		} else {
-			$response['fav_count'] = $fav_count;
-		}
-
-		wp_send_json_success( $response );
-	} else {
-		wp_send_json_error();
+	if ( empty( $_POST['item_id'] ) ) {
+		wp_send_json_error( esc_html__( 'No item id', 'buddyboss' ) );
 	}
+
+	$item_id   = sanitize_text_field( $_POST['item_id'] );
+	$item_type = sanitize_text_field( $_POST['item_type'] );
+	$user_id   = bp_loggedin_user_id();
+
+	$un_reacted = bp_activity_remove_user_favorite(
+		$item_id,
+		$user_id,
+		array(
+			'type'       => $item_type,
+			'error_type' => 'wp_error',
+		)
+	);
+
+	if ( is_wp_error( $un_reacted ) ) {
+		wp_send_json_error( $un_reacted->get_error_message() );
+	}
+
+	$response = array(
+		'reaction_button' => bb_get_activity_post_reaction_button_html( $item_id, $item_type ),
+		'reaction_count'  => bb_get_activity_post_user_reactions_html( $item_id, $item_type ),
+		//'tooltip'         => bp_activity_get_favorite_users_tooltip_string( $_POST['id'] ),
+	);
+
+	$fav_count = (int) bp_get_total_favorite_count_for_user( $user_id );
+	if ( 0 === $fav_count && ! bp_is_single_activity() ) {
+		$response['no_favorite'] = sprintf(
+			'<aside class="bp-feedback bp-messages info">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p>%s</p>
+			</aside>',
+			esc_html__( 'Sorry, there was no activity found.', 'buddyboss' )
+		);
+	}
+
+	wp_send_json_success( $response );
 }
 
 /**

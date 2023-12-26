@@ -143,6 +143,11 @@ window.bp = window.bp || {};
 			// Activity More Option Dropdown.
 			$( document ).on( 'click', this.toggleActivityOption.bind( this ) );
 
+			// Reaction actions.
+			$( document ).on( 'click', '.activity-state-popup_overlay', bp.Nouveau, this.closeActivityState.bind( this ) );
+			$( document ).on( 'click', '.activity-state-reactions', this.showActivityReactions );
+			$( document ).on( 'click', '.activity-state-popup .activity-state-popup_tab_panel a', this.ReactionStatePopupTab );
+
 			// Activity autoload.
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.autoload ) ) {
 				$( window ).scroll( this.loadMoreActivities );
@@ -345,7 +350,7 @@ window.bp = window.bp || {};
 					old_pinned.each(function() {
 						var action = $( this ).find( '.unpin-activity' );
 						var is_group_activity = false;
-						
+
 						action.removeClass( 'unpin-activity' ).addClass( 'pin-activity' );
 						if ( $(this).hasClass('groups') ) {
 							is_group_activity = true;
@@ -730,11 +735,11 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		activityActions: function( event ) {
+
 			var parent                     = event.data, target = $( event.target ), activity_item = $( event.currentTarget ),
 				activity_id                = activity_item.data( 'bp-activity-id' ), stream = $( event.delegateTarget ),
 				activity_state             = activity_item.find( '.activity-state' ),
 				comments_text              = activity_item.find( '.comments-count' ),
-				likes_text                 = activity_item.find( '.like-text' ),
 				item_id, form, model, self = this;
 
 			// In case the target is set to a span inside the link.
@@ -742,31 +747,67 @@ window.bp = window.bp || {};
 				target = $( target ).closest( 'a' );
 			}
 
-			// Favoriting.
-			if ( target.hasClass( 'fav' ) || target.hasClass( 'unfav' ) ) {
-				var type = target.hasClass( 'fav' ) ? 'fav' : 'unfav';
+			// If emotion item exists then take reaction id and update the target.
+			var reaction_id = 0;
+			if (
+				target.parent( '.ac-emotion_btn' ) &&
+				! ( target.hasClass( 'fav' ) || target.hasClass( 'unfav' ) )
+				) {
+				reaction_id = target.parents( '.ac-emotion_item' ).attr( 'data-reaction-id' );
+			}
 
+			// Favorite and unfavorite logic.
+			if ( target.hasClass( 'fav' ) || target.hasClass( 'unfav' ) || reaction_id > 0 ) {
 				// Stop event propagation.
 				event.preventDefault();
 
+				if ( ! $( target ).is( 'a' ) ) {
+					target = $( target ).closest( 'a' );
+				}
+
+				var type        = target.hasClass( 'fav' ) ? 'fav' : 'unfav',
+					is_activity = true,
+					item_type   = 'activity',
+					parent_el   = target.parents( '.acomment-display' ).first(),
+					main_el;
+
+				if ( reaction_id > 0 ) {
+					type = 'fav';
+				}
+
+				if ( 0 < parent_el.length ) {
+					is_activity = false;
+					item_type   = 'activity_comment';
+				}
+
+				if ( ! is_activity ) {
+					main_el = target.parents( '.activity-comment' ).first();
+					item_id = main_el.data( 'bp-activity-comment-id' );
+				} else {
+					main_el = target.parents( '.activity-item' );
+					item_id = main_el.data( 'bp-activity-id' );
+				}
+
 				target.addClass( 'loading' );
 
-				parent.ajax( { action: 'activity_mark_' + type, 'id': activity_id }, 'activity' ).done(
+				var data = {
+					action: 'activity_mark_' + type,
+					reaction_id: reaction_id,
+					item_id: item_id,
+					item_type: item_type,
+				};
+
+				parent.ajax( data, 'activity' ).done(
 					function( response ) {
 						target.removeClass( 'loading' );
 
 						if ( false === response.success ) {
+							alert( response.data );
 							return;
 						} else {
 							target.fadeOut(
 								200,
 								function() {
-									if ( $( this ).find( 'span' ).first().length ) {
-										$( this ).find( 'span' ).first().html( response.data.content );
-									} else {
-										$( this ).html( response.data.content );
-									}
-									// $( this ).prop( 'title', response.data.content );
 
 									if ('false' === $( this ).attr( 'aria-pressed' ) ) {
 										$( this ).attr( 'aria-pressed', 'true' );
@@ -774,18 +815,28 @@ window.bp = window.bp || {};
 										$( this ).attr( 'aria-pressed', 'false' );
 									}
 
-									if ( likes_text.length ) {
-										response.data.like_count ?
-											likes_text.text( response.data.like_count ) && activity_state.addClass( 'has-likes' ) :
-											likes_text.empty() && activity_state.removeClass( 'has-likes' );
-
-										// Update like tooltip.
-										var decoded = $( '<textarea/>' ).html( response.data.tooltip ).text();
-										likes_text.attr( 'data-hint', decoded );
+									// Update reacted user name and counts.
+									if ( 'undefined' !== typeof response.data.reaction_count ) {
+										if ( is_activity ) {
+											if ( 0 < main_el.find( '.activity-content .activity-state-reactions' ).length ) {
+												main_el.find( '.activity-content  .activity-state-reactions' ).replaceWith( response.data.reaction_count );
+											} else {
+												main_el.find( '.activity-content .activity-state' ).prepend( response.data.reaction_count );
+											}
+										} else {
+											if ( 0 < main_el.find( '#acomment-display-' + item_id + ' .comment-reactions' ).length ) {
+												main_el.find( '#acomment-display-' + item_id + ' .comment-reactions' ).html( response.data.reaction_count );
+											}
+										}
 									}
 
-									if ( $( this ).find( '.like-count' ).length ) {
-										$( this ).find( '.like-count' ).html( response.data.content );
+									// Update reacted button.
+									if ( response.data.reaction_button ) {
+										if ( is_activity ) {
+											main_el.find( '.bp-generic-meta a.bp-like-button:first' ).replaceWith( response.data.reaction_button );
+										} else {
+											main_el.find( '#acomment-display-' + item_id + ' .bp-generic-meta a.bp-like-button' ).replaceWith( response.data.reaction_button );
+										}
 									}
 
 									$( this ).fadeIn( 200 );
@@ -793,15 +844,15 @@ window.bp = window.bp || {};
 							);
 						}
 
+						// Add "Likes/Emotions" menu item on activity directory nav menu.
 						if ( 'fav' === type ) {
-							if ( undefined !== response.data.directory_tab ) {
-								if ( ! $( parent.objectNavParent + ' [data-bp-scope="favorites"]' ).length ) {
-									$( parent.objectNavParent + ' [data-bp-scope="all"]' ).after( response.data.directory_tab );
-								}
+							if (
+								typeof response.data.directory_tab !== 'undefined' &&
+								response.data.directory_tab !== '' &&
+								! $( parent.objectNavParent + ' [data-bp-scope="favorites"]' ).length
+							) {
+								$( parent.objectNavParent + ' [data-bp-scope="all"]' ).after( response.data.directory_tab );
 							}
-
-							target.removeClass( 'fav' );
-							target.addClass( 'unfav' );
 
 						} else if ( 'unfav' === type ) {
 							var favoriteScope = $( '[data-bp-user-scope="favorites"]' ).hasClass( 'selected' ) || $( parent.objectNavParent + ' [data-bp-scope="favorites"]' ).hasClass( 'selected' );
@@ -821,9 +872,6 @@ window.bp = window.bp || {};
 									stream.append( response.data.no_favorite );
 								}
 							}
-
-							target.removeClass( 'unfav' );
-							target.addClass( 'fav' );
 						}
 					}
 				);
@@ -1539,11 +1587,11 @@ window.bp = window.bp || {};
 									activity_group_id = target.closest( 'li.activity-item' ).attr('class').match(/group-\d+/);
 									activity_group_id = activity_group_id[0].replace( 'group-', '' );
 								}
-								
+
 								if ( activity_stream.hasClass( 'single-user' ) ) {
 									update_pinned_icon = false;
-								} else if (  
-									activity_stream.hasClass( 'activity' ) && 
+								} else if (
+									activity_stream.hasClass( 'activity' ) &&
 									'all' === scope &&
 									! is_group_activity
 								) {
@@ -1580,7 +1628,7 @@ window.bp = window.bp || {};
 									if ( update_pinned_icon ) {
 										target.closest( 'li.activity-item' ).addClass( 'bb-pinned' );
 									}
-									
+
 									target.addClass( 'unpin-activity' );
 									target.removeClass( 'pin-activity' );
 
@@ -1628,6 +1676,18 @@ window.bp = window.bp || {};
 						);
 					}
 				);
+			}
+
+			if ( target.hasClass( 'activity-state-likes' ) || target.parents('.activity-state-likes' ).length > 0 ) {
+				// Stop event propagation.
+				event.preventDefault();
+				target.closest( '.activity-content ' ).find( '.activity-state-popup' ).addClass( 'active' );
+			}
+
+			if( target.hasClass( 'comment-reactions' ) || target.parents('.comment-reactions' ).length > 0 ) {
+				// Stop event propagation.
+				event.preventDefault();
+				target.closest( '.acomment-display' ).find( '.activity-state-popup' ).addClass( 'active' );
 			}
 		},
 
@@ -3073,6 +3133,146 @@ window.bp = window.bp || {};
 			} else {
 				input.closest( 'form' ).removeClass( 'has-content' );
 			}
+		},
+
+		showActivityReactions: function( event ) {
+			event.preventDefault();
+
+			var target      = $( this ),
+				is_activity = true,
+				item_type   = 'activity',
+				item_id     = 0,
+				main_el,
+				activity_item;
+
+			var parent_el = target.parents( '.acomment-display' ).first();
+			if ( 0 < parent_el.length ) {
+				is_activity = false;
+				item_type   = 'activity_comment';
+			}
+
+			if ( ! is_activity ) {
+				main_el       = target.parents( '.activity-comment' ).first();
+				item_id       = main_el.data( 'bp-activity-comment-id' );
+				activity_item = main_el.find( '#acomment-display-' + item_id );
+			} else {
+				main_el       = target.parents( '.activity-item' );
+				item_id       = main_el.data( 'bp-activity-id' );
+				activity_item = main_el.find( '.activity-content' );
+			}
+
+			if ( activity_item.find( '.activity-state-popup' ).length <= 0 ) {
+
+				// Load Reactions template and show the popup.
+				var reactionModal = wp.template( 'activity-reactions-popup' ),
+					html          = reactionModal();
+
+				activity_item.append( html );
+				activity_item.find( '.activity-state-popup' ).addClass( 'active' );
+
+				// Get data if not fetched earlier.
+				if ( ! activity_item.find( '.activity-state-popup' ).hasClass( 'loaded' ) ) {
+
+					$.ajax(
+						{
+							url: BP_Nouveau.ajaxurl,
+							type: 'post',
+							data: {
+								action: 'bb_get_reactions',
+								item_id: item_id,
+								item_type: item_type,
+								_wpnonce: BP_Nouveau.nonces.activity,
+							}, success: function ( response ) {
+								console.log( response.data.reactions );
+								if ( typeof response.data.reactions !== 'undefined' ) {
+									var data = response.data;
+									var html = reactionModal( data );
+									activity_item.find( '.activity-state-popup' ).replaceWith( html );
+									activity_item.find( '.activity-state-popup' ).addClass( 'loaded active' );
+
+									// Load more emotions on scroll.
+									var $reactions_list = activity_item.find( '.activity-state-popup .activity-state-popup_tab_item ul' );
+									$reactions_list.on(
+										'scroll',
+										function() {
+											bp.Nouveau.Activity.ReactionLoadMore( $( this ), item_id, item_type );
+										}
+									);
+								}
+							}
+						}
+					);
+				}
+			} else {
+				activity_item.find( '.activity-state-popup' ).addClass( 'active' );
+			}
+		},
+
+		ReactionLoadMore: function( element, item_id, item_type ) {
+			if ( ! element.hasClass( 'loading' ) ) {
+				var distanceFromBottom = element[0].scrollHeight - element.scrollTop() - element.outerHeight(),
+					threshold          = 10,
+					reaction_id        = element.parent().data( 'reaction-id' ),
+					total_pages        = element.parent().data( 'total-pages' ),
+					paged              = element.parent().attr( 'data-paged' ),
+					userReactions      = wp.template( 'activity-user-reactions-popup-list' );
+
+				if ( 'undefined' === typeof paged || 0 >= paged ) {
+					paged = 1;
+				}
+
+				// Check if the user has scrolled to the bottom.
+				if (
+					distanceFromBottom <= threshold &&
+					paged < total_pages &&
+					! element.hasClass( 'loading' )
+				) {
+					element.append( '<li class="reactions_loader"><i class="b-icon-l bb-icon-spinner animate-spin"></i></li>' );
+					element.addClass( 'loading' );
+					paged = parseInt( paged, 10 ) + 1;
+
+					$.ajax(
+						{
+							url: BP_Nouveau.ajaxurl,
+							type: 'post',
+							data: {
+								action: 'bb_get_reactions',
+								reaction_id: reaction_id,
+								item_id: item_id,
+								item_type: item_type,
+								paged: paged,
+								_wpnonce: BP_Nouveau.nonces.activity,
+							},
+							success: function ( response ) {
+								if ( typeof response.data.reactions !== 'undefined' ) {
+									element.parent().attr( 'data-paged', paged );
+									element.append( userReactions( response.data.reactions ) );
+									element.find( '.reactions_loader' ).remove();
+									element.removeClass( 'loading' );
+								}
+							}
+						}
+					);
+				}
+			}
+		},
+
+		ReactionStatePopupTab: function( event ) {
+			event.preventDefault();
+			$( this ).closest( '.activity-state-popup' ).find( '.activity-state-popup_tab_panel li a' ).removeClass( 'active' );
+			$( this ).addClass( 'active' );
+			$( this ).closest( '.activity-state-popup' ).find( '.activity-state-popup_tab_content .activity-state-popup_tab_item' ).removeClass( 'active' );
+			$( this ).closest( '.activity-state-popup' ).find( '.' + $( this ).data( 'tab' ) ).addClass( 'active' );
+
+		},
+
+		/**
+		 * [closeActivityState description]
+		 *
+		 * @return {[type]}       [description]
+		 */
+		closeActivityState: function() {
+			$( '.activity-state-popup' ).removeClass( 'active' );
 		}
 
 	};

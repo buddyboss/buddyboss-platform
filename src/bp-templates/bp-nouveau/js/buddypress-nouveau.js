@@ -876,10 +876,10 @@ window.bp = window.bp || {};
 			// Following widget more button click.
 			$( document ).on( 'click', '.more-following .count-more', this.bbWidgetMoreFollowing );
 
-			// Accordion open/close event
+			// Accordion open/close event.
 			$( '.bb-accordion .bb-accordion_trigger' ).on( 'click', this.toggleAccordion );
-		},
 
+		},
 		/**
 		 * [heartbeatSend description]
 		 *

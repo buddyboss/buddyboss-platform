@@ -3583,7 +3583,7 @@ function bb_reactions_settings_callback_reaction_mode() {
 			'name'       => 'bb_reaction_mode',
 			'value'      => 'emotions',
 			'id'         => 'bb_reaction_mode_emotions',
-			'is_checked' => 'emotions' === bb_get_reaction_mode(),
+			'is_checked' => bb_is_reaction_emotions_enabled(),
 			'notice'     => esc_html__( 'Members express their thoughts or feelings by selecting an emotion from a list of options.', 'buddyboss' ),
 			'disabled'   => (
 				! class_exists( 'BB_Reactions' ) ||

@@ -19,15 +19,46 @@ function bp_activity_action_remove_favorite() {
 		return false;
 	}
 
+	if ( empty( $activity_id ) && bp_action_variable( 0 ) ) {
+		$activity_id = (int) bp_action_variable( 0 );
+	}
+
+	// Not viewing a specific activity item.
+	if ( empty( $activity_id ) ) {
+		return false;
+	}
+
 	// Check the nonce.
 	check_admin_referer( 'unmark_favorite' );
 
-	if ( bp_activity_remove_user_favorite( bp_action_variable( 0 ) ) ) {
-		bp_core_add_message( __( 'Post unsaved.', 'buddyboss' ) );
+	// Load up the activity item.
+	$activity = new BP_Activity_Activity( $activity_id );
+
+	if ( 'activity_comment' === $activity->type ) {
+		$type     = 'activity_comment';
+		$message  = __( 'Post comment unsaved.', 'buddyboss' );
+		$redirect = wp_get_referer() . '#acomment-display-' . $activity_id;
 	} else {
-		bp_core_add_message( __( 'There was an error unsaving that post. Please try again.', 'buddyboss' ), 'error' );
+		$type     = 'activity';
+		$message  = __( 'Post unsaved.', 'buddyboss' );
+		$redirect = wp_get_referer() . '#activity-' . $activity_id;
 	}
 
-	bp_core_redirect( wp_get_referer() . '#activity-' . bp_action_variable( 0 ) );
+	$un_reacted = bp_activity_remove_user_favorite(
+		$activity_id,
+		0,
+		array(
+			'type'       => $type,
+			'error_type' => 'wp_error',
+		)
+	);
+
+	if ( is_wp_error( $un_reacted ) ) {
+		bp_core_add_message( $un_reacted->get_error_message(), 'error' );
+	} else {
+		bp_core_add_message( $message );
+	}
+
+	bp_core_redirect( $redirect );
 }
 add_action( 'bp_actions', 'bp_activity_action_remove_favorite' );
