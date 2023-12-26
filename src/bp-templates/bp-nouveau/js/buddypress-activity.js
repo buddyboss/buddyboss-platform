@@ -3191,7 +3191,7 @@ window.bp = window.bp || {};
 									$reactions_list.on(
 										'scroll',
 										function() {
-											bp.Nouveau.ReactionLoadMore( $( this ), item_id, item_type );
+											bp.Nouveau.Activity.ReactionLoadMore( $( this ), item_id, item_type );
 										}
 									);
 								}
