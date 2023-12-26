@@ -46,7 +46,7 @@ class BB_Admin_Setting_Reactions extends BP_Admin_Setting_tab {
 
 			// If reaction button text is more then 8 characters then truncate it.
 			if ( ! empty( $reaction_button['text'] ) && strlen( $reaction_button['text'] ) > 8 ) {
-				$reaction_button['text'] = substr( $reaction_button['text'], 0, 8 );
+				$reaction_button['text'] = substr( $reaction_button['text'], 0, 12 );
 			}
 		}
 

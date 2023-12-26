@@ -2577,12 +2577,12 @@ function bb_custom_logout_redirection( $default = '' ) {
 function bb_get_all_reactions() {
 	return array(
 		'activity'         => array(
-			'label'     => esc_html__( 'Activity', 'buddyboss' ),
+			'label'     => esc_html__( 'Activity posts', 'buddyboss' ),
 			'disabled'  => ! bp_is_active( 'activity' ),
 			'component' => 'activity',
 		),
 		'activity_comment' => array(
-			'label'     => esc_html__( 'Activity Comment', 'buddyboss' ),
+			'label'     => esc_html__( 'Activity comments', 'buddyboss' ),
 			'disabled'  => ! bp_is_active( 'activity' ),
 			'component' => 'activity',
 		),
