@@ -23339,7 +23339,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 }
 
 @media screen and (max-width: 1024px) {
-  .directory.media .media-options,
+  .directory.media .site-main .media-options,
   .directory.document .document-options,
   .directory.video .video-options {
     position: static;
@@ -23348,6 +23348,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   .directory.media .media-options > *,
   .directory.document .document-options > *,
   .directory.video .video-options > * {
+    margin-left: 0px;
     margin-bottom: 15px;
     width: 100% !important;
   }
