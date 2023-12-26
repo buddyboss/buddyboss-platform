@@ -595,6 +595,7 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 	if (
 		bp_is_active( 'friends' ) &&
 		! empty( $current_logged_user_id ) &&
+		! empty( $reacted_users ) &&
 		count( $reacted_users ) > 1
 	) {
 
@@ -617,7 +618,8 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 		bp_is_activity_follow_active() &&
 		function_exists( 'bp_get_followers' ) &&
 		! empty( $current_logged_user_id ) &&
-		count( $reaction_count ) > 1
+		! empty( $reacted_users ) &&
+		count( $reacted_users ) > 1
 	) {
 		$followers = bp_get_followers(
 			array(
