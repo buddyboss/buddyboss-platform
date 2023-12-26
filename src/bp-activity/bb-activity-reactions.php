@@ -184,12 +184,12 @@ function bb_activity_prepare_web_emotions() {
  * @param string  $item_type Type of the item.
  * @param integer $no_of_reactions Number of reactions to display.
  *
- * @return array|bool
+ * @return array
  */
 function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', $no_of_reactions = 0 ) {
 
 	if ( empty( $item_id ) ) {
-		return false;
+		return array();
 	}
 
 	$reaction_data = bb_load_reaction()->bb_get_reactions_data(
@@ -202,7 +202,7 @@ function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', 
 	);
 
 	if ( empty( $reaction_data['reaction_data'] ) ) {
-		return false;
+		return array();
 	}
 
 	$reaction_data = current( $reaction_data['reaction_data'] );
@@ -214,7 +214,7 @@ function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', 
 	}
 
 	if ( empty( $all_reactions ) ) {
-		return false;
+		return array();
 	}
 
 	if ( bb_is_reaction_emotions_enabled() ) {
