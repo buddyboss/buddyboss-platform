@@ -217,13 +217,8 @@ function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', 
 		return array();
 	}
 
-	if ( bb_is_reaction_emotions_enabled() ) {
-		$all_emotions = bb_load_reaction()->bb_get_reactions( 'emotions' );
-	} else {
-		$all_emotions = bb_load_reaction()->bb_get_reactions();
-	}
-
-	$all_emotions = array_flip( array_column( $all_emotions, 'id' ) );
+	$all_emotions = bb_active_reactions();
+	$all_emotions = ( ! empty( $all_emotions ) ? array_flip( array_column( $all_emotions, 'id' ) ) : array() );
 
 	$all_reactions = array_intersect_key( $all_reactions, $all_emotions );
 	arsort( $all_reactions );
@@ -769,17 +764,10 @@ function bb_activity_get_user_reaction_by_item( $item_id, $item_type = 'activity
 		return false;
 	}
 
-	$reaction_id = current( $user_reaction['reactions'] );
+	$reaction_id  = current( $user_reaction['reactions'] );
+	$all_emotions = bb_active_reactions();
 
-	if ( bb_is_reaction_emotions_enabled() ) {
-		$all_emotions = bb_load_reaction()->bb_get_reactions( 'emotions' );
-	} else {
-		$all_emotions = bb_load_reaction()->bb_get_reactions();
-	}
-
-	$all_emotions = array_column( $all_emotions, null, 'id' );
-
-	if ( isset( $all_emotions[ $reaction_id ] ) ) {
+	if ( ! empty( $all_emotions ) && isset( $all_emotions[ $reaction_id ] ) ) {
 		return $all_emotions[ $reaction_id ];
 	}
 
@@ -807,13 +795,7 @@ function bb_activity_get_reaction_button( $reaction_id, $has_reacted = false ) {
 		'icon_html' => $icon_html,
 	);
 
-	if ( bb_is_reaction_emotions_enabled() ) {
-		$all_emotions = bb_load_reaction()->bb_get_reactions( 'emotions' );
-		$all_emotions = array_column( $all_emotions, null, 'id' );
-	} else {
-		$all_emotions = bb_load_reaction()->bb_get_reactions();
-		$all_emotions = array_column( $all_emotions, null, 'id' );
-	}
+	$all_emotions = bb_active_reactions();
 
 	if (
 		empty( $all_emotions ) ||
@@ -851,14 +833,7 @@ function bb_activity_get_reaction_button( $reaction_id, $has_reacted = false ) {
 function bb_activity_prepare_emotion_icon( $reaction_id ) {
 	$icon_html = '';
 
-	$all_emotions = array();
-	if ( bb_is_reaction_emotions_enabled() ) {
-		$all_emotions = bb_load_reaction()->bb_get_reactions( 'emotions' );
-		$all_emotions = array_column( $all_emotions, null, 'id' );
-	} else {
-		$all_emotions = bb_load_reaction()->bb_get_reactions();
-		$all_emotions = array_column( $all_emotions, null, 'id' );
-	}
+	$all_emotions = bb_active_reactions();
 
 	if (
 		empty( $all_emotions ) ||
