@@ -1070,6 +1070,27 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 		}
 	}
 
+	// Check if user try to un-react but there is no reaction id as per current reaction mode.
+	$reacted_reaction_id = bb_load_reaction()->bb_user_reacted_reaction_id(
+		array(
+			'item_id'   => $activity_id,
+			'item_type' => $r['type'],
+			'user_id'   => $user_id,
+		)
+	);
+
+	if ( empty( $reacted_reaction_id ) ) {
+		if ( 'bool' === $r['error_type'] ) {
+			return false;
+		} else {
+			return new WP_Error(
+				'bp_activity_add_user_favorite',
+				// @todo:Update error message later.
+				esc_html__( 'Reacted reaction ID is missing.', 'buddyboss' )
+			);
+		}
+	}
+
 	$un_reacted = bb_load_reaction()->bb_remove_user_item_reactions(
 		array(
 			'item_type'  => $r['type'],
