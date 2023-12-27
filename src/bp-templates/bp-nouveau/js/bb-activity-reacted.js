@@ -67,7 +67,7 @@ window.bp = window.bp || {};
 
 			if ( $.trim( target.find( '#reaction-content-' + item_id ).html() ) == '' ) {
 				self.collections[ collection_key ] = new bp.Collections.ActivityReactionCollection();
-				self.loader[ item_id ] = new bp.Views.ReactionPopup(
+				self.loader[ item_id ]             = new bp.Views.ReactionPopup(
 					{
 						collection: self.collections[ collection_key ],
 						item_id: item_id,
@@ -113,7 +113,7 @@ window.bp = window.bp || {};
 
 				// Add generic nonce.
 				options.data._wpnonce = BP_Nouveau.nonces.activity;
-				options.data.action = 'bb_get_reactions';
+				options.data.action   = 'bb_get_reactions';
 
 				return Backbone.sync( method, model, options );
 			},
@@ -121,7 +121,7 @@ window.bp = window.bp || {};
 			parse: function ( resp ) {
 				var data = ( resp.success ) ? resp.data : {};
 
-				return !_.isUndefined( data.reacted_users ) ? data.reacted_users : {};
+				return ! _.isUndefined( data.reacted_users ) ? data.reacted_users : {};
 			}
 		}
 	);
@@ -135,8 +135,8 @@ window.bp = window.bp || {};
 			targetElement: '',
 			options: {},
 			initialize: function ( options ) {
-				this.loader = bp.Nouveau.ActivityReaction.loader_html;
-				this.options = options;
+				this.loader        = bp.Nouveau.ActivityReaction.loader_html;
+				this.options       = options;
 				this.targetElement = options.targetElement;
 				this.targetElement.append( this.loader );
 				this.collection.fetch(
@@ -168,9 +168,11 @@ window.bp = window.bp || {};
 
 				if ( this.targetElement.find( '.activity-state-popup_tab_item > ul' ) ) {
 					var inside_self = this;
-					this.targetElement.find( '.activity-state-popup_tab_item > ul' ).each( function () {
-						$(this).on( 'scroll', _.bind( inside_self.loadMore, inside_self ) );
-					} );
+					this.targetElement.find( '.activity-state-popup_tab_item > ul' ).each(
+						function () {
+							$( this ).on( 'scroll', _.bind( inside_self.loadMore, inside_self ) );
+						}
+					);
 				}
 
 				return this;
@@ -182,14 +184,14 @@ window.bp = window.bp || {};
 
 			loadMore: function( e ) {
 				var element = e.currentTarget,
-					target = $( element );
+					target  = $( element );
 
 				if ( ! $( element ).hasClass( 'loading' ) ) {
 					var distanceFromBottom = element.scrollHeight - target.scrollTop() - target.outerHeight(),
 						threshold          = 10,
-						reaction_id        = target.parents('.activity-state-popup_tab_item').data( 'reaction-id' ),
-						total_pages        = target.parents('.activity-state-popup_tab_item').data( 'total-pages' ),
-						paged              = target.parents('.activity-state-popup_tab_item').data( 'paged' );
+						reaction_id        = target.parents( '.activity-state-popup_tab_item' ).attr( 'data-reaction-id' ),
+						total_pages        = parseInt( target.parents( '.activity-state-popup_tab_item' ).attr( 'data-total-pages' ) ),
+						paged              = target.parents( '.activity-state-popup_tab_item' ).attr( 'data-paged' );
 
 					if ( 'undefined' === typeof paged ) {
 						paged = 1;
@@ -250,15 +252,26 @@ window.bp = window.bp || {};
 				}
 			},
 
-			renderLoad: function ( target ) {
+			renderLoad: function ( target, collection, response ) {
 				this.loader.hide();
 
 				var models = this.collection.toJSON();
 
-				_.each( models, function ( model ) {
-					var reactionItemView = new bp.Views.ReactionItem( { model: model } );
-					target.append( reactionItemView.render().el );
-				} );
+				var next_page = ( response.success && ! _.isUndefined( response.data.page ) ) ? response.data.page : 0;
+
+				if ( next_page !== 0 ) {
+					target.parents( '.activity-state-popup_tab_item' ).attr( 'data-paged', next_page );
+				}
+
+				_.each(
+					models,
+					function ( model ) {
+						var reactionItemView = new bp.Views.ReactionItem( { model: model } );
+						target.append( reactionItemView.render().el );
+					}
+				);
+
+				target.removeClass( 'loading' );
 
 				return this;
 			},
@@ -294,7 +307,7 @@ window.bp = window.bp || {};
 			options: {},
 			initialize: function ( options ) {
 				this.options = options;
-				this.data = options.data;
+				this.data    = options.data;
 			},
 			render: function() {
 
@@ -327,8 +340,8 @@ window.bp = window.bp || {};
 			options: {},
 			collection: {},
 			initialize: function (options) {
-				this.loader = bp.Nouveau.ActivityReaction.loader_html;
-				this.options = options;
+				this.loader     = bp.Nouveau.ActivityReaction.loader_html;
+				this.options    = options;
 				this.collection = options.collection;
 				// Listen for clicks on tabs.
 				this.$el.on( 'click', 'li > a', _.bind( this.LoadTabData, this ) );
@@ -347,8 +360,8 @@ window.bp = window.bp || {};
 			},
 
 			LoadTabData: function ( e ) {
-				var current = $( e.currentTarget ),
-					tab     = current.data( 'tab' ),
+				var current       = $( e.currentTarget ),
+					tab           = current.data( 'tab' ),
 					targetElement = current.parents( '.activity-state-popup_tab' ).find( '.' + tab );
 
 				if ( targetElement.length > 0 ) {
@@ -389,10 +402,13 @@ window.bp = window.bp || {};
 
 				var models = this.collection.toJSON();
 
-				_.each( models, function ( model ) {
-					var reactionItemView = new bp.Views.ReactionItem( { model: model } );
-					targetElement.find( '.activity-state_users' ).append( reactionItemView.render().el );
-				} );
+				_.each(
+					models,
+					function ( model ) {
+						var reactionItemView = new bp.Views.ReactionItem( { model: model } );
+						targetElement.find( '.activity-state_users' ).append( reactionItemView.render().el );
+					}
+				);
 
 				return this;
 			},
@@ -410,7 +426,7 @@ window.bp = window.bp || {};
 			template: bp.template( 'activity-reacted-popup-tab-content' ),
 			initialize: function ( options ) {
 				this.options = options;
-				this.data = options.data;
+				this.data    = options.data;
 			},
 			render: function() {
 				this.$el.html( this.template( this.data ) );
