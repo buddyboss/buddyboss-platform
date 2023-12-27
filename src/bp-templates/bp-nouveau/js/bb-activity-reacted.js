@@ -36,7 +36,7 @@ window.bp = window.bp || {};
 			this.types       = [];
 			this.fetchXhr    = [];
 			this.loader      = [];
-			this.loader_html = $( '<p class="reaction-loader"><i className="bb-icon-l bb-icon-spinner animate-spin"></i></p>' );
+			this.loader_html = $( '<p class="reaction-loader"><i class="bb-icon-l bb-icon-spinner animate-spin"></i></p>' );
 
 			// Listen to events ("Add hooks!").
 			this.addListeners();
@@ -94,26 +94,26 @@ window.bp = window.bp || {};
 				this.options = {
 					page: 1,
 					per_page: this.per_page,
-					action: 'bb_get_reactions',
-					total_pages: 1,
 					item_type: 'activity',
 				};
 			},
 
 			sync: function ( method, model, options ) {
+				var self        = this;
 				var options     = options || {};
 				options.context = this;
 				options.data    = options.data || {};
 				options.path    = BP_Nouveau.ajaxurl;
 				options.method  = 'POST';
 
-				options.data = _.extend(
+				_.extend(
 					options.data,
-					model.options
+					_.pick( self.options, ['page', 'per_page', 'reaction_id', 'item_id', 'item_type' ] ),
 				);
 
 				// Add generic nonce.
 				options.data._wpnonce = BP_Nouveau.nonces.activity;
+				options.data.action = 'bb_get_reactions';
 
 				return Backbone.sync( method, model, options );
 			},
@@ -155,7 +155,7 @@ window.bp = window.bp || {};
 					collection: this.options.collection,
 					item_id: this.options.item_id,
 					item_type: this.options.item_type,
-					model: this.collection.last(),
+					model: this.collection.toJSON(),
 					data: ( response.success ) ? response.data : {},
 				};
 
@@ -166,12 +166,102 @@ window.bp = window.bp || {};
 				var ReactionPopupContent = new bp.Views.ReactionPopupContent( args );
 				this.targetElement.append( ReactionPopupContent.render().el );
 
+				if ( this.targetElement.find( '.activity-state-popup_tab_item > ul' ) ) {
+					var inside_self = this;
+					this.targetElement.find( '.activity-state-popup_tab_item > ul' ).each( function () {
+						$(this).on( 'scroll', _.bind( inside_self.loadMore, inside_self ) );
+					} );
+				}
+
 				return this;
 			},
 
 			failedRender: function ( collection, response, options ) {
 
 			},
+
+			loadMore: function( e ) {
+				var element = e.currentTarget,
+					target = $( element );
+
+				if ( ! $( element ).hasClass( 'loading' ) ) {
+					var distanceFromBottom = element.scrollHeight - target.scrollTop() - target.outerHeight(),
+						threshold          = 10,
+						reaction_id        = target.parents('.activity-state-popup_tab_item').data( 'reaction-id' ),
+						total_pages        = target.parents('.activity-state-popup_tab_item').data( 'total-pages' ),
+						paged              = target.parents('.activity-state-popup_tab_item').data( 'paged' );
+
+					if ( 'undefined' === typeof paged ) {
+						paged = 1;
+					}
+
+					// Check if the user has scrolled to the bottom.
+					if (
+						distanceFromBottom <= threshold &&
+						paged < total_pages &&
+						! $( element ).hasClass( 'loading' )
+					) {
+
+						if ( target.parents( '.activity-state-popup_tab_item' ).find( '.reaction-loader' ).length == 0 ) {
+							target.parents( '.activity-state-popup_tab_item' ).append( this.loader.show() );
+						} else {
+							target.parents( '.activity-state-popup_tab_item' ).find( '.reaction-loader' ).show();
+						}
+
+						$( element ).addClass( 'loading' );
+						paged = parseInt( paged, 10 ) + 1;
+
+						var arguments = {
+							item_id: this.options.item_id,
+							item_type: this.options.item_type,
+							reaction_id: reaction_id,
+							page: paged
+						};
+
+						var selected_collection = arguments.item_id + '_' + arguments.reaction_id;
+
+						if ( 'undefined' == typeof bp.Nouveau.ActivityReaction.collections[ selected_collection ] ) {
+							bp.Nouveau.ActivityReaction.collections[ selected_collection ] = new bp.Collections.ActivityReactionCollection();
+						}
+
+						this.collection = bp.Nouveau.ActivityReaction.collections[ selected_collection ];
+
+						this.args = {
+							collection: this.options.collection,
+							item_id: this.options.item_id,
+							item_type: this.options.item_type,
+							model: this.collection.toJSON(),
+						};
+
+						_.extend(
+							this.collection.options,
+							_.pick( arguments, [ 'page', 'item_id', 'item_type', 'reaction_id' ] )
+						);
+
+						this.args.collection = this.collection;
+						this.collection.fetch(
+							{
+								data: _.pick( arguments, [ 'page', 'item_id', 'item_type', 'reaction_id' ] ),
+								success: _.bind( this.renderLoad, this, target ),
+								error: _.bind( this.failedRender, this ),
+							}
+						);
+					}
+				}
+			},
+
+			renderLoad: function ( target ) {
+				this.loader.hide();
+				console.log( this.collection );
+				this.args.model = this.collection;
+				var ReactionItem = new bp.Views.ReactionItem( this.args );
+				target.append( ReactionItem.render().el );
+				return this;
+			},
+
+			failedRender: function() {
+
+			}
 		}
 	);
 
