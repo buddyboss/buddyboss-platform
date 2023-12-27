@@ -447,7 +447,7 @@ function bb_get_activity_reaction_ajax_callback() {
 
 	$item_id     = sanitize_text_field( $_POST['item_id'] );
 	$item_type   = sanitize_text_field( $_POST['item_type'] );
-	$paged       = ! empty( $_POST['paged'] ) ? (int) sanitize_text_field( $_POST['paged'] ) : 1;
+	$paged       = ! empty( $_POST['page'] ) ? (int) sanitize_text_field( $_POST['page'] ) : 1;
 	$reaction_id =  ! empty( $_POST['reaction_id'] ) ? (int) sanitize_text_field( $_POST['reaction_id'] ) : 0;
 
 	if ( 1 === $paged && empty( $reaction_id ) ) {
@@ -528,7 +528,7 @@ function bb_get_activity_reaction_ajax_callback() {
 		wp_send_json_success(
 			array(
 				'item_id'             => $item_id,
-				'paged'               => 1,
+				'page'                => 1,
 				'reaction_mode'       => bb_get_reaction_mode(),
 				'popup_heading'       => $popup_heading,
 				'popup_heading_count' => $popup_heading_count,
@@ -544,7 +544,7 @@ function bb_get_activity_reaction_ajax_callback() {
 				'item_id'     => $item_id,
 				'item_type'   => $item_type,
 				'reaction_id' => $reaction_id,
-				'paged'       => $paged,
+				'page'        => $paged,
 				'per_page'    => 20,
 			)
 		);
