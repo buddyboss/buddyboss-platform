@@ -4239,12 +4239,21 @@ input.search-query-input {
   transition-delay: 500ms;
 }
 
-.activity-list .activity-item .ac-emotions_list:hover, .activity-list .activity-item .ac-emotions_list.active {
+.activity-list .activity-item .ac-emotions_list.active {
   display: flex;
   bottom: 25px;
 }
 
-.activity-list .activity-item .ac-emotions_list:hover .ac-emotion_item, .activity-list .activity-item .ac-emotions_list.active .ac-emotion_item {
+.activity-list .activity-item .ac-emotions_list.active .ac-emotion_item {
+  top: 0;
+}
+
+body:not(.bb-is-mobile) .activity-list .activity-item .ac-emotions_list:hover {
+  display: flex;
+  bottom: 25px;
+}
+
+body:not(.bb-is-mobile) .activity-list .activity-item .ac-emotions_list:hover .ac-emotion_item {
   top: 0;
 }
 
@@ -4303,9 +4312,30 @@ input.search-query-input {
   line-height: 1;
 }
 
+@media screen and (max-width: 370px) {
+  .activity-list .activity-item .ac-emotions_list .ac-emotion_item img {
+    width: 30px;
+    height: 30px;
+  }
+  .activity-list .activity-item .ac-emotions_list .ac-emotion_item i {
+    font-size: 30px;
+  }
+}
+
 .activity-list .activity-item .acomment-display .ac-emotions_list:hover, .activity-list .activity-item .acomment-display .ac-emotions_list.active {
   bottom: 20px;
   left: -60px;
+}
+
+.bb-is-mobile.bb-reactions-mode .bp-generic-meta .generic-button a,
+.bb-is-mobile.bb-reactions-mode .bp-generic-meta .ac-emotions_list .ac-emotion_item a > *,
+.bb-is-mobile.bb-reactions-mode .bp-generic-meta .generic-button a > * {
+  -webkit-touch-callout: none !important;
+}
+
+.bb-is-mobile.bb-reactions-mode.activity * {
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 @media screen and (min-width: 46.8em) {

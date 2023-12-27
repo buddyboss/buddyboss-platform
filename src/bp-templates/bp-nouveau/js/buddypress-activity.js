@@ -761,6 +761,11 @@ window.bp = window.bp || {};
 				// Stop event propagation.
 				event.preventDefault();
 
+				// Do not trigger click event directly on the button when it's mobile and reaction is active.
+				if( $( 'body' ).hasClass( 'bb-is-mobile' ) && $( 'body' ).hasClass( 'bb-reactions-mode' ) && target.parent( '.ac-emotion_btn' ).length == 0  && event.customTriggered !== true ) {
+					return;
+				}
+
 				if ( ! $( target ).is( 'a' ) ) {
 					target = $( target ).closest( 'a' );
 				}
@@ -838,6 +843,9 @@ window.bp = window.bp || {};
 											main_el.find( '#acomment-display-' + item_id + ' .bp-generic-meta a.bp-like-button' ).replaceWith( response.data.reaction_button );
 										}
 									}
+
+									// Hide Reactions popup.
+									main_el.find( '.ac-emotions_list' ).removeClass( 'active' );
 
 									$( this ).fadeIn( 200 );
 								}
