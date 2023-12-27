@@ -242,7 +242,12 @@ window.bp = window.bp || {};
 					this.targetElement = current.parents( '.activity-state-popup_tab' ).find( '.' + tab );
 
 				if ( this.targetElement.length > 0 ) {
+					if ( this.targetElement.find( '.activity-state_users li' ).length !== 0 ) {
+						return;
+					}
+
 					this.targetElement.append( this.loader.show() );
+
 					var arguments = {
 						item_id: this.options.item_id,
 						item_type: this.options.item_type,
@@ -258,6 +263,7 @@ window.bp = window.bp || {};
 
 					this.collection = bp.Nouveau.ActivityReaction.collections[ selected_collection ];
 
+					this.args.collection = this.collection;
 					this.collection.on( 'sync', this.renderLoad, this );
 					this.collection.fetch( { data: _.pick( arguments, [ 'page', 'per_page', 'item_id', 'item_type', 'reaction_id' ] ) } );
 				}
@@ -265,6 +271,7 @@ window.bp = window.bp || {};
 
 			renderLoad: function () {
 				this.loader.hide();
+				this.args.model = this.collection.last();
 				var ReactionItem = new bp.Views.ReactionItem( this.args );
 				this.targetElement.find( '.activity-state_users' ).append( ReactionItem.render().el );
 				return this;
