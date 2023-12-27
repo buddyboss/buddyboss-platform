@@ -232,7 +232,6 @@ window.bp = window.bp || {};
 			model: this.model,
 			options: {},
 			collection: {},
-			targetElement: '',
 			initialize: function (options) {
 				this.loader = bp.Nouveau.ActivityReaction.loader_html;
 				this.options = options;
@@ -255,22 +254,21 @@ window.bp = window.bp || {};
 
 			LoadTabData: function ( e ) {
 				var current = $( e.currentTarget ),
-					tab     = current.data( 'tab' );
+					tab     = current.data( 'tab' ),
+					targetElement = current.parents( '.activity-state-popup_tab' ).find( '.' + tab );
 
-					this.targetElement = current.parents( '.activity-state-popup_tab' ).find( '.' + tab );
-
-				if ( this.targetElement.length > 0 ) {
-					if ( this.targetElement.find( '.activity-state_users li' ).length !== 0 ) {
+				if ( targetElement.length > 0 ) {
+					if ( targetElement.find( '.activity-state_users li' ).length !== 0 ) {
 						return;
 					}
 
-					this.targetElement.append( this.loader.show() );
+					targetElement.append( this.loader.show() );
 
 					var arguments = {
 						item_id: this.options.item_id,
 						item_type: this.options.item_type,
-						reaction_id: this.targetElement.data( 'reaction-id' ),
-						page: this.targetElement.data( 'paged' ),
+						reaction_id: targetElement.data( 'reaction-id' ),
+						page: targetElement.data( 'paged' )
 					};
 
 					var selected_collection = arguments.item_id + '_' + arguments.reaction_id;
@@ -282,18 +280,28 @@ window.bp = window.bp || {};
 					this.collection = bp.Nouveau.ActivityReaction.collections[ selected_collection ];
 
 					this.args.collection = this.collection;
-					this.collection.on( 'sync', this.renderLoad, this );
-					this.collection.fetch( { data: _.pick( arguments, [ 'page', 'per_page', 'item_id', 'item_type', 'reaction_id' ] ) } );
+					this.collection.fetch(
+						{
+							data: _.pick( arguments, [ 'page', 'per_page', 'item_id', 'item_type', 'reaction_id' ] ),
+							success: _.bind( this.renderLoad, this, targetElement ),
+							error: _.bind( this.failedRender, this ),
+						}
+					);
 				}
 			},
 
-			renderLoad: function () {
+			renderLoad: function ( targetElement, collection ) {
 				this.loader.hide();
+
 				this.args.model = this.collection;
 				var ReactionItem = new bp.Views.ReactionItem( this.args );
-				this.targetElement.find( '.activity-state_users' ).append( ReactionItem.render().el );
+				targetElement.find( '.activity-state_users' ).append( ReactionItem.render().el );
 				return this;
 			},
+
+			failedRender: function() {
+
+			}
 		}
 	);
 
