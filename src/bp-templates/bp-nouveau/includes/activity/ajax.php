@@ -151,7 +151,6 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 	$response = array(
 		'reaction_button' => bb_get_activity_post_reaction_button_html( $item_id, $item_type, $reaction_id, true ),
 		'reaction_count'  => bb_get_activity_post_user_reactions_html( $item_id, $item_type ),
-		//'tooltip'         => bp_activity_get_favorite_users_tooltip_string( $item_id ),
 	);
 
 	$fav_count = (int) bp_get_total_favorite_count_for_user( $user_id );
@@ -211,7 +210,6 @@ function bp_nouveau_ajax_unmark_activity_favorite() {
 	$response = array(
 		'reaction_button' => bb_get_activity_post_reaction_button_html( $item_id, $item_type ),
 		'reaction_count'  => bb_get_activity_post_user_reactions_html( $item_id, $item_type ),
-		//'tooltip'         => bp_activity_get_favorite_users_tooltip_string( $_POST['id'] ),
 	);
 
 	$fav_count = (int) bp_get_total_favorite_count_for_user( $user_id );
