@@ -447,15 +447,10 @@ function bb_get_activity_reaction_ajax_callback() {
 
 	$item_id     = sanitize_text_field( $_POST['item_id'] );
 	$item_type   = sanitize_text_field( $_POST['item_type'] );
-	$paged       = 1;
-	$reaction_id = 0;
+	$paged       = ! empty( $_POST['paged'] ) ? (int) sanitize_text_field( $_POST['paged'] ) : 1;
+	$reaction_id =  ! empty( $_POST['reaction_id'] ) ? (int) sanitize_text_field( $_POST['reaction_id'] ) : 0;
 
-	if ( ! empty( $_POST['paged'] ) ) {
-		$paged       = sanitize_text_field( $_POST['paged'] );
-		$reaction_id = sanitize_text_field( $_POST['reaction_id'] );
-	}
-
-	if ( 1 === $paged ) {
+	if ( 1 === $paged && empty( $reaction_id ) ) {
 		$most_reacted = bb_get_activity_most_reactions( $item_id, $item_type, 7 );
 		if ( empty( $most_reacted ) ) {
 			wp_send_json_error(
@@ -537,7 +532,7 @@ function bb_get_activity_reaction_ajax_callback() {
 				'reaction_id'         => $reaction_id,
 			)
 		);
-	} elseif ( $paged > 1 ) {
+	} else {
 
 		$users_data = bb_activity_get_reacted_users_data(
 			array(
