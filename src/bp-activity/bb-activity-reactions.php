@@ -463,13 +463,12 @@ function bb_get_activity_reaction_ajax_callback() {
 		$tabs = array();
 
 		if ( bb_is_reaction_emotions_enabled() ) {
-			$all_emotions  = bb_load_reaction()->bb_get_reactions( 'emotions' );
 			$popup_heading = __( 'Reactions', 'buddyboss' );
 		} else {
-			$all_emotions  = bb_load_reaction()->bb_get_reactions();
 			$popup_heading = __( 'Likes', 'buddyboss' );
 		}
-		$all_emotions  = array_column( $all_emotions, null, 'id' );
+
+		$all_emotions  = bb_active_reactions();
 
 		foreach ( $most_reacted as $reaction ) {
 			$tab                     = ! empty( $all_emotions[ $reaction['id'] ] ) ? $all_emotions[ $reaction['id'] ] : array();
@@ -483,15 +482,20 @@ function bb_get_activity_reaction_ajax_callback() {
 		if ( 1 === count( $tabs ) ) {
 			$current_tabs = current( $tabs );
 
+			if ( empty( $reaction_id ) ) {
+				$reaction_id = $current_tabs['id'];
+			}
+
 			$current_reacted = bb_activity_get_reacted_users_data(
 				array(
-					'item_id'   => $current_tabs['id'],
-					'item_type' => $item_type,
-					'per_page'  => 20,
+					'reaction_id' => $current_tabs['id'],
+					'item_id'     => $item_id,
+					'item_type'   => $item_type,
+					'per_page'    => 20,
 				)
 			);
-			$tab_content     = $current_reacted['reactions'];
 
+			$tab_content         = $current_reacted['reactions'];
 			$popup_heading       = $current_tabs['icon_text'];
 			$popup_heading_count = $current_tabs['total_count'];
 
@@ -500,6 +504,7 @@ function bb_get_activity_reaction_ajax_callback() {
 		} else {
 			$all_reacted = bb_activity_get_reacted_users_data(
 				array(
+					'item_id'   => $item_id,
 					'item_type' => $item_type,
 					'per_page'  => 20,
 				)

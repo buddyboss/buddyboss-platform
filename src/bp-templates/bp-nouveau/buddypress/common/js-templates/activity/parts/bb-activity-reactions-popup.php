@@ -58,53 +58,93 @@
 	users = data.reacted_users;
 	var data_reaction_id = data.reaction_id ? data.reaction_id : 0;
 
-	jQuery.each( data.reacted_tabs, function( key, reaction ) {
-	var current_reaction_id = reaction.id ? reaction.id : 0;
-	#>
-	<div class="activity-state-popup_tab_item activity-state_{{key}} {{isFirstItem ? 'active' : ''}}" data-reaction-id="{{reaction.id ? reaction.id : '0'}}" data-paged="{{reaction.paged}}" data-total-pages="{{reaction.total_pages}}">
+	if ( data.reacted_tabs.length === 0 ) {
+		#>
+		<div class="activity-state-popup_tab_item activity-state_ active" data-reaction-id="0" data-paged="1" data-total-pages="0">
 
-		<# if( data_reaction_id === current_reaction_id ) { #>
-			<# if( users.length > 0 ) { #>
+		<# if( users.length > 0 ) { #>
 			<ul class="activity-state_users">
-				<# jQuery.each( users, function( key, user ) { #>
-				<li class="activity-state_user">
-					<div class="activity-state_user__avatar">
-						<a href="{{ user.profile_url }}">
-							<img class="avatar" src="{{ user.avatar }}" alt="{{ user.name }}" />
-							<div class="activity-state_user__reaction">
-								<# if ( user.reaction.type === 'bb-icons' ) { #>
-								<i class="bb-icon-{{ user.reaction.icon }}" style="font-weight:200;color:{{ user.reaction.icon_color }};"></i>
-								<# } else if ( user.reaction.icon_path !== '' ) { #>
-								<img src="{{ user.reaction.icon_path }}" class="{{ user.reaction.type }}" alt="{{ user.reaction.icon_text }}" />
-								<# } else { #>
-								<i class="bb-icon-thumbs-up" style="font-weight:200;color:#385DFF;"></i>
-								<# } #>
-							</div>
-						</a>
-					</div>
-					<div class="activity-state_user__name">
-						<a href="{{ user.profile_url }}">{{ user.name }}</a>
-					</div>
-					<# if ( user.member_type && user.member_type.label ) { #>
-					<div class="activity-state_user__role" style="color:{{user.member_type.color.text}}; background-color:{{user.member_type.color.background}};">
-						{{ user.member_type.label }}
-					</div>
-					<# } #>
-				</li>
-				<# }); #>
-			</ul>
-			<# } else { #>
-			<div class="activity-state_no_users">
-				{{ data.no_users }}
-			</div>
-			<# } #>
+			<# jQuery.each( users, function( key, user ) { #>
+			<li class="activity-state_user">
+				<div class="activity-state_user__avatar">
+					<a href="{{ user.profile_url }}">
+						<img class="avatar" src="{{ user.avatar }}" alt="{{ user.name }}" />
+						<div class="activity-state_user__reaction">
+							<# if ( user.reaction.type === 'bb-icons' ) { #>
+							<i class="bb-icon-{{ user.reaction.icon }}" style="font-weight:200;color:{{ user.reaction.icon_color }};"></i>
+							<# } else if ( user.reaction.icon_path !== '' ) { #>
+							<img src="{{ user.reaction.icon_path }}" class="{{ user.reaction.type }}" alt="{{ user.reaction.icon_text }}" />
+							<# } else { #>
+							<i class="bb-icon-thumbs-up" style="font-weight:200;color:#385DFF;"></i>
+							<# } #>
+						</div>
+					</a>
+				</div>
+				<div class="activity-state_user__name">
+					<a href="{{ user.profile_url }}">{{ user.name }}</a>
+				</div>
+				<# if ( user.member_type && user.member_type.label ) { #>
+				<div class="activity-state_user__role" style="color:{{user.member_type.color.text}}; background-color:{{user.member_type.color.background}};">
+					{{ user.member_type.label }}
+				</div>
+				<# } #>
+			</li>
+			<# }); #>
+		</ul>
 		<# } else { #>
-		<ul class="activity-state_users"></ul>
+			<ul class="activity-state_users"></ul>
 		<# } #>
 	</div>
-	<#
-	isFirstItem = false;
-	});
+		<#
+	} else {
+		jQuery.each( data.reacted_tabs, function( key, reaction ) {
+		var current_reaction_id = reaction.id ? reaction.id : 0;
+		#>
+		<div class="activity-state-popup_tab_item activity-state_{{key}} {{isFirstItem ? 'active' : ''}}" data-reaction-id="{{reaction.id ? reaction.id : '0'}}" data-paged="{{reaction.paged}}" data-total-pages="{{reaction.total_pages}}">
+
+			<# if( data_reaction_id === current_reaction_id ) { #>
+				<# if( users.length > 0 ) { #>
+				<ul class="activity-state_users">
+					<# jQuery.each( users, function( key, user ) { #>
+					<li class="activity-state_user">
+						<div class="activity-state_user__avatar">
+							<a href="{{ user.profile_url }}">
+								<img class="avatar" src="{{ user.avatar }}" alt="{{ user.name }}" />
+								<div class="activity-state_user__reaction">
+									<# if ( user.reaction.type === 'bb-icons' ) { #>
+									<i class="bb-icon-{{ user.reaction.icon }}" style="font-weight:200;color:{{ user.reaction.icon_color }};"></i>
+									<# } else if ( user.reaction.icon_path !== '' ) { #>
+									<img src="{{ user.reaction.icon_path }}" class="{{ user.reaction.type }}" alt="{{ user.reaction.icon_text }}" />
+									<# } else { #>
+									<i class="bb-icon-thumbs-up" style="font-weight:200;color:#385DFF;"></i>
+									<# } #>
+								</div>
+							</a>
+						</div>
+						<div class="activity-state_user__name">
+							<a href="{{ user.profile_url }}">{{ user.name }}</a>
+						</div>
+						<# if ( user.member_type && user.member_type.label ) { #>
+						<div class="activity-state_user__role" style="color:{{user.member_type.color.text}}; background-color:{{user.member_type.color.background}};">
+							{{ user.member_type.label }}
+						</div>
+						<# } #>
+					</li>
+					<# }); #>
+				</ul>
+				<# } else { #>
+				<div class="activity-state_no_users">
+					{{ data.no_users }}
+				</div>
+				<# } #>
+			<# } else { #>
+			<ul class="activity-state_users"></ul>
+			<# } #>
+		</div>
+		<#
+		isFirstItem = false;
+		});
+	}
 	#>
 </script>
 
