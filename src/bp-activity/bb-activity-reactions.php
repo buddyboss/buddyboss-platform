@@ -491,6 +491,7 @@ function bb_get_activity_reaction_ajax_callback() {
 					'reaction_id' => $current_tabs['id'],
 					'item_id'     => $item_id,
 					'item_type'   => $item_type,
+					'paged'       => $paged,
 					'per_page'    => 20,
 				)
 			);
@@ -506,6 +507,7 @@ function bb_get_activity_reaction_ajax_callback() {
 				array(
 					'item_id'   => $item_id,
 					'item_type' => $item_type,
+					'paged'     => $paged,
 					'per_page'  => 20,
 				)
 			);
@@ -544,7 +546,7 @@ function bb_get_activity_reaction_ajax_callback() {
 				'item_id'     => $item_id,
 				'item_type'   => $item_type,
 				'reaction_id' => $reaction_id,
-				'page'        => $paged,
+				'paged'       => $paged,
 				'per_page'    => 20,
 			)
 		);
@@ -552,7 +554,7 @@ function bb_get_activity_reaction_ajax_callback() {
 		wp_send_json_success(
 			array(
 				'item_id'       => $item_id,
-				'paged'         => $paged,
+				'page'          => $paged,
 				'reaction_mode' => bb_get_reaction_mode(),
 				'reaction_id'   => $reaction_id,
 				'reacted_users' => ! empty( $users_data['reactions'] ) ? $users_data['reactions'] : array(),
