@@ -911,9 +911,11 @@ function bp_activity_get_actions_for_context( $context = '' ) {
  * @since BuddyPress 1.2.0
  *
  * @param int $user_id ID of the user whose favorites are being queried.
+ * @param string $activity_type Activity type.
+ *
  * @return array IDs of the user's favorite activity items.
  */
-function bp_activity_get_user_favorites( $user_id = 0 ) {
+function bp_activity_get_user_favorites( $user_id = 0, $activity_type = 'activity' ) {
 
 	// Fallback to logged in user if no user_id is passed.
 	if ( empty( $user_id ) ) {
@@ -921,7 +923,7 @@ function bp_activity_get_user_favorites( $user_id = 0 ) {
 	}
 
 	// Get favorites for user.
-	$favs = bb_activity_get_user_reacted_item_ids( $user_id );
+	$favs = bb_activity_get_user_reacted_item_ids( $user_id, $activity_type );
 
 	/**
 	 * Filters the favorited activity items for a specified user.
