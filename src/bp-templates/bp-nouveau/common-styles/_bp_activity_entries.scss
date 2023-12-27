@@ -1018,13 +1018,24 @@
 			transition: all ease 0.2s;
 			transition-delay: 500ms;
 
-			&:hover,
 			&.active {
 				display: flex;
 				bottom: 25px;
 
 				.ac-emotion_item {
 					top: 0;
+				}
+			}
+
+			body:not(.bb-is-mobile) & {
+
+				&:hover {
+					display: flex;
+					bottom: 25px;
+
+					.ac-emotion_item {
+						top: 0;
+					}
 				}
 			}
 
@@ -1090,6 +1101,19 @@
 					font-size: 40px;
 					line-height: 1;
 				}
+
+				@media screen and (max-width: 370px) {
+
+					img {
+						width: 30px;
+						height: 30px;
+					}
+
+					i {
+						font-size: 30px;
+					}
+
+				}
 			}
 		}
 
@@ -1106,6 +1130,25 @@
 	}
 
 	// close .activity-item
+
+}
+
+// Prevent callout popup on long press on ios devices
+.bb-is-mobile.bb-reactions-mode {
+
+	.bp-generic-meta {
+
+		.generic-button a,
+		.ac-emotions_list .ac-emotion_item a > *,
+		.generic-button a > * {
+			-webkit-touch-callout: none !important;
+		}
+	}
+
+	&.activity * {
+		-webkit-user-select: none;
+		user-select: none;
+	}
 
 }
 

@@ -341,6 +341,12 @@ function bb_get_activity_post_user_reactions_html( $activity_id, $item_type = 'a
 		}
 
 		$output .= '</div>';
+
+		$output .= '<div class="activity-state-popup">
+			<div class="activity-state-popup_overlay"></div>
+			<div class="activity-state-popup_inner" id="reaction-content-' . $activity_id . '">
+			</div>
+		</div>';
 	}
 
 	return apply_filters( 'bb_get_activity_post_user_reactions_html', $output );
@@ -439,20 +445,14 @@ function bb_get_activity_reaction_ajax_callback() {
 		);
 	}
 
-	$item_id   = sanitize_text_field( $_POST['item_id'] );
-	$item_type = sanitize_text_field( $_POST['item_type'] );
-	$paged     = 1;
+	$item_id     = sanitize_text_field( $_POST['item_id'] );
+	$item_type   = sanitize_text_field( $_POST['item_type'] );
+	$paged       = ! empty( $_POST['page'] ) ? (int) sanitize_text_field( $_POST['page'] ) : 1;
+	$reaction_id =  ! empty( $_POST['reaction_id'] ) ? (int) sanitize_text_field( $_POST['reaction_id'] ) : 0;
 
-	if ( ! empty( $_POST['paged'] ) ) {
-		$paged       = sanitize_text_field( $_POST['paged'] );
-		$reaction_id = sanitize_text_field( $_POST['reaction_id'] );
-	}
-
-	$reaction_data = array();
-	if ( 1 === $paged ) {
-		$reaction_data = bb_get_activity_most_reactions( $item_id, $item_type, 7 );
-
-		if ( empty( $reaction_data ) ) {
+	if ( 1 === $paged && empty( $reaction_id ) ) {
+		$most_reacted = bb_get_activity_most_reactions( $item_id, $item_type, 7 );
+		if ( empty( $most_reacted ) ) {
 			wp_send_json_error(
 				array(
 					'no_reactions' => esc_html__( 'No reactions', 'buddyboss' ),
@@ -460,54 +460,86 @@ function bb_get_activity_reaction_ajax_callback() {
 			);
 		}
 
-		$all_emotions = bb_load_reaction()->bb_get_reactions( 'emotions' );
-		$all_emotions = array_column( $all_emotions, null, 'id' );
+		$tabs = array();
 
-		foreach ( $reaction_data as $key => $reaction ) {
-			$users_data = bb_activity_get_reacted_users_data(
+		if ( bb_is_reaction_emotions_enabled() ) {
+			$popup_heading = __( 'Reactions', 'buddyboss' );
+		} else {
+			$popup_heading = __( 'Likes', 'buddyboss' );
+		}
+
+		$all_emotions  = bb_active_reactions();
+
+		foreach ( $most_reacted as $reaction ) {
+			$tab                     = ! empty( $all_emotions[ $reaction['id'] ] ) ? $all_emotions[ $reaction['id'] ] : array();
+			$tab['paged']            = 1;
+			$tab['total_pages']      = ceil( $reaction['count'] / 20 );
+			$tab['total_count']      = bb_format_reaction_count( $reaction['count'] );
+			$tabs[ $reaction['id'] ] = $tab;
+		}
+
+		$popup_heading_count = 0;
+		if ( 1 === count( $tabs ) ) {
+			$current_tabs = current( $tabs );
+
+			if ( empty( $reaction_id ) ) {
+				$reaction_id = $current_tabs['id'];
+			}
+
+			$current_reacted = bb_activity_get_reacted_users_data(
 				array(
+					'reaction_id' => $current_tabs['id'],
 					'item_id'     => $item_id,
 					'item_type'   => $item_type,
-					'reaction_id' => $reaction['id'],
+					'paged'       => $paged,
 					'per_page'    => 20,
 				)
 			);
 
-			// Added emotion information to show in a tab.
-			$emotion               = ! empty( $all_emotions[ $reaction['id'] ] ) ? $all_emotions[ $reaction['id'] ] : array();
-			$reaction_data[ $key ] = array_merge( $reaction_data[ $key ], $emotion );
+			$tab_content         = $current_reacted['reactions'];
+			$popup_heading       = $current_tabs['icon_text'];
+			$popup_heading_count = $current_tabs['total_count'];
 
-			$reaction_data[ $key ]['users']       = $users_data['reactions'];
-			$reaction_data[ $key ]['paged']       = 1;
-			$reaction_data[ $key ]['total_pages'] = ceil( $reaction_data[ $key ]['count'] / 20 );
-			$reaction_data[ $key ]['total_count'] = bb_format_reaction_count( $reaction_data[ $key ]['count'] );
-		}
-
-		if ( is_countable( $reaction_data ) && count( $reaction_data ) >= 2 ) {
-
-			$users_data = bb_activity_get_reacted_users_data(
+			// No required tab when only 1 tab available.
+			$tabs = array();
+		} else {
+			$all_reacted = bb_activity_get_reacted_users_data(
 				array(
 					'item_id'   => $item_id,
 					'item_type' => $item_type,
+					'paged'     => $paged,
 					'per_page'  => 20,
 				)
 			);
+			$tab_content = $all_reacted['reactions'];
 
 			array_unshift(
-				$reaction_data,
+				$tabs,
 				array(
 					'name'        => 'All',
 					'type'        => 'all',
 					'icon'        => '',
 					'icon_text'   => esc_html__( 'All', 'buddyboss' ),
-					'users'       => $users_data['reactions'],
 					'paged'       => 1,
-					'total_pages' => ceil( $users_data['total'] / 20 ),
-					'total_count' => $users_data['total'],
+					'total_pages' => ceil( $all_reacted['total'] / 20 ),
+					'total_count' => $all_reacted['total'],
 				)
 			);
 		}
-	} elseif ( $paged > 1 ) {
+
+		wp_send_json_success(
+			array(
+				'item_id'             => $item_id,
+				'page'                => 1,
+				'reaction_mode'       => bb_get_reaction_mode(),
+				'popup_heading'       => $popup_heading,
+				'popup_heading_count' => $popup_heading_count,
+				'reacted_users'       => $tab_content,
+				'reacted_tabs'        => $tabs,
+				'reaction_id'         => $reaction_id,
+			)
+		);
+	} else {
 
 		$users_data = bb_activity_get_reacted_users_data(
 			array(
@@ -519,17 +551,16 @@ function bb_get_activity_reaction_ajax_callback() {
 			)
 		);
 
-		$reaction_data['users'] = ! empty( $users_data['reactions'] ) ? $users_data['reactions'] : array();
+		wp_send_json_success(
+			array(
+				'item_id'       => $item_id,
+				'page'          => $paged,
+				'reaction_mode' => bb_get_reaction_mode(),
+				'reaction_id'   => $reaction_id,
+				'reacted_users' => ! empty( $users_data['reactions'] ) ? $users_data['reactions'] : array(),
+			)
+		);
 	}
-
-	wp_send_json_success(
-		array(
-			'item_id'       => $item_id,
-			'paged'         => $paged,
-			'reaction_mode' => bb_get_reaction_mode(),
-			'reactions'     => (object) $reaction_data,
-		)
-	);
 }
 
 /**

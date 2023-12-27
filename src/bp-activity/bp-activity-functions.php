@@ -911,9 +911,11 @@ function bp_activity_get_actions_for_context( $context = '' ) {
  * @since BuddyPress 1.2.0
  *
  * @param int $user_id ID of the user whose favorites are being queried.
+ * @param string $activity_type Activity type.
+ *
  * @return array IDs of the user's favorite activity items.
  */
-function bp_activity_get_user_favorites( $user_id = 0 ) {
+function bp_activity_get_user_favorites( $user_id = 0, $activity_type = 'activity' ) {
 
 	// Fallback to logged in user if no user_id is passed.
 	if ( empty( $user_id ) ) {
@@ -921,7 +923,7 @@ function bp_activity_get_user_favorites( $user_id = 0 ) {
 	}
 
 	// Get favorites for user.
-	$favs = bb_activity_get_user_reacted_item_ids( $user_id );
+	$favs = bb_activity_get_user_reacted_item_ids( $user_id, $activity_type );
 
 	/**
 	 * Filters the favorited activity items for a specified user.
@@ -1128,160 +1130,6 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 }
 
 /**
- * Get like count for activity
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $activity_id
- *
- * @return int|string
- */
-function bp_activity_get_favorite_users_string( $activity_id ) {
-
-	if ( ! bp_is_activity_like_active() ) {
-		return 0;
-	}
-
-	$like_count      = bp_activity_get_meta( $activity_id, 'favorite_count', true );
-	$like_count      = ( isset( $like_count ) && ! empty( $like_count ) ) ? $like_count : 0;
-	$favorited_users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
-
-	if ( empty( $favorited_users ) || ! is_array( $favorited_users ) ) {
-		return 0;
-	}
-
-	if ( $like_count > sizeof( $favorited_users ) ) {
-		$like_count = sizeof( $favorited_users );
-	}
-
-	$current_user_fav = false;
-	if ( bp_loggedin_user_id() && in_array( bp_loggedin_user_id(), $favorited_users ) ) {
-		$current_user_fav = true;
-		if ( sizeof( $favorited_users ) > 1 ) {
-			$pos = array_search( bp_loggedin_user_id(), $favorited_users );
-			unset( $favorited_users[ $pos ] );
-		}
-	}
-
-	$return_str = '';
-	if ( 1 == $like_count ) {
-		if ( $current_user_fav ) {
-			$return_str = __( 'You like this', 'buddyboss' );
-		} else {
-			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
-			$return_str        = $user_display_name . ' ' . __( 'likes this', 'buddyboss' );
-		}
-	} elseif ( 2 == $like_count ) {
-		if ( $current_user_fav ) {
-			$return_str .= __( 'You and', 'buddyboss' ) . ' ';
-
-			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
-			$return_str       .= $user_display_name . ' ' . __( 'like this', 'buddyboss' );
-		} else {
-			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
-			$return_str       .= $user_display_name . ' ' . __( 'and', 'buddyboss' ) . ' ';
-
-			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
-			$return_str       .= $user_display_name . ' ' . __( 'like this', 'buddyboss' );
-		}
-	} elseif ( 3 == $like_count ) {
-
-		if ( $current_user_fav ) {
-			$return_str .= __( 'You,', 'buddyboss' ) . ' ';
-
-			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
-			$return_str       .= $user_display_name . ' ' . __( 'and', 'buddyboss' ) . ' ';
-
-			$return_str .= ' ' . __( '1 other like this', 'buddyboss' );
-		} else {
-
-			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
-			$return_str       .= $user_display_name . ', ';
-
-			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
-			$return_str       .= $user_display_name . ' ' . __( 'and', 'buddyboss' ) . ' ';
-
-			$return_str .= ' ' . __( '1 other like this', 'buddyboss' );
-		}
-	} elseif ( 3 < $like_count ) {
-
-		$like_count = ( isset( $like_count ) && ! empty( $like_count ) ) ? (int) $like_count - 2 : 0;
-
-		if ( $current_user_fav ) {
-			$return_str .= __( 'You,', 'buddyboss' ) . ' ';
-
-			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
-			$return_str       .= $user_display_name . ' ' . __( 'and', 'buddyboss' ) . ' ';
-		} else {
-			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
-			$return_str       .= $user_display_name . ', ';
-
-			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
-			$return_str       .= $user_display_name . ' ' . __( 'and', 'buddyboss' ) . ' ';
-		}
-
-		if ( $like_count > 1 ) {
-			$return_str .= $like_count . ' ' . __( 'others like this', 'buddyboss' );
-		} else {
-			$return_str .= $like_count . ' ' . __( 'other like this', 'buddyboss' );
-		}
-	} else {
-		$return_str = $like_count;
-	}
-
-	return $return_str;
-}
-
-
-/**
- * Get users for activity favorite tooltip
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $activity_id
- *
- * @return string
- */
-function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
-
-	if ( ! bp_is_activity_like_active() ) {
-		return false;
-	}
-
-	$current_user_id = get_current_user_id();
-	$favorited_users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
-
-	if ( ! empty( $favorited_users ) ) {
-		$like_text       = bp_activity_get_favorite_users_string( $activity_id );
-		$favorited_users = array_reduce(
-			$favorited_users,
-			function ( $carry, $user_id ) use ( $current_user_id, $like_text ) {
-				if ( $user_id != $current_user_id ) {
-					$user_display_name = bp_core_get_user_displayname( $user_id );
-					if ( strpos( $like_text, $user_display_name ) === false ) {
-						$carry .= $user_display_name . ',&#10;';
-					}
-				}
-
-				return $carry;
-			}
-		);
-	}
-
-	return ! empty( $favorited_users ) ? trim( $favorited_users, ',&#10;' ) : '';
-}
-
-/**
  * Check if BuddyPress activity favorites data needs upgrade & Update to BuddyBoss activity like data
  *
  * @since BuddyBoss 1.0.0
@@ -1379,24 +1227,6 @@ function bp_activity_get_last_updated() {
 	 * @param BP_Activity_Activity $last_updated Date last updated.
 	 */
 	return apply_filters( 'bp_activity_get_last_updated', BP_Activity_Activity::get_last_updated() );
-}
-
-/**
- * Retrieve the number of favorite activity feed items a user has.
- *
- * @since BuddyPress 1.2.0
- *
- * @param int $user_id ID of the user whose favorite count is being requested.
- * @return int Total favorite count for the user.
- */
-function bp_activity_total_favorites_for_user( $user_id = 0 ) {
-
-	// Fallback on displayed user, and then logged in user.
-	if ( empty( $user_id ) ) {
-		$user_id = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
-	}
-
-	return BP_Activity_Activity::total_favorite_count( $user_id );
 }
 
 /**
@@ -1556,12 +1386,8 @@ function bp_activity_remove_all_user_data( $user_id = 0 ) {
 	// Clear the user's activity from the sitewide stream and clear their activity tables.
 	bp_activity_delete( array( 'user_id' => $user_id ) );
 
-	// Removed users liked activity meta.
-	bp_activity_remove_user_favorite_meta( $user_id );
-
 	// Remove any usermeta.
 	bp_delete_user_meta( $user_id, 'bp_latest_update' );
-	bp_delete_user_meta( $user_id, 'bp_favorite_activities' );
 
 	// Execute additional code
 	do_action( 'bp_activity_remove_data', $user_id ); // Deprecated! Do not use!
@@ -3388,58 +3214,6 @@ function bp_activity_delete( $args = '' ) {
 	return true;
 }
 
-/**
- * Delete users liked activity meta.
- *
- * @since BuddyBoss 1.2.5
- *
- * @param int To delete user id.
- * @return bool True on success, false on failure.
- */
-function bp_activity_remove_user_favorite_meta( $user_id = 0 ) {
-
-	if ( empty( $user_id ) ) {
-		return false;
-	}
-
-	/**
-	 * For delete user id from other liked activity
-	 */
-	$activity_ids = bp_get_user_meta( $user_id, 'bp_favorite_activities', true );
-
-	// Loop through activity ids and attempt to delete favorite.
-	if ( ! empty( $activity_ids ) && is_array( $activity_ids ) && count( $activity_ids ) > 0 ) {
-		foreach ( $activity_ids as $activity_id ) {
-			$activity = new BP_Activity_Activity( $activity_id );
-			// Attempt to delete meta value.
-			if ( ! empty( $activity->id ) ) {
-
-				// Update the users who have favorited this activity.
-				$users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
-				if ( empty( $users ) || ! is_array( $users ) ) {
-					$users = array();
-				}
-
-				$found_user = array_search( $user_id, $users );
-				if ( ! empty( $found_user ) ) {
-					unset( $users[ $found_user ] );
-				}
-
-				// Update activity meta
-				bp_activity_update_meta( $activity_id, 'bp_favorite_users', array_unique( array_values( $users ) ) );
-
-				// Update the total number of users who have favorited this activity.
-				$fav_count = bp_activity_get_meta( $activity_id, 'favorite_count' );
-
-				if ( ! empty( $fav_count ) ) {
-					bp_activity_update_meta( $activity_id, 'favorite_count', (int) $fav_count - 1 );
-				}
-			}
-		}
-	}
-
-	return true;
-}
 	/**
 	 * Delete an activity item by activity id.
 	 *
