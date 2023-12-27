@@ -149,32 +149,28 @@
 </script>
 
 <script type="text/html" id="tmpl-activity-reacted-item">
-	<#
-	jQuery.each( data, function( key, user ) { #>
-	<li class="activity-state_user">
-		<div class="activity-state_user__avatar">
-			<a href="{{ user.profile_url }}">
-				<img class="avatar" src="{{ user.avatar }}" alt="{{ user.name }}" />
-				<div class="activity-state_user__reaction">
-					<# if ( user.reaction.type === 'bb-icons' ) { #>
-					<i class="bb-icon-{{ user.reaction.icon }}" style="font-weight:200;color:{{ user.reaction.icon_color }};"></i>
-					<# } else if ( user.reaction.icon_path !== '' ) { #>
-					<img src="{{ user.reaction.icon_path }}" class="{{ user.reaction.type }}" alt="{{ user.reaction.icon_text }}" />
-					<# } else { #>
-					<i class="bb-icon-thumbs-up" style="font-weight:200;color:#385DFF;"></i>
-					<# } #>
-				</div>
-			</a>
-		</div>
-		<div class="activity-state_user__name">
-			<a href="{{ user.profile_url }}">{{ user.name }}</a>
-		</div>
-		<# if ( user.member_type && user.member_type.label ) { #>
-		<div class="activity-state_user__role" style="color:{{user.member_type.color.text}}; background-color:{{user.member_type.color.background}};">
-			{{ user.member_type.label }}
-		</div>
-		<# } #>
-	</li>
-	<# }); #>
+	<# user = data #>
+	<div class="activity-state_user__avatar">
+		<a href="{{ user.profile_url }}">
+			<img class="avatar" src="{{ user.avatar }}" alt="{{ user.name }}" />
+			<div class="activity-state_user__reaction">
+				<# if ( user.reaction.type === 'bb-icons' ) { #>
+				<i class="bb-icon-{{ user.reaction.icon }}" style="font-weight:200;color:{{ user.reaction.icon_color }};"></i>
+				<# } else if ( user.reaction.icon_path !== '' ) { #>
+				<img src="{{ user.reaction.icon_path }}" class="{{ user.reaction.type }}" alt="{{ user.reaction.icon_text }}" />
+				<# } else { #>
+				<i class="bb-icon-thumbs-up" style="font-weight:200;color:#385DFF;"></i>
+				<# } #>
+			</div>
+		</a>
+	</div>
+	<div class="activity-state_user__name">
+		<a href="{{ user.profile_url }}">{{ user.name }}</a>
+	</div>
+	<# if ( user.member_type && user.member_type.label ) { #>
+	<div class="activity-state_user__role" style="color:{{user.member_type.color.text}}; background-color:{{user.member_type.color.background}};">
+		{{ user.member_type.label }}
+	</div>
+	<# } #>
 </script>
 

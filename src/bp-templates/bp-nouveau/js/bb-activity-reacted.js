@@ -252,10 +252,14 @@ window.bp = window.bp || {};
 
 			renderLoad: function ( target ) {
 				this.loader.hide();
-				console.log( this.collection );
-				this.args.model = this.collection;
-				var ReactionItem = new bp.Views.ReactionItem( this.args );
-				target.append( ReactionItem.render().el );
+
+				var models = this.collection.toJSON();
+
+				_.each( models, function ( model ) {
+					var reactionItemView = new bp.Views.ReactionItem( { model: model } );
+					target.append( reactionItemView.render().el );
+				} );
+
 				return this;
 			},
 
@@ -380,12 +384,16 @@ window.bp = window.bp || {};
 				}
 			},
 
-			renderLoad: function ( targetElement, collection ) {
+			renderLoad: function ( targetElement ) {
 				this.loader.hide();
 
-				this.args.model = this.collection;
-				var ReactionItem = new bp.Views.ReactionItem( this.args );
-				targetElement.find( '.activity-state_users' ).append( ReactionItem.render().el );
+				var models = this.collection.toJSON();
+
+				_.each( models, function ( model ) {
+					var reactionItemView = new bp.Views.ReactionItem( { model: model } );
+					targetElement.find( '.activity-state_users' ).append( reactionItemView.render().el );
+				} );
+
 				return this;
 			},
 
@@ -413,9 +421,11 @@ window.bp = window.bp || {};
 
 	bp.Views.ReactionItem = Backbone.View.extend(
 		{
+			tagName: 'li',
+			className: 'activity-state_user',
 			template: bp.template( 'activity-reacted-item' ),
 			render: function() {
-				this.$el.html( this.template( this.model.toJSON() ) );
+				this.$el.html( this.template( this.model ) );
 				return this;
 			}
 		}
