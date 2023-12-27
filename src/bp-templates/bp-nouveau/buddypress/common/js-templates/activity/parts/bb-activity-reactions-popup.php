@@ -59,8 +59,9 @@
 	var data_reaction_id = data.reaction_id ? data.reaction_id : 0;
 
 	if ( data.reacted_tabs.length === 0 ) {
+		var total_pages = Math.ceil(data.popup_heading_count/20);
 		#>
-		<div class="activity-state-popup_tab_item activity-state_ active" data-reaction-id="0" data-paged="1" data-total-pages="0">
+		<div class="activity-state-popup_tab_item activity-state_ active" data-reaction-id="{{ data.reaction_id }}" data-paged="1" data-total-pages="{{ total_pages }}">
 
 		<# if( users.length > 0 ) { #>
 			<ul class="activity-state_users">
