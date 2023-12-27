@@ -150,8 +150,7 @@
 
 <script type="text/html" id="tmpl-activity-reacted-item">
 	<#
-	users = data.reacted_users;
-	jQuery.each( users, function( key, user ) { #>
+	jQuery.each( data, function( key, user ) { #>
 	<li class="activity-state_user">
 		<div class="activity-state_user__avatar">
 			<a href="{{ user.profile_url }}">

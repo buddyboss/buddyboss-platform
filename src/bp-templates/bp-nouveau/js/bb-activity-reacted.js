@@ -65,25 +65,26 @@ window.bp = window.bp || {};
 
 			var collection_key = item_id + '_0';
 
-			self.collections[collection_key] = new bp.Collections.ActivityReactionCollection();
-
-			self.loader[item_id] = new bp.Views.ReactionPopup(
-				{
-					collection: self.collections[collection_key],
-					item_id: item_id,
-					targetElement: target.find( '#reaction-content-' + item_id ),
-					item_type: true === item_type ? 'activity_comment' : 'activity'
-				}
-			);
+			if ( $.trim( target.find( '#reaction-content-' + item_id ).html() ) == '' ) {
+				self.collections[ collection_key ] = new bp.Collections.ActivityReactionCollection();
+				self.loader[ item_id ] = new bp.Views.ReactionPopup(
+					{
+						collection: self.collections[ collection_key ],
+						item_id: item_id,
+						targetElement: target.find( '#reaction-content-' + item_id ),
+						item_type: true === item_type ? 'activity_comment' : 'activity',
+					},
+				);
+			}
 			target.show();
 		}
 	};
 
-	bp.Models.reactedItem = Backbone.Model.extend( {} );
+	bp.Models.reactedItems = Backbone.Model.extend( {} );
 
 	bp.Collections.ActivityReactionCollection = Backbone.Collection.extend(
 		{
-			model: bp.Models.reactedItem,
+			model: bp.Models.reactedItems,
 			options: {},
 			per_page: 20,
 			this: this,
@@ -118,7 +119,9 @@ window.bp = window.bp || {};
 			},
 
 			parse: function ( resp ) {
-				return ( resp.success ) ? resp.data : {};
+				var data = ( resp.success ) ? resp.data : {};
+
+				return !_.isUndefined( data.reacted_users ) ? data.reacted_users : {};
 			}
 		}
 	);
@@ -136,18 +139,24 @@ window.bp = window.bp || {};
 				this.options = options;
 				this.targetElement = options.targetElement;
 				this.targetElement.append( this.loader );
-				this.collection.on( 'sync', this.render, this );
-				this.collection.fetch( { data: _.pick( options, [ 'page', 'per_page', 'item_id', 'item_type' ] ) } );
+				this.collection.fetch(
+					{
+						data: _.pick( options, [ 'page', 'per_page', 'item_id', 'item_type' ] ),
+						success : _.bind( this.render, this ),
+						error   : _.bind( this.failedRender, this )
+					}
+				);
 			},
 
-			render: function () {
+			render: function ( collection, response, options ) {
 				this.loader.hide();
 
 				var args = {
 					collection: this.options.collection,
 					item_id: this.options.item_id,
 					item_type: this.options.item_type,
-					model: this.collection.last()
+					model: this.collection.last(),
+					data: ( response.success ) ? response.data : {},
 				};
 
 				// Render popup heading.
@@ -159,6 +168,10 @@ window.bp = window.bp || {};
 
 				return this;
 			},
+
+			failedRender: function ( collection, response, options ) {
+
+			},
 		}
 	);
 
@@ -168,8 +181,11 @@ window.bp = window.bp || {};
 			tagName: 'div',
 			className: 'activity-state-popup_title',
 			template: bp.template( 'activity-reacted-popup-heading' ),
+			initialize: function ( options ) {
+				this.data = options.data;
+			},
 			render: function () {
-				this.$el.html( this.template( this.model.toJSON() ) );
+				this.$el.html( this.template( this.data ) );
 				return this;
 			},
 		}
@@ -184,6 +200,7 @@ window.bp = window.bp || {};
 			options: {},
 			initialize: function ( options ) {
 				this.options = options;
+				this.data = options.data;
 			},
 			render: function() {
 
@@ -192,6 +209,7 @@ window.bp = window.bp || {};
 					item_id: this.options.item_id,
 					item_type: this.options.item_type,
 					model: this.model,
+					data: this.data,
 				};
 
 				var ReactionPopupTabs = new bp.Views.ReactionPopupTabs( args );
@@ -231,7 +249,7 @@ window.bp = window.bp || {};
 			},
 
 			render: function() {
-				this.$el.html( this.template( this.model.toJSON() ) );
+				this.$el.html( this.template( this.options.data ) );
 				return this;
 			},
 
@@ -271,7 +289,7 @@ window.bp = window.bp || {};
 
 			renderLoad: function () {
 				this.loader.hide();
-				this.args.model = this.collection.last();
+				this.args.model = this.collection;
 				var ReactionItem = new bp.Views.ReactionItem( this.args );
 				this.targetElement.find( '.activity-state_users' ).append( ReactionItem.render().el );
 				return this;
@@ -284,8 +302,12 @@ window.bp = window.bp || {};
 			tagName: 'div',
 			className: 'activity-state-popup_tab_content',
 			template: bp.template( 'activity-reacted-popup-tab-content' ),
+			initialize: function ( options ) {
+				this.options = options;
+				this.data = options.data;
+			},
 			render: function() {
-				this.$el.html( this.template( this.model.toJSON() ) );
+				this.$el.html( this.template( this.data ) );
 				return this;
 			}
 		}
