@@ -327,6 +327,10 @@
 				&.has-reaction > i {
 					font-weight: 200;
 					font-size: 20px;
+
+					body:not(.bb-reactions-mode) & {
+						font-weight: 300;
+					}
 				}
 
 				> img {

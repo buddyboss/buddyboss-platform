@@ -3623,6 +3623,10 @@ input.search-query-input {
   font-size: 20px;
 }
 
+body:not(.bb-reactions-mode) .activity-list .activity-item > .bp-generic-meta.action .button.has-reaction > i {
+  font-weight: 300;
+}
+
 .activity-list .activity-item > .bp-generic-meta.action .button > img {
   height: 20px;
   width: 20px;
