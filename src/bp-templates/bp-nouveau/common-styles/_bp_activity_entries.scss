@@ -307,6 +307,7 @@
 			align-items: center;
 		}
 
+		.activity-content > .bp-generic-meta.action,
 		> .bp-generic-meta.action {
 
 			.button {
@@ -1099,6 +1100,10 @@
 				i {
 					font-size: 40px;
 					line-height: 1;
+
+					&:before {
+						margin: 0;
+					}
 				}
 
 				@media screen and (max-width: 370px) {
