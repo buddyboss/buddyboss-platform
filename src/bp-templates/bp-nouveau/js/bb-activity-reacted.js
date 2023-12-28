@@ -56,23 +56,34 @@ window.bp = window.bp || {};
 
 		showActivityReactions: function( event ) {
 			event.preventDefault();
-			var self        = bp.Nouveau.ActivityReaction;
-			var target_init = $( event.currentTarget );
 
-			var target    = target_init.next( '.activity-state-popup' );
-			var item_id   = target_init.parents( '.activity-item' ).data( 'bp-activity-id' ).toString();
-			var item_type = target_init.parents( 'li' ).hasClass( 'activity-comment' );
+			var self        = bp.Nouveau.ActivityReaction,
+				target_init = $( event.currentTarget ),
+				target      = target_init.next( '.activity-state-popup' ),
+				item_id     = 0,
+				item_type   = '';
+
+			if ( 0 < target.parents( '.acomment-display' ).first().length ) {
+				item_id   = target_init.parents( '.activity-comment' ).first().data( 'bp-activity-comment-id' ).toString();
+				item_type = 'activity_comment';
+			} else {
+				item_id   = target_init.parents( '.activity-item' ).data( 'bp-activity-id' ).toString();
+				item_type = 'activity';
+			}
 
 			var collection_key = item_id + '_0';
 
-			if ( $.trim( target.find( '#reaction-content-' + item_id ).html() ) == '' ) {
+			// remove the pop-up.
+			target.find( '#reaction-content-' + item_id + ' .reaction-loader' ).remove();
+
+			if ( '' === $.trim( target.find( '#reaction-content-' + item_id ).html() ) ) {
 				self.collections[ collection_key ] = new bp.Collections.ActivityReactionCollection();
 				self.loader[ item_id ]             = new bp.Views.ReactionPopup(
 					{
 						collection: self.collections[ collection_key ],
 						item_id: item_id,
 						targetElement: target.find( '#reaction-content-' + item_id ),
-						item_type: true === item_type ? 'activity_comment' : 'activity',
+						item_type: item_type,
 					},
 				);
 			}
@@ -99,19 +110,20 @@ window.bp = window.bp || {};
 			},
 
 			sync: function ( method, model, options ) {
-				var self        = this;
-				var options     = options || {};
-				options.context = this;
+				var self = this;
+
+				options         = options || {};
+				options.context = self;
 				options.data    = options.data || {};
-				options.path    = BP_Nouveau.ajaxurl;
-				options.method  = 'POST';
 
 				_.extend(
 					options.data,
-					_.pick( self.options, ['page', 'per_page', 'reaction_id', 'item_id', 'item_type' ] ),
+					_.pick( self.options, ['page', 'per_page' ] ),
 				);
 
-				// Add generic nonce.
+				// Add generic data and nonce.
+				options.path    	  = BP_Nouveau.ajaxurl;
+				options.method  	  = 'POST';
 				options.data._wpnonce = BP_Nouveau.nonces.activity;
 				options.data.action   = 'bb_get_reactions';
 
@@ -134,14 +146,14 @@ window.bp = window.bp || {};
 			template: bp.template( 'activity-reacted-popup-loader' ),
 			targetElement: '',
 			options: {},
-			initialize: function ( options ) {
+			initialize: function ( option ) {
 				this.loader        = bp.Nouveau.ActivityReaction.loader_html;
-				this.options       = options;
-				this.targetElement = options.targetElement;
+				this.options       = option;
+				this.targetElement = option.targetElement;
 				this.targetElement.append( this.loader );
 				this.collection.fetch(
 					{
-						data: _.pick( options, [ 'page', 'per_page', 'item_id', 'item_type' ] ),
+						data: _.pick( option, [ 'page', 'per_page', 'item_id', 'item_type' ] ),
 						success : _.bind( this.render, this ),
 						error   : _.bind( this.failedRender, this )
 					}
@@ -149,7 +161,7 @@ window.bp = window.bp || {};
 			},
 
 			render: function ( collection, response, options ) {
-				this.loader.hide();
+				this.loader.remove();
 
 				var args = {
 					collection: this.options.collection,
@@ -204,7 +216,7 @@ window.bp = window.bp || {};
 						! $( element ).hasClass( 'loading' )
 					) {
 
-						if ( target.parents( '.activity-state-popup_tab_item' ).find( '.reaction-loader' ).length == 0 ) {
+						if ( 0 === target.parents( '.activity-state-popup_tab_item' ).find( '.reaction-loader' ).length ) {
 							target.parents( '.activity-state-popup_tab_item' ).append( this.loader.show() );
 						} else {
 							target.parents( '.activity-state-popup_tab_item' ).find( '.reaction-loader' ).show();
@@ -253,7 +265,7 @@ window.bp = window.bp || {};
 			},
 
 			renderLoad: function ( target, collection, response ) {
-				this.loader.hide();
+				this.loader.remove();
 
 				var models = this.collection.toJSON();
 
@@ -398,7 +410,7 @@ window.bp = window.bp || {};
 			},
 
 			renderLoad: function ( targetElement ) {
-				this.loader.hide();
+				this.loader.remove();
 
 				var models = this.collection.toJSON();
 
