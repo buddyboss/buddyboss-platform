@@ -1250,7 +1250,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$total_count = $this->bb_get_user_reactions( $r );
 			$total_count = ! empty( $total_count ) && ! empty( $total_count['total'] ) ? $total_count['total'] : 0;
 
-			return $total_count;
+			return (int) $total_count;
 		}
 
 		/**
