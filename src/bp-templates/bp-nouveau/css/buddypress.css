@@ -3605,42 +3605,42 @@ input.search-query-input {
   align-items: center;
 }
 
-#buddypress .activity-list .activity-item > .activity-meta.action .button {
+#buddypress .activity-list .activity-item > .bp-generic-meta.action .button {
   display: flex;
   align-items: center;
   column-gap: 2px;
 }
 
-.activity-list .activity-item > .activity-meta.action .button > i {
+.activity-list .activity-item > .bp-generic-meta.action .button > i {
   font-size: 22px;
   font-weight: 400;
   display: inline-block;
   vertical-align: middle;
 }
 
-.activity-list .activity-item > .activity-meta.action .button.has-reaction > i {
+.activity-list .activity-item > .bp-generic-meta.action .button.has-reaction > i {
   font-weight: 200;
   font-size: 20px;
 }
 
-.activity-list .activity-item > .activity-meta.action .button > img {
+.activity-list .activity-item > .bp-generic-meta.action .button > img {
   height: 20px;
   width: 20px;
   object-fit: cover;
 }
 
-.activity-list .activity-item > .activity-meta.action .button > img.custom {
+.activity-list .activity-item > .bp-generic-meta.action .button > img.custom {
   border-radius: 100%;
 }
 
-#buddypress .activity-list .activity-item > .activity-meta.action .button > .like-count {
+#buddypress .activity-list .activity-item > .bp-generic-meta.action .button > .like-count {
   color: #333;
   line-height: 20px;
   display: inline-block;
   vertical-align: middle;
 }
 
-.activity-list .activity-item > .activity-meta.action .button.bp-like-button:before {
+.activity-list .activity-item > .bp-generic-meta.action .button.bp-like-button:before {
   display: none;
 }
 
