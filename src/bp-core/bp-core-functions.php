@@ -9412,7 +9412,7 @@ function bb_generate_default_avatar( $args ) {
 		$image_width  = $image_size['width'];
 		$image_height = $image_size['height'];
 
-		$text_x = ( ( $image_width - $text_width ) / 2 ) - 12;
+		$text_x = ( ( $image_width - $text_width ) / 2 ) - $text_dimensions[0];
 		$text_y = ( ( $image_height + $text_height ) / 2 ) - 3;
 
 		$rf_image_editor = new ReflectionClass( $image_editor );
