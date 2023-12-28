@@ -321,7 +321,7 @@ class BP_Activity_Component extends BP_Component {
 
 				$item_name = _x( 'Likes', 'Profile activity screen sub nav', 'buddyboss' );
 				if ( bb_is_reaction_emotions_enabled() ) {
-					$item_name = _x( 'Reacted to', 'Profile activity screen sub nav', 'buddyboss' );
+					$item_name = _x( 'Reactions', 'Profile activity screen sub nav', 'buddyboss' );
 				}
 
 				$sub_nav[] = array(
@@ -447,7 +447,7 @@ class BP_Activity_Component extends BP_Component {
 				if ( bp_is_activity_like_active() ) {
 					$item_title = _x( 'Likes', 'My Account Activity sub nav', 'buddyboss' );
 					if ( bb_is_reaction_emotions_enabled() ) {
-						$item_title = _x( 'Reacted to', 'My Account Activity sub nav', 'buddyboss' );
+						$item_title = _x( 'Reactions', 'My Account Activity sub nav', 'buddyboss' );
 					}
 
 					$wp_admin_nav[] = array(

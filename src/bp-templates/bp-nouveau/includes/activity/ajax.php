@@ -161,7 +161,7 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 				<a href="%1$s"><div class="bb-component-nav-item-point">%2$s</div> </a>
 			</li>',
 			esc_url( bp_loggedin_user_domain() . bp_get_activity_slug() . '/favorites/' ),
-			bb_is_reaction_emotions_enabled() ? esc_html__( 'Reacted to', 'buddyboss' ) : esc_html__( 'Likes', 'buddyboss' )
+			bb_is_reaction_emotions_enabled() ? esc_html__( 'Reactions', 'buddyboss' ) : esc_html__( 'Likes', 'buddyboss' )
 		);
 	}
 
