@@ -973,8 +973,7 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = arra
 		} else {
 			return new WP_Error(
 				'bp_activity_add_user_favorite',
-				// @todo:Update error message later.
-				esc_html__( 'Migration in progress. Please try again later.', 'buddyboss' )
+				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' )
 			);
 		}
 	}
@@ -1066,8 +1065,7 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 		} else {
 			return new WP_Error(
 				'bp_activity_add_user_favorite',
-				// @todo:Update error message later.
-				esc_html__( 'Migration in progress. Please try again later.', 'buddyboss' )
+				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' )
 			);
 		}
 	}
@@ -1087,8 +1085,7 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 		} else {
 			return new WP_Error(
 				'bp_activity_add_user_favorite',
-				// @todo:Update error message later.
-				esc_html__( 'Reacted reaction ID is missing.', 'buddyboss' )
+				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' )
 			);
 		}
 	}
