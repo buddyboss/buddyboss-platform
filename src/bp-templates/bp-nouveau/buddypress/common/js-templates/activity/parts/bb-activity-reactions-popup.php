@@ -26,7 +26,6 @@
 			<#
 			var isFirstItem = true;
 			jQuery.each( data.reacted_tabs, function( key, reaction ) {
-			// console.log( reaction );
 			#>
 			<li>
 				<a href="javascript:void(0);" class="{{ isFirstItem ? 'active' : '' }}" data-tab="activity-state_{{key}}" reaction-id="{{ reaction.id ? reaction.id : '0' }}">
