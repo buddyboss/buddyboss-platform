@@ -228,7 +228,7 @@
 
 				&.has-comments {
 
-					.activity-state-reactions + .ac-state-separator,
+					&.has-likes .ac-state-separator,
 					.activity-state-comments {
 						color: var(--bb-body-text-color);
 						display: inline-block;
