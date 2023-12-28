@@ -742,8 +742,8 @@ window.bp = window.bp || {};
 				comments_text              = activity_item.find( '.comments-count' ),
 				item_id, form, model, self = this;
 
-			// In case the target is set to a span inside the link.
-			if ( $( target ).is( 'span' ) ) {
+			// In case the target is set to a span or i tag inside the link.
+			if ( $( target ).is( 'span' ) || $( target ).is( 'i' ) ) {
 				target = $( target ).closest( 'a' );
 			}
 
