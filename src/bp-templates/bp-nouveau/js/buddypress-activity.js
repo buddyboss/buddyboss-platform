@@ -828,6 +828,14 @@ window.bp = window.bp || {};
 											} else {
 												main_el.find( '.activity-content .activity-state' ).prepend( response.data.reaction_count );
 											}
+
+											// Added has-likes class if activity has any reactions.
+											if ( response.data.reaction_count !== '' ) {
+												activity_state.addClass( 'has-likes' );
+											} else {
+												activity_state.removeClass( 'has-likes' );
+											}
+
 										} else {
 											if ( 0 < main_el.find( '#acomment-display-' + item_id + ' .comment-reactions' ).length ) {
 												main_el.find( '#acomment-display-' + item_id + ' .comment-reactions' ).html( response.data.reaction_count );

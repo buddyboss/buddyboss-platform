@@ -259,16 +259,17 @@ function bp_nouveau_get_activity_timestamp() {
  */
 function bp_nouveau_activity_state() {
 
-	$activity_id   = bp_get_activity_id();
-	$comment_count = bp_activity_get_comment_count();
-
-	$has_reaction = false;
-	if ( bb_is_reaction_emotions_enabled() ) {
-		$has_reaction = true;
-	}
+	$activity_id    = bp_get_activity_id();
+	$comment_count  = bp_activity_get_comment_count();
+	$reaction_count = bb_load_reaction()->bb_total_item_reactions_count(
+		array(
+			'item_id'   => $activity_id,
+			'item_type' => 'activity',
+		)
+	);
 
 	?>
-	<div class="activity-state <?php echo ! empty( $has_reaction ) ? 'has-emotion' : 'has-likes'; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
+	<div class="activity-state <?php echo ! empty( $reaction_count ) ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
 		<?php
 		if ( bb_is_reaction_activity_posts_enabled() ) {
 			echo bb_get_activity_post_user_reactions_html( $activity_id );
