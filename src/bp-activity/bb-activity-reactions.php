@@ -448,7 +448,8 @@ function bb_get_activity_reaction_ajax_callback() {
 	$item_id     = sanitize_text_field( $_POST['item_id'] );
 	$item_type   = sanitize_text_field( $_POST['item_type'] );
 	$paged       = ! empty( $_POST['page'] ) ? (int) sanitize_text_field( $_POST['page'] ) : 1;
-	$reaction_id =  ! empty( $_POST['reaction_id'] ) ? (int) sanitize_text_field( $_POST['reaction_id'] ) : 0;
+	$reaction_id = ! empty( $_POST['reaction_id'] ) ? (int) sanitize_text_field( $_POST['reaction_id'] ) : 0;
+	$per_page    = 20; // Fixed per page.
 
 	if ( 1 === $paged && empty( $reaction_id ) ) {
 		$most_reacted = bb_get_activity_most_reactions( $item_id, $item_type, 7 );
@@ -473,7 +474,7 @@ function bb_get_activity_reaction_ajax_callback() {
 		foreach ( $most_reacted as $reaction ) {
 			$tab                     = ! empty( $all_emotions[ $reaction['id'] ] ) ? $all_emotions[ $reaction['id'] ] : array();
 			$tab['paged']            = 1;
-			$tab['total_pages']      = ceil( $reaction['count'] / 20 );
+			$tab['total_pages']      = ceil( $reaction['count'] / $per_page );
 			$tab['total_count']      = bb_format_reaction_count( $reaction['count'] );
 			$tabs[ $reaction['id'] ] = $tab;
 		}
@@ -492,7 +493,7 @@ function bb_get_activity_reaction_ajax_callback() {
 					'item_id'     => $item_id,
 					'item_type'   => $item_type,
 					'paged'       => $paged,
-					'per_page'    => 20,
+					'per_page'    => $per_page,
 				)
 			);
 
@@ -508,7 +509,7 @@ function bb_get_activity_reaction_ajax_callback() {
 					'item_id'   => $item_id,
 					'item_type' => $item_type,
 					'paged'     => $paged,
-					'per_page'  => 20,
+					'per_page'  => $per_page,
 				)
 			);
 			$tab_content = $all_reacted['reactions'];
@@ -521,7 +522,7 @@ function bb_get_activity_reaction_ajax_callback() {
 					'icon'        => '',
 					'icon_text'   => esc_html__( 'All', 'buddyboss' ),
 					'paged'       => 1,
-					'total_pages' => ceil( $all_reacted['total'] / 20 ),
+					'total_pages' => ceil( $all_reacted['total'] / $per_page ),
 					'total_count' => $all_reacted['total'],
 				)
 			);
@@ -547,7 +548,7 @@ function bb_get_activity_reaction_ajax_callback() {
 				'item_type'   => $item_type,
 				'reaction_id' => $reaction_id,
 				'paged'       => $paged,
-				'per_page'    => 20,
+				'per_page'    => $per_page,
 			)
 		);
 
