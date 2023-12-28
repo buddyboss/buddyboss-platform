@@ -75,6 +75,7 @@ window.bp = window.bp || {};
 
 			// remove the pop-up.
 			target.find( '#reaction-content-' + item_id + ' .reaction-loader' ).remove();
+			target.find( '#reaction-content-' + item_id + ' .activity_reaction_popup_error' ).remove();
 
 			if ( '' === $.trim( target.find( '#reaction-content-' + item_id ).html() ) ) {
 				self.collections[ collection_key ] = new bp.Collections.ActivityReactionCollection();
@@ -154,15 +155,16 @@ window.bp = window.bp || {};
 				this.collection.fetch(
 					{
 						data: _.pick( option, [ 'page', 'per_page', 'item_id', 'item_type' ] ),
-						success : _.bind( this.render, this ),
-						error   : _.bind( this.failedRender, this )
+						success : _.bind( this.onOpenSuccessRender, this ),
+						error   : _.bind( this.onOpenFailedRender, this )
 					}
 				);
 			},
 
-			render: function ( collection, response, options ) {
+			onOpenSuccessRender: function ( collection, response, options ) {
 				this.loader.remove();
 
+				// Prepare the object to pass into views.
 				var args = {
 					collection: this.options.collection,
 					item_id: this.options.item_id,
@@ -171,27 +173,42 @@ window.bp = window.bp || {};
 					data: ( response.success ) ? response.data : {},
 				};
 
-				// Render popup heading.
-				var popupHeadingView = new bp.Views.ReactionPopupHeading( args );
-				this.targetElement.append( popupHeadingView.render().el );
+				if ( response.success ) {
+					// Render popup heading.
+					var popupHeadingView = new bp.Views.ReactionPopupHeading( args );
+					this.targetElement.append( popupHeadingView.render().el );
 
-				var ReactionPopupContent = new bp.Views.ReactionPopupContent( args );
-				this.targetElement.append( ReactionPopupContent.render().el );
+					// Render popup content.
+					var ReactionPopupContent = new bp.Views.ReactionPopupContent( args );
+					this.targetElement.append( ReactionPopupContent.render().el );
 
-				if ( this.targetElement.find( '.activity-state-popup_tab_item > ul' ) ) {
-					var inside_self = this;
-					this.targetElement.find( '.activity-state-popup_tab_item > ul' ).each(
-						function () {
-							$( this ).on( 'scroll', _.bind( inside_self.loadMore, inside_self ) );
-						}
-					);
+					// Add scroll event.
+					if ( this.targetElement.find( '.activity-state-popup_tab_item > ul' ) ) {
+						var inside_self = this;
+						this.targetElement.find( '.activity-state-popup_tab_item > ul' ).each(
+							function () {
+								$( this ).on( 'scroll', _.bind( inside_self.loadMore, inside_self ) );
+							}
+						);
+					}
+				} else {
+					this.onOpenFailedRender( collection, response, options );
 				}
 
 				return this;
 			},
 
-			failedRender: function ( collection, response, options ) {
+			onOpenFailedRender: function ( collection, response, options ) {
+				this.loader.remove();
 
+				// Prepare the object to pass into views.
+				var args = {
+					data: ( ! response.success ) ? response.data : {},
+				};
+
+				// Render popup heading.
+				var popupHeadingView = new bp.Views.ReactionErrorHandle( args );
+				this.targetElement.append( popupHeadingView.render().el );
 			},
 
 			loadMore: function( e ) {
@@ -455,6 +472,29 @@ window.bp = window.bp || {};
 				this.$el.html( this.template( this.model ) );
 				return this;
 			}
+		}
+	);
+
+	// View for a popup error handle.
+	bp.Views.ReactionErrorHandle = Backbone.View.extend(
+		{
+			tagName: 'div',
+			className: 'activity_reaction_popup_error',
+			template: bp.template( 'activity-reacted-no-data' ),
+			initialize: function ( options ) {
+				this.data = options.data;
+			},
+			render: function () {
+				var response = this.data;
+
+				if ( 'undefined' === typeof response.message || 0 >= response.message.length ) {
+					// Prepare the object to pass into views.
+					response.message = BP_Nouveau.activity.strings.reactionAjaxError;
+				}
+				this.$el.html( this.template( response ) );
+
+				return this;
+			},
 		}
 	);
 

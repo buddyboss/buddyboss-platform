@@ -197,3 +197,16 @@
 	<# } #>
 </script>
 
+<script type="text/html" id="tmpl-activity-reacted-no-data">
+	<#
+	if ( 'undefined' !== typeof data.message && 0 < data.message.length ) {
+		var error_type = ( 'undefined' !== typeof data.type && 0 < data.type.length ) ? data.type : 'error';
+		#>
+		<aside class="bp-feedback bp-messages bp-template-notice {{ error_type }}">
+			<span class="bp-icon" aria-hidden="true"></span>
+			<p>
+				{{ data.message }}
+			</p>
+		</aside>
+	<# } #>
+</script>

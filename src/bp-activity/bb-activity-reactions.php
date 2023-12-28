@@ -433,14 +433,18 @@ function bb_get_activity_reaction_ajax_callback() {
 	// Nonce check!
 	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'bp_nouveau_activity' ) ) {
 		wp_send_json_error(
-			__( 'Nonce verification failed', 'buddyboss' )
+			array(
+				'message' => __( 'Nonce verification failed.', 'buddyboss' ),
+				'type'    => 'error'
+			)
 		);
 	}
 
 	if ( empty( $_POST['item_id'] ) ) {
 		wp_send_json_error(
 			array(
-				'no_item_id' => esc_html__( 'No item id', 'buddyboss' ),
+				'message' => __( 'Item ID is required.', 'buddyboss' ),
+				'type'    => 'error'
 			)
 		);
 	}
@@ -456,7 +460,8 @@ function bb_get_activity_reaction_ajax_callback() {
 		if ( empty( $most_reacted ) ) {
 			wp_send_json_error(
 				array(
-					'no_reactions' => esc_html__( 'No reactions', 'buddyboss' ),
+					'message' => __( 'No reactions found!', 'buddyboss' ),
+					'type'    => 'info'
 				)
 			);
 		}
