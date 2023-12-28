@@ -267,8 +267,7 @@ window.bp = window.bp || {};
 			renderLoad: function ( target, collection, response ) {
 				this.loader.remove();
 
-				var models = this.collection.toJSON();
-
+				var models    = this.collection.toJSON();
 				var next_page = ( response.success && ! _.isUndefined( response.data.page ) ) ? response.data.page : 0;
 
 				if ( next_page !== 0 ) {
@@ -376,8 +375,8 @@ window.bp = window.bp || {};
 					tab           = current.data( 'tab' ),
 					targetElement = current.parents( '.activity-state-popup_tab' ).find( '.' + tab );
 
-				if ( targetElement.length > 0 ) {
-					if ( targetElement.find( '.activity-state_users li' ).length !== 0 ) {
+				if ( 0 < targetElement.length ) {
+					if ( 0 !== targetElement.find( '.activity-state_users li' ).length ) {
 						return;
 					}
 
