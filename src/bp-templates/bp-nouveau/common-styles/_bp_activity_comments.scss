@@ -128,15 +128,8 @@
 				text-transform: none;
 			}
 
-			a.bp-like-button {
-
-				&:before {
-					display: none;
-				}
-
-				.like-count {
-					margin-left: 0;
-				}
+			a.bp-like-button:before {
+				display: none;
 			}
 
 			a.has-emotion {
@@ -251,6 +244,10 @@
 		}
 
 	} // close .activity-comments
+
+	.activity-list .activity-item .activity-comments .bp-generic-meta.action a.bp-like-button .like-count {
+		margin-left: 0;
+	}
 
 	// Activity li.mini Comments
 

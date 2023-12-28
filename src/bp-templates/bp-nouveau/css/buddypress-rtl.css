@@ -6900,10 +6900,6 @@ span.dashicons.dashicons-admin-file:before {
   display: none;
 }
 
-.buddypress-wrap .activity-comments .bp-generic-meta.action a.bp-like-button .like-count {
-  margin-right: 0;
-}
-
 .buddypress-wrap .activity-comments .bp-generic-meta.action a.has-emotion > i,
 .buddypress-wrap .activity-comments .bp-generic-meta.action a.has-emotion > img {
   display: none;
@@ -6984,6 +6980,10 @@ span.dashicons.dashicons-admin-file:before {
 
 .buddypress-wrap .activity-comments .bb-activity-more-options-wrap .bb-activity-more-options-action i {
   font-size: 16px;
+}
+
+.buddypress-wrap .activity-list .activity-item .activity-comments .bp-generic-meta.action a.bp-like-button .like-count {
+  margin-right: 0;
 }
 
 .buddypress-wrap .mini .activity-comments {
