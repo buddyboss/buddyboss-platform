@@ -541,6 +541,16 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 				'aria-pressed' => $fav_args['aria-pressed'],
 			),
 		);
+
+		// If migration is in progress, add class and tooltip.
+		if (
+			function_exists( 'bb_pro_reaction_get_migration_status' ) &&
+			'inprogress' === bb_pro_reaction_get_migration_status()
+		) {
+			$buttons['activity_favorite']['button_attr'] ['class']               = $fav_args['link_class'] . ' bb-reaction-migration-inprogress';
+			$buttons['activity_favorite']['button_attr'] ['data-bp-tooltip']     = esc_html__( 'This feature is temporarily unavailable. Please try again later.', 'buddyboss' );
+			$buttons['activity_favorite']['button_attr'] ['data-bp-tooltip-pos'] = 'up';
+		}
 	}
 
 	/*
@@ -914,6 +924,16 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 					! empty( $reaction_data['text_color'] ) ? esc_attr( 'color:' . $reaction_data['text_color'] ) : ''
 				);
 			}
+		}
+
+		// If migration is in progress, add class and tooltip.
+		if (
+			function_exists( 'bb_pro_reaction_get_migration_status' ) &&
+			'inprogress' === bb_pro_reaction_get_migration_status()
+		) {
+			$fav_args['class']               = $fav_args['class'] . ' bb-reaction-migration-inprogress';
+			$fav_args['data-bp-tooltip']     = esc_html__( 'This feature is temporarily unavailable. Please try again later.', 'buddyboss' );
+			$fav_args['data-bp-tooltip-pos'] = 'up';
 		}
 
 		$buttons['activity_comment_favorite'] = array(
