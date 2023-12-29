@@ -314,7 +314,17 @@ window.bp = window.bp || {};
 			onLoadMoreFailedRender: function( target, collection, response ) {
 				this.loader.remove();
 
-				this.onOpenFailedRender( collection, response, {} );
+				// Prepare the object to pass into views.
+				var args = {
+					data: ( ! response.success ) ? response.data : {},
+				};
+
+				// Remove notice.
+				target.find( '.activity_reaction_popup_error' ).remove();
+
+				// Render popup heading.
+				var popupHeadingView = new bp.Views.ReactionErrorHandle( args );
+				target.append( popupHeadingView.render().el );
 			}
 		}
 	);
@@ -406,6 +416,7 @@ window.bp = window.bp || {};
 						return;
 					}
 
+					targetElement.find( '.activity_reaction_popup_error' ).remove();
 					targetElement.append( this.loader.show() );
 
 					var arguments = {
@@ -427,31 +438,47 @@ window.bp = window.bp || {};
 					this.collection.fetch(
 						{
 							data: _.pick( arguments, [ 'page', 'per_page', 'item_id', 'item_type', 'reaction_id' ] ),
-							success: _.bind( this.renderLoad, this, targetElement ),
-							error: _.bind( this.failedRender, this ),
+							success: _.bind( this.onTabChangeSuccessRender, this, targetElement ),
+							error: _.bind( this.onTabChangeFailedRender, this, targetElement ),
 						}
 					);
 				}
 			},
 
-			renderLoad: function ( targetElement ) {
+			onTabChangeSuccessRender: function ( targetElement, collection, response ) {
 				this.loader.remove();
 
-				var models = this.collection.toJSON();
+				if ( response.success ) {
+					var models = this.collection.toJSON();
 
-				_.each(
-					models,
-					function ( model ) {
-						var reactionItemView = new bp.Views.ReactionItem( { model: model } );
-						targetElement.find( '.activity-state_users' ).append( reactionItemView.render().el );
-					}
-				);
+					_.each(
+						models,
+						function ( model ) {
+							var reactionItemView = new bp.Views.ReactionItem( { model: model } );
+							targetElement.find( '.activity-state_users' ).append( reactionItemView.render().el );
+						}
+					);
+				} else {
+					this.onTabChangeFailedRender( targetElement, collection, response );
+				}
 
 				return this;
 			},
 
-			failedRender: function() {
+			onTabChangeFailedRender: function( targetElement, collection, response ) {
+				this.loader.remove();
 
+				// Prepare the object to pass into views.
+				var args = {
+					data: ( ! response.success ) ? response.data : {},
+				};
+
+				// Remove notice.
+				targetElement.find( '.activity_reaction_popup_error' ).remove();
+
+				// Render popup heading.
+				var popupHeadingView = new bp.Views.ReactionErrorHandle( args );
+				targetElement.append( popupHeadingView.render().el );
 			}
 		}
 	);
