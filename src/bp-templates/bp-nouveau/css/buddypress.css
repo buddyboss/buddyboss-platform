@@ -4086,6 +4086,10 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
   min-height: 150px;
 }
 
+.activity-list .activity-state-popup .activity-state_users.loading ~ .reaction-loader {
+  min-height: auto;
+}
+
 .activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_panel {
   margin-bottom: 10px;
 }

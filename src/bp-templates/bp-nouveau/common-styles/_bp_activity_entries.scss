@@ -844,6 +844,10 @@
 			min-height: 150px;
 		}
 
+		.activity-state_users.loading ~ .reaction-loader {
+			min-height: auto;
+		}
+
 		.activity-state-popup_tab {
 
 			.activity-state-popup_tab_panel {
