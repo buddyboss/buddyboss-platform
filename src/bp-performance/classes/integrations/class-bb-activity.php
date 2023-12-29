@@ -82,11 +82,6 @@ class BB_Activity extends Integration_Abstract {
 			'deleted_user'                            => 1, // User deleted on site.
 			'xprofile_avatar_uploaded'                => 1, // User avatar photo updated.
 			'bp_core_delete_existing_avatar'          => 1, // User avatar photo deleted.
-
-			// When change/update the reaction settings.
-			'update_option_bb_all_reactions'          => 3, // When enabled/disabled the reactions.
-			'update_option_bb_reaction_mode'          => 3, // When change/update the reaction mode.
-			'deleted_post'                            => 2, // When delete the emotion.
 		);
 
 		$this->purge_single_events( $purge_single_events );
@@ -317,47 +312,6 @@ class BB_Activity extends Integration_Abstract {
 					}
 				}
 			}
-		}
-	}
-
-	/**
-	 * When enabled/disabled reaction.
-	 *
-	 * @param string $option    Name of the updated option.
-	 * @param mixed  $old_value The old option value.
-	 * @param mixed  $value     The new option value.
-	 */
-	public function event_update_option_bb_all_reactions( $old_value, $value, $option ) {
-		Cache::instance()->purge_by_component( 'bp-activity' );
-		Cache::instance()->purge_by_component( 'bbapp-deeplinking' );
-	}
-
-	/**
-	 * When reaction mode changed.
-	 *
-	 * @param string $option    Name of the updated option.
-	 * @param mixed  $old_value The old option value.
-	 * @param mixed  $value     The new option value.
-	 */
-	public function event_update_option_bb_reaction_mode( $old_value, $value, $option ) {
-		Cache::instance()->purge_by_component( 'bp-activity' );
-		Cache::instance()->purge_by_component( 'bbapp-deeplinking' );
-	}
-
-	/**
-	 * When emotion deleted.
-	 *
-	 * @param int     $postid Post ID.
-	 * @param object $post   Post object.
-	 */
-	public function event_deleted_post( $postid, $post ) {
-		if (
-			! empty( $post ) &&
-			! empty( $post->post_type ) &&
-			'bb_reaction' === $post->post_type
-		) {
-			Cache::instance()->purge_by_component( 'bp-activity' );
-			Cache::instance()->purge_by_component( 'bbapp-deeplinking' );
 		}
 	}
 
