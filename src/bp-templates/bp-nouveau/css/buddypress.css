@@ -3581,6 +3581,7 @@ input.search-query-input {
 }
 
 .activity-list .activity-item .activity-state-reactions .reactions_item > i {
+  color: #5087e5;
   font-size: 18px;
   font-weight: 200;
   line-height: 1;
