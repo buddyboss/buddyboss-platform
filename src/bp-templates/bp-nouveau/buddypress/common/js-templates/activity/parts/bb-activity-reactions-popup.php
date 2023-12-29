@@ -58,7 +58,7 @@
 	var data_reaction_id = data.reaction_id ? data.reaction_id : 0;
 
 	if ( 0 === data.reacted_tabs.length ) {
-		var total_pages = Math.ceil( data.popup_heading_count / 20 );
+		var total_pages = 'undefined' !== typeof data.total_pages ? data.total_pages : 1;
 		#>
 		<div class="activity-state-popup_tab_item activity-state_ active" data-reaction-id="{{ data.reaction_id }}" data-paged="1" data-total-pages="{{ total_pages }}">
 
