@@ -321,10 +321,11 @@ function bb_get_activity_post_reaction_button_html( $item_id, $item_type = 'acti
  *
  * @param int    $activity_id Activity/Comment ID.
  * @param string $item_type   Type of Activity.
+ * @param bool   $is_popup    Add pop-up when it's true otherwise not add.
  *
  * @return string HTML markup
  */
-function bb_get_activity_post_user_reactions_html( $activity_id, $item_type = 'activity' ) {
+function bb_get_activity_post_user_reactions_html( $activity_id, $item_type = 'activity', $is_popup = true ) {
 	$output = '';
 
 	if ( empty( $activity_id ) ) {
@@ -362,11 +363,14 @@ function bb_get_activity_post_user_reactions_html( $activity_id, $item_type = 'a
 		$output .= '</div>';
 
 		// Build popup to show reacted items.
-		$output .= '<div class="activity-state-popup">
-			<div class="activity-state-popup_overlay"></div>
-			<div class="activity-state-popup_inner" id="reaction-content-' . $activity_id . '">
-			</div>
-		</div>';
+		if ( $is_popup ) {
+			$output .= '<div class="activity-state-popup">
+				<div class="activity-state-popup_overlay"></div>
+				<div class="activity-state-popup_inner" id="reaction-content-' . $activity_id . '">
+				</div>
+			</div>';
+		}
+
 	}
 
 	return apply_filters( 'bb_get_activity_post_user_reactions_html', $output );
