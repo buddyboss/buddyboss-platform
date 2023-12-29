@@ -521,6 +521,7 @@ function bb_get_activity_reaction_ajax_callback() {
 		}
 
 		$popup_heading_count = 0;
+		$total_pages         = 0;
 		if ( 1 === count( $tabs ) ) {
 			$current_tabs = current( $tabs );
 
@@ -541,6 +542,7 @@ function bb_get_activity_reaction_ajax_callback() {
 			$tab_content         = $current_reacted['reactions'];
 			$popup_heading       = $current_tabs['icon_text'];
 			$popup_heading_count = $current_tabs['total_count'];
+			$total_pages         = $current_tabs['total_pages'];
 
 			// No required tab when only 1 tab available.
 			$tabs = array();
@@ -575,6 +577,7 @@ function bb_get_activity_reaction_ajax_callback() {
 				'page'                => 1,
 				'reaction_mode'       => bb_get_reaction_mode(),
 				'popup_heading'       => $popup_heading,
+				'total_pages'         => $total_pages,
 				'popup_heading_count' => $popup_heading_count,
 				'reacted_users'       => $tab_content,
 				'reacted_tabs'        => $tabs,
