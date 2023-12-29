@@ -380,10 +380,22 @@ function bb_activity_get_reacted_users_data( $args ) {
 	$reaction_data  = bb_load_reaction()->bb_get_user_reactions( $args );
 	$user_reactions = array();
 
+	// Fetch all likes and emotions.
+	$all_reactions = bb_pro_get_reactions();
+	$emotions      = bb_pro_get_reactions( 'emotions' );
+
+	// Merge it.
+	if ( ! empty( $emotions ) ) {
+		$all_reactions = array_merge( $all_reactions, $emotions );
+	}
+
+	// Update an array key as ID.
+	$all_reactions = ! empty( $all_reactions ) ? array_column( $all_reactions, null, 'id' ) : array();
+
 	if ( ! empty( $reaction_data['reactions'] ) ) {
 		foreach ( $reaction_data['reactions'] as $reaction ) {
 
-			$reaction_meta = get_post_field( 'post_content', $reaction->reaction_id );
+			$reaction_meta = ! empty( $all_reactions[ $reaction->reaction_id ] ) ? $all_reactions[ $reaction->reaction_id ] : array();
 			$type          = function_exists( 'bp_get_member_type_object' ) ? bp_get_member_type( $reaction->user_id ) : '';
 			$type_obj      = function_exists( 'bp_get_member_type_object' ) && ! empty( $type ) ? bp_get_member_type_object( $type ) : '';
 			$color_data    = function_exists( 'bb_get_member_type_label_colors' ) && ! empty( $type ) ? bb_get_member_type_label_colors( $type ) : '';
@@ -396,7 +408,7 @@ function bb_activity_get_reacted_users_data( $args ) {
 				'id'          => $reaction->user_id,
 				'name'        => bp_core_get_user_displayname( $reaction->user_id ),
 				'member_type' => array(
-					'label' => isset( $member_type ) ? $member_type : $type,
+					'label' => $member_type ?? $type,
 					'color' => array(
 						'background' => ! empty( $color_data['background-color'] ) ? $color_data['background-color'] : '',
 						'text'       => ! empty( $color_data['color'] ) ? $color_data['color'] : '',
@@ -409,7 +421,7 @@ function bb_activity_get_reacted_users_data( $args ) {
 					)
 				),
 				'profile_url' => bp_core_get_user_domain( $reaction->user_id ),
-				'reaction'    => maybe_unserialize( $reaction_meta ),
+				'reaction'    => $reaction_meta,
 			);
 		}
 
