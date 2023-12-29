@@ -132,6 +132,28 @@
 				display: none;
 			}
 
+			a.bp-like-button.bb-reaction-migration-inprogress {
+
+				&:before {
+					content: "";
+					display: block;
+					position: absolute;
+					bottom: 100%;
+					left: 50%;
+					top: inherit;
+					min-width: auto;
+					transition: none;
+				}
+
+				&:after {
+					width: 180px;
+					white-space: normal;
+					left: 0;
+					transform: none;
+					transition: none;
+				}
+			}
+
 			a.has-emotion {
 
 				> i,
