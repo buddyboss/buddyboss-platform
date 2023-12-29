@@ -23,7 +23,7 @@ $search_term =  ! empty( $_REQUEST['s'] ) ? esc_html( $_REQUEST['s'] ) : '';
 			value="<?php echo BP_Search::instance()->has_search_results() ? $search_term : '' ?>"
 			placeholder="<?php echo BP_Search::instance()->has_search_results() ?  __( 'Search Network&hellip;', "buddyboss" ) : __( 'Try different keywords&hellip;', "buddyboss" ) ?>"
 		/>
-
+		<input type="hidden" name="bp_search" value="1">
 		<button type="submit" id="<?php bp_nouveau_search_selector_id( 'search-submit' ); ?>" class="nouveau-search-submit">
 			<span class="bb-icon-l bb-icon-search" aria-hidden="true"></span>
 			<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></span>
