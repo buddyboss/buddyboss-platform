@@ -660,4 +660,4 @@ function bb_reaction_clear_reactions_cache_on_delete_emotion( $postid, $post ) {
 	}
 }
 
-add_action( 'deleted_post', 'bb_reaction_clear_reactions_cache_on_delete_emotion', 10, 3 );
+add_action( 'deleted_post', 'bb_reaction_clear_reactions_cache_on_delete_emotion', 10, 2 );
