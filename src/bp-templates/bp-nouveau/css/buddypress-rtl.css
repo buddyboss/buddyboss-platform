@@ -3519,7 +3519,6 @@ input.search-query-input {
   clear: both;
 }
 
-.activity-list .activity-item .activity-content .activity-state .activity-state-likes,
 .activity-list .activity-item .activity-content .activity-state .ac-state-separator,
 .activity-list .activity-item .activity-content .activity-state .activity-state-comments {
   display: none;
@@ -3528,11 +3527,6 @@ input.search-query-input {
 .activity-list .activity-item .activity-content .activity-state a {
   border: 0;
   padding: 0;
-}
-
-.activity-list .activity-item .activity-content .activity-state.has-likes .activity-state-likes {
-  display: inline-block;
-  background-color: transparent;
 }
 
 .activity-list .activity-item .activity-content .activity-state.has-comments.has-likes .ac-state-separator,
