@@ -85,7 +85,7 @@ window.bp = window.bp || {};
 						item_id: item_id,
 						targetElement: target.find( '#reaction-content-' + item_id ),
 						item_type: item_type,
-					},
+					}
 				);
 			}
 			target.show();
@@ -119,7 +119,7 @@ window.bp = window.bp || {};
 
 				_.extend(
 					options.data,
-					_.pick( self.options, ['page', 'per_page' ] ),
+					_.pick( self.options, ['page', 'per_page' ] )
 				);
 
 				// Add generic data and nonce.
@@ -203,6 +203,7 @@ window.bp = window.bp || {};
 
 				// Prepare the object to pass into views.
 				var args = {
+					collection: options.collection,
 					data: ( ! response.success ) ? response.data : {},
 				};
 
