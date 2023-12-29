@@ -6937,6 +6937,10 @@ span.dashicons.dashicons-admin-file:before {
   text-transform: none;
 }
 
+.buddypress-wrap .activity-comments .bp-generic-meta.action .generic-button > a:hover {
+  text-decoration: underline !important;
+}
+
 .buddypress-wrap .activity-comments .bp-generic-meta.action a.bp-like-button:before {
   display: none;
 }
