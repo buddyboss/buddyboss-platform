@@ -521,7 +521,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 						<span class="like-count reactions_item" style="%3$s">%1$s</span>',
 					esc_html( $prepared_icon['icon_text'] ),
 					$prepared_icon['icon_html'],
-					! empty( $reaction['text_color'] ) ? esc_attr( 'color:' . $reaction['text_color'] ) : ''
+					! empty( $reaction_data['text_color'] ) ? esc_attr( 'color:' . $reaction_data['text_color'] ) : ''
 				);
 			}
 		}
