@@ -4095,9 +4095,11 @@ table.moderations .column-member {
 		flex-wrap: wrap;
 		align-items: center;
 		gap: 5px;
+		cursor: default;
 
 		> p {
 			width: 100%;
+			cursor: text;
 		}
 
 		.bb-reaction-button-text-limit {

@@ -3779,10 +3779,12 @@ table.moderations .column-member img {
   flex-wrap: wrap;
   align-items: center;
   gap: 5px;
+  cursor: default;
 }
 
 .section-bp_reaction_settings_section .bb-reaction-button-label > p {
   width: 100%;
+  cursor: text;
 }
 
 .section-bp_reaction_settings_section .bb-reaction-button-label .bb-reaction-button-text-limit {
