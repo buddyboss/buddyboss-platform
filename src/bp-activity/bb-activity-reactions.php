@@ -403,12 +403,11 @@ function bb_activity_get_reacted_users_data( $args ) {
 	$user_reactions = array();
 
 	// Fetch all likes and emotions.
-	$all_reactions = bb_pro_get_reactions();
-	$emotions      = bb_pro_get_reactions( 'emotions' );
-
-	// Merge it.
-	if ( ! empty( $emotions ) ) {
-		$all_reactions = array_merge( $all_reactions, $emotions );
+	$all_reactions = array();
+	if( bb_is_reaction_emotions_enabled() ) {
+		$all_reactions = bb_load_reaction()->bb_get_reactions( 'emotions' );
+	} else {
+		$all_reactions = bb_load_reaction()->bb_get_reactions();
 	}
 
 	// Update an array key as ID.
