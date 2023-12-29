@@ -909,8 +909,9 @@ function bp_activity_get_actions_for_context( $context = '' ) {
  * Get a users favorite activity feed items.
  *
  * @since BuddyPress 1.2.0
+ * @since BuddyBoss [BBVERSION] Added the `$activity_type` parameter.
  *
- * @param int $user_id ID of the user whose favorites are being queried.
+ * @param int    $user_id       ID of the user whose favorites are being queried.
  * @param string $activity_type Activity type.
  *
  * @return array IDs of the user's favorite activity items.
@@ -967,7 +968,6 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = arra
 		function_exists( 'bb_pro_reaction_get_migration_status' ) &&
 		'inprogress' === bb_pro_reaction_get_migration_status()
 	) {
-
 		if ( 'bool' === $r['error_type'] ) {
 			return false;
 		} else {

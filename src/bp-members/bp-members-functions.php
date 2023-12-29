@@ -5180,7 +5180,7 @@ function bb_members_get_user_mentionname( $user_id ) {
  *
  * @since BuddyBoss 2.0.0
  *
- * @param $type Type of the member
+ * @param string $type Type of the member
  *
  * @return array Return array of label color data
  */
@@ -5736,9 +5736,10 @@ function bb_remove_orphaned_profile_slug( $user_id ) {
 /**
  * Remove user's reactions when the user is deleted.
  *
- * @since BuddyPress [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  *
  * @param int $user_id ID of the user who is about to be deleted.
+ *
  * @return bool True on success, false on failure.
  */
 function bb_remove_user_reactions( $user_id ) {

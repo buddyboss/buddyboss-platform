@@ -19,6 +19,8 @@ add_action( 'bp_activity_after_delete', 'bb_activity_remove_activity_post_reacti
 /**
  * Get user reacted activity ids.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param integer $user_id       User Id.
  * @param string  $activity_type Activity type.
  *
@@ -49,7 +51,9 @@ function bb_activity_get_user_reacted_item_ids( $user_id = 0, $activity_type = '
 /**
  * Get total count of reactions for a user.
  *
- * @param integer $user_id The user ID.
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param integer $user_id       The user ID.
  * @param string  $activity_type The activity type.
  *
  * @return int
@@ -73,7 +77,10 @@ function bb_activity_total_reactions_count_for_user( $user_id = 0, $activity_typ
 /**
  * Delete all reactions for an activity.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param array|int $activities Array of the activity.
+ *
  * @return void
  */
 function bb_activity_remove_activity_post_reactions( $activities ) {
@@ -100,6 +107,8 @@ function bb_activity_remove_activity_post_reactions( $activities ) {
 /**
  * Get reaction emoticons for activity post.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @return string
  */
 function bb_get_activity_post_emotions_popup() {
@@ -118,6 +127,8 @@ function bb_get_activity_post_emotions_popup() {
 /**
  * Get reaction emoticons for activity post comment.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @return string
  */
 function bb_get_activity_post_comment_emotions_popup() {
@@ -135,6 +146,8 @@ function bb_get_activity_post_comment_emotions_popup() {
 
 /**
  * Prepare a reaction emoticons list for web to show on hover.
+ *
+ * @since BuddyBoss [BBVERSION]
  *
  * @return string
  */
@@ -180,8 +193,10 @@ function bb_activity_prepare_web_emotions() {
 /**
  * Get most reactions for activity.
  *
- * @param integer $item_id   ID of the item.
- * @param string  $item_type Type of the item.
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param integer $item_id         ID of the item.
+ * @param string  $item_type       Type of the item.
  * @param integer $no_of_reactions Number of reactions to display.
  *
  * @return array
@@ -251,6 +266,8 @@ function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', 
 /**
  * Get activity post reaction button html.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param int     $item_id     ID of the Activity/Comment.
  * @param string  $item_type   Type of Activity.
  * @param int     $reaction_id ID of the reaction.
@@ -300,6 +317,8 @@ function bb_get_activity_post_reaction_button_html( $item_id, $item_type = 'acti
 /**
  * Get user reactions list for activity post.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param int    $activity_id Activity/Comment ID.
  * @param string $item_type   Type of Activity.
  *
@@ -342,6 +361,7 @@ function bb_get_activity_post_user_reactions_html( $activity_id, $item_type = 'a
 
 		$output .= '</div>';
 
+		// Build popup to show reacted items.
 		$output .= '<div class="activity-state-popup">
 			<div class="activity-state-popup_overlay"></div>
 			<div class="activity-state-popup_inner" id="reaction-content-' . $activity_id . '">
@@ -354,6 +374,8 @@ function bb_get_activity_post_user_reactions_html( $activity_id, $item_type = 'a
 
 /**
  * Retrieves the user reactions for a specific activity.
+ *
+ * @since BuddyBoss [BBVERSION]
  *
  * @param array $args The arguments for retrieving the user reactions.
  *                    - reaction_id (int) The ID of the reaction (default: 0).
@@ -433,6 +455,8 @@ function bb_activity_get_reacted_users_data( $args ) {
 
 /**
  * Get reactions data for an activity.
+ *
+ * @since BuddyBoss [BBVERSION]
  *
  * @return mixed
  */
@@ -687,7 +711,6 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 		}
 	}
 
-	$return_str    = '';
 	$display_names = array();
 	if ( true === $is_current_user_reacted ) {
 		$display_names[] = esc_html__( 'You', 'buddyboss' );
@@ -735,7 +758,10 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 /**
  * Get the formatted reaction count.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param int $count The reaction count.
+ *
  * @return int|string The reaction count
  */
 function bb_format_reaction_count( $count ) {
