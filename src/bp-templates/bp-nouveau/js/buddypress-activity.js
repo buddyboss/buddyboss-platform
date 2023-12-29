@@ -3162,7 +3162,7 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		closeActivityState: function() {
-			$( '.activity-state-popup' ).removeClass( 'active' );
+			$( '.activity-state-popup' ).hide().removeClass( 'active' );
 		}
 
 	};
