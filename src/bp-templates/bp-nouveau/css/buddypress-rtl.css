@@ -4363,7 +4363,12 @@ body:not(.bb-is-mobile) .activity-list .activity-item .ac-emotions_list:hover .a
   }
 }
 
-.activity-list .activity-item .acomment-display .ac-emotions_list:hover, .activity-list .activity-item .acomment-display .ac-emotions_list.active {
+.activity-list .activity-item .acomment-display .ac-emotions_list.active {
+  bottom: 20px;
+  right: -60px;
+}
+
+body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emotions_list:hover {
   bottom: 20px;
   right: -60px;
 }
