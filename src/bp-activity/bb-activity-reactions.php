@@ -56,7 +56,7 @@ function bb_activity_get_user_reacted_item_ids( $user_id = 0, $activity_type = '
  * @param integer $user_id       The user ID.
  * @param string  $activity_type The activity type.
  *
- * @return int
+ * @return integer
  */
 function bb_activity_total_reactions_count_for_user( $user_id = 0, $activity_type = '' ) {
 
@@ -94,7 +94,7 @@ function bb_activity_remove_activity_post_reactions( $activities ) {
 		return;
 	}
 
-	foreach ( $activity_ids as $key => $activity_id ) {
+	foreach ( $activity_ids as $activity_id ) {
 		bb_load_reaction()->bb_remove_user_item_reactions(
 			array(
 				'item_id' => $activity_id,
@@ -273,7 +273,7 @@ function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', 
  * @param int     $reaction_id ID of the reaction.
  * @param boolean $has_reacted User has reaction or not.
  *
- * @return mixed
+ * @return string
  */
 function bb_get_activity_post_reaction_button_html( $item_id, $item_type = 'activity', $reaction_id = 0, $has_reacted = false ) {
 
@@ -298,7 +298,7 @@ function bb_get_activity_post_reaction_button_html( $item_id, $item_type = 'acti
 		$reaction_link = ( 'activity' === $item_type ) ? bp_get_activity_favorite_link( $item_id ) : bb_get_activity_comment_favorite_link( $item_id );
 	}
 
-	$reaction_button = sprintf(
+	return sprintf(
 		'<a href="%1$s" class="button bp-like-button bp-secondary-action %5$s" aria-pressed="false">
 			<span class="bp-screen-reader-text">%2$s</span>
 			%3$s
@@ -310,8 +310,6 @@ function bb_get_activity_post_reaction_button_html( $item_id, $item_type = 'acti
 		! empty( $reaction_data['text_color'] ) ? esc_attr( 'color:' . $reaction_data['text_color'] ) : '',
 		$reaction_button_class,
 	);
-
-	return $reaction_button;
 }
 
 /**
@@ -406,15 +404,7 @@ function bb_activity_get_reacted_users_data( $args ) {
 	$user_reactions = array();
 
 	// Fetch all likes and emotions.
-	$all_reactions = array();
-	if( bb_is_reaction_emotions_enabled() ) {
-		$all_reactions = bb_load_reaction()->bb_get_reactions( 'emotions' );
-	} else {
-		$all_reactions = bb_load_reaction()->bb_get_reactions();
-	}
-
-	// Update an array key as ID.
-	$all_reactions = ! empty( $all_reactions ) ? array_column( $all_reactions, null, 'id' ) : array();
+	$all_reactions = bb_active_reactions();
 
 	if ( ! empty( $reaction_data['reactions'] ) ) {
 		foreach ( $reaction_data['reactions'] as $reaction ) {
@@ -460,7 +450,7 @@ function bb_activity_get_reacted_users_data( $args ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return mixed
+ * @return void
  */
 function bb_get_activity_reaction_ajax_callback() {
 
@@ -527,7 +517,7 @@ function bb_get_activity_reaction_ajax_callback() {
 		if ( 1 === count( $tabs ) ) {
 			$current_tabs = current( $tabs );
 
-			if ( empty( $reaction_id ) ) {
+			if ( 0 === $reaction_id ) {
 				$reaction_id = $current_tabs['id'];
 			}
 
@@ -678,8 +668,8 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 			usort(
 				$reacted_users,
 				function ( $a, $b ) use ( $index_map ) {
-					$index_a = isset( $index_map[ $a ] ) ? $index_map[ $a ] : PHP_INT_MAX;
-					$index_b = isset( $index_map[ $b ] ) ? $index_map[ $b ] : PHP_INT_MAX;
+					$index_a = $index_map[ $a ] ?? PHP_INT_MAX;
+					$index_b = $index_map[ $b ] ?? PHP_INT_MAX;
 
 					// Compare the positions.
 					return $index_a - $index_b;
@@ -706,8 +696,8 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 			usort(
 				$reacted_users,
 				function ( $a, $b ) use ( $index_map ) {
-					$index_a = isset( $index_map[ $a ] ) ? $index_map[ $a ] : PHP_INT_MAX;
-					$index_b = isset( $index_map[ $b ] ) ? $index_map[ $b ] : PHP_INT_MAX;
+					$index_a = $index_map[ $a ] ?? PHP_INT_MAX;
+					$index_b = $index_map[ $b ] ?? PHP_INT_MAX;
 
 					// Compare the positions.
 					return $index_a - $index_b;
@@ -859,14 +849,15 @@ function bb_activity_get_user_reaction_by_item( $item_id, $item_type = 'activity
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int|array|WP_Post $id_or_post_or_reaction Accepts a post ID, Emotion array, WP_Post object.
+ * @param int  $reaction_id Reaction ID.
+ * @param bool $has_reacted Whether reacted or not.
  *
  * @return array
  */
 function bb_activity_get_reaction_button( $reaction_id, $has_reacted = false ) {
 
 	$settings  = bb_get_reaction_button_settings();
-	$icon_text = ! empty( $settings['text'] ) && ! $has_reacted ? $settings['text'] : esc_html( 'Like', 'buddyboss' );
+	$icon_text = ! empty( $settings['text'] ) && ! $has_reacted ? $settings['text'] : esc_html__( 'Like', 'buddyboss' );
 	$icon      = ! empty( $settings['icon'] ) && ! $has_reacted ? $settings['icon'] : 'thumbs-up bb-icon-f';
 	$icon_html = '<i class="bb-icon-' . $icon . ' "></i>';
 
@@ -963,7 +954,7 @@ function bb_get_reaction_button_settings() {
 
 	$args = array(
 		'icon' => 'thumbs-up',
-		'text' => esc_html( 'Like', 'buddyboss' ),
+		'text' => esc_html__( 'Like', 'buddyboss' ),
 	);
 
 	if (
