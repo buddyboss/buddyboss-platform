@@ -877,6 +877,10 @@ function bp_media_get_total_group_media_count( $group_id = 0 ) {
  * @since BuddyBoss 1.2.0
  */
 function bp_media_get_total_group_album_count( $group_id = 0 ) {
+	if ( false === bp_is_active( 'groups' ) ) {
+		return 0;
+	}
+
 	if ( empty( $group_id ) && bp_get_current_group_id() ) {
 		$group_id = bp_get_current_group_id();
 	}
