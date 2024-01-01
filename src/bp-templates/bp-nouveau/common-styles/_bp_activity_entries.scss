@@ -1166,6 +1166,7 @@
 	.bp-generic-meta {
 
 		.generic-button a,
+		.generic-button a img,
 		.ac-emotions_list .ac-emotion_item a > *,
 		.generic-button a > * {
 			-webkit-touch-callout: none !important;
@@ -1173,7 +1174,7 @@
 	}
 
 	&.activity * {
-		-webkit-user-select: none;
+		-webkit-user-select: none; // To prevent IOS to show context menu on long press
 		user-select: none;
 	}
 

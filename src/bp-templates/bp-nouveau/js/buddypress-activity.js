@@ -761,7 +761,7 @@ window.bp = window.bp || {};
 				event.preventDefault();
 
 				// Do not trigger click event directly on the button when it's mobile and reaction is active.
-				if ( $( 'body' ).hasClass( 'bb-is-mobile' ) && $( 'body' ).hasClass( 'bb-reactions-mode' ) && target.parent( '.ac-emotion_btn' ).length === 0 && event.customTriggered !== true ) {
+				if ( $( 'body' ).hasClass( 'bb-is-mobile' ) && $( 'body' ).hasClass( 'bb-reactions-mode' ) && target.closest( '.ac-emotion_btn' ).length === 0 && event.customTriggered !== true ) {
 					return;
 				}
 

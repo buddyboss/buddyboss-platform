@@ -4369,6 +4369,7 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
 }
 
 .bb-is-mobile.bb-reactions-mode .bp-generic-meta .generic-button a,
+.bb-is-mobile.bb-reactions-mode .bp-generic-meta .generic-button a img,
 .bb-is-mobile.bb-reactions-mode .bp-generic-meta .ac-emotions_list .ac-emotion_item a > *,
 .bb-is-mobile.bb-reactions-mode .bp-generic-meta .generic-button a > * {
   -webkit-touch-callout: none !important;
