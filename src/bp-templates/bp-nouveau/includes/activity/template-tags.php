@@ -936,6 +936,10 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 			$fav_args['data-bp-tooltip-pos'] = 'up';
 		}
 
+		// Remove link text from button attributes.
+		$link_text = $fav_args['link_text'];
+		unset( $fav_args['link_text'] );
+
 		$buttons['activity_comment_favorite'] = array(
 			'id'                => 'activity_comment_favorite',
 			'position'          => 4,
@@ -944,7 +948,7 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 			'parent_attr'       => $parent_attr,
 			'must_be_logged_in' => true,
 			'button_element'    => $button_element,
-			'link_text'         => $fav_args['link_text'],
+			'link_text'         => $link_text,
 			'button_attr'       => $fav_args,
 		);
 	}
