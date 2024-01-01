@@ -3156,24 +3156,30 @@ function bp_activity_can_favorite() {
  * Output the total favorite count for a specified user.
  *
  * @since BuddyPress 1.2.0
+ * @since BuddyBoss [BBVERSION] Added `$activity_type` property to indicate whether the current ID is activity or comment.
  *
- * @see bp_get_total_favorite_count_for_user() for description of parameters.
+ * @param int    $user_id       See {@link bp_get_total_favorite_count_for_user()}.
+ * @param string $activity_type Activity type.
  *
- * @param int $user_id See {@link bp_get_total_favorite_count_for_user()}.
+ * @see   bp_get_total_favorite_count_for_user() for description of parameters.
+ *
  */
-function bp_total_favorite_count_for_user( $user_id = 0 ) {
-	echo bp_get_total_favorite_count_for_user( $user_id );
+function bp_total_favorite_count_for_user( $user_id = 0, $activity_type = 'activity' ) {
+	echo bp_get_total_favorite_count_for_user( $user_id, $activity_type );
 }
 
 /**
  * Return the total favorite count for a specified user.
  *
  * @since BuddyPress 1.2.0
+ * @since BuddyBoss [BBVERSION] Added `$activity_type` property to indicate whether the current ID is activity or comment.
  *
- * @param int $user_id ID of user being queried. Default: displayed user ID.
+ * @param int    $user_id       ID of user being queried. Default: displayed user ID.
+ * @param string $activity_type Activity type.
+ *
  * @return int The total favorite count for the specified user.
  */
-function bp_get_total_favorite_count_for_user( $user_id = 0 ) {
+function bp_get_total_favorite_count_for_user( $user_id = 0, $activity_type = 'activity' ) {
 	$retval = false;
 
 	if ( bp_activity_can_favorite() ) {
@@ -3184,7 +3190,7 @@ function bp_get_total_favorite_count_for_user( $user_id = 0 ) {
 
 		// Get user meta if user ID exists.
 		if ( ! empty( $user_id ) ) {
-			$retval = bb_activity_total_reactions_count_for_user( $user_id, 'activity' );
+			$retval = bp_activity_total_favorites_for_user( $user_id, $activity_type );
 		}
 	}
 
@@ -3193,11 +3199,13 @@ function bp_get_total_favorite_count_for_user( $user_id = 0 ) {
 	 *
 	 * @since BuddyPress 1.2.0
 	 * @since BuddyPress 2.6.0 Added the `$user_id` parameter.
+	 * @since BuddyBoss [BBVERSION] Added `$activity_type` property to indicate whether the current ID is activity or comment.
 	 *
-	 * @param int|bool $retval  Total favorite count for a user. False on no favorites.
-	 * @param int      $user_id ID of the queried user.
+	 * @param int|bool $retval        Total favorite count for a user. False on no favorites.
+	 * @param int      $user_id       ID of the queried user.
+	 * @param string   $activity_type Activity type.
 	 */
-	return apply_filters( 'bp_get_total_favorite_count_for_user', $retval, $user_id );
+	return apply_filters( 'bp_get_total_favorite_count_for_user', $retval, $user_id, $activity_type );
 }
 
 /**

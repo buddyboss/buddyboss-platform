@@ -49,32 +49,6 @@ function bb_activity_get_user_reacted_item_ids( $user_id = 0, $activity_type = '
 }
 
 /**
- * Get total count of reactions for a user.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param integer $user_id       The user ID.
- * @param string  $activity_type The activity type.
- *
- * @return integer
- */
-function bb_activity_total_reactions_count_for_user( $user_id = 0, $activity_type = '' ) {
-
-	if ( empty( $user_id ) ) {
-		$user_id = bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id();
-	}
-
-	$reaction_count = bb_load_reaction()->bb_get_user_reactions_count(
-		array(
-			'user_id'   => $user_id,
-			'item_type' => $activity_type,
-		)
-	);
-
-	return apply_filters( 'bb_activity_total_reactions_for_user', $reaction_count, $user_id );
-}
-
-/**
  * Delete all reactions for an activity.
  *
  * @since BuddyBoss [BBVERSION]

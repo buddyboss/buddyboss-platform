@@ -6,26 +6,6 @@
  */
 
 /**
- * Retrieve the number of favorite activity feed items a user has.
- *
- * @since BuddyPress 1.2.0
- * @deprecated BuddyBoss [BBVERSION]
- *
- * @param int $user_id ID of the user whose favorite count is being requested.
- * @return int Total favorite count for the user.
- */
-function bp_activity_total_favorites_for_user( $user_id = 0 ) {
-	_deprecated_function( __FUNCTION__, '2.5.10', 'bb_activity_total_reactions_count_for_user' );
-
-	// Fallback on displayed user, and then logged in user.
-	if ( empty( $user_id ) ) {
-		$user_id = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
-	}
-
-	return bb_activity_total_reactions_count_for_user( $user_id, 'activity' );
-}
-
-/**
  * Get like count for activity
  *
  * @since BuddyBoss 1.0.0

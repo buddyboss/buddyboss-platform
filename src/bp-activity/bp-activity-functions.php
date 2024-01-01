@@ -1227,6 +1227,27 @@ function bp_activity_get_last_updated() {
 }
 
 /**
+ * Retrieve the number of favorite activity feed items a user has.
+ *
+ * @since BuddyPress 1.2.0
+ * @since BuddyBoss [BBVERSION] Added `$activity_type` property to indicate whether the current ID is activity or comment.
+ *
+ * @param int $user_id ID of the user whose favorite count is being requested.
+ * @param string $activity_type Activity type.
+ *
+ * @return int Total favorite count for the user.
+ */
+function bp_activity_total_favorites_for_user( $user_id = 0, $activity_type = 'activity' ) {
+
+	// Fallback on displayed user, and then logged in user.
+	if ( empty( $user_id ) ) {
+		$user_id = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+	}
+
+	return BP_Activity_Activity::total_favorite_count( $user_id, $activity_type );
+}
+
+/**
  * Get activity visibility levels out of the $bp global.
  *
  * @since BuddyBoss 1.2.3
