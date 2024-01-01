@@ -393,7 +393,7 @@ function bb_activity_get_reacted_users_data( $args ) {
 			}
 
 			$user_reactions[] = array(
-				'id'          => $reaction->user_id,
+				'id'          => $reaction->id,
 				'name'        => bp_core_get_user_displayname( $reaction->user_id ),
 				'member_type' => array(
 					'label' => $member_type ?? $type,
@@ -455,6 +455,7 @@ function bb_get_activity_reaction_ajax_callback() {
 	$item_type   = sanitize_text_field( $_POST['item_type'] );
 	$paged       = ! empty( $_POST['page'] ) ? (int) sanitize_text_field( $_POST['page'] ) : 1;
 	$reaction_id = ! empty( $_POST['reaction_id'] ) ? (int) sanitize_text_field( $_POST['reaction_id'] ) : 0;
+	$before      = ! empty( $_POST['before'] ) ? (int) sanitize_text_field( $_POST['before'] ) : 0;
 	$per_page    = 20; // Fixed per page.
 
 	if ( 1 === $paged && empty( $reaction_id ) ) {
@@ -502,6 +503,7 @@ function bb_get_activity_reaction_ajax_callback() {
 					'item_type'   => $item_type,
 					'paged'       => $paged,
 					'per_page'    => $per_page,
+					'before'      => $before,
 				)
 			);
 
@@ -519,6 +521,7 @@ function bb_get_activity_reaction_ajax_callback() {
 					'item_type' => $item_type,
 					'paged'     => $paged,
 					'per_page'  => $per_page,
+					'before'      => $before,
 				)
 			);
 			$tab_content = $all_reacted['reactions'];
@@ -559,6 +562,7 @@ function bb_get_activity_reaction_ajax_callback() {
 				'reaction_id' => $reaction_id,
 				'paged'       => $paged,
 				'per_page'    => $per_page,
+				'before'      => $before,
 			)
 		);
 

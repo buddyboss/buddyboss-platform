@@ -125,7 +125,7 @@ window.bp = window.bp || {};
 
 				_.extend(
 					options.data,
-					_.pick( self.options, ['page', 'per_page' ] )
+					_.pick( self.options, [ 'page', 'per_page', 'before', 'reaction_id', 'item_type', 'item_id' ] ),
 				);
 
 				// Add generic data and nonce.
@@ -276,9 +276,13 @@ window.bp = window.bp || {};
 							model: this.collection.toJSON(),
 						};
 
+						if ( this.collection.length > 0 ) {
+							arguments.before = this.collection.last().get( 'id' );
+						}
+
 						_.extend(
 							this.collection.options,
-							_.pick( arguments, [ 'page', 'item_id', 'item_type', 'reaction_id' ] )
+							_.pick( arguments, [ 'page', 'item_id', 'item_type', 'reaction_id', 'before' ] )
 						);
 
 						this.args.collection = this.collection;

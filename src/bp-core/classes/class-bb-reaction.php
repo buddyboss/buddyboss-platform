@@ -1048,6 +1048,9 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 				default:
 					$r['order_by'] = 'id';
+					if ( ! empty( $r['before'] ) ) {
+						$where_conditions['before'] = $wpdb->prepare( 'ur.id < %d', $r['before'] );
+					}
 					break;
 			}
 			$order_by = 'ur.' . $r['order_by'];
@@ -1133,7 +1136,12 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$per_page   = absint( $r['per_page'] );
 			$pagination = '';
 			if ( ! empty( $per_page ) && ! empty( $page ) && - 1 !== $per_page ) {
-				$pagination = $wpdb->prepare( 'LIMIT %d, %d', intval( ( $page - 1 ) * $per_page ), intval( $per_page ) );
+				$start_val = intval( ( $page - 1 ) * $per_page );
+				if ( ! empty( $where_conditions['before'] ) ) {
+					$start_val = 0;
+					unset( $where_conditions['before'] );
+				}
+				$pagination = $wpdb->prepare( 'LIMIT %d, %d', $start_val, intval( $per_page ) );
 			}
 
 			// Query first for user_reaction IDs.
