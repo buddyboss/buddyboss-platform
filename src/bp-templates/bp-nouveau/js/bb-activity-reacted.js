@@ -209,6 +209,13 @@ window.bp = window.bp || {};
 			onOpenFailedRender: function ( collection, response, options ) {
 				this.loader.remove();
 
+				if (
+					'undefined' !== typeof response.statusText &&
+					'abort' === response.statusText
+				) {
+					return;
+				}
+
 				// Prepare the object to pass into views.
 				var args = {
 					collection: options.collection,
@@ -326,6 +333,13 @@ window.bp = window.bp || {};
 
 			onLoadMoreFailedRender: function( target, collection, response ) {
 				this.loader.remove();
+
+				if (
+					'undefined' !== typeof response.statusText &&
+					'abort' === response.statusText
+				) {
+					return;
+				}
 
 				// Prepare the object to pass into views.
 				var args = {
@@ -480,6 +494,13 @@ window.bp = window.bp || {};
 
 			onTabChangeFailedRender: function( targetElement, collection, response ) {
 				this.loader.remove();
+
+				if (
+					'undefined' !== typeof response.statusText &&
+					'abort' === response.statusText
+				) {
+					return;
+				}
 
 				// Prepare the object to pass into views.
 				var args = {
