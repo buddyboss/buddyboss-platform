@@ -310,11 +310,7 @@ function bp_moderation_block_member() {
 				false
 			);
 
-			if ( true === bp_is_active( 'settings' ) ) {
-				$response['redirect'] = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() ) . '/blocked-members';
-			} else {
-				$response['redirect'] = bp_get_members_directory_permalink();
-			}
+			$response['redirect'] = bp_is_active( 'settings' ) ? trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() ) . '/blocked-members' : bp_get_members_directory_permalink();
 		}
 
 		$response['message'] = $moderation->errors;
