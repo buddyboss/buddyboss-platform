@@ -493,6 +493,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 			),
 		);
 
+		$reacted_id = 0;
 		if ( ! bb_activity_is_item_favorite( $activity_id ) ) {
 			$fav_args['link_class'] = $fav_args['link_class'] . ' reaction';
 
@@ -508,6 +509,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 			// Get user reacted reaction data and prepare the link.
 			$reaction_data = bb_activity_get_user_reaction_by_item( $activity_id );
 			if ( ! empty( $reaction_data['id'] ) ) {
+				$reacted_id    = $reaction_data['id'];
 				$reaction_type = $reaction_data['type'];
 				$prepared_icon = bb_activity_get_reaction_button( $reaction_data['id'], true );
 				$link_classes  = empty( $reaction_type ) ? ' has-like has-reaction' : ' has-emotion has-reaction';
@@ -536,9 +538,10 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 			'button_element'    => $button_element,
 			'link_text'         => $fav_args['link_text'],
 			'button_attr'       => array(
-				$key           => $fav_args['link_attr'],
-				'class'        => $fav_args['link_class'],
-				'aria-pressed' => $fav_args['aria-pressed'],
+				$key              => $fav_args['link_attr'],
+				'class'           => $fav_args['link_class'],
+				'aria-pressed'    => $fav_args['aria-pressed'],
+				'data-reacted-id' => $reacted_id,
 			),
 		);
 
@@ -891,13 +894,14 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 		$key = ( 'button' === $button_element ) ? 'data-bp-nonce' : 'href';
 
 		$fav_args = array(
-			'class'   => 'button fav reaction bp-secondary-action bp-like-button',
-			'aria-pressed' => 'false',
-			$key           => bb_get_activity_comment_favorite_link(),
-			'link_text'    => sprintf(
+			'class'           => 'button fav reaction bp-secondary-action bp-like-button',
+			'aria-pressed'    => 'false',
+			$key              => bb_get_activity_comment_favorite_link(),
+			'link_text'       => sprintf(
 				'<span class="bp-screen-reader-text">%1$s</span><span class="like-count">%1$s</span>',
 				esc_html__( 'Like', 'buddyboss' )
 			),
+			'data-reacted-id' => '',
 		);
 
 		if ( ! bb_get_activity_comment_is_favorite() ) {
@@ -914,15 +918,16 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 				$link_classes  = empty( $reaction_data['type'] ) ? 'has-like has-reaction' : 'has-emotion has-reaction';
 				$prepared_icon = bb_activity_get_reaction_button( $reaction_data['id'], true );
 
-				$fav_args['class']   = str_replace( 'fav', 'unfav', $fav_args['class'] ) . ' ' . $link_classes;
-				$fav_args['aria-pressed'] = true;
-				$fav_args[ $key ]         = bb_get_activity_comment_unfavorite_link();
-				$fav_args['link_text']    = sprintf(
+				$fav_args['class']           = str_replace( 'fav', 'unfav', $fav_args['class'] ) . ' ' . $link_classes;
+				$fav_args['aria-pressed']    = true;
+				$fav_args[ $key ]            = bb_get_activity_comment_unfavorite_link();
+				$fav_args['link_text']       = sprintf(
 					'<span class="bp-screen-reader-text">%1$s</span>
 						<span class="like-count reactions_item" style="%2$s">%1$s</span>',
 					esc_html( $prepared_icon['icon_text'] ),
 					! empty( $reaction_data['text_color'] ) ? esc_attr( 'color:' . $reaction_data['text_color'] ) : ''
 				);
+				$fav_args['data-reacted-id'] = $reaction_data['id'];
 			}
 		}
 

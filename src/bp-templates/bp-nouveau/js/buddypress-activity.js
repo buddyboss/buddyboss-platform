@@ -777,10 +777,20 @@ window.bp = window.bp || {};
 					is_activity = true,
 					item_type   = 'activity',
 					parent_el   = target.parents( '.acomment-display' ).first(),
+					reacted_id  = target.attr( 'data-reacted-id' ),
 					main_el;
 
 				if ( reaction_id > 0 ) {
 					type = 'fav';
+				}
+
+				// Return when same reaction ID found.
+				if ( target.parent( '.ac-emotion_btn' ) ) {
+					reacted_id = target.parents( '.bp-generic-meta' ).find( '.unfav' ).attr( 'data-reacted-id' );
+				}
+
+				if ( 'fav' === type && parseInt( reaction_id ) === parseInt( reacted_id ) ) {
+					return;
 				}
 
 				if ( 0 < parent_el.length ) {
