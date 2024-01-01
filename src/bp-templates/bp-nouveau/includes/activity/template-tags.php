@@ -905,7 +905,7 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 			$fav_args['link_text'] = sprintf(
 				'<span class="bp-screen-reader-text">%1$s</span>
 				<span class="like-count">%1$s</span>',
-				! empty( $button_settings['text'] ) ? esc_html( $button_settings['text'] ) : esc_html( 'Like', 'buddyboss' ),
+				! empty( $button_settings['text'] ) ? esc_html( $button_settings['text'] ) : __( 'Like', 'buddyboss' ),
 			);
 		} else {
 			// Get user reacted reaction data and prepare the link.
