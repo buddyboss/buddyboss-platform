@@ -742,7 +742,11 @@ window.bp = window.bp || {};
 				item_id, form, model, self = this;
 
 			// In case the target is set to a span or i tag inside the link.
-			if ( $( target ).is( 'span' ) || $( target ).is( 'i' ) ) {
+			if (
+				$( target ).is( 'span' ) ||
+				$( target ).is( 'i' ) ||
+				$( target ).is( 'img' )
+			) {
 				target = $( target ).closest( 'a' );
 			}
 
