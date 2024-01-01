@@ -34,6 +34,10 @@ function bp_activity_action_remove_favorite() {
 	// Load up the activity item.
 	$activity = new BP_Activity_Activity( $activity_id );
 
+	if ( empty( $activity->id ) ) {
+		return false;
+	}
+
 	if ( 'activity_comment' === $activity->type ) {
 		$type     = 'activity_comment';
 		$message  = __( 'Post comment unsaved.', 'buddyboss' );

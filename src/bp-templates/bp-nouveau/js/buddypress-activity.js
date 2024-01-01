@@ -145,7 +145,6 @@ window.bp = window.bp || {};
 
 			// Reaction actions.
 			$( document ).on( 'click', '.activity-state-popup_overlay', bp.Nouveau, this.closeActivityState.bind( this ) );
-			$( document ).on( 'click', '.activity-state-reactions', this.showActivityReactions );
 			$( document ).on( 'click', '.activity-state-popup .activity-state-popup_tab_panel a', this.ReactionStatePopupTab );
 
 			// Activity autoload.
@@ -742,8 +741,12 @@ window.bp = window.bp || {};
 				comments_text              = activity_item.find( '.comments-count' ),
 				item_id, form, model, self = this;
 
-			// In case the target is set to a span inside the link.
-			if ( $( target ).is( 'span' ) ) {
+			// In case the target is set to a span or i tag inside the link.
+			if (
+				$( target ).is( 'span' ) ||
+				$( target ).is( 'i' ) ||
+				$( target ).is( 'img' )
+			) {
 				target = $( target ).closest( 'a' );
 			}
 
@@ -762,7 +765,7 @@ window.bp = window.bp || {};
 				event.preventDefault();
 
 				// Do not trigger click event directly on the button when it's mobile and reaction is active.
-				if( $( 'body' ).hasClass( 'bb-is-mobile' ) && $( 'body' ).hasClass( 'bb-reactions-mode' ) && target.parent( '.ac-emotion_btn' ).length == 0  && event.customTriggered !== true ) {
+				if ( $( 'body' ).hasClass( 'bb-is-mobile' ) && $( 'body' ).hasClass( 'bb-reactions-mode' ) && target.closest( '.ac-emotion_btn' ).length === 0 && event.customTriggered !== true ) {
 					return;
 				}
 
@@ -774,10 +777,20 @@ window.bp = window.bp || {};
 					is_activity = true,
 					item_type   = 'activity',
 					parent_el   = target.parents( '.acomment-display' ).first(),
+					reacted_id  = target.attr( 'data-reacted-id' ),
 					main_el;
 
 				if ( reaction_id > 0 ) {
 					type = 'fav';
+				}
+
+				// Return when same reaction ID found.
+				if ( target.parent( '.ac-emotion_btn' ) ) {
+					reacted_id = target.parents( '.bp-generic-meta' ).find( '.unfav' ).attr( 'data-reacted-id' );
+				}
+
+				if ( 'fav' === type && parseInt( reaction_id ) === parseInt( reacted_id ) ) {
+					return;
 				}
 
 				if ( 0 < parent_el.length ) {
@@ -828,9 +841,19 @@ window.bp = window.bp || {};
 											} else {
 												main_el.find( '.activity-content .activity-state' ).prepend( response.data.reaction_count );
 											}
+
+											// Added has-likes class if activity has any reactions.
+											if ( response.data.reaction_count !== '' ) {
+												activity_state.addClass( 'has-likes' );
+											} else {
+												activity_state.removeClass( 'has-likes' );
+											}
+
 										} else {
-											if ( 0 < main_el.find( '#acomment-display-' + item_id + ' .comment-reactions' ).length ) {
-												main_el.find( '#acomment-display-' + item_id + ' .comment-reactions' ).html( response.data.reaction_count );
+											if ( 0 < main_el.find( '#acomment-display-' + item_id + ' .comment-reactions .activity-state-reactions' ).length ) {
+												main_el.find( '#acomment-display-' + item_id + ' .comment-reactions .activity-state-reactions' ).replaceWith( response.data.reaction_count );
+											} else {
+												main_el.find( '#acomment-display-' + item_id + ' .comment-reactions' ).prepend( response.data.reaction_count );
 											}
 										}
 									}
@@ -1684,18 +1707,6 @@ window.bp = window.bp || {};
 						);
 					}
 				);
-			}
-
-			if ( target.hasClass( 'activity-state-likes' ) || target.parents('.activity-state-likes' ).length > 0 ) {
-				// Stop event propagation.
-				event.preventDefault();
-				target.closest( '.activity-content ' ).find( '.activity-state-popup' ).addClass( 'active' );
-			}
-
-			if( target.hasClass( 'comment-reactions' ) || target.parents('.comment-reactions' ).length > 0 ) {
-				// Stop event propagation.
-				event.preventDefault();
-				target.closest( '.acomment-display' ).find( '.activity-state-popup' ).addClass( 'active' );
 			}
 		},
 
@@ -3143,128 +3154,6 @@ window.bp = window.bp || {};
 			}
 		},
 
-		showActivityReactions: function( event ) {
-			event.preventDefault();
-
-			var target      = $( this ),
-				is_activity = true,
-				item_type   = 'activity',
-				item_id     = 0,
-				main_el,
-				activity_item;
-
-			var parent_el = target.parents( '.acomment-display' ).first();
-			if ( 0 < parent_el.length ) {
-				is_activity = false;
-				item_type   = 'activity_comment';
-			}
-
-			if ( ! is_activity ) {
-				main_el       = target.parents( '.activity-comment' ).first();
-				item_id       = main_el.data( 'bp-activity-comment-id' );
-				activity_item = main_el.find( '#acomment-display-' + item_id );
-			} else {
-				main_el       = target.parents( '.activity-item' );
-				item_id       = main_el.data( 'bp-activity-id' );
-				activity_item = main_el.find( '.activity-content' );
-			}
-
-			if ( activity_item.find( '.activity-state-popup' ).length <= 0 ) {
-
-				// Load Reactions template and show the popup.
-				var reactionModal = wp.template( 'activity-reactions-popup' ),
-					html          = reactionModal();
-
-				activity_item.append( html );
-				activity_item.find( '.activity-state-popup' ).addClass( 'active' );
-
-				// Get data if not fetched earlier.
-				if ( ! activity_item.find( '.activity-state-popup' ).hasClass( 'loaded' ) ) {
-
-					$.ajax(
-						{
-							url: BP_Nouveau.ajaxurl,
-							type: 'post',
-							data: {
-								action: 'bb_get_reactions',
-								item_id: item_id,
-								item_type: item_type,
-								_wpnonce: BP_Nouveau.nonces.activity,
-							}, success: function ( response ) {
-								console.log( response.data.reactions );
-								if ( typeof response.data.reactions !== 'undefined' ) {
-									var data = response.data;
-									var html = reactionModal( data );
-									activity_item.find( '.activity-state-popup' ).replaceWith( html );
-									activity_item.find( '.activity-state-popup' ).addClass( 'loaded active' );
-
-									// Load more emotions on scroll.
-									var $reactions_list = activity_item.find( '.activity-state-popup .activity-state-popup_tab_item ul' );
-									$reactions_list.on(
-										'scroll',
-										function() {
-											bp.Nouveau.Activity.ReactionLoadMore( $( this ), item_id, item_type );
-										}
-									);
-								}
-							}
-						}
-					);
-				}
-			} else {
-				activity_item.find( '.activity-state-popup' ).addClass( 'active' );
-			}
-		},
-
-		ReactionLoadMore: function( element, item_id, item_type ) {
-			if ( ! element.hasClass( 'loading' ) ) {
-				var distanceFromBottom = element[0].scrollHeight - element.scrollTop() - element.outerHeight(),
-					threshold          = 10,
-					reaction_id        = element.parent().data( 'reaction-id' ),
-					total_pages        = element.parent().data( 'total-pages' ),
-					paged              = element.parent().attr( 'data-paged' ),
-					userReactions      = wp.template( 'activity-user-reactions-popup-list' );
-
-				if ( 'undefined' === typeof paged || 0 >= paged ) {
-					paged = 1;
-				}
-
-				// Check if the user has scrolled to the bottom.
-				if (
-					distanceFromBottom <= threshold &&
-					paged < total_pages &&
-					! element.hasClass( 'loading' )
-				) {
-					element.append( '<li class="reactions_loader"><i class="b-icon-l bb-icon-spinner animate-spin"></i></li>' );
-					element.addClass( 'loading' );
-					paged = parseInt( paged, 10 ) + 1;
-
-					$.ajax(
-						{
-							url: BP_Nouveau.ajaxurl,
-							type: 'post',
-							data: {
-								action: 'bb_get_reactions',
-								reaction_id: reaction_id,
-								item_id: item_id,
-								item_type: item_type,
-								paged: paged,
-								_wpnonce: BP_Nouveau.nonces.activity,
-							},
-							success: function ( response ) {
-								if ( typeof response.data.reactions !== 'undefined' ) {
-									element.parent().attr( 'data-paged', paged );
-									element.append( userReactions( response.data.reactions ) );
-									element.find( '.reactions_loader' ).remove();
-									element.removeClass( 'loading' );
-								}
-							}
-						}
-					);
-				}
-			}
-		},
-
 		ReactionStatePopupTab: function( event ) {
 			event.preventDefault();
 			$( this ).closest( '.activity-state-popup' ).find( '.activity-state-popup_tab_panel li a' ).removeClass( 'active' );
@@ -3280,7 +3169,7 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		closeActivityState: function() {
-			$( '.activity-state-popup' ).removeClass( 'active' );
+			$( '.activity-state-popup' ).hide().removeClass( 'active' );
 		}
 
 	};

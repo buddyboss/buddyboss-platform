@@ -3667,7 +3667,7 @@ function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
 }
 
 /**
- * Load the JS template for reacted users and reactions in modal .
+ * Load the JS template for reacted users and reactions in modal.
  *
  * @since BuddyBoss [BBVERSION]
  */

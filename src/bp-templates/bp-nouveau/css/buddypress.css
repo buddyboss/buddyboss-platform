@@ -3519,7 +3519,6 @@ input.search-query-input {
   clear: both;
 }
 
-.activity-list .activity-item .activity-content .activity-state .activity-state-likes,
 .activity-list .activity-item .activity-content .activity-state .ac-state-separator,
 .activity-list .activity-item .activity-content .activity-state .activity-state-comments {
   display: none;
@@ -3530,12 +3529,7 @@ input.search-query-input {
   padding: 0;
 }
 
-.activity-list .activity-item .activity-content .activity-state.has-likes .activity-state-likes {
-  display: inline-block;
-  background-color: transparent;
-}
-
-.activity-list .activity-item .activity-content .activity-state.has-comments .activity-state-reactions + .ac-state-separator,
+.activity-list .activity-item .activity-content .activity-state.has-comments.has-likes .ac-state-separator,
 .activity-list .activity-item .activity-content .activity-state.has-comments .activity-state-comments {
   color: var(--bb-body-text-color);
   display: inline-block;
@@ -3581,6 +3575,7 @@ input.search-query-input {
 }
 
 .activity-list .activity-item .activity-state-reactions .reactions_item > i {
+  color: #5087e5;
   font-size: 18px;
   font-weight: 200;
   line-height: 1;
@@ -3605,43 +3600,76 @@ input.search-query-input {
   align-items: center;
 }
 
-#buddypress .activity-list .activity-item > .activity-meta.action .button {
+#buddypress .activity-list .activity-item .activity-content .bp-generic-meta.action .button, #buddypress
+.activity-list .activity-item > .bp-generic-meta.action .button {
   display: flex;
   align-items: center;
   column-gap: 2px;
 }
 
-.activity-list .activity-item > .activity-meta.action .button > i {
+.activity-list .activity-item .activity-content .bp-generic-meta.action .button > i,
+.activity-list .activity-item > .bp-generic-meta.action .button > i {
   font-size: 22px;
   font-weight: 400;
   display: inline-block;
   vertical-align: middle;
 }
 
-.activity-list .activity-item > .activity-meta.action .button.has-reaction > i {
+.activity-list .activity-item .activity-content .bp-generic-meta.action .button.has-reaction > i,
+.activity-list .activity-item > .bp-generic-meta.action .button.has-reaction > i {
   font-weight: 200;
   font-size: 20px;
 }
 
-.activity-list .activity-item > .activity-meta.action .button > img {
+body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp-generic-meta.action .button.has-reaction > i, body:not(.bb-reactions-mode)
+.activity-list .activity-item > .bp-generic-meta.action .button.has-reaction > i {
+  font-weight: 300;
+}
+
+.activity-list .activity-item .activity-content .bp-generic-meta.action .button > img,
+.activity-list .activity-item > .bp-generic-meta.action .button > img {
   height: 20px;
   width: 20px;
   object-fit: cover;
 }
 
-.activity-list .activity-item > .activity-meta.action .button > img.custom {
+.activity-list .activity-item .activity-content .bp-generic-meta.action .button > img.custom,
+.activity-list .activity-item > .bp-generic-meta.action .button > img.custom {
   border-radius: 100%;
 }
 
-#buddypress .activity-list .activity-item > .activity-meta.action .button > .like-count {
+#buddypress .activity-list .activity-item .activity-content .bp-generic-meta.action .button > .like-count, #buddypress
+.activity-list .activity-item > .bp-generic-meta.action .button > .like-count {
   color: #333;
   line-height: 20px;
   display: inline-block;
   vertical-align: middle;
 }
 
-.activity-list .activity-item > .activity-meta.action .button.bp-like-button:before {
+.activity-list .activity-item .activity-content .bp-generic-meta.action .button.bp-like-button:before,
+.activity-list .activity-item > .bp-generic-meta.action .button.bp-like-button:before {
   display: none;
+}
+
+.activity-list .activity-item .activity-content .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:before,
+.activity-list .activity-item > .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:before {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  top: inherit;
+  min-width: auto;
+  transition: none;
+}
+
+.activity-list .activity-item .activity-content .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:after,
+.activity-list .activity-item > .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:after {
+  width: 180px;
+  white-space: normal;
+  left: 0;
+  transform: none;
+  transition: none;
 }
 
 .activity-list .activity-item .activity-inner p {
@@ -4079,6 +4107,10 @@ input.search-query-input {
   min-height: 150px;
 }
 
+.activity-list .activity-state-popup .activity-state_users.loading ~ .reaction-loader {
+  min-height: auto;
+}
+
 .activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_panel {
   margin-bottom: 10px;
 }
@@ -4317,6 +4349,10 @@ body:not(.bb-is-mobile) .activity-list .activity-item .ac-emotions_list:hover .a
   line-height: 1;
 }
 
+.activity-list .activity-item .ac-emotions_list .ac-emotion_item i:before {
+  margin: 0;
+}
+
 @media screen and (max-width: 370px) {
   .activity-list .activity-item .ac-emotions_list .ac-emotion_item img {
     width: 30px;
@@ -4327,12 +4363,18 @@ body:not(.bb-is-mobile) .activity-list .activity-item .ac-emotions_list:hover .a
   }
 }
 
-.activity-list .activity-item .acomment-display .ac-emotions_list:hover, .activity-list .activity-item .acomment-display .ac-emotions_list.active {
+.activity-list .activity-item .acomment-display .ac-emotions_list.active {
+  bottom: 20px;
+  left: -60px;
+}
+
+body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emotions_list:hover {
   bottom: 20px;
   left: -60px;
 }
 
 .bb-is-mobile.bb-reactions-mode .bp-generic-meta .generic-button a,
+.bb-is-mobile.bb-reactions-mode .bp-generic-meta .generic-button a img,
 .bb-is-mobile.bb-reactions-mode .bp-generic-meta .ac-emotions_list .ac-emotion_item a > *,
 .bb-is-mobile.bb-reactions-mode .bp-generic-meta .generic-button a > * {
   -webkit-touch-callout: none !important;
@@ -6944,12 +6986,31 @@ span.dashicons.dashicons-admin-file:before {
   text-transform: none;
 }
 
+.buddypress-wrap .activity-comments .bp-generic-meta.action .generic-button > a:hover {
+  text-decoration: underline !important;
+}
+
 .buddypress-wrap .activity-comments .bp-generic-meta.action a.bp-like-button:before {
   display: none;
 }
 
-.buddypress-wrap .activity-comments .bp-generic-meta.action a.bp-like-button .like-count {
-  margin-left: 0;
+.buddypress-wrap .activity-comments .bp-generic-meta.action a.bp-like-button.bb-reaction-migration-inprogress:before {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  top: inherit;
+  min-width: auto;
+  transition: none;
+}
+
+.buddypress-wrap .activity-comments .bp-generic-meta.action a.bp-like-button.bb-reaction-migration-inprogress:after {
+  width: 180px;
+  white-space: normal;
+  left: 0;
+  transform: none;
+  transition: none;
 }
 
 .buddypress-wrap .activity-comments .bp-generic-meta.action a.has-emotion > i,
@@ -7032,6 +7093,10 @@ span.dashicons.dashicons-admin-file:before {
 
 .buddypress-wrap .activity-comments .bb-activity-more-options-wrap .bb-activity-more-options-action i {
   font-size: 16px;
+}
+
+.buddypress-wrap .activity-list .activity-item .activity-comments .bp-generic-meta.action a.bp-like-button .like-count {
+  margin-left: 0;
 }
 
 .buddypress-wrap .mini .activity-comments {

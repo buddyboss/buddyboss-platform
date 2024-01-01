@@ -909,8 +909,9 @@ function bp_activity_get_actions_for_context( $context = '' ) {
  * Get a users favorite activity feed items.
  *
  * @since BuddyPress 1.2.0
+ * @since BuddyBoss [BBVERSION] Added the `$activity_type` parameter.
  *
- * @param int $user_id ID of the user whose favorites are being queried.
+ * @param int    $user_id       ID of the user whose favorites are being queried.
  * @param string $activity_type Activity type.
  *
  * @return array IDs of the user's favorite activity items.
@@ -967,14 +968,12 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = arra
 		function_exists( 'bb_pro_reaction_get_migration_status' ) &&
 		'inprogress' === bb_pro_reaction_get_migration_status()
 	) {
-
 		if ( 'bool' === $r['error_type'] ) {
 			return false;
 		} else {
 			return new WP_Error(
 				'bp_activity_add_user_favorite',
-				// @todo:Update error message later.
-				esc_html__( 'Migration in progress. Please try again later.', 'buddyboss' )
+				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' )
 			);
 		}
 	}
@@ -1066,8 +1065,7 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 		} else {
 			return new WP_Error(
 				'bp_activity_add_user_favorite',
-				// @todo:Update error message later.
-				esc_html__( 'Migration in progress. Please try again later.', 'buddyboss' )
+				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' )
 			);
 		}
 	}
@@ -1087,8 +1085,7 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 		} else {
 			return new WP_Error(
 				'bp_activity_add_user_favorite',
-				// @todo:Update error message later.
-				esc_html__( 'Reacted reaction ID is missing.', 'buddyboss' )
+				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' )
 			);
 		}
 	}
@@ -1227,6 +1224,27 @@ function bp_activity_get_last_updated() {
 	 * @param BP_Activity_Activity $last_updated Date last updated.
 	 */
 	return apply_filters( 'bp_activity_get_last_updated', BP_Activity_Activity::get_last_updated() );
+}
+
+/**
+ * Retrieve the number of favorite activity feed items a user has.
+ *
+ * @since BuddyPress 1.2.0
+ * @since BuddyBoss [BBVERSION] Added `$activity_type` property to indicate whether the current ID is activity or comment.
+ *
+ * @param int $user_id ID of the user whose favorite count is being requested.
+ * @param string $activity_type Activity type.
+ *
+ * @return int Total favorite count for the user.
+ */
+function bp_activity_total_favorites_for_user( $user_id = 0, $activity_type = 'activity' ) {
+
+	// Fallback on displayed user, and then logged in user.
+	if ( empty( $user_id ) ) {
+		$user_id = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+	}
+
+	return BP_Activity_Activity::total_favorite_count( $user_id, $activity_type );
 }
 
 /**
@@ -1386,8 +1404,19 @@ function bp_activity_remove_all_user_data( $user_id = 0 ) {
 	// Clear the user's activity from the sitewide stream and clear their activity tables.
 	bp_activity_delete( array( 'user_id' => $user_id ) );
 
+	// Removed users liked activity meta.
+	bp_activity_remove_user_favorite_meta( $user_id );
+
 	// Remove any usermeta.
 	bp_delete_user_meta( $user_id, 'bp_latest_update' );
+	bp_delete_user_meta( $user_id, 'bp_favorite_activities' );
+
+	// Remove user reactions from reactions table.
+	bb_load_reaction()->bb_remove_user_item_reactions(
+		array(
+			'user_id' => $user_id,
+		)
+	);
 
 	// Execute additional code
 	do_action( 'bp_activity_remove_data', $user_id ); // Deprecated! Do not use!
@@ -3214,6 +3243,58 @@ function bp_activity_delete( $args = '' ) {
 	return true;
 }
 
+/**
+ * Delete users liked activity meta.
+ *
+ * @since BuddyBoss 1.2.5
+ *
+ * @param int To delete user id.
+ * @return bool True on success, false on failure.
+ */
+function bp_activity_remove_user_favorite_meta( $user_id = 0 ) {
+
+	if ( empty( $user_id ) ) {
+		return false;
+	}
+
+	/**
+	 * For delete user id from other liked activity
+	 */
+	$activity_ids = bp_get_user_meta( $user_id, 'bp_favorite_activities', true );
+
+	// Loop through activity ids and attempt to delete favorite.
+	if ( ! empty( $activity_ids ) && is_array( $activity_ids ) && count( $activity_ids ) > 0 ) {
+		foreach ( $activity_ids as $activity_id ) {
+			$activity = new BP_Activity_Activity( $activity_id );
+			// Attempt to delete meta value.
+			if ( ! empty( $activity->id ) ) {
+
+				// Update the users who have favorited this activity.
+				$users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
+				if ( empty( $users ) || ! is_array( $users ) ) {
+					$users = array();
+				}
+
+				$found_user = array_search( $user_id, $users );
+				if ( ! empty( $found_user ) ) {
+					unset( $users[ $found_user ] );
+				}
+
+				// Update activity meta
+				bp_activity_update_meta( $activity_id, 'bp_favorite_users', array_unique( array_values( $users ) ) );
+
+				// Update the total number of users who have favorited this activity.
+				$fav_count = bp_activity_get_meta( $activity_id, 'favorite_count' );
+
+				if ( ! empty( $fav_count ) ) {
+					bp_activity_update_meta( $activity_id, 'favorite_count', (int) $fav_count - 1 );
+				}
+			}
+		}
+	}
+
+	return true;
+}
 	/**
 	 * Delete an activity item by activity id.
 	 *

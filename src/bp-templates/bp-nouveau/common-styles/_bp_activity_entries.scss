@@ -205,7 +205,6 @@
 				font-size: 12px;
 				clear: both;
 
-				.activity-state-likes,
 				.ac-state-separator,
 				.activity-state-comments {
 					display: none;
@@ -216,19 +215,9 @@
 					padding: 0;
 				}
 
-				&.has-likes {
-
-					.activity-state-likes {
-						display: inline-block;
-						background-color: transparent;
-					}
-
-
-				}
-
 				&.has-comments {
 
-					.activity-state-reactions + .ac-state-separator,
+					&.has-likes .ac-state-separator,
 					.activity-state-comments {
 						color: var(--bb-body-text-color);
 						display: inline-block;
@@ -281,6 +270,7 @@
 				}
 
 				> i {
+					color: $blue;
 					font-size: 18px;
 					font-weight: 200;
 					line-height: 1;
@@ -307,7 +297,8 @@
 			align-items: center;
 		}
 
-		> .activity-meta.action {
+		.activity-content .bp-generic-meta.action,
+		> .bp-generic-meta.action {
 
 			.button {
 
@@ -327,6 +318,10 @@
 				&.has-reaction > i {
 					font-weight: 200;
 					font-size: 20px;
+
+					body:not(.bb-reactions-mode) & {
+						font-weight: 300;
+					}
 				}
 
 				> img {
@@ -351,6 +346,28 @@
 
 				&.bp-like-button:before {
 					display: none;
+				}
+
+				&.bp-like-button.bb-reaction-migration-inprogress {
+
+					&:before {
+						content: "";
+						display: block;
+						position: absolute;
+						bottom: 100%;
+						left: 50%;
+						top: inherit;
+						min-width: auto;
+						transition: none;
+					}
+
+					&:after {
+						width: 180px;
+						white-space: normal;
+						left: 0;
+						transform: none;
+						transition: none;
+					}
 				}
 			}
 		}
@@ -844,6 +861,10 @@
 			min-height: 150px;
 		}
 
+		.activity-state_users.loading ~ .reaction-loader {
+			min-height: auto;
+		}
+
 		.activity-state-popup_tab {
 
 			.activity-state-popup_tab_panel {
@@ -1100,6 +1121,10 @@
 				i {
 					font-size: 40px;
 					line-height: 1;
+
+					&:before {
+						margin: 0;
+					}
 				}
 
 				@media screen and (max-width: 370px) {
@@ -1119,10 +1144,17 @@
 
 		.acomment-display .ac-emotions_list {
 
-			&:hover,
 			&.active {
 				bottom: 20px;
 				left: -60px;
+			}
+
+			&:hover {
+
+				body:not(.bb-is-mobile) & {
+					bottom: 20px;
+					left: -60px;
+				}
 			}
 
 		}
@@ -1139,6 +1171,7 @@
 	.bp-generic-meta {
 
 		.generic-button a,
+		.generic-button a img,
 		.ac-emotions_list .ac-emotion_item a > *,
 		.generic-button a > * {
 			-webkit-touch-callout: none !important;
@@ -1146,7 +1179,7 @@
 	}
 
 	&.activity * {
-		-webkit-user-select: none;
+		-webkit-user-select: none; // To prevent IOS to show context menu on long press
 		user-select: none;
 	}
 

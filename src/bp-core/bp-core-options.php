@@ -2699,7 +2699,7 @@ function bb_reaction_button_options( $key = '' ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return bool
+ * @return array
  */
 function bb_active_reactions() {
 	if ( bb_is_reaction_emotions_enabled() ) {

@@ -150,7 +150,7 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 
 	$response = array(
 		'reaction_button' => bb_get_activity_post_reaction_button_html( $item_id, $item_type, $reaction_id, true ),
-		'reaction_count'  => bb_get_activity_post_user_reactions_html( $item_id, $item_type ),
+		'reaction_count'  => bb_get_activity_post_user_reactions_html( $item_id, $item_type, false ),
 	);
 
 	$fav_count = (int) bp_get_total_favorite_count_for_user( $user_id );
@@ -161,7 +161,7 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 				<a href="%1$s"><div class="bb-component-nav-item-point">%2$s</div> </a>
 			</li>',
 			esc_url( bp_loggedin_user_domain() . bp_get_activity_slug() . '/favorites/' ),
-			bb_is_reaction_emotions_enabled() ? esc_html__( 'Reacted to', 'buddyboss' ) : esc_html__( 'Likes', 'buddyboss' )
+			bb_is_reaction_emotions_enabled() ? esc_html__( 'Reactions', 'buddyboss' ) : esc_html__( 'Likes', 'buddyboss' )
 		);
 	}
 
@@ -209,7 +209,7 @@ function bp_nouveau_ajax_unmark_activity_favorite() {
 
 	$response = array(
 		'reaction_button' => bb_get_activity_post_reaction_button_html( $item_id, $item_type ),
-		'reaction_count'  => bb_get_activity_post_user_reactions_html( $item_id, $item_type ),
+		'reaction_count'  => bb_get_activity_post_user_reactions_html( $item_id, $item_type, false ),
 	);
 
 	$fav_count = (int) bp_get_total_favorite_count_for_user( $user_id );
