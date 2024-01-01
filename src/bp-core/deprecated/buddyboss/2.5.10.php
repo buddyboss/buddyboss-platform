@@ -45,22 +45,3 @@ function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
 
 	return bb_activity_reaction_names_and_count( $activity_id );
 }
-
-/**
- * Delete users liked activity meta.
- *
- * @since BuddyBoss 1.2.5
- * @deprecated BuddyBoss [BBVERSION]
- *
- * @param int $user_id To delete user id.
- * @return bool True on success, false on failure.
- */
-function bp_activity_remove_user_favorite_meta( $user_id = 0 ) {
-	_deprecated_function( __FUNCTION__, '2.5.10', 'bb_remove_user_reactions' );
-
-	if ( empty( $user_id ) ) {
-		return false;
-	}
-
-	return bb_remove_user_reactions( $user_id );
-}

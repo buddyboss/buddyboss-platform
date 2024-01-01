@@ -3232,6 +3232,58 @@ function bp_activity_delete( $args = '' ) {
 	return true;
 }
 
+/**
+ * Delete users liked activity meta.
+ *
+ * @since BuddyBoss 1.2.5
+ *
+ * @param int To delete user id.
+ * @return bool True on success, false on failure.
+ */
+function bp_activity_remove_user_favorite_meta( $user_id = 0 ) {
+
+	if ( empty( $user_id ) ) {
+		return false;
+	}
+
+	/**
+	 * For delete user id from other liked activity
+	 */
+	$activity_ids = bp_get_user_meta( $user_id, 'bp_favorite_activities', true );
+
+	// Loop through activity ids and attempt to delete favorite.
+	if ( ! empty( $activity_ids ) && is_array( $activity_ids ) && count( $activity_ids ) > 0 ) {
+		foreach ( $activity_ids as $activity_id ) {
+			$activity = new BP_Activity_Activity( $activity_id );
+			// Attempt to delete meta value.
+			if ( ! empty( $activity->id ) ) {
+
+				// Update the users who have favorited this activity.
+				$users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
+				if ( empty( $users ) || ! is_array( $users ) ) {
+					$users = array();
+				}
+
+				$found_user = array_search( $user_id, $users );
+				if ( ! empty( $found_user ) ) {
+					unset( $users[ $found_user ] );
+				}
+
+				// Update activity meta
+				bp_activity_update_meta( $activity_id, 'bp_favorite_users', array_unique( array_values( $users ) ) );
+
+				// Update the total number of users who have favorited this activity.
+				$fav_count = bp_activity_get_meta( $activity_id, 'favorite_count' );
+
+				if ( ! empty( $fav_count ) ) {
+					bp_activity_update_meta( $activity_id, 'favorite_count', (int) $fav_count - 1 );
+				}
+			}
+		}
+	}
+
+	return true;
+}
 	/**
 	 * Delete an activity item by activity id.
 	 *
