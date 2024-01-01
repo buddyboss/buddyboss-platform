@@ -777,6 +777,7 @@ window.bp = window.bp || {};
 				'#group-invites-container .bb-groups-invites-right #send_group_invite_form .bb-groups-invites-right-bottom #send_group_invite_button',
 				function( e ) {
 					e.preventDefault();
+					var target     = $( e.currentTarget );
 					var users_list = [];
 					var newData    = $.grep(
 						$group_invites_select.select2( 'data' ),
@@ -801,9 +802,8 @@ window.bp = window.bp || {};
 						'message' 	 	: $( 'textarea#send-invites-control' ).val(),
 						'users'   		: users_list
 					};
-					var self = $( this );
 
-					self.prop( 'disabled', true );
+					target.attr( 'disabled', true );
 
 					$.ajax(
 						{
@@ -890,7 +890,7 @@ window.bp = window.bp || {};
 									); // <-- time in milliseconds
 								}
 
-								self.prop( 'disabled', false );
+								target.attr( 'disabled', false );
 							}
 						}
 					);
