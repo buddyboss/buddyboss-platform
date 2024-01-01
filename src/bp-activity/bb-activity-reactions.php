@@ -387,7 +387,7 @@ function bb_activity_get_reacted_users_data( $args ) {
 			$type          = function_exists( 'bp_get_member_type_object' ) ? bp_get_member_type( $reaction->user_id ) : '';
 			$type_obj      = function_exists( 'bp_get_member_type_object' ) && ! empty( $type ) ? bp_get_member_type_object( $type ) : '';
 			$color_data    = function_exists( 'bb_get_member_type_label_colors' ) && ! empty( $type ) ? bb_get_member_type_label_colors( $type ) : '';
-
+			$member_type   = '';
 			if ( ! empty( $type_obj ) ) {
 				$member_type = $type_obj->labels['singular_name'];
 			}
