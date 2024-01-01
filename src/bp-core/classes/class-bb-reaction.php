@@ -633,7 +633,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @param array $args Arguments of user reaction.
 		 *
-		 * @return bool|int|WP_Error|object
+		 * @return array|bool|object|WP_Error|null
 		 */
 		public function bb_add_user_item_reaction( $args ) {
 			global $wpdb;
@@ -852,7 +852,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @param array $args Args of user reactions.
 		 *
-		 * @return bool|int|mysqli_result|resource|WP_Error
+		 * @return bool|int|mysqli_result|WP_Error
 		 */
 		public function bb_remove_user_item_reactions( $args ) {
 			global $wpdb;
@@ -1238,6 +1238,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			$sql          = 'SELECT * FROM ' . self::$user_reaction_table . ' WHERE id = %d';
 			$get_reaction = $wpdb->get_row( $wpdb->prepare( $sql, $user_reaction_id ) ); // phpcs:ignore
+
+			wp_cache_set( $user_reaction_id, $get_reaction, self::$cache_group );
 
 			return $get_reaction;
 		}
@@ -1875,6 +1877,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			// phpcs:ignore
 			$sql           = $wpdb->prepare( 'SELECT * FROM ' . self::$reaction_data_table . " WHERE id = %d", $reaction_data_id );
 			$reaction_data = $wpdb->get_row( $sql ); // phpcs:ignore
+
+			wp_cache_set( $reaction_data_id, $reaction_data, self::$rd_cache_group );
 
 			return $reaction_data;
 		}
