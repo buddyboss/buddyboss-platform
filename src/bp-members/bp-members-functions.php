@@ -5732,29 +5732,3 @@ function bb_remove_orphaned_profile_slug( $user_id ) {
 		bb_remove_orphaned_profile_slug( $user_id );
 	}
 }
-
-/**
- * Remove user's reactions when the user is deleted.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int $user_id ID of the user who is about to be deleted.
- *
- * @return bool True on success, false on failure.
- */
-function bb_remove_user_reactions( $user_id ) {
-
-	if ( empty( $user_id ) ) {
-		$user_id = bp_loggedin_user_id();
-	}
-
-	$status = bb_load_reaction()->bb_remove_user_item_reactions(
-		array(
-			'user_id' => $user_id,
-		)
-	);
-
-	return $status;
-}
-add_action( 'wpmu_delete_user', 'bb_remove_user_reactions' );
-add_action( 'delete_user', 'bb_remove_user_reactions' );

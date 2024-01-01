@@ -1404,8 +1404,12 @@ function bp_activity_remove_all_user_data( $user_id = 0 ) {
 	// Clear the user's activity from the sitewide stream and clear their activity tables.
 	bp_activity_delete( array( 'user_id' => $user_id ) );
 
+	// Removed users liked activity meta.
+	bp_activity_remove_user_favorite_meta( $user_id );
+
 	// Remove any usermeta.
 	bp_delete_user_meta( $user_id, 'bp_latest_update' );
+	bp_delete_user_meta( $user_id, 'bp_favorite_activities' );
 
 	// Execute additional code
 	do_action( 'bp_activity_remove_data', $user_id ); // Deprecated! Do not use!
