@@ -63,7 +63,7 @@ window.bp = window.bp || {};
 				item_id     = 0,
 				item_type   = '';
 
-			if ( 0 < target.parents( '.acomment-display' ).first().length ) {
+			if ( 0 < target_init.parents( '.acomment-display' ).first().length ) {
 				item_id   = target_init.parents( '.activity-comment' ).first().data( 'bp-activity-comment-id' ).toString();
 				item_type = 'activity_comment';
 			} else {

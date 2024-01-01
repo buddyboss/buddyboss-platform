@@ -361,16 +361,15 @@ function bb_get_activity_post_user_reactions_html( $activity_id, $item_type = 'a
 		}
 
 		$output .= '</div>';
+	}
 
-		// Build popup to show reacted items.
-		if ( $is_popup ) {
-			$output .= '<div class="activity-state-popup">
+	// Build popup to show reacted items.
+	if ( $is_popup ) {
+		$output .= '<div class="activity-state-popup">
 				<div class="activity-state-popup_overlay"></div>
 				<div class="activity-state-popup_inner" id="reaction-content-' . $activity_id . '">
 				</div>
 			</div>';
-		}
-
 	}
 
 	return apply_filters( 'bb_get_activity_post_user_reactions_html', $output );

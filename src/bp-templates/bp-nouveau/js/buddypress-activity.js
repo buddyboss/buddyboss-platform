@@ -761,7 +761,7 @@ window.bp = window.bp || {};
 				event.preventDefault();
 
 				// Do not trigger click event directly on the button when it's mobile and reaction is active.
-				if( $( 'body' ).hasClass( 'bb-is-mobile' ) && $( 'body' ).hasClass( 'bb-reactions-mode' ) && target.parent( '.ac-emotion_btn' ).length == 0  && event.customTriggered !== true ) {
+				if ( $( 'body' ).hasClass( 'bb-is-mobile' ) && $( 'body' ).hasClass( 'bb-reactions-mode' ) && target.parent( '.ac-emotion_btn' ).length === 0 && event.customTriggered !== true ) {
 					return;
 				}
 
@@ -836,8 +836,10 @@ window.bp = window.bp || {};
 											}
 
 										} else {
-											if ( 0 < main_el.find( '#acomment-display-' + item_id + ' .comment-reactions' ).length ) {
-												main_el.find( '#acomment-display-' + item_id + ' .comment-reactions' ).html( response.data.reaction_count );
+											if ( 0 < main_el.find( '#acomment-display-' + item_id + ' .comment-reactions .activity-state-reactions' ).length ) {
+												main_el.find( '#acomment-display-' + item_id + ' .comment-reactions .activity-state-reactions' ).replaceWith( response.data.reaction_count );
+											} else {
+												main_el.find( '#acomment-display-' + item_id + ' .comment-reactions' ).prepend( response.data.reaction_count );
 											}
 										}
 									}
