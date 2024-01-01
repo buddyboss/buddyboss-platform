@@ -1411,6 +1411,13 @@ function bp_activity_remove_all_user_data( $user_id = 0 ) {
 	bp_delete_user_meta( $user_id, 'bp_latest_update' );
 	bp_delete_user_meta( $user_id, 'bp_favorite_activities' );
 
+	// Remove user reactions from reactions table.
+	bb_load_reaction()->bb_remove_user_item_reactions(
+		array(
+			'user_id' => $user_id,
+		)
+	);
+
 	// Execute additional code
 	do_action( 'bp_activity_remove_data', $user_id ); // Deprecated! Do not use!
 
