@@ -15,7 +15,7 @@
  * @return int Total favorite count for the user.
  */
 function bp_activity_total_favorites_for_user( $user_id = 0 ) {
-	_deprecated_function( __FUNCTION__, '2.5.10' );
+	_deprecated_function( __FUNCTION__, '2.5.10', 'bb_activity_total_reactions_count_for_user' );
 
 	// Fallback on displayed user, and then logged in user.
 	if ( empty( $user_id ) ) {
@@ -36,7 +36,7 @@ function bp_activity_total_favorites_for_user( $user_id = 0 ) {
  * @return int|string
  */
 function bp_activity_get_favorite_users_string( $activity_id ) {
-	_deprecated_function( __FUNCTION__, '2.5.10' );
+	_deprecated_function( __FUNCTION__, '2.5.10', 'bb_activity_reaction_names_and_count' );
 
 	if ( ! bp_is_activity_like_active() ) {
 		return 0;
@@ -57,33 +57,13 @@ function bp_activity_get_favorite_users_string( $activity_id ) {
  * @return string
  */
 function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
-	_deprecated_function( __FUNCTION__, '2.5.10' );
+	_deprecated_function( __FUNCTION__, '2.5.10', 'bb_activity_reaction_names_and_count' );
 
 	if ( ! bp_is_activity_like_active() ) {
 		return false;
 	}
 
-	$current_user_id = get_current_user_id();
-	$favorited_users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
-
-	if ( ! empty( $favorited_users ) ) {
-		$like_text       = bp_activity_get_favorite_users_string( $activity_id );
-		$favorited_users = array_reduce(
-			$favorited_users,
-			function ( $carry, $user_id ) use ( $current_user_id, $like_text ) {
-				if ( $user_id != $current_user_id ) {
-					$user_display_name = bp_core_get_user_displayname( $user_id );
-					if ( strpos( $like_text, $user_display_name ) === false ) {
-						$carry .= $user_display_name . ',&#10;';
-					}
-				}
-
-				return $carry;
-			}
-		);
-	}
-
-	return ! empty( $favorited_users ) ? trim( $favorited_users, ',&#10;' ) : '';
+	return bb_activity_reaction_names_and_count( $activity_id );
 }
 
 /**
@@ -96,7 +76,7 @@ function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
  * @return bool True on success, false on failure.
  */
 function bp_activity_remove_user_favorite_meta( $user_id = 0 ) {
-	_deprecated_function( __FUNCTION__, '2.5.10' );
+	_deprecated_function( __FUNCTION__, '2.5.10', 'bb_remove_user_reactions' );
 
 	if ( empty( $user_id ) ) {
 		return false;
