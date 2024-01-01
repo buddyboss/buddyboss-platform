@@ -34,7 +34,7 @@ window.bp = window.bp || {};
 			this.views       = new Backbone.Collection();
 			this.collections = [];
 			this.types       = [];
-			this.fetchXhr    = [];
+			this.fetchXhr    = null;
 			this.loader      = [];
 			this.loader_html = $( '<p class="reaction-loader"><i class="bb-icon-l bb-icon-spinner animate-spin"></i></p>' );
 
@@ -111,6 +111,12 @@ window.bp = window.bp || {};
 			},
 
 			sync: function ( method, model, options ) {
+
+				// Abort current operation when request multiple.
+				if ( null !== bp.Nouveau.ActivityReaction.fetchXhr ) {
+					bp.Nouveau.ActivityReaction.fetchXhr.abort();
+				}
+
 				var self = this;
 
 				options         = options || {};
@@ -128,7 +134,9 @@ window.bp = window.bp || {};
 				options.data._wpnonce = BP_Nouveau.nonces.activity;
 				options.data.action   = 'bb_get_reactions';
 
-				return Backbone.sync( method, model, options );
+				bp.Nouveau.ActivityReaction.fetchXhr = Backbone.sync( method, model, options );
+
+				return bp.Nouveau.ActivityReaction.fetchXhr;
 			},
 
 			parse: function ( resp ) {
