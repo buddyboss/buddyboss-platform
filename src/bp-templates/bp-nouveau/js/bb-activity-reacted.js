@@ -125,7 +125,7 @@ window.bp = window.bp || {};
 
 				_.extend(
 					options.data,
-					_.pick( self.options, [ 'page', 'per_page', 'before', 'reaction_id', 'item_type', 'item_id' ] ),
+					_.pick( self.options, [ 'page', 'per_page', 'before' ] ),
 				);
 
 				// Add generic data and nonce.
@@ -473,7 +473,9 @@ window.bp = window.bp || {};
 			},
 
 			onTabChangeSuccessRender: function ( targetElement, collection, response ) {
-				this.loader.remove();
+				if ( targetElement.find( '.reaction-loader' ) ) {
+					targetElement.find( '.reaction-loader' ).remove();
+				}
 
 				if ( response.success ) {
 					var models = this.collection.toJSON();
@@ -493,7 +495,9 @@ window.bp = window.bp || {};
 			},
 
 			onTabChangeFailedRender: function( targetElement, collection, response ) {
-				this.loader.remove();
+				if ( targetElement.find( '.reaction-loader' ) ) {
+					targetElement.find( '.reaction-loader' ).remove();
+				}
 
 				if (
 					'undefined' !== typeof response.statusText &&

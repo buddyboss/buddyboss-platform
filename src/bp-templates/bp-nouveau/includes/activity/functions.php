@@ -67,6 +67,9 @@ function bp_nouveau_activity_enqueue_scripts() {
 		wp_enqueue_script( 'bp-nouveau-activity-post-form' );
 		bp_get_template_part( 'common/js-templates/activity/form' );
 	}
+
+	// Add activity reaction popup js template.
+	bb_load_reaction_popup_modal_js_template();
 }
 
 /**

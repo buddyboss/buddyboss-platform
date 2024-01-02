@@ -175,12 +175,6 @@ add_action( 'edit_post', 'bb_cpt_post_title_save', 999, 2 );
 
 add_filter( 'bb_activity_comment_get_edit_data', 'bb_blogs_activity_comment_edit_content', 9999 );
 
-// Add activity reaction popup js template.
-add_action( 'bp_after_directory_activity_list', 'bb_load_reaction_popup_modal_js_template' );
-add_action( 'bp_after_member_activity_content', 'bb_load_reaction_popup_modal_js_template' );
-add_action( 'bp_after_group_activity_content', 'bb_load_reaction_popup_modal_js_template' );
-add_action( 'bp_after_single_activity_content', 'bb_load_reaction_popup_modal_js_template' );
-
 /** Functions *****************************************************************/
 
 /**
