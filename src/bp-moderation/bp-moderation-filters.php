@@ -307,7 +307,7 @@ function bp_moderation_block_member() {
 				false
 			);
 
-			$response['redirect'] = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() ) . '/blocked-members';
+			$response['redirect'] = bp_is_active( 'settings' ) ? trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() ) . '/blocked-members' : bp_loggedin_user_domain();
 		}
 
 		$response['message'] = $moderation->errors;
