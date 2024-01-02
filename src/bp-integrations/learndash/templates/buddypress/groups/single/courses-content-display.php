@@ -45,9 +45,7 @@ $course_status              = learndash_course_status( $course_id, null );
 $has_access                 = sfwd_lms_has_access( $course_id, $user_id );
 $has_topics                 = false;
 
-$content = apply_filters( 'the_content', $courses_new[0]->post_content );
-// $content = do_shortcode( $courses_new[0]->post_content );
-
+$content   = apply_filters( 'bb_learndash_course_post_content', $courses_new[0]->post_content );
 $logged_in = ! empty( $user_id );
 $materials = '';
 if ( ( 'on' === $course_settings['course_materials_enabled'] ) && ( ! empty( $course_settings['course_materials'] ) ) ) {

@@ -32,6 +32,9 @@ add_filter( 'bp_uri', 'bb_support_learndash_course_other_language_permalink', 10
 // Support for learndash nested urls.
 add_filter( 'learndash_permalinks_nested_urls', 'bb_support_learndash_permalinks_nested_urls', 9999, 3 );
 
+// Support for elementor content.
+add_filter( 'bb_learndash_course_post_content', 'bb_learndash_elementer_course_post_content' );
+
 /** Functions *****************************************************************/
 
 /**
@@ -479,4 +482,32 @@ function bb_support_learndash_permalinks_nested_urls( $ld_rewrite_rules, $ld_rew
 	}
 
 	return $ld_rewrite_rules;
+}
+
+/**
+ * Course content filter.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string $content Course post content.
+ */
+function bb_learndash_elementer_course_post_content( $content ) {
+
+	global $courses_new;
+
+	$course_id = ! empty( $courses_new[0] ) && ! empty( $courses_new[0]->ID ) ? $courses_new[0]->ID : 0;
+	$content   = apply_filters( 'the_content', $courses_new[0]->post_content );
+
+	// Elementor Compatibility.
+	if ( $course_id && class_exists( 'Elementor\Plugin' ) ) {
+
+		// Check if Elementor is active for this post.
+		if ( \Elementor\Plugin::instance()->documents->get( $course_id )->is_built_with_elementor() ) {
+
+			// Get the content using Elementor API.
+			$content = \Elementor\Plugin::$instance->frontend->get_builder_content_for_display( $course_id );
+		}
+	}
+
+	return $content;
 }
