@@ -3659,4 +3659,3 @@ function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
 
 	return $activity_comment_data;
 }
-
