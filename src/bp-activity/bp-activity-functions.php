@@ -6458,3 +6458,19 @@ function bb_activity_pin_type( $args ) {
 
 	return $r['pin_type'];
 }
+
+/**
+ * Load the JS template for reacted users and reactions in modal.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_load_reaction_popup_modal_js_template() {
+
+	// If reaction is enabled for activity post or comment then load the template.
+	if (
+		bb_is_reaction_activity_posts_enabled() ||
+		bb_is_reaction_activity_comments_enabled()
+	) {
+		bp_get_template_part( 'common/js-templates/activity/parts/bb-activity-reactions-popup' );
+	}
+}
