@@ -5184,7 +5184,7 @@ window.bp = window.bp || {};
 				var content = $.trim( $whatsNew[0].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 				var dropzone_error_check = this.$el.find( '.dz-preview.dz-error' ).length;
 				content     = content.replace( /&nbsp;/g, ' ' );
-				
+
 				if ( content.replace( /<p>/gi, '' ).replace( /<\/p>/gi, '' ).replace( /<br>/gi, '' ) === '' ) {
 					$whatsNew[0].innerHTML = '';
 				}
