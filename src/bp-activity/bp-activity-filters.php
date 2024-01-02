@@ -3601,7 +3601,7 @@ function bb_moderation_remove_mention_count( $num_links, $url, $comment ) {
  * @param object $post Post data.
  */
 function bb_cpt_post_title_save( $post_id, $post ) {
-	if ( empty( $post_id ) || empty( buddypress()->blogs ) ) {
+	if ( empty( $post_id ) || empty( buddypress()->blogs ) || ! bp_is_active( 'activity' ) ) {
 		return;
 	}
 
