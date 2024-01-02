@@ -5175,7 +5175,7 @@ function bb_members_get_user_mentionname( $user_id ) {
  *
  * @since BuddyBoss 2.0.0
  *
- * @param $type Type of the member
+ * @param string $type Type of the member
  *
  * @return array Return array of label color data
  */

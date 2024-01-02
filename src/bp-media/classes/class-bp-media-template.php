@@ -163,9 +163,6 @@ class BP_Media_Template {
 		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
 		$this->pag_num  = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
 
-		// Get an array of the logged in user's favorite media.
-		$this->my_favs = bp_get_user_meta( bp_loggedin_user_id(), 'bp_favorite_media', true );
-
 		// Fetch specific media items based on ID's.
 		if ( ! empty( $include ) ) {
 			$this->medias = bp_media_get_specific(
