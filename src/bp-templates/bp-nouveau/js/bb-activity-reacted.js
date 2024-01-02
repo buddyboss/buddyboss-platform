@@ -473,7 +473,9 @@ window.bp = window.bp || {};
 			},
 
 			onTabChangeSuccessRender: function ( targetElement, collection, response ) {
-				this.loader.remove();
+				if ( targetElement.find( '.reaction-loader' ) ) {
+					targetElement.find( '.reaction-loader' ).remove();
+				}
 
 				if ( response.success ) {
 					var models = this.collection.toJSON();
@@ -493,7 +495,9 @@ window.bp = window.bp || {};
 			},
 
 			onTabChangeFailedRender: function( targetElement, collection, response ) {
-				this.loader.remove();
+				if ( targetElement.find( '.reaction-loader' ) ) {
+					targetElement.find( '.reaction-loader' ).remove();
+				}
 
 				if (
 					'undefined' !== typeof response.statusText &&
