@@ -125,7 +125,7 @@ window.bp = window.bp || {};
 
 				_.extend(
 					options.data,
-					_.pick( self.options, [ 'page', 'per_page', 'before', 'reaction_id', 'item_type', 'item_id' ] ),
+					_.pick( self.options, [ 'page', 'per_page', 'before' ] ),
 				);
 
 				// Add generic data and nonce.
