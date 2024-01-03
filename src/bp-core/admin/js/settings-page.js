@@ -1340,6 +1340,17 @@ window.bp = window.bp || {};
 							defaultProfileAvatarCustomContainer.addClass( 'bp-hide' );
 						}
 
+						var is_available_image_library = $( 'input[name="bb-is-available-image-library"]' ).val();
+						if ( 'display-name' === this.value ) {
+							$( '.bp-default-profile-avatar-display-name-description' ).removeClass( 'bp-hide' );
+							if ( 0 === is_available_image_library.length ) {
+								$( '.bp-default-profile-avatar-display-name-notice' ).removeClass( 'bp-hide' );
+							}
+						} else {
+							$( '.bp-default-profile-avatar-display-name-description' ).addClass( 'bp-hide' );
+							$( '.bp-default-profile-avatar-display-name-notice' ).addClass( 'bp-hide' );
+						}
+
 						if ( typeof profileAvatarURL.length !== 'undefined' && 0 < profileAvatarURL.length ) {
 							previewContainer.find( '.preview_avatar_cover' ).addClass( 'has-avatar' );
 						}
@@ -1718,6 +1729,13 @@ window.bp = window.bp || {};
 						} else {
 							$( '.default-group-avatar-custom' ).addClass( 'bp-hide' );
 							groupAvatarURL = $( '.' + this.value + '-group-avatar' ).prop( 'src' );
+						}
+
+						var group_is_available_image_library = $( 'input[name="bb-is-available-image-library"]' ).val();
+						if ( 'group-name' === this.value && 0 === group_is_available_image_library.length ) {
+							$( '.bp-default-group-avatar-group-name-notice' ).removeClass( 'bp-hide' );
+						} else {
+							$( '.bp-default-group-avatar-group-name-notice' ).addClass( 'bp-hide' );
 						}
 
 						if ( typeof groupAvatarURL.length !== 'undefined' && 0 < groupAvatarURL.length ) {

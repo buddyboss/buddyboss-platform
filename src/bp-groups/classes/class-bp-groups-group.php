@@ -309,7 +309,11 @@ class BP_Groups_Group {
 			$this->slug = groups_check_slug( $this->slug );
 		}
 
+		$old_group_name = '';
 		if ( ! empty( $this->id ) ) {
+			// Get the group name from the database.
+			$old_group_name = bp_get_group_name( groups_get_group( $this->id ) );
+
 			$sql = $wpdb->prepare(
 				"UPDATE {$bp->groups->table_name} SET
 					creator_id = %d,
@@ -364,6 +368,10 @@ class BP_Groups_Group {
 
 		if ( empty( $this->id ) ) {
 			$this->id = $wpdb->insert_id;
+		} elseif ( ! empty( $old_group_name ) && $this->name !== $old_group_name ) {
+			if ( bb_core_get_first_character( $old_group_name ) !== bb_core_get_first_character( $this->name ) ) {
+				bb_delete_default_group_png_avatar( array( $this->id ) );
+			}
 		}
 
 		/**
@@ -422,22 +430,20 @@ class BP_Groups_Group {
 			return false;
 		}
 
+		$wp_filesystem = bb_wp_filesystem();
+
 		// Delete group avatars.
 		$upload_path = bp_core_avatar_upload_path();
-		if ( function_exists( 'system' ) ) {
-			system( 'rm -rf ' . escapeshellarg( $upload_path . '/group-avatars/' . $this->id ) );
-		} else {
-			bp_core_remove_temp_directory( $upload_path . '/group-avatars/' . $this->id );
-		}
+		$wp_filesystem->delete( trailingslashit( $upload_path . '/group-avatars/' . $this->id ), true );
 
 		// Delete group avatars.
 		$bp_attachments_uploads_dir = bp_attachments_uploads_dir_get();
 		$type_dir                   = trailingslashit( $bp_attachments_uploads_dir['basedir'] );
-		if ( function_exists( 'system' ) ) {
-			system( 'rm -rf ' . escapeshellarg( $type_dir . 'groups/' . $this->id ) );
-		} else {
-			bp_core_remove_temp_directory( $type_dir . 'groups/' . $this->id );
-		}
+		$wp_filesystem->delete( trailingslashit( $type_dir . 'groups/' . $this->id ), true );
+
+		// Delete group default PNG avatars.
+		$upload_path = bp_core_avatar_upload_path();
+		$wp_filesystem->delete( trailingslashit( $upload_path . '/group-avatars/default/' . $this->id ), true );
 
 		return true;
 	}
