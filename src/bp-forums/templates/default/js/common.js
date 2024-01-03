@@ -109,9 +109,9 @@ jQuery( document ).ready(
 
 					form.find( '.bbp_topic_tags_dropdown option[value="' + data.id + '"]' ).remove();
 					var existingTags = form.find( '#bbp_topic_tags' ).val();
-					tagsArrayData    = existingTags && existingTags.length > 0 ? existingTags.split( ',' ) : [],
+					tagsArrayData    = existingTags && existingTags.length > 0 ? existingTags.split( ',' ) : [];
 					tagsArrayData    = tagsArrayData.filter( function( item ) {
-						return item !== data.text
+						return item !== data.text;
 					})
 					var tags = tagsArrayData.join( ',' );
 
