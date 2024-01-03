@@ -1768,10 +1768,11 @@ function bp_nouveau_ajax_groups_send_message() {
 			// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "message_users_ids".
 			$_POST['message_meta_users_list'] = $message_users_ids;
 
-			if ( ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) ) {
-				$chunk_members = array_chunk( $members, bb_get_email_queue_min_count() );
+			$min_count = bb_get_email_queue_min_count();
+			if ( count( $members ) > $min_count ) {
+				$chunk_members = array_chunk( $members, $min_count );
 				if ( ! empty( $chunk_members ) ) {
-					foreach ( $chunk_members as $key => $members ) {
+					foreach ( $chunk_members as $members ) {
 						$bb_background_updater->data(
 							array(
 								'type'     => 'email',
