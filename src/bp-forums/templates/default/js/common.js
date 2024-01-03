@@ -98,7 +98,6 @@ jQuery( document ).ready(
 						bbp_topic_tags.val( tags );
 
 						form.find( '.select2-search__field' ).trigger( 'click' );
-						form.find( '.select2-search__field' ).trigger( 'click' );
 					}
 				);
 
@@ -215,97 +214,112 @@ jQuery( document ).ready(
 			jQuery( document ).on( 'elementor/popup/show', function () {
 				var $tagsSelect = jQuery( 'body' ).find( 'div.elementor-location-popup' ).find( '.bbp_topic_tags_dropdown' );
 				if ( $tagsSelect.length ) {
-					$tagsSelect.select2( {
-						placeholder: $tagsSelect.attr( 'placeholder' ),
-						dropdownParent: $tagsSelect.closest('form').parent(),
-						minimumInputLength: 1,
-						closeOnSelect: true,
-						tags: true,
-						language: {
-							errorLoading: function () {
-								return bp_select2.i18n.errorLoading;
-							},
-							inputTooLong: function ( e ) {
-								var n = e.input.length - e.maximum;
-								return bp_select2.i18n.inputTooLong.replace( '%%', n );
-							},
-							inputTooShort: function ( e ) {
-								return bp_select2.i18n.inputTooShort.replace( '%%', (e.minimum - e.input.length) );
-							},
-							loadingMore: function () {
-								return bp_select2.i18n.loadingMore;
-							},
-							maximumSelected: function ( e ) {
-								return bp_select2.i18n.maximumSelected.replace( '%%', e.maximum );
-							},
-							noResults: function () {
-								return bp_select2.i18n.noResults;
-							},
-							searching: function () {
-								return bp_select2.i18n.searching;
-							},
-							removeAllItems: function () {
-								return bp_select2.i18n.removeAllItems;
-							}
-						},
-						dropdownCssClass: 'bb-select-dropdown bb-tag-list-dropdown',
-						containerCssClass: 'bb-select-container',
-						tokenSeparators: [ ',' ],
-						ajax: {
-							url: bbpCommonJsData.ajax_url,
-							dataType: 'json',
-							delay: 1000,
-							data: function ( params ) {
-								return jQuery.extend( {}, params, {
-									_wpnonce: bbpCommonJsData.nonce,
-									action: 'search_tags',
-								} );
-							},
-							cache: true,
-							processResults: function ( data ) {
 
-								// Removed the element from results if already selected.
-								if ( false === jQuery.isEmptyObject( tagsArrayData ) ) {
-									jQuery.each( tagsArrayData, function ( index, value ) {
-										for ( var i = 0; i < data.data.results.length; i++ ) {
-											if ( data.data.results[ i ].id === value ) {
-												data.data.results.splice( i, 1 );
-											}
-										}
-									} );
+					$tagsSelect.each( function ( i, element ) {
+						jQuery( element ).select2( {
+							placeholder: jQuery( element ).attr( 'placeholder' ),
+							dropdownParent: jQuery( element ).closest('form').parent(),
+							minimumInputLength: 1,
+							closeOnSelect: true,
+							tags: true,
+							language: {
+								errorLoading: function () {
+									return bp_select2.i18n.errorLoading;
+								},
+								inputTooLong: function ( e ) {
+									var n = e.input.length - e.maximum;
+									return bp_select2.i18n.inputTooLong.replace( '%%', n );
+								},
+								inputTooShort: function ( e ) {
+									return bp_select2.i18n.inputTooShort.replace( '%%', (e.minimum - e.input.length) );
+								},
+								loadingMore: function () {
+									return bp_select2.i18n.loadingMore;
+								},
+								maximumSelected: function ( e ) {
+									return bp_select2.i18n.maximumSelected.replace( '%%', e.maximum );
+								},
+								noResults: function () {
+									return bp_select2.i18n.noResults;
+								},
+								searching: function () {
+									return bp_select2.i18n.searching;
+								},
+								removeAllItems: function () {
+									return bp_select2.i18n.removeAllItems;
 								}
+							},
+							dropdownCssClass: 'bb-select-dropdown bb-tag-list-dropdown',
+							containerCssClass: 'bb-select-container',
+							tokenSeparators: [ ',' ],
+							ajax: {
+								url: bbpCommonJsData.ajax_url,
+								dataType: 'json',
+								delay: 1000,
+								data: function ( params ) {
+									return jQuery.extend( {}, params, {
+										_wpnonce: bbpCommonJsData.nonce,
+										action: 'search_tags',
+									} );
+								},
+								cache: true,
+								processResults: function ( data ) {
 
-								return {
-									results: data && data.success ? data.data.results : []
-								};
+									// Removed the element from results if already selected.
+									if ( false === jQuery.isEmptyObject( tagsArrayData ) ) {
+										jQuery.each( tagsArrayData, function ( index, value ) {
+											for ( var i = 0; i < data.data.results.length; i++ ) {
+												if ( data.data.results[ i ].id === value ) {
+													data.data.results.splice( i, 1 );
+												}
+											}
+										} );
+									}
+
+									return {
+										results: data && data.success ? data.data.results : []
+									};
+								}
 							}
-						}
-					} );
-
-					// Add element into the Arrdata array.
-					$tagsSelect.on( 'select2:select', function ( e ) {
-						var data = e.params.data;
-						tagsArrayData.push( data.id );
-						var tags = tagsArrayData.join( ',' );
-						jQuery( 'body #bbp_topic_tags' ).val( tags );
-
-						jQuery( 'body .select2-search__field' ).trigger( 'click' );
-						jQuery( 'body .select2-search__field' ).trigger( 'click' );
-					} );
-
-					// Remove element into the Arrdata array.
-					$tagsSelect.on( 'select2:unselect', function ( e ) {
-						var data = e.params.data;
-						tagsArrayData = jQuery.grep( tagsArrayData, function ( value ) {
-							return value !== data.id;
 						} );
-						var tags = tagsArrayData.join( ',' );
-						jQuery( 'body #bbp_topic_tags' ).val( tags );
-						if ( tags.length === 0 ) {
-							jQuery( window ).scrollTop( jQuery( window ).scrollTop() + 1 );
-						}
-					} );
 
+						// Add element into the Arrdata array.
+						jQuery( element ).on( 'select2:select', function ( e ) {
+							var data = e.params.data;
+							var form = jQuery( element ).closest( 'form' );
+							var existingTags = form.find( '#bbp_topic_tags' ).val();
+							tagsArrayData  = existingTags && existingTags.length > 0 ? existingTags.split( ',' ) : [];
+							if ( ! tagsArrayData.includes( data.text ) ) {
+								tagsArrayData.push( data.text );
+							}
+
+							var tags = tagsArrayData.join( ',' );
+							form.find('#bbp_topic_tags' ).val( tags );
+
+							form.find( '.select2-search__field' ).trigger( 'click' );
+
+						} );
+
+						// Remove element into the Arrdata array.
+						jQuery( element ).on( 'select2:unselect', function ( e ) {
+							var data = e.params.data;
+							var form = jQuery( element ).closest( 'form' );
+							var existingTags = form.find( '#bbp_topic_tags' ).val();
+
+							form.find( '.bbp_topic_tags_dropdown option[value="' + data.id + '"]' ).remove();
+							tagsArrayData = existingTags && existingTags.length > 0 ? existingTags.split( ',' ) : [];
+							tagsArrayData = tagsArrayData.filter( function( item ) {
+								return item !== data.text;
+							});
+
+							var tags = tagsArrayData.join( ',' );
+							form.find('#bbp_topic_tags' ).val( tags );
+
+							if ( tags.length === 0 ) {
+								jQuery( window ).scrollTop( jQuery( window ).scrollTop() + 1 );
+							}
+						} );
+					} );
 				}
 			} );
 		}
