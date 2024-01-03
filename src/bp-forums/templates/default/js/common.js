@@ -108,13 +108,11 @@ jQuery( document ).ready(
 					var data = e.params.data;
 
 					form.find( '.bbp_topic_tags_dropdown option[value="' + data.id + '"]' ).remove();
-					var select_options = form.find( '.bbp_topic_tags_dropdown option' );
-					var tagsArrayData  = jQuery.map( select_options, function ( option ) {
-						return option.text;
-					} );
-					tagsArrayData = jQuery.grep( tagsArrayData, function ( value ) {
-						return value !== data.id;
-					} );
+					var existingTags = form.find( '#bbp_topic_tags' ).val();
+					tagsArrayData    = existingTags && existingTags.length > 0 ? existingTags.split( ',' ) : [],
+					tagsArrayData    = tagsArrayData.filter( function( item ) {
+						return item !== data.text
+					})
 					var tags = tagsArrayData.join( ',' );
 
 					form.find( '#bbp_topic_tags' ).val( tags );
