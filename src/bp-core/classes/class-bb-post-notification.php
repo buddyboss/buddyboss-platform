@@ -58,14 +58,16 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	 * @return mixed|void
 	 */
 	public function load() {
-		$this->register_notification_group(
-			'posts',
-			esc_html__( 'Posts', 'buddyboss' ),
-			esc_html__( 'Posts', 'buddyboss' ),
-			5
-		);
+		if ( bp_is_active( 'activity' ) ) {
+			$this->register_notification_group(
+				'posts',
+				esc_html__( 'Posts', 'buddyboss' ),
+				esc_html__( 'Posts', 'buddyboss' ),
+				5
+			);
 
-		$this->register_notification_for_post_comment_reply();
+			$this->register_notification_for_post_comment_reply();
+		}
 	}
 
 	/**
