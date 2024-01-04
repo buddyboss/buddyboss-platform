@@ -97,6 +97,17 @@ jQuery( document ).ready(
 						var tags = tagsArrayData.join( ',' );
 						bbp_topic_tags.val( tags );
 
+						// Prevent duplicates local suggession tags.
+						let tempTags = [];
+						jQuery( element ).find( 'option' ).each(function() {
+							const title = jQuery(this).attr( 'value' );
+							if ( tempTags.includes( title ) ) {
+								jQuery(this).remove();
+							} else {
+								tempTags.push( title );
+							}
+						});
+
 						form.find( '.select2-search__field' ).trigger( 'click' );
 					}
 				);
@@ -295,6 +306,17 @@ jQuery( document ).ready(
 
 							var tags = tagsArrayData.join( ',' );
 							form.find('#bbp_topic_tags' ).val( tags );
+
+							// Prevent duplicates local suggession tags.
+							let tempTags = [];
+							jQuery( element ).find( 'option' ).each(function() {
+								let title = jQuery(this).attr( 'value' );
+								if ( tempTags.includes( title ) ) {
+									jQuery(this).remove();
+								} else {
+									tempTags.push( title );
+								}
+							});
 
 							form.find( '.select2-search__field' ).trigger( 'click' );
 
