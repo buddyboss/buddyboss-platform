@@ -833,16 +833,27 @@ class SyncGenerator {
 		$bpGroup = groups_get_group( $groupId );
 
 		if ( ! empty( $ld_group_id ) ) {
-			wp_update_post(
-				array(
-					'ID'           => $ld_group_id,
-					'post_title'   => $bpGroup->name,
-					'post_author'  => $bpGroup->creator_id,
-					'post_content' => $bpGroup->description,
-					'post_status'  => 'publish',
-					'post_type'    => learndash_get_post_type_slug( 'group' ),
-				)
-			);
+			$ldGroup = get_post( $ld_group_id );
+			$args    = array();
+
+			if ( $bpGroup->name !== $ldGroup->post_title ) {
+				$args['post_title'] = $bpGroup->name;
+			}
+
+			if ( 'publish' !== $ldGroup->post_status ) {
+				$args['post_status'] = 'publish';
+			}
+
+			$ld_group_post_type = learndash_get_post_type_slug( 'group' );
+			if ( $ld_group_post_type !== $ldGroup->post_type ) {
+				$args['post_type'] = $ld_group_post_type;
+			}
+
+			// Update the LD group if has above any changed.
+			if ( ! empty( $args ) ) {
+				$args['ID'] = $ld_group_id;
+				wp_update_post( $args );
+			}
 		}
 	}
 
