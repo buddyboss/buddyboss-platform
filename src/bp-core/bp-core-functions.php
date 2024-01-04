@@ -9431,11 +9431,11 @@ function bb_generate_default_avatar( $args ) {
 			$last_filed_id    = bp_xprofile_lastname_field_id();
 			$field_visibility = xprofile_get_field_visibility_level( $last_filed_id, $r['item_id'] );
 
-			// If visibility is public, then display second character.
+			// If visibility is public, then display the second character.
 			if ( 'public' === $field_visibility ) {
-				$words = explode( ' ', $r['item_name'] );
-				if ( 2 <= count( $words ) ) {
-					$char2 = bb_core_get_first_character( $words[1] );
+				$last_name = xprofile_get_field_data( $last_filed_id, $r['item_id'] );;
+				if ( ! empty( $last_name ) ) {
+					$char2 = bb_core_get_first_character( $last_name );
 				}
 			}
 		}
