@@ -672,35 +672,33 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			),
 		);
 
-		if ( bp_is_active( 'activity' ) ) {
-			$fields[] = array(
-				'label'       => esc_html__( 'Activity Feeds', 'buddyboss' ),
-				'name'        => 'group-activity-feed-status',
-				'description' => esc_html__( 'Which members of this group are allowed to post into the activity feed?', 'buddyboss' ),
-				'field'       => 'radio',
-				'value'       => bp_group_get_activity_feed_status( $group_id ),
-				'options'     => array(
-					array(
-						'label'             => esc_html__( 'All group members', 'buddyboss' ),
-						'value'             => 'members',
-						'description'       => '',
-						'is_default_option' => 'members' === bp_group_get_activity_feed_status( $group_id ),
-					),
-					array(
-						'label'             => esc_html__( 'Organizers and Moderators only', 'buddyboss' ),
-						'value'             => 'mods',
-						'description'       => '',
-						'is_default_option' => 'mods' === bp_group_get_activity_feed_status( $group_id ),
-					),
-					array(
-						'label'             => esc_html__( 'Organizers only', 'buddyboss' ),
-						'value'             => 'admins',
-						'description'       => '',
-						'is_default_option' => 'admins' === bp_group_get_activity_feed_status( $group_id ),
-					),
+		$fields[] = array(
+			'label'       => esc_html__( 'Activity Feeds', 'buddyboss' ),
+			'name'        => 'group-activity-feed-status',
+			'description' => esc_html__( 'Which members of this group are allowed to post into the activity feed?', 'buddyboss' ),
+			'field'       => 'radio',
+			'value'       => bp_group_get_activity_feed_status( $group_id ),
+			'options'     => array(
+				array(
+					'label'             => esc_html__( 'All group members', 'buddyboss' ),
+					'value'             => 'members',
+					'description'       => '',
+					'is_default_option' => 'members' === bp_group_get_activity_feed_status( $group_id ),
 				),
-			);
-		}
+				array(
+					'label'             => esc_html__( 'Organizers and Moderators only', 'buddyboss' ),
+					'value'             => 'mods',
+					'description'       => '',
+					'is_default_option' => 'mods' === bp_group_get_activity_feed_status( $group_id ),
+				),
+				array(
+					'label'             => esc_html__( 'Organizers only', 'buddyboss' ),
+					'value'             => 'admins',
+					'description'       => '',
+					'is_default_option' => 'admins' === bp_group_get_activity_feed_status( $group_id ),
+				),
+			),
+		);
 
 		if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) {
 			$fields[] = array(
