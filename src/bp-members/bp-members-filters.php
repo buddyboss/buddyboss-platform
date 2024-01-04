@@ -31,6 +31,9 @@ add_action( 'bb_assign_default_member_type_to_activate_user_on_admin', 'bb_set_d
 add_action( 'update_option_bp-display-name-format', 'bb_member_remove_default_png_avatar_on_update_display_name', 10, 3 );
 add_action( 'deleted_user', 'bb_member_remove_default_png_avatar_on_deleted_user' );
 
+// Exclude account related notifications.
+add_filter( 'bp_notifications_get_where_conditions', 'bb_members_hide_account_settings_notifications', 10, 2 );
+
 /**
  * Load additional sign-up sanitization filters on bp_loaded.
  *
@@ -955,6 +958,24 @@ function bb_generate_member_profile_slug_on_activate( $user_id ) {
 add_action( 'bp_core_signup_user', 'bb_generate_member_profile_slug_on_activate', 10, 1 );
 add_action( 'bp_core_activated_user', 'bb_generate_member_profile_slug_on_activate', 10, 1 );
 
+/**
+ * Function to exclude the account settings related notification.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $where_conditions Where clause to get notifications.
+ * @param array $args             Parsed arguments to get notifications.
+ *
+ * @return array
+ */
+function bb_members_hide_account_settings_notifications( $where_conditions, $args ) {
+
+	if ( ! bp_is_active( 'settings' ) ) {
+		$where_conditions['account_settings_exclude'] = "( component_action != 'bb_account_password' )";
+	}
+
+	return $where_conditions;
+}
 
 /**
  * Delete default PNG for members when update the display name format.
