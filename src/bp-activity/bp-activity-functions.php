@@ -978,6 +978,17 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = arra
 		}
 	}
 
+	// Check if the reaction ID is active based on the current active reaction mode.
+	if ( ! empty( $r['reaction_id'] ) ) {
+		$active_reactions = bb_active_reactions();
+		if ( empty( $active_reactions ) || empty( $active_reactions[ $r['reaction_id'] ] ) ) {
+			return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
+				'bp_activity_add_user_favorite',
+				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' )
+			);
+		}
+	}
+
 	$reacted = bb_load_reaction()->bb_add_user_item_reaction(
 		array(
 			'item_type'   => $r['type'],
