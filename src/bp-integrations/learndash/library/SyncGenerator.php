@@ -849,7 +849,7 @@ class SyncGenerator {
 				$args['post_type'] = $ld_group_post_type;
 			}
 
-			// Update the LD group if has above any changed.
+			// Update the LD group if it has above any changed.
 			if ( ! empty( $args ) ) {
 				$args['ID'] = $ld_group_id;
 				wp_update_post( $args );
@@ -877,11 +877,11 @@ class SyncGenerator {
 			// Get the bp parent group id associate with ld parent group.
 			$bp_parent_group_id = 0;
 			if ( ! empty( $ldGroup->post_parent ) ) {
-				$bp_parent_group_id = (int)get_post_meta( $ldGroup->post_parent, '_sync_group_id', true );
+				$bp_parent_group_id = (int) get_post_meta( $ldGroup->post_parent, '_sync_group_id', true );
 			}
 
 			if ( $bp_parent_group_id !== $bb_group->parent_id ) {
-				$args['parent_id']  = ! empty( $bp_parent_group_id ) ? $bp_parent_group_id : 0;
+				$args['parent_id'] = ! empty( $bp_parent_group_id ) ? $bp_parent_group_id : 0;
 			}
 
 			// Check if group name is changed and get updated group name.
