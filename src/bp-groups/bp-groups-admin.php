@@ -1243,15 +1243,17 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 		</fieldset>
 	</div>
 
-	<div class="bp-groups-settings-section" id="bp-groups-settings-section-activity-feed-status">
-		<fieldset>
-			<legend><?php esc_html_e( 'Who can post into this group?', 'buddyboss' ); ?></legend>
+	<?php if ( bp_is_active( 'activity' ) ) : ?>
+		<div class="bp-groups-settings-section" id="bp-groups-settings-section-activity-feed-status">
+			<fieldset>
+				<legend><?php esc_html_e( 'Who can post into this group?', 'buddyboss' ); ?></legend>
 
-			<label for="bp-group-activity-feed-status-members"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-members" value="members" <?php checked( $activity_feed_status, 'members' ); ?> /><?php esc_html_e( 'All group members', 'buddyboss' ); ?></label>
-			<label for="bp-group-activity-feed-status-mods"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-mods" value="mods" <?php checked( $activity_feed_status, 'mods' ); ?> /><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></label>
-			<label for="bp-group-activity-feed-status-admins"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-admins" value="admins" <?php checked( $activity_feed_status, 'admins' ); ?> /><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
-		</fieldset>
-	</div>
+				<label for="bp-group-activity-feed-status-members"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-members" value="members" <?php checked( $activity_feed_status, 'members' ); ?> /><?php esc_html_e( 'All group members', 'buddyboss' ); ?></label>
+				<label for="bp-group-activity-feed-status-mods"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-mods" value="mods" <?php checked( $activity_feed_status, 'mods' ); ?> /><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></label>
+				<label for="bp-group-activity-feed-status-admins"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-admins" value="admins" <?php checked( $activity_feed_status, 'admins' ); ?> /><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
+			</fieldset>
+		</div>
+	<?php endif; ?>
 
 	<?php if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) : ?>
 		<div class="bp-groups-settings-section" id="bp-groups-settings-section-album-status">
