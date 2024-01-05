@@ -98,15 +98,15 @@ jQuery( document ).ready(
 						bbp_topic_tags.val( tags );
 
 						// Prevent duplicates local suggession tags.
-						let tempTags = [];
-						jQuery( element ).find( 'option' ).each(function() {
-							const title = jQuery(this).attr( 'value' );
+						var tempTags = [];
+						jQuery( element ).find( 'option' ).each( function () {
+							var title = jQuery( this ).attr( 'value' );
 							if ( tempTags.includes( title ) ) {
-								jQuery(this).remove();
+								jQuery( this ).remove();
 							} else {
 								tempTags.push( title );
 							}
-						});
+						} );
 
 						form.find( '.select2-search__field' ).trigger( 'click' );
 					}
@@ -300,6 +300,7 @@ jQuery( document ).ready(
 							var form = jQuery( element ).closest( 'form' );
 							var existingTags = form.find( '#bbp_topic_tags' ).val();
 							tagsArrayData  = existingTags && existingTags.length > 0 ? existingTags.split( ',' ) : [];
+
 							if ( ! tagsArrayData.includes( data.text ) ) {
 								tagsArrayData.push( data.text );
 							}
@@ -308,15 +309,15 @@ jQuery( document ).ready(
 							form.find('#bbp_topic_tags' ).val( tags );
 
 							// Prevent duplicates local suggession tags.
-							let tempTags = [];
-							jQuery( element ).find( 'option' ).each(function() {
-								let title = jQuery(this).attr( 'value' );
+							var tempTags = [];
+							jQuery( element ).find( 'option' ).each( function () {
+								var title = jQuery( this ).attr( 'value' );
 								if ( tempTags.includes( title ) ) {
-									jQuery(this).remove();
+									jQuery( this ).remove();
 								} else {
 									tempTags.push( title );
 								}
-							});
+							} );
 
 							form.find( '.select2-search__field' ).trigger( 'click' );
 
