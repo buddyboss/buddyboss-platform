@@ -356,29 +356,6 @@ function bp_learndash_get_users_certificates( $user_id = '' ) {
 }
 
 /**
- * Get the course style view
- *
- * @since BuddyBoss 1.2.0
- *
- * @return string
- */
-function bp_learndash_page_display() {
-
-	if ( empty( $_COOKIE['courseview'] ) || $_COOKIE['courseview'] == '' ) {
-
-		if ( function_exists( 'bp_get_view' ) ):
-			$view = bp_get_view();
-		else:
-			$view = 'grid';
-		endif;
-	} else {
-		$view = $_COOKIE['courseview'];
-	}
-
-	return $view;
-}
-
-/**
  * Check if there is any certificated created by the admin and if so then show the certificate tab or else hide the tab
  *
  * @since BuddyBoss 1.2.0
@@ -489,4 +466,20 @@ function bb_profiles_tutorial_my_courses() {
  */
 function bb_learndash_profile_courses_slug() {
 	return ltrim( apply_filters( 'bp_learndash_profile_courses_slug', \LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'courses' ) ), '/' );
+}
+
+/**
+ * Function to return course layout.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_learndash_course_layout() {
+	if ( is_user_logged_in() ) {
+		$existing_layouts = get_user_meta( get_current_user_id(), 'bb_layout_view', true );
+	} else {
+		$existing_layouts = ! empty( $_COOKIE['bb_layout_view'] ) ? json_decode( rawurldecode( $_COOKIE['bb_layout_view'] ), true ) : array();
+	}
+	$current_layouts = ! empty( $existing_layouts ) && ! empty( $existing_layouts['learndash_course'] ) ? $existing_layouts['learndash_course'] : apply_filters( 'bb_learndash_course_layout', 'grid' );
+
+	return $current_layouts;
 }
