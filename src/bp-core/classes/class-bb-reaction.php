@@ -2061,9 +2061,9 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @return bool|int
 		 */
 		public function bb_reactions_reaction_id() {
-			static $reaction_id = [];
-			$reaction_mode = bb_get_reaction_mode();
+			static $reaction_id = array();
 
+			$reaction_mode = bb_get_reaction_mode();
 
 			if ( ! empty( $reaction_id[ $reaction_mode ] ) ) {
 				return $reaction_id[ $reaction_mode ];
