@@ -840,15 +840,6 @@ class SyncGenerator {
 				$args['post_title'] = $bpGroup->name;
 			}
 
-			if ( 'publish' !== $ldGroup->post_status ) {
-				$args['post_status'] = 'publish';
-			}
-
-			$ld_group_post_type = learndash_get_post_type_slug( 'group' );
-			if ( $ld_group_post_type !== $ldGroup->post_type ) {
-				$args['post_type'] = $ld_group_post_type;
-			}
-
 			// Update the LD group if it has above any changed.
 			if ( ! empty( $args ) ) {
 				$args['ID'] = $ld_group_id;
@@ -880,12 +871,12 @@ class SyncGenerator {
 				$bp_parent_group_id = (int) get_post_meta( $ldGroup->post_parent, '_sync_group_id', true );
 			}
 
-			if ( $bp_parent_group_id !== $bb_group->parent_id ) {
+			if ( isset( $bb_group->parent_id ) && $bp_parent_group_id !== $bb_group->parent_id ) {
 				$args['parent_id'] = ! empty( $bp_parent_group_id ) ? $bp_parent_group_id : 0;
 			}
 
 			// Check if group name is changed and get updated group name.
-			if ( $ldGroup->post_title !== $bb_group->name ) {
+			if ( isset( $bb_group->name ) && $ldGroup->post_title !== $bb_group->name ) {
 				$args['name'] = ! empty( $ldGroup->post_title ) ? $ldGroup->post_title : sprintf( __( 'For Social Group: %s', 'buddyboss' ), $this->ldGroupId );
 			}
 
