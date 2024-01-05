@@ -1785,7 +1785,7 @@ function bp_nouveau_ajax_groups_send_message() {
 						);
 						$bb_background_updater->save();
 					}
-					$bb_background_updater->schedule_event();
+					$bb_background_updater->dispatch();
 				}
 
 				$message = true;
