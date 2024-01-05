@@ -2061,21 +2061,23 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @return bool|int
 		 */
 		public function bb_reactions_reaction_id() {
-			static $reaction_id = 0;
+			static $reaction_id = array();
 
-			if ( 0 !== $reaction_id ) {
-				return $reaction_id;
+			$reaction_mode = bb_get_reaction_mode();
+
+			if ( ! empty( $reaction_id[ $reaction_mode ] ) ) {
+				return $reaction_id[ $reaction_mode ];
 			}
 
 			if ( bb_is_reaction_emotions_enabled() ) {
 				$reactions   = $this->bb_get_reactions( 'emotions' );
 				$reaction    = current( $reactions );
-				$reaction_id = $reaction['id'];
+				$reaction_id[ $reaction_mode ] = $reaction['id'];
 			} else {
-				$reaction_id = $this->bb_reactions_get_like_reaction_id();
+				$reaction_id[ $reaction_mode ] = $this->bb_reactions_get_like_reaction_id();
 			}
 
-			return $reaction_id;
+			return $reaction_id[ $reaction_mode ];
 		}
 
 		/**
