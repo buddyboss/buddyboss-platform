@@ -833,16 +833,18 @@ class SyncGenerator {
 		$bpGroup = groups_get_group( $groupId );
 
 		if ( ! empty( $ld_group_id ) ) {
-			wp_update_post(
-				array(
-					'ID'           => $ld_group_id,
-					'post_title'   => $bpGroup->name,
-					'post_author'  => $bpGroup->creator_id,
-					'post_content' => $bpGroup->description,
-					'post_status'  => 'publish',
-					'post_type'    => learndash_get_post_type_slug( 'group' ),
-				)
-			);
+			$ldGroup = get_post( $ld_group_id );
+			$args    = array();
+
+			if ( $bpGroup->name !== $ldGroup->post_title ) {
+				$args['post_title'] = $bpGroup->name;
+			}
+
+			// Update the LD group if it has above any changed.
+			if ( ! empty( $args ) ) {
+				$args['ID'] = $ld_group_id;
+				wp_update_post( $args );
+			}
 		}
 	}
 
@@ -860,23 +862,28 @@ class SyncGenerator {
 
 		if ( ! empty( $groupId ) ) {
 
+			$bb_group = groups_get_group( $groupId );
+			$args     = array();
+
 			// Get the bp parent group id associate with ld parent group.
 			$bp_parent_group_id = 0;
 			if ( ! empty( $ldGroup->post_parent ) ) {
-				$bp_parent_group_id = get_post_meta( $ldGroup->post_parent, '_sync_group_id', true );
+				$bp_parent_group_id = (int) get_post_meta( $ldGroup->post_parent, '_sync_group_id', true );
 			}
 
-			groups_create_group(
-				array(
-					'group_id'    => $groupId,
-					'creator_id'  => $ldGroup->post_author,
-					'name'        => $ldGroup->post_title ?: sprintf( __( 'For Social Group: %s', 'buddyboss' ), $this->ldGroupId ),
-					//'status'      => $settings->get( 'learndash.default_bp_privacy' ),
-					'description' => $ldGroup->post_content,
-					'slug'        => $ldGroup->post_name,
-					'parent_id'   => $bp_parent_group_id,
-				)
-			);
+			if ( isset( $bb_group->parent_id ) && $bp_parent_group_id !== $bb_group->parent_id ) {
+				$args['parent_id'] = ! empty( $bp_parent_group_id ) ? $bp_parent_group_id : 0;
+			}
+
+			// Check if group name is changed and get updated group name.
+			if ( isset( $bb_group->name ) && $ldGroup->post_title !== $bb_group->name ) {
+				$args['name'] = ! empty( $ldGroup->post_title ) ? $ldGroup->post_title : sprintf( __( 'For Social Group: %s', 'buddyboss' ), $this->ldGroupId );
+			}
+
+			if ( ! empty( $args ) ) {
+				$args['group_id'] = $groupId;
+				groups_create_group( $args );
+			}
 
 			groups_update_groupmeta( $groupId, 'invite_status', $settings->get( 'learndash.default_bp_invite_status' ) );
 		}
