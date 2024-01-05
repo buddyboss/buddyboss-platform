@@ -56,7 +56,7 @@ function bp_nouveau_search_enqueue_scripts() {
 		'enable_ajax_search'    => function_exists( 'bp_is_search_autocomplete_enable' ) && bp_is_search_autocomplete_enable(),
 		'per_page'              => $per_page,
 		'autocomplete_selector' => "form[role='search']:not(.bp-dir-search-form), form.search-form:not(.bp-dir-search-form), form.searchform:not(.bp-dir-search-form), form#adminbarsearch:not(.bp-dir-search-form), .bp-search-form>#search-form:not(.bp-dir-search-form)",
-		'form_selector'         => '',
+		'form_selector'         => ".bp-search-page form.bp-dir-search-form[role='search']",
 		'forums_autocomplete'   => false,
 	);
 
