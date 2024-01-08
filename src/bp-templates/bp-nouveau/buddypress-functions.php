@@ -670,6 +670,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 		if ( true === $group_sub_objects ) {
 			$supported_objects = array_merge( $supported_objects, array( 'group_members', 'group_requests', 'group_subgroups' ) );
+			// Group sub objects nonce.
+			$object_nonces[ 'group_members' ] = wp_create_nonce( 'bp_nouveau_group_members' );
 		}
 
 //		if ( bp_is_active( 'media' ) ) {
