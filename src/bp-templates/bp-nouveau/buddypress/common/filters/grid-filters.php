@@ -22,32 +22,23 @@ if ( bp_is_members_directory() || bp_is_user() || ( is_a( $post, 'WP_Post' ) && 
 	$current_value = bp_get_option( 'bp-group-layout-format', 'list_grid' );
 }
 if ( 'list_grid' === $current_value ) {
-
-
-	$list                  = false;
 	$default_current_value = '';
-	if ( isset( $_POST['extras'] ) && ! empty( $_POST['extras']['layout'] ) && 'list' === $_POST['extras']['layout'] ) {
-		$list                  = true;
-		$default_current_value = 'list';
-	}
-
-	if ( ! $list ) {
-		if ( bp_is_members_directory() || bp_is_user() || ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'profile' ) ) ) {
-			if ( ! bp_is_user_groups() ) {
-				$default_current_value = bb_current_directory_layout( 'members' );
-			} else {
-				$default_current_value = bb_current_directory_layout( 'groups' );
-			}
-		} elseif ( bp_is_groups_directory() || bp_is_group() || ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'group' ) ) ) {
-			if ( ! bp_is_user_groups() && ! bp_is_groups_directory() ) {
-				$default_current_value = bb_current_directory_layout( 'members' );
-			} else {
-				$default_current_value = bb_current_directory_layout( 'groups' );
-			}
+	if ( bp_is_members_directory() || bp_is_user() || ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'profile' ) ) ) {
+		if ( ! bp_is_user_groups() ) {
+			$default_current_value = bb_current_directory_layout( 'members' );
 		} else {
 			$default_current_value = bb_current_directory_layout( 'groups' );
 		}
+	} elseif ( bp_is_groups_directory() || bp_is_group() || ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'group' ) ) ) {
+		if ( ! bp_is_user_groups() && ! bp_is_groups_directory() ) {
+			$default_current_value = bb_current_directory_layout( 'members' );
+		} else {
+			$default_current_value = bb_current_directory_layout( 'groups' );
+		}
+	} else {
+		$default_current_value = bb_current_directory_layout( 'groups' );
 	}
+
 	$component = bp_current_component();
 	if ( bp_is_group() && 'members' === bp_current_action() ) {
 		$component = 'group_members';
