@@ -1090,3 +1090,55 @@ function bb_background_remove_duplicate_async_request_batch_process( $batch ) {
 
 add_action( 'bb_async_request_batch_process', 'bb_background_remove_duplicate_async_request_batch_process', 1, 1 );
 
+/**
+ * Save directory layout settings for BuddyBoss.
+ * This function handles the AJAX request to save directory layout settings for BuddyBoss.
+ * It verifies the nonce, checks for valid options and values, and stores
+ * the layout option in the database or cookie.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function buddyboss_directory_save_layout() {
+	$object = bb_filter_input_string( INPUT_GET, 'object' );
+	$nonce  = bb_filter_input_string( INPUT_GET, 'nonce' );
+	if ( ! wp_verify_nonce( $nonce, 'bp_nouveau_' . $object ) ) {
+		wp_send_json_error( array(
+			'message' => __( 'Invalid request.', 'buddyboss' ),
+		) );
+	}
+
+	$option_name = bb_filter_input_string( INPUT_GET, 'option' );
+	if ( 'bb_layout_view' !== $option_name ) {
+		wp_send_json_error( array(
+			'message' => __( 'Not a valid option', 'buddyboss' ),
+		) );
+		wp_die();
+	}
+
+	$option_value = bb_filter_input_string( INPUT_GET, 'type' );
+	if ( ! in_array( $option_value, array( 'grid', 'list' ), true ) ) {
+		wp_send_json_error( array(
+			'message' => __( 'Not a valid value', 'buddyboss' ),
+		) );
+		wp_die();
+	}
+
+	if ( is_user_logged_in() ) {
+		$existing_layout = get_user_meta( get_current_user_id(), $option_name, true );
+		$existing_layout = ! empty( $existing_layout ) ? $existing_layout : array();
+		// Store layout option in the db.
+		$existing_layout[ $object ] = $option_value;
+		update_user_meta( get_current_user_id(), $option_name, $existing_layout );
+	} else {
+		$existing_layout = ! empty( $_COOKIE[ $option_name ] ) ? json_decode( rawurldecode( $_COOKIE[ $option_name ] ), true ) : array();
+		// Store layout option in the cookie.
+		$existing_layout[ $object ] = $option_value;
+		setcookie( $option_name, rawurlencode( wp_json_encode( $existing_layout ) ), time() + 31556926, '/', COOKIE_DOMAIN, false, false );
+	}
+
+	wp_send_json_success( array( 'html' => 'success' ) );
+	wp_die();
+}
+
+add_action( 'wp_ajax_buddyboss_directory_save_layout', 'buddyboss_directory_save_layout' );
+add_action( 'wp_ajax_nopriv_buddyboss_directory_save_layout', 'buddyboss_directory_save_layout' );

@@ -1323,6 +1323,14 @@ window.bp = window.bp || {};
 				function ( e ) {
 					e.preventDefault();
 
+					if (
+						'undefined' === typeof object ||
+						'undefined' === typeof $( this ).parent().attr( 'data-object' ) ||
+						object !== $( this ).parent().attr( 'data-object' )
+					) {
+						return;
+					}
+
 					if ( $( this ).hasClass( 'layout-list-view' ) ) {
 						$( '.layout-grid-view' ).removeClass( 'active' );
 						$( this ).addClass( 'active' );
@@ -1335,12 +1343,21 @@ window.bp = window.bp || {};
 						extras.layout = 'grid';
 					}
 
-					// Added this condition to fix the list and grid view on Groups members page pagination.
-					if ( group_members ) {
-						_this.setStorage( 'bp-group_members', 'extras', extras );
-					} else {
-						_this.setStorage( 'bp-' + object, 'extras', extras );
-					}
+					$.ajax(
+						{
+							method: 'GET',
+							url: BP_Nouveau.ajaxurl,
+							data: {
+								action: 'buddyboss_directory_save_layout',
+								object: object,
+								option: 'bb_layout_view',
+								nonce: BP_Nouveau.nonces[ object ],
+								type: extras.layout
+							},
+							success: function ( response ) {
+							}
+						}
+					);
 				}
 			);
 		},
