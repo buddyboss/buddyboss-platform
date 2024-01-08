@@ -1123,6 +1123,10 @@ function buddyboss_directory_save_layout() {
 		wp_die();
 	}
 
+	if ( 'group_members' === $object ) {
+		$object = 'members';
+	}
+
 	if ( is_user_logged_in() ) {
 		$existing_layout = get_user_meta( get_current_user_id(), $option_name, true );
 		$existing_layout = ! empty( $existing_layout ) ? $existing_layout : array();

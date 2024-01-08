@@ -9140,7 +9140,7 @@ function bb_current_directory_layout( $action ) {
 		$existing_layouts = ! empty( $_COOKIE['bb_layout_view'] ) ? json_decode( rawurldecode( $_COOKIE['bb_layout_view'] ), true ) : array();
 	}
 	$default_value = '';
-	if ( 'members' === $action || 'group_members' === $action ) {
+	if ( 'members' === $action ) {
 		$default_value = bp_profile_layout_default_format( 'grid' );
 	} elseif ( 'groups' === $action ) {
 		$default_value = bp_group_layout_default_format( 'grid' );

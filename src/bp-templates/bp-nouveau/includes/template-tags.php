@@ -604,7 +604,7 @@ function bp_nouveau_get_loop_classes() {
 					$default_current_value = bb_current_directory_layout( 'groups' );
 				}
 				if ( bp_is_group() && 'members' === bp_current_action() ) {
-					$default_current_value = bb_current_directory_layout( 'group_members' );
+					$default_current_value = bb_current_directory_layout( 'members' );
 				}
 				$classes = array_merge(
 					$classes,

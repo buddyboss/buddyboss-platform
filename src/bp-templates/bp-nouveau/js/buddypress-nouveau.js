@@ -1325,8 +1325,7 @@ window.bp = window.bp || {};
 
 					if (
 						'undefined' === typeof object ||
-						'undefined' === typeof $( this ).parent().attr( 'data-object' ) ||
-						object !== $( this ).parent().attr( 'data-object' )
+						'undefined' === typeof $( this ).parent().attr( 'data-object' )
 					) {
 						return;
 					}

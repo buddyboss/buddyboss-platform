@@ -50,8 +50,7 @@ if ( 'list_grid' === $current_value ) {
 	}
 	$component = bp_current_component();
 	if ( bp_is_group() && 'members' === bp_current_action() ) {
-		$component             = 'group_members';
-		$default_current_value = bb_current_directory_layout( 'group_members' );
+		$component = 'group_members';
 	}
 	?>
 <div class="grid-filters" data-object="<?php echo esc_attr( $component ); ?>">
