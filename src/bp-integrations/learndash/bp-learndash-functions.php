@@ -479,7 +479,6 @@ function bb_learndash_course_layout() {
 	} else {
 		$existing_layouts = ! empty( $_COOKIE['bb_layout_view'] ) ? json_decode( rawurldecode( $_COOKIE['bb_layout_view'] ), true ) : array();
 	}
-	$current_layouts = ! empty( $existing_layouts ) && ! empty( $existing_layouts['learndash_course'] ) ? $existing_layouts['learndash_course'] : apply_filters( 'bb_learndash_course_layout', 'grid' );
 
-	return $current_layouts;
+	return ! empty( $existing_layouts ) && ! empty( $existing_layouts['ld-course'] ) ? $existing_layouts['ld-course'] : apply_filters( 'bb_learndash_course_layout', 'grid' );
 }
