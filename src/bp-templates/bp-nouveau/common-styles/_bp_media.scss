@@ -5183,9 +5183,9 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 }
 
-.directory.media .media-options,
-.directory.document .document-options,
-.directory.video .video-options {
+.directory.media .site-main .media-options,
+.directory.document .site-main .document-options,
+.directory.video .site-main .video-options {
 
 	a.button > i {
 		margin-right: 7px;
