@@ -9345,7 +9345,7 @@ function bb_generate_default_avatar( $args ) {
 	 *
 	 * @param string $font_family Full path of font family. It should be a TTF file.
 	 */
-	$font_family = apply_filters( 'bb_default_png_avatar_font_family', trailingslashit( buddypress()->plugin_dir ) . 'bp-core/fonts/SFUIText-Regular.ttf' );
+	$font_family = apply_filters( 'bb_default_png_avatar_font_family', trailingslashit( buddypress()->plugin_dir ) . 'bp-core/fonts/SFUIText-Medium.ttf' );
 
 	if ( empty( $font_family ) ) {
 		return $prepare_response;
@@ -9373,7 +9373,7 @@ function bb_generate_default_avatar( $args ) {
 	 *
 	 * @param int $font_size The font size of the text to display on image.
 	 */
-	$font_size = (int) apply_filters( 'bb_default_png_avatar_text_font_size', 120 );
+	$font_size = (int) apply_filters( 'bb_default_png_avatar_text_font_size', 110 );
 	if ( empty( $font_size ) ) {
 		$font_size = 120;
 	}
