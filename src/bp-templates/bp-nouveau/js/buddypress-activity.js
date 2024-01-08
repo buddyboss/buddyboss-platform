@@ -773,6 +773,12 @@ window.bp = window.bp || {};
 					target = $( target ).closest( 'a' );
 				}
 
+				if ( target.hasClass( 'loading' ) ) {
+					return;
+				}
+
+				target.addClass( 'loading' );
+
 				var type        = target.hasClass( 'fav' ) ? 'fav' : 'unfav',
 					is_activity = true,
 					item_type   = 'activity',
@@ -806,8 +812,6 @@ window.bp = window.bp || {};
 					item_id = main_el.data( 'bp-activity-id' );
 				}
 
-				target.addClass( 'loading' );
-
 				var data = {
 					action: 'activity_mark_' + type,
 					reaction_id: reaction_id,
@@ -817,9 +821,9 @@ window.bp = window.bp || {};
 
 				parent.ajax( data, 'activity' ).done(
 					function( response ) {
-						target.removeClass( 'loading' );
 
 						if ( false === response.success ) {
+							target.removeClass( 'loading' );
 							alert( response.data );
 							return;
 						} else {
@@ -871,6 +875,7 @@ window.bp = window.bp || {};
 									main_el.find( '.ac-emotions_list' ).removeClass( 'active' );
 
 									$( this ).fadeIn( 200 );
+									target.removeClass( 'loading' );
 								}
 							);
 						}
