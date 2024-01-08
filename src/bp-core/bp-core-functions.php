@@ -9229,15 +9229,32 @@ function bb_get_default_png_avatar( $params ) {
 	$object  = $params['object'] ?? 'user';
 	$item_id = $params['item_id'] ?? 0;
 
-	$fallback_avatar  = buddypress()->plugin_url . 'bp-core/images/bb-profile-avatar-buddyboss.jpg';
+	$user_fallback_avatar  = buddypress()->plugin_url . 'bp-core/images/profile-avatar-buddyboss.png';
+	$group_fallback_avatar  = buddypress()->plugin_url . 'bp-core/images/group-avatar-buddyboss.png';
 
 	if ( empty( $item_id ) ) {
-		return $fallback_avatar;
+		return $user_fallback_avatar;
 	}
 
 	if ( 'user' === $object ) {
+
+		// If user deleted then fallback the buddyboss avatar.
+		$user = get_userdata( $item_id );
+		if ( empty( $user ) || ! empty( $user->deleted ) ) {
+			bb_delete_default_user_png_avatar( array( $item_id ) );
+			return $user_fallback_avatar;
+		}
+
 		$avatar_image_url = get_user_meta( $item_id, 'default-user-avatar-png', true );
 	} else {
+
+		// If group deleted then fallback the buddyboss avatar.
+		$group = new BP_Groups_Group( (int) $item_id );
+		if ( empty( $group ) || empty( $group->id ) ) {
+			bb_delete_default_group_png_avatar( array( $item_id ) );
+			return $group_fallback_avatar;
+		}
+
 		$avatar_image_url = groups_get_groupmeta( $item_id, 'default-group-avatar-png', true );
 	}
 
@@ -9252,7 +9269,7 @@ function bb_get_default_png_avatar( $params ) {
 		$avatar_image_url = bb_generate_default_avatar( $params )['url'];
 	}
 
-	return ! empty( $avatar_image_url ) ? $avatar_image_url : $fallback_avatar;
+	return ! empty( $avatar_image_url ) ? $avatar_image_url : $user_fallback_avatar;
 }
 
 /**
