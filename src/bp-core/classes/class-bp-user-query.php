@@ -616,7 +616,6 @@ class BP_User_Query {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function do_wp_user_query() {
-		static $do_wp_user_query;
 		$fields = array(
 			'ID',
 			'user_login',
@@ -635,51 +634,44 @@ class BP_User_Query {
 			$fields[] = 'deleted';
 		}
 
-		/**
-		 * Filters the WP User Query arguments before passing into the class.
-		 *
-		 * @since BuddyPress 1.7.0
-		 *
-		 * @param array         $value Array of arguments for the user query.
-		 * @param BP_User_Query $this  Current BP_User_Query instance.
-		 */
-		$args = apply_filters( 'bp_wp_user_query_args', array(
-			// Relevant.
-			'fields'      => $fields,
-			'include'     => $this->user_ids,
+		$r = array();
 
-			// Overrides
-			'blog_id'     => 0,    // BP does not require blog roles.
-			'count_total' => false, // We already have a count.
-		), $this );
+		// Prime caches as necessary.
+		$uncached_ids = bp_get_non_cached_ids( $this->user_ids, 'bb_user' );
+		if ( ! empty( $uncached_ids ) ) {
+			/**
+			 * Filters the WP User Query arguments before passing into the class.
+			 *
+			 * @since BuddyPress 1.7.0
+			 *
+			 * @param array         $value Array of arguments for the user query.
+			 * @param BP_User_Query $this  Current BP_User_Query instance.
+			 */
+			$args = apply_filters( 'bp_wp_user_query_args', array(
+				// Relevant.
+				'fields'      => $fields,
+				'include'     => $uncached_ids,
 
-		$cache_key = 'bb_do_wp_user_query_' . md5( maybe_serialize( $args ) );
+				// Overrides
+				'blog_id'     => 0,    // BP does not require blog roles.
+				'count_total' => false, // We already have a count.
+			), $this );
 
-		if ( ! isset( $do_wp_user_query[ $cache_key ] ) ) {
 			$wp_user_query = new WP_User_Query( $args );
 
-			$do_wp_user_query[ $cache_key ] = $wp_user_query;
-		} else {
-			$wp_user_query = $do_wp_user_query[ $cache_key ];
-		}
-
-		// We calculate total_users using a standalone query, except
-		// when a whitelist of user_ids is passed to the constructor.
-		// This clause covers the latter situation, and ensures that
-		// pagination works when querying by $user_ids.
-		if ( empty( $this->total_users ) ) {
-			$this->total_users = count( $wp_user_query->results );
-		}
-
-		// Reindex for easier matching.
-		$r = array();
-		foreach ( $wp_user_query->results as $u ) {
-			$r[ $u->ID ] = $u;
+			// Reindex for easier matching.
+			foreach ( $wp_user_query->results as $u ) {
+				$r[ $u->ID ] = $u;
+			}
 		}
 
 		// Match up to the user ids from the main query.
 		foreach ( $this->user_ids as $key => $uid ) {
-			if ( isset( $r[ $uid ] ) ) {
+
+			$user = wp_cache_get( $uid, 'bb_user' );
+			if ( ! empty( $user ) ) {
+				$this->results[ $uid ] = $user;
+			} elseif ( isset( $r[ $uid ] ) ) {
 				$r[ $uid ]->ID          = (int) $uid;
 				$r[ $uid ]->user_status = isset( $r[ $uid ]->user_status ) ? (int) $r[ $uid ]->user_status : 0;
 
@@ -689,10 +681,19 @@ class BP_User_Query {
 				// (as opposed to 'ID') property.
 				$this->results[ $uid ]->id = (int) $uid;
 
-				// Remove user ID from original user_ids property.
+				// Set data to cache.
+				wp_cache_set( $uid, $this->results[ $uid ], 'bb_user' );
 			} else {
 				unset( $this->user_ids[ $key ] );
 			}
+		}
+
+		// We calculate total_users using a standalone query, except
+		// when a whitelist of user_ids is passed to the constructor.
+		// This clause covers the latter situation, and ensures that
+		// pagination works when querying by $user_ids.
+		if ( empty( $this->total_users ) ) {
+			$this->total_users = count( $this->user_ids );
 		}
 	}
 
