@@ -34,23 +34,24 @@ if ( 'list_grid' === $current_value ) {
 	if ( ! $list ) {
 		if ( bp_is_members_directory() || bp_is_user() || ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'profile' ) ) ) {
 			if ( ! bp_is_user_groups() ) {
-				$default_current_value = bp_profile_layout_default_format( 'grid' );
+				$default_current_value = bb_current_directory_layout( 'members' );
 			} else {
-				$default_current_value = bp_group_layout_default_format( 'grid' );
+				$default_current_value = bb_current_directory_layout( 'groups' );
 			}
 		} elseif ( bp_is_groups_directory() || bp_is_group() || ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'group' ) ) ) {
 			if ( ! bp_is_user_groups() && ! bp_is_groups_directory() ) {
-				$default_current_value = bp_profile_layout_default_format( 'grid' );
+				$default_current_value = bb_current_directory_layout( 'members' );
 			} else {
-				$default_current_value = bp_group_layout_default_format( 'grid' );
+				$default_current_value = bb_current_directory_layout( 'groups' );
 			}
 		} else {
-			$default_current_value = bp_group_layout_default_format( 'grid' );
+			$default_current_value = bb_current_directory_layout( 'groups' );
 		}
 	}
 	$component = bp_current_component();
 	if ( bp_is_group() && 'members' === bp_current_action() ) {
-		$component = 'group_members';
+		$component             = 'group_members';
+		$default_current_value = bb_current_directory_layout( 'group_members' );
 	}
 	?>
 <div class="grid-filters" data-object="<?php echo esc_attr( $component ); ?>">

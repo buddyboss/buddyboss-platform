@@ -590,18 +590,21 @@ function bp_nouveau_get_loop_classes() {
 			if ( ! $list ) {
 				if ( bp_is_members_directory() || bp_is_user() ) {
 					if ( ! bp_is_user_groups() ) {
-						$default_current_value = bp_profile_layout_default_format( 'grid' );
+						$default_current_value = bb_current_directory_layout( 'members' );
 					} else {
-						$default_current_value = bp_group_layout_default_format( 'grid' );
+						$default_current_value = bb_current_directory_layout( 'groups' );
 					}
 				} elseif ( bp_is_groups_directory() || bp_is_group() ) {
 					if ( ! bp_is_user_groups() && ! bp_is_groups_directory() ) {
-						$default_current_value = bp_profile_layout_default_format( 'grid' );
+						$default_current_value = bb_current_directory_layout( 'members' );
 					} else {
-						$default_current_value = bp_group_layout_default_format( 'grid' );
+						$default_current_value = bb_current_directory_layout( 'groups' );
 					}
 				} else {
-					$default_current_value = bp_group_layout_default_format( 'grid' );
+					$default_current_value = bb_current_directory_layout( 'groups' );
+				}
+				if ( bp_is_group() && 'members' === bp_current_action() ) {
+					$default_current_value = bb_current_directory_layout( 'group_members' );
 				}
 				$classes = array_merge(
 					$classes,
