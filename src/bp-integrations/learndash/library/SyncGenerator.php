@@ -885,7 +885,11 @@ class SyncGenerator {
 				groups_create_group( $args );
 			}
 
-			groups_update_groupmeta( $groupId, 'invite_status', $settings->get( 'learndash.default_bp_invite_status' ) );
+			$invite_status = groups_get_groupmeta( $groupId, 'invite_status', true );
+			if ( empty( $invite_status ) ) {
+				groups_update_groupmeta( $groupId, 'invite_status', $settings->get( 'learndash.default_bp_invite_status' ) );
+			}
+
 		}
 
 		$this->setSyncGropuIds();
