@@ -535,15 +535,16 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	public function update_item( $request ) {
 		$request->set_param( 'context', 'edit' );
 
-		$is_validate = $this->validate_activity_comment_request( $request );
-		if ( is_wp_error( $is_validate ) ) {
-			return $is_validate;
-		}
-
 		// GET and SET for activity comment edit.
 		$edit_comment_id = (int) $request['comment_id'];
 		if ( 0 < $edit_comment_id ) {
 			$_POST['edit_comment'] = true;
+			$request->set_param( 'edit_comment', true );
+		}
+
+		$is_validate = $this->validate_activity_comment_request( $request );
+		if ( is_wp_error( $is_validate ) ) {
+			return $is_validate;
 		}
 
 		$args = array(
@@ -1025,7 +1026,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 				}
 			}
 
-			if ( ! empty( $request['media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
+			if ( empty( $request['edit_comment'] ) && ! empty( $request['media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
 				$can_send_gif = bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' );
 				if ( ! $can_send_gif ) {
 					$is_validate = new WP_Error(
