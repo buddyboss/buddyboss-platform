@@ -1100,7 +1100,13 @@ add_action( 'bb_async_request_batch_process', 'bb_background_remove_duplicate_as
  */
 function buddyboss_directory_save_layout() {
 	$object = bb_filter_input_string( INPUT_GET, 'object' );
-	$nonce  = bb_filter_input_string( INPUT_GET, 'nonce' );
+	if ( empty( $object ) ) {
+		wp_send_json_error( array(
+			'message' => __( 'Invalid object.', 'buddyboss' ),
+		) );
+	}
+
+	$nonce = bb_filter_input_string( INPUT_GET, 'nonce' );
 	if ( ! wp_verify_nonce( $nonce, 'bp_nouveau_' . $object ) ) {
 		wp_send_json_error( array(
 			'message' => __( 'Invalid request.', 'buddyboss' ),
@@ -1108,7 +1114,7 @@ function buddyboss_directory_save_layout() {
 	}
 
 	$option_name = bb_filter_input_string( INPUT_GET, 'option' );
-	if ( 'bb_layout_view' !== $option_name ) {
+	if ( empty( $option_name ) || 'bb_layout_view' !== $option_name ) {
 		wp_send_json_error( array(
 			'message' => __( 'Not a valid option', 'buddyboss' ),
 		) );
