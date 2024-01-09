@@ -29,9 +29,9 @@ global $courses_new;
 $count 		 = count( bp_ld_sync( 'buddypress' )->courses->getGroupCourses() );
 $courses_new = bp_ld_sync( 'buddypress' )->courses->getGroupCourses();
 $course_id   = $courses_new[0]->ID;
-if ( 
+if (
 	$count > 1 ||
-	( 
+	(
 		1 === $count &&
 		! empty( $course_id ) &&
 		class_exists( 'Elementor\Plugin' ) &&
