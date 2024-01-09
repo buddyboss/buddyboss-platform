@@ -9133,7 +9133,7 @@ function bb_remove_class_action( $action, $class, $method ) {
  *
  * @return string The current layout format ('grid' or 'list').
  */
-function bb_current_directory_layout( $action ) {
+function bb_get_directory_layout_preference( $action ) {
 	if ( is_user_logged_in() ) {
 		$existing_layouts = get_user_meta( get_current_user_id(), 'bb_layout_view', true );
 	} else {
