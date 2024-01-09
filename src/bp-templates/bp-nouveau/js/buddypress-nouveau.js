@@ -1292,7 +1292,7 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		switchGridList: function () {
-			var _this = this, object = $( '.grid-filters' ).data( 'object' );
+			var object = $( '.grid-filters' ).data( 'object' );
 
 			if ( 'friends' === object ) {
 				object = 'members';
@@ -1337,7 +1337,7 @@ window.bp = window.bp || {};
 								nonce: BP_Nouveau.nonces[ object ],
 								type: layout
 							},
-							success: function ( response ) {
+							success: function () {
 							}
 						}
 					);
