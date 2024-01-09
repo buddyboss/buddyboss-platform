@@ -23255,13 +23255,40 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   }
 }
 
+.directory.media .site-main,
+.directory.document .site-main,
+.directory.video .site-main {
+  position: relative;
+}
+
 .directory.media .site-main .media-options,
+.directory.media .site-main .document-options,
+.directory.media .site-main .video-options,
+.directory.document .site-main .media-options,
 .directory.document .site-main .document-options,
+.directory.document .site-main .video-options,
+.directory.video .site-main .media-options,
+.directory.video .site-main .document-options,
 .directory.video .site-main .video-options {
   position: absolute;
   right: 0;
   top: 0;
   margin: 0;
+}
+
+@media screen and (max-width: 1024px) {
+  .directory.media .site-main .media-options,
+  .directory.media .site-main .document-options,
+  .directory.media .site-main .video-options,
+  .directory.document .site-main .media-options,
+  .directory.document .site-main .document-options,
+  .directory.document .site-main .video-options,
+  .directory.video .site-main .media-options,
+  .directory.video .site-main .document-options,
+  .directory.video .site-main .video-options {
+    position: static;
+    margin: 0;
+  }
 }
 
 .directory.media .media-options .subnav-filters .subnav-search .bp-dir-search-form:before,
@@ -23325,66 +23352,62 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   text-align: left;
 }
 
-.directory.media .site-main .media-options a.button > i,
-.directory.document .site-main .document-options a.button > i,
-.directory.video .site-main .video-options a.button > i {
+.directory.media .media-options a.button > i,
+.directory.document .document-options a.button > i,
+.directory.video .video-options a.button > i {
   margin-right: 7px;
   font-size: 18px;
 }
 
-.directory.media .site-main .media-options > *,
-.directory.document .site-main .document-options > *,
-.directory.video .site-main .video-options > * {
+.directory.media .media-options > *,
+.directory.document .document-options > *,
+.directory.video .video-options > * {
   margin-left: 6px;
 }
 
 @media screen and (max-width: 1024px) {
-  .directory.media .site-main .media-options,
-  .directory.document .site-main .document-options,
-  .directory.video .site-main .video-options {
-    position: static;
-    margin: 0;
-  }
-  .directory.media .site-main .media-options > *,
-  .directory.document .site-main .document-options > *,
-  .directory.video .site-main .video-options > * {
+  .directory.media .media-options > *,
+  .directory.document .document-options > *,
+  .directory.video .video-options > * {
     margin-bottom: 15px;
     width: 100% !important;
+    display: inline-block;
+    box-sizing: border-box;
   }
-  .directory.media .site-main .media-options .subnav-filters .subnav-search,
-  .directory.document .site-main .document-options .subnav-filters .subnav-search,
-  .directory.video .site-main .video-options .subnav-filters .subnav-search {
+  .directory.media .media-options .subnav-filters .subnav-search,
+  .directory.document .document-options .subnav-filters .subnav-search,
+  .directory.video .video-options .subnav-filters .subnav-search {
     width: 100%;
   }
-  .directory.media .site-main .media-options .subnav-filters .subnav-search .bp-search,
-  .directory.document .site-main .document-options .subnav-filters .subnav-search .bp-search,
-  .directory.video .site-main .video-options .subnav-filters .subnav-search .bp-search {
+  .directory.media .media-options .subnav-filters .subnav-search .bp-search,
+  .directory.document .document-options .subnav-filters .subnav-search .bp-search,
+  .directory.video .video-options .subnav-filters .subnav-search .bp-search {
     width: 100%;
   }
-  .directory.media .site-main .media-options .subnav-filters .subnav-search .bp-search .bp-dir-search-form,
-  .directory.document .site-main .document-options .subnav-filters .subnav-search .bp-search .bp-dir-search-form,
-  .directory.video .site-main .video-options .subnav-filters .subnav-search .bp-search .bp-dir-search-form {
+  .directory.media .media-options .subnav-filters .subnav-search .bp-search .bp-dir-search-form,
+  .directory.document .document-options .subnav-filters .subnav-search .bp-search .bp-dir-search-form,
+  .directory.video .video-options .subnav-filters .subnav-search .bp-search .bp-dir-search-form {
     width: 100%;
   }
 }
 
-.directory.media .site-main .media-options .subnav-filters,
-.directory.document .site-main .document-options .subnav-filters,
-.directory.video .site-main .video-options .subnav-filters {
+.directory.media .media-options .subnav-filters,
+.directory.document .document-options .subnav-filters,
+.directory.video .video-options .subnav-filters {
   display: inline-block;
   vertical-align: middle;
 }
 
-.directory.media .site-main .media-options .subnav-filters .subnav-search,
-.directory.document .site-main .document-options .subnav-filters .subnav-search,
-.directory.video .site-main .video-options .subnav-filters .subnav-search {
+.directory.media .media-options .subnav-filters .subnav-search,
+.directory.document .document-options .subnav-filters .subnav-search,
+.directory.video .video-options .subnav-filters .subnav-search {
   margin: 0;
   position: initial;
 }
 
-.directory.media .site-main .media-options .subnav-filters .subnav-search .bp-dir-search-form,
-.directory.document .site-main .document-options .subnav-filters .subnav-search .bp-dir-search-form,
-.directory.video .site-main .video-options .subnav-filters .subnav-search .bp-dir-search-form {
+.directory.media .media-options .subnav-filters .subnav-search .bp-dir-search-form,
+.directory.document .document-options .subnav-filters .subnav-search .bp-dir-search-form,
+.directory.video .video-options .subnav-filters .subnav-search .bp-dir-search-form {
   background-color: #fff;
   border: 1px solid #dedfe2;
   box-shadow: none;
@@ -23393,9 +23416,9 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   position: relative;
 }
 
-.directory.media .site-main .media-options .subnav-filters .subnav-search .bp-dir-search-form button[type="submit"],
-.directory.document .site-main .document-options .subnav-filters .subnav-search .bp-dir-search-form button[type="submit"],
-.directory.video .site-main .video-options .subnav-filters .subnav-search .bp-dir-search-form button[type="submit"] {
+.directory.media .media-options .subnav-filters .subnav-search .bp-dir-search-form button[type="submit"],
+.directory.document .document-options .subnav-filters .subnav-search .bp-dir-search-form button[type="submit"],
+.directory.video .video-options .subnav-filters .subnav-search .bp-dir-search-form button[type="submit"] {
   position: absolute;
   opacity: 0;
   visibility: hidden;
