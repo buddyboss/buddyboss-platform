@@ -1,14 +1,14 @@
-# Copyright (C) 2023 BuddyBoss
+# Copyright (C) 2024 BuddyBoss
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.5.00\n"
+"Project-Id-Version: BuddyBoss Platform 2.5.10\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-12-13 17:38:16+00:00\n"
+"POT-Creation-Date: 2024-01-09 07:40:49+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2023-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2024-MO-DA HO:MI+ZONE\n"
 "Last-Translator: BuddyBoss <support@buddyboss.com>\n"
 "Language-Team: BuddyBoss <support@buddyboss.com>\n"
 "Language: en\n"
@@ -124,7 +124,7 @@ msgstr ""
 
 #: bp-activity/actions/reply.php:43
 #: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:324
-#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:977
+#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:978
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:417
 msgid "Please do not leave the comment area blank."
 msgstr ""
@@ -2138,7 +2138,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:130
 #: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:231
 #: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:492
-#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:756
+#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:757
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:398
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:938
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1062
@@ -2198,8 +2198,8 @@ msgid "Sorry, Activity component was not enabled."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:223
-#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:627
-#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:748
+#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:628
+#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:749
 msgid "Invalid activity comment ID."
 msgstr ""
 
@@ -2208,7 +2208,7 @@ msgid "Sorry, you cannot view the activity comment."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:341
-#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:994
+#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:995
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:538
 #: bp-forums/classes/class-bp-rest-reply-endpoint.php:904
 #: bp-forums/classes/class-bp-rest-reply-endpoint.php:1502
@@ -2220,7 +2220,7 @@ msgid "You don't have access to send the media."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:354
-#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:1007
+#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:1008
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:551
 #: bp-forums/classes/class-bp-rest-reply-endpoint.php:917
 #: bp-forums/classes/class-bp-rest-reply-endpoint.php:1515
@@ -2232,7 +2232,7 @@ msgid "You don't have access to send the document."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:367
-#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:1020
+#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:1021
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:564
 #: bp-forums/classes/class-bp-rest-reply-endpoint.php:930
 #: bp-forums/classes/class-bp-rest-reply-endpoint.php:1528
@@ -2243,7 +2243,7 @@ msgid "You don't have access to send the video."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:380
-#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:1033
+#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:1034
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:577
 #: bp-forums/classes/class-bp-rest-reply-endpoint.php:943
 #: bp-forums/classes/class-bp-rest-reply-endpoint.php:1541
@@ -2258,36 +2258,36 @@ msgstr ""
 msgid "Sorry, you are not allowed to create an activity comment."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:615
-#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:644
+#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:616
+#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:645
 msgid "Sorry, you are not allowed to update this activity comment."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:695
+#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:696
 msgid "Could not delete the activity comment."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:736
+#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:737
 msgid "Sorry, you are not allowed to delete this activity comment."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:795
+#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:796
 msgid "The content for the comment."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:802
+#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:803
 msgid "Parent comment ID."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:834
+#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:835
 msgid "Whether the comment created or not."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:840
+#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:841
 msgid "A list of comments for activity."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:870
+#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:871
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:71
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:109
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:129
@@ -2301,7 +2301,7 @@ msgstr ""
 msgid "A unique numeric ID for the activity."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:876
+#: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:877
 msgid ""
 "Comments by default, stream for within stream display, threaded for below "
 "each activity item."
@@ -3594,7 +3594,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:1744
 #: bp-members/bp-members-admin.php:33 bp-members/bp-members-admin.php:99
 #: bp-members/bp-members-functions.php:3118
-#: bp-members/bp-members-functions.php:3643
+#: bp-members/bp-members-functions.php:3645
 #: bp-members/classes/class-bp-members-admin.php:990
 #: bp-members/classes/class-bp-members-admin.php:2821
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php:31
@@ -3623,7 +3623,7 @@ msgid "e.g. Student"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1796
-#: bp-members/bp-members-functions.php:3646
+#: bp-members/bp-members-functions.php:3648
 msgid "Members Directory"
 msgstr ""
 
@@ -3719,7 +3719,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2130
-#: bp-groups/bp-groups-admin.php:2313 bp-members/bp-members-functions.php:3898
+#: bp-groups/bp-groups-admin.php:2313 bp-members/bp-members-functions.php:3900
 msgid "Copy to clipboard"
 msgstr ""
 
@@ -10944,7 +10944,7 @@ msgid "Field"
 msgstr ""
 
 #: bp-core/profile-search/bps-admin.php:84 bp-groups/bp-groups-admin.php:2329
-#: bp-members/bp-members-functions.php:3644
+#: bp-members/bp-members-functions.php:3646
 msgid "Label"
 msgstr ""
 
@@ -16749,7 +16749,7 @@ msgstr ""
 #: bp-groups/bp-groups-functions.php:4392
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:375
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:391
-#: bp-members/bp-members-functions.php:3920
+#: bp-members/bp-members-functions.php:3922
 #: bp-members/classes/class-bp-members-admin.php:972
 #: bp-moderation/bp-moderation-filters.php:924
 #: bp-moderation/classes/class-bp-moderation-list-table.php:235
@@ -19138,14 +19138,14 @@ msgid "Groups Filter"
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:2357 bp-groups/bp-groups-admin.php:2368
-#: bp-members/bp-members-functions.php:3672
-#: bp-members/bp-members-functions.php:3683
+#: bp-members/bp-members-functions.php:3674
+#: bp-members/bp-members-functions.php:3685
 msgid "Show"
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:2359 bp-groups/bp-groups-admin.php:2366
-#: bp-members/bp-members-functions.php:3674
-#: bp-members/bp-members-functions.php:3681
+#: bp-members/bp-members-functions.php:3676
+#: bp-members/bp-members-functions.php:3683
 #: bp-moderation/classes/class-bp-moderation-list-table.php:415
 #: bp-moderation/classes/class-bp-moderation-list-table.php:419
 #: bp-templates/bp-nouveau/includes/customizer-controls.php:149
@@ -19267,7 +19267,7 @@ msgid "Dropdown Order"
 msgstr ""
 
 #: bp-groups/bp-groups-functions.php:4997
-#: bp-members/bp-members-functions.php:5242
+#: bp-members/bp-members-functions.php:5244
 #: bp-xprofile/classes/class-bp-xprofile-field-type-number.php:28
 msgid "Number"
 msgstr ""
@@ -22253,7 +22253,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: bp-integrations/learndash/library/SyncGenerator.php:683
-#: bp-integrations/learndash/library/SyncGenerator.php:873
+#: bp-integrations/learndash/library/SyncGenerator.php:880
 msgid "For Social Group: %s"
 msgstr ""
 
@@ -23831,7 +23831,7 @@ msgid "Edit Profile Type"
 msgstr ""
 
 #: bp-members/bp-members-functions.php:3112
-#: bp-members/bp-members-functions.php:3647
+#: bp-members/bp-members-functions.php:3649
 #: bp-members/classes/class-bp-members-admin.php:2268
 #: bp-members/classes/class-bp-members-admin.php:2290
 msgid "Users"
@@ -23849,50 +23849,50 @@ msgstr ""
 msgid "Search Profile Types"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3645
+#: bp-members/bp-members-functions.php:3647
 msgid "Members Filter"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3893
+#: bp-members/bp-members-functions.php:3895
 msgid ""
 "You have {total_users} members with this profile type, are you sure you "
 "would like to trash it?"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3894
+#: bp-members/bp-members-functions.php:3896
 msgid ""
 "You have {total_users} members with this profile type, are you sure you "
 "would like to delete it?"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3895
+#: bp-members/bp-members-functions.php:3897
 msgid ""
 "You have members with these profile types, are you sure you would like to "
 "trash it?"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3896
+#: bp-members/bp-members-functions.php:3898
 msgid ""
 "You have members with these profile types, are you sure you would like to "
 "delete it?"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3897
+#: bp-members/bp-members-functions.php:3899
 msgid "Copied"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3959
-#: bp-members/bp-members-functions.php:3967
-#: bp-members/bp-members-functions.php:3975
-#: bp-members/bp-members-functions.php:3979
+#: bp-members/bp-members-functions.php:3961
+#: bp-members/bp-members-functions.php:3969
+#: bp-members/bp-members-functions.php:3977
+#: bp-members/bp-members-functions.php:3981
 msgid "their"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3971
+#: bp-members/bp-members-functions.php:3973
 msgid "his"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3973
+#: bp-members/bp-members-functions.php:3975
 msgid "her"
 msgstr ""
 
