@@ -284,7 +284,9 @@ window.bp = window.bp || {};
 						};
 
 						if ( this.collection.length > 0 ) {
-							arguments.before = this.collection.last().get( 'id' );
+							Object.assign( arguments, {
+								before: this.collection.last().get( 'id' ),
+							} );
 						}
 
 						_.extend(
