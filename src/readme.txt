@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.3.2
+Tested up to: 6.4.2
 Requires PHP: 5.6.20
-Stable tag: 2.5.00
+Stable tag: 2.5.10
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,12 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.5.10 =
+* Bug: Forums - Creating a new post when there was an existing discussion showed the previous discussion title
+* Bug: Groups - Document tab within a group would load slowly with groups with thousand or more members
+* Bug: Groups - When adding a LearnDash course to a group within the settings, previously this then would alter the groups permalink and alter the group invite settings
+* Bug: Styling - The & sign when used within a label for a Profile Type would show &AMP code on user profile and member directory
 
 = 2.5.00 =
 * New Feature! - TutorLMS settings added to BuddyBoss integration page for adding courses to groups and choosing course activity posts into group feeds depending in user interactions
