@@ -30,7 +30,7 @@ $count 		 = count( bp_ld_sync( 'buddypress' )->courses->getGroupCourses() );
 $courses_new = bp_ld_sync( 'buddypress' )->courses->getGroupCourses();
 
 if ( $count > 1 ) {
-	$view              = bb_learndash_course_layout();
+	$view              = bb_current_directory_layout( 'ld-course' );
 	$class_grid_active = ( 'grid' === $view ) ? 'active' : '';
 	$class_list_active = ( 'list' === $view ) ? 'active' : '';
 	$class_grid_show   = ( 'grid' === $view ) ? 'grid-view bb-grid' : '';

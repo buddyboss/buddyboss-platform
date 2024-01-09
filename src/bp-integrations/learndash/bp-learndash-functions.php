@@ -467,18 +467,3 @@ function bb_profiles_tutorial_my_courses() {
 function bb_learndash_profile_courses_slug() {
 	return ltrim( apply_filters( 'bp_learndash_profile_courses_slug', \LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'courses' ) ), '/' );
 }
-
-/**
- * Function to return course layout.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_learndash_course_layout() {
-	if ( is_user_logged_in() ) {
-		$existing_layouts = get_user_meta( get_current_user_id(), 'bb_layout_view', true );
-	} else {
-		$existing_layouts = ! empty( $_COOKIE['bb_layout_view'] ) ? json_decode( rawurldecode( $_COOKIE['bb_layout_view'] ), true ) : array();
-	}
-
-	return ! empty( $existing_layouts ) && ! empty( $existing_layouts['ld-course'] ) ? $existing_layouts['ld-course'] : apply_filters( 'bb_learndash_course_layout', 'grid' );
-}

@@ -9129,7 +9129,7 @@ function bb_remove_class_action( $action, $class, $method ) {
  * @since BuddyBoss [BBVERSION]
  *
  * @param string $action The directory action for which to retrieve the layout
- *                       (e.g. 'members', 'group_members', 'groups').
+ *                       (e.g. 'members', 'ld-course', 'groups').
  *
  * @return string The current layout format ('grid' or 'list').
  */
@@ -9144,6 +9144,8 @@ function bb_current_directory_layout( $action ) {
 		$default_value = bp_profile_layout_default_format( 'grid' );
 	} elseif ( 'groups' === $action ) {
 		$default_value = bp_group_layout_default_format( 'grid' );
+	} elseif ( 'ld-course' === $action ) {
+		$default_value = apply_filters( 'bb_learndash_course_layout', 'grid' );
 	}
 
 	return ! empty( $existing_layouts ) && ! empty( $existing_layouts[ $action ] ) ? $existing_layouts[ $action ] : $default_value;
