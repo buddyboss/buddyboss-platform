@@ -276,10 +276,6 @@ class BP_Embed extends WP_Embed {
 			return $content;
 		}
 
-		if ( in_array( $type->type, array( 'bbp_reply_create', 'bbp_topic_create' ), true ) && false === bbp_use_autoembed() ) {
-			return $content;
-		}
-		
 		if ( $is_activity ) {
 
 			if ( ! empty( $content ) && false !== strpos( '<iframe', $content ) ) {
