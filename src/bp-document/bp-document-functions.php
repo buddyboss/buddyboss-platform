@@ -2119,7 +2119,13 @@ function bp_document_user_document_folder_tree_view_li_html( $user_id = 0, $grou
 		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );
 	}
 
-	$data = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
+	$cached = bp_core_get_incremented_cache( $documents_folder_query, 'bp_document_folder' );
+	if ( false === $cached ) {
+		$data = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
+		bp_core_set_incremented_cache( $documents_folder_query, 'bp_document_folder', $data );
+	} else {
+		$data = $cached;
+	}
 
 	// Build array of item references:
 	foreach ( $data as $key => &$item ) {
