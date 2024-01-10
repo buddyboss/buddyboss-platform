@@ -510,7 +510,13 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		public function bb_get_reactions( $mode = 'likes', $is_active = true ) {
 			$filtered_reactions = array();
 			$reactions          = get_transient( 'bb_reactions' );
-			$all_reactions      = ! empty( $reactions ) ? maybe_unserialize( $reactions ) : array();
+
+			if ( empty( $reactions ) ) {
+				$this->bb_update_reactions_transient();
+				$reactions = get_transient( 'bb_reactions' );
+			}
+
+			$all_reactions = ! empty( $reactions ) ? maybe_unserialize( $reactions ) : array();
 
 			if ( ! empty( $all_reactions ) ) {
 				$filtered_reactions = array_values(
