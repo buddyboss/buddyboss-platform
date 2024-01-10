@@ -28,8 +28,16 @@ if ( $ld_group_id ) {
 global $courses_new;
 $count 		 = count( bp_ld_sync( 'buddypress' )->courses->getGroupCourses() );
 $courses_new = bp_ld_sync( 'buddypress' )->courses->getGroupCourses();
-
-if ( $count > 1 ) {
+$course_id   = $courses_new[0]->ID;
+if (
+	$count > 1 ||
+	(
+		1 === $count &&
+		! empty( $course_id ) &&
+		class_exists( 'Elementor\Plugin' ) &&
+		\Elementor\Plugin::instance()->documents->get( $course_id )->is_built_with_elementor()
+	)
+) {
 	$view              = get_option( 'bb_theme_learndash_grid_list', 'grid' );
 	$class_grid_active = ( 'grid' === $view ) ? 'active' : '';
 	$class_list_active = ( 'list' === $view ) ? 'active' : '';
@@ -71,7 +79,6 @@ if ( $count > 1 ) {
         </div>
     </div>
 	<?php
-}
-if ( 1 === $count ) {
+} elseif ( 1 === $count ) {
 	bp_locate_template( 'groups/single/courses-content-display.php', true, false );
 }
