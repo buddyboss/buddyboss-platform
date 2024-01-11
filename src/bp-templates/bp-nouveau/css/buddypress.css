@@ -15272,6 +15272,15 @@ button[data-bp-tooltip] {
   min-width: 0;
 }
 
+.bp-single-vert-nav .main-navs ul li {
+  width: 100%;
+}
+
+.bp-single-vert-nav .main-navs ul li a {
+  display: flex;
+  justify-content: space-between;
+}
+
 @media screen and (min-width: 46.8em) {
   .bp-single-vert-nav .bp-wrap {
     display: -webkit-box;
@@ -15287,7 +15296,6 @@ button[data-bp-tooltip] {
   }
   .bp-single-vert-nav .subnav {
     background: #eaeaea;
-    margin: 0;
     width: auto;
   }
   .bp-single-vert-nav .subnav li {

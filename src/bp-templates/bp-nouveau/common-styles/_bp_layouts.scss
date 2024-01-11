@@ -286,6 +286,24 @@
 // parent object navigation in a vertical column & sub navs
 // horizontally across the item-body
 
+.bp-single-vert-nav {
+
+	.main-navs {
+
+		ul {
+
+			li {
+				width: 100%;
+
+				a {
+					display: flex;
+					justify-content: space-between;
+				}
+			}
+		}
+	}
+}
+
 @include medium-up() {
 
 	.bp-single-vert-nav { // described for the #buddypress element
@@ -306,7 +324,6 @@
 
 		.subnav {
 			background: $light-grey;
-			margin: 0;
 			width: auto;
 
 			li {
