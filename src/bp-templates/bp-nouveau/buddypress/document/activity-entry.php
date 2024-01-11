@@ -96,11 +96,12 @@ $video_url     = bb_document_video_get_symlink( bp_get_document_id() );
 		</a>
 	</div>
 
-	<?php bp_get_template_part( 'document/activity-document-actions' ); ?> <!-- .bb-activity-document-actions. -->
-
 	<?php
-		// Code extension files preview.
-		bp_get_template_part( 'document/code-preview' );
+	// .bb-activity-document-actions.
+	bp_get_template_part( 'document/activity-document-actions' );
+
+	// Code extension files preview.
+	bp_get_template_part( 'document/code-preview' );
 	?>
 
 </div> <!-- .bb-activity-media-elem -->

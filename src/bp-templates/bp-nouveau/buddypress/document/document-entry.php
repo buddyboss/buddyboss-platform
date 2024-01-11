@@ -307,8 +307,7 @@ id="div-listing-<?php bp_document_id(); ?>">
 						}
 						?>
 						<li class="rename_file">
-							<a href="#" data-type="<?php echo esc_attr( $document_type ); ?>"
-							   class="ac-document-rename"><?php esc_html_e( 'Rename', 'buddyboss' ); ?></a>
+							<a href="#" data-type="<?php echo esc_attr( $document_type ); ?>" class="ac-document-rename"><?php esc_html_e( 'Rename', 'buddyboss' ); ?></a>
 						</li>
 						<?php
 						if ( $can_move ) {
