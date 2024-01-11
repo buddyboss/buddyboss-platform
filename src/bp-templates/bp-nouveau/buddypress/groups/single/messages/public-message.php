@@ -226,6 +226,7 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 							</div>
 							<?php
 						endif;
+
 						if ( bp_is_active( 'media' ) && bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), 0, 0 ) ) :
 							?>
 							<div class="post-elements-buttons-item post-gif">
@@ -258,8 +259,10 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 									</div>
 								</div>
 							</div>
-						<?php endif; ?>
-						<?php if ( bp_is_active( 'media' ) && bb_user_has_access_upload_emoji( $group_id, bp_loggedin_user_id(), 0, 0 ) ) : ?>
+							<?php
+						endif;
+
+						if ( bp_is_active( 'media' ) && bb_user_has_access_upload_emoji( $group_id, bp_loggedin_user_id(), 0, 0 ) ) : ?>
 							<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss' ); ?>"></div>
 						<?php endif; ?>
 						<div id="group-messages-new-submit" class="submit">

@@ -40,23 +40,16 @@
 				?>
 			</div>
 			<?php
-
 			bp_nouveau_group_hook( 'before', 'media_content' );
-
 			bp_get_template_part( 'media/actions' );
-
 			?>
 			<div id="media-stream" class="media" data-bp-list="media">
-
 				<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'group-media-loading' ); ?></div>
-
 			</div><!-- .media -->
 			<?php
-
 			bp_nouveau_group_hook( 'after', 'media_content' );
 
 			break;
-
 		// Any other.
 		default:
 			bp_get_template_part( 'groups/single/plugins' );

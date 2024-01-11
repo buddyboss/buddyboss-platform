@@ -35,21 +35,15 @@
 			}
 
 			bp_nouveau_group_hook( 'before', 'video_content' );
-
 			bp_get_template_part( 'video/actions' );
-
 			?>
 			<div id="video-stream" class="video" data-bp-list="video">
-
 				<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'group-video-loading' ); ?></div>
-
 			</div><!-- .media -->
 			<?php
-
 			bp_nouveau_group_hook( 'after', 'video_content' );
 
 			break;
-
 		// Any other.
 		default:
 			bp_get_template_part( 'groups/single/plugins' );

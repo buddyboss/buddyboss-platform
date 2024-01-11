@@ -7,20 +7,15 @@
  * @since   BuddyPress 3.0.0
  * @version 1.0.0
  */
-?>
 
-<?php if ( bp_is_group_create() ) : ?>
-
+if ( bp_is_group_create() ) : ?>
 	<h3 class="bp-screen-title creation-step-name">
 		<?php esc_html_e( 'Select Group Settings', 'buddyboss' ); ?>
 	</h3>
-
 <?php else : ?>
-
 	<h2 class="bp-screen-title">
 		<?php esc_html_e( 'Change Group Settings', 'buddyboss' ); ?>
 	</h2>
-
 <?php endif; ?>
 
 <div class="group-settings-selections">
@@ -33,7 +28,7 @@
 			<?php
 			if ( 'public' === bp_get_new_group_status() || ! bp_get_new_group_status() ) {
 				?>
-				 checked="checked"<?php } ?> aria-describedby="public-group-description" />
+				checked="checked"<?php } ?> aria-describedby="public-group-description" />
 			<label for="group-status-public"><?php esc_html_e( 'This is a public group', 'buddyboss' ); ?></label>
 		</div>
 
@@ -48,7 +43,7 @@
 			<?php
 			if ( 'private' === bp_get_new_group_status() ) {
 				?>
-				 checked="checked"<?php } ?> aria-describedby="private-group-description" />
+				checked="checked"<?php } ?> aria-describedby="private-group-description" />
 			<label for="group-status-private"><?php esc_html_e( 'This is a private group', 'buddyboss' ); ?></label>
 		</div>
 
@@ -63,7 +58,7 @@
 			<?php
 			if ( 'hidden' === bp_get_new_group_status() ) {
 				?>
-				 checked="checked"<?php } ?> aria-describedby="hidden-group-description" />
+				checked="checked"<?php } ?> aria-describedby="hidden-group-description" />
 			<label for="group-status-hidden"><?php esc_html_e( 'This is a hidden group', 'buddyboss' ); ?></label>
 		</div>
 
@@ -240,11 +235,9 @@
 			</div>
 		</fieldset>
 
-	<?php endif; ?>
+		<?php
+	endif;
 
-
-
-	<?php
 	$group_types = bp_groups_get_group_types( array( 'show_in_create_screen' => true ), 'objects' );
 
 	// Hide Group Types if none is selected in Users > Profile Type > E.g. (Students) > Allowed Group Types meta box.
@@ -273,8 +266,8 @@
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'What type of group is this? (optional)', 'buddyboss' ); ?></p>
 			<select id="bp-groups-type" name="group-types[]" autocomplete="off">
 				<option value="" <?php selected( '', '' ); ?>><?php _e( 'Select Group Type', 'buddyboss' ); ?></option>
-			<?php foreach ( $group_types as $type ) : ?>
-				<?php
+			<?php
+			foreach ( $group_types as $type ) :
 				if ( false === bp_restrict_group_creation() && true === bp_member_type_enable_disable() ) {
 
 					$get_all_registered_member_types = bp_get_active_member_types();
@@ -314,20 +307,18 @@
 					<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ); ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '', $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
 					<?php
 				}
-				?>
-
-			<?php endforeach; ?>
+			endforeach;
+			?>
 			</select>
 		</fieldset>
 
-	<?php endif; ?>
+		<?php
+	endif;
 
-	<?php
 	if ( bp_enable_group_hierarchies() ) :
 		$current_parent_group_id = bp_get_parent_group_id();
 		$possible_parent_groups  = bp_get_possible_parent_groups();
 		?>
-
 		<fieldset class="select group-parent">
 			<legend><?php esc_html_e( 'Group Parent', 'buddyboss' ); ?></legend>
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which group should be the parent of this group? (optional)', 'buddyboss' ); ?></p>
@@ -335,7 +326,6 @@
 				<option value="0" <?php selected( 0, $current_parent_group_id ); ?>><?php _e( 'Select Parent', 'buddyboss' ); ?></option>
 				<?php
 				if ( $possible_parent_groups ) {
-
 					foreach ( $possible_parent_groups as $possible_parent_group ) {
 						?>
 						<option value="<?php echo $possible_parent_group->id; ?>" <?php selected( $current_parent_group_id, $possible_parent_group->id ); ?>><?php echo esc_html( $possible_parent_group->name ); ?></option>
