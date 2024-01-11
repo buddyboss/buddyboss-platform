@@ -1121,7 +1121,7 @@ function buddyboss_directory_save_layout() {
 		wp_die();
 	}
 
-	$option_value = bb_filter_input_string( INPUT_GET, 'type' );
+	$option_value = bb_filter_input_string( INPUT_POST, 'type' );
 	if ( ! in_array( $option_value, array( 'grid', 'list' ), true ) ) {
 		wp_send_json_error( array(
 			'message' => __( 'Not a valid value', 'buddyboss' ),
