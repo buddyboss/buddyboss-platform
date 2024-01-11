@@ -1308,6 +1308,10 @@ window.bp = window.bp || {};
 				function ( e ) {
 					e.preventDefault();
 
+					if ( bp.Nouveau.ajax_request != false ) {
+						bp.Nouveau.ajax_request.abort();
+					}
+
 					if ( 'undefined' === typeof object ) {
 						return;
 					}
@@ -1326,7 +1330,7 @@ window.bp = window.bp || {};
 						layout = 'grid';
 					}
 
-					$.ajax(
+					bp.Nouveau.ajax_request = $.ajax(
 						{
 							method: 'POST',
 							url: BP_Nouveau.ajaxurl,
