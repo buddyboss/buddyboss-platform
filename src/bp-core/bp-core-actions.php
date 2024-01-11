@@ -1146,7 +1146,7 @@ function buddyboss_directory_save_layout() {
 		setcookie( $option_name, rawurlencode( wp_json_encode( $existing_layout ) ), time() + 31556926, '/', COOKIE_DOMAIN, false, false );
 	}
 
-	wp_send_json_success( array( 'html' => 'success' ) );
+	wp_send_json_success();
 	wp_die();
 }
 
