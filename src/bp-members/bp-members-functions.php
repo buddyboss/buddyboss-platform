@@ -3547,12 +3547,14 @@ function bp_register_active_member_types() {
 		foreach ( $member_type_ids as $member_type_id ) {
 			$key = bp_get_member_type_key( $member_type_id );
 
+			$label_name    = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
+			$singular_name = get_post_meta( $member_type_id, '_bp_member_type_label_singular_name', true );
 			bp_register_member_type(
 				$key,
 				array(
 					'labels'        => array(
-						'name'          => get_post_meta( $member_type_id, '_bp_member_type_label_name', true ),
-						'singular_name' => get_post_meta( $member_type_id, '_bp_member_type_label_singular_name', true ),
+						'name'          => ! empty( $label_name ) ? wp_specialchars_decode( $label_name ) : '',
+						'singular_name' => ! empty( $singular_name ) ? wp_specialchars_decode( $singular_name ) : '',
 					),
 					'has_directory' => true,
 				)
