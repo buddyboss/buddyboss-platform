@@ -1099,7 +1099,7 @@ add_action( 'bb_async_request_batch_process', 'bb_background_remove_duplicate_as
  * @since BuddyBoss [BBVERSION]
  */
 function buddyboss_directory_save_layout() {
-	$object = bb_filter_input_string( INPUT_GET, 'object' );
+	$object = bb_filter_input_string( INPUT_POST, 'object' );
 	if ( empty( $object ) ) {
 		wp_send_json_error( array(
 			'message' => __( 'Invalid object.', 'buddyboss' ),
