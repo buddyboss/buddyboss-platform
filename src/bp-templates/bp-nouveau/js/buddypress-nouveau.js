@@ -1304,7 +1304,7 @@ window.bp = window.bp || {};
 
 			$( document ).on(
 				'click',
-				'.grid-filters .layout-view',
+				'.grid-filters .layout-view:not(.active)',
 				function ( e ) {
 					e.preventDefault();
 
