@@ -10,18 +10,18 @@
 		</a>
 	</div>
 
-	<?php if ( bp_activity_embed_has_activity( bp_current_action() ) ) : ?>
-
-		<?php
+	<?php
+	if ( bp_activity_embed_has_activity( bp_current_action() ) ) :
 		while ( bp_activities() ) :
 			bp_the_activity();
-		?>
+			?>
 			<p class="bp-embed-activity-action">
 				<?php bp_activity_action( array( 'no_timestamp' => true ) ); ?>
 			</p>
-		<?php endwhile; ?>
-
-	<?php endif; ?>
+			<?php
+		endwhile;
+	endif;
+	?>
 
 	<p class="bp-embed-header-meta">
 		<?php if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) : ?>
