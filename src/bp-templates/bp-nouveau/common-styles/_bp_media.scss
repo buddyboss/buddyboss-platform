@@ -5095,22 +5095,25 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 	}
 }
 
-.directory.media .site-main,
-.directory.document .site-main,
-.directory.video .site-main {
-	position: relative;
+body.buddyboss-theme {
 
-	.media-options,
-	.document-options,
-	.video-options {
-		position: absolute;
-		right: 0;
-		top: 0;
-		margin: 0;
+	&.directory.media .site-main,
+	&.directory.document .site-main,
+	&.directory.video .site-main {
+		position: relative;
 
-		@media screen and (max-width: 1024px) {
-			position: static;
+		.media-options,
+		.document-options,
+		.video-options {
+			position: absolute;
+			right: 0;
+			top: 0;
 			margin: 0;
+
+			@media screen and (max-width: 1024px) {
+				position: static;
+				margin: 0;
+			}
 		}
 	}
 }

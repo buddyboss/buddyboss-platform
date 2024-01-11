@@ -23255,21 +23255,21 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   }
 }
 
-.directory.media .site-main,
-.directory.document .site-main,
-.directory.video .site-main {
+body.buddyboss-theme.directory.media .site-main,
+body.buddyboss-theme.directory.document .site-main,
+body.buddyboss-theme.directory.video .site-main {
   position: relative;
 }
 
-.directory.media .site-main .media-options,
-.directory.media .site-main .document-options,
-.directory.media .site-main .video-options,
-.directory.document .site-main .media-options,
-.directory.document .site-main .document-options,
-.directory.document .site-main .video-options,
-.directory.video .site-main .media-options,
-.directory.video .site-main .document-options,
-.directory.video .site-main .video-options {
+body.buddyboss-theme.directory.media .site-main .media-options,
+body.buddyboss-theme.directory.media .site-main .document-options,
+body.buddyboss-theme.directory.media .site-main .video-options,
+body.buddyboss-theme.directory.document .site-main .media-options,
+body.buddyboss-theme.directory.document .site-main .document-options,
+body.buddyboss-theme.directory.document .site-main .video-options,
+body.buddyboss-theme.directory.video .site-main .media-options,
+body.buddyboss-theme.directory.video .site-main .document-options,
+body.buddyboss-theme.directory.video .site-main .video-options {
   position: absolute;
   right: 0;
   top: 0;
@@ -23277,15 +23277,15 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 }
 
 @media screen and (max-width: 1024px) {
-  .directory.media .site-main .media-options,
-  .directory.media .site-main .document-options,
-  .directory.media .site-main .video-options,
-  .directory.document .site-main .media-options,
-  .directory.document .site-main .document-options,
-  .directory.document .site-main .video-options,
-  .directory.video .site-main .media-options,
-  .directory.video .site-main .document-options,
-  .directory.video .site-main .video-options {
+  body.buddyboss-theme.directory.media .site-main .media-options,
+  body.buddyboss-theme.directory.media .site-main .document-options,
+  body.buddyboss-theme.directory.media .site-main .video-options,
+  body.buddyboss-theme.directory.document .site-main .media-options,
+  body.buddyboss-theme.directory.document .site-main .document-options,
+  body.buddyboss-theme.directory.document .site-main .video-options,
+  body.buddyboss-theme.directory.video .site-main .media-options,
+  body.buddyboss-theme.directory.video .site-main .document-options,
+  body.buddyboss-theme.directory.video .site-main .video-options {
     position: static;
     margin: 0;
   }
