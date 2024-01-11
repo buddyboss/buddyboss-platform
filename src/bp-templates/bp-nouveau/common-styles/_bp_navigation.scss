@@ -41,9 +41,12 @@
 
 				@include font-size(12);
 				margin-left: 2px;
-				padding: 3px 6px;
+				padding-top: 2px;
+				padding-bottom: 2px;
 				text-align: center;
 				vertical-align: middle;
+				min-width: 25px;
+				align-self: center;
 			}
 		}
 
