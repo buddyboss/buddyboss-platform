@@ -4585,10 +4585,12 @@ function bp_document_load_gopp_image_editor_gs() {
 /**
  * Create symlink for a document video.
  *
- * @param object $document BP_Document Object.
- * @param bool   $generate Generate Symlink or not.
- *
  * @since BuddyBoss 1.7.0
+ *
+ * @param bool       $generate Generate Symlink or not.
+ * @param object|int $document BP_Document Object.
+ *
+ * @return string|void
  */
 function bb_document_video_get_symlink( $document, $generate = true ) {
 
