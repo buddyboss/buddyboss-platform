@@ -796,6 +796,7 @@ window.bp = window.bp || {};
 				}
 
 				if ( 'fav' === type && parseInt( reaction_id ) === parseInt( reacted_id ) ) {
+					target.removeClass( 'loading' );
 					return;
 				}
 
@@ -909,6 +910,10 @@ window.bp = window.bp || {};
 								}
 							}
 						}
+					}
+				).fail(
+					function( xhr, textStatus, errorThrown ) {
+						target.removeClass( 'loading' );
 					}
 				);
 			}
