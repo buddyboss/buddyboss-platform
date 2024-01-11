@@ -10,8 +10,8 @@
 
 global $media_template;
 
-$width         = isset( $media_template->media->attachment_data->meta['width'] ) ? $media_template->media->attachment_data->meta['width'] : 0;
-$height        = isset( $media_template->media->attachment_data->meta['height'] ) ? $media_template->media->attachment_data->meta['height'] : 0;
+$width         = $media_template->media->attachment_data->meta['width'] ?? 0;
+$height        = $media_template->media->attachment_data->meta['height'] ?? 0;
 $attachment_id = bp_get_media_attachment_id();
 $download_url  = bp_media_download_link( $attachment_id, bp_get_media_id() );
 $group_id      = bp_get_media_group_id();
@@ -30,10 +30,10 @@ if ( $group_id > 0 ) {
 	$move_type = 'profile';
 }
 $is_comment_pic = bp_media_is_activity_comment_photo( $media_template->media );
-$more_media     = $media_template->media_count > 5 ? true : false;
+$more_media     = $media_template->media_count > 5;
 ?>
 
-<div class="bb-activity-media-elem media-activity 
+<div class="bb-activity-media-elem media-activity
 	<?php
 	echo esc_attr( bp_get_media_id() ) . ' ';
 	echo $media_template->current_media > 4 ? esc_attr( 'hide' ) : '';

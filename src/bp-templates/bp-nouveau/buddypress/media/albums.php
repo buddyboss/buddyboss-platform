@@ -39,9 +39,7 @@ bp_nouveau_media_hook( 'before', 'media_album_content' );
 
 if ( bp_has_albums( bp_ajax_querystring( 'albums' ) ) ) :
 	?>
-
 	<div id="albums-dir-list" class="bb-albums bb-albums-dir-list">
-
 		<?php
 		if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) :
 			?>
@@ -55,13 +53,12 @@ if ( bp_has_albums( bp_ajax_querystring( 'albums' ) ) ) :
 
 			bp_get_template_part( 'media/album-entry' );
 
-			endwhile;
+		endwhile;
 
 		if ( bp_album_has_more_items() ) :
 			?>
 			<li class="load-more">
-				<a class="button outline"
-				   href="<?php bp_album_has_more_items(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+				<a class="button outline" href="<?php bp_album_has_more_items(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
 			</li>
 			<?php
 		endif;
@@ -76,9 +73,7 @@ if ( bp_has_albums( bp_ajax_querystring( 'albums' ) ) ) :
 	<?php
 
 else :
-
 	bp_nouveau_user_feedback( 'media-album-none' );
-
 endif;
 
 bp_nouveau_media_hook( 'after', 'media_album_content' );
