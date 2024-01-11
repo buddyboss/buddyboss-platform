@@ -1308,12 +1308,18 @@ window.bp = window.bp || {};
 				function ( e ) {
 					e.preventDefault();
 
-					if ( bp.Nouveau.ajax_request != false ) {
-						bp.Nouveau.ajax_request.abort();
-					}
-
 					if ( 'undefined' === typeof object ) {
 						return;
+					}
+
+					if ( bp.Nouveau.ajax_request != false ) {
+						bp.Nouveau.ajax_request.abort();
+
+						$( '.component-navigation [data-bp-object]' ).each(
+							function () {
+								$( this ).removeClass( 'loading' );
+							}
+						);
 					}
 
 					var layout = '';
