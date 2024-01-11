@@ -258,7 +258,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 				'object'       => 'group',
 				'item_id'      => bp_get_current_group_id(),
 				'item_name'    => bp_get_current_group_name(),
-				'group_avatar' => bp_disable_group_avatar_uploads() ? false : bp_get_group_avatar_url( groups_get_group( bp_get_current_group_id() ) ), // Add group avatar in get activity data object.
+				'group_avatar' => bp_disable_group_avatar_uploads() ? '' : bp_get_group_avatar_url( groups_get_group( bp_get_current_group_id() ) ), // Add group avatar in get activity data object.
 			)
 		);
 

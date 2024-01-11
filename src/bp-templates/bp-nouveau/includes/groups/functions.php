@@ -456,7 +456,7 @@ function bp_nouveau_prepare_group_for_js( $item ) {
 		return array();
 	}
 
-	$item_avatar_url = bp_disable_group_avatar_uploads() ? false : bp_core_fetch_avatar( array(
+	$item_avatar_url = bp_disable_group_avatar_uploads() ? '' : bp_core_fetch_avatar( array(
 		'item_id'    => $item->id,
 		'object'     => 'group',
 		'type'       => 'thumb',
