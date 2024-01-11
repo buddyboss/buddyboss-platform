@@ -451,7 +451,7 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 				$old_media_ids = explode( ',', $old_media_ids );
 				if ( ! empty( $old_media_ids ) ) {
 					foreach ( $old_media_ids as $media_id ) {
-						bp_media_delete( array( 'id' => $media_id ), 'activity' );
+						bp_media_delete( array( 'id' => $media_id ) );
 					}
 				}
 				bp_activity_delete_meta( $activity_id, 'bp_media_ids' );

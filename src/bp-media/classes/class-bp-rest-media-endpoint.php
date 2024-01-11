@@ -2473,7 +2473,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			// delete media ids and meta for activity if empty media in request.
 			if ( ! empty( $activity_id ) && ! empty( $old_media_ids ) ) {
 				foreach ( $old_media_ids as $media_id ) {
-					bp_media_delete( array( 'id' => $media_id ), 'activity' );
+					bp_media_delete( array( 'id' => $media_id ) );
 				}
 				bp_activity_delete_meta( $activity_id, 'bp_media_ids' );
 
