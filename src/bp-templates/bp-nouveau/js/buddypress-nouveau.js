@@ -1328,7 +1328,7 @@ window.bp = window.bp || {};
 
 					$.ajax(
 						{
-							method: 'GET',
+							method: 'POST',
 							url: BP_Nouveau.ajaxurl,
 							data: {
 								action: 'buddyboss_directory_save_layout',

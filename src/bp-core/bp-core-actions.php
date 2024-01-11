@@ -1106,14 +1106,14 @@ function buddyboss_directory_save_layout() {
 		) );
 	}
 
-	$nonce = bb_filter_input_string( INPUT_GET, 'nonce' );
+	$nonce = bb_filter_input_string( INPUT_POST, 'nonce' );
 	if ( ! wp_verify_nonce( $nonce, 'bp_nouveau_' . $object ) ) {
 		wp_send_json_error( array(
 			'message' => __( 'Invalid request.', 'buddyboss' ),
 		) );
 	}
 
-	$option_name = bb_filter_input_string( INPUT_GET, 'option' );
+	$option_name = bb_filter_input_string( INPUT_POST, 'option' );
 	if ( empty( $option_name ) || 'bb_layout_view' !== $option_name ) {
 		wp_send_json_error( array(
 			'message' => __( 'Not a valid option', 'buddyboss' ),
