@@ -184,6 +184,7 @@ add_action( 'update_option_bp-disable-group-messages', 'bb_clear_cache_while_gro
 function bp_messages_clear_message_unread_cache_on_thread_archived( $thread_id, $user_id ) {
 	wp_cache_delete( $user_id, 'bp_messages_unread_count' );
 	wp_cache_delete( "bb_thread_message_unread_count_{$user_id}_{$thread_id}", 'bp_messages_unread_count' );
+	bp_core_reset_incrementor( 'bp_messages' );
 }
 add_action( 'bb_messages_thread_archived', 'bp_messages_clear_message_unread_cache_on_thread_archived', 1, 2 );
 add_action( 'bb_messages_thread_unarchived', 'bp_messages_clear_message_unread_cache_on_thread_archived', 1, 2 );
