@@ -1292,7 +1292,7 @@ add_action( 'xprofile_group_before_save', 'bb_xprofile_before_save_xprofile_grou
  * @param object|BP_XProfile_Group $xprofile Current instance of the group being saved.
  */
 function bb_xprofile_migrate_simple_to_repeater_fields_data( $xprofile ) {
-	global $wpdb, $bp, $bp_background_updater;
+	global $wpdb, $bp, $bb_background_updater;
 
 	$repeater_enabled = isset( $_POST['group_is_repeater'] ) && 'on' == $_POST['group_is_repeater'] ? 'on' : 'off';
 	$previous_value   = bp_get_option( 'xprofile_group_' . $xprofile->id );
@@ -1324,19 +1324,20 @@ function bb_xprofile_migrate_simple_to_repeater_fields_data( $xprofile ) {
 					$chunk_user_ids = array_chunk( $user_ids, $min_count );
 					if ( ! empty( $chunk_user_ids ) ) {
 						foreach ( $chunk_user_ids as $chunked_user_ids ) {
-							$bp_background_updater->data(
+							$bb_background_updater->data(
 								array(
-									array(
-										'callback' => 'bb_xprofile_mapping_simple_to_repeater_fields_data',
-										'args'     => array( $chunked_user_ids, $xprofile->id ),
-									),
+									'type'     => 'xprofile',
+									'group'    => 'xprofile_simple_field_to_repeater',
+									'priority' => 5,
+									'callback' => 'bb_xprofile_mapping_simple_to_repeater_fields_data',
+									'args'     => array( $chunked_user_ids, $xprofile->id ),
 								)
 							);
-							$bp_background_updater->save();
+							$bb_background_updater->save();
 						}
 					}
 
-					$bp_background_updater->dispatch();
+					$bb_background_updater->dispatch();
 				} else {
 					bb_xprofile_mapping_simple_to_repeater_fields_data( $user_ids, $xprofile->id );
 				}
