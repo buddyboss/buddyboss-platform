@@ -5430,7 +5430,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 		$group            = groups_get_group( $group_id );
 		$group_name       = bp_get_group_name( $group );
 	}
-	$group_avatar = bp_is_active( 'groups' ) ? bp_get_group_avatar_url( groups_get_group( $group_id ) ) : '';  // Add group avatar in get activity data object.
+	$group_avatar = bp_is_active( 'groups' ) && ! bp_disable_group_avatar_uploads() ? bp_get_group_avatar_url( groups_get_group( $group_id ) ) : '';  // Add group avatar in get activity data object.
 
 	// Link preview data.
 	$link_preview_data = bp_activity_get_meta( $activity_id, '_link_preview_data', true );
