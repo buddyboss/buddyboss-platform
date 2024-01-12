@@ -9687,3 +9687,34 @@ function bb_reactions_get_settings_fields() {
 
 	return (array) apply_filters( 'bb_reactions_get_settings_fields', $fields );
 }
+
+/**
+ * Retrieve the current layout for BuddyBoss directories.
+ * This function retrieves the current layout for BuddyBoss directories based on the specified action.
+ * It checks whether the user is logged in, retrieves layout preferences from user meta or cookies,
+ * and provides a default layout value if no user preferences are found.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $action The directory action for which to retrieve the layout
+ *                       (e.g. 'members', 'ld-course', 'groups').
+ *
+ * @return string The current layout format ('grid' or 'list').
+ */
+function bb_get_directory_layout_preference( $action ) {
+	if ( is_user_logged_in() ) {
+		$existing_layouts = get_user_meta( get_current_user_id(), 'bb_layout_view', true );
+	} else {
+		$existing_layouts = ! empty( $_COOKIE['bb_layout_view'] ) ? json_decode( rawurldecode( $_COOKIE['bb_layout_view'] ), true ) : array();
+	}
+	$default_value = '';
+	if ( 'members' === $action ) {
+		$default_value = bp_profile_layout_default_format( 'grid' );
+	} elseif ( 'groups' === $action ) {
+		$default_value = bp_group_layout_default_format( 'grid' );
+	} elseif ( 'ld-course' === $action ) {
+		$default_value = apply_filters( 'bb_learndash_course_layout', 'grid' );
+	}
+
+	return ! empty( $existing_layouts ) && ! empty( $existing_layouts[ $action ] ) ? $existing_layouts[ $action ] : $default_value;
+}
