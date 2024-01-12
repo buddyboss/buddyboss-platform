@@ -655,7 +655,9 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 				}
 			);
 		}
-	} elseif (
+	}
+
+	if (
 		empty( $friend_users ) &&
 		bp_is_activity_follow_active() &&
 		function_exists( 'bp_get_followers' ) &&
