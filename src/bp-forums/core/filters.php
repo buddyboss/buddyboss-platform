@@ -299,6 +299,12 @@ add_filter( 'bbp_get_reply_content', 'bb_mention_remove_deleted_users_link', 20,
 add_filter( 'bbp_get_topic_content', 'bb_forums_link_preview', 999, 2 );
 add_filter( 'bbp_get_reply_content', 'bb_forums_link_preview', 999, 2 );
 
+add_filter( 'bbp_get_forum_content', 'wptexturize' );
+add_filter( 'bbp_get_forum_content', 'convert_smilies' );
+add_filter( 'bbp_get_forum_content', 'convert_chars' );
+add_filter( 'bbp_get_forum_content', 'wpautop' );
+add_filter( 'bbp_get_forum_content', 'make_clickable', 9 );
+
 /** Deprecated ****************************************************************/
 
 /**

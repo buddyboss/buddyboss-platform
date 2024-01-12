@@ -138,7 +138,8 @@
 
 	}
 
-	&#group-description-popup {
+	&#group-description-popup,
+	&[id^="single-forum-description-popup"] {
 
 		.bb-action-popup-content {
 			padding-bottom: 1px;

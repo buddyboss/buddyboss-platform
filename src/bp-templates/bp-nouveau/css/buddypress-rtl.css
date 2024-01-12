@@ -7112,19 +7112,19 @@ form.acomment-edit .activity-attached-gif-container .gif-image-remove:hover .bb-
   float: none;
 }
 
-.bb-action-popup#group-description-popup .bb-action-popup-content {
+.bb-action-popup#group-description-popup .bb-action-popup-content, .bb-action-popup[id^="single-forum-description-popup"] .bb-action-popup-content {
   padding-bottom: 1px;
 }
 
-.bb-action-popup#group-description-popup .bb-action-popup-content p {
+.bb-action-popup#group-description-popup .bb-action-popup-content p, .bb-action-popup[id^="single-forum-description-popup"] .bb-action-popup-content p {
   margin-bottom: 1.6875rem;
 }
 
-.bb-action-popup#group-description-popup .bb-action-popup-content p:empty {
+.bb-action-popup#group-description-popup .bb-action-popup-content p:empty, .bb-action-popup[id^="single-forum-description-popup"] .bb-action-popup-content p:empty {
   display: none;
 }
 
-.bb-action-popup#group-description-popup .bb-action-popup-content ul {
+.bb-action-popup#group-description-popup .bb-action-popup-content ul, .bb-action-popup[id^="single-forum-description-popup"] .bb-action-popup-content ul {
   margin: 0 1.6875rem 1.6875rem 0;
   list-style-type: disc;
 }
@@ -15846,10 +15846,6 @@ button.button.bb_discard_topic_reply_draft:hover {
 
 /* =Breadcrumb and Tags
 -------------------------------------------------------------- */
-div.bbp-breadcrumb {
-  float: right;
-}
-
 div.bbp-breadcrumb,
 div.bbp-topic-tags {
   font-size: 12px;
