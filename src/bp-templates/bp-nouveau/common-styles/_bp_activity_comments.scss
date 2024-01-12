@@ -20,7 +20,7 @@
 				padding: $pad-med 0 0;
 
 				&:not(.detached-comment-item) {
-					margin-left: $marg-med;
+					margin-left: 0;
 
 					@media screen and (max-width: 560px) {
 						margin-left: 0;
@@ -53,14 +53,26 @@
 
 		div.acomment-avatar {
 			width: auto;
+			margin-top: 7px;
 
 			img {
 				border-width: 1px;
 				float: left;
-				height: 25px;
 				max-width: none;
-				width: 25px;
+				max-width: 32px;
+				object-fit: cover;
 				image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
+			}
+		}
+
+		.acomment_inner {
+			display: flex;
+
+			.acomment-content_block {
+				background-color: $light-grey;
+				padding: $marg-sml $marg-med;
+				border-radius: $block-radius-inner;
+				margin-bottom: $marg-xsml;
 			}
 		}
 
@@ -76,9 +88,6 @@
 		}
 
 		.acomment-content {
-			border-left: 1px solid $bp-border-dark;
-			margin: $marg-med 0 0 10%;
-			padding: $pad-sml $pad-med;
 
 			p {
 				margin-bottom: 0.5em;
@@ -118,7 +127,6 @@
 
 		.bp-generic-meta.action {
 			background: none;
-			margin-top: $marg-sml;
 
 			// if button element in use
 			button {
@@ -210,14 +218,6 @@
 			margin-top: 0;
 		}
 
-	}
-
-	.bb-media-model-wrapper .activity-comments ul li:not(.detached-comment-item) {
-		margin-left: 10px;
-
-		@media screen and (max-width: 560px) {
-			margin-left: 0;
-		}
 	}
 
 } // close .buddypress-wrap

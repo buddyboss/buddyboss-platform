@@ -2,7 +2,6 @@
 // @version 3.0.0
 form.ac-form {
 	display: none;
-	padding: $pad-med;
 
 	.ac-reply-avatar {
 		float: left;
@@ -102,7 +101,7 @@ form.acomment-edit {
 	}
 
 	.ac-reply-avatar img {
-		max-width: 34px;
+		max-width: 32px;
 	}
 
 	.ac-reply-content {

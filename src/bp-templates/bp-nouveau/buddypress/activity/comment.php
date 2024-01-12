@@ -20,30 +20,37 @@ bp_nouveau_activity_hook( 'before', 'comment_entry' );
 
 		<?php bb_nouveau_activity_comment_bubble_buttons(); ?>
 
-		<div class="acomment-avatar item-avatar">
-			<a href="<?php bp_activity_comment_user_link(); ?>">
-				<?php
-				bp_activity_avatar(
-					array(
-						'type'    => 'thumb',
-						'user_id' => bp_get_activity_comment_user_id(),
-					)
-				);
-				?>
-			</a>
-		</div>
+		<div class="acomment_inner">
+			<div class="acomment-avatar item-avatar">
+				<a href="<?php bp_activity_comment_user_link(); ?>">
+					<?php
+					bp_activity_avatar(
+						array(
+							'type'    => 'thumb',
+							'user_id' => bp_get_activity_comment_user_id(),
+						)
+					);
+					?>
+				</a>
+			</div>
 
-		<div class="acomment-meta">
-			<?php bp_nouveau_activity_comment_action(); ?>
-		</div>
+			<div class="acomment-content_wrap">
 
-		<div class="acomment-content">
-			<?php
-			bp_activity_comment_content();
-			do_action( 'bp_activity_after_comment_content', bp_get_activity_comment_id() );
-			?>
+				<div class="acomment-content_block">
+					<div class="acomment-meta">
+						<?php bp_nouveau_activity_comment_action(); ?>
+					</div>
+
+					<div class="acomment-content">
+						<?php
+						bp_activity_comment_content();
+						do_action( 'bp_activity_after_comment_content', bp_get_activity_comment_id() );
+						?>
+					</div>
+				</div>
+				<?php bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) ); ?>
+			</div>
 		</div>
-		<?php bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) ); ?>
 	</div>
 	<div id="acomment-edit-form-<?php bp_activity_comment_id(); ?>" class="acomment-edit-form"></div>
 
