@@ -14,28 +14,22 @@
 $hide_sitewide = ( 1 === (int) bp_get_moderation_hide_site_wide() ) ? true : false;
 ?>
 <tr class="moderation-item-wrp">
-    <td class="moderation-item-type">
-        <span class="item-type">
-            <?php
-            echo esc_html( bp_moderation_get_content_type( bp_get_moderation_item_type() ) );
-            ?>
-        </span>
+	<td class="moderation-item-type">
+		<span class="item-type">
+			<?php echo esc_html( bp_moderation_get_content_type( bp_get_moderation_item_type() ) ); ?>
+		</span>
 		<?php
 		if ( true === $hide_sitewide ) {
 			?>
-            <span class="description">
-                <?php
-                esc_html_e( 'moderated', 'buddyboss' );
-                ?>
-            </span>
+			<span class="description">
+				<?php esc_html_e( 'moderated', 'buddyboss' ); ?>
+			</span>
 			<?php
 		}
 		?>
-    </td>
-    <td class="moderation-item-id">
-		<?php
-		echo esc_html( bp_get_moderation_item_id() );
-		?>
+	</td>
+	<td class="moderation-item-id">
+		<?php echo esc_html( bp_get_moderation_item_id() ); ?>
 	</td>
 	<td class="moderation-content-owner">
 		<?php
@@ -45,19 +39,14 @@ $hide_sitewide = ( 1 === (int) bp_get_moderation_hide_site_wide() ) ? true : fal
 	</td>
 	<td class="moderation-content-excerpt">
 		<?php
-		$content_excerpt = bp_moderation_get_content_excerpt( bp_get_moderation_item_id(),
-				bp_get_moderation_item_type() );
+		$content_excerpt = bp_moderation_get_content_excerpt( bp_get_moderation_item_id(), bp_get_moderation_item_type() );
 		echo wp_kses_post( substr( $content_excerpt, 0, 100 ) );
 		?>
 	</td>
 	<td class="moderation-content-category">
-		<?php
-		echo esc_html( bp_get_moderation_reported_category() );
-		?>
+		<?php echo esc_html( bp_get_moderation_reported_category() ); ?>
 	</td>
 	<td class="moderation-item-last-updated">
-		<?php
-		echo esc_html( bbp_get_time_since( bp_get_moderation_last_updated() ) );
-		?>
-    </td>
+		<?php echo esc_html( bbp_get_time_since( bp_get_moderation_last_updated() ) ); ?>
+	</td>
 </tr>
