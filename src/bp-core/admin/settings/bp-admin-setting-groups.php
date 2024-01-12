@@ -122,8 +122,11 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-disable-group-messages', esc_html__( 'Group Messages', 'buddyboss' ), 'bp_admin_setting_callback_group_messages', 'intval' );
 		}
 
-		// Allow group subscriptions setting.
-		$this->add_field( 'bb_enable_group_subscriptions', esc_html__( 'Subscriptions', 'buddyboss' ), 'bb_admin_setting_callback_group_subscriptions', 'intval' );
+		// Hide group subscription setting when notifications is disabled or forum/activity is not active.
+		if ( bp_is_active( 'notifications' ) && ! empty( bb_register_subscriptions_types( 'group' ) ) ) {
+			// Allow group subscriptions setting.
+			$this->add_field( 'bb_enable_group_subscriptions', esc_html__( 'Subscriptions', 'buddyboss' ), 'bb_admin_setting_callback_group_subscriptions', 'intval' );
+		}
 
 		// Group avatar and cover.
 		$this->add_section( 'bp_groups_avatar_settings', esc_html__( 'Group Images', 'buddyboss' ), '', 'bp_group_avatar_tutorial' );

@@ -566,8 +566,8 @@ function bb_register_subscriptions_types( $type = '' ) {
 
 	$subscription_type = apply_filters( 'bb_register_subscriptions_types', array() );
 
-	if ( ! empty( $type ) && isset( $subscription_type[ $type ] ) ) {
-		return $subscription_type[ $type ];
+	if ( ! empty( $type ) ) {
+		return isset( $subscription_type[ $type ] ) ? $subscription_type[ $type ] : array();
 	}
 
 	return $subscription_type;
@@ -1021,7 +1021,12 @@ function bb_is_enabled_subscription( $type, $notification_type = '' ) {
 				$is_enabled = function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active();
 				break;
 			case 'group':
-				$is_enabled = function_exists( 'bb_enable_group_subscriptions' ) && true === bb_enable_group_subscriptions();
+				$is_enabled = (
+					bp_is_active( 'notifications' ) &&
+					function_exists( 'bb_enable_group_subscriptions' ) &&
+					true === bb_enable_group_subscriptions() &&
+					! empty( bb_register_subscriptions_types( 'group' ) )
+				);
 				break;
 			default:
 				if ( ! empty( $notification_type ) ) {
