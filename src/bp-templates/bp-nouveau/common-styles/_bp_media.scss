@@ -5135,13 +5135,27 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 	}
 }
 
-.directory.media .site-main .media-options,
-.directory.document .site-main .document-options,
-.directory.video .site-main .video-options {
-	position: absolute;
-	right: 0;
-	top: 0;
-	margin: 0;
+body.buddyboss-theme {
+
+	&.directory.media .site-main,
+	&.directory.document .site-main,
+	&.directory.video .site-main {
+		position: relative;
+
+		.media-options,
+		.document-options,
+		.video-options {
+			position: absolute;
+			right: 0;
+			top: 0;
+			margin: 0;
+
+			@media screen and (max-width: 1024px) {
+				position: static;
+				margin: 0;
+			}
+		}
+	}
 }
 
 .directory.media .media-options,
@@ -5237,12 +5251,12 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 	}
 
 	@media screen and (max-width: 1024px) {
-		position: static;
-		margin: 0;
 
 		> * {
 			margin-bottom: 15px;
 			width: 100% !important;
+			display: inline-block;
+			box-sizing: border-box;
 		}
 
 		.subnav-filters .subnav-search {
