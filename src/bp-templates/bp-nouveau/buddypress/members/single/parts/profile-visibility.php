@@ -11,12 +11,10 @@
 if ( empty( $GLOBALS['profile_template'] ) ) {
 	return;
 }
-?>
 
-<?php if ( bp_current_user_can( 'bp_xprofile_change_field_visibility' ) ) : ?>
+if ( bp_current_user_can( 'bp_xprofile_change_field_visibility' ) ) : ?>
 
 	<p class="field-visibility-settings-toggle field-visibility-settings-header" id="field-visibility-settings-toggle-<?php bp_the_profile_field_id(); ?>">
-
 		<?php
 		printf(
 			/* translators: field visibility level, e.g. "public". */
@@ -24,7 +22,6 @@ if ( empty( $GLOBALS['profile_template'] ) ) {
 		);
 		?>
 		<button class="visibility-toggle-link button" type="button"><?php esc_html_e( 'Change', 'buddyboss' ); ?></button>
-
 	</p>
 
 	<div class="field-visibility-settings" id="field-visibility-settings-<?php bp_the_profile_field_id(); ?>">

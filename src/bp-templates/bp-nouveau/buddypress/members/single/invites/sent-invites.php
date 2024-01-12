@@ -9,9 +9,7 @@
  */
 
 bp_nouveau_member_hook( 'before', 'invites_sent_template' );
-?>
 
-<?php
 $email = trim( bb_filter_input_string( INPUT_GET, 'email' ) );
 if ( isset( $email ) && '' !== $email ) {
 	?>
@@ -161,11 +159,7 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 						} else {
 							?>
 							<span class="bp-invitee-status">
-								<a data-revoke-access="<?php echo esc_url( $revoke_link ); ?>"
-								   data-name="<?php echo esc_attr( $alert_message ); ?>"
-								   id="<?php echo esc_attr( get_the_ID() ); ?>"
-								   class="<?php echo esc_attr( $class ); ?>"
-								   href="javascript:void(0);">
+								<a data-revoke-access="<?php echo esc_url( $revoke_link ); ?>" data-name="<?php echo esc_attr( $alert_message ); ?>" id="<?php echo esc_attr( get_the_ID() ); ?>" class="<?php echo esc_attr( $class ); ?>" href="javascript:void(0);">
 									<span class="dashicons <?php echo esc_attr( $icon ); ?>"></span><?php echo $title; ?>
 								</a>
 							</span>
@@ -189,11 +183,8 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 	}
 
 	$total_pages = $the_query->max_num_pages;
-
 	if ( $total_pages > 1 ) {
-
 		$current_page = max( 1, get_query_var( 'paged' ) );
-
 		echo paginate_links(
 			array(
 				'base'      => get_pagenum_link( 1 ) . '%_%',

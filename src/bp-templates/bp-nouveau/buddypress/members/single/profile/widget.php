@@ -21,7 +21,6 @@ $user_progress_offset = 100 - $user_progress['completion_percentage'];
 
 ?>
 <div class="profile_completion_wrap">
-
 	<div class="pc_progress_wrap">
 		<svg class="pc_progress_graph <?php echo ( 0 === $user_progress['completion_percentage'] ) ? esc_attr( 'pc_progress_graph--blank' ) : esc_attr( '' ); ?>" width="146" height="73" viewBox="0 0 146 73" fill="none">
 			<path d="M143 73C143 34.3401 111.66 3 73 3C34.3401 3 3 34.3401 3 73" stroke="#F1F3F5" stroke-width="6"/>
@@ -34,9 +33,7 @@ $user_progress_offset = 100 - $user_progress['completion_percentage'];
 	</div>
 
 	<div class="pc_detailed_progress_wrap">
-
 		<ul class="pc_detailed_progress">
-
 			<?php
 			if ( isset( $user_progress['groups'] ) ) {
 
@@ -46,7 +43,7 @@ $user_progress_offset = 100 - $user_progress['completion_percentage'];
 					$user_progress_status = ( 0 === $single_section_details['completed'] && $single_section_details['total'] > 0 ) ? 'progress_not_started' : '';
 					?>
 
-					<li class="single_section_wrap 
+					<li class="single_section_wrap
 					<?php
 					echo ( $single_section_details['is_group_completed'] ) ? esc_attr( 'completed ' ) : esc_attr( 'incomplete ' );
 					echo esc_attr( $user_progress_status );
@@ -69,9 +66,6 @@ $user_progress_offset = 100 - $user_progress['completion_percentage'];
 				endforeach;
 			}
 			?>
-
 		</ul>
-
 	</div>
-
 </div>

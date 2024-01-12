@@ -223,9 +223,11 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 							<i class="bb-icon-menu-dots-h"></i>
 						</a>
 						<div class="bb_more_options_list">
-							<?php echo wp_kses_post( $member_switch_button ); ?>
-							<?php echo wp_kses_post( $member_report_button ); ?>
-							<?php echo wp_kses_post( $member_block_button ); ?>
+							<?php
+							echo wp_kses_post( $member_switch_button );
+							echo wp_kses_post( $member_report_button );
+							echo wp_kses_post( $member_block_button );
+							?>
 						</div>
 					</div><!-- .bb_more_options -->
 					<?php } ?>
@@ -236,17 +238,14 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 
 	</ul>
 
-	<?php bp_nouveau_pagination( 'bottom' ); ?>
-
 	<?php
+	bp_nouveau_pagination( 'bottom' );
 else :
-
 	bp_nouveau_user_feedback( 'members-loop-none' );
-
 endif;
-?>
 
-<?php bp_nouveau_after_loop(); ?>
+bp_nouveau_after_loop();
+?>
 
 <!-- Remove Connection confirmation popup -->
 <div class="bb-remove-connection bb-action-popup" style="display: none">

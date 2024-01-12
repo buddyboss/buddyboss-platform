@@ -37,12 +37,10 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 		</thead>
 
 		<tbody>
-
 		<?php
 		$raw = apply_filters( 'bp_invites_member_default_invitation_raw', 1 );
 		for ( $i = 0; $i < $raw; $i++ ) {
 			?>
-
 			<tr>
 				<td class="field-name">
 					<input type="text" name="invitee[<?php echo $i; ?>][]" id="invitee_<?php echo $i; ?>_title" value="<?php echo esc_attr( '' ); ?>" class="invites-input" <?php bp_form_field_attributes( 'invitee' ); ?>/>

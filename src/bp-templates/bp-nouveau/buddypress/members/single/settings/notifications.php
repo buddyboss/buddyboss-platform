@@ -34,8 +34,9 @@ if ( bb_web_notification_enabled() && bb_app_notification_enabled() ) {
 </p>
 
 <form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/notifications' ); ?>" method="post" class="standard-form <?php echo esc_attr( $class ); ?>" id="settings-form">
-
-	<?php if ( false === bb_enabled_legacy_email_preference() && ( bb_web_notification_enabled() || bb_app_notification_enabled() ) ) { ?>
+	<?php
+	if ( false === bb_enabled_legacy_email_preference() && ( bb_web_notification_enabled() || bb_app_notification_enabled() ) ) {
+		?>
 		<div class="notification_info">
 
 			<div class="notification_type email_notification">
@@ -78,13 +79,12 @@ if ( bb_web_notification_enabled() && bb_app_notification_enabled() ) {
 			<p class="notification_learn_more"><a href="#"><?php esc_html_e( 'Learn more', 'buddyboss' ); ?><span class="bb-icon-chevron-down"></span></a></p>
 
 		</div><!-- .notification_info -->
-	<?php } ?>
+		<?php
+	}
 
-	<?php bp_nouveau_member_email_notice_settings(); ?>
-
-	<?php bp_nouveau_submit_button( 'member-notifications-settings' ); ?>
-
+	bp_nouveau_member_email_notice_settings();
+	bp_nouveau_submit_button( 'member-notifications-settings' );
+	?>
 </form>
-
 <?php
 bp_nouveau_member_hook( 'after', 'settings_template' );

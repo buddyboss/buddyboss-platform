@@ -55,22 +55,20 @@ if ( $is_enabled_social_networks ) {
 if ( bp_is_my_profile() ) {
 	$my_profile = 'my_profile';
 }
-?>
 
-<?php if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifications() && ! bp_is_user_profile_edit() && ! bp_is_user_change_avatar() && ! bp_is_user_change_cover_image() ) : ?>
+if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifications() && ! bp_is_user_profile_edit() && ! bp_is_user_change_avatar() && ! bp_is_user_change_cover_image() ) : ?>
 
 	<div id="cover-image-container" class="<?php echo esc_attr( $profile_header_layout_style . ' ' . $social_networks_urls_div_class . ' ' . $my_profile ); ?> bb-cover-image-container">
 		<div id="header-cover-image" class="<?php echo esc_attr( 'cover-' . $profile_cover_height . ' width-' . $profile_cover_width . $has_cover_image_position . $has_cover_image . $has_default_cover ); ?>">
 			<?php
 			if ( ! empty( $cover_image_url ) ) {
 				?>
-				<img class="header-cover-img"
-					  src="<?php echo esc_url( $cover_image_url ); ?>"
-					 <?php
+				<img class="header-cover-img" src="<?php echo esc_url( $cover_image_url ); ?>"
+					<?php
 						echo ( '' !== $cover_image_position ) ? ' data-top="' . esc_attr( $cover_image_position ) . '"' : '';
 						echo ( '' !== $cover_image_position ) ? ' style="top: ' . esc_attr( $cover_image_position ) . 'px"' : '';
-						?>
-					  alt=""
+					?>
+					alt=""
 				/>
 				<?php
 			}
@@ -126,7 +124,6 @@ if ( bp_is_my_profile() ) {
 			</div><!-- #item-header-avatar -->
 
 			<div id="item-header-content">
-
 				<div class="flex">
 
 					<div class="bb-user-content-wrap">
@@ -171,7 +168,6 @@ if ( bp_is_my_profile() ) {
 									echo wp_kses_post( bp_get_last_activity() );
 								endif;
 								?>
-
 							</div>
 							<?php
 						endif;
@@ -209,11 +205,9 @@ if ( bp_is_my_profile() ) {
 							<?php
 						}
 						?>
-
 					</div><!-- .bb-user-content-wrap -->
 
 					<div class="member-header-actions-wrap">
-
 						<?php
 						bp_nouveau_member_header_buttons(
 							array(
@@ -240,11 +234,9 @@ if ( bp_is_my_profile() ) {
 							)
 						);
 						?>
-
 					</div><!-- .member-header-actions-wrap -->
 
 				</div>
-
 			</div><!-- #item-header-content -->
 		</div><!-- #item-header-cover-image -->
 	</div><!-- #cover-image-container -->

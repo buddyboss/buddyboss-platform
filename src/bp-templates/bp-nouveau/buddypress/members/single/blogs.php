@@ -7,13 +7,10 @@
  * @since   BuddyPress 3.0.0
  * @version 1.0.0
  */
-?>
 
-<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
+bp_get_template_part( 'members/single/parts/item-subnav' );
+bp_get_template_part( 'common/search-and-filters-bar' );
 
-<?php bp_get_template_part( 'common/search-and-filters-bar' ); ?>
-
-<?php
 switch ( bp_current_action() ) :
 
 	// Home/My Blogs
@@ -22,9 +19,7 @@ switch ( bp_current_action() ) :
 		?>
 
 		<div class="blogs myblogs" data-bp-list="blogs">
-
 			<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'member-blogs-loading' ); ?></div>
-
 		</div><!-- .blogs.myblogs -->
 
 		<?php

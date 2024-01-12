@@ -14,11 +14,9 @@ $certificates = bp_learndash_get_users_certificates( $user_id );
 
 <div id="bb-learndash-profile" class="bb-certificates-wrapper">
 	<?php if ( ! empty( $certificates ) ) { ?>
-
 		<ul id="certificate_list" class="bb-grid">
 			<?php
 			foreach ( $certificates as $certificate ) {
-
 				?>
 				<li class="sm-grid-1-1">
 					<div class="bb-certificate-wrap">
