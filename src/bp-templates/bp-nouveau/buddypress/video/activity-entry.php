@@ -71,8 +71,8 @@ echo esc_attr( $has_no_thumbnail );
 " data-id="<?php echo esc_attr( bp_get_video_id() ); ?>">
 	<div class="video-action-wrap item-action-wrap">
 
-		<?php if ( $can_edit ) { ?>
-			<?php
+		<?php
+		if ( $can_edit ) {
 			$item_id = 0;
 			if ( bp_loggedin_user_id() === bp_get_video_user_id() || bp_current_user_can( 'bp_moderate' ) || $can_edit ) {
 				?>
@@ -111,9 +111,10 @@ echo esc_attr( $has_no_thumbnail );
 					</ul>
 				</div>
 
-			<?php } ?>
-		<?php } ?>
-
+				<?php
+			}
+		}
+		?>
 	</div>
 
 	<?php if ( 1 === $video_template->video_count ) { ?>
@@ -135,7 +136,7 @@ echo esc_attr( $has_no_thumbnail );
 			}
 			?>
 			<?php if ( ! empty( bp_get_video_length() ) ) { ?>
-			<p class="bb-video-duration"><?php bp_video_length(); ?></p>
+				<p class="bb-video-duration"><?php bp_video_length(); ?></p>
 			<?php } ?>
 		</a>
 	<?php } else { ?>
@@ -146,17 +147,17 @@ echo esc_attr( $has_no_thumbnail );
 				$count = $video_template->video_count - 3;
 				if ( 1 === $count ) {
 					?>
-                    <span class="bb-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Video', 'buddyboss' ); ?></span></span></span>
+					<span class="bb-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Video', 'buddyboss' ); ?></span></span></span>
 					<?php
 				} else {
 					?>
-                    <span class="bb-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Videos', 'buddyboss' ); ?></span></span></span>
+					<span class="bb-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Videos', 'buddyboss' ); ?></span></span></span>
 					<?php
 				}
 			}
 			?>
 			<?php if ( ! empty( bp_get_video_length() ) ) { ?>
-			<p class="bb-video-duration"><?php bp_video_length(); ?></p>
+				<p class="bb-video-duration"><?php bp_video_length(); ?></p>
 			<?php } ?>
 		</a>
 	<?php } ?>

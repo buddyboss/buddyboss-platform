@@ -67,12 +67,13 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) :
 							<a class="bb-add-videos button small outline" id="bp-add-video" href="#" >
 								<?php esc_html_e( 'Add Videos', 'buddyboss' ); ?>
 							</a>
-						<?php } ?>
+							<?php
+						}
 
-						<?php if ( ( bp_is_my_profile() || bp_is_user_video() ) && ! bp_is_group() ) : ?>
+						if ( ( bp_is_my_profile() || bp_is_user_video() ) && ! bp_is_group() ) : ?>
 							<select id="bb-album-privacy">
-								<?php foreach ( bp_video_get_visibility_levels() as $k => $option ) { ?>
-									<?php
+								<?php
+								foreach ( bp_video_get_visibility_levels() as $k => $option ) {
 									$selected = '';
 									$privacy  = bp_get_album_privacy();
 									if ( $k === $privacy ) {

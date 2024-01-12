@@ -19,8 +19,10 @@
 						<h4><span class="target_name"><?php esc_html_e( 'Move Video to...', 'buddyboss' ); ?></span></h4>
 					</header>
 					<div class="bb-field-wrap">
-						<?php bp_get_template_part( 'video/location-move' ); ?>
-						<?php bp_get_template_part( 'video/video-create-album' ); ?>
+						<?php
+						bp_get_template_part( 'video/location-move' );
+						bp_get_template_part( 'video/video-create-album' );
+						?>
 					</div>
 					<footer class="bb-model-footer">
 						<a href="#" class="bp-video-open-create-popup-album"><?php esc_html_e( 'Create new album', 'buddyboss' ); ?></a>
