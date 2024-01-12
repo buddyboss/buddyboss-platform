@@ -273,7 +273,6 @@ function bp_nouveau_activity_state() {
 		</a>
 		<?php if ( bp_activity_can_comment() ) :
 			?>
-			<span class="ac-state-separator">&middot;</span>
 			<?php
 			$activity_state_comment_class['activity_state_comment_class'] = 'activity-state-comments';
 			$activity_state_class            = apply_filters( 'bp_nouveau_get_activity_comment_buttons_activity_state', $activity_state_comment_class, $activity_id );

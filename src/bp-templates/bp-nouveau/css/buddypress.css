@@ -3514,14 +3514,21 @@ input.search-query-input {
 }
 
 .activity-list .activity-item .activity-content .activity-state {
-  display: none;
-  font-size: 12px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
   clear: both;
+  margin: 10px 0;
 }
 
-.activity-list .activity-item .activity-content .activity-state .activity-state-likes,
-.activity-list .activity-item .activity-content .activity-state .ac-state-separator,
-.activity-list .activity-item .activity-content .activity-state .activity-state-comments {
+.activity-list .activity-item .activity-content .activity-state .activity-state-likes {
   display: none;
 }
 
@@ -3535,16 +3542,9 @@ input.search-query-input {
   background-color: transparent;
 }
 
-.activity-list .activity-item .activity-content .activity-state.has-comments .activity-state-comments {
+.activity-list .activity-item .activity-content .activity-state .activity-state-comments {
   display: inline-block;
-}
-
-.activity-list .activity-item .activity-content .activity-state.has-likes, .activity-list .activity-item .activity-content .activity-state.has-comments {
-  display: block;
-}
-
-.activity-list .activity-item .activity-content .activity-state.has-likes.has-comments .ac-state-separator {
-  display: inline-block;
+  margin-left: auto;
 }
 
 .activity-list .activity-item .activity-inner p {
@@ -3574,68 +3574,86 @@ input.search-query-input {
   display: inline-block;
 }
 
-.activity-list .activity-item .bp-generic-meta.action {
-  border: 1px solid transparent;
-  background: #fafafa;
-  padding: 2px;
+.activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta,
+.activity-list .activity-item > .bp-generic-meta.activity-meta {
+  display: flex;
+  justify-content: space-around;
+  border-top: 1px solid #eaeaea;
+  border-bottom: 1px solid #eaeaea;
+  padding: 5px 0;
   position: relative;
-  text-align: left;
+  margin-bottom: 10px;
 }
 
-.activity-list .activity-item .bp-generic-meta.action div.generic-button {
+.activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta div.generic-button,
+.activity-list .activity-item > .bp-generic-meta.activity-meta div.generic-button {
   margin: 0;
 }
 
-.activity-list .activity-item .bp-generic-meta.action .button {
+.activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button,
+.activity-list .activity-item > .bp-generic-meta.activity-meta .button {
   background: transparent;
 }
 
-.activity-list .activity-item .bp-generic-meta.action a {
+.activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta a,
+.activity-list .activity-item > .bp-generic-meta.activity-meta a {
   padding: 4px 8px;
 }
 
-.activity-list .activity-item .bp-generic-meta.action .button:focus,
-.activity-list .activity-item .bp-generic-meta.action .button:hover {
+.activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button:focus,
+.activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button:hover,
+.activity-list .activity-item > .bp-generic-meta.activity-meta .button:focus,
+.activity-list .activity-item > .bp-generic-meta.activity-meta .button:hover {
   background: none;
 }
 
-.activity-list .activity-item .bp-generic-meta.action .button:before,
-.activity-list .activity-item .bp-generic-meta.action .icons:before {
+.activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button:before,
+.activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .icons:before,
+.activity-list .activity-item > .bp-generic-meta.activity-meta .button:before,
+.activity-list .activity-item > .bp-generic-meta.activity-meta .icons:before {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 20px;
   vertical-align: middle;
 }
 
-.activity-list .activity-item .bp-generic-meta.action .acomment-reply.button:before {
+.activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .acomment-reply.button:before,
+.activity-list .activity-item > .bp-generic-meta.activity-meta .acomment-reply.button:before {
   content: "\ee33";
 }
 
-.activity-list .activity-item .bp-generic-meta.action .view:before {
+.activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .view:before,
+.activity-list .activity-item > .bp-generic-meta.activity-meta .view:before {
   content: "\ee33";
 }
 
-.activity-list .activity-item .bp-generic-meta.action .fav:before {
+.activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .fav:before,
+.activity-list .activity-item > .bp-generic-meta.activity-meta .fav:before {
   content: "\ef41";
 }
 
-.activity-list .activity-item .bp-generic-meta.action .unfav:before {
+.activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .unfav:before,
+.activity-list .activity-item > .bp-generic-meta.activity-meta .unfav:before {
   content: "\ef41";
   color: #0061ac;
   font-weight: 300;
 }
 
-.activity-list .activity-item .bp-generic-meta.action .edit-activity:before {
+.activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .edit-activity:before,
+.activity-list .activity-item > .bp-generic-meta.activity-meta .edit-activity:before {
   content: "\ee5a";
   font-size: 20px;
 }
 
-.activity-list .activity-item .bp-generic-meta.action .delete-activity:before {
+.activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .delete-activity:before,
+.activity-list .activity-item > .bp-generic-meta.activity-meta .delete-activity:before {
   content: "\ef48";
 }
 
-.activity-list .activity-item .bp-generic-meta.action .reported-content:before,
-.activity-list .activity-item .bp-generic-meta.action .report-content:before {
+.activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .reported-content:before,
+.activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .report-content:before,
+.activity-list .activity-item > .bp-generic-meta.activity-meta .reported-content:before,
+.activity-list .activity-item > .bp-generic-meta.activity-meta .report-content:before {
   content: "\ee9c";
   position: relative;
   font-size: 20px;
@@ -3644,30 +3662,36 @@ input.search-query-input {
   line-height: 1;
 }
 
-.activity-list .activity-item .bp-generic-meta.action .reported-content {
+.activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .reported-content,
+.activity-list .activity-item > .bp-generic-meta.activity-meta .reported-content {
   opacity: 0.8 !important;
   pointer-events: none;
 }
 
-.activity-list .activity-item .bp-generic-meta.action .spam-activity:before {
+.activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .spam-activity:before,
+.activity-list .activity-item > .bp-generic-meta.activity-meta .spam-activity:before {
   content: "\ee08";
 }
 
-.activity-list .activity-item .bp-generic-meta.action .delete-activity:hover {
+.activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .delete-activity:hover,
+.activity-list .activity-item > .bp-generic-meta.activity-meta .delete-activity:hover {
   color: #800;
 }
 
-.activity-list .activity-item .bp-generic-meta.action .button {
+.activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button,
+.activity-list .activity-item > .bp-generic-meta.activity-meta .button {
   border: 0;
   box-shadow: none;
 }
 
-.activity-list .activity-item .bp-generic-meta.action .button span {
+.activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button span,
+.activity-list .activity-item > .bp-generic-meta.activity-meta .button span {
   background: none;
   font-weight: 600;
 }
 
-.activity-list .activity-item .bp-generic-meta.action .unfav .like-count {
+.activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .unfav .like-count,
+.activity-list .activity-item > .bp-generic-meta.activity-meta .unfav .like-count {
   color: #0061ac;
 }
 

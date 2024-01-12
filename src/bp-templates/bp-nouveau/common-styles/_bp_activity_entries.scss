@@ -201,13 +201,14 @@
 			}
 
 			.activity-state {
-				display: none;
-				font-size: 12px;
-				clear: both;
 
-				.activity-state-likes,
-				.ac-state-separator,
-				.activity-state-comments {
+				@include center-vert();
+				justify-content: space-between;
+				font-size: 14px;
+				clear: both;
+				margin: 10px 0;
+
+				.activity-state-likes {
 					display: none;
 				}
 
@@ -224,23 +225,9 @@
 					}
 				}
 
-				&.has-comments {
-
-					.activity-state-comments {
-						display: inline-block;
-					}
-				}
-
-				&.has-likes,
-				&.has-comments {
-					display: block;
-				}
-
-				&.has-likes.has-comments {
-
-					.ac-state-separator {
-						display: inline-block;
-					}
+				.activity-state-comments {
+					display: inline-block;
+					margin-left: auto;
 				}
 			}
 
@@ -283,12 +270,15 @@
 			}
 		}
 
-		.bp-generic-meta.action {
-			border: 1px solid transparent;
-			background: $off-white;
-			padding: 2px;
+		.activity-content > .bp-generic-meta.activity-meta,
+		> .bp-generic-meta.activity-meta {
+			display: flex;
+			justify-content: space-around;
+			border-top: 1px solid $light-grey;
+			border-bottom: 1px solid $light-grey;
+			padding: 5px 0;
 			position: relative;
-			text-align: left;
+			margin-bottom: 10px;
 
 			// this wrapper has generic margins in _bp_lists.scss
 			// remove for act stream actions.
