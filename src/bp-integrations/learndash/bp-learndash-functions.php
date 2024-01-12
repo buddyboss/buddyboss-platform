@@ -356,29 +356,6 @@ function bp_learndash_get_users_certificates( $user_id = '' ) {
 }
 
 /**
- * Get the course style view
- *
- * @since BuddyBoss 1.2.0
- *
- * @return string
- */
-function bp_learndash_page_display() {
-
-	if ( empty( $_COOKIE['courseview'] ) || $_COOKIE['courseview'] == '' ) {
-
-		if ( function_exists( 'bp_get_view' ) ):
-			$view = bp_get_view();
-		else:
-			$view = 'grid';
-		endif;
-	} else {
-		$view = $_COOKIE['courseview'];
-	}
-
-	return $view;
-}
-
-/**
  * Check if there is any certificated created by the admin and if so then show the certificate tab or else hide the tab
  *
  * @since BuddyBoss 1.2.0

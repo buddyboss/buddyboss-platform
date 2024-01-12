@@ -593,6 +593,11 @@ window.bp = window.bp || {};
 						return;
 					}
 
+					if ( !_.isUndefined( response.data.layout ) ) {
+						$( '.layout-view' ).removeClass( 'active' );
+						$( '.layout-' + response.data.layout + '-view' ).addClass( 'active' );
+					}
+
 					if ( $( 'body.group-members.members.buddypress' ).length && ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.count ) ) {
 						$( 'body.group-members.members.buddypress ul li#members-groups-li' ).find( 'span' ).text( response.data.count );
 					}
@@ -1288,11 +1293,7 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		switchGridList: function () {
-			var _this = this, group_members = false, object = $( '.grid-filters' ).data( 'object' );
-
-			if ( 'group_members' === object ) {
-				group_members = true;
-			}
+			var object = $( '.grid-filters' ).data( 'object' );
 
 			if ( 'friends' === object ) {
 				object = 'members';
@@ -1302,46 +1303,55 @@ window.bp = window.bp || {};
 				object = 'members';
 			}
 
-			var objectData = _this.getStorage( 'bp-' + object );
-
-			var extras = {};
-			if ( undefined !== objectData.extras ) {
-				extras = objectData.extras;
-
-				if ( undefined !== extras.layout ) {
-					$( '.grid-filters .layout-view' ).removeClass( 'active' );
-					if ( extras.layout === 'list' ) {
-						$( '.grid-filters .layout-list-view' ).addClass( 'active' );
-					} else {
-						$( '.grid-filters .layout-grid-view' ).addClass( 'active' );
-					}
-				}
-			}
-
 			$( document ).on(
 				'click',
-				'.grid-filters .layout-view',
+				'.grid-filters .layout-view:not(.active)',
 				function ( e ) {
 					e.preventDefault();
+
+					if ( 'undefined' === typeof object ) {
+						return;
+					}
+
+					if ( bp.Nouveau.ajax_request != false ) {
+						bp.Nouveau.ajax_request.abort();
+
+						$( '.component-navigation [data-bp-object]' ).each(
+							function () {
+								$( this ).removeClass( 'loading' );
+							}
+						);
+					}
+
+					var layout = '';
 
 					if ( $( this ).hasClass( 'layout-list-view' ) ) {
 						$( '.layout-grid-view' ).removeClass( 'active' );
 						$( this ).addClass( 'active' );
 						$( '.bp-list' ).removeClass( 'grid' );
-						extras.layout = 'list';
+						layout = 'list';
 					} else {
 						$( '.layout-list-view' ).removeClass( 'active' );
 						$( this ).addClass( 'active' );
 						$( '.bp-list' ).addClass( 'grid' );
-						extras.layout = 'grid';
+						layout = 'grid';
 					}
 
-					// Added this condition to fix the list and grid view on Groups members page pagination.
-					if ( group_members ) {
-						_this.setStorage( 'bp-group_members', 'extras', extras );
-					} else {
-						_this.setStorage( 'bp-' + object, 'extras', extras );
-					}
+					bp.Nouveau.ajax_request = $.ajax(
+						{
+							method: 'POST',
+							url: BP_Nouveau.ajaxurl,
+							data: {
+								action: 'buddyboss_directory_save_layout',
+								object: object,
+								option: 'bb_layout_view',
+								nonce: BP_Nouveau.nonces[ object ],
+								type: layout
+							},
+							success: function () {
+							}
+						}
+					);
 				}
 			);
 		},
