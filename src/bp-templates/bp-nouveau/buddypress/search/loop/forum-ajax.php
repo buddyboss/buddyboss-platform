@@ -29,7 +29,6 @@ $total_reply = bbp_get_forum_reply_count( $forum_id );
 				<?php
 			}
 			?>
-
 		</div>
 		<div class="item">
 			<div class="item-title"><?php bbp_forum_title( get_the_ID() ); ?></div>

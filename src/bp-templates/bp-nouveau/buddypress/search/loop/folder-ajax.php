@@ -11,7 +11,6 @@
 
 $folder_link = bp_get_folder_folder_link();
 ?>
-
 <div class="bp-search-ajax-item bboss_ajax_search_document search-document-list">
 	<div class="item">
 

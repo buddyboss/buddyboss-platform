@@ -33,7 +33,6 @@ $albums_link = bp_get_album_link();
 					<span><?php echo wp_kses_post( bp_get_album_title() ); ?></span>
 				</a>
 			</div>
-						
 
 			<div class="media-album_modified">
 				<div class="media-album_details__bottom">

@@ -48,8 +48,10 @@ $total    = bbp_get_topic_reply_count( $topic_id ) ?>
 				</span>
 				<span class="middot">&middot;</span>
 				<span>
-					<?php esc_html_e( 'Started ', 'buddyboss' ); ?>
-					<?php echo wp_kses_post( bbp_get_topic_created_time( $topic_id ) ); ?>
+					<?php
+					esc_html_e( 'Started ', 'buddyboss' );
+					echo wp_kses_post( bbp_get_topic_created_time( $topic_id ) );
+					?>
 				</span>
 			</div>
 		</div>

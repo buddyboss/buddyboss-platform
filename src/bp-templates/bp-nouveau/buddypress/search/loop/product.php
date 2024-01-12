@@ -29,14 +29,10 @@ $product = wc_get_product( get_the_ID() ); ?>
 		</div>
 
 		<div class="item">
-
-
 			<h3 class="entry-title item-title">
 				<a href="<?php echo esc_url( get_permalink() ); ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'buddyboss' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php the_title(); ?></a>
 			</h3>
-
 			<?php wc_get_template( 'single-product/short-description.php' ); ?>
-
 			<span class="entry-meta">
 				<?php
 				$category = wc_get_product_category_list( get_the_ID() );
@@ -50,9 +46,6 @@ $product = wc_get_product( get_the_ID() ); ?>
 			<div class="item-extra">
 				<?php echo wc_price( wc_get_price_to_display( $product ) ) . $product->get_price_suffix(); ?>
 			</div>
-
 		</div>
-
-
 	</div>
 </li>

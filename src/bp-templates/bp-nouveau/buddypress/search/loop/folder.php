@@ -11,7 +11,6 @@
 
 $folder_link = bp_get_folder_folder_link();
 ?>
-
 <li data-bp-item-id="<?php bp_get_folder_folder_id(); ?>" data-bp-item-component="document" class="search-document-list">
 	<div class="list-wrap">
 		<div class="item">

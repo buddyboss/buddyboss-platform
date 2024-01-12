@@ -37,7 +37,6 @@ $class = '';
 if ( $attachment_id && bp_get_document_activity_id() ) {
 	$class = '';
 }
-
 ?>
 
 <div class="bp-search-ajax-item bboss_ajax_search_document search-document-list">

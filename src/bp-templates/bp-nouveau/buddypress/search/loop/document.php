@@ -35,13 +35,11 @@ if ( $attachment_id ) {
 }
 $document_id = bp_get_document_id();
 
-
 $class = ''; // used.
 if ( $attachment_id && bp_get_document_activity_id() ) {
 	$class = ''; // used.
 }
 $link = bp_get_document_link( bp_get_document_id() );
-
 ?>
 
 <li data-bp-item-id="<?php bp_document_id(); ?>" data-bp-item-component="document" class="search-document-list">
