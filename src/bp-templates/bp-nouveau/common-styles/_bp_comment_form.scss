@@ -2,6 +2,8 @@
 // @version 3.0.0
 form.ac-form {
 	display: none;
+	margin: 15px 0;
+	padding: 0;
 
 	.ac-reply-avatar {
 		float: left;
@@ -94,7 +96,36 @@ form.ac-form {
 }
 
 // Edit Comment Form
-form.acomment-edit {
+form.ac-form {
+	display: block;
+
+	&.not-initialized {
+
+		.ac-reply-content {
+
+			> button,
+			> input {
+				display: none !important;
+			}
+		}
+
+		.ac-reply-content {
+			height: 44px;
+			background-color: $light-grey;
+
+			.ac-textarea {
+				padding-right: 0;
+
+				.ac-reply-toolbar {
+					left: inherit;
+					right: 0;
+					bottom: inherit;
+					top: -5px;
+					margin: 0;
+				}
+			}
+		}
+	}
 
 	.bp-ac-form-cotainer {
 		align-items: flex-start;

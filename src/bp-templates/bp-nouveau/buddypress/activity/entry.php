@@ -82,9 +82,9 @@ if ( ! empty( $link_embed ) ) {
 
 		<div class="activity-comments">
 
-			<?php bp_activity_comments(); ?>
-
 			<?php bp_nouveau_activity_comment_form(); ?>
+			
+			<?php bp_activity_comments(); ?>
 
 		</div>
 
