@@ -2666,6 +2666,17 @@ function bb_get_reaction_mode( $default = 'likes' ) {
 }
 
 /**
+ * Check whether emotions is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_is_reaction_emotions_enabled() {
+	return (bool) apply_filters( 'bb_is_reaction_emotions_enabled', (bool) ( bb_get_reaction_mode() === 'emotions' ) );
+}
+
+/**
  * Get data for reaction button options.
  *
  * @since BuddyBoss [BBVERSION]
@@ -2681,4 +2692,22 @@ function bb_reaction_button_options( $key = '' ) {
 	}
 
 	return $button_settings[ $key ];
+}
+
+/**
+ * Fetch the enabled reactions based on mode.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bb_active_reactions() {
+	if ( bb_is_reaction_emotions_enabled() ) {
+		$all_emotions = bb_load_reaction()->bb_get_reactions( 'emotions' );
+	} else {
+		$all_emotions = bb_load_reaction()->bb_get_reactions();
+	}
+
+
+	return ( ! empty( $all_emotions ) ? array_column( $all_emotions, null, 'id' ) : array() );
 }

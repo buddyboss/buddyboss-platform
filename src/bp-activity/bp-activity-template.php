@@ -2637,12 +2637,18 @@ function bp_activity_favorite_link() {
  *
  * @since BuddyPress 1.2.0
  *
+ * @param int $activity_id The activity ID.
  * @global object $activities_template {@link BP_Activity_Template}
  *
  * @return string The activity favorite link.
  */
-function bp_get_activity_favorite_link() {
-	global $activities_template;
+function bp_get_activity_favorite_link( $activity_id = 0 ) {
+
+	if ( empty( $activity_id ) ) {
+		global $activities_template;
+
+		$activity_id = $activities_template->activity->id;
+	}
 
 	/**
 	 * Filters the activity favorite link.
@@ -2651,7 +2657,7 @@ function bp_get_activity_favorite_link() {
 	 *
 	 * @param string $value Constructed link for favoriting the activity comment.
 	 */
-	return apply_filters( 'bp_get_activity_favorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/favorite/' . $activities_template->activity->id . '/' ), 'mark_favorite' ) );
+	return apply_filters( 'bp_get_activity_favorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/favorite/' . $activity_id . '/' ), 'mark_favorite' ) );
 }
 
 /**
@@ -2668,12 +2674,18 @@ function bp_activity_unfavorite_link() {
  *
  * @since BuddyPress 1.2.0
  *
+ * @param int $activity_id The activity ID.
  * @global object $activities_template {@link BP_Activity_Template}
  *
  * @return string The activity unfavorite link.
  */
-function bp_get_activity_unfavorite_link() {
-	global $activities_template;
+function bp_get_activity_unfavorite_link( $activity_id = 0 ) {
+
+	if ( empty( $activity_id ) ) {
+		global $activities_template;
+
+		$activity_id = $activities_template->activity->id;
+	}
 
 	/**
 	 * Filters the activity unfavorite link.
@@ -2682,7 +2694,7 @@ function bp_get_activity_unfavorite_link() {
 	 *
 	 * @param string $value Constructed link for unfavoriting the activity comment.
 	 */
-	return apply_filters( 'bp_get_activity_unfavorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/unfavorite/' . $activities_template->activity->id . '/' ), 'unmark_favorite' ) );
+	return apply_filters( 'bp_get_activity_unfavorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/unfavorite/' . $activity_id . '/' ), 'unmark_favorite' ) );
 }
 
 /**
@@ -2779,7 +2791,7 @@ function bp_activity_comment_css_class() {
  */
 function bp_get_activity_comment_css_class() {
 
-	$class = ' comment-item';
+	$class = ' comment-item activity-comment';
 
 	// Fall back on current comment in activity loop.
 	$comment_depth = bp_activity_get_comment_depth();
@@ -3128,38 +3140,46 @@ function bp_activity_can_comment_reply( $comment = false ) {
  */
 function bp_activity_can_favorite() {
 
+	$retval = is_user_logged_in() && bb_is_reaction_activity_posts_enabled();
+
 	/**
-	 * Filters whether or not users can favorite activity items.
+	 * Filters whether users can favorite activity items.
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 * @param bool $value Whether or not favoriting is enabled.
+	 * @param bool $value Whether favoriting is enabled.
 	 */
-	return apply_filters( 'bp_activity_can_favorite', true );
+	return apply_filters( 'bp_activity_can_favorite', $retval );
 }
 
 /**
  * Output the total favorite count for a specified user.
  *
  * @since BuddyPress 1.2.0
+ * @since BuddyBoss [BBVERSION] Added `$activity_type` property to indicate whether the current ID is activity or comment.
  *
- * @see bp_get_total_favorite_count_for_user() for description of parameters.
+ * @param int    $user_id       See {@link bp_get_total_favorite_count_for_user()}.
+ * @param string $activity_type Activity type.
  *
- * @param int $user_id See {@link bp_get_total_favorite_count_for_user()}.
+ * @see   bp_get_total_favorite_count_for_user() for description of parameters.
+ *
  */
-function bp_total_favorite_count_for_user( $user_id = 0 ) {
-	echo bp_get_total_favorite_count_for_user( $user_id );
+function bp_total_favorite_count_for_user( $user_id = 0, $activity_type = 'activity' ) {
+	echo bp_get_total_favorite_count_for_user( $user_id, $activity_type );
 }
 
 /**
  * Return the total favorite count for a specified user.
  *
  * @since BuddyPress 1.2.0
+ * @since BuddyBoss [BBVERSION] Added `$activity_type` property to indicate whether the current ID is activity or comment.
  *
- * @param int $user_id ID of user being queried. Default: displayed user ID.
+ * @param int    $user_id       ID of user being queried. Default: displayed user ID.
+ * @param string $activity_type Activity type.
+ *
  * @return int The total favorite count for the specified user.
  */
-function bp_get_total_favorite_count_for_user( $user_id = 0 ) {
+function bp_get_total_favorite_count_for_user( $user_id = 0, $activity_type = 'activity' ) {
 	$retval = false;
 
 	if ( bp_activity_can_favorite() ) {
@@ -3170,7 +3190,7 @@ function bp_get_total_favorite_count_for_user( $user_id = 0 ) {
 
 		// Get user meta if user ID exists.
 		if ( ! empty( $user_id ) ) {
-			$retval = bp_activity_total_favorites_for_user( $user_id );
+			$retval = bp_activity_total_favorites_for_user( $user_id, $activity_type );
 		}
 	}
 
@@ -3179,11 +3199,13 @@ function bp_get_total_favorite_count_for_user( $user_id = 0 ) {
 	 *
 	 * @since BuddyPress 1.2.0
 	 * @since BuddyPress 2.6.0 Added the `$user_id` parameter.
+	 * @since BuddyBoss [BBVERSION] Added `$activity_type` property to indicate whether the current ID is activity or comment.
 	 *
-	 * @param int|bool $retval  Total favorite count for a user. False on no favorites.
-	 * @param int      $user_id ID of the queried user.
+	 * @param int|bool $retval        Total favorite count for a user. False on no favorites.
+	 * @param int      $user_id       ID of the queried user.
+	 * @param string   $activity_type Activity type.
 	 */
-	return apply_filters( 'bp_get_total_favorite_count_for_user', $retval, $user_id );
+	return apply_filters( 'bp_get_total_favorite_count_for_user', $retval, $user_id, $activity_type );
 }
 
 /**
@@ -4297,3 +4319,98 @@ function bb_activity_comment_user_can_edit( $activity_comment = false, $privacy_
 	 */
 	return (bool) apply_filters( 'bb_activity_comment_user_can_edit', $can_edit, $activity_comment );
 }
+
+/**
+ * Determine whether favorites are allowed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_activity_comment_can_favorite() {
+
+	$retval = is_user_logged_in() && bb_is_reaction_activity_comments_enabled();
+
+	/**
+	 * Filters whether users can favorite activity comment items.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value Whether comment favoriting is enabled.
+	 */
+	return (bool) apply_filters( 'bb_activity_comment_can_favorite', $retval );
+}
+
+/**
+ * Return whether the current activity comment is in a current user's favorites.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ *
+ * @global object $activities_template {@link BP_Activity_Template}
+ */
+function bb_get_activity_comment_is_favorite() {
+	/**
+	 * Filters whether the current activity comment item is in the current user's favorites.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value Whether the current activity item is in the current user's favorites.
+	 */
+	return (bool) apply_filters( 'bb_get_activity_comment_is_favorite', bb_activity_is_item_favorite( bp_get_activity_comment_id(), 'activity_comment' ) );
+}
+
+/**
+ * Return the activity comment favorite link.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int     $activity_comment_id The activity comment ID.
+ *
+ * @return string The activity favorite link.
+ *
+ * @global object $activities_template {@link BP_Activity_Template}
+ */
+function bb_get_activity_comment_favorite_link( $activity_comment_id = 0 ) {
+
+	if ( empty( $activity_comment_id ) ) {
+		$activity_comment_id = bp_get_activity_comment_id();
+	}
+
+	/**
+	 * Filters the activity comment favorite link.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Constructed link for favoriting the activity comment.
+	 */
+	return apply_filters( 'bb_get_activity_comment_favorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/favorite/' . $activity_comment_id . '/' ), 'mark_favorite' ) );
+}
+
+/**
+ * Return the activity comment unfavorite link.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int     $activity_comment_id The activity comment ID.
+ *
+ * @return string The activity comment unfavorite link.
+ *
+ * @global object $activities_template {@link BP_Activity_Template}
+ */
+function bb_get_activity_comment_unfavorite_link( $activity_comment_id = 0 ) {
+
+	if ( empty( $activity_comment_id ) ) {
+		$activity_comment_id = bp_get_activity_comment_id();
+	}
+	/**
+	 * Filters the activity comment unfavorite link.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Constructed link for unfavoriting the activity comment.
+	 */
+	return apply_filters( 'bb_get_activity_comment_unfavorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/unfavorite/' . $activity_comment_id . '/' ), 'unmark_favorite' ) );
+}
+

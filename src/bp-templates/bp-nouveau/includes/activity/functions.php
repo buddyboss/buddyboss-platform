@@ -36,6 +36,11 @@ function bp_nouveau_activity_register_scripts( $scripts = array() ) {
 				'dependencies' => array( 'bp-nouveau', 'bp-nouveau-activity', 'json2', 'wp-backbone' ),
 				'footer'       => true,
 			),
+			'bp-nouveau-activity-reacted'           => array(
+				'file'         => 'js/bb-activity-reacted%s.js',
+				'dependencies' => array( 'bp-nouveau', 'wp-util', 'wp-backbone' ),
+				'footer'       => true,
+			),
 		)
 	);
 }
@@ -51,6 +56,7 @@ function bp_nouveau_activity_enqueue_scripts() {
 	}
 
 	wp_enqueue_script( 'bp-nouveau-activity' );
+	wp_enqueue_script( 'bp-nouveau-activity-reacted' );
 	wp_enqueue_script( 'bp-medium-editor' );
 	wp_enqueue_style( 'bp-medium-editor' );
 	wp_enqueue_style( 'bp-medium-editor-beagle' );
@@ -61,6 +67,9 @@ function bp_nouveau_activity_enqueue_scripts() {
 		wp_enqueue_script( 'bp-nouveau-activity-post-form' );
 		bp_get_template_part( 'common/js-templates/activity/form' );
 	}
+
+	// Add activity reaction popup js template.
+	bb_load_reaction_popup_modal_js_template();
 }
 
 /**
@@ -243,6 +252,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'pinGroupPost'        => esc_html__( 'Pin to Group', 'buddyboss' ),
 		'unpinGroupPost'      => esc_html__( 'Unpin from Group', 'buddyboss' ),
 		'pinPostError'        => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+		'reactionAjaxError'   => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
 	);
 
     if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
@@ -324,7 +334,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 				'slug'      => 'favorites', // slug is used because BP_Core_Nav requires it, but it's the scope
 				'li_class'  => array(),
 				'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/favorites/',
-				'text'      => __( 'Likes', 'buddyboss' ),
+				'text'      => bb_is_reaction_emotions_enabled() ? esc_html__( 'Reactions', 'buddyboss' ) : esc_html__( 'Likes', 'buddyboss' ),
 				'count'     => false,
 				'position'  => 10,
 			);

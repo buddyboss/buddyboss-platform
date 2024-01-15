@@ -259,18 +259,23 @@ function bp_nouveau_get_activity_timestamp() {
  */
 function bp_nouveau_activity_state() {
 
-	$activity_id     = bp_get_activity_id();
-	$like_text       = bp_activity_get_favorite_users_string( $activity_id );
-	$comment_count   = bp_activity_get_comment_count();
-	$favorited_users = bp_activity_get_favorite_users_tooltip_string( $activity_id );
+	$activity_id    = bp_get_activity_id();
+	$comment_count  = bp_activity_get_comment_count();
+	$reaction_count = bb_load_reaction()->bb_total_item_reactions_count(
+		array(
+			'item_id'   => $activity_id,
+			'item_type' => 'activity',
+		)
+	);
 
 	?>
-	<div class="activity-state <?php echo $like_text ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
-		<a href="javascript:void(0);" class="activity-state-likes">
-			<span class="like-text hint--bottom hint--medium hint--multiline" data-hint="<?php echo ( $favorited_users ) ? $favorited_users : ''; ?>">
-				<?php echo $like_text ?: ''; ?>
-			</span>
-		</a>
+	<div class="activity-state <?php echo ! empty( $reaction_count ) ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
+		<?php
+		if ( bb_is_reaction_activity_posts_enabled() ) {
+			echo bb_get_activity_post_user_reactions_html( $activity_id );
+		}
+		?>
+
 		<?php if ( bp_activity_can_comment() ) :
 			?>
 			<span class="ac-state-separator">&middot;</span>
@@ -405,6 +410,10 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 	$output .= ob_get_clean();
 
 	$has_content = trim( $output, ' ' );
+
+	// Added emotion list.
+	$output .= bb_get_activity_post_emotions_popup();
+
 	if ( ! $has_content ) {
 		return;
 	}
@@ -472,29 +481,51 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 			$key = 'href';
 		}
 
-		if ( ! bp_get_activity_is_favorite() ) {
-			$fav_args = array(
-				'parent_element' => $parent_element,
-				'parent_attr'    => $parent_attr,
-				'button_element' => $button_element,
-				'link_class'     => 'button fav bp-secondary-action',
-				// 'data_bp_tooltip'  => __( 'Like', 'buddyboss' ),
-				'link_text'      => __( 'Like', 'buddyboss' ),
-				'aria-pressed'   => 'false',
-				'link_attr'      => bp_get_activity_favorite_link(),
+		$button_settings = bb_get_reaction_button_settings();
+
+		$fav_args = array(
+			'link_class'        => 'button fav bp-secondary-action bp-like-button',
+			'aria-pressed' => 'false',
+			'link_attr'    => bp_get_activity_favorite_link(),
+			'link_text'    => sprintf(
+				'<span class="bp-screen-reader-text">%1$s</span><span class="like-count">%1$s</span>',
+				$button_settings['text']
+			),
+		);
+
+		$reacted_id = 0;
+		if ( ! bb_activity_is_item_favorite( $activity_id ) ) {
+			$fav_args['link_class'] = $fav_args['link_class'] . ' reaction';
+
+			$fav_args['link_text'] = sprintf(
+				'<span class="bp-screen-reader-text">%1$s</span>
+				<i class="bb-icon-%2$s"></i>
+				<span class="like-count">%1$s</span>',
+				$button_settings['text'],
+				esc_attr( $button_settings['icon'] )
 			);
 
 		} else {
-			$fav_args = array(
-				'parent_element' => $parent_element,
-				'parent_attr'    => $parent_attr,
-				'button_element' => $button_element,
-				'link_class'     => 'button unfav bp-secondary-action',
-				// 'data_bp_tooltip' => __( 'Unlike', 'buddyboss' ),
-				'link_text'      => __( 'Unlike', 'buddyboss' ),
-				'aria-pressed'   => 'true',
-				'link_attr'      => bp_get_activity_unfavorite_link(),
-			);
+			// Get user reacted reaction data and prepare the link.
+			$reaction_data = bb_activity_get_user_reaction_by_item( $activity_id );
+			if ( ! empty( $reaction_data['id'] ) ) {
+				$reacted_id    = $reaction_data['id'];
+				$reaction_type = $reaction_data['type'];
+				$prepared_icon = bb_activity_get_reaction_button( $reaction_data['id'], true );
+				$link_classes  = empty( $reaction_type ) ? ' has-like has-reaction' : ' has-emotion has-reaction';
+
+				$fav_args['link_class']   = str_replace( 'fav', 'unfav', $fav_args['link_class'] ) . $link_classes;
+				$fav_args['aria-pressed'] = true;
+				$fav_args['link_attr']    = bp_get_activity_unfavorite_link();
+				$fav_args['link_text']    = sprintf(
+					'<span class="bp-screen-reader-text">%1$s</span>
+						%2$s
+						<span class="like-count reactions_item" style="%3$s">%1$s</span>',
+					esc_html( $prepared_icon['icon_text'] ),
+					$prepared_icon['icon_html'],
+					! empty( $reaction_data['text_color'] ) ? esc_attr( 'color:' . $reaction_data['text_color'] ) : ''
+				);
+			}
 		}
 
 		$buttons['activity_favorite'] = array(
@@ -504,15 +535,25 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 			'parent_element'    => $parent_element,
 			'parent_attr'       => $parent_attr,
 			'must_be_logged_in' => true,
-			'button_element'    => $fav_args['button_element'],
-			'link_text'         => sprintf( '<span class="bp-screen-reader-text">%1$s</span>  <span class="like-count">%2$s</span>', esc_html( $fav_args['link_text'] ), esc_html( $fav_args['link_text'] ) ),
+			'button_element'    => $button_element,
+			'link_text'         => $fav_args['link_text'],
 			'button_attr'       => array(
-				$key           => $fav_args['link_attr'],
-				'class'        => $fav_args['link_class'],
-				// 'data-bp-tooltip' => $fav_args['data_bp_tooltip'],
-				'aria-pressed' => $fav_args['aria-pressed'],
+				$key              => $fav_args['link_attr'],
+				'class'           => $fav_args['link_class'],
+				'aria-pressed'    => $fav_args['aria-pressed'],
+				'data-reacted-id' => $reacted_id,
 			),
 		);
+
+		// If migration is in progress, add class and tooltip.
+		if (
+			function_exists( 'bb_pro_reaction_get_migration_status' ) &&
+			'inprogress' === bb_pro_reaction_get_migration_status()
+		) {
+			$buttons['activity_favorite']['button_attr'] ['class']               = $fav_args['link_class'] . ' bb-reaction-migration-inprogress';
+			$buttons['activity_favorite']['button_attr'] ['data-bp-tooltip']     = esc_html__( 'This feature is temporarily unavailable. Please try again later.', 'buddyboss' );
+			$buttons['activity_favorite']['button_attr'] ['data-bp-tooltip-pos'] = 'up';
+		}
 	}
 
 	/*
@@ -776,6 +817,10 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 
 	$output     .= ob_get_clean();
 	$has_content = trim( $output, ' ' );
+
+	// Added emotion list.
+	$output .= bb_get_activity_post_comment_emotions_popup();
+
 	if ( ! $has_content ) {
 		return;
 	}
@@ -839,19 +884,93 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 
 	$buttons = array();
 
-	$buttons['activity_comment_reply'] = array(
-			'id'                => 'activity_comment_reply',
-			'position'          => 5,
+	// Add like button for activity comment.
+	if (
+		bb_activity_comment_can_favorite() &&
+		bb_is_reaction_activity_comments_enabled()
+	) {
+
+		// If button element set attr needs to be data-* else 'href'.
+		$key = ( 'button' === $button_element ) ? 'data-bp-nonce' : 'href';
+
+		$fav_args = array(
+			'class'           => 'button fav reaction bp-secondary-action bp-like-button',
+			'aria-pressed'    => 'false',
+			$key              => bb_get_activity_comment_favorite_link(),
+			'link_text'       => sprintf(
+				'<span class="bp-screen-reader-text">%1$s</span><span class="like-count">%1$s</span>',
+				esc_html__( 'Like', 'buddyboss' )
+			),
+			'data-reacted-id' => '',
+		);
+
+		if ( ! bb_get_activity_comment_is_favorite() ) {
+			$button_settings       = bb_get_reaction_button_settings();
+			$fav_args['link_text'] = sprintf(
+				'<span class="bp-screen-reader-text">%1$s</span>
+				<span class="like-count">%1$s</span>',
+				! empty( $button_settings['text'] ) ? esc_html( $button_settings['text'] ) : __( 'Like', 'buddyboss' ),
+			);
+		} else {
+			// Get user reacted reaction data and prepare the link.
+			$reaction_data = bb_activity_get_user_reaction_by_item( $activity_comment_id, 'activity_comment' );
+			if ( ! empty( $reaction_data ) ) {
+				$link_classes  = empty( $reaction_data['type'] ) ? 'has-like has-reaction' : 'has-emotion has-reaction';
+				$prepared_icon = bb_activity_get_reaction_button( $reaction_data['id'], true );
+
+				$fav_args['class']           = str_replace( 'fav', 'unfav', $fav_args['class'] ) . ' ' . $link_classes;
+				$fav_args['aria-pressed']    = true;
+				$fav_args[ $key ]            = bb_get_activity_comment_unfavorite_link();
+				$fav_args['link_text']       = sprintf(
+					'<span class="bp-screen-reader-text">%1$s</span>
+						<span class="like-count reactions_item" style="%2$s">%1$s</span>',
+					esc_html( $prepared_icon['icon_text'] ),
+					! empty( $reaction_data['text_color'] ) ? esc_attr( 'color:' . $reaction_data['text_color'] ) : ''
+				);
+				$fav_args['data-reacted-id'] = $reaction_data['id'];
+			}
+		}
+
+		// If migration is in progress, add class and tooltip.
+		if (
+			function_exists( 'bb_pro_reaction_get_migration_status' ) &&
+			'inprogress' === bb_pro_reaction_get_migration_status()
+		) {
+			$fav_args['class']               = $fav_args['class'] . ' bb-reaction-migration-inprogress';
+			$fav_args['data-bp-tooltip']     = esc_html__( 'This feature is temporarily unavailable. Please try again later.', 'buddyboss' );
+			$fav_args['data-bp-tooltip-pos'] = 'up';
+		}
+
+		// Remove link text from button attributes.
+		$link_text = $fav_args['link_text'];
+		unset( $fav_args['link_text'] );
+
+		$buttons['activity_comment_favorite'] = array(
+			'id'                => 'activity_comment_favorite',
+			'position'          => 4,
 			'component'         => 'activity',
-			'must_be_logged_in' => true,
 			'parent_element'    => $parent_element,
 			'parent_attr'       => $parent_attr,
+			'must_be_logged_in' => true,
 			'button_element'    => $button_element,
-			'link_text'         => esc_html__( 'Reply', 'buddyboss' ),
-			'button_attr'       => array(
-					'class' => "acomment-reply bp-primary-action",
-					'id'    => sprintf( 'acomment-reply-%1$s-from-%2$s', $activity_id, $activity_comment_id ),
-			),
+			'link_text'         => $link_text,
+			'button_attr'       => $fav_args,
+		);
+	}
+
+	$buttons['activity_comment_reply'] = array(
+		'id'                => 'activity_comment_reply',
+		'position'          => 5,
+		'component'         => 'activity',
+		'must_be_logged_in' => true,
+		'parent_element'    => $parent_element,
+		'parent_attr'       => $parent_attr,
+		'button_element'    => $button_element,
+		'link_text'         => esc_html__( 'Reply', 'buddyboss' ),
+		'button_attr'       => array(
+			'class' => "acomment-reply bp-primary-action",
+			'id'    => sprintf( 'acomment-reply-%1$s-from-%2$s', $activity_id, $activity_comment_id ),
+		),
 	);
 
 	// If button element set add nonce link to data-attr attr
