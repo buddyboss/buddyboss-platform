@@ -285,7 +285,15 @@ window.bp = window.bp || {};
 				$( '#buddypress [data-bp-list="activity"] ul.activity-list' ).prepend( '<li class="load-newest"><a href="#newest">' + BP_Nouveau.newest + ' (' + newest_activities_count + ')</a></li>' );
 			}
 
-			$( '#buddypress [data-bp-list="activity"] li.load-newest' ).trigger( 'click' );
+			// If something is pending in any activity, let's wait and don't trigger reload.
+			if (
+				$( '#activity-stream ul.activity-list li.activity-item' ).find( 'form.has-content' ).length > 0 ||
+				$( '#activity-stream ul.activity-list li.activity-item' ).find( 'div.vjs-playing' ).length > 0
+			) {
+				this.heartbeat_data.newest = '';
+			} else {
+				$( '#buddypress [data-bp-list="activity"] li.load-newest' ).trigger( 'click' );
+			}
 
 			/**
 			 * Finally trigger a pending event containing the activity heartbeat data
