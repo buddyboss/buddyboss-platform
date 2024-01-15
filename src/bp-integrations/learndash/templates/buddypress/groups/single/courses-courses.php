@@ -38,7 +38,7 @@ if (
 		\Elementor\Plugin::instance()->documents->get( $course_id )->is_built_with_elementor()
 	)
 ) {
-	$view              = get_option( 'bb_theme_learndash_grid_list', 'grid' );
+	$view              = bb_get_directory_layout_preference( 'ld-course' );
 	$class_grid_active = ( 'grid' === $view ) ? 'active' : '';
 	$class_list_active = ( 'list' === $view ) ? 'active' : '';
 	$class_grid_show   = ( 'grid' === $view ) ? 'grid-view bb-grid' : '';
