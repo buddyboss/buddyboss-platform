@@ -519,7 +519,10 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				}
 
 				$pre_search_query = implode( ' UNION ', $sql_queries );
-				$pre_search_query = "SELECT * FROM ( {$pre_search_query} ) as t1 ORDER BY t1.relevance DESC, t1.id DESC";
+
+				if ( true === $args['forum_search'] ) {
+					$pre_search_query = "SELECT * FROM ( {$pre_search_query} ) as t1 ORDER BY t1.relevance DESC, t1.id DESC";
+				}
 
 				if ( isset( $args['ajax_per_page'] ) && $args['ajax_per_page'] > 0 ) {
 					$pre_search_query .= " LIMIT {$args['ajax_per_page']} ";
