@@ -103,6 +103,17 @@ form.ac-form {
 
 		.ac-reply-content {
 
+			.ac-input {
+				min-height: 25px;
+				line-height: 25px;
+
+				&:before {
+					content: attr(data-placeholder);
+					color: $light-text;
+					opacity: 0.5;
+				}
+			}
+
 			> button,
 			> input {
 				display: none !important;

@@ -6696,6 +6696,17 @@ form.ac-form {
   display: block;
 }
 
+form.ac-form.not-initialized .ac-reply-content .ac-input {
+  min-height: 25px;
+  line-height: 25px;
+}
+
+form.ac-form.not-initialized .ac-reply-content .ac-input:before {
+  content: attr(data-placeholder);
+  color: #767676;
+  opacity: 0.5;
+}
+
 form.ac-form.not-initialized .ac-reply-content > button,
 form.ac-form.not-initialized .ac-reply-content > input {
   display: none !important;
