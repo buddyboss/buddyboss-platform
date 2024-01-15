@@ -1011,6 +1011,11 @@ window.bp = window.bp || {};
 				);
 			}
 
+			// Initiate Comment Form.
+			if( target.hasClass( 'ac-form' ) && target.hasClass( 'not-initialized' ) && target.parent().hasClass( 'activity-comments' ) ) {
+				target.closest( '.activity-item').find( '.acomment-reply' ).trigger( 'click' );
+			}
+
 			// Displaying the comment form.
 			if (
 				target.hasClass( 'activity-state-comments' ) ||
@@ -1051,7 +1056,7 @@ window.bp = window.bp || {};
 				this.toggleMultiMediaOptions( form, target );
 
 				form.removeClass( 'root' );
-				$( '.ac-form' ).hide();
+				$( '.ac-form' ).addClass( 'not-initialized' );
 
 				/* Remove any error messages */
 				$.each(
@@ -1083,7 +1088,7 @@ window.bp = window.bp || {};
 					}
 				}
 
-				form.slideDown( 200 );
+				form.removeClass( 'not-initialized' );
 
 				var emojiPosition = form.find( '.post-elements-buttons-item.post-emoji' ).prevAll().not( ':hidden' ).length + 1;
 				form.find( '.post-elements-buttons-item.post-emoji' ).attr( 'data-nth-child', emojiPosition );
@@ -1251,7 +1256,7 @@ window.bp = window.bp || {};
 			if ( target.hasClass( 'ac-reply-cancel' ) ) {
 
 				var $form = $( target ).closest( '.ac-form' );
-				$form.slideUp( 200 );
+				$form.addClass( 'not-initialized' );
 
 				// Change the aria state back to false on comment cancel.
 				$( '.acomment-reply' ).attr( 'aria-expanded', 'false' );
@@ -1365,49 +1370,45 @@ window.bp = window.bp || {};
 							var activity_comments = form.parent();
 							var the_comment       = $.trim( response.data.contents );
 
-							form.fadeOut(
-								200,
-								function() {
+							form.addClass( 'not-initialized' );
 
-									if ( form.hasClass( 'acomment-edit' ) ) {
-										var form_item_id = form.attr( 'data-item-id' );
-										form.closest( '.activity-comments' ).append( form );
-										$( 'li#acomment-' + form_item_id ).replaceWith( the_comment );
+							if ( form.hasClass( 'acomment-edit' ) ) {
+								var form_item_id = form.attr( 'data-item-id' );
+								form.closest( '.activity-comments' ).append( form );
+								$( 'li#acomment-' + form_item_id ).replaceWith( the_comment );
+							} else {
+								if ( 0 === activity_comments.children( 'ul' ).length ) {
+									if ( activity_comments.hasClass( 'activity-comments' ) ) {
+										activity_comments.prepend( '<ul></ul>' );
 									} else {
-										if ( 0 === activity_comments.children( 'ul' ).length ) {
-											if ( activity_comments.hasClass( 'activity-comments' ) ) {
-												activity_comments.prepend( '<ul></ul>' );
-											} else {
-												activity_comments.append( '<ul></ul>' );
-											}
-										}
-
-										activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
-										$( form ).find( '.ac-input' ).first().html( '' );
-
-										activity_comments.parent().addClass( 'has-comments' );
-										activity_comments.parent().addClass( 'comments-loaded' );
-										activity_state.addClass( 'has-comments' );
-										// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+										activity_comments.append( '<ul></ul>' );
 									}
-
-									var tool_box_comment = form.find( '.ac-reply-content' );
-									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ).length > 0 ) {
-										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
-									}
-									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-document-button' ).length > 0  ) {
-										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
-									}
-									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-video-button' ).length > 0  ) {
-										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
-									}
-									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).length > 0  ) {
-										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).removeClass( 'active ' );
-										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
-									}
-									jQuery( window ).scroll();
 								}
-							);
+
+								activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
+								$( form ).find( '.ac-input' ).first().html( '' );
+
+								activity_comments.parent().addClass( 'has-comments' );
+								activity_comments.parent().addClass( 'comments-loaded' );
+								activity_state.addClass( 'has-comments' );
+								// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+							}
+
+							var tool_box_comment = form.find( '.ac-reply-content' );
+							if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ).length > 0 ) {
+								tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
+							}
+							if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-document-button' ).length > 0  ) {
+								tool_box_comment.find( '.ac-reply-toolbar .ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
+							}
+							if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-video-button' ).length > 0  ) {
+								tool_box_comment.find( '.ac-reply-toolbar .ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
+							}
+							if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).length > 0  ) {
+								tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).removeClass( 'active ' );
+								tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
+							}
+							jQuery( window ).scroll();
 
 							if ( ! form.hasClass( 'acomment-edit' ) ) {
 								// Set the new count.
@@ -1787,13 +1788,9 @@ window.bp = window.bp || {};
 
 			event.preventDefault();
 
-			if ( ! $( event.currentTarget ).closest( '.ac-form' ).hasClass( 'acomment-edit' ) ) {
-				$( event.currentTarget ).toggleClass( 'active' );
-			} else {
-				if ( dropzone_container.hasClass( 'open' ) && ! event.isCustomEvent ) {
-					dropzone_container.trigger( 'click' );
-					return;
-				}
+			if ( dropzone_container.hasClass( 'open' ) && ! event.isCustomEvent ) {
+				dropzone_container.trigger( 'click' );
+				return;
 			}
 
 			var acCommentDefaultTemplate = document.getElementsByClassName( 'ac-reply-post-default-template' ).length ? document.getElementsByClassName( 'ac-reply-post-default-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
@@ -2016,7 +2013,7 @@ window.bp = window.bp || {};
 			var c_id = $( event.currentTarget ).data( 'ac-id' );
 			this.resetGifPicker( c_id );
 
-			if ( $( target ).closest( 'form.ac-form' ).hasClass( 'acomment-edit' ) && ! event.isCustomEvent ) {
+			if ( ! event.isCustomEvent ) {
 				$( target ).closest( '.ac-reply-content' ).find( '.dropzone.media-dropzone' ).trigger( 'click' );
 			}
 		},
@@ -2261,7 +2258,7 @@ window.bp = window.bp || {};
 			var c_id = $( event.currentTarget ).data( 'ac-id' );
 			this.resetGifPicker( c_id );
 
-			if ( $( target ).closest( 'form.ac-form' ).hasClass( 'acomment-edit' ) && ! event.isCustomEvent ) {
+			if ( ! event.isCustomEvent ) {
 				$( target ).closest( '.ac-reply-content' ).find( '.dropzone.document-dropzone' ).trigger( 'click' );
 			}
 		},
@@ -2529,7 +2526,7 @@ window.bp = window.bp || {};
 			var c_id = $( event.currentTarget ).data( 'ac-id' );
 			this.resetGifPicker( c_id );
 
-			if ( $( target ).closest( 'form.ac-form' ).hasClass( 'acomment-edit' ) && ! event.isCustomEvent ) {
+			if ( ! event.isCustomEvent ) {
 				$( target ).closest( '.ac-reply-content' ).find( '.dropzone.video-dropzone' ).trigger( 'click' );
 			}
 		},

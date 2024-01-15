@@ -6,7 +6,7 @@ form.ac-form {
 	padding: 0;
 
 	.ac-reply-avatar {
-		float: left;
+		margin-top: 4px;
 
 		img {
 			border: 1px solid #eee;
@@ -111,7 +111,6 @@ form.ac-form {
 
 		.ac-reply-content {
 			height: 44px;
-			background-color: $light-grey;
 
 			.ac-textarea {
 				padding-right: 0;
@@ -125,6 +124,10 @@ form.ac-form {
 				}
 			}
 		}
+
+		> * {
+			pointer-events: none;
+		}
 	}
 
 	.bp-ac-form-cotainer {
@@ -136,8 +139,9 @@ form.ac-form {
 	}
 
 	.ac-reply-content {
-		border: 1px solid $bp-border-color;
-		border-radius: 4px;
+		border: 1px solid transparent;
+		background-color: $light-grey;
+		border-radius: $block-radius-inner;
 		padding: 7px;
 		margin-left: 10px;
 

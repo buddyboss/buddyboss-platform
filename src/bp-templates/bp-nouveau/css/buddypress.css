@@ -6601,7 +6601,7 @@ form.ac-form {
 }
 
 form.ac-form .ac-reply-avatar {
-  float: left;
+  margin-top: 4px;
 }
 
 form.ac-form .ac-reply-avatar img {
@@ -6703,7 +6703,6 @@ form.ac-form.not-initialized .ac-reply-content > input {
 
 form.ac-form.not-initialized .ac-reply-content {
   height: 44px;
-  background-color: #eaeaea;
 }
 
 form.ac-form.not-initialized .ac-reply-content .ac-textarea {
@@ -6718,6 +6717,10 @@ form.ac-form.not-initialized .ac-reply-content .ac-textarea .ac-reply-toolbar {
   margin: 0;
 }
 
+form.ac-form.not-initialized > * {
+  pointer-events: none;
+}
+
 form.ac-form .bp-ac-form-cotainer {
   align-items: flex-start;
 }
@@ -6727,8 +6730,9 @@ form.ac-form .ac-reply-avatar img {
 }
 
 form.ac-form .ac-reply-content {
-  border: 1px solid #eee;
-  border-radius: 4px;
+  border: 1px solid transparent;
+  background-color: #eaeaea;
+  border-radius: 6px;
   padding: 7px;
   margin-left: 10px;
 }
