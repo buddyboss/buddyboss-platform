@@ -654,7 +654,27 @@
 		.bb-activity-more-options-wrap {
 			position: absolute;
 			right: 0;
-			top: -7px;
+			top: 50%;
+			transform: translateY(calc(-50% - 11px));
+			z-index: 1;
+
+			.bb-activity-more-options-action {
+				border-radius: $block-radius-inner;
+
+				i {
+					font-size: 16px;
+					color: $black;
+					opacity: 0.4;
+				}
+
+				&:hover {
+					background-color: $light-grey;
+
+					i {
+						opacity: 1;
+					}
+				}
+			}
 		}
 
 	}

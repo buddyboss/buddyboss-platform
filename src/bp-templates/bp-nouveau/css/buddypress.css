@@ -3939,7 +3939,27 @@ input.search-query-input {
 .activity-list .comment-item .bb-activity-more-options-wrap {
   position: absolute;
   right: 0;
-  top: -7px;
+  top: 50%;
+  transform: translateY(calc(-50% - 11px));
+  z-index: 1;
+}
+
+.activity-list .comment-item .bb-activity-more-options-wrap .bb-activity-more-options-action {
+  border-radius: 6px;
+}
+
+.activity-list .comment-item .bb-activity-more-options-wrap .bb-activity-more-options-action i {
+  font-size: 16px;
+  color: #333;
+  opacity: 0.4;
+}
+
+.activity-list .comment-item .bb-activity-more-options-wrap .bb-activity-more-options-action:hover {
+  background-color: #eaeaea;
+}
+
+.activity-list .comment-item .bb-activity-more-options-wrap .bb-activity-more-options-action:hover i {
+  opacity: 1;
 }
 
 @media screen and (min-width: 46.8em) {
@@ -6452,6 +6472,12 @@ span.dashicons.dashicons-admin-file:before {
   padding: 10px 15px;
   border-radius: 6px;
   margin-bottom: 5px;
+}
+
+.buddypress-wrap .activity-comments .acomment-display {
+  display: inline-flex;
+  position: relative;
+  padding-right: 34px;
 }
 
 .buddypress-wrap .activity-comments .acomment-meta,

@@ -76,6 +76,12 @@
 			}
 		}
 
+		.acomment-display {
+			display: inline-flex;
+			position: relative;
+			padding-right: 34px;
+		}
+
 		.acomment-meta,
 		.acomment-content p {
 
