@@ -1272,21 +1272,22 @@ function bb_moderation_get_reporting_category_fields_array() {
  * @return array|mixed
  */
 function bb_moderation_get_blocked_by_user_ids( $user_id = 0, $force = false ) {
+	static $cache = array();
 	global $wpdb;
 	if ( empty( $user_id ) ) {
 		$user_id = bp_loggedin_user_id();
 	}
 
-	$sql    = bb_moderation_get_blocked_by_sql( $user_id );
-	$cached = bp_core_get_incremented_cache( $sql, 'bb_moderation' );
-	if ( false === $cached || $force ) {
-		$data = $wpdb->get_col( $sql );
-		bp_core_set_incremented_cache( $sql, 'bb_moderation', $data );
-	} else {
-		$data = $cached;
-	}
+	$cache_key = 'bb_moderation_blocked_by_' . $user_id;
+	if ( ! isset( $cache[ $cache_key ] ) || $force ) {
+		$sql  = bb_moderation_get_blocked_by_sql( $user_id );
+		$data = $wpdb->get_col( $sql ); // phpcs:ignore
+		$data = ! empty( $data ) ? array_map( 'intval', $data ) : array();
 
-	$data = ! empty( $data ) ? array_map( 'intval', $data ) : array();
+		$cache[ $cache_key ] = $data;
+	} else {
+		$data = $cache[ $cache_key ];
+	}
 
 	return $data;
 }
