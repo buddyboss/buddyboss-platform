@@ -972,7 +972,7 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = arra
 			return false;
 		} else {
 			return new WP_Error(
-				'bp_activity_add_user_favorite',
+				'bp_activity_add_user_favorite_disabled_temporarily',
 				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' )
 			);
 		}
@@ -983,7 +983,7 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = arra
 		$active_reactions = bb_active_reactions();
 		if ( empty( $active_reactions ) || empty( $active_reactions[ $r['reaction_id'] ] ) ) {
 			return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
-				'bp_activity_add_user_favorite',
+				'bp_activity_add_user_favorite_disabled_temporarily',
 				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' )
 			);
 		}
@@ -1075,7 +1075,7 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 			return false;
 		} else {
 			return new WP_Error(
-				'bp_activity_add_user_favorite',
+				'bp_activity_add_user_favorite_disabled_temporarily',
 				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' )
 			);
 		}
@@ -1095,7 +1095,7 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 			return false;
 		} else {
 			return new WP_Error(
-				'bp_activity_add_user_favorite',
+				'bp_activity_add_user_favorite_disabled_temporarily',
 				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' )
 			);
 		}
