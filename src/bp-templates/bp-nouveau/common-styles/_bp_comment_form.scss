@@ -115,7 +115,8 @@ form.ac-form {
 			}
 
 			> button,
-			> input {
+			> input,
+			> .ac-submit-wrap {
 				display: none !important;
 			}
 		}
@@ -153,7 +154,7 @@ form.ac-form {
 		border: 1px solid transparent;
 		background-color: $light-grey;
 		border-radius: $block-radius-inner;
-		padding: 7px;
+		padding: 8px;
 		margin-left: 10px;
 
 		&:focus-within {
@@ -185,12 +186,43 @@ form.ac-form {
 			}
 		}
 
+		.ac-submit-wrap {
+			background-color: $blue;
+			border-radius: 50%;
+			height: 30px;
+			width: 30px;
+			overflow: hidden;
+			cursor: pointer;
+			position: relative;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 0;
+
+			&:before {
+				display: block;
+				content: "\eee7";
+				color: #fff;
+				font-family: bb-icons;
+				font-size: 16px;
+				font-weight: 300;
+				line-height: 30px;
+			}
+
+			input[name="ac_form_submit"] {
+				position: absolute;
+				inset: 0;
+				opacity: 0;
+				background-color: $blue;
+			}
+		}
+
 		.ac-reply-cancel,
-		input[name="ac_form_submit"] {
+		.ac-submit-wrap {
 			float: right;
 		}
 
-		input[name="ac_form_submit"] {
+		.ac-submit-wrap {
 			margin-left: 5px;
 		}
 
@@ -204,7 +236,7 @@ form.ac-form {
 		.bb-media-model-container & {
 
 			.ac-reply-cancel,
-			input[name="ac_form_submit"] {
+			.ac-submit-wrap {
 				float: left;
 			}
 
@@ -223,7 +255,7 @@ form.ac-form {
 		@media screen and (max-width: 1080px) and (min-width: 768px), screen and (max-width: 490px) {
 
 			.ac-reply-cancel,
-			input[name="ac_form_submit"] {
+			.ac-submit-wrap {
 				float: left;
 			}
 

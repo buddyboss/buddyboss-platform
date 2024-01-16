@@ -6565,13 +6565,13 @@ span.dashicons.dashicons-admin-file:before {
   display: none;
 }
 
-.buddypress-wrap .activity-comments .ac-form.has-gif .ac-reply-content input[name="ac_form_submit"], .buddypress-wrap .activity-comments .ac-form.has-content .ac-reply-content input[name="ac_form_submit"], .buddypress-wrap .activity-comments .ac-form.has-media .ac-reply-content input[name="ac_form_submit"] {
+.buddypress-wrap .activity-comments .ac-form.has-gif .ac-reply-content .ac-submit-wrap, .buddypress-wrap .activity-comments .ac-form.has-content .ac-reply-content .ac-submit-wrap, .buddypress-wrap .activity-comments .ac-form.has-media .ac-reply-content .ac-submit-wrap {
   opacity: 1;
   pointer-events: initial;
 }
 
-.buddypress-wrap .activity-comments .ac-form.media-uploading .ac-reply-content input[name="ac_form_submit"],
-.buddypress-wrap .activity-comments .ac-form .ac-reply-content input[name="ac_form_submit"] {
+.buddypress-wrap .activity-comments .ac-form.media-uploading .ac-reply-content .ac-submit-wrap,
+.buddypress-wrap .activity-comments .ac-form .ac-reply-content .ac-submit-wrap {
   opacity: 0.4;
   pointer-events: none;
 }
@@ -6708,7 +6708,8 @@ form.ac-form.not-initialized .ac-reply-content .ac-input:before {
 }
 
 form.ac-form.not-initialized .ac-reply-content > button,
-form.ac-form.not-initialized .ac-reply-content > input {
+form.ac-form.not-initialized .ac-reply-content > input,
+form.ac-form.not-initialized .ac-reply-content > .ac-submit-wrap {
   display: none !important;
 }
 
@@ -6744,7 +6745,7 @@ form.ac-form .ac-reply-content {
   border: 1px solid transparent;
   background-color: #eaeaea;
   border-radius: 6px;
-  padding: 7px;
+  padding: 8px;
   margin-left: 10px;
 }
 
@@ -6777,12 +6778,43 @@ form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar {
   left: 10px;
 }
 
+form.ac-form .ac-reply-content .ac-submit-wrap {
+  background-color: #5087e5;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+form.ac-form .ac-reply-content .ac-submit-wrap:before {
+  display: block;
+  content: "\eee7";
+  color: #fff;
+  font-family: bb-icons;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 30px;
+}
+
+form.ac-form .ac-reply-content .ac-submit-wrap input[name="ac_form_submit"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background-color: #5087e5;
+}
+
 form.ac-form .ac-reply-content .ac-reply-cancel,
-form.ac-form .ac-reply-content input[name="ac_form_submit"] {
+form.ac-form .ac-reply-content .ac-submit-wrap {
   float: right;
 }
 
-form.ac-form .ac-reply-content input[name="ac_form_submit"] {
+form.ac-form .ac-reply-content .ac-submit-wrap {
   margin-left: 5px;
 }
 
@@ -6791,7 +6823,7 @@ form.ac-form .ac-reply-content input[name="ac_form_submit"] {
 }
 
 .bb-media-model-container form.ac-form .ac-reply-content .ac-reply-cancel,
-.bb-media-model-container form.ac-form .ac-reply-content input[name="ac_form_submit"] {
+.bb-media-model-container form.ac-form .ac-reply-content .ac-submit-wrap {
   float: left;
 }
 
@@ -6805,7 +6837,7 @@ form.ac-form .ac-reply-content input[name="ac_form_submit"] {
 
 @media screen and (max-width: 1080px) and (min-width: 768px), screen and (max-width: 490px) {
   form.ac-form .ac-reply-content .ac-reply-cancel,
-  form.ac-form .ac-reply-content input[name="ac_form_submit"] {
+  form.ac-form .ac-reply-content .ac-submit-wrap {
     float: left;
   }
   #buddypress form.ac-form .ac-reply-content .ac-reply-cancel {
