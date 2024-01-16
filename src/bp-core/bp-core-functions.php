@@ -9694,7 +9694,7 @@ function bb_reactions_get_settings_fields() {
  * It checks whether the user is logged in, retrieves layout preferences from user meta or cookies,
  * and provides a default layout value if no user preferences are found.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.11
  *
  * @param string $action The directory action for which to retrieve the layout
  *                       (e.g. 'members', 'ld-course', 'groups').
