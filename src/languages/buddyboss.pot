@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.5.10\n"
+"Project-Id-Version: BuddyBoss Platform 2.5.11\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-01-09 07:40:49+00:00\n"
+"POT-Creation-Date: 2024-01-16 10:55:43+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4108,9 +4108,9 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:639
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:721
 #: bp-core/classes/class-bp-admin-tab.php:528
+#: bp-integrations/learndash/bp-learndash-functions.php:408
 #: bp-integrations/learndash/bp-learndash-functions.php:431
 #: bp-integrations/learndash/bp-learndash-functions.php:454
-#: bp-integrations/learndash/bp-learndash-functions.php:477
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:219
 #: bp-media/bp-media-settings.php:658 bp-media/bp-media-settings.php:685
 #: bp-media/bp-media-settings.php:856 bp-media/bp-media-settings.php:1096
@@ -6532,6 +6532,22 @@ msgstr[1] ""
 msgid ""
 "Migrating Group forum and discussion subscriptions data structure to the "
 "new subscription flow&hellip; %s"
+msgstr ""
+
+#: bp-core/bp-core-actions.php:1105
+msgid "Invalid object."
+msgstr ""
+
+#: bp-core/bp-core-actions.php:1112
+msgid "Invalid request."
+msgstr ""
+
+#: bp-core/bp-core-actions.php:1119
+msgid "Not a valid option"
+msgstr ""
+
+#: bp-core/bp-core-actions.php:1127
+msgid "Not a valid value"
 msgstr ""
 
 #: bp-core/bp-core-admin.php:22
@@ -16120,7 +16136,7 @@ msgstr ""
 
 #: bp-forums/common/widgets.php:1083 bp-groups/bp-groups-template.php:5611
 #: bp-notifications/bp-notifications-template.php:1020
-#: bp-templates/bp-nouveau/includes/template-tags.php:2181
+#: bp-templates/bp-nouveau/includes/template-tags.php:2167
 msgid "Order By:"
 msgstr ""
 
@@ -22343,12 +22359,12 @@ msgid "Collapse All"
 msgstr ""
 
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-courses.php:47
-#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:59
+#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:50
 msgid "Grid View"
 msgstr ""
 
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-courses.php:50
-#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:68
+#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:59
 msgid "List View"
 msgstr ""
 
@@ -24970,22 +24986,22 @@ msgid "Yes, I'd like to create a new site"
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:276
-#: bp-templates/bp-nouveau/includes/template-tags.php:2422
+#: bp-templates/bp-nouveau/includes/template-tags.php:2408
 msgid ""
 "I would like my site to appear in search engines, and in public listings "
 "around this network."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:311
-#: bp-templates/bp-nouveau/includes/template-tags.php:2604
+#: bp-templates/bp-nouveau/includes/template-tags.php:2590
 #. translators: 1. Term agreement page. 2. Privacy page.
 msgid "I agree to the %1$s and %2$s."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:318
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:324
-#: bp-templates/bp-nouveau/includes/template-tags.php:2636
-#: bp-templates/bp-nouveau/includes/template-tags.php:2660
+#: bp-templates/bp-nouveau/includes/template-tags.php:2622
+#: bp-templates/bp-nouveau/includes/template-tags.php:2646
 #. translators: Term agreement page.
 #. translators: Privacy page.
 msgid "I agree to the %s."
@@ -27448,10 +27464,10 @@ msgstr ""
 #: bp-moderation/screens/reported-content-popup.php:19
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:325
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:341
-#: bp-templates/bp-nouveau/includes/template-tags.php:2618
-#: bp-templates/bp-nouveau/includes/template-tags.php:2626
-#: bp-templates/bp-nouveau/includes/template-tags.php:2650
-#: bp-templates/bp-nouveau/includes/template-tags.php:2675
+#: bp-templates/bp-nouveau/includes/template-tags.php:2604
+#: bp-templates/bp-nouveau/includes/template-tags.php:2612
+#: bp-templates/bp-nouveau/includes/template-tags.php:2636
+#: bp-templates/bp-nouveau/includes/template-tags.php:2661
 msgid "Close (Esc)"
 msgstr ""
 
@@ -31933,29 +31949,29 @@ msgstr ""
 msgid "Loading suggestions..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2184
+#: bp-templates/bp-nouveau/includes/template-tags.php:2170
 msgid "Show:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2403
+#: bp-templates/bp-nouveau/includes/template-tags.php:2389
 #. translators: Do not translate placeholders. 2 = form field name, 3 =
 #. "(required)".
 msgid "<label for=\"%1$s\">%2$s %3$s</label>"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2609
+#: bp-templates/bp-nouveau/includes/template-tags.php:2595
 msgid "By creating an account you are agreeing to the %1$s and %2$s."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2618
-#: bp-templates/bp-nouveau/includes/template-tags.php:2626
-#: bp-templates/bp-nouveau/includes/template-tags.php:2650
-#: bp-templates/bp-nouveau/includes/template-tags.php:2675
+#: bp-templates/bp-nouveau/includes/template-tags.php:2604
+#: bp-templates/bp-nouveau/includes/template-tags.php:2612
+#: bp-templates/bp-nouveau/includes/template-tags.php:2636
+#: bp-templates/bp-nouveau/includes/template-tags.php:2661
 msgid "×"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2641
-#: bp-templates/bp-nouveau/includes/template-tags.php:2665
+#: bp-templates/bp-nouveau/includes/template-tags.php:2627
+#: bp-templates/bp-nouveau/includes/template-tags.php:2651
 msgid "By creating an account you are agreeing to the %s."
 msgstr ""
 
