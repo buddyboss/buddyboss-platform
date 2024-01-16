@@ -509,7 +509,14 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					 */
 					$obj                   = $this->search_helpers[ $search_type ];
 					$limit                 = isset( $_REQUEST['view'] ) ? ' LIMIT ' . ( $args['number'] ) : '';
-					$sql_queries[]         = '( ' . $obj->union_sql( $args['search_term'] ) . " ORDER BY relevance DESC, entry_date DESC $limit ) ";
+					if (
+						bp_is_active( 'forums' ) &&
+						in_array( $search_type, array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ), true )
+					) {
+						$sql_queries[] = '( ' . $obj->union_sql( $args['search_term'] ) . " ORDER BY  entry_date DESC $limit ) ";
+					} else {
+						$sql_queries[] = '( ' . $obj->union_sql( $args['search_term'] ) . " ORDER BY relevance DESC, entry_date DESC $limit ) ";
+					}
 					$total[ $search_type ] = $obj->get_total_match_count( $args['search_term'], $search_type );
 				}
 
@@ -521,7 +528,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				$pre_search_query = implode( ' UNION ', $sql_queries );
 
 				if ( true === $args['forum_search'] ) {
-					$pre_search_query = "SELECT * FROM ( {$pre_search_query} ) as t1 ORDER BY t1.relevance DESC, t1.id DESC";
+					$pre_search_query = "SELECT * FROM ( {$pre_search_query} ) as t1 ORDER BY t1.entry_date DESC";
 				}
 
 				if ( isset( $args['ajax_per_page'] ) && $args['ajax_per_page'] > 0 ) {
@@ -666,7 +673,19 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				 */
 				// $args['per_page'] = get_option( 'posts_per_page' );
 				$obj              = $this->search_helpers[ $args['search_subset'] ];
-				$pre_search_query = $obj->union_sql( $args['search_term'] ) . ' ORDER BY relevance DESC, entry_date DESC ';
+
+				if (
+					true === $args['forum_search'] ||
+					(
+						bp_is_active( 'forums' ) &&
+						! empty( $args['search_subset'] ) &&
+						in_array( $args['search_subset'], array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ), true )
+					)
+				) {
+					$pre_search_query = $obj->union_sql( $args['search_term'] ) . ' ORDER BY entry_date DESC ';
+				} else {
+					$pre_search_query = $obj->union_sql( $args['search_term'] ) . ' ORDER BY relevance DESC, entry_date DESC ';
+				}
 
 				if ( $args['per_page'] > 0 ) {
 					$offset            = ( $args['current_page'] * $args['per_page'] ) - $args['per_page'];
