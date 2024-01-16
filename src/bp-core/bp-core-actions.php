@@ -1096,7 +1096,7 @@ add_action( 'bb_async_request_batch_process', 'bb_background_remove_duplicate_as
  * It verifies the nonce, checks for valid options and values, and stores
  * the layout option in the database or cookie.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.11
  */
 function buddyboss_directory_save_layout() {
 	$object = bb_filter_input_string( INPUT_POST, 'object' );

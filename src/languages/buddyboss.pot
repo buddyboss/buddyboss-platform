@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.5.10\n"
+"Project-Id-Version: BuddyBoss Platform 2.5.11\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-01-09 09:25:45+00:00\n"
+"POT-Creation-Date: 2024-01-16 12:15:23+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -150,8 +150,8 @@ msgid "Post unsaved."
 msgstr ""
 
 #: bp-activity/bb-activity-reactions.php:282
-#: bp-activity/bb-activity-reactions.php:839
-#: bp-activity/bb-activity-reactions.php:936
+#: bp-activity/bb-activity-reactions.php:841
+#: bp-activity/bb-activity-reactions.php:938
 #: bp-core/admin/bp-core-admin-settings.php:3664
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:902
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:912
@@ -198,7 +198,7 @@ msgstr ""
 msgid "All"
 msgstr ""
 
-#: bp-activity/bb-activity-reactions.php:690
+#: bp-activity/bb-activity-reactions.php:692
 #: bp-members/classes/class-bp-members-component.php:464
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:233
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:237
@@ -206,13 +206,13 @@ msgstr ""
 msgid "You"
 msgstr ""
 
-#: bp-activity/bb-activity-reactions.php:711
+#: bp-activity/bb-activity-reactions.php:713
 msgid "other"
 msgid_plural "%s others"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-activity/bb-activity-reactions.php:724
+#: bp-activity/bb-activity-reactions.php:726
 #: bp-activity/bp-activity-functions.php:1710
 msgid " and "
 msgstr ""
@@ -2849,9 +2849,9 @@ msgstr ""
 
 #: bp-blogs/bp-blogs-template.php:655
 #: bp-core/classes/class-bp-core-user.php:204
-#: bp-groups/bp-groups-widgets.php:81
+#: bp-groups/bp-groups-widgets.php:83
 #: bp-groups/classes/class-bp-groups-invite-template.php:283
-#: bp-groups/classes/class-bp-groups-widget.php:163
+#: bp-groups/classes/class-bp-groups-widget.php:165
 #: bp-members/bp-members-template.php:1013
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1560
 #. translators: last active format.
@@ -3832,8 +3832,8 @@ msgid "All Groups"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2874
-#: bp-core/admin/settings/bp-admin-setting-groups.php:270
 #: bp-core/admin/settings/bp-admin-setting-groups.php:273
+#: bp-core/admin/settings/bp-admin-setting-groups.php:276
 #: bp-core/deprecated/buddyboss/1.1.8.php:233
 #: bp-core/deprecated/buddyboss/1.1.8.php:236
 #: bp-groups/bp-groups-admin.php:2604 bp-groups/bp-groups-functions.php:3803
@@ -4119,9 +4119,9 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:734
 #: bp-core/bp-core-functions.php:9179
 #: bp-core/classes/class-bp-admin-tab.php:538
+#: bp-integrations/learndash/bp-learndash-functions.php:408
 #: bp-integrations/learndash/bp-learndash-functions.php:431
 #: bp-integrations/learndash/bp-learndash-functions.php:454
-#: bp-integrations/learndash/bp-learndash-functions.php:477
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:219
 #: bp-media/bp-media-settings.php:658 bp-media/bp-media-settings.php:685
 #: bp-media/bp-media-settings.php:856 bp-media/bp-media-settings.php:1096
@@ -4544,7 +4544,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1226
 #: bp-core/admin/bp-core-admin-settings.php:2286
-#: bp-core/admin/settings/bp-admin-setting-groups.php:179
+#: bp-core/admin/settings/bp-admin-setting-groups.php:182
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:291
 msgid "Header Style"
 msgstr ""
@@ -4810,7 +4810,7 @@ msgid "Select which elements to show in your group headers."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:2359
-#: bp-core/admin/settings/bp-admin-setting-groups.php:227
+#: bp-core/admin/settings/bp-admin-setting-groups.php:230
 msgid "Grid Style"
 msgstr ""
 
@@ -5181,7 +5181,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:63
 #: bp-core/admin/bp-core-admin-tools.php:129
-#: bp-core/admin/settings/bp-admin-setting-groups.php:255
+#: bp-core/admin/settings/bp-admin-setting-groups.php:258
 #: bp-core/bp-core-functions.php:795 bp-core/bp-core-template.php:561
 #: bp-core/bp-core-update.php:1048
 #: bp-core/classes/class-bp-email-tokens.php:458 bp-forums/admin/topics.php:717
@@ -5258,7 +5258,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:1030
 #: bp-groups/classes/class-bp-groups-notification.php:865
 #: bp-groups/classes/class-bp-groups-widget.php:78
-#: bp-groups/classes/class-bp-groups-widget.php:223
+#: bp-groups/classes/class-bp-groups-widget.php:225
 #: bp-media/bp-media-settings.php:151 bp-media/bp-media-settings.php:158
 #: bp-media/bp-media-settings.php:174 bp-media/bp-media-settings.php:183
 #: bp-media/bp-media-settings.php:190
@@ -5444,7 +5444,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:1536
 #: bp-core/admin/bp-core-admin-tools.php:1635
 #: bp-core/bb-core-subscriptions.php:93 bp-core/bb-core-subscriptions.php:378
-#: bp-core/bb-core-subscriptions.php:1302 bp-forums/admin/tools.php:314
+#: bp-core/bb-core-subscriptions.php:1307 bp-forums/admin/tools.php:314
 #: bp-forums/admin/tools.php:316 bp-forums/admin/tools.php:374
 #: bp-forums/admin/tools.php:376 bp-forums/admin/tools.php:424
 #: bp-forums/admin/tools.php:426 bp-forums/admin/tools.php:634
@@ -5781,59 +5781,59 @@ msgstr ""
 msgid "Group Messages"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:135
+#: bp-core/admin/settings/bp-admin-setting-groups.php:137
 #: bp-forums/admin/settings.php:140 bp-forums/admin/settings.php:381
 #: bp-performance/classes/class-settings.php:161
 #: bp-settings/classes/class-bp-settings-component.php:198
 msgid "Subscriptions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:138
+#: bp-core/admin/settings/bp-admin-setting-groups.php:141
 msgid "Group Images"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:141
+#: bp-core/admin/settings/bp-admin-setting-groups.php:144
 msgid "Group Avatars"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:145
+#: bp-core/admin/settings/bp-admin-setting-groups.php:148
 msgid "Default Group Avatar"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:149
+#: bp-core/admin/settings/bp-admin-setting-groups.php:152
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:257
 msgid "Upload Custom Avatar"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:153
+#: bp-core/admin/settings/bp-admin-setting-groups.php:156
 msgid "Group Cover Images"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:157
+#: bp-core/admin/settings/bp-admin-setting-groups.php:160
 msgid "Default Group Cover Image"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:161
+#: bp-core/admin/settings/bp-admin-setting-groups.php:164
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:274
 msgid "Upload Custom Cover Image"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:165
+#: bp-core/admin/settings/bp-admin-setting-groups.php:168
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:278
 msgid "Cover Image Sizes"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:170
+#: bp-core/admin/settings/bp-admin-setting-groups.php:173
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:282
 msgid "Preview Cover Image"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:174
+#: bp-core/admin/settings/bp-admin-setting-groups.php:177
 msgid "Group Headers"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:187
-#: bp-core/admin/settings/bp-admin-setting-groups.php:247
+#: bp-core/admin/settings/bp-admin-setting-groups.php:190
+#: bp-core/admin/settings/bp-admin-setting-groups.php:250
 #: bp-core/deprecated/buddyboss/1.1.8.php:241 bp-groups/bp-groups-admin.php:175
 #: bp-groups/bp-groups-admin.php:2002 bp-groups/bp-groups-admin.php:2330
 #: bp-groups/bp-groups-functions.php:3811
@@ -5843,13 +5843,13 @@ msgstr ""
 msgid "Group Type"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:191
-#: bp-core/admin/settings/bp-admin-setting-groups.php:251
+#: bp-core/admin/settings/bp-admin-setting-groups.php:194
+#: bp-core/admin/settings/bp-admin-setting-groups.php:254
 #: bp-core/gdpr/class-bp-group-export.php:130
 msgid "Last Activity"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:195
+#: bp-core/admin/settings/bp-admin-setting-groups.php:198
 #: bp-core/gdpr/class-bp-group-export.php:99 bp-groups/bp-groups-admin.php:815
 #: bp-groups/bp-groups-admin.php:918
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:543
@@ -5860,70 +5860,70 @@ msgstr ""
 msgid "Group Description"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:199
+#: bp-core/admin/settings/bp-admin-setting-groups.php:202
 msgid "Group Organizers"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:203
-#: bp-core/admin/settings/bp-admin-setting-groups.php:243
+#: bp-core/admin/settings/bp-admin-setting-groups.php:206
+#: bp-core/admin/settings/bp-admin-setting-groups.php:246
 #: bp-groups/bp-groups-admin.php:1228
 msgid "Group Privacy"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:207
-#: bp-core/admin/settings/bp-admin-setting-groups.php:267
+#: bp-core/admin/settings/bp-admin-setting-groups.php:210
+#: bp-core/admin/settings/bp-admin-setting-groups.php:270
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:297
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:329
 msgid "Elements"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:210
+#: bp-core/admin/settings/bp-admin-setting-groups.php:213
 msgid "Group Directories"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:215
+#: bp-core/admin/settings/bp-admin-setting-groups.php:218
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:316
 msgid "Enabled View(s)"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:222
+#: bp-core/admin/settings/bp-admin-setting-groups.php:225
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:323
 msgid "Default View"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:235
+#: bp-core/admin/settings/bp-admin-setting-groups.php:238
 msgid "Cover Images"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:239
+#: bp-core/admin/settings/bp-admin-setting-groups.php:242
 msgid "Avatars"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:259
+#: bp-core/admin/settings/bp-admin-setting-groups.php:262
 msgid "Group Descriptions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:263
+#: bp-core/admin/settings/bp-admin-setting-groups.php:266
 msgid "Join Buttons"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:276
+#: bp-core/admin/settings/bp-admin-setting-groups.php:279
 msgid "Auto Membership Approval"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:279
+#: bp-core/admin/settings/bp-admin-setting-groups.php:282
 msgid "Group Hierarchies"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:284
+#: bp-core/admin/settings/bp-admin-setting-groups.php:287
 msgid "Hierarchies"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:289
+#: bp-core/admin/settings/bp-admin-setting-groups.php:292
 msgid "Hide Subgroups"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:294
+#: bp-core/admin/settings/bp-admin-setting-groups.php:297
 msgid "Restrict Invitations"
 msgstr ""
 
@@ -6592,18 +6592,34 @@ msgstr ""
 msgid "There is an error while adding the subscription."
 msgstr ""
 
-#: bp-core/bb-core-subscriptions.php:1281
+#: bp-core/bb-core-subscriptions.php:1286
 #. translators: total topics
 msgid "%d group forum and discussion subscriptions migrated successfully"
 msgid_plural "%d groups forum and discussion subscriptions migrated successfully"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-core/bb-core-subscriptions.php:1297
+#: bp-core/bb-core-subscriptions.php:1302
 #. translators: Status of current action.
 msgid ""
 "Migrating Group forum and discussion subscriptions data structure to the "
 "new subscription flow&hellip; %s"
+msgstr ""
+
+#: bp-core/bp-core-actions.php:1105
+msgid "Invalid object."
+msgstr ""
+
+#: bp-core/bp-core-actions.php:1112 bp-core/classes/class-bb-reaction.php:914
+msgid "Invalid request."
+msgstr ""
+
+#: bp-core/bp-core-actions.php:1119
+msgid "Not a valid option"
+msgstr ""
+
+#: bp-core/bp-core-actions.php:1127
+msgid "Not a valid value"
 msgstr ""
 
 #: bp-core/bp-core-admin.php:22
@@ -9144,44 +9160,40 @@ msgstr ""
 msgid "View Reaction"
 msgstr ""
 
-#: bp-core/classes/class-bb-reaction.php:668
-#: bp-core/classes/class-bb-reaction.php:1012
+#: bp-core/classes/class-bb-reaction.php:674
+#: bp-core/classes/class-bb-reaction.php:1018
 msgid "The item type is invalid."
 msgstr ""
 
-#: bp-core/classes/class-bb-reaction.php:686
+#: bp-core/classes/class-bb-reaction.php:692
 msgid "The reaction ID is required to add reaction."
 msgstr ""
 
-#: bp-core/classes/class-bb-reaction.php:693
+#: bp-core/classes/class-bb-reaction.php:699
 msgid "The item type is required to add reaction."
 msgstr ""
 
-#: bp-core/classes/class-bb-reaction.php:700
+#: bp-core/classes/class-bb-reaction.php:706
 msgid "The item id is required to add reaction."
 msgstr ""
 
-#: bp-core/classes/class-bb-reaction.php:706
+#: bp-core/classes/class-bb-reaction.php:712
 msgid "Invalid User ID."
 msgstr ""
 
-#: bp-core/classes/class-bb-reaction.php:759
+#: bp-core/classes/class-bb-reaction.php:765
 msgid "There is an error while adding the reaction."
 msgstr ""
 
-#: bp-core/classes/class-bb-reaction.php:908
-msgid "Invalid request."
-msgstr ""
-
-#: bp-core/classes/class-bb-reaction.php:930
+#: bp-core/classes/class-bb-reaction.php:936
 msgid "Unable to removing the reaction."
 msgstr ""
 
-#: bp-core/classes/class-bb-reaction.php:1574
+#: bp-core/classes/class-bb-reaction.php:1580
 msgid "The item summary is required to add reaction data."
 msgstr ""
 
-#: bp-core/classes/class-bb-reaction.php:1630
+#: bp-core/classes/class-bb-reaction.php:1636
 msgid "There is an error while adding the reaction data."
 msgstr ""
 
@@ -9857,7 +9869,7 @@ msgstr ""
 #: bp-forums/common/widgets.php:517 bp-forums/common/widgets.php:744
 #: bp-forums/common/widgets.php:1066 bp-forums/common/widgets.php:1232
 #: bp-forums/common/widgets.php:1483
-#: bp-groups/classes/class-bp-groups-widget.php:236
+#: bp-groups/classes/class-bp-groups-widget.php:238
 #: bp-members/classes/class-bp-core-members-widget.php:248
 #: bp-members/classes/class-bp-core-recently-active-widget.php:159
 #: bp-members/classes/class-bp-core-whos-online-widget.php:270
@@ -10502,7 +10514,7 @@ msgstr ""
 #: bp-friends/classes/class-bp-core-friends-widget.php:255
 #: bp-groups/bp-groups-template.php:5613
 #: bp-groups/classes/class-bp-groups-widget.php:128
-#: bp-groups/classes/class-bp-groups-widget.php:245
+#: bp-groups/classes/class-bp-groups-widget.php:247
 #: bp-members/classes/class-bp-core-members-widget.php:123
 #: bp-members/classes/class-bp-core-members-widget.php:274
 #: bp-templates/bp-nouveau/includes/blogs/functions.php:109
@@ -16213,7 +16225,7 @@ msgstr ""
 
 #: bp-forums/common/widgets.php:1083 bp-groups/bp-groups-template.php:5611
 #: bp-notifications/bp-notifications-template.php:1020
-#: bp-templates/bp-nouveau/includes/template-tags.php:2191
+#: bp-templates/bp-nouveau/includes/template-tags.php:2177
 msgid "Order By:"
 msgstr ""
 
@@ -18315,7 +18327,7 @@ msgstr ""
 #: bp-friends/classes/class-bp-core-friends-widget.php:150
 #: bp-friends/classes/class-bp-core-friends-widget.php:256
 #: bp-groups/classes/class-bp-groups-widget.php:134
-#: bp-groups/classes/class-bp-groups-widget.php:246
+#: bp-groups/classes/class-bp-groups-widget.php:248
 #: bp-members/classes/class-bp-core-members-widget.php:129
 #: bp-members/classes/class-bp-core-members-widget.php:279
 #: bp-members/classes/class-bp-members-admin.php:1246
@@ -18325,14 +18337,14 @@ msgstr ""
 #: bp-friends/classes/class-bp-core-friends-widget.php:151
 #: bp-friends/classes/class-bp-core-friends-widget.php:257
 #: bp-groups/classes/class-bp-groups-widget.php:140
-#: bp-groups/classes/class-bp-groups-widget.php:247
+#: bp-groups/classes/class-bp-groups-widget.php:249
 #: bp-members/classes/class-bp-core-members-widget.php:137
 #: bp-members/classes/class-bp-core-members-widget.php:284
 msgid "Popular"
 msgstr ""
 
 #: bp-friends/classes/class-bp-core-friends-widget.php:187
-#: bp-groups/classes/class-bp-groups-widget.php:176
+#: bp-groups/classes/class-bp-groups-widget.php:178
 #: bp-members/classes/class-bp-core-members-widget.php:189
 #: bp-members/classes/class-bp-core-recently-active-widget.php:105
 #: bp-members/classes/class-bp-core-recently-active-widget.php:242
@@ -19660,12 +19672,12 @@ msgstr ""
 msgid "an"
 msgstr ""
 
-#: bp-groups/bp-groups-widgets.php:77
-#: bp-groups/classes/class-bp-groups-widget.php:159
+#: bp-groups/bp-groups-widgets.php:79
+#: bp-groups/classes/class-bp-groups-widget.php:161
 msgid "created %s"
 msgstr ""
 
-#: bp-groups/bp-groups-widgets.php:95
+#: bp-groups/bp-groups-widgets.php:97
 msgid "No groups matched the current filter."
 msgstr ""
 
@@ -20328,19 +20340,19 @@ msgstr ""
 msgid "(BB) Social Groups"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-widget.php:181
+#: bp-groups/classes/class-bp-groups-widget.php:183
 msgid "There are no groups to display."
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-widget.php:238
+#: bp-groups/classes/class-bp-groups-widget.php:240
 msgid "Link widget title to Groups directory"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-widget.php:240
+#: bp-groups/classes/class-bp-groups-widget.php:242
 msgid "Max groups to show:"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-widget.php:243
+#: bp-groups/classes/class-bp-groups-widget.php:245
 msgid "Default groups to show:"
 msgstr ""
 
@@ -22438,12 +22450,12 @@ msgid "Collapse All"
 msgstr ""
 
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-courses.php:55
-#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:59
+#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:50
 msgid "Grid View"
 msgstr ""
 
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-courses.php:58
-#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:68
+#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:59
 msgid "List View"
 msgstr ""
 
@@ -25052,22 +25064,22 @@ msgid "Yes, I'd like to create a new site"
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:276
-#: bp-templates/bp-nouveau/includes/template-tags.php:2432
+#: bp-templates/bp-nouveau/includes/template-tags.php:2418
 msgid ""
 "I would like my site to appear in search engines, and in public listings "
 "around this network."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:311
-#: bp-templates/bp-nouveau/includes/template-tags.php:2614
+#: bp-templates/bp-nouveau/includes/template-tags.php:2600
 #. translators: 1. Term agreement page. 2. Privacy page.
 msgid "I agree to the %1$s and %2$s."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:318
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:324
-#: bp-templates/bp-nouveau/includes/template-tags.php:2646
-#: bp-templates/bp-nouveau/includes/template-tags.php:2670
+#: bp-templates/bp-nouveau/includes/template-tags.php:2632
+#: bp-templates/bp-nouveau/includes/template-tags.php:2656
 #. translators: Term agreement page.
 #. translators: Privacy page.
 msgid "I agree to the %s."
@@ -27530,10 +27542,10 @@ msgstr ""
 #: bp-moderation/screens/reported-content-popup.php:19
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:327
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:343
-#: bp-templates/bp-nouveau/includes/template-tags.php:2628
-#: bp-templates/bp-nouveau/includes/template-tags.php:2636
-#: bp-templates/bp-nouveau/includes/template-tags.php:2660
-#: bp-templates/bp-nouveau/includes/template-tags.php:2685
+#: bp-templates/bp-nouveau/includes/template-tags.php:2614
+#: bp-templates/bp-nouveau/includes/template-tags.php:2622
+#: bp-templates/bp-nouveau/includes/template-tags.php:2646
+#: bp-templates/bp-nouveau/includes/template-tags.php:2671
 msgid "Close (Esc)"
 msgstr ""
 
@@ -32026,29 +32038,29 @@ msgstr ""
 msgid "Loading suggestions..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2194
+#: bp-templates/bp-nouveau/includes/template-tags.php:2180
 msgid "Show:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2413
+#: bp-templates/bp-nouveau/includes/template-tags.php:2399
 #. translators: Do not translate placeholders. 2 = form field name, 3 =
 #. "(required)".
 msgid "<label for=\"%1$s\">%2$s %3$s</label>"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2619
+#: bp-templates/bp-nouveau/includes/template-tags.php:2605
 msgid "By creating an account you are agreeing to the %1$s and %2$s."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2628
-#: bp-templates/bp-nouveau/includes/template-tags.php:2636
-#: bp-templates/bp-nouveau/includes/template-tags.php:2660
-#: bp-templates/bp-nouveau/includes/template-tags.php:2685
+#: bp-templates/bp-nouveau/includes/template-tags.php:2614
+#: bp-templates/bp-nouveau/includes/template-tags.php:2622
+#: bp-templates/bp-nouveau/includes/template-tags.php:2646
+#: bp-templates/bp-nouveau/includes/template-tags.php:2671
 msgid "×"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2651
-#: bp-templates/bp-nouveau/includes/template-tags.php:2675
+#: bp-templates/bp-nouveau/includes/template-tags.php:2637
+#: bp-templates/bp-nouveau/includes/template-tags.php:2661
 msgid "By creating an account you are agreeing to the %s."
 msgstr ""
 
