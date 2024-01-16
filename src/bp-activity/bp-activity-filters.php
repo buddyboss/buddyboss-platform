@@ -2076,20 +2076,19 @@ function bp_activity_edit_update_media( $media_ids ) {
 			$media_ids     = wp_parse_id_list( $media_ids );
 
 			// Check and delete any old medias that were removed.
-			if (array_diff($old_media_ids, $media_ids)) {
-				$removed_media_ids = array_diff($old_media_ids, $media_ids);
-
+			$removed_media_ids = array_diff( $old_media_ids, $media_ids );
+			if ( is_array( $removed_media_ids ) && ! empty( $removed_media_ids ) ) {
 				// Delete old media that are not present in the new media IDs array.
-				foreach ($removed_media_ids as $removed_media_id) {
-					$removed_media = new BP_Media($removed_media_id);
+				foreach ( $removed_media_ids as $removed_media_id ) {
+					$removed_media = new BP_Media( $removed_media_id );
 					// Delete old media using BP_Media::delete().
-					BP_Media::delete(array('id' => $removed_media_id));
+					BP_Media::delete( array( 'id' => $removed_media_id ) );
 
 					// Check if the old media has an activity ID and delete its media activity.
-					if ($removed_media->activity_id) {
-						remove_action('bp_activity_after_delete', 'bp_media_delete_activity_media');
-						bp_activity_delete(array('id' => $removed_media->activity_id));
-						add_action('bp_activity_after_delete', 'bp_media_delete_activity_media');
+					if ( $removed_media->activity_id ) {
+						remove_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' );
+						bp_activity_delete( array( 'id' => $removed_media->activity_id ) );
+						add_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' );
 					}
 
 					// Save parent activity ID in media.
@@ -2097,7 +2096,7 @@ function bp_activity_edit_update_media( $media_ids ) {
 					$removed_media->save();
 
 					// Delete attachment activity ID meta.
-					delete_post_meta($removed_media->attachment_id, 'bp_media_parent_activity_id');
+					delete_post_meta( $removed_media->attachment_id, 'bp_media_parent_activity_id' );
 				}
 			}
 
