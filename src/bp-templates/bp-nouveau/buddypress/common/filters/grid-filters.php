@@ -22,32 +22,23 @@ if ( bp_is_members_directory() || bp_is_user() || ( is_a( $post, 'WP_Post' ) && 
 	$current_value = bp_get_option( 'bp-group-layout-format', 'list_grid' );
 }
 if ( 'list_grid' === $current_value ) {
-
-
-	$list                  = false;
 	$default_current_value = '';
-	if ( isset( $_POST['extras'] ) && ! empty( $_POST['extras']['layout'] ) && 'list' === $_POST['extras']['layout'] ) {
-		$list                  = true;
-		$default_current_value = 'list';
+	if ( bp_is_members_directory() || bp_is_user() || ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'profile' ) ) ) {
+		if ( ! bp_is_user_groups() ) {
+			$default_current_value = bb_get_directory_layout_preference( 'members' );
+		} else {
+			$default_current_value = bb_get_directory_layout_preference( 'groups' );
+		}
+	} elseif ( bp_is_groups_directory() || bp_is_group() || ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'group' ) ) ) {
+		if ( ! bp_is_user_groups() && ! bp_is_groups_directory() ) {
+			$default_current_value = bb_get_directory_layout_preference( 'members' );
+		} else {
+			$default_current_value = bb_get_directory_layout_preference( 'groups' );
+		}
+	} else {
+		$default_current_value = bb_get_directory_layout_preference( 'groups' );
 	}
 
-	if ( ! $list ) {
-		if ( bp_is_members_directory() || bp_is_user() || ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'profile' ) ) ) {
-			if ( ! bp_is_user_groups() ) {
-				$default_current_value = bp_profile_layout_default_format( 'grid' );
-			} else {
-				$default_current_value = bp_group_layout_default_format( 'grid' );
-			}
-		} elseif ( bp_is_groups_directory() || bp_is_group() || ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'group' ) ) ) {
-			if ( ! bp_is_user_groups() && ! bp_is_groups_directory() ) {
-				$default_current_value = bp_profile_layout_default_format( 'grid' );
-			} else {
-				$default_current_value = bp_group_layout_default_format( 'grid' );
-			}
-		} else {
-			$default_current_value = bp_group_layout_default_format( 'grid' );
-		}
-	}
 	$component = bp_current_component();
 	if ( bp_is_group() && 'members' === bp_current_action() ) {
 		$component = 'group_members';
