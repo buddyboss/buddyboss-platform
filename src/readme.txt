@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.5.11 =
+* Bug: Core - Changed directory layout view, switching logic, such as ‘Grid' and 'List’ for pages that utilize the the change view options so on page refresh will maintain the default settings
+
 = 2.5.10 =
 * Bug: Forums - Creating a new post when there was an existing discussion showed the previous discussion title
 * Bug: Groups - Document tab within a group would load slowly with groups with thousand or more members
