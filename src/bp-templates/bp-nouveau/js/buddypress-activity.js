@@ -912,7 +912,7 @@ window.bp = window.bp || {};
 						}
 					}
 				).fail(
-					function( xhr, textStatus, errorThrown ) {
+					function() {
 						target.removeClass( 'loading' );
 					}
 				);
