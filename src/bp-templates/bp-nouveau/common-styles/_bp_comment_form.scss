@@ -140,6 +140,20 @@ form.ac-form {
 		> * {
 			pointer-events: none;
 		}
+
+		.bb-media-model-container & {
+
+			.ac-reply-content {
+				height: 74px;
+			}
+		}
+
+		@media screen and (max-width: 1080px) and (min-width: 768px), screen and (max-width: 490px) {
+
+			.ac-reply-content {
+				height: 74px;
+			}
+		}
 	}
 
 	.bp-ac-form-cotainer {

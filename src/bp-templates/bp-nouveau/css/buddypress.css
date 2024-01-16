@@ -6733,6 +6733,16 @@ form.ac-form.not-initialized > * {
   pointer-events: none;
 }
 
+.bb-media-model-container form.ac-form.not-initialized .ac-reply-content {
+  height: 74px;
+}
+
+@media screen and (max-width: 1080px) and (min-width: 768px), screen and (max-width: 490px) {
+  form.ac-form.not-initialized .ac-reply-content {
+    height: 74px;
+  }
+}
+
 form.ac-form .bp-ac-form-cotainer {
   align-items: flex-start;
 }
