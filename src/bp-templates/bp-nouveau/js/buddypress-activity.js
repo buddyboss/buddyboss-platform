@@ -1012,7 +1012,7 @@ window.bp = window.bp || {};
 			}
 
 			// Initiate Comment Form.
-			if( target.hasClass( 'ac-form' ) && target.hasClass( 'not-initialized' ) && target.parent().hasClass( 'activity-comments' ) ) {
+			if( target.hasClass( 'ac-form' ) && target.hasClass( 'not-initialized' ) ) {
 				target.closest( '.activity-item').find( '.acomment-reply' ).trigger( 'click' );
 			}
 
