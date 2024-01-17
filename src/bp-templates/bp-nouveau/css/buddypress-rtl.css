@@ -4236,6 +4236,9 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
   font-weight: 600;
   line-height: 1.33;
   text-transform: capitalize;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 145px);
 }
 
 .activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item .activity-state_user .activity-state_user__name a {
