@@ -6745,6 +6745,12 @@ form.ac-form.not-initialized > * {
 
 form.ac-form .bp-ac-form-cotainer {
   align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+form.ac-form .bp-ac-form-cotainer .ac-reply-attachments {
+  width: 100%;
+  padding-right: 46px;
 }
 
 form.ac-form .ac-reply-avatar img {

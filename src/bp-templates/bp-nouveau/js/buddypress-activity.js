@@ -1784,7 +1784,7 @@ window.bp = window.bp || {};
 			var self               = this,
 				target             = $( event.currentTarget ),
 				key                = target.data( 'ac-id' ),
-				dropzone_container = target.closest( '.ac-reply-content' ).find( '#ac-reply-post-media-uploader-' + key );
+				dropzone_container = target.closest( '.bp-ac-form-cotainer' ).find( '#ac-reply-post-media-uploader-' + key );
 
 			event.preventDefault();
 
@@ -2014,7 +2014,7 @@ window.bp = window.bp || {};
 			this.resetGifPicker( c_id );
 
 			if ( ! event.isCustomEvent ) {
-				$( target ).closest( '.ac-reply-content' ).find( '.dropzone.media-dropzone' ).trigger( 'click' );
+				$( target ).closest( '.bp-ac-form-cotainer' ).find( '.dropzone.media-dropzone' ).trigger( 'click' );
 			}
 		},
 
@@ -2022,7 +2022,7 @@ window.bp = window.bp || {};
 			var self               = this,
 				target             = $( event.currentTarget ),
 				key                = target.data( 'ac-id' ),
-				dropzone_container = target.closest( '.ac-reply-content' ).find( '#ac-reply-post-document-uploader-' + key );
+				dropzone_container = target.closest( '.bp-ac-form-cotainer' ).find( '#ac-reply-post-document-uploader-' + key );
 
 			event.preventDefault();
 
@@ -2259,7 +2259,7 @@ window.bp = window.bp || {};
 			this.resetGifPicker( c_id );
 
 			if ( ! event.isCustomEvent ) {
-				$( target ).closest( '.ac-reply-content' ).find( '.dropzone.document-dropzone' ).trigger( 'click' );
+				$( target ).closest( '.bp-ac-form-cotainer' ).find( '.dropzone.document-dropzone' ).trigger( 'click' );
 			}
 		},
 
@@ -2267,7 +2267,7 @@ window.bp = window.bp || {};
 			var self               = this,
 				target             = $( event.currentTarget ),
 				key                = target.data( 'ac-id' ),
-				dropzone_container = target.closest( '.ac-reply-content' ).find( '#ac-reply-post-video-uploader-' + key );
+				dropzone_container = target.closest( '.bp-ac-form-cotainer' ).find( '#ac-reply-post-video-uploader-' + key );
 
 			event.preventDefault();
 
@@ -2527,7 +2527,7 @@ window.bp = window.bp || {};
 			this.resetGifPicker( c_id );
 
 			if ( ! event.isCustomEvent ) {
-				$( target ).closest( '.ac-reply-content' ).find( '.dropzone.video-dropzone' ).trigger( 'click' );
+				$( target ).closest( '.bp-ac-form-cotainer' ).find( '.dropzone.video-dropzone' ).trigger( 'click' );
 			}
 		},
 

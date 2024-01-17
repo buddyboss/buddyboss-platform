@@ -158,6 +158,12 @@ form.ac-form {
 
 	.bp-ac-form-cotainer {
 		align-items: flex-start;
+		flex-wrap: wrap;
+
+		.ac-reply-attachments {
+			width: 100%;
+			padding-left: 46px;
+		}
 	}
 
 	.ac-reply-avatar img {
