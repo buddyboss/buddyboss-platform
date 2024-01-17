@@ -687,17 +687,6 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 		}
 	}
 
-	// Set reacted names for REST API.
-	if (
-		! empty( $reacted_users ) &&
-		bb_is_rest()
-	) {
-		$reacted_users_count = ( true === $is_current_user_reacted ) ? count( $reacted_users ) + 1 : count( $reacted_users );
-		if ( 2 >= $reacted_users_count ) {
-			$name_count = 2;
-		}
-	}
-
 	$display_names = array();
 	if ( true === $is_current_user_reacted ) {
 		$display_names[] = esc_html__( 'You', 'buddyboss' );
@@ -719,11 +708,15 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 		$reacted_users = array_diff_key( $reacted_users, array_flip( $user_keys ) );
 	}
 
-	if ( count( $reacted_users ) > 0 ) {
-		$display_names[] = sprintf(
-			_n( 'other', '%s others', count( $reacted_users ), 'buddyboss' ),
-			bb_format_reaction_count( count( $reacted_users ) )
-		);
+	if ( ! empty( $reacted_users ) && count( $reacted_users ) > 0 ) {
+		if ( count( $reacted_users ) === 1 ) {
+			$display_names[] = bp_core_get_user_displayname( current( $reacted_users ) );
+		} else {
+			$display_names[] = sprintf(
+				_n( 'other', '%s others', count( $reacted_users ), 'buddyboss' ),
+				bb_format_reaction_count( count( $reacted_users ) )
+			);
+		}
 	}
 
 	// Get all names except the last one
