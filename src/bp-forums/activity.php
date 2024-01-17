@@ -509,8 +509,8 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				}
 
 				// New meta button as 'Join discussion'.
-				$buttons['activity_discussionsss'] = array(
-					'id'                => 'activity_discussionsss',
+				$buttons['activity_discussions'] = array(
+					'id'                => 'activity_discussions',
 					'position'          => 5,
 					'component'         => 'activity',
 					'must_be_logged_in' => true,
