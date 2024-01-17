@@ -985,6 +985,9 @@
 						font-weight: 600;
 						line-height: 1.33;
 						text-transform: capitalize;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						max-width: calc(100% - 145px);
 
 						a {
 							color: $meta-text-dark;
