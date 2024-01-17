@@ -123,15 +123,19 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 		wp_send_json_error();
 	}
 
+	$item_id   = sanitize_text_field( $_POST['item_id'] );
+	$item_type = sanitize_text_field( $_POST['item_type'] );
+	$user_id   = bp_loggedin_user_id();
+
+	if ( ! bb_all_enabled_reactions( $item_type ) ) {
+		wp_send_json_error( esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' ) );
+	}
+
 	if ( ! empty( $_POST['reaction_id'] ) ) {
 		$reaction_id = sanitize_text_field( $_POST['reaction_id'] );
 	} else {
 		$reaction_id = bb_load_reaction()->bb_reactions_reaction_id();
 	}
-
-	$item_id   = sanitize_text_field( $_POST['item_id'] );
-	$item_type = sanitize_text_field( $_POST['item_type'] );
-	$user_id   = bp_loggedin_user_id();
 
 	$reacted = bp_activity_add_user_favorite(
 		$item_id,
@@ -193,6 +197,10 @@ function bp_nouveau_ajax_unmark_activity_favorite() {
 	$item_id   = sanitize_text_field( $_POST['item_id'] );
 	$item_type = sanitize_text_field( $_POST['item_type'] );
 	$user_id   = bp_loggedin_user_id();
+
+	if ( ! bb_all_enabled_reactions( $item_type ) ) {
+		wp_send_json_error( esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' ) );
+	}
 
 	$un_reacted = bp_activity_remove_user_favorite(
 		$item_id,
