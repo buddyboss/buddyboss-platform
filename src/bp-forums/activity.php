@@ -220,6 +220,29 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				array( 'activity', 'member', 'member_groups', 'group' )
 			);
 
+			// Grouped forums.
+			if ( bp_is_active( 'groups' ) ) {
+				$bp = buddypress();
+
+				bp_activity_set_action(
+					$bp->groups->id,
+					$this->topic_create,
+					esc_html__( 'New forum discussion', 'buddyboss' ),
+					array( $this, 'bbp_format_activity_action_new_topic' ),
+					esc_html__( 'Discussions', 'buddyboss' ),
+					array( 'activity', 'member', 'member_groups', 'group' )
+					
+				);
+	
+				bp_activity_set_action(
+					$bp->groups->id,
+					$this->reply_create,
+					esc_html__( 'New forum reply', 'buddyboss' ),
+					array( $this, 'bbp_format_activity_action_new_reply' ),
+					esc_html__( 'Replies', 'buddyboss' ),
+					array( 'activity', 'member', 'member_groups', 'group' )
+				);
+			}
 		}
 
 		/**
@@ -486,8 +509,8 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				}
 
 				// New meta button as 'Join discussion'.
-				$buttons['activity_discussionsss'] = array(
-					'id'                => 'activity_discussionsss',
+				$buttons['activity_discussions'] = array(
+					'id'                => 'activity_discussions',
 					'position'          => 5,
 					'component'         => 'activity',
 					'must_be_logged_in' => true,
