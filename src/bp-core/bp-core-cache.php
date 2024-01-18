@@ -584,8 +584,8 @@ add_action( 'bb_reaction_after_remove_user_item_reaction', 'bb_reaction_clear_us
 function bb_reaction_clear_remove_user_item_cache( $deleted, $r, $reactions ) {
 	bp_core_reset_incrementor( 'bb_reactions' );
 	if ( ! empty( $reactions ) ) {
-		foreach ( $reactions as $reaction ) {
-			wp_cache_delete( $reaction->id, 'bb_reactions' );
+		foreach ( $reactions as $id ) {
+			wp_cache_delete( $id, 'bb_reactions' );
 		}
 	}
 }
