@@ -9204,6 +9204,11 @@ function bb_reactions_get_settings_fields() {
 	$fields    = array();
 	$pro_class = bb_get_pro_fields_class( 'reaction' );
 
+	$reaction_btn_class = 'bb_reaction_button_row ' . $pro_class;
+	if ( function_exists( 'bb_get_reaction_mode' ) && 'emotions' !== bb_get_reaction_mode() ) {
+		$reaction_btn_class .= ' bp-hide';
+	}
+
 	$fields['bp_reaction_settings_section'] = array(
 		'bb_all_reactions' => array(
 			'title'             => esc_html__( 'Enable reactions', 'buddyboss' ),
@@ -9226,7 +9231,7 @@ function bb_reactions_get_settings_fields() {
 			'title'             => esc_html__( 'Reactions button', 'buddyboss' ) . bb_get_pro_label_notice( 'reaction' ),
 			'callback'          => 'bb_reactions_settings_callback_reactions_button',
 			'args'              => array(
-				'class' => $pro_class
+				'class' =>  $reaction_btn_class
 			),
 		),
 	);
