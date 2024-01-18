@@ -4236,7 +4236,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
   text-transform: capitalize;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: calc(100% - 145px);
+  max-width: calc(100% - 155px);
 }
 
 .activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item .activity-state_user .activity-state_user__name a {
@@ -4254,6 +4254,10 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
   padding: 4px 8px;
   margin-right: auto;
   text-transform: capitalize;
+  max-width: 100px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item.active {

@@ -987,7 +987,7 @@
 						text-transform: capitalize;
 						overflow: hidden;
 						text-overflow: ellipsis;
-						max-width: calc(100% - 145px);
+						max-width: calc(100% - 155px);
 
 						a {
 							color: $meta-text-dark;
@@ -1005,6 +1005,10 @@
 						padding: 4px 8px;
 						margin-left: auto;
 						text-transform: capitalize;
+						max-width: 100px;
+						overflow: hidden;
+						white-space: nowrap;
+						text-overflow: ellipsis;
 					}
 				}
 
