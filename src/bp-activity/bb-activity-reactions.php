@@ -945,7 +945,8 @@ function bb_get_reaction_button_settings() {
 	if (
 		! class_exists( 'BB_Reactions' ) ||
 		! function_exists( 'bbp_pro_is_license_valid' ) ||
-		! bbp_pro_is_license_valid()
+		! bbp_pro_is_license_valid() ||
+		! bb_is_reaction_emotions_enabled()
 	) {
 		return $args;
 	}
