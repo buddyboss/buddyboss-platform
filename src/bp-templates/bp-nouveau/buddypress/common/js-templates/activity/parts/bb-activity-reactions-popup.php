@@ -72,23 +72,31 @@
 						#>
 							<li class="activity-state_user">
 								<div class="activity-state_user__avatar">
-									<a href="{{ user.profile_url }}">
+									<# if ( '' !== user.profile_url ) { #>
+										<a href="{{ user.profile_url }}">
+									<# } #>
 										<img class="avatar" src="{{ user.avatar }}" alt="{{ user.name }}" />
 										<div class="activity-state_user__reaction">
 											<# if ( 'bb-icons' === user.reaction.type ) { #>
-											<i class="bb-icon-{{ user.reaction.icon }}" style="font-weight:200;color:{{ user.reaction.icon_color }};"></i>
+												<i class="bb-icon-{{ user.reaction.icon }}" style="font-weight:200;color:{{ user.reaction.icon_color }};"></i>
 											<# } else if ( 0 < user.reaction.icon_path.length ) { #>
-											<img src="{{ user.reaction.icon_path }}" class="{{ user.reaction.type }}" alt="{{ user.reaction.icon_text }}" />
+												<img src="{{ user.reaction.icon_path }}" class="{{ user.reaction.type }}" alt="{{ user.reaction.icon_text }}" />
 											<# } else { #>
-											<i class="bb-icon-thumbs-up" style="font-weight:200;color:#385DFF;"></i>
+												<i class="bb-icon-thumbs-up" style="font-weight:200;color:#385DFF;"></i>
 											<# } #>
 										</div>
-									</a>
+									<# if ( '' !== user.profile_url ) { #>
+										</a>
+									<# } #>
 								</div>
 								<div class="activity-state_user__name">
-									<a href="{{ user.profile_url }}">{{ user.name }}</a>
+									<# if ( '' !== user.profile_url ) { #>
+										<a href="{{ user.profile_url }}">{{ user.name }}</a>
+									<# } else { #>
+										{{ user.name }}
+									<# } #>
 								</div>
-								<# if ( user.member_type && user.member_type.label ) { #>
+								<# if ( '' !== user.profile_url && user.member_type && user.member_type.label ) { #>
 									<div class="activity-state_user__role" style="color:{{user.member_type.color.text}}; background-color:{{user.member_type.color.background}};">
 										{{ user.member_type.label }}
 									</div>
@@ -127,7 +135,9 @@
 										#>
 										<li class="activity-state_user">
 											<div class="activity-state_user__avatar">
-												<a href="{{ user.profile_url }}">
+												<# if ( '' !== user.profile_url ) { #>
+													<a href="{{ user.profile_url }}">
+												<# } #>
 													<img class="avatar" src="{{ user.avatar }}" alt="{{ user.name }}" />
 													<div class="activity-state_user__reaction">
 														<# if ( user.reaction.type === 'bb-icons' ) { #>
@@ -138,12 +148,18 @@
 														<i class="bb-icon-thumbs-up" style="font-weight:200;color:#385DFF;"></i>
 														<# } #>
 													</div>
-												</a>
+												<# if ( '' !== user.profile_url ) { #>
+													</a>
+												<# } #>
 											</div>
 											<div class="activity-state_user__name">
-												<a href="{{ user.profile_url }}">{{ user.name }}</a>
+												<# if ( '' !== user.profile_url ) { #>
+													<a href="{{ user.profile_url }}">{{ user.name }}</a>
+												<# } else { #>
+													{{ user.name }}
+												<# } #>
 											</div>
-											<# if ( user.member_type && user.member_type.label ) { #>
+											<# if ( '' !== user.profile_url && user.member_type && user.member_type.label ) { #>
 											<div class="activity-state_user__role" style="color:{{user.member_type.color.text}}; background-color:{{user.member_type.color.background}};">
 												{{ user.member_type.label }}
 											</div>
@@ -173,7 +189,9 @@
 
 <script type="text/html" id="tmpl-activity-reacted-item">
 	<div class="activity-state_user__avatar">
-		<a href="{{ data.profile_url }}">
+		<# if ( '' !== data.profile_url ) { #>
+			<a href="{{ data.profile_url }}">
+		<# } #>
 			<img class="avatar" src="{{ data.avatar }}" alt="{{ data.name }}" />
 			<div class="activity-state_user__reaction">
 				<# if ( 'bb-icons' === data.reaction.type ) { #>
@@ -184,13 +202,19 @@
 					<i class="bb-icon-thumbs-up" style="font-weight:200;color:#385DFF;"></i>
 				<# } #>
 			</div>
-		</a>
+		<# if ( '' !== data.profile_url ) { #>
+			</a>
+		<# } #>
 	</div>
 	<div class="activity-state_user__name">
-		<a href="{{ data.profile_url }}">{{ data.name }}</a>
+		<# if ( '' !== data.profile_url ) { #>
+			<a href="{{ data.profile_url }}">{{ data.name }}</a>
+		<# } else { #>
+			{{ data.name }}
+		<# } #>
 	</div>
 
-	<# if ( data.member_type && data.member_type.label ) { #>
+	<# if ( '' !== data.profile_url && data.member_type && data.member_type.label ) { #>
 		<div class="activity-state_user__role" style="color:{{data.member_type.color.text}}; background-color:{{data.member_type.color.background}};">
 			{{ data.member_type.label }}
 		</div>
