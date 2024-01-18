@@ -21,7 +21,7 @@ class vBulletin extends BBP_Converter_Base {
 	/**
 	 * Sets up the field mappings
 	 */
-	public function setup_globals() {
+	private function setup_globals() {
 
 		/** Forum Section */
 
