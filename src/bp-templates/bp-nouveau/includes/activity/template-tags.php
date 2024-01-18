@@ -261,13 +261,14 @@ function bp_nouveau_activity_state() {
 
 	$activity_id    = bp_get_activity_id();
 	$comment_count  = bp_activity_get_comment_count();
-	$reaction_count = bb_load_reaction()->bb_total_item_reactions_count(
+	$reactions      = bb_active_reactions();
+	$reaction_count = bb_load_reaction()->bb_get_user_reactions_count(
 		array(
-			'item_id'   => $activity_id,
-			'item_type' => 'activity',
+			'item_id'     => $activity_id,
+			'item_type'   => 'activity',
+			'reaction_id' => array_keys( $reactions )
 		)
 	);
-
 	?>
 	<div class="activity-state <?php echo ! empty( $reaction_count ) ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
 		<?php
