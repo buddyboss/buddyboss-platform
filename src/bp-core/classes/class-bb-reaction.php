@@ -923,7 +923,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			// Fetch all reactions being deleted so we can perform more actions.
 			// phpcs:ignore
-			$get_reaction = $wpdb->get_results( 'SELECT * FROM ' . self::$user_reaction_table . " {$where_sql}" );
+			$get_reaction = $wpdb->get_results( 'SELECT id FROM ' . self::$user_reaction_table . " {$where_sql}" );
 
 			// Attempt to delete reactions from the database.
 			$deleted = $wpdb->query( 'DELETE FROM ' . self::$user_reaction_table . " {$where_sql}" ); // phpcs:ignore
