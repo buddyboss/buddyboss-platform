@@ -1844,6 +1844,9 @@ window.bp = window.bp || {};
 
 							var tool_box    = target.parents( '.ac-reply-toolbar' );
 							var commentForm = target.closest( '.ac-form' );
+							if ( bp.Nouveau.dropZoneGlobalProgress ) {
+								bp.Nouveau.dropZoneGlobalProgress( this );
+							}
 							commentForm.addClass( 'has-media' );
 							if ( tool_box.find( '.ac-reply-document-button' ) ) {
 								tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
@@ -1867,15 +1870,9 @@ window.bp = window.bp || {};
 
 							var commentForm = target.closest( '.ac-form' );
 							commentForm.addClass( 'media-uploading' );
-
-							var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
-							var radius        = circle.r.baseVal.value;
-							var circumference = radius * 2 * Math.PI;
-
-							circle.style.strokeDasharray  = circumference + ' ' + circumference;
-							circle.style.strokeDashoffset = circumference;
-							var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
-							circle.style.strokeDashoffset = offset;
+							if ( bp.Nouveau.dropZoneGlobalProgress ) {
+								bp.Nouveau.dropZoneGlobalProgress( this );
+							}
 						}
 					);
 
@@ -1902,7 +1899,7 @@ window.bp = window.bp || {};
 									_results.push( node.textContent = message );
 								}
 								if ( ! _.isNull( self.dropzone_obj.files ) && self.dropzone_obj.files.length === 0 ) {
-									$( self.dropzone_obj.element ).removeClass( 'files-uploaded' );
+									$( self.dropzone_obj.element ).removeClass( 'files-uploaded dz-progress-view' ).find( '.dz-global-progress' ).remove();
 								}
 								return _results;
 							}
@@ -1973,7 +1970,7 @@ window.bp = window.bp || {};
 								if ( tool_box.find( '.ac-reply-media-button' ) ) {
 									tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' ).find( '.toolbar-button' ).removeClass( 'active' );
 								}
-								$( self.dropzone_obj.element ).removeClass( 'files-uploaded' );
+								$( self.dropzone_obj.element ).removeClass( 'files-uploaded dz-progress-view' ).find( '.dz-global-progress' ).remove();
 								self.validateCommentContent( commentForm.find( '.ac-textarea' ).children( '.ac-input' ) );
 							} else {
 								target.closest( '.ac-form' ).addClass( 'has-content' );
@@ -2090,6 +2087,9 @@ window.bp = window.bp || {};
 							var tool_box    = target.parents( '.ac-reply-toolbar' );
 							var commentForm = target.closest( '.ac-form' );
 							commentForm.addClass( 'has-media' );
+							if ( bp.Nouveau.dropZoneGlobalProgress ) {
+								bp.Nouveau.dropZoneGlobalProgress( this );
+							}
 							if ( tool_box.find( '.ac-reply-media-button' ) ) {
 								tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 							}
@@ -2113,14 +2113,9 @@ window.bp = window.bp || {};
 							var commentForm = target.closest( '.ac-form' );
 							commentForm.addClass( 'media-uploading' );
 
-							var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
-							var radius        = circle.r.baseVal.value;
-							var circumference = radius * 2 * Math.PI;
-
-							circle.style.strokeDasharray  = circumference + ' ' + circumference;
-							circle.style.strokeDashoffset = circumference;
-							var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
-							circle.style.strokeDashoffset = offset;
+							if ( bp.Nouveau.dropZoneGlobalProgress ) {
+								bp.Nouveau.dropZoneGlobalProgress( this );
+							}
 						}
 					);
 
@@ -2158,7 +2153,7 @@ window.bp = window.bp || {};
 									_results.push( node.textContent = message );
 								}
 								if ( ! _.isNull( self.dropzone_document_obj.files ) && self.dropzone_document_obj.files.length === 0 ) {
-									$( self.dropzone_document_obj.element ).removeClass( 'files-uploaded' );
+									$( self.dropzone_document_obj.element ).removeClass( 'files-uploaded dz-progress-view' ).find( '.dz-global-progress' ).remove();
 								}
 								return _results;
 							}
@@ -2218,7 +2213,7 @@ window.bp = window.bp || {};
 								if ( tool_box.find( '.ac-reply-document-button' ) ) {
 									tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' ).find( '.toolbar-button' ).removeClass( 'active' );
 								}
-								$( self.dropzone_document_obj.element ).removeClass( 'files-uploaded' );
+								$( self.dropzone_document_obj.element ).removeClass( 'files-uploaded dz-progress-view' ).find( '.dz-global-progress' ).remove();
 								self.validateCommentContent( commentForm.find( '.ac-textarea' ).children( '.ac-input' ) );
 							} else {
 								target.closest( '.ac-form' ).addClass( 'has-content' );
@@ -2316,6 +2311,9 @@ window.bp = window.bp || {};
 							var tool_box    = target.parents( '.ac-reply-toolbar' );
 							var commentForm = target.closest( '.ac-form' );
 							commentForm.addClass( 'has-media' );
+							if ( bp.Nouveau.dropZoneGlobalProgress ) {
+								bp.Nouveau.dropZoneGlobalProgress( this );
+							}
 							if ( tool_box.find( '.ac-reply-media-button' ) ) {
 								tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 							}
@@ -2377,19 +2375,8 @@ window.bp = window.bp || {};
 							var commentForm = target.closest( '.ac-form' );
 							commentForm.addClass( 'media-uploading' );
 
-							var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
-							var radius        = circle.r.baseVal.value;
-							var circumference = radius * 2 * Math.PI;
-
-							circle.style.strokeDasharray = circumference + ' ' + circumference;
-							var offset                   = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
-
-							if ( element.upload.progress <= 99 ) {
-								$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
-								circle.style.strokeDashoffset = offset;
-							} else if ( element.upload.progress === 100 ) {
-								circle.style.strokeDashoffset = circumference - 0.99 * circumference;
-								$( element.previewElement ).find( '.dz-progress-count' ).text( '99% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
+							if ( bp.Nouveau.dropZoneGlobalProgress ) {
+								bp.Nouveau.dropZoneGlobalProgress( this );
 							}
 						}
 					);
@@ -2425,7 +2412,7 @@ window.bp = window.bp || {};
 									_results.push( node.textContent = message );
 								}
 								if ( ! _.isNull( self.dropzone_video_obj.files ) && self.dropzone_video_obj.files.length === 0 ) {
-									$( self.dropzone_video_obj.element ).removeClass( 'files-uploaded' );
+									$( self.dropzone_video_obj.element ).removeClass( 'files-uploaded dz-progress-view' ).find( '.dz-global-progress' ).remove();
 								}
 								return _results;
 							}
@@ -2486,7 +2473,7 @@ window.bp = window.bp || {};
 								if ( tool_box.find( '.ac-reply-video-button' ) ) {
 									tool_box.find( '.ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' ).find( '.toolbar-button' ).removeClass( 'active' );
 								}
-								$( self.dropzone_video_obj.element ).removeClass( 'files-uploaded' );
+								$( self.dropzone_video_obj.element ).removeClass( 'files-uploaded dz-progress-view' ).find( '.dz-global-progress' ).remove();
 								self.validateCommentContent( commentForm.find( '.ac-textarea' ).children( '.ac-input' ) );
 							} else {
 								target.closest( '.ac-form' ).addClass( 'has-content' );
