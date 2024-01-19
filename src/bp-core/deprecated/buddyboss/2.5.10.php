@@ -2,14 +2,14 @@
 /**
  * Deprecated functions.
  *
- * @deprecated BuddyBoss [BBVERSION]
+ * @deprecated BuddyBoss 2.5.20
  */
 
 /**
  * Get like count for activity
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION]
+ * @deprecated BuddyBoss 2.5.20
  *
  * @param int $activity_id The activity ID.
  *
@@ -30,7 +30,7 @@ function bp_activity_get_favorite_users_string( $activity_id ) {
  * Get users for activity favorite tooltip
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION]
+ * @deprecated BuddyBoss 2.5.20
  *
  * @param int $activity_id The activity ID.
  *

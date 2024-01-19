@@ -3156,7 +3156,7 @@ function bp_activity_can_favorite() {
  * Output the total favorite count for a specified user.
  *
  * @since BuddyPress 1.2.0
- * @since BuddyBoss [BBVERSION] Added `$activity_type` property to indicate whether the current ID is activity or comment.
+ * @since BuddyBoss 2.5.20 Added `$activity_type` property to indicate whether the current ID is activity or comment.
  *
  * @param int    $user_id       See {@link bp_get_total_favorite_count_for_user()}.
  * @param string $activity_type Activity type.
@@ -3172,7 +3172,7 @@ function bp_total_favorite_count_for_user( $user_id = 0, $activity_type = 'activ
  * Return the total favorite count for a specified user.
  *
  * @since BuddyPress 1.2.0
- * @since BuddyBoss [BBVERSION] Added `$activity_type` property to indicate whether the current ID is activity or comment.
+ * @since BuddyBoss 2.5.20 Added `$activity_type` property to indicate whether the current ID is activity or comment.
  *
  * @param int    $user_id       ID of user being queried. Default: displayed user ID.
  * @param string $activity_type Activity type.
@@ -3199,7 +3199,7 @@ function bp_get_total_favorite_count_for_user( $user_id = 0, $activity_type = 'a
 	 *
 	 * @since BuddyPress 1.2.0
 	 * @since BuddyPress 2.6.0 Added the `$user_id` parameter.
-	 * @since BuddyBoss [BBVERSION] Added `$activity_type` property to indicate whether the current ID is activity or comment.
+	 * @since BuddyBoss 2.5.20 Added `$activity_type` property to indicate whether the current ID is activity or comment.
 	 *
 	 * @param int|bool $retval        Total favorite count for a user. False on no favorites.
 	 * @param int      $user_id       ID of the queried user.
@@ -4323,7 +4323,7 @@ function bb_activity_comment_user_can_edit( $activity_comment = false, $privacy_
 /**
  * Determine whether favorites are allowed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @return bool
  */
@@ -4334,7 +4334,7 @@ function bb_activity_comment_can_favorite() {
 	/**
 	 * Filters whether users can favorite activity comment items.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.20
 	 *
 	 * @param bool $value Whether comment favoriting is enabled.
 	 */
@@ -4344,7 +4344,7 @@ function bb_activity_comment_can_favorite() {
 /**
  * Return whether the current activity comment is in a current user's favorites.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @return bool
  *
@@ -4354,7 +4354,7 @@ function bb_get_activity_comment_is_favorite() {
 	/**
 	 * Filters whether the current activity comment item is in the current user's favorites.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.20
 	 *
 	 * @param bool $value Whether the current activity item is in the current user's favorites.
 	 */
@@ -4364,7 +4364,7 @@ function bb_get_activity_comment_is_favorite() {
 /**
  * Return the activity comment favorite link.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @param int     $activity_comment_id The activity comment ID.
  *
@@ -4381,7 +4381,7 @@ function bb_get_activity_comment_favorite_link( $activity_comment_id = 0 ) {
 	/**
 	 * Filters the activity comment favorite link.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.20
 	 *
 	 * @param string $value Constructed link for favoriting the activity comment.
 	 */
@@ -4391,7 +4391,7 @@ function bb_get_activity_comment_favorite_link( $activity_comment_id = 0 ) {
 /**
  * Return the activity comment unfavorite link.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @param int     $activity_comment_id The activity comment ID.
  *
@@ -4407,7 +4407,7 @@ function bb_get_activity_comment_unfavorite_link( $activity_comment_id = 0 ) {
 	/**
 	 * Filters the activity comment unfavorite link.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.20
 	 *
 	 * @param string $value Constructed link for unfavoriting the activity comment.
 	 */

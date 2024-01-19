@@ -510,7 +510,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			/**
 			 * Added hook to add the custom data into the form.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.5.20
 			 *
 			 * @param string $tab_name The tab name.
 			 * @param object $this     Current tab object.

@@ -909,7 +909,7 @@ function bp_activity_get_actions_for_context( $context = '' ) {
  * Get a users favorite activity feed items.
  *
  * @since BuddyPress 1.2.0
- * @since BuddyBoss [BBVERSION] Added the `$activity_type` parameter.
+ * @since BuddyBoss 2.5.20 Added the `$activity_type` parameter.
  *
  * @param int    $user_id       ID of the user whose favorites are being queried.
  * @param string $activity_type Activity type.
@@ -940,7 +940,7 @@ function bp_activity_get_user_favorites( $user_id = 0, $activity_type = 'activit
  * Add an activity feed item as a favorite for a user.
  *
  * @since BuddyPress 1.2.0
- * @since BuddyBoss [BBVERSION] Added the `$args` parameter.
+ * @since BuddyBoss 2.5.20 Added the `$args` parameter.
  *
  * @param int   $activity_id ID of the activity item being favorited.
  * @param int   $user_id     ID of the user favoriting the activity item.
@@ -1044,7 +1044,7 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = arra
  * Remove an activity feed item as a favorite for a user.
  *
  * @since BuddyPress 1.2.0
- * @since BuddyBoss [BBVERSION] Added the `$args` parameter.
+ * @since BuddyBoss 2.5.20 Added the `$args` parameter.
  *
  * @param int    $activity_id ID of the activity item being unfavorited.
  * @param int    $user_id     ID of the user unfavoriting the activity item.
@@ -1241,7 +1241,7 @@ function bp_activity_get_last_updated() {
  * Retrieve the number of favorite activity feed items a user has.
  *
  * @since BuddyPress 1.2.0
- * @since BuddyBoss [BBVERSION] Added `$activity_type` property to indicate whether the current ID is activity or comment.
+ * @since BuddyBoss 2.5.20 Added `$activity_type` property to indicate whether the current ID is activity or comment.
  *
  * @param int $user_id ID of the user whose favorite count is being requested.
  * @param string $activity_type Activity type.
@@ -6473,7 +6473,7 @@ function bb_activity_pin_type( $args ) {
 /**
  * Load the JS template for reacted users and reactions in modal.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  */
 function bb_load_reaction_popup_modal_js_template() {
 

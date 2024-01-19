@@ -275,6 +275,11 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			'bb-web-notification-enabled'              => function_exists( 'bb_web_notification_enabled' ) && bb_web_notification_enabled(),
 			'bb-app-notification-enabled'              => function_exists( 'bb_app_notification_enabled' ) && bb_app_notification_enabled(),
 			'bb_enabled_legacy_email_preference'       => function_exists( 'bb_enabled_legacy_email_preference' ) && bb_enabled_legacy_email_preference(),
+
+			// Reactions settings.
+			'bb_reaction_mode'                         => function_exists( 'bb_get_reaction_mode' ) ? bb_get_reaction_mode() : 'likes',
+			'bb_is_reaction_activity_posts_enabled'    => function_exists( 'bb_is_reaction_activity_posts_enabled' ) && bb_is_reaction_activity_posts_enabled(),
+			'bb_is_reaction_activity_comments_enabled' => function_exists( 'bb_is_reaction_activity_comments_enabled' ) && bb_is_reaction_activity_comments_enabled(),
 		);
 
 		if ( bp_is_active( 'moderation' ) ) {
