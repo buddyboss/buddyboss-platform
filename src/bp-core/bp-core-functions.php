@@ -9189,7 +9189,7 @@ function bp_admin_reaction_setting_tutorial() {
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
-						'article' => 62792, // @todo update when release.
+						'article' => 127197,
 					),
 					'admin.php'
 				)
