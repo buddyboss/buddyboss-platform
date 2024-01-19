@@ -3402,7 +3402,7 @@ function bb_get_pro_label_notice( $type = 'default' ) {
 		);
 	} elseif (
 		function_exists( 'bb_platform_pro' ) &&
-		version_compare( bb_platform_pro()->version, '2.4.0', '<=' ) && // @todo: Update version condition above before release.
+		version_compare( bb_platform_pro()->version, '2.4.50', '<' ) &&
 		! empty( $type ) &&
 		'reaction' === $type
 	) {
@@ -3452,12 +3452,11 @@ function bb_get_pro_fields_class( $type = 'default' ) {
 		$pro_class = 'bb-pro-inactive';
 	}
 
-	// @todo: Update version condition above before release.
 	if (
 		! empty( $type ) &&
 		'reaction' === $type &&
 		function_exists( 'bb_platform_pro' ) &&
-		version_compare( bb_platform_pro()->version, '2.4.0', '<=' )
+		version_compare( bb_platform_pro()->version, '2.4.50', '<' )
 	) {
 		$pro_class = 'bb-pro-inactive';
 	}
