@@ -3468,7 +3468,7 @@ function bp_admin_setting_callback_custom_logout_redirection() {
 /**
  * Reactions settings enable markups.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  */
 function bb_reactions_settings_callback_all_reactions() {
 
@@ -3504,7 +3504,7 @@ function bb_reactions_settings_callback_all_reactions() {
 /**
  * Add reaction mode settings.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  */
 function bb_reactions_settings_callback_reaction_mode() {
 
@@ -3539,12 +3539,12 @@ function bb_reactions_settings_callback_reaction_mode() {
 		$notice_text = '';
 		foreach ( $reactions_modes as $reaction_mode ) {
 			?>
-			<label for="<?php echo $reaction_mode['id']; ?>" class="<?php echo esc_attr( ! empty( $reaction_mode['disabled'] ) ? 'disabled' : '' ); ?>">
-				<input name="<?php echo $reaction_mode['name']; ?>"
-					id="<?php echo $reaction_mode['id']; ?>"
+			<label for="<?php echo esc_attr( $reaction_mode['id'] ); ?>" class="<?php echo esc_attr( ! empty( $reaction_mode['disabled'] ) ? 'disabled' : '' ); ?>">
+				<input name="<?php echo esc_attr( $reaction_mode['name'] ); ?>"
+					id="<?php echo esc_attr( $reaction_mode['id'] ); ?>"
 					type="radio"
 					value="<?php echo $reaction_mode['value']; ?>"
-					data-current-val="<?php echo bb_get_reaction_mode(); ?>"
+					data-current-val="<?php echo esc_attr( bb_get_reaction_mode() ); ?>"
 					data-notice="<?php echo ! empty( $reaction_mode['notice'] ) ? $reaction_mode['notice'] : ''; ?>"
 					<?php
 					checked( $reaction_mode['is_checked'] );
@@ -3563,7 +3563,7 @@ function bb_reactions_settings_callback_reaction_mode() {
 		if ( ! empty( $notice_text ) ) {
 			?>
 			<p class="description bb-reaction-mode-description">
-				<?php echo $notice_text; ?>
+				<?php echo wp_kses_post( $notice_text ); ?>
 			</p>
 			<?php
 		}
@@ -3573,7 +3573,7 @@ function bb_reactions_settings_callback_reaction_mode() {
 /**
  * Add reactions button settings.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @return void
  */

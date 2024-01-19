@@ -9162,7 +9162,7 @@ function bb_get_directory_layout_preference( $action ) {
 /**
  * Get the Reactions settings sections.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @return array
  */
@@ -9182,7 +9182,7 @@ function bb_reactions_get_settings_sections() {
 /**
  * Link to Reaction tutorial.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  */
 function bp_admin_reaction_setting_tutorial() {
 	?>
@@ -9194,7 +9194,7 @@ function bp_admin_reaction_setting_tutorial() {
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
-						'article' => 62792, // @todo update when release.
+						'article' => 127197,
 					),
 					'admin.php'
 				)
@@ -9209,7 +9209,7 @@ function bp_admin_reaction_setting_tutorial() {
 /**
  * Get reaction settings fields by section.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @param string $section_id Section ID.
  *
@@ -9231,7 +9231,7 @@ function bb_reactions_get_settings_fields_for_section( $section_id = '' ) {
 /**
  * Get all of the reactions settings fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @return array
  */
@@ -9247,7 +9247,7 @@ function bb_reactions_get_settings_fields() {
 
 	$fields['bp_reaction_settings_section'] = array(
 		'bb_all_reactions' => array(
-			'title'    => esc_html__( 'Enable reactions', 'buddyboss' ),
+			'title'    => esc_html__( 'Enable Reactions', 'buddyboss' ),
 			'callback' => 'bb_reactions_settings_callback_all_reactions',
 			'args'     => array(),
 		),
@@ -9264,7 +9264,7 @@ function bb_reactions_get_settings_fields() {
 		'bb_reaction_emotions' => array(),
 
 		'bb_reactions_button' => array(
-			'title'    => esc_html__( 'Reactions button', 'buddyboss' ) . bb_get_pro_label_notice( 'reaction' ),
+			'title'    => esc_html__( 'Reactions Button', 'buddyboss' ) . bb_get_pro_label_notice( 'reaction' ),
 			'callback' => 'bb_reactions_settings_callback_reactions_button',
 			'args'     => array(
 				'class' => $reaction_btn_class

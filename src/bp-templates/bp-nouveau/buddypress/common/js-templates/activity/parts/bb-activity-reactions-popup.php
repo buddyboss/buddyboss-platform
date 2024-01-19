@@ -4,7 +4,7 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bb-activity-reactions-popup.php
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.5.20
  * @package BuddyBoss\Core
  */
 

@@ -2035,7 +2035,7 @@ class BP_Activity_Activity {
 	 * Get favorite count for a given user.
 	 *
 	 * @since BuddyPress 1.2.0
-	 * @since BuddyBoss [BBVERSION] Added `$activity_type` property to indicate whether the current ID is activity or comment.
+	 * @since BuddyBoss 2.5.20 Added `$activity_type` property to indicate whether the current ID is activity or comment.
 	 *
 	 * @param int    $user_id       The ID of the user whose favorites you're counting.
 	 * @param string $activity_type Activity type.

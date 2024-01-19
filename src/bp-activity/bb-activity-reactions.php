@@ -5,7 +5,7 @@
  * Functions for the Reaction functionality.
  *
  * @package BuddyBoss\Activity
- * @since BuddyPress [BBVERSION]
+ * @since BuddyPress 2.5.20
  */
 
 // Exit if accessed directly.
@@ -19,7 +19,7 @@ add_action( 'bp_activity_after_delete', 'bb_activity_remove_activity_post_reacti
 /**
  * Get user reacted activity ids.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @param integer $user_id       User Id.
  * @param string  $activity_type Activity type.
@@ -51,7 +51,7 @@ function bb_activity_get_user_reacted_item_ids( $user_id = 0, $activity_type = '
 /**
  * Delete all reactions for an activity.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @param array|int $activities Array of the activity.
  *
@@ -81,7 +81,7 @@ function bb_activity_remove_activity_post_reactions( $activities ) {
 /**
  * Get reaction emoticons for activity post.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @return string
  */
@@ -101,7 +101,7 @@ function bb_get_activity_post_emotions_popup() {
 /**
  * Get reaction emoticons for activity post comment.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @return string
  */
@@ -121,7 +121,7 @@ function bb_get_activity_post_comment_emotions_popup() {
 /**
  * Prepare a reaction emoticons list for web to show on hover.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @return string
  */
@@ -167,7 +167,7 @@ function bb_activity_prepare_web_emotions() {
 /**
  * Get most reactions for activity.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @param integer $item_id         ID of the item.
  * @param string  $item_type       Type of the item.
@@ -240,7 +240,7 @@ function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', 
 /**
  * Get activity post reaction button html.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @param int     $item_id     ID of the Activity/Comment.
  * @param string  $item_type   Type of Activity.
@@ -290,7 +290,7 @@ function bb_get_activity_post_reaction_button_html( $item_id, $item_type = 'acti
 /**
  * Get user reactions list for activity post.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @param int    $activity_id Activity/Comment ID.
  * @param string $item_type   Type of Activity.
@@ -351,7 +351,7 @@ function bb_get_activity_post_user_reactions_html( $activity_id, $item_type = 'a
 /**
  * Retrieves the user reactions for a specific activity.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @param array $args The arguments for retrieving the user reactions.
  *                    - reaction_id (int) The ID of the reaction (default: 0).
@@ -423,7 +423,7 @@ function bb_activity_get_reacted_users_data( $args ) {
 /**
  * Get reactions data for an activity.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @return void
  */
@@ -582,7 +582,7 @@ function bb_get_activity_reaction_ajax_callback() {
 /**
  * Get reaction count for activity.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @param int    $activity_id   Post Id.
  * @param string $activity_type Activity type.
@@ -738,7 +738,7 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 /**
  * Get the formatted reaction count.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @param int $count The reaction count.
  *
@@ -757,7 +757,7 @@ function bb_format_reaction_count( $count ) {
 /**
  * Check whether the current item is in the user's favorites.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @param int    $item_id   The ID of activity/activity comment.
  * @param string $item_type The item type.
@@ -787,7 +787,7 @@ function bb_activity_is_item_favorite( $item_id, $item_type = 'activity', $user_
 /**
  * Get user reaction by item.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @param int    $item_id   The ID of activity/activity comment.
  * @param string $item_type The item type.
@@ -832,7 +832,7 @@ function bb_activity_get_user_reaction_by_item( $item_id, $item_type = 'activity
 /**
  * Prepare emotion icon with text.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @param int  $reaction_id Reaction ID.
  * @param bool $has_reacted Whether reacted or not.
@@ -880,7 +880,7 @@ function bb_activity_get_reaction_button( $reaction_id, $has_reacted = false ) {
 /**
  * Prepare emotion icon.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @param int|array|WP_Post $reaction_id Accepts a post ID, Emotion array, WP_Post object.
  *
@@ -931,7 +931,7 @@ function bb_activity_prepare_emotion_icon( $reaction_id ) {
 /**
  * Get reaction button settings.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @return array
  */

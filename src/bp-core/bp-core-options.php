@@ -2570,7 +2570,7 @@ function bb_custom_logout_redirection( $default = '' ) {
 /**
  * Get all reaction types.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @return array[]
  */
@@ -2594,7 +2594,7 @@ function bb_get_all_reactions() {
  *
  * @param string $key Key of the reaction.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @return array|bool
  */
@@ -2618,7 +2618,7 @@ function bb_all_enabled_reactions( $key = '' ) {
 /**
  * Check whether Reaction for activity posts is enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: true.
@@ -2631,7 +2631,7 @@ function bb_is_reaction_activity_posts_enabled( $default = true ) {
 /**
  * Check whether Reaction for activity comments is enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: True.
@@ -2644,7 +2644,7 @@ function bb_is_reaction_activity_comments_enabled( $default = true ) {
 /**
  * Get currently active reaction mode.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @param string $default Optional. Fallback value if not found in the database.
  *                        Default: 'likes'
@@ -2668,7 +2668,7 @@ function bb_get_reaction_mode( $default = 'likes' ) {
 /**
  * Check whether emotions is enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @return bool
  */
@@ -2679,7 +2679,7 @@ function bb_is_reaction_emotions_enabled() {
 /**
  * Get data for reaction button options.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @param string $key Key name for the option.
  *
@@ -2697,7 +2697,7 @@ function bb_reaction_button_options( $key = '' ) {
 /**
  * Fetch the enabled reactions based on mode.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @return array
  */
