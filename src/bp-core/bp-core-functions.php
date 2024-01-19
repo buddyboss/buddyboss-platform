@@ -9206,7 +9206,7 @@ function bb_reactions_get_settings_fields() {
 
 	$fields['bp_reaction_settings_section'] = array(
 		'bb_all_reactions' => array(
-			'title'             => esc_html__( 'Enable reactions', 'buddyboss' ),
+			'title'             => esc_html__( 'Enable Reactions', 'buddyboss' ),
 			'callback'          => 'bb_reactions_settings_callback_all_reactions',
 			'args'              => array(),
 		),
@@ -9223,7 +9223,7 @@ function bb_reactions_get_settings_fields() {
 		'bb_reaction_emotions' => array(),
 
 		'bb_reactions_button' => array(
-			'title'             => esc_html__( 'Reactions button', 'buddyboss' ) . bb_get_pro_label_notice( 'reaction' ),
+			'title'             => esc_html__( 'Reactions Button', 'buddyboss' ) . bb_get_pro_label_notice( 'reaction' ),
 			'callback'          => 'bb_reactions_settings_callback_reactions_button',
 			'args'              => array(
 				'class' => $pro_class
