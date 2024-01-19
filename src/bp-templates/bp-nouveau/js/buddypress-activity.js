@@ -1079,12 +1079,12 @@ window.bp = window.bp || {};
 				} else {
 					// It's an activity we're commenting.
 					if ( item_id === activity_id ) {
-						$activity_comments.append( form );
+						// $activity_comments.append( form );
 						form.addClass( 'root' );
 
 						// It's a comment we're replying to.
 					} else {
-						$( '[data-bp-activity-comment-id="' + item_id + '"]' ).append( form );
+						// $( '[data-bp-activity-comment-id="' + item_id + '"]' ).append( form );
 					}
 				}
 
