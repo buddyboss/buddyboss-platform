@@ -2,7 +2,7 @@
 /**
  * Add admin Reactions settings page in Dashboard->BuddyBoss->Settings
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.5.20
  * @package BuddyBoss\Core
  */
 
@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Main Reactions Settings class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  */
 class BB_Admin_Setting_Reactions extends BP_Admin_Setting_tab {
 
 	/**
 	 * Initializes the function.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.20
 	 *
 	 * @return void
 	 */
@@ -32,7 +32,7 @@ class BB_Admin_Setting_Reactions extends BP_Admin_Setting_tab {
 	/**
 	 * Method to save the fields.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.20
 	 *
 	 * @return void
 	 */
@@ -53,7 +53,7 @@ class BB_Admin_Setting_Reactions extends BP_Admin_Setting_tab {
 		/**
 		 * Fires before save the settings.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.5.20
 		 */
 		do_action( 'bb_reaction_before_setting_save', $this->tab_name, $this );
 
@@ -65,7 +65,7 @@ class BB_Admin_Setting_Reactions extends BP_Admin_Setting_tab {
 	/**
 	 * Registers the fields for the reaction settings sections.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.20
 	 *
 	 * @return void
 	 */
@@ -108,7 +108,7 @@ class BB_Admin_Setting_Reactions extends BP_Admin_Setting_tab {
 		/**
 		 * Fires to register "reactions" tab settings fields and section.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.5.20
 		 *
 		 * @param Object $this BB_Admin_Setting_Reactions.
 		 */

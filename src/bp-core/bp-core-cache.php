@@ -613,7 +613,7 @@ add_action( 'bb_reaction_after_add_reactions_data', 'bb_reaction_clear_reactions
 /**
  * Clear cache when reaction settings updated.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @param string $option    Name of the updated option.
  * @param mixed  $old_value The old option value.
@@ -643,7 +643,7 @@ add_action( 'update_option_bb_reaction_mode', 'bb_reaction_clear_reactions_cache
 /**
  * Clear cache when emotion deleted.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @param int    $postid Post ID.
  * @param object $post   Post object.

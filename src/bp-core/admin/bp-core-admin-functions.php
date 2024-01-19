@@ -3380,7 +3380,7 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
  * Get label with platform pro notice if the platform is not active or not validate.
  *
  * @since BuddyBoss 1.9.1
- * @since BuddyBoss [BBVERSION] Added support for type.
+ * @since BuddyBoss 2.5.20 Added support for type.
  *
  * @param string $type Type to check.
  *
@@ -3402,7 +3402,7 @@ function bb_get_pro_label_notice( $type = 'default' ) {
 		);
 	} elseif (
 		function_exists( 'bb_platform_pro' ) &&
-		version_compare( bb_platform_pro()->version, '2.4.0', '<=' ) && // @todo: Update version condition above before release.
+		version_compare( bb_platform_pro()->version, '2.4.50', '<' ) &&
 		! empty( $type ) &&
 		'reaction' === $type
 	) {
@@ -3430,7 +3430,7 @@ function bb_get_pro_label_notice( $type = 'default' ) {
  * Get class for buddyboss pro settings fields.
  *
  * @since BuddyBoss 1.9.1
- * @since BuddyBoss [BBVERSION] Added support for type.
+ * @since BuddyBoss 2.5.20 Added support for type.
  *
  * @param string $type Type to check.
  *
@@ -3452,12 +3452,11 @@ function bb_get_pro_fields_class( $type = 'default' ) {
 		$pro_class = 'bb-pro-inactive';
 	}
 
-	// @todo: Update version condition above before release.
 	if (
 		! empty( $type ) &&
 		'reaction' === $type &&
 		function_exists( 'bb_platform_pro' ) &&
-		version_compare( bb_platform_pro()->version, '2.4.0', '<=' )
+		version_compare( bb_platform_pro()->version, '2.4.50', '<' )
 	) {
 		$pro_class = 'bb-pro-inactive';
 	}
