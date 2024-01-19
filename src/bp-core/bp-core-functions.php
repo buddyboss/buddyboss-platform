@@ -9235,14 +9235,19 @@ function bb_reactions_get_settings_fields() {
 	$fields    = array();
 	$pro_class = bb_get_pro_fields_class( 'reaction' );
 
+	$reaction_btn_class = 'bb_reaction_button_row ' . $pro_class;
+	if ( function_exists( 'bb_get_reaction_mode' ) && 'emotions' !== bb_get_reaction_mode() ) {
+		$reaction_btn_class .= ' bp-hide';
+	}
+
 	$fields['bp_reaction_settings_section'] = array(
 		'bb_all_reactions' => array(
-			'title'             => esc_html__( 'Enable Reactions', 'buddyboss' ),
-			'callback'          => 'bb_reactions_settings_callback_all_reactions',
-			'args'              => array(),
+			'title'    => esc_html__( 'Enable Reactions', 'buddyboss' ),
+			'callback' => 'bb_reactions_settings_callback_all_reactions',
+			'args'     => array(),
 		),
 
-		'bb_reaction_mode'  => array(
+		'bb_reaction_mode' => array(
 			'title'             => esc_html__( 'Reactions Mode', 'buddyboss' ) . bb_get_pro_label_notice( 'reaction' ),
 			'callback'          => 'bb_reactions_settings_callback_reaction_mode',
 			'sanitize_callback' => 'sanitize_text_field',
@@ -9254,10 +9259,10 @@ function bb_reactions_get_settings_fields() {
 		'bb_reaction_emotions' => array(),
 
 		'bb_reactions_button' => array(
-			'title'             => esc_html__( 'Reactions Button', 'buddyboss' ) . bb_get_pro_label_notice( 'reaction' ),
-			'callback'          => 'bb_reactions_settings_callback_reactions_button',
-			'args'              => array(
-				'class' => $pro_class
+			'title'    => esc_html__( 'Reactions Button', 'buddyboss' ) . bb_get_pro_label_notice( 'reaction' ),
+			'callback' => 'bb_reactions_settings_callback_reactions_button',
+			'args'     => array(
+				'class' => $reaction_btn_class
 			),
 		),
 	);
