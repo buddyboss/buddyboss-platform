@@ -492,7 +492,7 @@ window.bp = window.bp || {};
 
 								// Prepend a link to display all.
 								if ( ! i ) {
-									$( item ).before( '<li class="show-all"><button class="text-button" type="button" data-bp-show-comments-id="#' + activity_item.prop( 'id' ) + '/show-all/">' + BP_Nouveau.show_x_comments + '</button></li>' );
+									$( item ).parent( 'ul' ).after( '<li class="show-all"><button class="text-button" type="button" data-bp-show-comments-id="#' + activity_item.prop( 'id' ) + '/show-all/">' + BP_Nouveau.show_x_comments + '</button></li>' );
 								}
 
 								// stop hiding elements if the id from hash url for specific comment matches.
@@ -1013,7 +1013,7 @@ window.bp = window.bp || {};
 
 			// Initiate Comment Form.
 			if( target.hasClass( 'ac-form' ) && target.hasClass( 'not-initialized' ) ) {
-				target.closest( '.activity-item').find( '.acomment-reply' ).trigger( 'click' );
+				target.closest( '.activity-item').find( '.acomment-reply' ).eq(0).trigger( 'click' );
 			}
 
 			// Displaying the comment form.
@@ -1079,12 +1079,12 @@ window.bp = window.bp || {};
 				} else {
 					// It's an activity we're commenting.
 					if ( item_id === activity_id ) {
-						// $activity_comments.append( form );
+						$activity_comments.prepend( form );
 						form.addClass( 'root' );
 
 						// It's a comment we're replying to.
 					} else {
-						// $( '[data-bp-activity-comment-id="' + item_id + '"]' ).append( form );
+						$( '[data-bp-activity-comment-id="' + item_id + '"]' ).append( form );
 					}
 				}
 
