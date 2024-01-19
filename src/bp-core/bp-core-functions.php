@@ -9157,7 +9157,7 @@ function bb_get_directory_layout_preference( $action ) {
 /**
  * Get the Reactions settings sections.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @return array
  */
@@ -9177,7 +9177,7 @@ function bb_reactions_get_settings_sections() {
 /**
  * Link to Reaction tutorial.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  */
 function bp_admin_reaction_setting_tutorial() {
 	?>
@@ -9204,7 +9204,7 @@ function bp_admin_reaction_setting_tutorial() {
 /**
  * Get reaction settings fields by section.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @param string $section_id Section ID.
  *
@@ -9226,7 +9226,7 @@ function bb_reactions_get_settings_fields_for_section( $section_id = '' ) {
 /**
  * Get all of the reactions settings fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @return array
  */

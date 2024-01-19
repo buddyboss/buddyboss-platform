@@ -386,7 +386,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Update existing reaction.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.5.20
 		 *
 		 * @param int   $reaction_id Reaction ID.
 		 * @param array $args List of arguments.
@@ -2064,7 +2064,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Get default reaction id.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.5.20
 		 *
 		 * @return bool|int
 		 */
@@ -2091,7 +2091,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Get user reacted reaction id.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.5.20
 		 *
 		 * @param array $args Array of arguments.
 		 *
@@ -2125,7 +2125,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		/**
 		 * Validate callback for a reaction item type for activity comment.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.5.20
 		 *
 		 * @param array $args Array of arguments.
 		 *

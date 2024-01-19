@@ -3468,7 +3468,7 @@ function bp_admin_setting_callback_custom_logout_redirection() {
 /**
  * Reactions settings enable markups.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  */
 function bb_reactions_settings_callback_all_reactions() {
 
@@ -3504,7 +3504,7 @@ function bb_reactions_settings_callback_all_reactions() {
 /**
  * Add reaction mode settings.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  */
 function bb_reactions_settings_callback_reaction_mode() {
 
@@ -3573,7 +3573,7 @@ function bb_reactions_settings_callback_reaction_mode() {
 /**
  * Add reactions button settings.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.20
  *
  * @return void
  */
