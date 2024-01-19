@@ -57,6 +57,10 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.5.20 =
+* New Feature! - Introducing reaction into the platform, where your members will now have the ability to react with different emotions to posts, comments and replies. As an added feature you will be able to customise your emotions to suite your brand.
+* Enhancement: Core - Reactions settings updated to include REST API’s
+
 = 2.5.11 =
 * Bug: Core - Changed directory layout view, switching logic, such as ‘Grid' and 'List’ for pages that utilize the the change view options so on page refresh will maintain the default settings
 
