@@ -7031,6 +7031,20 @@ span.dashicons.dashicons-admin-file:before {
   color: inherit;
 }
 
+.buddypress-wrap .activity-comments .activity-attached-gif-container .gif-player {
+  display: flex;
+  max-width: 200px;
+}
+
+.buddypress-wrap .activity-comments .activity-attached-gif-container .gif-player video {
+  max-width: 200px;
+  height: 150px;
+}
+
+.buddypress-wrap .activity-comments .activity-attached-gif-container .gif-player .gif-icon {
+  padding: 0;
+}
+
 .buddypress-wrap .activity-comments .bp-generic-meta.action {
   background: none;
 }

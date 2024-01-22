@@ -164,6 +164,23 @@
 
 		} // close .acomment-options
 
+		.activity-attached-gif-container {
+
+			.gif-player {
+				display: flex;
+				max-width: 200px;
+
+				video {
+					max-width: 200px;
+					height: 150px;
+				}
+
+				.gif-icon {
+					padding: 0;
+				}
+			}
+		}
+
 		.bp-generic-meta.action {
 			background: none;
 
