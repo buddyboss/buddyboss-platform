@@ -7142,14 +7142,6 @@ span.dashicons.dashicons-admin-file:before {
   margin: 0 3px 0 2px;
 }
 
-.buddypress-wrap .activity-comments .bb-activity-more-options-wrap {
-  top: -3px;
-}
-
-.buddypress-wrap .activity-comments .bb-activity-more-options-wrap .bb-activity-more-options-action i {
-  font-size: 16px;
-}
-
 .buddypress-wrap .activity-list .activity-item .activity-comments .bp-generic-meta.action a.bp-like-button .like-count {
   margin-right: 0;
 }
