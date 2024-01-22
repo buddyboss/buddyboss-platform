@@ -3830,6 +3830,7 @@ input.search-query-input {
   border: 0;
   background-color: transparent;
   box-shadow: none;
+  box-sizing: border-box;
 }
 
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a:hover {
@@ -6431,6 +6432,43 @@ span.dashicons.dashicons-admin-file:before {
   }
 }
 
+.buddypress-wrap .activity-comments ul li .bb-media-length-1 .bb-activity-media-elem .entry-img img {
+  max-width: 200px;
+  height: auto;
+  max-height: 200px;
+  object-fit: cover;
+}
+
+.buddypress-wrap .activity-comments ul li .bb-media-length-3,
+.buddypress-wrap .activity-comments ul li .bb-media-length-2 {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 2px;
+}
+
+.buddypress-wrap .activity-comments ul li .bb-media-length-3 .act-grid-1-2,
+.buddypress-wrap .activity-comments ul li .bb-media-length-3 .act-grid-1-1,
+.buddypress-wrap .activity-comments ul li .bb-media-length-2 .act-grid-1-2,
+.buddypress-wrap .activity-comments ul li .bb-media-length-2 .act-grid-1-1 {
+  flex: auto;
+  max-width: initial;
+}
+
+.buddypress-wrap .activity-comments ul li .bb-media-length-3 .bb-activity-media-elem .entry-img,
+.buddypress-wrap .activity-comments ul li .bb-media-length-2 .bb-activity-media-elem .entry-img {
+  padding-top: 0;
+  display: inline-block;
+}
+
+.buddypress-wrap .activity-comments ul li .bb-media-length-3 .bb-activity-media-elem .entry-img img,
+.buddypress-wrap .activity-comments ul li .bb-media-length-2 .bb-activity-media-elem .entry-img img {
+  position: static;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  min-width: auto;
+}
+
 @media screen and (max-width: 560px) {
   .buddypress-wrap .activity-comments ul li .bb-media-length-1 .bb-activity-media-elem.media-activity {
     min-width: auto;
@@ -6755,6 +6793,7 @@ form.ac-form .bp-ac-form-cotainer .ac-reply-attachments {
 
 form.ac-form .ac-reply-avatar img {
   max-width: 32px;
+  height: auto;
 }
 
 form.ac-form .ac-reply-content {
@@ -27026,7 +27065,8 @@ body > .open-popup.video-error-popup {
 }
 
 .dropzone .dz-default {
-  border: 4px dashed #bbb;
+  border: 1px solid #bbb;
+  border-radius: 4px;
   min-height: 20vh;
   display: flex;
   align-items: center;

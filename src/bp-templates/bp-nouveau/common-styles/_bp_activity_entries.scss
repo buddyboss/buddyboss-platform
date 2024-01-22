@@ -524,6 +524,7 @@
 						border: 0;
 						background-color: transparent;
 						box-shadow: none;
+						box-sizing: border-box;
 
 						&:hover {
 							color: $blue;
