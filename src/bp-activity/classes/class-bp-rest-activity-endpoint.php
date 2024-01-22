@@ -108,12 +108,14 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					'id' => array(
 						'description' => __( 'A unique numeric ID for the activity.', 'buddyboss' ),
 						'type'        => 'integer',
+						'required'    => true,
 					),
 				),
 				array(
 					'methods'             => WP_REST_Server::EDITABLE,
 					'callback'            => array( $this, 'update_favorite' ),
 					'permission_callback' => array( $this, 'update_favorite_permissions_check' ),
+					'args'                => $this->get_favorite_endpoint_schema(),
 				),
 				'schema' => array( $this, 'get_item_schema' ),
 			)
@@ -1083,13 +1085,15 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	/**
 	 * Gets the current user's favorites.
 	 *
+	 * @param object $activity Activity object.
 	 * @return array Array of activity IDs.
 	 * @since 0.1.0
 	 */
-	public function get_user_favorites() {
+	public function get_user_favorites( $activity ) {
 		if ( null === $this->user_favorites ) {
-			if ( is_user_logged_in() ) {
-				$user_favorites       = bp_activity_get_user_favorites( get_current_user_id() );
+			if ( is_user_logged_in() && ! empty( $activity ) ) {
+				$activity_type        = $activity->type === 'activity_comment' ? $activity->type : 'activity';
+				$user_favorites       = bp_activity_get_user_favorites( get_current_user_id(), $activity_type );
 				$this->user_favorites = array_filter( wp_parse_id_list( $user_favorites ) );
 			} else {
 				$this->user_favorites = array();
@@ -1115,6 +1119,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} id A unique numeric ID for the activity
+	 * @apiParam {String=activity, activity_comment} [item_type] The type of activity.
+	 * @apiParam {Number} [reaction_id] The reaction ID.
 	 */
 	public function update_favorite( $request ) {
 		$activity = $this->get_activity_object( $request );
@@ -1129,24 +1135,60 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		$args = array(
+			'error_type' => 'wp_error',
+		);
+
+		if ( ! empty( $request->get_param( 'item_type' ) ) ) {
+			$args['type'] = $request->get_param( 'item_type' );
+		} else {
+			$args['type'] = $activity->type === 'activity_comment' ? 'activity_comment' : 'activity';
+		}
+
+		if ( ! empty( $request->get_param( 'reaction_id' ) ) ) {
+			$args['reaction_id'] = $request->get_param( 'reaction_id' );
+		}
+
 		$user_id = get_current_user_id();
 
 		$result = false;
-		if ( in_array( $activity->id, $this->get_user_favorites(), true ) ) {
-			$result  = bp_activity_remove_user_favorite( $activity->id, $user_id );
+		if ( empty( $args['reaction_id'] ) && in_array( $activity->id, $this->get_user_favorites( $activity ), true ) ) {
+			$result  = bp_activity_remove_user_favorite( $activity->id, $user_id, $args );
 			$message = __( 'Sorry, you cannot remove the activity from your favorites.', 'buddyboss' );
 
+			if ( is_wp_error( $result ) ) {
+				$message = $result->get_error_message();
+			}
+
 			// Update the user favorites, removing the activity ID.
-			$this->user_favorites = array_diff( $this->get_user_favorites(), array( $activity->id ) );
+			$this->user_favorites = array_diff( $this->get_user_favorites( $activity ), array( $activity->id ) );
 		} else {
-			$result  = bp_activity_add_user_favorite( $activity->id, $user_id );
+			$result  = bp_activity_add_user_favorite( $activity->id, $user_id, $args );
 			$message = __( 'Sorry, you cannot add the activity to your favorites.', 'buddyboss' );
+
+			if ( is_wp_error( $result ) ) {
+				$message = $result->get_error_message();
+			}
 
 			// Update the user favorites, adding the activity ID.
 			$this->user_favorites[] = (int) $activity->id;
 		}
 
-		if ( ! $result ) {
+		if ( empty( $result ) || is_wp_error( $result ) ) {
+
+			if (
+				is_wp_error( $result ) &&
+				'bp_activity_add_user_favorite_disabled_temporarily' === $result->get_error_code()
+			) {
+				return new WP_Error(
+					$result->get_error_code(),
+					$result->get_error_message(),
+					array(
+						'status' => 500,
+					)
+				);
+			}
+
 			return new WP_Error(
 				'bp_rest_user_cannot_update_activity_favorite',
 				$message,
@@ -1176,7 +1218,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		 *
 		 * @since 0.1.0
 		 */
-		do_action( 'bp_rest_activity_update_favorite', $activity, $this->get_user_favorites(), $response, $request );
+		do_action( 'bp_rest_activity_update_favorite', $activity, $this->get_user_favorites( $activity ), $response, $request );
 
 		return $response;
 	}
@@ -1198,9 +1240,16 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			)
 		);
 
+		$activity = $this->get_activity_object( $request );
+		if ( ! empty( $request->get_param( 'item_type' ) ) ) {
+			$type = $request->get_param( 'item_type' );
+		} else {
+			$type = $activity->type === 'activity_comment' ? 'activity_comment' : 'activity';
+		}
+
 		if (
-			is_user_logged_in() && bp_activity_can_favorite()
-			&& ( ! function_exists( 'bp_is_activity_like_active' ) || true === bp_is_activity_like_active() )
+			! empty( $type ) &&
+			is_user_logged_in() && bb_all_enabled_reactions( $type )
 		) {
 			$retval = true;
 		}
@@ -1538,11 +1587,11 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'status'            => $activity->is_spam ? 'spam' : 'published',
 			'title'             => $this->bb_rest_activity_action( $activity->action, $activity ),
 			'type'              => $activity->type,
-			'favorited'         => in_array( $activity->id, $this->get_user_favorites(), true ),
+			'favorited'         => in_array( $activity->id, $this->get_user_favorites( $activity ), true ),
 
 			// extend response.
-			'can_favorite'      => bp_activity_can_favorite(),
-			'favorite_count'    => $this->get_activity_favorite_count( $activity->id ),
+			'can_favorite'      =>( 'activity_comment' === $activity->type ) ? bb_activity_comment_can_favorite() : bp_activity_can_favorite(),
+			'favorite_count'    => $this->get_activity_favorite_count( $activity ),
 			'can_comment'       => ( 'activity_comment' === $activity->type ) ? bp_activity_can_comment_reply( $activity ) : bp_activity_can_comment(),
 			'can_edit'          => $can_edit,
 			'is_edited'         => ! empty( bp_activity_get_meta( $activity->id, '_is_edited', true ) ),
@@ -1555,6 +1604,15 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'link_embed_url'    => '',
 			'is_pinned'         => false,
 			'can_pin'           => false,
+			'reacted_names'     => bb_activity_reaction_names_and_count( $activity->id, $activity->type === 'activity_comment' ? $activity->type : 'activity', 1 ),
+			'reacted_counts'    => bb_get_activity_most_reactions( $activity->id, $activity->type === 'activity_comment' ? $activity->type : 'activity', 7 ),
+			'reacted_id'        => bb_load_reaction()->bb_user_reacted_reaction_id(
+				array(
+					'item_id'   => $activity->id,
+					'item_type' => $activity->type === 'activity_comment' ? $activity->type : 'activity',
+					'user_id'   => bp_loggedin_user_id(),
+				)
+			),
 		);
 
 		// Add feature image as separate object which added last in the content.
@@ -2072,6 +2130,43 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	}
 
 	/**
+	 * Get the favorite endpoint schema.
+	 *
+	 * @since 2.5.20
+	 * @return array
+	 */
+	public function get_favorite_endpoint_schema() {
+		$args = array();
+
+		$args['reaction_id'] = array(
+			'description'       => __( 'Reaction ID.', 'buddyboss' ),
+			'type'              => 'integer',
+			'required'          => false,
+			'sanitize_callback' => 'absint',
+			'validate_callback' => 'rest_validate_request_arg',
+			'enum'              => array_column( bb_load_reaction()->bb_get_reactions( bb_get_reaction_mode() ), 'id' ),
+		);
+
+		$args['item_type'] = array(
+			'description'       => __( 'Item type', 'buddyboss' ),
+			'type'              => 'string',
+			'required'          => false,
+			'sanitize_callback' => 'sanitize_text_field',
+			'validate_callback' => 'rest_validate_request_arg',
+			'enum'              => array_keys( bb_load_reaction()->bb_get_registered_reaction_item_types() ),
+		);
+
+		/**
+		 * Filters favorite query arguments.
+		 *
+		 * @since 2.5.20
+		 *
+		 * @param array  $args   Query arguments.
+		 */
+		return apply_filters( "bp_rest_activity_favorite_query_arguments", $args );
+	}
+
+	/**
 	 * Get the plugin schema, conforming to JSON Schema.
 	 *
 	 * @return array
@@ -2214,7 +2309,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				'favorite_count'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Favorite count for the activity object.', 'buddyboss' ),
-					'type'        => 'boolean',
+					'type'        => 'integer',
 					'readonly'    => true,
 				),
 				'can_comment'       => array(
@@ -2292,6 +2387,24 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Is user allowed to pin and unpin the respective activity.', 'buddyboss' ),
 					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+				'reacted_names'     => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => esc_html__( 'Reacted user names and count for the activity reactions.', 'buddyboss' ),
+					'type'        => 'string',
+					'readonly'    => true,
+				),
+				'reacted_counts'    => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => esc_html__( 'Reaction count for the activity.', 'buddyboss' ),
+					'type'        => 'array',
+					'readonly'    => true,
+				),
+				'reacted_id'        => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => esc_html__( 'Reaction ID from user reacted on the activity.', 'buddyboss' ),
+					'type'        => 'integer',
 					'readonly'    => true,
 				),
 			),
@@ -2489,19 +2602,26 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	/**
 	 * Get favorite count for activity.
 	 *
-	 * @param int $activity_id The activity id.
+	 * @param BP_Activity_Activity $activity Activity data.
 	 *
 	 * @return int|mixed
 	 */
-	public function get_activity_favorite_count( $activity_id ) {
+	public function get_activity_favorite_count( $activity ) {
 
-		if ( empty( $activity_id ) ) {
-			return;
+		if ( empty( $activity->id ) ) {
+			return 0;
 		}
 
-		$fav_count = bp_activity_get_meta( $activity_id, 'favorite_count', true );
+		if ( function_exists( 'bb_load_reaction' ) ) {
+			$fav_count = bb_load_reaction()->bb_total_item_reactions_count(
+				array(
+					'item_id'   => $activity->id,
+					'item_type' => $activity->type === 'activity_comment' ? 'activity_comment' : 'activity',
+				)
+			);
+		}
 
-		return ( ! empty( $fav_count ) ? $fav_count : 0 );
+		return (int)( ! empty( $fav_count ) ? $fav_count : 0 );
 	}
 
 	/**

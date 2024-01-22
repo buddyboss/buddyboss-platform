@@ -992,6 +992,24 @@
             "optional": false,
             "field": "id",
             "description": "<p>A unique numeric ID for the activity</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "activity",
+              "activity_comment"
+            ],
+            "optional": true,
+            "field": "item_type",
+            "description": "<p>The type of activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "reaction_id",
+            "description": "<p>The reaction ID.</p>"
           }
         ]
       }
@@ -9825,6 +9843,13 @@
             "field": "order_by",
             "defaultValue": "id",
             "description": "<p>Order by a specific parameter.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "before",
+            "description": "<p>Limit result set to items before a specific user reaction ID.</p>"
           }
         ]
       }
