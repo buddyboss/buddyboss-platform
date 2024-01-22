@@ -685,6 +685,7 @@ class BP_Activity_Activity {
 			'has_more_items' => null,
 		);
 
+		//$sort = 'ASC';
 		/**
 		 * Filters if BuddyPress should use legacy query structure over current structure for version 2.0+.
 		 *
