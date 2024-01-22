@@ -7065,6 +7065,18 @@ span.dashicons.dashicons-admin-file:before {
   padding-top: 82.56%;
 }
 
+.buddypress-wrap .activity-comments .bb-activity-media-wrap.ac-document {
+  flex-flow: column;
+}
+
+.buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity {
+  width: 265px;
+}
+
+.buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity .document-preview-wrap {
+  height: 115px;
+}
+
 .buddypress-wrap .activity-comments .bp-generic-meta.action {
   background: none;
 }

@@ -203,6 +203,18 @@
 			}
 		}
 
+		.bb-activity-media-wrap.ac-document {
+			flex-flow: column;
+		}
+
+		.bb-activity-media-elem.document-activity {
+			width: 265px;
+
+			.document-preview-wrap {
+				height: 115px;
+			}
+		}
+
 		.bp-generic-meta.action {
 			background: none;
 
