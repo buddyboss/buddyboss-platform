@@ -51,7 +51,6 @@ bp_nouveau_activity_hook( 'before', 'comment_entry' );
 				<?php bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) ); ?>
 			</div>
 		</div>
-		<?php bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) ); ?>
 		<div class="comment-reactions">
 			<?php
 			if ( bb_is_reaction_activity_comments_enabled() ) {
