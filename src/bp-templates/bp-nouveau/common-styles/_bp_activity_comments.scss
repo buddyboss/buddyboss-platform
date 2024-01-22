@@ -185,6 +185,24 @@
 			min-width: 245px;
 		}
 
+		.bb-activity-video-wrap:not(.bb-video-length-1) {
+			flex-wrap: nowrap;
+
+			.act-grid-1-1,
+			.act-grid-1-2 {
+
+				&.bb-activity-video-elem {
+					flex: auto;
+					min-width: 200px;
+					max-width: 200px;
+
+					.bb-item-cover-wrap {
+						padding-top: 82.56%;
+					}
+				}
+			}
+		}
+
 		.bp-generic-meta.action {
 			background: none;
 

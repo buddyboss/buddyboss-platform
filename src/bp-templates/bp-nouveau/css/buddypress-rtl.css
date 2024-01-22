@@ -7049,6 +7049,22 @@ span.dashicons.dashicons-admin-file:before {
   min-width: 245px;
 }
 
+.buddypress-wrap .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) {
+  flex-wrap: nowrap;
+}
+
+.buddypress-wrap .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) .act-grid-1-1.bb-activity-video-elem,
+.buddypress-wrap .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) .act-grid-1-2.bb-activity-video-elem {
+  flex: auto;
+  min-width: 200px;
+  max-width: 200px;
+}
+
+.buddypress-wrap .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) .act-grid-1-1.bb-activity-video-elem .bb-item-cover-wrap,
+.buddypress-wrap .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) .act-grid-1-2.bb-activity-video-elem .bb-item-cover-wrap {
+  padding-top: 82.56%;
+}
+
 .buddypress-wrap .activity-comments .bp-generic-meta.action {
   background: none;
 }
