@@ -7045,6 +7045,10 @@ span.dashicons.dashicons-admin-file:before {
   padding: 0;
 }
 
+.buddypress-wrap .activity-comments .bb-activity-video-wrap .bb-activity-video-elem {
+  min-width: 245px;
+}
+
 .buddypress-wrap .activity-comments .bp-generic-meta.action {
   background: none;
 }
