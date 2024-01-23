@@ -183,8 +183,21 @@ window.bp = window.bp || {};
 			var newest_activities_count, newest_activities, objects = bp.Nouveau.objects,
 				scope = bp.Nouveau.getStorage( 'bp-activity', 'scope' ), self = this;
 
+			var skip_refresh = false;
+
+			// If something is pending for activity like viewing video, audio, commenting then skip and don't refresh.
+			if (
+				(
+					$( '#activity-stream ul.activity-list li.activity-item' ).find( 'form.has-content' ).length > 0 && 
+					'none' !== $( '#activity-stream ul.activity-list li.activity-item' ).find( 'form.has-content' ).css( 'display' )
+			 	) ||
+				$( '#activity-stream ul.activity-list li.activity-item' ).find( 'div.vjs-playing' ).length > 0 ||
+				$( '#activity-stream ul.activity-list li.activity-item' ).find( 'div.vjs-playing' ).length > 0
+			) {
+				skip_refresh = true;
+			}
 			// Only proceed if we have newest activities.
-			if ( undefined === data || ! data.bp_activity_newest_activities ) {
+			if ( undefined === data || true === skip_refresh || ! data.bp_activity_newest_activities ) {
 				return;
 			}
 
@@ -193,6 +206,19 @@ window.bp = window.bp || {};
 
 			// Parse activities.
 			newest_activities = $( this.heartbeat_data.newest ).filter( '.activity-item' );
+
+			var hasPinnedItem = false;
+			for ( const key in newest_activities ) {
+				const item = newest_activities[key];
+				if (item.classList.contains('bb-pinned')) {
+					hasPinnedItem = true;
+					break;
+				}
+			}
+
+			if ( hasPinnedItem ) {
+				this.heartbeat_data.last_recorded = 0;
+			}
 
 			// Count them.
 			newest_activities_count = Number( newest_activities.length );
