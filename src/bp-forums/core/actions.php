@@ -594,7 +594,7 @@ function bb_forum_add_content_popup() {
 								</a>
 							</header>
 							<div class="bb-action-popup-content">
-								<?php echo wpautop( wp_kses_post( bbp_get_forum_content( $forum_id ) ) ); ?>
+								<?php echo wp_kses_post( bbp_get_forum_content( $forum_id ) ) ; ?>
 							</div>
 						</div>
 					</div>
