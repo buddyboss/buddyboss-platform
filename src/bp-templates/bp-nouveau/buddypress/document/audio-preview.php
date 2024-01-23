@@ -9,13 +9,16 @@
  * @version 1.7.0
  */
 
-$audio_url                 = '';
-$bp_document_music_preview = apply_filters( 'bp_document_music_preview', true );
-if ( in_array( bp_get_document_extension(), bp_get_document_preview_music_extensions(), true ) && $bp_document_music_preview ) {
-	$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), bp_get_document_attachment_id(), bp_get_document_extension() );
+$audio_url                    = '';
+$doc_extension                = bp_get_document_extension();
+$doc_preview_music_extensions = bp_get_document_preview_music_extensions();
+$bp_document_music_preview    = apply_filters( 'bp_document_music_preview', true );
+
+if ( in_array( $doc_extension, $doc_preview_music_extensions, true ) && $bp_document_music_preview ) {
+	$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), bp_get_document_attachment_id(), $doc_extension );
 }
 
-if ( in_array( bp_get_document_extension(), bp_get_document_preview_music_extensions(), true ) ) {
+if ( in_array( $doc_extension, $doc_preview_music_extensions, true ) ) {
 	?>
 	<div class="document-audio-wrap">
 		<audio controls controlsList="nodownload">
