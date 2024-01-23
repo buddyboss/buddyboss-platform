@@ -7186,19 +7186,19 @@ span.dashicons.dashicons-admin-file:before {
   position: relative;
 }
 
-.buddypress-wrap .activity-comments .comment-reactions {
+.buddypress-wrap .activity-comments .comment-reactions .activity-state-reactions {
   background-color: #fff;
-  box-shadow: 0 0 6px -2px rgba(0, 0, 0, 0.3);
   position: absolute;
   bottom: -10px;
   left: 0;
-  transform: translateX(-100%);
   margin-left: 10px;
   display: flex;
   align-items: center;
   padding: 2px;
   border-radius: 24px;
   cursor: pointer;
+  box-shadow: 0 0 6px -2px rgba(0, 0, 0, 0.3);
+  transform: translateX(-100%);
 }
 
 .buddypress-wrap .activity-comments .comment-reactions .comment-reactions_count {
