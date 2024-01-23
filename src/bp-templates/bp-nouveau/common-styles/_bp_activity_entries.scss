@@ -793,7 +793,7 @@
 			right: 0;
 			top: 50%;
 			transform: translateY(calc(-50% - 11px));
-			z-index: 1;
+			z-index: 11;
 
 			.bb-activity-more-options-action {
 				border-radius: $block-radius-inner;
@@ -805,6 +805,18 @@
 				}
 
 				&:hover {
+					background-color: $light-grey;
+
+					i {
+						opacity: 1;
+					}
+				}
+			}
+
+			&:has(.bb-activity-more-options.is_visible) {
+				z-index: 111;
+
+				.bb-activity-more-options-action {
 					background-color: $light-grey;
 
 					i {

@@ -4075,7 +4075,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
   left: 0;
   top: 50%;
   transform: translateY(calc(-50% - 11px));
-  z-index: 1;
+  z-index: 11;
 }
 
 .activity-list .comment-item .bb-activity-more-options-wrap .bb-activity-more-options-action {
@@ -4093,6 +4093,18 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 }
 
 .activity-list .comment-item .bb-activity-more-options-wrap .bb-activity-more-options-action:hover i {
+  opacity: 1;
+}
+
+.activity-list .comment-item .bb-activity-more-options-wrap:has(.bb-activity-more-options.is_visible) {
+  z-index: 111;
+}
+
+.activity-list .comment-item .bb-activity-more-options-wrap:has(.bb-activity-more-options.is_visible) .bb-activity-more-options-action {
+  background-color: #eaeaea;
+}
+
+.activity-list .comment-item .bb-activity-more-options-wrap:has(.bb-activity-more-options.is_visible) .bb-activity-more-options-action i {
   opacity: 1;
 }
 
@@ -6982,6 +6994,7 @@ span.dashicons.dashicons-admin-file:before {
   padding: 10px 15px;
   border-radius: 6px;
   margin-bottom: 5px;
+  position: relative;
 }
 
 .buddypress-wrap .activity-comments .acomment-display {
@@ -7174,8 +7187,8 @@ span.dashicons.dashicons-admin-file:before {
 
 .buddypress-wrap .activity-comments .comment-reactions {
   position: absolute;
-  bottom: -2px;
-  left: 0;
+  bottom: -10px;
+  left: -25px;
   display: flex;
   align-items: center;
   padding: 2px;
@@ -7186,6 +7199,11 @@ span.dashicons.dashicons-admin-file:before {
 .buddypress-wrap .activity-comments .comment-reactions .comment-reactions_count {
   font-size: 13px;
   margin: 0 3px 0 2px;
+}
+
+.buddypress-wrap .activity-comments .comment-reactions .reactions_item > i:before {
+  margin-right: 0;
+  margin-left: 0;
 }
 
 .buddypress-wrap .activity-list .activity-item .activity-comments .bp-generic-meta.action a.bp-like-button .like-count {

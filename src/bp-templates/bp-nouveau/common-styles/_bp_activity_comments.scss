@@ -106,6 +106,7 @@
 				padding: $marg-sml $marg-med;
 				border-radius: $block-radius-inner;
 				margin-bottom: $marg-xsml;
+				position: relative;
 			}
 		}
 
@@ -345,8 +346,8 @@
 
 		.comment-reactions {
 			position: absolute;
-			bottom: -2px;
-			right: 0;
+			bottom: -10px;
+			right: -25px;
 			display: flex;
 			align-items: center;
 			padding: 2px;
@@ -356,6 +357,11 @@
 			.comment-reactions_count {
 				font-size: 13px;
 				margin: 0 2px 0 3px;
+			}
+
+			.reactions_item > i:before {
+				margin-left: 0;
+				margin-right: 0;
 			}
 		}
 

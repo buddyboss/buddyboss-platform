@@ -47,16 +47,16 @@ bp_nouveau_activity_hook( 'before', 'comment_entry' );
 						do_action( 'bp_activity_after_comment_content', bp_get_activity_comment_id() );
 						?>
 					</div>
+					<div class="comment-reactions">
+						<?php
+						if ( bb_is_reaction_activity_comments_enabled() ) {
+							echo bb_get_activity_post_user_reactions_html( bp_get_activity_comment_id(), 'activity_comment' );
+						}
+						?>
+					</div>
 				</div>
 				<?php bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) ); ?>
 			</div>
-		</div>
-		<div class="comment-reactions">
-			<?php
-			if ( bb_is_reaction_activity_comments_enabled() ) {
-				echo bb_get_activity_post_user_reactions_html( bp_get_activity_comment_id(), 'activity_comment' );
-			}
-			?>
 		</div>
 	</div>
 	<div id="acomment-edit-form-<?php bp_activity_comment_id(); ?>" class="acomment-edit-form"></div>
