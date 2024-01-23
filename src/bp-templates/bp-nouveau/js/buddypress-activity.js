@@ -207,16 +207,7 @@ window.bp = window.bp || {};
 			// Parse activities.
 			newest_activities = $( this.heartbeat_data.newest ).filter( '.activity-item' );
 
-			var hasPinnedItem = false;
-			for ( const key in newest_activities ) {
-				const item = newest_activities[key];
-				if (item.classList.contains('bb-pinned')) {
-					hasPinnedItem = true;
-					break;
-				}
-			}
-
-			if ( hasPinnedItem ) {
+			if ( $( newest_activities ).filter( '.bb-pinned' ).length > 0 ) {
 				this.heartbeat_data.last_recorded = 0;
 			}
 
