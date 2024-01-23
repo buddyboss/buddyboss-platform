@@ -413,6 +413,19 @@
 			// remove for act stream actions.
 			div.generic-button {
 				margin: 0;
+				display: flex;
+				justify-content: center;
+				flex: auto;
+
+				> a {
+					width: 100%;
+					justify-content: center;
+					border-radius: $block-radius-inner;
+
+					&:hover {
+						background-color: $light-grey;
+					}
+				}
 			}
 
 			.button {
@@ -1069,7 +1082,7 @@
 
 			&.active {
 				display: flex;
-				bottom: 25px;
+				bottom: 34px;
 
 				.ac-emotion_item {
 					top: 0;
@@ -1080,7 +1093,7 @@
 
 				&:hover {
 					display: flex;
-					bottom: 25px;
+					bottom: 34px;
 
 					.ac-emotion_item {
 						top: 0;

@@ -3714,6 +3714,21 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta div.generic-button,
 .activity-list .activity-item > .bp-generic-meta.activity-meta div.generic-button {
   margin: 0;
+  display: flex;
+  justify-content: center;
+  flex: auto;
+}
+
+.activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta div.generic-button > a,
+.activity-list .activity-item > .bp-generic-meta.activity-meta div.generic-button > a {
+  width: 100%;
+  justify-content: center;
+  border-radius: 6px;
+}
+
+.activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta div.generic-button > a:hover,
+.activity-list .activity-item > .bp-generic-meta.activity-meta div.generic-button > a:hover {
+  background-color: #eaeaea;
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button,
@@ -4340,7 +4355,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .ac-emotions_list.active {
   display: flex;
-  bottom: 25px;
+  bottom: 34px;
 }
 
 .activity-list .activity-item .ac-emotions_list.active .ac-emotion_item {
@@ -4349,7 +4364,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 body:not(.bb-is-mobile) .activity-list .activity-item .ac-emotions_list:hover {
   display: flex;
-  bottom: 25px;
+  bottom: 34px;
 }
 
 body:not(.bb-is-mobile) .activity-list .activity-item .ac-emotions_list:hover .ac-emotion_item {
