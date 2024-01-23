@@ -46,6 +46,13 @@ $activity_comment_id = bp_get_activity_comment_id();
 			?>
 		</div>
 		<?php bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) ); ?>
+		<div class="comment-reactions">
+			<?php
+			if ( bb_is_reaction_activity_comments_enabled() ) {
+				echo bb_get_activity_post_user_reactions_html( bp_get_activity_comment_id(), 'activity_comment' );
+			}
+			?>
+		</div>
 	</div>
 	<div id="acomment-edit-form-<?php echo esc_attr( $activity_comment_id ); ?>" class="acomment-edit-form"></div>
 
