@@ -6974,6 +6974,7 @@ span.dashicons.dashicons-admin-file:before {
 .buddypress-wrap .activity-comments div.acomment-avatar {
   width: auto;
   margin-top: 7px;
+  flex-shrink: 0;
 }
 
 .buddypress-wrap .activity-comments div.acomment-avatar img {
@@ -7000,7 +7001,7 @@ span.dashicons.dashicons-admin-file:before {
 .buddypress-wrap .activity-comments .acomment-display {
   display: inline-flex;
   position: relative;
-  padding-right: 34px;
+  padding-right: 38px;
 }
 
 .buddypress-wrap .activity-comments .acomment-meta,
@@ -7186,9 +7187,13 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 .buddypress-wrap .activity-comments .comment-reactions {
+  background-color: #fff;
+  box-shadow: 0 0 6px -2px rgba(0, 0, 0, 0.3);
   position: absolute;
   bottom: -10px;
-  right: -25px;
+  right: 0;
+  transform: translateX(100%);
+  margin-right: 10px;
   display: flex;
   align-items: center;
   padding: 2px;
@@ -7198,7 +7203,7 @@ span.dashicons.dashicons-admin-file:before {
 
 .buddypress-wrap .activity-comments .comment-reactions .comment-reactions_count {
   font-size: 13px;
-  margin: 0 2px 0 3px;
+  margin: 0 4px 0 2px;
 }
 
 .buddypress-wrap .activity-comments .comment-reactions .reactions_item > i:before {
