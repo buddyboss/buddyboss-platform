@@ -909,11 +909,14 @@ function bp_activity_get_actions_for_context( $context = '' ) {
  * Get a users favorite activity feed items.
  *
  * @since BuddyPress 1.2.0
+ * @since BuddyBoss 2.5.20 Added the `$activity_type` parameter.
  *
- * @param int $user_id ID of the user whose favorites are being queried.
+ * @param int    $user_id       ID of the user whose favorites are being queried.
+ * @param string $activity_type Activity type.
+ *
  * @return array IDs of the user's favorite activity items.
  */
-function bp_activity_get_user_favorites( $user_id = 0 ) {
+function bp_activity_get_user_favorites( $user_id = 0, $activity_type = 'activity' ) {
 
 	// Fallback to logged in user if no user_id is passed.
 	if ( empty( $user_id ) ) {
@@ -921,7 +924,7 @@ function bp_activity_get_user_favorites( $user_id = 0 ) {
 	}
 
 	// Get favorites for user.
-	$favs = bp_get_user_meta( $user_id, 'bp_favorite_activities', true );
+	$favs = bb_activity_get_user_reacted_item_ids( $user_id, $activity_type );
 
 	/**
 	 * Filters the favorited activity items for a specified user.
@@ -937,51 +940,67 @@ function bp_activity_get_user_favorites( $user_id = 0 ) {
  * Add an activity feed item as a favorite for a user.
  *
  * @since BuddyPress 1.2.0
+ * @since BuddyBoss 2.5.20 Added the `$args` parameter.
  *
- * @param int $activity_id ID of the activity item being favorited.
- * @param int $user_id     ID of the user favoriting the activity item.
- * @return bool True on success, false on failure.
+ * @param int   $activity_id ID of the activity item being favorited.
+ * @param int   $user_id     ID of the user favoriting the activity item.
+ * @param array $args        Array extra argument.
+ *
+ * @return WP_Error|object|bool Object on success, WP_Error on failure.
  */
-function bp_activity_add_user_favorite( $activity_id, $user_id = 0 ) {
+function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = array() ) {
+	$r = bp_parse_args(
+		$args,
+		array(
+			'type'        => 'activity',
+			'reaction_id' => bb_load_reaction()->bb_reactions_reaction_id(),
+			'error_type'  => 'bool',
+		)
+	);
 
 	// Fallback to logged in user if no user_id is passed.
 	if ( empty( $user_id ) ) {
 		$user_id = bp_loggedin_user_id();
 	}
 
-	$my_favs = bp_get_user_meta( $user_id, 'bp_favorite_activities', true );
-	if ( empty( $my_favs ) || ! is_array( $my_favs ) ) {
-		$my_favs = array();
+	// Check if migration is in progress.
+	if (
+		function_exists( 'bb_pro_reaction_get_migration_status' ) &&
+		'inprogress' === bb_pro_reaction_get_migration_status()
+	) {
+		if ( 'bool' === $r['error_type'] ) {
+			return false;
+		} else {
+			return new WP_Error(
+				'bp_activity_add_user_favorite_disabled_temporarily',
+				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' )
+			);
+		}
 	}
 
-	// Bail if the user has already favorited this activity item.
-	if ( in_array( $activity_id, $my_favs ) ) {
-		return false;
+	// Check if the reaction ID is active based on the current active reaction mode.
+	if ( ! empty( $r['reaction_id'] ) ) {
+		$active_reactions = bb_active_reactions();
+		if ( empty( $active_reactions ) || empty( $active_reactions[ $r['reaction_id'] ] ) ) {
+			return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
+				'bp_activity_add_user_favorite_disabled_temporarily',
+				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' )
+			);
+		}
 	}
 
-	// Add to user's favorites.
-	$my_favs[] = $activity_id;
+	$reacted = bb_load_reaction()->bb_add_user_item_reaction(
+		array(
+			'item_type'   => $r['type'],
+			'reaction_id' => $r['reaction_id'],
+			'item_id'     => $activity_id,
+			'user_id'     => $user_id,
+			'error_type'  => $r['error_type'],
+		)
+	);
 
-	// Update the total number of users who have favorited this activity.
-	$fav_count = bp_activity_get_meta( $activity_id, 'favorite_count' );
-	$fav_count = ! empty( $fav_count ) ? (int) $fav_count + 1 : 1;
-
-	// Update the users who have favorited this activity.
-	$users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
-	if ( empty( $users ) || ! is_array( $users ) ) {
-		$users = array();
-	}
-	// Add to activity's favorited users.
-	$users[] = $user_id;
-
-	// Update user meta.
-	bp_update_user_meta( $user_id, 'bp_favorite_activities', array_unique( $my_favs ) );
-
-	// Update activity meta
-	bp_activity_update_meta( $activity_id, 'bp_favorite_users', array_unique( $users ) );
-
-	// Update activity meta counts.
-	if ( bp_activity_update_meta( $activity_id, 'favorite_count', $fav_count ) ) {
+	// Check user reacted or not.
+	if ( $reacted || ! is_wp_error( $reacted ) ) {
 
 		/**
 		 * Fires if bp_activity_update_meta() for favorite_count is successful and before returning a true value for success.
@@ -993,20 +1012,12 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0 ) {
 		 */
 		do_action( 'bp_activity_add_user_favorite', $activity_id, $user_id );
 
-		// Add user reaction.
-		if ( function_exists( 'bb_load_reaction' ) ) {
-			$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
-			bb_load_reaction()->bb_add_user_item_reaction(
-				array(
-					'item_type'   => 'activity',
-					'reaction_id' => $reaction_id,
-					'item_id'     => $activity_id,
-				)
-			);
+		// Success.
+		if ( 'bool' === $r['error_type'] ) {
+			return true;
 		}
 
-		// Success.
-		return true;
+		return $reacted;
 
 		// Saving meta was unsuccessful for an unknown reason.
 	} else {
@@ -1021,7 +1032,11 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0 ) {
 		 */
 		do_action( 'bp_activity_add_user_favorite_fail', $activity_id, $user_id );
 
-		return false;
+		if ( 'bool' === $r['error_type'] ) {
+			return false;
+		}
+
+		return $reacted;
 	}
 }
 
@@ -1029,249 +1044,97 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0 ) {
  * Remove an activity feed item as a favorite for a user.
  *
  * @since BuddyPress 1.2.0
+ * @since BuddyBoss 2.5.20 Added the `$args` parameter.
  *
- * @param int $activity_id ID of the activity item being unfavorited.
- * @param int $user_id     ID of the user unfavoriting the activity item.
- * @return bool True on success, false on failure.
+ * @param int    $activity_id ID of the activity item being unfavorited.
+ * @param int    $user_id     ID of the user unfavoriting the activity item.
+ * @param array  $args        Array extra argument.
+ *
+ * @return WP_Error|object|bool Object on success, WP_Error on failure.
  */
-function bp_activity_remove_user_favorite( $activity_id, $user_id = 0 ) {
+function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = array() ) {
+	$r = bp_parse_args(
+		$args,
+		array(
+			'type'        => 'activity',
+			'error_type'  => 'bool',
+		)
+	);
 
 	// Fallback to logged in user if no user_id is passed.
 	if ( empty( $user_id ) ) {
 		$user_id = bp_loggedin_user_id();
 	}
 
-	$my_favs = bp_get_user_meta( $user_id, 'bp_favorite_activities', true );
-	$my_favs = array_flip( (array) $my_favs );
-
-	// Bail if the user has not previously favorited the item.
-	if ( ! isset( $my_favs[ $activity_id ] ) ) {
-		return false;
-	}
-
-	// Remove the fav from the user's favs.
-	unset( $my_favs[ $activity_id ] );
-	$my_favs = array_unique( array_flip( $my_favs ) );
-
-	// Update the total number of users who have favorited this activity.
-	$fav_count = bp_activity_get_meta( $activity_id, 'favorite_count' );
-
-	// Update the users who have favorited this activity.
-	$users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
-	if ( empty( $users ) || ! is_array( $users ) ) {
-		$users = array();
-	}
-
-	if ( in_array( $user_id, $users ) ) {
-		$pos = array_search( $user_id, $users );
-		unset( $users[ $pos ] );
-	}
-
-	// Update activity meta
-	bp_activity_update_meta( $activity_id, 'bp_favorite_users', array_unique( $users ) );
-
-	if ( ! empty( $fav_count ) ) {
-
-		// Deduct from total favorites.
-		if ( bp_activity_update_meta( $activity_id, 'favorite_count', (int) $fav_count - 1 ) ) {
-
-			// Update users favorites.
-			if ( bp_update_user_meta( $user_id, 'bp_favorite_activities', $my_favs ) ) {
-
-				/**
-				 * Fires if bp_update_user_meta() is successful and before returning a true value for success.
-				 *
-				 * @since BuddyPress 1.2.1
-				 *
-				 * @param int $activity_id ID of the activity item being unfavorited.
-				 * @param int $user_id     ID of the user doing the unfavoriting.
-				 */
-				do_action( 'bp_activity_remove_user_favorite', $activity_id, $user_id );
-
-				// Remove user reaction.
-				if ( function_exists( 'bb_load_reaction' ) ) {
-					$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
-					bb_load_reaction()->bb_remove_user_item_reactions(
-						array(
-							'item_id'     => $activity_id,
-							'item_type'   => 'activity',
-							'user_id'     => $user_id,
-							'reaction_id' => $reaction_id,
-						)
-					);
-				}
-
-				// Success.
-				return true;
-
-				// Error updating.
-			} else {
-				return false;
-			}
-
-			// Error updating favorite count.
-		} else {
+	// Check if migration is in progress.
+	if (
+		function_exists( 'bb_pro_reaction_get_migration_status' ) &&
+		'inprogress' === bb_pro_reaction_get_migration_status()
+	) {
+		if ( 'bool' === $r['error_type'] ) {
 			return false;
-		}
-
-		// Error getting favorite count.
-	} else {
-		return false;
-	}
-}
-
-/**
- * Get like count for activity
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $activity_id
- *
- * @return int|string
- */
-function bp_activity_get_favorite_users_string( $activity_id ) {
-
-	if ( ! bp_is_activity_like_active() ) {
-		return 0;
-	}
-
-	$like_count      = bp_activity_get_meta( $activity_id, 'favorite_count', true );
-	$like_count      = ( isset( $like_count ) && ! empty( $like_count ) ) ? $like_count : 0;
-	$favorited_users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
-
-	if ( empty( $favorited_users ) || ! is_array( $favorited_users ) ) {
-		return 0;
-	}
-
-	if ( $like_count > sizeof( $favorited_users ) ) {
-		$like_count = sizeof( $favorited_users );
-	}
-
-	$current_user_fav = false;
-	if ( bp_loggedin_user_id() && in_array( bp_loggedin_user_id(), $favorited_users ) ) {
-		$current_user_fav = true;
-		if ( sizeof( $favorited_users ) > 1 ) {
-			$pos = array_search( bp_loggedin_user_id(), $favorited_users );
-			unset( $favorited_users[ $pos ] );
-		}
-	}
-
-	$return_str = '';
-	if ( 1 == $like_count ) {
-		if ( $current_user_fav ) {
-			$return_str = __( 'You like this', 'buddyboss' );
 		} else {
-			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
-			$return_str        = $user_display_name . ' ' . __( 'likes this', 'buddyboss' );
+			return new WP_Error(
+				'bp_activity_add_user_favorite_disabled_temporarily',
+				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' )
+			);
 		}
-	} elseif ( 2 == $like_count ) {
-		if ( $current_user_fav ) {
-			$return_str .= __( 'You and', 'buddyboss' ) . ' ';
-
-			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
-			$return_str       .= $user_display_name . ' ' . __( 'like this', 'buddyboss' );
-		} else {
-			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
-			$return_str       .= $user_display_name . ' ' . __( 'and', 'buddyboss' ) . ' ';
-
-			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
-			$return_str       .= $user_display_name . ' ' . __( 'like this', 'buddyboss' );
-		}
-	} elseif ( 3 == $like_count ) {
-
-		if ( $current_user_fav ) {
-			$return_str .= __( 'You,', 'buddyboss' ) . ' ';
-
-			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
-			$return_str       .= $user_display_name . ' ' . __( 'and', 'buddyboss' ) . ' ';
-
-			$return_str .= ' ' . __( '1 other like this', 'buddyboss' );
-		} else {
-
-			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
-			$return_str       .= $user_display_name . ', ';
-
-			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
-			$return_str       .= $user_display_name . ' ' . __( 'and', 'buddyboss' ) . ' ';
-
-			$return_str .= ' ' . __( '1 other like this', 'buddyboss' );
-		}
-	} elseif ( 3 < $like_count ) {
-
-		$like_count = ( isset( $like_count ) && ! empty( $like_count ) ) ? (int) $like_count - 2 : 0;
-
-		if ( $current_user_fav ) {
-			$return_str .= __( 'You,', 'buddyboss' ) . ' ';
-
-			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
-			$return_str       .= $user_display_name . ' ' . __( 'and', 'buddyboss' ) . ' ';
-		} else {
-			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
-			$return_str       .= $user_display_name . ', ';
-
-			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
-			$return_str       .= $user_display_name . ' ' . __( 'and', 'buddyboss' ) . ' ';
-		}
-
-		if ( $like_count > 1 ) {
-			$return_str .= $like_count . ' ' . __( 'others like this', 'buddyboss' );
-		} else {
-			$return_str .= $like_count . ' ' . __( 'other like this', 'buddyboss' );
-		}
-	} else {
-		$return_str = $like_count;
 	}
 
-	return $return_str;
-}
+	// Check if user try to un-react but there is no reaction id as per current reaction mode.
+	$reacted_reaction_id = bb_load_reaction()->bb_user_reacted_reaction_id(
+		array(
+			'item_id'   => $activity_id,
+			'item_type' => $r['type'],
+			'user_id'   => $user_id,
+		)
+	);
 
+	if ( empty( $reacted_reaction_id ) ) {
+		if ( 'bool' === $r['error_type'] ) {
+			return false;
+		} else {
+			return new WP_Error(
+				'bp_activity_add_user_favorite_disabled_temporarily',
+				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' )
+			);
+		}
+	}
 
-/**
- * Get users for activity favorite tooltip
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $activity_id
- *
- * @return string
- */
-function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
+	$un_reacted = bb_load_reaction()->bb_remove_user_item_reactions(
+		array(
+			'item_type'  => $r['type'],
+			'item_id'    => $activity_id,
+			'user_id'    => $user_id,
+			'error_type' => $r['error_type'],
+		)
+	);
 
-	if ( ! bp_is_activity_like_active() ) {
+	if ( ! is_wp_error( $un_reacted ) ) {
+
+		/**
+		 * Fires if bp_update_user_meta() is successful and before returning a true value for success.
+		 *
+		 * @since BuddyPress 1.2.1
+		 *
+		 * @param int $activity_id ID of the activity item being unfavorited.
+		 * @param int $user_id     ID of the user doing the unfavoriting.
+		 */
+		do_action( 'bp_activity_remove_user_favorite', $activity_id, $user_id );
+
+		// Success.
+		if ( 'bool' === $r['error_type'] ) {
+			return true;
+		}
+
+		return $un_reacted;
+	}
+
+	if ( 'bool' === $r['error_type'] ) {
 		return false;
 	}
 
-	$current_user_id = get_current_user_id();
-	$favorited_users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
-
-	if ( ! empty( $favorited_users ) ) {
-		$like_text       = bp_activity_get_favorite_users_string( $activity_id );
-		$favorited_users = array_reduce(
-			$favorited_users,
-			function ( $carry, $user_id ) use ( $current_user_id, $like_text ) {
-				if ( $user_id != $current_user_id ) {
-					$user_display_name = bp_core_get_user_displayname( $user_id );
-					if ( strpos( $like_text, $user_display_name ) === false ) {
-						$carry .= $user_display_name . ',&#10;';
-					}
-				}
-
-				return $carry;
-			}
-		);
-	}
-
-	return ! empty( $favorited_users ) ? trim( $favorited_users, ',&#10;' ) : '';
+	return $un_reacted;
 }
 
 /**
@@ -1378,18 +1241,21 @@ function bp_activity_get_last_updated() {
  * Retrieve the number of favorite activity feed items a user has.
  *
  * @since BuddyPress 1.2.0
+ * @since BuddyBoss 2.5.20 Added `$activity_type` property to indicate whether the current ID is activity or comment.
  *
  * @param int $user_id ID of the user whose favorite count is being requested.
+ * @param string $activity_type Activity type.
+ *
  * @return int Total favorite count for the user.
  */
-function bp_activity_total_favorites_for_user( $user_id = 0 ) {
+function bp_activity_total_favorites_for_user( $user_id = 0, $activity_type = 'activity' ) {
 
 	// Fallback on displayed user, and then logged in user.
 	if ( empty( $user_id ) ) {
 		$user_id = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
 	}
 
-	return BP_Activity_Activity::total_favorite_count( $user_id );
+	return BP_Activity_Activity::total_favorite_count( $user_id, $activity_type );
 }
 
 /**
@@ -1555,6 +1421,13 @@ function bp_activity_remove_all_user_data( $user_id = 0 ) {
 	// Remove any usermeta.
 	bp_delete_user_meta( $user_id, 'bp_latest_update' );
 	bp_delete_user_meta( $user_id, 'bp_favorite_activities' );
+
+	// Remove user reactions from reactions table.
+	bb_load_reaction()->bb_remove_user_item_reactions(
+		array(
+			'user_id' => $user_id,
+		)
+	);
 
 	// Execute additional code
 	do_action( 'bp_activity_remove_data', $user_id ); // Deprecated! Do not use!
@@ -6150,6 +6023,26 @@ function bb_activity_migration( $raw_db_version, $current_db ) {
 			set_transient( 'bb_migrate_activity_reaction', true, HOUR_IN_SECONDS );
 			bb_migrate_activity_like_reaction();
 		}
+
+		// Migrate the activity like settings with reaction settings.
+		if ( $current_db >= 20951 ) {
+			$enabled_reactions = bp_get_option( 'bb_all_reactions', array() );
+
+			if ( ! isset( $enabled_reactions['activity'] ) ) {
+				$enabled_reactions['activity'] = (bool) bp_get_option( '_bp_enable_activity_like', true );
+			}
+
+			if ( ! isset( $enabled_reactions['activity_comment'] ) ) {
+				$enabled_reactions['activity_comment'] = false;
+			}
+
+			bp_update_option( 'bb_all_reactions', $enabled_reactions );
+
+			$mode = bp_get_option( 'bb_reaction_mode' );
+			if ( empty( $mode ) ) {
+				bp_update_option( 'bb_reaction_mode', 'likes' );
+			}
+		}
 	}
 }
 
@@ -6575,4 +6468,20 @@ function bb_activity_pin_type( $args ) {
 	}
 
 	return $r['pin_type'];
+}
+
+/**
+ * Load the JS template for reacted users and reactions in modal.
+ *
+ * @since BuddyBoss 2.5.20
+ */
+function bb_load_reaction_popup_modal_js_template() {
+
+	// If reaction is enabled for activity post or comment then load the template.
+	if (
+		bb_is_reaction_activity_posts_enabled() ||
+		bb_is_reaction_activity_comments_enabled()
+	) {
+		bp_get_template_part( 'common/js-templates/activity/parts/bb-activity-reactions-popup' );
+	}
 }
