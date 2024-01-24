@@ -3619,7 +3619,7 @@ input.search-query-input {
 .activity-list .activity-item .activity-content .bp-generic-meta.action .button.has-reaction > i,
 .activity-list .activity-item > .bp-generic-meta.action .button.has-reaction > i {
   font-weight: 200;
-  font-size: 20px;
+  font-size: 24px;
 }
 
 body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp-generic-meta.action .button.has-reaction > i, body:not(.bb-reactions-mode)
@@ -3629,8 +3629,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content .bp-generic-meta.action .button > img,
 .activity-list .activity-item > .bp-generic-meta.action .button > img {
-  height: 20px;
-  width: 20px;
+  height: 24px;
+  width: 24px;
   object-fit: cover;
 }
 
@@ -3754,7 +3754,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 .activity-list .activity-item > .bp-generic-meta.activity-meta .icons:before {
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 20px;
+  font-size: 24px;
   vertical-align: middle;
 }
 

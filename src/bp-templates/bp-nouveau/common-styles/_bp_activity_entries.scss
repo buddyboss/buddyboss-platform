@@ -307,7 +307,7 @@
 
 				&.has-reaction > i {
 					font-weight: 200;
-					font-size: 20px;
+					font-size: 24px;
 
 					body:not(.bb-reactions-mode) & {
 						font-weight: 300;
@@ -315,8 +315,8 @@
 				}
 
 				> img {
-					height: 20px;
-					width: 20px;
+					height: 24px;
+					width: 24px;
 					object-fit: cover;
 				}
 
@@ -446,7 +446,7 @@
 			.button:before,
 			.icons:before {
 				font-family: "bb-icons";/* stylelint-disable-line */
-				font-size: 20px;
+				font-size: 24px;
 				vertical-align: middle;
 			}
 
