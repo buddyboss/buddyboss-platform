@@ -28,6 +28,9 @@ add_filter( 'bp_repair_list', 'bb_repair_member_profile_links', 12 );
 
 add_action( 'bb_assign_default_member_type_to_activate_user_on_admin', 'bb_set_default_member_type_to_activate_user_on_admin', 1, 2 );
 
+// Exclude account related notifications.
+add_filter( 'bp_notifications_get_where_conditions', 'bb_members_hide_account_settings_notifications', 10, 2 );
+
 /**
  * Load additional sign-up sanitization filters on bp_loaded.
  *
@@ -769,8 +772,8 @@ function bb_load_member_type_label_custom_css() {
 					$background_color        = isset( $label_color_data['background-color'] ) ? $label_color_data['background-color'] : '';
 					$text_color              = isset( $label_color_data['color'] ) ? $label_color_data['color'] : '';
 					$class_name              = 'body .bp-member-type.bb-current-member-' . $type;
-					$member_type_custom_css .= $class_name . ' {' . "background-color:$background_color;" . '}';
-					$member_type_custom_css .= $class_name . ' {' . "color:$text_color;" . '}';
+					$member_type_custom_css .= $class_name . ' {' . "background-color:$background_color !important;" . '}';
+					$member_type_custom_css .= $class_name . ' {' . "color:$text_color !important;" . '}';
 				}
 			}
 			wp_cache_set( $cache_key, $member_type_custom_css, 'bp_member_member_type' );
@@ -952,3 +955,21 @@ function bb_generate_member_profile_slug_on_activate( $user_id ) {
 add_action( 'bp_core_signup_user', 'bb_generate_member_profile_slug_on_activate', 10, 1 );
 add_action( 'bp_core_activated_user', 'bb_generate_member_profile_slug_on_activate', 10, 1 );
 
+/**
+ * Function to exclude the account settings related notification.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $where_conditions Where clause to get notifications.
+ * @param array $args             Parsed arguments to get notifications.
+ *
+ * @return array
+ */
+function bb_members_hide_account_settings_notifications( $where_conditions, $args ) {
+
+	if ( ! bp_is_active( 'settings' ) ) {
+		$where_conditions['account_settings_exclude'] = "( component_action != 'bb_account_password' )";
+	}
+
+	return $where_conditions;
+}

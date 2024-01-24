@@ -3818,6 +3818,7 @@ window.bp = window.bp || {};
 				if ( selected_privacy === 'group' ) {
 					var group_name = whats_new_form.find( '#bp-item-opt-' + group_item_id ).data( 'title' );
 					whats_new_form.find( '.bp-activity-privacy-status' ).text( group_name );
+					whats_new_form.find( '#bp-activity-privacy-point' ).removeClass().addClass( selected_privacy );
 					this.model.set( 'item_name', group_name );
 					// display image of the group.
 					if ( this.model.attributes.group_image && false === this.model.attributes.group_image.includes( 'mystery-group' ) ) {
@@ -4878,7 +4879,7 @@ window.bp = window.bp || {};
 				var $whatsNew = this.$el.find( '#whats-new' );
 				var content = $.trim( $whatsNew[0].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 				content     = content.replace( /&nbsp;/g, ' ' );
-				
+
 				if ( content.replace( /<p>/gi, '' ).replace( /<\/p>/gi, '' ).replace( /<br>/gi, '' ) === '' ) {
 					$whatsNew[0].innerHTML = '';
 				}
