@@ -10,7 +10,8 @@
  */
 
 $topic_id = get_the_ID();
-$total    = bbp_get_topic_reply_count( $topic_id ) ?>
+$total    = bbp_get_topic_reply_count( $topic_id );
+?>
 <li class="bp-search-item bp-search-item_topic">
 	<div class="list-wrap">
 		<div class="item-avatar">
