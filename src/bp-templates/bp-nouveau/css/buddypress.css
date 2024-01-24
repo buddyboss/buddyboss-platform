@@ -6236,6 +6236,74 @@ span.dashicons.dashicons-admin-file:before {
   top: 18px;
 }
 
+.bb-activity-placeholder {
+  background: #fff;
+  border: 1px solid #b7b7b7;
+  padding: 20px 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.bb-activity-placeholder .bb-activity-placeholder_avatar {
+  height: 48px;
+  width: 48px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.bb-activity-placeholder .bb-activity-placeholder_head {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.bb-activity-placeholder .bb-activity-placeholder_details {
+  display: flex;
+  justify-content: center;
+  flex-flow: column;
+  flex: 1;
+  width: calc(100% - 68px);
+}
+
+.bb-activity-placeholder .bb-activity-placeholder_details .bb-activity-placeholder_title,
+.bb-activity-placeholder .bb-activity-placeholder_details .bb-activity-placeholder_description {
+  max-width: 107px;
+  height: 17px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+
+.bb-activity-placeholder .bb-activity-placeholder_details .bb-activity-placeholder_description {
+  max-width: 202px;
+  height: 12px;
+}
+
+.bb-activity-placeholder .bb-activity-placeholder_content {
+  display: flex;
+  justify-content: center;
+  flex-flow: column;
+  flex: 1;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.bb-activity-placeholder .bb-activity-placeholder_content .bb-activity-placeholder_title {
+  height: 18px;
+  border-radius: 6px;
+  width: 100%;
+}
+
+.bb-activity-placeholder .bb-activity-placeholder_actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.bb-activity-placeholder .bb-activity-placeholder_actions .bb-activity-placeholder_description {
+  height: 13px;
+  border-radius: 6px;
+  width: 100%;
+  max-width: 98px;
+}
+
 @media screen and (max-width: 799px) {
   #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list {
     right: -53px;

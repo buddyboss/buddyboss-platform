@@ -26,7 +26,26 @@
 
 	<ul id="activity-stream" class="activity-list item-list bp-list" data-bp-list="activity">
 
-		<li id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'single-activity-loading' ); ?></li>
+	<div id="bp-ajax-loader">
+		<div class="bb-activity-placeholder">
+			<div class="bb-activity-placeholder_head">
+				<div class="bb-activity-placeholder_avatar bb-bg-animation bb-loading-bg"></div>
+				<div class="bb-activity-placeholder_details">
+					<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
+					<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
+				</div>
+			</div>
+			<div class="bb-activity-placeholder_content">
+				<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
+				<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
+			</div>
+			<div class="bb-activity-placeholder_actions">
+				<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
+				<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
+				<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
+			</div>
+		</div>
+	</div>
 
 	</ul>
 
