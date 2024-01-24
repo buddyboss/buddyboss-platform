@@ -447,7 +447,7 @@ function bp_admin_repair_list() {
 	if ( bp_is_active( 'activity' ) ) {
 		$repair_list[85] = array(
 			'bp-sync-activity-favourite',
-			esc_html__( 'Update activity favorites data', 'buddyboss' ),
+			esc_html__( 'Migrate BuddyPress activity favourites to BuddyBoss reactions table', 'buddyboss' ),
 			'bp_admin_update_activity_favourite',
 		);
 	}
@@ -1323,9 +1323,9 @@ add_action( 'wp_ajax_bp_admin_repair_tools_wrapper_function', 'bp_admin_repair_t
  */
 function bp_admin_update_activity_favourite() {
 
-	$bp_activity_favorites = bp_get_option( 'bp_activity_favorites', false );
+	$bp_activity_reactions = bp_get_option( 'bp_activity_reactions', false );
 
-	if ( ! $bp_activity_favorites ) {
+	if ( ! $bp_activity_reactions ) {
 
 		$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 
@@ -1334,9 +1334,10 @@ function bp_admin_update_activity_favourite() {
 			'offset' => $offset,
 		);
 
-		$users = get_users( $args );
+		$users       = get_users( $args );
+		$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
 
-		if ( ! empty( $users ) ) {
+		if ( ! empty( $users ) && ! empty( $reaction_id ) ) {
 
 			foreach ( $users as $user ) {
 				$user_favs = bp_get_user_meta( $user->ID, 'bp_favorite_activities', true );
@@ -1345,18 +1346,15 @@ function bp_admin_update_activity_favourite() {
 					continue;
 				}
 				foreach ( $user_favs as $fav ) {
-
-					// Update the users who have favorited this activity.
-					$favorite_users = bp_activity_get_meta( $fav, 'bp_favorite_users', true );
-					if ( empty( $favorite_users ) || ! is_array( $favorite_users ) ) {
-						$favorite_users = array();
-					}
-					// Add to activity's favorited users.
-					$favorite_users[] = $user->ID;
-
-					// Update activity meta
-					bp_activity_update_meta( $fav, 'bp_favorite_users', array_unique( $favorite_users ) );
-
+					// Add favorite user meta to reactions table.
+					bb_load_reaction()->bb_add_user_item_reaction(
+						array(
+							'user_id'     => $user->ID,
+							'reaction_id' => $reaction_id,
+							'item_id'     => $fav,
+							'item_type'   => 'activity',
+						)
+					);
 				}
 				$offset ++;
 			}
@@ -1371,7 +1369,7 @@ function bp_admin_update_activity_favourite() {
 
 		} else {
 
-			bp_update_option( 'bp_activity_favorites', true );
+			bp_update_option( 'bp_activity_reactions', true );
 
 			$statement = __( 'Updating activity favorites data &hellip; %s', 'buddyboss' );
 
