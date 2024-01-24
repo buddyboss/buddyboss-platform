@@ -235,3 +235,15 @@
 	}
 
 }
+
+@keyframes popIn {
+
+	0% {
+		transform: translateY(20%) scale(0.8);
+	}
+
+	100% {
+		transform: translateY(0) scale(1);
+	}
+
+}
