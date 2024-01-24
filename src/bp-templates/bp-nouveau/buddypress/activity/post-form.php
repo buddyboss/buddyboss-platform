@@ -20,10 +20,13 @@ if ( bp_is_user_activity() && ! bp_is_activity_tabs_active() && ! empty( $curren
 }
 
 $bp_hide_class = (
-	! empty( $current_action ) &&
-	! is_array( $current_action ) &&
-	'just-me' !== $current_action &&
-	'activity' !== $current_action
+	! bb_user_can_create_activity() ||
+	(
+		! empty( $current_action ) &&
+		! is_array( $current_action ) &&
+		'just-me' !== $current_action &&
+		'activity' !== $current_action
+	)
 ) ? 'bp-hide is-bp-hide' : '';
 
 ?>
