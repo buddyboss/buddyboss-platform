@@ -3524,7 +3524,7 @@ function bb_reactions_settings_callback_reaction_mode() {
 			'value'      => 'emotions',
 			'id'         => 'bb_reaction_mode_emotions',
 			'is_checked' => bb_is_reaction_emotions_enabled(),
-			'notice'     => esc_html__( 'Members express their thoughts or feelings by selecting an emotion from a list of options.', 'buddyboss' ),
+			'notice'     => esc_html__( 'Members express their thoughts or feelings by selecting an emotion from a list of options. Maximum of only 6 emotions can be used.', 'buddyboss' ),
 			'disabled'   => (
 				! class_exists( 'BB_Reactions' ) ||
 				! function_exists( 'bbp_pro_is_license_valid' ) ||
