@@ -577,46 +577,32 @@ function bp_nouveau_get_loop_classes() {
 				$current_value = bp_get_option( 'bp-group-layout-format' );
 			}
 		}
+
 		if ( 'list_grid' === $current_value ) {
-			$list = false;
-			if ( isset( $_POST['extras'] ) && ! empty( $_POST['extras']['layout'] ) && 'list' == $_POST['extras']['layout'] ) {
-				$list = true;
-			}
-
-			if ( ! $list && isset( $_POST['extras'] ) && ! empty( $_POST['extras']['layout'] ) ) {
-				$list = true;
-			}
-
-			if ( ! $list ) {
-				if ( bp_is_members_directory() || bp_is_user() ) {
-					if ( ! bp_is_user_groups() ) {
-						$default_current_value = bp_profile_layout_default_format( 'grid' );
-					} else {
-						$default_current_value = bp_group_layout_default_format( 'grid' );
-					}
-				} elseif ( bp_is_groups_directory() || bp_is_group() ) {
-					if ( ! bp_is_user_groups() && ! bp_is_groups_directory() ) {
-						$default_current_value = bp_profile_layout_default_format( 'grid' );
-					} else {
-						$default_current_value = bp_group_layout_default_format( 'grid' );
-					}
+			if ( bp_is_members_directory() || bp_is_user() ) {
+				if ( ! bp_is_user_groups() ) {
+					$default_current_value = bb_get_directory_layout_preference( 'members' );
 				} else {
-					$default_current_value = bp_group_layout_default_format( 'grid' );
+					$default_current_value = bb_get_directory_layout_preference( 'groups' );
 				}
-				$classes = array_merge(
-					$classes,
-					array(
-						$default_current_value,
-					)
-				);
-			} elseif ( isset( $_POST['extras'] ) && ! empty( $_POST['extras']['layout'] ) ) {
-				$classes = array_merge(
-					$classes,
-					array(
-						$_POST['extras']['layout'],
-					)
-				);
+			} elseif ( bp_is_groups_directory() || bp_is_group() ) {
+				if ( ! bp_is_user_groups() && ! bp_is_groups_directory() ) {
+					$default_current_value = bb_get_directory_layout_preference( 'members' );
+				} else {
+					$default_current_value = bb_get_directory_layout_preference( 'groups' );
+				}
+			} else {
+				$default_current_value = bb_get_directory_layout_preference( 'groups' );
 			}
+			if ( bp_is_group() && 'members' === bp_current_action() ) {
+				$default_current_value = bb_get_directory_layout_preference( 'members' );
+			}
+			$classes = array_merge(
+				$classes,
+				array(
+					$default_current_value,
+				)
+			);
 		} elseif ( 'list' === $current_value ) {
 			$classes = array_merge(
 				$classes,

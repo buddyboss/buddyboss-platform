@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.3.2
+Tested up to: 6.4.2
 Requires PHP: 5.6.20
-Stable tag: 2.5.00
+Stable tag: 2.5.20
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,19 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.5.20 =
+* New Feature! - Introducing reaction into the platform, where your members will now have the ability to react with different emotions to posts, comments and replies. As an added feature you will be able to customise your emotions to suite your brand.
+* Enhancement: Core - Reactions settings updated to include REST API’s
+
+= 2.5.11 =
+* Bug: Core - Changed directory layout view, switching logic, such as ‘Grid' and 'List’ for pages that utilize the the change view options so on page refresh will maintain the default settings
+
+= 2.5.10 =
+* Bug: Forums - Creating a new post when there was an existing discussion showed the previous discussion title
+* Bug: Groups - Document tab within a group would load slowly with groups with thousand or more members
+* Bug: Groups - When adding a LearnDash course to a group within the settings, previously this then would alter the groups permalink and alter the group invite settings
+* Bug: Styling - The & sign when used within a label for a Profile Type would show &AMP code on user profile and member directory
 
 = 2.5.00 =
 * New Feature! - TutorLMS settings added to BuddyBoss integration page for adding courses to groups and choosing course activity posts into group feeds depending in user interactions
