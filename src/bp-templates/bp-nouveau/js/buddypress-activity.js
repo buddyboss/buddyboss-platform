@@ -151,6 +151,11 @@ window.bp = window.bp || {};
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.autoload ) ) {
 				$( window ).scroll( this.loadMoreActivities );
 			}
+
+			$( '#activity-stream' ).on( 'DOMSubtreeModified', function() {
+				bp.Nouveau.Activity.handleAudioEvents();
+			});
+
 		},
 
 		/**
@@ -195,11 +200,16 @@ window.bp = window.bp || {};
 					$( '#activity-stream ul.activity-list li.activity-item' ).find( 'form.has-content' ).length > 0 && 
 					'none' !== $( '#activity-stream ul.activity-list li.activity-item' ).find( 'form.has-content' ).css( 'display' )
 			 	) ||
+				(
+					$( '#activity-stream ul.activity-list li.activity-item' ).find( 'form.has-media' ).length > 0 && 
+					'none' !== $( '#activity-stream ul.activity-list li.activity-item' ).find( 'form.has-media' ).css( 'display' )
+			 	) ||
 				$( '#activity-stream ul.activity-list li.activity-item' ).find( 'div.vjs-playing' ).length > 0 ||
-				$( '#activity-stream ul.activity-list li.activity-item' ).find( 'div.vjs-playing' ).length > 0
+				$( '#activity-stream ul.activity-list li.activity-item' ).find( '.audio-playing' ).length > 0
 			) {
 				skip_refresh = true;
 			}
+
 			// Only proceed if we have newest activities.
 			if ( undefined === data || true === skip_refresh || ! data.bp_activity_newest_activities ) {
 				return;
@@ -3194,6 +3204,19 @@ window.bp = window.bp || {};
 		 */
 		closeActivityState: function() {
 			$( '.activity-state-popup' ).hide().removeClass( 'active' );
+		},
+
+		handleAudioEvents: function() {
+			$( '.activity-item audio' ).on({
+				play: function() {
+					// Audio started playing
+					$(this).parent().addClass('audio-playing');
+				},
+				pause: function() {
+					// Audio paused
+					$(this).parent().removeClass('audio-playing');
+				}
+			});
 		}
 
 	};
