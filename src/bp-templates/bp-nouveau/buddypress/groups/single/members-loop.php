@@ -40,11 +40,14 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 			$members_list_item_content = ob_get_clean();
 			$member_loop_has_content   = ! empty( $members_list_item_content );
 
+			$member_user_id  = bp_get_member_user_id();
+			$group_member_id = bp_get_group_member_id();
+
 			// Get member followers element.
 			$followers_count = '';
 			if ( $enabled_followers && function_exists( 'bb_get_followers_count' ) ) {
 				ob_start();
-				bb_get_followers_count( bp_get_member_user_id() );
+				bb_get_followers_count( $member_user_id );
 				$followers_count = ob_get_clean();
 			}
 
@@ -52,28 +55,28 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 			$member_joined_date = bp_get_group_member_joined_since();
 
 			// Member last activity.
-			$member_last_activity = bp_get_last_activity( bp_get_member_user_id() );
+			$member_last_activity = bp_get_last_activity( $member_user_id );
 
 			// Primary and secondary profile action buttons.
-			$profile_actions = bb_member_directories_get_profile_actions( bp_get_member_user_id() );
+			$profile_actions = bb_member_directories_get_profile_actions( $member_user_id );
 
 			// Member switch button.
-			$member_switch_button = bp_get_add_switch_button( bp_get_member_user_id() );
+			$member_switch_button = bp_get_add_switch_button( $member_user_id );
 
 			// Get Primary action.
 			$primary_action_btn = function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '';
 			$is_blocked         = false;
 			$moderation_class   = '';
 			if ( bp_is_active( 'moderation' ) ) {
-				if ( bp_moderation_is_user_suspended( bp_get_member_user_id() ) ) {
+				if ( bp_moderation_is_user_suspended( $member_user_id ) ) {
 					$moderation_class .= 'bp-user-suspended';
-				} elseif ( bb_moderation_is_user_blocked_by( bp_get_member_user_id() ) ) {
+				} elseif ( bb_moderation_is_user_blocked_by( $member_user_id ) ) {
 					$is_blocked       = true;
 					$moderation_class .= ' bp-user-blocked';
 				}
 			}
 			?>
-			<li <?php bp_member_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php echo esc_attr( bp_get_group_member_id() ); ?>" data-bp-item-component="members">
+			<li <?php bp_member_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php echo esc_attr( $group_member_id ); ?>" data-bp-item-component="members">
 				<div class="list-wrap <?php echo esc_attr( $footer_buttons_class ); ?> <?php echo esc_attr( $follow_class ); ?> <?php echo $member_loop_has_content ? esc_attr( ' has_hook_content' ) : esc_attr( '' ); ?> <?php echo ! empty( $profile_actions['secondary'] ) ? esc_attr( 'secondary-buttons' ) : esc_attr( 'no-secondary-buttons' ); ?> <?php echo ! empty( $primary_action_btn ) ? esc_attr( 'primary-button' ) : esc_attr( 'no-primary-buttons' ); ?>">
 
 					<div class="list-wrap-inner">
@@ -81,7 +84,7 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 							<a href="<?php bp_group_member_domain(); ?>" class="<?php echo esc_attr( $moderation_class ); ?>">
 								<?php
 								if ( $enabled_online_status ) {
-									bb_user_presence_html( bp_get_group_member_id() );
+									bb_user_presence_html( $group_member_id );
 								}
 								bp_group_member_avatar();
 								?>
@@ -91,19 +94,20 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 						<div class="item">
 							<div class="item-block">
 								<?php
-								if ( $enabled_profile_type && function_exists( 'bp_member_type_enable_disable' ) && true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() ) {
-									echo '<p class="item-meta member-type only-grid-view">' . wp_kses_post( bp_get_user_member_type( bp_get_member_user_id() ) ) . '</p>';
+								$is_enabled_member_type = ( $enabled_profile_type && function_exists( 'bp_member_type_enable_disable' ) && true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() );
+
+								if ( $is_enabled_member_type ) {
+									echo '<p class="item-meta member-type only-grid-view">' . wp_kses_post( bp_get_user_member_type( $member_user_id ) ) . '</p>';
 								}
 								?>
 								<h2 class="list-title member-name">
 									<?php bp_group_member_link(); ?>
 								</h2>
 								<?php
-								if ( $enabled_profile_type && function_exists( 'bp_member_type_enable_disable' ) && true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() ) {
-									echo '<p class="item-meta member-type only-list-view">' . wp_kses_post( bp_get_user_member_type( bp_get_member_user_id() ) ) . '</p>';
+								if ( $is_enabled_member_type ) {
+									echo '<p class="item-meta member-type only-list-view">' . wp_kses_post( bp_get_user_member_type( $member_user_id ) ) . '</p>';
 								}
-								?>
-								<?php
+
 								if (
 									! $is_blocked &&
 									(
@@ -184,7 +188,7 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 								<i class="bb-icon-menu-dots-h"></i>
 							</a>
 							<div class="bb_more_options_list">
-								<?php echo wp_kses_post( bp_get_add_switch_button( bp_get_member_user_id() ) ); ?>
+								<?php echo wp_kses_post( bp_get_add_switch_button( $member_user_id ) ); ?>
 							</div>
 						</div><!-- .bb_more_options -->
 					<?php } ?>

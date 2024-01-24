@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+$bp_get_new_group_status = bp_get_new_group_status();
+$bp_get_current_group_id = bp_get_current_group_id();
+
 if ( bp_is_group_create() ) : ?>
 	<h3 class="bp-screen-title creation-step-name">
 		<?php esc_html_e( 'Select Group Settings', 'buddyboss' ); ?>
@@ -26,7 +29,7 @@ if ( bp_is_group_create() ) : ?>
 		<div class="bp-radio-wrap">
 			<input type="radio" name="group-status" id="group-status-public" class="bs-styled-radio" value="public"
 			<?php
-			if ( 'public' === bp_get_new_group_status() || ! bp_get_new_group_status() ) {
+			if ( 'public' === $bp_get_new_group_status || ! $bp_get_new_group_status ) {
 				?>
 				checked="checked"<?php } ?> aria-describedby="public-group-description" />
 			<label for="group-status-public"><?php esc_html_e( 'This is a public group', 'buddyboss' ); ?></label>
@@ -41,7 +44,7 @@ if ( bp_is_group_create() ) : ?>
 		<div class="bp-radio-wrap">
 			<input type="radio" name="group-status" id="group-status-private" class="bs-styled-radio" value="private"
 			<?php
-			if ( 'private' === bp_get_new_group_status() ) {
+			if ( 'private' === $bp_get_new_group_status ) {
 				?>
 				checked="checked"<?php } ?> aria-describedby="private-group-description" />
 			<label for="group-status-private"><?php esc_html_e( 'This is a private group', 'buddyboss' ); ?></label>
@@ -56,7 +59,7 @@ if ( bp_is_group_create() ) : ?>
 		<div class="bp-radio-wrap">
 			<input type="radio" name="group-status" id="group-status-hidden" class="bs-styled-radio" value="hidden"
 			<?php
-			if ( 'hidden' === bp_get_new_group_status() ) {
+			if ( 'hidden' === $bp_get_new_group_status ) {
 				?>
 				checked="checked"<?php } ?> aria-describedby="hidden-group-description" />
 			<label for="group-status-hidden"><?php esc_html_e( 'This is a hidden group', 'buddyboss' ); ?></label>
@@ -243,13 +246,13 @@ if ( bp_is_group_create() ) : ?>
 	// Hide Group Types if none is selected in Users > Profile Type > E.g. (Students) > Allowed Group Types meta box.
 	if ( false === bp_restrict_group_creation() && true === bp_member_type_enable_disable() ) {
 		$get_all_registered_member_types = bp_get_active_member_types();
-		if ( isset( $get_all_registered_member_types ) && ! empty( $get_all_registered_member_types ) ) {
+		if ( ! empty( $get_all_registered_member_types ) ) {
 
 			$current_user_member_type = bp_get_member_type( bp_loggedin_user_id() );
 			if ( '' !== $current_user_member_type ) {
 				$member_type_post_id = bp_member_type_post_by_type( $current_user_member_type );
 				$include_group_type  = get_post_meta( $member_type_post_id, '_bp_member_type_enabled_group_type_create', true );
-				if ( isset( $include_group_type ) && ! empty( $include_group_type ) && 'none' === $include_group_type[0] ) {
+				if ( ! empty( $include_group_type ) && 'none' === $include_group_type[0] ) {
 					$group_types = '';
 				}
 			}
@@ -266,49 +269,51 @@ if ( bp_is_group_create() ) : ?>
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'What type of group is this? (optional)', 'buddyboss' ); ?></p>
 			<select id="bp-groups-type" name="group-types[]" autocomplete="off">
 				<option value="" <?php selected( '', '' ); ?>><?php _e( 'Select Group Type', 'buddyboss' ); ?></option>
-			<?php
-			foreach ( $group_types as $type ) :
-				if ( false === bp_restrict_group_creation() && true === bp_member_type_enable_disable() ) {
+				<?php
+				foreach ( $group_types as $type ) :
 
-					$get_all_registered_member_types = bp_get_active_member_types();
+					$option = sprintf(
+						'<option for="%1$s" value="%2$s" %3$s>%4$s</option>',
+						sprintf(
+							'group-type-%s',
+							$type->name
+						),
+						esc_attr( $type->name ),
+						selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '', $type->name, false ),
+						esc_html( $type->labels['singular_name'] )
+					);
 
-					if ( isset( $get_all_registered_member_types ) && ! empty( $get_all_registered_member_types ) ) {
+					if ( false === bp_restrict_group_creation() && true === bp_member_type_enable_disable() ) {
 
-						$current_user_member_type = bp_get_member_type( bp_loggedin_user_id() );
+						$get_all_registered_member_types = bp_get_active_member_types();
 
-						if ( '' !== $current_user_member_type ) {
+						if ( ! empty( $get_all_registered_member_types ) ) {
 
-							$member_type_post_id = bp_member_type_post_by_type( $current_user_member_type );
-							$include_group_type  = get_post_meta( $member_type_post_id, '_bp_member_type_enabled_group_type_create', true );
+							$current_user_member_type = bp_get_member_type( bp_loggedin_user_id() );
 
-							if ( isset( $include_group_type ) && ! empty( $include_group_type ) ) {
-								if ( in_array( $type->name, $include_group_type ) ) {
-									?>
-									<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ); ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '', $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
-									<?php
+							if ( '' !== $current_user_member_type ) {
+
+								$member_type_post_id = bp_member_type_post_by_type( $current_user_member_type );
+								$include_group_type  = get_post_meta( $member_type_post_id, '_bp_member_type_enabled_group_type_create', true );
+
+								if ( ! empty( $include_group_type ) ) {
+									if ( in_array( $type->name, $include_group_type ) ) {
+										print $option;
+									}
+								} else {
+									print $option;
 								}
 							} else {
-								?>
-								<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ); ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '', $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
-								<?php
+								print $option;
 							}
 						} else {
-							?>
-							<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ); ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '', $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
-							<?php
+							print $option;
 						}
 					} else {
-						?>
-						<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ); ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '', $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
-						<?php
+						print $option;
 					}
-				} else {
-					?>
-					<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ); ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '', $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
-					<?php
-				}
-			endforeach;
-			?>
+				endforeach;
+				?>
 			</select>
 		</fieldset>
 

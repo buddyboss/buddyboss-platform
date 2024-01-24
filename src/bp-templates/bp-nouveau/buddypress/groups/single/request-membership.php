@@ -10,13 +10,16 @@
 
 bp_nouveau_group_hook( 'before', 'request_membership_content' );
 
-if ( groups_check_user_has_invite( bp_loggedin_user_id(), bp_get_current_group_id() ) ) {
+$current_group_id = bp_get_current_group_id();
+$loggedin_user_id = bp_loggedin_user_id();
+
+if ( groups_check_user_has_invite( $loggedin_user_id, $current_group_id ) ) {
 	?>
 	<aside class="bp-feedback bp-messages loading">
 		<span class="bp-icon" aria-hidden="true"></span>
 		<p>
 			<?php
-			$inviter = bp_groups_get_invited_by( bp_loggedin_user_id(), bp_get_current_group_id() );
+			$inviter = bp_groups_get_invited_by( $loggedin_user_id, $current_group_id );
 			if ( ! empty( $inviter ) ) :
 				$groups_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() );
 				printf(
@@ -43,11 +46,11 @@ if ( groups_check_user_has_invite( bp_loggedin_user_id(), bp_get_current_group_i
 
 	<?php
 } elseif ( ! bp_group_has_requested_membership() ) {
-	$parent_group_id = bp_get_parent_group_id( bp_get_current_group_id() );
-	$is_member       = groups_is_user_member( bp_loggedin_user_id(), $parent_group_id );
+	$parent_group_id = bp_get_parent_group_id( $current_group_id );
+	$is_member       = groups_is_user_member( $loggedin_user_id, $parent_group_id );
 
 	if (
-		bb_groups_user_can_send_membership_requests( bp_get_current_group_id() ) &&
+		bb_groups_user_can_send_membership_requests( $current_group_id ) &&
 		(
 			empty( $parent_group_id ) ||
 			(

@@ -3344,7 +3344,7 @@ function bp_member_type_term_taxonomy_id( $member_type_name ) {
  *
  * @param $member_type
  *
- * @return array
+ * @return int
  * @since BuddyBoss 1.0.0
  *
  * @global wpdb $wpdb WordPress database abstraction object.

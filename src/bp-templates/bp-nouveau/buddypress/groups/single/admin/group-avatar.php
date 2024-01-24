@@ -8,7 +8,10 @@
  * @version 1.0.0
  */
 
-if ( bp_is_group_create() ) : ?>
+$bp_is_group_create = bp_is_group_create();
+$group_has_avatar   = bp_get_group_has_avatar();
+
+if ( $bp_is_group_create ) : ?>
 	<h3 class="bp-screen-title creation-step-name">
 		<?php esc_html_e( 'Upload Group Avatar', 'buddyboss' ); ?>
 	</h3>
@@ -19,8 +22,8 @@ if ( bp_is_group_create() ) : ?>
 <?php endif; ?>
 
 <?php
-if ( ! bp_is_group_create() ) :
-	if ( ! bp_get_group_has_avatar() ) :
+if ( ! $bp_is_group_create ) :
+	if ( ! $group_has_avatar ) :
 		?>
 		<p class="bp-help-text"><?php esc_html_e( 'Add a photo that represents this group. The photo will be shown on the main group page and in search results.', 'buddyboss' ); ?></p>
 	<?php else : ?>
@@ -34,7 +37,7 @@ endif;
 <?php
 if ( 'upload-image' === bp_get_avatar_admin_step() ) :
 
-	if ( bp_is_group_create() ) :
+	if ( $bp_is_group_create ) :
 		?>
 		<div class="left-menu">
 			<?php bp_new_group_avatar(); ?>
@@ -50,11 +53,11 @@ if ( 'upload-image' === bp_get_avatar_admin_step() ) :
 				<input type="hidden" name="action" id="action" value="bp_avatar_upload" />
 			</p>
 
-	<?php if ( bp_is_group_create() ) : ?>
+	<?php if ( $bp_is_group_create ) : ?>
 			<p class="bp-help-text"><?php esc_html_e( 'To skip the group photo upload process select "Next Step".', 'buddyboss' ); ?></p>
 		</div><!-- .main-column -->
 
-	<?php elseif ( bp_get_group_has_avatar() ) : ?>
+	<?php elseif ( $group_has_avatar ) : ?>
 
 		<p><?php esc_html_e( "To remove the existing group photo, please use the delete group profile photo button.", 'buddyboss' ); ?></p>
 		<?php
@@ -79,7 +82,7 @@ if ( 'upload-image' === bp_get_avatar_admin_step() ) :
 	 */
 	bp_avatar_get_templates();
 
-	if ( ! bp_is_group_create() ) {
+	if ( ! $bp_is_group_create ) {
 		wp_nonce_field( 'bp_avatar_upload' );
 	}
 
@@ -99,7 +102,7 @@ if ( 'crop-image' === bp_get_avatar_admin_step() ) {
 	<input type="hidden" id="w" name="w" />
 	<input type="hidden" id="h" name="h" />
 	<?php
-	if ( ! bp_is_group_create() ) {
+	if ( ! $bp_is_group_create ) {
 		wp_nonce_field( 'bp_avatar_cropstore' );
 	}
 }
