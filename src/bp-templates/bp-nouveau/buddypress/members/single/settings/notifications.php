@@ -16,11 +16,14 @@ if ( bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {
 
 bp_nouveau_member_hook( 'before', 'settings_template' );
 
+$is_web_enabled = bb_web_notification_enabled();
+$is_app_enabled = bb_app_notification_enabled();
+
 $data  = bb_core_notification_preferences_data();
 $class = '';
-if ( bb_web_notification_enabled() && bb_app_notification_enabled() ) {
+if ( $is_web_enabled && $is_app_enabled ) {
 	$class = 'bb-notification-column-3';
-} elseif ( bb_web_notification_enabled() || bb_app_notification_enabled() ) {
+} elseif ( $is_web_enabled || $is_app_enabled ) {
 	$class = 'bb-notification-column-2';
 }
 ?>
@@ -35,7 +38,7 @@ if ( bb_web_notification_enabled() && bb_app_notification_enabled() ) {
 
 <form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/notifications' ); ?>" method="post" class="standard-form <?php echo esc_attr( $class ); ?>" id="settings-form">
 	<?php
-	if ( false === bb_enabled_legacy_email_preference() && ( bb_web_notification_enabled() || bb_app_notification_enabled() ) ) {
+	if ( false === bb_enabled_legacy_email_preference() && ( $is_web_enabled || $is_app_enabled ) ) {
 		?>
 		<div class="notification_info">
 
@@ -50,7 +53,7 @@ if ( bb_web_notification_enabled() && bb_app_notification_enabled() ) {
 				</div>
 			</div><!-- .notification_type -->
 
-			<?php if ( bb_web_notification_enabled() ) { ?>
+			<?php if ( $is_web_enabled ) { ?>
 			<div class="notification_type web_notification">
 				<span class="notification_type_icon">
 					<i class="bb-icon bb-icon-monitor"></i>
@@ -63,7 +66,7 @@ if ( bb_web_notification_enabled() && bb_app_notification_enabled() ) {
 			</div><!-- .notification_type -->
 			<?php } ?>
 
-			<?php if ( bb_app_notification_enabled() ) { ?>
+			<?php if ( $is_app_enabled ) { ?>
 			<div class="notification_type app_notification">
 				<span class="notification_type_icon">
 					<i class="bb-icon bb-icon-smartphone"></i>

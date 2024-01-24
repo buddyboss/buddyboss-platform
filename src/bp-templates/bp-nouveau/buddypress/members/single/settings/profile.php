@@ -28,7 +28,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 			$group_id = bp_get_the_profile_group_id();
 			// Check if Current Group is repeater if YES then get number of fields inside current group.
 			$is_group_repeater_str = bp_xprofile_get_meta( $group_id, 'group', 'is_repeater_enabled', true );
-			$is_group_repeater     = ( 'on' === $is_group_repeater_str ) ? true : false;
+			$is_group_repeater     = 'on' === $is_group_repeater_str;
 			$group_url             = esc_url( trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit/group/' . $group_id ) );
 
 			if ( bp_profile_fields() ) {
