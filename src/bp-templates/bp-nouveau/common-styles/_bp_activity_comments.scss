@@ -127,6 +127,44 @@
 				font-weight: 400;
 				text-transform: none;
 			}
+
+			.generic-button > a:hover {
+				text-decoration: underline !important;
+			}
+
+			a.bp-like-button:before {
+				display: none;
+			}
+
+			a.bp-like-button.bb-reaction-migration-inprogress {
+
+				&:before {
+					content: "";
+					display: block;
+					position: absolute;
+					bottom: 100%;
+					left: 50%;
+					top: inherit;
+					min-width: auto;
+					transition: none;
+				}
+
+				&:after {
+					width: 180px;
+					white-space: normal;
+					left: 0;
+					transform: none;
+					transition: none;
+				}
+			}
+
+			a.has-emotion {
+
+				> i,
+				> img {
+					display: none;
+				}
+			}
 		}
 
 		.show-all {
@@ -199,7 +237,43 @@
 
 		}
 
+		li.comment-item {
+			position: relative;
+		}
+
+		li > .acomment-display {
+			position: relative;
+		}
+
+		.comment-reactions {
+			position: absolute;
+			bottom: -2px;
+			right: 0;
+			display: flex;
+			align-items: center;
+			padding: 2px;
+			border-radius: 24px;
+			cursor: pointer;
+
+			.comment-reactions_count {
+				font-size: 13px;
+				margin: 0 2px 0 3px;
+			}
+		}
+
+		.bb-activity-more-options-wrap {
+			top: -3px;
+
+			.bb-activity-more-options-action i {
+				font-size: 16px;
+			}
+		}
+
 	} // close .activity-comments
+
+	.activity-list .activity-item .activity-comments .bp-generic-meta.action a.bp-like-button .like-count {
+		margin-left: 0;
+	}
 
 	// Activity li.mini Comments
 
