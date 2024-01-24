@@ -11,12 +11,14 @@
  * @version 1.5.6
  */
 
-$hide_sitewide = ( 1 === (int) bp_get_moderation_hide_site_wide() ) ? true : false;
+$hide_sitewide           = 1 === (int) bp_get_moderation_hide_site_wide();
+$bp_moderation_item_id   = bp_get_moderation_item_id();
+$bp_moderation_item_type = bp_get_moderation_item_type();
 ?>
 <tr class="moderation-item-wrp">
 	<td class="moderation-item-type">
 		<span class="item-type">
-			<?php echo esc_html( bp_moderation_get_content_type( bp_get_moderation_item_type() ) ); ?>
+			<?php echo esc_html( bp_moderation_get_content_type( $bp_moderation_item_type ) ); ?>
 		</span>
 		<?php
 		if ( true === $hide_sitewide ) {
@@ -29,11 +31,11 @@ $hide_sitewide = ( 1 === (int) bp_get_moderation_hide_site_wide() ) ? true : fal
 		?>
 	</td>
 	<td class="moderation-item-id">
-		<?php echo esc_html( bp_get_moderation_item_id() ); ?>
+		<?php echo esc_html( $bp_moderation_item_id ); ?>
 	</td>
 	<td class="moderation-content-owner">
 		<?php
-		$user_id = bp_moderation_get_content_owner_id( bp_get_moderation_item_id(), bp_get_moderation_item_type() );
+		$user_id = bp_moderation_get_content_owner_id( $bp_moderation_item_id, $bp_moderation_item_type );
 		echo wp_kses_post( bp_core_get_userlink( $user_id ) );
 		?>
 	</td>
