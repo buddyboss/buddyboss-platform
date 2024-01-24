@@ -82,6 +82,15 @@ class BB_Activity extends Integration_Abstract {
 			'deleted_user'                            => 1, // User deleted on site.
 			'xprofile_avatar_uploaded'                => 1, // User avatar photo updated.
 			'bp_core_delete_existing_avatar'          => 1, // User avatar photo deleted.
+
+			// When change/update the reaction settings.
+			'update_option_bb_all_reactions'          => 3, // When enabled/disabled the reactions.
+			'update_option_bb_reaction_mode'          => 3, // When change/update the reaction mode.
+			'deleted_post'                            => 2, // When delete the emotion.
+
+			// When create user reaction via reaction API.
+			'bb_reaction_after_add_user_item_reaction'    => 2, // When enabled/disabled the reactions.
+			'bb_reaction_after_remove_user_item_reaction' => 3, // When enabled/disabled the reactions.
 		);
 
 		$this->purge_single_events( $purge_single_events );
@@ -312,6 +321,78 @@ class BB_Activity extends Integration_Abstract {
 					}
 				}
 			}
+		}
+	}
+
+	/**
+	 * When enabled/disabled reaction.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bb_all_reactions( $old_value, $value, $option ) {
+		Cache::instance()->purge_by_component( 'bp-activity' );
+		Cache::instance()->purge_by_component( 'bbapp-deeplinking' );
+	}
+
+	/**
+	 * When reaction mode changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bb_reaction_mode( $old_value, $value, $option ) {
+		Cache::instance()->purge_by_component( 'bp-activity' );
+		Cache::instance()->purge_by_component( 'bbapp-deeplinking' );
+	}
+
+	/**
+	 * When emotion deleted.
+	 *
+	 * @param int     $postid Post ID.
+	 * @param object $post   Post object.
+	 */
+	public function event_deleted_post( $postid, $post ) {
+		if (
+			! empty( $post ) &&
+			! empty( $post->post_type ) &&
+			'bb_reaction' === $post->post_type
+		) {
+			Cache::instance()->purge_by_component( 'bp-activity' );
+			Cache::instance()->purge_by_component( 'bbapp-deeplinking' );
+		}
+	}
+
+	/**
+	 * When created user reaction via reaction API.
+	 *
+	 * @param int   $user_reaction_id User reaction id.
+	 * @param array $r                Array of parsed arguments.
+	 */
+	public function event_bb_reaction_after_add_user_item_reaction( $user_reaction_id, $r ) {
+		if (
+			! empty( $r ) &&
+			! empty( $r['item_id'] )
+		) {
+			$this->purge_item_cache_by_item_id( $r['item_id'] );
+		}
+	}
+
+	/**
+	 * When deleted user reaction via reaction API.
+	 *
+	 * @param int       $user_reaction_id User reaction id.
+	 * @param int|false $deleted          The number of rows deleted, or false on error.
+	 * @param object    $get              Reaction data.
+	 */
+	public function event_bb_reaction_after_remove_user_item_reaction( $user_reaction_id, $deleted, $get ) {
+		if (
+			! empty( $get ) &&
+			! empty( $get->item_id )
+		) {
+			$this->purge_item_cache_by_item_id( $get->item_id );
 		}
 	}
 
