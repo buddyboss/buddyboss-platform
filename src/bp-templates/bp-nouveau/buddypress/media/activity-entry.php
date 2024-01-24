@@ -69,7 +69,7 @@ $more_media     = $media_template->media_count > 5;
 								} elseif ( $can_move ) {
 									?>
 									<li class="move_file media-action-class">
-										<a href="#" data-media-id="<?php esc_attr_e( $bp_get_media_id ); ?>" data-action="activity" data-parent-activity-id="<?php esc_attr_e( $media_parent_activity_id ); ?>" data-item-activity-id="<?php esc_attr_e( $media_activity_id ); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
+										<a href="#" data-media-id="<?php echo esc_attr( $bp_get_media_id ); ?>" data-action="activity" data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>" data-item-activity-id="<?php echo esc_attr( $media_activity_id ); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
 									</li>
 									<?php
 								}
@@ -85,7 +85,7 @@ $more_media     = $media_template->media_count > 5;
 							if ( $can_delete ) {
 								?>
 								<li class="delete_file media-action-class">
-									<a class="media-file-delete" data-item-activity-id="<?php echo esc_attr( $item_id ); ?>" data-parent-activity-id="<?php esc_attr_e( $media_parent_activity_id ); ?>" data-item-from="activity" data-item-id="<?php esc_attr_e( $bp_get_media_id ); ?>" data-type="media" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
+									<a class="media-file-delete" data-item-activity-id="<?php echo esc_attr( $item_id ); ?>" data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>" data-item-from="activity" data-item-id="<?php echo esc_attr( $bp_get_media_id ); ?>" data-type="media" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
 								</li>
 								<?php
 							}
@@ -97,12 +97,12 @@ $more_media     = $media_template->media_count > 5;
 	</div> <!--.media-action-wrap-->
 	<a href="#"
 		class="bb-open-media-theatre entry-img"
-		data-id="<?php esc_attr_e( $bp_get_media_id ); ?>"
+		data-id="<?php echo esc_attr( $bp_get_media_id ); ?>"
 		data-attachment-id="<?php bp_media_attachment_id(); ?>"
 		data-attachment-full="<?php bb_media_photos_theatre_popup_image(); ?>"
-		data-activity-id="<?php esc_attr_e( $media_activity_id ); ?>"
+		data-activity-id="<?php echo esc_attr( $media_activity_id ); ?>"
 		data-privacy="<?php bp_media_privacy(); ?>"
-		data-parent-activity-id="<?php esc_attr_e( $media_parent_activity_id ); ?>"
+		data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>"
 		data-album-id="<?php bp_media_album_id(); ?>"
 		data-group-id="<?php bp_media_group_id(); ?>"
 		data-can-edit="<?php echo esc_attr( bp_media_user_can_edit( $bp_get_media_id ) ); ?>"

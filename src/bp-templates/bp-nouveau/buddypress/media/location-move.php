@@ -28,6 +28,6 @@ $bp_album_id = ! empty( $bp_album_id ) ? $bp_album_id : 0;
 			</div>
 		</div> <!-- .location-album-list-wrap -->
 		<input type="hidden" class="bb-album-create-from" value="profile" readonly/>
-		<input type="hidden" class="bb-album-selected-id" value="<?php esc_attr_e( $bp_album_id ); ?>" data-value="<?php esc_attr_e( $bp_album_id ); ?>" readonly/>
+		<input type="hidden" class="bb-album-selected-id" value="<?php echo esc_attr( $bp_album_id ); ?>" data-value="<?php echo esc_attr( $bp_album_id ); ?>" readonly/>
 	</div>
 </div>

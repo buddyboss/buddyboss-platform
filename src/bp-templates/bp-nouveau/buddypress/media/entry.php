@@ -58,7 +58,7 @@ if ( 'video' === $media_template->media->type ) {
 	$attachment_urls = bb_video_get_attachments_symlinks( $attachment_id, $bp_media_id );
 
 	?>
-	<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb-video-li" data-id="<?php esc_attr_e( $bp_media_id ); ?>" data-date-created="<?php bp_media_date_created(); ?>">
+	<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb-video-li" data-id="<?php echo esc_attr( $bp_media_id ); ?>" data-date-created="<?php bp_media_date_created(); ?>">
 		<div class="bb-video-thumb bb-item-thumb">
 			<div class="video-action-wrap item-action-wrap">
 				<?php
@@ -78,8 +78,8 @@ if ( 'video' === $media_template->media->type ) {
 										href="#"
 										data-action="video"
 										data-video-attachments="<?php echo esc_html( wp_json_encode( $attachment_urls ) ); ?>"
-										data-video-attachment-id="<?php esc_attr_e( $attachment_id ); ?>"
-										data-video-id="<?php esc_attr_e( $bp_media_id ); ?>"
+										data-video-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
+										data-video-id="<?php echo esc_attr( $bp_media_id ); ?>"
 										class="ac-video-thumbnail-edit"
 									>
 										<?php esc_html_e( 'Change Thumbnail', 'buddyboss' ); ?>
@@ -99,9 +99,9 @@ if ( 'video' === $media_template->media->type ) {
 									<a
 										href="#"
 										data-action="video"
-										data-video-id="<?php esc_attr_e( $bp_media_id ); ?>"
-										data-parent-activity-id="<?php esc_attr_e( $media_parent_activity_id ); ?>"
-										data-item-activity-id="<?php esc_attr_e( $media_activity_id ); ?>"
+										data-video-id="<?php echo esc_attr( $bp_media_id ); ?>"
+										data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>"
+										data-item-activity-id="<?php echo esc_attr( $media_activity_id ); ?>"
 										data-type="<?php echo esc_attr( $move_type ); ?>"
 										id="<?php echo esc_attr( $move_id ); ?>"
 										class="ac-video-move"
@@ -116,11 +116,11 @@ if ( 'video' === $media_template->media->type ) {
 								<li class="delete_file">
 									<a
 										class="video-file-delete"
-										data-video-id="<?php esc_attr_e( $bp_media_id ); ?>"
-										data-parent-activity-id="<?php esc_attr_e( $media_parent_activity_id ); ?>"
-										data-item-activity-id="<?php esc_attr_e( $media_activity_id ); ?>"
+										data-video-id="<?php echo esc_attr( $bp_media_id ); ?>"
+										data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>"
+										data-item-activity-id="<?php echo esc_attr( $media_activity_id ); ?>"
 										data-item-from="video"
-										data-item-id="<?php esc_attr_e( $bp_media_id ); ?>"
+										data-item-id="<?php echo esc_attr( $bp_media_id ); ?>"
 										data-type="video"
 										href="#"
 									>
@@ -149,14 +149,14 @@ if ( 'video' === $media_template->media->type ) {
 			<?php } ?>
 			<a
 				class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap"
-				data-id="<?php esc_attr_e( $bp_media_id ); ?>"
+				data-id="<?php echo esc_attr( $bp_media_id ); ?>"
 				data-attachment-full="<?php echo esc_url( $poster_full ); ?>"
-				data-activity-id="<?php esc_attr_e( $media_activity_id ); ?>"
-				data-privacy="<?php esc_attr_e( $bp_media_privacy ); ?>"
-				data-parent-activity-id="<?php esc_attr_e( $media_parent_activity_id ); ?>"
-				data-album-id="<?php esc_attr_e( $bp_media_album_id ); ?>"
-				data-group-id="<?php esc_attr_e( $group_id ); ?>"
-				data-attachment-id="<?php esc_attr_e( $attachment_id ); ?>"
+				data-activity-id="<?php echo esc_attr( $media_activity_id ); ?>"
+				data-privacy="<?php echo esc_attr( $bp_media_privacy ); ?>"
+				data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>"
+				data-album-id="<?php echo esc_attr( $bp_media_album_id ); ?>"
+				data-group-id="<?php echo esc_attr( $group_id ); ?>"
+				data-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
 				href="#"
 			>
 				<img
@@ -185,16 +185,16 @@ if ( 'video' === $media_template->media->type ) {
 				?>
 				<div class="bb-media-check-wrap bb-action-check-wrap">
 					<input
-						id="bb-media-<?php esc_attr_e( $bp_media_id ); ?>"
+						id="bb-media-<?php echo esc_attr( $bp_media_id ); ?>"
 						class="bb-custom-check"
 						type="checkbox"
-						value="<?php esc_attr_e( $bp_media_id ); ?>"
+						value="<?php echo esc_attr( $bp_media_id ); ?>"
 						name="bb-media-select" />
 					<label
 						class="bp-tooltip"
 						data-bp-tooltip-pos="up"
 						data-bp-tooltip="<?php esc_attr_e( 'Select', 'buddyboss' ); ?>"
-						for="bb-media-<?php esc_attr_e( $bp_media_id ); ?>"
+						for="bb-media-<?php echo esc_attr( $bp_media_id ); ?>"
 					>
 						<span class="bb-icon-rl bb-icon-check"></span>
 					</label>
@@ -222,7 +222,7 @@ if ( 'video' === $media_template->media->type ) {
 	$is_comment_pic = bp_media_is_activity_comment_photo( $media_template->media );
 
 	?>
-	<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb-photo-li" data-id="<?php esc_attr_e( $bp_media_id ); ?>" data-date-created="<?php bp_media_date_created(); ?>">
+	<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb-photo-li" data-id="<?php echo esc_attr( $bp_media_id ); ?>" data-date-created="<?php bp_media_date_created(); ?>">
 
 	<div class="bb-photo-thumb bb-item-thumb">
 		<div class="media-action-wrap">
@@ -248,9 +248,9 @@ if ( 'video' === $media_template->media->type ) {
 								<a
 									href="#"
 									data-action="media"
-									data-media-id="<?php esc_attr_e( $bp_media_id ); ?>"
-									data-parent-activity-id="<?php esc_attr_e( $media_parent_activity_id ); ?>"
-									data-item-activity-id="<?php esc_attr_e( $media_activity_id ); ?>"
+									data-media-id="<?php echo esc_attr( $bp_media_id ); ?>"
+									data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>"
+									data-item-activity-id="<?php echo esc_attr( $media_activity_id ); ?>"
 									data-type="<?php echo esc_attr( $move_type ); ?>"
 									id="<?php echo esc_attr( $move_id ); ?>"
 									class="ac-media-move"
@@ -274,11 +274,11 @@ if ( 'video' === $media_template->media->type ) {
 							<li class="delete_file">
 								<a
 									class="media-file-delete"
-									data-media-id="<?php esc_attr_e( $bp_media_id ); ?>"
-									data-parent-activity-id="<?php esc_attr_e( $media_parent_activity_id ); ?>"
-									data-item-activity-id="<?php esc_attr_e( $media_activity_id ); ?>"
+									data-media-id="<?php echo esc_attr( $bp_media_id ); ?>"
+									data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>"
+									data-item-activity-id="<?php echo esc_attr( $media_activity_id ); ?>"
 									data-item-from="media"
-									data-item-id="<?php esc_attr_e( $bp_media_id ); ?>"
+									data-item-id="<?php echo esc_attr( $bp_media_id ); ?>"
 									data-type="media"
 									href="#"
 								>
@@ -294,14 +294,14 @@ if ( 'video' === $media_template->media->type ) {
 		</div> <!--.media-action-wrap-->
 		<a
 			class="bb-open-media-theatre bb-photo-cover-wrap bb-item-cover-wrap"
-			data-id="<?php esc_attr_e( $bp_media_id ); ?>"
+			data-id="<?php echo esc_attr( $bp_media_id ); ?>"
 			data-attachment-full="<?php bb_media_photos_theatre_popup_image(); ?>"
-			data-activity-id="<?php esc_attr_e( $media_activity_id ); ?>"
-			data-privacy="<?php esc_attr_e( $bp_media_privacy ); ?>"
-			data-parent-activity-id="<?php esc_attr_e( $media_parent_activity_id ); ?>"
-			data-album-id="<?php esc_attr_e( $bp_media_album_id ); ?>"
-			data-group-id="<?php esc_attr_e( $group_id ); ?>"
-			data-attachment-id="<?php esc_attr_e( $attachment_id ); ?>"
+			data-activity-id="<?php echo esc_attr( $media_activity_id ); ?>"
+			data-privacy="<?php echo esc_attr( $bp_media_privacy ); ?>"
+			data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>"
+			data-album-id="<?php echo esc_attr( $bp_media_album_id ); ?>"
+			data-group-id="<?php echo esc_attr( $group_id ); ?>"
+			data-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
 			data-can-edit="<?php echo esc_attr( bp_media_user_can_edit( $bp_media_id ) ); ?>"
 			href="#">
 			<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php bb_media_photos_directory_image_thumbnail(); ?>" alt="<?php bp_media_title(); ?>" class="lazy"/>
@@ -323,16 +323,16 @@ if ( 'video' === $media_template->media->type ) {
 			?>
 			<div class="bb-media-check-wrap bb-action-check-wrap">
 				<input
-					id="bb-media-<?php esc_attr_e( $bp_media_id ); ?>"
+					id="bb-media-<?php echo esc_attr( $bp_media_id ); ?>"
 					class="bb-custom-check"
 					type="checkbox"
-					value="<?php esc_attr_e( $bp_media_id ); ?>"
+					value="<?php echo esc_attr( $bp_media_id ); ?>"
 					name="bb-media-select" />
 				<label
 					class="bp-tooltip"
 					data-bp-tooltip-pos="up"
 					data-bp-tooltip="<?php esc_html_e( 'Select', 'buddyboss' ); ?>"
-					for="bb-media-<?php esc_attr_e( $bp_media_id ); ?>">
+					for="bb-media-<?php echo esc_attr( $bp_media_id ); ?>">
 					<span class="bb-icon-rl bb-icon-check"></span>
 				</label>
 			</div>

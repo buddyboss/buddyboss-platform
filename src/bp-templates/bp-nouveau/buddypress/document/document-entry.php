@@ -100,25 +100,25 @@ if ( $attachment_id ) {
 }
 
 ?>
-<div class="media-folder_items <?php echo esc_attr( $listing_class ); ?>" data-author="<?php esc_attr_e( $doc_user_id ); ?>"
-data-group-id="<?php bp_document_group_id(); ?>" data-activity-id="<?php esc_attr_e( $doc_activity_id ); ?>"
-data-id="<?php esc_attr_e( $document_id ); ?>" data-parent-id="<?php bp_document_parent_id(); ?>"
-id="div-listing-<?php esc_attr_e( $document_id ); ?>">
+<div class="media-folder_items <?php echo esc_attr( $listing_class ); ?>" data-author="<?php echo esc_attr( $doc_user_id ); ?>"
+data-group-id="<?php bp_document_group_id(); ?>" data-activity-id="<?php echo esc_attr( $doc_activity_id ); ?>"
+data-id="<?php echo esc_attr( $document_id ); ?>" data-parent-id="<?php bp_document_parent_id(); ?>"
+id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 	<div class="media-folder_icon">
 		<a href="<?php echo esc_url( $document_folder_link ); ?>"> <i class="<?php echo esc_attr( $svg_icon ); ?>"></i> </a>
 	</div>
 	<div class="media-folder_details">
 		<a class="media-folder_name <?php echo esc_attr( $class ); ?>" href="<?php echo esc_url( $document_folder_link ); ?>"
-		data-id="<?php esc_attr_e( $document_id ); ?>" data-attachment-full=""
+		data-id="<?php echo esc_attr( $document_id ); ?>" data-attachment-full=""
 		data-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
 		data-privacy="<?php bp_db_document_privacy(); ?>"
 		data-extension="<?php echo $extension ? esc_attr( $extension ) : ''; ?>"
 		data-parent-activity-id="<?php bp_document_parent_activity_id(); ?>"
-		data-activity-id="<?php esc_attr_e( $doc_activity_id ); ?>" data-author="<?php esc_attr_e( $doc_user_id ); ?>"
-		data-preview="<?php esc_attr_e( $doc_attachment_url ); ?>"
-		data-full-preview="<?php esc_attr_e( $doc_attachment_url ); ?>"
-		data-text-preview="<?php esc_attr_e( $doc_attachment_url ); ?>"
-		data-mp3-preview="<?php esc_attr_e( $doc_attachment_url ); ?>"
+		data-activity-id="<?php echo esc_attr( $doc_activity_id ); ?>" data-author="<?php echo esc_attr( $doc_user_id ); ?>"
+		data-preview="<?php echo esc_attr( $doc_attachment_url ); ?>"
+		data-full-preview="<?php echo esc_attr( $doc_attachment_url ); ?>"
+		data-text-preview="<?php echo esc_attr( $doc_attachment_url ); ?>"
+		data-mp3-preview="<?php echo esc_attr( $doc_attachment_url ); ?>"
 		data-video-preview="<?php echo $video_url ? esc_url( $video_url ) : ''; ?>"
 		data-album-id="<?php bp_document_folder_id(); ?>" data-group-id="<?php bp_document_group_id(); ?>"
 		data-document-title="<?php echo esc_html( $filename ); ?>"
