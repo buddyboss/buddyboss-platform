@@ -584,8 +584,8 @@ add_action( 'bb_reaction_after_remove_user_item_reaction', 'bb_reaction_clear_us
 function bb_reaction_clear_remove_user_item_cache( $deleted, $r, $reactions ) {
 	bp_core_reset_incrementor( 'bb_reactions' );
 	if ( ! empty( $reactions ) ) {
-		foreach ( $reactions as $reaction ) {
-			wp_cache_delete( $reaction->id, 'bb_reactions' );
+		foreach ( $reactions as $id ) {
+			wp_cache_delete( $id, 'bb_reactions' );
 		}
 	}
 }
@@ -609,3 +609,55 @@ function bb_reaction_clear_reactions_data_cache( $reaction_data_id ) {
 }
 
 add_action( 'bb_reaction_after_add_reactions_data', 'bb_reaction_clear_reactions_data_cache', 10, 1 );
+
+/**
+ * Clear cache when reaction settings updated.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @param string $option    Name of the updated option.
+ * @param mixed  $old_value The old option value.
+ * @param mixed  $value     The new option value.
+ *
+ * @return void
+ */
+function bb_reaction_clear_reactions_cache_on_update_settings( $old_value = '', $value = '', $option = '' ) {
+	if (
+		function_exists( 'wp_cache_flush_group' ) &&
+		function_exists( 'wp_cache_supports' ) &&
+		wp_cache_supports( 'flush_group' )
+	) {
+		bp_core_reset_incrementor( 'bb_reactions' );
+		bp_core_reset_incrementor( 'bb_reaction_data' );
+
+		wp_cache_flush_group( 'bb_reactions' );
+		wp_cache_flush_group( 'bb_reaction_data' );
+	} else {
+		wp_cache_flush();
+	}
+}
+
+add_action( 'update_option_bb_all_reactions', 'bb_reaction_clear_reactions_cache_on_update_settings', 10, 3 );
+add_action( 'update_option_bb_reaction_mode', 'bb_reaction_clear_reactions_cache_on_update_settings', 10, 3 );
+
+/**
+ * Clear cache when emotion deleted.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @param int    $postid Post ID.
+ * @param object $post   Post object.
+ *
+ * @return void
+ */
+function bb_reaction_clear_reactions_cache_on_delete_emotion( $postid, $post ) {
+	if (
+		! empty( $post ) &&
+		! empty( $post->post_type ) &&
+		'bb_reaction' === $post->post_type
+	) {
+		bb_reaction_clear_reactions_cache_on_update_settings();
+	}
+}
+
+add_action( 'deleted_post', 'bb_reaction_clear_reactions_cache_on_delete_emotion', 10, 2 );
