@@ -366,12 +366,15 @@ if ( ! class_exists( 'BP_Component' ) ) :
 
 						// Passed with no extension.
 						'bp-' . $this->id . '/bp-' . $this->id . '-' . $file . '.php',
+						'bp-' . $this->id . '/bb-' . $this->id . '-' . $file . '.php',
 						'bp-' . $this->id . '-' . $file . '.php',
+						'bb-' . $this->id . '-' . $file . '.php',
 						'bp-' . $this->id . '/' . $file . '.php',
 
 						// Passed with extension.
 						$file,
 						'bp-' . $this->id . '-' . $file,
+						'bb-' . $this->id . '-' . $file,
 						'bp-' . $this->id . '/' . $file,
 					);
 
