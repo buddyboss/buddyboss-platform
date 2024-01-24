@@ -772,8 +772,8 @@ function bb_load_member_type_label_custom_css() {
 					$background_color        = isset( $label_color_data['background-color'] ) ? $label_color_data['background-color'] : '';
 					$text_color              = isset( $label_color_data['color'] ) ? $label_color_data['color'] : '';
 					$class_name              = 'body .bp-member-type.bb-current-member-' . $type;
-					$member_type_custom_css .= $class_name . ' {' . "background-color:$background_color;" . '}';
-					$member_type_custom_css .= $class_name . ' {' . "color:$text_color;" . '}';
+					$member_type_custom_css .= $class_name . ' {' . "background-color:$background_color !important;" . '}';
+					$member_type_custom_css .= $class_name . ' {' . "color:$text_color !important;" . '}';
 				}
 			}
 			wp_cache_set( $cache_key, $member_type_custom_css, 'bp_member_member_type' );

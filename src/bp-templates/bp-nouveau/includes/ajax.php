@@ -181,6 +181,8 @@ function bp_nouveau_object_template_results_members_tabs( $results, $object ) {
 		}
 	}
 
+	$results['layout'] = bb_get_directory_layout_preference( 'members' );
+
 	return $results;
 }
 
@@ -206,6 +208,8 @@ function bp_nouveau_object_template_results_groups_tabs( $results, $object ) {
 	bp_has_groups( bp_ajax_querystring( 'groups' ) );
 	$results['scopes']['personal'] = bp_core_number_format( $GLOBALS['groups_template']->total_group_count );
 	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_groups_personal_scope', 20, 2 );
+
+	$results['layout'] = bb_get_directory_layout_preference( 'groups' );
 
 	return $results;
 }
