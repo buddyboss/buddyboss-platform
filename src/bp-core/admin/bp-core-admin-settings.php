@@ -3721,7 +3721,7 @@ function bb_admin_setting_callback_comment_threading() {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_admin_setting_callback_comment_visibility() {
-	$options = array( [ 'label' => esc_attr__( 'None' ), 'value' => 0 ], [ 'label' => 1, 'value' => 1 ], [ 'label' => 2, 'value' => 2 ], [ 'label' => 3, 'value' => 3 ], [ 'label' => 4, 'value' => 4 ], [ 'label' => 5, 'value' => 5 ] );
+	$options = array( [ 'label' => esc_attr__( 'None', 'buddyboss' ), 'value' => 0 ], [ 'label' => 1, 'value' => 1 ], [ 'label' => 2, 'value' => 2 ], [ 'label' => 3, 'value' => 3 ], [ 'label' => 4, 'value' => 4 ], [ 'label' => 5, 'value' => 5 ] );
 	$setting = bb_get_activity_comment_visibility();
 	?>
 
