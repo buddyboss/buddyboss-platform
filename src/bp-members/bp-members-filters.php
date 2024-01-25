@@ -961,7 +961,7 @@ add_action( 'bp_core_activated_user', 'bb_generate_member_profile_slug_on_activa
 /**
  * Function to exclude the account settings related notification.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.30
  *
  * @param array $where_conditions Where clause to get notifications.
  * @param array $args             Parsed arguments to get notifications.
