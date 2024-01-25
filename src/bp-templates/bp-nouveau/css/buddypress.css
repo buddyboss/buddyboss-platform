@@ -7279,17 +7279,17 @@ span.dashicons.dashicons-admin-file:before {
   opacity: 0.7;
 }
 
-.buddypress-wrap .activity-comments .comment-item.suspended-comment-item > .acomment-content {
+.buddypress-wrap .activity-comments .comment-item.suspended-comment-item .acomment-content {
   pointer-events: none;
   opacity: 0.7;
 }
 
-.buddypress-wrap .activity-comments .comment-item.suspended-comment-item > .acomment-meta > .author-name[href=""] {
+.buddypress-wrap .activity-comments .comment-item.suspended-comment-item .acomment-meta > .author-name[href=""] {
   pointer-events: none;
   opacity: 0.7;
 }
 
-.buddypress-wrap .activity-comments .comment-item.suspended-comment-item > .acomment-meta .activity-time-since {
+.buddypress-wrap .activity-comments .comment-item.suspended-comment-item .acomment-meta .activity-time-since {
   display: none;
 }
 
