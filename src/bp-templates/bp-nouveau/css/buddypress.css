@@ -7584,6 +7584,18 @@ form.ac-form .ac-reply-content .ac-submit-wrap:before {
   line-height: 30px;
 }
 
+form.ac-form .ac-reply-content .ac-submit-wrap.loading {
+  background-color: transparent;
+}
+
+form.ac-form .ac-reply-content .ac-submit-wrap.loading:before {
+  content: "\ef30";
+  font-size: 18px;
+  color: #333;
+  animation: spin 2s infinite linear;
+  line-height: 1;
+}
+
 form.ac-form .ac-reply-content .ac-submit-wrap input[name="ac_form_submit"] {
   position: absolute;
   inset: 0;

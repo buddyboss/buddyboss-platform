@@ -1399,7 +1399,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				target.addClass( 'loading' ).prop( 'disabled', true );
+				target.parent().addClass( 'loading' ).prop( 'disabled', true );
 				comment_content.addClass( 'loading' ).prop( 'disabled', true );
 				var comment_value = comment_content[0].innerHTML.replace( /<div>/gi,'\n' ).replace( /<\/div>/gi,'' );
 
@@ -1449,7 +1449,7 @@ window.bp = window.bp || {};
 
 				parent.ajax( comment_data, 'activity' ).done(
 					function( response ) {
-						target.removeClass( 'loading' );
+						target.parent().removeClass( 'loading' );
 						comment_content.removeClass( 'loading' );
 						$( '.acomment-reply' ).attr( 'aria-expanded', 'false' );
 
