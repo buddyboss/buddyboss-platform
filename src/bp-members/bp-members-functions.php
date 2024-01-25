@@ -3954,18 +3954,17 @@ function bp_get_user_member_type( $user_id ) {
  */
 function bp_get_user_gender_pronoun_type( $user_id = '' ) {
 	global $wpdb;
-	static $static_cache = array();
+	static $static_cache = '';
 
 	if ( '' === $user_id ) {
 		$gender_pronoun = esc_html__( 'their', 'buddyboss' );
 	} else {
-		$cache_key    = 'bp_get_user_gender_pronoun_type_' . $user_id;
-		if ( ! isset( $static_cache[ $cache_key ] ) ) {
+		if ( empty( $static_cache ) ) {
 			$table         = bp_core_get_table_prefix() . 'bp_xprofile_fields';
 			$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$table} a WHERE parent_id = 0 AND type = 'gender' " );
-			$static_cache[ $cache_key ] = $exists_gender;
+			$static_cache = $exists_gender;
 		} else {
-			$exists_gender = $static_cache[ $cache_key ];
+			$exists_gender = $static_cache;
 		}
 
 		if ( $exists_gender[0]->count > 0 ) {
