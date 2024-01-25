@@ -851,11 +851,12 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			$all_members = $members;
 
 			if ( ! empty( $members ) ) {
+				$min_count = function_exists( 'bb_get_email_queue_min_count' ) ? bb_get_email_queue_min_count() : 10;
 				if (
-					! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) &&
+					( count( $members ) > $min_count ) &&
 					( $bb_background_updater instanceof BB_Background_Updater )
 				) {
-					$chunk_members = array_chunk( $members, function_exists( 'bb_get_email_queue_min_count' ) ? bb_get_email_queue_min_count() : 10 );
+					$chunk_members = array_chunk( $members, $min_count );
 					if ( ! empty( $chunk_members ) ) {
 						foreach ( $chunk_members as $key => $members ) {
 							$bb_background_updater->data(

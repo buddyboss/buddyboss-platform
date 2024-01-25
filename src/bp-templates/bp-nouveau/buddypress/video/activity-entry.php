@@ -65,7 +65,7 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 }
 ?>
 
-<div class="bb-activity-video-elem
+<div class="bb-activity-video-elem 
 <?php
 echo esc_attr( $video_id ) . ' ';
 echo $video_template->current_video > 2 ? esc_attr( 'hide ' ) : '';
