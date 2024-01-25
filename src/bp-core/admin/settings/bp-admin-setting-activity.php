@@ -72,12 +72,6 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			'class' => 'hidden',
 		) );
 
-		// Allow Activity comment edit setting.
-		$this->add_field( '_bb_enable_activity_comment_edit', __( 'Edit Comment', 'buddyboss' ), 'bb_admin_setting_callback_enable_activity_comment_edit', 'intval' );
-		$this->add_field( '_bb_activity_comment_edit_time', __( 'Edit Comment Time Limit', 'buddyboss' ), '__return_true', 'intval', array(
-			'class' => 'hidden',
-		) );
-
 		// Allow subscriptions setting.
 		$this->add_field( '_bp_enable_heartbeat_refresh', __( 'Activity auto-refresh', 'buddyboss' ), 'bp_admin_setting_callback_heartbeat', 'intval' );
 
@@ -103,6 +97,25 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		if ( is_plugin_active( 'akismet/akismet.php' ) && defined( 'AKISMET_VERSION' ) ) {
 			// $this->add_field( '_bp_enable_akismet', __( 'Akismet', 'buddyboss' ), 'bp_admin_setting_callback_activity_akismet', 'intval' );
 		}
+
+		$this->add_section( 'bb_activity_comments', __( 'Activity Comments', 'buddyboss' ) );
+
+		$this->add_field( '_bb_enable_activity_comments', __( 'Enable comments', 'buddyboss' ), 'bb_admin_setting_callback_enable_activity_comments', 'intval' );
+		
+		// Allow Activity comment threading setting.
+		$this->add_field( '_bb_enable_activity_comment_threading', __( 'Comment threading', 'buddyboss' ), 'bb_admin_setting_callback_comment_threading', 'intval' );
+		$this->add_field( '_bb_activity_comment_threading_depth', __( 'Comment threading depth', 'buddyboss' ), '__return_true', 'intval', array(
+			'class' => 'hidden',
+		) );
+
+		$this->add_field( '_bb_activity_comment_visibility', __( 'Comment visibility', 'buddyboss' ), 'bb_admin_setting_callback_comment_visibility', 'intval' );
+		$this->add_field( '_bb_activity_comment_loading', __( 'Comments loading', 'buddyboss' ), 'bb_admin_setting_callback_comment_loading', 'intval' );
+
+		// Allow Activity comment edit setting.
+		$this->add_field( '_bb_enable_activity_comment_edit', __( 'Edit Activity comments', 'buddyboss' ), 'bb_admin_setting_callback_enable_activity_comment_edit', 'intval' );
+		$this->add_field( '_bb_activity_comment_edit_time', __( 'Edit Comment Time Limit', 'buddyboss' ), '__return_true', 'intval', array(
+			'class' => 'hidden',
+		) );
 
 		$this->add_section( 'bp_custom_post_type', __( 'Posts in Activity Feeds', 'buddyboss' ) );
 

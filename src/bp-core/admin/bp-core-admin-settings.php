@@ -3673,3 +3673,98 @@ function bb_reactions_settings_callback_reactions_button() {
 	</label>
 	<?php
 }
+
+/**
+ * Enable activity comments.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_callback_enable_activity_comments() {
+	?>
+	<input id="_bb_enable_activity_comments" name="_bb_enable_activity_comments" type="checkbox" value="1" <?php checked( bb_is_activity_comments_enabled() ); ?> />
+	<label for="_bb_enable_activity_comments"><?php esc_html_e( 'Allow members to comment on activity posts', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'Comments on an individual activity post can be closed or disabled all together by site admins.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Enable activity comment threading.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_callback_comment_threading() {
+	$options = array( [ 'label' => 1, 'value' => 1 ], [ 'label' => 2, 'value' => 2 ], [ 'label' => 3, 'value' => 3 ], [ 'label' => 4, 'value' => 4 ] );
+	$depth   = bb_get_activity_comment_threading_depth();
+	?>
+
+	<input id="_bb_enable_activity_comment_threading" name="_bb_enable_activity_comment_threading" type="checkbox" value="1" <?php checked( bb_is_activity_comment_threading_enabled() ); ?> />
+	<label for="_bb_enable_activity_comment_threading">
+		<?php esc_html_e( 'Organize replies into threads', 'buddyboss' ); ?>
+		<select name="_bb_activity_comment_threading_depth">
+			<?php
+			foreach ( $options as $option ) {
+				$value       = isset( $option['value'] ) ? $option['value'] : 0;
+				$depth_level = isset( $option['label'] ) ? $option['label'] : 0;
+				echo '<option value="' . esc_attr( $value ) . '" ' . selected( $depth, $value, false ) . '>' . esc_html( $depth_level ) . '</option>';
+			}
+			?>
+		</select>
+		<?php esc_html_e( 'levels deep', 'buddyboss' ); ?>
+	</label>
+	<p class="description"><?php esc_html_e( 'Replies to an activity comment will be shown in separate threads, except when replying to a comment at the deepest level.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ *  Activity comment visibility.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_callback_comment_visibility() {
+	$options = array( [ 'label' => esc_attr__( 'None' ), 'value' => 0 ], [ 'label' => 1, 'value' => 1 ], [ 'label' => 2, 'value' => 2 ], [ 'label' => 3, 'value' => 3 ], [ 'label' => 4, 'value' => 4 ], [ 'label' => 5, 'value' => 5 ] );
+	$setting = bb_get_activity_comment_visibility();
+	?>
+
+	<label for="_bb_activity_comment_visibility">
+		<?php esc_html_e( 'Display a maximum', 'buddyboss' ); ?>
+		<select id="_bb_activity_comment_visibility" name="_bb_activity_comment_visibility">
+			<?php
+			foreach ( $options as $option ) {
+				$value         = isset( $option['value'] ) ? $option['value'] : 0;
+				$setting_level = isset( $option['label'] ) ? $option['label'] : 0;
+				echo '<option value="' . esc_attr( $value ) . '" ' . selected( $setting, $value, false ) . '>' . esc_html( $setting_level ) . '</option>';
+			}
+			?>
+		</select>
+		<?php esc_html_e( 'comments per post in activity feeds', 'buddyboss' ); ?>
+	</label>
+	<p class="description"><?php esc_html_e( 'Load more using the "View more comments" and "View replies" links. Higher comments counts will increase the time it takes members to scroll through activity feeds. This only applies to platform not app.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Activity comment loading.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_callback_comment_loading() {
+	$options = array( [ 'label' => 5, 'value' => 5 ], [ 'label' => 10, 'value' => 10 ], [ 'label' => 15, 'value' => 15 ], [ 'label' => 20, 'value' => 20 ] );
+	$setting = bb_get_activity_comment_loading();
+	?>
+
+	<label for="_bb_activity_comment_loading">
+		<?php esc_html_e( 'Load', 'buddyboss' ); ?>
+		<select id="_bb_activity_comment_loading" name="_bb_activity_comment_loading">
+			<?php
+			foreach ( $options as $option ) {
+				$value         = isset( $option['value'] ) ? $option['value'] : 0;
+				$setting_level = isset( $option['label'] ) ? $option['label'] : 0;
+				echo '<option value="' . esc_attr( $value ) . '" ' . selected( $setting, $value, false ) . '>' . esc_html( $setting_level ) . '</option>';
+			}
+			?>
+		</select>
+		<?php esc_html_e( 'additional comments on each request', 'buddyboss' ); ?>
+	</label>
+	<p class="description"><?php esc_html_e( 'Increasing the number of comments retrieved in each request may negatively impact site performance.', 'buddyboss' ); ?></p>
+	<?php
+}
