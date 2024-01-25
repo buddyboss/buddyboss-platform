@@ -7821,26 +7821,10 @@ form.ac-form div.dropzone .dz-preview .dz-progress-ring-wrap .dz-progress-ring {
 }
 
 form.ac-form .activity-attached-gif-container {
-  background: none !important;
-  height: auto !important;
-  width: auto !important;
-  display: table;
   min-height: auto !important;
 }
 
-form.ac-form .activity-attached-gif-container .gif-image-container {
-  margin: 15px 0 0;
-}
-
-form.ac-form .activity-attached-gif-container .gif-image-container img {
-  border-radius: 4px;
-  height: 60px;
-  width: 60px;
-  object-fit: cover;
-}
-
 form.ac-form .activity-attached-gif-container .gif-image-remove {
-  left: -8px;
   top: 7px;
 }
 

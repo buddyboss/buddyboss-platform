@@ -498,25 +498,9 @@ form.ac-form {
 	}
 
 	.activity-attached-gif-container {
-		background: none !important;
-		height: auto !important;
-		width: auto !important;
-		display: table;
 		min-height: auto !important;
 
-		.gif-image-container {
-			margin: 15px 0 0;
-
-			img {
-				border-radius: 4px;
-				height: 60px;
-				width: 60px;
-				object-fit: cover;
-			}
-		}
-
 		.gif-image-remove {
-			right: -8px;
 			top: 7px;
 
 			.bb-icon-times {
