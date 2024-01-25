@@ -513,7 +513,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 						bp_is_active( 'forums' ) &&
 						in_array( $search_type, array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ), true )
 					) {
-						$sql_queries[] = '( ' . $obj->union_sql( $args['search_term'] ) . " ORDER BY  entry_date DESC $limit ) ";
+						$sql_queries[] = '( ' . $obj->union_sql( $args['search_term'] ) . " ORDER BY entry_date DESC $limit ) ";
 					} else {
 						$sql_queries[] = '( ' . $obj->union_sql( $args['search_term'] ) . " ORDER BY relevance DESC, entry_date DESC $limit ) ";
 					}
