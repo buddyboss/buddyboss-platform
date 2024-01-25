@@ -3370,6 +3370,49 @@ input.search-query-input {
   max-width: 40%;
 }
 
+.activity-list .activity-item .activity-item-detached_head {
+  display: none;
+}
+
+.activity-list .activity-item.is-detached {
+  position: fixed;
+  top: 40px;
+  right: 50%;
+  transform: translateX(50%);
+  max-height: calc(100% - 80px);
+  width: 100%;
+  z-index: 999;
+  overflow: auto;
+  border-top: 0;
+}
+
+.activity-list .activity-item.is-detached .activity-item-detached_head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 25px;
+  border: 1px solid #b7b7b7;
+  border-right: 0;
+  border-left: 0;
+  margin: -1em -1em 1em -1em;
+}
+
+.activity-list .activity-item.is-detached .activity-item-detached_head h2 {
+  font-size: 20px;
+  margin: 0;
+}
+
+.activity-list .activity-item.is-detached .activity-item-detached_head .activity-item-detached_close {
+  font-size: 24px;
+  border: 0;
+  background-color: transparent;
+  outline: none;
+}
+
+.activity-list .activity-item.is-detached .activity-item-detached_head .activity-item-detached_close:focus-visible {
+  outline: 1px solid #5087e5;
+}
+
 @media screen and (min-width: 46.8em) {
   .activity-list .activity-item div.item-avatar {
     margin: 0 0 0 2%;

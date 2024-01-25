@@ -35,6 +35,50 @@
 			}
 		}
 
+		.activity-item-detached_head {
+			display: none;
+		}
+
+		&.is-detached {
+			position: fixed;
+			top: 40px;
+			left: 50%;
+			transform: translateX(-50%);
+			max-height: calc(100% - 80px);
+			width: 100%;
+			z-index: 999;
+			overflow: auto;
+			border-top: 0;
+
+			.activity-item-detached_head {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 15px 25px;
+				border: 1px solid #b7b7b7;
+				border-left: 0;
+				border-right: 0;
+				margin: -1em -1em 1em -1em;
+
+				h2 {
+
+					@include font-size(20);
+					margin: 0;
+				}
+
+				.activity-item-detached_close {
+					font-size: 24px;
+					border: 0;
+					background-color: transparent;
+					outline: none;
+
+					&:focus-visible {
+						outline: 1px solid $blue;
+					}
+				}
+			}
+		}
+
 		@include medium-up() {
 
 			div.item-avatar { // 'div' for weight
