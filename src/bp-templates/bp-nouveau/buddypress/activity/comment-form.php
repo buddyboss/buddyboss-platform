@@ -90,7 +90,7 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 		<?php
 		if ( 'blogs' !== $activities_template->activity->component ) {
 			?>
-		<div id="ac-reply-attachments-<?php bp_activity_id(); ?>" class="ac-reply-attachments">
+		<div id="ac-reply-attachments-<?php bp_activity_id(); ?>" class="ac-reply-attachments attachments--small">
 
 			<?php if ( bp_is_active( 'media' ) ) : ?>
 

@@ -7655,7 +7655,7 @@ form.ac-form div.dropzone .dz-default.dz-message:after {
   font-family: bb-icons;
   background-color: transparent;
   font-size: 30px;
-  font-weight: 400;
+  font-weight: 300;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -7735,6 +7735,14 @@ form.ac-form div.dropzone.video-dropzone .dz-progress-count {
   display: none;
 }
 
+form.ac-form div.dropzone.document-dropzone.dz-started {
+  margin-top: 10px;
+}
+
+form.ac-form div.dropzone.document-dropzone .dz-preview {
+  margin: 0 5px 5px 0;
+}
+
 form.ac-form div.dropzone.document-dropzone .dz-preview.dz-complete .dz-details {
   padding: 5px;
 }
@@ -7767,8 +7775,6 @@ form.ac-form div.dropzone.document-dropzone .dz-preview .dz-details .dz-filename
 
 form.ac-form div.dropzone.document-dropzone .dz-preview .dz-remove {
   background-color: #e7e7ea;
-  top: -8px;
-  right: -8px;
 }
 
 form.ac-form div.dropzone.document-dropzone .dz-preview .dz-progress-ring-wrap {

@@ -95,7 +95,7 @@ form.ac-form {
 	}
 }
 
-// Edit Comment Form
+// Comment Form
 form.ac-form {
 	display: block;
 
@@ -321,7 +321,7 @@ form.ac-form {
 				font-family: bb-icons;
 				background-color: transparent;
 				font-size: 30px;
-				font-weight: 400;
+				font-weight: 300;
 				display: flex;
 				align-items: center;
 				justify-content: center;
@@ -409,7 +409,12 @@ form.ac-form {
 
 		&.document-dropzone {
 
+			&.dz-started {
+				margin-top: 10px;
+			}
+
 			.dz-preview {
+				margin: 0 5px 5px 0;
 
 				&.dz-complete .dz-details {
 					padding: 5px;
@@ -444,8 +449,6 @@ form.ac-form {
 
 				.dz-remove {
 					background-color: #e7e7ea;
-					top: -8px;
-					right: -8px;
 				}
 
 				.dz-progress-ring-wrap {
