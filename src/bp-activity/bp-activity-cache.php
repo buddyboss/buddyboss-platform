@@ -200,3 +200,15 @@ function bp_activity_follow_delete_follow_ids_object_cache( $user_id, $ids ) {
 	}
 }
 add_action( 'bp_remove_follow_data', 'bp_activity_follow_delete_follow_ids_object_cache', 10, 2 );
+
+/**
+ * Clear cached data for activity meta data.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $activity_id ID of activity.
+ */
+function bb_activity_clear_metadata( $activity_id ) {
+	wp_cache_delete( $activity_id, 'activity_meta' );
+}
+add_action( 'deleted_activity_meta', 'bb_activity_clear_metadata', 10, 1 );
