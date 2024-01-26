@@ -507,6 +507,8 @@ class BP_Activity_Activity {
 					$where_conditions['search_sql'] .= $wpdb->prepare( ' OR a.user_id = %d', $user_id );
 				}
 			}
+
+			$where_conditions['search_sql'] = ' ( ' . $where_conditions['search_sql'] . ' ) ';
 		}
 
 		// Sorting.
