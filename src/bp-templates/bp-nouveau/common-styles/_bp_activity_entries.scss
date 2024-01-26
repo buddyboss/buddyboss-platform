@@ -39,7 +39,12 @@
 			display: none;
 		}
 
+		&.activity-popup {
+			display: none;
+		}
+
 		&.is-detached {
+			display: block;
 			position: fixed;
 			top: 40px;
 			left: 50%;

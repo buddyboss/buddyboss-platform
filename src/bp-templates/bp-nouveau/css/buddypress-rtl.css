@@ -3374,7 +3374,12 @@ input.search-query-input {
   display: none;
 }
 
+.activity-list .activity-item.activity-popup {
+  display: none;
+}
+
 .activity-list .activity-item.is-detached {
+  display: block;
   position: fixed;
   top: 40px;
   right: 50%;

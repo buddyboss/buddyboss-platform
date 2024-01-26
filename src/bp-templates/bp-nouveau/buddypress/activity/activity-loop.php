@@ -33,6 +33,8 @@ bp_nouveau_before_loop(); ?>
 
 	<?php endif; ?>
 
+	<li class="activity activity_update activity-item activity-popup"></li>
+
 	<?php if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
 		</ul>
 	<?php endif; ?>
