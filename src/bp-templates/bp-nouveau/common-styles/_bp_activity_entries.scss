@@ -35,6 +35,50 @@
 			}
 		}
 
+		.activity-item-detached_head {
+			display: none;
+		}
+
+		&.is-detached {
+			position: fixed;
+			top: 40px;
+			left: 50%;
+			transform: translateX(-50%);
+			max-height: calc(100% - 80px);
+			width: 100%;
+			z-index: 999;
+			overflow: auto;
+			border-top: 0;
+
+			.activity-item-detached_head {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 15px 25px;
+				border: 1px solid #b7b7b7;
+				border-left: 0;
+				border-right: 0;
+				margin: -1em -1em 1em -1em;
+
+				h2 {
+
+					@include font-size(20);
+					margin: 0;
+				}
+
+				.activity-item-detached_close {
+					font-size: 24px;
+					border: 0;
+					background-color: transparent;
+					outline: none;
+
+					&:focus-visible {
+						outline: 1px solid $blue;
+					}
+				}
+			}
+		}
+
 		@include medium-up() {
 
 			div.item-avatar { // 'div' for weight
@@ -201,12 +245,14 @@
 			}
 
 			.activity-state {
-				display: none;
-				font-size: 12px;
-				clear: both;
 
-				.ac-state-separator,
-				.activity-state-comments {
+				@include center-vert();
+				justify-content: space-between;
+				font-size: 14px;
+				clear: both;
+				margin: 10px 0;
+
+				.activity-state-likes {
 					display: none;
 				}
 
@@ -215,29 +261,17 @@
 					padding: 0;
 				}
 
-				&.has-comments {
+				&.has-likes {
 
-					&.has-likes .ac-state-separator,
-					.activity-state-comments {
-						color: var(--bb-body-text-color);
+					.activity-state-likes {
 						display: inline-block;
-						vertical-align: middle;
+						background-color: transparent;
 					}
 				}
 
-				&.has-emotion,
-				&.has-likes,
-				&.has-comments {
-					display: flex;
-					gap: 5px;
-					align-items: center;
-				}
-
-				&.has-comments {
-
-					.activity-state-reactions + .ac-state-separator {
-						display: inline-block;
-					}
+				.activity-state-comments {
+					display: inline-block;
+					margin-left: auto;
 				}
 			}
 
@@ -317,7 +351,7 @@
 
 				&.has-reaction > i {
 					font-weight: 200;
-					font-size: 20px;
+					font-size: 24px;
 
 					body:not(.bb-reactions-mode) & {
 						font-weight: 300;
@@ -325,8 +359,8 @@
 				}
 
 				> img {
-					height: 20px;
-					width: 20px;
+					height: 24px;
+					width: 24px;
 					object-fit: cover;
 				}
 
@@ -409,17 +443,33 @@
 			}
 		}
 
-		.bp-generic-meta.action {
-			border: 1px solid transparent;
-			background: $off-white;
-			padding: 2px;
+		.activity-content > .bp-generic-meta.activity-meta,
+		> .bp-generic-meta.activity-meta {
+			display: flex;
+			justify-content: space-around;
+			border-top: 1px solid $light-grey;
+			border-bottom: 1px solid $light-grey;
+			padding: 5px 0;
 			position: relative;
-			text-align: left;
+			margin-bottom: 10px;
 
 			// this wrapper has generic margins in _bp_lists.scss
 			// remove for act stream actions.
 			div.generic-button {
 				margin: 0;
+				display: flex;
+				justify-content: center;
+				flex: auto;
+
+				> a {
+					width: 100%;
+					justify-content: center;
+					border-radius: $block-radius-inner;
+
+					&:hover {
+						background-color: $light-grey;
+					}
+				}
 			}
 
 			.button {
@@ -440,7 +490,7 @@
 			.button:before,
 			.icons:before {
 				font-family: "bb-icons";/* stylelint-disable-line */
-				font-size: 20px;
+				font-size: 24px;
 				vertical-align: middle;
 			}
 
@@ -667,6 +717,7 @@
 						border: 0;
 						background-color: transparent;
 						box-shadow: none;
+						box-sizing: border-box;
 
 						&:hover {
 							color: $blue;
@@ -797,7 +848,39 @@
 		.bb-activity-more-options-wrap {
 			position: absolute;
 			right: 0;
-			top: -7px;
+			top: 50%;
+			transform: translateY(calc(-50% - 11px));
+			z-index: 11;
+
+			.bb-activity-more-options-action {
+				border-radius: $block-radius-inner;
+
+				i {
+					font-size: 16px;
+					color: $black;
+					opacity: 0.4;
+				}
+
+				&:hover {
+					background-color: $light-grey;
+
+					i {
+						opacity: 1;
+					}
+				}
+			}
+
+			&:has(.bb-activity-more-options.is_visible) {
+				z-index: 111;
+
+				.bb-activity-more-options-action {
+					background-color: $light-grey;
+
+					i {
+						opacity: 1;
+					}
+				}
+			}
 		}
 
 	}
@@ -1043,7 +1126,7 @@
 
 			&.active {
 				display: flex;
-				bottom: 25px;
+				bottom: 34px;
 
 				.ac-emotion_item {
 					top: 0;
@@ -1054,7 +1137,7 @@
 
 				&:hover {
 					display: flex;
-					bottom: 25px;
+					bottom: 34px;
 
 					.ac-emotion_item {
 						top: 0;
@@ -2652,6 +2735,76 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-video-wrap.bb-video-length-1 .bb-activity-video-elem .item-action-wrap {
 	right: 15px;
 	top: 18px;
+}
+
+// Loading animation
+
+.bb-activity-placeholder {
+	background: $white;
+	border: 1px solid #b7b7b7;
+	padding: 20px 15px;
+	border-radius: $block-radius-inner;
+	margin-bottom: $marg-lrg;
+
+	.bb-activity-placeholder_avatar {
+		height: 48px;
+		width: 48px;
+		border-radius: 50%;
+		margin-right: 10px;
+	}
+
+	.bb-activity-placeholder_head {
+		display: flex;
+		margin-bottom: 20px;
+	}
+
+	.bb-activity-placeholder_details {
+		display: flex;
+		justify-content: center;
+		flex-flow: column;
+		flex: 1;
+		width: calc(100% - 68px);
+
+		.bb-activity-placeholder_title,
+		.bb-activity-placeholder_description {
+			max-width: 107px;
+			height: 17px;
+			border-radius: 6px;
+			margin-bottom: 6px;
+		}
+
+		.bb-activity-placeholder_description {
+			max-width: 202px;
+			height: 12px;
+		}
+	}
+
+	.bb-activity-placeholder_content {
+		display: flex;
+		justify-content: center;
+		flex-flow: column;
+		flex: 1;
+		gap: 8px;
+		margin-bottom: 20px;
+
+		.bb-activity-placeholder_title {
+			height: 18px;
+			border-radius: 6px;
+			width: 100%;
+		}
+	}
+
+	.bb-activity-placeholder_actions {
+		display: flex;
+		justify-content: space-between;
+
+		.bb-activity-placeholder_description {
+			height: 13px;
+			border-radius: 6px;
+			width: 100%;
+			max-width: 98px;
+		}
+	}
 }
 
 @media screen and ( max-width: 799px ) {

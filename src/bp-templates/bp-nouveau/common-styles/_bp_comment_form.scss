@@ -2,10 +2,11 @@
 // @version 3.0.0
 form.ac-form {
 	display: none;
-	padding: $pad-med;
+	margin: 15px 0;
+	padding: 0;
 
 	.ac-reply-avatar {
-		float: left;
+		margin-top: 4px;
 
 		img {
 			border: 1px solid #eee;
@@ -94,21 +95,87 @@ form.ac-form {
 	}
 }
 
-// Edit Comment Form
-form.acomment-edit {
+// Comment Form
+form.ac-form {
+	display: block;
+
+	&.not-initialized {
+
+		.ac-reply-content {
+
+			.ac-input {
+				min-height: 25px;
+				line-height: 25px;
+
+				&:before {
+					content: attr(data-placeholder);
+					color: $light-text;
+					opacity: 0.5;
+				}
+			}
+
+			> button,
+			> input,
+			> .ac-submit-wrap {
+				display: none !important;
+			}
+		}
+
+		.ac-reply-content {
+			height: 44px;
+
+			.ac-textarea {
+				padding-right: 0;
+
+				.ac-reply-toolbar {
+					left: inherit;
+					right: 0;
+					bottom: inherit;
+					top: -5px;
+					margin: 0;
+				}
+			}
+		}
+
+		> * {
+			pointer-events: none;
+		}
+
+		.bb-media-model-container & {
+
+			.ac-reply-content {
+				height: 74px;
+			}
+		}
+
+		@media screen and (max-width: 1080px) and (min-width: 768px), screen and (max-width: 490px) {
+
+			.ac-reply-content {
+				height: 74px;
+			}
+		}
+	}
 
 	.bp-ac-form-cotainer {
 		align-items: flex-start;
+		flex-wrap: wrap;
+
+		.ac-reply-attachments {
+			width: 100%;
+			padding-left: 46px;
+		}
 	}
 
 	.ac-reply-avatar img {
-		max-width: 34px;
+		max-width: 32px;
+		height: auto;
 	}
 
 	.ac-reply-content {
-		border: 1px solid $bp-border-color;
-		border-radius: 4px;
-		padding: 7px;
+		border: 1px solid transparent;
+		background-color: $light-grey;
+		border-radius: $block-radius-inner;
+		padding: 8px;
 		margin-left: 10px;
 
 		&:focus-within {
@@ -140,12 +207,55 @@ form.acomment-edit {
 			}
 		}
 
+		.ac-submit-wrap {
+			background-color: $blue;
+			border-radius: 50%;
+			height: 30px;
+			width: 30px;
+			overflow: hidden;
+			cursor: pointer;
+			position: relative;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 0;
+
+			&:before {
+				display: block;
+				content: "\eee7";
+				color: #fff;
+				font-family: bb-icons;
+				font-size: 16px;
+				font-weight: 300;
+				line-height: 30px;
+			}
+
+			&.loading {
+				background-color: transparent;
+
+				&:before {
+					content: "\ef30";
+					font-size: 18px;
+					color: $black;
+					animation: spin 2s infinite linear;
+					line-height: 1;
+				}
+			}
+
+			input[name="ac_form_submit"] {
+				position: absolute;
+				inset: 0;
+				opacity: 0;
+				background-color: $blue;
+			}
+		}
+
 		.ac-reply-cancel,
-		input[name="ac_form_submit"] {
+		.ac-submit-wrap {
 			float: right;
 		}
 
-		input[name="ac_form_submit"] {
+		.ac-submit-wrap {
 			margin-left: 5px;
 		}
 
@@ -159,7 +269,7 @@ form.acomment-edit {
 		.bb-media-model-container & {
 
 			.ac-reply-cancel,
-			input[name="ac_form_submit"] {
+			.ac-submit-wrap {
 				float: left;
 			}
 
@@ -178,7 +288,7 @@ form.acomment-edit {
 		@media screen and (max-width: 1080px) and (min-width: 768px), screen and (max-width: 490px) {
 
 			.ac-reply-cancel,
-			input[name="ac_form_submit"] {
+			.ac-submit-wrap {
 				float: left;
 			}
 
@@ -223,7 +333,7 @@ form.acomment-edit {
 				font-family: bb-icons;
 				background-color: transparent;
 				font-size: 30px;
-				font-weight: 400;
+				font-weight: 300;
 				display: flex;
 				align-items: center;
 				justify-content: center;
@@ -311,7 +421,12 @@ form.acomment-edit {
 
 		&.document-dropzone {
 
+			&.dz-started {
+				margin-top: 10px;
+			}
+
 			.dz-preview {
+				margin: 0 5px 5px 0;
 
 				&.dz-complete .dz-details {
 					padding: 5px;
@@ -346,8 +461,6 @@ form.acomment-edit {
 
 				.dz-remove {
 					background-color: #e7e7ea;
-					top: -8px;
-					right: -8px;
 				}
 
 				.dz-progress-ring-wrap {
@@ -397,25 +510,9 @@ form.acomment-edit {
 	}
 
 	.activity-attached-gif-container {
-		background: none !important;
-		height: auto !important;
-		width: auto !important;
-		display: table;
 		min-height: auto !important;
 
-		.gif-image-container {
-			margin: 15px 0 0;
-
-			img {
-				border-radius: 4px;
-				height: 60px;
-				width: 60px;
-				object-fit: cover;
-			}
-		}
-
 		.gif-image-remove {
-			right: -8px;
 			top: 7px;
 
 			.bb-icon-times {
