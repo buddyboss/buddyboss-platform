@@ -123,7 +123,9 @@ if ( bp_is_group_create() ) {
 	<dd class="general-members-listing">
 
 		<p><?php printf( __( 'When a member joins a group, he or she is assigned the %1$s role by default. %2$s are able to contribute to the group’s discussions, activity feeds, and view other group members.', 'buddyboss' ), strtolower( get_group_role_label( bp_get_current_group_id(), 'member_singular_label_name' ) ), get_group_role_label( bp_get_current_group_id(), 'member_plural_label_name' ) ); ?></p>
-
+		<div class="search-wrapper" data-bp-search="group_members">
+			<input type="search" placeholder="Search Members" name="members_search" />
+		</div>
 		<?php if ( bp_group_has_members( 'per_page=15&exclude_banned=0' ) ) : ?>
 
 			<?php if ( bp_group_member_needs_pagination() ) : ?>

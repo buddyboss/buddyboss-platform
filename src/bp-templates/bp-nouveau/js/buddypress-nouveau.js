@@ -24,7 +24,6 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		start: function () {
-
 			// Setup globals.
 			this.setupGlobals();
 
@@ -819,12 +818,13 @@ window.bp = window.bp || {};
 			// Filtering.
 			$( document ).on( 'change', '#buddypress [data-bp-filter]', this, this.filterQuery );
 
-			// Group Type & Member Type Filter.
+			// Group Type & <Memb></Memb>er Type Filter.
 			$( document ).on( 'change', '#buddypress [data-bp-group-type-filter]', this, this.typeGroupFilterQuery );
 			$( document ).on( 'change', '#buddypress [data-bp-member-type-filter]', this, this.typeMemberFilterQuery );
 
 			// Searching.
 			$( '#buddypress [data-bp-search]' ).on( 'submit', 'form', this, this.searchQuery );
+			$( '#buddypress [data-bp-search]' ).on( 'keyup', 'input[type=search]', this, this.searchQuery );
 			$( '#buddypress [data-bp-search] form' ).on( 'search', 'input[type=search]', this.resetSearch );
 
 			// Buttons.
