@@ -375,6 +375,14 @@
 
 	} // close .activity-comments
 
+	.activity-comments > .ac-form {
+		display: none;
+	}
+
+	.activity-item.has-comments .activity-comments > .ac-form {
+		display: block;
+	}
+
 	.activity-list .activity-item .activity-comments .bp-generic-meta.action a.bp-like-button .like-count {
 		margin-left: 0;
 	}

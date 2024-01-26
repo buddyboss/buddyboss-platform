@@ -1126,6 +1126,11 @@ window.bp = window.bp || {};
 					$activity_comments = target.closest( '.bb-media-model-container' ).find( '[data-bp-activity-id="' + item_id + '"] .activity-comments' );
 				}
 
+				// Show comment form on activity item when it is hidden initially.
+				if( ! target.closest( '.activity-item' ).hasClass( 'has-comments' ) ) {
+					target.closest( '.activity-item' ).addClass( 'has-comments' );
+				}
+
 				// Stop event propagation.
 				event.preventDefault();
 

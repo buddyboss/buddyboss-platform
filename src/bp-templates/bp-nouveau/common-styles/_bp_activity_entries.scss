@@ -453,10 +453,8 @@
 			display: flex;
 			justify-content: space-around;
 			border-top: 1px solid $light-grey;
-			border-bottom: 1px solid $light-grey;
 			padding: 5px 0;
 			position: relative;
-			margin-bottom: 10px;
 
 			// this wrapper has generic margins in _bp_lists.scss
 			// remove for act stream actions.
@@ -571,6 +569,12 @@
 				color: #0061ac;
 			}
 
+		}
+
+		&.has-comments .activity-content > .bp-generic-meta.activity-meta,
+		&.has-comments > .bp-generic-meta.activity-meta {
+			border-bottom: 1px solid $light-grey;
+			margin-bottom: 10px;
 		}
 
 		// close .activity-meta
