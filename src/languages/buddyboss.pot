@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.5.30\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-01-24 15:00:36+00:00\n"
+"POT-Creation-Date: 2024-01-26 11:22:54+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -915,6 +915,7 @@ msgid "Replied to a status update"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:1627
+#: bp-core/admin/settings/bp-admin-setting-activity.php:101
 #: bp-moderation/classes/class-bp-moderation-activity-comment.php:113
 #: bp-search/bp-search-functions.php:389 bp-search/bp-search-settings.php:987
 msgid "Activity Comments"
@@ -1300,7 +1301,7 @@ msgid "Unfollow"
 msgstr ""
 
 #: bp-activity/bp-activity-template.php:4204
-#: bp-core/admin/settings/bp-admin-setting-activity.php:94
+#: bp-core/admin/settings/bp-admin-setting-activity.php:88
 #: bp-members/bp-members-admin.php:143
 #: bp-templates/bp-nouveau/includes/customizer.php:327
 msgid "Follow"
@@ -4329,7 +4330,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:423
-#: bp-core/admin/settings/bp-admin-setting-activity.php:139
+#: bp-core/admin/settings/bp-admin-setting-activity.php:152
 msgid "WordPress"
 msgstr ""
 
@@ -4423,6 +4424,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:569
 #: bp-core/admin/bp-core-admin-settings.php:954
 #: bp-core/admin/bp-core-admin-settings.php:1311
+#: bp-core/admin/bp-core-admin-settings.php:3665
 #: bp-core/bp-core-functions.php:7405
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:218
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:233
@@ -5089,6 +5091,47 @@ msgid ""
 "the list of options."
 msgstr ""
 
+#: bp-core/admin/bp-core-admin-settings.php:3625
+msgid "Allow members to comment on activity posts"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:3626
+msgid ""
+"Comments on an individual activity post can be closed or disabled all "
+"together by site admins."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:3653
+msgid "Organize replies into threads %s levels deep"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:3655
+msgid ""
+"Replies to an activity comment will be shown in separate threads, except "
+"when replying to a comment at the deepest level."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:3683
+msgid "Display a maximum %s comments per post in activity feeds"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:3685
+msgid ""
+"Load more using the \"View more comments\" and \"View replies\" links. "
+"Higher comments counts will increase the time it takes members to scroll "
+"through activity feeds. This only applies to platform not app."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:3711
+msgid "Load %s additional comments on each request"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:3713
+msgid ""
+"Increasing the number of comments retrieved in each request may negatively "
+"impact site performance."
+msgstr ""
+
 #: bp-core/admin/bp-core-admin-slugs.php:38
 msgid "Profile Dashboard"
 msgstr ""
@@ -5593,42 +5636,60 @@ msgid "Edit Activity Time Limit"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:76
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2094
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2098
-msgid "Edit Comment"
-msgstr ""
-
-#: bp-core/admin/settings/bp-admin-setting-activity.php:77
-msgid "Edit Comment Time Limit"
-msgstr ""
-
-#: bp-core/admin/settings/bp-admin-setting-activity.php:82
 msgid "Activity auto-refresh"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:85
+#: bp-core/admin/settings/bp-admin-setting-activity.php:79
 msgid "Activity auto-load"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:88
+#: bp-core/admin/settings/bp-admin-setting-activity.php:82
 msgid "Activity tabs"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:91
+#: bp-core/admin/settings/bp-admin-setting-activity.php:85
 #: bp-templates/bp-nouveau/buddypress/activity/entry.php:37
 msgid "Pinned Post"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:97
+#: bp-core/admin/settings/bp-admin-setting-activity.php:91
 #: bp-forums/admin/settings.php:172
 msgid "Link Previews"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:100
+#: bp-core/admin/settings/bp-admin-setting-activity.php:94
 msgid "Relevant Activity"
 msgstr ""
 
+#: bp-core/admin/settings/bp-admin-setting-activity.php:103
+msgid "Enable comments"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-activity.php:106
+msgid "Comment threading"
+msgstr ""
+
 #: bp-core/admin/settings/bp-admin-setting-activity.php:107
+msgid "Comment threading depth"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-activity.php:111
+msgid "Comment visibility"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-activity.php:112
+msgid "Comments loading"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-activity.php:115
+msgid "Edit Activity comments"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-activity.php:116
+msgid "Edit Comment Time Limit"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-activity.php:120
 msgid "Posts in Activity Feeds"
 msgstr ""
 
@@ -5636,7 +5697,7 @@ msgstr ""
 msgid "BuddyBoss Platform"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:153
+#: bp-core/admin/settings/bp-admin-setting-activity.php:166
 msgid "Custom Post Types"
 msgstr ""
 
@@ -30316,6 +30377,11 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1336
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1328
 msgid "Done Editing"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2094
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2098
+msgid "Edit Comment"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/widgets.php:35
