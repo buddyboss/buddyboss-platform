@@ -774,16 +774,48 @@ function bp_nouveau_get_activity_comment_action() {
 	return apply_filters(
 		'bp_nouveau_get_activity_comment_action',
 		sprintf(
-			/* translators: 1: user profile link, 2: user name, 3: activity permalink, 4: activity recorded date, 5: activity timestamp, 6: activity timestamp, 7: activity human time since, 8: Edited text */
-			__( '<a class="author-name" href="%1$s">%2$s</a> <a href="%3$s" class="activity-time-since"><time class="time-since" datetime="%4$s" data-bp-timestamp="%5$d" data-livestamp="%6$s">%7$s</time></a>%8$s', 'buddyboss' ),
+			/* translators: 1: user profile link, 2: user name, 3: Edited text */
+			__( '<a class="author-name" href="%1$s">%2$s</a>%3$s', 'buddyboss' ),
 			esc_url( bp_get_activity_comment_user_link() ),
 			esc_html( bp_get_activity_comment_name() ),
+			bb_nouveau_activity_comment_is_edited()
+		)
+	);
+}
+
+/**
+ * Ouptut the Activity comment action meta data
+ *
+ * @since BuddyPress 3.0.0
+ */
+function bp_nouveau_activity_comment_meta() {
+	echo bp_nouveau_get_activity_comment_meta();
+}
+
+/**
+ * Get the Activity comment action meta data
+ *
+ * @since BuddyPress 3.0.0
+ */
+function bp_nouveau_get_activity_comment_meta() {
+
+	/**
+	 * Filter to edit the activity comment action.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param string $value HTML Output
+	 */
+	return apply_filters(
+		'bp_nouveau_get_activity_comment_meta',
+		sprintf(
+			/* translators: 1: activity permalink, 2: activity recorded date, 3: activity timestamp, 4: activity timestamp, 5: activity human time since */
+			__( '<a href="%1$s" class="activity-time-since"><span class="time-since" datetime="%2$s" data-bp-timestamp="%3$d" data-livestamp="%4$s">%5$s</span></a>', 'buddyboss' ),
 			esc_url( bp_get_activity_comment_permalink() ),
 			esc_attr( bp_get_activity_comment_date_recorded_raw() ),
 			esc_attr( strtotime( bp_get_activity_comment_date_recorded_raw() ) ),
 			esc_attr( bp_core_get_iso8601_date( bp_get_activity_comment_date_recorded_raw() ) ),
-			esc_attr( bp_get_activity_comment_date_recorded() ),
-			bb_nouveau_activity_comment_is_edited()
+			esc_attr( bp_get_activity_comment_date_recorded() )
 		)
 	);
 }

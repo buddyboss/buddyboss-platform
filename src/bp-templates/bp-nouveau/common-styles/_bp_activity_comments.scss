@@ -375,6 +375,20 @@
 
 	} // close .activity-comments
 
+	.activity-comments .acomment-foot-actions {
+		display: flex;
+		align-items: center;
+
+		.generic-button {
+			margin: 10px 0;
+		}
+
+		.activity-time-since {
+			color: $light-text;
+			margin-left: 5px;
+		}
+	}
+
 	.activity-comments > .ac-form {
 		display: none;
 	}

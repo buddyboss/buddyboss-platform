@@ -7346,6 +7346,20 @@ span.dashicons.dashicons-admin-file:before {
   margin-right: 0;
 }
 
+.buddypress-wrap .activity-comments .acomment-foot-actions {
+  display: flex;
+  align-items: center;
+}
+
+.buddypress-wrap .activity-comments .acomment-foot-actions .generic-button {
+  margin: 10px 0;
+}
+
+.buddypress-wrap .activity-comments .acomment-foot-actions .activity-time-since {
+  color: #767676;
+  margin-left: 5px;
+}
+
 .buddypress-wrap .activity-comments > .ac-form {
   display: none;
 }

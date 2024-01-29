@@ -55,7 +55,10 @@ bp_nouveau_activity_hook( 'before', 'comment_entry' );
 						?>
 					</div>
 				</div>
-				<?php bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) ); ?>
+				<div class="acomment-foot-actions">
+					<?php bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) ); ?>
+					<?php bp_nouveau_activity_comment_meta(); ?>
+				</div>
 			</div>
 		</div>
 	</div>
