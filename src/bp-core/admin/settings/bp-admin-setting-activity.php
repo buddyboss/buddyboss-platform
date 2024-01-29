@@ -98,10 +98,16 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			// $this->add_field( '_bp_enable_akismet', __( 'Akismet', 'buddyboss' ), 'bp_admin_setting_callback_activity_akismet', 'intval' );
 		}
 
-		$this->add_section( 'bb_activity_comments', __( 'Activity Comments', 'buddyboss' ) );
+		$this->add_section( 'bb_activity_comments', __( 'Activity Comments', 'buddyboss' ), '', 'bb_admin_activity_comments_settings_tutorial', sprintf(
+				wp_kses_post(
+					__( 'WordPress post and custom post types will inherit from your WordPress %s settings.', 'buddyboss' )
+				),
+				'<a href="options-discussion.php" target="_blank" >' . esc_html__( 'Discussion', 'buddyboss' ) . '</a>'
+			)
+		);
 
 		$this->add_field( '_bb_enable_activity_comments', __( 'Enable comments', 'buddyboss' ), 'bb_admin_setting_callback_enable_activity_comments', 'intval' );
-		
+
 		// Allow Activity comment threading setting.
 		$this->add_field( '_bb_enable_activity_comment_threading', __( 'Comment threading', 'buddyboss' ), 'bb_admin_setting_callback_comment_threading', 'intval' );
 		$this->add_field( '_bb_activity_comment_threading_depth', __( 'Comment threading depth', 'buddyboss' ), '__return_true', 'intval', array(

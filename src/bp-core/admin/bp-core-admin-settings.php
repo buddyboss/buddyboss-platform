@@ -3713,3 +3713,30 @@ function bb_admin_setting_callback_comment_loading() {
 	<p class="description"><?php esc_html_e( 'Increasing the number of comments retrieved in each request may negatively impact site performance.', 'buddyboss' ); ?></p>
 	<?php
 }
+
+/**
+ * Link to Activity Comments tutorial
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_activity_comments_settings_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 124801,
+						),
+						'admin.php'
+					)
+				)
+			);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
