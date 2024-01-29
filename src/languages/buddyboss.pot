@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.5.30\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-01-25 05:21:39+00:00\n"
+"POT-Creation-Date: 2024-01-29 11:52:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -965,55 +965,56 @@ msgstr ""
 msgid "There was an error posting your reply. Please try again."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:2957
+#: bp-activity/bp-activity-functions.php:2951
+#: bp-activity/bp-activity-functions.php:2976
 msgid "The item you were replying to no longer exists."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:2999
+#: bp-activity/bp-activity-functions.php:3018
 msgid ""
 "Allowed time for editing this activity comment is passed already, you can "
 "not edit now."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:3691
+#: bp-activity/bp-activity-functions.php:3710
 msgid "Thumbnail"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:4096
-#: bp-activity/bp-activity-functions.php:4100
-#: bp-activity/bp-activity-functions.php:4103
-#: bp-activity/bp-activity-functions.php:4107
-#: bp-activity/bp-activity-functions.php:4112
+#: bp-activity/bp-activity-functions.php:4115
+#: bp-activity/bp-activity-functions.php:4119
+#: bp-activity/bp-activity-functions.php:4122
+#: bp-activity/bp-activity-functions.php:4126
+#: bp-activity/bp-activity-functions.php:4131
 #: bp-activity/classes/class-bp-activity-notification.php:217
 #: bp-members/classes/class-bp-members-mentions-notification.php:272
 msgid "post"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:4105 bp-blogs/bp-blogs-filters.php:266
+#: bp-activity/bp-activity-functions.php:4124 bp-blogs/bp-blogs-filters.php:266
 #: bp-core/bp-core-actions.php:974
 #: bp-core/classes/class-bp-email-tokens.php:2538
 msgid "View Comment"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:4108
-#: bp-activity/bp-activity-functions.php:4113
+#: bp-activity/bp-activity-functions.php:4127
+#: bp-activity/bp-activity-functions.php:4132
 #: bp-core/classes/class-bp-email-tokens.php:2144
 #: bp-core/classes/class-bp-email-tokens.php:2400
 msgid "View Post"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:5259 bp-forums/functions.php:1132
+#: bp-activity/bp-activity-functions.php:5278 bp-forums/functions.php:1132
 msgid "URL is not valid."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:5267
+#: bp-activity/bp-activity-functions.php:5286
 #: bp-activity/classes/class-bp-rest-activity-link-preview-endpoint.php:106
 #: bp-forums/classes/class-bb-rest-forums-link-preview-endpoint.php:106
 #: bp-forums/functions.php:1140
 msgid "There was a problem generating a link preview."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:5778
+#: bp-activity/bp-activity-functions.php:5797
 #: bp-groups/bp-groups-filters.php:1145
 #: bp-messages/classes/class-bp-messages-notification.php:371
 #: bp-messages/classes/class-bp-messages-notification.php:445
@@ -1023,7 +1024,7 @@ msgstr ""
 msgid "some photos"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:5780
+#: bp-activity/bp-activity-functions.php:5799
 #: bp-groups/bp-groups-filters.php:1147
 #: bp-messages/classes/class-bp-messages-notification.php:378
 #: bp-messages/classes/class-bp-messages-notification.php:453
@@ -1033,7 +1034,7 @@ msgstr ""
 msgid "a photo"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:5785
+#: bp-activity/bp-activity-functions.php:5804
 #: bp-groups/bp-groups-filters.php:1152
 #: bp-messages/classes/class-bp-messages-notification.php:388
 #: bp-messages/classes/class-bp-messages-notification.php:464
@@ -1043,7 +1044,7 @@ msgstr ""
 msgid "some documents"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:5787
+#: bp-activity/bp-activity-functions.php:5806
 #: bp-groups/bp-groups-filters.php:1154
 #: bp-messages/classes/class-bp-messages-notification.php:395
 #: bp-messages/classes/class-bp-messages-notification.php:472
@@ -1053,7 +1054,7 @@ msgstr ""
 msgid "a document"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:5792
+#: bp-activity/bp-activity-functions.php:5811
 #: bp-groups/bp-groups-filters.php:1159
 #: bp-messages/classes/class-bp-messages-notification.php:405
 #: bp-messages/classes/class-bp-messages-notification.php:483
@@ -1063,7 +1064,7 @@ msgstr ""
 msgid "some videos"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:5794
+#: bp-activity/bp-activity-functions.php:5813
 #: bp-groups/bp-groups-filters.php:1161
 #: bp-messages/classes/class-bp-messages-notification.php:412
 #: bp-messages/classes/class-bp-messages-notification.php:491
@@ -1073,12 +1074,12 @@ msgstr ""
 msgid "a video"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:5797
+#: bp-activity/bp-activity-functions.php:5816
 #: bp-groups/bp-groups-filters.php:1141 bp-groups/bp-groups-filters.php:1166
 msgid "an update"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:5973
+#: bp-activity/bp-activity-functions.php:5992
 msgid "Friendships"
 msgstr ""
 
@@ -28250,17 +28251,17 @@ msgstr ""
 msgid "No results found."
 msgstr ""
 
-#: bp-search/classes/class-bp-search.php:604
+#: bp-search/classes/class-bp-search.php:615
 msgid "%d result"
 msgid_plural "%d results"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-search/classes/class-bp-search.php:620
+#: bp-search/classes/class-bp-search.php:631
 msgid "View (%d) more"
 msgstr ""
 
-#: bp-search/classes/class-bp-search.php:868
+#: bp-search/classes/class-bp-search.php:891
 msgid "All Results"
 msgstr ""
 
@@ -28528,7 +28529,7 @@ msgstr ""
 msgid "Load More"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/activity/post-form.php:34
+#: bp-templates/bp-nouveau/buddypress/activity/post-form.php:37
 msgid "Post Update"
 msgstr ""
 
