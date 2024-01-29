@@ -95,93 +95,22 @@ function bp_video_add_theatre_template() {
  * @since BuddyBoss 1.7.0
  */
 function bp_video_activity_entry() {
-	global $video_template;
+	global $activities_template;
 
-	if ( ( buddypress()->activity->id === bp_get_activity_object_name() && ! bp_is_profile_video_support_enabled() ) || ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() && ! bp_is_group_video_support_enabled() ) ) {
-		return false;
+	$activity = '';
+	if ( isset( $activities_template->activity ) ) {
+		$activity = $activities_template->activity;
 	}
 
-	$video_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_video_ids', true );
-
-	// Add Video to single activity page..
-	$video_activity = bp_activity_get_meta( bp_get_activity_id(), 'bp_video_activity', true );
-	if ( bp_is_single_activity() && ! empty( $video_activity ) && '1' === $video_activity && empty( $video_ids ) ) {
-		$video_ids = BP_Video::get_activity_video_id( bp_get_activity_id() );
-	} else {
-		$video_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_video_ids', true );
-	}
-
-	if ( empty( $video_ids ) ) {
-		return;
-	}
-
-	$args = array(
-		'include'  => $video_ids,
-		'order_by' => 'menu_order',
-		'sort'     => 'ASC',
-		'user_id'  => false,
-		'per_page' => 0,
+	$is_media = bb_video_get_activity_video(
+		$activity,
+		array(
+			'user_id' => false
+		)
 	);
 
-	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() ) {
-		if ( bp_is_group_video_support_enabled() ) {
-			$args['privacy'] = array( 'grouponly' );
-			if ( ! bp_is_group_albums_support_enabled() ) {
-				$args['album_id'] = 'existing-video';
-			}
-		} else {
-			$args['privacy']  = array( '0' );
-			$args['album_id'] = 'existing-video';
-		}
-	} else {
-		$args['privacy'] = bp_video_query_privacy( bp_get_activity_user_id(), 0, bp_get_activity_object_name() );
-		if ( ! bp_is_profile_video_support_enabled() ) {
-			$args['user_id'] = 'null';
-		}
-		if ( ! bp_is_profile_albums_support_enabled() ) {
-			$args['album_id'] = 'existing-video';
-		}
-	}
-
-	$is_forum_activity = false;
-	if (
-		bp_is_active( 'forums' )
-		&& in_array( bp_get_activity_type(), array( 'bbp_forum_create', 'bbp_topic_create', 'bbp_reply_create' ), true )
-		&& bp_is_forums_video_support_enabled()
-	) {
-		$is_forum_activity = true;
-		$args['privacy'][] = 'forums';
-	}
-
-	/**
-	 * If the content has been changed by these filters bb_moderation_has_blocked_message,
-	 * bb_moderation_is_blocked_message, bb_moderation_is_suspended_message then
-	 * it will hide video content which is created by blocked/blocked/suspended member.
-	 */
-	$hide_forum_activity = function_exists( 'bb_moderation_to_hide_forum_activity' ) ? bb_moderation_to_hide_forum_activity( bp_get_activity_id() ) : false;
-
-	if ( true === $hide_forum_activity ) {
-		return;
-	}
-
-	if ( ! empty( $video_ids ) && bp_has_video( $args ) ) {
-		$classes = array(
-			esc_attr( 'bb-video-length-' . $video_template->video_count ),
-			$video_template->video_count > 5 ? esc_attr( ' bb-video-length-more' ) : '',
-			true === $is_forum_activity ? esc_attr( ' forums-video-wrap' ) : '',
-		);
-		?>
-		<div class="bb-activity-video-wrap <?php echo esc_attr( implode( ' ', array_filter( $classes ) ) ); ?>">
-			<?php
-			bp_get_template_part( 'video/add-video-thumbnail' );
-			bp_get_template_part( 'video/video-move' );
-			while ( bp_video() ) {
-				bp_the_video();
-				bp_get_template_part( 'video/activity-entry' );
-			}
-			?>
-		</div>
-		<?php
+	if ( ! empty( $is_media ) ) {
+		print $is_media;
 	}
 }
 
@@ -196,79 +125,10 @@ function bp_video_activity_entry() {
  * @return string
  */
 function bp_video_activity_append_video( $content, $activity ) {
-	global $video_template;
 
-	if ( ( buddypress()->activity->id === $activity->component && ! bp_is_profile_video_support_enabled() ) || ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component && ! bp_is_group_video_support_enabled() ) ) {
-		return $content;
-	}
-
-	$video_ids = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
-
-	if ( ! empty( $video_ids ) ) {
-
-		$args = array(
-			'include'  => $video_ids,
-			'order_by' => 'menu_order',
-			'sort'     => 'ASC',
-			'per_page' => 0,
-		);
-
-		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
-			if ( bp_is_group_video_support_enabled() ) {
-				$args['privacy'] = array( 'grouponly' );
-				if ( ! bp_is_group_albums_support_enabled() ) {
-					$args['album_id'] = 'existing-video';
-				}
-			} else {
-				$args['privacy']  = array( '0' );
-				$args['album_id'] = 'existing-video';
-			}
-		} else {
-			$args['privacy'] = bp_video_query_privacy( $activity->user_id, 0, $activity->component );
-
-			if ( 'activity_comment' === $activity->type ) {
-				$args['privacy'][] = 'comment';
-			}
-
-			if ( ! bp_is_profile_video_support_enabled() ) {
-				$args['user_id'] = 'null';
-			}
-			if ( ! bp_is_profile_albums_support_enabled() ) {
-				$args['album_id'] = 'existing-video';
-			}
-		}
-
-		$is_forum_activity = false;
-		if (
-			bp_is_active( 'forums' )
-			&& in_array( $activity->type, array( 'bbp_forum_create', 'bbp_topic_create', 'bbp_reply_create' ), true )
-			&& bp_is_forums_video_support_enabled()
-		) {
-			$is_forum_activity = true;
-			$args['privacy'][] = 'forums';
-		}
-
-		if ( bp_has_video( $args ) ) {
-			$classes = array(
-				esc_attr( 'bb-video-length-' . $video_template->video_count ),
-				( $video_template->video_count > 5 ? esc_attr( ' bb-video-length-more' ) : '' ),
-				( true === $is_forum_activity ? esc_attr( ' forums-video-wrap' ) : '' ),
-			);
-			ob_start();
-			?>
-			<div class="bb-activity-video-wrap <?php echo esc_attr( implode( ' ', array_filter( $classes ) ) ); ?>">
-				<?php
-				bp_get_template_part( 'video/add-video-thumbnail' );
-				bp_get_template_part( 'video/video-move' );
-				while ( bp_video() ) {
-					bp_the_video();
-					bp_get_template_part( 'video/activity-entry' );
-				}
-				?>
-			</div>
-			<?php
-			$content .= ob_get_clean();
-		}
+	$is_video = bb_video_get_activity_video( $activity );
+	if ( ! empty( $is_video ) ) {
+		$content .= $is_video;
 	}
 
 	return $content;
@@ -2050,7 +1910,7 @@ add_filter( 'redirect_canonical', 'bb_video_remove_specific_trailing_slash', 999
 
 /**
  * Videos search label.
- * 
+ *
  * @since BuddyBoss 2.4.70
  *
  * @param string $type Search label.
