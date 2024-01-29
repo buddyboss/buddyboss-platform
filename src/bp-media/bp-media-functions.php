@@ -4105,3 +4105,138 @@ function bb_media_migration() {
 	 */
 	$wpdb->query( "UPDATE {$bp->media->table_name} AS m JOIN {$wpdb->posts} AS p ON p.ID = m.attachment_id SET m.description = p.post_content" ); // phpcs:ignore
 }
+
+/**
+ * Get activity media.
+ *
+ * @BuddyBoss [BBVERSION]
+ *
+ * @param object|null $activity Activity object.
+ * @param array|null  $args     Extra argument to fetch media.
+ *
+ * @return string|bool
+ */
+function bb_media_get_activity_media( $activity = '', $args = array() ) {
+	global $media_template;
+
+	if ( empty( $activity ) ) {
+		global $activities_template;
+		if ( isset( $activities_template ) && isset( $activities_template->activity ) ) {
+			$activity = $activities_template->activity;
+		}
+	}
+
+	if ( empty( $activity ) ) {
+		return false;
+	}
+
+	if (
+		(
+			buddypress()->activity->id === $activity->component &&
+			! bp_is_profile_media_support_enabled()
+		) ||
+		(
+			bp_is_active( 'groups' ) &&
+			buddypress()->groups->id === $activity->component &&
+			! bp_is_group_media_support_enabled()
+		)
+	) {
+		return false;
+	}
+
+	if (
+		empty( $activity->meta_data['bp_media_ids'] ) ||
+		empty( $activity->meta_data['bp_media_ids'][0] )
+	) {
+		return false;
+	}
+
+	$media_args = array(
+		'include'  => $activity->meta_data['bp_media_ids'][0],
+		'order_by' => 'menu_order',
+		'sort'     => 'ASC',
+		'per_page' => 0,
+	);
+
+	if ( isset( $args['user_id'] ) ) {
+		$media_args['user_id'] = $args['user_id'];
+	}
+
+	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+		if ( bp_is_group_media_support_enabled() ) {
+			if ( ! bp_is_group_albums_support_enabled() ) {
+				$media_args['album_id'] = 'existing-media';
+			}
+		} else {
+			$media_args['privacy']  = array( '0' );
+			$media_args['album_id'] = 'existing-media';
+		}
+	} else {
+		$media_args['privacy'] = bp_media_query_privacy( $activity->user_id, 0, $activity->component );
+
+		if ( 'activity_comment' === $activity->type ) {
+			$media_args['privacy'][] = 'comment';
+		}
+
+		if ( ! bp_is_profile_media_support_enabled() ) {
+			$media_args['user_id'] = 'null';
+		}
+		if ( ! bp_is_profile_albums_support_enabled() ) {
+			$media_args['album_id'] = 'existing-media';
+		}
+	}
+
+	$is_forum_activity = false;
+	if (
+		bp_is_active( 'forums' )
+		&& in_array(
+			$activity->type,
+			array(
+				'bbp_forum_create',
+				'bbp_topic_create',
+				'bbp_reply_create',
+			),
+			true
+		)
+		&& bp_is_forums_media_support_enabled()
+	) {
+		$is_forum_activity = true;
+		$media_args['privacy'][] = 'forums';
+	}
+
+	/**
+	 * If the content has been changed by these filters bb_moderation_has_blocked_message,
+	 * bb_moderation_is_blocked_message, bb_moderation_is_suspended_message then
+	 * it will hide media content which is created by blocked/blocked/suspended member.
+	 */
+	$hide_forum_activity = function_exists( 'bb_moderation_to_hide_forum_activity' ) ? bb_moderation_to_hide_forum_activity( $activity->id ) : false;
+
+	if ( true === $hide_forum_activity ) {
+		return false;
+	}
+
+	$content = '';
+	if ( bp_has_media( $media_args ) ) {
+		ob_start();
+		?>
+		<div class="bb-activity-media-wrap
+			<?php
+			echo 'bb-media-length-' . esc_attr( $media_template->media_count );
+			echo $media_template->media_count > 5 ? ' bb-media-length-more' : '';
+			echo true === $is_forum_activity ? ' forums-media-wrap' : '';
+			?>
+			">
+			<?php
+			bp_get_template_part( 'media/media-move' );
+			while ( bp_media() ) {
+				bp_the_media();
+				bp_get_template_part( 'media/activity-entry' );
+			}
+			?>
+		</div>
+		<?php
+		$content = ob_get_clean();
+	}
+
+	return $content;
+}
