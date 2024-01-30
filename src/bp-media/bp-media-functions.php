@@ -4121,12 +4121,16 @@ function bb_media_get_activity_media( $activity = '', $args = array() ) {
 
 	if ( empty( $activity ) ) {
 		global $activities_template;
-		if ( isset( $activities_template ) && isset( $activities_template->activity ) ) {
+		if ( isset( $activities_template->activity ) ) {
 			$activity = $activities_template->activity;
 		}
 	}
 
-	if ( empty( $activity ) ) {
+	if (
+		empty( $activity ) ||
+		empty( $activity->meta_data['bp_media_ids'] ) ||
+		empty( $activity->meta_data['bp_media_ids'][0] )
+	) {
 		return false;
 	}
 
@@ -4140,13 +4144,6 @@ function bb_media_get_activity_media( $activity = '', $args = array() ) {
 			buddypress()->groups->id === $activity->component &&
 			! bp_is_group_media_support_enabled()
 		)
-	) {
-		return false;
-	}
-
-	if (
-		empty( $activity->meta_data['bp_media_ids'] ) ||
-		empty( $activity->meta_data['bp_media_ids'][0] )
 	) {
 		return false;
 	}

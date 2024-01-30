@@ -5099,14 +5099,16 @@ function bb_document_migration() {
  * @return string|bool
  */
 function bb_document_get_activity_document( $activity = '' ) {
-	global $video_template;
-
 	if ( empty( $activity ) ) {
 		global $activities_template;
 		$activity = $activities_template->activity ?? '';
 	}
 
-	if ( empty( $activity ) ) {
+	if (
+		empty( $activity ) ||
+		empty( $activity->meta_data['bp_document_ids'] ) ||
+		empty( $activity->meta_data['bp_document_ids'][0] )
+	) {
 		return false;
 	}
 
@@ -5119,13 +5121,6 @@ function bb_document_get_activity_document( $activity = '' ) {
 			bp_is_active( 'groups' ) &&
 			buddypress()->groups->id === $activity->component && ! bp_is_group_document_support_enabled()
 		)
-	) {
-		return false;
-	}
-
-	if (
-		empty( $activity->meta_data['bp_document_ids'] ) ||
-		empty( $activity->meta_data['bp_document_ids'][0] )
 	) {
 		return false;
 	}
