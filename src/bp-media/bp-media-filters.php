@@ -164,14 +164,16 @@ function bp_media_activity_append_media( $content, $activity ) {
 function bp_media_activity_comment_entry( $comment_id ) {
 	global $media_template;
 
-	$media_ids = bp_activity_get_meta( $comment_id, 'bp_media_ids', true );
-
-	if ( empty( $media_ids ) ) {
+	$comment  = new BP_Activity_Activity( $comment_id );
+	if (
+		empty( $comment->meta_data['bp_media_ids'] ) ||
+		empty( $comment->meta_data['bp_media_ids'][0] )
+	) {
 		return;
 	}
 
-	$comment  = new BP_Activity_Activity( $comment_id );
-	$activity = new BP_Activity_Activity( $comment->item_id );
+	$media_ids = $comment->meta_data['bp_media_ids'][0];
+	$activity  = new BP_Activity_Activity( $comment->item_id );
 
 	$args = array(
 		'include'  => $media_ids,
@@ -208,13 +210,11 @@ function bp_media_activity_comment_entry( $comment_id ) {
 		$args['album_id'] = 'existing-media';
 	}
 
-	$is_forum_activity = false;
 	if (
-			bp_is_active( 'forums' )
-			&& in_array( $activity->type, array( 'bbp_forum_create', 'bbp_topic_create', 'bbp_reply_create' ), true )
-			&& bp_is_forums_media_support_enabled()
+		bp_is_active( 'forums' )
+		&& in_array( $activity->type, array( 'bbp_forum_create', 'bbp_topic_create', 'bbp_reply_create' ), true )
+		&& bp_is_forums_media_support_enabled()
 	) {
-		$is_forum_activity = true;
 		$args['privacy'][] = 'forums';
 	}
 
@@ -223,11 +223,11 @@ function bp_media_activity_comment_entry( $comment_id ) {
 	if ( ! empty( $media_ids ) && bp_has_media( $args ) ) {
 		?>
 		<div class="bb-activity-media-wrap
-		<?php
-		echo esc_attr( 'bb-media-length-' . $media_template->media_count );
-		echo $media_template->media_count > 5 ? esc_attr( ' bb-media-length-more' ) : '';
-		?>
-		">
+			<?php
+			echo esc_attr( 'bb-media-length-' . $media_template->media_count );
+			echo $media_template->media_count > 5 ? esc_attr( ' bb-media-length-more' ) : '';
+			?>
+			">
 				<?php
 				bp_get_template_part( 'media/media-move' );
 				while ( bp_media() ) {
@@ -235,8 +235,8 @@ function bp_media_activity_comment_entry( $comment_id ) {
 					bp_get_template_part( 'media/activity-entry' );
 				}
 				?>
-			</div>
-			<?php
+		</div>
+		<?php
 	}
 }
 

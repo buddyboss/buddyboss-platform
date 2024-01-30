@@ -181,15 +181,16 @@ function bp_document_activity_append_document( $content, $activity ) {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_activity_comment_entry( $comment_id ) {
-
-	$document_ids = bp_activity_get_meta( $comment_id, 'bp_document_ids', true );
-
-	if ( empty( $document_ids ) ) {
+	$comment  = new BP_Activity_Activity( $comment_id );
+	if (
+		empty( $comment->meta_data['bp_document_ids'] ) ||
+		empty( $comment->meta_data['bp_document_ids'][0] )
+	) {
 		return;
 	}
 
-	$comment  = new BP_Activity_Activity( $comment_id );
-	$activity = new BP_Activity_Activity( $comment->item_id );
+	$document_ids = $comment->meta_data['bp_document_ids'][0];
+	$activity     = new BP_Activity_Activity( $comment->item_id );
 
 	$args = array(
 		'include'  => $document_ids,

@@ -144,14 +144,16 @@ function bp_video_activity_append_video( $content, $activity ) {
 function bp_video_activity_comment_entry( $comment_id ) {
 	global $video_template;
 
-	$video_ids = bp_activity_get_meta( $comment_id, 'bp_video_ids', true );
-
-	if ( empty( $video_ids ) ) {
+	$comment  = new BP_Activity_Activity( $comment_id );
+	if (
+		empty( $comment->meta_data['bp_video_ids'] ) ||
+		empty( $comment->meta_data['bp_video_ids'][0] )
+	) {
 		return;
 	}
 
-	$comment  = new BP_Activity_Activity( $comment_id );
-	$activity = new BP_Activity_Activity( $comment->item_id );
+	$video_ids = $comment->meta_data['bp_video_ids'][0];
+	$activity  = new BP_Activity_Activity( $comment->item_id );
 
 	$args = array(
 		'include'  => $video_ids,
@@ -186,13 +188,11 @@ function bp_video_activity_comment_entry( $comment_id ) {
 		$args['album_id'] = 'existing-video';
 	}
 
-	$is_forum_activity = false;
 	if (
 		bp_is_active( 'forums' )
 		&& in_array( $activity->type, array( 'bbp_forum_create', 'bbp_topic_create', 'bbp_reply_create' ), true )
 		&& bp_is_forums_video_support_enabled()
 	) {
-		$is_forum_activity = true;
 		$args['privacy'][] = 'forums';
 	}
 
