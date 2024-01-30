@@ -6236,24 +6236,41 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 		return false;
 	}
 
-	$can_edit_privacy                = true;
-	$album_id                        = 0;
-	$folder_id                       = 0;
-	$album_activity_comment__id      = bp_activity_get_meta( $activity_comment_id, 'bp_media_album_activity', true );
-	$album_video_activity_comment_id = bp_activity_get_meta( $activity_comment_id, 'bp_video_album_activity', true );
+	$edit_data = wp_cache_get( $activity_comment_id, 'activity_edit_data' );
+	if ( false === $edit_data ) {
+		// Get activity metas.
+		$activity_comment_metas = bb_activity_get_metadata( $activity_comment_id );
 
-	if ( ! empty( $album_activity_comment__id ) || ! empty( $album_video_activity_comment_id ) ) {
-		$album_id = $album_activity_comment__id;
-	}
+		$can_edit_privacy                = true;
+		$album_id                        = 0;
+		$folder_id                       = 0;
+		$album_activity_comment__id      = $activity_comment_metas['bp_media_album_activity'][0] ?? '';
+		$album_video_activity_comment_id = $activity_comment_metas['bp_video_album_activity'][0] ?? '';
 
-	$folder_activity_comment_id = bp_activity_get_meta( $activity_comment_id, 'bp_document_folder_activity', true );
-	if ( ! empty( $folder_activity_comment_id ) ) {
-		$folder_id = $folder_activity_comment_id;
-	}
+		if ( ! empty( $album_activity_comment__id ) || ! empty( $album_video_activity_comment_id ) ) {
+			$album_id = $album_activity_comment__id;
+		}
 
-	// if album or folder activity comment, then set privacy edit to always false.
-	if ( $album_id || $folder_id ) {
-		$can_edit_privacy = false;
+		$folder_activity_comment_id = $activity_comment_metas['bp_document_folder_activity'][0] ?? '';
+		if ( ! empty( $folder_activity_comment_id ) ) {
+			$folder_id = $folder_activity_comment_id;
+		}
+
+		// if album or folder activity comment, then set privacy edit to always false.
+		if ( $album_id || $folder_id ) {
+			$can_edit_privacy = false;
+		}
+
+		$edit_data = array(
+			'id'               => $activity_comment_id,
+			'can_edit_privacy' => $can_edit_privacy,
+			'album_id'         => $album_id,
+			'folder_id'        => $folder_id,
+			'content'          => stripslashes( $activity_comment->content ),
+			'item_id'          => $activity_comment->item_id,
+			'object'           => $activity_comment->component,
+			'privacy'          => $activity_comment->privacy,
+		);
 	}
 
 	/**
@@ -6265,16 +6282,7 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 	 */
 	return apply_filters(
 		'bb_activity_comment_get_edit_data',
-		array(
-			'id'               => $activity_comment_id,
-			'can_edit_privacy' => $can_edit_privacy,
-			'album_id'         => $album_id,
-			'folder_id'        => $folder_id,
-			'content'          => stripslashes( $activity_comment->content ),
-			'item_id'          => $activity_comment->item_id,
-			'object'           => $activity_comment->component,
-			'privacy'          => $activity_comment->privacy,
-		)
+		$edit_data
 	);
 }
 
