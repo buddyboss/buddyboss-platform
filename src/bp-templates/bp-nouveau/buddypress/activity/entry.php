@@ -39,27 +39,43 @@ if ( ! empty( $link_embed ) ) {
 		</span>
 	</div>
 
-	<div class="activity-avatar item-avatar">
+	<?php if ( 'groups' === $activities_template->activity->component ) : ?>
 
-		<a href="<?php bp_activity_user_link(); ?>">
+		<div class="bp-activity-head-group">
+			<div class="activity-group-avatar">
+				<div class="group-avatar">
+					<!-- Group avatar -->
+				</div>
+				<div class="author-avatar">
+					<!-- User avatar -->
+				</div>
+			</div>
 
-			<?php bp_activity_avatar( array( 'type' => 'full' ) ); ?>
+			<div class="activity-header activity-header--group">
+				<div class="activity-group-heading"><a href="#">Group title</a></div>
+				<div class="activity-group-post-meta">
+					<span class="activity-post-author"><a href="#">Activity post author</a></span>
+					<span class="time-since"><a href="#">1 day ago</a></span>
+					<span class="privacy selected public"></span>
+				</div>
+			</div>
+		</div>
+		
+	<?php else : ?>
 
-		</a>
-
-	</div>
-
-	<div class="activity-content <?php bp_activity_entry_css_class(); ?>">
+		<div class="activity-avatar item-avatar">
+			<a href="<?php bp_activity_user_link(); ?>"><?php bp_activity_avatar( array( 'type' => 'full' ) ); ?></a>
+		</div>
 
 		<div class="activity-header">
-
 			<?php bp_activity_action(); ?>
-
 			<?php bp_nouveau_activity_is_edited(); ?>
-
 			<?php bp_nouveau_activity_privacy(); ?>
-
 		</div>
+
+	<?php endif; ?>
+
+	<div class="activity-content <?php bp_activity_entry_css_class(); ?>">
 
 		<?php bp_nouveau_activity_hook( 'before', 'activity_content' ); ?>
 

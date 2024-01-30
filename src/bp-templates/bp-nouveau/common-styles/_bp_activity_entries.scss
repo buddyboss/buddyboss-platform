@@ -1403,6 +1403,51 @@ ul.medium-editor-toolbar-actions {
 
 }
 
+.bp-activity-head-group {
+	display: flex;
+}
+
+.activity-group-avatar {
+	display: inline-block;
+	position: relative;
+	width: 40px;
+	height: 40px;
+	margin-right: 10px;
+
+	img {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		margin: auto;
+		z-index: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.group-avatar {
+		max-width: 40px;
+		width: 40px;
+		height: 40px;
+		position: relative;
+		overflow: hidden;
+		z-index: 1;
+	}
+
+	.author-avatar {
+		display: inline-block;
+		position: absolute;
+		width: 22px;
+		height: 22px;
+		right: -5px;
+		bottom: -5px;
+		z-index: 5;
+		overflow: hidden;
+	}
+}
+
 .ac-reply-toolbar,
 #whats-new-toolbar,
 #whats-new-messages-toolbar,

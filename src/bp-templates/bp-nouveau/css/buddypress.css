@@ -4623,6 +4623,51 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   font-weight: 100;
 }
 
+.bp-activity-head-group {
+  display: flex;
+}
+
+.activity-group-avatar {
+  display: inline-block;
+  position: relative;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.activity-group-avatar img {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.activity-group-avatar .group-avatar {
+  max-width: 40px;
+  width: 40px;
+  height: 40px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.activity-group-avatar .author-avatar {
+  display: inline-block;
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  right: -5px;
+  bottom: -5px;
+  z-index: 5;
+  overflow: hidden;
+}
+
 .ac-reply-toolbar .bb-icon,
 .ac-reply-toolbar [class*=" bb-icon-"],
 #whats-new-toolbar .bb-icon,
