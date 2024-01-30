@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.5.31 =
+* Bug: Access controls - When restricting subscribers from posting to the Activity Feed, this has also restricted subscribers posting to the Group activity feed
+
 = 2.5.30 =
 * Bug: Core - Account settings was not updating correctly to only display notifications of components that are active instead of showing all settings options
 * Bug: Core - Activity feed options within group settings was showing even if the Activity Fee component had not been activated
