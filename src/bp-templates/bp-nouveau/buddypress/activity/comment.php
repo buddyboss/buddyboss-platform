@@ -42,14 +42,14 @@ $activity_comment_id = bp_get_activity_comment_id();
 		<div class="acomment-content">
 			<?php
 			bp_activity_comment_content();
-			do_action( 'bp_activity_after_comment_content', bp_get_activity_comment_id() );
+			do_action( 'bp_activity_after_comment_content', $activity_comment_id );
 			?>
 		</div>
 		<?php bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) ); ?>
 		<div class="comment-reactions">
 			<?php
 			if ( bb_is_reaction_activity_comments_enabled() ) {
-				echo bb_get_activity_post_user_reactions_html( bp_get_activity_comment_id(), 'activity_comment' );
+				echo bb_get_activity_post_user_reactions_html( $activity_comment_id, 'activity_comment' );
 			}
 			?>
 		</div>
