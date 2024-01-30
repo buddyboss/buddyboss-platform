@@ -4126,11 +4126,15 @@ function bb_media_get_activity_media( $activity = '', $args = array() ) {
 		}
 	}
 
-	if (
-		empty( $activity ) ||
-		empty( $activity->meta_data['bp_media_ids'] ) ||
-		empty( $activity->meta_data['bp_media_ids'][0] )
-	) {
+	if ( empty( $activity ) ) {
+		return false;
+	}
+
+	// Get activity metas.
+	$activity_metas = bb_activity_get_metadata( $activity->id );
+	$media_ids      = ! empty( $activity_metas['bp_media_ids'][0] ) ? $activity_metas['bp_media_ids'][0] : '';
+
+	if ( empty( $media_ids ) ) {
 		return false;
 	}
 
@@ -4149,7 +4153,7 @@ function bb_media_get_activity_media( $activity = '', $args = array() ) {
 	}
 
 	$media_args = array(
-		'include'  => $activity->meta_data['bp_media_ids'][0],
+		'include'  => $media_ids,
 		'order_by' => 'menu_order',
 		'sort'     => 'ASC',
 		'per_page' => 0,

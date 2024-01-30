@@ -5401,20 +5401,23 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 		return false;
 	}
 
+	// Get activity metas.
+	$activity_metas = bb_activity_get_metadata( $activity_id );
+
 	$can_edit_privacy        = true;
 	$album_id                = 0;
 	$folder_id               = 0;
 	$group_id                = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
 	$group_name              = '';
-	$album_activity_id       = bp_activity_get_meta( $activity_id, 'bp_media_album_activity', true );
-	$album_video_activity_id = bp_activity_get_meta( $activity_id, 'bp_video_album_activity', true );
+	$album_activity_id       = $activity_metas['bp_media_album_activity'][0] ?? '';
+	$album_video_activity_id = $activity_metas['bp_video_album_activity'][0] ?? '';
 	$link_image_index_save   = '';
 
 	if ( ! empty( $album_activity_id ) || ! empty( $album_video_activity_id ) ) {
 		$album_id = $album_activity_id;
 	}
 
-	$folder_activity_id = bp_activity_get_meta( $activity_id, 'bp_document_folder_activity', true );
+	$folder_activity_id = $activity_metas['bp_document_folder_activity'][0] ?? '';
 	if ( ! empty( $folder_activity_id ) ) {
 		$folder_id = $folder_activity_id;
 	}
@@ -5433,7 +5436,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 	$group_avatar = bp_is_active( 'groups' ) && ! bp_disable_group_avatar_uploads() ? bp_get_group_avatar_url( groups_get_group( $group_id ) ) : '';  // Add group avatar in get activity data object.
 
 	// Link preview data.
-	$link_preview_data = bp_activity_get_meta( $activity_id, '_link_preview_data', true );
+	$link_preview_data = ! empty( $activity_metas['_link_preview_data'][0] ) ? $activity_metas['_link_preview_data'][0] : array();
 	if ( isset( $link_preview_data['link_image_index_save'] ) ) {
 		$link_image_index_save = $link_preview_data['link_image_index_save'];
 	}

@@ -164,16 +164,14 @@ function bp_media_activity_append_media( $content, $activity ) {
 function bp_media_activity_comment_entry( $comment_id ) {
 	global $media_template;
 
-	$comment  = new BP_Activity_Activity( $comment_id );
-	if (
-		empty( $comment->meta_data['bp_media_ids'] ) ||
-		empty( $comment->meta_data['bp_media_ids'][0] )
-	) {
+	$activity_metas = bb_activity_get_metadata( $comment_id );
+	$media_ids      = ! empty( $activity_metas['bp_media_ids'][0] ) ? $activity_metas['bp_media_ids'][0] : '';
+	if ( empty( $media_ids ) ) {
 		return;
 	}
 
-	$media_ids = $comment->meta_data['bp_media_ids'][0];
-	$activity  = new BP_Activity_Activity( $comment->item_id );
+	$comment  = new BP_Activity_Activity( $comment_id );
+	$activity = new BP_Activity_Activity( $comment->item_id );
 
 	$args = array(
 		'include'  => $media_ids,
@@ -429,7 +427,9 @@ function bp_media_delete_activity_media( $activities ) {
 			}
 
 			// get media ids attached to activity.
-			$media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
+			$activity_metas = bb_activity_get_metadata( $activity_id );
+			$media_ids      = ! empty( $activity_metas['bp_media_ids'][0] ) ? $activity_metas['bp_media_ids'][0] : '';
+
 			if ( ! empty( $media_ids ) ) {
 				$media_ids = explode( ',', $media_ids );
 				foreach ( $media_ids as $media_id ) {
@@ -1554,7 +1554,8 @@ function bp_media_clear_media_symlinks_on_delete( $medias ) {
  * @param BP_Activity_Activity $activity Activity object.
  */
 function bp_media_activity_update_media_privacy( $activity ) {
-	$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
+	$activity_metas = bb_activity_get_metadata( $activity->id );
+	$media_ids      = ! empty( $activity_metas['bp_media_ids'][0] ) ? $activity_metas['bp_media_ids'][0] : '';
 
 	if ( ! empty( $media_ids ) ) {
 		$media_ids = explode( ',', $media_ids );
@@ -2311,8 +2312,9 @@ function bp_media_get_edit_activity_data( $activity ) {
 	if ( ! empty( $activity['id'] ) ) {
 
 		// Fetch media ids of activity.
-		$media_ids = bp_activity_get_meta( $activity['id'], 'bp_media_ids', true );
-		$media_id  = bp_activity_get_meta( $activity['id'], 'bp_media_id', true );
+		$activity_metas = bb_activity_get_metadata( $activity['id'] );
+		$media_ids      = ! empty( $activity_metas['bp_media_ids'][0] ) ? $activity_metas['bp_media_ids'][0] : '';
+		$media_id       = ! empty( $activity_metas['bp_media_id'][0] ) ? $activity_metas['bp_media_id'][0] : '';
 
 		if ( ! empty( $media_id ) && ! empty( $media_ids ) ) {
 			$media_ids = $media_ids . ',' . $media_id;
@@ -2389,7 +2391,8 @@ function bp_media_activity_entry_css_class( $class ) {
 
 	if ( bp_is_active( 'media' ) && bp_is_active( 'activity' ) ) {
 
-		$media_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_ids', true );
+		$activity_metas = bb_activity_get_metadata( bp_get_activity_id() );
+		$media_ids      = ! empty( $activity_metas['bp_media_ids'][0] ) ? $activity_metas['bp_media_ids'][0] : '';
 		if ( ! empty( $media_ids ) ) {
 			$class .= ' media-activity-wrap';
 		}

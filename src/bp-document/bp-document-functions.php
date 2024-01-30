@@ -5104,11 +5104,15 @@ function bb_document_get_activity_document( $activity = '' ) {
 		$activity = $activities_template->activity ?? '';
 	}
 
-	if (
-		empty( $activity ) ||
-		empty( $activity->meta_data['bp_document_ids'] ) ||
-		empty( $activity->meta_data['bp_document_ids'][0] )
-	) {
+	if ( empty( $activity ) ) {
+		return false;
+	}
+
+	// Get activity metas.
+	$activity_metas = bb_activity_get_metadata( $activity->id );
+	$document_ids   = ! empty( $activity_metas['bp_document_ids'][0] ) ? $activity_metas['bp_document_ids'][0] : '';
+
+	if ( empty( $document_ids ) ) {
 		return false;
 	}
 
@@ -5137,7 +5141,7 @@ function bb_document_get_activity_document( $activity = '' ) {
 	}
 
 	$args = array(
-		'include'  => $activity->meta_data['bp_document_ids'][0],
+		'include'  => $document_ids,
 		'order_by' => 'menu_order',
 		'sort'     => 'ASC',
 		'per_page' => 0,

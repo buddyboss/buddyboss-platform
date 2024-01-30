@@ -144,16 +144,14 @@ function bp_video_activity_append_video( $content, $activity ) {
 function bp_video_activity_comment_entry( $comment_id ) {
 	global $video_template;
 
-	$comment  = new BP_Activity_Activity( $comment_id );
-	if (
-		empty( $comment->meta_data['bp_video_ids'] ) ||
-		empty( $comment->meta_data['bp_video_ids'][0] )
-	) {
+	$activity_metas = bb_activity_get_metadata( $comment_id );
+	$video_ids      = ! empty( $activity_metas['bp_video_ids'][0] ) ? $activity_metas['bp_video_ids'][0] : '';
+	if ( empty( $video_ids ) ) {
 		return;
 	}
 
-	$video_ids = $comment->meta_data['bp_video_ids'][0];
-	$activity  = new BP_Activity_Activity( $comment->item_id );
+	$comment  = new BP_Activity_Activity( $comment_id );
+	$activity = new BP_Activity_Activity( $comment->item_id );
 
 	$args = array(
 		'include'  => $video_ids,
@@ -401,7 +399,8 @@ function bp_video_delete_activity_video( $activities ) {
 			}
 
 			// get video ids attached to activity.
-			$video_ids = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
+			$activity_metas = bb_activity_get_metadata( $activity_id );
+			$video_ids      = ! empty( $activity_metas['bp_video_ids'][0] ) ? $activity_metas['bp_video_ids'][0] : '';
 			if ( ! empty( $video_ids ) ) {
 				$video_ids = explode( ',', $video_ids );
 				foreach ( $video_ids as $video_id ) {
@@ -856,7 +855,8 @@ function bp_video_delete_attachment_video( $attachment_id ) {
  * @param BP_Activity_Activity $activity Activity object.
  */
 function bp_video_activity_update_video_privacy( $activity ) {
-	$video_ids = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
+	$activity_metas = bb_activity_get_metadata( $activity->id );
+	$video_ids      = ! empty( $activity_metas['bp_video_ids'][0] ) ? $activity_metas['bp_video_ids'][0] : '';
 
 	if ( ! empty( $video_ids ) ) {
 		$video_ids = explode( ',', $video_ids );
@@ -1527,8 +1527,9 @@ function bp_video_get_edit_activity_data( $activity ) {
 		$activity['group_video']   = bp_is_group_video_support_enabled() && bb_video_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && 'groups' === $activity['object'] ? $activity['item_id'] : 0 ) );
 
 		// Fetch video ids of activity.
-		$video_ids = bp_activity_get_meta( $activity['id'], 'bp_video_ids', true );
-		$video_id  = bp_activity_get_meta( $activity['id'], 'bp_video_id', true );
+		$activity_metas = bb_activity_get_metadata( $activity['id'] );
+		$video_ids      = ! empty( $activity_metas['bp_video_ids'][0] ) ? $activity_metas['bp_video_ids'][0] : '';
+		$video_id       = ! empty( $activity_metas['bp_video_id'][0] ) ? $activity_metas['bp_video_id'][0] : '';
 
 		if ( ! empty( $video_ids ) && ! empty( $video_id ) ) {
 			$video_ids = $video_ids . ',' . $video_id;
@@ -1709,7 +1710,8 @@ function bb_video_update_video_symlink( $response, $post_data ) {
 	if ( ! empty( $post_data['id'] ) ) {
 
 		// Fetch video ids of activity.
-		$video_ids = bp_activity_get_meta( $post_data['id'], 'bp_video_ids', true );
+		$activity_metas = bb_activity_get_metadata( $post_data['id'] );
+		$video_ids      = ! empty( $activity_metas['bp_video_ids'][0] ) ? $activity_metas['bp_video_ids'][0] : '';
 
 		if ( ! empty( $video_ids ) ) {
 			$activity['video'] = array();

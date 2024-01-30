@@ -4479,11 +4479,15 @@ function bb_video_get_activity_video( $activity = '', $args = array() ) {
 		$activity = $activities_template->activity ?? '';
 	}
 
-	if (
-		empty( $activity ) ||
-		empty( $activity->meta_data['bp_video_ids'] ) ||
-		empty( $activity->meta_data['bp_video_ids'][0] )
-	) {
+	if ( empty( $activity ) ) {
+		return false;
+	}
+
+	// Get activity metas.
+	$activity_metas = bb_activity_get_metadata( $activity->id );
+	$video_ids      = ! empty( $activity_metas['bp_video_ids'][0] ) ? $activity_metas['bp_video_ids'][0] : '';
+
+	if ( empty( $video_ids ) ) {
 		return false;
 	}
 
@@ -4502,7 +4506,7 @@ function bb_video_get_activity_video( $activity = '', $args = array() ) {
 	}
 
 	$video_args = array(
-		'include'  => $activity->meta_data['bp_video_ids'][0],
+		'include'  => $video_ids,
 		'order_by' => 'menu_order',
 		'sort'     => 'ASC',
 		'per_page' => 0,

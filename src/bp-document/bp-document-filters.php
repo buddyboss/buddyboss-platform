@@ -181,16 +181,14 @@ function bp_document_activity_append_document( $content, $activity ) {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_activity_comment_entry( $comment_id ) {
-	$comment  = new BP_Activity_Activity( $comment_id );
-	if (
-		empty( $comment->meta_data['bp_document_ids'] ) ||
-		empty( $comment->meta_data['bp_document_ids'][0] )
-	) {
+	$activity_metas = bb_activity_get_metadata( $comment_id );
+	$document_ids   = ! empty( $activity_metas['bp_document_ids'][0] ) ? $activity_metas['bp_document_ids'][0] : '';
+	if ( empty( $document_ids ) ) {
 		return;
 	}
 
-	$document_ids = $comment->meta_data['bp_document_ids'][0];
-	$activity     = new BP_Activity_Activity( $comment->item_id );
+	$comment  = new BP_Activity_Activity( $comment_id );
+	$activity = new BP_Activity_Activity( $comment->item_id );
 
 	$args = array(
 		'include'  => $document_ids,
@@ -482,7 +480,8 @@ function bp_document_delete_activity_document( $activities ) {
 			}
 
 			// get document ids attached to activity.
-			$document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+			$activity_metas = bb_activity_get_metadata( $activity_id );
+			$document_ids   = ! empty( $activity_metas['bp_document_ids'][0] ) ? $activity_metas['bp_document_ids'][0] : '';
 			if ( ! empty( $document_ids ) ) {
 				$document_ids = explode( ',', $document_ids );
 				foreach ( $document_ids as $document_id ) {
@@ -957,7 +956,8 @@ function bp_document_sync_document_data( $attachment_id ) {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_activity_update_document_privacy( $activity ) {
-	$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
+	$activity_metas = bb_activity_get_metadata( $activity->id );
+	$document_ids   = ! empty( $activity_metas['bp_document_ids'][0] ) ? $activity_metas['bp_document_ids'][0] : '';
 
 	if ( ! empty( $document_ids ) ) {
 		$document_ids = explode( ',', $document_ids );
@@ -1815,8 +1815,9 @@ function bp_document_get_edit_activity_data( $activity ) {
 	if ( ! empty( $activity['id'] ) ) {
 
 		// Fetch document ids of activity.
-		$document_ids = bp_activity_get_meta( $activity['id'], 'bp_document_ids', true );
-		$document_id  = bp_activity_get_meta( $activity['id'], 'bp_document_id', true );
+		$activity_metas = bb_activity_get_metadata( $activity['id'] );
+		$document_ids   = ! empty( $activity_metas['bp_document_ids'][0] ) ? $activity_metas['bp_document_ids'][0] : '';
+		$document_id    = ! empty( $activity_metas['bp_document_id'][0] ) ? $activity_metas['bp_document_id'][0] : '';
 
 		if ( ! empty( $document_id ) && ! empty( $document_ids ) ) {
 			$document_ids = $document_ids . ',' . $document_id;
@@ -1891,7 +1892,8 @@ function bp_document_get_edit_activity_data( $activity ) {
 function bp_document_activity_entry_css_class( $class ) {
 
 	if ( bp_is_active( 'media' ) && bp_is_active( 'activity' ) ) {
-		$document_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_ids', true );
+		$activity_metas = bb_activity_get_metadata( bp_get_activity_id() );
+		$document_ids   = ! empty( $activity_metas['bp_document_ids'][0] ) ? $activity_metas['bp_document_ids'][0] : '';
 		if ( ! empty( $document_ids ) ) {
 			$class .= ' document-activity';
 		}
@@ -1914,7 +1916,8 @@ function bb_document_update_video_symlink( $response, $post_data ) {
 	if ( ! empty( $post_data['id'] ) ) {
 
 		// Fetch document ids of activity.
-		$document_ids = bp_activity_get_meta( $post_data['id'], 'bp_document_ids', true );
+		$activity_metas = bb_activity_get_metadata( $post_data['id'] );
+		$document_ids   = ! empty( $activity_metas['bp_document_ids'][0] ) ? $activity_metas['bp_document_ids'][0] : '';
 
 		if ( ! empty( $document_ids ) ) {
 
