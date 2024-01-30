@@ -106,6 +106,10 @@ function bp_nouveau_ajax_object_template_loader() {
 			$template_part = 'groups/single/members-loop.php';
 			break;
 
+		case 'manage_group_members':
+			$template_part = 'groups/single/admin/search-manage-members.php';
+			break;
+
 		case 'group_requests':
 			$template_part = 'groups/single/requests-loop.php';
 			break;

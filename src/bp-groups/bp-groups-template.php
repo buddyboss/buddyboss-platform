@@ -3510,7 +3510,7 @@ function bp_group_member_promote_admin_link( $args = '' ) {
 	 */
 function bp_get_group_member_promote_admin_link( $args = '' ) {
 	global $members_template, $groups_template;
-
+	error_log( print_r( $groups_template, true ) );
 	$r = bp_parse_args(
 		$args,
 		array(
