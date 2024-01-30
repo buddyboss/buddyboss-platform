@@ -5088,3 +5088,89 @@ function bb_document_migration() {
 	 */
 	$wpdb->query( "UPDATE {$bp->document->table_name} AS d JOIN {$wpdb->posts} AS p ON p.ID = d.attachment_id SET d.description = p.post_content" ); // phpcs:ignore
 }
+
+/**
+ * Get activity document.
+ *
+ * @BuddyBoss [BBVERSION]
+ *
+ * @param object|null $activity Activity object.
+ *
+ * @return string|bool
+ */
+function bb_document_get_activity_document( $activity = '' ) {
+	global $video_template;
+
+	if ( empty( $activity ) ) {
+		global $activities_template;
+		$activity = $activities_template->activity ?? '';
+	}
+
+	if ( empty( $activity ) ) {
+		return false;
+	}
+
+	if (
+		(
+			buddypress()->activity->id === $activity->component &&
+			! bp_is_profile_document_support_enabled()
+		) ||
+		(
+			bp_is_active( 'groups' ) &&
+			buddypress()->groups->id === $activity->component && ! bp_is_group_document_support_enabled()
+		)
+	) {
+		return false;
+	}
+
+	if (
+		empty( $activity->meta_data['bp_document_ids'] ) ||
+		empty( $activity->meta_data['bp_document_ids'][0] )
+	) {
+		return false;
+	}
+
+	/**
+	 * If the content has been changed by these filters bb_moderation_has_blocked_message,
+	 * bb_moderation_is_blocked_message, bb_moderation_is_suspended_message then
+	 * it will hide document content which is created by blocked/blocked/suspended member.
+	 */
+	$hide_forum_activity = function_exists( 'bb_moderation_to_hide_forum_activity' ) && bb_moderation_to_hide_forum_activity( $activity->id );
+
+	if ( true === $hide_forum_activity ) {
+		return false;
+	}
+
+	$args = array(
+		'include'  => $activity->meta_data['bp_document_ids'][0],
+		'order_by' => 'menu_order',
+		'sort'     => 'ASC',
+		'per_page' => 0,
+	);
+
+	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_document_support_enabled() ) {
+		$args['privacy'] = array( 'grouponly' );
+		if ( 'activity_comment' === $activity->type ) {
+			$args['privacy'][] = 'comment';
+		}
+	}
+
+	$content = '';
+	if ( bp_has_document( $args ) ) {
+		ob_start();
+		?>
+		<div class="bb-activity-media-wrap bb-media-length-1 ">
+			<?php
+			bp_get_template_part( 'document/activity-document-move' );
+			while ( bp_document() ) {
+				bp_the_document();
+				bp_get_template_part( 'document/activity-entry' );
+			}
+			?>
+		</div>
+		<?php
+		$content = ob_get_clean();
+	}
+
+	return $content;
+}

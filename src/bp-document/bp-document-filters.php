@@ -142,49 +142,16 @@ function bp_document_add_theatre_template() {
  * @BuddyBoss 1.2.5
  */
 function bp_document_activity_entry() {
+	global $activities_template;
 
-	if ( ( buddypress()->activity->id === bp_get_activity_object_name() && ! bp_is_profile_document_support_enabled() ) || ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() && ! bp_is_group_document_support_enabled() ) ) {
-		return false;
+	$activity = '';
+	if ( isset( $activities_template->activity ) ) {
+		$activity = $activities_template->activity;
 	}
 
-	$document_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_ids', true );
-
-	// Add document to single activity page.
-	$document_activity = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_activity', true );
-	if ( bp_is_single_activity() && ! empty( $document_activity ) && '1' === $document_activity && empty( $document_ids ) ) {
-		$document_ids = BP_Document::get_activity_document_id( bp_get_activity_id() );
-	}
-
-	/**
-	 * If the content has been changed by these filters bb_moderation_has_blocked_message,
-	 * bb_moderation_is_blocked_message, bb_moderation_is_suspended_message then
-	 * it will hide document content which is created by blocked/blocked/suspended member.
-	 */
-	$hide_forum_activity = function_exists( 'bb_moderation_to_hide_forum_activity' ) ? bb_moderation_to_hide_forum_activity( bp_get_activity_id() ) : false;
-
-	if ( true === $hide_forum_activity ) {
-		return;
-	}
-
-	if ( ! empty( $document_ids ) && bp_has_document(
-		array(
-			'include'  => $document_ids,
-			'order_by' => 'menu_order',
-			'sort'     => 'ASC',
-			'per_page' => 0,
-		)
-	) ) { ?>
-		<div class="bb-activity-media-wrap bb-media-length-1 ">
-			<?php
-
-			bp_get_template_part( 'document/activity-document-move' );
-			while ( bp_document() ) {
-				bp_the_document();
-				bp_get_template_part( 'document/activity-entry' );
-			}
-			?>
-		</div>
-		<?php
+	$is_document = bb_document_get_activity_document( $activity );
+	if ( ! empty( $is_document ) ) {
+		print $is_document;
 	}
 }
 
@@ -198,37 +165,9 @@ function bp_document_activity_entry() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_activity_append_document( $content, $activity ) {
-
-	$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
-
-	$args = array(
-		'include'  => $document_ids,
-		'order_by' => 'menu_order',
-		'sort'     => 'ASC',
-		'per_page' => 0,
-	);
-
-	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_document_support_enabled() ) {
-		$args['privacy'] = array( 'grouponly' );
-		if ( 'activity_comment' === $activity->type ) {
-			$args['privacy'][] = 'comment';
-		}
-	}
-
-	if ( ! empty( $document_ids ) && bp_has_document( $args ) ) {
-		ob_start();
-		?>
-		<div class="bb-activity-media-wrap bb-media-length-1 ">
-			<?php
-			bp_get_template_part( 'document/activity-document-move' );
-			while ( bp_document() ) {
-				bp_the_document();
-				bp_get_template_part( 'document/activity-entry' );
-			}
-			?>
-		</div>
-		<?php
-		$content .= ob_get_clean();
+	$is_document = bb_document_get_activity_document( $activity );
+	if ( ! empty( $is_document ) ) {
+		$content .= $is_document;
 	}
 
 	return $content;
