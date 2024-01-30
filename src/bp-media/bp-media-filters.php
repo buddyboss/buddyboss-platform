@@ -420,15 +420,17 @@ function bp_media_delete_activity_media( $activities ) {
 				continue;
 			}
 
+			// Get activity metas
+			$activity_metas = bb_activity_get_metadata( $activity->id );
+
 			$activity_id    = $activity->id;
-			$media_activity = bp_activity_get_meta( $activity_id, 'bp_media_activity', true );
+			$media_activity = $activity_metas['bp_media_activity'][0] ?? '';
 			if ( ! empty( $media_activity ) && '1' == $media_activity ) {
 				bp_media_delete( array( 'activity_id' => $activity_id ) );
 			}
 
 			// get media ids attached to activity.
-			$activity_metas = bb_activity_get_metadata( $activity_id );
-			$media_ids      = ! empty( $activity_metas['bp_media_ids'][0] ) ? $activity_metas['bp_media_ids'][0] : '';
+			$media_ids = ! empty( $activity_metas['bp_media_ids'][0] ) ? $activity_metas['bp_media_ids'][0] : '';
 
 			if ( ! empty( $media_ids ) ) {
 				$media_ids = explode( ',', $media_ids );
@@ -1103,8 +1105,9 @@ function bp_media_gif_message_validated_content( $validated_content, $content, $
  * @return false|string|void
  */
 function bp_media_activity_embed_gif_content( $activity_id ) {
-
-	$gif_data = bp_activity_get_meta( $activity_id, '_gif_data', true );
+	// Get activity metas
+	$activity_metas = bb_activity_get_metadata( $activity_id );
+	$gif_data       = ! empty( $activity_metas['_gif_data'] ) ? $activity_metas['_gif_data'] : array();
 
 	if ( empty( $gif_data ) ) {
 		return;
@@ -2362,10 +2365,10 @@ function bp_media_get_edit_activity_data( $activity ) {
 		}
 
 		// Fetch gif data for the activity.
-		$gif_data = bp_activity_get_meta( $activity['id'], '_gif_data', true );
+		$gif_data = ! empty( $activity_metas['_gif_data'][0] ) ? $activity_metas['_gif_data'][0] : '';
 
 		if ( ! empty( $gif_data ) ) {
-			$gif_raw_data                        = (array) bp_activity_get_meta( $activity['id'], '_gif_raw_data', true );
+			$gif_raw_data                        = (array) ! empty( $activity_metas['_gif_raw_data'][0] ) ? $activity_metas['_gif_raw_data'][0] : array();
 			$gif_raw_data['bp_gif_current_data'] = '1';
 
 			$activity['gif'] = $gif_raw_data;
@@ -2556,14 +2559,16 @@ function bp_video_activity_entry_css_class( $class ) {
 
 	if ( bp_is_active( 'video' ) && bp_is_active( 'activity' ) ) {
 
-		$video_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_video_ids', true );
+		// Get activity metas.
+		$activity_metas = bb_activity_get_metadata( bp_get_activity_id() );
+
+		$video_ids = ! empty( $activity_metas['bp_video_ids'] ) ? $activity_metas['bp_video_ids'] : '';
 		if ( ! empty( $video_ids ) ) {
 			$class .= ' video-activity-wrap';
 		}
 	}
 
 	return $class;
-
 }
 
 /**

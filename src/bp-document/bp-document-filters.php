@@ -473,15 +473,17 @@ function bp_document_delete_activity_document( $activities ) {
 				continue;
 			}
 
+			// Get activity metas.
+			$activity_metas = bb_activity_get_metadata( $activity->id );
+
 			$activity_id       = $activity->id;
-			$document_activity = bp_activity_get_meta( $activity_id, 'bp_document_activity', true );
+			$document_activity = $activity_metas['bp_document_activity'][0] ?? '';
 			if ( ! empty( $document_activity ) && '1' == $document_activity ) {
 				bp_document_delete( array( 'activity_id' => $activity_id ) );
 			}
 
 			// get document ids attached to activity.
-			$activity_metas = bb_activity_get_metadata( $activity_id );
-			$document_ids   = ! empty( $activity_metas['bp_document_ids'][0] ) ? $activity_metas['bp_document_ids'][0] : '';
+			$document_ids = ! empty( $activity_metas['bp_document_ids'][0] ) ? $activity_metas['bp_document_ids'][0] : '';
 			if ( ! empty( $document_ids ) ) {
 				$document_ids = explode( ',', $document_ids );
 				foreach ( $document_ids as $document_id ) {

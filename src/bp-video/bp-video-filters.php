@@ -392,15 +392,17 @@ function bp_video_delete_activity_video( $activities ) {
 				continue;
 			}
 
+			// Get activity metas.
+			$activity_metas = bb_activity_get_metadata( $activity->id );
+
 			$activity_id    = $activity->id;
-			$video_activity = bp_activity_get_meta( $activity_id, 'bp_video_activity', true );
+			$video_activity = $activity_metas['bp_video_activity'][0] ?? '';
 			if ( ! empty( $video_activity ) && '1' === $video_activity ) {
 				bp_video_delete( array( 'activity_id' => $activity_id ) );
 			}
 
 			// get video ids attached to activity.
-			$activity_metas = bb_activity_get_metadata( $activity_id );
-			$video_ids      = ! empty( $activity_metas['bp_video_ids'][0] ) ? $activity_metas['bp_video_ids'][0] : '';
+			$video_ids = ! empty( $activity_metas['bp_video_ids'][0] ) ? $activity_metas['bp_video_ids'][0] : '';
 			if ( ! empty( $video_ids ) ) {
 				$video_ids = explode( ',', $video_ids );
 				foreach ( $video_ids as $video_id ) {
