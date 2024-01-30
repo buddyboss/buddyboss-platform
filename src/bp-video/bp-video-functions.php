@@ -2997,7 +2997,8 @@ function bp_video_get_activity_video( $activity_id ) {
 	$response           = array();
 	if ( bp_is_active( 'activity' ) && ! empty( $activity_id ) ) {
 
-		$video_activity_ids = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
+		$activity_metas     = bb_activity_get_metadata( $activity_id );
+		$video_activity_ids = $activity_metas['bp_video_ids'][0] ?? '';
 
 		global $video_template;
 		// Add Video to single activity page..
@@ -3005,7 +3006,7 @@ function bp_video_get_activity_video( $activity_id ) {
 		if ( bp_is_single_activity() && ! empty( $video_activity ) && '1' === $video_activity && empty( $video_activity_ids ) ) {
 			$video_ids = BP_Video::get_activity_video_id( $activity_id );
 		} else {
-			$video_ids = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
+			$video_ids = $video_activity_ids;
 		}
 
 		if ( empty( $video_ids ) ) {
