@@ -6485,3 +6485,26 @@ function bb_load_reaction_popup_modal_js_template() {
 		bp_get_template_part( 'common/js-templates/activity/parts/bb-activity-reactions-popup' );
 	}
 }
+
+/**
+ * Fetch the activity meta data using the activity ID.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $activity_id Activity ID.
+ *
+ * @return mixed|array
+ */
+function bb_activity_get_metadata( $activity_id ) {
+	// Get meta data from cache.
+	$meta_data = wp_cache_get( $activity_id, 'activity_meta' );
+	if ( false === $meta_data ) {
+		$meta_data = bp_activity_get_meta( $activity_id );
+
+		// Set meta data to cache.
+		wp_cache_set( $activity_id, $meta_data, 'activity_meta' );
+	}
+
+	// Return the metadata.
+	return $meta_data;
+}

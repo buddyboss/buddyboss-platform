@@ -141,14 +141,6 @@ class BP_Activity_Activity {
 	var $privacy;
 
 	/**
-	 * Meta data.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 * @var array
-	 */
-	var $meta_data;
-
-	/**
 	 * Error holder.
 	 *
 	 * @since BuddyPress 2.6.0
@@ -250,9 +242,6 @@ class BP_Activity_Activity {
 		} else {
 			$this->action = '';
 		}
-
-		// Activity metadata.
-		$this->meta_data = self::get_metadata( $row->id );
 	}
 
 	/**
@@ -921,7 +910,6 @@ class BP_Activity_Activity {
 				$activity->mptt_left         = (int) $activity->mptt_left;
 				$activity->mptt_right        = (int) $activity->mptt_right;
 				$activity->is_spam           = (int) $activity->is_spam;
-				$activity->meta_data         = self::get_metadata( $activity->id );
 			}
 
 			$activities[] = $activity;
@@ -958,25 +946,6 @@ class BP_Activity_Activity {
 		}
 
 		return $activities;
-	}
-
-	/**
-	 * Fetch the activity meta data using the activity ID.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param int $activity_id Activity ID.
-	 *
-	 * @return mixed|array
-	 */
-	public static function get_metadata( $activity_id ) {
-		$meta_data = wp_cache_get( $activity_id, 'activity_meta' );
-		if ( false === $meta_data ) {
-			$meta_data = bp_activity_get_meta( $activity_id );
-			wp_cache_set( $activity_id, $meta_data, 'activity_meta' );
-		}
-
-		return $meta_data;
 	}
 
 	/**
