@@ -151,6 +151,7 @@ window.bp = window.bp || {};
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.autoload ) ) {
 				$( window ).scroll( this.loadMoreActivities );
 			}
+
 		},
 
 		/**
@@ -161,7 +162,13 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		heartbeatSend: function( event, data ) {
-			this.heartbeat_data.first_recorded = $( '#buddypress [data-bp-list] [data-bp-activity-id]' ).first().data( 'bp-timestamp' ) || 0;
+			this.heartbeat_data.first_recorded = $( '#buddypress [data-bp-list] [data-bp-activity-id]:not(.bb-pinned)' ).first().data( 'bp-timestamp' ) || 0;
+
+			// Handle the first item is already latest and pinned.
+			var first_activity_timestamp = $( '#buddypress [data-bp-list] [data-bp-activity-id]' ).first().data( 'bp-timestamp' ) || 0;
+			if ( first_activity_timestamp > this.heartbeat_data.first_recorded ) {
+				this.heartbeat_data.first_recorded = first_activity_timestamp;
+			}
 
 			if ( 0 === this.heartbeat_data.last_recorded || this.heartbeat_data.first_recorded > this.heartbeat_data.last_recorded ) {
 				this.heartbeat_data.last_recorded = this.heartbeat_data.first_recorded;
@@ -324,7 +331,6 @@ window.bp = window.bp || {};
 				 * stream and eventually remove similar ids to avoid "double".
 				 */
 				var activities = $.parseHTML( this.heartbeat_data.newest );
-				var has_pinned = false;
 
 				$.each(
 					activities,
@@ -335,38 +341,21 @@ window.bp = window.bp || {};
 							}
 						}
 
-						// Check if the activity is pinned by heartbeat.
-						if ( $( activity ).hasClass( 'bb-pinned' ) ) {
-							has_pinned = true;
-						}
 					}
 				);
 
-				// Remove other pinned activities.
-				if ( true === has_pinned ) {
+				var first_activity = $( event.delegateTarget ).find( '.activity-list .activity-item' ).first();
+				if ( first_activity.length > 0 && first_activity.hasClass( 'bb-pinned' ) ) {
 
-					var old_pinned = $( event.delegateTarget ).find( '.activity-list' ).find( '.bb-pinned' );
-					old_pinned.each(function() {
-						var action = $( this ).find( '.unpin-activity' );
-						var is_group_activity = false;
+					// Add after pinned post.
+					$( first_activity ).after( this.heartbeat_data.newest ).find( 'li.activity-item' ).each( bp.Nouveau.hideSingleUrl ).trigger( 'bp_heartbeat_prepend', this.heartbeat_data );
+					
+				} else {
 
-						action.removeClass( 'unpin-activity' ).addClass( 'pin-activity' );
-						if ( $(this).hasClass('groups') ) {
-							is_group_activity = true;
-						}
-
-						if ( is_group_activity ) {
-							action.find('span').html( BP_Nouveau.activity.strings.pinGroupPost );
-						} else {
-							action.find('span').html( BP_Nouveau.activity.strings.pinPost );
-						}
-					});
-					old_pinned.removeClass( 'bb-pinned' );
+					// Now the stream is cleaned, prepend newest.
+					$( event.delegateTarget ).find( '.activity-list' ).prepend( this.heartbeat_data.newest ).find( 'li.activity-item' ).each( bp.Nouveau.hideSingleUrl ).trigger( 'bp_heartbeat_prepend', this.heartbeat_data );
 				}
-
-				// Now the stream is cleaned, prepend newest.
-				$( event.delegateTarget ).find( '.activity-list' ).prepend( this.heartbeat_data.newest ).find( 'li.activity-item' ).each( bp.Nouveau.hideSingleUrl ).trigger( 'bp_heartbeat_prepend', this.heartbeat_data );
-
+				
 				// Reset the newest activities now they're displayed.
 				this.heartbeat_data.newest = '';
 
@@ -1687,6 +1676,11 @@ window.bp = window.bp || {};
 									} else {
 										target.find('span').html( BP_Nouveau.activity.strings.pinPost );
 									}
+								}
+
+								if ( 'all' === scope && update_pinned_icon ) {
+									bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
+									bp.Nouveau.refreshActivities();
 								}
 							}
 
