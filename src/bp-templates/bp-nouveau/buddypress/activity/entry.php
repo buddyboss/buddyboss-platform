@@ -13,18 +13,19 @@
 
 bp_nouveau_activity_hook( 'before', 'entry' );
 
-$activity_id = bp_get_activity_id();
+$activity_id    = bp_get_activity_id();
+$activity_metas = bb_activity_get_metadata( $activity_id );
 
 $link_preview_string = '';
 $link_url            = '';
 
-$link_preview_data = bp_activity_get_meta( $activity_id, '_link_preview_data' );
+$link_preview_data = ! empty( $activity_metas['_link_preview_data'][0] ) ? maybe_unserialize( $activity_metas['_link_preview_data'][0] ) : array();
 if ( ! empty( $link_preview_data ) && count( $link_preview_data ) ) {
 	$link_preview_string = wp_json_encode( $link_preview_data );
 	$link_url            = ! empty( $link_preview_data['url'] ) ? $link_preview_data['url'] : '';
 }
 
-$link_embed = bp_activity_get_meta( $activity_id, '_link_embed' );
+$link_embed = $activity_metas['_link_embed'][0] ?? '';
 if ( ! empty( $link_embed ) ) {
 	$link_url = $link_embed;
 }

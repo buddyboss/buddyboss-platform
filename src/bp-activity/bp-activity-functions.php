@@ -1179,8 +1179,10 @@ function bp_activity_favorites_upgrade_data() {
 
 				foreach ( $user_favs as $fav ) {
 
+					$activity_metas = bb_activity_get_metadata( $fav );
+
 					// Update the users who have favorited this activity.
-					$users = bp_activity_get_meta( $fav, 'bp_favorite_users', true );
+					$users = $activity_metas['bp_favorite_users'][0] ?? '';
 					if ( empty( $users ) || ! is_array( $users ) ) {
 						$users = array();
 					}
@@ -3280,8 +3282,10 @@ function bp_activity_remove_user_favorite_meta( $user_id = 0 ) {
 			// Attempt to delete meta value.
 			if ( ! empty( $activity->id ) ) {
 
+				$activity_metas = bb_activity_get_metadata( $activity_id );
+
 				// Update the users who have favorited this activity.
-				$users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
+				$users = $activity_metas['bp_favorite_users'][0] ?? '';
 				if ( empty( $users ) || ! is_array( $users ) ) {
 					$users = array();
 				}
@@ -3295,7 +3299,7 @@ function bp_activity_remove_user_favorite_meta( $user_id = 0 ) {
 				bp_activity_update_meta( $activity_id, 'bp_favorite_users', array_unique( array_values( $users ) ) );
 
 				// Update the total number of users who have favorited this activity.
-				$fav_count = bp_activity_get_meta( $activity_id, 'favorite_count' );
+				$fav_count = $activity_metas['favorite_count'][0] ?? '';
 
 				if ( ! empty( $fav_count ) ) {
 					bp_activity_update_meta( $activity_id, 'favorite_count', (int) $fav_count - 1 );
@@ -4466,8 +4470,9 @@ add_action( 'bp_after_activity_comment', 'bp_activity_comment_embed_after_recurs
  * @return mixed The cached embeds for this activity item.
  */
 function bp_embed_activity_cache( $cache, $id, $cachekey ) {
-	$data = bp_activity_get_meta( $id, $cachekey );
+	$activity_metas = bb_activity_get_metadata( $id );
 
+	$data = $activity_metas[ $cachekey ][0] ?? '';
 	if (
 		! empty( $data ) &&
 		false !== strpos( $data, 'loom.com' ) &&
@@ -5439,7 +5444,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 		$group_avatar = bp_is_active( 'groups' ) && ! bp_disable_group_avatar_uploads() ? bp_get_group_avatar_url( groups_get_group( $group_id ) ) : '';  // Add group avatar in get activity data object.
 
 		// Link preview data.
-		$link_preview_data = ! empty( $activity_metas['_link_preview_data'][0] ) ? $activity_metas['_link_preview_data'][0] : array();
+		$link_preview_data = ! empty( $activity_metas['_link_preview_data'][0] ) ? maybe_unserialize( $activity_metas['_link_preview_data'][0] ) : array();
 		if ( isset( $link_preview_data['link_image_index_save'] ) ) {
 			$link_image_index_save = $link_preview_data['link_image_index_save'];
 		}
@@ -5781,9 +5786,10 @@ function bb_activity_following_post_notification( $args ) {
 	$activity_user_id = ! empty( $r['item_id'] ) ? $r['item_id'] : $r['activity']->user_id;
 	$poster_name      = bp_core_get_user_displayname( $activity_user_id );
 	$activity_link    = bp_activity_get_permalink( $activity_id );
-	$media_ids        = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
-	$document_ids     = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
-	$video_ids        = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
+	$activity_metas   = bb_activity_get_metadata( $activity_id );
+	$media_ids        = $activity_metas['bp_media_ids'][0] ?? '';
+	$document_ids     = $activity_metas['bp_document_ids'][0] ?? '';
+	$video_ids        = $activity_metas['bp_video_ids'][0] ?? '';
 
 	if ( $media_ids ) {
 		$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
