@@ -2395,8 +2395,10 @@ function bp_media_update_activity_privacy( $activity_id = 0, $privacy = '' ) {
 		return;
 	}
 
+	$activity_metas = bb_activity_get_metadata( $activity_id );
+
 	// Update privacy for the media which are uploaded in activity.
-	$media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
+	$media_ids = $activity_metas['bp_media_ids'][0] ?? '';
 	if ( ! empty( $media_ids ) ) {
 		$media_ids = explode( ',', $media_ids );
 		if ( ! empty( $media_ids ) ) {
@@ -2869,7 +2871,8 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 				// We have to change child activity privacy when we move the media while at a time multiple media uploaded.
 			} else {
 
-				$parent_activity_media_ids = bp_activity_get_meta( $parent_activity_id, 'bp_media_ids', true );
+				$activity_metas            = bb_activity_get_metadata( $parent_activity_id );
+				$parent_activity_media_ids = $activity_metas['bp_media_ids'][0] ?? '';
 
 				// Get the parent activity.
 				$parent_activity = new BP_Activity_Activity( (int) $parent_activity_id );
@@ -2979,92 +2982,21 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
  * @since BuddyBoss 1.5.6
  */
 function bp_media_get_activity_media( $activity_id ) {
-
 	$media_content      = '';
 	$media_activity_ids = '';
 	$response           = array();
+
 	if ( bp_is_active( 'activity' ) && ! empty( $activity_id ) ) {
+		$activity_metas = bb_activity_get_metadata( $activity_id );
 
-		$media_activity_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
-
-		global $media_template;
-		// Add Media to single activity page..
-		$media_activity = bp_activity_get_meta( $activity_id, 'bp_media_activity', true );
-		if ( bp_is_single_activity() && ! empty( $media_activity ) && '1' === $media_activity && empty( $media_activity_ids ) ) {
-			$media_ids = BP_Media::get_activity_media_id( $activity_id );
-		} else {
-			$media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
-		}
-
-		if ( empty( $media_ids ) ) {
+		$media_activity_ids = $activity_metas['bp_media_ids'][0] ?? '';
+		if ( empty( $media_activity_ids ) ) {
 			return;
 		}
 
-		$args = array(
-			'include'  => $media_ids,
-			'order_by' => 'menu_order',
-			'sort'     => 'ASC',
-			'user_id'  => false,
-			'per_page' => 0,
-		);
-
-		$activity = new BP_Activity_Activity( (int) $activity_id );
-		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
-			if ( bp_is_group_media_support_enabled() ) {
-				$args['privacy'] = array( 'grouponly' );
-				if ( ! bp_is_group_albums_support_enabled() ) {
-					$args['album_id'] = 'existing-media';
-				}
-			} else {
-				$args['privacy']  = array( '0' );
-				$args['album_id'] = 'existing-media';
-			}
-		} else {
-			$args['privacy'] = bp_media_query_privacy( $activity->user_id, 0, $activity->component );
-			if ( ! bp_is_profile_media_support_enabled() ) {
-				$args['user_id'] = 'null';
-			}
-			if ( ! bp_is_profile_albums_support_enabled() ) {
-				$args['album_id'] = 'existing-media';
-			}
-		}
-
-		$is_forum_activity = false;
-		if ( bp_is_active( 'forums' ) && in_array(
-			$activity->type,
-			array(
-				'bbp_forum_create',
-				'bbp_topic_create',
-				'bbp_reply_create',
-			),
-			true
-		) && bp_is_forums_media_support_enabled() ) {
-			$is_forum_activity = true;
-			$args['privacy'][] = 'forums';
-		}
-
-		if ( bp_has_media( $args ) ) {
-
-			ob_start();
-			?>
-			<div class="bb-activity-media-wrap
-			<?php
-			echo esc_attr( 'bb-media-length-' . $media_template->media_count );
-			echo $media_template->media_count > 5 ? esc_attr( ' bb-media-length-more' ) : '';
-			echo true === $is_forum_activity ? esc_attr( ' forums-media-wrap' ) : '';
-			?>
-			">
-				<?php
-				bp_get_template_part( 'media/media-move' );
-				while ( bp_media() ) {
-					bp_the_media();
-					bp_get_template_part( 'media/activity-entry' );
-				}
-				?>
-			</div>
-			<?php
-			$media_content = ob_get_contents();
-			ob_end_clean();
+		$media_content = bb_media_get_activity_media( $activity_id );
+		if ( empty( $media_content ) ) {
+			return;
 		}
 	}
 
