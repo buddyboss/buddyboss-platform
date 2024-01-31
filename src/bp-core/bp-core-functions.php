@@ -7780,6 +7780,9 @@ function bb_admin_icons( $id ) {
 		case 'bp_activity':
 			$meta_icon = $bb_icon_bf . ' bb-icon-activity';
 			break;
+		case 'bb_activity_comments':
+			$meta_icon = $bb_icon_bf . ' bb-icon-activity-comment';
+			break;
 		case 'bp_custom_post_type':
 			$meta_icon = $bb_icon_bf . ' bb-icon-thumbtack';
 			break;
