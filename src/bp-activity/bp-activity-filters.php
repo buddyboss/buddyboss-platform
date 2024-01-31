@@ -38,7 +38,6 @@ if ( function_exists( 'wp_encode_emoji' ) ) {
 }
 
 add_filter( 'bp_activity_mentioned_users', 'bp_find_mentions_by_at_sign', 10, 2 );
-add_filter( 'bp_activity_mentioned_users', 'bb_find_mentions_by_mention_user_id', 10, 2 );
 
 add_filter( 'bp_get_activity_action', 'wptexturize' );
 add_filter( 'bp_get_activity_content_body', 'wptexturize' );
