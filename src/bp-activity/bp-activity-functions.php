@@ -704,9 +704,9 @@ function bp_activity_type_supports( $activity_type = '', $feature = '' ) {
 			} elseif ( 'bbp_topic_create' === $activity_type || 'bbp_reply_create' === $activity_type ) {
 				$retval = false;
 
-				// By Default, all other activity types are supporting comments.
+				// By Default, all other activity types are supporting comments but check if activity comments disabled.
 			} else {
-				$retval = true;
+				$retval = bb_is_activity_comments_enabled();
 			}
 			break;
 	}
