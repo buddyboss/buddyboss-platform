@@ -374,6 +374,12 @@ function bp_admin_repair_list() {
 		'xprofile_update_display_names',
 	);
 
+	$repair_list[39] = array(
+		'bp-wordpress-update-display-name-activity',
+		esc_html__( 'Update display name to selected format in activities, forum discussions and replies', 'buddyboss' ),
+		'update_display_names_activity',
+	);
+
 	// Connections:
 	// - user friend count.
 	if ( bp_is_active( 'friends' ) ) {
@@ -851,6 +857,253 @@ function xprofile_update_display_names() {
 			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
 		);
 	}
+}
+
+/**
+ * Update member display names in Activity, Forum discussions, and replies.
+ *
+ * @since BuddyBoss x.x.x
+ */
+function update_display_names_activity() {
+    global $wpdb;
+
+    $batch_size = 25; //We are running 2 Db updates, so making this 25 per batch, whcih eventually menas 50 per batch.
+
+    // Get offset from request.
+    $offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0;
+
+    // Get activities containing mentions for the current batch.
+	$activities = $wpdb->get_results( $wpdb->prepare(
+		"SELECT id, content FROM {$wpdb->prefix}bp_activity WHERE content REGEXP %s LIMIT %d, %d",
+		'class=[\\\'"]bp-suggestions-mention[\\\'"]',
+		$offset * $batch_size,
+		$batch_size
+	) );
+
+	$forums = $wpdb->get_results( $wpdb->prepare(
+		"SELECT ID, post_content FROM {$wpdb->prefix}posts WHERE post_content REGEXP %s LIMIT %d, %d",
+		'class=[\\\'"]bp-suggestions-mention[\\\'"]',
+		$offset * $batch_size,
+		$batch_size
+	) );
+
+    if ( ! empty( $activities ) || ! empty( $forums ) ) {
+		if ( get_option( 'bp-enable-activity-mentions-match' ) == 1 ){
+			if ( ! empty ( $activities )){
+				foreach ( $activities as $activity ) {
+					$content = $activity->content;
+		
+					// Extract user IDs from mentions in activity content.
+					preg_match_all( "/<a\s+(?:[^>]*?\s+)?href=['\"]([^\"']+)['\"]/i", $content, $matches );
+		
+					if ( isset( $matches[1] ) && ! empty( $matches[1] ) ) {
+						foreach ( $matches[1] as $url ) {
+							// Extract username from the URL.
+							$username = basename( rtrim( $url, '/' ) ); // Get the last part of the URL as the username
+		
+							// Get user ID from username.
+							$user = get_user_by( 'login', $username );
+		
+							if ( ! $user ){
+								$sql = $wpdb->get_results( $wpdb->prepare( "SELECT user_id FROM {$wpdb->prefix}usermeta WHERE meta_value LIKE %s", $username ) );
+								if ( ! empty( $sql ) ) {
+									$user_id = $sql[0]->user_id;
+									$userdata = get_user_by( 'id', $user_id );
+									$username = $userdata->user_login;
+									$user = get_user_by( 'login', $username );
+								}
+							}
+		
+							if ( $user ) {
+								$user_id = $user->ID;
+		
+								// Get display name for the user.
+								$display_name = bp_core_get_user_displayname( $user_id );
+		
+								// If the display format is Username, show a "@".
+								if ( $display_name === $username ){
+									$display_name = "@" . $display_name;
+								}
+		
+								// Replace mention in activity content with display name.
+								$content = preg_replace( "~<a class='bp-suggestions-mention' href='{$url}' rel='nofollow'>[^<]*</a>~i", "<a class='bp-suggestions-mention' href='{$url}' rel='nofollow'>{$display_name}</a>", $content );
+							}
+						}
+					}
+		
+					// Update activity content in the database.
+					$wpdb->update(
+						$wpdb->prefix . 'bp_activity',
+						array( 'content' => $content ),
+						array( 'id' => $activity->id ),
+						array( '%s' ),
+						array( '%d' )
+					);
+				}
+			}
+	
+			if ( ! empty( $forums )){
+				foreach ( $forums as $forum ) {
+					$content = $forum->post_content;
+		
+					// Extract user IDs from mentions in forum content.
+					preg_match_all( "/<a\s+(?:[^>]*?\s+)?href=['\"]([^\"']+)['\"]/i", $content, $matches );
+		
+					if ( isset( $matches[1] ) && ! empty( $matches[1] ) ) {
+						foreach ( $matches[1] as $url ) {
+							// Extract username from the URL.
+							$username = basename( rtrim( $url, '/' ) ); // Get the last part of the URL as the username
+		
+							// Get user ID from username.
+							$user = get_user_by( 'login', $username );
+		
+							if ( ! $user ){
+								$sql = $wpdb->get_results( $wpdb->prepare( "SELECT user_id FROM {$wpdb->prefix}usermeta WHERE meta_value LIKE %s", $username ) );
+								if ( ! empty( $sql ) ) {
+									$user_id = $sql[0]->user_id;
+									$userdata = get_user_by( 'id', $user_id );
+									$username = $userdata->user_login;
+									$user = get_user_by( 'login', $username );
+								}
+							}
+		
+							if ( $user ) {
+								$user_id = $user->ID;
+		
+								// Get display name for the user.
+								$display_name = bp_core_get_user_displayname( $user_id );
+		
+								// If the display format is Username, show a "@".
+								if ( $display_name === $username ){
+									$display_name = "@" . $display_name;
+								}
+		
+								// Replace mention in activity content with display name.
+								$content = preg_replace( "~<a class='bp-suggestions-mention' href='{$url}' rel='nofollow'>[^<]*</a>~i", "<a class='bp-suggestions-mention' href='{$url}' rel='nofollow'>{$display_name}</a>", $content );
+							}
+						}
+					}
+		
+					// Update activity content in the database
+					$wpdb->update(
+						$wpdb->prefix . 'posts',
+						array( 'post_content' => $content ),
+						array( 'ID' => $forum->ID ),
+						array( '%s' ),
+						array( '%d' )
+					);
+				}
+			}
+		} else {
+			if ( ! empty ( $activities )){
+				foreach ( $activities as $activity ) {
+					$content = $activity->content;
+		
+					// Extract user IDs from mentions in activity content.
+					preg_match_all( "/<a\s+(?:[^>]*?\s+)?href=['\"]([^\"']+)['\"]/i", $content, $matches );
+		
+					if ( isset( $matches[1] ) && ! empty( $matches[1] ) ) {
+						foreach ( $matches[1] as $url ) {
+							// Extract username from the URL.
+							$username = basename( rtrim( $url, '/' ) ); // Get the last part of the URL as the username
+		
+							// Get user ID from username.
+							$user = get_user_by( 'login', $username );
+		
+							if ( ! $user ){
+								$sql = $wpdb->get_results( $wpdb->prepare( "SELECT user_id FROM {$wpdb->prefix}usermeta WHERE meta_value LIKE %s", $username ) );
+								if ( ! empty( $sql ) ) {
+									$user_id = $sql[0]->user_id;
+									$userdata = get_user_by( 'id', $user_id );
+									$username = $userdata->user_login;
+									$user = get_user_by( 'login', $username );
+								}
+							}
+
+							if ( $user ) {
+								$user_id = $user->ID;
+								$display_name = "@" . $username;
+								// Replace mention in activity content with display name.
+								$content = preg_replace( "~<a class='bp-suggestions-mention' href='{$url}' rel='nofollow'>[^<]*</a>~i", "<a class='bp-suggestions-mention' href='{$url}' rel='nofollow'>{$display_name}</a>", $content );
+							}
+						}
+					}
+		
+					// Update activity content in the database.
+					$wpdb->update(
+						$wpdb->prefix . 'bp_activity',
+						array( 'content' => $content ),
+						array( 'id' => $activity->id ),
+						array( '%s' ),
+						array( '%d' )
+					);
+				}
+			}
+	
+			if ( ! empty( $forums )){
+				foreach ( $forums as $forum ) {
+					$content = $forum->post_content;
+		
+					// Extract user IDs from mentions in forum content.
+					preg_match_all( "/<a\s+(?:[^>]*?\s+)?href=['\"]([^\"']+)['\"]/i", $content, $matches );
+		
+					if ( isset( $matches[1] ) && ! empty( $matches[1] ) ) {
+						foreach ( $matches[1] as $url ) {
+							// Extract username from the URL.
+							$username = basename( rtrim( $url, '/' ) ); // Get the last part of the URL as the username
+		
+							// Get user ID from username.
+							$user = get_user_by( 'login', $username );
+		
+							if ( ! $user ){
+								$sql = $wpdb->get_results( $wpdb->prepare( "SELECT user_id FROM {$wpdb->prefix}usermeta WHERE meta_value LIKE %s", $username ) );
+								if ( ! empty( $sql ) ) {
+									$user_id = $sql[0]->user_id;
+									$userdata = get_user_by( 'id', $user_id );
+									$username = $userdata->user_login;
+									$user = get_user_by( 'login', $username );
+								}
+							}
+		
+							if ( $user ) {
+								$user_id = $user->ID;
+								$display_name = "@" . $username;
+		
+								// Replace mention in activity content with display name.
+								$content = preg_replace( "~<a class='bp-suggestions-mention' href='{$url}' rel='nofollow'>[^<]*</a>~i", "<a class='bp-suggestions-mention' href='{$url}' rel='nofollow'>{$display_name}</a>", $content );
+							}
+						}
+					}
+		
+					// Update activity content in the database
+					$wpdb->update(
+						$wpdb->prefix . 'posts',
+						array( 'post_content' => $content ),
+						array( 'ID' => $forum->ID ),
+						array( '%s' ),
+						array( '%d' )
+					);
+				}
+			}
+		}
+
+        // Increment offset
+        $offset++;
+
+        // Return status and offset for next batch.
+		$records_updated = sprintf( __( '%s updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+        return array(
+            'status' => 'running',
+            'offset' => $offset,
+			'records' => $records_updated,
+        );
+    } else {
+        // No more activities or forums found.
+        return array(
+            'status' => 'complete',
+            'message' => __( 'All activities and forums updated successfully.', 'buddyboss' ),
+        );
+    }
 }
 
 /**

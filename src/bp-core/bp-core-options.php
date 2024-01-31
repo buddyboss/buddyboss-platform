@@ -126,6 +126,9 @@ function bp_get_default_options() {
 		// Profile Enable Gravatar.
 		'bp-enable-profile-gravatar'                 => false,
 
+		// Match Display Name format in Activities.
+		'bp-enable-activity-mentions-match'          => false,
+
 		/* Groups ************************************************************/
 
 		// @todo Move this into the groups component
@@ -1624,6 +1627,27 @@ function bp_enable_profile_gravatar( $default = false ) {
 	 * @param bool $value Whether or not members are able to use gravatars.
 	 */
 	return (bool) apply_filters( 'bp_enable_profile_gravatar', (bool) ( bp_get_option( 'bp-enable-profile-gravatar', $default ) ) );
+}
+
+/**
+ * Will we match activity mentions with display name format settings?
+ *
+ * @since BuddyBoss x.x.x
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if setting is enabled, otherwise false.
+ */
+function bp_enable_activity_mentions_match( $default = false ) {
+
+	/**
+	 * Filters whether or not members want to match the setting.
+	 *
+	 * @since BuddyBoss x.x.x
+	 *
+	 * @param bool $value Whether or not members want to sync this setting.
+	 */
+	return (bool) apply_filters( 'bp_enable_activity_mentions_match', (bool) ( bp_get_option( 'bp-enable-activity-mentions-match', $default ) ) );
 }
 
 /**

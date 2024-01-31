@@ -4744,6 +4744,10 @@ msgstr ""
 msgid "Add Password confirmation to register form"
 msgstr ""
 
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:497
+msgid "Use Selected format for \"Display Name Format\" when mentioning users"
+msgstr ""
+
 #: bp-core/admin/bp-core-admin-settings.php:2164
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:652
 msgid "Grid and List"
@@ -5340,6 +5344,10 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:373
 msgid "Update display name to selected format in profile settings"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-tools.php:379
+msgid "Update display name to selected format in activities, forum discussions and replies"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:382
@@ -6035,6 +6043,10 @@ msgstr ""
 msgid "Display Name Fields"
 msgstr ""
 
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:218
+msgid "Mentions Name Format"
+msgstr ""
+
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:208
 msgid "Profile Links"
 msgstr ""
@@ -6150,6 +6162,12 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:486
 msgid "Display each member's profile type on their profile page"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:502
+msgid ""
+"When enabled, mentions in Activities, Forums, and Replies will be showing with the selected format in "Display Name Format" setting. remember to run <a href=\"%s\">Repair "
+"Community</a> tool to update all the activities."
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:504

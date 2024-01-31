@@ -258,6 +258,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			'bp-display-name-format'                   => bp_core_display_name_format(),
 			'bp-hide-nickname-first-name'              => bp_hide_nickname_first_name(),
 			'bp-hide-nickname-last-name'               => bp_hide_nickname_last_name(),
+			'bp-enable-profile-gravatar'               => bp_enable_activity_mentions_match(),
 			'bp-profile-avatar-type'                   => function_exists( 'bb_get_profile_avatar_type' ) ? bb_get_profile_avatar_type() : '',
 			'bp-disable-avatar-uploads'                => bp_disable_avatar_uploads(),
 			'bp-default-profile-avatar-type'           => function_exists( 'bb_get_default_profile_avatar_type' ) ? bb_get_default_profile_avatar_type() : '',
