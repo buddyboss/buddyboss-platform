@@ -469,7 +469,7 @@ function bp_activity_at_name_filter( $content, $activity_id = 0 ) {
 	// Linkify the mentions with the username.
 	foreach ( (array) $usernames as $user_id => $username ) {
 		$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)/';
-		$content = preg_replace( $pattern, "<a class='bp-suggestions-mention' href='" . bp_core_get_user_domain( $user_id ) . "' rel='nofollow'>@$username</a>", $content );
+		$content = preg_replace( $pattern, "<a class='bp-suggestions-mention' href='{{mention_user_id_" . esc_attr( $user_id ) . "}}' rel='nofollow'>@$username</a>", $content );
 	}
 
 	// Put everything back.
