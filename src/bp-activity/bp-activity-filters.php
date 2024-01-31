@@ -180,6 +180,7 @@ add_action( 'bp_after_single_activity_content', 'bb_activity_pinpost_confirmatio
 
 add_filter( 'bp_get_activity_content', 'bb_mention_add_user_dynamic_link', 20, 1 );
 add_filter( 'bp_get_activity_content_body', 'bb_mention_add_user_dynamic_link', 20, 1 );
+add_filter( 'bp_activity_comment_content', 'bb_mention_add_user_dynamic_link', 20, 1 );
 
 /** Functions *****************************************************************/
 
