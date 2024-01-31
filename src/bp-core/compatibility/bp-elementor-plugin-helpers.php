@@ -69,6 +69,7 @@ if ( ! class_exists( 'BB_Elementor_Plugin_Compatibility') ) {
 
 			add_action( 'bp_core_set_uri_globals', array( $this, 'elementor_library_preview_permalink' ), 10, 2 );
 			add_action( 'bp_init', array( $this, 'maintenance_mode_template' ) );
+			add_filter( 'bb_theme_compat_reset_post', array( $this, 'theme_compat_reset_post' ) );
 			add_action( 'admin_menu', array( $this, 'remove_page_attributes_metabox_for_forum' ) );
 
 			add_filter( 'bp_core_set_uri_show_on_front', array( $this, 'set_uri_elementor_show_on_front' ), 10, 3 );
@@ -189,6 +190,23 @@ if ( ! class_exists( 'BB_Elementor_Plugin_Compatibility') ) {
 				)
 			) {
 				return false;
+			}
+
+			return $bool;
+		}
+
+		/**
+		 * Fix Elementor conflict for edit the directory pages with Elementor.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param bool $bool
+		 *
+		 * @return bool
+		 */
+		public function theme_compat_reset_post( $bool ) {
+			if ( isset( $_GET['elementor-preview'] ) && get_the_ID() === (int) $_GET['elementor-preview'] ) {
+				return true;
 			}
 
 			return $bool;
