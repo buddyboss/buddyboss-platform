@@ -819,7 +819,7 @@ window.bp = window.bp || {};
 			// Filtering.
 			$( document ).on( 'change', '#buddypress [data-bp-filter]', this, this.filterQuery );
 
-			// Group Type & <Memb></Memb>er Type Filter.
+			// Group Type & Member Type Filter.
 			$( document ).on( 'change', '#buddypress [data-bp-group-type-filter]', this, this.typeGroupFilterQuery );
 			$( document ).on( 'change', '#buddypress [data-bp-member-type-filter]', this, this.typeMemberFilterQuery );
 

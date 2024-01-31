@@ -20,7 +20,6 @@ $enabled_followers     = ! function_exists( 'bb_enabled_member_directory_element
 $enabled_last_active   = ! function_exists( 'bb_enabled_member_directory_element' ) || bb_enabled_member_directory_element( 'last-active' );
 $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element' ) || bb_enabled_member_directory_element( 'joined-date' );
 ?>
-<?php error_log( print_r( bp_ajax_querystring( 'group_members' ), true ) ); ?>
 <?php if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group_role' ) ) : ?>
 
 	<?php bp_nouveau_group_hook( 'before', 'members_content' ); ?>
