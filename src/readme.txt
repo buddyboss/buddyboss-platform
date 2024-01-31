@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.4.2
 Requires PHP: 5.6.20
-Stable tag: 2.5.30
+Stable tag: 2.5.31
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.5.31 =
+* Bug: Access controls - When restricting subscribers from posting to the Activity Feed, this has also restricted subscribers posting to the Group activity feed
 
 = 2.5.30 =
 * Bug: Core - Account settings was not updating correctly to only display notifications of components that are active instead of showing all settings options
