@@ -1485,18 +1485,6 @@ function bp_nouveau_video_activity_description( $activity_id = 0 ) {
 	}
 
 	echo '</div>';
-	if ( ! empty( $video_id ) ) {
-		$video_privacy    = bb_media_user_can_access( $video_id, 'video' );
-		$can_download_btn = true === (bool) $video_privacy['can_download'];
-		if ( $can_download_btn ) {
-			$download_url = bp_video_download_link( $attachment_id, $video_id );
-			if ( $download_url ) {
-				?>
-				<a class="download-media" href="<?php echo esc_url( $download_url ); ?>"> <?php esc_html_e( 'Download', 'buddyboss' ); ?></a>
-				<?php
-			}
-		}
-	}
 }
 
 /**
@@ -1550,20 +1538,6 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
 	}
 
 	echo '</div>';
-	if ( ! empty( $media_id ) ) {
-		$media_privacy    = bb_media_user_can_access( $media_id, 'photo' );
-		$can_download_btn = ( true === (bool) $media_privacy['can_download'] ) ? true : false;
-		if ( $can_download_btn ) {
-			$download_url = bp_media_download_link( $attachment_id, $media_id );
-			if ( $download_url ) {
-				?>
-				<a class="download-media" href="<?php echo esc_url( $download_url ); ?>">
-					<?php _e( 'Download', 'buddyboss' ); ?>
-				</a>
-				<?php
-			}
-		}
-	}
 }
 
 /**
@@ -1617,21 +1591,6 @@ function bp_nouveau_document_activity_description( $activity_id = 0 ) {
 	}
 
 	echo '</div>';
-	if ( ! empty( $document_id ) ) {
-		$document_privacy = bb_media_user_can_access( $document_id, 'document' );
-		$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
-		if ( $can_download_btn ) {
-			$download_url = bp_document_download_link( $attachment_id, $document_id );
-			if ( $download_url ) {
-				?>
-				<a class="download-document"
-				   href="<?php echo esc_url( $download_url ); ?>">
-					<?php _e( 'Download', 'buddyboss' ); ?>
-				</a>
-				<?php
-			}
-		}
-	}
 }
 
 /**
@@ -1903,36 +1862,46 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		);
 	}
 
+	global $activities_template;
 	// Pin post action only for allowed posts based on user role.
 	if (
 		(
-			bp_is_group_activity() &&
 			(
-				bp_current_user_can( 'administrator' ) ||
+				bp_is_group_activity() &&
 				(
-					bb_is_active_activity_pinned_posts() &&
+					bp_current_user_can( 'administrator' ) ||
 					(
-						groups_is_user_admin( bp_loggedin_user_id(), bp_get_activity_item_id() ) ||
-						groups_is_user_mod( bp_loggedin_user_id(), bp_get_activity_item_id() )
+						bb_is_active_activity_pinned_posts() &&
+						(
+							groups_is_user_admin( bp_loggedin_user_id(), bp_get_activity_item_id() ) ||
+							groups_is_user_mod( bp_loggedin_user_id(), bp_get_activity_item_id() )
+						)
+					)
+				)
+			) ||
+			(
+				(
+					bp_is_activity_directory() ||
+					bp_is_user_activity()
+				) &&
+				(
+					bp_current_user_can( 'administrator' ) ||
+					(
+						'groups' === bp_get_activity_object_name() &&
+						bb_is_active_activity_pinned_posts() &&
+						(
+							groups_is_user_admin( bp_loggedin_user_id(), bp_get_activity_item_id() ) ||
+							groups_is_user_mod( bp_loggedin_user_id(), bp_get_activity_item_id() )
+						)
 					)
 				)
 			)
-		) ||
+		) &&
 		(
-			(
-				bp_is_activity_directory() ||
-				bp_is_user_activity()
-			) &&
-			(
-				bp_current_user_can( 'administrator' ) ||
-				(
-					'groups' === bp_get_activity_object_name() &&
-					bb_is_active_activity_pinned_posts() &&
-					(
-						groups_is_user_admin( bp_loggedin_user_id(), bp_get_activity_item_id() ) ||
-						groups_is_user_mod( bp_loggedin_user_id(), bp_get_activity_item_id() )
-					)
-				)
+			// Is not a media mini activity
+			! ( 
+				$activity_type === 'activity_update' &&
+				empty( $activities_template->activity->content ) 
 			)
 		)
 	) {
@@ -1973,6 +1942,115 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		);
 	}
 
+	// Download link for the medias and documents.
+	$media_id = BP_Media::get_activity_media_id( $activity_id );
+	if ( ! empty( $media_id ) ) {
+		$attachment_id = BP_Media::get_activity_attachment_id( $activity_id );
+		if ( ! empty( $attachment_id ) ) {
+
+			$media_privacy    = bb_media_user_can_access( $media_id, 'photo' );
+			$can_download_btn = ( true === (bool) $media_privacy['can_download'] ) ? true : false;
+			if ( $can_download_btn ) {
+				$download_url = bp_media_download_link( $attachment_id, $media_id );
+				if ( $download_url ) {
+
+					// Button for media download.
+					$buttons['activity_media_download'] = array(
+						'id'                => 'activity_media_download',
+						'component'         => 'activity',
+						'parent_element'    => $parent_element,
+						'parent_attr'       => $parent_attr,
+						'must_be_logged_in' => true,
+						'button_element'    => $button_element,
+						'button_attr'       => array(
+							'id'            => 'activity-media-download-' . $attachment_id,
+							'href'          => esc_url( $download_url ),
+							'class'         => 'button item-button bp-secondary-action activity-media-download cloud-download',
+							'data-bp-nonce' => '',
+						),
+						'link_text'         => sprintf(
+							'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
+							esc_html__( 'Download', 'buddyboss' ),
+							esc_html__( 'Download', 'buddyboss' )
+						),
+					);
+				}
+			}
+		}
+	}
+	
+	$video_id = BP_Video::get_activity_video_id( $activity_id );
+	if ( ! empty( $video_id ) ) {
+		$attachment_id = BP_Video::get_activity_attachment_id( $activity_id );
+		if ( ! empty( $attachment_id ) ) {
+
+			$video_privacy    = bb_media_user_can_access( $video_id, 'video' );
+			$can_download_btn = ( true === (bool) $video_privacy['can_download'] ) ? true : false;
+			if ( $can_download_btn ) {
+				$download_url = bp_video_download_link( $attachment_id, $video_id );
+				if ( $download_url ) {
+
+					// Button for video download.
+					$buttons['activity_video_download'] = array(
+						'id'                => 'activity_video_download',
+						'component'         => 'activity',
+						'parent_element'    => $parent_element,
+						'parent_attr'       => $parent_attr,
+						'must_be_logged_in' => true,
+						'button_element'    => $button_element,
+						'button_attr'       => array(
+							'id'            => 'activity-video-download-' . $attachment_id,
+							'href'          => esc_url( $download_url ),
+							'class'         => 'button item-button bp-secondary-action activity-video-download cloud-download',
+							'data-bp-nonce' => '',
+						),
+						'link_text'         => sprintf(
+							'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
+							esc_html__( 'Download', 'buddyboss' ),
+							esc_html__( 'Download', 'buddyboss' )
+						),
+					);
+				}
+			}
+		}
+	}
+
+	$document_id = BP_Document::get_activity_document_id( $activity_id );
+	if ( ! empty( $document_id ) ) {
+		$attachment_id = BP_Document::get_activity_attachment_id( $activity_id );
+		if ( ! empty( $attachment_id ) ) {
+
+			$document_privacy = bb_media_user_can_access( $document_id, 'document' );
+			$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
+			if ( $can_download_btn ) {
+				$download_url = bp_document_download_link( $attachment_id, $document_id );
+				if ( $download_url ) {
+
+					// Button for document download.
+					$buttons['activity_document_download'] = array(
+						'id'                => 'activity_document_download',
+						'component'         => 'activity',
+						'parent_element'    => $parent_element,
+						'parent_attr'       => $parent_attr,
+						'must_be_logged_in' => true,
+						'button_element'    => $button_element,
+						'button_attr'       => array(
+							'id'            => 'activity-document-download-' . $attachment_id,
+							'href'          => esc_url( $download_url ),
+							'class'         => 'button item-button bp-secondary-action activity-document-download cloud-download',
+							'data-bp-nonce' => '',
+						),
+						'link_text'         => sprintf(
+							'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
+							esc_html__( 'Download', 'buddyboss' ),
+							esc_html__( 'Download', 'buddyboss' )
+						),
+					);
+				}
+			}
+		}
+	}
+	
 	/**
 	 * Filter to add your buttons, use the position argument to choose where to insert it.
 	 *
