@@ -861,7 +861,9 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 	 * @param string $content         Content for the posted comment.
 	 * @param int    $comment_id      The activity ID for the posted activity comment.
 	 */
+	remove_filter( 'bp_activity_comment_content', 'bp_activity_at_name_filter' );
 	$params['content'] = apply_filters( 'bp_activity_comment_content', $params['content'], $comment_id );
+	add_filter( 'bp_activity_comment_content', 'bp_activity_at_name_filter' );
 
 	// Comment args.
 	$args = array(
