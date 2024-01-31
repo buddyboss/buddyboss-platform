@@ -9,19 +9,20 @@
  */
 
 bp_nouveau_signup_hook( 'before', 'page' );
+$bp_get_current_signup_step = bp_get_current_signup_step();
 ?>
 
 <div id="register-page"class="page register-page">
 	<?php
 	bp_nouveau_template_notices();
-	bp_nouveau_user_feedback( bp_get_current_signup_step() );
+	bp_nouveau_user_feedback( $bp_get_current_signup_step );
 	?>
 
 	<form action="" name="signup_form" id="signup-form" class="standard-form signup-form clearfix" method="post" enctype="multipart/form-data">
 
 		<div class="layout-wrap">
 
-			<?php if ( 'request-details' === bp_get_current_signup_step() ) :
+			<?php if ( 'request-details' === $bp_get_current_signup_step ) :
 
 				bp_nouveau_signup_hook( 'before', 'account_details' );
 				?>

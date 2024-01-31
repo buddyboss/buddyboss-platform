@@ -9,7 +9,7 @@
  */
 
 $bp_get_new_group_status = bp_get_new_group_status();
-$bp_get_current_group_id = bp_get_current_group_id();
+$bp_is_media_active      = bp_is_active( 'media' );
 
 if ( bp_is_group_create() ) : ?>
 	<h3 class="bp-screen-title creation-step-name">
@@ -116,11 +116,11 @@ if ( bp_is_group_create() ) : ?>
 				<label for="group-activity-feed-status-admins"><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
 			</div>
 		</fieldset>
+		<?php
+	endif;
 
-	<?php endif; ?>
-
-	<?php if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) : ?>
-
+	if ( $bp_is_media_active && bp_is_group_media_support_enabled() ) :
+		?>
 		<fieldset class="radio group-media">
 			<legend><?php esc_html_e( 'Group Photos', 'buddyboss' ); ?></legend>
 
@@ -141,11 +141,11 @@ if ( bp_is_group_create() ) : ?>
 				<label for="group-media-status-admins"><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
 			</div>
 		</fieldset>
+		<?php
+	endif;
 
-	<?php endif; ?>
-
-	<?php if ( bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() ) : ?>
-
+	if ( $bp_is_media_active && bp_is_group_albums_support_enabled() ) :
+		?>
 		<fieldset class="radio group-albums">
 			<legend><?php esc_html_e( 'Group Albums', 'buddyboss' ); ?></legend>
 
@@ -166,11 +166,11 @@ if ( bp_is_group_create() ) : ?>
 				<label for="group-albums-status-admins"><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
 			</div>
 		</fieldset>
+		<?php
+	endif;
 
-	<?php endif; ?>
-
-	<?php if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() ) : ?>
-
+	if ( $bp_is_media_active && bp_is_group_document_support_enabled() ) :
+		?>
 		<fieldset class="radio group-document">
 			<legend><?php esc_html_e( 'Group Documents', 'buddyboss' ); ?></legend>
 
@@ -191,11 +191,11 @@ if ( bp_is_group_create() ) : ?>
 				<label for="group-document-status-admins"><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
 			</div>
 		</fieldset>
+		<?php
+	endif;
 
-	<?php endif; ?>
-
-	<?php if ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() ) : ?>
-
+	if ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() ) :
+		?>
 		<fieldset class="radio group-video">
 			<legend><?php esc_html_e( 'Group Videos', 'buddyboss' ); ?></legend>
 
@@ -216,11 +216,11 @@ if ( bp_is_group_create() ) : ?>
 				<label for="group-video-status-admins"><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
 			</div>
 		</fieldset>
+		<?php
+	endif;
 
-	<?php endif; ?>
-
-	<?php if ( bp_is_active( 'messages' ) && true === bp_disable_group_messages() ) : ?>
-
+	if ( bp_is_active( 'messages' ) && true === bp_disable_group_messages() ) :
+		?>
 		<fieldset class="radio group-messages">
 			<legend><?php esc_html_e( 'Group Messages', 'buddyboss' ); ?></legend>
 
@@ -241,7 +241,6 @@ if ( bp_is_group_create() ) : ?>
 				<label for="group-messages-status-admins"><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
 			</div>
 		</fieldset>
-
 		<?php
 	endif;
 
@@ -266,7 +265,6 @@ if ( bp_is_group_create() ) : ?>
 	// Group type selection
 	if ( $group_types ) :
 		?>
-
 		<fieldset class="group-create-types">
 			<legend><?php esc_html_e( 'Group Type', 'buddyboss' ); ?></legend>
 
@@ -320,7 +318,6 @@ if ( bp_is_group_create() ) : ?>
 				?>
 			</select>
 		</fieldset>
-
 		<?php
 	endif;
 

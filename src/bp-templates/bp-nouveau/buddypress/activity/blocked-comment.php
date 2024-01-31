@@ -104,7 +104,7 @@ if ( bp_is_active( 'moderation' ) ) {
 	if ( bb_is_group_activity_comment( $activity_comment_id ) && ! $check_hidden_content ) {
 		bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) );
 	}
-	?>
 
-	<?php bp_nouveau_activity_recurse_comments( bp_activity_current_comment() ); ?>
+	bp_nouveau_activity_recurse_comments( bp_activity_current_comment() );
+	?>
 </li>

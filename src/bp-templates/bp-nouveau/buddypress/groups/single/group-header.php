@@ -72,9 +72,8 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 				echo isset( bp_nouveau_group_meta()->group_type_list ) ? wp_kses_post( bp_nouveau_group_meta()->group_type_list ) : '';
 
 				bp_nouveau_group_hook( 'before', 'header_meta' );
-				?>
 
-				<?php if ( bp_nouveau_group_has_meta_extra() ) : ?>
+				if ( bp_nouveau_group_has_meta_extra() ) : ?>
 					<div class="item-meta">
 						<?php echo wp_kses_post( bp_nouveau_group_meta()->extra ); ?>
 					</div><!-- .item-meta -->
@@ -103,7 +102,6 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 				</div>
 
 				<?php
-
 				if (
 					! bp_nouveau_groups_front_page_description() &&
 					bp_nouveau_group_has_meta( 'description' ) &&

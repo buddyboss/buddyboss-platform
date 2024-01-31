@@ -46,9 +46,11 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 		<?php
 		while ( bp_groups() ) :
 			bp_the_group();
+
+			$bp_group_id = bp_get_group_id();
 			?>
 
-			<li <?php bp_group_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php bp_group_id(); ?>" data-bp-item-component="groups">
+			<li <?php bp_group_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php echo esc_attr( $bp_group_id ); ?>" data-bp-item-component="groups">
 				<div class="list-wrap">
 					<?php
 					if ( ! bp_disable_group_cover_image_uploads() && bb_platform_group_element_enable( 'cover-images' ) ) {
@@ -56,10 +58,10 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 							'url',
 							array(
 								'object_dir' => 'groups',
-								'item_id'    => bp_get_group_id(),
+								'item_id'    => $bp_group_id,
 							)
 						);
-						$has_default_cover     = function_exists( 'bb_attachment_get_cover_image_class' ) ? bb_attachment_get_cover_image_class( bp_get_group_id(), 'group' ) : '';
+						$has_default_cover     = function_exists( 'bb_attachment_get_cover_image_class' ) ? bb_attachment_get_cover_image_class( $bp_group_id, 'group' ) : '';
 						?>
 						<div class="bs-group-cover only-grid-view <?php echo esc_attr( $has_default_cover . ' cover-' . $group_cover_height ); ?>">
 							<a href="<?php bp_group_permalink(); ?>">

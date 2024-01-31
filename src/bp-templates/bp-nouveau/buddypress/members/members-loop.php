@@ -39,7 +39,8 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 		while ( bp_members() ) :
 			bp_the_member();
 
-			$bp_get_member_user_id = bp_get_member_user_id();
+			$bp_get_member_user_id   = bp_get_member_user_id();
+			$bp_get_member_permalink = bp_get_member_permalink();
 
 			// Check if members_list_item has content.
 			ob_start();
@@ -90,9 +91,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 					)
 				);
 				$member_report_button = ! is_super_admin( $bp_get_member_user_id ) ? bp_get_button( $report_button ) : '';
-			}
 
-			if ( bp_is_active( 'moderation' ) && is_user_logged_in() ) {
 				// Member block button.
 				$block_button = bp_member_get_report_link(
 					array(
@@ -133,7 +132,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 							$moderation_class = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $bp_get_member_user_id ) ? 'bp-user-suspended' : '';
 							$moderation_class = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $bp_get_member_user_id ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
 							?>
-							<a href="<?php bp_member_permalink(); ?>" class="<?php echo esc_attr( $moderation_class ); ?>">
+							<a href="<?php echo esc_url( $bp_get_member_permalink ); ?>" class="<?php echo esc_attr( $moderation_class ); ?>">
 								<?php
 								if ( $enabled_online_status ) {
 									bb_user_presence_html( $bp_get_member_user_id );
@@ -148,18 +147,23 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 							<div class="item-block">
 
 								<?php
+								$user_member_type = '';
 								if ( $enabled_profile_type && function_exists( 'bp_member_type_enable_disable' ) && true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() ) {
-									echo '<p class="item-meta member-type only-grid-view">' . wp_kses_post( bp_get_user_member_type( $bp_get_member_user_id ) ) . '</p>';
+									$user_member_type = bp_get_user_member_type( $bp_get_member_user_id );
+								}
+
+								if ( ! empty( $user_member_type ) ) {
+									echo '<p class="item-meta member-type only-grid-view">' . wp_kses_post( $user_member_type ) . '</p>';
 								}
 								?>
 
 								<h2 class="list-title member-name">
-									<a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a>
+									<a href="<?php echo esc_url( $bp_get_member_permalink ); ?>"><?php bp_member_name(); ?></a>
 								</h2>
 
 								<?php
-								if ( $enabled_profile_type && function_exists( 'bp_member_type_enable_disable' ) && true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() ) {
-									echo '<p class="item-meta member-type only-list-view">' . wp_kses_post( bp_get_user_member_type( $bp_get_member_user_id ) ) . '</p>';
+								if ( ! empty( $user_member_type ) ) {
+									echo '<p class="item-meta member-type only-list-view">' . wp_kses_post( $user_member_type ) . '</p>';
 								}
 
 								if ( ( $enabled_last_active && $member_last_activity ) || ( $enabled_joined_date && $member_joined_date ) ) :

@@ -9,6 +9,7 @@
  */
 
 $bp_loggedin_user_id = bp_loggedin_user_id();
+$is_media_active     = bp_is_active( 'media' );
 $args                = array(
 	'exclude'             => array( $bp_loggedin_user_id ),
 	'exclude_admins_mods' => false,
@@ -148,7 +149,7 @@ if ( 0 === $total_count ) {
 						<div id="group_message_content" name="group_message_content" tabindex="3"></div>
 						<input type="hidden" id="group_message_content_hidden" name="group_message_content_hidden" value="">
 						<div id="whats-new-attachments">
-							<?php if ( bp_is_active( 'media' ) ) : ?>
+							<?php if ( $is_media_active ) : ?>
 								<div class="dropzone closed media-dropzone" id="bp-group-messages-post-media-uploader"></div>
 								<input name="bp_group_messages_media" id="bp_group_messages_media" type="hidden" value=""/>
 								<div class="forum-post-media-template" style="display:none;">
@@ -182,7 +183,7 @@ if ( 0 === $total_count ) {
 								</div>
 								<?php
 							endif;
-							if ( bp_is_active( 'media' ) ) : ?>
+							if ( $is_media_active ) : ?>
 								<div class="dropzone closed video-dropzone" id="bp-group-messages-post-video-uploader"></div>
 								<input name="bp_group_messages_video" id="bp_group_messages_video" type="hidden" value=""/>
 								<div class="forum-post-video-template" style="display:none;">
@@ -223,7 +224,7 @@ if ( 0 === $total_count ) {
 								</div>
 								<?php
 							endif;
-							if ( bp_is_active( 'media' ) ) : ?>
+							if ( $is_media_active ) : ?>
 								<div class="dropzone closed document-dropzone" id="bp-group-messages-post-document-uploader"></div>
 								<input name="bp_group_messages_document" id="bp_group_messages_document" type="hidden" value=""/>
 								<div class="forum-post-document-template" style="display:none;">
@@ -255,7 +256,7 @@ if ( 0 === $total_count ) {
 								</div>
 								<?php
 							endif;
-							if ( bp_is_active( 'media' ) ) : ?>
+							if ( $is_media_active ) : ?>
 								<div class="bp-group-messages-attached-gif-container closed">
 									<div class="gif-image-container">
 										<img src="" alt="">
@@ -269,12 +270,12 @@ if ( 0 === $total_count ) {
 						</div>
 						<div id="whats-new-toolbar" class="
 						<?php
-						if ( ! bp_is_active( 'media' ) ) {
+						if ( ! $is_media_active ) {
 							echo 'media-off';
 						}
 						?>
 						">
-							<?php if ( bp_is_active( 'media' ) ) : ?>
+							<?php if ( $is_media_active ) : ?>
 								<div class="post-elements-buttons-item show-toolbar" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-show="<?php esc_html_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-hide="<?php esc_html_e( 'Hide formatting', 'buddyboss' ); ?>">
 									<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip">
 										<span class="bb-icon-l bb-icon-font"></span>
@@ -283,7 +284,7 @@ if ( 0 === $total_count ) {
 								<?php
 							endif;
 
-							if ( bp_is_active( 'media' ) && bb_user_has_access_upload_media( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) : ?>
+							if ( $is_media_active && bb_user_has_access_upload_media( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) : ?>
 								<div class="post-elements-buttons-item post-media media-support group-message-media-support">
 									<a href="#" id="bp-group-messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>">
 										<span class="bb-icon-l bb-icon-camera"></span>
@@ -293,7 +294,7 @@ if ( 0 === $total_count ) {
 							endif;
 
 							$video_extensions = ( function_exists( 'bp_video_get_allowed_extension' ) ) ? bp_video_get_allowed_extension() : '';
-							if ( bp_is_active( 'media' ) && ! empty( $video_extensions ) && bb_user_has_access_upload_video( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) :
+							if ( $is_media_active && ! empty( $video_extensions ) && bb_user_has_access_upload_video( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) :
 								?>
 								<div class="post-elements-buttons-item post-video video-support">
 									<a href="#" id="bp-group-messages-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>">
@@ -303,7 +304,7 @@ if ( 0 === $total_count ) {
 								<?php
 							endif;
 
-							if ( bp_is_active( 'media' ) && bb_user_has_access_upload_document( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) : ?>
+							if ( $is_media_active && bb_user_has_access_upload_document( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) : ?>
 								<div class="post-elements-buttons-item post-media document-support group-message-document-support">
 									<a href="#" id="bp-group-messages-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
 										<span class="bb-icon-l bb-icon-attach"></span>
@@ -312,7 +313,7 @@ if ( 0 === $total_count ) {
 								<?php
 							endif;
 
-							if ( bp_is_active( 'media' ) && bb_user_has_access_upload_gif( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) : ?>
+							if ( $is_media_active && bb_user_has_access_upload_gif( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) : ?>
 								<div class="post-elements-buttons-item post-gif">
 									<div class="gif-media-search">
 										<a href="#" id="bp-group-messages-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>">
@@ -346,7 +347,7 @@ if ( 0 === $total_count ) {
 								<?php
 							endif;
 
-							if ( bp_is_active( 'media' ) && bb_user_has_access_upload_emoji( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) : ?>
+							if ( $is_media_active && bb_user_has_access_upload_emoji( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) : ?>
 								<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss' ); ?>"></div>
 							<?php endif; ?>
 

@@ -8,8 +8,9 @@
  * @version 1.0.0
  */
 
-$bp_is_group_create = bp_is_group_create();
-$group_has_avatar   = bp_get_group_has_avatar();
+$bp_is_group_create   = bp_is_group_create();
+$group_has_avatar     = bp_get_group_has_avatar();
+$bp_avatar_admin_step = bp_get_avatar_admin_step();
 
 if ( $bp_is_group_create ) : ?>
 	<h3 class="bp-screen-title creation-step-name">
@@ -35,7 +36,7 @@ endif;
 
 
 <?php
-if ( 'upload-image' === bp_get_avatar_admin_step() ) :
+if ( 'upload-image' === $bp_avatar_admin_step ) :
 
 	if ( $bp_is_group_create ) :
 		?>
@@ -88,7 +89,7 @@ if ( 'upload-image' === bp_get_avatar_admin_step() ) :
 
 endif;
 
-if ( 'crop-image' === bp_get_avatar_admin_step() ) {
+if ( 'crop-image' === $bp_avatar_admin_step ) {
 	?>
 	<h2><?php esc_html_e( 'Crop Group Photo', 'buddyboss' ); ?></h2>
 	<img src="<?php bp_avatar_to_crop(); ?>" id="avatar-to-crop" class="avatar" alt="<?php esc_attr_e( 'Photo to crop', 'buddyboss' ); ?>" />

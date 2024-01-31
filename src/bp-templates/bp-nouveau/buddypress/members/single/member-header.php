@@ -36,13 +36,17 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 		}
 	}
 
-	$enabled_member_type       = ( true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() && $is_enabled_profile_type );
 	$bp_is_my_profile          = bp_is_my_profile();
 	$bp_displayed_user_id      = bp_displayed_user_id();
 	$bp_activity_do_mentions   = bp_activity_do_mentions();
 	$bp_get_last_activity      = bp_get_last_activity();
 	$bb_get_member_joined_date = bb_get_member_joined_date();
 	$is_activity_enabled       = bp_is_active( 'activity' );
+
+	$member_type = '';
+	if ( true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() && $is_enabled_profile_type ) {
+		$member_type = bp_get_user_member_type( $bp_displayed_user_id );
+	}
 
 	if ( $bp_is_my_profile ) {
 		$my_profile = 'my_profile';
@@ -74,8 +78,8 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 
 				bp_displayed_user_avatar( 'type=full' );
 
-				if ( $enabled_member_type ) {
-					echo wp_kses_post( bp_get_user_member_type( $bp_displayed_user_id ) );
+				if ( ! empty( $member_type ) ) {
+					echo wp_kses_post( $member_type );
 				}
 				?>
 			</div><!-- #item-header-avatar -->
@@ -87,8 +91,8 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 							<h2 class="user-nicename"><?php echo wp_kses_post( bp_core_get_user_displayname( $bp_displayed_user_id ) ); ?></h2>
 
 							<?php
-							if ( $enabled_member_type ) {
-								echo wp_kses_post( bp_get_user_member_type( $bp_displayed_user_id ) );
+							if ( ! empty( $member_type ) ) {
+								echo wp_kses_post( $member_type );
 							}
 							?>
 						</div>

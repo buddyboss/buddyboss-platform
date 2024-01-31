@@ -13,15 +13,17 @@
 <?php
 bp_nouveau_group_hook( 'before', 'invites_content' );
 
-if ( bp_has_groups( 'type=invites&user_id=' . bp_displayed_user_id() ) ) {
+$bp_displayed_user_id = bp_displayed_user_id();
+if ( bp_has_groups( 'type=invites&user_id=' . $bp_displayed_user_id ) ) {
 	?>
 	<ul id="group-list" class="invites item-list bp-list" data-bp-list="groups_invites">
 		<?php
 		while ( bp_groups() ) :
 			bp_the_group();
+			$bp_get_group_id = bp_get_group_id();
 			?>
 
-			<li class="item-entry invites-list" data-bp-item-id="<?php bp_group_id(); ?>" data-bp-item-component="groups">
+			<li class="item-entry invites-list" data-bp-item-id="<?php echo esc_attr( $bp_get_group_id ); ?>" data-bp-item-component="groups">
 
 				<div class="wrap">
 
@@ -57,7 +59,7 @@ if ( bp_has_groups( 'type=invites&user_id=' . bp_displayed_user_id() ) ) {
 						</p>
 
 						<p class="desc">
-							<?php echo bp_groups_get_invite_messsage_for_user( bp_displayed_user_id(), bp_get_group_id() ); ?>
+							<?php echo bp_groups_get_invite_messsage_for_user( $bp_displayed_user_id, $bp_get_group_id ); ?>
 						</p>
 						<?php
 						bp_nouveau_group_hook( '', 'invites_item' );

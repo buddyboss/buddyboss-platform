@@ -41,7 +41,7 @@ $bp_moderation_item_type = bp_get_moderation_item_type();
 	</td>
 	<td class="moderation-content-excerpt">
 		<?php
-		$content_excerpt = bp_moderation_get_content_excerpt( bp_get_moderation_item_id(), bp_get_moderation_item_type() );
+		$content_excerpt = bp_moderation_get_content_excerpt( $bp_moderation_item_id, $bp_moderation_item_type );
 		echo wp_kses_post( substr( $content_excerpt, 0, 100 ) );
 		?>
 	</td>

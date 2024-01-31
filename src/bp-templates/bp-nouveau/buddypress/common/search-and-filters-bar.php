@@ -11,10 +11,11 @@
 ?>
 <div class="subnav-filters filters no-ajax" id="subnav-filters">
 	<?php
+	$bp_current_component = bp_current_component();
 	if (
-		'friends' !== bp_current_component() &&
+		'friends' !== $bp_current_component &&
 		(
-			'members' !== bp_current_component() ||
+			'members' !== $bp_current_component ||
 			bp_disable_advanced_profile_search()
 		)
 	) {
@@ -27,9 +28,9 @@
 
 	if (
 		(
-			'members' === bp_current_component() ||
-			'groups' === bp_current_component() ||
-			'friends' === bp_current_component()
+			'members' === $bp_current_component ||
+			'groups' === $bp_current_component ||
+			'friends' === $bp_current_component
 		) &&
 		! bp_is_current_action( 'requests' )
 	) {
@@ -38,8 +39,8 @@
 
 	if (
 		(
-			'members' === bp_current_component() ||
-			'groups' === bp_current_component() ) ||
+			'members' === $bp_current_component ||
+			'groups' === $bp_current_component ) ||
 			(
 				bp_is_user() &&
 				(
@@ -52,16 +53,16 @@
 	}
 
 	if (
-		'members' === bp_current_component() ||
+		'members' === $bp_current_component ||
 		(
-			'friends' === bp_current_component() &&
+			'friends' === $bp_current_component &&
 			'my-friends' === bp_current_action()
 		)
 	) {
 		bp_get_template_part( 'common/filters/member-filters' );
 	}
 
-	if ( 'groups' === bp_current_component() ) {
+	if ( 'groups' === $bp_current_component ) {
 		bp_get_template_part( 'common/filters/group-filters' );
 	}
 	?>

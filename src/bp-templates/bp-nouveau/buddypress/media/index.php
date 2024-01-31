@@ -10,11 +10,9 @@
 
 bp_nouveau_before_media_directory_content();
 bp_nouveau_template_notices();
-
 ?>
 
 <div class="screen-content">
-
 	<?php
 	bp_nouveau_media_hook( 'before_directory', 'list' );
 

@@ -9,8 +9,9 @@
  * @version 1.0.0
  */
 
-$folder_link = bp_get_folder_folder_link();
-$folder_id   = bp_get_folder_folder_id();
+$folder_link             = bp_get_folder_folder_link();
+$folder_id               = bp_get_folder_folder_id();
+$document_folder_privacy = bp_get_document_folder_privacy();
 ?>
 <li data-bp-item-id="<?php echo esc_attr( $folder_id ); ?>" data-bp-item-component="document" class="search-document-list">
 	<div class="list-wrap">
@@ -46,14 +47,14 @@ $folder_id   = bp_get_folder_folder_id();
 								?>
 								<span class="middot">·</span>
 								<span>
-									<?php bp_document_folder_privacy(); ?>
+									<?php echo $document_folder_privacy; ?>
 								</span>
 								<?php
 							} else {
 								?>
 								<span class="middot">·</span>
 								<span id="privacy-<?php echo esc_attr( $folder_id ); ?>">
-									<?php bp_document_folder_privacy(); ?>
+									<?php echo $document_folder_privacy; ?>
 								</span>
 								<?php
 							}
@@ -61,7 +62,7 @@ $folder_id   = bp_get_folder_folder_id();
 							?>
 							<span class="middot">·</span>
 							<span>
-								<?php bp_document_folder_privacy(); ?>
+								<?php echo $document_folder_privacy; ?>
 							</span>
 							<?php
 						}

@@ -22,6 +22,7 @@
 <?php
 bp_nouveau_member_hook( 'before', 'avatar_upload_content' );
 
+$avatar_admin_step = bp_get_avatar_admin_step();
 if ( ! (int) bp_get_option( 'bp-disable-avatar-uploads' ) ) {
 	?>
 	<p class="bp-feedback info">
@@ -34,7 +35,7 @@ if ( ! (int) bp_get_option( 'bp-disable-avatar-uploads' ) ) {
 	<form action="" method="post" id="avatar-upload-form" class="standard-form" enctype="multipart/form-data">
 
 		<?php
-		if ( 'upload-image' === bp_get_avatar_admin_step() ) {
+		if ( 'upload-image' === $avatar_admin_step ) {
 			wp_nonce_field( 'bp_avatar_upload' );
 			?>
 			<p class="bp-help-text"><?php esc_html_e( "Click below to select a JPG, GIF or PNG format photo from your computer and then click 'Upload Image' to proceed.", 'buddyboss' ); ?></p>
@@ -55,7 +56,7 @@ if ( ! (int) bp_get_option( 'bp-disable-avatar-uploads' ) ) {
 			}
 		}
 
-		if ( 'crop-image' === bp_get_avatar_admin_step() ) {
+		if ( 'crop-image' === $avatar_admin_step ) {
 			?>
 			<p class="bp-help-text screen-header"><?php esc_html_e( 'Crop Your New Profile Photo', 'buddyboss' ); ?></p>
 			<img src="<?php bp_avatar_to_crop(); ?>" id="avatar-to-crop" class="avatar" alt="<?php esc_attr_e( 'Profile photo to crop', 'buddyboss' ); ?>" />

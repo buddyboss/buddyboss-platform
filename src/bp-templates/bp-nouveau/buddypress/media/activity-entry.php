@@ -76,11 +76,8 @@ $more_media     = $media_template->media_count > 5;
 							}
 							$item_id = 0;
 							if ( bp_is_active( 'activity' ) ) {
-								if ( bp_get_activity_comment_id() ) {
-									$item_id = bp_get_activity_comment_id();
-								} else {
-									$item_id = bp_get_activity_id();
-								}
+								$bp_get_activity_comment_id = bp_get_activity_comment_id();
+								$item_id                    = $bp_get_activity_comment_id ? $bp_get_activity_comment_id : bp_get_activity_id();
 							}
 							if ( $can_delete ) {
 								?>
@@ -98,13 +95,13 @@ $more_media     = $media_template->media_count > 5;
 	<a href="#"
 		class="bb-open-media-theatre entry-img"
 		data-id="<?php echo esc_attr( $bp_get_media_id ); ?>"
-		data-attachment-id="<?php bp_media_attachment_id(); ?>"
+		data-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
 		data-attachment-full="<?php bb_media_photos_theatre_popup_image(); ?>"
 		data-activity-id="<?php echo esc_attr( $media_activity_id ); ?>"
-		data-privacy="<?php bp_media_privacy(); ?>"
+		data-privacy="<?php echo esc_attr( $db_privacy ); ?>"
 		data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>"
 		data-album-id="<?php bp_media_album_id(); ?>"
-		data-group-id="<?php bp_media_group_id(); ?>"
+		data-group-id="<?php echo esc_attr( $group_id ); ?>"
 		data-can-edit="<?php echo esc_attr( bp_media_user_can_edit( $bp_get_media_id ) ); ?>"
 	>
 		<?php $size = 1 === $media_template->media_count ? 'bb-media-activity-image' : 'bb-media-photos-album-directory-image-medium'; ?>

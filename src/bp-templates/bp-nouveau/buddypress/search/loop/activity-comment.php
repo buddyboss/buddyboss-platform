@@ -41,10 +41,11 @@ $bp_activity_url       = bp_activity_get_permalink( bp_get_activity_id() );
 			<div class="item-meta">
 				<a href="<?php echo esc_url( $bp_activity_url ); ?>">
 					<?php
+					$activity_comment_date_recorded = bp_get_activity_date_recorded();
 					printf(
 						'<time class="time-since" data-livestamp="%1$s">%2$s</time>',
-						bp_core_get_iso8601_date( bp_get_activity_date_recorded() ),
-						bp_core_time_since( bp_get_activity_date_recorded() )
+						bp_core_get_iso8601_date( $activity_comment_date_recorded ),
+						bp_core_time_since( $activity_comment_date_recorded )
 					);
 					?>
 				</a>
