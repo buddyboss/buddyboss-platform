@@ -6166,7 +6166,7 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:502
 msgid ""
-"When enabled, mentions in Activities, Forums, and Replies will be showing with the selected format in "Display Name Format" setting. remember to run <a href=\"%s\">Repair "
+"When enabled, mentions in Activities, Forums, and Replies will be showing with the selected format in \"Display Name Format\" setting. remember to run <a href=\"%s\">Repair "
 "Community</a> tool to update all the activities."
 msgstr ""
 
