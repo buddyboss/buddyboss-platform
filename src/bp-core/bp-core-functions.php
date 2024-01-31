@@ -9090,13 +9090,15 @@ function bb_redirect_after_action( $redirect_to, $user_id = 0, $action = 'login'
 }
 
 /**
- * Function will remove mention link from content if mentioned member is deleted.
+ * Replace mention placeholders with user URLs in the given content.
+ * This function searches for mention placeholders in the provided content (e.g., {{mention_user_id_XXXX}})
+ * and replaces them with the corresponding user URLs using bp_core_get_user_domain().
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param mixed $content Content.
+ * @param mixed $content The content containing mention placeholders to be replaced..
  *
- * @return mixed
+ * @return mixed The content with mention placeholders replaced by user URLs.
  */
 function bb_mention_add_user_dynamic_link( $content ) {
 
@@ -9104,18 +9106,15 @@ function bb_mention_add_user_dynamic_link( $content ) {
 		return $content;
 	}
 
-	// Define a callback function for preg_replace_callback
-	$replace_callback = function ($matches) {
-		$userId = $matches[1]; // Extract the user ID from the match
+	// Define a callback function for preg_replace_callback.
+	$replace_callback = function ( $matches ) {
+		$userId = $matches[1];                     // Extract the user ID from the match
+
 		return bp_core_get_user_domain( $userId ); // Replace this with your actual BuddyPress URL format
 
 	};
 
-	// Use preg_replace_callback to replace the placeholders
-	$processed_content = preg_replace_callback('/{{mention_user_id_(\d+)}}/', $replace_callback, $content);
-
-	return $processed_content;
-
+	return preg_replace_callback( '/{{mention_user_id_(\d+)}}/', $replace_callback, $content );
 }
 
 /**
