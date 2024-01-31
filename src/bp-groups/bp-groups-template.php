@@ -3613,7 +3613,6 @@ function bp_get_group_member_ban_link( $user_id = 0, $group = false ) {
 	global $groups_template;
 
 	if ( empty( $group ) ) {
-		// $group =& $groups_template->group;
 		$group = ! empty( $groups_template->group ) ? $groups_template->group : groups_get_current_group();
 	}
 
