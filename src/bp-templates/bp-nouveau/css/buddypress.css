@@ -4075,6 +4075,10 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
   content: "\ee5a";
 }
 
+#buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.download-activity:before {
+  content: "\e889";
+}
+
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a span:not(.bp-screen-reader-text) {
   display: inline-block;
   vertical-align: middle;

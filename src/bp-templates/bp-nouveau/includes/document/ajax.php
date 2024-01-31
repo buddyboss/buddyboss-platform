@@ -444,9 +444,9 @@ function bp_nouveau_ajax_document_get_document_description() {
 								</span>
 								<div class="bb-activity-more-options">
 									<div class="generic-button">
-										<a id="activity-document-download-<?php echo $attachment_id ?>" href="<?php echo esc_url( $download_url ) ?>" class="button item-button bp-secondary-action activity-document-download">
+										<a id="activity-document-download-<?php echo $attachment_id ?>" href="<?php echo esc_url( $download_url ) ?>" class="button item-button bp-secondary-action activity-document-download download-activity">
 											<span class="bp-screen-reader-text"><?php echo esc_html__( 'Download', 'buddyboss' ); ?></span>
-											<span class="delete-label"><?php echo esc_html__( 'Download', 'buddyboss' ); ?></span>
+											<span class="download-label"><?php echo esc_html__( 'Download', 'buddyboss' ); ?></span>
 										</a>
 									</div>
 								</div>

@@ -772,6 +772,10 @@
 							content: "\ee5a";
 						}
 
+						&.download-activity:before {
+							content: "\e889";
+						}
+
 						span:not(.bp-screen-reader-text) {
 							display: inline-block;
 							vertical-align: middle;

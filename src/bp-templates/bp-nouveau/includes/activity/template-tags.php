@@ -1965,11 +1965,11 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 						'button_attr'       => array(
 							'id'            => 'activity-media-download-' . $attachment_id,
 							'href'          => esc_url( $download_url ),
-							'class'         => 'button item-button bp-secondary-action activity-media-download cloud-download',
+							'class'         => 'button item-button bp-secondary-action activity-media-download cloud-download download-activity',
 							'data-bp-nonce' => '',
 						),
 						'link_text'         => sprintf(
-							'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
+							'<span class="bp-screen-reader-text">%s</span><span class="download-label">%s</span>',
 							esc_html__( 'Download', 'buddyboss' ),
 							esc_html__( 'Download', 'buddyboss' )
 						),
