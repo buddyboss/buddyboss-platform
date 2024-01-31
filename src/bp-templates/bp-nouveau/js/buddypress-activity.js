@@ -496,7 +496,7 @@ window.bp = window.bp || {};
 
 								// Prepend a link to display all.
 								if ( ! i ) {
-									$( item ).parent( 'ul' ).after( '<li class="show-all"><button class="text-button" type="button" data-bp-show-comments-id="#' + activity_item.prop( 'id' ) + '/show-all/">' + BP_Nouveau.show_x_comments + '</button></li>' );
+									$( item ).parent( 'ul' ).before( '<div class="show-all"><button class="text-button" type="button" data-bp-show-comments-id="#' + activity_item.prop( 'id' ) + '/show-all/">' + BP_Nouveau.show_x_comments + '</button></div>' );
 								}
 
 								// stop hiding elements if the id from hash url for specific comment matches.
@@ -1176,7 +1176,7 @@ window.bp = window.bp || {};
 				} else {
 					// It's an activity we're commenting.
 					if ( item_id === activity_id ) {
-						$activity_comments.prepend( form );
+						$activity_comments.append( form );
 						form.addClass( 'root' );
 
 						// It's a comment we're replying to.

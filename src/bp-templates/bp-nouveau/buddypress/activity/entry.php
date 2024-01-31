@@ -97,10 +97,10 @@ if ( ! empty( $link_embed ) ) {
 	<?php if ( bp_activity_can_comment() && ( bp_activity_get_comment_count() || ( is_user_logged_in() && bp_is_single_activity() ) ) ) : ?>
 
 		<div class="activity-comments">
-
-			<?php bp_nouveau_activity_comment_form(); ?>
 			
 			<?php bp_activity_comments(); ?>
+
+			<?php bp_nouveau_activity_comment_form(); ?>
 
 		</div>
 
