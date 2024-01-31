@@ -543,6 +543,7 @@ window.bp = window.bp || {};
 					data.object === 'group_members' && $( 'body' ).hasClass( 'group-members' ),
 					data.object === 'activity' && $( 'body.groups' ).hasClass( 'activity' ),
 					data.object === 'document' && $( 'body' ).hasClass( 'documents' ),
+					data.object === 'manage_group_members' && $( 'body' ).hasClass( 'manage_group_members' ),
 					data.object === 'document' && ( $( 'body' ).hasClass( 'document' ) || $( 'body' ).hasClass( 'documents' ) ),
 				];
 
@@ -614,10 +615,10 @@ window.bp = window.bp || {};
 							$( self.objectNavParent + ' [data-bp-scope="' + i + '"]' ).find( 'span' ).text( response.data.scopes[ i ] );
 						}
 					}
-
+					console.log( 'data.target', data.target );
+					console.log( 'data', data );
 					if ( 'reset' !== data.method ) {
 						self.inject( data.target, response.data.contents, data.method );
-
 						$( data.target ).trigger( 'bp_ajax_' + data.method, $.extend( data, { response: response.data } ) );
 					} else {
 						/* animate to top if called from bottom pagination */

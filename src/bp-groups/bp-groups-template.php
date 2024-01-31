@@ -3470,7 +3470,7 @@ function bp_get_group_member_promote_mod_link( $args = '' ) {
 		$args,
 		array(
 			'user_id' => $members_template->member->user_id,
-			'group'   => &$groups_template->group,
+			'group'   => ! empty( $groups_template->group ) ? $groups_template->group : groups_get_current_group(),
 		),
 		'group_member_promote_mod_link'
 	);
@@ -3510,12 +3510,13 @@ function bp_group_member_promote_admin_link( $args = '' ) {
 	 */
 function bp_get_group_member_promote_admin_link( $args = '' ) {
 	global $members_template, $groups_template;
-	error_log( print_r( $groups_template, true ) );
+	// error_log( print_r( groups_get_current_group(), true ) );
+
 	$r = bp_parse_args(
 		$args,
 		array(
 			'user_id' => ! empty( $members_template->member->user_id ) ? $members_template->member->user_id : false,
-			'group'   => &$groups_template->group,
+			'group'   => ! empty( $groups_template->group ) ? $groups_template->group : groups_get_current_group(),
 		),
 		'group_member_promote_admin_link'
 	);
@@ -3612,7 +3613,8 @@ function bp_get_group_member_ban_link( $user_id = 0, $group = false ) {
 	global $groups_template;
 
 	if ( empty( $group ) ) {
-		$group =& $groups_template->group;
+		// $group =& $groups_template->group;
+		$group = ! empty( $groups_template->group ) ? $groups_template->group : groups_get_current_group();
 	}
 
 	/**
@@ -3660,7 +3662,7 @@ function bp_get_group_member_unban_link( $user_id = 0, $group = false ) {
 	}
 
 	if ( empty( $group ) ) {
-		$group =& $groups_template->group;
+		$group = ! empty( $groups_template->group ) ? $groups_template->group : groups_get_current_group();
 	}
 
 	/**
@@ -3704,7 +3706,7 @@ function bp_get_group_member_remove_link( $user_id = 0, $group = false ) {
 	global $groups_template;
 
 	if ( empty( $group ) ) {
-		$group =& $groups_template->group;
+		$group = ! empty( $groups_template->group ) ? $groups_template->group : groups_get_current_group();
 	}
 
 	/**

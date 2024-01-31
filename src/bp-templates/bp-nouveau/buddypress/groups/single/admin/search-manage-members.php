@@ -1,4 +1,5 @@
-<?php if ( bp_group_has_members( 'per_page=15&exclude_banned=0' ) ) : ?>
+<?php bp_nouveau_group_hook( 'before', 'manage_members_list' ); ?>
+<?php if ( bp_group_has_members( bp_ajax_querystring( 'manage_group_members' ) . '&per_page=15&type=group_role&exclude_banned=0' ) ) : ?>
 
 <?php if ( bp_group_member_needs_pagination() ) : ?>
 

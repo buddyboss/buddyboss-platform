@@ -704,14 +704,14 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 	$type = ( ! empty( $args['type'] ) ) ? $args['type'] : 'group';
 
 	// @todo Not really sure why BP Legacy needed to do this...
-	if ( 'group' === $type && is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+	if ( 'group' === $type && is_admin() ) {
 		return;
 	}
 
 	$buttons = array();
 
 	if ( ( 'loop' === $type || 'invite' === $type ) && isset( $GLOBALS['groups_template']->group ) ) {
-		$group = $GLOBALS['groups_template']->group;
+		$group = ! empty( $GLOBALS['groups_template']->group ) ? $GLOBALS['groups_template']->group : groups_get_current_group();
 	} else {
 		$group = groups_get_current_group();
 	}
@@ -875,7 +875,6 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 		 */
 	} elseif ( 'manage_members' === $type && isset( $GLOBALS['members_template']->member->user_id ) ) {
 		$user_id = $GLOBALS['members_template']->member->user_id;
-
 		$buttons = array(
 			'unban_member'  => array(
 				'id'                => 'unban_member',
