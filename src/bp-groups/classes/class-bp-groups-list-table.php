@@ -138,7 +138,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 		$this->group_type_ids = BP_Groups_Group::get_group_type_ids();
 
 		// Get group ids for groups with no members.
-		$this->group_type_ids['no-members'] = $wpdb->get_col( "SELECT g.id FROM {$bp->groups->table_name} g  LEFT JOIN {$bp->groups->table_name_members} m ON g.id = m.group_id WHERE m.group_id IS NULL" );
+		$this->group_type_ids['no-members'] = $wpdb->get_col( "SELECT g.id FROM {$bp->groups->table_name} g LEFT JOIN {$bp->groups->table_name_members} m ON g.id = m.group_id WHERE m.group_id IS NULL" );
 
 		// Pass a dummy array if there are no groups of this type.
 		$include = false;
@@ -177,7 +177,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 				$groups_args['group_type'] = $group_type;
 			}
 
-			if ( $this->view === 'no-members' ) {
+			if ( 'no-members' === $this->view ) {
 				add_filter( 'bp_groups_get_where_conditions', array( $this, 'bb_groups_get_where_conditions' ), 10, 2 );
 				add_filter( 'bp_after_bp_groups_group_get_parse_args', array( $this, 'bb_groups_group_get_parse_args' ), 10, 1 );
 			}
@@ -190,7 +190,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 				}
 			}
 
-			if ( $this->view === 'no-members' ) {
+			if ( 'no-members' === $this->view ) {
 				remove_filter( 'bp_after_bp_groups_group_get_parse_args', array( $this, 'buddyboss_bp_groups_group_get_parse_args' ), 10, 1 );
 				remove_filter( 'bp_groups_get_where_conditions', array( $this, 'buddyboss_bp_groups_get_where_conditions' ), 10, 2 );
 			}
