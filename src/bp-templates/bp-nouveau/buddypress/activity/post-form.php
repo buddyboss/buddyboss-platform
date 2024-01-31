@@ -20,7 +20,10 @@ if ( bp_is_user_activity() && ! bp_is_activity_tabs_active() && ! empty( $curren
 }
 
 $bp_hide_class = (
-	! bb_user_can_create_activity() ||
+	(
+		! bb_user_can_create_activity() &&
+		! bp_is_group_activity()
+	) ||
 	(
 		! empty( $current_action ) &&
 		! is_array( $current_action ) &&
