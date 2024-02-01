@@ -178,8 +178,8 @@ class BP_Groups_List_Table extends WP_List_Table {
 			}
 
 			if ( 'no-members' === $this->view ) {
-				add_filter( 'bp_groups_get_where_conditions', array( $this, 'bb_groups_get_where_conditions' ), 10, 2 );
-				add_filter( 'bp_after_bp_groups_group_get_parse_args', array( $this, 'bb_groups_group_get_parse_args' ), 10, 1 );
+				add_filter( 'bp_groups_get_where_conditions', 'bb_groups_get_where_conditions', 10, 2 );
+				add_filter( 'bp_after_bp_groups_group_get_parse_args', 'bb_groups_group_get_parse_args', 10, 1 );
 			}
 
 			$groups = array();
@@ -191,8 +191,8 @@ class BP_Groups_List_Table extends WP_List_Table {
 			}
 
 			if ( 'no-members' === $this->view ) {
-				remove_filter( 'bp_after_bp_groups_group_get_parse_args', array( $this, 'buddyboss_bp_groups_group_get_parse_args' ), 10, 1 );
-				remove_filter( 'bp_groups_get_where_conditions', array( $this, 'buddyboss_bp_groups_get_where_conditions' ), 10, 2 );
+				remove_filter( 'bp_after_bp_groups_group_get_parse_args', 'buddyboss_bp_groups_group_get_parse_args', 10, 1 );
+				remove_filter( 'bp_groups_get_where_conditions', 'buddyboss_bp_groups_get_where_conditions', 10, 2 );
 			}
 		}
 
@@ -861,41 +861,6 @@ class BP_Groups_List_Table extends WP_List_Table {
 			?>
 		</div>
 		<?php
-	}
-
-	/**
-	 * Filter groups query arguments to unset hidden param.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param array $r array of arguments.
-	 *
-	 * @return array
-	 */
-	public function bb_groups_group_get_parse_args( $r ) {
-
-		$r['show_hidden'] = false;
-
-		return $r;
-	}
-
-	/**
-	 * Filter groups query to exclude hidden query.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param array $where_conditions Where conditions SQL statement.
-	 * @param array $r                Array of parsed arguments for the get method.
-	 *
-	 * @return array
-	 */
-	public function bb_groups_get_where_conditions( $where_conditions, $r ) {
-
-		if ( isset( $where_conditions['hidden'] ) ) {
-			unset( $where_conditions['hidden'] );
-		}
-
-		return $where_conditions;
 	}
 
 }

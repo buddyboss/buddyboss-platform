@@ -395,10 +395,12 @@ class BP_Groups_Group {
 
 		// Fetch the user IDs of all the members of the group.
 		$user_ids    = BP_Groups_Member::get_group_member_ids( $this->id );
-		$user_id_str = esc_sql( implode( ',', wp_parse_id_list( $user_ids ) ) );
+		if ( ! empty( $user_ids ) ) {
+			$user_id_str = esc_sql( implode( ',', wp_parse_id_list( $user_ids ) ) );
 
-		// Modify group count usermeta for members.
-		$wpdb->query( "UPDATE {$wpdb->usermeta} SET meta_value = meta_value - 1 WHERE meta_key = 'total_group_count' AND user_id IN ( {$user_id_str} )" );
+			// Modify group count usermeta for members.
+			$wpdb->query( "UPDATE {$wpdb->usermeta} SET meta_value = meta_value - 1 WHERE meta_key = 'total_group_count' AND user_id IN ( {$user_id_str} )" );
+		}
 
 		// Now delete all group member entries.
 		BP_Groups_Member::delete_all( $this->id );
