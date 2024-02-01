@@ -207,7 +207,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				esc_html__( 'New forum discussion', 'buddyboss' ),
 				array( $this, 'bbp_format_activity_action_new_topic' ),
 				esc_html__( 'Discussions', 'buddyboss' ),
-				array( 'activity', 'member', 'member_groups', 'group' )
+				array( 'activity', 'member' )
 				
 			);
 
@@ -217,8 +217,32 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				esc_html__( 'New forum reply', 'buddyboss' ),
 				array( $this, 'bbp_format_activity_action_new_reply' ),
 				esc_html__( 'Replies', 'buddyboss' ),
-				array( 'activity', 'member', 'member_groups', 'group' )
+				array( 'activity', 'member' )
 			);
+
+			if ( bp_is_active( 'groups' ) ) {
+				global $bp;
+
+				// Sitewide activity stream items
+				bp_activity_set_action(
+					$bp->groups->id,
+					$this->topic_create,
+					esc_html__( 'New forum discussion', 'buddyboss' ),
+					array( $this, 'bbp_format_activity_action_new_topic' ),
+					esc_html__( 'Discussions', 'buddyboss' ),
+					array( 'member_groups', 'group' )
+
+				);
+
+				bp_activity_set_action(
+					$bp->groups->id,
+					$this->reply_create,
+					esc_html__( 'New forum reply', 'buddyboss' ),
+					array( $this, 'bbp_format_activity_action_new_reply' ),
+					esc_html__( 'Replies', 'buddyboss' ),
+					array( 'member_groups', 'group' )
+				);
+			}
 
 		}
 
@@ -337,6 +361,13 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			// Check if this activity stream action is directly linked
 			if ( in_array( $activity_object->type, $disabled_actions ) ) {
 				$link = $activity_object->primary_link;
+				if ( empty( $link ) ) {
+					if ( 'bbp_reply_create' == $activity_object->type ) {
+						$link = bbp_get_reply_url( $activity_object->secondary_item_id );
+					} elseif ( 'bbp_topic_create' == $activity_object->type ) {
+						$link = bbp_get_topic_permalink( $activity_object->secondary_item_id );
+					}
+				}
 			}
 
 			return $link;
