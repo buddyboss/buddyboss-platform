@@ -1915,9 +1915,9 @@ class BP_Groups_Group {
 		$ids = array();
 
 		$ids['all']     = $wpdb->get_col( "SELECT id FROM {$bp->groups->table_name}" );
-		$ids['public']  = $wpdb->get_col( "SELECT id FROM {$bp->groups->table_name} WHERE status = 'public'" );
-		$ids['private'] = $wpdb->get_col( "SELECT id FROM {$bp->groups->table_name} WHERE status = 'private'" );
-		$ids['hidden']  = $wpdb->get_col( "SELECT id FROM {$bp->groups->table_name} WHERE status = 'hidden'" );
+		$ids['public']  = $wpdb->get_col( "SELECT g.id FROM {$bp->groups->table_name} g JOIN {$bp->groups->table_name_groupmeta} gm ON g.id = gm.group_id WHERE g.status = 'public' AND gm.meta_key = 'total_member_count' AND gm.meta_value > 0" );
+		$ids['private'] = $wpdb->get_col( "SELECT g.id FROM {$bp->groups->table_name} g JOIN {$bp->groups->table_name_groupmeta} gm ON g.id = gm.group_id WHERE g.status = 'private' AND gm.meta_key = 'total_member_count' AND gm.meta_value > 0" );
+		$ids['hidden']  = $wpdb->get_col( "SELECT g.id FROM {$bp->groups->table_name} g JOIN {$bp->groups->table_name_groupmeta} gm ON g.id = gm.group_id WHERE g.status = 'hidden' AND gm.meta_key = 'total_member_count' AND gm.meta_value > 0" );
 
 		return $ids;
 	}
