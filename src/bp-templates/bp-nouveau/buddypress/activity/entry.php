@@ -94,13 +94,19 @@ if ( ! empty( $link_embed ) ) {
 
 	<?php bp_nouveau_activity_hook( 'before', 'entry_comments' ); ?>
 
-	<?php if ( bp_activity_can_comment() && ( bp_activity_get_comment_count() || ( is_user_logged_in() && bp_is_single_activity() ) ) ) : ?>
+	<?php if ( bp_activity_can_comment() ) : ?>
 
 		<div class="activity-comments">
-			
-			<?php bp_activity_comments(); ?>
 
-			<?php bp_nouveau_activity_comment_form(); ?>
+			<?php
+			 	if ( bp_activity_get_comment_count() ) { 
+					bp_activity_comments();
+				} 
+
+				if ( is_user_logged_in() ) {
+					bp_nouveau_activity_comment_form();
+				}
+			?>
 
 		</div>
 
