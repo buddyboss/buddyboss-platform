@@ -1468,6 +1468,7 @@ window.bp = window.bp || {};
 							var the_comment       = $.trim( response.data.contents );
 
 							form.addClass( 'not-initialized' );
+							form.closest( '.activity-comments' ).append( form );
 
 							if ( form.hasClass( 'acomment-edit' ) ) {
 								var form_item_id = form.attr( 'data-item-id' );
@@ -3171,14 +3172,14 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		openActivityPopup: function( activityID ) {
-			var activity_item = $( '#activity-' + activityID );
+			/*var activity_item = $( '#activity-' + activityID );
 			if ( activity_item.length ) {
 				var activity_HTML = activity_item.html();
 				$( '.activity-popup' ).html( activity_HTML );
 				$( '.activity-popup' ).find( '.activity-comments' ).children( 'ul' ).html( '' );
 				$( '.activity-popup' ).css( 'max-width', activity_item.width() );
 				$( '.activity-popup' ).addClass( 'is-detached' );
-			}
+			}*/
 		}
 
 	};

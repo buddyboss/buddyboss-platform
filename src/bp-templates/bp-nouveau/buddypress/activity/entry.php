@@ -135,7 +135,12 @@ if ( ! empty( $link_embed ) ) {
 
 	<?php if ( bp_activity_can_comment() ) : ?>
 
-		<div class="activity-comments">
+		<?php
+		$class = 'activity-comments';
+		$class .= bb_is_activity_comment_threading_enabled() ? ' threaded-comments threaded-level-' . bb_get_activity_comment_threading_depth() : '';
+		?>
+
+		<div class="<?php echo $class ?>">
 
 			<?php
 			 	if ( bp_activity_get_comment_count() ) { 

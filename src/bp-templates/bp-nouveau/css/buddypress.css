@@ -4145,7 +4145,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
   position: absolute;
   right: 0;
   top: 50%;
-  transform: translateY(calc(-50% - 11px));
+  transform: translateY(calc(-50% - 14px));
   z-index: 11;
 }
 
@@ -7185,7 +7185,7 @@ span.dashicons.dashicons-admin-file:before {
 .buddypress-wrap .activity-comments .acomment-display {
   display: inline-flex;
   position: relative;
-  padding-right: 38px;
+  padding-right: 34px;
 }
 
 .buddypress-wrap .activity-comments .acomment-meta,
