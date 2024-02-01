@@ -214,8 +214,10 @@ msgid "You"
 msgstr "Sie"
 
 #: bp-activity/bb-activity-reactions.php:716
-msgid "%s others"
-msgstr "andere"
+msgid "other"
+msgid_plural "%s others"
+msgstr[0] "andere"
+msgstr[1] "andere"
 
 #: bp-activity/bb-activity-reactions.php:730
 #: bp-activity/bp-activity-functions.php:1710
