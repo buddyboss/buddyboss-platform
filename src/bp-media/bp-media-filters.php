@@ -1244,8 +1244,8 @@ function bp_media_activity_save_gif_data( $activity ) {
 	}
 
 	if ( ! empty( $gif_data ) && ! isset( $gif_data['bp_gif_current_data'] ) ) {
-				$still = $gif_data['images']['480w_still']['url'];
-		$mp4           = $gif_data['images']['original_mp4']['mp4'];
+		$still = $gif_data['images']['480w_still']['url'];
+		$mp4   = $gif_data['images']['original_mp4']['mp4'];
 
 		bp_activity_update_meta(
 			$activity->id,
