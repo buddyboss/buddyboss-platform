@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.3.2
+Tested up to: 6.4.2
 Requires PHP: 5.6.20
-Stable tag: 2.4.71
+Stable tag: 2.5.31
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,67 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.5.31 =
+* Bug: Access controls - When restricting subscribers from posting to the Activity Feed, this has also restricted subscribers posting to the Group activity feed
+
+= 2.5.30 =
+* Bug: Core - Account settings was not updating correctly to only display notifications of components that are active instead of showing all settings options
+* Bug: Core - Activity feed options within group settings was showing even if the Activity Fee component had not been activated
+* Bug: Core - Blocking a user then disabling other BuddyBoss components except moderation lead to an infinite loading and a fatal error within the debug log
+* Bug: Core - Enabling the Network Search component while using the default Wordpress theme stopped the search page working correctly
+* Bug: Core - Removed Reactions lower icon upload limit of 200px to allow for smaller icons to be uploaded
+* Bug: Core - Updated the CRON process so that all group messages will not send all at once causing a 500 server error
+* Bug: Core - When switching languages in WordPress some words were not translated from backend to frontend due to translation path issues
+* Bug: Forums - If two discussions have the exact same name then a tag is allocated, the tag would not use the original tag but instead would create a new tag
+* Bug: Groups - Courses that were created via Elementor were not properly displaying on Social Group’s course tab
+* Bug: Groups - Group avatars were still showing even if the Show Group Avatar setting was disabled
+* Bug: Groups - If you select multiple users to send a group invite to, the Send button would allow you keep clicking it and sending multiple invites
+* Bug: Media - Creating a photo album created an infinite loading state when all other BuddyBoss Components were disabled except for Media Uploading
+* Bug: Media - Email notifications from activity post that had images did not display properly in the Gmail app for iOS devices
+* Bug: Media - Video player UI was not working correctly when switching language in TranslatePress
+* Bug: Platform - In the default WP theme 2024, if the Activity Access is restricted in the BuddyBoss platform by Profile Type, then restricting permissions would not work as the WP theme does not use Profile Types
+* Bug: Styling - Buttons from the videos and photos page were overlapping the content when viewing on mobile view or by resizing the page to a smaller view
+* Bug: The subscription icon was showing on social groups even though other components were disabled such as the forum discussion component
+
+= 2.5.20 =
+* New Feature! - Introducing reaction into the platform, where your members will now have the ability to react with different emotions to posts, comments and replies. As an added feature you will be able to customise your emotions to suite your brand.
+* Enhancement: Core - Reactions settings updated to include REST API’s
+
+= 2.5.11 =
+* Bug: Core - Changed directory layout view, switching logic, such as ‘Grid' and 'List’ for pages that utilize the the change view options so on page refresh will maintain the default settings
+
+= 2.5.10 =
+* Bug: Forums - Creating a new post when there was an existing discussion showed the previous discussion title
+* Bug: Groups - Document tab within a group would load slowly with groups with thousand or more members
+* Bug: Groups - When adding a LearnDash course to a group within the settings, previously this then would alter the groups permalink and alter the group invite settings
+* Bug: Styling - The & sign when used within a label for a Profile Type would show &AMP code on user profile and member directory
+
+= 2.5.00 =
+* New Feature! - TutorLMS settings added to BuddyBoss integration page for adding courses to groups and choosing course activity posts into group feeds depending in user interactions
+
+= 2.4.90 =
+* Enhancement: Core - Priority profile slug performance optimized
+* Bug: Activity - Link previews disappeared after editing the activity in the backend activity page
+* Bug: Core - Fatal error fix with the Presence PHP file
+* Bug: Core - Link embeds styling disappeared from the more recent versions
+* Bug: Core - Network search page was not working correctly with Block theme
+* Bug: Core - Pinned post pop up has been updated to a toast message
+* Bug: Core - Recently active, most members, newly created, and alphabetical filters are now showing up on the Group Directory page using Block theme
+* Bug: Core - When downloading folders on MacOS were showing empty
+
+= 2.4.80 =
+* Bug: Activity - Could not select any other media to upload to a new reply in the thread after previously uploading a GIF
+* Bug: Activity - When a user tried to edit a post, the Read More option was shown as part of the post
+* Bug: Core - The Last Name field did not work properly with the "Only Me" option when the "Allow members to override" setting was selected
+* Bug: Core - The search functionality and UI within our core pages are now working correctly
+* Bug: Core - When debug log was enabled in PHP 8.2 this then caused an error
+* Bug: Forums - Validation message is now working when the “Forums” setting of the Group is updated.
+* Bug: Groups - The member's single activity in Groups now shows correctly once group members leave that group
+* Bug: Media - Removing one of the added file extension on documents/videos also removed the rest of the extensions also
+* Bug: Media - The rename option within folders created under the group’s document tab has been added
+* Bug: Styling - Extra spacing added when removing URLs from posts with link preview
+* Bug: Styling - MemberPress Pro mode template pages UI breaks fixed
 
 = 2.4.71 =
 * Bug: Core - Refactored the unique identifier profile slug character length so that there are no more duplications

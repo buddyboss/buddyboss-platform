@@ -33,10 +33,12 @@ $stats = bbp_get_statistics(); ?>
 		<div class="bbp-count"><strong><?php echo esc_html( $stats['reply_count'] ); ?></strong><i class="bb-icon-l bb-icon-reply-all"></i></div>
 	</li>
 
+	<?php if ( ! empty( $stats['topic_tag_count'] ) ) : ?>
 	<li class="bbp-stats__tags">
 		<h4><?php _e( 'Discussion Tags', 'buddyboss' ); ?></h4>
 		<div class="bbp-count"><strong><?php echo esc_html( $stats['topic_tag_count'] ); ?></strong><i class="bb-icon-l bb-icon-tags"></i></div>
 	</li>
+	<?php endif; ?>
 
 	<?php if ( ! empty( $stats['empty_topic_tag_count'] ) ) : ?>
 		<li class="bbp-stats__tags-empty">

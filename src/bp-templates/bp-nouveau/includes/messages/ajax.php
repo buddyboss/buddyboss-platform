@@ -1882,7 +1882,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		}
 	}
 
-	$last_message_id           = $thread_template->thread->messages[0]->id;
+	$last_message_id           = isset( $thread_template->thread->messages[0]->id ) ? $thread_template->thread->messages[0]->id : 0;
 	$bp_get_the_thread_id      = bp_get_the_thread_id();
 	$group_name                = '';
 	$group_avatar              = '';
@@ -2630,8 +2630,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					$svg_icon              = bp_document_svg_icon( $extension, $attachment_id );
 					$svg_icon_download     = bp_document_svg_icon( 'download' );
 					$download_url          = bp_document_download_link( $attachment_id, bp_get_document_id() );
-					$filename              = basename( get_attached_file( $attachment_id ) );
-					$size                  = bp_document_size_format( filesize( get_attached_file( $attachment_id ) ) );
+					$attached_file         = get_attached_file( $attachment_id );
+					$filename              = basename( $attached_file );
+					$size                  = '';
 					$extension_description = '';
 					$url                   = wp_get_attachment_url( $attachment_id );
 					$extension_lists       = bp_document_extensions_list();
@@ -2639,6 +2640,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					$mirror_text           = bp_document_mirror_text( $attachment_id );
 					$audio_url             = '';
 					$video_url             = '';
+
+					if ( file_exists( $attached_file ) ) {
+						$size = bp_document_size_format( filesize( $attached_file ) );
+					}
 
 					if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
 						$audio_url = bp_document_get_preview_url( bp_get_document_id(), $attachment_id );

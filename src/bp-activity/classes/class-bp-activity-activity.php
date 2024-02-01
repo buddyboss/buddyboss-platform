@@ -260,11 +260,11 @@ class BP_Activity_Activity {
 		$this->item_id           = apply_filters_ref_array( 'bp_activity_item_id_before_save', array( $this->item_id, &$this ) );
 		$this->secondary_item_id = apply_filters_ref_array( 'bp_activity_secondary_item_id_before_save', array( $this->secondary_item_id, &$this ) );
 		$this->user_id           = apply_filters_ref_array( 'bp_activity_user_id_before_save', array( $this->user_id, &$this ) );
-		$this->primary_link      = apply_filters_ref_array( 'bp_activity_primary_link_before_save', array( '', &$this ) );
+		$this->primary_link      = ! empty( $this->primary_link ) ? apply_filters_ref_array( 'bp_activity_primary_link_before_save', array( '', &$this ) ) : '';
 		$this->component         = apply_filters_ref_array( 'bp_activity_component_before_save', array( $this->component, &$this ) );
 		$this->type              = apply_filters_ref_array( 'bp_activity_type_before_save', array( $this->type, &$this ) );
-		$this->action            = apply_filters_ref_array( 'bp_activity_action_before_save', array( '', &$this ) );
-		$this->content           = apply_filters_ref_array( 'bp_activity_content_before_save', array( $this->content, &$this ) );
+		$this->action            = ! empty( $this->action ) ? apply_filters_ref_array( 'bp_activity_action_before_save', array( '', &$this ) ) : '';
+		$this->content           = ! empty( $this->content ) ? apply_filters_ref_array( 'bp_activity_content_before_save', array( $this->content, &$this ) ) : '';
 		$this->date_recorded     = apply_filters_ref_array( 'bp_activity_date_recorded_before_save', array( $this->date_recorded, &$this ) );
 		$this->hide_sitewide     = apply_filters_ref_array( 'bp_activity_hide_sitewide_before_save', array( $this->hide_sitewide, &$this ) );
 		$this->mptt_left         = apply_filters_ref_array( 'bp_activity_mptt_left_before_save', array( $this->mptt_left, &$this ) );
@@ -2031,14 +2031,17 @@ class BP_Activity_Activity {
 	 * Get favorite count for a given user.
 	 *
 	 * @since BuddyPress 1.2.0
+	 * @since BuddyBoss 2.5.20 Added `$activity_type` property to indicate whether the current ID is activity or comment.
 	 *
-	 * @param int $user_id The ID of the user whose favorites you're counting.
+	 * @param int    $user_id       The ID of the user whose favorites you're counting.
+	 * @param string $activity_type Activity type.
+	 *
 	 * @return int $value A count of the user's favorites.
 	 */
-	public static function total_favorite_count( $user_id ) {
+	public static function total_favorite_count( $user_id, $activity_type = 'activity' ) {
 
 		// Get activities from user meta.
-		$favorite_activity_entries = bp_get_user_meta( $user_id, 'bp_favorite_activities', true );
+		$favorite_activity_entries = bb_activity_get_user_reacted_item_ids( $user_id, $activity_type );
 		if ( ! empty( $favorite_activity_entries ) ) {
 			return count( $favorite_activity_entries );
 		}

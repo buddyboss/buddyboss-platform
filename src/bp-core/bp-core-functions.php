@@ -2369,9 +2369,10 @@ function bp_core_load_buddypress_textdomain() {
 		array(
 			trailingslashit( WP_LANG_DIR . '/' . $domain ),
 			trailingslashit( WP_LANG_DIR ),
-			trailingslashit( BP_PLUGIN_DIR . '/languages' ),
 		)
 	);
+
+	unload_textdomain( $domain );
 
 	// Try custom locations in WP_LANG_DIR.
 	foreach ( $locations as $location ) {
@@ -2380,8 +2381,12 @@ function bp_core_load_buddypress_textdomain() {
 		}
 	}
 
-	// Default to WP and glotpress.
-	return load_plugin_textdomain( $domain );
+	$plugin_folder       = plugin_basename( BP_PLUGIN_DIR );
+	$buddyboss_lang_path = $plugin_folder . '/languages';
+	if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
+		$buddyboss_lang_path = $plugin_folder . '/src/languages';
+	}
+	return load_plugin_textdomain( $domain, false, $buddyboss_lang_path );
 }
 add_action( 'bp_core_loaded', 'bp_core_load_buddypress_textdomain' );
 
@@ -7865,6 +7870,9 @@ function bb_admin_icons( $id ) {
 		case 'bb_redirection':
 			$meta_icon = $bb_icon_bf . ' bb-icon-sign-in';
 			break;
+		case 'bp_reaction_settings_section':
+			$meta_icon = $bb_icon_bf . ' bb-icon-like';
+			break;
 		default:
 			$meta_icon = '';
 	}
@@ -9087,6 +9095,184 @@ function bb_redirect_after_action( $redirect_to, $user_id = 0, $action = 'login'
 	}
 
 	return $redirect_to;
+}
+
+/**
+ * Remove action which used in thord party class.
+ *
+ * @since BuddyBoss 2.5.00
+ *
+ * @param string $action Action name.
+ * @param string $class  Class name.
+ * @param string $method Method name.
+ */
+function bb_remove_class_action( $action, $class, $method ) {
+	global $wp_filter;
+	if ( isset( $wp_filter[ $action ] ) ) {
+		$len = strlen( $method );
+		foreach ( $wp_filter[ $action ] as $pri => $actions ) {
+			foreach ( $actions as $name => $def ) {
+				if ( substr( $name, - $len ) === $method ) {
+					if ( is_array( $def['function'] ) && ! empty( $def['function'] ) ) {
+						if ( get_class( $def['function'][0] ) === $class ) {
+							if ( is_object( $wp_filter[ $action ] ) && isset( $wp_filter[ $action ]->callbacks ) ) {
+								unset( $wp_filter[ $action ]->callbacks[ $pri ][ $name ] );
+							} else {
+								unset( $wp_filter[ $action ][ $pri ][ $name ] );
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Retrieve the current layout for BuddyBoss directories.
+ * This function retrieves the current layout for BuddyBoss directories based on the specified action.
+ * It checks whether the user is logged in, retrieves layout preferences from user meta or cookies,
+ * and provides a default layout value if no user preferences are found.
+ *
+ * @since BuddyBoss 2.5.11
+ *
+ * @param string $action The directory action for which to retrieve the layout
+ *                       (e.g. 'members', 'ld-course', 'groups').
+ *
+ * @return string The current layout format ('grid' or 'list').
+ */
+function bb_get_directory_layout_preference( $action ) {
+	if ( is_user_logged_in() ) {
+		$existing_layouts = get_user_meta( get_current_user_id(), 'bb_layout_view', true );
+	} else {
+		$existing_layouts = ! empty( $_COOKIE['bb_layout_view'] ) ? json_decode( rawurldecode( $_COOKIE['bb_layout_view'] ), true ) : array();
+	}
+	$default_value = '';
+	if ( 'members' === $action ) {
+		$default_value = bp_profile_layout_default_format( 'grid' );
+	} elseif ( 'groups' === $action ) {
+		$default_value = bp_group_layout_default_format( 'grid' );
+	} elseif ( 'ld-course' === $action ) {
+		$default_value = apply_filters( 'bb_learndash_course_layout', 'grid' );
+	}
+
+	return ! empty( $existing_layouts ) && ! empty( $existing_layouts[ $action ] ) ? $existing_layouts[ $action ] : $default_value;
+}
+
+/**
+ * Get the Reactions settings sections.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @return array
+ */
+function bb_reactions_get_settings_sections() {
+
+	$settings = array(
+		'bp_reaction_settings_section' => array(
+			'page'              => 'reaction',
+			'title'             => esc_html__( 'Reactions', 'buddyboss' ),
+			'tutorial_callback' => 'bp_admin_reaction_setting_tutorial',
+		),
+	);
+
+	return (array) apply_filters( 'bb_reactions_get_settings_sections', $settings );
+}
+
+/**
+ * Link to Reaction tutorial.
+ *
+ * @since BuddyBoss 2.5.20
+ */
+function bp_admin_reaction_setting_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 127197,
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
+ * Get reaction settings fields by section.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @param string $section_id Section ID.
+ *
+ * @return mixed False if section is invalid, array of fields otherwise.
+ */
+function bb_reactions_get_settings_fields_for_section( $section_id = '' ) {
+
+	// Bail if section is empty.
+	if ( empty( $section_id ) ) {
+		return false;
+	}
+
+	$fields = bb_reactions_get_settings_fields();
+	$retval = $fields[ $section_id ] ?? false;
+
+	return (array) apply_filters( 'bb_reactions_get_settings_fields_for_section', $retval, $section_id );
+}
+
+/**
+ * Get all of the reactions settings fields.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @return array
+ */
+function bb_reactions_get_settings_fields() {
+
+	$fields    = array();
+	$pro_class = bb_get_pro_fields_class( 'reaction' );
+
+	$reaction_btn_class = 'bb_reaction_button_row ' . $pro_class;
+	if ( function_exists( 'bb_get_reaction_mode' ) && 'emotions' !== bb_get_reaction_mode() ) {
+		$reaction_btn_class .= ' bp-hide';
+	}
+
+	$fields['bp_reaction_settings_section'] = array(
+		'bb_all_reactions' => array(
+			'title'    => esc_html__( 'Enable Reactions', 'buddyboss' ),
+			'callback' => 'bb_reactions_settings_callback_all_reactions',
+			'args'     => array(),
+		),
+
+		'bb_reaction_mode' => array(
+			'title'             => esc_html__( 'Reactions Mode', 'buddyboss' ) . bb_get_pro_label_notice( 'reaction' ),
+			'callback'          => 'bb_reactions_settings_callback_reaction_mode',
+			'sanitize_callback' => 'sanitize_text_field',
+			'args'              => array(
+				'class' => $pro_class
+			),
+		),
+
+		'bb_reaction_emotions' => array(),
+
+		'bb_reactions_button' => array(
+			'title'    => esc_html__( 'Reactions Button', 'buddyboss' ) . bb_get_pro_label_notice( 'reaction' ),
+			'callback' => 'bb_reactions_settings_callback_reactions_button',
+			'args'     => array(
+				'class' => $reaction_btn_class
+			),
+		),
+	);
+
+	return (array) apply_filters( 'bb_reactions_get_settings_fields', $fields );
 }
 
 /**

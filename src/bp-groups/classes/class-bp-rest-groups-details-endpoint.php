@@ -523,6 +523,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 			foreach ( $tabs_items as $key => $item ) {
 				$tabs[ $key ]['title']    = $item['text'];
 				$tabs[ $key ]['position'] = $item['position'];
+				$tabs[ $key ]['slug']     = $item['slug'];
 				$tabs[ $key ]['count']    = $this->get_group_tab_count( $item['slug'], $type );
 			}
 		}

@@ -535,15 +535,16 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	public function update_item( $request ) {
 		$request->set_param( 'context', 'edit' );
 
-		$is_validate = $this->validate_activity_comment_request( $request );
-		if ( is_wp_error( $is_validate ) ) {
-			return $is_validate;
-		}
-
 		// GET and SET for activity comment edit.
 		$edit_comment_id = (int) $request['comment_id'];
 		if ( 0 < $edit_comment_id ) {
 			$_POST['edit_comment'] = true;
+			$request->set_param( 'edit_comment', true );
+		}
+
+		$is_validate = $this->validate_activity_comment_request( $request );
+		if ( is_wp_error( $is_validate ) ) {
+			return $is_validate;
 		}
 
 		$args = array(
@@ -556,10 +557,34 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			'error_type'        => 'wp_error',
 		);
 
+		if ( bp_is_active( 'video' ) ) {
+			remove_action( 'bp_activity_comment_posted', 'bp_video_activity_comments_update_video_meta', 10, 3 );
+			remove_action( 'bp_activity_comment_posted_notification_skipped', 'bp_video_activity_comments_update_video_meta', 10, 3 );
+		}
+		if ( bp_is_active( 'media' ) ) {
+			remove_action( 'bp_activity_comment_posted', 'bp_media_activity_comments_update_media_meta', 10, 3 );
+			remove_action( 'bp_activity_comment_posted_notification_skipped', 'bp_media_activity_comments_update_media_meta', 10, 3 );
+		}
+		if ( bp_is_active( 'document' ) ) {
+			remove_action( 'bp_activity_comment_posted', 'bp_document_activity_comments_update_document_meta', 10, 3 );
+			remove_action( 'bp_activity_comment_posted_notification_skipped', 'bp_document_activity_comments_update_document_meta', 10, 3 );
+		}
 		remove_action( 'bp_activity_after_save', 'bp_activity_at_name_send_emails' );
 
 		$comment_id = bp_activity_new_comment( $args );
 
+		if ( bp_is_active( 'video' ) ) {
+			add_action( 'bp_activity_comment_posted', 'bp_video_activity_comments_update_video_meta', 10, 3 );
+			add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_video_activity_comments_update_video_meta', 10, 3 );
+		}
+		if ( bp_is_active( 'media' ) ) {
+			add_action( 'bp_activity_comment_posted', 'bp_media_activity_comments_update_media_meta', 10, 3 );
+			add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_media_activity_comments_update_media_meta', 10, 3 );
+		}
+		if ( bp_is_active( 'document' ) ) {
+			add_action( 'bp_activity_comment_posted', 'bp_document_activity_comments_update_document_meta', 10, 3 );
+			add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_document_activity_comments_update_document_meta', 10, 3 );
+		}
 		add_action( 'bp_activity_after_save', 'bp_activity_at_name_send_emails' );
 
 		if ( is_wp_error( $comment_id ) ) {
@@ -1025,7 +1050,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 				}
 			}
 
-			if ( ! empty( $request['media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
+			if ( empty( $request['edit_comment'] ) && ! empty( $request['media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
 				$can_send_gif = bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' );
 				if ( ! $can_send_gif ) {
 					$is_validate = new WP_Error(

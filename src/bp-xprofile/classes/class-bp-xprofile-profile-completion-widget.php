@@ -49,8 +49,8 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		}
 
 		/* Widget VARS */
-		$profile_groups_selected        = $instance['profile_groups_enabled'];
-		$this->widget_id                = $args['widget_id'];
+		$profile_groups_selected        = ! empty( $instance['profile_groups_enabled'] ) ? $instance['profile_groups_enabled'] : array();
+		$this->widget_id                = ! empty( $args['widget_id'] ) ? $args['widget_id'] : '';
 		$profile_phototype_selected     = ! empty( $instance['profile_photos_enabled'] ) ? $instance['profile_photos_enabled'] : array();
 		$profile_hide_widget_selected   = ! empty( $instance['profile_hide_widget'] ) ? $instance['profile_hide_widget'] : array();
 		$settings                       = array();

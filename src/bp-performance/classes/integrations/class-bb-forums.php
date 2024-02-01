@@ -92,6 +92,9 @@ class BB_Forums extends Integration_Abstract {
 			'groups_cover_image_uploaded'                        => 1, // When forum Group cover photo uploaded form Manage.
 			'groups_cover_image_deleted'                         => 1, // When forum Group cover photo deleted form Manage.
 
+			'bb_subscriptions_after_save'                        => 1,  // Create subscription.
+			'bb_subscriptions_before_delete_subscription'        => 1,  // Delete subscription.
+
 			// Added moderation support.
 			'bp_suspend_groups_suspended'                        => 1, // Any Group Suspended.
 			'bp_suspend_groups_unsuspended'                      => 1, // Any Group Unsuspended.
@@ -395,6 +398,37 @@ class BB_Forums extends Integration_Abstract {
 			foreach ( $forum_ids as $forum_id ) {
 				$this->purge_item_cache_by_item_id( $forum_id );
 			}
+		}
+	}
+
+	/**
+	 * When forum has been subscribed.
+	 *
+	 * @param BB_Subscriptions $subscription Subscription object.
+	 */
+	public function event_bb_subscriptions_after_save( $subscription ) {
+		if (
+			! empty( $subscription->type ) &&
+			! empty( $subscription->item_id ) &&
+			$subscription->type == 'forum'
+		) {
+			$this->purge_item_cache_by_item_id( $subscription->item_id );
+		}
+	}
+
+	/**
+	 * When forum subscription has been removed.
+	 *
+	 * @param int $subscription_id  Subscription id.
+	 */
+	public function event_bb_subscriptions_before_delete_subscription( $subscription_id ) {
+		$subscription = bb_subscriptions_get_subscription( $subscription_id );
+		if (
+			! empty( $subscription->type ) &&
+			! empty( $subscription->item_id ) &&
+			$subscription->type == 'forum'
+		) {
+			$this->purge_item_cache_by_item_id( $subscription->item_id );
 		}
 	}
 

@@ -2279,6 +2279,12 @@ function bp_core_map_user_registration( $user_id, $by_pass = false ) {
 
 		bp_xprofile_update_display_name( $user_id );
 	}
+
+	// Generate user profile slug on user registration.
+	$username = bb_core_get_user_slug( $user_id );
+	if ( empty( $username ) ) {
+		bb_set_user_profile_slug( $user_id );
+	}
 }
 add_action( 'user_register', 'bp_core_map_user_registration' );
 
@@ -3541,12 +3547,14 @@ function bp_register_active_member_types() {
 		foreach ( $member_type_ids as $member_type_id ) {
 			$key = bp_get_member_type_key( $member_type_id );
 
+			$label_name    = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
+			$singular_name = get_post_meta( $member_type_id, '_bp_member_type_label_singular_name', true );
 			bp_register_member_type(
 				$key,
 				array(
 					'labels'        => array(
-						'name'          => get_post_meta( $member_type_id, '_bp_member_type_label_name', true ),
-						'singular_name' => get_post_meta( $member_type_id, '_bp_member_type_label_singular_name', true ),
+						'name'          => ! empty( $label_name ) ? wp_specialchars_decode( $label_name ) : '',
+						'singular_name' => ! empty( $singular_name ) ? wp_specialchars_decode( $singular_name ) : '',
 					),
 					'has_directory' => true,
 				)
@@ -5177,7 +5185,7 @@ function bb_members_get_user_mentionname( $user_id ) {
  *
  * @since BuddyBoss 2.0.0
  *
- * @param $type Type of the member
+ * @param string $type Type of the member
  *
  * @return array Return array of label color data
  */
@@ -5357,7 +5365,6 @@ function bb_get_user_by_profile_slug( $profile_slug ) {
 
 	if ( ! isset( $cache[ $cache_key ] ) ) {
 		global $wpdb;
-		$bp_prefix = bp_core_get_table_prefix();
 
 		// Backward compatible to check 40 characters long unique slug or new slug as well.
 		$user_query = $wpdb->prepare(
@@ -5478,9 +5485,20 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
 		// removed old user meta which have value length 40.
 		$wpdb->query( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE 'bb_profile_slug' AND user_id = {$user_id} AND LENGTH(meta_value) = 40" );
 
+		// Remove duplicate log slug with same value.
+		$wpdb->query( "DELETE um1 FROM {$wpdb->usermeta} um1, {$wpdb->usermeta} um2 WHERE um1.umeta_id > um2.umeta_id AND um1.meta_key = um2.meta_key AND um1.meta_key LIKE 'bb_profile_long_slug_%' AND LENGTH(um1.meta_key) >= 61 AND um1.user_id = {$user_id}" );
+
 		// fetch user slug if already exists.
 		$p_slug = bb_core_get_user_slug( $user_id );
 		if ( ! empty( $p_slug ) && strlen( $p_slug ) <= 12 ) {
+
+			// Remove duplicate meta with same value.
+			delete_user_meta( $user_id, 'bb_profile_slug', $p_slug );
+			update_user_meta( $user_id, 'bb_profile_slug', $p_slug );
+
+			// Remove duplicate meta with same value.
+			delete_user_meta( $user_id, 'bb_profile_slug_' . $p_slug, $user_id );
+			update_user_meta( $user_id, 'bb_profile_slug_' . $p_slug, $user_id );
 
 			bb_remove_orphaned_profile_slug( $user_id );
 
@@ -5592,14 +5610,29 @@ function bb_generate_user_random_profile_slugs( $max_ids = 1, $prefix = '' ) {
  */
 function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 ) {
 	global $wpdb;
-	$bp_prefix = bp_core_get_table_prefix();
+
+	if ( empty( $unique_identifier ) ) {
+		return $unique_identifier;
+	}
 
 	if ( is_array( $unique_identifier ) ) {
+		$unique_identifier = array_filter( $unique_identifier );
+		if ( empty( $unique_identifier ) ) {
+			return $unique_identifier;
+		}
+		$prefixed_array = array_map( function ( $item ) {
+			return 'bb_profile_slug_' . $item;
+		}, $unique_identifier );
+
+		$profile_keys = '"' . implode( '","', $prefixed_array ) . '"';
 		$unique_identifier = '"' . implode( '","', $unique_identifier ) . '"';
+	} else {
+		$profile_keys      = '"bb_profile_slug_' . $unique_identifier . '"';
+		$unique_identifier = '"' . $unique_identifier . '"';
 	}
 
 	// Prepare the statement to check unique identifier.
-	$prepare_user_query = "SELECT DISTINCT u.user_nicename, u.user_login FROM `{$wpdb->users}` AS u WHERE ( u.user_login IN ({$unique_identifier}) OR u.user_nicename IN ({$unique_identifier}) )";
+	$prepare_user_query = "SELECT u.user_nicename, u.user_login FROM `{$wpdb->users}` AS u WHERE ( u.user_login IN ({$unique_identifier}) OR u.user_nicename IN ({$unique_identifier}) )";
 
 	// Exclude the user to check unique identifier.
 	if ( ! empty( $user_id ) ) {
@@ -5614,16 +5647,13 @@ function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 )
 
 	$matched_uuids = array();
 	if ( ! empty( $user_val ) ) {
+		$user_val      = array_unique( $user_val );
 		$matched_uuids = array_column( $user_val, 'user_nicename' );
 		$matched_uuids = array_merge( $matched_uuids, array_column( $user_val, 'user_login' ) );
 	}
 
 	// Prepare the statement to check unique identifier.
-	$prepare_meta_query = $wpdb->prepare(
-		"SELECT DISTINCT um.meta_value FROM `{$wpdb->usermeta}` AS um WHERE ( um.meta_key = %s AND um.meta_value IN ({$unique_identifier}) ) OR ( um.meta_key = %s AND um.meta_value IN ({$unique_identifier}) )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		'bb_profile_slug',
-		'nickname'
-	);
+	$prepare_meta_query = "SELECT REPLACE( um.meta_key, 'bb_profile_slug_', '' ) as value FROM `{$wpdb->usermeta}` AS um WHERE ( um.meta_key IN ({$profile_keys}) )";
 
 	// Exclude the user to check unique identifier.
 	if ( ! empty( $user_id ) ) {
@@ -5634,10 +5664,10 @@ function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 )
 	}
 
 	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-	$meta_val = $wpdb->get_results( $prepare_meta_query );
+	$meta_val = $wpdb->get_col( $prepare_meta_query );
 
 	if ( ! empty( $meta_val ) ) {
-		$matched_uuids = array_merge( $matched_uuids, array_column( $meta_val, 'meta_value' ) );
+		$matched_uuids = array_merge( $matched_uuids, $meta_val );
 	}
 
 	return array_filter( array_unique( $matched_uuids ) );
@@ -5689,8 +5719,6 @@ function bb_remove_orphaned_profile_slug( $user_id ) {
 	if ( empty( $p_slug ) || empty( $user_id ) ) {
 		return;
 	}
-
-	update_user_meta( $user_id, 'bb_profile_slug_' . $p_slug , $user_id );
 
 	$condition[] = $wpdb->prepare( "( meta_key LIKE 'bb_profile_slug_%' AND meta_key != %s )", "bb_profile_slug_{$p_slug}" );
 	$condition[] = "( meta_key LIKE 'bb_profile_long_slug_%' AND LENGTH(meta_key) < 61 )";

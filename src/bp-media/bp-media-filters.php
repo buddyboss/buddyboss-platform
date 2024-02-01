@@ -252,7 +252,7 @@ function bp_media_activity_append_media( $content, $activity ) {
 				$args['album_id'] = 'existing-media';
 			}
 		} else {
-			$args['privacy'] = bp_media_query_privacy( $activity->user_id, $group_id, $activity->component );
+			$args['privacy'] = bp_media_query_privacy( $activity->user_id, 0, $activity->component );
 
 			if ( 'activity_comment' === $activity->type ) {
 				$args['privacy'][] = 'comment';

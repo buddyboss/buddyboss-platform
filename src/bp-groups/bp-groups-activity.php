@@ -334,7 +334,7 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 		array(
 			'fields'      => 'ids',
 			'per_page'    => - 1,
-			'user_id'     => $user_id,
+			'user_id'     => bp_loggedin_user_id(),
 			'show_hidden' => true,
 		)
 	);

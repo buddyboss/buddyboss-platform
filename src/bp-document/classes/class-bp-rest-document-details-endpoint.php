@@ -158,6 +158,7 @@ class BP_REST_Document_Details_Endpoint extends WP_REST_Controller {
 
 				$tabs[ $key ]['title']    = $item['text'];
 				$tabs[ $key ]['position'] = $item['position'];
+				$tabs[ $key ]['slug']     = $item['slug'];
 			}
 		}
 

@@ -76,6 +76,8 @@ class BB_Groups extends Integration_Abstract {
 			'added_group_meta'                                   => 2,  // When Group added update. This needed for sorting by group last activity, member course.
 			'updated_group_meta'                                 => 2,  // When Group meta update. This needed for sorting by group last activity, member course.
 			'delete_group_meta'                                  => 2,  // When Group meta deleted. This needed for sorting by group last activity, member course.
+			'bb_subscriptions_after_save'                        => 1,  // Create subscription.
+			'bb_subscriptions_before_delete_subscription'        => 1,  // Delete subscription.
 
 			// Added moderation support.
 			'bp_suspend_groups_suspended'                        => 1, // Any Group Suspended.
@@ -362,6 +364,39 @@ class BB_Groups extends Integration_Abstract {
 	public function event_delete_group_meta( $meta_id, $group_id ) {
 		$this->purge_item_cache_by_item_id( $group_id );
 	}
+
+	/**
+	 * When Group has been subscribed.
+	 *
+	 * @param BB_Subscriptions $subscription Subscription object.
+	 */
+	public function event_bb_subscriptions_after_save( $subscription ) {
+		if (
+			! empty( $subscription->type ) &&
+			! empty( $subscription->item_id ) &&
+			$subscription->type == 'group'
+		) {
+			$this->purge_item_cache_by_item_id( $subscription->item_id );
+		}
+	}
+
+	/**
+	 * When Group subscription has been removed.
+	 *
+	 * @param int $subscription_id  Subscription id.
+	 */
+	public function event_bb_subscriptions_before_delete_subscription( $subscription_id ) {
+		$subscription = bb_subscriptions_get_subscription( $subscription_id );
+		if (
+			! empty( $subscription->type ) &&
+			! empty( $subscription->item_id ) &&
+			$subscription->type == 'group'
+		) {
+			$this->purge_item_cache_by_item_id( $subscription->item_id );
+		}
+	}
+
+
 
 	/******************************* Moderation Support ******************************/
 	/**

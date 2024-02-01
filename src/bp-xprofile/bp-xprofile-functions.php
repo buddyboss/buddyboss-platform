@@ -1451,7 +1451,14 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 	foreach ( (array) $default_visibility_levels as $d_field_id => $defaults ) {
 		// If the admin has forbidden custom visibility levels for this field, replace
 		// the user-provided setting with the default specified by the admin.
-		if ( isset( $defaults['allow_custom'] ) && isset( $defaults['default'] ) && 'disabled' == $defaults['allow_custom'] ) {
+		if (
+			isset( $defaults['allow_custom'] ) &&
+			isset( $defaults['default'] ) &&
+			(
+				empty( $user_visibility_levels[ $d_field_id ] ) ||
+				'disabled' === $defaults['allow_custom']
+			)
+		) {
 			$user_visibility_levels[ $d_field_id ] = $defaults['default'];
 		}
 	}
@@ -1722,7 +1729,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 		$social_settings_field   = xprofile_get_field( $social_networks_id, $user_id );
 		$social_settings_options = $social_settings_field->get_children();
 
-		if ( 
+		if (
 			isset( $original_option_values ) &&
 			! empty( $original_option_values ) &&
 			is_array( $original_option_values ) &&
@@ -2156,7 +2163,7 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 				$profile_url = get_avatar_url( $user_id, array( 'default' => '404' ) );
 
 				$headers = get_headers( $profile_url, 1 );
-				if ( $headers[0] === 'HTTP/1.1 200 OK' && isset( $headers['Link'] ) ) {
+				if ( ( ! empty( $headers ) ) && $headers[0] === 'HTTP/1.1 200 OK' && isset( $headers['Link'] ) ) {
 					$is_profile_photo_uploaded = 1;
 					++ $grand_completed_fields;
 				}
