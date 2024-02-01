@@ -2369,9 +2369,10 @@ function bp_core_load_buddypress_textdomain() {
 		array(
 			trailingslashit( WP_LANG_DIR . '/' . $domain ),
 			trailingslashit( WP_LANG_DIR ),
-			trailingslashit( BP_PLUGIN_DIR . '/languages' ),
 		)
 	);
+
+	unload_textdomain( $domain );
 
 	// Try custom locations in WP_LANG_DIR.
 	foreach ( $locations as $location ) {
@@ -2380,8 +2381,12 @@ function bp_core_load_buddypress_textdomain() {
 		}
 	}
 
-	// Default to WP and glotpress.
-	return load_plugin_textdomain( $domain );
+	$plugin_folder       = plugin_basename( BP_PLUGIN_DIR );
+	$buddyboss_lang_path = $plugin_folder . '/languages';
+	if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
+		$buddyboss_lang_path = $plugin_folder . '/src/languages';
+	}
+	return load_plugin_textdomain( $domain, false, $buddyboss_lang_path );
 }
 add_action( 'bp_core_loaded', 'bp_core_load_buddypress_textdomain' );
 
