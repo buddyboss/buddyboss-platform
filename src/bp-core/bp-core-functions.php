@@ -9274,3 +9274,116 @@ function bb_reactions_get_settings_fields() {
 
 	return (array) apply_filters( 'bb_reactions_get_settings_fields', $fields );
 }
+
+/**
+ * Link to General Performance tutorial.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_performance_general_setting_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 127197,
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
+ * Link to Activity Performance tutorial.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_performance_activity_setting_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 127197,
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
+ * Function to render the fields in a general section of the performance tab.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_performance_setting_general_callback() {
+	$bb_ajax_request_page_load = bb_get_ajax_request_page_load();
+	?>
+
+	<label for="bb_performance_general_page_load_request"><?php esc_html_e( 'Load', 'buddyboss' ); ?></label>
+	<select name="bb_performance_general_page_load_request" id="bb_performance_general_page_load_request">
+		<option value="1" <?php selected( $bb_ajax_request_page_load, 1 ); ?>>1</option>
+		<option value="2" <?php selected( $bb_ajax_request_page_load, 2 ); ?>>2</option>
+	</select>
+	<label for="bb_performance_general_page_load_request"><?php esc_html_e( 'page requests on page load', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'Select how many requests will be sent on page load. We recommend 1 request for high performing servers, and 2 for slower performing environments, or those who see conflicts with third party plugins.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Function to render the fields in a activity section of the performance tab.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_performance_setting_activity_callback() {
+	$bb_load_activity_per_request = bb_get_load_activity_per_request();
+
+	$load_per_page_activities_options = array(
+		'5'  => '5',
+		'10' => '10',
+		'15' => '15',
+		'20' => '20',
+	);
+	$activity_autoload_options        = array(
+		'infinite'  => __( 'Infinite scrolling', 'buddyboss' ),
+		'load_more' => __( 'Load more', 'buddyboss' ),
+	);
+	?>
+
+	<label for="bb_load_activity_per_request"><?php esc_html_e( 'Load', 'buddyboss' ); ?></label>
+	<select name="bb_load_activity_per_request" id="bb_load_activity_per_request">
+		<?php
+		foreach ( $load_per_page_activities_options as $load_val ) {
+			echo '<option value="' . esc_attr( $load_val ) . '" ' . selected( $bb_load_activity_per_request, $load_val, false ) . '>' . esc_html( $load_val ) . '</option>';
+		}
+		?>
+	</select>
+	<label for="_bp_enable_activity_autoload"><?php esc_html_e( 'activity posts at a time using', 'buddyboss' ); ?></label>
+	<select name="_bp_enable_activity_autoload" id="_bp_enable_activity_autoload">
+		<?php
+		foreach ( $activity_autoload_options as $load_val => $load_label ) {
+			echo '<option value="' . esc_attr( $load_val ) . '" ' . selected( $bb_load_activity_per_request, $load_val, false ) . '>' . esc_html( $load_label ) . '</option>';
+		}
+		?>
+	</select>
+	<p class="description"><?php esc_html_e( 'Use infinite scrolling to automatically load new posts while scrolling down feeds. Increasing the number of posts retrieved in each request may negatively impact page loading speeds.', 'buddyboss' ); ?></p>
+	<?php
+}

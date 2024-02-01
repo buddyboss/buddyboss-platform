@@ -2711,3 +2711,30 @@ function bb_active_reactions() {
 
 	return ( ! empty( $all_emotions ) ? array_column( $all_emotions, null, 'id' ) : array() );
 }
+
+
+/**
+ * Get Page requests option.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $default when option not found, function will return $default value.
+ *
+ * @return mixed|void
+ */
+function bb_get_ajax_request_page_load( $default = 1 ) {
+	return apply_filters( 'bb_get_bb_ajax_request_page_load', bp_get_option( 'bb_ajax_request_page_load', $default ) );
+}
+
+/**
+ * Get an Activity loading option.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $default when option not found, function will return $default value.
+ *
+ * @return mixed|void
+ */
+function bb_get_load_activity_per_request( $default = 10 ) {
+	return apply_filters( 'bb_get_load_activity_per_request', bp_get_option( 'bb_load_activity_per_request', $default ) );
+}
