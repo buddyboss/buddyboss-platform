@@ -39,29 +39,68 @@ if ( ! empty( $link_embed ) ) {
 		</span>
 	</div>
 
-	<?php if ( 'groups' === $activities_template->activity->component ) : ?>
+	<?php
+			global $activities_template;
 
-		<div class="bp-activity-head-group">
-			<div class="activity-group-avatar">
-				<div class="group-avatar">
-					<!-- Group avatar -->
+			if ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() ) :
+
+				// If group activity.
+				$group_id   = (int) $activities_template->activity->item_id;
+				$group      = groups_get_group( $group_id );
+				$group_name = bp_get_group_name( $group );
+				$userlink   = bp_get_activity_user_link();
+			?>
+			<div class="bp-activity-head-group">
+				<div class="activity-group-avatar">
+					<div class="group-avatar">
+						<a class="group-avatar-wrap mobile-center" href="<?php echo bp_get_group_permalink( $group ); ?>">
+							<?php
+								echo bp_core_fetch_avatar(
+									array(
+										'item_id' => $group->id,
+										'avatar_dir' => 'group-avatars',
+										'type' => 'thumb',
+										'object' => 'group',
+										'width' => 100,
+										'height' => 100,
+									)
+								);
+							?>
+						</a>
+					</div>
+					<div class="author-avatar">
+						<a href="<?php echo $userlink; ?>"><?php bp_activity_avatar( array( 'type' => 'thumb' ) ); ?></a>
+					</div>
 				</div>
-				<div class="author-avatar">
-					<!-- User avatar -->
+
+				<div class="activity-header activity-header--group">
+					<div class="activity-group-heading"><a href="<?php echo bp_get_group_permalink( $group ); ?>"><?php echo $group_name; ?></a></div>
+					<div class="activity-group-post-meta">
+						<span class="activity-post-author">
+							<a href="<?php echo $userlink; ?>">
+								<?php echo bp_core_get_user_displayname( $activities_template->activity->user_id ); ?>
+							</a>
+						</span>
+						<?php
+						printf(
+							'<span class="time-since" data-livestamp="%1$s">%2$s</span>',
+							bp_core_get_iso8601_date( bp_get_activity_date_recorded() ),
+							bp_core_time_since( bp_get_activity_date_recorded() )
+						);
+						?>
+						<?php
+						if ( function_exists( 'bp_nouveau_activity_is_edited' ) ) {
+							bp_nouveau_activity_is_edited();
+						}
+						if ( function_exists( 'bp_nouveau_activity_privacy' ) ) {
+							bp_nouveau_activity_privacy();
+						}
+						?>
+					</div>
 				</div>
 			</div>
 
-			<div class="activity-header activity-header--group">
-				<div class="activity-group-heading"><a href="#">Group title</a></div>
-				<div class="activity-group-post-meta">
-					<span class="activity-post-author"><a href="#">Activity post author</a></span>
-					<span class="time-since"><a href="#">1 day ago</a></span>
-					<span class="privacy selected public"></span>
-				</div>
-			</div>
-		</div>
-		
-	<?php else : ?>
+		<?php else : ?>
 
 		<div class="activity-avatar item-avatar">
 			<a href="<?php bp_activity_user_link(); ?>"><?php bp_activity_avatar( array( 'type' => 'full' ) ); ?></a>
