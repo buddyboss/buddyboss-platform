@@ -16,7 +16,7 @@ bp_nouveau_member_hook( 'before', 'activity_content' );
 
 <div id="activity-stream" class="activity single-user" data-bp-list="activity">
 	<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'member-activity-loading' ); ?></div>
-	<ul  class="<?php bp_nouveau_loop_classes(); ?>" ></ul>
+	<ul class="<?php bp_nouveau_loop_classes(); ?>"></ul>
 </div><!-- .activity -->
 
 <?php
