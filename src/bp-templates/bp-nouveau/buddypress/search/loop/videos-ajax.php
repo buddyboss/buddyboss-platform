@@ -50,7 +50,7 @@ $video_visibility = bp_get_video_visibility();
 					<div class="media-album_details__bottom">
 						<span class="media-album_author"><?php esc_html_e( 'By ', 'buddyboss' ); ?>
 							<a href="<?php echo esc_url( $video_link ); ?>">
-								<?php esc_html( bp_get_video_author() ); ?>
+								<?php echo esc_html( bp_get_video_author() ); ?>
 							</a>
 						</span>
 						<span class="middot">&middot;</span>
