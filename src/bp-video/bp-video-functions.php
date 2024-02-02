@@ -4517,6 +4517,12 @@ function bb_video_get_activity_video( $activity = '', $args = array() ) {
 		$video_args['user_id'] = $args['user_id'];
 	}
 
+	$video_args = bp_parse_args(
+		$args,
+		$video_args,
+		'activity_video'
+	);
+
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
 		if ( bp_is_group_video_support_enabled() ) {
 			$video_args['privacy'] = array( 'grouponly' );
