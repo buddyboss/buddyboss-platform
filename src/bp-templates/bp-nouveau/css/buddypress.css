@@ -4506,6 +4506,126 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
   left: -60px;
 }
 
+/* Activity comment modal ==> Starts Here */
+.activity-list .activity-item #bp-ajax-loader {
+  display: none;
+}
+
+.activity-list .activity-item.pop.loading .activity-comments > ul {
+  display: none;
+}
+
+.activity-list .activity-item.pop.loading #bp-ajax-loader {
+  display: block;
+}
+
+.activity-list .activity-item.pop {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 700px;
+  max-height: 85vh;
+  z-index: 9999;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.activity-list .activity-item.pop .activity-comments > ul {
+  display: block;
+}
+
+.activity-list .activity-item.pop .bb-activity-placeholder {
+  border: 0;
+}
+
+.activity-list .activity-item.pop .show-all {
+  display: none;
+}
+
+#buddypress .activity-list.bp-list .activity-item.pop {
+  padding-top: 0;
+}
+
+.activity-comments-modal-open {
+  overflow: hidden;
+}
+
+.activity-comments-modal-open::before {
+  content: "";
+  display: block;
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(250, 251, 253, 0.9);
+}
+
+.activity-item.pop .bb-model-activity-header {
+  display: flex;
+}
+
+.bb-model-activity-header {
+  display: none;
+  align-items: center;
+  position: sticky;
+  z-index: 99;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  border-bottom: 1px solid #eee;
+  background-color: #fff;
+  margin-bottom: 20px;
+}
+
+.bb-model-activity-header h2 {
+  line-height: 1;
+  margin: 0;
+}
+
+body.buddypress .buddypress-wrap .bb-model-activity-header h2 {
+  margin: 0;
+}
+
+.bb-model-activity-header .bb-close-action-popup {
+  margin-left: auto;
+}
+
+.modal-activity-container {
+  max-height: 80vh;
+}
+
+.modal-activity-container.modal-container {
+  padding-bottom: 0;
+}
+
+.modal-activity-container .bb-model-header {
+  z-index: 9;
+}
+
+.modal-activity-container .bb-action-popup-content.activity {
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin: 0 -30px;
+}
+
+.modal-activity-container .bb-activity-placeholder {
+  border: 0;
+}
+
+#buddypress .modal-activity-container .activity-list.bp-list {
+  margin-bottom: 0;
+}
+
+#buddypress .modal-activity-container .activity-list.bp-list .activity-item {
+  border: 0;
+  margin-bottom: 0;
+}
+
+/* Activity comment modal ==> Ends Here */
 .bb-is-mobile.bb-reactions-mode .bp-generic-meta .generic-button a,
 .bb-is-mobile.bb-reactions-mode .bp-generic-meta .generic-button a img,
 .bb-is-mobile.bb-reactions-mode .bp-generic-meta .ac-emotions_list .ac-emotion_item a > *,
