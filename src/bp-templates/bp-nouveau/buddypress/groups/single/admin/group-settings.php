@@ -28,10 +28,7 @@ if ( bp_is_group_create() ) : ?>
 
 		<div class="bp-radio-wrap">
 			<input type="radio" name="group-status" id="group-status-public" class="bs-styled-radio" value="public"
-			<?php
-			if ( 'public' === $bp_get_new_group_status || ! $bp_get_new_group_status ) {
-				?>
-				checked="checked"<?php } ?> aria-describedby="public-group-description" />
+				<?php echo ( 'public' === $bp_get_new_group_status || ! $bp_get_new_group_status ) ? ' checked="checked"' : ''; ?> aria-describedby="public-group-description" />
 			<label for="group-status-public"><?php esc_html_e( 'This is a public group', 'buddyboss' ); ?></label>
 		</div>
 
@@ -43,10 +40,7 @@ if ( bp_is_group_create() ) : ?>
 
 		<div class="bp-radio-wrap">
 			<input type="radio" name="group-status" id="group-status-private" class="bs-styled-radio" value="private"
-			<?php
-			if ( 'private' === $bp_get_new_group_status ) {
-				?>
-				checked="checked"<?php } ?> aria-describedby="private-group-description" />
+				<?php echo( 'private' === $bp_get_new_group_status ? ' checked="checked"' : '' ); ?> aria-describedby="private-group-description" />
 			<label for="group-status-private"><?php esc_html_e( 'This is a private group', 'buddyboss' ); ?></label>
 		</div>
 
@@ -58,10 +52,7 @@ if ( bp_is_group_create() ) : ?>
 
 		<div class="bp-radio-wrap">
 			<input type="radio" name="group-status" id="group-status-hidden" class="bs-styled-radio" value="hidden"
-			<?php
-			if ( 'hidden' === $bp_get_new_group_status ) {
-				?>
-				checked="checked"<?php } ?> aria-describedby="hidden-group-description" />
+				<?php echo( 'hidden' === $bp_get_new_group_status ? 'checked="checked"' : '' ); ?> aria-describedby="hidden-group-description" />
 			<label for="group-status-hidden"><?php esc_html_e( 'This is a hidden group', 'buddyboss' ); ?></label>
 		</div>
 
