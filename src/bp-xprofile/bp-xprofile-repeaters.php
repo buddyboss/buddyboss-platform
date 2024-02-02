@@ -376,7 +376,7 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $current_
 		$db_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE id = %d", $field_id ) );
 
 		// Added in cache.
-		wp_cache_add( $field_id, $db_row, 'bp_xprofile_fields' );
+		wp_cache_set( $field_id, $db_row, 'bp_xprofile_fields' );
 	}
 
 	if ( ! empty( $db_row ) && ! is_wp_error( $db_row ) ) {
@@ -494,7 +494,7 @@ function xprofile_update_clones_on_template_update( $field ) {
 		$db_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE id = %d", $field->id ) );
 
 		// Added in cache.
-		wp_cache_add( $field->id, $db_row, 'bp_xprofile_fields' );
+		wp_cache_set( $field->id, $db_row, 'bp_xprofile_fields' );
 	}
 
 	if ( ! empty( $db_row ) && ! is_wp_error( $db_row ) ) {
