@@ -2994,7 +2994,7 @@ function bp_media_get_activity_media( $activity_id ) {
 			return;
 		}
 
-		$media_content = bb_media_get_activity_media( $activity_id );
+		$media_content = bb_media_get_activity_media( $activity_id, array( 'user_id' => false ) );
 		if ( empty( $media_content ) ) {
 			return;
 		}
@@ -4070,6 +4070,7 @@ function bb_media_get_activity_media( $activity = '', $args = array() ) {
 		return false;
 	}
 
+	// Media based on group setting for forum.
 	if (
 		(
 			buddypress()->activity->id === $activity->component &&
@@ -4091,12 +4092,15 @@ function bb_media_get_activity_media( $activity = '', $args = array() ) {
 		'per_page' => 0,
 	);
 
-	if ( isset( $args['user_id'] ) ) {
-		$media_args['user_id'] = $args['user_id'];
-	}
+	$media_args = bp_parse_args(
+		$args,
+		$media_args,
+		'activity_media'
+	);
 
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
 		if ( bp_is_group_media_support_enabled() ) {
+			$media_args['privacy'] = array( 'grouponly' );
 			if ( ! bp_is_group_albums_support_enabled() ) {
 				$media_args['album_id'] = 'existing-media';
 			}

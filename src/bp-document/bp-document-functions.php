@@ -5098,7 +5098,7 @@ function bb_document_migration() {
  *
  * @return string|bool
  */
-function bb_document_get_activity_document( $activity = '' ) {
+function bb_document_get_activity_document( $activity = '', $args = array() ) {
 	if ( empty( $activity ) ) {
 		global $activities_template;
 		$activity = $activities_template->activity ?? '';
@@ -5116,6 +5116,7 @@ function bb_document_get_activity_document( $activity = '' ) {
 		return false;
 	}
 
+	// Documents based on group setting for forum.
 	if (
 		(
 			buddypress()->activity->id === $activity->component &&
@@ -5140,22 +5141,29 @@ function bb_document_get_activity_document( $activity = '' ) {
 		return false;
 	}
 
-	$args = array(
+	$document_args = array(
 		'include'  => $document_ids,
 		'order_by' => 'menu_order',
 		'sort'     => 'ASC',
 		'per_page' => 0,
 	);
 
+	// Update privacy for the group and comments.
 	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_document_support_enabled() ) {
-		$args['privacy'] = array( 'grouponly' );
+		$document_args['privacy'] = array( 'grouponly' );
 		if ( 'activity_comment' === $activity->type ) {
-			$args['privacy'][] = 'comment';
+			$document_args['privacy'][] = 'comment';
 		}
 	}
 
+	$document_args = bp_parse_args(
+		$args,
+		$document_args,
+		'activity_document'
+	);
+
 	$content = '';
-	if ( bp_has_document( $args ) ) {
+	if ( bp_has_document( $document_args ) ) {
 		ob_start();
 		?>
 		<div class="bb-activity-media-wrap bb-media-length-1 ">
