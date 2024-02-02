@@ -1240,6 +1240,8 @@ window.bp = window.bp || {};
 
 				// change the aria state from false to true.
 				target.attr( 'aria-expanded', 'true' );
+				target.closest( '.activity-comments' ).find( '.acomment-display' ).removeClass('display-focus');
+				target.closest( '.acomment-display' ).addClass('display-focus');
 
 				var peak_offset = ( $( window ).height() / 2 - 75 );
 
