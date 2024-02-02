@@ -1178,6 +1178,7 @@ window.bp = window.bp || {};
 					if ( item_id === activity_id ) {
 						$activity_comments.append( form );
 						form.addClass( 'root' );
+						$activity_comments.find( '.acomment-display' ).removeClass('display-focus');
 
 						// It's a comment we're replying to.
 					} else {
@@ -1468,6 +1469,8 @@ window.bp = window.bp || {};
 						} else {
 							var activity_comments = form.parent();
 							var the_comment       = $.trim( response.data.contents );
+
+							activity_comments.find( '.acomment-display' ).removeClass('display-focus');
 
 							form.addClass( 'not-initialized' );
 							form.closest( '.activity-comments' ).append( form );
