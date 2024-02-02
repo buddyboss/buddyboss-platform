@@ -4511,6 +4511,10 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
   display: none;
 }
 
+.activity-list .activity-item .bp-hidden {
+  display: none;
+}
+
 .activity-list .activity-item.pop.loading .activity-comments > ul {
   display: none;
 }
@@ -4533,6 +4537,10 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
 
 .activity-list .activity-item.pop .activity-comments > ul {
   display: block;
+}
+
+.activity-list .activity-item.pop li.bp-hidden {
+  display: list-item;
 }
 
 .activity-list .activity-item.pop .bb-activity-placeholder {

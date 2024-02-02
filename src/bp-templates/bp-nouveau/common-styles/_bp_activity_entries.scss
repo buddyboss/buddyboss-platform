@@ -1270,6 +1270,10 @@
 			display: none;
 		}
 
+		.bp-hidden {
+			display: none;
+		}
+
 		&.pop.loading {
 			.activity-comments > ul {
 				display: none;
@@ -1293,6 +1297,10 @@
 
 			.activity-comments > ul {
 				display: block;
+			}
+
+			li.bp-hidden {
+				display: list-item;
 			}
 
 			.bb-activity-placeholder {

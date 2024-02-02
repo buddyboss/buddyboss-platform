@@ -588,12 +588,7 @@ window.bp = window.bp || {};
 				function() {
 					$( event.target ).closest( '.activity-item' ).removeClass( 'loading' );
 					$( event.target ).closest( '.activity-item' ).find( '#bp-ajax-loader' ).remove();
-					$( event.target ).closest( 'ul' ).find( 'li' ).removeClass( 'bp-hidden' ).fadeIn(
-						300,
-						function() {
-							$( event.target ).parent( 'li' ).remove();
-						}
-					);
+					$( event.target ).closest( 'ul' ).find( 'li' ).fadeIn( 300 );
 				},
 				1000
 			);
