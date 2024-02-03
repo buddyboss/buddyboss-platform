@@ -2717,7 +2717,6 @@ function bb_active_reactions() {
 	return ( ! empty( $all_emotions ) ? array_column( $all_emotions, null, 'id' ) : array() );
 }
 
-
 /**
  * Get Page requests option.
  *
@@ -2725,10 +2724,10 @@ function bb_active_reactions() {
  *
  * @param bool $default when option not found, function will return $default value.
  *
- * @return mixed|void
+ * @return int
  */
 function bb_get_ajax_request_page_load( $default = 2 ) {
-	return apply_filters( 'bb_get_bb_ajax_request_page_load', bp_get_option( 'bb_ajax_request_page_load', $default ) );
+	return (int) apply_filters( 'bb_get_bb_ajax_request_page_load', bp_get_option( 'bb_ajax_request_page_load', $default ) );
 }
 
 /**
@@ -2738,10 +2737,10 @@ function bb_get_ajax_request_page_load( $default = 2 ) {
  *
  * @param bool $default when option not found, function will return $default value.
  *
- * @return mixed|void
+ * @return int
  */
 function bb_get_load_activity_per_request( $default = 10 ) {
-	return apply_filters( 'bb_get_load_activity_per_request', bp_get_option( 'bb_load_activity_per_request', $default ) );
+	return (int) apply_filters( 'bb_get_load_activity_per_request', bp_get_option( 'bb_load_activity_per_request', $default ) );
 }
 
 /**
@@ -2752,7 +2751,7 @@ function bb_get_load_activity_per_request( $default = 10 ) {
  * @param string $default Optional. Fallback value if not found in the database.
  *                        Default: infinite.
  *
- * @return bool infinite if Autoload is enabled, otherwise load_more.
+ * @return string infinite if Autoload is enabled, otherwise load_more.
  */
 function bb_get_activity_load_type( $default = 'infinite' ) {
 	return apply_filters( 'bb_get_activity_load_type', bp_get_option( 'bb_activity_load_type', $default ) );
