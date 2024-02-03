@@ -9355,6 +9355,7 @@ function bb_admin_performance_setting_general_callback() {
  */
 function bb_admin_performance_setting_activity_callback() {
 	$bb_load_activity_per_request = bb_get_load_activity_per_request();
+	$bb_activity_load_type        = bb_get_activity_load_type();
 
 	$load_per_page_activities_options = array(
 		'5'  => '5',
@@ -9376,11 +9377,11 @@ function bb_admin_performance_setting_activity_callback() {
 		}
 		?>
 	</select>
-	<label for="_bp_enable_activity_autoload"><?php esc_html_e( 'activity posts at a time using', 'buddyboss' ); ?></label>
-	<select name="_bp_enable_activity_autoload" id="_bp_enable_activity_autoload">
+	<label for="bb_activity_load_type"><?php esc_html_e( 'activity posts at a time using', 'buddyboss' ); ?></label>
+	<select name="bb_activity_load_type" id="bb_activity_load_type">
 		<?php
 		foreach ( $activity_autoload_options as $load_val => $load_label ) {
-			echo '<option value="' . esc_attr( $load_val ) . '" ' . selected( $bb_load_activity_per_request, $load_val, false ) . '>' . esc_html( $load_label ) . '</option>';
+			echo '<option value="' . esc_attr( $load_val ) . '" ' . selected( $bb_activity_load_type, $load_val, false ) . '>' . esc_html( $load_label ) . '</option>';
 		}
 		?>
 	</select>
