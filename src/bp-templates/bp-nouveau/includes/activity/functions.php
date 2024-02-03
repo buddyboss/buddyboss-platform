@@ -135,7 +135,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		) );
 	}
 
-	if ( bp_is_activity_autoload_active() ) {
+	if ( 'infinite' === bb_get_activity_load_type() ) {
 		$activity_params['autoload'] = true;
 	}
 
