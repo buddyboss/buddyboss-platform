@@ -469,8 +469,12 @@ function bp_activity_at_name_filter( $content, $activity_id = 0 ) {
 
 	// Linkify the mentions with the username.
 	foreach ( (array) $usernames as $user_id => $username ) {
-		$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)/';
-		$content = preg_replace( $pattern, "<a class='bp-suggestions-mention' href='{{mention_user_id_" . esc_attr( $user_id ) . "}}' rel='nofollow'>@$username</a>", $content );
+		$replacement = "<a class='bp-suggestions-mention' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>@$username</a>";
+		if ( false === strpos( $content, $replacement ) ) {
+			// Pattern for cases with existing <a>@mention</a> or @mention.
+			$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';
+			$content = preg_replace( $pattern, $replacement, $content );
+		}
 	}
 
 	// Put everything back.
@@ -512,8 +516,12 @@ function bp_activity_at_name_filter_updates( $activity ) {
 	if ( ! empty( $usernames ) ) {
 		// Replace @mention text with userlinks.
 		foreach ( (array) $usernames as $user_id => $username ) {
-			$pattern           = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)/';
-			$activity->content = preg_replace( $pattern, "<a class='bp-suggestions-mention' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>@$username</a>", $activity->content );
+			$replacement = "<a class='bp-suggestions-mention' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>@$username</a>";
+			if ( false === strpos( $activity->content, $replacement ) ) {
+				// Pattern for cases with existing <a>@mention</a> or @mention.
+				$pattern           = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';
+				$activity->content = preg_replace( $pattern, $replacement, $activity->content );
+			}
 		}
 
 		if ( ! bb_is_rest() ) {
