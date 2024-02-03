@@ -184,6 +184,11 @@ function bp_get_default_options() {
 				'icon' => 'thumbs-up',
 			)
 		),
+
+		// Performance Settings.
+		'bb_ajax_request_page_load'                  => 1,
+		'bb_load_activity_per_request'               => 10,
+		'bb_activity_load_type'                      => 'infinite',
 	);
 
 	/**
