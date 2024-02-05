@@ -30,6 +30,15 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 		$this->tab_order = 90;
 	}
 
+	public function settings_save() {
+
+		// Get old values for cpt and check if it disabled then keep it and later will save it.
+		$bb_activity_load_type = isset( $_POST['bb_activity_load_type'] ) ? sanitize_text_field( wp_unslash( $_POST['bb_activity_load_type'] ) ) : '';
+		bp_update_option( 'bb_activity_load_type', $bb_activity_load_type );
+
+		parent::settings_save();
+	}
+
 	/**
 	 * Register setting fields
 	 *
