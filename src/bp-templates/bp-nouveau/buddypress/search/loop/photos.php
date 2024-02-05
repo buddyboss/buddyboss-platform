@@ -27,11 +27,12 @@ $class = ''; // used.
 if ( $attachment_id && bp_get_media_activity_id() ) {
 	$class = ''; // used.
 }
-$media_link    = bp_get_media_link();
-$media_created = bp_get_media_date_created();
+$media_link       = bp_get_media_link();
+$media_created    = bp_get_media_date_created();
+$media_visibility = bp_get_media_visibility();
 ?>
 
-<li data-bp-item-id="<?php bp_get_media_id(); ?>" data-bp-item-component="media" class="search-media-list">
+<li data-bp-item-id="<?php echo esc_attr( $media_id ); ?>" data-bp-item-component="media" class="search-media-list">
 	<div class="list-wrap">
 		<div class="item">
 			<div class="media-album_items ac-album-list">
@@ -71,14 +72,14 @@ $media_created = bp_get_media_date_created();
 								?>
 								<span class="middot">&middot;</span>
 								<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
-									<?php bp_media_visibility(); ?>
+									<?php echo esc_html( $media_visibility ); ?>
 								</span>
 								<?php
 							} else {
 								?>
 								<span class="middot">&middot;</span>
-								<span id="privacy-<?php echo esc_attr( bp_get_media_id() ); ?>">
-									<?php bp_media_visibility(); ?>
+								<span id="privacy-<?php echo esc_attr( $media_id ); ?>">
+									<?php echo esc_html( $media_visibility ); ?>
 								</span>
 								<?php
 							}
@@ -86,7 +87,7 @@ $media_created = bp_get_media_date_created();
 							?>
 							<span class="middot">&middot;</span>
 							<span>
-								<?php bp_media_visibility(); ?>
+								<?php echo esc_html( $media_visibility ); ?>
 							</span>
 							<?php
 						}

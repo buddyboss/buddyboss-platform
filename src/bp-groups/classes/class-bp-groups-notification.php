@@ -1265,13 +1265,14 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			$activity_excerpt = str_replace( '&#8203;', '', $activity_excerpt );
 			$activity_excerpt = str_replace( '""', '', $activity_excerpt );
 
-			$media_ids    = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
-			$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
-			$video_ids    = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
-			$gif_data     = bp_activity_get_meta( $activity->id, '_gif_data', true );
-			$amount       = 'single';
-			$group        = groups_get_group( $activity->item_id );
-			$group_name   = bp_get_group_name( $group );
+			$activity_metas = bb_activity_get_metadata( $activity->id );
+			$media_ids      = $activity_metas['bp_media_ids'][0] ?? '';
+			$document_ids   = $activity_metas['bp_document_ids'][0] ?? '';
+			$video_ids      = $activity_metas['bp_video_ids'][0] ?? '';
+			$gif_data       = ! empty( $activity_metas['_gif_data'][0] ) ? maybe_unserialize( $activity_metas['_gif_data'][0] ) : array();
+			$amount         = 'single';
+			$group          = groups_get_group( $activity->item_id );
+			$group_name     = bp_get_group_name( $group );
 
 			if ( 'web_push' === $screen ) {
 				$notification_link = add_query_arg( 'rid', (int) $notification_id, bp_activity_get_permalink( $item_id ) );

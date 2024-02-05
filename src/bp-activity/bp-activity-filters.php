@@ -696,9 +696,10 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
  */
 function bp_activity_link_preview( $content, $activity ) {
 
-	$activity_id  = $activity->id;
-	$preview_data = bp_activity_get_meta( $activity_id, '_link_preview_data', true );
+	$activity_id    = $activity->id;
+	$activity_metas = bb_activity_get_metadata( $activity_id );
 
+	$preview_data = ! empty( $activity_metas['_link_preview_data'][0] ) ? maybe_unserialize( $activity_metas['_link_preview_data'][0] ) : array();
 	if ( empty( $preview_data['url'] ) ) {
 		return $content;
 	}
@@ -2068,10 +2069,11 @@ function bp_activity_edit_update_media( $media_ids ) {
 	global $bp_activity_edit, $bp_activity_post_update_id;
 
 	if ( ( true === $bp_activity_edit || isset( $_POST['edit'] ) ) && ! empty( $bp_activity_post_update_id ) ) {
-		$old_media_ids = bp_activity_get_meta( $bp_activity_post_update_id, 'bp_media_ids', true );
-		$old_media_ids = explode( ',', $old_media_ids );
+		$activity_metas = bb_activity_get_metadata( $bp_activity_post_update_id );
 
+		$old_media_ids = $activity_metas['bp_media_ids'][0] ?? '';
 		if ( ! empty( $old_media_ids ) ) {
+			$old_media_ids = explode( ',', $old_media_ids );
 			$old_media_ids = wp_parse_id_list( $old_media_ids );
 			$media_ids     = wp_parse_id_list( $media_ids );
 
@@ -2484,10 +2486,11 @@ function bp_activity_edit_update_document( $document_ids ) {
 	global $bp_activity_edit, $bp_activity_post_update_id;
 
 	if ( ( true === $bp_activity_edit || isset( $_POST['edit'] ) ) && ! empty( $bp_activity_post_update_id ) ) {
-		$old_document_ids = bp_activity_get_meta( $bp_activity_post_update_id, 'bp_document_ids', true );
-		$old_document_ids = explode( ',', $old_document_ids );
+		$activity_metas = bb_activity_get_metadata( $bp_activity_post_update_id );
 
+		$old_document_ids = $activity_metas['bp_document_ids'][0] ?? '';
 		if ( ! empty( $old_document_ids ) ) {
+			$old_document_ids = explode( ',', $old_document_ids );
 			$old_document_ids = wp_parse_id_list( $old_document_ids );
 			$document_ids     = wp_parse_id_list( $document_ids );
 
@@ -2712,7 +2715,9 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 		if ( 'blogs' === $comment_activity->component && isset( $comment_activity->secondary_item_id ) && 'new_blog_' . get_post_type( $comment_activity->secondary_item_id ) === $comment_activity->type ) {
 			$comment_post_type = $comment_activity->secondary_item_id;
 			$get_post_type     = get_post_type( $comment_post_type );
-			$comment_id        = bp_activity_get_meta( $activity->id, 'bp_blogs_' . $get_post_type . '_comment_id', true );
+			$activity_metas    = bb_activity_get_metadata( $activity->id );
+
+			$comment_id = $activity_metas['bp_blogs_' . $get_post_type . '_comment_id'][0] ?? '';
 			if ( $comment_id ) {
 				$comment = get_comment( $comment_id );
 				if ( ! empty( $comment->comment_content ) ) {
@@ -3151,10 +3156,11 @@ function bp_activity_edit_update_video( $video_ids ) {
 
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing
 	if ( ( true === $bp_activity_edit || isset( $_POST['edit'] ) ) && ! empty( $bp_activity_post_update_id ) ) {
-		$old_video_ids = bp_activity_get_meta( $bp_activity_post_update_id, 'bp_video_ids', true );
-		$old_video_ids = explode( ',', $old_video_ids );
+		$activity_metas = bb_activity_get_metadata( $bp_activity_post_update_id );
 
+		$old_video_ids = $activity_metas['bp_video_ids'][0] ?? '';
 		if ( ! empty( $old_video_ids ) ) {
+			$old_video_ids = explode( ',', $old_video_ids );
 			$old_video_ids = wp_parse_id_list( $old_video_ids );
 			$video_ids     = wp_parse_id_list( $video_ids );
 
@@ -3290,7 +3296,9 @@ function bb_activity_delete_link_review_attachment( $activities ) {
 
 	if ( ! empty( $activity_ids ) ) {
 		foreach ( $activity_ids as $activity_id ) {
-			$link_preview_meta = bp_activity_get_meta( $activity_id, '_link_preview_data', true );
+			$activity_metas = bb_activity_get_metadata( $activity_id );
+
+			$link_preview_meta = ! empty( $activity_metas['_link_preview_data'][0] ) ? maybe_unserialize( $activity_metas['_link_preview_data'][0] ) : array();
 			if ( ! empty( $link_preview_meta ) && ! empty( $link_preview_meta['attachment_id'] ) ) {
 				wp_delete_attachment( $link_preview_meta['attachment_id'], true );
 			}
@@ -3649,12 +3657,14 @@ function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
 		if (
 			! empty( $parent_activity->id ) &&
 			'blogs' === $parent_activity->component &&
-		 	! empty( $parent_activity->secondary_item_id ) &&
+			! empty( $parent_activity->secondary_item_id ) &&
 			! empty( get_post_type( $parent_activity->secondary_item_id ) ) &&
 			'new_blog_' . get_post_type( $parent_activity->secondary_item_id ) === $parent_activity->type
 		) {
 
-			$comment_id = bp_activity_get_meta( $activity_comment_data['id'], 'bp_blogs_' . get_post_type( $parent_activity->secondary_item_id ) . '_comment_id', true );
+			$activity_metas = bb_activity_get_metadata( $activity_comment_data['id'] );
+
+			$comment_id = $activity_metas['bp_blogs_' . get_post_type( $parent_activity->secondary_item_id ) . '_comment_id'][0] ?? '';
 			if ( $comment_id ) {
 				$comment = get_comment( $comment_id );
 				if ( ! empty( $comment->comment_content ) ) {

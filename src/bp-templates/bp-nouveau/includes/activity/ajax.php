@@ -678,13 +678,15 @@ function bp_nouveau_ajax_post_update() {
 
 	$draft_activity_meta_key = 'draft_' . $object;
 
+	$activity_metas = bb_activity_get_metadata( $activity_id );
+
 	if (
 		bp_is_active( 'media' ) &&
 		! empty( $_POST['media'] )
 	) {
 		$group_id = ( 'group' === $object ) ? $item_id : 0;
 
-		$media_ids      = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
+		$media_ids      = $activity_metas['bp_media_ids'][0] ?? '';
 		$existing_media = ( ! empty( $media_ids ) ) ? explode( ',', $media_ids ) : array();
 		$posted_media   = array_column( $_POST['media'], 'media_id' );
 		$posted_media   = wp_parse_id_list( $posted_media );
@@ -707,7 +709,7 @@ function bp_nouveau_ajax_post_update() {
 	) {
 		$group_id = ( 'group' === $object ) ? $item_id : 0;
 
-		$document_ids      = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+		$document_ids      = $activity_metas['bp_document_ids'][0] ?? '';
 		$existing_document = ( ! empty( $document_ids ) ) ? explode( ',', $document_ids ) : array();
 		$posted_document   = array_column( $_POST['document'], 'document_id' );
 		$posted_document   = wp_parse_id_list( $posted_document );
