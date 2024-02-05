@@ -9337,13 +9337,12 @@ function bb_admin_performance_activity_setting_tutorial() {
 function bb_admin_performance_setting_general_callback() {
 	$bb_ajax_request_page_load = bb_get_ajax_request_page_load();
 	?>
-
-	<label for="bb_performance_general_page_load_request"><?php esc_html_e( 'Load', 'buddyboss' ); ?></label>
-	<select name="bb_performance_general_page_load_request" id="bb_performance_general_page_load_request">
+	<label for="bb_ajax_request_page_load"><?php esc_html_e( 'Load', 'buddyboss' ); ?></label>
+	<select name="bb_ajax_request_page_load" id="bb_ajax_request_page_load">
 		<option value="1" <?php selected( $bb_ajax_request_page_load, 1 ); ?>>1</option>
 		<option value="2" <?php selected( $bb_ajax_request_page_load, 2 ); ?>>2</option>
 	</select>
-	<label for="bb_performance_general_page_load_request"><?php esc_html_e( 'page requests on page load', 'buddyboss' ); ?></label>
+	<label for="bb_ajax_request_page_load"><?php esc_html_e( 'page requests on page load', 'buddyboss' ); ?></label>
 	<p class="description"><?php esc_html_e( 'Select how many requests will be sent on page load. We recommend 1 request for high performing servers, and 2 for slower performing environments, or those who see conflicts with third party plugins.', 'buddyboss' ); ?></p>
 	<?php
 }

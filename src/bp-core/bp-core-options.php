@@ -2727,7 +2727,7 @@ function bb_active_reactions() {
  * @return int
  */
 function bb_get_ajax_request_page_load( $default = 2 ) {
-	return (int) apply_filters( 'bb_get_bb_ajax_request_page_load', bp_get_option( 'bb_ajax_request_page_load', $default ) );
+	return (int) apply_filters( 'bb_get_ajax_request_page_load', bp_get_option( 'bb_ajax_request_page_load', $default ) );
 }
 
 /**
