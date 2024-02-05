@@ -9,34 +9,24 @@
  */
 
 ?>
-
 <div class="bb-video-container bb-media-container member-video">
-	<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
-
 	<?php
-		bp_get_template_part( 'video/theatre' );
-		bp_get_template_part( 'media/theatre' );
-		bp_get_template_part( 'document/theatre' );
-	?>
-
-	<?php
+	bp_get_template_part( 'members/single/parts/item-subnav' );
+	bp_get_template_part( 'video/theatre' );
+	bp_get_template_part( 'media/theatre' );
+	bp_get_template_part( 'document/theatre' );
 
 	switch ( bp_current_action() ) :
 
 		// Home/Video.
 		case 'my-video':
 			bp_get_template_part( 'video/add-video' );
-
 			bp_nouveau_member_hook( 'before', 'video_content' );
-
 			bp_get_template_part( 'video/actions' );
-
 			?>
-
 			<div id="video-stream" class="video" data-bp-list="video">
 				<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'member-video-loading' ); ?></div>
 			</div><!-- .video -->
-
 			<?php
 			bp_nouveau_member_hook( 'after', 'video_content' );
 

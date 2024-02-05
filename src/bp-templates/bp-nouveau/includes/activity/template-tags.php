@@ -1196,7 +1196,9 @@ function bp_nouveau_activity_privacy() {
 				}
 			}
 
-			$activity_album_id = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_album_activity', true );
+			$activity_metas = bb_activity_get_metadata( bp_get_activity_id() );
+
+			$activity_album_id = $activity_metas['bp_media_album_activity'][0] ?? '';
 			if ( ! empty( $activity_album_id ) ) {
 				$album_id       = $activity_album_id;
 				$album          = new BP_Media_Album( $album_id );
@@ -1204,7 +1206,7 @@ function bp_nouveau_activity_privacy() {
 				$album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
 				$media_activity = true;
 			} else {
-				$media_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_ids', true );
+				$media_ids = $activity_metas['bp_media_ids'][0] ?? '';
 				if ( ! empty( $media_ids ) ) {
 					$media_ids = explode( ',', $media_ids );
 					$media_id  = ! empty( $media_ids ) ? $media_ids[0] : false;
@@ -1221,7 +1223,7 @@ function bp_nouveau_activity_privacy() {
 				}
 			}
 
-			$activity_video_album_id = bp_activity_get_meta( bp_get_activity_id(), 'bp_video_album_activity', true );
+			$activity_video_album_id = $activity_metas['bp_video_album_activity'][0] ?? '';
 			if ( ! empty( $activity_video_album_id ) ) {
 				$album_id       = $activity_video_album_id;
 				$album          = new BP_Video_Album( $album_id );
@@ -1229,7 +1231,7 @@ function bp_nouveau_activity_privacy() {
 				$album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
 				$media_activity = true;
 			} else {
-				$video_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_video_ids', true );
+				$video_ids = $activity_metas['bp_video_ids'][0] ?? '';
 				if ( ! empty( $video_ids ) ) {
 					$video_ids = explode( ',', $video_ids );
 					$video_id  = ! empty( $video_ids ) ? $video_ids[0] : false;
@@ -1246,7 +1248,7 @@ function bp_nouveau_activity_privacy() {
 				}
 			}
 
-			$activity_folder_id = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_folder_activity', true );
+			$activity_folder_id = $activity_metas['bp_document_folder_activity'][0] ?? '';
 			if ( ! empty( $activity_folder_id ) ) {
 				$folder_id         = $activity_folder_id;
 				$folder_id         = bp_document_get_root_parent_id( $folder_id );
@@ -1255,7 +1257,7 @@ function bp_nouveau_activity_privacy() {
 				$folder_url        = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
 				$document_activity = true;
 			} else {
-				$document_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_ids', true );
+				$document_ids = $activity_metas['bp_document_ids'][0] ?? '';
 				if ( ! empty( $document_ids ) ) {
 					$document_ids = explode( ',', $document_ids );
 					$document_id  = ! empty( $document_ids ) ? $document_ids[0] : false;
@@ -1378,11 +1380,11 @@ function bp_nouveau_activity_is_edited( $activity_id = 0, $echo = true ) {
 		return;
 	}
 
-	$is_edited = bp_activity_get_meta( $activity_id, '_is_edited', true );
+	$activity_metas = bb_activity_get_metadata( $activity_id );
+	$is_edited      = $activity_metas['_is_edited'][0] ?? '';
 
 	if ( $is_edited ) {
 		$activity_text = '<span class="bb-activity-edited-text"> ' . __( '(edited)', 'buddyboss' ) . ' </span>';
-
 	} else {
 		$activity_text = null;
 	}
@@ -2264,7 +2266,8 @@ function bb_nouveau_activity_comment_is_edited( $activity_comment_id = 0, $echo 
 		return $activity_comment_text;
 	}
 
-	$is_edited = bp_activity_get_meta( $activity_comment_id, '_is_edited', true );
+	$activity_metas = bb_activity_get_metadata( $activity_comment_id );
+	$is_edited      = $activity_metas['_is_edited'][0] ?? '';
 
 	if ( $is_edited ) {
 		$activity_comment_text = '<span class="bb-activity-edited-text" data-balloon-pos="up" data-balloon="' . bp_core_time_since( $is_edited ) . '"> ' . __( '(edited)', 'buddyboss' ) . ' </span>';
