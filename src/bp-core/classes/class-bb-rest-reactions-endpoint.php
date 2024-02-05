@@ -105,7 +105,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	 * @apiVersion     1.0.0
 	 */
 	public function get_reactions( $request ) {
-		$reactions = bb_load_reaction()->bb_get_reactions();
+		$reactions = bb_load_reaction()->bb_get_reactions( bb_get_reaction_mode() );
 
 		$context = $request->get_param( 'context' );
 		$context = ! empty( $context ) ? $context : 'view';
@@ -179,6 +179,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} [user_id] Limit result set to items with a specific user ID.
 	 * @apiParam {Array=asc,desc} [order=desc] Order sort attribute ascending or descending.
 	 * @apiParam {Array=id,date_created} [order_by=id] Order by a specific parameter.
+	 * @apiParam {Number} [before] Limit result set to items before a specific user reaction ID.
 	 */
 	public function get_items( $request ) {
 		$args = array(
@@ -187,9 +188,10 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 			'item_id'     => $request->get_param( 'item_id' ),
 			'user_id'     => $request->get_param( 'user_id' ),
 			'per_page'    => $request->get_param( 'per_page' ),
-			'paged'       => $request->get_param( 'paged' ),
+			'paged'       => $request->get_param( 'page' ),
 			'order'       => $request->get_param( 'order' ),
 			'order_by'    => $request->get_param( 'order_by' ),
+			'before'      => $request->get_param( 'before' ),
 			'count_total' => true,
 		);
 
@@ -564,7 +566,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 				'description'       => __( 'Reaction ID.', 'buddyboss' ),
 				'type'              => 'integer',
 				'required'          => true,
-				'enum'              => array_column( bb_load_reaction()->bb_get_reactions(), 'id' ),
+				'enum'              => array_column( bb_load_reaction()->bb_get_reactions( bb_get_reaction_mode() ), 'id' ),
 				'sanitize_callback' => 'absint',
 				'validate_callback' => 'rest_validate_request_arg',
 			);
@@ -744,18 +746,18 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 
 		$params['reaction_id'] = array(
 			'description'       => __( 'Limit result set to items with a specific Reaction ID.', 'buddyboss' ),
-			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
+			'enum'              => array_column( bb_load_reaction()->bb_get_reactions( bb_get_reaction_mode() ), 'id' )
 		);
 
 		$params['item_type'] = array(
 			'description'       => __( 'Limit result set to items with a specific item type.', 'buddyboss' ),
-			'default'           => '',
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
+			'enum'              => array_keys( bb_load_reaction()->bb_get_registered_reaction_item_types() )
 		);
 
 		$params['item_id'] = array(

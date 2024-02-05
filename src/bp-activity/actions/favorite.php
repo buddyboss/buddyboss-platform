@@ -18,15 +18,49 @@ function bp_activity_action_mark_favorite() {
 		return false;
 	}
 
+	if ( empty( $activity_id ) && bp_action_variable( 0 ) ) {
+		$activity_id = (int) bp_action_variable( 0 );
+	}
+
+	// Not viewing a specific activity item.
+	if ( empty( $activity_id ) ) {
+		return false;
+	}
+
 	// Check the nonce.
 	check_admin_referer( 'mark_favorite' );
 
-	if ( bp_activity_add_user_favorite( bp_action_variable( 0 ) ) ) {
-		bp_core_add_message( __( 'Activity post saved.', 'buddyboss' ) );
-	} else {
-		bp_core_add_message( __( 'There was an error saving that post. Please try again.', 'buddyboss' ), 'error' );
+	// Load up the activity item.
+	$activity = new BP_Activity_Activity( $activity_id );
+
+	if ( empty( $activity->id ) ) {
+		return false;
 	}
 
-	bp_core_redirect( wp_get_referer() . '#activity-' . bp_action_variable( 0 ) );
+	if ( 'activity_comment' === $activity->type ) {
+		$type     = 'activity_comment';
+		$message  = __( 'Activity comment post saved.', 'buddyboss' );
+		$redirect = wp_get_referer() . '#acomment-display-' . $activity_id;
+	} else {
+		$type     = 'activity';
+		$message  = __( 'Activity post saved.', 'buddyboss' );
+		$redirect = wp_get_referer() . '#activity-' . $activity_id;
+	}
+
+	$reacted = bp_activity_add_user_favorite(
+		$activity_id,
+		0,
+		array(
+			'type'       => $type,
+			'error_type' => 'wp_error',
+		)
+	);
+	if ( is_wp_error( $reacted ) ) {
+		bp_core_add_message( $reacted->get_error_message(), 'error' );
+	} else {
+		bp_core_add_message( $message );
+	}
+
+	bp_core_redirect( $redirect );
 }
 add_action( 'bp_actions', 'bp_activity_action_mark_favorite' );

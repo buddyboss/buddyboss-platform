@@ -890,7 +890,7 @@ function bp_activity_heartbeat_last_recorded( $response = array(), $data = array
 	// filters), but force the offset to get only new items.
 	$activity_latest_args = bp_parse_args(
 		bp_ajax_querystring( 'activity' ),
-		array( 'since' => date_i18n( 'Y-m-d H:i:s', $data['bp_activity_last_recorded'] ) ),
+		array( 'pin_type' => 'none', 'since' => date_i18n( 'Y-m-d H:i:s', $data['bp_activity_last_recorded'] ) ),
 		'activity_latest_args'
 	);
 
@@ -3601,7 +3601,14 @@ function bb_moderation_remove_mention_count( $num_links, $url, $comment ) {
  * @param object $post Post data.
  */
 function bb_cpt_post_title_save( $post_id, $post ) {
-	if ( empty( $post_id ) || empty( buddypress()->blogs ) ) {
+	if (
+		empty( $post_id ) ||
+		empty( buddypress()->blogs ) ||
+		! bp_is_active( 'activity' ) ||
+		empty( $post ) ||
+		empty( $post->post_type ) ||
+		! in_array( $post->post_type, bb_feed_post_types(), true )
+	) {
 		return;
 	}
 
