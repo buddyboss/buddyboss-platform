@@ -9354,24 +9354,29 @@ function bb_admin_performance_setting_general_callback() {
  */
 function bb_admin_performance_setting_activity_callback() {
 	$bb_load_activity_per_request = bb_get_load_activity_per_request();
-	$bb_activity_load_type        = bb_get_activity_load_type();
+	$bb_activity_load_type        = bp_is_activity_autoload_active();
 
-	$load_per_page_activities_options = array(
-		'5'  => '5',
-		'10' => '10',
-		'15' => '15',
-		'20' => '20',
+	$activity_per_page = apply_filters( 'bb_performance_activity_per_page', array() );
+	$activity_per_page = bp_parse_args(
+		$activity_per_page,
+		array( 5, 10, 15, 20 )
 	);
-	$activity_autoload_options        = array(
-		'infinite'  => __( 'Infinite scrolling', 'buddyboss' ),
-		'load_more' => __( 'Load more', 'buddyboss' ),
+	asort( $activity_per_page );
+
+	$activity_autoload_options = apply_filters( 'bb_performance_activity_autoload', array() );
+	$activity_autoload_options        = bp_parse_args(
+		$activity_autoload_options,
+		array(
+			'infinite'  => __( 'Infinite scrolling', 'buddyboss' ),
+			'load_more' => __( 'Load more', 'buddyboss' ),
+		)
 	);
 	?>
 
 	<label for="bb_load_activity_per_request"><?php esc_html_e( 'Load', 'buddyboss' ); ?></label>
 	<select name="bb_load_activity_per_request" id="bb_load_activity_per_request">
 		<?php
-		foreach ( $load_per_page_activities_options as $load_val ) {
+		foreach ( $activity_per_page as $load_val ) {
 			echo '<option value="' . esc_attr( $load_val ) . '" ' . selected( $bb_load_activity_per_request, $load_val, false ) . '>' . esc_html( $load_val ) . '</option>';
 		}
 		?>
