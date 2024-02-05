@@ -7726,6 +7726,10 @@ form.ac-form .bp-ac-form-cotainer .ac-reply-attachments {
   padding-left: 46px;
 }
 
+form.ac-form .bp-ac-form-cotainer .bp-feedback {
+  width: 100%;
+}
+
 form.ac-form .ac-reply-avatar img {
   max-width: 32px;
   height: auto;
