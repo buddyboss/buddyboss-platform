@@ -122,7 +122,7 @@ window.bp = window.bp || {};
 			$( '#buddypress' ).on( 'bp_ajax_request', '[data-bp-list="activity"]', this.scopeLoaded.bind( this ) );
 
 			// Activity comments effect.
-			$( '#buddypress [data-bp-list="activity"]' ).on( 'bp_ajax_append', this.hideComments );
+			//$( '#buddypress [data-bp-list="activity"]' ).on( 'bp_ajax_append', this.hideComments );
 			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.show-all', this.showComments );
 			$( 'body' ).on( 'click', '.bb-close-action-popup', this.closeComments );
 
@@ -610,7 +610,7 @@ window.bp = window.bp || {};
 		 */
 		scopeLoaded: function ( event, data ) {
 			// Make sure to only keep 5 root comments.
-			this.hideComments( event );
+			//this.hideComments( event );
 
 			// Reset the pagination for the scope.
 			this.current_page = 1;

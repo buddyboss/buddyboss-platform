@@ -64,7 +64,7 @@ bp_nouveau_activity_hook( 'before', 'comment_entry' );
 	</div>
 	<div id="acomment-edit-form-<?php bp_activity_comment_id(); ?>" class="acomment-edit-form"></div>
 
-	<?php bp_nouveau_activity_recurse_comments( bp_activity_current_comment() ); ?>
+	<?php bp_nouveau_activity_recurse_comments( bp_activity_current_comment(), empty( $args['show_replies'] ) ? 0 : bb_get_activity_comment_loading() ); ?>
 </li>
 <?php
 bp_nouveau_activity_hook( 'after', 'comment_entry' );

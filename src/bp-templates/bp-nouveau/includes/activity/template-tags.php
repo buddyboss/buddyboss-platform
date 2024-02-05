@@ -698,7 +698,7 @@ function bp_nouveau_activity_comments() {
  *
  * @param object $comment The activity object currently being recursed.
  */
-function bp_nouveau_activity_recurse_comments( $comment ) {
+function bp_nouveau_activity_recurse_comments( $comment, $comment_load_limit = false ) {
 	global $activities_template;
 
 	if ( empty( $comment->children ) ) {
@@ -714,7 +714,31 @@ function bp_nouveau_activity_recurse_comments( $comment ) {
 	 */
 	echo apply_filters( 'bp_activity_recurse_comments_start_ul', '<ul>' );
 
+	$comment_loaded_count = 0;
+	$comment_total        = bp_activity_recurse_comment_count( $comment );
+
 	foreach ( (array) $comment->children as $comment_child ) {
+
+		if ( false !== $comment_load_limit && $comment_loaded_count === $comment_load_limit ) {
+
+			if ( $comment->secondary_item_id !== 0 ) {
+				if ( 0 === $comment_loaded_count ) {
+					$link_text = sprintf(
+						/* translators: total replies */
+						_n( 'View %d reply', 'View %d replies', $comment_total, 'buddyboss' ),
+						absint( $comment_total )
+					);
+				} else {
+					$link_text = __( 'View more replies', 'buddyboss' );
+				}
+
+			} else {
+				$link_text = __( 'View more comments', 'buddyboss' );
+			}
+
+			echo "<li class='acomments-view-more'>". esc_html__( $link_text, 'buddyboss' ) ."</li>";
+			break;
+		}
 
 		// Put the comment into the global so it's available to filters.
 		$activities_template->activity->current_comment = $comment_child;
@@ -736,6 +760,8 @@ function bp_nouveau_activity_recurse_comments( $comment ) {
 		do_action( 'bp_after_activity_comment' );
 
 		unset( $activities_template->activity->current_comment );
+
+		$comment_loaded_count++;
 	}
 
 	/**

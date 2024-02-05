@@ -1916,7 +1916,7 @@ function bp_activity_get_comments( $args = '' ) {
 		return false;
 	}
 
-	bp_activity_recurse_comments( $activities_template->activity );
+	bp_activity_recurse_comments( $activities_template->activity, bb_get_activity_comment_visibility() );
 }
 
 /**
@@ -1932,7 +1932,7 @@ function bp_activity_get_comments( $args = '' ) {
  * @param object $comment The activity object currently being recursed.
  * @return bool|string
  */
-function bp_activity_recurse_comments( $comment ) {
+function bp_activity_recurse_comments( $comment, $comment_load_limit = false ) {
 	global $activities_template;
 
 	if ( empty( $comment ) ) {
@@ -1952,16 +1952,31 @@ function bp_activity_recurse_comments( $comment ) {
 	 */
 	echo apply_filters( 'bp_activity_recurse_comments_start_ul', '<ul>' );
 
+	$comment_loaded_count = 0;
 	foreach ( (array) $comment->children as $comment_child ) {
+
+		if ( false !== $comment_load_limit && $comment_loaded_count === $comment_load_limit ) {
+			echo "<li class='acomments-view-more'>" . __( 'View more comments', 'buddyboss' ) . "</li>";
+			break;
+		}
 
 		// Put the comment into the global so it's available to filters.
 		$activities_template->activity->current_comment = $comment_child;
 
 		$template = bp_locate_template( 'activity/comment.php', false, false );
 
-		load_template( $template, false );
+		$comment_template_args = array();
+		if ( $comment->item_id === $comment->secondary_item_id && $comment->id === bp_get_activity_id() ) {
+
+			// First level comments.
+			$comment_template_args = array( 'show_replies' => false );
+		}
+
+		load_template( $template, false, $comment_template_args );
 
 		unset( $activities_template->activity->current_comment );
+
+		$comment_loaded_count++;
 	}
 
 	/**
