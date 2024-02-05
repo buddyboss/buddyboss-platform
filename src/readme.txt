@@ -57,6 +57,16 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.5.40 =
+* Enhancement: Core - Code Refinement for background jobs in the platform complete
+* Enhancement: Groups - New tab has been added to BuddyBoss - Groups backend called ‘No Members’ so that you can now filter and pickup groups with no members in automations
+* Bug: Activity - Images were not deleted on the server when the activity post was edited and the image removed
+* Bug: Core - Migrating sites from vBulletin to BuddyBoss was giving a fatal error when user logged in with the same username
+* Bug: Core - Previous custom posts on the news feed page from group discussions and replies were not reflecting the updated translation from LocoTranslate plugin
+* Bug: Core - While typing a longer reply or comment in a pinned post on the Activity Feed the feed would refresh while typing which then clearing the text
+* Bug: Forums - URL link embedded into a forum page would not show
+* Bug: Styling - Notification settings tabs under the user Account Settings page did not display correctly
+
 = 2.5.31 =
 * Bug: Access controls - When restricting subscribers from posting to the Activity Feed, this has also restricted subscribers posting to the Group activity feed
 
