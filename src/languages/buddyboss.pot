@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.5.31\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-02-05 06:34:41+00:00\n"
+"POT-Creation-Date: 2024-02-05 06:36:33+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -721,7 +721,7 @@ msgstr ""
 msgid "&hellip;"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:721 bp-forums/core/filters.php:542
+#: bp-activity/bp-activity-filters.php:721 bp-forums/core/filters.php:548
 msgid "Continue reading"
 msgstr ""
 
@@ -16484,7 +16484,7 @@ msgid_plural "(+%s hidden)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-forums/forums/template.php:3052 bp-groups/bp-groups-template.php:1533
+#: bp-forums/forums/template.php:3053 bp-groups/bp-groups-template.php:1533
 #: bp-groups/bp-groups-template.php:1535
 msgid "View more"
 msgstr ""
