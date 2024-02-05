@@ -1000,24 +1000,26 @@ function bp_is_akismet_active( $default = true ) {
 }
 
 /**
- * Check whether Activity Autoload is enabled.
+ * Get an Activity load type.
  *
  * @since BuddyPress 2.0.0
+ * @since BuddyBoss [BBVERSION] Updated the setting.
  *
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: true.
- * @return bool True if Autoload is enabled, otherwise false.
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: infinite.
+ *
+ * @return string infinite if Autoload is enabled, otherwise load_more.
  */
-function bp_is_activity_autoload_active( $default = true ) {
+function bp_is_activity_autoload_active( $default = 'infinite' ) {
 
 	/**
 	 * Filters whether or not Activity Autoload is enabled.
 	 *
-	 * @since BuddyPress 2.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param bool $value Whether or not Activity Autoload is enabled.
+	 * @param string $value infinite if Autoload is enabled, otherwise load_more.
 	 */
-	return (bool) apply_filters( 'bp_is_activity_autoload_active', (bool) bp_get_option( '_bp_enable_activity_autoload', $default ) );
+	return apply_filters( 'bp_is_activity_autoload_active', bp_get_option( 'bb_activity_load_type', $default ) );
 }
 
 /**
@@ -2741,18 +2743,4 @@ function bb_get_ajax_request_page_load( $default = 2 ) {
  */
 function bb_get_load_activity_per_request( $default = 10 ) {
 	return (int) apply_filters( 'bb_get_load_activity_per_request', bp_get_option( 'bb_load_activity_per_request', $default ) );
-}
-
-/**
- * Get an Activity load type.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $default Optional. Fallback value if not found in the database.
- *                        Default: infinite.
- *
- * @return string infinite if Autoload is enabled, otherwise load_more.
- */
-function bb_get_activity_load_type( $default = 'infinite' ) {
-	return apply_filters( 'bb_get_activity_load_type', bp_get_option( 'bb_activity_load_type', $default ) );
 }
