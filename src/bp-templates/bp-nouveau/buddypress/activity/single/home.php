@@ -8,29 +8,33 @@
  * @version 1.0.0
  */
 
+$is_ajax_request = bb_get_ajax_request_page_load();
 ?>
 
 <div id="bp-nouveau-single-activity-edit-form-wrap" style="display: none;">
-	<div id="bp-nouveau-activity-form" class="activity-update-form<?php if ( !bp_is_active( 'media' ) ){ echo ' media-off'; } ?>"></div>
+	<div id="bp-nouveau-activity-form" class="activity-update-form<?php if ( ! bp_is_active( 'media' ) ) { echo ' media-off'; } ?>"></div>
 </div>
 
-<?php bp_nouveau_template_notices(); ?>
-
-<?php bp_nouveau_before_single_activity_content(); ?>
+<?php
+bp_nouveau_template_notices();
+bp_nouveau_before_single_activity_content();
+?>
 
 <div class="activity" data-bp-single="<?php echo esc_attr( bp_current_action() ); ?>">
 
-
-
 	<?php do_action( 'bp_before_single_activity_content' ); ?>
 
-	<ul id="activity-stream" class="activity-list item-list bp-list" data-bp-list="activity">
-
-		<li id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'single-activity-loading' ); ?></li>
-
+	<ul id="activity-stream" class="activity-list item-list bp-list" data-bp-list="activity" data-ajax="<?php echo ( 1 === $is_ajax_request ) ? 'false' : 'true'; ?>">
+		<?php
+		if ( 1 === $is_ajax_request ) {
+			bp_get_template_part( 'activity/activity-loop' );
+		} else {
+			echo '<li id="bp-ajax-loader">';
+			bp_nouveau_user_feedback( 'single-activity-loading' );
+			echo '</li>';
+		}
+		?>
 	</ul>
 
-
 	<?php do_action( 'bp_after_single_activity_content' ); ?>
-
 </div>
