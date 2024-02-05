@@ -62,11 +62,11 @@ $bp_document_privacy = bp_get_document_privacy();
 					<div class="media-folder_details__bottom">
 						<span class="media-folder_author"><?php esc_html_e( 'By ', 'buddyboss' ); ?>
 							<a href="<?php echo esc_url( trailingslashit( bp_core_get_user_domain( bp_get_document_user_id() ) . bp_get_document_slug() ) ); ?>">
-								<?php esc_html( bp_get_document_author() ); ?>
+								<?php echo esc_html( bp_get_document_author() ); ?>
 							</a>
 						</span>
 						<span class="middot">&middot;</span>
-						<span class="media-folder_date"><?php esc_html( bp_get_document_date() ); ?></span>
+						<span class="media-folder_date"><?php echo esc_html( bp_get_document_date() ); ?></span>
 					</div>
 				</div>
 
