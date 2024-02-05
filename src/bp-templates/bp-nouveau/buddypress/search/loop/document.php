@@ -34,14 +34,14 @@ if ( $attachment_id ) {
 
 }
 
-$class = ''; // used.
-if ( $attachment_id && bp_get_document_activity_id() ) {
-	$class = ''; // used.
-}
-
 $link                = bp_get_document_link( $document_id );
 $bp_doc_activity_id  = bp_get_document_activity_id();
 $bp_document_privacy = bp_get_document_privacy();
+
+$class = ''; // used.
+if ( $attachment_id && $bp_doc_activity_id ) {
+	$class = ''; // used.
+}
 ?>
 
 <li data-bp-item-id="<?php echo esc_attr( $document_id ); ?>" data-bp-item-component="document" class="search-document-list">
