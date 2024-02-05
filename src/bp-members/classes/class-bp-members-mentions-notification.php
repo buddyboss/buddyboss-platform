@@ -58,14 +58,19 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 	 * @return mixed|void
 	 */
 	public function load() {
-		$this->register_notification_group(
-			'mentions',
-			esc_html__( 'Mentions', 'buddyboss' ),
-			esc_html__( 'Mentions', 'buddyboss' ),
-			3
-		);
+		if (
+			bp_is_active( 'activity' ) ||
+			bp_is_active( 'forums' )
+		) {
+			$this->register_notification_group(
+				'mentions',
+				esc_html__( 'Mentions', 'buddyboss' ),
+				esc_html__( 'Mentions', 'buddyboss' ),
+				3
+			);
 
-		$this->register_notification_for_mentions();
+			$this->register_notification_for_mentions();
+		}
 	}
 
 	/**
