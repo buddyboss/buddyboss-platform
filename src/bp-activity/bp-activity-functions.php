@@ -6514,7 +6514,7 @@ function bb_load_reaction_popup_modal_js_template() {
 }
 
 /**
- * Fetch the activity meta data using the activity ID.
+ * Fetch the activity metadata using the activity ID.
  *
  * @since BuddyBoss [BBVERSION]
  *

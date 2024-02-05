@@ -4513,10 +4513,6 @@ function bb_video_get_activity_video( $activity = '', $args = array() ) {
 		'per_page' => 0,
 	);
 
-	if ( isset( $args['user_id'] ) ) {
-		$video_args['user_id'] = $args['user_id'];
-	}
-
 	$video_args = bp_parse_args(
 		$args,
 		$video_args,
