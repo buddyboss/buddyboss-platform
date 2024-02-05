@@ -279,39 +279,42 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				 ++++++++++++++++++++++++++++++++++
 				group items of same type together
 				++++++++++++++++++++++++++++++++++ */
-				$types = array();
-				foreach ( $this->search_results['all']['items'] as $item_id => $item ) {
-					$type = $item['type'];
-					if ( empty( $types ) || ! in_array( $type, $types ) ) {
-						$types[] = $type;
-					}
-				}
+				if( ! $args['forum_search'] ) {
 
-				$new_items = array();
-				foreach ( $types as $type ) {
-					$first_html_changed = false;
+					$types = array();
 					foreach ( $this->search_results['all']['items'] as $item_id => $item ) {
-						if ( $item['type'] != $type ) {
-							continue;
+						$type = $item['type'];
+						if ( empty( $types ) || ! in_array( $type, $types ) ) {
+							$types[] = $type;
 						}
-
-						// Filter by default will be false.
-						$bp_search_group_or_type_title = apply_filters( 'bp_search_group_or_type_title', false );
-						if ( true === $bp_search_group_or_type_title ) {
-							// add group/type title in first one.
-							if ( ! $first_html_changed ) {
-								// this filter can be used to change display of 'posts' to 'Blog Posts' etc..
-								$label              = apply_filters( 'bp_search_label_search_type', $type );
-								$item['html']       = "<div class='results-group results-group-{$type}'><span class='results-group-title'>{$label}</span></div>" . $item['html'];
-								$first_html_changed = true;
-							}
-						}
-
-						$new_items[ $item_id ] = $item;
 					}
-				}
 
-				$this->search_results['all']['items'] = $new_items;
+					$new_items = array();
+					foreach ( $types as $type ) {
+						$first_html_changed = false;
+						foreach ( $this->search_results['all']['items'] as $item_id => $item ) {
+							if ( $item['type'] != $type ) {
+								continue;
+							}
+
+							// Filter by default will be false.
+							$bp_search_group_or_type_title = apply_filters( 'bp_search_group_or_type_title', false );
+							if ( true === $bp_search_group_or_type_title ) {
+								// add group/type title in first one.
+								if ( ! $first_html_changed ) {
+									// this filter can be used to change display of 'posts' to 'Blog Posts' etc..
+									$label              = apply_filters( 'bp_search_label_search_type', $type );
+									$item['html']       = "<div class='results-group results-group-{$type}'><span class='results-group-title'>{$label}</span></div>" . $item['html'];
+									$first_html_changed = true;
+								}
+							}
+
+							$new_items[ $item_id ] = $item;
+						}
+					}
+
+					$this->search_results['all']['items'] = $new_items;
+				}
 
 				/* _______________________________ */
 				$url = $this->search_page_search_url( false );
@@ -528,7 +531,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				$pre_search_query = implode( ' UNION ', $sql_queries );
 
 				if ( true === $args['forum_search'] ) {
-					$pre_search_query = "SELECT * FROM ( {$pre_search_query} ) as t1 ORDER BY t1.entry_date DESC";
+					$pre_search_query = "SELECT * FROM ( {$pre_search_query} ) as t1 ORDER BY t1.entry_date DESC, t1.id DESC";
 				}
 
 				if ( isset( $args['ajax_per_page'] ) && $args['ajax_per_page'] > 0 ) {
