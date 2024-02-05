@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.5.31\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-02-05 06:29:22+00:00\n"
+"POT-Creation-Date: 2024-02-05 06:34:41+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5258,10 +5258,11 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:184
 #: bp-core/bb-core-subscriptions.php:600 bp-forums/activity.php:209
-#: bp-forums/admin/forums.php:498 bp-forums/admin/settings.php:262
-#: bp-forums/admin/settings.php:283 bp-forums/admin/tools.php:1797
-#: bp-forums/admin/topics.php:714 bp-forums/admin.php:237
-#: bp-forums/admin.php:293 bp-forums/classes/class-bp-forums-component.php:218
+#: bp-forums/activity.php:232 bp-forums/admin/forums.php:498
+#: bp-forums/admin/settings.php:262 bp-forums/admin/settings.php:283
+#: bp-forums/admin/tools.php:1797 bp-forums/admin/topics.php:714
+#: bp-forums/admin.php:237 bp-forums/admin.php:293
+#: bp-forums/classes/class-bp-forums-component.php:218
 #: bp-forums/classes/class-bp-forums-notification.php:129
 #: bp-forums/forums/template.php:2927 bp-forums/groups.php:53
 #: bp-forums/templates/default/bbpress/content-statistics.php:27
@@ -5274,10 +5275,11 @@ msgid "Discussions"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:193 bp-forums/activity.php:219
-#: bp-forums/admin/forums.php:499 bp-forums/admin/settings.php:270
-#: bp-forums/admin/settings.php:291 bp-forums/admin/tools.php:1798
-#: bp-forums/admin/topics.php:716 bp-forums/admin.php:249
-#: bp-forums/admin.php:312 bp-forums/classes/class-bp-forums-component.php:229
+#: bp-forums/activity.php:242 bp-forums/admin/forums.php:499
+#: bp-forums/admin/settings.php:270 bp-forums/admin/settings.php:291
+#: bp-forums/admin/tools.php:1798 bp-forums/admin/topics.php:716
+#: bp-forums/admin.php:249 bp-forums/admin.php:312
+#: bp-forums/classes/class-bp-forums-component.php:229
 #: bp-forums/core/theme-compat.php:667 bp-forums/forums/template.php:2996
 #: bp-forums/replies/template.php:49 bp-forums/replies/template.php:50
 #: bp-forums/templates/default/bbpress/content-statistics.php:32
@@ -12039,36 +12041,36 @@ msgstr ""
 msgid "You do not have access to that folder."
 msgstr ""
 
-#: bp-forums/activity.php:207
+#: bp-forums/activity.php:207 bp-forums/activity.php:230
 msgid "New forum discussion"
 msgstr ""
 
-#: bp-forums/activity.php:217
+#: bp-forums/activity.php:217 bp-forums/activity.php:240
 msgid "New forum reply"
 msgstr ""
 
-#: bp-forums/activity.php:414
+#: bp-forums/activity.php:437
 msgid "Reply to"
 msgstr ""
 
-#: bp-forums/activity.php:497 bp-forums/activity.php:498
-#: bp-forums/activity.php:540 bp-forums/activity.php:541
+#: bp-forums/activity.php:520 bp-forums/activity.php:521
+#: bp-forums/activity.php:563 bp-forums/activity.php:564
 msgid "Join Discussion"
 msgstr ""
 
-#: bp-forums/activity.php:613 bp-forums/activity.php:1209
+#: bp-forums/activity.php:636 bp-forums/activity.php:1232
 msgid "%1$s started the discussion %2$s in the forum %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:780 bp-forums/activity.php:1210
+#: bp-forums/activity.php:803 bp-forums/activity.php:1233
 msgid "%1$s replied to the discussion %2$s in the forum %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:909
+#: bp-forums/activity.php:932
 msgid "%1$s started the discussion %2$s in the group %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:941
+#: bp-forums/activity.php:964
 msgid "%1$s replied to the discussion %2$s in the group %3$s"
 msgstr ""
 
