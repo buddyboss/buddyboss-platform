@@ -491,7 +491,7 @@ class BP_Activity_Activity {
 
 			// Allow search CPT's post title in the activity feed.
 			$join_sql .= "LEFT JOIN {$bp->activity->table_name_meta} m ON ( m.activity_id = a.id )";
-			$where_conditions['search_sql'] .= $wpdb->prepare( ' OR m.meta_key = %s AND m.meta_value LIKE %s', 'post_title', $search_terms_like );
+			$where_conditions['search_sql'] .= $wpdb->prepare( ' OR ( m.meta_key = %s AND m.meta_value LIKE %s ) ', 'post_title', $search_terms_like );
 
 			/**
 			 * Filters whether or not to include users for search parameters.
@@ -507,6 +507,8 @@ class BP_Activity_Activity {
 					$where_conditions['search_sql'] .= $wpdb->prepare( ' OR a.user_id = %d', $user_id );
 				}
 			}
+
+			$where_conditions['search_sql'] = ' ( ' . $where_conditions['search_sql'] . ' ) ';
 		}
 
 		// Sorting.
