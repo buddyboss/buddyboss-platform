@@ -33,14 +33,14 @@ if ( $attachment_id ) {
 	$mirror_text         = bp_document_mirror_text( $attachment_id );
 }
 
-$class = '';
-if ( $attachment_id && bp_get_document_activity_id() ) {
-	$class = '';
-}
-
 $link                = bp_get_document_link( $document_id );
 $bp_doc_activity_id  = bp_get_document_activity_id();
 $bp_document_privacy = bp_get_document_privacy();
+
+$class = '';
+if ( $attachment_id && $bp_doc_activity_id ) {
+	$class = '';
+}
 ?>
 
 <div class="bp-search-ajax-item bboss_ajax_search_document search-document-list">
