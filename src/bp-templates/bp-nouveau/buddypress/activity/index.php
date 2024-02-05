@@ -8,6 +8,7 @@
  * @version 1.0.0
  */
 
+$is_ajax_request = bb_get_ajax_request_page_load();
 ?>
 
 	<?php bp_nouveau_before_activity_directory_content(); ?>
@@ -32,10 +33,16 @@
 
 		<?php bp_nouveau_activity_hook( 'before_directory', 'list' ); ?>
 
-		<div id="activity-stream" class="activity" data-bp-list="activity">
-
-				<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'directory-activity-loading' ); ?></div>
-
+		<div id="activity-stream" class="activity" data-bp-list="activity" data-ajax="<?php echo ( 1 === $is_ajax_request ) ? 'false' : 'true'; ?>">
+			<?php
+			if ( 1 === $is_ajax_request ) {
+				bp_get_template_part( 'activity/activity-loop' );
+			} else {
+				echo '<div id="bp-ajax-loader">';
+				bp_nouveau_user_feedback( 'directory-activity-loading' );
+				echo '</div>';
+			}
+			?>
 		</div><!-- .activity -->
 
 		<?php bp_nouveau_after_activity_directory_content(); ?>
