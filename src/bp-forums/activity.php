@@ -199,48 +199,31 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 * @uses bp_activity_set_action()
 		 */
 		public function register_activity_actions() {
-
-			// Sitewide activity stream items
-			bp_activity_set_action(
-				$this->component,
-				$this->topic_create,
-				esc_html__( 'New forum discussion', 'buddyboss' ),
-				array( $this, 'bbp_format_activity_action_new_topic' ),
-				esc_html__( 'Discussions', 'buddyboss' ),
-				array( 'activity', 'member' )
-				
+			$activity_actions = array(
+				$this->component => array( 'activity', 'member' )
 			);
-
-			bp_activity_set_action(
-				$this->component,
-				$this->reply_create,
-				esc_html__( 'New forum reply', 'buddyboss' ),
-				array( $this, 'bbp_format_activity_action_new_reply' ),
-				esc_html__( 'Replies', 'buddyboss' ),
-				array( 'activity', 'member' )
-			);
-
 			if ( bp_is_active( 'groups' ) ) {
 				global $bp;
+				$activity_actions[ $bp->groups->id ] = array( 'activity', 'member', 'member_groups', 'group' );
+			}
 
-				// Sitewide activity stream items
+			foreach ( $activity_actions as $key => $value ) {
 				bp_activity_set_action(
-					$bp->groups->id,
+					$key,
 					$this->topic_create,
 					esc_html__( 'New forum discussion', 'buddyboss' ),
 					array( $this, 'bbp_format_activity_action_new_topic' ),
 					esc_html__( 'Discussions', 'buddyboss' ),
-					array( 'member_groups', 'group' )
-
+					$value
 				);
 
 				bp_activity_set_action(
-					$bp->groups->id,
+					$key,
 					$this->reply_create,
 					esc_html__( 'New forum reply', 'buddyboss' ),
 					array( $this, 'bbp_format_activity_action_new_reply' ),
 					esc_html__( 'Replies', 'buddyboss' ),
-					array( 'member_groups', 'group' )
+					$value
 				);
 			}
 
