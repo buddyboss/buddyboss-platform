@@ -4225,9 +4225,73 @@ window.bp = window.bp || {};
 					self.render( self.options );
 				}
 			}
+		},
+
+		/**
+		 *  Refresh current activities, used after updating pinned post.
+		 */
+		refreshActivities: function() {
+
+			var self   = this, object = 'activity', scope = 'all',
+			filter = null, objectData = {}, extras = null, search_terms = '';
+
+			objectData = self.getStorage( 'bp-' + object );
+
+			if ( undefined !== objectData.scope ) {
+				scope = objectData.scope;
+			}
+
+			if ( undefined !== objectData.extras ) {
+				extras = objectData.extras;
+			}
+
+			if ( $( '#buddypress [data-bp-filter="' + object + '"]' ).length ) {
+				if ( undefined !== objectData.filter ) {
+					filter = objectData.filter;
+					$( '#buddypress [data-bp-filter="' + object + '"] option[value="' + filter + '"]' ).prop( 'selected', true );
+				} else if ( '-1' !== $( '#buddypress [data-bp-filter="' + object + '"]' ).val() && '0' !== $( '#buddypress [data-bp-filter="' + object + '"]' ).val() ) {
+					filter = $( '#buddypress [data-bp-filter="' + object + '"]' ).val();
+				}
+			}
+
+			if ( $( this.objectNavParent + ' [data-bp-object="' + object + '"]' ).length ) {
+				$( this.objectNavParent + ' [data-bp-object="' + object + '"]' ).each(
+					function () {
+						$( this ).removeClass( 'selected' );
+					}
+				);
+
+				$( this.objectNavParent + ' [data-bp-scope="' + object + '"], #object-nav li.current' ).addClass( 'selected' );
+			}
+
+			search_terms = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).val();
+
+			// Check the querystring to eventually include the search terms.
+			if ( null !== self.querystring ) {
+				if ( undefined !== self.querystring[ object + '_search' ] ) {
+					search_terms = decodeURI( self.querystring[ object + '_search' ] );
+				} else if ( undefined !== self.querystring.s ) {
+					search_terms = decodeURI( self.querystring.s );
+				}
+
+				if ( search_terms ) {
+					$( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).val( search_terms );
+				}
+			}
+
+			if ( $( '#buddypress [data-bp-list="' + object + '"]' ).length ) {
+				var queryData = {
+					object: object,
+					scope: scope,
+					filter: filter,
+					search_terms: search_terms,
+					extras: extras
+				};
+
+				// Populate the object list.
+				bp.Nouveau.objectRequest( queryData );
+			}
 		}
-
-
 	};
 
    // Launch BP Nouveau.
