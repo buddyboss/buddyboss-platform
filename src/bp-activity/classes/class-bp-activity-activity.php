@@ -491,7 +491,7 @@ class BP_Activity_Activity {
 
 			// Allow search CPT's post title in the activity feed.
 			$join_sql .= "LEFT JOIN {$bp->activity->table_name_meta} m ON ( m.activity_id = a.id )";
-			$where_conditions['search_sql'] .= $wpdb->prepare( ' OR m.meta_key = %s AND m.meta_value LIKE %s', 'post_title', $search_terms_like );
+			$where_conditions['search_sql'] .= $wpdb->prepare( ' OR ( m.meta_key = %s AND m.meta_value LIKE %s ) ', 'post_title', $search_terms_like );
 
 			/**
 			 * Filters whether or not to include users for search parameters.
@@ -507,6 +507,8 @@ class BP_Activity_Activity {
 					$where_conditions['search_sql'] .= $wpdb->prepare( ' OR a.user_id = %d', $user_id );
 				}
 			}
+
+			$where_conditions['search_sql'] = ' ( ' . $where_conditions['search_sql'] . ' ) ';
 		}
 
 		// Sorting.
@@ -2035,14 +2037,17 @@ class BP_Activity_Activity {
 	 * Get favorite count for a given user.
 	 *
 	 * @since BuddyPress 1.2.0
+	 * @since BuddyBoss 2.5.20 Added `$activity_type` property to indicate whether the current ID is activity or comment.
 	 *
-	 * @param int $user_id The ID of the user whose favorites you're counting.
+	 * @param int    $user_id       The ID of the user whose favorites you're counting.
+	 * @param string $activity_type Activity type.
+	 *
 	 * @return int $value A count of the user's favorites.
 	 */
-	public static function total_favorite_count( $user_id ) {
+	public static function total_favorite_count( $user_id, $activity_type = 'activity' ) {
 
 		// Get activities from user meta.
-		$favorite_activity_entries = bp_get_user_meta( $user_id, 'bp_favorite_activities', true );
+		$favorite_activity_entries = bb_activity_get_user_reacted_item_ids( $user_id, $activity_type );
 		if ( ! empty( $favorite_activity_entries ) ) {
 			return count( $favorite_activity_entries );
 		}

@@ -171,6 +171,19 @@ function bp_get_default_options() {
 
 		// Enabled activity pinned posts.
 		'_bb_enable_activity_pinned_posts'           => true,
+
+		// Enabled reactions and their mode.
+		'bb_all_reactions'                           => array(
+			'activity'         => true,
+			'activity_comment' => true
+		),
+		'bb_reaction_mode'                           => 'likes',
+		'bb_reaction_button'                         => array(
+			array(
+				'text' => '',
+				'icon' => 'thumbs-up',
+			)
+		),
 	);
 
 	/**
@@ -1175,6 +1188,11 @@ function bp_is_activity_follow_active( $default = false ) {
  */
 function bp_is_activity_like_active( $default = true ) {
 
+	$is_activity_post_like_active = false;
+	if ( bb_is_reaction_activity_posts_enabled( $default ) ) {
+		$is_activity_post_like_active = true;
+	}
+
 	/**
 	 * Filters whether or not Activity Like is enabled.
 	 *
@@ -1182,7 +1200,7 @@ function bp_is_activity_like_active( $default = true ) {
 	 *
 	 * @param bool $value Whether or not Activity Like is enabled.
 	 */
-	return (bool) apply_filters( 'bp_is_activity_like_active', (bool) bp_get_option( '_bp_enable_activity_like', $default ) );
+	return (bool) apply_filters( 'bp_is_activity_like_active', $is_activity_post_like_active );
 }
 
 
@@ -2547,4 +2565,149 @@ function bb_custom_logout_redirection( $default = '' ) {
 	 * @param string $value Custom logout page URL.
 	 */
 	return apply_filters( 'bb_custom_logout_redirection', bp_get_option( 'bb-custom-logout-redirection', $default ) );
+}
+
+/**
+ * Get all reaction types.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @return array[]
+ */
+function bb_get_all_reactions() {
+	return array(
+		'activity'         => array(
+			'label'     => esc_html__( 'Activity posts', 'buddyboss' ),
+			'disabled'  => ! bp_is_active( 'activity' ),
+			'component' => 'activity',
+		),
+		'activity_comment' => array(
+			'label'     => esc_html__( 'Activity comments', 'buddyboss' ),
+			'disabled'  => ! bp_is_active( 'activity' ),
+			'component' => 'activity',
+		),
+	);
+}
+
+/**
+ * Check whether Reaction is enabled based on key.
+ *
+ * @param string $key Key of the reaction.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @return array|bool
+ */
+function bb_all_enabled_reactions( $key = '' ) {
+	$get_reactions = (array) bp_get_option( 'bb_all_reactions', array() );
+	if ( empty( $key ) ) {
+		return $get_reactions;
+	}
+
+	$all_reactions = bb_get_all_reactions();
+
+	return (bool) (
+		isset( $get_reactions[ $key ] ) &&
+		$all_reactions[ $key ] &&
+		! empty( $all_reactions[ $key ]['component'] ) &&
+		bp_is_active( $all_reactions[ $key ]['component'] ) &&
+		$get_reactions[ $key ]
+	);
+}
+
+/**
+ * Check whether Reaction for activity posts is enabled.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if reaction for activity posts is enabled, otherwise false.
+ */
+function bb_is_reaction_activity_posts_enabled( $default = true ) {
+	return (bool) apply_filters( 'bb_is_reaction_activity_posts_enabled', (bool) bb_all_enabled_reactions('activity') );
+}
+
+/**
+ * Check whether Reaction for activity comments is enabled.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: True.
+ * @return bool True if reaction for activity comments is enabled, otherwise false.
+ */
+function bb_is_reaction_activity_comments_enabled( $default = true ) {
+	return (bool) apply_filters( 'bb_is_reaction_activity_comments_enabled', (bool) bb_all_enabled_reactions( 'activity_comment' ) );
+}
+
+/**
+ * Get currently active reaction mode.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: 'likes'
+ *
+ * @return string The reaction mode, either 'likes' or 'emotions'.
+ */
+function bb_get_reaction_mode( $default = 'likes' ) {
+
+	$mode = bp_get_option( 'bb_reaction_mode', $default );
+	if (
+		! class_exists( 'BB_Reactions' ) ||
+		! function_exists( 'bbp_pro_is_license_valid' ) ||
+		! bbp_pro_is_license_valid()
+	) {
+		$mode = 'likes';
+	}
+
+	return apply_filters( 'bb_get_reaction_mode', $mode );
+}
+
+/**
+ * Check whether emotions is enabled.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @return bool
+ */
+function bb_is_reaction_emotions_enabled() {
+	return (bool) apply_filters( 'bb_is_reaction_emotions_enabled', (bool) ( bb_get_reaction_mode() === 'emotions' ) );
+}
+
+/**
+ * Get data for reaction button options.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @param string $key Key name for the option.
+ *
+ * @return array|mixed
+ */
+function bb_reaction_button_options( $key = '' ) {
+	$button_settings = (array) bp_get_option( 'bb_reactions_button', array() );
+	if ( empty( $key ) ) {
+		return $button_settings;
+	}
+
+	return $button_settings[ $key ];
+}
+
+/**
+ * Fetch the enabled reactions based on mode.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @return array
+ */
+function bb_active_reactions() {
+	if ( bb_is_reaction_emotions_enabled() ) {
+		$all_emotions = bb_load_reaction()->bb_get_reactions( 'emotions' );
+	} else {
+		$all_emotions = bb_load_reaction()->bb_get_reactions();
+	}
+
+
+	return ( ! empty( $all_emotions ) ? array_column( $all_emotions, null, 'id' ) : array() );
 }
