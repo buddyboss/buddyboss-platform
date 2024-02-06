@@ -123,7 +123,7 @@ window.bp = window.bp || {};
 
 			// Activity comments effect.
 			//$( '#buddypress [data-bp-list="activity"]' ).on( 'bp_ajax_append', this.hideComments );
-			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.show-all', this.showComments );
+			//$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.acomments-view-more', this.showComments );
 			$( 'body' ).on( 'click', '.bb-close-action-popup', this.closeComments );
 
 			// Activity actions.
@@ -533,74 +533,20 @@ window.bp = window.bp || {};
 		showComments: function( event ) {
 			event.preventDefault();
 
-			var placeholder =
-			`<div id="bp-ajax-loader">
-				<div class="bb-activity-placeholder">
-					<div class="bb-activity-placeholder_head">
-						<div class="bb-activity-placeholder_avatar bb-bg-animation bb-loading-bg"></div>
-						<div class="bb-activity-placeholder_details">
-							<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
-							<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
-						</div>
-					</div>
-					<div class="bb-activity-placeholder_content">
-						<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
-						<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
-					</div>
-				</div>
-			</div>`;
-
 			var activityID = $( event.target ).closest( 'li.activity-item' ).data( 'bp-activity-id' );
 			var activity_item = $( '#activity-' + activityID );
-			var activity_HTML = activity_item.html();
+			var activity_content = activity_item.html();
 
-			$( event.target ).addClass( 'loading' );
+			$('.bb-activity-model-wrapper').show();
 
-			$( event.target ).closest( '.activity-item' ).addClass( 'pop loading' );
-			$( 'body' ).addClass( 'activity-comments-modal-open' );
-
-			$( event.target ).closest( '.activity-comments' ).prepend( placeholder );
-
-			/*var pop = 
-			`<div class="modal-mask bb-white bbm-model-wrap activity-modal-mask">
-				<div class="modal-wrapper">
-					<div class="modal-container modal-activity-container">
-						<header class="bb-model-header">
-							<h4><span class="target_name">Jhon's Post</span></h4>
-							<a class="bb-close-action-popup bb-model-close-button" href="#">
-								<span class="bb-icon-l bb-icon-times"></span>
-							</a>
-						</header>
-						<div class="bb-action-popup-content activity">
-							<ul class="activity-list item-list bp-list">
-								<li class="activity activity_update activity-item has-comments activity-item-pop">${placeholder}</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>`;*/
-
-			/*$( event.target ).closest( '.activity-comments' ).append( pop );
-
-			setTimeout(function() {
-				$('.activity-item.has-comments.activity-item-pop').html(`<li class="activity activity_update activity-item has-comments">${activity_HTML}</li>`);
-			}, 2000);*/
-
-			setTimeout(
-				function() {
-					$( event.target ).closest( '.activity-item' ).removeClass( 'loading' );
-					$( event.target ).closest( '.activity-item' ).find( '#bp-ajax-loader' ).remove();
-					$( event.target ).closest( 'ul' ).find( 'li' ).fadeIn( 300 );
-				},
-				1000
-			);
+			$( '.bb-activity-model-wrapper' ).find( '.bb-modal-activity-content' ).html( activity_content );
+			$( '.bb-activity-model-wrapper' ).find( '.bb-modal-activity-content' ).find( '.activity-comments' ).children( 'ul' ).remove();
 		},
 
 		closeComments: function( event ) {
 			event.preventDefault();
 
-			$( event.target ).closest( '.activity-item' ).removeClass( 'pop' );
-			$( 'body' ).removeClass( 'activity-comments-modal-open' );
+			$('.bb-activity-model-wrapper').hide();
 		},
 
 		/**
@@ -3231,21 +3177,25 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		openActivityPopup: function( activityID ) {
-			/*var activity_item = $( '#activity-' + activityID );
-			if ( activity_item.length ) {
-				var activity_HTML = activity_item.html();
-				$( '.activity-popup' ).html( activity_HTML );
-				$( '.activity-popup' ).find( '.activity-comments' ).children( 'ul' ).html( '' );
-				$( '.activity-popup' ).css( 'max-width', activity_item.width() );
-				$( '.activity-popup' ).addClass( 'is-detached' );
-			}*/
+			var activity_item = $( '#activity-' + activityID );
+			var activity_content = activity_item.html();
+
+			$('.bb-activity-model-wrapper').show();
+
+			$( '.bb-activity-model-wrapper' ).find( '.bb-modal-activity-content' ).html( activity_content );
+			$( '.bb-activity-model-wrapper' ).find( '.bb-modal-activity-content' ).find( '.activity-comments' ).children( 'ul' ).remove();
 		},
 
 		viewMoreComments: function( e ) {
 			e.preventDefault();
 
-			var currentTargetList = $( e.currentTarget ).parent(), activityId  = $( currentTargetList ).data( 'activity_id' ),
-				parentCommentId = $( currentTargetList ).data( 'parent_comment_id' ), lastCommentTimeStamp = '', target = $( e.currentTarget );
+			var currentTargetList = $( e.currentTarget ).parent(),
+					activityId  = $( currentTargetList ).data( 'activity_id' ),
+					parentCommentId = $( currentTargetList ).data( 'parent_comment_id' ),
+					lastCommentTimeStamp = '',
+					target = $( e.currentTarget );
+
+			bp.Nouveau.Activity.openActivityPopup( activityId );
 
 			target.addClass( 'loading' );
 

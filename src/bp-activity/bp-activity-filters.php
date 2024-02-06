@@ -3666,3 +3666,12 @@ function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
 
 	return $activity_comment_data;
 }
+
+/**
+ * Add activity modal template for activity pages
+ */
+function bp_activity_add_modal_template() {
+	bp_get_template_part( 'activity/activity-modal' );
+}
+
+add_action( 'bp_after_directory_activity_list', 'bp_activity_add_modal_template' );

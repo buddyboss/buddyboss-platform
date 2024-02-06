@@ -31,13 +31,6 @@ if ( ! empty( $link_embed ) ) {
 
 <li class="<?php bp_activity_css_class(); ?>" id="activity-<?php bp_activity_id(); ?>" data-bp-activity-id="<?php bp_activity_id(); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php bp_nouveau_edit_activity_data(); ?>" data-link-preview='<?php echo $link_preview_string; ?>' data-link-url='<?php echo $link_url; ?>'>
 
-	<div class="bb-model-activity-header">
-		<h2>Jhon's Post</h2>
-		<a class="bb-close-action-popup bb-model-close-button" href="#">
-			<span class="bb-icon-l bb-icon-times"></span>
-		</a>
-	</div>
-
 	<?php bb_nouveau_activity_entry_bubble_buttons(); ?>
 
 	<div class="bb-pin-action">

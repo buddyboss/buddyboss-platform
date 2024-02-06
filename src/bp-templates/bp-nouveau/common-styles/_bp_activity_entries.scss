@@ -1264,92 +1264,41 @@
 }
 
 /* Activity comment modal ==> Starts Here */
-.activity-list {
-	.activity-item {
-		#bp-ajax-loader {
-			display: none;
-		}
+.bb-activity-model-wrapper {
 
-		.bp-hidden {
-			display: none;
-		}
-
-		&.pop.loading {
-			.activity-comments > ul {
-				display: none;
-			}
-
-			#bp-ajax-loader {
-				display: block;
-			}
-		}
-
-		&.pop {
-			position: fixed;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-			width: 700px;
-			max-height: 85vh;
-			z-index: 9999;
-			overflow-y: auto;
-			overflow-x: hidden;
-
-			.activity-comments > ul {
-				display: block;
-			}
-
-			li.bp-hidden {
-				display: list-item;
-			}
-
-			.bb-activity-placeholder {
-				border: 0;
-			}
-
-			.show-all {
-				display: none;
-			}
-		}	
-	}
-}
-
-#buddypress {
-	.activity-list.bp-list {
-		.activity-item {
-			&.pop {
-				padding-top: 0;
-			}
-		}
-	}
-}
-
-.activity-comments-modal-open {
-	overflow: hidden;
-
-	&::before {
-		content: "";
-		display: block;
+	&.bb-internal-model {
 		position: fixed;
-		z-index: 999;
-		top: 0;
-		left: 0;
+		z-index: 999990;
+		background-color: rgba(255, 255, 255, 0.9);
 		width: 100%;
 		height: 100%;
-		background-color: rgba(250,251,253,.9);
+		top: 0;
+		left: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		> .activity-modal {
+			max-height: 85vh;
+			max-width: 700px;
+			width: 700px;
+		}
+	}
+
+	&#buddypress {
+
+		.activity-list.bp-list .activity-item {
+			padding: 0;
+		}
+	}
+
+	.activity-list .bb-activity-more-options-wrap {
+		top: unset;
 	}
 }
 
-.activity-item {
-	&.pop {
-		.bb-model-activity-header {
-			display: flex;
-		}
-	}	
-}
-
-.bb-model-activity-header {
-	display: none;
+.bb-modal-activity-header {
+	display: flex;
 	align-items: center;
 	position: sticky;
 	z-index: 99;
@@ -1358,8 +1307,7 @@
 	width: 100%;
 	height: 60px;
 	border-bottom: 1px solid $bp-border-color;
-	background-color: #fff;
-	margin-bottom: 20px;
+	padding: 0 25px;
 
 	h2 {
 		line-height: 1;
@@ -1375,40 +1323,22 @@
 	}
 }
 
-.modal-activity-container {
-	max-height: 80vh;
-
-	&.modal-container {
-		padding-bottom: 0;
-	}
-
-	.bb-model-header {
-		z-index: 9;
-	}
-
-	.bb-action-popup-content.activity {
-		overflow-y: auto;
-		overflow-x: hidden;
-		margin: 0 -30px;
-	}
+.bb-modal-activity-body {
+	padding: 15px;
+	max-height: calc(100% - 60px);
+	overflow-y: auto;
 
 	.bb-activity-placeholder {
 		border: 0;
+		padding: 20px 0;
+		margin: 0;
 	}
 }
 
-#buddypress {
-	.modal-activity-container {
-		.activity-list.bp-list {
-			margin-bottom: 0;
-
-			.activity-item {
-				border: 0;
-				margin-bottom: 0;
-			}
-		}
-	}
+.acomments-view-more {
+	cursor: pointer;
 }
+
 /* Activity comment modal ==> Ends Here */
 
 // Prevent callout popup on long press on ios devices
