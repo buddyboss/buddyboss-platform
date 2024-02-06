@@ -1906,7 +1906,7 @@ function bp_activity_comments( $args = '' ) {
  * @return bool
  */
 function bp_activity_get_comments( $args = '' ) {
-	global $activities_template;
+	global $activities_template, $load_single_activity;
 
 	if ( in_array( $activities_template->activity->component, array( 'blogs' ), true ) && ! bp_activity_can_comment() ) {
 		return false;
@@ -1916,7 +1916,7 @@ function bp_activity_get_comments( $args = '' ) {
 		return false;
 	}
 
-	bp_activity_recurse_comments( $activities_template->activity, bb_get_activity_comment_visibility() );
+	bp_activity_recurse_comments( $activities_template->activity, empty( $load_single_activity ) ? bb_get_activity_comment_visibility() : false );
 }
 
 /**
@@ -1966,7 +1966,7 @@ function bp_activity_recurse_comments( $comment, $comment_load_limit = false ) {
 		$template = bp_locate_template( 'activity/comment.php', false, false );
 
 		$comment_template_args = array();
-		if ( $comment->item_id === $comment->secondary_item_id && $comment->id === bp_get_activity_id() ) {
+		if ( false !== $comment_load_limit && $comment->item_id === $comment->secondary_item_id && $comment->id === bp_get_activity_id() ) {
 
 			// First level comments.
 			$comment_template_args = array( 'show_replies' => false );
@@ -2814,6 +2814,11 @@ function bp_get_activity_comment_css_class() {
 	// Threading is turned on, so check the depth.
 	if ( get_option( 'thread_comments' ) ) {
 		$class .= (bool) ( $comment_depth > get_option( 'thread_comments_depth' ) ) ? ' detached-comment-item' : '';
+	}
+
+	// Has childrens.
+	if ( ! empty( bp_activity_current_comment()->children ) ) {
+		$class .= ' has-child-comments';
 	}
 
 	return apply_filters( 'bp_get_activity_comment_css_class', $class );

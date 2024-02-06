@@ -8,7 +8,20 @@
  * @version 1.0.0
  */
 
-bp_nouveau_before_loop(); ?>
+bp_nouveau_before_loop();
+
+$query_string = bp_ajax_querystring( 'activity' );
+parse_str( $query_string, $query_string_array );
+
+global $load_single_activity;
+$load_single_activity = false;
+if ( ! empty( $query_string_array['include'] ) ) {
+
+	// Load single activity.
+	$load_single_activity = $query_string_array['include'];
+}
+
+?>
 
 <?php if ( bp_has_activities( bp_ajax_querystring( 'activity' ) ) ) : ?>
 
