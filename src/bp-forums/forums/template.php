@@ -3056,7 +3056,7 @@ function bbp_get_forum_content_excerpt_view_more( $forum_id = 0, $length = 250, 
 	/**
 	 * Filters the excerpt of a forum description.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.40
 	 *
 	 * @param string $value Excerpt of a forum description.
 	 * @param int $forum_id Forum Id.
