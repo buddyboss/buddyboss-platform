@@ -121,6 +121,10 @@ add_filter( 'posts_pre_query', 'bp_core_filter_wp_query', 10, 2 );
 
 // Remove deleted members link from mention for blog comment.
 add_filter( 'comment_text', 'bb_mention_remove_deleted_users_link', 20, 1 );
+
+// Add user dynamic link for blog comment.
+add_filter( 'comment_text', 'bb_mention_add_user_dynamic_link', 20, 1 );
+
 /**
  * Prevent specific pages (eg 'Activate') from showing on page listings.
  *
