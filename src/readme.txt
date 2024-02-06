@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.4.2
+Tested up to: 6.4.3
 Requires PHP: 8.0
-Stable tag: 2.5.31
+Stable tag: 2.5.40
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -65,6 +65,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Bug: Core - Previous custom posts on the news feed page from group discussions and replies were not reflecting the updated translation from LocoTranslate plugin
 * Bug: Core - While typing a longer reply or comment in a pinned post on the Activity Feed the feed would refresh while typing which then clearing the text
 * Bug: Forums - URL link embedded into a forum page would not show
+* Bug: Platform - On a fresh WP install, after activating the BuddyBoss Platform it triggered a WordPress Database error in the debug log
 * Bug: Styling - Notification settings tabs under the user Account Settings page did not display correctly
 
 = 2.5.31 =
