@@ -693,7 +693,7 @@ function bp_blogs_record_activity_on_site_creation( $recorded_blog, $is_private,
 				 * @param string $value Blog primary link.
 				 * @param int    $value Blog ID.
 				 */
-				'primary_link' => apply_filters( 'bp_blogs_activity_created_blog_primary_link', bp_blogs_get_blogmeta( $recorded_blog->blog_id, 'url' ), $recorded_blog->blog_id ),
+				'primary_link' => apply_filters( 'bp_blogs_activity_created_blog_primary_link', '', $recorded_blog->blog_id ),
 				'type'         => 'new_blog',
 				'item_id'      => $recorded_blog->blog_id,
 			)

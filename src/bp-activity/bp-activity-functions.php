@@ -2717,27 +2717,8 @@ function bp_activity_post_type_comment( $comment_id = 0, $is_approved = true, $a
 			}
 		}
 
-		// Set up the action by using the format functions.
-		$action_args = array_merge(
-			$activity_args,
-			array(
-				'post_title' => $post_type_comment->post->post_title,
-				'post_url'   => $post_url,
-				'blog_url'   => $blog_url,
-				'blog_name'  => get_blog_option( $blog_id, 'blogname' ),
-			)
-		);
-
-		$activity_args['action'] = call_user_func_array( $activity_comment_object->format_callback, array( '', (object) $action_args ) );
-
-		// Make sure the action is set.
-		if ( empty( $activity_args['action'] ) ) {
-			return;
-		} else {
-			// Backward compatibility filter for the blogs component.
-			if ( 'blogs' === $activity_post_object->component_id ) {
-				$activity_args['action'] = apply_filters( 'bp_blogs_record_activity_action', $activity_args['action'] );
-			}
+		if ( 'blogs' === $activity_post_object->component_id ) {
+			$activity_args['action'] = apply_filters( 'bp_blogs_record_activity_action', '' );
 		}
 
 		$activity_id = bp_activity_add( $activity_args );
