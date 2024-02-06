@@ -91,6 +91,12 @@ add_action(
 					'nopriv'   => true,
 				),
 			),
+			array(
+				'activity_loadmore_comments' => array(
+					'function' => 'bb_nouveau_ajax_activity_loadmore_comments',
+					'nopriv'   => true,
+				),
+			),
 		);
 
 		foreach ( $ajax_actions as $ajax_action ) {
@@ -1123,5 +1129,60 @@ function bb_nouveau_ajax_activity_update_pinned_post() {
 		wp_send_json_success( $response );
 	} else {
 		wp_send_json_error( $response );
+	}
+}
+
+/**
+ * Get more comments.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_nouveau_ajax_activity_loadmore_comments() {
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error();
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+		wp_send_json_error();
+	}
+
+	if ( empty( $_POST['activity_id'] ) ) {
+		wp_send_json_error();
+	}
+
+	if ( empty( $_POST['parent_comment_id'] ) ) {
+		wp_send_json_error();
+	}
+
+	if ( empty( $_POST['referer'] ) ) {
+		wp_send_json_error();
+	}
+
+	// if ( bp_has_activities( 'include=' . $_POST['activity_id'] ) ) {
+	// 	while ( bp_activities() ) {
+	// 		bp_the_activity();
+
+	// 		ob_start();
+	// 		bp_nouveau_activity_comments( bb_get_activity_comment_loading() );
+	// 		wp_send_json_success( ob_get_clean() );
+	// 	}
+	// } else {
+	// 	wp_send_json_error();
+	// }
+
+	$activities_template = new BP_Activity_Template( array( 'include' => $_POST['activity_id'], 'display_comments' => false ) );
+
+	$activity_comment_id = ! empty( $_POST['parent_comment_id'] ) ? (int) $_POST['parent_comment_id'] : 0;
+	$activity_comment    = new BP_Activity_Activity( $activity_comment_id );
+
+	if ( ! empty( $activity_comment->id ) ) {
+		$activities_template->comments = BP_Activity_Activity::append_comments( array( $activity_comment ) );
+		error_log(print_r( $activities_template,true ));
+		wp_send_json_success( $activities_template );
+	} else {
+		wp_send_json_error();
 	}
 }

@@ -152,6 +152,8 @@ window.bp = window.bp || {};
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.autoload ) ) {
 				$( window ).scroll( this.loadMoreActivities );
 			}
+
+			$( document ).on( 'click', '.acomments-view-more', this.viewMoreComments.bind( this ) );
 		},
 
 		/**
@@ -3237,6 +3239,63 @@ window.bp = window.bp || {};
 				$( '.activity-popup' ).css( 'max-width', activity_item.width() );
 				$( '.activity-popup' ).addClass( 'is-detached' );
 			}*/
+		},
+
+		viewMoreComments: function( e ) {
+			e.preventDefault();
+
+			var currentTargetList = $( e.currentTarget ).parent(), activityId  = $( currentTargetList ).data( 'activity_id' ),
+				parentCommentId = $( currentTargetList ).data( 'parent_comment_id' ), lastCommentTimeStamp = '', target = $( e.currentTarget );
+
+			target.addClass( 'loading' );
+
+			var data = {
+				action: 'activity_loadmore_comments',
+				activity_id: activityId,
+				parent_comment_id: parentCommentId,
+				activity_type_is_blog: $( e.currentTarget ).parents('.entry-content').length > 1 ? true : false
+			}
+
+			// View more links clicked on the new feed previews.
+			if ( $( e.currentTarget ).parents('.entry-content').length > 1 ) {
+				data.referer = 'news-feed';
+			} else {
+				data.referer = 'news-feed-modal';
+			}
+
+			if ( $( e.currentTarget ).prev( 'li.activity-comment' ).length > 0 ) {
+				// Load more in the current thread.
+				lastCommentTimeStamp = $( e.currentTarget ).prev( 'li.activity-comment' ).data( 'bp-timestamp' );
+				data.last_comment_timestamp = lastCommentTimeStamp;
+			}
+
+			// View more links clicked on the new feed previews, so load the modal with the response.
+			// if ( ! $( e.currentTarget ).parent().parent().hasClass( 'activity-comments' ) ) {
+			// 	// Clicked on reples links, so load the respective x replies in that thread.
+
+			// }
+
+			bp.Nouveau.ajax( data, 'activity' ).done(
+				function( response ) {
+					console.log( response );
+					if ( false === response.success ) {
+						target.removeClass( 'loading' );
+						return;
+					} else {
+						// success
+					}
+
+				}
+			).fail(
+				function() {
+					target.removeClass( 'loading' );
+				}
+			);
+
+			console.log( activityId );
+			console.log( parentCommentId );
+			console.log( lastCommentTimeStamp );
+
 		}
 
 	};

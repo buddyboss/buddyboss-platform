@@ -679,14 +679,14 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_activity_comments() {
+function bp_nouveau_activity_comments( $comment_load_limit = false ) {
 	global $activities_template;
 
 	if ( empty( $activities_template->activity->children ) ) {
 		return;
 	}
 
-	bp_nouveau_activity_recurse_comments( $activities_template->activity );
+	bp_nouveau_activity_recurse_comments( $activities_template->activity, $comment_load_limit = false );
 }
 
 /**
@@ -712,7 +712,7 @@ function bp_nouveau_activity_recurse_comments( $comment, $comment_load_limit = f
 	 *
 	 * @param string $value Opening tag for the HTML markup to use.
 	 */
-	echo apply_filters( 'bp_activity_recurse_comments_start_ul', '<ul>' );
+	echo apply_filters( 'bp_activity_recurse_comments_start_ul', "<ul data-activity_id={$activities_template->activity->id} data-parent_comment_id={$comment->id}>" );
 
 	$comment_loaded_count = 0;
 	$comment_total        = bp_activity_recurse_comment_count( $comment );
