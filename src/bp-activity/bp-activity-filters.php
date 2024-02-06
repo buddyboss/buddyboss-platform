@@ -1886,7 +1886,6 @@ function bp_activity_media_add( $media ) {
 				if ( ! empty( $media->group_id ) && bp_is_active( 'groups' ) ) {
 					$args['item_id'] = $media->group_id;
 					$args['type']    = 'activity_update';
-					$args['action']  = '';
 					$activity_id     = groups_record_activity( $args );
 				} else {
 					$activity_id = bp_activity_post_update( $args );
@@ -2098,7 +2097,6 @@ function bp_activity_edit_update_media( $media_ids ) {
 					if ( ! empty( $old_media->group_id ) && bp_is_active( 'groups' ) ) {
 						$args['item_id'] = $old_media->group_id;
 						$args['type']    = 'activity_update';
-						$args['action']  = '';
 						$activity_id     = groups_record_activity( $args );
 					} else {
 						$activity_id = bp_activity_post_update( $args );
@@ -2295,7 +2293,6 @@ function bp_activity_document_add( $document ) {
 				if ( ! empty( $document->group_id ) && bp_is_active( 'groups' ) ) {
 					$args['item_id'] = $document->group_id;
 					$args['type']    = 'activity_update';
-					$args['action']  = '';
 					$activity_id     = groups_record_activity( $args );
 				} else {
 					$activity_id = bp_activity_post_update( $args );
@@ -2507,7 +2504,6 @@ function bp_activity_edit_update_document( $document_ids ) {
 					if ( ! empty( $old_document->group_id ) && bp_is_active( 'groups' ) ) {
 						$args['item_id'] = $old_document->group_id;
 						$args['type']    = 'activity_update';
-						$args['action']  = '';
 						$activity_id     = groups_record_activity( $args );
 					} else {
 						$activity_id = bp_activity_post_update( $args );
@@ -2954,7 +2950,6 @@ function bp_activity_video_add( $video ) {
 				if ( ! empty( $video->group_id ) && bp_is_active( 'groups' ) ) {
 					$args['item_id'] = $video->group_id;
 					$args['type']    = 'activity_update';
-					$args['action']  = '';
 					$activity_id     = groups_record_activity( $args );
 				} else {
 					$activity_id = bp_activity_post_update( $args );
@@ -3167,7 +3162,6 @@ function bp_activity_edit_update_video( $video_ids ) {
 					if ( ! empty( $old_video->group_id ) && bp_is_active( 'groups' ) ) {
 						$args['item_id'] = $old_video->group_id;
 						$args['type']    = 'activity_update';
-						$args['action']  = '';
 						$activity_id     = groups_record_activity( $args );
 					} else {
 						$activity_id = bp_activity_post_update( $args );
