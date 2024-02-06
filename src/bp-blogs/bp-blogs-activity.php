@@ -919,7 +919,7 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 	// @todo since this is done after AJAX posting, the activity comment permalink
 	// doesn't change on the front end until the next page refresh.
 	$resave_activity               = new BP_Activity_Activity( $comment_id );
-	$resave_activity->primary_link = get_comment_link( $post_comment_id );
+	$resave_activity->primary_link = '';
 
 	/**
 	 * Now that the activity id exists and the post comment was created, we don't need to update
@@ -1469,6 +1469,10 @@ function bp_blogs_activity_comment_permalink( $retval = '' ) {
 	// Maybe adjust the link if item ID exists.
 	if ( ( false !== $item_id ) && isset( buddypress()->blogs->allow_comments[ $item_id ] ) ) {
 		$retval = $activities_template->activity->current_comment->primary_link;
+		if ( empty( $retval ) ) {
+			$comment_id = bp_activity_get_meta( $activities_template->activity->current_comment->id, 'bp_blogs_post_comment_id' );
+			$retval     = get_comment_link( $comment_id );
+		}
 	}
 
 	return $retval;
@@ -1499,6 +1503,10 @@ function bp_blogs_activity_comment_single_permalink( $retval, $activity ) {
 
 	if ( isset( $parent_activity->type ) && bp_activity_post_type_get_tracking_arg( $parent_activity->type, 'post_type' ) ) {
 		$retval = $activity->primary_link;
+		if ( empty( $retval ) ) {
+			$comment_id = bp_activity_get_meta( $activity->id, 'bp_blogs_post_comment_id' );
+			$retval     = get_comment_link( $comment_id );
+		}
 	}
 
 	return $retval;

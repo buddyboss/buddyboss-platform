@@ -609,23 +609,12 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				return;
 			}
 
-			// User link for topic author
-			$user_link = bbp_get_user_profile_link( $user_id );
-
 			// Topic
-			$topic_permalink = bbp_get_topic_permalink( $topic_id );
 			$topic_title     = get_post_field( 'post_title', $topic_id, 'raw' );
 			$topic_content   = get_post_field( 'post_content', $topic_id, 'raw' );
-			$topic_link      = '<a href="' . $topic_permalink . '">' . $topic_title . '</a>';
-
-			// Forum
-			$forum_permalink = bbp_get_forum_permalink( $forum_id );
-			$forum_title     = get_post_field( 'post_title', $forum_id, 'raw' );
-			$forum_link      = '<a href="' . $forum_permalink . '">' . $forum_title . '</a>';
 
 			// Activity action & text
-			$activity_text    = sprintf( esc_html__( '%1$s started the discussion %2$s in the forum %3$s', 'buddyboss' ), $user_link, $topic_link, $forum_link );
-			$activity_action  = apply_filters( 'bbp_activity_topic_create', $activity_text, $user_id, $topic_id, $forum_id );
+			$activity_action  = apply_filters( 'bbp_activity_topic_create', '', $user_id, $topic_id, $forum_id );
 			$activity_content = apply_filters( 'bbp_activity_topic_create_excerpt', $topic_content );
 
 			// Compile and record the activity stream results
@@ -635,7 +624,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 					'user_id'           => $user_id,
 					'action'            => $activity_action,
 					'content'           => $activity_content,
-					'primary_link'      => $topic_permalink,
+					'primary_link'      => '',
 					'type'              => $this->topic_create,
 					'item_id'           => $topic_id,
 					'secondary_item_id' => $forum_id,
@@ -773,26 +762,14 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				return;
 			}
 
-			// Setup links for activity stream
-			$user_link = bbp_get_user_profile_link( $user_id );
-
 			// Reply
-			$reply_url     = bbp_get_reply_url( $reply_id );
 			$reply_content = get_post_field( 'post_content', $reply_id, 'raw' );
 
 			// Topic
-			$topic_permalink = bbp_get_topic_permalink( $topic_id );
 			$topic_title     = get_post_field( 'post_title', $topic_id, 'raw' );
-			$topic_link      = '<a href="' . $topic_permalink . '">' . $topic_title . '</a>';
-
-			// Forum
-			$forum_permalink = bbp_get_forum_permalink( $forum_id );
-			$forum_title     = get_post_field( 'post_title', $forum_id, 'raw' );
-			$forum_link      = '<a href="' . $forum_permalink . '">' . $forum_title . '</a>';
 
 			// Activity action & text
-			$activity_text    = sprintf( esc_html__( '%1$s replied to the discussion %2$s in the forum %3$s', 'buddyboss' ), $user_link, $topic_link, $forum_link );
-			$activity_action  = apply_filters( 'bbp_activity_reply_create', $activity_text, $user_id, $reply_id, $topic_id );
+			$activity_action  = apply_filters( 'bbp_activity_reply_create', '', $user_id, $reply_id, $topic_id );
 			$activity_content = apply_filters( 'bbp_activity_reply_create_excerpt', $reply_content );
 
 			// Compile and record the activity stream results
@@ -802,7 +779,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 					'user_id'           => $user_id,
 					'action'            => $activity_action,
 					'content'           => $activity_content,
-					'primary_link'      => $reply_url,
+					'primary_link'      => '',
 					'type'              => $this->reply_create,
 					'item_id'           => $reply_id,
 					'secondary_item_id' => $topic_id,
