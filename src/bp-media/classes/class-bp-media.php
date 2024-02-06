@@ -1194,7 +1194,7 @@ class BP_Media {
 					}
 				}
 
-				if ( empty( $from ) ) {
+				if ( empty( $from ) || 'activity' === $from ) {
 					wp_delete_attachment( $attachment_id, true );
 				}
 			}
