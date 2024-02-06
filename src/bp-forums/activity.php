@@ -618,16 +618,16 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$activity_action  = apply_filters( 'bbp_activity_topic_create', '', $user_id, $topic_id, $forum_id );
 			$activity_content = apply_filters( 'bbp_activity_topic_create_excerpt', $topic_content );
 
-			$activity_id = $this->get_activity_id( $topic_id );
-			if ( ! empty( $activity_id ) ) {
-				$existing_activity = new BP_Activity_Activity( $activity_id );
+			$existing_activity_id = $this->get_activity_id( $topic_id );
+			if ( ! empty( $existing_activity_id ) ) {
+				$existing_activity = new BP_Activity_Activity( $existing_activity_id );
 				$activity_action   = $existing_activity->action;
 				$topic_permalink   = $existing_activity->primary_link;
 			}
 			// Compile and record the activity stream results
 			$activity_id = $this->record_activity(
 				array(
-					'id'                => $activity_id,
+					'id'                => $existing_activity_id,
 					'user_id'           => $user_id,
 					'action'            => $activity_action,
 					'content'           => $activity_content,
@@ -780,9 +780,9 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$activity_action  = apply_filters( 'bbp_activity_reply_create', '', $user_id, $reply_id, $topic_id );
 			$activity_content = apply_filters( 'bbp_activity_reply_create_excerpt', $reply_content );
 
-			$activity_id = $this->get_activity_id( $reply_id );
-			if ( ! empty( $activity_id ) ) {
-				$existing_activity = new BP_Activity_Activity( $activity_id );
+			$existing_activity_id = $this->get_activity_id( $reply_id );
+			if ( ! empty( $existing_activity_id ) ) {
+				$existing_activity = new BP_Activity_Activity( $existing_activity_id );
 				$activity_action   = $existing_activity->action;
 				$reply_url         = $existing_activity->primary_link;
 			}
@@ -790,7 +790,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			// Compile and record the activity stream results
 			$activity_id = $this->record_activity(
 				array(
-					'id'                => $this->get_activity_id( $reply_id ),
+					'id'                => $existing_activity_id,
 					'user_id'           => $user_id,
 					'action'            => $activity_action,
 					'content'           => $activity_content,
