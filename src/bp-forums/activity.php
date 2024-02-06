@@ -610,6 +610,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			}
 
 			// Topic
+			$topic_permalink = '';
 			$topic_title     = get_post_field( 'post_title', $topic_id, 'raw' );
 			$topic_content   = get_post_field( 'post_content', $topic_id, 'raw' );
 
@@ -617,14 +618,20 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$activity_action  = apply_filters( 'bbp_activity_topic_create', '', $user_id, $topic_id, $forum_id );
 			$activity_content = apply_filters( 'bbp_activity_topic_create_excerpt', $topic_content );
 
+			$activity_id = $this->get_activity_id( $topic_id );
+			if ( ! empty( $activity_id ) ) {
+				$existing_activity = new BP_Activity_Activity( $activity_id );
+				$activity_action   = $existing_activity->action;
+				$topic_permalink   = $existing_activity->primary_link;
+			}
 			// Compile and record the activity stream results
 			$activity_id = $this->record_activity(
 				array(
-					'id'                => $this->get_activity_id( $topic_id ),
+					'id'                => $activity_id,
 					'user_id'           => $user_id,
 					'action'            => $activity_action,
 					'content'           => $activity_content,
-					'primary_link'      => '',
+					'primary_link'      => $topic_permalink,
 					'type'              => $this->topic_create,
 					'item_id'           => $topic_id,
 					'secondary_item_id' => $forum_id,
@@ -763,6 +770,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			}
 
 			// Reply
+			$reply_url     = '';
 			$reply_content = get_post_field( 'post_content', $reply_id, 'raw' );
 
 			// Topic
@@ -772,6 +780,13 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$activity_action  = apply_filters( 'bbp_activity_reply_create', '', $user_id, $reply_id, $topic_id );
 			$activity_content = apply_filters( 'bbp_activity_reply_create_excerpt', $reply_content );
 
+			$activity_id = $this->get_activity_id( $reply_id );
+			if ( ! empty( $activity_id ) ) {
+				$existing_activity = new BP_Activity_Activity( $activity_id );
+				$activity_action   = $existing_activity->action;
+				$reply_url         = $existing_activity->primary_link;
+			}
+
 			// Compile and record the activity stream results
 			$activity_id = $this->record_activity(
 				array(
@@ -779,7 +794,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 					'user_id'           => $user_id,
 					'action'            => $activity_action,
 					'content'           => $activity_content,
-					'primary_link'      => '',
+					'primary_link'      => $reply_url,
 					'type'              => $this->reply_create,
 					'item_id'           => $reply_id,
 					'secondary_item_id' => $topic_id,
