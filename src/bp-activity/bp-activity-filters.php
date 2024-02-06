@@ -463,10 +463,22 @@ function bp_activity_at_name_filter( $content, $activity_id = 0 ) {
 		}
 	}
 
-	// Linkify the mentions with the username.
-	foreach ( (array) $usernames as $user_id => $username ) {
-		$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)/';
-		$content = preg_replace( $pattern, "<a class='bp-suggestions-mention' href='" . bp_core_get_user_domain( $user_id ) . "' rel='nofollow'>@$username</a>", $content );
+	if ( get_option( 'bp-enable-activity-mentions-match' ) == 1 ){
+		// Linkify the mentions with the username.
+		foreach ( (array) $usernames as $user_id => $username ) {
+
+			$show_mention = bp_core_get_user_displayname( $user_id );
+			if ($show_mention === $username ){
+				$show_mention = "@" . bp_core_get_user_displayname( $user_id );
+			}
+			$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)/';
+			$content = preg_replace( $pattern, "<a class='bp-suggestions-mention' href='" . bp_core_get_user_domain( $user_id ) . "' rel='nofollow'>$show_mention</a>", $content );
+		}
+	} else {
+		foreach ( (array) $usernames as $user_id => $username ) {
+			$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)/';
+			$content = preg_replace( $pattern, "<a class='bp-suggestions-mention' href='" . bp_core_get_user_domain( $user_id ) . "' rel='nofollow'>@$username</a>", $content );
+		}
 	}
 
 	// Put everything back.
@@ -506,10 +518,23 @@ function bp_activity_at_name_filter_updates( $activity ) {
 
 	// We have mentions!
 	if ( ! empty( $usernames ) ) {
-		// Replace @mention text with userlinks.
-		foreach ( (array) $usernames as $user_id => $username ) {
-			$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)/';
-			$activity->content = preg_replace( $pattern, "<a class='bp-suggestions-mention' href='" . bp_core_get_user_domain( $user_id ) . "' rel='nofollow'>@$username</a>", $activity->content );
+		if ( get_option( 'bp-enable-activity-mentions-match' ) == 1 ) {
+			// Replace @mention text with userlinks.
+			foreach ( (array) $usernames as $user_id => $username ) {
+
+				$show_mention = bp_core_get_user_displayname( $user_id );
+				if ($show_mention === $username ){
+					$show_mention = "@" . bp_core_get_user_displayname( $user_id );
+				}
+				$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)/';
+				$activity->content = preg_replace( $pattern, "<a class='bp-suggestions-mention' href='" . bp_core_get_user_domain( $user_id ) . "' rel='nofollow'>$show_mention</a>", $activity->content );
+			}
+		} else {
+			// Replace @mention text with userlinks.
+			foreach ( (array) $usernames as $user_id => $username ) {
+				$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)/';
+				$activity->content = preg_replace( $pattern, "<a class='bp-suggestions-mention' href='" . bp_core_get_user_domain( $user_id ) . "' rel='nofollow'>@$username</a>", $activity->content );
+			}
 		}
 
 		if ( ! bb_is_rest() ) {

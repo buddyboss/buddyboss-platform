@@ -45,6 +45,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$bp_disable_avatar_uploads_before_saving   = bp_disable_avatar_uploads();
 		$default_profile_avatar_type_before_saving = bb_get_default_profile_avatar_type();
 		$bp_enable_profile_gravatar_before_saving  = bp_enable_profile_gravatar();
+		$bp_enable_activity_mentions_match_before_saving = bp_enable_activity_mentions_match();
 		$profile_cover_type_before_saving          = bb_get_default_profile_cover_type();
 		$profile_slug_format_before_saving         = bb_get_profile_slug_format();
 
@@ -55,6 +56,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$bp_disable_avatar_uploads_after_saving   = bp_disable_avatar_uploads();
 		$default_profile_avatar_type_after_saving = bb_get_default_profile_avatar_type();
 		$bp_enable_profile_gravatar_after_saving  = bp_enable_profile_gravatar();
+		$bp_enable_activity_mentions_match_after_saving = bp_enable_activity_mentions_match();
 		$profile_cover_type_after_saving          = bb_get_default_profile_cover_type();
 		$profile_slug_format_after_saving         = bb_get_profile_slug_format();
 
@@ -95,6 +97,14 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 				bp_xprofile_update_field_meta( $nickname_field_id, 'default_visibility', 'public' );
 				bp_xprofile_update_field_meta( $nickname_field_id, 'allow_custom_visibility', 'disabled' );
 			}
+		}
+
+		$bp_enable_activity_mentions_match = bb_filter_input_string( INPUT_POST, 'bp-enable-activity-mentions-match' );
+
+		if ( $bp_enable_activity_mentions_match ){
+			bp_update_option( 'bp-enable-activity-mentions-match', 1 );
+		} else{
+			bp_update_option( 'bp-enable-activity-mentions-match', 0 );
 		}
 
 		$bb_profile_avatar_type           = bb_filter_input_string( INPUT_POST, 'bp-profile-avatar-type' );
@@ -203,6 +213,9 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$args          = array();
 		$args['class'] = 'nick-name-options display-options';
 		$this->add_field( 'bp-hide-nickname-last-name', '', 'bp_admin_setting_callback_nickname_hide_last_name', 'intval', $args );
+
+		// Mentions name format.
+		$this->add_field( 'bp-mentions-name-format', __( 'Mentions Name Format', 'buddyboss' ), array( $this, 'callback_mentions_name_format' ), 'intval' );
 
 		// Section for Profile Links.
 		$this->add_section( 'bb_profile_slug_settings', __( 'Profile Links', 'buddyboss' ), '', 'bb_profile_slug_tutorial' );
@@ -473,6 +486,30 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 				<label for="bp-member-type-enable-disable"><?php esc_html_e( 'Enable profile types to give members unique profile fields and permissions', 'buddyboss' ); ?></label>
 				<?php
 		}
+	}
+
+	/**
+	 * Mentions name format.
+	 */
+	public function callback_mentions_name_format() {
+		?>
+		<input id="bp-enable-activity-mentions-match" name="bp-enable-activity-mentions-match" type="checkbox" value="1" <?php checked( bp_enable_activity_mentions_match() ); ?> />
+		<label for="bp-enable-activity-mentions-match"><?php esc_html_e( 'Use Selected format for "Display Name Format" when mentioning users', 'buddyboss' ); ?></label>
+		<?php
+		printf(
+			'<p class="description">%s</p>',
+			sprintf(
+				__( 'When enabled, mentions in Activities, Forums, and Replies will be showing with the selected format in "Display Name Format" setting. remember to run <a href="%s">Repair Community</a> tool to update all the activities. ', 'buddyboss' ),
+				add_query_arg(
+					array(
+						'page' => 'bp-repair-community',
+						'tab'  => 'bp-repair-community',
+						'tool' => 'bp-wordpress-update-display-name-activity',
+					),
+					admin_url( 'admin.php' )
+				)
+			)
+		);
 	}
 
 	/**

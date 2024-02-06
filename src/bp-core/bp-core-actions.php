@@ -916,10 +916,23 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 		return;
 	}
 
-	// Replace @mention text with userlinks.
-	foreach ( (array) $usernames as $user_id => $username ) {
-		$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)/';
-		$post_type_comment->comment_content = preg_replace( $pattern, "<a class='bp-suggestions-mention' href='" . bp_core_get_user_domain( $user_id ) . "' rel='nofollow'>@$username</a>", $post_type_comment->comment_content );
+	if ( get_option( 'bp-enable-activity-mentions-match' ) == 1 ) {
+		// Replace @mention text with userlinks.
+		foreach ( (array) $usernames as $user_id => $username ) {
+
+			$show_mention = bp_core_get_user_displayname( $user_id );
+			if ($show_mention === $username ){
+				$show_mention = "@" . bp_core_get_user_displayname( $user_id );
+			}
+			$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)/';
+			$post_type_comment->comment_content = preg_replace( $pattern, "<a class='bp-suggestions-mention' href='" . bp_core_get_user_domain( $user_id ) . "' rel='nofollow'>$show_mention</a>", $post_type_comment->comment_content );
+		}
+	} else {
+		// Replace @mention text with userlinks.
+		foreach ( (array) $usernames as $user_id => $username ) {
+			$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)/';
+			$post_type_comment->comment_content = preg_replace( $pattern, "<a class='bp-suggestions-mention' href='" . bp_core_get_user_domain( $user_id ) . "' rel='nofollow'>@$username</a>", $post_type_comment->comment_content );
+		}	
 	}
 
 	// Send @mentions and setup BP notifications.

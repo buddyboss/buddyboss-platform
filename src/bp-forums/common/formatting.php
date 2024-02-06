@@ -528,9 +528,20 @@ function bbp_convert_mentions( $data ) {
 
 	// We have mentions!
 	if ( ! empty( $usernames ) ) {
-		foreach ( (array) $usernames as $user_id => $username ) {
-			$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)/';
-			$data = preg_replace( $pattern, "<a class='bp-suggestions-mention' href='" . bbp_get_user_profile_url( $user_id ) . "' rel='nofollow'>@$username</a>", $data );
+		if ( get_option( 'bp-enable-activity-mentions-match' ) == 1 ){
+			foreach ( (array) $usernames as $user_id => $username ) {
+				$show_mention = bp_core_get_user_displayname( $user_id );
+				if ($show_mention === $username ){
+					$show_mention = "@" . bp_core_get_user_displayname( $user_id );
+				}
+				$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)/';
+				$data = preg_replace( $pattern, "<a class='bp-suggestions-mention' href='" . bbp_get_user_profile_url( $user_id ) . "' rel='nofollow'>$show_mention</a>", $data );
+			}
+		} else {
+			foreach ( (array) $usernames as $user_id => $username ) {
+				$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)/';
+				$data = preg_replace( $pattern, "<a class='bp-suggestions-mention' href='" . bbp_get_user_profile_url( $user_id ) . "' rel='nofollow'>@$username</a>", $data );
+			}
 		}
 
 		// Temporary variable to avoid having to run bp_find_mentions_by_at_sign() again.
