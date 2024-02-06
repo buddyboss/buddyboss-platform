@@ -1085,7 +1085,7 @@ function bp_blogs_sync_activity_edit_to_post_comment( BP_Activity_Activity $acti
 	add_action( 'bp_activity_post_type_comment', 'bp_blogs_comment_sync_activity_comment', 10, 4 );
 
 	// If activity comment edited and it's a blog, then set activity comment content as blank.
-	$activity->primary_link = get_comment_link( $post_comment_id );
+	$activity->primary_link = ! empty( $activity->primary_link ) ? $activity->primary_link : '';
 
 	/**
 	 * Now that the activity id exists and the post comment was created, we don't need to update
