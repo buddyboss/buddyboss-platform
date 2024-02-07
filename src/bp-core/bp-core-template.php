@@ -1087,6 +1087,13 @@ function bp_create_excerpt( $text, $length = 225, $options = array() ) {
 		}
 
 		$truncate = rtrim( mb_substr( $truncate, 0, $spacepos ) );
+		
+		// If there's a space within the trimmed content, trim to that space
+		$last_space = mb_strrpos($truncate, ' ');
+
+		if ($last_space !== false) {
+			$truncate = mb_substr($truncate, 0, $last_space);
+		}
 	}
 	$truncate .= $ending;
 
