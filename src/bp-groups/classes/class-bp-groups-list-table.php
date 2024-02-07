@@ -80,7 +80,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function prepare_items() {
-		global $groups_template;
+		global $groups_template, $wpdb, $bp;
 
 		$screen = get_current_screen();
 
@@ -130,12 +130,15 @@ class BP_Groups_List_Table extends WP_List_Table {
 		}
 
 		// Set the current view.
-		if ( isset( $_GET['group_status'] ) && in_array( $_GET['group_status'], array( 'public', 'private', 'hidden' ) ) ) {
+		if ( isset( $_GET['group_status'] ) && in_array( $_GET['group_status'], array( 'public', 'private', 'hidden', 'no-members' ) ) ) {
 			$this->view = $_GET['group_status'];
 		}
 
 		// We'll use the ids of group status types for the 'include' param.
 		$this->group_type_ids = BP_Groups_Group::get_group_type_ids();
+
+		// Get group ids for groups with no members.
+		$this->group_type_ids['no-members'] = $wpdb->get_col( "SELECT g.id FROM {$bp->groups->table_name} g LEFT JOIN {$bp->groups->table_name_members} m ON g.id = m.group_id WHERE m.group_id IS NULL" );
 
 		// Pass a dummy array if there are no groups of this type.
 		$include = false;
@@ -148,6 +151,9 @@ class BP_Groups_List_Table extends WP_List_Table {
 		foreach ( $this->group_type_ids as $group_type => $group_ids ) {
 			$this->group_counts[ $group_type ] = count( $group_ids );
 		}
+
+		// Get group count for groups with no members.
+		$this->group_counts['no-members']   = count( $this->group_type_ids['no-members'] );
 
 		// Group types
 		$group_type = false;
@@ -171,12 +177,22 @@ class BP_Groups_List_Table extends WP_List_Table {
 				$groups_args['group_type'] = $group_type;
 			}
 
+			if ( 'no-members' === $this->view ) {
+				add_filter( 'bp_groups_get_where_conditions', 'bb_groups_get_where_conditions', 10, 2 );
+				add_filter( 'bp_after_bp_groups_group_get_parse_args', 'bb_groups_group_get_parse_args', 10, 1 );
+			}
+
 			$groups = array();
 			if ( bp_has_groups( $groups_args ) ) {
 				while ( bp_groups() ) {
 					bp_the_group();
 					$groups[] = (array) $groups_template->group;
 				}
+			}
+
+			if ( 'no-members' === $this->view ) {
+				remove_filter( 'bp_after_bp_groups_group_get_parse_args', 'buddyboss_bp_groups_group_get_parse_args', 10, 1 );
+				remove_filter( 'bp_groups_get_where_conditions', 'buddyboss_bp_groups_get_where_conditions', 10, 2 );
 			}
 		}
 
@@ -372,6 +388,14 @@ class BP_Groups_List_Table extends WP_List_Table {
 			"><?php printf( _n( 'Hidden <span class="count">(%s)</span>', 'Hidden <span class="count">(%s)</span>', $this->group_counts['hidden'], 'buddyboss' ), bp_core_number_format( $this->group_counts['hidden'] ) ); ?></a></li>
 
 			<?php
+			if ( $this->group_counts['no-members'] > 0 ) { ?>
+				|
+				<li class="no-members">
+					<a href="<?php echo esc_url( add_query_arg( 'group_status', 'no-members', $url_base ) ); ?>" class="<?php echo esc_attr( 'no-members' == $this->view ? 'current' : '' ); ?>">
+						<?php printf( _n( 'No members <span class="count">(%s)</span>', 'No members <span class="count">(%s)</span>', $this->group_counts['no-members'], 'buddyboss' ), bp_core_number_format( $this->group_counts['no-members'] ) ); ?>
+					</a>
+				</li>
+			<?php }
 
 			/**
 			 * Fires inside listing of views so plugins can add their own.
@@ -838,4 +862,5 @@ class BP_Groups_List_Table extends WP_List_Table {
 		</div>
 		<?php
 	}
+
 }
