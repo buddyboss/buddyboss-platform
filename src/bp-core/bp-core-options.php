@@ -1006,9 +1006,9 @@ function bp_is_akismet_active( $default = true ) {
  * @since BuddyBoss [BBVERSION] Updated the setting.
  *
  * @param string $default Optional. Fallback value if not found in the database.
- *                        Default: infinite.
+ *                        Default: true.
  *
- * @return string infinite if Autoload is enabled, otherwise load_more.
+ * @return bool true if Autoload is enabled, otherwise false.
  */
 function bp_is_activity_autoload_active( $default = 'infinite' ) {
 
@@ -1017,9 +1017,9 @@ function bp_is_activity_autoload_active( $default = 'infinite' ) {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $value infinite if Autoload is enabled, otherwise load_more.
+	 * @param bool $value true if Autoload is enabled, otherwise false.
 	 */
-	return apply_filters( 'bp_is_activity_autoload_active', bp_get_option( 'bb_activity_load_type', $default ) );
+	return (bool) apply_filters( 'bp_is_activity_autoload_active', ( 'infinite' === bp_get_option( 'bb_activity_load_type', $default ) ) );
 }
 
 /**
