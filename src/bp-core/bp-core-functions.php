@@ -9354,7 +9354,7 @@ function bb_admin_performance_setting_general_callback() {
  */
 function bb_admin_performance_setting_activity_callback() {
 	$bb_load_activity_per_request = bb_get_load_activity_per_request();
-	$bb_activity_load_type        = bp_is_activity_autoload_active();
+	$bb_activity_load_type        = bp_get_option( 'bb_activity_load_type', 'infinite' );
 
 	$activity_per_page = apply_filters( 'bb_performance_activity_per_page', array() );
 	$activity_per_page = bp_parse_args(
