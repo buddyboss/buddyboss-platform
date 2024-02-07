@@ -9,6 +9,8 @@
  * @version 1.4.0
  */
 
+$is_send_ajax_request = bb_is_send_ajax_request();
+
 bp_nouveau_before_document_directory_content();
 bp_nouveau_template_notices();
 
@@ -53,11 +55,18 @@ if ( bp_is_profile_video_support_enabled() ) {
 		?>
 	</div>
 
-	<div id="media-stream" class="media document-parent <?php if ( bp_is_document_directory() && bp_is_active( 'groups' ) ) { echo 'group-column'; } ?>" data-bp-list="document">
-		<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'directory-media-document-loading' ); ?></div>
+	<div id="media-stream" class="media document-parent <?php if ( bp_is_document_directory() && bp_is_active( 'groups' ) ) { echo 'group-column'; } ?>" data-bp-list="document" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+		<?php
+		if ( $is_send_ajax_request ) {
+			echo '<div id="bp-ajax-loader">';
+			bp_nouveau_user_feedback( 'directory-media-document-loading' );
+			echo '</div>';
+		} else {
+			bp_get_template_part( 'document/document-loop' );
+		}
+		?>
 	</div><!-- .media -->
 
 	<?php bp_nouveau_after_document_directory_content(); ?>
 
 </div><!-- // .screen-content -->
-
