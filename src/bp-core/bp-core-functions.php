@@ -7873,6 +7873,12 @@ function bb_admin_icons( $id ) {
 		case 'bp_reaction_settings_section':
 			$meta_icon = $bb_icon_bf . ' bb-icon-like';
 			break;
+		case 'bb_performance_general':
+			$meta_icon = $bb_icon_bf . ' bb-icon-cog';
+			break;
+		case 'bb_performance_activity':
+			$meta_icon = $bb_icon_bf . ' bb-icon-activity';
+			break;
 		default:
 			$meta_icon = '';
 	}
