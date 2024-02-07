@@ -9294,9 +9294,9 @@ function bb_mention_add_user_dynamic_link( $content ) {
 
 	// Define a callback function for preg_replace_callback.
 	$replace_callback = function ( $matches ) {
-		$userId = $matches[1];                     // Extract the user ID from the match
+		$user_id = $matches[1];                     // Extract the user ID from the match.
 
-		return bp_core_get_user_domain( $userId ); // Replace this with your actual BuddyPress URL format
+		return bp_core_get_user_domain( $user_id ); // Replace this with your actual BuddyPress URL format.
 
 	};
 
