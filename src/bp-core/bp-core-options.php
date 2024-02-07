@@ -184,6 +184,11 @@ function bp_get_default_options() {
 				'icon' => 'thumbs-up',
 			)
 		),
+
+		// Performance Settings.
+		'bb_ajax_request_page_load'                  => 1,
+		'bb_load_activity_per_request'               => 10,
+		'bb_activity_load_type'                      => 'infinite',
 	);
 
 	/**
@@ -1005,14 +1010,16 @@ function bp_is_akismet_active( $default = true ) {
  */
 function bp_is_activity_autoload_active( $default = true ) {
 
+	$default_val = true === $default ? 'infinite' : 'load_more';
+
 	/**
-	 * Filters whether or not Activity Autoload is enabled.
+	 * Filters whether Activity Autoload is enabled.
 	 *
-	 * @since BuddyPress 2.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param bool $value Whether or not Activity Autoload is enabled.
+	 * @param bool $value true if Autoload is enabled, otherwise false.
 	 */
-	return (bool) apply_filters( 'bp_is_activity_autoload_active', (bool) bp_get_option( '_bp_enable_activity_autoload', $default ) );
+	return (bool) apply_filters( 'bp_is_activity_autoload_active', ( 'infinite' === bp_get_option( 'bb_activity_load_type', $default_val ) ) );
 }
 
 /**
@@ -2714,7 +2721,7 @@ function bb_active_reactions() {
 
 /**
  * Check whether activity comments is enabled.
- * 
+ *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                        Default: true.
  *
@@ -2728,7 +2735,7 @@ function bb_is_activity_comments_enabled( $default = true ) {
 
 /**
  * Check whether activity comment threading is enabled.
- * 
+ *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                        Default: true.
  *
@@ -2742,7 +2749,7 @@ function bb_is_activity_comment_threading_enabled( $default = true ) {
 
 /**
  * Get activity comment threading depth.
- * 
+ *
  * @param int $default Optional. Fallback value if not found in the database.
  *                        Default: 3.
  *
@@ -2756,7 +2763,7 @@ function bb_get_activity_comment_threading_depth( $default = 3 ) {
 
 /**
  * Get activity comment visibility value.
- * 
+ *
  * @param int $default Optional. Fallback value if not found in the database.
  *                        Default: 2.
  *
@@ -2770,7 +2777,7 @@ function bb_get_activity_comment_visibility( $default = 2 ) {
 
 /**
  * Get activity comment loading value.
- * 
+ *
  * @param int $default Optional. Fallback value if not found in the database.
  *                        Default: 10.
  *
@@ -2780,4 +2787,30 @@ function bb_get_activity_comment_visibility( $default = 2 ) {
  */
 function bb_get_activity_comment_loading( $default = 10 ) {
 	return (int) apply_filters( 'bb_get_activity_comment_loading', bp_get_option( '_bb_get_activity_comment_loading', $default ) );
+}
+
+/**
+ * Get Page requests option.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $default when option not found, function will return $default value.
+ *
+ * @return int
+ */
+function bb_get_ajax_request_page_load( $default = 2 ) {
+	return (int) apply_filters( 'bb_get_ajax_request_page_load', bp_get_option( 'bb_ajax_request_page_load', $default ) );
+}
+
+/**
+ * Get an Activity loading option.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $default when option not found, function will return $default value.
+ *
+ * @return int
+ */
+function bb_get_load_activity_per_request( $default = 10 ) {
+	return (int) apply_filters( 'bb_get_load_activity_per_request', bp_get_option( 'bb_load_activity_per_request', $default ) );
 }
