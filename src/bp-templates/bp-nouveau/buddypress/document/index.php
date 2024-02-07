@@ -55,7 +55,7 @@ if ( bp_is_profile_video_support_enabled() ) {
 		?>
 	</div>
 
-	<div id="media-stream" class="media document-parent <?php if ( bp_is_document_directory() && bp_is_active( 'groups' ) ) { echo 'group-column'; } ?>" data-bp-list="document" data-ajax="<?php echo ( $is_send_ajax_request ) ? 'true' : 'false'; ?>">
+	<div id="media-stream" class="media document-parent <?php if ( bp_is_document_directory() && bp_is_active( 'groups' ) ) { echo 'group-column'; } ?>" data-bp-list="document" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 		<?php
 		if ( $is_send_ajax_request ) {
 			echo '<div id="bp-ajax-loader">';

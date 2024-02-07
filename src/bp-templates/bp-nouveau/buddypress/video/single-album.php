@@ -97,7 +97,7 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) {
 				}
 				?>
 
-				<div id="video-stream" class="video" data-bp-list="video" data-ajax="<?php echo ( $is_send_ajax_request ) ? 'true' : 'false'; ?>">
+				<div id="video-stream" class="video" data-bp-list="video" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 					<?php
 					if ( $is_send_ajax_request ) {
 						echo '<div id="bp-ajax-loader">';

@@ -27,7 +27,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 
 <?php bp_nouveau_group_hook( 'before', 'activity_content' ); ?>
 
-<div id="activity-stream" class="activity single-group" data-bp-list="activity" data-ajax="<?php echo ( $is_send_ajax_request ) ? 'true' : 'false'; ?>">
+<div id="activity-stream" class="activity single-group" data-bp-list="activity" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 	<?php
 	if ( $is_send_ajax_request ) {
 		echo '<li id="bp-activity-ajax-loader">';

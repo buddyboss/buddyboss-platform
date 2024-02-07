@@ -24,7 +24,7 @@ bp_nouveau_before_single_activity_content();
 
 	<?php do_action( 'bp_before_single_activity_content' ); ?>
 
-	<ul id="activity-stream" class="activity-list item-list bp-list" data-bp-list="activity" data-ajax="<?php echo ( $is_send_ajax_request ) ? 'true' : 'false'; ?>">
+	<ul id="activity-stream" class="activity-list item-list bp-list" data-bp-list="activity" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 		<?php
 		if ( $is_send_ajax_request ) {
 			echo '<li id="bp-ajax-loader">';

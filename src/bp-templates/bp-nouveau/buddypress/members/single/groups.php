@@ -24,7 +24,7 @@ switch ( bp_current_action() ) :
 	case 'my-groups':
 		bp_nouveau_member_hook( 'before', 'groups_content' );
 		?>
-		<div class="groups mygroups" data-bp-list="groups" data-ajax="<?php echo ( $is_send_ajax_request ) ? 'true' : 'false'; ?>">
+		<div class="groups mygroups" data-bp-list="groups" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 			<?php
 			if ( $is_send_ajax_request ) {
 				echo '<div id="bp-ajax-loader">';

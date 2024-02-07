@@ -64,7 +64,7 @@ bp_nouveau_template_notices();
 	bp_get_template_part( 'document/theatre' );
 	?>
 
-	<div id="video-stream" class="video" data-bp-list="video" data-ajax="<?php echo ( $is_send_ajax_request ) ? 'true' : 'false'; ?>">
+	<div id="video-stream" class="video" data-bp-list="video" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 		<?php
 		if ( $is_send_ajax_request ) {
 			echo '<div id="bp-ajax-loader">';

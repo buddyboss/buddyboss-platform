@@ -28,7 +28,7 @@ endif;
 	bp_nouveau_activity_hook( 'before_directory', 'list' );
 	?>
 
-	<div id="activity-stream" class="activity" data-bp-list="activity" data-ajax="<?php echo ( $is_send_ajax_request ) ? 'true' : 'false'; ?>">
+	<div id="activity-stream" class="activity" data-bp-list="activity" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 		<?php
 		if ( $is_send_ajax_request ) {
 			echo '<div id="bp-ajax-loader">';

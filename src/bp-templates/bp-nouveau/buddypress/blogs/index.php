@@ -19,7 +19,7 @@ endif;
 
 <div class="screen-content">
 	<?php bp_get_template_part( 'common/search-and-filters-bar' ); ?>
-	<div id="blogs-dir-list" class="blogs dir-list" data-bp-list="blogs" data-ajax="<?php echo ( $is_send_ajax_request ) ? 'true' : 'false'; ?>">
+	<div id="blogs-dir-list" class="blogs dir-list" data-bp-list="blogs" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 		<?php
 		if ( $is_send_ajax_request ) {
 			echo '<div id="bp-ajax-loader">';

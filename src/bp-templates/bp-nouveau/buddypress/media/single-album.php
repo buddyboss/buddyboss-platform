@@ -116,7 +116,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 				}
 				?>
 
-				<div id="media-stream" class="media" data-bp-list="media" data-ajax="<?php echo ( $is_send_ajax_request ) ? 'true' : 'false'; ?>">
+				<div id="media-stream" class="media" data-bp-list="media" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 					<div id="bp-ajax-loader">
 					<?php
 					if (
