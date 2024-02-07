@@ -7,26 +7,29 @@
  * @since   BuddyPress 3.0.0
  * @version 1.0.0
  */
-?>
 
-<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
+$is_send_ajax_request = bb_is_send_ajax_request();
 
-<?php bp_get_template_part( 'common/search-and-filters-bar' ); ?>
+bp_get_template_part( 'members/single/parts/item-subnav' );
+bp_get_template_part( 'common/search-and-filters-bar' );
 
-<?php
 switch ( bp_current_action() ) :
 
 	// Home/My Connections
 	case 'my-friends':
 		bp_nouveau_member_hook( 'before', 'friends_content' );
 		?>
-
-		<div class="members friends" data-bp-list="members">
-
-			<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'member-friends-loading' ); ?></div>
-
+		<div class="members friends" data-bp-list="members" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+			<?php
+			if ( $is_send_ajax_request ) {
+				echo '<div id="bp-ajax-loader">';
+				bp_nouveau_user_feedback( 'member-friends-loading' );
+				echo '</div>';
+			} else {
+				bp_get_template_part( 'members/members-loop' );
+			}
+			?>
 		</div><!-- .members.friends -->
-
 		<?php
 		bp_nouveau_member_hook( 'after', 'friends_content' );
 		break;
@@ -38,13 +41,17 @@ switch ( bp_current_action() ) :
 	case 'mutual':
 		bp_nouveau_member_hook( 'before', 'friends_content' );
 		?>
-
-        <div class="members mutual-friends" data-bp-list="members">
-
-            <div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'member-mutual-friends-loading' ); ?></div>
-
-        </div><!-- .members.mutual-friends -->
-
+		<div class="members mutual-friends" data-bp-list="members" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+			<?php
+			if ( $is_send_ajax_request ) {
+				echo '<div id="bp-ajax-loader">';
+				bp_nouveau_user_feedback( 'member-mutual-friends-loading' );
+				echo '</div>';
+			} else {
+				bp_get_template_part( 'members/members-loop' );
+			}
+			?>
+		</div><!-- .members.mutual-friends -->
 		<?php
 		bp_nouveau_member_hook( 'after', 'friends_content' );
 		break;
