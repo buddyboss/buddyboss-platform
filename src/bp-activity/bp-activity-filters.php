@@ -890,7 +890,7 @@ function bp_activity_heartbeat_last_recorded( $response = array(), $data = array
 	// filters), but force the offset to get only new items.
 	$activity_latest_args = bp_parse_args(
 		bp_ajax_querystring( 'activity' ),
-		array( 'since' => date_i18n( 'Y-m-d H:i:s', $data['bp_activity_last_recorded'] ) ),
+		array( 'pin_type' => 'none', 'since' => date_i18n( 'Y-m-d H:i:s', $data['bp_activity_last_recorded'] ) ),
 		'activity_latest_args'
 	);
 

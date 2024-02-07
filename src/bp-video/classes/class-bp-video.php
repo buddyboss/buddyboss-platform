@@ -1121,7 +1121,7 @@ class BP_Video {
 					wp_delete_attachment( $get_existing, true );
 				}
 
-				if ( empty( $from ) ) {
+				if ( empty( $from ) || 'activity' === $from ) {
 					wp_delete_attachment( $attachment_id, true );
 				}
 			}
