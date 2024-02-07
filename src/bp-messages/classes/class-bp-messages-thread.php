@@ -492,9 +492,15 @@ class BP_Messages_Thread {
 
 		// Integer casting.
 		foreach ( $messages as $key => $data ) {
-			$messages[ $key ]->id        = (int) $messages[ $key ]->id;
-			$messages[ $key ]->thread_id = (int) $messages[ $key ]->thread_id;
-			$messages[ $key ]->sender_id = (int) $messages[ $key ]->sender_id;
+			if ( isset( $messages[ $key ]->id ) ) {
+				$messages[ $key ]->id = (int) $messages[ $key ]->id;
+			}
+			if ( isset( $messages[ $key ]->thread_id ) ) {
+				$messages[ $key ]->thread_id = (int) $messages[ $key ]->thread_id;
+			}
+			if ( isset( $messages[ $key ]->sender_id ) ) {
+				$messages[ $key ]->sender_id = (int) $messages[ $key ]->sender_id;
+			}
 		}
 
 		return $messages;

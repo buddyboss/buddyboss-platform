@@ -392,8 +392,9 @@ class BP_XProfile_ProfileData {
 			if ( isset( $data[ $key ]->user_id ) ) {
 				$data[ $key ]->user_id = (int) $data[ $key ]->user_id;
 			}
-
-			$data[ $key ]->field_id = (int) $data[ $key ]->field_id;
+			if ( isset( $data[ $key ]->field_id ) ) {
+				$data[ $key ]->field_id = (int) $data[ $key ]->field_id;
+			}
 		}
 
 		return $data;
