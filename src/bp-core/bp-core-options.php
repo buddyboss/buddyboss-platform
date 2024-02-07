@@ -1000,26 +1000,26 @@ function bp_is_akismet_active( $default = true ) {
 }
 
 /**
- * Get an Activity load type.
+ * Check whether Activity Autoload is enabled.
  *
  * @since BuddyPress 2.0.0
- * @since BuddyBoss [BBVERSION] Updated the setting.
  *
- * @param string $default Optional. Fallback value if not found in the database.
- *                        Default: true.
- *
- * @return bool true if Autoload is enabled, otherwise false.
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if Autoload is enabled, otherwise false.
  */
-function bp_is_activity_autoload_active( $default = 'infinite' ) {
+function bp_is_activity_autoload_active( $default = true ) {
+
+	$default_val = true === $default ? 'infinite' : 'load_more';
 
 	/**
-	 * Filters whether or not Activity Autoload is enabled.
+	 * Filters whether Activity Autoload is enabled.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param bool $value true if Autoload is enabled, otherwise false.
 	 */
-	return (bool) apply_filters( 'bp_is_activity_autoload_active', ( 'infinite' === bp_get_option( 'bb_activity_load_type', $default ) ) );
+	return (bool) apply_filters( 'bp_is_activity_autoload_active', ( 'infinite' === bp_get_option( 'bb_activity_load_type', $default_val ) ) );
 }
 
 /**
