@@ -22,7 +22,7 @@ function bp_nouveau_get_members_directory_nav_items() {
 	$nav_items['all'] = array(
 		'component' => 'members',
 		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
-		'li_class'  => array(),
+		'li_class'  => array( 'selected' ),
 		'link'      => bp_get_members_directory_permalink(),
 		'text'      => __( 'All Members', 'buddyboss' ),
 		'count'     => bp_core_get_all_member_count(),
