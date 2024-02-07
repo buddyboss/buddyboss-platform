@@ -51,8 +51,10 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 		$this->add_field( 'bb_ajax_request_page_load', __( 'Page requests', 'buddyboss' ), 'bb_admin_performance_setting_general_callback', 'intval' );
 
 
-		$this->add_section( 'bb_performance_activity', __( 'Activity', 'buddyboss' ), '', 'bb_admin_performance_activity_setting_tutorial' );
-		$this->add_field( 'bb_load_activity_per_request', __( 'Activity loading', 'buddyboss' ), 'bb_admin_performance_setting_activity_callback', 'intval' );
+		if ( bp_is_active( 'activity' ) ) {
+			$this->add_section( 'bb_performance_activity', __( 'Activity', 'buddyboss' ), '', 'bb_admin_performance_activity_setting_tutorial' );
+			$this->add_field( 'bb_load_activity_per_request', __( 'Activity loading', 'buddyboss' ), 'bb_admin_performance_setting_activity_callback', 'intval' );
+		}
 
 		/**
 		 * Fires to register Performance tab settings fields and section.
@@ -61,7 +63,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 		 *
 		 * @param Object $this BB_Admin_Setting_Performance.
 		 */
-		do_action( 'bp_admin_setting_performance_register_fields', $this );
+		do_action( 'bb_admin_setting_performance_register_fields', $this );
 	}
 }
 
