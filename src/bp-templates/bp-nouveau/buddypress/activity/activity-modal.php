@@ -13,12 +13,7 @@
     <div class="activity-modal activity">
 			<ul class="activity-list item-list bp-list">
 				<li class="activity activity_update activity-item has-comments">
-					<div class="bb-modal-activity-header">
-						<h2>Jhon's Post</h2>
-						<a class="bb-close-action-popup bb-model-close-button" href="#">
-							<span class="bb-icon-l bb-icon-times"></span>
-						</a>
-					</div>
+					<div class="bb-modal-activity-header-wrapper"></div>
 					<div class="bb-modal-activity-body">
 						<div class="bb-modal-activity-content"></div>
 						<div class="bb-modal-activity-comments">

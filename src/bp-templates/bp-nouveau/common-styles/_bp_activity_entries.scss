@@ -337,7 +337,8 @@
 		}
 
 		.activity-content .bp-generic-meta.action,
-		> .bp-generic-meta.action {
+		> .bp-generic-meta.action,
+		.bb-modal-activity-content > .bp-generic-meta.action {
 
 			.button {
 
@@ -449,7 +450,8 @@
 		}
 
 		.activity-content > .bp-generic-meta.activity-meta,
-		> .bp-generic-meta.activity-meta {
+		> .bp-generic-meta.activity-meta,
+		.bb-modal-activity-content > .bp-generic-meta.activity-meta {
 			display: flex;
 			justify-content: space-around;
 			border-top: 1px solid $light-grey;
@@ -572,7 +574,8 @@
 		}
 
 		&.has-comments .activity-content > .bp-generic-meta.activity-meta,
-		&.has-comments > .bp-generic-meta.activity-meta {
+		&.has-comments > .bp-generic-meta.activity-meta,
+		.bb-modal-activity-content > .bp-generic-meta.activity-meta {
 			border-bottom: 1px solid $light-grey;
 			margin-bottom: 10px;
 		}
@@ -1280,9 +1283,16 @@
 
 		> .activity-modal {
 			max-height: 85vh;
+			min-height: 85vh;
 			max-width: 700px;
 			width: 700px;
+			position: relative;
+			overflow: hidden;
 		}
+	}
+
+	.activity-list {
+		margin: 0;
 	}
 
 	&#buddypress {
@@ -1324,14 +1334,27 @@
 }
 
 .bb-modal-activity-body {
+	position: relative;
 	padding: 15px;
-	max-height: calc(100% - 60px);
+	max-height: calc(85vh - 62px);
 	overflow-y: auto;
+	overflow-x: hidden;
 
 	.bb-activity-placeholder {
+		display: none;
 		border: 0;
 		padding: 20px 0;
 		margin: 0;
+
+		.loading & {
+			display: block;
+		}
+	}
+
+	.loading & {
+		.activity-comments {
+			display: none;
+		}
 	}
 }
 

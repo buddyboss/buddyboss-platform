@@ -124,7 +124,7 @@ window.bp = window.bp || {};
 			// Activity comments effect.
 			//$( '#buddypress [data-bp-list="activity"]' ).on( 'bp_ajax_append', this.hideComments );
 			//$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.acomments-view-more', this.showComments );
-			$( 'body' ).on( 'click', '.bb-close-action-popup', this.closeComments );
+			//$( 'body' ).on( 'click', '.bb-close-action-popup', this.closeComments );
 
 			// Activity actions.
 			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
@@ -3178,12 +3178,23 @@ window.bp = window.bp || {};
 		 */
 		openActivityPopup: function( activityID ) {
 			var activity_item = $( '#activity-' + activityID );
+			var modal = $('.bb-activity-model-wrapper');
 			var activity_content = activity_item.html();
+			var activity_comments = activity_item.find( '.activity-comments' ).html();
 
-			$('.bb-activity-model-wrapper').show();
+			//modal.show();
+			modal.addClass( 'loading' );
 
-			$( '.bb-activity-model-wrapper' ).find( '.bb-modal-activity-content' ).html( activity_content );
-			$( '.bb-activity-model-wrapper' ).find( '.bb-modal-activity-content' ).find( '.activity-comments' ).children( 'ul' ).remove();
+			modal.find( '.bb-modal-activity-content' ).html( activity_content );
+			/*modal.find( '.bb-modal-activity-content' ).find( '.activity-comments' ).remove();
+			modal.find( '.bb-modal-activity-comments' ).html( activity_comments );*/
+
+			setTimeout(
+				function () {
+					modal.removeClass( 'loading' );
+				},
+				1000
+			);
 		},
 
 		viewMoreComments: function( e ) {
