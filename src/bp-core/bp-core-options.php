@@ -2794,7 +2794,7 @@ function bb_get_activity_comment_loading( $default = 10 ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param bool $default when option not found, function will return $default value.
+ * @param int $default when option not found, function will return $default value.
  *
  * @return int
  */
@@ -2807,10 +2807,21 @@ function bb_get_ajax_request_page_load( $default = 2 ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param bool $default when option not found, function will return $default value.
+ * @param int $default when option not found, function will return $default value.
  *
  * @return int
  */
 function bb_get_load_activity_per_request( $default = 10 ) {
 	return (int) apply_filters( 'bb_get_load_activity_per_request', bp_get_option( 'bb_load_activity_per_request', $default ) );
+}
+
+/**
+ * Function to check the send ajax request to load main content.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_is_send_ajax_request() {
+	return (bool) ( 2 === bb_get_ajax_request_page_load() );
 }

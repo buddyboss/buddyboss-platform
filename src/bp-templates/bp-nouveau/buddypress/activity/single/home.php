@@ -8,6 +8,7 @@
  * @version 1.0.0
  */
 
+$is_send_ajax_request = bb_is_send_ajax_request();
 ?>
 
 <div id="bp-nouveau-single-activity-edit-form-wrap" style="display: none;">
@@ -20,10 +21,19 @@
 ?>
 
 <div class="activity" data-bp-single="<?php echo esc_attr( bp_current_action() ); ?>">
+
 	<?php do_action( 'bp_before_single_activity_content' ); ?>
 
-	<ul id="activity-stream" class="activity-list item-list bp-list" data-bp-list="activity">
-		<li id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'single-activity-loading' ); ?></li>
+	<ul id="activity-stream" class="activity-list item-list bp-list" data-bp-list="activity" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+		<?php
+		if ( $is_send_ajax_request ) {
+			echo '<li id="bp-ajax-loader">';
+			bp_nouveau_user_feedback( 'single-activity-loading' );
+			echo '</li>';
+		} else {
+			bp_get_template_part( 'activity/activity-loop' );
+		}
+		?>
 	</ul>
 
 	<?php do_action( 'bp_after_single_activity_content' ); ?>
