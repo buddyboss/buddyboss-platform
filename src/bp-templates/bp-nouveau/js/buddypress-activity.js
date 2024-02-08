@@ -124,7 +124,7 @@ window.bp = window.bp || {};
 			// Activity comments effect.
 			//$( '#buddypress [data-bp-list="activity"]' ).on( 'bp_ajax_append', this.hideComments );
 			//$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.acomments-view-more', this.showComments );
-			//$( 'body' ).on( 'click', '.bb-close-action-popup', this.closeComments );
+			$( 'body' ).on( 'click', '.bb-close-action-popup', this.closeComments );
 
 			// Activity actions.
 			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
@@ -3175,7 +3175,7 @@ window.bp = window.bp || {};
 			var activity_content = activity_item.html();
 			var activity_comments = activity_item.find( '.activity-comments' ).html();
 
-			//modal.show();
+			modal.show();
 			modal.addClass( 'loading' );
 
 			modal.find( '.bb-modal-activity-content' ).html( activity_content );

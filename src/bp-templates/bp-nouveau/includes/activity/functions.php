@@ -41,11 +41,6 @@ function bp_nouveau_activity_register_scripts( $scripts = array() ) {
 				'dependencies' => array( 'bp-nouveau', 'wp-util', 'wp-backbone' ),
 				'footer'       => true,
 			),
-			'bp-nouveau-activity-modal'           => array(
-				'file'         => 'js/bb-activity-modal%s.js',
-				'dependencies' => array( 'bp-nouveau', 'wp-util', 'wp-backbone' ),
-				'footer'       => true,
-			),
 		)
 	);
 }
@@ -62,7 +57,6 @@ function bp_nouveau_activity_enqueue_scripts() {
 
 	wp_enqueue_script( 'bp-nouveau-activity' );
 	wp_enqueue_script( 'bp-nouveau-activity-reacted' );
-	wp_enqueue_script( 'bp-nouveau-activity-modal' );
 	wp_enqueue_script( 'bp-medium-editor' );
 	wp_enqueue_style( 'bp-medium-editor' );
 	wp_enqueue_style( 'bp-medium-editor-beagle' );
