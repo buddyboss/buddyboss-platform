@@ -1111,7 +1111,7 @@ function bp_media_gif_message_validated_content( $validated_content, $content, $
 function bp_media_activity_embed_gif_content( $activity_id ) {
 	// Get activity metas
 	$activity_metas = bb_activity_get_metadata( $activity_id );
-	$gif_data       = ! empty( $activity_metas['_gif_data'] ) ? $activity_metas['_gif_data'] : array();
+	$gif_data       = ! empty( $activity_metas['_gif_data'][0] ) ? maybe_unserialize( $activity_metas['_gif_data'][0] ) : array();
 
 	if ( empty( $gif_data ) ) {
 		return;
@@ -2369,10 +2369,10 @@ function bp_media_get_edit_activity_data( $activity ) {
 		}
 
 		// Fetch gif data for the activity.
-		$gif_data = ! empty( $activity_metas['_gif_data'][0] ) ? $activity_metas['_gif_data'][0] : '';
+		$gif_data = ! empty( $activity_metas['_gif_data'][0] ) ? maybe_unserialize( $activity_metas['_gif_data'][0] ) : array();
 
 		if ( ! empty( $gif_data ) ) {
-			$gif_raw_data                        = (array) ! empty( $activity_metas['_gif_raw_data'][0] ) ? $activity_metas['_gif_raw_data'][0] : array();
+			$gif_raw_data                        = (array) ! empty( $activity_metas['_gif_raw_data'][0] ) ? maybe_unserialize( $activity_metas['_gif_raw_data'][0] ) : array();
 			$gif_raw_data['bp_gif_current_data'] = '1';
 
 			$activity['gif'] = $gif_raw_data;
