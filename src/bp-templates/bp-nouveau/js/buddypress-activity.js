@@ -3237,6 +3237,18 @@ window.bp = window.bp || {};
 						return;
 					} else {
 						// success
+						console.log(parentCommentId);
+						console.log(activityId);
+						var $targetList = $( '.activity-modal.activity .activity-comments' ).find( "[data-activity_id='" + activityId + "'][data-parent_comment_id='" + parentCommentId + "']" );
+
+						if ( $targetList.length > 0 ) {
+
+							if ( '' !== lastCommentTimeStamp ) {
+								$targetList.find( "li.activity-comment[data-bp-timestamp='" + lastCommentTimeStamp + "']" ).after( response.data );
+							} else {
+								$targetList.html( response.data );
+							}
+						} 
 					}
 
 				}

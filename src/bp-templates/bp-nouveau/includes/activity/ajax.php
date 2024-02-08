@@ -1161,28 +1161,76 @@ function bb_nouveau_ajax_activity_loadmore_comments() {
 		wp_send_json_error();
 	}
 
-	// if ( bp_has_activities( 'include=' . $_POST['activity_id'] ) ) {
-	// 	while ( bp_activities() ) {
-	// 		bp_the_activity();
+	global $activities_template;
+	$activity_id         = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
+	$parent_comment_id   = ! empty( $_POST['parent_comment_id'] ) ? (int) $_POST['parent_comment_id'] : 0;
+	$activities_template = new BP_Activity_Template( array( 'include' => $activity_id , 'display_comments' => true ) );
 
-	// 		ob_start();
-	// 		bp_nouveau_activity_comments( bb_get_activity_comment_loading() );
-	// 		wp_send_json_success( ob_get_clean() );
-	// 	}
-	// } else {
-	// 	wp_send_json_error();
-	// }
+	$activities_template->activity = $activities_template->activities[0];
 
-	$activities_template = new BP_Activity_Template( array( 'include' => $_POST['activity_id'], 'display_comments' => false ) );
 
-	$activity_comment_id = ! empty( $_POST['parent_comment_id'] ) ? (int) $_POST['parent_comment_id'] : 0;
-	$activity_comment    = new BP_Activity_Activity( $activity_comment_id );
+	// We have all comments and replies just loop through.
+	ob_start();
 
-	if ( ! empty( $activity_comment->id ) ) {
-		$activities_template->comments = BP_Activity_Activity::append_comments( array( $activity_comment ) );
-		error_log(print_r( $activities_template,true ));
-		wp_send_json_success( $activities_template );
-	} else {
+	$args = array(
+		'comment_load_limit'     => bb_get_activity_comment_loading(),
+		'parent_comment_id'      => $parent_comment_id,
+		'activity_id'            => $activity_id,
+		'is_load_more'           => true,
+		'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( $_POST['last_comment_timestamp'] ) : '',
+	);
+
+	// Check if parent is the main activity
+    if ( isset( $activities_template->activity ) && $activities_template->activity->id === $parent_comment_id ) {
+		// No current comment
+		bp_activity_recurse_comments( $activities_template->activity, $args );
+    }
+	elseif ( isset( $activities_template->activity->children ) && is_array( $activities_template->activity->children ) ) {
+
+		// If this object has children, search them
+		$result_comment = false;
+
+		foreach ( $activities_template->activity->children as $child ) {
+            $result_comment = findObjectById($child, $parent_comment_id);
+
+			if ( ! empty( $result_comment ) ) {
+				
+				// Set as current_comment to iterate.
+				$activities_template->activity->current_comment = $result_comment;
+				bp_activity_recurse_comments( $activities_template->activity->current_comment, $args );
+				break;
+			}
+			
+		}
+
+		if ( empty( $result_comment ) ) { 
+			wp_send_json_error();
+		}
+    } else {
 		wp_send_json_error();
 	}
+
+	wp_send_json_success( ob_get_clean() );
+
+}
+
+function findObjectById($object, $id) {
+	// Check if the current object is the one we're looking for
+	if (isset($object->id) && $object->id == $id) {
+		return $object;
+	}
+
+	// If this object has children, search them
+	if (isset($object->children) && is_array($object->children)) {
+		foreach ($object->children as $child) {
+			$result = findObjectById($child, $id);
+			// If the object was found in the current child, return it
+			if ($result !== null) {
+				return $result;
+			}
+		}
+	}
+
+	// If the object wasn't found in this branch, return null
+	return null;
 }

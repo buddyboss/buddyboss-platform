@@ -1916,7 +1916,10 @@ function bp_activity_get_comments( $args = '' ) {
 		return false;
 	}
 
-	bp_activity_recurse_comments( $activities_template->activity, empty( $load_single_activity ) ? bb_get_activity_comment_visibility() : false );
+	$args = array(
+		'comment_load_limit' => empty( $load_single_activity ) ? bb_get_activity_comment_visibility() : false
+	);
+	bp_activity_recurse_comments( $activities_template->activity, $args );
 }
 
 /**
@@ -1932,8 +1935,22 @@ function bp_activity_get_comments( $args = '' ) {
  * @param object $comment The activity object currently being recursed.
  * @return bool|string
  */
-function bp_activity_recurse_comments( $comment, $comment_load_limit = false ) {
+function bp_activity_recurse_comments( $comment, $args = array() ) {
 	global $activities_template;
+
+	$r = bp_parse_args(
+		$args,
+		array(
+			'comment_load_limit'     => false,
+			'parent_comment_id'      => 0,
+			'main_activity_id'       => 0,
+			'is_load_more'           => false,
+			'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( $_POST['last_comment_timestamp'] ) : '',
+		),
+		'bb_activity_recurse_comments'
+	);
+
+	extract( $r );
 
 	if ( empty( $comment ) ) {
 		return false;
@@ -1950,12 +1967,31 @@ function bp_activity_recurse_comments( $comment, $comment_load_limit = false ) {
 	 *
 	 * @param string $value Opening tag for the HTML markup to use.
 	 */
-	echo apply_filters( 'bp_activity_recurse_comments_start_ul', "<ul data-activity_id={$activities_template->activity->id} data-parent_comment_id={$comment->id}>" );
+	 if ( ! $is_load_more ) {
+		echo apply_filters( 'bp_activity_recurse_comments_start_ul', "<ul data-activity_id={$activities_template->activity->id} data-parent_comment_id={$comment->id}>" );
+	 }
+	
 
 	$comment_loaded_count = 0;
 	foreach ( (array) $comment->children as $comment_child ) {
+		if	(
+			true === $is_load_more &&
+			! empty( $last_comment_timestamp ) &&
+			$comment->id === $parent_comment_id &&
+			$comment_child->date_recorded <= date_i18n( 'Y-m-d H:i:s', $last_comment_timestamp )
+		)	{
 
-		if ( false !== $comment_load_limit && $comment_loaded_count === $comment_load_limit ) {
+			// Skip.
+			continue;
+		}
+
+		if (
+			false !== $comment_loaded_count &&
+			(
+				empty( $last_comment_timestamp ) &&
+				$comment_loaded_count === $comment_load_limit
+			)
+		) {
 			echo "<li class='acomments-view-more'>" . __( 'View more comments', 'buddyboss' ) . "</li>";
 			break;
 		}
@@ -1966,7 +2002,7 @@ function bp_activity_recurse_comments( $comment, $comment_load_limit = false ) {
 		$template = bp_locate_template( 'activity/comment.php', false, false );
 
 		$comment_template_args = array();
-		if ( false !== $comment_load_limit && $comment->item_id === $comment->secondary_item_id && $comment->id === bp_get_activity_id() ) {
+		if ( false !== $comment_load_limit && $comment->item_id === $comment->secondary_item_id ) {
 
 			// First level comments.
 			$comment_template_args = array( 'show_replies' => false );
@@ -1986,7 +2022,9 @@ function bp_activity_recurse_comments( $comment, $comment_load_limit = false ) {
 	 *
 	 * @param string $value Closing tag for the HTML markup to use.
 	 */
-	echo apply_filters( 'bp_activity_recurse_comments_end_ul', '</ul>' );
+	if ( ! $is_load_more ) {
+		echo apply_filters( 'bp_activity_recurse_comments_end_ul', '</ul>' );
+	}
 }
 
 /**
@@ -2181,7 +2219,7 @@ function bp_get_activity_comment_date_recorded() {
 	 *
 	 * @param string|bool Date for the activity comment currently being displayed.
 	 */
-	return apply_filters( 'bp_activity_comment_date_recorded', bp_core_time_since( bp_get_activity_comment_date_recorded_raw() ) );
+	return apply_filters( 'bp_activity_comment_date_recorded', bp_get_activity_comment_date_recorded_raw() );
 }
 
 /**
@@ -4434,3 +4472,24 @@ function bb_get_activity_comment_unfavorite_link( $activity_comment_id = 0 ) {
 	return apply_filters( 'bb_get_activity_comment_unfavorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/unfavorite/' . $activity_comment_id . '/' ), 'unmark_favorite' ) );
 }
 
+function bb_search_comment_hierarchy( $comment, $comment_id ) {
+	
+	// Check if the current object is the one we're looking for
+	if ( isset( $comment->id ) && $comment->id == $comment_id ) {
+		return $comment;
+	}
+
+	// If this object has children, search them
+	if ( isset( $comment->children ) && is_array( $comment->children ) ) {
+		foreach ( $comment->children as $child ) {
+			$result = bb_search_comment_hierarchy( $child, $comment_id );
+			// If the object was found in the current child, return it
+			if ( $result !== null ) {
+				return $result;
+			}
+		}
+	}
+
+	// If the object wasn't found in this branch, return null
+	return null;
+}

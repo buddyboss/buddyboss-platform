@@ -3682,7 +3682,7 @@ function bb_admin_setting_callback_comment_visibility() {
 	<label for="_bb_activity_comment_visibility">
 		<?php printf( esc_html__( 'Display a maximum %s comments per post in activity feeds', 'buddyboss' ), $select ); ?>
 	</label>
-	<p class="description"><?php esc_html_e( 'Load more using the "View more comments" and "View replies" links. Higher comments counts will increase the time it takes members to scroll through activity feeds. This only applies to platform not app.', 'buddyboss' ); ?></p>
+	<p class="description"><?php esc_html_e( 'Load more using the "View more comments" links. Higher comments counts will increase the time it takes members to scroll through activity feeds. This only applies to platform not app.', 'buddyboss' ); ?></p>
 	<?php
 }
 
