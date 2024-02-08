@@ -1087,12 +1087,28 @@ function bp_create_excerpt( $text, $length = 225, $options = array() ) {
 		}
 
 		$truncate = rtrim( mb_substr( $truncate, 0, $spacepos ) );
-		
-		// If there's a space within the trimmed content, trim to that space
-		$last_space = mb_strrpos($truncate, ' ');
 
-		if ($last_space !== false) {
-			$truncate = mb_substr($truncate, 0, $last_space);
+		// If there's a space or broken link within the trimmed content
+		$last_space = mb_strrpos( $truncate, ' ' );
+		$last_link_start = mb_strrpos( $truncate, '<a' );
+		$last_link_end = mb_strrpos( $truncate, '</a>' );
+
+		if ( $last_link_start !== false && $last_link_end === false ) {
+			// If last_link_start exist and last_link_end is not exist
+			
+			$truncate = mb_substr( $truncate, 0, $last_link_start );
+		} else if ( $last_link_start !== false && $last_link_end !== false ) {
+			// If last_link_start exist and last_link_end is exist
+			
+			if ( $last_link_start > $last_link_end ) {
+				// But last_link_start greater than last_link_end
+				
+				$truncate = mb_substr( $truncate, 0, $last_link_start );
+			}
+		} else if ( $last_space !== false && $last_link_start === false && $last_link_end === false ) {
+			// If last_link_start not exist
+			
+			$truncate = mb_substr( $truncate, 0, $last_space );
 		}
 	}
 	$truncate .= $ending;
