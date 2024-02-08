@@ -23,8 +23,8 @@
 						<div class="bb-modal-activity-content"></div>
 						<div class="bb-modal-activity-comments">
 
-							<div id="bp-ajax-loader">
-								<div class="bb-activity-placeholder">
+							<div id="bp-ajax-loader" class="init-placeholder">
+								<div class="bb-activity-placeholder bb-activity-tiny-placeholder">
 									<div class="bb-activity-placeholder_head">
 										<div class="bb-activity-placeholder_avatar bb-bg-animation bb-loading-bg"></div>
 										<div class="bb-activity-placeholder_details">
@@ -32,9 +32,12 @@
 											<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
 										</div>
 									</div>
-									<div class="bb-activity-placeholder_content">
-										<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
-										<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
+									<div class="bb-activity-placeholder_head">
+										<div class="bb-activity-placeholder_avatar bb-bg-animation bb-loading-bg"></div>
+										<div class="bb-activity-placeholder_details">
+											<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
+											<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
+										</div>
 									</div>
 								</div>
 							</div>

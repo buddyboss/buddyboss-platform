@@ -123,7 +123,7 @@ window.bp = window.bp || {};
 
 			// Activity comments effect.
 			//$( '#buddypress [data-bp-list="activity"]' ).on( 'bp_ajax_append', this.hideComments );
-			//$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.acomments-view-more', this.showComments );
+			$( '#activity-stream' ).on( 'click', '.acomments-view-more', this.showActivity );
 			$( 'body' ).on( 'click', '.bb-close-action-popup', this.closeComments );
 
 			// Activity actions.
@@ -153,7 +153,7 @@ window.bp = window.bp || {};
 				$( window ).scroll( this.loadMoreActivities );
 			}
 
-			$( document ).on( 'click', '.acomments-view-more', this.viewMoreComments.bind( this ) );
+			$( '.bb-activity-model-wrapper' ).on( 'click', '.acomments-view-more', this.viewMoreComments.bind( this ) );
 		},
 
 		/**
@@ -513,22 +513,18 @@ window.bp = window.bp || {};
 		},
 
 		/**
-		 * [showComments description]
+		 * [showActivity description]
 		 *
 		 * @param  {[type]} event [description]
 		 * @return {[type]}       [description]
 		 */
-		showComments: function( event ) {
+		showActivity: function( event ) {
 			event.preventDefault();
+			var currentTargetList = $( event.currentTarget ).parent(),
+					parentId = currentTargetList.data( 'parent_comment_id' ),
+					activityId  = $( currentTargetList ).data( 'activity_id' );
 
-			var activityID = $( event.target ).closest( 'li.activity-item' ).data( 'bp-activity-id' );
-			var activity_item = $( '#activity-' + activityID );
-			var activity_content = activity_item.html();
-
-			$('.bb-activity-model-wrapper').show();
-
-			$( '.bb-activity-model-wrapper' ).find( '.bb-modal-activity-content' ).html( activity_content );
-			$( '.bb-activity-model-wrapper' ).find( '.bb-modal-activity-content' ).find( '.activity-comments' ).children( 'ul' ).remove();
+			bp.Nouveau.Activity.launchActivityPopup( activityId, parentId );
 		},
 
 		closeComments: function( event ) {
@@ -3165,28 +3161,31 @@ window.bp = window.bp || {};
 		},
 
 		/**
-		 * [openActivityPopup description]
+		 * [launchActivityPopup description]
 		 *
 		 * @return {[type]}       [description]
 		 */
-		openActivityPopup: function( activityID ) {
+		launchActivityPopup: function( activityID, parentID ) {
 			var activity_item = $( '#activity-' + activityID );
 			var modal = $('.bb-activity-model-wrapper');
 			var activity_content = activity_item.html();
 			var activity_comments = activity_item.find( '.activity-comments' ).html();
+			var selector = '[data-parent_comment_id="' + parentID + '"]';
 
 			modal.show();
-			modal.addClass( 'loading' );
+			//modal.addClass( 'loading' );
 
 			modal.find( '.bb-modal-activity-content' ).html( activity_content );
 			/*modal.find( '.bb-modal-activity-content' ).find( '.activity-comments' ).remove();
 			modal.find( '.bb-modal-activity-comments' ).html( activity_comments );*/
+			var viewMoreCommentsLink = modal.find( selector ).children( '.acomments-view-more' ).first();
+			viewMoreCommentsLink.trigger( 'click' );
 
 			setTimeout(
 				function () {
 					modal.removeClass( 'loading' );
 				},
-				1000
+				500
 			);
 		},
 
@@ -3199,9 +3198,21 @@ window.bp = window.bp || {};
 					lastCommentTimeStamp = '',
 					target = $( e.currentTarget );
 
-			bp.Nouveau.Activity.openActivityPopup( activityId );
+			var skeleton = 
+				`<div id="bp-ajax-loader">
+					<div class="bb-activity-placeholder bb-activity-tiny-placeholder">
+						<div class="bb-activity-placeholder_head">
+							<div class="bb-activity-placeholder_avatar bb-bg-animation bb-loading-bg"></div>
+							<div class="bb-activity-placeholder_details">
+								<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
+								<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
+							</div>
+						</div>
+					</div>
+				</div>`;
 
 			target.addClass( 'loading' );
+			target.html( skeleton );
 
 			var data = {
 				action: 'activity_loadmore_comments',
@@ -3248,7 +3259,9 @@ window.bp = window.bp || {};
 							} else {
 								$targetList.html( response.data );
 							}
-						} 
+						}
+						target.removeClass( 'loading' );
+						target.empty();
 					}
 
 				}
