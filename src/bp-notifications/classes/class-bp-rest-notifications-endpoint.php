@@ -142,6 +142,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		}
 
 		$response = rest_ensure_response( $retval );
+		$response = bp_rest_response_add_total_headers( $response, count( $notifications ), $args['per_page'] );
 
 		/**
 		 * Fires after notifications are fetched via the REST API.
