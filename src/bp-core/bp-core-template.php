@@ -1093,11 +1093,11 @@ function bp_create_excerpt( $text, $length = 225, $options = array() ) {
 		$last_link_start = mb_strrpos( $truncate, '<a' );
 		$last_link_end   = mb_strrpos( $truncate, '</a>' );
 
-		if ( $last_link_start !== false && $last_link_end === false ) {
+		if ( false !== $last_link_start && false === $last_link_end ) {
 			// If last_link_start exist and last_link_end is not exist.
 
 			$truncate = mb_substr( $truncate, 0, $last_link_start );
-		} elseif ( $last_link_start !== false && $last_link_end !== false ) {
+		} elseif ( false !== $last_link_start && false !== $last_link_end ) {
 			// If last_link_start exist and last_link_end is exist.
 
 			if ( $last_link_start > $last_link_end ) {
@@ -1105,7 +1105,7 @@ function bp_create_excerpt( $text, $length = 225, $options = array() ) {
 
 				$truncate = mb_substr( $truncate, 0, $last_link_start );
 			}
-		} elseif ( $last_space !== false && $last_link_start === false && $last_link_end === false ) {
+		} elseif ( false !== $last_space && false === $last_link_start && false === $last_link_end ) {
 			// If last_link_start not exist.
 
 			$truncate = mb_substr( $truncate, 0, $last_space );
