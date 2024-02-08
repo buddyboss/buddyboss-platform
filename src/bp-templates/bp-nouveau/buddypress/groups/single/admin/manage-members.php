@@ -123,63 +123,71 @@ if ( bp_is_group_create() ) {
 		</dd>
 	<?php endif ?>
 
-
-	<dt class="gen-members-section section-title"><?php echo esc_html( get_group_role_label( $bp_current_group_id, 'member_plural_label_name' ), 'buddyboss' ); ?></dt>
+	<dt class="gen-members-section section-title">
+		<?php echo esc_html( get_group_role_label( bp_get_current_group_id(), 'member_plural_label_name' ), 'buddyboss' ); ?>
+		<div class="group-search members-search bp-search search-wrapper" data-bp-search="manage_group_members">
+			<input id="bbp_search_group_members" type="search" placeholder="Search Members" name="group_members_search" />
+			<button type="reset" class="search-form_reset">
+				<span class="bb-icon-rf bb-icon-times" aria-hidden="true"></span>
+				<span class="bp-screen-reader-text"><?php esc_html_e( 'Reset', 'buddyboss' ); ?></span>
+			</button>
+		</div>
+	</dt>
 
 	<dd class="general-members-listing">
 
-		<p><?php printf( __( 'When a member joins a group, he or she is assigned the %1$s role by default. %2$s are able to contribute to the group’s discussions, activity feeds, and view other group members.', 'buddyboss' ), strtolower( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) ), get_group_role_label( $bp_current_group_id, 'member_plural_label_name' ) ); ?></p>
+		<p><?php printf( __( 'When a member joins a group, he or she is assigned the %1$s role by default. %2$s are able to contribute to the group’s discussions, activity feeds, and view other group members.', 'buddyboss' ), strtolower( get_group_role_label( bp_get_current_group_id(), 'member_singular_label_name' ) ), get_group_role_label( bp_get_current_group_id(), 'member_plural_label_name' ) ); ?></p>
+		<div class="" data-bp-list="manage_group_members">
+			<?php if ( bp_group_has_members( 'per_page=15&exclude_banned=0' ) ) : ?>
 
-		<?php
-		if ( bp_group_has_members( 'per_page=15&exclude_banned=0' ) ) {
+				<?php if ( bp_group_member_needs_pagination() ) : ?>
 
-			if ( bp_group_member_needs_pagination() ) {
-				bp_nouveau_pagination( 'top' );
-			} ?>
+					<?php bp_nouveau_pagination( 'top' ); ?>
 
-			<ul id="members-list" class="item-list single-line">
-				<?php
-				while ( bp_group_members() ) :
-					bp_group_the_member();
-					?>
-					<li class="<?php bp_group_member_css_class(); ?> members-entry clearfix">
-						<?php bp_group_member_avatar_mini(); ?>
+				<?php endif; ?>
 
-						<p class="list-title member-name">
-							<?php bp_group_member_link(); ?>
-							<span class="banned warn">
-									<?php
-									if ( bp_get_group_member_is_banned() ) :
-										/* translators: indicates a user is banned from a group, e.g. "Mike (banned)". */
-										esc_html_e( '(banned)', 'buddyboss' );
-									endif;
-									?>
-							</span>
-						</p>
-
-						<?php
-						bp_nouveau_groups_manage_members_buttons(
-							array(
-								'container'         => 'div',
-								'container_classes' => array( 'members-manage-buttons', 'text-links-list' ),
-								'parent_element'    => '  ',
-							)
-						);
+				<ul id="members-list" class="item-list single-line">
+					<?php
+					while ( bp_group_members() ) :
+						bp_group_the_member();
 						?>
-					</li>
-				<?php endwhile; ?>
-			</ul>
 
-			<?php
-			if ( bp_group_member_needs_pagination() ) {
-				bp_nouveau_pagination( 'bottom' );
-			}
-		} else {
-			bp_nouveau_user_feedback( 'group-manage-members-none' );
-		}
-		?>
+						<li class="<?php bp_group_member_css_class(); ?> members-entry clearfix">
+							<?php bp_group_member_avatar_mini(); ?>
+
+							<p class="list-title member-name">
+								<?php bp_group_member_link(); ?>
+								<span class="banned warn">
+										<?php
+										if ( bp_get_group_member_is_banned() ) :
+											/* translators: indicates a user is banned from a group, e.g. "Mike (banned)". */
+											esc_html_e( '(banned)', 'buddyboss' );
+										endif;
+										?>
+								</span>
+							</p>
+
+							<?php
+							bp_nouveau_groups_manage_members_buttons(
+								array(
+									'container'         => 'div',
+									'container_classes' => array( 'members-manage-buttons', 'text-links-list' ),
+									'parent_element'    => '  ',
+								)
+							);
+							?>
+						</li>
+					<?php endwhile; ?>
+				</ul>
+
+				<?php
+				if ( bp_group_member_needs_pagination() ) {
+					bp_nouveau_pagination( 'bottom' );
+				}
+				?>
+			<?php endif ?>
+		</div>
 	</dd>
-
 </dl>
 
 <?php
