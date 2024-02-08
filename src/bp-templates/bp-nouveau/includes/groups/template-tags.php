@@ -704,7 +704,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 	$type = ( ! empty( $args['type'] ) ) ? $args['type'] : 'group';
 
 	// @todo Not really sure why BP Legacy needed to do this...
-	if ( 'group' === $type && is_admin() ) {
+	if ( 'group' === $type && is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 		return;
 	}
 

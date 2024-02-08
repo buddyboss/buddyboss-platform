@@ -3511,10 +3511,6 @@ function bp_group_member_promote_admin_link( $args = '' ) {
 function bp_get_group_member_promote_admin_link( $args = '' ) {
 	global $members_template, $groups_template;
 
-	if ( empty( $groups_template ) ) {
-		$groups_template = new BP_Groups_Template( groups_get_current_group() );
-	}
-
 	$r = bp_parse_args(
 		$args,
 		array(
