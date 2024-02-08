@@ -5389,7 +5389,8 @@ function bb_groups_migrate_subgroup_member() {
 function bb_update_groups_subgroup_membership_background_process() {
 	global $wpdb, $bp, $bb_background_updater;
 
-	$limit = (int) apply_filters( 'bb_limit_subgroup_membership_migration', 50 );
+	$table_name = $bb_background_updater::$table_name;
+	$limit      = (int) apply_filters( 'bb_limit_subgroup_membership_migration', 50 );
 
 	$sql = "SELECT gm.group_id, gm.user_id
 		FROM {$bp->groups->table_name_members} gm
@@ -5406,7 +5407,6 @@ function bb_update_groups_subgroup_membership_background_process() {
 		true !== bp_enable_group_hierarchies() ||
 		true !== bp_enable_group_restrict_invites()
 	) {
-		$table_name = $bb_background_updater::$table_name;
 		// Delete remaining background processes.
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->query(
@@ -5423,6 +5423,19 @@ function bb_update_groups_subgroup_membership_background_process() {
 	// Remove members from subgroups.
 	foreach ( $groups as $group ) {
 		groups_leave_group( $group->group_id, $group->user_id );
+	}
+
+	$total_bg = $wpdb->get_row(
+		$wpdb->prepare(
+			"SELECT count(DISTINCT id) as total FROM {$table_name} WHERE `type` = %s AND `group` = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			'migration',
+			'bb_groups_subgroup_membership'
+		)
+	);
+
+	// If total background job is more than 4 then don't create new background job.
+	if ( ! empty( $total_bg->total ) && $total_bg->total > 4 ) {
+		return;
 	}
 
 	$bb_background_updater->push_to_queue(
@@ -5448,7 +5461,9 @@ function bb_update_groups_subgroup_membership_background_process() {
  */
 function bb_update_groups_invitation_background_process() {
 	global $wpdb, $bp, $bb_background_updater;
-	$limit = (int) apply_filters( 'bb_limit_subgroup_membership_migration', 50 );
+
+	$table_name = $bb_background_updater::$table_name;
+	$limit      = (int) apply_filters( 'bb_limit_subgroup_membership_migration', 50 );
 
 	$invites_table_name = BP_Invitation_Manager::get_table_name();
 
@@ -5466,7 +5481,6 @@ function bb_update_groups_invitation_background_process() {
 		true !== bp_enable_group_hierarchies() ||
 		true !== bp_enable_group_restrict_invites()
 	) {
-		$table_name = $bb_background_updater::$table_name;
 		// Delete remaining background processes.
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->query(
@@ -5487,6 +5501,19 @@ function bb_update_groups_invitation_background_process() {
 		} else {
 			groups_delete_invite( $invitation->user_id, $invitation->item_id );
 		}
+	}
+
+	$total_bg = $wpdb->get_row(
+		$wpdb->prepare(
+			"SELECT count(DISTINCT id) as total FROM {$table_name} WHERE `type` = %s AND `group` = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			'migration',
+			'bb_groups_subgroup_invitation'
+		)
+	);
+
+	// If total background job is more than 4 then don't create new background job.
+	if ( ! empty( $total_bg->total ) && $total_bg->total > 4 ) {
+		return;
 	}
 
 	$bb_background_updater->push_to_queue(
