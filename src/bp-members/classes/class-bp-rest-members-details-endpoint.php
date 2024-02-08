@@ -979,7 +979,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 				if ( bp_is_activity_like_active() ) {
 					$item_activity['children'][] = array(
 						'ID'    => 'favorites',
-						'title' => __( 'Likes', 'buddyboss' ),
+						'title' => bb_is_reaction_emotions_enabled() ? esc_html__( 'Reactions', 'buddyboss' ) : esc_html__( 'Likes', 'buddyboss' ),
 						'url'   => esc_url( trailingslashit( $activity_link . 'favorites' ) ),
 						'count' => '',
 					);

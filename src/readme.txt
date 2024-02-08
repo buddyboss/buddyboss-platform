@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.3.2
+Tested up to: 6.4.3
 Requires PHP: 5.6.20
-Stable tag: 2.5.00
+Stable tag: 2.5.40
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,52 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.5.40 =
+* Enhancement: Core - Code Refinement for background jobs in the platform complete
+* Enhancement: Groups - New tab has been added to BuddyBoss - Groups backend called ‘No Members’ so that you can now filter and pickup groups with no members in automations
+* Bug: Activity - Images were not deleted on the server when the activity post was edited and the image removed
+* Bug: Core - Migrating sites from vBulletin to BuddyBoss was giving a fatal error when user logged in with the same username
+* Bug: Core - Previous custom posts on the news feed page from group discussions and replies were not reflecting the updated translation from LocoTranslate plugin
+* Bug: Core - While typing a longer reply or comment in a pinned post on the Activity Feed the feed would refresh while typing which then clearing the text
+* Bug: Forums - URL link embedded into a forum page would not show
+* Bug: Platform - On a fresh WP install, after activating the BuddyBoss Platform it triggered a WordPress Database error in the debug log
+* Bug: Styling - Notification settings tabs under the user Account Settings page did not display correctly
+
+= 2.5.31 =
+* Bug: Access controls - When restricting subscribers from posting to the Activity Feed, this has also restricted subscribers posting to the Group activity feed
+
+= 2.5.30 =
+* Bug: Core - Account settings was not updating correctly to only display notifications of components that are active instead of showing all settings options
+* Bug: Core - Activity feed options within group settings was showing even if the Activity Fee component had not been activated
+* Bug: Core - Blocking a user then disabling other BuddyBoss components except moderation lead to an infinite loading and a fatal error within the debug log
+* Bug: Core - Enabling the Network Search component while using the default Wordpress theme stopped the search page working correctly
+* Bug: Core - Removed Reactions lower icon upload limit of 200px to allow for smaller icons to be uploaded
+* Bug: Core - Updated the CRON process so that all group messages will not send all at once causing a 500 server error
+* Bug: Core - When switching languages in WordPress some words were not translated from backend to frontend due to translation path issues
+* Bug: Forums - If two discussions have the exact same name then a tag is allocated, the tag would not use the original tag but instead would create a new tag
+* Bug: Groups - Courses that were created via Elementor were not properly displaying on Social Group’s course tab
+* Bug: Groups - Group avatars were still showing even if the Show Group Avatar setting was disabled
+* Bug: Groups - If you select multiple users to send a group invite to, the Send button would allow you keep clicking it and sending multiple invites
+* Bug: Media - Creating a photo album created an infinite loading state when all other BuddyBoss Components were disabled except for Media Uploading
+* Bug: Media - Email notifications from activity post that had images did not display properly in the Gmail app for iOS devices
+* Bug: Media - Video player UI was not working correctly when switching language in TranslatePress
+* Bug: Platform - In the default WP theme 2024, if the Activity Access is restricted in the BuddyBoss platform by Profile Type, then restricting permissions would not work as the WP theme does not use Profile Types
+* Bug: Styling - Buttons from the videos and photos page were overlapping the content when viewing on mobile view or by resizing the page to a smaller view
+* Bug: The subscription icon was showing on social groups even though other components were disabled such as the forum discussion component
+
+= 2.5.20 =
+* New Feature! - Introducing reaction into the platform, where your members will now have the ability to react with different emotions to posts, comments and replies. As an added feature you will be able to customise your emotions to suite your brand.
+* Enhancement: Core - Reactions settings updated to include REST API’s
+
+= 2.5.11 =
+* Bug: Core - Changed directory layout view, switching logic, such as ‘Grid' and 'List’ for pages that utilize the the change view options so on page refresh will maintain the default settings
+
+= 2.5.10 =
+* Bug: Forums - Creating a new post when there was an existing discussion showed the previous discussion title
+* Bug: Groups - Document tab within a group would load slowly with groups with thousand or more members
+* Bug: Groups - When adding a LearnDash course to a group within the settings, previously this then would alter the groups permalink and alter the group invite settings
+* Bug: Styling - The & sign when used within a label for a Profile Type would show &AMP code on user profile and member directory
 
 = 2.5.00 =
 * New Feature! - TutorLMS settings added to BuddyBoss integration page for adding courses to groups and choosing course activity posts into group feeds depending in user interactions

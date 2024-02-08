@@ -96,26 +96,30 @@
 		</div>
 	</fieldset>
 
-	<fieldset class="radio group-post-form">
-		<legend><?php esc_html_e( 'Activity Feeds', 'buddyboss' ); ?></legend>
+	<?php if ( bp_is_active( 'activity' ) ) : ?>
 
-		<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to post into the activity feed?', 'buddyboss' ); ?></p>
+		<fieldset class="radio group-post-form">
+			<legend><?php esc_html_e( 'Activity Feeds', 'buddyboss' ); ?></legend>
 
-		<div class="bp-radio-wrap">
-			<input type="radio" name="group-activity-feed-status" id="group-activity-feed-status-members" class="bs-styled-radio" value="members"<?php bp_group_show_activity_feed_status_setting( 'members' ); ?> />
-			<label for="group-activity-feed-status-members"><?php esc_html_e( 'All group members', 'buddyboss' ); ?></label>
-		</div>
+			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to post into the activity feed?', 'buddyboss' ); ?></p>
 
-		<div class="bp-radio-wrap">
-			<input type="radio" name="group-activity-feed-status" id="group-activity-feed-status-mods" class="bs-styled-radio" value="mods"<?php bp_group_show_activity_feed_status_setting( 'mods' ); ?> />
-			<label for="group-activity-feed-status-mods"><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></label>
-		</div>
+			<div class="bp-radio-wrap">
+				<input type="radio" name="group-activity-feed-status" id="group-activity-feed-status-members" class="bs-styled-radio" value="members"<?php bp_group_show_activity_feed_status_setting( 'members' ); ?> />
+				<label for="group-activity-feed-status-members"><?php esc_html_e( 'All group members', 'buddyboss' ); ?></label>
+			</div>
 
-		<div class="bp-radio-wrap">
-			<input type="radio" name="group-activity-feed-status" id="group-activity-feed-status-admins" class="bs-styled-radio" value="admins"<?php bp_group_show_activity_feed_status_setting( 'admins' ); ?> />
-			<label for="group-activity-feed-status-admins"><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
-		</div>
-	</fieldset>
+			<div class="bp-radio-wrap">
+				<input type="radio" name="group-activity-feed-status" id="group-activity-feed-status-mods" class="bs-styled-radio" value="mods"<?php bp_group_show_activity_feed_status_setting( 'mods' ); ?> />
+				<label for="group-activity-feed-status-mods"><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></label>
+			</div>
+
+			<div class="bp-radio-wrap">
+				<input type="radio" name="group-activity-feed-status" id="group-activity-feed-status-admins" class="bs-styled-radio" value="admins"<?php bp_group_show_activity_feed_status_setting( 'admins' ); ?> />
+				<label for="group-activity-feed-status-admins"><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
+			</div>
+		</fieldset>
+
+	<?php endif; ?>
 
 	<?php if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) : ?>
 

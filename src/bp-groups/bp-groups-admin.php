@@ -112,9 +112,10 @@ function bp_groups_admin_load() {
 		check_admin_referer( 'bp-groups-delete' );
 
 		$group_ids = wp_parse_id_list( $_GET['gid'] );
-		$gf_ids    = wp_parse_id_list( $_GET['gfid'] );
 
-		// Delete groups forums
+		$gf_ids = isset( $_GET['gfid'] ) ? wp_parse_id_list( $_GET['gfid'] ) : array();
+
+		// Delete groups forums.
 		if ( ! empty( $gf_ids ) ) {
 			foreach ( $gf_ids as $gf_id ) {
 				$forum_ids = function_exists( 'bbp_get_group_forum_ids' ) ? bbp_get_group_forum_ids( $gf_id ) : array();
@@ -1025,13 +1026,15 @@ function bp_groups_admin_delete() {
 		$group_ids = explode( ',', $group_ids );
 	}
 	$group_ids = wp_parse_id_list( $group_ids );
+
+	add_filter( 'bp_groups_get_where_conditions', 'bb_groups_get_where_conditions', 10, 2 );
 	$groups    = groups_get_groups(
 		array(
 			'include'     => $group_ids,
-			'show_hidden' => true,
 			'per_page'    => null, // Return all results.
 		)
 	);
+	remove_filter( 'bp_groups_get_where_conditions', 'bb_groups_get_where_conditions', 10, 2 );
 
 	// Create a new list of group ids, based on those that actually exist.
 	$gids = array();
@@ -1243,15 +1246,17 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 		</fieldset>
 	</div>
 
-	<div class="bp-groups-settings-section" id="bp-groups-settings-section-activity-feed-status">
-		<fieldset>
-			<legend><?php esc_html_e( 'Who can post into this group?', 'buddyboss' ); ?></legend>
+	<?php if ( bp_is_active( 'activity' ) ) : ?>
+		<div class="bp-groups-settings-section" id="bp-groups-settings-section-activity-feed-status">
+			<fieldset>
+				<legend><?php esc_html_e( 'Who can post into this group?', 'buddyboss' ); ?></legend>
 
-			<label for="bp-group-activity-feed-status-members"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-members" value="members" <?php checked( $activity_feed_status, 'members' ); ?> /><?php esc_html_e( 'All group members', 'buddyboss' ); ?></label>
-			<label for="bp-group-activity-feed-status-mods"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-mods" value="mods" <?php checked( $activity_feed_status, 'mods' ); ?> /><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></label>
-			<label for="bp-group-activity-feed-status-admins"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-admins" value="admins" <?php checked( $activity_feed_status, 'admins' ); ?> /><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
-		</fieldset>
-	</div>
+				<label for="bp-group-activity-feed-status-members"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-members" value="members" <?php checked( $activity_feed_status, 'members' ); ?> /><?php esc_html_e( 'All group members', 'buddyboss' ); ?></label>
+				<label for="bp-group-activity-feed-status-mods"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-mods" value="mods" <?php checked( $activity_feed_status, 'mods' ); ?> /><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></label>
+				<label for="bp-group-activity-feed-status-admins"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-admins" value="admins" <?php checked( $activity_feed_status, 'admins' ); ?> /><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
+			</fieldset>
+		</div>
+	<?php endif; ?>
 
 	<?php if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) : ?>
 		<div class="bp-groups-settings-section" id="bp-groups-settings-section-album-status">
@@ -2669,4 +2674,39 @@ function bb_group_type_labelcolor_metabox( $post ) {
 		</div>
 	</div>
 	<?php
+}
+
+/**
+ * Filter groups query arguments to unset hidden param.
+ *
+ * @since BuddyBoss 2.5.40
+ *
+ * @param array $r array of arguments.
+ *
+ * @return array
+ */
+function bb_groups_group_get_parse_args( $r ) {
+
+	$r['show_hidden'] = false;
+
+	return $r;
+}
+
+/**
+ * Filter groups query to exclude hidden query.
+ *
+ * @since BuddyBoss 2.5.40
+ *
+ * @param array $where_conditions Where conditions SQL statement.
+ * @param array $r                Array of parsed arguments for the get method.
+ *
+ * @return array
+ */
+function bb_groups_get_where_conditions( $where_conditions, $r ) {
+
+	if ( isset( $where_conditions['hidden'] ) ) {
+		unset( $where_conditions['hidden'] );
+	}
+
+	return $where_conditions;
 }
