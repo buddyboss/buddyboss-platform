@@ -121,7 +121,7 @@ if ( bp_is_group_create() ) {
 	<dt class="gen-members-section section-title">
 		<?php echo esc_html( get_group_role_label( bp_get_current_group_id(), 'member_plural_label_name' ), 'buddyboss' ); ?>
 		<div class="search-wrapper" data-bp-search="manage_group_members">
-			<input type="search" placeholder="Search Members" name="members_search" />
+			<input type="search" placeholder="Search Members" name="group_members_search" />
 		</div>
 	</dt>
 
