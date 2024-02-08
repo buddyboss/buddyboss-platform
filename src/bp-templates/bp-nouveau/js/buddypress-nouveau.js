@@ -544,7 +544,7 @@ window.bp = window.bp || {};
 					data.object === 'group_members' && $( 'body' ).hasClass( 'group-members' ),
 					data.object === 'activity' && $( 'body.groups' ).hasClass( 'activity' ),
 					data.object === 'document' && $( 'body' ).hasClass( 'documents' ),
-					data.object === 'manage_group_members' && $( 'body' ).hasClass( 'manage_group_members' ),
+					data.object === 'manage_group_members' && $( 'body' ).hasClass( 'manage-members' ),
 					data.object === 'document' && ( $( 'body' ).hasClass( 'document' ) || $( 'body' ).hasClass( 'documents' ) ),
 				];
 
@@ -552,6 +552,7 @@ window.bp = window.bp || {};
 					$( '.groups .group-search.members-search' ),
 					$( '.groups .group-search.activity-search' ),
 					$( '.documents .bp-document-listing .bb-title' ),
+					$( '.groups .group-search.search-wrapper' ),
 					$( '#bp-media-single-folder .bb-title' ),
 				];
 
@@ -3497,6 +3498,8 @@ window.bp = window.bp || {};
 			if ( $form.filter( '.bp-messages-search-form, .bp-dir-search-form' ).length > 0 ) {
 				$form.find( 'input[type="search"]').val('');
 				$form.find( '.search-form_submit' ).trigger( 'click' );
+			} else if ( $form.find( '#bbp_search_group_members' ).length > 0 ) {
+				$form.find( '#bbp_search_group_members' ).val('').trigger('keyup');
 			} else {
 				$form.find( '#bbp_search' ).val('');
 			}
