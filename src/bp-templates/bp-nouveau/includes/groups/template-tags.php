@@ -711,7 +711,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 	$buttons = array();
 
 	if ( ( 'loop' === $type || 'invite' === $type ) && isset( $GLOBALS['groups_template']->group ) ) {
-		$group = ! empty( $GLOBALS['groups_template']->group ) ? $GLOBALS['groups_template']->group : groups_get_current_group();
+		$group = $GLOBALS['groups_template']->group;
 	} else {
 		$group = groups_get_current_group();
 	}
@@ -875,6 +875,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 		 */
 	} elseif ( 'manage_members' === $type && isset( $GLOBALS['members_template']->member->user_id ) ) {
 		$user_id = $GLOBALS['members_template']->member->user_id;
+
 		$buttons = array(
 			'unban_member'  => array(
 				'id'                => 'unban_member',

@@ -24,6 +24,7 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		start: function () {
+
 			// Setup globals.
 			this.setupGlobals();
 
@@ -615,8 +616,7 @@ window.bp = window.bp || {};
 							$( self.objectNavParent + ' [data-bp-scope="' + i + '"]' ).find( 'span' ).text( response.data.scopes[ i ] );
 						}
 					}
-					console.log( 'data.target', data.target );
-					console.log( 'data', data );
+
 					if ( 'reset' !== data.method ) {
 						self.inject( data.target, response.data.contents, data.method );
 						$( data.target ).trigger( 'bp_ajax_' + data.method, $.extend( data, { response: response.data } ) );
