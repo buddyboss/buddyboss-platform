@@ -1988,7 +1988,6 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 		if (
 			false !== $comment_loaded_count &&
 			(
-				empty( $last_comment_timestamp ) &&
 				$comment_loaded_count === $comment_load_limit
 			)
 		) {

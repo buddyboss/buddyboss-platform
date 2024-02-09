@@ -841,7 +841,7 @@ function bp_nouveau_get_activity_comment_meta() {
 			esc_attr( bp_get_activity_comment_date_recorded_raw() ),
 			esc_attr( strtotime( bp_get_activity_comment_date_recorded_raw() ) ),
 			esc_attr( bp_core_get_iso8601_date( bp_get_activity_comment_date_recorded_raw() ) ),
-			esc_attr( bp_get_activity_comment_date_recorded() )
+			esc_attr( bp_core_time_since( bp_get_activity_comment_date_recorded() ) )
 		)
 	);
 }
