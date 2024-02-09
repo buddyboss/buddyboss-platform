@@ -208,10 +208,8 @@ msgid "You"
 msgstr ""
 
 #: bp-activity/bb-activity-reactions.php:716
-msgid "other"
-msgid_plural "%s others"
-msgstr[0] ""
-msgstr[1] ""
+msgid "%s others"
+msgstr ""
 
 #: bp-activity/bb-activity-reactions.php:730
 #: bp-activity/bp-activity-functions.php:1710
