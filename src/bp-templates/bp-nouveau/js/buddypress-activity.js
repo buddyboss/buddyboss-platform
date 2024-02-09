@@ -734,6 +734,9 @@ window.bp = window.bp || {};
 				activity_state             = activity_item.find( '.activity-state' ),
 				comments_text              = activity_item.find( '.comments-count' ),
 				item_id, form, model, self = this;
+			
+			// Check if target is inside #activity-modal
+			var isInsideModal = target.closest('#activity-modal').length > 0;
 
 			// In case the target is set to a span or i tag inside the link.
 			if (
@@ -1173,8 +1176,11 @@ window.bp = window.bp || {};
 
 						// It's a comment we're replying to.
 					} else {
-						$('.bb-activity-model-wrapper').find( '[data-bp-activity-comment-id="' + item_id + '"]' ).append( form );
-						//$( '[data-bp-activity-comment-id="' + item_id + '"]' ).append( form );
+						if ( isInsideModal ) {
+							$('#activity-modal').find( '[data-bp-activity-comment-id="' + item_id + '"]' ).append( form );
+						} else {
+							$( '[data-bp-activity-comment-id="' + item_id + '"]' ).append( form );
+						}
 					}
 				}
 
