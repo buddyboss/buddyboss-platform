@@ -99,7 +99,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	}
 
 	/**
-	 * Hide related content of activity
+	 * Hide related content of comment.
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
@@ -158,7 +158,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	}
 
 	/**
-	 * Un-hide related content of activity
+	 * Un-hide related content of comment.
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
