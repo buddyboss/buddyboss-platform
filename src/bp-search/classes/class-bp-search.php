@@ -279,7 +279,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				 ++++++++++++++++++++++++++++++++++
 				group items of same type together
 				++++++++++++++++++++++++++++++++++ */
-				if( ! $args['forum_search'] ) {
+				if ( ! isset( $args['forum_search'] ) || ! $args['forum_search'] ) {
 
 					$types = array();
 					foreach ( $this->search_results['all']['items'] as $item_id => $item ) {
