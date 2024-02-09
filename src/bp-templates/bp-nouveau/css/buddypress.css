@@ -4569,6 +4569,11 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
   overflow: hidden;
 }
 
+.bb-activity-model-wrapper .activity-modal {
+  background: #fff;
+  border: 1px solid #b7b7b7;
+}
+
 .bb-activity-model-wrapper .activity-list {
   margin: 0;
 }

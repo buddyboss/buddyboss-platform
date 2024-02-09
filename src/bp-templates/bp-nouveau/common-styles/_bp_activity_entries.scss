@@ -337,8 +337,7 @@
 		}
 
 		.activity-content .bp-generic-meta.action,
-		> .bp-generic-meta.action,
-		.bb-modal-activity-content > .bp-generic-meta.action {
+		> .bp-generic-meta.action {
 
 			.button {
 
@@ -450,8 +449,7 @@
 		}
 
 		.activity-content > .bp-generic-meta.activity-meta,
-		> .bp-generic-meta.activity-meta,
-		.bb-modal-activity-content > .bp-generic-meta.activity-meta {
+		> .bp-generic-meta.activity-meta {
 			display: flex;
 			justify-content: space-around;
 			border-top: 1px solid $light-grey;
@@ -574,8 +572,7 @@
 		}
 
 		&.has-comments .activity-content > .bp-generic-meta.activity-meta,
-		&.has-comments > .bp-generic-meta.activity-meta,
-		.bb-modal-activity-content > .bp-generic-meta.activity-meta {
+		&.has-comments > .bp-generic-meta.activity-meta {
 			border-bottom: 1px solid $light-grey;
 			margin-bottom: 10px;
 		}
@@ -1289,6 +1286,11 @@
 			position: relative;
 			overflow: hidden;
 		}
+	}
+
+	.activity-modal {
+		background: $white;
+		border: 1px solid #b7b7b7;
 	}
 
 	.activity-list {

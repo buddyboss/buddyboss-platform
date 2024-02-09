@@ -132,6 +132,7 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-privacy>li:not(.bb-edit-privacy)', bp.Nouveau, this.activityPrivacyChange.bind( this ) );
 			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', 'span.privacy', bp.Nouveau, this.togglePrivacyDropdown.bind( this ) );
 			$( '#bb-media-model-container .activity-list' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
+			$( '.bb-activity-model-wrapper' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
 			$( document ).keydown( this.commentFormAction );
 			$( document ).click( this.togglePopupDropdown );
 
@@ -1166,7 +1167,8 @@ window.bp = window.bp || {};
 
 						// It's a comment we're replying to.
 					} else {
-						$( '[data-bp-activity-comment-id="' + item_id + '"]' ).append( form );
+						$('.bb-activity-model-wrapper').find( '[data-bp-activity-comment-id="' + item_id + '"]' ).append( form );
+						//$( '[data-bp-activity-comment-id="' + item_id + '"]' ).append( form );
 					}
 				}
 
@@ -3168,16 +3170,16 @@ window.bp = window.bp || {};
 		launchActivityPopup: function( activityID, parentID ) {
 			var activity_item = $( '#activity-' + activityID );
 			var modal = $('.bb-activity-model-wrapper');
-			var activity_content = activity_item.html();
+			//var activity_content = activity_item.html();
+			var activity_content = activity_item[0].outerHTML
 			var activity_comments = activity_item.find( '.activity-comments' ).html();
 			var selector = '[data-parent_comment_id="' + parentID + '"]';
 
 			modal.show();
 			//modal.addClass( 'loading' );
 
-			modal.find( '.bb-modal-activity-content' ).html( activity_content );
-			/*modal.find( '.bb-modal-activity-content' ).find( '.activity-comments' ).remove();
-			modal.find( '.bb-modal-activity-comments' ).html( activity_comments );*/
+			modal.find( 'ul.activity-list' ).html( activity_content );
+			/*modal.find( '.bb-modal-activity-comments' ).html( activity_comments );*/
 			var viewMoreCommentsLink = modal.find( selector ).children( '.acomments-view-more' ).first();
 			viewMoreCommentsLink.trigger( 'click' );
 
