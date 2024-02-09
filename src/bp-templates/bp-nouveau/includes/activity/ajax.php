@@ -1157,10 +1157,6 @@ function bb_nouveau_ajax_activity_loadmore_comments() {
 		wp_send_json_error();
 	}
 
-	if ( empty( $_POST['referer'] ) ) {
-		wp_send_json_error();
-	}
-
 	global $activities_template;
 	$activity_id         = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
 	$parent_comment_id   = ! empty( $_POST['parent_comment_id'] ) ? (int) $_POST['parent_comment_id'] : 0;
