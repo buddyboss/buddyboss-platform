@@ -1968,6 +1968,15 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 	 * @param string $value Opening tag for the HTML markup to use.
 	 */
 	 if ( ! $is_load_more ) {
+		if (
+			false !== $comment_loaded_count &&
+			(
+				count( $comment->children ) > $comment_load_limit
+			)
+		) {
+			echo "<a href='javascript:void(0);' class='view-more-comments'>" . esc_html__( 'View more comments', 'buddyboss' ) . "</a>";
+		}
+		
 		echo apply_filters( 'bp_activity_recurse_comments_start_ul', "<ul data-activity_id={$activities_template->activity->id} data-parent_comment_id={$comment->id}>" );
 	 }
 	
@@ -1991,7 +2000,14 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 				$comment_loaded_count === $comment_load_limit
 			)
 		) {
-			echo "<li class='acomments-view-more'>" . __( 'View more comments', 'buddyboss' ) . "</li>";
+
+			if ( ! empty( $parent_comment_id ) && $activities_template->activity->id !== $parent_comment_id ) {
+				$view_more_text = __( 'View more replies', 'buddyboss' );
+			} else {
+				$view_more_text = __( 'View more comments', 'buddyboss' );
+			}
+
+			echo "<li class='acomments-view-more'>" . esc_html( $view_more_text ) . "</li>";
 			break;
 		}
 

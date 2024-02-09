@@ -155,6 +155,9 @@ window.bp = window.bp || {};
 			}
 
 			$( '.bb-activity-model-wrapper' ).on( 'click', '.acomments-view-more', this.viewMoreComments.bind( this ) );
+			$( document ).on( 'click', '.activity-comments > .view-more-comments, .activity-state-comments > .comments-count', function( e ) {
+				$(this).parents('li.activity-item').find('.activity-comments > ul > li.acomments-view-more').trigger('click');
+			});
 		},
 
 		/**
@@ -3223,13 +3226,6 @@ window.bp = window.bp || {};
 				activity_type_is_blog: $( e.currentTarget ).parents('.entry-content').length > 1 ? true : false
 			}
 
-			// View more links clicked on the new feed previews.
-			if ( $( e.currentTarget ).parents('.entry-content').length > 1 ) {
-				data.referer = 'news-feed';
-			} else {
-				data.referer = 'news-feed-modal';
-			}
-
 			if ( $( e.currentTarget ).prev( 'li.activity-comment' ).length > 0 ) {
 				// Load more in the current thread.
 				lastCommentTimeStamp = $( e.currentTarget ).prev( 'li.activity-comment' ).data( 'bp-timestamp' );
@@ -3244,26 +3240,44 @@ window.bp = window.bp || {};
 
 			bp.Nouveau.ajax( data, 'activity' ).done(
 				function( response ) {
-					console.log( response );
 					if ( false === response.success ) {
 						target.removeClass( 'loading' );
 						return;
 					} else {
 						// success
-						console.log(parentCommentId);
-						console.log(activityId);
-						var $targetList = $( '.activity-modal.activity .activity-comments' ).find( "[data-activity_id='" + activityId + "'][data-parent_comment_id='" + parentCommentId + "']" );
+						var $targetList  = $( '.activity-modal.activity .activity-comments' ).find( "[data-activity_id='" + activityId + "'][data-parent_comment_id='" + parentCommentId + "']" );
+						var $newComments = $($.parseHTML(response.data));
+						if ( $targetList.length > 0 && $newComments.length > 0 ) {
 
-						if ( $targetList.length > 0 ) {
+							// Iterate through new comments to handle duplicates
+							$newComments.each(function() {
+
+								if ( 'LI' === this.nodeName && 'undefined' !== this.id && '' !== this.id ) {
+									var newCommentId = this.id;
+
+									// Check if this comment ID already exists within the target list
+									var $existingComment = $targetList.children( '#' + newCommentId );
+									if ( $existingComment.length > 0 ) {
+										// If it exists, remove the existing comment.
+										$existingComment.remove();
+									}
+								}
+
+							});
 
 							if ( '' !== lastCommentTimeStamp ) {
-								$targetList.find( "li.activity-comment[data-bp-timestamp='" + lastCommentTimeStamp + "']" ).after( response.data );
+
+								var $addAfterElement = $targetList.find( "li.activity-comment[data-bp-timestamp='" + lastCommentTimeStamp + "']" );
+								$addAfterElement.after( $newComments );
+							} else if( $targetList.children( '.activity-comment.comment-item' ).length > 0 ) {
+								// Already comments in the list.
+								$targetList.children( '.activity-comment.comment-item' ).first().before( $newComments );
 							} else {
-								$targetList.html( response.data );
+								$targetList.html( $newComments );
 							}
 						}
 						target.removeClass( 'loading' );
-						target.empty();
+						target.remove();
 					}
 
 				}
@@ -3272,11 +3286,6 @@ window.bp = window.bp || {};
 					target.removeClass( 'loading' );
 				}
 			);
-
-			console.log( activityId );
-			console.log( parentCommentId );
-			console.log( lastCommentTimeStamp );
-
 		}
 
 	};

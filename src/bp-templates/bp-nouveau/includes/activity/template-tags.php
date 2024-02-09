@@ -284,7 +284,7 @@ function bp_nouveau_activity_state() {
 			$activity_state_class            = apply_filters( 'bp_nouveau_get_activity_comment_buttons_activity_state', $activity_state_comment_class, $activity_id );
 			?>
 			<a href="#" class="<?php echo esc_attr( trim( implode( ' ', $activity_state_class ) ) ); ?>">
-				<span class="comments-count">
+				<span class="comments-count" data-comments-count="<?php echo $comment_count; ?>">
 					<?php
 					if ( $comment_count > 1 ) {
 						printf( _x( '%d Comments', 'placeholder: activity comments count', 'buddyboss' ), $comment_count );
