@@ -68,8 +68,12 @@ bp_nouveau_group_hook( 'before', 'manage_members_list' );
 	</ul>
 
 	<?php
-	if ( bp_group_member_needs_pagination() ) {
+	if ( bp_group_member_needs_pagination() ) :
 		bp_nouveau_pagination( 'bottom' );
-	}
+	endif;
 	?>
-<?php endif; ?>
+<?php
+else :
+	bp_nouveau_user_feedback( 'group-members-search-none' );
+endif;
+?>
