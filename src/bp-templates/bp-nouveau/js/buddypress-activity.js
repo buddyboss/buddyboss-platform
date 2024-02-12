@@ -3212,7 +3212,7 @@ window.bp = window.bp || {};
 					</div>
 				</div>`;
 
-			target.addClass( 'loading' );
+			target.addClass( 'loading' ).removeClass('bp-hide');
 			target.html( skeleton );
 
 			var data = {
@@ -3228,21 +3228,15 @@ window.bp = window.bp || {};
 				data.last_comment_timestamp = lastCommentTimeStamp;
 			}
 
-			// View more links clicked on the new feed previews, so load the modal with the response.
-			// if ( ! $( e.currentTarget ).parent().parent().hasClass( 'activity-comments' ) ) {
-			// 	// Clicked on reples links, so load the respective x replies in that thread.
-
-			// }
-
 			bp.Nouveau.ajax( data, 'activity' ).done(
 				function( response ) {
 					if ( false === response.success ) {
 						target.removeClass( 'loading' );
 						return;
-					} else {
+					} else if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.comments ) {
 						// success
 						var $targetList  = $( '.activity-modal.activity .activity-comments' ).find( "[data-activity_id='" + activityId + "'][data-parent_comment_id='" + parentCommentId + "']" );
-						var $newComments = $($.parseHTML(response.data));
+						var $newComments = $( $.parseHTML( response.data.comments ) );
 						if ( $targetList.length > 0 && $newComments.length > 0 ) {
 
 							// Iterate through new comments to handle duplicates

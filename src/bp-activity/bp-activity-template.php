@@ -1970,6 +1970,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 	 if ( ! $is_ajax_load_more ) {
 		if (
 			false !== $comment_load_limit &&
+			0 !== $comment_load_limit &&
 			(
 				count( $comment->children ) > $comment_load_limit
 			)
@@ -2006,7 +2007,12 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 				$view_more_text = __( 'View more comments', 'buddyboss' );
 			}
 
-			echo "<li class='acomments-view-more'>" . esc_html( $view_more_text ) . "</li>";
+			$hidden_class = '';
+			if ( ! $is_ajax_load_more ) { 
+				$hidden_class = 'bp-hide';
+			}
+
+			echo "<li class='acomments-view-more " . $hidden_class . "'>" . esc_html( $view_more_text ) . "</li>";
 			break;
 		}
 
