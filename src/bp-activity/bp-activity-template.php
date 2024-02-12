@@ -2870,8 +2870,14 @@ function bp_get_activity_comment_css_class() {
 	$comment_depth = bp_activity_get_comment_depth();
 
 	// Threading is turned on, so check the depth.
-	if ( get_option( 'thread_comments' ) ) {
-		$class .= (bool) ( $comment_depth > get_option( 'thread_comments_depth' ) ) ? ' detached-comment-item' : '';
+	if ( 'blogs' === bp_get_activity_object_name() ) {
+		if ( get_option( 'thread_comments' ) ) {
+			$class .= (bool) ( $comment_depth > get_option( 'thread_comments_depth' ) ) ? ' detached-comment-item' : '';
+		}
+	} else {
+		if ( bb_is_activity_comment_threading_enabled() ) {
+			$class .= (bool) ( $comment_depth > bb_get_activity_comment_threading_depth() ) ? ' detached-comment-item' : '';
+		}
 	}
 
 	// Has childrens.

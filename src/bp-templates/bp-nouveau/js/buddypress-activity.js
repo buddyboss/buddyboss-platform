@@ -530,7 +530,7 @@ window.bp = window.bp || {};
 			var currentTargetList = $( event.currentTarget ).parent(),
 					parentId = currentTargetList.data( 'parent_comment_id' ),
 					activityId  = $( currentTargetList ).data( 'activity_id' );
-
+			$( event.currentTarget ).parents( '.activity-comments' ).children('.view-more-comments').remove();
 			bp.Nouveau.Activity.launchActivityPopup( activityId, parentId );
 		},
 
@@ -3231,7 +3231,7 @@ window.bp = window.bp || {};
 			bp.Nouveau.ajax( data, 'activity' ).done(
 				function( response ) {
 					if ( false === response.success ) {
-						target.removeClass( 'loading' );
+						target.html('').removeClass( 'loading' );
 						return;
 					} else if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.comments ) {
 						// success
@@ -3266,14 +3266,13 @@ window.bp = window.bp || {};
 								$targetList.html( $newComments );
 							}
 						}
-						target.removeClass( 'loading' );
 						target.remove();
 					}
 
 				}
 			).fail(
 				function() {
-					target.removeClass( 'loading' );
+					target.html('').removeClass( 'loading' );
 				}
 			);
 		},

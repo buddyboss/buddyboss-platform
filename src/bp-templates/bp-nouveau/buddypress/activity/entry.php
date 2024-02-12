@@ -137,7 +137,11 @@ if ( ! empty( $link_embed ) ) {
 
 		<?php
 		$class = 'activity-comments';
-		$class .= bb_is_activity_comment_threading_enabled() ? ' threaded-comments threaded-level-' . bb_get_activity_comment_threading_depth() : '';
+		if ( 'blogs' === bp_get_activity_object_name() ) {
+			$class .= get_option( 'thread_comments' ) ? ' threaded-comments threaded-level-' . get_option( 'thread_comments_depth' ) : '';
+		} else {
+			$class .= bb_is_activity_comment_threading_enabled() ? ' threaded-comments threaded-level-' . bb_get_activity_comment_threading_depth() : '';
+		}
 		?>
 
 		<div class="<?php echo $class ?>">
