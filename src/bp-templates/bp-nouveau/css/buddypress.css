@@ -4617,6 +4617,10 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   cursor: pointer;
 }
 
+.view-more-comments {
+  font-weight: 600;
+}
+
 /* Activity comment modal ==> Ends Here */
 .bb-is-mobile.bb-reactions-mode .bp-generic-meta .generic-button a,
 .bb-is-mobile.bb-reactions-mode .bp-generic-meta .generic-button a img,
