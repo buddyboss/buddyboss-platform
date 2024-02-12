@@ -531,6 +531,12 @@ window.bp = window.bp || {};
 					parentId = currentTargetList.data( 'parent_comment_id' ),
 					activityId  = $( currentTargetList ).data( 'activity_id' );
 			$( event.currentTarget ).parents( '.activity-comments' ).children('.view-more-comments').remove();
+
+			$( event.currentTarget ).parents( '.activity-comments' ).find( '.ac-form' ).each( function() {
+				var form = $( this );
+				bp.Nouveau.Activity.resetActivityCommentForm( form, 'hardReset' );
+			});
+
 			bp.Nouveau.Activity.launchActivityPopup( activityId, parentId );
 		},
 
@@ -1137,7 +1143,7 @@ window.bp = window.bp || {};
 				event.preventDefault();
 
 				// If form is edit activity comment, then reset it.
-				self.resetActivityCommentForm( form );
+				self.resetActivityCommentForm( form, 'hardReset' );
 
 				// If the comment count span inside the link is clicked.
 				if ( target.parent().hasClass( 'acomment-reply' ) ) {
@@ -1185,10 +1191,8 @@ window.bp = window.bp || {};
 						// It's a comment we're replying to.
 					} else {
 						if ( isInsideModal ) {
-							console.log('zzxxx');
 							$('#activity-modal').find( '[data-bp-activity-comment-id="' + item_id + '"]' ).append( form );
 						} else {
-							console.log('aaaqqq');
 							$( '[data-bp-activity-comment-id="' + item_id + '"]' ).append( form );
 						}
 					}
@@ -3104,10 +3108,10 @@ window.bp = window.bp || {};
 
 		},
 
-		resetActivityCommentForm: function ( form ) {
+		resetActivityCommentForm: function ( form, resetType = '' ) {
 
-			// Form is not edit activity comment form, then return.
-			if ( ! form.hasClass( 'acomment-edit' ) ) {
+			// Form is not edit activity comment form and not hardReset, then return.
+			if ( ! form.hasClass('acomment-edit') && resetType !== 'hardReset' ) {
 				return;
 			}
 
