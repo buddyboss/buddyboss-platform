@@ -1944,7 +1944,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 			'comment_load_limit'     => false,
 			'parent_comment_id'      => 0,
 			'main_activity_id'       => 0,
-			'is_load_more'           => false,
+			'is_ajax_load_more'      => false,
 			'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( $_POST['last_comment_timestamp'] ) : '',
 		),
 		'bb_activity_recurse_comments'
@@ -1967,24 +1967,23 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 	 *
 	 * @param string $value Opening tag for the HTML markup to use.
 	 */
-	 if ( ! $is_load_more ) {
+	 if ( ! $is_ajax_load_more ) {
 		if (
-			false !== $comment_loaded_count &&
+			false !== $comment_load_limit &&
 			(
 				count( $comment->children ) > $comment_load_limit
 			)
 		) {
 			echo "<a href='javascript:void(0);' class='view-more-comments'>" . esc_html__( 'View more comments', 'buddyboss' ) . "</a>";
 		}
-		
+
 		echo apply_filters( 'bp_activity_recurse_comments_start_ul', "<ul data-activity_id={$activities_template->activity->id} data-parent_comment_id={$comment->id}>" );
-	 }
-	
+	}
 
 	$comment_loaded_count = 0;
 	foreach ( (array) $comment->children as $comment_child ) {
 		if	(
-			true === $is_load_more &&
+			true === $is_ajax_load_more &&
 			! empty( $last_comment_timestamp ) &&
 			$comment->id === $parent_comment_id &&
 			$comment_child->date_recorded <= date_i18n( 'Y-m-d H:i:s', $last_comment_timestamp )
@@ -2037,7 +2036,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 	 *
 	 * @param string $value Closing tag for the HTML markup to use.
 	 */
-	if ( ! $is_load_more ) {
+	if ( ! $is_ajax_load_more ) {
 		echo apply_filters( 'bp_activity_recurse_comments_end_ul', '</ul>' );
 	}
 }

@@ -1171,8 +1171,8 @@ function bb_nouveau_ajax_activity_loadmore_comments() {
 	$args = array(
 		'comment_load_limit'     => bb_get_activity_comment_loading(),
 		'parent_comment_id'      => $parent_comment_id,
-		'activity_id'            => $activity_id,
-		'is_load_more'           => true,
+		'main_activity_id'       => $activity_id,
+		'is_ajax_load_more'      => true,
 		'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( $_POST['last_comment_timestamp'] ) : '',
 	);
 

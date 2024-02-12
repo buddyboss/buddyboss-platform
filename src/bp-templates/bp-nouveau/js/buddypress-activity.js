@@ -155,9 +155,12 @@ window.bp = window.bp || {};
 			}
 
 			$( '.bb-activity-model-wrapper' ).on( 'click', '.acomments-view-more', this.viewMoreComments.bind( this ) );
-			$( document ).on( 'click', '.activity-comments > .view-more-comments, .activity-state-comments > .comments-count', function( e ) {
+			$( document ).on( 'click', '#activity-stream .activity-comments > .view-more-comments, #activity-stream .activity-state-comments > .comments-count', function( e ) {
+				e.preventDefault();
 				$(this).parents('li.activity-item').find('.activity-comments > ul > li.acomments-view-more').trigger('click');
 			});
+
+			$('#activity-modal > .bb-modal-activity-body').scroll( this.autoloadMoreComments.bind( this ) );
 		},
 
 		/**
@@ -3185,13 +3188,6 @@ window.bp = window.bp || {};
 			/*modal.find( '.bb-modal-activity-comments' ).html( activity_comments );*/
 			var viewMoreCommentsLink = modal.find( selector ).children( '.acomments-view-more' ).first();
 			viewMoreCommentsLink.trigger( 'click' );
-
-			setTimeout(
-				function () {
-					modal.removeClass( 'loading' );
-				},
-				500
-			);
 		},
 
 		viewMoreComments: function( e ) {
@@ -3286,6 +3282,25 @@ window.bp = window.bp || {};
 					target.removeClass( 'loading' );
 				}
 			);
+		},
+
+		autoloadMoreComments: function() {
+
+			if ( $( '.bb-activity-model-wrapper' ).length > 0 && $( '.bb-activity-model-wrapper' ).css('display') !=='none' ) {
+				var element = $( '.bb-modal-activity-body .activity-comments > ul > li.acomments-view-more:not(.loading)' ),
+					container = $( '.bb-activity-model-wrapper .bb-modal-activity-body' );
+				if ( element.length > 0 && container.length > 0 ) {
+					var elementTop = $(element).offset().top, containerTop = $(container).scrollTop(),
+						containerBottom = containerTop + $(container).height();
+
+					// Adjust elementTop based on the container's current scroll position
+					// This translates the element's position to be relative to the container, not the whole document
+					var elementRelativeTop = elementTop - $(container).offset().top + containerTop;
+					if ( elementRelativeTop < containerBottom && ( elementRelativeTop + $(element).outerHeight() ) > containerTop ) {
+						$(element).trigger('click').addClass('loading');
+					}
+				}
+			}
 		}
 
 	};
