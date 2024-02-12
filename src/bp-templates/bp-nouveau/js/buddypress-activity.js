@@ -536,8 +536,10 @@ window.bp = window.bp || {};
 
 		closeComments: function( event ) {
 			event.preventDefault();
+			var target = $( event.target ), modal = target.closest( '.bb-activity-model-wrapper' );
 
-			$('.bb-activity-model-wrapper').hide();
+			modal.hide();
+			modal.find( 'ul.activity-list' ).empty();
 		},
 
 		/**
@@ -3181,17 +3183,18 @@ window.bp = window.bp || {};
 		 */
 		launchActivityPopup: function( activityID, parentID ) {
 			var activity_item = $( '#activity-' + activityID );
+			var activity_form = $( '#ac-form-' + activityID );
 			var modal = $('.bb-activity-model-wrapper');
-			//var activity_content = activity_item.html();
-			var activity_content = activity_item[0].outerHTML
-			var activity_comments = activity_item.find( '.activity-comments' ).html();
+			var activity_content = activity_item[0].outerHTML;
 			var selector = '[data-parent_comment_id="' + parentID + '"]';
 
 			modal.show();
 			//modal.addClass( 'loading' );
 
 			modal.find( 'ul.activity-list' ).html( activity_content );
-			/*modal.find( '.bb-modal-activity-comments' ).html( activity_comments );*/
+			//modal.find( '.activity-comments > form.ac-form' ).remove();
+			//modal.find( '.bb-modal-activity-footer' ).append( activity_form );
+
 			var viewMoreCommentsLink = modal.find( selector ).children( '.acomments-view-more' ).first();
 			viewMoreCommentsLink.trigger( 'click' );
 		},

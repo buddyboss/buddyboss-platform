@@ -1280,7 +1280,6 @@
 
 		> .activity-modal {
 			max-height: 85vh;
-			min-height: 85vh;
 			max-width: 700px;
 			width: 700px;
 			position: relative;
@@ -1330,6 +1329,20 @@
 		margin-left: auto;
 	}
 }
+
+/*.bb-modal-activity-footer {
+	width: 100%;
+	height: 92px;
+	max-height: 252px;
+	border-top: 1px solid $bp-border-color;
+	padding: 10px 25px;
+	overflow-y: auto;
+	overflow-x: hidden;
+
+	form.ac-form {
+		margin: 0;
+	}
+}*/
 
 .bb-modal-activity-body {
 	position: relative;

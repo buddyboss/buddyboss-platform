@@ -3653,16 +3653,14 @@ input.search-query-input {
 }
 
 #buddypress .activity-list .activity-item .activity-content .bp-generic-meta.action .button, #buddypress
-.activity-list .activity-item > .bp-generic-meta.action .button, #buddypress
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.action .button {
+.activity-list .activity-item > .bp-generic-meta.action .button {
   display: flex;
   align-items: center;
   column-gap: 2px;
 }
 
 .activity-list .activity-item .activity-content .bp-generic-meta.action .button > i,
-.activity-list .activity-item > .bp-generic-meta.action .button > i,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.action .button > i {
+.activity-list .activity-item > .bp-generic-meta.action .button > i {
   font-size: 22px;
   font-weight: 400;
   display: inline-block;
@@ -3670,35 +3668,30 @@ input.search-query-input {
 }
 
 .activity-list .activity-item .activity-content .bp-generic-meta.action .button.has-reaction > i,
-.activity-list .activity-item > .bp-generic-meta.action .button.has-reaction > i,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.action .button.has-reaction > i {
+.activity-list .activity-item > .bp-generic-meta.action .button.has-reaction > i {
   font-weight: 200;
   font-size: 24px;
 }
 
 body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp-generic-meta.action .button.has-reaction > i, body:not(.bb-reactions-mode)
-.activity-list .activity-item > .bp-generic-meta.action .button.has-reaction > i, body:not(.bb-reactions-mode)
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.action .button.has-reaction > i {
+.activity-list .activity-item > .bp-generic-meta.action .button.has-reaction > i {
   font-weight: 300;
 }
 
 .activity-list .activity-item .activity-content .bp-generic-meta.action .button > img,
-.activity-list .activity-item > .bp-generic-meta.action .button > img,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.action .button > img {
+.activity-list .activity-item > .bp-generic-meta.action .button > img {
   height: 24px;
   width: 24px;
   object-fit: cover;
 }
 
 .activity-list .activity-item .activity-content .bp-generic-meta.action .button > img.custom,
-.activity-list .activity-item > .bp-generic-meta.action .button > img.custom,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.action .button > img.custom {
+.activity-list .activity-item > .bp-generic-meta.action .button > img.custom {
   border-radius: 100%;
 }
 
 #buddypress .activity-list .activity-item .activity-content .bp-generic-meta.action .button > .like-count, #buddypress
-.activity-list .activity-item > .bp-generic-meta.action .button > .like-count, #buddypress
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.action .button > .like-count {
+.activity-list .activity-item > .bp-generic-meta.action .button > .like-count {
   color: #333;
   line-height: 20px;
   display: inline-block;
@@ -3706,14 +3699,12 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 }
 
 .activity-list .activity-item .activity-content .bp-generic-meta.action .button.bp-like-button:before,
-.activity-list .activity-item > .bp-generic-meta.action .button.bp-like-button:before,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.action .button.bp-like-button:before {
+.activity-list .activity-item > .bp-generic-meta.action .button.bp-like-button:before {
   display: none;
 }
 
 .activity-list .activity-item .activity-content .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:before,
-.activity-list .activity-item > .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:before,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:before {
+.activity-list .activity-item > .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:before {
   content: "";
   display: block;
   position: absolute;
@@ -3725,8 +3716,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 }
 
 .activity-list .activity-item .activity-content .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:after,
-.activity-list .activity-item > .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:after,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:after {
+.activity-list .activity-item > .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:after {
   width: 180px;
   white-space: normal;
   left: 0;
@@ -3762,8 +3752,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta,
-.activity-list .activity-item > .bp-generic-meta.activity-meta,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta {
+.activity-list .activity-item > .bp-generic-meta.activity-meta {
   display: flex;
   justify-content: space-around;
   border-top: 1px solid #eaeaea;
@@ -3772,8 +3761,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta div.generic-button,
-.activity-list .activity-item > .bp-generic-meta.activity-meta div.generic-button,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta div.generic-button {
+.activity-list .activity-item > .bp-generic-meta.activity-meta div.generic-button {
   margin: 0;
   display: flex;
   justify-content: center;
@@ -3781,46 +3769,38 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta div.generic-button > a,
-.activity-list .activity-item > .bp-generic-meta.activity-meta div.generic-button > a,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta div.generic-button > a {
+.activity-list .activity-item > .bp-generic-meta.activity-meta div.generic-button > a {
   width: 100%;
   justify-content: center;
   border-radius: 6px;
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta div.generic-button > a:hover,
-.activity-list .activity-item > .bp-generic-meta.activity-meta div.generic-button > a:hover,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta div.generic-button > a:hover {
+.activity-list .activity-item > .bp-generic-meta.activity-meta div.generic-button > a:hover {
   background-color: #eaeaea;
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .button,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta .button {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .button {
   background: transparent;
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta a,
-.activity-list .activity-item > .bp-generic-meta.activity-meta a,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta a {
+.activity-list .activity-item > .bp-generic-meta.activity-meta a {
   padding: 4px 8px;
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button:focus,
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button:hover,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .button:focus,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .button:hover,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta .button:focus,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta .button:hover {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .button:hover {
   background: none;
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .icons:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .button:before,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .icons:before,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta .button:before,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta .icons:before {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .icons:before {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 24px;
@@ -3828,59 +3808,49 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .acomment-reply.button:before,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .acomment-reply.button:before,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta .acomment-reply.button:before {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .acomment-reply.button:before {
   content: "\ee33";
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .acomment-reply.button .comment-count,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .acomment-reply.button .comment-count,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta .acomment-reply.button .comment-count {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .acomment-reply.button .comment-count {
   color: #333;
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .view:before,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .view:before,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta .view:before {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .view:before {
   content: "\ee33";
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .fav:before,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .fav:before,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta .fav:before {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .fav:before {
   content: "\ef41";
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .has-like:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .unfav:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .has-like:before,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .unfav:before,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta .has-like:before,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta .unfav:before {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .unfav:before {
   content: "\ef41";
   color: #0061ac;
   font-weight: 300;
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .edit-activity:before,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .edit-activity:before,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta .edit-activity:before {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .edit-activity:before {
   content: "\ee5a";
   font-size: 20px;
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .delete-activity:before,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .delete-activity:before,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta .delete-activity:before {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .delete-activity:before {
   content: "\ef48";
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .reported-content:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .report-content:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .reported-content:before,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .report-content:before,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta .reported-content:before,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta .report-content:before {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .report-content:before {
   content: "\ee9c";
   position: relative;
   font-size: 20px;
@@ -3890,47 +3860,40 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .reported-content,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .reported-content,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta .reported-content {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .reported-content {
   opacity: 0.8 !important;
   pointer-events: none;
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .spam-activity:before,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .spam-activity:before,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta .spam-activity:before {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .spam-activity:before {
   content: "\ee08";
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .delete-activity:hover,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .delete-activity:hover,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta .delete-activity:hover {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .delete-activity:hover {
   color: #800;
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .button,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta .button {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .button {
   border: 0;
   box-shadow: none;
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button span,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .button span,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta .button span {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .button span {
   background: none;
   font-weight: 600;
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .unfav .like-count,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .unfav .like-count,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta .unfav .like-count {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .unfav .like-count {
   color: #0061ac;
 }
 
 .activity-list .activity-item.has-comments .activity-content > .bp-generic-meta.activity-meta,
-.activity-list .activity-item.has-comments > .bp-generic-meta.activity-meta,
-.activity-list .activity-item .bb-modal-activity-content > .bp-generic-meta.activity-meta {
+.activity-list .activity-item.has-comments > .bp-generic-meta.activity-meta {
   border-bottom: 1px solid #eaeaea;
   margin-bottom: 10px;
 }
@@ -4562,7 +4525,6 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
 
 .bb-activity-model-wrapper.bb-internal-model > .activity-modal {
   max-height: 85vh;
-  min-height: 85vh;
   max-width: 700px;
   width: 700px;
   position: relative;
@@ -4608,6 +4570,19 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   margin-left: auto;
 }
 
+/*.bb-modal-activity-footer {
+	width: 100%;
+	height: 92px;
+	max-height: 252px;
+	border-top: 1px solid $bp-border-color;
+	padding: 10px 25px;
+	overflow-y: auto;
+	overflow-x: hidden;
+
+	form.ac-form {
+		margin: 0;
+	}
+}*/
 .bb-modal-activity-body {
   position: relative;
   padding: 15px;
