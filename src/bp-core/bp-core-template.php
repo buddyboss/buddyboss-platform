@@ -1105,11 +1105,10 @@ function bp_create_excerpt( $text, $length = 225, $options = array() ) {
 
 				$truncate = mb_substr( $truncate, 0, $last_link_start );
 			}
-		} elseif ( false !== $last_space && false === $last_link_start && false === $last_link_end ) {
-			// If last_link_start not exist.
-
-			$truncate = mb_substr( $truncate, 0, $last_space );
 		}
+
+		// If the link in plain text
+		$truncate = mb_substr( $truncate, 0, $last_space );
 	}
 	$truncate .= $ending;
 
