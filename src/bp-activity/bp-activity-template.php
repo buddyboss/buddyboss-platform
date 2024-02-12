@@ -2022,7 +2022,13 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 		$template = bp_locate_template( 'activity/comment.php', false, false );
 
 		$comment_template_args = array();
-		if ( false !== $comment_load_limit && $comment->item_id === $comment->secondary_item_id ) {
+		if ( 
+			false !== $comment_load_limit &&
+			(
+				$comment->item_id === $comment->secondary_item_id || 
+				'blogs' === $comment->component
+			)
+		) {
 
 			// First level comments.
 			$comment_template_args = array( 'show_replies' => false );
