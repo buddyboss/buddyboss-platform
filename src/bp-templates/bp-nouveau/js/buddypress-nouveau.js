@@ -3512,8 +3512,8 @@ window.bp = window.bp || {};
 			if ( $form.filter( '.bp-messages-search-form, .bp-dir-search-form' ).length > 0 ) {
 				$form.find( 'input[type="search"]').val('');
 				$form.find( '.search-form_submit' ).trigger( 'click' );
-			} else if ( $form.find( '#bbp_search_group_members' ).length > 0 ) {
-				$form.find( '#bbp_search_group_members' ).val('').trigger('keyup');
+			} else if ( $form.find( '#bb_search_group_members' ).length > 0 ) {
+				$form.find( '#bb_search_group_members' ).val('').trigger('keyup');
 			} else {
 				$form.find( '#bbp_search' ).val('');
 			}
