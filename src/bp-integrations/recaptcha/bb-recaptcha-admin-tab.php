@@ -120,7 +120,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		'</div>';
 
 		$settings = array(
-			'bb_recaptcha_settings_section' => array(
+			'bb_recaptcha_versions' => array(
 				'page'              => 'Recaptcha',
 				'title'             => __( 'reCAPTCHA', 'buddyboss' ) . $html,
 				'tutorial_callback' => array( $this, 'setting_callback_recaptcha_tutorial' ),
@@ -130,7 +130,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					'<a href="#" target="_blank">' . esc_html__( 'Admin Console', 'buddyboss' ) . '</a>'
 				),
 			),
-			'bb_recaptcha_settings'         => array(
+			'bb_recaptcha_settings' => array(
 				'page'              => 'recaptcha',
 				'title'             => __( 'reCAPTCHA Settings', 'buddyboss' ),
 				'tutorial_callback' => array( $this, 'setting_callback_recaptcha_tutorial' ),
@@ -173,12 +173,36 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$fields = array();
 
-		$fields['bb_recaptcha_settings_section'] = array(
-			'information' => array(
+		$fields['bb_recaptcha_versions'] = array(
+			'information'             => array(
 				'title'             => esc_html__( 'Information', 'buddyboss' ),
 				'callback'          => array( $this, 'setting_callback_recaptcha_information' ),
 				'sanitize_callback' => 'string',
-				'args'              => array( 'class' => 'notes-hidden-header' ),
+				'args'              => array( 'class' => 'hidden-header' ),
+			),
+			'versions'                => array(
+				'title'             => esc_html__( 'Versions', 'buddyboss' ),
+				'callback'          => array( $this, 'setting_callback_recaptcha_versions' ),
+				'sanitize_callback' => 'string',
+				'args'              => array(),
+			),
+			'bb-recaptcha-site-key'   => array(
+				'title'             => __( 'Site Key', 'buddyboss' ),
+				'callback'          => array( $this, 'settings_callback_recaptcha_site_key' ),
+				'sanitize_callback' => 'string',
+				'args'              => array(),
+			),
+			'bb-recaptcha-secret-key' => array(
+				'title'             => __( 'Secret Key', 'buddyboss' ),
+				'callback'          => array( $this, 'settings_callback_recaptcha_secret_key' ),
+				'sanitize_callback' => 'string',
+				'args'              => array(),
+			),
+			'bb-recaptcha-verify'     => array(
+				'title'             => esc_html__( 'Verify', 'buddyboss' ),
+				'callback'          => array( $this, 'setting_callback_recaptcha_verify' ),
+				'sanitize_callback' => 'string',
+				'args'              => array( 'class' => 'hidden-header field-button' ),
 			),
 		);
 
@@ -300,10 +324,72 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 * @return mixed|string
 	 */
 	public function admin_setting_icons( $meta_icon, $id = '' ) {
-		if ( 'bb_recaptcha_settings_section' === $id || 'bb_recaptcha_settings' === $id ) {
+		if ( 'bb_recaptcha_versions' === $id || 'bb_recaptcha_settings' === $id ) {
 			$meta_icon = 'bb-icon-i bb-icon-brand-google';
 		}
 
 		return $meta_icon;
+	}
+
+	/**
+	 * Callback function for versions in Recaptcha integration.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function setting_callback_recaptcha_versions() {
+		$enabled_for = 'recaptcha_v3';
+		?>
+		<div class="show-full-width">
+			<input type="radio" name="bb-recaptcha[recaptcha_v3]" id="recaptcha_v3" value="recaptcha_v3" <?php checked( $enabled_for, 'recaptcha_v3' ); ?>>
+			<label for="recaptcha_v3"><?php esc_html_e( 'reCAPTCHA v3 (Recommended)', 'buddyboss' ); ?></label>
+			<input type="radio" name="bb-recaptcha[recaptcha_v2]" id="recaptcha_v2" value="recaptcha_v2" <?php checked( $enabled_for, 'recaptcha_v2' ); ?>>
+			<label for="recaptcha_v2"><?php esc_html_e( 'reCAPTCHA v2', 'buddyboss' ); ?></label>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Callback function for site key in Recaptcha integration.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function settings_callback_recaptcha_site_key() {
+		?>
+		<div class="password-toggle">
+			<input name="bb-recaptcha[bb-recaptcha-site-key]" id="bb-recaptcha-site-key" type="password" value="" aria-label="<?php esc_html_e( 'Site Key', 'buddyboss' ); ?>" required />
+			<button type="button" class="button button-secondary bb-hide-pw hide-if-no-js" data-toggle="0">
+				<span class="bb-icon bb-icon-eye-small" aria-hidden="true"></span>
+			</button>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Callback function for secret key in Recaptcha integration.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function settings_callback_recaptcha_secret_key() {
+		?>
+		<div class="password-toggle">
+			<input name="bb-recaptcha[bb-recaptcha-secret-key]" id="bb-recaptcha-secret-key" type="password" value="" aria-label="<?php esc_html_e( 'Secret Key', 'buddyboss' ); ?>" required />
+			<button type="button" class="button button-secondary bb-hide-pw hide-if-no-js" data-toggle="0">
+				<span class="bb-icon bb-icon-eye-small" aria-hidden="true"></span>
+			</button>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Callback function for verify button in Recaptcha integration.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function setting_callback_recaptcha_verify() {
+		?>
+		<div class="show-verify">
+			<button class="button recaptcha-verification"> <?php esc_html_e( 'Verify', 'buddyboss' ); ?></button>
+		</div>
+		<?php
 	}
 }
