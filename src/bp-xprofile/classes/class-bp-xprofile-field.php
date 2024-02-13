@@ -233,7 +233,7 @@ class BP_XProfile_Field {
 				return false;
 			}
 
-			wp_cache_add( $id, $field, 'bp_xprofile_fields' );
+			wp_cache_set( $id, $field, 'bp_xprofile_fields' );
 		}
 
 		$this->fill_data( $field );
