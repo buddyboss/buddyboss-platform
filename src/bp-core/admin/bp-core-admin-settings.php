@@ -478,6 +478,16 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 	</div>
 
 	<div class="avatar-custom-input">
+		<input id="bp-default-profile-avatar-display-name" name="bp-default-profile-avatar-type" type="radio" value="display-name" <?php checked( bb_get_default_profile_avatar_type(), 'display-name' ); ?> />
+		<label for="bp-default-profile-avatar-display-name">
+			<div class="img-block">
+				<img class="display-name-profile-avatar" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-profile-avatar-display-name.png' ); ?>"/>
+			</div>
+			<span><?php esc_html_e( 'Display Name', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+
+	<div class="avatar-custom-input">
 		<input id="bp-default-profile-avatar-custom" name="bp-default-profile-avatar-type" type="radio" value="custom" <?php checked( bb_get_default_profile_avatar_type(), 'custom' ); ?> />
 		<label for="bp-default-profile-avatar-custom">
 			<div class="img-block">
@@ -487,6 +497,32 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 		</label>
 	</div>
 
+	<p class="no-field-notice bp-default-profile-avatar-display-name-notice <?php echo ( 'display-name' !== bb_get_default_profile_avatar_type() || ! empty( _wp_image_editor_choose() ) ) ? 'bp-hide' : ''; ?>">
+		<?php
+		echo sprintf(
+		/* translators: Imagick text with link. */
+			__( 'Your Server needs %s installed to enable initials avatar. Ask your web host.', 'buddyboss' ),
+			sprintf(
+				'<a href="https://github.com/ImageMagick/ImageMagick">%s</a>',
+				__( 'Imagick', 'buddyboss' )
+			)
+		);
+		?>
+	</p>
+	<input type="hidden" name="bb-is-available-image-library" value="<?php echo _wp_image_editor_choose(); ?>">
+
+	<p class="description bp-default-profile-avatar-display-name-description <?php echo ( 'display-name' !== bb_get_default_profile_avatar_type() ) ? 'bp-hide' : ''; ?>">
+		<?php
+		echo sprintf(
+		/* translators: Profile text with link. */
+			__( 'Display name will show either a single initial or double initial depending on your display name option in %s settings.', 'buddyboss' ),
+			sprintf(
+				'<a href="#bp-display-name-format">%s</a>',
+				__( 'Profile', 'buddyboss' )
+			)
+		);
+		?>
+	</p>
 	<p class="description"><?php esc_html_e( 'Select which image should be used for members who haven\'t uploaded a profile avatar.', 'buddyboss' ); ?></p>
 
 	<div class="bp-cover-image-status bb-wordpress-profile-gravatar-warning" style="display:none;">
@@ -869,6 +905,16 @@ function bp_admin_setting_callback_default_group_avatar_type() {
 	</div>
 
 	<div class="avatar-custom-input">
+		<input id="bp-default-group-avatar-group-name" name="bp-default-group-avatar-type" type="radio" value="group-name" <?php checked( bb_get_default_group_avatar_type(), 'group-name' ); ?> />
+		<label for="bp-default-group-avatar-group-name">
+			<div class="img-block">
+				<img class="group-name-group-avatar" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-group-avatar-display-name.png' ); ?>" />
+			</div>
+			<span><?php esc_html_e( 'Group Name', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+
+	<div class="avatar-custom-input">
 		<input id="bp-default-group-avatar-custom" name="bp-default-group-avatar-type" type="radio" value="custom" <?php checked( bb_get_default_group_avatar_type(), 'custom' ); ?> />
 		<label for="bp-default-group-avatar-custom">
 			<div class="img-block">
@@ -877,6 +923,20 @@ function bp_admin_setting_callback_default_group_avatar_type() {
 			<span><?php esc_html_e( 'Custom', 'buddyboss' ); ?></span>
 		</label>
 	</div>
+
+	<p class="no-field-notice bp-default-group-avatar-group-name-notice <?php echo ( 'group-name' !== bb_get_default_group_avatar_type() || ! empty( _wp_image_editor_choose() ) ) ? 'bp-hide' : ''; ?>">
+		<?php
+		echo sprintf(
+		/* translators: Imagick text with link. */
+			__( 'Your Server needs %s installed to enable initials avatar. Ask your web host.', 'buddyboss' ),
+			sprintf(
+				'<a href="https://github.com/ImageMagick/ImageMagick">%s</a>',
+				__( 'Imagick', 'buddyboss' )
+			)
+		);
+		?>
+	</p>
+	<input type="hidden" name="bb-is-available-image-library" value="<?php echo _wp_image_editor_choose(); ?>">
 	<?php
 }
 
