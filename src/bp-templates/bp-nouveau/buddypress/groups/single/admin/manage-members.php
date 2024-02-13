@@ -126,7 +126,7 @@ if ( bp_is_group_create() ) {
 	<dt class="gen-members-section section-title">
 		<?php echo esc_html( get_group_role_label( bp_get_current_group_id(), 'member_plural_label_name' ), 'buddyboss' ); ?>
 		<div class="group-search members-search bp-search search-wrapper" data-bp-search="manage_group_members">
-			<input id="bbp_search_group_members" type="search" placeholder="Search Members" name="group_members_search" />
+			<input id="bb_search_group_members" type="search" placeholder="Search Members" name="group_members_search" />
 			<button type="reset" class="search-form_reset">
 				<span class="bb-icon-rf bb-icon-times" aria-hidden="true"></span>
 				<span class="bp-screen-reader-text"><?php esc_html_e( 'Reset', 'buddyboss' ); ?></span>
@@ -137,14 +137,14 @@ if ( bp_is_group_create() ) {
 	<dd class="general-members-listing">
 
 		<p><?php printf( __( 'When a member joins a group, he or she is assigned the %1$s role by default. %2$s are able to contribute to the group’s discussions, activity feeds, and view other group members.', 'buddyboss' ), strtolower( get_group_role_label( bp_get_current_group_id(), 'member_singular_label_name' ) ), get_group_role_label( bp_get_current_group_id(), 'member_plural_label_name' ) ); ?></p>
-		<div class="" data-bp-list="manage_group_members">
-			<?php if ( bp_group_has_members( 'per_page=15&exclude_banned=0' ) ) : ?>
+		<div data-bp-list="manage_group_members">
+			<?php
+			if ( bp_group_has_members( 'per_page=15&exclude_banned=0' ) ) {
 
-				<?php if ( bp_group_member_needs_pagination() ) : ?>
-
-					<?php bp_nouveau_pagination( 'top' ); ?>
-
-				<?php endif; ?>
+				if ( bp_group_member_needs_pagination() ) {
+					bp_nouveau_pagination( 'top' );
+				}
+				?>
 
 				<ul id="members-list" class="item-list single-line">
 					<?php
@@ -176,7 +176,9 @@ if ( bp_is_group_create() ) {
 								)
 							);
 							?>
+
 						</li>
+
 					<?php endwhile; ?>
 				</ul>
 
@@ -184,8 +186,11 @@ if ( bp_is_group_create() ) {
 				if ( bp_group_member_needs_pagination() ) {
 					bp_nouveau_pagination( 'bottom' );
 				}
-				?>
-			<?php endif; ?>
+
+			} else {
+				bp_nouveau_user_feedback( 'group-manage-members-none' );
+			}
+			?>
 		</div>
 	</dd>
 

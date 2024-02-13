@@ -25,11 +25,11 @@ bp_nouveau_group_hook( 'before', 'manage_members_list' );
 
 <?php if ( bp_group_has_members( bp_ajax_querystring( 'manage_group_members' ) . '&per_page=15&type=group_role&exclude_banned=0' ) ) : ?>
 
-	<?php if ( bp_group_member_needs_pagination() ) : ?>
-
-		<?php bp_nouveau_pagination( 'top' ); ?>
-
-	<?php endif; ?>
+	<?php
+	if ( bp_group_member_needs_pagination() ) {
+		bp_nouveau_pagination( 'top' );
+	}
+	?>
 
 	<ul id="members-list" class="item-list single-line">
 		<?php
@@ -68,8 +68,12 @@ bp_nouveau_group_hook( 'before', 'manage_members_list' );
 	</ul>
 
 	<?php
-	if ( bp_group_member_needs_pagination() ) {
+	if ( bp_group_member_needs_pagination() ) :
 		bp_nouveau_pagination( 'bottom' );
-	}
+	endif;
 	?>
-<?php endif; ?>
+	<?php
+else :
+	bp_nouveau_user_feedback( 'group-members-search-none' );
+endif;
+?>
