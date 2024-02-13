@@ -33,3 +33,65 @@
     margin-left: 0;
   }
 }
+
+#bb_recaptcha_settings_section input[type="text"],
+#bb_recaptcha_settings_section input[type="email"],
+#bb_recaptcha_settings_section select,
+#bb_recaptcha_settings_section input[type="password"] {
+  min-width: 50%;
+}
+
+#bb_recaptcha_settings_section select {
+  max-width: none;
+}
+
+#bb_recaptcha_settings_section .password-toggle {
+  position: relative;
+  display: inline-block;
+  width: 50%;
+}
+
+@media (max-width: 782px) {
+  #bb_recaptcha_settings_section .password-toggle {
+    width: 100%;
+  }
+}
+
+#bb_recaptcha_settings_section .password-toggle .bb-hide-pw {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 30px;
+  border: 0;
+  padding: 0;
+  background: none;
+  box-shadow: none;
+}
+
+#bb_recaptcha_settings_section .password-toggle .bb-hide-pw .bb-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+#bb_recaptcha_settings_section .password-toggle input[type="text"],
+#bb_recaptcha_settings_section .password-toggle input[type="password"] {
+  padding-right: 30px;
+  width: 100%;
+}
+
+#bb_recaptcha_settings_section .password-toggle input[type="text"] + .bb-hide-pw .bb-icon::before {
+  content: "\ee6a";
+}
+
+#bb_recaptcha_settings_section .checkbox-wrap input[type="checkbox"] {
+  margin-top: 0;
+}
+
+#bb_recaptcha_settings_section .checkbox-wrap + .checkbox-wrap {
+  margin-top: 15px;
+}
+
+#bb_recaptcha_settings_section .bb-bottom-notice {
+  text-align: center;
+}
