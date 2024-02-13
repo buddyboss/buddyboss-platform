@@ -219,9 +219,28 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'args'     => array(),
 			),
 			'bb_recaptcha_allow_bypass'    => array(
-				'title'    => ' ',
-				'callback' => array( $this, 'setting_callback_allow_bypass' ),
-				'args'     => array(),
+				'title'             => ' ',
+				'callback'          => array( $this, 'setting_callback_allow_bypass' ),
+				'sanitize_callback' => 'absint',
+				'args'              => array(),
+			),
+			'bb_recaptcha_language_code'   => array(
+				'title'             => esc_html__( 'Language Code', 'buddyboss' ),
+				'callback'          => array( $this, 'setting_callback_language_code' ),
+				'sanitize_callback' => 'string',
+				'args'              => array(),
+			),
+			'bb_recaptcha_conflict_mode'   => array(
+				'title'    => esc_html__( 'No-Conflict Mode', 'buddyboss' ),
+				'callback' => array( $this, 'setting_callback_conflict_mode' ),
+
+				'args' => array(),
+			),
+			'bb_recaptcha_exclude_ip'      => array(
+				'title'             => esc_html__( 'Exclude IP', 'buddyboss' ),
+				'callback'          => array( $this, 'setting_callback_exclude_ip' ),
+				'sanitize_callback' => 'sanitize_textarea_field',
+				'args'              => array(),
 			),
 		);
 
@@ -264,12 +283,12 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 */
 	public function setting_callback_recaptcha_information() {
 		echo '<div class="show-full-width">' .
-		     sprintf(
-		     /* translators: recaptcha link */
-			     esc_html__( 'Enter your %s to integrate fraud, spam and abuse protection into your website.', 'buddyboss' ),
-			     '<a href="#" target="_blank">' . esc_html__( 'Google reCAPTCHA API keys', 'buddyboss' ) . '</a>'
-		     ) .
-		     '</div>';
+			sprintf(
+			/* translators: recaptcha link */
+				esc_html__( 'Enter your %s to integrate fraud, spam and abuse protection into your website.', 'buddyboss' ),
+				'<a href="#" target="_blank">' . esc_html__( 'Google reCAPTCHA API keys', 'buddyboss' ) . '</a>'
+			) .
+			'</div>';
 	}
 
 	public function setting_callback_score_threshold() {
@@ -304,12 +323,42 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		<label for="bb_recaptcha_allow_bypass"><?php esc_html_e( 'Allow bypass, enter a 6 to 10-character string to customize your URL', 'buddyboss' ); ?></label>
 		<input type="text" name="bb_recaptcha_bypass_text" value="<?php esc_attr( bp_get_option( 'bb_recaptcha_bypass_text', '' ) ); ?>" placeholder="<?php esc_attr_e( 'stringxs', 'buddyboss' ); ?>">
 		<p class="description"><?php esc_html_e( 'The bypass URL enables you to bypass reCAPTCHA in case of issues. We recommend keeping the link below securely stored for accessing your site.', 'buddyboss' ); ?></p>
-        <div class="copy-toggle">
-            <input type="text" readonly class="zoom-group-instructions-main-input is-disabled" value="domain.com/wp-login.php/?bypass_captcha=xxUNIQUE_STRINGXS">
-            <span role="button" class="bb-copy-button hide-if-no-js" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Copy', 'buddyboss' ); ?>" data-copied-text="<?php esc_attr_e( 'Copied', 'buddyboss' ); ?>">
-                <i class="bb-icon-f bb-icon-copy"></i>
-            </span>
-        </div>
+		<div class="copy-toggle">
+			<input type="text" readonly class="zoom-group-instructions-main-input is-disabled" value="domain.com/wp-login.php/?bypass_captcha=xxUNIQUE_STRINGXS">
+			<span role="button" class="bb-copy-button hide-if-no-js" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Copy', 'buddyboss' ); ?>" data-copied-text="<?php esc_attr_e( 'Copied', 'buddyboss' ); ?>">
+				<i class="bb-icon-f bb-icon-copy"></i>
+			</span>
+		</div>
+		<?php
+	}
+
+	public function setting_callback_language_code() {
+		$languages = bb_recaptcha_languages();
+		$language  = bp_get_option( 'bb_recaptcha_language_code', 'en' );
+		?>
+		<select name="bb_recaptcha_language_code" id="bb-recaptcha-language-code">
+			<?php
+			foreach ( $languages as $code => $label ) {
+				echo '<option value="' . esc_attr( $code ) . '" ' . selected( $language, $code, false ) . '>' . esc_html( $label ) . '</option>';
+			}
+			?>
+		</select>
+		<p class="description"><?php esc_html_e( 'Select a language for reCAPTCHA when it is displayed.', 'buddyboss' ); ?></p>
+		<?php
+	}
+
+	public function setting_callback_conflict_mode() {
+		?>
+		<input id="bb_recaptcha_conflict_mode" name="bb_recaptcha_conflict_mode" type="checkbox" value="1" <?php checked( bp_get_option( 'bb_recaptcha_conflict_mode' ) ); ?> />
+		<label for="bb_recaptcha_conflict_mode"><?php esc_html_e( 'Allow no-conflict mode to prevent compatibility conflicts', 'buddyboss' ); ?></label>
+		<p class="description"><?php esc_html_e( 'When checked, other instances of reCAPTCHA are forcefully removed to prevent conflicts. Only enable this option if your site is experiencing compatibility issues or if instructed to do so by support.', 'buddyboss' ); ?></p>
+		<?php
+	}
+
+	public function setting_callback_exclude_ip() {
+		?>
+		<label for="bb_recaptcha_exclude_ip"><?php esc_html_e( 'Enter the IP addresses that you want to skip from captcha submission. Enter one IP per line.', 'buddyboss' ); ?></label>
+		<textarea rows="3" cols="50" name="bb_recaptcha_exclude_ip" id="bb_recaptcha_exclude_ip"><?php echo esc_textarea( bp_get_option( 'bb_recaptcha_exclude_ip' ) ); ?></textarea>
 		<?php
 	}
 
