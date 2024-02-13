@@ -1010,7 +1010,7 @@ function bp_create_excerpt( $text, $length = 225, $options = array() ) {
 			 *
 			 * @since BuddyPress 1.1.0
 			 *
-			 * @param string $truncate      Generated excerpt.
+			 * @param string $text          Generated excerpt.
 			 * @param string $original_text Original text provided.
 			 * @param int    $length        Length of returned string, including ellipsis.
 			 * @param array  $options       Array of HTML attributes and options.
@@ -1087,6 +1087,28 @@ function bp_create_excerpt( $text, $length = 225, $options = array() ) {
 		}
 
 		$truncate = rtrim( mb_substr( $truncate, 0, $spacepos ) );
+
+		// If there's a space or broken link within the trimmed content.
+		$last_space      = mb_strrpos( $truncate, ' ' );
+		$last_link_start = mb_strrpos( $truncate, '<a' );
+		$last_link_end   = mb_strrpos( $truncate, '</a>' );
+
+		if ( false !== $last_link_start && false === $last_link_end ) {
+			// If last_link_start exist and last_link_end is not exist.
+
+			$truncate = mb_substr( $truncate, 0, $last_link_start );
+		} elseif ( false !== $last_link_start && false !== $last_link_end ) {
+			// If last_link_start exist and last_link_end is exist.
+
+			if ( $last_link_start > $last_link_end ) {
+				// But last_link_start greater than last_link_end.
+
+				$truncate = mb_substr( $truncate, 0, $last_link_start );
+			}
+		}
+
+		// If the link in plain text
+		$truncate = mb_substr( $truncate, 0, $last_space );
 	}
 	$truncate .= $ending;
 
