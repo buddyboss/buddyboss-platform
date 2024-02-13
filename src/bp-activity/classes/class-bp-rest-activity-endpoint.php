@@ -1549,9 +1549,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				&& bb_is_activity_comment_edit_enabled()
 				&& function_exists( 'bb_activity_comment_user_can_edit' )
 				&& bb_activity_comment_user_can_edit( $activity )
-			) && (
-				isset( $activity->privacy ) &&
-				! in_array( $activity->privacy, array( 'document', 'media', 'video' ), true )
 			);
 
 			$edited_date   = bp_activity_get_meta( $activity->id, '_is_edited', true );
@@ -1590,7 +1587,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'favorited'         => in_array( $activity->id, $this->get_user_favorites( $activity ), true ),
 
 			// extend response.
-			'can_favorite'      =>( 'activity_comment' === $activity->type ) ? bb_activity_comment_can_favorite() : bp_activity_can_favorite(),
+			'can_favorite'      => ( 'activity_comment' === $activity->type ) ? bb_activity_comment_can_favorite() : bp_activity_can_favorite(),
 			'favorite_count'    => $this->get_activity_favorite_count( $activity ),
 			'can_comment'       => ( 'activity_comment' === $activity->type ) ? bp_activity_can_comment_reply( $activity ) : bp_activity_can_comment(),
 			'can_edit'          => $can_edit,

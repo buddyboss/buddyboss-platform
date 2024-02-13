@@ -2679,7 +2679,7 @@ function bb_group_type_labelcolor_metabox( $post ) {
 /**
  * Filter groups query arguments to unset hidden param.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.40
  *
  * @param array $r array of arguments.
  *
@@ -2695,7 +2695,7 @@ function bb_groups_group_get_parse_args( $r ) {
 /**
  * Filter groups query to exclude hidden query.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.40
  *
  * @param array $where_conditions Where conditions SQL statement.
  * @param array $r                Array of parsed arguments for the get method.
