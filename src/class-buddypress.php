@@ -719,6 +719,7 @@ class BuddyPress {
 			'BB_Subscriptions'                             => 'core',
 			'BB_Background_Updater'                        => 'core',
 			'BB_Reaction'                                  => 'core',
+			'BB_BG_Process_Log'                            => 'core',
 
 			// BuddyBoss Platform Rest API classes.
 			'BP_REST_Components_Endpoint'                  => 'core',
