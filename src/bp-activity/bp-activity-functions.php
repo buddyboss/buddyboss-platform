@@ -2942,6 +2942,25 @@ function bp_activity_new_comment( $args = '' ) {
 		}
 	}
 
+	// Check the parent comment exits before adding reply.
+	if ( ! empty( $r['parent_id'] ) ) {
+		$comment_activity = new BP_Activity_Activity( $r['parent_id'] );
+
+		// Bail if the parent activity comment does not exist.
+		if ( empty( $comment_activity->date_recorded ) ) {
+			$error = new WP_Error( 'missing_activity', __( 'The item you were replying to no longer exists.', 'buddyboss' ) );
+
+			if ( 'wp_error' === $r['error_type'] ) {
+				return $error;
+
+				// Backpat.
+			} else {
+				$bp->activity->errors['new_comment'] = $error;
+				return false;
+			}
+		}
+	}
+	
 	// Maybe set current activity ID as the parent.
 	if ( empty( $r['parent_id'] ) ) {
 		$r['parent_id'] = $r['activity_id'];

@@ -270,7 +270,7 @@ body.buddypress article.page > .entry-header .entry-title {
 
 .bp-navs ul li a {
   border: 0;
-  display: block;
+  display: flex;
   padding: 5px 10px;
   text-decoration: none;
 }
@@ -283,9 +283,12 @@ body.buddypress article.page > .entry-header .entry-title {
   display: inline;
   font-size: 12px;
   margin-right: 2px;
-  padding: 3px 6px;
+  padding-top: 2px;
+  padding-bottom: 2px;
   text-align: center;
   vertical-align: middle;
+  min-width: 25px;
+  align-self: center;
 }
 
 .bp-navs ul li.selected a,
@@ -7649,19 +7652,19 @@ form.acomment-edit .activity-attached-gif-container .gif-image-remove:hover .bb-
   float: none;
 }
 
-.bb-action-popup#group-description-popup .bb-action-popup-content {
+.bb-action-popup#group-description-popup .bb-action-popup-content, .bb-action-popup[id^="single-forum-description-popup"] .bb-action-popup-content {
   padding-bottom: 1px;
 }
 
-.bb-action-popup#group-description-popup .bb-action-popup-content p {
+.bb-action-popup#group-description-popup .bb-action-popup-content p, .bb-action-popup[id^="single-forum-description-popup"] .bb-action-popup-content p {
   margin-bottom: 1.6875rem;
 }
 
-.bb-action-popup#group-description-popup .bb-action-popup-content p:empty {
+.bb-action-popup#group-description-popup .bb-action-popup-content p:empty, .bb-action-popup[id^="single-forum-description-popup"] .bb-action-popup-content p:empty {
   display: none;
 }
 
-.bb-action-popup#group-description-popup .bb-action-popup-content ul {
+.bb-action-popup#group-description-popup .bb-action-popup-content ul, .bb-action-popup[id^="single-forum-description-popup"] .bb-action-popup-content ul {
   margin: 0 1.6875rem 1.6875rem 0;
   list-style-type: disc;
 }
@@ -15818,6 +15821,14 @@ button[data-bp-tooltip] {
   min-width: 0;
 }
 
+.bp-single-vert-nav .main-navs ul li {
+  width: 100%;
+}
+
+.bp-single-vert-nav .main-navs ul li a {
+  justify-content: space-between;
+}
+
 @media screen and (min-width: 46.8em) {
   .bp-single-vert-nav .bp-wrap {
     display: -webkit-box;
@@ -15833,7 +15844,6 @@ button[data-bp-tooltip] {
   }
   .bp-single-vert-nav .subnav {
     background: #eaeaea;
-    margin: 0;
     width: auto;
   }
   .bp-single-vert-nav .subnav li {
@@ -16392,10 +16402,6 @@ button.button.bb_discard_topic_reply_draft:hover {
 
 /* =Breadcrumb and Tags
 -------------------------------------------------------------- */
-div.bbp-breadcrumb {
-  float: right;
-}
-
 div.bbp-breadcrumb,
 div.bbp-topic-tags {
   font-size: 12px;
