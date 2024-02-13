@@ -1893,7 +1893,7 @@ window.bp = window.bp || {};
 
 		resetGifPicker: function(comment_id) {
 
-			$( '#ac-reply-gif-button-' + comment_id ).closest( '.post-gif' ).find( '.gif-media-search-dropdown' ).removeClass( 'open' );
+			$( '#ac-reply-gif-button-' + comment_id ).closest( '.post-gif' ).find( '.gif-media-search-dropdown' ).removeClass( 'open' ).empty();
 			$( '#ac-reply-gif-button-' + comment_id ).removeClass( 'active' );
 
 			// add gif data if enabled or uploaded.
