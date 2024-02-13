@@ -29,5 +29,14 @@
 			padding: 0;
 			margin: 0;
 		}
+
+		.show-full-width {
+			margin-left: -210px;
+			word-break: break-word;
+
+			@media (max-width: 782px) {
+				margin-left: 0;
+			}
+		}
 	}
 }

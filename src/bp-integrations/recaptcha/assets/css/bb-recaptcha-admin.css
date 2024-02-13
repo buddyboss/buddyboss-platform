@@ -22,3 +22,14 @@
   padding: 0;
   margin: 0;
 }
+
+#bb_recaptcha_settings_section .hidden-header .show-full-width {
+  margin-left: -210px;
+  word-break: break-word;
+}
+
+@media (max-width: 782px) {
+  #bb_recaptcha_settings_section .hidden-header .show-full-width {
+    margin-left: 0;
+  }
+}
