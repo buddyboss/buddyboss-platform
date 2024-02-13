@@ -2651,10 +2651,12 @@ window.bp = window.bp || {};
 		openGifPicker: function ( event ) {
 			event.preventDefault();
 
-			var currentTarget    = event.currentTarget,
+			var currentTarget  = event.currentTarget,
+				isInsideModal 	 = $( currentTarget ).closest('#activity-modal').length > 0,
+				hasParentModal 	 = isInsideModal ? '#activity-modal ' : '',
 				$gifPickerEl     = $( currentTarget ).next(),
 				activityID       = currentTarget.id.match( /\d+$/ )[0],
-				$gifAttachmentEl = $( '#ac-reply-post-gif-' + activityID );
+				$gifAttachmentEl = $( hasParentModal + '#ac-reply-post-gif-' + activityID );
 
 			if ( $gifPickerEl.is( ':empty' ) ) {
 				var model                      = new bp.Models.ACReply(),
