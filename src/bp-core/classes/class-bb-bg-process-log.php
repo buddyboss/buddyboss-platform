@@ -64,6 +64,9 @@ class BB_BG_Process_Log {
 	private function setup_hooks() {
 		add_filter( 'bb_bp_bg_process_start', array( $this, 'record_bp_bg_process' ), 10, 1 );
 		add_action( 'bb_bp_bg_process_end', array( $this, 'update_bp_bg_process' ), 10, 1 );
+
+		add_filter( 'bb_bg_process_start', array( $this, 'record_bg_process' ), 10, 1 );
+		add_action( 'bb_bg_process_end', array( $this, 'update_bg_process' ), 10, 1 );
 	}
 
 	/**
@@ -110,6 +113,57 @@ class BB_BG_Process_Log {
 	 * @return void
 	 */
 	public function update_bp_bg_process( $args ) {
+		$this->update_log( $args );
+	}
+
+	/**
+	 * Create log of bp background process.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array|object $args Array of arguments.
+	 *
+	 * @return array
+	 */
+	public function record_bg_process( $args ) {
+		global $wpdb;
+
+		$bg_data = ! empty( $args->data ) ? $args->data : array();
+
+		if ( empty( $bg_data ) ) {
+			return $args;
+		}
+
+		$insert = $this->add_log(
+			array(
+				'process_id'             => $args->key,
+				'component'              => $this->get_component_name( $bg_data['callback'] ),
+				'bg_process_from'        => 'platform',
+				'bg_process_name'        => $bg_data['callback'],
+				'callback_function'      => $bg_data['callback'],
+				'blog_id'                => $args->blog_id,
+				'priority'               => $args->priority,
+				'data'                   => maybe_serialize( $bg_data['args'] ),
+			)
+		);
+
+		if ( $insert ) {
+			$args->bg_process_log_id = $wpdb->insert_id;
+		}
+
+		return $args;
+	}
+
+	/**
+	 * Update log of bp background process.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args Array of arguments.
+	 *
+	 * @return void
+	 */
+	public function update_bg_process( $args ) {
 		$this->update_log( $args );
 	}
 
