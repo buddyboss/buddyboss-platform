@@ -2109,7 +2109,7 @@ function bp_activity_add( $args = '' ) {
 	$activity->is_spam           = $r['is_spam'];
 	$activity->privacy           = $r['privacy'];
 	$activity->error_type        = $r['error_type'];
-	$activity->action            = ! empty( $r['action'] ) ? $r['action'] : bp_activity_generate_action_string( $activity );
+	$activity->action            = ! empty( $r['action'] ) ? $r['action'] : '';
 
 	$save = $activity->save();
 
@@ -2190,7 +2190,6 @@ function bp_activity_post_update( $args = '' ) {
 
 	// Record this on the user's profile.
 	$activity_content = $r['content'];
-	$primary_link     = bp_core_get_userlink( $r['user_id'], false, true );
 
 	/**
 	 * Filters the new activity content for current activity item.
@@ -2208,7 +2207,7 @@ function bp_activity_post_update( $args = '' ) {
 	 *
 	 * @param string $primary_link Link to the profile for the user who posted the activity.
 	 */
-	$add_primary_link = apply_filters( 'bp_activity_new_update_primary_link', $primary_link );
+	$add_primary_link = apply_filters( 'bp_activity_new_update_primary_link', '' );
 
 	if ( ! empty( $r['id'] ) ) {
 		$activity = new BP_Activity_Activity( $r['id'] );
@@ -2231,7 +2230,7 @@ function bp_activity_post_update( $args = '' ) {
 					'content'           => $add_content,
 					'component'         => $activity->component,
 					'type'              => $activity->type,
-					'primary_link'      => $add_primary_link,
+					'primary_link'      => $activity->primary_link,
 					'user_id'           => $activity->user_id,
 					'item_id'           => $activity->item_id,
 					'secondary_item_id' => $activity->secondary_item_id,
@@ -2392,10 +2391,10 @@ function bp_activity_post_type_publish( $post_id = 0, $post = null, $user_id = 0
 	// Backward compatibility filters for the 'blogs' component.
 	if ( 'blogs' == $activity_post_object->component_id ) {
 		$activity_content      = apply_filters( 'bp_blogs_activity_new_post_content', '', $post, $post_url, $post->post_type );
-		$activity_primary_link = apply_filters( 'bp_blogs_activity_new_post_primary_link', $post_url, $post_id, $post->post_type );
+		$activity_primary_link = apply_filters( 'bp_blogs_activity_new_post_primary_link', '', $post_id, $post->post_type );
 	} else {
 		$activity_content      = $post->post_content;
-		$activity_primary_link = $post_url;
+		$activity_primary_link = '';
 	}
 
 	$activity_args = array(
@@ -2421,25 +2420,9 @@ function bp_activity_post_type_publish( $post_id = 0, $post = null, $user_id = 0
 		}
 	}
 
-	// Set up the action by using the format functions.
-	$action_args = array_merge(
-		$activity_args,
-		array(
-			'post_title' => $post->post_title,
-			'post_url'   => $post_url,
-		)
-	);
-
-	$activity_args['action'] = call_user_func_array( $activity_post_object->format_callback, array( '', (object) $action_args ) );
-
-	// Make sure the action is set.
-	if ( empty( $activity_args['action'] ) ) {
-		return;
-	} else {
-		// Backward compatibility filter for the blogs component.
-		if ( 'blogs' == $activity_post_object->component_id ) {
-			$activity_args['action'] = apply_filters( 'bp_blogs_record_activity_action', $activity_args['action'] );
-		}
+	// Backward compatibility filter for the blogs component.
+	if ( 'blogs' == $activity_post_object->component_id ) {
+		$activity_args['action'] = apply_filters( 'bp_blogs_record_activity_action', '' );
 	}
 
 	$activity_id = bp_activity_add( $activity_args );
@@ -2695,10 +2678,10 @@ function bp_activity_post_type_comment( $comment_id = 0, $is_approved = true, $a
 	// Backward compatibility filters for the 'blogs' component.
 	if ( 'blogs' == $activity_comment_object->component_id ) {
 		$activity_content      = apply_filters_ref_array( 'bp_blogs_activity_new_comment_content', array( '', &$post_type_comment, $comment_link ) );
-		$activity_primary_link = apply_filters_ref_array( 'bp_blogs_activity_new_comment_primary_link', array( $comment_link, &$post_type_comment ) );
+		$activity_primary_link = apply_filters_ref_array( 'bp_blogs_activity_new_comment_primary_link', array( '', &$post_type_comment ) );
 	} else {
 		$activity_content      = $post_type_comment->comment_content;
-		$activity_primary_link = $comment_link;
+		$activity_primary_link = '';
 	}
 
 	$activity_args = array(
@@ -2734,27 +2717,8 @@ function bp_activity_post_type_comment( $comment_id = 0, $is_approved = true, $a
 			}
 		}
 
-		// Set up the action by using the format functions.
-		$action_args = array_merge(
-			$activity_args,
-			array(
-				'post_title' => $post_type_comment->post->post_title,
-				'post_url'   => $post_url,
-				'blog_url'   => $blog_url,
-				'blog_name'  => get_blog_option( $blog_id, 'blogname' ),
-			)
-		);
-
-		$activity_args['action'] = call_user_func_array( $activity_comment_object->format_callback, array( '', (object) $action_args ) );
-
-		// Make sure the action is set.
-		if ( empty( $activity_args['action'] ) ) {
-			return;
-		} else {
-			// Backward compatibility filter for the blogs component.
-			if ( 'blogs' === $activity_post_object->component_id ) {
-				$activity_args['action'] = apply_filters( 'bp_blogs_record_activity_action', $activity_args['action'] );
-			}
+		if ( 'blogs' === $activity_post_object->component_id ) {
+			$activity_args['action'] = apply_filters( 'bp_blogs_record_activity_action', '' );
 		}
 
 		$activity_id = bp_activity_add( $activity_args );
@@ -2960,7 +2924,7 @@ function bp_activity_new_comment( $args = '' ) {
 			}
 		}
 	}
-	
+
 	// Maybe set current activity ID as the parent.
 	if ( empty( $r['parent_id'] ) ) {
 		$r['parent_id'] = $r['activity_id'];
@@ -3562,6 +3526,7 @@ function bp_activity_get_permalink( $activity_id, $activity_obj = false ) {
 
 	if ( false !== array_search( $activity_obj->type, $use_primary_links ) ) {
 		$link = $activity_obj->primary_link;
+		$link = empty( $link ) ? bp_activity_get_meta( $activity_obj->id, 'post_url' ) : add_query_arg( 'p', $activity_obj->secondary_item_id, trailingslashit( bp_get_root_domain() ) );
 	} else {
 		if ( 'activity_comment' == $activity_obj->type ) {
 			$link = bp_get_root_domain() . '/' . bp_get_activity_root_slug() . '/p/' . $activity_obj->item_id . '/#acomment-' . $activity_obj->id;

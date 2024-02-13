@@ -199,48 +199,33 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 * @uses bp_activity_set_action()
 		 */
 		public function register_activity_actions() {
-
-			// Sitewide activity stream items
-			bp_activity_set_action(
-				$this->component,
-				$this->topic_create,
-				esc_html__( 'New forum discussion', 'buddyboss' ),
-				array( $this, 'bbp_format_activity_action_new_topic' ),
-				esc_html__( 'Discussions', 'buddyboss' ),
-				array( 'activity', 'member', 'member_groups', 'group' )
-				
-			);
-
-			bp_activity_set_action(
-				$this->component,
-				$this->reply_create,
-				esc_html__( 'New forum reply', 'buddyboss' ),
-				array( $this, 'bbp_format_activity_action_new_reply' ),
-				esc_html__( 'Replies', 'buddyboss' ),
-				array( 'activity', 'member', 'member_groups', 'group' )
+			$activity_actions = array(
+				$this->component => array( 'activity', 'member' )
 			);
 
 			// Grouped forums.
 			if ( bp_is_active( 'groups' ) ) {
-				$bp = buddypress();
+				global $bp;
+				$activity_actions[ $bp->groups->id ] = array( 'activity', 'member', 'member_groups', 'group' );
+			}
 
+			foreach ( $activity_actions as $key => $value ) {
 				bp_activity_set_action(
-					$bp->groups->id,
+					$key,
 					$this->topic_create,
 					esc_html__( 'New forum discussion', 'buddyboss' ),
 					array( $this, 'bbp_format_activity_action_new_topic' ),
 					esc_html__( 'Discussions', 'buddyboss' ),
-					array( 'activity', 'member', 'member_groups', 'group' )
-					
+					$value
 				);
-	
+
 				bp_activity_set_action(
-					$bp->groups->id,
+					$key,
 					$this->reply_create,
 					esc_html__( 'New forum reply', 'buddyboss' ),
 					array( $this, 'bbp_format_activity_action_new_reply' ),
 					esc_html__( 'Replies', 'buddyboss' ),
-					array( 'activity', 'member', 'member_groups', 'group' )
+					$value
 				);
 			}
 		}
@@ -360,6 +345,13 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			// Check if this activity stream action is directly linked
 			if ( in_array( $activity_object->type, $disabled_actions ) ) {
 				$link = $activity_object->primary_link;
+				if ( empty( $link ) ) {
+					if ( 'bbp_reply_create' == $activity_object->type ) {
+						$link = bbp_get_reply_url( $activity_object->secondary_item_id );
+					} elseif ( 'bbp_topic_create' == $activity_object->type ) {
+						$link = bbp_get_topic_permalink( $activity_object->secondary_item_id );
+					}
+				}
 			}
 
 			return $link;
@@ -618,29 +610,25 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				return;
 			}
 
-			// User link for topic author
-			$user_link = bbp_get_user_profile_link( $user_id );
-
 			// Topic
-			$topic_permalink = bbp_get_topic_permalink( $topic_id );
+			$topic_permalink = '';
 			$topic_title     = get_post_field( 'post_title', $topic_id, 'raw' );
 			$topic_content   = get_post_field( 'post_content', $topic_id, 'raw' );
-			$topic_link      = '<a href="' . $topic_permalink . '">' . $topic_title . '</a>';
-
-			// Forum
-			$forum_permalink = bbp_get_forum_permalink( $forum_id );
-			$forum_title     = get_post_field( 'post_title', $forum_id, 'raw' );
-			$forum_link      = '<a href="' . $forum_permalink . '">' . $forum_title . '</a>';
 
 			// Activity action & text
-			$activity_text    = sprintf( esc_html__( '%1$s started the discussion %2$s in the forum %3$s', 'buddyboss' ), $user_link, $topic_link, $forum_link );
-			$activity_action  = apply_filters( 'bbp_activity_topic_create', $activity_text, $user_id, $topic_id, $forum_id );
+			$activity_action  = apply_filters( 'bbp_activity_topic_create', '', $user_id, $topic_id, $forum_id );
 			$activity_content = apply_filters( 'bbp_activity_topic_create_excerpt', $topic_content );
 
+			$existing_activity_id = $this->get_activity_id( $topic_id );
+			if ( ! empty( $existing_activity_id ) ) {
+				$existing_activity = new BP_Activity_Activity( $existing_activity_id );
+				$activity_action   = $existing_activity->action;
+				$topic_permalink   = $existing_activity->primary_link;
+			}
 			// Compile and record the activity stream results
 			$activity_id = $this->record_activity(
 				array(
-					'id'                => $this->get_activity_id( $topic_id ),
+					'id'                => $existing_activity_id,
 					'user_id'           => $user_id,
 					'action'            => $activity_action,
 					'content'           => $activity_content,
@@ -782,32 +770,28 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				return;
 			}
 
-			// Setup links for activity stream
-			$user_link = bbp_get_user_profile_link( $user_id );
-
 			// Reply
-			$reply_url     = bbp_get_reply_url( $reply_id );
+			$reply_url     = '';
 			$reply_content = get_post_field( 'post_content', $reply_id, 'raw' );
 
 			// Topic
-			$topic_permalink = bbp_get_topic_permalink( $topic_id );
 			$topic_title     = get_post_field( 'post_title', $topic_id, 'raw' );
-			$topic_link      = '<a href="' . $topic_permalink . '">' . $topic_title . '</a>';
-
-			// Forum
-			$forum_permalink = bbp_get_forum_permalink( $forum_id );
-			$forum_title     = get_post_field( 'post_title', $forum_id, 'raw' );
-			$forum_link      = '<a href="' . $forum_permalink . '">' . $forum_title . '</a>';
 
 			// Activity action & text
-			$activity_text    = sprintf( esc_html__( '%1$s replied to the discussion %2$s in the forum %3$s', 'buddyboss' ), $user_link, $topic_link, $forum_link );
-			$activity_action  = apply_filters( 'bbp_activity_reply_create', $activity_text, $user_id, $reply_id, $topic_id );
+			$activity_action  = apply_filters( 'bbp_activity_reply_create', '', $user_id, $reply_id, $topic_id );
 			$activity_content = apply_filters( 'bbp_activity_reply_create_excerpt', $reply_content );
+
+			$existing_activity_id = $this->get_activity_id( $reply_id );
+			if ( ! empty( $existing_activity_id ) ) {
+				$existing_activity = new BP_Activity_Activity( $existing_activity_id );
+				$activity_action   = $existing_activity->action;
+				$reply_url         = $existing_activity->primary_link;
+			}
 
 			// Compile and record the activity stream results
 			$activity_id = $this->record_activity(
 				array(
-					'id'                => $this->get_activity_id( $reply_id ),
+					'id'                => $existing_activity_id,
 					'user_id'           => $user_id,
 					'action'            => $activity_action,
 					'content'           => $activity_content,

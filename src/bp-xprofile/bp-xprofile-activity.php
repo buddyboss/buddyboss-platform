@@ -325,13 +325,9 @@ function bp_xprofile_updated_profile_activity( $user_id, $field_ids = array(), $
 		}
 	}
 
-	// If we've reached this point, assemble and post the activity item.
-	$profile_link = trailingslashit( bp_core_get_user_domain( $user_id ) . bp_get_profile_slug() );
-
 	return (bool) xprofile_record_activity(
 		array(
 			'user_id'      => $user_id,
-			'primary_link' => $profile_link,
 			'component'    => buddypress()->profile->id,
 			'type'         => 'updated_profile',
 		)

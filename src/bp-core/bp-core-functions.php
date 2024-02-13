@@ -9274,3 +9274,31 @@ function bb_reactions_get_settings_fields() {
 
 	return (array) apply_filters( 'bb_reactions_get_settings_fields', $fields );
 }
+
+/**
+ * Replace mention placeholders with user URLs in the given content.
+ * This function searches for mention placeholders in the provided content (e.g., {{mention_user_id_XXXX}})
+ * and replaces them with the corresponding user URLs using bp_core_get_user_domain().
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $content The content containing mention placeholders to be replaced..
+ *
+ * @return mixed The content with mention placeholders replaced by user URLs.
+ */
+function bb_mention_add_user_dynamic_link( $content ) {
+
+	if ( empty( $content ) ) {
+		return $content;
+	}
+
+	// Define a callback function for preg_replace_callback.
+	$replace_callback = function ( $matches ) {
+		$user_id = $matches[1];                     // Extract the user ID from the match.
+
+		return bp_core_get_user_domain( $user_id ); // Replace this with your actual BuddyPress URL format.
+
+	};
+
+	return preg_replace_callback( '/{{mention_user_id_(\d+)}}/', $replace_callback, $content );
+}

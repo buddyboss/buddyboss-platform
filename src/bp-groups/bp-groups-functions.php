@@ -1789,7 +1789,6 @@ function groups_post_update( $args = '' ) {
 	}
 
 	// Record this in activity feeds.
-	$activity_action  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $user_id ), '<a href="' . bp_get_group_permalink( $bp->groups->current_group ) . '">' . bp_get_group_name( $bp->groups->current_group ) . '</a>' );
 	$activity_content = $content;
 
 	/**
@@ -1799,7 +1798,7 @@ function groups_post_update( $args = '' ) {
 	 *
 	 * @param string $activity_action The new group activity update.
 	 */
-	$action = apply_filters( 'groups_activity_new_update_action', $activity_action );
+	$action = apply_filters( 'groups_activity_new_update_action', '' );
 
 	/**
 	 * Filters the content for the new group activity update.
