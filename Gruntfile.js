@@ -137,6 +137,15 @@ module.exports = function (grunt) {
 					src: ['bp-integrations/pusher/assets/css/scss/*.scss'],
 					dest: SOURCE_DIR + 'bp-integrations/pusher/assets/css/',
 				},
+				recaptcha: {
+					cwd: SOURCE_DIR,
+					expand: true,
+					extDot: 'last',
+					ext: '.css',
+					flatten: true,
+					src: ['bp-integrations/recaptcha/assets/css/scss/*.scss'],
+					dest: SOURCE_DIR + 'bp-integrations/recaptcha/assets/css/',
+				},
 			},
 			rtlcss: {
 				options: {
