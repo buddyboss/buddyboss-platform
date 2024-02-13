@@ -87,9 +87,10 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			$section_title     = ! empty( $section['title'] ) ? $section['title'] : '';
 			$section_callback  = ! empty( $section['callback'] ) ? $section['callback'] : false;
 			$tutorial_callback = ! empty( $section['tutorial_callback'] ) ? $section['tutorial_callback'] : false;
+			$notice            = ! empty( $section['notice'] ) ? $section['notice'] : false;
 
 			// Add the section.
-			$this->add_section( $section_id, $section_title, $section_callback, $tutorial_callback );
+			$this->add_section( $section_id, $section_title, $section_callback, $tutorial_callback, $notice );
 
 			// Loop through fields for this section.
 			foreach ( (array) $fields as $field_id => $field ) {
@@ -121,9 +122,14 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$settings = array(
 			'bb_recaptcha_settings_section' => array(
-				'page'              => 'recaptcha',
+				'page'              => 'Recaptcha',
 				'title'             => __( 'reCAPTCHA', 'buddyboss' ) . $html,
 				'tutorial_callback' => array( $this, 'setting_callback_recaptcha_tutorial' ),
+				'notice'            => sprintf(
+				/* translators: recaptcha link */
+					__( 'Check reCAPTCHA %s for usage statistics and monitor its performance. Adjust settings if necessary to maintain security.', 'buddyboss' ),
+					'<a href="#" target="_blank">' . esc_html__( 'Admin Console', 'buddyboss' ) . '</a>'
+				),
 			),
 		);
 
@@ -210,11 +216,13 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 * @return void
 	 */
 	public function setting_callback_recaptcha_information() {
-		printf(
-			/* translators: recaptcha api keys link */
-			esc_html__( 'Enter your %s to integrate fraud, spam and abuse protection into your website.', 'buddyboss' ),
-			'<a href="#" target="_blank">' . esc_html__( 'Google reCAPTCHA API keys', 'buddyboss' ) . '</a>'
-		);
+		echo '<div class="show-full-width">' .
+		     sprintf(
+		     /* translators: recaptcha link */
+			     esc_html__( 'Enter your %s to integrate fraud, spam and abuse protection into your website.', 'buddyboss' ),
+			     '<a href="#" target="_blank">' . esc_html__( 'Google reCAPTCHA API keys', 'buddyboss' ) . '</a>'
+		     ) .
+		     '</div>';
 	}
 
 	/**
