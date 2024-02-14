@@ -158,3 +158,69 @@ function bb_recaptcha_languages() {
 
 	return apply_filters( 'bb_recaptcha_languages', $languages );
 }
+
+/**
+ * Retrieves the selected reCAPTCHA version.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string The selected reCAPTCHA version.
+ */
+function bb_recaptcha_recaptcha_versions() {
+	$recaptcha_version = bb_recaptcha_setting( 'recaptcha_version', 'recaptcha_v3' );
+
+	/**
+	 * Filters the selected reCAPTCHA version.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $recaptcha_version The selected reCAPTCHA version.
+	 *
+	 * @return string The filtered reCAPTCHA version.
+	 */
+	return apply_filters( 'bb_recaptcha_recaptcha_versions', $recaptcha_version );
+}
+
+/**
+ * Retrieves the reCAPTCHA site key.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string The reCAPTCHA site key.
+ */
+function bb_recaptcha_site_key() {
+	$site_key = bb_recaptcha_setting( 'site_key', '' );
+
+	/**
+	 * Filters the reCAPTCHA site key.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $site_key The reCAPTCHA site key.
+	 *
+	 * @return string The filtered reCAPTCHA site key.
+	 */
+	return apply_filters( 'bb_recaptcha_site_key', $site_key );
+}
+
+/**
+ * Retrieves the reCAPTCHA secret key.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string The reCAPTCHA secret key.
+ */
+function bb_recaptcha_secret_key() {
+	$secret_key = bb_recaptcha_setting( 'secret_key', '' );
+
+	/**
+	 * Filters the reCAPTCHA secret key.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $secret_key The reCAPTCHA secret key.
+	 *
+	 * @return string The filtered reCAPTCHA secret key.
+	 */
+	return apply_filters( 'bb_recaptcha_secret_key', $secret_key );
+}
