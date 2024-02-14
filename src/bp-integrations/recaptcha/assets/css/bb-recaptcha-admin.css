@@ -164,10 +164,21 @@
   }
 }
 
+#bb_recaptcha_versions .bb-success-section {
+  padding: 10px;
+  margin-left: -210px;
+  background: #77e8091f;
+  color: #5ca712;
+  line-height: 1.5;
+  border: 1px solid #77e8091f;
+  border-radius: 4px;
+}
+
 #bb_recaptcha_design .bb-grid-style-outer {
   display: flex;
 }
 
+#bb_recaptcha_design .bb-grid-style-outer .bb-size,
 #bb_recaptcha_design .bb-grid-style-outer .bb-theme {
   display: flex;
   flex-direction: column;
@@ -176,12 +187,14 @@
   width: 184px;
 }
 
+#bb_recaptcha_design .bb-grid-style-outer .bb-size input[type="radio"],
 #bb_recaptcha_design .bb-grid-style-outer .bb-theme input[type="radio"] {
   height: 0;
   opacity: 0;
   visibility: hidden;
 }
 
+#bb_recaptcha_design .bb-grid-style-outer .bb-size .option,
 #bb_recaptcha_design .bb-grid-style-outer .bb-theme .option {
   display: flex;
   color: #999;
@@ -189,6 +202,7 @@
   position: relative;
 }
 
+#bb_recaptcha_design .bb-grid-style-outer .bb-size .option:before,
 #bb_recaptcha_design .bb-grid-style-outer .bb-theme .option:before {
   background: #f9f9f9;
   border: 2px solid #ccd0d4;
@@ -202,6 +216,7 @@
   width: 100%;
 }
 
+#bb_recaptcha_design .bb-grid-style-outer .bb-size .option:after,
 #bb_recaptcha_design .bb-grid-style-outer .bb-theme .option:after {
   background-size: contain !important;
   content: "";
@@ -214,30 +229,48 @@
   image-rendering: -webkit-optimize-contrast;
 }
 
+#bb_recaptcha_design .bb-grid-style-outer .bb-size .option.opt-light:after,
 #bb_recaptcha_design .bb-grid-style-outer .bb-theme .option.opt-light:after {
   background: url(../images/reCAPTCHA-light.png) no-repeat center;
 }
 
+#bb_recaptcha_design .bb-grid-style-outer .bb-size .option.opt-dark:after,
 #bb_recaptcha_design .bb-grid-style-outer .bb-theme .option.opt-dark:after {
   background: url(../images/reCAPTCHA-dark.png) no-repeat center;
 }
 
+#bb_recaptcha_design .bb-grid-style-outer .bb-size .option.opt-normal.opt-size-light:after,
+#bb_recaptcha_design .bb-grid-style-outer .bb-theme .option.opt-normal.opt-size-light:after {
+  background: url(../images/reCAPTCHA-light.png) no-repeat center;
+}
+
+#bb_recaptcha_design .bb-grid-style-outer .bb-size .option.opt-normal.opt-size-dark:after,
+#bb_recaptcha_design .bb-grid-style-outer .bb-theme .option.opt-normal.opt-size-dark:after {
+  background: url(../images/reCAPTCHA-dark.png) no-repeat center;
+}
+
+#bb_recaptcha_design .bb-grid-style-outer .bb-size .option.opt-compact.opt-size-light:after,
+#bb_recaptcha_design .bb-grid-style-outer .bb-theme .option.opt-compact.opt-size-light:after {
+  background: url(../images/reCAPTCHA-light-compact.png) no-repeat center;
+}
+
+#bb_recaptcha_design .bb-grid-style-outer .bb-size .option.opt-compact.opt-size-dark:after,
+#bb_recaptcha_design .bb-grid-style-outer .bb-theme .option.opt-compact.opt-size-dark:after {
+  background: url(../images/reCAPTCHA-dark-compact.png) no-repeat center;
+}
+
+#bb_recaptcha_design .bb-grid-style-outer .bb-size .option span,
 #bb_recaptcha_design .bb-grid-style-outer .bb-theme .option span {
   color: #999;
   font-size: 14px;
   line-height: 2;
 }
 
+#bb_recaptcha_design .bb-grid-style-outer .bb-size input[type="radio"]:checked + .option:before,
 #bb_recaptcha_design .bb-grid-style-outer .bb-theme input[type="radio"]:checked + .option:before {
   border-color: #2370b1;
 }
 
-#bb_recaptcha_versions .bb-success-section {
-  padding: 10px;
-  margin-left: -210px;
-  background: #77e8091f;
-  color: #5ca712;
-  line-height: 1.5;
-  border: 1px solid #77e8091f;
-  border-radius: 4px;
+#bb_recaptcha_design .bb-grid-style-outer .bb-size .option:before {
+  height: 96px;
 }

@@ -197,6 +197,7 @@
 	.bb-grid-style-outer {
 		display: flex;
 
+		.bb-size,
 		.bb-theme {
 			display: flex;
 			flex-direction: column;
@@ -249,6 +250,27 @@
 					background: url(../images/reCAPTCHA-dark.png) no-repeat center;
 				}
 
+				&.opt-normal {
+
+					&.opt-size-light:after  {
+						background: url(../images/reCAPTCHA-light.png) no-repeat center;
+					}
+
+					&.opt-size-dark:after  {
+						background: url(../images/reCAPTCHA-dark.png) no-repeat center;
+					}
+				}
+
+				&.opt-compact {
+					&.opt-size-light:after {
+						background: url(../images/reCAPTCHA-light-compact.png) no-repeat center;
+					}
+
+					&.opt-size-dark:after {
+						background: url(../images/reCAPTCHA-dark-compact.png) no-repeat center;
+					}
+				}
+
 				span {
 					color: #999;
 					font-size: 14px;
@@ -264,6 +286,15 @@
 
 			}
 
+		}
+
+		.bb-size {
+			.option {
+
+				&:before {
+					height: 96px;
+				}
+			}
 		}
 
 	}

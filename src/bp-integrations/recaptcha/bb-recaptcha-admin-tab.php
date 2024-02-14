@@ -567,16 +567,16 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 	public function setting_callback_theme() {
 		?>
-        <div class="bb-grid-style-outer">
+		<div class="bb-grid-style-outer">
 			<?php
 			new BB_Admin_Setting_Fields(
 				array(
 					'type'        => 'radio',
-					'id'          => 'bb-recaptcha-thems-style-',
+					'id'          => 'bb-recaptcha-theme-style-',
 					'label'       => esc_html__( 'Theme', 'buddyboss' ),
 					'disabled'    => false,
 					'opt_wrapper' => true,
-					'name'        => "bb_recaptcha[theme]",
+					'name'        => 'bb_recaptcha[theme]',
 					'value'       => 'light',
 					'options'     => array(
 						'light' => array(
@@ -591,16 +591,42 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				)
 			);
 			?>
-        </div>
-        <p class="description"><?php echo esc_html__( 'Select the style of your reCAPTCHA theme.', 'buddyboss' ); ?></p>
+		</div>
+		<p class="description"><?php echo esc_html__( 'Select the style of your reCAPTCHA theme.', 'buddyboss' ); ?></p>
 		<?php
 	}
 
 	public function setting_callback_size() {
-
+		?>
+		<div class="bb-grid-style-outer">
+			<?php
+			new BB_Admin_Setting_Fields(
+				array(
+					'type'        => 'radio',
+					'id'          => 'bb-recaptcha-size-',
+					'label'       => esc_html__( 'Size', 'buddyboss' ),
+					'disabled'    => false,
+					'opt_wrapper' => true,
+					'name'        => 'bb_recaptcha[size]',
+					'value'       => 'normal',
+					'options'     => array(
+						'normal'  => array(
+							'label' => esc_html__( 'Normal', 'buddyboss' ),
+							'class' => 'option opt-normal opt-size-light',
+						),
+						'compact' => array(
+							'label' => esc_html__( 'Compact', 'buddyboss' ),
+							'class' => 'option opt-compact opt-size-light',
+						),
+					),
+				)
+			);
+			?>
+		</div>
+		<p class="description"><?php echo esc_html__( 'Select the size of your reCAPTCHA.', 'buddyboss' ); ?></p>
+		<?php
 	}
 
 	public function setting_callback_badge_position() {
-
 	}
 }
