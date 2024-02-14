@@ -23,6 +23,8 @@
 			$( '.buddyboss_page_bp-integrations .section-bb_recaptcha_versions' ).on( 'click', '#recaptcha_verified', this.recaptchaVerified.bind( this ) );
 			$( '.buddyboss_page_bp-integrations .section-bb_recaptcha_versions' ).on( 'click', '#recaptcha_cancel', this.recaptchaVerificationPopupClose.bind( this ) );
 			$( '.buddyboss_page_bp-integrations .section-bb_recaptcha_versions' ).on( 'change', 'input[name="bb_recaptcha[recaptcha_version]"]', this.recaptchaVersion.bind( this ) );
+			$( '.buddyboss_page_bp-integrations .section-bb_recaptcha_versions' ).on( 'change', 'input[name="bb_recaptcha[v2_option]"]', this.recaptchaType.bind( this ) );
+			$( '.buddyboss_page_bp-integrations .section-bb_recaptcha_design' ).on( 'change', 'input[name="bb_recaptcha[theme]"]', this.recaptchaTheme.bind( this ) );
 
 		},
 
@@ -31,8 +33,35 @@
 
 			if ( 'recaptcha_v2' === event.currentTarget.value ) {
 				$( '.recaptcha_v2' ).removeClass( 'bp-hide' );
+				$( '.recaptcha_v3' ).addClass( 'bp-hide' );
 			} else {
 				$( '.recaptcha_v2' ).addClass( 'bp-hide' );
+				$( '.recaptcha_v3' ).removeClass( 'bp-hide' );
+			}
+		},
+
+		recaptchaType: function ( event ) {
+			event.preventDefault();
+
+			if ( 'v2_checkbox' === event.currentTarget.value ) {
+				$( '.recaptcha_v2_checkbox' ).removeClass( 'bp-hide' );
+				$( '.recaptcha_v2_invisible' ).addClass( 'bp-hide' );
+			} else {
+				$( '.recaptcha_v2_invisible' ).removeClass( 'bp-hide' );
+				$( '.recaptcha_v2_checkbox' ).addClass( 'bp-hide' );
+			}
+
+		},
+
+		recaptchaTheme: function ( event ) {
+			event.preventDefault();
+
+			var current_value = event.currentTarget.value;
+
+			if ( 'dark' === current_value ) {
+				$( 'input[name="bb_recaptcha[size]"] + label' ).removeClass( 'opt-size-light' ).addClass( 'opt-size-dark' );
+			} else {
+				$( 'input[name="bb_recaptcha[size]"] + label' ).removeClass( 'opt-size-dark' ).addClass( 'opt-size-light' );
 			}
 		},
 

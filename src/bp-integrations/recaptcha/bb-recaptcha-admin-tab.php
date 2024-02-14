@@ -266,7 +266,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'title'             => esc_html__( 'Score Threshold', 'buddyboss' ),
 				'callback'          => array( $this, 'setting_callback_score_threshold' ),
 				'sanitize_callback' => 'absint',
-				'args'              => array(),
+				'args'              => array( 'class' => 'recaptcha_v3' ),
 			),
 			'bb-recaptcha-enabled-for'     => array(
 				'title'    => esc_html__( 'Enabled For', 'buddyboss' ),
@@ -299,25 +299,37 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			),
 		);
 
-		$fields['bb_recaptcha_design'] = array(
-			'bb-recaptcha-theme'          => array(
-				'title'             => esc_html__( 'Theme', 'buddyboss' ),
-				'callback'          => array( $this, 'setting_callback_theme' ),
-				'sanitize_callback' => 'absint',
-				'args'              => array(),
-			),
-			'bb-recaptcha-size'           => array(
-				'title'    => esc_html__( 'Size', 'buddyboss' ),
-				'callback' => array( $this, 'setting_callback_size' ),
-				'args'     => array(),
-			),
-			'bb-recaptcha-badge-position' => array(
-				'title'    => esc_html__( 'Badge Position', 'buddyboss' ),
-				'callback' => array( $this, 'setting_callback_badge_position' ),
-				'args'     => array(),
-			),
+		$v2_option = bb_recaptcha_recaptcha_v2_option();
 
-		);
+		$class_v2_checkbox  = 'recaptcha_v2_checkbox';
+		$class_v2_invisible = 'recaptcha_v2_invisible';
+
+		if ( 'v2_checkbox' === $v2_option ) {
+			$class_v2_invisible .= ' bp-hide';
+		} else {
+			$class_v2_checkbox .= ' bp-hide';
+		}
+
+		if ( 'recaptcha_v2' === $enabled_for ) {
+			$fields['bb_recaptcha_design'] = array(
+				'bb-recaptcha-theme'          => array(
+					'title'             => esc_html__( 'Theme', 'buddyboss' ),
+					'callback'          => array( $this, 'setting_callback_theme' ),
+					'sanitize_callback' => 'absint',
+					'args'              => array( 'class' => $class_v2_checkbox ),
+				),
+				'bb-recaptcha-size'           => array(
+					'title'    => esc_html__( 'Size', 'buddyboss' ),
+					'callback' => array( $this, 'setting_callback_size' ),
+					'args'     => array( 'class' => $class_v2_checkbox ),
+				),
+				'bb-recaptcha-badge-position' => array(
+					'title'    => esc_html__( 'Badge Position', 'buddyboss' ),
+					'callback' => array( $this, 'setting_callback_badge_position' ),
+					'args'     => array( 'class' => $class_v2_invisible ),
+				),
+			);
+		}
 
 		return $fields;
 	}

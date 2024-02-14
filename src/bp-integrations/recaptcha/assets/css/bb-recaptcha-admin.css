@@ -296,9 +296,9 @@
   line-height: 2;
 }
 
-#bb_recaptcha_design .bb-grid-style-outer .bb-badge-position input[type="radio"]:checked + .option:before,
-#bb_recaptcha_design .bb-grid-style-outer .bb-size input[type="radio"]:checked + .option:before,
-#bb_recaptcha_design .bb-grid-style-outer .bb-theme input[type="radio"]:checked + .option:before {
+#bb_recaptcha_design .bb-grid-style-outer .bb-badge-position input[type="radio"]:checked:not(:disabled) + .option:before,
+#bb_recaptcha_design .bb-grid-style-outer .bb-size input[type="radio"]:checked:not(:disabled) + .option:before,
+#bb_recaptcha_design .bb-grid-style-outer .bb-theme input[type="radio"]:checked:not(:disabled) + .option:before {
   border-color: #2370b1;
 }
 
