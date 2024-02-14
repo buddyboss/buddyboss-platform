@@ -3408,5 +3408,7 @@ function bb_core_removed_orphaned_member_slug() {
  * @return void
  */
 function bb_update_to_2_4_74() {
-	bb_core_install_background_process_logs();
+	if ( class_exists( 'BB_BG_Process_Log' ) ) {
+		BB_BG_Process_Log::instance()->create_table();
+	}
 }

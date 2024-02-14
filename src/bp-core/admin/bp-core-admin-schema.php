@@ -58,7 +58,9 @@ function bp_core_install( $active_components = false ) {
 	bb_core_install_subscription();
 
 	// Install background process logs.
-	bb_core_install_background_process_logs();
+	if ( class_exists( 'BB_BG_Process_Log' ) ) {
+		BB_BG_Process_Log::instance()->create_table();
+	}
 
 	// Notifications.
 	if ( ! empty( $active_components['notifications'] ) ) {
@@ -1369,56 +1371,4 @@ function bb_core_install_subscription() {
    	) {$charset_collate};";
 
 	dbDelta( $sql );
-}
-
-/**
- * Install database tables for the subscriptions
- *
- * @since BuddyBoss 2.2.6
- *
- * @uses  get_charset_collate()
- * @uses  bp_core_get_table_prefix()
- * @uses  dbDelta()
- */
-function bb_core_install_background_process_logs() {
-	global $wpdb;
-
-	$sql             = array();
-	$charset_collate = $wpdb->get_charset_collate();
-	$bp_prefix       = bp_core_get_table_prefix();
-	$tbl_name        = "{$bp_prefix}bb_background_process_logs";
-
-	$table_exists = $wpdb->query( "SHOW TABLES LIKE '{$tbl_name}';" ); // phpcs:ignore
-	if ( ! $table_exists ) {
-		$sql[] = "CREATE TABLE $tbl_name(
-        id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        process_id bigint(20) NOT NULL,
-        parent bigint(20) NULL,
-        component varchar(55) NOT NULL,
-        bg_process_name varchar(255) NOT NULL,
-        bg_process_from varchar(255) NOT NULL,
-        callback_function varchar(255) NULL,
-        blog_id bigint(20) NOT NULL,
-        data longtext NULL,
-        priority bigint(10) NULL,
-        process_start_date_gmt datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-        process_start_date datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-        process_end_date_gmt datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-        process_end_date datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-        KEY  process_id (process_id),
-        KEY  parent (parent),
-        KEY  component (component),
-        KEY  bg_process_name (bg_process_name),
-        KEY  bg_process_from (bg_process_from),
-        KEY  callback_function (callback_function),
-        KEY  blog_id (blog_id),
-        KEY  priority (priority),
-        KEY  process_start_date_gmt (process_start_date_gmt),
-        KEY  process_start_date (process_start_date),
-        KEY  process_end_date_gmt (process_end_date_gmt),
-        KEY  process_end_date (process_end_date)
-        ) $charset_collate;";
-
-		dbDelta( $sql );
-	}
 }
