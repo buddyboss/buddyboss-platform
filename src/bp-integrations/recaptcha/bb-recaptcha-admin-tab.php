@@ -565,11 +565,41 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	public function setting_callback_theme() {
+		?>
+        <div class="bb-grid-style-outer">
+			<?php
+			new BB_Admin_Setting_Fields(
+				array(
+					'type'        => 'radio',
+					'id'          => 'bb-recaptcha-thems-style-',
+					'label'       => esc_html__( 'Theme', 'buddyboss' ),
+					'disabled'    => false,
+					'opt_wrapper' => true,
+					'name'        => "bb_recaptcha[theme]",
+					'value'       => 'light',
+					'options'     => array(
+						'light' => array(
+							'label' => esc_html__( 'Light', 'buddyboss' ),
+							'class' => 'option opt-light',
+						),
+						'dark'  => array(
+							'label' => esc_html__( 'Dark', 'buddyboss' ),
+							'class' => 'option opt-dark',
+						),
+					),
+				)
+			);
+			?>
+        </div>
+        <p class="description"><?php echo esc_html__( 'Select the style of your reCAPTCHA theme.', 'buddyboss' ); ?></p>
+		<?php
 	}
 
 	public function setting_callback_size() {
+
 	}
 
 	public function setting_callback_badge_position() {
+
 	}
 }

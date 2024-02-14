@@ -171,3 +171,80 @@
 
 	}
 }
+
+
+#bb_recaptcha_design {
+	.bb-grid-style-outer {
+		display: flex;
+
+		.bb-theme {
+			display: flex;
+			flex-direction: column;
+			margin-right: 15px;
+			text-align: center;
+			width: 184px;
+
+			input[type="radio"] {
+				height: 0;
+				opacity: 0;
+				visibility: hidden;
+			}
+
+			.option {
+				display: flex;
+				color: #999;
+				flex-direction: column;
+				position: relative;
+
+				&:before {
+					background: #f9f9f9;
+					border: 2px solid #ccd0d4;
+					border-radius: 4px;
+					box-sizing: border-box;
+					content: "";
+					display: flex;
+					height: 64px;
+					margin-bottom: 5px;
+					transition: all 0.3s ease;
+					width: 100%;
+				}
+
+				&:after {
+					background-size: contain !important;
+					content: "";
+					border-radius: 3px;
+					bottom: 30px;
+					left: 6px;
+					position: absolute;
+					right: 6px;
+					top: 6px;
+					image-rendering: -webkit-optimize-contrast;
+				}
+
+				&.opt-light:after {
+					background: url(../images/reCAPTCHA-light.png) no-repeat center;
+				}
+
+				&.opt-dark:after {
+					background: url(../images/reCAPTCHA-dark.png) no-repeat center;
+				}
+
+				span {
+					color: #999;
+					font-size: 14px;
+					line-height: 2;
+				}
+			}
+
+			input[type="radio"]:checked + .option {
+
+				&:before {
+					border-color: #2370b1;
+				}
+
+			}
+
+		}
+
+	}
+}
