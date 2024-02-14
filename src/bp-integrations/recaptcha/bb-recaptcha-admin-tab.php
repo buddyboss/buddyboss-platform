@@ -512,9 +512,9 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		$v2_option = bb_recaptcha_recaptcha_v2_option();
 		?>
 		<div class="recaptcha-version-fields">
-			<input type="radio" name="bb_recaptcha[recaptcha_version][v2_option]" id="v2_checkbox" value="v2_checkbox" <?php checked( $v2_option, 'v2_checkbox' ); ?>>
+			<input type="radio" name="bb_recaptcha[v2_option]" id="v2_checkbox" value="v2_checkbox" <?php checked( $v2_option, 'v2_checkbox' ); ?>>
 			<label for="v2_checkbox"><?php esc_html_e( 'Checkbox', 'buddyboss' ); ?></label>
-			<input type="radio" name="bb_recaptcha[recaptcha_version][v2_option]" id="v2_invisible_badge" value="v2_invisible_badge" <?php checked( $v2_option, 'v2_invisible_badge' ); ?>>
+			<input type="radio" name="bb_recaptcha[v2_option]" id="v2_invisible_badge" value="v2_invisible_badge" <?php checked( $v2_option, 'v2_invisible_badge' ); ?>>
 			<label for="v2_invisible_badge"><?php esc_html_e( 'Invisible Badge', 'buddyboss' ); ?></label>
 		</div>
 		<?php
