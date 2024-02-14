@@ -589,11 +589,11 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				<div id="bp-hello-recaptcha-content" class="bp-hello-recaptcha-content-container">
 					<img src="<?php echo bb_recaptcha_integration_url( 'assets/images/recaptcha.png' ); ?>" />
 					<p>
-						<?php esc_html_e( 'Verify reCAPTCHA token', 'buddyboss' ); ?>
+						<?php esc_html_e( 'Verifying reCAPTCHA token', 'buddyboss' ); ?>
 					</p>
 				</div>
 				<div class="bb-popup-buttons">
-					<a href="javascript:void(0);" id="recaptcha_submit" class="button button-primary">
+					<a href="javascript:void(0);" id="recaptcha_submit" class="button button-primary" disabled="disabled">
 						<?php esc_html_e( 'Submit', 'buddyboss' ); ?>
 					</a>
 					<a href="javascript:void(0);" id="recaptcha_cancel" class="button">
