@@ -67,6 +67,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'bbRecaptcha',
 				array(
 					'ajax_url' => admin_url( 'admin-ajax.php' ),
+					'nonce'    => wp_create_nonce( 'bb-recaptcha-verification' ),
 				)
 			);
 		}
@@ -144,6 +145,11 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$status      = 'not-connected';
 		$status_text = __( 'Not Connected', 'buddyboss' );
+		$verified    = get_option( 'bb_recaptcha_temp_verified' );
+		if ( ! empty( $verified ) && true === (bool) $verified ) {
+			$status      = 'connected';
+			$status_text = __( 'Connected', 'buddyboss' );
+		}
 		$html        = '<div class="bb-recaptcha-status">' .
 			'<span class="status-line ' . esc_attr( $status ) . '">' . esc_html( $status_text ) . '</span>' .
 		'</div>';
@@ -203,6 +209,12 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		$fields = array();
 
 		$fields['bb_recaptcha_versions'] = array(
+			'verified_message'             => array(
+				'title'             => esc_html__( 'Notice', 'buddyboss' ),
+				'callback'          => array( $this, 'setting_callback_recaptcha_verification' ),
+				'sanitize_callback' => 'string',
+				'args'              => array( 'class' => 'hidden-header' ),
+			),
 			'information'             => array(
 				'title'             => esc_html__( 'Information', 'buddyboss' ),
 				'callback'          => array( $this, 'setting_callback_recaptcha_information' ),
@@ -301,6 +313,19 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 		</p>
 		<?php
+	}
+
+	public function setting_callback_recaptcha_verification() {
+		$verified = get_option( 'bb_recaptcha_temp_verified' );
+		if ( ! empty( $verified ) && true === (bool) $verified ) {
+			echo '<div class="show-full-width">' .
+			     esc_html__( 'reCAPTCHA connected successfully.', 'buddyboss' ) .
+			     '</div>';
+		} else {
+			echo '<div class="show-full-width">' .
+			     esc_html__( 'Error verifying reCAPTCHA, Please try again.', 'buddyboss' ) .
+			     '</div>';
+		}
 	}
 
 	/**
@@ -417,7 +442,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function setting_callback_recaptcha_versions() {
-		$enabled_for = 'recaptcha_v3';
+		$enabled_for = bb_recaptcha_recaptcha_versions();
 		?>
 		<div class="show-full-width">
 			<input type="radio" name="bb_recaptcha[recaptcha_version]" id="recaptcha_v3" value="recaptcha_v3" <?php checked( $enabled_for, 'recaptcha_v3' ); ?>>
@@ -434,9 +459,10 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function settings_callback_recaptcha_site_key() {
+		$site_key = bb_recaptcha_site_key();
 		?>
 		<div class="password-toggle">
-			<input name="bb_recaptcha[site_key]" id="bb-recaptcha-site-key" type="password" value="" aria-label="<?php esc_html_e( 'Site Key', 'buddyboss' ); ?>" required />
+			<input name="bb_recaptcha[site_key]" id="bb-recaptcha-site-key" type="password" value="<?php echo esc_html( $site_key ); ?>" aria-label="<?php esc_html_e( 'Site Key', 'buddyboss' ); ?>" required />
 			<button type="button" class="button button-secondary bb-hide-pw hide-if-no-js" data-toggle="0">
 				<span class="bb-icon bb-icon-eye-small" aria-hidden="true"></span>
 			</button>
@@ -450,9 +476,10 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function settings_callback_recaptcha_secret_key() {
+		$secret_key = bb_recaptcha_secret_key();
 		?>
 		<div class="password-toggle">
-			<input name="bb_recaptcha[secret_key]" id="bb-recaptcha-secret-key" type="password" value="" aria-label="<?php esc_html_e( 'Secret Key', 'buddyboss' ); ?>" required />
+			<input name="bb_recaptcha[secret_key]" id="bb-recaptcha-secret-key" type="password" value="<?php echo esc_html( $secret_key ); ?>" aria-label="<?php esc_html_e( 'Secret Key', 'buddyboss' ); ?>" required />
 			<button type="button" class="button button-secondary bb-hide-pw hide-if-no-js" data-toggle="0">
 				<span class="bb-icon bb-icon-eye-small" aria-hidden="true"></span>
 			</button>
@@ -469,6 +496,32 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		?>
 		<div class="show-verify">
 			<button class="button recaptcha-verification"> <?php esc_html_e( 'Verify', 'buddyboss' ); ?></button>
+		</div>
+		<div id="bp-hello-backdrop" style="display: none;"></div>
+		<div id="bp-hello-container" class="bp-hello-recaptcha" role="dialog" aria-labelledby="bp-hello-title" style="display: none;">
+			<div class="bp-hello-header">
+				<div class="bp-hello-title">
+					<h2 id="bp-hello-title" tabindex="-1">
+						<?php esc_html_e( 'Verify reCAPTCHA', 'buddyboss' ); ?>
+					</h2>
+				</div>
+			</div>
+			<div class="bp-hello-content">
+				<div id="bp-hello-recaptcha-content" class="bp-hello-recaptcha-content-container">
+					<img src="<?php echo bb_recaptcha_integration_url( 'assets/images/recaptcha.png' ) ?>" />
+					<p>
+						<?php esc_html_e( 'Verify reCAPTCHA token', 'buddyboss' ); ?>
+					</p>
+				</div>
+				<div class="bb-popup-buttons">
+					<a href="javascript:void(0);" id="recaptcha_submit" class="button button-primary">
+						<?php esc_html_e( 'Submit', 'buddyboss' ); ?>
+					</a>
+					<a href="javascript:void(0);" id="recaptcha_cancel" class="button">
+						<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>
+					</a>
+				</div>
+			</div>
 		</div>
 		<?php
 	}
