@@ -114,10 +114,15 @@
 				} );
 			};
 
+			$( '#recaptcha_submit' ).removeAttr( 'disabled' );
+
 			document.head.appendChild( window.bb_recaptcha_script );
 		},
 
 		recaptchaSubmit: function ( event ) {
+			event.preventDefault();
+
+			$( event.currentTarget ).attr( 'disabled', 'disabled' );
 			$.ajax(
 				{
 					type: 'POST',
@@ -131,6 +136,7 @@
 						captcha_response: self.captcha_response,
 					},
 					success: function ( response ) {
+						$( event.currentTarget ).removeAttr( 'disabled' );
 						if ( response.success && typeof response.data !== 'undefined' ) {
 							$( '#bp-hello-recaptcha-content' ).html( response.data );
 							$( '.bb-popup-buttons' ).html( '<a href="javascript:void(0);" id="recaptcha_verified" class="button">OK</a>' );
