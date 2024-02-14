@@ -224,3 +224,25 @@ function bb_recaptcha_secret_key() {
 	 */
 	return apply_filters( 'bb_recaptcha_secret_key', $secret_key );
 }
+
+/**
+ * Retrieves the reCAPTCHA connection status.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string The reCAPTCHA connection status.
+ */
+function bb_recaptcha_connection_status() {
+	$connection_status = bb_recaptcha_setting( 'connection_status', '' );
+
+	/**
+	 * Filters the reCAPTCHA connection status.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $secret_key The reCAPTCHA connection status.
+	 *
+	 * @return string The filtered reCAPTCHA connection status.
+	 */
+	return apply_filters( 'bb_recaptcha_connection_status', $connection_status );
+}

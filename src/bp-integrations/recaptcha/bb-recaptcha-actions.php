@@ -29,35 +29,39 @@ function bb_recaptcha_verification() {
 	$secret_key       = bb_filter_input_string( INPUT_POST, 'secret_key' );
 	$captcha_response = bb_filter_input_string( INPUT_POST, 'captcha_response' );
 
-	$settings = bb_recaptcha_options();
-	$settings = ! empty( $settings ) ? $settings : array();
-
-	// Settings data.
-	$settings['recaptcha_version'] = $selected_version;
-	$settings['site_key']          = $site_key;
-	$settings['secret_key']        = $secret_key;
-	bp_update_option( 'bb_recaptcha', $settings );
+	$connection_status = 'not_connected';
 	if ( 'recaptcha_v3' === $selected_version ) {
 		if ( empty( $captcha_response ) ) {
-			$data = '<img src="'.bb_recaptcha_integration_url( 'assets/images/error.png' ) . '" />
-					<p>' . __( 'reCAPTCHA verification failed, please try again', 'buddyboss' ). '</p>';
-			wp_send_json_error( $data );
+			$data = '<img src="' . bb_recaptcha_integration_url( 'assets/images/error.png' ) . '" />
+					<p>' . __( 'reCAPTCHA verification failed, please try again', 'buddyboss' ) . '</p>';
 		} else {
 			$response = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
 			$response = json_decode( $response['body'] );
 
 			if ( $response->success ) {
-				bp_update_option( 'bb_recaptcha_verified', true );
-				$data = '<img src="'.bb_recaptcha_integration_url( 'assets/images/success.png' ) . '" />
-					<p>' . __( 'reCAPTCHA verification was successful', 'buddyboss' ). '</p>';
-				wp_send_json_success( $data );
+				$connection_status = 'connected';
+				$data              = '<img src="' . bb_recaptcha_integration_url( 'assets/images/success.png' ) . '" />
+					<p>' . __( 'reCAPTCHA verification was successful', 'buddyboss' ) . '</p>';
 			} else {
-				bp_update_option( 'bb_recaptcha_verified', false );
-				$data = '<img src="'.bb_recaptcha_integration_url( 'assets/images/error.png' ) . '" />
-					<p>' . __( 'reCAPTCHA verification failed, please try again', 'buddyboss' ). '</p>';
-				wp_send_json_error( $data );
+				$data = '<img src="' . bb_recaptcha_integration_url( 'assets/images/error.png' ) . '" />
+					<p>' . __( 'reCAPTCHA verification failed, please try again', 'buddyboss' ) . '</p>';
 			}
 		}
 	}
+
+	// Fetch settings data.
+	$settings = bb_recaptcha_options();
+	$settings = ! empty( $settings ) ? $settings : array();
+
+	// Store verification data.
+	$settings['recaptcha_version'] = $selected_version;
+	$settings['site_key']          = $site_key;
+	$settings['secret_key']        = $secret_key;
+	$settings['connection_status'] = $connection_status;
+	bp_update_option( 'bb_recaptcha', $settings );
+	if ( 'not_connected' === $connection_status ) {
+		wp_send_json_error( $data );
+	}
+	wp_send_json_success( $data );
 	exit();
 }

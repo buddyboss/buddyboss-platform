@@ -38,6 +38,16 @@
 				margin-left: 0;
 			}
 		}
+
+		.bb-success-section {
+			margin-left: 0;
+			margin-bottom: 15px;
+		}
+
+		.bb-error-section {
+			margin-left: 0;
+			margin-bottom: 15px;
+		}
 	}
 
 	input[type="text"],
@@ -169,6 +179,16 @@
 
 		}
 
+	}
+
+	.bb-success-section {
+		padding: 10px;
+		margin-left: -210px;
+		background: #77e8091f;
+		color: #5ca712;
+		line-height: 1.5;
+		border: 1px solid #77e8091f;
+		border-radius: 4px;
 	}
 }
 

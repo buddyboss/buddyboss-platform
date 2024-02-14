@@ -34,6 +34,16 @@
   }
 }
 
+#bb_recaptcha_versions .hidden-header .bb-success-section {
+  margin-left: 0;
+  margin-bottom: 15px;
+}
+
+#bb_recaptcha_versions .hidden-header .bb-error-section {
+  margin-left: 0;
+  margin-bottom: 15px;
+}
+
 #bb_recaptcha_versions input[type="text"],
 #bb_recaptcha_versions input[type="email"],
 #bb_recaptcha_versions select,
@@ -220,4 +230,14 @@
 
 #bb_recaptcha_design .bb-grid-style-outer .bb-theme input[type="radio"]:checked + .option:before {
   border-color: #2370b1;
+}
+
+#bb_recaptcha_versions .bb-success-section {
+  padding: 10px;
+  margin-left: -210px;
+  background: #77e8091f;
+  color: #5ca712;
+  line-height: 1.5;
+  border: 1px solid #77e8091f;
+  border-radius: 4px;
 }

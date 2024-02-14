@@ -218,12 +218,6 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		$fields = array();
 
 		$fields['bb_recaptcha_versions'] = array(
-			'verified_message'        => array(
-				'title'             => esc_html__( 'Notice', 'buddyboss' ),
-				'callback'          => array( $this, 'setting_callback_recaptcha_verification' ),
-				'sanitize_callback' => 'string',
-				'args'              => array( 'class' => 'hidden-header' ),
-			),
 			'information'             => array(
 				'title'             => esc_html__( 'Information', 'buddyboss' ),
 				'callback'          => array( $this, 'setting_callback_recaptcha_information' ),
@@ -344,19 +338,6 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		<?php
 	}
 
-	public function setting_callback_recaptcha_verification() {
-		$verified = bp_get_option( 'bb_recaptcha_verified' );
-		if ( ! empty( $verified ) && true === (bool) $verified ) {
-			echo '<div class="show-full-width">' .
-				esc_html__( 'reCAPTCHA connected successfully.', 'buddyboss' ) .
-				'</div>';
-		} else {
-			echo '<div class="show-full-width">' .
-				esc_html__( 'Error verifying reCAPTCHA, Please try again.', 'buddyboss' ) .
-				'</div>';
-		}
-	}
-
 	/**
 	 * Callback fields for recaptcha information.
 	 *
@@ -365,13 +346,33 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 * @return void
 	 */
 	public function setting_callback_recaptcha_information() {
-		echo '<div class="show-full-width">' .
-			sprintf(
+		?>
+		<div class="show-full-width">
+			<?php
+			$verified = bb_recaptcha_connection_status();
+			if ( ! empty( $verified ) ) {
+				if ( 'connected' === $verified ) {
+					?>
+					<div class="bb-recaptcha-success show-full-width bb-success-section">
+						<?php echo esc_html__( 'reCAPTCHA connected successfully.', 'buddyboss' ); ?>
+					</div>
+					<?php
+				} else {
+					?>
+					<div class="bb-recaptcha-errors show-full-width bb-error-section">
+						<?php echo esc_html__( 'Error verifying reCAPTCHA, Please try again.', 'buddyboss' ); ?>
+					</div>
+					<?php
+				}
+			}
+			echo sprintf(
 			/* translators: recaptcha link */
 				esc_html__( 'Enter your %s to integrate fraud, spam, and abuse protection into your website.', 'buddyboss' ),
 				'<a href="#" target="_blank">' . esc_html__( 'Google reCAPTCHA API keys', 'buddyboss' ) . '</a>'
-			) .
-			'</div>';
+			)
+			?>
+		</div>
+		<?php
 	}
 
 	public function setting_callback_score_threshold() {
