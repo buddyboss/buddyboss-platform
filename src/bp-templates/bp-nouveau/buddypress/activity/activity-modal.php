@@ -18,7 +18,9 @@
 				</a>
 			</div>
 			<div class="bb-modal-activity-body">
-				<ul class="activity-list item-list bp-list"></ul>
+				<div data-bp-list="activity">
+					<ul class="activity-list item-list bp-list"></ul>
+				</div>
 			</div>
 			<div class="bb-modal-activity-footer"></div>
 		</div>

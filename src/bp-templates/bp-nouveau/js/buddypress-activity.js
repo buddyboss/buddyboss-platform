@@ -3222,6 +3222,11 @@ window.bp = window.bp || {};
 			modal.show();
 
 			modal.find( 'ul.activity-list' ).html( activity_content );
+			
+			var action_tooltip = modal.find( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options-action' );
+			var privacy_wrap = modal.find( '.privacy-wrap' );
+			action_tooltip.attr('data-balloon-pos', 'left');
+			privacy_wrap.attr('data-bp-tooltip-pos', 'right');
 
 			var viewMoreCommentsLink = modal.find( selector ).children( '.acomments-view-more' ).first();
 			viewMoreCommentsLink.trigger( 'click' );
