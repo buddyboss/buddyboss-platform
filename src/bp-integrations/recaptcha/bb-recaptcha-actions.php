@@ -47,12 +47,12 @@ function bb_recaptcha_verification() {
 			$response = json_decode( $response['body'] );
 
 			if ( $response->success ) {
-				update_option( 'bb_recaptcha_temp_verified', true );
+				bp_update_option( 'bb_recaptcha_verified', true );
 				$data = '<img src="'.bb_recaptcha_integration_url( 'assets/images/success.png' ) . '" />
 					<p>' . __( 'reCAPTCHA verification was successful', 'buddyboss' ). '</p>';
 				wp_send_json_success( $data );
 			} else {
-				update_option( 'bb_recaptcha_temp_verified', false );
+				bp_update_option( 'bb_recaptcha_verified', false );
 				$data = '<img src="'.bb_recaptcha_integration_url( 'assets/images/error.png' ) . '" />
 					<p>' . __( 'reCAPTCHA verification failed, please try again', 'buddyboss' ). '</p>';
 				wp_send_json_error( $data );

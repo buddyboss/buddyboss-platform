@@ -145,12 +145,12 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$status      = 'not-connected';
 		$status_text = __( 'Not Connected', 'buddyboss' );
-		$verified    = get_option( 'bb_recaptcha_temp_verified' );
+		$verified    = bp_get_option( 'bb_recaptcha_verified' );
 		if ( ! empty( $verified ) && true === (bool) $verified ) {
 			$status      = 'connected';
 			$status_text = __( 'Connected', 'buddyboss' );
 		}
-		$html        = '<div class="bb-recaptcha-status">' .
+		$html = '<div class="bb-recaptcha-status">' .
 			'<span class="status-line ' . esc_attr( $status ) . '">' . esc_html( $status_text ) . '</span>' .
 		'</div>';
 
@@ -172,11 +172,14 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			),
 		);
 
-		$settings['bb_recaptcha_design'] = array(
-			'page'              => 'recaptcha',
-			'title'             => __( 'reCAPTCHA Design', 'buddyboss' ),
-			'tutorial_callback' => array( $this, 'setting_callback_recaptcha_tutorial' ),
-		);
+		$enabled_for = bb_recaptcha_recaptcha_versions();
+		if ( 'recaptcha_v2' === $enabled_for ) {
+			$settings['bb_recaptcha_design'] = array(
+				'page'              => 'recaptcha',
+				'title'             => __( 'reCAPTCHA Design', 'buddyboss' ),
+				'tutorial_callback' => array( $this, 'setting_callback_recaptcha_tutorial' ),
+			);
+		}
 
 		return $settings;
 	}
@@ -215,7 +218,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		$fields = array();
 
 		$fields['bb_recaptcha_versions'] = array(
-			'verified_message'             => array(
+			'verified_message'        => array(
 				'title'             => esc_html__( 'Notice', 'buddyboss' ),
 				'callback'          => array( $this, 'setting_callback_recaptcha_verification' ),
 				'sanitize_callback' => 'string',
@@ -292,18 +295,18 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		);
 
 		$fields['bb_recaptcha_design'] = array(
-			'bb-recaptcha-theme' => array(
+			'bb-recaptcha-theme'          => array(
 				'title'             => esc_html__( 'Theme', 'buddyboss' ),
 				'callback'          => array( $this, 'setting_callback_theme' ),
 				'sanitize_callback' => 'absint',
 				'args'              => array(),
 			),
-			'bb-recaptcha-size'     => array(
+			'bb-recaptcha-size'           => array(
 				'title'    => esc_html__( 'Size', 'buddyboss' ),
 				'callback' => array( $this, 'setting_callback_size' ),
 				'args'     => array(),
 			),
-			'bb-recaptcha-badge-position'     => array(
+			'bb-recaptcha-badge-position' => array(
 				'title'    => esc_html__( 'Badge Position', 'buddyboss' ),
 				'callback' => array( $this, 'setting_callback_badge_position' ),
 				'args'     => array(),
@@ -342,15 +345,15 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	public function setting_callback_recaptcha_verification() {
-		$verified = get_option( 'bb_recaptcha_temp_verified' );
+		$verified = bp_get_option( 'bb_recaptcha_verified' );
 		if ( ! empty( $verified ) && true === (bool) $verified ) {
 			echo '<div class="show-full-width">' .
-			     esc_html__( 'reCAPTCHA connected successfully.', 'buddyboss' ) .
-			     '</div>';
+				esc_html__( 'reCAPTCHA connected successfully.', 'buddyboss' ) .
+				'</div>';
 		} else {
 			echo '<div class="show-full-width">' .
-			     esc_html__( 'Error verifying reCAPTCHA, Please try again.', 'buddyboss' ) .
-			     '</div>';
+				esc_html__( 'Error verifying reCAPTCHA, Please try again.', 'buddyboss' ) .
+				'</div>';
 		}
 	}
 
@@ -543,7 +546,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			</div>
 			<div class="bp-hello-content">
 				<div id="bp-hello-recaptcha-content" class="bp-hello-recaptcha-content-container">
-					<img src="<?php echo bb_recaptcha_integration_url( 'assets/images/recaptcha.png' ) ?>" />
+					<img src="<?php echo bb_recaptcha_integration_url( 'assets/images/recaptcha.png' ); ?>" />
 					<p>
 						<?php esc_html_e( 'Verify reCAPTCHA token', 'buddyboss' ); ?>
 					</p>
@@ -562,14 +565,11 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	public function setting_callback_theme() {
-
-    }
+	}
 
 	public function setting_callback_size() {
+	}
 
-    }
-
-    public function setting_callback_badge_position() {
-
-    }
+	public function setting_callback_badge_position() {
+	}
 }
