@@ -172,6 +172,12 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			),
 		);
 
+		$settings['bb_recaptcha_design'] = array(
+			'page'              => 'recaptcha',
+			'title'             => __( 'reCAPTCHA Design', 'buddyboss' ),
+			'tutorial_callback' => array( $this, 'setting_callback_recaptcha_tutorial' ),
+		);
+
 		return $settings;
 	}
 
@@ -285,6 +291,26 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			),
 		);
 
+		$fields['bb_recaptcha_design'] = array(
+			'bb-recaptcha-theme' => array(
+				'title'             => esc_html__( 'Theme', 'buddyboss' ),
+				'callback'          => array( $this, 'setting_callback_theme' ),
+				'sanitize_callback' => 'absint',
+				'args'              => array(),
+			),
+			'bb-recaptcha-size'     => array(
+				'title'    => esc_html__( 'Size', 'buddyboss' ),
+				'callback' => array( $this, 'setting_callback_size' ),
+				'args'     => array(),
+			),
+			'bb-recaptcha-badge-position'     => array(
+				'title'    => esc_html__( 'Badge Position', 'buddyboss' ),
+				'callback' => array( $this, 'setting_callback_badge_position' ),
+				'args'     => array(),
+			),
+
+		);
+
 		return $fields;
 	}
 
@@ -368,7 +394,13 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'<label for="recaptcha_' . esc_attr( $action ) . '">' . esc_html( $setting['label'] ) . '</label><br /><br />';
 		}
 
-		echo '<p class="description">' . esc_html__( 'Select the pages to include in the reCAPTCHA submission. Make sure to Enable Registration if both registration and account activation are disabled.', 'buddyboss' ) . '</p>';
+		echo '<p class="description">' .
+			sprintf(
+					/* translators: registration setting link. */
+				esc_html__( 'Select the pages to include in the reCAPTCHA submission. Make sure to %s if both registration and account activation are disabled.', 'buddyboss' ),
+				'<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-settings&tab=bp-general#bp_registration' ) ) . '">' . esc_html__( 'Enable Registration', 'buddyboss' ) . '</a>'
+			) .
+			'</p>';
 	}
 
 	public function setting_callback_allow_bypass() {
@@ -429,7 +461,10 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 * @return mixed|string
 	 */
 	public function admin_setting_icons( $meta_icon, $id = '' ) {
-		if ( 'bb_recaptcha_versions' === $id || 'bb_recaptcha_settings' === $id ) {
+		if (
+			! empty( $id ) &&
+			in_array( $id, array( 'bb_recaptcha_versions', 'bb_recaptcha_settings', 'bb_recaptcha_design', true ) )
+		) {
 			$meta_icon = 'bb-icon-i bb-icon-brand-google';
 		}
 
@@ -525,4 +560,16 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		</div>
 		<?php
 	}
+
+	public function setting_callback_theme() {
+
+    }
+
+	public function setting_callback_size() {
+
+    }
+
+    public function setting_callback_badge_position() {
+
+    }
 }
