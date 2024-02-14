@@ -24,6 +24,29 @@ function bb_recaptcha_score_threshold( $default = 6 ) {
 	return (int) apply_filters( 'bb_recaptcha_score_threshold', bp_get_option( 'bb_recaptcha_score_threshold', $default ) );
 }
 
+function bb_recaptcha_options() {
+	return apply_filters( 'bb_recaptcha_options', bp_get_option( 'bb_recaptcha', array() ) );
+}
+
+function bb_recaptcha_setting( $key, $default = '' ) {
+	$settings = bb_recaptcha_options();
+	$retval   = $default;
+	if ( isset( $settings[ $key ] ) ) {
+		$retval = $settings[ $key ];
+	}
+
+	/**
+	 * Filters TutorLMS get settings.
+	 *
+	 * @since 2.4.40
+	 *
+	 * @param array  $retval  Settings of tutorlms.
+	 * @param string $key     Optional. Get setting by key.
+	 * @param string $default Optional. Default value if value or setting not available.
+	 */
+	return apply_filters( 'bb_recaptcha_setting', $retval, $key, $default );
+}
+
 function bb_recaptcha_actions() {
 	$actions = array(
 		'bb_login'         => array(
@@ -51,8 +74,9 @@ function bb_recaptcha_actions() {
 	return apply_filters( 'bb_recaptcha_actions', $actions );
 }
 
+
 function bb_recaptcha_is_enabled( $key ) {
-	$enabled_keys = bp_get_option( 'bb_recaptcha_enabled_for', array() );
+	$enabled_keys = bb_recaptcha_setting( 'enabled_for', array() );
 	$retval = ! empty( $key ) && array_key_exists( $key, $enabled_keys ) && ! empty( $enabled_keys[ $key ] );
 
 	return (bool) apply_filters( 'bb_recaptcha_is_enabled', $retval, $key );
