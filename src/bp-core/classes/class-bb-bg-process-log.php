@@ -54,6 +54,7 @@ class BB_BG_Process_Log {
 		$this->table_name = "{$wpdb->prefix}bb_background_process_logs";
 
 		$this->setup_hooks();
+		$this->schedule_log_event();
 	}
 
 	/**
@@ -67,6 +68,8 @@ class BB_BG_Process_Log {
 
 		add_filter( 'bb_bg_process_start', array( $this, 'record_bg_process' ), 10, 1 );
 		add_action( 'bb_bg_process_end', array( $this, 'update_bg_process' ), 10, 1 );
+
+		add_action( 'bb_bg_log_clear', array( $this, 'clear_logs' ) );
 	}
 
 	/**
@@ -405,5 +408,23 @@ class BB_BG_Process_Log {
             ) $charset_collate";
 
 		dbDelta( $sql );
+	}
+
+	private function schedule_log_event() {
+		// Check if the cron job is not already scheduled
+		if ( ! wp_next_scheduled( 'bb_bg_log_clear' ) ) {
+
+			$wp_date   = date_i18n( 'Y-m-d', strtotime( 'next Sunday' ) ) . ' 23:59:59';
+			$utc_date  = get_gmt_from_date( $wp_date );
+
+			// Schedule the cron job to run every Sunday at 12 AM
+			wp_schedule_event( strtotime( $utc_date ), 'weekly', 'bb_bg_log_clear' );
+		}
+	}
+
+	public function clear_logs() {
+		global $wpdb;
+
+		$wpdb->query( "DELETE id FROM {$this->table_name} WHERE process_start_date <= CONVERT_TZ(NOW(), 'SYSTEM', '+00:00') - INTERVAL 30 DAY;" ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	}
 }
