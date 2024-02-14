@@ -189,7 +189,7 @@ function bb_recaptcha_recaptcha_versions() {
  * @return string The selected v2 option.
  */
 function bb_recaptcha_recaptcha_v2_option() {
-	$recaptcha_v2_option = bb_recaptcha_setting( 'recaptcha_version', 'v2_checkbox' );
+	$recaptcha_v2_option = bb_recaptcha_setting( 'v2_option', 'v2_checkbox' );
 
 	/**
 	 * Filters the selected reCAPTCHA v2 option.
