@@ -63,13 +63,19 @@ class BB_BG_Process_Log {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	private function setup_hooks() {
+		// Old background jobs.
 		add_filter( 'bb_bp_bg_process_start', array( $this, 'record_bp_bg_process' ), 10, 1 );
 		add_action( 'bb_bp_bg_process_end', array( $this, 'update_bp_bg_process' ), 10, 1 );
 
+		// New background jobs.
 		add_filter( 'bb_bg_process_start', array( $this, 'record_bg_process' ), 10, 1 );
 		add_action( 'bb_bg_process_end', array( $this, 'update_bg_process' ), 10, 1 );
 
+		// Schedule an event to clear logs.
 		add_action( 'bb_bg_log_clear', array( $this, 'clear_logs' ) );
+
+		// Re-schedule when update the timezone.
+		add_action( 'update_option', array( $this, 'reschedule_event' ), 10, 3 );
 	}
 
 	/**
@@ -410,6 +416,12 @@ class BB_BG_Process_Log {
 		dbDelta( $sql );
 	}
 
+	/**
+	 * Schedule event to clear the logs.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @return void
+	 */
 	private function schedule_log_event() {
 		// Check if the cron job is not already scheduled
 		if ( ! wp_next_scheduled( 'bb_bg_log_clear' ) ) {
@@ -422,9 +434,39 @@ class BB_BG_Process_Log {
 		}
 	}
 
+	/**
+	 * Clear the logs.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @return void
+	 */
 	public function clear_logs() {
 		global $wpdb;
 
 		$wpdb->query( "DELETE id FROM {$this->table_name} WHERE process_start_date <= CONVERT_TZ(NOW(), 'SYSTEM', '+00:00') - INTERVAL 30 DAY;" ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	}
+
+	/**
+	 * Re-Schedule event to clear the logs.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @return void
+	 */
+	public function reschedule_event( $option, $old_value = '', $new_value = '' ) {
+		static $is_reschedule = false; // Avoid clearing multiple time.
+
+		// Check if the updated option is 'timezone_string'.
+		if (
+			(
+				'timezone_string' === $option ||
+				'gmt_offset' === $option
+			) &&
+			$old_value !== $new_value &&
+			! $is_reschedule
+		) {
+			wp_clear_scheduled_hook( 'bb_bg_log_clear' );
+			$this->schedule_log_event();
+			$is_reschedule = true;
+		}
 	}
 }
