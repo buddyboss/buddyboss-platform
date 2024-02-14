@@ -84,6 +84,10 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		$bb_recaptcha = isset( $_POST['bb_recaptcha'] ) ? map_deep( wp_unslash( $_POST['bb_recaptcha'] ), 'sanitize_text_field' ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		if ( ! empty( $bb_recaptcha ) ) {
+			if ( ! empty( $bb_recaptcha['exclude_ip'] ) ) {
+				$bb_recaptcha['exclude_ip'] = sanitize_textarea_field( wp_unslash( $_POST['bb_recaptcha']['exclude_ip'] ) );
+			}
+
 			bp_update_option( 'bb_recaptcha', $bb_recaptcha );
 		}
 
