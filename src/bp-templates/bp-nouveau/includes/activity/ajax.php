@@ -534,6 +534,14 @@ function bp_nouveau_ajax_new_activity_comment() {
 			$parent_id = (int) $p_obj->secondary_item_id;
 		}
 		$activities_template->activity->current_comment->depth = $depth;
+
+		// Set activity related properties to be used in the loop.
+		if ( ! isset( $activities_template->activity->component ) ) {
+			$a_obj = new BP_Activity_Activity( $p_obj->item_id );
+			$activities_template->activity->component         = $a_obj->component;
+			$activities_template->activity->item_id           = $a_obj->item_id;
+			$activities_template->activity->secondary_item_id = $a_obj->secondary_item_id;
+		}
 	}
 
 	ob_start();
@@ -1197,10 +1205,10 @@ function bb_nouveau_ajax_activity_loadmore_comments() {
 		$result_comment = false;
 
 		foreach ( $activities_template->activity->children as $child ) {
-            $result_comment = findObjectById($child, $parent_comment_id);
+			$result_comment = bb_search_comment_hierarchy( $child, $parent_comment_id );
 
 			if ( ! empty( $result_comment ) ) {
-				
+
 				// Set as current_comment to iterate.
 				$activities_template->activity->current_comment = $result_comment;
 				bp_activity_recurse_comments( $activities_template->activity->current_comment, $args );
@@ -1227,25 +1235,4 @@ function bb_nouveau_ajax_activity_loadmore_comments() {
 		)
 	);
 
-}
-
-function findObjectById($object, $id) {
-	// Check if the current object is the one we're looking for
-	if (isset($object->id) && $object->id == $id) {
-		return $object;
-	}
-
-	// If this object has children, search them
-	if (isset($object->children) && is_array($object->children)) {
-		foreach ($object->children as $child) {
-			$result = findObjectById($child, $id);
-			// If the object was found in the current child, return it
-			if ($result !== null) {
-				return $result;
-			}
-		}
-	}
-
-	// If the object wasn't found in this branch, return null
-	return null;
 }

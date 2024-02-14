@@ -2796,6 +2796,23 @@ function bb_activity_has_comment_reply_access( $can_comment, $comment ) {
 		$can_comment = false;
 	}
 
+	// Disallow replies if threading disabled or depth condition is matched.
+	if ( 'blogs' === bp_get_activity_object_name() ) {
+		if (
+			false === get_option( 'thread_comments' ) ||
+			$comment->depth >= get_option( 'thread_comments_depth' )
+		) {
+			$can_comment = false;
+		}
+	} else {
+		if (
+			false === bb_is_activity_comment_threading_enabled() ||
+			$comment->depth >= bb_get_activity_comment_threading_depth()
+		) {
+			$can_comment = false;
+		}
+	}
+
 	return $can_comment;
 }
 
