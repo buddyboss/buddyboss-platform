@@ -1743,6 +1743,30 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		);
 	}
 
+	if ( bb_web_notification_enabled() && ( bb_is_notification_type_enabled( 'bb_activity_comment' ) || bb_is_notification_type_enabled( 'bb_activity_comment_web' ) ) ) {
+		error_log( print_r( bb_notification_preferences_types( array( 'key' => 'bb_activity_comment' ), bp_loggedin_user_id() ), true ) );
+
+		$buttons['turn_on_off_notification'] = array(
+			'id'                => 'turn_on_off_notification',
+			'position'          => 30,
+			'component'         => 'activity',
+			'parent_element'    => $parent_element,
+			'parent_attr'       => $parent_attr,
+			'must_be_logged_in' => true,
+			'button_element'    => $button_element,
+			'button_attr'       => array(
+				'href'  => '#',
+				'class' => 'button edit bb-icon-bell-slash bp-secondary-action bp-tooltip',
+				'title' => __( 'Turn off notifications', 'buddyboss' ),
+			),
+			'link_text'         => sprintf(
+				'<span class="bp-screen-reader-text">%1$s</span><span class="turn-off-notification-label">%2$s</span>',
+				__( 'Turn On/Off Notification', 'buddyboss' ),
+				__( 'Turn off notifications', 'buddyboss' )
+			),
+		);
+	}
+
 	if ( bp_is_active( 'moderation' ) ) {
 		$buttons['activity_report'] = bp_activity_get_report_link(
 			array(

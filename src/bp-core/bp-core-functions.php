@@ -7029,6 +7029,7 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 	$options                  = array();
 	$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
 
+	error_log( print_r( $field['key'], true ) );
 	$email_checked = bp_get_user_meta( $user_id, $field['key'], true );
 	if ( empty( $email_checked ) ) {
 		$email_checked = $enabled_all_notification[ $field['key'] ]['email'] ?? $field['default'];
