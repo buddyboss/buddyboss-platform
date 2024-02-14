@@ -302,6 +302,12 @@
   border-color: #2370b1;
 }
 
+#bb_recaptcha_design .bb-grid-style-outer .bb-badge-position input[type="radio"]:disabled + .option:before,
+#bb_recaptcha_design .bb-grid-style-outer .bb-size input[type="radio"]:disabled + .option:before,
+#bb_recaptcha_design .bb-grid-style-outer .bb-theme input[type="radio"]:disabled + .option:before {
+  border-color: #DCDCDE;
+}
+
 #bb_recaptcha_design .bb-grid-style-outer .bb-size .option:before {
   height: 96px;
 }

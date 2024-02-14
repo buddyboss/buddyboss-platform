@@ -349,7 +349,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 						add_query_arg(
 							array(
 								'page'    => 'bp-help',
-								'article' => '125826',
+								'article' => '125826', // @todo: Update when release.
 							),
 							'admin.php'
 						)
@@ -606,6 +606,8 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	public function setting_callback_theme() {
+		$v2_option  = bb_recaptcha_recaptcha_v2_option();
+		$connection = bb_recaptcha_connection_status();
 		?>
 		<div class="bb-grid-style-outer">
 			<?php
@@ -614,10 +616,10 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					'type'        => 'radio',
 					'id'          => 'bb-recaptcha-theme-style-',
 					'label'       => esc_html__( 'Theme', 'buddyboss' ),
-					'disabled'    => false,
+					'disabled'    => 'v2_checkbox' !== $v2_option || 'connected' !== $connection,
 					'opt_wrapper' => true,
 					'name'        => 'bb_recaptcha[theme]',
-					'value'       => 'light',
+					'value'       => bb_recaptcha_setting( 'theme', 'light' ),
 					'options'     => array(
 						'light' => array(
 							'label' => esc_html__( 'Light', 'buddyboss' ),
@@ -637,6 +639,8 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	public function setting_callback_size() {
+		$v2_option  = bb_recaptcha_recaptcha_v2_option();
+		$connection = bb_recaptcha_connection_status();
 		?>
 		<div class="bb-grid-style-outer">
 			<?php
@@ -645,10 +649,10 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					'type'        => 'radio',
 					'id'          => 'bb-recaptcha-size-',
 					'label'       => esc_html__( 'Size', 'buddyboss' ),
-					'disabled'    => false,
+					'disabled'    => 'v2_checkbox' !== $v2_option || 'connected' !== $connection,
 					'opt_wrapper' => true,
 					'name'        => 'bb_recaptcha[size]',
-					'value'       => 'normal',
+					'value'       => bb_recaptcha_setting( 'size', 'normal' ),
 					'options'     => array(
 						'normal'  => array(
 							'label' => esc_html__( 'Normal', 'buddyboss' ),
@@ -668,6 +672,8 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	public function setting_callback_badge_position() {
+		$v2_option  = bb_recaptcha_recaptcha_v2_option();
+		$connection = bb_recaptcha_connection_status();
 		?>
 		<div class="bb-grid-style-outer">
 			<?php
@@ -676,10 +682,10 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					'type'        => 'radio',
 					'id'          => 'bb-recaptcha-badge-position-',
 					'label'       => esc_html__( 'Badge Position', 'buddyboss' ),
-					'disabled'    => false,
+					'disabled'    => 'v2_checkbox' === $v2_option || 'connected' !== $connection,
 					'opt_wrapper' => true,
 					'name'        => 'bb_recaptcha[badge_position]',
-					'value'       => 'bottom-right',
+					'value'       => bb_recaptcha_setting( 'badge_position', 'bottom-right' ),
 					'options'     => array(
 						'bottom-right' => array(
 							'label' => esc_html__( 'Bottom Right', 'buddyboss' ),
