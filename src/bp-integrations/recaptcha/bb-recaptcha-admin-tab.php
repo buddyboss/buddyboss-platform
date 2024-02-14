@@ -214,6 +214,11 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 * @return array $fields setting fields for pusher integration.
 	 */
 	public function get_settings_fields() {
+		$enabled_for        = bb_recaptcha_recaptcha_versions();
+		$recaptcha_v2_class = 'bp-hide';
+		if ( 'recaptcha_v2' === $enabled_for ) {
+			$recaptcha_v2_class = '';
+		}
 
 		$fields = array();
 
@@ -229,6 +234,12 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'callback'          => array( $this, 'setting_callback_recaptcha_versions' ),
 				'sanitize_callback' => 'string',
 				'args'              => array(),
+			),
+			'v2_option'               => array(
+				'title'             => esc_html__( 'reCAPTCHA v2 option', 'buddyboss' ),
+				'callback'          => array( $this, 'setting_callback_recaptcha_v2_option' ),
+				'sanitize_callback' => 'string',
+				'args'              => array( 'class' => 'hidden-header field-button recaptcha_v2 ' . $recaptcha_v2_class ),
 			),
 			'bb-recaptcha-site-key'   => array(
 				'title'             => __( 'Site Key', 'buddyboss' ),
@@ -483,11 +494,28 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	public function setting_callback_recaptcha_versions() {
 		$enabled_for = bb_recaptcha_recaptcha_versions();
 		?>
-		<div class="show-full-width">
+		<div class="recaptcha-version-fields">
 			<input type="radio" name="bb_recaptcha[recaptcha_version]" id="recaptcha_v3" value="recaptcha_v3" <?php checked( $enabled_for, 'recaptcha_v3' ); ?>>
 			<label for="recaptcha_v3"><?php esc_html_e( 'reCAPTCHA v3 (Recommended)', 'buddyboss' ); ?></label>
 			<input type="radio" name="bb_recaptcha[recaptcha_version]" id="recaptcha_v2" value="recaptcha_v2" <?php checked( $enabled_for, 'recaptcha_v2' ); ?>>
 			<label for="recaptcha_v2"><?php esc_html_e( 'reCAPTCHA v2', 'buddyboss' ); ?></label>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Callback function for recaptcha v2 options in Recaptcha integration.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function setting_callback_recaptcha_v2_option() {
+		$v2_option = bb_recaptcha_recaptcha_v2_option();
+		?>
+		<div class="recaptcha-version-fields">
+			<input type="radio" name="bb_recaptcha[recaptcha_version][v2_option]" id="v2_checkbox" value="v2_checkbox" <?php checked( $v2_option, 'v2_checkbox' ); ?>>
+			<label for="v2_checkbox"><?php esc_html_e( 'Checkbox', 'buddyboss' ); ?></label>
+			<input type="radio" name="bb_recaptcha[recaptcha_version][v2_option]" id="v2_invisible_badge" value="v2_invisible_badge" <?php checked( $v2_option, 'v2_invisible_badge' ); ?>>
+			<label for="v2_invisible_badge"><?php esc_html_e( 'Invisible Badge', 'buddyboss' ); ?></label>
 		</div>
 		<?php
 	}

@@ -21,7 +21,19 @@
 			$( '.buddyboss_page_bp-integrations .section-bb_recaptcha_versions' ).on( 'click', '.recaptcha-verification', this.recaptchaVerifications.bind( this ) );
 			$( '.buddyboss_page_bp-integrations .section-bb_recaptcha_versions' ).on( 'click', '#recaptcha_submit', this.recaptchaSubmit.bind( this ) );
 			$( '.buddyboss_page_bp-integrations .section-bb_recaptcha_versions' ).on( 'click', '#recaptcha_verified', this.recaptchaVerified.bind( this ) );
-			$( '.buddyboss_page_bp-integrations .section-bb_recaptcha_versions' ).on( 'click', '#recaptcha_verification_popup_cancel', this.recaptchaVerificationPopupClose.bind( this ) );
+			$( '.buddyboss_page_bp-integrations .section-bb_recaptcha_versions' ).on( 'click', '#recaptcha_cancel', this.recaptchaVerificationPopupClose.bind( this ) );
+			$( '.buddyboss_page_bp-integrations .section-bb_recaptcha_versions' ).on( 'change', 'input[name="bb_recaptcha[recaptcha_version]"]', this.recaptchaVersion.bind( this ) );
+
+		},
+
+		recaptchaVersion: function ( event ) {
+			event.preventDefault();
+
+			if ( 'recaptcha_v2' === event.currentTarget.value ) {
+				$( '.recaptcha_v2' ).removeClass( 'bp-hide' );
+			} else {
+				$( '.recaptcha_v2' ).addClass( 'bp-hide' );
+			}
 		},
 
 		recaptchaVerifications: function ( event ) {
@@ -98,7 +110,7 @@
 							window.bb_recaptcha_v3_verify = null;
 						} else {
 							$( '#bp-hello-recaptcha-content' ).html( response.data );
-							$( '.bb-popup-buttons' ).html( '<a href="javascript:void(0);" id="recaptcha_verification_popup_cancel" class="button">Cancel</a>' );
+							$( '.bb-popup-buttons' ).html( '<a href="javascript:void(0);" id="recaptcha_cancel" class="button">Cancel</a>' );
 						}
 					}
 				}

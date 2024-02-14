@@ -182,6 +182,28 @@ function bb_recaptcha_recaptcha_versions() {
 }
 
 /**
+ * Retrieves the selected reCAPTCHA v2 option.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string The selected v2 option.
+ */
+function bb_recaptcha_recaptcha_v2_option() {
+	$recaptcha_v2_option = bb_recaptcha_setting( 'recaptcha_version', 'v2_checkbox' );
+
+	/**
+	 * Filters the selected reCAPTCHA v2 option.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $recaptcha_v2_option The selected reCAPTCHA v2 option.
+	 *
+	 * @return string The filtered reCAPTCHA v2 option.
+	 */
+	return apply_filters( 'bb_recaptcha_recaptcha_v2_option', $recaptcha_v2_option );
+}
+
+/**
  * Retrieves the reCAPTCHA site key.
  *
  * @since BuddyBoss [BBVERSION]
