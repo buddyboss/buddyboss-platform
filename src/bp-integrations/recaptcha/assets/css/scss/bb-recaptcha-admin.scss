@@ -197,6 +197,7 @@
 	.bb-grid-style-outer {
 		display: flex;
 
+		.bb-badge-position,
 		.bb-size,
 		.bb-theme {
 			display: flex;
@@ -271,6 +272,18 @@
 					}
 				}
 
+				&.opt-bottom-right:after {
+					background: url(../images/reCAPTCHA-bottom-right.png) no-repeat center;
+				}
+
+				&.opt-bottom-left:after {
+					background: url(../images/reCAPTCHA-bottom-left.png) no-repeat center;
+				}
+
+				&.opt-inline:after {
+					background: url(../images/reCAPTCHA-inline.png) no-repeat center;
+				}
+
 				span {
 					color: #999;
 					font-size: 14px;
@@ -293,6 +306,18 @@
 
 				&:before {
 					height: 96px;
+				}
+			}
+		}
+
+		.bb-badge-position {
+			width: 120px;
+
+			.option {
+
+				&:before {
+					height: 120px;
+					background-color: #F0F0F1;
 				}
 			}
 		}

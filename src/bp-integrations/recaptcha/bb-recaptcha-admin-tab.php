@@ -376,12 +376,12 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					<?php
 				}
 			}
-			echo sprintf(
+			printf(
 			/* translators: recaptcha link */
 				esc_html__( 'Enter your %s to integrate fraud, spam, and abuse protection into your website.', 'buddyboss' ),
 				'<a href="#" target="_blank">' . esc_html__( 'Google reCAPTCHA API keys', 'buddyboss' ) . '</a>'
 			)
-			?>
+		?>
 		</div>
 		<?php
 	}
@@ -656,5 +656,37 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	public function setting_callback_badge_position() {
+		?>
+		<div class="bb-grid-style-outer">
+			<?php
+			new BB_Admin_Setting_Fields(
+				array(
+					'type'        => 'radio',
+					'id'          => 'bb-recaptcha-badge-position-',
+					'label'       => esc_html__( 'Badge Position', 'buddyboss' ),
+					'disabled'    => false,
+					'opt_wrapper' => true,
+					'name'        => 'bb_recaptcha[badge_position]',
+					'value'       => 'bottom-right',
+					'options'     => array(
+						'bottom-right' => array(
+							'label' => esc_html__( 'Bottom Right', 'buddyboss' ),
+							'class' => 'option opt-bottom-right',
+						),
+						'bottom-left'  => array(
+							'label' => esc_html__( 'Bottom Left', 'buddyboss' ),
+							'class' => 'option opt-bottom-left',
+						),
+						'inline'       => array(
+							'label' => esc_html__( 'Inline', 'buddyboss' ),
+							'class' => 'option opt-inline',
+						),
+					),
+				)
+			);
+			?>
+		</div>
+		<p class="description"><?php echo esc_html__( 'Select the position of your invisible reCAPTCHA badge.', 'buddyboss' ); ?></p>
+		<?php
 	}
 }
