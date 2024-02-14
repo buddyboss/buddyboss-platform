@@ -95,3 +95,61 @@
 #bb_recaptcha_versions .bb-bottom-notice {
   text-align: center;
 }
+
+#bb_recaptcha_versions .bp-hello-recaptcha .bp-hello-title h2 {
+  color: #1d2327;
+  font-size: 1.3em;
+  margin: 1em 0;
+  padding-bottom: 0;
+  border-bottom: none;
+  font-weight: 600;
+}
+
+#bb_recaptcha_versions .bp-hello-recaptcha .bp-hello-content {
+  height: auto;
+  padding: 0 23px;
+  min-height: 180px;
+  max-height: calc(100vh - 320px);
+  margin-bottom: 62px;
+}
+
+#bb_recaptcha_versions .bp-hello-recaptcha .bb-popup-buttons {
+  position: absolute;
+  bottom: 0;
+  padding: 15px;
+  text-align: right;
+  width: calc(100% - 30px);
+  margin: 0 -23px;
+  border-top: 1px solid var(--bp-hello-color-secondary);
+  background-color: #f0f0f1;
+}
+
+@media screen and (orientation: landscape) and (max-height: 480px) {
+  #bb_recaptcha_versions .bp-hello-recaptcha .bp-hello-content {
+    min-height: 110px;
+  }
+}
+
+#bb_recaptcha_versions .bp-hello-recaptcha .bp-hello-recaptcha-content-container {
+  padding: 15px 0;
+  margin: 0 auto;
+  text-align: center;
+}
+
+#bb_recaptcha_versions #bp-hello-container.bp-hello-recaptcha {
+  top: 50%;
+  bottom: initial;
+  transform: translateY(-50%);
+  margin-top: 32px;
+}
+
+#bb_recaptcha_versions #bp-hello-container.bp-hello-recaptcha .button-primary {
+  color: #fff;
+  margin-right: 10px;
+}
+
+@media screen and (max-width: 480px) {
+  #bb_recaptcha_versions #bp-hello-container.bp-hello-recaptcha .button-primary {
+    margin-right: 0;
+  }
+}

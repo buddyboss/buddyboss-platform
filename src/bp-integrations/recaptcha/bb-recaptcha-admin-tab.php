@@ -60,6 +60,15 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			$min     = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 			$rtl_css = is_rtl() ? '-rtl' : '';
 			wp_enqueue_style( 'bb-recaptcha-admin', bb_recaptcha_integration_url( '/assets/css/bb-recaptcha-admin' . $rtl_css . $min . '.css' ), false, buddypress()->version );
+
+			wp_enqueue_script( 'bb-recaptcha-admin', bb_recaptcha_integration_url( '/assets/js/bb-recaptcha-admin' . $min . '.js' ), false, buddypress()->version );
+			wp_localize_script(
+				'bb-recaptcha-admin',
+				'bbRecaptcha',
+				array(
+					'ajax_url' => admin_url( 'admin-ajax.php' ),
+				)
+			);
 		}
 
 		parent::register_admin_script();
@@ -121,7 +130,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$settings = array(
 			'bb_recaptcha_versions' => array(
-				'page'              => 'Recaptcha',
+				'page'              => 'recaptcha',
 				'title'             => __( 'reCAPTCHA', 'buddyboss' ) . $html,
 				'tutorial_callback' => array( $this, 'setting_callback_recaptcha_tutorial' ),
 				'notice'            => sprintf(
@@ -283,12 +292,12 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 */
 	public function setting_callback_recaptcha_information() {
 		echo '<div class="show-full-width">' .
-			sprintf(
-			/* translators: recaptcha link */
-				esc_html__( 'Enter your %s to integrate fraud, spam and abuse protection into your website.', 'buddyboss' ),
-				'<a href="#" target="_blank">' . esc_html__( 'Google reCAPTCHA API keys', 'buddyboss' ) . '</a>'
-			) .
-			'</div>';
+		     sprintf(
+		     /* translators: recaptcha link */
+			     esc_html__( 'Enter your %s to integrate fraud, spam, and abuse protection into your website.', 'buddyboss' ),
+			     '<a href="#" target="_blank">' . esc_html__( 'Google reCAPTCHA API keys', 'buddyboss' ) . '</a>'
+		     ) .
+		     '</div>';
 	}
 
 	public function setting_callback_score_threshold() {
@@ -389,9 +398,9 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		$enabled_for = 'recaptcha_v3';
 		?>
 		<div class="show-full-width">
-			<input type="radio" name="bb-recaptcha[recaptcha_v3]" id="recaptcha_v3" value="recaptcha_v3" <?php checked( $enabled_for, 'recaptcha_v3' ); ?>>
+			<input type="radio" name="bb-recaptcha[recaptcha_version]" id="recaptcha_v3" value="recaptcha_v3" <?php checked( $enabled_for, 'recaptcha_v3' ); ?>>
 			<label for="recaptcha_v3"><?php esc_html_e( 'reCAPTCHA v3 (Recommended)', 'buddyboss' ); ?></label>
-			<input type="radio" name="bb-recaptcha[recaptcha_v2]" id="recaptcha_v2" value="recaptcha_v2" <?php checked( $enabled_for, 'recaptcha_v2' ); ?>>
+			<input type="radio" name="bb-recaptcha[recaptcha_version]" id="recaptcha_v2" value="recaptcha_v2" <?php checked( $enabled_for, 'recaptcha_v2' ); ?>>
 			<label for="recaptcha_v2"><?php esc_html_e( 'reCAPTCHA v2', 'buddyboss' ); ?></label>
 		</div>
 		<?php
