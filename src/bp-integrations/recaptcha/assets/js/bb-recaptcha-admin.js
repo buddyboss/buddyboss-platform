@@ -12,6 +12,7 @@
 
 		setupGlobals: function () {
 			this.selected_version = '';
+			this.v2_option = '';
 			this.site_key = '';
 			this.secret_key = '';
 			this.captcha_response = '';
@@ -46,14 +47,21 @@
 			if ( 'recaptcha_v2' === event.currentTarget.value ) {
 				$( '.recaptcha_v2' ).removeClass( 'bp-hide' );
 				$( '.recaptcha_v3' ).addClass( 'bp-hide' );
+				$( '#bp-hello-content-recaptcha_v2' ).removeClass( 'bp-hide' );
+				$( '#bp-hello-content-recaptcha_v3' ).addClass( 'bp-hide' );
 			} else {
 				$( '.recaptcha_v2' ).addClass( 'bp-hide' );
 				$( '.recaptcha_v3' ).removeClass( 'bp-hide' );
+				$( '#bp-hello-content-recaptcha_v2' ).addClass( 'bp-hide' );
+				$( '#bp-hello-content-recaptcha_v3' ).removeClass( 'bp-hide' );
 			}
 		},
 
 		recaptchaType: function ( event ) {
 			event.preventDefault();
+
+			$( '.recaptcha-v2-fields p.description' ).addClass( 'bp-hide' );
+			$( '.' + event.currentTarget.value + '_description' ).removeClass( 'bp-hide' );
 
 			if ( 'v2_checkbox' === event.currentTarget.value ) {
 				$( '.recaptcha_v2_checkbox' ).removeClass( 'bp-hide' );
@@ -106,7 +114,8 @@
 				window.bb_recaptcha_script.src = 'https://www.google.com/recaptcha/api.js?onload=bb_recaptcha_v3_verify&render=' + self.site_key;
 			}
 			if ( 'recaptcha_v2' === self.selected_version ) {
-				window.bb_recaptcha_script.src = 'https://www.google.com/recaptcha/api.js?onload=wpcaptcha_captchav2_test&render=explicit';
+				self.v2_option = $( 'input[name="bb_recaptcha[v2_option]"]:checked' ).val();
+				window.bb_recaptcha_script.src = 'https://www.google.com/recaptcha/api.js?onload=bb_recaptcha_v2_verify&render=explicit';
 			}
 
 			window.bb_recaptcha_script.onerror = function () {
@@ -118,12 +127,21 @@
 					grecaptcha.ready( function () {
 						grecaptcha.execute( self.site_key, { action: 'submit' } ).then( function ( token ) {
 							self.captcha_response = token;
-							$( '.bp-hello-recaptcha .verifying_token' ).hide();
-							$( '.bp-hello-recaptcha .verified_token' ).show();
-							//$( '#bp-hello-recaptcha-content' ).html( 'reCAPTCHA token is ready, click Submit to verify' );
+							$( '#bp-hello-content-' + self.selected_version + ' .verifying_token' ).hide();
+							$( '#bp-hello-content-' + self.selected_version + ' .verified_token' ).show();
 						} );
 					} );
 				}
+			};
+
+			window.bb_recaptcha_v2_verify = function () {
+				window.bb_recaptcha_box = grecaptcha.render( 'verifying_token', {
+					sitekey: self.site_key,
+					theme: 'light',
+					callback: () => {
+						self.captcha_response = grecaptcha.getResponse( window.bb_recaptcha_box );
+					},
+				} );
 			};
 
 			$( '#recaptcha_submit' ).removeAttr( 'disabled' );
@@ -135,28 +153,32 @@
 			event.preventDefault();
 
 			$( event.currentTarget ).attr( 'disabled', 'disabled' );
+			var data = {
+				action: 'bb_recaptcha_verification',
+				nonce: bbRecaptcha.nonce,
+				selected_version: self.selected_version,
+				site_key: self.site_key,
+				secret_key: self.secret_key,
+				captcha_response: self.captcha_response,
+			};
+			if ( self.v2_option ) {
+				data[ 'v2_option' ] = self.v2_option;
+			}
 			$.ajax(
 				{
 					type: 'POST',
 					url: bbRecaptcha.ajax_url,
-					data: {
-						action: 'bb_recaptcha_verification',
-						nonce: bbRecaptcha.nonce,
-						selected_version: self.selected_version,
-						site_key: self.site_key,
-						secret_key: self.secret_key,
-						captcha_response: self.captcha_response,
-					},
+					data: data,
 					success: function ( response ) {
 						$( event.currentTarget ).removeAttr( 'disabled' );
 						if ( response.success && typeof response.data !== 'undefined' ) {
-							$( '#bp-hello-recaptcha-content' ).html( response.data );
+							$( '#bp-hello-content-' + self.selected_version ).html( response.data );
 							$( '.bb-popup-buttons' ).html( '<button id="recaptcha_verified" class="button">OK</button>' );
 							document.head.removeChild( window.bb_recaptcha_script );
 							window.bb_recaptcha_script = null;
 							window.bb_recaptcha_v3_verify = null;
 						} else {
-							$( '#bp-hello-recaptcha-content' ).html( response.data );
+							$( '#bp-hello-content-' + self.selected_version ).html( response.data );
 							$( '.bb-popup-buttons' ).html( '<button id="recaptcha_cancel" class="button">Cancel</button>' );
 						}
 					}
