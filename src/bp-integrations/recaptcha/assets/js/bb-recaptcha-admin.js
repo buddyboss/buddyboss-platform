@@ -44,7 +44,7 @@
 		recaptchaVersion: function ( event ) {
 			event.preventDefault();
 
-			var v2_option = $( 'input[name="bb_recaptcha[v2_option]"]:checked' ).val();
+			var v2_option = $( '.recaptcha_v2:visible input[name="bb_recaptcha[v2_option]"]:checked' ).val();
 
 			if ( 'recaptcha_v3' === event.currentTarget.value || 'v2_invisible_badge' === v2_option ) {
 				$( '.recaptcha_v3' ).removeClass( 'bp-hide' );
@@ -130,8 +130,9 @@
 					window.bb_recaptcha_script.src = 'https://www.google.com/recaptcha/api.js?onload=bb_recaptcha_v2_verify&render=explicit';
 				}
 				if ( 'v2_invisible_badge' === self.v2_option ) {
-					$( '#bp-hello-content-recaptcha_v3 .verifying_token' ).html('');
 					window.bb_recaptcha_script.src = 'https://www.google.com/recaptcha/api.js?onload=bb_recaptcha_v2_verify_invisible&render=explicit';
+					var content = '<div id="v2_invisible_footer"></div>';
+					$( 'body' ).append( content );
 				}
 			}
 
@@ -162,7 +163,7 @@
 			};
 
 			window.bb_recaptcha_v2_verify_invisible = function () {
-				window.bb_recaptcha_invisible = grecaptcha.render( 'bp-hello-content-v2_invisible_badge', {
+				window.bb_recaptcha_invisible = grecaptcha.render( 'v2_invisible_footer', {
 					sitekey: self.site_key,
 					tabindex : 9999,
 					size: 'invisible',

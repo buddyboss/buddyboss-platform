@@ -615,7 +615,6 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			</div>
 			<div class="bp-hello-content">
 				<div id="bp-hello-content-recaptcha_v3" class="bp-hello-recaptcha-content-container <?php echo esc_attr( $v3_class ); ?>">
-					<div id="bp-hello-content-v2_invisible_badge"></div>
 					<div class="verifying_token">
 						<img src="<?php echo bb_recaptcha_integration_url( 'assets/images/recaptcha.png' ); ?>"/>
 						<p>
