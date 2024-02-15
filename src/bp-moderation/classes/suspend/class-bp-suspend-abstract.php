@@ -449,7 +449,7 @@ abstract class BP_Suspend_Abstract {
 			$suspend_args = array(
 				'item_id'        => $item_id,
 				'item_type'      => $this->item_type,
-				'user_suspended' => $user_suspended,
+				'user_suspended' => false,
 				'hide_parent'    => false,
 				'hide_sitewide'  => false,
 			);
