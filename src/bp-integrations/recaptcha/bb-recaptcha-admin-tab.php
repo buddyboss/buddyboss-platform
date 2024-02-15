@@ -581,9 +581,28 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			$verify_disable = 'disabled="disabled"';
 		}
 		$enabled_for = bb_recaptcha_recaptcha_versions();
+		$v2_option   = bb_recaptcha_recaptcha_v2_option();
+
+		$v3_class = 'bp-hide';
+		if (
+			'recaptcha_v3' === $enabled_for ||
+			(
+				'recaptcha_v2' === $enabled_for &&
+				'v2_invisible_badge' === $v2_option
+			)
+		) {
+			$v3_class = '';
+		}
+
+		$v2_class = 'bp-hide';
+		if ( 'recaptcha_v2' === $enabled_for && 'v2_checkbox' === $v2_option ) {
+			$v2_class = '';
+		}
 		?>
 		<div class="show-verify">
-			<button class="button recaptcha-verification" <?php echo esc_attr( $verify_disable ); ?>> <?php esc_html_e( 'Verify', 'buddyboss' ); ?></button>
+			<button type="button" class="button recaptcha-verification" <?php echo esc_attr( $verify_disable ); ?>>
+				<?php esc_html_e( 'Verify', 'buddyboss' ); ?>
+			</button>
 		</div>
 		<div id="bp-hello-backdrop" style="display: none;"></div>
 		<div id="bp-hello-container" class="bp-hello-recaptcha" role="dialog" aria-labelledby="bp-hello-title" style="display: none;">
@@ -595,7 +614,8 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				</div>
 			</div>
 			<div class="bp-hello-content">
-				<div id="bp-hello-content-recaptcha_v3" class="bp-hello-recaptcha-content-container <?php echo 'recaptcha_v3' === $enabled_for ? '' : 'bp-hide'; ?>">
+				<div id="bp-hello-content-recaptcha_v3" class="bp-hello-recaptcha-content-container <?php echo esc_attr( $v3_class ); ?>">
+					<div id="bp-hello-content-v2_invisible_badge"></div>
 					<div class="verifying_token">
 						<img src="<?php echo bb_recaptcha_integration_url( 'assets/images/recaptcha.png' ); ?>"/>
 						<p>
@@ -608,10 +628,8 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 						</p>
 					</div>
 				</div>
-				<div id="bp-hello-content-recaptcha_v2" class="bp-hello-recaptcha-content-container <?php echo 'recaptcha_v2' === $enabled_for ? '' : 'bp-hide'; ?>">
-					<div class="verifying_token" id="verifying_token">
-
-					</div>
+				<div id="bp-hello-content-recaptcha_v2" class="bp-hello-recaptcha-content-container <?php echo esc_attr( $v2_class ); ?>">
+					<div class="verifying_token" id="verifying_token"></div>
 				</div>
 				<div class="bb-popup-buttons">
 					<button type="submit" id="recaptcha_submit" class="button button-primary" disabled="disabled">

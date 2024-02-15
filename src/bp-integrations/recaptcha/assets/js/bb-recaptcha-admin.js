@@ -44,16 +44,18 @@
 		recaptchaVersion: function ( event ) {
 			event.preventDefault();
 
-			if ( 'recaptcha_v2' === event.currentTarget.value ) {
+			var v2_option = $( 'input[name="bb_recaptcha[v2_option]"]:checked' ).val();
+
+			if ( 'recaptcha_v3' === event.currentTarget.value || 'v2_invisible_badge' === v2_option ) {
+				$( '.recaptcha_v3' ).removeClass( 'bp-hide' );
+				$( '.recaptcha_v2' ).addClass( 'bp-hide' );
+				$( '#bp-hello-content-recaptcha_v2' ).addClass( 'bp-hide' );
+				$( '#bp-hello-content-recaptcha_v3' ).removeClass( 'bp-hide' );
+			} else {
 				$( '.recaptcha_v2' ).removeClass( 'bp-hide' );
 				$( '.recaptcha_v3' ).addClass( 'bp-hide' );
 				$( '#bp-hello-content-recaptcha_v2' ).removeClass( 'bp-hide' );
 				$( '#bp-hello-content-recaptcha_v3' ).addClass( 'bp-hide' );
-			} else {
-				$( '.recaptcha_v2' ).addClass( 'bp-hide' );
-				$( '.recaptcha_v3' ).removeClass( 'bp-hide' );
-				$( '#bp-hello-content-recaptcha_v2' ).addClass( 'bp-hide' );
-				$( '#bp-hello-content-recaptcha_v3' ).removeClass( 'bp-hide' );
 			}
 		},
 
@@ -66,9 +68,13 @@
 			if ( 'v2_checkbox' === event.currentTarget.value ) {
 				$( '.recaptcha_v2_checkbox' ).removeClass( 'bp-hide' );
 				$( '.recaptcha_v2_invisible' ).addClass( 'bp-hide' );
+				$( '#bp-hello-content-recaptcha_v2' ).removeClass( 'bp-hide' );
+				$( '#bp-hello-content-recaptcha_v3' ).addClass( 'bp-hide' );
 			} else {
 				$( '.recaptcha_v2_invisible' ).removeClass( 'bp-hide' );
 				$( '.recaptcha_v2_checkbox' ).addClass( 'bp-hide' );
+				$( '#bp-hello-content-recaptcha_v2' ).addClass( 'bp-hide' );
+				$( '#bp-hello-content-recaptcha_v3' ).removeClass( 'bp-hide' );
 			}
 
 		},
@@ -110,12 +116,22 @@
 			self.secret_key = $( '#bb-recaptcha-secret-key' ).val();
 			window.bb_recaptcha_script = document.createElement('script');
 
+			if ( $( 'input[name="bb_recaptcha[v2_option]"]' ).length ) {
+				self.v2_option = $( 'input[name="bb_recaptcha[v2_option]"]:checked' ).val();
+			}
+
+			var selector = this.fetchSelector();
+
 			if ( 'recaptcha_v3' === self.selected_version ) {
 				window.bb_recaptcha_script.src = 'https://www.google.com/recaptcha/api.js?onload=bb_recaptcha_v3_verify&render=' + self.site_key;
 			}
-			if ( 'recaptcha_v2' === self.selected_version ) {
-				self.v2_option = $( 'input[name="bb_recaptcha[v2_option]"]:checked' ).val();
-				window.bb_recaptcha_script.src = 'https://www.google.com/recaptcha/api.js?onload=bb_recaptcha_v2_verify&render=explicit';
+			if ( 'recaptcha_v2' === self.selected_version && self.v2_option ) {
+				if ( 'v2_checkbox' === self.v2_option ) {
+					window.bb_recaptcha_script.src = 'https://www.google.com/recaptcha/api.js?onload=bb_recaptcha_v2_verify&render=explicit';
+				}
+				if ( 'v2_invisible_badge' === self.v2_option ) {
+					window.bb_recaptcha_script.src = 'https://www.google.com/recaptcha/api.js?onload=bb_recaptcha_v2_verify_invisible&render=explicit';
+				}
 			}
 
 			window.bb_recaptcha_script.onerror = function () {
@@ -127,8 +143,8 @@
 					grecaptcha.ready( function () {
 						grecaptcha.execute( self.site_key, { action: 'submit' } ).then( function ( token ) {
 							self.captcha_response = token;
-							$( '#bp-hello-content-' + self.selected_version + ' .verifying_token' ).hide();
-							$( '#bp-hello-content-' + self.selected_version + ' .verified_token' ).show();
+							$( '#' + selector + ' .verifying_token' ).hide();
+							$( '#' + selector + ' .verified_token' ).show();
 						} );
 					} );
 				}
@@ -142,6 +158,20 @@
 						self.captcha_response = grecaptcha.getResponse( window.bb_recaptcha_box );
 					},
 				} );
+			};
+
+			window.bb_recaptcha_v2_verify_invisible = function () {
+				window.bb_recaptcha_invisible = grecaptcha.render( 'bp-hello-content-v2_invisible_badge', {
+					sitekey: self.site_key,
+					tabindex : 9999,
+					size: 'invisible',
+					callback: ( token ) => {
+						self.captcha_response = token;
+						$( '#' + selector + ' .verifying_token' ).hide();
+						$( '#' + selector + ' .verified_token' ).show();
+					},
+				} );
+				grecaptcha.execute();
 			};
 
 			$( '#recaptcha_submit' ).removeAttr( 'disabled' );
@@ -164,6 +194,8 @@
 			if ( self.v2_option ) {
 				data[ 'v2_option' ] = self.v2_option;
 			}
+
+			var selector = this.fetchSelector();
 			$.ajax(
 				{
 					type: 'POST',
@@ -172,13 +204,17 @@
 					success: function ( response ) {
 						$( event.currentTarget ).removeAttr( 'disabled' );
 						if ( response.success && typeof response.data !== 'undefined' ) {
-							$( '#bp-hello-content-' + self.selected_version ).html( response.data );
+							$( '#' + selector ).html( response.data );
 							$( '.bb-popup-buttons' ).html( '<button id="recaptcha_verified" class="button">OK</button>' );
 							document.head.removeChild( window.bb_recaptcha_script );
 							window.bb_recaptcha_script = null;
 							window.bb_recaptcha_v3_verify = null;
+							window.bb_recaptcha_box = null;
+							window.bb_recaptcha_v2_verify = null;
+							window.bb_recaptcha_invisible = null;
+							window.bb_recaptcha_v2_verify_invisible = null;
 						} else {
-							$( '#bp-hello-content-' + self.selected_version ).html( response.data );
+							$( '#' + selector ).html( response.data );
 							$( '.bb-popup-buttons' ).html( '<button id="recaptcha_cancel" class="button">Cancel</button>' );
 						}
 					}
@@ -194,6 +230,23 @@
 		recaptchaVerificationPopupClose: function ( event ) {
 			event.preventDefault();
 			window.location.reload();
+		},
+
+		fetchSelector: function () {
+			if (
+				'recaptcha_v3' === self.selected_version ||
+				(
+					'recaptcha_v2' === self.selected_version &&
+					self.v2_option &&
+					'v2_invisible_badge' === self.v2_option
+				)
+			) {
+				selector = 'bp-hello-content-recaptcha_v3'
+			} else {
+				selector = 'bp-hello-content-recaptcha_v2'
+			}
+
+			return selector;
 		}
 	};
 
