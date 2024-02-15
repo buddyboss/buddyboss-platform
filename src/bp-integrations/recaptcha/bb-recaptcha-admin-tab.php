@@ -84,11 +84,16 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$bb_recaptcha = isset( $_POST['bb_recaptcha'] ) ? map_deep( wp_unslash( $_POST['bb_recaptcha'] ), 'sanitize_text_field' ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
+		// Fetch settings data.
+		$settings = bb_recaptcha_options();
+		$settings = ! empty( $settings ) ? $settings : array();
+
 		if ( ! empty( $bb_recaptcha ) ) {
 			if ( ! empty( $bb_recaptcha['exclude_ip'] ) ) {
 				$bb_recaptcha['exclude_ip'] = sanitize_textarea_field( wp_unslash( $_POST['bb_recaptcha']['exclude_ip'] ) );
 			}
 
+			$bb_recaptcha = bp_parse_args( $bb_recaptcha, $settings );
 			bp_update_option( 'bb_recaptcha', $bb_recaptcha );
 		}
 
@@ -145,8 +150,8 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$status      = 'not-connected';
 		$status_text = __( 'Not Connected', 'buddyboss' );
-		$verified    = bp_get_option( 'bb_recaptcha_verified' );
-		if ( ! empty( $verified ) && true === (bool) $verified ) {
+		$verified    = bb_recaptcha_connection_status();
+		if ( ! empty( $verified ) && 'connected' === $verified ) {
 			$status      = 'connected';
 			$status_text = __( 'Connected', 'buddyboss' );
 		}
