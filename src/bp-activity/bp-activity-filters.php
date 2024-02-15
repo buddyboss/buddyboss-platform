@@ -3695,3 +3695,5 @@ function bp_activity_add_modal_template() {
 }
 
 add_action( 'bp_after_directory_activity_list', 'bp_activity_add_modal_template' );
+add_action( 'bp_after_group_activity_content', 'bp_activity_add_modal_template' );
+add_action( 'bp_after_member_activity_content', 'bp_activity_add_modal_template' );
