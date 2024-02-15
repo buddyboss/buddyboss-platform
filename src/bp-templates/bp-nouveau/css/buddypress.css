@@ -4510,6 +4510,35 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
   left: -60px;
 }
 
+.activity-list .emojionearea .emojionearea-picker {
+  height: 310px;
+}
+
+.activity-list .emojionearea .emojionearea-picker .emojionearea-wrapper {
+  height: 310px;
+}
+
+.activity-list .emojionearea .emojionearea-picker .emojionearea-search-panel + .emojionearea-scroll-area {
+  height: 230px;
+}
+
+.activity-list .emojionearea .emojionearea-button.active + .emojionearea-picker-position-top {
+  margin-top: -300px;
+}
+
+.activity-list .emojionearea .emojionearea-picker.emojionearea-picker-position-top .emojionearea-wrapper:after {
+  right: 82px;
+}
+
+.activity-list .emojionearea-button.active + .emojionearea-picker-position-top {
+  right: -80px;
+}
+
+.activity-list .gif-media-search-dropdown {
+  top: initial;
+  bottom: 35px;
+}
+
 /* Activity comment modal ==> Starts Here */
 .acomments-modal-open {
   overflow: hidden;
@@ -4533,7 +4562,6 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
   max-width: 700px;
   width: 700px;
   position: relative;
-  overflow: hidden;
 }
 
 .bb-activity-model-wrapper .activity-modal {
@@ -4551,6 +4579,27 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
 
 .bb-activity-model-wrapper .activity-list .activity-item .acomment-display .ac-emotions_list.active {
   left: -10px;
+}
+
+body:not(.bb-is-mobile) .bb-activity-model-wrapper .activity-list .activity-item .acomment-display .ac-emotions_list:hover {
+  left: -10px;
+}
+
+.bb-activity-model-wrapper .gif-media-search-dropdown {
+  top: initial;
+  bottom: 35px;
+}
+
+.bb-activity-model-wrapper .gif-media-search-dropdown .gif-search-results {
+  min-height: 220px;
+  max-height: 260px;
+}
+
+@media screen and (max-height: 540px) {
+  .bb-activity-model-wrapper .gif-media-search-dropdown .gif-search-results {
+    min-height: 190px;
+    max-height: 190px;
+  }
 }
 
 .bb-modal-activity-header {
@@ -4596,7 +4645,7 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   position: relative;
   padding: 15px;
   max-height: calc(85vh - 62px);
-  overflow-y: auto;
+  /*overflow-y: auto;*/
   overflow-x: hidden;
 }
 
