@@ -2796,8 +2796,11 @@ function bb_activity_has_comment_reply_access( $can_comment, $comment ) {
 		$can_comment = false;
 	}
 
+	// Get the main activity.
+	$main_activity = new BP_Activity_Activity( $comment->item_id );
+
 	// Disallow replies if threading disabled or depth condition is matched.
-	if ( 'blogs' === bp_get_activity_object_name() ) {
+	if ( isset( $main_activity->component ) && 'blogs' === $main_activity->component ) {
 		if (
 			false === get_option( 'thread_comments' ) ||
 			$comment->depth >= get_option( 'thread_comments_depth' )
