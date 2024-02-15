@@ -349,13 +349,13 @@ window.bp = window.bp || {};
 
 					// Add after pinned post.
 					$( first_activity ).after( this.heartbeat_data.newest ).find( 'li.activity-item' ).each( bp.Nouveau.hideSingleUrl ).trigger( 'bp_heartbeat_prepend', this.heartbeat_data );
-					
+
 				} else {
 
 					// Now the stream is cleaned, prepend newest.
 					$( event.delegateTarget ).find( '.activity-list' ).prepend( this.heartbeat_data.newest ).find( 'li.activity-item' ).each( bp.Nouveau.hideSingleUrl ).trigger( 'bp_heartbeat_prepend', this.heartbeat_data );
 				}
-				
+
 				// Reset the newest activities now they're displayed.
 				this.heartbeat_data.newest = '';
 
@@ -1681,6 +1681,83 @@ window.bp = window.bp || {};
 								if ( 'all' === scope && update_pinned_icon ) {
 									bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
 									bp.Nouveau.refreshActivities();
+								}
+							}
+
+							$( document ).trigger(
+								'bb_trigger_toast_message',
+								[
+									'',
+									'<div>' + response.data.feedback + '</div>',
+									'success',
+									null,
+									true
+								]
+							);
+						}
+					}
+				).fail(
+					function() {
+						target.closest( '.activity-item' ).removeClass( 'loading-pin' );
+						$( document ).trigger(
+							'bb_trigger_toast_message',
+							[
+								'',
+								'<div>' + BP_Nouveau.activity.strings.pinPostError + '</div>',
+								'error',
+								null,
+								true
+							]
+						);
+					}
+				);
+			}
+
+			if ( target.hasClass( 'bb-icon-bell-slash' ) || target.hasClass( 'bb-icon-bell' ) ) {
+				// Stop event propagation.
+				event.preventDefault();
+
+				if ( ! activity_id ) {
+					return event;
+				}
+				target.closest( '.activity-item' ).addClass( 'loading-mute' );
+
+				var notification_toggle_action = 'mute';
+				if ( target.hasClass( 'bb-icon-bell' ) ) {
+					notification_toggle_action = 'unmute';
+				}
+
+				parent.ajax(
+					{
+						action     : 'toggle_activity_notification_status',
+						id         : activity_id,
+						notification_toggle_action : notification_toggle_action
+					},
+					'activity'
+				).done(
+					function( response ) {
+						target.closest( '.activity-item' ).removeClass( 'loading-mute' );
+
+						// Check for JSON output.
+						if ( 'object' !== typeof response ) {
+							response = JSON.parse( response );
+						}
+
+						if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.feedback ) {
+
+							if ( response.success ) {
+								// Change the pinned class and label.
+								if ( 'mute' === notification_toggle_action ) {
+									target.closest( 'li.activity-item' ).addClass( 'bb-muted' );
+									target.removeClass( 'bb-icon-bell-slash' );
+									target.addClass( 'bb-icon-bell' );
+
+									target.find('span').html( BP_Nouveau.activity.strings.unmuteNotification );
+								} else if ( 'unmute' === notification_toggle_action ) {
+									target.closest( 'li.activity-item' ).removeClass( 'bb-muted' );
+									target.removeClass( 'bb-icon-bell' );
+									target.addClass( 'bb-icon-bell-slash' );
+									target.find('span').html( BP_Nouveau.activity.strings.muteNotification );
 								}
 							}
 

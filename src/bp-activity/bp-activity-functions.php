@@ -2960,7 +2960,7 @@ function bp_activity_new_comment( $args = '' ) {
 			}
 		}
 	}
-	
+
 	// Maybe set current activity ID as the parent.
 	if ( empty( $r['parent_id'] ) ) {
 		$r['parent_id'] = $r['activity_id'];
@@ -6503,4 +6503,74 @@ function bb_load_reaction_popup_modal_js_template() {
 	) {
 		bp_get_template_part( 'common/js-templates/activity/parts/bb-activity-reactions-popup' );
 	}
+}
+
+/**
+ * Set activity notification status.
+ *
+ * @param array $args Array of Arguments.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+
+function bb_toggle_activity_notification_status( $args = array() ) {
+	$r = bp_parse_args(
+		$args,
+		array(
+			'action'      => 'mute',
+			'activity_id' => 0,
+			'user_id'     => bp_loggedin_user_id(),
+		)
+	);
+
+	$retval   = '';
+	$activity = new BP_Activity_Activity( (int) $r['activity_id'] );
+
+	if ( ! empty( $activity->id ) ) {
+		$activity_mute_notification_meta = bp_activity_get_meta( $activity->id, 'muted_notification_users' );
+		if ( 'mute' === $r['action'] ) {
+
+			// Check if existing metadata is an array, initialize an empty array if not.
+			if ( ! is_array( $activity_mute_notification_meta ) ) {
+				$activity_mute_notification_meta = array();
+			}
+
+			if ( in_array( $r['user_id'], $activity_mute_notification_meta ) ) {
+				return 'already_muted';
+			}
+
+			// Add the new user ID to the existing data array.
+			$activity_mute_notification_meta[] = $r['user_id'];
+
+			// Update metadata in the database.
+			bp_activity_update_meta( $activity->id, 'muted_notification_users', $activity_mute_notification_meta );
+			$retval = 'mute';
+		}
+
+		if ( 'unmute' === $r['action'] ) {
+
+			if ( is_array( $activity_mute_notification_meta ) && in_array( $r['user_id'], $activity_mute_notification_meta ) ) {
+				// Remove the user ID from the existing data array
+				$activity_mute_notification_meta = array_diff( $activity_mute_notification_meta, array( $r['user_id'] ) );
+
+				// Update metadata in the database.
+				bp_activity_update_meta( $activity->id, 'muted_notification_users', $activity_mute_notification_meta );
+				$retval = 'unmute';
+			}
+		}
+
+		/**
+		 * Fires after activity mute/unmute activity.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int    $activity_id Activity ID.
+		 * @param string $action      Action type mute/unmute.
+		 */
+		do_action( 'bb_activity_mute_unmute_notification', $activity->id, $r['action'] );
+	}
+
+	return $retval;
 }
