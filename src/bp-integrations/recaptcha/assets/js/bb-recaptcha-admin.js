@@ -31,13 +31,24 @@
 		},
 
 		enableVerifyButton: function ( event ) {
-			if (
-				'' !== $( '#bb-recaptcha-site-key' ).val().trim() &&
-				'' !== $( '#bb-recaptcha-secret-key' ).val().trim()
-			) {
+			var current_value = event.currentTarget.value.trim();
+			var old_value = event.currentTarget.getAttribute( 'data-old-value' ).trim();
+			if ( '' !== current_value ) {
 				$( '.recaptcha-verification' ).removeAttr( 'disabled' );
+				$( '.bb-recaptcha-settings form .submit input' ).attr( 'disabled', 'disabled' );
+				if (
+					'' !== $( 'input[name="bb_recaptcha[recaptcha_version]"]:checked' ).val() &&
+					current_value !== old_value
+				) {
+					$( '.recaptcha-verification' ).removeAttr( 'disabled' );
+					$( '.bb-recaptcha-settings form .submit input' ).attr( 'disabled', 'disabled' );
+				} else {
+					$( '.recaptcha-verification' ).attr( 'disabled', 'disabled' );
+					$( '.bb-recaptcha-settings form .submit input' ).removeAttr( 'disabled' );
+				}
 			} else {
 				$( '.recaptcha-verification' ).attr( 'disabled', 'disabled' );
+				$( '.bb-recaptcha-settings form .submit input' ).removeAttr( 'disabled' );
 			}
 		},
 

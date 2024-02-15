@@ -543,7 +543,11 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		$site_key = bb_recaptcha_site_key();
 		?>
 		<div class="password-toggle">
-			<input name="bb_recaptcha[site_key]" id="bb-recaptcha-site-key" type="password" value="<?php echo esc_html( $site_key ); ?>" aria-label="<?php esc_html_e( 'Site Key', 'buddyboss' ); ?>" required />
+			<input name="bb_recaptcha[site_key]" id="bb-recaptcha-site-key" type="password"
+			       value="<?php echo esc_html( $site_key ); ?>"
+			       aria-label="<?php esc_html_e( 'Site Key', 'buddyboss' ); ?>"
+			       data-old-value="<?php echo esc_html( $site_key ); ?>"
+			/>
 			<button type="button" class="button button-secondary bb-hide-pw hide-if-no-js" data-toggle="0">
 				<span class="bb-icon bb-icon-eye-small" aria-hidden="true"></span>
 			</button>
@@ -560,7 +564,11 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		$secret_key = bb_recaptcha_secret_key();
 		?>
 		<div class="password-toggle">
-			<input name="bb_recaptcha[secret_key]" id="bb-recaptcha-secret-key" type="password" value="<?php echo esc_html( $secret_key ); ?>" aria-label="<?php esc_html_e( 'Secret Key', 'buddyboss' ); ?>" required />
+			<input name="bb_recaptcha[secret_key]" id="bb-recaptcha-secret-key" type="password"
+			       value="<?php echo esc_html( $secret_key ); ?>"
+			       aria-label="<?php esc_html_e( 'Secret Key', 'buddyboss' ); ?>"
+			       data-old-value="<?php echo esc_html( $secret_key ); ?>"
+			/>
 			<button type="button" class="button button-secondary bb-hide-pw hide-if-no-js" data-toggle="0">
 				<span class="bb-icon bb-icon-eye-small" aria-hidden="true"></span>
 			</button>
@@ -574,6 +582,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function setting_callback_recaptcha_verify() {
+		$verified       = bb_recaptcha_connection_status();
 		$site_key       = bb_recaptcha_site_key();
 		$secret_key     = bb_recaptcha_secret_key();
 		$verify_disable = '';
@@ -600,7 +609,8 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		}
 		?>
 		<div class="show-verify">
-			<button type="button" class="button recaptcha-verification" <?php echo esc_attr( $verify_disable ); ?>>
+			<button type="button" class="button recaptcha-verification" <?php echo esc_attr( $verify_disable ); ?>
+				<?php echo ! empty( $verified ) && 'connected' === $verified ? ' disabled="disabled"' : ''; ?>>
 				<?php esc_html_e( 'Verify', 'buddyboss' ); ?>
 			</button>
 		</div>
