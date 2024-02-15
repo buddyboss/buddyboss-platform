@@ -163,6 +163,11 @@
 			.verifying_token {
 				display: inline-block;
 			}
+
+			.grecaptcha-badge {
+				position: static !important;
+				margin: 0 auto;
+			}
 		}
 
 	}

@@ -150,6 +150,11 @@
   display: inline-block;
 }
 
+#bb_recaptcha_versions .bp-hello-recaptcha .bp-hello-recaptcha-content-container .grecaptcha-badge {
+  position: static !important;
+  margin: 0 auto;
+}
+
 #bb_recaptcha_versions #bp-hello-container.bp-hello-recaptcha {
   top: 50%;
   bottom: initial;

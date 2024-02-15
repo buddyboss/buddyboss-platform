@@ -130,6 +130,7 @@
 					window.bb_recaptcha_script.src = 'https://www.google.com/recaptcha/api.js?onload=bb_recaptcha_v2_verify&render=explicit';
 				}
 				if ( 'v2_invisible_badge' === self.v2_option ) {
+					$( '#bp-hello-content-recaptcha_v3 .verifying_token' ).html('');
 					window.bb_recaptcha_script.src = 'https://www.google.com/recaptcha/api.js?onload=bb_recaptcha_v2_verify_invisible&render=explicit';
 				}
 			}
