@@ -162,7 +162,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'notice'            => sprintf(
 				/* translators: recaptcha link */
 					__( 'Check reCAPTCHA %s for usage statistics and monitor its performance. Adjust settings if necessary to maintain security.', 'buddyboss' ),
-					'<a href="#" target="_blank">' . esc_html__( 'Admin Console', 'buddyboss' ) . '</a>'
+					'<a href="https://www.google.com/recaptcha/admin" target="_blank">' . esc_html__( 'Admin Console', 'buddyboss' ) . '</a>'
 				),
 			),
 			'bb_recaptcha_settings' => array(
@@ -391,7 +391,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			printf(
 			/* translators: recaptcha link */
 				esc_html__( 'Enter your %s to integrate fraud, spam, and abuse protection into your website.', 'buddyboss' ),
-				'<a href="#" target="_blank">' . esc_html__( 'Google reCAPTCHA API keys', 'buddyboss' ) . '</a>'
+				'<a href="https://www.google.com/recaptcha/admin#list" target="_blank">' . esc_html__( 'Google reCAPTCHA API keys', 'buddyboss' ) . '</a>'
 			)
 		?>
 		</div>
