@@ -574,7 +574,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	public function setting_callback_recaptcha_verify() {
 		?>
 		<div class="show-verify">
-			<button class="button recaptcha-verification"> <?php esc_html_e( 'Verify', 'buddyboss' ); ?></button>
+			<button class="button recaptcha-verification" disabled="disabled"> <?php esc_html_e( 'Verify', 'buddyboss' ); ?></button>
 		</div>
 		<div id="bp-hello-backdrop" style="display: none;"></div>
 		<div id="bp-hello-container" class="bp-hello-recaptcha" role="dialog" aria-labelledby="bp-hello-title" style="display: none;">
@@ -587,18 +587,25 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			</div>
 			<div class="bp-hello-content">
 				<div id="bp-hello-recaptcha-content" class="bp-hello-recaptcha-content-container">
-					<img src="<?php echo bb_recaptcha_integration_url( 'assets/images/recaptcha.png' ); ?>" />
-					<p>
-						<?php esc_html_e( 'Verifying reCAPTCHA token', 'buddyboss' ); ?>
-					</p>
+					<div class="verifying_token">
+						<img src="<?php echo bb_recaptcha_integration_url( 'assets/images/recaptcha.png' ); ?>"/>
+						<p>
+							<?php esc_html_e( 'Verifying reCAPTCHA token', 'buddyboss' ); ?>
+						</p>
+					</div>
+					<div class="verified_token" style="display:none;">
+						<p>
+							<?php esc_html_e( 'reCAPTCHA token is ready, click Submit to verify', 'buddyboss' ); ?>
+						</p>
+					</div>
 				</div>
 				<div class="bb-popup-buttons">
-					<a href="javascript:void(0);" id="recaptcha_submit" class="button button-primary" disabled="disabled">
+					<button type="submit" id="recaptcha_submit" class="button button-primary" disabled="disabled">
 						<?php esc_html_e( 'Submit', 'buddyboss' ); ?>
-					</a>
-					<a href="javascript:void(0);" id="recaptcha_cancel" class="button">
+					</button>
+					<button id="recaptcha_cancel" class="button">
 						<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>
-					</a>
+					</button>
 				</div>
 			</div>
 		</div>
