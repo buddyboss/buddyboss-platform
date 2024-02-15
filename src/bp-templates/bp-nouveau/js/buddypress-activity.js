@@ -530,7 +530,6 @@ window.bp = window.bp || {};
 			var currentTargetList = $( event.currentTarget ).parent(),
 					parentId = currentTargetList.data( 'parent_comment_id' ),
 					activityId  = $( currentTargetList ).data( 'activity_id' );
-			$( event.currentTarget ).parents( '.activity-comments' ).children('.view-more-comments').remove();
 
 			$( event.currentTarget ).parents( '.activity-comments' ).find( '.ac-form' ).each( function() {
 				var form = $( this );
