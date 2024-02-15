@@ -46,6 +46,7 @@ class BB_Recaptcha_Integration extends BP_Integration {
 
 		$includes = array(
 			'actions',
+			'filters',
 			'functions',
 		);
 
