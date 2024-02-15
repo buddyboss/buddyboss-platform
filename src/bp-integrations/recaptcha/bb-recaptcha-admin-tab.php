@@ -523,11 +523,13 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	public function setting_callback_recaptcha_v2_option() {
 		$v2_option = bb_recaptcha_recaptcha_v2_option();
 		?>
-		<div class="recaptcha-version-fields">
+		<div class="recaptcha-version-fields recaptcha-v2-fields">
 			<input type="radio" name="bb_recaptcha[v2_option]" id="v2_checkbox" value="v2_checkbox" <?php checked( $v2_option, 'v2_checkbox' ); ?>>
 			<label for="v2_checkbox"><?php esc_html_e( 'Checkbox', 'buddyboss' ); ?></label>
 			<input type="radio" name="bb_recaptcha[v2_option]" id="v2_invisible_badge" value="v2_invisible_badge" <?php checked( $v2_option, 'v2_invisible_badge' ); ?>>
 			<label for="v2_invisible_badge"><?php esc_html_e( 'Invisible Badge', 'buddyboss' ); ?></label>
+			<p class="description v2_checkbox_description <?php echo 'v2_checkbox' === $v2_option ? '' : 'bp-hide'; ?>"><?php esc_html_e( 'Validate request with the "I\'m not a robot" checkbox', 'buddyboss' ); ?></p>
+			<p class="description v2_invisible_badge_description <?php echo 'v2_invisible_badge' === $v2_option ? '' : 'bp-hide'; ?>"><?php esc_html_e( 'Shows invisible reCaptcha badge. It is invoked directly when the user clicks on an existing button on your site.', 'buddyboss' ); ?></p>
 		</div>
 		<?php
 	}
@@ -572,9 +574,16 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function setting_callback_recaptcha_verify() {
+		$site_key       = bb_recaptcha_site_key();
+		$secret_key     = bb_recaptcha_secret_key();
+		$verify_disable = '';
+		if ( empty( $site_key ) && empty( $secret_key ) ) {
+			$verify_disable = 'disabled="disabled"';
+		}
+		$enabled_for = bb_recaptcha_recaptcha_versions();
 		?>
 		<div class="show-verify">
-			<button class="button recaptcha-verification" disabled="disabled"> <?php esc_html_e( 'Verify', 'buddyboss' ); ?></button>
+			<button class="button recaptcha-verification" <?php echo esc_attr( $verify_disable ); ?>> <?php esc_html_e( 'Verify', 'buddyboss' ); ?></button>
 		</div>
 		<div id="bp-hello-backdrop" style="display: none;"></div>
 		<div id="bp-hello-container" class="bp-hello-recaptcha" role="dialog" aria-labelledby="bp-hello-title" style="display: none;">
@@ -586,7 +595,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				</div>
 			</div>
 			<div class="bp-hello-content">
-				<div id="bp-hello-recaptcha-content" class="bp-hello-recaptcha-content-container">
+				<div id="bp-hello-content-recaptcha_v3" class="bp-hello-recaptcha-content-container <?php echo 'recaptcha_v3' === $enabled_for ? '' : 'bp-hide'; ?>">
 					<div class="verifying_token">
 						<img src="<?php echo bb_recaptcha_integration_url( 'assets/images/recaptcha.png' ); ?>"/>
 						<p>
@@ -597,6 +606,11 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 						<p>
 							<?php esc_html_e( 'reCAPTCHA token is ready, click Submit to verify', 'buddyboss' ); ?>
 						</p>
+					</div>
+				</div>
+				<div id="bp-hello-content-recaptcha_v2" class="bp-hello-recaptcha-content-container <?php echo 'recaptcha_v2' === $enabled_for ? '' : 'bp-hide'; ?>">
+					<div class="verifying_token" id="verifying_token">
+
 					</div>
 				</div>
 				<div class="bb-popup-buttons">
