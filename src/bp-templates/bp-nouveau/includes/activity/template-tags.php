@@ -1943,7 +1943,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	}
 
 	$notification_type = bb_activity_enabled_notification( 'bb_activity_comment', bp_loggedin_user_id() );
-	if ( ! empty( array_filter( $notification_type ) ) ) {
+	if ( ! empty( $notification_type ) && ! empty( array_filter( $notification_type ) ) ) {
 
 		$unmute_action_class        = 'bb-icon-bell-slash';
 		$unmute_action_label        = __( 'Turn Off Notification', 'buddyboss' );
