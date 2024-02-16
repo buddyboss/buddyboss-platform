@@ -1942,41 +1942,38 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		);
 	}
 
-	if ( ( bb_web_notification_enabled() || bb_web_push_notification_enabled() ) && ( bb_is_notification_type_enabled( 'bb_activity_comment', 'email' ) || bb_is_notification_type_enabled( 'bb_activity_comment', 'web' ) ) ) {
-		$notification_type = bb_is_notification_preferences_types_enabled( 'bb_activity_comment', bp_loggedin_user_id() );
+	$notification_type = bb_activity_enabled_notification( 'bb_activity_comment', bp_loggedin_user_id() );
+	if ( ! empty( array_filter( $notification_type ) ) ) {
 
-		if ( $notification_type['email'] || $notification_type['web'] ) {
-			$unmute_action_class = 'bb-icon-bell-slash';  // bb-icon-bell
-			$unmute_action_label = __( 'Turn Off Notification', 'buddyboss' );
+		$unmute_action_class        = 'bb-icon-bell-slash';
+		$unmute_action_label        = __( 'Turn Off Notification', 'buddyboss' );
+		$activity_mute_notification = bp_activity_get_meta( $activity_id, 'muted_notification_users' );
 
-			$activity_mute_notification = bp_activity_get_meta( $activity_id, 'muted_notification_users' );
-
-			if ( ! empty( $activity_mute_notification ) && is_array( $activity_mute_notification ) ) {
-				if ( in_array( bp_loggedin_user_id(), $activity_mute_notification ) ) {
-					$unmute_action_class = 'bb-icon-bell';
-					$unmute_action_label = __( 'Turn On Notification', 'buddyboss' );
-				}
+		if ( ! empty( $activity_mute_notification ) && is_array( $activity_mute_notification ) ) {
+			if ( in_array( bp_loggedin_user_id(), $activity_mute_notification, true ) ) {
+				$unmute_action_class = 'bb-icon-bell';
+				$unmute_action_label = __( 'Turn On Notification', 'buddyboss' );
 			}
-
-			$buttons['turn_on_off_notification'] = array(
-				'id'                => 'turn_on_off_notification',
-				'component'         => 'activity',
-				'parent_element'    => $parent_element,
-				'parent_attr'       => $parent_attr,
-				'must_be_logged_in' => true,
-				'button_element'    => $button_element,
-				'button_attr'       => array(
-					'href'  => '#',
-					'class' => 'button edit bp-secondary-action bp-tooltip ' . $unmute_action_class,
-					'title' => $unmute_action_label,
-				),
-				'link_text'         => sprintf(
-					'<span class="bp-screen-reader-text">%1$s</span><span class="turn-off-notification-label">%2$s</span>',
-					$unmute_action_label,
-					$unmute_action_label
-				),
-			);
 		}
+
+		$buttons['turn_on_off_notification'] = array(
+			'id'                => 'turn_on_off_notification',
+			'component'         => 'activity',
+			'parent_element'    => $parent_element,
+			'parent_attr'       => $parent_attr,
+			'must_be_logged_in' => true,
+			'button_element'    => $button_element,
+			'button_attr'       => array(
+				'href'  => '',
+				'class' => 'button edit bp-secondary-action bp-tooltip ' . $unmute_action_class,
+				'title' => $unmute_action_label,
+			),
+			'link_text'         => sprintf(
+				'<span class="bp-screen-reader-text">%1$s</span><span class="turn-off-notification-label">%2$s</span>',
+				$unmute_action_label,
+				$unmute_action_label
+			),
+		);
 	}
 
 	/**

@@ -2759,7 +2759,7 @@ function bp_get_activity_css_class() {
 	}
 
 	$activity_mute_notification_meta = bp_activity_get_meta( bp_get_activity_id(), 'muted_notification_users' );
-	if ( is_array( $activity_mute_notification_meta ) && in_array( bp_loggedin_user_id(), $activity_mute_notification_meta ) ) {
+	if ( is_array( $activity_mute_notification_meta ) && in_array( bp_loggedin_user_id(), $activity_mute_notification_meta, true ) ) {
 		$class .= ' bb-muted';
 	}
 

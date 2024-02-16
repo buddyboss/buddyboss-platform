@@ -7074,49 +7074,6 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 }
 
 /**
- * Check Email Notification Preference type is enabled.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $field_type   Field type.
- * @param int    $user_id      User id.
- *
- * @return array list of options.
- */
-function bb_is_notification_preferences_types_enabled( $field_type, $user_id = 0 ) {
-	$options                  = array();
-	$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
-
-	$email_checked = bp_get_user_meta( $user_id, $field_type, true );
-	if ( empty( $email_checked ) ) {
-		$email_checked = $enabled_all_notification[ $field_type ]['email'] ?? $field['default'];
-	}
-
-	$options['email'] = 'yes' === $email_checked;
-
-	if ( bb_web_notification_enabled() ) {
-		$web_checked = bp_get_user_meta( $user_id, $field_type . '_web', true );
-		if ( empty( $web_checked ) ) {
-			$web_checked = $enabled_all_notification[ $field_type ]['web'] ?? $field['default'];
-		}
-
-		$options['web'] = 'yes' === $web_checked;
-	}
-
-	if ( bb_app_notification_enabled() ) {
-		$app_checked = bp_get_user_meta( $user_id, $field_type . '_app', true );
-		if ( empty( $app_checked ) ) {
-			$app_checked = $enabled_all_notification[ $field_type ]['app'] ?? $field['default'];
-		}
-
-		$options['app'] = 'yes' === $app_checked;
-	}
-
-	return apply_filters( 'bb_is_notification_types_enabled', $options );
-
-}
-
-/**
  * Check the notification registered with specific notification type.
  *
  * @since BuddyBoss 1.9.3
