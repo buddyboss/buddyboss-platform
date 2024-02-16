@@ -3,6 +3,7 @@
 	var BB_Recaptcha = {
 
 		init: function () {
+			var self = this;
 
 			this.setupGlobals();
 
@@ -11,11 +12,11 @@
 		},
 
 		setupGlobals: function () {
-			this.selected_version = '';
-			this.v2_option = '';
-			this.site_key = '';
-			this.secret_key = '';
-			this.captcha_response = '';
+			self.selected_version = $( 'input[name="bb_recaptcha[recaptcha_version]"]:checked' ).val();
+			self.v2_option = $( '.recaptcha_v2:visible input[name="bb_recaptcha[v2_option]"]:checked' ).val();
+			self.site_key = '';
+			self.secret_key = '';
+			self.captcha_response = '';
 		},
 
 		addListeners: function () {
@@ -31,6 +32,7 @@
 		},
 
 		enableVerifyButton: function ( event ) {
+			// Enable/disable verify button and submit button.
 			var current_value = event.currentTarget.value.trim();
 			var old_value = event.currentTarget.getAttribute( 'data-old-value' ).trim();
 			if ( '' !== current_value ) {
@@ -55,9 +57,18 @@
 		recaptchaVersion: function ( event ) {
 			event.preventDefault();
 
-			var v2_option = $( '.recaptcha_v2:visible input[name="bb_recaptcha[v2_option]"]:checked' ).val();
+			var existing_v2_option = $( '.recaptcha_v2:visible input[name="bb_recaptcha[v2_option]"]:checked' ).val();
 
-			if ( 'recaptcha_v3' === event.currentTarget.value || 'v2_invisible_badge' === v2_option ) {
+			// Enable/disable verify button and submit button.
+			if ( self.selected_version !== event.currentTarget.value ) {
+				$( '.recaptcha-verification' ).removeAttr( 'disabled' );
+				$( '.bb-recaptcha-settings form .submit input' ).attr( 'disabled', 'disabled' );
+			} else {
+				$( '.recaptcha-verification' ).attr( 'disabled', 'disabled' );
+				$( '.bb-recaptcha-settings form .submit input' ).removeAttr( 'disabled' );
+			}
+
+			if ( 'recaptcha_v3' === event.currentTarget.value || 'v2_invisible_badge' === existing_v2_option ) {
 				$( '.recaptcha_v3' ).removeClass( 'bp-hide' );
 				$( '.recaptcha_v2' ).addClass( 'bp-hide' );
 				$( '#bp-hello-content-recaptcha_v2' ).addClass( 'bp-hide' );
@@ -68,10 +79,22 @@
 				$( '#bp-hello-content-recaptcha_v2' ).removeClass( 'bp-hide' );
 				$( '#bp-hello-content-recaptcha_v3' ).addClass( 'bp-hide' );
 			}
+
+			self.selected_version = event.currentTarget.value;
+			self.v2_option = $( '.recaptcha_v2:visible input[name="bb_recaptcha[v2_option]"]:checked' ).val();
 		},
 
 		recaptchaType: function ( event ) {
 			event.preventDefault();
+
+			// Enable/disable verify button and submit button.
+			if ( self.v2_option !== event.currentTarget.value ) {
+				$( '.recaptcha-verification' ).removeAttr( 'disabled' );
+				$( '.bb-recaptcha-settings form .submit input' ).attr( 'disabled', 'disabled' );
+			} else {
+				$( '.recaptcha-verification' ).attr( 'disabled', 'disabled' );
+				$( '.bb-recaptcha-settings form .submit input' ).removeAttr( 'disabled' );
+			}
 
 			$( '.recaptcha-v2-fields p.description' ).addClass( 'bp-hide' );
 			$( '.' + event.currentTarget.value + '_description' ).removeClass( 'bp-hide' );
@@ -87,6 +110,8 @@
 				$( '#bp-hello-content-recaptcha_v2' ).addClass( 'bp-hide' );
 				$( '#bp-hello-content-recaptcha_v3' ).removeClass( 'bp-hide' );
 			}
+
+			self.v2_option = event.currentTarget.value;
 
 		},
 
@@ -122,14 +147,9 @@
 			backdrop.style.display = '';
 			modal.style.display    = '';
 
-			self.selected_version = $( 'input[name="bb_recaptcha[recaptcha_version]"]:checked' ).val();
 			self.site_key = $( '#bb-recaptcha-site-key' ).val();
 			self.secret_key = $( '#bb-recaptcha-secret-key' ).val();
 			window.bb_recaptcha_script = document.createElement('script');
-
-			if ( $( 'input[name="bb_recaptcha[v2_option]"]' ).length ) {
-				self.v2_option = $( 'input[name="bb_recaptcha[v2_option]"]:checked' ).val();
-			}
 
 			var selector = this.fetchSelector();
 
