@@ -6508,13 +6508,12 @@ function bb_load_reaction_popup_modal_js_template() {
 /**
  * Set activity notification status.
  *
- * @param array $args Array of Arguments.
- *
  * @since BuddyBoss [BBVERSION]
  *
- * @return void
+ * @param array $args Array of Arguments.
+ *
+ * @return string
  */
-
 function bb_toggle_activity_notification_status( $args = array() ) {
 	$r = bp_parse_args(
 		$args,
@@ -6537,7 +6536,7 @@ function bb_toggle_activity_notification_status( $args = array() ) {
 				$activity_mute_notification_meta = array();
 			}
 
-			if ( in_array( $r['user_id'], $activity_mute_notification_meta ) ) {
+			if ( in_array( $r['user_id'], $activity_mute_notification_meta, true ) ) {
 				return 'already_muted';
 			}
 
