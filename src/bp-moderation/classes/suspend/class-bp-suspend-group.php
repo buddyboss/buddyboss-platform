@@ -153,7 +153,6 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 		}
 
 		$where                  = array();
-		$where['suspend_where'] = $this->exclude_where_query();
 
 		/**
 		 * Filters the hidden group Where SQL statement.
@@ -188,10 +187,6 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 
 		if ( ! empty( $username_visible ) ) {
 			return $restrict;
-		}
-
-		if ( BP_Core_Suspend::check_suspended_content( (int) $group->id, self::$type ) ) {
-			return false;
 		}
 
 		return $restrict;
