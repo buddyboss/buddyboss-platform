@@ -1,6 +1,6 @@
 /* global bbRecaptchaAdmin */
 ( function ( $ ) {
-	var BB_Recaptcha = {
+	var BB_Recaptcha_Admin = {
 
 		init: function () {
 			var self = this;
@@ -331,7 +331,7 @@
 
 	$(
 		function () {
-			BB_Recaptcha.init();
+			BB_Recaptcha_Admin.init();
 		}
 	);
 } )( jQuery );
