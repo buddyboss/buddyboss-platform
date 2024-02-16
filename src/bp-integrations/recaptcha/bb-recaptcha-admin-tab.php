@@ -217,6 +217,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 * @return array $fields setting fields for pusher integration.
 	 */
 	public function get_settings_fields() {
+		$verified           = bb_recaptcha_connection_status();
 		$enabled_for        = bb_recaptcha_recaptcha_versions();
 		$actions            = bb_recaptcha_actions();
 		$recaptcha_v2_class = 'bp-hide';
@@ -261,7 +262,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'title'             => esc_html__( 'Verify', 'buddyboss' ),
 				'callback'          => array( $this, 'setting_callback_recaptcha_verify' ),
 				'sanitize_callback' => 'string',
-				'args'              => array( 'class' => 'hidden-header field-button' ),
+				'args'              => array( 'class' => 'hidden-header field-button verify-row ' . ( 'connected' === $verified ? 'bp-hide' : '' ) ),
 			),
 		);
 
@@ -589,7 +590,10 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		$site_key       = bb_recaptcha_site_key();
 		$secret_key     = bb_recaptcha_secret_key();
 		$verify_disable = '';
-		if ( empty( $site_key ) && empty( $secret_key ) ) {
+		if (
+			'connected' === $verified ||
+			( empty( $site_key ) && empty( $secret_key ) )
+		) {
 			$verify_disable = 'disabled="disabled"';
 		}
 		$enabled_for = bb_recaptcha_recaptcha_versions();
@@ -612,8 +616,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		}
 		?>
 		<div class="show-verify">
-			<button type="button" class="button recaptcha-verification" <?php echo esc_attr( $verify_disable ); ?>
-				<?php echo ! empty( $verified ) && 'connected' === $verified ? ' disabled="disabled"' : ''; ?>>
+			<button type="button" class="button recaptcha-verification" <?php echo esc_attr( $verify_disable ); ?>>
 				<?php esc_html_e( 'Verify', 'buddyboss' ); ?>
 			</button>
 		</div>

@@ -33,22 +33,33 @@
 
 		enableVerifyButton: function ( event ) {
 			// Enable/disable verify button and submit button.
-			var current_value = event.currentTarget.value.trim();
-			var old_value = event.currentTarget.getAttribute( 'data-old-value' ).trim();
-			if ( '' !== current_value ) {
+			var site_key = $('#bb-recaptcha-site-key').val();
+			var old_site_key = $('#bb-recaptcha-site-key').attr( 'data-old-value' );
+
+			var secret_key = $('#bb-recaptcha-secret-key').val();
+			var old_secret_key = $('#bb-recaptcha-secret-key').attr( 'data-old-value' );
+
+			if ( '' !== site_key && '' !== secret_key  ) {
+				$( '.verify-row' ).removeClass( 'bp-hide' );
 				$( '.recaptcha-verification' ).removeAttr( 'disabled' );
 				$( '.bb-recaptcha-settings form .submit input' ).attr( 'disabled', 'disabled' );
 				if (
-					'' !== $( 'input[name="bb_recaptcha[recaptcha_version]"]:checked' ).val() &&
-					current_value !== old_value
+						'' !== $( 'input[name="bb_recaptcha[recaptcha_version]"]:checked' ).val() &&
+						(
+							site_key !== old_site_key ||
+							secret_key !== old_secret_key
+						)
 				) {
+					$( '.verify-row' ).removeClass( 'bp-hide' );
 					$( '.recaptcha-verification' ).removeAttr( 'disabled' );
 					$( '.bb-recaptcha-settings form .submit input' ).attr( 'disabled', 'disabled' );
 				} else {
+					$( '.verify-row' ).addClass( 'bp-hide' );
 					$( '.recaptcha-verification' ).attr( 'disabled', 'disabled' );
 					$( '.bb-recaptcha-settings form .submit input' ).removeAttr( 'disabled' );
 				}
 			} else {
+				$( '.verify-row' ).addClass( 'bp-hide' );
 				$( '.recaptcha-verification' ).attr( 'disabled', 'disabled' );
 				$( '.bb-recaptcha-settings form .submit input' ).removeAttr( 'disabled' );
 			}
@@ -74,9 +85,11 @@
 			// Enable/disable verify button and submit button.
 			// Need to get v2 selected value after v2 option is visible - $( '.recaptcha_v2:visible input[name="bb_recaptcha[v2_option]"]:checked' ).val() - .
 			if ( self.selected_version !== event.currentTarget.value || self.v2_option !== $( '.recaptcha_v2:visible input[name="bb_recaptcha[v2_option]"]:checked' ).val() ) {
+				$( '.verify-row' ).removeClass( 'bp-hide' );
 				$( '.recaptcha-verification' ).removeAttr( 'disabled' );
 				$( '.bb-recaptcha-settings form .submit input' ).attr( 'disabled', 'disabled' );
 			} else {
+				$( '.verify-row' ).addClass( 'bp-hide' );
 				$( '.recaptcha-verification' ).attr( 'disabled', 'disabled' );
 				$( '.bb-recaptcha-settings form .submit input' ).removeAttr( 'disabled' );
 			}
@@ -87,9 +100,11 @@
 
 			// Enable/disable verify button and submit button.
 			if ( self.v2_option !== event.currentTarget.value ) {
+				$( '.verify-row' ).removeClass( 'bp-hide' );
 				$( '.recaptcha-verification' ).removeAttr( 'disabled' );
 				$( '.bb-recaptcha-settings form .submit input' ).attr( 'disabled', 'disabled' );
 			} else {
+				$( '.verify-row' ).addClass( 'bp-hide' );
 				$( '.recaptcha-verification' ).attr( 'disabled', 'disabled' );
 				$( '.bb-recaptcha-settings form .submit input' ).removeAttr( 'disabled' );
 			}
