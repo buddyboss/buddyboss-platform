@@ -218,6 +218,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 */
 	public function get_settings_fields() {
 		$enabled_for        = bb_recaptcha_recaptcha_versions();
+		$actions            = bb_recaptcha_actions();
 		$recaptcha_v2_class = 'bp-hide';
 		if ( 'recaptcha_v2' === $enabled_for ) {
 			$recaptcha_v2_class = '';
@@ -280,7 +281,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'title'             => ' ',
 				'callback'          => array( $this, 'setting_callback_allow_bypass' ),
 				'sanitize_callback' => 'absint',
-				'args'              => array(),
+				'args'              => array( 'class' => 'bb_login_require ' . ( true === $actions['bb_login']['enabled'] ? '' : 'bp-hide' ) ),
 			),
 			'bb-recaptcha-language-code'   => array(
 				'title'             => esc_html__( 'Language Code', 'buddyboss' ),
@@ -306,7 +307,6 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$class_v2_checkbox  = 'recaptcha_v2_checkbox';
 		$class_v2_invisible = 'recaptcha_v2_invisible';
-
 		if ( 'v2_checkbox' === $v2_option ) {
 			$class_v2_invisible .= ' bp-hide';
 		} else {

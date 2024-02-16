@@ -27,7 +27,7 @@
 			$( '.buddyboss_page_bp-integrations .section-bb_recaptcha_versions' ).on( 'change', 'input[name="bb_recaptcha[recaptcha_version]"]', this.recaptchaVersion.bind( this ) );
 			$( '.buddyboss_page_bp-integrations .section-bb_recaptcha_versions' ).on( 'change', 'input[name="bb_recaptcha[v2_option]"]', this.recaptchaType.bind( this ) );
 			$( '.buddyboss_page_bp-integrations .section-bb_recaptcha_design' ).on( 'change', 'input[name="bb_recaptcha[theme]"]', this.recaptchaTheme.bind( this ) );
-
+			$( '.buddyboss_page_bp-integrations .section-bb_recaptcha_settings' ).on( 'change', '#recaptcha_bb_login', this.allowByPass.bind( this ) );
 		},
 
 		enableVerifyButton: function ( event ) {
@@ -260,6 +260,15 @@
 			}
 
 			return selector;
+		},
+
+		allowByPass: function ( event ) {
+			var isChecked = event.currentTarget.checked;
+			if ( isChecked ) {
+				$( '.bb_login_require' ).removeClass( 'bp-hide' );
+			} else {
+				$( '.bb_login_require' ).addClass( 'bp-hide' );
+			}
 		}
 	};
 
