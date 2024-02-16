@@ -17,6 +17,16 @@
 			self.site_key = '';
 			self.secret_key = '';
 			self.captcha_response = '';
+
+			// Grey out other settings when recaptcha not connected.
+			if ( $( '.bb-recaptcha-settings form table.bb-inactive-field' ).length ) {
+				$( '.bb-recaptcha-settings form #bb_recaptcha_settings table' ).removeClass( 'bb-inactive-field' );
+				$( '.bb-recaptcha-settings form #bb_recaptcha_design table' ).removeClass( 'bb-inactive-field' );
+			}
+			if ( $( '.bb-recaptcha-settings .section-bb_recaptcha_versions .bb-recaptcha-errors' ).length ) {
+				$( '.bb-recaptcha-settings form #bb_recaptcha_settings table' ).addClass( 'bb-inactive-field' );
+				$( '.bb-recaptcha-settings form #bb_recaptcha_design table' ).addClass( 'bb-inactive-field' );
+			}
 		},
 
 		addListeners: function () {
