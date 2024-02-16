@@ -59,7 +59,7 @@
 					$( '.bb-recaptcha-settings form .submit input' ).removeAttr( 'disabled' );
 				}
 			} else {
-				$( '.verify-row' ).addClass( 'bp-hide' );
+				$( '.verify-row' ).removeClass( 'bp-hide' );
 				$( '.recaptcha-verification' ).attr( 'disabled', 'disabled' );
 				$( '.bb-recaptcha-settings form .submit input' ).removeAttr( 'disabled' );
 			}
