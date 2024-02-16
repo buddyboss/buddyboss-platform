@@ -64,7 +64,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			wp_enqueue_script( 'bb-recaptcha-admin', bb_recaptcha_integration_url( '/assets/js/bb-recaptcha-admin' . $min . '.js' ), false, buddypress()->version );
 			wp_localize_script(
 				'bb-recaptcha-admin',
-				'bbRecaptcha',
+				'bbRecaptchaAdmin',
 				array(
 					'ajax_url' => admin_url( 'admin-ajax.php' ),
 					'nonce'    => wp_create_nonce( 'bb-recaptcha-verification' ),

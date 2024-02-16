@@ -1,4 +1,4 @@
-/* global bbRecaptcha */
+/* global bbRecaptchaAdmin */
 ( function ( $ ) {
 	var BB_Recaptcha = {
 
@@ -244,7 +244,7 @@
 			$( event.currentTarget ).attr( 'disabled', 'disabled' );
 			var data = {
 				action: 'bb_recaptcha_verification',
-				nonce: bbRecaptcha.nonce,
+				nonce: bbRecaptchaAdmin.nonce,
 				selected_version: self.selected_version,
 				site_key: self.site_key,
 				secret_key: self.secret_key,
@@ -258,7 +258,7 @@
 			$.ajax(
 				{
 					type: 'POST',
-					url: bbRecaptcha.ajax_url,
+					url: bbRecaptchaAdmin.ajax_url,
 					data: data,
 					success: function ( response ) {
 						$( event.currentTarget ).removeAttr( 'disabled' );
