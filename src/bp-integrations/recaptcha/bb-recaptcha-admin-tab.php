@@ -435,13 +435,22 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	public function setting_callback_allow_bypass() {
-		$checked = (bool) bb_recaptcha_setting( 'allow_bypass', false );
+		$checked      = (bool) bb_recaptcha_setting( 'allow_bypass', false );
+		$actions      = bb_recaptcha_actions();
+		$allow_bypass = false;
+		if (
+			isset( $actions['bb_login']['enabled'] ) &&
+			true === $actions['bb_login']['enabled'] &&
+			$checked
+		) {
+			$allow_bypass = true;
+		}
 		?>
 		<input id="bb_recaptcha_allow_bypass" name="bb_recaptcha[allow_bypass]" type="checkbox" value="1" <?php checked( $checked ); ?> />
 		<label for="bb_recaptcha_allow_bypass"><?php esc_html_e( 'Allow bypass, enter a 6 to 10-character string to customize your URL', 'buddyboss' ); ?></label>
-		<input type="text" name="bb_recaptcha[bypass_text]" value="<?php echo esc_attr( bb_recaptcha_setting( 'bypass_text', '' ) ); ?>" placeholder="<?php esc_attr_e( 'stringxs', 'buddyboss' ); ?>">
+		<input type="text" name="bb_recaptcha[bypass_text]" value="<?php echo esc_attr( bb_recaptcha_setting( 'bypass_text', '' ) ); ?>" placeholder="<?php esc_attr_e( 'stringxs', 'buddyboss' ); ?>" <?php echo $allow_bypass ? '' : 'disabled="disabled"'; ?>>
 		<p class="description"><?php esc_html_e( 'The bypass URL enables you to bypass reCAPTCHA in case of issues. We recommend keeping the link below securely stored for accessing your site.', 'buddyboss' ); ?></p>
-		<div class="copy-toggle">
+		<div class="copy-toggle <?php echo $allow_bypass ? '' : 'bp-hide'; ?>">
 			<input type="text" readonly class="zoom-group-instructions-main-input is-disabled" value="domain.com/wp-login.php/?bypass_captcha=xxUNIQUE_STRINGXS">
 			<span role="button" class="bb-copy-button hide-if-no-js" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Copy', 'buddyboss' ); ?>" data-copied-text="<?php esc_attr_e( 'Copied', 'buddyboss' ); ?>">
 				<i class="bb-icon-f bb-icon-copy"></i>
