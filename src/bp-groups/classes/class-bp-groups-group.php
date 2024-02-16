@@ -395,10 +395,12 @@ class BP_Groups_Group {
 
 		// Fetch the user IDs of all the members of the group.
 		$user_ids    = BP_Groups_Member::get_group_member_ids( $this->id );
-		$user_id_str = esc_sql( implode( ',', wp_parse_id_list( $user_ids ) ) );
+		if ( ! empty( $user_ids ) ) {
+			$user_id_str = esc_sql( implode( ',', wp_parse_id_list( $user_ids ) ) );
 
-		// Modify group count usermeta for members.
-		$wpdb->query( "UPDATE {$wpdb->usermeta} SET meta_value = meta_value - 1 WHERE meta_key = 'total_group_count' AND user_id IN ( {$user_id_str} )" );
+			// Modify group count usermeta for members.
+			$wpdb->query( "UPDATE {$wpdb->usermeta} SET meta_value = meta_value - 1 WHERE meta_key = 'total_group_count' AND user_id IN ( {$user_id_str} )" );
+		}
 
 		// Now delete all group member entries.
 		BP_Groups_Member::delete_all( $this->id );
@@ -1907,9 +1909,9 @@ class BP_Groups_Group {
 		$ids = array();
 
 		$ids['all']     = $wpdb->get_col( "SELECT id FROM {$bp->groups->table_name}" );
-		$ids['public']  = $wpdb->get_col( "SELECT id FROM {$bp->groups->table_name} WHERE status = 'public'" );
-		$ids['private'] = $wpdb->get_col( "SELECT id FROM {$bp->groups->table_name} WHERE status = 'private'" );
-		$ids['hidden']  = $wpdb->get_col( "SELECT id FROM {$bp->groups->table_name} WHERE status = 'hidden'" );
+		$ids['public']  = $wpdb->get_col( "SELECT g.id FROM {$bp->groups->table_name} g JOIN {$bp->groups->table_name_groupmeta} gm ON g.id = gm.group_id WHERE g.status = 'public' AND gm.meta_key = 'total_member_count' AND gm.meta_value > 0" );
+		$ids['private'] = $wpdb->get_col( "SELECT g.id FROM {$bp->groups->table_name} g JOIN {$bp->groups->table_name_groupmeta} gm ON g.id = gm.group_id WHERE g.status = 'private' AND gm.meta_key = 'total_member_count' AND gm.meta_value > 0" );
+		$ids['hidden']  = $wpdb->get_col( "SELECT g.id FROM {$bp->groups->table_name} g JOIN {$bp->groups->table_name_groupmeta} gm ON g.id = gm.group_id WHERE g.status = 'hidden' AND gm.meta_key = 'total_member_count' AND gm.meta_value > 0" );
 
 		return $ids;
 	}
