@@ -59,15 +59,6 @@
 
 			var existing_v2_option = $( '.recaptcha_v2:visible input[name="bb_recaptcha[v2_option]"]:checked' ).val();
 
-			// Enable/disable verify button and submit button.
-			if ( self.selected_version !== event.currentTarget.value ) {
-				$( '.recaptcha-verification' ).removeAttr( 'disabled' );
-				$( '.bb-recaptcha-settings form .submit input' ).attr( 'disabled', 'disabled' );
-			} else {
-				$( '.recaptcha-verification' ).attr( 'disabled', 'disabled' );
-				$( '.bb-recaptcha-settings form .submit input' ).removeAttr( 'disabled' );
-			}
-
 			if ( 'recaptcha_v3' === event.currentTarget.value || 'v2_invisible_badge' === existing_v2_option ) {
 				$( '.recaptcha_v3' ).removeClass( 'bp-hide' );
 				$( '.recaptcha_v2' ).addClass( 'bp-hide' );
@@ -80,8 +71,15 @@
 				$( '#bp-hello-content-recaptcha_v3' ).addClass( 'bp-hide' );
 			}
 
-			self.selected_version = event.currentTarget.value;
-			self.v2_option = $( '.recaptcha_v2:visible input[name="bb_recaptcha[v2_option]"]:checked' ).val();
+			// Enable/disable verify button and submit button.
+			// Need to get v2 selected value after v2 option is visible - $( '.recaptcha_v2:visible input[name="bb_recaptcha[v2_option]"]:checked' ).val() - .
+			if ( self.selected_version !== event.currentTarget.value || self.v2_option !== $( '.recaptcha_v2:visible input[name="bb_recaptcha[v2_option]"]:checked' ).val() ) {
+				$( '.recaptcha-verification' ).removeAttr( 'disabled' );
+				$( '.bb-recaptcha-settings form .submit input' ).attr( 'disabled', 'disabled' );
+			} else {
+				$( '.recaptcha-verification' ).attr( 'disabled', 'disabled' );
+				$( '.bb-recaptcha-settings form .submit input' ).removeAttr( 'disabled' );
+			}
 		},
 
 		recaptchaType: function ( event ) {
@@ -110,9 +108,6 @@
 				$( '#bp-hello-content-recaptcha_v2' ).addClass( 'bp-hide' );
 				$( '#bp-hello-content-recaptcha_v3' ).removeClass( 'bp-hide' );
 			}
-
-			self.v2_option = event.currentTarget.value;
-
 		},
 
 		recaptchaTheme: function ( event ) {
@@ -147,9 +142,14 @@
 			backdrop.style.display = '';
 			modal.style.display    = '';
 
+			self.selected_version = $( 'input[name="bb_recaptcha[recaptcha_version]"]:checked' ).val();
 			self.site_key = $( '#bb-recaptcha-site-key' ).val();
 			self.secret_key = $( '#bb-recaptcha-secret-key' ).val();
 			window.bb_recaptcha_script = document.createElement('script');
+
+			if ( $( 'input[name="bb_recaptcha[v2_option]"]' ).length ) {
+				self.v2_option = $( 'input[name="bb_recaptcha[v2_option]"]:checked' ).val();
+			}
 
 			var selector = this.fetchSelector();
 
