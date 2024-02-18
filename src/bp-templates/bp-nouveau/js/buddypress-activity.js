@@ -154,7 +154,7 @@ window.bp = window.bp || {};
 				$( window ).scroll( this.loadMoreActivities );
 			}
 
-			$( '.bb-activity-model-wrapper' ).on( 'click', '.acomments-view-more', this.viewMoreComments.bind( this ) );
+			$( '.bb-activity-model-wrapper, .bb-media-model-wrapper' ).on( 'click', '.acomments-view-more', this.viewMoreComments.bind( this ) );
 			$( document ).on( 'click', '#activity-stream .activity-comments > .view-more-comments, #activity-stream .activity-state-comments > .comments-count', function( e ) {
 				e.preventDefault();
 				$(this).parents('li.activity-item').find('.activity-comments > ul > li.acomments-view-more').trigger('click');
@@ -3276,7 +3276,7 @@ window.bp = window.bp || {};
 						return;
 					} else if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.comments ) {
 						// success
-						var $targetList  = $( '.activity-modal.activity .activity-comments' ).find( "[data-activity_id='" + activityId + "'][data-parent_comment_id='" + parentCommentId + "']" );
+						var $targetList  = $( '.bb-internal-model .activity-comments' ).find( "[data-activity_id='" + activityId + "'][data-parent_comment_id='" + parentCommentId + "']" );
 						var $newComments = $( $.parseHTML( response.data.comments ) );
 						if ( $targetList.length > 0 && $newComments.length > 0 ) {
 
