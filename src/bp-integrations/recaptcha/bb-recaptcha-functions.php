@@ -414,8 +414,7 @@ function bb_recaptcha_verification_front() {
 	$secret_key       = bb_recaptcha_secret_key();
 
 	$token_response = bb_filter_input_string( INPUT_POST, 'g-recaptcha-response' );
-	error_log( '$token_response' );
-	error_log( $token_response );
+	
 	if ( 'recaptcha_v3' === $selected_version ) {
 		if ( empty( $token_response ) ) {
 			return new WP_Error(
