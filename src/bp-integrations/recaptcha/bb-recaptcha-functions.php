@@ -204,6 +204,72 @@ function bb_recaptcha_recaptcha_v2_option() {
 }
 
 /**
+ * Retrieves the selected reCAPTCHA v2 theme.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string The selected v2 theme.
+ */
+function bb_recaptcha_v2_theme() {
+	$recaptcha_v2_theme = bb_recaptcha_setting( 'theme', 'light' );
+
+	/**
+	 * Filters the selected reCAPTCHA v2 theme.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $recaptcha_v2_theme The selected reCAPTCHA v2 theme.
+	 *
+	 * @return string The filtered reCAPTCHA v2 theme.
+	 */
+	return apply_filters( 'bb_recaptcha_v2_theme', $recaptcha_v2_theme );
+}
+
+/**
+ * Retrieves the selected reCAPTCHA v2 size.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string The selected v2 size.
+ */
+function bb_recaptcha_v2_size() {
+	$recaptcha_v2_size = bb_recaptcha_setting( 'size', 'normal' );
+
+	/**
+	 * Filters the selected reCAPTCHA v2 size.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $recaptcha_v2_size The selected reCAPTCHA v2 size.
+	 *
+	 * @return string The filtered reCAPTCHA v2 size.
+	 */
+	return apply_filters( 'bb_recaptcha_v2_size', $recaptcha_v2_size );
+}
+
+/**
+ * Retrieves the selected reCAPTCHA v2 badge.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string The selected v2 badge.
+ */
+function bb_recaptcha_v2_badge() {
+	$recaptcha_v2_badge = bb_recaptcha_setting( 'badge_position', 'bottomright' );
+
+	/**
+	 * Filters the selected reCAPTCHA v2 badge.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $recaptcha_v2_badge The selected reCAPTCHA v2 badge.
+	 *
+	 * @return string The filtered reCAPTCHA v2 badge.
+	 */
+	return apply_filters( 'bb_recaptcha_v2_badge', $recaptcha_v2_badge );
+}
+
+/**
  * Retrieves the reCAPTCHA site key.
  *
  * @since BuddyBoss [BBVERSION]
@@ -267,4 +333,11 @@ function bb_recaptcha_connection_status() {
 	 * @return string The filtered reCAPTCHA connection status.
 	 */
 	return apply_filters( 'bb_recaptcha_connection_status', $connection_status );
+}
+
+function bb_get_google_recaptcha_api_response( $secret_key, $token ) {
+	$get_data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $token );
+	$response = json_decode( wp_remote_retrieve_body( $get_data ), true );
+
+	return $response;
 }

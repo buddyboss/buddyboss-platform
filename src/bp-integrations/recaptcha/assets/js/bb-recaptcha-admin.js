@@ -243,7 +243,7 @@
 
 			$( event.currentTarget ).attr( 'disabled', 'disabled' );
 			var data = {
-				action: 'bb_recaptcha_verification',
+				action: 'bb_recaptcha_verification_admin_settings',
 				nonce: bbRecaptchaAdmin.nonce,
 				selected_version: self.selected_version,
 				site_key: self.site_key,

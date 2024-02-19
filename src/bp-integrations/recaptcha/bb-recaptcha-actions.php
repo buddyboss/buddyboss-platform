@@ -9,9 +9,9 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-add_action( 'wp_ajax_bb_recaptcha_verification', 'bb_recaptcha_verification' );
+add_action( 'wp_ajax_bb_recaptcha_verification_admin_settings', 'bb_recaptcha_verification_admin_settings' );
 
-function bb_recaptcha_verification() {
+function bb_recaptcha_verification_admin_settings() {
 
 	$nonce = bb_filter_input_string( INPUT_POST, 'nonce' );
 	// Nonce check!
@@ -46,10 +46,8 @@ function bb_recaptcha_verification() {
 			$data = '<img src="' . bb_recaptcha_integration_url( 'assets/images/error.png' ) . '" />
 					<p>' . __( 'reCAPTCHA verification failed, please try again', 'buddyboss' ) . '</p>';
 		} else {
-			$response = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
-			$response = json_decode( $response['body'] );
-
-			if ( $response->success ) {
+			$response = bb_get_google_recaptcha_api_response( $secret_key, $captcha_response );
+			if ( ! empty( $response ) && (bool) $response['success'] ) {
 				$connection_status = 'connected';
 				$data              = '<img src="' . bb_recaptcha_integration_url( 'assets/images/success.png' ) . '" />
 					<p>' . __( 'reCAPTCHA verification was successful', 'buddyboss' ) . '</p>';
@@ -63,10 +61,8 @@ function bb_recaptcha_verification() {
 			$data = '<img src="' . bb_recaptcha_integration_url( 'assets/images/error.png' ) . '" />
 					<p>' . __( 'reCAPTCHA verification failed, please try again', 'buddyboss' ) . '</p>';
 		} else {
-			$response = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
-			$response = json_decode( $response['body'] );
-
-			if ( $response->success ) {
+			$response = bb_get_google_recaptcha_api_response( $secret_key, $captcha_response );
+			if ( ! empty( $response ) && (bool) $response['success'] ) {
 				$connection_status = 'connected';
 				$data              = '<img src="' . bb_recaptcha_integration_url( 'assets/images/success.png' ) . '" />
 					<p>' . __( 'reCAPTCHA verification was successful', 'buddyboss' ) . '</p>';
