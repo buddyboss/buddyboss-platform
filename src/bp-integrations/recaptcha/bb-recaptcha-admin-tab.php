@@ -471,7 +471,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	public function setting_callback_conflict_mode() {
-		$checked = (bool) bb_recaptcha_setting( 'conflict_mode', false );
+		$checked = bb_recaptcha_conflict_mode();
 		?>
 		<input id="bb-recaptcha-conflict-mode" name="bb_recaptcha[conflict_mode]" type="checkbox" value="1" <?php checked( $checked ); ?> />
 		<label for="bb-recaptcha-conflict-mode"><?php esc_html_e( 'Allow no-conflict mode to prevent compatibility conflicts', 'buddyboss' ); ?></label>

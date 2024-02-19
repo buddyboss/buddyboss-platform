@@ -408,6 +408,26 @@ function bb_recaptcha_connection_status() {
 }
 
 /**
+ * Retrieves the reCAPTCHA conflict mode.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool The reCAPTCHA conflict mode.
+ */
+function bb_recaptcha_conflict_mode() {
+	$conflict_mode = (bool) bb_recaptcha_setting( 'conflict_mode', false );
+
+	/**
+	 * Filters the reCAPTCHA conflict mode.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $conflict_mode The reCAPTCHA conflict mode.
+	 */
+	return (bool) apply_filters( 'bb_recaptcha_conflict_mode', $conflict_mode );
+}
+
+/**
  * Retrieve the Google reCAPTCHA API response.
  * This function sends a request to the Google reCAPTCHA API to verify the provided token.
  *
@@ -468,7 +488,7 @@ function bb_recaptcha_display() {
 			if ( 'recaptcha_v2' === $enabled_for ) {
 				wp_register_script( 'bb-recaptcha-api', $api_url, false, buddypress()->version, true );
 			}
-			add_action( 'wp_footer', 'bb_recaptcha_add_scripts' );
+
 			if (
 				$actions['bb_login']['enabled'] ||
 				$actions['bb_register']['enabled'] ||
@@ -494,6 +514,10 @@ function bb_recaptcha_display() {
  * @return void
  */
 function bb_recaptcha_add_scripts_login_footer() {
+	if ( bb_recaptcha_conflict_mode() ) {
+		bb_recaptcha_remove_duplicate_scripts();
+	}
+
 	$min = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 	wp_enqueue_script(
 		'bb-recaptcha',
@@ -659,4 +683,35 @@ function bb_recaptcha_get_current_ip() {
 	}
 
 	return $anon_ip;
+}
+
+/**
+ * Removes duplicate reCAPTCHA scripts from the other plugins or WordPress.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @global WP_Scripts $wp_scripts WordPress script queue object.
+ *
+ * @return void
+ */
+function bb_recaptcha_remove_duplicate_scripts() {
+	global $wp_scripts;
+
+	if ( ! is_object( $wp_scripts ) || empty( $wp_scripts ) ) {
+		return false;
+	}
+
+	$urls = array( 'google.com/recaptcha', 'gstatic.com/recaptcha' );
+	foreach ( $wp_scripts->queue as $handle ) {
+		foreach ( $urls as $url ) {
+			if (
+				false !== strpos( $wp_scripts->registered[ $handle ]->src, $url ) &&
+				'' !== $handle
+			) {
+				wp_dequeue_script( $handle );
+				wp_deregister_script( $handle );
+				break;
+			}
+		}
+	}
 }
