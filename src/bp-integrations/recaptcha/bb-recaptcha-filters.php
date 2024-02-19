@@ -46,8 +46,21 @@ function bb_admin_recaptcha_class( $classes ) {
  *                               authenticated.
  */
 function bb_recaptcha_login_check( $user, $username, $password ) {
+	if ( ! bb_recaptcha_is_enabled( 'bb_login' ) ) {
+		return $user;
+	}
+
 	if ( ! $username ) {
 		return $user;
+	}
+	// Bypass captcha for login.
+	if ( bb_recaptcha_allow_bypass_enable() ) {
+		$get_url_string    = bb_filter_input_string( INPUT_POST, 'bb_recaptcha_bypass' );
+		$get_url_string    = ! empty( $get_url_string ) ? base64_decode( $get_url_string ) : '';
+		$admin_bypass_text = bb_recaptcha_setting( 'bypass_text', '' );
+		if ( $get_url_string === $admin_bypass_text ) {
+			return $user;
+		}
 	}
 	$captcha = bb_recaptcha_verification_front();
 	if ( is_wp_error( $captcha ) ) {

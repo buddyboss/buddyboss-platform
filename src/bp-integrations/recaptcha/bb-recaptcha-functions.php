@@ -428,6 +428,30 @@ function bb_recaptcha_conflict_mode() {
 }
 
 /**
+ * Retrieves the reCAPTCHA bypass option.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool The reCAPTCHA bypass option.
+ */
+function bb_recaptcha_allow_bypass_enable() {
+	if ( ! bb_recaptcha_is_enabled( 'bb_login' ) ) {
+		return false;
+	}
+
+	$allow_bypass = (bool) bb_recaptcha_setting( 'allow_bypass', false );
+
+	/**
+	 * Filters the reCAPTCHA bypass option.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $allow_bypass The reCAPTCHA bypass option.
+	 */
+	return (bool) apply_filters( 'bb_recaptcha_allow_bypass_enable', $allow_bypass );
+}
+
+/**
  * Retrieve the Google reCAPTCHA API response.
  * This function sends a request to the Google reCAPTCHA API to verify the provided token.
  *
@@ -454,95 +478,58 @@ function bb_get_google_recaptcha_api_response( $secret_key, $token ) {
  * @since BuddyBoss [BBVERSION]
  * @return void
  */
-function bb_recaptcha_display() {
+function bb_recaptcha_display( $display = false ) {
+
+	if ( ! $display ) {
+		return;
+	}
 	$verified = bb_recaptcha_connection_status();
 	if ( ! empty( $verified ) && 'connected' === $verified ) {
 		$site_key    = bb_recaptcha_site_key();
 		$enabled_for = bb_recaptcha_recaptcha_versions();
-		$actions     = bb_recaptcha_actions();
 		$lang        = bb_recaptcha_setting( 'language_code', 'en' );
 
+		if ( bb_recaptcha_allow_bypass_enable() ) {
+			$get_url_string = bb_filter_input_string( INPUT_GET, 'bypass_captcha' );
+			$get_url_string = ! empty( $get_url_string ) ? base64_encode( $get_url_string ) : '';
+			?>
+			<input type="hidden" id="bb_recaptcha_bypass_id" name="bb_recaptcha_bypass" value="<?php echo esc_html( $get_url_string ); ?>"/>
+			<?php
+		}
 		// Recaptcha api url.
 		$api_url    = 'https://www.google.com/recaptcha/api.js';
 		$query_args = array();
 		if ( 'en' !== $lang ) {
 			$query_args['hl'] = $lang;
 		}
-		if ( 'recaptcha_v3' === $enabled_for ) {
-			?>
-			<input type="hidden" id="bb_recaptcha_login_v3" name="g-recaptcha-response"/>
-			<?php
-			$query_args['render'] = $site_key;
-			$api_url              = add_query_arg( $query_args, $api_url );
-		} elseif ( 'recaptcha_v2' === $enabled_for ) {
-			$query_args['render'] = 'explicit';
-			$api_url              = add_query_arg( $query_args, $api_url );
-			?>
-			<div id="bb_recaptcha_login_v2" class="bb_recaptcha_login_v2_content" data-sitekey="<?php echo $site_key; ?>"></div>
-			<?php
+
+		if ( $display ) {
+			if ( 'recaptcha_v3' === $enabled_for ) {
+				?>
+				<input type="hidden" id="bb_recaptcha_login_v3" name="g-recaptcha-response"/>
+				<?php
+				$query_args['render'] = $site_key;
+				$api_url              = add_query_arg( $query_args, $api_url );
+			} elseif ( 'recaptcha_v2' === $enabled_for ) {
+				$query_args['render'] = 'explicit';
+				$api_url              = add_query_arg( $query_args, $api_url );
+				?>
+				<div id="bb_recaptcha_login_v2" class="bb_recaptcha_login_v2_content" data-sitekey="<?php echo $site_key; ?>"></div>
+				<?php
+			}
 		}
+
 		if ( ! wp_script_is( 'bb-recaptcha-api', 'registered' ) ) {
 			if ( 'recaptcha_v3' === $enabled_for ) {
 				wp_register_script( 'bb-recaptcha-api', $api_url, false, buddypress()->version, false );
-			}
-			if ( 'recaptcha_v2' === $enabled_for ) {
+			} elseif ( 'recaptcha_v2' === $enabled_for ) {
 				wp_register_script( 'bb-recaptcha-api', $api_url, false, buddypress()->version, true );
-			}
-
-			if (
-				$actions['bb_login']['enabled'] ||
-				$actions['bb_register']['enabled'] ||
-				$actions['bb_lost_password']['enabled']
-			) {
-				add_action( 'login_footer', 'bb_recaptcha_add_scripts_login_footer' );
 			}
 		}
 		$min     = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 		$rtl_css = is_rtl() ? '-rtl' : '';
 		wp_enqueue_style( 'bb-recaptcha', bb_recaptcha_integration_url( '/assets/css/bb-recaptcha' . $rtl_css . $min . '.css' ), false, buddypress()->version );
 	}
-}
-
-/**
- * Enqueue scripts and localize data for reCAPTCHA in the login footer.
- * This function enqueues the necessary JavaScript file for reCAPTCHA integration and localizes data
- * to be used by the JavaScript code. The localized data includes information about the selected reCAPTCHA version,
- * site key, and actions enabled for reCAPTCHA verification.
- * For reCAPTCHA v2, additional configuration options such as the theme, size, and badge position are also included.
- *
- * @since BuddyBoss [BBVERSION]
- * @return void
- */
-function bb_recaptcha_add_scripts_login_footer() {
-	if ( bb_recaptcha_conflict_mode() ) {
-		bb_recaptcha_remove_duplicate_scripts();
-	}
-
-	$min = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-	wp_enqueue_script(
-		'bb-recaptcha',
-		bb_recaptcha_integration_url( '/assets/js/bb-recaptcha' . $min . '.js' ),
-		array(
-			'jquery',
-			'bb-recaptcha-api',
-		),
-		buddypress()->version
-	);
-
-	$enabled_for   = bb_recaptcha_recaptcha_versions();
-	$localize_data = array(
-		'selected_version' => $enabled_for,
-		'site_key'         => bb_recaptcha_site_key(),
-		'actions'          => bb_recaptcha_actions(),
-	);
-	if ( 'recaptcha_v2' === $enabled_for ) {
-		$localize_data['v2_option']         = bb_recaptcha_recaptcha_v2_option();
-		$localize_data['v2_theme']          = bb_recaptcha_v2_theme();
-		$localize_data['v2_size']           = bb_recaptcha_v2_size();
-		$localize_data['v2_badge_position'] = bb_recaptcha_v2_badge();
-	}
-
-	wp_localize_script( 'bb-recaptcha', 'bbRecaptcha', array( 'data' => $localize_data ) );
 }
 
 /**
