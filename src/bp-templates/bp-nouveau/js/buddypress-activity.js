@@ -1290,6 +1290,8 @@ window.bp = window.bp || {};
 							standalone: true,
 							hideSource: false,
 							container: hasParentModal + '#ac-reply-emoji-button-' + activity_id,
+							detachedPicker: true,
+							containerPicker: '.emojionearea-theatre',
 							autocomplete: false,
 							pickerPosition: 'top',
 							hidePickerOnBlur: true,
@@ -1316,10 +1318,12 @@ window.bp = window.bp || {};
 
 								picker_show: function () {
 									$( this.button[0] ).closest( '.post-emoji' ).addClass( 'active' );
+									$( '.emojionearea-theatre' ).removeClass( 'hide' ).addClass( 'show' );
 								},
 
 								picker_hide: function () {
 									$( this.button[0] ).closest( '.post-emoji' ).removeClass( 'active' );
+									$( '.emojionearea-theatre' ).removeClass( 'show' ).addClass( 'hide' );
 								},
 							}
 						}

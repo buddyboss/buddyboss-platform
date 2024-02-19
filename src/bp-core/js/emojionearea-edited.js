@@ -232,6 +232,8 @@ document = window.document || {};
 			emojiPlaceholder  : "",
 			searchPlaceholder : bp_emojionearea.searchPlaceholder,
 			container         : null,
+			detachedPicker   	: false,
+			containerPicker   : null,
 			hideSource        : true,
 			shortnames        : true,
 			sprite            : true,
@@ -1037,6 +1039,10 @@ document = window.document || {};
 					.addClass( 'hidden' )
 			);
 
+		if (options.detachedPicker && options.containerPicker) {
+			$( options.containerPicker ).append(picker);
+		}
+
 		if (options.search) {
 			searchPanel.addClass( selector( 'with-search', true ) );
 		}
@@ -1780,11 +1786,15 @@ document = window.document || {};
 	var EmojioneArea = function(element, options) {
 		var self = this;
 		loadEmojione( options );
+
+		// Store options as a property of the instance
+		self.options = getOptions(options);
+
 		eventStorage[self.id    = ++unique] = {};
 		possibleEvents[self.id] = {};
 		emojioneReady(
 			function() {
-				init( self, element, options );
+				init( self, element, self.options );
 			}
 		);
 	};
@@ -1895,6 +1905,12 @@ document = window.document || {};
 
 	EmojioneArea.prototype.showPicker = function () {
 		var self = this;
+
+		var offset = self.button.offset();
+		var topPosition = offset.top;
+		var leftPosition = offset.left;
+		var transformValue = 'translate(' + (leftPosition - 335) + 'px, ' + (topPosition - 420) + 'px) translate(-100%, -100%)';
+
 		if (self._sh_timer) {
 			window.clearTimeout( self._sh_timer );
 		}
@@ -1902,6 +1918,9 @@ document = window.document || {};
 		self._sh_timer = window.setTimeout(
 			function() {
 				self.button.addClass( "active" );
+				if (self.options.detachedPicker) {
+					self.picker.css('transform', transformValue);
+				}
 			},
 			50
 		);
