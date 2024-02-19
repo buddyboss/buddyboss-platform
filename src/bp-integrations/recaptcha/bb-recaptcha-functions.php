@@ -492,9 +492,11 @@ function bb_recaptcha_display( $display = false ) {
 		if ( bb_recaptcha_allow_bypass_enable() ) {
 			$get_url_string = bb_filter_input_string( INPUT_GET, 'bypass_captcha' );
 			$get_url_string = ! empty( $get_url_string ) ? base64_encode( $get_url_string ) : '';
-			?>
-			<input type="hidden" id="bb_recaptcha_bypass_id" name="bb_recaptcha_bypass" value="<?php echo esc_html( $get_url_string ); ?>"/>
-			<?php
+			if ( ! empty( $get_url_string ) ) {
+				?>
+				<input type="hidden" id="bb_recaptcha_bypass_id" name="bb_recaptcha_bypass" value="<?php echo esc_html( $get_url_string ); ?>"/>
+				<?php
+			}
 		}
 		// Recaptcha api url.
 		$api_url    = 'https://www.google.com/recaptcha/api.js';
