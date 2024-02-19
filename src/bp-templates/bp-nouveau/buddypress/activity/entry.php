@@ -37,7 +37,7 @@ if ( ! empty( $link_embed ) ) {
 		<span class="bb-pin-action_button" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Pinned Post', 'buddyboss' ); ?>">
 			<i class="bb-icon-f bb-icon-thumbtack"></i>
 		</span>
-		<span class="bb-unmute-action_button" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Turned Off Notification', 'buddyboss' ); ?>">
+		<span class="bb-mute-action_button" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Turned Off Notification', 'buddyboss' ); ?>">
 			<i class="bb-icon-f bb-icon-bell-slash"></i>
 		</span>
 	</div>

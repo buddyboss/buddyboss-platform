@@ -4003,7 +4003,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
   top: 10px;
 }
 
-.activity-list .bb-pin-action .bb-unmute-action_button,
+.activity-list .bb-pin-action .bb-mute-action_button,
 .activity-list .bb-pin-action .bb-pin-action_button {
   cursor: default;
   display: none;
@@ -4024,8 +4024,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
   display: inline-block;
 }
 
-.activity-list .loading-mute .bb-unmute-action_button,
-.activity-list .bb-muted .bb-unmute-action_button {
+.activity-list .loading-mute .bb-mute-action_button,
+.activity-list .bb-muted .bb-mute-action_button {
   display: inline-block;
 }
 
@@ -4033,13 +4033,13 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
   left: 45px;
 }
 
-.activity-list .activity-item.loading-mute .bb-unmute-action_button [class*="bb-icon"],
+.activity-list .activity-item.loading-mute .bb-mute-action_button [class*="bb-icon"],
 .activity-list .activity-item.loading-pin .bb-pin-action_button [class*="bb-icon"] {
   animation: spin 2s infinite linear;
   display: inline-block;
 }
 
-.activity-list .activity-item.loading-mute .bb-unmute-action_button [class*="bb-icon"]:before,
+.activity-list .activity-item.loading-mute .bb-mute-action_button [class*="bb-icon"]:before,
 .activity-list .activity-item.loading-pin .bb-pin-action_button [class*="bb-icon"]:before {
   content: "\ef30";
   font-size: 20px;
