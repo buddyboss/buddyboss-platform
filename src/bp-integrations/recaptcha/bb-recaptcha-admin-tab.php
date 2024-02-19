@@ -431,14 +431,9 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	public function setting_callback_allow_bypass() {
-		$checked      = (bool) bb_recaptcha_setting( 'allow_bypass', false );
-		$actions      = bb_recaptcha_actions();
+		$checked      = bb_recaptcha_allow_bypass_enable();
 		$allow_bypass = false;
-		if (
-			isset( $actions['bb_login']['enabled'] ) &&
-			true === $actions['bb_login']['enabled'] &&
-			$checked
-		) {
+		if ( bb_recaptcha_is_enabled( 'bb_login' ) && $checked ) {
 			$allow_bypass = true;
 		}
 		?>
