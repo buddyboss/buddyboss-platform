@@ -1152,3 +1152,10 @@ function buddyboss_directory_save_layout() {
 
 add_action( 'wp_ajax_buddyboss_directory_save_layout', 'buddyboss_directory_save_layout' );
 add_action( 'wp_ajax_nopriv_buddyboss_directory_save_layout', 'buddyboss_directory_save_layout' );
+
+
+function bb_recaptcha_login() {
+	bb_recaptcha_display();
+}
+
+add_action( 'login_form', 'bb_recaptcha_login', 99 );
