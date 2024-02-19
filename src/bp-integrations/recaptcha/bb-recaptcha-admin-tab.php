@@ -400,10 +400,10 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 	public function setting_callback_score_threshold() {
 		?>
-		<input name="bb_recaptcha[score_threshold]" id="bb-recaptcha-score-threshold" type="number" min="0" max="10" value="<?php echo esc_attr( bb_recaptcha_setting( 'score_threshold', 6 ) ); ?>" required/>
+		<input name="bb_recaptcha[score_threshold]" id="bb-recaptcha-score-threshold" type="number" min="0" max="1" step="0.1" value="<?php echo esc_attr( bb_recaptcha_setting( 'score_threshold', 0.5 ) ); ?>" required/>
 		<p class="description">
 			<?php
-			esc_html_e( 'reCAPTCHA v3 provides a score for every request seamlessly, without causing user friction. Input a risk score between 1 and 10 in the field above to evaluate the probability of being identified as a bot.', 'buddyboss' );
+			esc_html_e( 'reCAPTCHA v3 provides a score for every request seamlessly, without causing user friction. Input a risk score between 0 and 1 in the field above to evaluate the probability of being identified as a bot.', 'buddyboss' );
 			?>
 		</p>
 		<?php
