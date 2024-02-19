@@ -706,7 +706,7 @@ function bb_recaptcha_remove_duplicate_scripts() {
 		foreach ( $urls as $url ) {
 			if (
 				false !== strpos( $wp_scripts->registered[ $handle ]->src, $url ) &&
-				'' !== $handle
+				'bb-recaptcha-api' !== $handle
 			) {
 				wp_dequeue_script( $handle );
 				wp_deregister_script( $handle );
