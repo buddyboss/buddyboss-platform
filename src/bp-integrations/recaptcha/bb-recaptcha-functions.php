@@ -335,6 +335,18 @@ function bb_recaptcha_connection_status() {
 	return apply_filters( 'bb_recaptcha_connection_status', $connection_status );
 }
 
+/**
+ * Retrieve the Google reCAPTCHA API response.
+ * This function sends a request to the Google reCAPTCHA API to verify the provided token.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $secret_key The secret key for the Google reCAPTCHA.
+ * @param string $token      The token to be verified by the Google reCAPTCHA API.
+ *
+ * @return array|false Returns an associative array containing the API response if successful,
+ *                     or false if there's an error or if the API response is invalid.
+ */
 function bb_get_google_recaptcha_api_response( $secret_key, $token ) {
 	$get_data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $token );
 	$response = json_decode( wp_remote_retrieve_body( $get_data ), true );
@@ -342,6 +354,14 @@ function bb_get_google_recaptcha_api_response( $secret_key, $token ) {
 	return $response;
 }
 
+/**
+ * Display the reCAPTCHA widget based on the configured settings.
+ * This function checks the connection status with the reCAPTCHA service and displays the appropriate reCAPTCHA widget
+ * based on the enabled version (v2 or v3) and the configured actions.
+ *
+ * @since BuddyBoss [BBVERSION]
+ * @return void
+ */
 function bb_recaptcha_display() {
 	$verified = bb_recaptcha_connection_status();
 	if ( ! empty( $verified ) && 'connected' === $verified ) {
@@ -381,6 +401,16 @@ function bb_recaptcha_display() {
 	}
 }
 
+/**
+ * Enqueue scripts and localize data for reCAPTCHA in the login footer.
+ * This function enqueues the necessary JavaScript file for reCAPTCHA integration and localizes data
+ * to be used by the JavaScript code. The localized data includes information about the selected reCAPTCHA version,
+ * site key, and actions enabled for reCAPTCHA verification.
+ * For reCAPTCHA v2, additional configuration options such as the theme, size, and badge position are also included.
+ *
+ * @since BuddyBoss [BBVERSION]
+ * @return void
+ */
 function bb_recaptcha_add_scripts_login_footer() {
 	$min = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 	wp_enqueue_script(
@@ -409,10 +439,25 @@ function bb_recaptcha_add_scripts_login_footer() {
 	wp_localize_script( 'bb-recaptcha', 'bbRecaptcha', array( 'data' => $localize_data ) );
 }
 
+/**
+ * Perform reCAPTCHA verification on the front end.
+ * This function checks the submitted reCAPTCHA token and verifies it with the Google reCAPTCHA API.
+ * It handles verification for both reCAPTCHA v2 and reCAPTCHA v3 based on the selected version.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return true|WP_Error Returns true if reCAPTCHA verification is successful,
+ *                       or a WP_Error object if verification fails.
+ */
 function bb_recaptcha_verification_front() {
 	$selected_version = bb_recaptcha_recaptcha_versions();
 	$secret_key       = bb_recaptcha_secret_key();
-	$token_response   = bb_filter_input_string( INPUT_POST, 'g-recaptcha-response' );
+
+	if ( bb_recaptcha_allow_ip() ) {
+		return true;
+	}
+
+	$token_response = bb_filter_input_string( INPUT_POST, 'g-recaptcha-response' );
 
 	if ( 'recaptcha_v3' === $selected_version ) {
 		if ( empty( $token_response ) ) {
@@ -459,4 +504,77 @@ function bb_recaptcha_verification_front() {
 	}
 
 	return true;
+}
+
+/**
+ * Check if the current user's IP is allowed to bypass reCAPTCHA verification.
+ * This function checks if the current user's IP address is included in the list of allowed IPs
+ * specified in the plugin settings. If the current IP is found in the list, reCAPTCHA verification
+ * is bypassed for the user.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool Returns true if the current user's IP is allowed to bypass reCAPTCHA verification, otherwise false.
+ */
+function bb_recaptcha_allow_ip() {
+	$get_allowed_ip = bb_recaptcha_setting( 'exclude_ip' );
+	if ( ! empty( $get_allowed_ip ) ) {
+		$allowed_ips = explode( PHP_EOL, $get_allowed_ip );
+		$current_ip  = bb_recaptcha_get_current_ip();
+		if ( in_array( $current_ip, $allowed_ips, true ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * Get the current user's IP address.
+ * This function retrieves the IP address of the current user by checking various HTTP headers
+ * commonly used to forward client IP addresses. It prioritizes headers that are most reliable for
+ * determining the actual client IP address. The function also validates the IP address to ensure
+ * it is not a private or reserved IP address.
+ *
+ * @since BuddyBoss [BBVERSION]
+ * @return string|false The current user's IP address if successfully retrieved and validated,
+ *                      or false if the IP address cannot be determined or is invalid.
+ */
+function bb_recaptcha_get_current_ip() {
+	$current_ip = false;
+	if ( isset( $_SERVER ) ) {
+		// In order of preference, with the best ones for this purpose first.
+		$address_headers = array(
+			'HTTP_CLIENT_IP',
+			'HTTP_X_FORWARDED_FOR',
+			'HTTP_X_FORWARDED',
+			'HTTP_X_CLUSTER_CLIENT_IP',
+			'HTTP_FORWARDED_FOR',
+			'HTTP_FORWARDED',
+			'REMOTE_ADDR',
+		);
+
+		foreach ( $address_headers as $header ) {
+			if ( array_key_exists( $header, $_SERVER ) ) {
+				$address_chain = explode( ',', $_SERVER[ $header ] );
+				$current_ip    = trim( $address_chain[0] );
+
+				if ( filter_var( $current_ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) !== false ) {
+					return $current_ip;
+				}
+			}
+		}
+	}
+
+	if ( ! $current_ip ) {
+		return false;
+	}
+
+	$anon_ip = wp_privacy_anonymize_ip( $current_ip, true );
+
+	if ( '0.0.0.0' === $anon_ip || '::' === $anon_ip ) {
+		return false;
+	}
+
+	return $anon_ip;
 }
