@@ -9359,7 +9359,7 @@ function bb_core_get_first_character( $string ) {
 		$character = '';
 	}
 
-	return $character;
+	return strval( $character );
 }
 
 /**
@@ -9422,7 +9422,7 @@ function bb_get_default_png_avatar( $params ) {
 	$group_fallback_avatar  = buddypress()->plugin_url . 'bp-core/images/group-avatar-buddyboss.png';
 
 	if ( empty( $item_id ) ) {
-		return $user_fallback_avatar;
+		return ( 'user' === $object ) ? $user_fallback_avatar : $group_fallback_avatar;
 	}
 
 	if ( 'user' === $object ) {
@@ -9458,7 +9458,7 @@ function bb_get_default_png_avatar( $params ) {
 		$avatar_image_url = bb_generate_default_avatar( $params )['url'];
 	}
 
-	return ! empty( $avatar_image_url ) ? $avatar_image_url : $user_fallback_avatar;
+	return ! empty( $avatar_image_url ) ? $avatar_image_url : ( ( 'user' === $object ) ? $user_fallback_avatar : $group_fallback_avatar );
 }
 
 /**
@@ -9520,7 +9520,7 @@ function bb_generate_default_avatar( $args ) {
 
 			// If visibility is public, then display the second character.
 			if ( 'public' === $field_visibility ) {
-				$last_name = xprofile_get_field_data( $last_filed_id, $r['item_id'] );;
+				$last_name = xprofile_get_field_data( $last_filed_id, $r['item_id'] );
 				if ( ! empty( $last_name ) ) {
 					$char2 = bb_core_get_first_character( $last_name );
 				}
@@ -9529,7 +9529,7 @@ function bb_generate_default_avatar( $args ) {
 	}
 
 	$item_name = strtoupper( $char1 . $char2 );
-	if ( empty( $item_name ) ) {
+	if ( empty( $item_name ) && '0' !== $item_name ) {
 		return $prepare_response;
 	}
 

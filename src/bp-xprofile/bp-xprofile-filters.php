@@ -805,8 +805,11 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
 	if ( empty( $user_id ) ) {
 		return $full_name;
 	}
+
+	global $bb_default_display_avatar;
+
 	$cache_key = 'bb_xprofile_filter_get_user_display_name_' . trim( $user_id );
-	if ( isset( $cache[ $cache_key ] ) ) {
+	if ( isset( $cache[ $cache_key ] ) && ! $bb_default_display_avatar ) {
 		return $cache[ $cache_key ];
 	}
 
@@ -828,6 +831,7 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
 				$full_name = str_replace( ' ' . $last_name, '', $full_name );
 			}
 		}
+		$bb_default_display_avatar = false;
 		$cache[ $cache_key ] = $full_name;
 	}
 
@@ -1551,6 +1555,8 @@ function bb_xprofile_remove_default_png_avatar_on_update_user_details( $field ) 
 		return;
 	}
 
+	global $bb_default_display_avatar;
+
 	$current_value = get_option( 'bp-display-name-format' );
 	$field_ids     = array();
 	if (
@@ -1565,7 +1571,8 @@ function bb_xprofile_remove_default_png_avatar_on_update_user_details( $field ) 
 		$field_ids[] = bp_xprofile_nickname_field_id();
 	}
 
-	if ( ! in_array( $field->field_id, $field_ids, true ) ) {
+	$field_ids = wp_parse_id_list( $field_ids );
+	if ( ! in_array( (int) $field->field_id, $field_ids, true ) ) {
 		return;
 	}
 
@@ -1573,7 +1580,9 @@ function bb_xprofile_remove_default_png_avatar_on_update_user_details( $field ) 
 	$old_value = xprofile_get_field_data( $field->field_id, $field->user_id );
 	$old_value = ( ! empty( $old_value ) ? bb_core_get_first_character( $old_value ) : '' );
 
+	$bb_default_display_avatar = false;
 	if ( $new_value !== $old_value ) {
+		$bb_default_display_avatar = true;
 		bb_delete_default_user_png_avatar( array( $field->user_id ) );
 	}
 }
