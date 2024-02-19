@@ -1520,7 +1520,8 @@ function bb_xprofile_remove_default_png_avatar_on_update_user_details( $field ) 
 		$field_ids[] = bp_xprofile_nickname_field_id();
 	}
 
-	if ( ! in_array( $field->field_id, $field_ids, true ) ) {
+	$field_ids = wp_parse_id_list( $field_ids );
+	if ( ! in_array( (int) $field->field_id, $field_ids, true ) ) {
 		return;
 	}
 
