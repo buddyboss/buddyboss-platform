@@ -368,13 +368,23 @@ function bb_recaptcha_display() {
 		$site_key    = bb_recaptcha_site_key();
 		$enabled_for = bb_recaptcha_recaptcha_versions();
 		$actions     = bb_recaptcha_actions();
+		$lang        = bb_recaptcha_setting( 'language_code', 'en' );
+
+		// Recaptcha api url.
+		$api_url    = 'https://www.google.com/recaptcha/api.js';
+		$query_args = array();
+		if ( 'en' !== $lang ) {
+			$query_args['hl'] = $lang;
+		}
 		if ( 'recaptcha_v3' === $enabled_for ) {
 			?>
 			<input type="hidden" id="bb_recaptcha_login_v3" name="g-recaptcha-response"/>
 			<?php
-			$api_url = sprintf( 'https://www.google.com/recaptcha/api.js?render=%s', $site_key );
+			$query_args['render'] = $site_key;
+			$api_url              = add_query_arg( $query_args, $api_url );
 		} elseif ( 'recaptcha_v2' === $enabled_for ) {
-			$api_url = 'https://www.google.com/recaptcha/api.js?render=explicit';
+			$query_args['render'] = 'explicit';
+			$api_url              = add_query_arg( $query_args, $api_url );
 			?>
 			<div id="bb_recaptcha_login_v2" class="bb_recaptcha_login_v2_content" data-sitekey="<?php echo $site_key; ?>"></div>
 			<?php
