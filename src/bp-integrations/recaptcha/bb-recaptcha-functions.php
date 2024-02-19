@@ -412,9 +412,8 @@ function bb_recaptcha_add_scripts_login_footer() {
 function bb_recaptcha_verification_front() {
 	$selected_version = bb_recaptcha_recaptcha_versions();
 	$secret_key       = bb_recaptcha_secret_key();
+	$token_response   = bb_filter_input_string( INPUT_POST, 'g-recaptcha-response' );
 
-	$token_response = bb_filter_input_string( INPUT_POST, 'g-recaptcha-response' );
-	
 	if ( 'recaptcha_v3' === $selected_version ) {
 		if ( empty( $token_response ) ) {
 			return new WP_Error(
@@ -423,7 +422,14 @@ function bb_recaptcha_verification_front() {
 			);
 		} else {
 			$response = bb_get_google_recaptcha_api_response( $secret_key, $token_response );
-			if ( ! empty( $response ) && (bool) $response['success'] ) {
+			if ( ! empty( $response ) && $response['success'] ) {
+				$score_threshold = bb_recaptcha_setting( 'score_threshold', 6 );
+				if ( $response['score'] < $score_threshold ) {
+					return new WP_Error(
+						'bb_recaptcha_v3_failed',
+						__( "<strong>ERROR</strong>: reCAPTCHA verification failed.<br />Please try again.", 'buddyboss' )
+					);
+				}
 				return true;
 			} else {
 				return new WP_Error(
@@ -441,7 +447,7 @@ function bb_recaptcha_verification_front() {
 			);
 		} else {
 			$response = bb_get_google_recaptcha_api_response( $secret_key, $token_response );
-			if ( ! empty( $response ) && (bool) $response['success'] ) {
+			if ( ! empty( $response ) && $response['success'] ) {
 				return true;
 			} else {
 				return new WP_Error(

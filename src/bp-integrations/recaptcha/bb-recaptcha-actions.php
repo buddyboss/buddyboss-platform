@@ -47,7 +47,7 @@ function bb_recaptcha_verification_admin_settings() {
 					<p>' . __( 'reCAPTCHA verification failed, please try again', 'buddyboss' ) . '</p>';
 		} else {
 			$response = bb_get_google_recaptcha_api_response( $secret_key, $captcha_response );
-			if ( ! empty( $response ) && (bool) $response['success'] ) {
+			if ( ! empty( $response ) && $response['success'] ) {
 				$connection_status = 'connected';
 				$data              = '<img src="' . bb_recaptcha_integration_url( 'assets/images/success.png' ) . '" />
 					<p>' . __( 'reCAPTCHA verification was successful', 'buddyboss' ) . '</p>';
@@ -62,7 +62,7 @@ function bb_recaptcha_verification_admin_settings() {
 					<p>' . __( 'reCAPTCHA verification failed, please try again', 'buddyboss' ) . '</p>';
 		} else {
 			$response = bb_get_google_recaptcha_api_response( $secret_key, $captcha_response );
-			if ( ! empty( $response ) && (bool) $response['success'] ) {
+			if ( ! empty( $response ) && $response['success'] ) {
 				$connection_status = 'connected';
 				$data              = '<img src="' . bb_recaptcha_integration_url( 'assets/images/success.png' ) . '" />
 					<p>' . __( 'reCAPTCHA verification was successful', 'buddyboss' ) . '</p>';
