@@ -217,13 +217,9 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 * @return array $fields setting fields for pusher integration.
 	 */
 	public function get_settings_fields() {
-		$verified           = bb_recaptcha_connection_status();
-		$enabled_for        = bb_recaptcha_recaptcha_versions();
-		$actions            = bb_recaptcha_actions();
-		$recaptcha_v2_class = 'bp-hide';
-		if ( 'recaptcha_v2' === $enabled_for ) {
-			$recaptcha_v2_class = '';
-		}
+		$verified    = bb_recaptcha_connection_status();
+		$enabled_for = bb_recaptcha_recaptcha_versions();
+		$actions     = bb_recaptcha_actions();
 
 		$fields = array();
 
@@ -244,7 +240,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'title'             => esc_html__( 'reCAPTCHA v2 option', 'buddyboss' ),
 				'callback'          => array( $this, 'setting_callback_recaptcha_v2_option' ),
 				'sanitize_callback' => 'string',
-				'args'              => array( 'class' => 'hidden-header field-button recaptcha_v2 ' . $recaptcha_v2_class ),
+				'args'              => array( 'class' => 'hidden-header field-button recaptcha_v2 ' . ( 'recaptcha_v2' === $enabled_for ? '' : 'bp-hide' ) ),
 			),
 			'bb-recaptcha-site-key'   => array(
 				'title'             => __( 'Site Key', 'buddyboss' ),
@@ -271,7 +267,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'title'             => esc_html__( 'Score Threshold', 'buddyboss' ),
 				'callback'          => array( $this, 'setting_callback_score_threshold' ),
 				'sanitize_callback' => 'absint',
-				'args'              => array( 'class' => 'recaptcha_v3' ),
+				'args'              => array( 'class' => 'recaptcha_v3 '. ( 'recaptcha_v2' === $enabled_for ? 'bp-hide' : '' ) ),
 			),
 			'bb-recaptcha-enabled-for'     => array(
 				'title'    => esc_html__( 'Enabled For', 'buddyboss' ),
