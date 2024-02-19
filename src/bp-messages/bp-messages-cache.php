@@ -83,6 +83,8 @@ function bp_messages_clear_cache_on_message_delete( $thread_ids, $user_id ) {
 	// Delete thread and thread recipient cache.
 	foreach ( (array) $thread_ids as $thread_id ) {
 		// wp_cache_delete( $thread_id, 'bp_messages_threads' );
+		$cache_key = "{$thread_id}99999999";
+		wp_cache_delete( $cache_key, 'bp_messages_threads' );
 		bp_messages_delete_thread_paginated_messages_cache( $thread_id );
 		wp_cache_delete( "thread_recipients_{$thread_id}", 'bp_messages' );
 		wp_cache_delete( "bb_thread_message_unread_count_{$user_id}_{$thread_id}", 'bp_messages_unread_count' );
