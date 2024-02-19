@@ -9388,7 +9388,7 @@ function bb_get_default_png_avatar( $params ) {
 	$group_fallback_avatar  = buddypress()->plugin_url . 'bp-core/images/group-avatar-buddyboss.png';
 
 	if ( empty( $item_id ) ) {
-		return $user_fallback_avatar;
+		return ( 'user' === $object ) ? $user_fallback_avatar : $group_fallback_avatar;
 	}
 
 	if ( 'user' === $object ) {
@@ -9424,7 +9424,7 @@ function bb_get_default_png_avatar( $params ) {
 		$avatar_image_url = bb_generate_default_avatar( $params )['url'];
 	}
 
-	return ! empty( $avatar_image_url ) ? $avatar_image_url : $user_fallback_avatar;
+	return ! empty( $avatar_image_url ) ? $avatar_image_url : ( ( 'user' === $object ) ? $user_fallback_avatar : $group_fallback_avatar );
 }
 
 /**
