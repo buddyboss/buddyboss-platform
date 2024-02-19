@@ -3687,6 +3687,10 @@ function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
 	return $activity_comment_data;
 }
 
+function bp_emojionearea_add_popup_template() {
+	bp_get_template_part( 'activity/emojionearea-popup' );
+}
+
 /**
  * Add activity modal template for activity pages
  */
@@ -3697,3 +3701,5 @@ function bp_activity_add_modal_template() {
 add_action( 'bp_after_directory_activity_list', 'bp_activity_add_modal_template' );
 add_action( 'bp_after_group_activity_content', 'bp_activity_add_modal_template' );
 add_action( 'bp_after_member_activity_content', 'bp_activity_add_modal_template' );
+
+add_action( 'bp_before_directory_activity_list', 'bp_emojionearea_add_popup_template' );
