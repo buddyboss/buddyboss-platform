@@ -11,6 +11,11 @@ defined( 'ABSPATH' ) || exit;
 
 add_action( 'wp_ajax_bb_recaptcha_verification_admin_settings', 'bb_recaptcha_verification_admin_settings' );
 
+/**
+ * Handles AJAX request for reCAPTCHA verification in admin settings.
+ *
+ * @sicne BuddyBoss [BBVERSION]
+ */
 function bb_recaptcha_verification_admin_settings() {
 
 	$nonce = bb_filter_input_string( INPUT_POST, 'nonce' );

@@ -31,6 +31,20 @@ function bb_admin_recaptcha_class( $classes ) {
 	return $classes;
 }
 
+/**
+ * Checks the login credentials and performs reCAPTCHA verification if enabled.
+ * If reCAPTCHA verification fails, the function returns a WP_Error object containing the error message.
+ *
+ * @sicne BuddyBoss [BBVERSION]
+ *
+ * @param WP_User|WP_Error|null $user     WP_User object if the user is authenticated, WP_Error object on error, or
+ *                                        null if not authenticated.
+ * @param string                $username The username submitted during login.
+ * @param string                $password The password submitted during login.
+ *
+ * @return WP_User|WP_Error|null WP_User object if the user is authenticated, WP_Error object on error, or null if not
+ *                               authenticated.
+ */
 function bb_recaptcha_login_check( $user, $username, $password ) {
 	if ( ! $username ) {
 		return $user;

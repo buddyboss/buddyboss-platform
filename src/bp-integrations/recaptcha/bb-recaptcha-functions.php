@@ -20,14 +20,57 @@ function bb_recaptcha_integration_url( $path = '' ) {
 	return trailingslashit( buddypress()->integration_url ) . 'recaptcha/' . trim( $path, '/\\' );
 }
 
-function bb_recaptcha_score_threshold( $default = 6 ) {
+/**
+ * Retrieves the reCAPTCHA score threshold.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param float $default The default score threshold value. Default is 0.5.
+ *
+ * @return int The reCAPTCHA score threshold.
+ */
+function bb_recaptcha_score_threshold( $default = 0.5 ) {
+
+	/**
+	 * Filter allows modifying the reCAPTCHA score threshold.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param float $threshold The reCAPTCHA score threshold.
+	 */
 	return (int) apply_filters( 'bb_recaptcha_score_threshold', bp_get_option( 'bb_recaptcha_score_threshold', $default ) );
 }
 
+/**
+ * Retrieves the reCAPTCHA options.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array The reCAPTCHA options.
+ */
 function bb_recaptcha_options() {
+
+	/**
+	 * Filter allows modifying the reCAPTCHA options.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param float $recaptcha_options The reCAPTCHA options.
+	 */
 	return apply_filters( 'bb_recaptcha_options', bp_get_option( 'bb_recaptcha', array() ) );
 }
 
+/**
+ * Retrieves the value of a specific reCAPTCHA setting.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $key     The key of the setting to retrieve.
+ * @param mixed  $default Optional. The default value to return if the setting is not found.
+ *                        Default is an empty string.
+ *
+ * @return mixed The value of the specified reCAPTCHA setting, or the default value if not found.
+ */
 function bb_recaptcha_setting( $key, $default = '' ) {
 	$settings = bb_recaptcha_options();
 	$retval   = $default;
@@ -36,17 +79,24 @@ function bb_recaptcha_setting( $key, $default = '' ) {
 	}
 
 	/**
-	 * Filters TutorLMS get settings.
+	 * Filters recaptcha get settings.
 	 *
-	 * @since 2.4.40
+	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array  $retval  Settings of tutorlms.
+	 * @param array  $retval  Settings of recaptcha.
 	 * @param string $key     Optional. Get setting by key.
 	 * @param string $default Optional. Default value if value or setting not available.
 	 */
 	return apply_filters( 'bb_recaptcha_setting', $retval, $key, $default );
 }
 
+/**
+ * Retrieves the reCAPTCHA actions and their configurations.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array An associative array of reCAPTCHA actions and their configurations.
+ */
 function bb_recaptcha_actions() {
 	$actions = array(
 		'bb_login'         => array(
@@ -71,17 +121,47 @@ function bb_recaptcha_actions() {
 		),
 	);
 
+	/**
+	 * Filter hook allows modifying the reCAPTCHA actions and their configurations.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $actions An associative array of reCAPTCHA actions and their configurations.
+	 */
 	return apply_filters( 'bb_recaptcha_actions', $actions );
 }
 
-
+/**
+ * Determines if reCAPTCHA is enabled for a specific action.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $key The key of the action for which to check reCAPTCHA enabled status.
+ *
+ * @return bool True if reCAPTCHA is enabled for the action, false otherwise.
+ */
 function bb_recaptcha_is_enabled( $key ) {
 	$enabled_keys = bb_recaptcha_setting( 'enabled_for', array() );
 	$retval = ! empty( $key ) && array_key_exists( $key, $enabled_keys ) && ! empty( $enabled_keys[ $key ] );
 
+	/**
+	 * Filters the enabled status of reCAPTCHA for a specific action.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool   $retval The current enabled status of reCAPTCHA for the specified action.
+	 * @param string $key    The key of the action for which the enabled status is being determined.
+	 */
 	return (bool) apply_filters( 'bb_recaptcha_is_enabled', $retval, $key );
 }
 
+/**
+ * Retrieves the list of supported reCAPTCHA languages.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array An associative array of supported reCAPTCHA languages.
+ */
 function bb_recaptcha_languages() {
 	$languages = array(
 		'ar'     => esc_html__( 'Arabic', 'buddyboss' ),
@@ -156,6 +236,14 @@ function bb_recaptcha_languages() {
 		'zu'     => esc_html__( 'Zulu', 'buddyboss' ),
 	);
 
+	/**
+	 * Filters the list of supported reCAPTCHA languages.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $languages An associative array of supported reCAPTCHA languages where the keys are
+	 *                         language codes and the values are the corresponding language names.
+	 */
 	return apply_filters( 'bb_recaptcha_languages', $languages );
 }
 
@@ -175,8 +263,6 @@ function bb_recaptcha_recaptcha_versions() {
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $recaptcha_version The selected reCAPTCHA version.
-	 *
-	 * @return string The filtered reCAPTCHA version.
 	 */
 	return apply_filters( 'bb_recaptcha_recaptcha_versions', $recaptcha_version );
 }
@@ -197,8 +283,6 @@ function bb_recaptcha_recaptcha_v2_option() {
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $recaptcha_v2_option The selected reCAPTCHA v2 option.
-	 *
-	 * @return string The filtered reCAPTCHA v2 option.
 	 */
 	return apply_filters( 'bb_recaptcha_recaptcha_v2_option', $recaptcha_v2_option );
 }
@@ -218,9 +302,7 @@ function bb_recaptcha_v2_theme() {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $recaptcha_v2_theme The selected reCAPTCHA v2 theme.
-	 *
-	 * @return string The filtered reCAPTCHA v2 theme.
+	 * @param string $recaptcha_v2_theme The selected reCAPTCHA v2 theme..
 	 */
 	return apply_filters( 'bb_recaptcha_v2_theme', $recaptcha_v2_theme );
 }
@@ -241,8 +323,6 @@ function bb_recaptcha_v2_size() {
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $recaptcha_v2_size The selected reCAPTCHA v2 size.
-	 *
-	 * @return string The filtered reCAPTCHA v2 size.
 	 */
 	return apply_filters( 'bb_recaptcha_v2_size', $recaptcha_v2_size );
 }
@@ -263,8 +343,6 @@ function bb_recaptcha_v2_badge() {
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $recaptcha_v2_badge The selected reCAPTCHA v2 badge.
-	 *
-	 * @return string The filtered reCAPTCHA v2 badge.
 	 */
 	return apply_filters( 'bb_recaptcha_v2_badge', $recaptcha_v2_badge );
 }
@@ -285,8 +363,6 @@ function bb_recaptcha_site_key() {
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $site_key The reCAPTCHA site key.
-	 *
-	 * @return string The filtered reCAPTCHA site key.
 	 */
 	return apply_filters( 'bb_recaptcha_site_key', $site_key );
 }
@@ -307,8 +383,6 @@ function bb_recaptcha_secret_key() {
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $secret_key The reCAPTCHA secret key.
-	 *
-	 * @return string The filtered reCAPTCHA secret key.
 	 */
 	return apply_filters( 'bb_recaptcha_secret_key', $secret_key );
 }
@@ -329,8 +403,6 @@ function bb_recaptcha_connection_status() {
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $secret_key The reCAPTCHA connection status.
-	 *
-	 * @return string The filtered reCAPTCHA connection status.
 	 */
 	return apply_filters( 'bb_recaptcha_connection_status', $connection_status );
 }
