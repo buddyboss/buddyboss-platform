@@ -748,13 +748,13 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					'disabled'    => 'v2_checkbox' === $v2_option || 'connected' !== $connection,
 					'opt_wrapper' => true,
 					'name'        => 'bb_recaptcha[badge_position]',
-					'value'       => bb_recaptcha_setting( 'badge_position', 'bottom-right' ),
+					'value'       => bb_recaptcha_setting( 'badge_position', 'bottomright' ),
 					'options'     => array(
-						'bottom-right' => array(
+						'bottomright' => array(
 							'label' => esc_html__( 'Bottom Right', 'buddyboss' ),
 							'class' => 'option opt-bottom-right',
 						),
-						'bottom-left'  => array(
+						'bottomleft'  => array(
 							'label' => esc_html__( 'Bottom Left', 'buddyboss' ),
 							'class' => 'option opt-bottom-left',
 						),
