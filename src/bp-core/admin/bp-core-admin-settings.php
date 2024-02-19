@@ -501,10 +501,10 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 		<?php
 		echo sprintf(
 		/* translators: Profile text with link. */
-			__( 'Display name will show either a single initial or double initial depending on your display name option in %s settings.', 'buddyboss' ),
+			__( 'Display name will show either as a single initial or as double initials depending on your display name option in %s.', 'buddyboss' ),
 			sprintf(
 				'<a href="#bp-display-name-format">%s</a>',
-				__( 'Profile', 'buddyboss' )
+				__( 'Profile settings', 'buddyboss' )
 			)
 		);
 		?>
