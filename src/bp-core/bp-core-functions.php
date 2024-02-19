@@ -9274,3 +9274,26 @@ function bb_reactions_get_settings_fields() {
 
 	return (array) apply_filters( 'bb_reactions_get_settings_fields', $fields );
 }
+
+/**
+ * Removed the old background job records.
+ *
+ * @since  BuddyBoss [BBVERSION]
+ *
+ * @param array $bg_ids IDs of bg jobs.
+ *
+ * @return @void
+ */
+function bb_bg_remove_logs( $bg_ids = array() ) {
+	global $wpdb;
+
+	if ( empty( $bg_ids ) ) {
+		return;
+	}
+
+	$bg_log_table_name = "{$wpdb->prefix}bb_background_process_logs";
+
+	$ids    = wp_parse_id_list( $bg_ids );
+	$ids_in = "'" . implode( "','", $ids ) . "'";
+	$wpdb->query( "DELETE FROM {$bg_log_table_name} WHERE id IN ($ids_in)" ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+}

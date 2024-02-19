@@ -443,7 +443,42 @@ class BB_BG_Process_Log {
 	public function clear_logs() {
 		global $wpdb;
 
-		$wpdb->query( "DELETE id FROM {$this->table_name} WHERE process_start_date <= CONVERT_TZ(NOW(), 'SYSTEM', '+00:00') - INTERVAL 30 DAY;" ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$results = $wpdb->get_results( "SELECT id FROM {$this->table_name} WHERE process_start_date <= CONVERT_TZ(NOW(), 'SYSTEM', '+00:00') - INTERVAL 30 DAY;", ARRAY_A ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+		/**
+		 * Filter the limit of rows to delete from the background process log table.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $limit Limit.
+		 */
+		$limit = apply_filters( 'bb_bg_process_log_delete_limit', 1000 );
+
+		$pluck_ids = ! empty( $results ) ? wp_list_pluck( $results, 'id' ) : array();
+		$count     = count( $pluck_ids );
+
+		if ( $count > $limit ) {
+			global $bb_background_updater;
+
+			$chunked_data = array_chunk( $pluck_ids, $limit );
+
+			foreach ( $chunked_data as $chunked_ids ) {
+				$bb_background_updater->data(
+					array(
+						'type'     => 'bb_bg_remove_old_logs',
+						'group'    => 'bb_bg_remove_old_logs',
+						'callback' => 'bb_bg_remove_logs',
+						'args'     => array( $chunked_ids ),
+					),
+				);
+
+				$bb_background_updater->save();
+			}
+
+			$bb_background_updater->schedule_event();
+		} else {
+			bb_bg_remove_logs( $pluck_ids );
+		}
 	}
 
 	/**
