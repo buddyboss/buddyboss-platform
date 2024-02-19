@@ -9325,7 +9325,7 @@ function bb_core_get_first_character( $string ) {
 		$character = '';
 	}
 
-	return $character;
+	return strval( $character );
 }
 
 /**
@@ -9486,7 +9486,7 @@ function bb_generate_default_avatar( $args ) {
 
 			// If visibility is public, then display the second character.
 			if ( 'public' === $field_visibility ) {
-				$last_name = xprofile_get_field_data( $last_filed_id, $r['item_id'] );;
+				$last_name = xprofile_get_field_data( $last_filed_id, $r['item_id'] );
 				if ( ! empty( $last_name ) ) {
 					$char2 = bb_core_get_first_character( $last_name );
 				}
@@ -9495,7 +9495,7 @@ function bb_generate_default_avatar( $args ) {
 	}
 
 	$item_name = strtoupper( $char1 . $char2 );
-	if ( empty( $item_name ) ) {
+	if ( empty( $item_name ) && '0' !== $item_name ) {
 		return $prepare_response;
 	}
 
