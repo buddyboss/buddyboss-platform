@@ -232,7 +232,7 @@ document = window.document || {};
 			emojiPlaceholder  : "",
 			searchPlaceholder : bp_emojionearea.searchPlaceholder,
 			container         : null,
-			detachedPicker   	: false,
+			detachPicker      : false,
 			containerPicker   : null,
 			hideSource        : true,
 			shortnames        : true,
@@ -1039,7 +1039,7 @@ document = window.document || {};
 					.addClass( 'hidden' )
 			);
 
-		if (options.detachedPicker && options.containerPicker) {
+		if (options.detachPicker && options.containerPicker) {
 			$( options.containerPicker ).append(picker);
 		}
 
@@ -1909,7 +1909,17 @@ document = window.document || {};
 		var offset = self.button.offset();
 		var topPosition = offset.top;
 		var leftPosition = offset.left;
-		var transformValue = 'translate(' + (leftPosition - 335) + 'px, ' + (topPosition - 420) + 'px) translate(-100%, -100%)';
+		var pickerWidth = self.picker.width();
+		var pickerHeight = self.picker.height();
+		if (
+			self.options.containerPicker &&
+			!isNaN(topPosition) &&
+			!isNaN(leftPosition) &&
+			!isNaN(pickerWidth) &&
+			!isNaN(pickerHeight)
+		) {
+			var transformValue = 'translate(' + (leftPosition - pickerWidth - 33) + 'px, ' + (topPosition - pickerHeight - 80) + 'px) translate(-100%, -100%)';
+		}
 
 		if (self._sh_timer) {
 			window.clearTimeout( self._sh_timer );
@@ -1918,7 +1928,7 @@ document = window.document || {};
 		self._sh_timer = window.setTimeout(
 			function() {
 				self.button.addClass( "active" );
-				if (self.options.detachedPicker) {
+				if (self.options.detachPicker && transformValue) {
 					self.picker.css('transform', transformValue);
 				}
 			},

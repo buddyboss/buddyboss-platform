@@ -1290,7 +1290,7 @@ window.bp = window.bp || {};
 							standalone: true,
 							hideSource: false,
 							container: hasParentModal + '#ac-reply-emoji-button-' + activity_id,
-							detachedPicker: true,
+							detachPicker: true,
 							containerPicker: '.emojionearea-theatre',
 							autocomplete: false,
 							pickerPosition: 'top',
