@@ -425,43 +425,20 @@ class BB_BG_Process_Log {
 	 */
 	private function schedule_log_event() {
 		// Check if the cron job is not already scheduled.
-		if ( ! wp_next_scheduled( 'bb_bg_log_clear' ) ) {
+		$is_scheduled = wp_next_scheduled( 'bb_bg_log_clear' );
 
-			// WP datetime.
-			$final_date = date_i18n( 'Y-m-d', strtotime( 'next Sunday' ) ) . ' 23:59:59';
-			if ( $this->is_server_cron_enabled() ) {
-				// Server timezone.
-				$utc_datetime       = date_create( $final_date, new DateTimeZone( date_default_timezone_get() ?: 'UTC' ) );
-				$schedule_timestamp = $utc_datetime->getTimestamp();
-			} else {
-				// WP timezone.
-				$local_datetime     = date_create( $final_date, wp_timezone() );
-				$schedule_timestamp = $local_datetime->getTimestamp();
-			}
+		// WP datetime.
+		$final_date         = date_i18n( 'Y-m-d', strtotime( 'next Sunday' ) ) . ' 23:59:59';
+		$local_datetime     = date_create( $final_date, wp_timezone() );
+		$schedule_timestamp = $local_datetime->getTimestamp();
 
-			// Schedule the cron job to run every Sunday at 12 AM.
+		// Schedule the cron job to run every Sunday at 12 AM.
+		if ( ! $is_scheduled ) {
+			wp_schedule_event( $schedule_timestamp, 'weekly', 'bb_bg_log_clear' );
+		} else if ( $is_scheduled !== $schedule_timestamp ) {
+			wp_clear_scheduled_hook( 'bb_bg_log_clear' );
 			wp_schedule_event( $schedule_timestamp, 'weekly', 'bb_bg_log_clear' );
 		}
-	}
-
-	/**
-	 * Function to check the cron is running on server or not.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 * @return bool
-	 */
-	private function is_server_cron_enabled() {
-		// Check if DISABLE_WP_CRON constant is defined and set to true.
-		if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON === true ) {
-			return true; // Server-level cron is likely enabled.
-		}
-
-		// Check if ALTERNATE_WP_CRON constant is defined and set to true.
-		if ( defined( 'ALTERNATE_WP_CRON' ) && ALTERNATE_WP_CRON === true ) {
-			return true; // Server-level cron is likely enabled.
-		}
-
-		return false; // Default WP-Cron is in use.
 	}
 
 	/**
@@ -497,7 +474,7 @@ class BB_BG_Process_Log {
 					array(
 						'type'     => 'bb_bg_remove_old_logs',
 						'group'    => 'bb_bg_remove_old_logs',
-						'callback' => 'bb_bg_remove_logs',
+						'callback' => array( $this, 'remove_logs' ),
 						'args'     => array( $chunked_ids ),
 					),
 				);
@@ -507,8 +484,29 @@ class BB_BG_Process_Log {
 
 			$bb_background_updater->schedule_event();
 		} else {
-			bb_bg_remove_logs( $pluck_ids );
+			$this->remove_logs( $pluck_ids );
 		}
+	}
+
+	/**
+	 * Removed the old background job records.
+	 *
+	 * @since  BuddyBoss [BBVERSION]
+	 *
+	 * @param array $bg_ids IDs of bg jobs.
+	 *
+	 * @return void
+	 */
+	public function remove_logs( $bg_ids ) {
+		global $wpdb;
+
+		if ( empty( $bg_ids ) ) {
+			return;
+		}
+
+		$ids    = wp_parse_id_list( $bg_ids );
+		$ids_in = "'" . implode( "','", $ids ) . "'";
+		$wpdb->query( "DELETE FROM {$this->table_name} WHERE id IN ($ids_in)" ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	}
 
 	/**
@@ -516,6 +514,7 @@ class BB_BG_Process_Log {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 * @return void
+	 * @throws Exception
 	 */
 	public function reschedule_event( $option, $old_value = '', $new_value = '' ) {
 		static $is_reschedule = false; // Avoid clearing multiple time.
