@@ -421,17 +421,47 @@ class BB_BG_Process_Log {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 * @return void
+	 * @throws Exception
 	 */
 	private function schedule_log_event() {
-		// Check if the cron job is not already scheduled
+		// Check if the cron job is not already scheduled.
 		if ( ! wp_next_scheduled( 'bb_bg_log_clear' ) ) {
 
-			$wp_date   = date_i18n( 'Y-m-d', strtotime( 'next Sunday' ) ) . ' 23:59:59';
-			$utc_date  = get_gmt_from_date( $wp_date );
+			// WP datetime.
+			$final_date = date_i18n( 'Y-m-d', strtotime( 'next Sunday' ) ) . ' 23:59:59';
+			if ( $this->is_server_cron_enabled() ) {
+				// Server timezone.
+				$utc_datetime       = date_create( $final_date, new DateTimeZone( date_default_timezone_get() ?: 'UTC' ) );
+				$schedule_timestamp = $utc_datetime->getTimestamp();
+			} else {
+				// WP timezone.
+				$local_datetime     = date_create( $final_date, wp_timezone() );
+				$schedule_timestamp = $local_datetime->getTimestamp();
+			}
 
-			// Schedule the cron job to run every Sunday at 12 AM
-			wp_schedule_event( strtotime( $utc_date ), 'weekly', 'bb_bg_log_clear' );
+			// Schedule the cron job to run every Sunday at 12 AM.
+			wp_schedule_event( $schedule_timestamp, 'weekly', 'bb_bg_log_clear' );
 		}
+	}
+
+	/**
+	 * Function to check the cron is running on server or not.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @return bool
+	 */
+	private function is_server_cron_enabled() {
+		// Check if DISABLE_WP_CRON constant is defined and set to true.
+		if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON === true ) {
+			return true; // Server-level cron is likely enabled.
+		}
+
+		// Check if ALTERNATE_WP_CRON constant is defined and set to true.
+		if ( defined( 'ALTERNATE_WP_CRON' ) && ALTERNATE_WP_CRON === true ) {
+			return true; // Server-level cron is likely enabled.
+		}
+
+		return false; // Default WP-Cron is in use.
 	}
 
 	/**
