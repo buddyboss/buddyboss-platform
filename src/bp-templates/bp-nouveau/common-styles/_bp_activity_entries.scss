@@ -1470,6 +1470,17 @@
 	}
 }
 
+.gif-media-search-dropdown {
+	&.gif-media-search-dropdown-standalone {
+		z-index: 999992;
+		top: 0;
+
+		.gif-search-content .gif-search-results {
+			max-height: 280px;
+		}
+	}
+}
+
 // Prevent callout popup on long press on ios devices
 .bb-is-mobile.bb-reactions-mode {
 

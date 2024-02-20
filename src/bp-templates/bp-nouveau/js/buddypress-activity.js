@@ -2658,9 +2658,15 @@ window.bp = window.bp || {};
 			var currentTarget  = event.currentTarget,
 				isInsideModal 	 = $( currentTarget ).closest('#activity-modal').length > 0,
 				hasParentModal 	 = isInsideModal ? '#activity-modal ' : '',
-				$gifPickerEl     = $( currentTarget ).next(),
+				pickerContainer  = isInsideModal ? $( '.gif-media-search-dropdown-standalone' ) : $( currentTarget ).next(),
+				$gifPickerEl     = pickerContainer,
 				activityID       = currentTarget.id.match( /\d+$/ )[0],
 				$gifAttachmentEl = $( hasParentModal + '#ac-reply-post-gif-' + activityID );
+
+			var offset = $( currentTarget ).offset();
+			var topPosition = offset.top;
+			var leftPosition = offset.left;
+			var transformValue = 'translate(' + (leftPosition - 300) + 'px, ' + (topPosition - 155) + 'px) translate(-100%, -100%)';
 
 			if ( $gifPickerEl.is( ':empty' ) ) {
 				var model                      = new bp.Models.ACReply(),
@@ -2671,6 +2677,10 @@ window.bp = window.bp || {};
 				$gifAttachmentEl.html( activityAttachedGifPreview.render().el );
 
 				this.models[activityID] = model;
+
+				if ( isInsideModal ) {
+					$gifPickerEl.css('transform', transformValue);
+				}
 			}
 
 			var gif_box = $( currentTarget ).parents( '.ac-textarea ' ).find( '.ac-reply-attachments .activity-attached-gif-container' );
@@ -3390,7 +3400,9 @@ window.bp = window.bp || {};
 
 		hideEmojioneAreaPicker: function() {
 			var activityId = $('#activity-modal > .bb-modal-activity-body .activity-item').data('bp-activity-id');
-			$( '.bb-activity-model-wrapper #ac-input-' + activityId ).data("emojioneArea").hidePicker();
+			if ( $('#activity-modal' ).length > 0 && $( '.emojionearea-theatre.show' ).length > 0 ) {
+				$( '.bb-activity-model-wrapper #ac-input-' + activityId ).data("emojioneArea").hidePicker();
+			}
 		}
 
 	};

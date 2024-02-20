@@ -2070,6 +2070,9 @@ window.bp = window.bp || {};
 			if ( event.key === 'Escape' || event.keyCode === 27 ) {
 				if ( !_.isUndefined( BP_Nouveau.media ) && !_.isUndefined( BP_Nouveau.media.gif_api_key ) ) {
 					target.find( 'form' ).find( '.gif-media-search-dropdown' ).removeClass( 'open' );
+					if ( $( '.gif-media-search-dropdown-standalone.open' ).length > 0 ) {
+						target.find( '.gif-media-search-dropdown-standalone' ).removeClass( 'open' );
+					}
 					target.find( '#bbpress-forums form' ).each( function () {
 						var $this = jQuery( this );
 						var gif_box = $this.find( '#whats-new-attachments .forums-attached-gif-container img' );
@@ -2110,6 +2113,9 @@ window.bp = window.bp || {};
 			if ( !_.isUndefined( BP_Nouveau.media ) && !_.isUndefined( BP_Nouveau.media.gif_api_key ) &&
 				!$targetEl.closest( '.post-gif' ).length ) {
 				target.find( 'form' ).find( '.gif-media-search-dropdown' ).removeClass( 'open' );
+				if ( $( '.gif-media-search-dropdown-standalone.open' ).length > 0 ) {
+					target.find( '.gif-media-search-dropdown-standalone' ).removeClass( 'open' );
+				}
 				target.find( '#bbpress-forums form' ).each( function () {
 					var $this = jQuery( this );
 					var gif_box = $this.find( '#whats-new-attachments .forums-attached-gif-container img' );

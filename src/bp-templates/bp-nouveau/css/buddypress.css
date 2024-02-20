@@ -4690,6 +4690,15 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   margin: 0;
 }
 
+.gif-media-search-dropdown.gif-media-search-dropdown-standalone {
+  z-index: 999992;
+  top: 0;
+}
+
+.gif-media-search-dropdown.gif-media-search-dropdown-standalone .gif-search-content .gif-search-results {
+  max-height: 280px;
+}
+
 .bb-is-mobile.bb-reactions-mode .bp-generic-meta .generic-button a,
 .bb-is-mobile.bb-reactions-mode .bp-generic-meta .generic-button a img,
 .bb-is-mobile.bb-reactions-mode .bp-generic-meta .ac-emotions_list .ac-emotion_item a > *,
