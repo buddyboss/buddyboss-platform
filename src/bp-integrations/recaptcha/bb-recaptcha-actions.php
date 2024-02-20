@@ -12,9 +12,10 @@ defined( 'ABSPATH' ) || exit;
 add_action( 'wp_ajax_bb_recaptcha_verification_admin_settings', 'bb_recaptcha_verification_admin_settings' );
 add_action( 'login_form', 'bb_recaptcha_login', 99 );
 add_action( 'lostpassword_form', 'bb_recaptcha_lost_password' );
-add_action( 'lostpassword_post', 'bb_recaptcha_lost_password_check', 10, 2 );
-
+add_action( 'lostpassword_post', 'bb_recaptcha_validate_lost_password', 10, 1 );
 add_action( 'bp_before_registration_submit_buttons', 'bb_recaptcha_registration' );
+add_action( 'bp_signup_validate', 'bb_recaptcha_validate_registration' );
+
 /**
  * Handles AJAX request for reCAPTCHA verification in admin settings.
  *
@@ -129,11 +130,10 @@ function bb_recaptcha_lost_password() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param WP_Error      $errors    A WP_Error object containing any errors generated
- *                                 by using invalid credentials.
- * @param WP_User|false $user_data WP_User object if found, false if the user does not exist.
+ * @param WP_Error $errors A WP_Error object containing any errors generated
+ *                         by using invalid credentials.
  */
-function bb_recaptcha_lost_password_check( $errors, $user_data ) {
+function bb_recaptcha_validate_lost_password( $errors ) {
 	if ( ! bb_recaptcha_is_enabled( 'bb_lost_password' ) ) {
 		return $errors;
 	}
@@ -157,6 +157,27 @@ function bb_recaptcha_registration() {
 		bb_recaptcha_display( 'bb_register' );
 
 		add_action( 'wp_footer', 'bb_recaptcha_add_scripts_login_footer' );
+	}
+}
+
+/**
+ * Validate recaptcha for registration form.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_recaptcha_validate_registration() {
+	if ( bb_recaptcha_is_enabled( 'bb_lost_password' ) ) {
+		$captcha = bb_recaptcha_verification_front();
+		if ( is_wp_error( $captcha ) ) {
+			wp_die(
+				$captcha->get_error_message(),
+				'reCAPTCHA',
+				array(
+					'response'  => 403,
+					'back_link' => 1,
+				)
+			);
+		}
 	}
 }
 
