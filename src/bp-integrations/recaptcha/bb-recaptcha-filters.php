@@ -12,7 +12,6 @@ defined( 'ABSPATH' ) || exit;
 // Add class in body tag in the admin.
 add_filter( 'admin_body_class', 'bb_admin_recaptcha_class' );
 add_filter( 'wp_authenticate_user', 'bb_recaptcha_login_check', 9999, 2 );
-add_filter( 'lostpassword_errors', 'bb_recaptcha_lost_password_check', 10, 2 );
 
 /**
  * Function to add class for recaptcha.
@@ -65,26 +64,4 @@ function bb_recaptcha_login_check( $user, $password ) {
 	}
 
 	return $user;
-}
-
-/**
- * Validate recaptcha for lost password form.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param WP_Error      $errors    A WP_Error object containing any errors generated
- *                                 by using invalid credentials.
- * @param WP_User|false $user_data WP_User object if found, false if the user does not exist.
- */
-function bb_recaptcha_lost_password_check( $errors, $user_data ) {
-	if ( ! bb_recaptcha_is_enabled( 'bb_lost_password' ) ) {
-		return $errors;
-	}
-
-	$captcha = bb_recaptcha_verification_front();
-	if ( is_wp_error( $captcha ) ) {
-		return $captcha;
-	}
-
-	return $errors;
 }
