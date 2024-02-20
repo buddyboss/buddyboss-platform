@@ -381,6 +381,7 @@ module.exports = function (grunt) {
 						'!**/admin/**/*.css',
 						'!**/emojionearea-edited.css',
 						'!**/pusher/**/*.css',
+						'!**/recaptcha/**/*.css',
 						'!**/endpoints/**/*.css'
 						]
 					)

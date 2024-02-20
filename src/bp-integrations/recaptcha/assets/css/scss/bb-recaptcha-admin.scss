@@ -1,5 +1,7 @@
 .bb-recaptcha-settings {
+
 	.bp-admin-card {
+
 		.bb-inactive-field {
 			pointer-events: none;
 			user-select: none;
@@ -211,6 +213,7 @@
 	}
 
 	#bb_recaptcha_design {
+
 		.bb-grid-style-outer {
 			display: flex;
 
@@ -270,16 +273,17 @@
 
 					&.opt-normal {
 
-						&.opt-size-light:after  {
+						&.opt-size-light:after {
 							background: url(../images/reCAPTCHA-light.png) no-repeat center;
 						}
 
-						&.opt-size-dark:after  {
+						&.opt-size-dark:after {
 							background: url(../images/reCAPTCHA-dark.png) no-repeat center;
 						}
 					}
 
 					&.opt-compact {
+
 						&.opt-size-light:after {
 							background: url(../images/reCAPTCHA-light-compact.png) no-repeat center;
 						}
@@ -317,9 +321,11 @@
 				}
 
 				input[type="radio"] {
+
 					&:disabled + .option {
+
 						&:before {
-							border-color: #DCDCDE;
+							border-color: #dcdcde;
 						}
 					}
 				}
@@ -327,6 +333,7 @@
 			}
 
 			.bb-size {
+
 				.option {
 
 					&:before {
@@ -342,7 +349,7 @@
 
 					&:before {
 						height: 120px;
-						background-color: #F0F0F1;
+						background-color: #f0f0f1;
 					}
 				}
 			}

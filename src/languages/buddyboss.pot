@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.5.40\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-02-06 14:05:41+00:00\n"
+"POT-Creation-Date: 2024-02-20 15:42:34+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -623,6 +623,7 @@ msgstr ""
 #: bp-core/admin/templates/moderation-deactivate-confirmation-popup.php:45
 #: bp-forums/replies/template.php:1865 bp-groups/bp-groups-admin.php:255
 #: bp-groups/bp-groups-admin.php:1090
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:654
 #: bp-members/classes/class-bp-members-admin.php:2533
 #: bp-moderation/screens/block-member-form.php:75
 #: bp-moderation/screens/content-report-form.php:69
@@ -3200,6 +3201,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-actions.php:314
 #: bp-core/admin/bp-core-admin-tools.php:1248 bp-forums/admin/tools.php:1985
 #: bp-forums/functions.php:889
+#: bp-integrations/recaptcha/bb-recaptcha-actions.php:33
 #: bp-templates/bp-nouveau/includes/document/ajax.php:187
 #: bp-templates/bp-nouveau/includes/document/ajax.php:545
 #: bp-templates/bp-nouveau/includes/document/ajax.php:629
@@ -3305,7 +3307,7 @@ msgstr ""
 #: bp-members/classes/class-bp-members-ms-list-table.php:159
 #: bp-members/classes/class-bp-members-ms-list-table.php:319
 #: bp-messages/bp-messages-template.php:1293
-#: bp-templates/bp-nouveau/buddypress/members/activate.php:45
+#: bp-templates/bp-nouveau/buddypress/members/activate.php:53
 msgid "Activate"
 msgstr ""
 
@@ -3627,8 +3629,8 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1744
 #: bp-members/bp-members-admin.php:33 bp-members/bp-members-admin.php:99
-#: bp-members/bp-members-functions.php:3118
-#: bp-members/bp-members-functions.php:3645
+#: bp-members/bp-members-functions.php:3123
+#: bp-members/bp-members-functions.php:3650
 #: bp-members/classes/class-bp-members-admin.php:990
 #: bp-members/classes/class-bp-members-admin.php:2821
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php:31
@@ -3657,7 +3659,7 @@ msgid "e.g. Student"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1796
-#: bp-members/bp-members-functions.php:3648
+#: bp-members/bp-members-functions.php:3653
 msgid "Members Directory"
 msgstr ""
 
@@ -3753,7 +3755,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2130
-#: bp-groups/bp-groups-admin.php:2318 bp-members/bp-members-functions.php:3900
+#: bp-groups/bp-groups-admin.php:2318 bp-members/bp-members-functions.php:3905
 msgid "Copy to clipboard"
 msgstr ""
 
@@ -4149,6 +4151,7 @@ msgstr ""
 #: bp-integrations/learndash/bp-learndash-functions.php:431
 #: bp-integrations/learndash/bp-learndash-functions.php:454
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:219
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:359
 #: bp-media/bp-media-settings.php:658 bp-media/bp-media-settings.php:685
 #: bp-media/bp-media-settings.php:856 bp-media/bp-media-settings.php:1096
 #: bp-notifications/bp-notifications-settings.php:93
@@ -4837,10 +4840,12 @@ msgid "Show members new notifications received while on a page on-screen."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:2558
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:749
 msgid "Bottom Left"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:2566
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:745
 msgid "Bottom Right"
 msgstr ""
 
@@ -4910,6 +4915,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:2733
 #: bp-core/admin/settings/bp-admin-setting-general.php:48
 #: bp-core/admin/settings/bp-admin-setting-registration.php:21
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:108
 msgid "Registration"
 msgstr ""
 
@@ -4998,9 +5004,9 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:3031
 msgid ""
 "Add domain(s) to restrict new users from being able to register, you can "
-"use a wildcard (*) symbol to apply restrictions to an entire extension.\n"
+"use a wildcard (*) symbol to apply restrictions to an entire extension.\r\n"
 "\t\tWhen multiple restrictions are in place, a domain will always take "
-"priority over an extension.\n"
+"priority over an extension.\r\n"
 "\t\t"
 msgstr ""
 
@@ -5679,6 +5685,7 @@ msgid "Toolbar"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-general.php:53
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:428
 msgid "Enable Registration"
 msgstr ""
 
@@ -6092,8 +6099,8 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:342
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:345
-#: bp-members/bp-members-functions.php:3110
-#: bp-members/bp-members-functions.php:3113
+#: bp-members/bp-members-functions.php:3115
+#: bp-members/bp-members-functions.php:3118
 #: bp-xprofile/bp-xprofile-admin.php:1100
 #: bp-xprofile/bp-xprofile-admin.php:1158
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1624
@@ -9914,11 +9921,11 @@ msgstr[1] ""
 msgid "BuddyBoss Core"
 msgstr ""
 
-#: bp-core/classes/class-bp-core.php:369
+#: bp-core/classes/class-bp-core.php:370
 msgid "BuddyBoss emails"
 msgstr ""
 
-#: bp-core/classes/class-bp-core.php:392
+#: bp-core/classes/class-bp-core.php:393
 msgid "BuddyBoss group type"
 msgstr ""
 
@@ -10459,13 +10466,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -11025,7 +11032,7 @@ msgid "Field"
 msgstr ""
 
 #: bp-core/profile-search/bps-admin.php:84 bp-groups/bp-groups-admin.php:2334
-#: bp-members/bp-members-functions.php:3646
+#: bp-members/bp-members-functions.php:3651
 msgid "Label"
 msgstr ""
 
@@ -11114,7 +11121,7 @@ msgstr ""
 
 #: bp-core/profile-search/bps-start.php:60
 #: bp-groups/bp-groups-functions.php:3801
-#: bp-members/bp-members-functions.php:3108
+#: bp-members/bp-members-functions.php:3113
 #: bp-members/classes/class-bp-members-admin.php:1115
 #: bp-members/classes/class-bp-members-admin.php:1135
 #: bp-members/classes/class-bp-members-admin.php:2272
@@ -16830,7 +16837,7 @@ msgstr ""
 #: bp-groups/bp-groups-functions.php:4392
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:375
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:391
-#: bp-members/bp-members-functions.php:3922
+#: bp-members/bp-members-functions.php:3927
 #: bp-members/classes/class-bp-members-admin.php:972
 #: bp-moderation/bp-moderation-filters.php:924
 #: bp-moderation/classes/class-bp-moderation-list-table.php:235
@@ -17201,6 +17208,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/form-reply-move.php:87
 #: bp-forums/templates/default/bbpress/form-topic-merge.php:105
 #: bp-forums/templates/default/bbpress/form-topic-split.php:112
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:651
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1488
 #: bp-xprofile/classes/class-bp-xprofile-group.php:956
 msgid "Submit"
@@ -17892,6 +17900,7 @@ msgid ""
 msgstr ""
 
 #: bp-forums/topics/functions.php:2212
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:712
 msgid "Normal"
 msgstr ""
 
@@ -18274,6 +18283,7 @@ msgstr ""
 
 #: bp-friends/bp-friends-template.php:450
 #: bp-friends/bp-friends-template.php:459
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:154
 msgid "Connected"
 msgstr ""
 
@@ -19219,14 +19229,14 @@ msgid "Groups Filter"
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:2362 bp-groups/bp-groups-admin.php:2373
-#: bp-members/bp-members-functions.php:3674
-#: bp-members/bp-members-functions.php:3685
+#: bp-members/bp-members-functions.php:3679
+#: bp-members/bp-members-functions.php:3690
 msgid "Show"
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:2364 bp-groups/bp-groups-admin.php:2371
-#: bp-members/bp-members-functions.php:3676
-#: bp-members/bp-members-functions.php:3683
+#: bp-members/bp-members-functions.php:3681
+#: bp-members/bp-members-functions.php:3688
 #: bp-moderation/classes/class-bp-moderation-list-table.php:415
 #: bp-moderation/classes/class-bp-moderation-list-table.php:419
 #: bp-templates/bp-nouveau/includes/customizer-controls.php:149
@@ -19343,12 +19353,12 @@ msgid "You may not register a group type with this name."
 msgstr ""
 
 #: bp-groups/bp-groups-functions.php:3812
-#: bp-members/bp-members-functions.php:3119
+#: bp-members/bp-members-functions.php:3124
 msgid "Dropdown Order"
 msgstr ""
 
 #: bp-groups/bp-groups-functions.php:4997
-#: bp-members/bp-members-functions.php:5244
+#: bp-members/bp-members-functions.php:5249
 #: bp-xprofile/classes/class-bp-xprofile-field-type-number.php:28
 msgid "Number"
 msgstr ""
@@ -22504,6 +22514,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:117
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:150
 msgid "Not Connected"
 msgstr ""
 
@@ -22513,6 +22524,7 @@ msgid "Pusher"
 msgstr ""
 
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:168
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:228
 msgid "Information"
 msgstr ""
 
@@ -22547,6 +22559,545 @@ msgstr ""
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:266
 #. translators: BuddyBoss Pro purchase link
 msgid "Please update %1$s to version %2$s to use Pusher on your site."
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-actions.php:58
+#: bp-integrations/recaptcha/bb-recaptcha-actions.php:67
+#: bp-integrations/recaptcha/bb-recaptcha-actions.php:73
+#: bp-integrations/recaptcha/bb-recaptcha-actions.php:82
+msgid "reCAPTCHA verification failed, please try again"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-actions.php:64
+#: bp-integrations/recaptcha/bb-recaptcha-actions.php:79
+msgid "reCAPTCHA verification was successful"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:163
+#: bp-integrations/recaptcha/bb-recaptcha-integration.php:26
+msgid "reCAPTCHA"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:167
+#. translators: recaptcha link
+msgid ""
+"Check reCAPTCHA %s for usage statistics and monitor its performance. Adjust "
+"settings if necessary to maintain security."
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:168
+msgid "Admin Console"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:173
+msgid "reCAPTCHA Settings"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:182
+msgid "reCAPTCHA Design"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:234
+msgid "Versions"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:240
+msgid "reCAPTCHA v2 option"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:246
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:552
+msgid "Site Key"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:252
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:573
+msgid "Secret Key"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:258
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:620
+msgid "Verify"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:267
+msgid "Score Threshold"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:273
+msgid "Enabled For"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:284
+msgid "Language Code"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:290
+msgid "No-Conflict Mode"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:296
+msgid "Exclude IP"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:316
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:672
+msgid "Theme"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:322
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:705
+msgid "Size"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:327
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:738
+msgid "Badge Position"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:380
+msgid "reCAPTCHA connected successfully."
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:386
+msgid "Error verifying reCAPTCHA, Please try again."
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:393
+#. translators: recaptcha link
+msgid ""
+"Enter your %s to integrate fraud, spam, and abuse protection into your "
+"website."
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:394
+msgid "Google reCAPTCHA API keys"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:406
+msgid ""
+"reCAPTCHA v3 provides a score for every request seamlessly, without causing "
+"user friction. Input a risk score between 0 and 1 in the field above to "
+"evaluate the probability of being identified as a bot."
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:427
+#. translators: registration setting link.
+msgid ""
+"Select the pages to include in the reCAPTCHA submission. Make sure to %s if "
+"both registration and account activation are disabled."
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:441
+msgid "Allow bypass, enter a 6 to 10-character string to customize your URL"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:442
+msgid "stringxs"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:443
+msgid ""
+"The bypass URL enables you to bypass reCAPTCHA in case of issues. We "
+"recommend keeping the link below securely stored for accessing your site."
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:446
+msgid "Copy"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:446
+#: bp-members/bp-members-functions.php:3904
+msgid "Copied"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:464
+msgid "Select a language for reCAPTCHA when it is displayed."
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:472
+msgid "Allow no-conflict mode to prevent compatibility conflicts"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:473
+msgid ""
+"When checked, other instances of reCAPTCHA are forcefully removed to "
+"prevent conflicts. Only enable this option if your site is experiencing "
+"compatibility issues or if instructed to do so by support."
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:479
+msgid ""
+"Enter the IP addresses that you want to skip from captcha submission. Enter "
+"one IP per line."
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:515
+msgid "reCAPTCHA v3 (Recommended)"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:517
+msgid "reCAPTCHA v2"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:532
+msgid "Checkbox"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:534
+msgid "Invisible Badge"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:535
+msgid "Validate request with the \"I'm not a robot\" checkbox"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:536
+msgid ""
+"Shows invisible reCaptcha badge. It is invoked directly when the user "
+"clicks on an existing button on your site."
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:628
+msgid "Verify reCAPTCHA"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:637
+msgid "Verifying reCAPTCHA token"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:642
+msgid "reCAPTCHA token is ready, click Submit to verify"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:679
+msgid "Light"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:683
+msgid "Dark"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:691
+msgid "Select the style of your reCAPTCHA theme."
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:716
+msgid "Compact"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:724
+msgid "Select the size of your reCAPTCHA."
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:753
+msgid "Inline"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-admin-tab.php:761
+msgid "Select the position of your invisible reCAPTCHA badge."
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:103
+msgid "Login"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:113
+msgid "Reset Password"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:118
+msgid "Account Activation"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:167
+msgid "Arabic"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:168
+msgid "Afrikaans"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:169
+msgid "Amharic"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:170
+msgid "Armenian"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:171
+msgid "Azerbaijani"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:172
+msgid "Basque"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:173
+msgid "Bengali"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:174
+msgid "Bulgarian"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:175
+msgid "Catalan"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:176
+msgid "Chinese (Hong Kong)"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:177
+msgid "Chinese (Simplified)"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:178
+msgid "Chinese (Traditional)"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:179
+msgid "Croatian"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:180
+msgid "Czech"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:181
+msgid "Danish"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:182
+msgid "Dutch"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:183
+msgid "English (UK)"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:184
+msgid "English (US)"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:185
+msgid "Estonian"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:186
+msgid "Filipino"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:187
+msgid "Finnish"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:188
+msgid "French"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:189
+msgid "French (Canadian)"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:190
+msgid "Galician"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:191
+msgid "Georgian"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:192
+msgid "German"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:193
+msgid "German (Austria)"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:194
+msgid "German (Switzerland)"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:195
+msgid "Greek"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:196
+msgid "Gujarati"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:197
+msgid "Hebrew"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:198
+msgid "Hindi"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:199
+msgid "Hungarain"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:200
+msgid "Icelandic"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:201
+msgid "Indonesian"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:202
+msgid "Italian"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:203
+msgid "Japanese"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:204
+msgid "Kannada"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:205
+msgid "Korean"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:206
+msgid "Laothian"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:207
+msgid "Latvian"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:208
+msgid "Lithuanian"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:209
+msgid "Malay"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:210
+msgid "Malayalam"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:211
+msgid "Marathi"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:212
+msgid "Mongolian"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:213
+msgid "Norwegian"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:214
+msgid "Persian"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:215
+msgid "Polish"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:216
+msgid "Portuguese"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:217
+msgid "Portuguese (Brazil)"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:218
+msgid "Portuguese (Portugal)"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:219
+msgid "Romanian"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:220
+msgid "Russian"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:221
+msgid "Serbian"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:222
+msgid "Sinhalese"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:223
+msgid "Slovak"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:224
+msgid "Slovenian"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:225
+msgid "Spanish"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:226
+msgid "Spanish (Latin America)"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:227
+msgid "Swahili"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:228
+msgid "Swedish"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:229
+msgid "Tamil"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:230
+msgid "Telugu"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:231
+msgid "Thai"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:232
+msgid "Turkish"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:233
+msgid "Ukrainian"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:234
+msgid "Urdu"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:235
+msgid "Vietnamese"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:236
+msgid "Zulu"
+msgstr ""
+
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:592
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:601
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:608
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:617
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:626
+msgid ""
+"<strong>ERROR</strong>: reCAPTCHA verification failed.<br />Please try "
+"again."
 msgstr ""
 
 #: bp-invites/actions/invites.php:54
@@ -23816,7 +24367,7 @@ msgid ""
 msgstr ""
 
 #: bp-members/bp-members-functions.php:1440
-#: bp-members/bp-members-functions.php:2571
+#: bp-members/bp-members-functions.php:2576
 msgid "<strong>ERROR</strong>: Your account has been marked as a spammer."
 msgstr ""
 
@@ -23854,132 +24405,128 @@ msgstr ""
 msgid "Sorry, that username already exists!"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:1986
-#: bp-members/bp-members-functions.php:2013
+#: bp-members/bp-members-functions.php:1991
+#: bp-members/bp-members-functions.php:2018
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:1145
 msgid "Invalid activation key."
 msgstr ""
 
-#: bp-members/bp-members-functions.php:1993
+#: bp-members/bp-members-functions.php:1998
 msgid "The user is already active."
 msgstr ""
 
-#: bp-members/bp-members-functions.php:1995
+#: bp-members/bp-members-functions.php:2000
 msgid "The site is already active."
 msgstr ""
 
-#: bp-members/bp-members-functions.php:2025
+#: bp-members/bp-members-functions.php:2030
 msgid "Could not create user"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:2041
+#: bp-members/bp-members-functions.php:2046
 msgid "That username is already activated."
 msgstr ""
 
-#: bp-members/bp-members-functions.php:2416
+#: bp-members/bp-members-functions.php:2421
 msgid ""
 "If you have not received an email yet, <a href=\"%s\">click here to resend "
 "it</a>."
 msgstr ""
 
-#: bp-members/bp-members-functions.php:2418
+#: bp-members/bp-members-functions.php:2423
 msgid ""
 "<strong>ERROR</strong>: Your account has not been activated. Check your "
 "email for the activation link."
 msgstr ""
 
-#: bp-members/bp-members-functions.php:2449
+#: bp-members/bp-members-functions.php:2454
 msgid "<strong>ERROR</strong>: Your account has already been activated."
 msgstr ""
 
-#: bp-members/bp-members-functions.php:2451
+#: bp-members/bp-members-functions.php:2456
 msgid "Activation email resent! Please check your inbox or spam folder."
 msgstr ""
 
-#: bp-members/bp-members-functions.php:2658
+#: bp-members/bp-members-functions.php:2663
 msgid "Profile type already exists."
 msgstr ""
 
-#: bp-members/bp-members-functions.php:2685
+#: bp-members/bp-members-functions.php:2690
 msgid "You may not register a profile type with this name."
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3005
+#: bp-members/bp-members-functions.php:3010
 msgid "BuddyBoss profile type"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3109
 #: bp-members/bp-members-functions.php:3114
+#: bp-members/bp-members-functions.php:3119
 msgid "New Profile Type"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3111
+#: bp-members/bp-members-functions.php:3116
 msgid "Edit Profile Type"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3112
-#: bp-members/bp-members-functions.php:3649
+#: bp-members/bp-members-functions.php:3117
+#: bp-members/bp-members-functions.php:3654
 #: bp-members/classes/class-bp-members-admin.php:2268
 #: bp-members/classes/class-bp-members-admin.php:2290
 msgid "Users"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3115
+#: bp-members/bp-members-functions.php:3120
 msgid "No Profile Types found"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3116
+#: bp-members/bp-members-functions.php:3121
 msgid "No Profile Types found in trash"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3117
+#: bp-members/bp-members-functions.php:3122
 msgid "Search Profile Types"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3647
+#: bp-members/bp-members-functions.php:3652
 msgid "Members Filter"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3895
+#: bp-members/bp-members-functions.php:3900
 msgid ""
 "You have {total_users} members with this profile type, are you sure you "
 "would like to trash it?"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3896
+#: bp-members/bp-members-functions.php:3901
 msgid ""
 "You have {total_users} members with this profile type, are you sure you "
 "would like to delete it?"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3897
+#: bp-members/bp-members-functions.php:3902
 msgid ""
 "You have members with these profile types, are you sure you would like to "
 "trash it?"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3898
+#: bp-members/bp-members-functions.php:3903
 msgid ""
 "You have members with these profile types, are you sure you would like to "
 "delete it?"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3899
-msgid "Copied"
-msgstr ""
-
-#: bp-members/bp-members-functions.php:3961
-#: bp-members/bp-members-functions.php:3969
-#: bp-members/bp-members-functions.php:3977
-#: bp-members/bp-members-functions.php:3981
+#: bp-members/bp-members-functions.php:3966
+#: bp-members/bp-members-functions.php:3974
+#: bp-members/bp-members-functions.php:3982
+#: bp-members/bp-members-functions.php:3986
 msgid "their"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3973
+#: bp-members/bp-members-functions.php:3978
 msgid "his"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3975
+#: bp-members/bp-members-functions.php:3980
 msgid "her"
 msgstr ""
 
@@ -34057,14 +34604,15 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to automatically create thumbnails after "
-"uploading videos (optional). Ask your web host.\n"
+"uploading videos (optional). Ask your web host.\r\n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and you "
 "still see the above warning, this means BuddyBoss Platform is unable to "
 "auto-detect the binary file path for FFmpeg. You will need to add the below "
 "FFmpeg absolute path constants into your %2$s file, replacing "
 "PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. "
-"Ask your web host to provide the absolute path for the FFmpeg binary file.\n"
-"\t\t\t\t\t<br /><br />%3$s\n"
+"Ask your web host to provide the absolute path for the FFmpeg binary "
+"file.\r\n"
+"\t\t\t\t\t<br /><br />%3$s\r\n"
 "\t\t\t\t\t<br />%4$s"
 msgstr ""
 
