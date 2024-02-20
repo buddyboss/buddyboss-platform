@@ -476,13 +476,17 @@ function bb_get_google_recaptcha_api_response( $secret_key, $token ) {
  * based on the enabled version (v2 or v3) and the configured actions.
  *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $action Current action ( i.e - bb_login, bb_register etc. ). Default will be blank.
+ *
  * @return void
  */
-function bb_recaptcha_display( $display = false ) {
+function bb_recaptcha_display( $action = '' ) {
 
-	if ( ! $display ) {
+	if ( '' === $action ) {
 		return;
 	}
+
 	$verified = bb_recaptcha_connection_status();
 	if ( ! empty( $verified ) && 'connected' === $verified ) {
 		$site_key    = bb_recaptcha_site_key();
@@ -505,20 +509,18 @@ function bb_recaptcha_display( $display = false ) {
 			$query_args['hl'] = $lang;
 		}
 
-		if ( $display ) {
-			if ( 'recaptcha_v3' === $enabled_for ) {
-				?>
-				<input type="hidden" id="bb_recaptcha_response_id" name="g-recaptcha-response"/>
-				<?php
-				$query_args['render'] = $site_key;
-				$api_url              = add_query_arg( $query_args, $api_url );
-			} elseif ( 'recaptcha_v2' === $enabled_for ) {
-				$query_args['render'] = 'explicit';
-				$api_url              = add_query_arg( $query_args, $api_url );
-				?>
-				<div id="bb_recaptcha_login_v2" class="bb_recaptcha_login_v2_content" data-sitekey="<?php echo $site_key; ?>"></div>
-				<?php
-			}
+		if ( 'recaptcha_v3' === $enabled_for ) {
+			?>
+			<input type="hidden" id="bb_recaptcha_response_id" name="g-recaptcha-response"/>
+			<?php
+			$query_args['render'] = $site_key;
+			$api_url              = add_query_arg( $query_args, $api_url );
+		} elseif ( 'recaptcha_v2' === $enabled_for ) {
+			$query_args['render'] = 'explicit';
+			$api_url              = add_query_arg( $query_args, $api_url );
+			?>
+			<div id="bb_recaptcha_v2_element" class="bb_recaptcha_v2_element_content" data-sitekey="<?php echo $site_key; ?>"></div>
+			<?php
 		}
 
 		if ( ! wp_script_is( 'bb-recaptcha-api', 'registered' ) ) {
@@ -531,6 +533,35 @@ function bb_recaptcha_display( $display = false ) {
 		$min     = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 		$rtl_css = is_rtl() ? '-rtl' : '';
 		wp_enqueue_style( 'bb-recaptcha', bb_recaptcha_integration_url( '/assets/css/bb-recaptcha' . $rtl_css . $min . '.css' ), false, buddypress()->version );
+
+		wp_register_script(
+			'bb-recaptcha',
+			bb_recaptcha_integration_url( '/assets/js/bb-recaptcha' . $min . '.js' ),
+			array(
+				'jquery',
+				'bb-recaptcha-api',
+			),
+			buddypress()->version
+		);
+
+		if ( bb_recaptcha_conflict_mode() ) {
+			bb_recaptcha_remove_duplicate_scripts();
+		}
+
+		$enabled_for   = bb_recaptcha_recaptcha_versions();
+		$localize_data = array(
+			'selected_version' => $enabled_for,
+			'site_key'         => bb_recaptcha_site_key(),
+			'action'           => $action,
+		);
+		if ( 'recaptcha_v2' === $enabled_for ) {
+			$localize_data['v2_option']         = bb_recaptcha_recaptcha_v2_option();
+			$localize_data['v2_theme']          = bb_recaptcha_v2_theme();
+			$localize_data['v2_size']           = bb_recaptcha_v2_size();
+			$localize_data['v2_badge_position'] = bb_recaptcha_v2_badge();
+		}
+
+		wp_localize_script( 'bb-recaptcha', 'bbRecaptcha', array( 'data' => $localize_data ) );
 	}
 }
 

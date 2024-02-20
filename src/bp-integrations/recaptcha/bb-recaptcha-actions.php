@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 add_action( 'wp_ajax_bb_recaptcha_verification_admin_settings', 'bb_recaptcha_verification_admin_settings' );
 add_action( 'login_form', 'bb_recaptcha_login', 99 );
 add_action( 'lostpassword_form', 'bb_recaptcha_lost_password' );
-
+add_action( 'bp_before_registration_submit_buttons', 'bb_recaptcha_registration' );
 /**
  * Handles AJAX request for reCAPTCHA verification in admin settings.
  *
@@ -102,7 +102,7 @@ function bb_recaptcha_verification_admin_settings() {
 function bb_recaptcha_login() {
 	$enable_for_login = bb_recaptcha_is_enabled( 'bb_login' );
 	if ( $enable_for_login ) {
-		bb_recaptcha_display( true );
+		bb_recaptcha_display( 'bb_login' );
 
 		add_action( 'login_footer', 'bb_recaptcha_add_scripts_login_footer' );
 	}
@@ -116,50 +116,33 @@ function bb_recaptcha_login() {
 function bb_recaptcha_lost_password() {
 	$enable_for_lost_password = bb_recaptcha_is_enabled( 'bb_lost_password' );
 	if ( $enable_for_lost_password ) {
-		bb_recaptcha_display( true );
+		bb_recaptcha_display( 'bb_lost_password' );
 
 		add_action( 'login_footer', 'bb_recaptcha_add_scripts_login_footer' );
 	}
 }
 
 /**
- * Enqueue scripts and localize data for reCAPTCHA in the login footer.
- * This function enqueues the necessary JavaScript file for reCAPTCHA integration and localizes data
- * to be used by the JavaScript code. The localized data includes information about the selected reCAPTCHA version,
- * site key, and actions enabled for reCAPTCHA verification.
- * For reCAPTCHA v2, additional configuration options such as the theme, size, and badge position are also included.
+ * Displays reCAPTCHA on the registration form if enabled.
  *
  * @since BuddyBoss [BBVERSION]
+ */
+function bb_recaptcha_registration() {
+	$enable_for_lost_password = bb_recaptcha_is_enabled( 'bb_register' );
+	if ( $enable_for_lost_password ) {
+		bb_recaptcha_display( 'bb_register' );
+
+		add_action( 'wp_footer', 'bb_recaptcha_add_scripts_login_footer' );
+	}
+}
+
+/**
+ * Enqueue scripts for recaptcha.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @return void
  */
 function bb_recaptcha_add_scripts_login_footer() {
-	if ( bb_recaptcha_conflict_mode() ) {
-		bb_recaptcha_remove_duplicate_scripts();
-	}
-
-	$min = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-	wp_enqueue_script(
-		'bb-recaptcha',
-		bb_recaptcha_integration_url( '/assets/js/bb-recaptcha' . $min . '.js' ),
-		array(
-			'jquery',
-			'bb-recaptcha-api',
-		),
-		buddypress()->version
-	);
-
-	$enabled_for   = bb_recaptcha_recaptcha_versions();
-	$localize_data = array(
-		'selected_version' => $enabled_for,
-		'site_key'         => bb_recaptcha_site_key(),
-		'actions'          => bb_recaptcha_actions(),
-	);
-	if ( 'recaptcha_v2' === $enabled_for ) {
-		$localize_data['v2_option']         = bb_recaptcha_recaptcha_v2_option();
-		$localize_data['v2_theme']          = bb_recaptcha_v2_theme();
-		$localize_data['v2_size']           = bb_recaptcha_v2_size();
-		$localize_data['v2_badge_position'] = bb_recaptcha_v2_badge();
-	}
-
-	wp_localize_script( 'bb-recaptcha', 'bbRecaptcha', array( 'data' => $localize_data ) );
+	wp_enqueue_script( 'bb-recaptcha' );
 }
