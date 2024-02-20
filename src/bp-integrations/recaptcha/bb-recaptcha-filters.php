@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 
 // Add class in body tag in the admin.
 add_filter( 'admin_body_class', 'bb_admin_recaptcha_class' );
-add_action( 'authenticate', 'bb_recaptcha_login_check', 9999, 3 );
+add_action( 'wp_authenticate_user', 'bb_recaptcha_login_check', 9999, 2 );
 
 /**
  * Function to add class for recaptcha.
@@ -37,22 +37,18 @@ function bb_admin_recaptcha_class( $classes ) {
  *
  * @sicne BuddyBoss [BBVERSION]
  *
- * @param WP_User|WP_Error|null $user     WP_User object if the user is authenticated, WP_Error object on error, or
- *                                        null if not authenticated.
- * @param string                $username The username submitted during login.
- * @param string                $password The password submitted during login.
+ * @param WP_User|WP_Error $user      WP_User or WP_Error object if a previous
+ *                                    callback failed authentication.
+ * @param string           $password  Password to check against the user.
  *
  * @return WP_User|WP_Error|null WP_User object if the user is authenticated, WP_Error object on error, or null if not
  *                               authenticated.
  */
-function bb_recaptcha_login_check( $user, $username, $password ) {
+function bb_recaptcha_login_check( $user, $password ) {
 	if ( ! bb_recaptcha_is_enabled( 'bb_login' ) ) {
 		return $user;
 	}
 
-	if ( ! $username ) {
-		return $user;
-	}
 	// Bypass captcha for login.
 	if ( bb_recaptcha_allow_bypass_enable() ) {
 		$get_url_string    = bb_filter_input_string( INPUT_POST, 'bb_recaptcha_bypass' );
