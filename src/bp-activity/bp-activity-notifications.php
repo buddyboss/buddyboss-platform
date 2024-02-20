@@ -239,7 +239,6 @@ add_action( 'bp_activity_sent_mention_email', 'bp_activity_at_mention_add_notifi
  * @param int                  $commenter_id ID of the user who made the comment.
  */
 function bp_activity_update_reply_add_notification( $activity, $comment_id, $commenter_id ) {
-	error_log( 'Activity call' );
 	// Stop sending notification to user who has muted notifications.
 	if ( $activity->user_id !== $commenter_id ) {
 		$activity_meta = bp_activity_get_meta( $activity->id, 'muted_notification_users' );
@@ -302,17 +301,13 @@ add_action( 'bp_activity_sent_reply_to_update_notification', 'bp_activity_update
  */
 function bp_activity_comment_reply_add_notification( $activity_comment, $comment_id, $commenter_id ) {
 	$original_activity = new BP_Activity_Activity( $activity_comment->item_id );
-	// error_log( print_r( $activity_comment, true ) );
-	// error_log( print_r( $comment_id, true ) );
-	// error_log( print_r( $commenter_id, true ) );
-	// error_log( print_r( $original_activity, true ) );
 
 	// Stop sending notification to user who has muted notifications.
 	if ( $activity_comment->user_id !== $commenter_id ) {
 		$activity_meta = bp_activity_get_meta( $original_activity->id, 'muted_notification_users' );
 
 		if ( ! empty( $activity_meta ) && is_array( $activity_meta ) ) {
-			if ( in_array( $original_activity->user_id, $activity_meta, true ) ) {
+			if ( in_array( $activity_comment->user_id, $activity_meta, true ) ) {
 				return;
 			}
 		}
