@@ -904,6 +904,10 @@ class BP_Activity_Activity {
 				$activity->is_spam           = (int) $activity->is_spam;
 			}
 
+			if ( empty( $activity->action ) ) {
+				$activity->action = bp_activity_generate_action_string( $activity );
+			}
+
 			$activities[] = $activity;
 		}
 
