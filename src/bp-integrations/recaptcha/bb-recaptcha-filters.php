@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 
 // Add class in body tag in the admin.
 add_filter( 'admin_body_class', 'bb_admin_recaptcha_class' );
-add_filter( 'wp_authenticate_user', 'bb_recaptcha_login_check', 9999, 2 );
+add_filter( 'wp_authenticate_user', 'bb_recaptcha_validate_login', 9999, 1 );
 add_filter( 'bb_before_core_activate_signup', 'bb_recaptcha_validate_activate' );
 
 /**
@@ -33,19 +33,18 @@ function bb_admin_recaptcha_class( $classes ) {
 }
 
 /**
- * Checks the login credentials and performs reCAPTCHA verification if enabled.
+ * Validate login process with reCAPTCHA if enabled.
  * If reCAPTCHA verification fails, the function returns a WP_Error object containing the error message.
  *
  * @sicne BuddyBoss [BBVERSION]
  *
  * @param WP_User|WP_Error $user      WP_User or WP_Error object if a previous
  *                                    callback failed authentication.
- * @param string           $password  Password to check against the user.
  *
  * @return WP_User|WP_Error|null WP_User object if the user is authenticated, WP_Error object on error, or null if not
  *                               authenticated.
  */
-function bb_recaptcha_login_check( $user, $password ) {
+function bb_recaptcha_validate_login( $user ) {
 	if ( ! bb_recaptcha_is_enabled( 'bb_login' ) ) {
 		return $user;
 	}
@@ -67,6 +66,16 @@ function bb_recaptcha_login_check( $user, $password ) {
 	return $user;
 }
 
+/**
+ * Validate activation process with reCAPTCHA if enabled.
+ *
+ * @sicne BuddyBoss [BBVERSION]
+ *
+ * @param bool $retval The return value to be validated.
+ *
+ * @return bool|WP_Error Returns the validated return value or a WP_Error object
+ *                       if reCAPTCHA verification fails.
+ */
 function bb_recaptcha_validate_activate( $retval ) {
 	if ( ! bb_recaptcha_is_enabled( 'bb_activate' ) ) {
 		return $retval;
