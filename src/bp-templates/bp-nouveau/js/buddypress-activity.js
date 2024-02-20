@@ -160,7 +160,8 @@ window.bp = window.bp || {};
 				$(this).parents('li.activity-item').find('.activity-comments > ul > li.acomments-view-more').trigger('click');
 			});
 
-			$('#activity-modal > .bb-modal-activity-body').scroll( this.autoloadMoreComments.bind( this ) );
+			$('#activity-modal > .bb-modal-activity-body').on('scroll', this.autoloadMoreComments.bind( this ) );
+			$('#activity-modal > .bb-modal-activity-body').on('scroll', this.hideEmojioneAreaPicker.bind( this ));
 		},
 
 		/**
@@ -3233,6 +3234,52 @@ window.bp = window.bp || {};
 
 			var viewMoreCommentsLink = modal.find( selector ).children( '.acomments-view-more' ).first();
 			viewMoreCommentsLink.trigger( 'click' );
+
+			/*$( '.bb-activity-model-wrapper #ac-input-' + activityID ).emojioneArea(
+				{
+					standalone: true,
+					hideSource: false,
+					container: '.bb-activity-model-wrapper #ac-reply-emoji-button-' + activityID,
+					detachPicker: true,
+					containerPicker: '.emojionearea-theatre',
+					autocomplete: false,
+					pickerPosition: 'top',
+					hidePickerOnBlur: true,
+					useInternalCDN: false,
+					events: {
+						emojibtn_click: function () {
+							$( '.bb-activity-model-wrapper #ac-input-' + activityID )[0].emojioneArea.hidePicker();
+
+							var $activity_comment_input   = $( '.bb-activity-model-wrapper #ac-form-' + activityID + ' #ac-input-' + activityID );
+							var $activity_comment_content = $activity_comment_input.html();
+
+							content = $.trim( $activity_comment_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+							content = content.replace( /&nbsp;/g, ' ' );
+
+							var content_text = $activity_comment_input.text();
+
+							if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0 ) {
+								$activity_comment_input.closest( 'form' ).addClass( 'has-content' );
+							} else {
+								$activity_comment_input.closest( 'form' ).removeClass( 'has-content' );
+							}
+						},
+
+						picker_show: function () {
+							$( this.button[0] ).closest( '.post-emoji' ).addClass( 'active' );
+							$( '.emojionearea-theatre' ).removeClass( 'hide' ).addClass( 'show' );
+						},
+
+						picker_hide: function () {
+							$( this.button[0] ).closest( '.post-emoji' ).removeClass( 'active' );
+							$( '.emojionearea-theatre' ).removeClass( 'show' ).addClass( 'hide' );
+						},
+					}
+				}
+			)[0].emojioneArea.on("button.click", function(btn, event) {
+				console.log('show picker');
+			});*/
+			//console.log(activityID + '-----' + $( '.bb-activity-model-wrapper #ac-input-' + activityID ).data("emojioneArea"));
 		},
 
 		viewMoreComments: function( e ) {
@@ -3339,6 +3386,11 @@ window.bp = window.bp || {};
 					}
 				}
 			}
+		},
+
+		hideEmojioneAreaPicker: function() {
+			var activityId = $('#activity-modal > .bb-modal-activity-body .activity-item').data('bp-activity-id');
+			$( '.bb-activity-model-wrapper #ac-input-' + activityId ).data("emojioneArea").hidePicker();
 		}
 
 	};
