@@ -43,6 +43,7 @@
 		},
 
 		enableVerifyButton: function ( event ) {
+			event.preventDefault();
 			// Enable/disable verify button and submit button.
 			var site_key = $('#bb-recaptcha-site-key').val();
 			var old_site_key = $('#bb-recaptcha-site-key').attr( 'data-old-value' );
@@ -213,7 +214,7 @@
 				window.bb_recaptcha_box = grecaptcha.render( 'verifying_token', {
 					sitekey: self.site_key,
 					theme: 'light',
-					callback: () => {
+					callback: function () {
 						self.captcha_response = grecaptcha.getResponse( window.bb_recaptcha_box );
 					},
 				} );
@@ -222,9 +223,9 @@
 			window.bb_recaptcha_v2_verify_invisible = function () {
 				window.bb_recaptcha_invisible = grecaptcha.render( 'v2_invisible_footer', {
 					sitekey: self.site_key,
-					tabindex : 9999,
+					tabindex: 9999,
 					size: 'invisible',
-					callback: ( token ) => {
+					callback: function ( token ) {
 						self.captcha_response = token;
 						$( '#' + selector + ' .verifying_token' ).hide();
 						$( '#' + selector + ' .verified_token' ).show();
@@ -251,7 +252,7 @@
 				captcha_response: self.captcha_response,
 			};
 			if ( self.v2_option ) {
-				data[ 'v2_option' ] = self.v2_option;
+				data.v2_option = self.v2_option;
 			}
 
 			var selector = this.fetchSelector();
@@ -292,6 +293,7 @@
 		},
 
 		fetchSelector: function () {
+			var selector = '';
 			if (
 				'recaptcha_v3' === self.selected_version ||
 				(
@@ -300,9 +302,9 @@
 					'v2_invisible_badge' === self.v2_option
 				)
 			) {
-				selector = 'bp-hello-content-recaptcha_v3'
+				selector = 'bp-hello-content-recaptcha_v3';
 			} else {
-				selector = 'bp-hello-content-recaptcha_v2'
+				selector = 'bp-hello-content-recaptcha_v2';
 			}
 
 			return selector;

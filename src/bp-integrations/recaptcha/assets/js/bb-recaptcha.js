@@ -54,7 +54,7 @@
 								'tabindex': 9999,
 								'badge': bbRecaptcha.data.v2_badge_position,
 								'size': 'invisible',
-								'callback': ( token ) => {
+								'callback': function ( token ) {
 									$( '#g-recaptcha-response' ).val( token );
 									if ( container ) {
 										$( '#' + container ).submit();
