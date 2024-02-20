@@ -19,7 +19,7 @@
 				if ( 'recaptcha_v3' === this.bbrecaptchaData.selected_version ) {
 					grecaptcha.ready( function () {
 						grecaptcha.execute( bbRecaptcha.data.site_key, { action: 'bb_login' } ).then( function ( token ) {
-							$( '#bb_recaptcha_login_v3' ).val( token );
+							$( '#bb_recaptcha_response_id' ).val( token );
 						} );
 					} );
 				}

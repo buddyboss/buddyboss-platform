@@ -508,7 +508,7 @@ function bb_recaptcha_display( $display = false ) {
 		if ( $display ) {
 			if ( 'recaptcha_v3' === $enabled_for ) {
 				?>
-				<input type="hidden" id="bb_recaptcha_login_v3" name="g-recaptcha-response"/>
+				<input type="hidden" id="bb_recaptcha_response_id" name="g-recaptcha-response"/>
 				<?php
 				$query_args['render'] = $site_key;
 				$api_url              = add_query_arg( $query_args, $api_url );
