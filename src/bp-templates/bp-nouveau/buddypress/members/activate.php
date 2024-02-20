@@ -41,6 +41,14 @@
 				<label for="key"><?php esc_html_e( 'Activation Key:', 'buddyboss' ); ?></label>
 				<input type="text" name="key" id="key" value="<?php echo esc_attr( bp_get_current_activation_key() ); ?>" />
 
+				<?php
+				/**
+				 * Fires before the submit button.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 */
+				do_action( 'bb_before_activate_submit_buttons' );
+				?>
 				<p class="submit">
 					<input type="submit" name="submit" value="<?php esc_attr_e( 'Activate', 'buddyboss' ); ?>" />
 				</p>
