@@ -56,6 +56,8 @@ add_action( 'messages_screen_inbox', 'bp_core_clear_cache' );
 function bp_messages_clear_cache_on_message_save( BP_Messages_Message $message ) {
 	// Delete thread cache.
 	// wp_cache_delete( $message->thread_id, 'bp_messages_threads' );
+	$cache_key = "{$message->thread_id}99999999";
+	wp_cache_delete( $cache_key, 'bp_messages_threads' );
 	bp_messages_delete_thread_paginated_messages_cache( $message->thread_id );
 
 	// Delete unread count for each recipient.
