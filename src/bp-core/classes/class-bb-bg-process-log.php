@@ -144,6 +144,8 @@ class BB_BG_Process_Log {
 			return $args;
 		}
 
+		$bg_data['callback'] = maybe_serialize( $bg_data['callback'] );
+
 		$insert = $this->add_log(
 			array(
 				'process_id'        => $args->key,
@@ -260,6 +262,11 @@ class BB_BG_Process_Log {
 	public static function get_component_name( $callback_function ) {
 		if ( empty( $callback_function ) ) {
 			return;
+		}
+
+		$callback_function = maybe_unserialize( $callback_function );
+		if ( is_array( $callback_function ) ) {
+			$callback_function = end( $callback_function );
 		}
 
 		switch ( $callback_function ) {
