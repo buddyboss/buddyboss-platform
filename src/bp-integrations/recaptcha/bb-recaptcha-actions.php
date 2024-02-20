@@ -15,6 +15,7 @@ add_action( 'lostpassword_form', 'bb_recaptcha_lost_password' );
 add_action( 'lostpassword_post', 'bb_recaptcha_validate_lost_password', 10, 1 );
 add_action( 'bp_before_registration_submit_buttons', 'bb_recaptcha_registration' );
 add_action( 'bp_signup_validate', 'bb_recaptcha_validate_registration' );
+add_action( 'bb_before_activate_submit_buttons', 'bb_recaptcha_activate_form' );
 
 /**
  * Handles AJAX request for reCAPTCHA verification in admin settings.
@@ -178,6 +179,20 @@ function bb_recaptcha_validate_registration() {
 				)
 			);
 		}
+	}
+}
+
+/**
+ * Displays reCAPTCHA on the activate form if enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_recaptcha_activate_form() {
+	$enable_for_bb_activate = bb_recaptcha_is_enabled( 'bb_activate' );
+	if ( $enable_for_bb_activate ) {
+		bb_recaptcha_display( 'bb_activate' );
+
+		add_action( 'wp_footer', 'bb_recaptcha_add_scripts_login_footer' );
 	}
 }
 
