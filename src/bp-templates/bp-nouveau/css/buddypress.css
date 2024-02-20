@@ -4680,16 +4680,6 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
 }
 
 /* Activity comment modal ==> Ends Here */
-.emojionearea-theatre.show .emojionearea-picker:not(.hidden) {
-  opacity: 1;
-  visibility: visible;
-  z-index: 999992;
-  top: unset;
-  left: unset;
-  right: unset;
-  margin: 0;
-}
-
 .bb-is-mobile.bb-reactions-mode .bp-generic-meta .generic-button a,
 .bb-is-mobile.bb-reactions-mode .bp-generic-meta .generic-button a img,
 .bb-is-mobile.bb-reactions-mode .bp-generic-meta .ac-emotions_list .ac-emotion_item a > *,
