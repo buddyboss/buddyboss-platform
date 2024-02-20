@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) || exit;
 // Add class in body tag in the admin.
 add_filter( 'admin_body_class', 'bb_admin_recaptcha_class' );
 add_filter( 'wp_authenticate_user', 'bb_recaptcha_login_check', 9999, 2 );
+add_filter( 'bb_before_core_activate_signup', 'bb_recaptcha_validate_activate' );
 
 /**
  * Function to add class for recaptcha.
@@ -64,4 +65,17 @@ function bb_recaptcha_login_check( $user, $password ) {
 	}
 
 	return $user;
+}
+
+function bb_recaptcha_validate_activate( $retval ) {
+	if ( ! bb_recaptcha_is_enabled( 'bb_activate' ) ) {
+		return $retval;
+	}
+
+	$captcha = bb_recaptcha_verification_front();
+	if ( is_wp_error( $captcha ) ) {
+		return $captcha;
+	}
+
+	return $retval;
 }

@@ -22,6 +22,8 @@
 					container = 'lostpasswordform';
 				} else if ( 'bb_register' === action ) {
 					container = 'signup-form';
+				} else if ( 'bb_activate' === action ) {
+					container = 'activation-form';
 				}
 				if ( 'recaptcha_v3' === this.bbrecaptchaVersion ) {
 					grecaptcha.ready( function () {
