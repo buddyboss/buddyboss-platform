@@ -27,7 +27,7 @@ function bb_recaptcha_integration_url( $path = '' ) {
  *
  * @param float $default The default score threshold value. Default is 0.5.
  *
- * @return int The reCAPTCHA score threshold.
+ * @return float The reCAPTCHA score threshold.
  */
 function bb_recaptcha_score_threshold( $default = 0.5 ) {
 
@@ -38,7 +38,7 @@ function bb_recaptcha_score_threshold( $default = 0.5 ) {
 	 *
 	 * @param float $threshold The reCAPTCHA score threshold.
 	 */
-	return (int) apply_filters( 'bb_recaptcha_score_threshold', bp_get_option( 'bb_recaptcha_score_threshold', $default ) );
+	return apply_filters( 'bb_recaptcha_score_threshold', bb_recaptcha_setting( 'score_threshold', $default ) );
 }
 
 /**
@@ -55,7 +55,7 @@ function bb_recaptcha_options() {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param float $recaptcha_options The reCAPTCHA options.
+	 * @param array $recaptcha_options The reCAPTCHA options.
 	 */
 	return apply_filters( 'bb_recaptcha_options', bp_get_option( 'bb_recaptcha', array() ) );
 }
@@ -83,9 +83,9 @@ function bb_recaptcha_setting( $key, $default = '' ) {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array  $retval  Settings of recaptcha.
-	 * @param string $key     Optional. Get setting by key.
-	 * @param string $default Optional. Default value if value or setting not available.
+	 * @param array $retval  Settings of recaptcha.
+	 * @param mixed $key     Optional. Get setting by key.
+	 * @param mixed $default Optional. Default value if value or setting not available.
 	 */
 	return apply_filters( 'bb_recaptcha_setting', $retval, $key, $default );
 }
@@ -355,7 +355,7 @@ function bb_recaptcha_v2_badge() {
  * @return string The reCAPTCHA site key.
  */
 function bb_recaptcha_site_key() {
-	$site_key = bb_recaptcha_setting( 'site_key', '' );
+	$site_key = bb_recaptcha_setting( 'site_key' );
 
 	/**
 	 * Filters the reCAPTCHA site key.
@@ -375,7 +375,7 @@ function bb_recaptcha_site_key() {
  * @return string The reCAPTCHA secret key.
  */
 function bb_recaptcha_secret_key() {
-	$secret_key = bb_recaptcha_setting( 'secret_key', '' );
+	$secret_key = bb_recaptcha_setting( 'secret_key' );
 
 	/**
 	 * Filters the reCAPTCHA secret key.
@@ -395,7 +395,7 @@ function bb_recaptcha_secret_key() {
  * @return string The reCAPTCHA connection status.
  */
 function bb_recaptcha_connection_status() {
-	$connection_status = bb_recaptcha_setting( 'connection_status', '' );
+	$connection_status = bb_recaptcha_setting( 'connection_status' );
 
 	/**
 	 * Filters the reCAPTCHA connection status.
@@ -460,7 +460,7 @@ function bb_recaptcha_allow_bypass_enable() {
  * @param string $secret_key The secret key for the Google reCAPTCHA.
  * @param string $token      The token to be verified by the Google reCAPTCHA API.
  *
- * @return array|false Returns an associative array containing the API response if successful,
+ * @return array|bool Returns an associative array containing the API response if successful,
  *                     or false if there's an error or if the API response is invalid.
  */
 function bb_get_google_recaptcha_api_response( $secret_key, $token ) {
@@ -469,8 +469,8 @@ function bb_get_google_recaptcha_api_response( $secret_key, $token ) {
 
 	$response_code = wp_remote_retrieve_response_code( $get_data );
 
-	// Check if the status code is 429 (Resource Exhausted)
-	if ( $response_code === 429 ) {
+	// Check if the status code is 429 (Resource Exhausted).
+	if ( 429 === $response_code ) {
 		return true;
 	} else {
 		// Decode the response body from JSON
@@ -588,7 +588,7 @@ function bb_recaptcha_display( $action = '' ) {
  *
  * @param string $action Current action for recaptcha.
  *
- * @return true|WP_Error Returns true if reCAPTCHA verification is successful,
+ * @return bool|WP_Error Returns true if reCAPTCHA verification is successful,
  *                       or a WP_Error object if verification fails.
  */
 function bb_recaptcha_verification_front( $action = '' ) {
@@ -622,7 +622,7 @@ function bb_recaptcha_verification_front( $action = '' ) {
 					}
 
 					// Check if reCAPTCHA score is below threshold for v3.
-					$score_threshold = bb_recaptcha_setting( 'score_threshold', 6 );
+					$score_threshold = bb_recaptcha_score_threshold();
 					if ( isset( $response['score'] ) && $response['score'] < $score_threshold ) {
 						return new WP_Error(
 							'bb_recaptcha_v3_failed',
@@ -725,7 +725,7 @@ function bb_recaptcha_get_current_ip() {
  *
  * @global WP_Scripts $wp_scripts WordPress script queue object.
  *
- * @return void
+ * @return bool|void
  */
 function bb_recaptcha_remove_duplicate_scripts() {
 	global $wp_scripts;

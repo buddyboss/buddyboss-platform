@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 
 // Add class in body tag in the admin.
 add_filter( 'admin_body_class', 'bb_admin_recaptcha_class' );
-add_filter( 'wp_authenticate_user', 'bb_recaptcha_validate_login', 9999, 1 );
+add_filter( 'wp_authenticate_user', 'bb_recaptcha_validate_login', 9999 );
 add_filter( 'bb_before_core_activate_signup', 'bb_recaptcha_validate_activate' );
 
 /**
@@ -38,8 +38,8 @@ function bb_admin_recaptcha_class( $classes ) {
  *
  * @sicne BuddyBoss [BBVERSION]
  *
- * @param WP_User|WP_Error $user      WP_User or WP_Error object if a previous
- *                                    callback failed authentication.
+ * @param WP_User|WP_Error $user WP_User or WP_Error object if a previous
+ *                               callback failed authentication.
  *
  * @return WP_User|WP_Error|null WP_User object if the user is authenticated, WP_Error object on error, or null if not
  *                               authenticated.
@@ -53,7 +53,7 @@ function bb_recaptcha_validate_login( $user ) {
 	if ( bb_recaptcha_allow_bypass_enable() ) {
 		$get_url_string    = bb_filter_input_string( INPUT_POST, 'bb_recaptcha_bypass' );
 		$get_url_string    = ! empty( $get_url_string ) ? base64_decode( $get_url_string ) : '';
-		$admin_bypass_text = bb_recaptcha_setting( 'bypass_text', '' );
+		$admin_bypass_text = bb_recaptcha_setting( 'bypass_text' );
 		if ( $get_url_string === $admin_bypass_text ) {
 			return $user;
 		}

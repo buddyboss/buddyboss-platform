@@ -85,7 +85,7 @@ class BB_Recaptcha_Integration extends BP_Integration {
 		require_once trailingslashit( buddypress()->integration_dir ) . $this->id . '/bb-recaptcha-admin-tab.php';
 
 		new BB_Recaptcha_Admin_Integration_Tab(
-			"bb-{$this->id}",
+			"bb-$this->id",
 			$this->name,
 			array(
 				'root_path'       => trailingslashit( buddypress()->integration_dir ) . $this->id,

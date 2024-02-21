@@ -107,7 +107,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$sections = $this->get_settings_sections();
 
-		foreach ( (array) $sections as $section_id => $section ) {
+		foreach ( $sections as $section_id => $section ) {
 
 			// Only add section and fields if section has fields.
 			$fields = $this->get_settings_fields_for_section( $section_id );
@@ -125,7 +125,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			$this->add_section( $section_id, $section_title, $section_callback, $tutorial_callback, $notice );
 
 			// Loop through fields for this section.
-			foreach ( (array) $fields as $field_id => $field ) {
+			foreach ( $fields as $field_id => $field ) {
 
 				$field['args'] = isset( $field['args'] ) ? $field['args'] : array();
 
@@ -204,9 +204,8 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		}
 
 		$fields = $this->get_settings_fields();
-		$fields = isset( $fields[ $section_id ] ) ? $fields[ $section_id ] : false;
 
-		return $fields;
+		return isset( $fields[ $section_id ] ) ? $fields[ $section_id ] : false;
 	}
 
 	/**
@@ -398,6 +397,13 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		<?php
 	}
 
+	/**
+	 * Callback fields for recaptcha score threshold.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
 	public function setting_callback_score_threshold() {
 		?>
 		<input name="bb_recaptcha[score_threshold]" id="bb-recaptcha-score-threshold" type="number" min="0" max="1" step="0.1" value="<?php echo esc_attr( bb_recaptcha_setting( 'score_threshold', 0.5 ) ); ?>" required/>
@@ -409,6 +415,13 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		<?php
 	}
 
+	/**
+	 * Callback fields for recaptcha enable or not.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
 	public function setting_callback_enabled_for() {
 		$actions = bb_recaptcha_actions();
 
@@ -430,13 +443,20 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			'</p>';
 	}
 
+	/**
+	 * Callback fields for allow bypass recaptcha.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
 	public function setting_callback_allow_bypass() {
 		$checked      = bb_recaptcha_allow_bypass_enable();
 		$allow_bypass = false;
 		if ( bb_recaptcha_is_enabled( 'bb_login' ) && $checked ) {
 			$allow_bypass = true;
 		}
-		$bypass_text = bb_recaptcha_setting( 'bypass_text', '' );
+		$bypass_text = bb_recaptcha_setting( 'bypass_text' );
 		?>
 		<input id="bb_recaptcha_allow_bypass" name="bb_recaptcha[allow_bypass]" type="checkbox" value="1" <?php checked( $checked ); ?> />
 		<label for="bb_recaptcha_allow_bypass"><?php esc_html_e( 'Allow bypass, enter a 6 to 10-character string to customize your URL', 'buddyboss' ); ?></label>
@@ -457,6 +477,13 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		<?php
 	}
 
+	/**
+	 * Callback fields for recaptcha language code.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
 	public function setting_callback_language_code() {
 		$languages = bb_recaptcha_languages();
 		$language  = bb_recaptcha_setting( 'language_code', 'en' );
@@ -472,6 +499,13 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		<?php
 	}
 
+	/**
+	 * Callback fields for recaptcha conflict mode.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
 	public function setting_callback_conflict_mode() {
 		$checked = bb_recaptcha_conflict_mode();
 		?>
@@ -481,6 +515,13 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		<?php
 	}
 
+	/**
+	 * Callback fields for recaptcha exclude ip.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
 	public function setting_callback_exclude_ip() {
 		?>
 		<label for="bb-recaptcha-exclude-ip"><?php esc_html_e( 'Enter the IP addresses that you want to skip from captcha submission. Enter one IP per line.', 'buddyboss' ); ?></label>
@@ -496,7 +537,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 * @param string $meta_icon Icon class.
 	 * @param string $id        Section ID.
 	 *
-	 * @return mixed|string
+	 * @return string
 	 */
 	public function admin_setting_icons( $meta_icon, $id = '' ) {
 		if (
@@ -639,7 +680,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			<div class="bp-hello-content">
 				<div id="bp-hello-content-recaptcha_v3" class="bp-hello-recaptcha-content-container <?php echo esc_attr( $v3_class ); ?>">
 					<div class="verifying_token">
-						<img src="<?php echo bb_recaptcha_integration_url( 'assets/images/recaptcha.png' ); ?>"/>
+						<img src="<?php echo bb_recaptcha_integration_url( 'assets/images/recaptcha.png' ); ?>" alt=""/>
 						<p>
 							<?php esc_html_e( 'Verifying reCAPTCHA token', 'buddyboss' ); ?>
 						</p>
@@ -666,6 +707,13 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		<?php
 	}
 
+	/**
+	 * Callback fields for recaptcha theme for v2 version.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
 	public function setting_callback_theme() {
 		$v2_option  = bb_recaptcha_recaptcha_v2_option();
 		$connection = bb_recaptcha_connection_status();
@@ -699,6 +747,13 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		<?php
 	}
 
+	/**
+	 * Callback fields for recaptcha size for v2 version.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
 	public function setting_callback_size() {
 		$v2_option  = bb_recaptcha_recaptcha_v2_option();
 		$connection = bb_recaptcha_connection_status();
@@ -732,6 +787,13 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		<?php
 	}
 
+	/**
+	 * Callback fields for recaptcha badge for v2 version.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
 	public function setting_callback_badge_position() {
 		$v2_option  = bb_recaptcha_recaptcha_v2_option();
 		$connection = bb_recaptcha_connection_status();
