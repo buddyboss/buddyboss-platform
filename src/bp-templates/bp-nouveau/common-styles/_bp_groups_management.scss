@@ -25,6 +25,62 @@
 	.section-title {
 		background: $light-grey;
 		padding-left: $pad-xsml;
+
+		&.gen-members-section {
+			background-color: transparent;
+
+			.search-wrapper {
+				margin-top: 1em;
+				width: 15em;
+				display: flex;
+				align-items: center;
+				position: relative;
+
+				input[type="search"] {
+					padding-top: 3px;
+					padding-bottom: 3px;
+					padding-right: 35px;
+					line-height: 1.5;
+					font-size: 16px;
+					-moz-appearance: none;
+
+					&::-webkit-search-clear-button,
+					&::-webkit-search-cancel-button {
+						-webkit-appearance: none;
+					}
+				}
+
+				.search-form_reset {
+					background-color: transparent;
+					border: 0;
+					padding: 0;
+					color: #767676;
+					position: absolute;
+					right: 12px;
+					opacity: 0.4;
+					font-size: 13px;
+				}
+
+				&.loading {
+					position: relative;
+
+					&:after {
+						content: "\ef30";
+						font-weight: 400;
+						font-family: "bb-icons"; /* stylelint-disable-line */
+						font-size: 20px;
+						line-height: 1;
+						position: absolute;
+						right: -30px;
+						text-align: center;
+						display: inline-block;
+						vertical-align: middle;
+						-webkit-animation: spin 2s infinite linear;
+						animation: spin 2s infinite linear;
+					}
+				}
+			}
+		}
 	}
 
 	ul {

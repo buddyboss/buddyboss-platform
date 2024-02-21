@@ -233,7 +233,7 @@ class BP_XProfile_Field {
 				return false;
 			}
 
-			wp_cache_add( $id, $field, 'bp_xprofile_fields' );
+			wp_cache_set( $id, $field, 'bp_xprofile_fields' );
 		}
 
 		$this->fill_data( $field );
@@ -1124,11 +1124,12 @@ class BP_XProfile_Field {
 
 		// Sort member_type matches in arrays, keyed by field_id.
 		foreach ( $mt_meta as $_mt_meta ) {
-			if ( ! isset( $fields[ $_mt_meta->object_id ] ) ) {
+			if ( isset( $_mt_meta->object_id ) && ! isset( $fields[ $_mt_meta->object_id ] ) ) {
 				$fields[ $_mt_meta->object_id ] = array();
 			}
-
-			$fields[ $_mt_meta->object_id ][] = $_mt_meta->meta_value;
+			if ( isset( $_mt_meta->meta_value ) ) {
+				$fields[ $_mt_meta->object_id ][] = $_mt_meta->meta_value;
+			}
 		}
 
 		// Add temp null member type before add field to register page from the $member_types array.

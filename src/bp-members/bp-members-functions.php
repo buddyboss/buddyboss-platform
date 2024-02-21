@@ -3344,7 +3344,7 @@ function bp_member_type_term_taxonomy_id( $member_type_name ) {
  *
  * @param $member_type
  *
- * @return array
+ * @return int
  * @since BuddyBoss 1.0.0
  *
  * @global wpdb $wpdb WordPress database abstraction object.
@@ -3953,15 +3953,20 @@ function bp_get_user_member_type( $user_id ) {
  * @return string
  */
 function bp_get_user_gender_pronoun_type( $user_id = '' ) {
-
 	global $wpdb;
-	global $bp;
+	static $static_cache = '';
 
 	if ( '' === $user_id ) {
 		$gender_pronoun = esc_html__( 'their', 'buddyboss' );
 	} else {
-		$table         = bp_core_get_table_prefix() . 'bp_xprofile_fields';
-		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$table} a WHERE parent_id = 0 AND type = 'gender' " );
+		if ( empty( $static_cache ) ) {
+			$table         = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+			$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$table} a WHERE parent_id = 0 AND type = 'gender' " );
+			$static_cache = $exists_gender;
+		} else {
+			$exists_gender = $static_cache;
+		}
+
 		if ( $exists_gender[0]->count > 0 ) {
 			$field_id = $exists_gender[0]->id;
 			$gender   = xprofile_get_field_data( $field_id, $user_id );
@@ -4253,7 +4258,10 @@ function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user )
 
 		// Check Member Type Dropdown added on register page.
 		$get_parent_id_of_member_types_field  = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->base_prefix}bp_xprofile_fields WHERE type = %s AND parent_id = %d ", 'membertypes', 0 ) );
-		$get_selected_member_type_on_register = trim( $wpdb->get_var( $wpdb->prepare( "SELECT value FROM {$wpdb->base_prefix}bp_xprofile_data WHERE user_id = %s AND field_id = %d ", $user_id, $get_parent_id_of_member_types_field ) ) );
+		$get_selected_member_type_on_register = $wpdb->get_var( $wpdb->prepare( "SELECT value FROM {$wpdb->base_prefix}bp_xprofile_data WHERE user_id = %s AND field_id = %d ", $user_id, $get_parent_id_of_member_types_field ) );
+		if ( ! empty( $get_selected_member_type_on_register ) ) {
+			$get_selected_member_type_on_register = trim( $get_selected_member_type_on_register );
+		}
 		// return to user if default member type is not set.
 		$existing_selected = bp_member_type_default_on_registration();
 
