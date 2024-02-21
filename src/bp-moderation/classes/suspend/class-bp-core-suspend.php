@@ -448,7 +448,7 @@ class BP_Core_Suspend {
 		$hidden_users_ids = bp_moderation_get_hidden_user_ids();
 		if ( ! empty( $hidden_users_ids ) ) {
 
-			$blocked_content_sql = $wpdb->prepare( "SELECT s.id FROM {$bp->table_prefix}bp_suspend as s, {$bp->table_prefix}bp_suspend_details as sd WHERE s.id = sd.suspend_id AND s.item_id = %d AND s.item_type = %s and `user_id` IN (" . implode( ',', $hidden_users_ids ) . ') limit 1', (int) $item_id, $item_type );
+			$blocked_content_sql = $wpdb->prepare( "SELECT s.id FROM {$bp->moderation->table_name} as s, {$bp->table_prefix}bp_suspend_details as sd WHERE s.id = sd.suspend_id AND s.item_id = %d AND s.item_type = %s and `user_id` IN (" . implode( ',', $hidden_users_ids ) . ') limit 1', (int) $item_id, $item_type );
 
 			$cached = bp_core_get_incremented_cache( $blocked_content_sql, 'bp_moderation' );
 			if ( false === $cached ) {
