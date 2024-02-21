@@ -57,6 +57,20 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.5.50 =
+* New Feature! - The Profile Avatar User Initials is a new setting to allow site owners to set the default user avatar to use display name initials with different background colors. We have also added this feature to group avatars.
+* Enhancement: Core - Code refactoring to improve performance within the Activity Feed with object caching support
+* Enhancement: Core - Updates and code refactoring for the Activity structure to provide scalability to upcoming features
+* Enhancement: Groups - Added a search option within Manage Group - Members page to search members easier
+* Bug: Core - Added xprofile field ID validation from the cache data to avoid unexpected error
+* Bug: Core - Default Theme 2023 Notification Preference was not showing the lists of subscribed groups, forums and discussion
+* Bug: Core - Links were getting clipped due to the ‘Read more’ text which was then redirected users to wrong url
+* Bug: Custom Development - A deprecated error was showing when updating or creating new LearnDash groups while social group integration was enabled
+* Bug: Elementor - Group pages was showing an error while editing with Elementor
+* Bug: Forums - Forum search results was not showing the same result between autocomplete and the search page
+* Bug: Messages - Issues with group messaging when new user joined or left a group
+* Bug: Translations - Translation strings for posts that had 3 or more reactions were not working as it was missing on the LocoTranslate plugin
+
 = 2.5.40 =
 * Enhancement: Core - Code Refinement for background jobs in the platform complete
 * Enhancement: Groups - New tab has been added to BuddyBoss - Groups backend called ‘No Members’ so that you can now filter and pickup groups with no members in automations
