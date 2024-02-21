@@ -21,6 +21,8 @@ $can_edit_btn   = true === (bool) $folder_privacy['can_edit'];
 $can_add_btn    = true === (bool) $folder_privacy['can_add'];
 $can_delete_btn = true === (bool) $folder_privacy['can_delete'];
 
+$bp_is_group = bp_is_group();
+
 $bradcrumbs = bp_document_folder_bradcrumb( $folder_id );
 if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 	while ( bp_folder() ) :
@@ -51,11 +53,11 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 								</form>
 							</div>
 							<?php
-							if ( is_user_logged_in() && ( bp_is_user_document() || bp_is_my_profile() || bp_is_group() || bp_is_document_directory() ) ) :
+							if ( is_user_logged_in() && ( bp_is_user_document() || bp_is_my_profile() || $bp_is_group || bp_is_document_directory() ) ) :
 
 								$active_extensions = bp_document_get_allowed_extension();
 								if ( ! empty( $active_extensions ) && is_user_logged_in() ) {
-									if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+									if ( bp_is_active( 'groups' ) && $bp_is_group ) {
 										$manage = groups_can_user_manage_document( bp_loggedin_user_id(), bp_get_current_group_id() );
 										if ( $manage ) {
 											?>
@@ -67,7 +69,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 											</a>
 											<?php
 										}
-									} elseif ( ! bp_is_group() && $can_edit_btn && bb_user_can_create_document() ) {
+									} elseif ( ! $bp_is_group && $can_edit_btn && bb_user_can_create_document() ) {
 										?>
 										<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
 											<i class="bb-icon-l bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
