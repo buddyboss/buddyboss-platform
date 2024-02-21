@@ -1222,7 +1222,7 @@ function bb_recipients_recipient_get_join_sql_with_group_members( $sql, $r ) {
 /**
  * Clear group message thread cache based on thread id.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.50
  *
  * @param int $thread_id Message thread id.
  *

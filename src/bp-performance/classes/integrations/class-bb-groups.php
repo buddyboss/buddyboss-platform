@@ -106,6 +106,9 @@ class BB_Groups extends Integration_Abstract {
 
 			// For Group Video Support.
 			'update_option_bp_video_group_video_support'    => 3,
+
+			// When change the member display name.
+			'update_option_bp-display-name-format'          => 3,
 		);
 
 		$this->purge_single_events( $purge_single_events );
@@ -425,10 +428,9 @@ class BB_Groups extends Integration_Abstract {
 	 */
 	public function event_profile_update( $user_id ) {
 		$group_ids = $this->get_group_ids_by_userid( $user_id );
+
 		if ( ! empty( $group_ids ) ) {
-			foreach ( $group_ids as $group_id ) {
-				$this->purge_item_cache_by_item_id( $group_id );
-			}
+			$this->purge_item_cache_by_item_ids( $group_ids );
 		}
 	}
 
@@ -439,10 +441,9 @@ class BB_Groups extends Integration_Abstract {
 	 */
 	public function event_deleted_user( $user_id ) {
 		$group_ids = $this->get_group_ids_by_userid( $user_id );
+
 		if ( ! empty( $group_ids ) ) {
-			foreach ( $group_ids as $group_id ) {
-				$this->purge_item_cache_by_item_id( $group_id );
-			}
+			$this->purge_item_cache_by_item_ids( $group_ids );
 		}
 	}
 
@@ -453,10 +454,9 @@ class BB_Groups extends Integration_Abstract {
 	 */
 	public function event_xprofile_avatar_uploaded( $user_id ) {
 		$group_ids = $this->get_group_ids_by_userid( $user_id );
+
 		if ( ! empty( $group_ids ) ) {
-			foreach ( $group_ids as $group_id ) {
-				$this->purge_item_cache_by_item_id( $group_id );
-			}
+			$this->purge_item_cache_by_item_ids( $group_ids );
 		}
 	}
 
@@ -467,14 +467,14 @@ class BB_Groups extends Integration_Abstract {
 	 */
 	public function event_bp_core_delete_existing_avatar( $args ) {
 		$item_id = ! empty( $args['item_id'] ) ? absint( $args['item_id'] ) : 0; // group/user id.
+
 		if ( ! empty( $user_id ) ) {
 			if ( isset( $args['object'] ) && 'user' === $args['object'] ) {
 				$user_id   = $item_id;
 				$group_ids = $this->get_group_ids_by_userid( $user_id );
+
 				if ( ! empty( $group_ids ) ) {
-					foreach ( $group_ids as $group_id ) {
-						$this->purge_item_cache_by_item_id( $group_id );
-					}
+					$this->purge_item_cache_by_item_ids( $group_ids );
 				}
 			} elseif ( isset( $args['object'] ) && 'group' === $args['object'] ) {
 				$this->purge_item_cache_by_item_id( $item_id );
@@ -509,6 +509,34 @@ class BB_Groups extends Integration_Abstract {
 		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
 		$group = new \BP_Groups_Group( $group_id );
 		Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( bp_get_group_permalink( $group ) ) );
+	}
+
+	/**
+	 * Purge item cache by ids.
+	 *
+	 * @param array $ids Array of ids.
+	 *
+	 * @return void
+	 */
+	private function purge_item_cache_by_item_ids( $ids ) {
+		if ( empty( $ids ) ) {
+			return;
+		}
+
+		Cache::instance()->purge_by_group_names( $ids, array( 'bp-groups_' ), array( $this, 'prepare_group_deeplink' ) );
+	}
+
+	/**
+	 * Prepare activity deeplink.
+	 *
+	 * @param int $group_id Activity ID.
+	 *
+	 * @return string
+	 */
+	public function prepare_group_deeplink( $group_id ) {
+		$group = new \BP_Groups_Group( $group_id );
+
+		return 'bbapp-deeplinking_' . untrailingslashit( bp_get_group_permalink( $group ) );
 	}
 
 	/**
@@ -628,6 +656,17 @@ class BB_Groups extends Integration_Abstract {
 	 * @param mixed  $value     The new option value.
 	 */
 	public function event_update_option_bp_video_group_video_support( $old_value, $value, $option ) {
+		$this->purge_cache_on_change_default_group_images_settings();
+	}
+
+	/**
+	 * When changed display name format settings from the Settings -> Profile.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_display_name_format( $old_value, $value, $option ) {
 		$this->purge_cache_on_change_default_group_images_settings();
 	}
 }

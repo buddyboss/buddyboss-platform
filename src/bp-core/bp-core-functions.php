@@ -9288,37 +9288,9 @@ function bb_reactions_get_settings_fields() {
 }
 
 /**
- * Replace mention placeholders with user URLs in the given content.
- * This function searches for mention placeholders in the provided content (e.g., {{mention_user_id_XXXX}})
- * and replaces them with the corresponding user URLs using bp_core_get_user_domain().
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param mixed $content The content containing mention placeholders to be replaced..
- *
- * @return mixed The content with mention placeholders replaced by user URLs.
- */
-function bb_mention_add_user_dynamic_link( $content ) {
-
-	if ( empty( $content ) ) {
-		return $content;
-	}
-
-	// Define a callback function for preg_replace_callback.
-	$replace_callback = function ( $matches ) {
-		$user_id = $matches[1];                     // Extract the user ID from the match.
-
-		return bp_core_get_user_domain( $user_id ); // Replace this with your actual BuddyPress URL format.
-
-	};
-
-	return preg_replace_callback( '/{{mention_user_id_(\d+)}}/', $replace_callback, $content );
-}
-
-/**
  * Function to check WP_Filesystem object available or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.50
  *
  * @return object
  */
@@ -9341,7 +9313,7 @@ function bb_wp_filesystem() {
 /**
  * Function to retrieve the first character of the give string and make it uppercase.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.50
  *
  * @param string $string String to find first character.
  *
@@ -9365,7 +9337,7 @@ function bb_core_get_first_character( $string ) {
 /**
  * Function to return pre-defined color palettes.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.50
  *
  * @return array
  */
@@ -9408,7 +9380,7 @@ function bb_get_predefined_palette() {
 /**
  * Function to retrieve the default PNG avatar if don't exists then generate.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.50
  *
  * @param array $params Array of avatar details.
  *
@@ -9464,7 +9436,7 @@ function bb_get_default_png_avatar( $params ) {
 /**
  * Function to prepare array to generate the default PNG avatar.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.50
  *
  * @param array $args Array of avatar details.
  *
@@ -9687,7 +9659,7 @@ function bb_generate_default_avatar( $args ) {
 /**
  * Function to delete the user default PNG avatar.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.50
  *
  * @param array $item_ids      Array of user IDs.
  * @param bool  $is_delete_dir True then delete directory. Default true.
@@ -9722,7 +9694,7 @@ function bb_delete_default_user_png_avatar( $item_ids = array(), $is_delete_dir 
 /**
  * Function to delete the group default PNG avatar.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.50
  *
  * @param array $item_ids      Array of group IDs.
  * @param bool  $is_delete_dir True then delete directory. Default true.
@@ -9752,4 +9724,32 @@ function bb_delete_default_group_png_avatar( $item_ids = array(), $is_delete_dir
 			}
 		}
 	}
+}
+
+/**
+ * Replace mention placeholders with user URLs in the given content.
+ * This function searches for mention placeholders in the provided content (e.g., {{mention_user_id_XXXX}})
+ * and replaces them with the corresponding user URLs using bp_core_get_user_domain().
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @param mixed $content The content containing mention placeholders to be replaced..
+ *
+ * @return mixed The content with mention placeholders replaced by user URLs.
+ */
+function bb_mention_add_user_dynamic_link( $content ) {
+
+	if ( empty( $content ) ) {
+		return $content;
+	}
+
+	// Define a callback function for preg_replace_callback.
+	$replace_callback = function ( $matches ) {
+		$user_id = $matches[1];                     // Extract the user ID from the match.
+
+		return bp_core_get_user_domain( $user_id ); // Replace this with your actual BuddyPress URL format.
+
+	};
+
+	return preg_replace_callback( '/{{mention_user_id_(\d+)}}/', $replace_callback, $content );
 }

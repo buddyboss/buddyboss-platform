@@ -199,7 +199,7 @@ if ( ! class_exists( 'BB_Elementor_Plugin_Compatibility') ) {
 		/**
 		 * Fix Elementor conflict for edit the directory pages with Elementor.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.5.50
 		 *
 		 * @param bool $bool
 		 *
@@ -216,7 +216,7 @@ if ( ! class_exists( 'BB_Elementor_Plugin_Compatibility') ) {
 		/**
 		 * Fix Elementor conflict for edit the activate and register page.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.5.50
 		 *
 		 * @param bool   $is_current_component Whether or not the current page belongs to specified component.
 		 * @param string $component            Name of the component being checked.
