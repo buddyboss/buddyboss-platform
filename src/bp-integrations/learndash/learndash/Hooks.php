@@ -34,7 +34,7 @@ class Hooks {
 	 */
 	public function init() {
 		// add some helpful missing hooks
-		add_action( 'ld_group_postdata_updated', array( $this, 'groupUpdated' ) );
+		add_action( 'save_post_groups', array( $this, 'groupUpdated' ) );
 		add_action( 'before_delete_post', array( $this, 'groupDeleting' ) );
 
 		// backward compet, we check the meta instead of using hook (hook not consistant)

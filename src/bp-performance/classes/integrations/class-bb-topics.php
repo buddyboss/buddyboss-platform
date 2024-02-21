@@ -441,12 +441,11 @@ class BB_Topics extends Integration_Abstract {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
 			return;
 		}
-		$topic_ids = $this->get_topic_ids_by_userid( $bp_moderation->item_id );
-		if ( ! empty( $topic_ids ) ) {
-			foreach ( $topic_ids as $topic_id ) {
-				$this->purge_item_cache_by_item_id( $topic_id );
-			}
 
+		$topic_ids = $this->get_topic_ids_by_userid( $bp_moderation->item_id );
+
+		if ( ! empty( $topic_ids ) ) {
+			$this->purge_item_cache_by_item_ids( $topic_ids );
 			$this->purge_subscription_cache_by_items( $topic_ids );
 		}
 	}
@@ -460,12 +459,11 @@ class BB_Topics extends Integration_Abstract {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
 			return;
 		}
-		$topic_ids = $this->get_topic_ids_by_userid( $bp_moderation->item_id );
-		if ( ! empty( $topic_ids ) ) {
-			foreach ( $topic_ids as $topic_id ) {
-				$this->purge_item_cache_by_item_id( $topic_id );
-			}
 
+		$topic_ids = $this->get_topic_ids_by_userid( $bp_moderation->item_id );
+
+		if ( ! empty( $topic_ids ) ) {
+			$this->purge_item_cache_by_item_ids( $topic_ids );
 			$this->purge_subscription_cache_by_items( $topic_ids );
 		}
 	}
@@ -478,11 +476,9 @@ class BB_Topics extends Integration_Abstract {
 	 */
 	public function event_profile_update( $user_id ) {
 		$topic_ids = $this->get_topic_ids_by_userid( $user_id );
-		if ( ! empty( $topic_ids ) ) {
-			foreach ( $topic_ids as $topic_id ) {
-				$this->purge_item_cache_by_item_id( $topic_id );
-			}
 
+		if ( ! empty( $topic_ids ) ) {
+			$this->purge_item_cache_by_item_ids( $topic_ids );
 			$this->purge_subscription_cache_by_items( $topic_ids );
 		}
 	}
@@ -494,11 +490,9 @@ class BB_Topics extends Integration_Abstract {
 	 */
 	public function event_deleted_user( $user_id ) {
 		$topic_ids = $this->get_topic_ids_by_userid( $user_id );
-		if ( ! empty( $topic_ids ) ) {
-			foreach ( $topic_ids as $topic_id ) {
-				$this->purge_item_cache_by_item_id( $topic_id );
-			}
 
+		if ( ! empty( $topic_ids ) ) {
+			$this->purge_item_cache_by_item_ids( $topic_ids );
 			$this->purge_subscription_cache_by_items( $topic_ids );
 		}
 	}
@@ -510,11 +504,9 @@ class BB_Topics extends Integration_Abstract {
 	 */
 	public function event_xprofile_avatar_uploaded( $user_id ) {
 		$topic_ids = $this->get_topic_ids_by_userid( $user_id );
-		if ( ! empty( $topic_ids ) ) {
-			foreach ( $topic_ids as $topic_id ) {
-				$this->purge_item_cache_by_item_id( $topic_id );
-			}
 
+		if ( ! empty( $topic_ids ) ) {
+			$this->purge_item_cache_by_item_ids( $topic_ids );
 			$this->purge_subscription_cache_by_items( $topic_ids );
 		}
 	}
@@ -526,14 +518,13 @@ class BB_Topics extends Integration_Abstract {
 	 */
 	public function event_bp_core_delete_existing_avatar( $args ) {
 		$user_id = ! empty( $args['item_id'] ) ? absint( $args['item_id'] ) : 0;
+
 		if ( ! empty( $user_id ) ) {
 			if ( isset( $args['object'] ) && 'user' === $args['object'] ) {
 				$topic_ids = $this->get_topic_ids_by_userid( $user_id );
-				if ( ! empty( $topic_ids ) ) {
-					foreach ( $topic_ids as $topic_id ) {
-						$this->purge_item_cache_by_item_id( $topic_id );
-					}
 
+				if ( ! empty( $topic_ids ) ) {
+					$this->purge_item_cache_by_item_ids( $topic_ids );
 					$this->purge_subscription_cache_by_items( $topic_ids );
 				}
 			}
@@ -564,6 +555,32 @@ class BB_Topics extends Integration_Abstract {
 	private function purge_item_cache_by_item_id( $topic_id ) {
 		Cache::instance()->purge_by_group( 'bbp-topics_' . $topic_id );
 		Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( get_permalink( $topic_id ) ) );
+	}
+
+	/**
+	 * Purge item cache by item ids.
+	 *
+	 * @param array $ids Array of ids.
+	 *
+	 * @return void
+	 */
+	private function purge_item_cache_by_item_ids( $ids ) {
+		if ( empty( $ids ) ) {
+			return;
+		}
+
+		Cache::instance()->purge_by_group_names( $ids, array( 'bbp-topics_' ), array( $this, 'prepare_topic_deeplink' ) );
+	}
+
+	/**
+	 * Prepare activity deeplink.
+	 *
+	 * @param int $topic_id Activity ID.
+	 *
+	 * @return string
+	 */
+	public function prepare_topic_deeplink( $topic_id ) {
+		return 'bbapp-deeplinking_' . untrailingslashit( get_permalink( $topic_id ) );
 	}
 
 	/**
@@ -598,11 +615,23 @@ class BB_Topics extends Integration_Abstract {
 		);
 
 		if ( ! empty( $all_subscription['subscriptions'] ) ) {
-			foreach ( $all_subscription['subscriptions'] as $subscription_id ) {
-				Cache::instance()->purge_by_group( 'bb-subscriptions_' . $subscription_id );
-			}
-
+			$this->purge_item_cache_by_subscription_ids( $all_subscription['subscriptions'] );
 			Cache::instance()->purge_by_group( 'bb-subscriptions' );
 		}
+	}
+
+	/**
+	 * Purge item cache by item ids.
+	 *
+	 * @param array $ids Array of ids.
+	 *
+	 * @return void
+	 */
+	private function purge_item_cache_by_subscription_ids( $ids ) {
+		if ( empty( $ids ) ) {
+			return;
+		}
+
+		Cache::instance()->purge_by_group_names( $ids, array( 'bb-subscriptions_' ) );
 	}
 }

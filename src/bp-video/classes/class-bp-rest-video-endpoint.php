@@ -1875,8 +1875,10 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$video_ids = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
-		$video_id  = bp_activity_get_meta( $activity_id, 'bp_video_id', true );
+		$activity_metas = bb_activity_get_metadata( $activity_id );
+
+		$video_ids = $activity_metas['bp_video_ids'][0] ?? '';
+		$video_id  = $activity_metas['bp_video_id'][0] ?? '';
 		$video_ids = trim( $video_ids );
 		$video_ids = explode( ',', $video_ids );
 

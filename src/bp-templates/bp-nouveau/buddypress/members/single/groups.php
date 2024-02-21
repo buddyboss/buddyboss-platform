@@ -7,20 +7,14 @@
  * @since   BuddyPress 3.0.0
  * @version 1.0.0
  */
-?>
 
-<?php if ( bp_is_my_profile() ) : ?>
-	<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
-<?php endif; ?>
+if ( bp_is_my_profile() ) {
+	bp_get_template_part( 'members/single/parts/item-subnav' );
+}
 
-<?php if ( ! bp_is_current_action( 'invites' ) ) : ?>
-
-
-	<?php bp_get_template_part( 'common/search-and-filters-bar' ); ?>
-
-<?php endif; ?>
-
-<?php
+if ( ! bp_is_current_action( 'invites' ) ) {
+	bp_get_template_part( 'common/search-and-filters-bar' );
+}
 
 switch ( bp_current_action() ) :
 
@@ -28,13 +22,9 @@ switch ( bp_current_action() ) :
 	case 'my-groups':
 		bp_nouveau_member_hook( 'before', 'groups_content' );
 		?>
-
 		<div class="groups mygroups" data-bp-list="groups">
-
 			<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'member-groups-loading' ); ?></div>
-
 		</div>
-
 		<?php
 		bp_nouveau_member_hook( 'after', 'groups_content' );
 		break;

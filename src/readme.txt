@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.4.3
 Requires PHP: 5.6.20
-Stable tag: 2.5.40
+Stable tag: 2.5.50
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,20 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.5.50 =
+* New Feature! - The Profile Avatar User Initials is a new setting to allow site owners to set the default user avatar to use display name initials with different background colors. We have also added this feature to group avatars.
+* Enhancement: Core - Code refactoring to improve performance within the Activity Feed with object caching support
+* Enhancement: Core - Updates and code refactoring for the Activity structure to provide scalability to upcoming features
+* Enhancement: Groups - Added a search option within Manage Group - Members page to search members easier
+* Bug: Core - Added xprofile field ID validation from the cache data to avoid unexpected error
+* Bug: Core - Default Theme 2023 Notification Preference was not showing the lists of subscribed groups, forums and discussion
+* Bug: Core - Links were getting clipped due to the ‘Read more’ text which was then redirected users to wrong url
+* Bug: Custom Development - A deprecated error was showing when updating or creating new LearnDash groups while social group integration was enabled
+* Bug: Elementor - Group pages was showing an error while editing with Elementor
+* Bug: Forums - Forum search results was not showing the same result between autocomplete and the search page
+* Bug: Messages - Issues with group messaging when new user joined or left a group
+* Bug: Translations - Translation strings for posts that had 3 or more reactions were not working as it was missing on the LocoTranslate plugin
 
 = 2.5.40 =
 * Enhancement: Core - Code Refinement for background jobs in the platform complete

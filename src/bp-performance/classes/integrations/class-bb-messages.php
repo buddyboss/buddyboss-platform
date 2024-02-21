@@ -172,9 +172,8 @@ class BB_Messages extends Integration_Abstract {
 	public function event_messages_delete_thread( $thread_ids ) {
 		if ( ! empty( $thread_ids ) ) {
 			$thread_ids = ! is_array( $thread_ids ) ? array( $thread_ids ) : $thread_ids;
-			foreach ( $thread_ids as $thread_id ) {
-				Cache::instance()->purge_by_group( 'bp-messages_' . $thread_id );
-			}
+
+			$this->purge_item_cache_by_item_ids( $thread_ids );
 		}
 	}
 
@@ -188,10 +187,9 @@ class BB_Messages extends Integration_Abstract {
 			// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 			$thread_ids = wp_parse_id_list( $_POST['id'] );
 		}
+
 		if ( ! empty( $thread_ids ) ) {
-			foreach ( $thread_ids as $thread_id ) {
-				Cache::instance()->purge_by_group( 'bp-messages_' . $thread_id );
-			}
+			$this->purge_item_cache_by_item_ids( $thread_ids );
 		}
 	}
 
@@ -275,10 +273,9 @@ class BB_Messages extends Integration_Abstract {
 	 */
 	public function event_bp_suspend_user_suspended( $user_id ) {
 		$thread_ids = $this->get_thread_ids_by_userid( $user_id );
+
 		if ( ! empty( $thread_ids ) ) {
-			foreach ( $thread_ids as $thread_id ) {
-				Cache::instance()->purge_by_group( 'bp-messages_' . $thread_id );
-			}
+			$this->purge_item_cache_by_item_ids( $thread_ids );
 		}
 	}
 
@@ -289,10 +286,9 @@ class BB_Messages extends Integration_Abstract {
 	 */
 	public function event_bp_suspend_user_unsuspended( $user_id ) {
 		$thread_ids = $this->get_thread_ids_by_userid( $user_id );
+
 		if ( ! empty( $thread_ids ) ) {
-			foreach ( $thread_ids as $thread_id ) {
-				Cache::instance()->purge_by_group( 'bp-messages_' . $thread_id );
-			}
+			$this->purge_item_cache_by_item_ids( $thread_ids );
 		}
 	}
 
@@ -321,10 +317,10 @@ class BB_Messages extends Integration_Abstract {
 	 */
 	public function event_bp_moderation_after_save( $moderation ) {
 		if ( 'user' === $moderation->item_type ) {
-			$creator_id = $moderation->user_id;
-			$blocked_id = $moderation->item_id;
-
+			$creator_id         = $moderation->user_id;
+			$blocked_id         = $moderation->item_id;
 			$creator_thread_ids = $this->get_thread_ids_by_userid( $creator_id );
+
 			if ( ! empty( $creator_thread_ids ) ) {
 				foreach ( $creator_thread_ids as $thread_id ) {
 					Cache::instance()->purge_by_user_id( $creator_id, 'bp-messages_' . $thread_id );
@@ -332,6 +328,7 @@ class BB_Messages extends Integration_Abstract {
 			}
 
 			$blocked_thread_ids = $this->get_thread_ids_by_userid( $blocked_id );
+
 			if ( ! empty( $blocked_thread_ids ) ) {
 				foreach ( $blocked_thread_ids as $thread_id ) {
 					Cache::instance()->purge_by_user_id( $blocked_id, 'bp-messages_' . $thread_id );
@@ -347,10 +344,10 @@ class BB_Messages extends Integration_Abstract {
 	 */
 	public function event_bb_moderation_after_delete( $moderation ) {
 		if ( 'user' === $moderation->item_type ) {
-			$creator_id   = $moderation->user_id;
-			$unblocked_id = $moderation->item_id;
-
+			$creator_id         = $moderation->user_id;
+			$unblocked_id       = $moderation->item_id;
 			$creator_thread_ids = $this->get_thread_ids_by_userid( $creator_id );
+
 			if ( ! empty( $creator_thread_ids ) ) {
 				foreach ( $creator_thread_ids as $thread_id ) {
 					Cache::instance()->purge_by_user_id( $creator_id, 'bp-messages_' . $thread_id );
@@ -358,6 +355,7 @@ class BB_Messages extends Integration_Abstract {
 			}
 
 			$unblocked_thread_ids = $this->get_thread_ids_by_userid( $unblocked_id );
+
 			if ( ! empty( $unblocked_thread_ids ) ) {
 				foreach ( $unblocked_thread_ids as $thread_id ) {
 					Cache::instance()->purge_by_user_id( $unblocked_id, 'bp-messages_' . $thread_id );
@@ -374,10 +372,9 @@ class BB_Messages extends Integration_Abstract {
 	 */
 	public function event_profile_update( $user_id ) {
 		$thread_ids = $this->get_thread_ids_by_userid( $user_id );
+
 		if ( ! empty( $thread_ids ) ) {
-			foreach ( $thread_ids as $thread_id ) {
-				Cache::instance()->purge_by_group( 'bp-messages_' . $thread_id );
-			}
+			$this->purge_item_cache_by_item_ids( $thread_ids );
 		}
 	}
 
@@ -388,10 +385,9 @@ class BB_Messages extends Integration_Abstract {
 	 */
 	public function event_deleted_user( $user_id ) {
 		$thread_ids = $this->get_thread_ids_by_userid( $user_id );
+
 		if ( ! empty( $thread_ids ) ) {
-			foreach ( $thread_ids as $thread_id ) {
-				Cache::instance()->purge_by_group( 'bp-messages_' . $thread_id );
-			}
+			$this->purge_item_cache_by_item_ids( $thread_ids );
 		}
 	}
 
@@ -402,10 +398,9 @@ class BB_Messages extends Integration_Abstract {
 	 */
 	public function event_xprofile_avatar_uploaded( $user_id ) {
 		$thread_ids = $this->get_thread_ids_by_userid( $user_id );
+
 		if ( ! empty( $thread_ids ) ) {
-			foreach ( $thread_ids as $thread_id ) {
-				Cache::instance()->purge_by_group( 'bp-messages_' . $thread_id );
-			}
+			$this->purge_item_cache_by_item_ids( $thread_ids );
 		}
 	}
 
@@ -416,13 +411,13 @@ class BB_Messages extends Integration_Abstract {
 	 */
 	public function event_bp_core_delete_existing_avatar( $args ) {
 		$user_id = ! empty( $args['item_id'] ) ? absint( $args['item_id'] ) : 0;
+
 		if ( ! empty( $user_id ) ) {
 			if ( isset( $args['object'] ) && 'user' === $args['object'] ) {
 				$thread_ids = $this->get_thread_ids_by_userid( $user_id );
+
 				if ( ! empty( $thread_ids ) ) {
-					foreach ( $thread_ids as $thread_id ) {
-						Cache::instance()->purge_by_group( 'bp-messages_' . $thread_id );
-					}
+					$this->purge_item_cache_by_item_ids( $thread_ids );
 				}
 			}
 		}
@@ -710,6 +705,20 @@ class BB_Messages extends Integration_Abstract {
 		}
 	}
 
+	/**
+	 * Purge item cache by item ids.
+	 *
+	 * @param array $ids Array of ids.
+	 *
+	 * @return void
+	 */
+	private function purge_item_cache_by_item_ids( $ids ) {
+		if ( empty( $ids ) ) {
+			return;
+		}
+
+		Cache::instance()->purge_by_group_names( $ids, array( 'bp-messages_' ) );
+	}
 
 	/*********************************** Functions ***********************************/
 	/**
