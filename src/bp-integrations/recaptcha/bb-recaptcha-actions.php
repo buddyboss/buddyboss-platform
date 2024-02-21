@@ -46,34 +46,13 @@ function bb_recaptcha_verification_admin_settings() {
 	$settings = ! empty( $settings ) ? $settings : array();
 
 	$connection_status = 'not_connected';
-	if (
-		'recaptcha_v3' === $selected_version ||
-		(
-			'recaptcha_v2' === $selected_version &&
-			'v2_invisible_badge' === $v2_option
-		)
-	) {
+	if ( ! empty( $selected_version ) ) {
 		if ( empty( $captcha_response ) ) {
 			$data = '<img src="' . bb_recaptcha_integration_url( 'assets/images/error.png' ) . '" />
 					<p>' . __( 'reCAPTCHA verification failed, please try again', 'buddyboss' ) . '</p>';
 		} else {
 			$response = bb_get_google_recaptcha_api_response( $secret_key, $captcha_response );
-			if ( ! empty( $response ) && $response['success'] ) {
-				$connection_status = 'connected';
-				$data              = '<img src="' . bb_recaptcha_integration_url( 'assets/images/success.png' ) . '" />
-					<p>' . __( 'reCAPTCHA verification was successful', 'buddyboss' ) . '</p>';
-			} else {
-				$data = '<img src="' . bb_recaptcha_integration_url( 'assets/images/error.png' ) . '" />
-					<p>' . __( 'reCAPTCHA verification failed, please try again', 'buddyboss' ) . '</p>';
-			}
-		}
-	} elseif ( 'recaptcha_v2' === $selected_version ) {
-		if ( empty( $captcha_response ) ) {
-			$data = '<img src="' . bb_recaptcha_integration_url( 'assets/images/error.png' ) . '" />
-					<p>' . __( 'reCAPTCHA verification failed, please try again', 'buddyboss' ) . '</p>';
-		} else {
-			$response = bb_get_google_recaptcha_api_response( $secret_key, $captcha_response );
-			if ( ! empty( $response ) && $response['success'] ) {
+			if ( $response ) {
 				$connection_status = 'connected';
 				$data              = '<img src="' . bb_recaptcha_integration_url( 'assets/images/success.png' ) . '" />
 					<p>' . __( 'reCAPTCHA verification was successful', 'buddyboss' ) . '</p>';
@@ -129,10 +108,13 @@ function bb_recaptcha_lost_password() {
 /**
  * Validate recaptcha for lost password form.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since  BuddyBoss [BBVERSION]
  *
  * @param WP_Error $errors A WP_Error object containing any errors generated
  *                         by using invalid credentials.
+ *
+ * @return WP_Error $errors A WP_Error object containing any errors generated
+ *                  by using invalid credentials.
  */
 function bb_recaptcha_validate_lost_password( $errors ) {
 	if ( ! bb_recaptcha_is_enabled( 'bb_lost_password' ) ) {

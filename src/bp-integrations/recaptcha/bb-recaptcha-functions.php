@@ -467,7 +467,21 @@ function bb_get_google_recaptcha_api_response( $secret_key, $token ) {
 	$get_data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $token );
 	$response = json_decode( wp_remote_retrieve_body( $get_data ), true );
 
-	return $response;
+	$response_code = wp_remote_retrieve_response_code( $get_data );
+
+	// Check if the status code is 429 (Resource Exhausted)
+	if ( $response_code === 429 ) {
+		return true;
+	} else {
+		// Decode the response body from JSON
+		$response_body = json_decode( wp_remote_retrieve_body( $get_data ), true );
+
+		if ( $response_body && $response_body['success'] ) {
+			return $response;
+		}
+	}
+
+	return false;
 }
 
 /**
@@ -587,51 +601,42 @@ function bb_recaptcha_verification_front( $action = '' ) {
 
 	$token_response = bb_filter_input_string( INPUT_POST, 'g-recaptcha-response' );
 
-	if ( 'recaptcha_v3' === $selected_version ) {
+	if ( ! empty( $selected_version ) ) {
 		if ( empty( $token_response ) ) {
 			return new WP_Error(
-				'bb_recaptcha_v3_not_submitted',
+				'bb_recaptcha_token_missing',
 				__( "<strong>ERROR</strong>: Google reCAPTCHA token is missing.", 'buddyboss' )
 			);
 		} else {
 			$response = bb_get_google_recaptcha_api_response( $secret_key, $token_response );
-			if ( ! empty( $response ) && $response['success'] ) {
-				if ( $response['action'] !== $action ) {
-					return new WP_Error(
-						'bb_recaptcha_v3_failed',
-						__( "<strong>ERROR</strong>: Google reCAPTCHA verification failed.", 'buddyboss' )
-					);
+
+			// Handle other reCAPTCHA verification responses
+			if ( $response ) {
+				if ( 'recaptcha_v3' === $selected_version ) {
+					// Check if reCAPTCHA action and current page action not same.
+					if ( isset( $response['action'] ) && $response['action'] !== $action ) {
+						return new WP_Error(
+							'bb_recaptcha_v3_failed',
+							__( "<strong>ERROR</strong>: Google reCAPTCHA verification failed.", 'buddyboss' )
+						);
+					}
+
+					// Check if reCAPTCHA score is below threshold for v3.
+					$score_threshold = bb_recaptcha_setting( 'score_threshold', 6 );
+					if ( isset( $response['score'] ) && $response['score'] < $score_threshold ) {
+						return new WP_Error(
+							'bb_recaptcha_v3_failed',
+							__( "<strong>ERROR</strong>: Google reCAPTCHA verification failed.", 'buddyboss' )
+						);
+					}
 				}
-				$score_threshold = bb_recaptcha_setting( 'score_threshold', 6 );
-				if ( $response['score'] < $score_threshold ) {
-					return new WP_Error(
-						'bb_recaptcha_v3_failed',
-						__( "<strong>ERROR</strong>: Google reCAPTCHA verification failed.", 'buddyboss' )
-					);
-				}
+
+				// Return true if reCAPTCHA verification succeeds
 				return true;
 			} else {
 				return new WP_Error(
-					'bb_recaptcha_v3_failed',
-					__( "<strong>ERROR</strong>: Could not get a response from the reCAPTCHA server.", 'buddyboss' )
-				);
-			}
-		}
-	}
-	if ( 'recaptcha_v2' === $selected_version ) {
-		if ( empty( $token_response ) ) {
-			return new WP_Error(
-				'bb_recaptcha_v2_not_submitted',
-				__( "<strong>ERROR</strong>: Google reCAPTCHA token is missing.", 'buddyboss' )
-			);
-		} else {
-			$response = bb_get_google_recaptcha_api_response( $secret_key, $token_response );
-			if ( ! empty( $response ) && $response['success'] ) {
-				return true;
-			} else {
-				return new WP_Error(
-					'bb_recaptcha_v2_failed',
-					__( "<strong>ERROR</strong>: Could not get a response from the reCAPTCHA server.", 'buddyboss' )
+					'bb_recaptcha_verification_failed',
+					__( "<strong>ERROR</strong>: Could not verify the reCAPTCHA response.", 'buddyboss' )
 				);
 			}
 		}
