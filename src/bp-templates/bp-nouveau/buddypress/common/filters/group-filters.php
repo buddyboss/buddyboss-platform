@@ -49,15 +49,13 @@ if ( ! empty( $group_types ) ) {
 				<span><?php bp_nouveau_filter_label(); ?></span>
 			</label>
 			<div class="select-wrap">
-				<select id="group-type-order-by"
-				        data-bp-group-type-filter="<?php bp_nouveau_search_object_data_attr() ?>">
+				<select id="group-type-order-by" data-bp-group-type-filter="<?php bp_nouveau_search_object_data_attr() ?>">
 					<option value=""><?php _e( 'All Types', 'buddyboss' ); ?></option><?php
 					foreach ( $group_types as $group_type_id ) {
 						$group_type_key   = bp_group_get_group_type_key( $group_type_id );
 						$group_type_label = bp_groups_get_group_type_object( $group_type_key )->labels['name'];
 						?>
-						<option
-						value="<?php echo esc_attr( $group_type_key ); ?>"><?php echo esc_attr( $group_type_label ); ?></option><?php
+						<option value="<?php echo esc_attr( $group_type_key ); ?>"><?php echo esc_attr( $group_type_label ); ?></option><?php
 					}
 					?>
 				</select>

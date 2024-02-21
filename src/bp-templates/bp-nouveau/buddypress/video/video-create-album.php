@@ -23,7 +23,7 @@
 	endif;
 	?>
 
-    <div class="db-modal-buttons">
+	<div class="db-modal-buttons">
 		<a class="close-create-popup-album" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
 		<a class="button bp-video-create-popup-album-submit" href="#"><?php esc_html_e( 'Create', 'buddyboss' ); ?></a>
 	</div>

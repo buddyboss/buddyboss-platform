@@ -491,6 +491,26 @@ function bp_nouveau_member_enqueue_scripts() {
 
 	if ( bp_is_user_settings_notifications() && bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {
 		wp_enqueue_script( 'bb-subscriptions' );
+
+		/**
+		 * Split each js template to its own file. Easier for child theme to
+		 * overwrite individual parts.
+		 *
+		 * @version BuddyBoss 2.2.6
+		 */
+		$template_parts = apply_filters(
+			'bb_member_subscriptions_js_template_parts',
+			array(
+				'bb-member-subscription-loading',
+				'bb-subscription-item',
+				'bb-member-subscription-pagination',
+				'bb-member-no-subscription',
+			)
+		);
+
+		foreach ( $template_parts as $template_part ) {
+			bp_get_template_part( 'common/js-templates/members/settings/' . $template_part );
+		}
 	}
 }
 

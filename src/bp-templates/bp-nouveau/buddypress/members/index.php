@@ -32,29 +32,25 @@
 	<div class="members-directory-container">
 
 		<?php
-			/**
-			 * Fires before the display of the members list tabs.
-			 *
-			 * @since BuddyPress 1.8.0
-			 */
-			do_action( 'bp_before_directory_members_tabs' );
-		?>
+		/**
+		 * Fires before the display of the members list tabs.
+		 *
+		 * @since BuddyPress 1.8.0
+		 */
+		do_action( 'bp_before_directory_members_tabs' );
 
-		<?php if ( ! bp_nouveau_is_object_nav_in_sidebar() ) : ?>
+		if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
+			bp_get_template_part( 'common/nav/directory-nav' );
+		}
 
-			<?php bp_get_template_part( 'common/nav/directory-nav' ); ?>
+		bp_get_template_part( 'common/search-and-filters-bar' );
 
-		<?php endif; ?>
-
-		<?php bp_get_template_part( 'common/search-and-filters-bar' ); ?>
-
-		<?php
-			/**
-			 * Fires before the display of the members content.
-			 *
-			 * @since BuddyPress 1.1.0
-			 */
-			do_action( 'bp_before_directory_members_content' );
+		/**
+		 * Fires before the display of the members content.
+		 *
+		 * @since BuddyPress 1.1.0
+		 */
+		do_action( 'bp_before_directory_members_content' );
 		?>
 
 		<div class="screen-content members-directory-content">

@@ -9412,6 +9412,62 @@ body.buddypress.bp-user #page #primary .entry-header {
   padding-right: 0.3em;
 }
 
+.groups-manage-members-list .section-title.gen-members-section {
+  background-color: transparent;
+}
+
+.groups-manage-members-list .section-title.gen-members-section .search-wrapper {
+  margin-top: 1em;
+  width: 15em;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.groups-manage-members-list .section-title.gen-members-section .search-wrapper input[type="search"] {
+  padding-top: 3px;
+  padding-bottom: 3px;
+  padding-left: 35px;
+  line-height: 1.5;
+  font-size: 16px;
+  -moz-appearance: none;
+}
+
+.groups-manage-members-list .section-title.gen-members-section .search-wrapper input[type="search"]::-webkit-search-clear-button, .groups-manage-members-list .section-title.gen-members-section .search-wrapper input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+.groups-manage-members-list .section-title.gen-members-section .search-wrapper .search-form_reset {
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+  color: #767676;
+  position: absolute;
+  left: 12px;
+  opacity: 0.4;
+  font-size: 13px;
+}
+
+.groups-manage-members-list .section-title.gen-members-section .search-wrapper.loading {
+  position: relative;
+}
+
+.groups-manage-members-list .section-title.gen-members-section .search-wrapper.loading:after {
+  content: "\ef30";
+  font-weight: 400;
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 20px;
+  line-height: 1;
+  position: absolute;
+  left: -30px;
+  text-align: center;
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-animation: spin 2s infinite linear;
+  animation: spin 2s infinite linear;
+}
+
 .groups-manage-members-list ul {
   list-style: none;
   margin-bottom: 0;

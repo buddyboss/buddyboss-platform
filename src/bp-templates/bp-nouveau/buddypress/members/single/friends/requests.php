@@ -9,13 +9,14 @@
  */
 ?>
 
-	<h2 class="screen-heading friendship-requests-screen"><?php esc_html_e( 'Requests to Connect', 'buddyboss' ); ?></h2>
+<h2 class="screen-heading friendship-requests-screen"><?php esc_html_e( 'Requests to Connect', 'buddyboss' ); ?></h2>
 
-<?php bp_nouveau_member_hook( 'before', 'friend_requests_content' ); ?>
+<?php
+bp_nouveau_member_hook( 'before', 'friend_requests_content' );
 
-<?php if ( bp_has_members( 'type=alphabetical&include=' . bp_get_friendship_requests() ) ) : ?>
-
-	<?php bp_nouveau_pagination( 'top' ); ?>
+if ( bp_has_members( 'type=alphabetical&include=' . bp_get_friendship_requests() ) ) {
+	bp_nouveau_pagination( 'top' );
+	?>
 
 	<ul id="friend-list" class="<?php bp_nouveau_loop_classes(); ?>" data-bp-list="friendship_requests">
 		<?php
@@ -34,22 +35,17 @@
 
 					<?php bp_nouveau_friend_hook( 'requests_item' ); ?>
 				</div>
-
 				<?php bp_nouveau_members_loop_buttons(); ?>
 			</li>
 
 		<?php endwhile; ?>
 	</ul>
 
-	<?php bp_nouveau_friend_hook( 'requests_content' ); ?>
+	<?php
+	bp_nouveau_friend_hook( 'requests_content' );
+	bp_nouveau_pagination( 'bottom' );
+} else {
+	bp_nouveau_user_feedback( 'member-requests-none' );
+}
 
-	<?php bp_nouveau_pagination( 'bottom' ); ?>
-
-<?php else : ?>
-
-	<?php bp_nouveau_user_feedback( 'member-requests-none' ); ?>
-
-<?php endif; ?>
-
-<?php
 bp_nouveau_member_hook( 'after', 'friend_requests_content' );
