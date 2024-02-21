@@ -356,4 +356,19 @@
 
 		}
 	}
+
+	#bb_recaptcha_settings {
+
+		.bb_login_require {
+
+			.copy-toggle {
+				width: 60%;
+
+				.copy-toggle-text {
+					margin-right: 5px;
+					margin-top: 10px;
+				}
+			}
+		}
+	}
 }

@@ -38,6 +38,8 @@
 			$( '.buddyboss_page_bp-integrations .section-bb_recaptcha_design' ).on( 'change', 'input[name="bb_recaptcha[theme]"]', this.recaptchaTheme.bind( this ) );
 			$( '.buddyboss_page_bp-integrations .section-bb_recaptcha_settings' ).on( 'change', '#recaptcha_bb_login', this.allowByPass.bind( this ) );
 			$( '.buddyboss_page_bp-integrations .section-bb_recaptcha_settings' ).on( 'change', '#bb_recaptcha_allow_bypass', this.enableBypassInputAndToggle.bind( this ) );
+			$( '.buddyboss_page_bp-integrations .section-bb_recaptcha_settings' ).on( 'keyup', 'input[name="bb_recaptcha[bypass_text]"]', this.updateByPassUrl.bind( this ) );
+			$( '.buddyboss_page_bp-integrations .section-bb_recaptcha_settings' ).on( 'click', '.bb_login_require .bb-copy-button', this.copyByPassUrl.bind( this ) );
 		},
 
 		enableVerifyButton: function ( event ) {
@@ -336,6 +338,27 @@
 				$( '.bb_login_require input[name="bb_recaptcha[bypass_text]"]' ).attr( 'disabled', 'disabled' );
 				$( '.bb_login_require .copy-toggle' ).addClass( 'bp-hide' );
 			}
+		},
+
+		updateByPassUrl: function ( event ) {
+			event.preventDefault();
+			var bypassString = 'xxUNIQUE_STRINGXS';
+			if ( event.currentTarget.value ) {
+				bypassString = event.currentTarget.value;
+			}
+			var url = $( '.copy-toggle-text' ).data( 'domain' ) + bypassString;
+			$( '.copy-toggle-text' ).attr( 'href', url );
+			$( '.copy-toggle-text' ).html( url );
+		},
+
+		copyByPassUrl: function ( event ) {
+			event.preventDefault();
+			var urlToCopy = $( '.copy-toggle-text' ).attr( 'href' );
+			var tempInput = $( '<input>' );
+			$( 'body' ).append( tempInput );
+			tempInput.val( urlToCopy ).select();
+			document.execCommand( 'copy' );
+			tempInput.remove();
 		}
 	};
 
