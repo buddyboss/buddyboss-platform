@@ -415,7 +415,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		foreach ( $actions as $action => $setting ) {
 
 			$disabled = ! empty( $setting['disabled'] ) ? ' disabled="disabled"' : '';
-			$checked  = ! empty( $setting['enabled'] ) ? ' checked="checked"' : '';
+			$checked  = bp_enable_site_registration() && ! empty( $setting['enabled'] ) ? ' checked="checked"' : '';
 
 			echo '<input id="recaptcha_' . esc_attr( $action ) . '" name="bb_recaptcha[enabled_for][' . esc_attr( $action ) . ']" type="checkbox" value="1" ' . $disabled . $checked . '/>' .
 				'<label for="recaptcha_' . esc_attr( $action ) . '">' . esc_html( $setting['label'] ) . '</label><br /><br />';
