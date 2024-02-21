@@ -101,6 +101,9 @@ class BB_Members extends Integration_Abstract {
 			'update_option_bp-disable-cover-image-uploads'   => 3,
 			'update_option_bp-default-profile-cover-type'    => 3,
 			'update_option_bp-default-custom-profile-cover'  => 3,
+
+			// When change the member display name.
+			'update_option_bp-display-name-format'           => 3,
 		);
 
 		$this->purge_single_events( $purge_single_events );
@@ -591,5 +594,16 @@ class BB_Members extends Integration_Abstract {
 
 			Cache::instance()->purge_by_group( 'bb-subscriptions' );
 		}
+	}
+
+	/**
+	 * When changed display name format settings from the Settings -> Profile.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_display_name_format( $old_value, $value, $option ) {
+		$this->purge_cache_on_change_default_profile_images_settings();
 	}
 }

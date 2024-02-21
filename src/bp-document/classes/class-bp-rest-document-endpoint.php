@@ -2373,8 +2373,10 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		$document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
-		$document_id  = bp_activity_get_meta( $activity_id, 'bp_document_id', true );
+		$activity_metas = bb_activity_get_metadata( $activity_id );
+
+		$document_ids = $activity_metas['bp_document_ids'][0] ?? '';
+		$document_id  = $activity_metas['bp_document_id'][0] ?? '';
 		$document_ids = trim( $document_ids );
 		$document_ids = explode( ',', $document_ids );
 
