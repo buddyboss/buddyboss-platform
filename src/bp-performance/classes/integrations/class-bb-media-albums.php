@@ -21,7 +21,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class BB_Media_Albums extends Integration_Abstract {
 
-
 	/**
 	 * Add(Start) Integration
 	 *
@@ -129,11 +128,9 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	public function event_bp_media_album_after_delete( $albums ) {
 		if ( ! empty( $albums ) ) {
-			foreach ( $albums as $album ) {
-				if ( ! empty( $album->id ) ) {
-					Cache::instance()->purge_by_group( 'bp-media-albums_' . $album->id );
-				}
-			}
+			$album_ids = wp_list_pluck( $albums, 'id' );
+
+			$this->purge_item_cache_by_item_ids( $album_ids );
 		}
 	}
 
@@ -166,11 +163,9 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	public function event_bp_media_before_delete( $medias ) {
 		if ( ! empty( $medias ) ) {
-			foreach ( $medias as $media ) {
-				if ( ! empty( $media->album_id ) ) {
-					Cache::instance()->purge_by_group( 'bp-media-albums_' . $media->album_id );
-				}
-			}
+			$album_ids = wp_list_pluck( $medias, 'album_id' );
+
+			$this->purge_item_cache_by_item_ids( $album_ids );
 		}
 	}
 
@@ -193,11 +188,9 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	public function event_bp_video_album_after_delete( $albums ) {
 		if ( ! empty( $albums ) ) {
-			foreach ( $albums as $album ) {
-				if ( ! empty( $album->id ) ) {
-					Cache::instance()->purge_by_group( 'bp-media-albums_' . $album->id );
-				}
-			}
+			$album_ids = wp_list_pluck( $albums, 'id' );
+
+			$this->purge_item_cache_by_item_ids( $album_ids );
 		}
 	}
 
@@ -230,11 +223,9 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	public function event_bp_video_before_delete( $videos ) {
 		if ( ! empty( $videos ) ) {
-			foreach ( $videos as $video ) {
-				if ( ! empty( $video->album_id ) ) {
-					Cache::instance()->purge_by_group( 'bp-media-albums_' . $video->album_id );
-				}
-			}
+			$album_ids = wp_list_pluck( $videos, 'album_id' );
+
+			$this->purge_item_cache_by_item_ids( $album_ids );
 		}
 	}
 
@@ -246,10 +237,9 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	public function event_groups_update_group( $group_id ) {
 		$album_ids = $this->get_album_ids_by_group_id( $group_id );
+
 		if ( ! empty( $album_ids ) ) {
-			foreach ( $album_ids as $album_id ) {
-				Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
-			}
+			$this->purge_item_cache_by_item_ids( $album_ids );
 		}
 	}
 
@@ -261,10 +251,9 @@ class BB_Media_Albums extends Integration_Abstract {
 	public function event_groups_group_after_save( $group ) {
 		if ( ! empty( $group->id ) ) {
 			$album_ids = $this->get_album_ids_by_group_id( $group->id );
+
 			if ( ! empty( $album_ids ) ) {
-				foreach ( $album_ids as $album_id ) {
-					Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
-				}
+				$this->purge_item_cache_by_item_ids( $album_ids );
 			}
 		}
 	}
@@ -276,10 +265,9 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	public function event_groups_group_details_edited( $group_id ) {
 		$album_ids = $this->get_album_ids_by_group_id( $group_id );
+
 		if ( ! empty( $album_ids ) ) {
-			foreach ( $album_ids as $album_id ) {
-				Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
-			}
+			$this->purge_item_cache_by_item_ids( $album_ids );
 		}
 	}
 
@@ -291,10 +279,9 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	public function event_bp_suspend_media_suspended( $media_id ) {
 		$album_ids = $this->get_album_id_by_media_id( $media_id );
+
 		if ( ! empty( $album_ids ) ) {
-			foreach ( $album_ids as $album_id ) {
-				Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
-			}
+			$this->purge_item_cache_by_item_ids( $album_ids );
 		}
 	}
 
@@ -305,10 +292,9 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	public function event_bp_suspend_media_unsuspended( $media_id ) {
 		$album_ids = $this->get_album_id_by_media_id( $media_id );
+
 		if ( ! empty( $album_ids ) ) {
-			foreach ( $album_ids as $album_id ) {
-				Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
-			}
+			$this->purge_item_cache_by_item_ids( $album_ids );
 		}
 	}
 
@@ -339,11 +325,11 @@ class BB_Media_Albums extends Integration_Abstract {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
 			return;
 		}
+
 		$album_ids = $this->get_album_ids_by_user_id( $bp_moderation->item_id );
+
 		if ( ! empty( $album_ids ) ) {
-			foreach ( $album_ids as $album_id ) {
-				Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
-			}
+			$this->purge_item_cache_by_item_ids( $album_ids );
 		}
 	}
 
@@ -356,11 +342,11 @@ class BB_Media_Albums extends Integration_Abstract {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
 			return;
 		}
+
 		$album_ids = $this->get_album_ids_by_user_id( $bp_moderation->item_id );
+
 		if ( ! empty( $album_ids ) ) {
-			foreach ( $album_ids as $album_id ) {
-				Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
-			}
+			$this->purge_item_cache_by_item_ids( $album_ids );
 		}
 	}
 
@@ -372,10 +358,9 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	public function event_profile_update( $user_id ) {
 		$album_ids = $this->get_album_ids_by_user_id( $user_id );
+
 		if ( ! empty( $album_ids ) ) {
-			foreach ( $album_ids as $album_id ) {
-				Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
-			}
+			$this->purge_item_cache_by_item_ids( $album_ids );
 		}
 	}
 
@@ -386,10 +371,9 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	public function event_deleted_user( $user_id ) {
 		$album_ids = $this->get_album_ids_by_user_id( $user_id );
+
 		if ( ! empty( $album_ids ) ) {
-			foreach ( $album_ids as $album_id ) {
-				Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
-			}
+			$this->purge_item_cache_by_item_ids( $album_ids );
 		}
 	}
 
@@ -400,10 +384,9 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	public function event_xprofile_avatar_uploaded( $user_id ) {
 		$album_ids = $this->get_album_ids_by_user_id( $user_id );
+
 		if ( ! empty( $album_ids ) ) {
-			foreach ( $album_ids as $album_id ) {
-				Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
-			}
+			$this->purge_item_cache_by_item_ids( $album_ids );
 		}
 	}
 
@@ -414,16 +397,31 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	public function event_bp_core_delete_existing_avatar( $args ) {
 		$user_id = ! empty( $args['item_id'] ) ? absint( $args['item_id'] ) : 0;
+
 		if ( ! empty( $user_id ) ) {
 			if ( isset( $args['object'] ) && 'user' === $args['object'] ) {
 				$album_ids = $this->get_album_ids_by_user_id( $user_id );
+
 				if ( ! empty( $album_ids ) ) {
-					foreach ( $album_ids as $album_id ) {
-						Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
-					}
+					$this->purge_item_cache_by_item_ids( $album_ids );
 				}
 			}
 		}
+	}
+
+	/**
+	 * Purge item cache by item ids.
+	 *
+	 * @param array $ids Array of ids.
+	 *
+	 * @return void
+	 */
+	private function purge_item_cache_by_item_ids( $ids ) {
+		if ( empty( $ids ) ) {
+			return;
+		}
+
+		Cache::instance()->purge_by_group_names( $ids, array( 'bp-media-albums_' ) );
 	}
 
 	/*********************************** Functions ***********************************/

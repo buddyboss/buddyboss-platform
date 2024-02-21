@@ -5093,7 +5093,7 @@ function bb_document_migration() {
 /**
  * Get activity document.
  *
- * @BuddyBoss [BBVERSION]
+ * @BuddyBoss 2.5.50
  *
  * @param object|null $activity Activity object.
  *

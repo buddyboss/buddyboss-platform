@@ -980,7 +980,7 @@ function bb_members_hide_account_settings_notifications( $where_conditions, $arg
 /**
  * Delete default PNG for members when update the display name format.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.50
  *
  * @param mixed  $old_value The old option value.
  * @param mixed  $value     The new option value.
@@ -1001,7 +1001,7 @@ function bb_member_remove_default_png_avatar_on_update_display_name( $old_value,
 /**
  * Delete default PNG for member when delete the user.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.50
  *
  * @param int $id ID of the user.
  *
