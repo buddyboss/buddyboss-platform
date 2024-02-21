@@ -455,7 +455,7 @@ class BP_Messages_Thread {
 		if ( false === $messages || static::$noCache ) {
 			// if current user isn't the recpient, then return empty array.
 			if ( ! static::is_thread_recipient( $thread_id ) && ! bp_current_user_can( 'bp_moderate' ) ) {
-				wp_cache_set( $cache_key, array(), 'bp_messages_threads' );
+				wp_cache_set( $cache_key, false, 'bp_messages_threads' );
 
 				return array();
 			}
