@@ -9,9 +9,7 @@
  */
 
 bp_nouveau_member_hook( 'before', 'invites_sent_template' );
-?>
 
-<?php
 $email = trim( bb_filter_input_string( INPUT_GET, 'email' ) );
 if ( isset( $email ) && '' !== $email ) {
 	?>
@@ -111,18 +109,20 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 
 		while ( $the_query->have_posts() ) :
 			$the_query->the_post();
+
+			$post_id = get_the_ID();
 			?>
 			<tr>
 				<td class="field-name">
-					<span><?php echo get_post_meta( get_the_ID(), '_bp_invitee_name', true ); ?></span>
+					<span><?php echo get_post_meta( $post_id, '_bp_invitee_name', true ); ?></span>
 				</td>
 				<td class="field-email">
-					<span><?php echo get_post_meta( get_the_ID(), '_bp_invitee_email', true ); ?></span>
+					<span><?php echo get_post_meta( $post_id, '_bp_invitee_email', true ); ?></span>
 				</td>
 				<td class="field-email">
 					<span>
 						<?php
-						$date = get_the_date( '', get_the_ID() );
+						$date = get_the_date( '', $post_id );
 						echo $date;
 						?>
 					</span>
@@ -131,17 +131,19 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 					<?php
 
 					$allow_custom_registration = bp_allow_custom_registration();
+					$bp_invitee_status         = get_post_meta( $post_id, '_bp_invitee_status', true );
+
 					if ( $allow_custom_registration && '' !== bp_custom_register_page_url() ) {
-						$class       = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? 'registered' : 'invited';
+						$class       = ( '1' === $bp_invitee_status ) ? 'registered' : 'invited';
 						$revoke_link = '';
-						$title       = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss' ) : __( 'Invited', 'buddyboss' );
+						$title       = ( '1' === $bp_invitee_status ) ? __( 'Registered', 'buddyboss' ) : __( 'Invited', 'buddyboss' );
 					} else {
-						$class       = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? 'registered' : 'revoked-access';
+						$class       = ( '1' === $bp_invitee_status ) ? 'registered' : 'revoked-access';
 						$revoke_link = bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_invites_slug() . '/revoke-invite';
-						$title       = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss' ) : __( 'Revoke Invite', 'buddyboss' );
+						$title       = ( '1' === $bp_invitee_status ) ? __( 'Registered', 'buddyboss' ) : __( 'Revoke Invite', 'buddyboss' );
 					}
-					$alert_message = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss' ) : __( 'Are you sure you want to revoke this invitation?', 'buddyboss' );
-					$icon          = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? 'dashicons-yes' : 'dashicons-dismiss';
+					$alert_message = ( '1' === $bp_invitee_status ) ? __( 'Registered', 'buddyboss' ) : __( 'Are you sure you want to revoke this invitation?', 'buddyboss' );
+					$icon          = ( '1' === $bp_invitee_status ) ? 'dashicons-yes' : 'dashicons-dismiss';
 
 					if ( $allow_custom_registration && '' !== bp_custom_register_page_url() ) {
 						?>
@@ -161,11 +163,7 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 						} else {
 							?>
 							<span class="bp-invitee-status">
-								<a data-revoke-access="<?php echo esc_url( $revoke_link ); ?>"
-								   data-name="<?php echo esc_attr( $alert_message ); ?>"
-								   id="<?php echo esc_attr( get_the_ID() ); ?>"
-								   class="<?php echo esc_attr( $class ); ?>"
-								   href="javascript:void(0);">
+								<a data-revoke-access="<?php echo esc_url( $revoke_link ); ?>" data-name="<?php echo esc_attr( $alert_message ); ?>" id="<?php echo esc_attr( $post_id ); ?>" class="<?php echo esc_attr( $class ); ?>" href="javascript:void(0);">
 									<span class="dashicons <?php echo esc_attr( $icon ); ?>"></span><?php echo $title; ?>
 								</a>
 							</span>
@@ -189,11 +187,8 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 	}
 
 	$total_pages = $the_query->max_num_pages;
-
 	if ( $total_pages > 1 ) {
-
 		$current_page = max( 1, get_query_var( 'paged' ) );
-
 		echo paginate_links(
 			array(
 				'base'      => get_pagenum_link( 1 ) . '%_%',

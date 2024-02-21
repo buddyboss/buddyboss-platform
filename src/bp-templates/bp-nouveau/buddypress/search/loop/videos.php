@@ -27,11 +27,12 @@ $class = ''; // used.
 if ( $attachment_id && bp_get_video_activity_id() ) {
 	$class = ''; // used.
 }
-$video_link    = bp_get_videos_link();
-$video_created = bp_get_video_date_created();
+$video_link       = bp_get_videos_link();
+$video_created    = bp_get_video_date_created();
+$video_visibility = bp_get_video_visibility();
 ?>
 
-<li data-bp-item-id="<?php bp_get_video_id(); ?>" data-bp-item-component="video" class="search-video-list">
+<li data-bp-item-id="<?php echo esc_attr( $video_id ); ?>" data-bp-item-component="video" class="search-video-list">
 	<div class="list-wrap">
 		<div class="item">
 			<div class="media-album_items ac-album-list">
@@ -71,14 +72,14 @@ $video_created = bp_get_video_date_created();
 								?>
 								<span class="middot">&middot;</span>
 								<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
-									<?php bp_video_visibility(); ?>
+									<?php echo esc_html( $video_visibility ); ?>
 								</span>
 								<?php
 							} else {
 								?>
 								<span class="middot">&middot;</span>
-								<span id="privacy-<?php echo esc_attr( bp_get_video_id() ); ?>">
-									<?php bp_video_visibility(); ?>
+								<span id="privacy-<?php echo esc_attr( $video_id ); ?>">
+									<?php echo esc_html( $video_visibility ); ?>
 								</span>
 								<?php
 							}
@@ -86,7 +87,7 @@ $video_created = bp_get_video_date_created();
 							?>
 							<span class="middot">&middot;</span>
 							<span>
-								<?php bp_video_visibility(); ?>
+								<?php echo esc_html( $video_visibility ); ?>
 							</span>
 							<?php
 						}

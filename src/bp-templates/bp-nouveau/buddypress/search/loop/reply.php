@@ -19,7 +19,7 @@ $topic_id = bbp_get_reply_topic_id( $reply_id );
 				<?php
 				$args   = array(
 					'type'    => 'avatar',
-					'post_id' => get_the_ID(),
+					'post_id' => $reply_id,
 				);
 				$avatar = bbp_get_reply_author_link( $args );
 
@@ -37,14 +37,15 @@ $topic_id = bbp_get_reply_topic_id( $reply_id );
 		<div class="item">
 			<div class="entry-title item-title">
 				<?php
-				$bbp_get_reply_author_url = bbp_get_reply_author_url( $reply_id );
+				$bbp_get_reply_author_url  = bbp_get_reply_author_url( $reply_id );
+				$reply_author_display_name = bbp_get_reply_author_display_name( $reply_id );
 				if ( ! empty( $bbp_get_reply_author_url ) ) {
 					?>
-					<a href="<?php echo $bbp_get_reply_author_url; ?>"><?php bbp_reply_author_display_name( $reply_id ); ?></a>
+					<a href="<?php echo esc_url( $bbp_get_reply_author_url ); ?>"><?php echo esc_html( $reply_author_display_name ); ?></a>
 					<?php
 				} else {
 					?>
-					<span><?php bbp_reply_author_display_name( $reply_id ); ?></span>
+					<span><?php echo esc_html( $reply_author_display_name ); ?></span>
 					<?php
 				}
 				?>

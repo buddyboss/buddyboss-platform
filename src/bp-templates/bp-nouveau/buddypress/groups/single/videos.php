@@ -19,12 +19,15 @@
 
 		// Home/Video.
 		case 'videos':
+			$current_group_id = bp_get_current_group_id();
+			$loggedin_user_id = bp_loggedin_user_id();
+
 			if (
 				bp_is_group_video() &&
 				(
-					groups_can_user_manage_video( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
-					groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
-					groups_is_user_admin( bp_loggedin_user_id(), bp_get_current_group_id() )
+					groups_can_user_manage_video( $loggedin_user_id, $current_group_id ) ||
+					groups_is_user_mod( $loggedin_user_id, $current_group_id ) ||
+					groups_is_user_admin( $loggedin_user_id, $current_group_id )
 				)
 			) {
 				bp_get_template_part( 'video/add-video' );
@@ -35,21 +38,15 @@
 			}
 
 			bp_nouveau_group_hook( 'before', 'video_content' );
-
 			bp_get_template_part( 'video/actions' );
-
 			?>
 			<div id="video-stream" class="video" data-bp-list="video">
-
 				<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'group-video-loading' ); ?></div>
-
 			</div><!-- .media -->
 			<?php
-
 			bp_nouveau_group_hook( 'after', 'video_content' );
 
 			break;
-
 		// Any other.
 		default:
 			bp_get_template_part( 'groups/single/plugins' );
