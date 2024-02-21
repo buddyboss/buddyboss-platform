@@ -4,7 +4,7 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/groups/single/admin/search-manage-members.php.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.5.50
  * @version 1.0.0
  */
 

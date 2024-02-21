@@ -1973,7 +1973,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			'next_messages_timestamp'   => $next_messages_timestamp,
 			'messages'                  => array(),
 			'loggedin_user_permissions' => $this->get_current_user_permissions( $permission_args, $request ),
-			'is_hidden'                 => $this->bb_rest_thread_is_hidden( $thread->thread_id, bp_loggedin_user_id() ),
+			'is_hidden'                 => messages_is_valid_archived_thread( $thread->thread_id, bp_loggedin_user_id() ),
 		);
 
 		if ( $thread->messages ) {
@@ -3107,20 +3107,6 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		}
 
 		return $where;
-	}
-
-	/**
-	 * Function to check the thread id hidden/archive or not.
-	 *
-	 * @param int $thread_id Thread id.
-	 * @param int $user_id   User id.
-	 *
-	 * @return bool
-	 */
-	public function bb_rest_thread_is_hidden( $thread_id, $user_id ) {
-		global $wpdb, $bp;
-		// Check the thread is hide/archived or not.
-		return (bool) $wpdb->query( $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_recipients} WHERE is_hidden = %d AND thread_id = %d AND user_id = %d", 1, $thread_id, $user_id ) );
 	}
 
 	/**

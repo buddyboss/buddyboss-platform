@@ -4041,7 +4041,7 @@ function bb_media_migration() {
 /**
  * Get activity media.
  *
- * @BuddyBoss [BBVERSION]
+ * @BuddyBoss 2.5.50
  *
  * @param object|null $activity Activity object.
  * @param array|null  $args     Extra argument to fetch media.

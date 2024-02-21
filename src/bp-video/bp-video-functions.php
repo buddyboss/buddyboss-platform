@@ -4465,7 +4465,7 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $genera
 /**
  * Get activity video.
  *
- * @BuddyBoss [BBVERSION]
+ * @BuddyBoss 2.5.50
  *
  * @param object|null $activity Activity object.
  * @param array|null  $args     Extra argument to fetch media.
