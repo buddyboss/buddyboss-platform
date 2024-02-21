@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.5.40\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-02-21 05:17:30+00:00\n"
+"POT-Creation-Date: 2024-02-21 05:30:35+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -353,7 +353,7 @@ msgid "Link"
 msgstr ""
 
 #: bp-activity/bp-activity-admin.php:270 bp-forums/admin/metaboxes.php:390
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1773
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1774
 msgid "Type"
 msgstr ""
 
@@ -507,8 +507,8 @@ msgstr ""
 #: bp-activity/bp-activity-admin.php:860
 #: bp-core/admin/bp-core-admin-functions.php:3411
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:46
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1322
-#: bp-xprofile/classes/class-bp-xprofile-group.php:874
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1323
+#: bp-xprofile/classes/class-bp-xprofile-group.php:880
 msgid "Update"
 msgstr ""
 
@@ -654,8 +654,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/document/ajax.php:464
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1337
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1329
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1519
-#: bp-xprofile/classes/class-bp-xprofile-group.php:981
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1520
+#: bp-xprofile/classes/class-bp-xprofile-group.php:987
 msgid "Cancel"
 msgstr ""
 
@@ -740,7 +740,7 @@ msgstr ""
 #: bp-forums/core/actions.php:359 bp-friends/bp-friends-filters.php:405
 #: bp-groups/bp-groups-notifications.php:1337
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:284
-#: bp-messages/bp-messages-filters.php:903
+#: bp-messages/bp-messages-filters.php:918
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:610
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:656
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:744
@@ -773,7 +773,7 @@ msgstr ""
 #: bp-forums/core/actions.php:360 bp-friends/bp-friends-filters.php:406
 #: bp-groups/bp-groups-notifications.php:1338
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:291
-#: bp-messages/bp-messages-filters.php:904
+#: bp-messages/bp-messages-filters.php:919
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:611
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:657
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:745
@@ -814,7 +814,7 @@ msgstr ""
 #: bp-groups/bp-groups-notifications.php:1397
 #: bp-groups/bp-groups-notifications.php:1413
 #: bp-groups/bp-groups-notifications.php:1433
-#: bp-messages/bp-messages-filters.php:915
+#: bp-messages/bp-messages-filters.php:930
 msgid "Yes, send email"
 msgstr ""
 
@@ -828,7 +828,7 @@ msgstr ""
 #: bp-groups/bp-groups-notifications.php:1403
 #: bp-groups/bp-groups-notifications.php:1419
 #: bp-groups/bp-groups-notifications.php:1439
-#: bp-messages/bp-messages-filters.php:921
+#: bp-messages/bp-messages-filters.php:936
 msgid "No, do not send email"
 msgstr ""
 
@@ -1307,7 +1307,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-template.php:145
 #: bp-members/classes/class-bp-core-members-template.php:127
 #: bp-messages/classes/class-bp-messages-box-template.php:115
-#: bp-messages/classes/class-bp-messages-thread.php:888
+#: bp-messages/classes/class-bp-messages-thread.php:894
 #: bp-xprofile/classes/class-bp-xprofile-data-template.php:134
 msgid ""
 "Arguments passed to %1$s should be in an associative array. See the inline "
@@ -3337,7 +3337,7 @@ msgid "Select %s"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:312
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1749
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1750
 msgid "Required"
 msgstr ""
 
@@ -5974,7 +5974,7 @@ msgstr ""
 #: bp-media/bp-media-settings.php:229
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1066
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1072
-#: bp-messages/bp-messages-filters.php:902
+#: bp-messages/bp-messages-filters.php:917
 #: bp-messages/bp-messages-notifications.php:33
 #: bp-messages/classes/class-bp-messages-component.php:222
 #: bp-messages/classes/class-bp-messages-component.php:229
@@ -6117,7 +6117,7 @@ msgstr ""
 #: bp-members/bp-members-functions.php:3113
 #: bp-xprofile/bp-xprofile-admin.php:1100
 #: bp-xprofile/bp-xprofile-admin.php:1158
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1624
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1625
 msgid "Profile Types"
 msgstr ""
 
@@ -7473,8 +7473,8 @@ msgstr ""
 #: bp-xprofile/bp-xprofile-admin.php:168 bp-xprofile/bp-xprofile-admin.php:177
 #: bp-xprofile/bp-xprofile-admin.php:1086
 #: bp-xprofile/classes/class-bp-xprofile-component.php:49
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1339
-#: bp-xprofile/classes/class-bp-xprofile-group.php:890
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1340
+#: bp-xprofile/classes/class-bp-xprofile-group.php:896
 msgid "Profile Fields"
 msgstr ""
 
@@ -16860,7 +16860,7 @@ msgstr ""
 #: bp-messages/bp-messages-functions.php:2191
 #: bp-messages/bp-messages-template.php:1824
 #: bp-messages/bp-messages-template.php:2089
-#: bp-messages/classes/class-bp-messages-thread.php:1632
+#: bp-messages/classes/class-bp-messages-thread.php:1638
 msgid "Deleted User"
 msgstr ""
 
@@ -17199,7 +17199,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/document/ajax.php:927
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1272
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1430
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1693
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1694
 msgid "Visibility"
 msgstr ""
 
@@ -17215,8 +17215,8 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/form-reply-move.php:87
 #: bp-forums/templates/default/bbpress/form-topic-merge.php:105
 #: bp-forums/templates/default/bbpress/form-topic-split.php:112
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1488
-#: bp-xprofile/classes/class-bp-xprofile-group.php:956
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1489
+#: bp-xprofile/classes/class-bp-xprofile-group.php:962
 msgid "Submit"
 msgstr ""
 
@@ -18770,8 +18770,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/functions.php:1474
 #: bp-templates/bp-nouveau/includes/functions.php:1526
 #: bp-templates/bp-nouveau/includes/functions.php:1538
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1297
-#: bp-xprofile/classes/class-bp-xprofile-group.php:862
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1298
+#: bp-xprofile/classes/class-bp-xprofile-group.php:868
 msgid "Save"
 msgstr ""
 
@@ -25331,36 +25331,36 @@ msgstr ""
 msgid "Joined \"%s\" "
 msgstr ""
 
-#: bp-messages/bp-messages-filters.php:575
+#: bp-messages/bp-messages-filters.php:582
 msgid "Left \"%s\" "
 msgstr ""
 
-#: bp-messages/bp-messages-filters.php:754
+#: bp-messages/bp-messages-filters.php:769
 msgid "Repair unread messages count"
 msgstr ""
 
-#: bp-messages/bp-messages-filters.php:784
+#: bp-messages/bp-messages-filters.php:799
 msgid "%s message threads updated successfully."
 msgstr ""
 
-#: bp-messages/bp-messages-filters.php:794
+#: bp-messages/bp-messages-filters.php:809
 msgid "Repairing unread messages count &hellip; Complete!"
 msgstr ""
 
-#: bp-messages/bp-messages-filters.php:911
+#: bp-messages/bp-messages-filters.php:926
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:841
 msgid "A member sends you a new message"
 msgstr ""
 
-#: bp-messages/bp-messages-filters.php:985
+#: bp-messages/bp-messages-filters.php:1000
 msgid "Archived messages"
 msgstr ""
 
-#: bp-messages/bp-messages-filters.php:992
+#: bp-messages/bp-messages-filters.php:1007
 msgid "Notification preferences"
 msgstr ""
 
-#: bp-messages/bp-messages-filters.php:992
+#: bp-messages/bp-messages-filters.php:1007
 msgid "Email preferences"
 msgstr ""
 
@@ -26095,7 +26095,7 @@ msgstr ""
 msgid "Display Sitewide Notices posted by the site administrator"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-thread.php:1623
+#: bp-messages/classes/class-bp-messages-thread.php:1629
 msgid "%s Recipients"
 msgstr ""
 
@@ -32593,7 +32593,7 @@ msgstr ""
 
 #: bp-xprofile/bp-xprofile-admin.php:170 bp-xprofile/bp-xprofile-admin.php:178
 #: bp-xprofile/bp-xprofile-admin.php:376
-#: bp-xprofile/classes/class-bp-xprofile-group.php:861
+#: bp-xprofile/classes/class-bp-xprofile-group.php:867
 msgid "New Field Set"
 msgstr ""
 
@@ -32603,13 +32603,13 @@ msgid "(Signup)"
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-admin.php:279
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1296
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1359
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1297
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1360
 msgid "Add New Field"
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-admin.php:280
-#: bp-xprofile/classes/class-bp-xprofile-group.php:873
+#: bp-xprofile/classes/class-bp-xprofile-group.php:879
 msgid "Edit Field Set"
 msgstr ""
 
@@ -32669,7 +32669,7 @@ msgid "There was an error saving the field. Please try again."
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-admin.php:597
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1369
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1370
 msgid "The field was saved successfully."
 msgstr ""
 
@@ -33597,7 +33597,7 @@ msgid "Default Value"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field.php:842
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1646
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1647
 msgid "Users with no profile type"
 msgstr ""
 
@@ -33609,115 +33609,115 @@ msgstr ""
 msgid "(Unavailable to all members)"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1192
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1193
 msgid "Profile fields must have a name."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1199
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1200
 msgid "Profile field requirement is missing."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1206
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1207
 msgid "Profile field type is missing."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1213
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1214
 msgid "The profile field type %s is not registered."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1229
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1230
 msgid "These field options are invalid."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1241
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1248
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1242
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1249
 msgid "%s require at least one option."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1321
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1322
 msgid "Edit Field"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1553
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1554
 msgid "Name (required)"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1560
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1561
 msgid "Text members see when editing this profile field (optional)"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1573
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1574
 msgid "Alternate Title"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1578
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1579
 msgid "For example, \"How old are you?\" could be used instead of \"Age\"."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1582
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1583
 msgid "Instructions"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1586
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1587
 msgid "Explain to members how best to fill out this field."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1626
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1627
 msgid "This field should be available to:"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1655
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1656
 msgid "Unavailable to all members."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1714
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1715
 msgid "Allow members to override"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1719
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1720
 msgid "Enforce field visibility"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1745
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1746
 msgid "Requirement"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1748
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1749
 msgid "Optional"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:693
+#: bp-xprofile/classes/class-bp-xprofile-group.php:699
 msgid "Please make sure you give the group a name."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:910
+#: bp-xprofile/classes/class-bp-xprofile-group.php:916
 msgid "Field Set Name (required)"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:915
+#: bp-xprofile/classes/class-bp-xprofile-group.php:921
 msgid "Field Set Description"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:920
+#: bp-xprofile/classes/class-bp-xprofile-group.php:926
 #. translators: accessibility text
 msgid "Add description"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:1012
+#: bp-xprofile/classes/class-bp-xprofile-group.php:1018
 msgid "Repeater Set"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:1014
+#: bp-xprofile/classes/class-bp-xprofile-group.php:1020
 msgid ""
 "Allow the profile fields within this set to be repeated again and again, so "
 "the user can add multiple instances of their data."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:1016
+#: bp-xprofile/classes/class-bp-xprofile-group.php:1022
 msgid "Disabled"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:1017
+#: bp-xprofile/classes/class-bp-xprofile-group.php:1023
 msgid "Enabled"
 msgstr ""
 
