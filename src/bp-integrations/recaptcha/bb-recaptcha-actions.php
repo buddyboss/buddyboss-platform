@@ -139,7 +139,7 @@ function bb_recaptcha_validate_lost_password( $errors ) {
 		return $errors;
 	}
 
-	$captcha = bb_recaptcha_verification_front();
+	$captcha = bb_recaptcha_verification_front( 'bb_lost_password' );
 	if ( is_wp_error( $captcha ) ) {
 		$errors->add( 'bb_recaptcha', $captcha->get_error_message() );
 	}
@@ -168,7 +168,7 @@ function bb_recaptcha_registration() {
  */
 function bb_recaptcha_validate_registration() {
 	if ( bb_recaptcha_is_enabled( 'bb_lost_password' ) ) {
-		$captcha = bb_recaptcha_verification_front();
+		$captcha = bb_recaptcha_verification_front( 'bb_lost_password' );
 		if ( is_wp_error( $captcha ) ) {
 			wp_die(
 				$captcha->get_error_message(),

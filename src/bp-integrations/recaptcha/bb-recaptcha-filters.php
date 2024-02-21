@@ -58,7 +58,7 @@ function bb_recaptcha_validate_login( $user ) {
 			return $user;
 		}
 	}
-	$captcha = bb_recaptcha_verification_front();
+	$captcha = bb_recaptcha_verification_front( 'bb_login' );
 	if ( is_wp_error( $captcha ) ) {
 		return $captcha;
 	}
@@ -81,7 +81,7 @@ function bb_recaptcha_validate_activate( $retval ) {
 		return $retval;
 	}
 
-	$captcha = bb_recaptcha_verification_front();
+	$captcha = bb_recaptcha_verification_front( 'bb_activate' );
 	if ( is_wp_error( $captcha ) ) {
 		return $captcha;
 	}
