@@ -30,7 +30,5 @@ if ( empty( $_GET['s'] ) || '' === $_GET['s'] ) {
 </header>
 
 <div id="buddypress">
-
 	<?php bp_get_template_part("search/results-page-content"); ?>
-
 </div>

@@ -12,11 +12,13 @@
  */
 
 bp_nouveau_activity_hook( 'before', 'comment_entry' );
+
+$activity_comment_id = bp_get_activity_comment_id();
 ?>
 
-<li id="acomment-<?php bp_activity_comment_id(); ?>" class="<?php bp_activity_comment_css_class(); ?>" data-bp-activity-comment-id="<?php bp_activity_comment_id(); ?>" data-bp-timestamp="<?php bb_nouveau_activity_comment_timestamp(); ?>" data-bp-activity-comment="<?php bb_nouveau_edit_activity_comment_data(); ?>">
+<li id="acomment-<?php echo esc_attr( $activity_comment_id ); ?>" class="<?php bp_activity_comment_css_class(); ?>" data-bp-activity-comment-id="<?php echo esc_attr( $activity_comment_id ); ?>" data-bp-timestamp="<?php bb_nouveau_activity_comment_timestamp(); ?>" data-bp-activity-comment="<?php bb_nouveau_edit_activity_comment_data(); ?>">
 
-	<div id="acomment-display-<?php bp_activity_comment_id(); ?>" class="acomment-display">
+	<div id="acomment-display-<?php echo esc_attr( $activity_comment_id ); ?>" class="acomment-display">
 
 		<?php bb_nouveau_activity_comment_bubble_buttons(); ?>
 
@@ -40,19 +42,19 @@ bp_nouveau_activity_hook( 'before', 'comment_entry' );
 		<div class="acomment-content">
 			<?php
 			bp_activity_comment_content();
-			do_action( 'bp_activity_after_comment_content', bp_get_activity_comment_id() );
+			do_action( 'bp_activity_after_comment_content', $activity_comment_id );
 			?>
 		</div>
 		<?php bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) ); ?>
 		<div class="comment-reactions">
 			<?php
 			if ( bb_is_reaction_activity_comments_enabled() ) {
-				echo bb_get_activity_post_user_reactions_html( bp_get_activity_comment_id(), 'activity_comment' );
+				echo bb_get_activity_post_user_reactions_html( $activity_comment_id, 'activity_comment' );
 			}
 			?>
 		</div>
 	</div>
-	<div id="acomment-edit-form-<?php bp_activity_comment_id(); ?>" class="acomment-edit-form"></div>
+	<div id="acomment-edit-form-<?php echo esc_attr( $activity_comment_id ); ?>" class="acomment-edit-form"></div>
 
 	<?php bp_nouveau_activity_recurse_comments( bp_activity_current_comment() ); ?>
 </li>

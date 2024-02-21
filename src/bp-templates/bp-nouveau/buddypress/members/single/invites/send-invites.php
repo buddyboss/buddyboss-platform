@@ -8,7 +8,11 @@
  * @version 1.0.0
  */
 
-bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
+bp_nouveau_member_hook( 'before', 'invites_send_template' );
+$send_invite_member_type_allow     = bp_check_member_send_invites_tab_member_type_allowed();
+$is_disabled_invite_member_subject = bp_disable_invite_member_email_subject();
+$is_disabled_invite_member_content = bp_disable_invite_member_email_content();
+?>
 
 <h2 class="screen-heading general-settings-screen">
 	<?php _e( 'Send Invites', 'buddyboss' ); ?>
@@ -26,7 +30,7 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 			<th class="title"><?php esc_html_e( 'Recipient Name', 'buddyboss' ); ?></th>
 			<th class="title"><?php esc_html_e( 'Recipient Email', 'buddyboss' ); ?></th>
 			<?php
-			if ( true === bp_check_member_send_invites_tab_member_type_allowed() ) {
+			if ( true === $send_invite_member_type_allow ) {
 				?>
 				<th class="title"><?php esc_html_e( 'Profile Type', 'buddyboss' ); ?></th>
 				<?php
@@ -37,12 +41,10 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 		</thead>
 
 		<tbody>
-
 		<?php
 		$raw = apply_filters( 'bp_invites_member_default_invitation_raw', 1 );
 		for ( $i = 0; $i < $raw; $i++ ) {
 			?>
-
 			<tr>
 				<td class="field-name">
 					<input type="text" name="invitee[<?php echo $i; ?>][]" id="invitee_<?php echo $i; ?>_title" value="<?php echo esc_attr( '' ); ?>" class="invites-input" <?php bp_form_field_attributes( 'invitee' ); ?>/>
@@ -51,7 +53,7 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 					<input type="email" name="email[<?php echo $i; ?>][]" id="email_<?php echo $i; ?>_email" value="<?php echo esc_attr( '' ); ?>" class="invites-input" <?php bp_form_field_attributes( 'email' ); ?>/>
 				</td>
 				<?php
-				if ( true === bp_check_member_send_invites_tab_member_type_allowed() ) {
+				if ( true === $send_invite_member_type_allow ) {
 					$current_user = bp_loggedin_user_id();
 					$member_type = bp_get_member_type( $current_user );
 					$member_type_post_id = bp_member_type_post_by_type( $member_type );
@@ -88,7 +90,7 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 
 		<?php }; ?>
 			<tr>
-				<td class="field-name" colspan="<?php if ( true === bp_check_member_send_invites_tab_member_type_allowed() ) { echo 3; } else { echo 2; }?>">
+				<td class="field-name" colspan="<?php if ( true === $send_invite_member_type_allow ) { echo 3; } else { echo 2; }?>">
 				</td>
 				<td class="field-actions-last" colspan="">
 					<span class="field-actions-add"><i class="bb-icon-l bb-icon-plus"></i></span>
@@ -100,7 +102,7 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 
 	<?php
 
-	if ( true === bp_disable_invite_member_email_subject() ) {
+	if ( true === $is_disabled_invite_member_subject ) {
 		?>
 		<label for="bp-member-invites-custom-subject"><?php _e( 'Customize the text of the invitation subject.', 'buddyboss' ) ?></label>
 		<textarea name="bp_member_invites_custom_subject" id="bp-member-invites-custom-subject" rows="5" cols="10" ><?php echo esc_textarea( bp_get_member_invitation_subject() ) ?></textarea>
@@ -108,7 +110,7 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 		<?php
 	}
 
-	if ( true === bp_disable_invite_member_email_content() ) {
+	if ( true === $is_disabled_invite_member_content ) {
 
 		?>
 		<label for="bp-member-invites-custom-content"><?php _e( 'Customize the text of the invitation email. A link to register will be sent with the email.', 'buddyboss' ) ?></label>
@@ -137,7 +139,7 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 		<?php
 	}
 
-	if ( true === bp_disable_invite_member_email_subject() && true === bp_disable_invite_member_email_content() ) {
+	if ( true === $is_disabled_invite_member_subject && true === $is_disabled_invite_member_content ) {
 		?>
 		<input type="hidden" value="<?php _e('Are you sure you want to send the invite without adding a subject and message?', 'buddyboss') ?>" name="error-message-empty-subject-body-field" id="error-message-empty-subject-body-field">
 		<?php
