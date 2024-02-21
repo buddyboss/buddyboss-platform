@@ -1752,12 +1752,12 @@ window.bp = window.bp || {};
 									target.removeClass( 'bb-icon-bell-slash' );
 									target.addClass( 'bb-icon-bell' );
 
-									target.find('span').html( BP_Nouveau.activity.strings.unmuteNotification );
+									target.find( 'span' ).html( BP_Nouveau.activity.strings.unmuteNotification );
 								} else if ( 'unmute' === notification_toggle_action ) {
 									target.closest( 'li.activity-item' ).removeClass( 'bb-muted' );
 									target.removeClass( 'bb-icon-bell' );
 									target.addClass( 'bb-icon-bell-slash' );
-									target.find('span').html( BP_Nouveau.activity.strings.muteNotification );
+									target.find( 'span' ).html( BP_Nouveau.activity.strings.muteNotification );
 								}
 							}
 

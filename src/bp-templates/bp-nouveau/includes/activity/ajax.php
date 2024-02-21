@@ -1186,5 +1186,4 @@ function bb_nouveau_ajax_toggle_activity_notification_status() {
 	} else {
 		wp_send_json_error( $response );
 	}
-
 }
