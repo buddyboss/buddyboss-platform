@@ -362,7 +362,6 @@ function bp_profile_repeater_is_data_valid_for_template_fields( $validated, $val
  * @return false|int
  */
 function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $current_count = 0 ) {
-	static $db_row_cache = array();
 	static $metas_cache  = array();
 	global $wpdb;
 	$bp = buddypress();
@@ -372,33 +371,31 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $current_
 		return false;
 	}
 
-	$db_row_cache_key = 'field_' . $field_id;
-	if ( ! isset( $db_row_cache[ $db_row_cache_key ] ) ) {
-		$db_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE id = %d", $field_id ), ARRAY_A );
+	$db_row = wp_cache_get( $field_id, 'bp_xprofile_fields' );
+	if ( false === $db_row ) {
+		$db_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE id = %d", $field_id ) );
 
-		$db_row_cache[ $db_row_cache_key ] = $db_row;
-	} else {
-		$db_row = $db_row_cache[ $db_row_cache_key ];
+		// Added in cache.
+		wp_cache_set( $field_id, $db_row, 'bp_xprofile_fields' );
 	}
 
-
 	if ( ! empty( $db_row ) && ! is_wp_error( $db_row ) ) {
-		$template_field_id = $db_row['id'];
+		$template_field_id = $db_row->id;
 
 		$new_field_column_data_types = array( '%d', '%d', '%s', '%s', '%s', '%d', '%d', '%d', '%d', '%s', '%d' );
 
 		$new_field_column_data = array(
-			'group_id'          => $db_row['group_id'],
-			'parent_id'         => $db_row['parent_id'],
-			'type'              => $db_row['type'],
-			'name'              => $db_row['name'],
-			'description'       => $db_row['description'],
-			'is_required'       => $db_row['is_required'],
-			'is_default_option' => $db_row['is_default_option'],
-			'field_order'       => $db_row['field_order'],
-			'option_order'      => $db_row['option_order'],
-			'order_by'          => $db_row['order_by'],
-			'can_delete'        => $db_row['can_delete'],
+			'group_id'          => $db_row->group_id,
+			'parent_id'         => $db_row->parent_id,
+			'type'              => $db_row->type,
+			'name'              => $db_row->name,
+			'description'       => $db_row->description,
+			'is_required'       => $db_row->is_required,
+			'is_default_option' => $db_row->is_default_option,
+			'field_order'       => $db_row->field_order,
+			'option_order'      => $db_row->option_order,
+			'order_by'          => $db_row->order_by,
+			'can_delete'        => $db_row->can_delete,
 		);
 
 		$inserted = $wpdb->insert(
@@ -452,7 +449,7 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $current_
 			bp_xprofile_update_meta( $new_field_id, 'field', '_clone_number', $current_clone_number );
 
 			// fix field order.
-			$field_order = ( (int) $current_clone_number * bp_profile_field_set_max_cap() ) + (int) $db_row['field_order'];
+			$field_order = ( (int) $current_clone_number * bp_profile_field_set_max_cap() ) + (int) $db_row->field_order;
 			$wpdb->update(
 				$bp->profile->table_name_fields,
 				array( 'field_order' => $field_order ),
@@ -492,7 +489,13 @@ function xprofile_update_clones_on_template_update( $field ) {
 		return;
 	}
 
-	$db_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE id = %d", $field->id ), ARRAY_A );
+	$db_row = wp_cache_get( $field->id, 'bp_xprofile_fields' );
+	if ( false === $db_row ) {
+		$db_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE id = %d", $field->id ) );
+
+		// Added in cache.
+		wp_cache_set( $field->id, $db_row, 'bp_xprofile_fields' );
+	}
 
 	if ( ! empty( $db_row ) && ! is_wp_error( $db_row ) ) {
 		$sql = $wpdb->prepare(
@@ -500,16 +503,16 @@ function xprofile_update_clones_on_template_update( $field ) {
 			. ' group_id = %d, parent_id = %d, type = %s, name = %s, description = %s, is_required = %d, '
 			. ' is_default_option = %d, option_order = %d, order_by = %d, can_delete = %d '
 			. ' WHERE id IN ( ' . implode( ',', $clone_ids ) . ' )',
-			$db_row['group_id'],
-			$db_row['parent_id'],
-			$db_row['type'],
-			$db_row['name'],
-			$db_row['description'],
-			$db_row['is_required'],
-			$db_row['is_default_option'],
-			$db_row['option_order'],
-			$db_row['order_by'],
-			$db_row['can_delete']
+			$db_row->group_id,
+			$db_row->parent_id,
+			$db_row->type,
+			$db_row->name,
+			$db_row->description,
+			$db_row->is_required,
+			$db_row->is_default_option,
+			$db_row->option_order,
+			$db_row->order_by,
+			$db_row->can_delete
 		);
 
 		$wpdb->query( $sql );

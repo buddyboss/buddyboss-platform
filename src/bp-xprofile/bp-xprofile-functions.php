@@ -1863,8 +1863,10 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 		return false;
 	}
 
+	global $bb_default_display_avatar;
+
 	$cache_key = 'bp_xprofile_get_member_display_name_' . trim( $user_id );
-	if ( isset( $cache[ $cache_key ] ) ) {
+	if ( isset( $cache[ $cache_key ] ) && ! $bb_default_display_avatar ) {
 		return $cache[ $cache_key ];
 	}
 

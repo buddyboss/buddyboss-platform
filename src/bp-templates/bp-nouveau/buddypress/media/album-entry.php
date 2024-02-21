@@ -7,9 +7,9 @@
  * @since   BuddyBoss 1.0.0
  * @version 1.0.0
  */
-?>
 
-<?php global $media_album_template; ?>
+global $media_album_template;
+?>
 
 <li class="bb-album-list-item">
 	<div class="bb-album-cover-wrap">
