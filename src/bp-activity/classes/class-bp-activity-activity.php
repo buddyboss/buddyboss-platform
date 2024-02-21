@@ -229,13 +229,7 @@ class BP_Activity_Activity {
 		$this->privacy           = $row->privacy;
 
 		// Generate dynamic 'action' when possible.
-		$action = bp_activity_generate_action_string( $this );
-		if ( false !== $action ) {
-			$this->action = $action;
-
-			// If no callback is available, use the literal string from
-			// the database row.
-		} elseif ( ! empty( $row->action ) ) {
+		if ( ! empty( $row->action ) ) {
 			$this->action = $row->action;
 
 			// Provide a fallback to avoid PHP notices.
@@ -299,10 +293,6 @@ class BP_Activity_Activity {
 
 				return $this->errors;
 			}
-		}
-
-		if ( empty( $this->primary_link ) ) {
-			$this->primary_link = bp_loggedin_user_domain();
 		}
 
 		// If we have an existing ID, update the activity item, otherwise insert it.
@@ -912,6 +902,10 @@ class BP_Activity_Activity {
 				$activity->mptt_left         = (int) $activity->mptt_left;
 				$activity->mptt_right        = (int) $activity->mptt_right;
 				$activity->is_spam           = (int) $activity->is_spam;
+			}
+
+			if ( empty( $activity->action ) ) {
+				$activity->action = bp_activity_generate_action_string( $activity );
 			}
 
 			$activities[] = $activity;
