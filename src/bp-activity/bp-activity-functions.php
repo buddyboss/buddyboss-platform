@@ -4222,6 +4222,17 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 
 		$send_email = true;
 
+		// Stop sending email notification to user who has muted notifications.
+		if ( $original_activity->user_id !== $commenter_id ) {
+			$activity_meta = bp_activity_get_meta( $original_activity->id, 'muted_notification_users' );
+
+			if ( ! empty( $activity_meta ) && is_array( $activity_meta ) ) {
+				if ( in_array( $original_activity->user_id, $activity_meta, true ) ) {
+					$send_email = false;
+				}
+			}
+		}
+
 		if ( ! empty( $usernames ) && array_key_exists( $original_activity->user_id, $usernames ) ) {
 			if ( true === bb_is_notification_enabled( $original_activity->user_id, 'bb_new_mention' ) ) {
 				$send_email = false;
@@ -4297,6 +4308,17 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 		}
 
 		$send_email = true;
+
+		// Stop sending email notification to user who has muted notifications.
+		if ( $parent_comment->user_id !== $commenter_id ) {
+			$activity_meta = bp_activity_get_meta( $original_activity->id, 'muted_notification_users' );
+
+			if ( ! empty( $activity_meta ) && is_array( $activity_meta ) ) {
+				if ( in_array( $parent_comment->user_id, $activity_meta, true ) ) {
+					$send_email = false;
+				}
+			}
+		}
 
 		if ( ! empty( $usernames ) && array_key_exists( $parent_comment->user_id, $usernames ) ) {
 			if ( true === bb_is_notification_enabled( $parent_comment->user_id, 'bb_new_mention' ) ) {
