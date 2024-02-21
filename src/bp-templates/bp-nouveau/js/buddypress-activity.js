@@ -534,6 +534,9 @@ window.bp = window.bp || {};
 
 			$( event.currentTarget ).parents( '.activity-comments' ).find( '.ac-form' ).each( function() {
 				var form = $( this );
+				// Reset emojionearea
+				form.find( '.post-elements-buttons-item.post-emoji' ).removeClass( 'active' ).empty( '' );
+
 				bp.Nouveau.Activity.resetActivityCommentForm( form, 'hardReset' );
 			});
 
@@ -543,6 +546,9 @@ window.bp = window.bp || {};
 		closeComments: function( event ) {
 			event.preventDefault();
 			var target = $( event.target ), modal = target.closest( '.bb-activity-model-wrapper' );
+			var activityId = modal.find( '.activity-item' ).data( 'bp-activity-id' );
+			
+			bp.Nouveau.Activity.initializeEmojioneArea( false, '', activityId );
 
 			modal.closest('body').removeClass( 'acomments-modal-open' );
 			modal.hide();
@@ -1286,49 +1292,9 @@ window.bp = window.bp || {};
 				if ( ! _.isUndefined( BP_Nouveau.media ) && ! _.isUndefined( BP_Nouveau.media.emoji ) && 'undefined' == typeof $( hasParentModal + '#ac-input-' + activity_id ).data( 'emojioneArea' ) ) {
 					// Store HTML data of editor.
 					var editor_data = $( hasParentModal + '#ac-input-' + activity_id ).html();
-					$( hasParentModal + '#ac-input-' + activity_id ).emojioneArea(
-						{
-							standalone: true,
-							hideSource: false,
-							container: hasParentModal + '#ac-reply-emoji-button-' + activity_id,
-							detachPicker: isInsideModal ? true : false,
-							containerPicker: isInsideModal ? '.emojionearea-theatre' : null,
-							autocomplete: false,
-							pickerPosition: 'top',
-							hidePickerOnBlur: true,
-							useInternalCDN: false,
-							events: {
-								emojibtn_click: function () {
-									$( hasParentModal + '#ac-input-' + activity_id )[0].emojioneArea.hidePicker();
 
-									// Check if emoji is added then enable submit button.
-									var $activity_comment_input   = $( hasParentModal + '#ac-form-' + activity_id + ' #ac-input-' + activity_id );
-									var $activity_comment_content = $activity_comment_input.html();
+					bp.Nouveau.Activity.initializeEmojioneArea( isInsideModal, hasParentModal, activity_id );
 
-									content = $.trim( $activity_comment_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
-									content = content.replace( /&nbsp;/g, ' ' );
-
-									var content_text = $activity_comment_input.text();
-
-									if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0 ) {
-										$activity_comment_input.closest( 'form' ).addClass( 'has-content' );
-									} else {
-										$activity_comment_input.closest( 'form' ).removeClass( 'has-content' );
-									}
-								},
-
-								picker_show: function () {
-									$( this.button[0] ).closest( '.post-emoji' ).addClass( 'active' );
-									$( '.emojionearea-theatre' ).removeClass( 'hide' ).addClass( 'show' );
-								},
-
-								picker_hide: function () {
-									$( this.button[0] ).closest( '.post-emoji' ).removeClass( 'active' );
-									$( '.emojionearea-theatre' ).removeClass( 'show' ).addClass( 'hide' );
-								},
-							}
-						}
-					);
 					// Restore HTML data of editor after emojioneArea intialized.
 					if ( target.hasClass( 'acomment-edit' ) && ! _.isNull( activity_comment_data ) ) {
 						$( hasParentModal + '#ac-input-' + activity_id ).html( editor_data );
@@ -3409,6 +3375,52 @@ window.bp = window.bp || {};
 				$( '.gif-media-search-dropdown-standalone' ).removeClass( 'open' );
 				$('#activity-modal' ).find( '.ac-reply-gif-button' ).removeClass( 'active' );
 			}
+		},
+
+		initializeEmojioneArea: function(isModal, parentSelector, activityId) {
+			$( parentSelector + '#ac-input-' + activityId ).emojioneArea(
+				{
+					standalone: true,
+					hideSource: false,
+					container: parentSelector + '#ac-reply-emoji-button-' + activityId,
+					detachPicker: isModal ? true : false,
+					containerPicker: isModal ? '.emojionearea-theatre' : null,
+					autocomplete: false,
+					pickerPosition: 'top',
+					hidePickerOnBlur: true,
+					useInternalCDN: false,
+					events: {
+						emojibtn_click: function () {
+							$( parentSelector + '#ac-input-' + activityId )[0].emojioneArea.hidePicker();
+
+							// Check if emoji is added then enable submit button.
+							var $activity_comment_input   = $( parentSelector + '#ac-form-' + activityId + ' #ac-input-' + activityId );
+							var $activity_comment_content = $activity_comment_input.html();
+
+							content = $.trim( $activity_comment_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+							content = content.replace( /&nbsp;/g, ' ' );
+
+							var content_text = $activity_comment_input.text();
+
+							if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0 ) {
+								$activity_comment_input.closest( 'form' ).addClass( 'has-content' );
+							} else {
+								$activity_comment_input.closest( 'form' ).removeClass( 'has-content' );
+							}
+						},
+
+						picker_show: function () {
+							$( this.button[0] ).closest( '.post-emoji' ).addClass( 'active' );
+							$( '.emojionearea-theatre' ).removeClass( 'hide' ).addClass( 'show' );
+						},
+
+						picker_hide: function () {
+							$( this.button[0] ).closest( '.post-emoji' ).removeClass( 'active' );
+							$( '.emojionearea-theatre' ).removeClass( 'show' ).addClass( 'hide' );
+						},
+					}
+				}
+			);
 		}
 
 	};
