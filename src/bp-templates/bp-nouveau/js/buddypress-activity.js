@@ -161,7 +161,7 @@ window.bp = window.bp || {};
 			});
 
 			$('#activity-modal > .bb-modal-activity-body').on('scroll', this.autoloadMoreComments.bind( this ) );
-			$('#activity-modal > .bb-modal-activity-body').on('scroll', this.hideEmojioneAreaPicker.bind( this ));
+			$('#activity-modal > .bb-modal-activity-body').on('scroll', this.discardGifEmojiPicker.bind( this ));
 		},
 
 		/**
@@ -1291,8 +1291,8 @@ window.bp = window.bp || {};
 							standalone: true,
 							hideSource: false,
 							container: hasParentModal + '#ac-reply-emoji-button-' + activity_id,
-							detachPicker: true,
-							containerPicker: '.emojionearea-theatre',
+							detachPicker: isInsideModal ? true : false,
+							containerPicker: isInsideModal ? '.emojionearea-theatre' : null,
 							autocomplete: false,
 							pickerPosition: 'top',
 							hidePickerOnBlur: true,
@@ -2663,10 +2663,11 @@ window.bp = window.bp || {};
 				activityID       = currentTarget.id.match( /\d+$/ )[0],
 				$gifAttachmentEl = $( hasParentModal + '#ac-reply-post-gif-' + activityID );
 
-			var offset = $( currentTarget ).offset();
-			var topPosition = offset.top;
-			var leftPosition = offset.left;
-			var transformValue = 'translate(' + (leftPosition - 300) + 'px, ' + (topPosition - 155) + 'px) translate(-100%, -100%)';
+			var scrollTop = $(window).scrollTop(),
+				offset = $( currentTarget ).offset(),
+				topPosition = Math.round(offset.top),
+				leftPosition = Math.round(offset.left),
+				transformValue = 'translate(' + (leftPosition + 50) + 'px, ' + (topPosition - scrollTop - 5) + 'px)  translate(-100%, -100%)';
 
 			if ( $gifPickerEl.is( ':empty' ) ) {
 				var model                      = new bp.Models.ACReply(),
@@ -2677,10 +2678,10 @@ window.bp = window.bp || {};
 				$gifAttachmentEl.html( activityAttachedGifPreview.render().el );
 
 				this.models[activityID] = model;
+			}
 
-				if ( isInsideModal ) {
-					$gifPickerEl.css('transform', transformValue);
-				}
+			if ( isInsideModal ) {
+				$gifPickerEl.css('transform', transformValue);
 			}
 
 			var gif_box = $( currentTarget ).parents( '.ac-textarea ' ).find( '.ac-reply-attachments .activity-attached-gif-container' );
@@ -3398,10 +3399,15 @@ window.bp = window.bp || {};
 			}
 		},
 
-		hideEmojioneAreaPicker: function() {
+		discardGifEmojiPicker: function() {
 			var activityId = $('#activity-modal > .bb-modal-activity-body .activity-item').data('bp-activity-id');
 			if ( $('#activity-modal' ).length > 0 && $( '.emojionearea-theatre.show' ).length > 0 ) {
 				$( '.bb-activity-model-wrapper #ac-input-' + activityId ).data("emojioneArea").hidePicker();
+			}
+
+			if ( $('#activity-modal' ).length > 0 && $( '.gif-media-search-dropdown-standalone.open' ).length > 0 ) {
+				$( '.gif-media-search-dropdown-standalone' ).removeClass( 'open' );
+				$('#activity-modal' ).find( '.ac-reply-gif-button' ).removeClass( 'active' );
 			}
 		}
 

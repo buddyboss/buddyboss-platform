@@ -1906,9 +1906,10 @@ document = window.document || {};
 	EmojioneArea.prototype.showPicker = function () {
 		var self = this;
 
+		var scrollTop = $(window).scrollTop();
 		var offset = self.button.offset();
-		var topPosition = offset.top;
-		var leftPosition = offset.left;
+		var topPosition = Math.round(offset.top);
+		var leftPosition = Math.round(offset.left);
 		var pickerWidth = self.picker.width();
 		var pickerHeight = self.picker.height();
 		if (
@@ -1918,7 +1919,7 @@ document = window.document || {};
 			!isNaN(pickerWidth) &&
 			!isNaN(pickerHeight)
 		) {
-			var transformValue = 'translate(' + (leftPosition - pickerWidth - 33) + 'px, ' + (topPosition - pickerHeight - 80) + 'px) translate(-100%, -100%)';
+			var transformValue = 'translate(' + (leftPosition + 42) + 'px, ' + (topPosition - scrollTop - 10) + 'px) translate(-100%, -100%)';
 		}
 
 		if (self._sh_timer) {

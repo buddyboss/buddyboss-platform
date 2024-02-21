@@ -1466,6 +1466,10 @@
 			left: unset;
 			right: unset;
 			margin: 0;
+			position: fixed;
+			top: 0;
+			left: 0;
+			transition: none;
 		}
 	}
 }
@@ -1474,6 +1478,10 @@
 	&.gif-media-search-dropdown-standalone {
 		z-index: 999992;
 		top: 0;
+		left: 0;
+		margin: 0;
+		padding: 0;
+		position: fixed;
 
 		.gif-search-content .gif-search-results {
 			max-height: 280px;
