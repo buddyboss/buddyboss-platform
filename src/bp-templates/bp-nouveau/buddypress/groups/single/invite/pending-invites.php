@@ -8,9 +8,9 @@
  * @version 1.2.3
  */
 
+bp_get_template_part( 'groups/single/parts/invite-subnav' );
 ?>
-<?php bp_get_template_part( 'groups/single/parts/invite-subnav' ); ?>
-<div id="group-invites-container">	
+<div id="group-invites-container">
 	<div class="group-invites-column">
 		<h2 class="bb-title"><?php _e( 'Pending Invites', 'buddyboss' ); ?></h2>
 		<div class="subnav-filters group-subnav-filters bp-invites-filters">
@@ -51,7 +51,6 @@
 		<div class="members bp-invites-content">
 			<ul id="members-list" class="item-list bp-list"></ul>
 		</div>
-
 
 	</div>
 </div>

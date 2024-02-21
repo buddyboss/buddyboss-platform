@@ -2049,7 +2049,15 @@ class BP_Messages_Thread {
 			$user_id = bp_loggedin_user_id();
 		}
 
-		$is_thread_archived = $wpdb->query( $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_recipients} WHERE is_hidden = %d AND thread_id = %d AND user_id = %d", 1, $thread_id, $user_id ) );
+		$is_thread_archived_query = $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_recipients} WHERE is_hidden = %d AND thread_id = %d AND user_id = %d", 1, $thread_id, $user_id );
+
+		$cached = bp_core_get_incremented_cache( $is_thread_archived_query, 'bp_messages' );
+		if ( false === $cached ) {
+			$is_thread_archived = $wpdb->query( $is_thread_archived_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			bp_core_set_incremented_cache( $is_thread_archived_query, 'bp_messages', $is_thread_archived );
+		} else {
+			$is_thread_archived = $cached;
+		}
 
 		if ( 0 < $is_thread_archived ) {
 			return true;
