@@ -544,6 +544,7 @@ window.bp = window.bp || {};
 					data.object === 'group_members' && $( 'body' ).hasClass( 'group-members' ),
 					data.object === 'activity' && $( 'body.groups' ).hasClass( 'activity' ),
 					data.object === 'document' && $( 'body' ).hasClass( 'documents' ),
+					data.object === 'manage_group_members' && $( 'body' ).hasClass( 'manage-members' ),
 					data.object === 'document' && ( $( 'body' ).hasClass( 'document' ) || $( 'body' ).hasClass( 'documents' ) ),
 				];
 
@@ -551,6 +552,7 @@ window.bp = window.bp || {};
 					$( '.groups .group-search.members-search' ),
 					$( '.groups .group-search.activity-search' ),
 					$( '.documents .bp-document-listing .bb-title' ),
+					$( '.groups .group-search.search-wrapper' ),
 					$( '#bp-media-single-folder .bb-title' ),
 				];
 
@@ -566,7 +568,7 @@ window.bp = window.bp || {};
 			// $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"], #object-nav li.current' ).find( 'span' ).show();
 			$( '#buddypress [data-bp-filter="' + data.object + '"] option[value="' + data.filter + '"]' ).prop( 'selected', true );
 
-			if ( 'friends' === data.object || 'group_members' === data.object ) {
+			if ( 'friends' === data.object || 'group_members' === data.object || 'manage_group_members' === data.object ) {
 				data.template = data.object;
 				data.object   = 'members';
 			} else if ( 'group_requests' === data.object ) {
@@ -623,7 +625,6 @@ window.bp = window.bp || {};
 
 					if ( 'reset' !== data.method ) {
 						self.inject( data.target, response.data.contents, data.method );
-
 						$( data.target ).trigger( 'bp_ajax_' + data.method, $.extend( data, { response: response.data } ) );
 					} else {
 						/* animate to top if called from bottom pagination */
@@ -830,6 +831,7 @@ window.bp = window.bp || {};
 
 			// Searching.
 			$( '#buddypress [data-bp-search]' ).on( 'submit', 'form', this, this.searchQuery );
+			$( '#buddypress [data-bp-search]' ).on( 'keyup', 'input[name=group_members_search]', this, _.throttle( this.searchQuery, 900 ) );
 			$( '#buddypress [data-bp-search] form' ).on( 'search', 'input[type=search]', this.resetSearch );
 
 			// Buttons.
@@ -3506,6 +3508,8 @@ window.bp = window.bp || {};
 			if ( $form.filter( '.bp-messages-search-form, .bp-dir-search-form' ).length > 0 ) {
 				$form.find( 'input[type="search"]').val('');
 				$form.find( '.search-form_submit' ).trigger( 'click' );
+			} else if ( $form.find( '#bb_search_group_members' ).length > 0 ) {
+				$form.find( '#bb_search_group_members' ).val('').trigger('keyup');
 			} else {
 				$form.find( '#bbp_search' ).val('');
 			}

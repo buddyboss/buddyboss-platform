@@ -10,7 +10,7 @@
 
 ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_activity">
-	<a href='<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), bp_activity_thread_permalink() ) ); ?>'>
+	<a href='<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), bp_get_activity_thread_permalink() ) ); ?>'>
 		<div class="item-avatar">
 			<?php
 			bp_activity_avatar(
@@ -34,10 +34,11 @@
 			<?php endif; ?>
 			<div class="item-meta activity-header">
 				<?php
+				$activity_date_recorded = bp_get_activity_date_recorded();
 				printf(
 					'<time class="time-since" data-livestamp="%1$s">%2$s</time>',
-					bp_core_get_iso8601_date( bp_get_activity_date_recorded() ),
-					bp_core_time_since( bp_get_activity_date_recorded() )
+					bp_core_get_iso8601_date( $activity_date_recorded ),
+					bp_core_time_since( $activity_date_recorded )
 				);
 				?>
 			</div>

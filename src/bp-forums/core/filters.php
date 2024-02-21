@@ -150,6 +150,7 @@ add_filter( 'bbp_get_reply_content', 'force_balance_tags', 30 );
 add_filter( 'bbp_get_reply_content', 'wpautop', 40 );
 add_filter( 'bbp_get_reply_content', 'bbp_remove_html_tags', 45 );
 add_filter( 'bbp_get_reply_content', 'bbp_rel_nofollow', 50 );
+add_filter( 'bbp_get_reply_content', 'bb_mention_add_user_dynamic_link' );
 
 // Run filters on topic content
 add_filter( 'bbp_get_topic_content', 'bbp_make_clickable', 4 );
@@ -164,6 +165,7 @@ add_filter( 'bbp_get_topic_content', 'bbp_remove_html_tags', 45 );
 add_filter( 'bbp_get_topic_content', 'bbp_rel_nofollow', 50 );
 add_filter( 'bbp_get_topic_content', 'bb_forums_hide_single_url', 999999, 1 );
 add_filter( 'bbp_get_reply_content', 'bb_forums_hide_single_url', 999999, 1 );
+add_filter( 'bbp_get_topic_content', 'bb_mention_add_user_dynamic_link' );
 
 // Form textarea output - undo the code-trick done pre-save, and sanitize
 add_filter( 'bbp_get_form_forum_content', 'bbp_code_trick_reverse' );

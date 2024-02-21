@@ -11,8 +11,8 @@
 
 $folder_privacy = '';
 if ( bp_is_user_document() || bp_is_user_folders() ) {
-	$folder_id 	= (int) bp_action_variable( 0 );
-	$folder 	= new BP_Document_Folder( $folder_id );
+	$folder_id = (int) bp_action_variable( 0 );
+	$folder    = new BP_Document_Folder( $folder_id );
 	if ( ! empty( $folder ) ) {
 		$folder_privacy = $folder->privacy;
 	}
