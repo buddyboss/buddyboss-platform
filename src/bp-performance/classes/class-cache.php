@@ -262,7 +262,7 @@ class Cache {
 	 *
 	 * @param array|string $group_names Cache group names.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.50
 	 */
 	public function purge_by_groups( $group_names ) {
 		global $wpdb;
@@ -276,7 +276,7 @@ class Cache {
 		 *
 		 * @param int $limit Cache purge limit.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.5.50
 		 */
 		$limit = apply_filters( 'bb_cache_purge_limit', 1000 );
 
@@ -313,7 +313,7 @@ class Cache {
 		 *
 		 * @param int $limit Cache purge limit.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.5.50
 		 */
 		$limit = apply_filters( 'bb_cache_purge_limit', 1000 );
 
@@ -411,7 +411,7 @@ class Cache {
 	 * @param array $group_names       Array of group names.
 	 * @param array $deeplink_callback Callable function to prepare the deeplink group name.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.50
 	 *
 	 * @return void
 	 */
@@ -428,7 +428,7 @@ class Cache {
 		 *
 		 * @param int $limit Cache purge limit.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.5.50
 		 */
 		$limit = apply_filters( 'bb_cache_purge_groups_limit', 1000 );
 
@@ -469,7 +469,7 @@ class Cache {
 	 * @param int   $user_id     User ID.
 	 * @param array $group_names Array of group names.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.50
 	 *
 	 * @return void
 	 */
@@ -485,7 +485,7 @@ class Cache {
 		 *
 		 * @param int $limit Cache purge limit.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.5.50
 		 */
 		$limit = apply_filters( 'bb_cache_purge_groups_limit', 1000 );
 

@@ -501,7 +501,7 @@ add_action( 'before_delete_post', 'bb_groups_clear_group_type_cache_before_delet
 /**
  * Reset cache incrementor for the Groups member.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.50
  *
  * @return bool True on success, false on failure.
  */

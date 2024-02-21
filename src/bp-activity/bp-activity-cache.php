@@ -207,7 +207,7 @@ add_action( 'bp_remove_follow_data', 'bp_activity_follow_delete_follow_ids_objec
 /**
  * Clear cached data for activity meta data.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.50
  *
  * @param int $activity_id ID of activity.
  */

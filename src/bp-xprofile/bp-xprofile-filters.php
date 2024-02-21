@@ -1498,7 +1498,7 @@ function bb_core_xprofile_clear_group_cache() {
 /**
  * Delete the user default PNG avatar when update the first and last name.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.50
  *
  * @param BP_XProfile_ProfileData $field Instance of the profile data being saved.
  */
@@ -1545,7 +1545,7 @@ function bb_xprofile_remove_default_png_avatar_on_update_user_details( $field ) 
 /**
  * Delete user meta for default PNG when update visibility related settings from backend.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.50
  *
  * @param null|bool $retval       Whether to allow updating metadata for the given type.
  * @param int       $object_id    ID of the object metadata is for.
@@ -1604,7 +1604,7 @@ function bb_xprofile_remove_default_png_avatar_on_update_visibility( $retval, $o
 /**
  * Delete user meta for default PNG when update own visibility related settings.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.50
  *
  * @param null|bool $retval      Whether to allow updating metadata for the given type.
  * @param int       $object_id   ID of the object metadata is for.

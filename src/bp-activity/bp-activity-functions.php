@@ -6500,7 +6500,7 @@ function bb_load_reaction_popup_modal_js_template() {
 /**
  * Fetch the activity metadata using the activity ID.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.50
  *
  * @param int $activity_id Activity ID.
  *
