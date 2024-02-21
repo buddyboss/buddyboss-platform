@@ -659,9 +659,15 @@ class BP_XProfile_Group {
 
 		// Integer casting.
 		foreach ( (array) $groups as $key => $data ) {
-			$groups[ $key ]->id          = (int) $groups[ $key ]->id;
-			$groups[ $key ]->group_order = (int) $groups[ $key ]->group_order;
-			$groups[ $key ]->can_delete  = (int) $groups[ $key ]->can_delete;
+			if ( isset( $groups[ $key ]->id ) ) {
+				$groups[ $key ]->id = (int) $groups[ $key ]->id;
+			}
+			if ( isset( $groups[ $key ]->group_order ) ) {
+				$groups[ $key ]->group_order = (int) $groups[ $key ]->group_order;
+			}
+			if ( isset( $groups[ $key ]->can_delete ) ) {
+				$groups[ $key ]->can_delete = (int) $groups[ $key ]->can_delete;
+			}
 		}
 
 		// Reset indexes & return.
