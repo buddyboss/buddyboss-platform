@@ -923,8 +923,14 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		// phpcs:ignore
 		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$bp->document->table_name_folder} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );
 
-		// phpcs:ignore
-		$data = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok.
+		$cached = bp_core_get_incremented_cache( $documents_folder_query, 'bp_document_folder' );
+		if ( false === $cached ) {
+			// phpcs:ignore
+			$data = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok.
+			bp_core_set_incremented_cache( $documents_folder_query, 'bp_document_folder', $data );
+		} else {
+			$data = $cached;
+		}
 
 		if ( isset( $request['hierarchical'] ) && false !== $request['hierarchical'] ) {
 
