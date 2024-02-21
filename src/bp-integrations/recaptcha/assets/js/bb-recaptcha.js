@@ -57,7 +57,7 @@
 								'callback': function ( token ) {
 									$( '#g-recaptcha-response' ).val( token );
 									if ( container ) {
-										$( '#' + container ).submit();
+										document.getElementById( container ).submit();
 									}
 								},
 							};
