@@ -8,14 +8,16 @@
  * @since   BuddyBoss 1.0.0
  * @version 1.0.0
  */
+
+$reply_id = get_the_ID();
 ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_reply">
-	<a href="<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), bbp_get_reply_url( get_the_ID() ) ) ); ?>">
+	<a href="<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), bbp_get_reply_url( $reply_id ) ) ); ?>">
 		<div class="item-avatar">
 			<?php
 			$args   = array(
 				'type'    => 'avatar',
-				'post_id' => get_the_ID(),
+				'post_id' => $reply_id,
 			);
 			$avatar = bbp_get_reply_author_link( $args );
 
@@ -33,12 +35,12 @@
 				<a href="<?php bbp_reply_url( get_the_ID() ); ?>"><?php bbp_reply_author_display_name( get_the_ID() ); ?></a>
 				<?php esc_html_e( 'replied to a discussion', 'buddyboss' ); ?>
 			</div>
-			<div class="item-desc">				
-				<?php echo wp_kses_post( wp_trim_words( bbp_get_reply_content( get_the_ID() ), 30, '...' ) ); ?>
+			<div class="item-desc">
+				<?php echo wp_kses_post( wp_trim_words( bbp_get_reply_content( $reply_id ), 30, '...' ) ); ?>
 			</div>
 
 			<div class="entry-meta">
-				<?php bbp_reply_post_date( get_the_ID(), true ); ?>
+				<?php bbp_reply_post_date( $reply_id, true ); ?>
 			</div>
 		</div>
 	</a>

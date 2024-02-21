@@ -854,10 +854,10 @@ class BP_Core_User {
 		foreach ( $user_ids as $user_id ) {
 			$retval[ $user_id ] = wp_cache_get( $user_id, 'bp_last_activity' );
 
-			if ( isset( $retval['user_id'] ) ) {
+			if ( false !== $retval[ $user_id ] && isset( $retval[ $user_id ]['user_id'] ) ) {
 				$retval[ $user_id ]['user_id'] = (int) $retval[ $user_id ]['user_id'];
 			}
-			if ( isset( $retval['activity_id'] ) ) {
+			if ( false !== $retval[ $user_id ] && isset( $retval[ $user_id ]['activity_id'] ) ) {
 				$retval[ $user_id ]['activity_id'] = (int) $retval[ $user_id ]['activity_id'];
 			}
 		}
