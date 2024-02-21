@@ -476,9 +476,7 @@ function bb_get_google_recaptcha_api_response( $secret_key, $token ) {
 		// Decode the response body from JSON
 		$response_body = json_decode( wp_remote_retrieve_body( $get_data ), true );
 
-		if ( $response_body && $response_body['success'] ) {
-			return $response;
-		}
+		return $response_body;
 	}
 
 	return false;
@@ -601,45 +599,53 @@ function bb_recaptcha_verification_front( $action = '' ) {
 
 	$token_response = bb_filter_input_string( INPUT_POST, 'g-recaptcha-response' );
 
+	$retval = array();
 	if ( ! empty( $selected_version ) ) {
 		if ( empty( $token_response ) ) {
-			return new WP_Error(
-				'bb_recaptcha_token_missing',
-				__( "<strong>ERROR</strong>: Google reCAPTCHA token is missing.", 'buddyboss' )
-			);
+			$error_message = __( 'Google reCAPTCHA token is missing.', 'buddyboss' );
+
+			$retval['error']['bb_recaptcha_token_missing'] = $error_message;
 		} else {
 			$response = bb_get_google_recaptcha_api_response( $secret_key, $token_response );
 
-			// Handle other reCAPTCHA verification responses
+			// Handle other reCAPTCHA verification responses.
 			if ( $response ) {
+				if ( empty( $response['success'] ) ) {
+					$error_message = __( 'Verification failed please try again.', 'buddyboss' );
+
+					$retval['error']['bb_recaptcha_verification_failed'] = $error_message;
+				}
+
 				if ( 'recaptcha_v3' === $selected_version ) {
 					// Check if reCAPTCHA action and current page action not same.
 					if ( isset( $response['action'] ) && $response['action'] !== $action ) {
-						return new WP_Error(
-							'bb_recaptcha_v3_failed',
-							__( "<strong>ERROR</strong>: Google reCAPTCHA verification failed.", 'buddyboss' )
-						);
+						$error_message = __( 'Verification failed please try again.', 'buddyboss' );
+
+						$retval['error']['bb_recaptcha_verification_failed'] = $error_message;
 					}
 
 					// Check if reCAPTCHA score is below threshold for v3.
 					$score_threshold = bb_recaptcha_score_threshold();
 					if ( isset( $response['score'] ) && $response['score'] < $score_threshold ) {
-						return new WP_Error(
-							'bb_recaptcha_v3_failed',
-							__( "<strong>ERROR</strong>: Google reCAPTCHA verification failed.", 'buddyboss' )
-						);
+						$error_message = __( 'Verification failed please try again.', 'buddyboss' );
+
+						$retval['error']['bb_recaptcha_verification_failed'] = $error_message;
 					}
 				}
 
-				// Return true if reCAPTCHA verification succeeds
-				return true;
 			} else {
-				return new WP_Error(
-					'bb_recaptcha_verification_failed',
-					__( "<strong>ERROR</strong>: Could not verify the reCAPTCHA response.", 'buddyboss' )
-				);
+				$error_message = __( 'Could not get a response from the reCAPTCHA server.', 'buddyboss' );
+
+				$retval['error']['bb_recaptcha_empty_response'] = $error_message;
 			}
 		}
+	}
+
+	if ( ! empty( $retval['error'] ) ) {
+		return new WP_Error(
+			key( $retval['error'] ),
+			apply_filters( 'bb_recaptcha_validation_message', current( $retval['error'] ) )
+		);
 	}
 
 	return true;

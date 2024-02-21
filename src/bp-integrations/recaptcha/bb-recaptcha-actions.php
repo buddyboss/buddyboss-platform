@@ -53,7 +53,7 @@ function bb_recaptcha_verification_admin_settings() {
 					<p>' . __( 'reCAPTCHA verification failed, please try again', 'buddyboss' ) . '</p>';
 		} else {
 			$response = bb_get_google_recaptcha_api_response( $secret_key, $captcha_response );
-			if ( $response ) {
+			if ( $response && ! empty( $response['success'] ) ) {
 				$connection_status = 'connected';
 				$data              = '<img src="' . bb_recaptcha_integration_url( 'assets/images/success.png' ) . '" alt=""/>
 					<p>' . __( 'reCAPTCHA verification was successful', 'buddyboss' ) . '</p>';
@@ -118,7 +118,14 @@ function bb_recaptcha_lost_password() {
  *                  by using invalid credentials.
  */
 function bb_recaptcha_validate_lost_password( $errors ) {
-	if ( ! bb_recaptcha_is_enabled( 'bb_lost_password' ) ) {
+	$verified = bb_recaptcha_connection_status();
+
+	// If connection not verified and not enable for lost password then allow to reset password.
+	if (
+		empty( $verified ) ||
+		'connected' !== $verified ||
+		! bb_recaptcha_is_enabled( 'bb_lost_password' )
+	) {
 		return $errors;
 	}
 
@@ -150,8 +157,15 @@ function bb_recaptcha_registration() {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_recaptcha_validate_registration() {
-	if ( bb_recaptcha_is_enabled( 'bb_lost_password' ) ) {
-		$captcha = bb_recaptcha_verification_front( 'bb_lost_password' );
+	$verified = bb_recaptcha_connection_status();
+
+	// If connection verified and enable for register then allow to do register.
+	if (
+		! empty( $verified ) &&
+		'connected' === $verified &&
+		bb_recaptcha_is_enabled( 'bb_register' )
+	) {
+		$captcha = bb_recaptcha_verification_front( 'bb_register' );
 		if ( is_wp_error( $captcha ) ) {
 			wp_die(
 				$captcha->get_error_message(),

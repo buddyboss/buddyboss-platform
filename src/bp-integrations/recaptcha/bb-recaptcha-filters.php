@@ -45,7 +45,14 @@ function bb_admin_recaptcha_class( $classes ) {
  *                               authenticated.
  */
 function bb_recaptcha_validate_login( $user ) {
-	if ( ! bb_recaptcha_is_enabled( 'bb_login' ) ) {
+	$verified = bb_recaptcha_connection_status();
+
+	// If connection not verified and not enable for login then allow to login.
+	if (
+		empty( $verified ) ||
+		'connected' !== $verified ||
+		! bb_recaptcha_is_enabled( 'bb_login' )
+	) {
 		return $user;
 	}
 
@@ -77,7 +84,14 @@ function bb_recaptcha_validate_login( $user ) {
  *                       if reCAPTCHA verification fails.
  */
 function bb_recaptcha_validate_activate( $retval ) {
-	if ( ! bb_recaptcha_is_enabled( 'bb_activate' ) ) {
+	$verified = bb_recaptcha_connection_status();
+
+	// If connection not verified and not enable for activate then allow to activate.
+	if (
+		empty( $verified ) ||
+		'connected' !== $verified ||
+		! bb_recaptcha_is_enabled( 'bb_activate' )
+	) {
 		return $retval;
 	}
 
