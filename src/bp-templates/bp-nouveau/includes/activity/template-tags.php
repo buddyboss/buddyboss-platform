@@ -1872,6 +1872,76 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		);
 	}
 
+	// Close comments.
+	if ( bb_is_close_activity_comments_enabled() ) {
+
+		$closed_action_label     = esc_html__( 'Turn off commenting', 'buddyboss' );
+		$closed_action_class     = 'close-activity-comment';
+		$is_closed_comments      = (bool) bp_activity_get_meta( $activity_id, 'bb_is_closed_comments' );
+		$activity_item_id        = bp_get_activity_item_id();
+		$activity_object_name    = bp_get_activity_object_name();
+		$closed_action_permitted = false;
+		if ( bp_current_user_can( 'administrator' ) ) {
+			$closed_action_permitted = true;
+		} elseif ( 'groups' === $activity_object_name ) {
+			// Check the user is moderator or organizer of the group or admin.
+			if (
+				bp_is_active( 'groups' ) &&
+				groups_is_user_admin( bp_loggedin_user_id(), $activity_item_id ) ||
+				groups_is_user_mod( bp_loggedin_user_id(), $activity_item_id )
+			) {
+				$closed_action_permitted = true;
+			}
+		} elseif ( bp_get_activity_user_id() === bp_loggedin_user_id() ) {
+			$closed_action_permitted = true;
+
+			// Check if already closed by admins then not permitted.
+			$comments_closer_id = bb_get_activity_comments_closer_id( $activity_id );
+			if ( $is_closed_comments && ! empty( $comments_closer_id ) ) {
+				if (
+					(
+						bp_is_active( 'groups' ) &&
+						groups_is_user_admin( $comments_closer_id, $activity_item_id ) ||
+						groups_is_user_mod( $comments_closer_id, $activity_item_id ) ||
+						bp_user_can( $comments_closer_id, 'administrator' )
+					)
+				) {
+					$closed_action_permitted = false;
+				}
+			}
+		}
+
+		if ( $is_closed_comments ) {
+			// Unable to edit closed comments activity.
+			unset( $buttons['activity_edit'] );
+
+			$closed_action_label = esc_html__( 'Turn on commenting', 'buddyboss' );
+			$closed_action_class = 'unclose-activity-comment';
+		}
+
+		if ( $closed_action_permitted ) {
+			$buttons['close_comments'] = array(
+				'id'                => 'close_comments',
+				'component'         => 'activity',
+				'parent_element'    => $parent_element,
+				'parent_attr'       => $parent_attr,
+				'must_be_logged_in' => true,
+				'button_element'    => $button_element,
+				'button_attr'       => array(
+					'id'            => '',
+					'href'          => '',
+					'class'         => 'button item-button bp-secondary-action ' . $closed_action_class,
+					'data-bp-nonce' => '',
+				),
+				'link_text'         => sprintf(
+					'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
+					$closed_action_label,
+					$closed_action_label
+				),
+			);
+		}
+	}
+
 	// Pin post action only for allowed posts based on user role.
 	if (
 		(

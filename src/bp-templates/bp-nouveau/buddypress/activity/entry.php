@@ -77,14 +77,41 @@ if ( ! empty( $link_embed ) ) {
 	</div>
 
 	<?php bp_nouveau_activity_hook( 'before', 'entry_comments' ); ?>
-
+	<?php
+		$activity_id             = bp_get_activity_id();
+		$close_activity_comments = false;
+		if ( bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( $activity_id ) ) {
+			$close_activity_comments = true;
+			$closer_id = bb_get_activity_comments_closer_id( $activity_id );
+			if ( $closer_id === bp_loggedin_user_id() ) {
+				$closed_notice = esc_html__( 'You turned off commenting for this post', 'buddyboss' );
+			} elseif ( bp_user_can( $closer_id, 'administrator' ) ) {
+				$closed_notice = esc_html__( 'An admin turned off commenting for this post', 'buddyboss' );
+			} elseif ( bp_is_active( 'groups' ) && 'groups' === bp_get_activity_object_name() ) {
+				if ( groups_is_user_admin( $closer_id, bp_get_activity_item_id() ) ) {
+					$closed_notice = esc_html__( 'An organizer turned off commenting for this post', 'buddyboss' );
+				} elseif ( groups_is_user_mod( $closer_id, bp_get_activity_item_id() ) ) {
+					$closed_notice = esc_html__( 'A moderator turned off commenting for this post', 'buddyboss' );
+				}
+			} else {
+				$closed_notice = sprintf( esc_html__( '%s turned off commenting for this post', 'buddyboss' ), bp_core_get_user_displayname( $closer_id ) );
+			}
+		?>
+			<div class='bb-activity-closed-comments-notice'><?php echo $closed_notice; ?></div>
+		<?php
+		}
+	?>
 	<?php if ( bp_activity_get_comment_count() || ( is_user_logged_in() && ( bp_activity_can_comment() || bp_is_single_activity() ) ) ) : ?>
 
 		<div class="activity-comments">
 
 			<?php bp_activity_comments(); ?>
 
-			<?php bp_nouveau_activity_comment_form(); ?>
+			<?php
+				if ( ! $close_activity_comments ) {
+					bp_nouveau_activity_comment_form();
+				}
+			?>
 
 		</div>
 
