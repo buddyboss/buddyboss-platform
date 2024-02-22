@@ -376,21 +376,23 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				if ( 'connected' === $verified ) {
 					?>
 					<div class="bb-recaptcha-success show-full-width bb-success-section">
-						<?php echo esc_html__( 'reCAPTCHA connected successfully.', 'buddyboss' ); ?>
+						<span><?php echo esc_html__( 'reCAPTCHA connected successfully.', 'buddyboss' ); ?></span>
 					</div>
 					<?php
 				} else {
 					?>
 					<div class="bb-recaptcha-errors show-full-width bb-error-section">
-						<?php echo esc_html__( 'Error verifying reCAPTCHA, Please try again.', 'buddyboss' ); ?>
+						<span><?php echo esc_html__( 'Error verifying reCAPTCHA, Please try again.', 'buddyboss' ); ?></span>
 					</div>
 					<?php
 				}
 			}
 			printf(
 			/* translators: recaptcha link */
-				esc_html__( 'Enter your %s to integrate fraud, spam, and abuse protection into your website.', 'buddyboss' ),
-				'<a href="https://www.google.com/recaptcha/admin#list" target="_blank">' . esc_html__( 'Google reCAPTCHA API keys', 'buddyboss' ) . '</a>'
+				esc_html__( '%s Enter your %s to integrate fraud, spam, and abuse protection into your website. %s', 'buddyboss' ),
+				'<span class="bb-recaptcha-prompt">',
+				'<a href="https://www.google.com/recaptcha/admin#list" target="_blank">' . esc_html__( 'Google reCAPTCHA API keys', 'buddyboss' ) . '</a>',
+				'</span>',
 			)
 		?>
 		</div>

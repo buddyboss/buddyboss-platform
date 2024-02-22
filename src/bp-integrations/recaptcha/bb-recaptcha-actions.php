@@ -49,16 +49,16 @@ function bb_recaptcha_verification_admin_settings() {
 	$data              = '';
 	if ( ! empty( $selected_version ) ) {
 		if ( empty( $captcha_response ) ) {
-			$data = '<img src="' . bb_recaptcha_integration_url( 'assets/images/error.png' ) . '" alt=""/>
+			$data = '<img src="' . bb_recaptcha_integration_url( 'assets/images/error.png' ) . '" alt="" class="recaptcha-status-icon" />
 					<p>' . __( 'reCAPTCHA verification failed, please try again', 'buddyboss' ) . '</p>';
 		} else {
 			$response = bb_get_google_recaptcha_api_response( $secret_key, $captcha_response );
 			if ( $response && ! empty( $response['success'] ) ) {
 				$connection_status = 'connected';
-				$data              = '<img src="' . bb_recaptcha_integration_url( 'assets/images/success.png' ) . '" alt=""/>
+				$data              = '<img src="' . bb_recaptcha_integration_url( 'assets/images/success.png' ) . '" alt="" class="recaptcha-status-icon" />
 					<p>' . __( 'reCAPTCHA verification was successful', 'buddyboss' ) . '</p>';
 			} else {
-				$data = '<img src="' . bb_recaptcha_integration_url( 'assets/images/error.png' ) . '" alt=""/>
+				$data = '<img src="' . bb_recaptcha_integration_url( 'assets/images/error.png' ) . '" alt="" class="recaptcha-status-icon" />
 					<p>' . __( 'reCAPTCHA verification failed, please try again', 'buddyboss' ) . '</p>';
 			}
 		}
