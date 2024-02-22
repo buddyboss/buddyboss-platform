@@ -138,6 +138,15 @@ add_filter( 'bp_before_has_profile_parse_args', 'bb_xprofile_set_social_network_
 // When email changed then check profile completion for gravatar.
 add_action( 'profile_update', 'bb_profile_update_completion_user_progress', 10, 2 );
 
+// When first and last changed, then delete the user default PNG avatar.
+add_action( 'xprofile_data_before_save', 'bb_xprofile_remove_default_png_avatar_on_update_user_details', 999, 1 );
+
+// When visibility settings changed, then delete the user default PNG avatar.
+add_action( 'update_xprofile_field_metadata', 'bb_xprofile_remove_default_png_avatar_on_update_visibility', 10, 5 );
+
+// When visibility settings changed by the user, then delete the user default PNG avatar.
+add_filter( 'update_user_metadata', 'bb_xprofile_remove_default_png_avatar_on_user_update_visibility', 10, 5 );
+
 /**
  * Sanitize each field option name for saving to the database.
  *
@@ -795,8 +804,11 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
 	if ( empty( $user_id ) ) {
 		return $full_name;
 	}
+
+	global $bb_default_display_avatar;
+
 	$cache_key = 'bb_xprofile_filter_get_user_display_name_' . trim( $user_id );
-	if ( isset( $cache[ $cache_key ] ) ) {
+	if ( isset( $cache[ $cache_key ] ) && ! $bb_default_display_avatar ) {
 		return $cache[ $cache_key ];
 	}
 
@@ -818,6 +830,7 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
 				$full_name = str_replace( ' ' . $last_name, '', $full_name );
 			}
 		}
+		$bb_default_display_avatar = false;
 		$cache[ $cache_key ] = $full_name;
 	}
 
@@ -1480,4 +1493,168 @@ function bb_xprofile_set_social_network_param( $args = array() ) {
  */
 function bb_core_xprofile_clear_group_cache() {
 	BP_XProfile_Group::$bp_xprofile_group_ids = array();
+}
+
+/**
+ * Delete the user default PNG avatar when update the first and last name.
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @param BP_XProfile_ProfileData $field Instance of the profile data being saved.
+ */
+function bb_xprofile_remove_default_png_avatar_on_update_user_details( $field ) {
+	if (
+		empty( $field->field_id ) ||
+		empty( $field->user_id )
+	) {
+		return;
+	}
+
+	global $bb_default_display_avatar;
+
+	$current_value = get_option( 'bp-display-name-format' );
+	$field_ids     = array();
+	if (
+		'first_name' === $current_value ||
+		'first_last_name' === $current_value
+	) {
+		$field_ids[] = bp_xprofile_firstname_field_id();
+		if ( 'first_last_name' === $current_value ) {
+			$field_ids[] = bp_xprofile_lastname_field_id();
+		}
+	} elseif ( 'nickname' === $current_value ) {
+		$field_ids[] = bp_xprofile_nickname_field_id();
+	}
+
+	$field_ids = wp_parse_id_list( $field_ids );
+	if ( ! in_array( (int) $field->field_id, $field_ids, true ) ) {
+		return;
+	}
+
+	$new_value = ( ! empty( $field->value ) ? bb_core_get_first_character( $field->value ) : '' );
+	$old_value = xprofile_get_field_data( $field->field_id, $field->user_id );
+	$old_value = ( ! empty( $old_value ) ? bb_core_get_first_character( $old_value ) : '' );
+
+	$bb_default_display_avatar = false;
+	if ( $new_value !== $old_value ) {
+		$bb_default_display_avatar = true;
+		bb_delete_default_user_png_avatar( array( $field->user_id ) );
+	}
+}
+
+/**
+ * Delete user meta for default PNG when update visibility related settings from backend.
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @param null|bool $retval       Whether to allow updating metadata for the given type.
+ * @param int       $object_id    ID of the object metadata is for.
+ * @param string    $meta_key     Metadata key.
+ * @param mixed     $meta_value   Metadata value. Must be serializable if non-scalar.
+ * @param mixed     $prev_value   Optional. Previous value to check before updating.
+ *                                If specified, only update existing metadata entries with
+ *                                this value. Otherwise, update all entries.
+ *
+ * @return bool
+ */
+function bb_xprofile_remove_default_png_avatar_on_update_visibility( $retval, $object_id, $meta_key, $meta_value, $prev_value ) {
+
+	$last_filed_id = bp_xprofile_lastname_field_id();
+	if (
+		$last_filed_id !== $object_id ||
+		! in_array( $meta_key, array( 'allow_custom_visibility', 'default_visibility' ), true )
+	) {
+		return $retval;
+	}
+
+	// Compare existing value to new value if no prev value given and the key exists only once.
+	if ( empty( $prev_value ) ) {
+		$old_value = get_metadata_raw( 'xprofile_field', $object_id, $meta_key );
+		if ( is_countable( $old_value ) && count( $old_value ) === 1 ) {
+			$prev_value = $old_value[0];
+		}
+	}
+
+	if ( $prev_value === $meta_value ) {
+		return $retval;
+	}
+
+	if ( 'default_visibility' === $meta_key ) {
+
+		// Get allowed visibility levels.
+		$allowed_values = bp_xprofile_get_visibility_levels();
+		if ( ! empty( $allowed_values['public'] ) ) {
+			unset( $allowed_values['public'] );
+		}
+
+		if (
+			array_key_exists( $meta_value, $allowed_values ) &&
+			array_key_exists( $prev_value, $allowed_values )
+		) {
+			return $retval;
+		}
+
+	}
+
+	bb_delete_default_user_png_avatar( array(), false );
+
+	return $retval;
+}
+
+/**
+ * Delete user meta for default PNG when update own visibility related settings.
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @param null|bool $retval      Whether to allow updating metadata for the given type.
+ * @param int       $object_id   ID of the object metadata is for.
+ * @param string    $meta_key    Metadata key.
+ * @param mixed     $meta_value  Metadata value. Must be serializable if non-scalar.
+ * @param mixed     $prev_value  Optional. Previous value to check before updating.
+ *                               If specified, only update existing metadata entries with
+ *                               this value. Otherwise, update all entries.
+ *
+ * @return bool
+ */
+function bb_xprofile_remove_default_png_avatar_on_user_update_visibility( $retval, $object_id, $meta_key, $meta_value, $prev_value ) {
+
+	if (
+		'bp_xprofile_visibility_levels' === $meta_key &&
+		! empty( $meta_value ) &&
+		function_exists( 'bb_delete_default_user_png_avatar' )
+	) {
+		$last_filed_id            = bp_xprofile_lastname_field_id();
+		$new_last_name_visibility = $meta_value[ $last_filed_id ] ?? '';
+
+		// Compare existing value to new value if no prev value given and the key exists only once.
+		if ( empty( $prev_value ) ) {
+			$old_value = get_metadata_raw( 'user', $object_id, $meta_key );
+			if ( is_countable( $old_value ) && count( $old_value ) === 1 ) {
+
+				// Get old last name visibility.
+				$old_last_name_visibility = $old_value[0][ $last_filed_id ] ?? '';
+
+				if ( $new_last_name_visibility === $old_last_name_visibility ) {
+					return $retval;
+				}
+
+				// Get allowed visibility levels.
+				$allowed_values = bp_xprofile_get_visibility_levels();
+				if ( ! empty( $allowed_values['public'] ) ) {
+					unset( $allowed_values['public'] );
+				}
+
+				if (
+					array_key_exists( $new_last_name_visibility, $allowed_values ) &&
+					array_key_exists( $old_last_name_visibility, $allowed_values )
+				) {
+					return $retval;
+				}
+			}
+		}
+
+		bb_delete_default_user_png_avatar( array( $object_id ) );
+	}
+
+	return $retval;
 }

@@ -2119,7 +2119,13 @@ function bp_document_user_document_folder_tree_view_li_html( $user_id = 0, $grou
 		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );
 	}
 
-	$data = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
+	$cached = bp_core_get_incremented_cache( $documents_folder_query, 'bp_document_folder' );
+	if ( false === $cached ) {
+		$data = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
+		bp_core_set_incremented_cache( $documents_folder_query, 'bp_document_folder', $data );
+	} else {
+		$data = $cached;
+	}
 
 	// Build array of item references:
 	foreach ( $data as $key => &$item ) {
@@ -4579,10 +4585,12 @@ function bp_document_load_gopp_image_editor_gs() {
 /**
  * Create symlink for a document video.
  *
- * @param object $document BP_Document Object.
- * @param bool   $generate Generate Symlink or not.
- *
  * @since BuddyBoss 1.7.0
+ *
+ * @param bool       $generate Generate Symlink or not.
+ * @param object|int $document BP_Document Object.
+ *
+ * @return string|void
  */
 function bb_document_video_get_symlink( $document, $generate = true ) {
 
@@ -5079,4 +5087,97 @@ function bb_document_migration() {
 	 * @since BuddyBoss 2.4.50
 	 */
 	$wpdb->query( "UPDATE {$bp->document->table_name} AS d JOIN {$wpdb->posts} AS p ON p.ID = d.attachment_id SET d.description = p.post_content" ); // phpcs:ignore
+}
+
+/**
+ * Get activity document.
+ *
+ * @BuddyBoss 2.5.50
+ *
+ * @param object|null $activity Activity object.
+ *
+ * @return string|bool
+ */
+function bb_document_get_activity_document( $activity = '', $args = array() ) {
+	if ( empty( $activity ) ) {
+		global $activities_template;
+		$activity = $activities_template->activity ?? '';
+	}
+
+	if ( empty( $activity ) ) {
+		return false;
+	}
+
+	// Get activity metas.
+	$activity_metas = bb_activity_get_metadata( $activity->id );
+	$document_ids   = ! empty( $activity_metas['bp_document_ids'][0] ) ? $activity_metas['bp_document_ids'][0] : '';
+
+	if ( empty( $document_ids ) ) {
+		return false;
+	}
+
+	// Documents based on group setting for forum.
+	if (
+		(
+			buddypress()->activity->id === $activity->component &&
+			! bp_is_profile_document_support_enabled()
+		) ||
+		(
+			bp_is_active( 'groups' ) &&
+			buddypress()->groups->id === $activity->component && ! bp_is_group_document_support_enabled()
+		)
+	) {
+		return false;
+	}
+
+	/**
+	 * If the content has been changed by these filters bb_moderation_has_blocked_message,
+	 * bb_moderation_is_blocked_message, bb_moderation_is_suspended_message then
+	 * it will hide document content which is created by blocked/blocked/suspended member.
+	 */
+	$hide_forum_activity = function_exists( 'bb_moderation_to_hide_forum_activity' ) && bb_moderation_to_hide_forum_activity( $activity->id );
+
+	if ( true === $hide_forum_activity ) {
+		return false;
+	}
+
+	$document_args = array(
+		'include'  => $document_ids,
+		'order_by' => 'menu_order',
+		'sort'     => 'ASC',
+		'per_page' => 0,
+	);
+
+	// Update privacy for the group and comments.
+	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_document_support_enabled() ) {
+		$document_args['privacy'] = array( 'grouponly' );
+		if ( 'activity_comment' === $activity->type ) {
+			$document_args['privacy'][] = 'comment';
+		}
+	}
+
+	$document_args = bp_parse_args(
+		$args,
+		$document_args,
+		'activity_document'
+	);
+
+	$content = '';
+	if ( bp_has_document( $document_args ) ) {
+		ob_start();
+		?>
+		<div class="bb-activity-media-wrap bb-media-length-1 ">
+			<?php
+			bp_get_template_part( 'document/activity-document-move' );
+			while ( bp_document() ) {
+				bp_the_document();
+				bp_get_template_part( 'document/activity-entry' );
+			}
+			?>
+		</div>
+		<?php
+		$content = ob_get_clean();
+	}
+
+	return $content;
 }

@@ -101,6 +101,9 @@ class BB_Members extends Integration_Abstract {
 			'update_option_bp-disable-cover-image-uploads'   => 3,
 			'update_option_bp-default-profile-cover-type'    => 3,
 			'update_option_bp-default-custom-profile-cover'  => 3,
+
+			// When change the member display name.
+			'update_option_bp-display-name-format'           => 3,
 		);
 
 		$this->purge_single_events( $purge_single_events );
@@ -191,22 +194,25 @@ class BB_Members extends Integration_Abstract {
 	 * @param array $signup_ids Signup IDs.
 	 */
 	public function event_bp_core_signup_after_delete( $signup_ids ) {
-
 		if ( ! empty( $signup_ids ) && is_array( $signup_ids ) ) {
 			$to_delete = \BP_Signup::get(
 				array(
 					'include' => $signup_ids,
 				)
 			);
-			$signups   = ! empty( $to_delete['signups'] ) ? $to_delete['signups'] : '';
+
+			$signups = ! empty( $to_delete['signups'] ) ? $to_delete['signups'] : '';
+
 			if ( ! empty( $signups ) ) {
+				$user_ids = array();
+
 				foreach ( $signups as $signup ) {
-					$user_id = username_exists( $signup->user_login );
-					$this->purge_item_cache_by_item_id( $user_id );
+					$user_ids[] = username_exists( $signup->user_login );
 				}
+
+				$this->purge_item_cache_by_item_ids( $user_ids );
 			}
 		}
-
 	}
 
 	/**
@@ -431,6 +437,32 @@ class BB_Members extends Integration_Abstract {
 	}
 
 	/**
+	 * Purge item cache by item ids.
+	 *
+	 * @param array $ids Array of ids.
+	 *
+	 * @return void
+	 */
+	private function purge_item_cache_by_item_ids( $ids ) {
+		if ( empty( $ids ) ) {
+			return;
+		}
+
+		Cache::instance()->purge_by_group_names( $ids, array( 'bp-members_' ), array( $this, 'prepare_user_deeplink' ) );
+	}
+
+	/**
+	 * Prepare activity deeplink.
+	 *
+	 * @param int $user_id User ID.
+	 *
+	 * @return string
+	 */
+	public function prepare_user_deeplink( $user_id ) {
+		return 'bbapp-deeplinking_' . untrailingslashit( bp_core_get_user_domain( $user_id ) );
+	}
+
+	/**
 	 * When Avatar Display option changed.
 	 *
 	 * @param string $option    Name of the updated option.
@@ -585,11 +617,34 @@ class BB_Members extends Integration_Abstract {
 		);
 
 		if ( ! empty( $all_subscription['subscriptions'] ) ) {
-			foreach ( $all_subscription['subscriptions'] as $subscription_id ) {
-				Cache::instance()->purge_by_group( 'bb-subscriptions_' . $subscription_id );
-			}
-
+			$this->purge_item_cache_by_subscription_ids( $all_subscription['subscriptions'] );
 			Cache::instance()->purge_by_group( 'bb-subscriptions' );
 		}
+	}
+
+	/**
+	 * When changed display name format settings from the Settings -> Profile.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_display_name_format( $old_value, $value, $option ) {
+		$this->purge_cache_on_change_default_profile_images_settings();
+	}
+
+	/**
+	 * Purge item cache by ids.
+	 *
+	 * @param array $ids Array of ids.
+	 *
+	 * @return void
+	 */
+	private function purge_item_cache_by_subscription_ids( $ids ) {
+		if ( empty( $ids ) ) {
+			return;
+		}
+
+		Cache::instance()->purge_by_group_names( $ids, array( 'bb-subscriptions_' ) );
 	}
 }

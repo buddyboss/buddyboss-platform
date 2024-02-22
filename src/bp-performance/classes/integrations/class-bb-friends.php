@@ -103,10 +103,9 @@ class BB_Friends extends Integration_Abstract {
 	 */
 	public function event_deleted_user( $user_id ) {
 		$friendship_ids = $this->get_friendship_ids_by_userid( $user_id );
+
 		if ( ! empty( $friendship_ids ) ) {
-			foreach ( $friendship_ids as $friendship_id ) {
-				Cache::instance()->purge_by_group( 'bp-friends_' . $friendship_id );
-			}
+			$this->purge_item_cache_by_item_ids( $friendship_ids );
 		}
 	}
 
@@ -117,10 +116,9 @@ class BB_Friends extends Integration_Abstract {
 	 */
 	public function event_make_spam_user( $user_id ) {
 		$friendship_ids = $this->get_friendship_ids_by_userid( $user_id );
+
 		if ( ! empty( $friendship_ids ) ) {
-			foreach ( $friendship_ids as $friendship_id ) {
-				Cache::instance()->purge_by_group( 'bp-friends_' . $friendship_id );
-			}
+			$this->purge_item_cache_by_item_ids( $friendship_ids );
 		}
 	}
 
@@ -131,10 +129,9 @@ class BB_Friends extends Integration_Abstract {
 	 */
 	public function event_make_ham_user( $user_id ) {
 		$friendship_ids = $this->get_friendship_ids_by_userid( $user_id );
+
 		if ( ! empty( $friendship_ids ) ) {
-			foreach ( $friendship_ids as $friendship_id ) {
-				Cache::instance()->purge_by_group( 'bp-friends_' . $friendship_id );
-			}
+			$this->purge_item_cache_by_item_ids( $friendship_ids );
 		}
 	}
 
@@ -145,10 +142,9 @@ class BB_Friends extends Integration_Abstract {
 	 */
 	public function event_add_user_to_blog( $user_id ) {
 		$friendship_ids = $this->get_friendship_ids_by_userid( $user_id );
+
 		if ( ! empty( $friendship_ids ) ) {
-			foreach ( $friendship_ids as $friendship_id ) {
-				Cache::instance()->purge_by_group( 'bp-friends_' . $friendship_id );
-			}
+			$this->purge_item_cache_by_item_ids( $friendship_ids );
 		}
 	}
 
@@ -159,10 +155,9 @@ class BB_Friends extends Integration_Abstract {
 	 */
 	public function event_remove_user_from_blog( $user_id ) {
 		$friendship_ids = $this->get_friendship_ids_by_userid( $user_id );
+
 		if ( ! empty( $friendship_ids ) ) {
-			foreach ( $friendship_ids as $friendship_id ) {
-				Cache::instance()->purge_by_group( 'bp-friends_' . $friendship_id );
-			}
+			$this->purge_item_cache_by_item_ids( $friendship_ids );
 		}
 	}
 
@@ -240,10 +235,9 @@ class BB_Friends extends Integration_Abstract {
 	 */
 	public function event_bp_suspend_user_suspended( $user_id ) {
 		$friendship_ids = $this->get_friendship_ids_by_userid( $user_id );
+
 		if ( ! empty( $friendship_ids ) ) {
-			foreach ( $friendship_ids as $friendship_id ) {
-				Cache::instance()->purge_by_group( 'bp-friends_' . $friendship_id );
-			}
+			$this->purge_item_cache_by_item_ids( $friendship_ids );
 		}
 	}
 
@@ -254,10 +248,9 @@ class BB_Friends extends Integration_Abstract {
 	 */
 	public function event_bp_suspend_user_unsuspended( $user_id ) {
 		$friendship_ids = $this->get_friendship_ids_by_userid( $user_id );
+
 		if ( ! empty( $friendship_ids ) ) {
-			foreach ( $friendship_ids as $friendship_id ) {
-				Cache::instance()->purge_by_group( 'bp-friends_' . $friendship_id );
-			}
+			$this->purge_item_cache_by_item_ids( $friendship_ids );
 		}
 	}
 
@@ -278,5 +271,20 @@ class BB_Friends extends Integration_Abstract {
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_col( $sql );
+	}
+
+	/**
+	 * Purge item cache by ids.
+	 *
+	 * @param array $ids Array of ids.
+	 *
+	 * @return void
+	 */
+	private function purge_item_cache_by_item_ids( $ids ) {
+		if ( empty( $ids ) ) {
+			return;
+		}
+
+		Cache::instance()->purge_by_group_names( $ids, array( 'bp-friends_' ) );
 	}
 }

@@ -6661,6 +6661,11 @@ function bp_get_group_has_avatar( $group_id = false ) {
 		)
 	);
 
+	// Check that the avatar has '/default/GROUP_ID/' path.
+	if ( false !== strpos( $group_avatar, '/default/' . $group_id . '/' ) ) {
+		return false;
+	}
+
 	if ( false !== strpos( $group_avatar, '/' . $group_id . '/' ) ) {
 		return true;
 	}
