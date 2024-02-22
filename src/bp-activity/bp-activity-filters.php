@@ -150,6 +150,8 @@ add_filter( 'bp_document_add_handler', 'bp_activity_edit_update_document', 10 );
 // Temporary filter to remove edit button on popup until we fully make compatible on edit everywhere in popup/reply/comment.
 add_filter( 'bb_nouveau_get_activity_entry_bubble_buttons', 'bp_nouveau_remove_edit_activity_entry_buttons', 999, 2 );
 
+// add_filter( 'bp_activity_can_comment', 'bb_activity_filter_closed_comments' );
+
 // Obey BuddyBoss commenting rules.
 add_filter( 'bp_activity_can_comment', 'bb_activity_has_comment_access' );
 
@@ -3665,4 +3667,25 @@ function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
 	}
 
 	return $activity_comment_data;
+}
+
+/**
+ * Filter to handle closed activity comments.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param boolean $retval True if activity can be commented.
+ *
+ * @return boolean
+ */
+function bb_activity_filter_closed_comments( $retval ) {
+
+	global $activities_template;
+
+	// Check if commenting closed.
+	if ( bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( $activities_template->activity->id )	) {
+		$retval = false;
+	}
+
+	return $retval;
 }

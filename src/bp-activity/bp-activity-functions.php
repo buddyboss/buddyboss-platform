@@ -2924,6 +2924,20 @@ function bp_activity_new_comment( $args = '' ) {
 	// Default error message.
 	$feedback = __( 'There was an error posting your reply. Please try again.', 'buddyboss' );
 
+	// Bail if the activity comments closed.
+	if ( bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( $r['activity_id'] ) ) {
+		$error = new WP_Error( 'closed_activity_comments', __( 'The comments are closed for the activity.', 'buddyboss' ) );
+
+		if ( 'wp_error' === $r['error_type'] ) {
+			return $error;
+
+			// Backpat.
+		} else {
+			$bp->activity->errors['new_comment'] = $error;
+			return false;
+		}
+	}
+
 	// Filter to skip comment content check for comment notification.
 	$check_empty_content = apply_filters( 'bp_has_activity_comment_content', true );
 
@@ -6552,36 +6566,43 @@ function bb_activity_close_unclose_comments( $args = array() ) {
 		)
 	);
 
-	$retval   = '';
+	$retval                 = '';
+	$close_comments_updated = false;
 	$activity = new BP_Activity_Activity( (int) $r['activity_id'] );
 
 	if ( ! empty( $activity->id ) ) {
 
 		if ( 'unclose_comments' === $r['action'] ) {
 			$updated_value = false;
-			$retval        = 'unclosed_comments';
 		} else {
 			$updated_value = true;
-			$retval        = 'closed_comments';
 		}
 
 		$oldvalue_user_id = 0;
-		$oldvalue         = (bool) bp_activity_get_meta( $activity->id, 'bb_is_closed_comments' );
+		$oldvalue         = bb_is_activity_comments_closed( $activity->id );
 		if ( $oldvalue ) {
-			$oldvalue_user_id = (int) bp_activity_get_meta( $activity->id, 'bb_is_closed_comments' );
+			$oldvalue_user_id = bb_get_activity_comments_closer_id( $activity->id );
 		}
 
 		// Check if group activity or normal activity.
-		if ( 'groups' === $activity->component && ! empty( $activity->item_id ) ) {
+		if ( 'groups' === $activity->component && ! empty( $activity->item_id ) && bp_is_active( 'groups' ) ) {
 
-			// Check the user is moderator or organizer and part of the group.
+			// Check the user is moderator or organizer or admin and also part of the group.
 			if ( ! groups_is_user_member( $r['user_id'], $activity->item_id ) ) {
 				$retval = 'not_member';
 			} else {
 				$is_admin = groups_is_user_admin( $r['user_id'], $activity->item_id );
 				$is_mod   = groups_is_user_mod( $r['user_id'], $activity->item_id );
+				$group    = groups_get_group( $activity->item_id );
 
-				if ( $is_admin || $is_mod || bp_current_user_can( 'administrator' ) ) {
+				if (
+					$is_admin ||
+					$is_mod ||
+					(
+						bp_current_user_can( 'administrator' ) &&
+						in_array( $group->status, array( 'hidden', 'private' ) )
+					) 
+				) {
 					$retval = 'allowed';
 				} elseif ( $activity->user_id === $r['user_id'] ) {
 					$retval = 'allowed';
@@ -6603,27 +6624,25 @@ function bb_activity_close_unclose_comments( $args = array() ) {
 					$retval = 'not_allowed';
 				}
 			}
-		} else {
-			if ( bp_current_user_can( 'administrator' ) ) {
-				$retval = 'allowed';
-			} elseif ( $activity->user_id === $r['user_id'] ) {
-				$retval = 'allowed';
+		} elseif ( bp_current_user_can( 'administrator' ) ) {
+			$retval = 'allowed';
+		} elseif ( $activity->user_id === $r['user_id'] ) {
+			$retval = 'allowed';
 
-				// Already closed by admin.
-				if (
-					(
-						$oldvalue &&
-						! empty( $oldvalue_user_id )
-					) &&
-					$oldvalue_user_id !== $r['user_id'] &&
-					bp_user_can( $oldvalue_user_id, 'administrator' ) &&
-					! $updated_value
-				) {
-					$retval = 'not_allowed';
-				}
-			} else {
+			// Already closed by admin.
+			if (
+				(
+					$oldvalue &&
+					! empty( $oldvalue_user_id )
+				) &&
+				$oldvalue_user_id !== $r['user_id'] &&
+				bp_user_can( $oldvalue_user_id, 'administrator' ) &&
+				! $updated_value
+			) {
 				$retval = 'not_allowed';
 			}
+		} else {
+			$retval = 'not_allowed';
 		}
 
 		if ( 'allowed' === $retval ) {
@@ -6635,6 +6654,7 @@ function bb_activity_close_unclose_comments( $args = array() ) {
 			} else {
 				$retval = 'unclosed_comments';
 			}
+			$close_comments_updated = true;
 		}
 
 		/**
@@ -6649,7 +6669,7 @@ function bb_activity_close_unclose_comments( $args = array() ) {
 	}
 
 	if ( 'bool' === $r['retval'] ) {
-		if ( 'close_comments_updated' ===  $retval ) {
+		if ( $close_comments_updated ) {
 			$retval = true;
 		} else {
 			$retval = false;

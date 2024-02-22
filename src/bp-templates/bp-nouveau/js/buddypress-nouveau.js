@@ -688,6 +688,7 @@ window.bp = window.bp || {};
 						function () { // Waiting to load dummy image.
 							self.reportPopUp();
 							self.reportedPopup();
+							$( '.activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
 						},
 						1000
 					);

@@ -442,6 +442,8 @@ window.bp = window.bp || {};
 					}
 				);
 			}
+
+			$( '.activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
 		},
 
 		/**
@@ -1753,8 +1755,10 @@ window.bp = window.bp || {};
 									target.addClass( 'unclose-activity-comment' );
 									target.removeClass( 'close-activity-comment' );
 									target.find('span').html( BP_Nouveau.activity.strings.uncloseComments );
-									target.closest( '.activity-item' ).find( '.activity-comments' ).before( "<div class='bb-activity-closed-comments-notice'>" + response.data.feedback + "</div>" );
+									target.closest( 'li.activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
+									target.closest( '.activity-item' ).find( '.activity-comments' ).before( '<div class="bb-activity-closed-comments-notice">' + response.data.feedback + '</div>' );
 								} else if ( 'unclose_comments' === close_comments_action ) {
+									target.closest( 'li.activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).show();
 									target.closest( 'li.activity-item' ).removeClass( 'bb-closed-comments' );
 									target.addClass( 'close-activity-comment' );
 									target.removeClass( 'unclose-activity-comment' );
@@ -1767,7 +1771,7 @@ window.bp = window.bp || {};
 								[
 									'',
 									'<div>' + response.data.feedback + '</div>',
-									'success',
+									response.success ? 'success' : 'error',
 									null,
 									true
 								]

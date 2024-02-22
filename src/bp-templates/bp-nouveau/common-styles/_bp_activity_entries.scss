@@ -23,6 +23,24 @@
 			padding-bottom: $pad-med;
 		}
 
+		&.bb-closed-comments {
+
+			.acomment-reply,
+			.acomment-edit,
+			.edit-activity {
+				display: none !important;
+			}
+
+			.bb-activity-closed-comments-notice {
+				background: #e1e3e5;
+				position: relative;
+				left: -15px;
+				width: calc(100% + 30px);
+				text-align: center;
+				padding: 5px;
+				font-weight: 600;
+			}
+		}
 
 		div.item-avatar { // 'div' for weight
 			margin: 0 auto;

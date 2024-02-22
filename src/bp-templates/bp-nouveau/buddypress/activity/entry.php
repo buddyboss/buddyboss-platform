@@ -107,11 +107,7 @@ if ( ! empty( $link_embed ) ) {
 
 			<?php bp_activity_comments(); ?>
 
-			<?php
-				if ( ! $close_activity_comments ) {
-					bp_nouveau_activity_comment_form();
-				}
-			?>
+			<?php bp_nouveau_activity_comment_form(); ?>
 
 		</div>
 

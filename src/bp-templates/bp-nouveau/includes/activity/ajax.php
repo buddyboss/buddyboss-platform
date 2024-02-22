@@ -666,6 +666,13 @@ function bp_nouveau_ajax_post_update() {
 	$object      = '';
 	$is_private  = false;
 
+	// Check if the activity comments closed.
+	if ( ! empty( $activity_id ) ) {
+		if ( bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( $activity_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'The comments are closed for the activity. The activity cannot be edited.', 'buddyboss') ) );
+		}
+	}
+
 	// Try to get the item id from posted variables.
 	if ( ! empty( $_POST['item_id'] ) ) {
 		$item_id = (int) $_POST['item_id'];
