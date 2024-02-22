@@ -61,7 +61,7 @@ if ( $bp_is_my_profile ) {
 
 if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifications() && ! bp_is_user_profile_edit() && ! bp_is_user_change_avatar() && ! bp_is_user_change_cover_image() ) :
 
-	$bp_activity_do_mentions   = bp_activity_do_mentions();
+	$bp_activity_do_mentions   = function_exists( 'bp_activity_do_mentions' ) && bp_activity_do_mentions();
 	$bp_get_last_activity      = bp_get_last_activity();
 	$bb_get_member_joined_date = bb_get_member_joined_date();
 	$is_activity_enabled       = bp_is_active( 'activity' );
