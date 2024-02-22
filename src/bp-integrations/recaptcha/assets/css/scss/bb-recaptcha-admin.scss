@@ -220,6 +220,7 @@
 	}
 
 	.bp-hello-recaptcha {
+
 		.bp-hello-recaptcha-content-container {
 
 			.recaptcha-status-icon {
@@ -227,9 +228,9 @@
 				margin-bottom: 16px;
 			}
 
-			& > p {
+			> p {
 				font-weight: 600;
-				color: #50575E;
+				color: #50575e;
 				line-height: 1;
 			}
 
@@ -239,12 +240,13 @@
 
 				p {
 					margin-top: 0;
-					color: #50575E;
+					color: #50575e;
 					line-height: 1;
 				}
 			}
 
 			.verifying_token {
+
 				p {
 					display: flex;
 					align-items: center;
@@ -256,8 +258,8 @@
 						width: 20px;
 						height: 20px;
 						border-radius: 50%;
-						border: 2px solid #DCDCDE;
-						border-top-color: #787C82;
+						border: 2px solid #dcdcde;
+						border-top-color: #787c82;
 						font-size: 20px;
 						line-height: 1;
 						margin-left: 10px;
@@ -270,8 +272,10 @@
 		}
 
 		&#bp-hello-container {
+
 			.verified_token,
 			.verifying_token {
+
 				p {
 					font-size: 16px;
 				}
@@ -279,7 +283,7 @@
 
 			.bp-hello-recaptcha-content-container {
 
-				& > p {
+				> p {
 					font-size: 16px;
 				}
 			}
@@ -449,14 +453,16 @@
 
 .bb-success-section,
 .bb-error-section {
+
 	&.bb-recaptcha-errors,
 	&.bb-recaptcha-success {
+
 		span {
 			display: inline-flex;
 			align-items: center;
 
 			&::before {
-				font-family: "bb-icons";
+				font-family: bb-icons;
 				font-style: normal;
 				font-weight: 200;
 				speak: none;
@@ -477,13 +483,40 @@
 	}
 }
 
+#bp-hello-container {
+
+	&.bp-hello-recaptcha {
+
+		.bp-hello-header {
+			background-color: #f6f7f7;
+			border-color: #dcdcde;
+		}
+	}
+}
+
+.section-bb_recaptcha_versions {
+
+	.recaptcha-version-fields {
+
+		input[type="radio"] {
+			margin-left: 16px;
+
+			&:first-of-type {
+				margin-left: 0;
+			}
+		}
+	}
+}
+
 .bb-error-section {
+
 	&.bb-recaptcha-success {
-		background-color: #EDFAEF;
-		color: #008A20;
-		border-color: #68DE7C;
+		background-color: #edfaef;
+		color: #008a20;
+		border-color: #68de7c;
 
 		span {
+
 			&::before {
 				content: "\e876";
 			}
@@ -492,12 +525,14 @@
 }
 
 .bb-error-section {
+
 	&.bb-recaptcha-errors {
-		background-color: #FCF0F1;
-		color: #D63638;
-		border-color: #FFABAF;
+		background-color: #fcf0f1;
+		color: #d63638;
+		border-color: #ffabaf;
 
 		span {
+
 			&::before {
 				content: "\ee65";
 			}

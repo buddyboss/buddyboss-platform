@@ -203,7 +203,7 @@
 
 .bb-recaptcha-settings .bp-hello-recaptcha .bp-hello-recaptcha-content-container > p {
   font-weight: 600;
-  color: #50575E;
+  color: #50575e;
   line-height: 1;
 }
 
@@ -215,7 +215,7 @@
 .bb-recaptcha-settings .bp-hello-recaptcha .bp-hello-recaptcha-content-container .verified_token p,
 .bb-recaptcha-settings .bp-hello-recaptcha .bp-hello-recaptcha-content-container .verifying_token p {
   margin-top: 0;
-  color: #50575E;
+  color: #50575e;
   line-height: 1;
 }
 
@@ -231,8 +231,8 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  border: 2px solid #DCDCDE;
-  border-top-color: #787C82;
+  border: 2px solid #dcdcde;
+  border-top-color: #787c82;
   font-size: 20px;
   line-height: 1;
   margin-left: 10px;
@@ -416,7 +416,7 @@
 .bb-success-section.bb-recaptcha-errors span::before, .bb-success-section.bb-recaptcha-success span::before,
 .bb-error-section.bb-recaptcha-errors span::before,
 .bb-error-section.bb-recaptcha-success span::before {
-  font-family: "bb-icons";
+  font-family: bb-icons;
   font-style: normal;
   font-weight: 200;
   speak: none;
@@ -434,10 +434,23 @@
   font-size: 16px;
 }
 
+#bp-hello-container.bp-hello-recaptcha .bp-hello-header {
+  background-color: #f6f7f7;
+  border-color: #dcdcde;
+}
+
+.section-bb_recaptcha_versions .recaptcha-version-fields input[type="radio"] {
+  margin-left: 16px;
+}
+
+.section-bb_recaptcha_versions .recaptcha-version-fields input[type="radio"]:first-of-type {
+  margin-left: 0;
+}
+
 .bb-error-section.bb-recaptcha-success {
-  background-color: #EDFAEF;
-  color: #008A20;
-  border-color: #68DE7C;
+  background-color: #edfaef;
+  color: #008a20;
+  border-color: #68de7c;
 }
 
 .bb-error-section.bb-recaptcha-success span::before {
@@ -445,9 +458,9 @@
 }
 
 .bb-error-section.bb-recaptcha-errors {
-  background-color: #FCF0F1;
-  color: #D63638;
-  border-color: #FFABAF;
+  background-color: #fcf0f1;
+  color: #d63638;
+  border-color: #ffabaf;
 }
 
 .bb-error-section.bb-recaptcha-errors span::before {
