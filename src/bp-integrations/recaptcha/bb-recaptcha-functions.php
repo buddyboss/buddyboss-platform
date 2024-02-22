@@ -466,6 +466,9 @@ function bb_recaptcha_v2_badge() {
  */
 function bb_get_google_recaptcha_api_response( $secret_key, $token ) {
 	$get_data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $token );
+	if ( empty( $get_data ) ) {
+		return false;
+	}
 
 	$response_code = wp_remote_retrieve_response_code( $get_data );
 
@@ -474,10 +477,7 @@ function bb_get_google_recaptcha_api_response( $secret_key, $token ) {
 		return true;
 	}
 
-	// Decode the response body from JSON
-	$response_body = json_decode( wp_remote_retrieve_body( $get_data ), true );
-
-	return $response_body;
+	return json_decode( wp_remote_retrieve_body( $get_data ), true );
 }
 
 /**
