@@ -9,15 +9,17 @@
  * @version 1.0.0
  */
 
-$total     = bp_search_get_total_lessons_count( get_the_ID() );
-$course_id = get_the_ID();  ?>
+$course_id          = get_the_ID();
+$total              = bp_search_get_total_lessons_count( $course_id );
+$post_thumbnail_url = get_the_post_thumbnail_url();
+?>
 <div class="bp-search-ajax-item bp-search-ajax-item_sfwd-courses">
 	<a href="<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), get_permalink() ) ); ?>">
 		<div class="item-avatar">
 			<?php
-			if ( get_the_post_thumbnail_url() ) {
+			if ( $post_thumbnail_url ) {
 				?>
-				<img src="<?php echo esc_url( get_the_post_thumbnail_url() ); ?>" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="<?php the_title(); ?>" />
+				<img src="<?php echo esc_url( $post_thumbnail_url ); ?>" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="<?php the_title(); ?>" />
 				<?php
 			} else {
 				?>
@@ -31,9 +33,10 @@ $course_id = get_the_ID();  ?>
 			<div class="item-title"><?php the_title(); ?></div>
 			<div class="item-desc">
 				<?php
-				if ( get_the_excerpt( $course_id ) ) {
+				$excerpt = get_the_excerpt( $course_id );
+				if ( $excerpt ) {
 					echo bp_create_excerpt(
-						wp_strip_all_tags( get_the_excerpt( $course_id ) ),
+						wp_strip_all_tags( $excerpt ),
 						100,
 						array(
 							'ending' => __( '&hellip;', 'buddyboss' ),
@@ -44,21 +47,17 @@ $course_id = get_the_ID();  ?>
 
 			</div>
 			<div class="entry-meta">
-
 				<?php if ( ! empty( learndash_course_status( $course_id ) ) ) : ?>
 					<span class="course-status">
 						<?php echo learndash_course_status( $course_id, null, false ); ?>
 					</span>
 				<?php endif; ?>
-
 				<span class="middot">&middot;</span>
-
 				<?php
 				// @todo remove %d?
 				printf( _n( '%d lesson', '%d lessons', $total, 'buddyboss' ), $total );
 				?>
 			</div>
-
 		</div>
 	</a>
 </div>

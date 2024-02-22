@@ -8,14 +8,9 @@
  * @version 1.0.0
  */
 
-?>
-
-<?php if ( bp_core_can_edit_settings() ) : ?>
-
-	<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
-
-<?php
-endif;
+if ( bp_core_can_edit_settings() ) {
+	bp_get_template_part( 'members/single/parts/item-subnav' );
+}
 
 switch ( bp_current_action() ) :
 	case 'notifications':

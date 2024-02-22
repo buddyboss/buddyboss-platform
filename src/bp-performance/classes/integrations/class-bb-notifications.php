@@ -136,13 +136,13 @@ class BB_Notifications extends Integration_Abstract {
 	 *                    array( 'item_id' => 7, 'component_action' => 'members' ).
 	 */
 	public function event_bp_notification_before_delete( $args ) {
-
 		// Pull up a list of items matching the args (those about te be deleted).
 		$ns = BP_Notifications_Notification::get( $args );
+
 		if ( ! empty( $ns ) ) {
-			foreach ( $ns as $n ) {
-				Cache::instance()->purge_by_group( 'bp-notifications_' . $n->id );
-			}
+			$n_ids = wp_list_pluck( $ns, 'id' );
+
+			$this->purge_item_cache_by_item_ids( $n_ids );
 		}
 	}
 
@@ -282,10 +282,9 @@ class BB_Notifications extends Integration_Abstract {
 	 */
 	public function event_profile_update( $user_id ) {
 		$ns = $this->get_notification_ids_by_userid( $user_id );
+
 		if ( ! empty( $ns ) ) {
-			foreach ( $ns as $n_id ) {
-				Cache::instance()->purge_by_group( 'bp-notifications_' . $n_id );
-			}
+			$this->purge_item_cache_by_item_ids( $ns );
 		}
 	}
 
@@ -296,10 +295,9 @@ class BB_Notifications extends Integration_Abstract {
 	 */
 	public function event_deleted_user( $user_id ) {
 		$ns = $this->get_notification_ids_by_userid( $user_id );
+
 		if ( ! empty( $ns ) ) {
-			foreach ( $ns as $n_id ) {
-				Cache::instance()->purge_by_group( 'bp-notifications_' . $n_id );
-			}
+			$this->purge_item_cache_by_item_ids( $ns );
 		}
 	}
 
@@ -310,10 +308,9 @@ class BB_Notifications extends Integration_Abstract {
 	 */
 	public function event_xprofile_avatar_uploaded( $user_id ) {
 		$ns = $this->get_notification_ids_by_userid( $user_id );
+
 		if ( ! empty( $ns ) ) {
-			foreach ( $ns as $n_id ) {
-				Cache::instance()->purge_by_group( 'bp-notifications_' . $n_id );
-			}
+			$this->purge_item_cache_by_item_ids( $ns );
 		}
 	}
 
@@ -324,13 +321,13 @@ class BB_Notifications extends Integration_Abstract {
 	 */
 	public function event_bp_core_delete_existing_avatar( $args ) {
 		$user_id = ! empty( $args['item_id'] ) ? absint( $args['item_id'] ) : 0;
+
 		if ( ! empty( $user_id ) ) {
 			if ( isset( $args['object'] ) && 'user' === $args['object'] ) {
 				$ns = $this->get_notification_ids_by_userid( $user_id );
+
 				if ( ! empty( $ns ) ) {
-					foreach ( $ns as $n_id ) {
-						Cache::instance()->purge_by_group( 'bp-notifications_' . $n_id );
-					}
+					$this->purge_item_cache_by_item_ids( $ns );
 				}
 			}
 		}
@@ -343,10 +340,9 @@ class BB_Notifications extends Integration_Abstract {
 	 */
 	public function event_bp_suspend_user_suspended( $user_id ) {
 		$ns = $this->get_notification_ids_by_userid( $user_id );
+
 		if ( ! empty( $ns ) ) {
-			foreach ( $ns as $n_id ) {
-				Cache::instance()->purge_by_group( 'bp-notifications_' . $n_id );
-			}
+			$this->purge_item_cache_by_item_ids( $ns );
 		}
 	}
 
@@ -357,10 +353,9 @@ class BB_Notifications extends Integration_Abstract {
 	 */
 	public function event_bp_suspend_user_unsuspended( $user_id ) {
 		$ns = $this->get_notification_ids_by_userid( $user_id );
+
 		if ( ! empty( $ns ) ) {
-			foreach ( $ns as $n_id ) {
-				Cache::instance()->purge_by_group( 'bp-notifications_' . $n_id );
-			}
+			$this->purge_item_cache_by_item_ids( $ns );
 		}
 	}
 
@@ -373,11 +368,11 @@ class BB_Notifications extends Integration_Abstract {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
 			return;
 		}
+
 		$ns = $this->get_notification_ids_by_userid( $bp_moderation->item_id );
+
 		if ( ! empty( $ns ) ) {
-			foreach ( $ns as $n_id ) {
-				Cache::instance()->purge_by_group( 'bp-notifications_' . $n_id );
-			}
+			$this->purge_item_cache_by_item_ids( $ns );
 		}
 	}
 
@@ -390,14 +385,28 @@ class BB_Notifications extends Integration_Abstract {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
 			return;
 		}
+
 		$ns = $this->get_notification_ids_by_userid( $bp_moderation->item_id );
+
 		if ( ! empty( $ns ) ) {
-			foreach ( $ns as $n_id ) {
-				Cache::instance()->purge_by_group( 'bp-notifications_' . $n_id );
-			}
+			$this->purge_item_cache_by_item_ids( $ns );
 		}
 	}
 
+	/**
+	 * Purge item cache by item ids.
+	 *
+	 * @param array $ids Array of ids.
+	 *
+	 * @return void
+	 */
+	private function purge_item_cache_by_item_ids( $ids ) {
+		if ( empty( $ids ) ) {
+			return;
+		}
+
+		Cache::instance()->purge_by_group_names( $ids, array( 'bp-notifications_' ) );
+	}
 
 	/**
 	 * Get notification ids from user name.
