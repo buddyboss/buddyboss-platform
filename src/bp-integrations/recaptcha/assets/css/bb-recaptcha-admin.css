@@ -186,13 +186,13 @@
   }
 }
 
-.bb-recaptcha-settings #bb_recaptcha_versions .bb-success-section {
+.bb-recaptcha-settings .bb-success-section {
   padding: 10px;
   margin-left: -210px;
-  background: #77e8091f;
-  color: #5ca712;
+  background: #edfaef;
+  color: #008a20;
   line-height: 1.5;
-  border: 1px solid #77e8091f;
+  border: 1px solid #68de7c;
   border-radius: 4px;
 }
 
@@ -434,6 +434,20 @@
   font-size: 16px;
 }
 
+.bb-success-section.bb-recaptcha-success span::before {
+  content: "\e876";
+}
+
+.bb-error-section.bb-recaptcha-errors {
+  background-color: #fcf0f1;
+  color: #d63638;
+  border-color: #ffabaf;
+}
+
+.bb-error-section.bb-recaptcha-errors span::before {
+  content: "\ee65";
+}
+
 #bp-hello-container.bp-hello-recaptcha .bp-hello-header {
   background-color: #f6f7f7;
   border-color: #dcdcde;
@@ -447,22 +461,19 @@
   margin-left: 0;
 }
 
-.bb-error-section.bb-recaptcha-success {
-  background-color: #edfaef;
-  color: #008a20;
-  border-color: #68de7c;
+.bp-hello-recaptcha .bp-hello-close .button {
+  background-color: transparent;
+  border: 0;
+  color: #a7aaad;
+  height: auto;
+  min-height: auto;
+  line-height: 1;
+  font-size: 28px;
+  padding: 0;
+  margin: 0;
 }
 
-.bb-error-section.bb-recaptcha-success span::before {
-  content: "\e876";
-}
-
-.bb-error-section.bb-recaptcha-errors {
-  background-color: #fcf0f1;
-  color: #d63638;
-  border-color: #ffabaf;
-}
-
-.bb-error-section.bb-recaptcha-errors span::before {
-  content: "\ee65";
+.bp-hello-recaptcha .recaptcha-verify-icon {
+  max-width: 80px;
+  margin-bottom: 1rem;
 }
