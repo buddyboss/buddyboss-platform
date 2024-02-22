@@ -214,7 +214,7 @@
 			window.bb_recaptcha_v3_verify = function () {
 				if ( typeof grecaptcha === 'object' ) {
 					grecaptcha.ready( function () {
-						grecaptcha.execute( self.site_key, { action: 'submit' } ).then( function ( token ) {
+						grecaptcha.execute( self.site_key, { action: 'bb_recaptcha_admin_verify' } ).then( function ( token ) {
 							self.captcha_response = token;
 							$( '#' + selector + ' .verifying_token' ).hide();
 							$( '#' + selector + ' .verified_token' ).show();
