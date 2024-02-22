@@ -508,7 +508,7 @@ function bb_recaptcha_display( $action = '' ) {
 			$get_url_string = ! empty( $get_url_string ) ? base64_encode( $get_url_string ) : '';
 			if ( ! empty( $get_url_string ) ) {
 				?>
-				<input type="hidden" id="bb_recaptcha_bypass_id" name="bb_recaptcha_bypass" value="<?php echo esc_html( $get_url_string ); ?>"/>
+				<input type="hidden" id="bb_recaptcha_login_bypass_id" name="bb_recaptcha_login_bypass" value="<?php echo esc_html( $get_url_string ); ?>"/>
 				<?php
 			}
 		}

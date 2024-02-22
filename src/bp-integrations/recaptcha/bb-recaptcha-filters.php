@@ -45,6 +45,15 @@ function bb_admin_recaptcha_class( $classes ) {
  *                               authenticated.
  */
 function bb_recaptcha_validate_login( $user ) {
+	// Apply only on wordpress login page and bypass recaptcha for rest api.
+	$bb_wp_login = bb_filter_input_string( INPUT_POST, 'log' );
+	if (
+		apply_filters( 'bb_recaptcha_rest_api_bypass', bb_is_rest() ) ||
+		! $bb_wp_login
+	) {
+		return $user;
+	}
+
 	$verified = bb_recaptcha_connection_status();
 
 	// If connection not verified and not enable for login then allow to login.
@@ -58,7 +67,7 @@ function bb_recaptcha_validate_login( $user ) {
 
 	// Bypass captcha for login.
 	if ( bb_recaptcha_allow_bypass_enable() ) {
-		$get_url_string    = bb_filter_input_string( INPUT_POST, 'bb_recaptcha_bypass' );
+		$get_url_string    = bb_filter_input_string( INPUT_POST, 'bb_recaptcha_login_bypass' );
 		$get_url_string    = ! empty( $get_url_string ) ? base64_decode( $get_url_string ) : '';
 		$admin_bypass_text = bb_recaptcha_setting( 'bypass_text' );
 		if ( $get_url_string === $admin_bypass_text ) {
@@ -84,6 +93,12 @@ function bb_recaptcha_validate_login( $user ) {
  *                       if reCAPTCHA verification fails.
  */
 function bb_recaptcha_validate_activate( $retval ) {
+
+	// Bypass recaptcha for rest api.
+	if ( apply_filters( 'bb_recaptcha_rest_api_bypass', bb_is_rest() ) ) {
+		return $retval;
+	}
+
 	$verified = bb_recaptcha_connection_status();
 
 	// If connection not verified and not enable for activate then allow to activate.
