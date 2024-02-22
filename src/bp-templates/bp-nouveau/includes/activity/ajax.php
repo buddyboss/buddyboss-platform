@@ -94,7 +94,7 @@ add_action(
 			array(
 				'toggle_activity_notification_status' => array(
 					'function' => 'bb_nouveau_ajax_toggle_activity_notification_status',
-					'nopriv'   => true,
+					'nopriv'   => false,
 				),
 			),
 		);

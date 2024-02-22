@@ -241,12 +241,8 @@ add_action( 'bp_activity_sent_mention_email', 'bp_activity_at_mention_add_notifi
 function bp_activity_update_reply_add_notification( $activity, $comment_id, $commenter_id ) {
 	// Stop sending notification to user who has muted notifications.
 	if ( $activity->user_id !== $commenter_id ) {
-		$activity_meta = bp_activity_get_meta( $activity->id, 'muted_notification_users' );
-
-		if ( ! empty( $activity_meta ) && is_array( $activity_meta ) ) {
-			if ( in_array( $activity->user_id, $activity_meta, true ) ) {
-				return;
-			}
+		if ( bb_user_has_mute_notification( $activity->id, $activity->user_id ) ) {
+			return;
 		}
 	}
 
@@ -304,12 +300,8 @@ function bp_activity_comment_reply_add_notification( $activity_comment, $comment
 
 	// Stop sending notification to user who has muted notifications.
 	if ( $activity_comment->user_id !== $commenter_id ) {
-		$activity_meta = bp_activity_get_meta( $original_activity->id, 'muted_notification_users' );
-
-		if ( ! empty( $activity_meta ) && is_array( $activity_meta ) ) {
-			if ( in_array( $activity_comment->user_id, $activity_meta, true ) ) {
-				return;
-			}
+		if ( bb_user_has_mute_notification( $original_activity->id, $activity_comment->user_id ) ) {
+			return;
 		}
 	}
 
@@ -494,11 +486,8 @@ function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $po
 			}
 
 			// Stop sending notification to user who has muted notifications.
-			$activity_meta = bp_activity_get_meta( $activity_args['activity_id'], 'muted_notification_users' );
-			if ( ! empty( $activity_meta ) && is_array( $activity_meta ) ) {
-				if ( in_array( (int) $post_type_comment->post->post_author, $activity_meta, true ) ) {
-					return;
-				}
+			if ( bb_user_has_mute_notification( $activity_args['activity_id'], $post_type_comment->post->post_author ) ) {
+				return;
 			}
 
 			$component_action = 'update_reply';
