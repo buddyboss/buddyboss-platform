@@ -6589,11 +6589,11 @@ function bb_toggle_activity_notification_status( $args = array() ) {
  */
 function bb_activity_enabled_notification( $field_type, $user_id = 0 ) {
 	static $cache = null;
-	$options = array();
+	// $options = array();
 
-	if ( null !== $cache ) {
-		return $cache;
-	}
+	// if ( null !== $cache ) {
+	// 	return $cache;
+	// }
 
 	if ( ! bp_is_active( 'notifications' ) ) {
 		$cache = $options;
@@ -6612,7 +6612,7 @@ function bb_activity_enabled_notification( $field_type, $user_id = 0 ) {
 	}
 
 	$options = apply_filters( 'bb_activity_enabled_notification', $options, $field_type, $user_id );
-	$cache   = $options;
+	// $cache   = $options;
 
 	return $options;
 }
@@ -6645,7 +6645,7 @@ function bb_user_has_mute_notification( $activity_id, $user_id ) {
 	$activity_meta = bb_activity_get_metadata( $activity_id );
 	if ( isset( $activity_meta['muted_notification_users'] ) ) {
 
-		$mute_activity_meta = unserialize( $activity_meta['muted_notification_users'][0] );
+		$mute_activity_meta = maybe_unserialize( $activity_meta['muted_notification_users'][0] );
 		if ( ! empty( $mute_activity_meta ) && is_array( $mute_activity_meta ) ) {
 
 			if ( in_array( (int) $user_id, $mute_activity_meta, true ) ) {
