@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.5.51 =
+* Bug: Core - A fatal error occurred on the profile page when the Activity Feed component was deactivated
+
 = 2.5.50 =
 * New Feature! - The Profile Avatar User Initials is a new setting to allow site owners to set the default user avatar to use display name initials with different background colors. We have also added this feature to group avatars.
 * Enhancement: Core - Code refactoring to improve performance within the Activity Feed with object caching support
