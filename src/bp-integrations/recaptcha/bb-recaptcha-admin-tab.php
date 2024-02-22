@@ -533,7 +533,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			</div>
 			<div class="bp-hello-content">
 				<div id="bp-hello-content-recaptcha_v3" class="bp-hello-recaptcha-content-container <?php echo esc_attr( $v3_class ); ?>">
-					<div class="verifying_token">
+					<div class="verifying_token loading">
 						<img src="<?php echo bb_recaptcha_integration_url( 'assets/images/recaptcha.png' ); ?>" alt="" class="recaptcha-verify-icon" />
 						<p>
 							<?php esc_html_e( 'Verifying reCAPTCHA token', 'buddyboss' ); ?>

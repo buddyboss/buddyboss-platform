@@ -250,8 +250,11 @@
 				p {
 					display: flex;
 					align-items: center;
+				}
 
-					&::after {
+				&.loading {
+
+					p::after {
 						content: "";
 						display: inline-block;
 						box-sizing: border-box;

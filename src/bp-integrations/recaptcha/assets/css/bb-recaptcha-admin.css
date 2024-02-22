@@ -224,7 +224,7 @@
   align-items: center;
 }
 
-.bb-recaptcha-settings .bp-hello-recaptcha .bp-hello-recaptcha-content-container .verifying_token p::after {
+.bb-recaptcha-settings .bp-hello-recaptcha .bp-hello-recaptcha-content-container .verifying_token.loading p::after {
   content: "";
   display: inline-block;
   box-sizing: border-box;
