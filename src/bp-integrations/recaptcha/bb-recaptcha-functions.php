@@ -1,6 +1,6 @@
 <?php
 /**
- * Recaptcha integration helpers
+ * Recaptcha integration helpers.
  *
  * @since   BuddyBoss [BBVERSION]
  * @package BuddyBoss\Recaptcha
@@ -18,27 +18,6 @@ defined( 'ABSPATH' ) || exit;
  */
 function bb_recaptcha_integration_url( $path = '' ) {
 	return trailingslashit( buddypress()->integration_url ) . 'recaptcha/' . trim( $path, '/\\' );
-}
-
-/**
- * Retrieves the reCAPTCHA score threshold.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param float $default The default score threshold value. Default is 0.5.
- *
- * @return float The reCAPTCHA score threshold.
- */
-function bb_recaptcha_score_threshold( $default = 0.5 ) {
-
-	/**
-	 * Filter allows modifying the reCAPTCHA score threshold.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param float $threshold The reCAPTCHA score threshold.
-	 */
-	return apply_filters( 'bb_recaptcha_score_threshold', bb_recaptcha_setting( 'score_threshold', $default ) );
 }
 
 /**
@@ -88,6 +67,128 @@ function bb_recaptcha_setting( $key, $default = '' ) {
 	 * @param mixed $default Optional. Default value if value or setting not available.
 	 */
 	return apply_filters( 'bb_recaptcha_setting', $retval, $key, $default );
+}
+
+/**
+ * Retrieves the selected reCAPTCHA version.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string The selected reCAPTCHA version.
+ */
+function bb_recaptcha_recaptcha_versions() {
+	$recaptcha_version = bb_recaptcha_setting( 'recaptcha_version', 'recaptcha_v3' );
+
+	/**
+	 * Filters the selected reCAPTCHA version.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $recaptcha_version The selected reCAPTCHA version.
+	 */
+	return apply_filters( 'bb_recaptcha_recaptcha_versions', $recaptcha_version );
+}
+
+/**
+ * Retrieves the selected reCAPTCHA v2 option.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string The selected v2 option.
+ */
+function bb_recaptcha_recaptcha_v2_option() {
+	$recaptcha_v2_option = bb_recaptcha_setting( 'v2_option', 'v2_checkbox' );
+
+	/**
+	 * Filters the selected reCAPTCHA v2 option.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $recaptcha_v2_option The selected reCAPTCHA v2 option.
+	 */
+	return apply_filters( 'bb_recaptcha_recaptcha_v2_option', $recaptcha_v2_option );
+}
+
+
+/**
+ * Retrieves the reCAPTCHA site key.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string The reCAPTCHA site key.
+ */
+function bb_recaptcha_site_key() {
+	$site_key = bb_recaptcha_setting( 'site_key' );
+
+	/**
+	 * Filters the reCAPTCHA site key.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $site_key The reCAPTCHA site key.
+	 */
+	return apply_filters( 'bb_recaptcha_site_key', $site_key );
+}
+
+/**
+ * Retrieves the reCAPTCHA secret key.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string The reCAPTCHA secret key.
+ */
+function bb_recaptcha_secret_key() {
+	$secret_key = bb_recaptcha_setting( 'secret_key' );
+
+	/**
+	 * Filters the reCAPTCHA secret key.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $secret_key The reCAPTCHA secret key.
+	 */
+	return apply_filters( 'bb_recaptcha_secret_key', $secret_key );
+}
+
+/**
+ * Retrieves the reCAPTCHA connection status.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string The reCAPTCHA connection status.
+ */
+function bb_recaptcha_connection_status() {
+	$connection_status = bb_recaptcha_setting( 'connection_status' );
+
+	/**
+	 * Filters the reCAPTCHA connection status.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $secret_key The reCAPTCHA connection status.
+	 */
+	return apply_filters( 'bb_recaptcha_connection_status', $connection_status );
+}
+
+/**
+ * Retrieves the reCAPTCHA score threshold.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param float $default The default score threshold value. Default is 0.5.
+ *
+ * @return float The reCAPTCHA score threshold.
+ */
+function bb_recaptcha_score_threshold( $default = 0.5 ) {
+
+	/**
+	 * Filter allows modifying the reCAPTCHA score threshold.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param float $threshold The reCAPTCHA score threshold.
+	 */
+	return apply_filters( 'bb_recaptcha_score_threshold', bb_recaptcha_setting( 'score_threshold', $default ) );
 }
 
 /**
@@ -153,6 +254,30 @@ function bb_recaptcha_is_enabled( $key ) {
 	 * @param string $key    The key of the action for which the enabled status is being determined.
 	 */
 	return (bool) apply_filters( 'bb_recaptcha_is_enabled', $retval, $key );
+}
+
+/**
+ * Retrieves the reCAPTCHA bypass option.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool The reCAPTCHA bypass option.
+ */
+function bb_recaptcha_allow_bypass_enable() {
+	if ( ! bb_recaptcha_is_enabled( 'bb_login' ) ) {
+		return false;
+	}
+
+	$allow_bypass = (bool) bb_recaptcha_setting( 'allow_bypass', false );
+
+	/**
+	 * Filters the reCAPTCHA bypass option.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $allow_bypass The reCAPTCHA bypass option.
+	 */
+	return (bool) apply_filters( 'bb_recaptcha_allow_bypass_enable', $allow_bypass );
 }
 
 /**
@@ -248,43 +373,23 @@ function bb_recaptcha_languages() {
 }
 
 /**
- * Retrieves the selected reCAPTCHA version.
+ * Retrieves the reCAPTCHA conflict mode.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return string The selected reCAPTCHA version.
+ * @return bool The reCAPTCHA conflict mode.
  */
-function bb_recaptcha_recaptcha_versions() {
-	$recaptcha_version = bb_recaptcha_setting( 'recaptcha_version', 'recaptcha_v3' );
+function bb_recaptcha_conflict_mode() {
+	$conflict_mode = (bool) bb_recaptcha_setting( 'conflict_mode', false );
 
 	/**
-	 * Filters the selected reCAPTCHA version.
+	 * Filters the reCAPTCHA conflict mode.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $recaptcha_version The selected reCAPTCHA version.
+	 * @param bool $conflict_mode The reCAPTCHA conflict mode.
 	 */
-	return apply_filters( 'bb_recaptcha_recaptcha_versions', $recaptcha_version );
-}
-
-/**
- * Retrieves the selected reCAPTCHA v2 option.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string The selected v2 option.
- */
-function bb_recaptcha_recaptcha_v2_option() {
-	$recaptcha_v2_option = bb_recaptcha_setting( 'v2_option', 'v2_checkbox' );
-
-	/**
-	 * Filters the selected reCAPTCHA v2 option.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $recaptcha_v2_option The selected reCAPTCHA v2 option.
-	 */
-	return apply_filters( 'bb_recaptcha_recaptcha_v2_option', $recaptcha_v2_option );
+	return (bool) apply_filters( 'bb_recaptcha_conflict_mode', $conflict_mode );
 }
 
 /**
@@ -348,110 +453,6 @@ function bb_recaptcha_v2_badge() {
 }
 
 /**
- * Retrieves the reCAPTCHA site key.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string The reCAPTCHA site key.
- */
-function bb_recaptcha_site_key() {
-	$site_key = bb_recaptcha_setting( 'site_key' );
-
-	/**
-	 * Filters the reCAPTCHA site key.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $site_key The reCAPTCHA site key.
-	 */
-	return apply_filters( 'bb_recaptcha_site_key', $site_key );
-}
-
-/**
- * Retrieves the reCAPTCHA secret key.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string The reCAPTCHA secret key.
- */
-function bb_recaptcha_secret_key() {
-	$secret_key = bb_recaptcha_setting( 'secret_key' );
-
-	/**
-	 * Filters the reCAPTCHA secret key.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $secret_key The reCAPTCHA secret key.
-	 */
-	return apply_filters( 'bb_recaptcha_secret_key', $secret_key );
-}
-
-/**
- * Retrieves the reCAPTCHA connection status.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string The reCAPTCHA connection status.
- */
-function bb_recaptcha_connection_status() {
-	$connection_status = bb_recaptcha_setting( 'connection_status' );
-
-	/**
-	 * Filters the reCAPTCHA connection status.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $secret_key The reCAPTCHA connection status.
-	 */
-	return apply_filters( 'bb_recaptcha_connection_status', $connection_status );
-}
-
-/**
- * Retrieves the reCAPTCHA conflict mode.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return bool The reCAPTCHA conflict mode.
- */
-function bb_recaptcha_conflict_mode() {
-	$conflict_mode = (bool) bb_recaptcha_setting( 'conflict_mode', false );
-
-	/**
-	 * Filters the reCAPTCHA conflict mode.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param bool $conflict_mode The reCAPTCHA conflict mode.
-	 */
-	return (bool) apply_filters( 'bb_recaptcha_conflict_mode', $conflict_mode );
-}
-
-/**
- * Retrieves the reCAPTCHA bypass option.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return bool The reCAPTCHA bypass option.
- */
-function bb_recaptcha_allow_bypass_enable() {
-	if ( ! bb_recaptcha_is_enabled( 'bb_login' ) ) {
-		return false;
-	}
-
-	$allow_bypass = (bool) bb_recaptcha_setting( 'allow_bypass', false );
-
-	/**
-	 * Filters the reCAPTCHA bypass option.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param bool $allow_bypass The reCAPTCHA bypass option.
-	 */
-	return (bool) apply_filters( 'bb_recaptcha_allow_bypass_enable', $allow_bypass );
-}
-
-/**
  * Retrieve the Google reCAPTCHA API response.
  * This function sends a request to the Google reCAPTCHA API to verify the provided token.
  *
@@ -465,21 +466,18 @@ function bb_recaptcha_allow_bypass_enable() {
  */
 function bb_get_google_recaptcha_api_response( $secret_key, $token ) {
 	$get_data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $token );
-	$response = json_decode( wp_remote_retrieve_body( $get_data ), true );
 
 	$response_code = wp_remote_retrieve_response_code( $get_data );
 
 	// Check if the status code is 429 (Resource Exhausted).
 	if ( 429 === $response_code ) {
 		return true;
-	} else {
-		// Decode the response body from JSON
-		$response_body = json_decode( wp_remote_retrieve_body( $get_data ), true );
-
-		return $response_body;
 	}
 
-	return false;
+	// Decode the response body from JSON
+	$response_body = json_decode( wp_remote_retrieve_body( $get_data ), true );
+
+	return $response_body;
 }
 
 /**

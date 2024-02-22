@@ -1,6 +1,6 @@
 <?php
 /**
- * Recaptcha integration actions
+ * Recaptcha integration actions.
  *
  * @since   BuddyBoss [BBVERSION]
  * @package BuddyBoss\Recaptcha

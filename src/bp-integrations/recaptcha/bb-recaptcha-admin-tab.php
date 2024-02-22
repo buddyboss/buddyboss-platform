@@ -1,6 +1,6 @@
 <?php
 /**
- * Recaptcha integration admin tab
+ * Recaptcha integration admin tab.
  *
  * @since   BuddyBoss [BBVERSION]
  * @package BuddyBoss\Recaptcha
@@ -348,7 +348,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 						add_query_arg(
 							array(
 								'page'    => 'bp-help',
-								'article' => '125826', // @todo: Update when release.
+								'article' => '125826', // @todo: update when release.
 							),
 							'admin.php'
 						)
@@ -395,159 +395,6 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		?>
 		</div>
 		<?php
-	}
-
-	/**
-	 * Callback fields for recaptcha score threshold.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @return void
-	 */
-	public function setting_callback_score_threshold() {
-		?>
-		<input name="bb_recaptcha[score_threshold]" id="bb-recaptcha-score-threshold" type="number" min="0" max="1" step="0.1" value="<?php echo esc_attr( bb_recaptcha_setting( 'score_threshold', 0.5 ) ); ?>" required/>
-		<p class="description">
-			<?php
-			esc_html_e( 'reCAPTCHA v3 provides a score for every request seamlessly, without causing user friction. Input a risk score between 0 and 1 in the field above to evaluate the probability of being identified as a bot.', 'buddyboss' );
-			?>
-		</p>
-		<?php
-	}
-
-	/**
-	 * Callback fields for recaptcha enable or not.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @return void
-	 */
-	public function setting_callback_enabled_for() {
-		$actions = bb_recaptcha_actions();
-
-		foreach ( $actions as $action => $setting ) {
-
-			$disabled = ! empty( $setting['disabled'] ) ? ' disabled="disabled"' : '';
-			$checked  = bp_enable_site_registration() && ! empty( $setting['enabled'] ) ? ' checked="checked"' : '';
-
-			echo '<input id="recaptcha_' . esc_attr( $action ) . '" name="bb_recaptcha[enabled_for][' . esc_attr( $action ) . ']" type="checkbox" value="1" ' . $disabled . $checked . '/>' .
-				'<label for="recaptcha_' . esc_attr( $action ) . '">' . esc_html( $setting['label'] ) . '</label><br /><br />';
-		}
-
-		echo '<p class="description">' .
-			sprintf(
-					/* translators: registration setting link. */
-				esc_html__( 'Select the pages to include in the reCAPTCHA submission. Make sure to %s if both registration and account activation are disabled.', 'buddyboss' ),
-				'<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-settings&tab=bp-general#bp_registration' ) ) . '">' . esc_html__( 'Enable Registration', 'buddyboss' ) . '</a>'
-			) .
-			'</p>';
-	}
-
-	/**
-	 * Callback fields for allow bypass recaptcha.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @return void
-	 */
-	public function setting_callback_allow_bypass() {
-		$checked      = bb_recaptcha_allow_bypass_enable();
-		$allow_bypass = false;
-		if ( bb_recaptcha_is_enabled( 'bb_login' ) && $checked ) {
-			$allow_bypass = true;
-		}
-		$bypass_text = bb_recaptcha_setting( 'bypass_text' );
-		?>
-		<input id="bb_recaptcha_allow_bypass" name="bb_recaptcha[allow_bypass]" type="checkbox" value="1" <?php checked( $checked ); ?> />
-		<label for="bb_recaptcha_allow_bypass"><?php esc_html_e( 'Allow bypass, enter a 6 to 10-character string to customize your URL', 'buddyboss' ); ?></label>
-		<input type="text" name="bb_recaptcha[bypass_text]" value="<?php echo esc_html( $bypass_text ); ?>" placeholder="<?php esc_attr_e( 'stringxs', 'buddyboss' ); ?>" <?php echo $allow_bypass ? '' : 'disabled="disabled"'; ?> minlength="6" maxlength="10" required>
-		<p class="description"><?php esc_html_e( 'The bypass URL enables you to bypass reCAPTCHA in case of issues. We recommend keeping the link below securely stored for accessing your site.', 'buddyboss' ); ?></p>
-		<div class="copy-toggle <?php echo $allow_bypass ? '' : 'bp-hide'; ?>">
-			<?php
-			if ( empty( $bypass_text ) ) {
-				$bypass_text = 'xxUNIQUE_STRINGXS';
-			}
-			$domain_name = wp_login_url() . '?bypass_captcha=';
-			?>
-			<a href="<?php echo esc_attr( $domain_name . $bypass_text ); ?>" class="copy-toggle-text" data-domain="<?php echo esc_attr( $domain_name ); ?>"><?php echo esc_attr( $domain_name . $bypass_text ); ?></a>
-			<span role="button" class="bb-copy-button hide-if-no-js" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Copy', 'buddyboss' ); ?>" data-copied-text="<?php esc_attr_e( 'Copied', 'buddyboss' ); ?>">
-				<i class="bb-icon-f bb-icon-copy"></i>
-			</span>
-		</div>
-		<?php
-	}
-
-	/**
-	 * Callback fields for recaptcha language code.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @return void
-	 */
-	public function setting_callback_language_code() {
-		$languages = bb_recaptcha_languages();
-		$language  = bb_recaptcha_setting( 'language_code', 'en' );
-		?>
-		<select name="bb_recaptcha[language_code]" id="bb-recaptcha-language-code">
-			<?php
-			foreach ( $languages as $code => $label ) {
-				echo '<option value="' . esc_attr( $code ) . '" ' . selected( $language, $code, false ) . '>' . esc_html( $label ) . '</option>';
-			}
-			?>
-		</select>
-		<p class="description"><?php esc_html_e( 'Select a language for reCAPTCHA when it is displayed.', 'buddyboss' ); ?></p>
-		<?php
-	}
-
-	/**
-	 * Callback fields for recaptcha conflict mode.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @return void
-	 */
-	public function setting_callback_conflict_mode() {
-		$checked = bb_recaptcha_conflict_mode();
-		?>
-		<input id="bb-recaptcha-conflict-mode" name="bb_recaptcha[conflict_mode]" type="checkbox" value="1" <?php checked( $checked ); ?> />
-		<label for="bb-recaptcha-conflict-mode"><?php esc_html_e( 'Allow no-conflict mode to prevent compatibility conflicts', 'buddyboss' ); ?></label>
-		<p class="description"><?php esc_html_e( 'When checked, other instances of reCAPTCHA are forcefully removed to prevent conflicts. Only enable this option if your site is experiencing compatibility issues or if instructed to do so by support.', 'buddyboss' ); ?></p>
-		<?php
-	}
-
-	/**
-	 * Callback fields for recaptcha exclude ip.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @return void
-	 */
-	public function setting_callback_exclude_ip() {
-		?>
-		<label for="bb-recaptcha-exclude-ip"><?php esc_html_e( 'Enter the IP addresses that you want to skip from captcha submission. Enter one IP per line.', 'buddyboss' ); ?></label>
-		<textarea rows="3" cols="50" name="bb_recaptcha[exclude_ip]" id="bb-recaptcha-exclude-ip"><?php echo esc_textarea( bb_recaptcha_setting( 'exclude_ip' ) ); ?></textarea>
-		<?php
-	}
-
-	/**
-	 * Added icon for the recaptcha admin settings.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $meta_icon Icon class.
-	 * @param string $id        Section ID.
-	 *
-	 * @return string
-	 */
-	public function admin_setting_icons( $meta_icon, $id = '' ) {
-		if (
-			! empty( $id ) &&
-			in_array( $id, array( 'bb_recaptcha_versions', 'bb_recaptcha_settings', 'bb_recaptcha_design', true ) )
-		) {
-			$meta_icon = 'bb-icon-i bb-icon-brand-google';
-		}
-
-		return $meta_icon;
 	}
 
 	/**
@@ -705,6 +552,159 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			</div>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Callback fields for recaptcha score threshold.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public function setting_callback_score_threshold() {
+		?>
+		<input name="bb_recaptcha[score_threshold]" id="bb-recaptcha-score-threshold" type="number" min="0" max="1" step="0.1" value="<?php echo esc_attr( bb_recaptcha_setting( 'score_threshold', 0.5 ) ); ?>" required/>
+		<p class="description">
+			<?php
+			esc_html_e( 'reCAPTCHA v3 provides a score for every request seamlessly, without causing user friction. Input a risk score between 0 and 1 in the field above to evaluate the probability of being identified as a bot.', 'buddyboss' );
+			?>
+		</p>
+		<?php
+	}
+
+	/**
+	 * Callback fields for recaptcha enable or not.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public function setting_callback_enabled_for() {
+		$actions = bb_recaptcha_actions();
+
+		foreach ( $actions as $action => $setting ) {
+
+			$disabled = ! empty( $setting['disabled'] ) ? ' disabled="disabled"' : '';
+			$checked  = bp_enable_site_registration() && ! empty( $setting['enabled'] ) ? ' checked="checked"' : '';
+
+			echo '<input id="recaptcha_' . esc_attr( $action ) . '" name="bb_recaptcha[enabled_for][' . esc_attr( $action ) . ']" type="checkbox" value="1" ' . $disabled . $checked . '/>' .
+				'<label for="recaptcha_' . esc_attr( $action ) . '">' . esc_html( $setting['label'] ) . '</label><br /><br />';
+		}
+
+		echo '<p class="description">' .
+			sprintf(
+					/* translators: registration setting link. */
+				esc_html__( 'Select the pages to include in the reCAPTCHA submission. Make sure to %s if both registration and account activation are disabled.', 'buddyboss' ),
+				'<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-settings&tab=bp-general#bp_registration' ) ) . '">' . esc_html__( 'Enable Registration', 'buddyboss' ) . '</a>'
+			) .
+			'</p>';
+	}
+
+	/**
+	 * Callback fields for allow bypass recaptcha.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public function setting_callback_allow_bypass() {
+		$checked      = bb_recaptcha_allow_bypass_enable();
+		$allow_bypass = false;
+		if ( bb_recaptcha_is_enabled( 'bb_login' ) && $checked ) {
+			$allow_bypass = true;
+		}
+		$bypass_text = bb_recaptcha_setting( 'bypass_text' );
+		?>
+		<input id="bb_recaptcha_allow_bypass" name="bb_recaptcha[allow_bypass]" type="checkbox" value="1" <?php checked( $checked ); ?> />
+		<label for="bb_recaptcha_allow_bypass"><?php esc_html_e( 'Allow bypass, enter a 6 to 10-character string to customize your URL', 'buddyboss' ); ?></label>
+		<input type="text" name="bb_recaptcha[bypass_text]" value="<?php echo esc_html( $bypass_text ); ?>" placeholder="<?php esc_attr_e( 'stringxs', 'buddyboss' ); ?>" <?php echo $allow_bypass ? '' : 'disabled="disabled"'; ?> minlength="6" maxlength="10" required>
+		<p class="description"><?php esc_html_e( 'The bypass URL enables you to bypass reCAPTCHA in case of issues. We recommend keeping the link below securely stored for accessing your site.', 'buddyboss' ); ?></p>
+		<div class="copy-toggle <?php echo $allow_bypass ? '' : 'bp-hide'; ?>">
+			<?php
+			if ( empty( $bypass_text ) ) {
+				$bypass_text = 'xxUNIQUE_STRINGXS';
+			}
+			$domain_name = wp_login_url() . '?bypass_captcha=';
+			?>
+			<a href="<?php echo esc_attr( $domain_name . $bypass_text ); ?>" class="copy-toggle-text" data-domain="<?php echo esc_attr( $domain_name ); ?>"><?php echo esc_attr( $domain_name . $bypass_text ); ?></a>
+			<span role="button" class="bb-copy-button hide-if-no-js" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Copy', 'buddyboss' ); ?>" data-copied-text="<?php esc_attr_e( 'Copied', 'buddyboss' ); ?>">
+				<i class="bb-icon-f bb-icon-copy"></i>
+			</span>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Callback fields for recaptcha language code.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public function setting_callback_language_code() {
+		$languages = bb_recaptcha_languages();
+		$language  = bb_recaptcha_setting( 'language_code', 'en' );
+		?>
+		<select name="bb_recaptcha[language_code]" id="bb-recaptcha-language-code">
+			<?php
+			foreach ( $languages as $code => $label ) {
+				echo '<option value="' . esc_attr( $code ) . '" ' . selected( $language, $code, false ) . '>' . esc_html( $label ) . '</option>';
+			}
+			?>
+		</select>
+		<p class="description"><?php esc_html_e( 'Select a language for reCAPTCHA when it is displayed.', 'buddyboss' ); ?></p>
+		<?php
+	}
+
+	/**
+	 * Callback fields for recaptcha conflict mode.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public function setting_callback_conflict_mode() {
+		$checked = bb_recaptcha_conflict_mode();
+		?>
+		<input id="bb-recaptcha-conflict-mode" name="bb_recaptcha[conflict_mode]" type="checkbox" value="1" <?php checked( $checked ); ?> />
+		<label for="bb-recaptcha-conflict-mode"><?php esc_html_e( 'Allow no-conflict mode to prevent compatibility conflicts', 'buddyboss' ); ?></label>
+		<p class="description"><?php esc_html_e( 'When checked, other instances of reCAPTCHA are forcefully removed to prevent conflicts. Only enable this option if your site is experiencing compatibility issues or if instructed to do so by support.', 'buddyboss' ); ?></p>
+		<?php
+	}
+
+	/**
+	 * Callback fields for recaptcha exclude ip.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public function setting_callback_exclude_ip() {
+		?>
+		<label for="bb-recaptcha-exclude-ip"><?php esc_html_e( 'Enter the IP addresses that you want to skip from captcha submission. Enter one IP per line.', 'buddyboss' ); ?></label>
+		<textarea rows="3" cols="50" name="bb_recaptcha[exclude_ip]" id="bb-recaptcha-exclude-ip"><?php echo esc_textarea( bb_recaptcha_setting( 'exclude_ip' ) ); ?></textarea>
+		<?php
+	}
+
+	/**
+	 * Added icon for the recaptcha admin settings.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $meta_icon Icon class.
+	 * @param string $id        Section ID.
+	 *
+	 * @return string
+	 */
+	public function admin_setting_icons( $meta_icon, $id = '' ) {
+		if (
+			! empty( $id ) &&
+			in_array( $id, array( 'bb_recaptcha_versions', 'bb_recaptcha_settings', 'bb_recaptcha_design', true ) )
+		) {
+			$meta_icon = 'bb-icon-i bb-icon-brand-google';
+		}
+
+		return $meta_icon;
 	}
 
 	/**
