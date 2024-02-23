@@ -6604,8 +6604,8 @@ function bb_toggle_activity_notification_status( $args = array() ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $field_type   Field type.
- * @param int    $user_id      User id.
+ * @param string $field_type Field type.
+ * @param int    $user_id    User id.
  *
  * @return array list of options.
  */
