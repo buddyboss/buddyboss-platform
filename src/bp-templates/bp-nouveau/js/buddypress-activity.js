@@ -980,7 +980,7 @@ window.bp = window.bp || {};
 						target.removeClass( 'loading' );
 
 						if ( false === response.success ) {
-							li_parent.prepend( response.data.feedback );
+							li_parent.append( response.data.feedback );
 							li_parent.find( '.bp-feedback' ).hide().fadeIn( 300 );
 						} else {
 							// Specific case of the single activity screen.
@@ -1465,6 +1465,7 @@ window.bp = window.bp || {};
 							var the_comment       = $.trim( response.data.contents );
 
 							activity_comments.find( '.acomment-display' ).removeClass('display-focus');
+							activity_comments.addClass( 'has-child-comments' );
 
 							form.addClass( 'not-initialized' );
 							form.closest( '.activity-comments' ).append( form );
