@@ -450,6 +450,15 @@
 				.copy-toggle-text {
 					margin-right: 5px;
 				}
+
+				&.bb-url-not-allowed {
+
+					color: #f00;
+
+					.copy-toggle-text {
+						color: #f00;
+					}
+				}
 			}
 		}
 	}

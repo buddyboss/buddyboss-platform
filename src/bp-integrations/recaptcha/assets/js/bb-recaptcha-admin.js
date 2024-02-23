@@ -351,6 +351,13 @@
 			if ( event.currentTarget.value ) {
 				bypassString = event.currentTarget.value;
 			}
+			if ( bypassString.length < 6 ) {
+				$( '.bb_login_require .copy-toggle' ).addClass( 'bb-url-not-allowed' );
+				$( '.bb_login_require .bb-copy-button' ).addClass( 'bp-hide' );
+			} else {
+				$( '.bb_login_require .copy-toggle' ).removeClass( 'bb-url-not-allowed' );
+				$( '.bb_login_require .bb-copy-button' ).removeClass( 'bp-hide' );
+			}
 			var url = $( '.copy-toggle-text' ).data( 'domain' ) + bypassString;
 			$( '.copy-toggle-text' ).attr( 'href', url );
 			$( '.copy-toggle-text' ).html( url );
