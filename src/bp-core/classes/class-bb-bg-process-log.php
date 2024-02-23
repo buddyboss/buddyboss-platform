@@ -2,13 +2,17 @@
 /**
  * Holds Background process log functionality.
  *
- * @package buddyboss/Classes
+ * @package BuddyBoss/Core
+ *
+ * @since BuddyBoss [BBVERSION]
  */
 
 class BB_BG_Process_Log {
 
 	/**
 	 * Class instance.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @var $instance
 	 */
@@ -17,12 +21,16 @@ class BB_BG_Process_Log {
 	/**
 	 * Table name.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @var string $table_name
 	 */
 	public $table_name = '';
 
 	/**
-	 * Using Singleton, see instance()
+	 * Using Singleton, see instance().
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function __construct() {
 		// Using Singleton, see instance().
@@ -30,6 +38,8 @@ class BB_BG_Process_Log {
 
 	/**
 	 * Get the instance of the class.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return object
 	 */
@@ -47,11 +57,12 @@ class BB_BG_Process_Log {
 	 * Initialize the logger by setting up hooks and loading necessary data.
 	 *
 	 * @since BuddyBoss [BBVERSION]
+	 * @throws Exception
 	 */
 	public function load() {
-		global $wpdb;
+		$bp_prefix = bp_core_get_table_prefix();
 
-		$this->table_name = "{$wpdb->prefix}bb_background_process_logs";
+		$this->table_name = $bp_prefix . 'bb_background_process_logs';
 
 		$this->setup_hooks();
 		$this->schedule_log_event();
@@ -64,11 +75,11 @@ class BB_BG_Process_Log {
 	 */
 	private function setup_hooks() {
 		// Old background jobs.
-		add_filter( 'bb_bp_bg_process_start', array( $this, 'record_bp_bg_process' ), 10, 1 );
+		add_filter( 'bb_bp_bg_process_start', array( $this, 'record_bp_bg_process' ) );
 		add_action( 'bb_bp_bg_process_end', array( $this, 'update_bp_bg_process' ), 10, 1 );
 
 		// New background jobs.
-		add_filter( 'bb_bg_process_start', array( $this, 'record_bg_process' ), 10, 1 );
+		add_filter( 'bb_bg_process_start', array( $this, 'record_bg_process' ) );
 		add_action( 'bb_bg_process_end', array( $this, 'update_bg_process' ), 10, 1 );
 
 		// Schedule an event to clear logs.
@@ -383,7 +394,8 @@ class BB_BG_Process_Log {
 	public function create_table() {
 		global $wpdb;
 
-		$log_table_name  = "{$wpdb->prefix}bb_background_process_logs";
+		$bp_prefix       = bp_core_get_table_prefix();
+		$log_table_name  = $bp_prefix . 'bb_background_process_logs';
 		$charset_collate = $wpdb->get_charset_collate();
 		$has_table       = $wpdb->query( $wpdb->prepare( 'show tables like %s', $log_table_name ) ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
@@ -457,7 +469,7 @@ class BB_BG_Process_Log {
 	public function clear_logs() {
 		global $wpdb;
 
-		$results = $wpdb->get_results( "SELECT id FROM {$this->table_name} WHERE process_start_date <= CONVERT_TZ(NOW(), 'SYSTEM', '+00:00') - INTERVAL 30 DAY;", ARRAY_A ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$results = $wpdb->get_results( "SELECT id FROM $this->table_name WHERE process_start_date <= CONVERT_TZ(NOW(), 'SYSTEM', '+00:00') - INTERVAL 30 DAY;", ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		/**
 		 * Filter the limit of rows to delete from the background process log table.
@@ -498,7 +510,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Removed the old background job records.
 	 *
-	 * @since  BuddyBoss [BBVERSION]
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param array $bg_ids IDs of bg jobs.
 	 *
@@ -513,7 +525,7 @@ class BB_BG_Process_Log {
 
 		$ids    = wp_parse_id_list( $bg_ids );
 		$ids_in = "'" . implode( "','", $ids ) . "'";
-		$wpdb->query( "DELETE FROM {$this->table_name} WHERE id IN ($ids_in)" ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$wpdb->query( "DELETE FROM $this->table_name WHERE id IN ($ids_in)" ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	}
 
 	/**
