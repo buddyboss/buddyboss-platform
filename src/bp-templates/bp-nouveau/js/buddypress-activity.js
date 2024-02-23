@@ -1729,8 +1729,8 @@ window.bp = window.bp || {};
 
 				parent.ajax(
 					{
-						action     : 'toggle_activity_notification_status',
-						id         : activity_id,
+						action                     : 'toggle_activity_notification_status',
+						id                         : activity_id,
 						notification_toggle_action : notification_toggle_action
 					},
 					'activity'
@@ -1746,7 +1746,7 @@ window.bp = window.bp || {};
 						if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.feedback ) {
 
 							if ( response.success ) {
-								// Change the pinned class and label.
+								// Change the muted class and label.
 								if ( 'mute' === notification_toggle_action ) {
 									target.closest( 'li.activity-item' ).addClass( 'bb-muted' );
 									target.removeClass( 'bb-icon-bell-slash' );
