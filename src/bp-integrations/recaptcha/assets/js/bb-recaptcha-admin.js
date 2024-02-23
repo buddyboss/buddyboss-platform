@@ -21,7 +21,7 @@
 				$( '.bb-recaptcha-settings form #bb_recaptcha_settings table' ).removeClass( 'bb-inactive-field' );
 				$( '.bb-recaptcha-settings form #bb_recaptcha_design table' ).removeClass( 'bb-inactive-field' );
 			}
-			if ( $( '.bb-recaptcha-settings .section-bb_recaptcha_versions .bb-recaptcha-errors' ).length ) {
+			if ( $( '.bb-recaptcha-settings .section-bb_recaptcha_versions .bb-recaptcha-status .not-connected' ).length ) {
 				$( '.bb-recaptcha-settings form #bb_recaptcha_settings table' ).addClass( 'bb-inactive-field' );
 				$( '.bb-recaptcha-settings form #bb_recaptcha_design table' ).addClass( 'bb-inactive-field' );
 			}
