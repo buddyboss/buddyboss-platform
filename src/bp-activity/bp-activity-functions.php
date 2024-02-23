@@ -6592,8 +6592,9 @@ function bb_toggle_activity_notification_status( $args = array() ) {
 		 *
 		 * @param int    $activity_id Activity ID.
 		 * @param string $action      Action type mute/unmute.
+		 * @param string $retval      Notification status.
 		 */
-		do_action( 'bb_activity_mute_unmute_notification', $activity->id, $r['action'] );
+		do_action( 'bb_activity_mute_unmute_notification', $activity->id, $r['action'], $retval );
 	}
 
 	return $retval;
