@@ -4559,6 +4559,7 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
 
 .bb-activity-model-wrapper.bb-internal-model > .activity-modal {
   max-height: 85vh;
+  min-height: 85vh;
   max-width: 700px;
   width: 700px;
   position: relative;
@@ -4567,6 +4568,8 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
 .bb-activity-model-wrapper .activity-modal {
   background: #fff;
   border: 1px solid #b7b7b7;
+  display: flex;
+  flex-direction: column;
 }
 
 .bb-activity-model-wrapper .activity-list {
@@ -4611,6 +4614,7 @@ body:not(.bb-is-mobile) .bb-activity-model-wrapper .activity-list .activity-item
   left: 0;
   width: 100%;
   height: 60px;
+  min-height: 60px;
   border-bottom: 1px solid #eee;
   padding: 0 25px;
 }
@@ -4628,25 +4632,77 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   margin-left: auto;
 }
 
-/*.bb-modal-activity-footer {
-	width: 100%;
-	height: 92px;
-	max-height: 252px;
-	border-top: 1px solid $bp-border-color;
-	padding: 10px 25px;
-	overflow-y: auto;
-	overflow-x: hidden;
+.bb-modal-activity-footer {
+  min-height: 106px;
+  max-height: 252px;
+  border-top: 1px solid #eee;
+  padding: 10px 25px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px 15px;
+}
 
-	form.ac-form {
-		margin: 0;
-	}
-}*/
+.bb-modal-activity-footer form.ac-form {
+  margin: 0;
+}
+
+.bb-modal-activity-footer.active .ac-form-placeholder {
+  display: none;
+}
+
+.ac-form-placeholder .bp-ac-form-cotainer {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.ac-form-placeholder .ac-reply-avatar {
+  margin-top: 4px;
+}
+
+.ac-form-placeholder .ac-reply-avatar .avatar-placeholder {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  background-color: #F2F4F5;
+  border-radius: 50%;
+}
+
+.ac-form-placeholder .ac-reply-avatar img {
+  display: none;
+  max-width: 32px;
+}
+
+.ac-form-placeholder .ac-reply-content {
+  padding: 8px;
+  margin-left: 10px;
+  border: 1px solid #D6D9DD;
+  background-color: #F2F4F5;
+  border-radius: 6px;
+  min-height: 85px;
+  position: relative;
+}
+
+.ac-form-placeholder .ac-reply-content .ac-reply-toolbar {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  bottom: 3px;
+  left: 10px;
+  margin-top: 10px;
+}
+
+.ac-form-placeholder .ac-reply-content .ac-reply-toolbar .post-elements-buttons-item {
+  margin-right: 10px;
+}
+
 .bb-modal-activity-body {
   position: relative;
   padding: 15px;
   max-height: calc(85vh - 62px);
   /*overflow-y: auto;*/
   overflow-x: hidden;
+  flex-grow: 1;
 }
 
 .bb-modal-activity-body .init-placeholder {

@@ -133,6 +133,7 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #activity-modal' ).on( 'click', 'span.privacy', bp.Nouveau, this.togglePrivacyDropdown.bind( this ) );
 			$( '#bb-media-model-container .activity-list' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
 			$( '.bb-activity-model-wrapper' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
+			$( '.bb-activity-model-wrapper' ).on( 'click', '.ac-form-placeholder', bp.Nouveau, this.activityRootComment.bind( this ) );
 			$( document ).keydown( this.commentFormAction );
 			$( document ).click( this.togglePopupDropdown );
 
@@ -545,7 +546,7 @@ window.bp = window.bp || {};
 
 		closeComments: function( event ) {
 			event.preventDefault();
-			var target = $( event.target ), modal = target.closest( '.bb-activity-model-wrapper' );
+			var target = $( event.target ), modal = target.closest( '.bb-activity-model-wrapper' ), footer = modal.find( '.bb-modal-activity-footer' );
 			var activityId = modal.find( '.activity-item' ).data( 'bp-activity-id' );
 			
 			bp.Nouveau.Activity.initializeEmojioneArea( false, '', activityId );
@@ -553,6 +554,8 @@ window.bp = window.bp || {};
 			modal.closest('body').removeClass( 'acomments-modal-open' );
 			modal.hide();
 			modal.find( 'ul.activity-list' ).empty();
+			footer.removeClass( 'active' );
+			footer.find( 'form.ac-form' ).remove();
 		},
 
 		/**
@@ -1128,7 +1131,7 @@ window.bp = window.bp || {};
 				item_id                   = activity_id;
 				if ( isInsideModal ) {
 					form = $('#activity-modal').find( '#ac-form-' + activity_id );
-					var $activity_comments = $('#activity-modal').find( '[data-bp-activity-id="' + item_id + '"] .activity-comments' );
+					var $activity_comments = $('#activity-modal').find( '.bb-modal-activity-footer' );
 					var hasParentModal = '#activity-modal ';
 				} else {
 					form = $( '#ac-form-' + activity_id );
@@ -1192,6 +1195,10 @@ window.bp = window.bp || {};
 				} else {
 					// It's an activity we're commenting.
 					if ( item_id === activity_id ) {
+						if ( isInsideModal ) {
+							$( '.bb-modal-activity-footer' ).addClass( 'active' );
+						} 
+
 						$activity_comments.append( form );
 						form.addClass( 'root' );
 						$activity_comments.find( '.acomment-display' ).removeClass('display-focus');
@@ -1199,6 +1206,7 @@ window.bp = window.bp || {};
 						// It's a comment we're replying to.
 					} else {
 						if ( isInsideModal ) {
+							$( '.bb-modal-activity-footer' ).removeClass( 'active' );
 							$('#activity-modal').find( '[data-bp-activity-comment-id="' + item_id + '"]' ).append( form );
 						} else {
 							$( '[data-bp-activity-comment-id="' + item_id + '"]' ).append( form );
@@ -1254,7 +1262,7 @@ window.bp = window.bp || {};
 								}
 							}
 						);
-						$( div_editor ).closest( 'form' ).addClass( 'events-initiated' );
+						//$( div_editor ).closest( 'form' ).addClass( 'events-initiated' );
 						self.InitiatedCommentForms.push( commentID ); // Add this Comment form in initiated comment form list.
 					}
 				}
@@ -3188,6 +3196,22 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * [activityRootComment description]
+		 *
+		 * @return {[type]}       [description]
+		 */
+		activityRootComment: function( e ) {
+			var currentTarget = $( e.currentTarget ),
+				modal = currentTarget.closest( '#activity-modal' ),
+				activityId  = modal.find( '.activity-item' ).data( 'bp-activity-id' ),
+				form = modal.find( '#ac-form-' + activityId );
+
+				modal.find( '.bb-modal-activity-footer' ).addClass( 'active' ).append( form );
+				form.addClass( 'root' );
+				form.find( '#ac-input-' + activityId ).focus();
+		},
+
+		/**
 		 * [launchActivityPopup description]
 		 *
 		 * @return {[type]}       [description]
@@ -3199,10 +3223,13 @@ window.bp = window.bp || {};
 			var selector = '[data-parent_comment_id="' + parentID + '"]';
 
 			modal.closest('body').addClass( 'acomments-modal-open' );
-
 			modal.show();
-
 			modal.find( 'ul.activity-list' ).html( activity_content );
+			
+			var form = modal.find( '#ac-form-' + activityID );
+			modal.find( '.bb-modal-activity-footer' ).addClass( 'active' ).append( form );
+			form.removeClass( 'not-initialized' ).addClass( 'root' );
+			form.find( '#ac-input-' + activityID ).focus();
 			
 			var action_tooltip = modal.find( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options-action' );
 			var privacy_wrap = modal.find( '.privacy-wrap' );
