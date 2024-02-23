@@ -112,13 +112,19 @@ class BB_BG_Process_Log {
 			return $args;
 		}
 
+		if ( is_string( $bg_data ) ) {
+			$bg_data = array( 'callback' => $bg_data );
+		} else {
+			$bg_data['callback'] = is_array( $bg_data['callback'] ) ? maybe_serialize( $bg_data['callback'] ) : $bg_data['callback'];
+		}
+
 		$insert = $this->add_log(
 			array(
 				'component'         => self::get_component_name( $bg_data['callback'] ),
 				'bg_process_from'   => self::action_from( $bg_data['callback'] ),
 				'bg_process_name'   => $bg_data['callback'],
 				'callback_function' => $bg_data['callback'],
-				'data'              => maybe_serialize( $bg_data['args'] ),
+				'data'              => ! empty( $bg_data['args'] ) ? maybe_serialize( $bg_data['args'] ) : '',
 			)
 		);
 
