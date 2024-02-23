@@ -6641,7 +6641,7 @@ function bb_activity_get_metadata( $activity_id ) {
 }
 
 /**
- * Check User has muted notification ot not.
+ * Check User has muted notification or not.
  *
  * @since BuddyBoss [BBVERSION]
  *
