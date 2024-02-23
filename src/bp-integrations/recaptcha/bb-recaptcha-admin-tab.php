@@ -96,8 +96,6 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			$bb_recaptcha['connection_status'] = $verified;
 			bp_update_option( 'bb_recaptcha', $bb_recaptcha );
 		}
-
-		parent::settings_save();
 	}
 
 	/**
