@@ -479,6 +479,10 @@ function bp_version_updater() {
 			bb_update_to_2_5_41();
 		}
 
+		if ( $raw_db_version < 20991 ) {
+			bb_update_to_2_4_74();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3414,4 +3418,17 @@ function bb_update_to_2_5_41() {
 	bp_update_option( 'bb_activity_load_type', $autoload_new_setting );
 	bp_update_option( 'bb_ajax_request_page_load', 2 );
 	bp_update_option( 'bb_load_activity_per_request', 10 );
+}
+
+/**
+ * Create a new table for background process logs.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_4_74() {
+	if ( class_exists( 'BB_BG_Process_Log' ) ) {
+		BB_BG_Process_Log::instance()->create_table();
+	}
 }
