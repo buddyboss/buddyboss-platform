@@ -154,9 +154,11 @@ class BB_BG_Process_Log {
 		if ( empty( $bg_data ) ) {
 			return $args;
 		}
-
-		$bg_data['callback'] = maybe_serialize( $bg_data['callback'] );
-
+		if ( is_string( $bg_data ) ) {
+			$bg_data = array( 'callback' => $bg_data );
+		} else {
+			$bg_data['callback'] = is_array( $bg_data['callback'] ) ? maybe_serialize( $bg_data['callback'] ) : $bg_data['callback'];
+		}
 		$insert = $this->add_log(
 			array(
 				'process_id'        => $args->key,
@@ -166,7 +168,7 @@ class BB_BG_Process_Log {
 				'callback_function' => $bg_data['callback'],
 				'blog_id'           => $args->blog_id,
 				'priority'          => $args->priority,
-				'data'              => maybe_serialize( $bg_data['args'] ),
+				'data'              => ! empty( $bg_data['args'] ) ? maybe_serialize( $bg_data['args'] ) : '',
 			)
 		);
 
@@ -469,7 +471,7 @@ class BB_BG_Process_Log {
 	public function clear_logs() {
 		global $wpdb;
 
-		$results = $wpdb->get_results( "SELECT id FROM $this->table_name WHERE process_start_date <= CONVERT_TZ(NOW(), 'SYSTEM', '+00:00') - INTERVAL 30 DAY;", ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$results = $wpdb->get_results( "SELECT id FROM $this->table_name WHERE process_start_date_gmt <= NOW() - INTERVAL 30 DAY;", ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		/**
 		 * Filter the limit of rows to delete from the background process log table.
