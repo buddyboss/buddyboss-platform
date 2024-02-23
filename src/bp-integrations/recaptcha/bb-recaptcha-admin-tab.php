@@ -543,7 +543,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					</div>
 					<div class="verified_token" style="display:none;">
 						<p>
-							<?php esc_html_e( 'reCAPTCHA token is ready, click Submit to verify', 'buddyboss' ); ?>
+							<?php esc_html_e( 'reCAPTCHA token is ready, click submit to verify', 'buddyboss' ); ?>
 						</p>
 					</div>
 				</div>
