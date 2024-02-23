@@ -497,3 +497,27 @@ function bb_groups_clear_group_type_cache_before_delete( $post_id ) {
 }
 
 add_action( 'before_delete_post', 'bb_groups_clear_group_type_cache_before_delete' );
+
+/**
+ * Reset cache incrementor for the Groups member.
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @return bool True on success, false on failure.
+ */
+function bb_groups_member_reset_cache_incrementor() {
+	return bp_core_reset_incrementor( 'bp_groups_member' );
+}
+add_action( 'groups_member_after_save', 'bb_groups_member_reset_cache_incrementor' );
+add_action( 'bp_groups_member_after_delete', 'bb_groups_member_reset_cache_incrementor' );
+add_action( 'groups_reject_invite', 'bb_groups_member_reset_cache_incrementor' );
+add_action( 'groups_invite_user', 'bb_groups_member_reset_cache_incrementor' );
+add_action( 'groups_uninvite_user', 'bb_groups_member_reset_cache_incrementor' );
+add_action( 'groups_membership_rejected', 'bb_groups_member_reset_cache_incrementor' );
+add_action( 'groups_membership_requested', 'bb_groups_member_reset_cache_incrementor' );
+add_action( 'groups_group_after_save', 'bb_groups_member_reset_cache_incrementor' );
+add_action( 'groups_create_group_step_complete', 'bb_groups_member_reset_cache_incrementor' );
+add_action( 'bp_groups_delete_group', 'bp_groups_reset_cache_incrementor' );
+add_action( 'updated_group_meta', 'bp_groups_reset_cache_incrementor' );
+add_action( 'deleted_group_meta', 'bp_groups_reset_cache_incrementor' );
+add_action( 'added_group_meta', 'bp_groups_reset_cache_incrementor' );

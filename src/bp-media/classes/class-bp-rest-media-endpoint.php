@@ -2338,9 +2338,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		$media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
-		$media_id  = bp_activity_get_meta( $activity_id, 'bp_media_id', true );
+		$activity_metas = bb_activity_get_metadata( $activity_id );
 
+		$media_ids = $activity_metas['bp_media_ids'][0] ?? '';
+		$media_id  = $activity_metas['bp_media_id'][0] ?? '';
 		$media_ids = trim( $media_ids );
 		$media_ids = explode( ',', $media_ids );
 
@@ -2582,8 +2583,9 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$gif_data = bp_activity_get_meta( $activity_id, '_gif_data', true );
+		$activity_metas = bb_activity_get_metadata( $activity_id );
 
+		$gif_data = ! empty( $activity_metas['_gif_data'][0] ) ? maybe_unserialize( $activity_metas['_gif_data'][0] ) : array();
 		if ( empty( $gif_data ) ) {
 			return;
 		}

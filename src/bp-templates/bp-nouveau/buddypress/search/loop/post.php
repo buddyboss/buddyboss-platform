@@ -9,7 +9,8 @@
  * @version 1.0.0
  */
 
-$result = bp_search_is_post_restricted( get_the_ID(), get_current_user_id(), 'post' );
+$search_post_id = get_the_ID();
+$result         = bp_search_is_post_restricted( $search_post_id, get_current_user_id(), 'post' );
 ?>
 <li class="bp-search-item bp-search-item_post <?php echo esc_attr( $result['post_class'] ); ?>">
 	<div class="list-wrap">
@@ -45,7 +46,7 @@ $result = bp_search_is_post_restricted( get_the_ID(), get_current_user_id(), 'po
 
 			<div class="entry-content entry-summary">
 				<?php
-				$get_the_post_content = apply_filters( 'the_content', get_the_content( '', false, get_the_ID() ) );
+				$get_the_post_content = apply_filters( 'the_content', get_the_content( '', false, $search_post_id ) );
 				// Render Divi shortcodes and other as well.
 				ob_start();
 				echo do_shortcode( $get_the_post_content );

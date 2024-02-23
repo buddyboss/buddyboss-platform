@@ -9,6 +9,8 @@
  * @version 1.7.0
  */
 
+$bp_get_album_id = bp_get_album_id();
+$bp_get_album_id = ! empty( $bp_get_album_id ) ? $bp_get_album_id : 0;
 ?>
 <div class="bb-dropdown-wrap">
 	<div class="location-album-list-wrap-main <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>">
@@ -26,6 +28,6 @@
 			</div>
 		</div> <!-- .location-album-list-wrap -->
 		<input type="hidden" class="bb-album-create-from" value="profile" readonly/>
-		<input type="hidden" class="bb-album-selected-id" value="<?php echo bp_get_album_id() ? esc_attr( bp_get_album_id() ) : '0'; ?>" data-value="<?php echo bp_get_album_id() ? esc_attr( bp_get_album_id() ) : '0'; ?>" readonly/>
+		<input type="hidden" class="bb-album-selected-id" value="<?php echo esc_attr( $bp_get_album_id ); ?>" data-value="<?php echo esc_attr( $bp_get_album_id ); ?>" readonly/>
 	</div>
 </div>

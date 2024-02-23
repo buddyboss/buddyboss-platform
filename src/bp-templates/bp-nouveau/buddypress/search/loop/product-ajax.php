@@ -9,14 +9,17 @@
  * @version 1.0.0
  */
 
-$product = wc_get_product( get_the_ID() ); ?>
+$product_id    = get_the_ID();
+$product       = wc_get_product( $product_id );
+$product_thumb = get_the_post_thumbnail_url();
+?>
 <div class="bp-search-ajax-item bp-search-ajax-item_product">
 	<a href="<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), get_permalink() ) ); ?>">
 		<div class="item-avatar">
 			<?php
-			if ( get_the_post_thumbnail_url() ) {
+			if ( $product_thumb ) {
 				?>
-				<img src="<?php echo esc_url( get_the_post_thumbnail_url() ); ?>" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="<?php the_title(); ?>" />
+				<img src="<?php echo esc_url( $product_thumb ); ?>" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="<?php the_title(); ?>" />
 				<?php
 			} else {
 				?>
@@ -31,9 +34,9 @@ $product = wc_get_product( get_the_ID() ); ?>
 			<?php wc_get_template( 'single-product/short-description.php' ); ?>
 			<div class="entry-meta">
 				<?php
-				$category = wc_get_product_category_list( get_the_ID() );
+				$category = wc_get_product_category_list( $product_id );
 				if ( $category ) {
-					echo wc_get_product_category_list( get_the_ID(), '<span class="middot">&middot;</span>' );
+					echo wc_get_product_category_list( $product_id, '<span class="middot">&middot;</span>' );
 				}
 				?>
 				<span class="middot">&middot;</span>

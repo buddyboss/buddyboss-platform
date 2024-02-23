@@ -744,7 +744,7 @@ class BP_Email_Tokens {
 
 
 												} else {
-													$object_id = ! empty( $tokens['reply_id'] ) ? $tokens['reply_id'] : $tokens['topic_id'];
+													$object_id = ! empty( $tokens['reply_id'] ) ? $tokens['reply_id'] : ( ! empty( $tokens['topic_id'] ) ? $tokens['topic_id'] : '' );
 													// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 													echo wpautop( $content );
 												}

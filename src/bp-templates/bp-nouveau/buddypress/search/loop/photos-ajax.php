@@ -25,8 +25,9 @@ $class = ''; // used.
 if ( $attachment_id && bp_get_media_activity_id() ) {
 	$class = ''; // used.
 }
-$media_link    = bp_get_media_link();
-$media_created = bp_get_media_date_created();
+$media_link       = bp_get_media_link();
+$media_created    = bp_get_media_date_created();
+$media_visibility = bp_get_media_visibility();
 ?>
 
 <div class="bp-search-ajax-item bboss_ajax_search_media search-media-list">
@@ -48,7 +49,7 @@ $media_created = bp_get_media_date_created();
 				<div class="media-album_modified">
 					<div class="media-album_details__bottom">
 						<span class="media-album_author"><?php esc_html_e( 'By ', 'buddyboss' ); ?>
-							<a href="<?php echo esc_url( $media_link ); ?>"><?php esc_html( bp_media_author() ); ?></a>
+							<a href="<?php echo esc_url( $media_link ); ?>"><?php esc_html( bp_get_media_author() ); ?></a>
 						</span>
 						<span class="middot">&middot;</span>
 						<span class="media-album_date"><?php echo esc_html( bp_core_format_date( $media_created ) ); ?></span>
@@ -64,14 +65,14 @@ $media_created = bp_get_media_date_created();
 								?>
 									<span class="middot">&middot;</span>
 									<span class="bp-tooltip" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
-									<?php bp_media_visibility(); ?>
+									<?php echo esc_html( $media_visibility ); ?>
 									</span>
 								<?php
 							} else {
 								?>
 									<span class="middot">&middot;</span>
-									<span id="privacy-<?php echo esc_attr( bp_get_media_id() ); ?>">
-									<?php bp_media_visibility(); ?>
+									<span id="privacy-<?php echo esc_attr( $media_id ); ?>">
+									<?php echo esc_html( $media_visibility ); ?>
 									</span>
 								<?php
 							}
@@ -79,7 +80,7 @@ $media_created = bp_get_media_date_created();
 							?>
 								<span class="middot">&middot;</span>
 								<span>
-								<?php bp_media_visibility(); ?>
+								<?php echo esc_html( $media_visibility ); ?>
 								</span>
 							<?php
 						}

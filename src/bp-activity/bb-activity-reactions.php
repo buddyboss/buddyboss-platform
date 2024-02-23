@@ -713,7 +713,7 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 			$display_names[] = bp_core_get_user_displayname( current( $reacted_users ) );
 		} else {
 			$display_names[] = sprintf(
-				_n( 'other', '%s others', count( $reacted_users ), 'buddyboss' ),
+				__( '%s others', 'buddyboss' ),
 				bb_format_reaction_count( count( $reacted_users ) )
 			);
 		}

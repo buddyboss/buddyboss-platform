@@ -539,7 +539,7 @@ function bp_theme_compat_reset_post( $args = array() ) {
 	}
 
 	// Bail if dummy post is empty.
-	if ( empty( $dummy ) ) {
+	if ( empty( $dummy ) || apply_filters( 'bb_theme_compat_reset_post', false ) ) {
 		return;
 	}
 

@@ -144,9 +144,7 @@ class BB_Subscriptions extends Integration_Abstract {
 		);
 
 		if ( ! empty( $subscription_ids['subscriptions'] ) ) {
-			foreach ( $subscription_ids['subscriptions'] as $subscription_id ) {
-				$this->purge_item_cache_by_item_id( $subscription_id );
-			}
+			$this->purge_item_cache_by_item_ids( $subscription_ids['subscriptions'] );
 		}
 	}
 
@@ -223,10 +221,9 @@ class BB_Subscriptions extends Integration_Abstract {
 	 */
 	private function purge_item_cache_by_user_id( $user_id ) {
 		$subscription_ids = $this->get_subscription_ids_by_userid( $user_id );
+
 		if ( ! empty( $subscription_ids ) ) {
-			foreach ( $subscription_ids as $subscription_id ) {
-				$this->purge_item_cache_by_item_id( $subscription_id );
-			}
+			$this->purge_item_cache_by_item_ids( $subscription_ids );
 		}
 	}
 
@@ -237,5 +234,20 @@ class BB_Subscriptions extends Integration_Abstract {
 	 */
 	private function purge_item_cache_by_item_id( $subscription_id ) {
 		Cache::instance()->purge_by_group( 'bb-subscriptions_' . $subscription_id );
+	}
+
+	/**
+	 * Purge item cache by item ids.
+	 *
+	 * @param array $ids Array of ids.
+	 *
+	 * @return void
+	 */
+	private function purge_item_cache_by_item_ids( $ids ) {
+		if ( empty( $ids ) ) {
+			return;
+		}
+
+		Cache::instance()->purge_by_group_names( $ids, array( 'bb-subscriptions_' ) );
 	}
 }

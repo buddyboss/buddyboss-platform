@@ -236,8 +236,10 @@ class Cache {
 	 * @param string $group_name Cache group name.
 	 */
 	public function purge_by_group( $group_name ) {
-		static $bp_purge_by_group_cache = array();
 		global $wpdb;
+
+		static $bp_purge_by_group_cache = array();
+
 		$cache_key = 'purge_by_group_' . sanitize_title( $group_name );
 		if ( ! isset( $bp_purge_by_group_cache[ $cache_key ] ) ) {
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -251,6 +253,81 @@ class Cache {
 			foreach ( $caches as $key => $cache ) {
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->query( $wpdb->prepare( "DELETE FROM {$this->cache_table} WHERE cache_name=%s AND cache_group=%s", $cache->cache_name, $group_name ) );
+			}
+		}
+	}
+
+	/**
+	 * Purge cache by groups
+	 *
+	 * @param array|string $group_names Cache group names.
+	 *
+	 * @since BuddyBoss 2.5.50
+	 */
+	public function purge_by_groups( $group_names ) {
+		global $wpdb;
+
+		if ( empty( $group_names ) ) {
+			return;
+		}
+
+		/**
+		 * Filter the cache purge limit.
+		 *
+		 * @param int $limit Cache purge limit.
+		 *
+		 * @since BuddyBoss 2.5.50
+		 */
+		$limit = apply_filters( 'bb_cache_purge_limit', 1000 );
+
+		$groups_in = is_array( $group_names ) ? "'" . implode( "','", $group_names ) . "'" : "'" . $group_names . "'";
+
+		//phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$count = $wpdb->get_var( "SELECT COUNT(id) FROM {$this->cache_table} WHERE cache_group IN ($groups_in)" );
+
+		if ( $count ) {
+			$round_count = ceil( $count / $limit );
+
+			for ( $i = 0; $i < $round_count; $i++ ) {
+				//phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$wpdb->query( "DELETE FROM {$this->cache_table} WHERE cache_group IN ($groups_in) LIMIT {$limit}" );
+			}
+		}
+	}
+
+	/**
+	 * Purge cache by user id
+	 *
+	 * @param integer $user_id     Cache user id.
+	 * @param array   $group_names Cache group names.
+	 */
+	public function purge_groups_by_user_id( $user_id, $group_names ) {
+		global $wpdb;
+
+		if ( empty( $user_id ) || empty( $group_names ) ) {
+			return;
+		}
+
+		/**
+		 * Filter the cache purge limit.
+		 *
+		 * @param int $limit Cache purge limit.
+		 *
+		 * @since BuddyBoss 2.5.50
+		 */
+		$limit = apply_filters( 'bb_cache_purge_limit', 1000 );
+
+		$groups_in = "'" . implode( "','", $group_names ) . "'";
+
+		//phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$this->cache_table} WHERE user_id=%d AND cache_group IN ($groups_in)", $user_id ) );
+
+		if ( $count ) {
+			$round_count = ceil( $count / $limit );
+
+			for ( $i = 0; $i < $round_count; $i++ ) {
+				//phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$wpdb->query( $wpdb->prepare( "DELETE FROM {$this->cache_table} WHERE user_id=%d AND cache_group IN ($groups_in) LIMIT {$limit}", $user_id ) );
 			}
 		}
 	}
@@ -324,6 +401,102 @@ class Cache {
 			// Operation succeeded.
 		} else { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedElse
 			// Operation failed.
+		}
+	}
+
+	/**
+	 * Purge cache by group names.
+	 *
+	 * @param array $ids               Array of ids.
+	 * @param array $group_names       Array of group names.
+	 * @param array $deeplink_callback Callable function to prepare the deeplink group name.
+	 *
+	 * @since BuddyBoss 2.5.50
+	 *
+	 * @return void
+	 */
+	public function purge_by_group_names( $ids, $group_names, $deeplink_callback = '' ) {
+		if ( empty( $ids ) || empty( $group_names ) ) {
+			return;
+		}
+
+		$count        = count( $ids );
+		$cache_groups = array();
+
+		/**
+		 * Limit the number of ids to purge at once.
+		 *
+		 * @param int $limit Cache purge limit.
+		 *
+		 * @since BuddyBoss 2.5.50
+		 */
+		$limit = apply_filters( 'bb_cache_purge_groups_limit', 1000 );
+
+		if ( $limit < $count ) {
+			$chunked_data = array_chunk( $ids, $limit );
+
+			foreach ( $chunked_data as $chunked_ids ) {
+				foreach ( $chunked_ids as $id ) {
+					foreach ( $group_names as $group_name ) {
+						$cache_groups[] = $group_name . $id;
+
+						if ( ! empty( $deeplink_callback ) && is_callable( $deeplink_callback ) ) {
+							$cache_groups[] = $group_name . call_user_func( $deeplink_callback, $id );
+						}
+					}
+				}
+
+				$this->purge_by_groups( $cache_groups );
+			}
+		} else {
+			foreach ( $ids as $id ) {
+				foreach ( $group_names as $group_name ) {
+					$cache_groups[] = $group_name . $id;
+
+					if ( ! empty( $deeplink_callback ) && is_callable( $deeplink_callback ) ) {
+						$cache_groups[] = $group_name . call_user_func( $deeplink_callback, $id );
+					}
+				}
+			}
+
+			$this->purge_by_groups( $cache_groups );
+		}
+	}
+
+	/**
+	 * Purge cache user groups.
+	 *
+	 * @param int   $user_id     User ID.
+	 * @param array $group_names Array of group names.
+	 *
+	 * @since BuddyBoss 2.5.50
+	 *
+	 * @return void
+	 */
+	public function purge_user_groups( $user_id, $group_names ) {
+		if ( empty( $user_id ) || empty( $group_names ) ) {
+			return;
+		}
+
+		$count = count( $group_names );
+
+		/**
+		 * Limit the number of ids to purge at once.
+		 *
+		 * @param int $limit Cache purge limit.
+		 *
+		 * @since BuddyBoss 2.5.50
+		 */
+		$limit = apply_filters( 'bb_cache_purge_groups_limit', 1000 );
+
+		if ( $limit < $count ) {
+			$chunked_data = array_chunk( $group_names, $limit );
+
+			foreach ( $chunked_data as $chunked_groups ) {
+				$this->purge_groups_by_user_id( $user_id, $chunked_groups );
+			}
+		} else {
+			$this->purge_groups_by_user_id( $user_id, $group_names );
 		}
 	}
 }
