@@ -1947,15 +1947,12 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	$notification_type = bb_activity_enabled_notification( 'bb_activity_comment', bp_loggedin_user_id() );
 	if ( ! empty( $notification_type ) && ! empty( array_filter( $notification_type ) ) ) {
 
-		$unmute_action_class        = 'bb-icon-bell-slash';
-		$unmute_action_label        = __( 'Turn Off Notification', 'buddyboss' );
-		$activity_mute_notification = bp_activity_get_meta( $activity_id, 'muted_notification_users' );
+		$unmute_action_class = 'bb-icon-bell-slash';
+		$unmute_action_label = __( 'Turn Off Notification', 'buddyboss' );
 
-		if ( ! empty( $activity_mute_notification ) && is_array( $activity_mute_notification ) ) {
-			if ( in_array( bp_loggedin_user_id(), $activity_mute_notification, true ) ) {
-				$unmute_action_class = 'bb-icon-bell';
-				$unmute_action_label = __( 'Turn On Notification', 'buddyboss' );
-			}
+		if ( bb_user_has_mute_notification( $activity_id, bp_loggedin_user_id() ) ) {
+			$unmute_action_class = 'bb-icon-bell';
+			$unmute_action_label = __( 'Turn On Notification', 'buddyboss' );
 		}
 
 		$buttons['turn_on_off_notification'] = array(

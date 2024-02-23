@@ -6589,11 +6589,11 @@ function bb_toggle_activity_notification_status( $args = array() ) {
  */
 function bb_activity_enabled_notification( $field_type, $user_id = 0 ) {
 	static $cache = null;
-	// $options = array();
+	$options = array();
 
-	// if ( null !== $cache ) {
-	// 	return $cache;
-	// }
+	if ( null !== $cache ) {
+		return $cache;
+	}
 
 	if ( ! bp_is_active( 'notifications' ) ) {
 		$cache = $options;
@@ -6612,7 +6612,7 @@ function bb_activity_enabled_notification( $field_type, $user_id = 0 ) {
 	}
 
 	$options = apply_filters( 'bb_activity_enabled_notification', $options, $field_type, $user_id );
-	// $cache   = $options;
+	$cache   = $options;
 
 	return $options;
 }
@@ -6640,6 +6640,16 @@ function bb_activity_get_metadata( $activity_id ) {
 	return $meta_data;
 }
 
+/**
+ * Check User has muted notification ot not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $activity_id Activity ID.
+ * @param int $user_id     User Id.
+ *
+ * @return boolean
+ */
 function bb_user_has_mute_notification( $activity_id, $user_id ) {
 	$is_muted      = false;
 	$activity_meta = bb_activity_get_metadata( $activity_id );
