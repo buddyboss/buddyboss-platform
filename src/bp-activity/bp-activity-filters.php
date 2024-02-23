@@ -3717,3 +3717,5 @@ add_action( 'bp_after_group_activity_content', 'bp_gifpicker_add_popup_template'
 add_action( 'bp_after_member_activity_content', 'bp_gifpicker_add_popup_template' );
 
 add_action( 'bp_before_directory_activity_list', 'bp_emojionearea_add_popup_template' );
+add_action( 'bp_before_group_activity_content', 'bp_emojionearea_add_popup_template' );
+add_action( 'bp_before_member_activity_content', 'bp_emojionearea_add_popup_template' );
