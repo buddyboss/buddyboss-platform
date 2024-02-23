@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.4.3
 Requires PHP: 5.6.20
-Stable tag: 2.5.50
+Stable tag: 2.5.51
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.5.51 =
+* Bug: Core - A fatal error occurred on the profile page when the Activity Feed component was deactivated
 
 = 2.5.50 =
 * New Feature! - The Profile Avatar User Initials is a new setting to allow site owners to set the default user avatar to use display name initials with different background colors. We have also added this feature to group avatars.
