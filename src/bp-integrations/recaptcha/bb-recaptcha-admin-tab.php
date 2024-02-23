@@ -66,8 +66,10 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'bb-recaptcha-admin',
 				'bbRecaptchaAdmin',
 				array(
-					'ajax_url' => admin_url( 'admin-ajax.php' ),
-					'nonce'    => wp_create_nonce( 'bb-recaptcha-verification' ),
+					'ajax_url'            => admin_url( 'admin-ajax.php' ),
+					'nonce'               => wp_create_nonce( 'bb-recaptcha-verification' ),
+					'bb_recaptcha_ok'     => __( 'OK', 'buddyboss' ),
+					'bb_recaptcha_cancel' => __( 'Cancel', 'buddyboss' ),
 				)
 			);
 		}

@@ -279,7 +279,7 @@
 						$( event.currentTarget ).removeAttr( 'disabled' );
 						if ( response.success && typeof response.data !== 'undefined' ) {
 							$( '#' + selector ).html( response.data );
-							$( '.bb-popup-buttons' ).html( '<button id="recaptcha_verified" class="button">OK</button>' );
+							$( '.bb-popup-buttons' ).html( '<button id="recaptcha_verified" class="button">' + bbRecaptchaAdmin.bb_recaptcha_ok + '</button>' );
 							document.head.removeChild( window.bb_recaptcha_script );
 							window.bb_recaptcha_script = null;
 							window.bb_recaptcha_v3_verify = null;
@@ -289,7 +289,7 @@
 							window.bb_recaptcha_v2_verify_invisible = null;
 						} else {
 							$( '#' + selector ).html( response.data );
-							$( '.bb-popup-buttons' ).html( '<button id="recaptcha_cancel" class="button">Cancel</button>' );
+							$( '.bb-popup-buttons' ).html( '<button id="recaptcha_cancel" class="button">' + bbRecaptchaAdmin.bb_recaptcha_ok + '</button>' );
 						}
 					}
 				}
@@ -365,12 +365,17 @@
 
 		copyByPassUrl: function ( event ) {
 			event.preventDefault();
+			var clickedButtonText = $( event.currentTarget ).html();
 			var urlToCopy = $( '.copy-toggle-text' ).attr( 'href' );
 			var tempInput = $( '<input>' );
 			$( 'body' ).append( tempInput );
 			tempInput.val( urlToCopy ).select();
 			document.execCommand( 'copy' );
 			tempInput.remove();
+			$( event.currentTarget ).text( $( event.currentTarget ).data( 'copied-text' ) );
+			setTimeout( function () {
+				$( event.currentTarget ).html( clickedButtonText );
+			}, 2000 );
 		}
 	};
 
