@@ -258,7 +258,7 @@ function bp_helper_plugins_loaded_callback() {
 				$post_types[] = bbp_get_reply_post_type();
 			}
 
-			if ( ! empty( $post_types ) && in_array( $post->post_type, $post_types ) ) {
+			if ( ! empty( $post_types ) && in_array( $post->post_type, $post_types, true ) ) {
 				return true;
 			}
 
