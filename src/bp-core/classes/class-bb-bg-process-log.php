@@ -7,6 +7,11 @@
  * @since BuddyBoss [BBVERSION]
  */
 
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * BB_BG_Process_Log class.
+ */
 class BB_BG_Process_Log {
 
 	/**
