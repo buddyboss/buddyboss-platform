@@ -387,14 +387,16 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					<?php
 				}
 			}
-			printf(
-			/* translators: recaptcha link */
-				esc_html__( '%s Enter your %s to integrate fraud, spam, and abuse protection into your website. %s', 'buddyboss' ),
-				'<span class="bb-recaptcha-prompt">',
-				'<a href="https://www.google.com/recaptcha/admin#list" target="_blank">' . esc_html__( 'Google reCAPTCHA API keys', 'buddyboss' ) . '</a>',
-				'</span>',
-			)
-		?>
+			?>
+			<span class="bb-recaptcha-prompt">
+				<?php
+				printf(
+				/* translators: recaptcha link */
+					esc_html__( 'Go to %s and log in with your Google account. Upon registration, you\'ll get a site key and secret key. Add these keys below to implement reCAPTCHA and protect your site from fraud, spam, and abuse.', 'buddyboss' ),
+					'<a href="https://www.google.com/recaptcha/admin#list" target="_blank">' . esc_html__( 'Google reCAPTCHA API keys', 'buddyboss' ) . '</a>',
+				)
+				?>
+			</span>
 		</div>
 		<?php
 	}
@@ -573,7 +575,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		<input name="bb_recaptcha[score_threshold]" id="bb-recaptcha-score-threshold" type="number" min="0" max="1" step="0.1" value="<?php echo esc_attr( bb_recaptcha_setting( 'score_threshold', 0.5 ) ); ?>" required/>
 		<p class="description">
 			<?php
-			esc_html_e( 'reCAPTCHA v3 provides a score for every request seamlessly, without causing user friction. Input a risk score between 0 and 1 in the field above to evaluate the probability of being identified as a bot.', 'buddyboss' );
+			esc_html_e( 'reCAPTCHA v3 provides a score for every request seamlessly, without causing user friction. Input a risk score options 0, 0.5 and 1 in the field above to evaluate the probability of being identified as a bot.', 'buddyboss' );
 			?>
 		</p>
 		<?php
@@ -659,7 +661,15 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			}
 			?>
 		</select>
-		<p class="description"><?php esc_html_e( 'Select a language for reCAPTCHA when it is displayed.', 'buddyboss' ); ?></p>
+		<p class="description">
+			<?php
+			echo sprintf(
+			/* translators: Language code link. */
+				esc_html__( 'Choose a language for reCAPTCHA V3 when shown. Find %s in the reCAPTCHA documentation.', 'buddyboss' ),
+				'<a href="https://developers.google.com/recaptcha/docs/language" target="_blank">' . esc_html__( 'Language codes', 'buddyboss' ) . '</a>'
+			)
+			?>
+		</p>
 		<?php
 	}
 
