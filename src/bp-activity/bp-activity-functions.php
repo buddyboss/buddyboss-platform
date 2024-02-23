@@ -1179,8 +1179,10 @@ function bp_activity_favorites_upgrade_data() {
 
 				foreach ( $user_favs as $fav ) {
 
+					$activity_metas = bb_activity_get_metadata( $fav );
+
 					// Update the users who have favorited this activity.
-					$users = bp_activity_get_meta( $fav, 'bp_favorite_users', true );
+					$users = $activity_metas['bp_favorite_users'][0] ?? '';
 					if ( empty( $users ) || ! is_array( $users ) ) {
 						$users = array();
 					}
@@ -2109,7 +2111,7 @@ function bp_activity_add( $args = '' ) {
 	$activity->is_spam           = $r['is_spam'];
 	$activity->privacy           = $r['privacy'];
 	$activity->error_type        = $r['error_type'];
-	$activity->action            = ! empty( $r['action'] ) ? $r['action'] : bp_activity_generate_action_string( $activity );
+	$activity->action            = ! empty( $r['action'] ) ? $r['action'] : '';
 
 	$save = $activity->save();
 
@@ -2190,7 +2192,6 @@ function bp_activity_post_update( $args = '' ) {
 
 	// Record this on the user's profile.
 	$activity_content = $r['content'];
-	$primary_link     = bp_core_get_userlink( $r['user_id'], false, true );
 
 	/**
 	 * Filters the new activity content for current activity item.
@@ -2208,7 +2209,7 @@ function bp_activity_post_update( $args = '' ) {
 	 *
 	 * @param string $primary_link Link to the profile for the user who posted the activity.
 	 */
-	$add_primary_link = apply_filters( 'bp_activity_new_update_primary_link', $primary_link );
+	$add_primary_link = apply_filters( 'bp_activity_new_update_primary_link', '' );
 
 	if ( ! empty( $r['id'] ) ) {
 		$activity = new BP_Activity_Activity( $r['id'] );
@@ -2231,7 +2232,7 @@ function bp_activity_post_update( $args = '' ) {
 					'content'           => $add_content,
 					'component'         => $activity->component,
 					'type'              => $activity->type,
-					'primary_link'      => $add_primary_link,
+					'primary_link'      => $activity->primary_link,
 					'user_id'           => $activity->user_id,
 					'item_id'           => $activity->item_id,
 					'secondary_item_id' => $activity->secondary_item_id,
@@ -2392,10 +2393,10 @@ function bp_activity_post_type_publish( $post_id = 0, $post = null, $user_id = 0
 	// Backward compatibility filters for the 'blogs' component.
 	if ( 'blogs' == $activity_post_object->component_id ) {
 		$activity_content      = apply_filters( 'bp_blogs_activity_new_post_content', '', $post, $post_url, $post->post_type );
-		$activity_primary_link = apply_filters( 'bp_blogs_activity_new_post_primary_link', $post_url, $post_id, $post->post_type );
+		$activity_primary_link = apply_filters( 'bp_blogs_activity_new_post_primary_link', '', $post_id, $post->post_type );
 	} else {
 		$activity_content      = $post->post_content;
-		$activity_primary_link = $post_url;
+		$activity_primary_link = '';
 	}
 
 	$activity_args = array(
@@ -2421,25 +2422,9 @@ function bp_activity_post_type_publish( $post_id = 0, $post = null, $user_id = 0
 		}
 	}
 
-	// Set up the action by using the format functions.
-	$action_args = array_merge(
-		$activity_args,
-		array(
-			'post_title' => $post->post_title,
-			'post_url'   => $post_url,
-		)
-	);
-
-	$activity_args['action'] = call_user_func_array( $activity_post_object->format_callback, array( '', (object) $action_args ) );
-
-	// Make sure the action is set.
-	if ( empty( $activity_args['action'] ) ) {
-		return;
-	} else {
-		// Backward compatibility filter for the blogs component.
-		if ( 'blogs' == $activity_post_object->component_id ) {
-			$activity_args['action'] = apply_filters( 'bp_blogs_record_activity_action', $activity_args['action'] );
-		}
+	// Backward compatibility filter for the blogs component.
+	if ( 'blogs' == $activity_post_object->component_id ) {
+		$activity_args['action'] = apply_filters( 'bp_blogs_record_activity_action', '' );
 	}
 
 	$activity_id = bp_activity_add( $activity_args );
@@ -2695,10 +2680,10 @@ function bp_activity_post_type_comment( $comment_id = 0, $is_approved = true, $a
 	// Backward compatibility filters for the 'blogs' component.
 	if ( 'blogs' == $activity_comment_object->component_id ) {
 		$activity_content      = apply_filters_ref_array( 'bp_blogs_activity_new_comment_content', array( '', &$post_type_comment, $comment_link ) );
-		$activity_primary_link = apply_filters_ref_array( 'bp_blogs_activity_new_comment_primary_link', array( $comment_link, &$post_type_comment ) );
+		$activity_primary_link = apply_filters_ref_array( 'bp_blogs_activity_new_comment_primary_link', array( '', &$post_type_comment ) );
 	} else {
 		$activity_content      = $post_type_comment->comment_content;
-		$activity_primary_link = $comment_link;
+		$activity_primary_link = '';
 	}
 
 	$activity_args = array(
@@ -2734,27 +2719,8 @@ function bp_activity_post_type_comment( $comment_id = 0, $is_approved = true, $a
 			}
 		}
 
-		// Set up the action by using the format functions.
-		$action_args = array_merge(
-			$activity_args,
-			array(
-				'post_title' => $post_type_comment->post->post_title,
-				'post_url'   => $post_url,
-				'blog_url'   => $blog_url,
-				'blog_name'  => get_blog_option( $blog_id, 'blogname' ),
-			)
-		);
-
-		$activity_args['action'] = call_user_func_array( $activity_comment_object->format_callback, array( '', (object) $action_args ) );
-
-		// Make sure the action is set.
-		if ( empty( $activity_args['action'] ) ) {
-			return;
-		} else {
-			// Backward compatibility filter for the blogs component.
-			if ( 'blogs' === $activity_post_object->component_id ) {
-				$activity_args['action'] = apply_filters( 'bp_blogs_record_activity_action', $activity_args['action'] );
-			}
+		if ( 'blogs' === $activity_post_object->component_id ) {
+			$activity_args['action'] = apply_filters( 'bp_blogs_record_activity_action', '' );
 		}
 
 		$activity_id = bp_activity_add( $activity_args );
@@ -2960,7 +2926,7 @@ function bp_activity_new_comment( $args = '' ) {
 			}
 		}
 	}
-	
+
 	// Maybe set current activity ID as the parent.
 	if ( empty( $r['parent_id'] ) ) {
 		$r['parent_id'] = $r['activity_id'];
@@ -3299,8 +3265,10 @@ function bp_activity_remove_user_favorite_meta( $user_id = 0 ) {
 			// Attempt to delete meta value.
 			if ( ! empty( $activity->id ) ) {
 
+				$activity_metas = bb_activity_get_metadata( $activity_id );
+
 				// Update the users who have favorited this activity.
-				$users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
+				$users = $activity_metas['bp_favorite_users'][0] ?? '';
 				if ( empty( $users ) || ! is_array( $users ) ) {
 					$users = array();
 				}
@@ -3314,7 +3282,7 @@ function bp_activity_remove_user_favorite_meta( $user_id = 0 ) {
 				bp_activity_update_meta( $activity_id, 'bp_favorite_users', array_unique( array_values( $users ) ) );
 
 				// Update the total number of users who have favorited this activity.
-				$fav_count = bp_activity_get_meta( $activity_id, 'favorite_count' );
+				$fav_count = $activity_metas['favorite_count'][0] ?? '';
 
 				if ( ! empty( $fav_count ) ) {
 					bp_activity_update_meta( $activity_id, 'favorite_count', (int) $fav_count - 1 );
@@ -3562,6 +3530,7 @@ function bp_activity_get_permalink( $activity_id, $activity_obj = false ) {
 
 	if ( false !== array_search( $activity_obj->type, $use_primary_links ) ) {
 		$link = $activity_obj->primary_link;
+		$link = empty( $link ) ? bp_activity_get_meta( $activity_obj->id, 'post_url' ) : add_query_arg( 'p', $activity_obj->secondary_item_id, trailingslashit( bp_get_root_domain() ) );
 	} else {
 		if ( 'activity_comment' == $activity_obj->type ) {
 			$link = bp_get_root_domain() . '/' . bp_get_activity_root_slug() . '/p/' . $activity_obj->item_id . '/#acomment-' . $activity_obj->id;
@@ -4485,8 +4454,9 @@ add_action( 'bp_after_activity_comment', 'bp_activity_comment_embed_after_recurs
  * @return mixed The cached embeds for this activity item.
  */
 function bp_embed_activity_cache( $cache, $id, $cachekey ) {
-	$data = bp_activity_get_meta( $id, $cachekey );
+	$activity_metas = bb_activity_get_metadata( $id );
 
+	$data = $activity_metas[ $cachekey ][0] ?? '';
 	if (
 		! empty( $data ) &&
 		false !== strpos( $data, 'loom.com' ) &&
@@ -5408,6 +5378,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 	if ( empty( $activity_id ) && empty( $activities_template ) ) {
 		return false;
 	}
+
 	// get activity.
 	if ( ! empty( $activities_template->activity ) ) {
 		$activity = $activities_template->activity;
@@ -5420,52 +5391,49 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 		return false;
 	}
 
-	$can_edit_privacy        = true;
-	$album_id                = 0;
-	$folder_id               = 0;
-	$group_id                = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
-	$group_name              = '';
-	$album_activity_id       = bp_activity_get_meta( $activity_id, 'bp_media_album_activity', true );
-	$album_video_activity_id = bp_activity_get_meta( $activity_id, 'bp_video_album_activity', true );
-	$link_image_index_save   = '';
+	$edit_data = wp_cache_get( $activity->id, 'activity_edit_data' );
+	if ( false === $edit_data ) {
+		// Get activity metas.
+		$activity_metas = bb_activity_get_metadata( $activity_id );
 
-	if ( ! empty( $album_activity_id ) || ! empty( $album_video_activity_id ) ) {
-		$album_id = $album_activity_id;
-	}
+		$can_edit_privacy        = true;
+		$album_id                = 0;
+		$folder_id               = 0;
+		$group_id                = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
+		$group_name              = '';
+		$album_activity_id       = $activity_metas['bp_media_album_activity'][0] ?? '';
+		$album_video_activity_id = $activity_metas['bp_video_album_activity'][0] ?? '';
+		$link_image_index_save   = '';
 
-	$folder_activity_id = bp_activity_get_meta( $activity_id, 'bp_document_folder_activity', true );
-	if ( ! empty( $folder_activity_id ) ) {
-		$folder_id = $folder_activity_id;
-	}
+		if ( ! empty( $album_activity_id ) || ! empty( $album_video_activity_id ) ) {
+			$album_id = $album_activity_id;
+		}
 
-	// if album or folder activity then set privacy edit to always false.
-	if ( $album_id || $folder_id ) {
-		$can_edit_privacy = false;
-	}
+		$folder_activity_id = $activity_metas['bp_document_folder_activity'][0] ?? '';
+		if ( ! empty( $folder_activity_id ) ) {
+			$folder_id = $folder_activity_id;
+		}
 
-	// if group activity then set privacy edit to always false.
-	if ( 0 < (int) $group_id ) {
-		$can_edit_privacy = false;
-		$group            = groups_get_group( $group_id );
-		$group_name       = bp_get_group_name( $group );
-	}
-	$group_avatar = bp_is_active( 'groups' ) && ! bp_disable_group_avatar_uploads() ? bp_get_group_avatar_url( groups_get_group( $group_id ) ) : '';  // Add group avatar in get activity data object.
+		// if album or folder activity then set privacy edit to always false.
+		if ( $album_id || $folder_id ) {
+			$can_edit_privacy = false;
+		}
 
-	// Link preview data.
-	$link_preview_data = bp_activity_get_meta( $activity_id, '_link_preview_data', true );
-	if ( isset( $link_preview_data['link_image_index_save'] ) ) {
-		$link_image_index_save = $link_preview_data['link_image_index_save'];
-	}
-	/**
-	 * Filter here to edit the activity edit data.
-	 *
-	 * @since BuddyBoss 1.5.1
-	 *
-	 * @param string $activity_data The Activity edit data.
-	 */
-	return apply_filters(
-		'bp_activity_get_edit_data',
-		array(
+		// if group activity then set privacy edit to always false.
+		if ( 0 < (int) $group_id ) {
+			$can_edit_privacy = false;
+			$group            = groups_get_group( $group_id );
+			$group_name       = bp_get_group_name( $group );
+		}
+		$group_avatar = bp_is_active( 'groups' ) && ! bp_disable_group_avatar_uploads() ? bp_get_group_avatar_url( groups_get_group( $group_id ) ) : '';  // Add group avatar in get activity data object.
+
+		// Link preview data.
+		$link_preview_data = ! empty( $activity_metas['_link_preview_data'][0] ) ? maybe_unserialize( $activity_metas['_link_preview_data'][0] ) : array();
+		if ( isset( $link_preview_data['link_image_index_save'] ) ) {
+			$link_image_index_save = $link_preview_data['link_image_index_save'];
+		}
+
+		$edit_data = array(
 			'id'                    => $activity_id,
 			'can_edit_privacy'      => $can_edit_privacy,
 			'album_id'              => $album_id,
@@ -5478,7 +5446,22 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 			'privacy'               => $activity->privacy,
 			'group_avatar'          => $group_avatar,
 			'link_image_index_save' => $link_image_index_save,
-		)
+		);
+
+		// Set meta data to cache.
+		wp_cache_set( $activity->id, $edit_data, 'activity_edit_data' );
+	}
+
+	/**
+	 * Filter here to edit the activity edit data.
+	 *
+	 * @since BuddyBoss 1.5.1
+	 *
+	 * @param string $activity_data The Activity edit data.
+	 */
+	return apply_filters(
+		'bp_activity_get_edit_data',
+		$edit_data
 	);
 }
 
@@ -5787,9 +5770,10 @@ function bb_activity_following_post_notification( $args ) {
 	$activity_user_id = ! empty( $r['item_id'] ) ? $r['item_id'] : $r['activity']->user_id;
 	$poster_name      = bp_core_get_user_displayname( $activity_user_id );
 	$activity_link    = bp_activity_get_permalink( $activity_id );
-	$media_ids        = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
-	$document_ids     = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
-	$video_ids        = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
+	$activity_metas   = bb_activity_get_metadata( $activity_id );
+	$media_ids        = $activity_metas['bp_media_ids'][0] ?? '';
+	$document_ids     = $activity_metas['bp_document_ids'][0] ?? '';
+	$video_ids        = $activity_metas['bp_video_ids'][0] ?? '';
 
 	if ( $media_ids ) {
 		$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
@@ -6242,24 +6226,41 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 		return false;
 	}
 
-	$can_edit_privacy                = true;
-	$album_id                        = 0;
-	$folder_id                       = 0;
-	$album_activity_comment__id      = bp_activity_get_meta( $activity_comment_id, 'bp_media_album_activity', true );
-	$album_video_activity_comment_id = bp_activity_get_meta( $activity_comment_id, 'bp_video_album_activity', true );
+	$edit_data = wp_cache_get( $activity_comment_id, 'activity_edit_data' );
+	if ( false === $edit_data ) {
+		// Get activity metas.
+		$activity_comment_metas = bb_activity_get_metadata( $activity_comment_id );
 
-	if ( ! empty( $album_activity_comment__id ) || ! empty( $album_video_activity_comment_id ) ) {
-		$album_id = $album_activity_comment__id;
-	}
+		$can_edit_privacy                = true;
+		$album_id                        = 0;
+		$folder_id                       = 0;
+		$album_activity_comment__id      = $activity_comment_metas['bp_media_album_activity'][0] ?? '';
+		$album_video_activity_comment_id = $activity_comment_metas['bp_video_album_activity'][0] ?? '';
 
-	$folder_activity_comment_id = bp_activity_get_meta( $activity_comment_id, 'bp_document_folder_activity', true );
-	if ( ! empty( $folder_activity_comment_id ) ) {
-		$folder_id = $folder_activity_comment_id;
-	}
+		if ( ! empty( $album_activity_comment__id ) || ! empty( $album_video_activity_comment_id ) ) {
+			$album_id = $album_activity_comment__id;
+		}
 
-	// if album or folder activity comment, then set privacy edit to always false.
-	if ( $album_id || $folder_id ) {
-		$can_edit_privacy = false;
+		$folder_activity_comment_id = $activity_comment_metas['bp_document_folder_activity'][0] ?? '';
+		if ( ! empty( $folder_activity_comment_id ) ) {
+			$folder_id = $folder_activity_comment_id;
+		}
+
+		// if album or folder activity comment, then set privacy edit to always false.
+		if ( $album_id || $folder_id ) {
+			$can_edit_privacy = false;
+		}
+
+		$edit_data = array(
+			'id'               => $activity_comment_id,
+			'can_edit_privacy' => $can_edit_privacy,
+			'album_id'         => $album_id,
+			'folder_id'        => $folder_id,
+			'content'          => stripslashes( $activity_comment->content ),
+			'item_id'          => $activity_comment->item_id,
+			'object'           => $activity_comment->component,
+			'privacy'          => $activity_comment->privacy,
+		);
 	}
 
 	/**
@@ -6271,16 +6272,7 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 	 */
 	return apply_filters(
 		'bb_activity_comment_get_edit_data',
-		array(
-			'id'               => $activity_comment_id,
-			'can_edit_privacy' => $can_edit_privacy,
-			'album_id'         => $album_id,
-			'folder_id'        => $folder_id,
-			'content'          => stripslashes( $activity_comment->content ),
-			'item_id'          => $activity_comment->item_id,
-			'object'           => $activity_comment->component,
-			'privacy'          => $activity_comment->privacy,
-		)
+		$edit_data
 	);
 }
 
@@ -6503,4 +6495,27 @@ function bb_load_reaction_popup_modal_js_template() {
 	) {
 		bp_get_template_part( 'common/js-templates/activity/parts/bb-activity-reactions-popup' );
 	}
+}
+
+/**
+ * Fetch the activity metadata using the activity ID.
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @param int $activity_id Activity ID.
+ *
+ * @return mixed|array
+ */
+function bb_activity_get_metadata( $activity_id ) {
+	// Get meta data from cache.
+	$meta_data = wp_cache_get( $activity_id, 'activity_meta' );
+	if ( false === $meta_data ) {
+		$meta_data = bp_activity_get_meta( $activity_id );
+
+		// Set meta data to cache.
+		wp_cache_set( $activity_id, $meta_data, 'activity_meta' );
+	}
+
+	// Return the metadata.
+	return $meta_data;
 }

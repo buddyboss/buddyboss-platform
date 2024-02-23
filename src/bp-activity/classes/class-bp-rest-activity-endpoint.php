@@ -797,13 +797,20 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$request->set_param( 'context', 'edit' );
 		$activity_object = $this->prepare_item_for_database( $request );
 
+		$activity_metas = bb_activity_get_metadata( $activity_object->id );
+
+		$old_media_ids    = $activity_metas['bp_media_ids'][0] ?? '';
+		$old_document_ids = $activity_metas['bp_document_ids'][0] ?? '';
+		$old_video_ids    = $activity_metas['bp_video_ids'][0] ?? '';
+		$old_gif_data     = ! empty( $activity_metas['_gif_data'][0] ) ? maybe_unserialize( $activity_metas['_gif_data'][0] ) : array();
+
 		if (
 			(
 				empty( $activity_object->content )
-				&& empty( bp_activity_get_meta( $activity_object->id, 'bp_media_ids', true ) )
-				&& empty( bp_activity_get_meta( $activity_object->id, '_gif_data', true ) )
-				&& empty( bp_activity_get_meta( $activity_object->id, 'bp_document_ids', true ) )
-				&& empty( bp_activity_get_meta( $activity_object->id, 'bp_video_ids', true ) )
+				&& empty( $old_media_ids )
+				&& empty( $old_gif_data )
+				&& empty( $old_document_ids )
+				&& empty( $old_video_ids )
 			) && true === $this->bp_rest_activity_content_validate( $request )
 		) {
 			return new WP_Error(
@@ -857,6 +864,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		if ( empty( $activity->action ) ) {
+			$activity_object->action = '';
+		}
 		$activity_id = bp_activity_add( $activity_object );
 
 		if ( ! is_numeric( $activity_id ) ) {
@@ -1543,6 +1553,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		// Get activity metas.
+		$activity_metas = bb_activity_get_metadata( $activity->id );
+
 		if ( 'activity_comment' === $activity->type ) {
 			$can_edit = (
 				function_exists( 'bb_is_activity_comment_edit_enabled' )
@@ -1551,7 +1564,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				&& bb_activity_comment_user_can_edit( $activity )
 			);
 
-			$edited_date   = bp_activity_get_meta( $activity->id, '_is_edited', true );
+			$edited_date   = $activity_metas['_is_edited'][0] ?? '';
 			$edited_date   = ! empty( $edited_date ) ? $edited_date : $activity->date_recorded;
 			$date_recorded = bp_rest_prepare_date_response( $edited_date );
 		} else {
@@ -1591,7 +1604,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'favorite_count'    => $this->get_activity_favorite_count( $activity ),
 			'can_comment'       => ( 'activity_comment' === $activity->type ) ? bp_activity_can_comment_reply( $activity ) : bp_activity_can_comment(),
 			'can_edit'          => $can_edit,
-			'is_edited'         => ! empty( bp_activity_get_meta( $activity->id, '_is_edited', true ) ),
+			'is_edited'         => $activity_metas['_is_edited'][0] ?? '',
 			'can_delete'        => bp_activity_user_can_delete( $activity ),
 			'content_stripped'  => html_entity_decode( wp_strip_all_tags( $activity->content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ),
 			'privacy'           => ( isset( $activity->privacy ) ? $activity->privacy : false ),
@@ -1618,7 +1631,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		}
 
 		// Add iframe embedded data in separate object.
-		$link_embed = bp_activity_get_meta( $activity->id, '_link_embed', true );
+		$link_embed = $activity_metas['_link_embed'][0] ?? '';
 
 		if ( ! empty( $link_embed ) ) {
 			$data['link_embed_url'] = $link_embed;
@@ -2084,6 +2097,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$activity = new BP_Activity_Activity( $activity_id );
 
 			if ( is_object( $activity ) && ! empty( $activity->id ) ) {
+
+				// Prepare activity action if empty.
+				if ( empty( $activity->action ) ) {
+					$activity->action = bp_activity_generate_action_string( $activity );
+				}
+
 				return $activity;
 			}
 		}
