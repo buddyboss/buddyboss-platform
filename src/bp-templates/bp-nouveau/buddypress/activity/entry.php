@@ -85,14 +85,19 @@ if ( ! empty( $link_embed ) ) {
 			$closer_id = bb_get_activity_comments_closer_id( $activity_id );
 			if ( $closer_id === bp_loggedin_user_id() ) {
 				$closed_notice = esc_html__( 'You turned off commenting for this post', 'buddyboss' );
-			} elseif ( bp_user_can( $closer_id, 'administrator' ) ) {
-				$closed_notice = esc_html__( 'An admin turned off commenting for this post', 'buddyboss' );
 			} elseif ( bp_is_active( 'groups' ) && 'groups' === bp_get_activity_object_name() ) {
+				$group = groups_get_group( bp_get_activity_item_id() );
 				if ( groups_is_user_admin( $closer_id, bp_get_activity_item_id() ) ) {
 					$closed_notice = esc_html__( 'An organizer turned off commenting for this post', 'buddyboss' );
 				} elseif ( groups_is_user_mod( $closer_id, bp_get_activity_item_id() ) ) {
 					$closed_notice = esc_html__( 'A moderator turned off commenting for this post', 'buddyboss' );
+				} elseif ( bp_user_can( $closer_id, 'administrator' ) && in_array( $group->status, array( 'public' ) ) ) {
+					$closed_notice = esc_html__( 'An admin turned off commenting for this post', 'buddyboss' );
+				} else {
+					$closed_notice = sprintf( esc_html__( '%s turned off commenting for this post', 'buddyboss' ), bp_core_get_user_displayname( $closer_id ) );
 				}
+			} elseif ( bp_user_can( $closer_id, 'administrator' ) ) {
+				$closed_notice = esc_html__( 'An admin turned off commenting for this post', 'buddyboss' );
 			} else {
 				$closed_notice = sprintf( esc_html__( '%s turned off commenting for this post', 'buddyboss' ), bp_core_get_user_displayname( $closer_id ) );
 			}

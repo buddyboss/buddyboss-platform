@@ -1098,6 +1098,11 @@ window.bp = window.bp || {};
 				target.parent().hasClass( 'acomment-reply' ) ||
 				target.hasClass( 'acomment-edit' )
 			) {
+				if ( target.parents( '.activity-item' ).hasClass( 'bb-closed-comments' ) ) {
+					event.preventDefault();
+					return;
+				}
+
 				var comment_link          = target;
 				item_id                   = activity_id;
 				form                      = $( '#ac-form-' + activity_id );

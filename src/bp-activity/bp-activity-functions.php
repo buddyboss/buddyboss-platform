@@ -6568,8 +6568,8 @@ function bb_activity_close_unclose_comments( $args = array() ) {
 
 	$retval                 = '';
 	$close_comments_updated = false;
-	$activity = new BP_Activity_Activity( (int) $r['activity_id'] );
 
+	$activity = new BP_Activity_Activity( (int) $r['activity_id'] );
 	if ( ! empty( $activity->id ) ) {
 
 		if ( 'unclose_comments' === $r['action'] ) {
@@ -6578,44 +6578,57 @@ function bb_activity_close_unclose_comments( $args = array() ) {
 			$updated_value = true;
 		}
 
-		$oldvalue_user_id = 0;
-		$oldvalue         = bb_is_activity_comments_closed( $activity->id );
-		if ( $oldvalue ) {
-			$oldvalue_user_id = bb_get_activity_comments_closer_id( $activity->id );
+		$prev_closer_id     = 0;
+		$is_closed_comments = bb_is_activity_comments_closed( $activity->id );
+		if ( $is_closed_comments ) {
+			$prev_closer_id = bb_get_activity_comments_closer_id( $activity->id );
 		}
 
 		// Check if group activity or normal activity.
 		if ( 'groups' === $activity->component && ! empty( $activity->item_id ) && bp_is_active( 'groups' ) ) {
+			$group = groups_get_group( $activity->item_id );
 
-			// Check the user is moderator or organizer or admin and also part of the group.
-			if ( ! groups_is_user_member( $r['user_id'], $activity->item_id ) ) {
+			if ( bp_current_user_can( 'administrator' ) &&
+				in_array( $group->status, array( 'public' ) ) 
+			) {
+				$retval = 'allowed';
+
+				// Check the user is moderator or organizer are also part of the group.
+			} elseif ( ! groups_is_user_member( $r['user_id'], $activity->item_id ) ) {
 				$retval = 'not_member';
 			} else {
 				$is_admin = groups_is_user_admin( $r['user_id'], $activity->item_id );
 				$is_mod   = groups_is_user_mod( $r['user_id'], $activity->item_id );
-				$group    = groups_get_group( $activity->item_id );
 
-				if (
-					$is_admin ||
-					$is_mod ||
-					(
-						bp_current_user_can( 'administrator' ) &&
-						in_array( $group->status, array( 'hidden', 'private' ) )
-					) 
-				) {
+				if ( $is_admin || $is_mod ) {
 					$retval = 'allowed';
-				} elseif ( $activity->user_id === $r['user_id'] ) {
-					$retval = 'allowed';
-					if ( $oldvalue && ! empty( $oldvalue_user_id ) ) {
-
-						// Already closed by group organizer/moderator/site admin.
+					if ( $is_closed_comments && ! empty( $prev_closer_id ) ) {
 						if (
 							(
-								groups_is_user_admin( $oldvalue_user_id, $activity->item_id ) ||
-								groups_is_user_mod( $oldvalue_user_id, $activity->item_id ) ||
-								bp_user_can( $oldvalue_user_id, 'administrator' )
+								bp_user_can( $prev_closer_id, 'administrator' ) && 
+								in_array( $group->status, array( 'public' ) )
 							) &&
 							! $updated_value
+						) {
+							$retval = 'not_allowed';
+						}
+					}
+				}
+				elseif ( $activity->user_id === $r['user_id'] ) {
+					$retval = 'allowed';
+
+					if ( $is_closed_comments && ! empty( $prev_closer_id ) ) {
+						// Already closed by group organizer/moderator/admin(public group)
+						if (
+							(
+								groups_is_user_admin( $prev_closer_id, $activity->item_id ) ||
+								groups_is_user_mod( $prev_closer_id, $activity->item_id ) ||
+								( 
+									bp_user_can( $prev_closer_id, 'administrator' ) && 
+									in_array( $group->status, array( 'public' ) )
+								) &&
+								! $updated_value
+							)
 						) {
 							$retval = 'not_allowed';
 						}
@@ -6632,11 +6645,11 @@ function bb_activity_close_unclose_comments( $args = array() ) {
 			// Already closed by admin.
 			if (
 				(
-					$oldvalue &&
-					! empty( $oldvalue_user_id )
+					$is_closed_comments &&
+					! empty( $prev_closer_id )
 				) &&
-				$oldvalue_user_id !== $r['user_id'] &&
-				bp_user_can( $oldvalue_user_id, 'administrator' ) &&
+				$prev_closer_id !== $r['user_id'] &&
+				bp_user_can( $prev_closer_id, 'administrator' ) &&
 				! $updated_value
 			) {
 				$retval = 'not_allowed';
