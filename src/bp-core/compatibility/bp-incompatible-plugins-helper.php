@@ -238,8 +238,9 @@ function bp_helper_plugins_loaded_callback() {
 
 	/**
 	 * Include plugin when plugin is activated.
+	 * Support Instructor Role.
 	 *
-	 * Support Instructor Role
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	if ( in_array( 'instructor-role/instructor.php', $bp_plugins ) ) {
 		add_filter( 'ir_filter_remove_private_protected_from_titles', function ( $is_prepend, $prepend, $post ) {
