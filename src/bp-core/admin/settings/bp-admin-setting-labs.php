@@ -27,7 +27,7 @@ class BB_Admin_Setting_Labs extends BP_Admin_Setting_tab {
 	public function initialize() {
 		$this->tab_label = esc_html__( 'Labs', 'buddyboss' );
 		$this->tab_name  = 'bp-labs';
-		$this->tab_order = 90;
+		$this->tab_order = 200;
 	}
 
 	/**

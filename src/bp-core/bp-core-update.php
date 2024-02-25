@@ -475,6 +475,10 @@ function bp_version_updater() {
 			bb_update_to_2_4_71();
 		}
 
+		if ( $raw_db_version < 20971 ) {
+			bb_update_to_2_5_41();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3394,4 +3398,20 @@ function bb_core_removed_orphaned_member_slug() {
 
 	// Re-register the background jobs until the result is empty.
 	bb_background_removed_orphaned_metadata();
+}
+
+/**
+ * Migrate the performance-related setting for existing installations.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_5_41() {
+	$is_autoload = (bool) bp_get_option( '_bp_enable_activity_autoload', true );
+	$autoload_new_setting = ( $is_autoload ) ? 'infinite' : 'load_more';
+
+	bp_update_option( 'bb_activity_load_type', $autoload_new_setting );
+	bp_update_option( 'bb_ajax_request_page_load', 2 );
+	bp_update_option( 'bb_load_activity_per_request', 10 );
 }
