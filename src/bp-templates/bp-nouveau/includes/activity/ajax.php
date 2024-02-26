@@ -91,6 +91,12 @@ add_action(
 					'nopriv'   => true,
 				),
 			),
+			array(
+				'toggle_activity_notification_status' => array(
+					'function' => 'bb_nouveau_ajax_toggle_activity_notification_status',
+					'nopriv'   => false,
+				),
+			),
 		);
 
 		foreach ( $ajax_actions as $ajax_action ) {
@@ -1132,6 +1138,62 @@ function bb_nouveau_ajax_activity_update_pinned_post() {
 	}
 
 	if ( ! empty( $retval ) && in_array( $retval, array( 'unpinned', 'pinned', 'pin_updated' ), true ) ) {
+		wp_send_json_success( $response );
+	} else {
+		wp_send_json_error( $response );
+	}
+}
+
+/**
+ * Mute/Unmute Activity Notification.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_nouveau_ajax_toggle_activity_notification_status() {
+	$response = array(
+		'feedback' => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+	);
+
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error( $response );
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['notification_toggle_action'] ) || ! in_array( $_POST['notification_toggle_action'], array( 'mute', 'unmute' ), true ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['id'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$args = array(
+		'action'      => $_POST['notification_toggle_action'],
+		'activity_id' => (int) $_POST['id'],
+		'user_id'     => bp_loggedin_user_id(),
+	);
+
+	$retval = bb_toggle_activity_notification_status( $args );
+
+	if ( 'unmute' === $retval ) {
+		$response['feedback'] = esc_html__( 'Notifications for this activity have been unmuted.', 'buddyboss' );
+	} elseif ( 'mute' === $retval ) {
+		$response['feedback'] = esc_html__( 'Notifications for this activity have been muted.', 'buddyboss' );
+	} elseif ( 'already_muted' === $retval ) {
+		$response['feedback'] = esc_html__( 'Notifications for this activity already been muted.', 'buddyboss' );
+	}
+
+	if ( ! empty( $retval ) && in_array( $retval, array( 'unmute', 'mute', 'already_muted' ), true ) ) {
 		wp_send_json_success( $response );
 	} else {
 		wp_send_json_error( $response );
