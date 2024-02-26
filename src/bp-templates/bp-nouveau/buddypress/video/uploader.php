@@ -106,8 +106,10 @@
 
 					<div class="bb-field-steps bb-field-steps-2">
 						<div class="bb-field-wrap">
-							<?php bp_get_template_part( 'video/location-move' ); ?>
-							<?php bp_get_template_part( 'video/video-create-album' ); ?>
+							<?php
+							bp_get_template_part( 'video/location-move' );
+							bp_get_template_part( 'video/video-create-album' );
+							?>
 						</div>
 					</div>
 

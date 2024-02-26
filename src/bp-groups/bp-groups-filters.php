@@ -1132,10 +1132,11 @@ function bb_subscription_send_subscribe_group_notifications( $content, $user_id,
 	$poster_name      = bp_core_get_user_displayname( $activity_user_id );
 	$activity_link    = bp_activity_get_permalink( $activity_id );
 	$group            = groups_get_group( $group_id );
-	$media_ids        = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
-	$document_ids     = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
-	$video_ids        = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
-	$gif_data         = bp_activity_get_meta( $activity_id, '_gif_data', true );
+	$activity_metas   = bb_activity_get_metadata( $activity_id );
+	$media_ids        = $activity_metas['bp_media_ids'][0] ?? '';
+	$document_ids     = $activity_metas['bp_document_ids'][0] ?? '';
+	$video_ids        = $activity_metas['bp_video_ids'][0] ?? '';
+	$gif_data         = ! empty( $activity_metas['_gif_data'][0] ) ? maybe_unserialize( $activity_metas['_gif_data'][0] ) : array();
 
 	if ( ! empty( wp_strip_all_tags( $activity->content ) ) ) {
 		$activity_type = __( 'an update', 'buddyboss' );
