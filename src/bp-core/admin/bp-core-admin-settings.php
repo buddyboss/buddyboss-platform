@@ -3673,3 +3673,17 @@ function bb_reactions_settings_callback_reactions_button() {
 	</label>
 	<?php
 }
+
+/**
+ * Allow schedule activity posts.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_callback_enable_activity_schedule_posts() {
+	?>
+
+	<input id="_bb_enable_activity_schedule_posts" name="_bb_enable_activity_schedule_posts" type="checkbox" value="1" <?php checked( bb_is_active_activity_schedule_posts() ); ?> />
+	<label for="_bb_enable_activity_schedule_posts"><?php esc_html_e( 'Allow members to schedule their posts', 'buddyboss' ); ?></label>
+
+	<?php
+}

@@ -172,6 +172,9 @@ function bp_get_default_options() {
 		// Enabled activity pinned posts.
 		'_bb_enable_activity_pinned_posts'           => true,
 
+		// Enabled activity schedule posts.
+		'_bb_enable_activity_schedule_posts'         => false,
+
 		// Enabled reactions and their mode.
 		'bb_all_reactions'                           => array(
 			'activity'         => true,
@@ -2710,4 +2713,26 @@ function bb_active_reactions() {
 
 
 	return ( ! empty( $all_emotions ) ? array_column( $all_emotions, null, 'id' ) : array() );
+}
+
+/**
+ * Check whether activity schedule posts are enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ *
+ * @return bool true    If activity schedule posts are enabled, otherwise false.
+ */
+function bb_is_active_activity_schedule_posts( $default = false ) {
+
+	/**
+	 * Filters whether activity schedule posts are enabled.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value Whether activity schedule posts are enabled.
+	 */
+	return (bool) apply_filters( 'bb_is_active_activity_schedule_posts', (bool) bp_get_option( '_bb_enable_activity_schedule_posts', $default ) );
 }

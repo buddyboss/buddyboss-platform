@@ -90,6 +90,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		// Allow scopes/tabs.
 		$this->add_field( '_bb_enable_activity_pinned_posts', __( 'Pinned Post', 'buddyboss' ), 'bb_admin_setting_callback_enable_activity_pinned_posts', 'intval' );
 
+		// Allow schedule posts.
+		$this->add_field( '_bb_enable_activity_schedule_posts', __( 'Schedule posts', 'buddyboss' ), 'bb_admin_setting_callback_enable_activity_schedule_posts', 'intval' );
+
 		// Allow follow.
 		$this->add_field( '_bp_enable_activity_follow', __( 'Follow', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_follow', 'intval' );
 
