@@ -3122,10 +3122,6 @@ function bp_activity_can_comment_reply( $comment = false ) {
 		$comment = bp_activity_current_comment();
 	}
 
-	// if ( bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( $comment->item_id ) ) {
-	// 	$can_comment = false;
-	// }
-
 	/**
 	 * Filters whether a comment can be made on an activity reply item.
 	 *

@@ -1102,10 +1102,6 @@ function bb_nouveau_activity_comment_meta_buttons( $comment, $args ) {
 
 	$content = '';
 
-	// if ( bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( bp_nouveau()->activity->id ) ) {
-	// 	unset( $returns['activity_comment_reply'] );
-	// }
-
 	// All button in single content.
 	foreach ( $returns as $return ) {
 		$content .= $return;
@@ -1876,8 +1872,6 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		);
 	}
 
-	remove_filter( 'bp_activity_can_comment', 'bb_activity_filter_closed_comments' );
-
 	// Close comments related menu.
 	if ( bb_is_close_activity_comments_enabled() && bp_activity_can_comment() ) {
 
@@ -1940,42 +1934,6 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 				} else {
 					$closed_action_permitted = false;
 				}
-
-				// $is_admin = groups_is_user_admin( bp_loggedin_user_id(), $activity_item_id );
-				// $is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $activity_item_id );
-				// $group    = groups_get_group( $activity_item_id );
-				// if (
-				// 	$is_admin ||
-				// 	$is_mod ||
-				// 	(
-				// 		bp_current_user_can( 'administrator' ) &&
-				// 		in_array( $group->status, array( 'hidden', 'private' ) )
-				// 	) 
-				// ) {
-				// 	$closed_action_permitted = true;
-				// } elseif ( bp_get_activity_user_id() === bp_loggedin_user_id() ) {
-				// 	$closed_action_permitted = true;
-
-				// 	$oldvalue = bb_is_activity_comments_closed( $activity_id  );
-				// 	if ( $oldvalue ) {
-				// 		$oldvalue_user_id = bb_get_activity_comments_closer_id( $activity_id  );
-				// 	}
-				// 	if ( $oldvalue && ! empty( $oldvalue_user_id ) ) {
-
-				// 		// Already closed by group organizer/moderator/site admin.
-				// 		if (
-				// 			(
-				// 				groups_is_user_admin( $oldvalue_user_id, $activity_item_id ) ||
-				// 				groups_is_user_mod( $oldvalue_user_id, $activity_item_id ) ||
-				// 				bp_user_can( $oldvalue_user_id, 'administrator' )
-				// 			)
-				// 		) {
-				// 			$closed_action_permitted = false;
-				// 		}
-				// 	}
-				// } else {
-				// 	$closed_action_permitted = false;
-				// }
 			}
 		} elseif ( bp_current_user_can( 'administrator' ) ) {
 			$closed_action_permitted = true;
@@ -2019,8 +1977,6 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 			);
 		}
 	}
-
-	// add_filter( 'bp_activity_can_comment', 'bb_activity_filter_closed_comments' );
 
 	// Pin post action only for allowed posts based on user role.
 	if (
