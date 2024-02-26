@@ -1890,11 +1890,11 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 
 			if (
 				bp_current_user_can( 'administrator' ) &&
-				'public' === $group->status 
+				'public' === $group->status
 			) {
 				$closed_action_permitted = true;
 
-			// Check the user is moderator or organizer are also part of the group.
+				// Check the user is moderator or organizer are also part of the group.
 			} elseif ( ! groups_is_user_member( bp_loggedin_user_id(), $activity_item_id ) ) {
 				$closed_action_permitted = false;
 			} else {
@@ -1907,15 +1907,14 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 					if ( $is_closed_comments && ! empty( $prev_closer_id ) ) {
 						if (
 							(
-								bp_user_can( $prev_closer_id, 'administrator' ) && 
+								bp_user_can( $prev_closer_id, 'administrator' ) &&
 								in_array( $group->status, array( 'public' ) )
 							)
 						) {
 							$closed_action_permitted = false;
 						}
 					}
-				}
-				elseif ( bp_get_activity_user_id() === bp_loggedin_user_id() ) {
+				} elseif ( bp_get_activity_user_id() === bp_loggedin_user_id() ) {
 					$closed_action_permitted = true;
 
 					if ( $is_closed_comments && ! empty( $prev_closer_id ) ) {
@@ -1924,8 +1923,8 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 							(
 								groups_is_user_admin( $prev_closer_id, $activity_item_id ) ||
 								groups_is_user_mod( $prev_closer_id, $activity_item_id ) ||
-								( 
-									bp_user_can( $prev_closer_id, 'administrator' ) && 
+								(
+									bp_user_can( $prev_closer_id, 'administrator' ) &&
 									'public' === $group->status
 								)
 							)
