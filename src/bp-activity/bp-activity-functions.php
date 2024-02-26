@@ -6512,7 +6512,7 @@ function bb_load_reaction_popup_modal_js_template() {
 }
 
 /**
- * Check if activity comments are closed. 
+ * Check if activity comments are closed.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -6540,11 +6540,12 @@ function bb_get_activity_comments_closer_id( $activity_id ) {
 /**
  * Close or unclose activity comments.
  *
- * @since BuddyBoss [BBVERSION]
- *
  * @param array $args Arguments related to close/unclose activity feed post commenting.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @return bool|string Update type closed_comments|unclosed_comments.
+ *
  */
 function bb_activity_close_unclose_comments( $args = array() ) {
 	$r = bp_parse_args(
@@ -6579,8 +6580,9 @@ function bb_activity_close_unclose_comments( $args = array() ) {
 		if ( 'groups' === $activity->component && ! empty( $activity->item_id ) && bp_is_active( 'groups' ) ) {
 			$group = groups_get_group( $activity->item_id );
 
-			if ( bp_current_user_can( 'administrator' ) &&
-				in_array( $group->status, array( 'public' ) ) 
+			if (
+				bp_current_user_can( 'administrator' ) &&
+				in_array( $group->status, array( 'public' ) )
 			) {
 				$retval = 'allowed';
 
@@ -6596,7 +6598,7 @@ function bb_activity_close_unclose_comments( $args = array() ) {
 					if ( $is_closed_comments && ! empty( $prev_closer_id ) ) {
 						if (
 							(
-								bp_user_can( $prev_closer_id, 'administrator' ) && 
+								bp_user_can( $prev_closer_id, 'administrator' ) &&
 								in_array( $group->status, array( 'public' ) )
 							) &&
 							! $updated_value
@@ -6604,8 +6606,7 @@ function bb_activity_close_unclose_comments( $args = array() ) {
 							$retval = 'not_allowed';
 						}
 					}
-				}
-				elseif ( $activity->user_id === $r['user_id'] ) {
+				} elseif ( $activity->user_id === $r['user_id'] ) {
 					$retval = 'allowed';
 
 					if ( $is_closed_comments && ! empty( $prev_closer_id ) ) {
@@ -6614,8 +6615,8 @@ function bb_activity_close_unclose_comments( $args = array() ) {
 							(
 								groups_is_user_admin( $prev_closer_id, $activity->item_id ) ||
 								groups_is_user_mod( $prev_closer_id, $activity->item_id ) ||
-								( 
-									bp_user_can( $prev_closer_id, 'administrator' ) && 
+								(
+									bp_user_can( $prev_closer_id, 'administrator' ) &&
 									in_array( $group->status, array( 'public' ) )
 								) &&
 								! $updated_value
@@ -6664,10 +6665,11 @@ function bb_activity_close_unclose_comments( $args = array() ) {
 		/**
 		 * Fires after activity comments closed/unclosed.
 		 *
+		 * @param int $activity_id Activity ID.
+		 * @param string $action Action type close_comments/unclose_comments.
+		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param int    $activity_id Activity ID.
-		 * @param string $action      Action type close_comments/unclose_comments.
 		 */
 		do_action( 'bb_activity_close_unclose_comments', $activity->id, $r['action'] );
 	}
