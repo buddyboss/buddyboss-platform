@@ -1983,9 +1983,8 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 			$closed_action_permitted = true;
 
 			// Check if already closed by admins then not permitted.
-			$comments_closer_id = bb_get_activity_comments_closer_id( $activity_id );
-			if ( $is_closed_comments && ! empty( $comments_closer_id ) ) {
-				if ( bp_user_can( $comments_closer_id, 'administrator' ) ) {
+			if ( $is_closed_comments && ! empty( $prev_closer_id ) ) {
+				if ( bp_user_can( $prev_closer_id, 'administrator' ) ) {
 					$closed_action_permitted = false;
 				}
 			}
