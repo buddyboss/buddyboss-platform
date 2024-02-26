@@ -132,7 +132,6 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-list="activity"], #activity-modal' ).on( 'click', '.activity-privacy>li:not(.bb-edit-privacy)', bp.Nouveau, this.activityPrivacyChange.bind( this ) );
 			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #activity-modal' ).on( 'click', 'span.privacy', bp.Nouveau, this.togglePrivacyDropdown.bind( this ) );
 			$( '#bb-media-model-container .activity-list' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
-			$( '.bb-activity-model-wrapper' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
 			$( '.bb-activity-model-wrapper' ).on( 'click', '.ac-form-placeholder', bp.Nouveau, this.activityRootComment.bind( this ) );
 			$( document ).keydown( this.commentFormAction );
 			$( document ).click( this.togglePopupDropdown );
@@ -1192,6 +1191,10 @@ window.bp = window.bp || {};
 
 					// Render activity comment edit data to form.
 					self.editActivityCommentForm( form, activity_comment_data );
+
+					if ( isInsideModal ) {
+						$( '.bb-modal-activity-footer' ).removeClass( 'active' );
+					}
 				} else {
 					// It's an activity we're commenting.
 					if ( item_id === activity_id ) {

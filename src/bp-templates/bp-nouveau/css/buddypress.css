@@ -4669,7 +4669,6 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
 }
 
 .ac-form-placeholder .ac-reply-avatar img {
-  display: none;
   max-width: 32px;
 }
 
@@ -7737,7 +7736,6 @@ form.ac-form .ac-reply-avatar {
 }
 
 form.ac-form .ac-reply-avatar img {
-  border: 1px solid #eee;
   image-rendering: -webkit-optimize-contrast;
 }
 
