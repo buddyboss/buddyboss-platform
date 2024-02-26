@@ -774,6 +774,11 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	public function setting_callback_size() {
 		$v2_option  = bb_recaptcha_recaptcha_v2_option();
 		$connection = bb_recaptcha_connection_status();
+		$v2_theme   = bb_recaptcha_v2_theme();
+		$size_class = 'opt-size-light';
+		if ( 'dark' === $v2_theme ) {
+			$size_class = 'opt-size-dark';
+		}
 		?>
 		<div class="bb-grid-style-outer">
 			<?php
@@ -789,11 +794,11 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					'options'     => array(
 						'normal'  => array(
 							'label' => esc_html__( 'Normal', 'buddyboss' ),
-							'class' => 'option opt-normal opt-size-light',
+							'class' => 'option opt-normal ' . esc_attr( $size_class ),
 						),
 						'compact' => array(
 							'label' => esc_html__( 'Compact', 'buddyboss' ),
-							'class' => 'option opt-compact opt-size-light',
+							'class' => 'option opt-compact ' . esc_attr( $size_class ),
 						),
 					),
 				)
