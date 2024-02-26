@@ -3370,12 +3370,11 @@ input.search-query-input {
 
 .activity-list .activity-item.bb-closed-comments .bb-activity-closed-comments-notice {
   background: #e1e3e5;
-  position: relative;
-  left: -15px;
-  width: calc(100% + 30px);
+  margin: 0 -15px;
   text-align: center;
   padding: 5px;
   font-weight: 600;
+  text-wrap: nowrap;
 }
 
 .activity-list .activity-item div.item-avatar {
@@ -3984,6 +3983,14 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.pin-activity:before {
   content: "\e9e9";
   font-size: 19px;
+}
+
+#buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.close-activity-comment:before {
+  content: "\ee35";
+}
+
+#buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.unclose-activity-comment:before {
+  content: "\ee35";
 }
 
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.unpin-activity:before {

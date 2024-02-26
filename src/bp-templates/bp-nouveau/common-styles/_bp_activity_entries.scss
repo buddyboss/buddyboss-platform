@@ -33,12 +33,11 @@
 
 			.bb-activity-closed-comments-notice {
 				background: #e1e3e5;
-				position: relative;
-				left: -15px;
-				width: calc(100% + 30px);
+				margin: 0 -15px;
 				text-align: center;
 				padding: 5px;
 				font-weight: 600;
+				text-wrap: nowrap;
 			}
 		}
 
@@ -714,6 +713,14 @@
 						&.pin-activity:before {
 							content: "\e9e9";
 							font-size: 19px;
+						}
+
+						&.close-activity-comment:before {
+							content: "\ee35";
+						}
+
+						&.unclose-activity-comment:before {
+							content: "\ee35";
 						}
 
 						&.unpin-activity:before {
