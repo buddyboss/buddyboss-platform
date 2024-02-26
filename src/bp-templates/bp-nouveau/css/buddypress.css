@@ -4646,6 +4646,14 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   margin: 0;
 }
 
+.bb-modal-activity-footer {
+  display: none;
+}
+
+.logged-in .bb-modal-activity-footer {
+  display: block;
+}
+
 .bb-modal-activity-footer.active .ac-form-placeholder {
   display: none;
 }
@@ -4698,7 +4706,6 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
 .bb-modal-activity-body {
   position: relative;
   padding: 15px;
-  max-height: calc(85vh - 62px);
   /*overflow-y: auto;*/
   overflow-x: hidden;
   flex-grow: 1;

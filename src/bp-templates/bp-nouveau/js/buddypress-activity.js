@@ -1469,9 +1469,16 @@ window.bp = window.bp || {};
 
 							activity_comments.find( '.acomment-display' ).removeClass('display-focus');
 							activity_comments.addClass( 'has-child-comments' );
-
-							form.addClass( 'not-initialized' );
-							form.closest( '.activity-comments' ).append( form );
+							
+							if ( isInsideModal ) {
+								$('#activity-modal').find( '.bb-modal-activity-footer' ).append( form ).addClass( 'active' );
+								var form_activity_id = form.find( 'input[name="comment_form_id"]' ).val();
+								form.find( '#ac-input-' + form_activity_id ).html( '' );
+								form.removeClass( 'has-content' ).addClass( 'root' );
+							} else {
+								form.addClass( 'not-initialized' );
+								form.closest( '.activity-comments' ).append( form );
+							}
 
 							if ( form.hasClass( 'acomment-edit' ) ) {
 								var form_item_id = form.attr( 'data-item-id' );
@@ -1494,6 +1501,8 @@ window.bp = window.bp || {};
 								activity_state.addClass( 'has-comments' );
 								// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 							}
+
+							form.removeClass( 'acomment-edit' );
 
 							var tool_box_comment = form.find( '.ac-reply-content' );
 							if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ).length > 0 ) {
