@@ -24,8 +24,7 @@
 				<div class="ac-form-placeholder">
 					<div class="bp-ac-form-cotainer">
 						<div class="ac-reply-avatar">
-							<img src="" class="avatar user-1-avatar avatar-150 photo" width="150" height="150" alt="">
-							<span class="avatar-placeholder"></span>
+							<?php bp_loggedin_user_avatar( array( 'type' => 'thumb' ) ); ?>
 						</div>
 						<div class="ac-reply-content">
 							<div id="ac-reply-toolbar-536" class="ac-reply-toolbar">
