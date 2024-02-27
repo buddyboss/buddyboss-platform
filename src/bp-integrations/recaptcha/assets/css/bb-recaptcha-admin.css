@@ -401,10 +401,16 @@
 .bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle {
   width: 60%;
   margin-top: 10px;
+  display: flex;
+  align-items: center;
 }
 
 .bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .copy-toggle-text {
   margin-right: 5px;
+  text-wrap: nowrap;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle.bb-url-not-allowed {
@@ -413,6 +419,15 @@
 
 .bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle.bb-url-not-allowed .copy-toggle-text {
   color: #f00;
+}
+
+.bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .bb-copy-button {
+  font-size: 12px;
+  color: #999;
+}
+
+.bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .bb-copy-button i {
+  font-size: 20px;
 }
 
 .bb-success-section.bb-recaptcha-errors span, .bb-success-section.bb-recaptcha-success span,

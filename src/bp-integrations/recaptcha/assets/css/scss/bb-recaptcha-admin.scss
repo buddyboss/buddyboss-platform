@@ -446,9 +446,15 @@
 			.copy-toggle {
 				width: 60%;
 				margin-top: 10px;
+				display: flex;
+				align-items: center;
 
 				.copy-toggle-text {
 					margin-right: 5px;
+					text-wrap: nowrap;
+					white-space: nowrap;
+  				overflow: hidden;
+  				text-overflow: ellipsis;
 				}
 
 				&.bb-url-not-allowed {
@@ -458,6 +464,15 @@
 					.copy-toggle-text {
 						color: #f00;
 					}
+				}
+
+				.bb-copy-button {
+					font-size: 12px;
+					color: #999;
+				}
+
+				.bb-copy-button i {
+					font-size: 20px;
 				}
 			}
 		}
