@@ -401,10 +401,16 @@
 .bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle {
   width: 60%;
   margin-top: 10px;
+  display: flex;
+  align-items: center;
 }
 
 .bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .copy-toggle-text {
   margin-left: 5px;
+  text-wrap: nowrap;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle.bb-url-not-allowed {
@@ -413,6 +419,73 @@
 
 .bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle.bb-url-not-allowed .copy-toggle-text {
   color: #f00;
+}
+
+.bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .bb-copy-button {
+  font-size: 12px;
+  color: #999;
+  position: relative;
+  cursor: pointer;
+}
+
+.bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .bb-copy-button[data-balloon][data-balloon-pos="up"]:after {
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.18s ease-out 0.18s;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: -0.24px;
+  background: rgba(18, 43, 70, 0.95);
+  border-radius: 4px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.22);
+  color: #fff;
+  content: attr(data-balloon);
+  line-height: 1.3;
+  padding: 7px 15px;
+  white-space: nowrap;
+  z-index: 10;
+  display: block;
+  bottom: 100%;
+  right: 50%;
+  margin-bottom: 5px;
+  transform: translate(50%, 10px);
+  transform-origin: top;
+  position: absolute;
+}
+
+.bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .bb-copy-button[data-balloon][data-balloon-pos="up"]:before {
+  background: no-repeat url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22var(--bb-tooltip-background)%22%20transform%3D%22rotate(0)%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E");
+  /* stylelint-disable-line */
+  background-size: 100% auto;
+  width: 18px;
+  height: 6px;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-transition: all 0.18s ease-out 0.18s;
+  transition: all 0.18s ease-out 0.18s;
+  content: "";
+  display: block;
+  bottom: 100%;
+  right: 50%;
+  transform: translate(50%, 10px);
+  transform-origin: top;
+  position: absolute;
+}
+
+.bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .bb-copy-button:hover:after, .bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .bb-copy-button:hover[data-balloon][data-balloon-pos="up"]:after {
+  pointer-events: auto;
+  opacity: 1;
+  transform: translate(50%, 0);
+}
+
+.bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .bb-copy-button:hover:before, .bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .bb-copy-button:hover[data-balloon][data-balloon-pos="up"]:before {
+  pointer-events: auto;
+  opacity: 1;
+  transform: translate(50%, 0);
+}
+
+.bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .bb-copy-button i {
+  font-size: 20px;
 }
 
 .bb-success-section.bb-recaptcha-errors span, .bb-success-section.bb-recaptcha-success span,
