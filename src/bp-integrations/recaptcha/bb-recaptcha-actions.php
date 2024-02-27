@@ -107,7 +107,7 @@ function bb_recaptcha_lost_password() {
 }
 
 /**
- * Validate recaptcha for lost password form.
+ * Validate recaptcha for a lost password form.
  *
  * @since  BuddyBoss [BBVERSION]
  *
@@ -159,14 +159,14 @@ function bb_recaptcha_registration() {
 }
 
 /**
- * Validate recaptcha for registration form.
+ * Validate recaptcha for a registration form.
  *
  * @since BuddyBoss [BBVERSION]
  */
 function bb_recaptcha_validate_registration() {
 	$verified = bb_recaptcha_connection_status();
 
-	// If connection verified and enable for register then allow to do register.
+	// If connection verified and enable for register, then allow to do register.
 	if (
 		! apply_filters( 'bb_recaptcha_rest_api_bypass', bb_is_rest() ) && // Bypass recaptcha.
 		! empty( $verified ) &&
@@ -183,7 +183,7 @@ function bb_recaptcha_validate_registration() {
 }
 
 /**
- * Displays reCAPTCHA on the activate form if enabled.
+ * Displays reCAPTCHA on the account activation form if enabled.
  *
  * @since BuddyBoss [BBVERSION]
  */

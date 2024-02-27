@@ -33,7 +33,7 @@ function bb_admin_recaptcha_class( $classes ) {
 }
 
 /**
- * Validate login process with reCAPTCHA if enabled.
+ * Validate a login process with reCAPTCHA if enabled.
  * If reCAPTCHA verification fails, the function returns a WP_Error object containing the error message.
  *
  * @sicne BuddyBoss [BBVERSION]
@@ -45,7 +45,7 @@ function bb_admin_recaptcha_class( $classes ) {
  *                               authenticated.
  */
 function bb_recaptcha_validate_login( $user ) {
-	// Apply only on wordpress login page and bypass recaptcha for rest api.
+	// Apply only on WordPress login page and bypass recaptcha for rest api.
 	$bb_wp_login = bb_filter_input_string( INPUT_POST, 'log' );
 	if (
 		apply_filters( 'bb_recaptcha_rest_api_bypass', bb_is_rest() ) ||
@@ -83,7 +83,7 @@ function bb_recaptcha_validate_login( $user ) {
 }
 
 /**
- * Validate activation process with reCAPTCHA if enabled.
+ * Validate the activation process with reCAPTCHA if enabled.
  *
  * @sicne BuddyBoss [BBVERSION]
  *

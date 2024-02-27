@@ -45,7 +45,7 @@ function bb_recaptcha_options() {
  * @since BuddyBoss [BBVERSION]
  *
  * @param string $key     The key of the setting to retrieve.
- * @param mixed  $default Optional. The default value to return if the setting is not found.
+ * @param string $default Optional. The default value to return if the setting is not found.
  *                        Default is an empty string.
  *
  * @return mixed The value of the specified reCAPTCHA setting, or the default value if not found.
@@ -108,7 +108,6 @@ function bb_recaptcha_recaptcha_v2_option() {
 	 */
 	return apply_filters( 'bb_recaptcha_recaptcha_v2_option', $recaptcha_v2_option );
 }
-
 
 /**
  * Retrieves the reCAPTCHA site key.
