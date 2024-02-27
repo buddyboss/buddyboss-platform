@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Setup the BB Recaptcha class.
+ * Set up the BB Recaptcha class.
  *
  * @since BuddyBoss [BBVERSION]
  */
@@ -82,9 +82,9 @@ class BB_Recaptcha_Integration extends BP_Integration {
 	 */
 	public function setup_admin_integration_tab() {
 
-		require_once trailingslashit( buddypress()->integration_dir ) . $this->id . '/bb-recaptcha-admin-tab.php';
+		require_once trailingslashit( buddypress()->integration_dir ) . $this->id . '/classes/class-bb-recaptcha-admin-tab.php';
 
-		new BB_Recaptcha_Admin_Integration_Tab(
+		new BB_Recaptcha_Admin_Tab(
 			"bb-$this->id",
 			$this->name,
 			array(

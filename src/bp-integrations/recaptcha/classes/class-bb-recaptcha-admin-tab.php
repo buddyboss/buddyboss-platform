@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss [BBVERSION]
  */
-class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
+class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 
 	/**
 	 * Current section.
@@ -266,7 +266,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'title'             => esc_html__( 'Score Threshold', 'buddyboss' ),
 				'callback'          => array( $this, 'setting_callback_score_threshold' ),
 				'sanitize_callback' => 'absint',
-				'args'              => array( 'class' => 'recaptcha_v3 '. ( 'recaptcha_v2' === $enabled_for ? 'bp-hide' : '' ) ),
+				'args'              => array( 'class' => 'recaptcha_v3 ' . ( 'recaptcha_v2' === $enabled_for ? 'bp-hide' : '' ) ),
 			),
 			'bb-recaptcha-enabled-for'     => array(
 				'title'    => esc_html__( 'Enabled For', 'buddyboss' ),
@@ -447,9 +447,9 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		?>
 		<div class="password-toggle">
 			<input name="bb_recaptcha[site_key]" id="bb-recaptcha-site-key" type="password"
-			       value="<?php echo esc_html( $site_key ); ?>"
-			       aria-label="<?php esc_html_e( 'Site Key', 'buddyboss' ); ?>"
-			       data-old-value="<?php echo esc_html( $site_key ); ?>"
+					value="<?php echo esc_html( $site_key ); ?>"
+					aria-label="<?php esc_html_e( 'Site Key', 'buddyboss' ); ?>"
+					data-old-value="<?php echo esc_html( $site_key ); ?>"
 			/>
 			<button type="button" class="button button-secondary bb-hide-pw hide-if-no-js" data-toggle="0">
 				<span class="bb-icon bb-icon-eye-small" aria-hidden="true"></span>
@@ -468,9 +468,9 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		?>
 		<div class="password-toggle">
 			<input name="bb_recaptcha[secret_key]" id="bb-recaptcha-secret-key" type="password"
-			       value="<?php echo esc_html( $secret_key ); ?>"
-			       aria-label="<?php esc_html_e( 'Secret Key', 'buddyboss' ); ?>"
-			       data-old-value="<?php echo esc_html( $secret_key ); ?>"
+					value="<?php echo esc_html( $secret_key ); ?>"
+					aria-label="<?php esc_html_e( 'Secret Key', 'buddyboss' ); ?>"
+					data-old-value="<?php echo esc_html( $secret_key ); ?>"
 			/>
 			<button type="button" class="button button-secondary bb-hide-pw hide-if-no-js" data-toggle="0">
 				<span class="bb-icon bb-icon-eye-small" aria-hidden="true"></span>
@@ -663,7 +663,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		</select>
 		<p class="description">
 			<?php
-			echo sprintf(
+			printf(
 			/* translators: Language code link. */
 				esc_html__( 'Choose a language for reCAPTCHA V3 when shown. Find %s in the reCAPTCHA documentation.', 'buddyboss' ),
 				'<a href="https://developers.google.com/recaptcha/docs/language" target="_blank">' . esc_html__( 'Language codes', 'buddyboss' ) . '</a>'
@@ -840,7 +840,7 @@ class BB_Recaptcha_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 							'label' => esc_html__( 'Bottom Left', 'buddyboss' ),
 							'class' => 'option opt-bottom-left',
 						),
-						'inline'       => array(
+						'inline'      => array(
 							'label' => esc_html__( 'Inline', 'buddyboss' ),
 							'class' => 'option opt-inline',
 						),
