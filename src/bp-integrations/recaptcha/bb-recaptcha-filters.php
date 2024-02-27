@@ -74,7 +74,7 @@ function bb_recaptcha_validate_login( $user ) {
 			if ( $get_url_string === $admin_bypass_text ) {
 				return $user;
 			} else {
-				return null;
+				return new WP_Error( 'authentication_failed', __( 'Invalid bypass captcha text.', 'buddyboss' ) );
 			}
 		}
 	}
