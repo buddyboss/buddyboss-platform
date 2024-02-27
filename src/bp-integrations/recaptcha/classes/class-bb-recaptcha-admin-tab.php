@@ -103,6 +103,20 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 			} else {
 				$bb_recaptcha['score_threshold'] = 0.5;
 			}
+			if ( isset( $bb_recaptcha['allow_bypass'] ) ) {
+				$bb_recaptcha['bypass_text'] = trim( $bb_recaptcha['bypass_text'] );
+				if ( ! empty( $bb_recaptcha['bypass_text'] ) ) {
+					if ( strlen( $bb_recaptcha['bypass_text'] ) < 6 ) {
+						$bb_recaptcha['bypass_text'] = '';
+					}
+					if ( strlen( $bb_recaptcha['bypass_text'] ) > 10 ) {
+						$bb_recaptcha['bypass_text'] = '';
+					}
+				}
+				if ( empty( $bb_recaptcha['bypass_text'] ) ) {
+					$bb_recaptcha['allow_bypass'] = false;
+				}
+			}
 			$bb_recaptcha['connection_status'] = $verified;
 			bp_update_option( 'bb_recaptcha', $bb_recaptcha );
 		}
