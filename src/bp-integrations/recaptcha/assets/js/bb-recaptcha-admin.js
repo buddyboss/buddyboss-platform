@@ -367,10 +367,10 @@
 			}
 			if ( bypassString.length < 6 ) {
 				$( '.bb_login_require .copy-toggle' ).addClass( 'bb-url-not-allowed' );
-				$( '.bb_login_require .bb-copy-button' ).addClass( 'bp-hide' );
+				$( '.bb_login_require .bb-recaptcha-copy-button' ).addClass( 'bp-hide' );
 			} else {
 				$( '.bb_login_require .copy-toggle' ).removeClass( 'bb-url-not-allowed' );
-				$( '.bb_login_require .bb-copy-button' ).removeClass( 'bp-hide' );
+				$( '.bb_login_require .bb-recaptcha-copy-button' ).removeClass( 'bp-hide' );
 			}
 			var url = $( '.copy-toggle-text' ).data( 'domain' ) + bypassString;
 			$( '.copy-toggle-text' ).attr( 'href', url );
