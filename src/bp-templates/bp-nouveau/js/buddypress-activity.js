@@ -3298,7 +3298,7 @@ window.bp = window.bp || {};
 			bp.Nouveau.ajax( data, 'activity' ).done(
 				function( response ) {
 					if ( false === response.success ) {
-						target.html('').removeClass( 'loading' );
+						target.html( "<p class='error'>" + response.data.message + "</p>" ).removeClass( 'loading' );
 						return;
 					} else if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.comments ) {
 						// success
@@ -3338,8 +3338,8 @@ window.bp = window.bp || {};
 
 				}
 			).fail(
-				function() {
-					target.html('').removeClass( 'loading' );
+				function( $xhr ) {
+					target.html( "<p class='error'>" + $xhr.statusText + "</p>" ).removeClass( 'loading' );
 				}
 			);
 		},
