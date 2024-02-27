@@ -515,21 +515,18 @@
 						position: absolute;
 					}
 
-					&:hover {
+					&:hover:after,
+					&[data-balloon][data-balloon-pos="up"]:hover:after {
+						pointer-events: auto;
+						opacity: 1;
+						transform: translate(-50%, 0);
+					}
 
-						&:after,
-						&[data-balloon][data-balloon-pos="up"]:after {
-							pointer-events: auto;
-							opacity: 1;
-							transform: translate(-50%, 0);
-						}
-
-						&:before,
-						&[data-balloon][data-balloon-pos="up"]:before {
-							pointer-events: auto;
-							opacity: 1;
-							transform: translate(-50%, 0);
-						}
+					&:hover:before,
+					&[data-balloon][data-balloon-pos="up"]:hover:before {
+						pointer-events: auto;
+						opacity: 1;
+						transform: translate(-50%, 0);
 					}
 				}
 
