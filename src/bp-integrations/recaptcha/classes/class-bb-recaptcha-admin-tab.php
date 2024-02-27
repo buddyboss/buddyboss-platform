@@ -660,7 +660,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 			$domain_name = wp_login_url() . '?bypass_captcha=';
 			?>
 			<a href="<?php echo esc_attr( $domain_name . $bypass_text ); ?>" class="copy-toggle-text" data-domain="<?php echo esc_attr( $domain_name ); ?>"><?php echo esc_attr( $domain_name . $bypass_text ); ?></a>
-			<span role="button" class="bb-copy-button hide-if-no-js" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Copy', 'buddyboss' ); ?>" data-copied-text="<?php esc_attr_e( 'Copied', 'buddyboss' ); ?>">
+			<span role="button" class="bb-recaptcha-copy-button hide-if-no-js" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Copy', 'buddyboss' ); ?>" data-copied-text="<?php esc_attr_e( 'Copied', 'buddyboss' ); ?>">
 				<i class="bb-icon-l bb-icon-copy"></i>
 			</span>
 		</div>

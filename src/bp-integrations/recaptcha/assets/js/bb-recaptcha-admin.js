@@ -43,7 +43,7 @@
 			recaptcha_settings.on( 'change', '#recaptcha_bb_login', this.allowByPass.bind( this ) );
 			recaptcha_settings.on( 'change', '#bb_recaptcha_allow_bypass', this.enableBypassInputAndToggle.bind( this ) );
 			recaptcha_settings.on( 'keyup', 'input[name="bb_recaptcha[bypass_text]"]', this.updateByPassUrl.bind( this ) );
-			recaptcha_settings.on( 'click', '.bb_login_require .bb-copy-button', this.copyByPassUrl.bind( this ) );
+			recaptcha_settings.on( 'click', '.bb_login_require .bb-recaptcha-copy-button', this.copyByPassUrl.bind( this ) );
 		},
 
 		enableVerifyButton: function ( event ) {
