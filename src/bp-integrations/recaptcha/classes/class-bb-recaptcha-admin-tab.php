@@ -93,6 +93,16 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 			if ( ! empty( $bb_recaptcha['exclude_ip'] ) ) {
 				$bb_recaptcha['exclude_ip'] = sanitize_textarea_field( wp_unslash( $_POST['bb_recaptcha']['exclude_ip'] ) );
 			}
+			if ( ! empty( $bb_recaptcha['score_threshold'] ) ) {
+				if ( $bb_recaptcha['score_threshold'] < 0 ) {
+					$bb_recaptcha['score_threshold'] = 0;
+				}
+				if ( $bb_recaptcha['score_threshold'] > 1 ) {
+					$bb_recaptcha['score_threshold'] = 1;
+				}
+			} else {
+				$bb_recaptcha['score_threshold'] = 0.5;
+			}
 			$bb_recaptcha['connection_status'] = $verified;
 			bp_update_option( 'bb_recaptcha', $bb_recaptcha );
 		}
