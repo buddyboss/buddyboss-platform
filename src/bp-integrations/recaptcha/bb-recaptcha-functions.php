@@ -622,7 +622,7 @@ function bb_recaptcha_verification_front( $action = '' ) {
 						) ||
 						(
 							isset( $response['score'] ) &&
-							$response['score'] < $score_threshold
+							$response['score'] >= $score_threshold
 						)
 					)
 				) {
