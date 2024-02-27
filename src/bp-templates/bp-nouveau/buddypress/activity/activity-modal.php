@@ -20,7 +20,7 @@
 			<div class="bb-modal-activity-body">
 				<ul class="activity-list item-list bp-list"></ul>
 			</div>
-			<div class="bb-modal-activity-footer">
+			<div class="bb-modal-activity-footer activity-item">
 				<div class="ac-form-placeholder">
 					<div class="bp-ac-form-cotainer">
 						<div class="ac-reply-avatar">
