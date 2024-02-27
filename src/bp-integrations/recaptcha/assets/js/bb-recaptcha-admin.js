@@ -386,7 +386,7 @@
 			tempInput.val( urlToCopy ).select();
 			document.execCommand( 'copy' );
 			tempInput.remove();
-			$( event.currentTarget ).text( $( event.currentTarget ).data( 'copied-text' ) );
+			$( event.currentTarget ).html( $( event.currentTarget ).html() );
 			setTimeout(
 				function () {
 					$( event.currentTarget ).html( clickedButtonText );
