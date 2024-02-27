@@ -67,11 +67,15 @@ function bb_recaptcha_validate_login( $user ) {
 
 	// If the user accesses the login page using the bypass login URL, continue to bypass the captcha.
 	if ( bb_recaptcha_allow_bypass_enable() ) {
-		$get_url_string    = bb_filter_input_string( INPUT_POST, 'bb_recaptcha_login_bypass' );
-		$get_url_string    = ! empty( $get_url_string ) ? base64_decode( $get_url_string ) : '';
-		$admin_bypass_text = bb_recaptcha_setting( 'bypass_text' );
-		if ( $get_url_string === $admin_bypass_text ) {
-			return $user;
+		$get_url_string = bb_filter_input_string( INPUT_POST, 'bb_recaptcha_login_bypass' );
+		if ( ! empty( $get_url_string ) ) {
+			$get_url_string    = base64_decode( $get_url_string );
+			$admin_bypass_text = bb_recaptcha_setting( 'bypass_text' );
+			if ( $get_url_string === $admin_bypass_text ) {
+				return $user;
+			} else {
+				return null;
+			}
 		}
 	}
 

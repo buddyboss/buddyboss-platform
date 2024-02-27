@@ -502,13 +502,18 @@ function bb_recaptcha_display( $action = '' ) {
 		$enabled_for = bb_recaptcha_recaptcha_versions();
 		$lang        = bb_recaptcha_setting( 'language_code', 'en' );
 
-		if ( bb_recaptcha_allow_bypass_enable() ) {
+		if ( 'bb_login' === $action && bb_recaptcha_allow_bypass_enable() ) {
 			$get_url_string = bb_filter_input_string( INPUT_GET, 'bypass_captcha' );
-			$get_url_string = ! empty( $get_url_string ) ? base64_encode( $get_url_string ) : '';
 			if ( ! empty( $get_url_string ) ) {
-				?>
-				<input type="hidden" id="bb_recaptcha_login_bypass_id" name="bb_recaptcha_login_bypass" value="<?php echo esc_html( $get_url_string ); ?>"/>
-				<?php
+				$admin_bypass_text = bb_recaptcha_setting( 'bypass_text' );
+				if ( $get_url_string === $admin_bypass_text ) {
+					$get_url_string = base64_encode( $get_url_string );
+					?>
+					<input type="hidden" id="bb_recaptcha_login_bypass_id" name="bb_recaptcha_login_bypass" value="<?php echo esc_html( $get_url_string ); ?>"/>
+					<?php
+					// If you have bypass url then don't display recaptcha.
+					return;
+				}
 			}
 		}
 		// Recaptcha api url.
