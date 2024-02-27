@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 
 // Add class in body tag in the admin.
 add_filter( 'admin_body_class', 'bb_admin_recaptcha_class' );
-add_filter( 'wp_authenticate_user', 'bb_recaptcha_validate_login', 9999 );
+add_filter( 'authenticate', 'bb_recaptcha_validate_login', 99999, 1 );
 add_filter( 'bb_before_core_activate_signup', 'bb_recaptcha_validate_activate' );
 
 /**
