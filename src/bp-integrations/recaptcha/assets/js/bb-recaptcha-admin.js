@@ -387,13 +387,13 @@
 			document.execCommand( 'copy' );
 			tempInput.remove();
 			$( event.currentTarget ).html( $( event.currentTarget ).html() );
-			var initText = $( event.currentTarget ).data('balloon');
-			var copiedText = $( event.currentTarget ).data('copied-text');
-			$( event.currentTarget ).attr("data-balloon", copiedText);
+			var initText = $( event.currentTarget ).data( 'balloon' );
+			var copiedText = $( event.currentTarget ).data( 'copied-text' );
+			$( event.currentTarget ).attr( 'data-balloon', copiedText );
 			setTimeout(
 				function () {
 					$( event.currentTarget ).html( clickedButtonText );
-					$( event.currentTarget ).attr("data-balloon", initText);
+					$( event.currentTarget ).attr( 'data-balloon', initText );
 				},
 				2000
 			);
