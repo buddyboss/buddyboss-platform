@@ -3141,7 +3141,8 @@ window.bp = window.bp || {};
 
 		},
 
-		resetActivityCommentForm: function ( form, resetType = '' ) {
+		resetActivityCommentForm: function ( form, resetType ) {
+			resetType = typeof resetType !== 'undefined' ? resetType : '';
 
 			// Form is not edit activity comment form and not hardReset, then return.
 			if ( ! form.hasClass('acomment-edit') && resetType !== 'hardReset' ) {
@@ -3167,6 +3168,7 @@ window.bp = window.bp || {};
 			this.resetGifPicker( form_activity_id );
 		},
 
+		// Reinitialize reply/edit comment form and append in activity modal footer
 		reinitializeActivityCommentForm: function ( form ) {
 
 			var form_activity_id = form.find( 'input[name="comment_form_id"]' ).val(),
@@ -3308,7 +3310,7 @@ window.bp = window.bp || {};
 					parentCommentId = $( currentTargetList ).data( 'parent_comment_id' ),
 					lastCommentTimeStamp = '',
 					target = $( e.currentTarget );
-
+			
 			var skeleton = 
 				`<div id="bp-ajax-loader">
 					<div class="bb-activity-placeholder bb-activity-tiny-placeholder">

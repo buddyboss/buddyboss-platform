@@ -1265,7 +1265,9 @@
 }
 
 .activity-list {
+
 	.emojionearea {
+
 		.emojionearea-picker {
 			height: 310px;
 
@@ -1283,6 +1285,7 @@
 		}
 
 		.emojionearea-picker.emojionearea-picker-position-top {
+
 			.emojionearea-wrapper:after {
 				right: 82px;
 			}
@@ -1346,12 +1349,15 @@
 	}
 
 	.activity-list .activity-item .acomment-display {
+
 		.ac-emotions_list {
+
 			&.active {
 				left: -10px;
 			}
 
 			&:hover {
+
 				body:not(.bb-is-mobile) & {
 					left: -10px;
 				}
@@ -1407,7 +1413,6 @@
 	min-height: 106px;
 	max-height: 252px;
 	border-top: 1px solid $bp-border-color;
-	padding: 10px 25px;
 	overflow-y: auto;
 	overflow-x: hidden;
 	padding: 10px 15px;
@@ -1428,12 +1433,13 @@
 		display: none;
 	}
 }
+
 .ac-form-placeholder {
 
 	.bp-ac-form-cotainer {
 		display: flex;
 		align-items: flex-start;
-    flex-wrap: wrap;
+		flex-wrap: wrap;
 	}
 
 	.ac-reply-avatar {
@@ -1443,7 +1449,7 @@
 			display: inline-block;
 			width: 32px;
 			height: 32px;
-			background-color: #F2F4F5;
+			background-color: #f2f4f5;
 			border-radius: 50%;
 		}
 
@@ -1455,8 +1461,8 @@
 	.ac-reply-content {
 		padding: 8px;
 		margin-left: 10px;
-		border: 1px solid #D6D9DD;
-		background-color: #F2F4F5;
+		border: 1px solid #d6d9dd;
+		background-color: #f2f4f5;
 		border-radius: 6px;
 		min-height: 85px;
 		position: relative;
@@ -1479,6 +1485,7 @@
 .bb-modal-activity-body {
 	position: relative;
 	padding: 15px;
+
 	/*overflow-y: auto;*/
 	overflow-x: hidden;
 	flex-grow: 1;
@@ -1524,13 +1531,13 @@
 }
 
 .emojionearea-theatre {
+
 	&.show {
+
 		.emojionearea-picker:not(.hidden) {
 			opacity: 1;
 			visibility: visible;
 			z-index: 999992;
-			top: unset;
-			left: unset;
 			right: unset;
 			margin: 0;
 			position: fixed;
@@ -1542,6 +1549,7 @@
 }
 
 .gif-media-search-dropdown {
+
 	&.gif-media-search-dropdown-standalone {
 		z-index: 999992;
 		top: 0;
@@ -3173,6 +3181,7 @@ span.dashicons.dashicons-admin-file:before {
 		}
 
 		.bb-activity-placeholder_details {
+
 			.bb-activity-placeholder_title {
 				max-width: 300px;
 				height: 55px;
