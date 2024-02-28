@@ -1408,6 +1408,11 @@ window.bp = window.bp || {};
 					}
 				);
 
+				if ( 'undefined' === typeof activity_id && target.parents('.bb-modal-activity-footer').length > 0 ) {
+					activity_id = target.parents('form.ac-form').find('input[name=comment_form_id]').val();
+					item_id     = activity_id;
+				}
+
 				target.parent().addClass( 'loading' ).prop( 'disabled', true );
 				comment_content.addClass( 'loading' ).prop( 'disabled', true );
 				var comment_value = comment_content[0].innerHTML.replace( /<div>/gi,'\n' ).replace( /<\/div>/gi,'' );

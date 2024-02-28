@@ -537,7 +537,12 @@ function bp_nouveau_ajax_new_activity_comment() {
 
 		// Set activity related properties to be used in the loop.
 		if ( ! isset( $activities_template->activity->component ) ) {
-			$a_obj = new BP_Activity_Activity( $p_obj->item_id );
+			if ( ! isset( $p_obj ) ) {
+				$a_obj = new BP_Activity_Activity( $activities_template->activities[0]->item_id );
+			} else {
+				$a_obj = new BP_Activity_Activity( $p_obj->item_id );
+			}
+			
 			$activities_template->activity->component         = $a_obj->component;
 			$activities_template->activity->item_id           = $a_obj->item_id;
 			$activities_template->activity->secondary_item_id = $a_obj->secondary_item_id;
