@@ -3311,18 +3311,18 @@ window.bp = window.bp || {};
 					lastCommentTimeStamp = '',
 					target = $( e.currentTarget );
 			
-			var skeleton = 
-				`<div id="bp-ajax-loader">
-					<div class="bb-activity-placeholder bb-activity-tiny-placeholder">
-						<div class="bb-activity-placeholder_head">
-							<div class="bb-activity-placeholder_avatar bb-bg-animation bb-loading-bg"></div>
-							<div class="bb-activity-placeholder_details">
-								<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
-								<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
-							</div>
-						</div>
-					</div>
-				</div>`;
+			var skeleton =
+				'<div id="bp-ajax-loader">' +
+					'<div class="bb-activity-placeholder bb-activity-tiny-placeholder">' +
+						'<div class="bb-activity-placeholder_head">' +
+							'<div class="bb-activity-placeholder_avatar bb-bg-animation bb-loading-bg"></div>' +
+							'<div class="bb-activity-placeholder_details">' +
+								'<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>' +
+								'<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>' +
+							'</div>' +
+						'</div>' +
+					'</div>' +
+				'</div>';
 
 			target.addClass( 'loading' ).removeClass('bp-hide');
 			target.html( skeleton );
