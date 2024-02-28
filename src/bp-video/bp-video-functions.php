@@ -726,7 +726,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 							'message_id'    => ! empty( $bp_video->message_id ) ? $bp_video->message_id : ( ! empty( $video['message_id'] ) ? $video['message_id'] : 0 ),
 							'privacy'       => $bp_video->privacy,
 							'menu_order'    => ! empty( $video['menu_order'] ) ? $video['menu_order'] : false,
-							'date_created'  => $bp_video->date_created,
+							'date_created'  => ! empty( $video['date_created'] ) ? $video['date_created'] : $bp_video->date_created,
 							'status'        => $bp_video->status,
 						)
 					);
@@ -743,6 +743,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 						'menu_order'    => ! empty( $video['menu_order'] ) ? $video['menu_order'] : false,
 						'privacy'       => ! empty( $video['privacy'] ) && in_array( $video['privacy'], array_merge( array_keys( bp_video_get_visibility_levels() ), array( 'message' ) ), true ) ? $video['privacy'] : $privacy,
 						'status'        => ! empty( $video['status'] ) ? $video['status'] : 'published',
+						'date_created'  => ! empty( $video['date_created'] ) ? $video['date_created'] : bp_core_current_time(),
 					)
 				);
 

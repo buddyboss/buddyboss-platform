@@ -626,6 +626,7 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 							'privacy'       => $bp_document->privacy,
 							'menu_order'    => ! empty( $document['menu_order'] ) ? $document['menu_order'] : false,
 							'date_modified' => bp_core_current_time(),
+							'date_created'  => ! empty( $document['date_created'] ) ? $document['date_created'] : $bp_document->date_created,
 							'status'        => $bp_document->status,
 						)
 					);
@@ -654,6 +655,7 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 						'message_id'    => ! empty( $document['message_id'] ) ? $document['message_id'] : 0,
 						'menu_order'    => ! empty( $document['menu_order'] ) ? $document['menu_order'] : 0,
 						'status'        => ! empty( $document['status'] ) ? $document['status'] : 'published',
+						'date_created'  => ! empty( $document['date_created'] ) ? $document['date_created'] : bp_core_current_time(),
 					)
 				);
 

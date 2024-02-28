@@ -605,7 +605,7 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 							'message_id'    => ! empty( $bp_media->message_id ) ? $bp_media->message_id : ( ! empty( $media['message_id'] ) ? $media['message_id'] : 0 ),
 							'privacy'       => $bp_media->privacy,
 							'menu_order'    => ! empty( $media['menu_order'] ) ? $media['menu_order'] : false,
-							'date_created'  => $bp_media->date_created,
+							'date_created'  => ! empty( $media['date_created'] ) ? $media['date_created'] : $bp_media->date_created,
 							'status'        => $bp_media->status,
 						)
 					);
@@ -622,6 +622,7 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 						'menu_order'    => ! empty( $media['menu_order'] ) ? $media['menu_order'] : false,
 						'privacy'       => ! empty( $media['privacy'] ) && in_array( $media['privacy'], array_merge( array_keys( bp_media_get_visibility_levels() ), array( 'message' ) ) ) ? $media['privacy'] : $privacy,
 						'status'        => ! empty( $media['status'] ) ? $media['status'] : 'published',
+						'date_created'  => ! empty( $media['date_created'] ) ? $media['date_created'] : bp_core_current_time(),
 					)
 				);
 			}
