@@ -806,7 +806,6 @@ class BP_Media {
 
 			$media->group_name = $group_name;
 			$media->visibility = $visibility;
-			$media->status     = $media->status;
 
 			$medias[] = $media;
 		}
