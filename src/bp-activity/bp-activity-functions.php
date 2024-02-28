@@ -2082,7 +2082,8 @@ function bp_activity_add( $args = '' ) {
 			'recorded_time'     => bp_core_current_time(), // The GMT time that this activity was recorded.
 			'hide_sitewide'     => false,                  // Should this be hidden on the sitewide activity feed?
 			'is_spam'           => false,                  // Is this activity item to be marked as spam?
-			'privacy'           => 'public',               // privacy of the activity
+			'privacy'           => 'public',               // privacy of the activity.
+			'status'            => 'published',            // status of the activity.
 			'error_type'        => 'bool',
 		),
 		'activity_add'
@@ -2111,6 +2112,7 @@ function bp_activity_add( $args = '' ) {
 	$activity->is_spam           = $r['is_spam'];
 	$activity->privacy           = $r['privacy'];
 	$activity->error_type        = $r['error_type'];
+	$activity->status            = $r['status'];
 	$activity->action            = ! empty( $r['action'] ) ? $r['action'] : '';
 
 	$save = $activity->save();
@@ -2172,6 +2174,8 @@ function bp_activity_post_update( $args = '' ) {
 			'hide_sitewide' => false,
 			'type'          => 'activity_update',
 			'privacy'       => 'public',
+			'status'        => 'published',
+			'recorded_time' => false,
 			'error_type'    => 'bool',
 		)
 	);
@@ -2236,10 +2240,11 @@ function bp_activity_post_update( $args = '' ) {
 					'user_id'           => $activity->user_id,
 					'item_id'           => $activity->item_id,
 					'secondary_item_id' => $activity->secondary_item_id,
-					'recorded_time'     => $activity->date_recorded,
+					'recorded_time'     => ! empty( $r['recorded_time'] ) ? $r['recorded_time'] : $activity->date_recorded,
 					'hide_sitewide'     => $activity->hide_sitewide,
 					'is_spam'           => $activity->is_spam,
 					'privacy'           => $r['privacy'],
+					'status'            => $r['status'],
 					'error_type'        => $r['error_type'],
 				)
 			);
@@ -2262,6 +2267,8 @@ function bp_activity_post_update( $args = '' ) {
 				'type'          => $r['type'],
 				'hide_sitewide' => $r['hide_sitewide'],
 				'privacy'       => $r['privacy'],
+				'recorded_time' => $r['recorded_time'],
+				'status'        => $r['status'],
 				'error_type'    => $r['error_type'],
 			)
 		);
