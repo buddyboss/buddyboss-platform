@@ -6540,12 +6540,11 @@ function bb_get_activity_comments_closer_id( $activity_id ) {
 /**
  * Close or unclose activity comments.
  *
- * @param array $args Arguments related to close/unclose activity feed post commenting.
- *
  * @since BuddyBoss [BBVERSION]
  *
- * @return bool|string Update type closed_comments|unclosed_comments.
+ * @param array $args Arguments related to close/unclose activity feed post commenting.
  *
+ * @return bool|string Update type closed_comments|unclosed_comments.
  */
 function bb_activity_close_unclose_comments( $args = array() ) {
 	$r = bp_parse_args(
@@ -6610,7 +6609,7 @@ function bb_activity_close_unclose_comments( $args = array() ) {
 					$retval = 'allowed';
 
 					if ( $is_closed_comments && ! empty( $prev_closer_id ) ) {
-						// Already closed by group organizer/moderator/admin(public group)
+						// Already closed by group organizer/moderator/admin(public group).
 						if (
 							(
 								groups_is_user_admin( $prev_closer_id, $activity->item_id ) ||
@@ -6665,11 +6664,10 @@ function bb_activity_close_unclose_comments( $args = array() ) {
 		/**
 		 * Fires after activity comments closed/unclosed.
 		 *
-		 * @param int $activity_id Activity ID.
-		 * @param string $action Action type close_comments/unclose_comments.
-		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
+		 * @param string $action      Action type close_comments/unclose_comments.
+		 * @param int    $activity_id Activity ID.
 		 */
 		do_action( 'bb_activity_close_unclose_comments', $activity->id, $r['action'] );
 	}

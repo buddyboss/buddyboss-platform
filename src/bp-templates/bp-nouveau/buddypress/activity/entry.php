@@ -72,8 +72,9 @@ if ( ! empty( $link_embed ) ) {
 		?>
 	</div>
 
-	<?php bp_nouveau_activity_hook( 'before', 'entry_comments' ); ?>
 	<?php
+	bp_nouveau_activity_hook( 'before', 'entry_comments' );
+
 	$activity_id             = bp_get_activity_id();
 	$close_activity_comments = false;
 	if ( bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( $activity_id ) ) {
@@ -101,15 +102,15 @@ if ( ! empty( $link_embed ) ) {
 		<div class='bb-activity-closed-comments-notice'><?php echo $closed_notice; ?></div>
 		<?php
 	}
-	?>
-	<?php if ( bp_activity_get_comment_count() || ( is_user_logged_in() && ( bp_activity_can_comment() || bp_is_single_activity() ) ) ) : ?>
+
+	if ( bp_activity_get_comment_count() || ( is_user_logged_in() && ( bp_activity_can_comment() || bp_is_single_activity() ) ) ) : ?>
 		<div class="activity-comments">
 			<?php
 			bp_activity_comments();
 			bp_nouveau_activity_comment_form();
 			?>
 		</div>
-	<?php
+		<?php
 	endif;
 
 	bp_nouveau_activity_hook( 'after', 'entry_comments' );
