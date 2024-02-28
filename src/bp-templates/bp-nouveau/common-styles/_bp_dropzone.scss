@@ -573,7 +573,8 @@
 .dropzone {
 
 	.dz-default {
-		border: 4px dashed #bbb;
+		border: 1px solid #bbb;
+		border-radius: 4px;
 		min-height: 20vh;
 		display: flex;
 		align-items: center;

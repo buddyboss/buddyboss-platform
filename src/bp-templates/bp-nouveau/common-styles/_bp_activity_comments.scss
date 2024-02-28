@@ -20,12 +20,45 @@
 				padding: $pad-med 0 0;
 
 				&:not(.detached-comment-item) {
-					margin-left: $marg-med;
+					margin-left: 0;
 
 					@media screen and (max-width: 560px) {
 						margin-left: 0;
 					}
 
+				}
+
+				.bb-media-length-1 .bb-activity-media-elem .entry-img img {
+					max-width: 200px;
+					height: auto;
+					max-height: 200px;
+					object-fit: cover;
+				}
+
+				.bb-media-length-3,
+				.bb-media-length-2 {
+					display: flex;
+					flex-wrap: nowrap;
+					gap: 2px;
+
+					.act-grid-1-2,
+					.act-grid-1-1 {
+						flex: auto;
+						max-width: initial;
+					}
+
+					.bb-activity-media-elem .entry-img {
+						padding-top: 0;
+						display: inline-block;
+
+						img {
+							position: static;
+							width: 150px;
+							height: 150px;
+							object-fit: cover;
+							min-width: auto;
+						}
+					}
 				}
 
 				@media screen and (max-width: 560px) {
@@ -53,15 +86,35 @@
 
 		div.acomment-avatar {
 			width: auto;
+			margin-top: 7px;
+			flex-shrink: 0;
 
 			img {
 				border-width: 1px;
 				float: left;
-				height: 25px;
 				max-width: none;
-				width: 25px;
+				max-width: 32px;
+				object-fit: cover;
 				image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
 			}
+		}
+
+		.acomment_inner {
+			display: flex;
+
+			.acomment-content_block {
+				background-color: $light-grey;
+				padding: $marg-sml $marg-med;
+				border-radius: $block-radius-inner;
+				margin-bottom: $marg-xsml;
+				position: relative;
+			}
+		}
+
+		.acomment-display {
+			display: inline-flex;
+			position: relative;
+			padding-right: 34px;
 		}
 
 		.acomment-meta,
@@ -76,9 +129,6 @@
 		}
 
 		.acomment-content {
-			border-left: 1px solid $bp-border-dark;
-			margin: $marg-med 0 0 10%;
-			padding: $pad-sml $pad-med;
 
 			p {
 				margin-bottom: 0.5em;
@@ -116,9 +166,59 @@
 
 		} // close .acomment-options
 
+		.activity-attached-gif-container {
+
+			.gif-player {
+				display: flex;
+				max-width: 200px;
+
+				video {
+					max-width: 200px;
+					height: 150px;
+				}
+
+				.gif-icon {
+					padding: 0;
+				}
+			}
+		}
+
+		.bb-activity-video-wrap .bb-activity-video-elem {
+			min-width: 245px;
+		}
+
+		.bb-activity-video-wrap:not(.bb-video-length-1) {
+			flex-wrap: nowrap;
+
+			.act-grid-1-1,
+			.act-grid-1-2 {
+
+				&.bb-activity-video-elem {
+					flex: auto;
+					min-width: 200px;
+					max-width: 200px;
+
+					.bb-item-cover-wrap {
+						padding-top: 82.56%;
+					}
+				}
+			}
+		}
+
+		.bb-activity-media-wrap.ac-document {
+			flex-flow: column;
+		}
+
+		.bb-activity-media-elem.document-activity {
+			width: 265px;
+
+			.document-preview-wrap {
+				height: 115px;
+			}
+		}
+
 		.bp-generic-meta.action {
 			background: none;
-			margin-top: $marg-sml;
 
 			// if button element in use
 			button {
@@ -197,12 +297,12 @@
 				opacity: 0.7;
 			}
 
-			> .acomment-content {
+			.acomment-content {
 				pointer-events: none;
 				opacity: 0.7;
 			}
 
-			> .acomment-meta {
+			.acomment-meta {
 
 				> .author-name[href=""] {
 					pointer-events: none;
@@ -222,15 +322,15 @@
 			&.has-content,
 			&.has-media {
 
-				.ac-reply-content input[name="ac_form_submit"] {
+				.ac-reply-content .ac-submit-wrap {
 					opacity: 1;
 					pointer-events: initial;
 				}
 
 			}
 
-			&.media-uploading .ac-reply-content input[name="ac_form_submit"],
-			.ac-reply-content input[name="ac_form_submit"] {
+			&.media-uploading .ac-reply-content .ac-submit-wrap,
+			.ac-reply-content .ac-submit-wrap {
 				opacity: 0.4;
 				pointer-events: none;
 			}
@@ -246,30 +346,56 @@
 		}
 
 		.comment-reactions {
-			position: absolute;
-			bottom: -2px;
-			right: 0;
-			display: flex;
-			align-items: center;
-			padding: 2px;
-			border-radius: 24px;
-			cursor: pointer;
+
+			.activity-state-reactions {
+				background-color: $white;
+				position: absolute;
+				bottom: -10px;
+				right: 0;
+				margin-right: 10px;
+				display: flex;
+				align-items: center;
+				padding: 2px;
+				border-radius: 24px;
+				cursor: pointer;
+				box-shadow: 0 0 6px -2px rgba(0, 0, 0, 0.3);
+				transform: translateX(100%);
+			}
 
 			.comment-reactions_count {
 				font-size: 13px;
-				margin: 0 2px 0 3px;
+				margin: 0 4px 0 2px;
 			}
-		}
 
-		.bb-activity-more-options-wrap {
-			top: -3px;
-
-			.bb-activity-more-options-action i {
-				font-size: 16px;
+			.reactions_item > i:before {
+				margin-left: 0;
+				margin-right: 0;
 			}
 		}
 
 	} // close .activity-comments
+
+	.activity-comments .acomment-foot-actions {
+		display: flex;
+		align-items: center;
+
+		.generic-button {
+			margin: 10px 0;
+		}
+
+		.activity-time-since {
+			color: $light-text;
+			margin-left: 5px;
+		}
+	}
+
+	.activity-comments > .ac-form {
+		display: none;
+	}
+
+	.activity-item.has-comments .activity-comments > .ac-form {
+		display: block;
+	}
 
 	.activity-list .activity-item .activity-comments .bp-generic-meta.action a.bp-like-button .like-count {
 		margin-left: 0;
@@ -284,14 +410,6 @@
 			margin-top: 0;
 		}
 
-	}
-
-	.bb-media-model-wrapper .activity-comments ul li:not(.detached-comment-item) {
-		margin-left: 10px;
-
-		@media screen and (max-width: 560px) {
-			margin-left: 0;
-		}
 	}
 
 } // close .buddypress-wrap

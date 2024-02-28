@@ -2797,6 +2797,26 @@ function bb_activity_has_comment_reply_access( $can_comment, $comment ) {
 		$can_comment = false;
 	}
 
+	// Get the main activity.
+	$main_activity = new BP_Activity_Activity( $comment->item_id );
+
+	// Disallow replies if threading disabled or depth condition is matched.
+	if ( isset( $main_activity->component ) && 'blogs' === $main_activity->component ) {
+		if (
+			false === get_option( 'thread_comments' ) ||
+			$comment->depth >= get_option( 'thread_comments_depth' )
+		) {
+			$can_comment = false;
+		}
+	} else {
+		if (
+			false === bb_is_activity_comment_threading_enabled() ||
+			$comment->depth >= bb_get_activity_comment_threading_depth()
+		) {
+			$can_comment = false;
+		}
+	}
+
 	return $can_comment;
 }
 
@@ -3678,3 +3698,14 @@ function bb_activity_directory_set_pagination( $querystring, $object ) {
 
 	return http_build_query( $querystring );
 }
+
+/**
+ * Add activity modal template for activity pages
+ */
+function bp_activity_add_modal_template() {
+	bp_get_template_part( 'activity/activity-modal' );
+}
+
+add_action( 'bp_after_directory_activity_list', 'bp_activity_add_modal_template' );
+add_action( 'bp_after_group_activity_content', 'bp_activity_add_modal_template' );
+add_action( 'bp_after_member_activity_content', 'bp_activity_add_modal_template' );

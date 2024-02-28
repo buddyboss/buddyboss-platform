@@ -10,6 +10,17 @@
 
 bp_nouveau_before_loop();
 
+$query_string = bp_ajax_querystring( 'activity' );
+parse_str( $query_string, $query_string_array );
+
+global $load_single_activity;
+$load_single_activity = false;
+if ( ! empty( $query_string_array['include'] ) ) {
+
+	// Load single activity.
+	$load_single_activity = $query_string_array['include'];
+}
+
 if ( bp_has_activities( bp_ajax_querystring( 'activity' ) ) ) :
 
 	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) :
@@ -30,7 +41,9 @@ if ( bp_has_activities( bp_ajax_querystring( 'activity' ) ) ) :
 		</li>
 		<?php
 	endif;
-
+		?>
+		<li class="activity activity_update activity-item activity-popup"></li>
+		<?php
 	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) :
 		?>
 		</ul>

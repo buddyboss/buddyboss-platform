@@ -2772,7 +2772,7 @@ function bb_get_activity_comment_threading_depth( $default = 3 ) {
  * @return int
  */
 function bb_get_activity_comment_visibility( $default = 2 ) {
-	return (int) apply_filters( 'bb_get_activity_comment_visibility', bp_get_option( '_bb_get_activity_comment_visibility', $default ) );
+	return (int) apply_filters( 'bb_get_activity_comment_visibility', bp_get_option( '_bb_activity_comment_visibility', $default ) );
 }
 
 /**
@@ -2786,7 +2786,7 @@ function bb_get_activity_comment_visibility( $default = 2 ) {
  * @return int
  */
 function bb_get_activity_comment_loading( $default = 10 ) {
-	return (int) apply_filters( 'bb_get_activity_comment_loading', bp_get_option( '_bb_get_activity_comment_loading', $default ) );
+	return (int) apply_filters( 'bb_get_activity_comment_loading', bp_get_option( '_bb_activity_comment_loading', $default ) );
 }
 
 /**

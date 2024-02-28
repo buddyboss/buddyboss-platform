@@ -52,29 +52,90 @@ if ( ! empty( $link_embed ) ) {
 		?>
 	</div>
 
-	<div class="activity-avatar item-avatar">
-		<a href="<?php bp_activity_user_link(); ?>">
-			<?php bp_activity_avatar( array( 'type' => 'full' ) ); ?>
-		</a>
-	</div>
+	<?php
+			global $activities_template;
 
-	<div class="activity-content <?php bp_activity_entry_css_class(); ?>">
-		<div class="activity-header">
-			<?php
-				bp_activity_action();
-				bp_nouveau_activity_is_edited();
-				bp_nouveau_activity_privacy();
+			if ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() ) :
+
+				// If group activity.
+				$group_id   = (int) $activities_template->activity->item_id;
+				$group      = groups_get_group( $group_id );
+				$group_name = bp_get_group_name( $group );
+				$userlink   = bp_get_activity_user_link();
 			?>
+			<div class="bp-activity-head-group">
+				<div class="activity-group-avatar">
+					<div class="group-avatar">
+						<a class="group-avatar-wrap mobile-center" href="<?php echo bp_get_group_permalink( $group ); ?>">
+							<?php
+								echo bp_core_fetch_avatar(
+									array(
+										'item_id' => $group->id,
+										'avatar_dir' => 'group-avatars',
+										'type' => 'thumb',
+										'object' => 'group',
+										'width' => 100,
+										'height' => 100,
+									)
+								);
+							?>
+						</a>
+					</div>
+					<div class="author-avatar">
+						<a href="<?php echo $userlink; ?>"><?php bp_activity_avatar( array( 'type' => 'thumb' ) ); ?></a>
+					</div>
+				</div>
+
+				<div class="activity-header activity-header--group">
+					<div class="activity-group-heading"><a href="<?php echo bp_get_group_permalink( $group ); ?>"><?php echo $group_name; ?></a></div>
+					<div class="activity-group-post-meta">
+						<span class="activity-post-author">
+							<a href="<?php echo $userlink; ?>">
+								<?php echo bp_core_get_user_displayname( $activities_template->activity->user_id ); ?>
+							</a>
+						</span>
+						<?php
+						printf(
+							'<span class="time-since" data-livestamp="%1$s">%2$s</span>',
+							bp_core_get_iso8601_date( bp_get_activity_date_recorded() ),
+							bp_core_time_since( bp_get_activity_date_recorded() )
+						);
+						?>
+						<?php
+						if ( function_exists( 'bp_nouveau_activity_is_edited' ) ) {
+							bp_nouveau_activity_is_edited();
+						}
+						if ( function_exists( 'bp_nouveau_activity_privacy' ) ) {
+							bp_nouveau_activity_privacy();
+						}
+						?>
+					</div>
+				</div>
+			</div>
+
+		<?php else : ?>
+
+		<div class="activity-avatar item-avatar">
+			<a href="<?php bp_activity_user_link(); ?>"><?php bp_activity_avatar( array( 'type' => 'full' ) ); ?></a>
 		</div>
 
-		<?php
-		bp_nouveau_activity_hook( 'before', 'activity_content' );
+		<div class="activity-header">
+			<?php bp_activity_action(); ?>
+			<?php bp_nouveau_activity_is_edited(); ?>
+			<?php bp_nouveau_activity_privacy(); ?>
+		</div>
 
-		if ( bp_nouveau_activity_has_content() ) :
+	<?php endif; ?>
+
+	<div class="activity-content <?php bp_activity_entry_css_class(); ?>">
+
+		<?php 
+			bp_nouveau_activity_hook( 'before', 'activity_content' ); 
+			if ( bp_nouveau_activity_has_content() ) : 
 			?>
-			<div class="activity-inner"><?php bp_nouveau_activity_content(); ?></div>
+				<div class="activity-inner"><?php bp_nouveau_activity_content(); ?></div>
 			<?php
-		endif;
+			endif;
 
 		bp_nouveau_activity_hook( 'after', 'activity_content' );
 		bp_nouveau_activity_state();
@@ -82,8 +143,8 @@ if ( ! empty( $link_embed ) ) {
 		?>
 	</div>
 
-	<?php bp_nouveau_activity_hook( 'before', 'entry_comments' ); ?>
-	<?php
+	<?php bp_nouveau_activity_hook( 'before', 'entry_comments' );
+
 	$activity_id             = bp_get_activity_id();
 	$close_activity_comments = false;
 	if ( bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( $activity_id ) ) {
@@ -111,9 +172,19 @@ if ( ! empty( $link_embed ) ) {
 		<div class='bb-activity-closed-comments-notice'><?php echo $closed_notice; ?></div>
 		<?php
 	}
-	?>
-	<?php if ( bp_activity_get_comment_count() || ( is_user_logged_in() && ( bp_activity_can_comment() || bp_is_single_activity() ) ) ) : ?>
-		<div class="activity-comments">
+
+	if ( bp_activity_can_comment() ) : ?>
+
+		<?php
+		$class = 'activity-comments';
+		if ( 'blogs' === bp_get_activity_object_name() ) {
+			$class .= get_option( 'thread_comments' ) ? ' threaded-comments threaded-level-' . get_option( 'thread_comments_depth' ) : '';
+		} else {
+			$class .= bb_is_activity_comment_threading_enabled() ? ' threaded-comments threaded-level-' . bb_get_activity_comment_threading_depth() : '';
+		}
+		?>
+
+		<div class="<?php echo $class ?>">
 			<?php
 			bp_activity_comments();
 			bp_nouveau_activity_comment_form();
