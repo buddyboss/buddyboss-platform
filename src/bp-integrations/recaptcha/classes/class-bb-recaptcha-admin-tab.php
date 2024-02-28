@@ -417,7 +417,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 				printf(
 				/* translators: recaptcha link */
 					esc_html__( 'Go to %s and log in with your Google account. Upon registration, you\'ll get a site key and secret key. Add these keys below to implement reCAPTCHA and protect your site from fraud, spam, and abuse.', 'buddyboss' ),
-					'<a href="https://www.google.com/recaptcha/admin#list" target="_blank">' . esc_html__( 'Google reCAPTCHA API keys', 'buddyboss' ) . '</a>',
+					'<a href="https://www.google.com/recaptcha/admin#list" target="_blank">' . esc_html__( 'reCAPTCHA website', 'buddyboss' ) . '</a>',
 				)
 				?>
 			</span>
