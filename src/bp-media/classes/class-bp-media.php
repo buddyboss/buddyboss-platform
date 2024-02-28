@@ -322,7 +322,7 @@ class BP_Media {
 	 *     @type string       $search_terms      Limit results by a search term. Default: false.
 	 *     @type string|bool  $count_total       If true, an additional DB query is run to count the total media items
 	 *                                           for the query. Default: false.
-	 *     @type array|string $status            String or Array or media items status. Default: published.
+	 *     @type array|string $status            String or Array of media items status. Default: published.
 	 * }
 	 * @return array The array returned has two keys:
 	 *               - 'total' is the count of located medias
