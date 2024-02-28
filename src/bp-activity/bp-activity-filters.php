@@ -549,6 +549,11 @@ function bp_activity_at_name_send_emails( $activity ) {
 		return;
 	}
 
+	// Avoid sending notification if the activity is not published.
+	if ( 'published' !== $activity->status ) {
+		return;
+	}
+
 	// If our temporary variable doesn't exist, stop now.
 	if ( empty( buddypress()->activity->mentioned_users ) ) {
 		return;
@@ -3438,7 +3443,8 @@ function bb_activity_send_email_to_following_post( $content, $user_id, $activity
 	if (
 		empty( $activity ) ||
 		'activity' !== $activity->component ||
-		in_array( $activity->privacy, array( 'document', 'media', 'video', 'onlyme' ), true )
+		in_array( $activity->privacy, array( 'document', 'media', 'video', 'onlyme' ), true ) ||
+		'published' !== $activity->status
 	) {
 		return;
 	}
