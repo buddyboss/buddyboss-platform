@@ -743,7 +743,6 @@ class BP_Video {
 
 			$video->group_name = $group_name;
 			$video->visibility = $visibility;
-			$video->status     = $video->status;
 			$video->video_link = bb_video_get_symlink( $video );
 			$videos[]          = $video;
 		}
