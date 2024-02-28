@@ -4636,7 +4636,6 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   min-height: 106px;
   max-height: 252px;
   border-top: 1px solid #eee;
-  padding: 10px 25px;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 10px 15px;
@@ -4672,7 +4671,7 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   display: inline-block;
   width: 32px;
   height: 32px;
-  background-color: #F2F4F5;
+  background-color: #f2f4f5;
   border-radius: 50%;
 }
 
@@ -4683,8 +4682,8 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
 .ac-form-placeholder .ac-reply-content {
   padding: 8px;
   margin-left: 10px;
-  border: 1px solid #D6D9DD;
-  background-color: #F2F4F5;
+  border: 1px solid #d6d9dd;
+  background-color: #f2f4f5;
   border-radius: 6px;
   min-height: 85px;
   position: relative;
@@ -4733,6 +4732,10 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   cursor: pointer;
 }
 
+.acomments-view-more i {
+  font-size: 20px;
+}
+
 .view-more-comments {
   font-weight: 600;
 }
@@ -4750,8 +4753,6 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   opacity: 1;
   visibility: visible;
   z-index: 999992;
-  top: unset;
-  left: unset;
   right: unset;
   margin: 0;
   position: fixed;

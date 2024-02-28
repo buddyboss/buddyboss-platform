@@ -1464,6 +1464,8 @@ window.bp = window.bp || {};
 					comment_data.edit_comment = true;
 				}
 
+				var isFooterForm = target.closest('.bb-modal-activity-footer').length > 0;
+
 				parent.ajax( comment_data, 'activity' ).done(
 					function( response ) {
 						target.parent().removeClass( 'loading' );
@@ -1502,7 +1504,7 @@ window.bp = window.bp || {};
 									}
 								}
 
-								if ( form.hasClass( 'root' ) ) {
+								if ( isFooterForm ) {
 									form.closest( '#activity-modal' ).find( '.bb-modal-activity-body .activity-comments' ).children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
 								} else {
 									activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );

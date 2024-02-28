@@ -106,7 +106,7 @@ if ( ! empty( $link_embed ) ) {
 			<a href="<?php bp_activity_user_link(); ?>"><?php bp_activity_avatar( array( 'type' => 'full' ) ); ?></a>
 		</div>
 
-		<div class="activity-header">
+		<div class="activity-header" data-activity-author="">
 			<?php bp_activity_action(); ?>
 			<?php bp_nouveau_activity_is_edited(); ?>
 			<?php bp_nouveau_activity_privacy(); ?>

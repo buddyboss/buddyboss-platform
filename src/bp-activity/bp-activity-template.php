@@ -2012,7 +2012,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 				$hidden_class = 'bp-hide';
 			}
 
-			echo "<li class='acomments-view-more " . $hidden_class . "'>" . esc_html( $view_more_text ) . "</li>";
+			echo "<li class='acomments-view-more " . $hidden_class . "'><i class='bb-icon-l bb-icon-corner-right'></i>" . esc_html( $view_more_text ) . "</li>";
 			break;
 		}
 
