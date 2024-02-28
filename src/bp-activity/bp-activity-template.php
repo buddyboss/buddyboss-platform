@@ -2747,6 +2747,10 @@ function bp_get_activity_css_class() {
 		$class .= ' has-comments';
 	}
 
+	if ( (bool) bp_activity_get_meta( $activities_template->activity->id, 'bb_is_closed_comments' ) ) {
+		$class .= ' bb-closed-comments';
+	}
+
 	$activity_metas    = bb_activity_get_metadata( bp_get_activity_id() );
 	$link_embed        = $activity_metas['_link_embed'][0] ?? '';
 	$link_preview_data = ! empty( $activity_metas['_link_preview_data'][0] ) ? maybe_unserialize( $activity_metas['_link_preview_data'][0] ) : array();

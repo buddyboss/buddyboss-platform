@@ -2890,6 +2890,20 @@ function bp_activity_new_comment( $args = '' ) {
 	// Default error message.
 	$feedback = __( 'There was an error posting your reply. Please try again.', 'buddyboss' );
 
+	// Bail if the activity comments closed.
+	if ( bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( $r['activity_id'] ) ) {
+		$error = new WP_Error( 'closed_activity_comments', __( 'The comments are closed for the activity.', 'buddyboss' ) );
+
+		if ( 'wp_error' === $r['error_type'] ) {
+			return $error;
+
+			// Backpat.
+		} else {
+			$bp->activity->errors['new_comment'] = $error;
+			return false;
+		}
+	}
+
 	// Filter to skip comment content check for comment notification.
 	$check_empty_content = apply_filters( 'bp_has_activity_comment_content', true );
 
@@ -6505,6 +6519,180 @@ function bb_load_reaction_popup_modal_js_template() {
 	) {
 		bp_get_template_part( 'common/js-templates/activity/parts/bb-activity-reactions-popup' );
 	}
+}
+
+/**
+ * Check if activity comments are closed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $activity_id Activity Id.
+ *
+ * @return bool
+ */
+function bb_is_activity_comments_closed( $activity_id ) {
+	return (bool) bp_activity_get_meta( $activity_id, 'bb_is_closed_comments' );
+}
+
+/**
+ * Get activity closed comments by user.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $activity_id Activity Id.
+ *
+ * @return bool
+ */
+function bb_get_activity_comments_closer_id( $activity_id ) {
+	return (int) bp_activity_get_meta( $activity_id, 'bb_closed_comments_closer_id' );
+}
+
+/**
+ * Close or unclose activity comments.
+ *
+ * @param array $args Arguments related to close/unclose activity feed post commenting.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool|string Update type closed_comments|unclosed_comments.
+ *
+ */
+function bb_activity_close_unclose_comments( $args = array() ) {
+	$r = bp_parse_args(
+		$args,
+		array(
+			'action'      => 'close_comments',
+			'activity_id' => 0,
+			'retval'      => 'bool',
+			'user_id'     => bp_loggedin_user_id(),
+		)
+	);
+
+	$retval                 = '';
+	$close_comments_updated = false;
+
+	$activity = new BP_Activity_Activity( (int) $r['activity_id'] );
+	if ( ! empty( $activity->id ) ) {
+
+		if ( 'unclose_comments' === $r['action'] ) {
+			$updated_value = false;
+		} else {
+			$updated_value = true;
+		}
+
+		$prev_closer_id     = 0;
+		$is_closed_comments = bb_is_activity_comments_closed( $activity->id );
+		if ( $is_closed_comments ) {
+			$prev_closer_id = bb_get_activity_comments_closer_id( $activity->id );
+		}
+
+		// Check if group activity or normal activity.
+		if ( 'groups' === $activity->component && ! empty( $activity->item_id ) && bp_is_active( 'groups' ) ) {
+			$group = groups_get_group( $activity->item_id );
+
+			if (
+				bp_current_user_can( 'administrator' ) &&
+				in_array( $group->status, array( 'public' ) )
+			) {
+				$retval = 'allowed';
+
+				// Check the user is moderator or organizer are also part of the group.
+			} elseif ( ! groups_is_user_member( $r['user_id'], $activity->item_id ) ) {
+				$retval = 'not_member';
+			} else {
+				$is_admin = groups_is_user_admin( $r['user_id'], $activity->item_id );
+				$is_mod   = groups_is_user_mod( $r['user_id'], $activity->item_id );
+
+				if ( $is_admin || $is_mod ) {
+					$retval = 'allowed';
+					if ( $is_closed_comments && ! empty( $prev_closer_id ) ) {
+						if (
+							(
+								bp_user_can( $prev_closer_id, 'administrator' ) &&
+								in_array( $group->status, array( 'public' ) )
+							) &&
+							! $updated_value
+						) {
+							$retval = 'not_allowed';
+						}
+					}
+				} elseif ( $activity->user_id === $r['user_id'] ) {
+					$retval = 'allowed';
+
+					if ( $is_closed_comments && ! empty( $prev_closer_id ) ) {
+						// Already closed by group organizer/moderator/admin(public group)
+						if (
+							(
+								groups_is_user_admin( $prev_closer_id, $activity->item_id ) ||
+								groups_is_user_mod( $prev_closer_id, $activity->item_id ) ||
+								(
+									bp_user_can( $prev_closer_id, 'administrator' ) &&
+									in_array( $group->status, array( 'public' ) )
+								) &&
+								! $updated_value
+							)
+						) {
+							$retval = 'not_allowed';
+						}
+					}
+				} else {
+					$retval = 'not_allowed';
+				}
+			}
+		} elseif ( bp_current_user_can( 'administrator' ) ) {
+			$retval = 'allowed';
+		} elseif ( $activity->user_id === $r['user_id'] ) {
+			$retval = 'allowed';
+
+			// Already closed by admin.
+			if (
+				(
+					$is_closed_comments &&
+					! empty( $prev_closer_id )
+				) &&
+				$prev_closer_id !== $r['user_id'] &&
+				bp_user_can( $prev_closer_id, 'administrator' ) &&
+				! $updated_value
+			) {
+				$retval = 'not_allowed';
+			}
+		} else {
+			$retval = 'not_allowed';
+		}
+
+		if ( 'allowed' === $retval ) {
+			bp_activity_update_meta( $activity->id, 'bb_is_closed_comments', $updated_value );
+			bp_activity_update_meta( $activity->id, 'bb_closed_comments_closer_id', $r['user_id'] );
+
+			if ( $updated_value ) {
+				$retval = 'closed_comments';
+			} else {
+				$retval = 'unclosed_comments';
+			}
+			$close_comments_updated = true;
+		}
+
+		/**
+		 * Fires after activity comments closed/unclosed.
+		 *
+		 * @param int $activity_id Activity ID.
+		 * @param string $action Action type close_comments/unclose_comments.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 */
+		do_action( 'bb_activity_close_unclose_comments', $activity->id, $r['action'] );
+	}
+
+	if ( 'bool' === $r['retval'] ) {
+		if ( $close_comments_updated ) {
+			$retval = true;
+		} else {
+			$retval = false;
+		}
+	}
+
+	return $retval;
 }
 
 /*

@@ -3871,3 +3871,17 @@ function bb_admin_performance_setting_activity_callback() {
 	<p class="description"><?php esc_html_e( 'Use infinite scrolling to automatically load new posts while scrolling down feeds. Increasing the number of posts retrieved in each request may negatively impact page loading speeds.', 'buddyboss' ); ?></p>
 	<?php
 }
+
+/**
+ * Enable close activity comments settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_callback_enable_close_activity_comments() {
+	?>
+
+	<input id="_bb_enable_close_activity_comments" name="_bb_enable_close_activity_comments" type="checkbox" value="1" <?php checked( bb_is_close_activity_comments_enabled( true ) ); ?> />
+	<label for="_bb_enable_close_activity_comments"><?php esc_html_e( 'Automatically your users to stop users commenting on their posts', 'buddyboss' ); ?></label>
+
+	<?php
+}

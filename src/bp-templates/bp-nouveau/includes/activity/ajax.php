@@ -97,6 +97,12 @@ add_action(
 					'nopriv'   => false,
 				),
 			),
+			array(
+				'activity_update_close_comments' => array(
+					'function' => 'bb_nouveau_ajax_activity_update_close_comments',
+					'nopriv'   => true,
+				),
+			),
 		);
 
 		foreach ( $ajax_actions as $ajax_action ) {
@@ -676,6 +682,13 @@ function bp_nouveau_ajax_post_update() {
 	$object      = '';
 	$is_private  = false;
 
+	// Check if the activity comments closed.
+	if ( ! empty( $activity_id ) ) {
+		if ( bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( $activity_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'The comments are closed for the activity. The activity cannot be edited.', 'buddyboss') ) );
+		}
+	}
+
 	// Try to get the item id from posted variables.
 	if ( ! empty( $_POST['item_id'] ) ) {
 		$item_id = (int) $_POST['item_id'];
@@ -1194,6 +1207,72 @@ function bb_nouveau_ajax_toggle_activity_notification_status() {
 	}
 
 	if ( ! empty( $retval ) && in_array( $retval, array( 'unmute', 'mute', 'already_muted' ), true ) ) {
+		wp_send_json_success( $response );
+	} else {
+		wp_send_json_error( $response );
+	}
+
+}
+
+/**
+ * Update close activity comments.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_nouveau_ajax_activity_update_close_comments() {
+	$response = array(
+		'feedback' => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+	);
+
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error( $response );
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['close_comments_action'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['id'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( ! in_array( $_POST['close_comments_action'], array( 'close_comments', 'unclose_comments' ), true ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$args = array(
+		'action'      => $_POST['close_comments_action'],
+		'activity_id' => (int) $_POST['id'],
+		'user_id'     => bp_loggedin_user_id(),
+		'retval'      => 'string',
+	);
+
+	$retval = bb_activity_close_unclose_comments( $args );
+	if ( ! empty( $retval ) ) {
+
+		if ( 'unclosed_comments' === $retval ) {
+			$response['feedback'] = esc_html__( 'You turned on commenting for this post', 'buddyboss' );
+		} elseif ( 'closed_comments' === $retval ) {
+			$response['feedback'] = esc_html__( 'You turned off commenting for this post', 'buddyboss' );
+		} elseif ( 'not_allowed' === $retval || 'not_member' === $retval ) {
+			$response['feedback'] = esc_html__( 'You are not permitted with the requested operation', 'buddyboss' );
+		}
+
+		$response = apply_filters( 'bb_ajax_activity_update_close_comments', $response, $_POST );
+	}
+
+	if ( ! empty( $retval ) && in_array( $retval, array( 'unclosed_comments', 'closed_comments' ), true ) ) {
 		wp_send_json_success( $response );
 	} else {
 		wp_send_json_error( $response );

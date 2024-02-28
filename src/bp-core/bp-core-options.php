@@ -2825,3 +2825,14 @@ function bb_get_load_activity_per_request( $default = 10 ) {
 function bb_is_send_ajax_request() {
 	return (bool) ( 2 === bb_get_ajax_request_page_load() );
 }
+
+/**
+ * Fetch the enabled reactions based on mode.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bb_is_close_activity_comments_enabled( $default = true ) {
+	return apply_filters( 'bb_is_close_activity_comments_enabled', bp_get_option( '_bb_enable_close_activity_comments', $default ) );
+}
