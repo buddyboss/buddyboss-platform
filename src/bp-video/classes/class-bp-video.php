@@ -470,7 +470,7 @@ class BP_Video {
 				$status                     = "'" . implode( "', '", $r['status'] ) . "'";
 				$where_conditions['status'] = "m.status IN ({$status})";
 			} else {
-				$where_conditions['status'] = "m.status = {$r['status']}";
+				$where_conditions['status'] = "m.status = '{$r['status']}'";
 			}
 		}
 
