@@ -2175,7 +2175,7 @@ function bp_activity_post_update( $args = '' ) {
 			'type'          => 'activity_update',
 			'privacy'       => 'public',
 			'status'        => 'published',
-			'recorded_time' => false,
+			'recorded_time' => bp_core_current_time(),
 			'error_type'    => 'bool',
 		)
 	);
