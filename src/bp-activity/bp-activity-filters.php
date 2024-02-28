@@ -3661,3 +3661,35 @@ function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
 
 	return $activity_comment_data;
 }
+
+/**
+ * Check the scheduled activity and publish it.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $activity_id Activity ID.
+ *
+ * @return void
+ */
+function bb_check_and_publish_schedule_activity( $activity_id ) {
+	$activity = new BP_Activity_Activity( $activity_id );
+
+	if ( empty( $activity->id ) || 'scheduled' !== $activity->status ) {
+		return;
+	}
+
+	$time = strtotime( $activity->date_recorded . ' GMT' );
+
+	// Reschedule an event.
+	if ( $time > time() ) {
+		wp_clear_scheduled_hook( 'bb_activity_publish', array( $activity_id ) ); // Clear anything else in the system.
+		wp_schedule_single_event( $time, 'bb_activity_publish', array( $activity_id ) );
+
+		return;
+	}
+
+	// Publish the activity.
+	$activity->status = 'published';
+	$activity->save();
+}
+add_action( 'bb_activity_publish', 'bb_check_and_publish_schedule_activity', 10, 1 );

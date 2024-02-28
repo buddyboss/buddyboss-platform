@@ -335,6 +335,10 @@ class BP_Activity_Activity {
 		 */
 		do_action_ref_array( 'bp_activity_after_save', array( &$this ) );
 
+		if ( 'scheduled' === $this->status ) {
+			$this->schedule_activity( $this );
+		}
+
 		return true;
 	}
 
@@ -2137,5 +2141,29 @@ class BP_Activity_Activity {
 		}
 
 		return $activity_comments;
+	}
+
+	/**
+	 * Schedule the activity.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array|object $activity The activity object or array.
+	 *
+	 * @return bool
+	 */
+	private function schedule_activity( $activity ) {
+		if ( empty( $activity->id ) || 'scheduled' !== $this->status ) {
+			return false;
+		}
+
+		if ( mysql2date( 'U', $activity->date_recorded, false ) > mysql2date( 'U', gmdate( 'Y-m-d H:i:59' ), false ) ) {
+			wp_clear_scheduled_hook( 'bb_activity_publish', array( $activity->id ) );
+			wp_schedule_single_event( strtotime( get_gmt_from_date( $activity->date_recorded ) . ' GMT' ), 'bb_activity_publish', array( $activity->id ) );
+
+			return true;
+		}
+
+		return false;
 	}
 }
