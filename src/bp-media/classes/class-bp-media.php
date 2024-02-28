@@ -475,9 +475,9 @@ class BP_Media {
 		if ( ! empty( $r['status'] ) ) {
 			if ( is_array( $r['status'] ) ) {
 				$status                     = "'" . implode( "', '", $r['status'] ) . "'";
-				$where_conditions['status'] = "a.status IN ({$status})";
+				$where_conditions['status'] = "m.status IN ({$status})";
 			} else {
-				$where_conditions['status'] = "a.status = {$r['status']}";
+				$where_conditions['status'] = "m.status = {$r['status']}";
 			}
 		}
 
