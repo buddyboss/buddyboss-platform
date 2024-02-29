@@ -2070,20 +2070,20 @@ function bp_activity_add( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'id'                => false,                  // Pass an existing activity ID to update an existing entry.
-			'action'            => '',                     // The activity action - e.g. "Jon Doe posted an update"
-			'content'           => '',                     // Optional: The content of the activity item e.g. "BuddyPress is awesome guys!"
-			'component'         => false,                  // The name/ID of the component e.g. groups, profile, mycomponent.
-			'type'              => false,                  // The activity type e.g. activity_update, profile_updated.
-			'primary_link'      => '',                     // Optional: The primary URL for this item in RSS feeds (defaults to activity permalink).
-			'user_id'           => bp_loggedin_user_id(),  // Optional: The user to record the activity for, can be false if this activity is not for a user.
-			'item_id'           => false,                  // Optional: The ID of the specific item being recorded, e.g. a blog_id.
-			'secondary_item_id' => false,                  // Optional: A second ID used to further filter e.g. a comment_id.
-			'recorded_time'     => bp_core_current_time(), // The GMT time that this activity was recorded.
-			'hide_sitewide'     => false,                  // Should this be hidden on the sitewide activity feed?
-			'is_spam'           => false,                  // Is this activity item to be marked as spam?
-			'privacy'           => bb_get_activity_published_status(),               // privacy of the activity.
-			'status'            => 'published',            // status of the activity.
+			'id'                => false,                              // Pass an existing activity ID to update an existing entry.
+			'action'            => '',                                 // The activity action - e.g. "Jon Doe posted an update"
+			'content'           => '',                                 // Optional: The content of the activity item e.g. "BuddyPress is awesome guys!"
+			'component'         => false,                              // The name/ID of the component e.g. groups, profile, mycomponent.
+			'type'              => false,                              // The activity type e.g. activity_update, profile_updated.
+			'primary_link'      => '',                                 // Optional: The primary URL for this item in RSS feeds (defaults to activity permalink).
+			'user_id'           => bp_loggedin_user_id(),              // Optional: The user to record the activity for, can be false if this activity is not for a user.
+			'item_id'           => false,                              // Optional: The ID of the specific item being recorded, e.g. a blog_id.
+			'secondary_item_id' => false,                              // Optional: A second ID used to further filter e.g. a comment_id.
+			'recorded_time'     => bp_core_current_time(),             // The GMT time that this activity was recorded.
+			'hide_sitewide'     => false,                              // Should this be hidden on the sitewide activity feed?
+			'is_spam'           => false,                              // Is this activity item to be marked as spam?
+			'privacy'           => 'public',                           // privacy of the activity.
+			'status'            => bb_get_activity_published_status(), // status of the activity.
 			'error_type'        => 'bool',
 		),
 		'activity_add'
