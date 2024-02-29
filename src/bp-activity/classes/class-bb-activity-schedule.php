@@ -108,7 +108,38 @@ if ( ! class_exists( 'BB_Activity_Schedule' ) ) {
 			// Publish the activity.
 			$activity->status = bb_get_activity_published_status();
 			$activity->save();
-		}
 
+			$metas = bb_activity_get_metadata( $activity_id );
+
+			// Published the media.
+			if ( ! empty( $metas['bp_media_ids'][0] ) ) {
+				$media_ids = explode( ",", $metas['bp_media_ids'][0] );
+				foreach ( $media_ids as $media_id ) {
+					$media = new BP_Media( $media_id );
+					$media->status = 'published';
+					$media->save();
+				}
+			}
+
+			// Published the video.
+			if ( ! empty( $metas['bp_video_ids'][0] ) ) {
+				$video_ids = explode( ",", $metas['bp_video_ids'][0] );
+				foreach ( $video_ids as $video_id ) {
+					$video = new BP_Video( $video_id );
+					$video->status = 'published';
+					$video->save();
+				}
+			}
+
+			// Published the document.
+			if ( ! empty( $metas['bp_document_ids'][0] ) ) {
+				$document_ids = explode( ",", $metas['bp_document_ids'][0] );
+				foreach ( $document_ids as $document_id ) {
+					$document = new BP_Document( $document_id );
+					$document->status = 'published';
+					$document->save();
+				}
+			}
+		}
 	}
 }
