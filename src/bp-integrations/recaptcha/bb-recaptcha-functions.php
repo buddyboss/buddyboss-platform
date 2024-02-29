@@ -538,8 +538,15 @@ function bb_recaptcha_display( $action = '' ) {
 			$query_args['render'] = 'explicit';
 			$api_url              = add_query_arg( $query_args, $api_url );
 			$v2_option            = bb_recaptcha_recaptcha_v2_option();
+			$v2_class             = '';
+			if ( 'v2_invisible_badge' === $v2_option ) {
+				$badge_position = bb_recaptcha_v2_badge();
+				if ( 'inline' === $badge_position ) {
+					$v2_class = 'v2_invisible_badge';
+				}
+			}
 			?>
-			<div id="bb_recaptcha_v2_element" class="bb_recaptcha_v2_element_content <?php echo 'v2_invisible_badge' === $v2_option ? esc_attr( 'v2_invisible_badge' ) : ''; ?>" data-sitekey="<?php echo $site_key; ?>"></div>
+			<div id="bb_recaptcha_v2_element" class="bb_recaptcha_v2_element_content <?php echo esc_attr( $v2_class ); ?>" data-sitekey="<?php echo $site_key; ?>"></div>
 			<?php
 		}
 
