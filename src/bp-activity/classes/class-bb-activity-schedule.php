@@ -140,6 +140,14 @@ if ( ! class_exists( 'BB_Activity_Schedule' ) ) {
 					$document->save();
 				}
 			}
+
+			// Send mentioned notifications.
+			add_filter( 'bp_activity_at_name_do_notifications', '__return_true' );
+			if ( ! empty( $activity->item_id ) ) {
+				bb_group_activity_at_name_send_emails( $activity->content, $activity->user_id, $activity->item_id, $activity_id );
+			} else {
+				bb_activity_at_name_send_emails( $activity->content, $activity->user_id, $activity_id );
+			}
 		}
 	}
 }
