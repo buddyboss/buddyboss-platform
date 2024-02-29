@@ -516,6 +516,11 @@ function bb_recaptcha_display( $action = '' ) {
 				}
 			}
 		}
+
+		// If ip address excluded to non validate captcha then don't display recaptcha.
+		if ( bb_recaptcha_allow_ip() ) {
+			return;
+		}
 		// Recaptcha api url.
 		$api_url    = 'https://www.google.com/recaptcha/api.js';
 		$query_args = array();
