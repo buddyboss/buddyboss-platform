@@ -1619,6 +1619,22 @@ window.bp = window.bp || {};
 				}
 			}
 
+			if (
+				isInsideModal &&
+				(
+					target.hasClass('bb-open-media-theatre') ||
+					target.hasClass('bb-open-document-theatre') ||
+					target.hasClass('document-detail-wrap-description-popup')
+				)
+			) {
+				// Stop event propagation.
+				event.preventDefault();
+
+				var modal = target.closest( '#activity-modal' ), closeButton = modal.find( '.bb-modal-activity-header .bb-close-action-popup' );
+	
+				closeButton.trigger( 'click' );
+			}
+
 			// Pin OR UnPin the activity.
 			if ( target.hasClass( 'pin-activity' ) || target.hasClass( 'unpin-activity' ) ) {
 				// Stop event propagation.
