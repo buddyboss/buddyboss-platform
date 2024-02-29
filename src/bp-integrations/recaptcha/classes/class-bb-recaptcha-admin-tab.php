@@ -117,6 +117,9 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 					$bb_recaptcha['allow_bypass'] = false;
 				}
 			}
+			if ( empty( $bb_recaptcha['site_key'] ) || empty( $bb_recaptcha['secret_key'] ) ) {
+				$verified = 'not-connected';
+			}
 			$bb_recaptcha['connection_status'] = $verified;
 			bp_update_option( 'bb_recaptcha', $bb_recaptcha );
 		}
