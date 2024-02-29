@@ -76,7 +76,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		$this->add_field( '_bp_enable_heartbeat_refresh', __( 'Activity auto-refresh', 'buddyboss' ), 'bp_admin_setting_callback_heartbeat', 'intval' );
 
 		// Allow auto-load.
-		$this->add_field( '_bp_enable_activity_autoload', __( 'Activity auto-load', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_autoload', 'intval' );
+		// $this->add_field( '_bp_enable_activity_autoload', __( 'Activity auto-load', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_autoload', 'intval' );
 
 		// Close comments.
 		$this->add_field( '_bb_enable_close_activity_comments', __( 'Close comments', 'buddyboss' ), 'bb_admin_setting_callback_enable_close_activity_comments', 'intval' );
