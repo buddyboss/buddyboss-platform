@@ -2663,6 +2663,7 @@ window.bp = window.bp || {};
 				isInsideModal 	 = $( currentTarget ).closest('#activity-modal').length > 0,
 				hasParentModal 	 = isInsideModal ? '#activity-modal ' : '',
 				pickerContainer  = isInsideModal ? $( '.gif-media-search-dropdown-standalone' ) : $( currentTarget ).next(),
+				isStandalone 	 	 = isInsideModal ? true : false,
 				$gifPickerEl     = pickerContainer,
 				activityID       = currentTarget.id.match( /\d+$/ )[0],
 				$gifAttachmentEl = $( hasParentModal + '#ac-reply-post-gif-' + activityID );
@@ -2675,8 +2676,8 @@ window.bp = window.bp || {};
 
 			if ( $gifPickerEl.is( ':empty' ) ) {
 				var model                      = new bp.Models.ACReply(),
-					gifMediaSearchDropdownView = new bp.Views.GifMediaSearchDropdown( {model: model} ),
-					activityAttachedGifPreview = new bp.Views.ActivityAttachedGifPreview( {model: model} );
+					gifMediaSearchDropdownView = new bp.Views.GifMediaSearchDropdown( {model: model, standalone: isStandalone} ),
+					activityAttachedGifPreview = new bp.Views.ActivityAttachedGifPreview( {model: model, standalone: isStandalone} );
 
 				$gifPickerEl.html( gifMediaSearchDropdownView.render().el );
 				$gifAttachmentEl.html( activityAttachedGifPreview.render().el );
@@ -3163,7 +3164,7 @@ window.bp = window.bp || {};
 			form_submit_btn.attr( 'data-add-edit-label', form_submit_btn.val() ).val( form_submit_btn_attr_val );
 
 			form.find( '#ac-input-' + form_activity_id ).html( '' );
-			form.removeClass( 'has-content' );
+			form.removeClass( 'has-content has-gif has-media' );
 			this.destroyCommentMediaUploader( form_activity_id );
 			this.destroyCommentDocumentUploader( form_activity_id );
 			this.destroyCommentVideoUploader( form_activity_id );
@@ -3188,7 +3189,7 @@ window.bp = window.bp || {};
 			form_submit_btn.attr( 'data-add-edit-label', form_submit_btn.val() ).val( form_submit_btn_attr_val );
 
 			form.find( '#ac-input-' + form_activity_id ).html( '' );
-			form.removeClass( 'has-content' );
+			form.removeClass( 'has-content has-gif has-media' );
 			$( '.bb-modal-activity-footer' ).addClass( 'active' ).append( form );
 			this.destroyCommentMediaUploader( form_activity_id );
 			this.destroyCommentDocumentUploader( form_activity_id );
