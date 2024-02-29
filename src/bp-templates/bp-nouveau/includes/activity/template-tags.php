@@ -1944,6 +1944,37 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		);
 	}
 
+	$notification_type = bb_activity_enabled_notification( 'bb_activity_comment', bp_loggedin_user_id() );
+	if ( ! empty( $notification_type ) && ! empty( array_filter( $notification_type ) ) ) {
+
+		$unmute_action_class = 'bb-icon-bell-slash';
+		$unmute_action_label = __( 'Turn Off Notification', 'buddyboss' );
+
+		if ( bb_user_has_mute_notification( $activity_id, bp_loggedin_user_id() ) ) {
+			$unmute_action_class = 'bb-icon-bell';
+			$unmute_action_label = __( 'Turn On Notification', 'buddyboss' );
+		}
+
+		$buttons['turn_on_off_notification'] = array(
+			'id'                => 'turn_on_off_notification',
+			'component'         => 'activity',
+			'parent_element'    => $parent_element,
+			'parent_attr'       => $parent_attr,
+			'must_be_logged_in' => true,
+			'button_element'    => $button_element,
+			'button_attr'       => array(
+				'href'  => '',
+				'class' => 'button edit bp-secondary-action bp-tooltip ' . $unmute_action_class,
+				'title' => $unmute_action_label,
+			),
+			'link_text'         => sprintf(
+				'<span class="bp-screen-reader-text">%1$s</span><span class="turn-off-notification-label">%2$s</span>',
+				$unmute_action_label,
+				$unmute_action_label
+			),
+		);
+	}
+
 	/**
 	 * Filter to add your buttons, use the position argument to choose where to insert it.
 	 *
