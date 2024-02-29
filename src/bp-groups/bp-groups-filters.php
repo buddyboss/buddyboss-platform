@@ -1123,7 +1123,7 @@ function bb_subscription_send_subscribe_group_notifications( $content, $user_id,
 	if (
 		'groups' !== $activity->component ||
 		in_array( $activity->privacy, array( 'document', 'media', 'video', 'onlyme' ), true ) ||
-		'published' !== $activity->status
+		bb_get_activity_published_status() !== $activity->status
 	) {
 		return;
 	}

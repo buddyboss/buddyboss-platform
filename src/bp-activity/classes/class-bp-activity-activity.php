@@ -437,7 +437,7 @@ class BP_Activity_Activity {
 				'spam'              => 'ham_only',      // Spam status.
 				'update_meta_cache' => true,            // Whether or not to update meta cache.
 				'count_total'       => false,           // Whether or not to use count_total.
-				'status'            => 'published',     // Filter by status.
+				'status'            => bb_get_activity_published_status(),     // Filter by status.
 			),
 			'bb_get_activities'
 		);
@@ -2153,7 +2153,7 @@ class BP_Activity_Activity {
 	 * @return bool
 	 */
 	private function schedule_activity( $activity ) {
-		if ( empty( $activity->id ) || 'scheduled' !== $this->status ) {
+		if ( empty( $activity->id ) || bb_get_activity_scheduled_status() !== $this->status ) {
 			return false;
 		}
 

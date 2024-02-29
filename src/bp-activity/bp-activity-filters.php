@@ -550,7 +550,7 @@ function bp_activity_at_name_send_emails( $activity ) {
 	}
 
 	// Avoid sending notification if the activity is not published.
-	if ( 'published' !== $activity->status ) {
+	if ( bb_get_activity_published_status() !== $activity->status ) {
 		return;
 	}
 
@@ -3444,7 +3444,7 @@ function bb_activity_send_email_to_following_post( $content, $user_id, $activity
 		empty( $activity ) ||
 		'activity' !== $activity->component ||
 		in_array( $activity->privacy, array( 'document', 'media', 'video', 'onlyme' ), true ) ||
-		'published' !== $activity->status
+		bb_get_activity_published_status() !== $activity->status
 	) {
 		return;
 	}
@@ -3674,7 +3674,7 @@ function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
 function bb_check_and_publish_schedule_activity( $activity_id ) {
 	$activity = new BP_Activity_Activity( $activity_id );
 
-	if ( empty( $activity->id ) || 'scheduled' !== $activity->status ) {
+	if ( empty( $activity->id ) || bb_get_activity_scheduled_status() !== $activity->status ) {
 		return;
 	}
 
@@ -3689,7 +3689,7 @@ function bb_check_and_publish_schedule_activity( $activity_id ) {
 	}
 
 	// Publish the activity.
-	$activity->status = 'published';
+	$activity->status = bb_get_activity_published_status();
 	$activity->save();
 }
 add_action( 'bb_activity_publish', 'bb_check_and_publish_schedule_activity', 10, 1 );

@@ -2082,7 +2082,7 @@ function bp_activity_add( $args = '' ) {
 			'recorded_time'     => bp_core_current_time(), // The GMT time that this activity was recorded.
 			'hide_sitewide'     => false,                  // Should this be hidden on the sitewide activity feed?
 			'is_spam'           => false,                  // Is this activity item to be marked as spam?
-			'privacy'           => 'public',               // privacy of the activity.
+			'privacy'           => bb_get_activity_published_status(),               // privacy of the activity.
 			'status'            => 'published',            // status of the activity.
 			'error_type'        => 'bool',
 		),
@@ -2174,7 +2174,7 @@ function bp_activity_post_update( $args = '' ) {
 			'hide_sitewide' => false,
 			'type'          => 'activity_update',
 			'privacy'       => 'public',
-			'status'        => 'published',
+			'status'        => bb_get_activity_published_status(),
 			'recorded_time' => bp_core_current_time(),
 			'error_type'    => 'bool',
 		)
