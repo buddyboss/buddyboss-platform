@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.5.52 =
+* Bug: Activity - Updated the call to an undefined function that was causing an error in the profile page if the Activity component was deactivated
+
 = 2.5.51 =
 * Bug: Core - A fatal error occurred on the profile page when the Activity Feed component was deactivated
 
