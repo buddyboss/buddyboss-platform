@@ -3663,33 +3663,15 @@ function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
 }
 
 /**
- * Check the scheduled activity and publish it.
+ * Load the class to schedule the activity post.
  *
  * @since BuddyBoss [BBVERSION]
- *
- * @param int $activity_id Activity ID.
- *
- * @return void
  */
-function bb_check_and_publish_schedule_activity( $activity_id ) {
-	$activity = new BP_Activity_Activity( $activity_id );
+function bb_activity_init_activity_schedule() {
 
-	if ( empty( $activity->id ) || bb_get_activity_scheduled_status() !== $activity->status ) {
-		return;
+	if ( ! class_exists( 'BB_Activity_Schedule' ) ) {
+		require_once buddypress()->plugin_dir . 'bp-activity/classes/class-bb-activity-schedule.php';
 	}
-
-	$time = strtotime( $activity->date_recorded . ' GMT' );
-
-	// Reschedule an event.
-	if ( $time > time() ) {
-		wp_clear_scheduled_hook( 'bb_activity_publish', array( $activity_id ) ); // Clear anything else in the system.
-		wp_schedule_single_event( $time, 'bb_activity_publish', array( $activity_id ) );
-
-		return;
-	}
-
-	// Publish the activity.
-	$activity->status = bb_get_activity_published_status();
-	$activity->save();
+	new BB_Activity_Schedule();
 }
-add_action( 'bb_activity_publish', 'bb_check_and_publish_schedule_activity', 10, 1 );
+add_action( 'bp_init', 'bb_activity_init_activity_schedule' );
