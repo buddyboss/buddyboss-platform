@@ -605,6 +605,10 @@ function bb_recaptcha_verification_front( $action = '' ) {
 		return true;
 	}
 
+	if ( ! isset( $_POST['g-recaptcha-response'] ) ) {
+		return true;
+	}
+
 	$token_response = bb_filter_input_string( INPUT_POST, 'g-recaptcha-response' );
 
 	$retval = array();
