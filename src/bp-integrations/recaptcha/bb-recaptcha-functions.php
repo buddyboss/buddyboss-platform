@@ -627,12 +627,14 @@ function bb_recaptcha_verification_front( $action = '' ) {
 						// Check selected action and response action. Also check score for version 3.
 						'recaptcha_v3' === $selected_version &&
 						(
-							isset( $response['action'] ) &&
-							$response['action'] !== $action
-						) ||
-						(
-							isset( $response['score'] ) &&
-							$response['score'] >= $score_threshold
+							(
+								isset( $response['action'] ) &&
+								$response['action'] !== $action
+							) ||
+							(
+								isset( $response['score'] ) &&
+								$response['score'] >= $score_threshold
+							)
 						)
 					)
 				) {
