@@ -3115,7 +3115,9 @@ window.bp = window.bp || {};
 				0 < Object.keys( activity_comment_data.gif ).length
 			) {
 				var $gifPickerEl     = toolbar_div.find( '.ac-reply-gif-button' ).next(),
-					$gifAttachmentEl = $( '#ac-reply-post-gif-' + form_activity_id );
+					isInsideModal 	 = form.closest('#activity-modal').length > 0,
+					hasParentModal 	 = isInsideModal ? '#activity-modal ' : '',
+					$gifAttachmentEl = $( hasParentModal + '#ac-reply-post-gif-' + form_activity_id );
 
 				toolbar_div.find( '.ac-reply-gif-button' ).trigger( 'click' );
 				self.disabledCommentMediaUploader( toolbar_div );
