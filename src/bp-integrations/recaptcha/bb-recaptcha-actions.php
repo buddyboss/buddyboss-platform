@@ -150,9 +150,9 @@ function bb_recaptcha_validate_lost_password( $errors ) {
 function bb_recaptcha_registration() {
 	$enable_for_register = bb_recaptcha_is_enabled( 'bb_register' );
 	if ( $enable_for_register ) {
-		bb_recaptcha_display( 'bb_register' );
-
 		do_action( 'bp_recaptcha_register_errors' );
+
+		bb_recaptcha_display( 'bb_register' );
 
 		add_action( 'wp_footer', 'bb_recaptcha_add_scripts_login_footer' );
 	}
@@ -176,7 +176,7 @@ function bb_recaptcha_validate_registration() {
 		$captcha = bb_recaptcha_verification_front( 'bb_register' );
 		if ( is_wp_error( $captcha ) ) {
 			global $bp;
-			$error_message                            = '<div class="error">' . $captcha->get_error_message() . '</div>';
+			$error_message                            = '<div class="bb-recaptcha-register error">' . $captcha->get_error_message() . '</div>';
 			$bp->signup->errors['recaptcha_register'] = $error_message;
 		}
 	}
