@@ -399,7 +399,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 		<div class="show-full-width">
 			<?php
 			$verified = bb_recaptcha_connection_status();
-			if ( ! empty( $verified ) ) {
+			if ( ! empty( $verified ) && isset( $_GET['bb_verified'] ) ) {
 				if ( 'connected' === $verified ) {
 					?>
 					<div class="bb-recaptcha-success show-full-width bb-success-section">
