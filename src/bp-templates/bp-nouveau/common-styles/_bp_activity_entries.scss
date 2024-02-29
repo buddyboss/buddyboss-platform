@@ -772,7 +772,8 @@
 							content: "\ee5a";
 						}
 
-						&.download-activity:before {
+						&.download-activity:before,
+						&.activity-video-download:before {
 							content: "\e889";
 						}
 

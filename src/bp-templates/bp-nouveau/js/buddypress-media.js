@@ -6699,6 +6699,12 @@ window.bp = window.bp || {};
 				activity = $( '.bb-media-model-wrapper.media [data-bp-activity-id="' + self.current_media.activity_id + '"]' );
 				activity_comments = activity.find( '.activity-comments' );
 				if ( activity_comments.length ) {
+					var form = activity_comments.find( '#ac-form-' + self.current_media.activity_id );
+					form.find( '#ac-input-' + self.current_media.activity_id ).html( '' );
+					form.removeClass( 'has-content has-gif has-media' ).addClass( 'root' );
+					activity_comments.append( form );
+					activity_comments.find( '.acomment-display' ).removeClass('display-focus');
+
 					html = activity_comments.html();
 					classes = activity_comments.attr( 'class' );
 					activity_comments.remove();
@@ -6706,7 +6712,7 @@ window.bp = window.bp || {};
 					if ( activity_comments.length ) {
 						activity_comments.html( html );
 						activity_comments.attr( 'class', classes );
-						activity_comments.children( 'form' ).removeClass( 'events-initiated').hide();
+						activity_comments.children( 'form' ).removeClass( 'events-initiated');
 					}
 				}
 				activity_state = activity.find( '.activity-state' );
@@ -6737,6 +6743,12 @@ window.bp = window.bp || {};
 				activity = $( '.bb-media-model-wrapper.document [data-bp-activity-id="' + self.current_document.activity_id + '"]' );
 				activity_comments = activity.find( '.activity-comments' );
 				if ( activity_comments.length ) {
+					var form = activity_comments.find( '#ac-form-' + self.current_document.activity_id );
+					form.find( '#ac-input-' + self.current_document.activity_id ).html( '' );
+					form.removeClass( 'has-content has-gif has-media' ).addClass( 'root' );
+					activity_comments.append( form );
+					activity_comments.find( '.acomment-display' ).removeClass('display-focus');
+
 					html = activity_comments.html();
 					classes = activity_comments.attr( 'class' );
 					activity_comments.remove();
@@ -6744,7 +6756,7 @@ window.bp = window.bp || {};
 					if ( activity_comments.length ) {
 						activity_comments.html( html );
 						activity_comments.attr( 'class', classes );
-						activity_comments.children( 'form' ).removeClass( 'events-initiated').hide();
+						activity_comments.children( 'form' ).removeClass( 'events-initiated');
 						//Reset document text preview
 						activity_comments.find( '.document-text.loaded' ).removeClass( 'loaded' ).find( '.CodeMirror' ).remove();
 						jQuery( window ).scroll();
