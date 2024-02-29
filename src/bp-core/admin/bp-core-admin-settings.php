@@ -3673,17 +3673,3 @@ function bb_reactions_settings_callback_reactions_button() {
 	</label>
 	<?php
 }
-
-/**
- * Enable close activity comments settings.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_admin_setting_callback_enable_close_activity_comments() {
-	?>
-
-	<input id="_bb_enable_close_activity_comments" name="_bb_enable_close_activity_comments" type="checkbox" value="1" <?php checked( bb_is_close_activity_comments_enabled( true ) ); ?> />
-	<label for="_bb_enable_close_activity_comments"><?php esc_html_e( 'Automatically your users to stop users commenting on their posts', 'buddyboss' ); ?></label>
-
-	<?php
-}

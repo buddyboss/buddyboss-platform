@@ -2711,14 +2711,3 @@ function bb_active_reactions() {
 
 	return ( ! empty( $all_emotions ) ? array_column( $all_emotions, null, 'id' ) : array() );
 }
-
-/**
- * Fetch the enabled reactions based on mode.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return array
- */
-function bb_is_close_activity_comments_enabled( $default = true ) {
-	return apply_filters( 'bb_is_close_activity_comments_enabled', bp_get_option( '_bb_enable_close_activity_comments', $default ) );
-}

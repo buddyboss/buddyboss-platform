@@ -85,7 +85,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		$this->add_field( '_bp_enable_activity_autoload', __( 'Activity auto-load', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_autoload', 'intval' );
 
 		// Close comments.
-		$this->add_field( '_bb_enable_close_activity_comments', __( 'Close comments', 'buddyboss' ), 'bb_admin_setting_callback_enable_close_activity_comments', 'intval' );
+		$this->add_field( '_bb_enable_close_activity_comments', __( 'Close comments', 'buddyboss' ), array( $this, 'bb_admin_setting_callback_enable_close_activity_comments' ), 'intval' );
 
 		// Allow scopes/tabs.
 		$this->add_field( '_bp_enable_activity_tabs', __( 'Activity tabs', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_tabs', 'intval' );
@@ -178,6 +178,20 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		 * @param Object $this BP_Admin_Setting_Activity.
 		 */
 		do_action( 'bp_admin_setting_activity_register_fields', $this );
+	}
+
+	/**
+	 * Enable close activity comments settings.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_setting_callback_enable_close_activity_comments() {
+		?>
+
+		<input id="_bb_enable_close_activity_comments" name="_bb_enable_close_activity_comments" type="checkbox" value="1" <?php checked( bb_is_close_activity_comments_enabled( true ) ); ?> />
+		<label for="_bb_enable_close_activity_comments"><?php esc_html_e( 'Automatically your users to stop users commenting on their posts', 'buddyboss' ); ?></label>
+
+		<?php
 	}
 }
 

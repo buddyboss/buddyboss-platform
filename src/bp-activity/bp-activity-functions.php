@@ -6521,7 +6521,8 @@ function bb_load_reaction_popup_modal_js_template() {
  * @return bool
  */
 function bb_is_activity_comments_closed( $activity_id ) {
-	return (bool) bp_activity_get_meta( $activity_id, 'bb_is_closed_comments' );
+	$activity_metas = bb_activity_get_metadata( $activity_id );
+	return ! empty( $activity_metas['bb_is_closed_comments'][0] ) ? (bool) $activity_metas['bb_is_closed_comments'][0] : false;
 }
 
 /**
@@ -6534,7 +6535,8 @@ function bb_is_activity_comments_closed( $activity_id ) {
  * @return bool
  */
 function bb_get_activity_comments_closer_id( $activity_id ) {
-	return (int) bp_activity_get_meta( $activity_id, 'bb_closed_comments_closer_id' );
+	$activity_metas = bb_activity_get_metadata( $activity_id );
+	return ! empty( $activity_metas['bb_closed_comments_closer_id'][0] ) ? (int) $activity_metas['bb_closed_comments_closer_id'][0] : 0;
 }
 
 /**
@@ -6559,6 +6561,108 @@ function bb_activity_close_unclose_comments( $args = array() ) {
 
 	$retval                 = '';
 	$close_comments_updated = false;
+
+	$activity = new BP_Activity_Activity( (int) $r['activity_id'] );
+	if ( ! empty( $activity->id ) ) {
+
+		if ( 'unclose_comments' === $r['action'] ) {
+			$updated_value = false;
+		} else {
+			$updated_value = true;
+		}
+
+		$check_args = array(
+			'activity_id' => (int) $r['activity_id'],
+			'action'      => $r['action'],
+		);
+		$retval = bb_activity_comments_close_action_allowed( $check_args );
+
+		if ( 'allowed' === $retval ) {
+			bp_activity_update_meta( $activity->id, 'bb_is_closed_comments', $updated_value );
+			bp_activity_update_meta( $activity->id, 'bb_closed_comments_closer_id', $r['user_id'] );
+
+			if ( $updated_value ) {
+				$retval = 'closed_comments';
+			} else {
+				$retval = 'unclosed_comments';
+			}
+			$close_comments_updated = true;
+		}
+
+		/**
+		 * Fires after activity comments closed/unclosed.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $action      Action type close_comments/unclose_comments.
+		 * @param int    $activity_id Activity ID.
+		 */
+		do_action( 'bb_activity_close_unclose_comments', $activity->id, $r['action'] );
+	}
+
+	if ( 'bool' === $r['retval'] ) {
+		if ( $close_comments_updated ) {
+			$retval = true;
+		} else {
+			$retval = false;
+		}
+	}
+
+	return $retval;
+}
+
+/**
+ * Fetch the activity metadata using the activity ID.
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @param int $activity_id Activity ID.
+ *
+ * @return mixed|array
+ */
+function bb_activity_get_metadata( $activity_id ) {
+	// Get meta data from cache.
+	$meta_data = wp_cache_get( $activity_id, 'activity_meta' );
+	if ( false === $meta_data ) {
+		$meta_data = bp_activity_get_meta( $activity_id );
+
+		// Set meta data to cache.
+		wp_cache_set( $activity_id, $meta_data, 'activity_meta' );
+	}
+
+	// Return the metadata.
+	return $meta_data;
+}
+
+/**
+ * Check if the closed comments setting enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_is_close_activity_comments_enabled( $default = true ) {
+	return apply_filters( 'bb_is_close_activity_comments_enabled', bp_get_option( '_bb_enable_close_activity_comments', $default ) );
+}
+
+/**
+ * Check if the closed comments allowed for perticular user.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_activity_comments_close_action_allowed( $args = array() ) {
+	$retval = 'not_allowed';
+
+	$r = bp_parse_args(
+		$args,
+		array(
+			'action'      => 'close_comments',
+			'activity_id' => 0,
+			'user_id'     => bp_loggedin_user_id(),
+		)
+	);
 
 	$activity = new BP_Activity_Activity( (int) $r['activity_id'] );
 	if ( ! empty( $activity->id ) ) {
@@ -6648,60 +6752,49 @@ function bb_activity_close_unclose_comments( $args = array() ) {
 		} else {
 			$retval = 'not_allowed';
 		}
-
-		if ( 'allowed' === $retval ) {
-			bp_activity_update_meta( $activity->id, 'bb_is_closed_comments', $updated_value );
-			bp_activity_update_meta( $activity->id, 'bb_closed_comments_closer_id', $r['user_id'] );
-
-			if ( $updated_value ) {
-				$retval = 'closed_comments';
-			} else {
-				$retval = 'unclosed_comments';
-			}
-			$close_comments_updated = true;
-		}
-
-		/**
-		 * Fires after activity comments closed/unclosed.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param string $action      Action type close_comments/unclose_comments.
-		 * @param int    $activity_id Activity ID.
-		 */
-		do_action( 'bb_activity_close_unclose_comments', $activity->id, $r['action'] );
-	}
-
-	if ( 'bool' === $r['retval'] ) {
-		if ( $close_comments_updated ) {
-			$retval = true;
-		} else {
-			$retval = false;
-		}
 	}
 
 	return $retval;
 }
 
 /**
- * Fetch the activity metadata using the activity ID.
+ * Get the close comments notice string.
  *
- * @since BuddyBoss 2.5.50
+ * @since BuddyBoss [BBVERSION]
+ * 
+ * @param int $activity_id Activivty Id.
  *
- * @param int $activity_id Activity ID.
- *
- * @return mixed|array
+ * @return string
  */
-function bb_activity_get_metadata( $activity_id ) {
-	// Get meta data from cache.
-	$meta_data = wp_cache_get( $activity_id, 'activity_meta' );
-	if ( false === $meta_data ) {
-		$meta_data = bp_activity_get_meta( $activity_id );
+function bb_get_close_activity_comments_notice( $activity_id = 0 ) {
 
-		// Set meta data to cache.
-		wp_cache_set( $activity_id, $meta_data, 'activity_meta' );
+	if ( empty( $activity_id ) ) {
+		$activity_id = bp_get_activity_id();
 	}
 
-	// Return the metadata.
-	return $meta_data;
+	$closed_notice = '';
+	$activity      = new BP_Activity_Activity( $activity_id );
+	if ( ! empty( $activity->id ) && bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( $activity->id ) ) {
+		$closer_id = bb_get_activity_comments_closer_id( $activity->id );
+		if ( $closer_id === bp_loggedin_user_id() ) {
+			$closed_notice = esc_html__( 'You turned off commenting for this post', 'buddyboss' );
+		} elseif ( bp_is_active( 'groups' ) && 'groups' === $activity->component && ! empty( $activity->item_id ) ) {
+			$group = groups_get_group( $activity->item_id );
+			if ( groups_is_user_admin( $closer_id, $activity->item_id ) ) {
+				$closed_notice = esc_html__( 'An organizer turned off commenting for this post', 'buddyboss' );
+			} elseif ( groups_is_user_mod( $closer_id, $activity->item_id ) ) {
+				$closed_notice = esc_html__( 'A moderator turned off commenting for this post', 'buddyboss' );
+			} elseif ( bp_user_can( $closer_id, 'administrator' ) && in_array( $group->status, array( 'public' ) ) ) {
+				$closed_notice = esc_html__( 'An admin turned off commenting for this post', 'buddyboss' );
+			} else {
+				$closed_notice = sprintf( esc_html__( '%s turned off commenting for this post', 'buddyboss' ), bp_core_get_user_displayname( $closer_id ) );
+			}
+		} elseif ( bp_user_can( $closer_id, 'administrator' ) ) {
+			$closed_notice = esc_html__( 'An admin turned off commenting for this post', 'buddyboss' );
+		} else {
+			$closed_notice = sprintf( esc_html__( '%s turned off commenting for this post', 'buddyboss' ), bp_core_get_user_displayname( $closer_id ) );
+		}
+	}
+
+	return $closed_notice;
 }

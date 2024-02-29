@@ -2747,7 +2747,7 @@ function bp_get_activity_css_class() {
 		$class .= ' has-comments';
 	}
 
-	if ( (bool) bp_activity_get_meta( $activities_template->activity->id, 'bb_is_closed_comments' ) ) {
+	if ( bb_is_activity_comments_closed( $activities_template->activity->id ) ) {
 		$class .= ' bb-closed-comments';
 	}
 
@@ -4421,4 +4421,3 @@ function bb_get_activity_comment_unfavorite_link( $activity_comment_id = 0 ) {
 	 */
 	return apply_filters( 'bb_get_activity_comment_unfavorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/unfavorite/' . $activity_comment_id . '/' ), 'unmark_favorite' ) );
 }
-
