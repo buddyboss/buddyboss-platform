@@ -24,6 +24,15 @@
 			if ( $( '.bb-recaptcha-settings .section-bb_recaptcha_versions .bb-recaptcha-status .not-connected' ).length ) {
 				$( '.bb-recaptcha-settings form #bb_recaptcha_settings table' ).addClass( 'bb-inactive-field' );
 				$( '.bb-recaptcha-settings form #bb_recaptcha_design table' ).addClass( 'bb-inactive-field' );
+
+			}
+
+			var urlParams = new URLSearchParams( window.location.search );
+			if ( urlParams.has( 'bb_verified' ) ) {
+				urlParams.delete( 'bb_verified' );
+
+				var newUrl = window.location.pathname + '?' + urlParams.toString() + window.location.hash;
+				window.history.replaceState( {}, document.title, newUrl );
 			}
 		},
 
@@ -312,12 +321,14 @@
 
 		recaptchaVerified: function ( event ) {
 			event.preventDefault();
-			window.location.reload();
+			var newUrl = window.location.href + ( window.location.search ? '&' : '?' ) + 'bb_verified';
+			window.location.href = newUrl;
 		},
 
 		recaptchaVerificationPopupClose: function ( event ) {
 			event.preventDefault();
-			window.location.reload();
+			var newUrl = window.location.href + ( window.location.search ? '&' : '?' ) + 'bb_verified';
+			window.location.href = newUrl;
 		},
 
 		fetchSelector: function () {
