@@ -51,32 +51,39 @@
 						);
 					}
 					if ( 'v2_invisible_badge' === this.bbrecaptchaData.v2_option ) {
-						grecaptcha.ready(
-							function () {
-								var params  = {
-									'sitekey': bbRecaptcha.data.site_key,
-									'tabindex': 9999,
-									'badge': bbRecaptcha.data.v2_badge_position,
-									'size': 'invisible',
-									'callback': function ( token ) {
-										$( '#g-recaptcha-response' ).val( token );
-										if ( container ) {
-											document.getElementById( container ).submit();
-										}
-									},
-								};
-								var loginV2 = grecaptcha.render( 'bb_recaptcha_v2_element', params );
-								if ( container ) {
-										$( '#' + container ).on(
-											'submit',
-											function ( e ) {
-												e.preventDefault();
-												grecaptcha.execute( loginV2 );
-											}
-										);
-								}
+						grecaptcha.ready( function () {
+							var form = $( '#' + container );
+							var params = {
+								'sitekey': bbRecaptcha.data.site_key,
+								'tabindex': 9999,
+								'badge': bbRecaptcha.data.v2_badge_position,
+								'size': 'invisible',
+								'callback': function ( token ) {
+									$( '#g-recaptcha-response' ).val( token );
+									if ( container ) {
+										form.find( 'input[data-click]' ).trigger( 'click' );
+									}
+								},
+							};
+
+							var loginV2 = grecaptcha.render( 'bb_recaptcha_v2_element', params );
+							if ( form.length ) {
+								form.on( 'submit', function ( e ) {
+									if ( '' == form.find( '.g-recaptcha-response' ).val() ) {
+										e.preventDefault();
+										e.stopImmediatePropagation();
+										grecaptcha.execute( loginV2 );
+									}
+								} ).find( 'input:submit, button' ).on( 'click', function ( e ) {
+									if ( '' == form.find( '.g-recaptcha-response' ).val() ) {
+										form.find( 'input:submit' ).attr( 'data-click', 'bb_recaptcha_submit' );
+										e.preventDefault();
+										e.stopImmediatePropagation();
+										grecaptcha.execute( loginV2 );
+									}
+								} );
 							}
-						);
+						} );
 					}
 				}
 			}
