@@ -1948,11 +1948,11 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	if ( ! empty( $notification_type ) && ! empty( array_filter( $notification_type ) ) ) {
 
 		$unmute_action_class = 'bb-icon-bell-slash';
-		$unmute_action_label = __( 'Turn Off Notification', 'buddyboss' );
+		$unmute_action_label = __( 'Turn off notification', 'buddyboss' );
 
 		if ( bb_user_has_mute_notification( $activity_id, bp_loggedin_user_id() ) ) {
 			$unmute_action_class = 'bb-icon-bell';
-			$unmute_action_label = __( 'Turn On Notification', 'buddyboss' );
+			$unmute_action_label = __( 'Turn on notification', 'buddyboss' );
 		}
 
 		$buttons['turn_on_off_notification'] = array(
