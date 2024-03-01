@@ -3444,7 +3444,7 @@ function bb_update_to_2_4_74() {
  *
  * @return void
  */
-function bb_update_to_2_5_0() {
+function bb_update_to_2_6_0() {
 	update_option( '_bb_enable_activity_comment_threading', (int) get_option( 'thread_comments' ) );
 
 	$thread_comments_depth = (int) get_option( 'thread_comments_depth', 3 );
