@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.5.51\n"
+"Project-Id-Version: BuddyBoss Platform 2.5.52\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-02-29 06:27:17+00:00\n"
+"POT-Creation-Date: 2024-03-01 04:23:08+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22951,15 +22951,15 @@ msgstr ""
 msgid "Zulu"
 msgstr ""
 
-#: bp-integrations/recaptcha/bb-recaptcha-functions.php:613
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:625
 msgid "Google reCAPTCHA token is missing."
 msgstr ""
 
-#: bp-integrations/recaptcha/bb-recaptcha-functions.php:641
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:653
 msgid "Verification failed please try again."
 msgstr ""
 
-#: bp-integrations/recaptcha/bb-recaptcha-functions.php:646
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:658
 msgid "Could not get a response from the reCAPTCHA server."
 msgstr ""
 

@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.4.3
 Requires PHP: 8.0
-Stable tag: 2.5.51
+Stable tag: 2.5.52
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.5.52 =
+* Bug: Activity - Updated the call to an undefined function that was causing an error in the profile page if the Activity component was deactivated
 
 = 2.5.51 =
 * Bug: Core - A fatal error occurred on the profile page when the Activity Feed component was deactivated
