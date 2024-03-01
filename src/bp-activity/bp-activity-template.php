@@ -2008,7 +2008,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 			}
 
 			$hidden_class = '';
-			if ( ! $is_ajax_load_more ) { 
+			if ( ! $is_ajax_load_more ) {
 				$hidden_class = 'bp-hide';
 			}
 
@@ -2022,10 +2022,10 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 		$template = bp_locate_template( 'activity/comment.php', false, false );
 
 		$comment_template_args = array();
-		if ( 
+		if (
 			false !== $comment_load_limit &&
 			(
-				$comment->item_id === $comment->secondary_item_id || 
+				$comment->item_id === $comment->secondary_item_id ||
 				'blogs' === $comment->component
 			)
 		) {
@@ -2826,7 +2826,7 @@ function bp_get_activity_css_class() {
 		$class .= ' has-comments';
 	}
 
-	if ( (bool) bp_activity_get_meta( $activities_template->activity->id, 'bb_is_closed_comments' ) ) {
+	if ( bb_is_activity_comments_closed( $activities_template->activity->id ) ) {
 		$class .= ' bb-closed-comments';
 	}
 
@@ -4528,7 +4528,7 @@ function bb_get_activity_comment_unfavorite_link( $activity_comment_id = 0 ) {
  * @global object|null
  */
 function bb_search_comment_hierarchy( $comment, $comment_id ) {
-	
+
 	// Check if the current object is the one we're looking for
 	if ( isset( $comment->id ) && $comment->id == $comment_id ) {
 		return $comment;

@@ -100,7 +100,7 @@ add_action(
 			array(
 				'activity_update_close_comments' => array(
 					'function' => 'bb_nouveau_ajax_activity_update_close_comments',
-					'nopriv'   => true,
+					'nopriv'   => false,
 				),
 			),
 			array(
@@ -1243,28 +1243,24 @@ function bb_nouveau_ajax_activity_update_close_comments() {
 		'feedback' => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
 	);
 
-	if ( ! bp_is_post_request() ) {
+	if (
+		! bp_is_post_request() ||
+		! is_user_logged_in() ||
+		(
+			 empty( $_POST['nonce'] ) ||
+			! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' )
+		)
+	) {
 		wp_send_json_error( $response );
 	}
 
-	if ( ! is_user_logged_in() ) {
-		wp_send_json_error( $response );
-	}
-
-	// Nonce check!
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
-		wp_send_json_error( $response );
-	}
-
-	if ( empty( $_POST['close_comments_action'] ) ) {
-		wp_send_json_error( $response );
-	}
-
-	if ( empty( $_POST['id'] ) ) {
-		wp_send_json_error( $response );
-	}
-
-	if ( ! in_array( $_POST['close_comments_action'], array( 'close_comments', 'unclose_comments' ), true ) ) {
+	if (
+		empty( $_POST['id'] ) ||
+		( 
+			empty( $_POST['close_comments_action'] ) ||
+			! in_array( $_POST['close_comments_action'], array( 'close_comments', 'unclose_comments' ), true ) 
+		)
+	) {
 		wp_send_json_error( $response );
 	}
 

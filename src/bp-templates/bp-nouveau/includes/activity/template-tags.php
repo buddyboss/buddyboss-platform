@@ -1896,73 +1896,16 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		$closed_action_label     = esc_html__( 'Turn off commenting', 'buddyboss' );
 		$closed_action_class     = 'close-activity-comment';
 		$is_closed_comments      = bb_is_activity_comments_closed( $activity_id );
-		$prev_closer_id          = bb_get_activity_comments_closer_id( $activity_id );
-		$activity_item_id        = bp_get_activity_item_id();
-		$activity_object_name    = bp_get_activity_object_name();
 		$closed_action_permitted = false;
-		if ( 'groups' === $activity_object_name && bp_is_active( 'groups' ) ) {
-			// Check the user is moderator or organizer of the group or admin.
-			$group = groups_get_group( $activity_item_id );
 
-			if (
-				bp_current_user_can( 'administrator' ) &&
-				'public' === $group->status
-			) {
-				$closed_action_permitted = true;
+		$check_args = array(
+			'activity_id' => (int) $activity_id,
+			'action'      => $is_closed_comments ? 'unclose_comments' : 'close_comments',
+		);
 
-				// Check the user is moderator or organizer are also part of the group.
-			} elseif ( ! groups_is_user_member( bp_loggedin_user_id(), $activity_item_id ) ) {
-				$closed_action_permitted = false;
-			} else {
-
-				$is_admin = groups_is_user_admin( bp_loggedin_user_id(), $activity_item_id );
-				$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $activity_item_id );
-
-				if ( $is_admin || $is_mod ) {
-					$closed_action_permitted = true;
-					if ( $is_closed_comments && ! empty( $prev_closer_id ) ) {
-						if (
-							(
-								bp_user_can( $prev_closer_id, 'administrator' ) &&
-								in_array( $group->status, array( 'public' ) )
-							)
-						) {
-							$closed_action_permitted = false;
-						}
-					}
-				} elseif ( bp_get_activity_user_id() === bp_loggedin_user_id() ) {
-					$closed_action_permitted = true;
-
-					if ( $is_closed_comments && ! empty( $prev_closer_id ) ) {
-						// Already closed by group organizer/moderator/ admin(public)
-						if (
-							(
-								groups_is_user_admin( $prev_closer_id, $activity_item_id ) ||
-								groups_is_user_mod( $prev_closer_id, $activity_item_id ) ||
-								(
-									bp_user_can( $prev_closer_id, 'administrator' ) &&
-									'public' === $group->status
-								)
-							)
-						) {
-							$closed_action_permitted = false;
-						}
-					}
-				} else {
-					$closed_action_permitted = false;
-				}
-			}
-		} elseif ( bp_current_user_can( 'administrator' ) ) {
+		$retval = bb_activity_comments_close_action_allowed( $check_args );
+		if ( 'allowed' === $retval ) {
 			$closed_action_permitted = true;
-		} elseif ( bp_get_activity_user_id() === bp_loggedin_user_id() ) {
-			$closed_action_permitted = true;
-
-			// Check if already closed by admins then not permitted.
-			if ( $is_closed_comments && ! empty( $prev_closer_id ) ) {
-				if ( bp_user_can( $prev_closer_id, 'administrator' ) ) {
-					$closed_action_permitted = false;
-				}
-			}
 		}
 
 		if ( $is_closed_comments ) {

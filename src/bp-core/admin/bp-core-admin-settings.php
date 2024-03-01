@@ -3891,7 +3891,6 @@ function bb_admin_setting_callback_enable_close_activity_comments() {
 	<?php
 }
 
-
 /**
  * Link to Activity Comments tutorial
  *
@@ -3902,17 +3901,17 @@ function bb_admin_activity_comments_settings_tutorial() {
 	<p>
 		<a class="button" href="
 		<?php
-			echo esc_url(
-				bp_get_admin_url(
-					add_query_arg(
-						array(
-							'page'    => 'bp-help',
-							'article' => 124801,
-						),
-						'admin.php'
-					)
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 124801,
+					),
+					'admin.php'
 				)
-			);
+			)
+		);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
