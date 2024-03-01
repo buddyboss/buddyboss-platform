@@ -279,7 +279,7 @@ class BP_Document {
 				'folder'         => true,
 				'user_directory' => true,
 				'meta_query'     => false,           // Filter by document meta.
-				'status'         => 'published',     // Filter by status.
+				'status'         => bb_document_get_published_status(), // Filter by status.
 			)
 		);
 

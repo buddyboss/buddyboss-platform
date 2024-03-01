@@ -361,7 +361,7 @@ function bp_document_get( $args = '' ) {
 			'meta_query_document' => false,        // Filter by activity meta. See WP_Meta_Query for format.
 			'meta_query_folder'   => false,        // Filter by activity meta. See WP_Meta_Query for format.
 			'moderation_query'    => true,         // Filter to include moderation query.
-			'status'              => 'published',  // Filter by document status. published, scheduled.
+			'status'              => bb_document_get_published_status(),  // Filter by document status. published, scheduled.
 		),
 		'document_get'
 	);
@@ -433,7 +433,7 @@ function bp_document_get_specific( $args = '' ) {
 			'meta_query'       => false,
 			'privacy'          => false,      // privacy to filter.
 			'moderation_query' => true,
-			'status'           => 'published', // Filter by document status. published, scheduled.
+			'status'           => bb_document_get_published_status(), // Filter by document status. published, scheduled.
 		),
 		'document_get_specific'
 	);
@@ -512,7 +512,7 @@ function bp_document_add( $args = '' ) {
 			'date_created'  => bp_core_current_time(),  // The GMT time that this document was recorded.
 			'date_modified' => bp_core_current_time(),  // The GMT time that this document was modified.
 			'error_type'    => 'bool',
-			'status'        => 'published',             // Document status.
+			'status'        => bb_document_get_published_status(), // Document status.
 		),
 		'document_add'
 	);
@@ -654,7 +654,7 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 						'privacy'       => ! empty( $document['privacy'] ) && in_array( $document['privacy'], array_merge( array_keys( bp_document_get_visibility_levels() ), array( 'message' ) ) ) ? $document['privacy'] : $privacy,
 						'message_id'    => ! empty( $document['message_id'] ) ? $document['message_id'] : 0,
 						'menu_order'    => ! empty( $document['menu_order'] ) ? $document['menu_order'] : 0,
-						'status'        => ! empty( $document['status'] ) ? $document['status'] : 'published',
+						'status'        => ! empty( $document['status'] ) ? $document['status'] : bb_document_get_published_status(),
 						'date_created'  => ! empty( $document['date_created'] ) ? $document['date_created'] : bp_core_current_time(),
 					)
 				);
