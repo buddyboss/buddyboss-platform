@@ -3,6 +3,14 @@
 	display: inline-block;
 }
 
+#loginform {
+
+	.bb_recaptcha_v2_element_content {
+		margin: 50px 0 -1px 0;
+		display: block;
+	}
+}
+
 .register-page {
 
 	.error {
