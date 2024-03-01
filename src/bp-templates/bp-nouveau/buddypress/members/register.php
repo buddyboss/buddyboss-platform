@@ -45,8 +45,8 @@ $bp_get_current_signup_step = bp_get_current_signup_step();
 							while ( bp_profile_fields() ) :
 								bp_the_profile_field();
 
-								if ( function_exists('bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
-									if ( function_exists( 'bp_get_xprofile_member_type_field_id') && bp_get_the_profile_field_id() === bp_get_xprofile_member_type_field_id() ) {
+								if ( function_exists( 'bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
+									if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_the_profile_field_id() === bp_get_xprofile_member_type_field_id() ) {
 										continue;
 									}
 								}
@@ -61,11 +61,11 @@ $bp_get_current_signup_step = bp_get_current_signup_step();
 									</fieldset>
 								</div>
 
-								<?php
+							<?php
 							endwhile;
 							?>
 							<input type="hidden" name="signup_profile_field_ids" id="signup_profile_field_ids" value="<?php bp_the_profile_field_ids(); ?>" />
-							<?php
+						<?php
 						endwhile;
 						bp_nouveau_signup_hook( '', 'signup_profile' );
 						?>
@@ -92,15 +92,16 @@ $bp_get_current_signup_step = bp_get_current_signup_step();
 					<?php
 					bp_nouveau_signup_hook( 'after', 'blog_details' );
 				}
-				?>
-			</div><!-- //.layout-wrap -->
-				<?php
-				bp_nouveau_signup_terms_privacy();
-				bp_nouveau_submit_button( 'register' );
+			}
+			?>
+		</div><!-- //.layout-wrap -->
+		<?php
+		if ( 'request-details' === $bp_get_current_signup_step ) {
+			bp_nouveau_signup_terms_privacy();
+			bp_nouveau_submit_button( 'register' );
+		} // request-details signup step.
 
-			} // request-details signup step.
-
-			bp_nouveau_signup_hook( 'custom', 'steps' ); ?>
+		bp_nouveau_signup_hook( 'custom', 'steps' ); ?>
 	</form>
 </div>
 <?php bp_nouveau_signup_hook( 'after', 'page' ); ?>
