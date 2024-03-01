@@ -995,9 +995,9 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 		if (
 			bb_is_enabled_subscription( 'group' ) &&
 			(
-				bp_is_active('activity') ||
+				bp_is_active( 'activity' ) ||
 				(
-					bp_is_active('forums') &&
+					bp_is_active( 'forums' ) &&
 					bp_group_is_forum_enabled()
 				)
 			)
