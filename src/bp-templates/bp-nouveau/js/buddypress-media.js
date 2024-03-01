@@ -6571,6 +6571,7 @@ window.bp = window.bp || {};
 			self.setMedias( target );
 
 			id = target.data( 'id' );
+			activityId = target.data( 'activity-id' );
 			self.setCurrentMedia( id );
 			self.showMedia();
 			self.navigationCommands();
@@ -6615,7 +6616,7 @@ window.bp = window.bp || {};
 			var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_media.activity_id + '"] .activity-comments' );
 			if ( on_page_activity_comments.length ) {
 				self.current_media.parent_activity_comments = true;
-				on_page_activity_comments.html( '' );
+				//on_page_activity_comments.html( '' ); // load on page activity content anew when activity has updates and theatre is closed
 			}
 
 			if ( true === self.current_media.parent_activity_comments ) {
@@ -6644,6 +6645,10 @@ window.bp = window.bp || {};
 								},
 								10
 							);
+
+							if ($(".bb-media-info-section #ac-input-" + self.current_media.activity_id).length) {
+								bp.Nouveau.Activity.initializeEmojioneArea( false, '.bb-media-info-section', self.current_media.activity_id );
+							}
 						} else {
 							$( '.bb-media-info-section.media' ).hide();
 						}
@@ -6710,7 +6715,7 @@ window.bp = window.bp || {};
 					activity_comments.remove();
 					activity_comments = $( '[data-bp-activity-id="' + self.current_media.activity_id + '"] .activity-comments' );
 					if ( activity_comments.length ) {
-						activity_comments.html( html );
+						//activity_comments.html( html );
 						activity_comments.attr( 'class', classes );
 						activity_comments.children( 'form' ).removeClass( 'events-initiated');
 					}
@@ -7194,7 +7199,7 @@ window.bp = window.bp || {};
 				var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_media.activity_id + '"] .activity-comments' );
 				if ( on_page_activity_comments.length ) {
 					self.current_media.parent_activity_comments = true;
-					on_page_activity_comments.html( '' );
+					//on_page_activity_comments.html( '' ); // load on page activity content anew when activity has updates and theatre is closed
 				}
 				if ( true === self.current_media.parent_activity_comments ) {
 					$( '.bb-media-model-wrapper:last' ).after( '<input type="hidden" value="' + self.current_media.activity_id + '" id="hidden_parent_id"/>' );
@@ -7251,7 +7256,7 @@ window.bp = window.bp || {};
 				var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_document.activity_id + '"] .activity-comments' );
 				if ( on_page_activity_comments.length ) {
 					self.current_document.parent_activity_comments = true;
-					on_page_activity_comments.html( '' );
+					//on_page_activity_comments.html( '' ); // load on page activity content anew when activity has updates and theatre is closed
 				}
 				if ( true === self.current_document.parent_activity_comments ) {
 					$( '.bb-media-model-wrapper:last' ).after( '<input type="hidden" value="' + self.current_document.activity_id + '" id="hidden_parent_id"/>' );
@@ -7301,7 +7306,7 @@ window.bp = window.bp || {};
 			var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_document.activity_id + '"] .activity-comments' );
 			if ( on_page_activity_comments.length ) {
 				self.current_document.parent_activity_comments = true;
-				on_page_activity_comments.html( '' );
+				//on_page_activity_comments.html( '' ); // load on page activity content anew when activity has updates and theatre is closed
 			}
 
 			if ( true === self.current_document.parent_activity_comments ) {

@@ -103,6 +103,12 @@ window.bp = window.bp || {};
 			this.models = [];
 
 			this.InitiatedCommentForms = [];
+
+			// Flag to track any activity updates
+			this.activityHasUpdates = false;
+
+			// Store the ID of the updated activity
+			this.currentActivityId = null;
 		},
 
 		/**
@@ -755,8 +761,9 @@ window.bp = window.bp || {};
 				comments_text              = activity_item.find( '.comments-count' ),
 				item_id, form, model, self = this;
 			
-			// Check if target is inside #activity-modal
+			// Check if target is inside #activity-modal or media theatre
 			var isInsideModal = target.closest('#activity-modal').length > 0;
+			var isInsideMediaTheatre = target.closest('.bb-internal-model').length > 0;
 
 			// In case the target is set to a span or i tag inside the link.
 			if (
@@ -1215,6 +1222,8 @@ window.bp = window.bp || {};
 						if ( isInsideModal ) {
 							$( '.bb-modal-activity-footer' ).removeClass( 'active' );
 							$('#activity-modal').find( '[data-bp-activity-comment-id="' + item_id + '"]' ).append( form );
+						} else if ( isInsideMediaTheatre ) {
+							$('.bb-internal-model').find( '[data-bp-activity-comment-id="' + item_id + '"]' ).append( form );
 						} else {
 							$( '[data-bp-activity-comment-id="' + item_id + '"]' ).append( form );
 						}
@@ -1494,7 +1503,11 @@ window.bp = window.bp || {};
 							if ( form.hasClass( 'acomment-edit' ) ) {
 								var form_item_id = form.attr( 'data-item-id' );
 								form.closest( '.activity-comments' ).append( form );
-								$( 'li#acomment-' + form_item_id ).replaceWith( the_comment );
+								if ( isInsideModal ) {
+									$('#activity-modal').find( 'li#acomment-' + form_item_id ).replaceWith( the_comment );
+								} else {
+									$( 'li#acomment-' + form_item_id ).replaceWith( the_comment );
+								}
 							} else {
 								if ( 0 === activity_comments.children( 'ul' ).length ) {
 									if ( activity_comments.hasClass( 'activity-comments' ) ) {
@@ -1574,6 +1587,9 @@ window.bp = window.bp || {};
 									self.dropzone_video[v].saved = true;
 								}
 							}
+
+							bp.Nouveau.Activity.activityHasUpdates = true;
+							bp.Nouveau.Activity.currentActivityId = activity_id;
 
 						}
 
