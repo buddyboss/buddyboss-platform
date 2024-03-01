@@ -354,7 +354,7 @@ class BP_Media {
 				'activity_id'      => false,           // Filter by activity id.
 				'group_id'         => false,           // Filter by group id.
 				'moderation_query' => false,           // Filter to include moderation.
-				'status'           => 'published',     // Filter by status.
+				'status'           => bb_media_get_published_status(), // Filter by status.
 			)
 		);
 

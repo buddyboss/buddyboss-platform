@@ -351,7 +351,7 @@ class BP_Video {
 				'privacy'          => false,           // public, loggedin, onlyme, friends, grouponly, message.
 				'moderation_query' => false,           // Whether to include moderation or not.
 				'count_total'      => false,           // Whether to use count_total.
-				'status'           => 'published'      // Filter by status.
+				'status'           => bb_video_get_published_status(),  // Filter by status.
 			)
 		);
 
