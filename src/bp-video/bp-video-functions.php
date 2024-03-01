@@ -472,7 +472,7 @@ function bp_video_get( $args = '' ) {
 			'in'               => false,        // Comma-separated list of IDs to include.
 			'moderation_query' => true,         // Filter to include moderation query.
 			'count_total'      => false,        // Whether to count the total number of items in the query.
-			'status'           => 'published',  // Status of the Video scheduled, published.
+			'status'           => bb_video_get_published_status(),  // Status of the Video scheduled, published.
 		),
 		'video_get'
 	);
@@ -615,7 +615,7 @@ function bp_video_add( $args = '' ) {
 			'menu_order'    => 0,                       // Optional:  Menu order.
 			'date_created'  => bp_core_current_time(),  // The GMT time that this video was recorded.
 			'error_type'    => 'bool',
-			'status'        => 'published'               // Status of video.
+			'status'        => bb_video_get_published_status(), // Status of video.
 		),
 		'video_add'
 	);
@@ -742,7 +742,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 						'message_id'    => ! empty( $video['message_id'] ) ? $video['message_id'] : 0,
 						'menu_order'    => ! empty( $video['menu_order'] ) ? $video['menu_order'] : false,
 						'privacy'       => ! empty( $video['privacy'] ) && in_array( $video['privacy'], array_merge( array_keys( bp_video_get_visibility_levels() ), array( 'message' ) ), true ) ? $video['privacy'] : $privacy,
-						'status'        => ! empty( $video['status'] ) ? $video['status'] : 'published',
+						'status'        => ! empty( $video['status'] ) ? $video['status'] : bb_video_get_published_status(),
 						'date_created'  => ! empty( $video['date_created'] ) ? $video['date_created'] : bp_core_current_time(),
 					)
 				);
