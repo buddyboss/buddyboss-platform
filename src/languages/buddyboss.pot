@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.5.51\n"
+"Project-Id-Version: BuddyBoss Platform 2.5.52\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-02-28 14:05:39+00:00\n"
+"POT-Creation-Date: 2024-03-01 04:22:17+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -623,7 +623,7 @@ msgstr ""
 #: bp-forums/replies/template.php:1865 bp-groups/bp-groups-admin.php:255
 #: bp-groups/bp-groups-admin.php:1090
 #: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:72
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:582
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:585
 #: bp-members/classes/class-bp-members-admin.php:2533
 #: bp-moderation/screens/block-member-form.php:75
 #: bp-moderation/screens/content-report-form.php:69
@@ -904,7 +904,7 @@ msgid "Replied to a status update"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:1629
-#: bp-core/admin/settings/bp-admin-setting-activity.php:104
+#: bp-core/admin/settings/bp-admin-setting-activity.php:107
 #: bp-moderation/classes/class-bp-moderation-activity-comment.php:113
 #: bp-search/bp-search-functions.php:389 bp-search/bp-search-settings.php:987
 msgid "Activity Comments"
@@ -1307,7 +1307,7 @@ msgid "Unfollow"
 msgstr ""
 
 #: bp-activity/bp-activity-template.php:4306
-#: bp-core/admin/settings/bp-admin-setting-activity.php:91
+#: bp-core/admin/settings/bp-admin-setting-activity.php:94
 #: bp-members/bp-members-admin.php:143
 #: bp-templates/bp-nouveau/includes/customizer.php:327
 msgid "Follow"
@@ -4162,7 +4162,7 @@ msgstr ""
 #: bp-integrations/learndash/bp-learndash-functions.php:431
 #: bp-integrations/learndash/bp-learndash-functions.php:454
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:219
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:382
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:385
 #: bp-media/bp-media-settings.php:658 bp-media/bp-media-settings.php:685
 #: bp-media/bp-media-settings.php:856 bp-media/bp-media-settings.php:1096
 #: bp-notifications/bp-notifications-settings.php:93
@@ -4339,13 +4339,13 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:409
-#: bp-core/admin/settings/bp-admin-setting-activity.php:161
+#: bp-core/admin/settings/bp-admin-setting-activity.php:164
 msgid "WordPress"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:415
 #: bp-core/admin/bp-core-admin-settings.php:427
-#: bp-core/admin/settings/bp-admin-setting-activity.php:108
+#: bp-core/admin/settings/bp-admin-setting-activity.php:111
 #: bp-core/bb-core-subscriptions.php:600 bp-forums/admin/metaboxes.php:510
 #: bp-forums/admin/replies.php:621 bp-forums/admin/settings.php:312
 #: bp-forums/classes/class-bp-forums-notification.php:128
@@ -4885,12 +4885,12 @@ msgid "Show members new notifications received while on a page on-screen."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:2604
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:864
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:867
 msgid "Bottom Left"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:2612
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:860
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:863
 msgid "Bottom Right"
 msgstr ""
 
@@ -5346,7 +5346,7 @@ msgid "Connections"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:95
-#: bp-core/admin/bp-core-admin-tools.php:142 bp-core/bp-core-options.php:2587
+#: bp-core/admin/bp-core-admin-tools.php:142 bp-core/bp-core-options.php:2590
 msgid "Activity posts"
 msgstr ""
 
@@ -5754,50 +5754,54 @@ msgstr ""
 msgid "Pinned Post"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:94
+#: bp-core/admin/settings/bp-admin-setting-activity.php:91
+msgid "Schedule posts"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-activity.php:97
 #: bp-forums/admin/settings.php:172
 msgid "Link Previews"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:97
+#: bp-core/admin/settings/bp-admin-setting-activity.php:100
 msgid "Relevant Activity"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:106
+#: bp-core/admin/settings/bp-admin-setting-activity.php:109
 msgid ""
 "WordPress post and custom post types will inherit from your WordPress %s "
 "settings."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:112
+#: bp-core/admin/settings/bp-admin-setting-activity.php:115
 msgid "Enable comments"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:115
+#: bp-core/admin/settings/bp-admin-setting-activity.php:118
 msgid "Comment threading"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:116
+#: bp-core/admin/settings/bp-admin-setting-activity.php:119
 msgid "Comment threading depth"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:120
+#: bp-core/admin/settings/bp-admin-setting-activity.php:123
 msgid "Comment visibility"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:121
+#: bp-core/admin/settings/bp-admin-setting-activity.php:124
 msgid "Comments loading"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:124
+#: bp-core/admin/settings/bp-admin-setting-activity.php:127
 msgid "Edit Activity comments"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:125
+#: bp-core/admin/settings/bp-admin-setting-activity.php:128
 msgid "Edit Comment Time Limit"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:129
+#: bp-core/admin/settings/bp-admin-setting-activity.php:132
 msgid "Posts in Activity Feeds"
 msgstr ""
 
@@ -5805,8 +5809,12 @@ msgstr ""
 msgid "BuddyBoss Platform"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:175
+#: bp-core/admin/settings/bp-admin-setting-activity.php:178
 msgid "Custom Post Types"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-activity.php:213
+msgid "Allow members to schedule their posts"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-document.php:22
@@ -5845,7 +5853,7 @@ msgid "Toolbar"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-general.php:53
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:631
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:634
 msgid "Enable Registration"
 msgstr ""
 
@@ -8434,27 +8442,27 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: bp-core/bp-core-options.php:1083
+#: bp-core/bp-core-options.php:1086
 msgid "30 Days"
 msgstr ""
 
-#: bp-core/bp-core-options.php:1087
+#: bp-core/bp-core-options.php:1090
 msgid "7 Days"
 msgstr ""
 
-#: bp-core/bp-core-options.php:1091
+#: bp-core/bp-core-options.php:1094
 msgid "1 Day"
 msgstr ""
 
-#: bp-core/bp-core-options.php:1095
+#: bp-core/bp-core-options.php:1098
 msgid "1 Hour"
 msgstr ""
 
-#: bp-core/bp-core-options.php:1099
+#: bp-core/bp-core-options.php:1102
 msgid "10 Minutes"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2592
+#: bp-core/bp-core-options.php:2595
 msgid "Activity comments"
 msgstr ""
 
@@ -17375,7 +17383,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/form-reply-move.php:87
 #: bp-forums/templates/default/bbpress/form-topic-merge.php:105
 #: bp-forums/templates/default/bbpress/form-topic-split.php:112
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:579
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:582
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1489
 #: bp-xprofile/classes/class-bp-xprofile-group.php:962
 msgid "Submit"
@@ -18067,7 +18075,7 @@ msgid ""
 msgstr ""
 
 #: bp-forums/topics/functions.php:2212
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:820
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:823
 msgid "Normal"
 msgstr ""
 
@@ -18450,7 +18458,7 @@ msgstr ""
 
 #: bp-friends/bp-friends-template.php:450
 #: bp-friends/bp-friends-template.php:459
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:178
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:181
 msgid "Connected"
 msgstr ""
 
@@ -22698,7 +22706,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:117
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:174
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:177
 msgid "Not Connected"
 msgstr ""
 
@@ -22708,7 +22716,7 @@ msgid "Pusher"
 msgstr ""
 
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:168
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:251
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:254
 msgid "Information"
 msgstr ""
 
@@ -23050,15 +23058,15 @@ msgstr ""
 msgid "Zulu"
 msgstr ""
 
-#: bp-integrations/recaptcha/bb-recaptcha-functions.php:608
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:625
 msgid "Google reCAPTCHA token is missing."
 msgstr ""
 
-#: bp-integrations/recaptcha/bb-recaptcha-functions.php:634
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:653
 msgid "Verification failed please try again."
 msgstr ""
 
-#: bp-integrations/recaptcha/bb-recaptcha-functions.php:639
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:658
 msgid "Could not get a response from the reCAPTCHA server."
 msgstr ""
 
@@ -23066,97 +23074,97 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:187
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:190
 #: bp-integrations/recaptcha/classes/class-bb-recaptcha-integration.php:26
 msgid "reCAPTCHA"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:191
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:194
 #. translators: recaptcha link
 msgid ""
 "Check reCAPTCHA %s for usage statistics and monitor its performance. Adjust "
 "settings if necessary to maintain security."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:192
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:195
 msgid "Admin Console"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:197
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:200
 msgid "reCAPTCHA Settings"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:206
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:209
 msgid "reCAPTCHA Design"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:257
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:260
 msgid "Versions"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:263
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:266
 msgid "reCAPTCHA v2 option"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:269
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:475
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:272
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:478
 msgid "Site Key"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:275
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:496
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:278
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:499
 msgid "Secret Key"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:281
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:543
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:284
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:546
 msgid "Verify"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:290
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:293
 msgid "Score Threshold"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:296
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:299
 msgid "Enabled For"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:307
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:310
 msgid "Language Code"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:313
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:316
 msgid "No-Conflict Mode"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:319
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:322
 msgid "Exclude IP"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:339
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:768
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:342
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:771
 msgid "Theme"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:345
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:813
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:348
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:816
 msgid "Size"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:350
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:853
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:353
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:856
 msgid "Badge Position"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:403
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:406
 msgid "reCAPTCHA connected successfully."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:409
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:412
 msgid "Error verifying reCAPTCHA, Please try again."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:419
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:422
 #. translators: recaptcha link
 msgid ""
 "Go to %s and log in with your Google account. Upon registration, you'll get "
@@ -23164,138 +23172,138 @@ msgid ""
 "protect your site from fraud, spam, and abuse."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:420
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:423
 msgid "reCAPTCHA website"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:438
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:441
 msgid "reCAPTCHA v3 (Recommended)"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:440
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:443
 msgid "reCAPTCHA v2"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:455
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:458
 msgid "Checkbox"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:457
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:460
 msgid "Invisible Badge"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:458
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:461
 msgid "Validate request with the \"I'm not a robot\" checkbox"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:459
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:462
 msgid ""
 "Shows invisible reCaptcha badge. It is invoked directly when the user "
 "clicks on an existing button on your site."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:551
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:554
 msgid "Verify reCAPTCHA"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:565
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:568
 msgid "Verifying reCAPTCHA token"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:570
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:573
 msgid "reCAPTCHA token is ready, click submit to verify"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:602
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:605
 msgid ""
 "reCAPTCHA v3 provides a score for every request seamlessly, without causing "
 "user friction. Input a risk score options 0, 0.5 and 1 in the field above "
 "to evaluate the probability of being identified as a bot."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:630
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:633
 #. translators: registration setting link.
 msgid ""
 "Select the pages to include in the reCAPTCHA submission. Make sure to %s if "
 "both registration and account activation are disabled."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:652
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:655
 msgid "Allow bypass, enter a 6 to 10-character string to customize your URL"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:653
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:656
 msgid "stringxs"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:654
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:657
 msgid ""
 "The bypass URL enables you to bypass reCAPTCHA in case of issues. We "
 "recommend keeping the link below securely stored for accessing your site."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:663
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:666
 msgid "Copy"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:663
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:666
 #: bp-members/bp-members-functions.php:3904
 msgid "Copied"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:692
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:695
 #. translators: Language code link.
 msgid ""
 "Choose a language for reCAPTCHA V3 when shown. Find %s in the reCAPTCHA "
 "documentation."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:693
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:696
 msgid "Language codes"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:711
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:714
 msgid "Allow no-conflict mode to prevent compatibility conflicts"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:712
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:715
 msgid ""
 "When checked, other instances of reCAPTCHA are forcefully removed to "
 "prevent conflicts. Only enable this option if your site is experiencing "
 "compatibility issues or if instructed to do so by support."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:725
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:728
 msgid ""
 "Enter the IP addresses that you want to skip from captcha submission. Enter "
 "one IP per line."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:775
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:778
 msgid "Light"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:779
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:782
 msgid "Dark"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:787
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:790
 msgid "Select the style of your reCAPTCHA theme."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:824
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:827
 msgid "Compact"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:832
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:835
 msgid "Select the size of your reCAPTCHA."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:868
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:871
 msgid "Inline"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:876
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:879
 msgid "Select the position of your invisible reCAPTCHA badge."
 msgstr ""
 
