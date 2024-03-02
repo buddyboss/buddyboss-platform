@@ -1922,6 +1922,7 @@ function bp_activity_get( $args = '' ) {
 			 */
 			'filter'            => array(),
 			'pin_type'          => '',
+			'status'            => bb_get_activity_published_status(),
 		),
 		'activity_get'
 	);
@@ -1949,6 +1950,7 @@ function bp_activity_get( $args = '' ) {
 			'count_total'       => $r['count_total'],
 			'fields'            => $r['fields'],
 			'pin_type'          => $r['pin_type'],
+			'status'            => $r['status'],
 		)
 	);
 
