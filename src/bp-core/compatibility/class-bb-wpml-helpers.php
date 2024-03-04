@@ -65,6 +65,10 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			add_action( 'wpml_language_has_switched', 'bp_core_xprofile_clear_all_user_progress_cache' );
 
 			add_filter( 'bp_profile_search_main_form', array( $this, 'bb_profile_search_main_form' ) );
+
+			// Forum/Topic.
+			add_filter( 'bbp_after_has_topics_parse_args', array( $this, 'bb_wpml_fix_member_topic_reply' ) );
+			add_filter( 'bbp_after_has_replies_parse_args', array( $this, 'bb_wpml_fix_member_topic_reply' ) );
 		}
 
 		/**
@@ -199,6 +203,14 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			}
 
 			return $post_id;
+		}
+
+		public function bb_wpml_fix_member_topic_reply( $r ) {
+			if ( class_exists('Sitepress') && isset( $r['post_parent'] ) && 'any' === $r['post_parent'] ) {
+				$r['post_parent'] = '';
+			}
+
+			return $r;
 		}
 
 	}
