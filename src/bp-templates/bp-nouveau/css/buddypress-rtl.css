@@ -3373,6 +3373,7 @@ input.search-query-input {
   margin: 0 -15px;
   text-align: center;
   padding: 5px;
+  font-size: 13px;
   font-weight: 600;
   text-wrap: nowrap;
 }

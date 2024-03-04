@@ -1883,7 +1883,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		$closed_action_permitted = false;
 
 		$check_args = array(
-			'activity_id' => (int) $activity_id,
+			'activity_id' => $activity_id,
 			'action'      => $is_closed_comments ? 'unclose_comments' : 'close_comments',
 		);
 

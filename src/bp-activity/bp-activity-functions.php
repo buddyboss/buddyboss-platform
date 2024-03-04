@@ -6512,7 +6512,7 @@ function bb_load_reaction_popup_modal_js_template() {
 }
 
 /**
- * Check if activity comments are closed.
+ * Check if activity comments are closed for given activity.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -6526,7 +6526,7 @@ function bb_is_activity_comments_closed( $activity_id ) {
 }
 
 /**
- * Get activity closed comments by user.
+ * Get user id who closed activity comments.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -6642,6 +6642,14 @@ function bb_activity_get_metadata( $activity_id ) {
  * @return bool
  */
 function bb_is_close_activity_comments_enabled( $default = true ) {
+	/**
+	 * Apply filter to modify the close activity comments setting.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $default The default value for the close activity comments setting.
+	 *                      Defaults to true if not specified.
+	 */
 	return apply_filters( 'bb_is_close_activity_comments_enabled', bp_get_option( '_bb_enable_close_activity_comments', $default ) );
 }
 
