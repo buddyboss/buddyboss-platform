@@ -6675,12 +6675,6 @@ function bb_activity_comments_close_action_allowed( $args = array() ) {
 	$activity = new BP_Activity_Activity( (int) $r['activity_id'] );
 	if ( ! empty( $activity->id ) ) {
 
-		if ( 'unclose_comments' === $r['action'] ) {
-			$updated_value = false;
-		} else {
-			$updated_value = true;
-		}
-
 		$prev_closer_id     = 0;
 		$is_closed_comments = bb_is_activity_comments_closed( $activity->id );
 		if ( $is_closed_comments ) {
@@ -6711,8 +6705,7 @@ function bb_activity_comments_close_action_allowed( $args = array() ) {
 							(
 								bp_user_can( $prev_closer_id, 'administrator' ) &&
 								in_array( $group->status, array( 'public' ) )
-							) &&
-							! $updated_value
+							)
 						) {
 							$retval = 'not_allowed';
 						}
@@ -6729,8 +6722,7 @@ function bb_activity_comments_close_action_allowed( $args = array() ) {
 								(
 									bp_user_can( $prev_closer_id, 'administrator' ) &&
 									in_array( $group->status, array( 'public' ) )
-								) &&
-								! $updated_value
+								)
 							)
 						) {
 							$retval = 'not_allowed';
@@ -6752,8 +6744,7 @@ function bb_activity_comments_close_action_allowed( $args = array() ) {
 					! empty( $prev_closer_id )
 				) &&
 				$prev_closer_id !== $r['user_id'] &&
-				bp_user_can( $prev_closer_id, 'administrator' ) &&
-				! $updated_value
+				bp_user_can( $prev_closer_id, 'administrator' )
 			) {
 				$retval = 'not_allowed';
 			}
