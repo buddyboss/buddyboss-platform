@@ -130,7 +130,7 @@ window.bp = window.bp || {};
 			// Activity comments effect.
 			//$( '#buddypress [data-bp-list="activity"]' ).on( 'bp_ajax_append', this.hideComments );
 			$( '#activity-stream' ).on( 'click', '.acomments-view-more', this.showActivity );
-			$( 'body' ).on( 'click', '.bb-close-action-popup', this.closeComments );
+			$( 'body' ).on( 'click', '.bb-close-action-popup', this.closeActivity );
 
 			// Activity actions.
 			$( '#buddypress [data-bp-list="activity"], #activity-modal' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
@@ -549,7 +549,7 @@ window.bp = window.bp || {};
 			bp.Nouveau.Activity.launchActivityPopup( activityId, parentId );
 		},
 
-		closeComments: function( event ) {
+		closeActivity: function( event ) {
 			event.preventDefault();
 			var target = $( event.target ), modal = target.closest( '.bb-activity-model-wrapper' ), footer = modal.find( '.bb-modal-activity-footer' );
 			var activityId = modal.find( '.activity-item' ).data( 'bp-activity-id' );
@@ -3320,10 +3320,12 @@ window.bp = window.bp || {};
 			var modal = $('.bb-activity-model-wrapper');
 			var activity_content = activity_item[0].outerHTML;
 			var selector = '[data-parent_comment_id="' + parentID + '"]';
+			var activityTitle = activity_item.data( 'activity-popup-title' );
 
 			modal.closest('body').addClass( 'acomments-modal-open' );
 			modal.show();
 			modal.find( 'ul.activity-list' ).html( activity_content );
+			modal.find( '.bb-modal-activity-header h2' ).text( activityTitle );
 			
 			var form = modal.find( '#ac-form-' + activityID );
 			modal.find( '.acomment-display' ).removeClass('display-focus');
