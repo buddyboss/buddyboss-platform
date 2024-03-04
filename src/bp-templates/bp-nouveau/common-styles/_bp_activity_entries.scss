@@ -773,7 +773,8 @@
 						}
 
 						&.download-activity:before,
-						&.activity-video-download:before {
+						&.activity-video-download:before,
+						&.activity-document-download:before {
 							content: "\e889";
 						}
 

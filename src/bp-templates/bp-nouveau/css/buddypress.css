@@ -4078,7 +4078,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
   content: "\ee5a";
 }
 
-#buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.download-activity:before, #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.activity-video-download:before {
+#buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.download-activity:before, #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.activity-video-download:before, #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.activity-document-download:before {
   content: "\e889";
 }
 
