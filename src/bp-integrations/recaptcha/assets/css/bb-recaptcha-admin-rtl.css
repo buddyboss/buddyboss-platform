@@ -488,6 +488,10 @@
   font-size: 20px;
 }
 
+.bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle.bp-hide {
+  display: none !important;
+}
+
 .bb-success-section.bb-recaptcha-errors span, .bb-success-section.bb-recaptcha-success span,
 .bb-error-section.bb-recaptcha-errors span,
 .bb-error-section.bb-recaptcha-success span {
