@@ -533,6 +533,10 @@
 				.bb-recaptcha-copy-button i {
 					font-size: 20px;
 				}
+
+				&.bp-hide {
+					display: none !important;
+				}
 			}
 		}
 	}
