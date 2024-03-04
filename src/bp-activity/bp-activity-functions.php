@@ -6512,6 +6512,29 @@ function bb_load_reaction_popup_modal_js_template() {
 }
 
 /**
+ * Fetch the activity metadata using the activity ID.
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @param int $activity_id Activity ID.
+ *
+ * @return mixed|array
+ */
+function bb_activity_get_metadata( $activity_id ) {
+	// Get meta data from cache.
+	$meta_data = wp_cache_get( $activity_id, 'activity_meta' );
+	if ( false === $meta_data ) {
+		$meta_data = bp_activity_get_meta( $activity_id );
+
+		// Set meta data to cache.
+		wp_cache_set( $activity_id, $meta_data, 'activity_meta' );
+	}
+
+	// Return the metadata.
+	return $meta_data;
+}
+
+/**
  * Check if activity comments are closed for given activity.
  *
  * @since BuddyBoss [BBVERSION]
@@ -6609,29 +6632,6 @@ function bb_activity_close_unclose_comments( $args = array() ) {
 	}
 
 	return $retval;
-}
-
-/**
- * Fetch the activity metadata using the activity ID.
- *
- * @since BuddyBoss 2.5.50
- *
- * @param int $activity_id Activity ID.
- *
- * @return mixed|array
- */
-function bb_activity_get_metadata( $activity_id ) {
-	// Get meta data from cache.
-	$meta_data = wp_cache_get( $activity_id, 'activity_meta' );
-	if ( false === $meta_data ) {
-		$meta_data = bp_activity_get_meta( $activity_id );
-
-		// Set meta data to cache.
-		wp_cache_set( $activity_id, $meta_data, 'activity_meta' );
-	}
-
-	// Return the metadata.
-	return $meta_data;
 }
 
 /**
@@ -6769,7 +6769,7 @@ function bb_activity_comments_close_action_allowed( $args = array() ) {
  * Get the close comments notice string.
  *
  * @since BuddyBoss [BBVERSION]
- * 
+ *
  * @param int $activity_id Activivty Id.
  *
  * @return string
