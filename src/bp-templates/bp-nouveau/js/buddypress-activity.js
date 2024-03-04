@@ -1243,48 +1243,7 @@ window.bp = window.bp || {};
 
 				/* Stop past image from clipboard */
 				var ce = form.find( '.ac-input[contenteditable]' );
-				if ( ce.length > 0 ) {
-					var div_editor = ce.get( 0 );
-					var commentID  = $( div_editor ).attr( 'id' ) + ( $( div_editor ).closest( '.bb-media-model-inner' ).length ? '-theater' : '' );
-
-					// Comment block is moved from theater and needs to be initiated.
-					if ( $.inArray( commentID, self.InitiatedCommentForms ) !== -1 && ! $( div_editor ).closest( 'form' ).hasClass( 'events-initiated' ) ) {
-						var index = self.InitiatedCommentForms.indexOf( commentID );
-						self.InitiatedCommentForms.splice( index, 1 );
-					}
-
-					if ( $.inArray( commentID, self.InitiatedCommentForms ) == -1 && ! $( div_editor ).closest( 'form' ).hasClass( 'events-initiated' ) ) {
-						// Check if Comment form has already paste event initiated.
-						div_editor.addEventListener(
-							'paste',
-							function ( e ) {
-								e.preventDefault();
-								var text = e.clipboardData.getData( 'text/plain' );
-								document.execCommand( 'insertText', false, text );
-							}
-						);
-
-						// Register keyup event.
-						div_editor.addEventListener(
-							'input',
-							function ( e ) {
-								var $activity_comment_content = jQuery( e.currentTarget ).html();
-
-								content = $.trim( $activity_comment_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
-								content = content.replace( /&nbsp;/g, ' ' );
-
-								var content_text = jQuery( e.currentTarget ).text().trim();
-								if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0 ) {
-									jQuery( e.currentTarget ).closest( 'form' ).addClass( 'has-content' );
-								} else {
-									jQuery( e.currentTarget ).closest( 'form' ).removeClass( 'has-content' );
-								}
-							}
-						);
-						//$( div_editor ).closest( 'form' ).addClass( 'events-initiated' );
-						self.InitiatedCommentForms.push( commentID ); // Add this Comment form in initiated comment form list.
-					}
-				}
+				bp.Nouveau.Activity.listenCommentInput( ce );
 
 				// change the aria state from false to true.
 				target.attr( 'aria-expanded', 'true' );
@@ -3291,6 +3250,51 @@ window.bp = window.bp || {};
 			$( '.activity-state-popup' ).hide().removeClass( 'active' );
 		},
 
+		listenCommentInput: function( input ) {
+			if ( input.length > 0 ) {
+				var div_editor = input.get( 0 );
+				var commentID  = $( div_editor ).attr( 'id' ) + ( $( div_editor ).closest( '.bb-media-model-inner' ).length ? '-theater' : '' );
+
+				// Comment block is moved from theater and needs to be initiated.
+				if ( $.inArray( commentID, this.InitiatedCommentForms ) !== -1 && ! $( div_editor ).closest( 'form' ).hasClass( 'events-initiated' ) ) {
+					var index = this.InitiatedCommentForms.indexOf( commentID );
+					this.InitiatedCommentForms.splice( index, 1 );
+				}
+
+				if ( $.inArray( commentID, this.InitiatedCommentForms ) == -1 && ! $( div_editor ).closest( 'form' ).hasClass( 'events-initiated' ) ) {
+					// Check if Comment form has already paste event initiated.
+					div_editor.addEventListener(
+						'paste',
+						function ( e ) {
+							e.preventDefault();
+							var text = e.clipboardData.getData( 'text/plain' );
+							document.execCommand( 'insertText', false, text );
+						}
+					);
+
+					// Register keyup event.
+					div_editor.addEventListener(
+						'input',
+						function ( e ) {
+							var $activity_comment_content = jQuery( e.currentTarget ).html();
+
+							content = $.trim( $activity_comment_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+							content = content.replace( /&nbsp;/g, ' ' );
+
+							var content_text = jQuery( e.currentTarget ).text().trim();
+							if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0 ) {
+								jQuery( e.currentTarget ).closest( 'form' ).addClass( 'has-content' );
+							} else {
+								jQuery( e.currentTarget ).closest( 'form' ).removeClass( 'has-content' );
+							}
+						}
+					);
+					//$( div_editor ).closest( 'form' ).addClass( 'events-initiated' );
+					this.InitiatedCommentForms.push( commentID ); // Add this Comment form in initiated comment form list.
+				}
+			}
+		},
+
 		/**
 		 * [activityRootComment description]
 		 *
@@ -3342,6 +3346,9 @@ window.bp = window.bp || {};
 			viewMoreCommentsLink.trigger( 'click' );
 
 			bp.Nouveau.Activity.initializeEmojioneArea( true, '#activity-modal ', activityID );
+
+			var ce = modal.find( '.bb-modal-activity-footer' ).find( '.ac-input[contenteditable]' );
+			bp.Nouveau.Activity.listenCommentInput( ce );
 		},
 
 		viewMoreComments: function( e ) {
