@@ -101,7 +101,9 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 					$bb_recaptcha['score_threshold'] = 1;
 				}
 			} else {
-				$bb_recaptcha['score_threshold'] = 0.5;
+				if ( 0 != $bb_recaptcha['score_threshold'] ) {
+					$bb_recaptcha['score_threshold'] = 0.5;
+				}
 			}
 			if ( isset( $bb_recaptcha['allow_bypass'] ) ) {
 				$bb_recaptcha['bypass_text'] = trim( $bb_recaptcha['bypass_text'] );
