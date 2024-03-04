@@ -1899,7 +1899,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		$closed_action_permitted = false;
 
 		$check_args = array(
-			'activity_id' => (int) $activity_id,
+			'activity_id' => $activity_id,
 			'action'      => $is_closed_comments ? 'unclose_comments' : 'close_comments',
 		);
 
@@ -1909,7 +1909,6 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		}
 
 		if ( $is_closed_comments ) {
-
 			// Unable to edit closed comments activity.
 			$closed_action_label = esc_html__( 'Turn on commenting', 'buddyboss' );
 			$closed_action_class = 'unclose-activity-comment';

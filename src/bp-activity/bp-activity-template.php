@@ -2826,7 +2826,7 @@ function bp_get_activity_css_class() {
 		$class .= ' has-comments';
 	}
 
-	if ( bb_is_activity_comments_closed( $activities_template->activity->id ) ) {
+	if ( bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( $activities_template->activity->id ) ) {
 		$class .= ' bb-closed-comments';
 	}
 

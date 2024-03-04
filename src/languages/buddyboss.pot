@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.5.52\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-03-01 04:22:17+00:00\n"
+"POT-Creation-Date: 2024-03-04 11:38:03+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -491,7 +491,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1552
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1605
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1759
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2372
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2314
 #: bp-templates/bp-nouveau/includes/document/ajax.php:476
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1349
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1341
@@ -623,7 +623,7 @@ msgstr ""
 #: bp-forums/replies/template.php:1865 bp-groups/bp-groups-admin.php:255
 #: bp-groups/bp-groups-admin.php:1090
 #: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:72
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:585
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:587
 #: bp-members/classes/class-bp-members-admin.php:2533
 #: bp-moderation/screens/block-member-form.php:75
 #: bp-moderation/screens/content-report-form.php:69
@@ -1076,6 +1076,29 @@ msgstr ""
 msgid "Friendships"
 msgstr ""
 
+#: bp-activity/bp-activity-functions.php:6948
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1278
+msgid "You turned off commenting for this post"
+msgstr ""
+
+#: bp-activity/bp-activity-functions.php:6952
+msgid "An organizer turned off commenting for this post"
+msgstr ""
+
+#: bp-activity/bp-activity-functions.php:6954
+msgid "A moderator turned off commenting for this post"
+msgstr ""
+
+#: bp-activity/bp-activity-functions.php:6956
+#: bp-activity/bp-activity-functions.php:6961
+msgid "An admin turned off commenting for this post"
+msgstr ""
+
+#: bp-activity/bp-activity-functions.php:6958
+#: bp-activity/bp-activity-functions.php:6963
+msgid "%s turned off commenting for this post"
+msgstr ""
+
 #: bp-activity/bp-activity-notifications.php:40
 msgid "@%s Mentions"
 msgstr ""
@@ -1241,7 +1264,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:124
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1858
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1859
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2403
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2345
 #: bp-templates/bp-nouveau/includes/notifications/functions.php:253
 #: bp-templates/bp-nouveau/includes/notifications/template-tags.php:114
 #: bp-xprofile/bp-xprofile-admin.php:920
@@ -2437,22 +2460,22 @@ msgid "Your post has been unpinned"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1322
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1161
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1163
 msgid "Your post has been pinned"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1324
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1165
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1167
 msgid "Your pinned post has been updated"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1329
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1121
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1187
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1243
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1123
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1189
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1245
 #: bp-templates/bp-nouveau/includes/activity/functions.php:254
 #: bp-templates/bp-nouveau/includes/activity/functions.php:255
-#: bp-templates/bp-nouveau/includes/activity/functions.php:260
+#: bp-templates/bp-nouveau/includes/activity/functions.php:258
 msgid "There was a problem marking this operation. Please try again."
 msgstr ""
 
@@ -4151,7 +4174,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:3382
 #: bp-core/admin/bp-core-admin-settings.php:3784
 #: bp-core/admin/bp-core-admin-settings.php:3811
-#: bp-core/admin/bp-core-admin-settings.php:3917
+#: bp-core/admin/bp-core-admin-settings.php:3916
 #: bp-core/admin/settings/bp-admin-setting-friends.php:113
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:596
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:652
@@ -4162,7 +4185,7 @@ msgstr ""
 #: bp-integrations/learndash/bp-learndash-functions.php:431
 #: bp-integrations/learndash/bp-learndash-functions.php:454
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:219
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:385
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:387
 #: bp-media/bp-media-settings.php:658 bp-media/bp-media-settings.php:685
 #: bp-media/bp-media-settings.php:856 bp-media/bp-media-settings.php:1096
 #: bp-notifications/bp-notifications-settings.php:93
@@ -4885,12 +4908,12 @@ msgid "Show members new notifications received while on a page on-screen."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:2604
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:867
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:869
 msgid "Bottom Left"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:2612
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:863
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:865
 msgid "Bottom Right"
 msgstr ""
 
@@ -5817,6 +5840,10 @@ msgstr ""
 msgid "Allow members to schedule their posts"
 msgstr ""
 
+#: bp-core/admin/settings/bp-admin-setting-activity.php:226
+msgid "Allow your users to stop users commenting on their posts"
+msgstr ""
+
 #: bp-core/admin/settings/bp-admin-setting-document.php:22
 #: bp-moderation/classes/class-bp-moderation-activity.php:551
 #: bp-moderation/classes/class-bp-moderation-activity.php:558
@@ -5853,7 +5880,7 @@ msgid "Toolbar"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-general.php:53
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:634
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:636
 msgid "Enable Registration"
 msgstr ""
 
@@ -6765,8 +6792,8 @@ msgid "Invalid object."
 msgstr ""
 
 #: bp-core/bp-core-actions.php:1116 bp-core/classes/class-bb-reaction.php:914
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1310
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1318
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1313
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1321
 msgid "Invalid request."
 msgstr ""
 
@@ -8498,7 +8525,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:92
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:60
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1689
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2296
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2238
 #: bp-templates/bp-nouveau/includes/groups/template-tags.php:555
 #: bp-templates/bp-nouveau/includes/members/template-tags.php:220
 msgid "Options"
@@ -11525,12 +11552,12 @@ msgstr ""
 #: bp-messages/bp-messages-functions.php:2531
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:37
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:273
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2137
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2138
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2173
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2174
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2209
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2210
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2079
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2080
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2115
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2116
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2151
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2152
 #: bp-templates/bp-nouveau/includes/document/ajax.php:448
 #: bp-templates/bp-nouveau/includes/document/ajax.php:449
 #: bp-templates/bp-nouveau/includes/document/functions.php:102
@@ -17383,7 +17410,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/form-reply-move.php:87
 #: bp-forums/templates/default/bbpress/form-topic-merge.php:105
 #: bp-forums/templates/default/bbpress/form-topic-split.php:112
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:582
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:584
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1489
 #: bp-xprofile/classes/class-bp-xprofile-group.php:962
 msgid "Submit"
@@ -18075,7 +18102,7 @@ msgid ""
 msgstr ""
 
 #: bp-forums/topics/functions.php:2212
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:823
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:825
 msgid "Normal"
 msgstr ""
 
@@ -18458,7 +18485,7 @@ msgstr ""
 
 #: bp-friends/bp-friends-template.php:450
 #: bp-friends/bp-friends-template.php:459
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:181
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:183
 msgid "Connected"
 msgstr ""
 
@@ -22541,8 +22568,8 @@ msgid_plural "hrs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-integrations/learndash/library/SyncGenerator.php:683
-#: bp-integrations/learndash/library/SyncGenerator.php:880
+#: bp-integrations/learndash/library/SyncGenerator.php:681
+#: bp-integrations/learndash/library/SyncGenerator.php:878
 msgid "For Social Group: %s"
 msgstr ""
 
@@ -22706,7 +22733,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:117
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:177
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:179
 msgid "Not Connected"
 msgstr ""
 
@@ -22716,7 +22743,7 @@ msgid "Pusher"
 msgstr ""
 
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:168
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:254
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:256
 msgid "Information"
 msgstr ""
 
@@ -23074,97 +23101,97 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:190
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:192
 #: bp-integrations/recaptcha/classes/class-bb-recaptcha-integration.php:26
 msgid "reCAPTCHA"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:194
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:196
 #. translators: recaptcha link
 msgid ""
 "Check reCAPTCHA %s for usage statistics and monitor its performance. Adjust "
 "settings if necessary to maintain security."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:195
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:197
 msgid "Admin Console"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:200
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:202
 msgid "reCAPTCHA Settings"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:209
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:211
 msgid "reCAPTCHA Design"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:260
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:262
 msgid "Versions"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:266
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:268
 msgid "reCAPTCHA v2 option"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:272
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:478
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:274
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:480
 msgid "Site Key"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:278
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:499
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:280
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:501
 msgid "Secret Key"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:284
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:546
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:286
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:548
 msgid "Verify"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:293
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:295
 msgid "Score Threshold"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:299
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:301
 msgid "Enabled For"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:310
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:312
 msgid "Language Code"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:316
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:318
 msgid "No-Conflict Mode"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:322
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:324
 msgid "Exclude IP"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:342
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:771
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:344
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:773
 msgid "Theme"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:348
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:816
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:350
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:818
 msgid "Size"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:353
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:856
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:355
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:858
 msgid "Badge Position"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:406
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:408
 msgid "reCAPTCHA connected successfully."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:412
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:414
 msgid "Error verifying reCAPTCHA, Please try again."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:422
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:424
 #. translators: recaptcha link
 msgid ""
 "Go to %s and log in with your Google account. Upon registration, you'll get "
@@ -23172,138 +23199,138 @@ msgid ""
 "protect your site from fraud, spam, and abuse."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:423
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:425
 msgid "reCAPTCHA website"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:441
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:443
 msgid "reCAPTCHA v3 (Recommended)"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:443
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:445
 msgid "reCAPTCHA v2"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:458
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:460
 msgid "Checkbox"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:460
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:462
 msgid "Invisible Badge"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:461
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:463
 msgid "Validate request with the \"I'm not a robot\" checkbox"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:462
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:464
 msgid ""
 "Shows invisible reCaptcha badge. It is invoked directly when the user "
 "clicks on an existing button on your site."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:554
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:556
 msgid "Verify reCAPTCHA"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:568
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:570
 msgid "Verifying reCAPTCHA token"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:573
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:575
 msgid "reCAPTCHA token is ready, click submit to verify"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:605
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:607
 msgid ""
 "reCAPTCHA v3 provides a score for every request seamlessly, without causing "
 "user friction. Input a risk score options 0, 0.5 and 1 in the field above "
 "to evaluate the probability of being identified as a bot."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:633
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:635
 #. translators: registration setting link.
 msgid ""
 "Select the pages to include in the reCAPTCHA submission. Make sure to %s if "
 "both registration and account activation are disabled."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:655
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:657
 msgid "Allow bypass, enter a 6 to 10-character string to customize your URL"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:656
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:658
 msgid "stringxs"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:657
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:659
 msgid ""
 "The bypass URL enables you to bypass reCAPTCHA in case of issues. We "
 "recommend keeping the link below securely stored for accessing your site."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:666
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:668
 msgid "Copy"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:666
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:668
 #: bp-members/bp-members-functions.php:3904
 msgid "Copied"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:695
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:697
 #. translators: Language code link.
 msgid ""
 "Choose a language for reCAPTCHA V3 when shown. Find %s in the reCAPTCHA "
 "documentation."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:696
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:698
 msgid "Language codes"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:714
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:716
 msgid "Allow no-conflict mode to prevent compatibility conflicts"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:715
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:717
 msgid ""
 "When checked, other instances of reCAPTCHA are forcefully removed to "
 "prevent conflicts. Only enable this option if your site is experiencing "
 "compatibility issues or if instructed to do so by support."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:728
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:730
 msgid ""
 "Enter the IP addresses that you want to skip from captcha submission. Enter "
 "one IP per line."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:778
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:780
 msgid "Light"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:782
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:784
 msgid "Dark"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:790
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:792
 msgid "Select the style of your reCAPTCHA theme."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:827
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:829
 msgid "Compact"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:835
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:837
 msgid "Select the size of your reCAPTCHA."
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:871
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:873
 msgid "Inline"
 msgstr ""
 
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:879
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:881
 msgid "Select the position of your invisible reCAPTCHA badge."
 msgstr ""
 
@@ -25793,7 +25820,7 @@ msgid "Activation key of the signup."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:254
-#: bp-templates/bp-nouveau/buddypress/members/register.php:90
+#: bp-templates/bp-nouveau/buddypress/members/register.php:86
 msgid "Yes, I'd like to create a new site"
 msgstr ""
 
@@ -27713,7 +27740,7 @@ msgstr ""
 #: bp-moderation/classes/class-bp-moderation-comment.php:334
 #: bp-templates/bp-nouveau/buddypress/members/members-loop.php:228
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1689
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2296
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2238
 #: bp-templates/bp-nouveau/includes/document/ajax.php:442
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1315
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1307
@@ -29181,29 +29208,6 @@ msgstr ""
 msgid "Turned Off Notification"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/activity/entry.php:154
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1284
-msgid "You turned off commenting for this post"
-msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/activity/entry.php:158
-msgid "An organizer turned off commenting for this post"
-msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/activity/entry.php:160
-msgid "A moderator turned off commenting for this post"
-msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/activity/entry.php:162
-#: bp-templates/bp-nouveau/buddypress/activity/entry.php:167
-msgid "An admin turned off commenting for this post"
-msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/activity/entry.php:164
-#: bp-templates/bp-nouveau/buddypress/activity/entry.php:169
-msgid "%s turned off commenting for this post"
-msgstr ""
-
 #: bp-templates/bp-nouveau/buddypress/activity/post-form.php:41
 msgid "Post Update"
 msgstr ""
@@ -30403,7 +30407,7 @@ msgstr ""
 msgid "Activation Key:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/register.php:87
+#: bp-templates/bp-nouveau/buddypress/members/register.php:83
 msgid "Site Details"
 msgstr ""
 
@@ -30907,95 +30911,95 @@ msgstr ""
 msgid "No activities were found."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:706
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:707
 msgid "The comments are closed for the activity. The activity cannot be edited."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:745
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:768
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:747
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:770
 #. translators: 1: string or media and medias. 2: group text.
 msgid "You don't have access to upload %1$s%2$s."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:746
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:748
 msgid "media"
 msgid_plural "medias"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:747
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:770
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:749
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:772
 msgid " inside group"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:769
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:771
 msgid "document"
 msgid_plural "documents"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:787
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:789
 msgid "You don't have access to do a activity."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:846
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:848
 msgid "There was a problem posting your update. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:880
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:882
 msgid "Update posted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:880
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:882
 msgid "View activity."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1011
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1013
 msgid "There was a problem marking this activity as spam. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1060
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1062
 msgid "This activity has been marked as spam and is no longer visible."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1159
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1161
 msgid "Your pinned post has been removed"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1163
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1165
 msgid "Your are not allowed to pinned or unpinned the post"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1220
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1222
 msgid "Notifications for this activity have been unmuted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1222
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1224
 msgid "Notifications for this activity have been muted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1224
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1226
 msgid "Notifications for this activity already been muted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1282
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1276
 msgid "You turned on commenting for this post"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1286
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1280
 msgid "You are not permitted with the requested operation"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1325
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1328
 msgid "Activity id cannot be empty."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1332
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1335
 msgid "Parent comment id cannot be empty."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1379
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1385
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1382
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1388
 msgid "No more items to load."
 msgstr ""
 
@@ -31045,41 +31049,43 @@ msgid "Loading..."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:250
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2043
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1985
 msgid "Pin to Feed"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:251
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2053
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1995
 msgid "Unpin from Feed"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:252
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2043
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1985
 msgid "Pin to Group"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:253
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2053
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1995
 msgid "Unpin from Group"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:256
-msgid "Turn off notifications"
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/activity/functions.php:257
-msgid "Turn on notifications"
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/activity/functions.php:258
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1896
 msgid "Turn off commenting"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:259
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1971
+#: bp-templates/bp-nouveau/includes/activity/functions.php:257
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1913
 msgid "Turn on commenting"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/activity/functions.php:259
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2024
+msgid "Turn off notification"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/activity/functions.php:260
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2028
+msgid "Turn on notification"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:264
@@ -31137,7 +31143,7 @@ msgid "Edit Folder Privacy"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1444
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2544
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2486
 msgid "(edited)"
 msgstr ""
 
@@ -31165,16 +31171,8 @@ msgstr ""
 msgid "Done Editing"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2082
-msgid "Turn Off Notification"
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2086
-msgid "Turn On Notification"
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2367
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2371
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2309
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2313
 msgid "Edit Comment"
 msgstr ""
 

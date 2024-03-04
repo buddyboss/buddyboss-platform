@@ -6522,7 +6522,30 @@ function bb_load_reaction_popup_modal_js_template() {
 }
 
 /**
- * Check if activity comments are closed.
+ * Fetch the activity metadata using the activity ID.
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @param int $activity_id Activity ID.
+ *
+ * @return mixed|array
+ */
+function bb_activity_get_metadata( $activity_id ) {
+	// Get meta data from cache.
+	$meta_data = wp_cache_get( $activity_id, 'activity_meta' );
+	if ( false === $meta_data ) {
+		$meta_data = bp_activity_get_meta( $activity_id );
+
+		// Set meta data to cache.
+		wp_cache_set( $activity_id, $meta_data, 'activity_meta' );
+	}
+
+	// Return the metadata.
+	return $meta_data;
+}
+
+/**
+ * Check if activity comments are closed for given activity.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -6532,11 +6555,11 @@ function bb_load_reaction_popup_modal_js_template() {
  */
 function bb_is_activity_comments_closed( $activity_id ) {
 	$activity_metas = bb_activity_get_metadata( $activity_id );
-	return ! empty( $activity_metas['bb_is_closed_comments'][0] ) ? (bool) $activity_metas['bb_is_closed_comments'][0] : false;
+	return ! empty( $activity_metas['bb_is_closed_comments'][0] ) && (bool) $activity_metas['bb_is_closed_comments'][0];
 }
 
 /**
- * Get activity closed comments by user.
+ * Get user id who closed activity comments.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -6622,29 +6645,6 @@ function bb_activity_close_unclose_comments( $args = array() ) {
 }
 
 /**
- * Fetch the activity metadata using the activity ID.
- *
- * @since BuddyBoss 2.5.50
- *
- * @param int $activity_id Activity ID.
- *
- * @return mixed|array
- */
-function bb_activity_get_metadata( $activity_id ) {
-	// Get meta data from cache.
-	$meta_data = wp_cache_get( $activity_id, 'activity_meta' );
-	if ( false === $meta_data ) {
-		$meta_data = bp_activity_get_meta( $activity_id );
-
-		// Set meta data to cache.
-		wp_cache_set( $activity_id, $meta_data, 'activity_meta' );
-	}
-
-	// Return the metadata.
-	return $meta_data;
-}
-
-/**
  * Check if the closed comments setting enabled.
  *
  * @since BuddyBoss [BBVERSION]
@@ -6652,11 +6652,19 @@ function bb_activity_get_metadata( $activity_id ) {
  * @return bool
  */
 function bb_is_close_activity_comments_enabled( $default = true ) {
+	/**
+	 * Apply filter to modify the close activity comments setting.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $default The default value for the close activity comments setting.
+	 *                      Defaults to true if not specified.
+	 */
 	return apply_filters( 'bb_is_close_activity_comments_enabled', bp_get_option( '_bb_enable_close_activity_comments', $default ) );
 }
 
 /**
- * Check if the closed comments allowed for perticular user.
+ * Check if the closed comments allowed for a particular user.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -6676,12 +6684,6 @@ function bb_activity_comments_close_action_allowed( $args = array() ) {
 
 	$activity = new BP_Activity_Activity( (int) $r['activity_id'] );
 	if ( ! empty( $activity->id ) ) {
-
-		if ( 'unclose_comments' === $r['action'] ) {
-			$updated_value = false;
-		} else {
-			$updated_value = true;
-		}
 
 		$prev_closer_id     = 0;
 		$is_closed_comments = bb_is_activity_comments_closed( $activity->id );
@@ -6713,8 +6715,7 @@ function bb_activity_comments_close_action_allowed( $args = array() ) {
 							(
 								bp_user_can( $prev_closer_id, 'administrator' ) &&
 								in_array( $group->status, array( 'public' ) )
-							) &&
-							! $updated_value
+							)
 						) {
 							$retval = 'not_allowed';
 						}
@@ -6731,8 +6732,7 @@ function bb_activity_comments_close_action_allowed( $args = array() ) {
 								(
 									bp_user_can( $prev_closer_id, 'administrator' ) &&
 									in_array( $group->status, array( 'public' ) )
-								) &&
-								! $updated_value
+								)
 							)
 						) {
 							$retval = 'not_allowed';
@@ -6754,8 +6754,7 @@ function bb_activity_comments_close_action_allowed( $args = array() ) {
 					! empty( $prev_closer_id )
 				) &&
 				$prev_closer_id !== $r['user_id'] &&
-				bp_user_can( $prev_closer_id, 'administrator' ) &&
-				! $updated_value
+				bp_user_can( $prev_closer_id, 'administrator' )
 			) {
 				$retval = 'not_allowed';
 			}
