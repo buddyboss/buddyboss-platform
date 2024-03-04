@@ -6545,7 +6545,7 @@ function bb_activity_get_metadata( $activity_id ) {
  */
 function bb_is_activity_comments_closed( $activity_id ) {
 	$activity_metas = bb_activity_get_metadata( $activity_id );
-	return ! empty( $activity_metas['bb_is_closed_comments'][0] ) ? (bool) $activity_metas['bb_is_closed_comments'][0] : false;
+	return ! empty( $activity_metas['bb_is_closed_comments'][0] ) && (bool) $activity_metas['bb_is_closed_comments'][0];
 }
 
 /**
@@ -6654,7 +6654,7 @@ function bb_is_close_activity_comments_enabled( $default = true ) {
 }
 
 /**
- * Check if the closed comments allowed for perticular user.
+ * Check if the closed comments allowed for a particular user.
  *
  * @since BuddyBoss [BBVERSION]
  *

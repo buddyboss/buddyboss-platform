@@ -78,7 +78,7 @@ if ( ! empty( $link_embed ) ) {
 	$closed_notice = bb_get_close_activity_comments_notice( $activity_id );
 	if ( ! empty( $closed_notice ) ) {
 		?>
-		<div class='bb-activity-closed-comments-notice'><?php echo $closed_notice; ?></div>
+		<div class='bb-activity-closed-comments-notice'><?php echo esc_html( $closed_notice ); ?></div>
 		<?php
 	}
 

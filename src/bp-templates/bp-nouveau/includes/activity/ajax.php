@@ -667,10 +667,12 @@ function bp_nouveau_ajax_post_update() {
 	$is_private  = false;
 
 	// Check if the activity comments closed.
-	if ( ! empty( $activity_id ) ) {
-		if ( bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( $activity_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'The comments are closed for the activity. The activity cannot be edited.', 'buddyboss') ) );
-		}
+	if ( ! empty( $activity_id ) && bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( $activity_id ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'The comments are closed for the activity. The activity cannot be edited.', 'buddyboss' )
+			)
+		);
 	}
 
 	// Try to get the item id from posted variables.
@@ -1156,20 +1158,16 @@ function bb_nouveau_ajax_activity_update_close_comments() {
 	if (
 		! bp_is_post_request() ||
 		! is_user_logged_in() ||
-		(
-			 empty( $_POST['nonce'] ) ||
-			! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' )
-		)
+		empty( $_POST['nonce'] ) ||
+		! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' )
 	) {
 		wp_send_json_error( $response );
 	}
 
 	if (
 		empty( $_POST['id'] ) ||
-		( 
-			empty( $_POST['close_comments_action'] ) ||
-			! in_array( $_POST['close_comments_action'], array( 'close_comments', 'unclose_comments' ), true ) 
-		)
+		empty( $_POST['close_comments_action'] ) ||
+		! in_array( $_POST['close_comments_action'], array( 'close_comments', 'unclose_comments' ), true )
 	) {
 		wp_send_json_error( $response );
 	}
@@ -1192,6 +1190,15 @@ function bb_nouveau_ajax_activity_update_close_comments() {
 			$response['feedback'] = esc_html__( 'You are not permitted with the requested operation', 'buddyboss' );
 		}
 
+		/**
+		 * Filters the response before updating activity close comments via AJAX.
+		 * This filter allows modification of the response data before it's used to update activity close comments via AJAX.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param mixed $response The response data. Can be of any type.
+		 * @param array $_POST    The $_POST data received via AJAX request.
+		 */
 		$response = apply_filters( 'bb_ajax_activity_update_close_comments', $response, $_POST );
 	}
 
