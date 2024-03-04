@@ -6703,6 +6703,7 @@ window.bp = window.bp || {};
 				activity_comments = activity.find( '.activity-comments' );
 				if ( activity_comments.length ) {
 					var form = activity_comments.find( '#ac-form-' + self.current_media.activity_id );
+					this.purgeEditActivityForm( form );
 					form.find( '#ac-input-' + self.current_media.activity_id ).html( '' );
 					form.removeClass( 'has-content has-gif has-media' ).addClass( 'root' );
 					activity_comments.append( form );
@@ -6749,6 +6750,7 @@ window.bp = window.bp || {};
 				activity_comments = activity.find( '.activity-comments' );
 				if ( activity_comments.length ) {
 					var form = activity_comments.find( '#ac-form-' + self.current_document.activity_id );
+					this.purgeEditActivityForm( form );
 					form.find( '#ac-input-' + self.current_document.activity_id ).html( '' );
 					form.removeClass( 'has-content has-gif has-media' ).addClass( 'root' );
 					activity_comments.append( form );
@@ -7626,6 +7628,20 @@ window.bp = window.bp || {};
 			bp.Nouveau.Activity.destroyCommentDocumentUploader( activityId );
 			bp.Nouveau.Activity.destroyCommentVideoUploader( activityId );
 			bp.Nouveau.Activity.resetGifPicker( activityId );
+		},
+
+		purgeEditActivityForm: function ( form ) {
+
+			if ( form.hasClass('acomment-edit') ) {
+				var form_item_id = form.attr( 'data-item-id' );
+				var form_acomment = $( '[data-bp-activity-comment-id="' + form_item_id + '"]' );
+				var form_acomment_edit = form_acomment.find( '#acomment-edit-form-' + form_item_id );
+
+				form_acomment.find( '#acomment-display-' + form_item_id ).removeClass( 'bp-hide' );
+				form.removeClass( 'acomment-edit' ).removeAttr( 'data-item-id' );
+				form_acomment_edit.empty();
+			}
+
 		},
 	};
 
