@@ -6707,6 +6707,7 @@ window.bp = window.bp || {};
 					form.removeClass( 'has-content has-gif has-media' ).addClass( 'root' );
 					activity_comments.append( form );
 					form.find( '.post-elements-buttons-item.post-emoji' ).removeClass( 'active' ).empty( '' ); // Reset emojionearea
+					this.resetActivityMedia( self.current_media.activity_id );
 					activity_comments.find( '.acomment-display' ).removeClass('display-focus');
 
 					html = activity_comments.html();
@@ -6752,6 +6753,7 @@ window.bp = window.bp || {};
 					form.removeClass( 'has-content has-gif has-media' ).addClass( 'root' );
 					activity_comments.append( form );
 					form.find( '.post-elements-buttons-item.post-emoji' ).removeClass( 'active' ).empty( '' ); // Reset emojionearea
+					this.resetActivityMedia( self.current_document.activity_id );
 					activity_comments.find( '.acomment-display' ).removeClass('display-focus');
 
 					html = activity_comments.html();
@@ -7617,6 +7619,13 @@ window.bp = window.bp || {};
 					}
 				}
 			);
+		},
+
+		resetActivityMedia: function ( activityId ) {
+			bp.Nouveau.Activity.destroyCommentMediaUploader( activityId );
+			bp.Nouveau.Activity.destroyCommentDocumentUploader( activityId );
+			bp.Nouveau.Activity.destroyCommentVideoUploader( activityId );
+			bp.Nouveau.Activity.resetGifPicker( activityId );
 		},
 	};
 
