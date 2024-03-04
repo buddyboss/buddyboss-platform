@@ -736,7 +736,7 @@ function bp_nouveau_activity_recurse_comments( $comment, $comment_load_limit = f
 				$link_text = __( 'View more comments', 'buddyboss' );
 			}
 
-			echo "<li class='acomments-view-more'>". esc_html__( $link_text, 'buddyboss' ) ."</li>";
+			echo "<li class='acomments-view-more'><i class='bb-icon-l bb-icon-corner-right'></i>". esc_html__( $link_text, 'buddyboss' ) ."</li>";
 			break;
 		}
 

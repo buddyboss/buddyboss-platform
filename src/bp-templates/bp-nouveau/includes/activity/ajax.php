@@ -542,6 +542,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 			} else {
 				$a_obj = new BP_Activity_Activity( $p_obj->item_id );
 			}
+			
 			$activities_template->activity->component         = $a_obj->component;
 			$activities_template->activity->item_id           = $a_obj->item_id;
 			$activities_template->activity->secondary_item_id = $a_obj->secondary_item_id;

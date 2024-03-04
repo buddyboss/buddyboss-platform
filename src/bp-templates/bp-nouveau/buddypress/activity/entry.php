@@ -27,9 +27,11 @@ if ( ! empty( $link_embed ) ) {
 	$link_url = $link_embed;
 }
 
+$activity_popup_title = sprintf( esc_html__( "%s's Post", 'buddyboss' ), bp_core_get_user_displayname( bp_get_activity_user_id() ) );
+
 ?>
 
-<li class="<?php bp_activity_css_class(); ?>" id="activity-<?php bp_activity_id(); ?>" data-bp-activity-id="<?php bp_activity_id(); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php bp_nouveau_edit_activity_data(); ?>" data-link-preview='<?php echo $link_preview_string; ?>' data-link-url='<?php echo $link_url; ?>'>
+<li class="<?php bp_activity_css_class(); ?>" id="activity-<?php bp_activity_id(); ?>" data-bp-activity-id="<?php bp_activity_id(); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php bp_nouveau_edit_activity_data(); ?>" data-link-preview='<?php echo $link_preview_string; ?>' data-link-url='<?php echo $link_url; ?>' data-activity-popup-title='<?php echo $activity_popup_title; ?>'>
 
 	<?php bb_nouveau_activity_entry_bubble_buttons(); ?>
 

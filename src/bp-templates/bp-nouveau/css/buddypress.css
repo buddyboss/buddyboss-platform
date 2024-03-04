@@ -4078,7 +4078,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
   content: "\ee5a";
 }
 
-#buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.download-activity:before {
+#buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.download-activity:before, #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.activity-video-download:before {
   content: "\e889";
 }
 
@@ -4559,6 +4559,7 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
 
 .bb-activity-model-wrapper.bb-internal-model > .activity-modal {
   max-height: 85vh;
+  min-height: 85vh;
   max-width: 700px;
   width: 700px;
   position: relative;
@@ -4567,6 +4568,8 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
 .bb-activity-model-wrapper .activity-modal {
   background: #fff;
   border: 1px solid #b7b7b7;
+  display: flex;
+  flex-direction: column;
 }
 
 .bb-activity-model-wrapper .activity-list {
@@ -4611,6 +4614,7 @@ body:not(.bb-is-mobile) .bb-activity-model-wrapper .activity-list .activity-item
   left: 0;
   width: 100%;
   height: 60px;
+  min-height: 60px;
   border-bottom: 1px solid #eee;
   padding: 0 25px;
 }
@@ -4628,25 +4632,82 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   margin-left: auto;
 }
 
-/*.bb-modal-activity-footer {
-	width: 100%;
-	height: 92px;
-	max-height: 252px;
-	border-top: 1px solid $bp-border-color;
-	padding: 10px 25px;
-	overflow-y: auto;
-	overflow-x: hidden;
+.bb-modal-activity-footer {
+  min-height: 106px;
+  max-height: 252px;
+  border-top: 1px solid #eee;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px 15px;
+}
 
-	form.ac-form {
-		margin: 0;
-	}
-}*/
+.bb-modal-activity-footer form.ac-form {
+  margin: 0;
+}
+
+.bb-modal-activity-footer {
+  display: none;
+}
+
+.logged-in .bb-modal-activity-footer {
+  display: block;
+}
+
+.bb-modal-activity-footer.active .ac-form-placeholder {
+  display: none;
+}
+
+.ac-form-placeholder .bp-ac-form-cotainer {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.ac-form-placeholder .ac-reply-avatar {
+  margin-top: 4px;
+}
+
+.ac-form-placeholder .ac-reply-avatar .avatar-placeholder {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  background-color: #f2f4f5;
+  border-radius: 50%;
+}
+
+.ac-form-placeholder .ac-reply-avatar img {
+  max-width: 32px;
+}
+
+.ac-form-placeholder .ac-reply-content {
+  padding: 8px;
+  margin-left: 10px;
+  border: 1px solid #d6d9dd;
+  background-color: #f2f4f5;
+  border-radius: 6px;
+  min-height: 85px;
+  position: relative;
+}
+
+.ac-form-placeholder .ac-reply-content .ac-reply-toolbar {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  bottom: 3px;
+  left: 10px;
+  margin-top: 10px;
+}
+
+.ac-form-placeholder .ac-reply-content .ac-reply-toolbar .post-elements-buttons-item {
+  margin-right: 10px;
+}
+
 .bb-modal-activity-body {
   position: relative;
   padding: 15px;
-  max-height: calc(85vh - 62px);
   /*overflow-y: auto;*/
   overflow-x: hidden;
+  flex-grow: 1;
 }
 
 .bb-modal-activity-body .init-placeholder {
@@ -4671,6 +4732,10 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   cursor: pointer;
 }
 
+.acomments-view-more i {
+  font-size: 20px;
+}
+
 .view-more-comments {
   font-weight: 600;
 }
@@ -4680,6 +4745,35 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
 }
 
 /* Activity comment modal ==> Ends Here */
+.ac-reply-toolbar .emojionearea.ac-input.medium-editor-element {
+  background-color: transparent;
+}
+
+.emojionearea-theatre.show .emojionearea-picker:not(.hidden) {
+  opacity: 1;
+  visibility: visible;
+  z-index: 999992;
+  right: unset;
+  margin: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transition: none;
+}
+
+.gif-media-search-dropdown.gif-media-search-dropdown-standalone {
+  z-index: 999992;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  position: fixed;
+}
+
+.gif-media-search-dropdown.gif-media-search-dropdown-standalone .gif-search-content .gif-search-results {
+  max-height: 280px;
+}
+
 .bb-is-mobile.bb-reactions-mode .bp-generic-meta .generic-button a,
 .bb-is-mobile.bb-reactions-mode .bp-generic-meta .generic-button a img,
 .bb-is-mobile.bb-reactions-mode .bp-generic-meta .ac-emotions_list .ac-emotion_item a > *,
@@ -7551,17 +7645,6 @@ span.dashicons.dashicons-admin-file:before {
   display: none;
 }
 
-.buddypress-wrap .activity-comments .ac-form.has-gif .ac-reply-content .ac-submit-wrap, .buddypress-wrap .activity-comments .ac-form.has-content .ac-reply-content .ac-submit-wrap, .buddypress-wrap .activity-comments .ac-form.has-media .ac-reply-content .ac-submit-wrap {
-  opacity: 1;
-  pointer-events: initial;
-}
-
-.buddypress-wrap .activity-comments .ac-form.media-uploading .ac-reply-content .ac-submit-wrap,
-.buddypress-wrap .activity-comments .ac-form .ac-reply-content .ac-submit-wrap {
-  opacity: 0.4;
-  pointer-events: none;
-}
-
 .buddypress-wrap .activity-comments li.comment-item {
   position: relative;
 }
@@ -7593,6 +7676,22 @@ span.dashicons.dashicons-admin-file:before {
 .buddypress-wrap .activity-comments .comment-reactions .reactions_item > i:before {
   margin-left: 0;
   margin-right: 0;
+}
+
+.buddypress-wrap .activity-comments .ac-form.has-gif .ac-reply-content .ac-submit-wrap, .buddypress-wrap .activity-comments .ac-form.has-content .ac-reply-content .ac-submit-wrap, .buddypress-wrap .activity-comments .ac-form.has-media .ac-reply-content .ac-submit-wrap,
+.buddypress-wrap .bb-modal-activity-footer .ac-form.has-gif .ac-reply-content .ac-submit-wrap,
+.buddypress-wrap .bb-modal-activity-footer .ac-form.has-content .ac-reply-content .ac-submit-wrap,
+.buddypress-wrap .bb-modal-activity-footer .ac-form.has-media .ac-reply-content .ac-submit-wrap {
+  opacity: 1;
+  pointer-events: initial;
+}
+
+.buddypress-wrap .activity-comments .ac-form.media-uploading .ac-reply-content .ac-submit-wrap,
+.buddypress-wrap .activity-comments .ac-form .ac-reply-content .ac-submit-wrap,
+.buddypress-wrap .bb-modal-activity-footer .ac-form.media-uploading .ac-reply-content .ac-submit-wrap,
+.buddypress-wrap .bb-modal-activity-footer .ac-form .ac-reply-content .ac-submit-wrap {
+  opacity: 0.4;
+  pointer-events: none;
 }
 
 .buddypress-wrap .activity-comments .acomment-foot-actions {
@@ -7650,7 +7749,6 @@ form.ac-form .ac-reply-avatar {
 }
 
 form.ac-form .ac-reply-avatar img {
-  border: 1px solid #eee;
   image-rendering: -webkit-optimize-contrast;
 }
 

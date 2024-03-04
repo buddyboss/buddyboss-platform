@@ -316,27 +316,6 @@
 			}
 		}
 
-		.ac-form {
-
-			&.has-gif,
-			&.has-content,
-			&.has-media {
-
-				.ac-reply-content .ac-submit-wrap {
-					opacity: 1;
-					pointer-events: initial;
-				}
-
-			}
-
-			&.media-uploading .ac-reply-content .ac-submit-wrap,
-			.ac-reply-content .ac-submit-wrap {
-				opacity: 0.4;
-				pointer-events: none;
-			}
-
-		}
-
 		li.comment-item {
 			position: relative;
 		}
@@ -374,6 +353,30 @@
 		}
 
 	} // close .activity-comments
+
+	.activity-comments,
+	.bb-modal-activity-footer {
+		.ac-form {
+
+			&.has-gif,
+			&.has-content,
+			&.has-media {
+
+				.ac-reply-content .ac-submit-wrap {
+					opacity: 1;
+					pointer-events: initial;
+				}
+
+			}
+
+			&.media-uploading .ac-reply-content .ac-submit-wrap,
+			.ac-reply-content .ac-submit-wrap {
+				opacity: 0.4;
+				pointer-events: none;
+			}
+
+		}
+	}
 
 	.activity-comments .acomment-foot-actions {
 		display: flex;
