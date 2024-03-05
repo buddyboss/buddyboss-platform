@@ -6539,7 +6539,7 @@ function bb_activity_get_metadata( $activity_id ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int $activity_id Activity Id.
+ * @param int $activity_id Activity ID.
  *
  * @return bool
  */
@@ -6553,7 +6553,7 @@ function bb_is_activity_comments_closed( $activity_id ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int $activity_id Activity Id.
+ * @param int $activity_id Activity ID.
  *
  * @return bool
  */
@@ -6617,8 +6617,8 @@ function bb_activity_close_unclose_comments( $args = array() ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param string $action      Action type close_comments/unclose_comments.
 		 * @param int    $activity_id Activity ID.
+		 * @param string $action      Action type close_comments/unclose_comments.
 		 */
 		do_action( 'bb_activity_close_unclose_comments', $activity->id, $r['action'] );
 	}
@@ -6638,6 +6638,9 @@ function bb_activity_close_unclose_comments( $args = array() ) {
  * Check if the closed comments setting enabled.
  *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $default The default value for the close activity comments setting.
+ *                      Defaults to true if not specified.
  *
  * @return bool
  */
@@ -6682,12 +6685,12 @@ function bb_activity_comments_close_action_allowed( $args = array() ) {
 		}
 
 		// Check if group activity or normal activity.
-		if ( 'groups' === $activity->component && ! empty( $activity->item_id ) && bp_is_active( 'groups' ) ) {
+		if ( bp_is_active( 'groups' ) && 'groups' === $activity->component && ! empty( $activity->item_id ) ) {
 			$group = groups_get_group( $activity->item_id );
 
 			if (
 				bp_current_user_can( 'administrator' ) &&
-				in_array( $group->status, array( 'public' ) )
+				'public' === $group->status
 			) {
 				$retval = 'allowed';
 
@@ -6704,7 +6707,7 @@ function bb_activity_comments_close_action_allowed( $args = array() ) {
 						if (
 							(
 								bp_user_can( $prev_closer_id, 'administrator' ) &&
-								in_array( $group->status, array( 'public' ) )
+								'public' === $group->status
 							)
 						) {
 							$retval = 'not_allowed';
@@ -6721,7 +6724,7 @@ function bb_activity_comments_close_action_allowed( $args = array() ) {
 								groups_is_user_mod( $prev_closer_id, $activity->item_id ) ||
 								(
 									bp_user_can( $prev_closer_id, 'administrator' ) &&
-									in_array( $group->status, array( 'public' ) )
+									'public' === $group->status
 								)
 							)
 						) {
@@ -6761,7 +6764,7 @@ function bb_activity_comments_close_action_allowed( $args = array() ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int $activity_id Activivty Id.
+ * @param int $activity_id Activivty ID.
  *
  * @return string
  */
@@ -6774,7 +6777,8 @@ function bb_get_close_activity_comments_notice( $activity_id = 0 ) {
 	$closed_notice = '';
 	$activity      = new BP_Activity_Activity( $activity_id );
 	if ( ! empty( $activity->id ) && bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( $activity->id ) ) {
-		$closer_id = bb_get_activity_comments_closer_id( $activity->id );
+		$closer_id     = bb_get_activity_comments_closer_id( $activity->id );
+		$closed_notice = sprintf( esc_html__( '%s turned off commenting for this post', 'buddyboss' ), bp_core_get_user_displayname( $closer_id ) );
 		if ( $closer_id === bp_loggedin_user_id() ) {
 			$closed_notice = esc_html__( 'You turned off commenting for this post', 'buddyboss' );
 		} elseif ( bp_is_active( 'groups' ) && 'groups' === $activity->component && ! empty( $activity->item_id ) ) {
@@ -6783,15 +6787,13 @@ function bb_get_close_activity_comments_notice( $activity_id = 0 ) {
 				$closed_notice = esc_html__( 'An organizer turned off commenting for this post', 'buddyboss' );
 			} elseif ( groups_is_user_mod( $closer_id, $activity->item_id ) ) {
 				$closed_notice = esc_html__( 'A moderator turned off commenting for this post', 'buddyboss' );
-			} elseif ( bp_user_can( $closer_id, 'administrator' ) && in_array( $group->status, array( 'public' ) ) ) {
+			} elseif ( bp_user_can( $closer_id, 'administrator' ) && 'public' === $group->status ) {
 				$closed_notice = esc_html__( 'An admin turned off commenting for this post', 'buddyboss' );
 			} else {
 				$closed_notice = sprintf( esc_html__( '%s turned off commenting for this post', 'buddyboss' ), bp_core_get_user_displayname( $closer_id ) );
 			}
 		} elseif ( bp_user_can( $closer_id, 'administrator' ) ) {
 			$closed_notice = esc_html__( 'An admin turned off commenting for this post', 'buddyboss' );
-		} else {
-			$closed_notice = sprintf( esc_html__( '%s turned off commenting for this post', 'buddyboss' ), bp_core_get_user_displayname( $closer_id ) );
 		}
 	}
 
