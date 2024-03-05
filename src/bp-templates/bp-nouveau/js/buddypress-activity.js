@@ -1456,15 +1456,15 @@ window.bp = window.bp || {};
 							activity_comments.find( '.acomment-display' ).removeClass('display-focus');
 							activity_comments.addClass( 'has-child-comments' );
 							
+							var form_activity_id = form.find( 'input[name="comment_form_id"]' ).val();
 							if ( isInsideModal ) {
 								$('#activity-modal').find( '.bb-modal-activity-footer' ).append( form ).addClass( 'active' );
-								var form_activity_id = form.find( 'input[name="comment_form_id"]' ).val();
-								form.find( '#ac-input-' + form_activity_id ).html( '' );
 								form.removeClass( 'has-content' ).addClass( 'root' );
 							} else {
-								form.addClass( 'not-initialized' );
+								form.addClass( 'not-initialized' ).removeClass( 'has-content has-gif has-media' );
 								form.closest( '.activity-comments' ).append( form );
 							}
+							form.find( '#ac-input-' + form_activity_id ).html( '' );
 
 							if ( form.hasClass( 'acomment-edit' ) ) {
 								var form_item_id = form.attr( 'data-item-id' );
