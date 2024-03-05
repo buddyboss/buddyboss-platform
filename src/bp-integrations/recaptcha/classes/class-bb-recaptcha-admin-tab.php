@@ -377,7 +377,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 						add_query_arg(
 							array(
 								'page'    => 'bp-help',
-								'article' => '125826', // @todo: update when release.
+								'article' => '127314',
 							),
 							'admin.php'
 						)
