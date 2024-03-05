@@ -1905,19 +1905,31 @@ class BP_Groups_Group {
 	 * with bp_has_groups().
 	 *
 	 * @since BuddyPress 1.7.0
+	 * @since BuddyBoss [BBVERSION] Added the `$args` parameter.
+	 *
+	 * @param array $args Array of arguments.
 	 *
 	 * @return array
 	 */
-	public static function get_group_type_ids() {
+	public static function get_group_type_ids( $args = array() ) {
 		global $wpdb;
+
+		$r = bp_parse_args(
+			$args,
+			array(
+				'not_in' => array(),
+			)
+		);
 
 		$bp  = buddypress();
 		$ids = array();
 
-		$ids['all']     = $wpdb->get_col( "SELECT id FROM {$bp->groups->table_name}" );
-		$ids['public']  = $wpdb->get_col( "SELECT g.id FROM {$bp->groups->table_name} g JOIN {$bp->groups->table_name_groupmeta} gm ON g.id = gm.group_id WHERE g.status = 'public' AND gm.meta_key = 'total_member_count' AND gm.meta_value > 0" );
-		$ids['private'] = $wpdb->get_col( "SELECT g.id FROM {$bp->groups->table_name} g JOIN {$bp->groups->table_name_groupmeta} gm ON g.id = gm.group_id WHERE g.status = 'private' AND gm.meta_key = 'total_member_count' AND gm.meta_value > 0" );
-		$ids['hidden']  = $wpdb->get_col( "SELECT g.id FROM {$bp->groups->table_name} g JOIN {$bp->groups->table_name_groupmeta} gm ON g.id = gm.group_id WHERE g.status = 'hidden' AND gm.meta_key = 'total_member_count' AND gm.meta_value > 0" );
+		$not_in_ids = "'" . implode( "','", $r['not_in'] ) . "'";
+
+		$ids['all']     = $wpdb->get_col( "SELECT id FROM {$bp->groups->table_name} WHERE id NOT IN({$not_in_ids})" );
+		$ids['public']  = $wpdb->get_col( "SELECT g.id FROM {$bp->groups->table_name} g JOIN {$bp->groups->table_name_groupmeta} gm ON g.id = gm.group_id WHERE g.status = 'public' AND gm.meta_key = 'total_member_count' AND gm.meta_value > 0 AND g.id NOT IN({$not_in_ids})" );
+		$ids['private'] = $wpdb->get_col( "SELECT g.id FROM {$bp->groups->table_name} g JOIN {$bp->groups->table_name_groupmeta} gm ON g.id = gm.group_id WHERE g.status = 'private' AND gm.meta_key = 'total_member_count' AND gm.meta_value > 0 AND g.id NOT IN({$not_in_ids})" );
+		$ids['hidden']  = $wpdb->get_col( "SELECT g.id FROM {$bp->groups->table_name} g JOIN {$bp->groups->table_name_groupmeta} gm ON g.id = gm.group_id WHERE g.status = 'hidden' AND gm.meta_key = 'total_member_count' AND gm.meta_value > 0 AND g.id NOT IN({$not_in_ids})" );
 
 		return $ids;
 	}
