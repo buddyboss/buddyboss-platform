@@ -2,7 +2,7 @@
 /**
  * Recaptcha integration admin tab.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.5.60
  * @package BuddyBoss\Recaptcha
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Setup Recaptcha integration admin tab class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  */
 class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 
@@ -26,7 +26,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Initialize.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 */
 	public function initialize() {
 		$this->tab_order       = 53;
@@ -39,7 +39,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Recaptcha Integration is active?
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @return bool
 	 */
@@ -50,7 +50,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Recaptcha integration tab scripts.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 */
 	public function register_admin_script() {
 
@@ -130,7 +130,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Register setting fields for recaptcha integration.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 */
 	public function register_fields() {
 
@@ -169,7 +169,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Get setting sections for recaptcha integration.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @return array $settings Settings sections for recaptcha integration.
 	 */
@@ -219,7 +219,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Get setting fields for section in recaptcha integration.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param string $section_id Section ID.
 	 *
@@ -240,7 +240,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Register setting fields for recaptcha integration.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @return array $fields setting fields for pusher integration.
 	 */
@@ -365,7 +365,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Link to Recaptcha Settings tutorial.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 */
 	public function setting_callback_recaptcha_tutorial() {
 		?>
@@ -392,7 +392,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Callback fields for recaptcha information.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @return void
 	 */
@@ -433,7 +433,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Callback function for versions in Recaptcha integration.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 */
 	public function setting_callback_recaptcha_versions() {
 		$enabled_for = bb_recaptcha_recaptcha_versions();
@@ -450,7 +450,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Callback function for recaptcha v2 options in Recaptcha integration.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 */
 	public function setting_callback_recaptcha_v2_option() {
 		$v2_option = bb_recaptcha_recaptcha_v2_option();
@@ -469,7 +469,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Callback function for site key in Recaptcha integration.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 */
 	public function settings_callback_recaptcha_site_key() {
 		$site_key = bb_recaptcha_site_key();
@@ -490,7 +490,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Callback function for secret key in Recaptcha integration.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 */
 	public function settings_callback_recaptcha_secret_key() {
 		$secret_key = bb_recaptcha_secret_key();
@@ -511,7 +511,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Callback function for verify button in Recaptcha integration.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 */
 	public function setting_callback_recaptcha_verify() {
 		$verified       = bb_recaptcha_connection_status();
@@ -595,7 +595,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Callback fields for recaptcha score threshold.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @return void
 	 */
@@ -613,7 +613,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Callback fields for recaptcha enable or not.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @return void
 	 */
@@ -641,7 +641,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Callback fields for allow bypass recaptcha.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @return void
 	 */
@@ -675,7 +675,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Callback fields for recaptcha language code.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @return void
 	 */
@@ -705,7 +705,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Callback fields for recaptcha conflict mode.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @return void
 	 */
@@ -721,7 +721,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Callback fields for recaptcha exclude ip.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @return void
 	 */
@@ -735,7 +735,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Added icon for the recaptcha admin settings.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param string $meta_icon Icon class.
 	 * @param string $id        Section ID.
@@ -756,7 +756,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Callback fields for recaptcha theme for v2 version.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @return void
 	 */
@@ -796,7 +796,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Callback fields for recaptcha size for v2 version.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @return void
 	 */
@@ -841,7 +841,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Callback fields for recaptcha badge for v2 version.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @return void
 	 */

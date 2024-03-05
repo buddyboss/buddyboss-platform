@@ -2,7 +2,7 @@
 /**
  * Recaptcha integration filters.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.5.60
  * @package BuddyBoss\Recaptcha
  */
 
@@ -17,7 +17,7 @@ add_filter( 'bb_before_core_activate_signup', 'bb_recaptcha_validate_activate' )
 /**
  * Function to add class for recaptcha.
  *
- * @sicne BuddyBoss [BBVERSION]
+ * @sicne BuddyBoss 2.5.60
  *
  * @param string $classes Space-separated list of CSS classes.
  *
@@ -36,7 +36,7 @@ function bb_admin_recaptcha_class( $classes ) {
  * Validate a login process with reCAPTCHA if enabled.
  * If reCAPTCHA verification fails, the function returns a WP_Error object containing the error message.
  *
- * @sicne BuddyBoss [BBVERSION]
+ * @sicne BuddyBoss 2.5.60
  *
  * @param WP_User|WP_Error $user WP_User or WP_Error object if a previous
  *                               callback failed authentication.
@@ -91,7 +91,7 @@ function bb_recaptcha_validate_login( $user ) {
 /**
  * Validate the activation process with reCAPTCHA if enabled.
  *
- * @sicne BuddyBoss [BBVERSION]
+ * @sicne BuddyBoss 2.5.60
  *
  * @param bool $retval The return value to be validated.
  *

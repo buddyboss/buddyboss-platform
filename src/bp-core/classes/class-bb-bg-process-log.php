@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss/Core
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -17,7 +17,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Class instance.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @var $instance
 	 */
@@ -26,7 +26,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Table name.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @var string $table_name
 	 */
@@ -35,7 +35,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Using Singleton, see instance().
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 */
 	public function __construct() {
 		// Using Singleton, see instance().
@@ -44,7 +44,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Get the instance of the class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @return object
 	 */
@@ -61,7 +61,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Initialize the logger by setting up hooks and loading necessary data.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 * @throws Exception
 	 */
 	public function load() {
@@ -76,7 +76,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Setup hooks for logging actions.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 */
 	private function setup_hooks() {
 		// Old background jobs.
@@ -97,7 +97,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Create log of bp background process.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param array $args Array of arguments.
 	 *
@@ -138,7 +138,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Update log of bp background process.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param array $args Array of arguments.
 	 *
@@ -151,7 +151,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Create log of bp background process.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param array|object $args Array of arguments.
 	 *
@@ -193,7 +193,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Update log of bp background process.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param array $args Array of arguments.
 	 *
@@ -206,7 +206,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Add log.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param array $args Array of arguments.
 	 *
@@ -243,7 +243,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Update log by ID.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param array $args Array of arguments.
 	 *
@@ -277,7 +277,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Get the component name.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param string $callback_function Type.
 	 *
@@ -355,7 +355,7 @@ class BB_BG_Process_Log {
 		/**
 		 * Filter the component name.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.5.60
 		 *
 		 * @param string $callback_function Type.
 		 * @param string $component         Component name.
@@ -366,7 +366,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Get the action from name.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param string $callback_function Type.
 	 *
@@ -390,7 +390,7 @@ class BB_BG_Process_Log {
 		/**
 		 * Filter the Platform name.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.5.60
 		 *
 		 * @param string $callback_function Type.
 		 * @param string $platform          Platform name.
@@ -401,7 +401,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Create the table.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 * @return void
 	 */
 	public function create_table() {
@@ -451,7 +451,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Schedule event to clear the logs.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 * @return void
 	 * @throws Exception
 	 */
@@ -476,7 +476,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Clear the logs.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 * @return void
 	 */
 	public function clear_logs() {
@@ -487,7 +487,7 @@ class BB_BG_Process_Log {
 		/**
 		 * Filter the limit of rows to delete from the background process log table.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.5.60
 		 *
 		 * @param int $limit Limit.
 		 */
@@ -523,7 +523,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Removed the old background job records.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param array $bg_ids IDs of bg jobs.
 	 *
@@ -544,7 +544,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Re-Schedule event to clear the logs.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 * @return void
 	 * @throws Exception
 	 */

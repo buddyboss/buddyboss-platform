@@ -3403,7 +3403,7 @@ function bb_core_removed_orphaned_member_slug() {
 /**
  * Create a new table for background process logs.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  *
  * @return void
  */
