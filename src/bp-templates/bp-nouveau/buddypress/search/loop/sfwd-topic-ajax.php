@@ -9,14 +9,17 @@
  * @version 1.0.0
  */
 
-$total = bp_search_get_total_quizzes_count( get_the_ID() ) ?>
+$topic_id           = get_the_ID();
+$total              = bp_search_get_total_quizzes_count( $topic_id );
+$post_thumbnail_url = get_the_post_thumbnail_url();
+?>
 <div class="bp-search-ajax-item bp-search-ajax-item_sfwd-topic">
 	<a href="<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), get_permalink() ) ); ?>">
 		<div class="item-avatar">
 			<?php
-			if ( get_the_post_thumbnail_url() ) {
+			if ( $post_thumbnail_url ) {
 				?>
-					<img src="<?php echo esc_url( get_the_post_thumbnail_url() ); ?>" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="<?php echo esc_attr( get_the_title() ); ?>" />
+					<img src="<?php echo esc_url( $post_thumbnail_url ); ?>" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="<?php echo esc_attr( get_the_title() ); ?>" />
 				<?php
 			} else {
 				?>
@@ -31,17 +34,17 @@ $total = bp_search_get_total_quizzes_count( get_the_ID() ) ?>
 
 			<div class="item-desc">
 				<?php
-				if ( get_the_excerpt( get_the_ID() ) ) {
+				if ( get_the_excerpt( $topic_id ) ) {
 					echo bp_create_excerpt(
-						get_the_excerpt( get_the_ID() ),
+						get_the_excerpt( $topic_id ),
 						100,
 						array(
 							'ending' => __( '&hellip;', 'buddyboss' ),
 						)
 					);
-				} elseif ( get_the_content( get_the_ID() ) ) {
+				} elseif ( get_the_content( $topic_id ) ) {
 					echo bp_create_excerpt(
-						wp_strip_all_tags( get_the_content( get_the_ID() ) ),
+						wp_strip_all_tags( get_the_content( $topic_id ) ),
 						100,
 						array(
 							'ending' => __( '&hellip;', 'buddyboss' ),

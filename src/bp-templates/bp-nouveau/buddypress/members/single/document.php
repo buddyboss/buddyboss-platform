@@ -10,13 +10,12 @@
 ?>
 
 <div class="bb-media-container member-media">
-	<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
-
 	<?php
-		bp_get_template_part( 'document/theatre' );
-		bp_get_template_part( 'video/theatre' );
-		bp_get_template_part( 'media/theatre' );
-		bp_get_template_part( 'video/add-video-thumbnail' );
+	bp_get_template_part( 'members/single/parts/item-subnav' );
+	bp_get_template_part( 'document/theatre' );
+	bp_get_template_part( 'video/theatre' );
+	bp_get_template_part( 'media/theatre' );
+	bp_get_template_part( 'video/add-video-thumbnail' );
 
 	switch ( bp_current_action() ) :
 
@@ -26,7 +25,6 @@
 				<div class="bp-document-listing">
 					<div class="bp-media-header-wrap">
 						<h2 class="bb-title"><?php esc_html_e( 'Documents', 'buddyboss' ); ?></h2>
-
 						<?php
 							bp_get_template_part( 'document/add-folder' );
 							bp_get_template_part( 'document/add-document' );
@@ -48,11 +46,7 @@
 
 					</div>
 				</div><!-- .bp-document-listing -->
-			<?php
-
-			bp_nouveau_member_hook( 'before', 'document_content' );
-
-			?>
+			<?php bp_nouveau_member_hook( 'before', 'document_content' ); ?>
 
 			<div id="media-stream" class="media" data-bp-list="document">
 				<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'member-document-loading' ); ?></div>
