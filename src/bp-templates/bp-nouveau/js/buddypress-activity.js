@@ -3355,10 +3355,11 @@ window.bp = window.bp || {};
 			e.preventDefault();
 
 			var currentTargetList = $( e.currentTarget ).parent(),
-					activityId  = $( currentTargetList ).data( 'activity_id' ),
-					parentCommentId = $( currentTargetList ).data( 'parent_comment_id' ),
-					lastCommentTimeStamp = '',
-					target = $( e.currentTarget );
+				target = $( e.currentTarget );
+				activityId  = $( currentTargetList ).data( 'activity_id' ),
+				parentCommentId = $( currentTargetList ).data( 'parent_comment_id' ),
+				scope = target.parents( 'li.activity-item[data-bp-activity-id=' + activityId + ']' ).hasClass( 'groups' ) ? 'groups' : '',
+				lastCommentTimeStamp = '';
 			
 			var skeleton =
 				'<div id="bp-ajax-loader">' +
@@ -3380,6 +3381,7 @@ window.bp = window.bp || {};
 				action: 'activity_loadmore_comments',
 				activity_id: activityId,
 				parent_comment_id: parentCommentId,
+				scope: scope,
 				activity_type_is_blog: $( e.currentTarget ).parents('.entry-content').length > 1 ? true : false
 			}
 

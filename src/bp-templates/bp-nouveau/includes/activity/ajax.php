@@ -1185,9 +1185,10 @@ function bb_nouveau_ajax_activity_loadmore_comments() {
 	global $activities_template;
 	$activity_id         = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
 	$parent_comment_id   = ! empty( $_POST['parent_comment_id'] ) ? (int) $_POST['parent_comment_id'] : 0;
-	$activities_template = new BP_Activity_Template( array( 'include' => $activity_id , 'display_comments' => true ) );
+	$scope               = ! empty( $_POST['scope'] ) ? $_POST['scope'] : '';
+	$activities_template = new BP_Activity_Template( array( 'include' => $activity_id , 'display_comments' => true, 'scope' => $scope ) );
 
-	$activities_template->activity = $activities_template->activities[0];
+	$activities_template->activity = isset( $activities_template->activities[0] ) ? $activities_template->activities[0] : null;
 
 	// We have all comments and replies just loop through.
 	ob_start();
