@@ -32,7 +32,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 		</div>
 	<?php endif; ?>
 
-	<div clas="bb-field-wrap">
+	<div class="bb-field-wrap">
 		<label for="email"><?php _e( 'Account Email', 'buddyboss' ); ?></label>
 		<input type="email" name="email" id="email" value="<?php echo esc_attr( bp_get_displayed_user_email() ); ?>" class="settings-input" <?php bp_form_field_attributes( 'email' ); ?> />
 	</div>
@@ -42,7 +42,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 		<p class="text"><?php esc_html_e( 'Leave password fields blank for no change', 'buddyboss' ); ?></p>
 	</div>
 
-	<div clas="bb-field-wrap">
+	<div class="bb-field-wrap">
 		<label for="pass1"><?php esc_html_e( 'Add Your New Password', 'buddyboss' ); ?></label>
 		<div class="bb-password-wrap">
 			<a href="#" class="bb-toggle-password" tabindex="-1"><i class="bb-icon-l bb-icon-eye"></i></a>
@@ -50,7 +50,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 		</div>
 	</div>
 
-	<div clas="bb-field-wrap">
+	<div class="bb-field-wrap">
 		<label for="pass2" class="repeated-pwd"><?php esc_html_e( 'Repeat Your New Password', 'buddyboss' ); ?></label>
 		<div class="bb-password-wrap">
 			<a href="#" class="bb-toggle-password" tabindex="-1"><i class="bb-icon-l bb-icon-eye"></i></a>
