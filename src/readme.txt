@@ -57,6 +57,14 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.5.60 =
+* New Feature! - We now officially support Google reCAPTCHA, this is a great feature to help mitigate risk of bot and spam accounts being created and login in to your site
+* Enhancement: Core - Performance improvement by introducing a Batch REST API endpoint that will allow the App to request multiple endpoints in a single REST API request
+* Enhancement: Rapyd - Now generating background process Logs for the app on the server
+* Bug: Core - Broken class found and fixed in the background code due to a typo
+* Bug: Forums - When Instructor role plugin was active, the forum title was not showing on forums page
+* Bug: Notifications - REST API endpoints updated to show the standard WordPress headers
+
 = 2.5.52 =
 * Bug: Activity - Updated the call to an undefined function that was causing an error in the profile page if the Activity component was deactivated
 
