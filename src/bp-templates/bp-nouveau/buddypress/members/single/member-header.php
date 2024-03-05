@@ -38,10 +38,10 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 
 	$bp_is_my_profile          = bp_is_my_profile();
 	$bp_displayed_user_id      = bp_displayed_user_id();
-	$bp_activity_do_mentions   = bp_activity_do_mentions();
+	$is_activity_enabled       = bp_is_active( 'activity' );
+	$bp_activity_do_mentions   = $is_activity_enabled && bp_activity_do_mentions();
 	$bp_get_last_activity      = bp_get_last_activity();
 	$bb_get_member_joined_date = bb_get_member_joined_date();
-	$is_activity_enabled       = bp_is_active( 'activity' );
 
 	$member_type = '';
 	if ( true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() && $is_enabled_profile_type ) {
