@@ -449,7 +449,9 @@
 		}
 
 		.activity-content > .bp-generic-meta.activity-meta,
-		> .bp-generic-meta.activity-meta {
+		> .bp-generic-meta.activity-meta,
+		.activity-content > .bp-generic-meta.groups-meta,
+		> .bp-generic-meta.groups-meta {
 			display: flex;
 			justify-content: space-around;
 			border-top: 1px solid $light-grey;
@@ -572,7 +574,9 @@
 		}
 
 		&.has-comments .activity-content > .bp-generic-meta.activity-meta,
-		&.has-comments > .bp-generic-meta.activity-meta {
+		&.has-comments > .bp-generic-meta.activity-meta,
+		&.has-comments .activity-content > .bp-generic-meta.groups-meta,
+		&.has-comments > .bp-generic-meta.groups-meta {
 			border-bottom: 1px solid $light-grey;
 			margin-bottom: 10px;
 		}

@@ -3752,7 +3752,9 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta,
-.activity-list .activity-item > .bp-generic-meta.activity-meta {
+.activity-list .activity-item > .bp-generic-meta.activity-meta,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta,
+.activity-list .activity-item > .bp-generic-meta.groups-meta {
   display: flex;
   justify-content: space-around;
   border-top: 1px solid #eaeaea;
@@ -3761,7 +3763,9 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta div.generic-button,
-.activity-list .activity-item > .bp-generic-meta.activity-meta div.generic-button {
+.activity-list .activity-item > .bp-generic-meta.activity-meta div.generic-button,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta div.generic-button,
+.activity-list .activity-item > .bp-generic-meta.groups-meta div.generic-button {
   margin: 0;
   display: flex;
   justify-content: center;
@@ -3769,38 +3773,54 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta div.generic-button > a,
-.activity-list .activity-item > .bp-generic-meta.activity-meta div.generic-button > a {
+.activity-list .activity-item > .bp-generic-meta.activity-meta div.generic-button > a,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta div.generic-button > a,
+.activity-list .activity-item > .bp-generic-meta.groups-meta div.generic-button > a {
   width: 100%;
   justify-content: center;
   border-radius: 6px;
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta div.generic-button > a:hover,
-.activity-list .activity-item > .bp-generic-meta.activity-meta div.generic-button > a:hover {
+.activity-list .activity-item > .bp-generic-meta.activity-meta div.generic-button > a:hover,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta div.generic-button > a:hover,
+.activity-list .activity-item > .bp-generic-meta.groups-meta div.generic-button > a:hover {
   background-color: #eaeaea;
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .button {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .button,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .button,
+.activity-list .activity-item > .bp-generic-meta.groups-meta .button {
   background: transparent;
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta a,
-.activity-list .activity-item > .bp-generic-meta.activity-meta a {
+.activity-list .activity-item > .bp-generic-meta.activity-meta a,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta a,
+.activity-list .activity-item > .bp-generic-meta.groups-meta a {
   padding: 4px 8px;
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button:focus,
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button:hover,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .button:focus,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .button:hover {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .button:hover,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .button:focus,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .button:hover,
+.activity-list .activity-item > .bp-generic-meta.groups-meta .button:focus,
+.activity-list .activity-item > .bp-generic-meta.groups-meta .button:hover {
   background: none;
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .icons:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .button:before,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .icons:before {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .icons:before,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .button:before,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .icons:before,
+.activity-list .activity-item > .bp-generic-meta.groups-meta .button:before,
+.activity-list .activity-item > .bp-generic-meta.groups-meta .icons:before {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 24px;
@@ -3808,49 +3828,69 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .acomment-reply.button:before,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .acomment-reply.button:before {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .acomment-reply.button:before,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .acomment-reply.button:before,
+.activity-list .activity-item > .bp-generic-meta.groups-meta .acomment-reply.button:before {
   content: "\ee33";
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .acomment-reply.button .comment-count,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .acomment-reply.button .comment-count {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .acomment-reply.button .comment-count,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .acomment-reply.button .comment-count,
+.activity-list .activity-item > .bp-generic-meta.groups-meta .acomment-reply.button .comment-count {
   color: #333;
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .view:before,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .view:before {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .view:before,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .view:before,
+.activity-list .activity-item > .bp-generic-meta.groups-meta .view:before {
   content: "\ee33";
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .fav:before,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .fav:before {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .fav:before,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .fav:before,
+.activity-list .activity-item > .bp-generic-meta.groups-meta .fav:before {
   content: "\ef41";
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .has-like:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .unfav:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .has-like:before,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .unfav:before {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .unfav:before,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .has-like:before,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .unfav:before,
+.activity-list .activity-item > .bp-generic-meta.groups-meta .has-like:before,
+.activity-list .activity-item > .bp-generic-meta.groups-meta .unfav:before {
   content: "\ef41";
   color: #0061ac;
   font-weight: 300;
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .edit-activity:before,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .edit-activity:before {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .edit-activity:before,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .edit-activity:before,
+.activity-list .activity-item > .bp-generic-meta.groups-meta .edit-activity:before {
   content: "\ee5a";
   font-size: 20px;
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .delete-activity:before,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .delete-activity:before {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .delete-activity:before,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .delete-activity:before,
+.activity-list .activity-item > .bp-generic-meta.groups-meta .delete-activity:before {
   content: "\ef48";
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .reported-content:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .report-content:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .reported-content:before,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .report-content:before {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .report-content:before,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .reported-content:before,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .report-content:before,
+.activity-list .activity-item > .bp-generic-meta.groups-meta .reported-content:before,
+.activity-list .activity-item > .bp-generic-meta.groups-meta .report-content:before {
   content: "\ee9c";
   position: relative;
   font-size: 20px;
@@ -3860,40 +3900,54 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .reported-content,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .reported-content {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .reported-content,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .reported-content,
+.activity-list .activity-item > .bp-generic-meta.groups-meta .reported-content {
   opacity: 0.8 !important;
   pointer-events: none;
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .spam-activity:before,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .spam-activity:before {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .spam-activity:before,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .spam-activity:before,
+.activity-list .activity-item > .bp-generic-meta.groups-meta .spam-activity:before {
   content: "\ee08";
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .delete-activity:hover,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .delete-activity:hover {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .delete-activity:hover,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .delete-activity:hover,
+.activity-list .activity-item > .bp-generic-meta.groups-meta .delete-activity:hover {
   color: #800;
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .button {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .button,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .button,
+.activity-list .activity-item > .bp-generic-meta.groups-meta .button {
   border: 0;
   box-shadow: none;
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button span,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .button span {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .button span,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .button span,
+.activity-list .activity-item > .bp-generic-meta.groups-meta .button span {
   background: none;
   font-weight: 600;
 }
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .unfav .like-count,
-.activity-list .activity-item > .bp-generic-meta.activity-meta .unfav .like-count {
+.activity-list .activity-item > .bp-generic-meta.activity-meta .unfav .like-count,
+.activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .unfav .like-count,
+.activity-list .activity-item > .bp-generic-meta.groups-meta .unfav .like-count {
   color: #0061ac;
 }
 
 .activity-list .activity-item.has-comments .activity-content > .bp-generic-meta.activity-meta,
-.activity-list .activity-item.has-comments > .bp-generic-meta.activity-meta {
+.activity-list .activity-item.has-comments > .bp-generic-meta.activity-meta,
+.activity-list .activity-item.has-comments .activity-content > .bp-generic-meta.groups-meta,
+.activity-list .activity-item.has-comments > .bp-generic-meta.groups-meta {
   border-bottom: 1px solid #eaeaea;
   margin-bottom: 10px;
 }
