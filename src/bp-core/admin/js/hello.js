@@ -17,6 +17,7 @@
 		}
 		
 		if (
+			modal &&
 			modal.classList.contains( 'bb-update-modal' ) &&
 			'undefined' !== typeof BP_HELLO &&
 			'1' !== BP_HELLO.bb_display_auto_popup &&
@@ -25,7 +26,10 @@
 			return;
 		}
 
-		if ( modal.classList.contains( 'bb-onload-modal' ) ) {
+		if (
+			modal &&
+			modal.classList.contains( 'bb-onload-modal' )
+		) {
 			document.body.classList.add( 'bp-disable-scroll' );
 
 			// Show modal and overlay.
@@ -49,7 +53,9 @@
 		}
 
 		// Events.
-		modal.addEventListener( 'keydown', bp_hello_handle_keyboard_events );
+		if ( modal ) {
+			modal.addEventListener( 'keydown', bp_hello_handle_keyboard_events );
+		}
 		backdrop.addEventListener( 'click', bp_hello_close_modal );
 	};
 

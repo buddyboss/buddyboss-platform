@@ -106,6 +106,7 @@ $bp_get_current_signup_step = bp_get_current_signup_step();
 		bp_nouveau_signup_terms_privacy();
 		bp_nouveau_submit_button( 'register' );
 		bp_nouveau_signup_hook( 'custom', 'steps' );
+
 		?>
 
 	</form>
