@@ -3293,7 +3293,7 @@ window.bp = window.bp || {};
 							}
 						}
 					);
-					//$( div_editor ).closest( 'form' ).addClass( 'events-initiated' );
+					$( div_editor ).closest( 'form' ).addClass( 'events-initiated' );
 					this.InitiatedCommentForms.push( commentID ); // Add this Comment form in initiated comment form list.
 				}
 			}
@@ -3340,6 +3340,11 @@ window.bp = window.bp || {};
 			modal.find( '.bb-modal-activity-footer' ).addClass( 'active' ).append( form );
 			form.removeClass( 'not-initialized' ).addClass( 'root' );
 			form.find( '#ac-input-' + activityID ).focus();
+
+			form.removeClass( 'events-initiated' );
+			var ce = modal.find( '.bb-modal-activity-footer' ).find( '.ac-input[contenteditable]' );
+			bp.Nouveau.Activity.listenCommentInput( ce );
+			
 			
 			var action_tooltip = modal.find( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options-action' );
 			var privacy_wrap = modal.find( '.privacy-wrap' );
@@ -3350,9 +3355,6 @@ window.bp = window.bp || {};
 			viewMoreCommentsLink.trigger( 'click' );
 
 			bp.Nouveau.Activity.initializeEmojioneArea( true, '#activity-modal ', activityID );
-
-			var ce = modal.find( '.bb-modal-activity-footer' ).find( '.ac-input[contenteditable]' );
-			bp.Nouveau.Activity.listenCommentInput( ce );
 		},
 
 		viewMoreComments: function( e ) {
