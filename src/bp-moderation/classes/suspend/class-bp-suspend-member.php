@@ -731,6 +731,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			} else {
 				bb_update_group_member_count( $group_ids );
 			}
+
+			$related_contents[ BP_Suspend_Group::$type ] = BP_Suspend_Group::get_member_group_ids( $member_id, $action );
 		}
 
 		if ( bp_is_active( 'forums' ) ) {

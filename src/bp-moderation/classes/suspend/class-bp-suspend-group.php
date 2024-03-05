@@ -79,12 +79,14 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	 * Get Blocked member's group ids [ Check with group organiser ]
 	 *
 	 * @since BuddyBoss 1.5.6
+	 * @since BuddyBoss [BBVERSION] Added the `$action` parameter.
 	 *
-	 * @param int $member_id member id.
+	 * @param int    $member_id member id.
+	 * @param string $action    Action name to perform.
 	 *
 	 * @return array
 	 */
-	public static function get_member_group_ids( $member_id ) {
+	public static function get_member_group_ids( $member_id, $action = '' ) {
 		$group_ids = array();
 
 		$user_groups = bp_get_user_groups(
@@ -96,6 +98,45 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 
 		if ( ! empty( $user_groups ) ) {
 			$group_ids = array_values( wp_list_pluck( $user_groups, 'group_id' ) );
+		}
+
+		// Validate if groups have only one organiser.
+		if ( ! empty( $group_ids ) ) {
+			foreach ( $group_ids as $gk => $group_id ) {
+
+				// Check the group already suspended.
+				if ( BP_Core_Suspend::check_suspended_content( $group_id, self::$type, true ) ) {
+
+					// Remove this group when the action is hide.
+					if ( 'hide' === $action ) {
+						unset( $group_ids[ $gk ] );
+						continue;
+					}
+					// Remove this group when the action is un-hide and not suspended.
+				} else if ( 'hide' !== $action ) {
+					unset( $group_ids[ $gk ] );
+					continue;
+				}
+
+				// Check the group organiser when action is hide.
+				if ( 'hide' === $action ) {
+					$admins = groups_get_group_admins( $group_id );
+					if ( ! empty( $admins ) ) {
+
+						// If a group has more than one organiser then remove it.
+						if ( 1 < count( $admins ) ) {
+							unset( $group_ids[ $gk ] );
+							continue;
+						}
+
+						// If a group have one organiser but not the same as `$member_id` then remove it.
+						$current = current( $admins );
+						if ( (int) $member_id !== (int) $current->user_id ) {
+							unset( $group_ids[ $gk ] );
+						}
+					}
+				}
+			}
 		}
 
 		return $group_ids;
