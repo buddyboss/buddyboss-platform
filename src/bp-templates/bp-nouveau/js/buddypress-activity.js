@@ -540,10 +540,14 @@ window.bp = window.bp || {};
 
 			$( event.currentTarget ).parents( '.activity-comments' ).find( '.ac-form' ).each( function() {
 				var form = $( this );
+				var commentsList = $( this ).closest( '.activity-comments' );
+				var commentItem = $( this ).closest( '.comment-item' )
 				// Reset emojionearea
 				form.find( '.post-elements-buttons-item.post-emoji' ).removeClass( 'active' ).empty( '' );
 
 				bp.Nouveau.Activity.resetActivityCommentForm( form, 'hardReset' );
+				commentsList.append( form );
+				commentItem.find( '.acomment-display' ).removeClass( 'display-focus' );
 			});
 
 			bp.Nouveau.Activity.launchActivityPopup( activityId, parentId );
