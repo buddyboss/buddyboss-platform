@@ -3363,6 +3363,7 @@ window.bp = window.bp || {};
 			var currentTargetList = $( e.currentTarget ).parent(),
 				target = $( e.currentTarget );
 				activityId  = $( currentTargetList ).data( 'activity_id' ),
+				commentsList = $( e.currentTarget ).closest( '.activity-comments' ),
 				parentCommentId = $( currentTargetList ).data( 'parent_comment_id' ),
 				scope = target.parents( 'li.activity-item[data-bp-activity-id=' + activityId + ']' ).hasClass( 'groups' ) ? 'groups' : '',
 				lastCommentTimeStamp = '';
@@ -3381,6 +3382,7 @@ window.bp = window.bp || {};
 				'</div>';
 
 			target.addClass( 'loading' ).removeClass('bp-hide');
+			commentsList.addClass( 'active' );
 			target.html( skeleton );
 
 			var data = {
@@ -3401,6 +3403,7 @@ window.bp = window.bp || {};
 				function( response ) {
 					if ( false === response.success ) {
 						target.html( "<p class='error'>" + response.data.message + "</p>" ).removeClass( 'loading' );
+						commentsList.removeClass( 'active' );
 						return;
 					} else if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.comments ) {
 						// success
@@ -3444,12 +3447,14 @@ window.bp = window.bp || {};
 							);
 						}
 						target.remove();
+						commentsList.removeClass( 'active' );
 					}
 
 				}
 			).fail(
 				function( $xhr ) {
 					target.html( "<p class='error'>" + $xhr.statusText + "</p>" ).removeClass( 'loading' );
+					commentsList.removeClass( 'active' );
 				}
 			);
 		},
@@ -3458,8 +3463,9 @@ window.bp = window.bp || {};
 
 			if ( $( '.bb-activity-model-wrapper' ).length > 0 && $( '.bb-activity-model-wrapper' ).css('display') !=='none' ) {
 				var element = $( '.bb-modal-activity-body .activity-comments > ul > li.acomments-view-more:not(.loading)' ),
-					container = $( '.bb-activity-model-wrapper .bb-modal-activity-body' );
-				if ( element.length > 0 && container.length > 0 ) {
+					container = $( '.bb-activity-model-wrapper .bb-modal-activity-body' ),
+					commentsList = $( '.bb-activity-model-wrapper .bb-modal-activity-body' ).find( '.activity-comments:not(.active)' );
+				if ( element.length > 0 && container.length > 0 && commentsList.length > 0 ) {
 					var elementTop = $(element).offset().top, containerTop = $(container).scrollTop(),
 						containerBottom = containerTop + $(container).height();
 

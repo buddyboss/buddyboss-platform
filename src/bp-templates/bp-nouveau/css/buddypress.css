@@ -4613,7 +4613,7 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
 
 .bb-activity-model-wrapper.bb-internal-model > .activity-modal {
   max-height: 85vh;
-  min-height: 85vh;
+  /*min-height: 85vh;*/
   max-width: 700px;
   width: 700px;
   position: relative;
@@ -4796,6 +4796,10 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
 
 .bb-activity-model-wrapper .view-more-comments {
   display: none;
+}
+
+.bb-internal-model .activity-comments.active .acomments-view-more {
+  pointer-events: none;
 }
 
 /* Activity comment modal ==> Ends Here */

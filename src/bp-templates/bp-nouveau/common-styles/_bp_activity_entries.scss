@@ -1329,7 +1329,7 @@
 
 		> .activity-modal {
 			max-height: 85vh;
-			min-height: 85vh;
+			/*min-height: 85vh;*/
 			max-width: 700px;
 			width: 700px;
 			position: relative;
@@ -1532,6 +1532,14 @@
 	.bb-activity-model-wrapper & {
 		display: none;
 	}
+}
+
+.bb-internal-model {
+	.activity-comments.active {
+		.acomments-view-more {
+			pointer-events: none;
+		}
+	}	
 }
 
 /* Activity comment modal ==> Ends Here */
