@@ -85,8 +85,14 @@ if ( ! empty( $link_embed ) ) {
 	<?php
 	bp_nouveau_activity_hook( 'before', 'entry_comments' );
 
-	if ( bp_activity_get_comment_count() || ( is_user_logged_in() && ( bp_activity_can_comment() || bp_is_single_activity() ) ) ) :
+	$closed_notice = bb_get_close_activity_comments_notice( $activity_id );
+	if ( ! empty( $closed_notice ) ) {
 		?>
+		<div class='bb-activity-closed-comments-notice'><?php echo esc_html( $closed_notice ); ?></div>
+		<?php
+	}
+
+	if ( bp_activity_get_comment_count() || ( is_user_logged_in() && ( bp_activity_can_comment() || bp_is_single_activity() ) ) ) : ?>
 		<div class="activity-comments">
 			<?php
 			bp_activity_comments();

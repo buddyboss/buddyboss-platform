@@ -255,6 +255,9 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'reactionAjaxError'   => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
 		'muteNotification'    => esc_html__( 'Turn off notification', 'buddyboss' ),
 		'unmuteNotification'  => esc_html__( 'Turn on notification', 'buddyboss' ),
+		'closeComments'       => esc_html__( 'Turn off commenting', 'buddyboss' ),
+		'uncloseComments'     => esc_html__( 'Turn on commenting', 'buddyboss' ),
+		'closeCommentsError'  => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
 	);
 
 	if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
