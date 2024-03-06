@@ -13,16 +13,19 @@
 
 bp_nouveau_activity_hook( 'before', 'entry' );
 
+$activity_id    = bp_get_activity_id();
+$activity_metas = bb_activity_get_metadata( $activity_id );
+
 $link_preview_string = '';
 $link_url            = '';
 
-$link_preview_data = bp_activity_get_meta( bp_get_activity_id(), '_link_preview_data', true );
+$link_preview_data = ! empty( $activity_metas['_link_preview_data'][0] ) ? maybe_unserialize( $activity_metas['_link_preview_data'][0] ) : array();
 if ( ! empty( $link_preview_data ) && count( $link_preview_data ) ) {
 	$link_preview_string = wp_json_encode( $link_preview_data );
 	$link_url            = ! empty( $link_preview_data['url'] ) ? $link_preview_data['url'] : '';
 }
 
-$link_embed = bp_activity_get_meta( bp_get_activity_id(), '_link_embed', true );
+$link_embed = $activity_metas['_link_embed'][0] ?? '';
 if ( ! empty( $link_embed ) ) {
 	$link_url = $link_embed;
 }
@@ -31,7 +34,7 @@ $activity_popup_title = sprintf( esc_html__( "%s's Post", 'buddyboss' ), bp_core
 
 ?>
 
-<li class="<?php bp_activity_css_class(); ?>" id="activity-<?php bp_activity_id(); ?>" data-bp-activity-id="<?php bp_activity_id(); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php bp_nouveau_edit_activity_data(); ?>" data-link-preview='<?php echo $link_preview_string; ?>' data-link-url='<?php echo $link_url; ?>' data-activity-popup-title='<?php echo $activity_popup_title; ?>'>
+<li class="<?php bp_activity_css_class(); ?>" id="activity-<?php echo esc_attr( $activity_id ); ?>" data-bp-activity-id="<?php echo esc_attr( $activity_id ); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php bp_nouveau_edit_activity_data(); ?>" data-link-preview='<?php echo $link_preview_string; ?>' data-link-url='<?php echo $link_url; ?>' data-activity-popup-title='<?php echo $activity_popup_title; ?>'>
 
 	<?php bb_nouveau_activity_entry_bubble_buttons(); ?>
 
@@ -109,11 +112,9 @@ $activity_popup_title = sprintf( esc_html__( "%s's Post", 'buddyboss' ), bp_core
 		</div>
 
 		<div class="activity-header">
-			<?php bp_activity_action(); ?>
-
-			<?php bp_nouveau_activity_is_edited(); ?>
-
-			<?php bp_nouveau_activity_privacy(); ?>
+			<?php bp_activity_action();
+				bp_nouveau_activity_is_edited();
+				 bp_nouveau_activity_privacy(); ?>
 		</div>
 
 	<?php endif;
@@ -121,13 +122,14 @@ $activity_popup_title = sprintf( esc_html__( "%s's Post", 'buddyboss' ), bp_core
 
 	<div class="activity-content <?php bp_activity_entry_css_class(); ?>">
 
-		<?php bp_nouveau_activity_hook( 'before', 'activity_content' ); ?>
+		<?php
+		bp_nouveau_activity_hook( 'before', 'activity_content' );
 
-		<?php if ( bp_nouveau_activity_has_content() ) : ?>
-
+		if ( bp_nouveau_activity_has_content() ) :
+			?>
 			<div class="activity-inner"><?php bp_nouveau_activity_content(); ?></div>
-
-		<?php endif; ?>
+			<?php
+		endif;
 
 		<?php bp_nouveau_activity_hook( 'after', 'activity_content' ); ?>
 

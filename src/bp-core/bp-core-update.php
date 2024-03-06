@@ -475,7 +475,11 @@ function bp_version_updater() {
 			bb_update_to_2_4_71();
 		}
 
-		if ( $raw_db_version < 20961 ) {
+		if ( $raw_db_version < 20991 ) {
+			bb_update_to_2_4_74();
+		}
+
+		if ( $raw_db_version < 21001 ) {
 			bb_update_to_2_5_0();
 		}
 
@@ -3398,6 +3402,19 @@ function bb_core_removed_orphaned_member_slug() {
 
 	// Re-register the background jobs until the result is empty.
 	bb_background_removed_orphaned_metadata();
+}
+
+/**
+ * Create a new table for background process logs.
+ *
+ * @since BuddyBoss 2.5.60
+ *
+ * @return void
+ */
+function bb_update_to_2_4_74() {
+	if ( class_exists( 'BB_BG_Process_Log' ) ) {
+		BB_BG_Process_Log::instance()->create_table();
+	}
 }
 
 /**
