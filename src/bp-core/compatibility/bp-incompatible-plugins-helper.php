@@ -235,6 +235,36 @@ function bp_helper_plugins_loaded_callback() {
 			return $allowed_handle_prefixes;
 		} );
 	}
+
+	/**
+	 * Include plugin when plugin is activated.
+	 * Support Instructor Role.
+	 *
+	 * @since BuddyBoss 2.5.60
+	 */
+	if ( in_array( 'instructor-role/instructor.php', $bp_plugins ) ) {
+		add_filter( 'ir_filter_remove_private_protected_from_titles', function ( $is_prepend, $prepend, $post ) {
+			$post_types = array();
+
+			if ( function_exists( 'bbp_get_forum_post_type' ) ) {
+				$post_types[] = bbp_get_forum_post_type();
+			}
+
+			if ( function_exists( 'bbp_get_topic_post_type' ) ) {
+				$post_types[] = bbp_get_topic_post_type();
+			}
+
+			if ( function_exists( 'bbp_get_reply_post_type' ) ) {
+				$post_types[] = bbp_get_reply_post_type();
+			}
+
+			if ( ! empty( $post_types ) && in_array( $post->post_type, $post_types, true ) ) {
+				return true;
+			}
+
+			return $is_prepend;
+		}, 10, 3 );
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
