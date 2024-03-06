@@ -47,6 +47,10 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 		// Delete moderation data when group is deleted.
 		add_action( 'bp_groups_delete_group', array( $this, 'sync_moderation_data_on_delete' ), 10, 1 );
 
+		// Add/Remove a group from suspend while any new organiser added/removed.
+		add_action( 'groups_member_after_save', array( $this, 'sync_moderation_data_on_group_member_update' ), 10, 1 );
+		add_action( 'groups_member_after_remove', array( $this, 'sync_moderation_data_on_group_member_update' ), 10, 1 );
+
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
 		 */
@@ -587,5 +591,117 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 		}
 
 		return $where_conditions;
+	}
+
+	/**
+	 * Suspend Group.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int   $group_id user id.
+	 * @param array $args    Suspend group arguments.
+	 */
+	public static function suspend_group( $group_id, $args = array() ) {
+		$args['item_id']        = $group_id;
+		$args['item_type']      = self::$type;
+		$args['user_suspended'] = 1;
+
+		BP_Core_Suspend::add_suspend( $args );
+
+		/**
+		 * Add related content of reported item into a hidden list
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $item_id       item id
+		 * @param int $hide_sitewide item hidden sitewide or user specific
+		 */
+		do_action(
+			'bp_suspend_hide_' . self::$type,
+			$group_id,
+			1,
+			array(
+				'action'           => 'suspended',
+				'force_bg_process' => true,
+			)
+		);
+	}
+
+	/**
+	 * Un-suspend Group
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int   $group_id user id.
+	 * @param array $args     Suspend group arguments.
+	 */
+	public static function unsuspend_group( $group_id, $args = array() ) {
+		$args['item_id']        = $group_id;
+		$args['item_type']      = self::$type;
+		$args['user_suspended'] = 0;
+
+		BP_Core_Suspend::add_suspend( $args );
+
+		/**
+		 * Remove related content of reported item from a hidden list.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $item_id       item id
+		 * @param int $hide_sitewide item hidden sitewide or user specific
+		 * @param int $force_all     un-hide for all users
+		 */
+		do_action(
+			'bp_suspend_unhide_' . self::$type,
+			$group_id,
+			0,
+			0,
+			array(
+				'action'           => 'unsuspended',
+				'force_bg_process' => true,
+			)
+		);
+	}
+
+	/**
+	 * Update the group when update group member.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param BP_Groups_Member $group_member Current instance of the group membership item has been saved. Passed by reference.
+	 */
+	public function sync_moderation_data_on_group_member_update( $group_member ) {
+		if ( empty( $group_member ) || empty( $group_member->id ) || empty( $group_member->group_id ) ) {
+			return;
+		}
+
+		// Check the group suspended or not.
+		$is_group_suspended = BP_Core_Suspend::check_suspended_content( $group_member->group_id, self::$type, true );
+
+		$admins = groups_get_group_admins( $group_member->group_id );
+		if ( ! empty( $admins ) ) {
+			$admin_ids           = array_column( $admins, 'user_id' );
+			$suspended_admin_ids = array();
+			if ( ! empty( $admin_ids ) ) {
+				foreach ( $admin_ids as $admin_id ) {
+					if ( bp_moderation_is_user_suspended( $admin_id ) ) {
+						$suspended_admin_ids[] = $admin_id;
+					}
+				}
+			}
+
+			$filtered_admin_ids = array_diff( $admin_ids, $suspended_admin_ids );
+			if (
+				! empty( $filtered_admin_ids ) &&
+				$is_group_suspended
+			) {
+				BP_Suspend_Group::unsuspend_group( $group_member->group_id );
+			} elseif (
+				empty( $filtered_admin_ids ) &&
+				! $is_group_suspended
+			) {
+				BP_Suspend_Group::suspend_group( $group_member->group_id );
+			}
+		}
 	}
 }
