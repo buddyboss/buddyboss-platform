@@ -34,39 +34,39 @@ $activity_id = bp_get_activity_id();
 				if ( 'blogs' !== $activities_template->activity->component ) {
 					?>
 
-					<div id="ac-reply-toolbar-<?php bp_activity_id(); ?>" class="ac-reply-toolbar">
+					<div id="ac-reply-toolbar-<?php echo esc_attr( $activity_id ); ?>" class="ac-reply-toolbar">
 
 						<?php
 						if ( bp_is_active( 'media' ) ) :
 							?>
 
 							<div class="post-elements-buttons-item post-media media-support">
-								<a href="#" id="ac-reply-media-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-media-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>" data-ac-id="<?php bp_activity_id(); ?>">
+								<a href="#" id="ac-reply-media-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip ac-reply-media-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>" data-ac-id="<?php echo esc_attr( $activity_id ); ?>">
 									<i class="bb-icon-l bb-icon-camera"></i>
 								</a>
 							</div>
 
 							<div class="post-elements-buttons-item post-video video-support">
-								<a href="#" id="ac-reply-video-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>" data-ac-id="<?php bp_activity_id(); ?>">
+								<a href="#" id="ac-reply-video-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>" data-ac-id="<?php echo esc_attr( $activity_id ); ?>">
 									<i class="bb-icon-l bb-icon-video"></i>
 								</a>
 							</div>
 							<div class="post-elements-buttons-item post-media document-support">
-								<a href="#" id="ac-reply-document-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>" data-ac-id="<?php bp_activity_id(); ?>">
+								<a href="#" id="ac-reply-document-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>" data-ac-id="<?php echo esc_attr( $activity_id ); ?>">
 									<i class="bb-icon-l bb-icon-attach"></i>
 								</a>
 							</div>
 
 							<div class="post-elements-buttons-item post-gif">
 								<div class="gif-media-search">
-									<a href="#" id="ac-reply-gif-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-gif-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>">
+									<a href="#" id="ac-reply-gif-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip ac-reply-gif-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>">
 										<i class="bb-icon-l bb-icon-gif"></i>
 									</a>
 									<div class="gif-media-search-dropdown"></div>
 								</div>
 							</div>
 
-							<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss' ); ?>" id="ac-reply-emoji-button-<?php bp_activity_id(); ?>"></div>
+							<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss' ); ?>" id="ac-reply-emoji-button-<?php echo esc_attr( $activity_id ); ?>"></div>
 
 						<?php endif; ?>
 					</div>
@@ -75,7 +75,7 @@ $activity_id = bp_get_activity_id();
 				?>
 
 			</div>
-			<input type="hidden" name="comment_form_id" value="<?php bp_activity_id(); ?>"/>
+			<input type="hidden" name="comment_form_id" value="<?php echo esc_attr( $activity_id ); ?>"/>
 
 			<div class="ac-submit-wrap">
 				<?php
@@ -211,60 +211,6 @@ $activity_id = bp_get_activity_id();
 
 					<div id="ac-reply-post-gif-<?php echo esc_attr( $activity_id ); ?>"></div>
 
-						<?php endif; ?>
-					</div>
-
-					<div id="ac-reply-toolbar-<?php echo esc_attr( $activity_id ); ?>" class="ac-reply-toolbar">
-
-						<?php
-						if ( bp_is_active( 'media' ) ) :
-							?>
-
-							<div class="post-elements-buttons-item post-media media-support">
-								<a href="#" id="ac-reply-media-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip ac-reply-media-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>" data-ac-id="<?php echo esc_attr( $activity_id ); ?>">
-									<i class="bb-icon-l bb-icon-camera"></i>
-								</a>
-							</div>
-
-							<div class="post-elements-buttons-item post-video video-support">
-								<a href="#" id="ac-reply-video-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>" data-ac-id="<?php echo esc_attr( $activity_id ); ?>">
-									<i class="bb-icon-l bb-icon-video"></i>
-								</a>
-							</div>
-							<div class="post-elements-buttons-item post-media document-support">
-								<a href="#" id="ac-reply-document-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>" data-ac-id="<?php echo esc_attr( $activity_id ); ?>">
-									<i class="bb-icon-l bb-icon-attach"></i>
-								</a>
-							</div>
-
-							<div class="post-elements-buttons-item post-gif">
-								<div class="gif-media-search">
-									<a href="#" id="ac-reply-gif-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip ac-reply-gif-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>">
-										<i class="bb-icon-l bb-icon-gif"></i>
-									</a>
-									<div class="gif-media-search-dropdown"></div>
-								</div>
-							</div>
-
-							<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss' ); ?>" id="ac-reply-emoji-button-<?php echo esc_attr( $activity_id ); ?>"></div>
-
-						<?php endif; ?>
-					</div>
-					<?php
-				}
-				?>
-
-			</div>
-			<input type="hidden" name="comment_form_id" value="<?php echo esc_attr( $activity_id ); ?>"/>
-
-			<?php
-			bp_nouveau_submit_button( 'activity-new-comment' );
-			printf(
-				'&nbsp; <button type="button" class="ac-reply-cancel">%s</button>',
-				esc_html__( 'Cancel', 'buddyboss' )
-			);
-			?>
-		</div>
 				<?php endif; ?>
 			</div>
 			<?php
