@@ -2022,10 +2022,10 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 
 			$hidden_class = '';
 			if ( ! $is_ajax_load_more ) {
-				$hidden_class = 'bp-hide';
+				$hidden_class = 'acomments-view-more--hide';
 			}
 
-			echo "<li class='acomments-view-more " . esc_attr( $hidden_class ) . "'><i class='bb-icon-l bb-icon-corner-right'></i>" . esc_html( $view_more_text ) . "</li>";
+			echo "<li class='acomments-view-more acomments-view-more--root " . esc_attr( $hidden_class ) . "'>" . esc_html( $view_more_text ) . "</li>";
 			break;
 		}
 
