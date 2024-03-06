@@ -2,7 +2,7 @@
 /**
  * Recaptcha integration actions.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.5.60
  * @package BuddyBoss\Recaptcha
  */
 
@@ -20,7 +20,7 @@ add_action( 'bb_before_activate_submit_buttons', 'bb_recaptcha_activate_form' );
 /**
  * Handles AJAX request for reCAPTCHA verification in admin settings.
  *
- * @sicne BuddyBoss [BBVERSION]
+ * @sicne BuddyBoss 2.5.60
  */
 function bb_recaptcha_verification_admin_settings() {
 
@@ -81,7 +81,7 @@ function bb_recaptcha_verification_admin_settings() {
 /**
  * Displays the reCAPTCHA on the login form.
  *
- * @sicne BuddyBoss [BBVERSION]
+ * @sicne BuddyBoss 2.5.60
  */
 function bb_recaptcha_login() {
 	$enable_for_login = bb_recaptcha_is_enabled( 'bb_login' );
@@ -95,7 +95,7 @@ function bb_recaptcha_login() {
 /**
  * Displays reCAPTCHA on the lost password form if enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  */
 function bb_recaptcha_lost_password() {
 	$enable_for_lost_password = bb_recaptcha_is_enabled( 'bb_lost_password' );
@@ -109,7 +109,7 @@ function bb_recaptcha_lost_password() {
 /**
  * Validate recaptcha for a lost password form.
  *
- * @since  BuddyBoss [BBVERSION]
+ * @since  BuddyBoss 2.5.60
  *
  * @param WP_Error $errors A WP_Error object containing any errors generated
  *                         by using invalid credentials.
@@ -145,7 +145,7 @@ function bb_recaptcha_validate_lost_password( $errors ) {
 /**
  * Displays reCAPTCHA on the registration form if enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  */
 function bb_recaptcha_registration() {
 	$enable_for_register = bb_recaptcha_is_enabled( 'bb_register' );
@@ -161,7 +161,7 @@ function bb_recaptcha_registration() {
 /**
  * Validate recaptcha for a registration form.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  */
 function bb_recaptcha_validate_registration() {
 	$verified = bb_recaptcha_connection_status();
@@ -185,7 +185,7 @@ function bb_recaptcha_validate_registration() {
 /**
  * Displays reCAPTCHA on the account activation form if enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  */
 function bb_recaptcha_activate_form() {
 	$enable_for_bb_activate = bb_recaptcha_is_enabled( 'bb_activate' );
@@ -199,7 +199,7 @@ function bb_recaptcha_activate_form() {
 /**
  * Enqueue scripts for recaptcha.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  *
  * @return void
  */

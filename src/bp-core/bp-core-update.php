@@ -3423,7 +3423,7 @@ function bb_update_to_2_5_41() {
 /**
  * Create a new table for background process logs.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  *
  * @return void
  */

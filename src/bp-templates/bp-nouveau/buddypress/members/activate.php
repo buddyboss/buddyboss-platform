@@ -40,7 +40,7 @@ bp_nouveau_activation_hook( 'before', 'page' ); ?>
 			/**
 			 * Fires before the activation submit button.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.5.60
 			 */
 			do_action( 'bb_before_activate_submit_buttons' );
 			?>
