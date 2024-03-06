@@ -4153,6 +4153,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
   position: absolute;
   right: 20px;
   font-size: 22px;
+  line-height: 1;
   top: 10px;
   display: none;
 }
@@ -4596,6 +4597,10 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
 /* Activity comment modal ==> Starts Here */
 .acomments-modal-open {
   overflow: hidden;
+}
+
+.acomments-modal-open .bb-toast-messages-enable .bb-toast-messages {
+  z-index: 999991;
 }
 
 .bb-activity-model-wrapper.bb-internal-model {
