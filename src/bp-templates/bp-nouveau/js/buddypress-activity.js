@@ -3355,6 +3355,10 @@ window.bp = window.bp || {};
 			viewMoreCommentsLink.trigger( 'click' );
 
 			bp.Nouveau.Activity.initializeEmojioneArea( true, '#activity-modal ', activityID );
+
+			if ( typeof bp.Nouveau !== 'undefined' ) {
+				bp.Nouveau.reportPopUp();
+			}
 		},
 
 		viewMoreComments: function( e ) {
@@ -3448,6 +3452,10 @@ window.bp = window.bp || {};
 						}
 						target.remove();
 						commentsList.removeClass( 'active' );
+
+						if ( typeof bp.Nouveau !== 'undefined' ) {
+							bp.Nouveau.reportPopUp();
+						}
 					}
 
 				}
