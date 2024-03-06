@@ -6504,3 +6504,113 @@ function bb_load_reaction_popup_modal_js_template() {
 		bp_get_template_part( 'common/js-templates/activity/parts/bb-activity-reactions-popup' );
 	}
 }
+
+/**
+ * Check whether activity comments is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ *
+ * @return bool
+ */
+function bb_is_activity_comments_enabled( $default = true ) {
+
+	/**
+	 * Apply filter to modify the activity comments enabled.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $default Status of activity comments enabled or disabled.
+	 */
+	return (bool) apply_filters( 'bb_is_activity_comments_enabled', bp_get_option( '_bb_enable_activity_comments', $default ) );
+}
+
+/**
+ * Check whether activity comment threading is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ *
+ * @return bool
+ */
+function bb_is_activity_comment_threading_enabled( $default = true ) {
+
+	/**
+	 * Apply filter to modify the activity comments threading enable.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $default Status of activity comments threading enabled or disabled.
+	 */
+	return (bool) apply_filters( 'bb_is_activity_comment_threading_enabled', bp_get_option( '_bb_enable_activity_comment_threading', $default ) );
+}
+
+/**
+ * Get activity comment threading depth.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $default Optional. Fallback value if not found in the database.
+ *                     Default: 3.
+ *
+ * @return int
+ */
+function bb_get_activity_comment_threading_depth( $default = 3 ) {
+
+	/**
+	 * Apply filter to modify the activity comments threading depth.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $default Value of activity comments threading depth.
+	 */
+	return (int) apply_filters( 'bb_get_activity_comment_threading_depth', bp_get_option( '_bb_activity_comment_threading_depth', $default ) );
+}
+
+/**
+ * Get activity comment visibility value.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $default Optional. Fallback value if not found in the database.
+ *                     Default: 2.
+ *
+ * @return int
+ */
+function bb_get_activity_comment_visibility( $default = 2 ) {
+
+	/**
+	 * Apply filter to modify the activity comments visibility.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $default Value of activity comments visibility.
+	 */
+	return (int) apply_filters( 'bb_get_activity_comment_visibility', bp_get_option( '_bb_activity_comment_visibility', $default ) );
+}
+
+/**
+ * Get activity comment loading value.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $default Optional. Fallback value if not found in the database.
+ *                     Default: 10.
+ *
+ * @return int
+ */
+function bb_get_activity_comment_loading( $default = 10 ) {
+
+	/**
+	 * Apply filter to modify the activity comments loading.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $default Value of activity comments loading.
+	 */
+	return (int) apply_filters( 'bb_get_activity_comment_loading', bp_get_option( '_bb_activity_comment_loading', $default ) );
+}
