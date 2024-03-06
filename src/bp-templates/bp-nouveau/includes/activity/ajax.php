@@ -542,7 +542,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 			} else {
 				$a_obj = new BP_Activity_Activity( $p_obj->item_id );
 			}
-			
+
 			$activities_template->activity->component         = $a_obj->component;
 			$activities_template->activity->item_id           = $a_obj->item_id;
 			$activities_template->activity->secondary_item_id = $a_obj->secondary_item_id;
@@ -1189,12 +1189,12 @@ function bb_nouveau_ajax_activity_loadmore_comments() {
 	}
 
 	global $activities_template;
-	$activity_id         = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
-	$parent_comment_id   = ! empty( $_POST['parent_comment_id'] ) ? (int) $_POST['parent_comment_id'] : 0;
-	$type                = ! empty( $_POST['type'] ) ? $_POST['type'] : '';
+	$activity_id       = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
+	$parent_comment_id = ! empty( $_POST['parent_comment_id'] ) ? (int) $_POST['parent_comment_id'] : 0;
+	$type              = ! empty( $_POST['type'] ) ? $_POST['type'] : '';
 
 	$args = array(
-		'include'          => $activity_id ,
+		'include'          => $activity_id,
 		'display_comments' => true,
 		'scope'            => 'groups' === $type ? $type : '',
 	);
@@ -1219,11 +1219,10 @@ function bb_nouveau_ajax_activity_loadmore_comments() {
 	);
 
 	// Check if parent is the main activity
-    if ( isset( $activities_template->activity ) && $activities_template->activity->id === $parent_comment_id ) {
+	if ( isset( $activities_template->activity ) && $activities_template->activity->id === $parent_comment_id ) {
 		// No current comment.
 		bp_activity_recurse_comments( $activities_template->activity, $args );
-    } elseif ( isset( $activities_template->activity->children ) && is_array( $activities_template->activity->children ) ) {
-
+	} elseif ( isset( $activities_template->activity->children ) && is_array( $activities_template->activity->children ) ) {
 		// If this object has children, search them
 		$result_comment = false;
 
@@ -1237,10 +1236,9 @@ function bb_nouveau_ajax_activity_loadmore_comments() {
 				bp_activity_recurse_comments( $activities_template->activity->current_comment, $args );
 				break;
 			}
-			
 		}
 
-		if ( empty( $result_comment ) ) { 
+		if ( empty( $result_comment ) ) {
 			wp_send_json_error( array(
 					'message' => __( 'No more items to load.', 'buddyboss' ),
 				)
@@ -1257,5 +1255,4 @@ function bb_nouveau_ajax_activity_loadmore_comments() {
 			'comments' => ob_get_clean(),
 		)
 	);
-
 }

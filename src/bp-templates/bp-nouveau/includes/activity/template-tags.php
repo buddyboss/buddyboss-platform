@@ -284,7 +284,7 @@ function bp_nouveau_activity_state() {
 			$activity_state_class            = apply_filters( 'bp_nouveau_get_activity_comment_buttons_activity_state', $activity_state_comment_class, $activity_id );
 			?>
 			<a href="#" class="<?php echo esc_attr( trim( implode( ' ', $activity_state_class ) ) ); ?>">
-				<span class="comments-count" data-comments-count="<?php echo $comment_count; ?>">
+				<span class="comments-count" data-comments-count="<?php echo esc_attr( $comment_count ); ?>">
 					<?php
 					if ( $comment_count > 1 ) {
 						printf( _x( '%d Comments', 'placeholder: activity comments count', 'buddyboss' ), $comment_count );
@@ -678,6 +678,11 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
  * Output Activity Comments if any
  *
  * @since BuddyPress 3.0.0
+ *
+ * @since BuddyBoss [BBVERSION]
+ * Introduce new param $comment_load_limit to limit the number of comments to load.
+ *
+ * @param bool $comment_load_limit Optional. The number of comments to load.
  */
 function bp_nouveau_activity_comments( $comment_load_limit = false ) {
 	global $activities_template;
@@ -686,17 +691,20 @@ function bp_nouveau_activity_comments( $comment_load_limit = false ) {
 		return;
 	}
 
-	bp_nouveau_activity_recurse_comments( $activities_template->activity, $comment_load_limit = false );
+	bp_nouveau_activity_recurse_comments( $activities_template->activity, $comment_load_limit );
 }
 
 /**
  * Loops through a level of activity comments and loads the template for each.
- *
  * Note: This is an adaptation of the bp_activity_recurse_comments() BuddyPress core function
  *
  * @since BuddyPress 3.0.0
  *
- * @param object $comment The activity object currently being recursed.
+ * @since BuddyBoss [BBVERSION]
+ * Introduce new param $comment_load_limit to limit the number of comments to load.
+ *
+ * @param object $comment            The activity object currently being recursed.
+ * @param bool   $comment_load_limit Optional. The number of comments to load.
  */
 function bp_nouveau_activity_recurse_comments( $comment, $comment_load_limit = false ) {
 	global $activities_template;
@@ -721,10 +729,10 @@ function bp_nouveau_activity_recurse_comments( $comment, $comment_load_limit = f
 
 		if ( false !== $comment_load_limit && $comment_loaded_count === $comment_load_limit ) {
 
-			if ( $comment->secondary_item_id !== 0 ) {
+			if ( 0 !== $comment->secondary_item_id ) {
 				if ( 0 === $comment_loaded_count ) {
 					$link_text = sprintf(
-						/* translators: total replies */
+					/* translators: total replies */
 						_n( 'View %d reply', 'View %d replies', $comment_total, 'buddyboss' ),
 						absint( $comment_total )
 					);
@@ -736,7 +744,7 @@ function bp_nouveau_activity_recurse_comments( $comment, $comment_load_limit = f
 				$link_text = __( 'View more comments', 'buddyboss' );
 			}
 
-			echo "<li class='acomments-view-more'><i class='bb-icon-l bb-icon-corner-right'></i>". esc_html__( $link_text, 'buddyboss' ) ."</li>";
+			echo "<li class='acomments-view-more'><i class='bb-icon-l bb-icon-corner-right'></i>". esc_html( $link_text ) ."</li>";
 			break;
 		}
 
@@ -800,7 +808,7 @@ function bp_nouveau_get_activity_comment_action() {
 	return apply_filters(
 		'bp_nouveau_get_activity_comment_action',
 		sprintf(
-			/* translators: 1: user profile link, 2: user name, 3: Edited text */
+			/* translators: 1: User profile link, 2: Username, 3: Edited text */
 			__( '<a class="author-name" href="%1$s">%2$s</a>%3$s', 'buddyboss' ),
 			esc_url( bp_get_activity_comment_user_link() ),
 			esc_html( bp_get_activity_comment_name() ),
@@ -1925,10 +1933,10 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		) &&
 		(
 			// Is not a media mini activity
-			! ( 
-				$activity_type === 'activity_update' &&
-				empty( $activities_template->activity->content ) 
-			)
+		! (
+			'activity_update' === $activity_type &&
+			empty( $activities_template->activity->content )
+		)
 		)
 	) {
 
@@ -1969,17 +1977,15 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	}
 
 	// Download link for the medias and documents.
-	$media_id = BP_Media::get_activity_media_id( $activity_id );
+	$media_id = bp_is_active( 'media' ) ? BP_Media::get_activity_media_id( $activity_id ) : 0;
 	if ( ! empty( $media_id ) ) {
 		$attachment_id = BP_Media::get_activity_attachment_id( $activity_id );
 		if ( ! empty( $attachment_id ) ) {
-
 			$media_privacy    = bb_media_user_can_access( $media_id, 'photo' );
-			$can_download_btn = ( true === (bool) $media_privacy['can_download'] ) ? true : false;
+			$can_download_btn = true === (bool) $media_privacy['can_download'];
 			if ( $can_download_btn ) {
 				$download_url = bp_media_download_link( $attachment_id, $media_id );
 				if ( $download_url ) {
-
 					// Button for media download.
 					$buttons['activity_media_download'] = array(
 						'id'                => 'activity_media_download',
@@ -2005,17 +2011,15 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		}
 	}
 	
-	$video_id = BP_Video::get_activity_video_id( $activity_id );
+	$video_id = bp_is_active( 'video' ) ? BP_Video::get_activity_video_id( $activity_id ) : 0;
 	if ( ! empty( $video_id ) ) {
 		$attachment_id = BP_Video::get_activity_attachment_id( $activity_id );
 		if ( ! empty( $attachment_id ) ) {
-
 			$video_privacy    = bb_media_user_can_access( $video_id, 'video' );
-			$can_download_btn = ( true === (bool) $video_privacy['can_download'] ) ? true : false;
+			$can_download_btn = true === (bool) $video_privacy['can_download'];
 			if ( $can_download_btn ) {
 				$download_url = bp_video_download_link( $attachment_id, $video_id );
 				if ( $download_url ) {
-
 					// Button for video download.
 					$buttons['activity_video_download'] = array(
 						'id'                => 'activity_video_download',
@@ -2041,17 +2045,15 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		}
 	}
 
-	$document_id = BP_Document::get_activity_document_id( $activity_id );
+	$document_id = bp_is_active( 'document' ) ? BP_Document::get_activity_document_id( $activity_id ) : 0;
 	if ( ! empty( $document_id ) ) {
 		$attachment_id = BP_Document::get_activity_attachment_id( $activity_id );
 		if ( ! empty( $attachment_id ) ) {
-
 			$document_privacy = bb_media_user_can_access( $document_id, 'document' );
-			$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
+			$can_download_btn = true === (bool) $document_privacy['can_download'];
 			if ( $can_download_btn ) {
 				$download_url = bp_document_download_link( $attachment_id, $document_id );
 				if ( $download_url ) {
-
 					// Button for document download.
 					$buttons['activity_document_download'] = array(
 						'id'                => 'activity_document_download',
