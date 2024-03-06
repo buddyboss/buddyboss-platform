@@ -42,67 +42,67 @@ $activity_popup_title = sprintf( esc_html__( "%s's Post", 'buddyboss' ), bp_core
 	</div>
 
 	<?php
-			global $activities_template;
+	global $activities_template;
 
-			if ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() ) :
+	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() ) :
 
-				// If group activity.
-				$group_id   = (int) $activities_template->activity->item_id;
-				$group      = groups_get_group( $group_id );
-				$group_name = bp_get_group_name( $group );
-				$userlink   = bp_get_activity_user_link();
-			?>
-			<div class="bp-activity-head-group">
-				<div class="activity-group-avatar">
-					<div class="group-avatar">
-						<a class="group-avatar-wrap mobile-center" href="<?php echo bp_get_group_permalink( $group ); ?>">
-							<?php
-								echo bp_core_fetch_avatar(
-									array(
-										'item_id' => $group->id,
-										'avatar_dir' => 'group-avatars',
-										'type' => 'thumb',
-										'object' => 'group',
-										'width' => 100,
-										'height' => 100,
-									)
-								);
-							?>
-						</a>
-					</div>
-					<div class="author-avatar">
-						<a href="<?php echo $userlink; ?>"><?php bp_activity_avatar( array( 'type' => 'thumb' ) ); ?></a>
-					</div>
-				</div>
-
-				<div class="activity-header activity-header--group">
-					<div class="activity-group-heading"><a href="<?php echo bp_get_group_permalink( $group ); ?>"><?php echo $group_name; ?></a></div>
-					<div class="activity-group-post-meta">
-						<span class="activity-post-author">
-							<a href="<?php echo $userlink; ?>">
-								<?php echo bp_core_get_user_displayname( $activities_template->activity->user_id ); ?>
-							</a>
-						</span>
+		// If group activity.
+		$group_id   = (int) $activities_template->activity->item_id;
+		$group      = groups_get_group( $group_id );
+		$group_name = bp_get_group_name( $group );
+		$user_link  = bp_get_activity_user_link();
+		?>
+		<div class="bp-activity-head-group">
+			<div class="activity-group-avatar">
+				<div class="group-avatar">
+					<a class="group-avatar-wrap mobile-center" href="<?php echo bp_get_group_permalink( $group ); ?>">
 						<?php
-						printf(
-							'<span class="time-since" data-livestamp="%1$s">%2$s</span>',
-							bp_core_get_iso8601_date( bp_get_activity_date_recorded() ),
-							bp_core_time_since( bp_get_activity_date_recorded() )
+						echo bp_core_fetch_avatar(
+							array(
+								'item_id' => $group->id,
+								'avatar_dir' => 'group-avatars',
+								'type' => 'thumb',
+								'object' => 'group',
+								'width' => 100,
+								'height' => 100,
+							)
 						);
 						?>
-						<?php
-						if ( function_exists( 'bp_nouveau_activity_is_edited' ) ) {
-							bp_nouveau_activity_is_edited();
-						}
-						if ( function_exists( 'bp_nouveau_activity_privacy' ) ) {
-							bp_nouveau_activity_privacy();
-						}
-						?>
-					</div>
+					</a>
+				</div>
+				<div class="author-avatar">
+					<a href="<?php echo esc_url( $user_link ); ?>"><?php bp_activity_avatar( array( 'type' => 'thumb' ) ); ?></a>
 				</div>
 			</div>
 
-		<?php else : ?>
+			<div class="activity-header activity-header--group">
+				<div class="activity-group-heading"><a href="<?php echo bp_get_group_permalink( $group ); ?>"><?php echo $group_name; ?></a></div>
+				<div class="activity-group-post-meta">
+						<span class="activity-post-author">
+							<a href="<?php echo esc_url( $user_link ); ?>">
+								<?php echo bp_core_get_user_displayname( $activities_template->activity->user_id ); ?>
+							</a>
+						</span>
+					<?php
+					printf(
+						'<span class="time-since" data-livestamp="%1$s">%2$s</span>',
+						bp_core_get_iso8601_date( bp_get_activity_date_recorded() ),
+						bp_core_time_since( bp_get_activity_date_recorded() )
+					);
+					?>
+					<?php
+					if ( function_exists( 'bp_nouveau_activity_is_edited' ) ) {
+						bp_nouveau_activity_is_edited();
+					}
+					if ( function_exists( 'bp_nouveau_activity_privacy' ) ) {
+						bp_nouveau_activity_privacy();
+					}
+					?>
+				</div>
+			</div>
+		</div>
+
+	<?php else : ?>
 
 		<div class="activity-avatar item-avatar">
 			<a href="<?php bp_activity_user_link(); ?>"><?php bp_activity_avatar( array( 'type' => 'full' ) ); ?></a>
@@ -110,11 +110,14 @@ $activity_popup_title = sprintf( esc_html__( "%s's Post", 'buddyboss' ), bp_core
 
 		<div class="activity-header">
 			<?php bp_activity_action(); ?>
+
 			<?php bp_nouveau_activity_is_edited(); ?>
+
 			<?php bp_nouveau_activity_privacy(); ?>
 		</div>
 
-	<?php endif; ?>
+	<?php endif;
+	?>
 
 	<div class="activity-content <?php bp_activity_entry_css_class(); ?>">
 
@@ -133,11 +136,10 @@ $activity_popup_title = sprintf( esc_html__( "%s's Post", 'buddyboss' ), bp_core
 		<?php bp_nouveau_activity_entry_buttons(); ?>
 	</div>
 
-	<?php bp_nouveau_activity_hook( 'before', 'entry_comments' ); ?>
+	<?php
+	bp_nouveau_activity_hook( 'before', 'entry_comments' );
 
-	<?php if ( bp_activity_can_comment() ) : ?>
-
-		<?php
+	if ( bp_activity_can_comment() ) {
 		$class = 'activity-comments';
 		if ( 'blogs' === bp_get_activity_object_name() ) {
 			$class .= get_option( 'thread_comments' ) ? ' threaded-comments threaded-level-' . get_option( 'thread_comments_depth' ) : '';
@@ -149,20 +151,21 @@ $activity_popup_title = sprintf( esc_html__( "%s's Post", 'buddyboss' ), bp_core
 		<div class="<?php echo $class ?>">
 
 			<?php
-			 	if ( bp_activity_get_comment_count() ) { 
-					bp_activity_comments();
-				} 
+			if ( bp_activity_get_comment_count() ) {
+				bp_activity_comments();
+			}
 
-				if ( is_user_logged_in() ) {
-					bp_nouveau_activity_comment_form();
-				}
+			if ( is_user_logged_in() ) {
+				bp_nouveau_activity_comment_form();
+			}
 			?>
 
 		</div>
 
-	<?php endif; ?>
-
-	<?php bp_nouveau_activity_hook( 'after', 'entry_comments' ); ?>
+		<?php
+	}
+	bp_nouveau_activity_hook( 'after', 'entry_comments' );
+	?>
 
 </li>
 
