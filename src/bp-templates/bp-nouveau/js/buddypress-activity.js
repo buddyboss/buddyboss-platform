@@ -3528,7 +3528,7 @@ window.bp = window.bp || {};
 				}
 
 				var data = {
-					action: 'activity_modal_sync',
+					action: 'activity_sync_from_modal',
 					activity_id: activityId,
 					type: type,
 				}
@@ -3537,10 +3537,10 @@ window.bp = window.bp || {};
 					function( response ) {
 						if ( false === response.success ) {
 							return;
-						} else if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.comments ) {
+						} else if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.activity ) {
 							// success
+							$pageActivitylistItem.replaceWith( $.parseHTML( response.data.activity ) );
 						}
-
 					}
 				).fail(
 					function( $xhr ) {
