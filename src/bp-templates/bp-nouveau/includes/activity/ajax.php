@@ -97,6 +97,12 @@ add_action(
 					'nopriv'   => true,
 				),
 			),
+			array(
+				'activity_sync_from_modal' => array(
+					'function' => 'bb_nouveau_ajax_activity_sync_from_modal',
+					'nopriv'   => true,
+				),
+			),
 		);
 
 		foreach ( $ajax_actions as $ajax_action ) {
@@ -1255,6 +1261,60 @@ function bb_nouveau_ajax_activity_loadmore_comments() {
 
 	wp_send_json_success( array(
 			'comments' => ob_get_clean(),
+		)
+	);
+}
+
+/**
+ * Get perticular activity to sync when activity modal is closed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_nouveau_ajax_activity_sync_from_modal() {
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( array(
+				'message' => __( 'Invalid request.', 'buddyboss' ),
+			)
+		);
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+		wp_send_json_error( array(
+				'message' => __( 'Invalid request.', 'buddyboss' ),
+			)
+		);
+	}
+
+	if ( empty( $_POST['activity_id'] ) ) {
+		wp_send_json_error( array(
+				'message' => __( 'Activity id cannot be empty.', 'buddyboss' ),
+			)
+		);
+	}
+
+	global $activities_template;
+	$activity_id = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
+	$type        = ! empty( $_POST['type'] ) ? $_POST['type'] : '';
+
+	$args = array(
+		'in'               => $activity_id ,
+		'display_comments' => true,
+		// 'scope'            => 'groups' === $type ? $type : '',
+	);
+
+	ob_start();
+	if ( bp_has_activities( $args ) ) {
+		while ( bp_activities() ) {
+			bp_the_activity();
+			bp_get_template_part( 'activity/entry' );
+		}
+	}
+
+	wp_send_json_success( array(
+			'activity' => ob_get_clean(),
 		)
 	);
 }
