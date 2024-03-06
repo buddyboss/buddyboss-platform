@@ -712,7 +712,7 @@ function bp_nouveau_activity_recurse_comments( $comment, $comment_load_limit = f
 	 *
 	 * @param string $value Opening tag for the HTML markup to use.
 	 */
-	echo apply_filters( 'bp_activity_recurse_comments_start_ul', "<ul data-activity_id={$activities_template->activity->id} data-parent_comment_id={$comment->id}>" );
+	echo apply_filters( 'bb_activity_recurse_comments_start_ul', "<ul data-activity_id={$activities_template->activity->id} data-parent_comment_id={$comment->id}>" );
 
 	$comment_loaded_count = 0;
 	$comment_total        = bp_activity_recurse_comment_count( $comment );
