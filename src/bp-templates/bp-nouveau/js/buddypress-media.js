@@ -6618,7 +6618,6 @@ window.bp = window.bp || {};
 				var form = on_page_activity_comments.find( '#ac-form-' + self.current_media.activity_id );
 				self.current_media.parent_activity_comments = true;
 				form.remove();
-				//on_page_activity_comments.html( '' ); // load on page activity content anew when activity has updates and theatre is closed
 			}
 
 			if ( true === self.current_media.parent_activity_comments ) {
@@ -6709,7 +6708,7 @@ window.bp = window.bp || {};
 					activity_comments.append( form );
 					form.find( '.post-elements-buttons-item.post-emoji' ).removeClass( 'active' ).empty( '' ); // Reset emojionearea
 					this.resetActivityMedia( self.current_media.activity_id );
-					activity_comments.find( '.acomment-display' ).removeClass('display-focus');
+					activity_comments.find( '.acomment-display' ).removeClass( 'display-focus' );
 
 					html = activity_comments.html();
 					classes = activity_comments.attr( 'class' );
@@ -6718,7 +6717,7 @@ window.bp = window.bp || {};
 					if ( activity_comments.length ) {
 						activity_comments.append( form );
 						activity_comments.attr( 'class', classes );
-						activity_comments.children( 'form' ).removeClass( 'events-initiated').addClass( 'not-initialized' );
+						activity_comments.children( 'form' ).removeClass( 'events-initiated' ).addClass( 'not-initialized' );
 					}
 				}
 				activity_state = activity.find( '.activity-state' );
@@ -6756,7 +6755,7 @@ window.bp = window.bp || {};
 					activity_comments.append( form );
 					form.find( '.post-elements-buttons-item.post-emoji' ).removeClass( 'active' ).empty( '' ); // Reset emojionearea
 					this.resetActivityMedia( self.current_document.activity_id );
-					activity_comments.find( '.acomment-display' ).removeClass('display-focus');
+					activity_comments.find( '.acomment-display' ).removeClass( 'display-focus' );
 
 					html = activity_comments.html();
 					classes = activity_comments.attr( 'class' );
@@ -6765,7 +6764,7 @@ window.bp = window.bp || {};
 					if ( activity_comments.length ) {
 						activity_comments.append( form );
 						activity_comments.attr( 'class', classes );
-						activity_comments.children( 'form' ).removeClass( 'events-initiated').addClass( 'not-initialized' );
+						activity_comments.children( 'form' ).removeClass( 'events-initiated' ).addClass( 'not-initialized' );
 						//Reset document text preview
 						activity_comments.find( '.document-text.loaded' ).removeClass( 'loaded' ).find( '.CodeMirror' ).remove();
 						jQuery( window ).scroll();
@@ -7203,7 +7202,6 @@ window.bp = window.bp || {};
 				var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_media.activity_id + '"] .activity-comments' );
 				if ( on_page_activity_comments.length ) {
 					self.current_media.parent_activity_comments = true;
-					//on_page_activity_comments.html( '' ); // load on page activity content anew when activity has updates and theatre is closed
 				}
 				if ( true === self.current_media.parent_activity_comments ) {
 					$( '.bb-media-model-wrapper:last' ).after( '<input type="hidden" value="' + self.current_media.activity_id + '" id="hidden_parent_id"/>' );
@@ -7260,7 +7258,6 @@ window.bp = window.bp || {};
 				var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_document.activity_id + '"] .activity-comments' );
 				if ( on_page_activity_comments.length ) {
 					self.current_document.parent_activity_comments = true;
-					//on_page_activity_comments.html( '' ); // load on page activity content anew when activity has updates and theatre is closed
 				}
 				if ( true === self.current_document.parent_activity_comments ) {
 					$( '.bb-media-model-wrapper:last' ).after( '<input type="hidden" value="' + self.current_document.activity_id + '" id="hidden_parent_id"/>' );
@@ -7312,7 +7309,6 @@ window.bp = window.bp || {};
 				var form = on_page_activity_comments.find( '#ac-form-' + self.current_document.activity_id );
 				self.current_document.parent_activity_comments = true;
 				form.remove();
-				//on_page_activity_comments.html( '' ); // load on page activity content anew when activity has updates and theatre is closed
 			}
 
 			if ( true === self.current_document.parent_activity_comments ) {
@@ -7632,7 +7628,7 @@ window.bp = window.bp || {};
 
 		purgeEditActivityForm: function ( form ) {
 
-			if ( form.hasClass('acomment-edit') ) {
+			if ( form.hasClass( 'acomment-edit' ) ) {
 				var form_item_id = form.attr( 'data-item-id' );
 				var form_acomment = $( '[data-bp-activity-comment-id="' + form_item_id + '"]' );
 				var form_acomment_edit = form_acomment.find( '#acomment-edit-form-' + form_item_id );
