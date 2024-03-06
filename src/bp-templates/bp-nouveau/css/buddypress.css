@@ -4804,11 +4804,24 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   margin: 0;
 }
 
+.buddypress-wrap .bb-media-info-section .activity-comments ul .acomments-view-more--root {
+  visibility: visible;
+  opacity: 1;
+  width: initial;
+  height: initial;
+  padding: 10px 0;
+  margin: 0;
+}
+
 .view-more-comments {
   font-weight: 600;
 }
 
 .bb-activity-model-wrapper .view-more-comments {
+  display: none;
+}
+
+.bb-media-info-section .activity-comments > .view-more-comments {
   display: none;
 }
 

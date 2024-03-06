@@ -1334,6 +1334,7 @@
 
 		> .activity-modal {
 			max-height: 85vh;
+
 			/*min-height: 85vh;*/
 			max-width: 700px;
 			width: 700px;
@@ -1531,13 +1532,31 @@
 	}
 }
 
-.buddypress-wrap .activity-comments ul .acomments-view-more--hide {
-	visibility: hidden;
-	opacity: 0;
-	width: 0;
-	height: 0;
-	padding: 0;
-	margin: 0;
+.buddypress-wrap {
+
+	.activity-comments ul .acomments-view-more--hide {
+		visibility: hidden;
+		opacity: 0;
+		width: 0;
+		height: 0;
+		padding: 0;
+		margin: 0;
+	}
+
+	.bb-media-info-section {
+
+		.activity-comments ul {
+
+			.acomments-view-more--root {
+				visibility: visible;
+				opacity: 1;
+				width: initial;
+				height: initial;
+				padding: 10px 0;
+				margin: 0;
+			}
+		}
+	}
 }
 
 .view-more-comments {
@@ -1548,12 +1567,21 @@
 	}
 }
 
+.bb-media-info-section {
+
+	.activity-comments > .view-more-comments {
+		display: none;
+	}
+}
+
 .bb-internal-model {
+
 	.activity-comments.active {
+
 		.acomments-view-more {
 			pointer-events: none;
 		}
-	}	
+	}
 }
 
 /* Activity comment modal ==> Ends Here */
