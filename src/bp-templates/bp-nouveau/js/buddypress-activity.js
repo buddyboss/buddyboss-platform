@@ -719,6 +719,9 @@ window.bp = window.bp || {};
 								}
 							);
 						}
+
+						bp.Nouveau.Activity.activityHasUpdates = true;
+						bp.Nouveau.Activity.currentActivityId = activity_id;
 					}
 				}
 			);
@@ -3507,7 +3510,7 @@ window.bp = window.bp || {};
 				$pageActivitylistItem = $( '#activity-stream li.activity-item[data-bp-activity-id=' + activityId + ']' ),
 				type = '';
 
-			if ( $pageActivitylistItem.length > 0 ) {
+			if ( $pageActivitylistItem.length > 0 && bp.Nouveau.Activity.activityHasUpdates ) {
 
 				if ( $activityListItem.length > 0 ) {
 					if ( $activityListItem.hasClass( 'mini' ) ) {
@@ -3537,6 +3540,9 @@ window.bp = window.bp || {};
 					}
 				);
 			}
+
+			bp.Nouveau.Activity.activityHasUpdates = false;
+			bp.Nouveau.Activity.currentActivityId = null;
 		},
 
 		discardGifEmojiPicker: function() {
