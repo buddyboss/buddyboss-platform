@@ -562,8 +562,10 @@ window.bp = window.bp || {};
 			var form = modal.find( '#ac-form-' + activityId );
 
 			bp.Nouveau.Activity.reinitializeActivityCommentForm( form );
-			
-			bp.Nouveau.Activity.initializeEmojioneArea( false, '', activityId );
+
+			if ( !_.isUndefined( BP_Nouveau.media ) && !_.isUndefined( BP_Nouveau.media.emoji ) ) {
+				bp.Nouveau.Activity.initializeEmojioneArea( false, '', activityId );
+			}
 
 			modal.closest('body').removeClass( 'acomments-modal-open' );
 			modal.hide();
@@ -3325,20 +3327,20 @@ window.bp = window.bp || {};
 		 *
 		 * @return {[type]}       [description]
 		 */
-		launchActivityPopup: function( activityID, parentID ) {
+		launchActivityPopup: function ( activityID, parentID ) {
 			var activity_item = $( '#activity-' + activityID );
-			var modal = $('.bb-activity-model-wrapper');
-			var activity_content = activity_item[0].outerHTML;
+			var modal = $( '.bb-activity-model-wrapper' );
+			var activity_content = activity_item[ 0 ].outerHTML;
 			var selector = '[data-parent_comment_id="' + parentID + '"]';
 			var activityTitle = activity_item.data( 'activity-popup-title' );
 
-			modal.closest('body').addClass( 'acomments-modal-open' );
+			modal.closest( 'body' ).addClass( 'acomments-modal-open' );
 			modal.show();
 			modal.find( 'ul.activity-list' ).html( activity_content );
 			modal.find( '.bb-modal-activity-header h2' ).text( activityTitle );
-			
+
 			var form = modal.find( '#ac-form-' + activityID );
-			modal.find( '.acomment-display' ).removeClass('display-focus');
+			modal.find( '.acomment-display' ).removeClass( 'display-focus' );
 			modal.find( '.bb-modal-activity-footer' ).addClass( 'active' ).append( form );
 			form.removeClass( 'not-initialized' ).addClass( 'root' );
 			form.find( '#ac-input-' + activityID ).focus();
@@ -3346,17 +3348,18 @@ window.bp = window.bp || {};
 			form.removeClass( 'events-initiated' );
 			var ce = modal.find( '.bb-modal-activity-footer' ).find( '.ac-input[contenteditable]' );
 			bp.Nouveau.Activity.listenCommentInput( ce );
-			
-			
+
 			var action_tooltip = modal.find( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options-action' );
 			var privacy_wrap = modal.find( '.privacy-wrap' );
-			action_tooltip.attr('data-balloon-pos', 'left');
-			privacy_wrap.attr('data-bp-tooltip-pos', 'right');
+			action_tooltip.attr( 'data-balloon-pos', 'left' );
+			privacy_wrap.attr( 'data-bp-tooltip-pos', 'right' );
 
 			var viewMoreCommentsLink = modal.find( selector ).children( '.acomments-view-more' ).first();
 			viewMoreCommentsLink.trigger( 'click' );
 
-			bp.Nouveau.Activity.initializeEmojioneArea( true, '#activity-modal ', activityID );
+			if ( !_.isUndefined( BP_Nouveau.media ) && !_.isUndefined( BP_Nouveau.media.emoji ) ) {
+				bp.Nouveau.Activity.initializeEmojioneArea( true, '#activity-modal ', activityID );
+			}
 
 			if ( typeof bp.Nouveau !== 'undefined' ) {
 				bp.Nouveau.reportPopUp();
