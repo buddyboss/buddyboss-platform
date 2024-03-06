@@ -919,7 +919,7 @@ function bp_xprofile_ajax_add_repeater_set() {
 	}
 
 	$count = bp_get_profile_field_set_count( $field_group_id, $user_id );
-	$count ++;
+	$count++;
 	bp_set_profile_field_set_count( $field_group_id, $user_id, $count );
 	die( 'ok' );
 }
