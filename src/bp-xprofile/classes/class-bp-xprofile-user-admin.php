@@ -366,10 +366,24 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 				return;
 			}
 
+			$is_repeater_enabled = 'on' === BP_XProfile_Group::get_group_meta( $r['profile_group_id'], 'is_repeater_enabled' );
+			$meta_box_id         = '';
+			$meta_box_class      = '';
+			$profile_field_class = 'bp-profile-field';
+			if ( $is_repeater_enabled ) {
+				$meta_box_class                      = ' bb_admin_repeater_group';
+				$meta_box_id                         = 'id="profile-edit-form"';
+				$profile_field_class                 .= ' editfield';
+				$r['repeater_show_main_fields_only'] = false;
+			}
+
 			// Bail if no profile fields are available.
 			if ( ! bp_has_profile( $r ) ) {
 				return;
 			}
+			?>
+			<div class="profile-edit<?php echo esc_attr( $meta_box_class ); ?>" <?php echo $meta_box_id; ?>>
+			<?php
 
 			// Loop through profile groups & fields.
 			while ( bp_profile_groups() ) :
@@ -385,6 +399,14 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 					$ids = implode( ',', $ids_arr );
 				} else {
 					$ids = bp_get_the_profile_group_field_ids();
+				}
+
+				if ( $is_repeater_enabled ) {
+					?>
+					<input type="hidden" name="user_id" id="user_id" value="<?php echo esc_attr( $r['user_id'] ); ?>"/>
+					<input type="hidden" name="group" id="group" value="<?php echo esc_attr( $r['profile_group_id'] ); ?>"/>
+					<input type="hidden" name="current_url" id="current_url" value="<?php echo isset( $_SERVER['REQUEST_URI'] ) ? esc_attr( $_SERVER['REQUEST_URI'] ) : ''; ?>"/>
+					<?php
 				}
 				?>
 			<input type="hidden" name="field_ids[]" id="<?php echo esc_attr( 'field_ids_' . bp_get_the_profile_group_slug() ); ?>" value="<?php echo esc_attr( $ids ); ?>" />
@@ -406,9 +428,11 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 					if ( 'membertypes' === $field->type ) {
 						continue;
 					}
+
+					do_action( 'bp_before_profile_field_html', array( 'group_id' => $r['profile_group_id'] ) );
 					?>
 
-				<div<?php bp_field_css_class( 'bp-profile-field' ); ?>>
+				<div<?php bp_field_css_class( $profile_field_class ); ?>>
 					<fieldset>
 
 					<?php
@@ -470,10 +494,18 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 					</fieldset>
 				</div>
 
-			<?php endwhile; // End bp_profile_fields(). ?>
+			<?php
+					do_action( 'bp_after_profile_field_html', array( 'group_id' => $r['profile_group_id'] ) );
+				endwhile;
+
+				do_action( 'bp_after_profile_field_content', array( 'group_id' => $r['profile_group_id'] ) );
+				// End bp_profile_fields(). ?>
 
 				<?php
 		endwhile; // End bp_profile_groups.
+			?>
+			</div>
+			<?php
 		}
 
 		/**
