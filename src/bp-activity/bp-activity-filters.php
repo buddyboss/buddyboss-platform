@@ -175,6 +175,17 @@ add_action( 'edit_post', 'bb_cpt_post_title_save', 999, 2 );
 
 add_filter( 'bb_activity_comment_get_edit_data', 'bb_blogs_activity_comment_edit_content', 9999 );
 
+// Modal template for activity.
+add_action( 'bp_after_directory_activity_list', 'bb_activity_add_modal_template' );
+add_action( 'bp_after_group_activity_content', 'bb_activity_add_modal_template' );
+add_action( 'bp_after_member_activity_content', 'bb_activity_add_modal_template' );
+add_action( 'bp_after_directory_activity_list', 'bb_gifpicker_add_popup_template' );
+add_action( 'bp_after_group_activity_content', 'bb_gifpicker_add_popup_template' );
+add_action( 'bp_after_member_activity_content', 'bb_gifpicker_add_popup_template' );
+add_action( 'bp_before_directory_activity_list', 'bb_emojionearea_add_popup_template' );
+add_action( 'bp_before_group_activity_content', 'bb_emojionearea_add_popup_template' );
+add_action( 'bp_before_member_activity_content', 'bb_emojionearea_add_popup_template' );
+
 /** Functions *****************************************************************/
 
 /**
@@ -3688,34 +3699,28 @@ function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
 }
 
 /**
- * Add template for gifpicker
+ * Add template for gifpicker.
+ *
+ * @since BuddyBoss [BBVERSION]
  */
-function bp_gifpicker_add_popup_template() {
+function bb_gifpicker_add_popup_template() {
 	bp_get_template_part( 'activity/gifpicker-popup' );
 }
 
 /**
- * Add template for emojionearea picker
+ * Add template for emojionearea picker.
+ *
+ * @since BuddyBoss [BBVERSION]
  */
-function bp_emojionearea_add_popup_template() {
+function bb_emojionearea_add_popup_template() {
 	bp_get_template_part( 'activity/emojionearea-popup' );
 }
 
 /**
- * Add activity modal template for activity pages
+ * Add activity modal template for activity pages.
+ *
+ * @since BuddyBoss [BBVERSION]
  */
-function bp_activity_add_modal_template() {
+function bb_activity_add_modal_template() {
 	bp_get_template_part( 'activity/activity-modal' );
 }
-
-add_action( 'bp_after_directory_activity_list', 'bp_activity_add_modal_template' );
-add_action( 'bp_after_group_activity_content', 'bp_activity_add_modal_template' );
-add_action( 'bp_after_member_activity_content', 'bp_activity_add_modal_template' );
-
-add_action( 'bp_after_directory_activity_list', 'bp_gifpicker_add_popup_template' );
-add_action( 'bp_after_group_activity_content', 'bp_gifpicker_add_popup_template' );
-add_action( 'bp_after_member_activity_content', 'bp_gifpicker_add_popup_template' );
-
-add_action( 'bp_before_directory_activity_list', 'bp_emojionearea_add_popup_template' );
-add_action( 'bp_before_group_activity_content', 'bp_emojionearea_add_popup_template' );
-add_action( 'bp_before_member_activity_content', 'bp_emojionearea_add_popup_template' );
