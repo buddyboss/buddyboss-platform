@@ -810,6 +810,7 @@
 		position: absolute;
 		right: 20px;
 		font-size: 22px;
+		line-height: 1;
 		top: 10px;
 		display: none;
 
@@ -1311,6 +1312,10 @@
 /* Activity comment modal ==> Starts Here */
 .acomments-modal-open {
 	overflow: hidden;
+
+	.bb-toast-messages-enable .bb-toast-messages {
+		z-index: 999991;
+	}
 }
 
 .bb-activity-model-wrapper {
