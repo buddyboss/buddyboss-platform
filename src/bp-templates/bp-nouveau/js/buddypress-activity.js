@@ -721,6 +721,9 @@ window.bp = window.bp || {};
 								}
 							);
 						}
+
+						bp.Nouveau.Activity.activityHasUpdates = true;
+						bp.Nouveau.Activity.currentActivityId = activity_id;
 					}
 				}
 			);
@@ -3334,6 +3337,10 @@ window.bp = window.bp || {};
 			var selector = '[data-parent_comment_id="' + parentID + '"]';
 			var activityTitle = activity_item.data( 'activity-popup-title' );
 
+			// Reset to default activity updates and id globale variables
+			bp.Nouveau.Activity.activityHasUpdates = false;
+			bp.Nouveau.Activity.currentActivityId = null;
+
 			modal.closest( 'body' ).addClass( 'acomments-modal-open' );
 			modal.show();
 			modal.find( 'ul.activity-list' ).html( activity_content );
@@ -3510,7 +3517,7 @@ window.bp = window.bp || {};
 				$pageActivitylistItem = $( '#activity-stream li.activity-item[data-bp-activity-id=' + activityId + ']' ),
 				type = '';
 
-			if ( $pageActivitylistItem.length > 0 ) {
+			if ( $pageActivitylistItem.length > 0 && bp.Nouveau.Activity.activityHasUpdates ) {
 
 				if ( $activityListItem.length > 0 ) {
 					if ( $activityListItem.hasClass( 'mini' ) ) {
@@ -3540,6 +3547,9 @@ window.bp = window.bp || {};
 					}
 				);
 			}
+
+			bp.Nouveau.Activity.activityHasUpdates = false;
+			bp.Nouveau.Activity.currentActivityId = null;
 		},
 
 		discardGifEmojiPicker: function() {

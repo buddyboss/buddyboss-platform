@@ -2511,7 +2511,7 @@ window.bp = window.bp || {};
 				this.destroy = this.destroy.bind(this);
 
 				// Check if standalone is provided in options and update the property
-				if (options && options.standalone !== undefined) {
+				if ( options && options.standalone !== undefined ) {
 					this.standalone = options.standalone;
 				}
 
@@ -2638,7 +2638,7 @@ window.bp = window.bp || {};
 				this.select = this.select.bind(this);
 
 				// Check if standalone is provided in options and update the property
-				if (options && options.standalone !== undefined) {
+				if ( options && options.standalone !== undefined ) {
 					this.standalone = options.standalone;
 				}
 
