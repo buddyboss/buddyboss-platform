@@ -3335,6 +3335,10 @@ window.bp = window.bp || {};
 			var selector = '[data-parent_comment_id="' + parentID + '"]';
 			var activityTitle = activity_item.data( 'activity-popup-title' );
 
+			// Reset to default activity updates and id globale variables
+			bp.Nouveau.Activity.activityHasUpdates = false;
+			bp.Nouveau.Activity.currentActivityId = null;
+
 			modal.closest('body').addClass( 'acomments-modal-open' );
 			modal.show();
 			modal.find( 'ul.activity-list' ).html( activity_content );
