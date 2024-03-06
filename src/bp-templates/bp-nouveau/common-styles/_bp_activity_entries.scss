@@ -1526,6 +1526,15 @@
 	}
 }
 
+.buddypress-wrap .activity-comments ul .acomments-view-more--hide {
+	visibility: hidden;
+	opacity: 0;
+	width: 0;
+	height: 0;
+	padding: 0;
+	margin: 0;
+}
+
 .view-more-comments {
 	font-weight: 600;
 
