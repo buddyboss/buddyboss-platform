@@ -550,8 +550,14 @@ function bp_nouveau_ajax_new_activity_comment() {
 	}
 
 	ob_start();
+
+	$comment_template_args = array();
+	if ( ! empty( $_POST['edit_comment'] ) ) {
+		$comment_template_args = array( 'show_replies' => false );
+	}
+
 	// Get activity comment template part.
-	bp_get_template_part( 'activity/comment' );
+	bp_get_template_part( 'activity/comment', null, $comment_template_args );
 	$response = array( 'contents' => ob_get_contents() );
 	ob_end_clean();
 
@@ -1185,8 +1191,19 @@ function bb_nouveau_ajax_activity_loadmore_comments() {
 	global $activities_template;
 	$activity_id         = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
 	$parent_comment_id   = ! empty( $_POST['parent_comment_id'] ) ? (int) $_POST['parent_comment_id'] : 0;
-	$scope               = ! empty( $_POST['scope'] ) ? $_POST['scope'] : '';
-	$activities_template = new BP_Activity_Template( array( 'include' => $activity_id , 'display_comments' => true, 'scope' => $scope ) );
+	$type                = ! empty( $_POST['type'] ) ? $_POST['type'] : '';
+
+	$args = array(
+		'include'          => $activity_id ,
+		'display_comments' => true,
+		'scope'            => 'groups' === $type ? $type : '',
+	);
+
+	if ( 'media' === $type || 'document' === $type ) {
+		$args['show_hidden'] = true;
+	}
+
+	$activities_template = new BP_Activity_Template( $args );
 
 	$activities_template->activity = isset( $activities_template->activities[0] ) ? $activities_template->activities[0] : null;
 
