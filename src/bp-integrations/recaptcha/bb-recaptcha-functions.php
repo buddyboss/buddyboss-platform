@@ -2,7 +2,7 @@
 /**
  * Recaptcha integration helpers.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.5.60
  * @package BuddyBoss\Recaptcha
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Returns Recaptcha Integration url.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  *
  * @param string $path Path to recaptcha integration.
  */
@@ -23,7 +23,7 @@ function bb_recaptcha_integration_url( $path = '' ) {
 /**
  * Retrieves the reCAPTCHA options.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  *
  * @return array The reCAPTCHA options.
  */
@@ -32,7 +32,7 @@ function bb_recaptcha_options() {
 	/**
 	 * Filter allows modifying the reCAPTCHA options.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param array $recaptcha_options The reCAPTCHA options.
 	 */
@@ -42,7 +42,7 @@ function bb_recaptcha_options() {
 /**
  * Retrieves the value of a specific reCAPTCHA setting.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  *
  * @param string $key     The key of the setting to retrieve.
  * @param string $default Optional. The default value to return if the setting is not found.
@@ -60,7 +60,7 @@ function bb_recaptcha_setting( $key, $default = '' ) {
 	/**
 	 * Filters recaptcha get settings.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param array $retval  Settings of recaptcha.
 	 * @param mixed $key     Optional. Get setting by key.
@@ -72,7 +72,7 @@ function bb_recaptcha_setting( $key, $default = '' ) {
 /**
  * Retrieves the selected reCAPTCHA version.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  *
  * @return string The selected reCAPTCHA version.
  */
@@ -82,7 +82,7 @@ function bb_recaptcha_recaptcha_versions() {
 	/**
 	 * Filters the selected reCAPTCHA version.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param string $recaptcha_version The selected reCAPTCHA version.
 	 */
@@ -92,7 +92,7 @@ function bb_recaptcha_recaptcha_versions() {
 /**
  * Retrieves the selected reCAPTCHA v2 option.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  *
  * @return string The selected v2 option.
  */
@@ -102,7 +102,7 @@ function bb_recaptcha_recaptcha_v2_option() {
 	/**
 	 * Filters the selected reCAPTCHA v2 option.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param string $recaptcha_v2_option The selected reCAPTCHA v2 option.
 	 */
@@ -112,7 +112,7 @@ function bb_recaptcha_recaptcha_v2_option() {
 /**
  * Retrieves the reCAPTCHA site key.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  *
  * @return string The reCAPTCHA site key.
  */
@@ -122,7 +122,7 @@ function bb_recaptcha_site_key() {
 	/**
 	 * Filters the reCAPTCHA site key.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param string $site_key The reCAPTCHA site key.
 	 */
@@ -132,7 +132,7 @@ function bb_recaptcha_site_key() {
 /**
  * Retrieves the reCAPTCHA secret key.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  *
  * @return string The reCAPTCHA secret key.
  */
@@ -142,7 +142,7 @@ function bb_recaptcha_secret_key() {
 	/**
 	 * Filters the reCAPTCHA secret key.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param string $secret_key The reCAPTCHA secret key.
 	 */
@@ -152,7 +152,7 @@ function bb_recaptcha_secret_key() {
 /**
  * Retrieves the reCAPTCHA connection status.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  *
  * @return string The reCAPTCHA connection status.
  */
@@ -162,7 +162,7 @@ function bb_recaptcha_connection_status() {
 	/**
 	 * Filters the reCAPTCHA connection status.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param string $secret_key The reCAPTCHA connection status.
 	 */
@@ -172,7 +172,7 @@ function bb_recaptcha_connection_status() {
 /**
  * Retrieves the reCAPTCHA score threshold.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  *
  * @param float $default The default score threshold value. Default is 0.5.
  *
@@ -183,7 +183,7 @@ function bb_recaptcha_score_threshold( $default = 0.5 ) {
 	/**
 	 * Filter allows modifying the reCAPTCHA score threshold.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param float $threshold The reCAPTCHA score threshold.
 	 */
@@ -193,7 +193,7 @@ function bb_recaptcha_score_threshold( $default = 0.5 ) {
 /**
  * Retrieves the reCAPTCHA actions and their configurations.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  *
  * @return array An associative array of reCAPTCHA actions and their configurations.
  */
@@ -224,7 +224,7 @@ function bb_recaptcha_actions() {
 	/**
 	 * Filter hook allows modifying the reCAPTCHA actions and their configurations.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param array $actions An associative array of reCAPTCHA actions and their configurations.
 	 */
@@ -234,7 +234,7 @@ function bb_recaptcha_actions() {
 /**
  * Determines if reCAPTCHA is enabled for a specific action.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  *
  * @param string $key The key of the action for which to check reCAPTCHA enabled status.
  *
@@ -247,7 +247,7 @@ function bb_recaptcha_is_enabled( $key ) {
 	/**
 	 * Filters the enabled status of reCAPTCHA for a specific action.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param bool   $retval The current enabled status of reCAPTCHA for the specified action.
 	 * @param string $key    The key of the action for which the enabled status is being determined.
@@ -258,7 +258,7 @@ function bb_recaptcha_is_enabled( $key ) {
 /**
  * Retrieves the reCAPTCHA bypass option.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  *
  * @return bool The reCAPTCHA bypass option.
  */
@@ -272,7 +272,7 @@ function bb_recaptcha_allow_bypass_enable() {
 	/**
 	 * Filters the reCAPTCHA bypass option.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param bool $allow_bypass The reCAPTCHA bypass option.
 	 */
@@ -282,7 +282,7 @@ function bb_recaptcha_allow_bypass_enable() {
 /**
  * Retrieves the list of supported reCAPTCHA languages.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  *
  * @return array An associative array of supported reCAPTCHA languages.
  */
@@ -363,7 +363,7 @@ function bb_recaptcha_languages() {
 	/**
 	 * Filters the list of supported reCAPTCHA languages.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param array $languages An associative array of supported reCAPTCHA languages where the keys are
 	 *                         language codes and the values are the corresponding language names.
@@ -374,7 +374,7 @@ function bb_recaptcha_languages() {
 /**
  * Retrieves the reCAPTCHA conflict mode.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  *
  * @return bool The reCAPTCHA conflict mode.
  */
@@ -384,7 +384,7 @@ function bb_recaptcha_conflict_mode() {
 	/**
 	 * Filters the reCAPTCHA conflict mode.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param bool $conflict_mode The reCAPTCHA conflict mode.
 	 */
@@ -394,7 +394,7 @@ function bb_recaptcha_conflict_mode() {
 /**
  * Retrieves the selected reCAPTCHA v2 theme.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  *
  * @return string The selected v2 theme.
  */
@@ -404,7 +404,7 @@ function bb_recaptcha_v2_theme() {
 	/**
 	 * Filters the selected reCAPTCHA v2 theme.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param string $recaptcha_v2_theme The selected reCAPTCHA v2 theme..
 	 */
@@ -414,7 +414,7 @@ function bb_recaptcha_v2_theme() {
 /**
  * Retrieves the selected reCAPTCHA v2 size.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  *
  * @return string The selected v2 size.
  */
@@ -424,7 +424,7 @@ function bb_recaptcha_v2_size() {
 	/**
 	 * Filters the selected reCAPTCHA v2 size.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param string $recaptcha_v2_size The selected reCAPTCHA v2 size.
 	 */
@@ -434,7 +434,7 @@ function bb_recaptcha_v2_size() {
 /**
  * Retrieves the selected reCAPTCHA v2 badge.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  *
  * @return string The selected v2 badge.
  */
@@ -444,7 +444,7 @@ function bb_recaptcha_v2_badge() {
 	/**
 	 * Filters the selected reCAPTCHA v2 badge.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param string $recaptcha_v2_badge The selected reCAPTCHA v2 badge.
 	 */
@@ -455,7 +455,7 @@ function bb_recaptcha_v2_badge() {
  * Retrieve the Google reCAPTCHA API response.
  * This function sends a request to the Google reCAPTCHA API to verify the provided token.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  *
  * @param string $secret_key The secret key for the Google reCAPTCHA.
  * @param string $token      The token to be verified by the Google reCAPTCHA API.
@@ -484,7 +484,7 @@ function bb_get_google_recaptcha_api_response( $secret_key, $token ) {
  * This function checks the connection status with the reCAPTCHA service and displays the appropriate reCAPTCHA widget
  * based on the enabled version (v2 or v3) and the configured actions.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  *
  * @param string $action Current action ( i.e - bb_login, bb_register etc. ). Default will be blank.
  *
@@ -597,7 +597,7 @@ function bb_recaptcha_display( $action = '' ) {
  * This function checks the submitted reCAPTCHA token and verifies it with the Google reCAPTCHA API.
  * It handles verification for both reCAPTCHA v2 and reCAPTCHA v3 based on the selected version.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  *
  * @param string $action Current action for recaptcha.
  *
@@ -678,7 +678,7 @@ function bb_recaptcha_verification_front( $action = '' ) {
  * specified in the plugin settings. If the current IP is found in the list, reCAPTCHA verification
  * is bypassed for the user.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  *
  * @return bool Returns true if the current user's IP is allowed to bypass reCAPTCHA verification, otherwise false.
  */
@@ -702,7 +702,7 @@ function bb_recaptcha_allow_ip() {
  * determining the actual client IP address. The function also validates the IP address to ensure
  * it is not a private or reserved IP address.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  * @return string|false The current user's IP address if successfully retrieved and validated,
  *                      or false if the IP address cannot be determined or is invalid.
  */
@@ -748,7 +748,7 @@ function bb_recaptcha_get_current_ip() {
 /**
  * Removes duplicate reCAPTCHA scripts from the other plugins or WordPress.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  *
  * @global WP_Scripts $wp_scripts WordPress script queue object.
  *

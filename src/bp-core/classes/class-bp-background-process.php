@@ -102,7 +102,7 @@ if ( ! class_exists( 'BP_Background_Process' ) ) {
 				/**
 				 * Filter to use before start process.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 2.5.60
 				 *
 				 * @param object $batch Batch object.
 				 */
@@ -133,7 +133,7 @@ if ( ! class_exists( 'BP_Background_Process' ) ) {
 				/**
 				 * Action to use after end the process.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 2.5.60
 				 *
 				 * @param object $batch Batch object.
 				 */

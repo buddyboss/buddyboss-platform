@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Recaptcha
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the BB Recaptcha class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.60
  */
 class BB_Recaptcha_Integration extends BP_Integration {
 
@@ -37,7 +37,7 @@ class BB_Recaptcha_Integration extends BP_Integration {
 	/**
 	 * Includes.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 *
 	 * @param array $includes Array of file paths to include.
 	 */
@@ -78,7 +78,7 @@ class BB_Recaptcha_Integration extends BP_Integration {
 	/**
 	 * Register Recaptcha setting tab.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.60
 	 */
 	public function setup_admin_integration_tab() {
 
