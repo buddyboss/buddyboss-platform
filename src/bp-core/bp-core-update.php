@@ -3414,5 +3414,5 @@ function bb_update_to_2_5_0() {
 	if ( $thread_comments_depth > 4 ) {
 		$thread_comments_depth = 4;
 	}
-	update_option( '_bb_activity_comment_threading_depth', $thread_comments_depth ) ;
+	update_option( '_bb_activity_comment_threading_depth', $thread_comments_depth );
 }
