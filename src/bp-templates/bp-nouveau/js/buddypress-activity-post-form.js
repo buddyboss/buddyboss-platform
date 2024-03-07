@@ -2571,7 +2571,7 @@ window.bp = window.bp || {};
 					tool_box.find( '#activity-gif-button' ).removeClass( 'open' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 				}
 
-				var tool_box_comment = this.$el.parents( '.bp-ac-form-cotainer' );
+				var tool_box_comment = this.$el.parents( '.bp-ac-form-container' );
 
 				if ( this.standalone ) {
 					this.$el.closest( '.screen-content' ).find( '#activity-modal .ac-form' ).removeClass( 'has-gif' );

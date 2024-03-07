@@ -4716,7 +4716,7 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   display: none;
 }
 
-.ac-form-placeholder .bp-ac-form-cotainer {
+.ac-form-placeholder .bp-ac-form-container {
   display: flex;
   align-items: flex-start;
   flex-wrap: wrap;
@@ -7971,17 +7971,17 @@ form.ac-form.not-initialized > * {
   }
 }
 
-form.ac-form .bp-ac-form-cotainer {
+form.ac-form .bp-ac-form-container {
   align-items: flex-start;
   flex-wrap: wrap;
 }
 
-form.ac-form .bp-ac-form-cotainer .ac-reply-attachments {
+form.ac-form .bp-ac-form-container .ac-reply-attachments {
   width: 100%;
   padding-left: 46px;
 }
 
-form.ac-form .bp-ac-form-cotainer .bp-feedback {
+form.ac-form .bp-ac-form-container .bp-feedback {
   width: 100%;
 }
 
@@ -8320,7 +8320,7 @@ form.ac-form .activity-attached-gif-container .gif-image-remove:hover .bb-icon-t
   pointer-events: none;
 }
 
-.bp-ac-form-cotainer {
+.bp-ac-form-container {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;

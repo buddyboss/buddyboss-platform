@@ -22,7 +22,7 @@
 			</div>
 			<div class="bb-modal-activity-footer activity-item">
 				<div class="ac-form-placeholder">
-					<div class="bp-ac-form-cotainer">
+					<div class="bp-ac-form-container">
 						<div class="ac-reply-avatar">
 							<?php bp_loggedin_user_avatar( array( 'type' => 'thumb' ) ); ?>
 						</div>

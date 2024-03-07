@@ -1924,7 +1924,7 @@ window.bp = window.bp || {};
 			var self               = this,
 				target             = $( event.currentTarget ),
 				key                = target.data( 'ac-id' ),
-				dropzone_container = target.closest( '.bp-ac-form-cotainer' ).find( '#ac-reply-post-media-uploader-' + key );
+				dropzone_container = target.closest( '.bp-ac-form-container' ).find( '#ac-reply-post-media-uploader-' + key );
 
 			// Check if target is inside #activity-modal
 			var isInsideModal = target.closest('#activity-modal').length > 0;
@@ -2153,7 +2153,7 @@ window.bp = window.bp || {};
 			this.resetGifPicker( c_id );
 
 			if ( ! event.isCustomEvent ) {
-				$( target ).closest( '.bp-ac-form-cotainer' ).find( '.dropzone.media-dropzone' ).trigger( 'click' );
+				$( target ).closest( '.bp-ac-form-container' ).find( '.dropzone.media-dropzone' ).trigger( 'click' );
 			}
 		},
 
@@ -2161,7 +2161,7 @@ window.bp = window.bp || {};
 			var self               = this,
 				target             = $( event.currentTarget ),
 				key                = target.data( 'ac-id' ),
-				dropzone_container = target.closest( '.bp-ac-form-cotainer' ).find( '#ac-reply-post-document-uploader-' + key );
+				dropzone_container = target.closest( '.bp-ac-form-container' ).find( '#ac-reply-post-document-uploader-' + key );
 
 			// Check if target is inside #activity-modal
 			var isInsideModal = target.closest('#activity-modal').length > 0;
@@ -2398,7 +2398,7 @@ window.bp = window.bp || {};
 			this.resetGifPicker( c_id );
 
 			if ( ! event.isCustomEvent ) {
-				$( target ).closest( '.bp-ac-form-cotainer' ).find( '.dropzone.document-dropzone' ).trigger( 'click' );
+				$( target ).closest( '.bp-ac-form-container' ).find( '.dropzone.document-dropzone' ).trigger( 'click' );
 			}
 		},
 
@@ -2406,7 +2406,7 @@ window.bp = window.bp || {};
 			var self               = this,
 				target             = $( event.currentTarget ),
 				key                = target.data( 'ac-id' ),
-				dropzone_container = target.closest( '.bp-ac-form-cotainer' ).find( '#ac-reply-post-video-uploader-' + key );
+				dropzone_container = target.closest( '.bp-ac-form-container' ).find( '#ac-reply-post-video-uploader-' + key );
 
 			// Check if target is inside #activity-modal
 			var isInsideModal = target.closest('#activity-modal').length > 0;
@@ -2660,7 +2660,7 @@ window.bp = window.bp || {};
 			this.resetGifPicker( c_id );
 
 			if ( ! event.isCustomEvent ) {
-				$( target ).closest( '.bp-ac-form-cotainer' ).find( '.dropzone.video-dropzone' ).trigger( 'click' );
+				$( target ).closest( '.bp-ac-form-container' ).find( '.dropzone.video-dropzone' ).trigger( 'click' );
 			}
 		},
 

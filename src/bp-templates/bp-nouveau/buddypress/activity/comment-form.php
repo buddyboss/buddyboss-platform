@@ -19,7 +19,7 @@ $activity_id = bp_get_activity_id();
 
 <form action="<?php bp_activity_comment_form_action(); ?>" method="post" id="ac-form-<?php echo esc_attr( $activity_id ); ?>" class="ac-form not-initialized"<?php bp_activity_comment_form_nojs_display(); ?>>
 
-	<div class="bp-ac-form-cotainer">
+	<div class="bp-ac-form-container">
 
 		<div class="ac-reply-avatar"><?php bp_loggedin_user_avatar( array( 'type' => 'thumb' ) ); ?></div>
 

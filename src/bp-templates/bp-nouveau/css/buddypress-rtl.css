@@ -7528,12 +7528,12 @@ form.ac-form.not-initialized > * {
   }
 }
 
-form.ac-form .bp-ac-form-cotainer {
+form.ac-form .bp-ac-form-container {
   align-items: flex-start;
   flex-wrap: wrap;
 }
 
-form.ac-form .bp-ac-form-cotainer .ac-reply-attachments {
+form.ac-form .bp-ac-form-container .ac-reply-attachments {
   width: 100%;
   padding-right: 46px;
 }
@@ -7873,7 +7873,7 @@ form.ac-form .activity-attached-gif-container .gif-image-remove:hover .bb-icon-t
   pointer-events: none;
 }
 
-.bp-ac-form-cotainer {
+.bp-ac-form-container {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
