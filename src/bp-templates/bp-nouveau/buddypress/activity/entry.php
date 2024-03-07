@@ -87,10 +87,11 @@ $activity_popup_title = sprintf( esc_html__( "%s's Post", 'buddyboss' ), bp_core
 							</a>
 						</span>
 					<?php
+					$activity_date_recorded = bp_get_activity_date_recorded();
 					printf(
 						'<span class="time-since" data-livestamp="%1$s">%2$s</span>',
-						bp_core_get_iso8601_date( bp_get_activity_date_recorded() ),
-						bp_core_time_since( bp_get_activity_date_recorded() )
+						bp_core_get_iso8601_date( $activity_date_recorded ),
+						bp_core_time_since( $activity_date_recorded )
 					);
 					?>
 					<?php
@@ -112,9 +113,11 @@ $activity_popup_title = sprintf( esc_html__( "%s's Post", 'buddyboss' ), bp_core
 		</div>
 
 		<div class="activity-header">
-			<?php bp_activity_action();
-				bp_nouveau_activity_is_edited();
-				 bp_nouveau_activity_privacy(); ?>
+			<?php
+			bp_activity_action();
+			bp_nouveau_activity_is_edited();
+			bp_nouveau_activity_privacy();
+			?>
 		</div>
 
 	<?php endif;
@@ -132,17 +135,17 @@ $activity_popup_title = sprintf( esc_html__( "%s's Post", 'buddyboss' ), bp_core
 		endif;
 		?>
 
-		<?php bp_nouveau_activity_hook( 'after', 'activity_content' ); ?>
-
-		<?php bp_nouveau_activity_state(); ?>
-
-		<?php bp_nouveau_activity_entry_buttons(); ?>
+		<?php
+		bp_nouveau_activity_hook( 'after', 'activity_content' );
+		bp_nouveau_activity_state();
+		bp_nouveau_activity_entry_buttons();
+		?>
 	</div>
 
 	<?php
 	bp_nouveau_activity_hook( 'before', 'entry_comments' );
 
-	if ( bp_activity_can_comment() ) {
+	if ( bp_activity_can_comment() || bp_is_single_activity() ) {
 		$class = 'activity-comments';
 		if ( 'blogs' === bp_get_activity_object_name() ) {
 			$class .= get_option( 'thread_comments' ) ? ' threaded-comments threaded-level-' . get_option( 'thread_comments_depth' ) : '';
