@@ -145,7 +145,7 @@ $activity_popup_title = sprintf( esc_html__( "%s's Post", 'buddyboss' ), bp_core
 	<?php
 	bp_nouveau_activity_hook( 'before', 'entry_comments' );
 
-	if ( bp_activity_can_comment() || bp_is_single_activity() ) {
+	if ( bp_activity_can_comment() ) {
 		$class = 'activity-comments';
 		if ( 'blogs' === bp_get_activity_object_name() ) {
 			$class .= get_option( 'thread_comments' ) ? ' threaded-comments threaded-level-' . get_option( 'thread_comments_depth' ) : '';
