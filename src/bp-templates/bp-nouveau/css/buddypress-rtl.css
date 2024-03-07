@@ -3368,6 +3368,10 @@ input.search-query-input {
   display: none !important;
 }
 
+.activity-list .activity-item.bb-closed-comments .generic-button:has(.edit-activity) {
+  display: none;
+}
+
 .activity-list .activity-item.bb-closed-comments .bb-activity-closed-comments-notice {
   background: #e1e3e5;
   margin: 0 -15px;

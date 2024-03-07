@@ -31,6 +31,10 @@
 				display: none !important;
 			}
 
+			.generic-button:has(.edit-activity) {
+				display: none;
+			}
+
 			.bb-activity-closed-comments-notice {
 				background: #e1e3e5;
 				margin: 0 -15px;
