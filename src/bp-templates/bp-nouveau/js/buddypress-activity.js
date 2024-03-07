@@ -3430,7 +3430,7 @@ window.bp = window.bp || {};
 			bp.Nouveau.ajax( data, 'activity' ).done(
 				function( response ) {
 					if ( false === response.success ) {
-						target.html( "<p class='error'>" + response.data.message + "</p>" ).removeClass( 'loading' );
+						target.html( "<p class='error'>" + response.data.message + "</p>" ).removeClass( 'acomments-view-more--hide' );
 						commentsList.removeClass( 'active' );
 						return;
 					} else if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.comments ) {
@@ -3455,7 +3455,7 @@ window.bp = window.bp || {};
 
 							});
 
-							if ( '' !== lastCommentTimeStamp ) {
+							if ( 'undefined' !== typeof lastCommentTimeStamp && '' !== lastCommentTimeStamp ) {
 
 								var $addAfterElement = $targetList.find( "li.activity-comment[data-bp-timestamp='" + lastCommentTimeStamp + "']" );
 								$addAfterElement.after( $newComments );
@@ -3485,7 +3485,7 @@ window.bp = window.bp || {};
 				}
 			).fail(
 				function( $xhr ) {
-					target.html( "<p class='error'>" + $xhr.statusText + "</p>" ).removeClass( 'loading' );
+					target.html( "<p class='error'>" + $xhr.statusText + "</p>" ).removeClass( 'acomments-view-more--hide' );
 					commentsList.removeClass( 'active' );
 				}
 			);
