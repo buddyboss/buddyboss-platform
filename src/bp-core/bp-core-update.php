@@ -475,6 +475,10 @@ function bp_version_updater() {
 			bb_update_to_2_4_71();
 		}
 
+		if ( $raw_db_version < 20961 ) {
+			bb_update_to_2_6_00();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3394,4 +3398,23 @@ function bb_core_removed_orphaned_member_slug() {
 
 	// Re-register the background jobs until the result is empty.
 	bb_background_removed_orphaned_metadata();
+}
+
+/**
+ * For existing install disable close comments setting by default.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_6_00() {
+
+	$is_already_run = get_transient( 'bb_update_to_2_6_00' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_update_to_2_6_00', true, HOUR_IN_SECONDS );
+
+	bp_update_option( '_bb_enable_close_activity_comments', 0 );
 }
