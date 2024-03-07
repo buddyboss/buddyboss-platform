@@ -1329,7 +1329,7 @@ function bp_admin_update_activity_favourite() {
 	if ( ! $bp_activity_reactions ) {
 		$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 		$args   = array(
-			'number' => 50,
+			'number' => 20,
 			'offset' => $offset,
 		);
 
