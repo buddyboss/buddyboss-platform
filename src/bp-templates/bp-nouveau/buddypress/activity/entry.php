@@ -128,8 +128,9 @@ $activity_popup_title = sprintf( esc_html__( "%s's Post", 'buddyboss' ), bp_core
 		if ( bp_nouveau_activity_has_content() ) :
 			?>
 			<div class="activity-inner"><?php bp_nouveau_activity_content(); ?></div>
-			<?php
+		<?php
 		endif;
+		?>
 
 		<?php bp_nouveau_activity_hook( 'after', 'activity_content' ); ?>
 
