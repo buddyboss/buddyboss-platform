@@ -910,6 +910,9 @@ window.bp = window.bp || {};
 									// Hide Reactions popup.
 									main_el.find( '.ac-emotions_list' ).removeClass( 'active' );
 
+									bp.Nouveau.Activity.activityHasUpdates = true;
+									bp.Nouveau.Activity.currentActivityId = item_id;
+
 									$( this ).fadeIn( 200 );
 									target.removeClass( 'loading' );
 								}
