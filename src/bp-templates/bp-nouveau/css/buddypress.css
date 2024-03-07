@@ -7562,6 +7562,7 @@ span.dashicons.dashicons-admin-file:before {
   padding: 10px 15px;
   border-radius: 6px;
   margin-bottom: 5px;
+  min-width: 170px;
   position: relative;
 }
 
