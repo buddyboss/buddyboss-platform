@@ -1245,6 +1245,14 @@ function bb_nouveau_ajax_activity_update_close_comments() {
 		'feedback' => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
 	);
 
+	if ( ! bb_is_close_activity_comments_enabled() ) {
+		wp_send_json_error( 
+			array(
+				'feedback' => esc_html__( 'There was a problem marking this operation. Close comments setting is disabled.', 'buddyboss' ),
+			)
+		);
+	}
+
 	if (
 		! bp_is_post_request() ||
 		! is_user_logged_in() ||

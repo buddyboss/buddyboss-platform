@@ -3445,6 +3445,15 @@ function bb_update_to_2_4_74() {
  * @return void
  */
 function bb_update_to_2_6_0() {
+
+	$is_already_run = get_transient( 'bb_update_to_2_6_0' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_update_to_2_6_0', true, HOUR_IN_SECONDS );
+
+	bp_update_option( '_bb_enable_close_activity_comments', 0 );
 	update_option( '_bb_enable_activity_comment_threading', (int) get_option( 'thread_comments' ) );
 
 	$thread_comments_depth = (int) get_option( 'thread_comments_depth', 3 );
