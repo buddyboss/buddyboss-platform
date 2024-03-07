@@ -1662,8 +1662,8 @@ window.bp = window.bp || {};
 							response = JSON.parse( response );
 						}
 						if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.feedback ) {
-							var activity_list   = target.closest( '#activity-stream > ul' );
-							var activity_stream = target.closest( '#activity-stream' );
+							var activity_list   = target.closest( 'ul.activity-list' );
+							var activity_stream = target.closest( '.screen-content' ).find( '#activity-stream' );
 
 							if ( response.success ) {
 
@@ -1755,6 +1755,9 @@ window.bp = window.bp || {};
 								]
 							);
 						}
+
+						bp.Nouveau.Activity.activityHasUpdates = true;
+						bp.Nouveau.Activity.currentActivityId = activity_id;
 					}
 				).fail(
 					function() {
