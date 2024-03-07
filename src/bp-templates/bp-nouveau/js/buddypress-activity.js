@@ -3423,7 +3423,7 @@ window.bp = window.bp || {};
 				}
 			}
 
-			target.addClass( 'loading' ).removeClass('bp-hide');
+			target.addClass( 'loading' ).removeClass( 'acomments-view-more--hide' );
 			commentsList.addClass( 'active' );
 			target.html( skeleton );
 
