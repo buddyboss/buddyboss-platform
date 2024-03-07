@@ -1006,6 +1006,9 @@ window.bp = window.bp || {};
 							li_parent.append( response.data.feedback );
 							li_parent.find( '.bp-feedback' ).hide().fadeIn( 300 );
 						} else {
+							var closestParentElement = li_parent.closest('.has-child-comments');
+							var closestList = closestParentElement.find( '> ul' );
+
 							// Specific case of the single activity screen.
 							if ( response.data.redirect ) {
 								return window.location.href = response.data.redirect;
@@ -1058,6 +1061,10 @@ window.bp = window.bp || {};
 								300,
 								function() {
 									li_parent.remove();
+
+									if (closestList.find('li').length === 0) {
+										closestParentElement.removeClass( 'has-child-comments' )
+									}
 								}
 							);
 
