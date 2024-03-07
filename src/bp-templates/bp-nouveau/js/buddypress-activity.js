@@ -3516,7 +3516,7 @@ window.bp = window.bp || {};
 
 			var currentTargetModal = $( e.currentTarget ).parents( '.bb-activity-model-wrapper' ),
 				$activityListItem = $( currentTargetModal ).find( 'ul.activity-list > li' ),
-				activityId  = $activityListItem.data( 'bp-activity-id' ),
+				activityId = $activityListItem.data( 'bp-activity-id' ),
 				$pageActivitylistItem = $( '#activity-stream li.activity-item[data-bp-activity-id=' + activityId + ']' ),
 				type = '';
 
@@ -3534,7 +3534,7 @@ window.bp = window.bp || {};
 					action: 'activity_sync_from_modal',
 					activity_id: activityId,
 					type: type,
-				}
+				};
 
 				bp.Nouveau.ajax( data, 'activity' ).done(
 					function( response ) {

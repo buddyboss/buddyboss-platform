@@ -1266,7 +1266,7 @@ function bb_nouveau_ajax_activity_loadmore_comments() {
 }
 
 /**
- * Get perticular activity to sync when activity modal is closed.
+ * Get particular activity to sync when activity modal is closed.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -1295,14 +1295,11 @@ function bb_nouveau_ajax_activity_sync_from_modal() {
 		);
 	}
 
-	global $activities_template;
 	$activity_id = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
-	$type        = ! empty( $_POST['type'] ) ? $_POST['type'] : '';
 
 	$args = array(
 		'in'               => $activity_id ,
 		'display_comments' => true,
-		// 'scope'            => 'groups' === $type ? $type : '',
 	);
 
 	ob_start();
