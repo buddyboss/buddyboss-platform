@@ -1332,6 +1332,10 @@
 		align-items: center;
 		justify-content: center;
 
+		&.activity-theatre {
+			z-index: 999990;
+		}
+
 		> .activity-modal {
 			max-height: 85vh;
 
