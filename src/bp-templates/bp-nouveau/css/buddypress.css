@@ -4616,6 +4616,10 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
   justify-content: center;
 }
 
+.bb-activity-model-wrapper.bb-internal-model.activity-theatre {
+  z-index: 999990;
+}
+
 .bb-activity-model-wrapper.bb-internal-model > .activity-modal {
   max-height: 85vh;
   /*min-height: 85vh;*/

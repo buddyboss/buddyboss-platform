@@ -3349,6 +3349,17 @@ window.bp = window.bp || {};
 			modal.find( 'ul.activity-list' ).html( activity_content );
 			modal.find( '.bb-modal-activity-header h2' ).text( activityTitle );
 
+			// Reload video
+			var videoElement = modal.find( '.bb-activity-video-elem video' );
+			if ( videoElement.length > 0 ) {
+				var videoElementID = videoElement.attr( 'id' ) + Math.floor(Math.random() * 10000);
+				videoElement.attr( 'id', videoElementID );
+				videoElement.insertAfter( modal.find( '.video-action-wrap' ) );
+				modal.find( '.video-js' ).remove();
+				videoElement.addClass( 'video-js' );
+				videojs( videoElementID, { "controls": true, "aspectRatio": "16:9", "fluid": true, "playbackRates": [0.5, 1, 1.5, 2], "fullscreenToggle" : false } );
+			}
+
 			var form = modal.find( '#ac-form-' + activityID );
 			modal.find( '.acomment-display' ).removeClass( 'display-focus' );
 			modal.find( '.bb-modal-activity-footer' ).addClass( 'active' ).append( form );
@@ -3430,7 +3441,7 @@ window.bp = window.bp || {};
 			bp.Nouveau.ajax( data, 'activity' ).done(
 				function( response ) {
 					if ( false === response.success ) {
-						target.html( "<p class='error'>" + response.data.message + "</p>" ).removeClass( 'loading' );
+						target.html( "<p class='error'>" + response.data.message + "</p>" ).removeClass( 'acomments-view-more--hide' );
 						commentsList.removeClass( 'active' );
 						return;
 					} else if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.comments ) {
@@ -3455,7 +3466,7 @@ window.bp = window.bp || {};
 
 							});
 
-							if ( '' !== lastCommentTimeStamp ) {
+							if ( 'undefined' !== typeof lastCommentTimeStamp && '' !== lastCommentTimeStamp ) {
 
 								var $addAfterElement = $targetList.find( "li.activity-comment[data-bp-timestamp='" + lastCommentTimeStamp + "']" );
 								$addAfterElement.after( $newComments );
@@ -3485,7 +3496,7 @@ window.bp = window.bp || {};
 				}
 			).fail(
 				function( $xhr ) {
-					target.html( "<p class='error'>" + $xhr.statusText + "</p>" ).removeClass( 'loading' );
+					target.html( "<p class='error'>" + $xhr.statusText + "</p>" ).removeClass( 'acomments-view-more--hide' );
 					commentsList.removeClass( 'active' );
 				}
 			);

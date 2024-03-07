@@ -29,7 +29,7 @@ if ( bp_is_active( 'moderation' ) ) {
 ?>
 
 <li id="acomment-<?php echo esc_attr( $activity_comment_id ); ?>" class="<?php bp_activity_comment_css_class(); ?> <?php echo $check_hidden_content ?  'suspended-comment-item' : '' ?>"
-	data-bp-activity-comment-id="<?php echo esc_attr( $activity_comment_id ); ?>">
+	data-bp-activity-comment-id="<?php echo esc_attr( $activity_comment_id ); ?>" data-bp-timestamp="<?php bb_nouveau_activity_comment_timestamp(); ?>">
 
 	<?php
 	if ( bb_is_group_activity_comment( $activity_comment_id ) && ! $check_hidden_content ) {
