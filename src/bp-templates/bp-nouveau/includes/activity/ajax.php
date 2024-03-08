@@ -1226,8 +1226,14 @@ function bb_nouveau_ajax_activity_loadmore_comments() {
 		'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( $_POST['last_comment_timestamp'] ) : '',
 	);
 
-	// Check if parent is the main activity
-	if ( isset( $activities_template->activity ) && $activities_template->activity->id === $parent_comment_id ) {
+	// Check if no activity.
+	if ( empty( $activities_template->activity_count ) ) {
+		wp_send_json_error( array(
+				'message' => __( 'Invalid request.', 'buddyboss' ),
+			)
+		);
+		// Check if parent is the main activity.
+	} elseif ( isset( $activities_template->activity ) && $activities_template->activity->id === $parent_comment_id ) {
 		// No current comment.
 		bp_activity_recurse_comments( $activities_template->activity, $args );
 	} elseif ( isset( $activities_template->activity->children ) && is_array( $activities_template->activity->children ) ) {
