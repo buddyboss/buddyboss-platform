@@ -13,7 +13,8 @@
  */
 
 $bp_loggedin_user_id     = bp_loggedin_user_id();
-$bp_get_current_group_id = bp_get_current_group_id();
+$bp_get_current_group_id = function_exists( 'bp_get_current_group_id' ) ? bp_get_current_group_id() : 0;
+
 if (
 	(
 		bp_is_my_profile() ||
