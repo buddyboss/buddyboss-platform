@@ -3534,6 +3534,14 @@ window.bp = window.bp || {};
 						$(element).trigger('click').addClass('loading');
 					}
 				}
+
+				// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+				setTimeout(
+					function() {
+						jQuery( window ).scroll();
+					},
+					200
+				);
 			}
 		},
 
