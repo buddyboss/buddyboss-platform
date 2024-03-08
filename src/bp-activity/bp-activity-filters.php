@@ -2812,7 +2812,7 @@ function bb_activity_has_comment_reply_access( $can_comment, $comment ) {
 	// Disallow replies if threading disabled or depth condition is matched.
 	if ( isset( $main_activity->component ) && 'blogs' === $main_activity->component ) {
 		if (
-			false === get_option( 'thread_comments' ) ||
+			empty( get_option( 'thread_comments' ) ) ||
 			$comment->depth >= get_option( 'thread_comments_depth' )
 		) {
 			$can_comment = false;
