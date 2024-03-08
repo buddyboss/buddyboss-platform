@@ -23,6 +23,13 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 	public $media_endpoint;
 
 	/**
+	 * Allow batch.
+	 *
+	 * @var true[] $allow_batch
+	 */
+	protected $allow_batch = array( 'v1' => true );
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.1.0
@@ -64,6 +71,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 					'callback'            => array( $this, 'upload_item' ),
 					'permission_callback' => array( $this, 'upload_item_permissions_check' ),
 				),
+				'allow_batch' => $this->allow_batch,
 			)
 		);
 
@@ -83,7 +91,8 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 					'permission_callback' => array( $this, 'create_item_permissions_check' ),
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
 				),
-				'schema' => array( $this, 'get_item_schema' ),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_item_schema' ),
 			)
 		);
 
@@ -91,7 +100,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[\d]+)',
 			array(
-				'args'   => array(
+				'args'        => array(
 					'id' => array(
 						'description' => __( 'A unique numeric ID for the video.', 'buddyboss' ),
 						'type'        => 'integer',
@@ -114,7 +123,8 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 					'callback'            => array( $this, 'delete_item' ),
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
 				),
-				'schema' => array( $this, 'get_item_schema' ),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_item_schema' ),
 			)
 		);
 	}
