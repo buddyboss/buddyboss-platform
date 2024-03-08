@@ -116,6 +116,7 @@ if ( bp_is_active( 'moderation' ) ) {
 		bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) );
 	}
 
-	bp_nouveau_activity_recurse_comments( bp_activity_current_comment() );
+	bp_nouveau_activity_recurse_comments( bp_activity_current_comment(), isset( $args['show_replies'] ) && false === $args['show_replies'] ? 0 : bb_get_activity_comment_loading() );
+
 	?>
 </li>

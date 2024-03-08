@@ -2038,6 +2038,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 		if (
 			false !== $comment_load_limit &&
 			(
+				$comment->id === $comment_child->secondary_item_id ||
 				$comment->item_id === $comment->secondary_item_id ||
 				in_array( $comment->component, array( 'groups', 'blogs' ), true )
 			)
