@@ -4734,6 +4734,30 @@ window.bp = window.bp || {};
 		}
 	);
 
+	bp.Views.activitySchedulePost = bp.View.extend(
+		{
+			tagName: 'div',
+			id: 'bb-schedule-posts',
+			className: 'bb-schedule-posts',
+			template: bp.template( 'activity-schedule-post' ),
+
+			events: {
+				'click .bb-schedule-post_dropdown_button': 'displayOptions',
+			},
+
+			initialize: function () {
+
+			},
+
+			displayOptions: function ( event ) {
+				event.preventDefault();
+
+				$( event.target ).closest( '.bb-schedule-post_dropdown_section' ).find( '.bb-schedule-post_dropdown_list' ).toggleClass( 'is_open' );
+			}
+		}
+
+	);
+
 	bp.Views.EditActivityPostIn = bp.View.extend(
 		{
 			template: bp.template( 'activity-edit-postin' ),
@@ -4757,6 +4781,7 @@ window.bp = window.bp || {};
 				//Show placeholder form
 				$( '#bp-nouveau-activity-form-placeholder' ).show();
 
+				this.views.add( new bp.Views.activitySchedulePost( { model: this.model } ) );
 				this.views.add( new bp.Views.FormSubmit( { model: this.model } ) );
 			}
 		}

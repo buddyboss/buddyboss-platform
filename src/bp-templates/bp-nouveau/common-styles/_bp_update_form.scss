@@ -266,6 +266,72 @@
 	color: inherit !important;
 }
 
+.bb-schedule-post_dropdown_section {
+	margin-right: 8px;
+	position: relative;
+
+	.bb-schedule-post_dropdown_button {
+		background-color: transparent;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 7px;
+		border: 1px solid $bp-border-color;
+		border-radius: 7px;
+
+		i {
+			font-size: 24px;
+			color: $light-text;
+
+			&.bb-icon-caret-down {
+				font-size: 13px;
+			}
+		}
+	}
+
+	.bb-schedule-post_dropdown_list {
+		display: none;
+		position: absolute;
+		top: 100%;
+		right: 0;
+		padding: 8px;
+		border-radius: 8px;
+		background-color: $white;
+
+		&.is_open {
+			display: block;
+		}
+
+		ul {
+			margin: 0;
+			min-width: 200px;
+		}
+
+		li {
+			list-style: none;
+
+			> a {
+				padding: 8px 15px;
+				border-radius: 6px;
+				font-size: 13px;
+				color: $dark-grey;
+				display: flex;
+				align-items: center;
+
+				&:hover {
+					background-color: $light-grey;
+				}
+
+				> i {
+					font-size: 20px;
+					color: $light-text-plus;
+					margin-right: 8px;
+				}
+			}
+		}
+	}
+}
+
 #whats-new-form:not(.focus-in--group) #privacy-status-group-back {
 	display: none !important;
 }
