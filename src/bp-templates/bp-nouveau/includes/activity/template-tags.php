@@ -307,7 +307,7 @@ function bp_nouveau_activity_state() {
 function bp_nouveau_activity_loading_state() {
 	?>
 	<div class="activity-sync-loader">
-	  <div class="activity-sync-bar"></div>
+		<div class="activity-sync-bar"></div>
 		<div class="activity-sync-progress inc"></div>
 		<div class="activity-sync-progress dec"></div>
 	</div>
