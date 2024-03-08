@@ -4765,6 +4765,59 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   margin-left: 10px;
 }
 
+.ac-form-placeholder .ac-submit-wrap {
+  background-color: #5087e5;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  opacity: 0.4;
+  pointer-events: none;
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+}
+
+.ac-form-placeholder .ac-submit-wrap:before {
+  display: block;
+  content: "\eee7";
+  color: #fff;
+  font-family: bb-icons;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 30px;
+}
+
+.ac-form-placeholder .ac-submit-wrap input[name="ac_form_submit"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background-color: #5087e5;
+}
+
+@media screen and (max-width: 490px) {
+  .ac-form-placeholder .ac-reply-content {
+    min-height: 125px;
+    padding-top: 35px;
+  }
+  .ac-form-placeholder .ac-reply-content .ac-reply-toolbar {
+    position: static;
+    margin-bottom: 12px;
+    padding: 0 2px;
+  }
+  .ac-form-placeholder .ac-submit-wrap {
+    position: static;
+    right: unset;
+    left: unset;
+  }
+}
+
 .bb-modal-activity-body {
   position: relative;
   padding: 15px;
@@ -8107,6 +8160,15 @@ form.ac-form .ac-reply-content .ac-submit-wrap {
   }
   form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar {
     position: static;
+  }
+}
+
+@media screen and (min-width: 490px) {
+  .activity-modal form.ac-form .ac-reply-content .ac-submit-wrap {
+    float: left;
+  }
+  .activity-modal form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar {
+    position: absolute;
   }
 }
 

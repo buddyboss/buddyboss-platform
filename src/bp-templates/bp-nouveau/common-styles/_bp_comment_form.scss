@@ -306,6 +306,19 @@ form.ac-form {
 				position: static;
 			}
 		}
+
+		@media screen and (min-width: 490px) {
+
+			.activity-modal & {
+				.ac-submit-wrap {
+					float: right;
+				}
+
+				.ac-textarea .ac-reply-toolbar {
+					position: absolute;
+				}
+			}
+		}
 	}
 
 	// Edit comment form Dropzone UI

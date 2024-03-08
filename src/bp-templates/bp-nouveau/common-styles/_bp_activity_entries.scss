@@ -1496,6 +1496,61 @@
 			}
 		}
 	}
+
+	.ac-submit-wrap {
+		background-color: $blue;
+		border-radius: 50%;
+		height: 30px;
+		width: 30px;
+		overflow: hidden;
+		cursor: pointer;
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0;
+		opacity: 0.4;
+		pointer-events: none;
+		position: absolute;
+		bottom: 8px;
+		right: 8px;
+
+		&:before {
+			display: block;
+			content: "\eee7";
+			color: #fff;
+			font-family: bb-icons;
+			font-size: 16px;
+			font-weight: 300;
+			line-height: 30px;
+		}
+
+		input[name="ac_form_submit"] {
+			position: absolute;
+			inset: 0;
+			opacity: 0;
+			background-color: $blue;
+		}
+	}
+
+	@media screen and (max-width: 490px) {
+		.ac-reply-content {
+			min-height: 125px;
+			padding-top: 35px;
+
+			.ac-reply-toolbar {
+				position: static;
+				margin-bottom: 12px;
+				padding: 0 2px;
+			}
+		}
+
+		.ac-submit-wrap {
+			position: static;
+			left: unset;
+			right: unset;
+		}
+	}
 }
 
 .bb-modal-activity-body {
