@@ -1345,10 +1345,17 @@ function bp_admin_update_activity_favourite() {
 					continue;
 				}
 
-				$user_fav_in  = implode( ',', $user_fav );
-				$sql          = 'SELECT item_id FROM ' . bb_load_reaction()::$user_reaction_table . ' WHERE user_id = %d AND item_id IN (%s)';
-				$migrated_fav = $wpdb->get_col( $wpdb->prepare( $sql, $user->ID, $user_fav_in ) );
-				$user_fav     = array_diff( $user_fav, $migrated_fav );
+				$migrated_fav = $wpdb->get_col(
+					$wpdb->prepare(
+						'SELECT item_id FROM ' . bb_load_reaction()::$user_reaction_table . ' WHERE user_id = %d AND item_id IN (' . implode( ',', $user_fav ) . ')',
+						$user->ID
+					)
+				);
+
+				if ( ! empty( $migrated_fav ) ) {
+					$user_fav = array_diff( $user_fav, $migrated_fav );
+				}
+
 				if ( ! empty( $user_fav ) ) {
 					$chunk_length = (int) apply_filters( 'bp_admin_update_activity_favourite_chunk_length', 100 );
 
