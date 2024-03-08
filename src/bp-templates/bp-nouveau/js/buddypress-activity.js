@@ -1369,6 +1369,8 @@ window.bp = window.bp || {};
 
 			// Submitting comments and replies.
 			if ( 'ac_form_submit' === target.prop( 'name' ) ) {
+                target.prop( 'disabled', true );
+
 				var comment_content, comment_data;
 
 				form    = target.closest( 'form' );
