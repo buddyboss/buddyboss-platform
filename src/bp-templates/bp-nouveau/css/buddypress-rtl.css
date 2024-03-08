@@ -4034,11 +4034,12 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
   left: 20px;
   font-size: 22px;
   top: 10px;
-  display: none;
 }
 
+.activity-list .bb-pin-action .bb-mute-action_button,
 .activity-list .bb-pin-action .bb-pin-action_button {
   cursor: default;
+  display: none;
 }
 
 .activity-list .bb-pin-action [class*="bb-icon"] {
@@ -4051,21 +4052,28 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
   margin-left: 55px;
 }
 
-.activity-list .loading-pin .bb-pin-action,
-.activity-list .bb-pinned .bb-pin-action {
-  display: block;
+.activity-list .loading-pin .bb-pin-action_button,
+.activity-list .bb-pinned .bb-pin-action_button {
+  display: inline-block;
+}
+
+.activity-list .loading-mute .bb-mute-action_button,
+.activity-list .bb-muted .bb-mute-action_button {
+  display: inline-block;
 }
 
 .activity-list .bb-activity-more-options-wrap + .bb-pin-action {
   left: 45px;
 }
 
-.activity-list .activity-item.loading-pin .bb-pin-action [class*="bb-icon"] {
+.activity-list .activity-item.loading-mute .bb-mute-action_button [class*="bb-icon"],
+.activity-list .activity-item.loading-pin .bb-pin-action_button [class*="bb-icon"] {
   animation: spin 2s infinite linear;
   display: inline-block;
 }
 
-.activity-list .activity-item.loading-pin .bb-pin-action [class*="bb-icon"]:before {
+.activity-list .activity-item.loading-mute .bb-mute-action_button [class*="bb-icon"]:before,
+.activity-list .activity-item.loading-pin .bb-pin-action_button [class*="bb-icon"]:before {
   content: "\ef30";
   font-size: 20px;
 }
