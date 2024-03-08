@@ -7824,10 +7824,6 @@ body.activity-permalink .activity-comments > ul {
   padding: 0 0.7em 0 1em;
 }
 
-body.activity-permalink .activity-comments ul li > ul {
-  margin-top: 10px;
-}
-
 form.ac-form {
   display: none;
   margin: 15px 0;
