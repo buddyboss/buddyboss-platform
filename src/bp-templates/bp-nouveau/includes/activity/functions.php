@@ -253,6 +253,9 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'unpinGroupPost'      => esc_html__( 'Unpin from Group', 'buddyboss' ),
 		'pinPostError'        => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
 		'reactionAjaxError'   => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+		'closeComments'       => esc_html__( 'Turn off commenting', 'buddyboss' ),
+		'uncloseComments'     => esc_html__( 'Turn on commenting', 'buddyboss' ),
+		'closeCommentsError'  => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
 	);
 
     if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {

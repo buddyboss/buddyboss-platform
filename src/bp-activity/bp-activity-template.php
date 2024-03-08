@@ -2747,6 +2747,10 @@ function bp_get_activity_css_class() {
 		$class .= ' has-comments';
 	}
 
+	if ( bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( $activities_template->activity->id ) ) {
+		$class .= ' bb-closed-comments';
+	}
+
 	$activity_metas    = bb_activity_get_metadata( bp_get_activity_id() );
 	$link_embed        = $activity_metas['_link_embed'][0] ?? '';
 	$link_preview_data = ! empty( $activity_metas['_link_preview_data'][0] ) ? maybe_unserialize( $activity_metas['_link_preview_data'][0] ) : array();
@@ -4417,4 +4421,3 @@ function bb_get_activity_comment_unfavorite_link( $activity_comment_id = 0 ) {
 	 */
 	return apply_filters( 'bb_get_activity_comment_unfavorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/unfavorite/' . $activity_comment_id . '/' ), 'unmark_favorite' ) );
 }
-

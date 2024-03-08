@@ -3362,6 +3362,26 @@ input.search-query-input {
   padding-bottom: 1em;
 }
 
+.activity-list .activity-item.bb-closed-comments .acomment-reply,
+.activity-list .activity-item.bb-closed-comments .acomment-edit,
+.activity-list .activity-item.bb-closed-comments .edit-activity {
+  display: none !important;
+}
+
+.activity-list .activity-item.bb-closed-comments .generic-button:has(.edit-activity) {
+  display: none;
+}
+
+.activity-list .activity-item.bb-closed-comments .bb-activity-closed-comments-notice {
+  background: #e1e3e5;
+  margin: 0 -15px;
+  text-align: center;
+  padding: 5px;
+  font-size: 13px;
+  font-weight: 600;
+  text-wrap: nowrap;
+}
+
 .activity-list .activity-item div.item-avatar {
   margin: 0 auto;
   text-align: center;
@@ -3973,6 +3993,14 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.pin-activity:before {
   content: "\e9e9";
   font-size: 19px;
+}
+
+#buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.close-activity-comment:before {
+  content: "\ee35";
+}
+
+#buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.unclose-activity-comment:before {
+  content: "\ee33";
 }
 
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.unpin-activity:before {
