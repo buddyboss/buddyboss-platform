@@ -300,6 +300,21 @@ function bp_nouveau_activity_state() {
 }
 
 /**
+ * Output the activity loading state progress bar.
+ *
+ * @since BuddyPress 3.0.0
+ */
+function bp_nouveau_activity_loading_state() {
+	?>
+	<div class="activity-sync-loader">
+	  <div class="activity-sync-bar"></div>
+		<div class="activity-sync-progress inc"></div>
+		<div class="activity-sync-progress dec"></div>
+	</div>
+	<?php
+}
+
+/**
  * Output the action buttons inside an Activity inner content.
  *
  * @since BuddyBoss 1.7.2

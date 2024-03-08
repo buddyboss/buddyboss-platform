@@ -138,6 +138,7 @@ $activity_popup_title = sprintf( esc_html__( "%s's Post", 'buddyboss' ), bp_core
 		<?php
 		bp_nouveau_activity_hook( 'after', 'activity_content' );
 		bp_nouveau_activity_state();
+		bp_nouveau_activity_loading_state();
 		bp_nouveau_activity_entry_buttons();
 		?>
 	</div>

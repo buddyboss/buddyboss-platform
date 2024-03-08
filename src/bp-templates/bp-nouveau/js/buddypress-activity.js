@@ -3556,6 +3556,8 @@ window.bp = window.bp || {};
 
 			if ( $pageActivitylistItem.length > 0 && bp.Nouveau.Activity.activityHasUpdates ) {
 
+				$pageActivitylistItem.addClass( 'activity-sync' );
+
 				if ( $activityListItem.length > 0 ) {
 					if ( $activityListItem.hasClass( 'mini' ) ) {
 						type = 'media';
