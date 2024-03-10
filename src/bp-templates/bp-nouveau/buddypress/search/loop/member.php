@@ -29,8 +29,7 @@ $member_user_link = bp_get_member_permalink();
 				<p class="item-meta last-activity">
 					<span class="middot">&middot;</span>
 					<?php
-					esc_html_e( 'Last active', 'buddyboss' );
-					echo wp_kses_post( bb_get_member_last_activity_time() );
+					printf( esc_html__( 'Last active %s', 'buddyboss' ), wp_kses_post( bb_get_member_last_activity_time() ) );
 					?>
 				</p>
 			<?php endif; ?>
