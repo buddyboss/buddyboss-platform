@@ -1322,41 +1322,56 @@ add_action( 'wp_ajax_bp_admin_repair_tools_wrapper_function', 'bp_admin_repair_t
  * @since BuddyBoss 1.3.3
  */
 function bp_admin_update_activity_favourite() {
+	global $wpdb;
 
 	$bp_activity_reactions = bp_get_option( 'bp_activity_reactions', false );
 
 	if ( ! $bp_activity_reactions ) {
-
 		$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
-
-		$args = array(
-			'number' => 50,
+		$args   = array(
+			'number' => 20,
 			'offset' => $offset,
 		);
 
 		$users       = get_users( $args );
 		$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
 
-		if ( ! empty( $users ) && ! empty( $reaction_id ) ) {
-
+		if ( is_array( $users ) && ! empty( $users ) && ! empty( $reaction_id ) ) {
 			foreach ( $users as $user ) {
-				$user_favs = bp_get_user_meta( $user->ID, 'bp_favorite_activities', true );
-				if ( empty( $user_favs ) || ! is_array( $user_favs ) ) {
-					$offset ++;
+				$user_fav = bp_get_user_meta( $user->ID, 'bp_favorite_activities', true );
+
+				if ( ! is_array( $user_fav ) || empty( $user_fav ) ) {
+					++$offset;
 					continue;
 				}
-				foreach ( $user_favs as $fav ) {
-					// Add favorite user meta to reactions table.
-					bb_load_reaction()->bb_add_user_item_reaction(
-						array(
-							'user_id'     => $user->ID,
-							'reaction_id' => $reaction_id,
-							'item_id'     => $fav,
-							'item_type'   => 'activity',
-						)
-					);
+
+				$migrated_fav = $wpdb->get_col(
+					$wpdb->prepare(
+						'SELECT item_id FROM ' . bb_load_reaction()::$user_reaction_table . ' WHERE user_id = %d AND item_id IN (' . implode( ',', $user_fav ) . ')',
+						$user->ID
+					)
+				);
+
+				if ( ! empty( $migrated_fav ) ) {
+					$user_fav = array_diff( $user_fav, $migrated_fav );
 				}
-				$offset ++;
+
+				if ( ! empty( $user_fav ) ) {
+					$chunk_length = (int) apply_filters( 'bp_admin_update_activity_favourite_chunk_length', 100 );
+
+					if ( count( $user_fav ) > $chunk_length ) {
+						$user_fav_chunks = array_chunk( $user_fav, $chunk_length );
+
+						if ( ! empty( $user_fav_chunks ) ) {
+							foreach ( $user_fav_chunks as $chunk ) {
+								bb_admin_tool_migration_reaction( $user->ID, $chunk );
+							}
+						}
+					} else {
+						bb_admin_tool_migration_reaction( $user->ID, $user_fav );
+					}
+				}
+				++$offset;
 			}
 
 			$records_updated = sprintf( __( '%s members activity favorite updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
@@ -1366,11 +1381,8 @@ function bp_admin_update_activity_favourite() {
 				'offset'  => $offset,
 				'records' => $records_updated,
 			);
-
 		} else {
-
 			bp_update_option( 'bp_activity_reactions', true );
-
 			$statement = __( 'Updating activity favorites data &hellip; %s', 'buddyboss' );
 
 			return array(
@@ -1388,6 +1400,52 @@ function bp_admin_update_activity_favourite() {
 	}
 }
 
+/**
+ * Insert reactions for a user in bulk.
+ *
+ * @param int   $user_id
+ * @param array $item_ids
+ *
+ * @since [BBVERSION]
+ *
+ * @return void
+ */
+function bb_admin_tool_migration_reaction( $user_id, $item_ids = array() ) {
+	global $wpdb;
+
+	if ( empty( $item_ids ) ) {
+		return;
+	}
+
+	$user_reaction_tbl    = bb_load_reaction()::$user_reaction_table;
+	$reaction_id          = bb_load_reaction()->bb_reactions_get_like_reaction_id();
+	$summary_args         = array();
+	$place_holder_queries = array();
+
+	foreach ( $item_ids as $item_id ) {
+		$place_holder_queries[] = $wpdb->prepare( '(%d, %d, %s, %d, %s)', $user_id, $reaction_id, 'activity', $item_id, bp_core_current_time() );
+		$summary_args[]         = array(
+			'reaction_id' => $reaction_id,
+			'item_id'     => $item_id,
+			'item_type'   => 'activity',
+		);
+	}
+
+	if ( ! empty( $place_holder_queries ) ) {
+		$place_holder_queries = implode( ', ', $place_holder_queries );
+        $wpdb->query( "INSERT INTO {$user_reaction_tbl} ( user_id, reaction_id, item_type, item_id, date_created ) VALUES {$place_holder_queries}" ); // phpcs:ignore
+
+		bp_core_reset_incrementor( 'bb_reactions' );
+
+		if ( ! empty( $summary_args ) ) {
+			$summary_args = array_unique( $summary_args, SORT_REGULAR );
+
+			foreach ( $summary_args as $reaction ) {
+				bb_load_reaction()->bb_prepare_reaction_summary_data( $reaction );
+			}
+		}
+	}
+}
 
 /**
  * Create the invitations database table if it does not exist.
