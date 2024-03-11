@@ -962,6 +962,9 @@ window.bp = window.bp || {};
 					activity_comment_id = activity_comment_li.data( 'bp-activity-comment-id' ),
 					li_parent, comment_count_span, comment_count, show_all_a, deleted_comments_count = 0;
 
+				var commentsList = target.closest( '.activity-comments' );
+				commentsList.addClass( 'active' );
+
 				// Stop event propagation.
 				event.preventDefault();
 
@@ -1081,6 +1084,8 @@ window.bp = window.bp || {};
 							bp.Nouveau.Activity.activityHasUpdates = true;
 							bp.Nouveau.Activity.currentActivityId = activity_id;
 						}
+
+						commentsList.removeClass( 'active' );
 					}
 				);
 			}
@@ -1373,6 +1378,9 @@ window.bp = window.bp || {};
 
 				var comment_content, comment_data;
 
+				var commentsList = target.closest( '.activity-comments' );
+				commentsList.addClass( 'active' );
+
 				form    = target.closest( 'form' );
 				item_id = activity_id;
 
@@ -1592,6 +1600,8 @@ window.bp = window.bp || {};
 
 						target.prop( 'disabled', false );
 						comment_content.prop( 'disabled', false );
+
+						commentsList.removeClass( 'active' );
 					}
 				);
 			}
