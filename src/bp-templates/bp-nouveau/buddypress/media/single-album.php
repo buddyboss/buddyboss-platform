@@ -19,11 +19,11 @@ $can_delete    = true === (bool) $album_privacy['can_delete'];
 $bp_is_my_profile                    = bp_is_my_profile();
 $bp_is_group                         = bp_is_group();
 $bp_is_user_media                    = bp_is_user_media();
-$bp_get_current_group_id             = bp_get_current_group_id();
-$bp_loggedin_user_id                 = bp_loggedin_user_id();
-$bp_is_profile_video_support_enabled = bp_is_profile_video_support_enabled();
-$bp_is_group_video_support_enabled   = bp_is_group_video_support_enabled();
 $bp_is_group_active                  = bp_is_active( 'groups' );
+$bp_get_current_group_id             = ( $bp_is_group_active ) ? bp_get_current_group_id() : 0;
+$bp_loggedin_user_id                 = bp_loggedin_user_id();
+$bp_is_profile_video_support_enabled = function_exists( 'bp_is_profile_video_support_enabled' ) && bp_is_profile_video_support_enabled();
+$bp_is_group_video_support_enabled   = function_exists( 'bp_is_group_video_support_enabled' ) && bp_is_group_video_support_enabled();
 
 if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 	<?php
