@@ -36,8 +36,27 @@
 									</a>
 								</header>
 								<div class="bb-action-popup-content">
-									<p>July 12, 2023 at 3:27 pm</p>
+									<p class="schedule-date">July 12, 2023 at 3:27 pm</p>
+
+									<label>Date</label>
+									<div class="input-field">
+										<input type="text" name="" id="">
+										<i class="bb-icon-f bb-icon-calendar"></i>
+									</div>
+
+									<label>Time</label>
+									<div class="input-field">
+										<input type="text" name="" id="">
+										<i class="bb-icon-f bb-icon-clock"></i>
+									</div>
+
+									<p><a href="#">View all scheduled posts <i class="bb-icon-f bb-icon-arrow-right"></i></a></p>
 								</div>
+
+								<footer class="bb-model-footer">
+									<a href="#" class="button button-outline bb-schedule-activity-cancel">Back</a>
+									<a class="button bb-schedule-activity" href="#">Next</a>
+								</footer>
 							</div>
 						</div>
 					</div>

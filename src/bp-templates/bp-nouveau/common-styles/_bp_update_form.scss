@@ -346,6 +346,43 @@
 			opacity: 0.4;
 		}
 	}
+
+	.bb-action-popup-content {
+
+		p.schedule-date {
+			margin-bottom: 15px;
+		}
+
+		label {
+			font-weight: 500;
+			margin-bottom: 10px;
+		}
+
+		.input-field {
+			position: relative;
+			margin-bottom: 20px;
+
+			[class*="bb-icon"] {
+				position: absolute;
+				top: 50%;
+				transform: translateY(-50%);
+				right: 12px;
+				font-size: 20px;
+				color: $black;
+				opacity: 0.4;
+			}
+		}
+	}
+
+	.bb-model-footer {
+		background-color: transparent;
+
+		.button {
+			padding: 6px 15px;
+			min-width: auto;
+		}
+	}
+
 }
 
 #whats-new-form:not(.focus-in--group) #privacy-status-group-back {
