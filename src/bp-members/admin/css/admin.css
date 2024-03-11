@@ -332,6 +332,11 @@ div#community-profile-page p.not-activated {
 	border: 1px solid #eee;
 }
 
+.profile-edit.bb_admin_repeater_group {
+	display: inline-block;
+	width: 100%;
+}
+
 #profile-edit-form .repeater_group_outer .repeater_tools {
 	display: flex;
 	flex-flow: row wrap;
