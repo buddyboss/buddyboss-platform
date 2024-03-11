@@ -310,7 +310,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		?>
 		<p>
 			<a class="button" href="
-		<?php
+			<?php
 			echo esc_url(
 				bp_get_admin_url(
 					add_query_arg(

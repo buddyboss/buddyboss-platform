@@ -300,21 +300,6 @@ function bp_nouveau_activity_state() {
 }
 
 /**
- * Output the activity loading state progress bar.
- *
- * @since BuddyPress 3.0.0
- */
-function bp_nouveau_activity_loading_state() {
-	?>
-	<div class="activity-sync-loader">
-		<div class="activity-sync-bar"></div>
-		<div class="activity-sync-progress inc"></div>
-		<div class="activity-sync-progress dec"></div>
-	</div>
-	<?php
-}
-
-/**
  * Output the action buttons inside an Activity inner content.
  *
  * @since BuddyBoss 1.7.2
@@ -2435,4 +2420,19 @@ function bb_nouveau_activity_comment_is_edited( $activity_comment_id = 0, $echo 
 	} else {
 		return $rendered_text;
 	}
+}
+
+/**
+ * Output the activity loading state progress bar.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_activity_load_progress_bar_state() {
+	?>
+	<div class="activity-sync-loader">
+		<div class="activity-sync-bar"></div>
+		<div class="activity-sync-progress inc"></div>
+		<div class="activity-sync-progress dec"></div>
+	</div>
+	<?php
 }

@@ -30,7 +30,7 @@ if ( ! empty( $link_embed ) ) {
 	$link_url = $link_embed;
 }
 
-$activity_popup_title = sprintf( esc_html__( "%s's Post", 'buddyboss' ), bp_core_get_user_displayname( bp_get_activity_user_id() ) );
+$activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_core_get_user_displayname( bp_get_activity_user_id() ) );
 
 ?>
 
@@ -138,7 +138,7 @@ $activity_popup_title = sprintf( esc_html__( "%s's Post", 'buddyboss' ), bp_core
 		<?php
 		bp_nouveau_activity_hook( 'after', 'activity_content' );
 		bp_nouveau_activity_state();
-		bp_nouveau_activity_loading_state();
+		bb_activity_load_progress_bar_state();
 		bp_nouveau_activity_entry_buttons();
 		?>
 	</div>

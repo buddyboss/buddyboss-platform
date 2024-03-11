@@ -1928,6 +1928,9 @@ function bp_activity_get_comments( $args = '' ) {
  * split between here and the comment.php template.
  *
  * @since BuddyPress 1.2.0
+ * @since BuddyBoss [BBVERSION]
+ * Added new param as args to pass some arguments to the function.
+ *
  * @global object $activities_template    {@link BP_Activity_Template}
  *
  * @param object $comment The activity object currently being recursed.
@@ -4545,7 +4548,7 @@ function bb_get_activity_comment_unfavorite_link( $activity_comment_id = 0 ) {
 function bb_search_comment_hierarchy( $comment, $comment_id ) {
 	
 	// Check if the current object is the one we're looking for.
-	if ( isset( $comment->id ) && $comment->id == $comment_id ) {
+	if ( isset( $comment->id ) && (int) $comment->id === (int) $comment_id ) {
 		return $comment;
 	}
 

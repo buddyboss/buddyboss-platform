@@ -33,13 +33,8 @@ if ( $group_id > 0 ) {
 	$move_type = 'profile';
 }
 $is_comment_pic = bp_media_is_activity_comment_photo( $media_template->media );
-
-$max_length = 5;
-if ( $is_comment_pic ) {
-	$max_length = 2;
-}
-
-$more_media = $media_template->media_count > $max_length ? true : false;
+$max_length     = $is_comment_pic ? 2 : 5;
+$more_media     = $media_template->media_count > $max_length ? true : false;
 ?>
 
 <div class="bb-activity-media-elem media-activity
