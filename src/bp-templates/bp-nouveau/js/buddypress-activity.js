@@ -3517,6 +3517,7 @@ window.bp = window.bp || {};
 
 						if ( typeof bp.Nouveau !== 'undefined' ) {
 							bp.Nouveau.reportPopUp();
+							bp.Nouveau.reportedPopup();
 						}
 
 						var action_tooltip = $targetList.find( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options-action' );
