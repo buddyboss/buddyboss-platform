@@ -3518,6 +3518,9 @@ window.bp = window.bp || {};
 						if ( typeof bp.Nouveau !== 'undefined' ) {
 							bp.Nouveau.reportPopUp();
 						}
+
+						var action_tooltip = $targetList.find( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options-action' );
+						action_tooltip.attr( 'data-balloon-pos', 'left' );
 					}
 
 				}

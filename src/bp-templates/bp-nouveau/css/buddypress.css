@@ -4623,7 +4623,7 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
 .bb-activity-model-wrapper.bb-internal-model > .activity-modal {
   max-height: 85vh;
   /*min-height: 85vh;*/
-  max-width: 700px;
+  max-width: 95%;
   width: 700px;
   position: relative;
 }
