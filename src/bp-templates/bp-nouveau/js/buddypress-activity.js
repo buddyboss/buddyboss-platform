@@ -3558,18 +3558,9 @@ window.bp = window.bp || {};
 
 				$pageActivitylistItem.addClass( 'activity-sync' );
 
-				if ( $activityListItem.length > 0 ) {
-					if ( $activityListItem.hasClass( 'mini' ) ) {
-						type = 'media';
-					} else if ( $activityListItem.hasClass( 'groups' ) ) {
-						type = 'groups';
-					}
-				}
-
 				var data = {
 					action: 'activity_sync_from_modal',
 					activity_id: activityId,
-					type: type,
 				};
 
 				bp.Nouveau.ajax( data, 'activity' ).done(
