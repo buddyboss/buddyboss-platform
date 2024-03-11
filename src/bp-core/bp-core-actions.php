@@ -1169,3 +1169,12 @@ function bb_bg_process_log_load() {
 }
 
 add_action( 'bp_init', 'bb_bg_process_log_load' );
+
+
+function bb_rate_limit() {
+	if ( class_exists( 'BB_Ratelimit' ) ) {
+		BB_Ratelimit::instance();
+	}
+}
+
+add_action( 'bp_init', 'bb_rate_limit' );
