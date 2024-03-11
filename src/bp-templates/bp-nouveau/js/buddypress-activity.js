@@ -3580,6 +3580,8 @@ window.bp = window.bp || {};
 						} else if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.activity ) {
 							// success
 							$pageActivitylistItem.replaceWith( $.parseHTML( response.data.activity ) );
+							// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+							jQuery( window ).scroll();
 						}
 					}
 				).fail(
