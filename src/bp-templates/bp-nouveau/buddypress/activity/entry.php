@@ -52,13 +52,13 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 		// If group activity.
 		$group_id   = (int) $activities_template->activity->item_id;
 		$group      = groups_get_group( $group_id );
-		$group_name = bp_get_group_name( $group );
-		$user_link  = bp_get_activity_user_link();
+		$group_name = esc_html( bp_get_group_name( $group ) );
+		$user_link  = esc_url( bp_get_activity_user_link() );
 		?>
 		<div class="bp-activity-head-group">
 			<div class="activity-group-avatar">
 				<div class="group-avatar">
-					<a class="group-avatar-wrap mobile-center" href="<?php echo bp_get_group_permalink( $group ); ?>">
+					<a class="group-avatar-wrap mobile-center" href="<?php echo esc_url( bp_get_group_permalink( $group ) ); ?>">
 						<?php
 						echo bp_core_fetch_avatar(
 							array(
@@ -74,15 +74,15 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 					</a>
 				</div>
 				<div class="author-avatar">
-					<a href="<?php echo esc_url( $user_link ); ?>"><?php bp_activity_avatar( array( 'type' => 'thumb' ) ); ?></a>
+					<a href="<?php echo $user_link; ?>"><?php bp_activity_avatar( array( 'type' => 'thumb' ) ); ?></a>
 				</div>
 			</div>
 
 			<div class="activity-header activity-header--group">
-				<div class="activity-group-heading"><a href="<?php echo bp_get_group_permalink( $group ); ?>"><?php echo $group_name; ?></a></div>
+				<div class="activity-group-heading"><a href="<?php echo esc_url( bp_get_group_permalink( $group ) ); ?>"><?php echo $group_name; ?></a></div>
 				<div class="activity-group-post-meta">
 						<span class="activity-post-author">
-							<a href="<?php echo esc_url( $user_link ); ?>">
+							<a href="<?php echo $user_link; ?>">
 								<?php echo bp_core_get_user_displayname( $activities_template->activity->user_id ); ?>
 							</a>
 						</span>
@@ -109,7 +109,7 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 	<?php else : ?>
 
 		<div class="activity-avatar item-avatar">
-			<a href="<?php bp_activity_user_link(); ?>"><?php bp_activity_avatar( array( 'type' => 'full' ) ); ?></a>
+			<a href="<?php esc_url( bp_activity_user_link() ); ?>"><?php bp_activity_avatar( array( 'type' => 'full' ) ); ?></a>
 		</div>
 
 		<div class="activity-header">
