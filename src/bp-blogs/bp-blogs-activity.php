@@ -1470,8 +1470,12 @@ function bp_blogs_activity_comment_permalink( $retval = '' ) {
 	if ( ( false !== $item_id ) && isset( buddypress()->blogs->allow_comments[ $item_id ] ) ) {
 		$retval = $activities_template->activity->current_comment->primary_link;
 		if ( empty( $retval ) ) {
-			$comment_id = bp_activity_get_meta( $activities_template->activity->current_comment->id, 'bp_blogs_post_comment_id' );
-			$retval     = get_comment_link( $comment_id );
+			$comment_post_type = $activities_template->activity->secondary_item_id;
+			$get_post_type     = get_post_type( $comment_post_type );
+			$activity_metas    = bb_activity_get_metadata( $activities_template->activity->current_comment->id );
+			$comment_id        = $activity_metas['bp_blogs_' . $get_post_type . '_comment_id'][0] ?? '';
+			error_log($comment_id);
+			$retval            = get_comment_link( $comment_id );
 		}
 	}
 
@@ -1504,8 +1508,11 @@ function bp_blogs_activity_comment_single_permalink( $retval, $activity ) {
 	if ( isset( $parent_activity->type ) && bp_activity_post_type_get_tracking_arg( $parent_activity->type, 'post_type' ) ) {
 		$retval = $activity->primary_link;
 		if ( empty( $retval ) ) {
-			$comment_id = bp_activity_get_meta( $activity->id, 'bp_blogs_post_comment_id' );
-			$retval     = get_comment_link( $comment_id );
+			$comment_post_type = $parent_activity->secondary_item_id;
+			$get_post_type     = get_post_type( $comment_post_type );
+			$activity_metas    = bb_activity_get_metadata( $activity->id );
+			$comment_id        = $activity_metas['bp_blogs_' . $get_post_type . '_comment_id'][0] ?? '';
+			$retval            = get_comment_link( $comment_id );
 		}
 	}
 
