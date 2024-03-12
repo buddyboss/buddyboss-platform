@@ -783,7 +783,7 @@ function bp_nouveau_activity_recurse_comments( $comment, $comment_load_limit = f
 }
 
 /**
- * Ouptut the Activity comment action string
+ * Output the Activity comment action string
  *
  * @since BuddyPress 3.0.0
  */
@@ -813,43 +813,6 @@ function bp_nouveau_get_activity_comment_action() {
 			esc_url( bp_get_activity_comment_user_link() ),
 			esc_html( bp_get_activity_comment_name() ),
 			bb_nouveau_activity_comment_is_edited()
-		)
-	);
-}
-
-/**
- * Ouptut the Activity comment action meta data
- *
- * @since BuddyPress 3.0.0
- */
-function bp_nouveau_activity_comment_meta() {
-	echo bp_nouveau_get_activity_comment_meta();
-}
-
-/**
- * Get the Activity comment action meta data
- *
- * @since BuddyPress 3.0.0
- */
-function bp_nouveau_get_activity_comment_meta() {
-
-	/**
-	 * Filter to edit the activity comment action.
-	 *
-	 * @since BuddyPress 3.0.0
-	 *
-	 * @param string $value HTML Output
-	 */
-	return apply_filters(
-		'bp_nouveau_get_activity_comment_meta',
-		sprintf(
-			/* translators: 1: activity permalink, 2: activity recorded date, 3: activity timestamp, 4: activity timestamp, 5: activity human time since */
-			__( '<a href="%1$s" class="activity-time-since"><span class="time-since" datetime="%2$s" data-bp-timestamp="%3$d" data-livestamp="%4$s">%5$s</span></a>', 'buddyboss' ),
-			esc_url( bp_get_activity_comment_permalink() ),
-			esc_attr( bp_get_activity_comment_date_recorded_raw() ),
-			esc_attr( strtotime( bp_get_activity_comment_date_recorded_raw() ) ),
-			esc_attr( bp_core_get_iso8601_date( bp_get_activity_comment_date_recorded_raw() ) ),
-			esc_attr( bp_core_time_since( bp_get_activity_comment_date_recorded() ) )
 		)
 	);
 }
@@ -2432,4 +2395,41 @@ function bb_activity_load_progress_bar_state() {
 		<div class="activity-sync-progress dec"></div>
 	</div>
 	<?php
+}
+
+/**
+ * Output the Activity comment action meta data.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_nouveau_activity_comment_meta() {
+	echo bp_nouveau_get_activity_comment_meta();
+}
+
+/**
+ * Get the Activity comment action meta data.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_nouveau_get_activity_comment_meta() {
+
+	/**
+	 * Filter to the activity comment meta data.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value HTML Output
+	 */
+	return apply_filters(
+		'bp_nouveau_get_activity_comment_meta',
+		sprintf(
+			/* translators: 1: activity permalink, 2: activity recorded date, 3: activity timestamp, 4: activity timestamp, 5: activity human time since */
+			__( '<a href="%1$s" class="activity-time-since"><span class="time-since" datetime="%2$s" data-bp-timestamp="%3$d" data-livestamp="%4$s">%5$s</span></a>', 'buddyboss' ),
+			esc_url( bp_get_activity_comment_permalink() ),
+			esc_attr( bp_get_activity_comment_date_recorded_raw() ),
+			esc_attr( strtotime( bp_get_activity_comment_date_recorded_raw() ) ),
+			esc_attr( bp_core_get_iso8601_date( bp_get_activity_comment_date_recorded_raw() ) ),
+			esc_attr( bp_core_time_since( bp_get_activity_comment_date_recorded() ) )
+		)
+	);
 }
