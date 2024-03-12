@@ -2813,14 +2813,20 @@ function bb_activity_has_comment_reply_access( $can_comment, $comment ) {
 	if ( isset( $main_activity->component ) && 'blogs' === $main_activity->component ) {
 		if (
 			empty( get_option( 'thread_comments' ) ) ||
-			$comment->depth >= get_option( 'thread_comments_depth' )
+			(
+				isset( $comment->depth ) &&
+				$comment->depth >= get_option( 'thread_comments_depth' )
+			)
 		) {
 			$can_comment = false;
 		}
 	} else {
 		if (
 			false === bb_is_activity_comment_threading_enabled() ||
-			$comment->depth >= bb_get_activity_comment_threading_depth()
+			(
+				isset( $comment->depth ) &&
+				$comment->depth >= bb_get_activity_comment_threading_depth()
+			)
 		) {
 			$can_comment = false;
 		}
