@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.4.3
 Requires PHP: 8.0
-Stable tag: 2.5.60
+Stable tag: 2.5.61
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,10 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.5.61 =
+* Bug: Core - reCaptcha update fixing issues with verifying on Login, Register, Reset password, Account Activation pages
+* Bug: Core - When disabling the Group component in BuddyBoss settings, when then visiting the photos tab in the user profile, this was causing a fatal error
 
 = 2.5.60 =
 * New Feature! - We now officially support Google reCAPTCHA, this is a great feature to help mitigate risk of bot and spam accounts being created and login in to your site

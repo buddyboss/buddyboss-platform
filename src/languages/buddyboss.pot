@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.5.60\n"
+"Project-Id-Version: BuddyBoss Platform 2.5.61\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-03-07 09:29:54+00:00\n"
+"POT-Creation-Date: 2024-03-12 09:53:22+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1242,11 +1242,11 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/actions.php:16
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:84
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:359
-#: bp-templates/bp-nouveau/buddypress/media/actions.php:40
+#: bp-templates/bp-nouveau/buddypress/media/actions.php:41
 #: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:89
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:131
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:294
-#: bp-templates/bp-nouveau/buddypress/video/actions.php:45
+#: bp-templates/bp-nouveau/buddypress/video/actions.php:46
 #: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:149
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:124
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1842
@@ -3555,8 +3555,8 @@ msgstr ""
 #: bp-search/bp-search-settings.php:486 bp-search/bp-search-settings.php:500
 #: bp-templates/bp-nouveau/buddypress/document/actions.php:17
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:74
-#: bp-templates/bp-nouveau/buddypress/media/actions.php:41
-#: bp-templates/bp-nouveau/buddypress/video/actions.php:46
+#: bp-templates/bp-nouveau/buddypress/media/actions.php:42
+#: bp-templates/bp-nouveau/buddypress/video/actions.php:47
 #: bp-templates/bp-nouveau/includes/media/functions.php:188
 #: bp-templates/bp-nouveau/includes/video/functions.php:149
 msgid "Select All"
@@ -5511,12 +5511,12 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:851
 #: bp-core/admin/bp-core-admin-tools.php:1185
 #: bp-core/admin/bp-core-admin-tools.php:1228
-#: bp-core/admin/bp-core-admin-tools.php:1378
-#: bp-core/admin/bp-core-admin-tools.php:1386
-#: bp-core/admin/bp-core-admin-tools.php:1421
-#: bp-core/admin/bp-core-admin-tools.php:1437
-#: bp-core/admin/bp-core-admin-tools.php:1536
-#: bp-core/admin/bp-core-admin-tools.php:1635
+#: bp-core/admin/bp-core-admin-tools.php:1390
+#: bp-core/admin/bp-core-admin-tools.php:1398
+#: bp-core/admin/bp-core-admin-tools.php:1479
+#: bp-core/admin/bp-core-admin-tools.php:1495
+#: bp-core/admin/bp-core-admin-tools.php:1594
+#: bp-core/admin/bp-core-admin-tools.php:1693
 #: bp-core/bb-core-subscriptions.php:93 bp-core/bb-core-subscriptions.php:378
 #: bp-core/bb-core-subscriptions.php:1307 bp-forums/admin/tools.php:314
 #: bp-forums/admin/tools.php:316 bp-forums/admin/tools.php:374
@@ -5631,49 +5631,49 @@ msgstr ""
 msgid "Repair Nickname&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1362
+#: bp-core/admin/bp-core-admin-tools.php:1377
 msgid "%s members activity favorite updated successfully."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1374
-#: bp-core/admin/bp-core-admin-tools.php:1382
+#: bp-core/admin/bp-core-admin-tools.php:1386
+#: bp-core/admin/bp-core-admin-tools.php:1394
 msgid "Updating activity favorites data &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1407
+#: bp-core/admin/bp-core-admin-tools.php:1465
 #. translators: %s: the result of the action performed by the repair tool
 msgid "Creating the database table for Invitations if it does not exist &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1408
+#: bp-core/admin/bp-core-admin-tools.php:1466
 msgid "Failed to create table!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1429
+#: bp-core/admin/bp-core-admin-tools.php:1487
 #. translators: %s: the result of the action performed by the repair tool
 msgid "Migrating existing group invitations &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1430
+#: bp-core/admin/bp-core-admin-tools.php:1488
 msgid "Failed to migrate invitations!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1526
+#: bp-core/admin/bp-core-admin-tools.php:1584
 msgid ""
 "Profile completion widget, profile photo status updated successfully for %s "
 "members."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1533
+#: bp-core/admin/bp-core-admin-tools.php:1591
 msgid "Profile Completion widget, profile photo status re-sync %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1625
+#: bp-core/admin/bp-core-admin-tools.php:1683
 #. translators: %s: number of groups
 msgid "%s groups member count updated successfully."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1631
+#: bp-core/admin/bp-core-admin-tools.php:1689
 msgid "Recalculating the total group members count for each group &hellip; %s"
 msgstr ""
 
@@ -22992,11 +22992,11 @@ msgstr ""
 msgid "Google reCAPTCHA token is missing."
 msgstr ""
 
-#: bp-integrations/recaptcha/bb-recaptcha-functions.php:653
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:654
 msgid "Verification failed please try again."
 msgstr ""
 
-#: bp-integrations/recaptcha/bb-recaptcha-functions.php:658
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:659
 msgid "Could not get a response from the reCAPTCHA server."
 msgstr ""
 
