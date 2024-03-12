@@ -116,6 +116,10 @@
 			display: inline-flex;
 			position: relative;
 			padding-right: 34px;
+
+			&.bp-hide {
+				display: none;
+			}
 		}
 
 		.acomment-meta,
