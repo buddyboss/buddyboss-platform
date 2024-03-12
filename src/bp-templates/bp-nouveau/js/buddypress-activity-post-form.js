@@ -2508,7 +2508,7 @@ window.bp = window.bp || {};
 			},
 
 			initialize: function ( options ) {
-				this.destroy = this.destroy.bind(this);
+				this.destroy = this.destroy.bind( this );
 
 				// Check if standalone is provided in options and update the property
 				if ( options && options.standalone !== undefined ) {
@@ -2635,7 +2635,7 @@ window.bp = window.bp || {};
 			},
 
 			initialize: function ( options ) {
-				this.select = this.select.bind(this);
+				this.select = this.select.bind( this );
 
 				// Check if standalone is provided in options and update the property
 				if ( options && options.standalone !== undefined ) {
@@ -5483,6 +5483,14 @@ window.bp = window.bp || {};
 							// Edit activity.
 						} else if ( edit ) {
 							$( '#activity-' + response.id ).replaceWith( response.activity );
+
+							var activity_modal_item = $( '#activity-modal .activity-list .activity-item' );
+							var activity_target = activity_modal_item.find( '.activity-content' ).find( '.activity-inner' );
+							if ( activity_modal_item.length > 0 ) {
+								var content = $( '#activity-' + response.id ).find( '.activity-content' ).find( '.activity-inner' ).html();
+								activity_target.empty();
+								activity_target.append( content );
+							}
 
 							// Inject the activity into the stream only if it hasn't been done already (HeartBeat).
 						} else if ( ! $( '#activity-' + response.id ).length ) {
