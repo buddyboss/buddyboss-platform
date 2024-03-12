@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.5.60\n"
+"Project-Id-Version: BuddyBoss Platform 2.5.61\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-03-06 04:44:34+00:00\n"
+"POT-Creation-Date: 2024-03-12 09:55:54+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -491,7 +491,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1552
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1605
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1759
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2314
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2316
 #: bp-templates/bp-nouveau/includes/document/ajax.php:476
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1349
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1341
@@ -1082,7 +1082,7 @@ msgid "%s turned off commenting for this post"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:6952
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1278
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1286
 msgid "You turned off commenting for this post"
 msgstr ""
 
@@ -1255,16 +1255,16 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/actions.php:16
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:84
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:359
-#: bp-templates/bp-nouveau/buddypress/media/actions.php:40
+#: bp-templates/bp-nouveau/buddypress/media/actions.php:41
 #: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:89
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:131
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:294
-#: bp-templates/bp-nouveau/buddypress/video/actions.php:45
+#: bp-templates/bp-nouveau/buddypress/video/actions.php:46
 #: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:149
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:124
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1858
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1859
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2345
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2347
 #: bp-templates/bp-nouveau/includes/notifications/functions.php:253
 #: bp-templates/bp-nouveau/includes/notifications/template-tags.php:114
 #: bp-xprofile/bp-xprofile-admin.php:920
@@ -3568,8 +3568,8 @@ msgstr ""
 #: bp-search/bp-search-settings.php:486 bp-search/bp-search-settings.php:500
 #: bp-templates/bp-nouveau/buddypress/document/actions.php:17
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:74
-#: bp-templates/bp-nouveau/buddypress/media/actions.php:41
-#: bp-templates/bp-nouveau/buddypress/video/actions.php:46
+#: bp-templates/bp-nouveau/buddypress/media/actions.php:42
+#: bp-templates/bp-nouveau/buddypress/video/actions.php:47
 #: bp-templates/bp-nouveau/includes/media/functions.php:188
 #: bp-templates/bp-nouveau/includes/video/functions.php:149
 msgid "Select All"
@@ -5572,12 +5572,12 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:851
 #: bp-core/admin/bp-core-admin-tools.php:1185
 #: bp-core/admin/bp-core-admin-tools.php:1228
-#: bp-core/admin/bp-core-admin-tools.php:1378
-#: bp-core/admin/bp-core-admin-tools.php:1386
-#: bp-core/admin/bp-core-admin-tools.php:1421
-#: bp-core/admin/bp-core-admin-tools.php:1437
-#: bp-core/admin/bp-core-admin-tools.php:1536
-#: bp-core/admin/bp-core-admin-tools.php:1635
+#: bp-core/admin/bp-core-admin-tools.php:1390
+#: bp-core/admin/bp-core-admin-tools.php:1398
+#: bp-core/admin/bp-core-admin-tools.php:1479
+#: bp-core/admin/bp-core-admin-tools.php:1495
+#: bp-core/admin/bp-core-admin-tools.php:1594
+#: bp-core/admin/bp-core-admin-tools.php:1693
 #: bp-core/bb-core-subscriptions.php:93 bp-core/bb-core-subscriptions.php:378
 #: bp-core/bb-core-subscriptions.php:1307 bp-forums/admin/tools.php:314
 #: bp-forums/admin/tools.php:316 bp-forums/admin/tools.php:374
@@ -5692,49 +5692,49 @@ msgstr ""
 msgid "Repair Nickname&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1362
+#: bp-core/admin/bp-core-admin-tools.php:1377
 msgid "%s members activity favorite updated successfully."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1374
-#: bp-core/admin/bp-core-admin-tools.php:1382
+#: bp-core/admin/bp-core-admin-tools.php:1386
+#: bp-core/admin/bp-core-admin-tools.php:1394
 msgid "Updating activity favorites data &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1407
+#: bp-core/admin/bp-core-admin-tools.php:1465
 #. translators: %s: the result of the action performed by the repair tool
 msgid "Creating the database table for Invitations if it does not exist &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1408
+#: bp-core/admin/bp-core-admin-tools.php:1466
 msgid "Failed to create table!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1429
+#: bp-core/admin/bp-core-admin-tools.php:1487
 #. translators: %s: the result of the action performed by the repair tool
 msgid "Migrating existing group invitations &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1430
+#: bp-core/admin/bp-core-admin-tools.php:1488
 msgid "Failed to migrate invitations!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1526
+#: bp-core/admin/bp-core-admin-tools.php:1584
 msgid ""
 "Profile completion widget, profile photo status updated successfully for %s "
 "members."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1533
+#: bp-core/admin/bp-core-admin-tools.php:1591
 msgid "Profile Completion widget, profile photo status re-sync %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1625
+#: bp-core/admin/bp-core-admin-tools.php:1683
 #. translators: %s: number of groups
 msgid "%s groups member count updated successfully."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1631
+#: bp-core/admin/bp-core-admin-tools.php:1689
 msgid "Recalculating the total group members count for each group &hellip; %s"
 msgstr ""
 
@@ -6792,8 +6792,8 @@ msgid "Invalid object."
 msgstr ""
 
 #: bp-core/bp-core-actions.php:1116 bp-core/classes/class-bb-reaction.php:914
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1313
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1321
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1329
 msgid "Invalid request."
 msgstr ""
 
@@ -8525,7 +8525,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:92
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:60
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1689
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2238
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2240
 #: bp-templates/bp-nouveau/includes/groups/template-tags.php:555
 #: bp-templates/bp-nouveau/includes/members/template-tags.php:220
 msgid "Options"
@@ -11552,12 +11552,12 @@ msgstr ""
 #: bp-messages/bp-messages-functions.php:2531
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:37
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:273
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2079
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:2080
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2115
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2081
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:2116
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2151
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2117
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:2152
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2153
 #: bp-templates/bp-nouveau/includes/document/ajax.php:448
 #: bp-templates/bp-nouveau/includes/document/ajax.php:449
 #: bp-templates/bp-nouveau/includes/document/functions.php:102
@@ -23089,11 +23089,11 @@ msgstr ""
 msgid "Google reCAPTCHA token is missing."
 msgstr ""
 
-#: bp-integrations/recaptcha/bb-recaptcha-functions.php:653
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:654
 msgid "Verification failed please try again."
 msgstr ""
 
-#: bp-integrations/recaptcha/bb-recaptcha-functions.php:658
+#: bp-integrations/recaptcha/bb-recaptcha-functions.php:659
 msgid "Could not get a response from the reCAPTCHA server."
 msgstr ""
 
@@ -27740,7 +27740,7 @@ msgstr ""
 #: bp-moderation/classes/class-bp-moderation-comment.php:334
 #: bp-templates/bp-nouveau/buddypress/members/members-loop.php:228
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1689
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2238
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2240
 #: bp-templates/bp-nouveau/includes/document/ajax.php:442
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1315
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1307
@@ -29205,7 +29205,7 @@ msgid "Write a comment..."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/activity/entry.php:47
-msgid "Turned Off Notification"
+msgid "Turned off notifications"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/activity/post-form.php:41
@@ -30982,24 +30982,30 @@ msgstr ""
 msgid "Notifications for this activity already been muted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1276
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1251
+msgid ""
+"There was a problem marking this operation. Close comments setting is "
+"disabled."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1284
 msgid "You turned on commenting for this post"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1280
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1288
 msgid "You are not permitted with the requested operation"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1328
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1336
 msgid "Activity id cannot be empty."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1335
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1343
 msgid "Parent comment id cannot be empty."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1382
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1388
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1390
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1396
 msgid "No more items to load."
 msgstr ""
 
@@ -31080,12 +31086,12 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:259
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:2024
-msgid "Turn off notification"
+msgid "Turn off notifications"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:260
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:2028
-msgid "Turn on notification"
+msgid "Turn on notifications"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:264
@@ -31143,7 +31149,7 @@ msgid "Edit Folder Privacy"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1444
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2486
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2488
 msgid "(edited)"
 msgstr ""
 
@@ -31171,8 +31177,8 @@ msgstr ""
 msgid "Done Editing"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2309
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2313
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2311
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2315
 msgid "Edit Comment"
 msgstr ""
 
