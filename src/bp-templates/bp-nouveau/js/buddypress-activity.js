@@ -2731,11 +2731,18 @@ window.bp = window.bp || {};
 			this.destroyCommentVideoUploader( activityID );
 		},
 
-		toggleMultiMediaOptions: function( form, target ) {
+		toggleMultiMediaOptions: function( form, target, placeholder ) {
 			if ( ! _.isUndefined( BP_Nouveau.media ) ) {
 
-				var parent_activity = target.closest( '.activity-item' );
-				var activity_data   = target.closest( '.activity-item' ).data( 'bp-activity' );
+				if ( placeholder ) {
+					target = target ? $(target) : $(placeholder);
+					var parent_activity = target.closest( '.activity-modal' ).find( '.activity-item' );
+					var activity_data   = target.closest( '.activity-modal' ).find( '.activity-item' ).data( 'bp-activity' );
+					form = $(placeholder);
+				} else {
+					var parent_activity = target.closest( '.activity-item' );
+					var activity_data   = target.closest( '.activity-item' ).data( 'bp-activity' );
+				}
 
 				if ( target.closest( 'li' ).data( 'bp-activity-comment' ) ) {
 					activity_data = target.closest( 'li' ).data( 'bp-activity-comment' );
@@ -3412,6 +3419,8 @@ window.bp = window.bp || {};
 			if ( typeof bp.Nouveau !== 'undefined' ) {
 				bp.Nouveau.reportPopUp();
 			}
+
+			bp.Nouveau.Activity.toggleMultiMediaOptions( form, '', '.bb-modal-activity-footer' );
 		},
 
 		viewMoreComments: function( e ) {
