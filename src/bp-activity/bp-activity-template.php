@@ -2019,8 +2019,10 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 		) {
 			if ( ! empty( $parent_comment_id ) && $activities_template->activity->id !== $parent_comment_id ) {
 				$view_more_text = __( 'View more replies', 'buddyboss' );
+				$view_more_icon = "<i class='bb-icon-l bb-icon-corner-right'></i>";
 			} else {
 				$view_more_text = __( 'View more comments', 'buddyboss' );
+				$view_more_icon = "";
 			}
 
 			$hidden_class = '';
@@ -2028,7 +2030,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 				$hidden_class = 'acomments-view-more--hide';
 			}
 
-			echo "<li class='acomments-view-more acomments-view-more--root " . esc_attr( $hidden_class ) . "'>" . esc_html( $view_more_text ) . "</li>";
+			echo "<li class='acomments-view-more acomments-view-more--root " . esc_attr( $hidden_class ) . "'>" . $view_more_icon . "" . esc_html( $view_more_text ) . "</li>";
 			break;
 		}
 
