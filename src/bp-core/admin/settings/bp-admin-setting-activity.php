@@ -279,7 +279,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_admin_setting_callback_comment_loading() {
-		$options = array( 5, 10, 15, 20 );
+		$options = apply_filters( 'bb_activity_comment_loading_options', array( 5, 10, 15, 20, 25, 30 ) );
 		$setting = bb_get_activity_comment_loading();
 		ob_start();
 		?>
