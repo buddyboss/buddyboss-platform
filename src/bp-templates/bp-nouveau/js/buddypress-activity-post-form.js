@@ -4747,7 +4747,6 @@ window.bp = window.bp || {};
 			},
 
 			initialize: function () {
-
 			},
 
 			displayOptions: function ( event ) {
@@ -4760,6 +4759,20 @@ window.bp = window.bp || {};
 				var schedulePost = $( event.target ).closest( '.bb-schedule-posts' );
 				schedulePost.find( '.bb-schedule-post_dropdown_list' ).removeClass( 'is_open' );
 				schedulePost.find( '.bb-schedule-post_modal #bb-schedule-post_form_modal' ).show();
+				if (typeof jQuery.fn.datetimepicker !== 'undefined') {
+					$( '.bb-schedule-post_dropdown_section .bb-schedule-activity-date-field' ).datetimepicker({
+						timepicker:false,
+						mask:true,
+					});
+
+					$( '.bb-schedule-post_dropdown_section .bb-schedule-activity-time-field' ).datetimepicker({
+						datepicker: false,
+						format: 'h:i',
+						formatTime:	'h:i',
+						hours12: true,
+						step: 30,
+					});
+				}
 			}
 		}
 

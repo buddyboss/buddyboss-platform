@@ -40,13 +40,13 @@
 
 									<label>Date</label>
 									<div class="input-field">
-										<input type="text" name="" id="">
+										<input type="text" name="" id="" class="bb-schedule-activity-date-field">
 										<i class="bb-icon-f bb-icon-calendar"></i>
 									</div>
 
 									<label>Time</label>
 									<div class="input-field">
-										<input type="text" name="" id="">
+										<input type="text" name="" id="" class="bb-schedule-activity-time-field">
 										<i class="bb-icon-f bb-icon-clock"></i>
 									</div>
 

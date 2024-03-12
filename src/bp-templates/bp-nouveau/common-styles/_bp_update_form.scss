@@ -374,7 +374,7 @@
 		}
 	}
 
-	.bb-model-footer {
+	.bb-action-popup .bb-model-footer {
 		background-color: transparent;
 
 		.button {
@@ -383,6 +383,10 @@
 		}
 	}
 
+}
+
+body.activity .xdsoft_datetimepicker {
+	z-index: 999999;
 }
 
 #whats-new-form:not(.focus-in--group) #privacy-status-group-back {

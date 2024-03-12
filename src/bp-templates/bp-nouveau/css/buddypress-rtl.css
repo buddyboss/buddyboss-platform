@@ -1747,13 +1747,17 @@ a.layout-grid-view {
   opacity: 0.4;
 }
 
-.bb-schedule-post_dropdown_section .bb-model-footer {
+.bb-schedule-post_dropdown_section .bb-action-popup .bb-model-footer {
   background-color: transparent;
 }
 
-.bb-schedule-post_dropdown_section .bb-model-footer .button {
+.bb-schedule-post_dropdown_section .bb-action-popup .bb-model-footer .button {
   padding: 6px 15px;
   min-width: auto;
+}
+
+body.activity .xdsoft_datetimepicker {
+  z-index: 999999;
 }
 
 #whats-new-form:not(.focus-in--group) #privacy-status-group-back {
