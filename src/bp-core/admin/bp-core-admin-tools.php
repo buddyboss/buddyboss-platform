@@ -1322,59 +1322,60 @@ add_action( 'wp_ajax_bp_admin_repair_tools_wrapper_function', 'bp_admin_repair_t
  * @since BuddyBoss 1.3.3
  */
 function bp_admin_update_activity_favourite() {
-	global $wpdb;
+	global $wpdb, $bp;
 
 	$bp_activity_reactions = bp_get_option( 'bp_activity_reactions', false );
 
 	if ( ! $bp_activity_reactions ) {
-		$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
-		$args   = array(
-			'number' => 20,
-			'offset' => $offset,
+		$offset   = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+		$per_page = (int) apply_filters( 'bb_admin_update_activity_favourite_per_page', 200 );
+
+		$items = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT a.id AS activity_id, am.meta_value FROM {$bp->activity->table_name} a INNER JOIN {$bp->activity->table_name_meta} am ON a.id = am.activity_id WHERE am.meta_key = 'bp_favorite_users' AND am.meta_value != '' ORDER BY a.id DESC LIMIT %d OFFSET %d",
+				$per_page,
+				$offset
+			),
+			ARRAY_A
 		);
 
-		$users       = get_users( $args );
-		$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
+		if ( ! empty( $items ) ) {
+			foreach ( $items as $item ) {
 
-		if ( is_array( $users ) && ! empty( $users ) && ! empty( $reaction_id ) ) {
-			foreach ( $users as $user ) {
-				$user_fav = bp_get_user_meta( $user->ID, 'bp_favorite_activities', true );
+				$item_id      = $item['activity_id'];
+				$fav_user_ids = maybe_unserialize( $item['meta_value'] );
 
-				if ( ! is_array( $user_fav ) || empty( $user_fav ) ) {
+				if ( ! is_array( $fav_user_ids ) || empty( $fav_user_ids ) ) {
 					++$offset;
 					continue;
 				}
 
-				$migrated_fav = $wpdb->get_col(
+				$migrated_fav_user_ids = $wpdb->get_col(
 					$wpdb->prepare(
-						'SELECT item_id FROM ' . bb_load_reaction()::$user_reaction_table . ' WHERE user_id = %d AND item_id IN (' . implode( ',', $user_fav ) . ')',
-						$user->ID
+						'SELECT user_id FROM ' . bb_load_reaction()::$user_reaction_table . ' WHERE item_id = %d AND user_id IN (' . implode( ',', $fav_user_ids ) . ')',
+						$item_id
 					)
 				);
 
-				if ( ! empty( $migrated_fav ) ) {
-					$user_fav = array_diff( $user_fav, $migrated_fav );
+				if ( ! empty( $migrated_fav_user_ids ) ) {
+					$fav_user_ids = array_diff( $fav_user_ids, $migrated_fav_user_ids );
 				}
 
-				if ( ! empty( $user_fav ) ) {
-					$chunk_length = (int) apply_filters( 'bp_admin_update_activity_favourite_chunk_length', 100 );
+				if ( ! empty( $fav_user_ids ) ) {
+					$chunk_length    = (int) apply_filters( 'bb_admin_update_activity_favourite_chunk_length', 500 );
+					$user_fav_chunks = count( $fav_user_ids ) > $chunk_length ? array_chunk( $fav_user_ids, $chunk_length ) : array( $fav_user_ids );
 
-					if ( count( $user_fav ) > $chunk_length ) {
-						$user_fav_chunks = array_chunk( $user_fav, $chunk_length );
-
-						if ( ! empty( $user_fav_chunks ) ) {
-							foreach ( $user_fav_chunks as $chunk ) {
-								bb_admin_tool_migration_reaction( $user->ID, $chunk );
-							}
+					if ( ! empty( $user_fav_chunks ) ) {
+						foreach ( $user_fav_chunks as $chunk ) {
+							bb_admin_tool_migration_reaction( $item_id, $chunk );
 						}
-					} else {
-						bb_admin_tool_migration_reaction( $user->ID, $user_fav );
 					}
 				}
+
 				++$offset;
 			}
 
-			$records_updated = sprintf( __( '%s members activity favorite updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+			$records_updated = sprintf( __( '%s activity favorites updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 			return array(
 				'status'  => 'running',
@@ -1403,32 +1404,40 @@ function bp_admin_update_activity_favourite() {
 /**
  * Insert reactions for a user in bulk.
  *
- * @param int   $user_id
- * @param array $item_ids
- *
  * @since [BBVERSION]
+ *
+ * @param int   $item_id  Item ID.
+ * @param array $user_ids Array of user ID.
  *
  * @return void
  */
-function bb_admin_tool_migration_reaction( $user_id, $item_ids = array() ) {
+function bb_admin_tool_migration_reaction( $item_id, $user_ids = array() ) {
 	global $wpdb;
 
-	if ( empty( $item_ids ) ) {
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	// Validate the user ids.
+	$filtered_user_ids = get_users(
+		array(
+			'include'         => $user_ids,
+			'fields'          => 'ids',
+			'populate_extras' => false,
+			'count_total'     => false,
+		)
+	);
+
+	if ( empty( $filtered_user_ids ) ) {
 		return;
 	}
 
 	$user_reaction_tbl    = bb_load_reaction()::$user_reaction_table;
 	$reaction_id          = bb_load_reaction()->bb_reactions_get_like_reaction_id();
-	$summary_args         = array();
 	$place_holder_queries = array();
 
-	foreach ( $item_ids as $item_id ) {
+	foreach ( $filtered_user_ids as $user_id ) {
 		$place_holder_queries[] = $wpdb->prepare( '(%d, %d, %s, %d, %s)', $user_id, $reaction_id, 'activity', $item_id, bp_core_current_time() );
-		$summary_args[]         = array(
-			'reaction_id' => $reaction_id,
-			'item_id'     => $item_id,
-			'item_type'   => 'activity',
-		);
 	}
 
 	if ( ! empty( $place_holder_queries ) ) {
@@ -1437,13 +1446,13 @@ function bb_admin_tool_migration_reaction( $user_id, $item_ids = array() ) {
 
 		bp_core_reset_incrementor( 'bb_reactions' );
 
-		if ( ! empty( $summary_args ) ) {
-			$summary_args = array_unique( $summary_args, SORT_REGULAR );
-
-			foreach ( $summary_args as $reaction ) {
-				bb_load_reaction()->bb_prepare_reaction_summary_data( $reaction );
-			}
-		}
+		bb_load_reaction()->bb_prepare_reaction_summary_data(
+			array(
+				'reaction_id' => $reaction_id,
+				'item_id'     => $item_id,
+				'item_type'   => 'activity',
+			)
+		);
 	}
 }
 
