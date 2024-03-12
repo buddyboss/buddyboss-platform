@@ -1418,11 +1418,25 @@ function bb_admin_tool_migration_reaction( $item_id, $user_ids = array() ) {
 		return;
 	}
 
+	// Validate the user ids.
+	$filtered_user_ids = get_users(
+		array(
+			'include'         => $user_ids,
+			'fields'          => 'ids',
+			'populate_extras' => false,
+			'count_total'     => false,
+		)
+	);
+
+	if ( empty( $filtered_user_ids ) ) {
+		return;
+	}
+
 	$user_reaction_tbl    = bb_load_reaction()::$user_reaction_table;
 	$reaction_id          = bb_load_reaction()->bb_reactions_get_like_reaction_id();
 	$place_holder_queries = array();
 
-	foreach ( $user_ids as $user_id ) {
+	foreach ( $filtered_user_ids as $user_id ) {
 		$place_holder_queries[] = $wpdb->prepare( '(%d, %d, %s, %d, %s)', $user_id, $reaction_id, 'activity', $item_id, bp_core_current_time() );
 	}
 
