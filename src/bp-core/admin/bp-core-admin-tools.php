@@ -1328,7 +1328,7 @@ function bp_admin_update_activity_favourite() {
 
 	if ( ! $bp_activity_reactions ) {
 		$offset   = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
-		$per_page = (int) apply_filters( 'bp_admin_update_activity_favourite_per_page', 200 );
+		$per_page = (int) apply_filters( 'bb_admin_update_activity_favourite_per_page', 200 );
 
 		$items = $wpdb->get_results(
 			$wpdb->prepare(
@@ -1362,7 +1362,7 @@ function bp_admin_update_activity_favourite() {
 				}
 
 				if ( ! empty( $fav_user_ids ) ) {
-					$chunk_length    = (int) apply_filters( 'bp_admin_update_activity_favourite_chunk_length', 500 );
+					$chunk_length    = (int) apply_filters( 'bb_admin_update_activity_favourite_chunk_length', 500 );
 					$user_fav_chunks = count( $fav_user_ids ) > $chunk_length ? array_chunk( $fav_user_ids, $chunk_length ) : array( $fav_user_ids );
 
 					if ( ! empty( $user_fav_chunks ) ) {
