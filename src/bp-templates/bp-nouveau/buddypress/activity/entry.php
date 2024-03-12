@@ -86,14 +86,16 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 								<?php echo bp_core_get_user_displayname( $activities_template->activity->user_id ); ?>
 							</a>
 						</span>
-					<?php
-					$activity_date_recorded = bp_get_activity_date_recorded();
-					printf(
-						'<span class="time-since" data-livestamp="%1$s">%2$s</span>',
-						bp_core_get_iso8601_date( $activity_date_recorded ),
-						bp_core_time_since( $activity_date_recorded )
-					);
-					?>
+					<a href="<?php echo esc_url( bp_get_group_permalink( $group ) ); ?>">
+						<?php
+						$activity_date_recorded = bp_get_activity_date_recorded();
+						printf(
+							'<span class="time-since" data-livestamp="%1$s">%2$s</span>',
+							bp_core_get_iso8601_date( $activity_date_recorded ),
+							bp_core_time_since( $activity_date_recorded )
+						);
+						?>
+					</a>
 					<?php
 					if ( function_exists( 'bp_nouveau_activity_is_edited' ) ) {
 						bp_nouveau_activity_is_edited();
