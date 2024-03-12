@@ -1331,14 +1331,15 @@ function bp_admin_update_activity_favourite() {
 		$args   = array(
 			'number' => 20,
 			'offset' => $offset,
+			'fields' => 'ids',
 		);
 
 		$users       = get_users( $args );
 		$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
 
 		if ( is_array( $users ) && ! empty( $users ) && ! empty( $reaction_id ) ) {
-			foreach ( $users as $user ) {
-				$user_fav = bp_get_user_meta( $user->ID, 'bp_favorite_activities', true );
+			foreach ( $users as $user_id ) {
+				$user_fav = bp_get_user_meta( $user_id, 'bp_favorite_activities', true );
 
 				if ( ! is_array( $user_fav ) || empty( $user_fav ) ) {
 					++$offset;
@@ -1348,7 +1349,7 @@ function bp_admin_update_activity_favourite() {
 				$migrated_fav = $wpdb->get_col(
 					$wpdb->prepare(
 						'SELECT item_id FROM ' . bb_load_reaction()::$user_reaction_table . ' WHERE user_id = %d AND item_id IN (' . implode( ',', $user_fav ) . ')',
-						$user->ID
+						$user_id
 					)
 				);
 
@@ -1358,17 +1359,12 @@ function bp_admin_update_activity_favourite() {
 
 				if ( ! empty( $user_fav ) ) {
 					$chunk_length = (int) apply_filters( 'bp_admin_update_activity_favourite_chunk_length', 100 );
+					$user_fav_chunks = count( $user_fav ) > $chunk_length ? array_chunk( $user_fav, $chunk_length ): array( $user_fav );
 
-					if ( count( $user_fav ) > $chunk_length ) {
-						$user_fav_chunks = array_chunk( $user_fav, $chunk_length );
-
-						if ( ! empty( $user_fav_chunks ) ) {
-							foreach ( $user_fav_chunks as $chunk ) {
-								bb_admin_tool_migration_reaction( $user->ID, $chunk );
-							}
+					if ( ! empty( $user_fav_chunks ) ) {
+						foreach ( $user_fav_chunks as $chunk ) {
+							bb_admin_tool_migration_reaction( $user_id, $chunk );
 						}
-					} else {
-						bb_admin_tool_migration_reaction( $user->ID, $user_fav );
 					}
 				}
 				++$offset;
@@ -1424,7 +1420,7 @@ function bb_admin_tool_migration_reaction( $user_id, $item_ids = array() ) {
 
 	foreach ( $item_ids as $item_id ) {
 		$place_holder_queries[] = $wpdb->prepare( '(%d, %d, %s, %d, %s)', $user_id, $reaction_id, 'activity', $item_id, bp_core_current_time() );
-		$summary_args[]         = array(
+		$summary_args[] = array(
 			'reaction_id' => $reaction_id,
 			'item_id'     => $item_id,
 			'item_type'   => 'activity',
