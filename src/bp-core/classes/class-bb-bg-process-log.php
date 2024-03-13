@@ -433,18 +433,7 @@ class BB_BG_Process_Log {
             process_start_date datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
             process_end_date_gmt datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
             process_end_date datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-            KEY  process_id (process_id),
-            KEY  parent (parent),
-            KEY  component (component),
-            KEY  bg_process_name (bg_process_name),
-            KEY  bg_process_from (bg_process_from),
-            KEY  callback_function (callback_function),
-            KEY  blog_id (blog_id),
-            KEY  priority (priority),
-            KEY  process_start_date_gmt (process_start_date_gmt),
-            KEY  process_start_date (process_start_date),
-            KEY  process_end_date_gmt (process_end_date_gmt),
-            KEY  process_end_date (process_end_date)
+            KEY  process_start_date_gmt (process_start_date_gmt)
             ) $charset_collate";
 
 		dbDelta( $sql );
