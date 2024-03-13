@@ -557,6 +557,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 
 	ob_start();
 
+	$comment_template_args = array();
 	if ( ! empty( $_POST['edit_comment'] ) && ! bp_is_single_activity() ) {
 		$comment_template_args = array( 'show_replies' => false, 'limit_comments' => true );
 	}
