@@ -1747,6 +1747,57 @@ a.layout-grid-view {
   opacity: 0.4;
 }
 
+.bb-schedule-post_dropdown_section .bb-action-popup-content .bb-schedule-activity-time-wrap {
+  flex: 1 0 auto;
+}
+
+.bb-schedule-post_dropdown_section .bb-action-popup-content .bb-schedule-activity-meridian-wrap {
+  position: relative;
+  margin: 0 0 20px 10px;
+  flex: 0 0 auto;
+  display: flex;
+}
+
+.bb-schedule-post_dropdown_section .bb-action-popup-content .input-field-inline {
+  display: flex;
+}
+
+.bb-schedule-post_dropdown_section .bb-action-popup-content .input-field-inline .bb-schedule-activity-meridian-wrap label {
+  margin: 0 4px;
+  font-size: 15px;
+  font-weight: 400;
+  color: #eaeaea;
+  letter-spacing: -0.22px;
+  cursor: pointer;
+}
+
+.bb-schedule-post_dropdown_section .bb-action-popup-content .input-field-inline .bb-schedule-activity-meridian-wrap label input {
+  position: absolute;
+  opacity: 0;
+}
+
+.bb-schedule-post_dropdown_section .bb-action-popup-content .input-field-inline .bb-schedule-activity-meridian-wrap label input:checked + span {
+  background: #5087e5;
+  border-color: #5087e5;
+  color: #fff;
+}
+
+.bb-schedule-post_dropdown_section .bb-action-popup-content .input-field-inline .bb-schedule-activity-meridian-wrap label span {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #eaeaea;
+  letter-spacing: -0.24px;
+  line-height: 24px;
+}
+
 .bb-schedule-post_dropdown_section .bb-action-popup .bb-model-footer {
   background-color: transparent;
 }

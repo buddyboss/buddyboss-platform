@@ -45,9 +45,21 @@
 									</div>
 
 									<label>Time</label>
-									<div class="input-field">
-										<input type="text" name="" id="" class="bb-schedule-activity-time-field">
-										<i class="bb-icon-f bb-icon-clock"></i>
+									<div class="input-field-inline">
+										<div class="input-field bb-schedule-activity-time-wrap">
+											<input type="text" name="" id="" class="bb-schedule-activity-time-field">
+											<i class="bb-icon-f bb-icon-clock"></i>
+										</div>
+										<div class="input-field bb-schedule-activity-meridian-wrap">
+											<label for="bb-schedule-activity-meridian-am">
+												<input type="radio" value="am" id="bb-schedule-activity-meridian-am" name="bb-schedule-activity-meridian">
+												<span class="bb-time-meridian">AM</span>
+											</label>
+											<label for="bb-schedule-activity-meridian-pm">
+												<input type="radio" value="pm" id="bb-schedule-activity-meridian-pm" name="bb-schedule-activity-meridian" checked="checked">
+												<span class="bb-time-meridian">PM</span>
+											</label>
+										</div>
 									</div>
 
 									<p><a href="#">View all scheduled posts <i class="bb-icon-f bb-icon-arrow-right"></i></a></p>
