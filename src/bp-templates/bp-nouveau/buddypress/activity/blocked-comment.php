@@ -108,16 +108,19 @@ if ( bp_is_active( 'moderation' ) ) {
 
 					</div>
 				</div>
+				<div class="acomment-foot-actions">
+					<?php
+					if ( bb_is_group_activity_comment( $activity_comment_id ) && ! $check_hidden_content ) {
+						bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) );
+					}
+					?>
+				</div>
 			</div>
 
 		</div>
 	</div>
 
 	<?php
-	if ( bb_is_group_activity_comment( $activity_comment_id ) && ! $check_hidden_content ) {
-		bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) );
-	}
-
 	$args = array(
 		'limit_comments'     => isset( $args['limit_comments'] ) && true === $args['limit_comments'],
 		'comment_load_limit' => isset( $args['show_replies'] ) && false === $args['show_replies'] ? 0 : bb_get_activity_comment_loading(),

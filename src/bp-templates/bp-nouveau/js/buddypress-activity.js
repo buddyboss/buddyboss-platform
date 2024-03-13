@@ -3520,7 +3520,7 @@ window.bp = window.bp || {};
 								function () {
 									jQuery( window ).scroll();
 								},
-								200,
+								200
 							);
 						}
 						target.remove();
@@ -3535,12 +3535,12 @@ window.bp = window.bp || {};
 						action_tooltip.attr( 'data-balloon-pos', 'left' );
 					}
 
-				},
+				}
 			).fail(
 				function ( $xhr ) {
 					target.html( '<p class=\'error\'>' + $xhr.statusText + '</p>' ).removeClass( 'acomments-view-more--hide' );
 					commentsList.removeClass( 'active' );
-				},
+				}
 			);
 		},
 
@@ -3567,7 +3567,7 @@ window.bp = window.bp || {};
 					function () {
 						jQuery( window ).scroll();
 					},
-					200,
+					200
 				);
 			}
 		},
@@ -3599,10 +3599,10 @@ window.bp = window.bp || {};
 							// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 							jQuery( window ).scroll();
 						}
-					},
+					}
 				).fail(
 					function ( $xhr ) {
-					},
+					}
 				);
 			}
 
@@ -3664,7 +3664,7 @@ window.bp = window.bp || {};
 							$( '.emojionearea-theatre' ).removeClass( 'show' ).addClass( 'hide' );
 						},
 					},
-				},
+				}
 			);
 		},
 
