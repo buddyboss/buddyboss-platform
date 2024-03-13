@@ -1784,6 +1784,11 @@ body.buddypress .bb-schedule-post_dropdown_section .schedule-posts-placeholder h
   color: #555;
 }
 
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .bb-action-popup-content {
+  background-color: #eaeaea;
+  border-radius: 0 0 4px 4px;
+}
+
 body.activity .xdsoft_datetimepicker {
   z-index: 999999;
 }

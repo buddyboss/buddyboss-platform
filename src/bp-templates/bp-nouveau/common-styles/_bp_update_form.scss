@@ -411,6 +411,11 @@
 		}
 	}
 
+	.bb-schedule-posts_modal .bb-action-popup-content {
+		background-color: $light-grey;
+		border-radius: 0 0 4px 4px;
+	}
+
 }
 
 body.activity .xdsoft_datetimepicker {
