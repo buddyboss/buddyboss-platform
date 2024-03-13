@@ -19,7 +19,7 @@
 		<div class="bb-schedule-post_dropdown_list">
 			<ul>
 				<li><a href="#" class="bb-schedule-post_action"><i class="bb-icon-l bb-icon-calendar"></i>Schedule Post</a></li>
-				<li><a href="#"><i class="bb-icon-l bb-icon-pencil"></i>View Schedule Posts</a></li>
+				<li><a href="#" class="bb-view-schedule-posts"><i class="bb-icon-l bb-icon-pencil"></i>View Schedule Posts</a></li>
 			</ul>
 		</div>
 
@@ -57,6 +57,32 @@
 									<a href="#" class="button button-outline bb-schedule-activity-cancel">Back</a>
 									<a class="button bb-schedule-activity" href="#">Next</a>
 								</footer>
+							</div>
+						</div>
+					</div>
+				</transition>
+			</div> <!-- .bb-action-popup -->
+		</div>
+
+		<div class="bb-schedule-posts_modal">
+			<div class="bb-action-popup" id="bb-schedule-posts_modal" style="display: none">
+				<transition name="modal">
+					<div class="modal-mask bb-white bbm-model-wrap">
+						<div class="modal-wrapper">
+							<div class="modal-container">
+								<header class="bb-model-header">
+									<h4><span class="target_name"><?php echo esc_html__( 'Scheduled posts', 'buddyboss' ); ?></span></h4>
+									<a class="bb-close-action-popup bb-model-close-button" href="#">
+										<span class="bb-icon-l bb-icon-times"></span>
+									</a>
+								</header>
+								<div class="bb-action-popup-content">
+									<div class="schedule-posts-placeholder">
+										<i class="bb-icon-f bb-icon-activity-slash"></i>
+										<h2>No Scheduled Posts Found</h2>
+										<p>You do not have any posts scheduled at the moment.</p>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
