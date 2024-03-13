@@ -472,7 +472,7 @@ function bp_activity_at_name_filter( $content, $activity_id = 0 ) {
 		$replacement = "<a class='bp-suggestions-mention' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>@$username</a>";
 		if ( false === strpos( $content, $replacement ) ) {
 			// Pattern for cases with existing <a>@mention</a> or @mention.
-			$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';
+			$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';
 			$content = preg_replace( $pattern, $replacement, $content );
 		}
 	}
@@ -519,7 +519,7 @@ function bp_activity_at_name_filter_updates( $activity ) {
 			$replacement = "<a class='bp-suggestions-mention' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>@$username</a>";
 			if ( false === strpos( $activity->content, $replacement ) ) {
 				// Pattern for cases with existing <a>@mention</a> or @mention.
-				$pattern           = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';
+				$pattern           = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';
 				$activity->content = preg_replace( $pattern, $replacement, $activity->content );
 			}
 		}
