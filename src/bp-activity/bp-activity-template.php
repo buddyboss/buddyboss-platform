@@ -1906,7 +1906,7 @@ function bp_activity_comments( $args = '' ) {
  * @return bool
  */
 function bp_activity_get_comments( $args = '' ) {
-	global $activities_template, $load_single_activity;
+	global $activities_template;
 
 	if ( in_array( $activities_template->activity->component, array( 'blogs' ), true ) && ! bp_activity_can_comment() ) {
 		return false;
@@ -1917,7 +1917,8 @@ function bp_activity_get_comments( $args = '' ) {
 	}
 
 	$args = array(
-		'comment_load_limit' => empty( $load_single_activity ) ? bb_get_activity_comment_visibility() : false,
+		'limit_comments'     => bp_is_single_activity() ? false : true,
+		'comment_load_limit' => bb_get_activity_comment_visibility(),
 	);
 	bp_activity_recurse_comments( $activities_template->activity, $args );
 }
@@ -1937,7 +1938,8 @@ function bp_activity_get_comments( $args = '' ) {
  * @param array  $args {
  * Array of arguments.
  *
- * @type int    $comment_load_limit     The number of comments to load. Default: false.
+ * @type bool   $limit_comments         Limit comments loading or not Default: false.
+ * @type int    $comment_load_limit     The number of comments to load. Default: 0.
  * @type int    $parent_comment_id      The ID of the parent comment.
  * @type int    $main_activity_id       The ID of the main activity.
  * @type bool   $is_ajax_load_more      Whether the comments are being loaded via AJAX.
@@ -1952,7 +1954,8 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'comment_load_limit'     => false,
+			'limit_comments'         => false,
+			'comment_load_limit'     => 0,
 			'parent_comment_id'      => 0,
 			'main_activity_id'       => 0,
 			'is_ajax_load_more'      => false,
@@ -1960,8 +1963,6 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 		),
 		'bb_activity_recurse_comments'
 	);
-
-	extract( $r );
 
 	if ( empty( $comment ) ) {
 		return false;
@@ -1978,12 +1979,12 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 	 *
 	 * @param string $value Opening tag for the HTML markup to use.
 	 */
-	if ( ! $is_ajax_load_more ) {
+	if ( ! $r['is_ajax_load_more'] ) {
 		if (
-			false !== $comment_load_limit &&
-			0 !== $comment_load_limit &&
+			false !== $r['limit_comments'] &&
+			0 !== $r['comment_load_limit'] &&
 			(
-				count( $comment->children ) > $comment_load_limit
+				count( $comment->children ) > $r['comment_load_limit']
 			)
 		) {
 			echo "<a href='javascript:void(0);' class='view-more-comments'>" . esc_html__( 'View more comments', 'buddyboss' ) . "</a>";
@@ -2002,22 +2003,22 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 	$comment_loaded_count = 0;
 	foreach ( (array) $comment->children as $comment_child ) {
 		if (
-			true === $is_ajax_load_more &&
-			! empty( $last_comment_timestamp ) &&
-			$comment->id === $parent_comment_id &&
-			$comment_child->date_recorded <= date_i18n( 'Y-m-d H:i:s', $last_comment_timestamp )
+			true === $r['is_ajax_load_more'] &&
+			! empty( $r['last_comment_timestamp'] ) &&
+			$comment->id === $r['parent_comment_id'] &&
+			$comment_child->date_recorded <= date_i18n( 'Y-m-d H:i:s', $r['last_comment_timestamp'] )
 		) {
 			// Skip.
 			continue;
 		}
 
 		if (
-			false !== $comment_loaded_count &&
+			false !== $r['limit_comments'] &&
 			(
-				$comment_loaded_count === $comment_load_limit
+				$comment_loaded_count === $r['comment_load_limit']
 			)
 		) {
-			if ( ! empty( $parent_comment_id ) && $activities_template->activity->id !== $parent_comment_id ) {
+			if ( ! empty( $r['parent_comment_id'] ) && $activities_template->activity->id !== $r['parent_comment_id'] ) {
 				$view_more_text = __( 'View more replies', 'buddyboss' );
 				$view_more_icon = "<i class='bb-icon-l bb-icon-corner-right'></i>";
 			} else {
@@ -2026,7 +2027,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 			}
 
 			$hidden_class = '';
-			if ( ! $is_ajax_load_more ) {
+			if ( ! $r['is_ajax_load_more'] ) {
 				$hidden_class = 'acomments-view-more--hide';
 			}
 
@@ -2039,9 +2040,9 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 
 		$template = bp_locate_template( 'activity/comment.php', false, false );
 
-		$comment_template_args = array();
+		$comment_template_args = array( 'limit_comments' => $r['limit_comments'] );
 		if (
-			false !== $comment_load_limit &&
+			false !== $r['limit_comments'] &&
 			(
 				$comment->id === $comment_child->secondary_item_id ||
 				$comment->item_id === $comment->secondary_item_id ||
@@ -2049,7 +2050,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 			)
 		) {
 			// First level comments.
-			$comment_template_args = array( 'show_replies' => false );
+			$comment_template_args['show_replies'] = false;
 		}
 
 		load_template( $template, false, $comment_template_args );
@@ -2066,7 +2067,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 	 *
 	 * @param string $value Closing tag for the HTML markup to use.
 	 */
-	if ( ! $is_ajax_load_more ) {
+	if ( ! $r['is_ajax_load_more'] ) {
 
 		/**
 		 * Filters the end of nested comment list in the activity.

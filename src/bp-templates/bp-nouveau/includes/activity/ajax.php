@@ -557,9 +557,8 @@ function bp_nouveau_ajax_new_activity_comment() {
 
 	ob_start();
 
-	$comment_template_args = array();
-	if ( ! empty( $_POST['edit_comment'] ) ) {
-		$comment_template_args = array( 'show_replies' => false );
+	if ( ! empty( $_POST['edit_comment'] ) && ! bp_is_single_activity() ) {
+		$comment_template_args = array( 'show_replies' => false, 'limit_comments' => true );
 	}
 
 	// Get activity comment template part.
@@ -1228,6 +1227,7 @@ function bb_nouveau_ajax_activity_loadmore_comments() {
 	ob_start();
 
 	$args = array(
+		'limit_comments'         => true,
 		'comment_load_limit'     => bb_get_activity_comment_loading(),
 		'parent_comment_id'      => $parent_comment_id,
 		'main_activity_id'       => $activity_id,

@@ -59,6 +59,8 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 		$group_name      = ! empty( $group_name ) ? esc_html( $group_name ) : '';
 		$group_permalink = bp_get_group_permalink( $group );
 		$group_permalink = ! empty( $group_permalink ) ? esc_url( $group_permalink ) : '';
+		$activity_link   = esc_url( bp_activity_get_permalink( $activities_template->activity->id, $activities_template->activity ) );
+		$activity_link   = ! empty( $activity_link ) ? esc_url( $activity_link ) : '';
 		?>
 		<div class="bp-activity-head-group">
 			<div class="activity-group-avatar">
@@ -91,7 +93,7 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 							<?php echo bp_core_get_user_displayname( $activities_template->activity->user_id ); ?>
 						</a>
 					</span>
-					<a href="<?php echo $group_permalink; ?>">
+					<a href="<?php echo $activity_link; ?>">
 						<?php
 						$activity_date_recorded = bp_get_activity_date_recorded();
 						printf(

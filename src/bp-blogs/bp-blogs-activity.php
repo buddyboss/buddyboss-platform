@@ -1473,8 +1473,10 @@ function bp_blogs_activity_comment_permalink( $retval = '' ) {
 			$comment_post_type = $activities_template->activity->secondary_item_id;
 			$get_post_type     = get_post_type( $comment_post_type );
 			$activity_metas    = bb_activity_get_metadata( $activities_template->activity->current_comment->id );
-			$comment_id        = $activity_metas['bp_blogs_' . $get_post_type . '_comment_id'][0] ?? '';
-			$retval            = get_comment_link( $comment_id );
+			$comment_id        = $activity_metas['bp_blogs_' . $get_post_type . '_comment_id'][0] ?? 0;
+			if ( ! empty( $comment_id ) ) {
+				$retval = get_comment_link( $comment_id );
+			}
 		}
 	}
 
@@ -1510,8 +1512,10 @@ function bp_blogs_activity_comment_single_permalink( $retval, $activity ) {
 			$comment_post_type = $parent_activity->secondary_item_id;
 			$get_post_type     = get_post_type( $comment_post_type );
 			$activity_metas    = bb_activity_get_metadata( $activity->id );
-			$comment_id        = $activity_metas['bp_blogs_' . $get_post_type . '_comment_id'][0] ?? '';
-			$retval            = get_comment_link( $comment_id );
+			$comment_id        = $activity_metas['bp_blogs_' . $get_post_type . '_comment_id'][0] ?? 0;
+			if ( ! empty( $comment_id ) ) {
+				$retval = get_comment_link( $comment_id );
+			}
 		}
 	}
 

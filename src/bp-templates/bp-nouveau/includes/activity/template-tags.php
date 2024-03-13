@@ -680,18 +680,19 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
  * @since BuddyPress 3.0.0
  *
  * @since BuddyBoss [BBVERSION]
- * Introduce new param $comment_load_limit to limit the number of comments to load.
+ * Introduce new param $args to limit the number of comments to load.
  *
- * @param bool $comment_load_limit Optional. The number of comments to load.
+ * @param array $args Optional. To limit the number of comments to load.
  */
-function bp_nouveau_activity_comments( $comment_load_limit = false ) {
+function bp_nouveau_activity_comments( $args = array() ) {
 	global $activities_template;
 
 	if ( empty( $activities_template->activity->children ) ) {
 		return;
 	}
 
-	bp_nouveau_activity_recurse_comments( $activities_template->activity, $comment_load_limit );
+
+	bp_nouveau_activity_recurse_comments( $activities_template->activity, $args );
 }
 
 /**
@@ -701,17 +702,32 @@ function bp_nouveau_activity_comments( $comment_load_limit = false ) {
  * @since BuddyPress 3.0.0
  *
  * @since BuddyBoss [BBVERSION]
- * Introduce new param $comment_load_limit to limit the number of comments to load.
+ * Added new param as args to pass some arguments to the function.
  *
- * @param object $comment            The activity object currently being recursed.
- * @param bool   $comment_load_limit Optional. The number of comments to load.
+ * @param object $comment        The activity object currently being recursed.
+ * @param array  $args Optional. {
+ * Array of arguments.
+ *
+ * @type bool $limit_comments     Limit comments loading or not Default: false.
+ * @type int  $comment_load_limit The number of comments to load. Default: 0.
+ * }
+ * 
  */
-function bp_nouveau_activity_recurse_comments( $comment, $comment_load_limit = false ) {
+function bp_nouveau_activity_recurse_comments( $comment, $args = array() ) {
 	global $activities_template;
 
 	if ( empty( $comment->children ) ) {
 		return;
 	}
+
+	$r = bp_parse_args(
+		$args,
+		array(
+			'limit_comments'     => false,
+			'comment_load_limit' => 0,
+		),
+		'bp_nouveau_activity_recurse_comments'
+	);
 
 	/**
 	 * Filters the opening tag for the template that lists activity comments.
@@ -726,8 +742,7 @@ function bp_nouveau_activity_recurse_comments( $comment, $comment_load_limit = f
 	$comment_total        = bp_activity_recurse_comment_count( $comment );
 
 	foreach ( (array) $comment->children as $comment_child ) {
-
-		if ( false !== $comment_load_limit && $comment_loaded_count === $comment_load_limit ) {
+		if ( false !== $r['limit_comments'] && $comment_loaded_count === $r['comment_load_limit'] ) {
 
 			if ( 0 !== $comment->secondary_item_id ) {
 				if ( 0 === $comment_loaded_count ) {
