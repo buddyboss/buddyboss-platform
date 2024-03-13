@@ -161,22 +161,29 @@ class BB_BG_Process_Log {
 		global $wpdb;
 
 		$bg_data = ! empty( $args->data ) ? $args->data : array();
-
 		if ( empty( $bg_data ) ) {
 			return $args;
 		}
-		if ( is_string( $bg_data ) ) {
-			$bg_data = array( 'callback' => $bg_data );
-		} else {
-			$bg_data['callback'] = is_array( $bg_data['callback'] ) ? maybe_serialize( $bg_data['callback'] ) : $bg_data['callback'];
+
+		$bg_data = is_string( $bg_data ) ? array( 'callback' => $bg_data ) : $bg_data;
+		if ( empty( $bg_data['callback'] ) ) {
+			return $args;
 		}
+
+		$bg_data['callback'] = is_array( $bg_data['callback'] ) ? maybe_serialize( $bg_data['callback'] ) : $bg_data['callback'];
+
+		$callback = $this->get_callback_name( $bg_data['callback'] );
+		if ( empty( $callback ) ) {
+			return $args;
+		}
+
 		$insert = $this->add_log(
 			array(
 				'process_id'        => $args->key,
-				'component'         => self::get_component_name( $bg_data['callback'] ),
-				'bg_process_from'   => self::action_from( $bg_data['callback'] ),
-				'bg_process_name'   => $bg_data['callback'],
-				'callback_function' => $bg_data['callback'],
+				'component'         => self::get_component_name( $callback ),
+				'bg_process_from'   => self::action_from( $callback ),
+				'bg_process_name'   => $callback,
+				'callback_function' => $callback,
 				'blog_id'           => $args->blog_id,
 				'priority'          => $args->priority,
 				'data'              => ! empty( $bg_data['args'] ) ? maybe_serialize( $bg_data['args'] ) : '',
@@ -286,11 +293,6 @@ class BB_BG_Process_Log {
 	public static function get_component_name( $callback_function ) {
 		if ( empty( $callback_function ) ) {
 			return;
-		}
-
-		$callback_function = maybe_unserialize( $callback_function );
-		if ( is_array( $callback_function ) ) {
-			$callback_function = end( $callback_function );
 		}
 
 		switch ( $callback_function ) {
@@ -564,5 +566,27 @@ class BB_BG_Process_Log {
 			$this->schedule_log_event();
 			$is_reschedule = true;
 		}
+	}
+
+	/**
+	 * Get the component name.
+	 *
+	 * @since BuddyBoss 2.5.60
+	 *
+	 * @param string $callback_function Type.
+	 *
+	 * @return mixed|void|null
+	 */
+	public static function get_callback_name( $callback_function ) {
+		if ( empty( $callback_function ) ) {
+			return;
+		}
+
+		$callback_function = maybe_unserialize( $callback_function );
+		if ( is_array( $callback_function ) ) {
+			$callback_function = end( $callback_function );
+		}
+
+		return $callback_function;
 	}
 }
