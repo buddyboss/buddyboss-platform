@@ -4761,8 +4761,15 @@ window.bp = window.bp || {};
 				schedulePost.find( '.bb-schedule-post_modal #bb-schedule-post_form_modal' ).show();
 				if (typeof jQuery.fn.datetimepicker !== 'undefined') {
 					$( '.bb-schedule-post_dropdown_section .bb-schedule-activity-date-field' ).datetimepicker({
+						format: 'Y-m-d',
 						timepicker:false,
 						mask:true,
+						minDate: 0,
+						yearStart: new Date().getFullYear(),
+						defaultDate: new Date(),
+						scrollMonth: false,
+						scrollTime: false,
+						scrollInput: false,
 					});
 
 					$( '.bb-schedule-post_dropdown_section .bb-schedule-activity-time-field' ).datetimepicker({
