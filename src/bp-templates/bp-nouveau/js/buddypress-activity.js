@@ -1285,6 +1285,8 @@ window.bp = window.bp || {};
 					easing: 'swing'
 				};
 
+				var div_editor = ce.get( 0 );
+
 				if ( ! jQuery( 'body' ).hasClass( 'bb-is-mobile' ) ) {
 					if ( isInsideModal ) {
 						$( '.bb-modal-activity-body' ).scrollTo( form, 500, scrollOptions );
