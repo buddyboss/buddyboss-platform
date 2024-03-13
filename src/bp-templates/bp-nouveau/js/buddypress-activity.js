@@ -3516,9 +3516,12 @@ window.bp = window.bp || {};
 							}
 
 							// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
-							setTimeout(function () {
-								jQuery(window).scroll();
-							}, 200);
+							setTimeout(
+								function () {
+									jQuery( window ).scroll();
+								},
+								200
+							);
 						}
 						target.remove();
 						commentsList.removeClass( 'active' );
