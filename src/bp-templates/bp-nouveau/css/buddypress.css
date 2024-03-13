@@ -8050,6 +8050,13 @@ form.ac-form {
   display: block;
 }
 
+form.ac-form.events-initiated:not(.has-content) .ac-reply-content .ac-input:before {
+  content: attr(data-placeholder);
+  color: #767676;
+  opacity: 0.5;
+  position: absolute;
+}
+
 form.ac-form.not-initialized .ac-reply-content .ac-input {
   min-height: 25px;
   line-height: 25px;
@@ -8453,6 +8460,26 @@ form.ac-form .activity-attached-gif-container .gif-image-remove:hover .bb-icon-t
 #buddypress form.ac-form .ac-reply-content input[type="submit"].loading {
   opacity: 0.4;
   pointer-events: none;
+}
+
+.ac-form .dropzone .dz-preview.dz-error .dz-details .dz-filename {
+  display: none;
+}
+
+.ac-form .dropzone.media-dropzone .dz-preview.dz-error .dz-details:before {
+  display: none;
+}
+
+.ac-form .dropzone.video-dropzone .dz-preview.dz-error .dz-progress-ring-wrap > i {
+  display: none;
+}
+
+.ac-form .dropzone.document-dropzone .dz-preview.dz-error.dz-preview .dz-details:before {
+  display: none;
+}
+
+.ac-form .dropzone.document-dropzone .dz-preview.dz-error.dz-preview .dz-details .dz-filename {
+  display: none;
 }
 
 .bp-ac-form-container {
@@ -21970,10 +21997,11 @@ img.emojioneemoji {
 
 .dropzone .dz-preview.dz-error .dz-error-message {
   top: 96%;
-  left: inherit;
+  left: 50%;
   right: inherit;
   max-width: 350px;
   min-width: 100%;
+  transform: translateX(-50%);
 }
 
 .dropzone .dz-preview.dz-error .dz-remove {
@@ -28229,6 +28257,7 @@ body > .open-popup.video-error-popup {
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
   border-bottom: 6px solid #be2626;
+  transform: translateX(-50%);
 }
 
 .vue-dropzone .dz-preview .dz-details .dz-filename {

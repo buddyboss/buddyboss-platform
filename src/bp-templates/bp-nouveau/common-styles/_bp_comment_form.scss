@@ -98,6 +98,22 @@ form.ac-form {
 form.ac-form {
 	display: block;
 
+	&.events-initiated:not(.has-content) {
+
+		.ac-reply-content {
+
+			.ac-input {
+
+				&:before {
+					content: attr(data-placeholder);
+					color: $light-text;
+					opacity: 0.5;
+					position: absolute;
+				}
+			}
+		}
+	}
+
 	&.not-initialized {
 
 		.ac-reply-content {
@@ -550,6 +566,53 @@ form.ac-form {
 		#buddypress & {
 			opacity: 0.4;
 			pointer-events: none;
+		}
+	}
+}
+
+.ac-form {
+
+	.dropzone {
+
+		.dz-preview.dz-error {
+
+			.dz-details .dz-filename {
+				display: none;
+			}
+		}
+	}
+
+	.dropzone.media-dropzone {
+
+		.dz-preview.dz-error {
+
+			.dz-details:before {
+				display: none;
+			}
+		}
+	}
+
+	.dropzone.video-dropzone {
+
+		.dz-preview.dz-error {
+
+			.dz-progress-ring-wrap > i {
+				display: none;
+			}
+		}
+	}
+
+	.dropzone.document-dropzone {
+
+		.dz-preview.dz-error.dz-preview {
+
+			.dz-details:before {
+				display: none;
+			}
+
+			.dz-details .dz-filename {
+				display: none;
+			}
 		}
 	}
 }

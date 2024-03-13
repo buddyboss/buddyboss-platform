@@ -2327,10 +2327,11 @@ img.emojioneemoji {
 
 	.dz-error-message {
 		top: 96%;
-		left: inherit;
+		left: 50%;
 		right: inherit;
 		max-width: 350px;
 		min-width: 100%;
+		transform: translateX(-50%);
 	}
 
 	.dz-remove {

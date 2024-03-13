@@ -1213,6 +1213,8 @@ window.bp = window.bp || {};
 
 				form.removeClass( 'root' );
 				$( '.ac-form' ).addClass( 'not-initialized' );
+				
+				bp.Nouveau.Activity.clearFeedbackNotice( form );
 
 				/* Remove any error messages */
 				$.each(
@@ -2098,6 +2100,7 @@ window.bp = window.bp || {};
 								}
 							} else {
 								var commentForm = target.closest( '.ac-form' );
+								bp.Nouveau.Activity.clearFeedbackNotice( commentForm );
 								commentForm.find( '.ac-reply-content' ).after( '<div class="bp-feedback bp-messages error">' + response + '</div>' );
 								this.removeFile( file );
 								commentForm.removeClass( 'media-uploading' );
@@ -2343,6 +2346,7 @@ window.bp = window.bp || {};
 								}
 							} else {
 								var commentForm = target.closest( '.ac-form' );
+								bp.Nouveau.Activity.clearFeedbackNotice( commentForm );
 								commentForm.find( '.ac-reply-content' ).after( '<div class="bp-feedback bp-messages error">' + response + '</div>' );
 								this.removeFile( file );
 								commentForm.removeClass( 'media-uploading' );
@@ -2604,6 +2608,7 @@ window.bp = window.bp || {};
 								}
 							} else {
 								var commentForm = target.closest( '.ac-form' );
+								bp.Nouveau.Activity.clearFeedbackNotice( commentForm );
 								commentForm.find( '.ac-reply-content' ).after( '<div class="bp-feedback bp-messages error">' + response + '</div>' );
 								this.removeFile( file );
 								commentForm.removeClass( 'media-uploading' );
@@ -3362,6 +3367,18 @@ window.bp = window.bp || {};
 			modal.find( '.bb-modal-activity-footer' ).addClass( 'active' ).append( form );
 			form.addClass( 'root' );
 			form.find( '#ac-input-' + activityId ).focus();
+			bp.Nouveau.Activity.clearFeedbackNotice( form );
+		},
+
+		/**
+		 * [clearFeedbackNotice description]
+		 *
+		 * @return {[type]}       [description]
+		 */
+		clearFeedbackNotice: function ( form ) {
+			if ( form.find( '.bp-ac-form-container' ).find( '.bp-feedback' ).length ) {
+				form.find( '.bp-ac-form-container' ).find( '.bp-feedback' ).remove();
+			}
 		},
 
 		/**
@@ -3407,6 +3424,8 @@ window.bp = window.bp || {};
 			modal.find( '.bb-modal-activity-footer' ).addClass( 'active' ).append( form );
 			form.removeClass( 'not-initialized' ).addClass( 'root' );
 			form.find( '#ac-input-' + activityID ).focus();
+
+			bp.Nouveau.Activity.clearFeedbackNotice( form );
 
 			form.removeClass( 'events-initiated' );
 			var ce = modal.find( '.bb-modal-activity-footer' ).find( '.ac-input[contenteditable]' );
