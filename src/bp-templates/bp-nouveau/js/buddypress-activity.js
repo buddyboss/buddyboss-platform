@@ -1163,17 +1163,20 @@ window.bp = window.bp || {};
 			) {
 				var comment_link          = target;
 				item_id                   = activity_id;
+				var hasParentModal;
+				var $activity_comments;
+
 				if ( isInsideModal ) {
 					form = $( '#activity-modal' ).find( '#ac-form-' + activity_id );
-					var $activity_comments = $( '#activity-modal' ).find( '.bb-modal-activity-footer' );
-					var hasParentModal = '#activity-modal ';
+					$activity_comments = $( '#activity-modal' ).find( '.bb-modal-activity-footer' );
+					hasParentModal = '#activity-modal ';
 				} else if ( isInsideMediaTheatre ) {
 					form = $( '.bb-internal-model' ).find( '#ac-form-' + activity_id );
-					var hasParentModal = '.bb-internal-model ';
+					hasParentModal = '.bb-internal-model ';
 				} else {
 					form = $( '#ac-form-' + activity_id );
-					var $activity_comments = $( '[data-bp-activity-id="' + item_id + '"] .activity-comments' );
-					var hasParentModal = '';
+					$activity_comments = $( '[data-bp-activity-id="' + item_id + '"] .activity-comments' );
+					hasParentModal = '';
 				}
 				var activity_comment_data = false;
 
@@ -3602,6 +3605,7 @@ window.bp = window.bp || {};
 					}
 				).fail(
 					function ( $xhr ) {
+						console.error('Request failed:', $xhr);
 					}
 				);
 			}
