@@ -4771,6 +4771,7 @@ window.bp = window.bp || {};
 						scrollMonth: false,
 						scrollTime: false,
 						scrollInput: false,
+						className: 'bb-schedule-activity-date-wrap',
 					});
 
 					$( '.bb-schedule-post_dropdown_section .bb-schedule-activity-time-field' ).datetimepicker({
@@ -4779,6 +4780,7 @@ window.bp = window.bp || {};
 						formatTime:	'h:i',
 						hours12: true,
 						step: 30,
+						className: 'bb-schedule-activity-time-picker',
 					});
 				}
 			},

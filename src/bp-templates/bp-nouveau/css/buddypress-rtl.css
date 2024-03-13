@@ -1840,7 +1840,8 @@ body.buddypress .bb-schedule-post_dropdown_section .schedule-posts-placeholder h
   border-radius: 0 0 4px 4px;
 }
 
-body.activity .xdsoft_datetimepicker {
+.bb-schedule-activity-time-picker.xdsoft_datetimepicker,
+.bb-schedule-activity-date-wrap.xdsoft_datetimepicker {
   z-index: 999999;
 }
 

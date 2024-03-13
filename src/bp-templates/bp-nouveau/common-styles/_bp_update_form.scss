@@ -469,7 +469,8 @@
 
 }
 
-body.activity .xdsoft_datetimepicker {
+.bb-schedule-activity-time-picker.xdsoft_datetimepicker,
+.bb-schedule-activity-date-wrap.xdsoft_datetimepicker {
 	z-index: 999999;
 }
 
