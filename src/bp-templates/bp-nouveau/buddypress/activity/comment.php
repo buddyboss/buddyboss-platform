@@ -67,11 +67,11 @@ $activity_comment_id = bp_get_activity_comment_id();
 	<div id="acomment-edit-form-<?php echo esc_attr( $activity_comment_id ); ?>" class="acomment-edit-form"></div>
 
 	<?php
-		$args = array(
-			'limit_comments'     => isset( $args['limit_comments'] ) && true === $args['limit_comments'] ? true : false,
-			'comment_load_limit' => isset( $args['show_replies'] ) && false === $args['show_replies'] ? 0 : bb_get_activity_comment_loading(),
-		);
-		bp_nouveau_activity_recurse_comments( bp_activity_current_comment(), $args );
+	$args = array(
+		'limit_comments'     => isset( $args['limit_comments'] ) && true === $args['limit_comments'],
+		'comment_load_limit' => isset( $args['show_replies'] ) && false === $args['show_replies'] ? 0 : bb_get_activity_comment_loading(),
+	);
+	bp_nouveau_activity_recurse_comments( bp_activity_current_comment(), $args );
 	?>
 </li>
 <?php

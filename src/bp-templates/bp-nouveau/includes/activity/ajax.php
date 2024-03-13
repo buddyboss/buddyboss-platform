@@ -93,7 +93,7 @@ add_action(
 			),
 			array(
 				'activity_loadmore_comments' => array(
-					'function' => 'bb_nouveau_ajax_activity_loadmore_comments',
+					'function' => 'bb_nouveau_ajax_activity_load_more_comments',
 					'nopriv'   => true,
 				),
 			),
@@ -1165,7 +1165,7 @@ function bb_nouveau_ajax_activity_update_pinned_post() {
  *
  * @return void
  */
-function bb_nouveau_ajax_activity_loadmore_comments() {
+function bb_nouveau_ajax_activity_load_more_comments() {
 	if ( ! bp_is_post_request() ) {
 		wp_send_json_error( array(
 				'message' => __( 'Invalid request.', 'buddyboss' ),
@@ -1218,10 +1218,9 @@ function bb_nouveau_ajax_activity_loadmore_comments() {
 				'message' => __( 'Invalid request.', 'buddyboss' ),
 			)
 		);
-		// Check if parent is the main activity.
 	}
 
-	$activities_template->activity = isset( $activities_template->activities[0] ) ? $activities_template->activities[0] : null;
+	$activities_template->activity = $activities_template->activities[0] ?? null;
 
 	// We have all comments and replies just loop through.
 	ob_start();
@@ -1289,7 +1288,7 @@ function bb_nouveau_ajax_activity_sync_from_modal() {
 		);
 	}
 
-	// Nonce check!
+	// Nonce verification.
 	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
 		wp_send_json_error( array(
 				'message' => __( 'Invalid request.', 'buddyboss' ),
