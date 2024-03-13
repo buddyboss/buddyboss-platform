@@ -1,6 +1,6 @@
 <?php
 /**
- * The template for activity modal
+ * The template for activity modal.
  *
  * This template can be overridden by copying it to yourtheme/buddypress/activity/activity-modal.php.
  *
