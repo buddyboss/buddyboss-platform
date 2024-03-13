@@ -766,7 +766,7 @@ window.bp = window.bp || {};
 				activity_id                = activity_item.data( 'bp-activity-id' ), stream = $( event.delegateTarget ),
 				activity_state             = activity_item.find( '.activity-state' ),
 				comments_text              = activity_item.find( '.comments-count' ),
-				item_id, form, model, self = this;
+				item_id, form, model, self = this, commentsList;
 
 			// Check if target is inside #activity-modal or media theatre
 			var isInsideModal = target.closest( '#activity-modal' ).length > 0;
@@ -958,7 +958,7 @@ window.bp = window.bp || {};
 					activity_comment_id = activity_comment_li.data( 'bp-activity-comment-id' ),
 					li_parent, comment_count_span, comment_count, show_all_a, deleted_comments_count = 0;
 
-				var commentsList = target.closest( '.activity-comments' );
+				commentsList = target.closest( '.activity-comments' );
 				commentsList.addClass( 'active' );
 
 				// Stop event propagation.
@@ -1377,7 +1377,7 @@ window.bp = window.bp || {};
 
 				var comment_content, comment_data;
 
-				var commentsList = target.closest( '.activity-comments' );
+				commentsList = target.closest( '.activity-comments' );
 				commentsList.addClass( 'active' );
 
 				form    = target.closest( 'form' );
@@ -3324,6 +3324,7 @@ window.bp = window.bp || {};
 						'input',
 						function ( e ) {
 							var $activity_comment_content = jQuery( e.currentTarget ).html();
+							var content;
 
 							content = $.trim( $activity_comment_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 							content = content.replace( /&nbsp;/g, ' ' );
@@ -3645,6 +3646,7 @@ window.bp = window.bp || {};
 							// Check if emoji is added then enable submit button.
 							var $activity_comment_input = $( parentSelector + '#ac-form-' + activityId + ' #ac-input-' + activityId );
 							var $activity_comment_content = $activity_comment_input.html();
+							var content;
 
 							content = $.trim( $activity_comment_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 							content = content.replace( /&nbsp;/g, ' ' );
