@@ -47,18 +47,23 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 	<?php
 	global $activities_template;
 
+	$user_link = bp_get_activity_user_link();
+	$user_link = ! empty( $user_link ) ? esc_url( $user_link ) : '';
+
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() ) :
 
 		// If group activity.
-		$group_id   = (int) $activities_template->activity->item_id;
-		$group      = groups_get_group( $group_id );
-		$group_name = esc_html( bp_get_group_name( $group ) );
-		$user_link  = esc_url( bp_get_activity_user_link() );
+		$group_id        = (int) $activities_template->activity->item_id;
+		$group           = groups_get_group( $group_id );
+		$group_name      = bp_get_group_name( $group );
+		$group_name      = ! empty( $group_name ) ? esc_html( $group_name ) : '';
+		$group_permalink = bp_get_group_permalink( $group );
+		$group_permalink = ! empty( $group_permalink ) ? esc_url( $group_permalink ) : '';
 		?>
 		<div class="bp-activity-head-group">
 			<div class="activity-group-avatar">
 				<div class="group-avatar">
-					<a class="group-avatar-wrap mobile-center" href="<?php echo esc_url( bp_get_group_permalink( $group ) ); ?>">
+					<a class="group-avatar-wrap mobile-center" href="<?php echo $group_permalink; ?>">
 						<?php
 						echo bp_core_fetch_avatar(
 							array(
@@ -79,14 +84,14 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 			</div>
 
 			<div class="activity-header activity-header--group">
-				<div class="activity-group-heading"><a href="<?php echo esc_url( bp_get_group_permalink( $group ) ); ?>"><?php echo $group_name; ?></a></div>
+				<div class="activity-group-heading"><a href="<?php echo $group_permalink; ?>"><?php echo $group_name; ?></a></div>
 				<div class="activity-group-post-meta">
 					<span class="activity-post-author">
 						<a href="<?php echo $user_link; ?>">
 							<?php echo bp_core_get_user_displayname( $activities_template->activity->user_id ); ?>
 						</a>
 					</span>
-					<a href="<?php echo esc_url( bp_get_group_permalink( $group ) ); ?>">
+					<a href="<?php echo $group_permalink; ?>">
 						<?php
 						$activity_date_recorded = bp_get_activity_date_recorded();
 						printf(
@@ -111,7 +116,7 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 	<?php else : ?>
 
 		<div class="activity-avatar item-avatar">
-			<a href="<?php esc_url( bp_activity_user_link() ); ?>"><?php bp_activity_avatar( array( 'type' => 'full' ) ); ?></a>
+			<a href="<?php echo $user_link; ?>"><?php bp_activity_avatar( array( 'type' => 'full' ) ); ?></a>
 		</div>
 
 		<div class="activity-header">
