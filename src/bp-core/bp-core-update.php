@@ -479,6 +479,10 @@ function bp_version_updater() {
 			bb_update_to_2_4_74();
 		}
 
+		if ( $raw_db_version < 21001 ) {
+			bb_update_to_2_4_75();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3409,6 +3413,27 @@ function bb_core_removed_orphaned_member_slug() {
  */
 function bb_update_to_2_4_74() {
 	if ( class_exists( 'BB_BG_Process_Log' ) ) {
+		BB_BG_Process_Log::instance()->create_table();
+	}
+}
+
+/**
+ * Remove columns from index key for background logs table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_4_75() {
+	global $wpdb;
+
+	if ( class_exists( 'BB_BG_Process_Log' ) ) {
+
+		// Delete the existing table.
+		$log_table_name  = bp_core_get_table_prefix() . 'bb_background_process_logs';
+		$wpdb->query( "DROP TABLE IF EXISTS {$log_table_name}" );
+
+		// Create a new table again.
 		BB_BG_Process_Log::instance()->create_table();
 	}
 }
