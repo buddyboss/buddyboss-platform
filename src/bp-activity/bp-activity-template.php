@@ -2060,21 +2060,14 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 		$comment_loaded_count++;
 	}
 
-	/**
-	 * Filters the closing tag for the template that list activity comments.
-	 *
-	 * @since BuddyPress  1.6.0
-	 *
-	 * @param string $value Closing tag for the HTML markup to use.
-	 */
 	if ( ! $r['is_ajax_load_more'] ) {
 
 		/**
-		 * Filters the end of nested comment list in the activity.
+		 * Filters the closing tag for the template that list activity comments.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyPress  1.6.0
 		 *
-		 * @param string $output The HTML output of the end of the UL element.
+		 * @param string $value Closing tag for the HTML markup to use.
 		 */
 		echo apply_filters( 'bp_activity_recurse_comments_end_ul', '</ul>' );
 	}

@@ -59,7 +59,7 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 		$group_name      = ! empty( $group_name ) ? esc_html( $group_name ) : '';
 		$group_permalink = bp_get_group_permalink( $group );
 		$group_permalink = ! empty( $group_permalink ) ? esc_url( $group_permalink ) : '';
-		$activity_link   = esc_url( bp_activity_get_permalink( $activities_template->activity->id, $activities_template->activity ) );
+		$activity_link   = bp_activity_get_permalink( $activities_template->activity->id, $activities_template->activity );
 		$activity_link   = ! empty( $activity_link ) ? esc_url( $activity_link ) : '';
 		?>
 		<div class="bp-activity-head-group">
