@@ -1435,17 +1435,31 @@
 	}
 }
 
-.bb-modal-activity-footer {
-	min-height: 106px;
+.footer-overflow {
+
+	/*flex-grow: 1;*/
 	max-height: 252px;
 	border-top: 1px solid $bp-border-color;
+}
+
+.bb-modal-activity-footer {
+
+	/*border-top: 1px solid $bp-border-color;
+	padding: 10px 15px;
+	flex-grow: 1;
+	min-height: 106px;*/
+	max-height: 232px;
 	overflow-y: auto;
 	overflow-x: hidden;
 	padding: 10px 15px;
-	flex-grow: 1;
 
 	form.ac-form {
 		margin: 0;
+	}
+
+	> ul {
+		margin: 0;
+		padding: 0;
 	}
 }
 
