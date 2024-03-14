@@ -7623,7 +7623,7 @@ span.dashicons.dashicons-admin-file:before {
 .buddypress-wrap .activity-comments ul li .bb-media-length-2 .act-grid-1-2,
 .buddypress-wrap .activity-comments ul li .bb-media-length-2 .act-grid-1-1 {
   flex: auto;
-  max-width: initial;
+  max-width: 156px;
 }
 
 .buddypress-wrap .activity-comments ul li .bb-media-length-3 .bb-activity-media-elem .entry-img,
