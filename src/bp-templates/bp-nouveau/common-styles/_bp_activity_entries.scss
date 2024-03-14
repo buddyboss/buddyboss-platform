@@ -1333,7 +1333,7 @@
 
 	&.bb-internal-model {
 		position: fixed;
-		z-index: 999990;
+		z-index: 999980;
 		background-color: rgba(255, 255, 255, 0.9);
 		width: 100%;
 		height: 100%;
@@ -1344,7 +1344,7 @@
 		justify-content: center;
 
 		&.activity-theatre {
-			z-index: 999990;
+			z-index: 999980;
 		}
 
 		> .activity-modal {
@@ -1442,6 +1442,7 @@
 	overflow-y: auto;
 	overflow-x: hidden;
 	padding: 10px 15px;
+	flex-grow: 1;
 
 	form.ac-form {
 		margin: 0;

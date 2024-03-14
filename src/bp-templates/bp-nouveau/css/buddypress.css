@@ -4613,7 +4613,7 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
 
 .bb-activity-model-wrapper.bb-internal-model {
   position: fixed;
-  z-index: 999990;
+  z-index: 999980;
   background-color: rgba(255, 255, 255, 0.9);
   width: 100%;
   height: 100%;
@@ -4625,7 +4625,7 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
 }
 
 .bb-activity-model-wrapper.bb-internal-model.activity-theatre {
-  z-index: 999990;
+  z-index: 999980;
 }
 
 .bb-activity-model-wrapper.bb-internal-model > .activity-modal {
@@ -4709,6 +4709,7 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   overflow-y: auto;
   overflow-x: hidden;
   padding: 10px 15px;
+  flex-grow: 1;
 }
 
 .bb-modal-activity-footer form.ac-form {
@@ -7880,7 +7881,7 @@ span.dashicons.dashicons-admin-file:before {
   border-radius: 24px;
   cursor: pointer;
   box-shadow: 0 0 6px -2px rgba(0, 0, 0, 0.3);
-  transform: translateX(100%);
+  transform: translateX(39px);
 }
 
 .buddypress-wrap .activity-comments .comment-reactions .comment-reactions_count {
