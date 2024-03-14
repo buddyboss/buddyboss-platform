@@ -79,10 +79,11 @@ class Sync {
 			return false;
 		}
 
-		// created programmatically
-		// if ( ! bp_ld_sync( 'settings' )->get( 'learndash.default_auto_sync' ) ) {
-			// return false;
-		// }
+		// Return if the ld-to-bb group sync is disabled.
+		$bp_ld_sync_settings = get_option( 'bp_ld_sync_settings' );
+		if ( empty( $bp_ld_sync_settings[ 'learndash' ][ 'default_auto_sync' ] ) || $bp_ld_sync_settings[ 'learndash' ][ 'default_auto_sync' ] == "0" ) {
+			return false;
+		}
 
 		$newGroup  = bp_ld_sync()->getRequest( 'bp-ld-sync-id', null );
 		$generator = $this->generator( 0, $groupId );
