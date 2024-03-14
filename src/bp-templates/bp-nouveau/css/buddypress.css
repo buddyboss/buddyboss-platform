@@ -4721,6 +4721,7 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
 
 .bb-modal-activity-footer form.ac-form {
   margin: 0;
+  line-height: 1.5;
 }
 
 .bb-modal-activity-footer > ul {
