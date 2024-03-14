@@ -33,6 +33,15 @@ class BB_BG_Process_Log {
 	public $table_name = '';
 
 	/**
+	 * Allocate the start memory.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var string $start_memory_log
+	 */
+	private $start_memory_log = 0;
+
+	/**
 	 * Using Singleton, see instance().
 	 *
 	 * @since BuddyBoss 2.5.60
@@ -130,6 +139,9 @@ class BB_BG_Process_Log {
 
 		if ( $insert ) {
 			$args->bg_process_log_id = $wpdb->insert_id;
+
+			// Start memory usage.
+			$this->start_memory_log = memory_get_peak_usage( false );
 		}
 
 		return $args;
@@ -192,6 +204,9 @@ class BB_BG_Process_Log {
 
 		if ( $insert ) {
 			$args->bg_process_log_id = $wpdb->insert_id;
+
+			// Start memory usage.
+			$this->start_memory_log = memory_get_peak_usage( false );
 		}
 
 		return $args;
@@ -266,14 +281,19 @@ class BB_BG_Process_Log {
 		$end_date_gmt = current_time( 'mysql', 1 );
 		$end_date     = get_date_from_gmt( $end_date_gmt );
 
+		// End memory usage.
+		$get_memory_used = $this->get_memory_used();
+
 		return $wpdb->update( //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$this->table_name,
 			array(
 				'process_end_date_gmt' => $end_date_gmt,
 				'process_end_date'     => $end_date,
+				'memory'               => $get_memory_used,
 			),
 			array( 'id' => (int) $args->bg_process_log_id ),
 			array(
+				'%s',
 				'%s',
 				'%s',
 			),
@@ -578,4 +598,29 @@ class BB_BG_Process_Log {
 
 		return $callback_function;
 	}
+
+	/**
+	 * Get memory usages while running the background job.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return string
+	 */
+	public function get_memory_used() {
+		$start     = $this->start_memory_log;
+		$end       = memory_get_peak_usage( false );
+		$mem_usage = $end - $start;
+
+		// Reset the variable.
+		$this->start_memory_log = 0;
+
+		if ( $mem_usage < 1024 ) {
+			return $mem_usage . " Bytes";
+		} elseif ( $mem_usage < 1048576 ) {
+			return round( $mem_usage / 1024, 2 ) . " KB";
+		} else {
+			return round( $mem_usage / 1048576, 2 ) . " MB";
+		}
+	}
+
 }
