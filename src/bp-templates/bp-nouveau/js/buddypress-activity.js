@@ -1980,6 +1980,7 @@ window.bp = window.bp || {};
 
 			if ( dropzone_container.hasClass( 'open' ) && ! event.isCustomEvent ) {
 				dropzone_container.trigger( 'click' );
+				dropzone_container.removeClass( 'open' ).addClass( 'closed' );
 				return;
 			}
 
