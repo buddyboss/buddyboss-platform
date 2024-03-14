@@ -1232,6 +1232,8 @@ window.bp = window.bp || {};
 					acomment.find( '#acomment-edit-form-' + item_id ).append( form );
 					form.addClass( 'acomment-edit' ).attr( 'data-item-id', item_id );
 
+					self.validateCommentContent( form.find( '.ac-textarea' ).children( '.ac-input' ) );
+
 					// Render activity comment edit data to form.
 					self.editActivityCommentForm( form, activity_comment_data );
 
@@ -3302,7 +3304,11 @@ window.bp = window.bp || {};
 			if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0 ) {
 				input.closest( 'form' ).addClass( 'has-content' );
 			} else {
-				input.closest( 'form' ).removeClass( 'has-content' );
+				if ( input.closest( 'form' ).hasClass( 'acomment-edit' ) ) {
+					input.closest( 'form' ).addClass( 'has-content' );
+				} else {
+					input.closest( 'form' ).removeClass( 'has-content' );
+				}
 			}
 		},
 
