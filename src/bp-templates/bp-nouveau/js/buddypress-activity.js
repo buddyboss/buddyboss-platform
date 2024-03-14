@@ -1617,8 +1617,7 @@ window.bp = window.bp || {};
 
 						if ($xhr.readyState === 0) {
 							// Network error
-							var networkErrorMessage = activityData.network_error_message;
-							form.find('.ac-reply-content').after('<div class="bp-feedback bp-messages error">' + networkErrorMessage + '</div>');
+							form.find('.ac-reply-content').after('<div class="bp-feedback bp-messages error">' + BP_Nouveau.activity.strings.commentPostError + '</div>');
 						} else {
 							// Other types of errors
 							var errorMessage = $xhr.responseJSON && $xhr.responseJSON.message ? $xhr.responseJSON.message : $xhr.statusText;
