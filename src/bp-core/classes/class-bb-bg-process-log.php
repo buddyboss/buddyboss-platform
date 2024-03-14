@@ -80,6 +80,7 @@ class BB_BG_Process_Log {
 
 		$this->setup_hooks();
 		$this->schedule_log_event();
+		$this->schedule_hourly_event();
 	}
 
 	/**
@@ -101,6 +102,9 @@ class BB_BG_Process_Log {
 
 		// Re-schedule when update the timezone.
 		add_action( 'update_option', array( $this, 'reschedule_event' ), 10, 3 );
+
+		// Schedule an event to clear logs.
+		add_action( 'bb_bg_log_clear_hourly', array( $this, 'clear_logs_hourly' ) );
 	}
 
 	/**
@@ -565,6 +569,64 @@ class BB_BG_Process_Log {
 		} else {
 			return round( $mem_usage / 1048576, 2 ) . " MB";
 		}
+	}
+
+	/**
+	 * Schedule event to clear the logs to every hour when the database table size exceeds 1 GB.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 * @throws Exception
+	 */
+	private function schedule_hourly_event() {
+		if ( ! wp_next_scheduled( 'bb_bg_log_clear_hourly' ) ) {
+			wp_schedule_event( time(), 'bb_schedule_1hour', 'bb_bg_log_clear_hourly' );
+		}
+	}
+
+	/**
+	 * Clear the logs if the table size will be more than 1 GB.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public function clear_logs_hourly() {
+		global $wpdb;
+
+		$table_size_mb = $this->get_table_size();
+		if ( 1024 < $table_size_mb ) {
+			do {
+				$wpdb->query( "DELETE FROM $this->table_name ORDER BY id ASC LIMIT 500000;" ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			} while ( 500 > $this->get_table_size() );
+		}
+	}
+
+	/**
+	 * Get the table size in MB.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return int
+	 */
+	public function get_table_size() {
+		global $wpdb;
+
+		$table_size_bytes = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT data_length + index_length AS table_size_bytes FROM information_schema.TABLES WHERE table_schema = %s AND table_name = %s",
+				$wpdb->dbname,
+				$this->table_name
+			)
+		);
+
+		if ( ! empty( $table_size_bytes ) ) {
+			// Convert bytes to megabytes.
+			return round( $table_size_bytes / ( 1024 * 1024 ), 2 );
+		}
+
+		return 0;
 	}
 
 }
