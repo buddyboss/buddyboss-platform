@@ -1960,6 +1960,8 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 			'main_activity_id'       => 0,
 			'is_ajax_load_more'      => false,
 			'last_comment_timestamp' => '',
+			'last_comment_id'        => 0,
+			'comment_order_by'       => apply_filters( 'bp_activity_recurse_comments_order_by', 'ASC' ),
 		),
 		'bb_activity_recurse_comments'
 	);
@@ -2001,15 +2003,25 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 	}
 
 	$comment_loaded_count = 0;
+	$skip_flag            = true;
 	foreach ( (array) $comment->children as $comment_child ) {
 		if (
 			true === $r['is_ajax_load_more'] &&
 			! empty( $r['last_comment_timestamp'] ) &&
-			$comment->id === $r['parent_comment_id'] &&
-			$comment_child->date_recorded <= date_i18n( 'Y-m-d H:i:s', $r['last_comment_timestamp'] )
+			$comment->id === $r['parent_comment_id']
 		) {
-			// Skip.
-			continue;
+			// Handle same time on next page.
+			if ( $comment_child->id === $r['last_comment_id'] ) {
+				$skip_flag = false;
+				continue;
+			}
+
+			// Use ternary operator for orderby logic.
+			$comparisonOperator = 'DESC' === $r['comment_order_by'] ? '>=' : '<=';
+			if ( $skip_flag && $comment_child->date_recorded . $comparisonOperator . date_i18n( 'Y-m-d H:i:s', $r['last_comment_timestamp'] ) ) {
+				// Skip comment.
+				continue;
+			}
 		}
 
 		if (

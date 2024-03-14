@@ -3459,7 +3459,8 @@ window.bp = window.bp || {};
 				commentsList = $( e.currentTarget ).closest( '.activity-comments' ),
 				parentCommentId = $( currentTargetList ).data( 'parent_comment_id' ),
 				type = '',
-				lastCommentTimeStamp = '';
+				lastCommentTimeStamp = '',
+				addAfterListItemId = '';
 
 			var skeleton =
 				'<div id="bp-ajax-loader">' +
@@ -3499,6 +3500,8 @@ window.bp = window.bp || {};
 				// Load more in the current thread.
 				lastCommentTimeStamp = $( e.currentTarget ).prev( 'li.activity-comment' ).data( 'bp-timestamp' );
 				data.last_comment_timestamp = lastCommentTimeStamp;
+				addAfterListItemId = $( e.currentTarget ).prev( 'li.activity-comment' ).data( 'bp-activity-comment-id' );
+				data.last_comment_id = addAfterListItemId;
 			}
 
 			bp.Nouveau.ajax( data, 'activity' ).done(
@@ -3529,9 +3532,9 @@ window.bp = window.bp || {};
 
 							} );
 
-							if ( 'undefined' !== typeof lastCommentTimeStamp && '' !== lastCommentTimeStamp ) {
+							if ( 'undefined' !== typeof addAfterListItemId && '' !== addAfterListItemId ) {
 
-								var $addAfterElement = $targetList.find( 'li.activity-comment[data-bp-timestamp=\'' + lastCommentTimeStamp + '\']' );
+								var $addAfterElement = $targetList.find( 'li.activity-comment[data-bp-activity-comment-id=\'' + addAfterListItemId + '\']' );
 								$addAfterElement.after( $newComments );
 							} else if ( $targetList.children( '.activity-comment.comment-item' ).length > 0 ) {
 								// Already comments in the list.

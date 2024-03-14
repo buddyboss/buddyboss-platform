@@ -1233,6 +1233,7 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 		'main_activity_id'       => $activity_id,
 		'is_ajax_load_more'      => true,
 		'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( $_POST['last_comment_timestamp'] ) : '',
+		'last_comment_id'        => ! empty( $_POST['last_comment_id'] ) ? (int) $_POST['last_comment_id'] : 0,
 	);
 
 	// Check if parent is the main activity.
