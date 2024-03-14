@@ -45,7 +45,7 @@ $more_media     = $media_template->media_count > $max_length ? true : false;
 	echo $media_template->media_count > 1 && $media_template->current_media > 0 ? 'act-grid-1-2 ' : '';
 	echo $width > $height ? 'bb-horizontal-layout' : '';
 	echo $height > $width || $width === $height ? esc_attr( 'bb-vertical-layout' ) : '';
-	echo ( $more_media && 4 === $media_template->current_media ) ? esc_attr( ' no_more_option ' ) : '';
+	echo ( $more_media && ( $max_length - 1 ) === $media_template->current_media ) ? esc_attr( ' no_more_option ' ) : '';
 	?>
 	" data-id="<?php echo esc_attr( $bp_get_media_id ); ?>">
 	<div class="media-action-wrap">
