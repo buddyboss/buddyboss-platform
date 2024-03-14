@@ -1959,7 +1959,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 			'parent_comment_id'      => 0,
 			'main_activity_id'       => 0,
 			'is_ajax_load_more'      => false,
-			'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( $_POST['last_comment_timestamp'] ) : '',
+			'last_comment_timestamp' => '',
 		),
 		'bb_activity_recurse_comments'
 	);
