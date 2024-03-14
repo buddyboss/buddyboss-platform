@@ -493,63 +493,7 @@ class BB_BG_Process_Log {
 	public function clear_logs() {
 		global $wpdb;
 
-		$results = $wpdb->get_results( "SELECT id FROM $this->table_name WHERE process_start_date_gmt <= NOW() - INTERVAL 30 DAY;", ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-
-		/**
-		 * Filter the limit of rows to delete from the background process log table.
-		 *
-		 * @since BuddyBoss 2.5.60
-		 *
-		 * @param int $limit Limit.
-		 */
-		$limit = apply_filters( 'bb_bg_process_log_delete_limit', 1000 );
-
-		$pluck_ids = ! empty( $results ) ? wp_list_pluck( $results, 'id' ) : array();
-		$count     = count( $pluck_ids );
-
-		if ( $count > $limit ) {
-			global $bb_background_updater;
-
-			$chunked_data = array_chunk( $pluck_ids, $limit );
-
-			foreach ( $chunked_data as $chunked_ids ) {
-				$bb_background_updater->data(
-					array(
-						'type'     => 'bb_bg_remove_old_logs',
-						'group'    => 'bb_bg_remove_old_logs',
-						'callback' => array( $this, 'remove_logs' ),
-						'args'     => array( $chunked_ids ),
-					),
-				);
-
-				$bb_background_updater->save();
-			}
-
-			$bb_background_updater->schedule_event();
-		} else {
-			$this->remove_logs( $pluck_ids );
-		}
-	}
-
-	/**
-	 * Removed the old background job records.
-	 *
-	 * @since BuddyBoss 2.5.60
-	 *
-	 * @param array $bg_ids IDs of bg jobs.
-	 *
-	 * @return void
-	 */
-	public function remove_logs( $bg_ids ) {
-		global $wpdb;
-
-		if ( empty( $bg_ids ) ) {
-			return;
-		}
-
-		$ids    = wp_parse_id_list( $bg_ids );
-		$ids_in = "'" . implode( "','", $ids ) . "'";
-		$wpdb->query( "DELETE FROM $this->table_name WHERE id IN ($ids_in)" ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$wpdb->query( "DELETE FROM $this->table_name WHERE process_start_date_gmt <= NOW() - INTERVAL 1 DAY;" ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	}
 
 	/**
