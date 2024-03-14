@@ -46,7 +46,7 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 			$wpdb            = $GLOBALS['wpdb'];
 			$charset_collate = $wpdb->get_charset_collate();
 
-			$table_name       = "{$wpdb->base_prefix}bb_security_lockouts";
+			$table_name       = "{$wpdb->base_prefix}bb_rate_limits";
 			self::$table_name = $table_name;
 
 			// Table already exists, so maybe upgrade instead?
@@ -55,26 +55,26 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 				$sql[] = "CREATE TABLE {$table_name} (
 					id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 					type varchar(25) NOT NULL,
-					host varchar(40),
+					ip_address varchar(40),
 					user bigint(20) UNSIGNED,
 					email varchar(60),
-					request varchar(60) NOT NULL,
+					action varchar(60) NOT NULL,
 					user_agent varchar(255),
 					hash varchar(255),
 					attempts int(3) NOT NULL DEFAULT 0,
 					block tinyint(1) NOT NULL DEFAULT 0,
-					block_expire datetime NULL default '0000-00-00 00:00:00',
+					block_expiration_time datetime NULL default '0000-00-00 00:00:00',
 					last_attempt datetime NOT NULL,
 					PRIMARY KEY  (id),
 					KEY type (type),
-					KEY host (host),
+					KEY ip_address (ip_address),
 					KEY user (user),
 					KEY email (email),
 					KEY user_agent (user_agent),
 					KEY block (block),
 					KEY hash (hash),
-					KEY request (request),
-					KEY block_expire (block_expire),
+					KEY action (action),
+					KEY block_expiration_time (block_expiration_time),
 					KEY last_attempt (last_attempt)
 				) {$charset_collate};";
 			}
@@ -118,7 +118,7 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 				: '';
 		}
 
-		public function add_lockout_to_db( $type, $value, $request, $data = array() ) {
+		public function add_lockout( $type, $value, $action, $data = array() ) {
 			global $wpdb;
 
 			$agent = $this->get_ua();
@@ -127,10 +127,10 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 			$table   = self::$table_name;
 			$attempt = $wpdb->get_row(
 				$wpdb->prepare(
-					"SELECT * FROM `{$table}` WHERE `type` = %s AND `{$type}` = %s AND `request` = %s AND `hash` = %s",
+					"SELECT * FROM `{$table}` WHERE `type` = %s AND `{$type}` = %s AND `action` = %s AND `hash` = %s",
 					$type,
 					$value,
-					$request,
+					$action,
 					$hash,
 				),
 				ARRAY_A
@@ -143,7 +143,7 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 				$current_attempt = strtotime( $current_attempt );
 
 				if ( ( $current_attempt - $last_attempt ) > self::$bb_rate_limit_seconds ) {
-					$this->delete_lockout_to_db( $attempt['id'] );
+					$this->delete_lockout( $attempt['id'] );
 					$attempt = array();
 				}
 			}
@@ -154,7 +154,7 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 					array(
 						'type'         => $type,
 						$type          => $value,
-						'request'      => $request,
+						'action'       => $action,
 						'user_agent'   => $agent,
 						'hash'         => $hash,
 						'attempts'     => 1,
@@ -163,19 +163,19 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 					),
 				);
 			} else {
-				$block        = $attempt['attempts'] >= self::$bb_rate_limit;
-				$block_expire = $attempt['block_expire'];
+				$block                 = $attempt['attempts'] >= self::$bb_rate_limit;
+				$block_expiration_time = $attempt['block_expiration_time'];
 				if ( $block ) {
-					$block_expire = date( 'Y-m-d H:i:s', current_time( 'timestamp' ) + self::$bb_rate_limit_reset_seconds );
+					$block_expiration_time = date( 'Y-m-d H:i:s', current_time( 'timestamp' ) + self::$bb_rate_limit_reset_seconds );
 				}
 
 				$wpdb->update(
 					$table,
 					array(
-						'attempts'     => $attempt['attempts'] + 1,
-						'block'        => $block,
-						'block_expire' => $block_expire,
-						'last_attempt' => bp_core_current_time(),
+						'attempts'              => $attempt['attempts'] + 1,
+						'block'                 => $block,
+						'block_expiration_time' => $block_expiration_time,
+						'last_attempt'          => bp_core_current_time(),
 					),
 					array(
 						'id' => $attempt['id'],
@@ -184,12 +184,13 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 			}
 		}
 
-		public function delete_lockout_to_db( $lockout_id ) {
+		public function delete_lockout( $lockout_id ) {
 			if ( empty( $lockout_id ) ) {
 				return;
 			}
 
 			global $wpdb;
+
 			$table = self::$table_name;
 			$wpdb->delete(
 				$table,
@@ -199,16 +200,16 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 			);
 		}
 
-		public function bb_is_ip_blocked( $ip, $request, $ua ) {
+		public function ip_blocked( $ip, $action, $ua ) {
 			$table = self::$table_name;
 
 			$hash = md5( $ip . $ua );
 			global $wpdb;
 			$sql = $wpdb->prepare(
-				"SELECT * FROM `{$table}` WHERE `type` = %s AND `host` = %s AND `request` = %s AND `block` = 1 AND `hash` = %s",
-				'host',
+				"SELECT * FROM `{$table}` WHERE `type` = %s AND `ip_address` = %s AND `action` = %s AND `block` = 1 AND `hash` = %s",
+				'ip_address',
 				$ip,
-				$request,
+				$action,
 				$hash
 			);
 
@@ -238,15 +239,15 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 			$ua = $this->get_ua();
 
 			/* check if ip in blocked list */
-			$blocked = $this->bb_is_ip_blocked( $ip, 'login', $ua );
+			$blocked = $this->ip_blocked( $ip, 'login', $ua );
 			if ( ! empty( $blocked ) ) {
 				$block_till =
-					! isset( $blocked->block_expire ) ||
-					is_null( $blocked->block_expire )
+					! isset( $blocked->block_expiration_time ) ||
+					is_null( $blocked->block_expiration_time )
 						?
 						date( 'Y-m-d H:i:s', current_time( 'timestamp' ) + self::$bb_rate_limit_reset_seconds )
 						:
-						$blocked->block_expire;
+						$blocked->block_expiration_time;
 
 				if ( ! is_wp_error( $user ) ) {
 					$user = new WP_Error();
@@ -254,7 +255,7 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 
 				$error = sprintf(
 					__( 'Too many failed attempts. You have been blocked until %s.', 'buddyboss' ),
-					$this->bb_block_time( $block_till )
+					$this->get_block_time( $block_till )
 				);
 				$error = wp_specialchars_decode( $error, ENT_COMPAT );
 				$user->add( 'bb_attempt_blocked', $error );
@@ -262,7 +263,7 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 				return $user;
 			}
 
-			$this->add_lockout_to_db( 'host', $ip, 'login' );
+			$this->add_lockout( 'ip_address', $ip, 'login' );
 
 			return $user;
 		}
@@ -299,7 +300,7 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 		public function bb_blacklist_emails() {
 		}
 
-		public function bb_block_time( $unblock_date ) {
+		public function get_block_time( $unblock_date ) {
 			/* time difference */
 
 			$time_diff = strtotime( $unblock_date ) - current_time( 'timestamp' );
