@@ -429,6 +429,7 @@ class BB_BG_Process_Log {
             blog_id bigint(20) NOT NULL,
             data longtext NULL,
             priority bigint(10) NULL,
+            memory varchar(20) DEFAULT 0 NULL,
             process_start_date_gmt datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
             process_start_date datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
             process_end_date_gmt datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
