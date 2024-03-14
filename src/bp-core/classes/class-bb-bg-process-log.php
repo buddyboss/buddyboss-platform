@@ -595,11 +595,29 @@ class BB_BG_Process_Log {
 	public function clear_logs_hourly() {
 		global $wpdb;
 
-		$table_size_mb = $this->get_table_size();
-		if ( 1024 < $table_size_mb ) {
-			do {
-				$wpdb->query( "DELETE FROM $this->table_name ORDER BY id ASC LIMIT 500000;" ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			} while ( 500 > $this->get_table_size() );
+		$table_size = $this->get_bg_process_log_table_size();
+		if ( $table_size > 1024 ) {
+			// Target size in MB.
+			$target_size_mb = 380;
+			// Calculate the multiplier.
+			$multiplier = $table_size / $target_size_mb;
+
+			// Get the minimum and maximum index IDs from the table.
+			$min_max_ids = $wpdb->get_row( "SELECT (SELECT MIN(id) FROM {$this->table_name}) AS min_id,(SELECT MAX(id) FROM {$this->table_name}) AS max_id" );
+			$min_id      = $min_max_ids->min_id;
+			$max_id      = $min_max_ids->max_id;
+
+			// Calculate the total entries.
+			$total_entries = $max_id - $min_id;
+
+			// Calculate the number of entries to keep.
+			$entries_to_keep = ceil( $total_entries / $multiplier );
+
+			// Calculate the original index for the entries to keep.
+			$original_index = $entries_to_keep * ( $multiplier - 1 ) + $min_id;
+
+			// Delete records where ID is less than the original index.
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$this->table_name} WHERE id < %d", $original_index ) );
 		}
 	}
 
@@ -610,7 +628,7 @@ class BB_BG_Process_Log {
 	 *
 	 * @return int
 	 */
-	public function get_table_size() {
+	public function get_bg_process_log_table_size() {
 		global $wpdb;
 
 		$table_size_bytes = $wpdb->get_var(
@@ -628,5 +646,4 @@ class BB_BG_Process_Log {
 
 		return 0;
 	}
-
 }
