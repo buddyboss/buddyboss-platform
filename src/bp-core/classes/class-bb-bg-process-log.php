@@ -528,7 +528,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Get the component name.
 	 *
-	 * @since BuddyBoss 2.5.60
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $callback_function Type.
 	 *
