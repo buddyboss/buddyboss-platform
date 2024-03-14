@@ -1658,6 +1658,7 @@ window.bp = window.bp || {};
 				isInsideModal &&
 				(
 					target.hasClass( 'bb-open-media-theatre' ) ||
+					target.hasClass( 'bb-open-video-theatre' ) ||
 					target.hasClass( 'bb-open-document-theatre' ) ||
 					target.hasClass( 'document-detail-wrap-description-popup' )
 				)
