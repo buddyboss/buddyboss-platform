@@ -451,16 +451,15 @@ class BB_BG_Process_Log {
 		$is_scheduled = wp_next_scheduled( 'bb_bg_log_clear' );
 
 		// WP datetime.
-		$final_date         = date_i18n( 'Y-m-d', strtotime( 'next Sunday' ) ) . ' 23:59:59';
+		$final_date         = date_i18n( 'Y-m-d', strtotime( 'today' ) ) . ' 23:59:59';
 		$local_datetime     = date_create( $final_date, wp_timezone() );
 		$schedule_timestamp = $local_datetime->getTimestamp();
 
-		// Schedule the cron job to run every Sunday at 12 AM.
 		if ( ! $is_scheduled ) {
-			wp_schedule_event( $schedule_timestamp, 'weekly', 'bb_bg_log_clear' );
+			wp_schedule_event( $schedule_timestamp, 'daily', 'bb_bg_log_clear' );
 		} else if ( $is_scheduled !== $schedule_timestamp ) {
 			wp_clear_scheduled_hook( 'bb_bg_log_clear' );
-			wp_schedule_event( $schedule_timestamp, 'weekly', 'bb_bg_log_clear' );
+			wp_schedule_event( $schedule_timestamp, 'daily', 'bb_bg_log_clear' );
 		}
 	}
 
