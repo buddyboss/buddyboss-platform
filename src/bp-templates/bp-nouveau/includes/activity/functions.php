@@ -61,6 +61,11 @@ function bp_nouveau_activity_enqueue_scripts() {
 	wp_enqueue_style( 'bp-medium-editor' );
 	wp_enqueue_style( 'bp-medium-editor-beagle' );
 
+	// Localize activity script with translated strings
+	wp_localize_script('bp-nouveau-activity', 'activityData', array(
+		'network_error_message' => esc_js(__("Network error: There was a problem posting your comment", "buddyboss"))
+	));
+
 	// Enqueue activity form parts and js required for single activity.
 
 	if ( bp_nouveau_current_user_can( 'publish_activity' ) ) {
