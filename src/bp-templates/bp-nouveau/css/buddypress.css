@@ -3867,6 +3867,12 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
   top: initial;
 }
 
+.bb-media-model-container .activity-list .bb-activity-more-options-wrap + .bb-pin-action {
+  position: static;
+  float: right;
+  margin: 5px -5px 0 0;
+}
+
 .bb-media-model-container .activity-list .bb-activity-more-options-wrap .bb-activity-more-options-action[data-balloon][data-balloon-pos="up"]:after {
   margin-right: 11px;
   right: 100%;
