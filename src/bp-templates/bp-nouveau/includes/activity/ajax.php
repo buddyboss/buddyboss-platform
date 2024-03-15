@@ -1169,7 +1169,7 @@ function bb_nouveau_ajax_activity_update_pinned_post() {
 function bb_nouveau_ajax_activity_load_more_comments() {
 	if ( ! bp_is_post_request() ) {
 		wp_send_json_error( array(
-				'message' => __( 'Invalid request.', 'buddyboss' ),
+				'message' => __( 'Invalid request1.', 'buddyboss' ),
 			)
 		);
 	}
@@ -1177,7 +1177,7 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 	// Nonce check!
 	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
 		wp_send_json_error( array(
-				'message' => __( 'Invalid request.', 'buddyboss' ),
+				'message' => __( 'Invalid request2.', 'buddyboss' ),
 			)
 		);
 	}
@@ -1203,8 +1203,8 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 
 	$args = array(
 		'include'          => $parent_comment_id,
-		'display_comments' => false,
-		'scope'            => 'groups' === $type ? $type : '',
+		//'display_comments' => false,
+		// 'scope'            => 'groups' === $type ? $type : '',
 	);
 
 	if ( 'media' === $type || 'document' === $type ) {
@@ -1212,21 +1212,21 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 	}
 
 	$activities_template = new BP_Activity_Template( $args );
-	error_log( print_r($activities_template, true ) );
+	// error_log( print_r($activities_template, true ) );
 	// Check if no activity.
-	if ( empty( $activities_template->activity_count ) ) {
-		wp_send_json_error( array(
-				'message' => __( 'Invalid request.', 'buddyboss' ),
-			)
-		);
-	}
+	// if ( empty( $activities_template->activity_count ) ) {
+	// 	wp_send_json_error( array(
+	// 			'message' => __( 'Invalid request.', 'buddyboss' ),
+	// 		)
+	// 	);
+	// }
 
-	$activities_template->activity = $activities_template->activities[0] ?? null;
+	// $activities_template->activity = $activities_template->activities[0] ?? null;
 
 	$parent_commment = new BP_Activity_Activity( $parent_comment_id );
-	$comments = BP_Activity_Activity::append_comments( array( $activities_template->activity ) );
+	$comments = BP_Activity_Activity::append_comments( array( $parent_commment ) );
 
-	// error_log(print_r( $comments,true ) );
+	error_log(print_r( $comments,true ) );
 
 	$activities_template->activity = $comments[0];
 // error_log( print_r($activities_template, true ) );
