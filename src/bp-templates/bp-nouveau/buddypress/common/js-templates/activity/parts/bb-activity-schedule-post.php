@@ -10,16 +10,18 @@
 
 ?>
 <script type="text/html" id="tmpl-activity-schedule-post">
+<?php
+	if ( bp_is_active( 'activity' ) && ( bp_is_activity_directory() && bb_is_enabled_activity_schedule_posts() ) ) :
+		?>
 	<div class="bb-schedule-post_dropdown_section">
 		<a href="#" class="bb-schedule-post_dropdown_button">
 			<i class="bb-icon-f bb-icon-clock"></i>
 			<i class="bb-icon-f bb-icon-caret-down"></i>
 		</a>
-
 		<div class="bb-schedule-post_dropdown_list">
 			<ul>
-				<li><a href="#" class="bb-schedule-post_action"><i class="bb-icon-l bb-icon-calendar"></i>Schedule Post</a></li>
-				<li><a href="#" class="bb-view-schedule-posts"><i class="bb-icon-l bb-icon-pencil"></i>View Schedule Posts</a></li>
+				<li><a href="#" class="bb-schedule-post_action"><i class="bb-icon-l bb-icon-calendar"></i><?php echo esc_html__( 'Schedule Post', 'buddyboss' ); ?></a></li>
+				<li><a href="#" class="bb-view-schedule-posts"><i class="bb-icon-l bb-icon-pencil"></i><?php echo esc_html__( 'View Schedule Posts', 'buddyboss' ); ?></a></li>
 			</ul>
 		</div>
 
@@ -102,4 +104,5 @@
 			</div> <!-- .bb-action-popup -->
 		</div>
 	</div>
+	<?php endif; ?>
 </script>
