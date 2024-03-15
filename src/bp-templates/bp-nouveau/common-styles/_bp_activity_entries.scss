@@ -592,6 +592,12 @@
 			right: initial;
 			top: initial;
 
+			+ .bb-pin-action {
+				position: static;
+				float: right;
+				margin: 5px -5px 0 0;
+			}
+
 			.bb-activity-more-options-action {
 
 				&[data-balloon][data-balloon-pos="up"]:after {
