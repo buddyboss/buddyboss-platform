@@ -3368,6 +3368,10 @@ input.search-query-input {
   display: none !important;
 }
 
+.activity-list .activity-item.bb-closed-comments .generic-button:has(.edit-activity) {
+  display: none;
+}
+
 .activity-list .activity-item.bb-closed-comments .bb-activity-closed-comments-notice {
   background: #e1e3e5;
   margin: 0 -15px;
@@ -3955,6 +3959,12 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
   position: relative;
   right: initial;
   top: initial;
+}
+
+.bb-media-model-container .activity-list .bb-activity-more-options-wrap + .bb-pin-action {
+  position: static;
+  float: right;
+  margin: 5px -5px 0 0;
 }
 
 .bb-media-model-container .activity-list .bb-activity-more-options-wrap .bb-activity-more-options-action[data-balloon][data-balloon-pos="up"]:after {
