@@ -2030,7 +2030,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 				$comment_loaded_count === $r['comment_load_limit']
 			)
 		) {
-			if ( ! empty( $r['parent_comment_id'] ) && $activities_template->activity->id !== $r['parent_comment_id'] ) {
+			if ( ! empty( $r['parent_comment_id'] ) && $r['main_activity_id'] !== $r['parent_comment_id'] ) {
 				$view_more_text = __( 'View more replies', 'buddyboss' );
 				$view_more_icon = "<i class='bb-icon-l bb-icon-corner-right'></i>";
 			} else {

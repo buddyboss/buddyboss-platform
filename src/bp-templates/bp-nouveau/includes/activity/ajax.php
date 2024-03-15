@@ -1202,8 +1202,8 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 	$type              = ! empty( $_POST['type'] ) ? $_POST['type'] : '';
 
 	$args = array(
-		'include'          => $activity_id,
-		'display_comments' => true,
+		'include'          => $parent_comment_id,
+		'display_comments' => false,
 		'scope'            => 'groups' === $type ? $type : '',
 	);
 
@@ -1212,7 +1212,7 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 	}
 
 	$activities_template = new BP_Activity_Template( $args );
-
+	error_log( print_r($activities_template, true ) );
 	// Check if no activity.
 	if ( empty( $activities_template->activity_count ) ) {
 		wp_send_json_error( array(
@@ -1223,6 +1223,13 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 
 	$activities_template->activity = $activities_template->activities[0] ?? null;
 
+	$parent_commment = new BP_Activity_Activity( $parent_comment_id );
+	$comments = BP_Activity_Activity::append_comments( array( $activities_template->activity ) );
+
+	// error_log(print_r( $comments,true ) );
+
+	$activities_template->activity = $comments[0];
+// error_log( print_r($activities_template, true ) );
 	// We have all comments and replies just loop through.
 	ob_start();
 
@@ -1237,31 +1244,9 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 	);
 
 	// Check if parent is the main activity.
-	if ( isset( $activities_template->activity ) && $activities_template->activity->id === $parent_comment_id ) {
+	if ( isset( $activities_template->activity ) ) {
 		// No current comment.
 		bp_activity_recurse_comments( $activities_template->activity, $args );
-	} elseif ( isset( $activities_template->activity->children ) && is_array( $activities_template->activity->children ) ) {
-		// If this object has children, search them
-		$result_comment = false;
-
-		foreach ( $activities_template->activity->children as $child ) {
-			$result_comment = bb_search_comment_hierarchy( $child, $parent_comment_id );
-
-			if ( ! empty( $result_comment ) ) {
-
-				// Set as current_comment to iterate.
-				$activities_template->activity->current_comment = $result_comment;
-				bp_activity_recurse_comments( $activities_template->activity->current_comment, $args );
-				break;
-			}
-		}
-
-		if ( empty( $result_comment ) ) {
-			wp_send_json_error( array(
-					'message' => __( 'No more items to load.', 'buddyboss' ),
-				)
-			);
-		}
 	} else {
 		wp_send_json_error( array(
 				'message' => __( 'No more items to load.', 'buddyboss' ),

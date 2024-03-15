@@ -741,6 +741,11 @@ function bp_nouveau_activity_recurse_comments( $comment, $args = array() ) {
 	$comment_loaded_count = 0;
 	$comment_total        = bp_activity_recurse_comment_count( $comment );
 
+	// get comments children count.
+	// if ( false !== $r['limit_comments'] && $comment_loaded_count === $r['comment_load_limit'] ) {
+		
+	// }
+
 	foreach ( (array) $comment->children as $comment_child ) {
 		if ( false !== $r['limit_comments'] && $comment_loaded_count === $r['comment_load_limit'] ) {
 
