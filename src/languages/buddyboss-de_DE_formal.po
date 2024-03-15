@@ -17789,11 +17789,11 @@ msgid "Lost Password"
 msgstr "Passwort vergessen"
 
 #: bp-forums/common/widgets.php:199
-msgid "Register URI:"
+msgid "Register URL:"
 msgstr "URI registrieren:"
 
 #: bp-forums/common/widgets.php:204
-msgid "Lost Password URI:"
+msgid "Lost Password URL:"
 msgstr "URI für Passwort vergessen:"
 
 #: bp-forums/common/widgets.php:261
