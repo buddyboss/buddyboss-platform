@@ -1259,7 +1259,7 @@ function bb_admin_setting_profile_header_elements( $args ) {
 		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
 			foreach ( $args['elements'] as $element ) {
 				?>
-				<div class="bb-profile-header-element bb-profile-header-element-<?php echo esc_attr( $element['element_name'] ); ?>">
+				<div class="<?php echo ! empty( $element['element_class'] ) ? esc_attr( $element['element_class'] ) : ''; ?> bb-profile-header-element bb-profile-header-element-<?php echo esc_attr( $element['element_name'] ); ?>">
 					<?php
 					new BB_Admin_Setting_Fields(
 						array(
@@ -1296,7 +1296,7 @@ function bb_admin_setting_member_directory_elements( $args ) {
 		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
 			foreach ( $args['elements'] as $element ) {
 				?>
-				<div class="bb-member-directory-element bb-member-directory-element-<?php echo esc_attr( $element['element_name'] ); ?>">
+				<div class="<?php echo ! empty( $element['element_class'] ) ? esc_attr( $element['element_class'] ) : ''; ?> bb-member-directory-element bb-member-directory-element-<?php echo esc_attr( $element['element_name'] ); ?>">
 					<?php
 					new BB_Admin_Setting_Fields(
 						array(
@@ -1333,7 +1333,7 @@ function bb_admin_setting_member_profile_actions( $args ) {
 		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
 			foreach ( $args['elements'] as $profile_action ) {
 				?>
-				<div class="bb-member-directory-profile-action bb-member-directory-profile-action-<?php echo esc_attr( $profile_action['element_name'] ); ?>">
+				<div class="bb-member-directory-profile-action bb-member-directory-profile-action-<?php echo esc_attr( $profile_action['element_name'] ); ?> <?php echo ! empty( $profile_action['element_class'] ) ? esc_attr( $profile_action['element_class'] ) : ''; ?>">
 					<?php
 					new BB_Admin_Setting_Fields(
 						array(
@@ -1372,6 +1372,10 @@ function bb_admin_setting_member_profile_primary_action( $args ) {
 
 			if ( isset( $args['elements'], $args['selected_elements'] ) && ! empty( $args['elements'] ) && ! empty( $args['selected_elements'] ) ) {
 				foreach ( $args['elements'] as $profile_primary_action ) {
+					if ( false !== strpos( $profile_primary_action['element_class'], 'bp-hide' ) ) {
+						continue;
+					}
+
 					if ( in_array( $profile_primary_action['element_name'], $args['selected_elements'], true ) ) {
 						$options[ $profile_primary_action['element_name'] ] = $profile_primary_action['element_label'];
 					}
