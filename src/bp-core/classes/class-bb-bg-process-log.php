@@ -597,27 +597,22 @@ class BB_BG_Process_Log {
 
 		$table_size = $this->get_bg_process_log_table_size();
 		if ( $table_size > 1024 ) {
-			// Target size in MB.
-			$target_size_mb = 380;
-			// Calculate the multiplier.
-			$multiplier = $table_size / $target_size_mb;
 
-			// Get the minimum and maximum index IDs from the table.
-			$min_max_ids = $wpdb->get_row( "SELECT (SELECT MIN(id) FROM {$this->table_name}) AS min_id,(SELECT MAX(id) FROM {$this->table_name}) AS max_id" );
-			$min_id      = $min_max_ids->min_id;
-			$max_id      = $min_max_ids->max_id;
+			$rows = $wpdb->get_row( "SELECT COUNT(*) as row FROM {$this->table_name}" );
+			if ( ! empty( $rows ) && ! empty( $rows->row ) ) {
 
-			// Calculate the total entries.
-			$total_entries = $max_id - $min_id;
+				// Average Row Size (bytes) = Total Table Size (bytes) / Total Number of Rows.
+				$average_row_size_byte = round( ( $table_size * ( 1024 * 1024 ) ) / $rows->row );
 
-			// Calculate the number of entries to keep.
-			$entries_to_keep = ceil( $total_entries / $multiplier );
+				$total_reduce_size_mb    = $table_size - 500;
+				$total_reduce_size_bytes = round( $total_reduce_size_mb * ( 1024 * 1024 ) );
 
-			// Calculate the original index for the entries to keep.
-			$original_index = $entries_to_keep * ( $multiplier - 1 ) + $min_id;
+				// Rows to Delete = Size to Reduce (bytes) / Average Row Size (bytes).
+				$rows_to_delete = round( $total_reduce_size_bytes / $average_row_size_byte );
 
-			// Delete records where ID is less than the original index.
-			$wpdb->query( $wpdb->prepare( "DELETE FROM {$this->table_name} WHERE id < %d", $original_index ) );
+				// Delete records.
+				$wpdb->query( $wpdb->prepare( "DELETE FROM {$this->table_name} ORDER BY id ASC LIMIT %d", $rows_to_delete ) );
+			}
 		}
 	}
 
