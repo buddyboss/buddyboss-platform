@@ -181,6 +181,17 @@ add_filter( 'bp_activity_comment_content', 'bb_mention_add_user_dynamic_link', 2
 
 add_filter( 'bp_ajax_querystring', 'bb_activity_directory_set_pagination', 20, 2 );
 
+// Modal template for activity.
+add_action( 'bp_after_directory_activity_list', 'bb_activity_add_modal_template' );
+add_action( 'bp_after_group_activity_content', 'bb_activity_add_modal_template' );
+add_action( 'bp_after_member_activity_content', 'bb_activity_add_modal_template' );
+add_action( 'bp_after_directory_activity_list', 'bb_gifpicker_add_popup_template' );
+add_action( 'bp_after_group_activity_content', 'bb_gifpicker_add_popup_template' );
+add_action( 'bp_after_member_activity_content', 'bb_gifpicker_add_popup_template' );
+add_action( 'bp_before_directory_activity_list', 'bb_emojionearea_add_popup_template' );
+add_action( 'bp_before_group_activity_content', 'bb_emojionearea_add_popup_template' );
+add_action( 'bp_before_member_activity_content', 'bb_emojionearea_add_popup_template' );
+
 /** Functions *****************************************************************/
 
 /**
@@ -2797,6 +2808,32 @@ function bb_activity_has_comment_reply_access( $can_comment, $comment ) {
 		$can_comment = false;
 	}
 
+	// Get the main activity.
+	$main_activity = new BP_Activity_Activity( $comment->item_id );
+
+	// Disallow replies if threading disabled or depth condition is matched.
+	if ( isset( $main_activity->component ) && 'blogs' === $main_activity->component ) {
+		if (
+			empty( get_option( 'thread_comments' ) ) ||
+			(
+				isset( $comment->depth ) &&
+				$comment->depth >= get_option( 'thread_comments_depth' )
+			)
+		) {
+			$can_comment = false;
+		}
+	} else {
+		if (
+			false === bb_is_activity_comment_threading_enabled() ||
+			(
+				isset( $comment->depth ) &&
+				$comment->depth >= bb_get_activity_comment_threading_depth()
+			)
+		) {
+			$can_comment = false;
+		}
+	}
+
 	return $can_comment;
 }
 
@@ -3677,4 +3714,31 @@ function bb_activity_directory_set_pagination( $querystring, $object ) {
 	$querystring['per_page'] = bb_get_load_activity_per_request();
 
 	return http_build_query( $querystring );
+}
+
+/**
+ * Add template for gifpicker.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_gifpicker_add_popup_template() {
+	bp_get_template_part( 'activity/gifpicker-popup' );
+}
+
+/**
+ * Add template for emojionearea picker.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_emojionearea_add_popup_template() {
+	bp_get_template_part( 'activity/emojionearea-popup' );
+}
+
+/**
+ * Add activity modal template for activity pages.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_activity_add_modal_template() {
+	bp_get_template_part( 'activity/activity-modal' );
 }

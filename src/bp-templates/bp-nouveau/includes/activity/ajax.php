@@ -103,6 +103,18 @@ add_action(
 					'nopriv'   => false,
 				),
 			),
+			array(
+				'activity_loadmore_comments' => array(
+					'function' => 'bb_nouveau_ajax_activity_load_more_comments',
+					'nopriv'   => true,
+				),
+			),
+			array(
+				'activity_sync_from_modal' => array(
+					'function' => 'bb_nouveau_ajax_activity_sync_from_modal',
+					'nopriv'   => true,
+				),
+			),
 		);
 
 		foreach ( $ajax_actions as $ajax_action ) {
@@ -540,11 +552,30 @@ function bp_nouveau_ajax_new_activity_comment() {
 			$parent_id = (int) $p_obj->secondary_item_id;
 		}
 		$activities_template->activity->current_comment->depth = $depth;
+
+		// Set activity related properties to be used in the loop.
+		if ( ! isset( $activities_template->activity->component ) ) {
+			if ( ! isset( $p_obj ) ) {
+				$a_obj = new BP_Activity_Activity( $activities_template->activities[0]->item_id );
+			} else {
+				$a_obj = new BP_Activity_Activity( $p_obj->item_id );
+			}
+
+			$activities_template->activity->component         = $a_obj->component;
+			$activities_template->activity->item_id           = $a_obj->item_id;
+			$activities_template->activity->secondary_item_id = $a_obj->secondary_item_id;
+		}
 	}
 
 	ob_start();
+
+	$comment_template_args = array();
+	if ( ! empty( $_POST['edit_comment'] ) && ! bp_is_single_activity() ) {
+		$comment_template_args = array( 'show_replies' => false, 'limit_comments' => true );
+	}
+
 	// Get activity comment template part.
-	bp_get_template_part( 'activity/comment' );
+	bp_get_template_part( 'activity/comment', null, $comment_template_args );
 	$response = array( 'contents' => ob_get_contents() );
 	ob_end_clean();
 
@@ -1234,7 +1265,7 @@ function bb_nouveau_ajax_activity_update_close_comments() {
 	);
 
 	if ( ! bb_is_close_activity_comments_enabled() ) {
-		wp_send_json_error( 
+		wp_send_json_error(
 			array(
 				'feedback' => esc_html__( 'There was a problem marking this operation. Close comments setting is disabled.', 'buddyboss' ),
 			)
@@ -1293,4 +1324,171 @@ function bb_nouveau_ajax_activity_update_close_comments() {
 	} else {
 		wp_send_json_error( $response );
 	}
+}
+
+/**
+ * Get more comments.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_nouveau_ajax_activity_load_more_comments() {
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( array(
+				'message' => __( 'Invalid request.', 'buddyboss' ),
+			)
+		);
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+		wp_send_json_error( array(
+				'message' => __( 'Invalid request.', 'buddyboss' ),
+			)
+		);
+	}
+
+	if ( empty( $_POST['activity_id'] ) ) {
+		wp_send_json_error( array(
+				'message' => __( 'Activity id cannot be empty.', 'buddyboss' ),
+			)
+		);
+	}
+
+	if ( empty( $_POST['parent_comment_id'] ) ) {
+		wp_send_json_error( array(
+				'message' => __( 'Parent comment id cannot be empty.', 'buddyboss' ),
+			)
+		);
+	}
+
+	global $activities_template;
+	$activity_id       = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
+	$parent_comment_id = ! empty( $_POST['parent_comment_id'] ) ? (int) $_POST['parent_comment_id'] : 0;
+	$type              = ! empty( $_POST['type'] ) ? $_POST['type'] : '';
+
+	$args = array(
+		'include'          => $activity_id,
+		'display_comments' => true,
+		'scope'            => 'groups' === $type ? $type : '',
+	);
+
+	if ( 'media' === $type || 'document' === $type ) {
+		$args['show_hidden'] = true;
+	}
+
+	$activities_template = new BP_Activity_Template( $args );
+
+	// Check if no activity.
+	if ( empty( $activities_template->activity_count ) ) {
+		wp_send_json_error( array(
+				'message' => __( 'Invalid request.', 'buddyboss' ),
+			)
+		);
+	}
+
+	$activities_template->activity = $activities_template->activities[0] ?? null;
+
+	// We have all comments and replies just loop through.
+	ob_start();
+
+	$args = array(
+		'limit_comments'         => true,
+		'comment_load_limit'     => bb_get_activity_comment_loading(),
+		'parent_comment_id'      => $parent_comment_id,
+		'main_activity_id'       => $activity_id,
+		'is_ajax_load_more'      => true,
+		'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( $_POST['last_comment_timestamp'] ) : '',
+		'last_comment_id'        => ! empty( $_POST['last_comment_id'] ) ? (int) $_POST['last_comment_id'] : 0,
+	);
+
+	// Check if parent is the main activity.
+	if ( isset( $activities_template->activity ) && $activities_template->activity->id === $parent_comment_id ) {
+		// No current comment.
+		bp_activity_recurse_comments( $activities_template->activity, $args );
+	} elseif ( isset( $activities_template->activity->children ) && is_array( $activities_template->activity->children ) ) {
+		// If this object has children, search them
+		$result_comment = false;
+
+		foreach ( $activities_template->activity->children as $child ) {
+			$result_comment = bb_search_comment_hierarchy( $child, $parent_comment_id );
+
+			if ( ! empty( $result_comment ) ) {
+
+				// Set as current_comment to iterate.
+				$activities_template->activity->current_comment = $result_comment;
+				bp_activity_recurse_comments( $activities_template->activity->current_comment, $args );
+				break;
+			}
+		}
+
+		if ( empty( $result_comment ) ) {
+			wp_send_json_error( array(
+					'message' => __( 'No more items to load.', 'buddyboss' ),
+				)
+			);
+		}
+	} else {
+		wp_send_json_error( array(
+				'message' => __( 'No more items to load.', 'buddyboss' ),
+			)
+		);
+	}
+
+	wp_send_json_success( array(
+			'comments' => ob_get_clean(),
+		)
+	);
+}
+
+/**
+ * Get particular activity to sync when activity modal is closed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_nouveau_ajax_activity_sync_from_modal() {
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( array(
+				'message' => __( 'Invalid request.', 'buddyboss' ),
+			)
+		);
+	}
+
+	// Nonce verification.
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+		wp_send_json_error( array(
+				'message' => __( 'Invalid request.', 'buddyboss' ),
+			)
+		);
+	}
+
+	if ( empty( $_POST['activity_id'] ) ) {
+		wp_send_json_error( array(
+				'message' => __( 'Activity id cannot be empty.', 'buddyboss' ),
+			)
+		);
+	}
+
+	$activity_id = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
+
+	$args = array(
+		'in'               => $activity_id ,
+		'display_comments' => true,
+	);
+
+	ob_start();
+	if ( bp_has_activities( $args ) ) {
+		while ( bp_activities() ) {
+			bp_the_activity();
+			bp_get_template_part( 'activity/entry' );
+		}
+	}
+
+	wp_send_json_success( array(
+			'activity' => ob_get_clean(),
+		)
+	);
 }

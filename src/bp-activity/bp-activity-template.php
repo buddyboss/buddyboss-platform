@@ -1916,24 +1916,55 @@ function bp_activity_get_comments( $args = '' ) {
 		return false;
 	}
 
-	bp_activity_recurse_comments( $activities_template->activity );
+	$args = array(
+		'limit_comments'     => bp_is_single_activity() ? false : true,
+		'comment_load_limit' => bb_get_activity_comment_visibility(),
+	);
+	bp_activity_recurse_comments( $activities_template->activity, $args );
 }
 
 /**
  * Loops through a level of activity comments and loads the template for each.
- *
  * Note: The recursion itself used to happen entirely in this function. Now it is
  * split between here and the comment.php template.
  *
  * @since BuddyPress 1.2.0
+ * @since BuddyBoss [BBVERSION]
+ * Added new param as args to pass some arguments to the function.
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template    {@link BP_Activity_Template}
  *
  * @param object $comment The activity object currently being recursed.
+ * @param array  $args {
+ * Array of arguments.
+ *
+ * @type bool   $limit_comments         Limit comments loading or not Default: false.
+ * @type int    $comment_load_limit     The number of comments to load. Default: 0.
+ * @type int    $parent_comment_id      The ID of the parent comment.
+ * @type int    $main_activity_id       The ID of the main activity.
+ * @type bool   $is_ajax_load_more      Whether the comments are being loaded via AJAX.
+ * @type string $last_comment_timestamp The timestamp of the last comment. Default: empty string.
+ * }
+ *
  * @return bool|string
  */
-function bp_activity_recurse_comments( $comment ) {
+function bp_activity_recurse_comments( $comment, $args = array() ) {
 	global $activities_template;
+
+	$r = bp_parse_args(
+		$args,
+		array(
+			'limit_comments'         => false,
+			'comment_load_limit'     => 0,
+			'parent_comment_id'      => 0,
+			'main_activity_id'       => 0,
+			'is_ajax_load_more'      => false,
+			'last_comment_timestamp' => '',
+			'last_comment_id'        => 0,
+			'comment_order_by'       => apply_filters( 'bp_activity_recurse_comments_order_by', 'ASC' ),
+		),
+		'bb_activity_recurse_comments'
+	);
 
 	if ( empty( $comment ) ) {
 		return false;
@@ -1950,28 +1981,108 @@ function bp_activity_recurse_comments( $comment ) {
 	 *
 	 * @param string $value Opening tag for the HTML markup to use.
 	 */
-	echo apply_filters( 'bp_activity_recurse_comments_start_ul', '<ul>' );
+	if ( ! $r['is_ajax_load_more'] ) {
+		if (
+			false !== $r['limit_comments'] &&
+			0 !== $r['comment_load_limit'] &&
+			(
+				count( $comment->children ) > $r['comment_load_limit']
+			)
+		) {
+			echo "<a href='javascript:void(0);' class='view-more-comments'>" . esc_html__( 'View more comments', 'buddyboss' ) . "</a>";
+		}
 
+		/**
+		 * Filters the start of nested comment list in the activity.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $output The HTML output of the start of the UL element.
+		 */
+		echo apply_filters( 'bb_activity_recurse_comments_start_ul', "<ul data-activity_id={$activities_template->activity->id} data-parent_comment_id={$comment->id}>" );
+	}
+
+	$comment_loaded_count = 0;
+	$skip_flag            = true;
 	foreach ( (array) $comment->children as $comment_child ) {
+		if (
+			true === $r['is_ajax_load_more'] &&
+			! empty( $r['last_comment_timestamp'] ) &&
+			$comment->id === $r['parent_comment_id']
+		) {
+			// Handle same time on next page.
+			if ( $comment_child->id === $r['last_comment_id'] ) {
+				$skip_flag = false;
+				continue;
+			}
+
+			// Use ternary operator for orderby logic.
+			$comparisonOperator = 'DESC' === $r['comment_order_by'] ? '>=' : '<=';
+			if ( $skip_flag && $comment_child->date_recorded . $comparisonOperator . date_i18n( 'Y-m-d H:i:s', $r['last_comment_timestamp'] ) ) {
+				// Skip comment.
+				continue;
+			}
+		}
+
+		if (
+			false !== $r['limit_comments'] &&
+			(
+				$comment_loaded_count === $r['comment_load_limit']
+			)
+		) {
+			if ( ! empty( $r['parent_comment_id'] ) && $activities_template->activity->id !== $r['parent_comment_id'] ) {
+				$view_more_text = __( 'View more replies', 'buddyboss' );
+				$view_more_icon = "<i class='bb-icon-l bb-icon-corner-right'></i>";
+			} else {
+				$view_more_text = __( 'View more comments', 'buddyboss' );
+				$view_more_icon = "";
+			}
+
+			$hidden_class = '';
+			if ( ! $r['is_ajax_load_more'] ) {
+				$hidden_class = 'acomments-view-more--hide';
+			}
+
+			echo "<li class='acomments-view-more acomments-view-more--root " . esc_attr( $hidden_class ) . "'>" . $view_more_icon . "" . esc_html( $view_more_text ) . "</li>";
+			break;
+		}
 
 		// Put the comment into the global so it's available to filters.
 		$activities_template->activity->current_comment = $comment_child;
 
 		$template = bp_locate_template( 'activity/comment.php', false, false );
 
-		load_template( $template, false );
+		$comment_template_args = array( 'limit_comments' => $r['limit_comments'] );
+		if (
+			false !== $r['limit_comments'] &&
+			(
+				$comment->id === $comment_child->secondary_item_id ||
+				$comment->item_id === $comment->secondary_item_id ||
+				in_array( $comment->component, array( 'groups', 'blogs' ), true )
+			)
+		) {
+			// First level comments.
+			$comment_template_args['show_replies'] = false;
+		}
+
+		load_template( $template, false, $comment_template_args );
 
 		unset( $activities_template->activity->current_comment );
+
+		$comment_loaded_count++;
 	}
 
-	/**
-	 * Filters the closing tag for the template that list activity comments.
-	 *
-	 * @since BuddyPress  1.6.0
-	 *
-	 * @param string $value Closing tag for the HTML markup to use.
-	 */
-	echo apply_filters( 'bp_activity_recurse_comments_end_ul', '</ul>' );
+	if ( ! $r['is_ajax_load_more'] ) {
+
+		/**
+		 * Filters the closing tag for the template that list activity comments.
+		 *
+		 * @since BuddyPress  1.6.0
+		 *
+		 * @param string $value Closing tag for the HTML markup to use.
+		 */
+		echo apply_filters( 'bp_activity_recurse_comments_end_ul', '</ul>' );
+	}
 }
 
 /**
@@ -2164,9 +2275,13 @@ function bp_get_activity_comment_date_recorded() {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 * @param string|bool Date for the activity comment currently being displayed.
+	 * @since BuddyBoss [BBVERSION]
+	 * Updated param.
+	 *
+	 * @param string|bool string|bool $date_recorded Time since the activity was recorded,
+	 *                    in the form "%s ago". False on failure.
 	 */
-	return apply_filters( 'bp_activity_comment_date_recorded', bp_core_time_since( bp_get_activity_comment_date_recorded_raw() ) );
+	return apply_filters( 'bp_activity_comment_date_recorded', bp_get_activity_comment_date_recorded_raw() );
 }
 
 /**
@@ -2785,7 +2900,6 @@ function bp_get_activity_css_class() {
 }
 
 /**
- *
  * Output the activity comment CSS class.
  *
  * @since BuddyBoss 1.0.0
@@ -2809,8 +2923,19 @@ function bp_get_activity_comment_css_class() {
 	$comment_depth = bp_activity_get_comment_depth();
 
 	// Threading is turned on, so check the depth.
-	if ( get_option( 'thread_comments' ) ) {
-		$class .= (bool) ( $comment_depth > get_option( 'thread_comments_depth' ) ) ? ' detached-comment-item' : '';
+	if ( 'blogs' === bp_get_activity_object_name() ) {
+		if ( get_option( 'thread_comments' ) ) {
+			$class .= ( $comment_depth > get_option( 'thread_comments_depth' ) ) ? ' detached-comment-item' : '';
+		}
+	} else {
+		if ( bb_is_activity_comment_threading_enabled() ) {
+			$class .= ( $comment_depth > bb_get_activity_comment_threading_depth() ) ? ' detached-comment-item' : '';
+		}
+	}
+
+	// Has children's.
+	if ( ! empty( bp_activity_current_comment()->children ) ) {
+		$class .= ' has-child-comments';
 	}
 
 	return apply_filters( 'bp_get_activity_comment_css_class', $class );
@@ -4424,4 +4549,36 @@ function bb_get_activity_comment_unfavorite_link( $activity_comment_id = 0 ) {
 	 * @param string $value Constructed link for unfavoriting the activity comment.
 	 */
 	return apply_filters( 'bb_get_activity_comment_unfavorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/unfavorite/' . $activity_comment_id . '/' ), 'unmark_favorite' ) );
+}
+
+/**
+ * Search and return the activity comment hierarchy.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object $comment    The comment under which need to search.
+ * @param int    $comment_id The comment id to be searched.
+ *
+ * @return string $comment_id The comment id to be searched.
+ */
+function bb_search_comment_hierarchy( $comment, $comment_id ) {
+
+	// Check if the current object is the one we're looking for.
+	if ( isset( $comment->id ) && (int) $comment->id === (int) $comment_id ) {
+		return $comment;
+	}
+
+	// If this object has children, search them.
+	if ( isset( $comment->children ) && is_array( $comment->children ) ) {
+		foreach ( $comment->children as $child ) {
+			$result = bb_search_comment_hierarchy( $child, $comment_id );
+			// If the object was found in the current child, return it.
+			if ( $result !== null ) {
+				return $result;
+			}
+		}
+	}
+
+	// If the object wasn't found in this branch, return null.
+	return null;
 }

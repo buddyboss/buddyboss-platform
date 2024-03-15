@@ -2799,11 +2799,19 @@ window.bp = window.bp || {};
 			tagName: 'div',
 			className: 'activity-attached-gif-container',
 			template: bp.template( 'activity-attached-gif' ),
+			standalone: false,
 			events: {
 				'click .gif-image-remove': 'destroy'
 			},
 
-			initialize: function () {
+			initialize: function ( options ) {
+				this.destroy = this.destroy.bind( this );
+
+				// Check if standalone is provided in options and update the property.
+				if ( options && options.standalone !== undefined ) {
+					this.standalone = options.standalone;
+				}
+
 				this.listenTo( this.model, 'change', this.render );
 				this.listenTo( Backbone, 'activity_gif_close', this.destroy );
 			},
@@ -2860,8 +2868,14 @@ window.bp = window.bp || {};
 					tool_box.find( '#activity-gif-button' ).removeClass( 'open' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 				}
 
-				var tool_box_comment = this.$el.parents( '.ac-reply-content' );
-				this.$el.closest( '.ac-form' ).removeClass( 'has-gif' );
+				var tool_box_comment = this.$el.parents( '.bp-ac-form-container' );
+
+				if ( this.standalone ) {
+					this.$el.closest( '.screen-content' ).find( '#activity-modal .ac-form' ).removeClass( 'has-gif' );
+				} else {
+					this.$el.closest( '.ac-form' ).removeClass( 'has-gif' );
+				}
+
 				if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ) ) {
 					tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 					tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
@@ -2911,12 +2925,20 @@ window.bp = window.bp || {};
 			limit: 20,
 			q: null,
 			requests: [],
+			standalone: false,
 			events: {
 				'keydown .search-query-input': 'search',
 				'click .found-media-item': 'select'
 			},
 
 			initialize: function ( options ) {
+				this.select = this.select.bind( this );
+
+				// Check if standalone is provided in options and update the property.
+				if ( options && options.standalone !== undefined ) {
+					this.standalone = options.standalone;
+				}
+
 				this.options = options || {};
 				this.giphy   = new window.Giphy( BP_Nouveau.media.gif_api_key );
 
@@ -3030,7 +3052,12 @@ window.bp = window.bp || {};
 				}
 
 				var whatNewForm = this.$el.closest( '#whats-new-form' );
-				this.$el.closest( '.ac-form' ).addClass( 'has-gif' );
+
+				if ( this.standalone ) {
+					this.$el.closest( '.screen-content' ).find( '#activity-modal .ac-form' ).addClass( 'has-gif' );
+				} else {
+					this.$el.closest( '.ac-form' ).addClass( 'has-gif' );
+				}
 
 				var whatNewScroll = whatNewForm.find( '.whats-new-scroll-view' );
 				whatNewScroll.stop().animate({
@@ -5762,6 +5789,14 @@ window.bp = window.bp || {};
 							// Edit activity.
 						} else if ( edit ) {
 							$( '#activity-' + response.id ).replaceWith( response.activity );
+
+							var activity_modal_item = $( '#activity-modal .activity-list .activity-item' );
+							var activity_target = activity_modal_item.find( '.activity-content' ).find( '.activity-inner' );
+							if ( activity_modal_item.length > 0 ) {
+								var content = $( '#activity-' + response.id ).find( '.activity-content' ).find( '.activity-inner' ).html();
+								activity_target.empty();
+								activity_target.append( content );
+							}
 
 							// Inject the activity into the stream only if it hasn't been done already (HeartBeat).
 						} else if ( ! $( '#activity-' + response.id ).length ) {
