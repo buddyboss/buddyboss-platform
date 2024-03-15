@@ -8217,16 +8217,6 @@ span.dashicons.dashicons-admin-file:before {
   margin-top: 0;
 }
 
-.buddypress-wrap .bb-media-model-wrapper .activity-comments ul li:not(.detached-comment-item) {
-  margin-left: 10px;
-}
-
-@media screen and (max-width: 560px) {
-  .buddypress-wrap .bb-media-model-wrapper .activity-comments ul li:not(.detached-comment-item) {
-    margin-left: 0;
-  }
-}
-
 #buddypress.buddypress-wrap .bb-activity-media-elem .bb_more_dropdown.open {
   overflow: initial;
 }

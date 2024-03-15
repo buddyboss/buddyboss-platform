@@ -8046,11 +8046,11 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 .buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity {
-  width: 265px;
+  width: 380px;
 }
 
 .buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity .document-preview-wrap {
-  height: 115px;
+  height: 170px;
 }
 
 .buddypress-wrap .activity-comments .bp-generic-meta.action {
@@ -8162,6 +8162,14 @@ span.dashicons.dashicons-admin-file:before {
   margin-left: 0;
 }
 
+.buddypress-wrap .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity {
+  width: 265px;
+}
+
+.buddypress-wrap .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity .document-preview-wrap {
+  height: 115px;
+}
+
 .buddypress-wrap .activity-comments .ac-form.has-gif .ac-reply-content .ac-submit-wrap, .buddypress-wrap .activity-comments .ac-form.has-content .ac-reply-content .ac-submit-wrap, .buddypress-wrap .activity-comments .ac-form.has-media .ac-reply-content .ac-submit-wrap,
 .buddypress-wrap .bb-modal-activity-footer .ac-form.has-gif .ac-reply-content .ac-submit-wrap,
 .buddypress-wrap .bb-modal-activity-footer .ac-form.has-content .ac-reply-content .ac-submit-wrap,
@@ -8207,16 +8215,6 @@ span.dashicons.dashicons-admin-file:before {
 .buddypress-wrap .mini .activity-comments {
   clear: both;
   margin-top: 0;
-}
-
-.buddypress-wrap .bb-media-model-wrapper .activity-comments ul li:not(.detached-comment-item) {
-  margin-right: 10px;
-}
-
-@media screen and (max-width: 560px) {
-  .buddypress-wrap .bb-media-model-wrapper .activity-comments ul li:not(.detached-comment-item) {
-    margin-right: 0;
-  }
 }
 
 #buddypress.buddypress-wrap .bb-activity-media-elem .bb_more_dropdown.open {
@@ -26773,7 +26771,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(180deg);
+  transform: rotateY(-180deg);
 }
 
 @media screen and (max-width: 768px) {
