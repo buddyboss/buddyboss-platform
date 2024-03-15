@@ -4761,13 +4761,15 @@ window.bp = window.bp || {};
 				schedulePost.find( '.bb-schedule-post_dropdown_list' ).removeClass( 'is_open' );
 				schedulePost.find( '.bb-schedule-post_modal #bb-schedule-post_form_modal' ).show();
 				if (typeof jQuery.fn.datetimepicker !== 'undefined') {
+					var currentDate = new Date();
 					$( '.bb-schedule-post_dropdown_section .bb-schedule-activity-date-field' ).datetimepicker({
 						format: 'Y-m-d',
 						timepicker:false,
 						mask:true,
 						minDate: 0,
-						yearStart: new Date().getFullYear(),
-						defaultDate: new Date(),
+						maxDate: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 90 ),
+						yearStart: currentDate.getFullYear(),
+						defaultDate: currentDate,
 						scrollMonth: false,
 						scrollTime: false,
 						scrollInput: false,
@@ -4779,7 +4781,7 @@ window.bp = window.bp || {};
 						format: 'h:i',
 						formatTime:	'h:i',
 						hours12: true,
-						step: 30,
+						step: 5,
 						className: 'bb-schedule-activity-time-picker',
 					});
 				}
