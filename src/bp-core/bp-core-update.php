@@ -3430,7 +3430,23 @@ function bb_update_to_2_4_75() {
 	if ( class_exists( 'BB_BG_Process_Log' ) ) {
 
 		// Delete the existing table.
-		$log_table_name  = bp_core_get_table_prefix() . 'bb_background_process_logs';
+		$log_table_name = bp_core_get_table_prefix() . 'bb_background_process_logs';
+
+		// Check the index keys.
+		$indices_columns = $wpdb->get_col( $wpdb->prepare( "SELECT COLUMN_NAME FROM information_schema.statistics WHERE table_schema = %s AND table_name = %s", $wpdb->__get( 'dbname' ), $log_table_name ) );
+
+		if ( empty( $indices_columns ) ) {
+			return;
+		}
+
+		$pre_indices  = array( 'id', 'process_start_date_gmt' );
+		$diff_indices = array_diff( $indices_columns, $pre_indices );
+
+		if ( empty( $diff_indices ) ) {
+			return;
+		}
+
+		// Delete the existing table.
 		$wpdb->query( "DROP TABLE IF EXISTS {$log_table_name}" );
 
 		// Create a new table again.
