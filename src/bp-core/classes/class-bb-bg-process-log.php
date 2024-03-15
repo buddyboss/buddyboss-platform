@@ -598,7 +598,7 @@ class BB_BG_Process_Log {
 		$table_size = $this->get_bg_process_log_table_size();
 		if ( $table_size > 1024 ) {
 
-			$rows = $wpdb->get_row( "SELECT COUNT(*) as row FROM {$this->table_name}" );
+			$rows = $wpdb->get_row( "SELECT COUNT(id) as row FROM {$this->table_name}" );
 			if ( ! empty( $rows ) && ! empty( $rows->row ) ) {
 
 				// Average Row Size (bytes) = Total Table Size (bytes) / Total Number of Rows.
