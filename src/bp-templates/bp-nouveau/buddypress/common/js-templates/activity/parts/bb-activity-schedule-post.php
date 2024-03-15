@@ -11,7 +11,7 @@
 ?>
 <script type="text/html" id="tmpl-activity-schedule-post">
 <?php
-	if ( bp_is_active( 'activity' ) && ( bp_is_activity_directory() && bb_is_enabled_activity_schedule_posts() ) ) :
+	if ( bp_is_active( 'activity' ) && bb_is_enabled_activity_schedule_posts() ) :
 		?>
 	<div class="bb-schedule-post_dropdown_section">
 		<a href="#" class="bb-schedule-post_dropdown_button">
