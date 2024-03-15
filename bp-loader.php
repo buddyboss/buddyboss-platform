@@ -18,6 +18,8 @@ if ( file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) && file_exists(
 	require dirname( __FILE__ ) . '/vendor/autoload.php';
 }
 
+require_once plugin_dir_path( __FILE__ ) . 'src/bp-core/libraries/action-scheduler/action-scheduler.php';
+
 // Assume you want to load from build.
 $bp_loader = dirname( __FILE__ ) . '/src/bp-loader.php';
 $subdir    = 'src';
@@ -37,7 +39,7 @@ if ( ! defined( 'BP_PLUGIN_URL' ) ) {
 }
 
 // Include BuddyBoss Platform.
-include( $bp_loader );
+require $bp_loader;
 
 // Unset the loader, since it's loaded in global scope.
 unset( $bp_loader );

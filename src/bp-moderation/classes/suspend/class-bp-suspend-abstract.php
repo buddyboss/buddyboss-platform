@@ -63,6 +63,11 @@ abstract class BP_Suspend_Abstract {
 		'action_suspend',
 	);
 
+	public function __construct() {
+		add_action( 'bb_as_hide_related_content', array( $this, 'hide_related_content' ), 10, 3 );
+		add_action( 'bb_as_unhide_related_content', array( $this, 'unhide_related_content' ), 10, 4 );
+	}
+
 	/**
 	 * Check whether bypass argument pass for admin user or not.
 	 *
@@ -238,17 +243,21 @@ abstract class BP_Suspend_Abstract {
 				$args['page'] = ++$page;
 
 				$parent_id = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $item_id;
-				$bb_background_updater->data(
-					array(
-						'type'              => $this->item_type,
-						'group'             => $group_name,
-						'data_id'           => $item_id,
-						'secondary_data_id' => $parent_id,
-						'callback'          => array( $this, 'hide_related_content' ),
-						'args'              => array( $item_id, $hide_sitewide, $args ),
-					),
-				);
-				$bb_background_updater->save()->schedule_event();
+//				$bb_background_updater->data(
+//					array(
+//						'type'              => $this->item_type,
+//						'group'             => $group_name,
+//						'data_id'           => $item_id,
+//						'secondary_data_id' => $parent_id,
+//						'callback'          => array( $this, 'hide_related_content' ),
+//						'args'              => array( $item_id, $hide_sitewide, $args ),
+//					),
+//				);
+//				$bb_background_updater->save()->schedule_event();
+
+				$action_id = as_schedule_single_action( time(), 'bb_as_hide_related_content', array( $item_id, $hide_sitewide, $args ), $group_name );
+				bb_insert_as_meta( $action_id, $this->item_type, $group_name, $item_id, $parent_id );
+
 			}
 		}
 	}
@@ -404,17 +413,20 @@ abstract class BP_Suspend_Abstract {
 				$args['page'] = ++$page;
 
 				$parent_id = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $item_id;
-				$bb_background_updater->data(
-					array(
-						'type'              => $this->item_type,
-						'group'             => $group_name,
-						'data_id'           => $item_id,
-						'secondary_data_id' => $parent_id,
-						'callback'          => array( $this, 'unhide_related_content' ),
-						'args'              => array( $item_id, $hide_sitewide, $force_all, $args ),
-					),
-				);
-				$bb_background_updater->save()->schedule_event();
+				// $bb_background_updater->data(
+				// array(
+				// 'type'              => $this->item_type,
+				// 'group'             => $group_name,
+				// 'data_id'           => $item_id,
+				// 'secondary_data_id' => $parent_id,
+				// 'callback'          => array( $this, 'unhide_related_content' ),
+				// 'args'              => array( $item_id, $hide_sitewide, $force_all, $args ),
+				// ),
+				// );
+				// $bb_background_updater->save()->schedule_event();
+
+				$action_id = as_schedule_single_action( time(), 'bb_as_unhide_related_content', array( $item_id, $hide_sitewide, $force_all, $args ), $group_name );
+				bb_insert_as_meta( $action_id, $this->item_type, $group_name, $item_id, $parent_id );
 			}
 		}
 	}

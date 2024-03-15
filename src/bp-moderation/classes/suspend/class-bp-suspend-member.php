@@ -30,6 +30,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 */
 	public function __construct() {
 
+		parent::__construct();
+
 		$this->item_type = self::$type;
 
 		// Manage hidden list.
@@ -79,6 +81,9 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		add_action( 'bb_activity_before_permalink_redirect_url', array( $this, 'bb_activity_before_permalink_redirect_url' ), 10, 1 );
 		add_action( 'bb_activity_after_permalink_redirect_url', array( $this, 'bb_activity_after_permalink_redirect_url' ), 10, 1 );
+
+		add_action( 'bb_as_bb_update_member_friend_count', array( $this, 'bb_update_member_friend_count' ), 10, 3 );
+		add_action( 'bb_as_bb_update_group_member_count', array( $this, 'bb_update_group_member_count' ), 10, 1 );
 	}
 
 	/**
@@ -420,17 +425,21 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		if ( $this->background_disabled || ! $force_bg_process ) {
 			$this->hide_related_content( $member_id, $hide_sitewide, $args );
 		} else {
-			$bb_background_updater->data(
-				array(
-					'type'              => $this->item_type,
-					'group'             => $group_name,
-					'data_id'           => $member_id,
-					'secondary_data_id' => $this->item_type . '_' . $member_id,
-					'callback'          => array( $this, 'hide_related_content' ),
-					'args'              => array( $member_id, $hide_sitewide, $args ),
-				)
-			);
-			$bb_background_updater->save()->schedule_event();
+//			$bb_background_updater->data(
+//				array(
+//					'type'              => $this->item_type,
+//					'group'             => $group_name,
+//					'data_id'           => $member_id,
+//					'secondary_data_id' => $this->item_type . '_' . $member_id,
+//					'callback'          => array( $this, 'hide_related_content' ),
+//					'args'              => array( $member_id, $hide_sitewide, $args ),
+//				)
+//			);
+//			$bb_background_updater->save()->schedule_event();
+
+			$action_id = as_schedule_single_action( time(), 'bb_as_hide_related_content', array( $member_id, $hide_sitewide, $args ), $group_name );
+			bb_insert_as_meta( $action_id, $this->item_type, $group_name, $member_id, $this->item_type . '_' . $member_id );
+
 		}
 	}
 
@@ -490,17 +499,20 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		if ( $this->background_disabled || ! $force_bg_process ) {
 			$this->unhide_related_content( $member_id, $hide_sitewide, $force_all, $args );
 		} else {
-			$bb_background_updater->data(
-				array(
-					'type'              => $this->item_type,
-					'group'             => $group_name,
-					'data_id'           => $member_id,
-					'secondary_data_id' => $this->item_type . '_' . $member_id,
-					'callback'          => array( $this, 'unhide_related_content' ),
-					'args'              => array( $member_id, $hide_sitewide, $force_all, $args ),
-				),
-			);
-			$bb_background_updater->save()->schedule_event();
+//			$bb_background_updater->data(
+//				array(
+//					'type'              => $this->item_type,
+//					'group'             => $group_name,
+//					'data_id'           => $member_id,
+//					'secondary_data_id' => $this->item_type . '_' . $member_id,
+//					'callback'          => array( $this, 'unhide_related_content' ),
+//					'args'              => array( $member_id, $hide_sitewide, $force_all, $args ),
+//				),
+//			);
+//			$bb_background_updater->save()->schedule_event();
+
+			$action_id = as_schedule_single_action( time(), 'bb_as_unhide_related_content', array( $member_id, $hide_sitewide, $force_all, $args ), $group_name );
+			bb_insert_as_meta( $action_id, $this->item_type, $group_name, $member_id, $this->item_type . '_' . $member_id );
 		}
 	}
 
@@ -691,18 +703,21 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 					$chunk_results = array_chunk( $friend_ids, $min_count );
 					if ( ! empty( $chunk_results ) ) {
 						foreach ( $chunk_results as $chunk_result ) {
-							$bb_background_updater->data(
-								array(
-									'type'              => 'member_count',
-									'group'             => 'bb_update_member_friend_count',
-									'data_id'           => $member_id,
-									'secondary_data_id' => $member_id,
-									'callback'          => array( $this, 'bb_update_member_friend_count' ),
-									'args'              => array( $member_id, $chunk_result, $action ),
-								),
-							);
+//							$bb_background_updater->data(
+//								array(
+//									'type'              => 'member_count',
+//									'group'             => 'bb_update_member_friend_count',
+//									'data_id'           => $member_id,
+//									'secondary_data_id' => $member_id,
+//									'callback'          => array( $this, 'bb_update_member_friend_count' ),
+//									'args'              => array( $member_id, $chunk_result, $action ),
+//								),
+//							);
+//
+//							$bb_background_updater->save()->dispatch();
 
-							$bb_background_updater->save()->dispatch();
+							$action_id = as_schedule_single_action( time(), 'bb_as_bb_update_member_friend_count', array( $member_id, $chunk_result, $action ), 'bb_update_member_friend_count' );
+							bb_insert_as_meta( $action_id, 'member_count', 'bb_update_member_friend_count', $member_id, $member_id );
 						}
 					}
 				}
@@ -716,17 +731,20 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 			if ( count( $group_ids ) > $min_count ) {
 				foreach ( array_chunk( $group_ids, $min_count ) as $chunk ) {
-					$bb_background_updater->data(
-						array(
-							'type'              => 'group_member_count',
-							'group'             => 'bb_update_group_member_count',
-							'data_id'           => $member_id,
-							'secondary_data_id' => $member_id,
-							'callback'          => 'bb_update_group_member_count',
-							'args'              => array( $chunk ),
-						),
-					);
-					$bb_background_updater->save()->schedule_event();
+//					$bb_background_updater->data(
+//						array(
+//							'type'              => 'group_member_count',
+//							'group'             => 'bb_update_group_member_count',
+//							'data_id'           => $member_id,
+//							'secondary_data_id' => $member_id,
+//							'callback'          => 'bb_update_group_member_count',
+//							'args'              => array( $chunk ),
+//						),
+//					);
+//					$bb_background_updater->save()->schedule_event();
+
+					$action_id = as_schedule_single_action( time(), 'bb_as_bb_update_group_member_count', array( $chunk ), 'bb_update_group_member_count' );
+					bb_insert_as_meta( $action_id, 'group_member_count', 'bb_update_group_member_count', $member_id, $member_id );
 				}
 			} else {
 				bb_update_group_member_count( $group_ids );
