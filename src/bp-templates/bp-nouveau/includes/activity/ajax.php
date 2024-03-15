@@ -1229,7 +1229,8 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 	}
 
 	$activities_template->activity = $comments[0];
-
+	error_log( 'on ajax load ' );
+	error_log( print_r( $activities_template->activity, true ) );
 	// We have all comments and replies just loop through.
 	ob_start();
 

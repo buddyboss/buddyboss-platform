@@ -260,7 +260,8 @@ function bp_nouveau_get_activity_timestamp() {
 function bp_nouveau_activity_state() {
 
 	$activity_id    = bp_get_activity_id();
-	$comment_count  = bp_activity_get_comment_count();
+//	$comment_count  = bp_activity_get_comment_count();
+	$comment_count  = bb_get_activity_comment_children_count( $activity_id );
 	$reactions      = bb_active_reactions();
 	$reaction_count = bb_load_reaction()->bb_get_user_reactions_count(
 		array(
@@ -716,9 +717,14 @@ function bp_nouveau_activity_comments( $args = array() ) {
 function bp_nouveau_activity_recurse_comments( $comment, $args = array() ) {
 	global $activities_template;
 
-	if ( empty( $comment->children ) ) {
+//	error_log( print_r( $comment, true ) );
+	if ( empty( $comment ) ) {
 		return;
 	}
+
+	//	if ( empty( $comment->children ) ) {
+	//		return;
+	//	}
 
 	$r = bp_parse_args(
 		$args,
@@ -728,6 +734,7 @@ function bp_nouveau_activity_recurse_comments( $comment, $args = array() ) {
 		),
 		'bp_nouveau_activity_recurse_comments'
 	);
+
 
 	/**
 	 * Filters the opening tag for the template that lists activity comments.
@@ -742,31 +749,49 @@ function bp_nouveau_activity_recurse_comments( $comment, $args = array() ) {
 	$comment_total        = bp_activity_recurse_comment_count( $comment );
 
 	// get comments children count.
-	// if ( false !== $r['limit_comments'] && $comment_loaded_count === $r['comment_load_limit'] ) {
-		
-	// }
+	if ( false !== $r['limit_comments'] ) {
 
-	foreach ( (array) $comment->children as $comment_child ) {
-		if ( false !== $r['limit_comments'] && $comment_loaded_count === $r['comment_load_limit'] ) {
-
-			if ( 0 !== $comment->secondary_item_id ) {
-				if ( 0 === $comment_loaded_count ) {
-					$link_text = sprintf(
-					/* translators: total replies */
-						_n( 'View %d reply', 'View %d replies', $comment_total, 'buddyboss' ),
-						absint( $comment_total )
-					);
-				} else {
-					$link_text = __( 'View more replies', 'buddyboss' );
-				}
-
-			} else {
-				$link_text = __( 'View more comments', 'buddyboss' );
-			}
-
+		if ( 0 !== $comment->child_count ) {
+			//			if ( 0 === $comment_loaded_count ) {
+			$link_text = sprintf(
+			/* translators: total replies */
+				_n( 'View %d reply', 'View %d replies', $comment->child_count, 'buddyboss' ),
+				absint( $comment->child_count )
+			);
+			//			} else {
+			//				$link_text = __( 'View more replies', 'buddyboss' );
+			//			}
 			echo "<li class='acomments-view-more'><i class='bb-icon-l bb-icon-corner-right'></i>". esc_html( $link_text ) ."</li>";
-			break;
+
 		}
+		//		else {
+		//			$link_text = __( 'View more comments', 'buddyboss' );
+		//		}
+
+//		echo "<li class='acomments-view-more'><i class='bb-icon-l bb-icon-corner-right'></i>". esc_html( $link_text ) ."</li>";
+	}
+//	error_log( print_r( $comment->children, true ) );
+	foreach ( (array) $comment->children as $comment_child ) {
+//		if ( false !== $r['limit_comments'] && $comment_loaded_count === $r['comment_load_limit'] ) {
+//
+//			if ( 0 !== $comment->count ) {
+//				if ( 0 === $comment_loaded_count ) {
+//					$link_text = sprintf(
+//					/* translators: total replies */
+//						_n( 'View %d reply', 'View %d replies', $comment->count, 'buddyboss' ),
+//						absint( $comment->count )
+//					);
+//				} else {
+//					$link_text = __( 'View more replies', 'buddyboss' );
+//				}
+//
+//			} else {
+//				$link_text = __( 'View more comments', 'buddyboss' );
+//			}
+//
+//			echo "<li class='acomments-view-more'><i class='bb-icon-l bb-icon-corner-right'></i>". esc_html( $link_text ) ."</li>";
+//			break;
+//		}
 
 		// Put the comment into the global so it's available to filters.
 		$activities_template->activity->current_comment = $comment_child;
