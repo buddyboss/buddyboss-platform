@@ -1201,35 +1201,35 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 	$parent_comment_id = ! empty( $_POST['parent_comment_id'] ) ? (int) $_POST['parent_comment_id'] : 0;
 	$type              = ! empty( $_POST['type'] ) ? $_POST['type'] : '';
 
-	$args = array(
-		'include'          => $parent_comment_id,
-		//'display_comments' => false,
-		// 'scope'            => 'groups' === $type ? $type : '',
-	);
+	// $args = array(
+	// 	'include'          => $parent_comment_id,
+	// 	//'display_comments' => false,
+	// 	// 'scope'            => 'groups' === $type ? $type : '',
+	// );
 
-	if ( 'media' === $type || 'document' === $type ) {
-		$args['show_hidden'] = true;
-	}
-
-	$activities_template = new BP_Activity_Template( $args );
-	// error_log( print_r($activities_template, true ) );
-	// Check if no activity.
-	// if ( empty( $activities_template->activity_count ) ) {
-	// 	wp_send_json_error( array(
-	// 			'message' => __( 'Invalid request.', 'buddyboss' ),
-	// 		)
-	// 	);
+	// if ( 'media' === $type || 'document' === $type ) {
+	// 	$args['show_hidden'] = true;
 	// }
 
-	// $activities_template->activity = $activities_template->activities[0] ?? null;
+	$activities_template = new BP_Activity_Template( array() );
+	$parent_commment     = new BP_Activity_Activity( $parent_comment_id );
+	if ( empty( $parent_commment ) ) {
+		wp_send_json_error( array(
+				'message' => __( 'Invalid request.', 'buddyboss' ),
+			)
+		);
+	}
+	$comments = BP_Activity_Activity::append_comments( array( $parent_commment ), '', true );
 
-	$parent_commment = new BP_Activity_Activity( $parent_comment_id );
-	$comments = BP_Activity_Activity::append_comments( array( $parent_commment ) );
-
-	error_log(print_r( $comments,true ) );
+	if ( empty( $comments[0] ) ) {
+		wp_send_json_error( array(
+				'message' => __( 'No more items to load.', 'buddyboss' ),
+			)
+		);
+	}
 
 	$activities_template->activity = $comments[0];
-// error_log( print_r($activities_template, true ) );
+
 	// We have all comments and replies just loop through.
 	ob_start();
 
