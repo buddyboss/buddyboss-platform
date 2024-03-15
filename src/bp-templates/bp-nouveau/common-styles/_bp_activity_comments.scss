@@ -215,10 +215,10 @@
 		}
 
 		.bb-activity-media-elem.document-activity {
-			width: 265px;
+			width: 380px;
 
 			.document-preview-wrap {
-				height: 115px;
+				height: 170px;
 			}
 		}
 
@@ -358,6 +358,18 @@
 		}
 
 	} // close .activity-comments
+
+	.bb-media-info-section {
+		.activity-comments {
+			.bb-activity-media-elem.document-activity {
+				width: 265px;
+	
+				.document-preview-wrap {
+					height: 115px;
+				}
+			}
+		}	
+	}
 
 	.activity-comments,
 	.bb-modal-activity-footer {
