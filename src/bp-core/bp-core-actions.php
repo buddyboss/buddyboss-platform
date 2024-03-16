@@ -1173,7 +1173,7 @@ add_action( 'bp_init', 'bb_bg_process_log_load' );
 /**
  * Function to load component label class.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss [BBVERSION]
  */
 function bb_component_label_load() {
 	if ( class_exists( 'BB_Component_Label' ) ) {
