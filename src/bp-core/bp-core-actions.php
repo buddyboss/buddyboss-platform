@@ -1169,3 +1169,16 @@ function bb_bg_process_log_load() {
 }
 
 add_action( 'bp_init', 'bb_bg_process_log_load' );
+
+/**
+ * Function to load component label class.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bb_component_label_load() {
+	if ( class_exists( 'BB_Component_Label' ) ) {
+		BB_Component_Label::instance();
+	}
+}
+
+add_action( 'bp_init', 'bb_component_label_load' );
