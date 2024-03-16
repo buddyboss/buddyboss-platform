@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss/Core
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss [BBVERSION]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -17,7 +17,7 @@ class BB_Component_Label {
 	/**
 	 * Class instance.
 	 *
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @var $instance
 	 */
@@ -26,7 +26,7 @@ class BB_Component_Label {
 	/**
 	 * Using Singleton, see instance().
 	 *
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function __construct() {
 		// Using Singleton, see instance().
@@ -35,7 +35,7 @@ class BB_Component_Label {
 	/**
 	 * Get the instance of the class.
 	 *
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return object
 	 */
@@ -53,12 +53,12 @@ class BB_Component_Label {
      *
      * Retrieves the label entered on the settings page based on the provided key name.
      *
-     * @since X.X.X
+     * @since [BBVERSION]
      *
      * @param  string  $key Key name of the setting field. Should be lowercase and without any special characters or spaces.
      * @return string  The label entered on the settings page.
      */
-    public static function get_label( $key ) {
+    public static function get_label( $key = null ) {
 
         $labels = array(
             'groups' => esc_html__( 'Groups', 'buddyboss' ),
@@ -119,6 +119,8 @@ class BB_Component_Label {
 
         if ( isset( $labels[ $key ] ) ){
             $label = $labels[ $key ];
+        } elseif ( $key === null ) {
+            $label = $labels;
         } else {
             $label = esc_html__( $key, 'buddyboss' ); // Return the $key itself by adding text-domain domain.
         }
@@ -137,7 +139,7 @@ class BB_Component_Label {
      *
      * Retrieves a lowercase string suitable for use as a slug.
      *
-     * @since X.X.X
+     * @since [BBVERSION]
      *
      * @param string $key The key name of the setting field. Should be lowercase and without any special characters or spaces.
      * @return string A lowercase string suitable for use as a slug.

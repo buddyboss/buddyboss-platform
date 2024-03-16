@@ -9753,12 +9753,12 @@ function bb_mention_add_user_dynamic_link( $content ) {
  *
  * Retrieves the label associated with a given field.
  *
- * @since X.X.X
+ * @since [BBVERSION]
  *
  * @param string $field The field label to retrieve. Should be lowercase and contain underscores instead of spaces.
  * @return string The field label. Returns an empty string if none is found.
  */
-function bb_get_component_label( $field ) {
+function bb_get_component_label( $field = null ) {
 	return BB_Component_Label::get_label( $field );
 }
 
@@ -9767,11 +9767,11 @@ function bb_get_component_label( $field ) {
  *
  * Retrieves the label associated with a given field in lowercase.
  *
- * @since X.X.X
+ * @since [BBVERSION]
  *
  * @param string $field The field label to retrieve. Should be lowercase and contain underscores instead of spaces.
  * @return string The lowercase field label. Returns an empty string if none is found.
  */
-function bb_get_component_label_lower( $field ) {
+function bb_get_component_label_lower( $field = null ) {
 	return BB_Component_Label::label_to_lower( $field );
 }
