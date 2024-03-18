@@ -1114,7 +1114,7 @@ function bb_as_moderation_async_request_batch_process( $action_id, $context ) {
 		return;
 	}
 
-	$sql = $wpdb->prepare( "SELECT DISTINCT action_id from {$wpdb->prefix}actionscheduler_meta WHERE `group` = %s AND data_id = %s AND type = %s ORDER BY priority, id ASC LIMIT 1", $next_group_name, $item_id, $type );
+	$sql = $wpdb->prepare( "SELECT DISTINCT action_id from {$wpdb->prefix}actionscheduler_meta WHERE `group` = %s AND data_id = %s AND type = %s ORDER BY priority, id DESC LIMIT 1", $next_group_name, $item_id, $type );
 	$data = $wpdb->get_results( $sql ); // phpcs:ignore
 
 	if ( ! empty( $data ) ) {
