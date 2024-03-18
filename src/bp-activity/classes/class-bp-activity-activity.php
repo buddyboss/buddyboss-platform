@@ -1521,13 +1521,13 @@ class BP_Activity_Activity {
 	 * @param string $spam       Optional. 'ham_only' (default), 'spam_only' or 'all'.
 	 * @return array The updated activities with nested comments.
 	 */
-	public static function append_comments( $activities, $spam = 'ham_only', $exclude_childrens = false ) {
+	public static function append_comments( $activities, $spam = 'ham_only', $exclude_childrens = false, $args = array() ) {
 		$activity_comments = array();
 
 		// Now fetch the activity comments and parse them into the correct position in the activities array.
 		foreach ( (array) $activities as $activity ) {
 			$top_level_parent_id                = 'activity_comment' == $activity->type ? $activity->item_id : 0;
-			$activity_comments[ $activity->id ] = self::get_activity_comments( $activity->id, $activity->mptt_left, $activity->mptt_right, $spam, $top_level_parent_id, $exclude_childrens );
+			$activity_comments[ $activity->id ] = self::get_activity_comments( $activity->id, $activity->mptt_left, $activity->mptt_right, $spam, $top_level_parent_id, $exclude_childrens, $args );
 		}
 
 		// Merge the comments with the activity items.
@@ -1568,7 +1568,7 @@ class BP_Activity_Activity {
 	 * @param int    $top_level_parent_id Optional. The id of the root-level parent activity item.
 	 * @return array The updated activities with nested comments.
 	 */
-	public static function get_activity_comments( $activity_id, $left, $right, $spam = 'ham_only', $top_level_parent_id = 0, $exclude_childrens = false ) {
+	public static function get_activity_comments( $activity_id, $left, $right, $spam = 'ham_only', $top_level_parent_id = 0, $exclude_childrens = false, $args = array() ) {
 		global $wpdb;
 		$function_args = func_get_args();
 
@@ -1680,6 +1680,13 @@ class BP_Activity_Activity {
 					$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.item_id = %d and a.mptt_left > %d AND a.mptt_left < %d";
 				}
 				$sql['misc']   = "ORDER BY a.date_recorded ASC";
+
+				if ( ! bp_is_single_activity() && ! bb_is_rest() ) {
+					$offset = ! empty( $args['offset'] ) ? $args['offset'] : 0;
+					$limit  = ! empty( $args['limit'] ) ? $args['limit'] : bb_get_activity_comment_visibility();
+					// @todo: Check the activity id is blog post activity or not. if yes update the logic to limit count.
+					$sql['misc'] .= ' limit ' . $offset . ', ' . $limit;
+				}
 
 				/**
 				 * Filters the MySQL From query for legacy activity comment.

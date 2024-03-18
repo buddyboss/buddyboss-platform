@@ -1219,7 +1219,10 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 			)
 		);
 	}
-	$comments = BP_Activity_Activity::append_comments( array( $parent_commment ), '', true );
+	$comments = BP_Activity_Activity::append_comments( array( $parent_commment ), '', true, array(
+		'limit'  => bb_get_activity_comment_loading(),
+		'offset' => ! empty( $_POST['offset'] ) ? (int) $_POST['offset'] : 0,
+	) );
 
 	if ( empty( $comments[0] ) ) {
 		wp_send_json_error( array(

@@ -3519,6 +3519,7 @@ window.bp = window.bp || {};
 				activity_id: activityId,
 				parent_comment_id: parentCommentId,
 				type: type,
+				offset: $( currentTargetList ).find( '.activity-comment.comment-item' ).length,
 				activity_type_is_blog: $( e.currentTarget ).parents( '.entry-content' ).length > 1 ? true : false,
 			};
 

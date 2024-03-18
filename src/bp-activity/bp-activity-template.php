@@ -1970,7 +1970,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 		return false;
 	}
 
-	if ( empty( $comment->children ) ) {
+	if ( empty( $comment->child_count ) ) {
 		return false;
 	}
 
@@ -1986,7 +1986,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 			false !== $r['limit_comments'] &&
 			0 !== $r['comment_load_limit'] &&
 			(
-				count( $comment->children ) > $r['comment_load_limit']
+				$comment->child_count > $r['comment_load_limit']
 			)
 		) {
 			echo "<a href='javascript:void(0);' class='view-more-comments'>" . esc_html__( 'View more comments', 'buddyboss' ) . "</a>";
@@ -2002,6 +2002,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 		echo apply_filters( 'bb_activity_recurse_comments_start_ul', "<ul data-activity_id={$activities_template->activity->id} data-parent_comment_id={$comment->id}>" );
 	}
 
+	/*
 	$comment_loaded_count = 0;
 	$skip_flag            = true;
 	foreach ( (array) $comment->children as $comment_child ) {
@@ -2071,6 +2072,54 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 
 		$comment_loaded_count++;
 	}
+	*/
+
+	foreach ( (array) $comment->children as $comment_child ) {
+
+		// Put the comment into the global so it's available to filters.
+		$activities_template->activity->current_comment = $comment_child;
+
+		$template = bp_locate_template( 'activity/comment.php', false, false );
+
+		$comment_template_args = array( 'limit_comments' => $r['limit_comments'] );
+		if (
+			false !== $r['limit_comments'] &&
+			(
+				$comment->id === $comment_child->secondary_item_id ||
+				$comment->item_id === $comment->secondary_item_id ||
+				in_array( $comment->component, array( 'groups', 'blogs' ), true )
+			)
+		) {
+			// First level comments.
+			$comment_template_args['show_replies'] = false;
+		}
+
+		load_template( $template, false, $comment_template_args );
+
+		unset( $activities_template->activity->current_comment );
+	}
+
+	if (
+		false !== $r['limit_comments'] &&
+		count( $comment->children ) === $r['comment_load_limit'] &&
+		$comment->child_count - count( $comment->children ) > 0
+	) {
+		if ( ! empty( $r['parent_comment_id'] ) && $r['main_activity_id'] !== $r['parent_comment_id'] ) {
+			$view_more_text = __( 'View more replies', 'buddyboss' );
+			$view_more_icon = "<i class='bb-icon-l bb-icon-corner-right'></i>";
+		} else {
+			$view_more_text = __( 'View more comments', 'buddyboss' );
+			$view_more_icon = "";
+		}
+
+		$hidden_class = '';
+		if ( ! $r['is_ajax_load_more'] ) {
+			$hidden_class = 'acomments-view-more--hide';
+		}
+
+		echo "<li class='acomments-view-more acomments-view-more--root " . esc_attr( $hidden_class ) . "'>" . $view_more_icon . "" . esc_html( $view_more_text ) . "</li>";
+	}
+
 
 	if ( ! $r['is_ajax_load_more'] ) {
 
@@ -4554,7 +4603,7 @@ function bb_get_activity_comment_unfavorite_link( $activity_comment_id = 0 ) {
  * @return string $comment_id The comment id to be searched.
  */
 function bb_search_comment_hierarchy( $comment, $comment_id ) {
-	
+
 	// Check if the current object is the one we're looking for.
 	if ( isset( $comment->id ) && (int) $comment->id === (int) $comment_id ) {
 		return $comment;
