@@ -237,11 +237,11 @@ class BB_Activity extends Integration_Abstract {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
 			return;
 		}
+
 		$activity_ids = $this->get_activity_ids_by_userid( $bp_moderation->item_id );
+
 		if ( ! empty( $activity_ids ) ) {
-			foreach ( $activity_ids as $activity_id ) {
-				$this->purge_item_cache_by_item_id( $activity_id );
-			}
+			$this->purge_item_cache_by_item_ids( $activity_ids );
 		}
 	}
 
@@ -254,11 +254,11 @@ class BB_Activity extends Integration_Abstract {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
 			return;
 		}
+
 		$activity_ids = $this->get_activity_ids_by_userid( $bp_moderation->item_id );
+
 		if ( ! empty( $activity_ids ) ) {
-			foreach ( $activity_ids as $activity_id ) {
-				$this->purge_item_cache_by_item_id( $activity_id );
-			}
+			$this->purge_item_cache_by_item_ids( $activity_ids );
 		}
 	}
 
@@ -270,10 +270,9 @@ class BB_Activity extends Integration_Abstract {
 	 */
 	public function event_profile_update( $user_id ) {
 		$activity_ids = $this->get_activity_ids_by_userid( $user_id );
+
 		if ( ! empty( $activity_ids ) ) {
-			foreach ( $activity_ids as $activity_id ) {
-				$this->purge_item_cache_by_item_id( $activity_id );
-			}
+			$this->purge_item_cache_by_item_ids( $activity_ids );
 		}
 	}
 
@@ -284,10 +283,9 @@ class BB_Activity extends Integration_Abstract {
 	 */
 	public function event_deleted_user( $user_id ) {
 		$activity_ids = $this->get_activity_ids_by_userid( $user_id );
+
 		if ( ! empty( $activity_ids ) ) {
-			foreach ( $activity_ids as $activity_id ) {
-				$this->purge_item_cache_by_item_id( $activity_id );
-			}
+			$this->purge_item_cache_by_item_ids( $activity_ids );
 		}
 	}
 
@@ -298,10 +296,9 @@ class BB_Activity extends Integration_Abstract {
 	 */
 	public function event_xprofile_avatar_uploaded( $user_id ) {
 		$activity_ids = $this->get_activity_ids_by_userid( $user_id );
+
 		if ( ! empty( $activity_ids ) ) {
-			foreach ( $activity_ids as $activity_id ) {
-				$this->purge_item_cache_by_item_id( $activity_id );
-			}
+			$this->purge_item_cache_by_item_ids( $activity_ids );
 		}
 	}
 
@@ -312,13 +309,13 @@ class BB_Activity extends Integration_Abstract {
 	 */
 	public function event_bp_core_delete_existing_avatar( $args ) {
 		$user_id = ! empty( $args['item_id'] ) ? absint( $args['item_id'] ) : 0;
+
 		if ( ! empty( $user_id ) ) {
 			if ( isset( $args['object'] ) && 'user' === $args['object'] ) {
 				$activity_ids = $this->get_activity_ids_by_userid( $user_id );
+
 				if ( ! empty( $activity_ids ) ) {
-					foreach ( $activity_ids as $activity_id ) {
-						$this->purge_item_cache_by_item_id( $activity_id );
-					}
+					$this->purge_item_cache_by_item_ids( $activity_ids );
 				}
 			}
 		}
@@ -422,5 +419,31 @@ class BB_Activity extends Integration_Abstract {
 	private function purge_item_cache_by_item_id( $activity_id ) {
 		Cache::instance()->purge_by_group( 'bp-activity_' . $activity_id );
 		Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( bp_activity_get_permalink( $activity_id ) ) );
+	}
+
+	/**
+	 * Purge item cache by item ids.
+	 *
+	 * @param array $ids Array of ids.
+	 *
+	 * @return void
+	 */
+	private function purge_item_cache_by_item_ids( $ids ) {
+		if ( empty( $ids ) ) {
+			return;
+		}
+
+		Cache::instance()->purge_by_group_names( $ids, array( 'bp-activity_' ), array( $this, 'prepare_activity_deeplink' ) );
+	}
+
+	/**
+	 * Prepare activity deeplink.
+	 *
+	 * @param int $activity_id Activity ID.
+	 *
+	 * @return string
+	 */
+	public function prepare_activity_deeplink( $activity_id ) {
+		return 'bbapp-deeplinking_' . untrailingslashit( bp_activity_get_permalink( $activity_id ) );
 	}
 }

@@ -134,6 +134,19 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			bp_update_option( 'bp-enable-profile-gravatar', $bp_enable_profile_gravatar_before_saving );
 		}
 
+		// Check the image extension/library and based on that saves the settings.
+		if ( 'display-name' === $default_profile_avatar_type_after_saving && empty( _wp_image_editor_choose() ) ) {
+
+			if ( 'display-name' === $default_profile_avatar_type_before_saving ) {
+				$default_profile_avatar_type_before_saving = 'buddyboss';
+			}
+
+			bp_update_option( 'bp-profile-avatar-type', $profile_avatar_type_before_saving );
+			bp_update_option( 'bp-disable-avatar-uploads', $bp_disable_avatar_uploads_before_saving );
+			bp_update_option( 'bp-default-profile-avatar-type', $default_profile_avatar_type_before_saving );
+			bp_update_option( 'bp-enable-profile-gravatar', $bp_enable_profile_gravatar_before_saving );
+		}
+
 		if ( ! isset( $bb_default_custom_profile_cover ) || ( isset( $bb_default_custom_profile_cover ) && empty( $bb_default_custom_profile_cover ) && 'custom' === $profile_cover_type_after_saving ) ) {
 
 			if ( 'custom' === $profile_cover_type_before_saving ) {
@@ -419,7 +432,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 		$current_value = bp_core_display_name_format();
 
-		printf( '<select name="%1$s" for="%1$s">', 'bp-display-name-format' );
+		printf( '<select name="%1$s" id="%1$s" for="%1$s">', 'bp-display-name-format' );
 		foreach ( $options as $key => $value ) {
 			printf(
 				'<option value="%s" %s>%s</option>',

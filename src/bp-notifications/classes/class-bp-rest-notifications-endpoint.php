@@ -132,7 +132,8 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		$args = $this->prepare_get_item_for_database( $request );
 
 		// Actually, query it.
-		$notifications = BP_Notifications_Notification::get( $args );
+		$notifications       = BP_Notifications_Notification::get( $args );
+		$notifications_count = BP_Notifications_Notification::get_total_count( $args );
 
 		$retval = array();
 		foreach ( $notifications as $notification ) {
@@ -142,6 +143,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		}
 
 		$response = rest_ensure_response( $retval );
+		$response = bp_rest_response_add_total_headers( $response, $notifications_count, $args['per_page'] );
 
 		/**
 		 * Fires after notifications are fetched via the REST API.

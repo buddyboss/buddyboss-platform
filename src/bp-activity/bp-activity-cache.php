@@ -53,6 +53,7 @@ function bp_activity_clear_cache_for_activity( $activity ) {
 	wp_cache_delete( 'bp_document_attachment_id_' . $activity->id, 'bp_document' ); // Used in get_activity_attachment_id().
 	wp_cache_delete( 'bp_video_activity_id_' . $activity->id, 'bp_video' );         // Used in get_activity_video_id().
 	wp_cache_delete( 'bp_video_attachment_id_' . $activity->id, 'bp_video' );       // Used in get_activity_attachment_id().
+	wp_cache_delete( $activity->id, 'activity_edit_data' );
 
 	if ( ! empty( $activity->secondary_item_id ) ) {
 		wp_cache_delete( 'bp_get_child_comments_' . $activity->secondary_item_id, 'bp_activity_comments' ); // Used in BP_Activity_Activity::get_child_comments().
@@ -77,6 +78,7 @@ function bp_activity_clear_cache_for_deleted_activity( $deleted_ids ) {
 		wp_cache_delete( 'bp_document_attachment_id_' . $deleted_id, 'bp_document' ); // Used in get_activity_attachment_id().
 		wp_cache_delete( 'bp_video_activity_id_' . $deleted_id, 'bp_video' );         // Used in get_activity_video_id().
 		wp_cache_delete( 'bp_video_attachment_id_' . $deleted_id, 'bp_video' );       // Used in get_activity_attachment_id().
+		wp_cache_delete( $deleted_id, 'activity_edit_data' );
 	}
 }
 add_action( 'bp_activity_deleted_activities', 'bp_activity_clear_cache_for_deleted_activity' );
@@ -99,6 +101,7 @@ function bb_activity_clear_cache_after_deleted_activity( $activities ) {
 			wp_cache_delete( 'bp_document_attachment_id_' . $activity->id, 'bp_document' ); // Used in get_activity_attachment_id().
 			wp_cache_delete( 'bp_video_activity_id_' . $activity->id, 'bp_video' );         // Used in get_activity_video_id().
 			wp_cache_delete( 'bp_video_attachment_id_' . $activity->id, 'bp_video' );       // Used in get_activity_attachment_id().
+			wp_cache_delete( $activity->id, 'activity_edit_data' );
 			if ( ! empty( $activity->secondary_item_id ) ) {
 				wp_cache_delete( 'bp_get_child_comments_' . $activity->secondary_item_id, 'bp_activity_comments' ); // Used in BP_Activity_Activity::get_child_comments().
 			}
@@ -200,3 +203,17 @@ function bp_activity_follow_delete_follow_ids_object_cache( $user_id, $ids ) {
 	}
 }
 add_action( 'bp_remove_follow_data', 'bp_activity_follow_delete_follow_ids_object_cache', 10, 2 );
+
+/**
+ * Clear cached data for activity meta data.
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @param int $activity_id ID of activity.
+ */
+function bb_activity_clear_metadata( $meta_ids, $activity_id ) {
+	wp_cache_delete( $activity_id, 'activity_meta' );
+}
+add_action( 'deleted_activity_meta', 'bb_activity_clear_metadata', 10, 2 );
+add_action( 'updated_activity_meta', 'bb_activity_clear_metadata', 10, 2 );
+add_action( 'added_activity_meta', 'bb_activity_clear_metadata', 10, 2 );
