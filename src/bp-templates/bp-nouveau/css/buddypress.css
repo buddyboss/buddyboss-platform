@@ -20865,6 +20865,11 @@ a.bb-close-model {
   padding: 15px 15px 0;
 }
 
+.bb-media-info-section .activity-comments .comment-item form {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 .bb-media-info-header {
   font-size: 14px;
   color: #939597;
