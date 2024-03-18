@@ -6631,25 +6631,13 @@ function bb_get_activity_comment_loading( $default = 10 ) {
 }
 
 function bb_get_activity_comment_children_count( $comment_id ) {
-//	global $bp, $wpdb;
-//	$activity_table = $bp->activity->table_name;
-
-	// Fetch left and right values of the comment
 	$child_count = 0;
-//	$query       = $wpdb->prepare( 'SELECT mptt_left, mptt_right FROM ' . $activity_table . ' WHERE id = %d', $comment_id );
-//	$result      = $wpdb->get_row( $query );
-//	if ( $result ) {
-//		$left        = $result->mptt_left;
-//		$right       = $result->mptt_right;
-//		$child_count = intval( ( $right - $left ) / 2 );
-//	}
+	if ( empty( $comment_id ) ) {
+		return $child_count;
+	}
 
 	$activity_comment = new BP_Activity_Activity( $comment_id );
-	if ( ! empty( $activity_comment ) ) {
-		$left        = $activity_comment->mptt_left;
-		$right       = $activity_comment->mptt_right;
-		$child_count = intval( ( $right - $left ) / 2 );
-	}
+	$child_count      = intval( ( $activity_comment->mptt_right - $activity_comment->mptt_left ) / 2 );
 
 	return ! empty( $child_count ) ? $child_count : 0;
 }

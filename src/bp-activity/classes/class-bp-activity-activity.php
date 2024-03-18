@@ -806,7 +806,9 @@ class BP_Activity_Activity {
 			}
 
 			if ( $activities && $r['display_comments'] ) {
+				error_log( ' before append_comments ' . time() );
 				$activities = self::append_comments( $activities, $r['spam'], true );
+				error_log( ' after append_comments ' . time() );
 			}
 
 			// Pre-fetch data associated with activity users and other objects.
@@ -1551,7 +1553,8 @@ class BP_Activity_Activity {
 					$activity_comments[ $activity->id ] = self::get_filtered_activity_comments( $activity_comments[ $activity->id ] );
 				}
 
-				$activities[ $key ]->children = $activity_comments[ $activity->id ];
+				$activities[ $key ]->children    = $activity_comments[ $activity->id ];
+				$activities[ $key ]->child_count = bb_get_activity_comment_children_count( $activity->id );
 			}
 		}
 
@@ -1724,7 +1727,8 @@ class BP_Activity_Activity {
 			}
 
 			$ref = array();
-
+			error_log( ' $descendants ' );
+			error_log( print_r( $descendants, true ) );
 			// Loop descendants and build an assoc array.
 			foreach ( (array) $descendants as $d ) {
 				$d->children = array();
