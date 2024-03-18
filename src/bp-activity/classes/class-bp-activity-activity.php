@@ -806,9 +806,7 @@ class BP_Activity_Activity {
 			}
 
 			if ( $activities && $r['display_comments'] ) {
-				error_log( ' before append_comments ' . time() );
 				$activities = self::append_comments( $activities, $r['spam'], true );
-				error_log( ' after append_comments ' . time() );
 			}
 
 			// Pre-fetch data associated with activity users and other objects.
