@@ -3459,7 +3459,7 @@ window.bp = window.bp || {};
 			var ce = modal.find( '.bb-modal-activity-footer' ).find( '.ac-input[contenteditable]' );
 			bp.Nouveau.Activity.listenCommentInput( ce );
 
-			var action_tooltips = modal.find('.bb-activity-more-options-wrap .bb-activity-more-options-action, .bb-pin-action_button');
+			var action_tooltips = modal.find('.bb-activity-more-options-wrap .bb-activity-more-options-action, .bb-pin-action_button, .bb-mute-action_button');
 			action_tooltips.attr('data-balloon-pos', 'left');
 			var privacy_wrap = modal.find( '.privacy-wrap' );
 			privacy_wrap.attr( 'data-bp-tooltip-pos', 'right' );
