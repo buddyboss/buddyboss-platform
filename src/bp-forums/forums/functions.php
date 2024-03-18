@@ -309,6 +309,9 @@ function bbp_new_forum_handler( $action = '' ) {
 			)
 		);
 
+		//Add the Forum Author IP.
+		update_post_meta( $forum_id, '_bbp_author_ip', bbp_current_author_ip(), false );
+
 		/** Additional Actions (After Save) */
 
 		do_action( 'bbp_new_forum_post_extras', $forum_id );

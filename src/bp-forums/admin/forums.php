@@ -66,6 +66,9 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 			add_action( 'add_meta_boxes', array( $this, 'comments_metabox'      ) );
 			add_action( 'save_post', array( $this, 'attributes_metabox_save' ) );
 
+			// Anonymous metabox actions
+			add_action( 'add_meta_boxes', array( $this, 'author_metabox' ) );
+
 			// Column headers.
 			add_filter( 'manage_' . $this->post_type . '_posts_columns', array( $this, 'column_headers' ) );
 
@@ -363,6 +366,11 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 				return $forum_id;
 			}
 
+			// Add Author IP if it's a new Forum
+			if ( ! get_post_meta( $forum_id, '_bbp_author_ip' ) ){
+				update_post_meta( $forum_id, '_bbp_author_ip', bbp_current_author_ip(), false );
+			}
+
 			// Parent ID
 			$parent_id = ( ! empty( $_POST['parent_id'] ) && is_numeric( $_POST['parent_id'] ) ) ? (int) $_POST['parent_id'] : 0;
 
@@ -377,6 +385,42 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 			do_action( 'bbp_forum_attributes_metabox_save', $forum_id );
 
 			return $forum_id;
+		}
+
+		/**
+		 * Add the author info metabox
+		 *
+		 * Allows editing of information about an author
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @uses bbp_get_forum() To get the forum
+		 * @uses bbp_get_forum_post_type() To get the topic post type
+		 * @uses add_meta_box() To add the metabox
+		 * @uses do_action() Calls 'bbp_author_metabox' with the forum id
+		 */
+		public function author_metabox() {
+
+			if ( $this->bail() ) {
+				return;
+			}
+
+			// Bail if post_type is not a reply
+			if ( empty( $_GET['action'] ) || ( 'edit' !== $_GET['action'] ) ) {
+				return;
+			}
+
+			// Add the metabox
+			add_meta_box(
+				'bbp_author_metabox',
+				__( 'Author Information', 'buddyboss' ),
+				'bbp_author_metabox',
+				$this->post_type,
+				'side',
+				'high'
+			);
+
+			do_action( 'bbp_author_metabox', get_the_ID() );
 		}
 
 		/**
