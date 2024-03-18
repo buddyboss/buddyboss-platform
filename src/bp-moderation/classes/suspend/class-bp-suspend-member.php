@@ -82,8 +82,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		add_action( 'bb_activity_before_permalink_redirect_url', array( $this, 'bb_activity_before_permalink_redirect_url' ), 10, 1 );
 		add_action( 'bb_activity_after_permalink_redirect_url', array( $this, 'bb_activity_after_permalink_redirect_url' ), 10, 1 );
 
-		add_action( 'bb_as_bb_update_member_friend_count', array( $this, 'bb_update_member_friend_count' ), 10, 3 );
-		add_action( 'bb_as_bb_update_group_member_count', array( $this, 'bb_update_group_member_count' ), 10, 1 );
+		add_action( 'bb_as_bb_update_member_friend_count', 'bb_update_member_friend_count', 10, 3 );
+		add_action( 'bb_as_bb_update_group_member_count', 'bb_update_group_member_count', 10, 1 );
 	}
 
 	/**
