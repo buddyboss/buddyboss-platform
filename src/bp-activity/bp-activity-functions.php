@@ -6630,6 +6630,15 @@ function bb_get_activity_comment_loading( $default = 10 ) {
 	return (int) apply_filters( 'bb_get_activity_comment_loading', bp_get_option( '_bb_activity_comment_loading', $default ) );
 }
 
+/**
+ * Get activity comment count based on id.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param $comment_id
+ *
+ * @return int $child_count Return count of children comment.
+ */
 function bb_get_activity_comment_children_count( $comment_id ) {
 	$child_count = 0;
 	if ( empty( $comment_id ) ) {
