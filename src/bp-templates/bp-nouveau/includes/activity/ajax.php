@@ -1211,7 +1211,7 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 	// 	$args['show_hidden'] = true;
 	// }
 
-	$activities_template = new BP_Activity_Template( array() );
+	$activities_template = new stdClass();
 	$parent_commment     = new BP_Activity_Activity( $parent_comment_id );
 	if ( empty( $parent_commment ) ) {
 		wp_send_json_error( array(
