@@ -1528,12 +1528,7 @@ class BP_Activity_Activity {
 
 		// Now fetch the activity comments and parse them into the correct position in the activities array.
 		foreach ( (array) $activities as $activity ) {
-			$top_level_parent_id = 'activity_comment' == $activity->type ? $activity->item_id : 0;
-//			if ( $exclude_childrens ) {
-//				$activity_comments[ $activity->id ] = self::get_activity_immediate_level_comments( $activity->id, $spam, $top_level_parent_id );
-//			} else {
-//				$activity_comments[ $activity->id ] = self::get_activity_comments1( $activity->id, $activity->mptt_left, $activity->mptt_right, $spam, $top_level_parent_id, $exclude_childrens );
-//			}
+			$top_level_parent_id                = 'activity_comment' == $activity->type ? $activity->item_id : 0;
 			$activity_comments[ $activity->id ] = self::get_activity_comments( $activity->id, $activity->mptt_left, $activity->mptt_right, $spam, $top_level_parent_id, $exclude_childrens );
 		}
 
@@ -1727,8 +1722,6 @@ class BP_Activity_Activity {
 			}
 
 			$ref = array();
-			error_log( ' $descendants ' );
-			error_log( print_r( $descendants, true ) );
 			// Loop descendants and build an assoc array.
 			foreach ( (array) $descendants as $d ) {
 				$d->children = array();
