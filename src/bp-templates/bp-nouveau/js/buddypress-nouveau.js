@@ -1312,7 +1312,7 @@ window.bp = window.bp || {};
 				function ( e ) {
 					e.preventDefault();
 
-					if ( 'undefined' === typeof object ) {
+					if ( ! object || 'undefined' === typeof object ) {
 						return;
 					}
 
