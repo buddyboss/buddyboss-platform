@@ -263,7 +263,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 //			);
 //			$bb_background_updater->save()->schedule_event();
 
-			$action_id = as_schedule_single_action( time(), 'bb_as_hide_related_content', array( $album_id, $hide_sitewide, $args ), $group_name );
+			$action_id = as_enqueue_async_action('bb_as_hide_related_content', array( $album_id, $hide_sitewide, $args ), $group_name );
 			bb_insert_as_meta( $action_id, $this->item_type, $group_name, $album_id, $args['parent_id'] );
 		}
 	}
@@ -338,7 +338,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 //			);
 //			$bb_background_updater->save()->schedule_event();
 
-			$action_id = as_schedule_single_action( time(), 'bb_as_unhide_related_content', array( $album_id, $hide_sitewide, $force_all, $args ), $group_name );
+			$action_id = as_enqueue_async_action('bb_as_unhide_related_content', array( $album_id, $hide_sitewide, $force_all, $args ), $group_name );
 			bb_insert_as_meta( $action_id, $this->item_type, $group_name, $album_id, $args['parent_id'] );
 		}
 	}

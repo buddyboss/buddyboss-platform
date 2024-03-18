@@ -1136,6 +1136,7 @@ function bb_as_moderation_async_request_batch_process( $action_id, $context ) {
 			(int) $current_args['action_suspend'] === (int) $next_args['action_suspend']
 		) {
 			// Update the status of the action.
+			error_log( sprintf( 'Skip suspend process: `%s` next found: `%s`', $action_id, $next_action_id ) );
 			ActionScheduler::store()->mark_complete( $action_id ); // Set the status to whatever you need, e.g., 'completed', 'failed', 'pending', etc.
 			error_log( sprintf( 'Skip suspend process: `%s` next found: `%s`', $action_id, $next_action_id ) );
 
@@ -1146,6 +1147,7 @@ function bb_as_moderation_async_request_batch_process( $action_id, $context ) {
 			(int) $current_args['hide_parent'] !== (int) $next_args['hide_parent']
 		) {
 			// Update the status of the action.
+			error_log( sprintf( 'Skip parent process: `%s` next found: `%s`', $action_id, $next_action_id ) );
 			ActionScheduler::store()->mark_complete( $action_id ); // Set the status to whatever you need, e.g., 'completed', 'failed', 'pending', etc.
 			error_log( sprintf( 'Skip parent process: `%s` next found: `%s`', $action_id, $next_action_id ) );
 			// Used for hide_sitewide argument check.
@@ -1157,6 +1159,7 @@ function bb_as_moderation_async_request_batch_process( $action_id, $context ) {
 			(int) $next_data[1] !== (int) $current_data[1]
 		) {
 			// Update the status of the action.
+			error_log( sprintf( 'Skip sitewide process: `%s` next found: `%s`', $action_id, $next_action_id ) );
 			ActionScheduler::store()->mark_complete( $action_id ); // Set the status to whatever you need, e.g., 'completed', 'failed', 'pending', etc.
 			error_log( sprintf( 'Skip sitewide process: `%s` next found: `%s`', $action_id, $next_action_id ) );
 		}
