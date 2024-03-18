@@ -1119,7 +1119,13 @@ function bb_as_moderation_async_request_batch_process( $action_id, $context ) {
 
 	if ( ! empty( $data ) ) {
 		$next_action_id      = current( $data );
-		$next_batch          = ActionScheduler::store()->fetch_action( $next_action_id->action_id );
+
+		$next_action_status  = ActionScheduler::store()->get_status( $next_action_id );
+		if ( $next_action_status !== 'pending' ) {
+			return;
+		}
+
+		$next_batch          = ActionScheduler::store()->fetch_action( $next_action_id );
 		$next_batch_args     = $next_batch->get_args();
 		$currrent_batch_args = $get_current_action->get_args();
 
