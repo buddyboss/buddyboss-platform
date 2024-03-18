@@ -551,6 +551,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.resetActivityCommentForm( form, 'hardReset' );
 				commentsList.append( form );
 				commentItem.find( '.acomment-display' ).removeClass( 'display-focus' );
+				commentItem.removeClass( 'comment-item-focus' );
 			} );
 
 			bp.Nouveau.Activity.launchActivityPopup( activityId, parentId );
@@ -1253,11 +1254,13 @@ window.bp = window.bp || {};
 						if ( isInsideModal ) {
 							$( '.bb-modal-activity-footer' ).addClass( 'active' );
 							$( '#activity-modal' ).find( '.acomment-display' ).removeClass( 'display-focus' );
+							$( '#activity-modal' ).find( '.comment-item' ).removeClass( 'comment-item-focus' );
 						}
 
 						$activity_comments.append( form );
 						form.addClass( 'root' );
 						$activity_comments.find( '.acomment-display' ).removeClass( 'display-focus' );
+						$activity_comments.find( '.comment-item' ).removeClass( 'comment-item-focus' );
 
 						// It's a comment we're replying to.
 					} else {
@@ -1287,7 +1290,9 @@ window.bp = window.bp || {};
 				// change the aria state from false to true.
 				target.attr( 'aria-expanded', 'true' );
 				target.closest( '.activity-comments' ).find( '.acomment-display' ).removeClass( 'display-focus' );
+				target.closest( '.activity-comments' ).find( '.comment-item' ).removeClass( 'comment-item-focus' );
 				target.closest( '.acomment-display' ).addClass( 'display-focus' );
+				target.closest( '.comment-item' ).addClass( 'comment-item-focus' );
 
 				var peak_offset = ( $( window ).height() / 2 - 75 );
 
@@ -1496,6 +1501,7 @@ window.bp = window.bp || {};
 							var the_comment       = $.trim( response.data.contents );
 
 							activity_comments.find( '.acomment-display' ).removeClass('display-focus');
+							activity_comments.find( '.comment-item' ).removeClass( 'comment-item-focus' );
 							activity_comments.addClass( 'has-child-comments' );
 
 							var form_activity_id = form.find( 'input[name="comment_form_id"]' ).val();
@@ -2200,6 +2206,11 @@ window.bp = window.bp || {};
 						dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
 						maxThumbnailFilesize        : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
 					};
+
+					// If a Dropzone instance already exists, destroy it before creating a new one
+					if ( self.dropzone_obj instanceof Dropzone ) {
+						self.dropzone_obj.destroy();
+					}
 
 					// init dropzone.
 					self.dropzone_obj = new Dropzone( hasParentModal +'#ac-reply-post-media-uploader-' + target.data( 'ac-id' ), dropzone_options );
@@ -3583,6 +3594,7 @@ window.bp = window.bp || {};
 			bp.Nouveau.Activity.resetActivityCommentForm( form, 'hardReset' );
 
 			modal.find( '.acomment-display' ).removeClass( 'display-focus' );
+			modal.find( '.comment-item' ).removeClass( 'comment-item-focus' );
 			modal.find( '.bb-modal-activity-footer' ).addClass( 'active' ).append( form );
 			form.addClass( 'root' );
 			form.find( '#ac-input-' + activityId ).focus();
@@ -3640,6 +3652,7 @@ window.bp = window.bp || {};
 
 			var form = modal.find( '#ac-form-' + activityID );
 			modal.find( '.acomment-display' ).removeClass( 'display-focus' );
+			modal.find( '.comment-item' ).removeClass( 'comment-item-focus' );			
 			modal.find( '.bb-modal-activity-footer' ).addClass( 'active' ).append( form );
 			form.removeClass( 'not-initialized' ).addClass( 'root' );
 			form.find( '#ac-input-' + activityID ).focus();
@@ -3650,7 +3663,7 @@ window.bp = window.bp || {};
 			var ce = modal.find( '.bb-modal-activity-footer' ).find( '.ac-input[contenteditable]' );
 			bp.Nouveau.Activity.listenCommentInput( ce );
 
-			var action_tooltips = modal.find('.bb-activity-more-options-wrap .bb-activity-more-options-action, .bb-pin-action_button');
+			var action_tooltips = modal.find('.bb-activity-more-options-wrap .bb-activity-more-options-action, .bb-pin-action_button, .bb-mute-action_button');
 			action_tooltips.attr('data-balloon-pos', 'left');
 			var privacy_wrap = modal.find( '.privacy-wrap' );
 			privacy_wrap.attr( 'data-bp-tooltip-pos', 'right' );

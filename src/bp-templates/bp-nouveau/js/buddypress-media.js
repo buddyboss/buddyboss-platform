@@ -6719,6 +6719,7 @@ window.bp = window.bp || {};
 					form.find( '.post-elements-buttons-item.post-emoji' ).removeClass( 'active' ).empty( '' ); // Reset emojionearea
 					this.resetActivityMedia( self.current_media.activity_id );
 					activity_comments.find( '.acomment-display' ).removeClass( 'display-focus' );
+					activity_comments.find( '.comment-item' ).removeClass( 'comment-item-focus' );
 
 					html = activity_comments.html();
 					classes = activity_comments.attr( 'class' );
@@ -6767,6 +6768,7 @@ window.bp = window.bp || {};
 					form.find( '.post-elements-buttons-item.post-emoji' ).removeClass( 'active' ).empty( '' ); // Reset emojionearea
 					this.resetActivityMedia( self.current_document.activity_id );
 					activity_comments.find( '.acomment-display' ).removeClass( 'display-focus' );
+					activity_comments.find( '.comment-item' ).removeClass( 'comment-item-focus' );
 
 					html = activity_comments.html();
 					classes = activity_comments.attr( 'class' );
