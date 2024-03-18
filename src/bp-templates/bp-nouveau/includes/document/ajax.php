@@ -433,6 +433,28 @@ function bp_nouveau_ajax_document_get_document_description() {
 		if ( $can_view ) {
 			?>
 			<li class="activity activity_update activity-item mini ">
+				<?php
+				if ( $can_download_btn && ! empty( $document_id ) && ! empty( $attachment_id ) ) {
+					$download_url = bp_document_download_link( $attachment_id, $document_id );
+					if ( $download_url ) {
+						?>
+						<div class="bb-activity-more-options-wrap action">
+								<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="<?php echo esc_html__( 'More Options', 'buddyboss' ); ?>">
+									<i class="bb-icon-f bb-icon-ellipsis-h"></i>
+								</span>
+							<div class="bb-activity-more-options">
+								<div class="generic-button">
+									<a id="activity-document-download-<?php echo esc_attr( $attachment_id ); ?>" href="<?php echo esc_url( $download_url ); ?>" class="button item-button bp-secondary-action activity-document-download download-activity">
+										<span class="bp-screen-reader-text"><?php echo esc_html__( 'Download', 'buddyboss' ); ?></span>
+										<span class="download-label"><?php echo esc_html__( 'Download', 'buddyboss' ); ?></span>
+									</a>
+								</div>
+							</div>
+						</div>
+						<?php
+					}
+				}
+				?>
 				<div class="bp-activity-head">
 					<div class="activity-avatar item-avatar">
 						<a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $avatar; ?></a>
@@ -468,18 +490,6 @@ function bp_nouveau_ajax_document_get_document_description() {
 					}
 					?>
 				</div>
-				<?php
-				if ( ! empty( $document_id ) && $can_download_btn ) {
-					$download_url = bp_document_download_link( $attachment_id, $document_id );
-					if ( $download_url ) {
-						?>
-						<a class="download-document" href="<?php echo esc_url( $download_url ); ?>">
-							<?php esc_html_e( 'Download', 'buddyboss' ); ?>
-						</a>
-						<?php
-					}
-				}
-				?>
 			</li>
 			<?php
 			$document_description = ob_get_contents();

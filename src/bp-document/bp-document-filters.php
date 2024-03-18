@@ -227,7 +227,7 @@ function bp_document_activity_comment_entry( $comment_id ) {
 
 	if ( ! empty( $document_ids ) && bp_has_document( $args ) ) {
 		?>
-		<div class="bb-activity-media-wrap bb-media-length-1 ">
+		<div class="bb-activity-media-wrap ac-document bb-media-length-1 ">
 			<?php
 			bp_get_template_part( 'document/activity-document-move' );
 			while ( bp_document() ) {
