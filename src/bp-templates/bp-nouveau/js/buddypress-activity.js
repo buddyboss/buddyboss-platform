@@ -2019,6 +2019,11 @@ window.bp = window.bp || {};
 						maxThumbnailFilesize        : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
 					};
 
+					// If a Dropzone instance already exists, destroy it before creating a new one
+					if ( self.dropzone_obj instanceof Dropzone ) {
+						self.dropzone_obj.destroy();
+					}
+
 					// init dropzone.
 					self.dropzone_obj = new Dropzone( hasParentModal +'#ac-reply-post-media-uploader-' + target.data( 'ac-id' ), dropzone_options );
 
