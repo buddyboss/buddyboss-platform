@@ -33,6 +33,15 @@ class BB_BG_Process_Log {
 	public $table_name = '';
 
 	/**
+	 * Allocate the start memory.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var string $start_memory_log
+	 */
+	private $start_memory_log = 0;
+
+	/**
 	 * Using Singleton, see instance().
 	 *
 	 * @since BuddyBoss 2.5.60
@@ -71,6 +80,7 @@ class BB_BG_Process_Log {
 
 		$this->setup_hooks();
 		$this->schedule_log_event();
+		$this->schedule_hourly_event();
 	}
 
 	/**
@@ -92,6 +102,9 @@ class BB_BG_Process_Log {
 
 		// Re-schedule when update the timezone.
 		add_action( 'update_option', array( $this, 'reschedule_event' ), 10, 3 );
+
+		// Schedule an event to clear logs.
+		add_action( 'bb_bg_log_clear_hourly', array( $this, 'clear_logs_hourly' ) );
 	}
 
 	/**
@@ -130,6 +143,9 @@ class BB_BG_Process_Log {
 
 		if ( $insert ) {
 			$args->bg_process_log_id = $wpdb->insert_id;
+
+			// Start memory usage.
+			$this->start_memory_log = memory_get_peak_usage( false );
 		}
 
 		return $args;
@@ -161,22 +177,29 @@ class BB_BG_Process_Log {
 		global $wpdb;
 
 		$bg_data = ! empty( $args->data ) ? $args->data : array();
-
 		if ( empty( $bg_data ) ) {
 			return $args;
 		}
-		if ( is_string( $bg_data ) ) {
-			$bg_data = array( 'callback' => $bg_data );
-		} else {
-			$bg_data['callback'] = is_array( $bg_data['callback'] ) ? maybe_serialize( $bg_data['callback'] ) : $bg_data['callback'];
+
+		$bg_data = is_string( $bg_data ) ? array( 'callback' => $bg_data ) : $bg_data;
+		if ( empty( $bg_data['callback'] ) ) {
+			return $args;
 		}
+
+		$bg_data['callback'] = is_array( $bg_data['callback'] ) ? maybe_serialize( $bg_data['callback'] ) : $bg_data['callback'];
+
+		$callback = $this->get_callback_name( $bg_data['callback'] );
+		if ( empty( $callback ) ) {
+			return $args;
+		}
+
 		$insert = $this->add_log(
 			array(
 				'process_id'        => $args->key,
-				'component'         => self::get_component_name( $bg_data['callback'] ),
-				'bg_process_from'   => self::action_from( $bg_data['callback'] ),
-				'bg_process_name'   => $bg_data['callback'],
-				'callback_function' => $bg_data['callback'],
+				'component'         => self::get_component_name( $callback ),
+				'bg_process_from'   => self::action_from( $callback ),
+				'bg_process_name'   => $callback,
+				'callback_function' => $callback,
 				'blog_id'           => $args->blog_id,
 				'priority'          => $args->priority,
 				'data'              => ! empty( $bg_data['args'] ) ? maybe_serialize( $bg_data['args'] ) : '',
@@ -185,6 +208,9 @@ class BB_BG_Process_Log {
 
 		if ( $insert ) {
 			$args->bg_process_log_id = $wpdb->insert_id;
+
+			// Start memory usage.
+			$this->start_memory_log = memory_get_peak_usage( false );
 		}
 
 		return $args;
@@ -259,14 +285,19 @@ class BB_BG_Process_Log {
 		$end_date_gmt = current_time( 'mysql', 1 );
 		$end_date     = get_date_from_gmt( $end_date_gmt );
 
+		// End memory usage.
+		$get_memory_used = $this->get_memory_used();
+
 		return $wpdb->update( //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$this->table_name,
 			array(
 				'process_end_date_gmt' => $end_date_gmt,
 				'process_end_date'     => $end_date,
+				'memory'               => $get_memory_used,
 			),
 			array( 'id' => (int) $args->bg_process_log_id ),
 			array(
+				'%s',
 				'%s',
 				'%s',
 			),
@@ -286,11 +317,6 @@ class BB_BG_Process_Log {
 	public static function get_component_name( $callback_function ) {
 		if ( empty( $callback_function ) ) {
 			return;
-		}
-
-		$callback_function = maybe_unserialize( $callback_function );
-		if ( is_array( $callback_function ) ) {
-			$callback_function = end( $callback_function );
 		}
 
 		switch ( $callback_function ) {
@@ -427,22 +453,12 @@ class BB_BG_Process_Log {
             blog_id bigint(20) NOT NULL,
             data longtext NULL,
             priority bigint(10) NULL,
+            memory varchar(20) DEFAULT 0 NULL,
             process_start_date_gmt datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
             process_start_date datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
             process_end_date_gmt datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
             process_end_date datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-            KEY  process_id (process_id),
-            KEY  parent (parent),
-            KEY  component (component),
-            KEY  bg_process_name (bg_process_name),
-            KEY  bg_process_from (bg_process_from),
-            KEY  callback_function (callback_function),
-            KEY  blog_id (blog_id),
-            KEY  priority (priority),
-            KEY  process_start_date_gmt (process_start_date_gmt),
-            KEY  process_start_date (process_start_date),
-            KEY  process_end_date_gmt (process_end_date_gmt),
-            KEY  process_end_date (process_end_date)
+            KEY  process_start_date_gmt (process_start_date_gmt)
             ) $charset_collate";
 
 		dbDelta( $sql );
@@ -460,16 +476,15 @@ class BB_BG_Process_Log {
 		$is_scheduled = wp_next_scheduled( 'bb_bg_log_clear' );
 
 		// WP datetime.
-		$final_date         = date_i18n( 'Y-m-d', strtotime( 'next Sunday' ) ) . ' 23:59:59';
+		$final_date         = date_i18n( 'Y-m-d', strtotime( 'today' ) ) . ' 23:59:59';
 		$local_datetime     = date_create( $final_date, wp_timezone() );
 		$schedule_timestamp = $local_datetime->getTimestamp();
 
-		// Schedule the cron job to run every Sunday at 12 AM.
 		if ( ! $is_scheduled ) {
-			wp_schedule_event( $schedule_timestamp, 'weekly', 'bb_bg_log_clear' );
+			wp_schedule_event( $schedule_timestamp, 'daily', 'bb_bg_log_clear' );
 		} else if ( $is_scheduled !== $schedule_timestamp ) {
 			wp_clear_scheduled_hook( 'bb_bg_log_clear' );
-			wp_schedule_event( $schedule_timestamp, 'weekly', 'bb_bg_log_clear' );
+			wp_schedule_event( $schedule_timestamp, 'daily', 'bb_bg_log_clear' );
 		}
 	}
 
@@ -482,63 +497,7 @@ class BB_BG_Process_Log {
 	public function clear_logs() {
 		global $wpdb;
 
-		$results = $wpdb->get_results( "SELECT id FROM $this->table_name WHERE process_start_date_gmt <= NOW() - INTERVAL 30 DAY;", ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-
-		/**
-		 * Filter the limit of rows to delete from the background process log table.
-		 *
-		 * @since BuddyBoss 2.5.60
-		 *
-		 * @param int $limit Limit.
-		 */
-		$limit = apply_filters( 'bb_bg_process_log_delete_limit', 1000 );
-
-		$pluck_ids = ! empty( $results ) ? wp_list_pluck( $results, 'id' ) : array();
-		$count     = count( $pluck_ids );
-
-		if ( $count > $limit ) {
-			global $bb_background_updater;
-
-			$chunked_data = array_chunk( $pluck_ids, $limit );
-
-			foreach ( $chunked_data as $chunked_ids ) {
-				$bb_background_updater->data(
-					array(
-						'type'     => 'bb_bg_remove_old_logs',
-						'group'    => 'bb_bg_remove_old_logs',
-						'callback' => array( $this, 'remove_logs' ),
-						'args'     => array( $chunked_ids ),
-					),
-				);
-
-				$bb_background_updater->save();
-			}
-
-			$bb_background_updater->schedule_event();
-		} else {
-			$this->remove_logs( $pluck_ids );
-		}
-	}
-
-	/**
-	 * Removed the old background job records.
-	 *
-	 * @since BuddyBoss 2.5.60
-	 *
-	 * @param array $bg_ids IDs of bg jobs.
-	 *
-	 * @return void
-	 */
-	public function remove_logs( $bg_ids ) {
-		global $wpdb;
-
-		if ( empty( $bg_ids ) ) {
-			return;
-		}
-
-		$ids    = wp_parse_id_list( $bg_ids );
-		$ids_in = "'" . implode( "','", $ids ) . "'";
-		$wpdb->query( "DELETE FROM $this->table_name WHERE id IN ($ids_in)" ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$wpdb->query( "DELETE FROM $this->table_name WHERE process_start_date_gmt <= NOW() - INTERVAL 1 DAY;" ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	}
 
 	/**
@@ -564,5 +523,122 @@ class BB_BG_Process_Log {
 			$this->schedule_log_event();
 			$is_reschedule = true;
 		}
+	}
+
+	/**
+	 * Get the component name.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $callback_function Type.
+	 *
+	 * @return mixed|void|null
+	 */
+	public static function get_callback_name( $callback_function ) {
+		if ( empty( $callback_function ) ) {
+			return;
+		}
+
+		$callback_function = maybe_unserialize( $callback_function );
+		if ( is_array( $callback_function ) ) {
+			$callback_function = end( $callback_function );
+		}
+
+		return $callback_function;
+	}
+
+	/**
+	 * Get memory usages while running the background job.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return string
+	 */
+	public function get_memory_used() {
+		$start     = $this->start_memory_log;
+		$end       = memory_get_peak_usage( false );
+		$mem_usage = $end - $start;
+
+		// Reset the variable.
+		$this->start_memory_log = 0;
+
+		if ( $mem_usage < 1024 ) {
+			return $mem_usage . " Bytes";
+		} elseif ( $mem_usage < 1048576 ) {
+			return round( $mem_usage / 1024, 2 ) . " KB";
+		} else {
+			return round( $mem_usage / 1048576, 2 ) . " MB";
+		}
+	}
+
+	/**
+	 * Schedule event to clear the logs to every hour when the database table size exceeds 1 GB.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 * @throws Exception
+	 */
+	private function schedule_hourly_event() {
+		if ( ! wp_next_scheduled( 'bb_bg_log_clear_hourly' ) ) {
+			wp_schedule_event( time(), 'bb_schedule_1hour', 'bb_bg_log_clear_hourly' );
+		}
+	}
+
+	/**
+	 * Clear the logs if the table size will be more than 1 GB.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public function clear_logs_hourly() {
+		global $wpdb;
+
+		$table_size = $this->get_bg_process_log_table_size();
+		if ( $table_size > 1024 ) {
+
+			$rows = $wpdb->get_row( "SELECT COUNT(id) as total_count FROM {$this->table_name}" );
+			if ( ! empty( $rows ) && ! empty( $rows->total_count ) ) {
+
+				// Average Row Size (bytes) = Total Table Size (bytes) / Total Number of Rows.
+				$average_row_size_byte = round( ( $table_size * ( 1024 * 1024 ) ) / $rows->total_count );
+
+				$total_reduce_size_mb    = $table_size - 500;
+				$total_reduce_size_bytes = round( $total_reduce_size_mb * ( 1024 * 1024 ) );
+
+				// Rows to Delete = Size to Reduce (bytes) / Average Row Size (bytes).
+				$rows_to_delete = round( $total_reduce_size_bytes / $average_row_size_byte );
+
+				// Delete records.
+				$wpdb->query( $wpdb->prepare( "DELETE FROM {$this->table_name} ORDER BY id ASC LIMIT %d", $rows_to_delete ) );
+			}
+		}
+	}
+
+	/**
+	 * Get the table size in MB.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return int
+	 */
+	public function get_bg_process_log_table_size() {
+		global $wpdb;
+
+		$table_size_bytes = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT data_length + index_length AS table_size_bytes FROM information_schema.TABLES WHERE table_schema = %s AND table_name = %s",
+				$wpdb->dbname,
+				$this->table_name
+			)
+		);
+
+		if ( ! empty( $table_size_bytes ) ) {
+			// Convert bytes to megabytes.
+			return round( $table_size_bytes / ( 1024 * 1024 ), 2 );
+		}
+
+		return 0;
 	}
 }
