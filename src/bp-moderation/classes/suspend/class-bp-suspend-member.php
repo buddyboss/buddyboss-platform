@@ -84,6 +84,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		add_action( 'bb_as_bb_update_member_friend_count', 'bb_update_member_friend_count', 10, 3 );
 		add_action( 'bb_as_bb_update_group_member_count', 'bb_update_group_member_count', 10, 1 );
+
 	}
 
 	/**
