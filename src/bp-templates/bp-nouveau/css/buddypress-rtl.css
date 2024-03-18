@@ -7791,11 +7791,11 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 .buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity {
-  width: 265px;
+  width: 380px;
 }
 
 .buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity .document-preview-wrap {
-  height: 115px;
+  height: 170px;
 }
 
 .buddypress-wrap .activity-comments .bp-generic-meta.action {
@@ -7905,6 +7905,14 @@ span.dashicons.dashicons-admin-file:before {
 .buddypress-wrap .activity-comments .comment-reactions .reactions_item > i:before {
   margin-right: 0;
   margin-left: 0;
+}
+
+.buddypress-wrap .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity {
+  width: 265px;
+}
+
+.buddypress-wrap .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity .document-preview-wrap {
+  height: 115px;
 }
 
 .buddypress-wrap .activity-comments .ac-form.has-gif .ac-reply-content .ac-submit-wrap, .buddypress-wrap .activity-comments .ac-form.has-content .ac-reply-content .ac-submit-wrap, .buddypress-wrap .activity-comments .ac-form.has-media .ac-reply-content .ac-submit-wrap,
