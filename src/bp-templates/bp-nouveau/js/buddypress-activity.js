@@ -3519,7 +3519,8 @@ window.bp = window.bp || {};
 				activity_id: activityId,
 				parent_comment_id: parentCommentId,
 				type: type,
-				offset: $( '#activity-modal .activity-comments > ul[data-activity_id="' + parentCommentId + '"] > li.comment-item' ).length,
+				// offset: $( currentTargetList ).find( '.activity-comment.comment-item' ).length,
+				offset: $( e.currentTarget ).parents('.activity-comments').find( 'ul[data-parent_comment_id ="' + parentCommentId + '"] > li.comment-item' ).length,
 				activity_type_is_blog: $( e.currentTarget ).parents( '.entry-content' ).length > 1 ? true : false,
 			};
 
