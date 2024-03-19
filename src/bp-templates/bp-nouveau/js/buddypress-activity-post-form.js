@@ -4800,6 +4800,9 @@ window.bp = window.bp || {};
 			displayScheduleButton: function ( event ) {
 				event.preventDefault();
 				$( '#aw-whats-new-submit' ).val( BP_Nouveau.activity.strings.schedulePostButton );
+				var schedulePost = $( event.target ).closest( '.bb-schedule-posts' );
+				schedulePost.find( '.bb-schedule-post_dropdown_button' ).addClass( 'is_scheduled' );
+				$( event.target ).closest( '#bb-schedule-post_form_modal' ).hide();
 			},
 
 			validateScheduleTime: function () {

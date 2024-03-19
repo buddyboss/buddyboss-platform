@@ -255,6 +255,7 @@
 
 	#discard-draft-activity {
 		display: block;
+		padding: 0 20px 0 12px;
 	}
 }
 
@@ -276,7 +277,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: 7px;
+		padding: 5px 7px;
 		border: 1px solid $bp-border-color;
 		border-radius: 7px;
 
@@ -286,6 +287,21 @@
 
 			&.bb-icon-caret-down {
 				font-size: 13px;
+			}
+		}
+
+		&.is_scheduled {
+
+			> i {
+				display: none;
+			}
+
+			&:after {
+				content: "\e803";
+				font-size: 24px;
+				font-family: 'bb-icons';/* stylelint-disable-line */
+				font-weight: 300;
+				color: $black;
 			}
 		}
 	}
