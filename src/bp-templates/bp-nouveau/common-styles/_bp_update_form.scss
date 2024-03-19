@@ -432,6 +432,12 @@
 		.button {
 			padding: 6px 15px;
 			min-width: auto;
+
+			&[disabled] {
+				opacity: 0.6;
+				cursor: default;
+				pointer-events: none;
+			}
 		}
 	}
 

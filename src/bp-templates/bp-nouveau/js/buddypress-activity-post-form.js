@@ -4745,6 +4745,8 @@ window.bp = window.bp || {};
 				'click .bb-schedule-post_dropdown_button': 'displayOptions',
 				'click .bb-schedule-post_action': 'displayScheduleForm',
 				'click .bb-view-schedule-posts': 'displaySchedulePosts',
+				'change .bb-schedule-activity-date-field': 'validateScheduleTime',
+				'change .bb-schedule-activity-time-field': 'validateScheduleTime',
 			},
 
 			initialize: function () {
@@ -4792,6 +4794,14 @@ window.bp = window.bp || {};
 				var schedulePost = $( event.target ).closest( '.bb-schedule-posts' );
 				schedulePost.find( '.bb-schedule-post_dropdown_list' ).removeClass( 'is_open' );
 				schedulePost.find( '#bb-schedule-posts_modal' ).show();
+			},
+
+			validateScheduleTime: function () {
+				if ( $( '.bb-schedule-activity-date-field' ).val() !== '' && $( '.bb-schedule-activity-time-field' ).val() !== '' ) {
+					$( '.bb-schedule-activity' ).removeAttr( 'disabled' );
+				} else {
+					$( '.bb-schedule-activity' ).attr( 'disabled', 'disabled' );
+				}
 			}
 		}
 

@@ -1809,6 +1809,12 @@ a.layout-grid-view {
   min-width: auto;
 }
 
+.bb-schedule-post_dropdown_section .bb-action-popup .bb-model-footer .button[disabled] {
+  opacity: 0.6;
+  cursor: default;
+  pointer-events: none;
+}
+
 .bb-schedule-post_dropdown_section .schedule-posts-placeholder {
   display: flex;
   flex-direction: column;
