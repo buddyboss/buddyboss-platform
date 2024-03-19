@@ -4745,6 +4745,7 @@ window.bp = window.bp || {};
 				'click .bb-schedule-post_dropdown_button': 'displayOptions',
 				'click .bb-schedule-post_action': 'displayScheduleForm',
 				'click .bb-view-schedule-posts': 'displaySchedulePosts',
+				'click .bb-schedule-activity': 'displayScheduleButton',
 			},
 
 			initialize: function () {
@@ -4792,6 +4793,11 @@ window.bp = window.bp || {};
 				var schedulePost = $( event.target ).closest( '.bb-schedule-posts' );
 				schedulePost.find( '.bb-schedule-post_dropdown_list' ).removeClass( 'is_open' );
 				schedulePost.find( '#bb-schedule-posts_modal' ).show();
+			},
+
+			displayScheduleButton: function ( event ) {
+				event.preventDefault();
+				$( '#aw-whats-new-submit' ).val( BP_Nouveau.activity.strings.schedulePostButton );
 			}
 		}
 

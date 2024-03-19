@@ -255,6 +255,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'unpinGroupPost'      => esc_html__( 'Unpin from Group', 'buddyboss' ),
 		'pinPostError'        => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
 		'reactionAjaxError'   => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+		'schedulePostButton'  => esc_html__( 'Schedule', 'buddyboss' ),
 	);
 
     if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
@@ -665,5 +666,3 @@ function bp_nouveau_activity_customizer_controls( $controls = array() ) {
 //		),
 	) );
 }
-
-
