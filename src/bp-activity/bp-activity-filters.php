@@ -3719,3 +3719,18 @@ function bb_emojionearea_add_popup_template() {
 function bb_activity_add_modal_template() {
 	bp_get_template_part( 'activity/activity-modal' );
 }
+
+/**
+ * Add class to recent activity comment.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $class Comment class.
+ *
+ * @return string $class Comment class.
+ */
+function bb_activity_recent_comment_class( $class ) {
+	$class .= ' bb-recent-comment';
+
+	return $class;
+}

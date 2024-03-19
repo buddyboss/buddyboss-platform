@@ -3520,7 +3520,7 @@ window.bp = window.bp || {};
 				parent_comment_id: parentCommentId,
 				type: type,
 				// offset: $( currentTargetList ).find( '.activity-comment.comment-item' ).length,
-				offset: $( e.currentTarget ).parents('.activity-comments').find( 'ul[data-parent_comment_id ="' + parentCommentId + '"] > li.comment-item' ).length,
+				offset: $( e.currentTarget ).parents('.activity-comments').find( 'ul[data-parent_comment_id ="' + parentCommentId + '"] > li.comment-item:not(.bb-recent-comment)' ).length,
 				activity_type_is_blog: $( e.currentTarget ).parents( '.entry-content' ).length > 1 ? true : false,
 			};
 
