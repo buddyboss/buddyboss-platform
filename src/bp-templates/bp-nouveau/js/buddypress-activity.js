@@ -109,6 +109,9 @@ window.bp = window.bp || {};
 
 			// Store the ID of the updated activity
 			this.currentActivityId = null;
+
+			// Flag to track activity pin updates
+			this.activityPinHasUpdates = false;
 		},
 
 		/**
@@ -1805,6 +1808,10 @@ window.bp = window.bp || {};
 							);
 						}
 
+						if ( isInsideModal ) {
+							bp.Nouveau.Activity.activityPinHasUpdates = true;
+						}
+
 						bp.Nouveau.Activity.activityHasUpdates = true;
 						bp.Nouveau.Activity.currentActivityId = activity_id;
 					}
@@ -3436,6 +3443,7 @@ window.bp = window.bp || {};
 			// Reset to default activity updates and id global variables
 			bp.Nouveau.Activity.activityHasUpdates = false;
 			bp.Nouveau.Activity.currentActivityId = null;
+			bp.Nouveau.Activity.activityPinHasUpdates = false;
 
 			modal.closest( 'body' ).addClass( 'acomments-modal-open' );
 			modal.show();
@@ -3667,6 +3675,11 @@ window.bp = window.bp || {};
 							$pageActivitylistItem.replaceWith( $.parseHTML( response.data.activity ) );
 							// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 							jQuery( window ).scroll();
+
+							// Refresh activities after updating pin/unpin post status.
+							if ( bp.Nouveau.Activity.activityPinHasUpdates ) {
+								bp.Nouveau.refreshActivities();
+							}
 						}
 					}
 				).fail(
