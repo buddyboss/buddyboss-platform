@@ -1547,7 +1547,8 @@ class BP_Activity_Activity {
 				}
 
 				$activities[ $key ]->children    = $activity_comments[ $activity->id ];
-				$activities[ $key ]->child_count = bb_get_activity_comment_children_count( $activity->id );
+				$activities[ $key ]->all_child_count = bb_get_all_activity_comment_children_count( $activity->id );
+				$activities[ $key ]->top_level_count = bb_get_activity_top_level_comment_count( $activity->id );
 			}
 		}
 
@@ -1754,7 +1755,8 @@ class BP_Activity_Activity {
 
 				if ( true === $exclude_childrens ) {
 					// Function to determine the depth of comments using MPTT values
-					$ref[ $d->id ]->child_count = bb_get_activity_comment_children_count( $d->id );
+					$ref[ $d->id ]->all_child_count = bb_get_all_activity_comment_children_count( $d->id );
+					$ref[ $d->id ]->top_level_count = bb_get_activity_top_level_comment_count( $d->id );
 				}
 			}
 

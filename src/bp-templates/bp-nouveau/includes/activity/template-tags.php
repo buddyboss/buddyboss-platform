@@ -261,7 +261,7 @@ function bp_nouveau_activity_state() {
 
 	$activity_id    = bp_get_activity_id();
 //	$comment_count  = bp_activity_get_comment_count();
-	$comment_count  = bb_get_activity_comment_children_count( $activity_id );
+	$comment_count  = bb_get_all_activity_comment_children_count( $activity_id );
 	$reactions      = bb_active_reactions();
 	$reaction_count = bb_load_reaction()->bb_get_user_reactions_count(
 		array(
@@ -751,12 +751,12 @@ function bp_nouveau_activity_recurse_comments( $comment, $args = array() ) {
 	// get comments children count.
 	if ( false !== $r['limit_comments'] ) {
 
-		if ( 0 !== $comment->child_count ) {
+		if ( 0 !== $comment->all_child_count ) {
 			//			if ( 0 === $comment_loaded_count ) {
 			$link_text = sprintf(
 			/* translators: total replies */
-				_n( 'View %d reply', 'View %d replies', $comment->child_count, 'buddyboss' ),
-				absint( $comment->child_count )
+				_n( 'View %d reply', 'View %d replies', $comment->all_child_count, 'buddyboss' ),
+				absint( $comment->all_child_count )
 			);
 			//			} else {
 			//				$link_text = __( 'View more replies', 'buddyboss' );

@@ -6631,22 +6631,44 @@ function bb_get_activity_comment_loading( $default = 10 ) {
 }
 
 /**
- * Get activity comment count based on id.
+ * Get all activity children comments count based on id.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @param $comment_id
  *
- * @return int $child_count Return count of children comment.
+ * @return int $all_child_count Return count of children comment.
  */
-function bb_get_activity_comment_children_count( $comment_id ) {
-	$child_count = 0;
+function bb_get_all_activity_comment_children_count( $comment_id ) {
+	$all_child_count = 0;
 	if ( empty( $comment_id ) ) {
-		return $child_count;
+		return $all_child_count;
 	}
 
 	$activity_comment = new BP_Activity_Activity( $comment_id );
-	$child_count      = intval( ( $activity_comment->mptt_right - $activity_comment->mptt_left ) / 2 );
+	$all_child_count  = intval( ( $activity_comment->mptt_right - $activity_comment->mptt_left ) / 2 );
 
-	return ! empty( $child_count ) ? $child_count : 0;
+	return ! empty( $all_child_count ) ? $all_child_count : 0;
+}
+
+/**
+ * Get top level activity comment count based on id.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param $comment_id
+ *
+ * @return int $top_level_comment_count Return count of children comment.
+ */
+function bb_get_activity_top_level_comment_count( $comment_id ) {
+	$top_level_comment_count = 0;
+	if ( empty( $comment_id ) ) {
+		return $top_level_comment_count;
+	}
+
+	global $wpdb;
+	$sql = 'SELECT COUNT(*) as total FROM wp_bp_activity WHERE secondary_item_id = ' . $comment_id;
+	$result = $wpdb->get_row( $sql );
+
+	return $result->total ?? 0;
 }

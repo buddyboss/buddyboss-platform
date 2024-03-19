@@ -1954,14 +1954,15 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'limit_comments'         => false,
-			'comment_load_limit'     => 0,
-			'parent_comment_id'      => 0,
-			'main_activity_id'       => 0,
-			'is_ajax_load_more'      => false,
-			'last_comment_timestamp' => '',
-			'last_comment_id'        => 0,
-			'comment_order_by'       => apply_filters( 'bp_activity_recurse_comments_order_by', 'ASC' ),
+			'limit_comments'                => false,
+			'comment_load_limit'            => 0,
+			'parent_comment_id'             => 0,
+			'main_activity_id'              => 0,
+			'is_ajax_load_more'             => false,
+			'last_comment_timestamp'        => '',
+			'last_comment_id'               => 0,
+			'comment_order_by'              => apply_filters( 'bp_activity_recurse_comments_order_by', 'ASC' ),
+			'already_loaded_comments_count' => 0,
 		),
 		'bb_activity_recurse_comments'
 	);
@@ -1970,7 +1971,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 		return false;
 	}
 
-	if ( empty( $comment->child_count ) ) {
+	if ( empty( $comment->all_child_count ) ) {
 		return false;
 	}
 
@@ -1986,7 +1987,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 			false !== $r['limit_comments'] &&
 			0 !== $r['comment_load_limit'] &&
 			(
-				$comment->child_count > $r['comment_load_limit']
+				$comment->all_child_count > $r['comment_load_limit']
 			)
 		) {
 			echo "<a href='javascript:void(0);' class='view-more-comments'>" . esc_html__( 'View more comments', 'buddyboss' ) . "</a>";
@@ -2099,10 +2100,19 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 		unset( $activities_template->activity->current_comment );
 	}
 
+	$loaded_count = 0;
+	if ( ! empty( $comment->children ) ) {
+		if ( 'activity_comment' !== $comment->type ) {
+			$loaded_count = (int) $r['already_loaded_comments_count'] + bb_get_activity_comment_visibility();
+		} else {
+			$loaded_count = (int) $r['already_loaded_comments_count'] + bb_get_activity_comment_loading();
+		}
+	}
+
 	if (
 		false !== $r['limit_comments'] &&
 		count( $comment->children ) === $r['comment_load_limit'] &&
-		$comment->child_count - count( $comment->children ) > 0
+		$comment->top_level_count > $loaded_count
 	) {
 		if ( ! empty( $r['parent_comment_id'] ) && $r['main_activity_id'] !== $r['parent_comment_id'] ) {
 			$view_more_text = __( 'View more replies', 'buddyboss' );
