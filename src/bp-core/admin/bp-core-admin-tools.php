@@ -1404,7 +1404,7 @@ function bp_admin_update_activity_favourite() {
 /**
  * Insert reactions for a user in bulk.
  *
- * @since [BBVERSION]
+ * @since 2.5.70
  *
  * @param int   $item_id  Item ID.
  * @param array $user_ids Array of user ID.
