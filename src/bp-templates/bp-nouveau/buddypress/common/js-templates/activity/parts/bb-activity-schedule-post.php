@@ -69,7 +69,7 @@
 
 								<footer class="bb-model-footer">
 									<a href="#" class="button button-outline bb-schedule-activity-cancel">Back</a>
-									<a class="button bb-schedule-activity" href="#">Next</a>
+									<a class="button bb-schedule-activity" href="#" disabled>Next</a>
 								</footer>
 							</div>
 						</div>

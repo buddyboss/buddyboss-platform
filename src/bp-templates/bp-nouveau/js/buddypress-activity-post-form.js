@@ -4746,6 +4746,8 @@ window.bp = window.bp || {};
 				'click .bb-schedule-post_action': 'displayScheduleForm',
 				'click .bb-view-schedule-posts': 'displaySchedulePosts',
 				'click .bb-schedule-activity': 'displayScheduleButton',
+				'change .bb-schedule-activity-date-field': 'validateScheduleTime',
+				'change .bb-schedule-activity-time-field': 'validateScheduleTime',
 			},
 
 			initialize: function () {
@@ -4798,9 +4800,16 @@ window.bp = window.bp || {};
 			displayScheduleButton: function ( event ) {
 				event.preventDefault();
 				$( '#aw-whats-new-submit' ).val( BP_Nouveau.activity.strings.schedulePostButton );
+			},
+
+			validateScheduleTime: function () {
+				if ( $( '.bb-schedule-activity-date-field' ).val() !== '' && $( '.bb-schedule-activity-time-field' ).val() !== '' ) {
+					$( '.bb-schedule-activity' ).removeAttr( 'disabled' );
+				} else {
+					$( '.bb-schedule-activity' ).attr( 'disabled', 'disabled' );
+				}
 			}
 		}
-
 	);
 
 	bp.Views.EditActivityPostIn = bp.View.extend(
