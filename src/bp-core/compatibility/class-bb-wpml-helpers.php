@@ -210,7 +210,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		 * If WPML plugin is active and the query arguments include 'post_parent' set to 'any',
 		 * this function adjusts it to an empty string to ensure correct filtering.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.5.70
 		 *
 		 * @param array $r The query arguments.
 		 *
