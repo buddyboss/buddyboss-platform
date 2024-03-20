@@ -5816,14 +5816,14 @@ span.dashicons.dashicons-admin-file:before {
 @media screen and (max-width: 544px) {
   .bb-activity-media-wrap .bb-activity-media-elem,
   .activity-list .activity-item .activity-content.media-activity-wrap .activity-inner .bb-activity-media-elem {
-    flex: 0 0 100% !important;
-    max-width: 100% !important;
-    min-width: auto !important;
-    position: relative;
-  }
-  .bb-activity-media-wrap .bb-activity-media-elem .entry-img,
-  .activity-list .activity-item .activity-content.media-activity-wrap .activity-inner .bb-activity-media-elem .entry-img {
-    padding-top: 55.56% !important;
+    /*flex: 0 0 100% !important;
+			max-width: 100% !important;
+			min-width: auto !important;
+			position: relative;
+
+			.entry-img {
+				padding-top: 55.56% !important;
+			}*/
   }
   .bb-activity-media-wrap .bb-activity-media-elem.hideact-grid-1-2,
   .activity-list .activity-item .activity-content.media-activity-wrap .activity-inner .bb-activity-media-elem.hideact-grid-1-2 {
@@ -7655,6 +7655,13 @@ span.dashicons.dashicons-admin-file:before {
   min-width: auto;
 }
 
+@media screen and (max-width: 544px) {
+  .buddypress-wrap .activity-comments ul li .bb-media-length-3,
+  .buddypress-wrap .activity-comments ul li .bb-media-length-2 {
+    flex-flow: wrap;
+  }
+}
+
 @media screen and (max-width: 560px) {
   .buddypress-wrap .activity-comments ul li .bb-media-length-1 .bb-activity-media-elem.media-activity {
     min-width: auto;
@@ -7786,6 +7793,12 @@ span.dashicons.dashicons-admin-file:before {
   padding-top: 82.56%;
 }
 
+@media screen and (max-width: 544px) {
+  .buddypress-wrap .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) {
+    flex-wrap: wrap;
+  }
+}
+
 .buddypress-wrap .activity-comments .bb-activity-media-wrap.ac-document {
   flex-flow: column;
 }
@@ -7796,6 +7809,12 @@ span.dashicons.dashicons-admin-file:before {
 
 .buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity .document-preview-wrap {
   height: 170px;
+}
+
+@media screen and (max-width: 544px) {
+  .buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity {
+    width: 250px;
+  }
 }
 
 .buddypress-wrap .activity-comments .bp-generic-meta.action {
@@ -26883,8 +26902,8 @@ div.video-js .vjs-poster > img {
   .forums-video-wrap .bb-activity-video-elem.act-grid-1-1, .forums-video-wrap .bb-activity-video-elem.act-grid-1-2,
   .bb-activity-video-wrap .bb-activity-video-elem.act-grid-1-1,
   .bb-activity-video-wrap .bb-activity-video-elem.act-grid-1-2 {
-    flex: 0 0 100% !important;
-    max-width: 100% !important;
+    /*flex: 0 0 100% !important;
+				max-width: 100% !important;*/
   }
   .forums-video-wrap .bb-activity-video-elem.act-grid-1-1 .bb-item-cover-wrap, .forums-video-wrap .bb-activity-video-elem.act-grid-1-2 .bb-item-cover-wrap,
   .bb-activity-video-wrap .bb-activity-video-elem.act-grid-1-1 .bb-item-cover-wrap,
@@ -27928,7 +27947,6 @@ div.dropzone.dz-started .dz-default.dz-message {
 @media screen and (max-width: 768px) {
   .dropzone.video-dropzone .dz-preview.dz-file-preview {
     width: calc(50% - 11.5px);
-    margin: 0 5px 10px;
   }
   .dropzone.video-dropzone .dz-preview.dz-file-preview:last-child {
     margin-left: 0;
