@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.5.61\n"
+"Project-Id-Version: BuddyBoss Platform 2.5.70\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-03-15 16:03:11+00:00\n"
+"POT-Creation-Date: 2024-03-20 03:19:31+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5072,9 +5072,9 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:3077
 msgid ""
 "Add domain(s) to restrict new users from being able to register, you can "
-"use a wildcard (*) symbol to apply restrictions to an entire extension.\r\n"
+"use a wildcard (*) symbol to apply restrictions to an entire extension.\n"
 "\t\tWhen multiple restrictions are in place, a domain will always take "
-"priority over an extension.\r\n"
+"priority over an extension.\n"
 "\t\t"
 msgstr ""
 
@@ -7189,8 +7189,9 @@ msgstr ""
 
 #: bp-core/bp-core-cssjs.php:258
 #: bp-templates/bp-nouveau/includes/media/functions.php:138
+#: bp-templates/bp-nouveau/includes/video/functions.php:121
 msgid ""
-"Sorry, File size is too big ({{filesize}} MB). Max file size: "
+"Sorry, file size is too big ({{filesize}} MB). Max file size limit: "
 "{{maxFilesize}} MB."
 msgstr ""
 
@@ -10666,13 +10667,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\r\n"
-"\r\n"
-"\"%3$s\"\r\n"
-"\r\n"
-"To view and respond to the message, log in and visit: %4$s\r\n"
-"\r\n"
-"---------------------\r\n"
+"%1$s mentioned you in the group \"%2$s\":\n"
+"\n"
+"\"%3$s\"\n"
+"\n"
+"To view and respond to the message, log in and visit: %4$s\n"
+"\n"
+"---------------------\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -25824,7 +25825,7 @@ msgid "Activation key of the signup."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:254
-#: bp-templates/bp-nouveau/buddypress/members/register.php:86
+#: bp-templates/bp-nouveau/buddypress/members/register.php:87
 msgid "Yes, I'd like to create a new site"
 msgstr ""
 
@@ -30430,7 +30431,7 @@ msgstr ""
 msgid "Activation Key:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/register.php:83
+#: bp-templates/bp-nouveau/buddypress/members/register.php:84
 msgid "Site Details"
 msgstr ""
 
@@ -32997,12 +32998,6 @@ msgstr ""
 msgid "Empty video file will not be uploaded."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:121
-msgid ""
-"Sorry, file size is too big ({{filesize}} MB). Max file size limit: "
-"{{maxFilesize}} MB."
-msgstr ""
-
 #: bp-templates/bp-nouveau/includes/video/functions.php:126
 msgid ""
 "To reposition your cover video, please upload a larger image and then try "
@@ -34966,15 +34961,14 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to automatically create thumbnails after "
-"uploading videos (optional). Ask your web host.\r\n"
+"uploading videos (optional). Ask your web host.\n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and you "
 "still see the above warning, this means BuddyBoss Platform is unable to "
 "auto-detect the binary file path for FFmpeg. You will need to add the below "
 "FFmpeg absolute path constants into your %2$s file, replacing "
 "PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. "
-"Ask your web host to provide the absolute path for the FFmpeg binary "
-"file.\r\n"
-"\t\t\t\t\t<br /><br />%3$s\r\n"
+"Ask your web host to provide the absolute path for the FFmpeg binary file.\n"
+"\t\t\t\t\t<br /><br />%3$s\n"
 "\t\t\t\t\t<br />%4$s"
 msgstr ""
 

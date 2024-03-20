@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.4.3
 Requires PHP: 8.0
-Stable tag: 2.5.61
+Stable tag: 2.5.70
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,13 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.5.70 =
+* Bug: Core - Create Account button and privacy policy checkbox were showing in the confirm email address notice screen and have now been removed
+* Bug: Core - Reactions migration tool was taking too long when migrating large numbers of Likes
+* Bug: Core - Updated background process log logic to maintain the log table size between 500MB or less and no larger than 1GB
+* Bug: Forums - Discussions and replies in secondary languages were not displayed on the users profile page discussions tab
+* Bug: Groups - When promoting a member in the the group to co-organizer or moderator the users were losing course access
 
 = 2.5.61 =
 * Bug: Core - reCaptcha update fixing issues with verifying on Login, Register, Reset password, Account Activation pages

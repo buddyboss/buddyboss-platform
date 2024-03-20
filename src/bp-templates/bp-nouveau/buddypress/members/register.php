@@ -19,9 +19,10 @@ $bp_get_current_signup_step = bp_get_current_signup_step();
 	<form action="" name="signup_form" id="signup-form" class="standard-form signup-form clearfix" method="post" enctype="multipart/form-data">
 		<div class="layout-wrap">
 			<?php
-			if ( 'request-details' === $bp_get_current_signup_step ) { ?>
+			if ( 'request-details' === $bp_get_current_signup_step ) {
 
-				<?php bp_nouveau_signup_hook( 'before', 'account_details' ); ?>
+				bp_nouveau_signup_hook( 'before', 'account_details' );
+				?>
 
 				<div class="register-section default-profile" id="basic-details-section">
 					<?php
