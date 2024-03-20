@@ -4791,7 +4791,7 @@ window.bp = window.bp || {};
 					$( '.bb-schedule-post_dropdown_section .bb-schedule-activity-date-field' ).datetimepicker({
 						format: 'Y-m-d',
 						timepicker:false,
-						mask:true,
+						mask:false,
 						minDate: 0,
 						maxDate: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 90 ),
 						yearStart: currentDate.getFullYear(),
