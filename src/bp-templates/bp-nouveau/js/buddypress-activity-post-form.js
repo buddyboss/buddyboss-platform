@@ -3625,11 +3625,12 @@ window.bp = window.bp || {};
 				this.views.add( new bp.Views.CaseAvatar( { model: this.model } ) );
 				this.views.add( new bp.Views.CaseHeading( { model: this.model } ) );
 				this.views.add( new bp.Views.CasePrivacy( { model: this.model } ) );
+				this.views.add( new bp.Views.PostScheduleTime( { model: this.model } ) );
 
 				$( '#whats-new-heading, #whats-new-status' ).wrapAll( '<div class="activity-post-name-status" />' );
 				setTimeout(
 					function () {
-						$( '.activity-singular #whats-new-heading, .activity-singular #whats-new-status' ).wrapAll( '<div class="activity-post-name-status" />' );
+						$( '.activity-singular #whats-new-heading, .activity-singular #whats-new-status, .activity-singular #activity-schedule-section' ).wrapAll( '<div class="activity-post-name-status" />' );
 					},
 					1000
 				);
@@ -3933,6 +3934,27 @@ window.bp = window.bp || {};
 				} else if ( bp.Nouveau.Activity.postForm.editActivityData !== false && ! _.isUndefined( bp.Nouveau.Activity.postForm.editActivityData ) ) {
 					this.views.add( new bp.Views.EditActivityPostIn( { model: this.model } ) );
 				}
+			}
+		}
+	);
+
+	bp.Views.PostScheduleTime = bp.View.extend(
+		{
+			tagName: 'div',
+			id: 'activity-schedule-section',
+			template: bp.template( 'activity-schedule-details' ),
+
+			initialize: function () {
+				this.model = new Backbone.Model(
+					_.pick(
+						BP_Nouveau.activity.params,
+						[
+							'activity_type',
+							'activity_date',
+							'activity_time'
+						]
+					)
+				);
 			}
 		}
 	);
@@ -4751,6 +4773,7 @@ window.bp = window.bp || {};
 			},
 
 			initialize: function () {
+				this.model.on( 'change', this.render, this );
 			},
 
 			displayOptions: function ( event ) {
@@ -4803,6 +4826,9 @@ window.bp = window.bp || {};
 				var schedulePost = $( event.target ).closest( '.bb-schedule-posts' );
 				schedulePost.find( '.bb-schedule-post_dropdown_button' ).addClass( 'is_scheduled' );
 				$( event.target ).closest( '#bb-schedule-post_form_modal' ).hide();
+				this.model.set( 'activity_type', 'schedule' );
+				this.model.set( 'activity_date',  schedulePost.find( '.bb-schedule-activity-date-field' ).val() );
+				this.model.set( 'activity_time',  schedulePost.find( '.bb-schedule-activity-time-field' ).val() );
 			},
 
 			validateScheduleTime: function () {
