@@ -571,6 +571,7 @@ window.bp = window.bp || {};
 			}
 
 			modal.closest( 'body' ).removeClass( 'acomments-modal-open' );
+			modal.closest( 'body' ).find( '#whats-new-form' ).removeAttr('disabled');
 			modal.hide();
 			modal.find( 'ul.activity-list' ).empty();
 			footer.removeClass( 'active' );
@@ -3446,6 +3447,7 @@ window.bp = window.bp || {};
 			bp.Nouveau.Activity.activityPinHasUpdates = false;
 
 			modal.closest( 'body' ).addClass( 'acomments-modal-open' );
+			modal.closest( 'body' ).find( '#whats-new-form' ).attr('disabled', 'disabled');
 			modal.show();
 			modal.find( 'ul.activity-list' ).html( activity_content );
 			modal.find( '.bb-modal-activity-header h2' ).text( activityTitle );
