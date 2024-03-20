@@ -35,7 +35,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Allocate the start memory.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.70
 	 *
 	 * @var string $start_memory_log
 	 */
@@ -528,7 +528,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Get the component name.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.70
 	 *
 	 * @param string $callback_function Type.
 	 *
@@ -550,7 +550,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Get memory usages while running the background job.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.70
 	 *
 	 * @return string
 	 */
@@ -574,7 +574,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Schedule event to clear the logs to every hour when the database table size exceeds 1 GB.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.70
 	 *
 	 * @return void
 	 * @throws Exception
@@ -588,7 +588,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Clear the logs if the table size will be more than 1 GB.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.70
 	 *
 	 * @return void
 	 */
@@ -619,7 +619,7 @@ class BB_BG_Process_Log {
 	/**
 	 * Get the table size in MB.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.70
 	 *
 	 * @return int
 	 */

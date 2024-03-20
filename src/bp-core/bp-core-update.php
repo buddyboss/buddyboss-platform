@@ -3470,7 +3470,7 @@ function bb_update_to_2_6_0() {
 /**
  * Remove columns from index key for background logs table.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.70
  *
  * @return void
  */

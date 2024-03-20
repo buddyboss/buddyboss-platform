@@ -67,8 +67,8 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			add_filter( 'bp_profile_search_main_form', array( $this, 'bb_profile_search_main_form' ) );
 
 			// Forum/Topic.
-			add_filter( 'bbp_after_has_topics_parse_args', array( $this, 'bb_wpml_fix_member_topic_reply' ) );
-			add_filter( 'bbp_after_has_replies_parse_args', array( $this, 'bb_wpml_fix_member_topic_reply' ) );
+			add_filter( 'bbp_after_has_topics_parse_args', array( $this, 'bb_wpml_member_profile_topic_reply' ) );
+			add_filter( 'bbp_after_has_replies_parse_args', array( $this, 'bb_wpml_member_profile_topic_reply' ) );
 		}
 
 		/**
@@ -205,8 +205,19 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			return $post_id;
 		}
 
-		public function bb_wpml_fix_member_topic_reply( $r ) {
-			if ( class_exists('Sitepress') && isset( $r['post_parent'] ) && 'any' === $r['post_parent'] ) {
+		/**
+		 * Adjusts the query arguments for member profile topic replies when using WPML.
+		 * If WPML plugin is active and the query arguments include 'post_parent' set to 'any',
+		 * this function adjusts it to an empty string to ensure correct filtering.
+		 *
+		 * @since BuddyBoss 2.5.70
+		 *
+		 * @param array $r The query arguments.
+		 *
+		 * @return array Modified query arguments.
+		 */
+		public function bb_wpml_member_profile_topic_reply( $r ) {
+			if ( class_exists( 'Sitepress' ) && isset( $r['post_parent'] ) && 'any' === $r['post_parent'] ) {
 				$r['post_parent'] = '';
 			}
 
