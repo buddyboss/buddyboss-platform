@@ -1722,7 +1722,13 @@ window.bp = window.bp || {};
 						}
 						if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.feedback ) {
 							var activity_list   = target.closest( 'ul.activity-list' );
-							var activity_stream = target.closest( '.screen-content' ).find( '#activity-stream' );
+							var activity_stream;
+							if ( isInsideModal ) {
+								activity_stream = target.closest( '.buddypress-wrap' ).find( '#activity-stream' );
+							} else {
+								activity_stream = target.closest( '#activity-stream' );
+							}
+							
 
 							if ( response.success ) {
 

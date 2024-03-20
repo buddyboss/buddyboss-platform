@@ -59,6 +59,10 @@
 							min-width: auto;
 						}
 					}
+
+					@media screen and (max-width: 544px) {
+						flex-flow: wrap;
+					}
 				}
 
 				@media screen and (max-width: 560px) {
@@ -208,6 +212,10 @@
 					}
 				}
 			}
+
+			@media screen and (max-width: 544px) {
+				flex-wrap: wrap;
+			}
 		}
 
 		.bb-activity-media-wrap.ac-document {
@@ -219,6 +227,10 @@
 
 			.document-preview-wrap {
 				height: 170px;
+			}
+
+			@media screen and (max-width: 544px) {
+				width: 250px;
 			}
 		}
 

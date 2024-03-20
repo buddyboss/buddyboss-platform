@@ -2878,7 +2878,8 @@ span.dashicons.dashicons-admin-file:before {
 	@media screen and (max-width: 544px) {
 
 		.bb-activity-media-elem {
-			flex: 0 0 100% !important;
+
+			/*flex: 0 0 100% !important;
 			max-width: 100% !important;
 			min-width: auto !important;
 			position: relative;
@@ -2886,7 +2887,7 @@ span.dashicons.dashicons-admin-file:before {
 
 			.entry-img {
 				padding-top: 55.56% !important;
-			}
+			}*/
 
 			&.hideact-grid-1-2 {
 				flex: 0 !important;
