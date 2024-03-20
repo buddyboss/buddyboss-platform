@@ -2493,13 +2493,11 @@ function bp_activity_get_comment_count( $deprecated = null ) {
 	}
 
 	// Get the count using the purpose-built recursive function.
-	$count = ! empty( $activities_template->activity->children )
-		? bp_activity_recurse_comment_count( $activities_template->activity )
-		: 0;
+//	$count = ! empty( $activities_template->activity->children )
+//		? bp_activity_recurse_comment_count( $activities_template->activity )
+//		: 0;
 
-	if ( empty( $count ) ) {
-		$count = $activities_template->activity->all_child_count ?? 0;
-	}
+	$count = $activities_template->activity->all_child_count ?? 0;
 
 	/**
 	 * Filters the activity comment count.
