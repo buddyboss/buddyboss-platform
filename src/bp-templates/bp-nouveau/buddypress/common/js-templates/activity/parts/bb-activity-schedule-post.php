@@ -38,15 +38,19 @@
 									</a>
 								</header>
 								<div class="bb-action-popup-content">
-									<p class="schedule-date">July 12, 2023 at 3:27 pm</p>
+									<?php
+									$formatted_date = wp_date( get_option('date_format') );
+									$formatted_time = wp_date( get_option('time_format') );
+									?>
+									<p class="schedule-date"><?php echo esc_html( $formatted_date . ' at ' . $formatted_time ); ?></p>
 
-									<label>Date</label>
+									<label><?php echo esc_html__( 'Date', 'buddyboss' ); ?></label>
 									<div class="input-field">
 										<input type="text" name="" id="" class="bb-schedule-activity-date-field">
 										<i class="bb-icon-f bb-icon-calendar"></i>
 									</div>
 
-									<label>Time</label>
+									<label><?php echo esc_html__( 'Time', 'buddyboss' ); ?></label>
 									<div class="input-field-inline">
 										<div class="input-field bb-schedule-activity-time-wrap">
 											<input type="text" name="" id="" class="bb-schedule-activity-time-field">
@@ -64,12 +68,12 @@
 										</div>
 									</div>
 
-									<p><a href="#">View all scheduled posts <i class="bb-icon-f bb-icon-arrow-right"></i></a></p>
+									<p><a href="#"><?php echo esc_html__( 'View all scheduled posts', 'buddyboss' ); ?> <i class="bb-icon-f bb-icon-arrow-right"></i></a></p>
 								</div>
 
 								<footer class="bb-model-footer">
-									<a href="#" class="button button-outline bb-schedule-activity-cancel">Back</a>
-									<a class="button bb-schedule-activity" href="#" disabled>Next</a>
+									<a href="#" class="button button-outline bb-schedule-activity-cancel"><?php echo esc_html__( 'Back', 'buddyboss' ); ?></a>
+									<a class="button bb-schedule-activity" href="#" disabled><?php echo esc_html__( 'Next', 'buddyboss' ); ?></a>
 								</footer>
 							</div>
 						</div>
@@ -93,8 +97,8 @@
 								<div class="bb-action-popup-content">
 									<div class="schedule-posts-placeholder">
 										<i class="bb-icon-f bb-icon-activity-slash"></i>
-										<h2>No Scheduled Posts Found</h2>
-										<p>You do not have any posts scheduled at the moment.</p>
+										<h2><?php echo esc_html__( 'No Scheduled Posts Found', 'buddyboss' ); ?></h2>
+										<p><?php echo esc_html__( 'You do not have any posts scheduled at the moment.', 'buddyboss' ); ?></p>
 									</div>
 								</div>
 							</div>
