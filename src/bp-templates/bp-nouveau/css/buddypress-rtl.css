@@ -1606,6 +1606,7 @@ a.layout-grid-view {
 }
 
 #whats-new-form.focus-in #activity-schedule-section .activity-post-schedule-details strong {
+  font-weight: 600;
   margin-left: 5px;
 }
 
