@@ -260,8 +260,7 @@ function bp_nouveau_get_activity_timestamp() {
 function bp_nouveau_activity_state() {
 
 	$activity_id    = bp_get_activity_id();
-//	$comment_count  = bp_activity_get_comment_count();
-	$comment_count  = bb_get_all_activity_comment_children_count( $activity_id );
+	$comment_count  = bp_activity_get_comment_count();
 	$reactions      = bb_active_reactions();
 	$reaction_count = bb_load_reaction()->bb_get_user_reactions_count(
 		array(

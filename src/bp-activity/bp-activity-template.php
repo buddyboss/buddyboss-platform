@@ -2497,6 +2497,10 @@ function bp_activity_get_comment_count( $deprecated = null ) {
 		? bp_activity_recurse_comment_count( $activities_template->activity )
 		: 0;
 
+	if ( empty( $count ) ) {
+		$count = $activities_template->activity->all_child_count ?? 0;
+	}
+
 	/**
 	 * Filters the activity comment count.
 	 *
