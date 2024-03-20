@@ -1868,12 +1868,12 @@ function bb_notification_is_read_only( $notification ) {
 		(
 				! in_array( $notification->component_action, $allowed_component_action, true ) &&
 				! empty( $notification->secondary_item_id ) &&
-				bp_is_user_inactive( $notification->secondary_item_id )
+				bp_is_user_inactive( $notification->user_id )
 		) ||
 		(
 				in_array( $notification->component_action, $allowed_component_action, true ) &&
 				! empty( $notification->item_id ) &&
-				bp_is_user_inactive( $notification->item_id )
+				bp_is_user_inactive( $notification->user_id )
 		) ||
 		(
 			bp_is_active( 'moderation' ) &&
