@@ -1912,7 +1912,7 @@ function bp_activity_get_comments( $args = '' ) {
 		return false;
 	}
 
-	if ( empty( $activities_template->activity->children ) ) {
+	if ( empty( $activities_template->activity->all_child_count ) ) {
 		return false;
 	}
 
