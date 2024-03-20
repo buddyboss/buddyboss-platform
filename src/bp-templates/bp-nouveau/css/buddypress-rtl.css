@@ -1566,8 +1566,10 @@ a.layout-grid-view {
 
 .bp-nouveau-activity-form-placeholder- #whats-new-privacy-stage,
 .bp-nouveau-activity-form-placeholder- #bp-activity-privacy-point,
+.bp-nouveau-activity-form-placeholder- #activity-schedule-section,
 #whats-new-form #whats-new-privacy-stage,
-#whats-new-form #bp-activity-privacy-point {
+#whats-new-form #bp-activity-privacy-point,
+#whats-new-form #activity-schedule-section {
   display: none;
 }
 
@@ -1583,6 +1585,29 @@ a.layout-grid-view {
 #whats-new-form.focus-in #bp-activity-privacy-point .bb-icon-chevron-down {
   font-size: 12px;
   margin-right: 5px;
+}
+
+#whats-new-form.focus-in #activity-schedule-section {
+  display: flex;
+  margin: auto;
+  margin-left: 0;
+  font-size: 13px;
+}
+
+#whats-new-form.focus-in #activity-schedule-section [class*="bb-icon"] {
+  font-size: 16px;
+  margin-left: 3px;
+}
+
+#whats-new-form.focus-in #activity-schedule-section .activity-post-schedule-details {
+  display: flex;
+  align-items: center;
+  line-height: 1.2;
+}
+
+#whats-new-form.focus-in #activity-schedule-section .activity-post-schedule-details strong {
+  font-weight: 600;
+  margin-left: 5px;
 }
 
 #whats-new-form.focus-in--privacy #whats-new-privacy-stage {

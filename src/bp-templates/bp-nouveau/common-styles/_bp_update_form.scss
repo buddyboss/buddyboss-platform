@@ -164,7 +164,8 @@
 	background-color: #fff;
 
 	#whats-new-privacy-stage,
-	#bp-activity-privacy-point {
+	#bp-activity-privacy-point,
+	#activity-schedule-section {
 		display: none;
 	}
 }
@@ -182,6 +183,29 @@
 		.bb-icon-chevron-down {
 			font-size: 12px;
 			margin-left: 5px;
+		}
+	}
+
+	#activity-schedule-section {
+		display: flex;
+		margin: auto;
+		margin-right: 0;
+		font-size: 13px;
+
+		[class*="bb-icon"] {
+			font-size: 16px;
+			margin-right: 3px;
+		}
+
+		.activity-post-schedule-details {
+			display: flex;
+			align-items: center;
+			line-height: 1.2;
+
+			strong {
+				font-weight: 600;
+				margin-right: 5px;
+			}
 		}
 	}
 }
