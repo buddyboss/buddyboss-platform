@@ -4767,6 +4767,8 @@ window.bp = window.bp || {};
 				'click .bb-schedule-post_dropdown_button': 'displayOptions',
 				'click .bb-schedule-post_action': 'displayScheduleForm',
 				'click .bb-view-schedule-posts': 'displaySchedulePosts',
+				'click .bb-schedule-activity-cancel': 'cancelSchedulePost',
+				'click .bb-model-close-button': 'cancelSchedulePost',
 				'click .bb-schedule-activity': 'displayScheduleButton',
 				'change .bb-schedule-activity-date-field': 'validateScheduleTime',
 				'change .bb-schedule-activity-time-field': 'validateScheduleTime',
@@ -4779,6 +4781,13 @@ window.bp = window.bp || {};
 			displayOptions: function ( event ) {
 				event.preventDefault();
 				$( event.target ).closest( '.bb-schedule-post_dropdown_section' ).find( '.bb-schedule-post_dropdown_list' ).toggleClass( 'is_open' );
+			},
+
+			cancelSchedulePost: function ( event ) {
+				event.preventDefault();
+				var schedulePost = $( event.target ).closest( '#bb-schedule-post_form_modal' );
+				schedulePost.find( 'input' ).val( '' );
+				schedulePost.hide();
 			},
 
 			displayScheduleForm: function ( event ) {
