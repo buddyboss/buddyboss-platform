@@ -23,9 +23,7 @@
 				?>
 				<p class="item-meta last-activity">
 					<span class="middot">&middot;</span>
-					<?php
-					printf( esc_html__( 'Last active %s', 'buddyboss' ), wp_kses_post( bb_get_member_last_activity_time() ) );
-					?>
+					<?php echo esc_html__( 'Last active', 'buddyboss' ) . ' ' . wp_kses_post( bb_get_member_last_activity_time() );?>
 				</p><!-- #item-meta -->
 			<?php endif; ?>
 		</div>
