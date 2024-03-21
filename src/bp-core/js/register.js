@@ -291,6 +291,11 @@ jQuery( document ).ready( function() {
                 		jQuery( document ).find( '#'+nickname ).before( html_uerror );
                 		return_val = false;
                 	}
+
+					// If form is validated the remove disabled attributes for member type field.
+					if ( jQuery( ".field_type_membertypes" ).length ) {
+						jQuery( ".field_type_membertypes fieldset select" ).attr( 'disabled', false );
+					}
 	                return true;
 	           	}
 			});
