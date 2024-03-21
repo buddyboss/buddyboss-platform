@@ -1222,8 +1222,11 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 		);
 	}
 	$comments = BP_Activity_Activity::append_comments( array( $parent_commment ), '', true, array(
-		'limit'  => bb_get_activity_comment_loading(),
-		'offset' => ! empty( $_POST['offset'] ) ? (int) $_POST['offset'] : 0,
+		'limit'                  => bb_get_activity_comment_loading(),
+		'offset'                 => ! empty( $_POST['offset'] ) ? (int) $_POST['offset'] : 0,
+		'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( $_POST['last_comment_timestamp'] ) : '',
+		'last_comment_id'        => ! empty( $_POST['last_comment_id'] ) ? (int) $_POST['last_comment_id'] : 0,
+		'comment_order_by'       => apply_filters( 'bp_activity_recurse_comments_order_by', 'ASC' ),
 	) );
 
 	if ( empty( $comments[0] ) ) {

@@ -3563,7 +3563,11 @@ window.bp = window.bp || {};
 							if ( 'undefined' !== typeof addAfterListItemId && '' !== addAfterListItemId ) {
 
 								var $addAfterElement = $targetList.find( 'li.activity-comment[data-bp-activity-comment-id=\'' + addAfterListItemId + '\']' );
-								$addAfterElement.after( $newComments );
+								if( $addAfterElement.length > 0 ) {
+									$addAfterElement.after( $newComments );
+								} else {
+									$targetList.append( $newComments );
+								}
 							} else if ( $targetList.children( '.activity-comment.comment-item' ).length > 0 ) {
 								// Already comments in the list.
 								$targetList.children( '.activity-comment.comment-item' ).first().before( $newComments );

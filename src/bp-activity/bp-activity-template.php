@@ -1987,7 +1987,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 			false !== $r['limit_comments'] &&
 			0 !== $r['comment_load_limit'] &&
 			(
-				$comment->all_child_count > $r['comment_load_limit']
+				$comment->top_level_count > $r['comment_load_limit']
 			)
 		) {
 			echo "<a href='javascript:void(0);' class='view-more-comments'>" . esc_html__( 'View more comments', 'buddyboss' ) . "</a>";

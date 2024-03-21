@@ -1676,7 +1676,7 @@ class BP_Activity_Activity {
 				$sql['select'] = "SELECT a.id";
 				$sql['from']   = "FROM {$bp->activity->table_name} a";
 				if ( true === $exclude_childrens ) {
-					$sql['where']  = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.secondary_item_id = %d";
+					$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.secondary_item_id = %d";
 				} else {
 					$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.item_id = %d and a.mptt_left > %d AND a.mptt_left < %d";
 				}
@@ -1711,10 +1711,29 @@ class BP_Activity_Activity {
 
 				$sql['limit'] = '';
 				if ( ! bp_is_single_activity() && ! bb_is_rest() ) {
-					$offset = ! empty( $args['offset'] ) ? $args['offset'] : 0;
+					if ( ! empty( $args['last_comment_id'] ) && ! empty( $args['last_comment_timestamp'] )  && ! empty( $args['comment_order_by'] ) ) {
+						$comparisonOperator = ( 'DESC' === strtoupper( $args['comment_order_by'] ) ) ? '<' : '>';
+
+						// Condition to handle other random order of ID if any.
+						$comparisonEqOperator = ( 'DESC' === strtoupper( $args['comment_order_by'] ) ) ? '>=' : '<=';
+
+						$sql['where'] .= $wpdb->prepare(
+							" AND (
+								a.id {$comparisonOperator} %d 
+								OR (
+									a.id {$comparisonEqOperator} %d 
+									AND a.date_recorded {$comparisonOperator} '%s'
+								)
+							) ",
+							$args['last_comment_id'],
+							$args['last_comment_id'],
+							date_i18n( 'Y-m-d H:i:s', $args['last_comment_timestamp'] )
+						);
+					}
+
 					$limit  = ! empty( $args['limit'] ) ? $args['limit'] : bb_get_activity_comment_visibility();
 					// @todo: Check the activity id is blog post activity or not. if yes update the logic to limit count.
-					$sql['limit'] = 'limit ' . $offset . ', ' . $limit;
+					$sql['limit'] = 'limit ' . $limit;
 
 					/**
 					 * Filters the MySQL From query for limit activity comment.
@@ -1732,6 +1751,7 @@ class BP_Activity_Activity {
 				} else {
 					$sql = $wpdb->prepare( $sql, $top_level_parent_id, $left, $right );
 				}
+
 				$descendant_ids = $wpdb->get_col( $sql );
 				$descendants    = self::get_activity_data( $descendant_ids );
 				$descendants    = self::append_user_fullnames( $descendants );
