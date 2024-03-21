@@ -4836,14 +4836,17 @@ window.bp = window.bp || {};
 
 			displayScheduleButton: function ( event ) {
 				event.preventDefault();
-				$( '#aw-whats-new-submit' ).val( BP_Nouveau.activity.strings.schedulePostButton );
 				var schedulePost = $( event.target ).closest( '.bb-schedule-posts' );
+				var schedulePost_time = schedulePost.find( '.bb-schedule-activity-time-field' ).val();
+				var schedulePost_date = schedulePost.find( '.bb-schedule-activity-date-field' ).val();
+				var schedulePost_meridian = schedulePost.find( 'input[name="bb-schedule-activity-meridian"]:checked').val();
+				this.model.set( 'activity_action_type', 'schedule' );
+				this.model.set( 'activity_schedule_date', schedulePost_date );
+				this.model.set( 'activity_schedule_time', schedulePost_time );
+				this.model.set( 'activity_schedule_meridiem', schedulePost_meridian);
+				$( '#aw-whats-new-submit' ).val( BP_Nouveau.activity.strings.schedulePostButton );
 				schedulePost.find( '.bb-schedule-post_dropdown_button' ).addClass( 'is_scheduled' );
 				$( event.target ).closest( '#bb-schedule-post_form_modal' ).hide();
-				this.model.set( 'activity_action_type', 'schedule' );
-				this.model.set( 'activity_schedule_date',  schedulePost.find( '.bb-schedule-activity-date-field' ).val() );
-				this.model.set( 'activity_schedule_time',  schedulePost.find( '.bb-schedule-activity-time-field' ).val() );
-				this.model.set( 'activity_schedule_meridiem',  schedulePost.find( 'input[name="bb-schedule-activity-meridian"]:checked').val() );
 			},
 
 			validateScheduleTime: function () {
