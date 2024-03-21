@@ -1235,7 +1235,7 @@ function bp_document_delete_orphaned_attachments() {
 	$post_table              = $wpdb->posts;
 	$postmeta_table          = $wpdb->postmeta;
 	$six_hours_ago_timestamp = strtotime( '-6 hours', current_time( 'timestamp', 1 ) );
-	$six_months_ago          = date( 'Y-m-d H:i:s', $six_hours_ago_timestamp );
+	$six_hours_ago           = date( 'Y-m-d H:i:s', $six_hours_ago_timestamp );
 
 	$query = "SELECT {$post_table}.ID
 				FROM {$post_table}
@@ -1243,7 +1243,7 @@ function bp_document_delete_orphaned_attachments() {
 				LEFT JOIN {$postmeta_table} AS mt1
 					ON ( {$post_table}.ID = mt1.post_id AND mt1.meta_key = 'bb_media_draft' )
 					WHERE 1=1 AND
-						( {$post_table}.post_date_gmt < '{$six_months_ago}' ) AND
+						( {$post_table}.post_date_gmt < '{$six_hours_ago}' ) AND
 						(
 							(
 								{$postmeta_table}.meta_key = 'bp_document_saved' AND
