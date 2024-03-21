@@ -258,6 +258,7 @@ function bp_invites_member_invite_register_screen_message() {
 				?>
 				<script>
 					jQuery( document ).ready( function () {
+						// On form submission remove disabled attribute from the select.
 						jQuery( "#signup-form" ).on( "submit", function() {
 							jQuery( ".field_type_membertypes fieldset select" ).attr( "disabled", false );
 						} );
