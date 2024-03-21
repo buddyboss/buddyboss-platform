@@ -993,14 +993,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 		// Membership button on groups loop or single group's header.
 	} elseif ( 'subscription' === $type ) {
 		if (
-			bb_is_enabled_subscription( 'group' ) &&
-			(
-				bp_is_active( 'activity' ) ||
-				(
-					bp_is_active( 'forums' ) &&
-					bp_group_is_forum_enabled()
-				)
-			)
+			bb_is_enabled_subscription( 'group' )
 		) {
 			$buttons['group_subscription'] = bb_get_group_subscription_button(
 				array(
