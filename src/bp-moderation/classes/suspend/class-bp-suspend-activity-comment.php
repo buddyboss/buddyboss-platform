@@ -230,8 +230,12 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 //			);
 //			$bb_background_updater->save()->schedule_event();
 
-			$action_id = as_enqueue_async_action('bb_as_hide_related_content', array( $acomment_id, $hide_sitewide, $args ), $group_name );
-			bb_insert_as_meta( $action_id, $this->item_type, $group_name, $acomment_id, $args['parent_id'] );
+			$action_id = as_enqueue_async_action('bb_as_hide_related_content', array( $acomment_id, $hide_sitewide, $args ), $group_name, true );
+			if ( $action_id ) {
+				bb_insert_as_meta( $action_id, $this->item_type, $group_name, $acomment_id, $args['parent_id'] );
+			} else {
+				error_log( 'duplicate' );
+			}
 		}
 	}
 
@@ -305,8 +309,12 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 //			);
 //			$bb_background_updater->save()->schedule_event();
 
-			$action_id = as_enqueue_async_action('bb_as_unhide_related_content', array( $acomment_id, $hide_sitewide, $force_all, $args ), $group_name );
-			bb_insert_as_meta( $action_id, $this->item_type, $group_name, $acomment_id, $args['parent_id'] );
+			$action_id = as_enqueue_async_action('bb_as_unhide_related_content', array( $acomment_id, $hide_sitewide, $force_all, $args ), $group_name, true );
+			if ( $action_id ) {
+				bb_insert_as_meta( $action_id, $this->item_type, $group_name, $acomment_id, $args['parent_id'] );
+			} else {
+				error_log( 'duplicate' );
+			}
 		}
 	}
 

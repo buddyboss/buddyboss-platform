@@ -144,6 +144,10 @@ abstract class BP_Suspend_Abstract {
 	public function hide_related_content( $item_id, $hide_sitewide = 0, $args = array() ) {
 		global $bb_background_updater;
 
+		error_log( $item_id );
+		error_log( $hide_sitewide );
+		error_log( print_r( $args, true ) );
+
 		$args = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
 
 		if ( empty( $args['action'] ) ) {
@@ -255,8 +259,12 @@ abstract class BP_Suspend_Abstract {
 //				);
 //				$bb_background_updater->save()->schedule_event();
 
-				$action_id = as_enqueue_async_action('bb_as_hide_related_content', array( $item_id, $hide_sitewide, $args ), $group_name );
-				bb_insert_as_meta( $action_id, $this->item_type, $group_name, $item_id, $parent_id );
+				$action_id = as_enqueue_async_action('bb_as_hide_related_content', array( $item_id, $hide_sitewide, $args ), $group_name, true );
+				if ( $action_id ) {
+					bb_insert_as_meta( $action_id, $this->item_type, $group_name, $folder_id, $parent_id );
+				} else {
+					error_log( 'duplicate');
+				}
 
 			}
 		}
@@ -305,6 +313,12 @@ abstract class BP_Suspend_Abstract {
 	 */
 	public function unhide_related_content( $item_id, $hide_sitewide = 0, $force_all = 0, $args = array() ) {
 		global $bb_background_updater;
+
+		error_log( $item_id );
+		error_log( $hide_sitewide );
+		error_log( $force_all );
+		error_log( print_r( $args, true ) );
+
 
 		$args = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
 
@@ -425,8 +439,12 @@ abstract class BP_Suspend_Abstract {
 				// );
 				// $bb_background_updater->save()->schedule_event();
 
-				$action_id = as_enqueue_async_action('bb_as_unhide_related_content', array( $item_id, $hide_sitewide, $force_all, $args ), $group_name );
-				bb_insert_as_meta( $action_id, $this->item_type, $group_name, $item_id, $parent_id );
+				$action_id = as_enqueue_async_action('bb_as_unhide_related_content', array( $item_id, $hide_sitewide, $force_all, $args ), $group_name, true );
+				if ( $action_id ) {
+					bb_insert_as_meta( $action_id, $this->item_type, $group_name, $item_id, $parent_id );
+				} else {
+					error_log( 'duplicate');
+				}
 			}
 		}
 	}
