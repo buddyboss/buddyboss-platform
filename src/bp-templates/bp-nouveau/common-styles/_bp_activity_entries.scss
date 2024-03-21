@@ -1562,6 +1562,19 @@
 	@media screen and (max-width: 490px) {
 
 		.ac-reply-content {
+
+			.ac-reply-toolbar {
+
+				.post-elements-buttons-item {
+					margin-right: 5px;
+				}
+			}
+		}
+	}
+
+	@media screen and (max-width: 420px) {
+
+		.ac-reply-content {
 			min-height: 125px;
 			padding-top: 35px;
 
@@ -1569,6 +1582,10 @@
 				position: static;
 				margin-bottom: 12px;
 				padding: 0 2px;
+
+				.post-elements-buttons-item {
+					margin-right: 5px;
+				}
 			}
 		}
 

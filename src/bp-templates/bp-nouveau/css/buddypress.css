@@ -4823,6 +4823,12 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
 }
 
 @media screen and (max-width: 490px) {
+  .ac-form-placeholder .ac-reply-content .ac-reply-toolbar .post-elements-buttons-item {
+    margin-right: 5px;
+  }
+}
+
+@media screen and (max-width: 420px) {
   .ac-form-placeholder .ac-reply-content {
     min-height: 125px;
     padding-top: 35px;
@@ -4831,6 +4837,9 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
     position: static;
     margin-bottom: 12px;
     padding: 0 2px;
+  }
+  .ac-form-placeholder .ac-reply-content .ac-reply-toolbar .post-elements-buttons-item {
+    margin-right: 5px;
   }
   .ac-form-placeholder .ac-submit-wrap {
     position: static;
@@ -7793,6 +7802,12 @@ span.dashicons.dashicons-admin-file:before {
   padding-top: 82.56%;
 }
 
+@media screen and (max-width: 960px) and (min-width: 800px) {
+  .has-sidebar .buddypress-wrap .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) {
+    flex-wrap: wrap;
+  }
+}
+
 @media screen and (max-width: 544px) {
   .buddypress-wrap .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) {
     flex-wrap: wrap;
@@ -8139,7 +8154,7 @@ form.ac-form.not-initialized > * {
   height: 74px;
 }
 
-@media screen and (max-width: 1080px) and (min-width: 768px), screen and (max-width: 490px) {
+@media screen and (max-width: 1080px) and (min-width: 768px), screen and (max-width: 420px) {
   form.ac-form.not-initialized .ac-reply-content {
     height: 74px;
   }
@@ -8270,10 +8285,13 @@ form.ac-form .ac-reply-content .ac-submit-wrap {
   position: static;
 }
 
-@media screen and (max-width: 1080px) and (min-width: 768px), screen and (max-width: 490px) {
+@media screen and (max-width: 1080px) and (min-width: 768px), screen and (max-width: 420px) {
   form.ac-form .ac-reply-content .ac-reply-cancel,
   form.ac-form .ac-reply-content .ac-submit-wrap {
     float: left;
+  }
+  form.ac-form .ac-reply-content .ac-submit-wrap {
+    margin-left: 8px;
   }
   #buddypress form.ac-form .ac-reply-content .ac-reply-cancel {
     margin-left: 10px;
@@ -8289,6 +8307,12 @@ form.ac-form .ac-reply-content .ac-submit-wrap {
   }
   .activity-modal form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar {
     position: absolute;
+  }
+}
+
+@media screen and (max-width: 490px) {
+  form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar .post-elements-buttons-item {
+    margin-right: 5px;
   }
 }
 

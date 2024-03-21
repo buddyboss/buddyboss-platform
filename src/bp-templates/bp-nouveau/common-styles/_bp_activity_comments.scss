@@ -213,6 +213,13 @@
 				}
 			}
 
+			@media screen and (max-width: 960px) and (min-width: 800px) {
+
+				.has-sidebar & {
+					flex-wrap: wrap;
+				}
+			}
+
 			@media screen and (max-width: 544px) {
 				flex-wrap: wrap;
 			}
