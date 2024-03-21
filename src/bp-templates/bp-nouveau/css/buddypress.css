@@ -7478,6 +7478,11 @@ span.dashicons.dashicons-admin-file:before {
   z-index: 11;
 }
 
+/* Disable click events on activity while sync after closing activity modal */
+#activity-stream .activity-item.activity-sync {
+  pointer-events: none;
+}
+
 #activity-stream .activity-item.activity-sync > .bp-generic-meta.activity-meta {
   border-top: 0;
 }
