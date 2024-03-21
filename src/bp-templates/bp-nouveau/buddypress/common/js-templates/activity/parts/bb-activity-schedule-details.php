@@ -11,8 +11,9 @@
 ?>
 <script type="text/html" id="tmpl-activity-schedule-details">
 	
+	<# if ( data.activity_schedule_date !== null && data.activity_schedule_time !== null ) {  #>
 		<span class="activity-post-schedule-details">
-			<i class="bb-icon-f bb-icon-clock"></i><strong><?php esc_html_e( 'Posting:', 'buddyboss' ); ?></strong> Oct 31 <?php esc_html_e( 'at', 'buddyboss' ); ?> 6:30 PM
+			<i class="bb-icon-f bb-icon-clock"></i><strong><?php esc_html_e( 'Posting:', 'buddyboss' ); ?></strong> {{{data.activity_schedule_date}}} <?php esc_html_e( 'at', 'buddyboss' ); ?> {{{data.activity_schedule_time}}} {{{data.activity_schedule_meridiem}}}
 		</span>
-	
+	<# } #>
 </script>
