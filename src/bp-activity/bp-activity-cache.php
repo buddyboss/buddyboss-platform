@@ -217,3 +217,20 @@ function bb_activity_clear_metadata( $meta_ids, $activity_id ) {
 add_action( 'deleted_activity_meta', 'bb_activity_clear_metadata', 10, 2 );
 add_action( 'updated_activity_meta', 'bb_activity_clear_metadata', 10, 2 );
 add_action( 'added_activity_meta', 'bb_activity_clear_metadata', 10, 2 );
+
+/**
+ * Reset cache incrementor for the Activity comment count.
+ *
+ * Called whenever an activity comment item is created or deleted, this
+ * function effectively invalidates all cached results of activity comment count queries.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True on success, false on failure.
+ */
+function bp_activity_comment_reset_cache_incrementor() {
+	$bp_activity_comment = bp_core_reset_incrementor( 'bp_activity_comment' );
+	return $bp_activity_comment;
+}
+add_action( 'bp_activity_delete', 'bp_activity_comment_reset_cache_incrementor' );
+add_action( 'bp_activity_add', 'bp_activity_comment_reset_cache_incrementor' );
