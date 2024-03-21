@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.5.71 =
+* Bug: Core - Media files were being removed when running the cron bp_document_delete_orphaned_attachments_hook
+
 = 2.5.70 =
 * Bug: Core - Create Account button and privacy policy checkbox were showing in the confirm email address notice screen and have now been removed
 * Bug: Core - Reactions migration tool was taking too long when migrating large numbers of Likes
