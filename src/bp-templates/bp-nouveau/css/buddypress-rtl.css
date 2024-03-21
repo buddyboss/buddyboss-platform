@@ -7807,7 +7807,13 @@ span.dashicons.dashicons-admin-file:before {
   padding-top: 82.56%;
 }
 
-@media screen and (max-width: 960px) and (min-width: 800px) {
+@media screen and (max-width: 1260px) and (min-width: 1080px) {
+  .has-sidebar.activity-sidebar-left .buddypress-wrap .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) {
+    flex-wrap: wrap;
+  }
+}
+
+@media screen and (max-width: 960px) and (min-width: 768px) {
   .has-sidebar .buddypress-wrap .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) {
     flex-wrap: wrap;
   }
@@ -7952,6 +7958,10 @@ span.dashicons.dashicons-admin-file:before {
 
 .buddypress-wrap .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity .document-preview-wrap {
   height: 115px;
+}
+
+.buddypress-wrap .bb-media-info-section .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) {
+  flex-wrap: wrap;
 }
 
 .buddypress-wrap .activity-comments .ac-form.has-gif .ac-reply-content .ac-submit-wrap, .buddypress-wrap .activity-comments .ac-form.has-content .ac-reply-content .ac-submit-wrap, .buddypress-wrap .activity-comments .ac-form.has-media .ac-reply-content .ac-submit-wrap,
