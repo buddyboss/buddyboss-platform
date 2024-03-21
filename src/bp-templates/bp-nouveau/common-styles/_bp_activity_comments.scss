@@ -213,6 +213,20 @@
 				}
 			}
 
+			@media screen and (max-width: 1260px) and (min-width: 1080px) {
+
+				.has-sidebar.activity-sidebar-left & {
+					flex-wrap: wrap;
+				}
+			}
+
+			@media screen and (max-width: 960px) and (min-width: 768px) {
+
+				.has-sidebar & {
+					flex-wrap: wrap;
+				}
+			}
+
 			@media screen and (max-width: 544px) {
 				flex-wrap: wrap;
 			}
@@ -381,6 +395,10 @@
 				.document-preview-wrap {
 					height: 115px;
 				}
+			}
+
+			.bb-activity-video-wrap:not(.bb-video-length-1) {
+				flex-wrap: wrap;
 			}
 		}
 	}
