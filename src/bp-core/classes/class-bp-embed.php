@@ -267,11 +267,20 @@ class BP_Embed extends WP_Embed {
 		if (
 			! empty( $type ) &&
 			is_object( $type ) &&
-			! empty( $type->component ) &&
-			'bbpress' === $type->component &&
 			! empty( $type->type ) &&
 			in_array( $type->type, array( 'bbp_reply_create', 'bbp_topic_create' ), true ) &&
-			metadata_exists( 'post', $type->item_id, '_link_embed' )
+			(
+				(
+					// Check the type of activity and return if not a bbPress activity.
+					! empty( $type->component ) &&
+					'bbpress' === $type->component &&
+					metadata_exists( 'post', $type->item_id, '_link_embed' )
+				) ||
+				(
+					// Check the type of activity and return if bbPress activity and link preview is disable.
+					false === bbp_use_autoembed()
+				)
+			)
 		) {
 			return $content;
 		}
@@ -335,7 +344,7 @@ class BP_Embed extends WP_Embed {
 		// Replace line breaks from all HTML elements with placeholders.
 		$content = wp_replace_in_html_tags( $content, array( "\n" => '<!-- wp-line-break -->' ) );
 
-		if ( ! $link_embed && preg_match( '#(^|\s|>)https?://#i', $content ) && ! ( strpos( $content, 'download_document_file' ) || strpos( $content, 'download_media_file' ) || strpos( $content, 'download_video_file' ) ) ) {
+		if ( ! empty( $link_embed ) && preg_match( '#(^|\s|>)https?://#i', $content ) && ! ( strpos( $content, 'download_document_file' ) || strpos( $content, 'download_media_file' ) || strpos( $content, 'download_video_file' ) ) ) {
 			// Find URLs on their own line.
 			if ( ! $is_activity ) {
 				$content = preg_replace_callback( '|^(\s*)(https?://[^\s<>"]+)(\s*)$|im', array( $this, 'autoembed_callback' ), $content );
