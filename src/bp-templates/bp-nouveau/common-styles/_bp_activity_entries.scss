@@ -1567,6 +1567,11 @@
 
 				.post-elements-buttons-item {
 					margin-right: 5px;
+
+					i::before {
+						margin-left: 0;
+						margin-right: 0;
+					}
 				}
 			}
 		}

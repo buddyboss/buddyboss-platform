@@ -281,7 +281,14 @@ form.ac-form {
 		.ac-reply-cancel {
 
 			#buddypress & {
-				padding: 5px 10px;
+
+				/* padding: 5px 10px; */
+				visibility: hidden;
+				opacity: 0;
+				width: 0;
+				height: 0;
+				font-size: 0;
+				padding: 0;
 			}
 		}
 
@@ -347,6 +354,11 @@ form.ac-form {
 
 				.post-elements-buttons-item {
 					margin-right: 5px;
+
+					i::before {
+						margin-left: 0;
+						margin-right: 0;
+					}
 				}
 			}
 		}

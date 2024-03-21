@@ -4826,6 +4826,10 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   .ac-form-placeholder .ac-reply-content .ac-reply-toolbar .post-elements-buttons-item {
     margin-left: 5px;
   }
+  .ac-form-placeholder .ac-reply-content .ac-reply-toolbar .post-elements-buttons-item i::before {
+    margin-right: 0;
+    margin-left: 0;
+  }
 }
 
 @media screen and (max-width: 420px) {
@@ -8284,7 +8288,13 @@ form.ac-form .ac-reply-content .ac-submit-wrap {
 }
 
 #buddypress form.ac-form .ac-reply-content .ac-reply-cancel {
-  padding: 5px 10px;
+  /* padding: 5px 10px; */
+  visibility: hidden;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  font-size: 0;
+  padding: 0;
 }
 
 .bb-media-model-container form.ac-form .ac-reply-content .ac-reply-cancel,
@@ -8328,6 +8338,10 @@ form.ac-form .ac-reply-content .ac-submit-wrap {
 @media screen and (max-width: 490px) {
   form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar .post-elements-buttons-item {
     margin-left: 5px;
+  }
+  form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar .post-elements-buttons-item i::before {
+    margin-right: 0;
+    margin-left: 0;
   }
 }
 
