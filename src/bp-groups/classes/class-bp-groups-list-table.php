@@ -134,11 +134,22 @@ class BP_Groups_List_Table extends WP_List_Table {
 			$this->view = $_GET['group_status'];
 		}
 
-		// We'll use the ids of group status types for the 'include' param.
-		$this->group_type_ids = BP_Groups_Group::get_group_type_ids();
-
 		// Get group ids for groups with no members.
-		$this->group_type_ids['no-members'] = $wpdb->get_col( "SELECT g.id FROM {$bp->groups->table_name} g LEFT JOIN {$bp->groups->table_name_members} m ON g.id = m.group_id WHERE m.group_id IS NULL" );
+		$no_member_sql = "m.group_id IS NULL";
+		if ( bp_is_active( 'moderation' ) ) {
+			$no_member_sql = "( m.group_id IS NULL OR ( m.user_id IN( SELECT item_id FROM {$bp->moderation->table_name} WHERE item_type = 'user' AND ( user_suspended = 1 OR hide_parent = 1 OR hide_sitewide = 1 ) ) AND m.is_admin = '1' ) )";
+		}
+
+		$no_member_group_ids = $wpdb->get_col( "SELECT g.id FROM {$bp->groups->table_name} g LEFT JOIN {$bp->groups->table_name_members} m ON g.id = m.group_id WHERE {$no_member_sql}" );
+
+		// We'll use the ids of group status types for the 'include' param.
+		$this->group_type_ids = BP_Groups_Group::get_group_type_ids(
+			array(
+				'not_in' => $no_member_group_ids
+			)
+		);
+
+		$this->group_type_ids['no-members'] = $no_member_group_ids;
 
 		// Pass a dummy array if there are no groups of this type.
 		$include = false;

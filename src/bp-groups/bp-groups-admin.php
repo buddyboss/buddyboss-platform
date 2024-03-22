@@ -1782,6 +1782,9 @@ function bp_groups_admin_autocomplete_handler() {
 		wp_die( -1 );
 	}
 
+	// Remove validation before get the group.
+	add_filter( 'bp_groups_group_pre_validate', '__return_true', 9999 );
+
 	$suggestions = bp_core_get_suggestions(
 		array(
 			'group_id' => -$group_id,  // A negative value will exclude this group's members from the suggestions.
@@ -1790,6 +1793,9 @@ function bp_groups_admin_autocomplete_handler() {
 			'type'     => 'members',
 		)
 	);
+
+	// Remove validation before get the group.
+	remove_filter( 'bp_groups_group_pre_validate', '__return_true', 9999 );
 
 	$matches = array();
 
