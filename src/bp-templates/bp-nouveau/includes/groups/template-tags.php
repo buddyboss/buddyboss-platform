@@ -992,8 +992,9 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 
 		// Membership button on groups loop or single group's header.
 	} elseif ( 'subscription' === $type ) {
-
-		if ( bb_is_enabled_subscription( 'group' ) ) {
+		if (
+			bb_is_enabled_subscription( 'group' )
+		) {
 			$buttons['group_subscription'] = bb_get_group_subscription_button(
 				array(
 					'id'                => 'group_subscription',
@@ -1001,7 +1002,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 					'component'         => 'groups',
 					'parent_element'    => $parent_element,
 					'parent_attr'       => array(
-						'id'    => ! empty( $button_args['wrapper_id'] ) ? $button_args['wrapper_id'] : '',
+						'id'    => '',
 						'class' => $parent_class,
 					),
 					'must_be_logged_in' => true,
