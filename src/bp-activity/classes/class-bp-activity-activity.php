@@ -1588,6 +1588,17 @@ class BP_Activity_Activity {
 			$top_level_parent_id = $activity_id;
 		}
 
+		if (
+			bb_is_rest() &&
+			! empty( (bool) $_GET['apply_limit'] ) &&
+			! empty( $_GET['last_comment_id'] ) &&
+			! empty( $_GET['last_comment_timestamp'] )
+		) {
+			$args['last_comment_id']        = intval( $_GET['last_comment_id'] );
+			$args['last_comment_timestamp'] = sanitize_text_field( $_GET['last_comment_timestamp'] );
+			$args['comment_order_by']       = apply_filters( 'bp_activity_recurse_comments_order_by', 'ASC' );
+		}
+
 		$comments = wp_cache_get( $activity_id, 'bp_activity_comments' );
 
 		// We store the string 'none' to cache the fact that the
@@ -1687,7 +1698,7 @@ class BP_Activity_Activity {
 				} else {
 					$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.item_id = $top_level_parent_id and a.mptt_left > $left AND a.mptt_left < $right";
 				}
-				$sql['misc']   = "ORDER BY a.date_recorded ASC";
+				$sql['misc'] = "ORDER BY a.date_recorded ASC";
 
 				/**
 				 * Filters the MySQL From query for legacy activity comment.
@@ -1719,7 +1730,7 @@ class BP_Activity_Activity {
 				$sql['misc'] = apply_filters( 'bp_activity_comments_get_misc_sql', $sql['misc'] );
 
 				$sql['limit'] = '';
-				if ( ! bp_is_single_activity() && ! bb_is_rest() ) {
+				if ( ! bp_is_single_activity() || ( bb_is_rest() && ! empty( (bool) $_GET['apply_limit'] ) ) ) {
 					if ( ! empty( $args['last_comment_id'] ) && ! empty( $args['last_comment_timestamp'] )  && ! empty( $args['comment_order_by'] ) ) {
 						$comparisonOperator = ( 'DESC' === strtoupper( $args['comment_order_by'] ) ) ? '<' : '>';
 
@@ -1740,8 +1751,13 @@ class BP_Activity_Activity {
 						);
 					}
 
-					$limit  = ! empty( $args['limit'] ) ? $args['limit'] + 1 : bb_get_activity_comment_visibility() + 1;
-					// @todo: Check the activity id is blog post activity or not. if yes update the logic to limit count.
+					if ( bb_is_rest() ) {
+						$limit = bb_get_activity_comment_loading();
+					} else {
+						$limit = ! empty( $args['limit'] ) ? $args['limit'] : bb_get_activity_comment_visibility();
+						$limit++;
+					}
+
 					$sql['limit'] = 'limit ' . $limit;
 
 					/**
