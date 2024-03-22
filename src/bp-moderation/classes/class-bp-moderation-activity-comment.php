@@ -534,7 +534,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		$blocked_user_query = true;
 		if (
 			function_exists( 'bb_did_filter' ) &&
-			bb_did_filter( 'bb_activity_comments_count_get_where_conditions' ) ||
+			bb_did_filter( 'bb_activity_comments_count_get_where_conditions' ) &&
 			bb_did_filter( 'bp_activity_comments_get_where_conditions' )
 		) {
 			$blocked_user_query = false;
@@ -601,7 +601,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 		if (
 			function_exists( 'bb_did_filter' ) &&
-			! bb_did_filter( 'bb_activity_comments_count_get_where_conditions' ) ||
+			! bb_did_filter( 'bb_activity_comments_count_get_where_conditions' ) &&
 			! bb_did_filter( 'bp_activity_comments_get_where_conditions' )
 		) {
 			$where .= "( {$this->alias}.hide_parent = 0 OR {$this->alias}.hide_parent IS NULL ) AND
