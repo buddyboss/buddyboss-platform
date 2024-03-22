@@ -1536,15 +1536,15 @@ class BP_Activity_Activity {
 
 				// Apply condition for non group activity.
 				// Logged-in member CAN’T see comments by the member in other member’s posts of is/has blocked users.
-				if (
-					bp_is_active( 'moderation' ) &&
-					is_user_logged_in() &&
-					'groups' !== $activity->component &&
-					! empty( $activity_comments[ $activity->id ] ) &&
-					get_current_user_id() !== $activity->user_id
-				) {
-					$activity_comments[ $activity->id ] = self::get_filtered_activity_comments( $activity_comments[ $activity->id ] );
-				}
+//				if (
+//					bp_is_active( 'moderation' ) &&
+//					is_user_logged_in() &&
+//					'groups' !== $activity->component &&
+//					! empty( $activity_comments[ $activity->id ] ) &&
+//					get_current_user_id() !== $activity->user_id
+//				) {
+//					$activity_comments[ $activity->id ] = self::get_filtered_activity_comments( $activity_comments[ $activity->id ] );
+//				}
 
 				$activities[ $key ]->children        = $activity_comments[ $activity->id ];
 				$activities[ $key ]->all_child_count = bb_get_all_activity_comment_children_count(
@@ -1680,9 +1680,9 @@ class BP_Activity_Activity {
 				$sql['select'] = "SELECT a.id";
 				$sql['from']   = "FROM {$bp->activity->table_name} a";
 				if ( true === $exclude_childrens ) {
-					$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.secondary_item_id = %d";
+					$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.secondary_item_id = $activity_id";
 				} else {
-					$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.item_id = %d and a.mptt_left > %d AND a.mptt_left < %d";
+					$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.item_id = $top_level_parent_id and a.mptt_left > $left AND a.mptt_left < $right";
 				}
 				$sql['misc']   = "ORDER BY a.date_recorded ASC";
 
@@ -1703,7 +1703,9 @@ class BP_Activity_Activity {
 				 * @param string $where Activity Comment from query
 				 */
 				$sql['where'] = apply_filters( 'bp_activity_comments_get_where_conditions', $sql['where'] );
-
+				if ( is_array( $sql['where'] ) ) {
+					$sql['where'] = 'WHERE ' . join( ' AND ', $sql['where'] );
+				}
 				/**
 				 * Filters the MySQL From query for order by activity comment.
 				 *
@@ -1750,11 +1752,6 @@ class BP_Activity_Activity {
 				}
 
 				$sql = "{$sql['select']} {$sql['from']} {$sql['where']} {$sql['misc']} {$sql['limit']}";
-				if ( true === $exclude_childrens ) {
-					$sql = $wpdb->prepare( $sql, $activity_id );
-				} else {
-					$sql = $wpdb->prepare( $sql, $top_level_parent_id, $left, $right );
-				}
 
 				$descendant_ids = $wpdb->get_col( $sql );
 				$descendants    = self::get_activity_data( $descendant_ids );

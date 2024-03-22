@@ -55,6 +55,9 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 		add_filter( 'bb_activity_comments_count_get_join_sql', array( $this, 'bb_update_join_sql' ), 10, 2 );
 		add_filter( 'bb_activity_comments_count_get_where_conditions', array( $this, 'bb_update_where_sql' ), 10, 2 );
 
+		add_filter( 'bp_activity_comments_get_join_sql', array( $this, 'bb_update_join_sql' ), 10, 2 );
+		add_filter( 'bp_activity_comments_get_where_conditions', array( $this, 'bb_update_where_sql' ), 10, 2 );
+
 		add_filter( 'bp_locate_template_names', array( $this, 'locate_blocked_template' ) );
 	}
 
@@ -515,6 +518,14 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 
 		$where                  = array();
 		$where['suspend_where'] = $this->exclude_where_query();
+
+		if ( is_string( $where_conditions ) ) {
+			$where_conditions_explode = explode( 'WHERE ', $where_conditions );
+			if ( isset( $where_conditions_explode[1] ) ) {
+				$and_conditions_explode = explode( ' AND ', $where_conditions_explode[1] );
+				$where_conditions       = $and_conditions_explode;
+			}
+		}
 
 		/**
 		 * Filters the hidden activity comment count Where SQL statement.
