@@ -426,11 +426,10 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 										bp_moderation_is_user_blocked( $current_comment_author_id ) ||
 										bb_moderation_is_user_blocked_by( $current_comment_author_id )
 									)
-								) ||
-								// Check comments parent, which is just at top of that comment.
-								(
-									$this->bb_check_parent_activity_hidden( $current_comment_data->id )
 								)
+								||
+								// Check comments parent, which is just at top of that comment.
+								$this->bb_check_parent_activity_hidden( $current_comment_data->id )
 							)
 						)
 					)
@@ -534,7 +533,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		$blocked_user_query = true;
 		if (
 			function_exists( 'bb_did_filter' ) &&
-			bb_did_filter( 'bb_activity_comments_count_get_where_conditions' ) &&
+			bb_did_filter( 'bb_activity_comments_count_get_where_conditions' ) ||
 			bb_did_filter( 'bp_activity_comments_get_where_conditions' )
 		) {
 			$blocked_user_query = false;
