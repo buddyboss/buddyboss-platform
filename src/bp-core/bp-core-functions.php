@@ -9747,3 +9747,22 @@ function bb_mention_add_user_dynamic_link( $content ) {
 
 	return preg_replace_callback( '/{{mention_user_id_(\d+)}}/', $replace_callback, $content );
 }
+
+function bb_insert_as_meta( $action_id, $type, $group, $data_id, $secondary_data_id, $priority = 10 ) {
+	global $wpdb;
+
+	// Insert to wp_actionscheduler_meta table having a column action_id, type, group, data_id and secondary_data_id.
+	$query = $wpdb->prepare( "INSERT INTO {$wpdb->prefix}actionscheduler_meta (`action_id`, `type`, `group`, `data_id`, `secondary_data_id`, `priority` ) VALUES (%d, %s, %s, %s, %s, %d )", $action_id, $type, $group, $data_id, $secondary_data_id, $priority );
+	$wpdb->query( $query );
+}
+
+// Get the as meta using the action_id.
+function bb_get_as_meta( $action_id ) {
+	global $wpdb;
+
+	// Get the data from wp_actionscheduler_meta table using the action_id.
+	$query = $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}actionscheduler_meta WHERE action_id = %d", $action_id );
+	$results = $wpdb->get_results( $query, ARRAY_A );
+
+	return $results;
+}
