@@ -5747,3 +5747,31 @@ function bb_remove_orphaned_profile_slug( $user_id ) {
 		bb_remove_orphaned_profile_slug( $user_id );
 	}
 }
+
+/**
+ * Fetch user display name for email notification according to hidden fields.
+ *
+ * @since [BBVERSION]
+ *
+ * @param int $activity_user_id User ID of the notification sender.
+ * @param int $receiver_user_id User ID of the notification receiver.
+ *
+ * @return string
+ */
+function bb_activity_get_notification_user_displayname( $activity_user_id, $receiver_user_id = 0 ) {
+
+	if ( empty( $activity_user_id ) ) {
+		return;
+	}
+
+	global $bb_hide_self_hidden_fields, $bb_hide_self_hidden_fields_user;
+	$bb_hide_self_hidden_fields 	 = true;
+	$bb_hide_self_hidden_fields_user = $receiver_user_id;
+	$poster_name                     = bp_core_get_user_displayname( $activity_user_id );
+
+	// Clean up.
+	$bb_hide_self_hidden_fields = false;
+	unset( $GLOBALS['bb_hide_self_hidden_fields_user'] );
+
+	return $poster_name;
+}

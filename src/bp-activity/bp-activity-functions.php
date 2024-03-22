@@ -4031,7 +4031,8 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
 	$email_type   = 'activity-at-message';
 	$group_name   = '';
 	$message_link = bp_activity_get_permalink( $activity_id );
-	$poster_name  = bp_core_get_user_displayname( $activity->user_id );
+	$poster_name  = bb_activity_get_notification_user_displayname( $activity->user_id, $receiver_user_id );	
+	
 
 	remove_filter( 'bp_get_activity_content_body', 'convert_smilies' );
 	remove_filter( 'bp_get_activity_content_body', 'wpautop' );
@@ -4148,7 +4149,7 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
 function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 0, $params = array() ) {
 	$original_activity = new BP_Activity_Activity( $params['activity_id'] );
 
-	$poster_name	   = bb_activity_get_user_notification_displayname( $commenter_id, $original_activity->user_id );	
+	$poster_name	   = bb_activity_get_notification_user_displayname( $commenter_id, $original_activity->user_id );	
 	$thread_link       = bp_activity_get_permalink( $params['activity_id'] );
 	$usernames         = bp_activity_do_mentions() ? bp_activity_find_mentions( $params['content'] ) : array();
 
@@ -5769,7 +5770,6 @@ function bb_activity_following_post_notification( $args ) {
 
 	$activity_id      = $r['activity']->id;
 	$activity_user_id = ! empty( $r['item_id'] ) ? $r['item_id'] : $r['activity']->user_id;
-	$poster_name      = bp_core_get_user_displayname( $activity_user_id );
 	$activity_link    = bp_activity_get_permalink( $activity_id );
 	$activity_metas   = bb_activity_get_metadata( $activity_id );
 	$media_ids        = $activity_metas['bp_media_ids'][0] ?? '';
@@ -5805,7 +5805,6 @@ function bb_activity_following_post_notification( $args ) {
 		'tokens' => array(
 			'activity'      => $r['activity'],
 			'activity.type' => $text,
-			'poster.name'   => $poster_name,
 			'activity.url'  => esc_url( $activity_link ),
 		),
 	);
@@ -5847,7 +5846,9 @@ function bb_activity_following_post_notification( $args ) {
 				'user_id'           => $user_id,
 				'notification_type' => 'new-activity-following',
 			);
+			$poster_name = bb_activity_get_notification_user_displayname( $activity_user_id, $user_id );
 
+			$args['tokens']['poster.name']      = $poster_name;
 			$args['tokens']['unsubscribe']      = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
 			$args['tokens']['receiver-user.id'] = $user_id;
 
@@ -6519,32 +6520,4 @@ function bb_activity_get_metadata( $activity_id ) {
 
 	// Return the metadata.
 	return $meta_data;
-}
-
-/**
- * Fetch user display name for email notification according to hidden fields.
- *
- * @since [BBVERSION]
- *
- * @param int $sender_user_id User ID of the notification sender.
- * @param int $receiver_user_id User ID of the notification receiver.
- *
- * @return string
- */
-function bb_activity_get_user_notification_displayname( $sender_user_id, $receiver_user_id ) {
-
-	if ( empty( $sender_user_id ) || empty( $receiver_user_id ) ) {
-		return;
-	}
-
-	global $bb_hide_self_hidden_fields, $bb_hide_self_hidden_fields_user;
-	$bb_hide_self_hidden_fields 	 = true;
-	$bb_hide_self_hidden_fields_user = $receiver_user_id;
-	$poster_name                     = bp_core_get_user_displayname( $sender_user_id );
-
-	// Clean up.
-	$bb_hide_self_hidden_fields = false;
-	unset( $GLOBALS['bb_hide_self_hidden_fields_user'] );
-
-	return $poster_name;
 }
