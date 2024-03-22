@@ -21,7 +21,7 @@
 		<div class="bb-schedule-post_dropdown_list">
 			<ul>
 				<li><a href="#" class="bb-schedule-post_action"><i class="bb-icon-l bb-icon-calendar"></i><?php echo esc_html__( 'Schedule Post', 'buddyboss' ); ?></a></li>
-				<li><a href="#" class="bb-view-schedule-posts"><i class="bb-icon-l bb-icon-pencil"></i><?php echo esc_html__( 'View Schedule Posts', 'buddyboss' ); ?></a></li>
+				<li><a href="#" id="bb-view-schedule-posts" class="bb-view-schedule-posts"><i class="bb-icon-l bb-icon-pencil"></i><?php echo esc_html__( 'View Schedule Posts', 'buddyboss' ); ?></a></li>
 			</ul>
 		</div>
 
