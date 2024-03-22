@@ -1919,6 +1919,12 @@
 		.acomments-view-more {
 			pointer-events: none;
 		}
+
+		.acomment-foot-actions {
+			.button.reaction {
+				pointer-events: none;
+			}
+		}
 	}
 }
 

@@ -5132,6 +5132,10 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   pointer-events: none;
 }
 
+.bb-internal-model .activity-comments.active .acomment-foot-actions .button.reaction {
+  pointer-events: none;
+}
+
 /* Activity comment modal ==> Ends Here */
 .ac-reply-toolbar .emojionearea.ac-input.medium-editor-element {
   background-color: transparent;
