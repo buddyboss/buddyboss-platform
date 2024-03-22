@@ -1610,6 +1610,11 @@ a.layout-grid-view {
   margin-right: 5px;
 }
 
+#whats-new-form.focus-in #activity-schedule-section .activity-post-schedule-details .activity-post-meridiem {
+  margin-left: 3px;
+  text-transform: uppercase;
+}
+
 #whats-new-form.focus-in--privacy #whats-new-privacy-stage {
   display: block;
 }

@@ -4840,6 +4840,12 @@ window.bp = window.bp || {};
 				var schedulePost_time = schedulePost.find( '.bb-schedule-activity-time-field' ).val();
 				var schedulePost_date = schedulePost.find( '.bb-schedule-activity-date-field' ).val();
 				var schedulePost_meridian = schedulePost.find( 'input[name="bb-schedule-activity-meridian"]:checked').val();
+
+				var UserDate = new Date( schedulePost_date );
+				var monthName = UserDate.toLocaleString( 'en-us', { month: 'short' } );
+				var dateNumber = UserDate.getDate();
+				schedulePost_date = monthName + ' ' + dateNumber;
+
 				this.model.set( 'activity_action_type', 'schedule' );
 				this.model.set( 'activity_schedule_date', schedulePost_date );
 				this.model.set( 'activity_schedule_time', schedulePost_time );
