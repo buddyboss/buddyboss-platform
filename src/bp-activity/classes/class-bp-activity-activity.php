@@ -1737,7 +1737,7 @@ class BP_Activity_Activity {
 						);
 					}
 
-					$limit  = ! empty( $args['limit'] ) ? $args['limit'] : bb_get_activity_comment_visibility();
+					$limit  = ! empty( $args['limit'] ) ? $args['limit'] + 1 : bb_get_activity_comment_visibility() + 1;
 					// @todo: Check the activity id is blog post activity or not. if yes update the logic to limit count.
 					$sql['limit'] = 'limit ' . $limit;
 

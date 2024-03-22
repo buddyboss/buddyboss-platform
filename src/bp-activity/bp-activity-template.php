@@ -2074,9 +2074,31 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 		$comment_loaded_count++;
 	}
 	*/
-
+	$comment_loaded_count = 0;
 	foreach ( (array) $comment->children as $comment_child ) {
 
+		if (
+			false !== $r['limit_comments'] &&
+			(
+				$comment_loaded_count === $r['comment_load_limit']
+			)
+		) {
+			if ( ! empty( $r['parent_comment_id'] ) && $r['main_activity_id'] !== $r['parent_comment_id'] ) {
+				$view_more_text = __( 'View more replies', 'buddyboss' );
+				$view_more_icon = "<i class='bb-icon-l bb-icon-corner-right'></i>";
+			} else {
+				$view_more_text = __( 'View more comments', 'buddyboss' );
+				$view_more_icon = "";
+			}
+
+			$hidden_class = '';
+			if ( ! $r['is_ajax_load_more'] ) {
+				$hidden_class = 'acomments-view-more--hide';
+			}
+
+			echo "<li class='acomments-view-more acomments-view-more--root " . esc_attr( $hidden_class ) . "'>" . $view_more_icon . "" . esc_html( $view_more_text ) . "</li>";
+			break;
+		}
 		// Put the comment into the global so it's available to filters.
 		$activities_template->activity->current_comment = $comment_child;
 
@@ -2098,37 +2120,40 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 		load_template( $template, false, $comment_template_args );
 
 		unset( $activities_template->activity->current_comment );
+
+		$comment_loaded_count++;
 	}
 
-	$loaded_count = 0;
-	if ( ! empty( $comment->children ) ) {
-		if ( 'activity_comment' !== $comment->type ) {
-			$loaded_count = (int) $r['already_loaded_comments_count'] + bb_get_activity_comment_visibility();
-		} else {
-			$loaded_count = (int) $r['already_loaded_comments_count'] + bb_get_activity_comment_loading();
-		}
-	}
+// 	$loaded_count = 0;
+// 	if ( ! empty( $comment->children ) ) {
+// 		if ( 'activity_comment' !== $comment->type ) {
+// 			$loaded_count = (int) $r['already_loaded_comments_count'] + bb_get_activity_comment_visibility();
+// 		} else {
+// 			$loaded_count = (int) $r['already_loaded_comments_count'] + bb_get_activity_comment_loading();
+// 		}
+// 	}
+// error_log(print_r($comment,true));
 
-	if (
-		false !== $r['limit_comments'] &&
-		count( $comment->children ) === $r['comment_load_limit'] &&
-		$comment->top_level_count > $loaded_count
-	) {
-		if ( ! empty( $r['parent_comment_id'] ) && $r['main_activity_id'] !== $r['parent_comment_id'] ) {
-			$view_more_text = __( 'View more replies', 'buddyboss' );
-			$view_more_icon = "<i class='bb-icon-l bb-icon-corner-right'></i>";
-		} else {
-			$view_more_text = __( 'View more comments', 'buddyboss' );
-			$view_more_icon = "";
-		}
+// 	if (
+// 		false !== $r['limit_comments'] &&
+// 		count( $comment->children ) === $r['comment_load_limit'] &&
+// 		$comment->top_level_count > $loaded_count
+// 	) {
+// 		if ( ! empty( $r['parent_comment_id'] ) && $r['main_activity_id'] !== $r['parent_comment_id'] ) {
+// 			$view_more_text = __( 'View more replies', 'buddyboss' );
+// 			$view_more_icon = "<i class='bb-icon-l bb-icon-corner-right'></i>";
+// 		} else {
+// 			$view_more_text = __( 'View more comments', 'buddyboss' );
+// 			$view_more_icon = "";
+// 		}
 
-		$hidden_class = '';
-		if ( ! $r['is_ajax_load_more'] ) {
-			$hidden_class = 'acomments-view-more--hide';
-		}
+// 		$hidden_class = '';
+// 		if ( ! $r['is_ajax_load_more'] ) {
+// 			$hidden_class = 'acomments-view-more--hide';
+// 		}
 
-		echo "<li class='acomments-view-more acomments-view-more--root " . esc_attr( $hidden_class ) . "'>" . $view_more_icon . "" . esc_html( $view_more_text ) . "</li>";
-	}
+// 		echo "<li class='acomments-view-more acomments-view-more--root " . esc_attr( $hidden_class ) . "'>" . $view_more_icon . "" . esc_html( $view_more_text ) . "</li>";
+// 	}
 
 
 	if ( ! $r['is_ajax_load_more'] ) {
