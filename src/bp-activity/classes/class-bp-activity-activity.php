@@ -669,7 +669,7 @@ class BP_Activity_Activity {
 
 		// Sanitize page and per_page parameters.
 		$page     = absint( $r['page'] );
-		$per_page = 1; // absint( $r['per_page'] );
+		$per_page = absint( $r['per_page'] );
 
 		$retval = array(
 			'activities'     => null,
