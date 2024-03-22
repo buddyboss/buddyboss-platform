@@ -13,7 +13,7 @@
 	
 	<# if ( data.activity_schedule_date && data.activity_schedule_time ) {  #>
 		<span class="activity-post-schedule-details">
-			<i class="bb-icon-f bb-icon-clock"></i><strong><?php esc_html_e( 'Posting:', 'buddyboss' ); ?></strong> {{{data.activity_schedule_date}}} <?php esc_html_e( 'at', 'buddyboss' ); ?> {{{data.activity_schedule_time}}} {{{data.activity_schedule_meridiem}}}
+			<i class="bb-icon-f bb-icon-clock"></i><strong><?php esc_html_e( 'Posting:', 'buddyboss' ); ?></strong> {{{data.activity_schedule_date}}} <?php esc_html_e( 'at', 'buddyboss' ); ?> {{{data.activity_schedule_time}}} <span class="activity-post-meridiem">{{{data.activity_schedule_meridiem}}}</span>
 		</span>
 	<# } #>
 </script>

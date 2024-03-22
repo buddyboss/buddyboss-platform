@@ -1610,6 +1610,11 @@ a.layout-grid-view {
   margin-right: 5px;
 }
 
+#whats-new-form.focus-in #activity-schedule-section .activity-post-schedule-details .activity-post-meridiem {
+  margin-left: 3px;
+  text-transform: uppercase;
+}
+
 #whats-new-form.focus-in--privacy #whats-new-privacy-stage {
   display: block;
 }
@@ -2259,12 +2264,38 @@ body.buddypress .bb-schedule-post_dropdown_section .schedule-posts-placeholder h
   border-top: 1px solid #eee;
 }
 
-@media screen and (max-width: 480px) {
-  .bp-nouveau-activity-form-placeholder- .has-draft .whats-new-form-footer,
-  .activity-update-form .has-draft .whats-new-form-footer {
+@media screen and (max-width: 580px) {
+  .bp-nouveau-activity-form-placeholder- .whats-new-form-footer,
+  .activity-update-form .whats-new-form-footer {
     flex-direction: column;
     align-items: center;
     padding-top: 1em;
+  }
+  .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #activity-form-submit-wrapper,
+  .activity-update-form .activity-form.focus-in #activity-form-submit-wrapper {
+    padding: 0 15px;
+  }
+  .bp-nouveau-activity-form-placeholder- #whats-new-form.activity-form.has-draft #discard-draft-activity,
+  .activity-update-form #whats-new-form.activity-form.has-draft #discard-draft-activity {
+    padding: 0 10px 0 5px;
+  }
+  .bp-nouveau-activity-form-placeholder- .bb-schedule-post_dropdown_section .bb-schedule-post_dropdown_list,
+  .activity-update-form .bb-schedule-post_dropdown_section .bb-schedule-post_dropdown_list {
+    right: initial;
+    left: 0;
+  }
+  .bp-nouveau-activity-form-placeholder- .activity-form.focus-in .whats-new-form-header #user-status-huddle,
+  .activity-update-form .activity-form.focus-in .whats-new-form-header #user-status-huddle {
+    flex-wrap: wrap;
+  }
+  .bp-nouveau-activity-form-placeholder- .activity-form.focus-in .whats-new-form-header #user-status-huddle .activity-post-name-status,
+  .activity-update-form .activity-form.focus-in .whats-new-form-header #user-status-huddle .activity-post-name-status {
+    max-width: 50%;
+  }
+  .bp-nouveau-activity-form-placeholder- .activity-form.focus-in .whats-new-form-header #user-status-huddle #activity-schedule-section,
+  .activity-update-form .activity-form.focus-in .whats-new-form-header #user-status-huddle #activity-schedule-section {
+    margin-top: 15px;
+    width: 100%;
   }
 }
 
