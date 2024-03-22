@@ -109,6 +109,9 @@ window.bp = window.bp || {};
 
 			// Store the ID of the updated activity
 			this.currentActivityId = null;
+
+			// Flag to track activity pin updates
+			this.activityPinHasUpdates = false;
 		},
 
 		/**
@@ -549,6 +552,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.resetActivityCommentForm( form, 'hardReset' );
 				commentsList.append( form );
 				commentItem.find( '.acomment-display' ).removeClass( 'display-focus' );
+				commentItem.removeClass( 'comment-item-focus' );
 			} );
 
 			bp.Nouveau.Activity.launchActivityPopup( activityId, parentId );
@@ -1246,11 +1250,13 @@ window.bp = window.bp || {};
 						if ( isInsideModal ) {
 							$( '.bb-modal-activity-footer' ).addClass( 'active' );
 							$( '#activity-modal' ).find( '.acomment-display' ).removeClass( 'display-focus' );
+							$( '#activity-modal' ).find( '.comment-item' ).removeClass( 'comment-item-focus' );
 						}
 
 						$activity_comments.append( form );
 						form.addClass( 'root' );
 						$activity_comments.find( '.acomment-display' ).removeClass( 'display-focus' );
+						$activity_comments.find( '.comment-item' ).removeClass( 'comment-item-focus' );
 
 						// It's a comment we're replying to.
 					} else {
@@ -1280,7 +1286,9 @@ window.bp = window.bp || {};
 				// change the aria state from false to true.
 				target.attr( 'aria-expanded', 'true' );
 				target.closest( '.activity-comments' ).find( '.acomment-display' ).removeClass( 'display-focus' );
+				target.closest( '.activity-comments' ).find( '.comment-item' ).removeClass( 'comment-item-focus' );
 				target.closest( '.acomment-display' ).addClass( 'display-focus' );
+				target.closest( '.comment-item' ).addClass( 'comment-item-focus' );
 
 				var peak_offset = ( $( window ).height() / 2 - 75 );
 
@@ -1489,6 +1497,7 @@ window.bp = window.bp || {};
 							var the_comment       = $.trim( response.data.contents );
 
 							activity_comments.find( '.acomment-display' ).removeClass('display-focus');
+							activity_comments.find( '.comment-item' ).removeClass( 'comment-item-focus' );
 							activity_comments.addClass( 'has-child-comments' );
 
 							var form_activity_id = form.find( 'input[name="comment_form_id"]' ).val();
@@ -1706,7 +1715,13 @@ window.bp = window.bp || {};
 						}
 						if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.feedback ) {
 							var activity_list   = target.closest( 'ul.activity-list' );
-							var activity_stream = target.closest( '.screen-content' ).find( '#activity-stream' );
+							var activity_stream;
+							if ( isInsideModal ) {
+								activity_stream = target.closest( '.buddypress-wrap' ).find( '#activity-stream' );
+							} else {
+								activity_stream = target.closest( '#activity-stream' );
+							}
+							
 
 							if ( response.success ) {
 
@@ -1797,6 +1812,10 @@ window.bp = window.bp || {};
 									true
 								]
 							);
+						}
+
+						if ( isInsideModal ) {
+							bp.Nouveau.Activity.activityPinHasUpdates = true;
 						}
 
 						bp.Nouveau.Activity.activityHasUpdates = true;
@@ -2012,6 +2031,11 @@ window.bp = window.bp || {};
 						dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
 						maxThumbnailFilesize        : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
 					};
+
+					// If a Dropzone instance already exists, destroy it before creating a new one
+					if ( self.dropzone_obj instanceof Dropzone ) {
+						self.dropzone_obj.destroy();
+					}
 
 					// init dropzone.
 					self.dropzone_obj = new Dropzone( hasParentModal +'#ac-reply-post-media-uploader-' + target.data( 'ac-id' ), dropzone_options );
@@ -3236,6 +3260,8 @@ window.bp = window.bp || {};
 			var form_submit_btn_attr_val = form_submit_btn.attr( 'data-add-edit-label' );
 			form_submit_btn.attr( 'data-add-edit-label', form_submit_btn.val() ).val( form_submit_btn_attr_val );
 
+			form.find( '.post-elements-buttons-item .toolbar-button' ).removeClass( 'active' );
+
 			form.find( '#ac-input-' + form_activity_id ).html( '' );
 			form.removeClass( 'has-content has-gif has-media' );
 			this.destroyCommentMediaUploader( form_activity_id );
@@ -3390,6 +3416,7 @@ window.bp = window.bp || {};
 			bp.Nouveau.Activity.resetActivityCommentForm( form, 'hardReset' );
 
 			modal.find( '.acomment-display' ).removeClass( 'display-focus' );
+			modal.find( '.comment-item' ).removeClass( 'comment-item-focus' );
 			modal.find( '.bb-modal-activity-footer' ).addClass( 'active' ).append( form );
 			form.addClass( 'root' );
 			form.find( '#ac-input-' + activityId ).focus();
@@ -3422,6 +3449,7 @@ window.bp = window.bp || {};
 			// Reset to default activity updates and id global variables
 			bp.Nouveau.Activity.activityHasUpdates = false;
 			bp.Nouveau.Activity.currentActivityId = null;
+			bp.Nouveau.Activity.activityPinHasUpdates = false;
 
 			modal.closest( 'body' ).addClass( 'acomments-modal-open' );
 			modal.show();
@@ -3447,6 +3475,7 @@ window.bp = window.bp || {};
 
 			var form = modal.find( '#ac-form-' + activityID );
 			modal.find( '.acomment-display' ).removeClass( 'display-focus' );
+			modal.find( '.comment-item' ).removeClass( 'comment-item-focus' );			
 			modal.find( '.bb-modal-activity-footer' ).addClass( 'active' ).append( form );
 			form.removeClass( 'not-initialized' ).addClass( 'root' );
 			form.find( '#ac-input-' + activityID ).focus();
@@ -3457,7 +3486,7 @@ window.bp = window.bp || {};
 			var ce = modal.find( '.bb-modal-activity-footer' ).find( '.ac-input[contenteditable]' );
 			bp.Nouveau.Activity.listenCommentInput( ce );
 
-			var action_tooltips = modal.find('.bb-activity-more-options-wrap .bb-activity-more-options-action, .bb-pin-action_button');
+			var action_tooltips = modal.find('.bb-activity-more-options-wrap .bb-activity-more-options-action, .bb-pin-action_button, .bb-mute-action_button');
 			action_tooltips.attr('data-balloon-pos', 'left');
 			var privacy_wrap = modal.find( '.privacy-wrap' );
 			privacy_wrap.attr( 'data-bp-tooltip-pos', 'right' );
@@ -3658,6 +3687,11 @@ window.bp = window.bp || {};
 							$pageActivitylistItem.replaceWith( $.parseHTML( response.data.activity ) );
 							// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 							jQuery( window ).scroll();
+
+							// Refresh activities after updating pin/unpin post status.
+							if ( bp.Nouveau.Activity.activityPinHasUpdates ) {
+								bp.Nouveau.refreshActivities();
+							}
 						}
 					}
 				).fail(

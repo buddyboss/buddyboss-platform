@@ -4303,6 +4303,8 @@ window.bp = window.bp || {};
 				// Populate the object list.
 				bp.Nouveau.objectRequest( queryData );
 			}
+
+			bp.Nouveau.Activity.activityPinHasUpdates = false;
 		}
 	};
 
