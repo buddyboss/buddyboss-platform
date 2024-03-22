@@ -69,6 +69,9 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			// Forum/Topic.
 			add_filter( 'bbp_after_has_topics_parse_args', array( $this, 'bb_wpml_member_profile_topic_reply' ) );
 			add_filter( 'bbp_after_has_replies_parse_args', array( $this, 'bb_wpml_member_profile_topic_reply' ) );
+			
+			//Global Search.
+			add_filter( 'Bp_Search_Posts_sql', array( $this, 'bb_wpml_search_posts_sql' ), 10, 3 );
 		}
 
 		/**
@@ -222,6 +225,28 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			}
 
 			return $r;
+		}
+
+		/**
+		 * Add fix for WPML post count issue in Global Search.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $sql_query String of the SQL query to filter.
+		 * 
+		 * @param array $args Arguments of the filter to get the post_type.
+		 *
+		 * @return string
+		 */
+		public function bb_wpml_search_posts_sql( $sql_query, $args ) {
+			$current_language = apply_filters( 'wpml_current_language', NULL );
+
+			if ( $current_language ) {
+				global $wpdb;
+				$sql_query .= $wpdb->prepare( " AND p.ID IN ( SELECT element_id FROM {$wpdb->prefix}icl_translations WHERE element_type = 'post_{$args['post_type']}' AND language_code = %s )", $current_language );
+			}
+
+			return $sql_query;
 		}
 
 	}
