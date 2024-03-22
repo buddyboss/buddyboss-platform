@@ -331,6 +331,14 @@ window.bp = window.bp || {};
 			if ( $tabActivityFormWrap.hasClass( 'is-bp-hide' ) ) {
 				$tabActivityFormWrap.addClass( 'bp-hide' );
 			}
+
+			// Reset media action buttons and uploader area.
+			if ( window.activityMediaAction !== null ) {
+				$( '.activity-update-form.modal-popup' ).find( '#' + window.activityMediaAction ).trigger( 'click' );
+				window.activityMediaAction = null;
+			}
+
+			$( '#whats-new-form' ).removeClass( 'focus-in--attm' );
 		},
 
 		createThumbnailFromUrl: function ( mock_file ) {
