@@ -1201,17 +1201,6 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 	global $activities_template;
 	$activity_id       = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
 	$parent_comment_id = ! empty( $_POST['parent_comment_id'] ) ? (int) $_POST['parent_comment_id'] : 0;
-	$type              = ! empty( $_POST['type'] ) ? $_POST['type'] : '';
-
-	// $args = array(
-	// 	'include'          => $parent_comment_id,
-	// 	//'display_comments' => false,
-	// 	// 'scope'            => 'groups' === $type ? $type : '',
-	// );
-
-	// if ( 'media' === $type || 'document' === $type ) {
-	// 	$args['show_hidden'] = true;
-	// }
 
 	$activities_template = new stdClass();
 	$parent_commment     = new BP_Activity_Activity( $parent_comment_id );

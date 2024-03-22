@@ -2003,77 +2003,6 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 		echo apply_filters( 'bb_activity_recurse_comments_start_ul', "<ul data-activity_id={$activities_template->activity->id} data-parent_comment_id={$comment->id}>" );
 	}
 
-	/*
-	$comment_loaded_count = 0;
-	$skip_flag            = true;
-	foreach ( (array) $comment->children as $comment_child ) {
-		if (
-			true === $r['is_ajax_load_more'] &&
-			! empty( $r['last_comment_timestamp'] ) &&
-			$comment->id === $r['parent_comment_id']
-		) {
-			// Handle same time on next page.
-			if ( $comment_child->id === $r['last_comment_id'] ) {
-				$skip_flag = false;
-				continue;
-			}
-
-			// Use ternary operator for orderby logic.
-			$comparisonOperator = 'DESC' === $r['comment_order_by'] ? '>=' : '<=';
-			if ( $skip_flag && $comment_child->date_recorded . $comparisonOperator . date_i18n( 'Y-m-d H:i:s', $r['last_comment_timestamp'] ) ) {
-				// Skip comment.
-				continue;
-			}
-		}
-
-		if (
-			false !== $r['limit_comments'] &&
-			(
-				$comment_loaded_count === $r['comment_load_limit']
-			)
-		) {
-			if ( ! empty( $r['parent_comment_id'] ) && $r['main_activity_id'] !== $r['parent_comment_id'] ) {
-				$view_more_text = __( 'View more replies', 'buddyboss' );
-				$view_more_icon = "<i class='bb-icon-l bb-icon-corner-right'></i>";
-			} else {
-				$view_more_text = __( 'View more comments', 'buddyboss' );
-				$view_more_icon = "";
-			}
-
-			$hidden_class = '';
-			if ( ! $r['is_ajax_load_more'] ) {
-				$hidden_class = 'acomments-view-more--hide';
-			}
-
-			echo "<li class='acomments-view-more acomments-view-more--root " . esc_attr( $hidden_class ) . "'>" . $view_more_icon . "" . esc_html( $view_more_text ) . "</li>";
-			break;
-		}
-
-		// Put the comment into the global so it's available to filters.
-		$activities_template->activity->current_comment = $comment_child;
-
-		$template = bp_locate_template( 'activity/comment.php', false, false );
-
-		$comment_template_args = array( 'limit_comments' => $r['limit_comments'] );
-		if (
-			false !== $r['limit_comments'] &&
-			(
-				$comment->id === $comment_child->secondary_item_id ||
-				$comment->item_id === $comment->secondary_item_id ||
-				in_array( $comment->component, array( 'groups', 'blogs' ), true )
-			)
-		) {
-			// First level comments.
-			$comment_template_args['show_replies'] = false;
-		}
-
-		load_template( $template, false, $comment_template_args );
-
-		unset( $activities_template->activity->current_comment );
-
-		$comment_loaded_count++;
-	}
-	*/
 	$comment_loaded_count = 0;
 	foreach ( (array) $comment->children as $comment_child ) {
 
@@ -2123,38 +2052,6 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 
 		$comment_loaded_count++;
 	}
-
-// 	$loaded_count = 0;
-// 	if ( ! empty( $comment->children ) ) {
-// 		if ( 'activity_comment' !== $comment->type ) {
-// 			$loaded_count = (int) $r['already_loaded_comments_count'] + bb_get_activity_comment_visibility();
-// 		} else {
-// 			$loaded_count = (int) $r['already_loaded_comments_count'] + bb_get_activity_comment_loading();
-// 		}
-// 	}
-// error_log(print_r($comment,true));
-
-// 	if (
-// 		false !== $r['limit_comments'] &&
-// 		count( $comment->children ) === $r['comment_load_limit'] &&
-// 		$comment->top_level_count > $loaded_count
-// 	) {
-// 		if ( ! empty( $r['parent_comment_id'] ) && $r['main_activity_id'] !== $r['parent_comment_id'] ) {
-// 			$view_more_text = __( 'View more replies', 'buddyboss' );
-// 			$view_more_icon = "<i class='bb-icon-l bb-icon-corner-right'></i>";
-// 		} else {
-// 			$view_more_text = __( 'View more comments', 'buddyboss' );
-// 			$view_more_icon = "";
-// 		}
-
-// 		$hidden_class = '';
-// 		if ( ! $r['is_ajax_load_more'] ) {
-// 			$hidden_class = 'acomments-view-more--hide';
-// 		}
-
-// 		echo "<li class='acomments-view-more acomments-view-more--root " . esc_attr( $hidden_class ) . "'>" . $view_more_icon . "" . esc_html( $view_more_text ) . "</li>";
-// 	}
-
 
 	if ( ! $r['is_ajax_load_more'] ) {
 
@@ -2516,11 +2413,6 @@ function bp_activity_get_comment_count( $deprecated = null ) {
 	if ( ! empty( $deprecated ) ) {
 		_deprecated_argument( __FUNCTION__, '1.2', sprintf( __( '%1$s no longer accepts arguments. See the inline documentation at %2$s for more details.', 'buddyboss' ), __FUNCTION__, __FILE__ ) );
 	}
-
-	// Get the count using the purpose-built recursive function.
-//	$count = ! empty( $activities_template->activity->children )
-//		? bp_activity_recurse_comment_count( $activities_template->activity )
-//		: 0;
 
 	$count = $activities_template->activity->all_child_count ?? 0;
 

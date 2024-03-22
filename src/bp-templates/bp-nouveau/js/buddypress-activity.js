@@ -3531,14 +3531,6 @@ window.bp = window.bp || {};
 				'</div>';
 
 			var $activityListItem = target.parents( 'li.activity-item[data-bp-activity-id=' + activityId + ']' );
-			if ( $activityListItem.length > 0 ) {
-				if ( $activityListItem.hasClass( 'mini' ) ) {
-					type = 'media';
-				} else if ( $activityListItem.hasClass( 'groups' ) ) {
-					type = 'groups';
-				}
-			}
-
 			target.addClass( 'loading' ).removeClass( 'acomments-view-more--hide' );
 			commentsList.addClass( 'active' );
 			target.html( skeleton );
@@ -3547,8 +3539,6 @@ window.bp = window.bp || {};
 				action: 'activity_loadmore_comments',
 				activity_id: activityId,
 				parent_comment_id: parentCommentId,
-				type: type,
-				// offset: $( currentTargetList ).find( '.activity-comment.comment-item' ).length,
 				offset: $( e.currentTarget ).parents( '.activity-comments' ).find( 'ul[data-parent_comment_id ="' + parentCommentId + '"] > li.comment-item:not(.bb-recent-comment)' ).length,
 				activity_type_is_blog: $( e.currentTarget ).parents( '.entry-content' ).length > 1 ? true : false,
 			};
