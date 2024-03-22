@@ -2271,6 +2271,10 @@ body.buddypress .bb-schedule-post_dropdown_section .schedule-posts-placeholder h
     align-items: center;
     padding-top: 1em;
   }
+  .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #activity-form-submit-wrapper,
+  .activity-update-form .activity-form.focus-in #activity-form-submit-wrapper {
+    padding: 0 15px;
+  }
   .bp-nouveau-activity-form-placeholder- #whats-new-form.activity-form.has-draft #discard-draft-activity,
   .activity-update-form #whats-new-form.activity-form.has-draft #discard-draft-activity {
     padding: 0 10px 0 5px;
@@ -2279,6 +2283,19 @@ body.buddypress .bb-schedule-post_dropdown_section .schedule-posts-placeholder h
   .activity-update-form .bb-schedule-post_dropdown_section .bb-schedule-post_dropdown_list {
     right: initial;
     left: 0;
+  }
+  .bp-nouveau-activity-form-placeholder- .activity-form.focus-in .whats-new-form-header #user-status-huddle,
+  .activity-update-form .activity-form.focus-in .whats-new-form-header #user-status-huddle {
+    flex-wrap: wrap;
+  }
+  .bp-nouveau-activity-form-placeholder- .activity-form.focus-in .whats-new-form-header #user-status-huddle .activity-post-name-status,
+  .activity-update-form .activity-form.focus-in .whats-new-form-header #user-status-huddle .activity-post-name-status {
+    max-width: 50%;
+  }
+  .bp-nouveau-activity-form-placeholder- .activity-form.focus-in .whats-new-form-header #user-status-huddle #activity-schedule-section,
+  .activity-update-form .activity-form.focus-in .whats-new-form-header #user-status-huddle #activity-schedule-section {
+    margin-top: 15px;
+    width: 100%;
   }
 }
 

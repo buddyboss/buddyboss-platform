@@ -872,6 +872,10 @@
 			padding-top: $pad-med;
 		}
 
+		.activity-form.focus-in #activity-form-submit-wrapper {
+			padding: 0 15px;
+		}
+
 		#whats-new-form.activity-form.has-draft #discard-draft-activity {
 			padding: 0 10px 0 5px;
 		}
@@ -879,6 +883,19 @@
 		.bb-schedule-post_dropdown_section .bb-schedule-post_dropdown_list {
 			right: initial;
 			left: 0;
+		}
+
+		.activity-form.focus-in .whats-new-form-header #user-status-huddle {
+			flex-wrap: wrap;
+
+			.activity-post-name-status {
+				max-width: 50%;
+			}
+
+			#activity-schedule-section {
+				margin-top: 15px;
+				width: 100%;
+			}
 		}
 
 	}
