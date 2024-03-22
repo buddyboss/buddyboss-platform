@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.5.70\n"
+"Project-Id-Version: BuddyBoss Platform 2.5.71\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-03-20 03:20:20+00:00\n"
+"POT-Creation-Date: 2024-03-22 12:23:49+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3995,8 +3995,8 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:1143
 #: bp-core/admin/bp-core-admin-settings.php:3423
 #: bp-core/admin/bp-core-admin-settings.php:3473
-#: bp-document/bp-document-functions.php:2039
-#: bp-groups/bp-groups-admin.php:2659 bp-video/bp-video-functions.php:2571
+#: bp-document/bp-document-functions.php:2031
+#: bp-groups/bp-groups-admin.php:2659 bp-video/bp-video-functions.php:2562
 msgid "Default"
 msgstr ""
 
@@ -5250,8 +5250,8 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:53 bp-core/bp-core-functions.php:797
 #: bp-document/bp-document-filters.php:126
-#: bp-document/bp-document-functions.php:2226
-#: bp-document/bp-document-functions.php:2229
+#: bp-document/bp-document-functions.php:2218
+#: bp-document/bp-document-functions.php:2221
 #: bp-document/classes/class-bp-document-component.php:70
 #: bp-document/classes/class-bp-document-component.php:260
 #: bp-document/classes/class-bp-document-component.php:262
@@ -6205,11 +6205,11 @@ msgid "Registration Settings"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-video.php:24
-#: bp-document/bp-document-functions.php:2084
+#: bp-document/bp-document-functions.php:2076
 #: bp-moderation/classes/class-bp-moderation-activity.php:565
 #: bp-moderation/classes/class-bp-moderation-activity.php:572
 #: bp-moderation/classes/class-bp-moderation-video.php:220
-#: bp-video/bp-video-functions.php:2616
+#: bp-video/bp-video-functions.php:2607
 msgid "Video"
 msgstr ""
 
@@ -9693,7 +9693,7 @@ msgstr ""
 
 #: bp-core/classes/class-bp-admin-tab.php:288
 #: bp-core/classes/class-bp-attachment.php:162
-#: bp-document/bp-document-functions.php:1524
+#: bp-document/bp-document-functions.php:1516
 #: bp-media/bp-media-functions.php:183 bp-video/bp-video-functions.php:157
 #: bp-video/bp-video-functions.php:305
 msgid "No file was uploaded."
@@ -9871,28 +9871,28 @@ msgid "The uploaded file exceeds the maximum allowed file size of: %s"
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:161
-#: bp-document/bp-document-functions.php:1523
+#: bp-document/bp-document-functions.php:1515
 #: bp-media/bp-media-functions.php:182 bp-video/bp-video-functions.php:156
 #: bp-video/bp-video-functions.php:304
 msgid "The uploaded file was only partially uploaded."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:164
-#: bp-document/bp-document-functions.php:1526
+#: bp-document/bp-document-functions.php:1518
 #: bp-media/bp-media-functions.php:185 bp-video/bp-video-functions.php:159
 #: bp-video/bp-video-functions.php:307
 msgid "Missing a temporary folder."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:165
-#: bp-document/bp-document-functions.php:1527
+#: bp-document/bp-document-functions.php:1519
 #: bp-media/bp-media-functions.php:186 bp-video/bp-video-functions.php:160
 #: bp-video/bp-video-functions.php:308
 msgid "Failed to write file to disk."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:166
-#: bp-document/bp-document-functions.php:1528
+#: bp-document/bp-document-functions.php:1520
 #: bp-media/bp-media-functions.php:187 bp-video/bp-video-functions.php:161
 #: bp-video/bp-video-functions.php:309
 msgid "File upload stopped by extension."
@@ -11591,85 +11591,85 @@ msgstr ""
 msgid "Repairing documents &hellip; Complete!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1406
+#: bp-document/bp-document-functions.php:1398
 msgid "Please login in order to upload file document."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1522
+#: bp-document/bp-document-functions.php:1514
 #: bp-video/bp-video-functions.php:155 bp-video/bp-video-functions.php:303
 msgid "The uploaded file exceeds "
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1553
+#: bp-document/bp-document-functions.php:1545
 msgid "Error while uploading document."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2044
+#: bp-document/bp-document-functions.php:2036
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:163
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:248
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:96
-#: bp-video/bp-video-functions.php:2576
+#: bp-video/bp-video-functions.php:2567
 msgid "Archive"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2049
-#: bp-video/bp-video-functions.php:2581
+#: bp-document/bp-document-functions.php:2041
+#: bp-video/bp-video-functions.php:2572
 msgid "Audio"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2054
-#: bp-video/bp-video-functions.php:2586
+#: bp-document/bp-document-functions.php:2046
+#: bp-video/bp-video-functions.php:2577
 msgid "Code"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2059
-#: bp-video/bp-video-functions.php:2591
+#: bp-document/bp-document-functions.php:2051
+#: bp-video/bp-video-functions.php:2582
 msgid "Design"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2064
+#: bp-document/bp-document-functions.php:2056
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:51
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/members/bb-link-preview.php:44
-#: bp-video/bp-video-functions.php:2596
+#: bp-video/bp-video-functions.php:2587
 msgid "Image"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2069
-#: bp-video/bp-video-functions.php:2601
+#: bp-document/bp-document-functions.php:2061
+#: bp-video/bp-video-functions.php:2592
 msgid "Presentation"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2074
-#: bp-video/bp-video-functions.php:2606
+#: bp-document/bp-document-functions.php:2066
+#: bp-video/bp-video-functions.php:2597
 msgid "Spreadsheet"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2079
-#: bp-video/bp-video-functions.php:2611
+#: bp-document/bp-document-functions.php:2071
+#: bp-video/bp-video-functions.php:2602
 msgid "Text"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2233
+#: bp-document/bp-document-functions.php:2225
 msgid "..."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2622
+#: bp-document/bp-document-functions.php:2614
 msgid "The document name is empty!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2625
+#: bp-document/bp-document-functions.php:2617
 msgid "Bad characters or invalid document name!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2628
+#: bp-document/bp-document-functions.php:2620
 msgid "A file with that name already exists in the containing folder!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2631
+#: bp-document/bp-document-functions.php:2623
 msgid "The document containing directory is not writable!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2655
+#: bp-document/bp-document-functions.php:2647
 msgid "File renaming error!"
 msgstr ""
 
@@ -23680,7 +23680,7 @@ msgstr ""
 msgid "Re-Run Migration"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1445 bp-media/bp-media-functions.php:2273
+#: bp-media/bp-media-filters.php:1445 bp-media/bp-media-functions.php:2265
 msgid ""
 "BuddyBoss Media data update is complete! Any previously uploaded member "
 "photos should display in their profiles now."
@@ -23755,7 +23755,7 @@ msgstr ""
 msgid "Error while uploading media."
 msgstr ""
 
-#: bp-media/bp-media-functions.php:2274
+#: bp-media/bp-media-functions.php:2266
 msgid "BuddyBoss Media data update is failing!"
 msgstr ""
 
@@ -33070,11 +33070,11 @@ msgstr ""
 msgid "Error while uploading video."
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4120
+#: bp-video/bp-video-functions.php:4111
 msgid "FFMpeg\\FFMpeg class not found"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4159
+#: bp-video/bp-video-functions.php:4150
 msgid "FFMpeg\\FFProbe class not found"
 msgstr ""
 
@@ -34784,32 +34784,32 @@ msgctxt "member latest update in member directory"
 msgid "- &quot;%s&quot;"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3457
+#: bp-document/bp-document-functions.php:3449
 #. translators: Memory unit for terabyte.
 msgctxt "memory unit"
 msgid "TB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3459
+#: bp-document/bp-document-functions.php:3451
 #. translators: Memory unit for gigabyte.
 msgctxt "memory unit"
 msgid "GB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3461
+#: bp-document/bp-document-functions.php:3453
 #. translators: Memory unit for megabyte.
 msgctxt "memory unit"
 msgid "MB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3463
+#: bp-document/bp-document-functions.php:3455
 #. translators: Memory unit for kilobyte.
 msgctxt "memory unit"
 msgid "KB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3465
-#: bp-document/bp-document-functions.php:3470
+#: bp-document/bp-document-functions.php:3457
+#: bp-document/bp-document-functions.php:3462
 #. translators: Memory unit for byte.
 msgctxt "memory unit"
 msgid "B"
