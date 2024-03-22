@@ -1353,6 +1353,13 @@ function bp_xprofile_get_hidden_fields_for_user( $displayed_user_id = 0, $curren
 		$current_user_id = bp_loggedin_user_id();
 	}
 
+	global $bb_hide_self_hidden_fields;
+
+	if ( $bb_hide_self_hidden_fields ) {
+		global $bb_hide_self_hidden_fields_user;
+		$current_user_id = $bb_hide_self_hidden_fields_user;
+	}
+
 	// @todo - This is where you'd swap out for current_user_can() checks
 	$hidden_levels = bp_xprofile_get_hidden_field_types_for_user( $displayed_user_id, $current_user_id );
 	$hidden_fields = bp_xprofile_get_fields_by_visibility_levels( $displayed_user_id, $hidden_levels );

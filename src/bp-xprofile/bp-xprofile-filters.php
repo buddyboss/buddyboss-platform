@@ -805,10 +805,11 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
 		return $full_name;
 	}
 
-	global $bb_default_display_avatar;
+	global $bb_default_display_avatar, $bb_hide_self_hidden_fields;
 
 	$cache_key = 'bb_xprofile_filter_get_user_display_name_' . trim( $user_id );
-	if ( isset( $cache[ $cache_key ] ) && ! $bb_default_display_avatar ) {
+	
+	if ( isset( $cache[ $cache_key ] ) && ! $bb_default_display_avatar && ! $bb_hide_self_hidden_fields ) {
 		return $cache[ $cache_key ];
 	}
 
@@ -830,8 +831,12 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
 				$full_name = str_replace( ' ' . $last_name, '', $full_name );
 			}
 		}
+
 		$bb_default_display_avatar = false;
-		$cache[ $cache_key ] = $full_name;
+
+		if ( ! $bb_hide_self_hidden_fields ) {
+			$cache[ $cache_key ] = $full_name;
+		}
 	}
 
 	return $full_name;

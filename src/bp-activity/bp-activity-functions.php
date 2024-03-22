@@ -4147,7 +4147,16 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
  */
 function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 0, $params = array() ) {
 	$original_activity = new BP_Activity_Activity( $params['activity_id'] );
-	$poster_name       = bp_core_get_user_displayname( $commenter_id );
+
+	global $bb_hide_self_hidden_fields, $bb_hide_self_hidden_fields_user;
+	$bb_hide_self_hidden_fields 	 = true;
+	$bb_hide_self_hidden_fields_user = $original_activity->user_id;
+	$poster_name                     = bp_core_get_user_displayname( $commenter_id );
+
+	// Clean up.
+	$bb_hide_self_hidden_fields = false;
+	unset( $GLOBALS['bb_hide_self_hidden_fields_user'] );
+
 	$thread_link       = bp_activity_get_permalink( $params['activity_id'] );
 	$usernames         = bp_activity_do_mentions() ? bp_activity_find_mentions( $params['content'] ) : array();
 
