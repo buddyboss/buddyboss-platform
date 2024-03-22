@@ -6631,16 +6631,17 @@ function bb_get_activity_comment_loading( $default = 10 ) {
 }
 
 /**
- * Get all activity children comments count based on id.
+ * Get all activity children comments count andtop level comment count based on id.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @param array $args Array of arguments.
  *
- * @return int $all_child_count Return count of children comment.
+ * @return array Array of child and top level comment count.
  */
 function bb_get_all_activity_comment_children_count( $args = array() ) {
 	$all_child_count = 0;
+	$top_level_count = 0;
 
 	$activity = null;
 	if ( ! empty( $args['activity'] ) ) {
@@ -6648,36 +6649,34 @@ function bb_get_all_activity_comment_children_count( $args = array() ) {
 	}
 
 	if ( empty( $activity ) ) {
-		return $all_child_count;
+		return array( 'all_child_count' => $all_child_count, 'top_level_count' => $top_level_count );
 	}
 
 	$comment_id = $activity->id;
 
 	global $wpdb, $bp;
-	// Select conditions.
-	$select_sql = 'SELECT DISTINCT count(*) as total_count';
-	$from_sql   = ' FROM ' . $bp->activity->table_name . ' a';
-	$join_sql   = '';
 
-	// Where conditions.
-	$where_conditions              = array();
-	$where_conditions['type']      = "a.type = 'activity_comment'";
 	if ( 'activity' === $activity->component && 0 === $activity->item_id && 0 === $activity->secondary_item_id ) {
 		// Condition for activity feed comments.
-		$where_conditions['a.item_id'] = "a.item_id = $comment_id";
+		$all_child_count_condition = "a.item_id = $comment_id";
 	} elseif ( 'activity' !== $activity->component ) {
 		// Condition for blogs, groups, etc feed comments.
-		$where_conditions['a.item_id'] = "a.item_id = $comment_id";
+		$all_child_count_condition = "a.item_id = $comment_id";
 	} else {
 		// Condition for child of activity comments.
-		$where_conditions['a.item_id'] = "a.item_id = $activity->item_id";
+		$all_child_count_condition = "a.item_id = $activity->item_id";
 	}
-	if ( ! empty( $activity->mptt_left ) ) {
-		$where_conditions['a.mptt_left'] = "a.mptt_left > $activity->mptt_left";
-	}
-	if ( ! empty( $activity->mptt_right ) ) {
-		$where_conditions['a.mptt_right'] = "a.mptt_left < $activity->mptt_right";
-	}
+
+	// Select conditions.
+	$select_sql = 'SELECT SUM( CASE WHEN ( ' . $all_child_count_condition . ' ) THEN 1 ELSE 0 END ) AS all_child_count,
+                   SUM( CASE WHEN a.secondary_item_id = ' . $comment_id . ' THEN 1 ELSE 0 END ) AS top_level_count';
+
+	$from_sql = ' FROM ' . $bp->activity->table_name . ' a';
+
+	// Where conditions.
+	$where_conditions           = array();
+	$where_conditions['a.type'] = "a.type = 'activity_comment'";
+
 	if ( ! empty( $args['spam'] ) ) {
 		if ( 'ham_only' == $args['spam'] ) {
 			$where_conditions['a.is_spam'] = 'a.is_spam = 0';
@@ -6688,43 +6687,33 @@ function bb_get_all_activity_comment_children_count( $args = array() ) {
 		}
 	}
 
+	if ( ! empty( $activity->mptt_left ) ) {
+		$where_conditions['a.mptt_left'] = "a.mptt_left > $activity->mptt_left";
+	}
+	if ( ! empty( $activity->mptt_right ) ) {
+		$where_conditions['a.mptt_right'] = "a.mptt_left < $activity->mptt_right";
+	}
+
 	$where_conditions = apply_filters( 'bb_activity_comments_count_get_where_conditions', $where_conditions, '' );
 	$where_sql        = 'WHERE ' . join( ' AND ', $where_conditions );
 
-	$join_sql = apply_filters( 'bb_activity_comments_count_get_join_sql', $join_sql, '' );
+	$join_sql = apply_filters( 'bb_activity_comments_count_get_join_sql', '', '' );
 
 	$total_comment_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql}";
 
 	$cache_group = 'bp_activity_comment';
 	$cached      = bp_core_get_incremented_cache( $total_comment_sql, $cache_group );
 	if ( false === $cached ) {
-		$total_comments = $wpdb->get_var( $total_comment_sql );
-		bp_core_set_incremented_cache( $total_comment_sql, $cache_group, $total_comments );
+		$counts = $wpdb->get_row( $total_comment_sql, ARRAY_A );
+
+		$all_child_count = isset( $counts['all_child_count'] ) ? intval( $counts['all_child_count'] ) : 0;
+		$top_level_count = isset( $counts['top_level_count'] ) ? intval( $counts['top_level_count'] ) : 0;
+
+		bp_core_set_incremented_cache( $total_comment_sql, $cache_group, $counts );
 	} else {
-		$total_comments = $cached;
+		$all_child_count = isset( $cached['all_child_count'] ) ? intval( $cached['all_child_count'] ) : 0;
+		$top_level_count = isset( $cached['top_level_count'] ) ? intval( $cached['top_level_count'] ) : 0;
 	}
 
-	return ! empty( $total_comments ) ? $total_comments : 0;
-}
-
-/**
- * Get top level activity comment count based on id.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param $comment_id
- *
- * @return int $top_level_comment_count Return count of children comment.
- */
-function bb_get_activity_top_level_comment_count( $comment_id ) {
-	$top_level_comment_count = 0;
-	if ( empty( $comment_id ) ) {
-		return $top_level_comment_count;
-	}
-
-	global $wpdb;
-	$sql = 'SELECT COUNT(*) as total FROM wp_bp_activity WHERE secondary_item_id = ' . $comment_id;
-	$result = $wpdb->get_row( $sql );
-
-	return $result->total ?? 0;
+	return array( 'all_child_count' => $all_child_count, 'top_level_count' => $top_level_count );
 }
