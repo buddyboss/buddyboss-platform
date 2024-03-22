@@ -2259,12 +2259,21 @@ body.buddypress .bb-schedule-post_dropdown_section .schedule-posts-placeholder h
   border-top: 1px solid #eee;
 }
 
-@media screen and (max-width: 480px) {
-  .bp-nouveau-activity-form-placeholder- .has-draft .whats-new-form-footer,
-  .activity-update-form .has-draft .whats-new-form-footer {
+@media screen and (max-width: 580px) {
+  .bp-nouveau-activity-form-placeholder- .whats-new-form-footer,
+  .activity-update-form .whats-new-form-footer {
     flex-direction: column;
     align-items: center;
     padding-top: 1em;
+  }
+  .bp-nouveau-activity-form-placeholder- #whats-new-form.activity-form.has-draft #discard-draft-activity,
+  .activity-update-form #whats-new-form.activity-form.has-draft #discard-draft-activity {
+    padding: 0 5px 0 10px;
+  }
+  .bp-nouveau-activity-form-placeholder- .bb-schedule-post_dropdown_section .bb-schedule-post_dropdown_list,
+  .activity-update-form .bb-schedule-post_dropdown_section .bb-schedule-post_dropdown_list {
+    left: initial;
+    right: 0;
   }
 }
 
