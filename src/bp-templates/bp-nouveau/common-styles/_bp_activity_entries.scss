@@ -1690,6 +1690,11 @@
 			pointer-events: none;
 		}
 
+		.bb-activity-more-options-wrap .acomment-edit,
+		.bb-activity-more-options-wrap .acomment-delete {
+			pointer-events: none;
+		}
+
 		.acomment-foot-actions {
 
 			.button.reaction {
