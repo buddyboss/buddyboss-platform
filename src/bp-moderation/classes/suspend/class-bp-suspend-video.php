@@ -392,19 +392,22 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 		if ( $this->background_disabled ) {
 			$this->hide_related_content( $video_id, $hide_sitewide, $args );
 		} else {
-//			$bb_background_updater->data(
-//				array(
-//					'type'              => $this->item_type,
-//					'group'             => $group_name,
-//					'data_id'           => $video_id,
-//					'secondary_data_id' => $args['parent_id'],
-//					'callback'          => array( $this, 'hide_related_content' ),
-//					'args'              => array( $video_id, $hide_sitewide, $args ),
-//				),
-//			);
-//			$bb_background_updater->save()->schedule_event();
+			// $bb_background_updater->data(
+			// array(
+			// 'type'              => $this->item_type,
+			// 'group'             => $group_name,
+			// 'data_id'           => $video_id,
+			// 'secondary_data_id' => $args['parent_id'],
+			// 'callback'          => array( $this, 'hide_related_content' ),
+			// 'args'              => array( $video_id, $hide_sitewide, $args ),
+			// ),
+			// );
+			// $bb_background_updater->save()->schedule_event();
 
-			$action_id = as_enqueue_async_action('bb_as_hide_related_content', array( $video_id, $hide_sitewide, $args ), $group_name, true );
+			if ( as_has_scheduled_action( 'bb_as_hide_related_content', array( $video_id, $hide_sitewide, $args ), $group_name ) ) {
+				return;
+			}
+			$action_id = as_enqueue_async_action( 'bb_as_hide_related_content', array( $video_id, $hide_sitewide, $args ), $group_name, true );
 			if ( $action_id ) {
 				bb_insert_as_meta( $action_id, $this->item_type, $group_name, $video_id, $args['parent_id'] );
 			} else {
@@ -471,18 +474,22 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 		if ( $this->background_disabled ) {
 			$this->unhide_related_content( $video_id, $hide_sitewide, $force_all, $args );
 		} else {
-//			$bb_background_updater->data(
-//				array(
-//					'type'              => $this->item_type,
-//					'group'             => $group_name,
-//					'data_id'           => $video_id,
-//					'secondary_data_id' => $args['parent_id'],
-//					'callback'          => array( $this, 'unhide_related_content' ),
-//					'args'              => array( $video_id, $hide_sitewide, $force_all, $args ),
-//				),
-//			);
-//			$bb_background_updater->save()->schedule_event();
-			$action_id = as_enqueue_async_action('bb_as_unhide_related_content', array( $video_id, $hide_sitewide, $force_all, $args ), $group_name, true );
+			// $bb_background_updater->data(
+			// array(
+			// 'type'              => $this->item_type,
+			// 'group'             => $group_name,
+			// 'data_id'           => $video_id,
+			// 'secondary_data_id' => $args['parent_id'],
+			// 'callback'          => array( $this, 'unhide_related_content' ),
+			// 'args'              => array( $video_id, $hide_sitewide, $force_all, $args ),
+			// ),
+			// );
+			// $bb_background_updater->save()->schedule_event();
+
+			if ( as_has_scheduled_action( 'bb_as_unhide_related_content', array( $video_id, $hide_sitewide, $force_all, $args ), $group_name ) ) {
+				return;
+			}
+			$action_id = as_enqueue_async_action( 'bb_as_unhide_related_content', array( $video_id, $hide_sitewide, $force_all, $args ), $group_name, true );
 			if ( $action_id ) {
 				bb_insert_as_meta( $action_id, $this->item_type, $group_name, $video_id, $args['parent_id'] );
 			} else {

@@ -437,7 +437,10 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 //			);
 //			$bb_background_updater->save()->schedule_event();
 
-			$action_id = as_enqueue_async_action('bb_as_hide_related_content', array( $member_id, $hide_sitewide, $args ), $group_name, true );
+			if ( as_has_scheduled_action( 'bb_as_hide_related_content', array( $member_id, $hide_sitewide, $args ), $group_name ) ) {
+				return;
+			}
+			$action_id = as_enqueue_async_action( 'bb_as_hide_related_content', array( $member_id, $hide_sitewide, $args ), $group_name, true );
 			if ( $action_id ) {
 				bb_insert_as_meta( $action_id, $this->item_type, $group_name, $member_id, $this->item_type . '_' . $member_id );
 			} else {
@@ -515,7 +518,10 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 //			);
 //			$bb_background_updater->save()->schedule_event();
 
-			$action_id = as_enqueue_async_action('bb_as_unhide_related_content', array( $member_id, $hide_sitewide, $force_all, $args ), $group_name, true );
+			if ( as_has_scheduled_action( 'bb_as_unhide_related_content', array( $member_id, $hide_sitewide, $force_all, $args ), $group_name ) ) {
+				return;
+			}
+			$action_id = as_enqueue_async_action( 'bb_as_unhide_related_content', array( $member_id, $hide_sitewide, $force_all, $args ), $group_name, true );
 			if ( $action_id ) {
 				bb_insert_as_meta( $action_id, $this->item_type, $group_name, $member_id, $this->item_type . '_' . $member_id );
 			} else {
@@ -724,7 +730,10 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 //
 //							$bb_background_updater->save()->dispatch();
 
-							$action_id = as_enqueue_async_action('bb_as_bb_update_member_friend_count', array( $member_id, $chunk_result, $action ), 'bb_update_member_friend_count', true );
+							if ( as_has_scheduled_action( 'bb_as_bb_update_member_friend_count', array( $member_id, $chunk_result, $action ), 'bb_update_member_friend_count' ) ) {
+								continue;
+							}
+							$action_id = as_enqueue_async_action( 'bb_as_bb_update_member_friend_count', array( $member_id, $chunk_result, $action ), 'bb_update_member_friend_count', true );
 							if ( $action_id ) {
 								bb_insert_as_meta( $action_id, 'member_count', 'bb_update_member_friend_count', $member_id, $member_id );
 							} else {
@@ -755,7 +764,10 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 //					);
 //					$bb_background_updater->save()->schedule_event();
 
-					$action_id = as_enqueue_async_action('bb_as_bb_update_group_member_count', array( $chunk ), 'bb_update_group_member_count', true );
+					if ( as_has_scheduled_action( 'bb_as_bb_update_group_member_count', array( $chunk ), 'bb_update_group_member_count' ) ) {
+						continue;
+					}
+					$action_id = as_enqueue_async_action( 'bb_as_bb_update_group_member_count', array( $chunk ), 'bb_update_group_member_count', true );
 					if ( $action_id ) {
 						bb_insert_as_meta( $action_id, 'group_member_count', 'bb_update_group_member_count', $member_id, $member_id );
 					} else {

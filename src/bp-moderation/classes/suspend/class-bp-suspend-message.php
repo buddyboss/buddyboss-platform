@@ -209,7 +209,10 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 //			);
 //			$bb_background_updater->save()->schedule_event();
 
-			$action_id = as_enqueue_async_action('bb_as_hide_related_content', array( $message_id, $hide_sitewide, $args ), $group_name, true );
+			if ( as_has_scheduled_action( 'bb_as_hide_related_content', array( $message_id, $hide_sitewide, $args ), $group_name ) ) {
+				return;
+			}
+			$action_id = as_enqueue_async_action( 'bb_as_hide_related_content', array( $message_id, $hide_sitewide, $args ), $group_name, true );
 			if ( $action_id ) {
 				bb_insert_as_meta( $action_id, $this->item_type, $group_name, $message_id, $args['parent_id'] );
 			} else {
@@ -288,7 +291,10 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 //			);
 //			$bb_background_updater->save()->schedule_event();
 
-			$action_id = as_enqueue_async_action('bb_as_unhide_related_content', array( $message_id, $hide_sitewide, $force_all, $args ), $group_name, true );
+			if ( as_has_scheduled_action( 'bb_as_unhide_related_content', array( $message_id, $hide_sitewide, $force_all, $args ), $group_name ) ) {
+				return;
+			}
+			$action_id = as_enqueue_async_action( 'bb_as_unhide_related_content', array( $message_id, $hide_sitewide, $force_all, $args ), $group_name, true );
 			if ( $action_id ) {
 				bb_insert_as_meta( $action_id, $this->item_type, $group_name, $message_id, $args['parent_id'] );
 			} else {
