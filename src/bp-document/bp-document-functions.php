@@ -3853,6 +3853,8 @@ function bp_document_create_symlinks( $document, $size = '' ) {
 				$group_status    = bp_get_group_status( $group_object );
 				$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $group_status . $privacy );
 			}
+
+			$attachment_path = $attachment_path . '.' . $extension;
 			if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
 				if ( ! is_link( $attachment_path ) ) {
 					// Generate Document Thumb Symlink.
@@ -4456,6 +4458,8 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 				$group_status            = bp_get_group_status( $group_object );
 				$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $group_status . $document->privacy );
 			}
+
+			$preview_attachment_path = $preview_attachment_path . '.' . $extension;
 			if ( ! file_exists( $preview_attachment_path ) && $generate ) {
 				bp_document_create_symlinks( $document, '' );
 			}
