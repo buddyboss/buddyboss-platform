@@ -4688,6 +4688,9 @@ function bb_document_video_get_symlink( $document, $generate = true ) {
 
 				if ( strstr( $mime, 'video/' ) ) {
 					if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
+
+						$extension       = bp_document_extension( $attachment_id );
+						$attachment_path = $attachment_path . '.' . $extension;
 						if ( ! is_link( $attachment_path ) && ! file_exists( $attachment_path ) ) {
 							$get_existing = get_post_meta( $document->attachment_id, 'bb_video_symlinks_arr', true );
 							if ( ! $get_existing ) {
