@@ -4722,6 +4722,7 @@ window.bp = window.bp || {};
 
 				this.model.on( 'change:object', this.updateDisplay, this );
 				this.model.on( 'change:posting', this.updateStatus, this );
+				this.model.on( 'change:activity_action_type', this.updateSubmitLabel, this );
 			},
 
 			updateDisplay: function ( model ) {
@@ -4751,6 +4752,19 @@ window.bp = window.bp || {};
 					this.reset.el.disabled  = false;
 
 					this.submit.el.classList.remove( 'loading' );
+				}
+			},
+
+			updateSubmitLabel: function ( model ) {
+				var buttomText = BP_Nouveau.activity.strings.postUpdateButton;
+				if ( $( '#whats-new-form' ).hasClass( 'bp-activity-edit' ) ) {
+					buttomText = BP_Nouveau.activity.strings.updatePostButton;
+				}
+
+				if( model.get( 'activity_action_type' ) === 'schedule' ) {
+					this.submit.el.value = BP_Nouveau.activity.strings.schedulePostButton;
+				} else {
+					this.submit.el.value = buttomText;
 				}
 			}
 		}
@@ -4850,8 +4864,6 @@ window.bp = window.bp || {};
 				this.model.set( 'activity_schedule_date', schedulePost_date );
 				this.model.set( 'activity_schedule_time', schedulePost_time );
 				this.model.set( 'activity_schedule_meridiem', schedulePost_meridian);
-				$( '#aw-whats-new-submit' ).val( BP_Nouveau.activity.strings.schedulePostButton );
-				schedulePost.find( '.bb-schedule-post_dropdown_button' ).addClass( 'is_scheduled' );
 				$( event.target ).closest( '#bb-schedule-post_form_modal' ).hide();
 			},
 

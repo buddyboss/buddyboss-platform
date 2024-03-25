@@ -787,7 +787,7 @@ window.bp = window.bp || {};
 			var scope = 'all';
 
 			if ( $( '#buddypress [data-bp-list="' + object + '"]' ).length ) {
-				queryData = {
+				var queryData = {
 					object: object,
 					scope: scope,
 					status: 'schedule',
