@@ -3226,6 +3226,7 @@ function bp_media_create_symlinks( $media, $size = '' ) {
 
 		$file = image_get_intermediate_size( $attachment_id, $size );
 
+		$output_file_src = '';
 		if ( $file && ! empty( $file['path'] ) ) {
 
 			$output_file_src = $upload_dir . '/' . $file['path'];
@@ -3265,6 +3266,11 @@ function bp_media_create_symlinks( $media, $size = '' ) {
 			}
 		}
 
+		if ( ! empty( $output_file_src ) ) {
+			$file_extension  = pathinfo( $output_file_src, PATHINFO_EXTENSION );
+			$attachment_path = $attachment_path . '.' . $file_extension;
+		}
+
 		// Generate Media Symlink.
 		bb_core_symlink_generator( 'media', $media, $size, $file, $output_file_src, $attachment_path );
 
@@ -3280,7 +3286,6 @@ function bp_media_create_symlinks( $media, $size = '' ) {
 		 * @since BuddyBoss 1.7.0
 		 */
 		do_action( 'bp_media_create_symlinks', $media->id, $attachment_id, $media, $symlinks_path, $size );
-
 	}
 }
 
@@ -3408,6 +3413,9 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 					$group_status            = bp_get_group_status( $group_object );
 					$preview_attachment_path = $symlinks_path . '/' . md5( $media_id . $attachment_id . $group_status . $media->privacy . $size );
 				}
+
+				$file_extension          = pathinfo( $output_file_src, PATHINFO_EXTENSION );
+				$preview_attachment_path = $preview_attachment_path . '.' . $file_extension;
 
 				if ( ! file_exists( $preview_attachment_path ) && $generate ) {
 					bp_media_create_symlinks( $media, $size );
