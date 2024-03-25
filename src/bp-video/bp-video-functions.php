@@ -3917,6 +3917,9 @@ function bb_video_get_symlink( $video, $generate = true ) {
 					}
 
 					if ( $generate ) {
+						$file_extension  = pathinfo( $attached_file, PATHINFO_EXTENSION );
+						$attachment_path = $attachment_path . '.' . $file_extension;
+
 						// Generate Video Symlink.
 						bb_core_symlink_generator( 'video', $video, $time, array(), $attached_file, $attachment_path );
 					}
@@ -4429,6 +4432,9 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $genera
 			$video->attachment_id = $attachment_id;
 
 			if ( $generate ) {
+				$file_extension  = pathinfo( $output_file_src, PATHINFO_EXTENSION );
+				$attachment_path = $attachment_path . '.' . $file_extension;
+
 				// Generate Video Thumb Symlink.
 				bb_core_symlink_generator( 'video_thumb', $video, $size, $file, $output_file_src, $attachment_path );
 			}
