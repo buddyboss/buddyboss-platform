@@ -1017,6 +1017,9 @@ window.bp = window.bp || {};
 							li_parent.find( '.bp-feedback' ).hide().fadeIn( 300 );
 						} else {
 							var closestParentElement = li_parent.closest( '.has-child-comments' );
+							if ( li_parent.hasClass( 'has-child-comments' ) ) {
+								var closestNestedParentElement = li_parent.closest('ul').closest( 'li' );
+							}
 							var closestList = closestParentElement.find( '> ul' );
 
 							// Specific case of the single activity screen.
@@ -1074,6 +1077,14 @@ window.bp = window.bp || {};
 
 									if ( closestList.find( 'li' ).length === 0 ) {
 										closestParentElement.removeClass( 'has-child-comments' );
+									}
+
+									if ( typeof closestNestedParentElement !== 'undefined' ) {
+										var closestParentElementList = closestNestedParentElement.find( '> ul' );
+										var trimmedList = closestParentElementList.html().trim();
+										if ( trimmedList === '' ) {
+											closestNestedParentElement.removeClass( 'has-child-comments' );
+										}
 									}
 								}
 							);
