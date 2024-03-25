@@ -5749,7 +5749,7 @@ function bb_remove_orphaned_profile_slug( $user_id ) {
 }
 
 /**
- * Fetch user display name for email notification according to hidden fields.
+ * Fetch user display name for email notification based on xprofile fields privacy.
  *
  * @since [BBVERSION]
  *
@@ -5766,7 +5766,7 @@ function bb_activity_get_notification_user_displayname( $activity_user_id, $rece
 
 	global $bb_hide_self_hidden_fields, $bb_hide_self_hidden_fields_user;
 	$bb_hide_self_hidden_fields 	 = true;
-	$bb_hide_self_hidden_fields_user = $receiver_user_id;
+	$bb_hide_self_hidden_fields_user = (int) $receiver_user_id;
 	$poster_name                     = bp_core_get_user_displayname( $activity_user_id );
 
 	// Clean up.

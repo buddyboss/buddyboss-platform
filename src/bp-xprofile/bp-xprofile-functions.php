@@ -1353,10 +1353,9 @@ function bp_xprofile_get_hidden_fields_for_user( $displayed_user_id = 0, $curren
 		$current_user_id = bp_loggedin_user_id();
 	}
 
-	global $bb_hide_self_hidden_fields;
+	global $bb_hide_self_hidden_fields, $bb_hide_self_hidden_fields_user;
 
-	if ( $bb_hide_self_hidden_fields ) {
-		global $bb_hide_self_hidden_fields_user;
+	if ( $bb_hide_self_hidden_fields && ! empty( $bb_hide_self_hidden_fields_user ) ) {
 		$current_user_id = $bb_hide_self_hidden_fields_user;
 	}
 
