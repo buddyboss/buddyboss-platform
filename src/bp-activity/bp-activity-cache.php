@@ -219,18 +219,21 @@ add_action( 'updated_activity_meta', 'bb_activity_clear_metadata', 10, 2 );
 add_action( 'added_activity_meta', 'bb_activity_clear_metadata', 10, 2 );
 
 /**
- * Reset cache incrementor for the Activity comment count.
- *
- * Called whenever an activity comment item is created or deleted, this
- * function effectively invalidates all cached results of activity comment count queries.
+ * Clear cached data for activity comment counts.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return bool True on success, false on failure.
+ * @param array $activities Array of activities.
  */
-function bp_activity_comment_reset_cache_incrementor() {
-	$bp_activity_comment = bp_core_reset_incrementor( 'bp_activity_comment' );
-	return $bp_activity_comment;
+function bb_activity_comment_reset_count( $activities ) {
+	if ( ! empty( $activities ) ) {
+		foreach ( $activities as $activity ) {
+			// Clear the comment count cache based on its own id and parent activity ID.
+			wp_cache_delete( 'bp_activity_comment_count_' . $activity->id, 'bp_activity_comments' );
+			wp_cache_delete( 'bp_activity_comment_count_' . $activity->item_id, 'bp_activity_comments' );
+			wp_cache_delete( 'bp_activity_comment_count_' . $activity->secondary_item_id, 'bp_activity_comments' );
+		}
+	}
 }
-add_action( 'bp_activity_delete', 'bp_activity_comment_reset_cache_incrementor' );
-add_action( 'bp_activity_add', 'bp_activity_comment_reset_cache_incrementor' );
+
+add_action( 'bp_activity_after_delete', 'bb_activity_comment_reset_count' );

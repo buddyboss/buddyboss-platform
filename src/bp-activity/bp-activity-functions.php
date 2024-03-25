@@ -2123,9 +2123,15 @@ function bp_activity_add( $args = '' ) {
 
 	// If this is an activity comment, rebuild the tree.
 	if ( 'activity_comment' === $activity->type ) {
+
 		// Also clear the comment cache for the parent activity ID.
 		wp_cache_delete( $activity->item_id, 'bp_activity_comments' );
 		wp_cache_delete( 'bp_get_child_comments_' . $activity->item_id, 'bp_activity_comments' );
+
+		// Clear the comment count cache based on its own id and parent activity ID.
+		wp_cache_delete( 'bp_activity_comment_count_' . $activity->id, 'bp_activity_comments' );
+		wp_cache_delete( 'bp_activity_comment_count_' . $activity->item_id, 'bp_activity_comments' );
+		wp_cache_delete( 'bp_activity_comment_count_' . $activity->secondary_item_id, 'bp_activity_comments' );
 
 		BP_Activity_Activity::rebuild_activity_comment_tree( $activity->item_id );
 	}
@@ -6652,7 +6658,8 @@ function bb_get_all_activity_comment_children_count( $args = array() ) {
 		return array( 'all_child_count' => $all_child_count, 'top_level_count' => $top_level_count );
 	}
 
-	$comment_id = $activity->id;
+	$activity_id = $args['activity_id'];
+	$comment_id  = $activity->id;
 
 	global $wpdb, $bp;
 
@@ -6661,6 +6668,9 @@ function bb_get_all_activity_comment_children_count( $args = array() ) {
 		$all_child_count_condition = "a.item_id = $comment_id";
 	} elseif ( 'activity' !== $activity->component ) {
 		// Condition for blogs, groups, etc feed comments.
+		$all_child_count_condition = "a.item_id = $comment_id";
+	} elseif ( 'activity_comment' === $activity->type && 0 === $activity->mptt_left && 0 === $activity->mptt_right ) {
+		// Condition for new added comment. mptt_left and mptt_right will be 0 at that time. That's update later.
 		$all_child_count_condition = "a.item_id = $comment_id";
 	} else {
 		// Condition for child of activity comments.
@@ -6701,15 +6711,14 @@ function bb_get_all_activity_comment_children_count( $args = array() ) {
 
 	$total_comment_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql}";
 
-	$cache_group = 'bp_activity_comment';
-	$cached      = bp_core_get_incremented_cache( $total_comment_sql, $cache_group );
-	if ( false === $cached ) {
+	$cache_group = 'bp_activity_comment_count_' . $comment_id;
+	$cached      = wp_cache_get( $cache_group, 'bp_activity_comments' );
+	if ( false === $cached )
 		$counts = $wpdb->get_row( $total_comment_sql, ARRAY_A );
-
 		$all_child_count = isset( $counts['all_child_count'] ) ? intval( $counts['all_child_count'] ) : 0;
 		$top_level_count = isset( $counts['top_level_count'] ) ? intval( $counts['top_level_count'] ) : 0;
 
-		bp_core_set_incremented_cache( $total_comment_sql, $cache_group, $counts );
+		wp_cache_set( $cache_group, $counts, 'bp_activity_comments' );
 	} else {
 		$all_child_count = isset( $cached['all_child_count'] ) ? intval( $cached['all_child_count'] ) : 0;
 		$top_level_count = isset( $cached['top_level_count'] ) ? intval( $cached['top_level_count'] ) : 0;
