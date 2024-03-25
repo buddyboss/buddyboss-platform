@@ -46,14 +46,14 @@
 
 									<label><?php echo esc_html__( 'Date', 'buddyboss' ); ?></label>
 									<div class="input-field">
-										<input type="text" name="" id="" class="bb-schedule-activity-date-field">
+										<input type="text" name="bb-schedule-activity-date-field" class="bb-schedule-activity-date-field" value="{{data.activity_schedule_date_raw ? data.activity_schedule_date_raw : ''}}">
 										<i class="bb-icon-f bb-icon-calendar"></i>
 									</div>
 
 									<label><?php echo esc_html__( 'Time', 'buddyboss' ); ?></label>
 									<div class="input-field-inline">
 										<div class="input-field bb-schedule-activity-time-wrap">
-											<input type="text" name="" id="" class="bb-schedule-activity-time-field">
+											<input type="text" name="bb-schedule-activity-time-field" class="bb-schedule-activity-time-field" value="{{data.activity_schedule_time ? data.activity_schedule_time : ''}}">
 											<i class="bb-icon-f bb-icon-clock"></i>
 										</div>
 										<div class="input-field bb-schedule-activity-meridian-wrap">

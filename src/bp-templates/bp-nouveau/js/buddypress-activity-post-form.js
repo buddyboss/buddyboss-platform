@@ -1114,6 +1114,7 @@ window.bp = window.bp || {};
 				'link_title',
 				'link_url',
 				'activity_action_type',
+				'activity_schedule_date_raw',
 				'activity_schedule_date',
 				'activity_schedule_time',
 				'activity_schedule_meridiem'
@@ -4852,15 +4853,16 @@ window.bp = window.bp || {};
 				event.preventDefault();
 				var schedulePost = $( event.target ).closest( '.bb-schedule-posts' );
 				var schedulePost_time = schedulePost.find( '.bb-schedule-activity-time-field' ).val();
-				var schedulePost_date = schedulePost.find( '.bb-schedule-activity-date-field' ).val();
+				var schedulePost_date_raw = schedulePost.find( '.bb-schedule-activity-date-field' ).val();
 				var schedulePost_meridian = schedulePost.find( 'input[name="bb-schedule-activity-meridian"]:checked').val();
 
-				var UserDate = new Date( schedulePost_date );
+				var UserDate = new Date( schedulePost_date_raw );
 				var monthName = UserDate.toLocaleString( 'en-us', { month: 'short' } );
 				var dateNumber = UserDate.getDate();
-				schedulePost_date = monthName + ' ' + dateNumber;
+				var schedulePost_date = monthName + ' ' + dateNumber;
 
 				this.model.set( 'activity_action_type', 'schedule' );
+				this.model.set( 'activity_schedule_date_raw', schedulePost_date_raw );
 				this.model.set( 'activity_schedule_date', schedulePost_date );
 				this.model.set( 'activity_schedule_time', schedulePost_time );
 				this.model.set( 'activity_schedule_meridiem', schedulePost_meridian);
