@@ -3902,6 +3902,11 @@ function bp_document_create_symlinks( $document, $size = '' ) {
 					$file_path = $file_path . '/' . $file['file'];
 				}
 
+				$preview_file_extension  = pathinfo( $file_path, PATHINFO_EXTENSION );
+				if ( ! empty( $preview_file_extension ) ) {
+					$attachment_path = $attachment_path . '.' . $preview_file_extension;
+				}
+
 				if ( $file && ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
 					if ( ! is_link( $attachment_path ) ) {
 
@@ -4333,6 +4338,22 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 				$group_object            = groups_get_group( $document->group_id );
 				$group_status            = bp_get_group_status( $group_object );
 				$preview_attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $group_status . $document->privacy . $size );
+			}
+
+			$file = image_get_intermediate_size( $attachment_id, $size );
+			if ( ! empty( $file ) && ! empty( $file['file'] ) ) {
+				$attached_file      = get_attached_file( $attachment_id );
+				$attached_file_info = pathinfo( $attached_file );
+				$file_path          = '';
+				if ( ! empty( $attached_file_info['dirname'] ) ) {
+					$file_path = $attached_file_info['dirname'];
+					$file_path = $file_path . '/' . $file['file'];
+				}
+
+				$preview_file_extension = pathinfo( $file_path, PATHINFO_EXTENSION );
+				if ( ! empty( $preview_file_extension ) ) {
+					$preview_attachment_path = $preview_attachment_path . '.' . $preview_file_extension;
+				}
 			}
 
 			if ( ! file_exists( $preview_attachment_path ) && $generate ) {
