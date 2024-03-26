@@ -480,7 +480,7 @@ class BP_Activity_Activity {
 			$where_conditions['search_sql'] = $wpdb->prepare( 'ExtractValue( a.content, "//text()" ) LIKE %s', $search_terms_like );
 
 			// Allow search CPT's post title in the activity feed.
-			$join_sql .= "LEFT JOIN {$bp->activity->table_name_meta} m ON ( m.activity_id = a.id )";
+			$join_sql                       .= "LEFT JOIN {$bp->activity->table_name_meta} m ON ( m.activity_id = a.id )";
 			$where_conditions['search_sql'] .= $wpdb->prepare( ' OR ( m.meta_key = %s AND m.meta_value LIKE %s ) ', 'post_title', $search_terms_like );
 
 			/**
@@ -1534,8 +1534,8 @@ class BP_Activity_Activity {
 		foreach ( (array) $activities as $key => $activity ) {
 			if ( isset( $activity_comments[ $activity->id ] ) ) {
 
-				$activities[ $key ]->children = $activity_comments[ $activity->id ];
-				$comments_count               = bb_get_all_activity_comment_children_count(
+				$activities[ $key ]->children        = $activity_comments[ $activity->id ];
+				$comments_count                      = bb_get_all_activity_comment_children_count(
 					array(
 						'activity' => $activity,
 					)
@@ -1638,7 +1638,7 @@ class BP_Activity_Activity {
 				$sql['select'] = "SELECT a.*, u.user_email, u.user_nicename, u.user_login, u.display_name{$fullname_select} ";
 				$sql['from']   = "FROM {$bp->activity->table_name} a, {$wpdb->users} u{$fullname_from} ";
 				$sql['where']  = "WHERE u.ID = a.user_id {$fullname_where} AND a.type = 'activity_comment' {$spam_sql} AND a.item_id = %d AND a.mptt_left > %d AND a.mptt_left < %d";
-				$sql['misc']   = "ORDER BY a.date_recorded ASC";
+				$sql['misc']   = 'ORDER BY a.date_recorded ASC';
 
 				/**
 				 * Filters the MySQL From query for legacy activity comment.
@@ -1646,7 +1646,6 @@ class BP_Activity_Activity {
 				 * @since BuddyPress 2.0.0
 				 *
 				 * @param string $from Activity Comment from query
-				 *
 				 */
 				$sql['from'] = apply_filters( 'bp_activity_comments_get_join_sql', $sql['from'] );
 
@@ -1656,10 +1655,8 @@ class BP_Activity_Activity {
 				 * @since BuddyPress 2.0.0
 				 *
 				 * @param string $where Activity Comment from query
-				 *
 				 */
 				$sql['where'] = apply_filters( 'bp_activity_comments_get_where_conditions', $sql['where'] );
-
 
 				$sql = "{$sql['select']} {$sql['from']} {$sql['where']} {$sql['misc']}";
 
@@ -1682,14 +1679,14 @@ class BP_Activity_Activity {
 				// descendants to the correct part of the tree.
 			} else {
 
-				$sql['select'] = "SELECT a.id";
+				$sql['select'] = 'SELECT a.id';
 				$sql['from']   = "FROM {$bp->activity->table_name} a";
 				if ( true === $exclude_childrens ) {
 					$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.secondary_item_id = $activity_id";
 				} else {
 					$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.item_id = $top_level_parent_id and a.mptt_left > $left AND a.mptt_left < $right";
 				}
-				$sql['misc'] = "ORDER BY a.date_recorded ASC";
+				$sql['misc'] = 'ORDER BY a.date_recorded ASC';
 
 				/**
 				 * Filters the MySQL From query for legacy activity comment.
@@ -1722,7 +1719,7 @@ class BP_Activity_Activity {
 
 				$sql['limit'] = '';
 				if ( ! bp_is_single_activity() || ( bb_is_rest() && ! empty( (bool) $_GET['apply_limit'] ) ) ) {
-					if ( ! empty( $args['last_comment_id'] ) && ! empty( $args['last_comment_timestamp'] )  && ! empty( $args['comment_order_by'] ) ) {
+					if ( ! empty( $args['last_comment_id'] ) && ! empty( $args['last_comment_timestamp'] ) && ! empty( $args['comment_order_by'] ) ) {
 						$comparisonOperator = ( 'DESC' === strtoupper( $args['comment_order_by'] ) ) ? '<' : '>';
 
 						// Condition to handle other random order of ID if any.
@@ -1852,7 +1849,7 @@ class BP_Activity_Activity {
 
 		return $comments;
 	}
-	
+
 	/**
 	 * Rebuild nested comment tree under an activity or activity comment.
 	 *
