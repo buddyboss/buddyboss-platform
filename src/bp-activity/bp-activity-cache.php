@@ -190,7 +190,7 @@ add_action( 'bp_stop_following', 'bp_activity_follow_delete_object_cache' );
  * @since BuddyBoss 1.1.7
  *
  * @param int        $user_id ID of user.
- * @param array|bool $ids array of follow ids or false.
+ * @param array|bool $ids     array of follow ids or false.
  */
 function bp_activity_follow_delete_follow_ids_object_cache( $user_id, $ids ) {
 	if ( ! empty( $ids ) ) {
@@ -234,9 +234,9 @@ function bb_activity_comment_reset_count( $activities ) {
 
 			// Also clear cache for all top level item.
 			$comments = bb_get_activity_hierarchy( $activity->secondary_item_id );
-			if ( ! empty ( $comments ) ) {
+			if ( ! empty( $comments ) ) {
 				$descendants = wp_list_pluck( $comments, 'id' );
-				if ( ! empty ( $descendants ) ) {
+				if ( ! empty( $descendants ) ) {
 					foreach ( $descendants as $activity_id ) {
 						wp_cache_delete( 'bp_activity_comment_count_' . $activity_id, 'bp_activity_comments' );
 					}
