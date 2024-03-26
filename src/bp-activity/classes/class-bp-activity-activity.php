@@ -1582,7 +1582,7 @@ class BP_Activity_Activity {
 		) {
 			$args['last_comment_id']        = intval( $_GET['last_comment_id'] );
 			$args['last_comment_timestamp'] = sanitize_text_field( $_GET['last_comment_timestamp'] );
-			$args['comment_order_by']       = apply_filters( 'bp_activity_recurse_comments_order_by', 'ASC' );
+			$args['comment_order_by']       = apply_filters( 'bb_activity_recurse_comments_order_by', 'ASC' );
 		}
 
 		if ( bp_is_single_activity() || ( bb_is_rest() && empty( $_GET['apply_limit'] ) ) ) {
