@@ -2714,25 +2714,3 @@ function bb_active_reactions() {
 
 	return ( ! empty( $all_emotions ) ? array_column( $all_emotions, null, 'id' ) : array() );
 }
-
-/**
- * Check whether activity schedule posts are enabled.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: false.
- *
- * @return bool true    If activity schedule posts are enabled, otherwise false.
- */
-function bb_is_active_activity_schedule_posts( $default = false ) {
-
-	/**
-	 * Filters whether activity schedule posts are enabled.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param bool $value Whether activity schedule posts are enabled.
-	 */
-	return (bool) apply_filters( 'bb_is_active_activity_schedule_posts', (bool) bp_get_option( '_bb_enable_activity_schedule_posts', $default ) );
-}
