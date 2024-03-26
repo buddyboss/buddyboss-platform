@@ -3904,9 +3904,11 @@ function bp_document_create_symlinks( $document, $size = '' ) {
 					$file_path = $file_path . '/' . $file['file'];
 				}
 
-				$preview_file_extension  = pathinfo( $file_path, PATHINFO_EXTENSION );
-				if ( ! empty( $preview_file_extension ) ) {
-					$attachment_path = $attachment_path . '.' . $preview_file_extension;
+				if ( ! empty( $file_path ) ) {
+					$preview_file_extension  = pathinfo( $file_path, PATHINFO_EXTENSION );
+					if ( ! empty( $preview_file_extension ) ) {
+						$attachment_path = $attachment_path . '.' . $preview_file_extension;
+					}
 				}
 
 				if ( $file && ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
@@ -3922,6 +3924,11 @@ function bp_document_create_symlinks( $document, $size = '' ) {
 						if ( ! file_exists( $output_file_src ) ) {
 							bb_document_regenerate_attachment_thumbnails( $attachment_id );
 							$file = image_get_intermediate_size( $attachment_id, $size );
+						}
+
+						$preview_file_extension  = pathinfo( $output_file_src, PATHINFO_EXTENSION );
+						if ( ! empty( $preview_file_extension ) ) {
+							$attachment_path = $attachment_path . '.' . $preview_file_extension;
 						}
 
 						// Check if file exists.
