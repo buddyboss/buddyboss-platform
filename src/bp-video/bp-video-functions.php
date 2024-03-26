@@ -3906,6 +3906,11 @@ function bb_video_get_symlink( $video, $generate = true ) {
 				$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $group_status . $privacy . $time );
 			}
 
+			if ( ! empty( $attached_file ) ) {
+				$file_extension  = pathinfo( $attached_file, PATHINFO_EXTENSION );
+				$attachment_path = ! empty( $file_extension ) ? $attachment_path . '.' . $file_extension : $attachment_path;
+			}
+
 			if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
 				if ( ! is_link( $attachment_path ) && ! file_exists( $attachment_path ) ) {
 					$get_existing = get_post_meta( $video->attachment_id, 'bb_video_symlinks_arr', true );
@@ -3917,9 +3922,6 @@ function bb_video_get_symlink( $video, $generate = true ) {
 					}
 
 					if ( $generate ) {
-						$file_extension  = pathinfo( $attached_file, PATHINFO_EXTENSION );
-						$attachment_path = $attachment_path . '.' . $file_extension;
-
 						// Generate Video Symlink.
 						bb_core_symlink_generator( 'video', $video, $time, array(), $attached_file, $attachment_path );
 					}
