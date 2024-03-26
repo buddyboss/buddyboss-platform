@@ -3347,13 +3347,16 @@ function bp_media_delete_symlinks( $media ) {
 	}
 	$all_attachments[] = $attachment_path;
 
-	$symlink_extension  = '';
-	$output_file_src = get_attached_file( $attachment_id );
-	if ( file_exists( $output_file_src ) ) {
-		$symlink_extension = pathinfo( $output_file_src, PATHINFO_EXTENSION );
-	}
+	$output_file_src   = get_attached_file( $attachment_id );
+	$symlink_extension = file_exists( $output_file_src ) ? pathinfo( $output_file_src, PATHINFO_EXTENSION ) : '';
 
 	foreach ( $all_attachments as $attachment_path ) {
+		// Delete symlink without an extension.
+		if ( file_exists( $attachment_path ) ) {
+			unlink( $attachment_path );
+		}
+
+		// Delete symlink with an extension.
 		$attachment_path = ! empty( $symlink_extension ) ? $attachment_path . '.' . $symlink_extension : $attachment_path;
 		if ( file_exists( $attachment_path ) ) {
 			unlink( $attachment_path );

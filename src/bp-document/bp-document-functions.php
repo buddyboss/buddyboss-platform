@@ -4047,6 +4047,12 @@ function bp_document_delete_symlinks( $document ) {
 	}
 
 	foreach ( $all_attachments as $attachment_path ) {
+		// Delete symlink without an extension.
+		if ( file_exists( $attachment_path ) ) {
+			unlink( $attachment_path );
+		}
+
+		// Delete symlink with an extension.
 		$attachment_path = $attachment_path . '.' . $symlink_extension;
 		if ( file_exists( $attachment_path ) ) {
 			unlink( $attachment_path );
