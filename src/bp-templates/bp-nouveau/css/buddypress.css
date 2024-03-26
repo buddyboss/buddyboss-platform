@@ -1663,7 +1663,7 @@ a.layout-grid-view {
 
 #whats-new-form.activity-form.has-draft #discard-draft-activity {
   display: block;
-  padding: 0 20px 0 12px;
+  padding: 0 8px 0 0;
 }
 
 #discard-draft-activity {
