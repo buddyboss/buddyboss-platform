@@ -537,7 +537,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 		 * @param array  $where_conditions Where condition for activity comment search.
 		 * @param string $search_term      Search term.
 		 */
-		$where = apply_filters( 'bp_suspend_activity_comment_count_get_where_conditions', $where, $this, $where_conditions, $args );
+		$where = apply_filters( 'bb_suspend_activity_comment_count_get_where_conditions', $where, $this, $where_conditions, $args );
 
 		if ( ! empty( array_filter( $where ) ) ) {
 			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
