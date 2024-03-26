@@ -1600,7 +1600,12 @@ class BP_Activity_Activity {
 			$args['comment_order_by']       = apply_filters( 'bp_activity_recurse_comments_order_by', 'ASC' );
 		}
 
-		$comments = wp_cache_get( $activity_id, 'bp_activity_comments' );
+		if ( bp_is_single_activity() || ( bb_is_rest() && empty( $_GET['apply_limit'] ) ) ) {
+			$comments = wp_cache_get( $activity_id, 'bp_activity_comments' );
+		} else {
+			// No caching for paginated comments.
+			$comments = array();
+		}
 
 		// We store the string 'none' to cache the fact that the
 		// activity item has no comments.
@@ -1856,7 +1861,9 @@ class BP_Activity_Activity {
 				$cache_value = $comments;
 			}
 
-			wp_cache_set( $activity_id, $cache_value, 'bp_activity_comments' );
+			if ( bp_is_single_activity() || ( bb_is_rest() && empty( (bool) $_GET['apply_limit'] ) ) ) {
+				wp_cache_set( $activity_id, $cache_value, 'bp_activity_comments' );
+			}
 		}
 
 		return $comments;

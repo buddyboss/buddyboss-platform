@@ -776,6 +776,11 @@ window.bp = window.bp || {};
 			var isInsideModal = target.closest( '#activity-modal' ).length > 0;
 			var isInsideMediaTheatre = target.closest( '.bb-internal-model' ).length > 0;
 
+			if (isInsideModal) {
+				activity_state = activity_item.closest( '#activity-modal' ).find( '.activity-state' );
+				comments_text = activity_item.closest( '#activity-modal' ).find( '.comments-count' );
+			}
+
 			// In case the target is set to a span or i tag inside the link.
 			if (
 				$( target ).is( 'span' ) ||
