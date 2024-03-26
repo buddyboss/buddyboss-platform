@@ -483,6 +483,10 @@ function bp_version_updater() {
 			bb_update_to_2_4_75();
 		}
 
+		if ( $raw_db_version < 21031 ) {
+			bb_update_to_2_4_76();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3451,5 +3455,57 @@ function bb_update_to_2_4_75() {
 
 		// Create a new table again.
 		BB_BG_Process_Log::instance()->create_table();
+	}
+}
+
+/**
+ * Remove symlinks of media, documents and videos.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_4_76() {
+	$media_symlinks_path = bp_media_symlink_path();
+	bb_remove_symlinks( $media_symlinks_path );
+
+	$document_symlinks_path = bp_document_symlink_path();
+	bb_remove_symlinks( $document_symlinks_path );
+
+	$video_symlinks_path = bb_video_symlink_path();
+	bb_remove_symlinks( $video_symlinks_path );
+}
+
+/**
+ * Remove from the directory symlinks of media, documents and videos.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $folder_path The folder path.
+ *
+ * @return void
+ */
+function bb_remove_symlinks( $folder_path ) {
+	// Open the folder.
+	if ( $handle = opendir( $folder_path ) ) {
+		// Loop through the folder contents.
+		while ( false !== ( $entry = readdir( $handle ) ) ) {
+
+			// Skip ., .. and index.html.
+			if ( '.' === $entry || '..' === $entry || 'index.html' === $entry ) {
+				continue;
+			}
+
+			// Full path to the entry.
+			$entry_path = $folder_path . '/' . $entry;
+
+			// Check if the entry is a symlink.
+			if ( is_link( $entry_path ) ) {
+				// Delete the symlink.
+				unlink( $entry_path );
+			}
+		}
+		// Close the folder handle
+		closedir( $handle );
 	}
 }
