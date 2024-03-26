@@ -4521,35 +4521,3 @@ function bb_get_activity_comment_unfavorite_link( $activity_comment_id = 0 ) {
 	 */
 	return apply_filters( 'bb_get_activity_comment_unfavorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/unfavorite/' . $activity_comment_id . '/' ), 'unmark_favorite' ) );
 }
-
-/**
- * Search and return the activity comment hierarchy.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param object $comment    The comment under which need to search.
- * @param int    $comment_id The comment id to be searched.
- *
- * @return string $comment_id The comment id to be searched.
- */
-function bb_search_comment_hierarchy( $comment, $comment_id ) {
-
-	// Check if the current object is the one we're looking for.
-	if ( isset( $comment->id ) && (int) $comment->id === (int) $comment_id ) {
-		return $comment;
-	}
-
-	// If this object has children, search them.
-	if ( isset( $comment->children ) && is_array( $comment->children ) ) {
-		foreach ( $comment->children as $child ) {
-			$result = bb_search_comment_hierarchy( $child, $comment_id );
-			// If the object was found in the current child, return it.
-			if ( $result !== null ) {
-				return $result;
-			}
-		}
-	}
-
-	// If the object wasn't found in this branch, return null.
-	return null;
-}
