@@ -1720,17 +1720,17 @@ class BP_Activity_Activity {
 				$sql['limit'] = '';
 				if ( ! bp_is_single_activity() || ( bb_is_rest() && ! empty( (bool) $_GET['apply_limit'] ) ) ) {
 					if ( ! empty( $args['last_comment_id'] ) && ! empty( $args['last_comment_timestamp'] ) && ! empty( $args['comment_order_by'] ) ) {
-						$comparisonOperator = ( 'DESC' === strtoupper( $args['comment_order_by'] ) ) ? '<' : '>';
+						$comparison_op = ( 'DESC' === strtoupper( $args['comment_order_by'] ) ) ? '<' : '>';
 
 						// Condition to handle other random order of ID if any.
-						$comparisonEqOperator = ( 'DESC' === strtoupper( $args['comment_order_by'] ) ) ? '>=' : '<=';
+						$comparison_eq_op = ( 'DESC' === strtoupper( $args['comment_order_by'] ) ) ? '>=' : '<=';
 
 						$sql['where'] .= $wpdb->prepare(
 							" AND (
-								a.id {$comparisonOperator} %d
+								a.id {$comparison_op} %d
 								OR (
-									a.id {$comparisonEqOperator} %d
-									AND a.date_recorded {$comparisonOperator} '%s'
+									a.id {$comparison_eq_op} %d
+									AND a.date_recorded {$comparison_op} '%s'
 								)
 							) ",
 							$args['last_comment_id'],
@@ -1755,7 +1755,7 @@ class BP_Activity_Activity {
 					 *
 					 * @param string $limit Activity Comment from query
 					 */
-					$sql['limit'] = apply_filters( 'bp_activity_comments_get_limit_conditions', $sql['limit'] );
+					$sql['limit'] = apply_filters( 'bb_activity_comments_get_limit_conditions', $sql['limit'] );
 				}
 
 				$sql = "{$sql['select']} {$sql['from']} {$sql['where']} {$sql['misc']} {$sql['limit']}";
