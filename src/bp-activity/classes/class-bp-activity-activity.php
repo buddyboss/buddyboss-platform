@@ -1549,8 +1549,7 @@ class BP_Activity_Activity {
 				$activities[ $key ]->children = $activity_comments[ $activity->id ];
 				$comments_count               = bb_get_all_activity_comment_children_count(
 					array(
-						'activity_id' => $activity->id,
-						'activity'    => $activity,
+						'activity' => $activity,
 					)
 				);
 				if ( ! empty( $comments_count ) ) {
@@ -1802,9 +1801,8 @@ class BP_Activity_Activity {
 				if ( true === $exclude_childrens ) {
 					$comments_count = bb_get_all_activity_comment_children_count(
 						array(
-							'activity_id' => $activity_id,
-							'spam'        => $spam,
-							'activity'    => $d,
+							'spam'     => $spam,
+							'activity' => $d,
 						)
 					);
 					if ( ! empty( $comments_count ) ) {

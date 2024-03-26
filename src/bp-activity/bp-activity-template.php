@@ -2904,7 +2904,12 @@ function bp_get_activity_comment_css_class() {
 	}
 
 	// Has children's.
-	if ( ! empty( bp_activity_current_comment()->children ) ) {
+	$comments_count = bb_get_all_activity_comment_children_count(
+		array(
+			'activity' => bp_activity_current_comment(),
+		)
+	);
+	if ( ! empty( $comments_count['all_child_count'] ) > 0 ) {
 		$class .= ' has-child-comments';
 	}
 

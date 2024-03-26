@@ -6658,8 +6658,7 @@ function bb_get_all_activity_comment_children_count( $args = array() ) {
 		return array( 'all_child_count' => $all_child_count, 'top_level_count' => $top_level_count );
 	}
 
-	$activity_id = $args['activity_id'];
-	$comment_id  = $activity->id;
+	$comment_id = $activity->id;
 
 	global $wpdb, $bp;
 
