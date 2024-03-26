@@ -6713,7 +6713,7 @@ function bb_get_all_activity_comment_children_count( $args = array() ) {
 
 	$cache_group = 'bp_activity_comment_count_' . $comment_id;
 	$cached      = wp_cache_get( $cache_group, 'bp_activity_comments' );
-	if ( false === $cached )
+	if ( false === $cached ) {
 		$counts = $wpdb->get_row( $total_comment_sql, ARRAY_A );
 		$all_child_count = isset( $counts['all_child_count'] ) ? intval( $counts['all_child_count'] ) : 0;
 		$top_level_count = isset( $counts['top_level_count'] ) ? intval( $counts['top_level_count'] ) : 0;
