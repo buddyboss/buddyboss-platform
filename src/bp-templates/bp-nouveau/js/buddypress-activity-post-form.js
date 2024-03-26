@@ -5484,12 +5484,35 @@ window.bp = window.bp || {};
 						} else if ( edit ) {
 							$( '#activity-' + response.id ).replaceWith( response.activity );
 
+							var html_string = response.activity;
+							var start_index = html_string.indexOf('data-bp-activity="') + 'data-bp-activity="'.length;
+							var end_index = html_string.indexOf('"', start_index);
+
+							// Extract the value of the data-bp-activity attribute
+							var data_bp_activity = html_string.substring(start_index, end_index);
+
+							// Replace the encoded entities with their respective characters
+							data_bp_activity = data_bp_activity.replace(/&quot;/g, '"');
+							//data_bp_activity = data_bp_activity.replace(/&lt;p&gt;/g, '<p>').replace(/&lt;\/p&gt;/g, '</p>');
+
+							// Parse the JSON string inside data-bp-activity attribute
+							var parsed_data_bp_activity = JSON.parse(data_bp_activity);
+
+							// Define a regular expression to match opening and closing HTML tags
+							var htmlTagRegex = /&lt;\/?(\w+)(\s+(\w|\s|="[^"]*")*)?\/?&gt;/g;
+
+							// Replace HTML entities with their corresponding tags
+							parsed_data_bp_activity.content = parsed_data_bp_activity.content.replace(htmlTagRegex, function(match) {
+								return match.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+							});
+
 							var activity_modal_item = $( '#activity-modal .activity-list .activity-item' );
 							var activity_target = activity_modal_item.find( '.activity-content' ).find( '.activity-inner' );
 							if ( activity_modal_item.length > 0 ) {
 								var content = $( '#activity-' + response.id ).find( '.activity-content' ).find( '.activity-inner' ).html();
 								activity_target.empty();
 								activity_target.append( content );
+								activity_modal_item.data('bp-activity', parsed_data_bp_activity);
 							}
 
 							// Inject the activity into the stream only if it hasn't been done already (HeartBeat).
