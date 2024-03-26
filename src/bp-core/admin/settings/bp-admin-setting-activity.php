@@ -64,6 +64,8 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	}
 
 	public function register_fields() {
+		$pro_class = bb_get_pro_fields_class();
+
 		$this->add_section( 'bp_activity', __( 'Activity Settings', 'buddyboss' ), '', 'bp_activity_settings_tutorial' );
 
 		// Allow Activity edit setting.
@@ -89,6 +91,11 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 		// Allow pinned posts.
 		$this->add_field( '_bb_enable_activity_pinned_posts', __( 'Pinned Post', 'buddyboss' ), 'bb_admin_setting_callback_enable_activity_pinned_posts', 'intval' );
+
+		// Allow schedule posts.
+		$args          = array();
+		$args['class'] = esc_attr( $pro_class );
+		$this->add_field( '_bb_enable_activity_schedule_posts', __( 'Schedule posts', 'buddyboss' ) . bb_get_pro_label_notice(), array( $this, 'bb_admin_setting_callback_enable_activity_schedule_posts' ), 'intval', $args );
 
 		// Allow follow.
 		$this->add_field( '_bp_enable_activity_follow', __( 'Follow', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_follow', 'intval' );
@@ -187,7 +194,19 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 		<input id="_bb_enable_close_activity_comments" name="_bb_enable_close_activity_comments" type="checkbox" value="1" <?php checked( bb_is_close_activity_comments_enabled( true ) ); ?> />
 		<label for="_bb_enable_close_activity_comments"><?php esc_html_e( 'Allow your users to stop users commenting on their posts', 'buddyboss' ); ?></label>
+		<?php
+	}
 
+
+	/**
+	 * Allow schedule activity posts.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_setting_callback_enable_activity_schedule_posts() {
+		?>
+		<input id="_bb_enable_activity_schedule_posts" name="_bb_enable_activity_schedule_posts" type="checkbox" value="1" <?php checked( bb_is_enabled_activity_schedule_posts() ); ?> />
+		<label for="_bb_enable_activity_schedule_posts"><?php esc_html_e( 'Allow members to schedule their posts', 'buddyboss' ); ?></label>
 		<?php
 	}
 }
