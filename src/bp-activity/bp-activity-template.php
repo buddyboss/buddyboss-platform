@@ -1480,7 +1480,6 @@ function bp_get_activity_content() {
 	$content = bp_get_activity_action() . ' ' . bp_get_activity_content_body();
 	// return apply_filters( 'bp_get_activity_content', $content );
 	return apply_filters_ref_array( 'bp_get_activity_content', array( $content, &$activities_template->activity ) );
-
 }
 
 /**
@@ -1954,14 +1953,14 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'limit_comments'                => false,
-			'comment_load_limit'            => 0,
-			'parent_comment_id'             => 0,
-			'main_activity_id'              => 0,
-			'is_ajax_load_more'             => false,
-			'last_comment_timestamp'        => '',
-			'last_comment_id'               => 0,
-			'comment_order_by'              => apply_filters( 'bb_activity_recurse_comments_order_by', 'ASC' ),
+			'limit_comments'         => false,
+			'comment_load_limit'     => 0,
+			'parent_comment_id'      => 0,
+			'main_activity_id'       => 0,
+			'is_ajax_load_more'      => false,
+			'last_comment_timestamp' => '',
+			'last_comment_id'        => 0,
+			'comment_order_by'       => apply_filters( 'bb_activity_recurse_comments_order_by', 'ASC' ),
 		),
 		'bb_activity_recurse_comments'
 	);
@@ -1989,7 +1988,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 				$comment->top_level_count > $r['comment_load_limit']
 			)
 		) {
-			echo "<a href='javascript:void(0);' class='view-more-comments'>" . esc_html__( 'View more comments', 'buddyboss' ) . "</a>";
+			echo '<a href="javascript:void(0);" class="view-more-comments">' . esc_html__( 'View more comments', 'buddyboss' ) . '</a>';
 		}
 
 		/**
@@ -2016,7 +2015,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 				$view_more_icon = "<i class='bb-icon-l bb-icon-corner-right'></i>";
 			} else {
 				$view_more_text = __( 'View more comments', 'buddyboss' );
-				$view_more_icon = "";
+				$view_more_icon = '';
 			}
 
 			$hidden_class = '';
@@ -2024,7 +2023,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 				$hidden_class = 'acomments-view-more--hide';
 			}
 
-			echo "<li class='acomments-view-more acomments-view-more--root " . esc_attr( $hidden_class ) . "'>" . $view_more_icon . "" . esc_html( $view_more_text ) . "</li>";
+			echo '<li class="acomments-view-more acomments-view-more--root ' . esc_attr( $hidden_class ) . '">' . $view_more_icon . esc_html( $view_more_text ) . '</li>';
 			break;
 		}
 		// Put the comment into the global so it's available to filters.
@@ -2049,7 +2048,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 
 		unset( $activities_template->activity->current_comment );
 
-		$comment_loaded_count++;
+		++$comment_loaded_count;
 	}
 
 	if ( ! $r['is_ajax_load_more'] ) {
@@ -2346,7 +2345,7 @@ function bp_activity_comment_content() {
  * @since BuddyPress 1.5.0
  * @since BuddyBoss 2.4.40 Added $activity_comment_id parameter to get activity comment content.
  *
- * @param int     $activity_comment_id Activity comment ID.
+ * @param int $activity_comment_id Activity comment ID.
  *
  * @return string $content The content of the current activity comment.
  * @global object $activities_template {@link BP_Activity_Template}
@@ -2445,7 +2444,7 @@ function bp_activity_recurse_comment_count( $comment, $count = 0 ) {
 	// Loop through children and recursively count comments.
 	if ( ! empty( $comment->children ) ) {
 		foreach ( (array) $comment->children as $comment ) {
-			$new_count++;
+			++$new_count;
 			$new_count = bp_activity_recurse_comment_count( $comment, $new_count );
 		}
 	}
@@ -2855,7 +2854,7 @@ function bp_get_activity_css_class() {
 	}
 
 	if ( 'groups' === $activities_template->activity->component ) {
-		$class .= ' group-'. $activities_template->activity->item_id;
+		$class .= ' group-' . $activities_template->activity->item_id;
 	}
 
 	/**
@@ -2896,10 +2895,8 @@ function bp_get_activity_comment_css_class() {
 		if ( get_option( 'thread_comments' ) ) {
 			$class .= ( $comment_depth > get_option( 'thread_comments_depth' ) ) ? ' detached-comment-item' : '';
 		}
-	} else {
-		if ( bb_is_activity_comment_threading_enabled() ) {
-			$class .= ( $comment_depth > bb_get_activity_comment_threading_depth() ) ? ' detached-comment-item' : '';
-		}
+	} elseif ( bb_is_activity_comment_threading_enabled() ) {
+		$class .= ( $comment_depth > bb_get_activity_comment_threading_depth() ) ? ' detached-comment-item' : '';
 	}
 
 	// Has children's.
@@ -3273,7 +3270,6 @@ function bp_activity_can_favorite() {
  * @param string $activity_type Activity type.
  *
  * @see   bp_get_total_favorite_count_for_user() for description of parameters.
- *
  */
 function bp_total_favorite_count_for_user( $user_id = 0, $activity_type = 'activity' ) {
 	echo bp_get_total_favorite_count_for_user( $user_id, $activity_type );
@@ -4181,7 +4177,7 @@ function bp_get_follower_ids( $args = '' ) {
 		array(
 			'user_id'  => bp_displayed_user_id(),
 			'page'     => false,
-			'per_page' => false
+			'per_page' => false,
 		)
 	);
 
@@ -4221,7 +4217,7 @@ function bp_get_following_ids( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'user_id' => bp_displayed_user_id(),
+			'user_id'  => bp_displayed_user_id(),
 			'page'     => false,
 			'per_page' => false,
 		)
@@ -4477,7 +4473,7 @@ function bb_get_activity_comment_is_favorite() {
  *
  * @since BuddyBoss 2.5.20
  *
- * @param int     $activity_comment_id The activity comment ID.
+ * @param int $activity_comment_id The activity comment ID.
  *
  * @return string The activity favorite link.
  *
@@ -4504,7 +4500,7 @@ function bb_get_activity_comment_favorite_link( $activity_comment_id = 0 ) {
  *
  * @since BuddyBoss 2.5.20
  *
- * @param int     $activity_comment_id The activity comment ID.
+ * @param int $activity_comment_id The activity comment ID.
  *
  * @return string The activity comment unfavorite link.
  *
