@@ -63,6 +63,7 @@ function xprofile_screen_edit_profile() {
 		$is_required              = array();
 		$validations              = array();
 		$is_required_fields_error = array();
+		$social_fields_validation = array();
 
 		// Loop through the posted fields formatting any datebox values then validate the field.
 		foreach ( (array) $posted_field_ids as $field_id ) {
@@ -70,10 +71,10 @@ function xprofile_screen_edit_profile() {
 
 			$is_required[ $field_id ] = xprofile_check_is_required_field( $field_id );
 			if ( $is_required[ $field_id ] && empty( $_POST[ 'field_' . $field_id ] ) ) {
-				$errors                     = true;
-				$field                      = new BP_XProfile_Field( $field_id );
-				$field_name                 = $field->name;
-				$is_required_fields_error[] = $field_name;
+				$errors                                = true;
+				$field                                 = new BP_XProfile_Field( $field_id );
+				$is_required_fields_error[]            = $field->name;
+				$social_fields_validation[ $field_id ] = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field->name );
 			}
 
 			$field = new BP_XProfile_Field( $field_id );
@@ -141,8 +142,9 @@ function xprofile_screen_edit_profile() {
 			}
 
 			if ( isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], bp_displayed_user_id() ) ) {
-				$errors        = true;
-				$validations[] = $message;
+				$errors                                = true;
+				$validations[]                         = is_array( $message ) ? reset( $message ) : $message;
+				$social_fields_validation[ $field_id ] = $message;
 			}
 		}
 
@@ -179,6 +181,32 @@ function xprofile_screen_edit_profile() {
 			do_action( 'bb_xprofile_error_on_updated_profile', bp_displayed_user_id(), $posted_field_ids, $errors, $old_values, $new_values );
 		}
 
+		// Check the social field error and remove it to save.
+		if ( ! empty( $errors ) && ! empty( $social_fields_validation ) ) {
+			$social_posted_id = 0;
+			foreach ( $social_fields_validation as $field_id => $message ) {
+				$field = new BP_XProfile_Field( $field_id );
+				if ( 'socialnetworks' === $field->type && ! empty( $_POST[ 'field_' . $field_id ] ) ) {
+					$providers = array_keys( $message );
+					if ( ! empty( $providers ) ) {
+						foreach ( $providers as $provider ) {
+							// If any provider has error then remove it from post request.
+							if ( isset( $_POST[ 'field_' . $field_id ][ $provider ] ) ) {
+								unset( $_POST[ 'field_' . $field_id ][ $provider ] );
+							}
+						}
+					}
+					$social_posted_id = $field_id;
+					break;
+				}
+			}
+
+			// Save other social fields.
+			if ( ! empty( $social_posted_id ) && isset( $_POST[ 'field_' . $social_posted_id ] ) ) {
+				bb_xprofile_save_fields( $posted_field_ids, $is_required );
+			}
+		}
+
 		// There are validation errors.
 		if ( ! empty( $errors ) && $validations ) {
 			foreach ( $validations as $validation ) {
@@ -198,66 +226,7 @@ function xprofile_screen_edit_profile() {
 		} else {
 
 			// Reset the errors var.
-			$errors = false;
-
-			// Now we've checked for required fields, lets save the values.
-			$old_values = $new_values = array();
-			foreach ( (array) $posted_field_ids as $field_id ) {
-
-				// Certain types of fields (checkboxes, multiselects) may come through empty. Save them as an empty array so that they don't get overwritten by the default on the next edit.
-				$value = isset( $_POST[ 'field_' . $field_id ] ) ? $_POST[ 'field_' . $field_id ] : '';
-
-				$visibility_level = ! empty( $_POST[ 'field_' . $field_id . '_visibility' ] ) ? $_POST[ 'field_' . $field_id . '_visibility' ] : 'public';
-
-				// Save the old and new values. They will be
-				// passed to the filter and used to determine
-				// whether an activity item should be posted.
-				$old_values[ $field_id ] = array(
-					'value'      => xprofile_get_field_data( $field_id, bp_displayed_user_id() ),
-					'visibility' => xprofile_get_field_visibility_level( $field_id, bp_displayed_user_id() ),
-				);
-
-				// Update the field data and visibility level.
-				xprofile_set_field_visibility_level( $field_id, bp_displayed_user_id(), $visibility_level );
-				$field_updated = xprofile_set_field_data( $field_id, bp_displayed_user_id(), $value, $is_required[ $field_id ] );
-
-				// We need to pass post value here.
-				// If we get value from xprofile_get_field_data function then date format change and it will not validate as per Y-m-d 00:00:00 format.
-				$new_values[ $field_id ] = array(
-					'value'      => $value,
-					'visibility' => xprofile_get_field_visibility_level( $field_id, bp_displayed_user_id() ),
-				);
-
-				$value = xprofile_get_field_data( $field_id, bp_displayed_user_id() );
-
-				if ( ! $field_updated ) {
-					$errors = true;
-				} else {
-
-					/**
-					 * Fires on each iteration of an XProfile field being saved with no error.
-					 *
-					 * @since BuddyPress 1.1.0
-					 *
-					 * @param int    $field_id ID of the field that was saved.
-					 * @param string $value    Value that was saved to the field.
-					 */
-					do_action( 'xprofile_profile_field_data_updated', $field_id, $value );
-				}
-			}
-
-			/**
-			 * Fires after all XProfile fields have been saved for the current profile.
-			 *
-			 * @since BuddyPress 1.0.0
-			 *
-			 * @param int   $value            Displayed user ID.
-			 * @param array $posted_field_ids Array of field IDs that were edited.
-			 * @param bool  $errors           Whether or not any errors occurred.
-			 * @param array $old_values       Array of original values before updated.
-			 * @param array $new_values       Array of newly saved values after update.
-			 */
-			do_action( 'xprofile_updated_profile', bp_displayed_user_id(), $posted_field_ids, $errors, $old_values, $new_values );
+			$errors = bb_xprofile_save_fields( $posted_field_ids, $is_required );
 
 			// Set the feedback messages.
 			if ( ! empty( $errors ) ) {

@@ -1082,28 +1082,33 @@ function bp_xprofile_validate_social_networks_value( $retval, $field_id, $value,
 		return $retval;
 	}
 
+	$validation = array();
 	$field_name = xprofile_get_field( $field_id )->name;
 
 	if ( 1 === $field->is_required ) {
 		foreach ( $value as $key => $val ) {
 			$val = trim( $val );
 			if ( empty( $val ) ) {
-				return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
+				$validation[ $key ] = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
 			}
 		}
 	}
 
 	$providers = bp_xprofile_social_network_provider();
 	foreach ( $value as $k => $v ) {
+		if ( ! empty( $validation ) && ! empty( $validation[ $k ] ) ) {
+			continue;
+		}
+
 		if ( '' === $v || filter_var( $v, FILTER_VALIDATE_URL ) ) {
 
 		} else {
 			$key = bp_social_network_search_key( $k, $providers );
-			return sprintf( __( 'Please enter valid %s profile url.', 'buddyboss' ), $providers[ $key ]->name );
+			$validation[ $k ] = sprintf( __( 'Please enter valid %s profile url.', 'buddyboss' ), $providers[ $key ]->name );
 		}
 	}
 
-	return $retval;
+	return ! empty( $validation ) ? $validation : $retval;
 }
 
 /**
