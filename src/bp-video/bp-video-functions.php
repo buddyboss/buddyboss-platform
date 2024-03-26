@@ -3570,6 +3570,7 @@ function bb_video_delete_thumb_symlink( $video, $delete_thumb_id ) {
 	// Get video previews symlink directory path.
 	$video_symlinks_path = bb_video_symlink_path();
 	$video               = new BP_Video( $video_id );
+	$all_attachments     = array();
 
 	// Delete the thumb symlink.
 	$privacy         = $video->privacy;
@@ -3579,10 +3580,7 @@ function bb_video_delete_thumb_symlink( $video, $delete_thumb_id ) {
 		$group_status    = bp_get_group_status( $group_object );
 		$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $delete_thumb_id . $group_status . $privacy );
 	}
-
-	if ( file_exists( $attachment_path ) || is_link( $attachment_path ) ) {
-		unlink( $attachment_path );
-	}
+	$all_attachments[] = $attachment_path;
 
 	$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $delete_thumb_id . $privacy . 'medium' );
 	if ( $video->group_id > 0 && bp_is_active( 'groups' ) ) {
@@ -3590,10 +3588,7 @@ function bb_video_delete_thumb_symlink( $video, $delete_thumb_id ) {
 		$group_status    = bp_get_group_status( $group_object );
 		$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $delete_thumb_id . $group_status . $privacy . 'medium' );
 	}
-
-	if ( file_exists( $attachment_path ) || is_link( $attachment_path ) ) {
-		unlink( $attachment_path );
-	}
+	$all_attachments[] = $attachment_path;
 
 	$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $delete_thumb_id . $privacy . 'large' );
 	if ( $video->group_id > 0 && bp_is_active( 'groups' ) ) {
@@ -3601,10 +3596,7 @@ function bb_video_delete_thumb_symlink( $video, $delete_thumb_id ) {
 		$group_status    = bp_get_group_status( $group_object );
 		$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $delete_thumb_id . $group_status . $privacy . 'large' );
 	}
-
-	if ( file_exists( $attachment_path ) || is_link( $attachment_path ) ) {
-		unlink( $attachment_path );
-	}
+	$all_attachments[] = $attachment_path;
 
 	$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $delete_thumb_id . $privacy . 'full' );
 	if ( $video->group_id > 0 && bp_is_active( 'groups' ) ) {
@@ -3627,10 +3619,26 @@ function bb_video_delete_thumb_symlink( $video, $delete_thumb_id ) {
 					$group_status    = bp_get_group_status( $group_object );
 					$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $delete_thumb_id . $group_status . $privacy . sanitize_key( $name ) );
 				}
-				if ( file_exists( $attachment_path ) ) {
-					unlink( $attachment_path );
-				}
+				$all_attachments[] = $attachment_path;
 			}
+		}
+	}
+
+	// Get video preview attachment ID.
+	$preview_attached_file  = get_attached_file( $delete_thumb_id );
+	$preview_file_extension = ! empty( $preview_attached_file ) ? pathinfo( $preview_attached_file, PATHINFO_EXTENSION ) : '';
+
+	foreach ( array_unique( $all_attachments ) as $attachment ) {
+		$preview_attachment = ! empty( $preview_file_extension ) ? $attachment . '.' . $preview_file_extension : $attachment;
+
+		// Delete the symlink if video preview file exists.
+		if ( file_exists( $preview_attachment ) || is_link( $preview_attachment ) ) {
+			unlink( $preview_attachment );
+		}
+
+		// Delete the symlink if video/preview file exists.
+		if ( file_exists( $attachment ) || is_link( $attachment ) ) {
+			unlink( $attachment );
 		}
 	}
 }
@@ -3789,16 +3797,10 @@ function bb_video_delete_symlinks( $video ) {
 	$preview_attached_file = get_attached_file( $preview_attachment_id );
 
 	// Get a video file extension.
-	$video_file_extension = '';
-	if ( ! empty( $attached_file ) ) {
-		$video_file_extension = pathinfo( $attached_file, PATHINFO_EXTENSION );
-	}
+	$video_file_extension = ! empty( $attached_file ) ? pathinfo( $attached_file, PATHINFO_EXTENSION ) : '';
 
 	// Get a video preview file extension.
-	$preview_file_extension = '';
-	if ( ! empty( $preview_attached_file ) ) {
-		$preview_file_extension = pathinfo( $preview_attached_file, PATHINFO_EXTENSION );
-	}
+	$preview_file_extension = ! empty( $preview_attached_file ) ? pathinfo( $preview_attached_file, PATHINFO_EXTENSION ) : '';
 
 	foreach ( array_unique( $all_attachments ) as $attachment ) {
 		$video_attachment   = ! empty( $video_file_extension ) ? $attachment . '.' . $video_file_extension : $attachment;
