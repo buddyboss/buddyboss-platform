@@ -1567,7 +1567,13 @@ class BP_Activity_Activity {
 		global $wpdb;
 		$function_args = func_get_args();
 
-		if ( bp_is_single_activity() ) {
+		if (
+			bp_is_single_activity() ||
+			(
+				bb_is_rest() &&
+				! isset( $_GET['apply_limit'] )
+			)
+		) {
 			$exclude_childrens = false;
 		}
 
@@ -1577,6 +1583,7 @@ class BP_Activity_Activity {
 
 		if (
 			bb_is_rest() &&
+			isset( $_GET['apply_limit'] ) &&
 			! empty( (bool) $_GET['apply_limit'] ) &&
 			! empty( $_GET['last_comment_id'] ) &&
 			! empty( $_GET['last_comment_timestamp'] )
@@ -1757,7 +1764,11 @@ class BP_Activity_Activity {
 						$limit++;
 					}
 
-					$sql['limit'] = 'limit ' . $limit;
+					if ( bb_is_rest() && ! isset( $_GET['apply_limit'] ) ) {
+						$sql['limit'] = "";
+					} else {
+						$sql['limit'] = 'limit ' . $limit;
+					}
 
 					/**
 					 * Filters the MySQL From query for limit activity comment.
@@ -1792,7 +1803,12 @@ class BP_Activity_Activity {
 					$ref[ $d->id ]      =& $comments[ $d->id ];
 				}
 
-				if ( true === $exclude_childrens ) {
+				if (
+					true === $exclude_childrens ||
+					(
+						bb_is_rest() && ! isset( $_GET['apply_limit'] )
+					)
+				) {
 					$comments_count = self::bb_get_all_activity_comment_children_count(
 						array(
 							'spam'     => $spam,
@@ -1853,7 +1869,14 @@ class BP_Activity_Activity {
 				$cache_value = $comments;
 			}
 
-			if ( bp_is_single_activity() || ( bb_is_rest() && empty( (bool) $_GET['apply_limit'] ) ) ) {
+			if (
+				bp_is_single_activity() ||
+				(
+					bb_is_rest() &&
+					isset( $_GET['apply_limit'] ) &&
+					empty( (bool) $_GET['apply_limit'] )
+				)
+			) {
 				wp_cache_set( $activity_id, $cache_value, 'bp_activity_comments' );
 			}
 		}

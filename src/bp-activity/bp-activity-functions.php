@@ -2130,6 +2130,11 @@ function bp_activity_add( $args = '' ) {
 
 		// Clear the comment count cache based on its own id and parent activity ID.
 		wp_cache_delete( 'bp_activity_comment_count_' . $activity->id, 'bp_activity_comments' );
+		// Purge cache for activity API.
+		if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+			BuddyBoss\Performance\Cache::instance()->purge_by_group( 'bp-activity_' . $activity->id );
+			BuddyBoss\Performance\Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( bp_activity_get_permalink( $activity->id ) ) );
+		}
 
 		// Also clear cache for all top level item.
 		$comments = bb_get_activity_hierarchy( $activity->id );
@@ -2138,10 +2143,14 @@ function bp_activity_add( $args = '' ) {
 			if ( ! empty ( $descendants ) ) {
 				foreach ( $descendants as $activity_id ) {
 					wp_cache_delete( 'bp_activity_comment_count_' . $activity_id, 'bp_activity_comments' );
+					// Purge cache for activity API.
+					if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+						BuddyBoss\Performance\Cache::instance()->purge_by_group( 'bp-activity_' . $activity_id );
+						BuddyBoss\Performance\Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( bp_activity_get_permalink( $activity_id ) ) );
+					}
 				}
 			}
 		}
-
 
 		BP_Activity_Activity::rebuild_activity_comment_tree( $activity->item_id );
 	}
