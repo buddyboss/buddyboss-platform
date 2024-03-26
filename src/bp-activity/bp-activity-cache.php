@@ -231,8 +231,6 @@ function bb_activity_comment_reset_count( $activities ) {
 		foreach ( $activities as $activity ) {
 			// Clear the comment count cache based on its own id and parent activity ID.
 			wp_cache_delete( 'bp_activity_comment_count_' . $activity->id, 'bp_activity_comments' );
-			wp_cache_delete( 'bp_activity_comment_count_' . $activity->item_id, 'bp_activity_comments' );
-			wp_cache_delete( 'bp_activity_comment_count_' . $activity->secondary_item_id, 'bp_activity_comments' );
 
 			// Also clear cache for all top level item.
 			$comments = bb_get_activity_hierarchy( $activity->secondary_item_id );
