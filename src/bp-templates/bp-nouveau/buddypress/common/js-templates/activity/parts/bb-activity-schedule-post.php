@@ -94,7 +94,7 @@
 										<span class="bb-icon-l bb-icon-times"></span>
 									</a>
 								</header>
-								<div class="bb-action-popup-content">
+								<div class="bb-action-popup-content" data-bp-list="activity">
 									<div class="schedule-posts-placeholder">
 										<i class="bb-icon-f bb-icon-activity-slash"></i>
 										<h2><?php echo esc_html__( 'No Scheduled Posts Found', 'buddyboss' ); ?></h2>

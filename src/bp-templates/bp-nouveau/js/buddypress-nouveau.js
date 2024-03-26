@@ -791,6 +791,7 @@ window.bp = window.bp || {};
 					object: object,
 					scope: scope,
 					status: 'schedule',
+					target: '#buddypress .bb-action-popup-content[data-bp-list]',
 				};
 
 				if ( $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).length ) {
@@ -798,7 +799,7 @@ window.bp = window.bp || {};
 				} else if ( $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).length ) {
 					queryData.group_type = $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).val();
 				}
-				console.log( this );
+
 				// Populate the object list.
 				self.objectRequest( queryData );
 			}
