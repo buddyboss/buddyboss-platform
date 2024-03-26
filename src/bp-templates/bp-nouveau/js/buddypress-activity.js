@@ -3547,14 +3547,6 @@ window.bp = window.bp || {};
 				'</div>';
 
 			var $activityListItem = target.parents( 'li.activity-item[data-bp-activity-id=' + activityId + ']' );
-			if ( $activityListItem.length > 0 ) {
-				if ( $activityListItem.hasClass( 'mini' ) ) {
-					type = 'media';
-				} else if ( $activityListItem.hasClass( 'groups' ) ) {
-					type = 'groups';
-				}
-			}
-
 			target.addClass( 'loading' ).removeClass( 'acomments-view-more--hide' );
 			commentsList.addClass( 'active' );
 			target.html( skeleton );
@@ -3563,7 +3555,7 @@ window.bp = window.bp || {};
 				action: 'activity_loadmore_comments',
 				activity_id: activityId,
 				parent_comment_id: parentCommentId,
-				type: type,
+				offset: $( e.currentTarget ).parents( '.activity-comments' ).find( 'ul[data-parent_comment_id ="' + parentCommentId + '"] > li.comment-item:not(.bb-recent-comment)' ).length,
 				activity_type_is_blog: $( e.currentTarget ).parents( '.entry-content' ).length > 1 ? true : false,
 			};
 
@@ -3606,7 +3598,11 @@ window.bp = window.bp || {};
 							if ( 'undefined' !== typeof addAfterListItemId && '' !== addAfterListItemId ) {
 
 								var $addAfterElement = $targetList.find( 'li.activity-comment[data-bp-activity-comment-id=\'' + addAfterListItemId + '\']' );
-								$addAfterElement.after( $newComments );
+								if( $addAfterElement.length > 0 ) {
+									$addAfterElement.after( $newComments );
+								} else {
+									$targetList.append( $newComments );
+								}
 							} else if ( $targetList.children( '.activity-comment.comment-item' ).length > 0 ) {
 								// Already comments in the list.
 								$targetList.children( '.activity-comment.comment-item' ).first().before( $newComments );

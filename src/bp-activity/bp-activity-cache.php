@@ -104,6 +104,7 @@ function bb_activity_clear_cache_after_deleted_activity( $activities ) {
 			wp_cache_delete( $activity->id, 'activity_edit_data' );
 			if ( ! empty( $activity->secondary_item_id ) ) {
 				wp_cache_delete( 'bp_get_child_comments_' . $activity->secondary_item_id, 'bp_activity_comments' ); // Used in BP_Activity_Activity::get_child_comments().
+				wp_cache_delete( $activity->secondary_item_id, 'bp_activity' );
 			}
 		}
 	}
@@ -217,3 +218,32 @@ function bb_activity_clear_metadata( $meta_ids, $activity_id ) {
 add_action( 'deleted_activity_meta', 'bb_activity_clear_metadata', 10, 2 );
 add_action( 'updated_activity_meta', 'bb_activity_clear_metadata', 10, 2 );
 add_action( 'added_activity_meta', 'bb_activity_clear_metadata', 10, 2 );
+
+/**
+ * Clear cached data for activity comment counts.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $activities Array of activities.
+ */
+function bb_activity_comment_reset_count( $activities ) {
+	if ( ! empty( $activities ) ) {
+		foreach ( $activities as $activity ) {
+			// Clear the comment count cache based on its own id and parent activity ID.
+			wp_cache_delete( 'bp_activity_comment_count_' . $activity->id, 'bp_activity_comments' );
+
+			// Also clear cache for all top level item.
+			$comments = bb_get_activity_hierarchy( $activity->secondary_item_id );
+			if ( ! empty ( $comments ) ) {
+				$descendants = wp_list_pluck( $comments, 'id' );
+				if ( ! empty ( $descendants ) ) {
+					foreach ( $descendants as $activity_id ) {
+						wp_cache_delete( 'bp_activity_comment_count_' . $activity_id, 'bp_activity_comments' );
+					}
+				}
+			}
+		}
+	}
+}
+
+add_action( 'bp_activity_after_delete', 'bb_activity_comment_reset_count' );

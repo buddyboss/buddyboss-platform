@@ -2123,9 +2123,25 @@ function bp_activity_add( $args = '' ) {
 
 	// If this is an activity comment, rebuild the tree.
 	if ( 'activity_comment' === $activity->type ) {
+
 		// Also clear the comment cache for the parent activity ID.
 		wp_cache_delete( $activity->item_id, 'bp_activity_comments' );
 		wp_cache_delete( 'bp_get_child_comments_' . $activity->item_id, 'bp_activity_comments' );
+
+		// Clear the comment count cache based on its own id and parent activity ID.
+		wp_cache_delete( 'bp_activity_comment_count_' . $activity->id, 'bp_activity_comments' );
+
+		// Also clear cache for all top level item.
+		$comments = bb_get_activity_hierarchy( $activity->id );
+		if ( ! empty ( $comments ) ) {
+			$descendants = wp_list_pluck( $comments, 'id' );
+			if ( ! empty ( $descendants ) ) {
+				foreach ( $descendants as $activity_id ) {
+					wp_cache_delete( 'bp_activity_comment_count_' . $activity_id, 'bp_activity_comments' );
+				}
+			}
+		}
+
 
 		BP_Activity_Activity::rebuild_activity_comment_tree( $activity->item_id );
 	}
