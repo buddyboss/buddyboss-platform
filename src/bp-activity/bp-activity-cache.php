@@ -104,6 +104,7 @@ function bb_activity_clear_cache_after_deleted_activity( $activities ) {
 			wp_cache_delete( $activity->id, 'activity_edit_data' );
 			if ( ! empty( $activity->secondary_item_id ) ) {
 				wp_cache_delete( 'bp_get_child_comments_' . $activity->secondary_item_id, 'bp_activity_comments' ); // Used in BP_Activity_Activity::get_child_comments().
+				wp_cache_delete( $activity->secondary_item_id, 'bp_activity' );
 			}
 		}
 	}
