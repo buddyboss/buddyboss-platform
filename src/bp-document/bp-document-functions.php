@@ -3978,39 +3978,32 @@ function bp_document_delete_symlinks( $document ) {
 	$document_symlinks_path = bp_document_symlink_path();
 	$attachment_id          = $old_document->attachment_id;
 
+	$all_attachments = array();
+
 	$privacy         = $old_document->privacy;
-	$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $privacy . 'medium' );
+	$medium_attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $privacy . 'medium' );
 	if ( $old_document->group_id > 0 && bp_is_active( 'groups' ) ) {
 		$group_object    = groups_get_group( $old_document->group_id );
 		$group_status    = bp_get_group_status( $group_object );
-		$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $privacy . 'medium' );
+		$medium_attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $privacy . 'medium' );
 	}
+	$all_attachments[] = $medium_attachment_path;
 
-	if ( file_exists( $attachment_path ) ) {
-		unlink( $attachment_path );
-	}
-
-	$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $privacy . 'large' );
+	$large_attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $privacy . 'large' );
 	if ( $old_document->group_id > 0 && bp_is_active( 'groups' ) ) {
 		$group_object    = groups_get_group( $old_document->group_id );
 		$group_status    = bp_get_group_status( $group_object );
-		$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $privacy . 'large' );
+		$large_attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $privacy . 'large' );
 	}
+	$all_attachments[] = $large_attachment_path;
 
-	if ( file_exists( $attachment_path ) ) {
-		unlink( $attachment_path );
-	}
-
-	$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $privacy . 'full' );
+	$full_attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $privacy . 'full' );
 	if ( $old_document->group_id > 0 && bp_is_active( 'groups' ) ) {
 		$group_object    = groups_get_group( $old_document->group_id );
 		$group_status    = bp_get_group_status( $group_object );
-		$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $privacy . 'full' );
+		$full_attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $privacy . 'full' );
 	}
-
-	if ( file_exists( $attachment_path ) ) {
-		unlink( $attachment_path );
-	}
+	$all_attachments[] = $full_attachment_path;
 
 	$image_sizes = bb_document_get_image_sizes();
 	if ( ! empty( $image_sizes ) ) {
@@ -4023,10 +4016,7 @@ function bp_document_delete_symlinks( $document ) {
 					$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $privacy . sanitize_key( $name ) );
 				}
 
-				// If rename the file then preview doesn't exist but symbolic is available in the folder. So, checked the file is not empty then remove it from symbolic.
-				if ( file_exists( $attachment_path ) ) {
-					@unlink( $attachment_path ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-				}
+				$all_attachments[] = $attachment_path;
 			}
 		}
 	}
@@ -4037,9 +4027,30 @@ function bp_document_delete_symlinks( $document ) {
 		$group_status            = bp_get_group_status( $group_object );
 		$preview_attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $old_document->privacy );
 	}
+	$all_attachments[] = $preview_attachment_path;
 
-	if ( file_exists( $preview_attachment_path ) ) {
-		unlink( $preview_attachment_path );
+	$extension          = bp_document_extension( $attachment_id );
+	$attached_file      = get_attached_file( $attachment_id );
+	$attached_file_info = pathinfo( $attached_file );
+	$symlink_extension  = $extension;
+
+	if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
+		$file = image_get_intermediate_size( $attachment_id, 'bb-document-image-preview-activity-image' );
+
+		$file_path = '';
+		if ( $file && ! empty( $file['file'] ) && ! empty( $attached_file_info['dirname'] ) ) {
+			$file_path = $attached_file_info['dirname'];
+			$file_path = $file_path . '/' . $file['file'];
+		}
+
+		$symlink_extension = pathinfo( $file_path, PATHINFO_EXTENSION );
+	}
+
+	foreach ( $all_attachments as $attachment_path ) {
+		$attachment_path = $attachment_path . '.' . $symlink_extension;
+		if ( file_exists( $attachment_path ) ) {
+			unlink( $attachment_path );
+		}
 	}
 }
 
