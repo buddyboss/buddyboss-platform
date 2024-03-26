@@ -51,7 +51,7 @@ class Sync {
 		add_action( 'bp_ld_sync/buddypress_group_admin_removed', array( $this, 'onAdminRemoved' ), 10, 3 );
 		add_action( 'bp_ld_sync/buddypress_group_mod_removed', array( $this, 'onModRemoved' ), 10, 3 );
 		add_action( 'bp_ld_sync/buddypress_group_member_removed', array( $this, 'onMemberRemoved' ), 10, 3 );
-		// add_action('bp_ld_sync/buddypress_group_member_banned', [$this, 'onMemberRemoved'], 10, 3);
+		add_action( 'bp_ld_sync/buddypress_group_member_banned', [ $this, 'onMemberRemoved' ], 10, 3 );
 	}
 
 	/**
