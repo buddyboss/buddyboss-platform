@@ -2900,8 +2900,9 @@ function bp_get_activity_comment_css_class() {
 	}
 
 	// Has children's.
-	$comments_count = bb_get_all_activity_comment_children_count(
+	$comments_count = BP_Activity_Activity::bb_get_all_activity_comment_children_count(
 		array(
+			'spam'     => 'ham_only',
 			'activity' => bp_activity_current_comment(),
 		)
 	);
