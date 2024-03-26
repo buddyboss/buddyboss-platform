@@ -1534,18 +1534,6 @@ class BP_Activity_Activity {
 		foreach ( (array) $activities as $key => $activity ) {
 			if ( isset( $activity_comments[ $activity->id ] ) ) {
 
-				// Apply condition for non group activity.
-				// Logged-in member CAN’T see comments by the member in other member’s posts of is/has blocked users.
-//				if (
-//					bp_is_active( 'moderation' ) &&
-//					is_user_logged_in() &&
-//					'groups' !== $activity->component &&
-//					! empty( $activity_comments[ $activity->id ] ) &&
-//					get_current_user_id() !== $activity->user_id
-//				) {
-//					$activity_comments[ $activity->id ] = self::get_filtered_activity_comments( $activity_comments[ $activity->id ] );
-//				}
-
 				$activities[ $key ]->children = $activity_comments[ $activity->id ];
 				$comments_count               = bb_get_all_activity_comment_children_count(
 					array(
