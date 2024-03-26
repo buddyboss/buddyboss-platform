@@ -233,6 +233,17 @@ function bb_activity_comment_reset_count( $activities ) {
 			wp_cache_delete( 'bp_activity_comment_count_' . $activity->id, 'bp_activity_comments' );
 			wp_cache_delete( 'bp_activity_comment_count_' . $activity->item_id, 'bp_activity_comments' );
 			wp_cache_delete( 'bp_activity_comment_count_' . $activity->secondary_item_id, 'bp_activity_comments' );
+
+			// Also clear cache for all top level item.
+			$comments = bb_get_activity_hierarchy( $activity->secondary_item_id );
+			if ( ! empty ( $comments ) ) {
+				$descendants = wp_list_pluck( $comments, 'id' );
+				if ( ! empty ( $descendants ) ) {
+					foreach ( $descendants as $activity_id ) {
+						wp_cache_delete( 'bp_activity_comment_count_' . $activity_id, 'bp_activity_comments' );
+					}
+				}
+			}
 		}
 	}
 }
