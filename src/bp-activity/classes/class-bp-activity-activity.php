@@ -1540,10 +1540,8 @@ class BP_Activity_Activity {
 						'activity' => $activity,
 					)
 				);
-				if ( ! empty( $comments_count ) ) {
-					$activities[ $key ]->all_child_count = $comments_count['all_child_count'];
-					$activities[ $key ]->top_level_count = $comments_count['top_level_count'];
-				}
+				$activities[ $key ]->all_child_count = $comments_count['all_child_count'] ?? 0;
+				$activities[ $key ]->top_level_count = $comments_count['top_level_count'] ?? 0;
 			}
 		}
 
@@ -1732,9 +1730,9 @@ class BP_Activity_Activity {
 
 						$sql['where'] .= $wpdb->prepare(
 							" AND (
-								a.id {$comparisonOperator} %d 
+								a.id {$comparisonOperator} %d
 								OR (
-									a.id {$comparisonEqOperator} %d 
+									a.id {$comparisonEqOperator} %d
 									AND a.date_recorded {$comparisonOperator} '%s'
 								)
 							) ",
