@@ -6676,7 +6676,7 @@ function bb_get_all_activity_comment_children_count( $args = array() ) {
 		// Condition for blogs, groups, etc feed comments.
 		$all_child_count_condition = "a.item_id = $comment_id";
 	} elseif ( 'activity_comment' === $activity->type && 0 === $activity->mptt_left && 0 === $activity->mptt_right ) {
-		// Condition for new added comment. mptt_left and mptt_right will be 0 at that time. That's update later.
+		// The Condition for new added comment mptt_left and mptt_right will be 0 at that time.
 		$all_child_count_condition = "a.item_id = $comment_id";
 	} else {
 		// Condition for child of activity comments.
