@@ -1792,7 +1792,7 @@ a.layout-grid-view {
 }
 
 .bb-schedule-post_dropdown_section .bb-action-popup-content .bb-schedule-activity-time-wrap {
-  flex: 1 0 auto;
+  flex: 1 1 auto;
 }
 
 .bb-schedule-post_dropdown_section .bb-action-popup-content .bb-schedule-activity-meridian-wrap {
