@@ -1537,6 +1537,7 @@ class BP_Activity_Activity {
 				$activities[ $key ]->children        = $activity_comments[ $activity->id ];
 				$comments_count                      = bb_get_all_activity_comment_children_count(
 					array(
+						'spam'     => $spam,
 						'activity' => $activity,
 					)
 				);
