@@ -47,7 +47,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		 * And IF moderation setting enabled for member then it'll filter blocked user content.
 		 */
 		add_filter( 'bp_suspend_activity_comment_get_where_conditions', array( $this, 'update_where_sql' ), 10, 4 );
-		add_filter( 'bp_suspend_activity_comment_count_get_where_conditions', array( $this, 'bb_update_where_sql' ), 10, 4 );
+		add_filter( 'bb_suspend_activity_comment_count_get_where_conditions', array( $this, 'bb_update_where_sql' ), 10, 4 );
 
 		add_filter( 'bp_locate_template_names', array( $this, 'locate_blocked_template' ) );
 

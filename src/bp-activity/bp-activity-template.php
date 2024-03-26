@@ -1962,7 +1962,6 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 			'last_comment_timestamp'        => '',
 			'last_comment_id'               => 0,
 			'comment_order_by'              => apply_filters( 'bb_activity_recurse_comments_order_by', 'ASC' ),
-			'already_loaded_comments_count' => 0,
 		),
 		'bb_activity_recurse_comments'
 	);
