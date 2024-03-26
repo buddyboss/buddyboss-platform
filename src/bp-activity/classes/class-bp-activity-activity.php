@@ -1718,8 +1718,18 @@ class BP_Activity_Activity {
 				$sql['misc'] = apply_filters( 'bp_activity_comments_get_misc_sql', $sql['misc'] );
 
 				$sql['limit'] = '';
-				if ( ! bp_is_single_activity() || ( bb_is_rest() && ! empty( (bool) $_GET['apply_limit'] ) ) ) {
-					if ( ! empty( $args['last_comment_id'] ) && ! empty( $args['last_comment_timestamp'] ) && ! empty( $args['comment_order_by'] ) ) {
+				if (
+					! bp_is_single_activity() ||
+					(
+						bb_is_rest() &&
+						! empty( (bool) $_GET['apply_limit'] )
+					)
+				) {
+					if (
+						! empty( $args['last_comment_id'] ) &&
+						! empty( $args['last_comment_timestamp'] ) &&
+						! empty( $args['comment_order_by'] )
+					) {
 						$comparison_op = ( 'DESC' === strtoupper( $args['comment_order_by'] ) ) ? '<' : '>';
 
 						// Condition to handle other random order of ID if any.

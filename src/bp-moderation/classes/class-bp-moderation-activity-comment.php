@@ -258,8 +258,18 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 		$author_id = self::get_content_owner_id( $item_id );
 
-		if ( ( $this->is_member_blocking_enabled() && ! empty( $author_id ) && ! bp_moderation_is_user_suspended( $author_id ) && bp_moderation_is_user_blocked( $author_id ) ) ||
-		     ( $this->is_reporting_enabled() && BP_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) ) {
+		if (
+			(
+				$this->is_member_blocking_enabled() &&
+				! empty( $author_id ) &&
+				! bp_moderation_is_user_suspended( $author_id ) &&
+				bp_moderation_is_user_blocked( $author_id )
+			) ||
+			(
+				$this->is_reporting_enabled() &&
+				BP_Core_Suspend::check_hidden_content( $item_id, $this->item_type )
+			)
+		) {
 			return true;
 		}
 		return false;
@@ -350,14 +360,14 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		}
 
 		global $wpdb, $bp;
-		$sql['select']     = "SELECT DISTINCT a.id , a.user_id FROM {$bp->activity->table_name} a inner join {$bp->activity->table_name} ac ON ac.id = a.item_id inner join {$bp->activity->table_name} acs ON acs.id = a.secondary_item_id";
-		$sql['where']      = 'WHERE ' . join( ' AND ', $where_conditions );
-		$sql               = "{$sql['select']} {$sql['where']}";
+		$sql['select'] = "SELECT DISTINCT a.id , a.user_id FROM {$bp->activity->table_name} a inner join {$bp->activity->table_name} ac ON ac.id = a.item_id inner join {$bp->activity->table_name} acs ON acs.id = a.secondary_item_id";
+		$sql['where']  = 'WHERE ' . join( ' AND ', $where_conditions );
+		$sql           = "{$sql['select']} {$sql['where']}";
 		if ( ! empty( $search_term ) ) {
 			$query_placeholder = '%' . $wpdb->esc_like( $search_term ) . '%';
 			$sql               = $wpdb->prepare( $sql, $query_placeholder );
 		}
-		$results           = $wpdb->get_results( $sql );
+		$results          = $wpdb->get_results( $sql );
 		$blocked_item_ids = array();
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $ac_id ) {
