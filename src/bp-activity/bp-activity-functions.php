@@ -6637,7 +6637,7 @@ function bb_get_activity_comment_loading( $default = 10 ) {
 }
 
 /**
- * Get all activity children comments count andtop level comment count based on id.
+ * Get all activity children comments count and top level comment count based on id.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -6654,8 +6654,15 @@ function bb_get_all_activity_comment_children_count( $args = array() ) {
 		$activity = $args['activity'];
 	}
 
-	if ( empty( $activity ) ) {
-		return array( 'all_child_count' => $all_child_count, 'top_level_count' => $top_level_count );
+	if (
+		empty( $activity ) &&
+		! $activity instanceof BP_Activity_Activity &&
+		empty( $activity->id )
+	) {
+		return array(
+			'all_child_count' => $all_child_count,
+			'top_level_count' => $top_level_count,
+		);
 	}
 
 	$comment_id = $activity->id;
@@ -6713,7 +6720,7 @@ function bb_get_all_activity_comment_children_count( $args = array() ) {
 	$cache_group = 'bp_activity_comment_count_' . $comment_id;
 	$cached      = wp_cache_get( $cache_group, 'bp_activity_comments' );
 	if ( false === $cached ) {
-		$counts = $wpdb->get_row( $total_comment_sql, ARRAY_A );
+		$counts          = $wpdb->get_row( $total_comment_sql, ARRAY_A );
 		$all_child_count = isset( $counts['all_child_count'] ) ? intval( $counts['all_child_count'] ) : 0;
 		$top_level_count = isset( $counts['top_level_count'] ) ? intval( $counts['top_level_count'] ) : 0;
 
@@ -6723,5 +6730,8 @@ function bb_get_all_activity_comment_children_count( $args = array() ) {
 		$top_level_count = isset( $cached['top_level_count'] ) ? intval( $cached['top_level_count'] ) : 0;
 	}
 
-	return array( 'all_child_count' => $all_child_count, 'top_level_count' => $top_level_count );
+	return array(
+		'all_child_count' => $all_child_count,
+		'top_level_count' => $top_level_count,
+	);
 }
