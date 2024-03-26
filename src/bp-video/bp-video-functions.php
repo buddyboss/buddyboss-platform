@@ -3660,6 +3660,7 @@ function bb_video_delete_symlinks( $video ) {
 	// Get video previews symlink directory path.
 	$video_symlinks_path = bb_video_symlink_path();
 	$attachment_id       = $old_video->attachment_id;
+	$all_attachments     = array();
 
 	// Delete the video symlink.
 	$privacy         = $old_video->privacy;
@@ -3669,19 +3670,12 @@ function bb_video_delete_symlinks( $video ) {
 		$group_status    = bp_get_group_status( $group_object );
 		$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $group_status . $privacy );
 	}
-
-	if ( file_exists( $attachment_path ) ) {
-		unlink( $attachment_path );
-	}
+	$all_attachments[] = $attachment_path;
 
 	// Remove symlinks that is created randomly.
 	$get_existings = get_post_meta( $old_video->attachment_id, 'bb_video_symlinks_arr', true );
 	if ( $get_existings ) {
-		foreach ( $get_existings as $symlink ) {
-			if ( file_exists( $symlink ) ) {
-				unlink( $symlink );
-			}
-		}
+		$all_attachments = array_merge( $all_attachments, $get_existings );
 	}
 
 	// Delete the video main preview link.
@@ -3692,10 +3686,7 @@ function bb_video_delete_symlinks( $video ) {
 		$group_status    = bp_get_group_status( $group_object );
 		$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $group_status . $privacy . 'medium' );
 	}
-
-	if ( file_exists( $attachment_path ) ) {
-		unlink( $attachment_path );
-	}
+	$all_attachments[] = $attachment_path;
 
 	$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $privacy . 'large' );
 	if ( $old_video->group_id > 0 && bp_is_active( 'groups' ) ) {
@@ -3703,10 +3694,7 @@ function bb_video_delete_symlinks( $video ) {
 		$group_status    = bp_get_group_status( $group_object );
 		$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $group_status . $privacy . 'large' );
 	}
-
-	if ( file_exists( $attachment_path ) ) {
-		unlink( $attachment_path );
-	}
+	$all_attachments[] = $attachment_path;
 
 	$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $privacy . 'full' );
 	if ( $old_video->group_id > 0 && bp_is_active( 'groups' ) ) {
@@ -3714,9 +3702,7 @@ function bb_video_delete_symlinks( $video ) {
 		$group_status    = bp_get_group_status( $group_object );
 		$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $group_status . $privacy . 'full' );
 	}
-	if ( file_exists( $attachment_path ) ) {
-		unlink( $attachment_path );
-	}
+	$all_attachments[] = $attachment_path;
 
 	$image_sizes = bb_video_get_image_sizes();
 	if ( ! empty( $image_sizes ) ) {
@@ -3728,9 +3714,7 @@ function bb_video_delete_symlinks( $video ) {
 					$group_status    = bp_get_group_status( $group_object );
 					$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $group_status . $privacy . sanitize_key( $name ) );
 				}
-				if ( file_exists( $attachment_path ) ) {
-					unlink( $attachment_path );
-				}
+				$all_attachments[] = $attachment_path;
 			}
 		}
 	}
@@ -3746,10 +3730,7 @@ function bb_video_delete_symlinks( $video ) {
 				$group_status    = bp_get_group_status( $group_object );
 				$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $group_status . $privacy . 'medium' );
 			}
-
-			if ( file_exists( $attachment_path ) ) {
-				unlink( $attachment_path );
-			}
+			$all_attachments[] = $attachment_path;
 
 			$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $privacy . 'large' );
 			if ( $old_video->group_id > 0 && bp_is_active( 'groups' ) ) {
@@ -3757,10 +3738,7 @@ function bb_video_delete_symlinks( $video ) {
 				$group_status    = bp_get_group_status( $group_object );
 				$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $group_status . $privacy . 'large' );
 			}
-
-			if ( file_exists( $attachment_path ) ) {
-				unlink( $attachment_path );
-			}
+			$all_attachments[] = $attachment_path;
 
 			$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $privacy . 'full' );
 			if ( $old_video->group_id > 0 && bp_is_active( 'groups' ) ) {
@@ -3768,9 +3746,7 @@ function bb_video_delete_symlinks( $video ) {
 				$group_status    = bp_get_group_status( $group_object );
 				$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $group_status . $privacy . 'full' );
 			}
-			if ( file_exists( $attachment_path ) ) {
-				unlink( $attachment_path );
-			}
+			$all_attachments[] = $attachment_path;
 
 			if ( ! empty( $image_sizes ) ) {
 				foreach ( $image_sizes as $name => $image_size ) {
@@ -3782,10 +3758,7 @@ function bb_video_delete_symlinks( $video ) {
 							$group_status    = bp_get_group_status( $group_object );
 							$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $group_status . $privacy . sanitize_key( $name ) );
 						}
-
-						if ( file_exists( $attachment_path ) ) {
-							unlink( $attachment_path );
-						}
+						$all_attachments[] = $attachment_path;
 					}
 				}
 			}
@@ -3803,11 +3776,47 @@ function bb_video_delete_symlinks( $video ) {
 					$group_status    = bp_get_group_status( $group_object );
 					$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $get_video_thumb_id . $group_status . $privacy . sanitize_key( $name ) );
 				}
-
-				if ( file_exists( $attachment_path ) ) {
-					unlink( $attachment_path );
-				}
+				$all_attachments[] = $attachment_path;
 			}
+		}
+	}
+
+	// Get video attachment.
+	$attached_file = get_attached_file( $old_video->attachment_id );
+
+	// Get video preview attachment ID.
+	$preview_attachment_id = bb_get_video_thumb_id( $old_video->attachment_id );
+	$preview_attached_file = get_attached_file( $preview_attachment_id );
+
+	// Get a video file extension.
+	$video_file_extension = '';
+	if ( ! empty( $attached_file ) ) {
+		$video_file_extension = pathinfo( $attached_file, PATHINFO_EXTENSION );
+	}
+
+	// Get a video preview file extension.
+	$preview_file_extension = '';
+	if ( ! empty( $preview_attached_file ) ) {
+		$preview_file_extension = pathinfo( $preview_attached_file, PATHINFO_EXTENSION );
+	}
+
+	foreach ( array_unique( $all_attachments ) as $attachment ) {
+		$video_attachment   = ! empty( $video_file_extension ) ? $attachment . '.' . $video_file_extension : $attachment;
+		$preview_attachment = ! empty( $preview_file_extension ) ? $attachment . '.' . $preview_file_extension : $attachment;
+
+		// Delete the symlink if video file exists.
+		if ( file_exists( $video_attachment ) ) {
+			unlink( $video_attachment );
+		}
+
+		// Delete the symlink if video preview file exists.
+		if ( file_exists( $preview_attachment ) ) {
+			unlink( $preview_attachment );
+		}
+
+		// Delete the symlink if video/preview file exists.
+		if ( file_exists( $attachment ) ) {
+			unlink( $attachment );
 		}
 	}
 }
