@@ -384,6 +384,15 @@ window.bp = window.bp || {};
 			self.postForm.model.set( 'link_image_index', activity_data.link_image_index_save );
 			self.postForm.model.set( 'link_image_index_save', activity_data.link_image_index_save );
 
+			if( activity_data.activity_action_type === 'schedule' ) {
+				// Set Schedule post data
+				self.postForm.model.set( 'activity_action_type', activity_data.activity_action_type );
+				self.postForm.model.set( 'activity_schedule_date_raw', activity_data.activity_schedule_date_raw );
+				self.postForm.model.set( 'activity_schedule_date', activity_data.activity_schedule_date );
+				self.postForm.model.set( 'activity_schedule_time', activity_data.activity_schedule_time );
+				self.postForm.model.set( 'activity_schedule_meridiem', activity_data.activity_schedule_meridiem );
+			}
+
 			var tool_box = $( '.activity-form.focus-in #whats-new-toolbar' );
 
 			if ( ! _.isUndefined( self.activityToolbar ) ) {
@@ -949,7 +958,7 @@ window.bp = window.bp || {};
 				self.postForm.$el.serializeArray(),
 				function( pair ) {
 					pair.name = pair.name.replace( '[]', '' );
-					if ( - 1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in'], pair.name ) ) {
+					if ( - 1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field'], pair.name ) ) {
 						if ( _.isUndefined( meta[ pair.name ] ) ) {
 							meta[ pair.name ] = pair.value;
 						} else {
