@@ -732,9 +732,25 @@ function bp_nouveau_ajax_post_update() {
 		$privacy = $_POST['privacy']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	}
 
-	$status = 'public';
+	$status             = 'public';
+	$schedule_date_time = '';
 	if ( ! empty( $_POST['activity_action_type'] ) && 'scheduled' === $_POST['activity_action_type'] ) {
 		$status = $_POST['activity_action_type'];
+
+		if ( ! empty( $_POST['activity_schedule_date_raw'] ) && ! empty( $_POST['activity_schedule_time'] ) && ! empty( $_POST['activity_schedule_meridiem'] ) ) {
+			$activity_schedule_date_raw = $_POST['activity_schedule_date_raw'];
+			$activity_schedule_meridiem = $_POST['activity_schedule_meridiem']; // 'pm' or 'am'
+			$activity_schedule_time     = $_POST['activity_schedule_time'];
+
+			// Convert 12-hour time format to 24-hour time format
+			$activity_schedule_time_24hr = date( 'H:i', strtotime( $activity_schedule_time . ' ' . $activity_schedule_meridiem ) );
+
+			// Combine date and time
+			$activity_datetime = $activity_schedule_date_raw . ' ' . $activity_schedule_time_24hr;
+
+			// Convert to MySQL datetime format
+			$schedule_date_time = date( 'Y-m-d H:i:s', strtotime( $activity_datetime ) );
+		}
 	}
 
 	if ( 'user' === $object && bp_is_active( 'activity' ) ) {
@@ -758,11 +774,12 @@ function bp_nouveau_ajax_post_update() {
 
 		$activity_id = bp_activity_post_update(
 			array(
-				'id'         => $activity_id,
-				'content'    => $content,
-				'privacy'    => $privacy,
-				'error_type' => 'wp_error',
-				'status'     => $status,
+				'id'            => $activity_id,
+				'content'       => $content,
+				'privacy'       => $privacy,
+				'error_type'    => 'wp_error',
+				'status'        => $status,
+				'recorded_time' => $schedule_date_time,
 			)
 		);
 
@@ -774,10 +791,11 @@ function bp_nouveau_ajax_post_update() {
 			// This function is setting the current group!
 			$activity_id = groups_post_update(
 				array(
-					'id'       => $activity_id,
-					'content'  => $_POST['content'],
-					'group_id' => $item_id,
-					'status'   => $status,
+					'id'            => $activity_id,
+					'content'       => $_POST['content'],
+					'group_id'      => $item_id,
+					'status'        => $status,
+					'recorded_time' => $schedule_date_time,
 				)
 			);
 
