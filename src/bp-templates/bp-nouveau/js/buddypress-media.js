@@ -6726,9 +6726,11 @@ window.bp = window.bp || {};
 					activity_comments.remove();
 					activity_comments = $( '[data-bp-activity-id="' + self.current_media.activity_id + '"] .activity-comments' );
 					if ( activity_comments.length ) {
-						activity_comments.append( form );
 						activity_comments.attr( 'class', classes );
-						activity_comments.children( 'form' ).removeClass( 'events-initiated' ).addClass( 'not-initialized' );
+						if ( activity_comments.find( '#ac-form-' + self.current_media.activity_id ).length === 0 ) {
+							activity_comments.append( form );
+							activity_comments.children( 'form' ).removeClass( 'events-initiated' ).addClass( 'not-initialized' );
+						}
 					}
 				}
 				activity_state = activity.find( '.activity-state' );
@@ -6775,9 +6777,11 @@ window.bp = window.bp || {};
 					activity_comments.remove();
 					activity_comments = $( '[data-bp-activity-id="' + self.current_document.activity_id + '"] .activity-comments' );
 					if ( activity_comments.length ) {
-						activity_comments.append( form );
 						activity_comments.attr( 'class', classes );
-						activity_comments.children( 'form' ).removeClass( 'events-initiated' ).addClass( 'not-initialized' );
+						if ( activity_comments.find( '#ac-form-' + self.current_document.activity_id ).length === 0 ) {
+							activity_comments.append( form );
+							activity_comments.children( 'form' ).removeClass( 'events-initiated' ).addClass( 'not-initialized' );
+						}
 						//Reset document text preview
 						activity_comments.find( '.document-text.loaded' ).removeClass( 'loaded' ).find( '.CodeMirror' ).remove();
 						jQuery( window ).scroll();
