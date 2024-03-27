@@ -1020,8 +1020,14 @@ a.bb-close-model {
 
 		form {
 			background: #fbfbfc;
-			margin: 15px -15px;
+
+			/*margin: 15px -15px;*/
 			padding: 15px 15px 0;
+		}
+
+		.comment-item form {
+			padding-left: 0;
+			padding-right: 0;
 		}
 	}
 }
@@ -2327,10 +2333,11 @@ img.emojioneemoji {
 
 	.dz-error-message {
 		top: 96%;
-		left: inherit;
+		left: 50%;
 		right: inherit;
 		max-width: 350px;
 		min-width: 100%;
+		transform: translateX(-50%);
 	}
 
 	.dz-remove {

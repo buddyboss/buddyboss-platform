@@ -3062,6 +3062,10 @@ window.bp = window.bp || {};
 				! $targetEl.closest( '.post-emoji' ).length &&
 				! $targetEl.is( '.emojioneemoji,.emojibtn' ) ) {
 				$( '.post-emoji.active, .emojionearea-button.active' ).removeClass( 'active' );
+				if ( $( '.emojionearea-theatre.show' ).length > 0 ) {
+					$( '.emojionearea-theatre' ).removeClass( 'show' ).addClass( 'hide' );
+					$( '.emojionearea-theatre' ).find( '.emojionearea-picker' ).addClass( 'hidden' );
+				}
 			}
 		},
 
@@ -3075,6 +3079,10 @@ window.bp = window.bp || {};
 				if ( ! _.isUndefined( BP_Nouveau.media ) &&
 					! _.isUndefined( BP_Nouveau.media.emoji ) ) {
 					$( '.post-emoji.active, .emojionearea-button.active' ).removeClass( 'active' );
+					if ( $( '.emojionearea-theatre.show' ).length > 0 ) {
+						$( '.emojionearea-theatre' ).removeClass( 'show' ).addClass( 'hide' );
+						$( '.emojionearea-theatre' ).find( '.emojionearea-picker' ).addClass( 'hidden' );
+					}
 				}
 			}
 		},
@@ -4301,6 +4309,8 @@ window.bp = window.bp || {};
 				// Populate the object list.
 				bp.Nouveau.objectRequest( queryData );
 			}
+
+			bp.Nouveau.Activity.activityPinHasUpdates = false;
 		}
 	};
 

@@ -1307,26 +1307,26 @@ function bp_nouveau_ajax_media_get_media_description() {
 			?>
 			<li class="activity activity_update activity-item mini ">
 				<?php
-					if ( $can_download_btn && ! empty( $media_id ) && ! empty( $attachment_id ) ) {
-						$download_url = bp_media_download_link( $attachment_id, $media_id );
-						if ( $download_url ) {
-							?>
-							<div class="bb-activity-more-options-wrap action">
+				if ( $can_download_btn && ! empty( $media_id ) && ! empty( $attachment_id ) ) {
+					$download_url = bp_media_download_link( $attachment_id, $media_id );
+					if ( $download_url ) {
+						?>
+						<div class="bb-activity-more-options-wrap action">
 								<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="<?php echo esc_html__( 'More Options', 'buddyboss' ); ?>">
 									<i class="bb-icon-f bb-icon-ellipsis-h"></i>
 								</span>
-								<div class="bb-activity-more-options">
-									<div class="generic-button">
-										<a id="activity-media-download-<?php echo $attachment_id ?>" href="<?php echo esc_url( $download_url ) ?>" class="button item-button bp-secondary-action activity-media-download download-activity">
-											<span class="bp-screen-reader-text"><?php echo esc_html__( 'Download', 'buddyboss' ); ?></span>
-											<span class="download-label"><?php echo esc_html__( 'Download', 'buddyboss' ); ?></span>
-										</a>
-									</div>
+							<div class="bb-activity-more-options">
+								<div class="generic-button">
+									<a id="activity-media-download-<?php echo esc_attr( $attachment_id ); ?>" href="<?php echo esc_url( $download_url ); ?>" class="button item-button bp-secondary-action activity-media-download download-activity">
+										<span class="bp-screen-reader-text"><?php echo esc_html__( 'Download', 'buddyboss' ); ?></span>
+										<span class="download-label"><?php echo esc_html__( 'Download', 'buddyboss' ); ?></span>
+									</a>
 								</div>
 							</div>
-							<?php
-						}
+						</div>
+						<?php
 					}
+				}
 				?>
 				<div class="bp-activity-head">
 					<div class="activity-avatar item-avatar">

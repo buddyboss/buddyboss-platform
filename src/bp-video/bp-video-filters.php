@@ -195,9 +195,10 @@ function bp_video_activity_comment_entry( $comment_id ) {
 	}
 
 	if ( ! empty( $video_ids ) && bp_has_video( $args ) ) {
-		$classes = array(
-			esc_attr( 'bb-video-length-' . $video_template->video_count ),
-			( $video_template->video_count > 5 ? esc_attr( ' bb-video-length-more' ) : '' ),
+		$max_length = bb_video_get_activity_comment_max_thumb_length();
+		$classes    = array(
+			esc_attr( 'bb-video-length-' . ( $video_template->video_count > $max_length ? $max_length : $video_template->video_count ) ),
+			( $video_template->video_count > $max_length ? esc_attr( ' bb-video-length-more' ) : '' ),
 		);
 		?>
 		<div class="bb-activity-video-wrap <?php echo esc_attr( implode( ' ', array_filter( $classes ) ) ); ?>">
