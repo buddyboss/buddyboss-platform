@@ -232,7 +232,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		<label for="_bb_enable_activity_comment_threading">
 			<?php printf( esc_html__( 'Organize replies into threads %s levels deep', 'buddyboss' ), $select ); ?>
 		</label>
-		<p class="description"><?php esc_html_e( 'Replies to an activity comment will be shown in separate threads, except when replying to a comment at the deepest level.', 'buddyboss' ); ?></p>
+		<p class="description"><?php esc_html_e( 'Replies to an activity comment will be shown in separate threads, except when replying to a comment at the deepest level. This only applies to platform not app.', 'buddyboss' ); ?></p>
 		<?php
 	}
 
