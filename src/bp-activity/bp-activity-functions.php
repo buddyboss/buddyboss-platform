@@ -1996,6 +1996,7 @@ function bp_activity_get_specific( $args = '' ) {
 			'spam'              => 'ham_only', // Retrieve items marked as spam.
 			'scope'             => false, // Retrieve items marked as spam.
 			'update_meta_cache' => true,
+			'status'            => bb_get_activity_published_status(),
 		),
 		'activity_get_specific'
 	);
@@ -2012,6 +2013,7 @@ function bp_activity_get_specific( $args = '' ) {
 		'spam'              => $r['spam'],
 		'scope'             => $r['scope'],
 		'update_meta_cache' => $r['update_meta_cache'],
+		'status'            => $r['status'],
 	);
 
 	/**

@@ -790,8 +790,9 @@ window.bp = window.bp || {};
 				var queryData = {
 					object: object,
 					scope: scope,
-					status: 'schedule',
+					status: 'scheduled',
 					target: '#buddypress .bb-action-popup-content[data-bp-list]',
+					template: 'schedule_activity',
 				};
 
 				if ( $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).length ) {
