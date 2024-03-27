@@ -68,7 +68,7 @@
 										</div>
 									</div>
 
-									<p><a href="#"><?php echo esc_html__( 'View all scheduled posts', 'buddyboss' ); ?> <i class="bb-icon-f bb-icon-arrow-right"></i></a></p>
+									<p><a href="#" class="bb-view-all-scheduled-posts"><?php echo esc_html__( 'View all scheduled posts', 'buddyboss' ); ?> <i class="bb-icon-f bb-icon-arrow-right"></i></a></p>
 								</div>
 
 								<footer class="bb-model-footer">

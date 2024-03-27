@@ -4780,6 +4780,7 @@ window.bp = window.bp || {};
 				'click .bb-schedule-post_dropdown_button': 'displayOptions',
 				'click .bb-schedule-post_action': 'displayScheduleForm',
 				'click .bb-view-schedule-posts': 'displaySchedulePosts',
+				'click .bb-view-all-scheduled-posts': 'displaySchedulePosts',
 				'click .bb-schedule-activity-cancel': 'cancelSchedulePost',
 				'click .bb-model-close-button': 'cancelSchedulePost',
 				'click .bb-schedule-activity': 'displayScheduleButton',
@@ -4844,6 +4845,7 @@ window.bp = window.bp || {};
 				event.preventDefault();
 				var schedulePost = $( event.target ).closest( '.bb-schedule-posts' );
 				schedulePost.find( '.bb-schedule-post_dropdown_list' ).removeClass( 'is_open' );
+				schedulePost.find( '#bb-schedule-post_form_modal' ).hide();
 				schedulePost.find( '#bb-schedule-posts_modal' ).show();
 			},
 
