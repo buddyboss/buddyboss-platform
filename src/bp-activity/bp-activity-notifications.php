@@ -239,6 +239,12 @@ add_action( 'bp_activity_sent_mention_email', 'bp_activity_at_mention_add_notifi
  * @param int                  $commenter_id ID of the user who made the comment.
  */
 function bp_activity_update_reply_add_notification( $activity, $comment_id, $commenter_id ) {
+	// Stop sending notification to user who has muted notifications.
+	if ( $activity->user_id !== $commenter_id ) {
+		if ( bb_user_has_mute_notification( $activity->id, $activity->user_id ) ) {
+			return;
+		}
+	}
 
 	if (
 		function_exists( 'bb_moderation_allowed_specific_notification' ) &&
@@ -290,8 +296,15 @@ add_action( 'bp_activity_sent_reply_to_update_notification', 'bp_activity_update
  * @param int                  $commenter_id     ID of the user who made the comment.
  */
 function bp_activity_comment_reply_add_notification( $activity_comment, $comment_id, $commenter_id ) {
-
 	$original_activity = new BP_Activity_Activity( $activity_comment->item_id );
+
+	// Stop sending notification to user who has muted notifications.
+	if ( $activity_comment->user_id !== $commenter_id ) {
+		if ( bb_user_has_mute_notification( $original_activity->id, $activity_comment->user_id ) ) {
+			return;
+		}
+	}
+
 	if (
 		function_exists( 'bb_moderation_allowed_specific_notification' ) &&
 		bb_moderation_allowed_specific_notification(
@@ -468,6 +481,11 @@ function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $po
 		// @todo Should we remove this restriction?
 		if ( ! empty( $post_type_comment->user_id ) ) {
 			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $post_type_comment->post->post_author, $post_type_comment->user_id ) ) {
+				return;
+			}
+
+			// Stop sending notification to user who has muted notifications.
+			if ( bb_user_has_mute_notification( $activity_args['activity_id'], $post_type_comment->post->post_author ) ) {
 				return;
 			}
 
