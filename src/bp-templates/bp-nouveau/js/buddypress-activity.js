@@ -1874,6 +1874,10 @@ window.bp = window.bp || {};
 										}
 									}
 								}
+
+								if ( 'undefined' !== typeof bp.Nouveau.Activity.activityHasUpdates ) {
+									bp.Nouveau.Activity.activityHasUpdates = true;
+								}
 							}
 
 							$( document ).trigger(
