@@ -3509,11 +3509,11 @@ function bb_update_to_2_4_75() {
  * @return void
  */
 function bb_update_to_2_5_0() {
-	update_option( '_bb_enable_activity_comment_threading', (int) get_option( 'thread_comments' ) );
+	bp_update_option( '_bb_enable_activity_comment_threading', (int) get_option( 'thread_comments' ) );
 
 	$thread_comments_depth = (int) get_option( 'thread_comments_depth', 3 );
 	if ( $thread_comments_depth > 4 ) {
 		$thread_comments_depth = 4;
 	}
-	update_option( '_bb_activity_comment_threading_depth', $thread_comments_depth );
+	bp_update_option( '_bb_activity_comment_threading_depth', $thread_comments_depth );
 }

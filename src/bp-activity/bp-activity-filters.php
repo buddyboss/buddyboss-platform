@@ -3624,7 +3624,7 @@ function bb_moderation_remove_mention_count( $num_links, $url, $comment ) {
  * @since BuddyBoss 2.4.60
  *
  * @param int    $post_id post id of the topic or reply.
- * @param object $post Post data.
+ * @param object $post    Post data.
  */
 function bb_cpt_post_title_save( $post_id, $post ) {
 	if (
@@ -3679,10 +3679,9 @@ function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
 			! empty( get_post_type( $parent_activity->secondary_item_id ) ) &&
 			'new_blog_' . get_post_type( $parent_activity->secondary_item_id ) === $parent_activity->type
 		) {
-
 			$activity_metas = bb_activity_get_metadata( $activity_comment_data['id'] );
 
-			$comment_id = $activity_metas['bp_blogs_' . get_post_type( $parent_activity->secondary_item_id ) . '_comment_id'][0] ?? '';
+			$comment_id = $activity_metas[ 'bp_blogs_' . get_post_type( $parent_activity->secondary_item_id ) . '_comment_id' ][0] ?? '';
 			if ( $comment_id ) {
 				$comment = get_comment( $comment_id );
 				if ( ! empty( $comment->comment_content ) ) {
@@ -3741,4 +3740,19 @@ function bb_emojionearea_add_popup_template() {
  */
 function bb_activity_add_modal_template() {
 	bp_get_template_part( 'activity/activity-modal' );
+}
+
+/**
+ * Add class to recent activity comment.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $class Comment class.
+ *
+ * @return string $class Comment class.
+ */
+function bb_activity_recent_comment_class( $class ) {
+	$class .= ' bb-recent-comment';
+
+	return $class;
 }

@@ -5509,6 +5509,14 @@ window.bp = window.bp || {};
 				}
 			},
 
+			decodeHtml: function (html) {
+
+				var txt = document.createElement('textarea');
+				txt.innerHTML = html;
+				return txt.value;
+
+			},
+
 			postUpdate: function ( event ) {
 				var self = this,
 					meta = {}, edit = false;
@@ -5790,27 +5798,21 @@ window.bp = window.bp || {};
 						} else if ( edit ) {
 							$( '#activity-' + response.id ).replaceWith( response.activity );
 
-							var html_string = response.activity;
-							var start_index = html_string.indexOf('data-bp-activity="') + 'data-bp-activity="'.length;
-							var end_index = html_string.indexOf('"', start_index);
+							// Extract value of data-bp-activity
+							var start_index = response.activity.indexOf('data-bp-activity="') + 'data-bp-activity="'.length;
+							var end_index = response.activity.indexOf('"', start_index);
+							var data_bp_activity = response.activity.substring(start_index, end_index);
 
-							// Extract the value of the data-bp-activity attribute
-							var data_bp_activity = html_string.substring(start_index, end_index);
+							var decoded_data_bp_activity = self.decodeHtml(data_bp_activity);
 
-							// Replace the encoded entities with their respective characters
-							data_bp_activity = data_bp_activity.replace(/&quot;/g, '"');
-							//data_bp_activity = data_bp_activity.replace(/&lt;p&gt;/g, '<p>').replace(/&lt;\/p&gt;/g, '</p>');
+							// Parse data-bp-activity attribute value as JSON
+							var parsed_data_bp_activity = JSON.parse(decoded_data_bp_activity);
 
-							// Parse the JSON string inside data-bp-activity attribute
-							var parsed_data_bp_activity = JSON.parse(data_bp_activity);
+							// Handle HTML entities in the content
+							var decoded_content = $('<div>').html(parsed_data_bp_activity.content).html();
 
-							// Define a regular expression to match opening and closing HTML tags
-							var htmlTagRegex = /&lt;\/?(\w+)(\s+(\w|\s|="[^"]*")*)?\/?&gt;/g;
-
-							// Replace HTML entities with their corresponding tags
-							parsed_data_bp_activity.content = parsed_data_bp_activity.content.replace(htmlTagRegex, function(match) {
-								return match.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-							});
+							// Update the content property with the decoded content
+							parsed_data_bp_activity.content = decoded_content;
 
 							var activity_modal_item = $( '#activity-modal .activity-list .activity-item' );
 							var activity_target = activity_modal_item.find( '.activity-content' ).find( '.activity-inner' );

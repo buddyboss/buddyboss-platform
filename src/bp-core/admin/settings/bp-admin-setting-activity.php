@@ -97,7 +97,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		// Allow link preview.
 		$this->add_field( '_bp_enable_activity_link_preview', __( 'Link Previews', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_link_preview', 'intval' );
 
-		//Relevant Activity Feeds
+		// Relevant Activity Feeds
 		$this->add_field( '_bp_enable_relevant_feed', __( 'Relevant Activity', 'buddyboss' ), 'bp_admin_setting_callback_enable_relevant_feed', 'intval' );
 
 		// Allow subscriptions setting.
@@ -276,12 +276,30 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	 */
 	public function bb_admin_setting_callback_comment_visibility() {
 		$options = array(
-			[ 'label' => esc_attr__( 'None', 'buddyboss' ), 'value' => 0 ],
-			[ 'label' => 1, 'value' => 1 ],
-			[ 'label' => 2, 'value' => 2 ],
-			[ 'label' => 3, 'value' => 3 ],
-			[ 'label' => 4, 'value' => 4 ],
-			[ 'label' => 5, 'value' => 5 ],
+			array(
+				'label' => esc_attr__( 'None', 'buddyboss' ),
+				'value' => 0,
+			),
+			array(
+				'label' => 1,
+				'value' => 1,
+			),
+			array(
+				'label' => 2,
+				'value' => 2,
+			),
+			array(
+				'label' => 3,
+				'value' => 3,
+			),
+			array(
+				'label' => 4,
+				'value' => 4,
+			),
+			array(
+				'label' => 5,
+				'value' => 5,
+			),
 		);
 		$setting = bb_get_activity_comment_visibility();
 		ob_start();

@@ -24,7 +24,7 @@ $activity_comment_id = bp_get_activity_comment_id();
 
 		<div class="acomment_inner">
 			<div class="acomment-avatar item-avatar">
-				<a href="<?php bp_activity_comment_user_link(); ?>">
+				<a href="<?php echo esc_url( bp_get_activity_comment_user_link() ); ?>">
 					<?php
 					bp_activity_avatar(
 						array(

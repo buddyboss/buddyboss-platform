@@ -716,7 +716,7 @@ function bp_nouveau_activity_comments( $args = array() ) {
 function bp_nouveau_activity_recurse_comments( $comment, $args = array() ) {
 	global $activities_template;
 
-	if ( empty( $comment->children ) ) {
+	if ( empty( $comment ) ) {
 		return;
 	}
 
@@ -729,6 +729,7 @@ function bp_nouveau_activity_recurse_comments( $comment, $args = array() ) {
 		'bp_nouveau_activity_recurse_comments'
 	);
 
+
 	/**
 	 * Filters the opening tag for the template that lists activity comments.
 	 *
@@ -739,29 +740,22 @@ function bp_nouveau_activity_recurse_comments( $comment, $args = array() ) {
 	echo apply_filters( 'bb_activity_recurse_comments_start_ul', "<ul data-activity_id={$activities_template->activity->id} data-parent_comment_id={$comment->id}>" );
 
 	$comment_loaded_count = 0;
-	$comment_total        = bp_activity_recurse_comment_count( $comment );
+
+	// get comments children count.
+	if ( false !== $r['limit_comments'] ) {
+
+		if ( 0 !== $comment->all_child_count ) {
+			$link_text = sprintf(
+			/* translators: total replies */
+				_n( 'View %d reply', 'View %d replies', $comment->all_child_count, 'buddyboss' ),
+				absint( $comment->all_child_count )
+			);
+			echo "<li class='acomments-view-more'><i class='bb-icon-l bb-icon-corner-right'></i>". esc_html( $link_text ) ."</li>";
+
+		}
+	}
 
 	foreach ( (array) $comment->children as $comment_child ) {
-		if ( false !== $r['limit_comments'] && $comment_loaded_count === $r['comment_load_limit'] ) {
-
-			if ( 0 !== $comment->secondary_item_id ) {
-				if ( 0 === $comment_loaded_count ) {
-					$link_text = sprintf(
-					/* translators: total replies */
-						_n( 'View %d reply', 'View %d replies', $comment_total, 'buddyboss' ),
-						absint( $comment_total )
-					);
-				} else {
-					$link_text = __( 'View more replies', 'buddyboss' );
-				}
-
-			} else {
-				$link_text = __( 'View more comments', 'buddyboss' );
-			}
-
-			echo "<li class='acomments-view-more'><i class='bb-icon-l bb-icon-corner-right'></i>". esc_html( $link_text ) ."</li>";
-			break;
-		}
 
 		// Put the comment into the global so it's available to filters.
 		$activities_template->activity->current_comment = $comment_child;

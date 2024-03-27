@@ -4169,3 +4169,25 @@ function bb_media_get_activity_media( $activity = '', $args = array() ) {
 
 	return $content;
 }
+
+/**
+ * Maximum thumbnail length in comment.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int
+ */
+function bb_media_get_activity_comment_max_thumb_length() {
+	return (int) apply_filters( 'bb_media_get_activity_comment_max_thumb_length', 2 ); 
+}
+
+/**
+ * Maximum thumbnail length in activity.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int
+ */
+function bb_media_get_activity_max_thumb_length() {
+	return (int) apply_filters( 'bb_media_get_activity_max_thumb_length', 5 ); 
+}

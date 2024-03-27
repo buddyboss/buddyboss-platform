@@ -41,7 +41,7 @@ $db_privacy              = bp_get_video_privacy();
 $is_comment_vid          = bp_video_is_activity_comment_video( $video_id );
 $attachment_urls         = bb_video_get_attachments_symlinks( $attachment_id, $video_id );
 $parent_root_activity_id = 0;
-$max_length              = $is_comment_vid ? 2 : 3;
+$max_length              = $is_comment_vid ? bb_video_get_activity_comment_max_thumb_length() : bb_video_get_activity_max_thumb_length();
 $more_video              = $video_template->video_count > $max_length ? true : false;
 
 if ( $is_comment_vid ) {
