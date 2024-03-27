@@ -11,7 +11,7 @@
 bp_nouveau_before_loop();
 $activity_schedule_args = bp_parse_args(
 	bp_ajax_querystring( 'activity' ),
-	array( 'status' => $_POST['status'] ),
+	array( 'status' => $_POST['status'], 'sort' => 'ASC' ),
 	'activity_schedule_args'
 );
 
