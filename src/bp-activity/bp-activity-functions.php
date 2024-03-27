@@ -989,6 +989,26 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = arra
 		}
 	}
 
+	// Get the parent activity.
+	$activity = new BP_Activity_Activity( $activity_id );
+
+	// Bail if activity privacy restrict 
+	if ( ! empty( $activity->privacy ) ) {
+		if ( 'friends' === $activity->privacy && bp_is_active( 'friends' ) && false === friends_check_friendship( $activity->user_id, $user_id ) ) {
+			
+			return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
+				'error',
+				esc_html__( 'User must be in activity author connection to add favorite.', 'buddyboss' )
+			);
+		} else if ( 'onlyme' === $activity->privacy && $activity->user_id !== $user_id ) {
+			
+			return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
+				'error',
+				esc_html__( 'User can not add favorite on Only Me activity.', 'buddyboss' )
+			);
+		}
+	}
+
 	$reacted = bb_load_reaction()->bb_add_user_item_reaction(
 		array(
 			'item_type'   => $r['type'],
@@ -1097,6 +1117,26 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 			return new WP_Error(
 				'bp_activity_add_user_favorite_disabled_temporarily',
 				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' )
+			);
+		}
+	}
+
+	// Get the parent activity.
+	$activity = new BP_Activity_Activity( $activity_id );
+
+	// Bail if activity privacy restrict 
+	if ( ! empty( $activity->privacy ) ) {
+		if ( 'friends' === $activity->privacy && bp_is_active( 'friends' ) && false === friends_check_friendship( $activity->user_id, $user_id ) ) {
+			
+			return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
+				'error',
+				esc_html__( 'User must be in activity author connection to remove favorite.', 'buddyboss' )
+			);
+		} else if ( 'onlyme' === $activity->privacy && $activity->user_id !== $user_id ) {
+			
+			return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
+				'error',
+				esc_html__( 'User can not remove favorite on Only Me activity.', 'buddyboss' )
 			);
 		}
 	}
