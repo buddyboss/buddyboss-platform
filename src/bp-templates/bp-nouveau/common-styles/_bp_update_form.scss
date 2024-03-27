@@ -485,13 +485,29 @@
 		}
 	}
 
-	.schedule-posts-placeholder {
+	.schedule-posts-placeholder_loader {
 		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 150px;
+
+		[class*="bb-icon"] {
+			font-size: 20px;
+			line-height: 1;
+		}
+	}
+
+	.schedule-posts-placeholder {
+		display: none;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 		min-height: 210px;
 		margin: 30px 0;
+
+		&.is_open {
+			display: flex;
+		}
 
 		> [class*="bb-icon"] {
 			color: $black;
