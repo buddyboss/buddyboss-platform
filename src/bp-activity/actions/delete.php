@@ -57,9 +57,9 @@ function bp_activity_action_delete_activity( $activity_id = 0 ) {
 			'user_id' => $activity->user_id,
 		)
 	) ) {
-		bp_core_add_message( __( 'Activity deleted successfully', 'buddyboss' ) );
+		bp_core_add_message( sprintf( __( '%s deleted successfully', 'buddyboss' ), bb_get_component_label( 'activity' ) ) );
 	} else {
-		bp_core_add_message( __( 'There was an error when deleting that activity', 'buddyboss' ), 'error' );
+		bp_core_add_message( sprintf( __( 'There was an error when deleting that %s', 'buddyboss' ), strtolower( bb_get_component_label( 'activity' ) ) ), 'error' );
 	}
 
 	/**
