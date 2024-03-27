@@ -732,6 +732,11 @@ function bp_nouveau_ajax_post_update() {
 		$privacy = $_POST['privacy']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	}
 
+	$status = 'public';
+	if ( ! empty( $_POST['activity_action_type'] ) && 'scheduled' === $_POST['activity_action_type'] ) {
+		$status = $_POST['activity_action_type'];
+	}
+
 	if ( 'user' === $object && bp_is_active( 'activity' ) ) {
 
 		if ( ! bb_user_can_create_activity() ) {
@@ -757,6 +762,7 @@ function bp_nouveau_ajax_post_update() {
 				'content'    => $content,
 				'privacy'    => $privacy,
 				'error_type' => 'wp_error',
+				'status'     => $status,
 			)
 		);
 
@@ -771,6 +777,7 @@ function bp_nouveau_ajax_post_update() {
 					'id'       => $activity_id,
 					'content'  => $_POST['content'],
 					'group_id' => $item_id,
+					'status'   => $status,
 				)
 			);
 

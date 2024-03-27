@@ -494,6 +494,7 @@ function groups_record_activity( $args = '' ) {
 				'is_spam'           => $activity->is_spam,
 				'privacy'           => $activity->privacy,
 				'error_type'        => ! empty( $args['error_type'] ) ? $args['error_type'] : $activity->error_type,
+				'status'            => ! empty( $args['status'] ) ? $args['status'] : bb_get_activity_published_status(),
 			);
 
 			/**
@@ -521,6 +522,7 @@ function groups_record_activity( $args = '' ) {
 			'hide_sitewide'     => $hide_sitewide,
 			'privacy'           => 'public',
 			'error_type'        => 'bool',
+			'status'            => bb_get_activity_published_status(),
 		),
 		'groups_record_activity'
 	);

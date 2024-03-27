@@ -14,7 +14,7 @@
 	if ( bp_is_active( 'activity' ) && bb_is_enabled_activity_schedule_posts() ) :
 		?>
 	<div class="bb-schedule-post_dropdown_section">
-		<a href="#" class="bb-schedule-post_dropdown_button {{data.activity_action_type === 'schedule' ? 'is_scheduled' : ''}}">
+		<a href="#" class="bb-schedule-post_dropdown_button {{data.activity_action_type === 'scheduled' ? 'is_scheduled' : ''}}">
 			<i class="bb-icon-f bb-icon-clock"></i>
 			<i class="bb-icon-f bb-icon-caret-down"></i>
 		</a>

@@ -384,7 +384,7 @@ window.bp = window.bp || {};
 			self.postForm.model.set( 'link_image_index', activity_data.link_image_index_save );
 			self.postForm.model.set( 'link_image_index_save', activity_data.link_image_index_save );
 
-			if( activity_data.activity_action_type === 'schedule' ) {
+			if( activity_data.activity_action_type === 'scheduled' ) {
 				// Set Schedule post data
 				self.postForm.model.set( 'activity_action_type', activity_data.activity_action_type );
 				self.postForm.model.set( 'activity_schedule_date_raw', activity_data.activity_schedule_date_raw );
@@ -4760,7 +4760,7 @@ window.bp = window.bp || {};
 					buttomText = BP_Nouveau.activity.strings.updatePostButton;
 				}
 
-				if( model.get( 'activity_action_type' ) === 'schedule' ) {
+				if( model.get( 'activity_action_type' ) === 'scheduled' ) {
 					this.submit.el.value = BP_Nouveau.activity.strings.schedulePostButton;
 				} else {
 					this.submit.el.value = buttomText;
@@ -4859,7 +4859,7 @@ window.bp = window.bp || {};
 				var dateNumber = UserDate.getDate();
 				var schedulePost_date = monthName + ' ' + dateNumber;
 
-				this.model.set( 'activity_action_type', 'schedule' );
+				this.model.set( 'activity_action_type', 'scheduled' );
 				this.model.set( 'activity_schedule_date_raw', schedulePost_date_raw );
 				this.model.set( 'activity_schedule_date', schedulePost_date );
 				this.model.set( 'activity_schedule_time', schedulePost_time );

@@ -1765,6 +1765,7 @@ function groups_post_update( $args = '' ) {
 			'group_id'   => 0,
 			'privacy'    => 'public',
 			'error_type' => 'bool',
+			'status'     => bb_get_activity_published_status(),
 		),
 		'groups_post_update'
 	);
@@ -1819,6 +1820,7 @@ function groups_post_update( $args = '' ) {
 			'item_id'    => $group_id,
 			'privacy'    => $privacy,
 			'error_type' => $error_type,
+			'status'     => $status,
 		)
 	);
 
