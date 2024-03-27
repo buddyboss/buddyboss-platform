@@ -3529,7 +3529,6 @@ window.bp = window.bp || {};
 				activityId = $( currentTargetList ).data( 'activity_id' ),
 				commentsList = $( e.currentTarget ).closest( '.activity-comments' ),
 				parentCommentId = $( currentTargetList ).data( 'parent_comment_id' ),
-				type = '',
 				lastCommentTimeStamp = '',
 				addAfterListItemId = '';
 
@@ -3546,7 +3545,6 @@ window.bp = window.bp || {};
 				'</div>' +
 				'</div>';
 
-			var $activityListItem = target.parents( 'li.activity-item[data-bp-activity-id=' + activityId + ']' );
 			target.addClass( 'loading' ).removeClass( 'acomments-view-more--hide' );
 			commentsList.addClass( 'active' );
 			target.html( skeleton );
