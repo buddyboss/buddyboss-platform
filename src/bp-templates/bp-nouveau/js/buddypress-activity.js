@@ -1767,6 +1767,10 @@ window.bp = window.bp || {};
 									target.attr( 'title', BP_Nouveau.activity.strings.muteNotification );
 									target.find( 'span' ).html( BP_Nouveau.activity.strings.muteNotification );
 								}
+
+								if ( 'undefined' !== typeof bp.Nouveau.Activity.activityHasUpdates ) {
+									bp.Nouveau.Activity.activityHasUpdates = true;
+								}
 							}
 
 							$( document ).trigger(
