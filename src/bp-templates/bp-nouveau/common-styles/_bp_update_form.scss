@@ -265,7 +265,6 @@
 #whats-new-form.media-uploading,
 #whats-new-form.focus-in--empty {
 
-	.bb-schedule-post_dropdown_button,
 	#aw-whats-new-submit {
 		opacity: 0.6;
 		cursor: default;
@@ -284,7 +283,7 @@
 
 	#discard-draft-activity {
 		display: block;
-		padding: 0 20px 0 12px;
+		padding: 0 8px 0 0;
 	}
 }
 
@@ -420,7 +419,7 @@
 		}
 
 		.bb-schedule-activity-time-wrap {
-			flex: 1 0 auto;
+			flex: 1 1 auto;
 		}
 
 		.bb-schedule-activity-meridian-wrap {
