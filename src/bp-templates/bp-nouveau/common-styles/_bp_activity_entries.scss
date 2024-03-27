@@ -1684,20 +1684,35 @@
 
 .bb-internal-model {
 
-	.activity-comments.active {
+	.activity-item.active {
 
-		.acomments-view-more {
-			pointer-events: none;
+		.activity-comments {
+
+			.acomments-view-more {
+				pointer-events: none;
+			}
+
+			.bb-activity-more-options-wrap .acomment-edit,
+			.bb-activity-more-options-wrap .acomment-delete {
+				pointer-events: none;
+			}
+
+			.acomment-foot-actions {
+
+				.button.reaction {
+					pointer-events: none;
+				}
+			}
 		}
 
-		.bb-activity-more-options-wrap .acomment-edit,
-		.bb-activity-more-options-wrap .acomment-delete {
-			pointer-events: none;
+		.activity-header {
+			.activity-privacy li {
+				pointer-events: none;
+			}
 		}
 
-		.acomment-foot-actions {
-
-			.button.reaction {
+		.bb-activity-more-options {
+			a.button {
 				pointer-events: none;
 			}
 		}
