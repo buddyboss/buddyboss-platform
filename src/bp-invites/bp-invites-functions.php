@@ -257,12 +257,17 @@ function bp_invites_member_invite_register_screen_message() {
 				$member_type_post_id = bp_member_type_post_by_type( $get_invite_profile_type );
 				?>
 				<script>
-					jQuery(document).ready(function () {
-						if ( jQuery(".field_type_membertypes").length) {
-							jQuery(".field_type_membertypes fieldset select").val("<?php echo esc_js( $member_type_post_id ); ?>");
-							jQuery(".field_type_membertypes fieldset select").attr('disabled', 'disabled');
+					jQuery( document ).ready( function () {
+						// On form submission remove disabled attribute from the select.
+						jQuery( "#signup-form" ).on( "submit", function() {
+							jQuery( ".field_type_membertypes fieldset select" ).attr( "disabled", false );
+						} );
+
+						if ( jQuery( ".field_type_membertypes" ).length ) {
+							jQuery( ".field_type_membertypes fieldset select" ).attr( 'disabled', 'disabled' );
+							jQuery( ".field_type_membertypes fieldset select" ).val( "<?php echo esc_js( $member_type_post_id ); ?>" );
 						}
-					});
+					} );
 				</script>
 				<?php
 
