@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.5.71\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-03-22 12:25:46+00:00\n"
+"POT-Creation-Date: 2024-03-27 09:33:44+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -663,7 +663,7 @@ msgid "Cancel"
 msgstr ""
 
 #: bp-activity/bp-activity-adminbar.php:46
-#: bp-core/admin/settings/bp-admin-setting-activity.php:70
+#: bp-core/admin/settings/bp-admin-setting-activity.php:72
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1738
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1742
 msgid "Edit Activity"
@@ -1317,7 +1317,7 @@ msgid "Unfollow"
 msgstr ""
 
 #: bp-activity/bp-activity-template.php:4216
-#: bp-core/admin/settings/bp-admin-setting-activity.php:94
+#: bp-core/admin/settings/bp-admin-setting-activity.php:101
 #: bp-members/bp-members-admin.php:143
 #: bp-templates/bp-nouveau/includes/customizer.php:327
 msgid "Follow"
@@ -4348,7 +4348,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:409
-#: bp-core/admin/settings/bp-admin-setting-activity.php:139
+#: bp-core/admin/settings/bp-admin-setting-activity.php:146
 msgid "WordPress"
 msgstr ""
 
@@ -5308,7 +5308,7 @@ msgid "Connections"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:95
-#: bp-core/admin/bp-core-admin-tools.php:142 bp-core/bp-core-options.php:2587
+#: bp-core/admin/bp-core-admin-tools.php:142 bp-core/bp-core-options.php:2590
 msgid "Activity posts"
 msgstr ""
 
@@ -5690,52 +5690,56 @@ msgstr ""
 msgid "Activity loading"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:67
+#: bp-core/admin/settings/bp-admin-setting-activity.php:69
 #: bp-core/admin/settings/bp-admin-setting-general.php:150
 msgid "Activity Settings"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:71
+#: bp-core/admin/settings/bp-admin-setting-activity.php:73
 msgid "Edit Activity Time Limit"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:76
+#: bp-core/admin/settings/bp-admin-setting-activity.php:78
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:2174
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:2178
 msgid "Edit Comment"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:77
+#: bp-core/admin/settings/bp-admin-setting-activity.php:79
 msgid "Edit Comment Time Limit"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:82
+#: bp-core/admin/settings/bp-admin-setting-activity.php:84
 msgid "Activity auto-refresh"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:85
+#: bp-core/admin/settings/bp-admin-setting-activity.php:87
 msgid "Activity tabs"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:88
+#: bp-core/admin/settings/bp-admin-setting-activity.php:90
 msgid "Close comments"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:91
+#: bp-core/admin/settings/bp-admin-setting-activity.php:93
 #: bp-templates/bp-nouveau/buddypress/activity/entry.php:40
 msgid "Pinned Post"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:97
+#: bp-core/admin/settings/bp-admin-setting-activity.php:98
+msgid "Schedule posts"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-activity.php:104
 #: bp-forums/admin/settings.php:172
 msgid "Link Previews"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:100
+#: bp-core/admin/settings/bp-admin-setting-activity.php:107
 msgid "Relevant Activity"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:107
+#: bp-core/admin/settings/bp-admin-setting-activity.php:114
 msgid "Posts in Activity Feeds"
 msgstr ""
 
@@ -5743,12 +5747,16 @@ msgstr ""
 msgid "BuddyBoss Platform"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:153
+#: bp-core/admin/settings/bp-admin-setting-activity.php:160
 msgid "Custom Post Types"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:189
+#: bp-core/admin/settings/bp-admin-setting-activity.php:196
 msgid "Allow your users to stop users commenting on their posts"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-activity.php:209
+msgid "Allow members to schedule their posts"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-document.php:22
@@ -8374,27 +8382,27 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: bp-core/bp-core-options.php:1083
+#: bp-core/bp-core-options.php:1086
 msgid "30 Days"
 msgstr ""
 
-#: bp-core/bp-core-options.php:1087
+#: bp-core/bp-core-options.php:1090
 msgid "7 Days"
 msgstr ""
 
-#: bp-core/bp-core-options.php:1091
+#: bp-core/bp-core-options.php:1094
 msgid "1 Day"
 msgstr ""
 
-#: bp-core/bp-core-options.php:1095
+#: bp-core/bp-core-options.php:1098
 msgid "1 Hour"
 msgstr ""
 
-#: bp-core/bp-core-options.php:1099
+#: bp-core/bp-core-options.php:1102
 msgid "10 Minutes"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2592
+#: bp-core/bp-core-options.php:2595
 msgid "Activity comments"
 msgstr ""
 
@@ -20963,12 +20971,12 @@ msgid "Group Name (required)"
 msgstr ""
 
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:565
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1611
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1612
 msgid "Notify group members of these changes via email"
 msgstr ""
 
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:572
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1602
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1603
 msgid "Notify group members of these changes"
 msgstr ""
 
@@ -30633,8 +30641,8 @@ msgstr[1] ""
 msgid "Last active "
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/search/loop/member-ajax.php:27
-#: bp-templates/bp-nouveau/buddypress/search/loop/member.php:32
+#: bp-templates/bp-nouveau/buddypress/search/loop/member-ajax.php:26
+#: bp-templates/bp-nouveau/buddypress/search/loop/member.php:31
 msgid "Last active"
 msgstr ""
 
@@ -32277,11 +32285,11 @@ msgstr ""
 msgid "Remove from group"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1539
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1540
 msgid "Groups default front page"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1557
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1558
 msgid "widgets (content blocks)"
 msgstr ""
 
