@@ -43,7 +43,7 @@ function bp_activity_admin_menu() {
 	$wp_admin_bar->add_menu(
 		array(
 			'id'    => 'activity-admin',
-			'title' => __( 'Edit Activity', 'buddyboss' ),
+			'title' => sprintf( __( 'Edit %s', 'buddyboss' ), bb_get_component_label( 'activity' ) ),
 			'href'  => esc_url( $activity_edit_link ),
 		)
 	);

@@ -39,11 +39,11 @@ function bp_activity_action_mark_favorite() {
 
 	if ( 'activity_comment' === $activity->type ) {
 		$type     = 'activity_comment';
-		$message  = __( 'Activity comment post saved.', 'buddyboss' );
+		$message = sprintf( __( '%s comment post saved.', 'buddyboss' ), bb_get_component_label( 'activity' ) );
 		$redirect = wp_get_referer() . '#acomment-display-' . $activity_id;
 	} else {
 		$type     = 'activity';
-		$message  = __( 'Activity post saved.', 'buddyboss' );
+		$message = sprintf( __( '%s post saved.', 'buddyboss' ), bb_get_component_label( 'activity' ) );
 		$redirect = wp_get_referer() . '#activity-' . $activity_id;
 	}
 

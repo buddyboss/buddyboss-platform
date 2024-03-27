@@ -65,7 +65,7 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 
 		case 'update_reply':
 			$link   = bp_get_notifications_permalink();
-			$title  = __( 'New Activity reply', 'buddyboss' );
+			$title  = sprintf( __( 'New %s reply', 'buddyboss' ), bb_get_component_label( 'activity' ) );
 			$amount = 'single';
 
 			if ( (int) $total_items > 1 ) {
@@ -80,7 +80,7 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 
 		case 'comment_reply':
 			$link   = bp_get_notifications_permalink();
-			$title  = __( 'New Activity comment reply', 'buddyboss' );
+			$title  = sprintf( __( 'New %s comment reply', 'buddyboss' ), bb_get_component_label( 'activity' ) );
 			$amount = 'single';
 
 			if ( (int) $total_items > 1 ) {
