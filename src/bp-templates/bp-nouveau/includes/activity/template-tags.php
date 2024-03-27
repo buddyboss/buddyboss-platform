@@ -729,7 +729,6 @@ function bp_nouveau_activity_recurse_comments( $comment, $args = array() ) {
 		'bp_nouveau_activity_recurse_comments'
 	);
 
-
 	/**
 	 * Filters the opening tag for the template that lists activity comments.
 	 *
@@ -740,7 +739,7 @@ function bp_nouveau_activity_recurse_comments( $comment, $args = array() ) {
 	echo apply_filters( 'bb_activity_recurse_comments_start_ul', "<ul data-activity_id={$activities_template->activity->id} data-parent_comment_id={$comment->id}>" );
 
 	$comment_loaded_count = 0;
-
+	$skip_children_loop   = false;
 	// get comments children count.
 	if ( false !== $r['limit_comments'] ) {
 
@@ -752,33 +751,36 @@ function bp_nouveau_activity_recurse_comments( $comment, $args = array() ) {
 			);
 			echo "<li class='acomments-view-more'><i class='bb-icon-l bb-icon-corner-right'></i>". esc_html( $link_text ) ."</li>";
 
+			$skip_children_loop = true;
 		}
 	}
 
-	foreach ( (array) $comment->children as $comment_child ) {
+	if ( ! $skip_children_loop ) {
+		foreach ( (array) $comment->children as $comment_child ) {
 
-		// Put the comment into the global so it's available to filters.
-		$activities_template->activity->current_comment = $comment_child;
-
-		/**
-		 * Fires before the display of an activity comment.
-		 *
-		 * @since BuddyPress 1.5.0
-		 */
-		do_action( 'bp_before_activity_comment' );
-
-		bp_get_template_part( 'activity/comment' );
-
-		/**
-		 * Fires after the display of an activity comment.
-		 *
-		 * @since BuddyPress 1.5.0
-		 */
-		do_action( 'bp_after_activity_comment' );
-
-		unset( $activities_template->activity->current_comment );
-
-		$comment_loaded_count++;
+			// Put the comment into the global so it's available to filters.
+			$activities_template->activity->current_comment = $comment_child;
+	
+			/**
+			 * Fires before the display of an activity comment.
+			 *
+			 * @since BuddyPress 1.5.0
+			 */
+			do_action( 'bp_before_activity_comment' );
+	
+			bp_get_template_part( 'activity/comment' );
+	
+			/**
+			 * Fires after the display of an activity comment.
+			 *
+			 * @since BuddyPress 1.5.0
+			 */
+			do_action( 'bp_after_activity_comment' );
+	
+			unset( $activities_template->activity->current_comment );
+	
+			$comment_loaded_count++;
+		}
 	}
 
 	/**
