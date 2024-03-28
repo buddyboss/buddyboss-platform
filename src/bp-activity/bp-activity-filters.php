@@ -3693,27 +3693,6 @@ function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
 }
 
 /**
- * Function to update per page for activity.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $querystring Current query string.
- * @param string $object      Current template component.
- *
- * @return string The AJAX querystring.
- */
-function bb_activity_directory_set_pagination( $querystring, $object ) {
-	if ( 'activity' !== $object || bp_is_single_activity() ) {
-		return $querystring;
-	}
-
-	$querystring             = bp_parse_args( $querystring );
-	$querystring['per_page'] = bb_get_load_activity_per_request();
-
-	return http_build_query( $querystring );
-}
-
-/**
  * Add template for gifpicker.
  *
  * @since BuddyBoss [BBVERSION]
