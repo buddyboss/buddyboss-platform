@@ -3653,14 +3653,16 @@ input.search-query-input {
 }
 
 #buddypress .activity-list .activity-item .activity-content .bp-generic-meta.action .button, #buddypress
-.activity-list .activity-item > .bp-generic-meta.action .button {
+.activity-list .activity-item > .bp-generic-meta.action .button, #buddypress
+.activity-list .activity-item .activity-actions > .bp-generic-meta.action .button {
   display: flex;
   align-items: center;
   column-gap: 2px;
 }
 
 .activity-list .activity-item .activity-content .bp-generic-meta.action .button > i,
-.activity-list .activity-item > .bp-generic-meta.action .button > i {
+.activity-list .activity-item > .bp-generic-meta.action .button > i,
+.activity-list .activity-item .activity-actions > .bp-generic-meta.action .button > i {
   font-size: 22px;
   font-weight: 400;
   display: inline-block;
@@ -3668,30 +3670,35 @@ input.search-query-input {
 }
 
 .activity-list .activity-item .activity-content .bp-generic-meta.action .button.has-reaction > i,
-.activity-list .activity-item > .bp-generic-meta.action .button.has-reaction > i {
+.activity-list .activity-item > .bp-generic-meta.action .button.has-reaction > i,
+.activity-list .activity-item .activity-actions > .bp-generic-meta.action .button.has-reaction > i {
   font-weight: 200;
   font-size: 24px;
 }
 
 body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp-generic-meta.action .button.has-reaction > i, body:not(.bb-reactions-mode)
-.activity-list .activity-item > .bp-generic-meta.action .button.has-reaction > i {
+.activity-list .activity-item > .bp-generic-meta.action .button.has-reaction > i, body:not(.bb-reactions-mode)
+.activity-list .activity-item .activity-actions > .bp-generic-meta.action .button.has-reaction > i {
   font-weight: 300;
 }
 
 .activity-list .activity-item .activity-content .bp-generic-meta.action .button > img,
-.activity-list .activity-item > .bp-generic-meta.action .button > img {
+.activity-list .activity-item > .bp-generic-meta.action .button > img,
+.activity-list .activity-item .activity-actions > .bp-generic-meta.action .button > img {
   height: 24px;
   width: 24px;
   object-fit: cover;
 }
 
 .activity-list .activity-item .activity-content .bp-generic-meta.action .button > img.custom,
-.activity-list .activity-item > .bp-generic-meta.action .button > img.custom {
+.activity-list .activity-item > .bp-generic-meta.action .button > img.custom,
+.activity-list .activity-item .activity-actions > .bp-generic-meta.action .button > img.custom {
   border-radius: 100%;
 }
 
 #buddypress .activity-list .activity-item .activity-content .bp-generic-meta.action .button > .like-count, #buddypress
-.activity-list .activity-item > .bp-generic-meta.action .button > .like-count {
+.activity-list .activity-item > .bp-generic-meta.action .button > .like-count, #buddypress
+.activity-list .activity-item .activity-actions > .bp-generic-meta.action .button > .like-count {
   color: #333;
   line-height: 20px;
   display: inline-block;
@@ -3699,12 +3706,14 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 }
 
 .activity-list .activity-item .activity-content .bp-generic-meta.action .button.bp-like-button:before,
-.activity-list .activity-item > .bp-generic-meta.action .button.bp-like-button:before {
+.activity-list .activity-item > .bp-generic-meta.action .button.bp-like-button:before,
+.activity-list .activity-item .activity-actions > .bp-generic-meta.action .button.bp-like-button:before {
   display: none;
 }
 
 .activity-list .activity-item .activity-content .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:before,
-.activity-list .activity-item > .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:before {
+.activity-list .activity-item > .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:before,
+.activity-list .activity-item .activity-actions > .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:before {
   content: "";
   display: block;
   position: absolute;
@@ -3716,7 +3725,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 }
 
 .activity-list .activity-item .activity-content .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:after,
-.activity-list .activity-item > .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:after {
+.activity-list .activity-item > .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:after,
+.activity-list .activity-item .activity-actions > .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:after {
   width: 180px;
   white-space: normal;
   left: 0;
@@ -3753,6 +3763,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta,
 .activity-list .activity-item > .bp-generic-meta.activity-meta,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta,
 .activity-list .activity-item > .bp-generic-meta.groups-meta {
   display: flex;
@@ -3764,6 +3775,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta div.generic-button,
 .activity-list .activity-item > .bp-generic-meta.activity-meta div.generic-button,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action div.generic-button,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta div.generic-button,
 .activity-list .activity-item > .bp-generic-meta.groups-meta div.generic-button {
   margin: 0;
@@ -3774,6 +3786,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta div.generic-button > a,
 .activity-list .activity-item > .bp-generic-meta.activity-meta div.generic-button > a,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action div.generic-button > a,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta div.generic-button > a,
 .activity-list .activity-item > .bp-generic-meta.groups-meta div.generic-button > a {
   width: 100%;
@@ -3783,6 +3796,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta div.generic-button > a:hover,
 .activity-list .activity-item > .bp-generic-meta.activity-meta div.generic-button > a:hover,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action div.generic-button > a:hover,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta div.generic-button > a:hover,
 .activity-list .activity-item > .bp-generic-meta.groups-meta div.generic-button > a:hover {
   background-color: #eaeaea;
@@ -3790,6 +3804,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .button,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .button,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .button,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .button {
   background: transparent;
@@ -3797,6 +3812,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta a,
 .activity-list .activity-item > .bp-generic-meta.activity-meta a,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action a,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta a,
 .activity-list .activity-item > .bp-generic-meta.groups-meta a {
   padding: 4px 8px;
@@ -3806,6 +3822,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button:hover,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .button:focus,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .button:hover,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .button:focus,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .button:hover,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .button:focus,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .button:hover,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .button:focus,
@@ -3817,6 +3835,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .icons:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .button:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .icons:before,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .button:before,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .icons:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .button:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .icons:before,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .button:before,
@@ -3829,6 +3849,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .acomment-reply.button:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .acomment-reply.button:before,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .acomment-reply.button:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .acomment-reply.button:before,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .acomment-reply.button:before {
   content: "\ee33";
@@ -3836,6 +3857,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .acomment-reply.button .comment-count,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .acomment-reply.button .comment-count,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .acomment-reply.button .comment-count,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .acomment-reply.button .comment-count,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .acomment-reply.button .comment-count {
   color: #333;
@@ -3843,6 +3865,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .view:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .view:before,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .view:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .view:before,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .view:before {
   content: "\ee33";
@@ -3850,6 +3873,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .fav:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .fav:before,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .fav:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .fav:before,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .fav:before {
   content: "\ef41";
@@ -3859,6 +3883,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .unfav:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .has-like:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .unfav:before,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .has-like:before,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .unfav:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .has-like:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .unfav:before,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .has-like:before,
@@ -3870,6 +3896,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .edit-activity:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .edit-activity:before,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .edit-activity:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .edit-activity:before,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .edit-activity:before {
   content: "\ee5a";
@@ -3878,6 +3905,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .delete-activity:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .delete-activity:before,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .delete-activity:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .delete-activity:before,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .delete-activity:before {
   content: "\ef48";
@@ -3887,6 +3915,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .report-content:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .reported-content:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .report-content:before,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .reported-content:before,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .report-content:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .reported-content:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .report-content:before,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .reported-content:before,
@@ -3901,6 +3931,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .reported-content,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .reported-content,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .reported-content,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .reported-content,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .reported-content {
   opacity: 0.8 !important;
@@ -3909,6 +3940,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .spam-activity:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .spam-activity:before,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .spam-activity:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .spam-activity:before,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .spam-activity:before {
   content: "\ee08";
@@ -3916,6 +3948,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .delete-activity:hover,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .delete-activity:hover,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .delete-activity:hover,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .delete-activity:hover,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .delete-activity:hover {
   color: #800;
@@ -3923,6 +3956,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .button,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .button,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .button,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .button {
   border: 0;
@@ -3931,6 +3965,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button span,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .button span,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .button span,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .button span,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .button span {
   background: none;
@@ -3939,6 +3974,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .unfav .like-count,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .unfav .like-count,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .unfav .like-count,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .unfav .like-count,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .unfav .like-count {
   color: #0061ac;
@@ -3946,6 +3982,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item.has-comments .activity-content > .bp-generic-meta.activity-meta,
 .activity-list .activity-item.has-comments > .bp-generic-meta.activity-meta,
+.activity-list .activity-item.has-comments .activity-actions > .bp-generic-meta.action,
 .activity-list .activity-item.has-comments .activity-content > .bp-generic-meta.groups-meta,
 .activity-list .activity-item.has-comments > .bp-generic-meta.groups-meta {
   border-bottom: 1px solid #eaeaea;
