@@ -2980,27 +2980,11 @@ function bp_activity_new_comment( $args = '' ) {
 	// Bail if activity privacy restrict 
 	if ( ! empty( $activity->privacy ) ) {
 		if ( 'friends' === $activity->privacy && bp_is_active( 'friends' ) && false === friends_check_friendship( $activity->user_id, $r['user_id'] ) ) {
-			$error = new WP_Error( 'error', __( 'User must be in activity author connection to add comment.', 'buddyboss' ) );
-
-			if ( 'wp_error' === $r['error_type'] ) {
-				return $error;
-
-				// Backpat.
-			} else {
-				$bp->activity->errors['new_comment'] = $error;
-				return false;
-			}
+			
+			return new WP_Error( 'error', __( 'User must be in activity author connection to add comment.', 'buddyboss' ) );
 		} else if ( 'onlyme' === $activity->privacy && $activity->user_id !== $r['user_id'] ) {
-			$error = new WP_Error( 'error', __( 'User can not add comment on Only Me activity.', 'buddyboss' ) );
-
-			if ( 'wp_error' === $r['error_type'] ) {
-				return $error;
-
-				// Backpat.
-			} else {
-				$bp->activity->errors['new_comment'] = $error;
-				return false;
-			}
+			
+			return new WP_Error( 'error', __( 'User can not add comment on Only Me activity.', 'buddyboss' ) );
 		}
 	}
 
