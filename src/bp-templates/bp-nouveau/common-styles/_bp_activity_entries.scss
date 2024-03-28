@@ -1713,26 +1713,26 @@
 
 .bb-internal-model {
 
-	.activity-item.active {
+	.activity-comments.active {
 
-		.activity-comments {
+		.acomments-view-more {
+			pointer-events: none;
+		}
 
-			.acomments-view-more {
+		.bb-activity-more-options-wrap .acomment-edit,
+		.bb-activity-more-options-wrap .acomment-delete {
+			pointer-events: none;
+		}
+
+		.acomment-foot-actions {
+
+			.button.reaction {
 				pointer-events: none;
-			}
-
-			.bb-activity-more-options-wrap .acomment-edit,
-			.bb-activity-more-options-wrap .acomment-delete {
-				pointer-events: none;
-			}
-
-			.acomment-foot-actions {
-
-				.button.reaction {
-					pointer-events: none;
-				}
 			}
 		}
+	}
+
+	.activity-item.active {
 
 		.activity-header {
 

@@ -3538,6 +3538,7 @@ window.bp = window.bp || {};
 			var currentTargetList = $( e.currentTarget ).parent(),
 				target = $( e.currentTarget ),
 				activityId = $( currentTargetList ).data( 'activity_id' ),
+				commentsList = $( e.currentTarget ).closest( '.activity-comments' ),
 				commentsActivityItem = $( e.currentTarget ).closest( '.activity-item' ),
 				parentCommentId = $( currentTargetList ).data( 'parent_comment_id' ),
 				lastCommentTimeStamp = '',
@@ -3557,6 +3558,7 @@ window.bp = window.bp || {};
 				'</div>';
 
 			target.addClass( 'loading' ).removeClass( 'acomments-view-more--hide' );
+			commentsList.addClass( 'active' );
 			commentsActivityItem.addClass( 'active' );
 			target.html( skeleton );
 
@@ -3580,6 +3582,7 @@ window.bp = window.bp || {};
 				function ( response ) {
 					if ( false === response.success ) {
 						target.html( '<p class=\'error\'>' + response.data.message + '</p>' ).removeClass( 'acomments-view-more--hide' );
+						commentsList.removeClass( 'active' );
 						commentsActivityItem.removeClass( 'active' );
 						return;
 					} else if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.comments ) {
@@ -3628,6 +3631,7 @@ window.bp = window.bp || {};
 							);
 						}
 						target.remove();
+						commentsList.removeClass( 'active' );
 						commentsActivityItem.removeClass( 'active' );
 
 						var scrollOptions = {
@@ -3650,6 +3654,7 @@ window.bp = window.bp || {};
 			).fail(
 				function ( $xhr ) {
 					target.html( '<p class=\'error\'>' + $xhr.statusText + '</p>' ).removeClass( 'acomments-view-more--hide' );
+					commentsList.removeClass( 'active' );
 					commentsActivityItem.removeClass( 'active' );
 				}
 			);
