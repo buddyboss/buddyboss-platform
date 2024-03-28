@@ -527,12 +527,15 @@ function bp_core_get_user_displaynames( $user_ids ) {
  * Fetch the display name for a user.
  *
  * @since BuddyPress 1.0.1
+ * @since BuddyBoss [BBVERSION] Added the `$current_user_id` and the `$cached` parameter.
  *
  * @param int|string|bool $user_id_or_username User ID or username.
+ * @param int $current_user_id                 Optional. ID of the user viewing the profile.
+ * @param bool $cached                         Optional. Allow fetching display name from the cache.
  * @return string|bool The display name for the user in question, or false if
  *                     user not found.
  */
-function bp_core_get_user_displayname( $user_id_or_username ) {
+function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 0, $cached = true ) {
 	if ( empty( $user_id_or_username ) ) {
 		return false;
 	}
@@ -547,7 +550,11 @@ function bp_core_get_user_displayname( $user_id_or_username ) {
 		return false;
 	}
 
-	$list_fields = bp_xprofile_get_hidden_fields_for_user( $user_id, bp_loggedin_user_id() );
+	if ( empty( $current_user_id ) ) {
+		$current_user_id = bp_loggedin_user_id();
+	}
+
+	$list_fields = bp_xprofile_get_hidden_fields_for_user( $user_id, $current_user_id );
 	if ( empty( $list_fields ) ) {
 		$full_name = get_the_author_meta( 'display_name', $user_id );
 		if ( empty( $full_name ) ) {
@@ -576,7 +583,7 @@ function bp_core_get_user_displayname( $user_id_or_username ) {
 	 * @param string $fullname Display name for the user.
 	 * @param int    $user_id  ID of the user to check.
 	 */
-	return apply_filters( 'bp_core_get_user_displayname', trim( $full_name ), $user_id );
+	return apply_filters( 'bp_core_get_user_displayname', trim( $full_name ), $user_id, $current_user_id, $cached );
 }
 add_filter( 'bp_core_get_user_displayname', 'wp_filter_kses' );
 add_filter( 'bp_core_get_user_displayname', 'strip_tags', 1 );
@@ -5746,32 +5753,4 @@ function bb_remove_orphaned_profile_slug( $user_id ) {
 	while ( $wpdb->rows_affected > 0 ) {
 		bb_remove_orphaned_profile_slug( $user_id );
 	}
-}
-
-/**
- * Fetch user display name for email notification based on xprofile fields privacy.
- *
- * @since [BBVERSION]
- *
- * @param int $activity_user_id User ID of the notification sender.
- * @param int $receiver_user_id User ID of the notification receiver.
- *
- * @return string
- */
-function bb_activity_get_notification_user_displayname( $activity_user_id, $receiver_user_id = 0 ) {
-
-	if ( empty( $activity_user_id ) ) {
-		return;
-	}
-
-	global $bb_hide_self_hidden_fields, $bb_hide_self_hidden_fields_user;
-	$bb_hide_self_hidden_fields 	 = true;
-	$bb_hide_self_hidden_fields_user = (int) $receiver_user_id;
-	$poster_name                     = bp_core_get_user_displayname( $activity_user_id );
-
-	// Clean up.
-	$bb_hide_self_hidden_fields = false;
-	unset( $GLOBALS['bb_hide_self_hidden_fields_user'] );
-
-	return $poster_name;
 }
