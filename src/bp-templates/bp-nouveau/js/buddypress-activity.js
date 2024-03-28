@@ -172,6 +172,17 @@ window.bp = window.bp || {};
 			$( '#activity-modal > .bb-modal-activity-body' ).on( 'scroll', this.discardGifEmojiPicker.bind( this ) );
 
 			$( '.bb-activity-model-wrapper .bb-model-close-button' ).on( 'click', this.activitySyncOnModalClose.bind( this ) );
+
+			// Validate media access for comment forms.
+			$( '#buddypress' ).on( 'bp_ajax_request', '[data-bp-list="activity"]', function() {
+				setTimeout( function() {
+					$( '.ac-form.not-initialized' ).each( function() {
+						var form = $( this );
+						var target = form.find( '.ac-textarea' );
+						bp.Nouveau.Activity.toggleMultiMediaOptions( form, target );
+					});
+				}, 1000 );
+			} );
 		},
 
 		/**
