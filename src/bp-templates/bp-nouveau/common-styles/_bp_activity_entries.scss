@@ -1927,6 +1927,13 @@
 	}
 }
 
+.activity-modal {
+
+	.activity-comments .acomments-view-more--root:not(.loading) {
+		opacity: 0;
+	}
+}
+
 .bb-media-info-section {
 
 	.activity-comments > .view-more-comments {
