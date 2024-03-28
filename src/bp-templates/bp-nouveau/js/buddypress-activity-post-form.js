@@ -5560,13 +5560,22 @@ window.bp = window.bp || {};
 							// Update the content property with the decoded content
 							parsed_data_bp_activity.content = decoded_content;
 
+							console.log(parsed_data_bp_activity.privacy + '--xxx--' + JSON.stringify(parsed_data_bp_activity, null, 2));
+
 							var activity_modal_item = $( '#activity-modal .activity-list .activity-item' );
 							var activity_target = activity_modal_item.find( '.activity-content' ).find( '.activity-inner' );
+							var activity_privacy_status = activity_modal_item.find( '.bb-media-privacy-wrap' ).find( '.privacy-wrap' ).find( '.privacy');
+							var activity_privacy_list = activity_modal_item.find( '.bb-media-privacy-wrap' ).find( '.activity-privacy li');
 							if ( activity_modal_item.length > 0 ) {
 								var content = $( '#activity-' + response.id ).find( '.activity-content' ).find( '.activity-inner' ).html();
 								activity_target.empty();
 								activity_target.append( content );
-								activity_modal_item.data('bp-activity', parsed_data_bp_activity);
+								activity_modal_item.data( 'bp-activity', parsed_data_bp_activity );
+								activity_privacy_status.removeClass().addClass( 'privacy selected ' + parsed_data_bp_activity.privacy );
+								activity_privacy_list.removeClass( 'selected' );
+								activity_privacy_list.filter(function() {
+									return $( this ).hasClass( parsed_data_bp_activity.privacy );
+								}).addClass( 'selected' );
 							}
 
 							// Inject the activity into the stream only if it hasn't been done already (HeartBeat).

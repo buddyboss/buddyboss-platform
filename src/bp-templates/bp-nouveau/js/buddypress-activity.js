@@ -163,15 +163,26 @@ window.bp = window.bp || {};
 			}
 
 			$( '.bb-activity-model-wrapper, .bb-media-model-wrapper' ).on( 'click', '.acomments-view-more', this.viewMoreComments.bind( this ) );
-			$( document ).on( 'click', '#activity-stream .activity-comments > .view-more-comments, #activity-stream .activity-state-comments > .comments-count', function ( e ) {
+			$( document ).on( 'click', '#activity-stream .activity-comments .view-more-comments, #activity-stream .activity-state-comments > .comments-count', function ( e ) {
 				e.preventDefault();
-				$( this ).parents( 'li.activity-item' ).find( '.activity-comments > ul > li.acomments-view-more' ).trigger( 'click' );
+				$( this ).parents( 'li.activity-item' ).find( '.activity-comments > ul > li.acomments-view-more, .activity-comments > .activity-actions > ul > li.acomments-view-more' ).trigger( 'click' );
 			} );
 
 			$( '#activity-modal > .bb-modal-activity-body' ).on( 'scroll', this.autoloadMoreComments.bind( this ) );
 			$( '#activity-modal > .bb-modal-activity-body' ).on( 'scroll', this.discardGifEmojiPicker.bind( this ) );
 
 			$( '.bb-activity-model-wrapper .bb-model-close-button' ).on( 'click', this.activitySyncOnModalClose.bind( this ) );
+
+			// Validate media access for comment forms.
+			$( '#buddypress' ).on( 'bp_ajax_request', '[data-bp-list="activity"]', function() {
+				setTimeout( function() {
+					$( '.ac-form.not-initialized' ).each( function() {
+						var form = $( this );
+						var target = form.find( '.ac-textarea' );
+						bp.Nouveau.Activity.toggleMultiMediaOptions( form, target );
+					});
+				}, 1000 );
+			} );
 		},
 
 		/**
@@ -3077,7 +3088,7 @@ window.bp = window.bp || {};
 				} else {
 
 					// check media is enabled in groups or not.
-					if ( ! _.isNull( activity_data ) && ! _.isUndefined( activity_data.profile_media ) ) {
+					if ( ! _.isUndefined( activity_data ) && ! _.isNull( activity_data ) && ! _.isUndefined( activity_data.profile_media ) ) {
 						if ( activity_data.profile_media === true ) {
 							form.find( '.ac-reply-toolbar .post-media.media-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 						} else {
@@ -3090,7 +3101,7 @@ window.bp = window.bp || {};
 					}
 
 					// check document is enabled in groups or not.
-					if ( ! _.isNull( activity_data ) && ! _.isUndefined( activity_data.profile_document ) ) {
+					if ( ! _.isUndefined( activity_data ) && ! _.isNull( activity_data ) && ! _.isUndefined( activity_data.profile_document ) ) {
 						if ( activity_data.profile_document === true ) {
 							form.find( '.ac-reply-toolbar .post-media.document-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 						} else {
@@ -3103,7 +3114,7 @@ window.bp = window.bp || {};
 					}
 
 					// check video is enabled in profile or not.
-					if ( ! _.isNull( activity_data ) && ! _.isUndefined( activity_data.profile_video ) ) {
+					if ( ! _.isUndefined( activity_data ) && ! _.isNull( activity_data ) && ! _.isUndefined( activity_data.profile_video ) ) {
 						if ( activity_data.profile_video === true ) {
 							form.find( '.ac-reply-toolbar .post-video.video-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-video-disabled' );
 						} else {
@@ -3727,7 +3738,7 @@ window.bp = window.bp || {};
 			var currentTargetList = $( e.currentTarget ).parent(),
 				target = $( e.currentTarget ),
 				activityId = $( currentTargetList ).data( 'activity_id' ),
-				commentsList = $( e.currentTarget ).closest( '.activity-comments' ),
+				commentsActivityItem = $( e.currentTarget ).closest( '.activity-item' ),
 				parentCommentId = $( currentTargetList ).data( 'parent_comment_id' ),
 				lastCommentTimeStamp = '',
 				addAfterListItemId = '';
@@ -3746,7 +3757,7 @@ window.bp = window.bp || {};
 				'</div>';
 
 			target.addClass( 'loading' ).removeClass( 'acomments-view-more--hide' );
-			commentsList.addClass( 'active' );
+			commentsActivityItem.addClass( 'active' );
 			target.html( skeleton );
 
 			var data = {
@@ -3769,7 +3780,7 @@ window.bp = window.bp || {};
 				function ( response ) {
 					if ( false === response.success ) {
 						target.html( '<p class=\'error\'>' + response.data.message + '</p>' ).removeClass( 'acomments-view-more--hide' );
-						commentsList.removeClass( 'active' );
+						commentsActivityItem.removeClass( 'active' );
 						return;
 					} else if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.comments ) {
 						// success
@@ -3817,7 +3828,7 @@ window.bp = window.bp || {};
 							);
 						}
 						target.remove();
-						commentsList.removeClass( 'active' );
+						commentsActivityItem.removeClass( 'active' );
 
 						if ( typeof bp.Nouveau !== 'undefined' ) {
 							bp.Nouveau.reportPopUp();
@@ -3832,7 +3843,7 @@ window.bp = window.bp || {};
 			).fail(
 				function ( $xhr ) {
 					target.html( '<p class=\'error\'>' + $xhr.statusText + '</p>' ).removeClass( 'acomments-view-more--hide' );
-					commentsList.removeClass( 'active' );
+					commentsActivityItem.removeClass( 'active' );
 				}
 			);
 		},

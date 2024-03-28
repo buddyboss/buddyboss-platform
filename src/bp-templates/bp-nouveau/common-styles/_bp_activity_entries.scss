@@ -359,7 +359,8 @@
 		}
 
 		.activity-content .bp-generic-meta.action,
-		> .bp-generic-meta.action {
+		> .bp-generic-meta.action,
+		.activity-actions > .bp-generic-meta.action {
 
 			.button {
 
@@ -472,6 +473,8 @@
 
 		.activity-content > .bp-generic-meta.activity-meta,
 		> .bp-generic-meta.activity-meta,
+		> .bp-generic-meta[class*="-meta"],
+		&.elementor-activity-item .activity-actions > .bp-generic-meta.action,
 		.activity-content > .bp-generic-meta.groups-meta,
 		> .bp-generic-meta.groups-meta {
 			display: flex;
@@ -597,6 +600,7 @@
 
 		&.has-comments .activity-content > .bp-generic-meta.activity-meta,
 		&.has-comments > .bp-generic-meta.activity-meta,
+		&.has-comments .activity-actions > .bp-generic-meta.action,
 		&.has-comments .activity-content > .bp-generic-meta.groups-meta,
 		&.has-comments > .bp-generic-meta.groups-meta {
 			border-bottom: 1px solid $light-grey;
@@ -1360,6 +1364,24 @@
 	}
 }
 
+.bb-media-model-wrapper .activity-list .activity-item .acomment-display,
+.activity-list .activity-item.elementor-activity-item .acomment-display {
+
+	.ac-emotions_list {
+
+		&.active {
+			left: -10px;
+		}
+
+		&:hover {
+
+			body:not(.bb-is-mobile) & {
+				left: -10px;
+			}
+		}
+	}
+}
+
 /* Activity comment modal ==> Starts Here */
 .acomments-modal-open {
 	overflow: hidden;
@@ -1735,20 +1757,37 @@
 
 .bb-internal-model {
 
-	.activity-comments.active {
+	.activity-item.active {
 
-		.acomments-view-more {
-			pointer-events: none;
+		.activity-comments {
+
+			.acomments-view-more {
+				pointer-events: none;
+			}
+
+			.bb-activity-more-options-wrap .acomment-edit,
+			.bb-activity-more-options-wrap .acomment-delete {
+				pointer-events: none;
+			}
+
+			.acomment-foot-actions {
+
+				.button.reaction {
+					pointer-events: none;
+				}
+			}
 		}
 
-		.bb-activity-more-options-wrap .acomment-edit,
-		.bb-activity-more-options-wrap .acomment-delete {
-			pointer-events: none;
+		.activity-header {
+
+			.activity-privacy li {
+				pointer-events: none;
+			}
 		}
 
-		.acomment-foot-actions {
+		.bb-activity-more-options {
 
-			.button.reaction {
+			a.button {
 				pointer-events: none;
 			}
 		}
