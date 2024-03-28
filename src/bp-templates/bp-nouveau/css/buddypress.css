@@ -1906,6 +1906,32 @@ body.buddypress .bb-schedule-post_dropdown_section .schedule-posts-placeholder h
   border-radius: 0 0 4px 4px;
 }
 
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bp-activity-head {
+  margin-right: 55px;
+}
+
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bb-activity-schedule-actions {
+  position: absolute;
+  right: 15px;
+  top: 25px;
+}
+
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bb-activity-schedule-actions .bb-activity-schedule-action {
+  font-size: 16px;
+  margin: 0 0 0 10px;
+  cursor: pointer;
+}
+
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bb-activity-schedule-actions .bb-activity-schedule-action i {
+  color: #333;
+  opacity: 0.4;
+}
+
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .schedule-text {
+  font-size: 13px;
+  font-weight: 400;
+}
+
 .bb-schedule-activity-time-picker.xdsoft_datetimepicker,
 .bb-schedule-activity-date-wrap.xdsoft_datetimepicker {
   z-index: 999999;

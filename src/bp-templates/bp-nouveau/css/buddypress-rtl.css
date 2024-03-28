@@ -1906,6 +1906,17 @@ body.buddypress .bb-schedule-post_dropdown_section .schedule-posts-placeholder h
   border-radius: 0 0 4px 4px;
 }
 
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bb-activity-schedule-actions .bb-activity-schedule-actions {
+  font-size: 16px;
+  margin: 0 15px 0 0;
+  cursor: pointer;
+}
+
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bb-activity-schedule-actions .bb-activity-schedule-actions i {
+  color: #333;
+  opacity: 0.4;
+}
+
 .bb-schedule-activity-time-picker.xdsoft_datetimepicker,
 .bb-schedule-activity-date-wrap.xdsoft_datetimepicker {
   z-index: 999999;

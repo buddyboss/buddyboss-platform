@@ -34,7 +34,14 @@ if ( ! empty( $link_embed ) ) {
 
 <li class="<?php bp_activity_css_class(); ?>" id="activity-<?php echo esc_attr( $activity_id ); ?>" data-bp-activity-id="<?php echo esc_attr( $activity_id ); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php bp_nouveau_edit_activity_data(); ?>" data-link-preview='<?php echo $link_preview_string; ?>' data-link-url='<?php echo $link_url; ?>'>
 
-	<?php bb_nouveau_activity_entry_bubble_buttons(); ?>
+	<div class="bb-activity-schedule-actions">
+		<a href="#" class="bb-activity-schedule-action">
+			<i class="bb-icon-l bb-icon-pencil"></i>
+		</a>
+		<a href="#" class="bb-activity-schedule-action">
+			<i class="bb-icon-l bb-icon-trash"></i>
+		</a>
+	</div>
 
 	<div class="bb-pin-action">
 		<span class="bb-pin-action_button" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Pinned Post', 'buddyboss' ); ?>">
