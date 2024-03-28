@@ -81,7 +81,7 @@ add_filter( 'xprofile_field_options_before_save', 'bp_xprofile_sanitize_field_op
 add_filter( 'xprofile_field_default_before_save', 'bp_xprofile_sanitize_field_default' );
 
 add_filter( 'bp_get_the_profile_field_name', 'xprofile_filter_field_edit_name' );
-add_filter( 'bp_core_get_user_displayname', 'xprofile_filter_get_user_display_name', 15, 3 );
+add_filter( 'bp_core_get_user_displayname', 'xprofile_filter_get_user_display_name', 15, 4 );
 
 // Saving field value
 add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_nickname_value', 10, 4 );
