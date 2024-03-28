@@ -5040,16 +5040,16 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   display: none;
 }
 
-.bb-internal-model .activity-item.active .activity-comments .acomments-view-more {
+.bb-internal-model .activity-comments.active .acomments-view-more {
   pointer-events: none;
 }
 
-.bb-internal-model .activity-item.active .activity-comments .bb-activity-more-options-wrap .acomment-edit,
-.bb-internal-model .activity-item.active .activity-comments .bb-activity-more-options-wrap .acomment-delete {
+.bb-internal-model .activity-comments.active .bb-activity-more-options-wrap .acomment-edit,
+.bb-internal-model .activity-comments.active .bb-activity-more-options-wrap .acomment-delete {
   pointer-events: none;
 }
 
-.bb-internal-model .activity-item.active .activity-comments .acomment-foot-actions .button.reaction {
+.bb-internal-model .activity-comments.active .acomment-foot-actions .button.reaction {
   pointer-events: none;
 }
 
