@@ -1927,7 +1927,12 @@ body.buddypress .bb-schedule-post_dropdown_section .schedule-posts-placeholder h
   opacity: 0.4;
 }
 
-.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .schedule-text {
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .activity-date .schedule-text {
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .activity-date .time-since {
   font-size: 13px;
   font-weight: 400;
 }

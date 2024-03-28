@@ -1906,15 +1906,35 @@ body.buddypress .bb-schedule-post_dropdown_section .schedule-posts-placeholder h
   border-radius: 0 0 4px 4px;
 }
 
-.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bb-activity-schedule-actions .bb-activity-schedule-actions {
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bp-activity-head {
+  margin-left: 55px;
+}
+
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bb-activity-schedule-actions {
+  position: absolute;
+  left: 15px;
+  top: 25px;
+}
+
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bb-activity-schedule-actions .bb-activity-schedule-action {
   font-size: 16px;
-  margin: 0 15px 0 0;
+  margin: 0 10px 0 0;
   cursor: pointer;
 }
 
-.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bb-activity-schedule-actions .bb-activity-schedule-actions i {
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bb-activity-schedule-actions .bb-activity-schedule-action i {
   color: #333;
   opacity: 0.4;
+}
+
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .activity-date .schedule-text {
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .activity-date .time-since {
+  font-size: 13px;
+  font-weight: 400;
 }
 
 .bb-schedule-activity-time-picker.xdsoft_datetimepicker,
