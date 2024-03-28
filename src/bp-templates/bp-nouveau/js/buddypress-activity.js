@@ -3630,6 +3630,13 @@ window.bp = window.bp || {};
 						target.remove();
 						commentsActivityItem.removeClass( 'active' );
 
+						var scrollOptions = {
+							offset: 0,
+							easing: 'swing'
+						};
+
+						$( '.bb-modal-activity-body' ).scrollTo( '#acomment-' + parentCommentId, 500, scrollOptions );
+
 						if ( typeof bp.Nouveau !== 'undefined' ) {
 							bp.Nouveau.reportPopUp();
 							bp.Nouveau.reportedPopup();
