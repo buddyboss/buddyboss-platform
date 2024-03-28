@@ -3763,7 +3763,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta,
 .activity-list .activity-item > .bp-generic-meta.activity-meta,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta],
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"],
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta,
 .activity-list .activity-item > .bp-generic-meta.groups-meta {
@@ -3776,7 +3776,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta div.generic-button,
 .activity-list .activity-item > .bp-generic-meta.activity-meta div.generic-button,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta] div.generic-button,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] div.generic-button,
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action div.generic-button,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta div.generic-button,
 .activity-list .activity-item > .bp-generic-meta.groups-meta div.generic-button {
@@ -3788,7 +3788,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta div.generic-button > a,
 .activity-list .activity-item > .bp-generic-meta.activity-meta div.generic-button > a,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta] div.generic-button > a,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] div.generic-button > a,
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action div.generic-button > a,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta div.generic-button > a,
 .activity-list .activity-item > .bp-generic-meta.groups-meta div.generic-button > a {
@@ -3799,7 +3799,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta div.generic-button > a:hover,
 .activity-list .activity-item > .bp-generic-meta.activity-meta div.generic-button > a:hover,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta] div.generic-button > a:hover,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] div.generic-button > a:hover,
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action div.generic-button > a:hover,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta div.generic-button > a:hover,
 .activity-list .activity-item > .bp-generic-meta.groups-meta div.generic-button > a:hover {
@@ -3808,7 +3808,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .button,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta] .button,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .button,
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .button,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .button,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .button {
@@ -3817,7 +3817,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta a,
 .activity-list .activity-item > .bp-generic-meta.activity-meta a,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta] a,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] a,
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action a,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta a,
 .activity-list .activity-item > .bp-generic-meta.groups-meta a {
@@ -3828,8 +3828,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button:hover,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .button:focus,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .button:hover,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta] .button:focus,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta] .button:hover,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .button:focus,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .button:hover,
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .button:focus,
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .button:hover,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .button:focus,
@@ -3843,8 +3843,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .icons:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .button:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .icons:before,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta] .button:before,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta] .icons:before,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .button:before,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .icons:before,
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .button:before,
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .icons:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .button:before,
@@ -3859,7 +3859,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .acomment-reply.button:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .acomment-reply.button:before,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta] .acomment-reply.button:before,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .acomment-reply.button:before,
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .acomment-reply.button:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .acomment-reply.button:before,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .acomment-reply.button:before {
@@ -3868,7 +3868,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .acomment-reply.button .comment-count,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .acomment-reply.button .comment-count,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta] .acomment-reply.button .comment-count,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .acomment-reply.button .comment-count,
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .acomment-reply.button .comment-count,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .acomment-reply.button .comment-count,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .acomment-reply.button .comment-count {
@@ -3877,7 +3877,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .view:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .view:before,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta] .view:before,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .view:before,
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .view:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .view:before,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .view:before {
@@ -3886,7 +3886,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .fav:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .fav:before,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta] .fav:before,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .fav:before,
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .fav:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .fav:before,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .fav:before {
@@ -3897,8 +3897,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .unfav:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .has-like:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .unfav:before,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta] .has-like:before,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta] .unfav:before,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .has-like:before,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .unfav:before,
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .has-like:before,
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .unfav:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .has-like:before,
@@ -3912,7 +3912,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .edit-activity:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .edit-activity:before,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta] .edit-activity:before,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .edit-activity:before,
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .edit-activity:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .edit-activity:before,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .edit-activity:before {
@@ -3922,7 +3922,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .delete-activity:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .delete-activity:before,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta] .delete-activity:before,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .delete-activity:before,
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .delete-activity:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .delete-activity:before,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .delete-activity:before {
@@ -3933,8 +3933,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .report-content:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .reported-content:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .report-content:before,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta] .reported-content:before,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta] .report-content:before,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .reported-content:before,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .report-content:before,
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .reported-content:before,
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .report-content:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .reported-content:before,
@@ -3951,7 +3951,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .reported-content,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .reported-content,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta] .reported-content,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .reported-content,
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .reported-content,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .reported-content,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .reported-content {
@@ -3961,7 +3961,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .spam-activity:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .spam-activity:before,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta] .spam-activity:before,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .spam-activity:before,
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .spam-activity:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .spam-activity:before,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .spam-activity:before {
@@ -3970,7 +3970,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .delete-activity:hover,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .delete-activity:hover,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta] .delete-activity:hover,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .delete-activity:hover,
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .delete-activity:hover,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .delete-activity:hover,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .delete-activity:hover {
@@ -3979,7 +3979,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .button,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta] .button,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .button,
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .button,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .button,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .button {
@@ -3989,7 +3989,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button span,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .button span,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta] .button span,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .button span,
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .button span,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .button span,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .button span {
@@ -3999,7 +3999,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .unfav .like-count,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .unfav .like-count,
-.activity-list .activity-item > .bp-generic-meta[class*=-meta] .unfav .like-count,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .unfav .like-count,
 .activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .unfav .like-count,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .unfav .like-count,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .unfav .like-count {
@@ -4657,11 +4657,13 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
   bottom: 35px;
 }
 
-.bb-media-model-wrapper .activity-list .activity-item .acomment-display .ac-emotions_list.active {
+.bb-media-model-wrapper .activity-list .activity-item .acomment-display .ac-emotions_list.active,
+.activity-list .activity-item.elementor-activity-item .acomment-display .ac-emotions_list.active {
   right: -10px;
 }
 
-body:not(.bb-is-mobile) .bb-media-model-wrapper .activity-list .activity-item .acomment-display .ac-emotions_list:hover {
+body:not(.bb-is-mobile) .bb-media-model-wrapper .activity-list .activity-item .acomment-display .ac-emotions_list:hover, body:not(.bb-is-mobile)
+.activity-list .activity-item.elementor-activity-item .acomment-display .ac-emotions_list:hover {
   right: -10px;
 }
 

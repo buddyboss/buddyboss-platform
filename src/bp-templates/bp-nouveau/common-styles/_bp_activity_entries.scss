@@ -1313,21 +1313,19 @@
 	}
 }
 
-.bb-media-model-wrapper {
+.bb-media-model-wrapper .activity-list .activity-item .acomment-display,
+.activity-list .activity-item.elementor-activity-item .acomment-display {
 
-	.activity-list .activity-item .acomment-display {
+	.ac-emotions_list {
 
-		.ac-emotions_list {
+		&.active {
+			left: -10px;
+		}
 
-			&.active {
+		&:hover {
+
+			body:not(.bb-is-mobile) & {
 				left: -10px;
-			}
-
-			&:hover {
-
-				body:not(.bb-is-mobile) & {
-					left: -10px;
-				}
 			}
 		}
 	}
