@@ -30351,6 +30351,10 @@ span.icons:before {
   z-index: 1099;
 }
 
+.acomments-modal-open .bb-onscreen-notification-enable .bb-onscreen-notification {
+  z-index: 999999;
+}
+
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list {
   margin: 0;
   padding: 0;
