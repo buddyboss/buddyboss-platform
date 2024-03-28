@@ -1562,7 +1562,7 @@ window.bp = window.bp || {};
 								}
 
 								if ( isFooterForm ) {
-									form.closest( '#activity-modal' ).find( '.bb-modal-activity-body .activity-comments' ).children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
+									form.closest( '#activity-modal' ).find( '.bb-modal-activity-body .activity-comments, .bb-modal-activity-body .activity-comments .activity-actions' ).children( 'ul' ).append( $( the_comment ) );
 								} else {
 									activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
 								}
@@ -3851,7 +3851,7 @@ window.bp = window.bp || {};
 		autoloadMoreComments: function () {
 
 			if ( $( '.bb-activity-model-wrapper' ).length > 0 && $( '.bb-activity-model-wrapper' ).css( 'display' ) !== 'none' ) {
-				var element = $( '.bb-modal-activity-body .activity-comments > ul > li.acomments-view-more:not(.loading)' ),
+				var element = $( '.bb-modal-activity-body .activity-comments > ul > li.acomments-view-more:not(.loading), .bb-modal-activity-body .activity-comments .activity-actions > ul > li.acomments-view-more:not(.loading)' ),
 					container = $( '.bb-activity-model-wrapper .bb-modal-activity-body' ),
 					commentsList = $( '.bb-activity-model-wrapper .bb-modal-activity-body' ).find( '.activity-comments:not(.active)' );
 				if ( element.length > 0 && container.length > 0 && commentsList.length > 0 ) {
