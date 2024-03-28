@@ -416,7 +416,7 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 				$forum_id = bbp_get_forum_id( $forum_id );
 
 				// Poster name.
-				$reply_author_name = bbp_get_reply_author_display_name( $reply_id );
+				$reply_author_name = bbp_get_reply_author_display_name( $reply_id, $user_id );
 				$author_id         = bbp_get_reply_author_id( $reply_id );
 
 				/** Mail */
@@ -575,7 +575,7 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 				$forum_id = bbp_get_forum_id( $forum_id );
 
 				// Poster name.
-				$reply_author_name = bbp_get_reply_author_display_name( $topic_id );
+				$reply_author_name = bbp_get_reply_author_display_name( $topic_id, $user_id );
 
 				/** Mail */
 

@@ -444,6 +444,7 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
 			'inviter.name'   => bp_core_get_userlink( $inviter_user_id, true, false, true ),
 			'inviter.url'    => bp_core_get_user_domain( $inviter_user_id ),
 			'inviter.id'     => $inviter_user_id,
+			'invited.id'     => $invited_user_id,
 			'invites.url'    => esc_url( $invited_link . '/invites/' ),
 			'invite.message' => $invite_message,
 			'unsubscribe'    => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
