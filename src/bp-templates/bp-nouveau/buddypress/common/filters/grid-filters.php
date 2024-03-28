@@ -51,6 +51,11 @@ if ( 'list_grid' === $current_value ) {
 	if ( $bb_is_group && 'members' === bp_current_action() ) {
 		$component = 'group_members';
 	}
+
+	if ( empty( $component ) && $has_profile_shortcode ) {
+		$component = 'members';
+	}
+
 	?>
 	<div class="grid-filters" data-object="<?php echo esc_attr( $component ); ?>">
 		<a href="#" class="layout-view layout-grid-view bp-tooltip <?php echo ( 'grid' === $default_current_value ) ? 'active' : ''; ?>" data-view="grid" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'Grid View', 'buddyboss' ); ?>"> <i class="bb-icon-l bb-icon-grid-large" aria-hidden="true"></i> </a>
