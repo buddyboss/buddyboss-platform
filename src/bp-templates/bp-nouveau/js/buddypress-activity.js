@@ -1555,7 +1555,7 @@ window.bp = window.bp || {};
 								}
 
 								if ( isFooterForm ) {
-									form.closest( '#activity-modal' ).find( '.bb-modal-activity-body .activity-comments' ).children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
+									form.closest( '#activity-modal' ).find( '.bb-modal-activity-body .activity-comments, .bb-modal-activity-body .activity-comments .activity-actions' ).children( 'ul' ).append( $( the_comment ) );
 								} else {
 									activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
 								}
