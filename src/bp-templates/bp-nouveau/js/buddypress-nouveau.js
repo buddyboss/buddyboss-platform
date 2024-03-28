@@ -1314,7 +1314,7 @@ window.bp = window.bp || {};
 						return;
 					}
 
-					if ( bp.Nouveau.ajax_request != false ) {
+					if ( 'undefined' !== typeof bp.Nouveau.ajax_request && null !== bp.Nouveau.ajax_request && bp.Nouveau.ajax_request != false ) {
 						bp.Nouveau.ajax_request.abort();
 
 						$( '.component-navigation [data-bp-object]' ).each(
