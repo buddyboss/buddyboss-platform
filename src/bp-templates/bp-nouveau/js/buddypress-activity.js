@@ -163,9 +163,9 @@ window.bp = window.bp || {};
 			}
 
 			$( '.bb-activity-model-wrapper, .bb-media-model-wrapper' ).on( 'click', '.acomments-view-more', this.viewMoreComments.bind( this ) );
-			$( document ).on( 'click', '#activity-stream .activity-comments > .view-more-comments, #activity-stream .activity-state-comments > .comments-count', function ( e ) {
+			$( document ).on( 'click', '#activity-stream .activity-comments .view-more-comments, #activity-stream .activity-state-comments > .comments-count', function ( e ) {
 				e.preventDefault();
-				$( this ).parents( 'li.activity-item' ).find( '.activity-comments > ul > li.acomments-view-more' ).trigger( 'click' );
+				$( this ).parents( 'li.activity-item' ).find( '.activity-comments > ul > li.acomments-view-more, .activity-comments > .activity-actions > ul > li.acomments-view-more' ).trigger( 'click' );
 			} );
 
 			$( '#activity-modal > .bb-modal-activity-body' ).on( 'scroll', this.autoloadMoreComments.bind( this ) );
@@ -2880,7 +2880,7 @@ window.bp = window.bp || {};
 				} else {
 
 					// check media is enabled in groups or not.
-					if ( ! _.isNull( activity_data ) && ! _.isUndefined( activity_data.profile_media ) ) {
+					if ( ! _.isUndefined( activity_data ) && ! _.isNull( activity_data ) && ! _.isUndefined( activity_data.profile_media ) ) {
 						if ( activity_data.profile_media === true ) {
 							form.find( '.ac-reply-toolbar .post-media.media-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 						} else {
@@ -2893,7 +2893,7 @@ window.bp = window.bp || {};
 					}
 
 					// check document is enabled in groups or not.
-					if ( ! _.isNull( activity_data ) && ! _.isUndefined( activity_data.profile_document ) ) {
+					if ( ! _.isUndefined( activity_data ) && ! _.isNull( activity_data ) && ! _.isUndefined( activity_data.profile_document ) ) {
 						if ( activity_data.profile_document === true ) {
 							form.find( '.ac-reply-toolbar .post-media.document-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 						} else {
@@ -2906,7 +2906,7 @@ window.bp = window.bp || {};
 					}
 
 					// check video is enabled in profile or not.
-					if ( ! _.isNull( activity_data ) && ! _.isUndefined( activity_data.profile_video ) ) {
+					if ( ! _.isUndefined( activity_data ) && ! _.isNull( activity_data ) && ! _.isUndefined( activity_data.profile_video ) ) {
 						if ( activity_data.profile_video === true ) {
 							form.find( '.ac-reply-toolbar .post-video.video-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-video-disabled' );
 						} else {
