@@ -1342,7 +1342,7 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 	if ( ! bp_is_post_request() ) {
 		wp_send_json_error(
 			array(
-				'message' => __( 'Invalid request1.', 'buddyboss' ),
+				'message' => __( 'Invalid request.', 'buddyboss' ),
 			)
 		);
 	}
@@ -1351,7 +1351,7 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
 		wp_send_json_error(
 			array(
-				'message' => __( 'Invalid request2.', 'buddyboss' ),
+				'message' => __( 'Invalid request.', 'buddyboss' ),
 			)
 		);
 	}

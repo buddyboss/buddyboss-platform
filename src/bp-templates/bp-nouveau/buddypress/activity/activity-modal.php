@@ -8,7 +8,7 @@
  * @version 1.0.0
  */
 ?>
-<div class="bb-activity-model-wrapper bb-internal-model activity-theatre" style="display: none;">
+<div class="bb-activity-model-wrapper bb-internal-model activity-theatre buddypress-wrap" style="display: none;" id="buddypress">
 
 	<div id="activity-modal" class="activity-modal activity">
 		<div class="bb-modal-activity-header">

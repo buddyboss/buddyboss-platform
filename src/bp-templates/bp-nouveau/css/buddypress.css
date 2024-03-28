@@ -3673,14 +3673,16 @@ input.search-query-input {
 }
 
 #buddypress .activity-list .activity-item .activity-content .bp-generic-meta.action .button, #buddypress
-.activity-list .activity-item > .bp-generic-meta.action .button {
+.activity-list .activity-item > .bp-generic-meta.action .button, #buddypress
+.activity-list .activity-item .activity-actions > .bp-generic-meta.action .button {
   display: flex;
   align-items: center;
   column-gap: 2px;
 }
 
 .activity-list .activity-item .activity-content .bp-generic-meta.action .button > i,
-.activity-list .activity-item > .bp-generic-meta.action .button > i {
+.activity-list .activity-item > .bp-generic-meta.action .button > i,
+.activity-list .activity-item .activity-actions > .bp-generic-meta.action .button > i {
   font-size: 22px;
   font-weight: 400;
   display: inline-block;
@@ -3688,30 +3690,35 @@ input.search-query-input {
 }
 
 .activity-list .activity-item .activity-content .bp-generic-meta.action .button.has-reaction > i,
-.activity-list .activity-item > .bp-generic-meta.action .button.has-reaction > i {
+.activity-list .activity-item > .bp-generic-meta.action .button.has-reaction > i,
+.activity-list .activity-item .activity-actions > .bp-generic-meta.action .button.has-reaction > i {
   font-weight: 200;
   font-size: 24px;
 }
 
 body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp-generic-meta.action .button.has-reaction > i, body:not(.bb-reactions-mode)
-.activity-list .activity-item > .bp-generic-meta.action .button.has-reaction > i {
+.activity-list .activity-item > .bp-generic-meta.action .button.has-reaction > i, body:not(.bb-reactions-mode)
+.activity-list .activity-item .activity-actions > .bp-generic-meta.action .button.has-reaction > i {
   font-weight: 300;
 }
 
 .activity-list .activity-item .activity-content .bp-generic-meta.action .button > img,
-.activity-list .activity-item > .bp-generic-meta.action .button > img {
+.activity-list .activity-item > .bp-generic-meta.action .button > img,
+.activity-list .activity-item .activity-actions > .bp-generic-meta.action .button > img {
   height: 24px;
   width: 24px;
   object-fit: cover;
 }
 
 .activity-list .activity-item .activity-content .bp-generic-meta.action .button > img.custom,
-.activity-list .activity-item > .bp-generic-meta.action .button > img.custom {
+.activity-list .activity-item > .bp-generic-meta.action .button > img.custom,
+.activity-list .activity-item .activity-actions > .bp-generic-meta.action .button > img.custom {
   border-radius: 100%;
 }
 
 #buddypress .activity-list .activity-item .activity-content .bp-generic-meta.action .button > .like-count, #buddypress
-.activity-list .activity-item > .bp-generic-meta.action .button > .like-count {
+.activity-list .activity-item > .bp-generic-meta.action .button > .like-count, #buddypress
+.activity-list .activity-item .activity-actions > .bp-generic-meta.action .button > .like-count {
   color: #333;
   line-height: 20px;
   display: inline-block;
@@ -3719,12 +3726,14 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 }
 
 .activity-list .activity-item .activity-content .bp-generic-meta.action .button.bp-like-button:before,
-.activity-list .activity-item > .bp-generic-meta.action .button.bp-like-button:before {
+.activity-list .activity-item > .bp-generic-meta.action .button.bp-like-button:before,
+.activity-list .activity-item .activity-actions > .bp-generic-meta.action .button.bp-like-button:before {
   display: none;
 }
 
 .activity-list .activity-item .activity-content .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:before,
-.activity-list .activity-item > .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:before {
+.activity-list .activity-item > .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:before,
+.activity-list .activity-item .activity-actions > .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:before {
   content: "";
   display: block;
   position: absolute;
@@ -3736,7 +3745,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 }
 
 .activity-list .activity-item .activity-content .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:after,
-.activity-list .activity-item > .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:after {
+.activity-list .activity-item > .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:after,
+.activity-list .activity-item .activity-actions > .bp-generic-meta.action .button.bp-like-button.bb-reaction-migration-inprogress:after {
   width: 180px;
   white-space: normal;
   left: 0;
@@ -3773,6 +3783,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta,
 .activity-list .activity-item > .bp-generic-meta.activity-meta,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"],
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta,
 .activity-list .activity-item > .bp-generic-meta.groups-meta {
   display: flex;
@@ -3784,6 +3796,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta div.generic-button,
 .activity-list .activity-item > .bp-generic-meta.activity-meta div.generic-button,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] div.generic-button,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action div.generic-button,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta div.generic-button,
 .activity-list .activity-item > .bp-generic-meta.groups-meta div.generic-button {
   margin: 0;
@@ -3794,6 +3808,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta div.generic-button > a,
 .activity-list .activity-item > .bp-generic-meta.activity-meta div.generic-button > a,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] div.generic-button > a,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action div.generic-button > a,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta div.generic-button > a,
 .activity-list .activity-item > .bp-generic-meta.groups-meta div.generic-button > a {
   width: 100%;
@@ -3803,6 +3819,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta div.generic-button > a:hover,
 .activity-list .activity-item > .bp-generic-meta.activity-meta div.generic-button > a:hover,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] div.generic-button > a:hover,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action div.generic-button > a:hover,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta div.generic-button > a:hover,
 .activity-list .activity-item > .bp-generic-meta.groups-meta div.generic-button > a:hover {
   background-color: #eaeaea;
@@ -3810,6 +3828,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .button,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .button,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .button,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .button,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .button {
   background: transparent;
@@ -3817,6 +3837,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta a,
 .activity-list .activity-item > .bp-generic-meta.activity-meta a,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] a,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action a,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta a,
 .activity-list .activity-item > .bp-generic-meta.groups-meta a {
   padding: 4px 8px;
@@ -3826,6 +3848,10 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button:hover,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .button:focus,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .button:hover,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .button:focus,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .button:hover,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .button:focus,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .button:hover,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .button:focus,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .button:hover,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .button:focus,
@@ -3837,6 +3863,10 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .icons:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .button:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .icons:before,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .button:before,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .icons:before,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .button:before,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .icons:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .button:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .icons:before,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .button:before,
@@ -3849,6 +3879,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .acomment-reply.button:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .acomment-reply.button:before,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .acomment-reply.button:before,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .acomment-reply.button:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .acomment-reply.button:before,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .acomment-reply.button:before {
   content: "\ee33";
@@ -3856,6 +3888,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .acomment-reply.button .comment-count,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .acomment-reply.button .comment-count,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .acomment-reply.button .comment-count,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .acomment-reply.button .comment-count,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .acomment-reply.button .comment-count,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .acomment-reply.button .comment-count {
   color: #333;
@@ -3863,6 +3897,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .view:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .view:before,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .view:before,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .view:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .view:before,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .view:before {
   content: "\ee33";
@@ -3870,6 +3906,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .fav:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .fav:before,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .fav:before,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .fav:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .fav:before,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .fav:before {
   content: "\ef41";
@@ -3879,6 +3917,10 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .unfav:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .has-like:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .unfav:before,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .has-like:before,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .unfav:before,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .has-like:before,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .unfav:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .has-like:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .unfav:before,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .has-like:before,
@@ -3890,6 +3932,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .edit-activity:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .edit-activity:before,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .edit-activity:before,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .edit-activity:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .edit-activity:before,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .edit-activity:before {
   content: "\ee5a";
@@ -3898,6 +3942,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .delete-activity:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .delete-activity:before,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .delete-activity:before,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .delete-activity:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .delete-activity:before,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .delete-activity:before {
   content: "\ef48";
@@ -3907,6 +3953,10 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .report-content:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .reported-content:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .report-content:before,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .reported-content:before,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .report-content:before,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .reported-content:before,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .report-content:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .reported-content:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .report-content:before,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .reported-content:before,
@@ -3921,6 +3971,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .reported-content,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .reported-content,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .reported-content,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .reported-content,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .reported-content,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .reported-content {
   opacity: 0.8 !important;
@@ -3929,6 +3981,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .spam-activity:before,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .spam-activity:before,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .spam-activity:before,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .spam-activity:before,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .spam-activity:before,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .spam-activity:before {
   content: "\ee08";
@@ -3936,6 +3990,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .delete-activity:hover,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .delete-activity:hover,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .delete-activity:hover,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .delete-activity:hover,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .delete-activity:hover,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .delete-activity:hover {
   color: #800;
@@ -3943,6 +3999,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .button,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .button,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .button,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .button,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .button {
   border: 0;
@@ -3951,6 +4009,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .button span,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .button span,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .button span,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .button span,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .button span,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .button span {
   background: none;
@@ -3959,6 +4019,8 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-content > .bp-generic-meta.activity-meta .unfav .like-count,
 .activity-list .activity-item > .bp-generic-meta.activity-meta .unfav .like-count,
+.activity-list .activity-item > .bp-generic-meta[class*="-meta"] .unfav .like-count,
+.activity-list .activity-item.elementor-activity-item .activity-actions > .bp-generic-meta.action .unfav .like-count,
 .activity-list .activity-item .activity-content > .bp-generic-meta.groups-meta .unfav .like-count,
 .activity-list .activity-item > .bp-generic-meta.groups-meta .unfav .like-count {
   color: #0061ac;
@@ -3966,6 +4028,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item.has-comments .activity-content > .bp-generic-meta.activity-meta,
 .activity-list .activity-item.has-comments > .bp-generic-meta.activity-meta,
+.activity-list .activity-item.has-comments .activity-actions > .bp-generic-meta.action,
 .activity-list .activity-item.has-comments .activity-content > .bp-generic-meta.groups-meta,
 .activity-list .activity-item.has-comments > .bp-generic-meta.groups-meta {
   border-bottom: 1px solid #eaeaea;
@@ -4804,6 +4867,16 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
 .activity-list .gif-media-search-dropdown {
   top: initial;
   bottom: 35px;
+}
+
+.bb-media-model-wrapper .activity-list .activity-item .acomment-display .ac-emotions_list.active,
+.activity-list .activity-item.elementor-activity-item .acomment-display .ac-emotions_list.active {
+  left: -10px;
+}
+
+body:not(.bb-is-mobile) .bb-media-model-wrapper .activity-list .activity-item .acomment-display .ac-emotions_list:hover, body:not(.bb-is-mobile)
+.activity-list .activity-item.elementor-activity-item .acomment-display .ac-emotions_list:hover {
+  left: -10px;
 }
 
 /* Activity comment modal ==> Starts Here */
@@ -7878,37 +7951,43 @@ span.dashicons.dashicons-admin-file:before {
 * @section 3.1.3 - Activity Comments
 *-----------------------------------------------------
 */
-.buddypress-wrap .activity-comments {
+.buddypress-wrap .activity-comments,
+.bb-media-model-wrapper .activity-comments {
   clear: both;
   margin: 0 5%;
   position: relative;
   width: auto;
 }
 
-.buddypress-wrap .activity-comments ul {
+.buddypress-wrap .activity-comments ul,
+.bb-media-model-wrapper .activity-comments ul {
   clear: both;
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.buddypress-wrap .activity-comments ul li {
+.buddypress-wrap .activity-comments ul li,
+.bb-media-model-wrapper .activity-comments ul li {
   border-top: 1px solid #eee;
   border-bottom: 0;
   padding: 1em 0 0;
 }
 
-.buddypress-wrap .activity-comments ul li:not(.detached-comment-item) {
+.buddypress-wrap .activity-comments ul li:not(.detached-comment-item),
+.bb-media-model-wrapper .activity-comments ul li:not(.detached-comment-item) {
   margin-left: 0;
 }
 
 @media screen and (max-width: 560px) {
-  .buddypress-wrap .activity-comments ul li:not(.detached-comment-item) {
+  .buddypress-wrap .activity-comments ul li:not(.detached-comment-item),
+  .bb-media-model-wrapper .activity-comments ul li:not(.detached-comment-item) {
     margin-left: 0;
   }
 }
 
-.buddypress-wrap .activity-comments ul li .bb-media-length-1 .bb-activity-media-elem .entry-img img {
+.buddypress-wrap .activity-comments ul li .bb-media-length-1 .bb-activity-media-elem .entry-img img,
+.bb-media-model-wrapper .activity-comments ul li .bb-media-length-1 .bb-activity-media-elem .entry-img img {
   max-width: 200px;
   height: auto;
   max-height: 200px;
@@ -7916,7 +7995,9 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 .buddypress-wrap .activity-comments ul li .bb-media-length-3,
-.buddypress-wrap .activity-comments ul li .bb-media-length-2 {
+.buddypress-wrap .activity-comments ul li .bb-media-length-2,
+.bb-media-model-wrapper .activity-comments ul li .bb-media-length-3,
+.bb-media-model-wrapper .activity-comments ul li .bb-media-length-2 {
   display: flex;
   flex-wrap: nowrap;
   gap: 2px;
@@ -7925,19 +8006,27 @@ span.dashicons.dashicons-admin-file:before {
 .buddypress-wrap .activity-comments ul li .bb-media-length-3 .act-grid-1-2,
 .buddypress-wrap .activity-comments ul li .bb-media-length-3 .act-grid-1-1,
 .buddypress-wrap .activity-comments ul li .bb-media-length-2 .act-grid-1-2,
-.buddypress-wrap .activity-comments ul li .bb-media-length-2 .act-grid-1-1 {
+.buddypress-wrap .activity-comments ul li .bb-media-length-2 .act-grid-1-1,
+.bb-media-model-wrapper .activity-comments ul li .bb-media-length-3 .act-grid-1-2,
+.bb-media-model-wrapper .activity-comments ul li .bb-media-length-3 .act-grid-1-1,
+.bb-media-model-wrapper .activity-comments ul li .bb-media-length-2 .act-grid-1-2,
+.bb-media-model-wrapper .activity-comments ul li .bb-media-length-2 .act-grid-1-1 {
   flex: auto;
   max-width: 156px;
 }
 
 .buddypress-wrap .activity-comments ul li .bb-media-length-3 .bb-activity-media-elem .entry-img,
-.buddypress-wrap .activity-comments ul li .bb-media-length-2 .bb-activity-media-elem .entry-img {
+.buddypress-wrap .activity-comments ul li .bb-media-length-2 .bb-activity-media-elem .entry-img,
+.bb-media-model-wrapper .activity-comments ul li .bb-media-length-3 .bb-activity-media-elem .entry-img,
+.bb-media-model-wrapper .activity-comments ul li .bb-media-length-2 .bb-activity-media-elem .entry-img {
   padding-top: 0;
   display: inline-block;
 }
 
 .buddypress-wrap .activity-comments ul li .bb-media-length-3 .bb-activity-media-elem .entry-img img,
-.buddypress-wrap .activity-comments ul li .bb-media-length-2 .bb-activity-media-elem .entry-img img {
+.buddypress-wrap .activity-comments ul li .bb-media-length-2 .bb-activity-media-elem .entry-img img,
+.bb-media-model-wrapper .activity-comments ul li .bb-media-length-3 .bb-activity-media-elem .entry-img img,
+.bb-media-model-wrapper .activity-comments ul li .bb-media-length-2 .bb-activity-media-elem .entry-img img {
   position: static;
   width: 150px;
   height: 150px;
@@ -7947,36 +8036,44 @@ span.dashicons.dashicons-admin-file:before {
 
 @media screen and (max-width: 544px) {
   .buddypress-wrap .activity-comments ul li .bb-media-length-3,
-  .buddypress-wrap .activity-comments ul li .bb-media-length-2 {
+  .buddypress-wrap .activity-comments ul li .bb-media-length-2,
+  .bb-media-model-wrapper .activity-comments ul li .bb-media-length-3,
+  .bb-media-model-wrapper .activity-comments ul li .bb-media-length-2 {
     flex-flow: wrap;
   }
 }
 
 @media screen and (max-width: 560px) {
-  .buddypress-wrap .activity-comments ul li .bb-media-length-1 .bb-activity-media-elem.media-activity {
+  .buddypress-wrap .activity-comments ul li .bb-media-length-1 .bb-activity-media-elem.media-activity,
+  .bb-media-model-wrapper .activity-comments ul li .bb-media-length-1 .bb-activity-media-elem.media-activity {
     min-width: auto;
   }
 }
 
-.buddypress-wrap .activity-comments ul li:first-child {
+.buddypress-wrap .activity-comments ul li:first-child,
+.bb-media-model-wrapper .activity-comments ul li:first-child {
   border-top: 0;
 }
 
-.buddypress-wrap .activity-comments ul li:last-child {
+.buddypress-wrap .activity-comments ul li:last-child,
+.bb-media-model-wrapper .activity-comments ul li:last-child {
   margin-bottom: 0;
 }
 
-.buddypress-wrap .activity-comments > ul > li > ul {
+.buddypress-wrap .activity-comments > ul > li > ul,
+.bb-media-model-wrapper .activity-comments > ul > li > ul {
   margin-left: 5%;
 }
 
-.buddypress-wrap .activity-comments div.acomment-avatar {
+.buddypress-wrap .activity-comments div.acomment-avatar,
+.bb-media-model-wrapper .activity-comments div.acomment-avatar {
   width: auto;
   margin-top: 7px;
   flex-shrink: 0;
 }
 
-.buddypress-wrap .activity-comments div.acomment-avatar img {
+.buddypress-wrap .activity-comments div.acomment-avatar img,
+.bb-media-model-wrapper .activity-comments div.acomment-avatar img {
   border-width: 1px;
   float: left;
   max-width: none;
@@ -7985,11 +8082,13 @@ span.dashicons.dashicons-admin-file:before {
   image-rendering: -webkit-optimize-contrast;
 }
 
-.buddypress-wrap .activity-comments .acomment_inner {
+.buddypress-wrap .activity-comments .acomment_inner,
+.bb-media-model-wrapper .activity-comments .acomment_inner {
   display: flex;
 }
 
-.buddypress-wrap .activity-comments .acomment_inner .acomment-content_block {
+.buddypress-wrap .activity-comments .acomment_inner .acomment-content_block,
+.bb-media-model-wrapper .activity-comments .acomment_inner .acomment-content_block {
   background-color: #eaeaea;
   padding: 10px 15px;
   border-radius: 6px;
@@ -7998,146 +8097,181 @@ span.dashicons.dashicons-admin-file:before {
   position: relative;
 }
 
-.buddypress-wrap .activity-comments .acomment-display {
+.buddypress-wrap .activity-comments .acomment-display,
+.bb-media-model-wrapper .activity-comments .acomment-display {
   display: inline-flex;
   position: relative;
   padding-right: 34px;
 }
 
-.buddypress-wrap .activity-comments .acomment-display.bp-hide {
+.buddypress-wrap .activity-comments .acomment-display.bp-hide,
+.bb-media-model-wrapper .activity-comments .acomment-display.bp-hide {
   display: none;
 }
 
 .buddypress-wrap .activity-comments .acomment-meta,
-.buddypress-wrap .activity-comments .acomment-content p {
+.buddypress-wrap .activity-comments .acomment-content p,
+.bb-media-model-wrapper .activity-comments .acomment-meta,
+.bb-media-model-wrapper .activity-comments .acomment-content p {
   font-size: 14px;
 }
 
-.buddypress-wrap .activity-comments .acomment-meta {
+.buddypress-wrap .activity-comments .acomment-meta,
+.bb-media-model-wrapper .activity-comments .acomment-meta {
   color: #555;
   padding-left: 2%;
 }
 
-.buddypress-wrap .activity-comments .acomment-content p {
+.buddypress-wrap .activity-comments .acomment-content p,
+.bb-media-model-wrapper .activity-comments .acomment-content p {
   margin-bottom: 0.5em;
 }
 
-.buddypress-wrap .activity-comments .acomment-content p:last-child {
+.buddypress-wrap .activity-comments .acomment-content p:last-child,
+.bb-media-model-wrapper .activity-comments .acomment-content p:last-child {
   margin-bottom: 0;
 }
 
-.buddypress-wrap .activity-comments .acomment-content p:empty {
+.buddypress-wrap .activity-comments .acomment-content p:empty,
+.bb-media-model-wrapper .activity-comments .acomment-content p:empty {
   min-height: 1em;
 }
 
 .buddypress-wrap .activity-comments .acomment-content .bb-activity-video-wrap,
-.buddypress-wrap .activity-comments .acomment-content .bb-activity-media-wrap {
+.buddypress-wrap .activity-comments .acomment-content .bb-activity-media-wrap,
+.bb-media-model-wrapper .activity-comments .acomment-content .bb-activity-video-wrap,
+.bb-media-model-wrapper .activity-comments .acomment-content .bb-activity-media-wrap {
   margin: 15px 0;
 }
 
-.buddypress-wrap .activity-comments .acomment-options {
+.buddypress-wrap .activity-comments .acomment-options,
+.bb-media-model-wrapper .activity-comments .acomment-options {
   float: left;
   margin: 10px 0 10px 20px;
 }
 
-.buddypress-wrap .activity-comments .acomment-options a {
+.buddypress-wrap .activity-comments .acomment-options a,
+.bb-media-model-wrapper .activity-comments .acomment-options a {
   color: #767676;
   font-size: 14px;
 }
 
-.buddypress-wrap .activity-comments .acomment-options a:focus, .buddypress-wrap .activity-comments .acomment-options a:hover {
+.buddypress-wrap .activity-comments .acomment-options a:focus, .buddypress-wrap .activity-comments .acomment-options a:hover,
+.bb-media-model-wrapper .activity-comments .acomment-options a:focus,
+.bb-media-model-wrapper .activity-comments .acomment-options a:hover {
   color: inherit;
 }
 
-.buddypress-wrap .activity-comments .activity-attached-gif-container .gif-player {
+.buddypress-wrap .activity-comments .activity-attached-gif-container .gif-player,
+.bb-media-model-wrapper .activity-comments .activity-attached-gif-container .gif-player {
   display: flex;
   max-width: 200px;
 }
 
-.buddypress-wrap .activity-comments .activity-attached-gif-container .gif-player video {
+.buddypress-wrap .activity-comments .activity-attached-gif-container .gif-player video,
+.bb-media-model-wrapper .activity-comments .activity-attached-gif-container .gif-player video {
   max-width: 200px;
   height: 150px;
 }
 
-.buddypress-wrap .activity-comments .activity-attached-gif-container .gif-player .gif-icon {
+.buddypress-wrap .activity-comments .activity-attached-gif-container .gif-player .gif-icon,
+.bb-media-model-wrapper .activity-comments .activity-attached-gif-container .gif-player .gif-icon {
   padding: 0;
 }
 
-.buddypress-wrap .activity-comments .bb-activity-video-wrap .bb-activity-video-elem {
+.buddypress-wrap .activity-comments .bb-activity-video-wrap .bb-activity-video-elem,
+.bb-media-model-wrapper .activity-comments .bb-activity-video-wrap .bb-activity-video-elem {
   min-width: 245px;
 }
 
-.buddypress-wrap .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) {
+.buddypress-wrap .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1),
+.bb-media-model-wrapper .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) {
   flex-wrap: nowrap;
 }
 
 .buddypress-wrap .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) .act-grid-1-1.bb-activity-video-elem,
-.buddypress-wrap .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) .act-grid-1-2.bb-activity-video-elem {
+.buddypress-wrap .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) .act-grid-1-2.bb-activity-video-elem,
+.bb-media-model-wrapper .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) .act-grid-1-1.bb-activity-video-elem,
+.bb-media-model-wrapper .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) .act-grid-1-2.bb-activity-video-elem {
   flex: auto;
   min-width: 200px;
   max-width: 200px;
 }
 
 .buddypress-wrap .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) .act-grid-1-1.bb-activity-video-elem .bb-item-cover-wrap,
-.buddypress-wrap .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) .act-grid-1-2.bb-activity-video-elem .bb-item-cover-wrap {
+.buddypress-wrap .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) .act-grid-1-2.bb-activity-video-elem .bb-item-cover-wrap,
+.bb-media-model-wrapper .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) .act-grid-1-1.bb-activity-video-elem .bb-item-cover-wrap,
+.bb-media-model-wrapper .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) .act-grid-1-2.bb-activity-video-elem .bb-item-cover-wrap {
   padding-top: 82.56%;
 }
 
 @media screen and (max-width: 1260px) and (min-width: 1080px) {
-  .has-sidebar.activity-sidebar-left .buddypress-wrap .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) {
+  .has-sidebar.activity-sidebar-left .buddypress-wrap .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1), .has-sidebar.activity-sidebar-left
+  .bb-media-model-wrapper .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) {
     flex-wrap: wrap;
   }
 }
 
 @media screen and (max-width: 960px) and (min-width: 768px) {
-  .has-sidebar .buddypress-wrap .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) {
+  .has-sidebar .buddypress-wrap .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1), .has-sidebar
+  .bb-media-model-wrapper .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) {
     flex-wrap: wrap;
   }
 }
 
 @media screen and (max-width: 544px) {
-  .buddypress-wrap .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) {
+  .buddypress-wrap .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1),
+  .bb-media-model-wrapper .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) {
     flex-wrap: wrap;
   }
 }
 
-.buddypress-wrap .activity-comments .bb-activity-media-wrap.ac-document {
+.buddypress-wrap .activity-comments .bb-activity-media-wrap.ac-document,
+.bb-media-model-wrapper .activity-comments .bb-activity-media-wrap.ac-document {
   flex-flow: column;
 }
 
-.buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity {
+.buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity,
+.bb-media-model-wrapper .activity-comments .bb-activity-media-elem.document-activity {
   width: 380px;
 }
 
-.buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity .document-preview-wrap {
+.buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity .document-preview-wrap,
+.bb-media-model-wrapper .activity-comments .bb-activity-media-elem.document-activity .document-preview-wrap {
   height: 170px;
 }
 
 @media screen and (max-width: 544px) {
-  .buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity {
+  .buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity,
+  .bb-media-model-wrapper .activity-comments .bb-activity-media-elem.document-activity {
     width: 250px;
   }
 }
 
-.buddypress-wrap .activity-comments .bp-generic-meta.action {
+.buddypress-wrap .activity-comments .bp-generic-meta.action,
+.bb-media-model-wrapper .activity-comments .bp-generic-meta.action {
   background: none;
 }
 
-.buddypress-wrap .activity-comments .bp-generic-meta.action button {
+.buddypress-wrap .activity-comments .bp-generic-meta.action button,
+.bb-media-model-wrapper .activity-comments .bp-generic-meta.action button {
   font-size: 14px;
   font-weight: 400;
   text-transform: none;
 }
 
-.buddypress-wrap .activity-comments .bp-generic-meta.action .generic-button > a:hover {
+.buddypress-wrap .activity-comments .bp-generic-meta.action .generic-button > a:hover,
+.bb-media-model-wrapper .activity-comments .bp-generic-meta.action .generic-button > a:hover {
   text-decoration: underline !important;
 }
 
-.buddypress-wrap .activity-comments .bp-generic-meta.action a.bp-like-button:before {
+.buddypress-wrap .activity-comments .bp-generic-meta.action a.bp-like-button:before,
+.bb-media-model-wrapper .activity-comments .bp-generic-meta.action a.bp-like-button:before {
   display: none;
 }
 
-.buddypress-wrap .activity-comments .bp-generic-meta.action a.bp-like-button.bb-reaction-migration-inprogress:before {
+.buddypress-wrap .activity-comments .bp-generic-meta.action a.bp-like-button.bb-reaction-migration-inprogress:before,
+.bb-media-model-wrapper .activity-comments .bp-generic-meta.action a.bp-like-button.bb-reaction-migration-inprogress:before {
   content: "";
   display: block;
   position: absolute;
@@ -8148,7 +8282,8 @@ span.dashicons.dashicons-admin-file:before {
   transition: none;
 }
 
-.buddypress-wrap .activity-comments .bp-generic-meta.action a.bp-like-button.bb-reaction-migration-inprogress:after {
+.buddypress-wrap .activity-comments .bp-generic-meta.action a.bp-like-button.bb-reaction-migration-inprogress:after,
+.bb-media-model-wrapper .activity-comments .bp-generic-meta.action a.bp-like-button.bb-reaction-migration-inprogress:after {
   width: 180px;
   white-space: normal;
   left: 0;
@@ -8157,53 +8292,66 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 .buddypress-wrap .activity-comments .bp-generic-meta.action a.has-emotion > i,
-.buddypress-wrap .activity-comments .bp-generic-meta.action a.has-emotion > img {
+.buddypress-wrap .activity-comments .bp-generic-meta.action a.has-emotion > img,
+.bb-media-model-wrapper .activity-comments .bp-generic-meta.action a.has-emotion > i,
+.bb-media-model-wrapper .activity-comments .bp-generic-meta.action a.has-emotion > img {
   display: none;
 }
 
-.buddypress-wrap .activity-comments .show-all button {
+.buddypress-wrap .activity-comments .show-all button,
+.bb-media-model-wrapper .activity-comments .show-all button {
   font-size: 14px;
   text-decoration: underline;
   padding-left: 0.7em;
 }
 
-.buddypress-wrap .activity-comments .show-all button span {
+.buddypress-wrap .activity-comments .show-all button span,
+.bb-media-model-wrapper .activity-comments .show-all button span {
   text-decoration: none;
 }
 
-.buddypress-wrap .activity-comments .show-all button:hover span, .buddypress-wrap .activity-comments .show-all button:focus span {
+.buddypress-wrap .activity-comments .show-all button:hover span, .buddypress-wrap .activity-comments .show-all button:focus span,
+.bb-media-model-wrapper .activity-comments .show-all button:hover span,
+.bb-media-model-wrapper .activity-comments .show-all button:focus span {
   color: #5087e5;
 }
 
-.buddypress-wrap .activity-comments .comment-item.suspended-comment-item > .item-avatar > a[href=""] {
+.buddypress-wrap .activity-comments .comment-item.suspended-comment-item > .item-avatar > a[href=""],
+.bb-media-model-wrapper .activity-comments .comment-item.suspended-comment-item > .item-avatar > a[href=""] {
   position: relative;
   pointer-events: none;
   opacity: 0.7;
 }
 
-.buddypress-wrap .activity-comments .comment-item.suspended-comment-item .acomment-content {
+.buddypress-wrap .activity-comments .comment-item.suspended-comment-item .acomment-content,
+.bb-media-model-wrapper .activity-comments .comment-item.suspended-comment-item .acomment-content {
   pointer-events: none;
   opacity: 0.7;
 }
 
-.buddypress-wrap .activity-comments .comment-item.suspended-comment-item .acomment-meta > .author-name[href=""] {
+.buddypress-wrap .activity-comments .comment-item.suspended-comment-item .acomment-meta > .author-name[href=""],
+.bb-media-model-wrapper .activity-comments .comment-item.suspended-comment-item .acomment-meta > .author-name[href=""] {
   pointer-events: none;
   opacity: 0.7;
 }
 
-.buddypress-wrap .activity-comments .comment-item.suspended-comment-item .acomment-meta .activity-time-since {
+.buddypress-wrap .activity-comments .comment-item.suspended-comment-item .acomment-meta .activity-time-since,
+.bb-media-model-wrapper .activity-comments .comment-item.suspended-comment-item .acomment-meta .activity-time-since {
   display: none;
 }
 
-.buddypress-wrap .activity-comments li.comment-item {
+.buddypress-wrap .activity-comments li.comment-item,
+.bb-media-model-wrapper .activity-comments li.comment-item {
   position: relative;
 }
 
-.buddypress-wrap .activity-comments li > .acomment-display {
+.buddypress-wrap .activity-comments li > .acomment-display,
+.bb-media-model-wrapper .activity-comments li > .acomment-display {
   position: relative;
 }
 
-.buddypress-wrap .activity-comments .comment-reactions .activity-state-reactions {
+.buddypress-wrap .activity-comments .comment-reactions .activity-state-reactions,
+.bb-media-model-wrapper .activity-comments .comment-reactions .activity-state-reactions {
   background-color: #fff;
   position: absolute;
   bottom: -10px;
@@ -8218,32 +8366,43 @@ span.dashicons.dashicons-admin-file:before {
   transform: translateX(39px);
 }
 
-.buddypress-wrap .activity-comments .comment-reactions .comment-reactions_count {
+.buddypress-wrap .activity-comments .comment-reactions .comment-reactions_count,
+.bb-media-model-wrapper .activity-comments .comment-reactions .comment-reactions_count {
   font-size: 13px;
   margin: 0 4px 0 2px;
 }
 
-.buddypress-wrap .activity-comments .comment-reactions .reactions_item > i:before {
+.buddypress-wrap .activity-comments .comment-reactions .reactions_item > i:before,
+.bb-media-model-wrapper .activity-comments .comment-reactions .reactions_item > i:before {
   margin-left: 0;
   margin-right: 0;
 }
 
-.buddypress-wrap .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity {
+.buddypress-wrap .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity,
+.bb-media-model-wrapper .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity {
   width: 265px;
 }
 
-.buddypress-wrap .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity .document-preview-wrap {
+.buddypress-wrap .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity .document-preview-wrap,
+.bb-media-model-wrapper .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity .document-preview-wrap {
   height: 115px;
 }
 
-.buddypress-wrap .bb-media-info-section .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) {
+.buddypress-wrap .bb-media-info-section .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1),
+.bb-media-model-wrapper .bb-media-info-section .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) {
   flex-wrap: wrap;
 }
 
 .buddypress-wrap .activity-comments .ac-form.has-gif .ac-reply-content .ac-submit-wrap, .buddypress-wrap .activity-comments .ac-form.has-content .ac-reply-content .ac-submit-wrap, .buddypress-wrap .activity-comments .ac-form.has-media .ac-reply-content .ac-submit-wrap,
 .buddypress-wrap .bb-modal-activity-footer .ac-form.has-gif .ac-reply-content .ac-submit-wrap,
 .buddypress-wrap .bb-modal-activity-footer .ac-form.has-content .ac-reply-content .ac-submit-wrap,
-.buddypress-wrap .bb-modal-activity-footer .ac-form.has-media .ac-reply-content .ac-submit-wrap {
+.buddypress-wrap .bb-modal-activity-footer .ac-form.has-media .ac-reply-content .ac-submit-wrap,
+.bb-media-model-wrapper .activity-comments .ac-form.has-gif .ac-reply-content .ac-submit-wrap,
+.bb-media-model-wrapper .activity-comments .ac-form.has-content .ac-reply-content .ac-submit-wrap,
+.bb-media-model-wrapper .activity-comments .ac-form.has-media .ac-reply-content .ac-submit-wrap,
+.bb-media-model-wrapper .bb-modal-activity-footer .ac-form.has-gif .ac-reply-content .ac-submit-wrap,
+.bb-media-model-wrapper .bb-modal-activity-footer .ac-form.has-content .ac-reply-content .ac-submit-wrap,
+.bb-media-model-wrapper .bb-modal-activity-footer .ac-form.has-media .ac-reply-content .ac-submit-wrap {
   opacity: 1;
   pointer-events: initial;
 }
@@ -8251,38 +8410,49 @@ span.dashicons.dashicons-admin-file:before {
 .buddypress-wrap .activity-comments .ac-form.media-uploading .ac-reply-content .ac-submit-wrap,
 .buddypress-wrap .activity-comments .ac-form .ac-reply-content .ac-submit-wrap,
 .buddypress-wrap .bb-modal-activity-footer .ac-form.media-uploading .ac-reply-content .ac-submit-wrap,
-.buddypress-wrap .bb-modal-activity-footer .ac-form .ac-reply-content .ac-submit-wrap {
+.buddypress-wrap .bb-modal-activity-footer .ac-form .ac-reply-content .ac-submit-wrap,
+.bb-media-model-wrapper .activity-comments .ac-form.media-uploading .ac-reply-content .ac-submit-wrap,
+.bb-media-model-wrapper .activity-comments .ac-form .ac-reply-content .ac-submit-wrap,
+.bb-media-model-wrapper .bb-modal-activity-footer .ac-form.media-uploading .ac-reply-content .ac-submit-wrap,
+.bb-media-model-wrapper .bb-modal-activity-footer .ac-form .ac-reply-content .ac-submit-wrap {
   opacity: 0.4;
   pointer-events: none;
 }
 
-.buddypress-wrap .activity-comments .acomment-foot-actions {
+.buddypress-wrap .activity-comments .acomment-foot-actions,
+.bb-media-model-wrapper .activity-comments .acomment-foot-actions {
   display: flex;
   align-items: center;
 }
 
-.buddypress-wrap .activity-comments .acomment-foot-actions .generic-button {
+.buddypress-wrap .activity-comments .acomment-foot-actions .generic-button,
+.bb-media-model-wrapper .activity-comments .acomment-foot-actions .generic-button {
   margin: 10px 0;
 }
 
-.buddypress-wrap .activity-comments .acomment-foot-actions .activity-time-since {
+.buddypress-wrap .activity-comments .acomment-foot-actions .activity-time-since,
+.bb-media-model-wrapper .activity-comments .acomment-foot-actions .activity-time-since {
   color: #767676;
   margin-left: 5px;
 }
 
-.buddypress-wrap .activity-comments > .ac-form {
+.buddypress-wrap .activity-comments > .ac-form,
+.bb-media-model-wrapper .activity-comments > .ac-form {
   display: none;
 }
 
-.buddypress-wrap .activity-item.has-comments .activity-comments > .ac-form {
+.buddypress-wrap .activity-item.has-comments .activity-comments > .ac-form,
+.bb-media-model-wrapper .activity-item.has-comments .activity-comments > .ac-form {
   display: block;
 }
 
-.buddypress-wrap .activity-list .activity-item .activity-comments .bp-generic-meta.action a.bp-like-button .like-count {
+.buddypress-wrap .activity-list .activity-item .activity-comments .bp-generic-meta.action a.bp-like-button .like-count,
+.bb-media-model-wrapper .activity-list .activity-item .activity-comments .bp-generic-meta.action a.bp-like-button .like-count {
   margin-left: 0;
 }
 
-.buddypress-wrap .mini .activity-comments {
+.buddypress-wrap .mini .activity-comments,
+.bb-media-model-wrapper .mini .activity-comments {
   clear: both;
   margin-top: 0;
 }
