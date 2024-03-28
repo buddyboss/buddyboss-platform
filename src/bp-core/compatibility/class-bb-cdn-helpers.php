@@ -47,6 +47,10 @@ class BB_CDN_Helpers {
 	public function compatibility_init() {
 		add_filter( 'bp_nouveau_object_template_result', array( $this, 'bb_template_ajax_content_add_cdn' ), 10, 1 );
 		add_filter( 'bb_media_after_get_preview_image_url_symlink', array( $this, 'bb_media_preview_symlink_add_cdn' ), 10, 1 );
+		add_filter( 'bb_video_after_get_symlink', array( $this, 'bb_media_preview_symlink_add_cdn' ), 10, 1 );
+		add_filter( 'bb_video_after_get_attachment_symlink', array( $this, 'bb_media_preview_symlink_add_cdn' ), 10, 1 );
+		add_filter( 'bp_document_get_preview_url', array( $this, 'bb_media_preview_symlink_add_cdn' ), 10, 1 );
+		add_filter( 'bb_document_video_get_symlink', array( $this, 'bb_media_preview_symlink_add_cdn' ), 10, 1 );
 	}
 
 	/**
