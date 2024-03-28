@@ -4786,6 +4786,8 @@ window.bp = window.bp || {};
 				'click .bb-schedule-activity': 'displayScheduleButton',
 				'change .bb-schedule-activity-date-field': 'validateScheduleTime',
 				'change .bb-schedule-activity-time-field': 'validateScheduleTime',
+				'click .bb-activity-schedule_edit': 'editScheduledPost',
+				'click .bb-activity-schedule_delete': 'deleteScheduledPost',
 			},
 
 			initialize: function () {
@@ -4875,6 +4877,25 @@ window.bp = window.bp || {};
 				} else {
 					$( '.bb-schedule-activity' ).attr( 'disabled', 'disabled' );
 				}
+			},
+
+			editScheduledPost: function ( event ) {
+				event.preventDefault();
+
+				var activity = $( event.target ).closest( 'li.activity' );
+				var activity_id = activity.data( 'bp-activity-id' );
+
+			},
+
+			deleteScheduledPost: function ( event ) {
+				event.preventDefault();
+
+				var confirm_deletion = confirm( BP_Nouveau.activity.strings.confirmDeletePost );
+
+				if( confirm_deletion ) {
+					// Delete Scheduled Post
+				}
+
 			}
 		}
 	);
