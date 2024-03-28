@@ -179,6 +179,8 @@ add_filter( 'bp_get_activity_content', 'bb_mention_add_user_dynamic_link', 20, 1
 add_filter( 'bp_get_activity_content_body', 'bb_mention_add_user_dynamic_link', 20, 1 );
 add_filter( 'bp_activity_comment_content', 'bb_mention_add_user_dynamic_link', 20, 1 );
 
+add_filter( 'bp_ajax_querystring', 'bb_activity_directory_set_pagination', 20, 2 );
+
 // Modal template for activity.
 add_action( 'bp_after_directory_activity_list', 'bb_activity_add_modal_template' );
 add_action( 'bp_after_group_activity_content', 'bb_activity_add_modal_template' );
@@ -3690,6 +3692,27 @@ function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
 	}
 
 	return $activity_comment_data;
+}
+
+/**
+ * Function to update per page for activity.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $querystring Current query string.
+ * @param string $object      Current template component.
+ *
+ * @return string The AJAX querystring.
+ */
+function bb_activity_directory_set_pagination( $querystring, $object ) {
+	if ( 'activity' !== $object || bp_is_single_activity() ) {
+		return $querystring;
+	}
+
+	$querystring             = bp_parse_args( $querystring );
+	$querystring['per_page'] = bb_get_load_activity_per_request();
+
+	return http_build_query( $querystring );
 }
 
 /**
