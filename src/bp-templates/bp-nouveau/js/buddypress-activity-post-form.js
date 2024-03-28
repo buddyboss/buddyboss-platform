@@ -384,6 +384,15 @@ window.bp = window.bp || {};
 			self.postForm.model.set( 'link_image_index', activity_data.link_image_index_save );
 			self.postForm.model.set( 'link_image_index_save', activity_data.link_image_index_save );
 
+			if( activity_data.activity_action_type === 'scheduled' ) {
+				// Set Schedule post data
+				self.postForm.model.set( 'activity_action_type', activity_data.activity_action_type );
+				self.postForm.model.set( 'activity_schedule_date_raw', activity_data.activity_schedule_date_raw );
+				self.postForm.model.set( 'activity_schedule_date', activity_data.activity_schedule_date );
+				self.postForm.model.set( 'activity_schedule_time', activity_data.activity_schedule_time );
+				self.postForm.model.set( 'activity_schedule_meridiem', activity_data.activity_schedule_meridiem );
+			}
+
 			var tool_box = $( '.activity-form.focus-in #whats-new-toolbar' );
 
 			if ( ! _.isUndefined( self.activityToolbar ) ) {
@@ -949,7 +958,7 @@ window.bp = window.bp || {};
 				self.postForm.$el.serializeArray(),
 				function( pair ) {
 					pair.name = pair.name.replace( '[]', '' );
-					if ( - 1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in'], pair.name ) ) {
+					if ( - 1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field'], pair.name ) ) {
 						if ( _.isUndefined( meta[ pair.name ] ) ) {
 							meta[ pair.name ] = pair.value;
 						} else {
@@ -1112,7 +1121,12 @@ window.bp = window.bp || {};
 				'link_description',
 				'link_image',
 				'link_title',
-				'link_url'
+				'link_url',
+				'activity_action_type',
+				'activity_schedule_date_raw',
+				'activity_schedule_date',
+				'activity_schedule_time',
+				'activity_schedule_meridiem'
 			];
 
 			_.each(
@@ -3625,11 +3639,12 @@ window.bp = window.bp || {};
 				this.views.add( new bp.Views.CaseAvatar( { model: this.model } ) );
 				this.views.add( new bp.Views.CaseHeading( { model: this.model } ) );
 				this.views.add( new bp.Views.CasePrivacy( { model: this.model } ) );
+				this.views.add( new bp.Views.PostScheduleTime( { model: this.model } ) );
 
 				$( '#whats-new-heading, #whats-new-status' ).wrapAll( '<div class="activity-post-name-status" />' );
 				setTimeout(
 					function () {
-						$( '.activity-singular #whats-new-heading, .activity-singular #whats-new-status' ).wrapAll( '<div class="activity-post-name-status" />' );
+						$( '.activity-singular #whats-new-heading, .activity-singular #whats-new-status, .activity-singular #activity-schedule-section' ).wrapAll( '<div class="activity-post-name-status" />' );
 					},
 					1000
 				);
@@ -3934,6 +3949,23 @@ window.bp = window.bp || {};
 					this.views.add( new bp.Views.EditActivityPostIn( { model: this.model } ) );
 				}
 			}
+		}
+	);
+
+	bp.Views.PostScheduleTime = bp.View.extend(
+		{
+			tagName: 'div',
+			id: 'activity-schedule-section',
+			template: bp.template( 'activity-schedule-details' ),
+
+			initialize: function () {
+				this.model.on( 'change', this.render, this );
+			},
+
+			render: function () {
+				this.$el.html( this.template( this.model.attributes ) );
+				return this;
+			},
 		}
 	);
 
@@ -4685,21 +4717,11 @@ window.bp = window.bp || {};
 					}
 				);
 
-				this.discard = new bp.Views.ActivityInput(
-					{
-						model: this.model,
-						type: 'button',
-						id: 'discard-draft-activity',
-						className: 'button outline',
-						name: 'discard-draft-activity',
-						value: BP_Nouveau.activity.strings.discardButton
-					}
-				);
-
-				this.views.set( [ this.submit, this.reset, this.discard ] );
+				this.views.set( [ this.submit, this.reset ] );
 
 				this.model.on( 'change:object', this.updateDisplay, this );
 				this.model.on( 'change:posting', this.updateStatus, this );
+				this.model.on( 'change:activity_action_type', this.updateSubmitLabel, this );
 			},
 
 			updateDisplay: function ( model ) {
@@ -4730,6 +4752,150 @@ window.bp = window.bp || {};
 
 					this.submit.el.classList.remove( 'loading' );
 				}
+			},
+
+			updateSubmitLabel: function ( model ) {
+				var buttomText = BP_Nouveau.activity.strings.postUpdateButton;
+				if ( $( '#whats-new-form' ).hasClass( 'bp-activity-edit' ) ) {
+					buttomText = BP_Nouveau.activity.strings.updatePostButton;
+				}
+
+				if( model.get( 'activity_action_type' ) === 'scheduled' ) {
+					this.submit.el.value = BP_Nouveau.activity.strings.schedulePostButton;
+				} else {
+					this.submit.el.value = buttomText;
+				}
+			}
+		}
+	);
+
+	bp.Views.activitySchedulePost = bp.View.extend(
+		{
+			tagName: 'div',
+			id: 'bb-schedule-posts',
+			className: 'bb-schedule-posts',
+			template: bp.template( 'activity-schedule-post' ),
+
+			events: {
+				'click .bb-schedule-post_dropdown_button': 'displayOptions',
+				'click .bb-schedule-post_action': 'displayScheduleForm',
+				'click .bb-view-schedule-posts': 'displaySchedulePosts',
+				'click .bb-view-all-scheduled-posts': 'displaySchedulePosts',
+				'click .bb-schedule-activity-cancel': 'cancelSchedulePost',
+				'click .bb-model-close-button': 'cancelSchedulePost',
+				'click .bb-schedule-activity': 'displayScheduleButton',
+				'change .bb-schedule-activity-date-field': 'validateScheduleTime',
+				'change .bb-schedule-activity-time-field': 'validateScheduleTime',
+				'click .bb-activity-schedule_edit': 'editScheduledPost',
+				'click .bb-activity-schedule_delete': 'deleteScheduledPost',
+			},
+
+			initialize: function () {
+				this.model.on( 'change', this.render, this );
+			},
+
+			render: function () {
+				this.$el.html( this.template( this.model.attributes ) );
+				return this;
+			},
+
+			displayOptions: function ( event ) {
+				event.preventDefault();
+				$( event.target ).closest( '.bb-schedule-post_dropdown_section' ).find( '.bb-schedule-post_dropdown_list' ).toggleClass( 'is_open' );
+			},
+
+			cancelSchedulePost: function ( event ) {
+				event.preventDefault();
+				var schedulePost = $( event.target ).closest( '#bb-schedule-post_form_modal' );
+				schedulePost.find( 'input' ).val( '' );
+				schedulePost.hide();
+			},
+
+			displayScheduleForm: function ( event ) {
+				event.preventDefault();
+				var schedulePost = $( event.target ).closest( '.bb-schedule-posts' );
+				schedulePost.find( '.bb-schedule-post_dropdown_list' ).removeClass( 'is_open' );
+				schedulePost.find( '.bb-schedule-post_modal #bb-schedule-post_form_modal' ).show();
+				if (typeof jQuery.fn.datetimepicker !== 'undefined') {
+					var currentDate = new Date();
+					$( '.bb-schedule-post_dropdown_section .bb-schedule-activity-date-field' ).datetimepicker({
+						format: 'Y-m-d',
+						timepicker:false,
+						mask:false,
+						minDate: 0,
+						maxDate: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 90 ),
+						yearStart: currentDate.getFullYear(),
+						defaultDate: currentDate,
+						scrollMonth: false,
+						scrollTime: false,
+						scrollInput: false,
+						className: 'bb-schedule-activity-date-wrap',
+					});
+
+					$( '.bb-schedule-post_dropdown_section .bb-schedule-activity-time-field' ).datetimepicker({
+						datepicker: false,
+						format: 'h:i',
+						formatTime:	'h:i',
+						hours12: true,
+						step: 5,
+						className: 'bb-schedule-activity-time-picker',
+					});
+				}
+			},
+
+			displaySchedulePosts: function ( event ) {
+				event.preventDefault();
+				var schedulePost = $( event.target ).closest( '.bb-schedule-posts' );
+				schedulePost.find( '.bb-schedule-post_dropdown_list' ).removeClass( 'is_open' );
+				schedulePost.find( '#bb-schedule-post_form_modal' ).hide();
+				schedulePost.find( '#bb-schedule-posts_modal' ).show();
+			},
+
+			displayScheduleButton: function ( event ) {
+				event.preventDefault();
+				var schedulePost = $( event.target ).closest( '.bb-schedule-posts' );
+				var schedulePost_time = schedulePost.find( '.bb-schedule-activity-time-field' ).val();
+				var schedulePost_date_raw = schedulePost.find( '.bb-schedule-activity-date-field' ).val();
+				var schedulePost_meridian = schedulePost.find( 'input[name="bb-schedule-activity-meridian"]:checked').val();
+
+				var UserDate = new Date( schedulePost_date_raw );
+				var monthName = UserDate.toLocaleString( 'en-us', { month: 'short' } );
+				var dateNumber = UserDate.getDate();
+				var schedulePost_date = monthName + ' ' + dateNumber;
+
+				this.model.set( 'activity_action_type', 'scheduled' );
+				this.model.set( 'activity_schedule_date_raw', schedulePost_date_raw );
+				this.model.set( 'activity_schedule_date', schedulePost_date );
+				this.model.set( 'activity_schedule_time', schedulePost_time );
+				this.model.set( 'activity_schedule_meridiem', schedulePost_meridian);
+				$( event.target ).closest( '#bb-schedule-post_form_modal' ).hide();
+			},
+
+			validateScheduleTime: function () {
+				if ( $( '.bb-schedule-activity-date-field' ).val() !== '' && $( '.bb-schedule-activity-time-field' ).val() !== '' ) {
+					$( '.bb-schedule-activity' ).removeAttr( 'disabled' );
+				} else {
+					$( '.bb-schedule-activity' ).attr( 'disabled', 'disabled' );
+				}
+			},
+
+			editScheduledPost: function ( event ) {
+				event.preventDefault();
+
+				var activity = $( event.target ).closest( 'li.activity' );
+				var activity_id = activity.data( 'bp-activity-id' );
+
+			},
+
+			deleteScheduledPost: function ( event ) {
+				event.preventDefault();
+
+				var confirm_deletion = confirm( BP_Nouveau.activity.strings.confirmDeletePost );
+
+				if( confirm_deletion ) {
+					// Delete Scheduled Post
+				}
+
 			}
 		}
 	);
@@ -4757,6 +4923,17 @@ window.bp = window.bp || {};
 				//Show placeholder form
 				$( '#bp-nouveau-activity-form-placeholder' ).show();
 
+				this.views.add( new bp.Views.ActivityInput(
+					{
+						model: this.model,
+						type: 'button',
+						id: 'discard-draft-activity',
+						className: 'button outline',
+						name: 'discard-draft-activity',
+						value: BP_Nouveau.activity.strings.discardButton
+					}
+				));
+				this.views.add( new bp.Views.activitySchedulePost( { model: this.model } ) );
 				this.views.add( new bp.Views.FormSubmit( { model: this.model } ) );
 			}
 		}

@@ -64,6 +64,8 @@ function bp_nouveau_activity_enqueue_scripts() {
 	// Enqueue activity form parts and js required for single activity.
 
 	if ( bp_nouveau_current_user_can( 'publish_activity' ) ) {
+		wp_enqueue_style( 'jquery-datetimepicker' );
+		wp_enqueue_script( 'jquery-datetimepicker' );
 		wp_enqueue_script( 'bp-nouveau-activity-post-form' );
 		bp_get_template_part( 'common/js-templates/activity/form' );
 	}
@@ -253,6 +255,8 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'unpinGroupPost'      => esc_html__( 'Unpin from Group', 'buddyboss' ),
 		'pinPostError'        => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
 		'reactionAjaxError'   => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+		'schedulePostButton'  => esc_html__( 'Schedule', 'buddyboss' ),
+		'confirmDeletePost'   => esc_html__( 'Are you sure you want to delete that permanently?', 'buddyboss' ),
 	);
 
     if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
@@ -663,5 +667,3 @@ function bp_nouveau_activity_customizer_controls( $controls = array() ) {
 //		),
 	) );
 }
-
-

@@ -549,6 +549,11 @@ function bp_activity_at_name_send_emails( $activity ) {
 		return;
 	}
 
+	// Avoid sending notification if the activity is not published.
+	if ( bb_get_activity_published_status() !== $activity->status ) {
+		return;
+	}
+
 	// If our temporary variable doesn't exist, stop now.
 	if ( empty( buddypress()->activity->mentioned_users ) ) {
 		return;
@@ -3438,7 +3443,8 @@ function bb_activity_send_email_to_following_post( $content, $user_id, $activity
 	if (
 		empty( $activity ) ||
 		'activity' !== $activity->component ||
-		in_array( $activity->privacy, array( 'document', 'media', 'video', 'onlyme' ), true )
+		in_array( $activity->privacy, array( 'document', 'media', 'video', 'onlyme' ), true ) ||
+		bb_get_activity_published_status() !== $activity->status
 	) {
 		return;
 	}
@@ -3655,3 +3661,17 @@ function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
 
 	return $activity_comment_data;
 }
+
+/**
+ * Load the class to schedule the activity post.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_activity_init_activity_schedule() {
+
+	if ( ! class_exists( 'BB_Activity_Schedule' ) ) {
+		require_once buddypress()->plugin_dir . 'bp-activity/classes/class-bb-activity-schedule.php';
+	}
+	new BB_Activity_Schedule();
+}
+add_action( 'bp_init', 'bb_activity_init_activity_schedule' );

@@ -1964,3 +1964,25 @@ function bb_get_media_photos_theatre_popup_image() {
 	 */
 	return apply_filters( 'bb_get_media_photos_theatre_popup_image', $media_template->media->attachment_data->media_theatre_popup );
 }
+
+/**
+ * Return the published status.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_media_get_published_status() {
+	return buddypress()->media->published_status;
+}
+
+/**
+ * Return the scheduled status.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_media_get_scheduled_status() {
+	return buddypress()->media->scheduled_status;
+}

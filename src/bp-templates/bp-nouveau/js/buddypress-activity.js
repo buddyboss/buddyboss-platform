@@ -349,13 +349,13 @@ window.bp = window.bp || {};
 
 					// Add after pinned post.
 					$( first_activity ).after( this.heartbeat_data.newest ).find( 'li.activity-item' ).each( bp.Nouveau.hideSingleUrl ).trigger( 'bp_heartbeat_prepend', this.heartbeat_data );
-					
+
 				} else {
 
 					// Now the stream is cleaned, prepend newest.
 					$( event.delegateTarget ).find( '.activity-list' ).prepend( this.heartbeat_data.newest ).find( 'li.activity-item' ).each( bp.Nouveau.hideSingleUrl ).trigger( 'bp_heartbeat_prepend', this.heartbeat_data );
 				}
-				
+
 				// Reset the newest activities now they're displayed.
 				this.heartbeat_data.newest = '';
 

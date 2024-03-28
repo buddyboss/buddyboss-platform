@@ -1922,6 +1922,7 @@ function bp_activity_get( $args = '' ) {
 			 */
 			'filter'            => array(),
 			'pin_type'          => '',
+			'status'            => bb_get_activity_published_status(),
 		),
 		'activity_get'
 	);
@@ -1949,6 +1950,7 @@ function bp_activity_get( $args = '' ) {
 			'count_total'       => $r['count_total'],
 			'fields'            => $r['fields'],
 			'pin_type'          => $r['pin_type'],
+			'status'            => $r['status'],
 		)
 	);
 
@@ -1994,6 +1996,7 @@ function bp_activity_get_specific( $args = '' ) {
 			'spam'              => 'ham_only', // Retrieve items marked as spam.
 			'scope'             => false, // Retrieve items marked as spam.
 			'update_meta_cache' => true,
+			'status'            => bb_get_activity_published_status(),
 		),
 		'activity_get_specific'
 	);
@@ -2010,6 +2013,7 @@ function bp_activity_get_specific( $args = '' ) {
 		'spam'              => $r['spam'],
 		'scope'             => $r['scope'],
 		'update_meta_cache' => $r['update_meta_cache'],
+		'status'            => $r['status'],
 	);
 
 	/**
@@ -2070,19 +2074,20 @@ function bp_activity_add( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'id'                => false,                  // Pass an existing activity ID to update an existing entry.
-			'action'            => '',                     // The activity action - e.g. "Jon Doe posted an update"
-			'content'           => '',                     // Optional: The content of the activity item e.g. "BuddyPress is awesome guys!"
-			'component'         => false,                  // The name/ID of the component e.g. groups, profile, mycomponent.
-			'type'              => false,                  // The activity type e.g. activity_update, profile_updated.
-			'primary_link'      => '',                     // Optional: The primary URL for this item in RSS feeds (defaults to activity permalink).
-			'user_id'           => bp_loggedin_user_id(),  // Optional: The user to record the activity for, can be false if this activity is not for a user.
-			'item_id'           => false,                  // Optional: The ID of the specific item being recorded, e.g. a blog_id.
-			'secondary_item_id' => false,                  // Optional: A second ID used to further filter e.g. a comment_id.
-			'recorded_time'     => bp_core_current_time(), // The GMT time that this activity was recorded.
-			'hide_sitewide'     => false,                  // Should this be hidden on the sitewide activity feed?
-			'is_spam'           => false,                  // Is this activity item to be marked as spam?
-			'privacy'           => 'public',               // privacy of the activity
+			'id'                => false,                              // Pass an existing activity ID to update an existing entry.
+			'action'            => '',                                 // The activity action - e.g. "Jon Doe posted an update"
+			'content'           => '',                                 // Optional: The content of the activity item e.g. "BuddyPress is awesome guys!"
+			'component'         => false,                              // The name/ID of the component e.g. groups, profile, mycomponent.
+			'type'              => false,                              // The activity type e.g. activity_update, profile_updated.
+			'primary_link'      => '',                                 // Optional: The primary URL for this item in RSS feeds (defaults to activity permalink).
+			'user_id'           => bp_loggedin_user_id(),              // Optional: The user to record the activity for, can be false if this activity is not for a user.
+			'item_id'           => false,                              // Optional: The ID of the specific item being recorded, e.g. a blog_id.
+			'secondary_item_id' => false,                              // Optional: A second ID used to further filter e.g. a comment_id.
+			'recorded_time'     => bp_core_current_time(),             // The GMT time that this activity was recorded.
+			'hide_sitewide'     => false,                              // Should this be hidden on the sitewide activity feed?
+			'is_spam'           => false,                              // Is this activity item to be marked as spam?
+			'privacy'           => 'public',                           // privacy of the activity.
+			'status'            => bb_get_activity_published_status(), // status of the activity.
 			'error_type'        => 'bool',
 		),
 		'activity_add'
@@ -2111,6 +2116,7 @@ function bp_activity_add( $args = '' ) {
 	$activity->is_spam           = $r['is_spam'];
 	$activity->privacy           = $r['privacy'];
 	$activity->error_type        = $r['error_type'];
+	$activity->status            = $r['status'];
 	$activity->action            = ! empty( $r['action'] ) ? $r['action'] : '';
 
 	$save = $activity->save();
@@ -2172,6 +2178,8 @@ function bp_activity_post_update( $args = '' ) {
 			'hide_sitewide' => false,
 			'type'          => 'activity_update',
 			'privacy'       => 'public',
+			'status'        => bb_get_activity_published_status(),
+			'recorded_time' => bp_core_current_time(),
 			'error_type'    => 'bool',
 		)
 	);
@@ -2236,10 +2244,11 @@ function bp_activity_post_update( $args = '' ) {
 					'user_id'           => $activity->user_id,
 					'item_id'           => $activity->item_id,
 					'secondary_item_id' => $activity->secondary_item_id,
-					'recorded_time'     => $activity->date_recorded,
+					'recorded_time'     => ! empty( $r['recorded_time'] ) ? $r['recorded_time'] : $activity->date_recorded,
 					'hide_sitewide'     => $activity->hide_sitewide,
 					'is_spam'           => $activity->is_spam,
 					'privacy'           => $r['privacy'],
+					'status'            => $r['status'],
 					'error_type'        => $r['error_type'],
 				)
 			);
@@ -2262,6 +2271,8 @@ function bp_activity_post_update( $args = '' ) {
 				'type'          => $r['type'],
 				'hide_sitewide' => $r['hide_sitewide'],
 				'privacy'       => $r['privacy'],
+				'recorded_time' => $r['recorded_time'],
+				'status'        => $r['status'],
 				'error_type'    => $r['error_type'],
 			)
 		);
