@@ -5036,7 +5036,7 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   display: none;
 }
 
-.activity-modal .activity-comments .acomments-view-more--root:not(.loading) {
+.activity-modal .activity-comments > ul > .acomments-view-more--root:not(.loading) {
   opacity: 0;
 }
 

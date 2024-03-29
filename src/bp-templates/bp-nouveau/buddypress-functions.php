@@ -687,6 +687,9 @@ class BP_Nouveau extends BP_Theme_Compat {
 			$params['customizer_settings'] = bp_nouveau_get_temporary_setting( 'any' );
 		}
 
+		// Add localize variable for performance tab.
+		$params['is_send_ajax_request'] = function_exists( 'bb_is_send_ajax_request' ) ? bb_is_send_ajax_request() : '';
+
 		/**
 		 * Filters core JavaScript strings for internationalization before AJAX usage.
 		 *
