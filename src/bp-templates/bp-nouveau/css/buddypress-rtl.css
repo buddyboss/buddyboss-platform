@@ -4428,6 +4428,10 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
   user-select: none;
 }
 
+.activity-modal.bb-closed-comments .footer-overflow {
+  display: none !important;
+}
+
 @media screen and (min-width: 46.8em) {
   .activity-list.bp-list {
     padding: 30px;
