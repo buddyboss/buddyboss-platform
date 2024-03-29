@@ -4259,7 +4259,10 @@ function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user )
 		$get_selected_member_type_on_register = $wpdb->get_var( $wpdb->prepare( "SELECT value FROM {$wpdb->base_prefix}bp_xprofile_data WHERE user_id = %s AND field_id = %d ", $user_id, $get_parent_id_of_member_types_field ) );
 		if ( ! empty( $get_selected_member_type_on_register ) ) {
 			$get_selected_member_type_on_register = trim( $get_selected_member_type_on_register );
+		} else {
+			$get_selected_member_type_on_register = '';
 		}
+
 		// return to user if default member type is not set.
 		$existing_selected = bp_member_type_default_on_registration();
 
