@@ -3368,6 +3368,10 @@ input.search-query-input {
   display: none !important;
 }
 
+.activity-list .activity-item.bb-closed-comments > .activity-comments > .ac-form {
+  display: none !important;
+}
+
 .activity-list .activity-item.bb-closed-comments .generic-button:has(.edit-activity) {
   display: none;
 }
