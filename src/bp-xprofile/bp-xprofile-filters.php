@@ -81,7 +81,7 @@ add_filter( 'xprofile_field_options_before_save', 'bp_xprofile_sanitize_field_op
 add_filter( 'xprofile_field_default_before_save', 'bp_xprofile_sanitize_field_default' );
 
 add_filter( 'bp_get_the_profile_field_name', 'xprofile_filter_field_edit_name' );
-add_filter( 'bp_core_get_user_displayname', 'xprofile_filter_get_user_display_name', 15, 4 );
+add_filter( 'bp_core_get_user_displayname', 'xprofile_filter_get_user_display_name', 15, 3 );
 
 // Saving field value
 add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_nickname_value', 10, 4 );
@@ -792,17 +792,16 @@ function xprofile_filter_field_edit_name( $field_name ) {
  * Conditionally filters 'bp_core_get_user_displayname' to return user display name from xprofile.
  *
  * @since BuddyBoss 1.2.3
- * @since BuddyBoss [BBVERSION] Added the `$current_user_id` and the `$cached` parameter 
+ * @since BuddyBoss [BBVERSION] Added the `$current_user_id` parameter 
  *
  * @global \BP_XProfile_Field_Type $field
  *
  * @param  string $full_name
  * @param  int    $user_id
  * @param  int    $current_user_id
- * @param  bool   $cached
  * @return string
  */
-function xprofile_filter_get_user_display_name( $full_name, $user_id, $current_user_id, $cached = true ) {
+function xprofile_filter_get_user_display_name( $full_name, $user_id, $current_user_id ) {
 	static $cache;
 	if ( empty( $user_id ) || empty( $current_user_id ) ) {
 		return $full_name;
@@ -810,9 +809,9 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id, $current_u
 
 	global $bb_default_display_avatar;
 
-	$cache_key = 'bb_xprofile_filter_get_user_display_name_' . trim( $user_id );
+	$cache_key = 'bb_xprofile_filter_get_user_display_name_' . trim( $user_id ) . '_' . trim( $current_user_id );
 	
-	if ( isset( $cache[ $cache_key ] ) && ! $bb_default_display_avatar && $cached ) {
+	if ( isset( $cache[ $cache_key ] ) && ! $bb_default_display_avatar ) {
 		return $cache[ $cache_key ];
 	}
 
@@ -836,10 +835,7 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id, $current_u
 		}
 
 		$bb_default_display_avatar = false;
-
-		if ( $cached ) {
-			$cache[ $cache_key ]       = $full_name;
-		}
+		$cache[ $cache_key ]       = $full_name;
 	}
 
 	return $full_name;

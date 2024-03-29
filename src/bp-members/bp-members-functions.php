@@ -583,7 +583,7 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 	 * @param string $fullname Display name for the user.
 	 * @param int    $user_id  ID of the user to check.
 	 */
-	return apply_filters( 'bp_core_get_user_displayname', trim( $full_name ), $user_id, $current_user_id, $cached );
+	return apply_filters( 'bp_core_get_user_displayname', trim( $full_name ), $user_id, $current_user_id );
 }
 add_filter( 'bp_core_get_user_displayname', 'wp_filter_kses' );
 add_filter( 'bp_core_get_user_displayname', 'strip_tags', 1 );
