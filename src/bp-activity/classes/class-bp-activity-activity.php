@@ -2256,6 +2256,15 @@ class BP_Activity_Activity {
 		if ( 'activity' === $activity->component && 0 === $activity->item_id && 0 === $activity->secondary_item_id ) {
 			// Condition for activity feed comments.
 			$all_child_count_condition = "a.item_id = $comment_id";
+		} else if (
+			'activity' === $activity->component &&
+			'activity_update' === $activity->type &&
+			in_array( $activity->privacy, [ 'media', 'video', 'document' ] ) && 
+			0 === $activity->item_id &&
+			0 !== $activity->secondary_item_id
+		) {
+			// Condition for individual media, video, document activity comments.
+			$all_child_count_condition = "a.item_id = $comment_id";
 		} elseif ( 'activity' !== $activity->component ) {
 			// Condition for blogs, groups, etc feed comments.
 			$all_child_count_condition = "a.item_id = $comment_id";
