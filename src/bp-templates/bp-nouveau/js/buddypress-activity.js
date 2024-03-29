@@ -3663,7 +3663,9 @@ window.bp = window.bp || {};
 							easing: 'swing'
 						};
 
-						$( '.bb-modal-activity-body' ).scrollTo( '#acomment-' + parentCommentId, 500, scrollOptions );
+						if ( ! target.hasClass( 'acomments-view-more--root' ) ) {
+							$( '.bb-modal-activity-body' ).scrollTo( '#acomment-' + parentCommentId, 500, scrollOptions );
+						}
 
 						if ( typeof bp.Nouveau !== 'undefined' ) {
 							bp.Nouveau.reportPopUp();
