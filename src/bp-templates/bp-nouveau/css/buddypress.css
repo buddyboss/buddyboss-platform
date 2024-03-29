@@ -3368,6 +3368,10 @@ input.search-query-input {
   display: none !important;
 }
 
+.activity-list .activity-item.bb-closed-comments > .activity-comments > .ac-form {
+  display: none !important;
+}
+
 .activity-list .activity-item.bb-closed-comments .generic-button:has(.edit-activity) {
   display: none;
 }
@@ -5101,6 +5105,10 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
 .bb-is-mobile.bb-reactions-mode.activity * {
   -webkit-user-select: none;
   user-select: none;
+}
+
+.activity-modal.bb-closed-comments .footer-overflow {
+  display: none !important;
 }
 
 @media screen and (min-width: 46.8em) {
