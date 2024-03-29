@@ -1754,7 +1754,7 @@
 
 .activity-modal {
 
-	.activity-comments .acomments-view-more--root:not(.loading) {
+	.activity-comments > ul > .acomments-view-more--root:not(.loading) {
 		opacity: 0;
 	}
 }
