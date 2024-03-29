@@ -2044,6 +2044,16 @@
 
 }
 
+.activity-modal {
+
+	&.bb-closed-comments {
+
+		.footer-overflow {
+			display: none !important;
+		}
+	}
+}
+
 // close .activity-list
 
 @include medium-up() {
