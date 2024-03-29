@@ -491,6 +491,10 @@ function bp_version_updater() {
 			bb_update_to_2_4_75();
 		}
 
+		if ( $raw_db_version < 21021 ) {
+			bb_update_to_2_5_0();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3495,4 +3499,22 @@ function bb_update_to_2_4_75() {
 		// Create a new table again.
 		BB_BG_Process_Log::instance()->create_table();
 	}
+}
+
+
+/**
+ * Migrate comment related discussion settings to new comment settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_5_0() {
+	bp_update_option( '_bb_enable_activity_comment_threading', (int) get_option( 'thread_comments' ) );
+
+	$thread_comments_depth = (int) get_option( 'thread_comments_depth', 3 );
+	if ( $thread_comments_depth > 4 ) {
+		$thread_comments_depth = 4;
+	}
+	bp_update_option( '_bb_activity_comment_threading_depth', $thread_comments_depth );
 }
