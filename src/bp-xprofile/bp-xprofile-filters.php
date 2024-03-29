@@ -833,7 +833,6 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id, $current_u
 				$full_name = str_replace( ' ' . $last_name, '', $full_name );
 			}
 		}
-
 		$bb_default_display_avatar = false;
 		$cache[ $cache_key ]       = $full_name;
 	}
