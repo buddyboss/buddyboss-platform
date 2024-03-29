@@ -1937,6 +1937,21 @@ body.buddypress .bb-schedule-post_dropdown_section .schedule-posts-placeholder h
   font-weight: 400;
 }
 
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .item-action_more,
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .media-action_more,
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .document-detail-wrap,
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bb-open-video-theatre,
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bb-open-media-theatre,
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bb-open-document-theatre {
+  pointer-events: none;
+}
+
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .item-action_more,
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .media-action-wrap,
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .document-action-wrap {
+  display: none;
+}
+
 .bb-schedule-activity-time-picker.xdsoft_datetimepicker,
 .bb-schedule-activity-date-wrap.xdsoft_datetimepicker {
   z-index: 999999;

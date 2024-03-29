@@ -569,6 +569,21 @@
 				font-weight: 400;
 			}
 		}
+
+		.item-action_more,
+		.media-action_more,
+		.document-detail-wrap,
+		.bb-open-video-theatre,
+		.bb-open-media-theatre,
+		.bb-open-document-theatre {
+			pointer-events: none;
+		}
+
+		.item-action_more,
+		.media-action-wrap,
+		.document-action-wrap {
+			display: none;
+		}
 	}
 
 }
