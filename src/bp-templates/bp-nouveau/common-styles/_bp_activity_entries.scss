@@ -31,6 +31,10 @@
 				display: none !important;
 			}
 
+			> .activity-comments > .ac-form {
+				display: none;
+			}
+
 			.generic-button:has(.edit-activity) {
 				display: none;
 			}
