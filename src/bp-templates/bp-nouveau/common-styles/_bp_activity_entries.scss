@@ -23,6 +23,32 @@
 			padding-bottom: $pad-med;
 		}
 
+		&.bb-closed-comments {
+
+			.acomment-reply,
+			.acomment-edit,
+			.edit-activity {
+				display: none !important;
+			}
+
+			> .activity-comments > .ac-form {
+				display: none;
+			}
+
+			.generic-button:has(.edit-activity) {
+				display: none;
+			}
+
+			.bb-activity-closed-comments-notice {
+				background: #e1e3e5;
+				margin: 0 -15px;
+				text-align: center;
+				padding: 5px;
+				font-size: 13px;
+				font-weight: 600;
+				text-wrap: nowrap;
+			}
+		}
 
 		div.item-avatar { // 'div' for weight
 			margin: 0 auto;
