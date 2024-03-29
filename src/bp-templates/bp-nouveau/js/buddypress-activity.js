@@ -583,6 +583,8 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.initializeEmojioneArea( false, '', activityId );
 			}
 
+			modal.find( '#activity-modal' ).removeClass( 'bb-closed-comments' );
+
 			modal.closest( 'body' ).removeClass( 'acomments-modal-open' );
 			modal.hide();
 			modal.find( 'ul.activity-list' ).empty();
@@ -3706,6 +3708,10 @@ window.bp = window.bp || {};
 					'playbackRates': [ 0.5, 1, 1.5, 2 ],
 					'fullscreenToggle': false,
 				} );
+			}
+
+			if ( activity_item.hasClass( 'bb-closed-comments' ) ) {
+				modal.find( '#activity-modal' ).addClass( 'bb-closed-comments' );
 			}
 
 			var form = modal.find( '#ac-form-' + activityID );
