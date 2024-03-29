@@ -10,6 +10,8 @@
  * @version 1.0.0
  */
 
+$is_send_ajax_request = bb_is_send_ajax_request();
+
 ?>
 <h2 class="bp-screen-title<?php echo ( ! bp_is_group_home() ) ? ' bp-screen-reader-text' : ''; ?>">
 	<?php esc_html_e( 'Group Feed', 'buddyboss' ); ?>
@@ -26,49 +28,56 @@
 
 <?php bp_nouveau_group_hook( 'before', 'activity_content' ); ?>
 
-<div id="activity-stream" class="activity single-group" data-bp-list="activity">
+	<div id="activity-stream" class="activity single-group" data-bp-list="activity" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 
-		<li id="bp-activity-ajax-loader">
-			<div class="bb-activity-placeholder">
-				<div class="bb-activity-placeholder_head">
-					<div class="bb-activity-placeholder_avatar bb-bg-animation bb-loading-bg"></div>
-					<div class="bb-activity-placeholder_details">
+		<?php
+		if ( $is_send_ajax_request ) {
+			?>
+			<li id="bp-activity-ajax-loader">
+				<div class="bb-activity-placeholder">
+					<div class="bb-activity-placeholder_head">
+						<div class="bb-activity-placeholder_avatar bb-bg-animation bb-loading-bg"></div>
+						<div class="bb-activity-placeholder_details">
+							<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
+							<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
+						</div>
+					</div>
+					<div class="bb-activity-placeholder_content">
 						<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
+						<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
+					</div>
+					<div class="bb-activity-placeholder_actions">
+						<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
+						<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
 						<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
 					</div>
 				</div>
-				<div class="bb-activity-placeholder_content">
-					<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
-					<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
-				</div>
-				<div class="bb-activity-placeholder_actions">
-					<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
-					<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
-					<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
-				</div>
-			</div>
-			<div class="bb-activity-placeholder">
-				<div class="bb-activity-placeholder_head">
-					<div class="bb-activity-placeholder_avatar bb-bg-animation bb-loading-bg"></div>
-					<div class="bb-activity-placeholder_details">
+				<div class="bb-activity-placeholder">
+					<div class="bb-activity-placeholder_head">
+						<div class="bb-activity-placeholder_avatar bb-bg-animation bb-loading-bg"></div>
+						<div class="bb-activity-placeholder_details">
+							<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
+							<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
+						</div>
+					</div>
+					<div class="bb-activity-placeholder_content">
 						<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
+						<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
+					</div>
+					<div class="bb-activity-placeholder_actions">
+						<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
+						<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
 						<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
 					</div>
 				</div>
-				<div class="bb-activity-placeholder_content">
-					<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
-					<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
-				</div>
-				<div class="bb-activity-placeholder_actions">
-					<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
-					<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
-					<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
-				</div>
-			</div>
-		</li>
+			</li>
+			<?php
+		} else {
+			bp_get_template_part( 'activity/activity-loop' );
+		}
+		?>
 
-</div><!-- .activity -->
-
+	</div><!-- .activity -->
 <?php
 bp_nouveau_group_hook( 'after', 'activity_content' );
 bp_get_template_part( 'common/js-templates/activity/comments' );
