@@ -2000,6 +2000,9 @@ window.bp = window.bp || {};
 								// Change the close comments related class and label.
 								if ( 'close_comments' === close_comments_action ) {
 									target.closest( 'li.activity-item' ).addClass( 'bb-closed-comments' );
+									if ( target.closest( '#activity-modal' ).length > 0 ) {
+										target.closest( '#activity-modal' ).addClass( 'bb-closed-comments' );
+									}
 									target.addClass( 'unclose-activity-comment' );
 									target.removeClass( 'close-activity-comment' );
 									target.find( 'span' ).html( BP_Nouveau.activity.strings.uncloseComments );
@@ -2019,6 +2022,9 @@ window.bp = window.bp || {};
 								} else if ( 'unclose_comments' === close_comments_action ) {
 									target.closest( 'li.activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).show();
 									target.closest( 'li.activity-item' ).removeClass( 'bb-closed-comments' );
+									if ( target.closest( '#activity-modal' ).length > 0 ) {
+										target.closest( '#activity-modal' ).removeClass( 'bb-closed-comments' );
+									}
 									target.addClass( 'close-activity-comment' );
 									target.removeClass( 'unclose-activity-comment' );
 									target.find( 'span' ).html( BP_Nouveau.activity.strings.closeComments );
