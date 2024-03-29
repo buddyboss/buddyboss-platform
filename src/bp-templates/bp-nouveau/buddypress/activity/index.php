@@ -8,6 +8,8 @@
  * @version 1.0.0
  */
 
+$is_send_ajax_request = bb_is_send_ajax_request();
+
 bp_nouveau_before_activity_directory_content();
 
 if ( is_user_logged_in() ) :
@@ -26,8 +28,10 @@ endif;
 	bp_nouveau_activity_hook( 'before_directory', 'list' );
 	?>
 
-		<div id="activity-stream" class="activity" data-bp-list="activity">
-
+	<div id="activity-stream" class="activity" data-bp-list="activity" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+		<?php
+		if ( $is_send_ajax_request ) {
+			?>
 			<div id="bp-ajax-loader">
 				<div class="bb-activity-placeholder">
 					<div class="bb-activity-placeholder_head">
@@ -66,8 +70,12 @@ endif;
 					</div>
 				</div>
 			</div>
-
-		</div><!-- .activity -->
+			<?php
+		} else {
+			bp_get_template_part( 'activity/activity-loop' );
+		}
+		?>
+	</div><!-- .activity -->
 
 	<?php bp_nouveau_after_activity_directory_content(); ?>
 </div><!-- // .screen-content -->
