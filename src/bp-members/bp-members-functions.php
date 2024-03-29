@@ -527,15 +527,14 @@ function bp_core_get_user_displaynames( $user_ids ) {
  * Fetch the display name for a user.
  *
  * @since BuddyPress 1.0.1
- * @since BuddyBoss [BBVERSION] Added the `$current_user_id` and the `$cached` parameter.
+ * @since BuddyBoss [BBVERSION] Added the `$current_user_id` parameter.
  *
  * @param int|string|bool $user_id_or_username User ID or username.
  * @param int $current_user_id                 Optional. ID of the user viewing the profile.
- * @param bool $cached                         Optional. Allow fetching display name from the cache.
  * @return string|bool The display name for the user in question, or false if
  *                     user not found.
  */
-function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 0, $cached = true ) {
+function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 0 ) {
 	if ( empty( $user_id_or_username ) ) {
 		return false;
 	}

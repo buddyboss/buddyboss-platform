@@ -1218,7 +1218,7 @@ class BP_Email_Tokens {
 												</tr>
 												<tr>
 													<td class="mobile-text-center">
-														<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.25 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.75 ) . 'px' ); ?>;"><?php echo bp_core_get_user_displayname( $member_id, $receiver_id, false ); ?></div>
+														<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.25 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.75 ) . 'px' ); ?>;"><?php echo bp_core_get_user_displayname( $member_id, $receiver_id ); ?></div>
 														<div class="spacer" style="font-size: 2px; line-height: 2px; height: 2px;">&nbsp;</div>
 														<p style="opacity: 0.7; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.8125 ) . 'px' ); ?>; color : <?php echo esc_attr( $settings['body_text_color'] ); ?>; margin: 0;">
 															@<?php echo bp_activity_get_user_mentionname( $member_id ); ?>
