@@ -732,7 +732,7 @@ function bp_nouveau_ajax_post_update() {
 		$privacy = $_POST['privacy']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	}
 
-	$status             = 'public';
+	$status             = bb_get_activity_published_status();
 	$schedule_date_time = '';
 	if ( ! empty( $_POST['activity_action_type'] ) && 'scheduled' === $_POST['activity_action_type'] ) {
 		$status = $_POST['activity_action_type'];
