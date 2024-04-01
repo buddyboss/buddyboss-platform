@@ -4125,7 +4125,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
   width: 198px;
   padding: 5px 0;
   display: none;
-  z-index: 11;
+  z-index: 112;
 }
 
 .activity-list .bb-activity-more-options-wrap .bb-activity-more-options.is_visible {
