@@ -184,13 +184,10 @@ if ( ! class_exists( 'BB_API_Ratelimit' ) ) {
 			return ! empty( $action['attempts_reset_limit'] ) ? $action['attempts_reset_limit'] : self::$attempts_reset_limit;
 		}
 
-		public function update_attempt( $action, $value, $data = array() ) {
+		public function update_attempt( $action, $data = array() ) {
 			global $wpdb;
 
-			if (
-				empty( $value ) ||
-				empty( $action )
-			) {
+			if ( empty( $action ) ) {
 				return;
 			}
 
@@ -202,6 +199,7 @@ if ( ! class_exists( 'BB_API_Ratelimit' ) ) {
 
 			$identity_type = $this->get_identity_type( $action );
 
+			$value      = $identity_type === 'ip_address' ? $this->get_ip() : get_current_user_id();
 			$agent      = $this->get_ua();
 			$ip_ua_hash = md5( $value . $agent );
 
@@ -300,8 +298,11 @@ if ( ! class_exists( 'BB_API_Ratelimit' ) ) {
 			);
 		}
 
-		public function ip_blocked( $ip, $action, $ua ) {
+		public function ip_blocked( $action ) {
 			$table = self::$table_name;
+
+			$ip = $this->get_ip();
+			$ua = $this->get_ua();
 
 			$ip_ua_hash = md5( $ip . $ua );
 			global $wpdb;
@@ -316,8 +317,10 @@ if ( ! class_exists( 'BB_API_Ratelimit' ) ) {
 			return $wpdb->get_row( $sql );
 		}
 
-		public function is_user_blocked( $user_id, $action ) {
+		public function is_user_blocked( $action ) {
 			$table = self::$table_name;
+
+			$user_id = get_current_user_id();
 
 			global $wpdb;
 			$sql = $wpdb->prepare(
@@ -446,7 +449,7 @@ if ( ! class_exists( 'BB_API_Ratelimit' ) ) {
 			$action = 'login';
 
 			/* check if ip in blocked list */
-			$blocked = $this->ip_blocked( $ip, $action, $ua );
+			$blocked = $this->ip_blocked( $action );
 			if ( ! empty( $blocked ) ) {
 				$block_till =
 					! isset( $blocked->block_expiry_date ) ||
@@ -470,7 +473,7 @@ if ( ! class_exists( 'BB_API_Ratelimit' ) ) {
 				return $user;
 			}
 
-			$this->update_attempt( $action, $ip );
+			$this->update_attempt( $action );
 
 			return $user;
 		}
