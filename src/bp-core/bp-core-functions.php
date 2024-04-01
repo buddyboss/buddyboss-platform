@@ -9748,8 +9748,8 @@ function bb_mention_add_user_dynamic_link( $content ) {
 }
 
 function bb_api_rate_limit() {
-	if ( class_exists( 'BB_Ratelimit' ) ) {
-		return BB_Ratelimit::instance();
+	if ( class_exists( 'BB_API_Ratelimit' ) ) {
+		return BB_API_Ratelimit::instance();
 	}
 
 	return null;

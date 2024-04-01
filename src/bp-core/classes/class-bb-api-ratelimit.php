@@ -8,8 +8,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BB_Ratelimit' ) ) {
-	class BB_Ratelimit {
+if ( ! class_exists( 'BB_API_Ratelimit' ) ) {
+	class BB_API_Ratelimit {
 
 		public static $instance = null;
 
@@ -472,7 +472,5 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 			return $user;
 		}
 	}
-
-
 
 }
