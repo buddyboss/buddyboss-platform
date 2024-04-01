@@ -60,7 +60,7 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 					user_id bigint(20) UNSIGNED,
 					action varchar(60) NOT NULL,
 					user_agent varchar(255),
-					hash varchar(255),
+					ip_ua_hash varchar(255),
 					no_of_attempts int(3) NOT NULL DEFAULT 0,
 					is_blocked tinyint(1) NOT NULL DEFAULT 0,
 					block_expiry_date datetime NULL default '0000-00-00 00:00:00',
@@ -71,7 +71,7 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 					KEY user_id (user_id),
 					KEY user_agent (user_agent),
 					KEY is_blocked (is_blocked),
-					KEY hash (hash),
+					KEY ip_ua_hash (ip_ua_hash),
 					KEY action (action),
 					KEY block_expiry_date (block_expiry_date),
 					KEY last_attempt_date (last_attempt_date)
@@ -121,16 +121,16 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 			global $wpdb;
 
 			$agent = $this->get_ua();
-			$hash  = md5( $value . $agent );
+			$ip_ua_hash  = md5( $value . $agent );
 
 			$table   = self::$table_name;
 			$attempt = $wpdb->get_row(
 				$wpdb->prepare(
-					"SELECT * FROM `{$table}` WHERE `identity_type` = %s AND `{$identity_type}` = %s AND `action` = %s AND `hash` = %s",
+					"SELECT * FROM `{$table}` WHERE `identity_type` = %s AND `{$identity_type}` = %s AND `action` = %s AND `ip_ua_hash` = %s",
 					$identity_type,
 					$value,
 					$action,
-					$hash,
+					$ip_ua_hash,
 				),
 				ARRAY_A
 			);
@@ -155,7 +155,7 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 						$identity_type      => $value,
 						'action'            => $action,
 						'user_agent'        => $agent,
-						'hash'              => $hash,
+						'ip_ua_hash'              => $ip_ua_hash,
 						'no_of_attempts'    => 1,
 						'is_blocked'        => 0,
 						'last_attempt_date' => bp_core_current_time(),
@@ -202,14 +202,14 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 		public function ip_blocked( $ip, $action, $ua ) {
 			$table = self::$table_name;
 
-			$hash = md5( $ip . $ua );
+			$ip_ua_hash = md5( $ip . $ua );
 			global $wpdb;
 			$sql = $wpdb->prepare(
-				"SELECT * FROM `{$table}` WHERE `identity_type` = %s AND `ip_address` = %s AND `action` = %s AND `is_blocked` = 1 AND `hash` = %s",
+				"SELECT * FROM `{$table}` WHERE `identity_type` = %s AND `ip_address` = %s AND `action` = %s AND `is_blocked` = 1 AND `ip_ua_hash` = %s",
 				'ip_address',
 				$ip,
 				$action,
-				$hash
+				$ip_ua_hash
 			);
 
 			return $wpdb->get_row( $sql );
