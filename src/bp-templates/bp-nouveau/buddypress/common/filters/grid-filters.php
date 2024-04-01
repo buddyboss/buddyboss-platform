@@ -54,6 +54,8 @@ if ( 'list_grid' === $current_value ) {
 
 	if ( empty( $component ) && $has_profile_shortcode ) {
 		$component = 'members';
+	} elseif ( empty( $component ) && $has_group_shortcode ) {
+		$component = 'groups';
 	}
 
 	?>
