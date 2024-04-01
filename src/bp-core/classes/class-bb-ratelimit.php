@@ -257,7 +257,8 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 					$data_args,
 				);
 			} else {
-				$block                 = $attempt['no_of_attempts'] >= $this->get_allowed_attempts( $action );
+				$no_of_attempts = $attempt['no_of_attempts'] + 1;
+				$block                 = $no_of_attempts >= $this->get_allowed_attempts( $action );
 				$block_expiration_time = $attempt['block_expiry_date'];
 				if ( $block ) {
 					$block_expiration_time = date( 'Y-m-d H:i:s', current_time( 'timestamp' ) + $this->get_attempts_reset_limit( $action ) );
@@ -266,7 +267,7 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 				$wpdb->update(
 					$table,
 					array(
-						'no_of_attempts'    => $attempt['no_of_attempts'] + 1,
+						'no_of_attempts'    => $no_of_attempts,
 						'is_blocked'        => $block,
 						'block_expiry_date' => $block_expiration_time,
 						'last_attempt_date' => bp_core_current_time(),
