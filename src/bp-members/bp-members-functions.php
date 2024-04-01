@@ -5011,10 +5011,10 @@ function bb_member_loop_set_member_id( $id ) {
 
 		// This will fix the issues in theme members directory page & members connections tab send message issue.
 		if ( is_user_logged_in() && bp_loggedin_user_id() === $id ) {
-			if ( 'my-friends' === bp_current_action() && 'friends' === bp_current_component() ) {
+			if ( 'my-friends' === bp_current_action() && function_exists( 'bp_get_friends_slug' ) && bp_get_friends_slug() === bp_current_component() ) {
 				// This will fix the issues in theme members directory page & members connections tab send message issue.
 				return bp_get_member_user_id();
-			} elseif ( 'requests' === bp_current_action() && 'friends' === bp_current_component() ) {
+			} elseif ( 'requests' === bp_current_action() && function_exists( 'bp_get_friends_slug' ) && bp_get_friends_slug() === bp_current_component() ) {
 				// This will fix the issues in theme members directory page & members connections tab send message issue.
 				return bp_get_member_user_id();
 			} else {
@@ -5022,7 +5022,8 @@ function bb_member_loop_set_member_id( $id ) {
 			}
 		} else {
 			if (
-				'friends' === bp_current_component() &&
+				function_exists( 'bp_get_friends_slug' ) &&
+				bp_get_friends_slug() === bp_current_component() &&
 				( 'my-friends' === bp_current_action() || 'mutual' === bp_current_action() )
 			) {
 				// This will fix the issues in theme members directory page & members connections tab send message issue.
@@ -5048,12 +5049,12 @@ function bb_member_loop_set_member_id( $id ) {
  */
 function bb_member_loop_set_my_profile( $my_profile ) {
 
-	if ( 'my-friends' === bp_current_action() && 'friends' === bp_current_component() ) {
+	if ( 'my-friends' === bp_current_action() && function_exists( 'bp_get_friends_slug' ) && bp_get_friends_slug() === bp_current_component() ) {
 		if ( $my_profile && bp_loggedin_user_id() === bp_displayed_user_id() ) {
 			return false;
 		}
 	}
-	if ( 'requests' === bp_current_action() && 'friends' === bp_current_component() ) {
+	if ( 'requests' === bp_current_action() && function_exists( 'bp_get_friends_slug' ) && bp_get_friends_slug() === bp_current_component() ) {
 		if ( $my_profile && bp_loggedin_user_id() === bp_displayed_user_id() ) {
 			return false;
 		}
