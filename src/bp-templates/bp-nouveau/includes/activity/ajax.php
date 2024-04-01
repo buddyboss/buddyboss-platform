@@ -1193,7 +1193,7 @@ function bp_nouveau_ajax_delete_scheduled_activity() {
 	}
 
 	$activity = new BP_Activity_Activity( (int) $_POST['id'] );
-
+	error_log( print_r( $activity, true ) );
 	// Check access.
 	if ( ! bp_activity_user_can_delete( $activity ) ) {
 		wp_send_json_error( $response );

@@ -4882,7 +4882,7 @@ window.bp = window.bp || {};
 			editScheduledPost: function ( event ) {
 				event.preventDefault();
 
-				var activity = $( event.target ).closest( 'li.activity' );
+				var activity = $( event.target ).closest( 'li.activity-item' );
 				var target   = $( event.target );
 
 				// Edit the activity.
@@ -4915,9 +4915,10 @@ window.bp = window.bp || {};
 				event.preventDefault();
 				var confirm_deletion = confirm( BP_Nouveau.activity.strings.confirmDeletePost );
 				var target           = $( event.target ).parent();
-				var activity         = $( event.target ).closest( 'li.activity' );
+				var activity         = $( event.target ).closest( 'li.activity-item' );
 				var activity_id      = activity.data( 'bp-activity-id' );
-
+				console.log( 'event.target',event.target );
+				console.log( 'activity',activity );
 				// Deleting or spamming.
 				if ( confirm_deletion && target.hasClass( 'bb-activity-schedule_delete' ) ) {
 					var li_parent;
