@@ -301,6 +301,15 @@ if ( ! class_exists( 'BB_API_Ratelimit' ) ) {
 		public function ip_blocked( $action ) {
 			$table = self::$table_name;
 
+			$action_data = $this->get_action( $action );
+			if (
+				empty( $action_data ) ||
+				empty( $action_data['identity_type'] ) ||
+				$action_data['identity_type'] !== 'ip_address'
+			) {
+				return false;
+			}
+
 			$ip = $this->get_ip();
 			$ua = $this->get_ua();
 
@@ -319,6 +328,15 @@ if ( ! class_exists( 'BB_API_Ratelimit' ) ) {
 
 		public function is_user_blocked( $action ) {
 			$table = self::$table_name;
+
+			$action_data = $this->get_action( $action );
+			if (
+				empty( $action_data ) ||
+				empty( $action_data['identity_type'] ) ||
+				$action_data['identity_type'] !== 'user_id'
+			) {
+				return false;
+			}
 
 			$user_id = get_current_user_id();
 
