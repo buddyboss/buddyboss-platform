@@ -3488,6 +3488,10 @@ span.dashicons.dashicons-admin-file:before {
 			background-color: #fff;
 			border-radius: 4px;
 
+			.bb-media-info-section & {
+				padding: 5px 5px;
+			}
+
 			.entry-img {
 				-ms-flex-preferred-size: 38px;
 				flex-basis: 38px;
@@ -3513,6 +3517,10 @@ span.dashicons.dashicons-admin-file:before {
 				vertical-align: middle;
 				padding: 10px 0 10px 10px !important;
 				color: #122b46;
+
+				.bb-media-info-section & {
+					padding: 10px 0 10px 3px !important;
+				}
 
 				.document-title {
 					text-overflow: ellipsis;
@@ -3564,6 +3572,10 @@ span.dashicons.dashicons-admin-file:before {
 			-webkit-transition: all 0.3s ease;
 			-o-transition: all 0.3s ease;
 			transition: all 0.3s ease;
+
+			.bb-media-info-section & {
+				right: 10px;
+			}
 
 			> a {
 				float: left;
