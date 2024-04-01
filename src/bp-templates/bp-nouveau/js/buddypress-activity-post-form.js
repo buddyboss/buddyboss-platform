@@ -4792,6 +4792,9 @@ window.bp = window.bp || {};
 
 			initialize: function () {
 				this.model.on( 'change', this.render, this );
+				$( this.el ).on( 'scroll', '.bb-action-popup-content', function() {
+
+				});
 			},
 
 			render: function () {
@@ -4849,6 +4852,12 @@ window.bp = window.bp || {};
 				schedulePost.find( '.bb-schedule-post_dropdown_list' ).removeClass( 'is_open' );
 				schedulePost.find( '#bb-schedule-post_form_modal' ).hide();
 				schedulePost.find( '#bb-schedule-posts_modal' ).show();
+				schedulePost.find( '#bb-schedule-posts_modal .bb-action-popup-content:not(.bb-scrolling)' ).on( 'scroll', function() {
+					// replace dummy image with original image by faking scroll event.
+					$( window ).scroll();
+					$( this ).addClass( 'bb-scrolling' );
+				});
+
 			},
 
 			displayScheduleButton: function ( event ) {
@@ -4942,7 +4951,7 @@ window.bp = window.bp || {};
 					// Set defaults parent li to activity container.
 					li_parent = activity;
 					bp.ajax.post( ajaxData ).done(
-						function ( response ) {
+						function () {
 							target.removeClass( 'loading' );
 							$( li_parent ).remove();
 						}
