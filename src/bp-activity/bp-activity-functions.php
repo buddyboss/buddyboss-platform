@@ -6553,3 +6553,19 @@ function bb_is_enabled_activity_schedule_posts( $default = false ) {
 	 */
 	return (bool) apply_filters( 'bb_is_enabled_activity_schedule_posts', (bool) bp_get_option( '_bb_enable_activity_schedule_posts', $default ) );
 }
+
+/**
+ * Check whether user can schedule activity or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool true if user can post schedule posts, otherwise false.
+ */
+function bb_can_user_schedule_activity() {
+
+	if ( current_user_can( 'activate_plugins' ) || bp_group_is_admin() || bp_group_is_mod() ) {
+		return true;
+	}
+
+	return false;
+}
