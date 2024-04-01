@@ -52,10 +52,12 @@ if ( 'list_grid' === $current_value ) {
 		$component = 'group_members';
 	}
 
-	if ( empty( $component ) && $has_profile_shortcode ) {
-		$component = 'members';
-	} elseif ( empty( $component ) && $has_group_shortcode ) {
-		$component = 'groups';
+	if ( empty( $component ) ) {
+		if ( $has_profile_shortcode ) {
+			$component = 'members';
+		} elseif ( $has_group_shortcode ) {
+			$component = 'groups';
+		}
 	}
 
 	?>
