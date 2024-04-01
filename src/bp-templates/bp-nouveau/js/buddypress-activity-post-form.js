@@ -4883,17 +4883,75 @@ window.bp = window.bp || {};
 				event.preventDefault();
 
 				var activity = $( event.target ).closest( 'li.activity' );
-				var activity_id = activity.data( 'bp-activity-id' );
+				var target   = $( event.target );
 
+				// Edit the activity.
+				if ( target.parent().hasClass( 'bb-activity-schedule_edit' ) ) {
+					// Stop event propagation.
+					event.preventDefault();
+					var activity_data        = activity.data( 'bp-activity' );
+					var activity_URL_preview = activity.data( 'link-url' ) !== '' ? activity.data( 'link-url' ) : null;
+
+					if ( typeof activity_data !== 'undefined' ) {
+						bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data, activity_URL_preview );
+
+						// Check if it's a Group activity.
+						if ( target.closest( 'li' ).hasClass( 'groups' ) ) {
+							$( '#bp-nouveau-activity-form' ).addClass( 'group-activity' );
+						} else {
+							$( '#bp-nouveau-activity-form' ).removeClass( 'group-activity' );
+						}
+
+						// Close the Media/Document popup if someone click on Edit while on Media/Document popup.
+						if ( typeof bp.Nouveau.Media !== 'undefined' && typeof bp.Nouveau.Media.Theatre !== 'undefined' && ( bp.Nouveau.Media.Theatre.is_open_media || bp.Nouveau.Media.Theatre.is_open_document ) ) {
+							$( document ).find( '.bb-close-media-theatre' ).trigger( 'click' );
+							$( document ).find( '.bb-close-document-theatre' ).trigger( 'click' );
+						}
+					}
+				}
 			},
 
 			deleteScheduledPost: function ( event ) {
 				event.preventDefault();
-
 				var confirm_deletion = confirm( BP_Nouveau.activity.strings.confirmDeletePost );
+				var target           = $( event.target ).parent();
+				var activity         = $( event.target ).closest( 'li.activity' );
+				var activity_id      = activity.data( 'bp-activity-id' );
 
-				if( confirm_deletion ) {
-					// Delete Scheduled Post
+				// Deleting or spamming.
+				if ( confirm_deletion && target.hasClass( 'bb-activity-schedule_delete' ) ) {
+					var li_parent;
+
+					// Stop event propagation.
+					event.preventDefault();
+
+					if ( undefined !== BP_Nouveau.confirm && false === window.confirm( BP_Nouveau.confirm ) ) {
+						return false;
+					}
+
+					target.addClass( 'loading' );
+
+					var ajaxData = {
+						action      : 'delete_scheduled_activity',
+						'id'        : activity_id,
+						// '_wpnonce'  : BP_Nouveau.activity.params.scheduled_post_nonce,
+						'is_single' : target.closest( '[data-bp-single]' ).length
+					};
+
+					// Set defaults parent li to activity container.
+					li_parent = activity;
+					bp.ajax.post( ajaxData ).done(
+						function ( response ) {
+							target.removeClass( 'loading' );
+							$( li_parent ).remove();
+						}
+					).fail(
+						function ( response ) {
+							target.removeClass( 'loading' );
+							li_parent.prepend( response.feedback );
+							li_parent.find( '.bp-feedback' ).hide().fadeIn( 300 );
+						}
+					);
 				}
 
 			}

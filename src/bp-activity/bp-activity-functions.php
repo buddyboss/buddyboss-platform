@@ -5406,7 +5406,6 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 	if ( false === $edit_data ) {
 		// Get activity metas.
 		$activity_metas = bb_activity_get_metadata( $activity_id );
-
 		$can_edit_privacy        = true;
 		$album_id                = 0;
 		$folder_id               = 0;
@@ -5457,6 +5456,8 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 			'privacy'               => $activity->privacy,
 			'group_avatar'          => $group_avatar,
 			'link_image_index_save' => $link_image_index_save,
+			'date_recorded'         => $activity->date_recorded,
+			'status'                => $activity->status,
 		);
 
 		// Set meta data to cache.

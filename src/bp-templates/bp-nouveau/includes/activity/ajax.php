@@ -91,6 +91,12 @@ add_action(
 					'nopriv'   => true,
 				),
 			),
+			array(
+				'delete_scheduled_activity' => array(
+					'function' => 'bp_nouveau_ajax_delete_scheduled_activity',
+					'nopriv'   => false,
+				),
+			),
 		);
 
 		foreach ( $ajax_actions as $ajax_action ) {
@@ -1151,4 +1157,71 @@ function bb_nouveau_ajax_activity_update_pinned_post() {
 	} else {
 		wp_send_json_error( $response );
 	}
+}
+
+/**
+ * Deletes an scheduled Activity item received via a POST request.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string JSON reply.
+ */
+function bp_nouveau_ajax_delete_scheduled_activity() {
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback bp-messages error">%s</div>',
+			esc_html__( 'There was a problem when deleting. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'scheduled_post_nonce' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['id'] ) || ! is_numeric( $_POST['id'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$activity = new BP_Activity_Activity( (int) $_POST['id'] );
+
+	// Check access.
+	if ( ! bp_activity_user_can_delete( $activity ) ) {
+		wp_send_json_error( $response );
+	}
+
+	/** This action is documented in bp-activity/bp-activity-actions.php */
+	do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
+
+	if ( ! bp_activity_delete(
+		array(
+			'id'      => $activity->id,
+			'user_id' => $activity->user_id,
+		)
+	) ) {
+		wp_send_json_error( $response );
+	}
+
+	/** This action is documented in bp-activity/bp-activity-actions.php */
+	do_action( 'bp_activity_action_delete_scheduled_activity', $activity->id, $activity->user_id );
+
+	// The activity has been deleted successfully.
+	$response = array( 'deleted' => $activity->id );
+
+	// If on a single activity redirect to user's home.
+	if ( ! empty( $_POST['is_single'] ) ) {
+		$response['redirect'] = bp_core_get_user_domain( $activity->user_id );
+		bp_core_add_message( __( 'Activity deleted successfully', 'buddyboss' ) );
+	}
+
+	wp_send_json_success( $response );
 }

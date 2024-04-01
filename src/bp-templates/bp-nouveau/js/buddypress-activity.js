@@ -723,7 +723,6 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		activityActions: function( event ) {
-
 			var parent                     = event.data, target = $( event.target ), activity_item = $( event.currentTarget ),
 				activity_id                = activity_item.data( 'bp-activity-id' ), stream = $( event.delegateTarget ),
 				activity_state             = activity_item.find( '.activity-state' ),
