@@ -23,6 +23,8 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 
 		static $attempts_reset_limit = 3600; // 1 hours
 
+		protected $actions = array();
+
 		public function __construct() {
 			if ( ! self::$enabled_rate_limit ) {
 				return;
@@ -149,12 +151,12 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 				$wpdb->insert(
 					$table,
 					array(
-						'identity_type'         => $identity_type,
-						$identity_type          => $value,
-						'action'       => $action,
-						'user_agent'   => $agent,
-						'hash'         => $hash,
-						'no_of_attempts'     => 1,
+						'identity_type'     => $identity_type,
+						$identity_type      => $value,
+						'action'            => $action,
+						'user_agent'        => $agent,
+						'hash'              => $hash,
+						'no_of_attempts'    => 1,
 						'is_blocked'        => 0,
 						'last_attempt_date' => bp_core_current_time(),
 					),
@@ -169,10 +171,10 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 				$wpdb->update(
 					$table,
 					array(
-						'no_of_attempts'              => $attempt['no_of_attempts'] + 1,
-						'is_blocked'                 => $block,
+						'no_of_attempts'    => $attempt['no_of_attempts'] + 1,
+						'is_blocked'        => $block,
 						'block_expiry_date' => $block_expiration_time,
-						'last_attempt_date'          => bp_core_current_time(),
+						'last_attempt_date' => bp_core_current_time(),
 					),
 					array(
 						'id' => $attempt['id'],
@@ -358,6 +360,75 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 
 			return false;
 		}
+
+		public function register_action( $args ) {
+			$r = wp_parse_args(
+				$args,
+				array(
+					'action'               => '',
+					'action_label'         => '',
+					'identity_type'        => 'ip_address',
+					'allowed_attempts'     => self::$allowed_attempts,
+					'attempts_time_limit'  => self::$attempts_time_limit,
+					'attempts_reset_limit' => self::$attempts_reset_limit,
+				)
+			);
+
+			$r['action'] = str_replace( '-', '_', sanitize_title( $r['action'] ) );
+
+			if (
+				empty( $r['action'] ) ||
+				empty( $r['identity_type'] ) ||
+				! in_array( $r['identity_type'], array( 'ip_address', 'user_id' ), true ) ||
+				array_key_exists( $r['action'], $this->actions )
+			) {
+				return;
+			}
+
+			$this->actions[ $r['action'] ] = $r;
+		}
+
+		public function get_action( $action ) {
+			return $this->actions[ $action ] ?? false;
+		}
+
+		public function get_identity_type( $action ) {
+			$action = $this->get_action( $action );
+			if ( empty( $action ) ) {
+				return false;
+			}
+
+			return $action['identity_type'];
+		}
+
+		public function get_allowed_attempts( $action ) {
+			$action = $this->get_action( $action );
+			if ( empty( $action ) ) {
+				return false;
+			}
+
+			return $action['allowed_attempts'];
+		}
+
+		public function get_attempts_time_limit( $action ) {
+			$action = $this->get_action( $action );
+			if ( empty( $action ) ) {
+				return false;
+			}
+
+			return $action['attempts_time_limit'];
+		}
+
+		public function get_attempts_reset_limit( $action ) {
+			$action = $this->get_action( $action );
+			if ( empty( $action ) ) {
+				return false;
+			}
+
+			return $action['attempts_reset_limit'];
+		}
 	}
+
+
 
 }

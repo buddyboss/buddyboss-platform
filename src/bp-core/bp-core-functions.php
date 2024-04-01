@@ -9742,8 +9742,15 @@ function bb_mention_add_user_dynamic_link( $content ) {
 		$user_id = $matches[1];                     // Extract the user ID from the match.
 
 		return bp_core_get_user_domain( $user_id ); // Replace this with your actual BuddyPress URL format.
-
 	};
 
 	return preg_replace_callback( '/{{mention_user_id_(\d+)}}/', $replace_callback, $content );
+}
+
+function bb_api_rate_limit() {
+	if ( class_exists( 'BB_Ratelimit' ) ) {
+		return BB_Ratelimit::instance();
+	}
+
+	return null;
 }
