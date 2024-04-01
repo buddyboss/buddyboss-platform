@@ -57,7 +57,6 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 					type varchar(25) NOT NULL,
 					ip_address varchar(40),
 					user bigint(20) UNSIGNED,
-					email varchar(60),
 					action varchar(60) NOT NULL,
 					user_agent varchar(255),
 					hash varchar(255),
@@ -69,7 +68,6 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 					KEY type (type),
 					KEY ip_address (ip_address),
 					KEY user (user),
-					KEY email (email),
 					KEY user_agent (user_agent),
 					KEY block (block),
 					KEY hash (hash),
@@ -281,9 +279,6 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 		public function bb_whitelist_users() {
 		}
 
-		public function bb_whitelist_emails() {
-		}
-
 		public function bb_blacklist_ips() {
 			if ( ! defined( 'BB_RATE_BLACKLIST_IPS' ) ) {
 				return array();
@@ -295,9 +290,6 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 		}
 
 		public function bb_blacklist_users() {
-		}
-
-		public function bb_blacklist_emails() {
 		}
 
 		public function get_block_time( $unblock_date ) {
