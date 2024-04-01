@@ -1169,3 +1169,27 @@ function bb_bg_process_log_load() {
 }
 
 add_action( 'bp_init', 'bb_bg_process_log_load' );
+
+
+function bb_ratelimit_register_actions() {
+	bb_api_rate_limit()->register_action(
+		array(
+			'action'        => 'login',
+			'action_label'  => __( 'Login', 'buddyboss' ),
+			'identity_type' => 'ip_address',
+		)
+	);
+
+	bb_api_rate_limit()->register_action(
+		array(
+			'action'               => 'register',
+			'action_label'         => __( 'User Register', 'buddyboss' ),
+			'identity_type'        => 'ip_address',
+			'allowed_attempts'     => 5,
+			'attempts_time_limit'  => 1200, // 20 minutes
+			'attempts_reset_limit' => 7200, // 2 hours
+		)
+	);
+}
+
+add_action( 'bp_init', 'bb_ratelimit_register_actions' );
