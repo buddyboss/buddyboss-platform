@@ -117,21 +117,109 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 				: '';
 		}
 
-		public function update_attempt( $identity_type, $value, $action, $data = array() ) {
+		public function register_action( $args ) {
+			$r = wp_parse_args(
+				$args,
+				array(
+					'action'               => '',
+					'action_label'         => '',
+					'identity_type'        => 'ip_address',
+					'allowed_attempts'     => self::$allowed_attempts,
+					'attempts_time_limit'  => self::$attempts_time_limit,
+					'attempts_reset_limit' => self::$attempts_reset_limit,
+				)
+			);
+
+			$r['action'] = str_replace( '-', '_', sanitize_title( $r['action'] ) );
+
+			if (
+				empty( $r['action'] ) ||
+				empty( $r['identity_type'] ) ||
+				! in_array( $r['identity_type'], array( 'ip_address', 'user_id' ), true ) ||
+				array_key_exists( $r['action'], $this->actions )
+			) {
+				return;
+			}
+
+			$this->actions[ $r['action'] ] = $r;
+		}
+
+		public function get_action( $action ) {
+			return $this->actions[ $action ] ?? false;
+		}
+
+		public function get_identity_type( $action ) {
+			$action = $this->get_action( $action );
+			if ( empty( $action ) ) {
+				return false;
+			}
+
+			return $action['identity_type'];
+		}
+
+		public function get_allowed_attempts( $action ) {
+			$action = $this->get_action( $action );
+			if ( empty( $action ) ) {
+				return false;
+			}
+
+			return ! empty( $action['allowed_attempts'] ) ? $action['allowed_attempts'] : self::$allowed_attempts;
+		}
+
+		public function get_attempts_time_limit( $action ) {
+			$action = $this->get_action( $action );
+			if ( empty( $action ) ) {
+				return false;
+			}
+
+			return ! empty( $action['attempts_time_limit'] ) ? $action['attempts_time_limit'] : self::$attempts_time_limit;
+		}
+
+		public function get_attempts_reset_limit( $action ) {
+			$action = $this->get_action( $action );
+			if ( empty( $action ) ) {
+				return false;
+			}
+
+			return ! empty( $action['attempts_reset_limit'] ) ? $action['attempts_reset_limit'] : self::$attempts_reset_limit;
+		}
+
+		public function update_attempt( $action, $value, $data = array() ) {
 			global $wpdb;
 
-			$agent = $this->get_ua();
-			$ip_ua_hash  = md5( $value . $agent );
+			if (
+				empty( $value ) ||
+				empty( $action )
+			) {
+				return;
+			}
 
-			$table   = self::$table_name;
+			$action_data = $this->get_action( $action );
+
+			if ( empty( $action_data ) ) {
+				return;
+			}
+
+			$identity_type = $this->get_identity_type( $action );
+
+			$agent      = $this->get_ua();
+			$ip_ua_hash = md5( $value . $agent );
+
+			$table       = self::$table_name;
+			$sql         = "SELECT * FROM `{$table}` WHERE `identity_type` = %s AND `{$identity_type}` = %s AND `action` = %s";
+			$placeholder = array(
+				$identity_type,
+				$value,
+				$action,
+			);
+
+			if ( $identity_type === 'ip_address' ) {
+				$sql          .= ' AND `ip_ua_hash` = %s';
+				$placeholder[] = $ip_ua_hash;
+			}
+
 			$attempt = $wpdb->get_row(
-				$wpdb->prepare(
-					"SELECT * FROM `{$table}` WHERE `identity_type` = %s AND `{$identity_type}` = %s AND `action` = %s AND `ip_ua_hash` = %s",
-					$identity_type,
-					$value,
-					$action,
-					$ip_ua_hash,
-				),
+				$wpdb->prepare( $sql, $placeholder ),
 				ARRAY_A
 			);
 
@@ -141,31 +229,38 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 				$current_attempt = bp_core_current_time();
 				$current_attempt = strtotime( $current_attempt );
 
-				if ( ( $current_attempt - $last_attempt ) > self::$attempts_time_limit ) {
+				if ( ( $current_attempt - $last_attempt ) > $this->get_attempts_time_limit( $action ) ) {
 					$this->reset_attempt( $attempt['id'] );
 					$attempt = array();
 				}
 			}
 
 			if ( empty( $attempt ) ) {
+				$data_args = array(
+					'identity_type'     => $identity_type,
+					$identity_type      => $value,
+					'action'            => $action,
+					'user_agent'        => $agent,
+					'ip_ua_hash'        => $ip_ua_hash,
+					'no_of_attempts'    => 1,
+					'is_blocked'        => 0,
+					'last_attempt_date' => bp_core_current_time(),
+				);
+
+				if ( $identity_type === 'ip_address' ) {
+					$data_args['user_agent'] = $agent;
+					$data_args['ip_ua_hash'] = $ip_ua_hash;
+				}
+
 				$wpdb->insert(
 					$table,
-					array(
-						'identity_type'     => $identity_type,
-						$identity_type      => $value,
-						'action'            => $action,
-						'user_agent'        => $agent,
-						'ip_ua_hash'              => $ip_ua_hash,
-						'no_of_attempts'    => 1,
-						'is_blocked'        => 0,
-						'last_attempt_date' => bp_core_current_time(),
-					),
+					$data_args,
 				);
 			} else {
-				$block                 = $attempt['no_of_attempts'] >= self::$allowed_attempts;
+				$block                 = $attempt['no_of_attempts'] >= $this->get_allowed_attempts( $action );
 				$block_expiration_time = $attempt['block_expiry_date'];
 				if ( $block ) {
-					$block_expiration_time = date( 'Y-m-d H:i:s', current_time( 'timestamp' ) + self::$attempts_reset_limit );
+					$block_expiration_time = date( 'Y-m-d H:i:s', current_time( 'timestamp' ) + $this->get_attempts_reset_limit( $action ) );
 				}
 
 				$wpdb->update(
@@ -183,8 +278,8 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 			}
 		}
 
-		public function reset_attempt( $lockout_id ) {
-			if ( empty( $lockout_id ) ) {
+		public function reset_attempt( $limit_status_id ) {
+			if ( empty( $limit_status_id ) ) {
 				return;
 			}
 
@@ -194,7 +289,7 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 			$wpdb->delete(
 				$table,
 				array(
-					'id' => $lockout_id,
+					'id' => $limit_status_id,
 				)
 			);
 		}
@@ -215,56 +310,18 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 			return $wpdb->get_row( $sql );
 		}
 
-		public function bb_authenticate( $user, $username, $password ) {
+		public function is_user_blocked( $user_id, $action ) {
+			$table = self::$table_name;
 
-			/* get user`s IP */
-			$ip = $this->get_ip();
+			global $wpdb;
+			$sql = $wpdb->prepare(
+				"SELECT * FROM `{$table}` WHERE `identity_type` = %s AND `ip_address` = %s AND `action` = %s AND `is_blocked` = 1",
+				'user_id',
+				$user_id,
+				$action
+			);
 
-			// check its white listed.
-			if ( $ip && in_array( $ip, $this->bb_whitelist_ips(), true ) ) {
-				return $user;
-			}
-
-			// check its black listed.
-			if ( $ip && in_array( $ip, $this->bb_blacklist_ips(), true ) ) {
-				$user  = new WP_Error();
-				$error = __( "You've been added to deny list. Please contact website administrator.", 'buddyboss' );
-				$error = wp_specialchars_decode( $error, ENT_COMPAT );
-				$user->add( 'bb_blacklisted_ip', $error );
-
-				return $user;
-			}
-
-			$ua = $this->get_ua();
-
-			/* check if ip in blocked list */
-			$blocked = $this->ip_blocked( $ip, 'login', $ua );
-			if ( ! empty( $blocked ) ) {
-				$block_till =
-					! isset( $blocked->block_expiry_date ) ||
-					is_null( $blocked->block_expiry_date )
-						?
-						date( 'Y-m-d H:i:s', current_time( 'timestamp' ) + self::$attempts_reset_limit )
-						:
-						$blocked->block_expiry_date;
-
-				if ( ! is_wp_error( $user ) ) {
-					$user = new WP_Error();
-				}
-
-				$error = sprintf(
-					__( 'Too many failed attempts. You have been blocked until %s.', 'buddyboss' ),
-					$this->get_attempt_reset_time( $block_till )
-				);
-				$error = wp_specialchars_decode( $error, ENT_COMPAT );
-				$user->add( 'bb_attempt_blocked', $error );
-
-				return $user;
-			}
-
-			$this->update_attempt( 'ip_address', $ip, 'login' );
-
-			return $user;
+			return $wpdb->get_row( $sql );
 		}
 
 		public function bb_whitelist_ips() {
@@ -361,71 +418,57 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 			return false;
 		}
 
-		public function register_action( $args ) {
-			$r = wp_parse_args(
-				$args,
-				array(
-					'action'               => '',
-					'action_label'         => '',
-					'identity_type'        => 'ip_address',
-					'allowed_attempts'     => self::$allowed_attempts,
-					'attempts_time_limit'  => self::$attempts_time_limit,
-					'attempts_reset_limit' => self::$attempts_reset_limit,
-				)
-			);
+		public function bb_authenticate( $user, $username, $password ) {
 
-			$r['action'] = str_replace( '-', '_', sanitize_title( $r['action'] ) );
+			/* get user`s IP */
+			$ip = $this->get_ip();
 
-			if (
-				empty( $r['action'] ) ||
-				empty( $r['identity_type'] ) ||
-				! in_array( $r['identity_type'], array( 'ip_address', 'user_id' ), true ) ||
-				array_key_exists( $r['action'], $this->actions )
-			) {
-				return;
+			// check its white listed.
+			if ( $ip && in_array( $ip, $this->bb_whitelist_ips(), true ) ) {
+				return $user;
 			}
 
-			$this->actions[ $r['action'] ] = $r;
-		}
+			// check its black listed.
+			if ( $ip && in_array( $ip, $this->bb_blacklist_ips(), true ) ) {
+				$user  = new WP_Error();
+				$error = __( "You've been added to deny list. Please contact website administrator.", 'buddyboss' );
+				$error = wp_specialchars_decode( $error, ENT_COMPAT );
+				$user->add( 'bb_blacklisted_ip', $error );
 
-		public function get_action( $action ) {
-			return $this->actions[ $action ] ?? false;
-		}
-
-		public function get_identity_type( $action ) {
-			$action = $this->get_action( $action );
-			if ( empty( $action ) ) {
-				return false;
+				return $user;
 			}
 
-			return $action['identity_type'];
-		}
+			$ua     = $this->get_ua();
+			$action = 'login';
 
-		public function get_allowed_attempts( $action ) {
-			$action = $this->get_action( $action );
-			if ( empty( $action ) ) {
-				return false;
+			/* check if ip in blocked list */
+			$blocked = $this->ip_blocked( $ip, $action, $ua );
+			if ( ! empty( $blocked ) ) {
+				$block_till =
+					! isset( $blocked->block_expiry_date ) ||
+					is_null( $blocked->block_expiry_date )
+						?
+						date( 'Y-m-d H:i:s', current_time( 'timestamp' ) + $this->get_attempts_reset_limit( $action ) )
+						:
+						$blocked->block_expiry_date;
+
+				if ( ! is_wp_error( $user ) ) {
+					$user = new WP_Error();
+				}
+
+				$error = sprintf(
+					__( 'Too many failed attempts. You have been blocked until %s.', 'buddyboss' ),
+					$this->get_attempt_reset_time( $block_till )
+				);
+				$error = wp_specialchars_decode( $error, ENT_COMPAT );
+				$user->add( 'bb_attempt_blocked', $error );
+
+				return $user;
 			}
 
-			return $action['allowed_attempts'];
-		}
+			$this->update_attempt( $action, $ip );
 
-		public function get_attempts_time_limit( $action ) {
-			$action = $this->get_action( $action );
-			if ( empty( $action ) ) {
-				return false;
-			}
-
-			return $action['attempts_time_limit'];
-		}
-
-		public function get_attempts_reset_limit( $action ) {
-			$action = $this->get_action( $action );
-			if ( empty( $action ) ) {
-				return false;
-			}
-
-			return $action['attempts_reset_limit'];
+			return $user;
 		}
 	}
 
