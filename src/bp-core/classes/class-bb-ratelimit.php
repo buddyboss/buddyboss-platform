@@ -4,7 +4,6 @@
  *
  * @since   BuddyBoss 2.5.60
  * @package BuddyBoss/Core
- *
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -18,11 +17,11 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 
 		static $enabled_rate_limit = true;
 
-		static $bb_rate_limit = 10;
+		static $allowed_attempts = 10;
 
-		static $bb_rate_limit_seconds = 600; // 10min
+		static $attempts_time_limit = 600; // 10min
 
-		static $bb_rate_limit_reset_seconds = 3600; // 1 hours
+		static $attempts_reset_limit = 3600; // 1 hours
 
 		public function __construct() {
 			if ( ! self::$enabled_rate_limit ) {
@@ -46,7 +45,7 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 			$wpdb            = $GLOBALS['wpdb'];
 			$charset_collate = $wpdb->get_charset_collate();
 
-			$table_name       = "{$wpdb->base_prefix}bb_rate_limits";
+			$table_name       = "{$wpdb->base_prefix}bb_api_rate_limit_status";
 			self::$table_name = $table_name;
 
 			// Table already exists, so maybe upgrade instead?
@@ -54,26 +53,26 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 			if ( ! $table_exists ) {
 				$sql[] = "CREATE TABLE {$table_name} (
 					id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-					type varchar(25) NOT NULL,
+					identity_type varchar(25) NOT NULL,
 					ip_address varchar(40),
-					user bigint(20) UNSIGNED,
+					user_id bigint(20) UNSIGNED,
 					action varchar(60) NOT NULL,
 					user_agent varchar(255),
 					hash varchar(255),
-					attempts int(3) NOT NULL DEFAULT 0,
-					block tinyint(1) NOT NULL DEFAULT 0,
-					block_expiration_time datetime NULL default '0000-00-00 00:00:00',
-					last_attempt datetime NOT NULL,
+					no_of_attempts int(3) NOT NULL DEFAULT 0,
+					is_blocked tinyint(1) NOT NULL DEFAULT 0,
+					block_expiry_date datetime NULL default '0000-00-00 00:00:00',
+					last_attempt_date datetime NOT NULL,
 					PRIMARY KEY  (id),
-					KEY type (type),
+					KEY identity_type (identity_type),
 					KEY ip_address (ip_address),
-					KEY user (user),
+					KEY user_id (user_id),
 					KEY user_agent (user_agent),
-					KEY block (block),
+					KEY is_blocked (is_blocked),
 					KEY hash (hash),
 					KEY action (action),
-					KEY block_expiration_time (block_expiration_time),
-					KEY last_attempt (last_attempt)
+					KEY block_expiry_date (block_expiry_date),
+					KEY last_attempt_date (last_attempt_date)
 				) {$charset_collate};";
 			}
 
@@ -116,7 +115,7 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 				: '';
 		}
 
-		public function add_lockout( $type, $value, $action, $data = array() ) {
+		public function update_attempt( $identity_type, $value, $action, $data = array() ) {
 			global $wpdb;
 
 			$agent = $this->get_ua();
@@ -125,8 +124,8 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 			$table   = self::$table_name;
 			$attempt = $wpdb->get_row(
 				$wpdb->prepare(
-					"SELECT * FROM `{$table}` WHERE `type` = %s AND `{$type}` = %s AND `action` = %s AND `hash` = %s",
-					$type,
+					"SELECT * FROM `{$table}` WHERE `identity_type` = %s AND `{$identity_type}` = %s AND `action` = %s AND `hash` = %s",
+					$identity_type,
 					$value,
 					$action,
 					$hash,
@@ -135,13 +134,13 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 			);
 
 			if ( ! empty( $attempt ) ) {
-				$last_attempt    = $attempt['last_attempt'];
+				$last_attempt    = $attempt['last_attempt_date'];
 				$last_attempt    = strtotime( $last_attempt );
 				$current_attempt = bp_core_current_time();
 				$current_attempt = strtotime( $current_attempt );
 
-				if ( ( $current_attempt - $last_attempt ) > self::$bb_rate_limit_seconds ) {
-					$this->delete_lockout( $attempt['id'] );
+				if ( ( $current_attempt - $last_attempt ) > self::$attempts_time_limit ) {
+					$this->reset_attempt( $attempt['id'] );
 					$attempt = array();
 				}
 			}
@@ -150,30 +149,30 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 				$wpdb->insert(
 					$table,
 					array(
-						'type'         => $type,
-						$type          => $value,
+						'identity_type'         => $identity_type,
+						$identity_type          => $value,
 						'action'       => $action,
 						'user_agent'   => $agent,
 						'hash'         => $hash,
-						'attempts'     => 1,
-						'block'        => 0,
-						'last_attempt' => bp_core_current_time(),
+						'no_of_attempts'     => 1,
+						'is_blocked'        => 0,
+						'last_attempt_date' => bp_core_current_time(),
 					),
 				);
 			} else {
-				$block                 = $attempt['attempts'] >= self::$bb_rate_limit;
-				$block_expiration_time = $attempt['block_expiration_time'];
+				$block                 = $attempt['no_of_attempts'] >= self::$allowed_attempts;
+				$block_expiration_time = $attempt['block_expiry_date'];
 				if ( $block ) {
-					$block_expiration_time = date( 'Y-m-d H:i:s', current_time( 'timestamp' ) + self::$bb_rate_limit_reset_seconds );
+					$block_expiration_time = date( 'Y-m-d H:i:s', current_time( 'timestamp' ) + self::$attempts_reset_limit );
 				}
 
 				$wpdb->update(
 					$table,
 					array(
-						'attempts'              => $attempt['attempts'] + 1,
-						'block'                 => $block,
-						'block_expiration_time' => $block_expiration_time,
-						'last_attempt'          => bp_core_current_time(),
+						'no_of_attempts'              => $attempt['no_of_attempts'] + 1,
+						'is_blocked'                 => $block,
+						'block_expiry_date' => $block_expiration_time,
+						'last_attempt_date'          => bp_core_current_time(),
 					),
 					array(
 						'id' => $attempt['id'],
@@ -182,7 +181,7 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 			}
 		}
 
-		public function delete_lockout( $lockout_id ) {
+		public function reset_attempt( $lockout_id ) {
 			if ( empty( $lockout_id ) ) {
 				return;
 			}
@@ -204,7 +203,7 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 			$hash = md5( $ip . $ua );
 			global $wpdb;
 			$sql = $wpdb->prepare(
-				"SELECT * FROM `{$table}` WHERE `type` = %s AND `ip_address` = %s AND `action` = %s AND `block` = 1 AND `hash` = %s",
+				"SELECT * FROM `{$table}` WHERE `identity_type` = %s AND `ip_address` = %s AND `action` = %s AND `is_blocked` = 1 AND `hash` = %s",
 				'ip_address',
 				$ip,
 				$action,
@@ -240,12 +239,12 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 			$blocked = $this->ip_blocked( $ip, 'login', $ua );
 			if ( ! empty( $blocked ) ) {
 				$block_till =
-					! isset( $blocked->block_expiration_time ) ||
-					is_null( $blocked->block_expiration_time )
+					! isset( $blocked->block_expiry_date ) ||
+					is_null( $blocked->block_expiry_date )
 						?
-						date( 'Y-m-d H:i:s', current_time( 'timestamp' ) + self::$bb_rate_limit_reset_seconds )
+						date( 'Y-m-d H:i:s', current_time( 'timestamp' ) + self::$attempts_reset_limit )
 						:
-						$blocked->block_expiration_time;
+						$blocked->block_expiry_date;
 
 				if ( ! is_wp_error( $user ) ) {
 					$user = new WP_Error();
@@ -253,7 +252,7 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 
 				$error = sprintf(
 					__( 'Too many failed attempts. You have been blocked until %s.', 'buddyboss' ),
-					$this->get_block_time( $block_till )
+					$this->get_attempt_reset_time( $block_till )
 				);
 				$error = wp_specialchars_decode( $error, ENT_COMPAT );
 				$user->add( 'bb_attempt_blocked', $error );
@@ -261,7 +260,7 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 				return $user;
 			}
 
-			$this->add_lockout( 'ip_address', $ip, 'login' );
+			$this->update_attempt( 'ip_address', $ip, 'login' );
 
 			return $user;
 		}
@@ -271,9 +270,12 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 				return array();
 			}
 
-			return array_filter( BB_RATE_WHITELIST_IPS, function ( $ip ) {
-				return filter_var( $ip, FILTER_VALIDATE_IP ) !== false;
-			} );
+			return array_filter(
+				BB_RATE_WHITELIST_IPS,
+				function ( $ip ) {
+					return filter_var( $ip, FILTER_VALIDATE_IP ) !== false;
+				}
+			);
 		}
 
 		public function bb_whitelist_users() {
@@ -284,15 +286,18 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 				return array();
 			}
 
-			return array_filter( BB_RATE_BLACKLIST_IPS, function ( $ip ) {
-				return filter_var( $ip, FILTER_VALIDATE_IP ) !== false;
-			} );
+			return array_filter(
+				BB_RATE_BLACKLIST_IPS,
+				function ( $ip ) {
+					return filter_var( $ip, FILTER_VALIDATE_IP ) !== false;
+				}
+			);
 		}
 
 		public function bb_blacklist_users() {
 		}
 
-		public function get_block_time( $unblock_date ) {
+		public function get_attempt_reset_time( $unblock_date ) {
 			/* time difference */
 
 			$time_diff = strtotime( $unblock_date ) - current_time( 'timestamp' );
@@ -312,20 +317,20 @@ if ( ! class_exists( 'BB_Ratelimit' ) ) {
 				$string = ( 0 < $weeks ? '&nbsp;' . $weeks . '&nbsp;' . _n( 'week', 'weeks', $weeks, 'buddyboss' ) : '' );
 				$sum    = $weeks * 604800;
 
-				$days   = intval( ( $time_diff - $sum ) / 86400 );
+				$days    = intval( ( $time_diff - $sum ) / 86400 );
 				$string .= ( 0 < $days ? '&nbsp;' . $days . '&nbsp;' . _n( 'day', 'days', $days, 'buddyboss' ) : '' );
 				$sum    += $days * 86400;
 
-				$hours  = intval( ( $time_diff - $sum ) / 3600 );
+				$hours   = intval( ( $time_diff - $sum ) / 3600 );
 				$string .= ( 0 < $hours ? '&nbsp;' . $hours . '&nbsp;' . _n( 'hour', 'hours', $hours, 'buddyboss' ) : '' );
 				$sum    += $hours * 3600;
 
 				$minutes = intval( ( $time_diff - $sum ) / 60 );
-				$string  .= ( 0 < $minutes ? '&nbsp;' . $minutes . '&nbsp;' . _n( 'minute', 'minutes', $minutes, 'buddyboss' ) : '' );
-				$sum     += $minutes * 60;
+				$string .= ( 0 < $minutes ? '&nbsp;' . $minutes . '&nbsp;' . _n( 'minute', 'minutes', $minutes, 'buddyboss' ) : '' );
+				$sum    += $minutes * 60;
 
 				$seconds = $time_diff - $sum;
-				$string  .= ( 0 < $seconds ? '&nbsp;' . $seconds . '&nbsp;' . _n( 'second', 'seconds', $seconds, 'buddyboss' ) : '' );
+				$string .= ( 0 < $seconds ? '&nbsp;' . $seconds . '&nbsp;' . _n( 'second', 'seconds', $seconds, 'buddyboss' ) : '' );
 
 				return $string;
 			}
