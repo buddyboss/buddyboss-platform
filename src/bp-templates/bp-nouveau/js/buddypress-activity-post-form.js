@@ -4934,7 +4934,7 @@ window.bp = window.bp || {};
 					var ajaxData = {
 						action      : 'delete_scheduled_activity',
 						'id'        : activity_id,
-						// '_wpnonce'  : BP_Nouveau.activity.params.scheduled_post_nonce,
+						'_wpnonce'  : BP_Nouveau.activity.params.scheduled_post_nonce,
 						'is_single' : target.closest( '[data-bp-single]' ).length
 					};
 
