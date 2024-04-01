@@ -206,16 +206,21 @@ if ( ! class_exists( 'BB_API_Ratelimit' ) ) {
 			$ip_ua_hash = md5( $value . $agent );
 
 			$table       = self::$table_name;
-			$sql         = "SELECT * FROM `{$table}` WHERE `identity_type` = %s AND `{$identity_type}` = %s AND `action` = %s";
+			$sql         = "SELECT * FROM `{$table}` WHERE `identity_type` = %s AND `action` = %s";
 			$placeholder = array(
 				$identity_type,
-				$value,
 				$action,
 			);
 
 			if ( $identity_type === 'ip_address' ) {
+				$sql          .= ' AND `{$identity_type}` = %s';
 				$sql          .= ' AND `ip_ua_hash` = %s';
+				$placeholder[] = $value;
 				$placeholder[] = $ip_ua_hash;
+			} else {
+				$value         = (int) $value;
+				$sql          .= ' AND `{$identity_type}` = %d';
+				$placeholder[] = $value;
 			}
 
 			$attempt = $wpdb->get_row(
@@ -257,7 +262,7 @@ if ( ! class_exists( 'BB_API_Ratelimit' ) ) {
 					$data_args,
 				);
 			} else {
-				$no_of_attempts = $attempt['no_of_attempts'] + 1;
+				$no_of_attempts        = $attempt['no_of_attempts'] + 1;
 				$block                 = $no_of_attempts >= $this->get_allowed_attempts( $action );
 				$block_expiration_time = $attempt['block_expiry_date'];
 				if ( $block ) {
@@ -316,7 +321,7 @@ if ( ! class_exists( 'BB_API_Ratelimit' ) ) {
 
 			global $wpdb;
 			$sql = $wpdb->prepare(
-				"SELECT * FROM `{$table}` WHERE `identity_type` = %s AND `ip_address` = %s AND `action` = %s AND `is_blocked` = 1",
+				"SELECT * FROM `{$table}` WHERE `identity_type` = %s AND `user_id` = %d AND `action` = %s AND `is_blocked` = 1",
 				'user_id',
 				$user_id,
 				$action
@@ -338,7 +343,7 @@ if ( ! class_exists( 'BB_API_Ratelimit' ) ) {
 			);
 		}
 
-		public function bb_whitelist_users() {
+		public function bb_whitelist_user_ids() {
 		}
 
 		public function bb_blacklist_ips() {
@@ -354,7 +359,7 @@ if ( ! class_exists( 'BB_API_Ratelimit' ) ) {
 			);
 		}
 
-		public function bb_blacklist_users() {
+		public function bb_blacklist_user_ids() {
 		}
 
 		public function get_attempt_reset_time( $unblock_date ) {
@@ -372,7 +377,6 @@ if ( ! class_exists( 'BB_API_Ratelimit' ) ) {
 
 			/* less then 1 months */
 			if ( $time_diff > 0 && $time_diff < 2635200 ) {
-
 				$weeks  = intval( $time_diff / 604800 );
 				$string = ( 0 < $weeks ? '&nbsp;' . $weeks . '&nbsp;' . _n( 'week', 'weeks', $weeks, 'buddyboss' ) : '' );
 				$sum    = $weeks * 604800;
@@ -420,7 +424,6 @@ if ( ! class_exists( 'BB_API_Ratelimit' ) ) {
 		}
 
 		public function bb_authenticate( $user, $username, $password ) {
-
 			/* get user`s IP */
 			$ip = $this->get_ip();
 
@@ -472,5 +475,4 @@ if ( ! class_exists( 'BB_API_Ratelimit' ) ) {
 			return $user;
 		}
 	}
-
 }
