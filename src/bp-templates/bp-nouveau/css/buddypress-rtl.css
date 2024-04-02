@@ -7730,7 +7730,6 @@ span.dashicons.dashicons-admin-file:before {
 
 .buddypress-wrap .activity-comments ul li,
 .bb-media-model-wrapper .activity-comments ul li {
-  border-top: 1px solid #eee;
   border-bottom: 0;
   padding: 1em 0 0;
 }
