@@ -401,6 +401,11 @@ function bp_nouveau_pagination( $position ) {
 		$pagination_type = 'groups';
 	}
 
+	// Set default values.
+	$page_arg  = '';
+	$pag_count = '';
+	$pag_links = '';
+
 	switch ( $pagination_type ) {
 		case 'blogs':
 			$pag_count   = bp_get_blogs_pagination_count();
