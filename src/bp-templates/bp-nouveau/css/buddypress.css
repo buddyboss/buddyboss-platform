@@ -27241,13 +27241,13 @@ div.video-js .vjs-poster > img {
   font-size: 15px;
 }
 
-.bb-media-model-container .bb-media-info-section .bb-activity-video-wrap .vjs-control-bar .skip-5,
-.bb-media-model-container .bb-media-info-section .bb-activity-video-wrap .vjs-control-bar .vjs-time-control,
-.bb-media-model-container .bb-media-info-section .bb-activity-video-wrap .vjs-control-bar .vjs-picture-in-picture-control {
+.activity-comments .bb-activity-video-wrap .vjs-control-bar .skip-5,
+.activity-comments .bb-activity-video-wrap .vjs-control-bar .vjs-time-control,
+.activity-comments .bb-activity-video-wrap .vjs-control-bar .vjs-picture-in-picture-control {
   display: none;
 }
 
-.bb-media-model-container .bb-media-info-section .bb-activity-video-wrap .vjs-control-bar .vjs-slider-vertical .vjs-volume-level:before {
+.activity-comments .bb-activity-video-wrap .vjs-control-bar .vjs-slider-vertical .vjs-volume-level:before {
   left: -3px;
 }
 
