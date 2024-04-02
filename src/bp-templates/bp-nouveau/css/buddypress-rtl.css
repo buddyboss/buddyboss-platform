@@ -8141,12 +8141,31 @@ span.dashicons.dashicons-admin-file:before {
 
 .buddypress-wrap .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity,
 .bb-media-model-wrapper .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity {
-  width: 265px;
+  width: 240px;
 }
 
 .buddypress-wrap .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity .document-preview-wrap,
 .bb-media-model-wrapper .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity .document-preview-wrap {
   height: 115px;
+}
+
+.buddypress-wrap .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-helper-text-click,
+.bb-media-model-wrapper .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-helper-text-click {
+  margin-right: -2px;
+}
+
+.buddypress-wrap .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-helper-text,
+.buddypress-wrap .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-description,
+.buddypress-wrap .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-extension-description,
+.bb-media-model-wrapper .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-helper-text,
+.bb-media-model-wrapper .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-description,
+.bb-media-model-wrapper .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-extension-description {
+  font-size: 11px;
+}
+
+.buddypress-wrap .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-description,
+.bb-media-model-wrapper .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-description {
+  margin-left: 3px;
 }
 
 .buddypress-wrap .bb-media-info-section .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1),
