@@ -391,6 +391,15 @@ window.bp = window.bp || {};
 				self.postForm.model.set( 'activity_schedule_date', activity_data.activity_schedule_date );
 				self.postForm.model.set( 'activity_schedule_time', activity_data.activity_schedule_time );
 				self.postForm.model.set( 'activity_schedule_meridiem', activity_data.activity_schedule_meridiem );
+
+				// Check if time has passed and trigger warning
+				// TODO: Compare scheduled time with server
+				var activity_schedule_datetime = activity_data.activity_schedule_date_raw + " " + activity_data.activity_schedule_time + " " + activity_data.activity_schedule_meridiem;
+				var activity_schedule_date = new Date(activity_schedule_datetime);
+				var current_date = new Date();
+				if (current_date > activity_schedule_date) {
+					Backbone.trigger( 'onError', BP_Nouveau.activity.strings.scheduleWarning, 'warning' );
+				}
 			}
 
 			var tool_box = $( '.activity-form.focus-in #whats-new-toolbar' );

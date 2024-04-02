@@ -258,6 +258,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'reactionAjaxError'   => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
 		'schedulePostButton'  => esc_html__( 'Schedule', 'buddyboss' ),
 		'confirmDeletePost'   => esc_html__( 'Are you sure you want to delete that permanently?', 'buddyboss' ),
+		'scheduleWarning'     => esc_html__( 'Schedule Outdated', 'buddyboss' ),
 	);
 
     if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
