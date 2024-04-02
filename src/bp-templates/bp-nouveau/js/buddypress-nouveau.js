@@ -1294,21 +1294,22 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		switchGridList: function () {
-			var object = $( '.grid-filters' ).data( 'object' );
-
-			if ( 'friends' === object ) {
-				object = 'members';
-			} else if ( 'group_requests' === object ) {
-				object = 'groups';
-			} else if ( 'notifications' === object ) {
-				object = 'members';
-			}
 
 			$( document ).on(
 				'click',
 				'.grid-filters .layout-view:not(.active)',
 				function ( e ) {
 					e.preventDefault();
+					var gridfilters = $( this ).parents( '.grid-filters' ),
+						object = gridfilters.data( 'object' );
+
+					if ( 'friends' === object ) {
+						object = 'members';
+					} else if ( 'group_requests' === object ) {
+						object = 'groups';
+					} else if ( 'notifications' === object ) {
+						object = 'members';
+					}
 
 					if ( 'undefined' === typeof object ) {
 						return;
@@ -1327,14 +1328,14 @@ window.bp = window.bp || {};
 					var layout = '';
 
 					if ( $( this ).hasClass( 'layout-list-view' ) ) {
-						$( '.layout-grid-view' ).removeClass( 'active' );
+						gridfilters.find( '.layout-grid-view' ).removeClass( 'active' );
 						$( this ).addClass( 'active' );
-						$( '.bp-list' ).removeClass( 'grid' );
+						$( this ).parents( '.buddypress-wrap' ).find( '.bp-list' ).removeClass( 'grid' );
 						layout = 'list';
 					} else {
-						$( '.layout-list-view' ).removeClass( 'active' );
+						gridfilters.find( '.layout-list-view' ).removeClass( 'active' );
 						$( this ).addClass( 'active' );
-						$( '.bp-list' ).addClass( 'grid' );
+						$( this ).parents( '.buddypress-wrap' ).find( '.bp-list' ).addClass( 'grid' );
 						layout = 'grid';
 					}
 
