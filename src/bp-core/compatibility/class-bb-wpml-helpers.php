@@ -228,13 +228,12 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		}
 
 		/**
-		 * Add fix for WPML post count issue in Global Search.
+		 * Add fix for WPML post count issue in Global Search using a join query.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string $sql_query String of the SQL query to filter.
-		 * 
-		 * @param array $args Arguments of the filter to get the post_type.
+		 * @param array  $args      Arguments of the filter to get the post_type.
 		 *
 		 * @return string
 		 */
@@ -243,7 +242,15 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 
 			if ( $current_language ) {
 				global $wpdb;
-				$sql_query .= $wpdb->prepare( " AND p.ID IN ( SELECT element_id FROM {$wpdb->prefix}icl_translations WHERE element_type = 'post_{$args['post_type']}' AND language_code = %s )", $current_language );
+				$sql_query .= " AND EXISTS (
+					SELECT 1 
+					FROM {$wpdb->prefix}icl_translations t
+					WHERE t.element_type = CONCAT('post_', %s)
+					AND t.language_code = %s
+					AND t.element_id = p.ID
+				)";
+
+				$sql_query = $wpdb->prepare( $sql_query, $args['post_type'], $current_language );
 			}
 
 			return $sql_query;
