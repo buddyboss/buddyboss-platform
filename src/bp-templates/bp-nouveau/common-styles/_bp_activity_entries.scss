@@ -1591,7 +1591,7 @@
 			display: flex;
 			align-items: center;
 			position: absolute;
-			bottom: 3px;
+			bottom: 4px;
 			left: 10px;
 			margin-top: 10px;
 
@@ -1657,24 +1657,14 @@
 	@media screen and (max-width: 420px) {
 
 		.ac-reply-content {
-			min-height: 125px;
-			padding-top: 35px;
 
 			.ac-reply-toolbar {
-				position: static;
-				margin-bottom: 12px;
-				padding: 0 2px;
+				left: 5px;
 
 				.post-elements-buttons-item {
 					margin-right: 5px;
 				}
 			}
-		}
-
-		.ac-submit-wrap {
-			position: static;
-			left: unset;
-			right: unset;
 		}
 	}
 }
