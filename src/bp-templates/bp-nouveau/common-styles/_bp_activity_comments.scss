@@ -16,7 +16,6 @@
 			padding: 0;
 
 			li {
-				border-top: 1px solid $bp-border-color;
 				border-bottom: 0;
 				padding: $pad-med 0 0;
 
@@ -391,10 +390,27 @@
 		.activity-comments {
 
 			.bb-activity-media-elem.document-activity {
-				width: 265px;
+				width: 240px;
 
 				.document-preview-wrap {
 					height: 115px;
+				}
+
+				.document-description-wrap .document-detail-wrap {
+
+					.document-helper-text-click {
+						margin-left: -2px;
+					}
+
+					.document-helper-text,
+					.document-description,
+					.document-extension-description {
+						font-size: 11px;
+					}
+				}
+
+				.document-description-wrap .document-detail-wrap .document-description {
+					margin-right: 3px;
 				}
 			}
 
