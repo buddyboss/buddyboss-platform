@@ -4902,7 +4902,7 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   display: flex;
   align-items: center;
   position: absolute;
-  bottom: 3px;
+  bottom: 4px;
   right: 10px;
   margin-top: 10px;
 }
@@ -4957,22 +4957,11 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
 }
 
 @media screen and (max-width: 420px) {
-  .ac-form-placeholder .ac-reply-content {
-    min-height: 125px;
-    padding-top: 35px;
-  }
   .ac-form-placeholder .ac-reply-content .ac-reply-toolbar {
-    position: static;
-    margin-bottom: 12px;
-    padding: 0 2px;
+    right: 5px;
   }
   .ac-form-placeholder .ac-reply-content .ac-reply-toolbar .post-elements-buttons-item {
     margin-left: 5px;
-  }
-  .ac-form-placeholder .ac-submit-wrap {
-    position: static;
-    right: unset;
-    left: unset;
   }
 }
 
@@ -8489,9 +8478,6 @@ form.ac-form.not-initialized > * {
 }
 
 @media screen and (max-width: 1080px) and (min-width: 768px), screen and (max-width: 420px) {
-  form.ac-form.not-initialized .ac-reply-content {
-    height: 74px;
-  }
   .bb-media-model-container form.ac-form.not-initialized .ac-reply-content {
     height: 44px;
   }
@@ -8551,6 +8537,12 @@ form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar {
   position: absolute;
   bottom: -45px;
   right: 10px;
+}
+
+@media screen and (max-width: 420px) {
+  form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar {
+    right: 5px;
+  }
 }
 
 form.ac-form .ac-reply-content .ac-submit-wrap {
@@ -8616,19 +8608,6 @@ form.ac-form .ac-reply-content .ac-submit-wrap {
 }
 
 @media screen and (max-width: 1080px) and (min-width: 768px), screen and (max-width: 420px) {
-  form.ac-form .ac-reply-content .ac-reply-cancel,
-  form.ac-form .ac-reply-content .ac-submit-wrap {
-    float: right;
-  }
-  form.ac-form .ac-reply-content .ac-submit-wrap {
-    margin-right: 8px;
-  }
-  #buddypress form.ac-form .ac-reply-content .ac-reply-cancel {
-    margin-right: 10px;
-  }
-  form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar {
-    position: static;
-  }
   .bb-media-model-container form.ac-form .ac-reply-content .ac-reply-cancel,
   .bb-media-model-container form.ac-form .ac-reply-content .ac-submit-wrap {
     float: left;
@@ -8654,6 +8633,12 @@ form.ac-form .ac-reply-content .ac-submit-wrap {
   form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar .post-elements-buttons-item i::before {
     margin-right: 0;
     margin-left: 0;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar .post-elements-buttons-item {
+    margin-left: 3px;
   }
 }
 
@@ -8866,6 +8851,37 @@ form.ac-form .activity-attached-gif-container .gif-image-remove:hover .bb-icon-t
 #buddypress form.ac-form .ac-reply-content input[type="submit"].loading {
   opacity: 0.4;
   pointer-events: none;
+}
+
+@media screen and (max-width: 420px) {
+  .activity-modal .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-reply-cancel,
+  .activity-modal .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-submit-wrap,
+  .activity-modal .threaded-level-5 ul > li > ul > li > ul > li form.ac-form .ac-reply-cancel,
+  .activity-modal .threaded-level-5 ul > li > ul > li > ul > li form.ac-form .ac-submit-wrap,
+  .activity-modal .threaded-level-6 ul > li > ul > li > ul > li form.ac-form .ac-reply-cancel,
+  .activity-modal .threaded-level-6 ul > li > ul > li > ul > li form.ac-form .ac-submit-wrap {
+    float: right;
+  }
+  .activity-modal .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-submit-wrap,
+  .activity-modal .threaded-level-5 ul > li > ul > li > ul > li form.ac-form .ac-submit-wrap,
+  .activity-modal .threaded-level-6 ul > li > ul > li > ul > li form.ac-form .ac-submit-wrap {
+    margin-right: 5px;
+  }
+  #buddypress .activity-modal .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-reply-cancel, #buddypress
+  .activity-modal .threaded-level-5 ul > li > ul > li > ul > li form.ac-form .ac-reply-cancel, #buddypress
+  .activity-modal .threaded-level-6 ul > li > ul > li > ul > li form.ac-form .ac-reply-cancel {
+    margin-right: 10px;
+  }
+  .activity-modal .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-textarea .ac-reply-toolbar,
+  .activity-modal .threaded-level-5 ul > li > ul > li > ul > li form.ac-form .ac-textarea .ac-reply-toolbar,
+  .activity-modal .threaded-level-6 ul > li > ul > li > ul > li form.ac-form .ac-textarea .ac-reply-toolbar {
+    position: static;
+  }
+  .activity-modal .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-textarea,
+  .activity-modal .threaded-level-5 ul > li > ul > li > ul > li form.ac-form .ac-textarea,
+  .activity-modal .threaded-level-6 ul > li > ul > li > ul > li form.ac-form .ac-textarea {
+    padding: 0 5px;
+  }
 }
 
 .bb-media-model-container .threaded-level-3 ul > li > ul > li form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar .post-elements-buttons-item,
