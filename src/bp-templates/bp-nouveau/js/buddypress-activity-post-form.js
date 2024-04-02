@@ -332,13 +332,7 @@ window.bp = window.bp || {};
 				$tabActivityFormWrap.addClass( 'bp-hide' );
 			}
 
-			// Reset media action buttons and uploader area.
-			if ( window.activityMediaAction !== null ) {
-				$( '.activity-update-form.modal-popup' ).find( '#' + window.activityMediaAction ).trigger( 'click' );
-				window.activityMediaAction = null;
-			}
-
-			$( '#whats-new-form' ).removeClass( 'focus-in--attm' );
+			bp.Views.ActivityHeader.prototype.resetMultiMediaOptions();
 		},
 
 		createThumbnailFromUrl: function ( mock_file ) {
