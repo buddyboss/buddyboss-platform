@@ -145,10 +145,10 @@ window.bp = window.bp || {};
 			$( document ).click( this.togglePopupDropdown );
 
 			// forums.
-			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, .bb-modal-activity-footer' ).on( 'click', '.ac-reply-media-button', this.openCommentsMediaUploader.bind( this ) );
-			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, .bb-modal-activity-footer' ).on( 'click', '.ac-reply-document-button', this.openCommentsDocumentUploader.bind( this ) );
-			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, .bb-modal-activity-footer' ).on( 'click', '.ac-reply-video-button', this.openCommentsVideoUploader.bind( this ) );
-			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, .bb-modal-activity-footer' ).on( 'click', '.ac-reply-gif-button', this.openGifPicker.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #activity-modal .activity-list, .bb-modal-activity-footer' ).on( 'click', '.ac-reply-media-button', this.openCommentsMediaUploader.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #activity-modal .activity-list, .bb-modal-activity-footer' ).on( 'click', '.ac-reply-document-button', this.openCommentsDocumentUploader.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #activity-modal .activity-list, .bb-modal-activity-footer' ).on( 'click', '.ac-reply-video-button', this.openCommentsVideoUploader.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #activity-modal .activity-list, .bb-modal-activity-footer' ).on( 'click', '.ac-reply-gif-button', this.openGifPicker.bind( this ) );
 
 			// Activity More Option Dropdown.
 			$( document ).on( 'click', this.toggleActivityOption.bind( this ) );
@@ -2009,10 +2009,12 @@ window.bp = window.bp || {};
 							if ( response.success ) {
 								var $media_parent = $( '#activity-stream > .activity-list' ).find( '[data-bp-activity-id=' + activity_id + ']' );
 								target.closest( '.activity-item' ).find( '.bb-activity-closed-comments-notice' ).remove();
-
 								// Change the close comments related class and label.
 								if ( 'close_comments' === close_comments_action ) {
 									target.closest( 'li.activity-item' ).addClass( 'bb-closed-comments' );
+									if ( target.closest( '#activity-modal' ).length > 0 ) {
+										target.closest( '#activity-modal' ).addClass( 'bb-closed-comments' );
+									}
 									target.addClass( 'unclose-activity-comment' );
 									target.removeClass( 'close-activity-comment' );
 									target.find( 'span' ).html( BP_Nouveau.activity.strings.uncloseComments );
@@ -2032,6 +2034,9 @@ window.bp = window.bp || {};
 								} else if ( 'unclose_comments' === close_comments_action ) {
 									target.closest( 'li.activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).show();
 									target.closest( 'li.activity-item' ).removeClass( 'bb-closed-comments' );
+									if ( target.closest( '#activity-modal' ).length > 0 ) {
+										target.closest( '#activity-modal' ).removeClass( 'bb-closed-comments' );
+									}
 									target.addClass( 'close-activity-comment' );
 									target.removeClass( 'unclose-activity-comment' );
 									target.find( 'span' ).html( BP_Nouveau.activity.strings.closeComments );
@@ -4033,3 +4038,4 @@ window.bp = window.bp || {};
 	bp.Nouveau.Activity.start();
 
 } )( bp, jQuery );
+
