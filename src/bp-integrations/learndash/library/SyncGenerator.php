@@ -380,7 +380,6 @@ class SyncGenerator {
 		$this->syncingToLearndash(
 			function () use ( $userId, $remove ) {
 				call_user_func_array( $this->getBpSyncFunction( 'admin' ), array( $userId, $this->ldGroupId, $remove ) );
-				$this->maybeRemoveAsLdUser( 'admin', $userId );
 				$this->promoteAsGroupLeader( $userId, 'admin', $remove );
 			}
 		);
@@ -405,7 +404,6 @@ class SyncGenerator {
 		$this->syncingToLearndash(
 			function () use ( $userId, $remove ) {
 				call_user_func_array( $this->getBpSyncFunction( 'mod' ), array( $userId, $this->ldGroupId, $remove ) );
-				$this->maybeRemoveAsLdUser( 'mod', $userId );
 				$this->promoteAsGroupLeader( $userId, 'mod', $remove );
 			}
 		);

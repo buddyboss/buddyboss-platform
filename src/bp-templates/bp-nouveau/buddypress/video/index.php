@@ -10,6 +10,8 @@
  * @version 1.7.0
  */
 
+$is_send_ajax_request = bb_is_send_ajax_request();
+
 bp_nouveau_before_video_directory_content();
 bp_nouveau_template_notices();
 ?>
@@ -57,13 +59,21 @@ bp_nouveau_template_notices();
 	</div>
 
 	<?php
-		bp_get_template_part( 'media/theatre' );
-		bp_get_template_part( 'video/theatre' );
-		bp_get_template_part( 'document/theatre' );
+	bp_get_template_part( 'media/theatre' );
+	bp_get_template_part( 'video/theatre' );
+	bp_get_template_part( 'document/theatre' );
 	?>
 
-	<div id="video-stream" class="video" data-bp-list="video">
-		<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'directory-video-loading' ); ?></div>
+	<div id="video-stream" class="video" data-bp-list="video" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+		<?php
+		if ( $is_send_ajax_request ) {
+			echo '<div id="bp-ajax-loader">';
+			bp_nouveau_user_feedback( 'directory-video-loading' );
+			echo '</div>';
+		} else {
+			bp_get_template_part( 'video/video-loop' );
+		}
+		?>
 	</div><!-- .video -->
 
 	<?php bp_nouveau_after_video_directory_content(); ?>
