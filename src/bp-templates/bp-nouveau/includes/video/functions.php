@@ -118,7 +118,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'invalid_video_type'                 => __( 'Unable to upload the file', 'buddyboss' ),
 		'video_size_error_header'            => __( 'File too large ', 'buddyboss' ),
 		'video_size_error_description'       => __( 'This file type is too large.', 'buddyboss' ),
-		'dictFileTooBig'                     => __( 'File is too large ({{filesize}} MB). Max filesize: {{maxFilesize}} MB.', 'buddyboss' ),
+		'dictFileTooBig'                     => __( 'Sorry, file size is too big ({{filesize}} MB). Max file size limit: {{maxFilesize}} MB.', 'buddyboss' ),
 		'maxFiles'                           => bp_video_allowed_upload_video_per_batch(),
 		'is_video_directory'                 => ( bp_is_video_directory() ) ? 'yes' : 'no',
 		'create_album_error_title'           => __( 'Please enter title of album', 'buddyboss' ),
@@ -185,7 +185,7 @@ function bp_nouveau_get_video_directory_nav_items() {
 	$nav_items['all'] = array(
 		'component' => 'video',
 		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope.
-		'li_class'  => array(),
+		'li_class'  => array( 'selected' ),
 		'link'      => bp_get_video_directory_permalink(),
 		'text'      => __( 'All Videos', 'buddyboss' ),
 		'count'     => bp_get_total_video_count(),
