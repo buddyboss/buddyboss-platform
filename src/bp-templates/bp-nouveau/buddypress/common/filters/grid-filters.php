@@ -15,12 +15,12 @@ $bb_is_user             = bp_is_user();
 $bb_is_group            = bp_is_group();
 $bb_is_user_groups      = bp_is_user_groups();
 $bb_is_groups_directory = bp_is_groups_directory();
-$has_profile_shortcode = false;
-$has_group_shortcode   = false;
-if ( ! empty( $args[ 'shortcode_type' ] ) ) {
-	if ( 'members' === $args[ 'shortcode_type' ] ) {
+$has_profile_shortcode  = false;
+$has_group_shortcode    = false;
+if ( ! empty( $args['shortcode_type'] ) ) {
+	if ( 'members' === $args['shortcode_type'] ) {
 		$has_profile_shortcode = true;
-	} elseif ( 'groups' === $args[ 'shortcode_type' ] ) {
+	} elseif ( 'groups' === $args['shortcode_type'] ) {
 		$has_group_shortcode = true;
 	}
 } else {
