@@ -172,7 +172,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 				'bp_rest_max_upload_size',
 				sprintf(
 				/* translators: 1: File size, 2: Allowed size. */
-					__( 'File is too large (%1$s MB). Max file size: %2$s MB.', 'buddyboss' ),
+					__( 'Sorry, file size is too big (%1$s MB). Max file size limit: %2$s MB.', 'buddyboss' ),
 					round( $file['file']['size'] / 1048576, 1 ),
 					bp_video_allowed_upload_video_size()
 				),
