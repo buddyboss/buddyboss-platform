@@ -5062,6 +5062,8 @@ window.bp = window.bp || {};
 				this.listenTo(Backbone, 'onError', this.onError);
 				this.listenTo(Backbone, 'cleanFeedBack', this.cleanFeedback);
 
+				this.listenTo(Backbone, 'triggerToastMessage', this.triggerToastMessage);
+
 				if ( 'user' === BP_Nouveau.activity.params.object ) {
 					if ( ! BP_Nouveau.activity.params.access_control_settings.can_create_activity ) {
 						this.$el.addClass( 'bp-hide' );
@@ -5427,6 +5429,10 @@ window.bp = window.bp || {};
 				);
 			},
 
+			triggerToastMessage: function ( title, message, type, url, autoHide ) {
+				$( document ).trigger( 'bb_trigger_toast_message', [ title, message, type, url, autoHide ] );
+			},
+
 			displayFeedback: function ( model ) {
 				if ( _.isUndefined( this.model.get( 'errors' ) ) ) {
 					this.cleanFeedback();
@@ -5703,6 +5709,16 @@ window.bp = window.bp || {};
 
 						// Reset the form.
 						self.resetForm();
+
+						// Trigger Toast message if it is a scheduled post.
+						if( data.activity_action_type === 'scheduled' ) {
+							Backbone.trigger( 'triggerToastMessage',
+								BP_Nouveau.activity.strings.successScheduleTitle,
+								'<div>'+ BP_Nouveau.activity.strings.successScheduleDesc + '<span class="bb-view-scheduled-posts">' + BP_Nouveau.activity.strings.viewSchedulePosts + '</span></div>',
+								'success',
+								null,
+								true );
+						}
 
 						// Display a successful feedback if the acticity is not consistent with the displayed stream.
 						if ( ! toPrepend ) {
