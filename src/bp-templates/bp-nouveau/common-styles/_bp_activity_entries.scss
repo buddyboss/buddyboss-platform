@@ -23,6 +23,33 @@
 			padding-bottom: $pad-med;
 		}
 
+		&.bb-closed-comments {
+
+			.acomment-reply,
+			.acomment-edit,
+			.edit-activity {
+				display: none !important;
+			}
+
+			> .activity-comments > .ac-form {
+				display: none !important;
+			}
+
+			.generic-button:has(.edit-activity) {
+				display: none;
+			}
+
+			.bb-activity-closed-comments-notice {
+				background: #e1e3e5;
+				margin: 0 -15px;
+				text-align: center;
+				padding: 5px;
+				font-size: 13px;
+				font-weight: 600;
+				text-wrap: nowrap;
+			}
+		}
+
 		div.item-avatar { // 'div' for weight
 			margin: 0 auto;
 			text-align: center;
@@ -636,6 +663,12 @@
 			right: initial;
 			top: initial;
 
+			+ .bb-pin-action {
+				position: static;
+				float: right;
+				margin: 5px -5px 0 0;
+			}
+
 			.bb-activity-more-options-action {
 
 				&[data-balloon][data-balloon-pos="up"]:after {
@@ -763,6 +796,14 @@
 						&.pin-activity:before {
 							content: "\e9e9";
 							font-size: 19px;
+						}
+
+						&.close-activity-comment:before {
+							content: "\ee35";
+						}
+
+						&.unclose-activity-comment:before {
+							content: "\ee33";
 						}
 
 						&.unpin-activity:before {
@@ -1797,6 +1838,16 @@
 		user-select: none;
 	}
 
+}
+
+.activity-modal {
+
+	&.bb-closed-comments {
+
+		.footer-overflow {
+			display: none !important;
+		}
+	}
 }
 
 // close .activity-list

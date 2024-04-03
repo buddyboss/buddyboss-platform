@@ -153,6 +153,14 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 	<?php
 	bp_nouveau_activity_hook( 'before', 'entry_comments' );
 
+	$closed_notice = bb_get_close_activity_comments_notice( $activity_id );
+	if ( ! empty( $closed_notice ) ) {
+		?>
+
+		<div class='bb-activity-closed-comments-notice'><?php echo esc_html( $closed_notice ); ?></div>
+		<?php
+	}
+
 	if ( bp_activity_can_comment() ) {
 		$class = 'activity-comments';
 		if ( 'blogs' === bp_get_activity_object_name() ) {
@@ -161,9 +169,7 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 			$class .= bb_is_activity_comment_threading_enabled() ? ' threaded-comments threaded-level-' . bb_get_activity_comment_threading_depth() : '';
 		}
 		?>
-
 		<div class="<?php echo $class ?>">
-
 			<?php
 			if ( bp_activity_get_comment_count() ) {
 				bp_activity_comments();

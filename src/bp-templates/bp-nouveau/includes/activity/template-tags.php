@@ -711,7 +711,7 @@ function bp_nouveau_activity_comments( $args = array() ) {
  * @type bool $limit_comments     Limit comments loading or not Default: false.
  * @type int  $comment_load_limit The number of comments to load. Default: 0.
  * }
- * 
+ *
  */
 function bp_nouveau_activity_recurse_comments( $comment, $args = array() ) {
 	global $activities_template;
@@ -760,25 +760,25 @@ function bp_nouveau_activity_recurse_comments( $comment, $args = array() ) {
 
 			// Put the comment into the global so it's available to filters.
 			$activities_template->activity->current_comment = $comment_child;
-	
+
 			/**
 			 * Fires before the display of an activity comment.
 			 *
 			 * @since BuddyPress 1.5.0
 			 */
 			do_action( 'bp_before_activity_comment' );
-	
+
 			bp_get_template_part( 'activity/comment' );
-	
+
 			/**
 			 * Fires after the display of an activity comment.
 			 *
 			 * @since BuddyPress 1.5.0
 			 */
 			do_action( 'bp_after_activity_comment' );
-	
+
 			unset( $activities_template->activity->current_comment );
-	
+
 			$comment_loaded_count++;
 		}
 	}
@@ -1870,6 +1870,53 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 				esc_html( $delete_args['data_bp_tooltip'] )
 			),
 		);
+	}
+
+	// Close comments related menu.
+	if ( bb_is_close_activity_comments_enabled() && bp_activity_can_comment() ) {
+
+		$closed_action_label     = esc_html__( 'Turn off commenting', 'buddyboss' );
+		$closed_action_class     = 'close-activity-comment';
+		$is_closed_comments      = bb_is_activity_comments_closed( $activity_id );
+		$closed_action_permitted = false;
+
+		$check_args = array(
+			'activity_id' => $activity_id,
+			'action'      => $is_closed_comments ? 'unclose_comments' : 'close_comments',
+		);
+
+		$retval = bb_activity_comments_close_action_allowed( $check_args );
+		if ( 'allowed' === $retval ) {
+			$closed_action_permitted = true;
+		}
+
+		if ( $is_closed_comments ) {
+			// Unable to edit closed comments activity.
+			$closed_action_label = esc_html__( 'Turn on commenting', 'buddyboss' );
+			$closed_action_class = 'unclose-activity-comment';
+		}
+
+		if ( $closed_action_permitted ) {
+			$buttons['close_comments'] = array(
+				'id'                => 'close_comments',
+				'component'         => 'activity',
+				'parent_element'    => $parent_element,
+				'parent_attr'       => $parent_attr,
+				'must_be_logged_in' => true,
+				'button_element'    => $button_element,
+				'button_attr'       => array(
+					'id'            => '',
+					'href'          => '',
+					'class'         => 'button item-button bp-secondary-action ' . $closed_action_class,
+					'data-bp-nonce' => '',
+				),
+				'link_text'         => sprintf(
+					'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
+					$closed_action_label,
+					$closed_action_label
+				),
+			);
+		}
 	}
 
 	global $activities_template;

@@ -1263,7 +1263,7 @@ window.bp = window.bp || {};
 
 				form.removeClass( 'root' );
 				$( '.ac-form' ).addClass( 'not-initialized' );
-				
+
 				bp.Nouveau.Activity.clearFeedbackNotice( form );
 
 				/* Remove any error messages */
@@ -1775,7 +1775,7 @@ window.bp = window.bp || {};
 							} else {
 								activity_stream = target.closest( '#activity-stream' );
 							}
-							
+
 
 							if ( response.success ) {
 
@@ -3741,7 +3741,7 @@ window.bp = window.bp || {};
 
 			var form = modal.find( '#ac-form-' + activityID );
 			modal.find( '.acomment-display' ).removeClass( 'display-focus' );
-			modal.find( '.comment-item' ).removeClass( 'comment-item-focus' );			
+			modal.find( '.comment-item' ).removeClass( 'comment-item-focus' );
 			modal.find( '.bb-modal-activity-footer' ).addClass( 'active' ).append( form );
 			form.removeClass( 'not-initialized' ).addClass( 'root' );
 			form.find( '#ac-input-' + activityID ).focus();
