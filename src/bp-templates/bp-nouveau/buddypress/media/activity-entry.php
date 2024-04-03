@@ -33,18 +33,19 @@ if ( $group_id > 0 ) {
 	$move_type = 'profile';
 }
 $is_comment_pic = bp_media_is_activity_comment_photo( $media_template->media );
-$more_media     = $media_template->media_count > 5;
+$max_length     = $is_comment_pic ? bb_media_get_activity_comment_max_thumb_length() : bb_media_get_activity_max_thumb_length();
+$more_media     = $media_template->media_count > $max_length ? true : false;
 ?>
 
 <div class="bb-activity-media-elem media-activity
 	<?php
 	echo esc_attr( $bp_get_media_id ) . ' ';
-	echo $media_template->current_media > 4 ? esc_attr( 'hide' ) : '';
+	echo $media_template->current_media > ( $max_length - 1 ) ? esc_attr( 'hide ' ) : '';
 	echo 1 === $media_template->media_count || $media_template->media_count > 1 && 0 === $media_template->current_media ? esc_attr( 'act-grid-1-1 ' ) : '';
 	echo $media_template->media_count > 1 && $media_template->current_media > 0 ? 'act-grid-1-2 ' : '';
 	echo $width > $height ? 'bb-horizontal-layout' : '';
 	echo $height > $width || $width === $height ? esc_attr( 'bb-vertical-layout' ) : '';
-	echo ( $more_media && 4 === $media_template->current_media ) ? esc_attr( ' no_more_option ' ) : '';
+	echo ( $more_media && ( $max_length - 1 ) === $media_template->current_media ) ? esc_attr( ' no_more_option ' ) : '';
 	?>
 	" data-id="<?php echo esc_attr( $bp_get_media_id ); ?>">
 	<div class="media-action-wrap">
@@ -108,8 +109,8 @@ $more_media     = $media_template->media_count > 5;
 		<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php echo 1 === $media_template->media_count ? esc_url( bp_get_media_attachment_image_activity_thumbnail() ) : esc_url( bb_get_media_photos_directory_image_thumbnail() ); ?>" class="no-round photo lazy" alt="<?php bp_media_title(); ?>" />
 
 		<?php
-		if ( $media_template->media_count > 5 && 4 === $media_template->current_media ) {
-			$count = $media_template->media_count - 5;
+		if ( $media_template->media_count > $max_length && ( $max_length - 1 ) === $media_template->current_media ) {
+			$count = $media_template->media_count - $max_length;
 			?>
 			<span class="bb-photos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Photos', 'buddyboss' ); ?></span></span></span>
 			<?php

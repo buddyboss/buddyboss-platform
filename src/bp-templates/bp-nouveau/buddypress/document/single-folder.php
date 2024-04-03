@@ -9,6 +9,8 @@
  * @version 1.4.0
  */
 
+$is_send_ajax_request = bb_is_send_ajax_request();
+
 global $document_folder_template;
 if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_group_folders() ) {
 	$folder_id = (int) bp_action_variable( 1 );
@@ -128,8 +130,16 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 					}
 					?>
 				</div> <!-- .bp-media-header-wrap -->
-				<div id="media-stream" class="media" data-bp-list="document">
-					<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'member-document-loading' ); ?></div>
+				<div id="media-stream" class="media" data-bp-list="document" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+					<?php
+					if ( $is_send_ajax_request ) {
+						echo '<div id="bp-ajax-loader">';
+						bp_nouveau_user_feedback( 'member-document-loading' );
+						echo '</div>';
+					} else {
+						bp_get_template_part( 'document/document-loop' );
+					}
+					?>
 				</div>
 			</div>
 		</div>
