@@ -8087,10 +8087,60 @@ span.dashicons.dashicons-admin-file:before {
   height: 170px;
 }
 
-@media screen and (max-width: 544px) {
+@media screen and (max-width: 670px) {
   .buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity,
   .bb-media-model-wrapper .activity-comments .bb-activity-media-elem.document-activity {
     width: 250px;
+  }
+  .buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity .document-audio-wrap ~ .document-action-wrap,
+  .buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity .document-preview-wrap ~ .document-action-wrap,
+  .bb-media-model-wrapper .activity-comments .bb-activity-media-elem.document-activity .document-audio-wrap ~ .document-action-wrap,
+  .bb-media-model-wrapper .activity-comments .bb-activity-media-elem.document-activity .document-preview-wrap ~ .document-action-wrap {
+    bottom: unset;
+    top: 21px;
+  }
+  .buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap,
+  .bb-media-model-wrapper .activity-comments .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap {
+    padding: 0 !important;
+  }
+  .buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-title,
+  .bb-media-model-wrapper .activity-comments .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-title {
+    width: calc(100% - 5px);
+  }
+  .buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity .document-preview-wrap,
+  .bb-media-model-wrapper .activity-comments .bb-activity-media-elem.document-activity .document-preview-wrap {
+    height: 120px;
+  }
+  .buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity .document-description-wrap .document-helper-text > span:first-of-type,
+  .bb-media-model-wrapper .activity-comments .bb-activity-media-elem.document-activity .document-description-wrap .document-helper-text > span:first-of-type {
+    display: none;
+  }
+  .buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-description,
+  .bb-media-model-wrapper .activity-comments .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-description {
+    width: 100%;
+  }
+  .buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-helper-text-click,
+  .bb-media-model-wrapper .activity-comments .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-helper-text-click {
+    margin-right: 0;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity,
+  .bb-media-model-wrapper .activity-comments .bb-activity-media-elem.document-activity {
+    width: 200px;
+  }
+  .buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity .document-description-wrap,
+  .bb-media-model-wrapper .activity-comments .bb-activity-media-elem.document-activity .document-description-wrap {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .buddypress-wrap .activity-comments .bb-activity-media-elem.document-activity,
+  .bb-media-model-wrapper .activity-comments .bb-activity-media-elem.document-activity {
+    width: 160px;
   }
 }
 
@@ -8256,6 +8306,64 @@ span.dashicons.dashicons-admin-file:before {
 .buddypress-wrap .bb-media-info-section .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1),
 .bb-media-model-wrapper .bb-media-info-section .activity-comments .bb-activity-video-wrap:not(.bb-video-length-1) {
   flex-wrap: wrap;
+}
+
+@media screen and (min-width: 1024px), screen and (max-width: 550px) {
+  .buddypress-wrap .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity,
+  .bb-media-model-wrapper .bb-media-info-section .activity-comments .bb-activity-media-elem.document-activity {
+    width: 220px;
+  }
+  .buddypress-wrap .bb-media-info-section .activity-comments.threaded-level-3 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity, .buddypress-wrap .bb-media-info-section .activity-comments.threaded-level-4 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity,
+  .bb-media-model-wrapper .bb-media-info-section .activity-comments.threaded-level-3 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity,
+  .bb-media-model-wrapper .bb-media-info-section .activity-comments.threaded-level-4 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity {
+    width: 145px;
+  }
+  .buddypress-wrap .bb-media-info-section .activity-comments.threaded-level-3 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-preview-wrap, .buddypress-wrap .bb-media-info-section .activity-comments.threaded-level-4 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-preview-wrap,
+  .bb-media-model-wrapper .bb-media-info-section .activity-comments.threaded-level-3 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-preview-wrap,
+  .bb-media-model-wrapper .bb-media-info-section .activity-comments.threaded-level-4 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-preview-wrap {
+    height: 100px;
+  }
+  .buddypress-wrap .bb-media-info-section .activity-comments.threaded-level-3 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-audio-wrap ~ .document-action-wrap,
+  .buddypress-wrap .bb-media-info-section .activity-comments.threaded-level-3 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-preview-wrap ~ .document-action-wrap, .buddypress-wrap .bb-media-info-section .activity-comments.threaded-level-4 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-audio-wrap ~ .document-action-wrap,
+  .buddypress-wrap .bb-media-info-section .activity-comments.threaded-level-4 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-preview-wrap ~ .document-action-wrap,
+  .bb-media-model-wrapper .bb-media-info-section .activity-comments.threaded-level-3 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-audio-wrap ~ .document-action-wrap,
+  .bb-media-model-wrapper .bb-media-info-section .activity-comments.threaded-level-3 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-preview-wrap ~ .document-action-wrap,
+  .bb-media-model-wrapper .bb-media-info-section .activity-comments.threaded-level-4 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-audio-wrap ~ .document-action-wrap,
+  .bb-media-model-wrapper .bb-media-info-section .activity-comments.threaded-level-4 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-preview-wrap ~ .document-action-wrap {
+    bottom: unset;
+    top: 21px;
+  }
+  .buddypress-wrap .bb-media-info-section .activity-comments.threaded-level-3 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-description-wrap, .buddypress-wrap .bb-media-info-section .activity-comments.threaded-level-4 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-description-wrap,
+  .bb-media-model-wrapper .bb-media-info-section .activity-comments.threaded-level-3 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-description-wrap,
+  .bb-media-model-wrapper .bb-media-info-section .activity-comments.threaded-level-4 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-description-wrap {
+    padding-right: 0;
+    padding-left: 0;
+  }
+  .buddypress-wrap .bb-media-info-section .activity-comments.threaded-level-3 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-description-wrap .document-helper-text > span:first-of-type, .buddypress-wrap .bb-media-info-section .activity-comments.threaded-level-4 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-description-wrap .document-helper-text > span:first-of-type,
+  .bb-media-model-wrapper .bb-media-info-section .activity-comments.threaded-level-3 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-description-wrap .document-helper-text > span:first-of-type,
+  .bb-media-model-wrapper .bb-media-info-section .activity-comments.threaded-level-4 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-description-wrap .document-helper-text > span:first-of-type {
+    display: none;
+  }
+  .buddypress-wrap .bb-media-info-section .activity-comments.threaded-level-3 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-description, .buddypress-wrap .bb-media-info-section .activity-comments.threaded-level-4 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-description,
+  .bb-media-model-wrapper .bb-media-info-section .activity-comments.threaded-level-3 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-description,
+  .bb-media-model-wrapper .bb-media-info-section .activity-comments.threaded-level-4 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-description {
+    width: 100%;
+  }
+  .buddypress-wrap .bb-media-info-section .activity-comments.threaded-level-3 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-helper-text-click, .buddypress-wrap .bb-media-info-section .activity-comments.threaded-level-4 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-helper-text-click,
+  .bb-media-model-wrapper .bb-media-info-section .activity-comments.threaded-level-3 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-helper-text-click,
+  .bb-media-model-wrapper .bb-media-info-section .activity-comments.threaded-level-4 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-helper-text-click {
+    margin-right: 0;
+  }
+  .buddypress-wrap .bb-media-info-section .activity-comments.threaded-level-3 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-title, .buddypress-wrap .bb-media-info-section .activity-comments.threaded-level-4 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-title,
+  .bb-media-model-wrapper .bb-media-info-section .activity-comments.threaded-level-3 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-title,
+  .bb-media-model-wrapper .bb-media-info-section .activity-comments.threaded-level-4 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-title {
+    width: calc(100% - 5px);
+  }
+  .buddypress-wrap .bb-media-info-section .activity-comments.threaded-level-3 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-detail-wrap, .buddypress-wrap .bb-media-info-section .activity-comments.threaded-level-4 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-detail-wrap,
+  .bb-media-model-wrapper .bb-media-info-section .activity-comments.threaded-level-3 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-detail-wrap,
+  .bb-media-model-wrapper .bb-media-info-section .activity-comments.threaded-level-4 ul > li > ul > li > ul > li .bb-activity-media-elem.document-activity .document-detail-wrap {
+    padding: 0 !important;
+  }
 }
 
 .buddypress-wrap .activity-comments .ac-form.has-gif .ac-reply-content .ac-submit-wrap, .buddypress-wrap .activity-comments .ac-form.has-content .ac-reply-content .ac-submit-wrap, .buddypress-wrap .activity-comments .ac-form.has-media .ac-reply-content .ac-submit-wrap,
