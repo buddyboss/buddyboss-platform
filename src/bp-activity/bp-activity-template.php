@@ -2857,6 +2857,10 @@ function bp_get_activity_css_class() {
 		$class .= ' bb-pinned';
 	}
 
+	if ( bb_user_has_mute_notification( bp_get_activity_id(), bp_loggedin_user_id() ) ) {
+		$class .= ' bb-muted';
+	}
+
 	if ( 'groups' === $activities_template->activity->component ) {
 		$class .= ' group-' . $activities_template->activity->item_id;
 	}

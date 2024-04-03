@@ -257,11 +257,13 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'uncloseComments'     => esc_html__( 'Turn on commenting', 'buddyboss' ),
 		'closeCommentsError'  => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
 		'commentPostError'	  => esc_html__( 'There was a problem posting your comment.', 'buddyboss' ),
+		'muteNotification'    => esc_html__( 'Turn off notifications', 'buddyboss' ),
+		'unmuteNotification'  => esc_html__( 'Turn on notifications', 'buddyboss' ),
 	);
 
-    if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
-        $activity_strings['whatsnewPlaceholder'] = sprintf( esc_html__( 'Write something to %s...', 'buddyboss' ), bp_get_user_firstname( bp_get_displayed_user_fullname() ) );
-    }
+	if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
+		$activity_strings['whatsnewPlaceholder'] = sprintf( esc_html__( 'Write something to %s...', 'buddyboss' ), bp_get_user_firstname( bp_get_displayed_user_fullname() ) );
+	}
 
 	if ( bp_is_group() ) {
 		$activity_strings['whatsnewPlaceholder'] = esc_html__( 'Share something with the group...', 'buddyboss' );
@@ -667,5 +669,3 @@ function bp_nouveau_activity_customizer_controls( $controls = array() ) {
 //		),
 	) );
 }
-
-

@@ -1867,13 +1867,6 @@ window.bp = window.bp || {};
 								]
 							);
 						}
-
-						if ( isInsideModal ) {
-							bp.Nouveau.Activity.activityPinHasUpdates = true;
-						}
-
-						bp.Nouveau.Activity.activityHasUpdates = true;
-						bp.Nouveau.Activity.currentActivityId = activity_id;
 					}
 				).fail(
 					function() {
@@ -1956,6 +1949,13 @@ window.bp = window.bp || {};
 								]
 							);
 						}
+
+						if ( isInsideModal ) {
+							bp.Nouveau.Activity.activityPinHasUpdates = true;
+						}
+
+						bp.Nouveau.Activity.activityHasUpdates = true;
+						bp.Nouveau.Activity.currentActivityId = activity_id;
 					}
 				).fail(
 					function() {
