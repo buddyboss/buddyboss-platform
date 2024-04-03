@@ -69,6 +69,10 @@ class Sync {
 			return false;
 		}
 
+		if ( empty( bp_ld_sync()->isRequestExists( 'bp-ld-sync-enable' ) ) ){
+			return false;
+		}
+
 		// created from backend
 		if ( bp_ld_sync()->isRequestExists( 'bp-ld-sync-enable' ) && ! bp_ld_sync()->getRequest( 'bp-ld-sync-enable' ) ) {
 			$group_id = get_post_meta( $groupId, '_sync_group_id', true );
@@ -79,11 +83,10 @@ class Sync {
 			return false;
 		}
 
-		// Return if the ld-to-bb group sync is disabled.
-		$bp_ld_sync_settings = get_option( 'bp_ld_sync_settings' );
-		if ( empty( $bp_ld_sync_settings[ 'learndash' ][ 'default_auto_sync' ] ) || $bp_ld_sync_settings[ 'learndash' ][ 'default_auto_sync' ] == "0" ) {
-			return false;
-		}
+		// created programmatically
+		// if ( ! bp_ld_sync( 'settings' )->get( 'learndash.default_auto_sync' ) ) {
+			// return false;
+		// }
 
 		$newGroup  = bp_ld_sync()->getRequest( 'bp-ld-sync-id', null );
 		$generator = $this->generator( 0, $groupId );
