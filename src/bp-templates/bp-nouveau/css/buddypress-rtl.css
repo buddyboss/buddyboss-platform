@@ -29760,7 +29760,7 @@ span.icons:before {
   position: fixed;
   bottom: 25px;
   left: 35px;
-  max-width: 360px;
+  max-width: 370px;
   width: 100%;
   z-index: 1099;
 }
@@ -29864,6 +29864,11 @@ body.activity-modal-open .bb-toast-messages-enable .bb-toast-messages {
   font-weight: 400;
   font-size: 13px;
   line-height: 20px;
+  width: 100%;
+}
+
+.bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .toast-messages-content .toast-messages-action_link {
+  display: inline-block;
 }
 
 .bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .actions {
@@ -29898,6 +29903,11 @@ body.activity-modal-open .bb-toast-messages-enable .bb-toast-messages {
   left: 0;
   bottom: 0;
   top: 0;
+}
+
+.bb-toast-messages-enable .bb-toast-messages .toast-messages-list .toast-messages-action_link {
+  color: #5087e5;
+  cursor: pointer;
 }
 
 .bb-toast-messages-enable .bb-toast-messages.bb-position-right {

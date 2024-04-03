@@ -5714,10 +5714,10 @@ window.bp = window.bp || {};
 						if( data.activity_action_type === 'scheduled' ) {
 							Backbone.trigger( 'triggerToastMessage',
 								BP_Nouveau.activity.strings.successScheduleTitle,
-								'<div>'+ BP_Nouveau.activity.strings.successScheduleDesc + '<span class="bb-view-scheduled-posts">' + BP_Nouveau.activity.strings.viewSchedulePosts + '</span></div>',
+								'<div>'+ BP_Nouveau.activity.strings.successScheduleDesc + ' <span class="toast-messages-action_link bb-view-scheduled-posts"> ' + BP_Nouveau.activity.strings.viewSchedulePosts + '</span></div>',
 								'success',
 								null,
-								true );
+								false );
 						}
 
 						// Display a successful feedback if the acticity is not consistent with the displayed stream.
