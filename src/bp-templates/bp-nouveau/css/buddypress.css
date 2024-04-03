@@ -29771,6 +29771,10 @@ span.icons:before {
   }
 }
 
+body.activity-modal-open .bb-toast-messages-enable .bb-toast-messages {
+  z-index: 999999;
+}
+
 .bb-toast-messages-enable .bb-toast-messages .toast-messages-list {
   margin: 0;
   padding: 0;

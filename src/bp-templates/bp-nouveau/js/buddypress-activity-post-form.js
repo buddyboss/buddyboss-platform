@@ -394,7 +394,7 @@ window.bp = window.bp || {};
 
 				// Check if time has passed and trigger warning
 				// TODO: Compare scheduled time with server
-				var activity_schedule_datetime = activity_data.activity_schedule_date_raw + " " + activity_data.activity_schedule_time + " " + activity_data.activity_schedule_meridiem;
+				var activity_schedule_datetime = activity_data.activity_schedule_date_raw + ' ' + activity_data.activity_schedule_time + ' ' + activity_data.activity_schedule_meridiem;
 				var activity_schedule_date = new Date(activity_schedule_datetime);
 				var current_date = new Date();
 				if (current_date > activity_schedule_date) {
@@ -4963,6 +4963,16 @@ window.bp = window.bp || {};
 						function () {
 							target.removeClass( 'loading' );
 							$( li_parent ).remove();
+							$( document ).trigger(
+								'bb_trigger_toast_message',
+								[
+									BP_Nouveau.activity.strings.successDeletionTitle,
+									'<div>'+ BP_Nouveau.activity.strings.successDeletionDesc +'</div>',
+									'delete',
+									null,
+									true
+								]
+							);
 						}
 					).fail(
 						function ( response ) {

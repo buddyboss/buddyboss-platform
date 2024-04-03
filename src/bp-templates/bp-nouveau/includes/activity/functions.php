@@ -259,6 +259,8 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'schedulePostButton'  => esc_html__( 'Schedule', 'buddyboss' ),
 		'confirmDeletePost'   => esc_html__( 'Are you sure you want to delete that permanently?', 'buddyboss' ),
 		'scheduleWarning'     => esc_html__( 'Schedule Outdated', 'buddyboss' ),
+		'successDeletionTitle'=> esc_html__( 'Scheduled Post Deleted', 'buddyboss' ),
+		'successDeletionDesc' => esc_html__( 'Your scheduled post has been deleted.', 'buddyboss' ),
 	);
 
     if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
