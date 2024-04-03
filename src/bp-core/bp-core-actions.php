@@ -1156,3 +1156,16 @@ function buddyboss_directory_save_layout() {
 
 add_action( 'wp_ajax_buddyboss_directory_save_layout', 'buddyboss_directory_save_layout' );
 add_action( 'wp_ajax_nopriv_buddyboss_directory_save_layout', 'buddyboss_directory_save_layout' );
+
+/**
+ * Function to load background process log class.
+ *
+ * @since BuddyBoss 2.5.60
+ */
+function bb_bg_process_log_load() {
+	if ( class_exists( 'BB_BG_Process_Log' ) ) {
+		BB_BG_Process_Log::instance();
+	}
+}
+
+add_action( 'bp_init', 'bb_bg_process_log_load' );

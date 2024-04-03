@@ -1963,6 +1963,11 @@ function bp_core_activate_signup( $key ) {
 
 	$user = false;
 
+	$is_valid = apply_filters( 'bb_before_core_activate_signup', true );
+	if ( is_wp_error( $is_valid ) ) {
+		return $is_valid;
+	}
+
 	// Multisite installs have their own activation routine.
 	if ( is_multisite() ) {
 		$user = wpmu_activate_signup( $key );

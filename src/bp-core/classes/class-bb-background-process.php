@@ -432,6 +432,15 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 			do {
 				$batch = $this->get_batch();
 
+				/**
+				 * Filter to use before start process.
+				 *
+				 * @since BuddyBoss 2.5.60
+				 *
+				 * @param object $batch Batch object.
+				 */
+				$log_batch = apply_filters( 'bb_bg_process_start', $batch );
+
 				do_action( $this->identifier . '_batch_process', $batch );
 
 				$key_id = $batch->key;
@@ -453,6 +462,16 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 				if ( empty( $batch->data ) ) {
 					$this->delete( $key_id );
 				}
+
+				/**
+				 * Action to use after end the process.
+				 *
+				 * @since BuddyBoss 2.5.60
+				 *
+				 * @param object $batch Batch object.
+				 */
+				do_action( 'bb_bg_process_end', $log_batch );
+
 			} while ( ! $this->time_exceeded() && ! $this->memory_exceeded() && ! $this->is_queue_empty() && ! $this->is_paused() && ! $this->is_cancelled() );
 
 			$this->unlock_process();
