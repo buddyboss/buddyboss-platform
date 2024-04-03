@@ -25,6 +25,13 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	protected $activity_endpoint;
 
 	/**
+	 * Allow batch.
+	 *
+	 * @var true[] $allow_batch
+	 */
+	protected $allow_batch = array( 'v1' => true );
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.1.0
@@ -59,7 +66,8 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 					'permission_callback' => array( $this, 'create_item_permissions_check' ),
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
 				),
-				'schema' => array( $this, 'get_item_schema' ),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_item_schema' ),
 			)
 		);
 
@@ -67,7 +75,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			$this->namespace,
 			$activity_endpoint . '/comment/(?P<comment_id>[\d]+)',
 			array(
-				'args'   => array(
+				'args'        => array(
 					'comment_id' => array(
 						'description' => __( 'A unique numeric ID for the activity comment.', 'buddyboss' ),
 						'type'        => 'integer',
@@ -96,7 +104,8 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 					'callback'            => array( $this, 'delete_item' ),
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
 				),
-				'schema' => array( $this, 'get_item_schema' ),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_item_schema' ),
 			)
 		);
 	}
