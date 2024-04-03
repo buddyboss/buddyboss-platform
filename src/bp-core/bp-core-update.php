@@ -3460,6 +3460,7 @@ function bb_update_to_2_4_75() {
 
 /**
  * For existing installation, disable close comments setting by default.
+ * Migrate comment related discussion settings to new comment settings.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -3475,4 +3476,12 @@ function bb_update_to_2_5_80() {
 	set_transient( 'bb_update_to_2_5_80', true, HOUR_IN_SECONDS );
 
 	bp_update_option( '_bb_enable_close_activity_comments', 0 );
+
+	bp_update_option( '_bb_enable_activity_comment_threading', (int) get_option( 'thread_comments' ) );
+
+	$thread_comments_depth = (int) get_option( 'thread_comments_depth', 3 );
+	if ( $thread_comments_depth > 4 ) {
+		$thread_comments_depth = 4;
+	}
+	bp_update_option( '_bb_activity_comment_threading_depth', $thread_comments_depth );
 }
