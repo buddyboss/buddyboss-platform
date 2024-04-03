@@ -630,9 +630,9 @@ function bb_recaptcha_verification_front( $action = '' ) {
 
 			// Handle other reCAPTCHA verification responses.
 			if ( $response ) {
-				// Response success not empty then it will true.
+				// Response success doesn't empty then it will true.
 
-				// Response success empty then verification fail.
+				// Response success empty then verification fails.
 				if (
 					empty( $response['success'] ) ||
 					(
@@ -644,8 +644,9 @@ function bb_recaptcha_verification_front( $action = '' ) {
 								$response['action'] !== $action
 							) ||
 							(
+								1 !== (int) $score_threshold &&
 								isset( $response['score'] ) &&
-								$response['score'] >= $score_threshold
+								$response['score'] < $score_threshold
 							)
 						)
 					)
