@@ -12,12 +12,15 @@
 
 global $video_album_template;
 
+$is_send_ajax_request = bb_is_send_ajax_request();
+
 $album_id      = (int) bp_action_variable( 0 );
 $album_privacy = bb_media_user_can_access( $album_id, 'album' );
 $can_edit      = true === (bool) $album_privacy['can_edit'];
 $can_add       = true === (bool) $album_privacy['can_add'];
 
-if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) :
+if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) {
+
 	while ( bp_video_album() ) :
 		bp_the_video_album();
 
@@ -42,11 +45,11 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) :
 						<span class="bb-sep">&middot;</span>
 						<span>
 						<?php
-							printf(
-								/* translators: videos */
-								_n( '%s video', '%s videos', $video_album_template->album->video['total'], 'buddyboss' ), // phpcs:ignore
-								bp_core_number_format( $video_album_template->album->video['total'] ) // phpcs:ignore
-							);
+						printf(
+						/* translators: videos */
+							_n( '%s video', '%s videos', $video_album_template->album->video['total'], 'buddyboss' ), // phpcs:ignore
+							bp_core_number_format( $video_album_template->album->video['total'] ) // phpcs:ignore
+						);
 						?>
 						</span>
 					</p>
@@ -67,12 +70,13 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) :
 							<a class="bb-add-videos button small outline" id="bp-add-video" href="#" >
 								<?php esc_html_e( 'Add Videos', 'buddyboss' ); ?>
 							</a>
-						<?php } ?>
+							<?php
+						}
 
-						<?php if ( ( bp_is_my_profile() || bp_is_user_video() ) && ! bp_is_group() ) : ?>
+						if ( ( bp_is_my_profile() || bp_is_user_video() ) && ! bp_is_group() ) : ?>
 							<select id="bb-album-privacy">
-								<?php foreach ( bp_video_get_visibility_levels() as $k => $option ) { ?>
-									<?php
+								<?php
+								foreach ( bp_video_get_visibility_levels() as $k => $option ) {
 									$selected = '';
 									$privacy  = bp_get_album_privacy();
 									if ( $k === $privacy ) {
@@ -85,7 +89,7 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) :
 					</div>
 
 					<?php
-						bp_get_template_part( 'video/uploader' );
+					bp_get_template_part( 'video/uploader' );
 				endif;
 
 				if ( $can_add ) {
@@ -93,11 +97,20 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) :
 				}
 				?>
 
-				<div id="video-stream" class="video" data-bp-list="video">
-					<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'album-video-loading' ); ?></div>
+				<div id="video-stream" class="video" data-bp-list="video" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+					<?php
+					if ( $is_send_ajax_request ) {
+						echo '<div id="bp-ajax-loader">';
+						bp_nouveau_user_feedback( 'album-video-loading' );
+						echo '</div>';
+					} else {
+						bp_get_template_part( 'video/video-loop' );
+					}
+					?>
 				</div>
 			</div>
 		</div>
 		<?php
 	endwhile;
-endif; ?>
+}
+?>
