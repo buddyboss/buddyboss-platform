@@ -483,6 +483,10 @@ function bp_version_updater() {
 			bb_update_to_2_4_75();
 		}
 
+		if ( $raw_db_version < 21081 ) {
+			bb_update_to_2_5_80();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3452,4 +3456,23 @@ function bb_update_to_2_4_75() {
 		// Create a new table again.
 		BB_BG_Process_Log::instance()->create_table();
 	}
+}
+
+/**
+ * For existing installation, disable close comments setting by default.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_5_80() {
+
+	$is_already_run = get_transient( 'bb_update_to_2_5_80' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_update_to_2_5_80', true, HOUR_IN_SECONDS );
+
+	bp_update_option( '_bb_enable_close_activity_comments', 0 );
 }
