@@ -475,6 +475,18 @@ function bp_version_updater() {
 			bb_update_to_2_4_71();
 		}
 
+		if ( $raw_db_version < 20991 ) {
+			bb_update_to_2_4_74();
+		}
+
+		if ( $raw_db_version < 21011 ) {
+			bb_update_to_2_4_75();
+		}
+
+		if ( $raw_db_version < 21081 ) {
+			bb_update_to_2_5_80();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3394,4 +3406,90 @@ function bb_core_removed_orphaned_member_slug() {
 
 	// Re-register the background jobs until the result is empty.
 	bb_background_removed_orphaned_metadata();
+}
+
+/**
+ * Create a new table for background process logs.
+ *
+ * @since BuddyBoss 2.5.60
+ *
+ * @return void
+ */
+function bb_update_to_2_4_74() {
+	if ( class_exists( 'BB_BG_Process_Log' ) ) {
+		BB_BG_Process_Log::instance()->create_table();
+	}
+}
+
+/**
+ * Remove columns from index key for background logs table.
+ *
+ * @since BuddyBoss 2.5.70
+ *
+ * @return void
+ */
+function bb_update_to_2_4_75() {
+	global $wpdb;
+
+	if ( class_exists( 'BB_BG_Process_Log' ) ) {
+
+		// Delete the existing table.
+		$log_table_name = bp_core_get_table_prefix() . 'bb_background_process_logs';
+
+		// Check the index keys.
+		$indices_columns = $wpdb->get_col( $wpdb->prepare( "SELECT COLUMN_NAME FROM information_schema.statistics WHERE table_schema = %s AND table_name = %s", $wpdb->__get( 'dbname' ), $log_table_name ) );
+
+		if ( empty( $indices_columns ) ) {
+			return;
+		}
+
+		$pre_indices  = array( 'id', 'process_start_date_gmt' );
+		$diff_indices = array_diff( $indices_columns, $pre_indices );
+
+		if ( empty( $diff_indices ) ) {
+			return;
+		}
+
+		// Delete the existing table.
+		$wpdb->query( "DROP TABLE IF EXISTS {$log_table_name}" );
+
+		// Create a new table again.
+		BB_BG_Process_Log::instance()->create_table();
+	}
+}
+
+/**
+ * For existing installation, disable close comments setting by default.
+ * Migrate comment related discussion settings to new comment settings.
+ * Migrate the performance-related setting for existing installations.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_5_80() {
+
+	$is_already_run = get_transient( 'bb_update_to_2_5_80' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_update_to_2_5_80', true, HOUR_IN_SECONDS );
+
+	bp_update_option( '_bb_enable_close_activity_comments', 0 );
+
+	bp_update_option( '_bb_enable_activity_comment_threading', (int) get_option( 'thread_comments' ) );
+
+	$thread_comments_depth = (int) get_option( 'thread_comments_depth', 3 );
+	if ( $thread_comments_depth > 4 ) {
+		$thread_comments_depth = 4;
+	}
+	bp_update_option( '_bb_activity_comment_threading_depth', $thread_comments_depth );
+
+	$is_autoload = (bool) bp_get_option( '_bp_enable_activity_autoload', true );
+	$autoload_new_setting = ( $is_autoload ) ? 'infinite' : 'load_more';
+
+	bp_update_option( 'bb_activity_load_type', $autoload_new_setting );
+	bp_update_option( 'bb_ajax_request_page_load', 2 );
+	bp_update_option( 'bb_load_activity_per_request', 10 );
 }

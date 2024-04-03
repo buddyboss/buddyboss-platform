@@ -37,6 +37,13 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 	protected $members_endpoint;
 
 	/**
+	 * Allow batch.
+	 *
+	 * @var true[] $allow_batch
+	 */
+	protected $allow_batch = array( 'v1' => true );
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.1.0
@@ -58,7 +65,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<group_id>[\d]+)/members',
 			array(
-				'args'   => array(
+				'args'        => array(
 					'group_id' => array(
 						'description' => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
 						'type'        => 'integer',
@@ -76,7 +83,8 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 					'permission_callback' => array( $this, 'create_item_permissions_check' ),
 					'args'                => $this->get_endpoint_args_for_method( WP_REST_Server::CREATABLE ),
 				),
-				'schema' => array( $this, 'get_item_schema' ),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_item_schema' ),
 			)
 		);
 
@@ -84,7 +92,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<group_id>[\d]+)/members/(?P<user_id>[\d]+)',
 			array(
-				'args'   => array(
+				'args'        => array(
 					'group_id' => array(
 						'description' => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
 						'type'        => 'integer',
@@ -106,7 +114,8 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
 					'args'                => $this->get_endpoint_args_for_method( WP_REST_Server::DELETABLE ),
 				),
-				'schema' => array( $this, 'get_item_schema' ),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_item_schema' ),
 			)
 		);
 	}
