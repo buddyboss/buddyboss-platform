@@ -243,8 +243,54 @@
 				height: 170px;
 			}
 
-			@media screen and (max-width: 544px) {
+			@media screen and (max-width: 670px) {
 				width: 250px;
+
+				.document-audio-wrap ~ .document-action-wrap,
+				.document-preview-wrap ~ .document-action-wrap {
+					bottom: unset;
+					top: 21px;
+				}
+
+				.document-description-wrap .document-detail-wrap {
+					padding: 0 !important;
+				}
+
+				.document-description-wrap .document-detail-wrap .document-title {
+					width: calc(100% - 5px);
+				}
+
+				.document-preview-wrap {
+					height: 120px;
+				}
+
+				.document-description-wrap {
+
+					.document-helper-text > span:first-of-type {
+						display: none;
+					}
+
+					.document-detail-wrap .document-description {
+						width: 100%;
+					}
+
+					.document-detail-wrap .document-helper-text-click {
+						margin-left: 0;
+					}
+				}
+			}
+
+			@media screen and (max-width: 550px) {
+				width: 200px;
+
+				.document-description-wrap {
+					padding-left: 0;
+					padding-right: 0;
+				}
+			}
+
+			@media screen and (max-width: 460px) {
+				width: 160px;
 			}
 		}
 
@@ -416,6 +462,59 @@
 
 			.bb-activity-video-wrap:not(.bb-video-length-1) {
 				flex-wrap: wrap;
+			}
+
+			@media screen and (min-width: 1024px), screen and (max-width: 550px) {
+
+				.bb-activity-media-elem.document-activity {
+					width: 220px;
+				}
+
+				&.threaded-level-3,
+				&.threaded-level-4 {
+
+					ul > li > ul > li > ul > li {
+
+						.bb-activity-media-elem.document-activity {
+							width: 145px;
+
+							.document-preview-wrap {
+								height: 100px;
+							}
+
+							.document-audio-wrap ~ .document-action-wrap,
+							.document-preview-wrap ~ .document-action-wrap {
+								bottom: unset;
+								top: 21px;
+							}
+
+							.document-description-wrap {
+								padding-left: 0;
+								padding-right: 0;
+
+								.document-helper-text > span:first-of-type {
+									display: none;
+								}
+
+								.document-detail-wrap .document-description {
+									width: 100%;
+								}
+
+								.document-detail-wrap .document-helper-text-click {
+									margin-left: 0;
+								}
+							}
+
+							.document-description-wrap .document-detail-wrap .document-title {
+								width: calc(100% - 5px);
+							}
+
+							.document-detail-wrap {
+								padding: 0 !important;
+							}
+						}
+					}
+				}
 			}
 		}
 	}
