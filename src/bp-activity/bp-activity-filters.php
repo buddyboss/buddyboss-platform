@@ -190,6 +190,8 @@ add_action( 'bp_before_directory_activity_list', 'bb_emojionearea_add_popup_temp
 add_action( 'bp_before_group_activity_content', 'bb_emojionearea_add_popup_template' );
 add_action( 'bp_before_member_activity_content', 'bb_emojionearea_add_popup_template' );
 
+add_filter( 'bp_ajax_querystring', 'bb_activity_directory_set_pagination', 20, 2 );
+
 /** Functions *****************************************************************/
 
 /**
@@ -3732,4 +3734,25 @@ function bb_activity_recent_comment_class( $class ) {
 	$class .= ' bb-recent-comment';
 
 	return $class;
+}
+
+/**
+ * Function to update per page for activity.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $querystring Current query string.
+ * @param string $object      Current template component.
+ *
+ * @return string The AJAX querystring.
+ */
+function bb_activity_directory_set_pagination( $querystring, $object ) {
+	if ( 'activity' !== $object || bp_is_single_activity() ) {
+		return $querystring;
+	}
+
+	$querystring             = bp_parse_args( $querystring );
+	$querystring['per_page'] = bb_get_load_activity_per_request();
+
+	return http_build_query( $querystring );
 }

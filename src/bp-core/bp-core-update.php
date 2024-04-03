@@ -3461,6 +3461,7 @@ function bb_update_to_2_4_75() {
 /**
  * For existing installation, disable close comments setting by default.
  * Migrate comment related discussion settings to new comment settings.
+ * Migrate the performance-related setting for existing installations.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -3484,4 +3485,11 @@ function bb_update_to_2_5_80() {
 		$thread_comments_depth = 4;
 	}
 	bp_update_option( '_bb_activity_comment_threading_depth', $thread_comments_depth );
+
+	$is_autoload = (bool) bp_get_option( '_bp_enable_activity_autoload', true );
+	$autoload_new_setting = ( $is_autoload ) ? 'infinite' : 'load_more';
+
+	bp_update_option( 'bb_activity_load_type', $autoload_new_setting );
+	bp_update_option( 'bb_ajax_request_page_load', 2 );
+	bp_update_option( 'bb_load_activity_per_request', 10 );
 }
