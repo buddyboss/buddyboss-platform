@@ -12,11 +12,9 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 
 bp_nouveau_before_media_directory_content();
 bp_nouveau_template_notices();
-
 ?>
 
 <div class="screen-content">
-
 	<?php
 	bp_nouveau_media_hook( 'before_directory', 'list' );
 
@@ -43,7 +41,8 @@ bp_nouveau_template_notices();
 			</a>
 
 			<?php
-			if ( bp_is_profile_albums_support_enabled() ) {
+			$bp_is_profile_albums_support_enabled = bp_is_profile_albums_support_enabled();
+			if ( $bp_is_profile_albums_support_enabled ) {
 				?>
 				<a href="#" id="bb-create-album" class="bb-create-album button small">
 					<i class="bb-icon-l bb-icon-image-video"></i>
@@ -54,7 +53,7 @@ bp_nouveau_template_notices();
 
 			bp_get_template_part( 'media/uploader' );
 
-			if ( bp_is_profile_albums_support_enabled() ) {
+			if ( $bp_is_profile_albums_support_enabled ) {
 				bp_get_template_part( 'media/create-album' );
 			}
 		endif;

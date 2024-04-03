@@ -255,6 +255,8 @@ function bp_group_messages_groups_membership_accepted( $user_id, $group_id, $acc
 
 		$wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->messages->table_name_recipients} ( user_id, thread_id, unread_count ) VALUES ( %d, %d, 0 )", $user_id, $group_thread ) );
 
+		bb_clear_group_thread_cache( $group_thread );
+
 		if ( bb_is_last_message_group_join_message( $group_thread, $user_id ) ) {
 			return;
 		}
@@ -399,6 +401,8 @@ function bp_group_messages_join_new_member( $group_id, $user_id ) {
 
 		$wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->messages->table_name_recipients} ( user_id, thread_id, unread_count ) VALUES ( %d, %d, 0 )", $user_id, $group_thread ) );
 
+		bb_clear_group_thread_cache( $group_thread );
+
 		if ( bb_is_last_message_group_join_message( $group_thread, $user_id ) ) {
 			return;
 		}
@@ -489,6 +493,7 @@ function bp_group_messages_remove_group_member_from_thread( $group_id, $user_id 
 		);
 		bp_messages_update_meta( $last_message->id, 'group_message_group_left_users', array( $left_user ) );
 
+		bb_clear_group_thread_cache( $group_thread );
 	}
 }
 
@@ -518,6 +523,8 @@ function bp_group_messages_accept_new_member( $user_id, $group_id ) {
 		bp_messages_update_meta( $first_message->id, 'message_users_ids', implode( ',', $message_users_ids ) );
 
 		$wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->messages->table_name_recipients} ( user_id, thread_id, unread_count ) VALUES ( %d, %d, 0 )", $user_id, $group_thread ) );
+
+		bb_clear_group_thread_cache( $group_thread );
 
 		if ( bb_is_last_message_group_join_message( $group_thread, $user_id ) ) {
 			return;
@@ -580,6 +587,8 @@ function bp_group_messages_banned_member( $user_id, $group_id ) {
 		bp_messages_update_meta( $first_message->id, 'message_users_ids', implode( ',', $message_users_ids ) );
 		$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND thread_id = %d", $user_id, (int) $group_thread ) );
 
+		bb_clear_group_thread_cache( $group_thread );
+
 		/**
 		 * Fired action after user banned for the message.
 		 *
@@ -622,6 +631,8 @@ function bp_group_messages_admin_banned_member( $group_id, $user_id ) {
 		bp_messages_update_meta( $first_message->id, 'message_users_ids', implode( ',', $message_users_ids ) );
 		$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND thread_id = %d", $user_id, (int) $group_thread ) );
 
+		bb_clear_group_thread_cache( $group_thread );
+
 		/**
 		 * Fired action after user banned for the message.
 		 *
@@ -660,6 +671,8 @@ function bp_group_messages_unbanned_member( $group_id, $user_id ) {
 		bp_messages_update_meta( $first_message->id, 'message_users_ids', implode( ',', $message_users_ids ) );
 
 		$wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->messages->table_name_recipients} ( user_id, thread_id, unread_count ) VALUES ( %d, %d, 0 )", $user_id, $group_thread ) );
+
+		bb_clear_group_thread_cache( $group_thread );
 
 		/**
 		 * Fired action after user un-banned for the message.
@@ -736,6 +749,8 @@ function bp_messages_remove_user_to_group_message_thread( $group_id, $user_id ) 
 				'time'    => bp_core_current_time(),
 			);
 			bp_messages_update_meta( $last_message->id, 'group_message_group_left_users', array( $left_user ) );
+
+			bb_clear_group_thread_cache( $group_thread );
 		}
 	}
 }
@@ -1203,3 +1218,23 @@ function bb_recipients_recipient_get_join_sql_with_group_members( $sql, $r ) {
 	return $sql;
 }
 
+/**
+ * Clear group message thread cache based on thread id.
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @param int $thread_id Message thread id.
+ *
+ * @return void
+ */
+function bb_clear_group_thread_cache( $thread_id ) {
+	if ( ! $thread_id ) {
+		return;
+	}
+
+	$cache_key = "{$thread_id}99999999";
+	wp_cache_delete( $cache_key, 'bp_messages_threads' );
+	bp_messages_delete_thread_paginated_messages_cache( $thread_id );
+	wp_cache_delete( 'thread_recipients_' . $thread_id, 'bp_messages' );
+	bp_core_reset_incrementor( 'bp_messages' );
+}

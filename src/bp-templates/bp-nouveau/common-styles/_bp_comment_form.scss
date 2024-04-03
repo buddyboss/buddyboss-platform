@@ -2,13 +2,13 @@
 // @version 3.0.0
 form.ac-form {
 	display: none;
-	padding: $pad-med;
+	margin: 15px 0;
+	padding: 0;
 
 	.ac-reply-avatar {
-		float: left;
+		margin-top: 4px;
 
 		img {
-			border: 1px solid #eee;
 			image-rendering: -webkit-optimize-contrast;
 		}
 	}
@@ -94,21 +94,103 @@ form.ac-form {
 	}
 }
 
-// Edit Comment Form
-form.acomment-edit {
+// Comment Form
+form.ac-form {
+	display: block;
 
-	.bp-ac-form-cotainer {
+	&.events-initiated:not(.has-content) {
+
+		.ac-reply-content {
+
+			.ac-input {
+
+				&:before {
+					content: attr(data-placeholder);
+					color: $light-text;
+					opacity: 0.5;
+					position: absolute;
+				}
+			}
+		}
+	}
+
+	&.not-initialized {
+
+		.ac-reply-content {
+
+			.ac-input {
+				min-height: 25px;
+				line-height: 25px;
+
+				&:before {
+					content: attr(data-placeholder);
+					color: $light-text;
+					opacity: 0.5;
+				}
+			}
+
+			> button,
+			> input,
+			> .ac-submit-wrap {
+				display: none !important;
+			}
+		}
+
+		.ac-reply-content {
+			height: 44px;
+
+			.ac-textarea {
+				padding-right: 0;
+
+				.ac-reply-toolbar {
+					left: inherit;
+					right: 0;
+					bottom: inherit;
+					top: -5px;
+					margin: 0;
+				}
+			}
+		}
+
+		> * {
+			pointer-events: none;
+		}
+
+		@media screen and (max-width: 1080px) and (min-width: 768px), screen and (max-width: 420px) {
+
+			.bb-media-model-container & {
+
+				.ac-reply-content {
+					height: 44px;
+				}
+			}
+		}
+	}
+
+	.bp-ac-form-container {
 		align-items: flex-start;
+		flex-wrap: wrap;
+
+		.ac-reply-attachments {
+			width: 100%;
+			padding-left: 46px;
+		}
+
+		.bp-feedback {
+			width: 100%;
+		}
 	}
 
 	.ac-reply-avatar img {
-		max-width: 34px;
+		max-width: 32px;
+		height: auto;
 	}
 
 	.ac-reply-content {
-		border: 1px solid $bp-border-color;
-		border-radius: 4px;
-		padding: 7px;
+		border: 1px solid transparent;
+		background-color: $light-grey;
+		border-radius: $block-radius-inner;
+		padding: 8px;
 		margin-left: 10px;
 
 		&:focus-within {
@@ -137,60 +219,130 @@ form.acomment-edit {
 				position: absolute;
 				bottom: -45px;
 				left: 10px;
+
+				@media screen and (max-width: 420px) {
+					left: 5px;
+				}
+			}
+		}
+
+		.ac-submit-wrap {
+			background-color: $blue;
+			border-radius: 50%;
+			height: 30px;
+			width: 30px;
+			overflow: hidden;
+			cursor: pointer;
+			position: relative;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 0;
+
+			&:before {
+				display: block;
+				content: "\eee7";
+				color: #fff;
+				font-family: bb-icons;
+				font-size: 16px;
+				font-weight: 300;
+				line-height: 30px;
+			}
+
+			&.loading {
+				background-color: transparent;
+
+				&:before {
+					content: "\ef30";
+					font-size: 18px;
+					color: $black;
+					animation: spin 2s infinite linear;
+					line-height: 1;
+				}
+			}
+
+			input[name="ac_form_submit"] {
+				position: absolute;
+				inset: 0;
+				opacity: 0;
+				background-color: $blue;
 			}
 		}
 
 		.ac-reply-cancel,
-		input[name="ac_form_submit"] {
+		.ac-submit-wrap {
 			float: right;
 		}
 
-		input[name="ac_form_submit"] {
+		.ac-submit-wrap {
 			margin-left: 5px;
 		}
 
 		.ac-reply-cancel {
 
 			#buddypress & {
-				padding: 5px 10px;
+
+				/* padding: 5px 10px; */
+				visibility: hidden;
+				opacity: 0;
+				width: 0;
+				height: 0;
+				font-size: 0;
+				padding: 0;
 			}
 		}
 
-		.bb-media-model-container & {
+		@media screen and (max-width: 1080px) and (min-width: 768px), screen and (max-width: 420px) {
 
-			.ac-reply-cancel,
-			input[name="ac_form_submit"] {
-				float: left;
-			}
+			.bb-media-model-container & {
 
-			.ac-reply-cancel {
-
-				#buddypress & {
-					margin-left: 10px;
+				.ac-reply-cancel,
+				.ac-submit-wrap {
+					float: right;
 				}
-			}
 
-			.ac-textarea .ac-reply-toolbar {
-				position: static;
+				.ac-textarea .ac-reply-toolbar {
+					position: absolute;
+				}
 			}
 		}
 
-		@media screen and (max-width: 1080px) and (min-width: 768px), screen and (max-width: 490px) {
+		@media screen and (min-width: 490px) {
 
-			.ac-reply-cancel,
-			input[name="ac_form_submit"] {
-				float: left;
-			}
+			.activity-modal & {
 
-			.ac-reply-cancel {
+				.ac-submit-wrap {
+					float: right;
+				}
 
-				#buddypress & {
-					margin-left: 10px;
+				.ac-textarea .ac-reply-toolbar {
+					position: absolute;
 				}
 			}
+		}
+
+		@media screen and (max-width: 490px) {
 
 			.ac-textarea .ac-reply-toolbar {
-				position: static;
+
+				.post-elements-buttons-item {
+					margin-right: 5px;
+
+					i::before {
+						margin-left: 0;
+						margin-right: 0;
+					}
+				}
+			}
+		}
+
+		@media screen and (max-width: 400px) {
+
+			.ac-textarea .ac-reply-toolbar {
+
+				.post-elements-buttons-item {
+					margin-right: 3px;
+				}
 			}
 		}
 	}
@@ -223,7 +375,7 @@ form.acomment-edit {
 				font-family: bb-icons;
 				background-color: transparent;
 				font-size: 30px;
-				font-weight: 400;
+				font-weight: 300;
 				display: flex;
 				align-items: center;
 				justify-content: center;
@@ -311,7 +463,12 @@ form.acomment-edit {
 
 		&.document-dropzone {
 
+			&.dz-started {
+				margin-top: 10px;
+			}
+
 			.dz-preview {
+				margin: 0 5px 5px 0;
 
 				&.dz-complete .dz-details {
 					padding: 5px;
@@ -346,8 +503,6 @@ form.acomment-edit {
 
 				.dz-remove {
 					background-color: #e7e7ea;
-					top: -8px;
-					right: -8px;
 				}
 
 				.dz-progress-ring-wrap {
@@ -397,25 +552,9 @@ form.acomment-edit {
 	}
 
 	.activity-attached-gif-container {
-		background: none !important;
-		height: auto !important;
-		width: auto !important;
-		display: table;
 		min-height: auto !important;
 
-		.gif-image-container {
-			margin: 15px 0 0;
-
-			img {
-				border-radius: 4px;
-				height: 60px;
-				width: 60px;
-				object-fit: cover;
-			}
-		}
-
 		.gif-image-remove {
-			right: -8px;
 			top: 7px;
 
 			.bb-icon-times {
@@ -440,7 +579,139 @@ form.acomment-edit {
 	}
 }
 
-.bp-ac-form-cotainer {
+@media screen and (max-width: 420px) {
+
+	.activity-modal {
+
+		.threaded-level-4,
+		.threaded-level-5,
+		.threaded-level-6 {
+
+			ul > li > ul > li > ul > li {
+
+				form.ac-form {
+
+					.ac-reply-cancel,
+					.ac-submit-wrap {
+						float: left;
+					}
+
+					.ac-submit-wrap {
+						margin-left: 5px;
+					}
+
+					.ac-reply-cancel {
+
+						#buddypress & {
+							margin-left: 10px;
+						}
+					}
+
+					.ac-textarea .ac-reply-toolbar {
+						position: static;
+					}
+
+					.ac-textarea {
+						padding: 0 5px;
+					}
+				}
+			}
+		}
+	}
+}
+
+.bb-media-model-container {
+
+	.threaded-level-3,
+	.threaded-level-4 {
+
+		ul > li > ul > li {
+
+			form.ac-form {
+
+				.ac-reply-content .ac-textarea {
+
+					.ac-reply-toolbar {
+
+						.post-elements-buttons-item {
+							margin-right: 5px;
+						}
+					}
+				}
+			}
+		}
+
+		ul > li > ul > li > ul > li {
+
+			form.ac-form {
+
+				.ac-reply-content {
+
+					@media screen and (min-width: 1024px), screen and (max-width: 450px) {
+
+						.ac-reply-cancel,
+						.ac-submit-wrap {
+							float: left;
+						}
+
+						.ac-textarea .ac-reply-toolbar {
+							position: static;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+.ac-form {
+
+	.dropzone {
+
+		.dz-preview.dz-error {
+
+			.dz-details .dz-filename {
+				display: none;
+			}
+		}
+	}
+
+	.dropzone.media-dropzone {
+
+		.dz-preview.dz-error {
+
+			.dz-details:before {
+				display: none;
+			}
+		}
+	}
+
+	.dropzone.video-dropzone {
+
+		.dz-preview.dz-error {
+
+			.dz-progress-ring-wrap > i {
+				display: none;
+			}
+		}
+	}
+
+	.dropzone.document-dropzone {
+
+		.dz-preview.dz-error.dz-preview {
+
+			.dz-details:before {
+				display: none;
+			}
+
+			.dz-details .dz-filename {
+				display: none;
+			}
+		}
+	}
+}
+
+.bp-ac-form-container {
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;

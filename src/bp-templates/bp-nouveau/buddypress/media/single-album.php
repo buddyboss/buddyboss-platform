@@ -18,6 +18,15 @@ $can_edit      = true === (bool) $album_privacy['can_edit'];
 $can_add       = true === (bool) $album_privacy['can_add'];
 $can_delete    = true === (bool) $album_privacy['can_delete'];
 
+$bp_is_my_profile                    = bp_is_my_profile();
+$bp_is_group                         = bp_is_group();
+$bp_is_user_media                    = bp_is_user_media();
+$bp_is_group_active                  = bp_is_active( 'groups' );
+$bp_get_current_group_id             = ( $bp_is_group_active ) ? bp_get_current_group_id() : 0;
+$bp_loggedin_user_id                 = bp_loggedin_user_id();
+$bp_is_profile_video_support_enabled = function_exists( 'bp_is_profile_video_support_enabled' ) && bp_is_profile_video_support_enabled();
+$bp_is_group_video_support_enabled   = function_exists( 'bp_is_group_video_support_enabled' ) && bp_is_group_video_support_enabled();
+
 if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 	<?php
 	while ( bp_album() ) :
@@ -31,7 +40,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 				<div class="bb-single-album-header text-center">
 					<h4 class="bb-title" id="bp-single-album-title"><?php bp_album_title(); ?></h4>
 					<?php
-					if ( ( bp_is_my_profile() || bp_current_user_can( 'bp_moderate' ) ) || ( bp_is_group() && $can_edit ) ) :
+					if ( ( $bp_is_my_profile || bp_current_user_can( 'bp_moderate' ) ) || ( $bp_is_group && $can_edit ) ) :
 						?>
 						<input type="text" value="<?php bp_album_title(); ?>" placeholder="<?php esc_attr_e( 'Title', 'buddyboss' ); ?>" id="bb-album-title" style="display: none;" />
 						<a href="#" class="button small" id="bp-edit-album-title"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></a>
@@ -46,7 +55,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 				</div>
 
 				<?php
-				if ( ( bp_is_my_profile() || bp_is_user_media() ) || ( bp_is_group() ) ) :
+				if ( ( $bp_is_my_profile || $bp_is_user_media ) || ( $bp_is_group ) ) :
 					?>
 					<div class="bb-album-actions">
 						<?php
@@ -58,14 +67,14 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 							<?php
 						}
 
-						if ( ( bp_is_my_profile() || bp_is_user_media() ) && bb_user_can_create_media() && $can_edit ) {
+						if ( ( $bp_is_my_profile || $bp_is_user_media ) && bb_user_can_create_media() && $can_edit ) {
 							?>
 							<a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
 								<?php esc_html_e( 'Add Photos', 'buddyboss' ); ?>
 							</a>
 							<?php
-						} elseif ( bp_is_active( 'groups' ) && bp_is_group() ) {
-							$manage = groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_current_group_id() );
+						} elseif ( $bp_is_group_active && $bp_is_group ) {
+							$manage = groups_can_user_manage_media( $bp_loggedin_user_id, $bp_get_current_group_id );
 							if ( $manage ) {
 								?>
 								<a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
@@ -75,12 +84,12 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 							}
 						}
 
-						if ( ( bp_is_my_profile() || bp_is_user_media() ) && bp_is_profile_video_support_enabled() && $can_edit && bb_user_can_create_video() ) {
+						if ( ( $bp_is_my_profile || $bp_is_user_media ) && $bp_is_profile_video_support_enabled && $can_edit && bb_user_can_create_video() ) {
 							?>
 							<a href="#" id="bp-add-video" class="bb-add-video button small outline"><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
 							<?php
-						} elseif ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_video_support_enabled() ) {
-							$manage = groups_can_user_manage_video( bp_loggedin_user_id(), bp_get_current_group_id() );
+						} elseif ( $bp_is_group_active && $bp_is_group && $bp_is_group_video_support_enabled ) {
+							$manage = groups_can_user_manage_video( $bp_loggedin_user_id, $bp_get_current_group_id );
 							if ( $manage ) {
 								?>
 								<a href="#" id="bp-add-video" class="bb-add-video button small outline"><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
@@ -88,7 +97,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 							}
 						}
 
-						if ( ( bp_is_my_profile() || bp_is_user_media() ) && ! bp_is_group() && $can_edit ) {
+						if ( ( $bp_is_my_profile || $bp_is_user_media ) && ! $bp_is_group && $can_edit ) {
 							?>
 							<select id="bb-album-privacy">
 								<?php foreach ( bp_media_get_visibility_levels() as $k => $option ) { ?>
@@ -122,16 +131,17 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 					if (
 						(
 							(
-								bp_is_my_profile() ||
-								bp_is_user_media()
+								$bp_is_my_profile ||
+								$bp_is_user_media
 							) &&
-							bp_is_profile_video_support_enabled() &&
+							$bp_is_profile_video_support_enabled &&
 							$can_edit
 						) ||
 						(
-							bp_is_active( 'groups' ) &&
-							bp_is_group() && $can_edit &&
-							bp_is_group_video_support_enabled()
+							$bp_is_group_active &&
+							$bp_is_group &&
+							$can_edit &&
+							$bp_is_group_video_support_enabled
 						)
 					) {
 						$feedback_id = 'album-media-video-loading';

@@ -69,6 +69,8 @@ if ( ! class_exists( 'BB_Elementor_Plugin_Compatibility') ) {
 
 			add_action( 'bp_core_set_uri_globals', array( $this, 'elementor_library_preview_permalink' ), 10, 2 );
 			add_action( 'bp_init', array( $this, 'maintenance_mode_template' ) );
+			add_filter( 'bb_theme_compat_reset_post', array( $this, 'theme_compat_reset_post' ) );
+			add_filter( 'bp_is_current_component', array( $this, 'current_component' ), 99, 2 );
 			add_action( 'admin_menu', array( $this, 'remove_page_attributes_metabox_for_forum' ) );
 
 			add_filter( 'bp_core_set_uri_show_on_front', array( $this, 'set_uri_elementor_show_on_front' ), 10, 3 );
@@ -192,6 +194,49 @@ if ( ! class_exists( 'BB_Elementor_Plugin_Compatibility') ) {
 			}
 
 			return $bool;
+		}
+
+		/**
+		 * Fix Elementor conflict for edit the directory pages with Elementor.
+		 *
+		 * @since BuddyBoss 2.5.50
+		 *
+		 * @param bool $bool
+		 *
+		 * @return bool
+		 */
+		public function theme_compat_reset_post( $bool ) {
+			if ( isset( $_GET['elementor-preview'] ) && get_the_ID() === (int) $_GET['elementor-preview'] ) {
+				return true;
+			}
+
+			return $bool;
+		}
+
+		/**
+		 * Fix Elementor conflict for edit the activate and register page.
+		 *
+		 * @since BuddyBoss 2.5.50
+		 *
+		 * @param bool   $is_current_component Whether or not the current page belongs to specified component.
+		 * @param string $component            Name of the component being checked.
+		 *
+		 * @return bool
+		 */
+		public function current_component( $is_current_component, $component ) {
+			if (
+				isset( $_GET['elementor-preview'] ) &&
+				get_the_ID() === (int) $_GET['elementor-preview'] &&
+				true === $is_current_component &&
+				(
+					'activate' === $component ||
+					'register' === $component
+				)
+			) {
+				return false;
+			}
+
+			return $is_current_component;
 		}
 	}
 }

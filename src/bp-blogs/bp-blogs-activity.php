@@ -693,7 +693,7 @@ function bp_blogs_record_activity_on_site_creation( $recorded_blog, $is_private,
 				 * @param string $value Blog primary link.
 				 * @param int    $value Blog ID.
 				 */
-				'primary_link' => apply_filters( 'bp_blogs_activity_created_blog_primary_link', bp_blogs_get_blogmeta( $recorded_blog->blog_id, 'url' ), $recorded_blog->blog_id ),
+				'primary_link' => apply_filters( 'bp_blogs_activity_created_blog_primary_link', '', $recorded_blog->blog_id ),
 				'type'         => 'new_blog',
 				'item_id'      => $recorded_blog->blog_id,
 			)
@@ -872,7 +872,9 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 	 * @param string $content         Content for the posted comment.
 	 * @param int    $comment_id      The activity ID for the posted activity comment.
 	 */
+	remove_filter( 'bp_activity_comment_content', 'bp_activity_at_name_filter' );
 	$params['content'] = apply_filters( 'bp_activity_comment_content', $params['content'], $comment_id );
+	add_filter( 'bp_activity_comment_content', 'bp_activity_at_name_filter' );
 
 	// Comment args.
 	$args = array(
@@ -917,7 +919,7 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 	// @todo since this is done after AJAX posting, the activity comment permalink
 	// doesn't change on the front end until the next page refresh.
 	$resave_activity               = new BP_Activity_Activity( $comment_id );
-	$resave_activity->primary_link = get_comment_link( $post_comment_id );
+	$resave_activity->primary_link = '';
 
 	/**
 	 * Now that the activity id exists and the post comment was created, we don't need to update
@@ -1083,7 +1085,7 @@ function bp_blogs_sync_activity_edit_to_post_comment( BP_Activity_Activity $acti
 	add_action( 'bp_activity_post_type_comment', 'bp_blogs_comment_sync_activity_comment', 10, 4 );
 
 	// If activity comment edited and it's a blog, then set activity comment content as blank.
-	$activity->primary_link = get_comment_link( $post_comment_id );
+	$activity->primary_link = ! empty( $activity->primary_link ) ? $activity->primary_link : '';
 
 	/**
 	 * Now that the activity id exists and the post comment was created, we don't need to update
@@ -1467,6 +1469,15 @@ function bp_blogs_activity_comment_permalink( $retval = '' ) {
 	// Maybe adjust the link if item ID exists.
 	if ( ( false !== $item_id ) && isset( buddypress()->blogs->allow_comments[ $item_id ] ) ) {
 		$retval = $activities_template->activity->current_comment->primary_link;
+		if ( empty( $retval ) ) {
+			$post_type = str_replace( 'new_blog_', '', $activities_template->activity->type );
+			if ( empty( $post_type ) ) {
+				$comment_post_type = $activities_template->activity->secondary_item_id;
+				$post_type         = get_post_type( $comment_post_type );
+			}
+			$comment_id = bp_activity_get_meta( $activities_template->activity->current_comment->id, 'bp_blogs_' . $post_type . '_comment_id' );
+			$retval     = ! empty( $comment_id ) ? get_comment_link( $comment_id ) : $retval;
+		}
 	}
 
 	return $retval;
@@ -1497,6 +1508,15 @@ function bp_blogs_activity_comment_single_permalink( $retval, $activity ) {
 
 	if ( isset( $parent_activity->type ) && bp_activity_post_type_get_tracking_arg( $parent_activity->type, 'post_type' ) ) {
 		$retval = $activity->primary_link;
+		if ( empty( $retval ) ) {
+			$post_type = str_replace( 'new_blog_', '', $parent_activity->type );
+			if ( empty( $post_type ) ) {
+				$comment_post_type = $parent_activity->secondary_item_id;
+				$post_type         = get_post_type( $comment_post_type );
+			}
+			$comment_id = bp_activity_get_meta( $activity->id, 'bp_blogs_' . $post_type . '_comment_id' );
+			$retval     = ! empty( $comment_id ) ? get_comment_link( $comment_id ) : $retval;
+		}
 	}
 
 	return $retval;

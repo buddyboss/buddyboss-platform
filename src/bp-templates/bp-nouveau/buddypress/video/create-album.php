@@ -11,6 +11,8 @@
  * @since   BuddyBoss 1.7.0
  * @version 1.7.0
  */
+
+$bp_is_group = bp_is_group();
 ?>
 
 <div id="bp-video-create-album" style="display: none;">
@@ -29,7 +31,7 @@
 					</div>
 
 					<footer class="bb-model-footer">
-						<?php if ( ! bp_is_group() ) : ?>
+						<?php if ( ! $bp_is_group ) : ?>
 							<div class="bb-dropdown-wrap">
 								<select id="bb-album-privacy">
 									<?php
@@ -44,7 +46,7 @@
 							<?php
 						endif;
 
-						if ( bp_is_group() && bp_is_group_albums_support_enabled() ) {
+						if ( $bp_is_group && bp_is_group_albums_support_enabled() ) {
 							?>
 							<a class="button" id="bp-video-create-album-submit" href="#"><?php esc_attr_e( 'Create Album', 'buddyboss' ); ?></a>
 							<?php

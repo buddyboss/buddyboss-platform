@@ -1013,16 +1013,6 @@ a.bb-close-model {
 			font-size: 13px;
 		}
 
-		.acomment-content {
-			border-left: 0;
-			margin: 0 0 0 51px;
-			padding: 0;
-
-			.bb-activity-media-wrap {
-				margin: 15px 0;
-			}
-		}
-
 		.action {
 			line-height: 1;
 			margin-left: 51px;
@@ -1030,9 +1020,14 @@ a.bb-close-model {
 
 		form {
 			background: #fbfbfc;
-			margin: 0 -15px;
-			margin-right: 0;
-			padding: 15px 15px 0;
+
+			/*margin: 15px -15px;*/
+			padding: 15px 0 0;
+		}
+
+		.comment-item form {
+			padding-left: 0;
+			padding-right: 0;
 		}
 	}
 }
@@ -2338,10 +2333,11 @@ img.emojioneemoji {
 
 	.dz-error-message {
 		top: 96%;
-		left: inherit;
+		left: 50%;
 		right: inherit;
 		max-width: 350px;
 		min-width: 100%;
+		transform: translateX(-50%);
 	}
 
 	.dz-remove {

@@ -31,7 +31,44 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 	<?php
 	if ( $is_send_ajax_request ) {
 		echo '<li id="bp-activity-ajax-loader">';
-		bp_nouveau_user_feedback( 'group-activity-loading' );
+		?>
+		<div class="bb-activity-placeholder">
+			<div class="bb-activity-placeholder_head">
+				<div class="bb-activity-placeholder_avatar bb-bg-animation bb-loading-bg"></div>
+				<div class="bb-activity-placeholder_details">
+					<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
+					<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
+				</div>
+			</div>
+			<div class="bb-activity-placeholder_content">
+				<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
+				<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
+			</div>
+			<div class="bb-activity-placeholder_actions">
+				<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
+				<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
+				<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
+			</div>
+		</div>
+		<div class="bb-activity-placeholder">
+			<div class="bb-activity-placeholder_head">
+				<div class="bb-activity-placeholder_avatar bb-bg-animation bb-loading-bg"></div>
+				<div class="bb-activity-placeholder_details">
+					<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
+					<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
+				</div>
+			</div>
+			<div class="bb-activity-placeholder_content">
+				<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
+				<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
+			</div>
+			<div class="bb-activity-placeholder_actions">
+				<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
+				<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
+				<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
+			</div>
+		</div>
+		<?php
 		echo '</li>';
 	} else {
 		bp_get_template_part( 'activity/activity-loop' );

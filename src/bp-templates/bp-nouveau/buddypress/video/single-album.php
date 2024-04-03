@@ -21,6 +21,10 @@ $can_add       = true === (bool) $album_privacy['can_add'];
 
 if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) {
 
+	$bp_is_my_profile = bp_is_my_profile();
+	$bp_is_group      = bp_is_group();
+	$bp_is_user_video = bp_is_user_video();
+
 	while ( bp_video_album() ) :
 		bp_the_video_album();
 
@@ -31,7 +35,7 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) {
 				<div class="bb-single-album-header text-center">
 					<h4 class="bb-title" id="bp-single-album-title"><?php bp_video_album_title(); ?></h4>
 					<?php
-					if ( ( bp_is_my_profile() || bp_current_user_can( 'bp_moderate' ) ) || ( bp_is_group() && $can_add ) ) {
+					if ( ( $bp_is_my_profile || bp_current_user_can( 'bp_moderate' ) ) || ( $bp_is_group && $can_add ) ) {
 						?>
 						<input type="text" value="<?php bp_video_album_title(); ?>" placeholder="<?php esc_html_e( 'Title', 'buddyboss' ); ?>" id="bb-album-title" style="display: none;" />
 						<a href="#" class="button small" id="bp-edit-album-title"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></a>
@@ -56,7 +60,7 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) {
 				</div>
 
 				<?php
-				if ( ( ( bp_is_my_profile() || bp_is_user_video() ) && $can_add ) || ( bp_is_group() && $can_add ) ) :
+				if ( ( ( $bp_is_my_profile || $bp_is_user_video ) && $can_add ) || ( $bp_is_group && $can_add ) ) :
 					?>
 
 					<div class="bb-album-actions">
@@ -73,7 +77,7 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) {
 							<?php
 						}
 
-						if ( ( bp_is_my_profile() || bp_is_user_video() ) && ! bp_is_group() ) : ?>
+						if ( ( $bp_is_my_profile || $bp_is_user_video ) && ! $bp_is_group ) : ?>
 							<select id="bb-album-privacy">
 								<?php
 								foreach ( bp_video_get_visibility_levels() as $k => $option ) {

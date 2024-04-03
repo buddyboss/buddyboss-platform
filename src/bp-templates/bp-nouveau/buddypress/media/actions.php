@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+$bp_loggedin_user_id     = bp_loggedin_user_id();
+$bp_get_current_group_id = function_exists( 'bp_get_current_group_id' ) ? bp_get_current_group_id() : 0;
+
 if (
 	(
 		bp_is_my_profile() ||
@@ -18,17 +21,17 @@ if (
 		(
 			bp_is_group_media() &&
 			(
-				groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
-				groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
-				groups_is_user_admin( bp_loggedin_user_id(), bp_get_current_group_id() )
+				groups_can_user_manage_media( $bp_loggedin_user_id, $bp_get_current_group_id ) ||
+				groups_is_user_mod( $bp_loggedin_user_id, $bp_get_current_group_id ) ||
+				groups_is_user_admin( $bp_loggedin_user_id, $bp_get_current_group_id )
 			)
 		) ||
 		(
 			bp_is_group_albums() &&
 			(
-				groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
-				groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
-				groups_is_user_admin( bp_loggedin_user_id(), bp_get_current_group_id() )
+				groups_can_user_manage_albums( $bp_loggedin_user_id, $bp_get_current_group_id ) ||
+				groups_is_user_mod( $bp_loggedin_user_id, $bp_get_current_group_id ) ||
+				groups_is_user_admin( $bp_loggedin_user_id, $bp_get_current_group_id )
 			)
 		)
 	)
