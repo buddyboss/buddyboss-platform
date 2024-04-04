@@ -144,7 +144,10 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $activity->children ) ) {
-			$request->set_param( 'context', 'view' );
+
+			if ( empty( $request->get_param( 'context' ) ) ) {
+				$request->set_param( 'context', 'view' );
+			}
 
 			$comments_count = BP_Activity_Activity::bb_get_all_activity_comment_children_count(
 				array(
@@ -261,7 +264,9 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$request->set_param( 'context', 'view' );
+		if ( empty( $request->get_param( 'context' ) ) ) {
+			$request->set_param( 'context', 'view' );
+		}
 		$comments = $this->prepare_activity_comments( array( $activity_comment ), $request );
 		$retval  = ! empty( $comments[0] ) ? $comments[0] : $comments;
 
