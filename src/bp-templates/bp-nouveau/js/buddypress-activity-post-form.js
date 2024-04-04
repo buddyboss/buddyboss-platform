@@ -4841,7 +4841,12 @@ window.bp = window.bp || {};
 
 			displayOptions: function ( event ) {
 				event.preventDefault();
-				$( event.target ).closest( '.bb-schedule-post_dropdown_section' ).find( '.bb-schedule-post_dropdown_list' ).toggleClass( 'is_open' );
+				var target = $( event.target );
+				if( target.hasClass( 'is_scheduled' ) && target.closest( '.activity-form' ).hasClass( 'bp-activity-edit' ) ) {
+					target.closest( '.bb-schedule-posts' ).find('.bb-schedule-post_action').trigger( 'click' );
+				} else {
+					target.closest( '.bb-schedule-post_dropdown_section' ).find( '.bb-schedule-post_dropdown_list' ).toggleClass( 'is_open' );
+				}
 			},
 
 			cancelSchedulePost: function ( event ) {
