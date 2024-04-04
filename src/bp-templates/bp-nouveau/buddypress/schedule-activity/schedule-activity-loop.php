@@ -23,7 +23,7 @@ if ( bp_has_activities( $activity_schedule_args ) ) :
 		<?php
 	endif;
 
-	while ( bp_activities( array( 'status' => $_POST['status'] ) ) ) :
+	while ( bp_activities( array( 'status' => sanitize_text_field( $_POST['status'] ) ) ) ) :
 		bp_the_activity();
 		bp_get_template_part( 'schedule-activity/entry' );
 	endwhile;

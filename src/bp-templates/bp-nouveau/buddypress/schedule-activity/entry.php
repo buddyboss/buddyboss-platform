@@ -32,51 +32,93 @@ if ( ! empty( $link_embed ) ) {
 
 ?>
 
-<li class="<?php bp_activity_css_class(); ?>" id="activity-<?php echo esc_attr( $activity_id ); ?>" data-bp-activity-id="<?php echo esc_attr( $activity_id ); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php bp_nouveau_edit_activity_data(); ?>" data-link-preview='<?php echo $link_preview_string; ?>' data-link-url='<?php echo $link_url; ?>'>
+<li
+	class="<?php bp_activity_css_class(); ?>"
+	id="activity-<?php echo esc_attr( $activity_id ); ?>"
+	data-bp-activity-id="<?php echo esc_attr( $activity_id ); ?>"
+	data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>"
+	data-bp-activity="<?php ( function_exists( 'bp_nouveau_edit_activity_data' ) ) ? bp_nouveau_edit_activity_data() : ''; ?>"
+	data-link-preview='<?php echo $link_preview_string; ?>'
+	data-link-url='<?php echo $link_url; ?>'>
 
 	<div class="bb-activity-schedule-actions">
-		<a href="#" class="bb-activity-schedule-action">
+		<a href="#" class="bb-activity-schedule-action bb-activity-schedule_edit">
 			<i class="bb-icon-l bb-icon-pencil"></i>
 		</a>
-		<a href="#" class="bb-activity-schedule-action">
+		<a href="#" class="bb-activity-schedule-action bb-activity-schedule_delete">
 			<i class="bb-icon-l bb-icon-trash"></i>
 		</a>
 	</div>
 
-	<div class="bb-pin-action">
-		<span class="bb-pin-action_button" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Pinned Post', 'buddyboss' ); ?>">
-			<i class="bb-icon-f bb-icon-thumbtack"></i>
-		</span>
-	</div>
-
-	<div class="activity-avatar item-avatar">
-		<a href="<?php bp_activity_user_link(); ?>">
-			<?php bp_activity_avatar( array( 'type' => 'full' ) ); ?>
-		</a>
-	</div>
-
-	<div class="activity-content <?php bp_activity_entry_css_class(); ?>">
-		<div class="activity-header">
-			<?php
-				bp_activity_action();
-				bp_nouveau_activity_is_edited();
-				bp_nouveau_activity_privacy();
-			?>
+	<div class="bp-activity-head">
+		<div class="activity-avatar item-avatar">
+			<a href="<?php bp_activity_user_link(); ?>"><?php bp_activity_avatar( array( 'type' => 'full' ) ); ?></a>
 		</div>
 
-		<?php
-		bp_nouveau_activity_hook( 'before', 'activity_content' );
+		<div class="activity-header">
+			<?php bp_activity_action(); ?>
+			<p class="activity-date">
+				<span class="schedule-text"><?php esc_html_e( 'Schedule for:', 'buddyboss-theme' ) ?></span>
+				<a href="<?php echo esc_url( bp_activity_get_permalink( $activity_id ) ); ?>">
+					<?php
+					$activity_date_recorded = bp_get_activity_date_recorded();
 
-		if ( bp_nouveau_activity_has_content() ) :
+					// Convert GMT time to local time based on WordPress settings.
+					$local_time_wp = get_date_from_gmt( $activity_date_recorded, 'Y-m-d H:i:s' );
+
+					// Get the date and time formats set in WordPress settings.
+					$date_format = get_option( 'date_format' );
+					$time_format = get_option( 'time_format' );
+
+					// Format the local time according to the WordPress settings.
+					$formatted_local_time_wp = date_i18n( $date_format . ' ' . $time_format, strtotime( $local_time_wp ) );
+
+					printf(
+						'<span class="time-since">%1$s</span>',
+						$formatted_local_time_wp,
+					);
+					?>
+				</a>
+				<?php
+				if ( function_exists( 'bp_nouveau_activity_is_edited' ) ) {
+					bp_nouveau_activity_is_edited();
+				}
+				?>
+			</p>
+			<?php
+			if ( function_exists( 'bp_nouveau_activity_privacy' ) ) {
+				bp_nouveau_activity_privacy();
+			}
 			?>
-			<div class="activity-inner"><?php bp_nouveau_activity_content(); ?></div>
+
+		</div>
+	</div>
+
+	<?php bp_nouveau_activity_hook( 'before', 'activity_content' ); ?>
+
+	<div class="activity-content <?php ( function_exists( 'bp_activity_entry_css_class' ) ) ? bp_activity_entry_css_class() : ''; ?>">
+		<?php if ( bp_nouveau_activity_has_content() ) : ?>
+			<div class="activity-inner <?php echo ( function_exists( 'bp_activity_has_content' ) && empty( bp_activity_has_content() ) ) ? esc_attr( 'bb-empty-content' ) : esc_attr( '' ); ?>">
+				<?php
+					bp_nouveau_activity_content();
+
+				if ( function_exists( 'bb_nouveau_activity_inner_buttons' ) ) {
+					bb_nouveau_activity_inner_buttons();
+				}
+				?>
+			</div>
 			<?php
 		endif;
 
-		bp_nouveau_activity_hook( 'after', 'activity_content' );
-		bp_nouveau_activity_state();
+		if ( function_exists( 'bp_nouveau_activity_state' ) ) {
+			bp_nouveau_activity_state();
+		}
 		?>
 	</div>
+
+	<?php
+	bp_nouveau_activity_hook( 'after', 'activity_content' );
+	?>
 </li>
 
 <?php

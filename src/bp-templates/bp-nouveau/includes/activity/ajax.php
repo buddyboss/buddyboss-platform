@@ -740,10 +740,13 @@ function bp_nouveau_ajax_post_update() {
 
 	$status             = bb_get_activity_published_status();
 	$schedule_date_time = '';
+	$is_scheduled       = false;
 	if ( ! empty( $_POST['activity_action_type'] ) && 'scheduled' === $_POST['activity_action_type'] ) {
 		$status = $_POST['activity_action_type'];
 
 		if ( ! empty( $_POST['activity_schedule_date_raw'] ) && ! empty( $_POST['activity_schedule_time'] ) && ! empty( $_POST['activity_schedule_meridiem'] ) ) {
+			$is_scheduled = true;
+
 			$activity_schedule_date_raw = $_POST['activity_schedule_date_raw'];
 			$activity_schedule_meridiem = $_POST['activity_schedule_meridiem']; // 'pm' or 'am'
 			$activity_schedule_time     = $_POST['activity_schedule_time'];
@@ -755,7 +758,7 @@ function bp_nouveau_ajax_post_update() {
 			$activity_datetime = $activity_schedule_date_raw . ' ' . $activity_schedule_time_24hr;
 
 			// Convert to MySQL datetime format
-			$schedule_date_time = date( 'Y-m-d H:i:s', strtotime( $activity_datetime ) );
+			$schedule_date_time = get_gmt_from_date( $activity_datetime );
 		}
 	}
 
@@ -778,16 +781,18 @@ function bp_nouveau_ajax_post_update() {
 			$draft_activity_meta_key .= '_' . bp_get_displayed_user()->id;
 		}
 
-		$activity_id = bp_activity_post_update(
-			array(
-				'id'            => $activity_id,
-				'content'       => $content,
-				'privacy'       => $privacy,
-				'error_type'    => 'wp_error',
-				'status'        => $status,
-				'recorded_time' => $schedule_date_time,
-			)
+		$post_array = array(
+			'id'            => $activity_id,
+			'content'       => $content,
+			'privacy'       => $privacy,
+			'error_type'    => 'wp_error',
 		);
+
+		if ( $is_scheduled ) {
+			$post_array[ 'recorded_time' ] = $schedule_date_time;
+			$post_array[ 'status' ]        = $status;
+		}
+		$activity_id = bp_activity_post_update( $post_array );
 
 	} elseif ( 'group' === $object ) {
 		if ( $item_id && bp_is_active( 'groups' ) ) {
