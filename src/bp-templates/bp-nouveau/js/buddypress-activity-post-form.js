@@ -116,6 +116,25 @@ window.bp = window.bp || {};
 				}
 			);
 
+			// View scheduled posts modal.
+			$( document ).on(
+				'click',
+				'.bb-view-scheduled-posts',
+				function() {
+					// Show post form modal.
+					jQuery( '.activity-update-form .activity-form:not(.focus-in) #whats-new' ).trigger( 'focus' );
+
+					// Open view schedule posts modal.
+					setTimeout( function() {
+						$( '.activity-form .bb-schedule-post_dropdown_button' ).trigger( 'click' );
+
+						setTimeout( function() {
+							$( '.activity-form .bb-view-schedule-posts' ).trigger( 'click' );
+						}, 0 );
+					}, 0 );
+				}
+			);
+
 			Backbone.trigger( 'mediaprivacy' );
 		},
 
