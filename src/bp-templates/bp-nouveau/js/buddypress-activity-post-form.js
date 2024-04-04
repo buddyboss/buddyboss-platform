@@ -4968,18 +4968,10 @@ window.bp = window.bp || {};
 				var target           = $( event.target ).parent();
 				var activity         = $( event.target ).closest( 'li.activity-item' );
 				var activity_id      = activity.data( 'bp-activity-id' );
-				console.log( 'event.target',event.target );
-				console.log( 'activity',activity );
+
 				// Deleting or spamming.
 				if ( confirm_deletion && target.hasClass( 'bb-activity-schedule_delete' ) ) {
 					var li_parent;
-
-					// Stop event propagation.
-					event.preventDefault();
-
-					if ( undefined !== BP_Nouveau.confirm && false === window.confirm( BP_Nouveau.confirm ) ) {
-						return false;
-					}
 
 					target.addClass( 'loading' );
 
