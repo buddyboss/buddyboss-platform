@@ -228,24 +228,6 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		}
 
 		/**
-		 * Check if the post type is translatable in WPML settings.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 * 
-		 * @param string $post_type The post type to check.
-		 * @return bool True if the post type is translatable, false otherwise.
-		 */
-		private function is_post_type_translatable( $post_type ) {
-			$settings = get_option( 'icl_sitepress_settings', array() );
-
-			if ( isset( $settings[ 'custom_posts_sync_option' ][ $post_type ] ) && $settings[ 'custom_posts_sync_option' ][ $post_type ] == 1 ) {
-				return true;
-			}
-
-			return false;
-		}
-
-		/**
 		 * Remove WPML post__in filter to allow parent translated post as well if the post is not translateable.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -272,11 +254,10 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		 * @return string
 		 */
 		public function bb_wpml_search_posts_sql( $sql_query, $args ) {
+			global $sitepress;
 
-			if ( $this->is_post_type_translatable( $args['post_type'] ) ) {
-				$current_language = ICL_LANGUAGE_CODE;
-
-				if ( $current_language ) {
+			if ( $sitepress->is_translated_post_type( $args['post_type'] ) ) {
+				if ( defined( 'ICL_LANGUAGE_CODE' ) ) {
 					global $wpdb;
 					$sql_query .= " AND EXISTS (
 						SELECT 1 
@@ -286,7 +267,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 						AND t.element_id = p.ID
 					)";
 
-					$sql_query = $wpdb->prepare( $sql_query, $args['post_type'], $current_language );
+					$sql_query = $wpdb->prepare( $sql_query, $args['post_type'], ICL_LANGUAGE_CODE );
 				}
 			} else {
 				add_filter( 'wpml_post_parse_query', array( $this, 'remove_wpml_post_parse_query' ) );
