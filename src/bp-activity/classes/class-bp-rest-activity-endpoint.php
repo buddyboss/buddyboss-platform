@@ -182,6 +182,28 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				'schema' => array( $this, 'get_item_schema' ),
 			)
 		);
+
+		// Register the activity turn on/off notification route.
+		register_rest_route(
+			$this->namespace,
+			$activity_endpoint . '/notification',
+			array(
+				'args'   => array(
+					'action' => array(
+						'description' => __( 'Turn On/Off attribute mute or unmute.', 'buddyboss' ),
+						'type'        => 'string',
+						'enum'        => array( 'mute', 'unmute' ),
+						'required'    => true,
+					),
+				),
+				array(
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => array( $this, 'update_mute_unmute_notification' ),
+					'permission_callback' => array( $this, 'update_mute_unmute_notification_permissions_check' ),
+				),
+				'schema' => array( $this, 'get_item_schema' ),
+			)
+		);
 	}
 
 	/**
@@ -1562,7 +1584,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$response = rest_ensure_response( $retval );
 
 		/**
-		 * Fires after user pin/unpin activity has been updated via the REST API.
+		 * Fires after user update close comments on activity via the REST API.
 		 *
 		 * @param BP_Activity_Activity $activity       The updated activity.
 		 * @param WP_REST_Response     $response       The response data.
@@ -2019,7 +2041,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		// error_log( print_r( bp_activity_get_comments_user_ids(), true ) );
 		// Turn On/Off notification.
 		if ( ! empty( $schema['properties']['is_receive_notification'] ) ) {
 			$data['can_toggle_notification'] = false;
@@ -3170,7 +3191,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	}
 
 	/**
-	 * Update the activity pin.
+	 * Update activity notification to be mute/unmute.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
