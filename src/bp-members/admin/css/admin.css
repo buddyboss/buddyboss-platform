@@ -337,6 +337,22 @@ div#community-profile-page p.not-activated {
 	width: 100%;
 }
 
+.profile-edit .field-visibility-settings fieldset > .radio {
+	clear: both;
+}
+
+.profile-edit .field-visibility-settings .bp-radio-wrap input {
+	margin-left: 0;
+}
+
+.profile-edit .field-visibility-settings .bp-radio-wrap label {
+	margin-bottom: 0;
+}
+
+.profile-edit .field-visibility-settings .field-visibility-settings-close {
+	margin-top: 15px;
+}
+
 #profile-edit-form .repeater_group_outer .repeater_tools {
 	display: flex;
 	flex-flow: row wrap;
