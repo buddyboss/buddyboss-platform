@@ -5,13 +5,13 @@ msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
 "POT-Creation-Date: 2019-12-05 07:20:32+00:00\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2021-02-17 15:32+0530\n"
+"PO-Revision-Date: 2024-03-23 23:02+0530\n"
 "Last-Translator: Tom Landon <mail@tomlandon.net>\n"
 "Language-Team: Deutsch (Sie)\n"
 "Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;"
@@ -19,7 +19,7 @@ msgstr ""
 "esc_html_x:1,2c\n"
 "X-Poedit-Basepath: ..\n"
 "X-Textdomain-Support: yes\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 3.4.2\n"
 "X-Loco-Version: 2.3.1; wp-5.3.2\n"
 "X-Poedit-SearchPath-0: .\n"
 
@@ -652,7 +652,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-functions.php:1773
 msgid " and "
-msgstr "und"
+msgstr " und "
 
 #: bp-activity/bp-activity-functions.php:1777 cli/components/activity.php:766
 msgid "%s posted an update"
@@ -1598,16 +1598,16 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:107
 msgid ""
-"Components, Pages, Settings, and Forums, have been moved to <a href=\"%1$s"
-"\">Settings &gt; BuddyPress</a>. Profile Fields has been moved into the <a href="
-"\"%2$s\">Users</a> menu."
+"Components, Pages, Settings, and Forums, have been moved to <a "
+"href=\"%1$s\">Settings &gt; BuddyPress</a>. Profile Fields has been moved into "
+"the <a href=\"%2$s\">Users</a> menu."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:240
 msgid ""
-"<strong>BuddyBoss Platform is almost ready</strong>. You must <a href=\"%s"
-"\">update your permalink structure</a> to something other than the default for "
-"it to work."
+"<strong>BuddyBoss Platform is almost ready</strong>. You must <a "
+"href=\"%s\">update your permalink structure</a> to something other than the "
+"default for it to work."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:272 bp-core/bp-core-functions.php:780
@@ -1750,14 +1750,14 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1282
 msgid ""
-"Are these emails not written in your site's language? Go to <a href=\"%s"
-"\">BuddyBoss Tools and try the \"reinstall emails\"</a> tool."
+"Are these emails not written in your site's language? Go to <a "
+"href=\"%s\">BuddyBoss Tools and try the \"reinstall emails\"</a> tool."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1303
 msgid ""
-"Phrases wrapped in braces <code>{{ }}</code> are email tokens. <a href=\"%s"
-"\">Learn about email tokens</a>."
+"Phrases wrapped in braces <code>{{ }}</code> are email tokens. <a "
+"href=\"%s\">Learn about email tokens</a>."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1362
@@ -3121,13 +3121,13 @@ msgstr ""
 
 #: bp-core/admin/templates/about-buddyboss.php:54
 msgid ""
-"BuddyBoss Platform is a fork of <a href=\"https://buddypress.org/\" target="
-"\"_blank\">BuddyPress</a>, and is designed to be backwards compatible with "
-"BuddyPress data and most BuddyPress plugins. If you have been using BuddyPress "
-"in the past, you should remove it as this is a full replacement. We have "
-"improved almost every aspect of BuddyPress and added many new features. Below "
-"are some highlights, but as you explore you will find improvements all over the "
-"place. Have fun!"
+"BuddyBoss Platform is a fork of <a href=\"https://buddypress.org/\" "
+"target=\"_blank\">BuddyPress</a>, and is designed to be backwards compatible "
+"with BuddyPress data and most BuddyPress plugins. If you have been using "
+"BuddyPress in the past, you should remove it as this is a full replacement. We "
+"have improved almost every aspect of BuddyPress and added many new features. "
+"Below are some highlights, but as you explore you will find improvements all "
+"over the place. Have fun!"
 msgstr ""
 
 #: bp-core/admin/templates/about-buddyboss.php:56
@@ -3143,9 +3143,9 @@ msgid ""
 "we are able to do much more advanced layouts in our theme than before, and we "
 "think you will love the result. If you were previously using <a href=\"https://"
 "www.buddyboss.com/product/boss-theme/\" target=\"_blank\">Boss</a> theme or <a "
-"href=\"https://www.buddyboss.com/product/onesocial-theme/\" target=\"_blank"
-"\">OneSocial</a> theme you should switch to our new theme, as those legacy "
-"themes won't support all of our new layouts."
+"href=\"https://www.buddyboss.com/product/onesocial-theme/\" "
+"target=\"_blank\">OneSocial</a> theme you should switch to our new theme, as "
+"those legacy themes won't support all of our new layouts."
 msgstr ""
 
 #: bp-core/admin/templates/about-buddyboss.php:59
@@ -4109,8 +4109,8 @@ msgstr ""
 msgid ""
 "Thanks for registering!\n"
 "\n"
-"To complete the activation of your account, go to the following link: <a href="
-"\"{{{activate.url}}}\">{{{activate.url}}}</a>"
+"To complete the activation of your account, go to the following link: <a "
+"href=\"{{{activate.url}}}\">{{{activate.url}}}</a>"
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
@@ -4276,8 +4276,8 @@ msgstr ""
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-core/bp-core-functions.php:3599
 msgid ""
-"You have been promoted to <b>{{promoted_to}}</b> in the group &quot;<a href="
-"\"{{{group.url}}}\">{{group.name}}</a>&quot;.\n"
+"You have been promoted to <b>{{promoted_to}}</b> in the group &quot;<a "
+"href=\"{{{group.url}}}\">{{group.name}}</a>&quot;.\n"
 "\n"
 "{{{group.small_card}}}"
 msgstr ""
@@ -5090,8 +5090,8 @@ msgstr ""
 #: bp-core/bp-core-wp-emails.php:1072 bp-core/bp-core-wp-emails.php:1080
 #: bp-core/bp-core-wp-emails.php:1087 bp-core/bp-core-wp-emails.php:1135
 msgid ""
-"Regards, <br />All at <a href=\"###SITEURL###\">###SITENAME###</a> <br /><a href="
-"\"###SITEURL###\">###SITEURL###</a>"
+"Regards, <br />All at <a href=\"###SITEURL###\">###SITENAME###</a> <br /><a "
+"href=\"###SITEURL###\">###SITEURL###</a>"
 msgstr ""
 
 #: bp-core/bp-core-wp-emails.php:1078 bp-core/bp-core-wp-emails.php:1084
@@ -5119,8 +5119,8 @@ msgstr ""
 
 #: bp-core/bp-core-wp-emails.php:1133
 msgid ""
-"To confirm this, please click on the following link: <br /><a href="
-"\"###CONFIRM_URL###\">###CONFIRM_URL###</a>"
+"To confirm this, please click on the following link: <br /><a "
+"href=\"###CONFIRM_URL###\">###CONFIRM_URL###</a>"
 msgstr ""
 
 #: bp-core/bp-core-wp-emails.php:1178
@@ -7302,8 +7302,8 @@ msgstr ""
 
 #: bp-forums/admin/forums.php:650
 msgid ""
-"Forum scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s"
-"\">Preview forum</a>"
+"Forum scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" "
+"href=\"%2$s\">Preview forum</a>"
 msgstr ""
 
 #: bp-forums/admin/forums.php:660
@@ -7737,8 +7737,8 @@ msgstr ""
 
 #: bp-forums/admin/replies.php:953
 msgid ""
-"Reply scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s"
-"\">Preview topic</a>"
+"Reply scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" "
+"href=\"%2$s\">Preview topic</a>"
 msgstr ""
 
 #: bp-forums/admin/replies.php:963
@@ -8886,8 +8886,8 @@ msgstr ""
 
 #: bp-forums/admin/topics.php:1045
 msgid ""
-"Discussion scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s"
-"\">Preview discussion</a>"
+"Discussion scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" "
+"href=\"%2$s\">Preview discussion</a>"
 msgstr ""
 
 #: bp-forums/admin/topics.php:1055
@@ -9175,11 +9175,11 @@ msgid "Lost Password"
 msgstr ""
 
 #: bp-forums/common/widgets.php:194
-msgid "Register URI:"
+msgid "Register URL:"
 msgstr ""
 
 #: bp-forums/common/widgets.php:199
-msgid "Lost Password URI:"
+msgid "Lost Password URL:"
 msgstr ""
 
 #: bp-forums/common/widgets.php:253
@@ -13357,10 +13357,10 @@ msgstr ""
 
 #: bp-media/bp-media-filters.php:913
 msgid ""
-"Import your existing members photo uploads, if you were previously using <a href="
-"\"https://www.buddyboss.com/product/buddyboss-media/\">BuddyBoss Media</a> with "
-"BuddyPress. Click \"Run Migration\" below to migrate your old photos into the "
-"new Media component."
+"Import your existing members photo uploads, if you were previously using <a "
+"href=\"https://www.buddyboss.com/product/buddyboss-media/\">BuddyBoss Media</a> "
+"with BuddyPress. Click \"Run Migration\" below to migrate your old photos into "
+"the new Media component."
 msgstr ""
 
 #: bp-media/bp-media-filters.php:960
@@ -16211,9 +16211,9 @@ msgstr ""
 #. activity recorded date, 5: activity timestamp, 6: activity human time since
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:722
 msgid ""
-"<a class=\"author-name\" href=\"%1$s\">%2$s</a> <a href=\"%3$s\" class="
-"\"activity-time-since\"><time class=\"time-since\" datetime=\"%4$s\" data-bp-"
-"timestamp=\"%5$d\">%6$s</time></a>"
+"<a class=\"author-name\" href=\"%1$s\">%2$s</a> <a href=\"%3$s\" "
+"class=\"activity-time-since\"><time class=\"time-since\" datetime=\"%4$s\" data-"
+"bp-timestamp=\"%5$d\">%6$s</time></a>"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/widgets.php:35

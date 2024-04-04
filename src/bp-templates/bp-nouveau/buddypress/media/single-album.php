@@ -10,6 +10,8 @@
 
 global $media_album_template;
 
+$is_send_ajax_request = bb_is_send_ajax_request();
+
 $album_id      = (int) bp_action_variable( 0 );
 $album_privacy = bb_media_user_can_access( $album_id, 'album' );
 $can_edit      = true === (bool) $album_privacy['can_edit'];
@@ -123,15 +125,34 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 				}
 				?>
 
-				<div id="media-stream" class="media" data-bp-list="media">
+				<div id="media-stream" class="media" data-bp-list="media" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 					<div id="bp-ajax-loader">
 					<?php
-					if ( ( $bp_is_my_profile || $bp_is_user_media ) && $bp_is_profile_video_support_enabled && $can_edit ) {
-						bp_nouveau_user_feedback( 'album-media-video-loading' );
-					} elseif ( $bp_is_group_active && $bp_is_group && $can_edit && $bp_is_group_video_support_enabled ) {
-						bp_nouveau_user_feedback( 'album-media-video-loading' );
+					if (
+						(
+							(
+								$bp_is_my_profile ||
+								$bp_is_user_media
+							) &&
+							$bp_is_profile_video_support_enabled &&
+							$can_edit
+						) ||
+						(
+							$bp_is_group_active &&
+							$bp_is_group &&
+							$can_edit &&
+							$bp_is_group_video_support_enabled
+						)
+					) {
+						$feedback_id = 'album-media-video-loading';
 					} else {
-						bp_nouveau_user_feedback( 'album-media-loading' );
+						$feedback_id = 'album-media-loading';
+					}
+
+					if ( $is_send_ajax_request ) {
+						bp_nouveau_user_feedback( $feedback_id );
+					} else {
+						bp_get_template_part( 'media/media-loop' );
 					}
 					?>
 					</div>

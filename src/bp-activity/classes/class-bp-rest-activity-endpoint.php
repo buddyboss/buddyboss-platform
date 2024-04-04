@@ -156,6 +156,54 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				'schema' => array( $this, 'get_item_schema' ),
 			)
 		);
+
+		// Register the activity close comments route.
+		register_rest_route(
+			$this->namespace,
+			$activity_endpoint . '/close-comments',
+			array(
+				'args'   => array(
+					'id'               => array(
+						'description' => __( 'A unique numeric ID for the activity.', 'buddyboss' ),
+						'type'        => 'integer',
+						'required'    => true,
+					),
+					'turn_on_comments' => array(
+						'description' => __( 'If true then turn on comments.', 'buddyboss' ),
+						'type'        => 'boolean',
+						'default'     => false,
+					),
+				),
+				array(
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => array( $this, 'update_close_comments' ),
+					'permission_callback' => array( $this, 'update_close_comments_permissions_check' ),
+				),
+				'schema' => array( $this, 'get_item_schema' ),
+			)
+		);
+
+		// Register the activity turn on/off notification route.
+		register_rest_route(
+			$this->namespace,
+			$activity_endpoint . '/notification',
+			array(
+				'args'   => array(
+					'action' => array(
+						'description' => __( 'Turn On/Off attribute mute or unmute.', 'buddyboss' ),
+						'type'        => 'string',
+						'enum'        => array( 'mute', 'unmute' ),
+						'required'    => true,
+					),
+				),
+				array(
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => array( $this, 'update_mute_unmute_notification' ),
+					'permission_callback' => array( $this, 'update_mute_unmute_notification_permissions_check' ),
+				),
+				'schema' => array( $this, 'get_item_schema' ),
+			)
+		);
 	}
 
 	/**
@@ -963,6 +1011,18 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					)
 				);
 			} elseif (
+				function_exists( 'bb_is_close_activity_comments_enabled' ) &&
+				bb_is_close_activity_comments_enabled() &&
+				bb_is_activity_comments_closed( $activity->id )
+			) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to update this activity. The comments are closed for the activity.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			} elseif (
 				function_exists( 'bp_is_activity_edit_enabled' )
 				&& ! bp_is_activity_edit_enabled()
 				&& function_exists( 'bp_activity_user_can_edit' )
@@ -1454,6 +1514,155 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	}
 
 	/**
+	 * Update the activity close comments.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return WP_REST_Response | WP_Error
+	 *
+	 * @since 0.1.0
+	 *
+	 * @api            {PATCH} /wp-json/buddyboss/v1/activity/:id/close-comments Activity close comments
+	 * @apiName        UpdateBBActivityCloseComments
+	 * @apiGroup       Activity
+	 * @apiDescription Make activity close_comments/unclose_comments
+	 * @apiVersion     1.0.0
+	 * @apiPermission  Administrator or the Group Admin/Moderator or post author.
+	 * @apiParam {Number} id A unique numeric ID for the activity
+	 * @apiParam {String=close_comments,unclose_comments} [comments_action] Close or Unclose comments.
+	 */
+	public function update_close_comments( $request ) {
+		$activity = $this->get_activity_object( $request->get_param( 'id' ) );
+		$result   = false;
+
+		if ( true === (bool) $request->get_param( 'turn_on_comments' ) ) {
+			$comments_action = 'unclose_comments';
+		} else {
+			$comments_action = 'close_comments';
+		}
+
+		$args = array(
+			'action'      => $comments_action,
+			'activity_id' => (int) $activity->id,
+			'user_id'     => bp_loggedin_user_id(),
+			'retval'      => 'string',
+		);
+
+		$result = bb_activity_close_unclose_comments( $args );
+
+		if ( ! empty( $result ) ) {
+			if ( 'unclosed_comments' === $result ) {
+				$feedback = esc_html__( 'You turned on commenting for this post', 'buddyboss' );
+			} elseif ( 'closed_comments' === $result ) {
+				$feedback = esc_html__( 'You turned off commenting for this post', 'buddyboss' );
+			}  elseif ( 'not_allowed' === $result || 'not_member' === $result ) {
+				$feedback = esc_html__( 'You are not permitted with the requested operation', 'buddyboss' );
+			}
+		} else {
+			return new WP_Error(
+				'bp_rest_activity_cannot_update_close_comments',
+				__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+				array(
+					'status' => 500,
+				)
+			);
+		}
+
+		// Setting context.
+		$request->set_param( 'context', 'edit' );
+
+		// Prepare the response now the user favorites has been updated.
+		$res_activity = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $activity, $request )
+		);
+
+		$retval = array(
+			'feedback' => $feedback,
+			'activity' => $res_activity,
+		);
+
+		$response = rest_ensure_response( $retval );
+
+		/**
+		 * Fires after user update close comments on activity via the REST API.
+		 *
+		 * @param BP_Activity_Activity $activity       The updated activity.
+		 * @param WP_REST_Response     $response       The response data.
+		 * @param WP_REST_Request      $request        The request sent to the API.
+		 *
+		 * @since 0.1.0
+		 */
+		do_action( 'bp_rest_activity_update_close_comments', $activity, $response, $request );
+
+		return $response;
+	}
+
+	/**
+	 * Check if a given request has access to close or unclose activity comments.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return bool|WP_Error
+	 * @since 0.1.0
+	 */
+	public function update_close_comments_permissions_check( $request ) {
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
+
+		if ( is_user_logged_in() && bb_is_close_activity_comments_enabled() ) {
+
+			$activity = $this->get_activity_object( $request->get_param( 'id' ) );
+			if ( empty( $activity->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_id',
+					__( 'Invalid activity ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} else {
+
+				// Closed comments actions allowed or not.
+				$check_args = array(
+					'activity_id' => $activity->id,
+					'action'      => ( (bool) $request->get_param( 'turn_on_comments' ) ) ? 'unclose_comments' : 'close_comments',
+				);
+				$retval = bb_activity_comments_close_action_allowed( $check_args );
+				if ( 'allowed' === $retval ) {
+					$retval = true;
+				} else {
+					$retval = false;
+				}
+			}
+		}
+
+		if ( false === $retval ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
+		/**
+		 * Filter the activity `update_close_comments` permissions check.
+		 *
+		 * @param bool|WP_Error $retval Returned value.
+		 * @param WP_REST_Request $request The request sent to the API.
+		 *
+		 * @since 0.1.0
+		 */
+		return apply_filters( 'bp_rest_activity_update_close_comments_permissions_check', $retval, $request );
+	}
+
+	/**
 	 * Renders the content of an activity.
 	 *
 	 * @param BP_Activity_Activity $activity Activity data.
@@ -1633,6 +1842,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					'user_id'   => bp_loggedin_user_id(),
 				)
 			),
+			'is_comment_closed' => function_exists( 'bb_is_close_activity_comments_enabled' ) && bb_is_close_activity_comments_enabled() ? bb_is_activity_comments_closed( $activity->id ) : false,
 		);
 
 		// Add feature image as separate object which added last in the content.
@@ -1764,14 +1974,37 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$data['can_pin'] = true;
 		}
 
+		$data['can_close_comment'] = false;
+		if ( function_exists( 'bb_is_close_activity_comments_enabled' ) && bb_is_close_activity_comments_enabled() ) {
+
+			if ( $data['is_comment_closed'] ) {
+				$data['comment_closed_notice'] = bb_get_close_activity_comments_notice( $activity->id );
+			}
+
+			// Closed comments actions allowed or not.
+			$check_args = array(
+				'activity_id' => $activity->id,
+				'action'      => $data['is_comment_closed'] ? 'unclose_comments' : 'close_comments',
+			);
+
+			$retval = bb_activity_comments_close_action_allowed( $check_args );
+			if ( 'allowed' === $retval ) {
+				$data['can_close_comment'] = true;
+			}
+		}
+
 		// Get item schema.
 		$schema = $this->get_item_schema();
 
+		// Comment depth.
+		if ( 'activity_comment' === $activity->type && ! empty( $activity->depth ) ) {
+			$data['comment_depth'] = $activity->depth;
+		}
+
 		// Get comments (count).
 		if ( ! empty( $activity->children ) ) {
-			$data['comment_count'] = bp_activity_recurse_comment_count( $activity );
-
-			if ( ! empty( $schema['properties']['comments'] ) && 'threaded' === $request['display_comments'] ) {
+			$data['comment_count'] = isset( $activity->all_child_count ) ? $activity->all_child_count : bp_activity_recurse_comment_count( $activity );
+			if ( ! empty( $schema['properties']['comments'] ) && 'threaded' === $request['display_comments'] && empty( $request->get_param( 'apply_limit' ) ) ) {
 				// First check the comment is disabled from the activity settings for post type.
 				// For more information please check this PROD-2475.
 				if ( 'blogs' === $activity->component && $data['can_comment'] ) {
@@ -1782,8 +2015,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				}
 			}
 		} else {
-			$activity->children    = BP_Activity_Activity::get_activity_comments( $activity->id, $activity->mptt_left, $activity->mptt_right, $request['status'], $top_level_parent_id );
-			$data['comment_count'] = ! empty( $activity->children ) ? bp_activity_recurse_comment_count( $activity ) : 0;
+			if ( isset( $activity->all_child_count ) ) {
+				$data['comment_count'] = $activity->all_child_count;
+			} else {
+				$activity->children    = BP_Activity_Activity::get_activity_comments( $activity->id, $activity->mptt_left, $activity->mptt_right, $request['status'], $top_level_parent_id, true );
+				$data['comment_count'] = ! empty( $activity->children ) ? bp_activity_recurse_comment_count( $activity ) : 0;
+			}
 		}
 
 		if ( ! empty( $schema['properties']['user_avatar'] ) ) {
@@ -1802,6 +2039,24 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					)
 				),
 			);
+		}
+
+		// Turn On/Off notification.
+		if ( ! empty( $schema['properties']['is_receive_notification'] ) ) {
+			$data['can_toggle_notification'] = false;
+			$notification_type               = bb_activity_enabled_notification( 'bb_activity_comment', bp_loggedin_user_id() );
+			$user_ids                        = ! empty( $activity->children )
+				? (array) bp_activity_recurse_comments_user_ids( $activity->children )
+				: array();
+			$user_ids                        = array_unique( $user_ids );
+
+			if ( ! empty( $notification_type ) && ! empty( array_filter( $notification_type ) ) && ( $activity->user_id === bp_loggedin_user_id() || in_array( bp_loggedin_user_id(), $user_ids, true ) ) ) {
+				$data['can_toggle_notification'] = true;
+			}
+			$data['is_receive_notification'] = true;
+			if ( bb_user_has_mute_notification( $activity->id, bp_loggedin_user_id() ) ) {
+				$data['is_receive_notification'] = false;
+			}
 		}
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -2433,6 +2688,18 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					'type'        => 'integer',
 					'readonly'    => true,
 				),
+				'is_comment_closed' => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Is perticular activity comments are closed.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+				'can_close_comment' => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Is user allowed to turn on and turn off the respective activity comments.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
 			),
 		);
 
@@ -2462,6 +2729,22 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				'type'        => 'object',
 				'readonly'    => true,
 				'properties'  => $avatar_properties,
+			);
+		}
+
+		// Turn On/Off notification.
+		if ( bp_is_active( 'notifications' ) && bb_is_notification_type_enabled( 'bb_activity_comment' ) ) {
+			$schema['properties']['can_toggle_notification'] = array(
+				'context'     => array( 'embed', 'view', 'edit' ),
+				'description' => __( 'Is user allowed to on/off notification the respective activity.', 'buddyboss' ),
+				'type'        => 'boolean',
+				'readonly'    => true,
+			);
+			$schema['properties']['is_receive_notification'] = array(
+				'context'     => array( 'embed', 'view', 'edit' ),
+				'description' => __( 'Is particular activity is muted.', 'buddyboss' ),
+				'type'        => 'boolean',
+				'readonly'    => true,
 			);
 		}
 
@@ -2905,5 +3188,157 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		}
 
 		return preg_replace( "/[\r\n]+/", "\r\n", $action );
+	}
+
+	/**
+	 * Update activity notification to be mute/unmute.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return WP_REST_Response | WP_Error
+	 *
+	 * @since 0.1.0
+	 *
+	 * @api            {PATCH} /wp-json/buddyboss/v1/activity/:id/notification Activity notification
+	 * @apiName        ToggleBBNotificationTurnOnOff
+	 * @apiGroup       Activity
+	 * @apiDescription Make activity notification on/off
+	 * @apiVersion     1.0.0
+	 * @apiPermission  Any loggedin user
+	 * @apiParam {Number} id A unique numeric ID for the activity
+	 * @apiParam {String=mute,unmute} [mute_action] mute or unmute activity notification.
+	 */
+	public function update_mute_unmute_notification( $request ) {
+		$activity = $this->get_activity_object( $request->get_param( 'id' ) );
+
+		$notification_type = bb_activity_enabled_notification( 'bb_activity_comment', bp_loggedin_user_id() );
+		if ( empty( $notification_type ) ) {
+			return new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, you are not allowed to turn on/off notification.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
+		if ( empty( $activity->id ) ) {
+			return new WP_Error(
+				'bp_rest_invalid_id',
+				__( 'Invalid activity ID.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		}
+
+		$toggle_notification_action = $request->get_param( 'action' );
+		if ( empty( $toggle_notification_action ) ) {
+			return new WP_Error(
+				'bp_rest_activity_notification_required_action',
+				__( 'The action is required.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		}
+
+		$args = array(
+			'action'      => $toggle_notification_action,
+			'activity_id' => (int) $activity->id,
+			'user_id'     => bp_loggedin_user_id(),
+		);
+
+		$result = bb_toggle_activity_notification_status( $args );
+
+		$feedback = '';
+		if ( ! empty( $result ) ) {
+			if ( 'unmute' === $result ) {
+				$feedback = esc_html__( 'Notifications for this activity have been unmuted.', 'buddyboss' );
+			} elseif ( 'mute' === $result ) {
+				$feedback = esc_html__( 'Notifications for this activity have been muted.', 'buddyboss' );
+			} elseif ( 'already_muted' === $result ) {
+				$feedback = esc_html__( 'Notifications for this activity already been muted.', 'buddyboss' );
+			}
+		} else {
+			return new WP_Error(
+				'bp_rest_activity_cannot_mute_notification',
+				__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+				array(
+					'status' => 500,
+				)
+			);
+		}
+
+		// Setting context.
+		$request->set_param( 'context', 'edit' );
+
+		// Prepare the response now the user favorites has been updated.
+		$res_activity = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $activity, $request )
+		);
+
+		$retval = array(
+			'feedback' => $feedback,
+			'activity' => $res_activity,
+		);
+
+		$response = rest_ensure_response( $retval );
+
+		/**
+		 * Fires after user turn on/off activity notification has been updated via the REST API.
+		 *
+		 * @param BP_Activity_Activity $activity       The updated activity.
+		 * @param WP_REST_Response     $response       The response data.
+		 * @param WP_REST_Request      $request        The request sent to the API.
+		 *
+		 * @since 0.1.0
+		 */
+		do_action( 'bb_rest_activity_mute_unmute_notification', $activity, $response, $request );
+
+		return $response;
+	}
+
+	/**
+	 * Check if a given request has access to mute or unmute activity notification.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return bool|WP_Error
+	 * @since 0.1.0
+	 */
+	public function update_mute_unmute_notification_permissions_check( $request ) {
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
+
+		$activity = $this->get_activity_object( $request->get_param( 'id' ) );
+		if ( empty( $activity->id ) ) {
+			$retval = new WP_Error(
+				'bp_rest_invalid_id',
+				__( 'Invalid activity ID.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		}
+
+		if ( is_user_logged_in() ) {
+			$retval = true;
+		}
+
+		/**
+		 * Filter the activity `update_mute_unmute_notification` permissions check.
+		 *
+		 * @param bool|WP_Error   $retval  Returned value.
+		 * @param WP_REST_Request $request The request sent to the API.
+		 *
+		 * @since 0.1.0
+		 */
+		return apply_filters( 'bp_rest_activity_update_mute_unmute_notification_permissions_check', $retval, $request );
 	}
 }
