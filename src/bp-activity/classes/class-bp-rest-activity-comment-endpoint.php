@@ -145,6 +145,23 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $activity->children ) ) {
 			$request->set_param( 'context', 'view' );
+
+			$comments_count = BP_Activity_Activity::bb_get_all_activity_comment_children_count(
+				array(
+					'spam'     => 'ham_only',
+					'activity' => $activity,
+				)
+			);
+			if ( ! empty( $comments_count ) ) {
+				$retval['comment_count']       = $comments_count['all_child_count'];
+				$retval['level_comment_count'] = $comments_count['top_level_count'];
+			}
+
+			$request->set_param( 'parent_comment', $activity );
+			if ( empty( $request->get_param( 'parent_comment_id' ) ) ) {
+				$request->set_param( 'parent_comment_id', $activity->id );
+			}
+
 			$retval['comments'] = $this->prepare_activity_comments( $activity->children, $request );
 		}
 
@@ -503,6 +520,18 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 						'status' => 404,
 					)
 				);
+			} elseif (
+				function_exists( 'bb_is_close_activity_comments_enabled' ) &&
+				bb_is_close_activity_comments_enabled() &&
+				bb_is_activity_comments_closed( $activity->id )
+			) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to create an activity comment. The comments are closed for the activity.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
 			}
 		}
 
@@ -661,6 +690,19 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 					__( 'Invalid activity comment ID.', 'buddyboss' ),
 					array(
 						'status' => 404,
+					)
+				);
+			} elseif (
+				! empty( $request['id'] ) &&
+				function_exists( 'bb_is_close_activity_comments_enabled' ) &&
+				bb_is_close_activity_comments_enabled() &&
+				bb_is_activity_comments_closed( $request['id'] )
+			) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to update this activity comment. The comments are closed for the activity.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
 					)
 				);
 			} elseif (
@@ -964,10 +1006,29 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			return $data;
 		}
 
+		$comment_load_limit = false;
+
+		if ( ! empty( $request->get_param( 'apply_limit' ) ) ) {
+			$comment_load_limit = bb_get_activity_comment_loading();
+		}
+
+		$comment_loaded_count = 0;
 		foreach ( $comments as $comment ) {
+
+			if (
+				false !== $comment_load_limit &&
+				(
+					$comment_loaded_count === $comment_load_limit
+				)
+			) {
+				break;
+			}
+
 			$data[] = $this->activity_endpoint->prepare_response_for_collection(
 				$this->activity_endpoint->prepare_item_for_response( $comment, $request )
 			);
+
+			$comment_loaded_count++;
 		}
 
 		/**
