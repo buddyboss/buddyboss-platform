@@ -421,6 +421,10 @@ window.bp = window.bp || {};
 				}
 			}
 
+			if( activity_data.status === 'scheduled' ) {
+				self.postForm.model.set( 'activity_action_type', activity_data.status );
+			}
+
 			var tool_box = $( '.activity-form.focus-in #whats-new-toolbar' );
 
 			if ( ! _.isUndefined( self.activityToolbar ) ) {
@@ -4734,6 +4738,11 @@ window.bp = window.bp || {};
 				if ( $( '#whats-new-form' ).hasClass( 'bp-activity-edit' ) ) {
 					buttomText = BP_Nouveau.activity.strings.updatePostButton;
 				}
+
+				if( this.model.get( 'activity_action_type' ) === 'scheduled' || this.model.get( 'activity_status' ) === 'scheduled' ) {
+					buttomText = BP_Nouveau.activity.strings.updatePostButton;
+				}
+
 				this.submit = new bp.Views.ActivityInput(
 					{
 						model: this.model,
@@ -4788,7 +4797,7 @@ window.bp = window.bp || {};
 					buttomText = BP_Nouveau.activity.strings.updatePostButton;
 				}
 
-				if( model.get( 'activity_action_type' ) === 'scheduled' ) {
+				if( model.get( 'activity_action_type' ) === 'scheduled' || this.model.get( 'activity_status' ) === 'scheduled' ) {
 					this.submit.el.value = BP_Nouveau.activity.strings.schedulePostButton;
 				} else {
 					this.submit.el.value = buttomText;
