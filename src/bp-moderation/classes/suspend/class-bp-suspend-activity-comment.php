@@ -476,7 +476,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Prepare activity comment join SQL query to filter blocked Activity.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.80
 	 *
 	 * @param string $join_sql Activity Join sql.
 	 * @param array  $args     Query arguments.
@@ -494,7 +494,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden activity comment count Where SQL statement.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.5.80
 		 *
 		 * @param array $join_sql Join sql query
 		 * @param array $class    current class object.
@@ -507,7 +507,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Prepare activity comment count Where SQL query to filter blocked Activity
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.80
 	 *
 	 * @param array  $where_conditions Activity Where sql.
 	 * @param string $args             Search terms.
@@ -530,7 +530,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden activity comment count Where SQL statement.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.5.80
 		 *
 		 * @param array  $where            Query to hide suspended user's activity comment.
 		 * @param array  $class            current class object.

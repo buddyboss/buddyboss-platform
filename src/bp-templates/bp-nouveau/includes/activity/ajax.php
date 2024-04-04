@@ -1188,7 +1188,7 @@ function bb_nouveau_ajax_activity_update_pinned_post() {
 /**
  * Update close activity comments.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @return void
  */
@@ -1244,7 +1244,7 @@ function bb_nouveau_ajax_activity_update_close_comments() {
 		 * Filters the response before updating activity close comments via AJAX.
 		 * This filter allows modification of the response data before it's used to update activity close comments via AJAX.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.5.80
 		 *
 		 * @param mixed $response The response data. Can be of any type.
 		 * @param array $_POST    The $_POST data received via AJAX request.
@@ -1262,7 +1262,7 @@ function bb_nouveau_ajax_activity_update_close_comments() {
 /**
  * Get more comments.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @return void
  */
@@ -1370,7 +1370,7 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 /**
  * Get particular activity to sync when activity modal is closed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @return void
  */
@@ -1425,7 +1425,7 @@ function bb_nouveau_ajax_activity_sync_from_modal() {
 /**
  * Mute/Unmute Activity Notification.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @return void
  */

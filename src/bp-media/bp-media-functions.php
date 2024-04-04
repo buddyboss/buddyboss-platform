@@ -4173,7 +4173,7 @@ function bb_media_get_activity_media( $activity = '', $args = array() ) {
 /**
  * Maximum thumbnail length in comment.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @return int
  */
@@ -4184,7 +4184,7 @@ function bb_media_get_activity_comment_max_thumb_length() {
 /**
  * Maximum thumbnail length in activity.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @return int
  */

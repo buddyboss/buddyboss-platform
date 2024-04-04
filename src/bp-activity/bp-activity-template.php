@@ -1928,7 +1928,7 @@ function bp_activity_get_comments( $args = '' ) {
  * split between here and the comment.php template.
  *
  * @since BuddyPress 1.2.0
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  * Added new param as args to pass some arguments to the function.
  *
  * @global object $activities_template    {@link BP_Activity_Template}
@@ -1994,7 +1994,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 		/**
 		 * Filters the start of nested comment list in the activity.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.5.80
 		 *
 		 * @param string $output The HTML output of the start of the UL element.
 		 */
@@ -2254,7 +2254,7 @@ function bp_get_activity_comment_date_recorded() {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.80
 	 * Updated param.
 	 *
 	 * @param string|bool string|bool $date_recorded Time since the activity was recorded,

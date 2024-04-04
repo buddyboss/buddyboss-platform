@@ -3697,7 +3697,7 @@ function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
 /**
  * Add template for gifpicker.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  */
 function bb_gifpicker_add_popup_template() {
 	bp_get_template_part( 'activity/gifpicker-popup' );
@@ -3706,7 +3706,7 @@ function bb_gifpicker_add_popup_template() {
 /**
  * Add template for emojionearea picker.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  */
 function bb_emojionearea_add_popup_template() {
 	bp_get_template_part( 'activity/emojionearea-popup' );
@@ -3715,7 +3715,7 @@ function bb_emojionearea_add_popup_template() {
 /**
  * Add activity modal template for activity pages.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  */
 function bb_activity_add_modal_template() {
 	bp_get_template_part( 'activity/activity-modal' );
@@ -3724,7 +3724,7 @@ function bb_activity_add_modal_template() {
 /**
  * Add class to recent activity comment.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @param string $class Comment class.
  *
@@ -3739,7 +3739,7 @@ function bb_activity_recent_comment_class( $class ) {
 /**
  * Function to update per page for activity.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @param string $querystring Current query string.
  * @param string $object      Current template component.

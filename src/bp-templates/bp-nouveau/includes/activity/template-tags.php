@@ -679,7 +679,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
  *
  * @since BuddyPress 3.0.0
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  * Introduce new param $args to limit the number of comments to load.
  *
  * @param array $args Optional. To limit the number of comments to load.
@@ -701,7 +701,7 @@ function bp_nouveau_activity_comments( $args = array() ) {
  *
  * @since BuddyPress 3.0.0
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  * Added new param as args to pass some arguments to the function.
  *
  * @param object $comment        The activity object currently being recursed.
@@ -2474,7 +2474,7 @@ function bb_nouveau_activity_comment_is_edited( $activity_comment_id = 0, $echo 
 /**
  * Output the activity loading state progress bar.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  */
 function bb_activity_load_progress_bar_state() {
 	?>
@@ -2489,7 +2489,7 @@ function bb_activity_load_progress_bar_state() {
 /**
  * Output the Activity comment action meta data.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  */
 function bp_nouveau_activity_comment_meta() {
 	echo bp_nouveau_get_activity_comment_meta();
@@ -2498,14 +2498,14 @@ function bp_nouveau_activity_comment_meta() {
 /**
  * Get the Activity comment action meta data.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  */
 function bp_nouveau_get_activity_comment_meta() {
 
 	/**
 	 * Filter to the activity comment meta data.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.80
 	 *
 	 * @param string $value HTML Output
 	 */

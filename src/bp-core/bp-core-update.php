@@ -3463,7 +3463,7 @@ function bb_update_to_2_4_75() {
  * Migrate comment related discussion settings to new comment settings.
  * Migrate the performance-related setting for existing installations.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @return void
  */
