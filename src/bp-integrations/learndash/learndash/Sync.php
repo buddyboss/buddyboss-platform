@@ -69,10 +69,6 @@ class Sync {
 			return false;
 		}
 
-		if ( empty( bp_ld_sync()->isRequestExists( 'bp-ld-sync-enable' ) ) ){
-			return false;
-		}
-
 		// created from backend
 		if ( bp_ld_sync()->isRequestExists( 'bp-ld-sync-enable' ) && ! bp_ld_sync()->getRequest( 'bp-ld-sync-enable' ) ) {
 			$group_id = get_post_meta( $groupId, '_sync_group_id', true );
