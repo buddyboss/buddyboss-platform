@@ -7123,19 +7123,33 @@ function bb_is_enabled_activity_schedule_posts( $default = false ) {
  *
  * @return bool true if user can post schedule posts, otherwise false.
  */
-function bb_can_user_schedule_activity() {
+function bb_can_user_schedule_activity( $args = array() ) {
+	$retval = false;
+	$r      = bp_parse_args(
+		$args,
+		array(
+			'user_id'  => get_current_user_id(),
+			'object'   =>   '',
+			'group_id' => 0,
+		)
+	);
 
-	$user_id = get_current_user_id();
-	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
-		$group_id = bp_get_current_group_id();
-		$is_admin = groups_is_user_admin( $user_id, $group_id );
-		$is_mod   = groups_is_user_mod( $user_id, $group_id );
+	if (
+		bp_is_active( 'groups' ) &&
+		(
+			'group' === $r['object'] ||
+			bp_is_group()
+		)
+	) {
+		$group_id = 'group' === $r['object'] && ! empty( $r['group_id'] ) ? $r['group_id'] : bp_get_current_group_id();
+		$is_admin = groups_is_user_admin( $r['user_id'], $group_id );
+		$is_mod   = groups_is_user_mod( $r['user_id'], $group_id );
 		if ( $is_admin || $is_mod ) {
-			return true;
+			$retval = true;
 		}
 	} elseif ( bp_current_user_can( 'administrator' ) ) {
-		return true;
+		$retval = true;
 	}
 
-	return false;
+	return apply_filters( 'bb_can_user_schedule_activity', $retval, $args );
 }
