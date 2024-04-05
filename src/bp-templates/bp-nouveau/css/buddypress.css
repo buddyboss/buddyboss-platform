@@ -1720,6 +1720,7 @@ a.layout-grid-view {
   padding: 8px;
   border-radius: 8px;
   background-color: #fff;
+  box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.06), 0 6px 24px 0 rgba(0, 0, 0, 0.12);
 }
 
 .bb-schedule-post_dropdown_section .bb-schedule-post_dropdown_list.is_open {
