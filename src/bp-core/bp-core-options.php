@@ -1018,7 +1018,7 @@ function bp_is_activity_autoload_active( $default = true ) {
 	/**
 	 * Filters whether Activity Autoload is enabled.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.80
 	 *
 	 * @param bool $value true if Autoload is enabled, otherwise false.
 	 */
@@ -2725,7 +2725,7 @@ function bb_active_reactions() {
 /**
  * Get Page requests option.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @param int $default when option not found, function will return $default value.
  *
@@ -2738,7 +2738,7 @@ function bb_get_ajax_request_page_load( $default = 2 ) {
 /**
  * Get an Activity loading option.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @param int $default when option not found, function will return $default value.
  *
@@ -2751,7 +2751,7 @@ function bb_get_load_activity_per_request( $default = 10 ) {
 /**
  * Function to check the send ajax request to load main content.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @return bool
  */

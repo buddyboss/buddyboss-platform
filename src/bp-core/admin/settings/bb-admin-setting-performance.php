@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  */
 
 // Exit if accessed directly.
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Main performance settings class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  */
 class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 
 	/**
 	 * Initial method for this class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.80
 	 *
 	 * @return void
 	 */
@@ -42,7 +42,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 	/**
 	 * Register setting fields
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.80
 	 *
 	 * @return void
 	 */
@@ -59,7 +59,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 		/**
 		 * Fires to register Performance tab settings fields and section.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.5.80
 		 *
 		 * @param Object $this BB_Admin_Setting_Performance.
 		 */

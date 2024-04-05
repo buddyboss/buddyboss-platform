@@ -92,12 +92,6 @@ add_action(
 				),
 			),
 			array(
-				'toggle_activity_notification_status' => array(
-					'function' => 'bb_nouveau_ajax_toggle_activity_notification_status',
-					'nopriv'   => false,
-				),
-			),
-			array(
 				'activity_update_close_comments' => array(
 					'function' => 'bb_nouveau_ajax_activity_update_close_comments',
 					'nopriv'   => false,
@@ -113,6 +107,12 @@ add_action(
 				'activity_sync_from_modal' => array(
 					'function' => 'bb_nouveau_ajax_activity_sync_from_modal',
 					'nopriv'   => true,
+				),
+			),
+			array(
+				'toggle_activity_notification_status' => array(
+					'function' => 'bb_nouveau_ajax_toggle_activity_notification_status',
+					'nopriv'   => false,
 				),
 			),
 		);
@@ -1186,65 +1186,9 @@ function bb_nouveau_ajax_activity_update_pinned_post() {
 }
 
 /**
- * Mute/Unmute Activity Notification.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return void
- */
-function bb_nouveau_ajax_toggle_activity_notification_status() {
-	$response = array(
-		'feedback' => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
-	);
-
-	if ( ! bp_is_post_request() ) {
-		wp_send_json_error( $response );
-	}
-
-	if ( ! is_user_logged_in() ) {
-		wp_send_json_error( $response );
-	}
-
-	// Nonce check!
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
-		wp_send_json_error( $response );
-	}
-
-	if ( empty( $_POST['notification_toggle_action'] ) || ! in_array( $_POST['notification_toggle_action'], array( 'mute', 'unmute' ), true ) ) {
-		wp_send_json_error( $response );
-	}
-
-	if ( empty( $_POST['id'] ) ) {
-		wp_send_json_error( $response );
-	}
-
-	$args = array(
-		'action'      => $_POST['notification_toggle_action'],
-		'activity_id' => (int) $_POST['id'],
-		'user_id'     => bp_loggedin_user_id(),
-	);
-
-	$retval = bb_toggle_activity_notification_status( $args );
-
-	if ( 'unmute' === $retval ) {
-		$response['feedback'] = esc_html__( 'Notifications for this activity have been unmuted.', 'buddyboss' );
-	} elseif ( 'mute' === $retval ) {
-		$response['feedback'] = esc_html__( 'Notifications for this activity have been muted.', 'buddyboss' );
-	} elseif ( 'already_muted' === $retval ) {
-		$response['feedback'] = esc_html__( 'Notifications for this activity already been muted.', 'buddyboss' );
-	}
-
-	if ( ! empty( $retval ) && in_array( $retval, array( 'unmute', 'mute', 'already_muted' ), true ) ) {
-		wp_send_json_success( $response );
-	} else {
-		wp_send_json_error( $response );
-	}
-}
-
-/**
  * Update close activity comments.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @return void
  */
@@ -1300,7 +1244,7 @@ function bb_nouveau_ajax_activity_update_close_comments() {
 		 * Filters the response before updating activity close comments via AJAX.
 		 * This filter allows modification of the response data before it's used to update activity close comments via AJAX.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.5.80
 		 *
 		 * @param mixed $response The response data. Can be of any type.
 		 * @param array $_POST    The $_POST data received via AJAX request.
@@ -1313,13 +1257,12 @@ function bb_nouveau_ajax_activity_update_close_comments() {
 	} else {
 		wp_send_json_error( $response );
 	}
-
 }
 
 /**
  * Get more comments.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @return void
  */
@@ -1427,7 +1370,7 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 /**
  * Get particular activity to sync when activity modal is closed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @return void
  */
@@ -1477,4 +1420,60 @@ function bb_nouveau_ajax_activity_sync_from_modal() {
 			'activity' => ob_get_clean(),
 		)
 	);
+}
+
+/**
+ * Mute/Unmute Activity Notification.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @return void
+ */
+function bb_nouveau_ajax_toggle_activity_notification_status() {
+	$response = array(
+		'feedback' => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+	);
+
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error( $response );
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['notification_toggle_action'] ) || ! in_array( $_POST['notification_toggle_action'], array( 'mute', 'unmute' ), true ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['id'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$args = array(
+		'action'      => $_POST['notification_toggle_action'],
+		'activity_id' => (int) $_POST['id'],
+		'user_id'     => bp_loggedin_user_id(),
+	);
+
+	$retval = bb_toggle_activity_notification_status( $args );
+
+	if ( 'unmute' === $retval ) {
+		$response['feedback'] = esc_html__( 'Notifications for this activity have been unmuted.', 'buddyboss' );
+	} elseif ( 'mute' === $retval ) {
+		$response['feedback'] = esc_html__( 'Notifications for this activity have been muted.', 'buddyboss' );
+	} elseif ( 'already_muted' === $retval ) {
+		$response['feedback'] = esc_html__( 'Notifications for this activity already been muted.', 'buddyboss' );
+	}
+
+	if ( ! empty( $retval ) && in_array( $retval, array( 'unmute', 'mute', 'already_muted' ), true ) ) {
+		wp_send_json_success( $response );
+	} else {
+		wp_send_json_error( $response );
+	}
 }

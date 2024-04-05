@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.4.3
 Requires PHP: 5.6.20
-Stable tag: 2.5.71
+Stable tag: 2.5.80
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,24 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.5.80 =
+* New Feature! - Close comments allows post authors and admins to turn of commenting on any specific post which gives users and admins another great way to maintain control and moderation
+* New Feature! - To make the activity feed more streamlined we have introduced the View more comments and View more replies which will allow users to expand the threads they are interested in rather than showing the full expanded user interactions
+* New Feature! - We have added a new tab in the settings dedicated to performance settings with a new page load count setting which lets you select whether to load the page in 1 or 2 calls
+* New Feature! - We have updated our Activity feed design to now open selected posts into its own modal which provides a more focused experience for users when interacting with posts
+* New Feature! - Users now have the ability to Turn off Notifications on specific posts they have interacted with that they no longer have interest in
+* Enhancement: Activity - We have added new settings to allow for more granular control on our new Activity feed update that lets you select thread count, load count, default comment visibility and even the ability to turn off commenting all together
+* Enhancement: Performance - Converted the current phase loading approach with a single request by default to improve performance
+* Bug: Activity - When updating the post with link preview and there were comments, meta value for comments was filled based from Preview
+* Bug: Core - The phone Number profile field was displaying “//” within the link when hovering over it
+* Bug: Core - When users added a Dot to the end of their nickname this broke the link, we have now added this functionality
+* Bug: Forums - The BuddyBoss Forum login widget was showing a typographical error
+* Bug: Groups - Subscription option in the backend setting is now removed after disabling
+* Bug: LearnDash - Switching from grid to list view from the LearnDash course grid using the LearnDash Course List block was showing a JS error
+* Bug: Profiles - Profile types were not showing or retaining previous settings
+* Bug: Styling - When searching member on the members page there was an issue with text spacing
+* Bug: Translations - When selecting German language there were spacing issues showing for author names on activity posts
 
 = 2.5.71 =
 * Bug: Core - Media files were being removed when running the cron bp_document_delete_orphaned_attachments_hook

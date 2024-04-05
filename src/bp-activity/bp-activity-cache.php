@@ -222,7 +222,7 @@ add_action( 'added_activity_meta', 'bb_activity_clear_metadata', 10, 2 );
 /**
  * Clear cached data for activity comment counts.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @param array $activities Array of activities.
  */

@@ -9175,11 +9175,11 @@ msgid "Lost Password"
 msgstr ""
 
 #: bp-forums/common/widgets.php:194
-msgid "Register URI:"
+msgid "Register URL:"
 msgstr ""
 
 #: bp-forums/common/widgets.php:199
-msgid "Lost Password URI:"
+msgid "Lost Password URL:"
 msgstr ""
 
 #: bp-forums/common/widgets.php:253
