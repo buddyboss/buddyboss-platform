@@ -31,11 +31,12 @@ class BB_Activity extends Integration_Abstract {
 		$this->register( 'bp-activity' );
 
 		$purge_events = array(
-			'bp_activity_add',              // Any Activity add.
-			'bp_activity_after_save',       // Any activity privacy update.
-			'bp_activity_delete',           // Any Activity deleted.
-			'bp_activity_delete_comment',   // Any Activity comment deleted.
-			'bb_activity_pin_unpin_post',   // Any Activity pin/unpin.
+			'bp_activity_add',                    // Any Activity add.
+			'bp_activity_after_save',             // Any activity privacy update.
+			'bp_activity_delete',                 // Any Activity deleted.
+			'bp_activity_delete_comment',         // Any Activity comment deleted.
+			'bb_activity_pin_unpin_post',         // Any Activity pin/unpin.
+			'bb_activity_close_unclose_comments', // Any Activity closed/unclosed comment.
 
 			// Added moderation support.
 			'bp_suspend_activity_suspended',           // Any Activity Suspended.
@@ -67,6 +68,7 @@ class BB_Activity extends Integration_Abstract {
 			'bp_activity_add_user_favorite'           => 1, // if activity added in user favorite list.
 			'bp_activity_remove_user_favorite'        => 1, // if activity remove from user favorite list.
 			'bb_activity_pin_unpin_post'              => 1, // Any Activity pin/unpin.
+			'bb_activity_close_unclose_comments'      => 1, // Any Activity close/unclose comment.
 
 			// Added Moderation Support.
 			'bp_suspend_activity_suspended'           => 1, // Any Activity Suspended.
@@ -445,5 +447,14 @@ class BB_Activity extends Integration_Abstract {
 	 */
 	public function prepare_activity_deeplink( $activity_id ) {
 		return 'bbapp-deeplinking_' . untrailingslashit( bp_activity_get_permalink( $activity_id ) );
+	}
+
+	/**
+	 * Close/Unclose Activity Comments.
+	 *
+	 * @param int $activity_id Activity id.
+	 */
+	public function event_bb_activity_close_unclose_comments( $activity_id ) {
+		$this->purge_item_cache_by_item_id( $activity_id );
 	}
 }
