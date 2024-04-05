@@ -6570,168 +6570,9 @@ function bb_activity_get_metadata( $activity_id ) {
 }
 
 /**
- * Check whether activity schedule posts are enabled.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: false.
- *
- * @return bool true if activity schedule posts are enabled, otherwise false.
- */
-function bb_is_enabled_activity_schedule_posts( $default = false ) {
-
-	/**
-	 * Filters whether activity schedule posts are enabled.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param bool $value Whether activity schedule posts are enabled.
-	 */
-	return (bool) apply_filters( 'bb_is_enabled_activity_schedule_posts', (bool) bp_get_option( '_bb_enable_activity_schedule_posts', $default ) );
-}
-
-/*
- * Set activity notification status.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param array $args Array of Arguments.
- *
- * @return string
- */
-function bb_toggle_activity_notification_status( $args = array() ) {
-	$r = bp_parse_args(
-		$args,
-		array(
-			'action'      => 'mute',
-			'activity_id' => 0,
-			'user_id'     => bp_loggedin_user_id(),
-		)
-	);
-
-	$retval   = '';
-	$activity = new BP_Activity_Activity( (int) $r['activity_id'] );
-
-	if ( ! empty( $activity->id ) ) {
-		$activity_mute_notification_meta = bp_activity_get_meta( $activity->id, 'muted_notification_users' );
-		if ( 'mute' === $r['action'] ) {
-
-			// Check if existing metadata is an array, initialize an empty array if not.
-			if ( ! is_array( $activity_mute_notification_meta ) ) {
-				$activity_mute_notification_meta = array();
-			}
-
-			if ( in_array( $r['user_id'], $activity_mute_notification_meta, true ) ) {
-				return 'already_muted';
-			}
-
-			// Add the new user ID to the existing data array.
-			$activity_mute_notification_meta[] = $r['user_id'];
-
-			// Update metadata in the database.
-			bp_activity_update_meta( $activity->id, 'muted_notification_users', $activity_mute_notification_meta );
-			$retval = 'mute';
-		}
-
-		if ( 'unmute' === $r['action'] ) {
-
-			if ( is_array( $activity_mute_notification_meta ) && in_array( $r['user_id'], $activity_mute_notification_meta ) ) {
-				// Remove the user ID from the existing data array
-				$activity_mute_notification_meta = array_diff( $activity_mute_notification_meta, array( $r['user_id'] ) );
-
-				// Update metadata in the database.
-				bp_activity_update_meta( $activity->id, 'muted_notification_users', $activity_mute_notification_meta );
-				$retval = 'unmute';
-			}
-		}
-
-		/**
-		 * Fires after activity mute/unmute activity.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param int    $activity_id Activity ID.
-		 * @param string $action      Action type mute/unmute.
-		 * @param string $retval      Notification status.
-		 */
-		do_action( 'bb_activity_mute_unmute_notification', $activity->id, $r['action'], $retval );
-	}
-
-	return $retval;
-}
-
-/**
- * Verify about the activity notification status based on user.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $field_type Field type.
- * @param int    $user_id    User id.
- *
- * @return array list of options.
- */
-function bb_activity_enabled_notification( $field_type, $user_id = 0 ) {
-	static $cache = null;
-	$options = array();
-
-	if ( null !== $cache ) {
-		return $cache;
-	}
-
-	if ( ! bp_is_active( 'notifications' ) ) {
-		$cache = $options;
-
-		return $options;
-	}
-
-	$options['email'] = bb_is_notification_enabled( $user_id, $field_type );
-
-	if ( bb_web_notification_enabled() ) {
-		$options['web'] = bb_is_notification_enabled( $user_id, $field_type, 'web' );
-	}
-
-	if ( bb_app_notification_enabled() ) {
-		$options['app'] = bb_is_notification_enabled( $user_id, $field_type, 'app' );
-	}
-
-	$options = apply_filters( 'bb_activity_enabled_notification', $options, $field_type, $user_id );
-	$cache   = $options;
-
-	return $options;
-}
-
-/**
- * Check User has muted notification or not.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int $activity_id Activity ID.
- * @param int $user_id     User Id.
- *
- * @return boolean
- */
-function bb_user_has_mute_notification( $activity_id, $user_id ) {
-	$is_muted      = false;
-	$activity_meta = bb_activity_get_metadata( $activity_id );
-	if ( isset( $activity_meta['muted_notification_users'] ) ) {
-
-		$mute_activity_meta = maybe_unserialize( $activity_meta['muted_notification_users'][0] );
-		if ( ! empty( $mute_activity_meta ) && is_array( $mute_activity_meta ) ) {
-
-			if ( in_array( (int) $user_id, $mute_activity_meta, true ) ) {
-				$is_muted = true;
-			}
-		}
-	}
-
-	return $is_muted;
-}
-
-/**
  * Check if activity comments are closed for given activity.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @param int $activity_id Activity ID.
  *
@@ -6745,7 +6586,7 @@ function bb_is_activity_comments_closed( $activity_id ) {
 /**
  * Get user id who closed activity comments.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @param int $activity_id Activity ID.
  *
@@ -6759,7 +6600,7 @@ function bb_get_activity_comments_closer_id( $activity_id ) {
 /**
  * Close or unclose activity comments.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @param array $args Arguments related to close/unclose activity feed post commenting.
  *
@@ -6809,7 +6650,7 @@ function bb_activity_close_unclose_comments( $args = array() ) {
 		/**
 		 * Fires after activity comments closed/unclosed.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.5.80
 		 *
 		 * @param int    $activity_id Activity ID.
 		 * @param string $action      Action type close_comments/unclose_comments.
@@ -6831,7 +6672,7 @@ function bb_activity_close_unclose_comments( $args = array() ) {
 /**
  * Check if the closed comments setting enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @param bool $default The default value for the close activity comments setting.
  *                      Defaults to true if not specified.
@@ -6842,7 +6683,7 @@ function bb_is_close_activity_comments_enabled( $default = true ) {
 	/**
 	 * Apply filter to modify the close activity comments setting.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.80
 	 *
 	 * @param bool $default The default value for the close activity comments setting.
 	 *                      Defaults to true if not specified.
@@ -6853,7 +6694,7 @@ function bb_is_close_activity_comments_enabled( $default = true ) {
 /**
  * Check if the closed comments allowed for a particular user.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @return string
  */
@@ -6956,7 +6797,7 @@ function bb_activity_comments_close_action_allowed( $args = array() ) {
 /**
  * Get the close comments notice string.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @param int $activity_id Activivty ID.
  *
@@ -6997,7 +6838,7 @@ function bb_get_close_activity_comments_notice( $activity_id = 0 ) {
 /**
  * Check whether activity comments is enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: true.
@@ -7009,7 +6850,7 @@ function bb_is_activity_comments_enabled( $default = true ) {
 	/**
 	 * Apply filter to modify the activity comments enabled.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.80
 	 *
 	 * @param bool $default Status of activity comments enabled or disabled.
 	 */
@@ -7019,7 +6860,7 @@ function bb_is_activity_comments_enabled( $default = true ) {
 /**
  * Check whether activity comment threading is enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: true.
@@ -7031,7 +6872,7 @@ function bb_is_activity_comment_threading_enabled( $default = true ) {
 	/**
 	 * Apply filter to modify the activity comments threading enable.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.80
 	 *
 	 * @param bool $default Status of activity comments threading enabled or disabled.
 	 */
@@ -7041,7 +6882,7 @@ function bb_is_activity_comment_threading_enabled( $default = true ) {
 /**
  * Get activity comment threading depth.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @param int $default Optional. Fallback value if not found in the database.
  *                     Default: 3.
@@ -7053,7 +6894,7 @@ function bb_get_activity_comment_threading_depth( $default = 3 ) {
 	/**
 	 * Apply filter to modify the activity comments threading depth.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.80
 	 *
 	 * @param bool $default Value of activity comments threading depth.
 	 */
@@ -7063,7 +6904,7 @@ function bb_get_activity_comment_threading_depth( $default = 3 ) {
 /**
  * Get activity comment visibility value.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @param int $default Optional. Fallback value if not found in the database.
  *                     Default: 2.
@@ -7075,7 +6916,7 @@ function bb_get_activity_comment_visibility( $default = 2 ) {
 	/**
 	 * Apply filter to modify the activity comments visibility.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.80
 	 *
 	 * @param bool $default Value of activity comments visibility.
 	 */
@@ -7085,7 +6926,7 @@ function bb_get_activity_comment_visibility( $default = 2 ) {
 /**
  * Get activity comment loading value.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @param int $default Optional. Fallback value if not found in the database.
  *                     Default: 10.
@@ -7097,9 +6938,168 @@ function bb_get_activity_comment_loading( $default = 10 ) {
 	/**
 	 * Apply filter to modify the activity comments loading.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.80
 	 *
 	 * @param bool $default Value of activity comments loading.
 	 */
 	return (int) apply_filters( 'bb_get_activity_comment_loading', bp_get_option( '_bb_activity_comment_loading', $default ) );
+}
+
+/**
+ * Set activity notification status.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @param array $args Array of Arguments.
+ *
+ * @return string
+ */
+function bb_toggle_activity_notification_status( $args = array() ) {
+	$r = bp_parse_args(
+		$args,
+		array(
+			'action'      => 'mute',
+			'activity_id' => 0,
+			'user_id'     => bp_loggedin_user_id(),
+		)
+	);
+
+	$retval   = '';
+	$activity = new BP_Activity_Activity( (int) $r['activity_id'] );
+
+	if ( ! empty( $activity->id ) ) {
+		$activity_mute_notification_meta = bp_activity_get_meta( $activity->id, 'muted_notification_users' );
+		if ( 'mute' === $r['action'] ) {
+
+			// Check if existing metadata is an array, initialize an empty array if not.
+			if ( ! is_array( $activity_mute_notification_meta ) ) {
+				$activity_mute_notification_meta = array();
+			}
+
+			if ( in_array( $r['user_id'], $activity_mute_notification_meta, true ) ) {
+				return 'already_muted';
+			}
+
+			// Add the new user ID to the existing data array.
+			$activity_mute_notification_meta[] = $r['user_id'];
+
+			// Update metadata in the database.
+			bp_activity_update_meta( $activity->id, 'muted_notification_users', $activity_mute_notification_meta );
+			$retval = 'mute';
+		}
+
+		if ( 'unmute' === $r['action'] ) {
+
+			if ( is_array( $activity_mute_notification_meta ) && in_array( $r['user_id'], $activity_mute_notification_meta ) ) {
+				// Remove the user ID from the existing data array
+				$activity_mute_notification_meta = array_diff( $activity_mute_notification_meta, array( $r['user_id'] ) );
+
+				// Update metadata in the database.
+				bp_activity_update_meta( $activity->id, 'muted_notification_users', $activity_mute_notification_meta );
+				$retval = 'unmute';
+			}
+		}
+
+		/**
+		 * Fires after activity mute/unmute activity.
+		 *
+		 * @since BuddyBoss 2.5.80
+		 *
+		 * @param int    $activity_id Activity ID.
+		 * @param string $action      Action type mute/unmute.
+		 * @param string $retval      Notification status.
+		 */
+		do_action( 'bb_activity_mute_unmute_notification', $activity->id, $r['action'], $retval );
+	}
+
+	return $retval;
+}
+
+/**
+ * Verify about the activity notification status based on user.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @param string $field_type Field type.
+ * @param int    $user_id    User id.
+ *
+ * @return array list of options.
+ */
+function bb_activity_enabled_notification( $field_type, $user_id = 0 ) {
+	static $cache = null;
+	$options = array();
+
+	if ( null !== $cache ) {
+		return $cache;
+	}
+
+	if ( ! bp_is_active( 'notifications' ) ) {
+		$cache = $options;
+
+		return $options;
+	}
+
+	$options['email'] = bb_is_notification_enabled( $user_id, $field_type );
+
+	if ( bb_web_notification_enabled() ) {
+		$options['web'] = bb_is_notification_enabled( $user_id, $field_type, 'web' );
+	}
+
+	if ( bb_app_notification_enabled() ) {
+		$options['app'] = bb_is_notification_enabled( $user_id, $field_type, 'app' );
+	}
+
+	$options = apply_filters( 'bb_activity_enabled_notification', $options, $field_type, $user_id );
+	$cache   = $options;
+
+	return $options;
+}
+
+/**
+ * Check User has muted notification or not.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @param int $activity_id Activity ID.
+ * @param int $user_id     User Id.
+ *
+ * @return boolean
+ */
+function bb_user_has_mute_notification( $activity_id, $user_id ) {
+	$is_muted      = false;
+	$activity_meta = bb_activity_get_metadata( $activity_id );
+	if ( isset( $activity_meta['muted_notification_users'] ) ) {
+
+		$mute_activity_meta = maybe_unserialize( $activity_meta['muted_notification_users'][0] );
+		if ( ! empty( $mute_activity_meta ) && is_array( $mute_activity_meta ) ) {
+
+			if ( in_array( (int) $user_id, $mute_activity_meta, true ) ) {
+				$is_muted = true;
+			}
+		}
+	}
+
+	return $is_muted;
+}
+
+/**
+ * Check whether activity schedule posts are enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ *
+ * @return bool true if activity schedule posts are enabled, otherwise false.
+ */
+function bb_is_enabled_activity_schedule_posts( $default = false ) {
+
+	/**
+	 * Filters whether activity schedule posts are enabled.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value Whether activity schedule posts are enabled.
+	 */
+	return (bool) apply_filters( 'bb_is_enabled_activity_schedule_posts', (bool) bp_get_option( '_bb_enable_activity_schedule_posts', $default ) );
 }

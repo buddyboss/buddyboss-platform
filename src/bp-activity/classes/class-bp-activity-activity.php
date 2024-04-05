@@ -1772,7 +1772,7 @@ class BP_Activity_Activity {
 					/**
 					 * Filters the MySQL From query for limit activity comment.
 					 *
-					 * @since BuddyBoss [BBVERSION]
+					 * @since BuddyBoss 2.5.80
 					 *
 					 * @param string $limit Activity Comment from query
 					 */
@@ -2223,7 +2223,7 @@ class BP_Activity_Activity {
 	/**
 	 * Get all activity children comments count and top level comment count based on id.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.80
 	 *
 	 * @param array $args Array of arguments.
 	 *

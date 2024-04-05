@@ -131,16 +131,17 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 					if (
 						(
 							(
-								bp_is_my_profile() ||
-								bp_is_user_media()
+								$bp_is_my_profile ||
+								$bp_is_user_media
 							) &&
-							bp_is_profile_video_support_enabled() &&
+							$bp_is_profile_video_support_enabled &&
 							$can_edit
 						) ||
 						(
-							bp_is_active( 'groups' ) &&
-							bp_is_group() && $can_edit &&
-							bp_is_group_video_support_enabled()
+							$bp_is_group_active &&
+							$bp_is_group &&
+							$can_edit &&
+							$bp_is_group_video_support_enabled
 						)
 					) {
 						$feedback_id = 'album-media-video-loading';

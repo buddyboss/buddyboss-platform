@@ -202,21 +202,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	}
 
 	/**
-	 * Allow schedule activity posts.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	public function bb_admin_setting_callback_enable_activity_schedule_posts() {
-		?>
-		<input id="_bb_enable_activity_schedule_posts" name="_bb_enable_activity_schedule_posts" type="checkbox" value="1" <?php checked( bb_is_enabled_activity_schedule_posts() ); ?> />
-		<label for="_bb_enable_activity_schedule_posts"><?php esc_html_e( 'Allow members to schedule their posts', 'buddyboss' ); ?></label>
-		<?php
-	}
-
-	/**
 	 * Enable close activity comments settings.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.80
 	 */
 	public function bb_admin_setting_callback_enable_close_activity_comments() {
 		?>
@@ -230,7 +218,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	/**
 	 * Enable activity comments.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.80
 	 */
 	public function bb_admin_setting_callback_enable_activity_comments() {
 		?>
@@ -243,7 +231,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	/**
 	 * Enable activity comment threading.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.80
 	 */
 	public function bb_admin_setting_callback_comment_threading() {
 		$options = array( 1, 2, 3, 4 );
@@ -272,7 +260,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	/**
 	 * Activity comment visibility.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.80
 	 */
 	public function bb_admin_setting_callback_comment_visibility() {
 		$options = array(
@@ -327,7 +315,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	/**
 	 * Activity comment loading.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.80
 	 */
 	public function bb_admin_setting_callback_comment_loading() {
 		$options = apply_filters( 'bb_activity_comment_loading_options', array( 5, 10, 15, 20, 25, 30 ) );
@@ -355,7 +343,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	/**
 	 * Link to Activity Comments tutorial
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.80
 	 */
 	public function bb_admin_activity_comments_settings_tutorial() {
 		?>
@@ -376,6 +364,18 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 		</p>
+		<?php
+	}
+
+	/**
+	 * Allow schedule activity posts.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_setting_callback_enable_activity_schedule_posts() {
+		?>
+		<input id="_bb_enable_activity_schedule_posts" name="_bb_enable_activity_schedule_posts" type="checkbox" value="1" <?php checked( bb_is_enabled_activity_schedule_posts() ); ?> />
+		<label for="_bb_enable_activity_schedule_posts"><?php esc_html_e( 'Allow members to schedule their posts', 'buddyboss' ); ?></label>
 		<?php
 	}
 }

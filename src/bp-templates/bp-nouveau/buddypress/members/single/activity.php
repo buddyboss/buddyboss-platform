@@ -16,11 +16,11 @@ bp_get_template_part( 'common/search-and-filters-bar' );
 bp_nouveau_member_hook( 'before', 'activity_content' );
 ?>
 
-<div id="activity-stream" class="activity single-user" data-bp-list="activity" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
-	<?php
-	if ( $is_send_ajax_request ) {
-		?>
-		<div id="bp-ajax-loader">
+	<div id="activity-stream" class="activity single-user" data-bp-list="activity" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+		<?php
+		if ( $is_send_ajax_request ) {
+			echo '<div id="bp-ajax-loader">';
+			?>
 			<div class="bb-activity-placeholder">
 				<div class="bb-activity-placeholder_head">
 					<div class="bb-activity-placeholder_avatar bb-bg-animation bb-loading-bg"></div>
@@ -57,20 +57,18 @@ bp_nouveau_member_hook( 'before', 'activity_content' );
 					<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
 				</div>
 			</div>
-		</div>
-		<?php
-	}
-	?>
-
-	<ul  class="<?php bp_nouveau_loop_classes(); ?>" >
-		<?php
-		if ( ! $is_send_ajax_request ) {
-			bp_get_template_part( 'activity/activity-loop' );
+			<?php
+			echo '</div>';
 		}
 		?>
-	</ul>
-
-</div><!-- .activity -->
+		<ul class="<?php bp_nouveau_loop_classes(); ?>">
+			<?php
+			if ( ! $is_send_ajax_request ) {
+				bp_get_template_part( 'activity/activity-loop' );
+			}
+			?>
+		</ul>
+	</div><!-- .activity -->
 
 <?php
 bp_nouveau_member_hook( 'after', 'activity_content' );

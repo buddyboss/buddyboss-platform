@@ -79,4 +79,3 @@ bp_nouveau_template_notices();
 	<?php bp_nouveau_after_video_directory_content(); ?>
 
 </div><!-- // .screen-content -->
-
