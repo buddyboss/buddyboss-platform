@@ -78,7 +78,7 @@ $scheduled_date_string                    = wp_json_encode( $scheduled_date_data
 		<div class="activity-header">
 			<?php bp_activity_action(); ?>
 			<p class="activity-date">
-				<span class="schedule-text"><?php esc_html_e( 'Schedule for:', 'buddyboss-theme' ) ?></span>
+				<span class="schedule-text"><?php esc_html_e( 'Schedule for:', 'buddyboss' ) ?></span>
 				<a href="javascript: void(0);">
 					<?php
 					$activity_date_recorded = bp_get_activity_date_recorded();
