@@ -57,6 +57,11 @@ function bp_core_install( $active_components = false ) {
 	// Install item subscriptions.
 	bb_core_install_subscription();
 
+	// Install background process logs.
+	if ( class_exists( 'BB_BG_Process_Log' ) ) {
+		BB_BG_Process_Log::instance()->create_table();
+	}
+
 	// Notifications.
 	if ( ! empty( $active_components['notifications'] ) ) {
 		bp_core_install_notifications();

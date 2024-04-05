@@ -256,6 +256,12 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'unpinGroupPost'      => esc_html__( 'Unpin from Group', 'buddyboss' ),
 		'pinPostError'        => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
 		'reactionAjaxError'   => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+		'closeComments'       => esc_html__( 'Turn off commenting', 'buddyboss' ),
+		'uncloseComments'     => esc_html__( 'Turn on commenting', 'buddyboss' ),
+		'closeCommentsError'  => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+		'commentPostError'	  => esc_html__( 'There was a problem posting your comment.', 'buddyboss' ),
+		'muteNotification'    => esc_html__( 'Turn off notifications', 'buddyboss' ),
+		'unmuteNotification'  => esc_html__( 'Turn on notifications', 'buddyboss' ),
 		'schedulePostButton'  => esc_html__( 'Schedule', 'buddyboss' ),
 		'confirmDeletePost'   => esc_html__( 'Are you sure you want to delete that permanently?', 'buddyboss' ),
 		'scheduleWarning'     => esc_html__( 'Schedule Outdated', 'buddyboss' ),
@@ -266,9 +272,9 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'viewSchedulePosts'    => esc_html__( 'View all posts', 'buddyboss' ),
 	);
 
-    if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
-        $activity_strings['whatsnewPlaceholder'] = sprintf( esc_html__( 'Write something to %s...', 'buddyboss' ), bp_get_user_firstname( bp_get_displayed_user_fullname() ) );
-    }
+	if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
+		$activity_strings['whatsnewPlaceholder'] = sprintf( esc_html__( 'Write something to %s...', 'buddyboss' ), bp_get_user_firstname( bp_get_displayed_user_fullname() ) );
+	}
 
 	if ( bp_is_group() ) {
 		$activity_strings['whatsnewPlaceholder'] = esc_html__( 'Share something with the group...', 'buddyboss' );
@@ -315,7 +321,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 	$nav_items['all'] = array(
 		'component' => 'activity',
 		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
-		'li_class'  => array( 'dynamic' ),
+		'li_class'  => array( 'dynamic', 'selected' ),
 		'link'      => bp_get_activity_directory_permalink(),
 		'text'      => __( 'All Updates', 'buddyboss' ),
 		'count'     => false,

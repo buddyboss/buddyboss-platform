@@ -330,7 +330,7 @@ class BuddyPress {
 
 		/** Versions */
 		$this->version    = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined( 'BP_VERSION' ) ? BP_VERSION : '1.0.0' );
-		$this->db_version = 21001;
+		$this->db_version = 21091;
 
 		/** Loading */
 
@@ -719,6 +719,7 @@ class BuddyPress {
 			'BB_Subscriptions'                             => 'core',
 			'BB_Background_Updater'                        => 'core',
 			'BB_Reaction'                                  => 'core',
+			'BB_BG_Process_Log'                            => 'core',
 			'BB_Activity_Schedule'                         => 'activity',
 
 			// BuddyBoss Platform Rest API classes.
