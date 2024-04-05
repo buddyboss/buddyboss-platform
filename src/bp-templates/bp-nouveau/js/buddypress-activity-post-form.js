@@ -5772,12 +5772,22 @@ window.bp = window.bp || {};
 
 						// Trigger Toast message if it is a scheduled post.
 						if( data.activity_action_type === 'scheduled' ) {
+							var title = BP_Nouveau.activity.strings.EditSuccessScheduleTitle;
+							var desc = BP_Nouveau.activity.strings.EditSuccessScheduleDesc;
+							var LinkText = BP_Nouveau.activity.strings.EditViewSchedulePost;
+
+							if( ! data.edit_activity ) { // It's a new scheduled post.
+								title = BP_Nouveau.activity.strings.successScheduleTitle;
+								desc = BP_Nouveau.activity.strings.successScheduleDesc;
+								LinkText = BP_Nouveau.activity.strings.viewSchedulePosts;
+							}
+
 							Backbone.trigger( 'triggerToastMessage',
-								BP_Nouveau.activity.strings.successScheduleTitle,
-								'<div>'+ BP_Nouveau.activity.strings.successScheduleDesc + ' <span class="toast-messages-action_link bb-view-scheduled-posts"> ' + BP_Nouveau.activity.strings.viewSchedulePosts + '</span></div>',
+								title,
+								'<div>'+ desc + ' <span class="toast-messages-action_link bb-view-scheduled-posts"> ' + LinkText + '</span></div>',
 								'success',
 								null,
-								false );
+								true );
 						}
 
 						// Display a successful feedback if the acticity is not consistent with the displayed stream.
