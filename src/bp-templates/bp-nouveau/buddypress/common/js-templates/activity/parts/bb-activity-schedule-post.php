@@ -42,7 +42,7 @@
 									$formatted_date = wp_date( get_option('date_format') );
 									$formatted_time = wp_date( get_option('time_format') );
 									?>
-									<p class="schedule-date"><?php echo esc_html( $formatted_date . ' at ' . $formatted_time ); ?></p>
+									<p class="schedule-date"><?php echo esc_html( $formatted_date );?> at <span class="bb-server-time"><?php echo esc_html( $formatted_time ); ?></span></p>
 
 									<label><?php echo esc_html__( 'Date', 'buddyboss' ); ?></label>
 									<div class="input-field">

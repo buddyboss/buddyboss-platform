@@ -204,6 +204,9 @@ window.bp = window.bp || {};
 
 			// An object containing each query var.
 			this.querystring = this.getLinkParams();
+
+			// Get Server Time Difference on load.
+			this.bbServerTimeDiff = new Date( BP_Nouveau.wpTime ).getTime() - Date.now();
 		},
 
 		/**
@@ -4336,6 +4339,27 @@ window.bp = window.bp || {};
 
 			bp.Nouveau.Activity.activityPinHasUpdates = false;
 		},
+
+		/**
+		 *  Get current Server Time
+		 */
+		bbServerTime: function() {
+
+			var localTime = new Date();
+			var currentServerTime = new Date( localTime.getTime() + bp.Nouveau.bbServerTimeDiff );
+
+			// Extract date, year, and time components
+			var date = currentServerTime.toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
+			var year = currentServerTime.getFullYear();
+			var time = currentServerTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+			return {
+				currentServerTime: currentServerTime,
+				date: date,
+				year: year,
+				time: time
+			};
+		}
 	};
 
    // Launch BP Nouveau.

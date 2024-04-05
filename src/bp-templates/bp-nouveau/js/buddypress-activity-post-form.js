@@ -412,11 +412,10 @@ window.bp = window.bp || {};
 				self.postForm.model.set( 'activity_schedule_meridiem', activity_data.activity_schedule_meridiem );
 
 				// Check if time has passed and trigger warning
-				// TODO: Compare scheduled time with server
 				var activity_schedule_datetime = activity_data.activity_schedule_date_raw + ' ' + activity_data.activity_schedule_time + ' ' + activity_data.activity_schedule_meridiem;
-				var activity_schedule_date = new Date(activity_schedule_datetime);
-				var current_date = new Date();
-				if (current_date > activity_schedule_date) {
+				var activity_schedule_date = new Date( activity_schedule_datetime );
+				var current_date = new Date( bp.Nouveau.bbServerTime().currentServerTime );
+				if ( current_date > activity_schedule_date ) {
 					Backbone.trigger( 'onError', BP_Nouveau.activity.strings.scheduleWarning, 'warning' );
 				}
 			}
@@ -4916,6 +4915,18 @@ window.bp = window.bp || {};
 						step: 5,
 						className: 'bb-schedule-activity-time-picker',
 					});
+				}
+
+				if ( $( '.bb-server-date' ).length ) {
+					$( '.bb-server-date' ).text( bp.Nouveau.bbServerTime().date );
+				}
+	
+				if ( $( '.bb-server-year' ).length ) {
+					$( '.bb-server-year' ).text( bp.Nouveau.bbServerTime().year );
+				}
+	
+				if ( $( '.bb-server-time' ).length ) {
+					$( '.bb-server-time' ).text( bp.Nouveau.bbServerTime().time );
 				}
 			},
 
