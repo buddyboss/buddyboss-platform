@@ -7125,7 +7125,15 @@ function bb_is_enabled_activity_schedule_posts( $default = false ) {
  */
 function bb_can_user_schedule_activity() {
 
-	if ( bp_current_user_can( 'administrator' ) || ( bp_is_group() && ( bp_group_is_admin() || bp_group_is_mod() ) ) ) {
+	$user_id = get_current_user_id();
+	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+		$group_id = bp_get_current_group_id();
+		$is_admin = groups_is_user_admin( $user_id, $group_id );
+		$is_mod   = groups_is_user_mod( $user_id, $group_id );
+		if ( $is_admin || $is_mod ) {
+			return true;
+		}
+	} elseif ( bp_current_user_can( 'administrator' ) ) {
 		return true;
 	}
 
