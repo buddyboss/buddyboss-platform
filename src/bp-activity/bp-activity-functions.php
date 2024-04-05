@@ -7125,7 +7125,7 @@ function bb_is_enabled_activity_schedule_posts( $default = false ) {
  */
 function bb_can_user_schedule_activity() {
 
-	if ( current_user_can( 'activate_plugins' ) || bp_group_is_admin() || bp_group_is_mod() ) {
+	if ( bp_current_user_can( 'administrator' ) || ( bp_is_group() && ( bp_group_is_admin() || bp_group_is_mod() ) ) ) {
 		return true;
 	}
 

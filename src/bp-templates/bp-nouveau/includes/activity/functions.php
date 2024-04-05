@@ -269,7 +269,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'successDeletionDesc' => esc_html__( 'Your scheduled post has been deleted.', 'buddyboss' ),
 		'successScheduleTitle'=> esc_html__( 'Successfully Scheduled Post', 'buddyboss' ),
 		'successScheduleDesc' => esc_html__( 'Your post has been scheduled.', 'buddyboss' ),
-		'viewSchedulePosts'    => esc_html__( 'View all posts', 'buddyboss' ),
+		'viewSchedulePosts'   => esc_html__( 'View all posts', 'buddyboss' ),
 	);
 
 	if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
