@@ -679,7 +679,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
  *
  * @since BuddyPress 3.0.0
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  * Introduce new param $args to limit the number of comments to load.
  *
  * @param array $args Optional. To limit the number of comments to load.
@@ -701,7 +701,7 @@ function bp_nouveau_activity_comments( $args = array() ) {
  *
  * @since BuddyPress 3.0.0
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  * Added new param as args to pass some arguments to the function.
  *
  * @param object $comment        The activity object currently being recursed.
@@ -1999,37 +1999,6 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		);
 	}
 
-	$notification_type = bb_activity_enabled_notification( 'bb_activity_comment', bp_loggedin_user_id() );
-	if ( ! empty( $notification_type ) && ! empty( array_filter( $notification_type ) ) && ( bp_get_activity_user_id() === bp_loggedin_user_id() || in_array( bp_loggedin_user_id(), bp_activity_get_comments_user_ids(), true ) ) ) {
-
-		$unmute_action_class = 'bb-icon-bell-slash';
-		$unmute_action_label = __( 'Turn off notifications', 'buddyboss' );
-
-		if ( bb_user_has_mute_notification( $activity_id, bp_loggedin_user_id() ) ) {
-			$unmute_action_class = 'bb-icon-bell';
-			$unmute_action_label = __( 'Turn on notifications', 'buddyboss' );
-		}
-
-		$buttons['turn_on_off_notification'] = array(
-			'id'                => 'turn_on_off_notification',
-			'component'         => 'activity',
-			'parent_element'    => $parent_element,
-			'parent_attr'       => $parent_attr,
-			'must_be_logged_in' => true,
-			'button_element'    => $button_element,
-			'button_attr'       => array(
-				'href'  => '',
-				'class' => 'button edit bp-secondary-action bp-tooltip ' . $unmute_action_class,
-				'title' => $unmute_action_label,
-			),
-			'link_text'         => sprintf(
-				'<span class="bp-screen-reader-text">%1$s</span><span class="turn-off-notification-label">%2$s</span>',
-				$unmute_action_label,
-				$unmute_action_label
-			),
-		);
-	}
-
 	// Download link for the medias and documents.
 	$media_id = bp_is_active( 'media' ) ? BP_Media::get_activity_media_id( $activity_id ) : 0;
 	if ( ! empty( $media_id ) ) {
@@ -2131,6 +2100,37 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 				}
 			}
 		}
+	}
+
+	$notification_type = bb_activity_enabled_notification( 'bb_activity_comment', bp_loggedin_user_id() );
+	if ( ! empty( $notification_type ) && ! empty( array_filter( $notification_type ) ) && ( bp_get_activity_user_id() === bp_loggedin_user_id() || in_array( bp_loggedin_user_id(), bp_activity_get_comments_user_ids(), true ) ) ) {
+
+		$unmute_action_class = 'bb-icon-bell-slash';
+		$unmute_action_label = __( 'Turn off notifications', 'buddyboss' );
+
+		if ( bb_user_has_mute_notification( $activity_id, bp_loggedin_user_id() ) ) {
+			$unmute_action_class = 'bb-icon-bell';
+			$unmute_action_label = __( 'Turn on notifications', 'buddyboss' );
+		}
+
+		$buttons['turn_on_off_notification'] = array(
+			'id'                => 'turn_on_off_notification',
+			'component'         => 'activity',
+			'parent_element'    => $parent_element,
+			'parent_attr'       => $parent_attr,
+			'must_be_logged_in' => true,
+			'button_element'    => $button_element,
+			'button_attr'       => array(
+				'href'  => '',
+				'class' => 'button edit bp-secondary-action bp-tooltip ' . $unmute_action_class,
+				'title' => $unmute_action_label,
+			),
+			'link_text'         => sprintf(
+				'<span class="bp-screen-reader-text">%1$s</span><span class="turn-off-notification-label">%2$s</span>',
+				$unmute_action_label,
+				$unmute_action_label
+			),
+		);
 	}
 
 	/**
@@ -2474,7 +2474,7 @@ function bb_nouveau_activity_comment_is_edited( $activity_comment_id = 0, $echo 
 /**
  * Output the activity loading state progress bar.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  */
 function bb_activity_load_progress_bar_state() {
 	?>
@@ -2489,7 +2489,7 @@ function bb_activity_load_progress_bar_state() {
 /**
  * Output the Activity comment action meta data.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  */
 function bp_nouveau_activity_comment_meta() {
 	echo bp_nouveau_get_activity_comment_meta();
@@ -2498,14 +2498,14 @@ function bp_nouveau_activity_comment_meta() {
 /**
  * Get the Activity comment action meta data.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  */
 function bp_nouveau_get_activity_comment_meta() {
 
 	/**
 	 * Filter to the activity comment meta data.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.80
 	 *
 	 * @param string $value HTML Output
 	 */

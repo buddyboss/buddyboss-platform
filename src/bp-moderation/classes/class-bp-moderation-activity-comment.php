@@ -527,7 +527,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Update where query Remove hidden/blocked user's Activities comment from count.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.80
 	 *
 	 * @param string $where            Activity Where sql.
 	 * @param object $suspend          suspend object.
@@ -573,7 +573,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Check parent activity comment is hidden or not.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.80
 	 *
 	 * @param int $item_id Item id.
 	 *
@@ -599,7 +599,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Prepare Where sql for exclude Blocked items.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.80
 	 *
 	 * @param bool $blocked_user_query If true then blocked user query will fire.
 	 *

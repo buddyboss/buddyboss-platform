@@ -4585,7 +4585,7 @@ function bb_video_get_activity_video( $activity = '', $args = array() ) {
 /**
  * Maximum video thumbnail length in comment.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @return int
  */
@@ -4596,7 +4596,7 @@ function bb_video_get_activity_comment_max_thumb_length() {
 /**
  * Maximum video thumbnail length in activity.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @return int
  */

@@ -6572,7 +6572,7 @@ function bb_activity_get_metadata( $activity_id ) {
 /**
  * Check if activity comments are closed for given activity.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @param int $activity_id Activity ID.
  *
@@ -6586,7 +6586,7 @@ function bb_is_activity_comments_closed( $activity_id ) {
 /**
  * Get user id who closed activity comments.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @param int $activity_id Activity ID.
  *
@@ -6600,7 +6600,7 @@ function bb_get_activity_comments_closer_id( $activity_id ) {
 /**
  * Close or unclose activity comments.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @param array $args Arguments related to close/unclose activity feed post commenting.
  *
@@ -6650,7 +6650,7 @@ function bb_activity_close_unclose_comments( $args = array() ) {
 		/**
 		 * Fires after activity comments closed/unclosed.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.5.80
 		 *
 		 * @param int    $activity_id Activity ID.
 		 * @param string $action      Action type close_comments/unclose_comments.
@@ -6672,7 +6672,7 @@ function bb_activity_close_unclose_comments( $args = array() ) {
 /**
  * Check if the closed comments setting enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @param bool $default The default value for the close activity comments setting.
  *                      Defaults to true if not specified.
@@ -6683,7 +6683,7 @@ function bb_is_close_activity_comments_enabled( $default = true ) {
 	/**
 	 * Apply filter to modify the close activity comments setting.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.5.80
 	 *
 	 * @param bool $default The default value for the close activity comments setting.
 	 *                      Defaults to true if not specified.
@@ -6694,7 +6694,7 @@ function bb_is_close_activity_comments_enabled( $default = true ) {
 /**
  * Check if the closed comments allowed for a particular user.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @return string
  */
@@ -6797,7 +6797,7 @@ function bb_activity_comments_close_action_allowed( $args = array() ) {
 /**
  * Get the close comments notice string.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @param int $activity_id Activivty ID.
  *
@@ -6836,9 +6836,119 @@ function bb_get_close_activity_comments_notice( $activity_id = 0 ) {
 }
 
 /**
+ * Check whether activity comments is enabled.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ *
+ * @return bool
+ */
+function bb_is_activity_comments_enabled( $default = true ) {
+
+	/**
+	 * Apply filter to modify the activity comments enabled.
+	 *
+	 * @since BuddyBoss 2.5.80
+	 *
+	 * @param bool $default Status of activity comments enabled or disabled.
+	 */
+	return (bool) apply_filters( 'bb_is_activity_comments_enabled', bp_get_option( '_bb_enable_activity_comments', $default ) );
+}
+
+/**
+ * Check whether activity comment threading is enabled.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ *
+ * @return bool
+ */
+function bb_is_activity_comment_threading_enabled( $default = true ) {
+
+	/**
+	 * Apply filter to modify the activity comments threading enable.
+	 *
+	 * @since BuddyBoss 2.5.80
+	 *
+	 * @param bool $default Status of activity comments threading enabled or disabled.
+	 */
+	return (bool) apply_filters( 'bb_is_activity_comment_threading_enabled', bp_get_option( '_bb_enable_activity_comment_threading', $default ) );
+}
+
+/**
+ * Get activity comment threading depth.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @param int $default Optional. Fallback value if not found in the database.
+ *                     Default: 3.
+ *
+ * @return int
+ */
+function bb_get_activity_comment_threading_depth( $default = 3 ) {
+
+	/**
+	 * Apply filter to modify the activity comments threading depth.
+	 *
+	 * @since BuddyBoss 2.5.80
+	 *
+	 * @param bool $default Value of activity comments threading depth.
+	 */
+	return (int) apply_filters( 'bb_get_activity_comment_threading_depth', bp_get_option( '_bb_activity_comment_threading_depth', $default ) );
+}
+
+/**
+ * Get activity comment visibility value.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @param int $default Optional. Fallback value if not found in the database.
+ *                     Default: 2.
+ *
+ * @return int
+ */
+function bb_get_activity_comment_visibility( $default = 2 ) {
+
+	/**
+	 * Apply filter to modify the activity comments visibility.
+	 *
+	 * @since BuddyBoss 2.5.80
+	 *
+	 * @param bool $default Value of activity comments visibility.
+	 */
+	return (int) apply_filters( 'bb_get_activity_comment_visibility', bp_get_option( '_bb_activity_comment_visibility', $default ) );
+}
+
+/**
+ * Get activity comment loading value.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @param int $default Optional. Fallback value if not found in the database.
+ *                     Default: 10.
+ *
+ * @return int
+ */
+function bb_get_activity_comment_loading( $default = 10 ) {
+
+	/**
+	 * Apply filter to modify the activity comments loading.
+	 *
+	 * @since BuddyBoss 2.5.80
+	 *
+	 * @param bool $default Value of activity comments loading.
+	 */
+	return (int) apply_filters( 'bb_get_activity_comment_loading', bp_get_option( '_bb_activity_comment_loading', $default ) );
+}
+
+/**
  * Set activity notification status.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @param array $args Array of Arguments.
  *
@@ -6893,7 +7003,7 @@ function bb_toggle_activity_notification_status( $args = array() ) {
 		/**
 		 * Fires after activity mute/unmute activity.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.5.80
 		 *
 		 * @param int    $activity_id Activity ID.
 		 * @param string $action      Action type mute/unmute.
@@ -6908,7 +7018,7 @@ function bb_toggle_activity_notification_status( $args = array() ) {
 /**
  * Verify about the activity notification status based on user.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @param string $field_type Field type.
  * @param int    $user_id    User id.
@@ -6948,7 +7058,7 @@ function bb_activity_enabled_notification( $field_type, $user_id = 0 ) {
 /**
  * Check User has muted notification or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  *
  * @param int $activity_id Activity ID.
  * @param int $user_id     User Id.
@@ -6970,136 +7080,4 @@ function bb_user_has_mute_notification( $activity_id, $user_id ) {
 	}
 
 	return $is_muted;
-}
-
-/**
- * Check whether activity schedule posts are enabled.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: false.
- *
- * @return bool true if activity schedule posts are enabled, otherwise false.
- */
-function bb_is_enabled_activity_schedule_posts( $default = false ) {
-
-	/**
-	 * Filters whether activity schedule posts are enabled.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param bool $value Whether activity schedule posts are enabled.
-	 */
-	return (bool) apply_filters( 'bb_is_enabled_activity_schedule_posts', (bool) bp_get_option( '_bb_enable_activity_schedule_posts', $default ) );
-}
-
-/**
- * Check whether activity comments is enabled.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: true.
- *
- * @return bool
- */
-function bb_is_activity_comments_enabled( $default = true ) {
-
-	/**
-	 * Apply filter to modify the activity comments enabled.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param bool $default Status of activity comments enabled or disabled.
-	 */
-	return (bool) apply_filters( 'bb_is_activity_comments_enabled', bp_get_option( '_bb_enable_activity_comments', $default ) );
-}
-
-/**
- * Check whether activity comment threading is enabled.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: true.
- *
- * @return bool
- */
-function bb_is_activity_comment_threading_enabled( $default = true ) {
-
-	/**
-	 * Apply filter to modify the activity comments threading enable.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param bool $default Status of activity comments threading enabled or disabled.
-	 */
-	return (bool) apply_filters( 'bb_is_activity_comment_threading_enabled', bp_get_option( '_bb_enable_activity_comment_threading', $default ) );
-}
-
-/**
- * Get activity comment threading depth.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int $default Optional. Fallback value if not found in the database.
- *                     Default: 3.
- *
- * @return int
- */
-function bb_get_activity_comment_threading_depth( $default = 3 ) {
-
-	/**
-	 * Apply filter to modify the activity comments threading depth.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param bool $default Value of activity comments threading depth.
-	 */
-	return (int) apply_filters( 'bb_get_activity_comment_threading_depth', bp_get_option( '_bb_activity_comment_threading_depth', $default ) );
-}
-
-/**
- * Get activity comment visibility value.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int $default Optional. Fallback value if not found in the database.
- *                     Default: 2.
- *
- * @return int
- */
-function bb_get_activity_comment_visibility( $default = 2 ) {
-
-	/**
-	 * Apply filter to modify the activity comments visibility.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param bool $default Value of activity comments visibility.
-	 */
-	return (int) apply_filters( 'bb_get_activity_comment_visibility', bp_get_option( '_bb_activity_comment_visibility', $default ) );
-}
-
-/**
- * Get activity comment loading value.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int $default Optional. Fallback value if not found in the database.
- *                     Default: 10.
- *
- * @return int
- */
-function bb_get_activity_comment_loading( $default = 10 ) {
-
-	/**
-	 * Apply filter to modify the activity comments loading.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param bool $default Value of activity comments loading.
-	 */
-	return (int) apply_filters( 'bb_get_activity_comment_loading', bp_get_option( '_bb_activity_comment_loading', $default ) );
 }

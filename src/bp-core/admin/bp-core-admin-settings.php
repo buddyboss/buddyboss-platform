@@ -3667,7 +3667,7 @@ function bb_reactions_settings_callback_reactions_button() {
 /**
  * Link to General Performance tutorial.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  */
 function bb_admin_performance_general_setting_tutorial() {
 	?>
@@ -3694,7 +3694,7 @@ function bb_admin_performance_general_setting_tutorial() {
 /**
  * Link to Activity Performance tutorial.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  */
 function bb_admin_performance_activity_setting_tutorial() {
 	?>
@@ -3721,7 +3721,7 @@ function bb_admin_performance_activity_setting_tutorial() {
 /**
  * Function to render the fields in a general section of the performance tab.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  */
 function bb_admin_performance_setting_general_callback() {
 	$bb_ajax_request_page_load = bb_get_ajax_request_page_load();
@@ -3739,7 +3739,7 @@ function bb_admin_performance_setting_general_callback() {
 /**
  * Function to render the fields in a activity section of the performance tab.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.80
  */
 function bb_admin_performance_setting_activity_callback() {
 	$bb_load_activity_per_request = bb_get_load_activity_per_request();
