@@ -994,19 +994,19 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = arra
 
 	// Bail if activity privacy restrict 
 	if ( ! empty( $activity->privacy ) ) {
-		if ( 'friends' === $activity->privacy && bp_is_active( 'friends' ) && false === friends_check_friendship( $activity->user_id, $user_id ) ) {
+		if ( 'onlyme' === $activity->privacy && $activity->user_id !== $user_id ) {
 			
 			return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
 				'error',
-				esc_html__( 'User must be in activity author connection to add favorite.', 'buddyboss' )
+				esc_html__( 'Sorry, You cannot add favorites on "Only Me" activity.', 'buddyboss' )
 			);
-		} else if ( 'onlyme' === $activity->privacy && $activity->user_id !== $user_id ) {
+		} else if ( false === bb_check_activity_author_is_friend( $activity, $user_id )  ) {
 			
 			return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
 				'error',
-				esc_html__( 'User can not add favorite on Only Me activity.', 'buddyboss' )
+				esc_html__( 'Sorry, please establish a friendship with the author of the activity to add a favorites.', 'buddyboss' )
 			);
-		}
+		} 
 	}
 
 	$reacted = bb_load_reaction()->bb_add_user_item_reaction(
@@ -1126,17 +1126,17 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 
 	// Bail if activity privacy restrict 
 	if ( ! empty( $activity->privacy ) ) {
-		if ( 'friends' === $activity->privacy && bp_is_active( 'friends' ) && false === friends_check_friendship( $activity->user_id, $user_id ) ) {
+		if ( 'onlyme' === $activity->privacy && $activity->user_id !== $user_id ) {
 			
 			return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
 				'error',
-				esc_html__( 'User must be in activity author connection to remove favorite.', 'buddyboss' )
+				esc_html__( 'Sorry, You cannot remove your favorites on "Only Me" activity.', 'buddyboss' )
 			);
-		} else if ( 'onlyme' === $activity->privacy && $activity->user_id !== $user_id ) {
+		} else if ( false === bb_check_activity_author_is_friend( $activity, $user_id ) ) {
 			
 			return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
 				'error',
-				esc_html__( 'User can not remove favorite on Only Me activity.', 'buddyboss' )
+				esc_html__( 'Sorry, please establish a friendship with the author of the activity to remove your favorites.', 'buddyboss' )
 			);
 		}
 	}
@@ -3018,13 +3018,13 @@ function bp_activity_new_comment( $args = '' ) {
 
 	// Bail if activity privacy restrict 
 	if ( ! empty( $activity->privacy ) ) {
-		if ( 'friends' === $activity->privacy && bp_is_active( 'friends' ) && false === friends_check_friendship( $activity->user_id, $r['user_id'] ) ) {
+		if ( 'onlyme' === $activity->privacy && $activity->user_id !== $r['user_id'] ) {
 			
-			return new WP_Error( 'error', __( 'User must be in activity author connection to add comment.', 'buddyboss' ) );
-		} else if ( 'onlyme' === $activity->privacy && $activity->user_id !== $r['user_id'] ) {
+			return new WP_Error( 'error', __( 'Sorry, You cannot add comments on "Only Me" activity.', 'buddyboss' ) );
+		} else if ( false == bb_check_activity_author_is_friend( $activity, $r['user_id'] ) ) {
 			
-			return new WP_Error( 'error', __( 'User can not add comment on Only Me activity.', 'buddyboss' ) );
-		}
+			return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to add a comment.', 'buddyboss' ) );
+		} 
 	}
 
 	// Bail if the parent activity does not exist.
@@ -7131,4 +7131,18 @@ function bb_user_has_mute_notification( $activity_id, $user_id ) {
 	}
 
 	return $is_muted;
+}
+
+/**
+ * Check User has connection or not with activity author.
+ *
+ * @since [BBVERSION]
+ *
+ * @param object $activity  Activity.
+ * @param int    $user_id   User Id.
+ *
+ * @return boolean
+ */
+function bb_check_activity_author_is_friend( $activity, $user_id ) {
+	return ( 'friends' === $activity->privacy && bp_is_active( 'friends' ) && friends_check_friendship( $activity->user_id, $user_id ) );
 }
