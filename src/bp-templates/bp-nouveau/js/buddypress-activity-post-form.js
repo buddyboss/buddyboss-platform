@@ -423,6 +423,10 @@ window.bp = window.bp || {};
 
 			if( activity_data.status === 'scheduled' ) {
 				self.postForm.model.set( 'activity_action_type', activity_data.status );
+				self.postForm.model.set( 'activity_schedule_date_raw', activity_data.activity_schedule_date_raw );
+				self.postForm.model.set( 'activity_schedule_date', activity_data.activity_schedule_date );
+				self.postForm.model.set( 'activity_schedule_time', activity_data.activity_schedule_time );
+				self.postForm.model.set( 'activity_schedule_meridiem', activity_data.activity_schedule_meridiem );
 			}
 
 			var tool_box = $( '.activity-form.focus-in #whats-new-toolbar' );
@@ -4969,6 +4973,15 @@ window.bp = window.bp || {};
 					event.preventDefault();
 					var activity_data        = activity.data( 'bp-activity' );
 					var activity_URL_preview = activity.data( 'link-url' ) !== '' ? activity.data( 'link-url' ) : null;
+
+					// Set the activity schedule data.
+					if ( activity_data.status === 'scheduled' ) {
+						var activity_schedule_data = activity.data('bb-scheduled-time');
+						activity_data.activity_schedule_date_raw = activity_schedule_data.date_raw;
+						activity_data.activity_schedule_date     = activity_schedule_data.date;
+						activity_data.activity_schedule_time     = activity_schedule_data.time;
+						activity_data.activity_schedule_meridiem = activity_schedule_data.meridiem;
+					}
 
 					if ( typeof activity_data !== 'undefined' ) {
 						bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data, activity_URL_preview );
