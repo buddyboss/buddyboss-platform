@@ -795,11 +795,11 @@ function bp_nouveau_ajax_post_update() {
 		$privacy = $_POST['privacy']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	}
 
-	$status             = bb_get_activity_published_status();
+	$activity_status    = bb_get_activity_published_status();
 	$schedule_date_time = '';
 	$is_scheduled       = false;
 	if ( ! empty( $_POST['activity_action_type'] ) && 'scheduled' === $_POST['activity_action_type'] ) {
-		$status = $_POST['activity_action_type'];
+		$activity_status = $_POST['activity_action_type'];
 
 		if ( ! empty( $_POST['activity_schedule_date_raw'] ) && ! empty( $_POST['activity_schedule_time'] ) && ! empty( $_POST['activity_schedule_meridiem'] ) ) {
 			$is_scheduled = true;
@@ -847,7 +847,7 @@ function bp_nouveau_ajax_post_update() {
 
 		if ( $is_scheduled ) {
 			$post_array[ 'recorded_time' ] = $schedule_date_time;
-			$post_array[ 'status' ]        = $status;
+			$post_array[ 'status' ]        = $activity_status;
 		}
 		$activity_id = bp_activity_post_update( $post_array );
 
@@ -856,16 +856,19 @@ function bp_nouveau_ajax_post_update() {
 
 			$_POST['group_id'] = $item_id; // Set POST variable for group id for further processing from other components
 
-			// This function is setting the current group!
-			$activity_id = groups_post_update(
-				array(
-					'id'            => $activity_id,
-					'content'       => $_POST['content'],
-					'group_id'      => $item_id,
-					'status'        => $status,
-					'recorded_time' => $schedule_date_time,
-				)
+			$post_array = array(
+				'id'            => $activity_id,
+				'content'       => $_POST['content'],
+				'group_id'      => $item_id,
 			);
+
+			if ( $is_scheduled ) {
+				$post_array[ 'recorded_time' ] = $schedule_date_time;
+				$post_array[ 'status' ]        = $activity_status;
+			}
+
+			// This function is setting the current group!
+			$activity_id = groups_post_update( $post_array );
 
 			if ( empty( $status ) ) {
 				if ( ! empty( $bp->groups->current_group->status ) ) {

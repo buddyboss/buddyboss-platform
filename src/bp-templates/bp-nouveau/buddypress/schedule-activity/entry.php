@@ -117,7 +117,8 @@ $scheduled_date_string                    = wp_json_encode( $scheduled_date_data
 	<?php bp_nouveau_activity_hook( 'before', 'activity_content' ); ?>
 
 	<div class="activity-content <?php ( function_exists( 'bp_activity_entry_css_class' ) ) ? bp_activity_entry_css_class() : ''; ?>">
-		<?php if ( bp_nouveau_activity_has_content() ) : ?>
+		<?php
+		if ( bp_nouveau_activity_has_content() ) : ?>
 			<div class="activity-inner <?php echo ( function_exists( 'bp_activity_has_content' ) && empty( bp_activity_has_content() ) ) ? esc_attr( 'bb-empty-content' ) : esc_attr( '' ); ?>">
 				<?php
 					bp_nouveau_activity_content();
@@ -129,10 +130,6 @@ $scheduled_date_string                    = wp_json_encode( $scheduled_date_data
 			</div>
 			<?php
 		endif;
-
-		if ( function_exists( 'bp_nouveau_activity_state' ) ) {
-			bp_nouveau_activity_state();
-		}
 		?>
 	</div>
 
