@@ -487,6 +487,11 @@ function bp_version_updater() {
 			bb_update_to_2_5_80();
 		}
 
+		// To be added.
+		// if ( $raw_db_version < XXXXX ) {
+		// 	bb_update_to_X_X_X();
+		// }
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3492,4 +3497,19 @@ function bb_update_to_2_5_80() {
 	bp_update_option( 'bb_activity_load_type', $autoload_new_setting );
 	bp_update_option( 'bb_ajax_request_page_load', 2 );
 	bp_update_option( 'bb_load_activity_per_request', 10 );
+}
+
+/**
+ * Purge the existing 5 year old cache to implement the new 30 days cache_expire system.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_X_X_X() {
+
+	global $wpdb;
+	$cache_table = $wpdb->prefix . 'bb_performance_cache';
+
+	$wpdb->query( "DELETE FROM {$cache_table}" );
 }
