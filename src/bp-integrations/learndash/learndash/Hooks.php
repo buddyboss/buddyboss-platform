@@ -92,8 +92,8 @@ class Hooks {
 			return false;
 		}
 
-		if( learndash_get_post_type_slug( 'group' ) === $group->post_type ){
-			if ( ! current_user_can( 'edit_group', $groupId ) ){
+		if ( learndash_get_post_type_slug( 'group' ) === $group->post_type ) {
+			if ( ! current_user_can( 'edit_group', $groupId ) ) {
 				return false;
 			}
 		}
