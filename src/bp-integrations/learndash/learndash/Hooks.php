@@ -84,7 +84,7 @@ class Hooks {
 			return false;
 		}
 
-		if( ! isset( $_POST['post_type'] ) ){
+		if ( ! isset( $_POST['post_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			return false;
 		}
 
