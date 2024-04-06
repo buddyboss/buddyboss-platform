@@ -80,7 +80,7 @@ class Hooks {
 	 */
 	public function groupUpdated( $groupId, $group ) {
 
-		if( wp_is_post_revision( $groupId ) || wp_is_post_autosave( $groupId )){
+		if ( wp_is_post_revision( $groupId ) ) {
 			return false;
 		}
 
