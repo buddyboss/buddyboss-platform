@@ -70,8 +70,8 @@ if ( ! class_exists( 'BB_Activity_Schedule' ) ) {
 			}
 
 			if ( mysql2date( 'U', $activity->date_recorded, false ) > mysql2date( 'U', gmdate( 'Y-m-d H:i:59' ), false ) ) {
-				wp_clear_scheduled_hook( 'bb_activity_publish', array( $activity->id ) );
-				wp_schedule_single_event( strtotime( $activity->date_recorded . 'GMT' ), 'bb_activity_publish', array( $activity->id ) );
+				wp_clear_scheduled_hook( 'bb_activity_publish', array( (int) $activity->id ) );
+				wp_schedule_single_event( strtotime( $activity->date_recorded . 'GMT' ), 'bb_activity_publish', array( (int) $activity->id ) );
 				return true;
 			}
 

@@ -3791,7 +3791,7 @@ function bb_activity_delete_scheduled_cron_events( $activities ) {
 	if ( ! empty( $activities ) ) {
 		foreach ( $activities as $activity ) {
 			if ( bb_get_activity_scheduled_status() === $activity->status ) {
-				wp_clear_scheduled_hook( 'bb_activity_publish', array( $activity->id ) );
+				wp_clear_scheduled_hook( 'bb_activity_publish', array( (int) $activity->id ) );
 			}
 		}
 	}
