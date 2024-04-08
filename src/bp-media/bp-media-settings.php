@@ -148,14 +148,14 @@ function bp_media_get_settings_fields() {
 	if ( bp_is_active( 'groups' ) ) {
 
 		$fields['bp_media_settings_photos']['bp_media_group_media_support'] = array(
-			'title'             => __( 'Groups', 'buddyboss' ),
+			'title'             => bb_get_component_label( 'Groups' ),
 			'callback'          => 'bp_media_settings_callback_group_media_support',
 			'sanitize_callback' => 'absint',
 			'args'              => array(),
 		);
 
 		$fields['bp_media_settings_documents']['bp_media_group_document_support'] = array(
-			'title'             => __( 'Groups', 'buddyboss' ),
+			'title'             => bb_get_component_label( 'Groups' ),
 			'callback'          => 'bp_media_settings_callback_group_document_support',
 			'sanitize_callback' => 'absint',
 			'args'              => array(),
@@ -171,7 +171,7 @@ function bp_media_get_settings_fields() {
 		);
 
 		$fields['bp_media_settings_videos']['bp_video_group_video_support'] = array(
-			'title'             => __( 'Groups', 'buddyboss' ),
+			'title'             => bb_get_component_label( 'Groups' ),
 			'callback'          => 'bp_video_settings_callback_group_video_support',
 			'sanitize_callback' => 'absint',
 			'args'              => array(),
@@ -180,14 +180,14 @@ function bp_media_get_settings_fields() {
 		if ( bp_is_active( 'activity' ) ) {
 
 			$fields['bp_media_settings_emoji']['bp_media_groups_emoji_support'] = array(
-				'title'             => __( 'Groups', 'buddyboss' ),
+				'title'             => bb_get_component_label( 'Groups' ),
 				'callback'          => 'bp_media_settings_callback_groups_emoji_support',
 				'sanitize_callback' => 'absint',
 				'args'              => array(),
 			);
 
 			$fields['bp_media_settings_gifs']['bp_media_groups_gif_support'] = array(
-				'title'             => __( 'Groups', 'buddyboss' ),
+				'title'             => bb_get_component_label( 'Groups' ),
 				'callback'          => 'bp_media_settings_callback_groups_gif_support',
 				'sanitize_callback' => 'absint',
 				'args'              => array(),

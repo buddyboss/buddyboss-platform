@@ -107,7 +107,7 @@ class BB_Component_Label {
             'labs' => __( 'Labs', 'buddyboss' ),
             'replies' => __( 'Replies', 'buddyboss' ),
             'reply' => __( 'Reply', 'buddyboss' ),
-            'activity' => __( 'Activity1', 'buddyboss' ),
+            'activity' => __( 'Activity', 'buddyboss' ),
             'activity_post' => __( 'Activity Post', 'buddyboss' ),
             'activity_posts' => __( 'Activity Posts', 'buddyboss' ),
             'performance' => __( 'Performance', 'buddyboss' ),

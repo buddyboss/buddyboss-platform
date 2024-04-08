@@ -75,7 +75,7 @@ class BP_Groups_Widget extends WP_Widget {
 		}
 
 		if ( empty( $instance['title'] ) ) {
-			$instance['title'] = __( 'Groups', 'buddyboss' );
+			$instance['title'] = bb_get_component_label( 'Groups' );
 		}
 
 		/**
@@ -222,7 +222,7 @@ class BP_Groups_Widget extends WP_Widget {
 	 */
 	public function form( $instance ) {
 		$defaults = array(
-			'title'         => __( 'Groups', 'buddyboss' ),
+			'title'         => bb_get_component_label( 'Groups' ),
 			'max_groups'    => 5,
 			'group_default' => 'active',
 			'link_title'    => false,

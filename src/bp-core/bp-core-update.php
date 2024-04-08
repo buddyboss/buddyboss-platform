@@ -1048,7 +1048,7 @@ function bp_migrate_directory_page_titles() {
 	$legacy_titles = array(
 		'activity' => __( 'Site-Wide Activity', 'buddyboss' ),
 		'blogs'    => __( 'Sites', 'buddyboss' ),
-		'groups'   => __( 'Groups', 'buddyboss' ),
+		'groups'   => bb_get_component_label( 'Groups' ),
 		'members'  => __( 'Members', 'buddyboss' ),
 	);
 

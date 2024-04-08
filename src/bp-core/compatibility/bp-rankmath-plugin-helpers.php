@@ -38,7 +38,7 @@ class BP_RankMath_Title implements IPaper {
 			}
 
 			if ( 'my-groups' === $action ) {
-				$action = esc_html__( 'Groups', 'buddyboss' );
+				$action = esc_htmlbb_get_component_label( 'Groups' );
 			}
 
 			if ( isset( $action ) && ! empty( $action ) ) {

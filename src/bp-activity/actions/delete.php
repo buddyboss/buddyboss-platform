@@ -59,7 +59,7 @@ function bp_activity_action_delete_activity( $activity_id = 0 ) {
 	) ) {
 		bp_core_add_message( sprintf( __( '%s deleted successfully', 'buddyboss' ), bb_get_component_label( 'activity' ) ) );
 	} else {
-		bp_core_add_message( sprintf( __( 'There was an error when deleting that %s', 'buddyboss' ), strtolower( bb_get_component_label( 'activity' ) ) ), 'error' );
+		bp_core_add_message( sprintf( __( 'There was an error when deleting that %s', 'buddyboss' ), bb_get_component_label_lower( 'activity' ) ), 'error' );
 	}
 
 	/**

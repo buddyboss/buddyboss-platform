@@ -196,7 +196,7 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 		$options['friends'] = __( 'Connections', 'buddyboss' );
 	}
 	if ( bp_is_active( 'groups' ) ) {
-		$options['groups'] = __( 'Groups', 'buddyboss' );
+		$options['groups'] = bb_get_component_label( 'Groups' );
 	}
 	if ( bp_is_active( 'forums' ) ) {
 		$options['forums'] = __( 'Forums', 'buddyboss' );

@@ -34,8 +34,8 @@ function bp_groups_add_admin_menu() {
 		// Add our screen.
 		$hooks[] = add_submenu_page(
 			'buddyboss-platform',
-			__( 'Groups', 'buddyboss' ),
-			__( 'Groups', 'buddyboss' ),
+			bb_get_component_label( 'Groups' ),
+			bb_get_component_label( 'Groups' ),
 			'bp_moderate',
 			'bp-groups',
 			'bp_groups_admin'
@@ -45,8 +45,8 @@ function bp_groups_add_admin_menu() {
 		// Add our screen.
 		$hooks[] = add_submenu_page(
 			'buddyboss-platform',
-			__( 'Groups', 'buddyboss' ),
-			__( 'Groups', 'buddyboss' ),
+			bb_get_component_label( 'Groups' ),
+			bb_get_component_label( 'Groups' ),
 			'bp_moderate',
 			'bp-groups',
 			'bp_groups_admin'
@@ -209,7 +209,7 @@ function bp_groups_admin_load() {
 		$bp_groups_list_table = new BP_Groups_List_Table();
 
 		// The per_page screen option.
-		add_screen_option( 'per_page', array( 'label' => __( 'Groups', 'buddyboss' ) ) );
+		add_screen_option( 'per_page', array( 'label' => bb_get_component_label( 'Groups' ) ) );
 
 		// Help panel - overview text.
 		get_current_screen()->add_help_tab(
@@ -2334,7 +2334,7 @@ function bp_group_type_add_column( $columns ) {
 	$columns['group_type']    = __( 'Label', 'buddyboss' );
 	$columns['enable_filter'] = __( 'Groups Filter', 'buddyboss' );
 	$columns['enable_remove'] = __( 'Groups Directory', 'buddyboss' );
-	$columns['total_groups']  = __( 'Groups', 'buddyboss' );
+	$columns['total_groups']  = bb_get_component_label( 'Groups' );
 
 	unset( $columns['date'] );
 

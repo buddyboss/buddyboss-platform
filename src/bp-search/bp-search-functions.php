@@ -372,7 +372,7 @@ function bp_search_items() {
 
 	// other buddypress components
 	$bp_components = array(
-		'groups'   => __( 'Groups', 'buddyboss' ),
+		'groups'   => bb_get_component_label( 'Groups' ),
 		'activity' => __( 'Activity', 'buddyboss' ),
 		'messages' => __( 'Messages', 'buddyboss' ),
 		/*

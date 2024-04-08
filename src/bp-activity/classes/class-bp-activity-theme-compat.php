@@ -170,7 +170,7 @@ class BP_Activity_Theme_Compat {
 		bp_theme_compat_reset_post(
 			array(
 				'ID'             => ! empty( $activity_page_id ) ? $activity_page_id : 0,
-				'post_title'     => __( 'News Feed', 'buddyboss' ),
+				'post_title'     => bb_get_component_label( 'News Feed' ),
 				'post_author'    => 0,
 				'post_date'      => 0,
 				'post_content'   => '',

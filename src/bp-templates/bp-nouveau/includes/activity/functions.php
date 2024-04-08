@@ -362,7 +362,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 					'slug'      => 'groups', // slug is used because BP_Core_Nav requires it, but it's the scope
 					'li_class'  => array( 'dynamic' ),
 					'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/' . bp_get_groups_slug() . '/',
-					'text'      => __( 'Groups', 'buddyboss' ),
+					'text'      => bb_get_component_label( 'Groups' ),
 					'count'     => false,
 					'position'  => 25,
 				);

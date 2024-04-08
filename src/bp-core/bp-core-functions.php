@@ -789,8 +789,8 @@ function bp_core_add_page_mappings( $components, $existing = 'keep', $map_regist
  */
 function bp_core_get_directory_page_default_titles() {
 	$page_default_titles = array(
-		'activity'        => __( 'News Feed', 'buddyboss' ),
-		'groups'          => __( 'Groups', 'buddyboss' ),
+		'activity'        => bb_get_component_label( 'News Feed' ),
+		'groups'          => bb_get_component_label( 'Groups' ),
 		'blogs'           => __( 'Sites', 'buddyboss' ),
 		'members'         => __( 'Members', 'buddyboss' ),
 		'media'           => __( 'Photos', 'buddyboss' ),
