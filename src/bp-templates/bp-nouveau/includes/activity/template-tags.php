@@ -1956,10 +1956,12 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		) &&
 		(
 			// Is not a media mini activity
-		! (
-			'activity_update' === $activity_type &&
-			empty( $activities_template->activity->content )
-		)
+			! (
+				'activity_update' === $activity_type &&
+				empty( $activities_template->activity->content ) &&
+				in_array( $activities_template->activity->privacy, array ( 'media', 'document', 'video' ) ) &&
+				! empty( $activities_template->activity->secondary_item_id )
+			)
 		)
 	) {
 
