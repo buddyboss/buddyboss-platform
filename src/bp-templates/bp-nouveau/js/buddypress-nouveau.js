@@ -884,7 +884,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bb-close-action-popup, .action-popup-overlay', this.closeActionPopup );
 			$( document ).on( 'keyup', '.search-form-has-reset input[type="search"], .search-form-has-reset input#bbp_search', _.throttle( this.directorySearchInput, 900 ) );
 			$( document ).on( 'click', '.search-form-has-reset .search-form_reset', this.resetDirectorySearch );
-			$( '#buddypress' ).on( 'click', '.bb-view-schedule-posts', this, this.showSchedulePosts );
+			$( '#buddypress' ).on( 'click', '.bb-view-schedule-posts, .bb-view-all-scheduled-posts', this, this.showSchedulePosts );
 
 			$( document ).on( 'keyup', this, this.keyUp );
 
