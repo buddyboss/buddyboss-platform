@@ -4882,7 +4882,6 @@ window.bp = window.bp || {};
 			cancelSchedulePost: function ( event ) {
 				event.preventDefault();
 				var schedulePost = $( event.target ).closest( '#bb-schedule-post_form_modal' );
-				schedulePost.find( 'input' ).val( '' );
 				schedulePost.hide();
 			},
 
