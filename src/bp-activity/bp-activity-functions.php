@@ -991,13 +991,13 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = arra
 
 	$privacy_check = bb_check_activity_privacy_for_favorite( 
 		array( 
-			'action' => 'add',
+			'action'      => 'add',
 			'activity_id' => $activity_id,
-			'user_id' => $user_id
+			'user_id'     => $user_id
 		) 
 	);
 
-	// Bail if activity privacy restrict 
+	// Bail if activity privacy restrict.
 	if ( is_wp_error( $privacy_check ) ) {
 		return ( 'bool' === $r['error_type'] ) ? false : $privacy_check;
 	}
@@ -1116,13 +1116,13 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 
 	$privacy_check = bb_check_activity_privacy_for_favorite( 
 		array( 
-			'action' => 'remove',
+			'action'      => 'remove',
 			'activity_id' => $activity_id,
-			'user_id' => $user_id
+			'user_id'     => $user_id
 		) 
 	);
 
-	// Bail if activity privacy restrict 
+	// Bail if activity privacy restrict. 
 	if ( is_wp_error( $privacy_check ) ) {
 		return ( 'bool' === $r['error_type'] ) ? false : $privacy_check;
 	}
@@ -3009,7 +3009,7 @@ function bp_activity_new_comment( $args = '' ) {
 		) 
 	);
 
-	// Bail if activity privacy restrict 
+	// Bail if activity privacy restrict.
 	if ( is_wp_error( $privacy_check ) ) {
 		return $privacy_check;
 	}
@@ -7191,10 +7191,8 @@ function bb_check_activity_privacy_for_comment( $args ) {
 
 	if ( ! empty( $activity->privacy ) ) {
 		if ( 'onlyme' === $activity->privacy && $activity->user_id !== $args['user_id'] ) {
-			
 			return new WP_Error( 'error', __( 'Sorry, You cannot add comments on "Only Me" activity.', 'buddyboss' ) );
 		} else if ( false == bb_check_activity_author_is_friend( $activity, $args['user_id'] ) ) {
-			
 			return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to add a comment.', 'buddyboss' ) );
 		} 
 	}
