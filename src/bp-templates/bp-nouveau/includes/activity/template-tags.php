@@ -1923,6 +1923,8 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 
 	// Pin post action only for allowed posts based on user role.
 	if (
+		'activity_update' === $activity_type &&
+		! in_array( $activities_template->activity->privacy, array ( 'media', 'document', 'video' ), true ) &&
 		(
 			(
 				bp_is_group_activity() &&
@@ -1953,14 +1955,6 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 						)
 					)
 				)
-			)
-		) &&
-		(
-			// Is not a media mini activity
-			! (
-				'activity_update' === $activity_type &&
-				empty( $activities_template->activity->content ) &&
-				in_array( $activities_template->activity->privacy, array ( 'media', 'document', 'video' ), true )
 			)
 		)
 	) {
