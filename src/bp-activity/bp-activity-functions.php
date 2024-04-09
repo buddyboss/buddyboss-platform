@@ -989,14 +989,14 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = arra
 		}
 	}
 
-	$privacy_check = bb_check_activity_privacy_for_favorite( 
-		array( 
+	$privacy_check = bb_check_activity_privacy_for_favorite(
+		array(
 			'action'      => 'add',
 			'activity_id' => $activity_id,
-			'user_id'     => $user_id
-		) 
+			'user_id'     => $user_id,
+		)
 	);
-
+	
 	// Bail if activity privacy restrict.
 	if ( is_wp_error( $privacy_check ) ) {
 		return ( 'bool' === $r['error_type'] ) ? false : $privacy_check;
@@ -1114,15 +1114,15 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 		}
 	}
 
-	$privacy_check = bb_check_activity_privacy_for_favorite( 
-		array( 
+	$privacy_check = bb_check_activity_privacy_for_favorite(
+		array(
 			'action'      => 'remove',
 			'activity_id' => $activity_id,
-			'user_id'     => $user_id
-		) 
+			'user_id'     => $user_id,
+		)
 	);
-
-	// Bail if activity privacy restrict. 
+	
+	// Bail if activity privacy restrict.
 	if ( is_wp_error( $privacy_check ) ) {
 		return ( 'bool' === $r['error_type'] ) ? false : $privacy_check;
 	}
@@ -3002,13 +3002,13 @@ function bp_activity_new_comment( $args = '' ) {
 	// Get the parent activity.
 	$activity = new BP_Activity_Activity( $activity_id );
 
-	$privacy_check = bb_check_activity_privacy_for_comment( 
-		array( 
+	$privacy_check = bb_check_activity_privacy_for_comment(
+		array(
 			'activity_id' => $activity_id,
-			'user_id' => $r['user_id']
-		) 
+			'user_id'     => $r['user_id'],
+		)
 	);
-
+	
 	// Bail if activity privacy restrict.
 	if ( is_wp_error( $privacy_check ) ) {
 		return $privacy_check;
@@ -7159,7 +7159,7 @@ function bb_check_activity_privacy_for_favorite( $args ) {
 					esc_html__( 'Sorry, You cannot add favorites on "Only Me" activity.', 'buddyboss' )
 				);
 			}
-		} else if ( false === bb_check_activity_author_is_friend( $activity, $args['user_id'] )  ) {
+		} elseif ( false === bb_check_activity_author_is_friend( $activity, $args['user_id'] ) ) {
 			if ( 'remove' === $args['action'] ) {
 				return new WP_Error(
 					'error',
@@ -7171,7 +7171,7 @@ function bb_check_activity_privacy_for_favorite( $args ) {
 					esc_html__( 'Sorry, please establish a friendship with the author of the activity to add a favorites.', 'buddyboss' )
 				);
 			}
-		} 
+		}
 	}
 
 	return true;
@@ -7192,9 +7192,9 @@ function bb_check_activity_privacy_for_comment( $args ) {
 	if ( ! empty( $activity->privacy ) ) {
 		if ( 'onlyme' === $activity->privacy && $activity->user_id !== $args['user_id'] ) {
 			return new WP_Error( 'error', __( 'Sorry, You cannot add comments on "Only Me" activity.', 'buddyboss' ) );
-		} else if ( false == bb_check_activity_author_is_friend( $activity, $args['user_id'] ) ) {
+		} elseif ( false === bb_check_activity_author_is_friend( $activity, $args['user_id'] ) ) {
 			return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to add a comment.', 'buddyboss' ) );
-		} 
+		}
 	}
 
 	return true;
