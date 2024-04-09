@@ -134,6 +134,16 @@ window.bp = window.bp || {};
 			$( '#activity-stream' ).on( 'click', '.acomments-view-more', this.showActivity );
 			$( 'body' ).on( 'click', '.bb-close-action-popup', this.closeActivity );
 
+			$( document ).on( 'click', function( event)  {
+				if (
+					$( '#activity-modal:visible' ).length > 0 &&
+					$( '#bp-nouveau-activity-form-placeholder:visible' ).length === 0 &&
+					!$( event.target ).closest( '#activity-modal' ).length
+				) {
+					this.closeActivity( event );
+				}
+			}.bind( this ) );
+
 			// Activity actions.
 			$( '#buddypress [data-bp-list="activity"], #activity-modal' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
 			$( '#buddypress [data-bp-list="activity"], #activity-modal' ).on( 'click', '.activity-privacy>li.bb-edit-privacy a', bp.Nouveau, this.activityPrivacyRedirect.bind( this ) );
