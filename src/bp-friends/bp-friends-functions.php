@@ -824,7 +824,7 @@ function friends_notification_new_request( $friendship_id, $initiator_id, $frien
 			'friendship.id'       => $friendship_id,
 			'initiator.id'        => $initiator_id,
 			'initiator.url'       => esc_url( bp_core_get_user_domain( $initiator_id ) ),
-			'initiator.name'      => bp_core_get_user_displayname( $initiator_id ),
+			'initiator.name'      => bp_core_get_user_displayname( $initiator_id, $friend_id ),
 			'unsubscribe'         => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 		),
 	);
@@ -863,7 +863,7 @@ function friends_notification_accepted_request( $friendship_id, $initiator_id, $
 		'tokens' => array(
 			'friend.id'      => $friend_id,
 			'friendship.url' => esc_url( bp_core_get_user_domain( $friend_id ) ),
-			'friend.name'    => bp_core_get_user_displayname( $friend_id ),
+			'friend.name'    => bp_core_get_user_displayname( $friend_id, $initiator_id ),
 			'friendship.id'  => $friendship_id,
 			'initiator.id'   => $initiator_id,
 			'unsubscribe'    => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),

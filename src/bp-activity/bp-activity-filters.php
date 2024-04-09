@@ -3517,8 +3517,9 @@ function bb_send_email_to_follower( $follower ) {
 	if ( true === bb_is_notification_enabled( $following_user_id, 'bb_following_new' ) ) {
 		$args                          = array(
 			'tokens' => array(
+				'following.id'  => $following_user_id,
 				'follower.id'   => $user_id,
-				'follower.name' => bp_core_get_user_displayname( $user_id ),
+				'follower.name' => bp_core_get_user_displayname( $user_id, $following_user_id ),
 				'follower.url'  => esc_url( bp_core_get_user_domain( $user_id ) ),
 			),
 		);
