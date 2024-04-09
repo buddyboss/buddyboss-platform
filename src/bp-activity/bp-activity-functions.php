@@ -7139,7 +7139,8 @@ function bb_can_user_schedule_activity( $args = array() ) {
 		(
 			'group' === $r['object'] ||
 			bp_is_group()
-		)
+		) &&
+		bp_current_user_can( 'administrator' )
 	) {
 		$group_id = 'group' === $r['object'] && ! empty( $r['group_id'] ) ? $r['group_id'] : bp_get_current_group_id();
 		$is_admin = groups_is_user_admin( $r['user_id'], $group_id );
