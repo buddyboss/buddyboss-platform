@@ -318,18 +318,18 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 		$url   = wp_strip_all_tags( html_entity_decode( $field_value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
 		$parts = parse_url( $url );
 
-		// Add the tel:// protocol to the field value.
+		// Add the tel: protocol to the field value.
 		if ( isset( $parts['scheme'] ) ) {
 			if ( strtolower( $parts['scheme'] ) !== 'tel' ) {
 				$scheme = preg_quote( $parts['scheme'], '#' );
 				$url    = preg_replace( '#^' . $scheme . '#i', 'tel', $url );
 			}
 
-			$url_text = preg_replace( '#^tel://#i', '', $url );
+			$url_text = preg_replace( '#^tel:#i', '', $url );
 
 		} else {
 			$url_text = $url;
-			$url      = 'tel://' . $url;
+			$url      = 'tel:' . $url;
 		}
 
 		return sprintf(

@@ -132,7 +132,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		}
 
 		// Hide group subscription setting when notifications is disabled or forum/activity is not active.
-		if ( bp_is_active( 'notifications' ) && ! empty( bb_register_subscriptions_types( 'group' ) ) ) {
+		if ( bp_is_active( 'notifications' ) && ( bp_is_active( 'activity' ) || bp_is_active( 'forums' ) ) ) {
 			// Allow group subscriptions setting.
 			$this->add_field( 'bb_enable_group_subscriptions', esc_html__( 'Subscriptions', 'buddyboss' ), 'bb_admin_setting_callback_group_subscriptions', 'intval' );
 		}

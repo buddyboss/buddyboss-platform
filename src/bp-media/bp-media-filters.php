@@ -222,8 +222,9 @@ function bp_media_activity_comment_entry( $comment_id ) {
 		?>
 		<div class="bb-activity-media-wrap
 			<?php
-			echo esc_attr( 'bb-media-length-' . $media_template->media_count );
-			echo $media_template->media_count > 5 ? esc_attr( ' bb-media-length-more' ) : '';
+			$max_length = bb_media_get_activity_comment_max_thumb_length();
+			echo esc_attr( 'bb-media-length-' . ( $media_template->media_count > $max_length ? $max_length : $media_template->media_count ) );
+			echo $media_template->media_count > $max_length ? esc_attr( ' bb-media-length-more' ) : '';
 			?>
 			">
 				<?php
