@@ -532,7 +532,7 @@ function bbp_convert_mentions( $data ) {
 			$replacement = "<a class='bp-suggestions-mention' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>@$username</a>";
 			if ( false === strpos( $data, $replacement ) ) {
 				// Pattern for cases with existing <a>@mention</a> or @mention.
-				$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';
+				$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';
 				$data    = preg_replace( $pattern, $replacement, $data );
 			}
 		}

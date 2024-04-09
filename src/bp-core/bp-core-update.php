@@ -483,6 +483,10 @@ function bp_version_updater() {
 			bb_update_to_2_4_75();
 		}
 
+		if ( $raw_db_version < 21081 ) {
+			bb_update_to_2_5_80();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3452,4 +3456,40 @@ function bb_update_to_2_4_75() {
 		// Create a new table again.
 		BB_BG_Process_Log::instance()->create_table();
 	}
+}
+
+/**
+ * For existing installation, disable close comments setting by default.
+ * Migrate comment related discussion settings to new comment settings.
+ * Migrate the performance-related setting for existing installations.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @return void
+ */
+function bb_update_to_2_5_80() {
+
+	$is_already_run = get_transient( 'bb_update_to_2_5_80' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_update_to_2_5_80', true, HOUR_IN_SECONDS );
+
+	bp_update_option( '_bb_enable_close_activity_comments', 0 );
+
+	bp_update_option( '_bb_enable_activity_comment_threading', (int) get_option( 'thread_comments' ) );
+
+	$thread_comments_depth = (int) get_option( 'thread_comments_depth', 3 );
+	if ( $thread_comments_depth > 4 ) {
+		$thread_comments_depth = 4;
+	}
+	bp_update_option( '_bb_activity_comment_threading_depth', $thread_comments_depth );
+
+	$is_autoload = (bool) bp_get_option( '_bp_enable_activity_autoload', true );
+	$autoload_new_setting = ( $is_autoload ) ? 'infinite' : 'load_more';
+
+	bp_update_option( 'bb_activity_load_type', $autoload_new_setting );
+	bp_update_option( 'bb_ajax_request_page_load', 2 );
+	bp_update_option( 'bb_load_activity_per_request', 10 );
 }

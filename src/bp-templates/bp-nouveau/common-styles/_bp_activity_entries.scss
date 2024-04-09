@@ -23,6 +23,32 @@
 			padding-bottom: $pad-med;
 		}
 
+		&.bb-closed-comments {
+
+			.acomment-reply,
+			.acomment-edit,
+			.edit-activity {
+				display: none !important;
+			}
+
+			> .activity-comments > .ac-form {
+				display: none !important;
+			}
+
+			.generic-button:has(.edit-activity) {
+				display: none;
+			}
+
+			.bb-activity-closed-comments-notice {
+				background: #e1e3e5;
+				margin: 0 -15px;
+				text-align: center;
+				padding: 5px;
+				font-size: 13px;
+				font-weight: 600;
+				text-wrap: nowrap;
+			}
+		}
 
 		div.item-avatar { // 'div' for weight
 			margin: 0 auto;
@@ -32,6 +58,55 @@
 			img {
 				height: auto;
 				max-width: 40%;
+			}
+		}
+
+		.activity-item-detached_head {
+			display: none;
+		}
+
+		&.activity-popup {
+			display: none;
+		}
+
+		&.is-detached {
+			display: block;
+			position: fixed;
+			top: 40px;
+			left: 50%;
+			transform: translateX(-50%);
+			max-height: calc(100% - 80px);
+			width: 100%;
+			z-index: 999;
+			overflow: auto;
+			border-top: 0;
+
+			.activity-item-detached_head {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 15px 25px;
+				border: 1px solid #b7b7b7;
+				border-left: 0;
+				border-right: 0;
+				margin: -1em -1em 1em -1em;
+
+				h2 {
+
+					@include font-size(20);
+					margin: 0;
+				}
+
+				.activity-item-detached_close {
+					font-size: 24px;
+					border: 0;
+					background-color: transparent;
+					outline: none;
+
+					&:focus-visible {
+						outline: 1px solid $blue;
+					}
+				}
 			}
 		}
 
@@ -201,12 +276,14 @@
 			}
 
 			.activity-state {
-				display: none;
-				font-size: 12px;
-				clear: both;
 
-				.ac-state-separator,
-				.activity-state-comments {
+				@include center-vert();
+				justify-content: space-between;
+				font-size: 14px;
+				clear: both;
+				margin: 10px 0;
+
+				.activity-state-likes {
 					display: none;
 				}
 
@@ -215,29 +292,17 @@
 					padding: 0;
 				}
 
-				&.has-comments {
+				&.has-likes {
 
-					&.has-likes .ac-state-separator,
-					.activity-state-comments {
-						color: var(--bb-body-text-color);
+					.activity-state-likes {
 						display: inline-block;
-						vertical-align: middle;
+						background-color: transparent;
 					}
 				}
 
-				&.has-emotion,
-				&.has-likes,
-				&.has-comments {
-					display: flex;
-					gap: 5px;
-					align-items: center;
-				}
-
-				&.has-comments {
-
-					.activity-state-reactions + .ac-state-separator {
-						display: inline-block;
-					}
+				.activity-state-comments {
+					display: inline-block;
+					margin-left: auto;
 				}
 			}
 
@@ -298,7 +363,8 @@
 		}
 
 		.activity-content .bp-generic-meta.action,
-		> .bp-generic-meta.action {
+		> .bp-generic-meta.action,
+		.activity-actions > .bp-generic-meta.action {
 
 			.button {
 
@@ -317,7 +383,7 @@
 
 				&.has-reaction > i {
 					font-weight: 200;
-					font-size: 20px;
+					font-size: 24px;
 
 					body:not(.bb-reactions-mode) & {
 						font-weight: 300;
@@ -325,8 +391,8 @@
 				}
 
 				> img {
-					height: 20px;
-					width: 20px;
+					height: 24px;
+					width: 24px;
 					object-fit: cover;
 				}
 
@@ -409,17 +475,35 @@
 			}
 		}
 
-		.bp-generic-meta.action {
-			border: 1px solid transparent;
-			background: $off-white;
-			padding: 2px;
+		.activity-content > .bp-generic-meta.activity-meta,
+		> .bp-generic-meta.activity-meta,
+		> .bp-generic-meta[class*="-meta"],
+		&.elementor-activity-item .activity-actions > .bp-generic-meta.action,
+		.activity-content > .bp-generic-meta.groups-meta,
+		> .bp-generic-meta.groups-meta {
+			display: flex;
+			justify-content: space-around;
+			border-top: 1px solid $light-grey;
+			padding: 5px 0;
 			position: relative;
-			text-align: left;
 
 			// this wrapper has generic margins in _bp_lists.scss
 			// remove for act stream actions.
 			div.generic-button {
 				margin: 0;
+				display: flex;
+				justify-content: center;
+				flex: auto;
+
+				> a {
+					width: 100%;
+					justify-content: center;
+					border-radius: $block-radius-inner;
+
+					&:hover {
+						background-color: $light-grey;
+					}
+				}
 			}
 
 			.button {
@@ -440,7 +524,7 @@
 			.button:before,
 			.icons:before {
 				font-family: "bb-icons";/* stylelint-disable-line */
-				font-size: 20px;
+				font-size: 24px;
 				vertical-align: middle;
 			}
 
@@ -518,6 +602,15 @@
 
 		}
 
+		&.has-comments .activity-content > .bp-generic-meta.activity-meta,
+		&.has-comments > .bp-generic-meta.activity-meta,
+		&.has-comments .activity-actions > .bp-generic-meta.action,
+		&.has-comments .activity-content > .bp-generic-meta.groups-meta,
+		&.has-comments > .bp-generic-meta.groups-meta {
+			border-bottom: 1px solid $light-grey;
+			margin-bottom: 10px;
+		}
+
 		// close .activity-meta
 
 	}
@@ -570,6 +663,12 @@
 			right: initial;
 			top: initial;
 
+			+ .bb-pin-action {
+				position: static;
+				float: right;
+				margin: 5px -5px 0 0;
+			}
+
 			.bb-activity-more-options-action {
 
 				&[data-balloon][data-balloon-pos="up"]:after {
@@ -612,7 +711,7 @@
 			width: 198px;
 			padding: 5px 0;
 			display: none;
-			z-index: 11;
+			z-index: 112;
 
 			&.is_visible {
 				display: block;
@@ -667,6 +766,7 @@
 						border: 0;
 						background-color: transparent;
 						box-shadow: none;
+						box-sizing: border-box;
 
 						&:hover {
 							color: $blue;
@@ -698,6 +798,14 @@
 							font-size: 19px;
 						}
 
+						&.close-activity-comment:before {
+							content: "\ee35";
+						}
+
+						&.unclose-activity-comment:before {
+							content: "\ee33";
+						}
+
 						&.unpin-activity:before {
 							content: "\ea13";
 							font-size: 19px;
@@ -710,6 +818,12 @@
 						&.acomment-edit:before,
 						&.edit-activity:before {
 							content: "\ee5a";
+						}
+
+						&.download-activity:before,
+						&.activity-video-download:before,
+						&.activity-document-download:before {
+							content: "\e889";
 						}
 
 						span:not(.bp-screen-reader-text) {
@@ -740,11 +854,13 @@
 		position: absolute;
 		right: 20px;
 		font-size: 22px;
+		line-height: 1;
 		top: 10px;
-		display: none;
 
+		.bb-mute-action_button,
 		.bb-pin-action_button {
 			cursor: default;
+			display: none;
 		}
 
 		[class*="bb-icon"] {
@@ -760,17 +876,26 @@
 			margin-right: 55px;
 		}
 
-		.bb-pin-action {
-			display: block;
+		.bb-pin-action_button {
+			display: inline-block;
 		}
 
+	}
+
+	.loading-mute,
+	.bb-muted {
+
+		.bb-mute-action_button {
+			display: inline-block;
+		}
 	}
 
 	.bb-activity-more-options-wrap + .bb-pin-action {
 		right: 45px;
 	}
 
-	.activity-item.loading-pin .bb-pin-action [class*="bb-icon"] {
+	.activity-item.loading-mute .bb-mute-action_button [class*="bb-icon"],
+	.activity-item.loading-pin .bb-pin-action_button [class*="bb-icon"] {
 		animation: spin 2s infinite linear;
 		display: inline-block;
 
@@ -797,7 +922,39 @@
 		.bb-activity-more-options-wrap {
 			position: absolute;
 			right: 0;
-			top: -7px;
+			top: 50%;
+			transform: translateY(calc(-50% - 24px));
+			z-index: 11;
+
+			.bb-activity-more-options-action {
+				border-radius: $block-radius-inner;
+
+				i {
+					font-size: 16px;
+					color: $black;
+					opacity: 0.4;
+				}
+
+				&:hover {
+					background-color: $light-grey;
+
+					i {
+						opacity: 1;
+					}
+				}
+			}
+
+			&:has(.bb-activity-more-options.is_visible) {
+				z-index: 111;
+
+				.bb-activity-more-options-action {
+					background-color: $light-grey;
+
+					i {
+						opacity: 1;
+					}
+				}
+			}
 		}
 
 	}
@@ -1043,7 +1200,7 @@
 
 			&.active {
 				display: flex;
-				bottom: 25px;
+				bottom: 34px;
 
 				.ac-emotion_item {
 					top: 0;
@@ -1054,7 +1211,7 @@
 
 				&:hover {
 					display: flex;
-					bottom: 25px;
+					bottom: 34px;
 
 					.ac-emotion_item {
 						top: 0;
@@ -1079,6 +1236,7 @@
 				top: 10px;
 				transition: all ease 0.2s;
 				transition-delay: 500ms;
+				min-width: 40px;
 
 				a {
 					padding: 0;
@@ -1167,6 +1325,511 @@
 
 }
 
+.activity-list {
+
+	.emojionearea {
+
+		.emojionearea-picker {
+			height: 310px;
+
+			.emojionearea-wrapper {
+				height: 310px;
+			}
+
+			.emojionearea-search-panel + .emojionearea-scroll-area {
+				height: 230px;
+			}
+		}
+
+		.emojionearea-button.active + .emojionearea-picker-position-top {
+			margin-top: -300px;
+		}
+
+		.emojionearea-picker.emojionearea-picker-position-top {
+
+			.emojionearea-wrapper:after {
+				right: 82px;
+			}
+		}
+	}
+
+	.emojionearea-button.active + .emojionearea-picker-position-top {
+		right: -80px;
+	}
+
+	.gif-media-search-dropdown {
+		top: initial;
+		bottom: 35px;
+	}
+}
+
+.bb-media-model-wrapper .activity-list .activity-item .acomment-display,
+.activity-list .activity-item.elementor-activity-item .acomment-display {
+
+	.ac-emotions_list {
+
+		&.active {
+			left: -10px;
+		}
+
+		&:hover {
+
+			body:not(.bb-is-mobile) & {
+				left: -10px;
+			}
+		}
+	}
+}
+
+/* Activity comment modal ==> Starts Here */
+.acomments-modal-open {
+	overflow: hidden;
+
+	.bb-toast-messages-enable .bb-toast-messages {
+		z-index: 999991;
+	}
+}
+
+.bb-activity-model-wrapper {
+
+	.activity-modal .activity-list.bp-list {
+
+		.activity-item {
+			border: 0;
+			background-color: transparent;
+			box-shadow: none;
+			padding: 0;
+			margin: 0;
+		}
+	}
+
+	&.bb-internal-model {
+		position: fixed;
+		z-index: 999980;
+		background-color: rgba(255, 255, 255, 0.9);
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		&.activity-theatre {
+			z-index: 999980;
+		}
+
+		> .activity-modal {
+			max-height: 85vh;
+
+			/*min-height: 85vh;*/
+			max-width: 95%;
+			width: 700px;
+			position: relative;
+		}
+	}
+
+	.activity-modal {
+		background: $white;
+		border: 1px solid #b7b7b7;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.activity-list {
+		margin: 0;
+	}
+
+	&#buddypress {
+
+		.activity-list.bp-list .activity-item {
+			padding: 0;
+		}
+	}
+
+	.activity-list .activity-item .acomment-display {
+
+		.ac-emotions_list {
+
+			&.active {
+				left: -10px;
+			}
+
+			&:hover {
+
+				body:not(.bb-is-mobile) & {
+					left: -10px;
+				}
+			}
+		}
+	}
+
+	.gif-media-search-dropdown {
+		top: initial;
+		bottom: 35px;
+
+		.gif-search-results {
+			min-height: 220px;
+			max-height: 260px;
+
+			@media screen and (max-height: 540px) {
+				min-height: 190px;
+				max-height: 190px;
+			}
+		}
+
+	}
+}
+
+.bb-modal-activity-header {
+	display: flex;
+	align-items: center;
+	position: sticky;
+	z-index: 99;
+	top: 0;
+	left: 0;
+	height: 60px;
+	min-height: 60px;
+	border-bottom: 1px solid $bp-border-color;
+	padding: 0 25px;
+
+	h2 {
+		line-height: 1;
+		margin: 0;
+
+		body.buddypress .buddypress-wrap & {
+			margin: 0;
+		}
+	}
+
+	.bb-close-action-popup {
+		margin-left: auto;
+	}
+}
+
+.footer-overflow {
+
+	/*flex-grow: 1;*/
+	max-height: 252px;
+	border-top: 1px solid $bp-border-color;
+}
+
+.bb-modal-activity-footer {
+
+	/*border-top: 1px solid $bp-border-color;
+	padding: 10px 15px;
+	flex-grow: 1;
+	min-height: 106px;*/
+	max-height: 232px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding: 10px 15px;
+
+	form.ac-form {
+		margin: 0;
+		line-height: 1.5;
+	}
+
+	> ul {
+		margin: 0;
+		padding: 0;
+	}
+}
+
+.bb-modal-activity-footer {
+	display: none;
+
+	.logged-in & {
+		display: block;
+	}
+
+	&.active .ac-form-placeholder {
+		display: none;
+	}
+}
+
+.ac-form-placeholder {
+
+	.bp-ac-form-container {
+		display: flex;
+		align-items: flex-start;
+		flex-wrap: wrap;
+	}
+
+	.ac-reply-avatar {
+		margin-top: 4px;
+
+		.avatar-placeholder {
+			display: inline-block;
+			width: 32px;
+			height: 32px;
+			background-color: #f2f4f5;
+			border-radius: 50%;
+		}
+
+		img {
+			max-width: 32px;
+			height: auto;
+		}
+	}
+
+	.ac-reply-content {
+		padding: 8px;
+		margin-left: 10px;
+		border: 1px solid #d6d9dd;
+		background-color: #f2f4f5;
+		border-radius: 6px;
+		min-height: 85px;
+		position: relative;
+
+		.ac-reply-toolbar {
+			display: flex;
+			align-items: center;
+			position: absolute;
+			bottom: 4px;
+			left: 10px;
+			margin-top: 10px;
+
+			.post-elements-buttons-item {
+				margin-right: 10px;
+			}
+		}
+	}
+
+	.ac-submit-wrap {
+		background-color: $blue;
+		border-radius: 50%;
+		height: 30px;
+		width: 30px;
+		overflow: hidden;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0;
+		opacity: 0.4;
+		pointer-events: none;
+		position: absolute;
+		bottom: 8px;
+		right: 8px;
+
+		&:before {
+			display: block;
+			content: "\eee7";
+			color: #fff;
+			font-family: bb-icons;
+			font-size: 16px;
+			font-weight: 300;
+			line-height: 30px;
+		}
+
+		input[name="ac_form_submit"] {
+			position: absolute;
+			inset: 0;
+			opacity: 0;
+			background-color: $blue;
+		}
+	}
+
+	@media screen and (max-width: 490px) {
+
+		.ac-reply-content {
+
+			.ac-reply-toolbar {
+
+				.post-elements-buttons-item {
+					margin-right: 5px;
+
+					i::before {
+						margin-left: 0;
+						margin-right: 0;
+					}
+				}
+			}
+		}
+	}
+
+	@media screen and (max-width: 420px) {
+
+		.ac-reply-content {
+
+			.ac-reply-toolbar {
+				left: 5px;
+
+				.post-elements-buttons-item {
+					margin-right: 5px;
+				}
+			}
+		}
+	}
+}
+
+.bb-modal-activity-body {
+	position: relative;
+	padding: 15px;
+
+	/*overflow-y: auto;*/
+	overflow-x: hidden;
+	flex-grow: 1;
+
+	.init-placeholder {
+		display: none;
+
+		.loading & {
+			display: block;
+		}
+
+		.bb-activity-placeholder {
+			border: 0;
+			padding: 20px 0;
+			margin: 0;
+		}
+	}
+
+	.loading & {
+
+		.activity-comments {
+			display: none;
+		}
+	}
+}
+
+.acomments-view-more {
+	cursor: pointer;
+
+	i {
+		font-size: 20px;
+	}
+}
+
+.buddypress-wrap {
+
+	.activity-comments ul .acomments-view-more--hide {
+		visibility: hidden;
+		opacity: 0;
+		width: 0;
+		height: 0;
+		padding: 0;
+		margin: 0;
+	}
+
+	.bb-media-info-section {
+
+		.activity-comments ul {
+
+			.acomments-view-more--root {
+				visibility: visible;
+				opacity: 1;
+				width: initial;
+				height: initial;
+				padding: 10px 0;
+				margin: 0;
+			}
+		}
+	}
+}
+
+.view-more-comments {
+	font-weight: 600;
+
+	.bb-activity-model-wrapper & {
+		display: none;
+	}
+}
+
+.activity-modal {
+
+	.activity-comments > ul > .acomments-view-more--root:not(.loading) {
+		opacity: 0;
+	}
+}
+
+.bb-media-info-section {
+
+	.activity-comments > .view-more-comments {
+		display: none;
+	}
+}
+
+.bb-internal-model {
+
+	.activity-comments.active {
+
+		.acomments-view-more {
+			pointer-events: none;
+		}
+
+		.bb-activity-more-options-wrap .acomment-edit,
+		.bb-activity-more-options-wrap .acomment-delete {
+			pointer-events: none;
+		}
+
+		.acomment-foot-actions {
+
+			.button.reaction {
+				pointer-events: none;
+			}
+		}
+	}
+
+	.activity-item.active {
+
+		.activity-header {
+
+			.activity-privacy li {
+				pointer-events: none;
+			}
+		}
+
+		.bb-activity-more-options {
+
+			a.button {
+				pointer-events: none;
+			}
+		}
+	}
+}
+
+/* Activity comment modal ==> Ends Here */
+
+.ac-reply-toolbar .emojionearea.ac-input.medium-editor-element {
+	background-color: transparent;
+}
+
+.emojionearea-theatre {
+
+	&.show {
+
+		.emojionearea-picker:not(.hidden) {
+			opacity: 1;
+			visibility: visible;
+			z-index: 999992;
+			right: unset;
+			margin: 0;
+			position: fixed;
+			top: 0;
+			left: 0;
+			transition: none;
+		}
+	}
+}
+
+.gif-media-search-dropdown {
+
+	&.gif-media-search-dropdown-standalone {
+		z-index: 999992;
+		top: 0;
+		left: 0;
+		margin: 0;
+		padding: 0;
+		position: fixed;
+
+		.gif-search-content .gif-search-results {
+			max-height: 280px;
+		}
+	}
+}
+
 // Prevent callout popup on long press on ios devices
 .bb-is-mobile.bb-reactions-mode {
 
@@ -1185,6 +1848,16 @@
 		user-select: none;
 	}
 
+}
+
+.activity-modal {
+
+	&.bb-closed-comments {
+
+		.footer-overflow {
+			display: none !important;
+		}
+	}
 }
 
 // close .activity-list
@@ -1309,6 +1982,51 @@ ul.medium-editor-toolbar-actions {
 		font-weight: 100;
 	}
 
+}
+
+.bp-activity-head-group {
+	display: flex;
+}
+
+.activity-group-avatar {
+	display: inline-block;
+	position: relative;
+	width: 40px;
+	height: 40px;
+	margin-right: 10px;
+
+	img {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		margin: auto;
+		z-index: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.group-avatar {
+		max-width: 40px;
+		width: 40px;
+		height: 40px;
+		position: relative;
+		overflow: hidden;
+		z-index: 1;
+	}
+
+	.author-avatar {
+		display: inline-block;
+		position: absolute;
+		width: 22px;
+		height: 22px;
+		right: -5px;
+		bottom: -5px;
+		z-index: 5;
+		overflow: hidden;
+	}
 }
 
 .ac-reply-toolbar,
@@ -2060,14 +2778,15 @@ span.dashicons.dashicons-admin-file:before {
 	@media screen and (max-width: 544px) {
 
 		.bb-activity-media-elem {
-			flex: 0 0 100% !important;
+
+			/*flex: 0 0 100% !important;
 			max-width: 100% !important;
 			min-width: auto !important;
 			position: relative;
 
 			.entry-img {
 				padding-top: 55.56% !important;
-			}
+			}*/
 
 			&.hideact-grid-1-2 {
 				flex: 0 !important;
@@ -2654,6 +3373,106 @@ span.dashicons.dashicons-admin-file:before {
 	top: 18px;
 }
 
+// Loading animation
+
+.bb-activity-placeholder {
+	background: $white;
+	border: 1px solid #b7b7b7;
+	padding: 20px 15px;
+	border-radius: $block-radius-inner;
+	margin-bottom: $marg-lrg;
+
+	.bb-activity-placeholder_avatar {
+		height: 48px;
+		width: 48px;
+		border-radius: 50%;
+		margin-right: 10px;
+	}
+
+	.bb-activity-placeholder_head {
+		display: flex;
+		margin-bottom: 20px;
+	}
+
+	.bb-activity-placeholder_details {
+		display: flex;
+		justify-content: center;
+		flex-flow: column;
+		flex: 1;
+		width: calc(100% - 68px);
+
+		.bb-activity-placeholder_title,
+		.bb-activity-placeholder_description {
+			max-width: 107px;
+			height: 17px;
+			border-radius: 6px;
+			margin-bottom: 6px;
+		}
+
+		.bb-activity-placeholder_description {
+			max-width: 202px;
+			height: 12px;
+		}
+	}
+
+	.bb-activity-placeholder_content {
+		display: flex;
+		justify-content: center;
+		flex-flow: column;
+		flex: 1;
+		gap: 8px;
+		margin-bottom: 20px;
+
+		.bb-activity-placeholder_title {
+			height: 18px;
+			border-radius: 6px;
+			width: 100%;
+		}
+	}
+
+	.bb-activity-placeholder_actions {
+		display: flex;
+		justify-content: space-between;
+
+		.bb-activity-placeholder_description {
+			height: 13px;
+			border-radius: 6px;
+			width: 100%;
+			max-width: 98px;
+		}
+	}
+
+	&.bb-activity-tiny-placeholder {
+		border: 0;
+		padding: 0;
+		margin: 0;
+		background-color: transparent;
+
+		.bb-activity-placeholder_avatar {
+			height: 32px;
+			width: 32px;
+		}
+
+		.bb-activity-placeholder_head {
+			margin-bottom: 3px;
+			margin-top: 3px;
+		}
+
+		.bb-activity-placeholder_details {
+
+			.bb-activity-placeholder_title {
+				max-width: 300px;
+				height: 55px;
+			}
+
+			.bb-activity-placeholder_description {
+				max-width: 118px;
+				height: 18px;
+			}
+		}
+	}
+}
+
 @media screen and ( max-width: 799px ) {
 
 	#media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list {
@@ -2720,6 +3539,10 @@ span.dashicons.dashicons-admin-file:before {
 			background-color: #fff;
 			border-radius: 4px;
 
+			.bb-media-info-section & {
+				padding: 5px 5px;
+			}
+
 			.entry-img {
 				-ms-flex-preferred-size: 38px;
 				flex-basis: 38px;
@@ -2745,6 +3568,10 @@ span.dashicons.dashicons-admin-file:before {
 				vertical-align: middle;
 				padding: 10px 0 10px 10px !important;
 				color: #122b46;
+
+				.bb-media-info-section & {
+					padding: 10px 0 10px 3px !important;
+				}
 
 				.document-title {
 					text-overflow: ellipsis;
@@ -2796,6 +3623,10 @@ span.dashicons.dashicons-admin-file:before {
 			-webkit-transition: all 0.3s ease;
 			-o-transition: all 0.3s ease;
 			transition: all 0.3s ease;
+
+			.bb-media-info-section & {
+				right: 10px;
+			}
 
 			> a {
 				float: left;
@@ -3312,6 +4143,75 @@ span.dashicons.dashicons-admin-file:before {
 		z-index: 11;
 	}
 
+}
+
+/* Disable click events on activity while sync after closing activity modal */
+#activity-stream .activity-item.activity-sync {
+	pointer-events: none;
+}
+
+#activity-stream .activity-item.activity-sync > .bp-generic-meta.activity-meta {
+	border-top: 0;
+}
+
+.activity-sync-loader {
+	position: relative;
+	width: 100%;
+	height: 1px;
+	overflow-x: hidden;
+	display: none;
+
+	.activity-sync & {
+		display: block;
+	}
+}
+
+.activity-sync-bar {
+	position: absolute;
+	opacity: 0.9;
+	background: #eaeaea;
+	width: 150%;
+	height: 2px;
+}
+
+.activity-sync-progress {
+	position: absolute;
+	background: #4a8df8;
+	height: 2px;
+}
+
+.inc {
+	animation: increase 2s infinite;
+}
+
+.dec {
+	animation: decrease 2s 0.5s infinite;
+}
+
+@keyframes increase {
+
+	from {
+		left: -5%;
+		width: 5%;
+	}
+
+	to {
+		left: 130%;
+		width: 100%;
+	}
+}
+
+@keyframes decrease {
+
+	from {
+		left: -80%;
+		width: 80%;
+	}
+
+	to {
+		left: 110%;
+		width: 10%;
+	}
 }
 
 @media screen and (max-width: 420px) {

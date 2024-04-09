@@ -10859,11 +10859,11 @@ msgid "Lost Password"
 msgstr "Mot de passe perdu"
 
 #: bp-forums/common/widgets.php:194
-msgid "Register URI:"
+msgid "Register URL:"
 msgstr "URI d'enregistrement:"
 
 #: bp-forums/common/widgets.php:199
-msgid "Lost Password URI:"
+msgid "Lost Password URL:"
 msgstr "URI de perte de mot de passe:"
 
 #: bp-forums/common/widgets.php:253

@@ -921,7 +921,7 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 		$replacement = "<a class='bp-suggestions-mention' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>@$username</a>";
 		if ( false === strpos( $post_type_comment->comment_content, $replacement ) ) {
 			// Pattern for cases with existing <a>@mention</a> or @mention.
-			$pattern                            = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';
+			$pattern                            = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';
 			$post_type_comment->comment_content = preg_replace( $pattern, $replacement, $post_type_comment->comment_content );
 		}
 	}
