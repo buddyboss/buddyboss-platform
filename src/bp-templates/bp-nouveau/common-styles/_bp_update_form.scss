@@ -306,12 +306,17 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: 5px 7px;
-		border: 1px solid $bp-border-color;
+		border: 1px solid $primary-grey;
 		border-radius: 7px;
 
 		i {
 			font-size: 24px;
 			color: $light-text;
+			line-height: 1.1;
+
+			&:before {
+				margin: 0;
+			}
 
 			&.bb-icon-caret-down {
 				font-size: 13px;
@@ -350,6 +355,7 @@
 
 		ul {
 			margin: 0;
+			padding: 0;
 			min-width: 200px;
 		}
 
@@ -363,6 +369,7 @@
 				color: $dark-grey;
 				display: flex;
 				align-items: center;
+				text-decoration: none;
 
 				&:hover {
 					background-color: $light-grey;
