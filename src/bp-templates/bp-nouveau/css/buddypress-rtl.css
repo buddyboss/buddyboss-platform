@@ -1546,6 +1546,10 @@ a.layout-grid-view {
   display: none;
 }
 
+.activity-post-user-name-container h5 {
+  margin: 0;
+}
+
 .activity-post-user-name-container .activity-post-user-name {
   line-height: 1;
 }
@@ -2280,6 +2284,9 @@ body.buddypress .bb-schedule-post_dropdown_section .schedule-posts-placeholder h
 
 .bp-nouveau-activity-form-placeholder- #user-status-huddle img,
 .activity-update-form #user-status-huddle img {
+  max-width: 45px;
+  height: auto;
+  border-radius: 50%;
   box-shadow: none;
   display: inline-block;
   margin-left: 15px;
@@ -2810,6 +2817,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 .activity-update-form #activity-header h3 {
+  font-size: 20px;
   margin: 0;
 }
 
