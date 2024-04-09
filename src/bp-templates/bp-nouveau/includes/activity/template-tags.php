@@ -1920,6 +1920,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	}
 
 	global $activities_template;
+
 	// Pin post action only for allowed posts based on user role.
 	if (
 		(
@@ -1959,8 +1960,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 			! (
 				'activity_update' === $activity_type &&
 				empty( $activities_template->activity->content ) &&
-				in_array( $activities_template->activity->privacy, array ( 'media', 'document', 'video' ) ) &&
-				! empty( $activities_template->activity->secondary_item_id )
+				in_array( $activities_template->activity->privacy, array ( 'media', 'document', 'video' ), true )
 			)
 		)
 	) {
