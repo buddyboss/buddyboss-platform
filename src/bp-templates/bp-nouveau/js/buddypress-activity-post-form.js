@@ -4848,6 +4848,7 @@ window.bp = window.bp || {};
 				'click .bb-schedule-post_action': 'displayScheduleForm',
 				'click .bb-view-schedule-posts': 'displaySchedulePosts',
 				'click .bb-view-all-scheduled-posts': 'displaySchedulePosts',
+				'click #bb-schedule-posts_modal .bb-close-action-popup': 'closeSchedulePosts',
 				'click .bb-schedule-activity-cancel': 'cancelSchedulePost',
 				'click .bb-model-close-button': 'cancelSchedulePost',
 				'click .bb-schedule-activity': 'displayScheduleButton',
@@ -4943,6 +4944,14 @@ window.bp = window.bp || {};
 
 			},
 
+			closeSchedulePosts: function ( event ) {
+				event.preventDefault();
+				var schedulePostModal = $( event.target ).closest( '#bb-schedule-posts_modal' );
+				schedulePostModal.find( '.bb-action-popup-content' ).removeClass( 'has-content has-no-content' );
+				schedulePostModal.find( '.bb-action-popup-content .schedule-posts-content' ).removeAttr( 'style' ).html( '' );
+				schedulePostModal.hide();
+			},
+
 			displayScheduleButton: function ( event ) {
 				event.preventDefault();
 				var schedulePost = $( event.target ).closest( '.bb-schedule-posts' );
@@ -5018,6 +5027,7 @@ window.bp = window.bp || {};
 				var target           = $( event.target ).parent();
 				var activity         = $( event.target ).closest( 'li.activity-item' );
 				var activity_id      = activity.data( 'bp-activity-id' );
+				var schedule_posts   = $( event.target ).closest( '.schedule-posts-content' );
 
 				// Deleting or spamming.
 				if ( confirm_deletion && target.hasClass( 'bb-activity-schedule_delete' ) ) {
@@ -5038,6 +5048,11 @@ window.bp = window.bp || {};
 						function () {
 							target.removeClass( 'loading' );
 							$( li_parent ).remove();
+
+							if( schedule_posts.find( 'li' ).length === 0 ) {
+								schedule_posts.closest( '.bb-action-popup-content').addClass( 'has-no-content' ).removeClass( 'has-content' );
+							}
+
 							$( document ).trigger(
 								'bb_trigger_toast_message',
 								[

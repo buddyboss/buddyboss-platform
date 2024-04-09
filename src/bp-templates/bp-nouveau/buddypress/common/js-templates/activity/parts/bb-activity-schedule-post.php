@@ -103,6 +103,7 @@
 										<h2><?php echo esc_html__( 'No Scheduled Posts Found', 'buddyboss' ); ?></h2>
 										<p><?php echo esc_html__( 'You do not have any posts scheduled at the moment.', 'buddyboss' ); ?></p>
 									</div>
+									<div class="schedule-posts-content"></div>
 								</div>
 							</div>
 						</div>

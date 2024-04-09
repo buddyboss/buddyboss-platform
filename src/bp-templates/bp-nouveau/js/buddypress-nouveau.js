@@ -601,6 +601,15 @@ window.bp = window.bp || {};
 						return;
 					}
 
+					// Control the scheduled posts layout view.
+					if( data.status === 'scheduled' ) {
+						if( $( response.data.contents ).hasClass( 'bp-feedback' ) ) {
+							$( data.target ).parent().addClass( 'has-no-content' );
+						} else {
+							$( data.target ).parent().addClass( 'has-content' );
+						}
+					}
+
 					if ( !_.isUndefined( response.data.layout ) ) {
 						$( '.layout-view' ).removeClass( 'active' );
 						$( '.layout-' + response.data.layout + '-view' ).addClass( 'active' );
@@ -798,7 +807,7 @@ window.bp = window.bp || {};
 					object: object,
 					scope: scope,
 					status: 'scheduled',
-					target: '#buddypress .bb-action-popup-content[data-bp-list]',
+					target: '#buddypress .bb-action-popup-content[data-bp-list] .schedule-posts-content',
 					template: 'schedule_activity',
 				};
 

@@ -530,6 +530,29 @@
 		}
 	}
 
+	.bb-action-popup-content {
+
+		&.has-no-content {
+
+			.schedule-posts-content,
+			.schedule-posts-placeholder_loader {
+				display: none !important;
+			}
+
+			.schedule-posts-placeholder {
+				display: flex;
+			}
+		}
+
+		&.has-content {
+
+			.schedule-posts-placeholder,
+			.schedule-posts-placeholder_loader {
+				display: none;
+			}
+		}
+	}
+
 	.bb-schedule-posts_modal .bb-action-popup-content {
 		background-color: $light-grey;
 		border-radius: 0 0 4px 4px;
