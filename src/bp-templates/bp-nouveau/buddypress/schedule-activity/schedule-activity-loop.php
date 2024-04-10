@@ -11,7 +11,7 @@
 bp_nouveau_before_loop();
 $activity_schedule_args = bp_parse_args(
 	bp_ajax_querystring( 'activity' ),
-	array( 'status' => $_POST['status'], 'sort' => 'ASC' ),
+	array( 'status' => sanitize_text_field( $_POST['status'] ), 'sort' => 'ASC' ),
 	'activity_schedule_args'
 );
 
@@ -23,7 +23,7 @@ if ( bp_has_activities( $activity_schedule_args ) ) :
 		<?php
 	endif;
 
-	while ( bp_activities( array( 'status' => sanitize_text_field( $_POST['status'] ) ) ) ) :
+	while ( bp_activities() ) :
 		bp_the_activity();
 		bp_get_template_part( 'schedule-activity/entry' );
 	endwhile;

@@ -2111,7 +2111,7 @@ function bp_activity_add( $args = '' ) {
 	$activity->primary_link      = $r['primary_link'];
 	$activity->item_id           = $r['item_id'];
 	$activity->secondary_item_id = $r['secondary_item_id'];
-	$activity->date_recorded     = empty( $r['id'] ) || $r['status'] === bb_get_activity_scheduled_status() ? $r['recorded_time'] : $activity->date_recorded;
+	$activity->date_recorded     = ( empty( $r['id'] ) || $r['status'] === bb_get_activity_scheduled_status() || ( bb_get_activity_scheduled_status() === $activity->status && $r['status'] === bb_get_activity_published_status() ) ) && $r['recorded_time'] ? $r['recorded_time'] : $activity->date_recorded;
 	$activity->hide_sitewide     = $r['hide_sitewide'];
 	$activity->is_spam           = $r['is_spam'];
 	$activity->privacy           = $r['privacy'];
