@@ -2277,8 +2277,9 @@ class BP_Activity_Activity {
 		}
 
 		// Select conditions.
-		$select_sql = 'SELECT COUNT(*) AS all_child_count,
-					SUM( CASE WHEN a.secondary_item_id = ' . $comment_id . ' THEN 1 ELSE 0 END ) AS top_level_count';
+		$select_sql = 'SELECT
+			COUNT(*) AS all_child_count,
+			SUM( CASE WHEN a.secondary_item_id = ' . $comment_id . ' THEN 1 ELSE 0 END ) AS top_level_count';
 
 		$from_sql = ' FROM ' . $bp->activity->table_name . ' a';
 
