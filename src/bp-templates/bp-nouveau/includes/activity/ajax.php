@@ -863,10 +863,10 @@ function bp_nouveau_ajax_post_update() {
 
 			$_POST['group_id'] = $item_id; // Set POST variable for group id for further processing from other components
 
-			if ( $is_scheduled && ! bb_can_user_schedule_activity( array ( 'object' => 'group', 'group_id' => $item_id )  ) ) {
+			if ( $is_scheduled && ! bb_can_user_schedule_activity( array ( 'object' => 'group', 'group_id' => $item_id ) ) ) {
 				wp_send_json_error(
 					array(
-						'message' => __( 'You don\'t have access to schedule the activity to perticular group.', 'buddyboss' ),
+						'message' => __( 'You don\'t have permission to schedule activity in perticular group.', 'buddyboss' ),
 					)
 				);
 			}

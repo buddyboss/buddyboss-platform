@@ -7128,8 +7128,8 @@ function bb_can_user_schedule_activity( $args = array() ) {
 	$r      = bp_parse_args(
 		$args,
 		array(
-			'user_id'  => get_current_user_id(),
-			'object'   =>   '',
+			'user_id'  => bp_loggedin_user_id(),
+			'object'   => '',
 			'group_id' => 0,
 		)
 	);
@@ -7140,7 +7140,7 @@ function bb_can_user_schedule_activity( $args = array() ) {
 			'group' === $r['object'] ||
 			bp_is_group()
 		) &&
-		bp_current_user_can( 'administrator' )
+		bp_user_can( $r['user_id'], 'administrator' )
 	) {
 		$group_id = 'group' === $r['object'] && ! empty( $r['group_id'] ) ? $r['group_id'] : bp_get_current_group_id();
 		$is_admin = groups_is_user_admin( $r['user_id'], $group_id );
@@ -7148,7 +7148,7 @@ function bb_can_user_schedule_activity( $args = array() ) {
 		if ( $is_admin || $is_mod ) {
 			$retval = true;
 		}
-	} elseif ( bp_current_user_can( 'administrator' ) ) {
+	} elseif ( bp_user_can( $r['user_id'], 'administrator' ) ) {
 		$retval = true;
 	}
 
