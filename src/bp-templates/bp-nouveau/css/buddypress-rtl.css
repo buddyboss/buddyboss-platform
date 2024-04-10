@@ -1954,6 +1954,12 @@ body.buddypress .bb-schedule-post_dropdown_section .schedule-posts-placeholder h
   display: none;
 }
 
+body:not(.buddyboss-theme) .bb-schedule-post_dropdown_section .bb-action-popup-content .schedule-posts-content > .activity-list {
+  padding: 0;
+  margin: 20px 0;
+  background-color: transparent;
+}
+
 .bb-schedule-post_dropdown_section .bb-schedule-posts_modal .bb-action-popup-content {
   background-color: #eaeaea;
   border-radius: 0 0 4px 4px;

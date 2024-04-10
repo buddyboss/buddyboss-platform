@@ -589,6 +589,15 @@
 				display: none;
 			}
 		}
+
+		body:not(.buddyboss-theme) & {
+
+			.schedule-posts-content > .activity-list {
+				padding: 0;
+				margin: 20px 0;
+				background-color: transparent;
+			}
+		}
 	}
 
 	.bb-schedule-posts_modal .bb-action-popup-content {
