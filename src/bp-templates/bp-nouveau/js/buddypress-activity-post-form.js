@@ -4860,9 +4860,6 @@ window.bp = window.bp || {};
 
 			initialize: function () {
 				this.model.on( 'change', this.render, this );
-				$( this.el ).on( 'scroll', '.bb-action-popup-content', function() {
-
-				});
 			},
 
 			render: function () {
