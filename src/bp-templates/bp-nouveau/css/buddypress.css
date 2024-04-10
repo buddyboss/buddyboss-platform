@@ -1708,7 +1708,7 @@ a.layout-grid-view {
   font-size: 13px;
 }
 
-.bb-schedule-post_dropdown_section .bb-schedule-post_dropdown_button.is_scheduled {
+body:not(.buddyboss-theme) .bb-schedule-post_dropdown_section .bb-schedule-post_dropdown_button.is_scheduled {
   background-color: #ccc;
   text-decoration: none;
   padding: 0 7px;

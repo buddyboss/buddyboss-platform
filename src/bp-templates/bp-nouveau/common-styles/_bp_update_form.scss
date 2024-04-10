@@ -328,9 +328,12 @@
 		}
 
 		&.is_scheduled {
-			background-color: $primary-grey;
-			text-decoration: none;
-			padding: 0 7px;
+
+			body:not(.buddyboss-theme) & {
+				background-color: $primary-grey;
+				text-decoration: none;
+				padding: 0 7px;
+			}
 
 			> i {
 				display: none;
