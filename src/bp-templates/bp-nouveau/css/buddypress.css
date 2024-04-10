@@ -1708,6 +1708,12 @@ a.layout-grid-view {
   font-size: 13px;
 }
 
+.bb-schedule-post_dropdown_section .bb-schedule-post_dropdown_button.is_scheduled {
+  background-color: #ccc;
+  text-decoration: none;
+  padding: 0 7px;
+}
+
 .bb-schedule-post_dropdown_section .bb-schedule-post_dropdown_button.is_scheduled > i {
   display: none;
 }
@@ -1780,7 +1786,8 @@ a.layout-grid-view {
 }
 
 .bb-schedule-post_dropdown_section .bb-action-popup-content p.schedule-date {
-  margin-bottom: 15px;
+  font-size: 13px;
+  margin-bottom: 10px;
 }
 
 .bb-schedule-post_dropdown_section .bb-action-popup-content label {
@@ -1801,6 +1808,26 @@ a.layout-grid-view {
   font-size: 20px;
   color: #333;
   opacity: 0.4;
+}
+
+body:not(.buddyboss-theme) .bb-schedule-post_dropdown_section .bb-action-popup-content .input-field > input {
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+body:not(.buddyboss-theme) .bb-schedule-post_dropdown_section .bb-action-popup-content .bb-schedule-activity-meridian-wrap label input {
+  width: auto;
+}
+
+body:not(.buddyboss-theme) .bb-schedule-post_dropdown_section .bb-action-popup-content .bb-view-all-scheduled-posts {
+  text-decoration: none;
+}
+
+body:not(.buddyboss-theme) .bb-schedule-post_dropdown_section .bb-action-popup-content .bb-view-all-scheduled-posts {
+  font-size: 14px;
 }
 
 .bb-schedule-post_dropdown_section .bb-action-popup-content .bb-schedule-activity-time-wrap {

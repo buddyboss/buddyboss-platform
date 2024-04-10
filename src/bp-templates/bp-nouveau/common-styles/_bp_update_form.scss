@@ -328,6 +328,9 @@
 		}
 
 		&.is_scheduled {
+			background-color: $primary-grey;
+			text-decoration: none;
+			padding: 0 7px;
 
 			> i {
 				display: none;
@@ -407,7 +410,8 @@
 	.bb-action-popup-content {
 
 		p.schedule-date {
-			margin-bottom: 15px;
+			font-size: 13px;
+			margin-bottom: 10px;
 		}
 
 		label {
@@ -427,6 +431,29 @@
 				font-size: 20px;
 				color: $black;
 				opacity: 0.4;
+			}
+		}
+
+		body:not(.buddyboss-theme) & {
+
+			.input-field > input {
+				height: 40px;
+				padding: 0 12px;
+				border-radius: 5px;
+				border: 1px solid $primary-grey;
+				box-sizing: border-box;
+			}
+
+			.bb-schedule-activity-meridian-wrap label input {
+				width: auto;
+			}
+
+			.bb-view-all-scheduled-posts {
+				text-decoration: none;
+			}
+
+			.bb-view-all-scheduled-posts {
+				font-size: 14px;
 			}
 		}
 
