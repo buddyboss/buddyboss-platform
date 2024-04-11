@@ -13,6 +13,7 @@
 <?php
 	if ( bp_is_active( 'activity' ) && bb_is_enabled_activity_schedule_posts() && bb_can_user_schedule_activity() ) :
 		?>
+		<# if ( false === data.edit_activity || 'scheduled' === data.activity_action_type ) { #>
 	<div class="bb-schedule-post_dropdown_section">
 		<a href="#" class="bb-schedule-post_dropdown_button {{data.activity_action_type === 'scheduled' ? 'is_scheduled' : ''}}">
 			<i class="bb-icon-f bb-icon-clock"></i>
@@ -112,5 +113,6 @@
 			</div> <!-- .bb-action-popup -->
 		</div>
 	</div>
+	<# } #>
 	<?php endif; ?>
 </script>

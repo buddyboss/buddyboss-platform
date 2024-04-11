@@ -799,14 +799,14 @@ function bp_nouveau_ajax_post_update() {
 	$schedule_date_time = '';
 	$is_scheduled       = false;
 	if ( ! empty( $_POST['activity_action_type'] ) && 'scheduled' === $_POST['activity_action_type'] ) {
-		$activity_status = $_POST['activity_action_type'];
+		$activity_status = bb_get_activity_scheduled_status();
 
 		if ( ! empty( $_POST['activity_schedule_date_raw'] ) && ! empty( $_POST['activity_schedule_time'] ) && ! empty( $_POST['activity_schedule_meridiem'] ) ) {
 			$is_scheduled = true;
 
-			$activity_schedule_date_raw = $_POST['activity_schedule_date_raw'];
-			$activity_schedule_meridiem = $_POST['activity_schedule_meridiem']; // 'pm' or 'am'
-			$activity_schedule_time     = $_POST['activity_schedule_time'];
+			$activity_schedule_date_raw = sanitize_text_field( $_POST['activity_schedule_date_raw'] );
+			$activity_schedule_meridiem = sanitize_text_field( $_POST['activity_schedule_meridiem'] ); // 'pm' or 'am'
+			$activity_schedule_time     = sanitize_text_field( $_POST['activity_schedule_time'] );
 
 			// Convert 12-hour time format to 24-hour time format
 			$activity_schedule_time_24hr = date( 'H:i', strtotime( $activity_schedule_time . ' ' . $activity_schedule_meridiem ) );
@@ -817,6 +817,14 @@ function bp_nouveau_ajax_post_update() {
 			// Convert to MySQL datetime format
 			$schedule_date_time = get_gmt_from_date( $activity_datetime );
 		}
+	}
+
+	if ( $is_scheduled && ! bb_is_enabled_activity_schedule_posts() ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Schedule activity settings disabled.', 'buddyboss' ),
+			)
+		);
 	}
 
 	if ( 'user' === $object && bp_is_active( 'activity' ) ) {
