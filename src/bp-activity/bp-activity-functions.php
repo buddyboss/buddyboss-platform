@@ -993,10 +993,10 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = arra
 		array(
 			'action'      => 'add',
 			'activity_id' => $activity_id,
-			'user_id'     => $user_id,
+			'user_id'     => (int) $user_id,
 		)
 	);
-	
+
 	// Bail if activity privacy restrict.
 	if ( is_wp_error( $privacy_check ) ) {
 		return ( 'bool' === $r['error_type'] ) ? false : $privacy_check;
@@ -1118,10 +1118,10 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 		array(
 			'action'      => 'remove',
 			'activity_id' => $activity_id,
-			'user_id'     => $user_id,
+			'user_id'     => (int) $user_id,
 		)
 	);
-	
+
 	// Bail if activity privacy restrict.
 	if ( is_wp_error( $privacy_check ) ) {
 		return ( 'bool' === $r['error_type'] ) ? false : $privacy_check;
@@ -3005,10 +3005,10 @@ function bp_activity_new_comment( $args = '' ) {
 	$privacy_check = bb_check_activity_privacy_for_comment(
 		array(
 			'activity_id' => $activity_id,
-			'user_id'     => $r['user_id'],
+			'user_id'     => (int) $r['user_id'],
 		)
 	);
-	
+
 	// Bail if activity privacy restrict.
 	if ( is_wp_error( $privacy_check ) ) {
 		return $privacy_check;
@@ -7121,20 +7121,6 @@ function bb_user_has_mute_notification( $activity_id, $user_id ) {
 }
 
 /**
- * Check User has connection or not with activity author.
- *
- * @since [BBVERSION]
- *
- * @param object $activity  Activity.
- * @param int    $user_id   User Id.
- *
- * @return boolean
- */
-function bb_check_activity_author_is_friend( $activity, $user_id ) {
-	return ( 'friends' === $activity->privacy && bp_is_active( 'friends' ) && friends_check_friendship( $activity->user_id, $user_id ) );
-}
-
-/**
  * Check Activity Privacy for Favorite.
  *
  * @since [BBVERSION]
@@ -7146,7 +7132,7 @@ function bb_check_activity_author_is_friend( $activity, $user_id ) {
 function bb_check_activity_privacy_for_favorite( $args ) {
 	$activity = new BP_Activity_Activity( $args['activity_id'] );
 
-	if ( ! empty( $activity->privacy ) ) {
+	if ( ! empty( $activity->privacy ) && ! empty( $args['user_id'] ) ) {
 		if ( 'onlyme' === $activity->privacy && $activity->user_id !== $args['user_id'] ) {
 			if ( 'remove' === $args['action'] ) {
 				return new WP_Error(
@@ -7159,7 +7145,13 @@ function bb_check_activity_privacy_for_favorite( $args ) {
 					esc_html__( 'Sorry, You cannot add favorites on "Only Me" activity.', 'buddyboss' )
 				);
 			}
-		} elseif ( false === bb_check_activity_author_is_friend( $activity, $args['user_id'] ) ) {
+		} elseif (
+			'friends' === $activity->privacy &&
+			(
+				! bp_is_active( 'friends' ) ||
+				! friends_check_friendship( $activity->user_id, $args['user_id'] )
+			)
+		) {
 			if ( 'remove' === $args['action'] ) {
 				return new WP_Error(
 					'error',
@@ -7189,10 +7181,16 @@ function bb_check_activity_privacy_for_favorite( $args ) {
 function bb_check_activity_privacy_for_comment( $args ) {
 	$activity = new BP_Activity_Activity( $args['activity_id'] );
 
-	if ( ! empty( $activity->privacy ) ) {
+	if ( ! empty( $activity->privacy ) && ! empty( $args['user_id'] ) ) {
 		if ( 'onlyme' === $activity->privacy && $activity->user_id !== $args['user_id'] ) {
 			return new WP_Error( 'error', __( 'Sorry, You cannot add comments on "Only Me" activity.', 'buddyboss' ) );
-		} elseif ( false === bb_check_activity_author_is_friend( $activity, $args['user_id'] ) ) {
+		} elseif (
+			'friends' === $activity->privacy &&
+			(
+				! bp_is_active( 'friends' ) ||
+				! friends_check_friendship( $activity->user_id, $args['user_id'] )
+			)
+		) {
 			return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to add a comment.', 'buddyboss' ) );
 		}
 	}
