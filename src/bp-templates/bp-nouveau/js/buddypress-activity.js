@@ -134,11 +134,11 @@ window.bp = window.bp || {};
 			$( '#activity-stream' ).on( 'click', '.acomments-view-more', this.showActivity );
 			$( 'body' ).on( 'click', '.bb-close-action-popup', this.closeActivity );
 
-			$( document ).on( 'click', function( event)  {
+			$( document ).on( 'click', function ( event ) {
 				if (
 					$( '#activity-modal:visible' ).length > 0 &&
 					$( '#bp-nouveau-activity-form-placeholder:visible' ).length === 0 &&
-					!$( event.target ).closest( '#activity-modal' ).length
+					! $( event.target ).closest( '#activity-modal' ).length
 				) {
 					this.closeActivity( event );
 				}
