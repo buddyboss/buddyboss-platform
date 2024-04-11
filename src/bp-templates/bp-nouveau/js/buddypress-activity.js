@@ -3958,7 +3958,7 @@ window.bp = window.bp || {};
 			}
 
 			var $activityListItem = currentTargetModal.find( 'ul.activity-list > li' ),
-				activityListItemId = $activityListItem.data('bp-activity-id'),
+				activityListItemId = $activityListItem.data( 'bp-activity-id' ),
 				activityId = activityID !== undefined ? activityID : activityListItemId,
 				$pageActivitylistItem = $( '#activity-stream li.activity-item[data-bp-activity-id=' + activityId + ']' );
 
