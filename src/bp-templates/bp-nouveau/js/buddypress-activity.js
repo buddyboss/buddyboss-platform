@@ -137,7 +137,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', function ( event ) {
 				if (
 					$( '#activity-modal:visible' ).length > 0 &&
-					$( '#bp-nouveau-activity-form-placeholder:visible' ).length === 0 &&
+					0 === $( '#bp-nouveau-activity-form-placeholder:visible' ).length &&
 					! $( event.target ).closest( '#activity-modal' ).length
 				) {
 					this.closeActivity( event );
