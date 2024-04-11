@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.5.81 =
+* Bug: Activity - Fixed a memory allocation issue which was affecting the activity loading function which had added a significant delay
+
 = 2.5.80 =
 * New Feature! - Close comments allows post authors and admins to turn of commenting on any specific post which gives users and admins another great way to maintain control and moderation
 * New Feature! - To make the activity feed more streamlined we have introduced the View more comments and View more replies which will allow users to expand the threads they are interested in rather than showing the full expanded user interactions
