@@ -2763,10 +2763,10 @@ window.bp = window.bp || {};
 				}
 
 				var whatNewScroll = whatNewForm.find( '.whats-new-scroll-view' );
-				if (whatNewScroll.length > 0) {
-					whatNewScroll.stop().animate({
+				if ( whatNewScroll.length > 0 ) {
+					whatNewScroll.stop().animate( {
 						scrollTop: whatNewScroll[0].scrollHeight
-					}, 300);
+					}, 300 );
 				}
 
 				e.stopPropagation();
