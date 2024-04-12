@@ -194,11 +194,6 @@ function bp_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $e
 		$field_group_id = $wpdb->get_var( $wpdb->prepare( "SELECT group_id FROM {$bp->profile->table_name_fields} WHERE id = %d", $posted_field_ids[0] ) );
 	}
 
-	// Check for admin side repeater field.
-	if ( isset( $_POST['group'] ) ) {
-		$field_group_id = $_POST['group'];
-	}
-
 	$is_repeater_enabled = 'on' == BP_XProfile_Group::get_group_meta( $field_group_id, 'is_repeater_enabled' ) ? true : false;
 	if ( ! $is_repeater_enabled ) {
 		return;
