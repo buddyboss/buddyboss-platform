@@ -4618,3 +4618,14 @@ function bb_user_has_access_upload_video( $group_id = 0, $user_id = 0, $forum_id
 	return false;
 
 }
+
+/**
+ * Checks if user can create a scheduled activity or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool Is user can create scheduled activity or not.
+ */
+function bb_user_can_create_scheduled_activity() {
+	return (bool) apply_filters( 'bb_user_can_create_scheduled_activity', true );
+}

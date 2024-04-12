@@ -140,6 +140,9 @@ window.bp = window.bp || {};
 					bp_icon_type = 'check';
 				} else if ( bp_msg_type === 'warning' ) {
 					bp_icon_type = 'exclamation-triangle';
+				} else if ( bp_msg_type === 'delete' ) {
+					bp_icon_type = 'trash';
+					bp_msg_type = 'error';
 				} else {
 					bp_icon_type = 'info';
 				}
@@ -201,6 +204,9 @@ window.bp = window.bp || {};
 
 			// An object containing each query var.
 			this.querystring = this.getLinkParams();
+
+			// Get Server Time Difference on load.
+			this.bbServerTimeDiff = new Date( BP_Nouveau.wpTime ).getTime() - Date.now();
 		},
 
 		/**
@@ -356,7 +362,7 @@ window.bp = window.bp || {};
 		 */
 		ajax: function ( post_data, object, button ) {
 
-			if ( this.ajax_request && typeof button === 'undefined' ) {
+			if ( this.ajax_request && typeof button === 'undefined' && post_data.status !== 'scheduled') {
 				this.ajax_request.abort();
 			}
 
@@ -595,6 +601,15 @@ window.bp = window.bp || {};
 						return;
 					}
 
+					// Control the scheduled posts layout view.
+					if( data.status === 'scheduled' ) {
+						if( $( response.data.contents ).hasClass( 'bp-feedback' ) ) {
+							$( data.target ).parent().addClass( 'has-no-content' );
+						} else {
+							$( data.target ).parent().addClass( 'has-content' );
+						}
+					}
+
 					if ( !_.isUndefined( response.data.layout ) ) {
 						$( '.layout-view' ).removeClass( 'active' );
 						$( '.layout-' + response.data.layout + '-view' ).addClass( 'active' );
@@ -782,6 +797,31 @@ window.bp = window.bp || {};
 			);
 		},
 
+		showSchedulePosts: function (e) {
+			var self = e.data;
+			var object = 'activity';
+			var scope = 'all';
+
+			if ( $( '#buddypress [data-bp-list="' + object + '"]' ).length ) {
+				var queryData = {
+					object: object,
+					scope: scope,
+					status: 'scheduled',
+					target: '#buddypress .bb-action-popup-content[data-bp-list] .schedule-posts-content',
+					template: 'schedule_activity',
+				};
+
+				if ( $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).length ) {
+					queryData.member_type_id = $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).val();
+				} else if ( $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).length ) {
+					queryData.group_type = $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).val();
+				}
+
+				// Populate the object list.
+				self.objectRequest( queryData );
+			}
+		},
+
 		/**
 		 * [setHeartBeat description]
 		 */
@@ -853,6 +893,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bb-close-action-popup, .action-popup-overlay', this.closeActionPopup );
 			$( document ).on( 'keyup', '.search-form-has-reset input[type="search"], .search-form-has-reset input#bbp_search', _.throttle( this.directorySearchInput, 900 ) );
 			$( document ).on( 'click', '.search-form-has-reset .search-form_reset', this.resetDirectorySearch );
+			$( '#buddypress' ).on( 'click', '.bb-view-schedule-posts, .bb-view-all-scheduled-posts', this, this.showSchedulePosts );
 
 			$( document ).on( 'keyup', this, this.keyUp );
 
@@ -4243,7 +4284,7 @@ window.bp = window.bp || {};
 					);
 					self.render( self.options );
 				}
-			}
+			},
 		},
 
 		/**
@@ -4312,6 +4353,27 @@ window.bp = window.bp || {};
 			}
 
 			bp.Nouveau.Activity.activityPinHasUpdates = false;
+		},
+
+		/**
+		 *  Get current Server Time
+		 */
+		bbServerTime: function() {
+
+			var localTime = new Date();
+			var currentServerTime = new Date( localTime.getTime() + bp.Nouveau.bbServerTimeDiff );
+
+			// Extract date, year, and time components
+			var date = currentServerTime.toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
+			var year = currentServerTime.getFullYear();
+			var time = currentServerTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+			return {
+				currentServerTime: currentServerTime,
+				date: date,
+				year: year,
+				time: time
+			};
 		}
 	};
 

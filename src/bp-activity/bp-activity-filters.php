@@ -119,6 +119,9 @@ add_action( 'bp_has_activities', 'bp_activity_has_activity_filter', 10, 2 );
 add_action( 'bp_has_activities', 'bp_activity_has_media_activity_filter', 10, 2 );
 add_action( 'bp_activity_after_delete', 'bb_activity_delete_link_review_attachment', 10, 1 );
 
+// Delete scheduled activity cron event.
+add_action( 'bp_activity_after_delete', 'bb_activity_delete_scheduled_cron_events', 10, 1 );
+
 /* Actions *******************************************************************/
 
 // At-name filter.
@@ -559,6 +562,11 @@ function bp_activity_at_name_filter_updates( $activity ) {
 function bp_activity_at_name_send_emails( $activity ) {
 	// Are mentions disabled?
 	if ( ! bp_activity_do_mentions() || ( ! empty( $activity->privacy ) && 'onlyme' === $activity->privacy ) ) {
+		return;
+	}
+
+	// Avoid sending notification if the activity is not published.
+	if ( bb_get_activity_published_status() !== $activity->status ) {
 		return;
 	}
 
@@ -3477,7 +3485,8 @@ function bb_activity_send_email_to_following_post( $content, $user_id, $activity
 	if (
 		empty( $activity ) ||
 		'activity' !== $activity->component ||
-		in_array( $activity->privacy, array( 'document', 'media', 'video', 'onlyme' ), true )
+		in_array( $activity->privacy, array( 'document', 'media', 'video', 'onlyme' ), true ) ||
+		bb_get_activity_published_status() !== $activity->status
 	) {
 		return;
 	}
@@ -3756,4 +3765,35 @@ function bb_activity_directory_set_pagination( $querystring, $object ) {
 	$querystring['per_page'] = bb_get_load_activity_per_request();
 
 	return http_build_query( $querystring );
+}
+
+/**
+ * Load the class to schedule the activity post.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_activity_init_activity_schedule() {
+
+	if ( ! class_exists( 'BB_Activity_Schedule' ) ) {
+		require_once buddypress()->plugin_dir . 'bp-activity/classes/class-bb-activity-schedule.php';
+	}
+	new BB_Activity_Schedule();
+}
+add_action( 'bp_init', 'bb_activity_init_activity_schedule' );
+
+/**
+ * Action to delete scheduled activity cron event.
+ *
+ * @param array $activities Array of activities.
+ *
+ * @since [BBVERSION]
+ */
+function bb_activity_delete_scheduled_cron_events( $activities ) {
+	if ( ! empty( $activities ) ) {
+		foreach ( $activities as $activity ) {
+			if ( bb_get_activity_scheduled_status() === $activity->status ) {
+				wp_clear_scheduled_hook( 'bb_activity_publish', array( (int) $activity->id ) );
+			}
+		}
+	}
 }

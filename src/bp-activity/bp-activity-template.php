@@ -289,6 +289,7 @@ function bp_has_activities( $args = '' ) {
 			// Searching.
 			'search_terms'      => $search_terms_default,
 			'update_meta_cache' => true,
+			'status'            => bb_get_activity_published_status(),
 		),
 		'has_activities'
 	);
@@ -4528,4 +4529,26 @@ function bb_get_activity_comment_unfavorite_link( $activity_comment_id = 0 ) {
 	 * @param string $value Constructed link for unfavoriting the activity comment.
 	 */
 	return apply_filters( 'bb_get_activity_comment_unfavorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/unfavorite/' . $activity_comment_id . '/' ), 'unmark_favorite' ) );
+}
+
+/**
+ * Return the published status.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_get_activity_published_status() {
+	return buddypress()->activity->published_status;
+}
+
+/**
+ * Return the scheduled status.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_get_activity_scheduled_status() {
+	return buddypress()->activity->scheduled_status;
 }

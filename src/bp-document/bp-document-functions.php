@@ -362,6 +362,7 @@ function bp_document_get( $args = '' ) {
 			'meta_query_document' => false,        // Filter by activity meta. See WP_Meta_Query for format.
 			'meta_query_folder'   => false,        // Filter by activity meta. See WP_Meta_Query for format.
 			'moderation_query'    => true,         // Filter to include moderation query.
+			'status'              => bb_document_get_published_status(),  // Filter by document status. published, scheduled.
 		),
 		'document_get'
 	);
@@ -388,6 +389,7 @@ function bp_document_get( $args = '' ) {
 			'meta_query_document' => $r['meta_query_document'],
 			'meta_query_folder'   => $r['meta_query_folder'],
 			'moderation_query'    => $r['moderation_query'],
+			'status'              => $r['status'],
 		)
 	);
 
@@ -432,6 +434,7 @@ function bp_document_get_specific( $args = '' ) {
 			'meta_query'       => false,
 			'privacy'          => false,      // privacy to filter.
 			'moderation_query' => true,
+			'status'           => bb_document_get_published_status(), // Filter by document status. published, scheduled.
 		),
 		'document_get_specific'
 	);
@@ -448,6 +451,7 @@ function bp_document_get_specific( $args = '' ) {
 		'privacy'          => $r['privacy'],      // privacy to filter.
 		'meta_query'       => $r['meta_query'],
 		'moderation_query' => $r['moderation_query'],
+		'status'           => $r['status'],
 	);
 
 	/**
@@ -484,6 +488,7 @@ function bp_document_get_specific( $args = '' ) {
  * @type string        $date_created Optional. The GMT time, in Y-m-d h:i:s format, when
  *                                       the item was recorded. Defaults to the current time.
  * @type string        $error_type   Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
+ * @type string        $status       Optional. Status of the documents.
  * }
  * @return WP_Error|bool|int The ID of the document on success. False on error.
  * @since BuddyBoss 1.4.0
@@ -508,6 +513,7 @@ function bp_document_add( $args = '' ) {
 			'date_created'  => bp_core_current_time(),  // The GMT time that this document was recorded.
 			'date_modified' => bp_core_current_time(),  // The GMT time that this document was modified.
 			'error_type'    => 'bool',
+			'status'        => bb_document_get_published_status(), // Document status.
 		),
 		'document_add'
 	);
@@ -528,6 +534,7 @@ function bp_document_add( $args = '' ) {
 	$document->date_created  = $r['date_created'];
 	$document->date_modified = $r['date_modified'];
 	$document->error_type    = $r['error_type'];
+	$document->status        = $r['status'];
 
 	// groups document always have privacy to `grouponly`.
 	if ( ! empty( $document->privacy ) && ( in_array( $document->privacy, array( 'forums', 'message' ), true ) ) ) {
@@ -620,6 +627,8 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 							'privacy'       => $bp_document->privacy,
 							'menu_order'    => ! empty( $document['menu_order'] ) ? $document['menu_order'] : false,
 							'date_modified' => bp_core_current_time(),
+							'date_created'  => ! empty( $document['date_created'] ) ? $document['date_created'] : $bp_document->date_created,
+							'status'        => $bp_document->status,
 						)
 					);
 
@@ -646,6 +655,8 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 						'privacy'       => ! empty( $document['privacy'] ) && in_array( $document['privacy'], array_merge( array_keys( bp_document_get_visibility_levels() ), array( 'message' ) ) ) ? $document['privacy'] : $privacy,
 						'message_id'    => ! empty( $document['message_id'] ) ? $document['message_id'] : 0,
 						'menu_order'    => ! empty( $document['menu_order'] ) ? $document['menu_order'] : 0,
+						'status'        => ! empty( $document['status'] ) ? $document['status'] : bb_document_get_published_status(),
+						'date_created'  => ! empty( $document['date_created'] ) ? $document['date_created'] : bp_core_current_time(),
 					)
 				);
 
@@ -704,6 +715,7 @@ function bp_document_delete( $args = '', $from = false ) {
 			'group_id'      => false,
 			'privacy'       => false,
 			'date_created'  => false,
+			'status'        => false,
 		)
 	);
 

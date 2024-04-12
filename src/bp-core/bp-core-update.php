@@ -487,6 +487,10 @@ function bp_version_updater() {
 			bb_update_to_2_5_80();
 		}
 
+		if ( $raw_db_version < 21091 ) {
+			bb_update_to_2_5_91();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3492,4 +3496,38 @@ function bb_update_to_2_5_80() {
 	bp_update_option( 'bb_activity_load_type', $autoload_new_setting );
 	bp_update_option( 'bb_ajax_request_page_load', 2 );
 	bp_update_option( 'bb_load_activity_per_request', 10 );
+}
+
+/**
+ * Create a new column in database tables.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_5_91() {
+	global $wpdb;
+
+	$bp  = buddypress();
+
+	// Add 'status' column in 'bp_activity' table.
+	$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$bp->activity->table_name}' AND column_name = 'status'" ); //phpcs:ignore
+
+	if ( empty( $row ) ) {
+		$wpdb->query( "ALTER TABLE {$bp->activity->table_name} ADD `status` varchar( 20 ) NOT NULL DEFAULT 'published' AFTER `privacy`" ); //phpcs:ignore
+	}
+
+	// Add 'status' column in 'bp_media' table.
+	$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$bp->media->table_name}' AND column_name = 'status'" ); //phpcs:ignore
+
+	if ( empty( $row ) ) {
+		$wpdb->query( "ALTER TABLE {$bp->media->table_name} ADD `status` varchar( 20 ) NOT NULL DEFAULT 'published' AFTER `menu_order`" ); //phpcs:ignore
+	}
+
+	// Add 'status' column in 'bp_document' table.
+	$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$bp->document->table_name}' AND column_name = 'status'" ); //phpcs:ignore
+
+	if ( empty( $row ) ) {
+		$wpdb->query( "ALTER TABLE {$bp->document->table_name} ADD `status` varchar( 20 ) NOT NULL DEFAULT 'published' AFTER `menu_order`" ); //phpcs:ignore
+	}
 }

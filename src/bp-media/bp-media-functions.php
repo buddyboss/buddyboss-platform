@@ -351,6 +351,7 @@ function bp_media_get( $args = '' ) {
 			'moderation_query' => true,         // Filter to include moderation query.
 			'video'            => false,        // Whether to include videos.
 			'count_total'      => false,
+			'status'           => bb_media_get_published_status()
 		),
 		'media_get'
 	);
@@ -375,6 +376,7 @@ function bp_media_get( $args = '' ) {
 			'fields'           => $r['fields'],
 			'moderation_query' => $r['moderation_query'],
 			'video'            => $r['video'],
+			'status'           => $r['status'],
 		)
 	);
 
@@ -493,6 +495,7 @@ function bp_media_add( $args = '' ) {
 			'menu_order'    => 0,                       // Optional:  Menu order.
 			'date_created'  => bp_core_current_time(),  // The GMT time that this media was recorded.
 			'error_type'    => 'bool',
+			'status'        => bb_media_get_published_status(),            // status of the media.
 		),
 		'media_add'
 	);
@@ -512,6 +515,7 @@ function bp_media_add( $args = '' ) {
 	$media->menu_order    = $r['menu_order'];
 	$media->date_created  = $r['date_created'];
 	$media->error_type    = $r['error_type'];
+	$media->status        = $r['status'];
 
 	// groups media always have privacy to `grouponly`.
 	if ( ! empty( $media->privacy ) && ( in_array( $media->privacy, array( 'forums', 'message' ), true ) ) ) {
@@ -601,7 +605,8 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 							'message_id'    => ! empty( $bp_media->message_id ) ? $bp_media->message_id : ( ! empty( $media['message_id'] ) ? $media['message_id'] : 0 ),
 							'privacy'       => $bp_media->privacy,
 							'menu_order'    => ! empty( $media['menu_order'] ) ? $media['menu_order'] : false,
-							'date_created'  => $bp_media->date_created,
+							'date_created'  => ! empty( $media['date_created'] ) ? $media['date_created'] : $bp_media->date_created,
+							'status'        => $bp_media->status,
 						)
 					);
 				}
@@ -616,6 +621,8 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 						'message_id'    => ! empty( $media['message_id'] ) ? $media['message_id'] : 0,
 						'menu_order'    => ! empty( $media['menu_order'] ) ? $media['menu_order'] : false,
 						'privacy'       => ! empty( $media['privacy'] ) && in_array( $media['privacy'], array_merge( array_keys( bp_media_get_visibility_levels() ), array( 'message' ) ) ) ? $media['privacy'] : $privacy,
+						'status'        => ! empty( $media['status'] ) ? $media['status'] : bb_media_get_published_status(),
+						'date_created'  => ! empty( $media['date_created'] ) ? $media['date_created'] : bp_core_current_time(),
 					)
 				);
 			}
@@ -668,6 +675,7 @@ function bp_media_delete( $args = '', $from = false ) {
 			'group_id'      => false,
 			'privacy'       => false,
 			'date_created'  => false,
+			'status'        => false,
 		)
 	);
 
