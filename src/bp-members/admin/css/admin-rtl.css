@@ -125,7 +125,7 @@ div#community-profile-page p.not-activated {
 }
 
 .bp-profile-field .description {  /* description also sits in the right side column */
-	margin: 10px 200px 12px 0;
+	margin: 0 200px 12px 0;
 	text-align: right;
 }
 
@@ -233,8 +233,13 @@ div#community-profile-page p.not-activated {
 	width: 192px;
 }
 
+#your-profile .bp-profile-field > fieldset > legend {
+	min-height: 50px;
+}
+
 #your-profile .field_type_socialnetworks fieldset > legend {
 	float: none;
+	min-height: auto;
 }
 
 .field_type_socialnetworks fieldset .editfield {
@@ -244,6 +249,10 @@ div#community-profile-page p.not-activated {
 
 .bp-profile-field .radio .clear-value {
 	margin-top: 10px;
+}
+
+.bp-profile-field select {
+	min-width: 230px;
 }
 
 @media screen and (max-width: 782px) {

@@ -125,7 +125,7 @@ div#community-profile-page p.not-activated {
 }
 
 .bp-profile-field .description {  /* description also sits in the right side column */
-	margin: 10px 0 12px 200px;
+	margin: 0 0 12px 200px;
 	text-align: left;
 }
 
@@ -233,8 +233,13 @@ div#community-profile-page p.not-activated {
 	width: 192px;
 }
 
+#your-profile .bp-profile-field > fieldset > legend {
+	min-height: 50px;
+}
+
 #your-profile .field_type_socialnetworks fieldset > legend {
 	float: none;
+	min-height: auto;
 }
 
 .field_type_socialnetworks fieldset .editfield {
