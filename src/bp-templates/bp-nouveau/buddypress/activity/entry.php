@@ -60,7 +60,7 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 	$user_link = bp_get_activity_user_link();
 	$user_link = ! empty( $user_link ) ? esc_url( $user_link ) : '';
 
-	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() ) :
+	if ( bp_is_active( 'groups' ) && ! bp_is_group() && buddypress()->groups->id === bp_get_activity_object_name() ) :
 
 		// If group activity.
 		$group_id        = (int) $activities_template->activity->item_id;
