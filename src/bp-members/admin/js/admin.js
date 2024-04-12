@@ -101,8 +101,6 @@
 			$( this ).parents( '.repeater_group_outer' ).toggleClass( 'active' );
 		} );
 
-		var deleted_field_ids = [];
-
 		// Delete button
 		$( '.bb_admin_repeater_group' ).on( 'click', '.repeater_group_outer .repeater_set_delete', function ( e ) {
 			var $delete_button = $( this );
@@ -111,6 +109,12 @@
 			e.preventDefault();
 			if ( $delete_button.hasClass( 'disabled' ) ) {
 				return;
+			}
+			var deleted_field_ids = [];
+			var existing_deleted_field_ids = '';
+			if ( $( '#' + parentContainer + ' [name="deleted_field_ids[' + groupId + ']"]' ).length ) {
+				existing_deleted_field_ids = $( '#' + parentContainer + ' [name="deleted_field_ids[' + groupId + ']"]' ).val();
+				deleted_field_ids.push( existing_deleted_field_ids );
 			}
 			var r = confirm( BB_Member_Admin.confirm_delete_set );
 			if ( r ) {
