@@ -372,7 +372,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 			$profile_field_class = 'bp-profile-field';
 			if ( $is_repeater_enabled ) {
 				$meta_box_class                      = ' bb_admin_repeater_group';
-				$meta_box_id                         = 'id="profile-edit-form"';
+				$meta_box_id                         = 'id="profile-edit-form-' . esc_attr( $r['profile_group_id'] ) . '"';
 				$profile_field_class                 .= ' editfield';
 				$r['repeater_show_main_fields_only'] = false;
 			}
@@ -403,13 +403,13 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 
 				if ( $is_repeater_enabled ) {
 					?>
-					<input type="hidden" name="user_id" id="user_id" value="<?php echo esc_attr( $r['user_id'] ); ?>"/>
-					<input type="hidden" name="group" id="group" value="<?php echo esc_attr( $r['profile_group_id'] ); ?>"/>
-					<input type="hidden" name="current_url" id="current_url" value="<?php echo isset( $_SERVER['REQUEST_URI'] ) ? esc_attr( $_SERVER['REQUEST_URI'] ) : ''; ?>"/>
+                    <input type="hidden" name="user_id" id="user_id" value="<?php echo esc_attr( $r['user_id'] ); ?>" />
+                    <input type="hidden" name="group[]" id="group" value="<?php echo esc_attr( $r['profile_group_id'] ); ?>" />
+                    <input type="hidden" name="current_url" id="current_url" value="<?php echo isset( $_SERVER['REQUEST_URI'] ) ? esc_attr( $_SERVER['REQUEST_URI'] ) : ''; ?>" />
 					<?php
 				}
 				?>
-			<input type="hidden" name="field_ids[]" id="<?php echo esc_attr( 'field_ids_' . bp_get_the_profile_group_slug() ); ?>" value="<?php echo esc_attr( $ids ); ?>" />
+                <input type="hidden" name="field_ids[<?php echo esc_attr( $r['profile_group_id'] ); ?>]" id="<?php echo esc_attr( 'field_ids_' . bp_get_the_profile_group_slug() ); ?>" value="<?php echo esc_attr( $ids ); ?>" />
 
 				<?php if ( bp_get_the_profile_group_description() ) : ?>
 

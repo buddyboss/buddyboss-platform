@@ -324,7 +324,7 @@ div#community-profile-page p.not-activated {
 	}
 }
 
-#profile-edit-form .repeater_group_outer {
+.bb_admin_repeater_group .repeater_group_outer {
 	margin: 0 0 15px;
 	padding: 15px;
 	cursor: move;
@@ -353,49 +353,49 @@ div#community-profile-page p.not-activated {
 	margin-top: 15px;
 }
 
-#profile-edit-form .repeater_group_outer .repeater_tools {
+.bb_admin_repeater_group .repeater_group_outer .repeater_tools {
 	display: flex;
 	flex-flow: row wrap;
 }
 
-#profile-edit-form .repeater_group_outer .repeater_tools a {
+.bb_admin_repeater_group .repeater_group_outer .repeater_tools a {
 	align-items: center;
 	display: flex;
 }
 
-#profile-edit-form .repeater_group_outer .repeater_set_title {
+.bb_admin_repeater_group .repeater_group_outer .repeater_set_title {
 	flex: 1;
 	min-width: 0;
 }
 
-#profile-edit-form .repeater_group_outer .repeater_set_title_empty {
+.bb_admin_repeater_group .repeater_group_outer .repeater_set_title_empty {
 	color: #ccc;
 }
 
-#profile-edit-form .repeater_group_outer .repeater_set_edit {
+.bb_admin_repeater_group .repeater_group_outer .repeater_set_edit {
 	margin-left: auto;
 	margin-right: 5px;
 }
 
-#profile-edit-form #btn_add_repeater_set {
+.bb_admin_repeater_group #btn_add_repeater_set {
 	float: left;
 	height: 32px;
 	margin-right: 10px
 }
 
-#profile-edit-form #btn_add_repeater_set .dashicons {
+.bb_admin_repeater_group #btn_add_repeater_set .dashicons {
 	font: normal normal normal 18px/1 bb-icons
 }
 
-#profile-edit-form #btn_add_repeater_set .dashicons:before {
+.bb_admin_repeater_group #btn_add_repeater_set .dashicons:before {
 	content: "\eef9"
 }
 
-#profile-edit-form .field-visibility-settings-open {
+.bb_admin_repeater_group .field-visibility-settings-open {
 	display: block;
 }
 
-#profile-edit-form .repeater_group_inner {
+.bb_admin_repeater_group .repeater_group_inner {
 	border-top: 1px solid #eee;
 	display: none;
 	margin: 10px -15px;

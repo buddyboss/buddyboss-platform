@@ -180,6 +180,11 @@ add_action( 'bb_xprofile_error_on_updated_profile', 'bp_profile_repeaters_update
  * @since BuddyBoss 1.0.0
  */
 function bp_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
+
+	if ( is_admin() ) {
+		return;
+	}
+
 	global $wpdb;
 	$bp = buddypress();
 
@@ -1128,4 +1133,109 @@ function bb_xprofile_top_most_template_field_id( $field_id ) {
 	}
 
 	return $main_field;
+}
+
+add_action( 'xprofile_updated_profile', 'bb_admin_profile_repeaters_update_field_data', 11, 5 );
+add_action( 'bb_xprofile_error_on_updated_profile', 'bb_admin_profile_repeaters_update_field_data', 11, 5 );
+
+/**
+ * Function to save repeater data in the admin screen.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int   $user_id          ID for the user whose profile is being saved.
+ * @param array $posted_field_ids Array of field IDs that were edited.
+ * @param bool  $errors           Whether or not any errors occurred.
+ * @param array $old_values       Array of original values before update.
+ * @param array $new_values       Array of newly saved values after update.
+ *
+ * @return void
+ */
+function bb_admin_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
+
+	if ( ! is_admin() ) {
+		return;
+	}
+
+	global $wpdb;
+	$bp = buddypress();
+
+	// Check for admin side repeater field.
+	if ( isset( $_POST['group'] ) && is_array( $_POST['group'] ) ) {
+		foreach ( $_POST['group'] as $field_group_id ) {
+			$is_repeater_enabled = 'on' == BP_XProfile_Group::get_group_meta( $field_group_id, 'is_repeater_enabled' ) ? true : false;
+			if ( ! $is_repeater_enabled ) {
+				return;
+			}
+
+			$repeater_field_ids = $_POST['field_ids'][ $field_group_id ];
+			$posted_field_ids   = wp_parse_id_list( $repeater_field_ids );
+
+			// First, clear the data for deleted fields, if any
+			if ( isset( $_POST['deleted_field_ids'][ $field_group_id ] ) && ! empty( $_POST['deleted_field_ids'][ $field_group_id ] ) ) {
+				$deleted_field_ids = wp_parse_id_list( $_POST['deleted_field_ids'][ $field_group_id ] );
+				foreach ( $deleted_field_ids as $deleted_field_id ) {
+					xprofile_delete_field_data( $deleted_field_id, $user_id );
+				}
+			}
+
+			$field_set_sequence = isset( $_POST['repeater_set_sequence'][ $field_group_id ] ) ? wp_parse_id_list( wp_unslash( $_POST['repeater_set_sequence'][ $field_group_id ] ) ) : array();
+
+			// We'll take the data from all clone fields and dump it into the main/template field.
+			// This is done to ensure that search etc, work smoothly.
+			$main_field_data = array();
+
+			$counter = 1;
+			foreach ( (array) $field_set_sequence as $field_set_number ) {
+				// Find all fields in this set, take their values and update the data for corresponding fields in set number $counter
+				$fields_of_current_set = $wpdb->get_col(
+					"SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = '_clone_number' AND meta_value = {$field_set_number} "
+					. ' AND object_id IN (' . implode( ',', $posted_field_ids ) . ") and object_type = 'field' "
+				);
+
+				if ( ! empty( $fields_of_current_set ) && ! is_wp_error( $fields_of_current_set ) ) {
+					foreach ( $fields_of_current_set as $field_of_current_set ) {
+						$cloned_from = $wpdb->get_var( "SELECT meta_value FROM {$bp->profile->table_name_meta} WHERE object_id = {$field_of_current_set} AND meta_key = '_cloned_from' " );
+
+						$sql                    = "SELECT m1.object_id FROM {$bp->profile->table_name_meta} AS m1 JOIN {$bp->profile->table_name_meta} AS m2 ON m1.object_id = m2.object_id "
+						                          . " WHERE m1.object_type = 'field' AND m1.meta_key = '_cloned_from' AND m1.meta_value = {$cloned_from} "
+						                          . " AND m2.meta_key = '_clone_number' AND m2.meta_value = {$counter} ";
+						$corresponding_field_id = $wpdb->get_var( $sql );
+						if ( ! empty( $corresponding_field_id ) ) {
+							$new_data             = isset( $new_values[ $field_of_current_set ]['value'] ) ? $new_values[ $field_of_current_set ]['value'] : '';
+							$new_visibility_level = isset( $new_values[ $field_of_current_set ]['visibility'] ) ? $new_values[ $field_of_current_set ]['visibility'] : '';
+							xprofile_set_field_visibility_level( $corresponding_field_id, $user_id, $new_visibility_level );
+
+							$type = $wpdb->get_var( $wpdb->prepare( "SELECT `type` FROM {$bp->table_prefix}bp_xprofile_fields WHERE id = %d", $corresponding_field_id ) );
+
+							if ( 'datebox' === $type && ! empty ( $new_data ) ) {
+								$new_data = date( 'Y-m-d 00:00:00', strtotime( $new_data ) );
+							}
+
+							xprofile_set_field_data( $corresponding_field_id, $user_id, $new_data );
+
+							if ( ! isset( $main_field_data[ $cloned_from ] ) ) {
+								$main_field_data[ $cloned_from ] = array();
+							}
+
+							$main_field_data[ $cloned_from ][] = is_array( $new_values[ $field_of_current_set ]['value'] ) ? implode( ' ', $new_values[ $field_of_current_set ]['value'] ) : $new_values[ $field_of_current_set ]['value'];
+						}
+					}
+				}
+
+				$counter ++;
+			}
+
+			if ( ! empty( $main_field_data ) ) {
+				foreach ( $main_field_data as $main_field_id => $values ) {
+					$values_str = implode( ' ', $values );
+					xprofile_set_field_data( $main_field_id, $user_id, $values_str );
+				}
+			}
+
+			if ( isset( $_POST['repeater_set_sequence'][ $field_group_id ] ) ) {
+				bp_set_profile_field_set_count( $field_group_id, $user_id, count( $field_set_sequence ) );
+			}
+		}
+	}
 }
