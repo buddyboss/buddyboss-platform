@@ -4961,12 +4961,20 @@ window.bp = window.bp || {};
 				var dateNumber = UserDate.getDate();
 				var schedulePost_date = monthName + ' ' + dateNumber;
 
-				this.model.set( 'activity_action_type', 'scheduled' );
-				this.model.set( 'activity_schedule_date_raw', schedulePost_date_raw );
-				this.model.set( 'activity_schedule_date', schedulePost_date );
-				this.model.set( 'activity_schedule_time', schedulePost_time );
-				this.model.set( 'activity_schedule_meridiem', schedulePost_meridian);
-				$( event.target ).closest( '#bb-schedule-post_form_modal' ).hide();
+				// Check if time has passed and trigger warning and revert to normal post button.
+				var activity_schedule_datetime = schedulePost_date_raw + ' ' + schedulePost_time + ' ' + schedulePost_meridian;
+				var activity_schedule_date     = new Date( activity_schedule_datetime );
+				var current_date = new Date( bp.Nouveau.bbServerTime().currentServerTime );
+				if ( current_date > activity_schedule_date ) {
+					Backbone.trigger( 'onError', BP_Nouveau.activity.strings.scheduleWarning, 'warning' );
+				} else {
+					this.model.set( 'activity_action_type', 'scheduled' );
+					this.model.set( 'activity_schedule_date_raw', schedulePost_date_raw );
+					this.model.set( 'activity_schedule_date', schedulePost_date );
+					this.model.set( 'activity_schedule_time', schedulePost_time );
+					this.model.set( 'activity_schedule_meridiem', schedulePost_meridian );
+					$( event.target ).closest( '#bb-schedule-post_form_modal' ).hide();
+				}
 			},
 
 			validateScheduleTime: function () {
