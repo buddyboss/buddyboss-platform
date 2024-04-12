@@ -246,6 +246,10 @@ div#community-profile-page p.not-activated {
 	margin-top: 10px;
 }
 
+.bp-profile-field select {
+	min-width: 230px;
+}
+
 @media screen and (max-width: 782px) {
 
 	#your-profile .bp-profile-field legend {
