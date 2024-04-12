@@ -181,9 +181,9 @@ function xprofile_screen_edit_profile() {
 
 		// There are validation errors.
 		if ( ! empty( $errors ) && $validations ) {
-			foreach ( $validations as $validation ) {
-				bp_core_add_message( $validation, 'error' );
-			}
+
+			// Add validation messages all together.
+			bp_core_add_message( implode( "\n", $validations ), 'error' );
 
 			// There are errors.
 		} elseif ( ! empty( $errors ) ) {
