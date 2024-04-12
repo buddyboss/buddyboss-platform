@@ -776,7 +776,6 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					'BB_Member_Admin',
 					array(
 						'confirm_delete_set' => __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss' ),
-						'unsaved_changes'    => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss' ),
 						'empty_field'        => __( 'New Field', 'buddyboss' ),
 					)
 				);
