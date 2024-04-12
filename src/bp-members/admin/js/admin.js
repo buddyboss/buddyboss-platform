@@ -188,11 +188,10 @@
 				'url': ajaxurl,
 				'method': 'POST',
 				'data': {
-					'action': 'bp_xprofile_add_repeater_set',
+					'action': 'bb_admin_xprofile_add_repeater_set',
 					'_wpnonce': $button.data( 'nonce' ),
 					'group': groupId,
 					'user_id': $( '#user_id' ).val(),
-					'origin': 'admin',
 					'set_no': parentId.find( 'input[name="repeater_set_sequence[' + groupId + ']"]' ).val(),
 					'existing_field_ids': parentId.find( 'input[name="field_ids[' + groupId + ']"]' ).val(),
 				},
