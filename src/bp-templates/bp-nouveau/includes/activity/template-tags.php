@@ -286,7 +286,7 @@ function bp_nouveau_activity_state() {
 			<a href="#" class="<?php echo esc_attr( trim( implode( ' ', $activity_state_class ) ) ); ?>">
 				<span class="comments-count" data-comments-count="<?php echo esc_attr( $comment_count ); ?>">
 					<?php
-					if ( $comment_count > 1 ) {
+					if ( $comment_count > 1 || 0 === $comment_count ) {
 						printf( _x( '%d Comments', 'placeholder: activity comments count', 'buddyboss' ), $comment_count );
 					} else {
 						printf( _x( '%d Comment', 'placeholder: activity comment count', 'buddyboss' ), $comment_count );

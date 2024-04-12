@@ -134,6 +134,21 @@ window.bp = window.bp || {};
 			$( '#activity-stream' ).on( 'click', '.acomments-view-more', this.showActivity );
 			$( 'body' ).on( 'click', '.bb-close-action-popup', this.closeActivity );
 
+			$( document ).on( 'activityModalOpened', function( event, data ) {
+				var activityId = data.activityId;
+		
+				$( document ).on( 'click', function( event ) {
+					if (
+						$( '#activity-modal:visible' ).length > 0 &&
+						0 === $( '#bp-nouveau-activity-form-placeholder:visible' ).length &&
+						! $( event.target ).closest( '#activity-modal' ).length
+					) {
+						this.closeActivity( event );
+						this.activitySyncOnModalClose( event, activityId );
+					}
+				}.bind( this ) );
+			}.bind( this ) );
+
 			// Activity actions.
 			$( '#buddypress [data-bp-list="activity"], #activity-modal' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
 			$( '#buddypress [data-bp-list="activity"], #activity-modal' ).on( 'click', '.activity-privacy>li.bb-edit-privacy a', bp.Nouveau, this.activityPrivacyRedirect.bind( this ) );
@@ -564,6 +579,8 @@ window.bp = window.bp || {};
 			var currentTargetList = $( event.currentTarget ).parent(),
 				parentId = currentTargetList.data( 'parent_comment_id' ),
 				activityId = $( currentTargetList ).data( 'activity_id' );
+
+			$( document ).trigger( 'activityModalOpened', { activityId: activityId } );
 
 			$( event.currentTarget ).parents( '.activity-comments' ).find( '.ac-form' ).each( function () {
 				var form = $( this );
@@ -3929,12 +3946,20 @@ window.bp = window.bp || {};
 			}
 		},
 
-		activitySyncOnModalClose: function ( e ) {
+		activitySyncOnModalClose: function ( e, activityID ) {
 			e.preventDefault();
 
-			var currentTargetModal = $( e.currentTarget ).parents( '.bb-activity-model-wrapper' ),
-				$activityListItem = $( currentTargetModal ).find( 'ul.activity-list > li' ),
-				activityId = $activityListItem.data( 'bp-activity-id' ),
+			var currentTargetModal;
+
+			if ( $( e.currentTarget ).is( document ) ) {
+				currentTargetModal = $( '.bb-activity-model-wrapper' );
+			} else {
+				currentTargetModal = $( e.currentTarget ).parents( '.bb-activity-model-wrapper' );
+			}
+
+			var $activityListItem = currentTargetModal.find( 'ul.activity-list > li' ),
+				activityListItemId = $activityListItem.data('bp-activity-id'),
+				activityId = activityID !== undefined ? activityID : activityListItemId,
 				$pageActivitylistItem = $( '#activity-stream li.activity-item[data-bp-activity-id=' + activityId + ']' );
 
 			if ( $pageActivitylistItem.length > 0 && bp.Nouveau.Activity.activityHasUpdates ) {
