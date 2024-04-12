@@ -764,6 +764,8 @@ add_action( 'bp_after_profile_field_content', 'bp_print_add_repeater_set_button'
  * Output button to add repeater field set.
  *
  * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION]
+ * Introduce new param $args as array.
  */
 function bp_print_add_repeater_set_button( $args = array () ) {
 	if ( 'edit' !== bp_current_action() && empty( $args ) ) {
@@ -827,6 +829,8 @@ add_action( 'bp_before_profile_field_html', 'bp_profile_repeaters_print_group_ht
  * Open wrapper of repeater set - on edit profile screen
  *
  * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION]
+ * Introduce new param $args as array.
  * @global type $first_xpfield_in_repeater
  */
 function bp_profile_repeaters_print_group_html_start( $args = array () ) {
