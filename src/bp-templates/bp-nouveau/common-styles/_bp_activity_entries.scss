@@ -1431,6 +1431,7 @@
 			max-width: 95%;
 			width: 700px;
 			position: relative;
+			box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
 		}
 	}
 
@@ -1705,6 +1706,10 @@
 	i {
 		font-size: 20px;
 	}
+}
+
+.acomments-view-more:not(.loading):not(.acomments-view-more--hide) {
+	display: inline-block;
 }
 
 .buddypress-wrap {
