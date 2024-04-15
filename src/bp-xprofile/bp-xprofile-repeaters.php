@@ -785,7 +785,7 @@ function bp_print_add_repeater_set_button( $args = array () ) {
         } else {
             $nonce = wp_create_nonce( 'bp_xprofile_add_repeater_set' );
         }
-		echo "<button id='btn_add_repeater_set' class='button outline' data-nonce='" . $nonce . "' data-group='{$group_id}'>"; // disabled='disabled' style='pointer-events:none;'
+		echo "<button id='btn_add_repeater_set' class='button outline' data-nonce='" . esc_attr( $nonce ) . "' data-group='" . esc_attr( $group_id ) . "'>";
 		echo '<i class="bb-icon-f bb-icon-plus"></i>';
 		printf(
 			/* translators: %s = profile field group name */
