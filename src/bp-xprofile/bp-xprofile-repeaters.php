@@ -1081,7 +1081,7 @@ function bb_admin_xprofile_add_repeater_set() {
 	ob_start();
 	if ( ! empty( $clone_field_ids_has_data ) ) {
 		?>
-        <div class="repeater_group_outer" data-set_no="<?php echo $current_set_number; ?>">
+        <div class="repeater_group_outer" data-set_no="<?php echo esc_attr( $current_set_number ); ?>">
             <div class="repeater_tools">
                 <span class="repeater_set_title"></span>
                 <a class="repeater_set_edit bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Edit', 'buddyboss' ); ?>">
