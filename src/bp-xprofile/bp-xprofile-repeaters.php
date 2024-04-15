@@ -1161,7 +1161,6 @@ function bb_admin_xprofile_add_repeater_set() {
 }
 
 add_action( 'xprofile_updated_profile', 'bb_admin_profile_repeaters_update_field_data', 11, 5 );
-add_action( 'bb_xprofile_error_on_updated_profile', 'bb_admin_profile_repeaters_update_field_data', 11, 5 );
 
 /**
  * Function to save repeater data in the admin screen.
