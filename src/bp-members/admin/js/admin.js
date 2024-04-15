@@ -210,6 +210,15 @@
 						$button.removeClass( 'disabled' );
 						$button.removeAttr( 'disabled', 'disabled' );
 						$button.css( 'pointer-events', 'initial' );
+
+						var lastSetNo = jQuery( response.data.set_no ).get( -1 );
+						jQuery( '#profile-edit-form-' + groupId + ' .repeater_group_outer[data-set_no=' + lastSetNo + '] .field_type_textarea textarea' ).each( function () {
+							tinymce.EditorManager.execCommand( 'mceAddEditor', false, jQuery( this ).attr( 'name' ) );
+
+							if ( typeof quicktags !== 'undefined' ) {
+								quicktags( { id: jQuery( this ).attr( 'name' ) } );
+							}
+						} );
 					}
 				}
 			} );
