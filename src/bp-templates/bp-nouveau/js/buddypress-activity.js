@@ -1072,6 +1072,7 @@ window.bp = window.bp || {};
 
 							if ( activity_comment_id ) {
 								deleted_comments_count = 1;
+								var hidden_comments_count = activity_comment_li.find( '.acomments-view-more' ).data( 'child-count' );
 
 								// Move the form if needed.
 								activity_item.append( activity_comment_li.find( 'form' ) );
@@ -1083,6 +1084,8 @@ window.bp = window.bp || {};
 										deleted_comments_count += 1;
 									}
 								);
+
+								deleted_comments_count += hidden_comments_count;
 
 								// Update the button count.
 								comment_count_span = activity_state.find( 'span.comments-count' );
@@ -3957,7 +3960,7 @@ window.bp = window.bp || {};
 			}
 
 			var $activityListItem = currentTargetModal.find( 'ul.activity-list > li' ),
-				activityListItemId = $activityListItem.data('bp-activity-id'),
+				activityListItemId = $activityListItem.data( 'bp-activity-id' ),
 				activityId = activityID !== undefined ? activityID : activityListItemId,
 				$pageActivitylistItem = $( '#activity-stream li.activity-item[data-bp-activity-id=' + activityId + ']' );
 
