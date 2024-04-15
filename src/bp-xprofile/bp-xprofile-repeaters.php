@@ -1078,8 +1078,17 @@ function bb_admin_xprofile_add_repeater_set() {
 	if ( ! empty( $existing_field_ids ) ) {
 		$clone_field_ids_has_data = array_diff( $clone_field_ids_has_data, $existing_field_ids );
 	}
+    $sortable_fields = array();
+    foreach ( $clone_field_ids_has_data as $key => $field_id ) {
+        $field_data = xprofile_get_field( $field_id, $user_id, false );
+        $sortable_fields[ $key ] = $field_data;
+    }
+    // Sort field_id based on field_order.
+    usort( $sortable_fields, function ( $a, $b ) {
+		return $a->field_order - $b->field_order;
+	} );
 	ob_start();
-	if ( ! empty( $clone_field_ids_has_data ) ) {
+	if ( ! empty( $sortable_fields ) ) {
 		?>
         <div class="repeater_group_outer" data-set_no="<?php echo esc_attr( $current_set_number ); ?>">
             <div class="repeater_tools">
@@ -1095,12 +1104,11 @@ function bb_admin_xprofile_add_repeater_set() {
             </div>
             <div class='repeater_group_inner'>
 				<?php
-				foreach ( $clone_field_ids_has_data as $key => $field_id ) {
+				foreach ( $sortable_fields as $key => $field_object ) {
 					global $field, $profile_template;
-					$fieldobject                     = xprofile_get_field( $field_id, null, false );
-					$field                           = $fieldobject;
+                    $field                           = $field_object;
 					$profile_template                = isset( $profile_template ) ? $profile_template : new stdClass();
-					$profile_template->field         = $fieldobject;
+					$profile_template->field         = $field_object;
 					$profile_template->current_field = $key;
 					$profile_template->in_the_loop   = false;
 					?>
