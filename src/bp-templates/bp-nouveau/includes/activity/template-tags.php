@@ -750,7 +750,7 @@ function bp_nouveau_activity_recurse_comments( $comment, $args = array() ) {
 				_n( 'View %d reply', 'View %d replies', $comment->all_child_count, 'buddyboss' ),
 				absint( $comment->all_child_count )
 			);
-			echo "<li class='acomments-view-more'><i class='bb-icon-l bb-icon-corner-right'></i>". esc_html( $link_text ) ."</li>";
+			echo "<li class='acomments-view-more' data-child-count='" . esc_attr( $comment->all_child_count ) . "'><i class='bb-icon-l bb-icon-corner-right'></i>" . esc_html( $link_text ) . "</li>";
 
 			$skip_children_loop = true;
 		}
