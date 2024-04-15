@@ -1031,8 +1031,6 @@ function bb_xprofile_top_most_template_field_id( $field_id ) {
 	return $main_field;
 }
 
-add_action( 'wp_ajax_bb_admin_xprofile_add_repeater_set', 'bb_admin_xprofile_add_repeater_set' );
-
 /**
  * Adds a repeater set for admin screen.
  *
@@ -1078,49 +1076,49 @@ function bb_admin_xprofile_add_repeater_set() {
 	if ( ! empty( $existing_field_ids ) ) {
 		$clone_field_ids_has_data = array_diff( $clone_field_ids_has_data, $existing_field_ids );
 	}
-    $sortable_fields = array();
-    foreach ( $clone_field_ids_has_data as $key => $field_id ) {
-        $field_data = xprofile_get_field( $field_id, $user_id, false );
-        $sortable_fields[ $key ] = $field_data;
-    }
-    // Sort field_id based on field_order.
-    usort( $sortable_fields, function ( $a, $b ) {
+	$sortable_fields = array();
+	foreach ( $clone_field_ids_has_data as $key => $field_id ) {
+		$field_data              = xprofile_get_field( $field_id, $user_id, false );
+		$sortable_fields[ $key ] = $field_data;
+	}
+	// Sort field_id based on field_order.
+	usort( $sortable_fields, function ( $a, $b ) {
 		return $a->field_order - $b->field_order;
 	} );
 	ob_start();
 	if ( ! empty( $sortable_fields ) ) {
 		?>
-        <div class="repeater_group_outer" data-set_no="<?php echo esc_attr( $current_set_number ); ?>">
-            <div class="repeater_tools">
-                <span class="repeater_set_title"></span>
-                <a class="repeater_set_edit bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Edit', 'buddyboss' ); ?>">
-                    <i class="dashicons dashicons-edit"></i>
-                    <span class="bp-screen-reader-text"><?php _e( 'Edit', 'buddyboss' ); ?></span>
-                </a>
-                <a class="repeater_set_delete bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Delete', 'buddyboss' ); ?>">
-                    <i class="dashicons dashicons-trash"></i>
-                    <span class="bp-screen-reader-text"><?php _e( 'Delete', 'buddyboss' ); ?></span>
-                </a>
-            </div>
-            <div class='repeater_group_inner'>
+		<div class="repeater_group_outer" data-set_no="<?php echo esc_attr( $current_set_number ); ?>">
+			<div class="repeater_tools">
+				<span class="repeater_set_title"></span>
+				<a class="repeater_set_edit bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Edit', 'buddyboss' ); ?>">
+					<i class="dashicons dashicons-edit"></i>
+					<span class="bp-screen-reader-text"><?php _e( 'Edit', 'buddyboss' ); ?></span>
+				</a>
+				<a class="repeater_set_delete bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Delete', 'buddyboss' ); ?>">
+					<i class="dashicons dashicons-trash"></i>
+					<span class="bp-screen-reader-text"><?php _e( 'Delete', 'buddyboss' ); ?></span>
+				</a>
+			</div>
+			<div class='repeater_group_inner'>
 				<?php
 				foreach ( $sortable_fields as $key => $field_object ) {
 					global $field, $profile_template;
-                    $field                           = $field_object;
+					$field                           = $field_object;
 					$profile_template                = isset( $profile_template ) ? $profile_template : new stdClass();
 					$profile_template->field         = $field_object;
 					$profile_template->current_field = $key;
 					$profile_template->in_the_loop   = false;
 					?>
-                    <div<?php bp_field_css_class( $profile_field_class ); ?>>
-                        <fieldset>
+					<div<?php bp_field_css_class( $profile_field_class ); ?>>
+						<fieldset>
 							<?php
 							$field_type = bp_xprofile_create_field_type( $field->type );
 							$field_type->edit_field_html( array( 'user_id' => $user_id ) );
 							do_action( 'bp_custom_profile_edit_fields_pre_visibility' );
 							$can_change_visibility = bp_current_user_can( 'bp_xprofile_change_field_visibility' );
 							?>
-                            <p class="field-visibility-settings-<?php echo $can_change_visibility ? 'toggle' : 'notoggle'; ?>" id="field-visibility-settings-toggle-<?php bp_the_profile_field_input_name(); ?>">
+							<p class="field-visibility-settings-<?php echo $can_change_visibility ? 'toggle' : 'notoggle'; ?>" id="field-visibility-settings-toggle-<?php bp_the_profile_field_input_name(); ?>">
 									<span id="<?php echo $field->id; ?>-2">
 									<?php
 									printf(
@@ -1130,28 +1128,27 @@ function bb_admin_xprofile_add_repeater_set() {
 									?>
 									</span>
 								<?php if ( $can_change_visibility ) : ?>
-                                    <button type="button" class="button visibility-toggle-link" aria-describedby="<?php echo bp_the_profile_field_input_name(); ?>-2" aria-expanded="false"><?php esc_html_e( 'Change', 'buddyboss' ); ?></button>
+									<button type="button" class="button visibility-toggle-link" aria-describedby="<?php echo bp_the_profile_field_input_name(); ?>-2" aria-expanded="false"><?php esc_html_e( 'Change', 'buddyboss' ); ?></button>
 								<?php endif; ?>
-                            </p>
+							</p>
 							<?php if ( $can_change_visibility ) : ?>
-                                <div class="field-visibility-settings" id="field-visibility-settings-<?php bp_the_profile_field_id(); ?>">
-                                    <fieldset>
-                                        <legend><?php _e( 'Who can see this field?', 'buddyboss' ); ?></legend>
+								<div class="field-visibility-settings" id="field-visibility-settings-<?php bp_the_profile_field_id(); ?>">
+									<fieldset>
+										<legend><?php _e( 'Who can see this field?', 'buddyboss' ); ?></legend>
 										<?php bp_profile_visibility_radio_buttons(); ?>
-                                    </fieldset>
-                                    <button type="button" class="button field-visibility-settings-close"><?php esc_html_e( 'Close', 'buddyboss' ); ?></button>
-                                </div>
+									</fieldset>
+									<button type="button" class="button field-visibility-settings-close"><?php esc_html_e( 'Close', 'buddyboss' ); ?></button>
+								</div>
 							<?php endif;
 							do_action( 'bp_custom_profile_edit_fields' );
 							?>
-                        </fieldset>
-                    </div>
+						</fieldset>
+					</div>
 					<?php
 				}
-
 				?>
-            </div>
-        </div>
+			</div>
+		</div>
 		<?php
 	}
 	$all_fields = array();
@@ -1167,8 +1164,7 @@ function bb_admin_xprofile_add_repeater_set() {
 		)
 	);
 }
-
-add_action( 'xprofile_updated_profile', 'bb_admin_profile_repeaters_update_field_data', 11, 5 );
+add_action( 'wp_ajax_bb_admin_xprofile_add_repeater_set', 'bb_admin_xprofile_add_repeater_set' );
 
 /**
  * Function to save repeater data in the admin screen.
@@ -1271,3 +1267,4 @@ function bb_admin_profile_repeaters_update_field_data( $user_id, $posted_field_i
 		}
 	}
 }
+add_action( 'xprofile_updated_profile', 'bb_admin_profile_repeaters_update_field_data', 11, 5 );
