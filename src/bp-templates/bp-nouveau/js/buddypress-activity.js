@@ -4041,18 +4041,18 @@ window.bp = window.bp || {};
 		/**
 		 * Show scheduled activities.
 		 */
-		showSchedulePosts: function (e) {
+		showSchedulePosts: function () {
 			var object = 'activity',
 				scope = 'all';
 
 			bp.Nouveau.Activity.scheduled_current_page = 1;
 
-			if ( $( '#buddypress [data-bp-list="' + object + '"]' ).length ) {
+			if ( $( '#buddypress .bb-action-popup-content .schedule-posts-content' ).length ) {
 				var queryData = {
 					object: object,
 					scope: scope,
 					status: 'scheduled',
-					target: '#buddypress .bb-action-popup-content[data-bp-list] .schedule-posts-content',
+					target: '#buddypress .bb-action-popup-content .schedule-posts-content',
 					template: 'schedule_activity',
 				};
 
@@ -4077,7 +4077,7 @@ window.bp = window.bp || {};
 				self = this,
 				page = ( Number( self.scheduled_current_page ) * 1 ) + 1;
 
-			if ( page > 0 && $( '#buddypress [data-bp-list="' + object + '"]' ).length ) {
+			if ( page > 0 && $( '#buddypress .bb-action-popup-content .schedule-posts-content' ).length ) {
 				targetEl.find( 'a' ).first().addClass( 'loading' );
 				$( '#buddypress #bb-schedule-posts_modal ul.bp-list li.activity-item' ).addClass( 'bb-pre-listed-page-item' );
 				var queryData = {

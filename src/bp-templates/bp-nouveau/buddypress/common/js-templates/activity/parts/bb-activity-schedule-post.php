@@ -95,7 +95,7 @@
 										<span class="bb-icon-l bb-icon-times"></span>
 									</a>
 								</header>
-								<div class="bb-action-popup-content" data-bp-list="activity">
+								<div class="bb-action-popup-content">
 									<div class="schedule-posts-placeholder_loader">
 										<i class="bb-icon-f bb-icon-spinner animate-spin"></i>
 									</div>
