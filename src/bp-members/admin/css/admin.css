@@ -264,6 +264,10 @@ div#community-profile-page p.not-activated {
 		margin-bottom: 12px;
 	}
 
+	#your-profile .bp-profile-field > fieldset > legend {
+		min-height: auto;
+	}
+
 	#your-profile .field_type_multiselectbox select {
 		height: auto;
 	}
