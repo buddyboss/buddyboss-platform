@@ -336,7 +336,7 @@ window.bp = window.bp || {};
 			$( document ).prop( 'title', '(' + newest_activities_count + ') ' + this.heartbeat_data.document_title );
 
 			// Update the Load Newest li if it already exists.
-			if ( $( '#buddypress [data-bp-list="activity"] li' ).first().hasClass( 'load-newest' ) ) {
+			if ( $( '#buddypress [data-bp-list="activity"]' ).first().hasClass( 'load-newest' ) ) {
 				var newest_link = $( '#buddypress [data-bp-list="activity"] .load-newest a' ).html();
 				$( '#buddypress [data-bp-list="activity"] .load-newest a' ).html( newest_link.replace( /([0-9]+)/, newest_activities_count ) );
 
@@ -4042,10 +4042,10 @@ window.bp = window.bp || {};
 		 * Show scheduled activities.
 		 */
 		showSchedulePosts: function (e) {
-			var object = 'activity';
-			var scope = 'all';
+			var object = 'activity',
+				scope = 'all';
 
-			this.scheduled_current_page = 1;
+			bp.Nouveau.Activity.scheduled_current_page = 1;
 
 			if ( $( '#buddypress [data-bp-list="' + object + '"]' ).length ) {
 				var queryData = {
@@ -4075,14 +4075,7 @@ window.bp = window.bp || {};
 				scope = 'all',
 				targetEl = $( event.currentTarget ),
 				self = this,
-				page = ( Number( this.scheduled_current_page ) * 1 ) + 1;
-
-
-			if ( targetEl.length > 0 ) {
-				const url = new URL( targetEl.find( 'a' ).attr( 'href' ) );
-				const params = new URLSearchParams( url.search );
-				page = params.get('acpage');
-			}
+				page = ( Number( self.scheduled_current_page ) * 1 ) + 1;
 
 			if ( page > 0 && $( '#buddypress [data-bp-list="' + object + '"]' ).length ) {
 				targetEl.find( 'a' ).first().addClass( 'loading' );
@@ -4124,7 +4117,7 @@ window.bp = window.bp || {};
 							targetEl.remove();
 
 							// Update the current page.
-							// self.scheduled_current_page = page;
+							self.scheduled_current_page = page;
 
 							// Replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 							jQuery( window ).scroll();
