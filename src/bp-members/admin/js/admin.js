@@ -228,7 +228,11 @@
 						},
 						'success': function ( response ) {
 							if ( response.success && response.data ) {
-								parentId.find( '.repeater_group_outer' ).last().after( response.data.html );
+								if ( parentId.find( '.repeater_group_outer' ).length ) {
+									parentId.find( '.repeater_group_outer' ).last().after( response.data.html );
+								} else {
+									parentId.find( '.repeater_sets_sortable' ).html( response.data.html );
+								}
 								parentId.find( '[name="field_ids[' + groupId + ']"]' ).val( response.data.field_ids.join( ',' ) );
 								parentId.find( '[name="repeater_set_sequence[' + groupId + ']"]' ).val( response.data.set_no.join( ',' ) );
 								parentId.find( '.repeater_sets_sortable' ).sortable( 'destroy' ).sortable();
