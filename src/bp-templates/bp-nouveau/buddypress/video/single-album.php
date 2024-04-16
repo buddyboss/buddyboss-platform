@@ -12,6 +12,8 @@
 
 global $video_album_template;
 
+$is_send_ajax_request = bb_is_send_ajax_request();
+
 $album_id      = (int) bp_action_variable( 0 );
 $album_privacy = bb_media_user_can_access( $album_id, 'album' );
 $can_edit      = true === (bool) $album_privacy['can_edit'];
@@ -99,8 +101,16 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) {
 				}
 				?>
 
-				<div id="video-stream" class="video" data-bp-list="video">
-					<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'album-video-loading' ); ?></div>
+				<div id="video-stream" class="video" data-bp-list="video" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+					<?php
+					if ( $is_send_ajax_request ) {
+						echo '<div id="bp-ajax-loader">';
+						bp_nouveau_user_feedback( 'album-video-loading' );
+						echo '</div>';
+					} else {
+						bp_get_template_part( 'video/video-loop' );
+					}
+					?>
 				</div>
 			</div>
 		</div>
