@@ -279,12 +279,10 @@ function bp_ps_xprofile_search_test( $f ) {
 		if ( is_user_logged_in() ) {
 			$loggin_user_id = bp_loggedin_user_id();
 
-			$sql['where'][] = "user_id != {$loggin_user_id}";
-
 			$field_visibility[] = 'loggedin';
 
 			if ( bp_is_active( 'friends' ) ) {
-				$friend_ids = $wpdb->prepare(
+				$friend_ids_sql = $wpdb->prepare(
 					"SELECT CASE WHEN initiator_user_id = %d THEN friend_user_id ELSE initiator_user_id END AS friend_id
 					FROM {$bp->friends->table_name} WHERE is_confirmed = 1 AND( initiator_user_id = %d OR friend_user_id = %d )",
 					$loggin_user_id,
@@ -296,7 +294,8 @@ function bp_ps_xprofile_search_test( $f ) {
 
 		$sql['where'][] = "field_id IN (
 			SELECT field_id FROM {$bp->profile->table_name_visibility} WHERE `value` IN ('" . implode( "','", $field_visibility ) . "')
-			 OR `value` = 'friends' AND user_id IN ({$friend_ids})
+			 OR ( `value` = 'friends' AND user_id IN ({$friend_ids_sql}) )
+			 OR ( `value` = 'onlyme' AND user_id = {$loggin_user_id} )
 		)";
 	}
 
