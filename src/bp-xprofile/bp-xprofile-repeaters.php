@@ -864,6 +864,9 @@ function bp_profile_repeaters_print_group_html_start( $args = array() ) {
 		$is_required = xprofile_check_is_required_field( $current_field_id );
 
 		$can_delete = ( '1' === $current_set_number && true === $is_required ) ? false : true;
+        if ( is_admin() && 1 === (int) $current_set_number ) {
+            $can_delete = false;
+        }
 
 		if ( empty( $first_xpfield_in_repeater ) ) {
 			$first_xpfield_in_repeater = $template_field_id;
