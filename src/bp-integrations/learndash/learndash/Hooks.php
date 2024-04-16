@@ -34,7 +34,7 @@ class Hooks {
 	 */
 	public function init() {
 		// add some helpful missing hooks
-		add_action( 'save_post_groups', array( $this, 'groupUpdated' ) );
+		add_action( 'save_post_groups', array( $this, 'groupUpdated' ), 10, 2 );
 		add_action( 'before_delete_post', array( $this, 'groupDeleting' ) );
 
 		// backward compet, we check the meta instead of using hook (hook not consistant)
@@ -78,7 +78,26 @@ class Hooks {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function groupUpdated( $groupId ) {
+	public function groupUpdated( $groupId, $group ) {
+
+		if ( wp_is_post_revision( $groupId ) ) {
+			return false;
+		}
+
+		if ( ! isset( $_POST['post_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			return false;
+		}
+
+		if ( $_POST['post_type'] !== $group->post_type ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			return false;
+		}
+
+		if ( learndash_get_post_type_slug( 'group' ) === $group->post_type ) {
+			if ( ! current_user_can( 'edit_group', $groupId ) ) {
+				return false;
+			}
+		}
+
 		do_action( 'bp_ld_sync/learndash_group_updated', $groupId );
 	}
 
