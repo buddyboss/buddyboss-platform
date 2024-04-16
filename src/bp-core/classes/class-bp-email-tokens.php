@@ -522,7 +522,8 @@ class BP_Email_Tokens {
 
 		$settings = bp_email_get_appearance_settings();
 
-		$activity = isset( $tokens['activity'] ) ? $tokens['activity'] : false;
+		$activity    = isset( $tokens['activity'] ) ? $tokens['activity'] : false;
+		$author_name = isset( $tokens['poster.name'] ) ?  $tokens['poster.name'] : bp_core_get_user_displayname( $activity->user_id );
 
 		if ( empty( $activity ) ) {
 			return $output;
@@ -553,7 +554,7 @@ class BP_Email_Tokens {
 								</a>
 							</td>
 							<td width="88%" style="vertical-align: middle;">
-								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bp_core_get_user_displayname( $activity->user_id ); ?></div>
+								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo esc_html( $author_name ); ?></div>
 							</td>
 						</tr>
 						</tbody>
@@ -648,7 +649,8 @@ class BP_Email_Tokens {
 			return $output;
 		}
 
-		$user_id = $activity->user_id ?? $author_id;
+		$user_id     = $activity->user_id ?? $author_id;
+		$author_name = $tokens['poster.name'] ?? bp_core_get_user_displayname( $user_id );
 
 		ob_start();
 
@@ -681,7 +683,7 @@ class BP_Email_Tokens {
 								</a>
 							</td>
 							<td width="88%" style="vertical-align: middle;">
-								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bp_core_get_user_displayname( $user_id ); ?></div>
+								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo esc_html( $author_name ); ?></div>
 							</td>
 						</tr>
 						</tbody>
@@ -807,7 +809,8 @@ class BP_Email_Tokens {
 		if ( empty( $activity_comment ) || empty( $activity_comment->secondary_item_id ) ) {
 			return $output;
 		}
-
+		
+		$commenter_name       = isset( $tokens['poster.name'] ) ? $tokens['poster.name'] : bp_core_get_user_displayname( $activity_comment->user_id );
 		$activity_original_id = ! empty( $activity_comment->item_id ) ? $activity_comment->item_id : $activity_comment->secondary_item_id;
 		$activity_original    = new BP_Activity_Activity( $activity_original_id );
 		if ( empty( $activity_original ) ) {
@@ -839,7 +842,7 @@ class BP_Email_Tokens {
 								</a>
 							</td>
 							<td width="88%" style="vertical-align: middle;">
-								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bp_core_get_user_displayname( $activity_comment->user_id ); ?></div>
+								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo esc_html( $commenter_name ); ?></div>
 							</td>
 						</tr>
 						</tbody>
@@ -1153,19 +1156,24 @@ class BP_Email_Tokens {
 		$email_type = $bp_email->get( 'type' );
 		switch ( $email_type ) {
 			case 'friends-request-accepted':
-				$member_id = isset( $tokens['friend.id'] ) ? $tokens['friend.id'] : false;
+				$member_id   = isset( $tokens['friend.id'] ) ? $tokens['friend.id'] : false;
+				$receiver_id = isset( $tokens['initiator.id'] ) ? $tokens['initiator.id'] : false;
 				break;
 			case 'groups-membership-request':
-				$member_id = isset( $tokens['requesting-user.id'] ) ? $tokens['requesting-user.id'] : false;
+				$member_id   = isset( $tokens['requesting-user.id'] ) ? $tokens['requesting-user.id'] : false;
+				$receiver_id = isset( $tokens['admin.id'] ) ? $tokens['admin.id'] : false;
 				break;
 			case 'friends-request':
-				$member_id = isset( $tokens['initiator.id'] ) ? $tokens['initiator.id'] : false;
+				$member_id   = isset( $tokens['initiator.id'] ) ? $tokens['initiator.id'] : false;
+				$receiver_id = isset( $tokens['friend.id'] ) ? $tokens['friend.id'] : false;
 				break;
 			case 'groups-invitation':
-				$member_id = isset( $tokens['inviter.id'] ) ? $tokens['inviter.id'] : false;
+				$member_id   = isset( $tokens['inviter.id'] ) ? $tokens['inviter.id'] : false;
+				$receiver_id = isset( $tokens['invited.id'] ) ? $tokens['invited.id'] : false;
 				break;
 			case 'new-follower':
-				$member_id = isset( $tokens['follower.id'] ) ? $tokens['follower.id'] : false;
+				$member_id   = isset( $tokens['follower.id'] ) ? $tokens['follower.id'] : false;
+				$receiver_id = isset( $tokens['following.id'] ) ? $tokens['following.id'] : false;
 				break;
 		}
 
@@ -1210,7 +1218,7 @@ class BP_Email_Tokens {
 												</tr>
 												<tr>
 													<td class="mobile-text-center">
-														<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.25 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.75 ) . 'px' ); ?>;"><?php echo bp_core_get_user_displayname( $member_id ); ?></div>
+														<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.25 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.75 ) . 'px' ); ?>;"><?php echo bp_core_get_user_displayname( $member_id, $receiver_id ); ?></div>
 														<div class="spacer" style="font-size: 2px; line-height: 2px; height: 2px;">&nbsp;</div>
 														<p style="opacity: 0.7; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.8125 ) . 'px' ); ?>; color : <?php echo esc_attr( $settings['body_text_color'] ); ?>; margin: 0;">
 															@<?php echo bp_activity_get_user_mentionname( $member_id ); ?>
@@ -1502,7 +1510,7 @@ class BP_Email_Tokens {
 								</a>
 							</td>
 							<td width="88%" style="vertical-align: middle;">
-								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bbp_get_reply_author_display_name( $formatted_tokens['reply.id'] ); ?></div>
+								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bbp_get_reply_author_display_name( $formatted_tokens['reply.id'], $receiver_user_id ); ?></div>
 							</td>
 						</tr>
 						</tbody>
@@ -1903,8 +1911,9 @@ class BP_Email_Tokens {
 			)
 		);
 
+		$sender_name = $tokens['sender.name'] ?? bp_core_get_user_displayname( $sender_id );
 		if ( ! empty( $sender_id ) ) {
-			$output = '<a href="' . esc_url( bp_core_get_user_domain( $sender_id ) ) . '" target="_blank" rel="nofollow" style="color: ' . esc_attr( $settings['highlight_color'] ) . '!important; font-weight: 500; text-decoration: none;">' . esc_html( bp_core_get_user_displayname( $sender_id ) ) . '</a>';
+			$output = '<a href="' . esc_url( bp_core_get_user_domain( $sender_id ) ) . '" target="_blank" rel="nofollow" style="color: ' . esc_attr( $settings['highlight_color'] ) . '!important; font-weight: 500; text-decoration: none;">' . esc_html( $sender_name ) . '</a>';
 		}
 
 		return $output;
@@ -2423,10 +2432,10 @@ class BP_Email_Tokens {
 		$user_id        = isset( $tokens['commenter.id'] ) ? $tokens['commenter.id'] : false;
 		$commenter_name = '';
 
-		if ( ! empty( $user_id ) ) {
-			$commenter_name = bp_core_get_user_displayname( $user_id );
-		} elseif ( ! empty( $tokens['commenter.name'] ) ) {
+		if ( ! empty( $tokens['commenter.name'] ) ) {
 			$commenter_name = $tokens['commenter.name'];
+		} elseif ( ! empty( $user_id ) ) {
+			$commenter_name = bp_core_get_user_displayname( $user_id );
 		}
 
 		return $commenter_name;
