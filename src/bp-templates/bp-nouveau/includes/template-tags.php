@@ -161,7 +161,7 @@ function bp_nouveau_has_dismiss_button() {
 }
 
 /**
- * Ouptut the dismiss type.
+ * Output the dismiss type.
  *
  * $type is used to set the data-attr for the button.
  * 'clear' is tested for & used to remove cookies, if set, in buddypress-nouveau.js.

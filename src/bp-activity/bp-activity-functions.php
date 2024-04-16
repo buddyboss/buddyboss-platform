@@ -704,9 +704,9 @@ function bp_activity_type_supports( $activity_type = '', $feature = '' ) {
 			} elseif ( 'bbp_topic_create' === $activity_type || 'bbp_reply_create' === $activity_type ) {
 				$retval = false;
 
-				// By Default, all other activity types are supporting comments.
+				// By Default, all other activity types are supporting comments but check if activity comments disabled.
 			} else {
-				$retval = true;
+				$retval = bb_is_activity_comments_enabled();
 			}
 			break;
 	}
@@ -2123,9 +2123,34 @@ function bp_activity_add( $args = '' ) {
 
 	// If this is an activity comment, rebuild the tree.
 	if ( 'activity_comment' === $activity->type ) {
+
 		// Also clear the comment cache for the parent activity ID.
 		wp_cache_delete( $activity->item_id, 'bp_activity_comments' );
 		wp_cache_delete( 'bp_get_child_comments_' . $activity->item_id, 'bp_activity_comments' );
+
+		// Clear the comment count cache based on its own id and parent activity ID.
+		wp_cache_delete( 'bp_activity_comment_count_' . $activity->id, 'bp_activity_comments' );
+		// Purge cache for activity API.
+		if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+			BuddyBoss\Performance\Cache::instance()->purge_by_group( 'bp-activity_' . $activity->id );
+			BuddyBoss\Performance\Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( bp_activity_get_permalink( $activity->id ) ) );
+		}
+
+		// Also clear cache for all top level item.
+		$comments = bb_get_activity_hierarchy( $activity->id );
+		if ( ! empty ( $comments ) ) {
+			$descendants = wp_list_pluck( $comments, 'id' );
+			if ( ! empty ( $descendants ) ) {
+				foreach ( $descendants as $activity_id ) {
+					wp_cache_delete( 'bp_activity_comment_count_' . $activity_id, 'bp_activity_comments' );
+					// Purge cache for activity API.
+					if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+						BuddyBoss\Performance\Cache::instance()->purge_by_group( 'bp-activity_' . $activity_id );
+						BuddyBoss\Performance\Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( bp_activity_get_permalink( $activity_id ) ) );
+					}
+				}
+			}
+		}
 
 		BP_Activity_Activity::rebuild_activity_comment_tree( $activity->item_id );
 	}
@@ -2889,6 +2914,20 @@ function bp_activity_new_comment( $args = '' ) {
 
 	// Default error message.
 	$feedback = __( 'There was an error posting your reply. Please try again.', 'buddyboss' );
+
+	// Bail if the activity comments closed.
+	if ( bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( $r['activity_id'] ) ) {
+		$error = new WP_Error( 'closed_activity_comments', __( 'The comments are closed for the activity.', 'buddyboss' ) );
+
+		if ( 'wp_error' === $r['error_type'] ) {
+			return $error;
+
+			// Backpat.
+		} else {
+			$bp->activity->errors['new_comment'] = $error;
+			return false;
+		}
+	}
 
 	// Filter to skip comment content check for comment notification.
 	$check_empty_content = apply_filters( 'bp_has_activity_comment_content', true );
@@ -4031,7 +4070,7 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
 	$email_type   = 'activity-at-message';
 	$group_name   = '';
 	$message_link = bp_activity_get_permalink( $activity_id );
-	$poster_name  = bp_core_get_user_displayname( $activity->user_id );
+	$poster_name  = bp_core_get_user_displayname( $activity->user_id, $receiver_user_id );		
 
 	remove_filter( 'bp_get_activity_content_body', 'convert_smilies' );
 	remove_filter( 'bp_get_activity_content_body', 'wpautop' );
@@ -4147,7 +4186,7 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
  */
 function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 0, $params = array() ) {
 	$original_activity = new BP_Activity_Activity( $params['activity_id'] );
-	$poster_name       = bp_core_get_user_displayname( $commenter_id );
+	$poster_name	   = bp_core_get_user_displayname( $commenter_id, $original_activity->user_id );
 	$thread_link       = bp_activity_get_permalink( $params['activity_id'] );
 	$usernames         = bp_activity_do_mentions() ? bp_activity_find_mentions( $params['content'] ) : array();
 
@@ -4190,6 +4229,11 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 		}
 
 		$send_email = true;
+
+		// Stop sending email notification to user who has muted notifications.
+		if ( bb_user_has_mute_notification( $original_activity->id, $original_activity->user_id ) ) {
+			$send_email = false;
+		}
 
 		if ( ! empty( $usernames ) && array_key_exists( $original_activity->user_id, $usernames ) ) {
 			if ( true === bb_is_notification_enabled( $original_activity->user_id, 'bb_new_mention' ) ) {
@@ -4266,6 +4310,11 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 		}
 
 		$send_email = true;
+
+		// Stop sending email notification to user who has muted notifications.
+		if ( bb_user_has_mute_notification( $original_activity->id, $parent_comment->user_id ) ) {
+			$send_email = false;
+		}
 
 		if ( ! empty( $usernames ) && array_key_exists( $parent_comment->user_id, $usernames ) ) {
 			if ( true === bb_is_notification_enabled( $parent_comment->user_id, 'bb_new_mention' ) ) {
@@ -5768,7 +5817,6 @@ function bb_activity_following_post_notification( $args ) {
 
 	$activity_id      = $r['activity']->id;
 	$activity_user_id = ! empty( $r['item_id'] ) ? $r['item_id'] : $r['activity']->user_id;
-	$poster_name      = bp_core_get_user_displayname( $activity_user_id );
 	$activity_link    = bp_activity_get_permalink( $activity_id );
 	$activity_metas   = bb_activity_get_metadata( $activity_id );
 	$media_ids        = $activity_metas['bp_media_ids'][0] ?? '';
@@ -5804,7 +5852,6 @@ function bb_activity_following_post_notification( $args ) {
 		'tokens' => array(
 			'activity'      => $r['activity'],
 			'activity.type' => $text,
-			'poster.name'   => $poster_name,
 			'activity.url'  => esc_url( $activity_link ),
 		),
 	);
@@ -5846,7 +5893,9 @@ function bb_activity_following_post_notification( $args ) {
 				'user_id'           => $user_id,
 				'notification_type' => 'new-activity-following',
 			);
+			$poster_name = bp_core_get_user_displayname( $activity_user_id, $user_id );
 
+			$args['tokens']['poster.name']      = $poster_name;
 			$args['tokens']['unsubscribe']      = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
 			$args['tokens']['receiver-user.id'] = $user_id;
 
@@ -6497,7 +6546,7 @@ function bb_load_reaction_popup_modal_js_template() {
 	}
 }
 
-/**
+/*
  * Fetch the activity metadata using the activity ID.
  *
  * @since BuddyBoss 2.5.50
@@ -6518,4 +6567,517 @@ function bb_activity_get_metadata( $activity_id ) {
 
 	// Return the metadata.
 	return $meta_data;
+}
+
+/**
+ * Check if activity comments are closed for given activity.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @param int $activity_id Activity ID.
+ *
+ * @return bool
+ */
+function bb_is_activity_comments_closed( $activity_id ) {
+	$activity_metas = bb_activity_get_metadata( $activity_id );
+	return ! empty( $activity_metas['bb_is_closed_comments'][0] ) && (bool) $activity_metas['bb_is_closed_comments'][0];
+}
+
+/**
+ * Get user id who closed activity comments.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @param int $activity_id Activity ID.
+ *
+ * @return bool
+ */
+function bb_get_activity_comments_closer_id( $activity_id ) {
+	$activity_metas = bb_activity_get_metadata( $activity_id );
+	return ! empty( $activity_metas['bb_closed_comments_closer_id'][0] ) ? (int) $activity_metas['bb_closed_comments_closer_id'][0] : 0;
+}
+
+/**
+ * Close or unclose activity comments.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @param array $args Arguments related to close/unclose activity feed post commenting.
+ *
+ * @return bool|string Update type closed_comments|unclosed_comments.
+ */
+function bb_activity_close_unclose_comments( $args = array() ) {
+	$r = bp_parse_args(
+		$args,
+		array(
+			'action'      => 'close_comments',
+			'activity_id' => 0,
+			'retval'      => 'bool',
+			'user_id'     => bp_loggedin_user_id(),
+		)
+	);
+
+	$retval                 = '';
+	$close_comments_updated = false;
+
+	$activity = new BP_Activity_Activity( (int) $r['activity_id'] );
+	if ( ! empty( $activity->id ) ) {
+
+		if ( 'unclose_comments' === $r['action'] ) {
+			$updated_value = false;
+		} else {
+			$updated_value = true;
+		}
+
+		$check_args = array(
+			'activity_id' => (int) $r['activity_id'],
+			'action'      => $r['action'],
+		);
+		$retval = bb_activity_comments_close_action_allowed( $check_args );
+
+		if ( 'allowed' === $retval ) {
+			bp_activity_update_meta( $activity->id, 'bb_is_closed_comments', $updated_value );
+			bp_activity_update_meta( $activity->id, 'bb_closed_comments_closer_id', $r['user_id'] );
+
+			if ( $updated_value ) {
+				$retval = 'closed_comments';
+			} else {
+				$retval = 'unclosed_comments';
+			}
+			$close_comments_updated = true;
+		}
+
+		/**
+		 * Fires after activity comments closed/unclosed.
+		 *
+		 * @since BuddyBoss 2.5.80
+		 *
+		 * @param int    $activity_id Activity ID.
+		 * @param string $action      Action type close_comments/unclose_comments.
+		 */
+		do_action( 'bb_activity_close_unclose_comments', $activity->id, $r['action'] );
+	}
+
+	if ( 'bool' === $r['retval'] ) {
+		if ( $close_comments_updated ) {
+			$retval = true;
+		} else {
+			$retval = false;
+		}
+	}
+
+	return $retval;
+}
+
+/**
+ * Check if the closed comments setting enabled.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @param bool $default The default value for the close activity comments setting.
+ *                      Defaults to true if not specified.
+ *
+ * @return bool
+ */
+function bb_is_close_activity_comments_enabled( $default = true ) {
+	/**
+	 * Apply filter to modify the close activity comments setting.
+	 *
+	 * @since BuddyBoss 2.5.80
+	 *
+	 * @param bool $default The default value for the close activity comments setting.
+	 *                      Defaults to true if not specified.
+	 */
+	return apply_filters( 'bb_is_close_activity_comments_enabled', bp_get_option( '_bb_enable_close_activity_comments', $default ) );
+}
+
+/**
+ * Check if the closed comments allowed for a particular user.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @return string
+ */
+function bb_activity_comments_close_action_allowed( $args = array() ) {
+	$retval = 'not_allowed';
+
+	$r = bp_parse_args(
+		$args,
+		array(
+			'action'      => 'close_comments',
+			'activity_id' => 0,
+			'user_id'     => bp_loggedin_user_id(),
+		)
+	);
+
+	$activity = new BP_Activity_Activity( (int) $r['activity_id'] );
+	if ( ! empty( $activity->id ) ) {
+
+		$prev_closer_id     = 0;
+		$is_closed_comments = bb_is_activity_comments_closed( $activity->id );
+		if ( $is_closed_comments ) {
+			$prev_closer_id = bb_get_activity_comments_closer_id( $activity->id );
+		}
+
+		// Check if group activity or normal activity.
+		if ( bp_is_active( 'groups' ) && 'groups' === $activity->component && ! empty( $activity->item_id ) ) {
+			$group = groups_get_group( $activity->item_id );
+
+			if (
+				bp_current_user_can( 'administrator' ) &&
+				'public' === $group->status
+			) {
+				$retval = 'allowed';
+
+				// Check the user is moderator or organizer are also part of the group.
+			} elseif ( ! groups_is_user_member( $r['user_id'], $activity->item_id ) ) {
+				$retval = 'not_member';
+			} else {
+				$is_admin = groups_is_user_admin( $r['user_id'], $activity->item_id );
+				$is_mod   = groups_is_user_mod( $r['user_id'], $activity->item_id );
+
+				if ( $is_admin || $is_mod ) {
+					$retval = 'allowed';
+					if ( $is_closed_comments && ! empty( $prev_closer_id ) ) {
+						if (
+							(
+								bp_user_can( $prev_closer_id, 'administrator' ) &&
+								'public' === $group->status
+							)
+						) {
+							$retval = 'not_allowed';
+						}
+					}
+				} elseif ( $activity->user_id === $r['user_id'] ) {
+					$retval = 'allowed';
+
+					if ( $is_closed_comments && ! empty( $prev_closer_id ) ) {
+						// Already closed by group organizer/moderator/admin(public group).
+						if (
+							(
+								groups_is_user_admin( $prev_closer_id, $activity->item_id ) ||
+								groups_is_user_mod( $prev_closer_id, $activity->item_id ) ||
+								(
+									bp_user_can( $prev_closer_id, 'administrator' ) &&
+									'public' === $group->status
+								)
+							)
+						) {
+							$retval = 'not_allowed';
+						}
+					}
+				} else {
+					$retval = 'not_allowed';
+				}
+			}
+		} elseif ( bp_current_user_can( 'administrator' ) ) {
+			$retval = 'allowed';
+		} elseif ( $activity->user_id === $r['user_id'] ) {
+			$retval = 'allowed';
+
+			// Already closed by admin.
+			if (
+				(
+					$is_closed_comments &&
+					! empty( $prev_closer_id )
+				) &&
+				$prev_closer_id !== $r['user_id'] &&
+				bp_user_can( $prev_closer_id, 'administrator' )
+			) {
+				$retval = 'not_allowed';
+			}
+		} else {
+			$retval = 'not_allowed';
+		}
+	}
+
+	return $retval;
+}
+
+/**
+ * Get the close comments notice string.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @param int $activity_id Activivty ID.
+ *
+ * @return string
+ */
+function bb_get_close_activity_comments_notice( $activity_id = 0 ) {
+
+	if ( empty( $activity_id ) ) {
+		$activity_id = bp_get_activity_id();
+	}
+
+	$closed_notice = '';
+	$activity      = new BP_Activity_Activity( $activity_id );
+	if ( ! empty( $activity->id ) && bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( $activity->id ) ) {
+		$closer_id     = bb_get_activity_comments_closer_id( $activity->id );
+		$closed_notice = sprintf( esc_html__( '%s turned off commenting for this post', 'buddyboss' ), bp_core_get_user_displayname( $closer_id ) );
+		if ( $closer_id === bp_loggedin_user_id() ) {
+			$closed_notice = esc_html__( 'You turned off commenting for this post', 'buddyboss' );
+		} elseif ( bp_is_active( 'groups' ) && 'groups' === $activity->component && ! empty( $activity->item_id ) ) {
+			$group = groups_get_group( $activity->item_id );
+			if ( groups_is_user_admin( $closer_id, $activity->item_id ) ) {
+				$closed_notice = esc_html__( 'An organizer turned off commenting for this post', 'buddyboss' );
+			} elseif ( groups_is_user_mod( $closer_id, $activity->item_id ) ) {
+				$closed_notice = esc_html__( 'A moderator turned off commenting for this post', 'buddyboss' );
+			} elseif ( bp_user_can( $closer_id, 'administrator' ) && 'public' === $group->status ) {
+				$closed_notice = esc_html__( 'An admin turned off commenting for this post', 'buddyboss' );
+			} else {
+				$closed_notice = sprintf( esc_html__( '%s turned off commenting for this post', 'buddyboss' ), bp_core_get_user_displayname( $closer_id ) );
+			}
+		} elseif ( bp_user_can( $closer_id, 'administrator' ) ) {
+			$closed_notice = esc_html__( 'An admin turned off commenting for this post', 'buddyboss' );
+		}
+	}
+
+	return $closed_notice;
+}
+
+/**
+ * Check whether activity comments is enabled.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ *
+ * @return bool
+ */
+function bb_is_activity_comments_enabled( $default = true ) {
+
+	/**
+	 * Apply filter to modify the activity comments enabled.
+	 *
+	 * @since BuddyBoss 2.5.80
+	 *
+	 * @param bool $default Status of activity comments enabled or disabled.
+	 */
+	return (bool) apply_filters( 'bb_is_activity_comments_enabled', bp_get_option( '_bb_enable_activity_comments', $default ) );
+}
+
+/**
+ * Check whether activity comment threading is enabled.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ *
+ * @return bool
+ */
+function bb_is_activity_comment_threading_enabled( $default = true ) {
+
+	/**
+	 * Apply filter to modify the activity comments threading enable.
+	 *
+	 * @since BuddyBoss 2.5.80
+	 *
+	 * @param bool $default Status of activity comments threading enabled or disabled.
+	 */
+	return (bool) apply_filters( 'bb_is_activity_comment_threading_enabled', bp_get_option( '_bb_enable_activity_comment_threading', $default ) );
+}
+
+/**
+ * Get activity comment threading depth.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @param int $default Optional. Fallback value if not found in the database.
+ *                     Default: 3.
+ *
+ * @return int
+ */
+function bb_get_activity_comment_threading_depth( $default = 3 ) {
+
+	/**
+	 * Apply filter to modify the activity comments threading depth.
+	 *
+	 * @since BuddyBoss 2.5.80
+	 *
+	 * @param bool $default Value of activity comments threading depth.
+	 */
+	return (int) apply_filters( 'bb_get_activity_comment_threading_depth', bp_get_option( '_bb_activity_comment_threading_depth', $default ) );
+}
+
+/**
+ * Get activity comment visibility value.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @param int $default Optional. Fallback value if not found in the database.
+ *                     Default: 2.
+ *
+ * @return int
+ */
+function bb_get_activity_comment_visibility( $default = 2 ) {
+
+	/**
+	 * Apply filter to modify the activity comments visibility.
+	 *
+	 * @since BuddyBoss 2.5.80
+	 *
+	 * @param bool $default Value of activity comments visibility.
+	 */
+	return (int) apply_filters( 'bb_get_activity_comment_visibility', bp_get_option( '_bb_activity_comment_visibility', $default ) );
+}
+
+/**
+ * Get activity comment loading value.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @param int $default Optional. Fallback value if not found in the database.
+ *                     Default: 10.
+ *
+ * @return int
+ */
+function bb_get_activity_comment_loading( $default = 10 ) {
+
+	/**
+	 * Apply filter to modify the activity comments loading.
+	 *
+	 * @since BuddyBoss 2.5.80
+	 *
+	 * @param bool $default Value of activity comments loading.
+	 */
+	return (int) apply_filters( 'bb_get_activity_comment_loading', bp_get_option( '_bb_activity_comment_loading', $default ) );
+}
+
+/**
+ * Set activity notification status.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @param array $args Array of Arguments.
+ *
+ * @return string
+ */
+function bb_toggle_activity_notification_status( $args = array() ) {
+	$r = bp_parse_args(
+		$args,
+		array(
+			'action'      => 'mute',
+			'activity_id' => 0,
+			'user_id'     => bp_loggedin_user_id(),
+		)
+	);
+
+	$retval   = '';
+	$activity = new BP_Activity_Activity( (int) $r['activity_id'] );
+
+	if ( ! empty( $activity->id ) ) {
+		$activity_mute_notification_meta = bp_activity_get_meta( $activity->id, 'muted_notification_users' );
+		if ( 'mute' === $r['action'] ) {
+
+			// Check if existing metadata is an array, initialize an empty array if not.
+			if ( ! is_array( $activity_mute_notification_meta ) ) {
+				$activity_mute_notification_meta = array();
+			}
+
+			if ( in_array( $r['user_id'], $activity_mute_notification_meta, true ) ) {
+				return 'already_muted';
+			}
+
+			// Add the new user ID to the existing data array.
+			$activity_mute_notification_meta[] = $r['user_id'];
+
+			// Update metadata in the database.
+			bp_activity_update_meta( $activity->id, 'muted_notification_users', $activity_mute_notification_meta );
+			$retval = 'mute';
+		}
+
+		if ( 'unmute' === $r['action'] ) {
+
+			if ( is_array( $activity_mute_notification_meta ) && in_array( $r['user_id'], $activity_mute_notification_meta ) ) {
+				// Remove the user ID from the existing data array
+				$activity_mute_notification_meta = array_diff( $activity_mute_notification_meta, array( $r['user_id'] ) );
+
+				// Update metadata in the database.
+				bp_activity_update_meta( $activity->id, 'muted_notification_users', $activity_mute_notification_meta );
+				$retval = 'unmute';
+			}
+		}
+
+		/**
+		 * Fires after activity mute/unmute activity.
+		 *
+		 * @since BuddyBoss 2.5.80
+		 *
+		 * @param int    $activity_id Activity ID.
+		 * @param string $action      Action type mute/unmute.
+		 * @param string $retval      Notification status.
+		 */
+		do_action( 'bb_activity_mute_unmute_notification', $activity->id, $r['action'], $retval );
+	}
+
+	return $retval;
+}
+
+/**
+ * Verify about the activity notification status based on user.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @param string $field_type Field type.
+ * @param int    $user_id    User id.
+ *
+ * @return array list of options.
+ */
+function bb_activity_enabled_notification( $field_type, $user_id = 0 ) {
+	static $cache = null;
+	$options = array();
+
+	if ( null !== $cache ) {
+		return $cache;
+	}
+
+	if ( ! bp_is_active( 'notifications' ) ) {
+		$cache = $options;
+
+		return $options;
+	}
+
+	$options['email'] = bb_is_notification_enabled( $user_id, $field_type );
+
+	if ( bb_web_notification_enabled() ) {
+		$options['web'] = bb_is_notification_enabled( $user_id, $field_type, 'web' );
+	}
+
+	if ( bb_app_notification_enabled() ) {
+		$options['app'] = bb_is_notification_enabled( $user_id, $field_type, 'app' );
+	}
+
+	$options = apply_filters( 'bb_activity_enabled_notification', $options, $field_type, $user_id );
+	$cache   = $options;
+
+	return $options;
+}
+
+/**
+ * Check User has muted notification or not.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @param int $activity_id Activity ID.
+ * @param int $user_id     User Id.
+ *
+ * @return boolean
+ */
+function bb_user_has_mute_notification( $activity_id, $user_id ) {
+	$is_muted      = false;
+	$activity_meta = bb_activity_get_metadata( $activity_id );
+	if ( isset( $activity_meta['muted_notification_users'] ) ) {
+
+		$mute_activity_meta = maybe_unserialize( $activity_meta['muted_notification_users'][0] );
+		if ( ! empty( $mute_activity_meta ) && is_array( $mute_activity_meta ) ) {
+
+			if ( in_array( (int) $user_id, $mute_activity_meta, true ) ) {
+				$is_muted = true;
+			}
+		}
+	}
+
+	return $is_muted;
 }

@@ -242,20 +242,6 @@ function bp_admin_setting_callback_heartbeat() {
 }
 
 /**
- * Automatically load more activity posts when scrolling to the bottom of the page.
- *
- * @since BuddyPress 2.0.0
- */
-function bp_admin_setting_callback_enable_activity_autoload() {
-	?>
-
-	<input id="_bp_enable_activity_autoload" name="_bp_enable_activity_autoload" type="checkbox" value="1" <?php checked( bp_is_activity_autoload_active( false ) ); ?> />
-	<label for="_bp_enable_activity_autoload"><?php esc_html_e( 'Automatically load more activity posts when scrolling to the bottom of the page ', 'buddyboss' ); ?></label>
-
-	<?php
-}
-
-/**
  * Enable activity edit
  *
  * @since BuddyBoss 1.5.0
@@ -1259,7 +1245,7 @@ function bb_admin_setting_profile_header_elements( $args ) {
 		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
 			foreach ( $args['elements'] as $element ) {
 				?>
-				<div class="bb-profile-header-element bb-profile-header-element-<?php echo esc_attr( $element['element_name'] ); ?>">
+				<div class="<?php echo ! empty( $element['element_class'] ) ? esc_attr( $element['element_class'] ) : ''; ?> bb-profile-header-element bb-profile-header-element-<?php echo esc_attr( $element['element_name'] ); ?>">
 					<?php
 					new BB_Admin_Setting_Fields(
 						array(
@@ -1296,7 +1282,7 @@ function bb_admin_setting_member_directory_elements( $args ) {
 		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
 			foreach ( $args['elements'] as $element ) {
 				?>
-				<div class="bb-member-directory-element bb-member-directory-element-<?php echo esc_attr( $element['element_name'] ); ?>">
+				<div class="<?php echo ! empty( $element['element_class'] ) ? esc_attr( $element['element_class'] ) : ''; ?> bb-member-directory-element bb-member-directory-element-<?php echo esc_attr( $element['element_name'] ); ?>">
 					<?php
 					new BB_Admin_Setting_Fields(
 						array(
@@ -1333,7 +1319,7 @@ function bb_admin_setting_member_profile_actions( $args ) {
 		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
 			foreach ( $args['elements'] as $profile_action ) {
 				?>
-				<div class="bb-member-directory-profile-action bb-member-directory-profile-action-<?php echo esc_attr( $profile_action['element_name'] ); ?>">
+				<div class="bb-member-directory-profile-action bb-member-directory-profile-action-<?php echo esc_attr( $profile_action['element_name'] ); ?> <?php echo ! empty( $profile_action['element_class'] ) ? esc_attr( $profile_action['element_class'] ) : ''; ?>">
 					<?php
 					new BB_Admin_Setting_Fields(
 						array(
@@ -1372,6 +1358,10 @@ function bb_admin_setting_member_profile_primary_action( $args ) {
 
 			if ( isset( $args['elements'], $args['selected_elements'] ) && ! empty( $args['elements'] ) && ! empty( $args['selected_elements'] ) ) {
 				foreach ( $args['elements'] as $profile_primary_action ) {
+					if ( false !== strpos( $profile_primary_action['element_class'], 'bp-hide' ) ) {
+						continue;
+					}
+
 					if ( in_array( $profile_primary_action['element_name'], $args['selected_elements'], true ) ) {
 						$options[ $profile_primary_action['element_name'] ] = $profile_primary_action['element_label'];
 					}
@@ -3671,5 +3661,123 @@ function bb_reactions_settings_callback_reactions_button() {
 			<?php esc_html_e( 'Change the icon and text used within the Reactions button. When using “Emotions”, clicking on the button will react with the first emotion from the list of options.', 'buddyboss' ); ?>
 		</p>
 	</label>
+	<?php
+}
+
+/**
+ * Link to General Performance tutorial.
+ *
+ * @since BuddyBoss 2.5.80
+ */
+function bb_admin_performance_general_setting_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 127197, // @todo update when release.
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
+ * Link to Activity Performance tutorial.
+ *
+ * @since BuddyBoss 2.5.80
+ */
+function bb_admin_performance_activity_setting_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 127197, // @todo update when release.
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
+ * Function to render the fields in a general section of the performance tab.
+ *
+ * @since BuddyBoss 2.5.80
+ */
+function bb_admin_performance_setting_general_callback() {
+	$bb_ajax_request_page_load = bb_get_ajax_request_page_load();
+	?>
+	<label for="bb_ajax_request_page_load"><?php esc_html_e( 'Load', 'buddyboss' ); ?></label>
+	<select name="bb_ajax_request_page_load" id="bb_ajax_request_page_load">
+		<option value="1" <?php selected( $bb_ajax_request_page_load, 1 ); ?>>1</option>
+		<option value="2" <?php selected( $bb_ajax_request_page_load, 2 ); ?>>2</option>
+	</select>
+	<label for="bb_ajax_request_page_load"><?php esc_html_e( 'page requests on page load', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'Select how many requests will be sent on page load. We recommend 1 request for high performing servers, and 2 for slower performing environments, or those who see conflicts with third party plugins.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Function to render the fields in a activity section of the performance tab.
+ *
+ * @since BuddyBoss 2.5.80
+ */
+function bb_admin_performance_setting_activity_callback() {
+	$bb_load_activity_per_request = bb_get_load_activity_per_request();
+	$bb_activity_load_type        = bp_get_option( 'bb_activity_load_type', 'infinite' );
+
+	$activity_per_page = apply_filters( 'bb_performance_activity_per_page', array() );
+	$activity_per_page = bp_parse_args(
+		$activity_per_page,
+		array( 5, 10, 15, 20 )
+	);
+	asort( $activity_per_page );
+
+	$activity_autoload_options = apply_filters( 'bb_performance_activity_autoload', array() );
+	$activity_autoload_options        = bp_parse_args(
+		$activity_autoload_options,
+		array(
+			'infinite'  => __( 'Infinite scrolling', 'buddyboss' ),
+			'load_more' => __( 'Load more', 'buddyboss' ),
+		)
+	);
+	?>
+
+	<label for="bb_load_activity_per_request"><?php esc_html_e( 'Load', 'buddyboss' ); ?></label>
+	<select name="bb_load_activity_per_request" id="bb_load_activity_per_request">
+		<?php
+		foreach ( $activity_per_page as $load_val ) {
+			echo '<option value="' . esc_attr( $load_val ) . '" ' . selected( $bb_load_activity_per_request, $load_val, false ) . '>' . esc_html( $load_val ) . '</option>';
+		}
+		?>
+	</select>
+	<label for="bb_activity_load_type"><?php esc_html_e( 'activity posts at a time using', 'buddyboss' ); ?></label>
+	<select name="bb_activity_load_type" id="bb_activity_load_type">
+		<?php
+		foreach ( $activity_autoload_options as $load_val => $load_label ) {
+			echo '<option value="' . esc_attr( $load_val ) . '" ' . selected( $bb_activity_load_type, $load_val, false ) . '>' . esc_html( $load_label ) . '</option>';
+		}
+		?>
+	</select>
+	<p class="description"><?php esc_html_e( 'Use infinite scrolling to automatically load new posts while scrolling down feeds. Increasing the number of posts retrieved in each request may negatively impact page loading speeds.', 'buddyboss' ); ?></p>
 	<?php
 }
