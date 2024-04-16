@@ -1085,7 +1085,7 @@ window.bp = window.bp || {};
 									}
 								);
 
-								deleted_comments_count += hidden_comments_count;
+								deleted_comments_count += hidden_comments_count !== undefined ? parseFloat( hidden_comments_count ) : 0;
 
 								// Update the button count.
 								comment_count_span = activity_state.find( 'span.comments-count' );
