@@ -4078,6 +4078,10 @@ window.bp = window.bp || {};
 				page = ( Number( self.scheduled_current_page ) * 1 ) + 1;
 
 			if ( page > 0 && $( '#buddypress .bb-action-popup-content .schedule-posts-content' ).length ) {
+				if ( targetEl.hasClass( 'bb-page-item-deleted' ) ) {
+					targetEl.removeClass( 'bb-page-item-deleted' );
+					page = page - 1;
+				}
 				targetEl.find( 'a' ).first().addClass( 'loading' );
 				$( '#buddypress #bb-schedule-posts_modal ul.bp-list li.activity-item' ).addClass( 'bb-pre-listed-page-item' );
 				var queryData = {
@@ -4085,10 +4089,15 @@ window.bp = window.bp || {};
 					scope: scope,
 					status: 'scheduled',
 					target: '#buddypress #bb-schedule-posts_modal .schedule-posts-content ul.bp-list',
-					template: 'schedule_activity',
 					method : 'append',
+					template: 'schedule_activity',
 					page: page,
 				};
+
+				if ( page === 1 ) {
+					queryData.method = 'reset';
+					queryData.target = '#buddypress #bb-schedule-posts_modal .schedule-posts-content';
+				}
 
 				if ( $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).length ) {
 					queryData.member_type_id = $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).val();

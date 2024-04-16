@@ -5072,6 +5072,8 @@ window.bp = window.bp || {};
 									true
 								]
 							);
+
+							$( "#buddypress #bb-schedule-posts_modal .load-more" ).addClass( 'bb-page-item-deleted' );
 						}
 					).fail(
 						function ( response ) {
