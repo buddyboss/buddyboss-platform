@@ -4859,7 +4859,7 @@ window.bp = window.bp || {};
 			},
 
 			initialize: function () {
-				this.model.on( 'change', this.render, this );
+				this.model.on( 'change:activity_action_type change:activity_schedule_date_raw change:activity_schedule_date change:activity_schedule_time change:activity_schedule_meridiem', this.render, this );
 			},
 
 			render: function () {
