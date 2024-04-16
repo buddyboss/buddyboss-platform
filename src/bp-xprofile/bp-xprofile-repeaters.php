@@ -864,9 +864,6 @@ function bp_profile_repeaters_print_group_html_start( $args = array() ) {
 		$is_required = xprofile_check_is_required_field( $current_field_id );
 
 		$can_delete = ( '1' === $current_set_number && true === $is_required ) ? false : true;
-        if ( is_admin() && 1 === (int) $current_set_number ) {
-            $can_delete = false;
-        }
 
 		if ( empty( $first_xpfield_in_repeater ) ) {
 			$first_xpfield_in_repeater = $template_field_id;
@@ -1084,9 +1081,7 @@ function bb_admin_xprofile_add_repeater_set() {
 	$current_set_number = count( $set_no_values ) + 1;
 	$set_no_values[]    = $current_set_number;
 
-	$count = bp_get_profile_field_set_count( $field_group_id, $user_id );
-	$count ++;
-	bp_set_profile_field_set_count( $field_group_id, $user_id, $count );
+	bp_set_profile_field_set_count( $field_group_id, $user_id, $current_set_number );
 
 	$user_field_set_count     = bp_get_profile_field_set_count( $field_group_id, $user_id );
 	$clone_field_ids_has_data = bp_get_repeater_clone_field_ids_subset( $field_group_id, $user_field_set_count );
@@ -1101,7 +1096,6 @@ function bb_admin_xprofile_add_repeater_set() {
 	if ( ! empty( $_POST['deleted_field_ids'] ) ) {
         $deleted_field_ids = wp_parse_id_list( $_POST['deleted_field_ids'] );
         if ( ! empty( $deleted_field_ids ) ) {
-		    $clone_field_ids_has_data = array_diff( $clone_field_ids_has_data, $deleted_field_ids );
             foreach ( $deleted_field_ids as $deleted_field_id ) {
                 xprofile_delete_field_data( $deleted_field_id, $user_id );
             }
@@ -1186,9 +1180,13 @@ function bb_admin_xprofile_add_repeater_set() {
 		<?php
 	}
 	$all_fields = array();
-	if ( ! empty( $existing_field_ids ) && ! empty( $clone_field_ids_has_data ) ) {
-		$all_fields = array_merge( $existing_field_ids, $clone_field_ids_has_data );
+    if ( ! empty( $clone_field_ids_has_data ) ) {
+		$all_fields = $clone_field_ids_has_data;
 	}
+	if ( ! empty( $existing_field_ids ) && ! empty( $all_fields ) ) {
+		$all_fields = array_merge( $existing_field_ids, $all_fields );
+	}
+
 	$html = ob_get_clean();
 	wp_send_json_success(
 		array(
@@ -1236,8 +1234,10 @@ function bb_admin_profile_repeaters_update_field_data( $user_id, $posted_field_i
 			// First, clear the data for deleted fields, if any.
 			if ( isset( $_POST['deleted_field_ids'][ $field_group_id ] ) && ! empty( $_POST['deleted_field_ids'][ $field_group_id ] ) ) {
 				$deleted_field_ids = wp_parse_id_list( $_POST['deleted_field_ids'][ $field_group_id ] );
-				foreach ( $deleted_field_ids as $deleted_field_id ) {
-					xprofile_delete_field_data( $deleted_field_id, $user_id );
+                foreach ( $deleted_field_ids as $deleted_field_id ) {
+                    if ( ! in_array( $deleted_field_id, $posted_field_ids, true ) ) {
+					    xprofile_delete_field_data( $deleted_field_id, $user_id );
+                    }
 				}
 			}
 
