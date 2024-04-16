@@ -4967,6 +4967,10 @@ window.bp = window.bp || {};
 				var current_date = new Date( bp.Nouveau.bbServerTime().currentServerTime );
 				if ( current_date > activity_schedule_date ) {
 					Backbone.trigger( 'onError', BP_Nouveau.activity.strings.scheduleWarning, 'warning' );
+					// Clear Feedback after 3 sec.
+					setTimeout( function() {
+						Backbone.trigger( 'cleanFeedBack');
+					}, 3000 );
 				} else {
 					this.model.set( 'activity_action_type', 'scheduled' );
 					this.model.set( 'activity_schedule_date_raw', schedulePost_date_raw );
