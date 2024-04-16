@@ -4024,7 +4024,7 @@ function bp_group_type_short_code_callback( $atts ) {
 		<div id="buddypress" class="buddypress-wrap round-avatars bp-dir-hori-nav bp-shortcode-wrap">
 			<div class="screen-content">
 				<div class="subnav-filters filters no-ajax" id="subnav-filters">
-					<?php bp_get_template_part( 'common/filters/grid-filters' ); ?>
+					<?php bp_get_template_part( 'common/filters/grid-filters', null, array( 'shortcode_type' => 'groups' ) ); ?>
 				</div>
 				<div id="groups-dir-list" class="groups dir-list">
 					<?php
