@@ -52,6 +52,12 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 		add_filter( 'bp_activity_comments_search_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_activity_comments_search_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
+		add_filter( 'bb_activity_comments_count_get_join_sql', array( $this, 'bb_update_join_sql' ), 10, 2 );
+		add_filter( 'bb_activity_comments_count_get_where_conditions', array( $this, 'bb_update_where_sql' ), 10, 2 );
+
+		add_filter( 'bp_activity_comments_get_join_sql', array( $this, 'bb_update_join_sql' ), 10, 2 );
+		add_filter( 'bp_activity_comments_get_where_conditions', array( $this, 'bb_update_where_sql' ), 10, 2 );
+
 		add_filter( 'bp_locate_template_names', array( $this, 'locate_blocked_template' ) );
 	}
 
@@ -146,7 +152,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	 */
 	public function update_where_sql( $where_conditions, $args = '' ) {
 
-		$where                  = array();
+		$where = array();
 		if ( function_exists( 'bb_did_filter' ) && ! bb_did_filter( 'bp_activity_comments_search_where_conditions' ) ) {
 			$where['suspend_where'] = $this->exclude_where_query();
 		}
@@ -465,5 +471,78 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 			}
 		}
 
+	}
+
+	/**
+	 * Prepare activity comment join SQL query to filter blocked Activity.
+	 *
+	 * @since BuddyBoss 2.5.80
+	 *
+	 * @param string $join_sql Activity Join sql.
+	 * @param array  $args     Query arguments.
+	 *
+	 * @return string Join sql
+	 */
+	public function bb_update_join_sql( $join_sql, $args = array() ) {
+
+		if ( isset( $args['moderation_query'] ) && false === $args['moderation_query'] ) {
+			return $join_sql;
+		}
+
+		$join_sql .= $this->exclude_joint_query( 'a.id' );
+
+		/**
+		 * Filters the hidden activity comment count Where SQL statement.
+		 *
+		 * @since BuddyBoss 2.5.80
+		 *
+		 * @param array $join_sql Join sql query
+		 * @param array $class    current class object.
+		 */
+		$join_sql = apply_filters( 'bp_suspend_activity_comment_count_get_join', $join_sql, $this );
+
+		return $join_sql;
+	}
+
+	/**
+	 * Prepare activity comment count Where SQL query to filter blocked Activity
+	 *
+	 * @since BuddyBoss 2.5.80
+	 *
+	 * @param array  $where_conditions Activity Where sql.
+	 * @param string $args             Search terms.
+	 *
+	 * @return mixed Where SQL
+	 */
+	public function bb_update_where_sql( $where_conditions, $args = '' ) {
+
+		$where                  = array();
+		$where['suspend_where'] = $this->exclude_where_query();
+
+		if ( is_string( $where_conditions ) ) {
+			$where_conditions_explode = explode( 'WHERE ', $where_conditions );
+			if ( isset( $where_conditions_explode[1] ) ) {
+				$and_conditions_explode = explode( ' AND ', $where_conditions_explode[1] );
+				$where_conditions       = $and_conditions_explode;
+			}
+		}
+
+		/**
+		 * Filters the hidden activity comment count Where SQL statement.
+		 *
+		 * @since BuddyBoss 2.5.80
+		 *
+		 * @param array  $where            Query to hide suspended user's activity comment.
+		 * @param array  $class            current class object.
+		 * @param array  $where_conditions Where condition for activity comment search.
+		 * @param string $search_term      Search term.
+		 */
+		$where = apply_filters( 'bb_suspend_activity_comment_count_get_where_conditions', $where, $this, $where_conditions, $args );
+
+		if ( ! empty( array_filter( $where ) ) ) {
+			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+		}
+
+		return $where_conditions;
 	}
 }

@@ -179,6 +179,19 @@ add_filter( 'bp_get_activity_content', 'bb_mention_add_user_dynamic_link', 20, 1
 add_filter( 'bp_get_activity_content_body', 'bb_mention_add_user_dynamic_link', 20, 1 );
 add_filter( 'bp_activity_comment_content', 'bb_mention_add_user_dynamic_link', 20, 1 );
 
+// Modal template for activity.
+add_action( 'bp_after_directory_activity_list', 'bb_activity_add_modal_template' );
+add_action( 'bp_after_group_activity_content', 'bb_activity_add_modal_template' );
+add_action( 'bp_after_member_activity_content', 'bb_activity_add_modal_template' );
+add_action( 'bp_after_directory_activity_list', 'bb_gifpicker_add_popup_template' );
+add_action( 'bp_after_group_activity_content', 'bb_gifpicker_add_popup_template' );
+add_action( 'bp_after_member_activity_content', 'bb_gifpicker_add_popup_template' );
+add_action( 'bp_before_directory_activity_list', 'bb_emojionearea_add_popup_template' );
+add_action( 'bp_before_group_activity_content', 'bb_emojionearea_add_popup_template' );
+add_action( 'bp_before_member_activity_content', 'bb_emojionearea_add_popup_template' );
+
+add_filter( 'bp_ajax_querystring', 'bb_activity_directory_set_pagination', 20, 2 );
+
 /** Functions *****************************************************************/
 
 /**
@@ -310,8 +323,8 @@ function bp_activity_save_link_data( $activity ) {
 		return;
 	}
 
-	// Return if link embed was used activity is in edit.
-	if ( true === $link_embed && 'activity_comment' === $activity->type ) {
+	// Return if link embed/link preview was used activity is in edit.
+	if ( ( true === $link_embed || ! empty( $link_url ) ) && 'activity_comment' === $activity->type ) {
 		return;
 	}
 
@@ -472,7 +485,7 @@ function bp_activity_at_name_filter( $content, $activity_id = 0 ) {
 		$replacement = "<a class='bp-suggestions-mention' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>@$username</a>";
 		if ( false === strpos( $content, $replacement ) ) {
 			// Pattern for cases with existing <a>@mention</a> or @mention.
-			$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';
+			$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';
 			$content = preg_replace( $pattern, $replacement, $content );
 		}
 	}
@@ -519,7 +532,7 @@ function bp_activity_at_name_filter_updates( $activity ) {
 			$replacement = "<a class='bp-suggestions-mention' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>@$username</a>";
 			if ( false === strpos( $activity->content, $replacement ) ) {
 				// Pattern for cases with existing <a>@mention</a> or @mention.
-				$pattern           = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';
+				$pattern           = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';
 				$activity->content = preg_replace( $pattern, $replacement, $activity->content );
 			}
 		}
@@ -2795,6 +2808,32 @@ function bb_activity_has_comment_reply_access( $can_comment, $comment ) {
 		$can_comment = false;
 	}
 
+	// Get the main activity.
+	$main_activity = new BP_Activity_Activity( $comment->item_id );
+
+	// Disallow replies if threading disabled or depth condition is matched.
+	if ( isset( $main_activity->component ) && 'blogs' === $main_activity->component ) {
+		if (
+			empty( get_option( 'thread_comments' ) ) ||
+			(
+				isset( $comment->depth ) &&
+				$comment->depth >= get_option( 'thread_comments_depth' )
+			)
+		) {
+			$can_comment = false;
+		}
+	} else {
+		if (
+			false === bb_is_activity_comment_threading_enabled() ||
+			(
+				isset( $comment->depth ) &&
+				$comment->depth >= bb_get_activity_comment_threading_depth()
+			)
+		) {
+			$can_comment = false;
+		}
+	}
+
 	return $can_comment;
 }
 
@@ -3585,7 +3624,7 @@ function bb_moderation_remove_mention_count( $num_links, $url, $comment ) {
  * @since BuddyBoss 2.4.60
  *
  * @param int    $post_id post id of the topic or reply.
- * @param object $post Post data.
+ * @param object $post    Post data.
  */
 function bb_cpt_post_title_save( $post_id, $post ) {
 	if (
@@ -3640,10 +3679,9 @@ function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
 			! empty( get_post_type( $parent_activity->secondary_item_id ) ) &&
 			'new_blog_' . get_post_type( $parent_activity->secondary_item_id ) === $parent_activity->type
 		) {
-
 			$activity_metas = bb_activity_get_metadata( $activity_comment_data['id'] );
 
-			$comment_id = $activity_metas['bp_blogs_' . get_post_type( $parent_activity->secondary_item_id ) . '_comment_id'][0] ?? '';
+			$comment_id = $activity_metas[ 'bp_blogs_' . get_post_type( $parent_activity->secondary_item_id ) . '_comment_id' ][0] ?? '';
 			if ( $comment_id ) {
 				$comment = get_comment( $comment_id );
 				if ( ! empty( $comment->comment_content ) ) {
@@ -3654,4 +3692,67 @@ function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
 	}
 
 	return $activity_comment_data;
+}
+
+/**
+ * Add template for gifpicker.
+ *
+ * @since BuddyBoss 2.5.80
+ */
+function bb_gifpicker_add_popup_template() {
+	bp_get_template_part( 'activity/gifpicker-popup' );
+}
+
+/**
+ * Add template for emojionearea picker.
+ *
+ * @since BuddyBoss 2.5.80
+ */
+function bb_emojionearea_add_popup_template() {
+	bp_get_template_part( 'activity/emojionearea-popup' );
+}
+
+/**
+ * Add activity modal template for activity pages.
+ *
+ * @since BuddyBoss 2.5.80
+ */
+function bb_activity_add_modal_template() {
+	bp_get_template_part( 'activity/activity-modal' );
+}
+
+/**
+ * Add class to recent activity comment.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @param string $class Comment class.
+ *
+ * @return string $class Comment class.
+ */
+function bb_activity_recent_comment_class( $class ) {
+	$class .= ' bb-recent-comment';
+
+	return $class;
+}
+
+/**
+ * Function to update per page for activity.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @param string $querystring Current query string.
+ * @param string $object      Current template component.
+ *
+ * @return string The AJAX querystring.
+ */
+function bb_activity_directory_set_pagination( $querystring, $object ) {
+	if ( 'activity' !== $object || bp_is_single_activity() ) {
+		return $querystring;
+	}
+
+	$querystring             = bp_parse_args( $querystring );
+	$querystring['per_page'] = bb_get_load_activity_per_request();
+
+	return http_build_query( $querystring );
 }

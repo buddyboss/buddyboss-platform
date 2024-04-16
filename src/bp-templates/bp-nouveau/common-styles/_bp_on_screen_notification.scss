@@ -29,6 +29,10 @@
 		width: 100%;
 		z-index: 1099;
 
+		.acomments-modal-open & {
+			z-index: 999999;
+		}
+
 		.notification-list {
 			margin: 0;
 			padding: 0;
