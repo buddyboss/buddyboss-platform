@@ -3850,7 +3850,7 @@ function bp_member_type_shortcode_callback( $atts ) {
 	echo '<div id="buddypress" class="buddypress-wrap bp-dir-hori-nav bp-shortcode-wrap">';
 	echo '<div class="members">';
 	echo '<div class="subnav-filters filters no-ajax" id="subnav-filters">';
-	bp_get_template_part( 'common/filters/grid-filters' );
+	bp_get_template_part( 'common/filters/grid-filters', null, array( 'shortcode_type' => 'members' ) );
 	echo '</div>';
 	echo '<div class="screen-content members-directory-content">';
 
