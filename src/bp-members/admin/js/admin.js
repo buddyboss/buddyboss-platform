@@ -224,6 +224,7 @@
 							'user_id': $( '#user_id' ).val(),
 							'set_no': parentId.find( 'input[name="repeater_set_sequence[' + groupId + ']"]' ).val(),
 							'existing_field_ids': parentId.find( 'input[name="field_ids[' + groupId + ']"]' ).val(),
+							'deleted_field_ids': parentId.find( 'input[name="deleted_field_ids[' + groupId + ']"]' ).val(),
 						},
 						'success': function ( response ) {
 							if ( response.success && response.data ) {
