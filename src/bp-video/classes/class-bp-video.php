@@ -659,6 +659,7 @@ class BP_Video {
 				$video->message_id    = (int) $video->message_id;
 				$video->group_id      = (int) $video->group_id;
 				$video->menu_order    = (int) $video->menu_order;
+				$video->status        = isset( $video->status ) ? $video->status : bb_video_get_published_status();
 			}
 
 			$file_url = wp_get_attachment_url( $video->attachment_id );

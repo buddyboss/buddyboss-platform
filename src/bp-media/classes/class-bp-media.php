@@ -709,6 +709,7 @@ class BP_Media {
 				$media->message_id    = (int) $media->message_id;
 				$media->group_id      = (int) $media->group_id;
 				$media->menu_order    = (int) $media->menu_order;
+				$media->status        = isset( $media->status ) ? $media->status : bb_media_get_published_status();
 			}
 
 			// fetch attachment data.
