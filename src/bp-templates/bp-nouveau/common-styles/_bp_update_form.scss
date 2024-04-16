@@ -801,6 +801,10 @@
 		position: relative;
 		display: inline-block;
 		width: 100%;
+
+		&.hide-schedule-button #bb-schedule-posts {
+			display: none;
+		}
 	}
 
 	#whats-new-form.bottom-notice {

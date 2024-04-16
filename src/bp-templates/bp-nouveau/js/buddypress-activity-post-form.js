@@ -423,6 +423,8 @@ window.bp = window.bp || {};
 						Backbone.trigger( 'onError', BP_Nouveau.activity.strings.scheduleWarning, 'warning' );
 					}
 				}
+			} else {
+				self.postForm.$el.addClass( 'hide-schedule-button' );
 			}
 
 			var tool_box = $( '.activity-form.focus-in #whats-new-toolbar' );
@@ -5469,7 +5471,7 @@ window.bp = window.bp || {};
 				$( '#bp-nouveau-activity-form-placeholder' ).hide();
 
 				$( '#whats-new-content' ).find( '#bp-activity-id' ).val( '' ); // reset activity id if in edit mode.
-				bp.Nouveau.Activity.postForm.postForm.$el.removeClass( 'bp-activity-edit' );
+				bp.Nouveau.Activity.postForm.postForm.$el.removeClass( 'bp-activity-edit hide-schedule-button' );
 
 				if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) ) {
 					bp.Nouveau.Activity.postForm.postForm.$el.find('.bp-activity-privacy__label-group').show().find( 'input#group' ).attr( 'disabled', false ); // enable back group visibility level.
