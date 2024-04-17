@@ -32,7 +32,7 @@ function bp_search_override_wp_native_results( $template ) {
 		);
 		
 		// Add support for Twenty Twenty Two theme, as that's the only block theme having the index.php file.
-		if ( 'twentytwentytwo' === get_stylesheet() ) {
+		if ( 'twentytwentytwo' === get_template() ) {
 			array_pop( $live_template_names );
 		}
 
