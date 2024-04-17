@@ -1153,7 +1153,7 @@ function bbp_reply_author_display_name( $reply_id = 0 ) {
  * Return the author display_name of the reply
  *
  * @since                          bbPress (r2667)
- * @since BuddyBoss [BBVERSION] Added the `$viewer_user_id` parameter.
+ * @since BuddyBoss 2.5.90 Added the `$viewer_user_id` parameter.
  *
  * @param int $reply_id Optional. Reply id
  * @param int $viewer_user_id Optional. Reply viewer user id
