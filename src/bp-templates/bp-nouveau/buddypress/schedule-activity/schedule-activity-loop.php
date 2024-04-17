@@ -19,9 +19,8 @@ $activity_schedule_args = bp_parse_args(
 );
 
 $activity_schedule_args['user_id'] = bp_loggedin_user_id();
-
+$activity_schedule_args['scope']   = '';
 add_filter( 'bp_activity_default_scope', '__return_empty_array' );
-$activity_schedule_args['scope'] = '';
 
 if ( bp_has_activities( $activity_schedule_args ) ) :
 
