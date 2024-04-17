@@ -1094,13 +1094,13 @@ function bb_admin_xprofile_add_repeater_set() {
 
     // First, clear the data for deleted fields, if any.
 	if ( ! empty( $_POST['deleted_field_ids'] ) ) {
-        $deleted_field_ids = wp_parse_id_list( $_POST['deleted_field_ids'] );
-        if ( ! empty( $deleted_field_ids ) ) {
-            foreach ( $deleted_field_ids as $deleted_field_id ) {
-                xprofile_delete_field_data( $deleted_field_id, $user_id );
-            }
-        }
-    }
+		$deleted_field_ids = wp_parse_id_list( $_POST['deleted_field_ids'] );
+		if ( ! empty( $deleted_field_ids ) ) {
+			foreach ( $deleted_field_ids as $deleted_field_id ) {
+				xprofile_delete_field_data( $deleted_field_id, $user_id );
+			}
+		}
+	}
 	$sortable_fields = array();
 	foreach ( $clone_field_ids_has_data as $key => $field_id ) {
 		$field_data              = xprofile_get_field( $field_id, $user_id, false );
@@ -1180,7 +1180,7 @@ function bb_admin_xprofile_add_repeater_set() {
 		<?php
 	}
 	$all_fields = array();
-    if ( ! empty( $clone_field_ids_has_data ) ) {
+	if ( ! empty( $clone_field_ids_has_data ) ) {
 		$all_fields = $clone_field_ids_has_data;
 	}
 	if ( ! empty( $existing_field_ids ) && ! empty( $all_fields ) ) {
