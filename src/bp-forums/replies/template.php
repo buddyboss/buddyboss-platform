@@ -1153,8 +1153,10 @@ function bbp_reply_author_display_name( $reply_id = 0 ) {
  * Return the author display_name of the reply
  *
  * @since                          bbPress (r2667)
+ * @since BuddyBoss 2.5.90 Added the `$viewer_user_id` parameter.
  *
  * @param int $reply_id Optional. Reply id
+ * @param int $viewer_user_id Optional. Reply viewer user id
  *
  * @return string Reply's author's display name
  * @uses                           bbp_is_reply_anonymous() To check if the reply is by an
@@ -1166,7 +1168,7 @@ function bbp_reply_author_display_name( $reply_id = 0 ) {
  *                                 the author display name and reply id
  * @uses                           bbp_get_reply_id() To get the reply id
  */
-function bbp_get_reply_author_display_name( $reply_id = 0 ) {
+function bbp_get_reply_author_display_name( $reply_id = 0, $viewer_user_id = 0 ) {
 	$reply_id = bbp_get_reply_id( $reply_id );
 
 	// User is not a guest.
@@ -1175,8 +1177,8 @@ function bbp_get_reply_author_display_name( $reply_id = 0 ) {
 		// Get the author ID.
 		$author_id = bbp_get_reply_author_id( $reply_id );
 
-		// Get the author display name.
-		$author_name = ( function_exists( 'bp_core_get_user_displayname' ) ) ? bp_core_get_user_displayname( $author_id ) : '';
+		// Get the author display name based on the last name privacy.
+		$author_name = ( function_exists( 'bp_core_get_user_displayname' ) ) ? bp_core_get_user_displayname( $author_id, $viewer_user_id ) : '';
 
 		if ( empty( $author_name ) ) {
 			$author_name = get_the_author_meta( 'display_name', $author_id );

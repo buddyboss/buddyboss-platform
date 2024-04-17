@@ -350,6 +350,8 @@ window.bp = window.bp || {};
 			if ( $tabActivityFormWrap.hasClass( 'is-bp-hide' ) ) {
 				$tabActivityFormWrap.addClass( 'bp-hide' );
 			}
+
+			bp.Views.ActivityHeader.prototype.resetMultiMediaOptions();
 		},
 
 		createThumbnailFromUrl: function ( mock_file ) {
