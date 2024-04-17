@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.6.0
  */
-class BP_XProfile_Visibility {
+class BB_XProfile_Visibility {
 
 	/**
 	 * XProfile ID.
@@ -81,7 +81,7 @@ class BP_XProfile_Visibility {
 	public function populate( $field_id, $user_id ) {
 		global $wpdb;
 
-		$table_name = bp_core_get_table_prefix() . 'bp_xprofile_visibility';
+		$table_name = bp_core_get_table_prefix() . 'bb_xprofile_visibility';
 
 		$sql                = $wpdb->prepare( "SELECT * FROM {$table_name} WHERE field_id = %d AND user_id = %d", $field_id, $user_id );
 		$profile_visibility = $wpdb->get_row( $sql );
@@ -113,7 +113,7 @@ class BP_XProfile_Visibility {
 	public function exists() {
 		global $wpdb;
 
-		$table  = bp_core_get_table_prefix() . 'bp_xprofile_visibility';
+		$table  = bp_core_get_table_prefix() . 'bb_xprofile_visibility';
 		$retval = $wpdb->get_row( $wpdb->prepare( "SELECT id FROM {$table} WHERE user_id = %d AND field_id = %d", $this->user_id, $this->field_id ) );
 
 		/**
@@ -234,7 +234,7 @@ class BP_XProfile_Visibility {
 				$result = $this->delete();
 
 			} else {
-				$table    = bp_core_get_table_prefix() . 'bp_xprofile_visibility';
+				$table    = bp_core_get_table_prefix() . 'bb_xprofile_visibility';
 				$result   = $wpdb->query( $wpdb->prepare( "INSERT INTO {$table} (user_id, field_id, value, last_updated) VALUES (%d, %d, %s, %s)", $this->user_id, $this->field_id, $this->value, $this->last_updated ) );
 				$this->id = $wpdb->insert_id;
 			}
@@ -271,7 +271,7 @@ class BP_XProfile_Visibility {
 		global $wpdb;
 
 		$bp         = buddypress();
-		$table_name = bp_core_get_table_prefix() . 'bp_xprofile_visibility';
+		$table_name = bp_core_get_table_prefix() . 'bb_xprofile_visibility';
 
 		/**
 		 * Fires before the current profile data instance gets deleted.
