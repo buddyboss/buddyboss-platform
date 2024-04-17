@@ -2601,7 +2601,7 @@ function bb_remove_google_plus_fields( $field_id, $field_name ) {
 /**
  * Function to save the xprofile fields data.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.5.90
  *
  * @param array $posted_field_ids Request array.
  * @param array $is_required      Field is required or not.

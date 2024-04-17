@@ -793,7 +793,7 @@ function xprofile_filter_field_edit_name( $field_name ) {
  * Conditionally filters 'bp_core_get_user_displayname' to return user display name from xprofile.
  *
  * @since BuddyBoss 1.2.3
- * @since BuddyBoss [BBVERSION] Added the `$current_user_id` parameter 
+ * @since BuddyBoss 2.5.90 Added the `$current_user_id` parameter 
  *
  * @global \BP_XProfile_Field_Type $field
  *
