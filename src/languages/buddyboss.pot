@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.5.90\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-04-17 04:03:01+00:00\n"
+"POT-Creation-Date: 2024-04-17 10:54:54+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -689,15 +689,15 @@ msgid "Your browser does not support HTML5 audio"
 msgstr ""
 
 #: bp-activity/bp-activity-filters.php:689
-#: bp-activity/bp-activity-filters.php:2706
-#: bp-activity/bp-activity-filters.php:2743
+#: bp-activity/bp-activity-filters.php:2719
+#: bp-activity/bp-activity-filters.php:2756
 msgid " Read more"
 msgstr ""
 
 #: bp-activity/bp-activity-filters.php:693
-#: bp-activity/bp-activity-filters.php:2680
-#: bp-activity/bp-activity-filters.php:2704
-#: bp-activity/bp-activity-filters.php:2741
+#: bp-activity/bp-activity-filters.php:2693
+#: bp-activity/bp-activity-filters.php:2717
+#: bp-activity/bp-activity-filters.php:2754
 #: bp-activity/classes/class-bp-activity-notification.php:226
 #: bp-activity/classes/class-bp-activity-notification.php:241
 #: bp-activity/classes/class-bp-activity-notification.php:646
@@ -731,12 +731,12 @@ msgstr ""
 msgid "Load Newest"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3374
+#: bp-activity/bp-activity-filters.php:3394
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:792
 msgid "Activity Feed"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3375 bp-blogs/bp-blogs-template.php:1172
+#: bp-activity/bp-activity-filters.php:3395 bp-blogs/bp-blogs-template.php:1172
 #: bp-core/gdpr/class-bp-friendship-export.php:93
 #: bp-core/gdpr/class-bp-notification-export.php:68
 #: bp-core/gdpr/class-bp-settings-export.php:72
@@ -769,7 +769,7 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3376 bp-blogs/bp-blogs-template.php:1180
+#: bp-activity/bp-activity-filters.php:3396 bp-blogs/bp-blogs-template.php:1180
 #: bp-core/gdpr/class-bp-friendship-export.php:93
 #: bp-core/gdpr/class-bp-notification-export.php:66
 #: bp-core/gdpr/class-bp-settings-export.php:77
@@ -802,14 +802,14 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3387
+#: bp-activity/bp-activity-filters.php:3407
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:800
 #. translators: %s: users mention name.
 msgid "A member mentions you in an update using \"@%s\""
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3392
-#: bp-activity/bp-activity-filters.php:3412 bp-forums/core/actions.php:370
+#: bp-activity/bp-activity-filters.php:3412
+#: bp-activity/bp-activity-filters.php:3432 bp-forums/core/actions.php:370
 #: bp-forums/core/actions.php:386 bp-friends/bp-friends-filters.php:417
 #: bp-friends/bp-friends-filters.php:433
 #: bp-groups/bp-groups-notifications.php:1350
@@ -822,8 +822,8 @@ msgstr ""
 msgid "Yes, send email"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3399
-#: bp-activity/bp-activity-filters.php:3419 bp-forums/core/actions.php:376
+#: bp-activity/bp-activity-filters.php:3419
+#: bp-activity/bp-activity-filters.php:3439 bp-forums/core/actions.php:376
 #: bp-forums/core/actions.php:392 bp-friends/bp-friends-filters.php:423
 #: bp-friends/bp-friends-filters.php:439
 #: bp-groups/bp-groups-notifications.php:1356
@@ -836,7 +836,7 @@ msgstr ""
 msgid "No, do not send email"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3407
+#: bp-activity/bp-activity-filters.php:3427
 #: bp-core/gdpr/class-bp-settings-export.php:157
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:815
 msgid "A member replies to an update or comment you've posted"
@@ -1176,10 +1176,10 @@ msgid "%1$s replied to one of your activity comments"
 msgstr ""
 
 #: bp-activity/bp-activity-template.php:470
-#: bp-document/bp-document-template.php:341
-#: bp-document/bp-document-template.php:1437 bp-media/bp-media-template.php:331
-#: bp-media/bp-media-template.php:1333 bp-video/bp-video-template.php:324
-#: bp-video/bp-video-template.php:1269
+#: bp-document/bp-document-template.php:342
+#: bp-document/bp-document-template.php:1438 bp-media/bp-media-template.php:332
+#: bp-media/bp-media-template.php:1334 bp-video/bp-video-template.php:325
+#: bp-video/bp-video-template.php:1270
 msgid "Viewing 1 item"
 msgid_plural "Viewing %1$s - %2$s of %3$s items"
 msgstr[0] ""
@@ -1586,7 +1586,7 @@ msgstr ""
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:46
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:64
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:105
-#: bp-document/classes/class-bp-document.php:729
+#: bp-document/classes/class-bp-document.php:730
 #: bp-forums/admin/settings.php:254 bp-forums/admin/tools.php:1796
 #: bp-forums/admin.php:28 bp-forums/admin.php:29 bp-forums/admin.php:45
 #: bp-forums/admin.php:46 bp-forums/admin.php:231 bp-forums/admin.php:274
@@ -1600,12 +1600,12 @@ msgstr ""
 #: bp-forums/forums/template.php:49 bp-media/bp-media-filters.php:1411
 #: bp-media/bp-media-settings.php:239 bp-media/bp-media-settings.php:246
 #: bp-media/bp-media-settings.php:253 bp-media/bp-media-settings.php:260
-#: bp-media/bp-media-settings.php:267 bp-media/classes/class-bp-media.php:801
+#: bp-media/bp-media-settings.php:267 bp-media/classes/class-bp-media.php:802
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1193
 #: bp-search/bp-search-functions.php:369
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:950
 #: bp-templates/bp-nouveau/includes/customizer.php:202
-#: bp-video/classes/class-bp-video.php:738
+#: bp-video/classes/class-bp-video.php:739
 msgid "Forums"
 msgstr ""
 
@@ -2116,32 +2116,32 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-template.php:342
 #: bp-blogs/classes/class-bp-blogs-template.php:197
 #: bp-document/classes/class-bp-document-folder-template.php:220
-#: bp-document/classes/class-bp-document-template.php:246
+#: bp-document/classes/class-bp-document-template.php:249
 #: bp-groups/classes/class-bp-groups-template.php:315
 #: bp-media/classes/class-bp-media-album-template.php:223
-#: bp-media/classes/class-bp-media-template.php:242
+#: bp-media/classes/class-bp-media-template.php:245
 #: bp-members/classes/class-bp-core-members-template.php:258
 #: bp-messages/classes/class-bp-messages-box-template.php:233
 #: bp-moderation/classes/class-bp-moderation-template.php:220
 #: bp-notifications/classes/class-bp-notifications-template.php:246
 #: bp-video/classes/class-bp-video-album-template.php:223
-#: bp-video/classes/class-bp-video-template.php:237
+#: bp-video/classes/class-bp-video-template.php:240
 msgid "&larr;"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-template.php:343
 #: bp-blogs/classes/class-bp-blogs-template.php:198
 #: bp-document/classes/class-bp-document-folder-template.php:221
-#: bp-document/classes/class-bp-document-template.php:247
+#: bp-document/classes/class-bp-document-template.php:250
 #: bp-groups/classes/class-bp-groups-template.php:316
 #: bp-media/classes/class-bp-media-album-template.php:224
-#: bp-media/classes/class-bp-media-template.php:243
+#: bp-media/classes/class-bp-media-template.php:246
 #: bp-members/classes/class-bp-core-members-template.php:259
 #: bp-messages/classes/class-bp-messages-box-template.php:234
 #: bp-moderation/classes/class-bp-moderation-template.php:221
 #: bp-notifications/classes/class-bp-notifications-template.php:247
 #: bp-video/classes/class-bp-video-album-template.php:224
-#: bp-video/classes/class-bp-video-template.php:238
+#: bp-video/classes/class-bp-video-template.php:241
 msgid "&rarr;"
 msgstr ""
 
@@ -4110,7 +4110,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:3427
 #: bp-core/admin/bp-core-admin-settings.php:3477
 #: bp-document/bp-document-functions.php:2043
-#: bp-groups/bp-groups-admin.php:2659 bp-video/bp-video-functions.php:2570
+#: bp-groups/bp-groups-admin.php:2659 bp-video/bp-video-functions.php:2572
 msgid "Default"
 msgstr ""
 
@@ -5418,22 +5418,22 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:84
 #: bp-core/admin/settings/bp-admin-setting-friends.php:21
 #: bp-core/gdpr/class-bp-friendship-export.php:58
-#: bp-document/classes/class-bp-document.php:725
-#: bp-document/classes/class-bp-document.php:1429
+#: bp-document/classes/class-bp-document.php:726
+#: bp-document/classes/class-bp-document.php:1430
 #: bp-friends/bp-friends-activity.php:110
 #: bp-friends/bp-friends-activity.php:119 bp-friends/bp-friends-filters.php:404
 #: bp-friends/classes/class-bp-friends-component.php:30
 #: bp-friends/classes/class-bp-friends-component.php:176
 #: bp-friends/classes/class-bp-friends-component.php:260
 #: bp-friends/classes/class-bp-friends-component.php:306
-#: bp-media/classes/class-bp-media.php:797
+#: bp-media/classes/class-bp-media.php:798
 #: bp-members/classes/class-bp-core-whos-online-widget.php:209
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:991
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1097
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:988
 #: bp-templates/bp-nouveau/includes/activity/functions.php:372
 #: bp-templates/bp-nouveau/includes/customizer.php:196
-#: bp-video/classes/class-bp-video.php:734
+#: bp-video/classes/class-bp-video.php:735
 msgid "Connections"
 msgstr ""
 
@@ -6320,7 +6320,7 @@ msgstr ""
 #: bp-moderation/classes/class-bp-moderation-activity.php:565
 #: bp-moderation/classes/class-bp-moderation-activity.php:572
 #: bp-moderation/classes/class-bp-moderation-video.php:220
-#: bp-video/bp-video-functions.php:2615
+#: bp-video/bp-video-functions.php:2617
 msgid "Video"
 msgstr ""
 
@@ -11725,44 +11725,44 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:163
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:248
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:96
-#: bp-video/bp-video-functions.php:2575
+#: bp-video/bp-video-functions.php:2577
 msgid "Archive"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:2053
-#: bp-video/bp-video-functions.php:2580
+#: bp-video/bp-video-functions.php:2582
 msgid "Audio"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:2058
-#: bp-video/bp-video-functions.php:2585
+#: bp-video/bp-video-functions.php:2587
 msgid "Code"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:2063
-#: bp-video/bp-video-functions.php:2590
+#: bp-video/bp-video-functions.php:2592
 msgid "Design"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:2068
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:51
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/members/bb-link-preview.php:44
-#: bp-video/bp-video-functions.php:2595
+#: bp-video/bp-video-functions.php:2597
 msgid "Image"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:2073
-#: bp-video/bp-video-functions.php:2600
+#: bp-video/bp-video-functions.php:2602
 msgid "Presentation"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:2078
-#: bp-video/bp-video-functions.php:2605
+#: bp-video/bp-video-functions.php:2607
 msgid "Spreadsheet"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:2083
-#: bp-video/bp-video-functions.php:2610
+#: bp-video/bp-video-functions.php:2612
 msgid "Text"
 msgstr ""
 
@@ -11800,14 +11800,14 @@ msgstr ""
 
 #: bp-document/classes/class-bp-document-folder.php:524
 #: bp-document/classes/class-bp-document-privacy.php:58
-#: bp-document/classes/class-bp-document.php:715
-#: bp-document/classes/class-bp-document.php:1419
+#: bp-document/classes/class-bp-document.php:716
+#: bp-document/classes/class-bp-document.php:1420
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:182
 #: bp-media/classes/class-bp-media-album.php:520
 #: bp-media/classes/class-bp-media-privacy.php:59
-#: bp-media/classes/class-bp-media.php:790
+#: bp-media/classes/class-bp-media.php:791
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:70
-#: bp-video/classes/class-bp-video.php:727
+#: bp-video/classes/class-bp-video.php:728
 msgid "Group Members"
 msgstr ""
 
@@ -11824,11 +11824,11 @@ msgstr ""
 msgid "There is no document."
 msgstr ""
 
-#: bp-document/classes/class-bp-document.php:727
+#: bp-document/classes/class-bp-document.php:728
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-user-stats.php:72
-#: bp-media/classes/class-bp-media.php:799
+#: bp-media/classes/class-bp-media.php:800
 #: bp-templates/bp-nouveau/includes/customizer.php:336
-#: bp-video/classes/class-bp-video.php:736
+#: bp-video/classes/class-bp-video.php:737
 msgid "Message"
 msgstr ""
 
@@ -23802,7 +23802,7 @@ msgstr ""
 msgid "Re-Run Migration"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1446 bp-media/bp-media-functions.php:2273
+#: bp-media/bp-media-filters.php:1446 bp-media/bp-media-functions.php:2275
 msgid ""
 "BuddyBoss Media data update is complete! Any previously uploaded member "
 "photos should display in their profiles now."
@@ -23877,7 +23877,7 @@ msgstr ""
 msgid "Error while uploading media."
 msgstr ""
 
-#: bp-media/bp-media-functions.php:2274
+#: bp-media/bp-media-functions.php:2276
 msgid "BuddyBoss Media data update is failing!"
 msgstr ""
 
@@ -29308,7 +29308,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/media-loop.php:37
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:111
 #: bp-templates/bp-nouveau/buddypress/moderation/blocked-members-loop.php:50
-#: bp-templates/bp-nouveau/buddypress/schedule-activity/schedule-activity-loop.php:34
+#: bp-templates/bp-nouveau/buddypress/schedule-activity/schedule-activity-loop.php:44
 #: bp-templates/bp-nouveau/buddypress/video/albums.php:66
 #: bp-templates/bp-nouveau/buddypress/video/video-loop.php:38
 #: bp-templates/bp-nouveau/includes/document/ajax.php:960
@@ -33292,11 +33292,11 @@ msgstr ""
 msgid "Error while uploading video."
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4119
+#: bp-video/bp-video-functions.php:4121
 msgid "FFMpeg\\FFMpeg class not found"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4158
+#: bp-video/bp-video-functions.php:4160
 msgid "FFMpeg\\FFProbe class not found"
 msgstr ""
 

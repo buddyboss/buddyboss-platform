@@ -702,6 +702,7 @@ class BP_Document {
 				$document->menu_order    = (int) $document->menu_order;
 				$document->parent        = (int) $document->folder_id;
 				$document->extension     = ( $thumb_gen ? bp_document_extension( $document->attachment_id ) : false ); // Get document extension.
+				$document->status        = isset( $document->status ) ? $document->status : bb_document_get_published_status();
 			}
 
 			$group_name = '';

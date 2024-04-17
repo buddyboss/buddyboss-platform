@@ -5167,6 +5167,10 @@ function bb_document_get_activity_document( $activity = '', $args = array() ) {
 		'activity_document'
 	);
 
+	if ( bb_get_activity_scheduled_status() === $activity->status ) {
+		$document_args['status'] = bb_document_get_scheduled_status();
+	}
+
 	$content = '';
 	if ( bp_has_document( $document_args ) ) {
 		ob_start();

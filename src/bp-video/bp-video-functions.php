@@ -541,6 +541,7 @@ function bp_video_get_specific( $args = '' ) {
 			'album_id'         => false,      // Album ID.
 			'user_id'          => false,      // User ID.
 			'moderation_query' => true,
+			'status'           => bb_video_get_published_status(),
 		),
 		'video_get_specific'
 	);
@@ -556,6 +557,7 @@ function bp_video_get_specific( $args = '' ) {
 		'album_id'         => $r['album_id'],
 		'user_id'          => $r['user_id'],
 		'moderation_query' => $r['moderation_query'],
+		'status'           => $r['status'],
 	);
 
 	/**
@@ -4517,6 +4519,10 @@ function bb_video_get_activity_video( $activity = '', $args = array() ) {
 		$video_args,
 		'activity_video'
 	);
+
+	if ( bb_get_activity_scheduled_status() === $activity->status ) {
+		$video_args['status'] = bb_video_get_scheduled_status();
+	}
 
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
 		if ( bp_is_group_video_support_enabled() ) {

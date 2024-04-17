@@ -115,8 +115,15 @@ if ( ! class_exists( 'BB_Activity_Schedule' ) ) {
 				$media_ids = explode( ",", $metas['bp_media_ids'][0] );
 				foreach ( $media_ids as $media_id ) {
 					$media = new BP_Media( $media_id );
-					$media->status = 'published';
+					$media->status = bb_media_get_published_status();
 					$media->save();
+
+					// Also update the individual videos activity.
+					if ( count( $media_ids ) > 1 ) {
+						$media_activity         = new BP_Activity_Activity( $media->activity_id );
+						$media_activity->status = bb_get_activity_published_status();
+						$media_activity->save();
+					}
 				}
 			}
 
@@ -125,8 +132,15 @@ if ( ! class_exists( 'BB_Activity_Schedule' ) ) {
 				$video_ids = explode( ",", $metas['bp_video_ids'][0] );
 				foreach ( $video_ids as $video_id ) {
 					$video = new BP_Video( $video_id );
-					$video->status = 'published';
+					$video->status = bb_video_get_published_status();
 					$video->save();
+
+					// Also update the individual videos activity.
+					if ( count( $video_ids ) > 0 ) {
+						$video_activity         = new BP_Activity_Activity( $video->activity_id );
+						$video_activity->status = bb_get_activity_published_status();
+						$video_activity->save();
+					}
 				}
 			}
 
@@ -135,8 +149,15 @@ if ( ! class_exists( 'BB_Activity_Schedule' ) ) {
 				$document_ids = explode( ",", $metas['bp_document_ids'][0] );
 				foreach ( $document_ids as $document_id ) {
 					$document = new BP_Document( $document_id );
-					$document->status = 'published';
+					$document->status = bb_document_get_published_status();
 					$document->save();
+
+					// Also update the individual documents activity.
+					if ( count( $document_ids ) > 0 ) {
+						$document_activity         = new BP_Activity_Activity( $document->activity_id );
+						$document_activity->status = bb_get_activity_published_status();
+						$document_activity->save();
+					}
 				}
 			}
 

@@ -2155,6 +2155,13 @@ body:not(.buddyboss-theme) .bb-schedule-post_dropdown_section .bb-action-popup-c
   width: 100%;
 }
 
+.bp-nouveau-activity-form-placeholder- #whats-new-form-placeholder.hide-schedule-button #bb-schedule-posts,
+.bp-nouveau-activity-form-placeholder- #whats-new-form.activity-form.hide-schedule-button #bb-schedule-posts,
+.activity-update-form #whats-new-form-placeholder.hide-schedule-button #bb-schedule-posts,
+.activity-update-form #whats-new-form.activity-form.hide-schedule-button #bb-schedule-posts {
+  display: none;
+}
+
 .bp-nouveau-activity-form-placeholder- #whats-new-form.bottom-notice,
 .activity-update-form #whats-new-form.bottom-notice {
   margin-bottom: 60px;

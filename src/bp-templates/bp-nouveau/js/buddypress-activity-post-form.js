@@ -457,29 +457,28 @@ window.bp = window.bp || {};
 			self.postForm.model.set( 'link_image_index', activity_data.link_image_index_save );
 			self.postForm.model.set( 'link_image_index_save', activity_data.link_image_index_save );
 
-			if( activity_data.activity_action_type === 'scheduled' ) {
+			if( activity_data.activity_action_type === 'scheduled' || activity_data.status === 'scheduled' ) {
+
 				// Set Schedule post data
-				self.postForm.model.set( 'activity_action_type', activity_data.activity_action_type );
 				self.postForm.model.set( 'activity_schedule_date_raw', activity_data.activity_schedule_date_raw );
 				self.postForm.model.set( 'activity_schedule_date', activity_data.activity_schedule_date );
 				self.postForm.model.set( 'activity_schedule_time', activity_data.activity_schedule_time );
 				self.postForm.model.set( 'activity_schedule_meridiem', activity_data.activity_schedule_meridiem );
 
-				// Check if time has passed and trigger warning
-				var activity_schedule_datetime = activity_data.activity_schedule_date_raw + ' ' + activity_data.activity_schedule_time + ' ' + activity_data.activity_schedule_meridiem;
-				var activity_schedule_date = new Date( activity_schedule_datetime );
-				var current_date = new Date( bp.Nouveau.bbServerTime().currentServerTime );
-				if ( current_date > activity_schedule_date ) {
-					Backbone.trigger( 'onError', BP_Nouveau.activity.strings.scheduleWarning, 'warning' );
+				if( activity_data.status === 'scheduled' ) {
+					self.postForm.model.set( 'activity_action_type', activity_data.status );
+				} else {
+					self.postForm.model.set( 'activity_action_type', activity_data.activity_action_type );
+					// Check if time has passed and trigger warning
+					var activity_schedule_datetime = activity_data.activity_schedule_date_raw + ' ' + activity_data.activity_schedule_time + ' ' + activity_data.activity_schedule_meridiem;
+					var activity_schedule_date = new Date( activity_schedule_datetime );
+					var current_date = new Date( bp.Nouveau.bbServerTime().currentServerTime );
+					if ( current_date > activity_schedule_date ) {
+						Backbone.trigger( 'onError', BP_Nouveau.activity.strings.scheduleWarning, 'warning' );
+					}
 				}
-			}
-
-			if( activity_data.status === 'scheduled' ) {
-				self.postForm.model.set( 'activity_action_type', activity_data.status );
-				self.postForm.model.set( 'activity_schedule_date_raw', activity_data.activity_schedule_date_raw );
-				self.postForm.model.set( 'activity_schedule_date', activity_data.activity_schedule_date );
-				self.postForm.model.set( 'activity_schedule_time', activity_data.activity_schedule_time );
-				self.postForm.model.set( 'activity_schedule_meridiem', activity_data.activity_schedule_meridiem );
+			} else {
+				self.postForm.$el.addClass( 'hide-schedule-button' );
 			}
 
 			var tool_box = $( '.activity-form.focus-in #whats-new-toolbar' );
@@ -4917,7 +4916,7 @@ window.bp = window.bp || {};
 			},
 
 			initialize: function () {
-				this.model.on( 'change', this.render, this );
+				this.model.on( 'change:activity_action_type change:activity_schedule_date_raw change:activity_schedule_date change:activity_schedule_time change:activity_schedule_meridiem', this.render, this );
 			},
 
 			render: function () {
@@ -5019,11 +5018,24 @@ window.bp = window.bp || {};
 				var dateNumber = UserDate.getDate();
 				var schedulePost_date = monthName + ' ' + dateNumber;
 
-				this.model.set( 'activity_action_type', 'scheduled' );
-				this.model.set( 'activity_schedule_date_raw', schedulePost_date_raw );
-				this.model.set( 'activity_schedule_date', schedulePost_date );
-				this.model.set( 'activity_schedule_time', schedulePost_time );
-				this.model.set( 'activity_schedule_meridiem', schedulePost_meridian);
+				// Check if time has passed and trigger warning and revert to normal post button.
+				var activity_schedule_datetime = schedulePost_date_raw + ' ' + schedulePost_time + ' ' + schedulePost_meridian;
+				var activity_schedule_date     = new Date( activity_schedule_datetime );
+				var current_date = new Date( bp.Nouveau.bbServerTime().currentServerTime );
+				if ( current_date > activity_schedule_date ) {
+					Backbone.trigger( 'onError', BP_Nouveau.activity.strings.scheduleWarning, 'warning' );
+					// Clear Feedback after 3 sec.
+					setTimeout( function() {
+						Backbone.trigger( 'cleanFeedBack');
+					}, 3000 );
+				} else {
+					this.model.set( 'activity_action_type', 'scheduled' );
+					this.model.set( 'activity_schedule_date_raw', schedulePost_date_raw );
+					this.model.set( 'activity_schedule_date', schedulePost_date );
+					this.model.set( 'activity_schedule_time', schedulePost_time );
+					this.model.set( 'activity_schedule_meridiem', schedulePost_meridian );
+					Backbone.trigger( 'cleanFeedBack');
+				}
 				$( event.target ).closest( '#bb-schedule-post_form_modal' ).hide();
 			},
 
@@ -5118,6 +5130,8 @@ window.bp = window.bp || {};
 									true
 								]
 							);
+
+							$( '#buddypress #bb-schedule-posts_modal .load-more' ).addClass( 'bb-page-item-deleted' );
 						}
 					).fail(
 						function ( response ) {
@@ -5515,7 +5529,7 @@ window.bp = window.bp || {};
 				$( '#bp-nouveau-activity-form-placeholder' ).hide();
 
 				$( '#whats-new-content' ).find( '#bp-activity-id' ).val( '' ); // reset activity id if in edit mode.
-				bp.Nouveau.Activity.postForm.postForm.$el.removeClass( 'bp-activity-edit' );
+				bp.Nouveau.Activity.postForm.postForm.$el.removeClass( 'bp-activity-edit hide-schedule-button' );
 
 				if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) ) {
 					bp.Nouveau.Activity.postForm.postForm.$el.find('.bp-activity-privacy__label-group').show().find( 'input#group' ).attr( 'disabled', false ); // enable back group visibility level.
