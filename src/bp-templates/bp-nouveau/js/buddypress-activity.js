@@ -4042,12 +4042,13 @@ window.bp = window.bp || {};
 		 * Show scheduled activities.
 		 */
 		showSchedulePosts: function () {
+			var object = 'activity';
 
 			bp.Nouveau.Activity.scheduled_current_page = 1;
 
 			if ( $( '#buddypress .bb-action-popup-content .schedule-posts-content' ).length ) {
 				var queryData = {
-					object: 'activity',
+					object: object,
 					status: 'scheduled',
 					target: '#buddypress .bb-action-popup-content .schedule-posts-content',
 					template: 'schedule_activity',
