@@ -527,7 +527,7 @@ function bp_core_get_user_displaynames( $user_ids ) {
  * Fetch the display name for a user.
  *
  * @since BuddyPress 1.0.1
- * @since BuddyBoss [BBVERSION] Added the `$current_user_id` parameter.
+ * @since BuddyBoss 2.5.90 Added the `$current_user_id` parameter.
  *
  * @param int|string|bool $user_id_or_username User ID or username.
  * @param int $current_user_id                 Optional. ID of the user viewing the profile.
