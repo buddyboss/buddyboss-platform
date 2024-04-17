@@ -4042,15 +4042,12 @@ window.bp = window.bp || {};
 		 * Show scheduled activities.
 		 */
 		showSchedulePosts: function () {
-			var object = 'activity',
-				scope = 'all';
 
 			bp.Nouveau.Activity.scheduled_current_page = 1;
 
 			if ( $( '#buddypress .bb-action-popup-content .schedule-posts-content' ).length ) {
 				var queryData = {
-					object: object,
-					scope: scope,
+					object: 'activity',
 					status: 'scheduled',
 					target: '#buddypress .bb-action-popup-content .schedule-posts-content',
 					template: 'schedule_activity',
@@ -4072,7 +4069,6 @@ window.bp = window.bp || {};
 		loadMoreScheduledActivities: function( event ) {
 			event.preventDefault();
 			var object = 'activity',
-				scope = 'all',
 				targetEl = $( event.currentTarget ),
 				self = this,
 				page = ( Number( self.scheduled_current_page ) * 1 ) + 1;
@@ -4086,7 +4082,6 @@ window.bp = window.bp || {};
 				$( '#buddypress #bb-schedule-posts_modal ul.bp-list li.activity-item' ).addClass( 'bb-pre-listed-page-item' );
 				var queryData = {
 					object: object,
-					scope: scope,
 					status: 'scheduled',
 					target: '#buddypress #bb-schedule-posts_modal .schedule-posts-content ul.bp-list',
 					method : 'append',

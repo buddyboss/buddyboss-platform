@@ -11,11 +11,21 @@
 bp_nouveau_before_loop();
 $activity_schedule_args = bp_parse_args(
 	bp_ajax_querystring( 'activity' ),
-	array( 'status' => sanitize_text_field( $_POST['status'] ), 'sort' => 'ASC', 'user_id' => bp_loggedin_user_id() ),
+	array(
+		'status'  => sanitize_text_field( $_POST['status'] ),
+		'sort'    => 'ASC',
+	),
 	'activity_schedule_args'
 );
 
+$activity_schedule_args['user_id'] = bp_loggedin_user_id();
+
+add_filter( 'bp_activity_default_scope', '__return_empty_string' );
+$activity_schedule_args['scope']   = '';
+
 if ( bp_has_activities( $activity_schedule_args ) ) :
+
+	remove_filter( 'bp_activity_default_scope', '__return_empty_string' );
 
 	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) :
 		?>
