@@ -626,7 +626,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'is_friend_confirm'          => __( 'Are you sure you want to remove your connection with this member?', 'buddyboss' ),
 			'confirm'                    => __( 'Are you sure?', 'buddyboss' ),
 			'confirm_delete_set'         => __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss' ),
-			'show_x_comments'            => __( 'View previous comments', 'buddyboss' ),
+			'show_x_comments'            => __( 'View more comments', 'buddyboss' ),
 			'unsaved_changes'            => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss' ),
 			'object_nav_parent'          => '#buddypress',
 			'anchorPlaceholderText'      => __( 'Paste or type a link', 'buddyboss' ),
@@ -686,6 +686,9 @@ class BP_Nouveau extends BP_Theme_Compat {
 		if ( is_customize_preview() ) {
 			$params['customizer_settings'] = bp_nouveau_get_temporary_setting( 'any' );
 		}
+
+		// Add localize variable for performance tab.
+		$params['is_send_ajax_request'] = function_exists( 'bb_is_send_ajax_request' ) ? bb_is_send_ajax_request() : '';
 
 		/**
 		 * Filters core JavaScript strings for internationalization before AJAX usage.

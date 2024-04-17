@@ -9942,11 +9942,11 @@ msgid "Lost Password"
 msgstr "Elfelejtett jelszó"
 
 #: bp-forums/common/widgets.php:189
-msgid "Register URI:"
+msgid "Register URL:"
 msgstr "Regisztráció URI:"
 
 #: bp-forums/common/widgets.php:194
-msgid "Lost Password URI:"
+msgid "Lost Password URL:"
 msgstr "Elfelejtett jelszó URI:"
 
 #: bp-forums/common/widgets.php:242
