@@ -405,19 +405,19 @@ window.bp = window.bp || {};
 			self.postForm.model.set( 'link_image_index', activity_data.link_image_index_save );
 			self.postForm.model.set( 'link_image_index_save', activity_data.link_image_index_save );
 
-			if( activity_data.activity_action_type === 'scheduled' || activity_data.status === 'scheduled' ) {
+			if( 'scheduled' === activity_data.activity_action_type || 'scheduled' === activity_data.status ) {
 
-				// Set Schedule post data
+				// Set Schedule post data.
 				self.postForm.model.set( 'activity_schedule_date_raw', activity_data.activity_schedule_date_raw );
 				self.postForm.model.set( 'activity_schedule_date', activity_data.activity_schedule_date );
 				self.postForm.model.set( 'activity_schedule_time', activity_data.activity_schedule_time );
 				self.postForm.model.set( 'activity_schedule_meridiem', activity_data.activity_schedule_meridiem );
 
-				if( activity_data.status === 'scheduled' ) {
+				if( 'scheduled' === activity_data.status ) {
 					self.postForm.model.set( 'activity_action_type', activity_data.status );
 				} else {
 					self.postForm.model.set( 'activity_action_type', activity_data.activity_action_type );
-					// Check if time has passed and trigger warning
+					// Check if time has passed and trigger warning.
 					var activity_schedule_datetime = activity_data.activity_schedule_date_raw + ' ' + activity_data.activity_schedule_time + ' ' + activity_data.activity_schedule_meridiem;
 					var activity_schedule_date = new Date( activity_schedule_datetime );
 					var current_date = new Date( bp.Nouveau.bbServerTime().currentServerTime );
@@ -4770,7 +4770,7 @@ window.bp = window.bp || {};
 					buttomText = BP_Nouveau.activity.strings.updatePostButton;
 				}
 
-				if( this.model.get( 'activity_action_type' ) === 'scheduled' || this.model.get( 'activity_status' ) === 'scheduled' ) {
+				if( 'scheduled' === this.model.get( 'activity_action_type' ) || 'scheduled' === this.model.get( 'activity_status' ) ) {
 					buttomText = BP_Nouveau.activity.strings.updatePostButton;
 				}
 
@@ -4828,7 +4828,7 @@ window.bp = window.bp || {};
 					buttomText = BP_Nouveau.activity.strings.updatePostButton;
 				}
 
-				if( model.get( 'activity_action_type' ) === 'scheduled' || this.model.get( 'activity_status' ) === 'scheduled' ) {
+				if( 'scheduled' === model.get( 'activity_action_type' ) || 'scheduled' === this.model.get( 'activity_status' ) ) {
 					this.submit.el.value = BP_Nouveau.activity.strings.schedulePostButton;
 				} else {
 					this.submit.el.value = buttomText;
@@ -4871,8 +4871,8 @@ window.bp = window.bp || {};
 			displayOptions: function ( event ) {
 				event.preventDefault();
 				var target = $( event.target );
-				if( target.hasClass( 'is_scheduled' ) && target.closest( '.activity-form' ).hasClass( 'bp-activity-edit' ) ) {
-					target.closest( '.bb-schedule-posts' ).find('.bb-schedule-post_action').trigger( 'click' );
+				if ( target.hasClass( 'is_scheduled' ) && target.closest( '.activity-form' ).hasClass( 'bp-activity-edit' ) ) {
+					target.closest( '.bb-schedule-posts' ).find( '.bb-schedule-post_action' ).trigger( 'click' );
 				} else {
 					target.closest( '.bb-schedule-post_dropdown_section' ).find( '.bb-schedule-post_dropdown_list' ).toggleClass( 'is_open' );
 				}
@@ -4889,40 +4889,40 @@ window.bp = window.bp || {};
 				var schedulePost = $( event.target ).closest( '.bb-schedule-posts' );
 				schedulePost.find( '.bb-schedule-post_dropdown_list' ).removeClass( 'is_open' );
 				schedulePost.find( '.bb-schedule-post_modal #bb-schedule-post_form_modal' ).show();
-				if (typeof jQuery.fn.datetimepicker !== 'undefined') {
+				if ( 'undefined' !== typeof jQuery.fn.datetimepicker ) {
 					var currentDate = new Date();
-					$( '.bb-schedule-post_dropdown_section .bb-schedule-activity-date-field' ).datetimepicker({
+					$( '.bb-schedule-post_dropdown_section .bb-schedule-activity-date-field' ).datetimepicker( {
 						format: 'Y-m-d',
-						timepicker:false,
-						mask:false,
+						timepicker: false,
+						mask: false,
 						minDate: 0,
-						maxDate: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 90 ),
+						maxDate: new Date( currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 90 ),
 						yearStart: currentDate.getFullYear(),
 						defaultDate: currentDate,
 						scrollMonth: false,
 						scrollTime: false,
 						scrollInput: false,
 						className: 'bb-schedule-activity-date-wrap',
-					});
+					} );
 
-					$( '.bb-schedule-post_dropdown_section .bb-schedule-activity-time-field' ).datetimepicker({
+					$( '.bb-schedule-post_dropdown_section .bb-schedule-activity-time-field' ).datetimepicker( {
 						datepicker: false,
 						format: 'h:i',
-						formatTime:	'h:i',
+						formatTime: 'h:i',
 						hours12: true,
 						step: 5,
 						className: 'bb-schedule-activity-time-picker',
-					});
+					} );
 				}
 
 				if ( $( '.bb-server-date' ).length ) {
 					$( '.bb-server-date' ).text( bp.Nouveau.bbServerTime().date );
 				}
-	
+
 				if ( $( '.bb-server-year' ).length ) {
 					$( '.bb-server-year' ).text( bp.Nouveau.bbServerTime().year );
 				}
-	
+
 				if ( $( '.bb-server-time' ).length ) {
 					$( '.bb-server-time' ).text( bp.Nouveau.bbServerTime().time );
 				}
@@ -4934,11 +4934,11 @@ window.bp = window.bp || {};
 				schedulePost.find( '.bb-schedule-post_dropdown_list' ).removeClass( 'is_open' );
 				schedulePost.find( '#bb-schedule-post_form_modal' ).hide();
 				schedulePost.find( '#bb-schedule-posts_modal' ).show();
-				schedulePost.find( '#bb-schedule-posts_modal .bb-action-popup-content:not(.bb-scrolling)' ).on( 'scroll', function() {
+				schedulePost.find( '#bb-schedule-posts_modal .bb-action-popup-content:not(.bb-scrolling)' ).on( 'scroll', function () {
 					// replace dummy image with original image by faking scroll event.
 					$( window ).scroll();
 					$( this ).addClass( 'bb-scrolling' );
-				});
+				} );
 
 			},
 
@@ -4955,7 +4955,7 @@ window.bp = window.bp || {};
 				var schedulePost = $( event.target ).closest( '.bb-schedule-posts' );
 				var schedulePost_time = schedulePost.find( '.bb-schedule-activity-time-field' ).val();
 				var schedulePost_date_raw = schedulePost.find( '.bb-schedule-activity-date-field' ).val();
-				var schedulePost_meridian = schedulePost.find( 'input[name="bb-schedule-activity-meridian"]:checked').val();
+				var schedulePost_meridian = schedulePost.find( 'input[name="bb-schedule-activity-meridian"]:checked' ).val();
 
 				var UserDate = new Date( schedulePost_date_raw );
 				var monthName = UserDate.toLocaleString( 'en-us', { month: 'short' } );
@@ -4969,8 +4969,8 @@ window.bp = window.bp || {};
 				if ( current_date > activity_schedule_date ) {
 					Backbone.trigger( 'onError', BP_Nouveau.activity.strings.scheduleWarning, 'warning' );
 					// Clear Feedback after 3 sec.
-					setTimeout( function() {
-						Backbone.trigger( 'cleanFeedBack');
+					setTimeout( function () {
+						Backbone.trigger( 'cleanFeedBack' );
 					}, 3000 );
 				} else {
 					this.model.set( 'activity_action_type', 'scheduled' );
@@ -4978,13 +4978,13 @@ window.bp = window.bp || {};
 					this.model.set( 'activity_schedule_date', schedulePost_date );
 					this.model.set( 'activity_schedule_time', schedulePost_time );
 					this.model.set( 'activity_schedule_meridiem', schedulePost_meridian );
-					Backbone.trigger( 'cleanFeedBack');
+					Backbone.trigger( 'cleanFeedBack' );
 				}
 				$( event.target ).closest( '#bb-schedule-post_form_modal' ).hide();
 			},
 
 			validateScheduleTime: function () {
-				if ( $( '.bb-schedule-activity-date-field' ).val() !== '' && $( '.bb-schedule-activity-time-field' ).val() !== '' ) {
+				if ( '' !== $( '.bb-schedule-activity-date-field' ).val() && '' !== $( '.bb-schedule-activity-time-field' ).val() ) {
 					$( '.bb-schedule-activity' ).removeAttr( 'disabled' );
 				} else {
 					$( '.bb-schedule-activity' ).attr( 'disabled', 'disabled' );
@@ -5005,15 +5005,15 @@ window.bp = window.bp || {};
 					var activity_URL_preview = activity.data( 'link-url' ) !== '' ? activity.data( 'link-url' ) : null;
 
 					// Set the activity schedule data.
-					if ( activity_data.status === 'scheduled' ) {
-						var activity_schedule_data = activity.data('bb-scheduled-time');
+					if ( 'scheduled' === activity_data.status ) {
+						var activity_schedule_data = activity.data( 'bb-scheduled-time' );
 						activity_data.activity_schedule_date_raw = activity_schedule_data.date_raw;
-						activity_data.activity_schedule_date     = activity_schedule_data.date;
-						activity_data.activity_schedule_time     = activity_schedule_data.time;
+						activity_data.activity_schedule_date = activity_schedule_data.date;
+						activity_data.activity_schedule_time = activity_schedule_data.time;
 						activity_data.activity_schedule_meridiem = activity_schedule_data.meridiem;
 					}
 
-					if ( typeof activity_data !== 'undefined' ) {
+					if ( 'undefined' !== typeof activity_data ) {
 						bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data, activity_URL_preview );
 
 						// Check if it's a Group activity.
@@ -5024,7 +5024,7 @@ window.bp = window.bp || {};
 						}
 
 						// Close the Media/Document popup if someone click on Edit while on Media/Document popup.
-						if ( typeof bp.Nouveau.Media !== 'undefined' && typeof bp.Nouveau.Media.Theatre !== 'undefined' && ( bp.Nouveau.Media.Theatre.is_open_media || bp.Nouveau.Media.Theatre.is_open_document ) ) {
+						if ( 'undefined' !== typeof bp.Nouveau.Media && 'undefined' !== typeof bp.Nouveau.Media.Theatre && ( bp.Nouveau.Media.Theatre.is_open_media || bp.Nouveau.Media.Theatre.is_open_document ) ) {
 							$( document ).find( '.bb-close-media-theatre' ).trigger( 'click' );
 							$( document ).find( '.bb-close-document-theatre' ).trigger( 'click' );
 						}
@@ -5060,15 +5060,15 @@ window.bp = window.bp || {};
 							target.removeClass( 'loading' );
 							$( li_parent ).remove();
 
-							if( schedule_posts.find( 'li' ).length === 0 ) {
-								schedule_posts.closest( '.bb-action-popup-content').addClass( 'has-no-content' ).removeClass( 'has-content' );
+							if ( 0 === schedule_posts.find( 'li' ).length ) {
+								schedule_posts.closest( '.bb-action-popup-content' ).addClass( 'has-no-content' ).removeClass( 'has-content' );
 							}
 
 							$( document ).trigger(
 								'bb_trigger_toast_message',
 								[
 									BP_Nouveau.activity.strings.successDeletionTitle,
-									'<div>'+ BP_Nouveau.activity.strings.successDeletionDesc +'</div>',
+									'<div>' + BP_Nouveau.activity.strings.successDeletionDesc + '</div>',
 									'delete',
 									null,
 									true
@@ -5822,12 +5822,12 @@ window.bp = window.bp || {};
 						self.resetForm();
 
 						// Trigger Toast message if it is a scheduled post.
-						if( data.activity_action_type === 'scheduled' ) {
+						if ( 'scheduled' === data.activity_action_type ) {
 							var title = BP_Nouveau.activity.strings.EditSuccessScheduleTitle;
 							var desc = BP_Nouveau.activity.strings.EditSuccessScheduleDesc;
 							var LinkText = BP_Nouveau.activity.strings.EditViewSchedulePost;
 
-							if( ! data.edit_activity ) { // It's a new scheduled post.
+							if ( ! data.edit_activity ) { // It's a new scheduled post.
 								title = BP_Nouveau.activity.strings.successScheduleTitle;
 								desc = BP_Nouveau.activity.strings.successScheduleDesc;
 								LinkText = BP_Nouveau.activity.strings.viewSchedulePosts;
@@ -5835,13 +5835,13 @@ window.bp = window.bp || {};
 
 							Backbone.trigger( 'triggerToastMessage',
 								title,
-								'<div>'+ desc + ' <span class="toast-messages-action_link bb-view-scheduled-posts"> ' + LinkText + '</span></div>',
+								'<div>' + desc + ' <span class="toast-messages-action_link bb-view-scheduled-posts"> ' + LinkText + '</span></div>',
 								'success',
 								null,
 								true );
 						}
 
-						// Display a successful feedback if the acticity is not consistent with the displayed stream.
+						// Display a successful feedback if the activity is not consistent with the displayed stream.
 						if ( ! toPrepend ) {
 
 							self.views.add(

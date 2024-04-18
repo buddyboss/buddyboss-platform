@@ -1,10 +1,10 @@
 <?php
 /**
- * The template for activity loop
+ * The template for schedule activity loop.
  *
  * This template can be overridden by copying it to yourtheme/buddypress/schedule-activity/schedule-activity-loop.php.
  *
- * @since   BuddyBoss 1.0.0
+ * @since   BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
 

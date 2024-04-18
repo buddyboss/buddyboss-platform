@@ -117,7 +117,7 @@ add_action(
 			),
 			array(
 				'delete_scheduled_activity' => array(
-					'function' => 'bp_nouveau_ajax_delete_scheduled_activity',
+					'function' => 'bb_nouveau_ajax_delete_scheduled_activity',
 					'nopriv'   => false,
 				),
 			),
@@ -795,23 +795,27 @@ function bp_nouveau_ajax_post_update() {
 		$privacy = $_POST['privacy']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	}
 
-	$activity_status    = bb_get_activity_published_status();
-	$schedule_date_time = '';
-	$is_scheduled       = false;
-	if ( ! empty( $_POST['activity_action_type'] ) && 'scheduled' === $_POST['activity_action_type'] ) {
+	$activity_status      = bb_get_activity_published_status();
+	$schedule_date_time   = '';
+	$is_scheduled         = false;
+	$activity_action_type = bb_filter_input_string( INPUT_POST, 'activity_action_type' );
+	if ( ! empty( $activity_action_type ) && 'scheduled' === $activity_action_type ) {
 		$activity_status = bb_get_activity_scheduled_status();
 
-		if ( ! empty( $_POST['activity_schedule_date_raw'] ) && ! empty( $_POST['activity_schedule_time'] ) && ! empty( $_POST['activity_schedule_meridiem'] ) ) {
+		$activity_schedule_date_raw = bb_filter_input_string( INPUT_POST, 'activity_schedule_date_raw' );
+		$activity_schedule_time     = bb_filter_input_string( INPUT_POST, 'activity_schedule_time' );
+		$activity_schedule_meridiem = bb_filter_input_string( INPUT_POST, 'activity_schedule_meridiem' );
+		if ( ! empty( $activity_schedule_date_raw ) && ! empty( $activity_schedule_time ) && ! empty( $activity_schedule_meridiem ) ) {
 			$is_scheduled = true;
 
-			$activity_schedule_date_raw = sanitize_text_field( $_POST['activity_schedule_date_raw'] );
-			$activity_schedule_meridiem = sanitize_text_field( $_POST['activity_schedule_meridiem'] ); // 'pm' or 'am'
-			$activity_schedule_time     = sanitize_text_field( $_POST['activity_schedule_time'] );
+			$activity_schedule_date_raw = sanitize_text_field( $activity_schedule_date_raw );
+			$activity_schedule_meridiem = sanitize_text_field( $activity_schedule_time ); // 'pm' or 'am'
+			$activity_schedule_time     = sanitize_text_field( $activity_schedule_meridiem );
 
-			// Convert 12-hour time format to 24-hour time format
+			// Convert 12-hour time format to 24-hour time format.
 			$activity_schedule_time_24hr = date( 'H:i', strtotime( $activity_schedule_time . ' ' . $activity_schedule_meridiem ) );
 
-			// Combine date and time
+			// Combine date and time.
 			$activity_datetime = $activity_schedule_date_raw . ' ' . $activity_schedule_time_24hr;
 
 			// Convert to MySQL datetime format
@@ -854,24 +858,24 @@ function bp_nouveau_ajax_post_update() {
 		}
 
 		$post_array = array(
-			'id'            => $activity_id,
-			'content'       => $content,
-			'privacy'       => $privacy,
-			'error_type'    => 'wp_error',
+			'id'         => $activity_id,
+			'content'    => $content,
+			'privacy'    => $privacy,
+			'error_type' => 'wp_error',
 		);
 
 		if ( $is_scheduled ) {
-			$post_array[ 'recorded_time' ] = $schedule_date_time;
-			$post_array[ 'status' ]        = $activity_status;
+			$post_array['recorded_time'] = $schedule_date_time;
+			$post_array['status']        = $activity_status;
 		}
 		$activity_id = bp_activity_post_update( $post_array );
 
 	} elseif ( 'group' === $object ) {
 		if ( $item_id && bp_is_active( 'groups' ) ) {
 
-			$_POST['group_id'] = $item_id; // Set POST variable for group id for further processing from other components
+			$_POST['group_id'] = $item_id; // Set POST variable for group id for further processing from other components.
 
-			if ( $is_scheduled && ! bb_can_user_schedule_activity( array ( 'object' => 'group', 'group_id' => $item_id ) ) ) {
+			if ( $is_scheduled && ! bb_can_user_schedule_activity( array( 'object'   => 'group', 'group_id' => $item_id, ) ) ) {
 				wp_send_json_error(
 					array(
 						'message' => __( 'You don\'t have permission to schedule activity in perticular group.', 'buddyboss' ),
@@ -880,14 +884,14 @@ function bp_nouveau_ajax_post_update() {
 			}
 
 			$post_array = array(
-				'id'            => $activity_id,
-				'content'       => $_POST['content'],
-				'group_id'      => $item_id,
+				'id'       => $activity_id,
+				'content'  => $_POST['content'],
+				'group_id' => $item_id,
 			);
 
 			if ( $is_scheduled ) {
-				$post_array[ 'recorded_time' ] = $schedule_date_time;
-				$post_array[ 'status' ]        = $activity_status;
+				$post_array['recorded_time'] = $schedule_date_time;
+				$post_array['status']        = $activity_status;
 			}
 
 			// This function is setting the current group!
@@ -1541,13 +1545,13 @@ function bb_nouveau_ajax_toggle_activity_notification_status() {
 }
 
 /**
- * Deletes an scheduled Activity item received via a POST request.
+ * Deletes the scheduled Activity item received via a POST request.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return string JSON reply.
+ * @return void JSON reply.
  */
-function bp_nouveau_ajax_delete_scheduled_activity() {
+function bb_nouveau_ajax_delete_scheduled_activity() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error">%s</div>',
@@ -1580,19 +1584,19 @@ function bp_nouveau_ajax_delete_scheduled_activity() {
 		wp_send_json_error( $response );
 	}
 
-	/** This action is documented in bp-activity/bp-activity-actions.php */
-	do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
+	do_action( 'bp_activity_before_action_delete_scheduled_activity', $activity->id, $activity->user_id );
 
-	if ( ! bp_activity_delete(
-		array(
-			'id'      => $activity->id,
-			'user_id' => $activity->user_id,
+	if (
+		! bp_activity_delete(
+			array(
+				'id'      => $activity->id,
+				'user_id' => $activity->user_id,
+			)
 		)
-	) ) {
+	) {
 		wp_send_json_error( $response );
 	}
 
-	/** This action is documented in bp-activity/bp-activity-actions.php */
 	do_action( 'bp_activity_action_delete_scheduled_activity', $activity->id, $activity->user_id );
 
 	// The activity has been deleted successfully.
