@@ -70,7 +70,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			add_filter( 'bbp_after_has_topics_parse_args', array( $this, 'bb_wpml_member_profile_topic_reply' ) );
 			add_filter( 'bbp_after_has_replies_parse_args', array( $this, 'bb_wpml_member_profile_topic_reply' ) );
 			
-			//Global Search.
+			//Fix incorrect search results for Global Search for translated/non-translated posts.
 			add_filter( 'Bp_Search_Posts_sql', array( $this, 'bb_wpml_search_posts_sql' ), 10, 3 );
 		}
 
@@ -233,6 +233,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 * 
 		 * @param string $q Query for parsing WP QUERY.
+		 * 
 		 * @return $q Returns modifed Query.
 		 */
 		public function remove_wpml_post_parse_query( $q ) {
@@ -244,7 +245,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		}
 
 		/**
-		 * Add fix for WPML post count issue in Global Search using a join query.
+		 * Add fix for WPML post count issue in Global Search.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
