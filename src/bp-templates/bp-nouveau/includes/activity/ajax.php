@@ -875,7 +875,15 @@ function bp_nouveau_ajax_post_update() {
 
 			$_POST['group_id'] = $item_id; // Set POST variable for group id for further processing from other components.
 
-			if ( $is_scheduled && ! bb_can_user_schedule_activity( array( 'object'   => 'group', 'group_id' => $item_id, ) ) ) {
+			if (
+				$is_scheduled &&
+				! bb_can_user_schedule_activity(
+					array(
+						'object'   => 'group',
+						'group_id' => $item_id,
+					)
+				)
+			) {
 				wp_send_json_error(
 					array(
 						'message' => __( 'You don\'t have permission to schedule activity in perticular group.', 'buddyboss' ),
@@ -1584,7 +1592,7 @@ function bb_nouveau_ajax_delete_scheduled_activity() {
 		wp_send_json_error( $response );
 	}
 
-	do_action( 'bp_activity_before_action_delete_scheduled_activity', $activity->id, $activity->user_id );
+	do_action( 'bb_activity_before_action_delete_scheduled_activity', $activity->id, $activity->user_id );
 
 	if (
 		! bp_activity_delete(
@@ -1597,7 +1605,7 @@ function bb_nouveau_ajax_delete_scheduled_activity() {
 		wp_send_json_error( $response );
 	}
 
-	do_action( 'bp_activity_action_delete_scheduled_activity', $activity->id, $activity->user_id );
+	do_action( 'bb_activity_action_delete_scheduled_activity', $activity->id, $activity->user_id );
 
 	// The activity has been deleted successfully.
 	$response = array( 'deleted' => $activity->id );
