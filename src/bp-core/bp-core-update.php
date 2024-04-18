@@ -487,10 +487,9 @@ function bp_version_updater() {
 			bb_update_to_2_5_80();
 		}
 
-		// To be added.
-		// if ( $raw_db_version < XXXXX ) {
-		// 	bb_update_to_X_X_X();
-		// }
+		if ( $raw_db_version < 21091 ) {
+			bb_update_to_2_6_00();
+		}
 
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
@@ -3506,10 +3505,10 @@ function bb_update_to_2_5_80() {
  *
  * @return void
  */
-function bb_update_to_X_X_X() {
+function bb_update_to_2_6_00() {
 
-	global $wpdb;
-	$cache_table = $wpdb->prefix . 'bb_performance_cache';
-
-	$wpdb->query( "DELETE FROM {$cache_table}" );
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
 }
