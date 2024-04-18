@@ -532,7 +532,7 @@ function bp_core_install_default_profiles_fields() {
 		if ( $result ) {
 			$base_group_id = $wpdb->insert_id;
 			if ( $is_multisite ) {
-				add_site_option( 'bp-xprofile-base-group-id', $base_group_id );
+				update_site_option( 'bp-xprofile-base-group-id', $base_group_id );
 			}
 		}
 	}
@@ -558,7 +558,7 @@ function bp_core_install_default_profiles_fields() {
 			if ( $result ) {
 				$first_name_id = $wpdb->insert_id;
 				if ( $is_multisite ) {
-					add_site_option( 'bp-xprofile-firstname-field-id', $first_name_id );
+					update_site_option( 'bp-xprofile-firstname-field-id', $first_name_id );
 				}
 			}
 		}
@@ -578,7 +578,7 @@ function bp_core_install_default_profiles_fields() {
 		if ( $result ) {
 			$first_name_id = $wpdb->insert_id;
 			if ( $is_multisite ) {
-				add_site_option( 'bp-xprofile-firstname-field-id', $first_name_id );
+				update_site_option( 'bp-xprofile-firstname-field-id', $first_name_id );
 			}
 		}
 	}
@@ -603,7 +603,7 @@ function bp_core_install_default_profiles_fields() {
 			if ( $result ) {
 				$last_name_id = $wpdb->insert_id;
 				if ( $is_multisite ) {
-					add_site_option( 'bp-xprofile-lastname-field-id', $last_name_id );
+					update_site_option( 'bp-xprofile-lastname-field-id', $last_name_id );
 				}
 			}
 		}
@@ -623,7 +623,7 @@ function bp_core_install_default_profiles_fields() {
 		if ( $result ) {
 			$last_name_id = $wpdb->insert_id;
 			if ( $is_multisite ) {
-				add_site_option( 'bp-xprofile-lastname-field-id', $last_name_id );
+				update_site_option( 'bp-xprofile-lastname-field-id', $last_name_id );
 			}
 		}
 	}
@@ -648,7 +648,7 @@ function bp_core_install_default_profiles_fields() {
 			if ( $result ) {
 				$nickname_id = $wpdb->insert_id;
 				if ( $is_multisite ) {
-					add_site_option( 'bp-xprofile-nickname-field-id', $nickname_id );
+					update_site_option( 'bp-xprofile-nickname-field-id', $nickname_id );
 				}
 			}
 		}
@@ -668,7 +668,7 @@ function bp_core_install_default_profiles_fields() {
 		if ( $result ) {
 			$nickname_id = $wpdb->insert_id;
 			if ( $is_multisite ) {
-				add_site_option( 'bp-xprofile-nickname-field-id', $nickname_id );
+				update_site_option( 'bp-xprofile-nickname-field-id', $nickname_id );
 			}
 		}
 	}
