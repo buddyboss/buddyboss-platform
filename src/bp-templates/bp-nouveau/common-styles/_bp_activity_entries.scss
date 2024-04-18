@@ -301,8 +301,12 @@
 				}
 
 				.activity-state-comments {
-					display: inline-block;
+					display: none;
 					margin-left: auto;
+
+					&.has-comments {
+						display: inline-block;
+					}
 				}
 			}
 
