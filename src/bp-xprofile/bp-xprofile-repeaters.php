@@ -997,7 +997,7 @@ add_filter( 'bp_ps_field_before_query', 'bp_profile_repeaters_search_change_filt
 /**
  * If the field is a main/template field for a repeater set, search should have a like '%s keyword %s' query.
  *
- * @param object $f Passed by reference
+ * @param object $f Passed by reference.
  */
 function bp_profile_repeaters_search_change_filter( $f ) {
 	if ( ! isset( $f->id ) ) {
@@ -1018,11 +1018,11 @@ function bp_profile_repeaters_search_change_filter( $f ) {
 
 	$cloned_from = bp_xprofile_get_meta( $field_id, 'field', '_cloned_from', true );
 	if ( ! empty( $cloned_from ) ) {
-		// This is a clone field. We needn't do anything
+		// This is a clone field. We needn't do anything.
 		return $f;
 	}
 
-	// this is a template field
+	// this is a template field.
 	$f->format = 'text';
 	$f->filter = 'contains';
 	return $f;
@@ -1094,9 +1094,9 @@ function bb_admin_xprofile_add_repeater_set() {
 		$clone_field_ids_has_data = array_diff( $clone_field_ids_has_data, $existing_field_ids );
 	}
 
-    // First, clear the data for deleted fields, if any.
+	// First, clear the data for deleted fields, if any.
 	if ( ! empty( $_POST['deleted_field_ids'] ) ) {
-		$deleted_field_ids = wp_parse_id_list( $_POST['deleted_field_ids'] );
+		$deleted_field_ids = wp_parse_id_list( sanitize_text_field( wp_unslash( $_POST['deleted_field_ids'] ) ) );
 		if ( ! empty( $deleted_field_ids ) ) {
 			foreach ( $deleted_field_ids as $deleted_field_id ) {
 				xprofile_delete_field_data( $deleted_field_id, $user_id );
@@ -1149,7 +1149,7 @@ function bb_admin_xprofile_add_repeater_set() {
 							$can_change_visibility = bp_current_user_can( 'bp_xprofile_change_field_visibility' );
 							?>
 							<p class="field-visibility-settings-<?php echo $can_change_visibility ? 'toggle' : 'notoggle'; ?>" id="field-visibility-settings-toggle-<?php bp_the_profile_field_input_name(); ?>">
-									<span id="<?php echo $field->id; ?>-2">
+									<span id="<?php echo esc_attr( $field->id ); ?>-2">
 									<?php
 									printf(
 										__( 'This field can be seen by: %s', 'buddyboss' ),
@@ -1236,10 +1236,10 @@ function bb_admin_profile_repeaters_update_field_data( $user_id, $posted_field_i
 			// First, clear the data for deleted fields, if any.
 			if ( isset( $_POST['deleted_field_ids'][ $field_group_id ] ) && ! empty( $_POST['deleted_field_ids'][ $field_group_id ] ) ) {
 				$deleted_field_ids = wp_parse_id_list( $_POST['deleted_field_ids'][ $field_group_id ] );
-                foreach ( $deleted_field_ids as $deleted_field_id ) {
-                    if ( ! in_array( $deleted_field_id, $posted_field_ids, true ) ) {
-					    xprofile_delete_field_data( $deleted_field_id, $user_id );
-                    }
+				foreach ( $deleted_field_ids as $deleted_field_id ) {
+					if ( ! in_array( $deleted_field_id, $posted_field_ids, true ) ) {
+						xprofile_delete_field_data( $deleted_field_id, $user_id );
+					}
 				}
 			}
 
