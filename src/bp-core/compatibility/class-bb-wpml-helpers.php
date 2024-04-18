@@ -252,7 +252,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		 * @param string $sql_query String of the SQL query to filter.
 		 * @param array  $args      Arguments of the filter to get the post_type.
 		 *
-		 * @return string
+		 * @return string $sql_query String of the SQL query to filter.
 		 */
 		public function bb_wpml_search_posts_sql( $sql_query, $args ) {
 			global $sitepress;
