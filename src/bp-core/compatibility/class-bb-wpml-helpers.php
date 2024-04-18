@@ -257,10 +257,12 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		public function bb_wpml_search_posts_sql( $sql_query, $args ) {
 			global $sitepress;
 
-			if ( $sitepress->is_translated_post_type( $args['post_type'] ) ) {
-				if ( defined( 'ICL_LANGUAGE_CODE' ) ) {
-					global $wpdb;
-					$sql_query .= " AND EXISTS (
+			if (
+				defined( 'ICL_LANGUAGE_CODE' ) &&
+				$sitepress->is_translated_post_type( $args['post_type'] )
+			) {
+			        global $wpdb;
+				$sql_query .= " AND EXISTS (
 						SELECT 1 
 						FROM {$wpdb->prefix}icl_translations t
 						WHERE t.element_type = CONCAT('post_', %s)
@@ -268,10 +270,9 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 						AND t.element_id = p.ID
 					)";
 
-					$sql_query = $wpdb->prepare( $sql_query, $args['post_type'], ICL_LANGUAGE_CODE );
-				}
+				$sql_query = $wpdb->prepare( $sql_query, $args['post_type'], ICL_LANGUAGE_CODE );
 			} else {
-				add_filter( 'wpml_post_parse_query', array( $this, 'remove_wpml_post_parse_query' ) );
+				add_filter( 'wpml_post_parse_query', array( $this, 'bb_remove_wpml_post_parse_query' ) );
 			}
 
 			return $sql_query;
