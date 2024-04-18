@@ -5189,3 +5189,25 @@ function bb_document_get_activity_document( $activity = '', $args = array() ) {
 
 	return $content;
 }
+
+/**
+ * Return the document published status.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_document_get_published_status() {
+	return buddypress()->document->published_status;
+}
+
+/**
+ * Return the document scheduled status.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_document_get_scheduled_status() {
+	return buddypress()->document->scheduled_status;
+}

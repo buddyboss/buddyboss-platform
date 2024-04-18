@@ -2039,25 +2039,3 @@ function bp_get_video_activity_thumb() {
 	 */
 	return apply_filters( 'bp_get_video_activity_thumb', $video_template->video->attachment_data->video_activity_thumb );
 }
-
-/**
- * Return the published status.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string
- */
-function bb_video_get_published_status() {
-	return buddypress()->video->published_status;
-}
-
-/**
- * Return the scheduled status.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string
- */
-function bb_video_get_scheduled_status() {
-	return buddypress()->video->scheduled_status;
-}

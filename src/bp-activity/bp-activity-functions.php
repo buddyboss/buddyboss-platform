@@ -7164,3 +7164,25 @@ function bb_can_user_schedule_activity( $args = array() ) {
 	 */
 	return apply_filters( 'bb_can_user_schedule_activity', $retval, $args );
 }
+
+/**
+ * Return the activity published status.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_get_activity_published_status() {
+	return buddypress()->activity->published_status;
+}
+
+/**
+ * Return the activity scheduled status.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_get_activity_scheduled_status() {
+	return buddypress()->activity->scheduled_status;
+}
