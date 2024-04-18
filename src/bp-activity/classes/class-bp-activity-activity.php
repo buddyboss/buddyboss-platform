@@ -275,7 +275,7 @@ class BP_Activity_Activity {
 		$this->mptt_right        = apply_filters_ref_array( 'bp_activity_mptt_right_before_save', array( $this->mptt_right, &$this ) );
 		$this->is_spam           = apply_filters_ref_array( 'bp_activity_is_spam_before_save', array( $this->is_spam, &$this ) );
 		$this->privacy           = apply_filters_ref_array( 'bp_activity_privacy_before_save', array( $this->privacy, &$this ) );
-		$this->status            = apply_filters_ref_array( 'bp_activity_status_before_save', array( $this->status, &$this ) );
+		$this->status            = apply_filters_ref_array( 'bb_activity_status_before_save', array( $this->status, &$this ) );
 
 		/**
 		 * Fires before the current activity item gets saved.
