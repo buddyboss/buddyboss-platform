@@ -7121,11 +7121,12 @@ function bb_is_enabled_activity_schedule_posts( $default = false ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * @param array $args Array of Arguments.
+ *
  * @return bool true if user can post schedule posts, otherwise false.
  */
 function bb_can_user_schedule_activity( $args = array() ) {
-	$retval = false;
-	$r      = bp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'user_id'  => bp_loggedin_user_id(),
@@ -7134,6 +7135,7 @@ function bb_can_user_schedule_activity( $args = array() ) {
 		)
 	);
 
+	$retval = false;
 	if (
 		bp_is_active( 'groups' ) &&
 		(
@@ -7152,5 +7154,13 @@ function bb_can_user_schedule_activity( $args = array() ) {
 		$retval = true;
 	}
 
+	/**
+	 * Filters whether user can schedule activity posts.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool  $retval Return value for schedule post.
+	 * @param array $args   Array of Arguments.
+	 */
 	return apply_filters( 'bb_can_user_schedule_activity', $retval, $args );
 }

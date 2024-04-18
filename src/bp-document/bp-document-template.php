@@ -2531,7 +2531,6 @@ function bp_get_document_link( $document_id ) {
 	return apply_filters( 'bp_get_document_link', $url, $document_id );
 }
 
-
 /**
  * Return the published status.
  *

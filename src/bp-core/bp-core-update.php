@@ -3508,7 +3508,7 @@ function bb_update_to_2_5_80() {
 function bb_update_to_2_5_91() {
 	global $wpdb;
 
-	$bp  = buddypress();
+	$bp = buddypress();
 
 	// Add 'status' column in 'bp_activity' table.
 	$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$bp->activity->table_name}' AND column_name = 'status'" ); //phpcs:ignore
