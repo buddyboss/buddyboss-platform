@@ -764,6 +764,8 @@ add_action( 'bp_after_profile_field_content', 'bp_print_add_repeater_set_button'
  * @since BuddyBoss 1.0.0
  * @since BuddyBoss [BBVERSION]
  * Introduce new param $args as array.
+ *
+ * @param array $args Array of arguments.
  */
 function bp_print_add_repeater_set_button( $args = array() ) {
 	if ( 'edit' !== bp_current_action() && empty( $args ) ) {
