@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.4.3
 Requires PHP: 5.6.20
-Stable tag: 2.5.60
+Stable tag: 2.5.90
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,52 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.5.90 =
+* Bug: Activity - Creating a new post was highlighting the recent media file button that was used in a previous post
+* Bug: Activity - When selecting a single image from a post that had a multiple image uploads to pin then this would not work
+* Bug: Core - If a social link fails validation on the frontend then this would stop all network links from working
+* bug: Core - Last name privacy was not being reflected in the email if the users were not connected
+* Bug: Core - When an email invitee registers using the sent link that had a profile type already suggested this now does not show the profile type field required error notice when submitting
+* Bug: Core - When using Profile Type shortcode the list/grid toggle did not work when viewing in the frontend
+* Bug: Core: The default profile type was not working and the newly registered users were showing as Member
+* Bug: LearnDash - Buddyboss groups were getting created when a LearnDash group was created even if the LearnDash associated setting was off
+* Bug: Message - Send message button redirection was not working properly from both Member and Profile connections additionally, the filter in the connection tab on the logged-in member's profile was displaying incorrectly
+
+= 2.5.81 =
+* Bug: Activity - Fixed a memory allocation issue which was affecting the activity loading function which had added a significant delay
+
+= 2.5.80 =
+* New Feature! - Close comments allows post authors and admins to turn of commenting on any specific post which gives users and admins another great way to maintain control and moderation
+* New Feature! - To make the activity feed more streamlined we have introduced the View more comments and View more replies which will allow users to expand the threads they are interested in rather than showing the full expanded user interactions
+* New Feature! - We have added a new tab in the settings dedicated to performance settings with a new page load count setting which lets you select whether to load the page in 1 or 2 calls
+* New Feature! - We have updated our Activity feed design to now open selected posts into its own modal which provides a more focused experience for users when interacting with posts
+* New Feature! - Users now have the ability to Turn off Notifications on specific posts they have interacted with that they no longer have interest in
+* Enhancement: Activity - We have added new settings to allow for more granular control on our new Activity feed update that lets you select thread count, load count, default comment visibility and even the ability to turn off commenting all together
+* Enhancement: Performance - Converted the current phase loading approach with a single request by default to improve performance
+* Bug: Activity - When updating the post with link preview and there were comments, meta value for comments was filled based from Preview
+* Bug: Core - The phone Number profile field was displaying “//” within the link when hovering over it
+* Bug: Core - When users added a Dot to the end of their nickname this broke the link, we have now added this functionality
+* Bug: Forums - The BuddyBoss Forum login widget was showing a typographical error
+* Bug: Groups - Subscription option in the backend setting is now removed after disabling
+* Bug: LearnDash - Switching from grid to list view from the LearnDash course grid using the LearnDash Course List block was showing a JS error
+* Bug: Profiles - Profile types were not showing or retaining previous settings
+* Bug: Styling - When searching member on the members page there was an issue with text spacing
+* Bug: Translations - When selecting German language there were spacing issues showing for author names on activity posts
+
+= 2.5.71 =
+* Bug: Core - Media files were being removed when running the cron bp_document_delete_orphaned_attachments_hook
+
+= 2.5.70 =
+* Bug: Core - Create Account button and privacy policy checkbox were showing in the confirm email address notice screen and have now been removed
+* Bug: Core - Reactions migration tool was taking too long when migrating large numbers of Likes
+* Bug: Core - Updated background process log logic to maintain the log table size between 500MB or less and no larger than 1GB
+* Bug: Forums - Discussions and replies in secondary languages were not displayed on the users profile page discussions tab
+* Bug: Groups - When promoting a member in the the group to co-organizer or moderator the users were losing course access
+
+= 2.5.61 =
+* Bug: Core - reCaptcha update fixing issues with verifying on Login, Register, Reset password, Account Activation pages
+* Bug: Core - When disabling the Group component in BuddyBoss settings, when then visiting the photos tab in the user profile, this was causing a fatal error
 
 = 2.5.60 =
 * New Feature! - We now officially support Google reCAPTCHA, this is a great feature to help mitigate risk of bot and spam accounts being created and login in to your site
