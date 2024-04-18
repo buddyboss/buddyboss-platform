@@ -228,15 +228,15 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		}
 
 		/**
-		 * Remove WPML post__in filter to allow parent translated post as well if the post is not translateable.
+		 * Remove WPML post__in filter to allow parent translated post as well if the post is not translatable.
 		 *
 		 * @since BuddyBoss [BBVERSION]
-		 * 
-		 * @param string $q Query for parsing WP QUERY.
-		 * 
-		 * @return $q Returns modifed Query.
+		 *
+		 * @param WP_Query $q Query for parsing WP QUERY.
+		 *
+		 * @return WP_Query $q Returns modified Query.
 		 */
-		public function remove_wpml_post_parse_query( $q ) {
+		public function bb_remove_wpml_post_parse_query( $q ) {
 			if ( isset( $q->query_vars['post__in'] ) ) {
 				unset( $q->query_vars['post__in'] );
 			}
