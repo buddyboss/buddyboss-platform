@@ -7147,6 +7147,7 @@ function bb_check_activity_privacy_for_favorite( $args ) {
 			}
 		} elseif (
 			'friends' === $activity->privacy &&
+			$activity->user_id !== $args['user_id'] &&
 			(
 				! bp_is_active( 'friends' ) ||
 				! friends_check_friendship( $activity->user_id, $args['user_id'] )
@@ -7186,12 +7187,47 @@ function bb_check_activity_privacy_for_comment( $args ) {
 			return new WP_Error( 'error', __( 'Sorry, You cannot add comments on "Only Me" activity.', 'buddyboss' ) );
 		} elseif (
 			'friends' === $activity->privacy &&
+			$activity->user_id !== $args['user_id'] &&
 			(
 				! bp_is_active( 'friends' ) ||
 				! friends_check_friendship( $activity->user_id, $args['user_id'] )
 			)
 		) {
 			return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to add a comment.', 'buddyboss' ) );
+		}
+	}
+
+	return true;
+}
+
+/**
+ * Check Activity Privacy for Reaction.
+ *
+ * @since [BBVERSION]
+ *
+ * @param array $args Array for argument.
+ *
+ * @return WP_Error|bool Boolen on success, WP_Error on failure.
+ */
+function bb_check_activity_privacy_for_reaction( $args ) {
+	$activity = new BP_Activity_Activity( $args['activity_id'] );
+
+	if ( 
+		! empty( $activity->privacy ) && 
+		! empty( $args['user_id'] ) && 
+		in_array( $args['activity_type'], array( 'activity', 'activity_comment' ) ) 
+	) {
+		if ( 'onlyme' === $activity->privacy && $activity->user_id !== $args['user_id'] ) {
+			return new WP_Error( 'error', __( 'Sorry, You cannot add reactions on "Only Me" activity.', 'buddyboss' ) );
+		} elseif (
+			'friends' === $activity->privacy &&
+			$activity->user_id !== $args['user_id'] &&
+			(
+				! bp_is_active( 'friends' ) ||
+				! friends_check_friendship( $activity->user_id, $args['user_id'] )
+			)
+		) {
+			return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to add a reaction.', 'buddyboss' ) );
 		}
 	}
 
