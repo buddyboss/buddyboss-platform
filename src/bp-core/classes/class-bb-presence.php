@@ -268,7 +268,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @since BuddyBoss 2.3.1
 		 */
-		public static function bb_load_presence_api_mu_plugin( $bypass = false ) {
+		public static function bb_load_presence_api_mu_plugin( $bypass = true ) {
 			if ( ! function_exists( 'buddypress' ) ) {
 				return;
 			}
