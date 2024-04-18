@@ -840,6 +840,8 @@ add_action( 'bp_before_profile_field_html', 'bp_profile_repeaters_print_group_ht
  * @since BuddyBoss [BBVERSION]
  * Introduce new param $args as array.
  * @global type $first_xpfield_in_repeater
+ *
+ * @param array $args Array of arguments.
  */
 function bp_profile_repeaters_print_group_html_start( $args = array() ) {
 	$args = bp_parse_args(
