@@ -3499,7 +3499,7 @@ function bb_update_to_2_5_80() {
 }
 
 /**
- * Purge the existing 5 year old cache to implement the new 30 days cache_expire system.
+ * Purge the existing old cache to implement the new 30 days cache expiry system.
  *
  * @since BuddyBoss [BBVERSION]
  *
