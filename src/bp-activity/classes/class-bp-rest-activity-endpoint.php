@@ -1469,6 +1469,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		if (
 			is_user_logged_in() &&
+			'activity_update' === $activity->type &&
+			! in_array ( $activity->privacy, array( 'media', 'document', 'video' ), true ) &&
 			(
 				(
 					'group' === $pin_type &&
@@ -1943,29 +1945,33 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		// Show pin actions.
 		if (
+			'activity_update' === $activity->type &&
+			! in_array ( $activity->privacy, array( 'media', 'document', 'video' ), true ) &&
 			(
-				'group' === $pin_type &&
 				(
-					bp_current_user_can( 'administrator' ) ||
+					'group' === $pin_type &&
 					(
-						bb_is_active_activity_pinned_posts() &&
+						bp_current_user_can( 'administrator' ) ||
 						(
-							groups_is_user_mod( get_current_user_id(), $activity->item_id ) ||
-							groups_is_user_admin( get_current_user_id(), $activity->item_id )
+							bb_is_active_activity_pinned_posts() &&
+							(
+								groups_is_user_mod( get_current_user_id(), $activity->item_id ) ||
+								groups_is_user_admin( get_current_user_id(), $activity->item_id )
+							)
 						)
 					)
-				)
-			) ||
-			(
-				'group' !== $pin_type &&
+				) ||
 				(
-					bp_current_user_can( 'administrator' ) ||
+					'group' !== $pin_type &&
 					(
-						'groups' === $activity->component &&
-						bb_is_active_activity_pinned_posts() &&
+						bp_current_user_can( 'administrator' ) ||
 						(
-							groups_is_user_mod( get_current_user_id(), $activity->item_id ) ||
-							groups_is_user_admin( get_current_user_id(), $activity->item_id )
+							'groups' === $activity->component &&
+							bb_is_active_activity_pinned_posts() &&
+							(
+								groups_is_user_mod( get_current_user_id(), $activity->item_id ) ||
+								groups_is_user_admin( get_current_user_id(), $activity->item_id )
+							)
 						)
 					)
 				)
