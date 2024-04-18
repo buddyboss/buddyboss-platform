@@ -70,7 +70,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			add_filter( 'bbp_after_has_topics_parse_args', array( $this, 'bb_wpml_member_profile_topic_reply' ) );
 			add_filter( 'bbp_after_has_replies_parse_args', array( $this, 'bb_wpml_member_profile_topic_reply' ) );
 			
-			//Fix incorrect search results for Global Search for translated/non-translated posts.
+			// Fix incorrect search results for Global Search for translated/non-translated posts.
 			add_filter( 'Bp_Search_Posts_sql', array( $this, 'bb_wpml_search_posts_sql' ), 10, 2 );
 		}
 
