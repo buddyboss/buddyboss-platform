@@ -1,6 +1,6 @@
 <?php
 /**
- * The template for displaying activity post form buttons
+ * The template for displaying schedule activity post form.
  *
  * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bb-activity-schedule-post.php.
  *
@@ -23,10 +23,12 @@
 				<ul>
 					<li>
 						<a href="#" class="bb-schedule-post_action"><i class="bb-icon-l bb-icon-calendar"></i><?php echo esc_html__( 'Schedule Post', 'buddyboss' ); ?>
-						</a></li>
+						</a>
+					</li>
 					<li>
 						<a href="#" id="bb-view-schedule-posts" class="bb-view-schedule-posts"><i class="bb-icon-l bb-icon-pencil"></i><?php echo esc_html__( 'View Schedule Posts', 'buddyboss' ); ?>
-						</a></li>
+						</a>
+					</li>
 				</ul>
 			</div>
 
@@ -49,7 +51,7 @@
 										$formatted_date = wp_date( get_option( 'date_format' ) );
 										$formatted_time = wp_date( get_option( 'time_format' ) );
 										?>
-										<p class="schedule-date"><?php echo esc_html( $formatted_date ); ?> at
+										<p class="schedule-date"><?php echo esc_html( $formatted_date ); ?> <?php echo esc_html__( 'at', 'buddyboss' ); ?>
 											<span class="bb-server-time"><?php echo esc_html( $formatted_time ); ?></span>
 										</p>
 
@@ -68,18 +70,20 @@
 											<div class="input-field bb-schedule-activity-meridian-wrap">
 												<label for="bb-schedule-activity-meridian-am">
 													<input type="radio" value="am" id="bb-schedule-activity-meridian-am" name="bb-schedule-activity-meridian">
-													<span class="bb-time-meridian">AM</span>
+													<span class="bb-time-meridian"><?php echo esc_html__( 'AM', 'buddyboss' ); ?></span>
 												</label>
 												<label for="bb-schedule-activity-meridian-pm">
 													<input type="radio" value="pm" id="bb-schedule-activity-meridian-pm" name="bb-schedule-activity-meridian" checked="checked">
-													<span class="bb-time-meridian">PM</span>
+													<span class="bb-time-meridian"><?php echo esc_html__( 'PM', 'buddyboss' ); ?></span>
 												</label>
 											</div>
 										</div>
 
 										<p>
 											<a href="#" class="bb-view-all-scheduled-posts"><?php echo esc_html__( 'View all scheduled posts', 'buddyboss' ); ?>
-												<i class="bb-icon-f bb-icon-arrow-right"></i></a></p>
+												<i class="bb-icon-f bb-icon-arrow-right"></i>
+											</a>
+										</p>
 									</div>
 
 									<footer class="bb-model-footer">
