@@ -9,9 +9,9 @@
  * @version 1.0.0
  */
 
-$folder_link = bp_get_folder_folder_link();
+$folder_link             = bp_get_folder_folder_link();
+$document_folder_privacy = bp_get_document_folder_privacy();
 ?>
-
 <div class="bp-search-ajax-item bboss_ajax_search_document search-document-list">
 	<div class="item">
 
@@ -45,14 +45,14 @@ $folder_link = bp_get_folder_folder_link();
 							?>
 							<span class="middot">&middot;</span>
 							<span>
-								<?php bp_document_folder_privacy(); ?>
+								<?php echo $document_folder_privacy; ?>
 							</span>
 							<?php
 						} else {
 							?>
 							<span class="middot">&middot;</span>
 							<span id="privacy-<?php echo esc_attr( bp_get_folder_folder_id() ); ?>">
-								<?php bp_document_folder_privacy(); ?>
+								<?php echo $document_folder_privacy; ?>
 							</span>
 							<?php
 						}
@@ -60,7 +60,7 @@ $folder_link = bp_get_folder_folder_link();
 						?>
 						<span class="middot">&middot;</span>
 						<span>
-							<?php bp_document_folder_privacy(); ?>
+							<?php echo $document_folder_privacy; ?>
 						</span>
 						<?php
 					}

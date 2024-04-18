@@ -47,6 +47,8 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		 * And IF moderation setting enabled for member then it'll filter blocked user content.
 		 */
 		add_filter( 'bp_suspend_activity_comment_get_where_conditions', array( $this, 'update_where_sql' ), 10, 4 );
+		add_filter( 'bb_suspend_activity_comment_count_get_where_conditions', array( $this, 'bb_update_where_sql' ), 10, 4 );
+
 		add_filter( 'bp_locate_template_names', array( $this, 'locate_blocked_template' ) );
 
 		add_filter( 'bp_activity_comment_content', array( $this, 'bb_activity_comment_remove_mention_link' ), 10, 1 );
@@ -256,8 +258,18 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 		$author_id = self::get_content_owner_id( $item_id );
 
-		if ( ( $this->is_member_blocking_enabled() && ! empty( $author_id ) && ! bp_moderation_is_user_suspended( $author_id ) && bp_moderation_is_user_blocked( $author_id ) ) ||
-		     ( $this->is_reporting_enabled() && BP_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) ) {
+		if (
+			(
+				$this->is_member_blocking_enabled() &&
+				! empty( $author_id ) &&
+				! bp_moderation_is_user_suspended( $author_id ) &&
+				bp_moderation_is_user_blocked( $author_id )
+			) ||
+			(
+				$this->is_reporting_enabled() &&
+				BP_Core_Suspend::check_hidden_content( $item_id, $this->item_type )
+			)
+		) {
 			return true;
 		}
 		return false;
@@ -342,19 +354,20 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		static $cache                       = array();
 		static $parent_comment_author_cache = array();
 
-		$cache_key = 'bb_is_blocked_activity_comment_ids';
+		$cache_key = 'bb_is_blocked_activity_comment_ids_' . md5( implode( '_', $where_conditions ) );
 		if ( isset( $cache[ $cache_key ] ) ) {
 			return $cache[ $cache_key ];
 		}
 
 		global $wpdb, $bp;
-		$sql['select']     = "SELECT DISTINCT a.id , a.user_id FROM {$bp->activity->table_name} a inner join {$bp->activity->table_name} ac ON ac.id = a.item_id";
-		$sql['where']      = 'WHERE ' . join( ' AND ', $where_conditions );
-		$sql               = "{$sql['select']} {$sql['where']}";
-		$query_placeholder = '%' . $wpdb->esc_like( $search_term ) . '%';
-
-		$sql               = $wpdb->prepare( $sql, $query_placeholder );
-		$results           = $wpdb->get_results( $sql );
+		$sql['select'] = "SELECT DISTINCT a.id , a.user_id FROM {$bp->activity->table_name} a inner join {$bp->activity->table_name} ac ON ac.id = a.item_id inner join {$bp->activity->table_name} acs ON acs.id = a.secondary_item_id";
+		$sql['where']  = 'WHERE ' . join( ' AND ', $where_conditions );
+		$sql           = "{$sql['select']} {$sql['where']}";
+		if ( ! empty( $search_term ) ) {
+			$query_placeholder = '%' . $wpdb->esc_like( $search_term ) . '%';
+			$sql               = $wpdb->prepare( $sql, $query_placeholder );
+		}
+		$results          = $wpdb->get_results( $sql );
 		$blocked_item_ids = array();
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $ac_id ) {
@@ -424,6 +437,9 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 										bb_moderation_is_user_blocked_by( $current_comment_author_id )
 									)
 								)
+								||
+								// Check comments parent, which is just at top of that comment.
+								$this->bb_check_parent_activity_hidden( $current_comment_data->id )
 							)
 						)
 					)
@@ -506,5 +522,111 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		$activity = new BP_Activity_Activity( $activity_id );
 		do_action( 'bb_moderation_after_get_related_activity', $activity_id );
 		return $activity;
+	}
+
+	/**
+	 * Update where query Remove hidden/blocked user's Activities comment from count.
+	 *
+	 * @since BuddyBoss 2.5.80
+	 *
+	 * @param string $where            Activity Where sql.
+	 * @param object $suspend          suspend object.
+	 * @param array  $where_conditions Where condition for activity comment search.
+	 * @param string $term             Search term.
+	 *
+	 * @return array|mixed
+	 */
+	public function bb_update_where_sql( $where, $suspend, $where_conditions, $term = '' ) {
+		$this->alias = $suspend->alias;
+
+		// Allow to search hasblocked members activity comment.
+		$blocked_user_query = true;
+		if (
+			function_exists( 'bb_did_filter' ) &&
+			bb_did_filter( 'bb_activity_comments_count_get_where_conditions' ) ||
+			bb_did_filter( 'bp_activity_comments_get_where_conditions' )
+		) {
+			$blocked_user_query = false;
+		}
+
+		$sql = $this->exclude_where_query( $blocked_user_query );
+		if ( ! empty( $sql ) ) {
+			$where['moderation_where'] = $sql;
+		}
+
+		// Allow to search activity comment for current members which is added by isblocked member activity.
+		if ( false === $blocked_user_query ) {
+
+			// If isblocked/hasblocked members activity hide then all comment of that activities should not be searchable.
+			$is_blocked_item_ids = $this->bb_is_blocked_activity_comment_ids( $where_conditions, $term );
+			if ( ! empty( $is_blocked_item_ids ) ) {
+				if ( ! empty( $where['moderation_where'] ) ) {
+					$where['moderation_where'] .= ' AND ( a.id NOT IN ( ' . implode( ',', $is_blocked_item_ids ) . ') )';
+				} else {
+					$where['moderation_where'] = ' a.id NOT IN ( ' . implode( ',', $is_blocked_item_ids ) . ') ';
+				}
+			}
+		}
+		return $where;
+	}
+
+	/**
+	 * Check parent activity comment is hidden or not.
+	 *
+	 * @since BuddyBoss 2.5.80
+	 *
+	 * @param int $item_id Item id.
+	 *
+	 * @return bool
+	 */
+	public function bb_check_parent_activity_hidden( $item_id ) {
+		$parent_comment = $this->bb_get_moderated_activity( $item_id );
+		if ( ! empty( $parent_comment ) ) {
+			$parent_comment = $this->bb_get_moderated_activity( $parent_comment->secondary_item_id );
+			if (
+				bp_moderation_is_user_blocked( $parent_comment->user_id ) ||
+				bb_moderation_is_user_blocked_by( $parent_comment->user_id )
+			) {
+				return true;
+			}
+
+			return false;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Prepare Where sql for exclude Blocked items.
+	 *
+	 * @since BuddyBoss 2.5.80
+	 *
+	 * @param bool $blocked_user_query If true then blocked user query will fire.
+	 *
+	 * @return string|void
+	 */
+	protected function exclude_where_query( $blocked_user_query = true ) {
+		$where = '';
+
+		if (
+			function_exists( 'bb_did_filter' ) &&
+			! bb_did_filter( 'bb_activity_comments_count_get_where_conditions' ) &&
+			! bb_did_filter( 'bp_activity_comments_get_where_conditions' )
+		) {
+			$where .= "( {$this->alias}.hide_parent = 0 OR {$this->alias}.hide_parent IS NULL ) AND
+		( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL )";
+		}
+
+		if ( true === $blocked_user_query ) {
+			$blocked_query = $this->blocked_user_query();
+			if ( ! empty( $blocked_query ) ) {
+				if ( ! empty( $where ) ) {
+					$where .= ' AND ';
+				}
+				$where .= "( ( {$this->alias}.id NOT IN ( $blocked_query ) ) OR {$this->alias}.id IS NULL )";
+			}
+		}
+
+		return $where;
 	}
 }

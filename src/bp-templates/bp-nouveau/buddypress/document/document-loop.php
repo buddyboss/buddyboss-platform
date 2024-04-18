@@ -43,62 +43,66 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 			$active_group_class = 'asce';
 		}
 		?>
-        <div class="document-data-table-head">
-            <div class="data-head data-head-name <?php echo esc_attr( $active_title_class ); ?>" data-target="name">
+		<div class="document-data-table-head">
+			<div class="data-head data-head-name <?php echo esc_attr( $active_title_class ); ?>" data-target="name">
 				<span>
 					<?php esc_html_e( 'Name', 'buddyboss' ); ?>
 					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
-            </div>
-            <div class="data-head data-head-modified <?php echo esc_attr( $active_date_class ); ?>" data-target="modified">
+			</div>
+			<div class="data-head data-head-modified <?php echo esc_attr( $active_date_class ); ?>" data-target="modified">
 				<span>
 					<?php esc_html_e( 'Modified', 'buddyboss' ); ?>
 					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
-            </div>
-            <div class="data-head data-head-origin <?php echo esc_attr( $active_group_class ); ?>" data-target="group">
+			</div>
+			<div class="data-head data-head-origin <?php echo esc_attr( $active_group_class ); ?>" data-target="group">
 				<?php
 				if ( bp_is_document_directory() && bp_is_active( 'groups' ) && isset( $scope ) && 'personal' !== $scope ) {
 					?>
-                    <span>
+					<span>
 					<?php esc_html_e( 'Group', 'buddyboss' ); ?>
 						<i class="bb-icon-f bb-icon-caret-down"></i>
 					</span>
 					<?php
 				}
 				?>
-            </div>
+			</div>
 
-            <div class="data-head data-head-visibility <?php echo esc_attr( $active_privacy_class ); ?>" data-target="visibility">
+			<div class="data-head data-head-visibility <?php echo esc_attr( $active_privacy_class ); ?>" data-target="visibility">
 				<span>
 					<?php esc_html_e( 'Visibility', 'buddyboss' ); ?>
 					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
-            </div>
-        </div><!-- .document-data-table-head -->
-        <div id="media-folder-document-data-table">
+			</div>
+		</div><!-- .document-data-table-head -->
+
+		<div id="media-folder-document-data-table">
 		<?php
 		bp_get_template_part( 'document/activity-document-move' );
 		bp_get_template_part( 'document/activity-document-folder-move' );
 	endif;
+
 	while ( bp_document() ) :
 		bp_the_document();
 
 		bp_get_template_part( 'document/document-entry' );
 	endwhile;
+
 	if ( bp_document_has_more_items() ) :
 		?>
-        <div class="pager">
-            <div class="dt-more-container load-more">
-                <a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
-            </div>
-        </div>
-	<?php
+		<div class="pager">
+			<div class="dt-more-container load-more">
+				<a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+			</div>
+		</div>
+		<?php
 	endif;
+
 	if ( empty( $get_page ) || 1 === (int) $get_page ) :
 		?>
-        </div> <!-- #media-folder-document-data-table -->
-	<?php
+		</div> <!-- #media-folder-document-data-table -->
+		<?php
 	endif;
 else :
 	bp_nouveau_user_feedback( 'media-loop-document-none' );

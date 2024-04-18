@@ -741,7 +741,7 @@ add_filter( 'heartbeat_nopriv_received', 'bb_heartbeat_on_screen_notifications',
  * @return bool
  */
 function bb_notifications_background_enabled() {
-	return class_exists( 'BB_Background_Updater' ) && apply_filters( 'bb_notifications_background_enabled', ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) );
+	return class_exists( 'BB_Background_Updater' ) && apply_filters( 'bb_notifications_background_enabled', true );
 }
 
 /**
@@ -960,17 +960,21 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 	}
 
 	foreach ( $notifications as $key => $val ) {
+
 		$user_val = get_user_meta( $user_id, $key, true );
 		if ( $user_val ) {
 			$notifications[ $key ] = $user_val;
 		}
 
-		if ( 'no' === $notifications[ $key ] && isset( $all_actions[ $key ] ) ) {
-			$excluded_actions = array_merge( $excluded_actions, $all_actions[ $key ] );
-		}
-
-		// Add in excluded action if the settings is disabled from frontend top bar Enable Notification option.
-		if ( 'no' === bp_get_user_meta( $user_id, $notifications_type_key, true ) ) {
+		if (
+			isset( $all_actions[ $key ] ) &&
+			is_array( $all_actions[ $key ] ) &&
+			(
+				'no' === $notifications[ $key ] ||
+				// Add in excluded action if the settings are disabled from frontend top bar Enable a Notification option.
+				'no' === bp_get_user_meta( $user_id, $notifications_type_key, true )
+			)
+		) {
 			$excluded_actions = array_merge( $excluded_actions, $all_actions[ $key ] );
 		}
 	}
@@ -1381,13 +1385,14 @@ function bb_get_notification_conditional_icon( $notification ) {
 			break;
 		case 'bb_activity_following_post':
 		case 'bb_groups_subscribed_activity':
-			$item_id      = $notification->item_id;
-			$activity     = new BP_Activity_Activity( $item_id );
-			$media_ids    = bp_activity_get_meta( $item_id, 'bp_media_ids', true );
-			$document_ids = bp_activity_get_meta( $item_id, 'bp_document_ids', true );
-			$video_ids    = bp_activity_get_meta( $item_id, 'bp_video_ids', true );
-			$gif_data     = bp_activity_get_meta( $item_id, '_gif_data', true );
-			$excerpt      = wp_strip_all_tags( $activity->content );
+			$item_id        = $notification->item_id;
+			$activity       = new BP_Activity_Activity( $item_id );
+			$activity_metas = bb_activity_get_metadata( $item_id );
+			$media_ids      = $activity_metas['bp_media_ids'][0] ?? '';
+			$document_ids   = $activity_metas['bp_document_ids'][0] ?? '';
+			$video_ids      = $activity_metas['bp_video_ids'][0] ?? '';
+			$gif_data       = ! empty( $activity_metas['_gif_data'][0] ) ? maybe_unserialize( $activity_metas['_gif_data'][0] ) : array();
+			$excerpt        = wp_strip_all_tags( $activity->content );
 
 			if ( '&nbsp;' === $excerpt ) {
 				$excerpt = '';

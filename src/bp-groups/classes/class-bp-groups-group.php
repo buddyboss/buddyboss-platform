@@ -309,7 +309,11 @@ class BP_Groups_Group {
 			$this->slug = groups_check_slug( $this->slug );
 		}
 
+		$old_group_name = '';
 		if ( ! empty( $this->id ) ) {
+			// Get the group name from the database.
+			$old_group_name = bp_get_group_name( groups_get_group( $this->id ) );
+
 			$sql = $wpdb->prepare(
 				"UPDATE {$bp->groups->table_name} SET
 					creator_id = %d,
@@ -364,6 +368,10 @@ class BP_Groups_Group {
 
 		if ( empty( $this->id ) ) {
 			$this->id = $wpdb->insert_id;
+		} elseif ( ! empty( $old_group_name ) && $this->name !== $old_group_name ) {
+			if ( bb_core_get_first_character( $old_group_name ) !== bb_core_get_first_character( $this->name ) ) {
+				bb_delete_default_group_png_avatar( array( $this->id ) );
+			}
 		}
 
 		/**
@@ -395,10 +403,12 @@ class BP_Groups_Group {
 
 		// Fetch the user IDs of all the members of the group.
 		$user_ids    = BP_Groups_Member::get_group_member_ids( $this->id );
-		$user_id_str = esc_sql( implode( ',', wp_parse_id_list( $user_ids ) ) );
+		if ( ! empty( $user_ids ) ) {
+			$user_id_str = esc_sql( implode( ',', wp_parse_id_list( $user_ids ) ) );
 
-		// Modify group count usermeta for members.
-		$wpdb->query( "UPDATE {$wpdb->usermeta} SET meta_value = meta_value - 1 WHERE meta_key = 'total_group_count' AND user_id IN ( {$user_id_str} )" );
+			// Modify group count usermeta for members.
+			$wpdb->query( "UPDATE {$wpdb->usermeta} SET meta_value = meta_value - 1 WHERE meta_key = 'total_group_count' AND user_id IN ( {$user_id_str} )" );
+		}
 
 		// Now delete all group member entries.
 		BP_Groups_Member::delete_all( $this->id );
@@ -422,22 +432,20 @@ class BP_Groups_Group {
 			return false;
 		}
 
+		$wp_filesystem = bb_wp_filesystem();
+
 		// Delete group avatars.
 		$upload_path = bp_core_avatar_upload_path();
-		if ( function_exists( 'system' ) ) {
-			system( 'rm -rf ' . escapeshellarg( $upload_path . '/group-avatars/' . $this->id ) );
-		} else {
-			bp_core_remove_temp_directory( $upload_path . '/group-avatars/' . $this->id );
-		}
+		$wp_filesystem->delete( trailingslashit( $upload_path . '/group-avatars/' . $this->id ), true );
 
 		// Delete group avatars.
 		$bp_attachments_uploads_dir = bp_attachments_uploads_dir_get();
 		$type_dir                   = trailingslashit( $bp_attachments_uploads_dir['basedir'] );
-		if ( function_exists( 'system' ) ) {
-			system( 'rm -rf ' . escapeshellarg( $type_dir . 'groups/' . $this->id ) );
-		} else {
-			bp_core_remove_temp_directory( $type_dir . 'groups/' . $this->id );
-		}
+		$wp_filesystem->delete( trailingslashit( $type_dir . 'groups/' . $this->id ), true );
+
+		// Delete group default PNG avatars.
+		$upload_path = bp_core_avatar_upload_path();
+		$wp_filesystem->delete( trailingslashit( $upload_path . '/group-avatars/default/' . $this->id ), true );
 
 		return true;
 	}
@@ -1907,9 +1915,9 @@ class BP_Groups_Group {
 		$ids = array();
 
 		$ids['all']     = $wpdb->get_col( "SELECT id FROM {$bp->groups->table_name}" );
-		$ids['public']  = $wpdb->get_col( "SELECT id FROM {$bp->groups->table_name} WHERE status = 'public'" );
-		$ids['private'] = $wpdb->get_col( "SELECT id FROM {$bp->groups->table_name} WHERE status = 'private'" );
-		$ids['hidden']  = $wpdb->get_col( "SELECT id FROM {$bp->groups->table_name} WHERE status = 'hidden'" );
+		$ids['public']  = $wpdb->get_col( "SELECT g.id FROM {$bp->groups->table_name} g JOIN {$bp->groups->table_name_groupmeta} gm ON g.id = gm.group_id WHERE g.status = 'public' AND gm.meta_key = 'total_member_count' AND gm.meta_value > 0" );
+		$ids['private'] = $wpdb->get_col( "SELECT g.id FROM {$bp->groups->table_name} g JOIN {$bp->groups->table_name_groupmeta} gm ON g.id = gm.group_id WHERE g.status = 'private' AND gm.meta_key = 'total_member_count' AND gm.meta_value > 0" );
+		$ids['hidden']  = $wpdb->get_col( "SELECT g.id FROM {$bp->groups->table_name} g JOIN {$bp->groups->table_name_groupmeta} gm ON g.id = gm.group_id WHERE g.status = 'hidden' AND gm.meta_key = 'total_member_count' AND gm.meta_value > 0" );
 
 		return $ids;
 	}

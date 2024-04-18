@@ -60,24 +60,4 @@ $data = bb_core_notification_preferences_data();
 	</div>
 <?php
 
-/**
- * Split each js template to its own file. Easier for child theme to
- * overwrite individual parts.
- *
- * @version BuddyBoss 2.2.6
- */
-$template_parts = apply_filters(
-	'bb_member_subscriptions_js_template_parts',
-	array(
-		'bb-member-subscription-loading',
-		'bb-subscription-item',
-		'bb-member-subscription-pagination',
-		'bb-member-no-subscription',
-	)
-);
-
-foreach ( $template_parts as $template_part ) {
-	bp_get_template_part( 'common/js-templates/members/settings/' . $template_part );
-}
-
 bp_nouveau_member_hook( 'after', 'settings_template' );

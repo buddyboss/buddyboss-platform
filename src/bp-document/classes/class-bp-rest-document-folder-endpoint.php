@@ -16,6 +16,13 @@ defined( 'ABSPATH' ) || exit;
 class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 
 	/**
+	 * Allow batch.
+	 *
+	 * @var true[] $allow_batch
+	 */
+	protected $allow_batch = array( 'v1' => true );
+
+	/**
 	 * BP_REST_Document_Endpoint Instance.
 	 *
 	 * @var BP_REST_Document_Endpoint
@@ -55,7 +62,8 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 					'permission_callback' => array( $this, 'create_item_permissions_check' ),
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
 				),
-				'schema' => array( $this, 'get_item_schema' ),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_item_schema' ),
 			)
 		);
 
@@ -63,7 +71,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[\d]+)',
 			array(
-				'args'   => array(
+				'args'        => array(
 					'id' => array(
 						'description' => __( 'A unique numeric ID for the folder.', 'buddyboss' ),
 						'type'        => 'integer',
@@ -86,7 +94,8 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 					'callback'            => array( $this, 'delete_item' ),
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
 				),
-				'schema' => array( $this, 'get_item_schema' ),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_item_schema' ),
 			)
 		);
 
@@ -923,8 +932,14 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		// phpcs:ignore
 		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$bp->document->table_name_folder} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );
 
-		// phpcs:ignore
-		$data = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok.
+		$cached = bp_core_get_incremented_cache( $documents_folder_query, 'bp_document_folder' );
+		if ( false === $cached ) {
+			// phpcs:ignore
+			$data = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok.
+			bp_core_set_incremented_cache( $documents_folder_query, 'bp_document_folder', $data );
+		} else {
+			$data = $cached;
+		}
 
 		if ( isset( $request['hierarchical'] ) && false !== $request['hierarchical'] ) {
 

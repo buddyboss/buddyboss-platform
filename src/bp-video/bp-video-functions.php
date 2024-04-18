@@ -1845,9 +1845,6 @@ function albums_check_video_album_access( $album_id ) {
  */
 function bp_video_delete_orphaned_attachments() {
 
-	remove_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10 );
-	remove_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10 );
-
 	/**
 	 * Removed the WP_Query because it's conflicting with other plugins which hare using non-standard way using the
 	 * pre_get_posts & ajax_query_attachments_args hook & filter and it's getting all the media ids and it will remove
@@ -1855,43 +1852,37 @@ function bp_video_delete_orphaned_attachments() {
 	 *
 	 * @since BuddyBoss 1.7.6
 	 */
-	$args = array(
-		'posts_per_page' => -1,
-		'fields'         => 'ids',
-		'post_status'    => 'inherit',
-		'post_type'      => 'attachment',
-		'meta_query'     => array(
-			'relation' => 'AND',
-			array(
-				'key'   => 'bp_video_saved',
-				'value' => '0',
-			),
-			array(
-				'key'     => 'bb_media_draft',
-				'compare' => 'NOT EXISTS',
-				'value'   => '',
-			),
-		),
-		'date_query'     => array(
-			array(
-				'column' => 'post_date_gmt',
-				'before' => '6 hours ago',
-			),
-		),
-	);
+	global $wpdb;
+	$post_table              = $wpdb->posts;
+	$postmeta_table          = $wpdb->postmeta;
+	$six_hours_ago_timestamp = strtotime( '-6 hours', current_time( 'timestamp', 1 ) );
+	$six_hours_ago           = date( 'Y-m-d H:i:s', $six_hours_ago_timestamp );
 
-	$video_wp_query = new WP_query( $args );
-	if ( 0 < $video_wp_query->found_posts ) {
-		foreach ( $video_wp_query->posts as $post_id ) {
+	$query = "SELECT {$post_table}.ID
+				FROM {$post_table}
+				LEFT JOIN {$postmeta_table} ON ( {$post_table}.ID = {$postmeta_table}.post_id )
+				LEFT JOIN {$postmeta_table} AS mt1
+					ON ( {$post_table}.ID = mt1.post_id AND mt1.meta_key = 'bb_media_draft' )
+					WHERE 1=1 AND
+						( {$post_table}.post_date_gmt < '{$six_hours_ago}' ) AND
+						(
+							(
+								{$postmeta_table}.meta_key = 'bp_video_saved' AND
+								{$postmeta_table}.meta_value = '0'
+							) AND
+							mt1.post_id IS NULL
+						) AND
+						{$post_table}.post_type = 'attachment' AND
+						( {$post_table}.post_status = 'inherit' )
+				GROUP BY {$post_table}.ID
+				ORDER BY {$post_table}.post_date DESC";
+
+	$video_wp_query_posts = $wpdb->get_col( $query );
+	if ( ! empty( $video_wp_query_posts ) ) {
+		foreach ( $video_wp_query_posts as $post_id ) {
 			wp_delete_attachment( $post_id, true );
 		}
 	}
-
-	wp_reset_postdata();
-	wp_reset_query();
-
-	add_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10, 2 );
-	add_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10, 2 );
 }
 
 /**
@@ -2997,7 +2988,8 @@ function bp_video_get_activity_video( $activity_id ) {
 	$response           = array();
 	if ( bp_is_active( 'activity' ) && ! empty( $activity_id ) ) {
 
-		$video_activity_ids = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
+		$activity_metas     = bb_activity_get_metadata( $activity_id );
+		$video_activity_ids = $activity_metas['bp_video_ids'][0] ?? '';
 
 		global $video_template;
 		// Add Video to single activity page..
@@ -3005,7 +2997,7 @@ function bp_video_get_activity_video( $activity_id ) {
 		if ( bp_is_single_activity() && ! empty( $video_activity ) && '1' === $video_activity && empty( $video_activity_ids ) ) {
 			$video_ids = BP_Video::get_activity_video_id( $activity_id );
 		} else {
-			$video_ids = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
+			$video_ids = $video_activity_ids;
 		}
 
 		if ( empty( $video_ids ) ) {
@@ -4459,4 +4451,155 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $genera
 	}
 
 	return $attachment_url;
+}
+
+/**
+ * Get activity video.
+ *
+ * @BuddyBoss 2.5.50
+ *
+ * @param object|null $activity Activity object.
+ * @param array|null  $args     Extra argument to fetch media.
+ *
+ * @return string|bool
+ */
+function bb_video_get_activity_video( $activity = '', $args = array() ) {
+	global $video_template;
+
+	if ( empty( $activity ) ) {
+		global $activities_template;
+		$activity = $activities_template->activity ?? '';
+	}
+
+	if ( empty( $activity ) ) {
+		return false;
+	}
+
+	// Get activity metas.
+	$activity_metas = bb_activity_get_metadata( $activity->id );
+	$video_ids      = ! empty( $activity_metas['bp_video_ids'][0] ) ? $activity_metas['bp_video_ids'][0] : '';
+
+	if ( empty( $video_ids ) ) {
+		return false;
+	}
+
+	if (
+		(
+			buddypress()->activity->id === $activity->component &&
+			! bp_is_profile_video_support_enabled()
+		) ||
+		(
+			bp_is_active( 'groups' ) &&
+			buddypress()->groups->id === $activity->component &&
+			! bp_is_group_video_support_enabled()
+		)
+	) {
+		return false;
+	}
+
+	$video_args = array(
+		'include'  => $video_ids,
+		'order_by' => 'menu_order',
+		'sort'     => 'ASC',
+		'per_page' => 0,
+	);
+
+	$video_args = bp_parse_args(
+		$args,
+		$video_args,
+		'activity_video'
+	);
+
+	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+		if ( bp_is_group_video_support_enabled() ) {
+			$video_args['privacy'] = array( 'grouponly' );
+			if ( ! bp_is_group_albums_support_enabled() ) {
+				$video_args['album_id'] = 'existing-video';
+			}
+		} else {
+			$video_args['privacy']  = array( '0' );
+			$video_args['album_id'] = 'existing-video';
+		}
+	} else {
+		$video_args['privacy'] = bp_video_query_privacy( $activity->user_id, 0, $activity->component );
+
+		if ( 'activity_comment' === $activity->type ) {
+			$video_args['privacy'][] = 'comment';
+		}
+
+		if ( ! bp_is_profile_video_support_enabled() ) {
+			$video_args['user_id'] = 'null';
+		}
+		if ( ! bp_is_profile_albums_support_enabled() ) {
+			$video_args['album_id'] = 'existing-video';
+		}
+	}
+
+	$is_forum_activity = false;
+	if (
+		bp_is_active( 'forums' )
+		&& in_array( $activity->type, array( 'bbp_forum_create', 'bbp_topic_create', 'bbp_reply_create' ), true )
+		&& bp_is_forums_video_support_enabled()
+	) {
+		$is_forum_activity = true;
+		$video_args['privacy'][] = 'forums';
+	}
+
+	/**
+	 * If the content has been changed by these filters bb_moderation_has_blocked_message,
+	 * bb_moderation_is_blocked_message, bb_moderation_is_suspended_message then
+	 * it will hide video content which is created by blocked/blocked/suspended member.
+	 */
+	$hide_forum_activity = function_exists( 'bb_moderation_to_hide_forum_activity' ) && bb_moderation_to_hide_forum_activity( $activity->id );
+
+	if ( true === $hide_forum_activity ) {
+		return false;
+	}
+
+	$content = '';
+	if ( bp_has_video( $video_args ) ) {
+		$classes = array(
+			esc_attr( 'bb-video-length-' . $video_template->video_count ),
+			( $video_template->video_count > 5 ? esc_attr( ' bb-video-length-more' ) : '' ),
+			( true === $is_forum_activity ? esc_attr( ' forums-video-wrap' ) : '' ),
+		);
+		ob_start();
+		?>
+		<div class="bb-activity-video-wrap <?php echo esc_attr( implode( ' ', array_filter( $classes ) ) ); ?>">
+			<?php
+			bp_get_template_part( 'video/add-video-thumbnail' );
+			bp_get_template_part( 'video/video-move' );
+			while ( bp_video() ) {
+				bp_the_video();
+				bp_get_template_part( 'video/activity-entry' );
+			}
+			?>
+		</div>
+		<?php
+		$content = ob_get_clean();
+	}
+
+	return $content;
+}
+
+/**
+ * Maximum video thumbnail length in comment.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @return int
+ */
+function bb_video_get_activity_comment_max_thumb_length() {
+	return (int) apply_filters( 'bb_video_get_activity_comment_max_thumb_length', 2 ); 
+}
+
+/**
+ * Maximum video thumbnail length in activity.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @return int
+ */
+function bb_video_get_activity_max_thumb_length() {
+	return (int) apply_filters( 'bb_video_get_activity_max_thumb_length', 3 ); 
 }

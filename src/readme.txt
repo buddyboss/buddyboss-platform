@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.4.2
+Tested up to: 6.4.3
 Requires PHP: 5.6.20
-Stable tag: 2.5.20
+Stable tag: 2.5.90
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,113 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.5.90 =
+* Bug: Activity - Creating a new post was highlighting the recent media file button that was used in a previous post
+* Bug: Activity - When selecting a single image from a post that had a multiple image uploads to pin then this would not work
+* Bug: Core - If a social link fails validation on the frontend then this would stop all network links from working
+* bug: Core - Last name privacy was not being reflected in the email if the users were not connected
+* Bug: Core - When an email invitee registers using the sent link that had a profile type already suggested this now does not show the profile type field required error notice when submitting
+* Bug: Core - When using Profile Type shortcode the list/grid toggle did not work when viewing in the frontend
+* Bug: Core: The default profile type was not working and the newly registered users were showing as Member
+* Bug: LearnDash - Buddyboss groups were getting created when a LearnDash group was created even if the LearnDash associated setting was off
+* Bug: Message - Send message button redirection was not working properly from both Member and Profile connections additionally, the filter in the connection tab on the logged-in member's profile was displaying incorrectly
+
+= 2.5.81 =
+* Bug: Activity - Fixed a memory allocation issue which was affecting the activity loading function which had added a significant delay
+
+= 2.5.80 =
+* New Feature! - Close comments allows post authors and admins to turn of commenting on any specific post which gives users and admins another great way to maintain control and moderation
+* New Feature! - To make the activity feed more streamlined we have introduced the View more comments and View more replies which will allow users to expand the threads they are interested in rather than showing the full expanded user interactions
+* New Feature! - We have added a new tab in the settings dedicated to performance settings with a new page load count setting which lets you select whether to load the page in 1 or 2 calls
+* New Feature! - We have updated our Activity feed design to now open selected posts into its own modal which provides a more focused experience for users when interacting with posts
+* New Feature! - Users now have the ability to Turn off Notifications on specific posts they have interacted with that they no longer have interest in
+* Enhancement: Activity - We have added new settings to allow for more granular control on our new Activity feed update that lets you select thread count, load count, default comment visibility and even the ability to turn off commenting all together
+* Enhancement: Performance - Converted the current phase loading approach with a single request by default to improve performance
+* Bug: Activity - When updating the post with link preview and there were comments, meta value for comments was filled based from Preview
+* Bug: Core - The phone Number profile field was displaying “//” within the link when hovering over it
+* Bug: Core - When users added a Dot to the end of their nickname this broke the link, we have now added this functionality
+* Bug: Forums - The BuddyBoss Forum login widget was showing a typographical error
+* Bug: Groups - Subscription option in the backend setting is now removed after disabling
+* Bug: LearnDash - Switching from grid to list view from the LearnDash course grid using the LearnDash Course List block was showing a JS error
+* Bug: Profiles - Profile types were not showing or retaining previous settings
+* Bug: Styling - When searching member on the members page there was an issue with text spacing
+* Bug: Translations - When selecting German language there were spacing issues showing for author names on activity posts
+
+= 2.5.71 =
+* Bug: Core - Media files were being removed when running the cron bp_document_delete_orphaned_attachments_hook
+
+= 2.5.70 =
+* Bug: Core - Create Account button and privacy policy checkbox were showing in the confirm email address notice screen and have now been removed
+* Bug: Core - Reactions migration tool was taking too long when migrating large numbers of Likes
+* Bug: Core - Updated background process log logic to maintain the log table size between 500MB or less and no larger than 1GB
+* Bug: Forums - Discussions and replies in secondary languages were not displayed on the users profile page discussions tab
+* Bug: Groups - When promoting a member in the the group to co-organizer or moderator the users were losing course access
+
+= 2.5.61 =
+* Bug: Core - reCaptcha update fixing issues with verifying on Login, Register, Reset password, Account Activation pages
+* Bug: Core - When disabling the Group component in BuddyBoss settings, when then visiting the photos tab in the user profile, this was causing a fatal error
+
+= 2.5.60 =
+* New Feature! - We now officially support Google reCAPTCHA, this is a great feature to help mitigate risk of bot and spam accounts being created and login in to your site
+* Enhancement: Core - Performance improvement by introducing a Batch REST API endpoint that will allow the App to request multiple endpoints in a single REST API request
+* Enhancement: Rapyd - Now generating background process Logs for the app on the server
+* Bug: Core - Broken class found and fixed in the background code due to a typo
+* Bug: Forums - When Instructor role plugin was active, the forum title was not showing on forums page
+* Bug: Notifications - REST API endpoints updated to show the standard WordPress headers
+
+= 2.5.52 =
+* Bug: Activity - Updated the call to an undefined function that was causing an error in the profile page if the Activity component was deactivated
+
+= 2.5.51 =
+* Bug: Core - A fatal error occurred on the profile page when the Activity Feed component was deactivated
+
+= 2.5.50 =
+* New Feature! - The Profile Avatar User Initials is a new setting to allow site owners to set the default user avatar to use display name initials with different background colors. We have also added this feature to group avatars.
+* Enhancement: Core - Code refactoring to improve performance within the Activity Feed with object caching support
+* Enhancement: Core - Updates and code refactoring for the Activity structure to provide scalability to upcoming features
+* Enhancement: Groups - Added a search option within Manage Group - Members page to search members easier
+* Bug: Core - Added xprofile field ID validation from the cache data to avoid unexpected error
+* Bug: Core - Default Theme 2023 Notification Preference was not showing the lists of subscribed groups, forums and discussion
+* Bug: Core - Links were getting clipped due to the ‘Read more’ text which was then redirected users to wrong url
+* Bug: Custom Development - A deprecated error was showing when updating or creating new LearnDash groups while social group integration was enabled
+* Bug: Elementor - Group pages was showing an error while editing with Elementor
+* Bug: Forums - Forum search results was not showing the same result between autocomplete and the search page
+* Bug: Messages - Issues with group messaging when new user joined or left a group
+* Bug: Translations - Translation strings for posts that had 3 or more reactions were not working as it was missing on the LocoTranslate plugin
+
+= 2.5.40 =
+* Enhancement: Core - Code Refinement for background jobs in the platform complete
+* Enhancement: Groups - New tab has been added to BuddyBoss - Groups backend called ‘No Members’ so that you can now filter and pickup groups with no members in automations
+* Bug: Activity - Images were not deleted on the server when the activity post was edited and the image removed
+* Bug: Core - Migrating sites from vBulletin to BuddyBoss was giving a fatal error when user logged in with the same username
+* Bug: Core - Previous custom posts on the news feed page from group discussions and replies were not reflecting the updated translation from LocoTranslate plugin
+* Bug: Core - While typing a longer reply or comment in a pinned post on the Activity Feed the feed would refresh while typing which then clearing the text
+* Bug: Forums - URL link embedded into a forum page would not show
+* Bug: Platform - On a fresh WP install, after activating the BuddyBoss Platform it triggered a WordPress Database error in the debug log
+* Bug: Styling - Notification settings tabs under the user Account Settings page did not display correctly
+
+= 2.5.31 =
+* Bug: Access controls - When restricting subscribers from posting to the Activity Feed, this has also restricted subscribers posting to the Group activity feed
+
+= 2.5.30 =
+* Bug: Core - Account settings was not updating correctly to only display notifications of components that are active instead of showing all settings options
+* Bug: Core - Activity feed options within group settings was showing even if the Activity Fee component had not been activated
+* Bug: Core - Blocking a user then disabling other BuddyBoss components except moderation lead to an infinite loading and a fatal error within the debug log
+* Bug: Core - Enabling the Network Search component while using the default Wordpress theme stopped the search page working correctly
+* Bug: Core - Removed Reactions lower icon upload limit of 200px to allow for smaller icons to be uploaded
+* Bug: Core - Updated the CRON process so that all group messages will not send all at once causing a 500 server error
+* Bug: Core - When switching languages in WordPress some words were not translated from backend to frontend due to translation path issues
+* Bug: Forums - If two discussions have the exact same name then a tag is allocated, the tag would not use the original tag but instead would create a new tag
+* Bug: Groups - Courses that were created via Elementor were not properly displaying on Social Group’s course tab
+* Bug: Groups - Group avatars were still showing even if the Show Group Avatar setting was disabled
+* Bug: Groups - If you select multiple users to send a group invite to, the Send button would allow you keep clicking it and sending multiple invites
+* Bug: Media - Creating a photo album created an infinite loading state when all other BuddyBoss Components were disabled except for Media Uploading
+* Bug: Media - Email notifications from activity post that had images did not display properly in the Gmail app for iOS devices
+* Bug: Media - Video player UI was not working correctly when switching language in TranslatePress
+* Bug: Platform - In the default WP theme 2024, if the Activity Access is restricted in the BuddyBoss platform by Profile Type, then restricting permissions would not work as the WP theme does not use Profile Types
+* Bug: Styling - Buttons from the videos and photos page were overlapping the content when viewing on mobile view or by resizing the page to a smaller view
+* Bug: The subscription icon was showing on social groups even though other components were disabled such as the forum discussion component
 
 = 2.5.20 =
 * New Feature! - Introducing reaction into the platform, where your members will now have the ability to react with different emotions to posts, comments and replies. As an added feature you will be able to customise your emotions to suite your brand.

@@ -83,6 +83,59 @@ function bp_nouveau_messages_enqueue_scripts() {
 	wp_enqueue_style( 'bp-medium-editor' );
 	wp_enqueue_style( 'bp-medium-editor-beagle' );
 
+	if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
+		bp_get_template_part( 'media/theatre' );
+	}
+	if ( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() ) {
+		bp_get_template_part( 'video/theatre' );
+	}
+	if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
+		bp_get_template_part( 'document/theatre' );
+	}
+
+	/**
+	 * Split each js template to its own file. Easier for child theme to
+	 * overwrite individual parts.
+	 *
+	 * @version Buddyboss 1.0.0
+	 */
+	$template_parts = apply_filters(
+		'bp_messages_js_template_parts',
+		array(
+			'parts/bp-messages-feedback',
+			'parts/bp-messages-loading',
+			'parts/bp-messages-hook',
+			'parts/bp-messages-form',
+			'parts/bp-messages-editor',
+			'parts/bp-messages-paginate',
+			'parts/bp-messages-filters',
+			'parts/bp-messages-thread',
+			'parts/bp-messages-single-header',
+			'parts/bp-messages-single-load-more',
+			'parts/bp-messages-single-list',
+			'parts/bp-messages-single',
+			'parts/bp-messages-editor-toolbar',
+			'parts/bp-messages-formatting-toolbar',
+			'parts/bp-messages-media',
+			'parts/bp-messages-document',
+			'parts/bp-messages-video',
+			'parts/bp-messages-attached-gif',
+			'parts/bp-messages-gif-media-search-dropdown',
+			'parts/bp-messages-gif-result-item',
+			'parts/bp-messages-no-threads',
+			'parts/bp-messages-search-no-threads',
+			'parts/bp-messages-filter-loader',
+			'parts/bp-messages-empty-single-list',
+			'parts/bp-messages-no-archived-threads',
+			'parts/bp-messages-archived-nav',
+			'parts/bp-messages-unarchived-nav',
+		)
+	);
+
+	foreach ( $template_parts as $template_part ) {
+		bp_get_template_part( 'common/js-templates/messages/' . $template_part );
+	}
+
 	// Add The tiny MCE init specific function.
 	add_filter( 'tiny_mce_before_init', 'bp_nouveau_messages_at_on_tinymce_init', 10, 2 );
 }

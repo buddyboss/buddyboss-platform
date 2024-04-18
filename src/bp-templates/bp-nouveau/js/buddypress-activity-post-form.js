@@ -331,6 +331,8 @@ window.bp = window.bp || {};
 			if ( $tabActivityFormWrap.hasClass( 'is-bp-hide' ) ) {
 				$tabActivityFormWrap.addClass( 'bp-hide' );
 			}
+
+			bp.Views.ActivityHeader.prototype.resetMultiMediaOptions();
 		},
 
 		createThumbnailFromUrl: function ( mock_file ) {
@@ -2502,11 +2504,19 @@ window.bp = window.bp || {};
 			tagName: 'div',
 			className: 'activity-attached-gif-container',
 			template: bp.template( 'activity-attached-gif' ),
+			standalone: false,
 			events: {
 				'click .gif-image-remove': 'destroy'
 			},
 
-			initialize: function () {
+			initialize: function ( options ) {
+				this.destroy = this.destroy.bind( this );
+
+				// Check if standalone is provided in options and update the property.
+				if ( options && options.standalone !== undefined ) {
+					this.standalone = options.standalone;
+				}
+
 				this.listenTo( this.model, 'change', this.render );
 				this.listenTo( Backbone, 'activity_gif_close', this.destroy );
 			},
@@ -2563,8 +2573,14 @@ window.bp = window.bp || {};
 					tool_box.find( '#activity-gif-button' ).removeClass( 'open' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 				}
 
-				var tool_box_comment = this.$el.parents( '.ac-reply-content' );
-				this.$el.closest( '.ac-form' ).removeClass( 'has-gif' );
+				var tool_box_comment = this.$el.parents( '.bp-ac-form-container' );
+
+				if ( this.standalone ) {
+					this.$el.closest( '.screen-content' ).find( '#activity-modal .ac-form' ).removeClass( 'has-gif' );
+				} else {
+					this.$el.closest( '.ac-form' ).removeClass( 'has-gif' );
+				}
+
 				if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ) ) {
 					tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 					tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
@@ -2614,12 +2630,20 @@ window.bp = window.bp || {};
 			limit: 20,
 			q: null,
 			requests: [],
+			standalone: false,
 			events: {
 				'keydown .search-query-input': 'search',
 				'click .found-media-item': 'select'
 			},
 
 			initialize: function ( options ) {
+				this.select = this.select.bind( this );
+
+				// Check if standalone is provided in options and update the property.
+				if ( options && options.standalone !== undefined ) {
+					this.standalone = options.standalone;
+				}
+
 				this.options = options || {};
 				this.giphy   = new window.Giphy( BP_Nouveau.media.gif_api_key );
 
@@ -2733,7 +2757,12 @@ window.bp = window.bp || {};
 				}
 
 				var whatNewForm = this.$el.closest( '#whats-new-form' );
-				this.$el.closest( '.ac-form' ).addClass( 'has-gif' );
+
+				if ( this.standalone ) {
+					this.$el.closest( '.screen-content' ).find( '#activity-modal .ac-form' ).addClass( 'has-gif' );
+				} else {
+					this.$el.closest( '.ac-form' ).addClass( 'has-gif' );
+				}
 
 				var whatNewScroll = whatNewForm.find( '.whats-new-scroll-view' );
 				whatNewScroll.stop().animate({
@@ -3818,6 +3847,7 @@ window.bp = window.bp || {};
 				if ( selected_privacy === 'group' ) {
 					var group_name = whats_new_form.find( '#bp-item-opt-' + group_item_id ).data( 'title' );
 					whats_new_form.find( '.bp-activity-privacy-status' ).text( group_name );
+					whats_new_form.find( '#bp-activity-privacy-point' ).removeClass().addClass( selected_privacy );
 					this.model.set( 'item_name', group_name );
 					// display image of the group.
 					if ( this.model.attributes.group_image && false === this.model.attributes.group_image.includes( 'mystery-group' ) ) {
@@ -4878,7 +4908,7 @@ window.bp = window.bp || {};
 				var $whatsNew = this.$el.find( '#whats-new' );
 				var content = $.trim( $whatsNew[0].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 				content     = content.replace( /&nbsp;/g, ' ' );
-				
+
 				if ( content.replace( /<p>/gi, '' ).replace( /<\/p>/gi, '' ).replace( /<br>/gi, '' ) === '' ) {
 					$whatsNew[0].innerHTML = '';
 				}
@@ -5175,6 +5205,14 @@ window.bp = window.bp || {};
 				}
 			},
 
+			decodeHtml: function (html) {
+
+				var txt = document.createElement('textarea');
+				txt.innerHTML = html;
+				return txt.value;
+
+			},
+
 			postUpdate: function ( event ) {
 				var self = this,
 					meta = {}, edit = false;
@@ -5455,6 +5493,40 @@ window.bp = window.bp || {};
 							// Edit activity.
 						} else if ( edit ) {
 							$( '#activity-' + response.id ).replaceWith( response.activity );
+
+							// Extract value of data-bp-activity
+							var start_index = response.activity.indexOf('data-bp-activity="') + 'data-bp-activity="'.length;
+							var end_index = response.activity.indexOf('"', start_index);
+							var data_bp_activity = response.activity.substring(start_index, end_index);
+
+							var decoded_data_bp_activity = self.decodeHtml(data_bp_activity);
+
+							// Parse data-bp-activity attribute value as JSON
+							var parsed_data_bp_activity = JSON.parse(decoded_data_bp_activity);
+
+							// Handle HTML entities in the content
+							var decoded_content = $('<div>').html(parsed_data_bp_activity.content).html();
+
+							// Update the content property with the decoded content
+							parsed_data_bp_activity.content = decoded_content;
+
+							console.log(parsed_data_bp_activity.privacy + '--xxx--' + JSON.stringify(parsed_data_bp_activity, null, 2));
+
+							var activity_modal_item = $( '#activity-modal .activity-list .activity-item' );
+							var activity_target = activity_modal_item.find( '.activity-content' ).find( '.activity-inner' );
+							var activity_privacy_status = activity_modal_item.find( '.bb-media-privacy-wrap' ).find( '.privacy-wrap' ).find( '.privacy');
+							var activity_privacy_list = activity_modal_item.find( '.bb-media-privacy-wrap' ).find( '.activity-privacy li');
+							if ( activity_modal_item.length > 0 ) {
+								var content = $( '#activity-' + response.id ).find( '.activity-content' ).find( '.activity-inner' ).html();
+								activity_target.empty();
+								activity_target.append( content );
+								activity_modal_item.data( 'bp-activity', parsed_data_bp_activity );
+								activity_privacy_status.removeClass().addClass( 'privacy selected ' + parsed_data_bp_activity.privacy );
+								activity_privacy_list.removeClass( 'selected' );
+								activity_privacy_list.filter(function() {
+									return $( this ).hasClass( parsed_data_bp_activity.privacy );
+								}).addClass( 'selected' );
+							}
 
 							// Inject the activity into the stream only if it hasn't been done already (HeartBeat).
 						} else if ( ! $( '#activity-' + response.id ).length ) {

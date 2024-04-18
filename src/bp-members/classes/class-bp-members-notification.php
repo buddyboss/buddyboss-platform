@@ -58,14 +58,16 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 	 * @return mixed|void
 	 */
 	public function load() {
-		$this->register_notification_group(
-			'members',
-			esc_html__( 'Account Settings', 'buddyboss' ),
-			esc_html__( 'Account Settings', 'buddyboss' ),
-			6
-		);
+		if ( bp_is_active( 'settings' ) ) {
+			$this->register_notification_group(
+				'members',
+				esc_html__( 'Account Settings', 'buddyboss' ),
+				esc_html__( 'Account Settings', 'buddyboss' ),
+				6
+			);
 
-		$this->register_notification_for_password_change();
+			$this->register_notification_for_password_change();
+		}
 	}
 
 	/**
@@ -126,9 +128,13 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 	 * @param int    $notification_id       Notification ID.
 	 * @param string $screen                Notification Screen type.
 	 *
-	 * @return array
+	 * @return array|string
 	 */
 	public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen ) {
+
+		if ( ! bp_is_active( 'settings' ) ) {
+			return $content;
+		}
 
 		$notification = bp_notifications_get_notification( $notification_id );
 
