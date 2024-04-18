@@ -81,9 +81,6 @@ $scheduled_date_string                  = wp_json_encode( $scheduled_date_data )
 				<span class="schedule-text"><?php esc_html_e( 'Schedule for:', 'buddyboss' ) ?></span>
 				<a href="javascript: void(0);">
 					<?php
-					// Format the local time according to the WordPress settings.
-					$formatted_local_time_wp = date_i18n( $date_format . ' ' . $time_format, strtotime( $local_time_wp ) );
-
 					printf(
 						'<span class="time-since">%1$s</span>',
 						$formatted_local_time_wp,
