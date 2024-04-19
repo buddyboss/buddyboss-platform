@@ -7195,6 +7195,13 @@ function bb_get_activity_scheduled_status() {
  * @return bool Is user can create scheduled activity or not.
  */
 function bb_user_can_create_scheduled_activity() {
-	error_log(999);
+
+	/**
+	 * Filters whether user can create schedule activity.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value Value for schedule activity.
+	 */
 	return (bool) apply_filters( 'bb_user_can_create_scheduled_activity', true );
 }
