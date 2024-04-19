@@ -491,6 +491,10 @@ function bp_version_updater() {
 			bb_update_to_2_5_91();
 		}
 
+		if ( $raw_db_version < 21101 ) {
+			bb_update_to_2_6_00();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3488,7 +3492,7 @@ function bb_update_to_2_5_80() {
 	if ( $thread_comments_depth > 4 ) {
 		$thread_comments_depth = 4;
 	}
-	update_option( '_bb_activity_comment_threading_depth', $thread_comments_depth ) ;
+	bp_update_option( '_bb_activity_comment_threading_depth', $thread_comments_depth );
 
 	$is_autoload = (bool) bp_get_option( '_bp_enable_activity_autoload', true );
 	$autoload_new_setting = ( $is_autoload ) ? 'infinite' : 'load_more';
@@ -3529,5 +3533,20 @@ function bb_update_to_2_5_91() {
 
 	if ( empty( $row ) ) {
 		$wpdb->query( "ALTER TABLE {$bp->document->table_name} ADD `status` varchar( 20 ) NOT NULL DEFAULT 'published' AFTER `menu_order`" ); //phpcs:ignore
+	}
+}
+
+/**
+ * Purge the existing old cache to implement the new 30 days cache expiry system.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_6_00() {
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_all();
 	}
 }
