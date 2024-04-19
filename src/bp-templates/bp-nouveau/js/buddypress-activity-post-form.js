@@ -4853,6 +4853,7 @@ window.bp = window.bp || {};
 				'click .bb-schedule-activity-cancel': 'cancelSchedulePost',
 				'click .bb-model-close-button': 'cancelSchedulePost',
 				'click .bb-schedule-activity': 'displayScheduleButton',
+				'change .bb-schedule-activity-meridian-wrap input': 'validateScheduleTime',
 				'change .bb-schedule-activity-date-field': 'validateScheduleTime',
 				'change .bb-schedule-activity-time-field': 'validateScheduleTime',
 				'click .bb-activity-schedule_edit': 'editScheduledPost',
