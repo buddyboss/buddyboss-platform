@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.5.91 =
+* Enhancement: Activity - Made small UI adjustments to the new activity pop-up modal
+
 = 2.5.90 =
 * Bug: Activity - Creating a new post was highlighting the recent media file button that was used in a previous post
 * Bug: Activity - When selecting a single image from a post that had a multiple image uploads to pin then this would not work
