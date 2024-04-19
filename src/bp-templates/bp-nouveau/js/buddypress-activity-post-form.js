@@ -425,7 +425,7 @@ window.bp = window.bp || {};
 						Backbone.trigger( 'onError', BP_Nouveau.activity.strings.scheduleWarning, 'warning' );
 					}
 				}
-			} else {
+			} else if( activity_data.status === 'published' ) {
 				self.postForm.$el.addClass( 'hide-schedule-button' );
 			}
 
