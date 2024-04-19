@@ -690,9 +690,9 @@ function bb_post_new_comment_reply_notification( $comment_id, $comment_approved,
 
 	$comment_author_id        = ! empty( $comment_author ) ? $comment_author->ID : $commentdata['user_id'];
 	$comment_content          = $commentdata['comment_content'];
-	$comment_author_name      = ! empty( $comment_author ) ? bp_core_get_user_displayname( $comment_author->ID ) : $commentdata['comment_author'];
 	$comment_link             = get_comment_link( $comment_id );
 	$parent_comment_author_id = (int) $parent_comment->user_id;
+	$comment_author_name      = ! empty( $comment_author ) ? bp_core_get_user_displayname( $comment_author->ID, $parent_comment_author_id ) : $commentdata['comment_author'];
 
 	// Send an email if the user hasn't opted-out.
 	if ( ! empty( $parent_comment_author_id ) ) {
@@ -947,7 +947,7 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 		) {
 
 			// Poster name.
-			$reply_author_name = bp_core_get_user_displayname( $comment_user_id );
+			$reply_author_name = bp_core_get_user_displayname( $comment_user_id, $user_id );
 			$author_id         = $comment_user_id;
 
 			/** Mail */
