@@ -1128,7 +1128,7 @@ class BP_Moderation {
 			} else {
 				$this->count += 1;
 			}
-			if ( ! empty( $threshold ) ) {
+			if ( ! empty( $threshold ) || ! empty( $user_threshold ) ) {
 				if ( $this->count >= $threshold && empty( $this->hide_sitewide ) ) {
 					$this->hide_sitewide = 1;
 					$auto_hide           = true;
