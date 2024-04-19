@@ -5856,7 +5856,7 @@ window.bp = window.bp || {};
 							$( '#whats-new-form' ).addClass( 'bottom-notice' );
 
 							// Edit activity.
-						} else if ( edit ) {
+						} else if ( edit && data.activity_action_type !== 'scheduled' ) {
 							$( '#activity-' + response.id ).replaceWith( response.activity );
 
 							// Extract value of data-bp-activity
