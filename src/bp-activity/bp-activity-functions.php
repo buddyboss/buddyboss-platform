@@ -7188,20 +7188,20 @@ function bb_get_activity_scheduled_status() {
 }
 
 /**
- * Checks if user can create a scheduled activity or not.
+ * Checks member permission to create a scheduled activity or not.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return bool Is user can create scheduled activity or not.
+ * @return bool Is member has access to create schedule activity or not.
  */
-function bb_user_can_create_scheduled_activity() {
+function bb_member_access_to_create_scheduled_activity() {
 
 	/**
-	 * Filters whether user can create schedule activity.
+	 * Filters whether member has access to create schedule activity.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param bool $value Value for schedule activity.
 	 */
-	return (bool) apply_filters( 'bb_user_can_create_scheduled_activity', true );
+	return (bool) apply_filters( 'bb_member_access_to_create_scheduled_activity', true );
 }
