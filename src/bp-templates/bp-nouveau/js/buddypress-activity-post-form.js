@@ -5875,8 +5875,6 @@ window.bp = window.bp || {};
 							// Update the content property with the decoded content
 							parsed_data_bp_activity.content = decoded_content;
 
-							console.log(parsed_data_bp_activity.privacy + '--xxx--' + JSON.stringify(parsed_data_bp_activity, null, 2));
-
 							var activity_modal_item = $( '#activity-modal .activity-list .activity-item' );
 							var activity_target = activity_modal_item.find( '.activity-content' ).find( '.activity-inner' );
 							var activity_privacy_status = activity_modal_item.find( '.bb-media-privacy-wrap' ).find( '.privacy-wrap' ).find( '.privacy');
