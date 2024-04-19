@@ -7186,3 +7186,15 @@ function bb_get_activity_published_status() {
 function bb_get_activity_scheduled_status() {
 	return buddypress()->activity->scheduled_status;
 }
+
+/**
+ * Checks if user can create a scheduled activity or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool Is user can create scheduled activity or not.
+ */
+function bb_user_can_create_scheduled_activity() {
+	error_log(999);
+	return (bool) apply_filters( 'bb_user_can_create_scheduled_activity', true );
+}
