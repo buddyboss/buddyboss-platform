@@ -7119,11 +7119,7 @@ function bb_validate_activity_privacy( $args ) {
 				'reaction' === $args['validate_action'] &&
 				in_array( $args['activity_type'], array( 'activity', 'activity_comment' ), true )
 			) {
-				if ( 'add' === $args['action'] ) {
-					return new WP_Error( 'error', __( 'Sorry, You cannot add reactions on `Only Me` activity.', 'buddyboss' ) );
-				} else {
-					return new WP_Error( 'error', __( 'Sorry, You cannot remove reactions on `Only Me` activity.', 'buddyboss' ) );
-				}
+				return new WP_Error( 'error', __( 'Sorry, You cannot perform reactions on `Only Me` activity.', 'buddyboss' ) );
 			}
 		} elseif (
 			'friends' === $activity->privacy &&
@@ -7140,11 +7136,7 @@ function bb_validate_activity_privacy( $args ) {
 				'reaction' === $args['validate_action'] &&
 				in_array( $args['activity_type'], array( 'activity', 'activity_comment' ), true )
 			) {
-				if ( 'add' === $args['action'] ) {
-					return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to add a reaction.', 'buddyboss' ) );
-				} else {
-					return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to remove a reaction.', 'buddyboss' ) );
-				}
+				return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to perform a reaction.', 'buddyboss' ) );
 			}
 		}
 	}
