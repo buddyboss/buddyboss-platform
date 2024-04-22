@@ -7108,7 +7108,7 @@ function bb_check_activity_privacy_for_comment( $args ) {
 
 	if ( ! empty( $activity->privacy ) && ! empty( $args['user_id'] ) ) {
 		if ( 'onlyme' === $activity->privacy && $activity->user_id !== $args['user_id'] ) {
-			return new WP_Error( 'error', __( 'Sorry, You cannot add comments on "Only Me" activity.', 'buddyboss' ) );
+			return new WP_Error( 'error', __( 'Sorry, You cannot add comments on `Only Me` activity.', 'buddyboss' ) );
 		} elseif (
 			'friends' === $activity->privacy &&
 			$activity->user_id !== $args['user_id'] &&
@@ -7143,9 +7143,9 @@ function bb_check_activity_privacy_for_reaction( $args ) {
 	) {
 		if ( 'onlyme' === $activity->privacy && $activity->user_id !== $args['user_id'] ) {
 			if ( 'add' === $args['action'] ) {
-				return new WP_Error( 'error', __( 'Sorry, You cannot add reactions on "Only Me" activity.', 'buddyboss' ) );
+				return new WP_Error( 'error', __( 'Sorry, You cannot add reactions on `Only Me` activity.', 'buddyboss' ) );
 			} else {
-				return new WP_Error( 'error', __( 'Sorry, You cannot remove reactions on "Only Me" activity.', 'buddyboss' ) );
+				return new WP_Error( 'error', __( 'Sorry, You cannot remove reactions on `Only Me` activity.', 'buddyboss' ) );
 			}
 		} elseif (
 			'friends' === $activity->privacy &&
