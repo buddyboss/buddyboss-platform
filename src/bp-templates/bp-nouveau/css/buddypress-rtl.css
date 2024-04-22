@@ -3618,8 +3618,12 @@ input.search-query-input {
 }
 
 .activity-list .activity-item .activity-content .activity-state .activity-state-comments {
-  display: inline-block;
+  display: none;
   margin-right: auto;
+}
+
+.activity-list .activity-item .activity-content .activity-state .activity-state-comments.has-comments {
+  display: inline-block;
 }
 
 .activity-list .activity-item .activity-state-reactions {
